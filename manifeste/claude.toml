@@ -1,0 +1,30 @@
+# Claude Code — headless JSONL adapter.
+#
+# Invocation (verified against claude-code source):
+#   claude -p "PROMPT" --output-format stream-json --verbose
+# Each stdout line is a JSON object tagged by `type`:
+#   - {"type":"system","subtype":"init","session_id":"…"}  → session id
+#   - {"type":"assistant","message":{"content":[{"text":…}]}}
+#   - {"type":"result","result":"…","usage":{…}}            → final message + usage
+name = "claude"
+command = "claude"
+args = ["-p", "{prompt}", "--output-format", "stream-json", "--verbose"]
+# --resume takes the session id; prompt is still passed with -p.
+resume_args = [
+    "-p", "{prompt}",
+    "--resume", "{session_id}",
+    "--output-format", "stream-json",
+    "--verbose",
+]
+kinds = ["code", "chat"]
+supports_resume = true
+streaming = true
+
+[parse]
+discriminator = "type"
+# session_id appears on the init `system` line; emitted once.
+session_id = "session_id"
+
+[parse.map]
+assistant = { event = "message", text = "message.content[0].text" }
+result = { event = "result", text = "result" }

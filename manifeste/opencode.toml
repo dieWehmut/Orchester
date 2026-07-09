@@ -1,0 +1,28 @@
+# OpenCode — headless JSONL adapter.
+#
+# Invocation (verified against opencode/packages/opencode/src/cli/cmd/run.ts):
+#   opencode run --format json "PROMPT"
+# Resume: --session <id> (or --continue for the last session).
+#
+# Every JSON line is `{type, timestamp, sessionID, ...data}`. Content events
+# carry a `part` object: text/reasoning have `part.text`; tool_use has
+# `part.tool` + `part.state.status`. `sessionID` is present on every line.
+name = "opencode"
+command = "opencode"
+args = ["run", "--format", "json", "{prompt}"]
+resume_args = ["run", "--format", "json", "--session", "{session_id}", "{prompt}"]
+kinds = ["code", "chat"]
+supports_resume = true
+streaming = true
+
+[parse]
+discriminator = "type"
+session_id = "sessionID"
+
+[parse.map]
+text = { event = "message", text = "part.text" }
+reasoning = { event = "reasoning", text = "part.text" }
+tool_use = { event = "tool_call", name = "part.tool", status = "part.state.status" }
+step_start = { event = "turn_started" }
+step_finish = { event = "turn_completed" }
+error = { event = "error", message = "error.message" }

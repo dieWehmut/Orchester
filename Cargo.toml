@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "kisten/protokoll",
     "kisten/vertrag",
+    "kisten/adapter",
     # added incrementally as each crate is built:
     # "kisten/adapter",
     # "kisten/verzeichnis",
