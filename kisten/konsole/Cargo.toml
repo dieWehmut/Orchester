@@ -1,0 +1,22 @@
+[package]
+name = "orchester-konsole"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[[bin]]
+name = "orchester"
+path = "src/main.rs"
+
+[dependencies]
+orchester-protokoll = { workspace = true }
+orchester-vertrag = { workspace = true }
+orchester-verzeichnis = { workspace = true }
+orchester-laufzeit = { workspace = true }
+clap = { workspace = true }
+tokio = { workspace = true }
+serde_json = { workspace = true }
+futures = { workspace = true }
+thiserror = { workspace = true }
