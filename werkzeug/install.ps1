@@ -24,6 +24,131 @@ function Prepend-PathIfExists([string]$PathItem) {
     }
 }
 
+function Test-Command([string]$Name) {
+    return [bool](Get-Command $Name -ErrorAction SilentlyContinue)
+}
+
+function Invoke-WingetInstall([string]$Id) {
+    if (-not (Test-Command winget)) {
+        return $false
+    }
+
+    Write-Host "Installing dependency with winget: $Id"
+    winget install --id $Id -e --silent --accept-package-agreements --accept-source-agreements
+    return ($LASTEXITCODE -eq 0)
+}
+
+function Install-RustIfMissing {
+    if (Test-Command cargo) {
+        return
+    }
+
+    Write-Host "cargo not found; installing Rust toolchain..."
+    if (-not (Invoke-WingetInstall "Rustlang.Rustup")) {
+        $rustup = Join-Path $env:TEMP "rustup-init.exe"
+        Invoke-WebRequest -Uri "https://win.rustup.rs/x86_64" -OutFile $rustup
+        & $rustup -y --profile minimal
+        if ($LASTEXITCODE -ne 0) {
+            throw "rustup-init failed with exit code $LASTEXITCODE"
+        }
+    }
+
+    Prepend-PathIfExists (Join-Path $env:USERPROFILE ".cargo\bin")
+    if (-not (Test-Command cargo)) {
+        throw "cargo is still not available after Rust installation"
+    }
+}
+
+function Install-GitIfMissing {
+    if (Test-Command git) {
+        return
+    }
+
+    Write-Host "git not found; installing Git..."
+    if (-not (Invoke-WingetInstall "Git.Git")) {
+        Write-Warning "Git could not be installed automatically. Continuing because local install does not require git."
+    }
+    Prepend-PathIfExists "D:\software\git\Git\cmd"
+    Prepend-PathIfExists "C:\Program Files\Git\cmd"
+}
+
+function Find-Gcc {
+    $candidates = @(
+        "D:\software\gcc\mingw64\bin\gcc.exe",
+        "D:\software\msys\msys2\mingw64\bin\gcc.exe",
+        "C:\msys64\mingw64\bin\gcc.exe"
+    )
+    foreach ($candidate in $candidates) {
+        if (Test-Path -LiteralPath $candidate) {
+            return $candidate
+        }
+    }
+
+    $cmd = Get-Command gcc -ErrorAction SilentlyContinue
+    if ($cmd) {
+        return $cmd.Source
+    }
+    return $null
+}
+
+function Find-Ar([string]$GccPath) {
+    $sameDir = Join-Path (Split-Path -Parent $GccPath) "ar.exe"
+    if (Test-Path -LiteralPath $sameDir) {
+        return $sameDir
+    }
+
+    $cmd = Get-Command ar -ErrorAction SilentlyContinue
+    if ($cmd) {
+        return $cmd.Source
+    }
+    return $null
+}
+
+function Install-MingwIfMissing {
+    $gcc = Find-Gcc
+    if (-not $gcc) {
+        Write-Host "MinGW gcc not found; trying to install it..."
+        $pacmanCandidates = @(
+            "D:\software\msys\msys2\usr\bin\pacman.exe",
+            "C:\msys64\usr\bin\pacman.exe"
+        )
+        $pacman = $pacmanCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+        if ($pacman) {
+            & $pacman -Sy --needed --noconfirm mingw-w64-x86_64-gcc
+        } else {
+            Invoke-WingetInstall "MSYS2.MSYS2" | Out-Null
+        }
+        Prepend-PathIfExists "D:\software\gcc\mingw64\bin"
+        Prepend-PathIfExists "D:\software\msys\msys2\mingw64\bin"
+        Prepend-PathIfExists "C:\msys64\mingw64\bin"
+        $gcc = Find-Gcc
+    }
+
+    if (-not $gcc) {
+        throw "MinGW gcc is required for this repository's x86_64-pc-windows-gnu build target and could not be installed automatically"
+    }
+
+    $env:CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER = $gcc
+    $ar = Find-Ar $gcc
+    if ($ar) {
+        $env:CARGO_TARGET_X86_64_PC_WINDOWS_GNU_AR = $ar
+    }
+}
+
+function Use-GnuRustToolchain {
+    if (-not (Test-Command rustup)) {
+        return
+    }
+
+    rustup toolchain install stable-x86_64-pc-windows-gnu --profile minimal --force-non-host | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        throw "failed to install stable-x86_64-pc-windows-gnu toolchain"
+    }
+    $env:RUSTUP_TOOLCHAIN = "stable-x86_64-pc-windows-gnu"
+    $env:CARGO_BUILD_TARGET = "x86_64-pc-windows-gnu"
+    rustup target add x86_64-pc-windows-gnu | Out-Null
+}
+
 function Ensure-UserPath([string]$PathItem) {
     $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
     $parts = @()
@@ -49,20 +174,21 @@ function Ensure-UserPath([string]$PathItem) {
 if (-not $env:RUSTUP_HOME -and (Test-Path -LiteralPath "D:\rust\rustup")) {
     $env:RUSTUP_HOME = "D:\rust\rustup"
 }
-if (-not $env:CARGO_HOME -and (Test-Path -LiteralPath "D:\rust\cargo")) {
-    $env:CARGO_HOME = "D:\rust\cargo"
-}
 
 Prepend-PathIfExists (Join-Path $env:USERPROFILE ".cargo\bin")
 if ($env:CARGO_HOME) {
     Prepend-PathIfExists (Join-Path $env:CARGO_HOME "bin")
 }
 Prepend-PathIfExists "D:\software\gcc\mingw64\bin"
+Prepend-PathIfExists "D:\software\git\Git\cmd"
+Prepend-PathIfExists "C:\Program Files\Git\cmd"
 
-$cargo = Get-Command cargo -ErrorAction SilentlyContinue
-if (-not $cargo) {
-    throw "cargo was not found. Install Rust or add cargo.exe to PATH first."
-}
+Install-GitIfMissing
+Install-RustIfMissing
+Install-MingwIfMissing
+Use-GnuRustToolchain
+
+$cargo = Get-Command cargo -ErrorAction Stop
 
 New-Item -ItemType Directory -Force -Path $BinDir | Out-Null
 

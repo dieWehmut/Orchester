@@ -54,6 +54,167 @@ prepend_dir() {
   return 0
 }
 
+have_cmd() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+run_as_root() {
+  if [ "$(id -u 2>/dev/null || echo 1)" = "0" ]; then
+    "$@"
+  elif have_cmd sudo; then
+    sudo "$@"
+  else
+    die "root privileges are required to install missing system packages; install sudo or rerun as root"
+  fi
+}
+
+winget_install() {
+  pkg="$1"
+  if have_cmd powershell.exe; then
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \
+      "if (Get-Command winget -ErrorAction SilentlyContinue) { winget install --id '$pkg' -e --silent --accept-package-agreements --accept-source-agreements; exit \$LASTEXITCODE } else { exit 127 }" \
+      >/dev/null 2>&1
+  else
+    return 127
+  fi
+}
+
+install_system_deps() {
+  info "Checking/installing system dependencies"
+
+  case "$(uname -s 2>/dev/null || echo unknown)" in
+    MINGW*|MSYS*|CYGWIN*)
+      if have_cmd pacman; then
+        pacman -Sy --needed --noconfirm git curl mingw-w64-x86_64-gcc >/dev/null
+        prepend_dir "/mingw64/bin"
+      else
+        have_cmd git || winget_install "Git.Git" || true
+        if ! have_cmd gcc; then
+          winget_install "MSYS2.MSYS2" || true
+        fi
+      fi
+      ;;
+    Darwin)
+      if have_cmd brew; then
+        brew install git curl >/dev/null
+      else
+        xcode-select --install >/dev/null 2>&1 || true
+      fi
+      ;;
+    Linux|*)
+      if have_cmd apt-get; then
+        run_as_root apt-get update -y >/dev/null
+        run_as_root apt-get install -y git curl ca-certificates build-essential >/dev/null
+      elif have_cmd dnf; then
+        run_as_root dnf install -y git curl ca-certificates gcc gcc-c++ make >/dev/null
+      elif have_cmd yum; then
+        run_as_root yum install -y git curl ca-certificates gcc gcc-c++ make >/dev/null
+      elif have_cmd pacman; then
+        run_as_root pacman -Sy --needed --noconfirm git curl ca-certificates base-devel >/dev/null
+      elif have_cmd apk; then
+        run_as_root apk add --no-cache git curl ca-certificates build-base >/dev/null
+      elif have_cmd zypper; then
+        run_as_root zypper --non-interactive install git curl ca-certificates gcc gcc-c++ make >/dev/null
+      elif have_cmd brew; then
+        brew install git curl >/dev/null
+      else
+        warn "No supported package manager found; continuing with existing tools"
+      fi
+      ;;
+  esac
+}
+
+download_to_file() {
+  url="$1"
+  dest="$2"
+  if have_cmd curl; then
+    curl -fsSL "$url" -o "$dest"
+  elif have_cmd wget; then
+    wget -qO "$dest" "$url"
+  else
+    return 127
+  fi
+}
+
+install_rustup() {
+  info "Installing Rust toolchain"
+
+  case "$(uname -s 2>/dev/null || echo unknown)" in
+    MINGW*|MSYS*|CYGWIN*)
+      rustup_init="${TMPDIR:-/tmp}/rustup-init.exe"
+      download_to_file "https://win.rustup.rs/x86_64" "$rustup_init" || die "failed to download rustup-init.exe"
+      "$rustup_init" -y --profile minimal
+      ;;
+    *)
+      rustup_sh="${TMPDIR:-/tmp}/rustup-init.sh"
+      download_to_file "https://sh.rustup.rs" "$rustup_sh" || die "failed to download rustup-init.sh"
+      sh "$rustup_sh" -y --profile minimal
+      ;;
+  esac
+
+  [ -n "${HOME:-}" ] && prepend_dir "$HOME/.cargo/bin"
+  [ -n "${USERNAME:-}" ] && prepend_dir "/c/Users/$USERNAME/.cargo/bin"
+  prepend_dir "/c/Users/30119/.cargo/bin"
+  [ -n "${CARGO_HOME:-}" ] && prepend_dir "$CARGO_HOME/bin"
+  export PATH
+}
+
+ensure_dependencies() {
+  missing=false
+  have_cmd git || missing=true
+  have_cmd curl || have_cmd wget || missing=true
+
+  case "$(uname -s 2>/dev/null || echo unknown)" in
+    MINGW*|MSYS*|CYGWIN*)
+      have_cmd gcc || [ -x /d/software/gcc/mingw64/bin/gcc.exe ] || missing=true
+      ;;
+    *)
+      have_cmd cc || have_cmd gcc || missing=true
+      ;;
+  esac
+
+  if [ "$missing" = true ]; then
+    install_system_deps
+  fi
+
+  if ! have_cmd cargo; then
+    install_rustup
+  fi
+
+  if have_cmd rustup; then
+    rustup default stable >/dev/null 2>&1 || true
+    case "$(uname -s 2>/dev/null || echo unknown)" in
+      MINGW*|MSYS*|CYGWIN*)
+        rustup toolchain install stable-x86_64-pc-windows-gnu --profile minimal --force-non-host >/dev/null 2>&1 || true
+        export RUSTUP_TOOLCHAIN="stable-x86_64-pc-windows-gnu"
+        export CARGO_BUILD_TARGET="x86_64-pc-windows-gnu"
+        rustup target add x86_64-pc-windows-gnu >/dev/null 2>&1 || true
+        ;;
+    esac
+  fi
+
+  have_cmd git || die "git is still missing after dependency installation"
+  have_cmd cargo || die "cargo is still missing after Rust installation"
+  have_cmd curl || have_cmd wget || die "curl or wget is still missing after dependency installation"
+}
+
+configure_windows_gnu_linker() {
+  case "$(uname -s 2>/dev/null || echo unknown)" in
+    MINGW*|MSYS*|CYGWIN*)
+      if have_cmd gcc; then
+        gcc_path="$(command -v gcc)"
+        ar_path="$(command -v ar 2>/dev/null || true)"
+        if have_cmd cygpath; then
+          gcc_path="$(cygpath -w "$gcc_path")"
+          [ -n "$ar_path" ] && ar_path="$(cygpath -w "$ar_path")"
+        fi
+        export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$gcc_path"
+        [ -n "$ar_path" ] && export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_AR="$ar_path"
+      fi
+      ;;
+  esac
+}
+
 usage() {
   cat <<EOF
 Orchester installer
@@ -124,9 +285,6 @@ case "$(uname -s 2>/dev/null || echo unknown)" in
     if [ -z "${RUSTUP_HOME:-}" ] && [ -d /d/rust/rustup ]; then
       export RUSTUP_HOME="D:/rust/rustup"
     fi
-    if [ -z "${CARGO_HOME:-}" ] && [ -d /d/rust/cargo ]; then
-      export CARGO_HOME="D:/rust/cargo"
-    fi
     if [ -d /d/software/gcc/mingw64/bin ]; then
       PATH="/d/software/gcc/mingw64/bin:$PATH"
     fi
@@ -147,12 +305,8 @@ esac
 prepend_dir "$INSTALL_ROOT/bin"
 export PATH
 
-need_cmd() {
-  command -v "$1" >/dev/null 2>&1 || die "$1 was not found; install it and rerun this installer"
-}
-
-need_cmd cargo
-need_cmd git
+ensure_dependencies
+configure_windows_gnu_linker
 
 SCRIPT_DIR=""
 case "${0:-}" in

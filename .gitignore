@@ -3,7 +3,7 @@
 **/target/
 **/*.rs.bk
 *.pdb
-
+sample
 # Keep Cargo.lock tracked (Orchester ships binaries).
 
 # ── Forschung: cloned reference repos ───────────────────────────────
