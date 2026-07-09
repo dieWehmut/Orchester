@@ -288,7 +288,7 @@ pub fn select_agent_line<R: BufRead, W: Write>(
         return Ok(None);
     }
 
-    render_welcome(out)?;
+    render_line_home(out, choices, default_agent)?;
     render_agent_table(out, choices, default_agent)?;
 
     loop {
@@ -543,6 +543,27 @@ fn render_home<W: Write>(
     out.flush()
 }
 
+fn render_line_home<W: Write>(
+    out: &mut W,
+    choices: &[AgentChoice],
+    default_agent: Option<&str>,
+) -> io::Result<()> {
+    let selectable = selectable_agents(choices);
+    let selected = default_index(&selectable, default_agent);
+    let selected_agent = selectable.get(selected);
+    let (cols, _) = terminal::size().unwrap_or((100, 30));
+    let width = (cols as usize).clamp(50, 132);
+
+    writeln!(out)?;
+    writeln!(
+        out,
+        "{ORANGE}{BOLD}Orchester{RESET} {DIM}v{}  local agent conductor{RESET}",
+        env!("CARGO_PKG_VERSION")
+    )?;
+    render_home_panel(out, width, selected_agent)?;
+    writeln!(out)
+}
+
 fn render_home_panel<W: Write>(
     out: &mut W,
     width: usize,
@@ -638,19 +659,6 @@ fn render_command_palette<W: Write>(
         )?;
     }
     Ok(())
-}
-
-fn render_welcome<W: Write>(out: &mut W) -> io::Result<()> {
-    writeln!(out)?;
-    writeln!(
-        out,
-        "{BOLD}{CYAN}Orchester{RESET} {DIM}local agent conductor{RESET}"
-    )?;
-    writeln!(
-        out,
-        "{DIM}Pick an installed agent, then type a task prompt.{RESET}"
-    )?;
-    writeln!(out)
 }
 
 fn render_no_runnable_agents<W: Write>(out: &mut W) -> io::Result<()> {

@@ -143,7 +143,6 @@ fn run_subcommand_reads_prompt_from_stdin() {
 fn no_args_can_run_interactive_mock_session() {
     let home = temp_home("interactive");
     let mut child = orchester()
-        .env("ORCHESTER_FORCE_INTERACTIVE", "1")
         .env("ORCHESTER_HOME", &home)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
@@ -163,6 +162,7 @@ fn no_args_can_run_interactive_mock_session() {
     assert!(output.status.success(), "stderr:\n{}", stderr(&output));
     let out = stdout(&output);
     assert!(out.contains("Orchester"), "interactive output:\n{out}");
+    assert!(out.contains("Welcome back"), "interactive output:\n{out}");
     assert!(
         out.contains("Available agents"),
         "interactive output:\n{out}"

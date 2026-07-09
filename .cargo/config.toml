@@ -1,10 +1,6 @@
-# Orchester is developed on an ARM64 Windows host that has no MSVC toolchain,
-# but does have a working x86_64 MinGW-w64 GCC/clang. We therefore build for the
-# GNU target (runs fine on ARM64 Windows via x64 emulation). Swap this out for
-# aarch64-pc-windows-msvc once the MSVC Build Tools are installed.
-[build]
-target = "x86_64-pc-windows-gnu"
-
+# Windows installers select x86_64-pc-windows-gnu through CARGO_BUILD_TARGET.
+# Do not set [build].target here: cargo install reads this file on Linux/macOS
+# too, and a global Windows target breaks native Unix installs.
 [target.x86_64-pc-windows-gnu]
 linker = "D:/software/gcc/mingw64/bin/gcc.exe"
 ar = "D:/software/gcc/mingw64/bin/ar.exe"

@@ -68,10 +68,7 @@ async fn run(cli: Cli) -> Result<ExitCode, CliError> {
     let registry = Registry::discover(MANIFEST_DIR);
 
     if no_arg_launch {
-        if should_start_interactive() {
-            return run_interactive(registry).await;
-        }
-        return Err(CliError::MissingAgent);
+        return run_interactive(registry).await;
     }
 
     let prompt = match command {
@@ -703,16 +700,6 @@ async fn drive_agent_run(
         .await?;
 
     Ok((record_task, result))
-}
-
-fn should_start_interactive() -> bool {
-    if matches!(
-        std::env::var("ORCHESTER_FORCE_INTERACTIVE").as_deref(),
-        Ok("1" | "true" | "yes")
-    ) {
-        return true;
-    }
-    io::stdin().is_terminal() && io::stdout().is_terminal()
 }
 
 fn record_session(agent: &str, task: &Task, result: &RunResult) -> io::Result<()> {

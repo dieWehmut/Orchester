@@ -231,6 +231,25 @@ configure_windows_gnu_linker() {
   esac
 }
 
+configure_cargo_build_target() {
+  case "$(uname -s 2>/dev/null || echo unknown)" in
+    MINGW*|MSYS*|CYGWIN*)
+      export CARGO_BUILD_TARGET="${CARGO_BUILD_TARGET:-x86_64-pc-windows-gnu}"
+      ;;
+    *)
+      host_triple="$(rustc -vV 2>/dev/null | sed -n 's/^host: //p' | head -n 1)"
+      [ -n "$host_triple" ] || die "could not detect Rust host target"
+      export CARGO_BUILD_TARGET="$host_triple"
+      case "${RUSTUP_TOOLCHAIN:-}" in
+        *windows*) unset RUSTUP_TOOLCHAIN ;;
+      esac
+      if have_cmd rustup; then
+        rustup target add "$host_triple" >/dev/null 2>&1 || true
+      fi
+      ;;
+  esac
+}
+
 ensure_windows_user_path() {
   bin_dir_win="$(to_windows_path "$1")" || return 1
   have_cmd powershell.exe || return 1
@@ -482,6 +501,7 @@ export PATH
 
 ensure_dependencies
 configure_windows_gnu_linker
+configure_cargo_build_target
 
 SCRIPT_DIR=""
 case "${0:-}" in
@@ -528,7 +548,7 @@ mkdir -p "$BIN_DIR"
 info "Installing orchester to $BIN_DIR"
 (
   cd "$SRC_DIR"
-  cargo install --path kisten/konsole --force --root "$INSTALL_ROOT"
+  cargo install --path kisten/konsole --force --root "$INSTALL_ROOT" --target "$CARGO_BUILD_TARGET"
 )
 
 BIN="$BIN_DIR/orchester$EXE_SUFFIX"
