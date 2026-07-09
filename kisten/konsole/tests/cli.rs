@@ -140,6 +140,46 @@ fn run_subcommand_reads_prompt_from_stdin() {
 }
 
 #[test]
+fn no_args_can_run_interactive_mock_session() {
+    let home = temp_home("interactive");
+    let mut child = orchester()
+        .env("ORCHESTER_FORCE_INTERACTIVE", "1")
+        .env("ORCHESTER_HOME", &home)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("spawn interactive orchester");
+
+    child
+        .stdin
+        .as_mut()
+        .expect("stdin handle")
+        .write_all(b"mock\nhello interactive\n/quit\n")
+        .expect("write interactive input");
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().expect("collect output");
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    assert!(out.contains("Orchester"), "interactive output:\n{out}");
+    assert!(
+        out.contains("Available agents"),
+        "interactive output:\n{out}"
+    );
+    assert!(
+        out.contains("mock received: hello interactive"),
+        "interactive output:\n{out}"
+    );
+    assert!(
+        out.contains("mock done: hello interactive"),
+        "interactive output:\n{out}"
+    );
+
+    let _ = std::fs::remove_dir_all(home);
+}
+
+#[test]
 fn run_records_session_metadata() {
     let home = temp_home("sessions");
     let run = orchester()
