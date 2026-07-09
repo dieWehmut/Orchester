@@ -1,0 +1,18 @@
+[package]
+name = "orchester-vertrag"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Der Adapter-Vertrag: AgentAdapter-Trait, AdapterManifest und der generische ManifestAdapter."
+
+[dependencies]
+orchester-protokoll.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+toml.workspace = true
+tokio = { workspace = true }
+tokio-stream.workspace = true
+futures.workspace = true
+async-trait.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
