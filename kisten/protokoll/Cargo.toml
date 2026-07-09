@@ -1,0 +1,10 @@
+[package]
+name = "orchester-protokoll"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Unified event/task protocol at the core of Orchester — the moat (Burggraben)."
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true

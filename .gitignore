@@ -1,0 +1,32 @@
+# ── Rust build output ───────────────────────────────────────────────
+/target/
+**/target/
+**/*.rs.bk
+*.pdb
+
+# Keep Cargo.lock tracked (Orchester ships binaries).
+
+# ── Forschung: cloned reference repos ───────────────────────────────
+# 50+ upstream repos live here purely as read-only reference. Never commit
+# them (each carries its own .git). Keep only our own analysis + notes.
+/forschung/*
+!/forschung/ANALYSIS.md
+!/forschung/README.md
+# Legacy name before the German rename (belt & braces):
+/agent-research/
+/forschung/.analysis_parts/
+
+# ── Local runtime / tooling state ───────────────────────────────────
+.remember/logs/
+.remember/tmp/
+.env
+.env.*
+!.env.example
+tmp/
+
+# ── Editor / OS noise ───────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/

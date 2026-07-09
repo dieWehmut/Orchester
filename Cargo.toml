@@ -1,0 +1,38 @@
+[workspace]
+resolver = "2"
+members = [
+    "kisten/protokoll",
+    # added incrementally as each crate is built:
+    # "kisten/vertrag",
+    # "kisten/adapter",
+    # "kisten/verzeichnis",
+    # "kisten/laufzeit",
+    # "kisten/konsole",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/orchester/orchester"
+rust-version = "1.80"
+
+[workspace.dependencies]
+# Internal crates (German role names; see handbuch/ARCHITEKTUR.md)
+orchester-protokoll = { path = "kisten/protokoll" }
+orchester-vertrag = { path = "kisten/vertrag" }
+orchester-adapter = { path = "kisten/adapter" }
+orchester-verzeichnis = { path = "kisten/verzeichnis" }
+orchester-laufzeit = { path = "kisten/laufzeit" }
+
+# External
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "0.8"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "process", "io-util", "io-std", "sync", "signal", "time"] }
+tokio-stream = "0.1"
+futures = "0.3"
+async-trait = "0.1"
+thiserror = "2"
+clap = { version = "4", features = ["derive"] }
+tracing = "0.1"

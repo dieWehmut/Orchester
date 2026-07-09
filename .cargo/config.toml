@@ -1,0 +1,10 @@
+# Orchester is developed on an ARM64 Windows host that has no MSVC toolchain,
+# but does have a working x86_64 MinGW-w64 GCC/clang. We therefore build for the
+# GNU target (runs fine on ARM64 Windows via x64 emulation). Swap this out for
+# aarch64-pc-windows-msvc once the MSVC Build Tools are installed.
+[build]
+target = "x86_64-pc-windows-gnu"
+
+[target.x86_64-pc-windows-gnu]
+linker = "D:/software/gcc/mingw64/bin/gcc.exe"
+ar = "D:/software/gcc/mingw64/bin/ar.exe"
