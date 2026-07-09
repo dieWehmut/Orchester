@@ -9,7 +9,7 @@ use async_trait::async_trait;
 use futures::stream;
 
 use orchester_protokoll::{Capability, Event, Task, TaskKind};
-use orchester_vertrag::{AdapterError, AgentAdapter, EventStream};
+use orchester_vertrag::{AdapterAvailability, AdapterError, AgentAdapter, EventStream};
 
 /// Scripted, subprocess-free adapter.
 pub struct MockAdapter;
@@ -39,6 +39,10 @@ impl AgentAdapter for MockAdapter {
             supports_resume: false,
             streaming: true,
         }
+    }
+
+    fn availability(&self) -> AdapterAvailability {
+        AdapterAvailability::available(self.name(), "built-in mock adapter")
     }
 
     async fn run(&self, task: Task) -> Result<EventStream, AdapterError> {
@@ -79,5 +83,13 @@ mod tests {
         assert!(matches!(&events[2], Event::Message { text } if text.contains("hi")));
         assert!(matches!(events[3], Event::TurnCompleted));
         assert!(matches!(&events[4], Event::Result { text } if text.contains("hi")));
+    }
+
+    #[test]
+    fn mock_is_always_available() {
+        let adapter = MockAdapter::new();
+        let availability = adapter.availability();
+        assert_eq!(availability.name, "mock");
+        assert!(!availability.is_missing());
     }
 }

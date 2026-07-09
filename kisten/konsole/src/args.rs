@@ -1,6 +1,6 @@
 //! Command-line surface for Orchester.
 //!
-//! The v0.1 grammar is intentionally tiny — one subcommand (`list`) plus a
+//! The v0.1 grammar is intentionally tiny: `run`, `list`, `doctor`, plus a
 //! default "run" mode. Multi-agent flags (`--agents`, `--parallel`, `--auto`)
 //! are declared but stubbed: they lock the UX now and print "not yet
 //! implemented" so scripts written against them fail loudly rather than
@@ -53,10 +53,20 @@ pub enum Command {
 
     /// List discovered adapters and their capabilities.
     List,
+
+    /// Check local adapter availability.
+    Doctor(DoctorArgs),
 }
 
 #[derive(Debug, Args)]
 pub struct RunArgs {
     /// The prompt. Use `-` to read the prompt from stdin.
     pub prompt: Option<String>,
+}
+
+#[derive(Debug, Args)]
+pub struct DoctorArgs {
+    /// Exit non-zero if any adapter command is missing.
+    #[arg(long)]
+    pub strict: bool,
 }

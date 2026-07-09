@@ -9,6 +9,7 @@
 use std::io::Write;
 
 use orchester_protokoll::{Capability, ChangeKind, Event, TaskKind, ToolStatus};
+use orchester_vertrag::{AdapterAvailability, AvailabilityStatus};
 
 // Minimal ANSI palette. Kept here rather than pulling a styling crate for v0.1.
 const DIM: &str = "\x1b[2m";
@@ -28,7 +29,11 @@ pub fn render_event(out: &mut impl Write, event: &Event) -> std::io::Result<()> 
         Event::Reasoning { text } => writeln!(out, "{DIM}{ITALIC}{text}{RESET}"),
         Event::Message { text } => writeln!(out, "{text}"),
         Event::Result { text } => writeln!(out, "{text}"),
-        Event::ToolCall { name, status, detail } => {
+        Event::ToolCall {
+            name,
+            status,
+            detail,
+        } => {
             let marker = match status {
                 ToolStatus::InProgress => "▶",
                 ToolStatus::Completed => "✔",
@@ -36,9 +41,17 @@ pub fn render_event(out: &mut impl Write, event: &Event) -> std::io::Result<()> 
             };
             match detail {
                 Some(d) if !d.is_empty() => {
-                    writeln!(out, "{DIM}{marker} {name} ({}) — {d}{RESET}", status_word(*status))
+                    writeln!(
+                        out,
+                        "{DIM}{marker} {name} ({}) — {d}{RESET}",
+                        status_word(*status)
+                    )
                 }
-                _ => writeln!(out, "{DIM}{marker} {name} ({}){RESET}", status_word(*status)),
+                _ => writeln!(
+                    out,
+                    "{DIM}{marker} {name} ({}){RESET}",
+                    status_word(*status)
+                ),
             }
         }
         Event::FileChange { path, kind } => {
@@ -94,6 +107,27 @@ pub fn render_list(out: &mut impl Write, caps: &[Capability]) -> std::io::Result
     Ok(())
 }
 
+/// Render adapter availability diagnostics for `orchester doctor`.
+pub fn render_doctor(out: &mut impl Write, checks: &[AdapterAvailability]) -> std::io::Result<()> {
+    if checks.is_empty() {
+        return writeln!(out, "{DIM}no adapters registered{RESET}");
+    }
+
+    for check in checks {
+        let (color, label) = match check.status {
+            AvailabilityStatus::Available => (GREEN, "ok"),
+            AvailabilityStatus::Missing => (RED, "missing"),
+            AvailabilityStatus::Unknown => (DIM, "unknown"),
+        };
+        writeln!(
+            out,
+            "{color}{label}{RESET}\t{}\t{}",
+            check.name, check.detail
+        )?;
+    }
+    Ok(())
+}
+
 fn status_word(s: ToolStatus) -> &'static str {
     match s {
         ToolStatus::InProgress => "in_progress",
@@ -136,7 +170,9 @@ mod tests {
 
     #[test]
     fn error_is_marked() {
-        let out = rendered(&Event::Error { message: "boom".into() });
+        let out = rendered(&Event::Error {
+            message: "boom".into(),
+        });
         assert!(out.contains("error: boom"));
     }
 
@@ -177,5 +213,21 @@ mod tests {
         assert!(out.contains("mock"));
         assert!(out.contains("chat"));
         assert!(out.contains("no-resume"));
+    }
+
+    #[test]
+    fn doctor_shows_adapter_status() {
+        let checks = vec![
+            AdapterAvailability::available("mock", "built-in mock adapter"),
+            AdapterAvailability::missing("ghost", "command 'ghost' not found on PATH"),
+        ];
+        let mut buf = Vec::new();
+        render_doctor(&mut buf, &checks).unwrap();
+        let out = String::from_utf8(buf).unwrap();
+
+        assert!(out.contains("ok"));
+        assert!(out.contains("mock"));
+        assert!(out.contains("missing"));
+        assert!(out.contains("ghost"));
     }
 }

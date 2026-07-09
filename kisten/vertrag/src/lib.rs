@@ -16,7 +16,7 @@ pub mod extract;
 mod manifest;
 mod manifest_adapter;
 
-pub use adapter::{AgentAdapter, EventStream};
+pub use adapter::{AdapterAvailability, AgentAdapter, AvailabilityStatus, EventStream};
 pub use error::AdapterError;
 pub use manifest::{AdapterManifest, EventMapping, ParseSpec};
 pub use manifest_adapter::ManifestAdapter;

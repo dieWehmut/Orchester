@@ -1,16 +1,17 @@
 use async_trait::async_trait;
 use futures::StreamExt;
 use serde_json::Value;
+use std::env;
+use std::ffi::OsString;
+use std::path::{Path, PathBuf};
 use std::process::Stdio;
 use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::process::Command;
 use tokio_stream::wrappers::LinesStream;
 
-use orchester_protokoll::{
-    Capability, ChangeKind, Event, TaskKind, TodoItem, ToolStatus, Usage,
-};
+use orchester_protokoll::{Capability, ChangeKind, Event, TaskKind, TodoItem, ToolStatus, Usage};
 
-use crate::adapter::{AgentAdapter, EventStream};
+use crate::adapter::{AdapterAvailability, AgentAdapter, EventStream};
 use crate::error::AdapterError;
 use crate::extract;
 use crate::manifest::{AdapterManifest, EventMapping};
@@ -74,6 +75,18 @@ impl AgentAdapter for ManifestAdapter {
         }
     }
 
+    fn availability(&self) -> AdapterAvailability {
+        match find_executable(&self.manifest.command) {
+            Some(path) => {
+                AdapterAvailability::available(self.name(), format!("found {}", path.display()))
+            }
+            None => AdapterAvailability::missing(
+                self.name(),
+                format!("command '{}' not found on PATH", self.manifest.command),
+            ),
+        }
+    }
+
     async fn run(&self, task: orchester_protokoll::Task) -> Result<EventStream, AdapterError> {
         let args = self.build_args(&task.prompt, task.model.as_deref(), task.resume.as_deref());
         let mut cmd = Command::new(&self.manifest.command);
@@ -130,6 +143,47 @@ fn parse_kind(k: &str) -> TaskKind {
         "browser" => TaskKind::Browser,
         other => TaskKind::Custom(other.to_string()),
     }
+}
+
+fn find_executable(command: &str) -> Option<PathBuf> {
+    let command_path = Path::new(command);
+    if command_path.components().count() > 1 || command_path.is_absolute() {
+        return command_path.is_file().then(|| command_path.to_path_buf());
+    }
+
+    let path = env::var_os("PATH")?;
+    let names = executable_names(command);
+    for dir in env::split_paths(&path) {
+        for name in &names {
+            let candidate = dir.join(name);
+            if candidate.is_file() {
+                return Some(candidate);
+            }
+        }
+    }
+    None
+}
+
+#[cfg(windows)]
+fn executable_names(command: &str) -> Vec<OsString> {
+    if Path::new(command).extension().is_some() {
+        return vec![OsString::from(command)];
+    }
+
+    let mut names = vec![OsString::from(command)];
+    if let Some(pathext) = env::var_os("PATHEXT") {
+        for ext in env::split_paths(&pathext) {
+            if let Some(ext) = ext.to_str() {
+                names.push(OsString::from(format!("{command}{ext}")));
+            }
+        }
+    }
+    names
+}
+
+#[cfg(not(windows))]
+fn executable_names(command: &str) -> Vec<OsString> {
+    vec![OsString::from(command)]
 }
 
 /// Turn a single stdout line into zero or more normalized events.
@@ -202,9 +256,15 @@ fn build_event(m: &EventMapping, v: &Value) -> Option<Event> {
         "session_started" => None, // handled by the session_id path
         "turn_started" => Some(Event::TurnStarted),
         "turn_completed" => Some(Event::TurnCompleted),
-        "message" => Some(Event::Message { text: text(&m.text) }),
-        "reasoning" => Some(Event::Reasoning { text: text(&m.text) }),
-        "result" => Some(Event::Result { text: text(&m.text) }),
+        "message" => Some(Event::Message {
+            text: text(&m.text),
+        }),
+        "reasoning" => Some(Event::Reasoning {
+            text: text(&m.text),
+        }),
+        "result" => Some(Event::Result {
+            text: text(&m.text),
+        }),
         "error" => Some(Event::Error {
             message: text(&m.message),
         }),
@@ -224,8 +284,16 @@ fn build_event(m: &EventMapping, v: &Value) -> Option<Event> {
         }),
         "file_change" => build_file_change(m, v),
         "usage" => Some(Event::Usage(Usage {
-            input_tokens: m.input_tokens.as_ref().map(|p| extract::get_u64(v, p)).unwrap_or(0),
-            output_tokens: m.output_tokens.as_ref().map(|p| extract::get_u64(v, p)).unwrap_or(0),
+            input_tokens: m
+                .input_tokens
+                .as_ref()
+                .map(|p| extract::get_u64(v, p))
+                .unwrap_or(0),
+            output_tokens: m
+                .output_tokens
+                .as_ref()
+                .map(|p| extract::get_u64(v, p))
+                .unwrap_or(0),
             cached_input_tokens: m
                 .cached_input_tokens
                 .as_ref()
@@ -273,7 +341,11 @@ fn build_file_change(m: &EventMapping, v: &Value) -> Option<Event> {
 }
 
 fn build_todo_list(m: &EventMapping, v: &Value) -> Option<Event> {
-    let arr = m.items.as_ref().and_then(|p| extract::get(v, p))?.as_array()?;
+    let arr = m
+        .items
+        .as_ref()
+        .and_then(|p| extract::get(v, p))?
+        .as_array()?;
     let text_field = m.item_text.as_deref().unwrap_or("text");
     let done_field = m.item_completed.as_deref().unwrap_or("completed");
     let items = arr
@@ -329,13 +401,25 @@ result    = { event = "result",  text = "result" }
         ManifestAdapter::from_toml(CLAUDE_TOML).expect("valid manifest")
     }
 
+    fn adapter_with_command(command: String) -> ManifestAdapter {
+        let mut manifest = adapter().manifest.clone();
+        manifest.command = command;
+        ManifestAdapter::new(manifest)
+    }
+
     #[test]
     fn build_args_substitutes_prompt() {
         let a = adapter();
         let args = a.build_args_for_test("list files", None, None);
         assert_eq!(
             args,
-            vec!["-p", "list files", "--output-format", "stream-json", "--verbose"]
+            vec![
+                "-p",
+                "list files",
+                "--output-format",
+                "stream-json",
+                "--verbose"
+            ]
         );
     }
 
@@ -346,9 +430,36 @@ result    = { event = "result",  text = "result" }
         assert_eq!(
             args,
             vec![
-                "-p", "more", "--resume", "sess-123", "--output-format", "stream-json", "--verbose"
+                "-p",
+                "more",
+                "--resume",
+                "sess-123",
+                "--output-format",
+                "stream-json",
+                "--verbose"
             ]
         );
+    }
+
+    #[test]
+    fn availability_reports_existing_command() {
+        let exe = std::env::current_exe().expect("current test executable");
+        let a = adapter_with_command(exe.to_string_lossy().into_owned());
+        let availability = a.availability();
+
+        assert!(!availability.is_missing());
+        assert_eq!(availability.name, "claude");
+        assert!(availability.detail.contains("found"));
+    }
+
+    #[test]
+    fn availability_reports_missing_command() {
+        let a = adapter_with_command("orchester-command-that-should-not-exist".into());
+        let availability = a.availability();
+
+        assert!(availability.is_missing());
+        assert_eq!(availability.name, "claude");
+        assert!(availability.detail.contains("not found"));
     }
 
     #[test]
@@ -387,7 +498,11 @@ result    = { event = "result",  text = "result" }
     fn result_line_maps_to_result() {
         let a = adapter();
         let mut seen = true;
-        let out = map_line(&a.manifest, r#"{"type":"result","result":"done"}"#, &mut seen);
+        let out = map_line(
+            &a.manifest,
+            r#"{"type":"result","result":"done"}"#,
+            &mut seen,
+        );
         assert_eq!(out.len(), 1);
         assert!(matches!(&out[0], Ok(Event::Result { text }) if text == "done"));
     }

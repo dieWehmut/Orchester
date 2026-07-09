@@ -35,6 +35,23 @@ fn list_shows_builtin_adapters() {
 }
 
 #[test]
+fn doctor_reports_mock_adapter_available() {
+    let output = orchester()
+        .arg("doctor")
+        .output()
+        .expect("run orchester doctor");
+
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    assert!(out.contains("mock"), "doctor output:\n{out}");
+    assert!(out.contains("ok"), "doctor output:\n{out}");
+    assert!(
+        out.contains("built-in mock adapter"),
+        "doctor output:\n{out}"
+    );
+}
+
+#[test]
 fn default_run_can_emit_event_jsonl() {
     let output = orchester()
         .args(["--agent", "mock", "--json", "hello default"])

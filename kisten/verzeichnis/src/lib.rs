@@ -12,7 +12,7 @@ use std::sync::Arc;
 
 use orchester_adapter::{builtin, MockAdapter, BUILTIN_MANIFESTS};
 use orchester_protokoll::Capability;
-use orchester_vertrag::{AdapterError, AgentAdapter, ManifestAdapter};
+use orchester_vertrag::{AdapterAvailability, AdapterError, AgentAdapter, ManifestAdapter};
 
 /// An index of adapters keyed by name.
 ///
@@ -92,6 +92,11 @@ impl Registry {
         self.adapters.values().map(|a| a.capabilities()).collect()
     }
 
+    /// Availability checks for every registered adapter, alphabetical by name.
+    pub fn availability(&self) -> Vec<AdapterAvailability> {
+        self.adapters.values().map(|a| a.availability()).collect()
+    }
+
     /// Number of registered adapters.
     pub fn len(&self) -> usize {
         self.adapters.len()
@@ -144,5 +149,17 @@ mod tests {
     fn missing_dir_falls_back_to_builtins() {
         let registry = Registry::discover("this/dir/does/not/exist");
         assert_eq!(registry.len(), 4);
+    }
+
+    #[test]
+    fn availability_is_alphabetical_and_includes_mock() {
+        let mut registry = Registry::new();
+        registry.register_builtins();
+
+        let checks = registry.availability();
+        let names: Vec<_> = checks.iter().map(|c| c.name.as_str()).collect();
+        assert_eq!(names, vec!["claude", "codex", "mock", "opencode"]);
+        let mock = checks.iter().find(|c| c.name == "mock").unwrap();
+        assert!(!mock.is_missing());
     }
 }

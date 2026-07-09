@@ -56,6 +56,17 @@ async fn run(cli: Cli) -> Result<ExitCode, CliError> {
             render::render_list(&mut out, &registry.list())?;
             return Ok(ExitCode::SUCCESS);
         }
+        Some(Command::Doctor(doctor)) => {
+            let checks = registry.availability();
+            let strict_failed = doctor.strict && checks.iter().any(|check| check.is_missing());
+            let mut out = io::stdout().lock();
+            render::render_doctor(&mut out, &checks)?;
+            return Ok(if strict_failed {
+                ExitCode::FAILURE
+            } else {
+                ExitCode::SUCCESS
+            });
+        }
         Some(Command::Run(run)) => run.prompt,
         None => prompt,
     };
