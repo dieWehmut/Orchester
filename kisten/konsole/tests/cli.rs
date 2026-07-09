@@ -1,5 +1,7 @@
 use std::io::Write;
+use std::path::PathBuf;
 use std::process::{Command, Stdio};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 fn orchester() -> Command {
     Command::new(env!("CARGO_BIN_EXE_orchester"))
@@ -18,6 +20,17 @@ fn json_events(output: &std::process::Output) -> Vec<serde_json::Value> {
         .lines()
         .map(|line| serde_json::from_str(line).expect("valid Event JSONL"))
         .collect()
+}
+
+fn temp_home(name: &str) -> PathBuf {
+    let nanos = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_nanos();
+    std::env::temp_dir().join(format!(
+        "orchester-cli-{name}-{}-{nanos}",
+        std::process::id()
+    ))
 }
 
 #[test]
@@ -105,4 +118,43 @@ fn run_subcommand_reads_prompt_from_stdin() {
     let events = json_events(&output);
     assert!(events.iter().any(|event| event["type"] == "message"
         && event["text"].as_str().unwrap().contains("hello stdin")));
+}
+
+#[test]
+fn run_records_session_metadata() {
+    let home = temp_home("sessions");
+    let run = orchester()
+        .env("ORCHESTER_HOME", &home)
+        .args(["--agent", "mock", "--json", "remember this"])
+        .output()
+        .expect("run mock agent");
+    assert!(run.status.success(), "stderr:\n{}", stderr(&run));
+
+    let sessions = orchester()
+        .env("ORCHESTER_HOME", &home)
+        .arg("sessions")
+        .output()
+        .expect("list sessions");
+    assert!(sessions.status.success(), "stderr:\n{}", stderr(&sessions));
+    let out = stdout(&sessions);
+    assert!(out.contains("mock"), "sessions output:\n{out}");
+    assert!(out.contains("mock-session"), "sessions output:\n{out}");
+    assert!(out.contains("remember this"), "sessions output:\n{out}");
+
+    let sessions_json = orchester()
+        .env("ORCHESTER_HOME", &home)
+        .args(["sessions", "--json"])
+        .output()
+        .expect("list sessions as json");
+    assert!(
+        sessions_json.status.success(),
+        "stderr:\n{}",
+        stderr(&sessions_json)
+    );
+    let value: serde_json::Value = serde_json::from_str(stdout(&sessions_json).trim()).unwrap();
+    assert_eq!(value["agent"], "mock");
+    assert_eq!(value["session_id"], "mock-session");
+    assert_eq!(value["prompt"], "remember this");
+
+    let _ = std::fs::remove_dir_all(home);
 }

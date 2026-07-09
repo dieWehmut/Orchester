@@ -14,8 +14,8 @@ use std::process::ExitCode;
 
 use clap::Parser;
 
-use orchester_laufzeit::{Conductor, ConductorError};
-use orchester_protokoll::{Outcome, Task};
+use orchester_laufzeit::{Conductor, ConductorError, SessionRecord, SessionStore};
+use orchester_protokoll::{Outcome, RunResult, Task};
 use orchester_verzeichnis::Registry;
 
 use args::{Cli, Command};
@@ -67,6 +67,16 @@ async fn run(cli: Cli) -> Result<ExitCode, CliError> {
                 ExitCode::SUCCESS
             });
         }
+        Some(Command::Sessions) => {
+            let records = session_store().load()?;
+            let mut out = io::stdout().lock();
+            if json {
+                render::render_sessions_json(&mut out, &records)?;
+            } else {
+                render::render_sessions(&mut out, &records)?;
+            }
+            return Ok(ExitCode::SUCCESS);
+        }
         Some(Command::Run(run)) => run.prompt,
         None => prompt,
     };
@@ -88,6 +98,7 @@ async fn run(cli: Cli) -> Result<ExitCode, CliError> {
     if let Some(model) = model {
         task = task.with_model(model);
     }
+    let record_task = task.clone();
 
     let conductor = Conductor::new(registry);
     let json_mode = json;
@@ -106,6 +117,10 @@ async fn run(cli: Cli) -> Result<ExitCode, CliError> {
         })
         .await?;
 
+    if let Err(e) = record_session(&agent, &record_task, &result) {
+        eprintln!("orchester: failed to record session metadata: {e}");
+    }
+
     // In rendered mode, print a dim usage/outcome footer.
     if !json_mode {
         let mut err = io::stderr().lock();
@@ -120,6 +135,30 @@ async fn run(cli: Cli) -> Result<ExitCode, CliError> {
         Outcome::Success => ExitCode::SUCCESS,
         Outcome::Failed | Outcome::Cancelled => ExitCode::FAILURE,
     })
+}
+
+fn record_session(agent: &str, task: &Task, result: &RunResult) -> io::Result<()> {
+    session_store().append(&SessionRecord::new(agent, task, result))
+}
+
+fn session_store() -> SessionStore {
+    SessionStore::new(orchester_home().join("sessions.jsonl"))
+}
+
+fn orchester_home() -> PathBuf {
+    if let Some(path) = std::env::var_os("ORCHESTER_HOME") {
+        return PathBuf::from(path);
+    }
+    if let Some(path) = std::env::var_os("LOCALAPPDATA") {
+        return PathBuf::from(path).join("Orchester");
+    }
+    if let Some(path) = std::env::var_os("USERPROFILE") {
+        return PathBuf::from(path).join(".orchester");
+    }
+    if let Some(path) = std::env::var_os("HOME") {
+        return PathBuf::from(path).join(".orchester");
+    }
+    PathBuf::from(".orchester")
 }
 
 /// Resolve the prompt argument: `-` (or absent with piped stdin) reads stdin.

@@ -11,6 +11,8 @@ orchester-protokoll = { workspace = true }
 orchester-vertrag = { workspace = true }
 orchester-verzeichnis = { workspace = true }
 futures = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
 thiserror = { workspace = true }
 
 [dev-dependencies]

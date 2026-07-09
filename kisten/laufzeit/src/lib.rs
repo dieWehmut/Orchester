@@ -3,6 +3,8 @@
 
 mod conductor;
 mod session;
+mod store;
 
 pub use conductor::{Conductor, ConductorError};
 pub use session::Session;
+pub use store::{SessionRecord, SessionStore};

@@ -8,6 +8,7 @@
 
 use std::io::Write;
 
+use orchester_laufzeit::SessionRecord;
 use orchester_protokoll::{Capability, ChangeKind, Event, TaskKind, ToolStatus};
 use orchester_vertrag::{AdapterAvailability, AvailabilityStatus};
 
@@ -128,6 +129,38 @@ pub fn render_doctor(out: &mut impl Write, checks: &[AdapterAvailability]) -> st
     Ok(())
 }
 
+/// Render recorded sessions newest-first for humans.
+pub fn render_sessions(out: &mut impl Write, records: &[SessionRecord]) -> std::io::Result<()> {
+    if records.is_empty() {
+        return writeln!(out, "{DIM}no sessions recorded{RESET}");
+    }
+
+    for record in records.iter().rev() {
+        let session_id = record.session_id.as_deref().unwrap_or("-");
+        writeln!(
+            out,
+            "{}\t{}\t{}\t{}",
+            outcome_word(record.outcome),
+            record.agent,
+            session_id,
+            compact_prompt(&record.prompt)
+        )?;
+    }
+    Ok(())
+}
+
+/// Render recorded sessions as JSONL.
+pub fn render_sessions_json(
+    out: &mut impl Write,
+    records: &[SessionRecord],
+) -> std::io::Result<()> {
+    for record in records {
+        let line = serde_json::to_string(record).expect("SessionRecord serializes");
+        writeln!(out, "{line}")?;
+    }
+    Ok(())
+}
+
 fn status_word(s: ToolStatus) -> &'static str {
     match s {
         ToolStatus::InProgress => "in_progress",
@@ -144,6 +177,24 @@ fn kind_word(k: &TaskKind) -> String {
         TaskKind::Browser => "browser".into(),
         TaskKind::Custom(s) => s.clone(),
     }
+}
+
+fn outcome_word(outcome: orchester_protokoll::Outcome) -> &'static str {
+    match outcome {
+        orchester_protokoll::Outcome::Success => "success",
+        orchester_protokoll::Outcome::Failed => "failed",
+        orchester_protokoll::Outcome::Cancelled => "cancelled",
+    }
+}
+
+fn compact_prompt(prompt: &str) -> String {
+    let first_line = prompt.lines().next().unwrap_or("").trim();
+    let mut chars = first_line.chars();
+    let mut out: String = chars.by_ref().take(77).collect();
+    if chars.next().is_some() {
+        out.push_str("...");
+    }
+    out
 }
 
 #[cfg(test)]
@@ -229,5 +280,49 @@ mod tests {
         assert!(out.contains("mock"));
         assert!(out.contains("missing"));
         assert!(out.contains("ghost"));
+    }
+
+    #[test]
+    fn sessions_show_newest_first() {
+        let records = vec![
+            session_record("first", "sid-1"),
+            session_record("second", "sid-2"),
+        ];
+        let mut buf = Vec::new();
+        render_sessions(&mut buf, &records).unwrap();
+        let out = String::from_utf8(buf).unwrap();
+        let first = out.find("second").unwrap();
+        let second = out.find("first").unwrap();
+
+        assert!(first < second);
+        assert!(out.contains("success"));
+        assert!(out.contains("sid-2"));
+    }
+
+    #[test]
+    fn sessions_json_is_valid_jsonl() {
+        let records = vec![session_record("json prompt", "sid-json")];
+        let mut buf = Vec::new();
+        render_sessions_json(&mut buf, &records).unwrap();
+        let out = String::from_utf8(buf).unwrap();
+        let value: serde_json::Value = serde_json::from_str(out.trim()).unwrap();
+
+        assert_eq!(value["agent"], "mock");
+        assert_eq!(value["session_id"], "sid-json");
+        assert_eq!(value["prompt"], "json prompt");
+    }
+
+    fn session_record(prompt: &str, session_id: &str) -> SessionRecord {
+        SessionRecord {
+            recorded_at_unix: 1,
+            agent: "mock".into(),
+            session_id: Some(session_id.into()),
+            prompt: prompt.into(),
+            cwd: ".".into(),
+            model: None,
+            outcome: orchester_protokoll::Outcome::Success,
+            final_text: "done".into(),
+            usage: Default::default(),
+        }
     }
 }

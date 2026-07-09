@@ -1,7 +1,7 @@
 //! Command-line surface for Orchester.
 //!
-//! The v0.1 grammar is intentionally tiny: `run`, `list`, `doctor`, plus a
-//! default "run" mode. Multi-agent flags (`--agents`, `--parallel`, `--auto`)
+//! The v0.1 grammar is intentionally tiny: `run`, `list`, `doctor`, `sessions`,
+//! plus a default "run" mode. Multi-agent flags (`--agents`, `--parallel`, `--auto`)
 //! are declared but stubbed: they lock the UX now and print "not yet
 //! implemented" so scripts written against them fail loudly rather than
 //! silently doing the wrong thing.
@@ -56,6 +56,9 @@ pub enum Command {
 
     /// Check local adapter availability.
     Doctor(DoctorArgs),
+
+    /// List locally recorded session metadata.
+    Sessions,
 }
 
 #[derive(Debug, Args)]
