@@ -156,8 +156,12 @@ function Ensure-UserPath([string]$PathItem) {
         $parts = $userPath -split ';' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
     }
 
-    if ($parts -contains $PathItem) {
-        return
+    $normalizedPathItem = $PathItem.Trim().TrimEnd('\').ToLowerInvariant()
+    foreach ($part in $parts) {
+        if ($part.Trim().TrimEnd('\').ToLowerInvariant() -eq $normalizedPathItem) {
+            Write-Host "Windows user PATH already includes $PathItem"
+            return
+        }
     }
 
     $newPath = if ([string]::IsNullOrWhiteSpace($userPath)) {
@@ -166,6 +170,106 @@ function Ensure-UserPath([string]$PathItem) {
         "$userPath;$PathItem"
     }
     [Environment]::SetEnvironmentVariable("Path", $newPath, "User")
+    Write-Host "Added $PathItem to Windows user PATH"
+}
+
+function Test-PathInProcessPath([string]$PathItem) {
+    $normalizedPathItem = $PathItem.Trim().TrimEnd('\').ToLowerInvariant()
+    foreach ($part in ($env:Path -split ';')) {
+        if ([string]::IsNullOrWhiteSpace($part)) {
+            continue
+        }
+        try {
+            $normalizedPart = [System.IO.Path]::GetFullPath($part).TrimEnd('\').ToLowerInvariant()
+        } catch {
+            $normalizedPart = $part.Trim().TrimEnd('\').ToLowerInvariant()
+        }
+        if ($normalizedPart -eq $normalizedPathItem) {
+            return $true
+        }
+    }
+    return $false
+}
+
+function Test-WritableDirectory([string]$PathItem) {
+    try {
+        if (-not (Test-Path -LiteralPath $PathItem)) {
+            New-Item -ItemType Directory -Force -Path $PathItem | Out-Null
+        }
+        $probe = Join-Path $PathItem ".orchester-write-test-$PID"
+        Set-Content -LiteralPath $probe -Value "" -Encoding ASCII
+        Remove-Item -LiteralPath $probe -Force
+        return $true
+    } catch {
+        return $false
+    }
+}
+
+function Ensure-WindowsCommandShim([string]$Target) {
+    $shimDir = $null
+
+    if ($env:ORCHESTER_WINDOWS_SHIM_DIR) {
+        $shimDir = $env:ORCHESTER_WINDOWS_SHIM_DIR
+    } else {
+        $candidates = @()
+        $localAppData = $env:LOCALAPPDATA
+        if ([string]::IsNullOrWhiteSpace($localAppData) -and $env:USERPROFILE) {
+            $localAppData = Join-Path $env:USERPROFILE "AppData\Local"
+        }
+        if ($localAppData) {
+            $windowsApps = Join-Path $localAppData "Microsoft\WindowsApps"
+            if (Test-WritableDirectory $windowsApps) {
+                $shimDir = $windowsApps
+            }
+        }
+        if ([string]::IsNullOrWhiteSpace($shimDir)) {
+            if ($env:USERPROFILE) {
+                $candidates += Join-Path $env:USERPROFILE "bin"
+            }
+            foreach ($part in ($env:Path -split ';')) {
+                if ([string]::IsNullOrWhiteSpace($part) -or [string]::IsNullOrWhiteSpace($env:USERPROFILE)) {
+                    continue
+                }
+                try {
+                    $normalizedPart = [System.IO.Path]::GetFullPath($part).TrimEnd('\').ToLowerInvariant()
+                    $normalizedProfile = [System.IO.Path]::GetFullPath($env:USERPROFILE).TrimEnd('\').ToLowerInvariant()
+                } catch {
+                    continue
+                }
+                if ($normalizedPart.StartsWith($normalizedProfile)) {
+                    $candidates += $part
+                }
+            }
+
+            $seen = @{}
+            foreach ($candidate in $candidates) {
+                if ([string]::IsNullOrWhiteSpace($candidate)) {
+                    continue
+                }
+                try {
+                    $key = [System.IO.Path]::GetFullPath($candidate).TrimEnd('\').ToLowerInvariant()
+                } catch {
+                    $key = $candidate.Trim().TrimEnd('\').ToLowerInvariant()
+                }
+                if ($seen.ContainsKey($key)) {
+                    continue
+                }
+                $seen[$key] = $true
+                if ((Test-Path -LiteralPath $candidate) -and (Test-PathInProcessPath $candidate) -and (Test-WritableDirectory $candidate)) {
+                    $shimDir = $candidate
+                    break
+                }
+            }
+        }
+    }
+
+    if ([string]::IsNullOrWhiteSpace($shimDir) -or -not (Test-WritableDirectory $shimDir)) {
+        return $null
+    }
+
+    $shim = Join-Path $shimDir "orchester.cmd"
+    Set-Content -LiteralPath $shim -Value @("@echo off", "`"$Target`" %*") -Encoding ASCII
+    return $shim
 }
 
 # This repo is currently configured for x86_64-pc-windows-gnu on this Windows
@@ -206,6 +310,12 @@ if (-not (Test-Path -LiteralPath $Installed)) {
 if (-not $NoPathUpdate) {
     Ensure-UserPath $BinDir
     Prepend-PathIfExists $BinDir
+    $shim = Ensure-WindowsCommandShim $Installed
+    if ($shim) {
+        Write-Host "Added Windows command shim: $shim"
+    } else {
+        Write-Warning "Open a new Windows terminal before running 'orchester' if this terminal cannot find it."
+    }
 }
 
 Write-Host ""
@@ -218,4 +328,8 @@ if ($LASTEXITCODE -ne 0) {
     throw "orchester --version failed with exit code $LASTEXITCODE"
 }
 Write-Host ""
-Write-Host "You can now run 'orchester' from any new terminal."
+if ($NoPathUpdate) {
+    Write-Host "PATH update was skipped. Run '$Installed' directly or add '$BinDir' to PATH."
+} else {
+    Write-Host "You can now run 'orchester' from any new terminal."
+}

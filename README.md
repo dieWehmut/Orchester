@@ -27,6 +27,14 @@ Rust/Cargo, and a C linker) and tries to install missing pieces automatically
 using the host package manager or rustup. It then installs the `orchester`
 binary into `~/.cargo/bin`.
 
+On Windows, the `curl | sh` installer also writes the install bin directory
+(`%USERPROFILE%\.cargo\bin` by default) to the Windows user `PATH`. It also
+creates an `orchester.cmd` shim in
+`%LOCALAPPDATA%\Microsoft\WindowsApps` when that directory is writable; Windows
+normally keeps that directory on `PATH`, so the same `cmd.exe` window can run
+`orchester` immediately. If that shim directory is not available, open a new
+terminal after installation.
+
 On Windows PowerShell from a cloned checkout:
 
 ```powershell

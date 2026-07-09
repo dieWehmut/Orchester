@@ -58,6 +58,22 @@ have_cmd() {
   command -v "$1" >/dev/null 2>&1
 }
 
+is_windows_shell() {
+  case "$(uname -s 2>/dev/null || echo unknown)" in
+    MINGW*|MSYS*|CYGWIN*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+to_windows_path() {
+  path="$1"
+  if have_cmd cygpath; then
+    cygpath -aw "$path"
+  else
+    printf '%s\n' "$path"
+  fi
+}
+
 run_as_root() {
   if [ "$(id -u 2>/dev/null || echo 1)" = "0" ]; then
     "$@"
@@ -215,6 +231,164 @@ configure_windows_gnu_linker() {
   esac
 }
 
+ensure_windows_user_path() {
+  bin_dir_win="$(to_windows_path "$1")" || return 1
+  have_cmd powershell.exe || return 1
+
+  result="$(
+    WIN_PATH_ITEM="$bin_dir_win" powershell.exe -NoProfile -ExecutionPolicy Bypass -Command '
+$ErrorActionPreference = "Stop"
+$item = $env:WIN_PATH_ITEM
+function Normalize-PathText([string]$Path) {
+    if ([string]::IsNullOrWhiteSpace($Path)) { return "" }
+    return $Path.Trim().TrimEnd("\").ToLowerInvariant()
+}
+$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+$parts = @()
+if (-not [string]::IsNullOrWhiteSpace($userPath)) {
+    $parts = $userPath -split ";" | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+}
+$exists = $false
+foreach ($part in $parts) {
+    if ((Normalize-PathText $part) -eq (Normalize-PathText $item)) {
+        $exists = $true
+        break
+    }
+}
+if ($exists) {
+    Write-Output "exists"
+    exit 0
+}
+$newPath = if ([string]::IsNullOrWhiteSpace($userPath)) { $item } else { "$userPath;$item" }
+[Environment]::SetEnvironmentVariable("Path", $newPath, "User")
+Write-Output "added"
+' 2>/dev/null | tr -d '\r'
+  )" || return 1
+
+  case "$result" in
+    added)
+      ok "Added $bin_dir_win to Windows user PATH"
+      ;;
+    exists)
+      ok "Windows user PATH already includes $bin_dir_win"
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+ensure_windows_command_shim() {
+  target_win="$(to_windows_path "$1")" || return 1
+  shim_dir_win=""
+  if [ -n "${ORCHESTER_WINDOWS_SHIM_DIR:-}" ]; then
+    shim_dir_win="$(to_windows_path "$ORCHESTER_WINDOWS_SHIM_DIR")" || return 1
+  fi
+  have_cmd powershell.exe || return 1
+
+  result="$(
+    WIN_ORCHESTER_TARGET="$target_win" WIN_ORCHESTER_SHIM_DIR="$shim_dir_win" powershell.exe -NoProfile -ExecutionPolicy Bypass -Command '
+$ErrorActionPreference = "Stop"
+$target = $env:WIN_ORCHESTER_TARGET
+$requestedDir = $env:WIN_ORCHESTER_SHIM_DIR
+
+function Normalize-PathText([string]$Path) {
+    if ([string]::IsNullOrWhiteSpace($Path)) { return "" }
+    try {
+        return ([System.IO.Path]::GetFullPath($Path)).TrimEnd("\").ToLowerInvariant()
+    } catch {
+        return $Path.Trim().TrimEnd("\").ToLowerInvariant()
+    }
+}
+
+function Test-PathInProcessPath([string]$Dir) {
+    $needle = Normalize-PathText $Dir
+    $processPath = [Environment]::GetEnvironmentVariable("Path", "Process")
+    foreach ($part in ($processPath -split ";")) {
+        if ((Normalize-PathText $part) -eq $needle) {
+            return $true
+        }
+    }
+    return $false
+}
+
+function Test-WritableDirectory([string]$Dir) {
+    try {
+        if (-not (Test-Path -LiteralPath $Dir)) {
+            New-Item -ItemType Directory -Force -Path $Dir | Out-Null
+        }
+        $probe = Join-Path $Dir ".orchester-write-test-$PID"
+        Set-Content -LiteralPath $probe -Value "" -Encoding ASCII
+        Remove-Item -LiteralPath $probe -Force
+        return $true
+    } catch {
+        return $false
+    }
+}
+
+$shimDir = $null
+if (-not [string]::IsNullOrWhiteSpace($requestedDir)) {
+    $shimDir = $requestedDir
+} else {
+    $candidates = @()
+    $localAppData = $env:LOCALAPPDATA
+    if ([string]::IsNullOrWhiteSpace($localAppData) -and -not [string]::IsNullOrWhiteSpace($env:USERPROFILE)) {
+        $localAppData = Join-Path $env:USERPROFILE "AppData\Local"
+    }
+    if (-not [string]::IsNullOrWhiteSpace($localAppData)) {
+        $windowsApps = Join-Path $localAppData "Microsoft\WindowsApps"
+        if (Test-WritableDirectory $windowsApps) {
+            $shimDir = $windowsApps
+        }
+    }
+    if ([string]::IsNullOrWhiteSpace($shimDir)) {
+        if (-not [string]::IsNullOrWhiteSpace($env:USERPROFILE)) {
+            $candidates += Join-Path $env:USERPROFILE "bin"
+        }
+        $processPath = [Environment]::GetEnvironmentVariable("Path", "Process")
+        foreach ($part in ($processPath -split ";")) {
+            if ([string]::IsNullOrWhiteSpace($part) -or [string]::IsNullOrWhiteSpace($env:USERPROFILE)) {
+                continue
+            }
+            if ((Normalize-PathText $part).StartsWith((Normalize-PathText $env:USERPROFILE))) {
+                $candidates += $part
+            }
+        }
+
+        $seen = @{}
+        foreach ($candidate in $candidates) {
+            $key = Normalize-PathText $candidate
+            if ([string]::IsNullOrWhiteSpace($key) -or $seen.ContainsKey($key)) {
+                continue
+            }
+            $seen[$key] = $true
+            if ((Test-Path -LiteralPath $candidate) -and (Test-PathInProcessPath $candidate) -and (Test-WritableDirectory $candidate)) {
+                $shimDir = $candidate
+                break
+            }
+        }
+    }
+}
+
+if ([string]::IsNullOrWhiteSpace($shimDir) -or -not (Test-WritableDirectory $shimDir)) {
+    Write-Output "SKIPPED"
+    exit 0
+}
+
+$shim = Join-Path $shimDir "orchester.cmd"
+$commandLine = """" + $target + """ %*"
+Set-Content -LiteralPath $shim -Value @("@echo off", $commandLine) -Encoding ASCII
+Write-Output $shim
+' 2>/dev/null | tr -d '\r'
+  )" || return 1
+
+  if [ "$result" = "SKIPPED" ] || [ -z "$result" ]; then
+    return 1
+  fi
+
+  ok "Added Windows command shim: $result"
+}
+
 usage() {
   cat <<EOF
 Orchester installer
@@ -235,6 +409,7 @@ Environment:
   ORCHESTER_REPO
   ORCHESTER_REF
   ORCHESTER_INSTALL_ROOT
+  ORCHESTER_WINDOWS_SHIM_DIR
   ORCHESTER_NO_PATH_UPDATE=true
   ORCHESTER_KEEP_TMP=true
 EOF
@@ -370,6 +545,15 @@ append_path_line() {
 }
 
 if [ "$NO_PATH_UPDATE" != "true" ]; then
+  if is_windows_shell; then
+    ensure_windows_user_path "$BIN_DIR" || warn "Could not update Windows user PATH automatically; add $(to_windows_path "$BIN_DIR") manually."
+    if ensure_windows_command_shim "$BIN"; then
+      :
+    else
+      warn "Open a new Windows terminal before running 'orchester' if this terminal cannot find it."
+    fi
+  fi
+
   case ":$PATH:" in
     *":$BIN_DIR:"*) ;;
     *)
@@ -392,4 +576,8 @@ fi
 ok "Installed $BIN"
 info "Version check:"
 "$BIN" --version
-ok "Done. Try: orchester doctor"
+if [ "$NO_PATH_UPDATE" = "true" ]; then
+  ok "Done. Try: $BIN doctor"
+else
+  ok "Done. Try: orchester doctor"
+fi
