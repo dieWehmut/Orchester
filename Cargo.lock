@@ -187,6 +187,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "orchester-laufzeit"
+version = "0.1.0"
+dependencies = [
+ "futures",
+ "orchester-protokoll",
+ "orchester-vertrag",
+ "orchester-verzeichnis",
+ "thiserror",
+ "tokio",
+]
+
+[[package]]
 name = "orchester-protokoll"
 version = "0.1.0"
 dependencies = [

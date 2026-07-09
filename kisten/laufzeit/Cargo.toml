@@ -1,0 +1,17 @@
+[package]
+name = "orchester-laufzeit"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+orchester-protokoll = { workspace = true }
+orchester-vertrag = { workspace = true }
+orchester-verzeichnis = { workspace = true }
+futures = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+tokio = { workspace = true }

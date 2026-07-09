@@ -5,6 +5,7 @@ members = [
     "kisten/vertrag",
     "kisten/adapter",
     "kisten/verzeichnis",
+    "kisten/laufzeit",
     # added incrementally as each crate is built:
     # "kisten/adapter",
     # "kisten/verzeichnis",
