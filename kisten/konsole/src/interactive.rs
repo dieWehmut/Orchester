@@ -16,7 +16,35 @@ const GREEN: &str = "\x1b[32m";
 const YELLOW: &str = "\x1b[33m";
 const CYAN: &str = "\x1b[36m";
 const ORANGE: &str = "\x1b[38;5;208m";
+const PINK: &str = "\x1b[38;5;218m";
+const LAVENDER: &str = "\x1b[38;5;147m";
+const INK: &str = "\x1b[38;5;245m";
 const RESET: &str = "\x1b[0m";
+
+// Generated from D:\picture\dieWehmut-2.jpg as terminal character art so the
+// installed binary can render the portrait without reading the image file.
+const AVATAR_WIDTH: usize = 34;
+const AVATAR_LINES: &[&str] = &[
+    "%%=   .  :::-::::.:.::. .:. -#****",
+    "%%*  .. ...::.-::::::::..:. :*#***",
+    "%%%: .. ..:::::-::::-::::. . .+###",
+    "%%%+   ..-::----=------::.    :+#%",
+    "%%%#. ..:-:--======--=--.:..  :++#",
+    "%%%*. ..----=-====+==-=-:.:.. .*#*",
+    "%%#+ ..:---==-=++++++===-::.. -=*#",
+    "@%#- .::-===-+-=+++++==+-::....*-*",
+    "%##...:-==+==+=-=++=*+==-::..: .-",
+    "##+. .--=++=**+===+==++==::..:. ..",
+    "*#-. :--++==%#**#***+====-...::",
+    "#+   ---++=*@#%**%###+::--:.:::..",
+    "+.=..-=-++=#@##%**@%-..=:--=:::...",
+    ":+* :-=-++=%%%#%@##%+=++==*#-.:..:",
+    "*%=.--=-+++=::=#%@%%%****=*#::.. +",
+    "*%:.::==++:+-==%%%%%%%%##=+=:-: .+",
+    "#*.:.:==++=#*+#%%%%%%%%%*--.--+..-",
+    "%-.-::=:=+*%##%%%%%%%%%%+--::-+  +",
+    "* :#-:=:-++%%%%%%%%@%%%#+:=-::. .*",
+];
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AgentChoice {
@@ -460,38 +488,14 @@ fn render_home<W: Write>(
     let selectable = selectable_agents(choices);
     let selected_agent = selectable.get(selected);
     let (cols, _) = terminal::size().unwrap_or((100, 30));
-    let width = cols.clamp(76, 132) as usize;
+    let width = (cols as usize).clamp(50, 132);
 
     writeln!(
         out,
         "{ORANGE}{BOLD}Orchester{RESET} {DIM}v{}  local agent conductor{RESET}",
         env!("CARGO_PKG_VERSION")
     )?;
-    writeln!(out, "{ORANGE}+{}+{RESET}", "-".repeat(width - 2))?;
-    render_panel_row(
-        out,
-        width,
-        "Welcome back",
-        "Tips",
-        Some("Enter launches the selected native agent CLI"),
-    )?;
-    render_panel_row(
-        out,
-        width,
-        &format!("cwd {}", std::env::current_dir()?.display()),
-        "Commands",
-        Some("/agent switch  /list  /help  /quit"),
-    )?;
-    if let Some(agent) = selected_agent {
-        render_panel_row(
-            out,
-            width,
-            &format!("selected {} ({})", agent.name, launch_label(agent)),
-            "Mode",
-            Some("Up/Down choose, / opens command palette"),
-        )?;
-    }
-    writeln!(out, "{ORANGE}+{}+{RESET}", "-".repeat(width - 2))?;
+    render_home_panel(out, width, selected_agent)?;
     writeln!(out)?;
 
     writeln!(out, "{BOLD}Choose agent{RESET}")?;
@@ -539,25 +543,76 @@ fn render_home<W: Write>(
     out.flush()
 }
 
-fn render_panel_row<W: Write>(
+fn render_home_panel<W: Write>(
     out: &mut W,
     width: usize,
-    left_title: &str,
-    right_title: &str,
-    right_body: Option<&str>,
+    selected_agent: Option<&AgentChoice>,
 ) -> io::Result<()> {
-    let left_width = width.saturating_sub(5) / 2;
-    let right_width = width.saturating_sub(left_width + 5);
-    let left = truncate(left_title, left_width);
-    let right = match right_body {
-        Some(body) => format!("{right_title}: {body}"),
-        None => right_title.to_string(),
-    };
-    let right = truncate(&right, right_width);
-    writeln!(
-        out,
-        "{ORANGE}|{RESET} {left:<left_width$} {ORANGE}|{RESET} {right:<right_width$} {ORANGE}|{RESET}"
-    )
+    let content_width = width.saturating_sub(7);
+    let left_width = AVATAR_WIDTH
+        .min(content_width / 2 + 4)
+        .min(content_width.saturating_sub(18))
+        .max(12);
+    let right_width = content_width.saturating_sub(left_width);
+    let selected = selected_agent
+        .map(|agent| format!("{} ({})", agent.name, launch_label(agent)))
+        .unwrap_or_else(|| "none".into());
+    let cwd = std::env::current_dir()
+        .map(|cwd| cwd.display().to_string())
+        .unwrap_or_else(|_| ".".into());
+    let right_rows = [
+        "Welcome back".to_string(),
+        String::new(),
+        "Tips for getting started".to_string(),
+        "  Enter launches the highlighted CLI".to_string(),
+        "  / opens matching commands".to_string(),
+        String::new(),
+        "Agent choice".to_string(),
+        "  Choose on every Orchester launch".to_string(),
+        format!("  Selected: {selected}"),
+        String::new(),
+        "Commands".to_string(),
+        "  /agent  /list  /help  /quit".to_string(),
+        String::new(),
+        format!("cwd {cwd}"),
+    ];
+
+    writeln!(out, "{ORANGE}+{}+{RESET}", "-".repeat(width - 2))?;
+    let rows = AVATAR_LINES.len().max(right_rows.len());
+    for row in 0..rows {
+        let avatar = AVATAR_LINES.get(row).copied().unwrap_or("");
+        let avatar = truncate(avatar, left_width);
+        let avatar_pad = " ".repeat(left_width.saturating_sub(avatar.chars().count()));
+        let right = right_rows.get(row).map(String::as_str).unwrap_or("");
+        let right = truncate(right, right_width);
+
+        write!(out, "{ORANGE}|{RESET} ")?;
+        write_avatar_line(out, &avatar)?;
+        write!(out, "{avatar_pad} {ORANGE}|{RESET} ")?;
+        write!(out, "{right:<right_width$}")?;
+        writeln!(out, " {ORANGE}|{RESET}")?;
+    }
+    writeln!(out, "{ORANGE}+{}+{RESET}", "-".repeat(width - 2))
+}
+
+fn write_avatar_line<W: Write>(out: &mut W, line: &str) -> io::Result<()> {
+    for ch in line.chars() {
+        if ch == ' ' {
+            write!(out, " ")?;
+        } else {
+            write!(out, "{}{ch}{RESET}", avatar_color(ch))?;
+        }
+    }
+    Ok(())
+}
+
+fn avatar_color(ch: char) -> &'static str {
+    match ch {
+        '@' | '%' | '#' => INK,
+        '*' | '+' | '=' => PINK,
+        '-' | ':' => LAVENDER,
+        _ => DIM,
+    }
 }
 
 fn render_command_palette<W: Write>(
@@ -916,6 +971,45 @@ mod tests {
             read_prompt_action(&mut input, &mut out, &agent, Some("sid"), &choices).unwrap();
 
         assert_eq!(action, PromptAction::Run("write tests".into()));
+    }
+
+    #[test]
+    fn home_renders_avatar_and_explicit_choice_copy() {
+        let choices = vec![choice(
+            "codex",
+            AvailabilityStatus::Available,
+            Some("codex"),
+        )];
+        let mut out = Vec::new();
+
+        render_home(&mut out, &choices, 0, "", 0, "").unwrap();
+
+        let rendered = String::from_utf8_lossy(&out);
+        let plain = strip_ansi(&rendered);
+        assert!(plain.contains("%%="), "home output:\n{rendered}");
+        assert!(
+            rendered.contains("Choose on every Orchester launch"),
+            "home output:\n{rendered}"
+        );
+    }
+
+    fn strip_ansi(input: &str) -> String {
+        let mut plain = String::new();
+        let mut chars = input.chars();
+        while let Some(ch) = chars.next() {
+            if ch == '\x1b' {
+                if matches!(chars.next(), Some('[')) {
+                    for end in chars.by_ref() {
+                        if ('@'..='~').contains(&end) {
+                            break;
+                        }
+                    }
+                }
+            } else {
+                plain.push(ch);
+            }
+        }
+        plain
     }
 
     fn choice(name: &str, status: AvailabilityStatus, command: Option<&str>) -> AgentChoice {
