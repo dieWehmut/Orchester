@@ -35,3 +35,4 @@ async-trait = "0.1"
 thiserror = "2"
 clap = { version = "4", features = ["derive"] }
 tracing = "0.1"
+crossterm = "0.29"

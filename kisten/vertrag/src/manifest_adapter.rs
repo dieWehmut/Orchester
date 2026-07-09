@@ -87,9 +87,15 @@ impl AgentAdapter for ManifestAdapter {
         }
     }
 
+    fn native_command(&self) -> Option<&str> {
+        Some(&self.manifest.command)
+    }
+
     async fn run(&self, task: orchester_protokoll::Task) -> Result<EventStream, AdapterError> {
         let args = self.build_args(&task.prompt, task.model.as_deref(), task.resume.as_deref());
-        let mut cmd = Command::new(&self.manifest.command);
+        let program = find_executable(&self.manifest.command)
+            .unwrap_or_else(|| PathBuf::from(&self.manifest.command));
+        let mut cmd = native_process_command(&program);
         cmd.args(&args)
             .current_dir(&task.cwd)
             .stdout(Stdio::piped())
@@ -134,6 +140,22 @@ impl AgentAdapter for ManifestAdapter {
     }
 }
 
+#[cfg(windows)]
+fn native_process_command(program: &Path) -> Command {
+    if is_windows_shell_script(program) {
+        let mut command = Command::new("cmd.exe");
+        command.arg("/d").arg("/c").arg(program);
+        command
+    } else {
+        Command::new(program)
+    }
+}
+
+#[cfg(not(windows))]
+fn native_process_command(program: &Path) -> Command {
+    Command::new(program)
+}
+
 /// Map a `kinds` string to a [`TaskKind`].
 fn parse_kind(k: &str) -> TaskKind {
     match k {
@@ -170,7 +192,7 @@ fn executable_names(command: &str) -> Vec<OsString> {
         return vec![OsString::from(command)];
     }
 
-    let mut names = vec![OsString::from(command)];
+    let mut names = Vec::new();
     if let Some(pathext) = env::var_os("PATHEXT") {
         for ext in env::split_paths(&pathext) {
             if let Some(ext) = ext.to_str() {
@@ -178,12 +200,21 @@ fn executable_names(command: &str) -> Vec<OsString> {
             }
         }
     }
+    names.push(OsString::from(command));
     names
 }
 
 #[cfg(not(windows))]
 fn executable_names(command: &str) -> Vec<OsString> {
     vec![OsString::from(command)]
+}
+
+#[cfg(windows)]
+fn is_windows_shell_script(path: &Path) -> bool {
+    path.extension()
+        .and_then(|ext| ext.to_str())
+        .map(|ext| ext.eq_ignore_ascii_case("cmd") || ext.eq_ignore_ascii_case("bat"))
+        .unwrap_or(false)
 }
 
 /// Turn a single stdout line into zero or more normalized events.

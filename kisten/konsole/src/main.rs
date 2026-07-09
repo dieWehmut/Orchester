@@ -10,9 +10,12 @@ mod interactive;
 mod render;
 
 use std::collections::HashMap;
+use std::env;
+use std::ffi::OsString;
 use std::io::{self, IsTerminal, Read, Write};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::ExitCode;
+use std::process::{Command as ProcessCommand, Stdio};
 
 use clap::Parser;
 
@@ -141,6 +144,32 @@ async fn run(cli: Cli) -> Result<ExitCode, CliError> {
 }
 
 async fn run_interactive(registry: Registry) -> Result<ExitCode, CliError> {
+    if io::stdin().is_terminal() && io::stdout().is_terminal() {
+        return run_terminal_interactive(registry).await;
+    }
+    run_line_interactive(registry).await
+}
+
+async fn run_terminal_interactive(registry: Registry) -> Result<ExitCode, CliError> {
+    let mut default_agent = default_interactive_agent(&interactive::build_agent_choices(&registry));
+
+    loop {
+        let choices = interactive::build_agent_choices(&registry);
+        let Some(agent) = interactive::select_agent_tui(&choices, default_agent.as_deref())? else {
+            return Ok(ExitCode::SUCCESS);
+        };
+        default_agent = Some(agent.name.clone());
+
+        if agent.native_command.is_some() {
+            launch_native_agent(&agent)?;
+            continue;
+        }
+
+        run_adapter_prompt_shell(&registry, agent).await?;
+    }
+}
+
+async fn run_line_interactive(registry: Registry) -> Result<ExitCode, CliError> {
     let mut choices = interactive::build_agent_choices(&registry);
     let mut default_agent = default_interactive_agent(&choices);
     let stdin = io::stdin();
@@ -148,7 +177,7 @@ async fn run_interactive(registry: Registry) -> Result<ExitCode, CliError> {
 
     let Some(mut agent) = ({
         let mut out = io::stdout().lock();
-        interactive::select_agent(&mut input, &mut out, &choices, default_agent.as_deref())?
+        interactive::select_agent_line(&mut input, &mut out, &choices, default_agent.as_deref())?
     }) else {
         return Ok(ExitCode::SUCCESS);
     };
@@ -164,7 +193,7 @@ async fn run_interactive(registry: Registry) -> Result<ExitCode, CliError> {
 
         let action = {
             let mut out = io::stdout().lock();
-            interactive::read_prompt_action(&mut input, &mut out, &agent, resume)?
+            interactive::read_prompt_action(&mut input, &mut out, &agent, resume, &choices)?
         };
 
         match action {
@@ -208,7 +237,7 @@ async fn run_interactive(registry: Registry) -> Result<ExitCode, CliError> {
                 default_agent = Some(agent.name.clone());
                 let maybe_agent = {
                     let mut out = io::stdout().lock();
-                    interactive::select_agent(
+                    interactive::select_agent_line(
                         &mut input,
                         &mut out,
                         &choices,
@@ -217,6 +246,20 @@ async fn run_interactive(registry: Registry) -> Result<ExitCode, CliError> {
                 };
                 if let Some(next_agent) = maybe_agent {
                     agent = next_agent;
+                }
+            }
+            PromptAction::LaunchAgent(name) => {
+                choices = interactive::build_agent_choices(conductor.registry());
+                if let Some(next_agent) = choices.iter().find(|choice| choice.name == name) {
+                    agent = next_agent.clone();
+                    if agent.native_command.is_some()
+                        && io::stdin().is_terminal()
+                        && io::stdout().is_terminal()
+                    {
+                        launch_native_agent(&agent)?;
+                    }
+                } else {
+                    eprintln!("orchester: unknown agent `{name}`");
                 }
             }
             PromptAction::ListAgents => {
@@ -232,6 +275,182 @@ async fn run_interactive(registry: Registry) -> Result<ExitCode, CliError> {
             PromptAction::Empty => {}
         }
     }
+}
+
+async fn run_adapter_prompt_shell(
+    registry: &Registry,
+    mut agent: AgentChoice,
+) -> Result<(), CliError> {
+    let mut choices = interactive::build_agent_choices(registry);
+    let stdin = io::stdin();
+    let mut input = stdin.lock();
+    let conductor = Conductor::new(Registry::discover(MANIFEST_DIR));
+    let mut sessions: HashMap<String, String> = HashMap::new();
+
+    loop {
+        let resume = agent
+            .supports_resume
+            .then(|| sessions.get(&agent.name).map(String::as_str))
+            .flatten();
+        let action = {
+            let mut out = io::stdout().lock();
+            interactive::read_prompt_action(&mut input, &mut out, &agent, resume, &choices)?
+        };
+
+        match action {
+            PromptAction::Run(prompt) => {
+                let resume = resume.map(str::to_owned);
+                {
+                    let mut out = io::stdout().lock();
+                    interactive::render_run_header(&mut out, &agent, resume.as_deref())?;
+                }
+                let (record_task, result) =
+                    match drive_agent_run(&conductor, &agent.name, prompt, resume, None, false)
+                        .await
+                    {
+                        Ok(run) => run,
+                        Err(e) => {
+                            eprintln!("orchester: {e}");
+                            continue;
+                        }
+                    };
+                if let Err(e) = record_session(&agent.name, &record_task, &result) {
+                    eprintln!("orchester: failed to record session metadata: {e}");
+                }
+                if let Some(session_id) = result.session_id.clone() {
+                    sessions.insert(agent.name.clone(), session_id);
+                }
+                let mut out = io::stdout().lock();
+                interactive::render_run_footer(
+                    &mut out,
+                    result.outcome,
+                    result.usage.input_tokens,
+                    result.usage.output_tokens,
+                )?;
+            }
+            PromptAction::PickAgent => return Ok(()),
+            PromptAction::LaunchAgent(name) => {
+                choices = interactive::build_agent_choices(registry);
+                if let Some(next_agent) = choices.iter().find(|choice| choice.name == name) {
+                    agent = next_agent.clone();
+                    if agent.native_command.is_some() {
+                        return Ok(());
+                    }
+                }
+            }
+            PromptAction::ListAgents => {
+                choices = interactive::build_agent_choices(registry);
+                let mut out = io::stdout().lock();
+                interactive::render_agent_table(&mut out, &choices, Some(agent.name.as_str()))?;
+            }
+            PromptAction::Help => {
+                let mut out = io::stdout().lock();
+                interactive::render_help(&mut out)?;
+            }
+            PromptAction::Quit => return Ok(()),
+            PromptAction::Empty => {}
+        }
+    }
+}
+
+fn launch_native_agent(agent: &AgentChoice) -> Result<(), CliError> {
+    let Some(command) = agent.native_command.as_deref() else {
+        return Err(CliError::NativeAgentUnavailable(agent.name.clone()));
+    };
+    if !agent.is_available() {
+        return Err(CliError::NativeAgentUnavailable(agent.name.clone()));
+    }
+
+    let executable = resolve_native_command(command)
+        .ok_or_else(|| CliError::NativeAgentUnavailable(agent.name.clone()))?;
+
+    println!(
+        "\x1b[2mLaunching {} ({})...\x1b[0m",
+        agent.name,
+        executable.display()
+    );
+    let mut process = native_process_command(&executable);
+    let status = process
+        .current_dir(std::env::current_dir()?)
+        .stdin(Stdio::inherit())
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
+        .status()?;
+
+    if !status.success() {
+        eprintln!("orchester: {} exited with {}", agent.name, status);
+    }
+    Ok(())
+}
+
+#[cfg(windows)]
+fn native_process_command(executable: &Path) -> ProcessCommand {
+    if is_windows_shell_script(executable) {
+        let mut command = ProcessCommand::new("cmd.exe");
+        command.arg("/d").arg("/c").arg(executable);
+        command
+    } else {
+        ProcessCommand::new(executable)
+    }
+}
+
+#[cfg(not(windows))]
+fn native_process_command(executable: &Path) -> ProcessCommand {
+    ProcessCommand::new(executable)
+}
+
+fn resolve_native_command(command: &str) -> Option<PathBuf> {
+    let command_path = Path::new(command);
+    if command_path.components().count() > 1 || command_path.is_absolute() {
+        return command_path.is_file().then(|| command_path.to_path_buf());
+    }
+
+    let path = env::var_os("PATH")?;
+    let names = executable_names(command);
+    for dir in env::split_paths(&path) {
+        for name in &names {
+            let candidate = dir.join(name);
+            if candidate.is_file() {
+                return Some(candidate);
+            }
+        }
+    }
+    None
+}
+
+#[cfg(windows)]
+fn executable_names(command: &str) -> Vec<OsString> {
+    if Path::new(command).extension().is_some() {
+        return vec![OsString::from(command)];
+    }
+
+    let mut names = Vec::new();
+    if let Some(pathext) = env::var_os("PATHEXT") {
+        for ext in env::split_paths(&pathext) {
+            if let Some(ext) = ext.to_str() {
+                names.push(OsString::from(format!("{command}{ext}")));
+            }
+        }
+    } else {
+        for ext in [".COM", ".EXE", ".BAT", ".CMD"] {
+            names.push(OsString::from(format!("{command}{ext}")));
+        }
+    }
+    names.push(OsString::from(command));
+    names
+}
+
+#[cfg(not(windows))]
+fn executable_names(command: &str) -> Vec<OsString> {
+    vec![OsString::from(command)]
+}
+
+#[cfg(windows)]
+fn is_windows_shell_script(path: &Path) -> bool {
+    path.extension()
+        .and_then(|ext| ext.to_str())
+        .map(|ext| ext.eq_ignore_ascii_case("cmd") || ext.eq_ignore_ascii_case("bat"))
+        .unwrap_or(false)
 }
 
 async fn drive_agent_run(
@@ -281,7 +500,7 @@ fn should_start_interactive() -> bool {
 fn default_interactive_agent(choices: &[AgentChoice]) -> Option<String> {
     let selectable = choices
         .iter()
-        .filter(|choice| choice.is_selectable())
+        .filter(|choice| choice.is_available())
         .map(|choice| choice.name.as_str())
         .collect::<Vec<_>>();
     if selectable.is_empty() {
@@ -348,6 +567,8 @@ enum CliError {
     MissingAgent,
     #[error("no prompt given; pass a prompt argument or `-` to read stdin")]
     MissingPrompt,
+    #[error("agent `{0}` is not available as a native interactive CLI")]
+    NativeAgentUnavailable(String),
     #[error(transparent)]
     Conductor(#[from] ConductorError),
     #[error(transparent)]

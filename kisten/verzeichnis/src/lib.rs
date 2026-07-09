@@ -87,6 +87,14 @@ impl Registry {
         self.adapters.get(name).cloned()
     }
 
+    /// Native interactive command for an adapter, when the adapter wraps a CLI.
+    pub fn native_command(&self, name: &str) -> Option<String> {
+        self.adapters
+            .get(name)
+            .and_then(|adapter| adapter.native_command())
+            .map(str::to_string)
+    }
+
     /// The capabilities of every registered adapter, alphabetical by name.
     pub fn list(&self) -> Vec<Capability> {
         self.adapters.values().map(|a| a.capabilities()).collect()
