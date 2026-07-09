@@ -12,6 +12,7 @@ mod render;
 use std::collections::HashMap;
 use std::env;
 use std::ffi::OsString;
+#[cfg(windows)]
 use std::fs;
 use std::io::{self, IsTerminal, Read, Write};
 use std::path::{Path, PathBuf};
