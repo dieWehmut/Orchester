@@ -6,7 +6,7 @@
 //! implemented" so scripts written against them fail loudly rather than
 //! silently doing the wrong thing.
 
-use clap::{Parser, Subcommand};
+use clap::{Args, Parser, Subcommand};
 
 /// Orchester — a conductor for heterogeneous coding agents.
 #[derive(Debug, Parser)]
@@ -48,6 +48,15 @@ pub struct Cli {
 
 #[derive(Debug, Subcommand)]
 pub enum Command {
+    /// Run one adapter with a prompt.
+    Run(RunArgs),
+
     /// List discovered adapters and their capabilities.
     List,
+}
+
+#[derive(Debug, Args)]
+pub struct RunArgs {
+    /// The prompt. Use `-` to read the prompt from stdin.
+    pub prompt: Option<String>,
 }

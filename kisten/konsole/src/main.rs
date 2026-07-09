@@ -36,35 +36,50 @@ async fn main() -> ExitCode {
 }
 
 async fn run(cli: Cli) -> Result<ExitCode, CliError> {
+    let Cli {
+        command,
+        agent,
+        resume,
+        model,
+        json,
+        agents,
+        parallel,
+        auto,
+        prompt,
+    } = cli;
+
     let registry = Registry::discover(MANIFEST_DIR);
 
-    // Subcommand: list.
-    if let Some(Command::List) = cli.command {
-        let mut out = io::stdout().lock();
-        render::render_list(&mut out, &registry.list())?;
-        return Ok(ExitCode::SUCCESS);
-    }
+    let prompt = match command {
+        Some(Command::List) => {
+            let mut out = io::stdout().lock();
+            render::render_list(&mut out, &registry.list())?;
+            return Ok(ExitCode::SUCCESS);
+        }
+        Some(Command::Run(run)) => run.prompt,
+        None => prompt,
+    };
 
     // Reserved multi-agent flags: declared to lock the UX, not yet implemented.
-    if cli.agents.is_some() || cli.parallel || cli.auto {
+    if agents.is_some() || parallel || auto {
         eprintln!("orchester: multi-agent / --auto modes are not yet implemented (roadmap v0.5+)");
         return Ok(ExitCode::FAILURE);
     }
 
     // Default mode: run one agent.
-    let agent = cli.agent.ok_or(CliError::MissingAgent)?;
-    let prompt = read_prompt(cli.prompt)?;
+    let agent = agent.ok_or(CliError::MissingAgent)?;
+    let prompt = read_prompt(prompt)?;
 
     let mut task = Task::new(prompt, PathBuf::from("."));
-    if let Some(id) = cli.resume {
+    if let Some(id) = resume {
         task = task.with_resume(id);
     }
-    if let Some(model) = cli.model {
+    if let Some(model) = model {
         task = task.with_model(model);
     }
 
     let conductor = Conductor::new(registry);
-    let json_mode = cli.json;
+    let json_mode = json;
 
     // Render live while folding into a RunResult.
     let result = conductor
@@ -101,9 +116,7 @@ fn read_prompt(arg: Option<String>) -> Result<String, CliError> {
     match arg.as_deref() {
         Some("-") | None => {
             let mut buf = String::new();
-            io::stdin()
-                .read_to_string(&mut buf)
-                .map_err(CliError::Io)?;
+            io::stdin().read_to_string(&mut buf).map_err(CliError::Io)?;
             let trimmed = buf.trim().to_string();
             if trimmed.is_empty() {
                 Err(CliError::MissingPrompt)
