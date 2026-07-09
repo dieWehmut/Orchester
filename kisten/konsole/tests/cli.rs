@@ -48,6 +48,25 @@ fn list_shows_builtin_adapters() {
 }
 
 #[test]
+fn list_can_emit_capability_jsonl() {
+    let output = orchester()
+        .args(["list", "--json"])
+        .output()
+        .expect("run orchester list --json");
+
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let values: Vec<serde_json::Value> = stdout(&output)
+        .lines()
+        .map(|line| serde_json::from_str(line).expect("valid capability JSONL"))
+        .collect();
+
+    assert!(values.iter().any(|value| value["name"] == "mock"));
+    assert!(values
+        .iter()
+        .any(|value| value["name"] == "mock" && value["streaming"] == true));
+}
+
+#[test]
 fn doctor_reports_mock_adapter_available() {
     let output = orchester()
         .arg("doctor")

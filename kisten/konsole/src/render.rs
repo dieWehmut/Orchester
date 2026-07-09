@@ -108,6 +108,15 @@ pub fn render_list(out: &mut impl Write, caps: &[Capability]) -> std::io::Result
     Ok(())
 }
 
+/// Render capabilities as JSONL.
+pub fn render_list_json(out: &mut impl Write, caps: &[Capability]) -> std::io::Result<()> {
+    for cap in caps {
+        let line = serde_json::to_string(cap).expect("Capability serializes");
+        writeln!(out, "{line}")?;
+    }
+    Ok(())
+}
+
 /// Render adapter availability diagnostics for `orchester doctor`.
 pub fn render_doctor(out: &mut impl Write, checks: &[AdapterAvailability]) -> std::io::Result<()> {
     if checks.is_empty() {
@@ -264,6 +273,24 @@ mod tests {
         assert!(out.contains("mock"));
         assert!(out.contains("chat"));
         assert!(out.contains("no-resume"));
+    }
+
+    #[test]
+    fn list_json_is_valid_jsonl() {
+        let caps = vec![Capability {
+            name: "mock".into(),
+            kinds: vec![TaskKind::Chat],
+            supports_resume: false,
+            streaming: true,
+        }];
+        let mut buf = Vec::new();
+        render_list_json(&mut buf, &caps).unwrap();
+        let out = String::from_utf8(buf).unwrap();
+        let value: serde_json::Value = serde_json::from_str(out.trim()).unwrap();
+
+        assert_eq!(value["name"], "mock");
+        assert_eq!(value["kinds"][0], "chat");
+        assert_eq!(value["streaming"], true);
     }
 
     #[test]

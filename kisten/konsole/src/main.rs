@@ -53,7 +53,12 @@ async fn run(cli: Cli) -> Result<ExitCode, CliError> {
     let prompt = match command {
         Some(Command::List) => {
             let mut out = io::stdout().lock();
-            render::render_list(&mut out, &registry.list())?;
+            let caps = registry.list();
+            if json {
+                render::render_list_json(&mut out, &caps)?;
+            } else {
+                render::render_list(&mut out, &caps)?;
+            }
             return Ok(ExitCode::SUCCESS);
         }
         Some(Command::Doctor(doctor)) => {
