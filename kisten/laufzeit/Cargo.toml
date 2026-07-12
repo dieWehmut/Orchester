@@ -13,8 +13,20 @@ orchester-verzeichnis = { workspace = true }
 futures = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
+json5 = { workspace = true }
+secrecy = { workspace = true }
+keyring = { workspace = true }
 thiserror = { workspace = true }
 rusqlite = { workspace = true }
 
 [dev-dependencies]
 tokio = { workspace = true }
+
+[target.'cfg(windows)'.dependencies]
+keyring = { workspace = true, features = ["windows-native"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+keyring = { workspace = true, features = ["apple-native"] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+keyring = { workspace = true, features = ["linux-native"] }
