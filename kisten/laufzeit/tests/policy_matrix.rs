@@ -246,6 +246,14 @@ fn policy_explanations_do_not_echo_model_controlled_arguments() {
 }
 
 #[test]
+fn bounded_sleep_is_a_shell_free_read_only_command() {
+    let result = engine().evaluate(&command("sleep", &["0"])).unwrap();
+    assert_eq!(result.decision, PolicyDecision::Allow);
+    assert_eq!(result.rule_id, "workspace.read");
+    assert_eq!(result.effect, EffectClass::ReadOnlyIdempotent);
+}
+
+#[test]
 fn network_probe_commands_require_approval() {
     for program in ["ping", "ping6", "traceroute", "tracert.exe"] {
         let intent = classify_command(program, &[OsString::from("127.0.0.1")]).unwrap();

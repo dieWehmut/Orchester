@@ -486,7 +486,7 @@ fn is_read_only_command(program: &str, args: &[&str]) -> bool {
     match program {
         "ls" | "dir" | "pwd" | "cat" | "type" | "head" | "tail" | "rg" | "grep" | "which"
         | "where" | "stat" | "file" | "wc" | "echo" | "printf" | "true" | "false" | "whoami"
-        | "id" | "uname" => true,
+        | "id" | "uname" | "sleep" => true,
         "find" => !args.iter().any(|arg| {
             let lower = arg.to_ascii_lowercase();
             lower == "-delete" || lower == "-exec" || lower == "-execdir"
