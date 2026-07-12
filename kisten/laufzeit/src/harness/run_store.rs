@@ -28,6 +28,7 @@ use crate::harness::feedback::FeedbackEngine;
 
 mod observation;
 mod schema;
+mod storage;
 mod types;
 
 use observation::DurableObservation;
@@ -123,15 +124,15 @@ impl SqliteRunStore {
         if let Some(parent) = path.parent() {
             let created = !parent.exists();
             std::fs::create_dir_all(parent).map_err(StoreError::Io)?;
-            ensure_private_state_dir(parent, created)?;
+            storage::ensure_private_state_dir(parent, created)?;
         }
         let file_existed = path.exists();
-        let wal_existed = state_sidecar(path, "-wal").exists();
-        let shm_existed = state_sidecar(path, "-shm").exists();
+        let wal_existed = storage::state_sidecar(path, "-wal").exists();
+        let shm_existed = storage::state_sidecar(path, "-shm").exists();
         let connection = Connection::open(path)?;
-        ensure_private_state_file(path, !file_existed)?;
+        storage::ensure_private_state_file(path, !file_existed)?;
         let store = Self::initialize(connection, true, terminal_sanitizer)?;
-        ensure_private_state_sidecars(path, wal_existed, shm_existed)?;
+        storage::ensure_private_state_sidecars(path, wal_existed, shm_existed)?;
         Ok(store)
     }
 
@@ -148,7 +149,7 @@ impl SqliteRunStore {
         connection.execute_batch("PRAGMA foreign_keys = ON; PRAGMA synchronous = FULL;")?;
         schema::apply_migrations(&mut connection)?;
         if enable_wal {
-            enable_wal_mode(&connection)?;
+            storage::enable_wal_mode(&connection)?;
         }
         Ok(Self {
             connection: Mutex::new(connection),
@@ -1094,41 +1095,6 @@ impl ExecutionCandidate {
     }
 }
 
-fn enable_wal_mode(connection: &Connection) -> Result<(), StoreError> {
-    let mut last_busy = None;
-    for _ in 0..100 {
-        match connection.query_row("PRAGMA journal_mode = WAL", [], |row| {
-            row.get::<_, String>(0)
-        }) {
-            Ok(mode) if mode.eq_ignore_ascii_case("wal") => return Ok(()),
-            Ok(_) => {
-                return Err(StoreError::Invariant(
-                    "state database could not enter WAL mode".into(),
-                ))
-            }
-            Err(error) if sqlite_is_busy(&error) => {
-                last_busy = Some(error);
-                std::thread::sleep(Duration::from_millis(10));
-            }
-            Err(error) => return Err(StoreError::Database(error)),
-        }
-    }
-    Err(StoreError::Database(
-        last_busy.unwrap_or_else(|| rusqlite::Error::InvalidQuery),
-    ))
-}
-
-fn sqlite_is_busy(error: &rusqlite::Error) -> bool {
-    matches!(
-        error,
-        rusqlite::Error::SqliteFailure(details, _)
-            if matches!(
-                details.code,
-                rusqlite::ErrorCode::DatabaseBusy | rusqlite::ErrorCode::DatabaseLocked
-            )
-    )
-}
-
 fn verify_schema_shape(connection: &Connection) -> Result<(), StoreError> {
     let (count, minimum, maximum): (u32, Option<u32>, Option<u32>) = connection.query_row(
         "SELECT COUNT(*), MIN(version), MAX(version) FROM schema_versions",
@@ -1631,108 +1597,6 @@ fn require_observation_row_integrity(connection: &Connection) -> Result<(), Stor
     } else {
         Ok(())
     }
-}
-
-#[cfg(unix)]
-fn ensure_private_state_dir(path: &Path, created: bool) -> Result<(), StoreError> {
-    use std::os::unix::fs::PermissionsExt;
-    if created {
-        std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o700))
-            .map_err(StoreError::Io)?;
-    }
-    let mode = std::fs::metadata(path)
-        .map_err(StoreError::Io)?
-        .permissions()
-        .mode()
-        & 0o777;
-    if mode == 0o700 {
-        Ok(())
-    } else {
-        Err(StoreError::InsecurePermissions)
-    }
-}
-
-#[cfg(windows)]
-fn ensure_private_state_dir(_path: &Path, _created: bool) -> Result<(), StoreError> {
-    if crate::harness::config::check_permissions(_path)
-        .into_iter()
-        .all(|finding| finding.secure)
-    {
-        Ok(())
-    } else {
-        Err(StoreError::InsecurePermissions)
-    }
-}
-
-#[cfg(not(any(unix, windows)))]
-fn ensure_private_state_dir(_path: &Path, _created: bool) -> Result<(), StoreError> {
-    Err(StoreError::InsecurePermissions)
-}
-
-#[cfg(unix)]
-fn ensure_private_state_file(path: &Path, created: bool) -> Result<(), StoreError> {
-    use std::os::unix::fs::PermissionsExt;
-    if created {
-        std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o600))
-            .map_err(StoreError::Io)?;
-    }
-    let mode = std::fs::metadata(path)
-        .map_err(StoreError::Io)?
-        .permissions()
-        .mode()
-        & 0o777;
-    if mode == 0o600 {
-        Ok(())
-    } else {
-        Err(StoreError::InsecurePermissions)
-    }
-}
-
-#[cfg(unix)]
-fn ensure_private_state_sidecars(
-    path: &Path,
-    wal_existed: bool,
-    shm_existed: bool,
-) -> Result<(), StoreError> {
-    for (suffix, existed) in [("-wal", wal_existed), ("-shm", shm_existed)] {
-        let sidecar = state_sidecar(path, suffix);
-        if sidecar.exists() {
-            ensure_private_state_file(&sidecar, !existed)?;
-        }
-    }
-    Ok(())
-}
-
-#[cfg(not(unix))]
-fn ensure_private_state_sidecars(
-    _path: &Path,
-    _wal_existed: bool,
-    _shm_existed: bool,
-) -> Result<(), StoreError> {
-    Ok(())
-}
-
-fn state_sidecar(path: &Path, suffix: &str) -> std::path::PathBuf {
-    let mut value = path.as_os_str().to_os_string();
-    value.push(suffix);
-    value.into()
-}
-
-#[cfg(windows)]
-fn ensure_private_state_file(_path: &Path, _created: bool) -> Result<(), StoreError> {
-    if crate::harness::config::check_permissions(_path)
-        .into_iter()
-        .all(|finding| finding.secure)
-    {
-        Ok(())
-    } else {
-        Err(StoreError::InsecurePermissions)
-    }
-}
-
-#[cfg(not(any(unix, windows)))]
-fn ensure_private_state_file(_path: &Path, _created: bool) -> Result<(), StoreError> {
-    Err(StoreError::InsecurePermissions)
 }
 
 impl SqliteRunStore {
