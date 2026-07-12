@@ -1,6 +1,7 @@
 //! Self-harness support modules.  The loop and governance components build on
 //! these stable configuration and credential boundaries.
 
+pub mod agent_loop;
 pub mod approval;
 pub mod audit;
 pub mod barrier;
