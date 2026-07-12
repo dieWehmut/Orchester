@@ -472,7 +472,7 @@ fn permit_cannot_start_after_durable_approval_expiry() {
 #[test]
 fn tool_start_requires_checkpoint_and_schema_permissions_are_checked() {
     let fixture = Fixture::new(PolicyDecision::Allow);
-    assert_eq!(fixture.store.schema_version().unwrap(), 3);
+    assert_eq!(fixture.store.schema_version().unwrap(), 4);
     let before = fixture.store.append_event(
         &fixture.owner,
         &fixture.run_id,
@@ -686,6 +686,21 @@ impl Fixture {
                 },
             )
             .unwrap();
+        store
+            .append_event(
+                &owner,
+                &run_id,
+                orchester_laufzeit::harness::run_store::EventAppend {
+                    turn_id: Some(turn_id.clone()),
+                    step_id: Some(step_id.clone()),
+                    call_id: Some(call_id.clone()),
+                    occurred_at: "2026-07-12T00:00:02Z".into(),
+                    kind: HarnessEventKind::ModelCompleted {
+                        assistant_text: String::new(),
+                    },
+                },
+            )
+            .unwrap();
         let action = if decision == PolicyDecision::Allow {
             AgentAction::ReadFile {
                 path: "src/lib.rs".into(),
@@ -709,7 +724,8 @@ impl Fixture {
                     action_id: action_id.clone(),
                     run_id: run_id.clone(),
                     step_id: step_id.clone(),
-                    call_id: call_id.clone(),
+                    call_id: CallId::from("provider-tool-durable"),
+                    origin_model_call_id: call_id.clone(),
                     action: action.clone(),
                     action_hash: hash.clone(),
                     effect_class: effect,

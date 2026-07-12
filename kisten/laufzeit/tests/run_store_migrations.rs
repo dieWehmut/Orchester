@@ -27,7 +27,7 @@ fn v1_state_database_is_upgraded_to_latest_before_use() {
         std::fs::set_permissions(&db, std::fs::Permissions::from_mode(0o600)).unwrap();
     }
     let store = SqliteRunStore::open(&db).unwrap();
-    assert_eq!(store.schema_version().unwrap(), 3);
+    assert_eq!(store.schema_version().unwrap(), 4);
     drop(store);
     let connection = rusqlite::Connection::open(&db).unwrap();
     let columns: Vec<String> = connection
@@ -83,13 +83,13 @@ fn concurrent_v1_openers_converge_on_latest_migration() {
         }));
     }
     for opener in openers {
-        assert_eq!(opener.join().unwrap().unwrap(), 3);
+        assert_eq!(opener.join().unwrap().unwrap(), 4);
     }
     std::fs::remove_dir_all(root).unwrap();
 }
 
 #[test]
-fn v2_state_database_backfills_model_phase() {
+fn v2_state_database_backfills_model_phase_and_action_origin() {
     let root = std::env::temp_dir().join(format!(
         "orchester-v2-model-phase-{}-{}",
         std::process::id(),
@@ -133,6 +133,14 @@ fn v2_state_database_backfills_model_phase() {
                'run-v2', 1, 1, 'event-model-done', 'turn-v2',
                'step-model-done', 'model-done', 'model.completed', '{}',
                '2026-07-13T00:00:05Z'
+             );
+             INSERT INTO actions(
+               action_id, run_id, step_id, call_id, kind, canonical_json,
+               action_hash, effect_class, state, created_at
+             ) VALUES(
+               'action-v2', 'run-v2', 'step-action', 'provider-v2',
+               'read_file', '{}', 'hash-v2', 'read_only_idempotent',
+               'recorded', '2026-07-13T00:00:06Z'
              );",
         )
         .unwrap();
@@ -145,7 +153,7 @@ fn v2_state_database_backfills_model_phase() {
     }
 
     let store = SqliteRunStore::open(&db).unwrap();
-    assert_eq!(store.schema_version().unwrap(), 3);
+    assert_eq!(store.schema_version().unwrap(), 4);
     drop(store);
     let connection = rusqlite::Connection::open(&db).unwrap();
     let phases = connection
@@ -167,6 +175,16 @@ fn v2_state_database_backfills_model_phase() {
             ("step-tool".into(), "running".into()),
         ]
     );
+    drop(connection);
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    let origin: String = connection
+        .query_row(
+            "SELECT origin_model_call_id FROM actions WHERE action_id = 'action-v2'",
+            [],
+            |row| row.get(0),
+        )
+        .unwrap();
+    assert_eq!(origin, "model-action");
     drop(connection);
     std::fs::remove_dir_all(root).unwrap();
 }
@@ -254,8 +272,118 @@ fn v3_migration_rolls_back_when_version_write_fails() {
         .unwrap();
     drop(connection);
     let store = SqliteRunStore::open(&db).unwrap();
-    assert_eq!(store.schema_version().unwrap(), 3);
+    assert_eq!(store.schema_version().unwrap(), 4);
     drop(store);
+    std::fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
+fn v4_migration_rolls_back_when_origin_version_write_fails() {
+    let root = std::env::temp_dir().join(format!(
+        "orchester-v4-rollback-{}-{}",
+        std::process::id(),
+        NEXT.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir_all(&root).unwrap();
+    let db = root.join("state.db");
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    connection
+        .execute_batch(include_str!("../migrations/0001_state.sql"))
+        .unwrap();
+    connection
+        .execute_batch(include_str!("../migrations/0002_approval_barrier.sql"))
+        .unwrap();
+    connection
+        .execute_batch(include_str!("../migrations/0003_model_phase.sql"))
+        .unwrap();
+    connection
+        .execute_batch(
+            "INSERT INTO actors(actor_id, kind, subject_hash, created_at)
+             VALUES('owner-v4', 'local_user', 'owner-v4-hash', '2026-07-13T00:00:00Z');
+             INSERT INTO projects(project_id, canonical_root, workspace_identity, created_at, updated_at)
+             VALUES('project-v4', '/workspace/v4', 'workspace-v4', '2026-07-13T00:00:00Z', '2026-07-13T00:00:00Z');
+             INSERT INTO runs(
+               run_id, project_id, owner_actor_id, status, next_sequence,
+               current_turn_id, current_step_id, policy_snapshot_hash,
+               config_snapshot_hash, max_steps, steps_used, created_at, updated_at
+             ) VALUES(
+               'run-v4', 'project-v4', 'owner-v4', 'running', 2,
+               'turn-v4', 'step-v4', 'policy-v4', 'config-v4', 8, 1,
+               '2026-07-13T00:00:00Z', '2026-07-13T00:00:00Z'
+             );
+             INSERT INTO steps(
+               run_id, step_ordinal, step_id, turn_id, status, model_call_id,
+               started_at, model_phase
+             ) VALUES(
+               'run-v4', 1, 'step-v4', 'turn-v4', 'action_recorded',
+               'model-v4', '2026-07-13T00:00:01Z', 'completed'
+             );
+             INSERT INTO actions(
+               action_id, run_id, step_id, call_id, kind, canonical_json,
+               action_hash, effect_class, state, created_at
+             ) VALUES(
+               'action-v4', 'run-v4', 'step-v4', 'provider-v4', 'read_file',
+               '{}', 'hash-v4', 'read_only_idempotent', 'recorded',
+               '2026-07-13T00:00:02Z'
+             );
+             CREATE TRIGGER fail_v4_version_write
+             BEFORE INSERT ON schema_versions
+             WHEN NEW.version = 4
+             BEGIN
+               SELECT RAISE(ABORT, 'injected v4 version write failure');
+             END;",
+        )
+        .unwrap();
+    drop(connection);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        std::fs::set_permissions(&root, std::fs::Permissions::from_mode(0o700)).unwrap();
+        std::fs::set_permissions(&db, std::fs::Permissions::from_mode(0o600)).unwrap();
+    }
+
+    assert!(SqliteRunStore::open(&db).is_err());
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    let columns: Vec<String> = connection
+        .prepare("PRAGMA table_info(actions)")
+        .unwrap()
+        .query_map([], |row| row.get(1))
+        .unwrap()
+        .collect::<Result<_, _>>()
+        .unwrap();
+    let schema_version: u32 = connection
+        .query_row(
+            "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
+            [],
+            |row| row.get(0),
+        )
+        .unwrap();
+    let user_version: u32 = connection
+        .query_row("PRAGMA user_version", [], |row| row.get(0))
+        .unwrap();
+    assert!(!columns
+        .iter()
+        .any(|column| column == "origin_model_call_id"));
+    assert_eq!(schema_version, 3);
+    assert_eq!(user_version, 3);
+    connection
+        .execute_batch("DROP TRIGGER fail_v4_version_write")
+        .unwrap();
+    drop(connection);
+
+    let store = SqliteRunStore::open(&db).unwrap();
+    assert_eq!(store.schema_version().unwrap(), 4);
+    drop(store);
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    let origin: String = connection
+        .query_row(
+            "SELECT origin_model_call_id FROM actions WHERE action_id = 'action-v4'",
+            [],
+            |row| row.get(0),
+        )
+        .unwrap();
+    assert_eq!(origin, "model-v4");
+    drop(connection);
     std::fs::remove_dir_all(root).unwrap();
 }
 
@@ -294,7 +422,7 @@ fn concurrent_v2_openers_converge_on_one_v3_migration() {
         }));
     }
     for opener in openers {
-        assert_eq!(opener.join().unwrap().unwrap(), 3);
+        assert_eq!(opener.join().unwrap().unwrap(), 4);
     }
     std::fs::remove_dir_all(root).unwrap();
 }
@@ -392,6 +520,46 @@ fn database_claiming_v3_with_weak_model_phase_is_rejected() {
                ADD COLUMN model_phase TEXT NOT NULL DEFAULT 'not_started';
              INSERT INTO schema_versions(version, applied_at) VALUES(3, CURRENT_TIMESTAMP);
              PRAGMA user_version = 3;",
+        )
+        .unwrap();
+    drop(connection);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        std::fs::set_permissions(&root, std::fs::Permissions::from_mode(0o700)).unwrap();
+        std::fs::set_permissions(&db, std::fs::Permissions::from_mode(0o600)).unwrap();
+    }
+
+    assert!(matches!(
+        SqliteRunStore::open(&db),
+        Err(StoreError::Corrupt)
+    ));
+    std::fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
+fn database_claiming_v4_without_action_origin_is_rejected() {
+    let root = std::env::temp_dir().join(format!(
+        "orchester-invalid-v4-{}-{}",
+        std::process::id(),
+        NEXT.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir_all(&root).unwrap();
+    let db = root.join("state.db");
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    connection
+        .execute_batch(include_str!("../migrations/0001_state.sql"))
+        .unwrap();
+    connection
+        .execute_batch(include_str!("../migrations/0002_approval_barrier.sql"))
+        .unwrap();
+    connection
+        .execute_batch(include_str!("../migrations/0003_model_phase.sql"))
+        .unwrap();
+    connection
+        .execute_batch(
+            "INSERT INTO schema_versions(version, applied_at) VALUES(4, CURRENT_TIMESTAMP);
+             PRAGMA user_version = 4;",
         )
         .unwrap();
     drop(connection);

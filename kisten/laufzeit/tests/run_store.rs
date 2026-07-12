@@ -84,6 +84,27 @@ fn append_model_event(
     )
 }
 
+fn test_action_record(
+    run_id: &RunId,
+    step_id: &str,
+    action_id: &str,
+    origin_model_call_id: &str,
+    provider_call_id: &str,
+    action: AgentAction,
+) -> ActionRecord {
+    ActionRecord {
+        action_id: action_id.into(),
+        run_id: run_id.clone(),
+        step_id: step_id.into(),
+        call_id: provider_call_id.into(),
+        origin_model_call_id: origin_model_call_id.into(),
+        action_hash: action_hash(&action).unwrap(),
+        effect_class: EffectClass::ReadOnlyIdempotent,
+        action,
+        occurred_at: "2026-07-12T00:00:03Z".into(),
+    }
+}
+
 fn step_model_state(path: &Path, step_id: &str) -> (String, Option<String>) {
     let connection = rusqlite::Connection::open(path).unwrap();
     connection
@@ -385,6 +406,7 @@ fn every_write_requires_the_run_owner_and_approval_pause_blocks_new_steps() {
                 run_id: run.run_id.clone(),
                 step_id: StepId::from("step-1"),
                 call_id: CallId::from("action-call-1"),
+                origin_model_call_id: CallId::from("model-call-1"),
                 action: action.clone(),
                 action_hash: action_hash(&action).unwrap(),
                 effect_class: EffectClass::WorkspaceMutation,
@@ -440,6 +462,7 @@ fn a_step_cannot_record_two_actions_and_failed_insert_adds_no_event() {
         run_id: run.run_id.clone(),
         step_id: StepId::from("step-1"),
         call_id: CallId::from("call-1"),
+        origin_model_call_id: CallId::from("model-call-1"),
         action: first_action.clone(),
         action_hash: action_hash(&first_action).unwrap(),
         effect_class: EffectClass::ReadOnlyIdempotent,
@@ -456,6 +479,7 @@ fn a_step_cannot_record_two_actions_and_failed_insert_adds_no_event() {
         run_id: run.run_id.clone(),
         step_id: StepId::from("step-1"),
         call_id: CallId::from("call-2"),
+        origin_model_call_id: CallId::from("model-call-1"),
         action: second_action.clone(),
         action_hash: action_hash(&second_action).unwrap(),
         effect_class: EffectClass::ReadOnlyIdempotent,
@@ -472,6 +496,242 @@ fn a_step_cannot_record_two_actions_and_failed_insert_adds_no_event() {
         after.iter().map(|event| event.sequence).collect::<Vec<_>>(),
         vec![1, 2, 3, 4, 5]
     );
+}
+
+#[test]
+fn action_before_model_completion_is_rejected_atomically() {
+    let store = SqliteRunStore::in_memory().unwrap();
+    let run = store
+        .create_run(new_run("run-action-before-model", "owner-a"))
+        .unwrap();
+    start_step(&store, &run.run_id, "owner-a", "step-1");
+    append_model_event(
+        &store,
+        &run.run_id,
+        "owner-a",
+        "step-1",
+        "model-call-1",
+        HarnessEventKind::ModelStarted,
+    )
+    .unwrap();
+    let before = store.events_owned(&run.run_id, "owner-a").unwrap();
+    let action = test_action_record(
+        &run.run_id,
+        "step-1",
+        "action-before-model",
+        "model-call-1",
+        "provider-tool-1",
+        AgentAction::ReadFile {
+            path: "src/lib.rs".into(),
+            start_line: None,
+            end_line: None,
+        },
+    );
+
+    assert!(matches!(
+        store.record_action("owner-a", action),
+        Err(StoreError::Invariant(_))
+    ));
+    assert_eq!(store.events_owned(&run.run_id, "owner-a").unwrap(), before);
+    assert_eq!(
+        store
+            .load_run_owned(&run.run_id, "owner-a")
+            .unwrap()
+            .next_sequence,
+        4
+    );
+    append_model_event(
+        &store,
+        &run.run_id,
+        "owner-a",
+        "step-1",
+        "model-call-1",
+        HarnessEventKind::ModelCompleted {
+            assistant_text: "done".into(),
+        },
+    )
+    .unwrap();
+    store
+        .record_action(
+            "owner-a",
+            test_action_record(
+                &run.run_id,
+                "step-1",
+                "action-after-model",
+                "model-call-1",
+                "provider-tool-after-model",
+                AgentAction::ReadFile {
+                    path: "src/lib.rs".into(),
+                    start_line: None,
+                    end_line: None,
+                },
+            ),
+        )
+        .unwrap();
+}
+
+#[test]
+fn action_rejects_a_different_origin_model_call_id() {
+    let store = SqliteRunStore::in_memory().unwrap();
+    let run = store
+        .create_run(new_run("run-action-origin", "owner-a"))
+        .unwrap();
+    start_step(&store, &run.run_id, "owner-a", "step-1");
+    complete_model(&store, &run.run_id, "owner-a", "step-1");
+    let before = store.events_owned(&run.run_id, "owner-a").unwrap();
+    let action = test_action_record(
+        &run.run_id,
+        "step-1",
+        "action-wrong-origin",
+        "model-call-2",
+        "provider-tool-1",
+        AgentAction::ReadFile {
+            path: "src/lib.rs".into(),
+            start_line: None,
+            end_line: None,
+        },
+    );
+
+    assert!(matches!(
+        store.record_action("owner-a", action),
+        Err(StoreError::Invariant(_))
+    ));
+    assert_eq!(store.events_owned(&run.run_id, "owner-a").unwrap(), before);
+    assert_eq!(
+        store
+            .load_run_owned(&run.run_id, "owner-a")
+            .unwrap()
+            .next_sequence,
+        5
+    );
+}
+
+#[test]
+fn action_accepts_completed_origin_with_distinct_provider_call_id() {
+    let path = temp_db("action-origin-valid");
+    let run_id = RunId::from("run-action-origin-valid");
+    let (sequence, event_call_id, event_origin, is_action_event) = {
+        let store = SqliteRunStore::open(&path).unwrap();
+        store
+            .create_run(new_run("run-action-origin-valid", "owner-a"))
+            .unwrap();
+        start_step(&store, &run_id, "owner-a", "step-1");
+        complete_model(&store, &run_id, "owner-a", "step-1");
+        let event = store
+            .record_action(
+                "owner-a",
+                test_action_record(
+                    &run_id,
+                    "step-1",
+                    "action-valid-origin",
+                    "model-call-1",
+                    "provider-tool-1",
+                    AgentAction::ReadFile {
+                        path: "src/lib.rs".into(),
+                        start_line: None,
+                        end_line: None,
+                    },
+                ),
+            )
+            .unwrap();
+        (
+            event.sequence,
+            event.call_id,
+            match &event.kind {
+                HarnessEventKind::ActionRecorded {
+                    origin_model_call_id,
+                    ..
+                } => origin_model_call_id.clone(),
+                _ => None,
+            },
+            matches!(&event.kind, HarnessEventKind::ActionRecorded { .. }),
+        )
+    };
+    let connection = rusqlite::Connection::open(&path).unwrap();
+    let binding: (String, String) = connection
+        .query_row(
+            "SELECT call_id, origin_model_call_id
+             FROM actions WHERE action_id = 'action-valid-origin'",
+            [],
+            |row| Ok((row.get(0)?, row.get(1)?)),
+        )
+        .unwrap();
+    drop(connection);
+    remove_temp_db(&path);
+
+    assert_eq!(sequence, 5);
+    assert_eq!(event_call_id, Some("provider-tool-1".into()));
+    assert_eq!(event_origin, Some("model-call-1".into()));
+    assert!(is_action_event);
+    assert_eq!(binding, ("provider-tool-1".into(), "model-call-1".into()));
+}
+
+#[test]
+fn legacy_action_without_completed_origin_cannot_reenter_policy_or_execution() {
+    let path = temp_db("legacy-action-origin");
+    let run_id = RunId::from("run-legacy-action-origin");
+    {
+        let store = SqliteRunStore::open(&path).unwrap();
+        store
+            .create_run(new_run("run-legacy-action-origin", "owner-a"))
+            .unwrap();
+        start_step(&store, &run_id, "owner-a", "step-1");
+        complete_model(&store, &run_id, "owner-a", "step-1");
+        store
+            .record_action(
+                "owner-a",
+                test_action_record(
+                    &run_id,
+                    "step-1",
+                    "legacy-action",
+                    "model-call-1",
+                    "provider-tool-1",
+                    AgentAction::ReadFile {
+                        path: "src/lib.rs".into(),
+                        start_line: None,
+                        end_line: None,
+                    },
+                ),
+            )
+            .unwrap();
+    }
+    let connection = rusqlite::Connection::open(&path).unwrap();
+    connection
+        .execute_batch(
+            "UPDATE steps SET model_phase = 'running' WHERE step_id = 'step-1';
+             UPDATE actions SET origin_model_call_id = NULL
+             WHERE action_id = 'legacy-action';",
+        )
+        .unwrap();
+    drop(connection);
+
+    let store = SqliteRunStore::open(&path).unwrap();
+    let before = store.events_owned(&run_id, "owner-a").unwrap();
+    assert!(matches!(
+        store.append_event(
+            "owner-a",
+            &run_id,
+            EventAppend {
+                turn_id: Some(TurnId::from("turn-1")),
+                step_id: Some(StepId::from("step-1")),
+                call_id: None,
+                occurred_at: "2026-07-12T00:00:04Z".into(),
+                kind: HarnessEventKind::PolicyDecided {
+                    action_id: "legacy-action".into(),
+                    decision: orchester_protokoll::PolicyDecision::Ask,
+                    rule_id: "workspace.read".into(),
+                },
+            },
+        ),
+        Err(StoreError::Invariant(_))
+    ));
+    assert_eq!(store.events_owned(&run_id, "owner-a").unwrap(), before);
+    assert!(matches!(
+        store.execution_candidate("owner-a", &run_id, &"legacy-action".into()),
+        Err(StoreError::NotFound)
+    ));
+    drop(store);
+    remove_temp_db(&path);
 }
 
 #[test]

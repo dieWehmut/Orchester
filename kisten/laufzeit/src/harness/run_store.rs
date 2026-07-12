@@ -28,7 +28,8 @@ use crate::harness::barrier::{ExecutionPermit, StartedTool};
 const MIGRATION_V1: &str = include_str!("../../migrations/0001_state.sql");
 const MIGRATION_V2: &str = include_str!("../../migrations/0002_approval_barrier.sql");
 const MIGRATION_V3: &str = include_str!("../../migrations/0003_model_phase.sql");
-const CURRENT_SCHEMA_VERSION: u32 = 3;
+const MIGRATION_V4: &str = include_str!("../../migrations/0004_action_model_binding.sql");
+const CURRENT_SCHEMA_VERSION: u32 = 4;
 
 #[derive(Debug, Error)]
 pub enum StoreError {
@@ -205,6 +206,7 @@ pub struct ActionRecord {
     pub run_id: RunId,
     pub step_id: StepId,
     pub call_id: CallId,
+    pub origin_model_call_id: CallId,
     pub action: AgentAction,
     pub action_hash: String,
     pub effect_class: EffectClass,
@@ -355,7 +357,11 @@ impl SqliteRunStore {
                  FROM actions a
                  JOIN runs r ON r.run_id = a.run_id
                  JOIN projects p ON p.project_id = r.project_id
-                 WHERE a.action_id = ?1 AND a.run_id = ?2 AND r.owner_actor_id = ?3",
+                 JOIN steps s ON s.run_id = a.run_id AND s.step_id = a.step_id
+                 WHERE a.action_id = ?1 AND a.run_id = ?2 AND r.owner_actor_id = ?3
+                   AND a.origin_model_call_id IS NOT NULL
+                   AND s.model_phase = 'completed'
+                   AND a.origin_model_call_id = s.model_call_id",
                 params![
                     input.binding.action_id.0,
                     input.binding.run_id.0,
@@ -930,8 +936,12 @@ impl SqliteRunStore {
                         ap.approval_id, r.owner_actor_id
                  FROM actions a
                  JOIN runs r ON r.run_id = a.run_id
+                 JOIN steps s ON s.run_id = a.run_id AND s.step_id = a.step_id
                  LEFT JOIN approvals ap ON ap.action_id = a.action_id
-                 WHERE a.run_id = ?1 AND a.action_id = ?2 AND r.owner_actor_id = ?3",
+                 WHERE a.run_id = ?1 AND a.action_id = ?2 AND r.owner_actor_id = ?3
+                   AND a.origin_model_call_id IS NOT NULL
+                   AND s.model_phase = 'completed'
+                   AND a.origin_model_call_id = s.model_call_id",
                 params![run_id.0, action_id.0, owner_actor_id],
                 |row| {
                     Ok((
@@ -1032,7 +1042,11 @@ impl SqliteRunStore {
         let owned: bool = transaction
             .query_row(
                 "SELECT 1 FROM actions a JOIN runs r ON r.run_id = a.run_id
-                 WHERE a.run_id = ?1 AND a.action_id = ?2 AND r.owner_actor_id = ?3",
+                 JOIN steps s ON s.run_id = a.run_id AND s.step_id = a.step_id
+                 WHERE a.run_id = ?1 AND a.action_id = ?2 AND r.owner_actor_id = ?3
+                   AND a.origin_model_call_id IS NOT NULL
+                   AND s.model_phase = 'completed'
+                   AND a.origin_model_call_id = s.model_call_id",
                 params![candidate.run_id.0, candidate.action_id.0, owner_actor_id],
                 |_| Ok(true),
             )
@@ -1057,8 +1071,12 @@ impl SqliteRunStore {
         let candidate_matches: bool = transaction
             .query_row(
                 "SELECT 1 FROM actions a
+                 JOIN steps s ON s.run_id = a.run_id AND s.step_id = a.step_id
                  LEFT JOIN approvals ap ON ap.action_id = a.action_id
                  WHERE a.run_id = ?1 AND a.action_id = ?2
+                   AND a.origin_model_call_id IS NOT NULL
+                   AND s.model_phase = 'completed'
+                   AND a.origin_model_call_id = s.model_call_id
                    AND a.state IN ('ready', 'awaiting_approval')
                    AND (
                      a.audit_event_id = ?3
@@ -1278,6 +1296,28 @@ fn apply_migrations(connection: &mut Connection) -> Result<(), StoreError> {
         }
         transaction.commit()?;
     }
+    let version = connection.query_row(
+        "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
+        [],
+        |row| row.get::<_, u32>(0),
+    )?;
+    if version < 4 {
+        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
+        let locked_version = transaction.query_row(
+            "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
+            [],
+            |row| row.get::<_, u32>(0),
+        )?;
+        if locked_version > CURRENT_SCHEMA_VERSION {
+            return Err(StoreError::Invariant(
+                "state database schema is newer than this binary".into(),
+            ));
+        }
+        if locked_version < 4 {
+            transaction.execute_batch(MIGRATION_V4)?;
+        }
+        transaction.commit()?;
+    }
     let migrated = connection.query_row(
         "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
         [],
@@ -1341,8 +1381,14 @@ fn verify_schema_shape(connection: &Connection) -> Result<(), StoreError> {
     require_columns(
         connection,
         "actions",
-        &["policy_event_id", "audit_event_id", "audit_sequence"],
+        &[
+            "policy_event_id",
+            "audit_event_id",
+            "audit_sequence",
+            "origin_model_call_id",
+        ],
     )?;
+    require_text_column(connection, "actions", "origin_model_call_id")?;
     require_model_phase_schema(connection)?;
     require_columns(
         connection,
@@ -1406,6 +1452,23 @@ fn require_columns(
     } else {
         Err(StoreError::Corrupt)
     }
+}
+
+fn require_text_column(
+    connection: &Connection,
+    table: &str,
+    required: &str,
+) -> Result<(), StoreError> {
+    let mut statement = connection.prepare(&format!("PRAGMA table_info({table})"))?;
+    let mut rows = statement.query([])?;
+    while let Some(row) = rows.next()? {
+        if row.get::<_, String>(1)? == required
+            && row.get::<_, String>(2)?.eq_ignore_ascii_case("TEXT")
+        {
+            return Ok(());
+        }
+    }
+    Err(StoreError::Corrupt)
 }
 
 fn require_model_phase_schema(connection: &Connection) -> Result<(), StoreError> {
@@ -1934,9 +1997,23 @@ impl RunStore for SqliteRunStore {
                 "action hash does not match canonical action".into(),
             ));
         }
-        if current_step_status(&transaction, &snapshot)?.as_deref() != Some("model_running") {
+        let model_binding: Option<(String, String, Option<String>)> = transaction
+            .query_row(
+                "SELECT status, model_phase, model_call_id
+                 FROM steps WHERE run_id = ?1 AND step_id = ?2",
+                params![action.run_id.0, action.step_id.0],
+                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+            )
+            .optional()?;
+        let Some((step_status, model_phase, model_call_id)) = model_binding else {
+            return Err(StoreError::Invariant("action step is missing".into()));
+        };
+        if step_status != "model_running"
+            || model_phase != "completed"
+            || model_call_id.as_deref() != Some(action.origin_model_call_id.0.as_str())
+        {
             return Err(StoreError::Invariant(
-                "action requires a completed model call in the current step".into(),
+                "action origin does not match a completed model call".into(),
             ));
         }
         let policy_effect = crate::harness::governance::PolicyEngine::new()
@@ -1950,14 +2027,15 @@ impl RunStore for SqliteRunStore {
         }
         transaction.execute(
             "INSERT INTO actions(
-                action_id, run_id, step_id, call_id, kind, canonical_json,
-                action_hash, effect_class, state, created_at
-             ) VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, 'recorded', ?9)",
+                action_id, run_id, step_id, call_id, origin_model_call_id,
+                kind, canonical_json, action_hash, effect_class, state, created_at
+             ) VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, 'recorded', ?10)",
             params![
                 action.action_id.0,
                 action.run_id.0,
                 action.step_id.0,
                 action.call_id.0,
+                action.origin_model_call_id.0,
                 action_kind(&action.action),
                 canonical_json,
                 action.action_hash,
@@ -1978,6 +2056,7 @@ impl RunStore for SqliteRunStore {
             kind: HarnessEventKind::ActionRecorded {
                 action_id: action.action_id.clone(),
                 action: action.action,
+                origin_model_call_id: Some(action.origin_model_call_id.clone()),
             },
         };
         persist_event(&transaction, &event)?;
@@ -2328,13 +2407,17 @@ fn approval_context_matches(
             "SELECT a.canonical_json FROM actions a
              JOIN runs r ON r.run_id = a.run_id
              JOIN projects p ON p.project_id = r.project_id
+             JOIN steps s ON s.run_id = a.run_id AND s.step_id = a.step_id
              WHERE a.run_id = ?1 AND a.action_id = ?2
                AND r.owner_actor_id = ?3 AND a.action_hash = ?4
                AND p.workspace_identity = ?5
                AND r.policy_snapshot_hash = ?6
                AND r.config_snapshot_hash = ?7
                AND a.policy_decision = 'ask' AND a.policy_rule_id = ?8
-               AND a.state = ?9 AND r.status = ?10",
+               AND a.state = ?9 AND r.status = ?10
+               AND a.origin_model_call_id IS NOT NULL
+               AND s.model_phase = 'completed'
+               AND a.origin_model_call_id = s.model_call_id",
             params![
                 approval.run_id.0,
                 approval.action_id.0,
@@ -2695,7 +2778,14 @@ fn apply_event_transition(
             };
             let updated = transaction.execute(
                 "UPDATE actions SET policy_decision = ?1, policy_rule_id = ?2, state = ?3
-                 WHERE run_id = ?4 AND step_id = ?5 AND action_id = ?6 AND state = 'recorded'",
+                 WHERE run_id = ?4 AND step_id = ?5 AND action_id = ?6
+                   AND state = 'recorded' AND origin_model_call_id IS NOT NULL
+                   AND EXISTS(
+                     SELECT 1 FROM steps s
+                     WHERE s.run_id = actions.run_id AND s.step_id = actions.step_id
+                       AND s.model_phase = 'completed'
+                       AND actions.origin_model_call_id = s.model_call_id
+                   )",
                 params![
                     policy_decision_name(*decision),
                     rule_id,
@@ -2738,7 +2828,14 @@ fn apply_event_transition(
             let action_matches: bool = transaction
                 .query_row(
                     "SELECT 1 FROM actions WHERE run_id = ?1 AND step_id = ?2
-                     AND action_id = ?3 AND state = 'awaiting_approval'",
+                     AND action_id = ?3 AND state = 'awaiting_approval'
+                     AND origin_model_call_id IS NOT NULL
+                     AND EXISTS(
+                       SELECT 1 FROM steps s
+                       WHERE s.run_id = actions.run_id AND s.step_id = actions.step_id
+                         AND s.model_phase = 'completed'
+                         AND actions.origin_model_call_id = s.model_call_id
+                     )",
                     params![snapshot.run_id.0, step_id.0, request.action_id.0],
                     |_| Ok(true),
                 )
@@ -2766,8 +2863,12 @@ fn apply_event_transition(
                 .query_row(
                     "SELECT a.audit_sequence, a.policy_decision FROM actions a
                      JOIN audit_checkpoints c ON c.event_id = a.audit_event_id
+                     JOIN steps s ON s.run_id = a.run_id AND s.step_id = a.step_id
                      WHERE a.run_id = ?1 AND a.action_id = ?2 AND a.state = 'ready'
                        AND a.audit_event_id = ?3
+                       AND a.origin_model_call_id IS NOT NULL
+                       AND s.model_phase = 'completed'
+                       AND a.origin_model_call_id = s.model_call_id
                        AND (a.policy_decision = 'allow' OR EXISTS(
                          SELECT 1 FROM approvals ap
                          WHERE ap.action_id = a.action_id AND ap.state = 'executing'
