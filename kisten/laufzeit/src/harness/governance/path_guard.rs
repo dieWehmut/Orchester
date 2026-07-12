@@ -643,10 +643,31 @@ impl WorkspaceGuard {
 
 #[cfg(windows)]
 fn invalid_platform_component(component: &OsStr) -> bool {
+    let value = component.to_string_lossy();
     // A colon in a non-prefix component selects an NTFS alternate data
     // stream. Such a handle still reports as a regular file and would bypass
     // the protected-file and content-boundary model.
-    component.to_string_lossy().contains(':')
+    // Trailing dots/spaces and DOS device names are Win32 aliases whose
+    // ambient rename semantics can disagree with capability-relative opens.
+    if value.contains(':')
+        || value.ends_with('.')
+        || value.ends_with(' ')
+        || value
+            .chars()
+            .any(|character| character.is_control() || r#"<>"|?*"#.contains(character))
+    {
+        return true;
+    }
+
+    let basename = value.split('.').next().unwrap_or_default();
+    let uppercase = basename.to_ascii_uppercase();
+    matches!(
+        uppercase.as_str(),
+        "CON" | "PRN" | "AUX" | "NUL" | "CLOCK$" | "CONIN$" | "CONOUT$"
+    ) || uppercase
+        .strip_prefix("COM")
+        .or_else(|| uppercase.strip_prefix("LPT"))
+        .is_some_and(|number| matches!(number, "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"))
 }
 
 #[cfg(not(windows))]

@@ -98,6 +98,38 @@ fn rejects_ntfs_alternate_data_stream_paths() {
     assert!(!ws.root.join(path).exists());
 }
 
+#[cfg(windows)]
+#[test]
+fn rejects_win32_aliases_and_reserved_device_names() {
+    let ws = TempWorkspace::new();
+    let guard = ws.guard();
+
+    assert_eq!(
+        guard
+            .resolve_write(Path::new(".GIT/config"))
+            .unwrap_err()
+            .kind(),
+        GuardErrorKind::Protected
+    );
+    for path in [
+        ".git.",
+        ".orchester ",
+        "src/value.txt.",
+        "src/value.txt ",
+        "src/CON",
+        "src/con.txt",
+        "src/NUL.rs",
+        "src/LPT1.log",
+        "src/bad?.txt",
+    ] {
+        assert_eq!(
+            guard.resolve_write(Path::new(path)).unwrap_err().kind(),
+            GuardErrorKind::InvalidPath,
+            "accepted Win32-ambiguous path {path:?}"
+        );
+    }
+}
+
 #[test]
 fn workspace_root_open_rejects_link_or_reparse_components() {
     let ws = TempWorkspace::new();
