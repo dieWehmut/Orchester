@@ -673,6 +673,17 @@ impl AtomicWriteTarget {
     }
 
     pub fn commit(mut self) -> Result<(), GuardError> {
+        let temp_identity = {
+            let file = self.file.as_ref().ok_or_else(|| GuardError::Changed {
+                path: self.destination_path.clone(),
+            })?;
+            let clone = file
+                .try_clone()
+                .map_err(|source| map_io("clone atomic target", &self.display_path, source))?
+                .into_std();
+            ensure_regular_file(&clone, &self.display_path)?;
+            identity_from_file(&clone, &self.display_path)?
+        };
         if let Some(file) = self.file.take() {
             file.sync_all()
                 .map_err(|source| map_io("sync atomic target", &self.display_path, source))?;
@@ -698,6 +709,7 @@ impl AtomicWriteTarget {
                         &self.destination_path,
                     )?
                     .into_std();
+                    ensure_regular_file(&file, &self.destination_path)?;
                     Some(identity_from_file(&file, &self.destination_path)?)
                 }
                 Ok(_) => return Err(GuardError::Unsupported),
@@ -722,6 +734,19 @@ impl AtomicWriteTarget {
                 Path::new(&self.final_name),
             )
             .map_err(|source| map_io("commit atomic write", &self.destination_path, source))?;
+        let renamed = open_file_nofollow(
+            &self.parent,
+            &self.final_name,
+            false,
+            &self.destination_path,
+        )?
+        .into_std();
+        ensure_regular_file(&renamed, &self.destination_path)?;
+        if identity_from_file(&renamed, &self.destination_path)? != temp_identity {
+            return Err(GuardError::Changed {
+                path: self.destination_path.clone(),
+            });
+        }
         self.committed = true;
         Ok(())
     }
