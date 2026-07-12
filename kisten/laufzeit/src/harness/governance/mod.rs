@@ -3,6 +3,7 @@
 mod path_guard;
 mod workspace_lock;
 
+pub(crate) use path_guard::WorkspaceIdentity;
 pub use path_guard::{
     AtomicWriteTarget, FilesystemResolver, GuardError, GuardErrorKind, PathResolver, ResolvedPath,
     WorkspaceGuard,

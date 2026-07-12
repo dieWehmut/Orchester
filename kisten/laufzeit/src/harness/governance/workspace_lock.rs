@@ -4,7 +4,7 @@ use std::sync::{Arc, Mutex, Weak};
 
 use tokio::sync::{OwnedRwLockReadGuard, OwnedRwLockWriteGuard, RwLock};
 
-use super::{GuardError, PathResolver, ResolvedPath, WorkspaceGuard};
+use super::{GuardError, ResolvedPath, WorkspaceGuard, WorkspaceIdentity};
 
 /// Process-local lock registry keyed by the durable workspace identity.
 #[derive(Clone, Default)]
@@ -14,7 +14,7 @@ pub struct WorkspaceLocks {
 
 #[derive(Default)]
 struct WorkspaceLocksInner {
-    locks: Mutex<HashMap<String, Weak<RwLock<()>>>>,
+    locks: Mutex<HashMap<WorkspaceIdentity, Weak<RwLock<()>>>>,
 }
 
 impl WorkspaceLocks {
@@ -22,22 +22,21 @@ impl WorkspaceLocks {
         Self::default()
     }
 
-    pub async fn read(&self, identity: &str) -> OwnedRwLockReadGuard<()> {
-        self.lock_for(identity).read_owned().await
+    pub async fn read(&self, workspace: &WorkspaceGuard) -> OwnedRwLockReadGuard<()> {
+        self.lock_for(workspace.identity()).read_owned().await
     }
 
-    pub async fn mutate(&self, identity: &str) -> OwnedRwLockWriteGuard<()> {
-        self.lock_for(identity).write_owned().await
+    pub async fn mutate(&self, workspace: &WorkspaceGuard) -> OwnedRwLockWriteGuard<()> {
+        self.lock_for(workspace.identity()).write_owned().await
     }
 
     /// Acquire the workspace mutation lock before resolving the target path.
-    pub async fn resolve_mutation<R: PathResolver>(
+    pub async fn resolve_mutation(
         &self,
-        identity: &str,
-        workspace: &WorkspaceGuard<R>,
+        workspace: &WorkspaceGuard,
         requested: &Path,
     ) -> Result<MutationLease, GuardError> {
-        let guard = self.mutate(identity).await;
+        let guard = self.mutate(workspace).await;
         let resolved = workspace.resolve_write(requested)?;
         Ok(MutationLease {
             _guard: guard,
@@ -45,7 +44,7 @@ impl WorkspaceLocks {
         })
     }
 
-    fn lock_for(&self, identity: &str) -> Arc<RwLock<()>> {
+    fn lock_for(&self, identity: &WorkspaceIdentity) -> Arc<RwLock<()>> {
         let mut locks = self
             .inner
             .locks
@@ -55,7 +54,7 @@ impl WorkspaceLocks {
             return existing;
         }
         let lock = Arc::new(RwLock::new(()));
-        locks.insert(identity.to_owned(), Arc::downgrade(&lock));
+        locks.insert(identity.clone(), Arc::downgrade(&lock));
         lock
     }
 }

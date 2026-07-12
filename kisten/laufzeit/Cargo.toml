@@ -17,6 +17,8 @@ serde_json = { workspace = true }
 json5 = { workspace = true }
 secrecy = { workspace = true }
 keyring = { workspace = true }
+cap-std = { workspace = true }
+cap-fs-ext = { workspace = true }
 thiserror = { workspace = true }
 rusqlite = { workspace = true }
 sha2 = { workspace = true }
@@ -28,6 +30,7 @@ regex = { workspace = true }
 
 [target.'cfg(windows)'.dependencies]
 keyring = { workspace = true, features = ["windows-native"] }
+windows-sys = { workspace = true }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 keyring = { workspace = true, features = ["apple-native"] }

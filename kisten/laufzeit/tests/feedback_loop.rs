@@ -5,6 +5,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use orchester_laufzeit::harness::feedback::{
     FailureLoopGuard, FeedbackClass, FeedbackEngine, FeedbackInput, FeedbackLimits,
 };
+use orchester_laufzeit::harness::governance::WorkspaceLocks;
 use orchester_laufzeit::harness::mutation::{
     MutationTracker, SnapshotLimits, SnapshotResult, SourceWatchConfig, WorkspaceSnapshotter,
 };
@@ -224,6 +225,7 @@ fn indirect_source_change_advances_generation_and_stales_validator_passes() {
         can_finish(&run, &[state]),
         Err(FinishBlocked::ValidationRequired)
     );
+    drop(watch);
     fs::remove_dir_all(root).unwrap();
 }
 
@@ -237,6 +239,7 @@ fn excluded_build_tree_does_not_advance_source_snapshot() {
     fs::write(root.join("target/debug/generated"), "ignored").unwrap();
     let after = watch.capture().unwrap();
     assert_eq!(before, after);
+    drop(watch);
     fs::remove_dir_all(root).unwrap();
 }
 
@@ -270,6 +273,7 @@ fn validator_that_mutates_sources_fails_even_with_exit_zero() {
     assert!(!evaluation.report.retryable);
     assert_eq!(state.last_passed_generation, None);
     assert_eq!(tracker.generation(), 5);
+    drop(watch);
     fs::remove_dir_all(root).unwrap();
 }
 
@@ -454,6 +458,56 @@ fn snapshot_limit_is_typed_and_invalidates_prior_validation() {
     let observation = tracker.observe(&limited, &limited);
     assert!(observation.uncertain);
     assert_eq!(tracker.generation(), 9);
+    drop(watch);
+    fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
+fn snapshot_limit_reports_only_the_bounded_detection_size() {
+    let root = temp_workspace("bounded-snapshot-read");
+    fs::write(root.join("src/large.rs"), vec![b'x'; 1024]).unwrap();
+    let watch = WorkspaceSnapshotter::new(
+        &root,
+        SourceWatchConfig {
+            includes: vec![PathBuf::from("src")],
+            excludes: Vec::new(),
+            limits: SnapshotLimits {
+                max_files: 10,
+                max_bytes: 4,
+            },
+        },
+    )
+    .unwrap();
+
+    assert_eq!(
+        watch.capture().unwrap(),
+        SnapshotResult::LimitExceeded { files: 1, bytes: 5 }
+    );
+    drop(watch);
+    fs::remove_dir_all(root).unwrap();
+}
+
+#[tokio::test]
+async fn snapshot_lock_identity_is_derived_from_the_workspace_guard() {
+    let root = temp_workspace("snapshot-lock-identity");
+    fs::write(root.join("src/lib.rs"), "stable").unwrap();
+    let first_watch = watcher(&root);
+    let second_watch = watcher(&root.join("."));
+    let locks = WorkspaceLocks::default();
+    let first = locks.mutate(first_watch.workspace()).await;
+    let contender_locks = locks.clone();
+    let contender =
+        tokio::spawn(async move { second_watch.capture_locked(&contender_locks).await });
+
+    tokio::time::sleep(std::time::Duration::from_millis(20)).await;
+    assert!(!contender.is_finished());
+    drop(first);
+    tokio::time::timeout(std::time::Duration::from_secs(1), contender)
+        .await
+        .expect("snapshot should acquire the derived workspace lock")
+        .expect("snapshot task")
+        .expect("snapshot capture");
+    drop(first_watch);
     fs::remove_dir_all(root).unwrap();
 }
 

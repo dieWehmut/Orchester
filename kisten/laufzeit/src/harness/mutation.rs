@@ -5,13 +5,12 @@
 //! workspace lock, then feed both snapshots to [`MutationTracker`].
 
 use std::collections::BTreeMap;
-use std::fs;
-use std::io;
+use std::io::{self, Read};
 use std::path::{Component, Path, PathBuf};
 
 use thiserror::Error;
 
-use super::governance::WorkspaceLocks;
+use super::governance::{GuardError, GuardErrorKind, WorkspaceGuard, WorkspaceLocks};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct SnapshotLimits {
@@ -88,9 +87,9 @@ pub enum SnapshotError {
     },
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct WorkspaceSnapshotter {
-    root: PathBuf,
+    workspace: WorkspaceGuard,
     config: SourceWatchConfig,
 }
 
@@ -99,55 +98,34 @@ impl WorkspaceSnapshotter {
         root: impl AsRef<Path>,
         mut config: SourceWatchConfig,
     ) -> Result<Self, SnapshotError> {
-        let requested_root = root.as_ref();
-        let metadata =
-            fs::symlink_metadata(requested_root).map_err(SnapshotError::RootUnavailable)?;
-        if is_link_or_reparse(&metadata) {
-            return Err(SnapshotError::LinkTraversal {
-                path: requested_root.to_path_buf(),
-            });
-        }
-        if !metadata.is_dir() {
-            return Err(SnapshotError::InvalidRelativePath {
-                path: requested_root.to_path_buf(),
-            });
-        }
-        let root = fs::canonicalize(requested_root).map_err(SnapshotError::RootUnavailable)?;
+        let workspace = WorkspaceGuard::new(root.as_ref()).map_err(|error| {
+            SnapshotError::RootUnavailable(io::Error::new(io::ErrorKind::PermissionDenied, error))
+        })?;
         config.includes = normalize_paths(config.includes)?;
         config.excludes = normalize_paths(config.excludes)?;
         if config.includes.is_empty() {
             config.includes.push(PathBuf::from("."));
         }
-        Ok(Self { root, config })
+        Ok(Self { workspace, config })
     }
 
     pub fn root(&self) -> &Path {
-        &self.root
+        self.workspace.root()
+    }
+
+    pub fn workspace(&self) -> &WorkspaceGuard {
+        &self.workspace
     }
 
     pub fn capture(&self) -> Result<SnapshotResult, SnapshotError> {
         let mut accumulator = SnapshotAccumulator::new(self.config.limits);
         for include in &self.config.includes {
-            let absolute = self.root.join(include);
-            match fs::symlink_metadata(&absolute) {
-                Ok(metadata) => {
-                    if is_link_or_reparse(&metadata) {
-                        return Err(SnapshotError::LinkTraversal {
-                            path: include.clone(),
-                        });
-                    }
-                }
-                Err(error) if error.kind() == io::ErrorKind::NotFound => continue,
-                Err(source) => {
-                    return Err(SnapshotError::Io {
-                        path: include.clone(),
-                        source,
-                    })
-                }
-            }
-            self.reject_linked_components(include)?;
-            if let Some(limit) = self.visit(include, &mut accumulator)? {
-                return Ok(limit);
+            match self.visit(include, &mut accumulator) {
+                Ok(Some(limit)) => return Ok(limit),
+                Ok(None) => {}
+                Err(SnapshotError::Io { source, .. })
+                    if source.kind() == io::ErrorKind::NotFound => {}
+                Err(error) => return Err(error),
             }
         }
         Ok(SnapshotResult::Complete(accumulator.finish()))
@@ -159,9 +137,8 @@ impl WorkspaceSnapshotter {
     pub async fn capture_locked(
         &self,
         locks: &WorkspaceLocks,
-        workspace_identity: &str,
     ) -> Result<SnapshotResult, SnapshotError> {
-        let _guard = locks.read(workspace_identity).await;
+        let _guard = locks.read(&self.workspace).await;
         self.capture()
     }
 
@@ -173,90 +150,63 @@ impl WorkspaceSnapshotter {
         if self.excluded(relative) {
             return Ok(None);
         }
-        let absolute = self.root.join(relative);
-        let metadata = fs::symlink_metadata(&absolute).map_err(|source| SnapshotError::Io {
+        match self.workspace.directory_entries(relative) {
+            Ok(mut children) => {
+                accumulator.record_directory(relative);
+                children.sort_by_key(|left| path_bytes(Path::new(left)));
+                for child in children {
+                    let child = relative.join(child);
+                    if let Some(limit) = self.visit(&child, accumulator)? {
+                        return Ok(Some(limit));
+                    }
+                }
+                return Ok(None);
+            }
+            Err(error) if error.kind() == GuardErrorKind::NotDirectory => {}
+            Err(error) => return Err(snapshot_guard_error(relative, error)),
+        }
+
+        let mut file = self
+            .workspace
+            .open_snapshot_file(relative)
+            .map_err(|error| snapshot_guard_error(relative, error))?;
+        let metadata = file.metadata().map_err(|source| SnapshotError::Io {
             path: relative.to_path_buf(),
             source,
         })?;
-        if is_link_or_reparse(&metadata) {
-            return Err(SnapshotError::LinkTraversal {
+        if !metadata.is_file() {
+            return Err(SnapshotError::UnsupportedFileType {
                 path: relative.to_path_buf(),
             });
         }
-        if metadata.is_dir() {
-            accumulator.record_directory(relative);
-            let entries = fs::read_dir(&absolute).map_err(|source| SnapshotError::Io {
+        let files = accumulator.file_count.saturating_add(1);
+        if files > accumulator.limits.max_files {
+            return Ok(Some(SnapshotResult::LimitExceeded {
+                files,
+                bytes: accumulator.byte_count,
+            }));
+        }
+        let remaining = accumulator
+            .limits
+            .max_bytes
+            .saturating_sub(accumulator.byte_count);
+        let mut content = Vec::with_capacity(remaining.min(64 * 1024) as usize);
+        Read::by_ref(&mut file)
+            .take(remaining.saturating_add(1))
+            .read_to_end(&mut content)
+            .map_err(|source| SnapshotError::Io {
                 path: relative.to_path_buf(),
                 source,
             })?;
-            let mut children = entries
-                .map(|entry| {
-                    entry
-                        .map(|entry| relative.join(entry.file_name()))
-                        .map_err(|source| SnapshotError::Io {
-                            path: relative.to_path_buf(),
-                            source,
-                        })
-                })
-                .collect::<Result<Vec<_>, _>>()?;
-            children.sort_by_key(|left| path_bytes(left));
-            for child in children {
-                if let Some(limit) = self.visit(&child, accumulator)? {
-                    return Ok(Some(limit));
-                }
-            }
-            return Ok(None);
+        let actual_bytes = accumulator.byte_count.saturating_add(content.len() as u64);
+        if actual_bytes > accumulator.limits.max_bytes {
+            return Ok(Some(SnapshotResult::LimitExceeded {
+                files,
+                bytes: accumulator.limits.max_bytes.saturating_add(1),
+            }));
         }
-        if metadata.is_file() {
-            let bytes = metadata.len();
-            let files = accumulator.file_count.saturating_add(1);
-            let total_bytes = accumulator.byte_count.saturating_add(bytes);
-            if files > accumulator.limits.max_files || total_bytes > accumulator.limits.max_bytes {
-                return Ok(Some(SnapshotResult::LimitExceeded {
-                    files,
-                    bytes: total_bytes,
-                }));
-            }
-            let content = fs::read(&absolute).map_err(|source| SnapshotError::Io {
-                path: relative.to_path_buf(),
-                source,
-            })?;
-            let actual_bytes = accumulator.byte_count.saturating_add(content.len() as u64);
-            if files > accumulator.limits.max_files || actual_bytes > accumulator.limits.max_bytes {
-                return Ok(Some(SnapshotResult::LimitExceeded {
-                    files,
-                    bytes: actual_bytes,
-                }));
-            }
-            accumulator.record_file(relative, &content);
-            return Ok(None);
-        }
-        Err(SnapshotError::UnsupportedFileType {
-            path: relative.to_path_buf(),
-        })
-    }
-
-    fn reject_linked_components(&self, relative: &Path) -> Result<(), SnapshotError> {
-        let mut current = self.root.clone();
-        let mut checked = PathBuf::new();
-        for component in relative.components() {
-            if component == Component::CurDir {
-                continue;
-            }
-            current.push(component.as_os_str());
-            checked.push(component.as_os_str());
-            if !current.exists() {
-                break;
-            }
-            let metadata = fs::symlink_metadata(&current).map_err(|source| SnapshotError::Io {
-                path: checked.clone(),
-                source,
-            })?;
-            if is_link_or_reparse(&metadata) {
-                return Err(SnapshotError::LinkTraversal { path: checked });
-            }
-        }
-        Ok(())
+        accumulator.record_file(relative, &content);
+        Ok(None)
     }
 
     fn excluded(&self, relative: &Path) -> bool {
@@ -372,19 +322,27 @@ fn path_bytes(path: &Path) -> Vec<u8> {
     normalized
 }
 
-fn is_link_or_reparse(metadata: &fs::Metadata) -> bool {
-    if metadata.file_type().is_symlink() {
-        return true;
-    }
-    #[cfg(windows)]
-    {
-        use std::os::windows::fs::MetadataExt;
-        const FILE_ATTRIBUTE_REPARSE_POINT: u32 = 0x400;
-        metadata.file_attributes() & FILE_ATTRIBUTE_REPARSE_POINT != 0
-    }
-    #[cfg(not(windows))]
-    {
-        false
+fn snapshot_guard_error(path: &Path, error: GuardError) -> SnapshotError {
+    match error.kind() {
+        GuardErrorKind::LinkTraversal => SnapshotError::LinkTraversal {
+            path: path.to_path_buf(),
+        },
+        GuardErrorKind::InvalidPath | GuardErrorKind::Outside | GuardErrorKind::Protected => {
+            SnapshotError::InvalidRelativePath {
+                path: path.to_path_buf(),
+            }
+        }
+        GuardErrorKind::NotDirectory => SnapshotError::UnsupportedFileType {
+            path: path.to_path_buf(),
+        },
+        GuardErrorKind::NotFound => SnapshotError::Io {
+            path: path.to_path_buf(),
+            source: io::Error::new(io::ErrorKind::NotFound, error),
+        },
+        _ => SnapshotError::Io {
+            path: path.to_path_buf(),
+            source: io::Error::new(io::ErrorKind::PermissionDenied, error),
+        },
     }
 }
 

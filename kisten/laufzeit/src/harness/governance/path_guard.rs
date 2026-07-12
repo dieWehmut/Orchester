@@ -1,14 +1,18 @@
 use std::collections::hash_map::RandomState;
-use std::fs::{self, File, Metadata, OpenOptions};
+use std::ffi::{OsStr, OsString};
+use std::fs::{self, File, Metadata};
 use std::hash::{BuildHasher, Hash, Hasher};
-use std::io;
+use std::io::{self, Read, Write};
 use std::path::{Component, Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use cap_fs_ext::{DirExt, FollowSymlinks, OpenOptionsFollowExt};
+use cap_std::fs::{Dir, File as CapFile, OpenOptions};
 use thiserror::Error;
 
 static NEXT_TEMP_FILE: AtomicU64 = AtomicU64::new(0);
+const DEFAULT_READ_LIMIT: u64 = 16 * 1024 * 1024;
 
 /// Stable categories callers can use in policy and audit decisions.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -20,10 +24,12 @@ pub enum GuardErrorKind {
     NotFound,
     NotDirectory,
     Changed,
+    LimitExceeded,
+    Unsupported,
     Io,
 }
 
-/// A path was rejected before any governed file operation was opened.
+/// A path was rejected before a governed operation could use it.
 #[derive(Debug, Error)]
 pub enum GuardError {
     #[error("path is empty, contains NUL, or has an invalid prefix: {path:?}")]
@@ -40,6 +46,10 @@ pub enum GuardError {
     NotDirectory { path: PathBuf },
     #[error("path identity changed after it was resolved: {path:?}")]
     Changed { path: PathBuf },
+    #[error("guarded read exceeds {limit} bytes: {path:?}")]
+    LimitExceeded { path: PathBuf, limit: u64 },
+    #[error("secure path operations are unsupported on this platform")]
+    Unsupported,
     #[error("could not {operation} {path:?}: {source}")]
     Io {
         operation: &'static str,
@@ -59,18 +69,19 @@ impl GuardError {
             Self::NotFound { .. } => GuardErrorKind::NotFound,
             Self::NotDirectory { .. } => GuardErrorKind::NotDirectory,
             Self::Changed { .. } => GuardErrorKind::Changed,
+            Self::LimitExceeded { .. } => GuardErrorKind::LimitExceeded,
+            Self::Unsupported => GuardErrorKind::Unsupported,
             Self::Io { .. } => GuardErrorKind::Io,
         }
     }
 }
 
-/// Filesystem operations are abstracted so resolution can be fault-injected later.
+/// Compatibility resolver for diagnostics which do not perform file I/O.
 pub trait PathResolver: Send + Sync {
     fn resolve_existing_no_follow(&self, path: &Path) -> Result<PathBuf, GuardError>;
     fn resolve_parent_no_links(&self, path: &Path) -> Result<PathBuf, GuardError>;
 }
 
-/// Resolver backed by the host filesystem.
 #[derive(Debug, Clone, Copy, Default)]
 pub struct FilesystemResolver;
 
@@ -110,36 +121,61 @@ impl PathResolver for FilesystemResolver {
     }
 }
 
-/// A checked path plus the filesystem identities needed for write-time revalidation.
+#[cfg(windows)]
+type CanonicalRootKey = Vec<u16>;
+#[cfg(not(windows))]
+type CanonicalRootKey = PathBuf;
+
+/// An unforgeable lock key derived from the canonical root and its OS object id.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub(crate) struct WorkspaceIdentity {
+    canonical_root: CanonicalRootKey,
+    object: ObjectIdentity,
+}
+
+#[cfg(unix)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+struct ObjectIdentity {
+    device: u64,
+    inode: u64,
+}
+
+#[cfg(windows)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+struct ObjectIdentity {
+    volume_serial: u32,
+    file_index: u64,
+}
+
+#[cfg(not(any(unix, windows)))]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+struct ObjectIdentity;
+
+/// A checked path plus handle-derived identities for write-time revalidation.
 #[derive(Debug)]
 pub struct ResolvedPath {
     pub requested: PathBuf,
     pub final_path: PathBuf,
     pub canonical_parent: PathBuf,
-    root: PathBuf,
-    root_identity: PathIdentity,
-    parent_identity: PathIdentity,
-    target_identity: Option<PathIdentity>,
+    relative: PathBuf,
+    root_identity: ObjectIdentity,
+    parent_identity: ObjectIdentity,
+    target_identity: Option<ObjectIdentity>,
+    target_kind: Option<NodeKind>,
     mode: ResolveMode,
 }
 
 impl ResolvedPath {
-    /// Resolve again immediately before open or rename and reject any identity change.
-    pub fn revalidate<R: PathResolver>(
-        &self,
-        guard: &WorkspaceGuard<R>,
-    ) -> Result<ResolvedPath, GuardError> {
-        if self.root != guard.root {
-            return Err(GuardError::Changed {
-                path: self.requested.clone(),
-            });
-        }
-        let current = guard.resolve(&self.requested, self.mode)?;
-        if self.final_path != current.final_path
+    /// Resolve again through directory capabilities and compare OS object ids.
+    pub fn revalidate(&self, guard: &WorkspaceGuard) -> Result<ResolvedPath, GuardError> {
+        let current = guard.resolve_normalized(&self.requested, self.mode)?;
+        if self.relative != current.relative
+            || self.final_path != current.final_path
             || self.canonical_parent != current.canonical_parent
             || self.root_identity != current.root_identity
             || self.parent_identity != current.parent_identity
             || self.target_identity != current.target_identity
+            || self.target_kind != current.target_kind
         {
             return Err(GuardError::Changed {
                 path: self.requested.clone(),
@@ -155,41 +191,49 @@ enum ResolveMode {
     Write,
 }
 
-/// Resolves agent-supplied paths without allowing workspace or link traversal.
-pub struct WorkspaceGuard<R = FilesystemResolver> {
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum NodeKind {
+    File,
+    Directory,
+}
+
+/// A workspace root held as an OS directory capability for its full lifetime.
+pub struct WorkspaceGuard {
     root: PathBuf,
-    root_identity: PathIdentity,
-    resolver: R,
+    root_dir: Dir,
+    identity: WorkspaceIdentity,
     protected: Vec<PathBuf>,
 }
 
-impl WorkspaceGuard<FilesystemResolver> {
-    pub fn new(root: impl AsRef<Path>) -> Result<Self, GuardError> {
-        Self::with_resolver(root, FilesystemResolver)
+impl std::fmt::Debug for WorkspaceGuard {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        formatter
+            .debug_struct("WorkspaceGuard")
+            .field("root", &self.root)
+            .field("identity", &self.identity)
+            .finish_non_exhaustive()
     }
 }
 
-impl<R: PathResolver> WorkspaceGuard<R> {
-    pub fn with_resolver(root: impl AsRef<Path>, resolver: R) -> Result<Self, GuardError> {
+impl WorkspaceGuard {
+    pub fn new(root: impl AsRef<Path>) -> Result<Self, GuardError> {
         let requested_root = root.as_ref();
         if requested_root.as_os_str().is_empty() || contains_nul(requested_root) {
             return Err(GuardError::InvalidPath {
                 path: requested_root.to_path_buf(),
             });
         }
-        let metadata = symlink_metadata(requested_root)?;
-        reject_link(requested_root, &metadata)?;
-        if !metadata.is_dir() {
-            return Err(GuardError::NotDirectory {
-                path: requested_root.to_path_buf(),
-            });
-        }
-        let root = resolver.resolve_existing_no_follow(requested_root)?;
-        let root_identity = path_identity(&root)?;
+        let root = resolve_existing_path_no_links(requested_root)?;
+        let root_dir = open_root_capability(&root)?;
+        let object = identity_from_dir(&root_dir, &root)?;
+        let identity = WorkspaceIdentity {
+            canonical_root: canonical_root_key(&root),
+            object: object.clone(),
+        };
         Ok(Self {
             root,
-            root_identity,
-            resolver,
+            root_dir,
+            identity,
             protected: vec![PathBuf::from(".git"), PathBuf::from(".orchester")],
         })
     }
@@ -198,15 +242,59 @@ impl<R: PathResolver> WorkspaceGuard<R> {
         &self.root
     }
 
+    pub(crate) fn identity(&self) -> &WorkspaceIdentity {
+        &self.identity
+    }
+
     pub fn resolve_read(&self, requested: &Path) -> Result<ResolvedPath, GuardError> {
-        self.resolve(requested, ResolveMode::Read)
+        self.resolve_normalized(requested, ResolveMode::Read)
     }
 
     pub fn resolve_write(&self, requested: &Path) -> Result<ResolvedPath, GuardError> {
-        self.resolve(requested, ResolveMode::Write)
+        self.resolve_normalized(requested, ResolveMode::Write)
     }
 
-    /// Create a never-followed temporary file beside a fully existing target parent.
+    /// Open a previously resolved file relative to a verified parent handle.
+    pub fn open_read(&self, resolved: &ResolvedPath) -> Result<File, GuardError> {
+        if resolved.mode != ResolveMode::Read {
+            return Err(GuardError::InvalidPath {
+                path: resolved.requested.clone(),
+            });
+        }
+        let current = resolved.revalidate(self)?;
+        if current.target_kind != Some(NodeKind::File) {
+            return Err(GuardError::NotDirectory {
+                path: current.requested,
+            });
+        }
+        let (parent, basename) = self.open_parent(&current.relative)?;
+        let cap_file = open_file_nofollow(&parent, &basename, false, &current.requested)?;
+        let file = cap_file.into_std();
+        let identity = identity_from_file(&file, &current.requested)?;
+        if current.target_identity.as_ref() != Some(&identity) {
+            return Err(GuardError::Changed {
+                path: current.requested,
+            });
+        }
+        Ok(file)
+    }
+
+    /// Read a file with a conservative default allocation bound.
+    pub fn read_file(&self, requested: &Path) -> Result<Vec<u8>, GuardError> {
+        self.read_file_bounded(requested, DEFAULT_READ_LIMIT)
+    }
+
+    pub fn read_file_bounded(
+        &self,
+        requested: &Path,
+        max_bytes: u64,
+    ) -> Result<Vec<u8>, GuardError> {
+        let resolved = self.resolve_read(requested)?;
+        let file = self.open_read(&resolved)?;
+        read_bounded(file, requested, max_bytes)
+    }
+
+    /// Create an unguessable temporary file through the verified parent handle.
     pub fn atomic_write_target(
         &self,
         resolved: &ResolvedPath,
@@ -217,104 +305,175 @@ impl<R: PathResolver> WorkspaceGuard<R> {
                 path: current.requested,
             });
         }
-        let final_parent = current
-            .final_path
-            .parent()
-            .ok_or_else(|| GuardError::InvalidPath {
-                path: current.final_path.clone(),
-            })?;
-        if final_parent != current.canonical_parent {
-            return Err(GuardError::NotFound {
-                path: final_parent.to_path_buf(),
+        if current.target_kind == Some(NodeKind::Directory) {
+            return Err(GuardError::NotDirectory {
+                path: current.requested,
             });
         }
-        if current.target_identity.is_some()
-            && fs::symlink_metadata(&current.final_path)
-                .map(|metadata| metadata.is_dir())
-                .unwrap_or(false)
-        {
-            return Err(GuardError::NotDirectory {
-                path: current.final_path,
+        let (parent, final_name) = self.open_parent(&current.relative)?;
+        let immediate_parent =
+            current
+                .final_path
+                .parent()
+                .ok_or_else(|| GuardError::InvalidPath {
+                    path: current.requested.clone(),
+                })?;
+        if immediate_parent != current.canonical_parent {
+            return Err(GuardError::NotFound {
+                path: immediate_parent.to_path_buf(),
             });
         }
 
         for _ in 0..32 {
-            let path = final_parent.join(format!(".orchester-write-{:016x}.tmp", random_token()));
-            match OpenOptions::new().write(true).create_new(true).open(&path) {
-                Ok(file) => return Ok(AtomicWriteTarget { path, file }),
+            let temp_name = OsString::from(format!(".orchester-write-{:016x}.tmp", random_token()));
+            let mut options = OpenOptions::new();
+            options.write(true).create_new(true);
+            options.follow(FollowSymlinks::No);
+            match parent.open_with(Path::new(&temp_name), &options) {
+                Ok(file) => {
+                    let display_path = immediate_parent.join(&temp_name);
+                    return Ok(AtomicWriteTarget {
+                        parent,
+                        file: Some(file),
+                        temp_name,
+                        final_name,
+                        display_path,
+                        destination_path: current.final_path,
+                        expected_target_identity: current.target_identity,
+                        committed: false,
+                    });
+                }
                 Err(source) if source.kind() == io::ErrorKind::AlreadyExists => continue,
                 Err(source) => {
-                    return Err(GuardError::Io {
-                        operation: "create atomic write target",
-                        path,
+                    return Err(map_io(
+                        "create atomic write target",
+                        &current.requested,
                         source,
-                    });
+                    ));
                 }
             }
         }
         Err(GuardError::Io {
             operation: "create atomic write target",
-            path: final_parent.to_path_buf(),
+            path: current.requested,
             source: io::Error::new(io::ErrorKind::AlreadyExists, "temporary name collisions"),
         })
     }
 
-    fn resolve(&self, requested: &Path, mode: ResolveMode) -> Result<ResolvedPath, GuardError> {
-        if requested.as_os_str().is_empty() || contains_nul(requested) {
-            return Err(GuardError::InvalidPath {
-                path: requested.to_path_buf(),
-            });
-        }
-        let current_root_identity = path_identity(&self.root)?;
-        if current_root_identity != self.root_identity {
-            return Err(GuardError::Changed {
-                path: self.root.clone(),
-            });
-        }
+    /// Replace a regular file through a same-directory capability rename.
+    pub fn write_atomic(&self, requested: &Path, contents: &[u8]) -> Result<(), GuardError> {
+        let resolved = self.resolve_write(requested)?;
+        let mut target = self.atomic_write_target(&resolved)?;
+        target
+            .file_mut()
+            .write_all(contents)
+            .map_err(|source| map_io("write atomic target", requested, source))?;
+        target.commit()
+    }
 
-        let relative = self.normalize_request(requested)?;
-        if self.is_protected(&relative) {
-            return Err(GuardError::Protected {
-                path: requested.to_path_buf(),
-            });
-        }
+    /// Rename one regular file to another without resolving either parent ambiently.
+    pub fn rename(&self, from: &Path, to: &Path) -> Result<(), GuardError> {
+        let from_relative = self.normalize_request(from, false)?;
+        let to_relative = self.normalize_request(to, false)?;
+        self.reject_protected(&from_relative, from)?;
+        self.reject_protected(&to_relative, to)?;
+        let (from_parent, from_name) = self.open_parent(&from_relative)?;
+        let (to_parent, to_name) = self.open_parent(&to_relative)?;
+        let source = open_file_nofollow(&from_parent, &from_name, false, from)?;
+        let source_std = source
+            .try_clone()
+            .map_err(|source| map_io("clone rename source", from, source))?
+            .into_std();
+        let source_identity = identity_from_file(&source_std, from)?;
 
-        let final_path = self.root.join(&relative);
-        let mut current = self.root.clone();
-        let mut canonical_parent = self.root.clone();
-        let components: Vec<_> = relative.components().collect();
-        let mut target_identity = None;
-        let mut encountered_missing = false;
-
-        for (index, component) in components.iter().enumerate() {
-            let Component::Normal(name) = component else {
-                return Err(GuardError::InvalidPath {
-                    path: requested.to_path_buf(),
+        match to_parent.symlink_metadata(Path::new(&to_name)) {
+            Ok(metadata) if metadata.file_type().is_symlink() => {
+                return Err(GuardError::LinkTraversal {
+                    path: to.to_path_buf(),
                 });
-            };
-            current.push(name);
-            if encountered_missing {
+            }
+            Ok(metadata) if metadata.is_dir() => {
+                return Err(GuardError::NotDirectory {
+                    path: to.to_path_buf(),
+                });
+            }
+            Ok(metadata) if metadata.is_file() => {}
+            Ok(_) => return Err(GuardError::Unsupported),
+            Err(error) if error.kind() == io::ErrorKind::NotFound => {}
+            Err(source) => return Err(map_io("inspect rename target", to, source)),
+        }
+
+        from_parent
+            .rename(Path::new(&from_name), &to_parent, Path::new(&to_name))
+            .map_err(|source| map_io("rename", from, source))?;
+        let renamed = open_file_nofollow(&to_parent, &to_name, false, to)?.into_std();
+        if identity_from_file(&renamed, to)? != source_identity {
+            return Err(GuardError::Changed {
+                path: to.to_path_buf(),
+            });
+        }
+        Ok(())
+    }
+
+    pub(crate) fn directory_entries(&self, requested: &Path) -> Result<Vec<OsString>, GuardError> {
+        let relative = self.normalize_request(requested, true)?;
+        self.reject_protected(&relative, requested)?;
+        let directory = self.open_directory(&relative, requested)?;
+        let entries = directory
+            .entries()
+            .map_err(|source| map_io("read directory", requested, source))?;
+        entries
+            .map(|entry| {
+                entry
+                    .map(|entry| entry.file_name())
+                    .map_err(|source| map_io("read directory entry", requested, source))
+            })
+            .collect()
+    }
+
+    pub(crate) fn open_snapshot_file(&self, requested: &Path) -> Result<File, GuardError> {
+        let resolved = self.resolve_read(requested)?;
+        self.open_read(&resolved)
+    }
+
+    fn resolve_normalized(
+        &self,
+        requested: &Path,
+        mode: ResolveMode,
+    ) -> Result<ResolvedPath, GuardError> {
+        let relative = self.normalize_request(requested, false)?;
+        self.reject_protected(&relative, requested)?;
+        let components = normal_components(&relative, requested)?;
+        let (basename, parent_components) =
+            components
+                .split_last()
+                .ok_or_else(|| GuardError::InvalidPath {
+                    path: requested.to_path_buf(),
+                })?;
+        let mut directory = self.clone_root()?;
+        let mut canonical_parent = self.root.clone();
+        let mut missing_parent = false;
+
+        for component in parent_components {
+            if missing_parent {
                 continue;
             }
-            match fs::symlink_metadata(&current) {
-                Ok(metadata) => {
-                    reject_link(&current, &metadata)?;
-                    let canonical = self.resolver.resolve_existing_no_follow(&current)?;
-                    if !canonical.starts_with(&self.root) {
-                        return Err(GuardError::Outside {
-                            path: requested.to_path_buf(),
-                        });
-                    }
-                    let is_last = index + 1 == components.len();
-                    if !is_last && !metadata.is_dir() {
-                        return Err(GuardError::NotDirectory { path: current });
-                    }
-                    if metadata.is_dir() && !is_last {
-                        canonical_parent = canonical.clone();
-                    }
-                    if is_last {
-                        target_identity = Some(path_identity(&canonical)?);
-                    }
+            match directory.symlink_metadata(Path::new(component)) {
+                Ok(metadata) if metadata.file_type().is_symlink() => {
+                    return Err(GuardError::LinkTraversal {
+                        path: requested.to_path_buf(),
+                    });
+                }
+                Ok(metadata) if !metadata.is_dir() => {
+                    return Err(GuardError::NotDirectory {
+                        path: requested.to_path_buf(),
+                    });
+                }
+                Ok(_) => {
+                    directory = directory
+                        .open_dir_nofollow(Path::new(component))
+                        .map_err(|source| map_io("open path component", requested, source))?;
+                    canonical_parent.push(component);
                 }
                 Err(source) if source.kind() == io::ErrorKind::NotFound => {
                     if mode == ResolveMode::Read {
@@ -322,37 +481,109 @@ impl<R: PathResolver> WorkspaceGuard<R> {
                             path: requested.to_path_buf(),
                         });
                     }
-                    encountered_missing = true;
+                    missing_parent = true;
                 }
-                Err(source) => {
-                    return Err(GuardError::Io {
-                        operation: "inspect path",
-                        path: current,
-                        source,
-                    });
-                }
+                Err(source) => return Err(map_io("inspect path component", requested, source)),
             }
         }
 
-        let canonical_final = if encountered_missing {
-            final_path
+        let parent_identity = identity_from_dir(&directory, requested)?;
+        let (target_identity, target_kind) = if missing_parent {
+            (None, None)
         } else {
-            self.resolver.resolve_existing_no_follow(&final_path)?
+            match directory.symlink_metadata(Path::new(basename)) {
+                Ok(metadata) if metadata.file_type().is_symlink() => {
+                    return Err(GuardError::LinkTraversal {
+                        path: requested.to_path_buf(),
+                    });
+                }
+                Ok(metadata) if metadata.is_dir() => {
+                    let target = directory
+                        .open_dir_nofollow(Path::new(basename))
+                        .map_err(|source| map_io("open target directory", requested, source))?;
+                    (
+                        Some(identity_from_dir(&target, requested)?),
+                        Some(NodeKind::Directory),
+                    )
+                }
+                Ok(metadata) if metadata.is_file() => {
+                    let target = open_file_nofollow(&directory, basename, false, requested)?;
+                    let target = target.into_std();
+                    (
+                        Some(identity_from_file(&target, requested)?),
+                        Some(NodeKind::File),
+                    )
+                }
+                Ok(_) => return Err(GuardError::Unsupported),
+                Err(source) if source.kind() == io::ErrorKind::NotFound => {
+                    if mode == ResolveMode::Read {
+                        return Err(GuardError::NotFound {
+                            path: requested.to_path_buf(),
+                        });
+                    }
+                    (None, None)
+                }
+                Err(source) => return Err(map_io("inspect target", requested, source)),
+            }
         };
-        let parent_identity = path_identity(&canonical_parent)?;
+
         Ok(ResolvedPath {
             requested: requested.to_path_buf(),
-            final_path: canonical_final,
+            final_path: self.root.join(&relative),
             canonical_parent,
-            root: self.root.clone(),
-            root_identity: current_root_identity,
+            relative,
+            root_identity: self.identity.object.clone(),
             parent_identity,
             target_identity,
+            target_kind,
             mode,
         })
     }
 
-    fn normalize_request(&self, requested: &Path) -> Result<PathBuf, GuardError> {
+    fn open_parent(&self, relative: &Path) -> Result<(Dir, OsString), GuardError> {
+        let components = normal_components(relative, relative)?;
+        let (basename, parents) =
+            components
+                .split_last()
+                .ok_or_else(|| GuardError::InvalidPath {
+                    path: relative.to_path_buf(),
+                })?;
+        let mut directory = self.clone_root()?;
+        for component in parents {
+            directory = directory
+                .open_dir_nofollow(Path::new(component))
+                .map_err(|source| map_io("open parent directory", relative, source))?;
+        }
+        Ok((directory, basename.clone()))
+    }
+
+    fn open_directory(&self, relative: &Path, requested: &Path) -> Result<Dir, GuardError> {
+        let mut directory = self.clone_root()?;
+        if relative.as_os_str().is_empty() {
+            return Ok(directory);
+        }
+        for component in normal_components(relative, requested)? {
+            directory = directory
+                .open_dir_nofollow(Path::new(&component))
+                .map_err(|source| map_io("open directory", requested, source))?;
+        }
+        Ok(directory)
+    }
+
+    fn clone_root(&self) -> Result<Dir, GuardError> {
+        self.root_dir.try_clone().map_err(|source| GuardError::Io {
+            operation: "clone workspace root handle",
+            path: self.root.clone(),
+            source,
+        })
+    }
+
+    fn normalize_request(&self, requested: &Path, allow_root: bool) -> Result<PathBuf, GuardError> {
+        if contains_nul(requested) {
+            return Err(GuardError::InvalidPath {
+                path: requested.to_path_buf(),
+            });
+        }
         let relative = if requested.is_absolute() {
             strip_workspace_prefix(requested, &self.root).ok_or_else(|| GuardError::Outside {
                 path: requested.to_path_buf(),
@@ -379,7 +610,7 @@ impl<R: PathResolver> WorkspaceGuard<R> {
                 }
             }
         }
-        if normalized.as_os_str().is_empty() {
+        if normalized.as_os_str().is_empty() && !allow_root {
             return Err(GuardError::InvalidPath {
                 path: requested.to_path_buf(),
             });
@@ -387,116 +618,226 @@ impl<R: PathResolver> WorkspaceGuard<R> {
         Ok(normalized)
     }
 
-    fn is_protected(&self, relative: &Path) -> bool {
-        self.protected
+    fn reject_protected(&self, relative: &Path, requested: &Path) -> Result<(), GuardError> {
+        if self
+            .protected
             .iter()
             .any(|protected| path_starts_with(relative, protected))
+        {
+            Err(GuardError::Protected {
+                path: requested.to_path_buf(),
+            })
+        } else {
+            Ok(())
+        }
     }
 }
 
-/// A newly created regular file that is removed unless the caller renames it.
+/// A capability-relative temporary file which cleans itself up unless committed.
 pub struct AtomicWriteTarget {
-    path: PathBuf,
-    file: File,
+    parent: Dir,
+    file: Option<CapFile>,
+    temp_name: OsString,
+    final_name: OsString,
+    display_path: PathBuf,
+    destination_path: PathBuf,
+    expected_target_identity: Option<ObjectIdentity>,
+    committed: bool,
 }
 
 impl AtomicWriteTarget {
     pub fn path(&self) -> &Path {
-        &self.path
+        &self.display_path
     }
 
-    pub fn file(&self) -> &File {
-        &self.file
+    pub fn file(&self) -> &CapFile {
+        self.file.as_ref().expect("atomic target file is open")
     }
 
-    pub fn file_mut(&mut self) -> &mut File {
-        &mut self.file
+    pub fn file_mut(&mut self) -> &mut CapFile {
+        self.file.as_mut().expect("atomic target file is open")
+    }
+
+    pub fn commit(mut self) -> Result<(), GuardError> {
+        if let Some(file) = self.file.take() {
+            file.sync_all()
+                .map_err(|source| map_io("sync atomic target", &self.display_path, source))?;
+            drop(file);
+        }
+        let current_target_identity =
+            match self.parent.symlink_metadata(Path::new(&self.final_name)) {
+                Ok(metadata) if metadata.file_type().is_symlink() => {
+                    return Err(GuardError::LinkTraversal {
+                        path: self.destination_path.clone(),
+                    });
+                }
+                Ok(metadata) if metadata.is_dir() => {
+                    return Err(GuardError::NotDirectory {
+                        path: self.destination_path.clone(),
+                    });
+                }
+                Ok(metadata) if metadata.is_file() => {
+                    let file = open_file_nofollow(
+                        &self.parent,
+                        &self.final_name,
+                        false,
+                        &self.destination_path,
+                    )?
+                    .into_std();
+                    Some(identity_from_file(&file, &self.destination_path)?)
+                }
+                Ok(_) => return Err(GuardError::Unsupported),
+                Err(error) if error.kind() == io::ErrorKind::NotFound => None,
+                Err(source) => {
+                    return Err(map_io(
+                        "inspect atomic destination",
+                        &self.destination_path,
+                        source,
+                    ));
+                }
+            };
+        if current_target_identity != self.expected_target_identity {
+            return Err(GuardError::Changed {
+                path: self.destination_path.clone(),
+            });
+        }
+        self.parent
+            .rename(
+                Path::new(&self.temp_name),
+                &self.parent,
+                Path::new(&self.final_name),
+            )
+            .map_err(|source| map_io("commit atomic write", &self.destination_path, source))?;
+        self.committed = true;
+        Ok(())
     }
 }
 
 impl Drop for AtomicWriteTarget {
     fn drop(&mut self) {
-        let _ = fs::remove_file(&self.path);
+        let _ = self.file.take();
+        if !self.committed {
+            let _ = self.parent.remove_file(Path::new(&self.temp_name));
+        }
     }
 }
 
-#[cfg(unix)]
-#[derive(Debug, Clone, PartialEq, Eq)]
-struct PathIdentity {
-    device: u64,
-    inode: u64,
+fn open_root_capability(root: &Path) -> Result<Dir, GuardError> {
+    match (root.parent(), root.file_name()) {
+        (Some(parent), Some(name)) => {
+            let parent = Dir::open_ambient_dir(parent, cap_std::ambient_authority())
+                .map_err(|source| map_io("open workspace parent", root, source))?;
+            parent
+                .open_dir_nofollow(Path::new(name))
+                .map_err(|source| map_io("open workspace root", root, source))
+        }
+        _ => Dir::open_ambient_dir(root, cap_std::ambient_authority())
+            .map_err(|source| map_io("open filesystem root", root, source)),
+    }
+}
+
+fn open_file_nofollow(
+    parent: &Dir,
+    basename: &OsStr,
+    write: bool,
+    requested: &Path,
+) -> Result<CapFile, GuardError> {
+    let mut options = OpenOptions::new();
+    if write {
+        options.write(true);
+    } else {
+        options.read(true);
+    }
+    options.follow(FollowSymlinks::No);
+    parent
+        .open_with(Path::new(basename), &options)
+        .map_err(|source| map_io("open file without following links", requested, source))
+}
+
+fn read_bounded(mut file: File, requested: &Path, max_bytes: u64) -> Result<Vec<u8>, GuardError> {
+    let limit = max_bytes.saturating_add(1);
+    let mut content = Vec::with_capacity(max_bytes.min(64 * 1024) as usize);
+    Read::by_ref(&mut file)
+        .take(limit)
+        .read_to_end(&mut content)
+        .map_err(|source| map_io("read file", requested, source))?;
+    if content.len() as u64 > max_bytes {
+        return Err(GuardError::LimitExceeded {
+            path: requested.to_path_buf(),
+            limit: max_bytes,
+        });
+    }
+    Ok(content)
+}
+
+fn identity_from_dir(directory: &Dir, path: &Path) -> Result<ObjectIdentity, GuardError> {
+    let file = directory
+        .try_clone()
+        .map_err(|source| map_io("clone directory handle", path, source))?
+        .into_std_file();
+    identity_from_file(&file, path)
 }
 
 #[cfg(unix)]
-fn path_identity(path: &Path) -> Result<PathIdentity, GuardError> {
+fn identity_from_file(file: &File, path: &Path) -> Result<ObjectIdentity, GuardError> {
     use std::os::unix::fs::MetadataExt;
 
-    let metadata = symlink_metadata(path)?;
-    reject_link(path, &metadata)?;
-    Ok(PathIdentity {
+    let metadata = file
+        .metadata()
+        .map_err(|source| map_io("inspect open handle", path, source))?;
+    if metadata.file_type().is_symlink() {
+        return Err(GuardError::LinkTraversal {
+            path: path.to_path_buf(),
+        });
+    }
+    Ok(ObjectIdentity {
         device: metadata.dev(),
         inode: metadata.ino(),
     })
 }
 
 #[cfg(windows)]
-#[derive(Debug, Clone, PartialEq, Eq)]
-struct PathIdentity {
-    attributes: u32,
-    created: u64,
-    modified: u64,
-    size: u64,
-}
-
-#[cfg(windows)]
-fn path_identity(path: &Path) -> Result<PathIdentity, GuardError> {
-    use std::os::windows::fs::MetadataExt;
-
-    let metadata = symlink_metadata(path)?;
-    reject_link(path, &metadata)?;
-    let modified = if metadata.is_dir() {
-        0
-    } else {
-        metadata.last_write_time()
+fn identity_from_file(file: &File, path: &Path) -> Result<ObjectIdentity, GuardError> {
+    use std::os::windows::io::AsRawHandle;
+    use windows_sys::Win32::Storage::FileSystem::{
+        GetFileInformationByHandle, BY_HANDLE_FILE_INFORMATION, FILE_ATTRIBUTE_REPARSE_POINT,
     };
-    Ok(PathIdentity {
-        attributes: metadata.file_attributes(),
-        created: metadata.creation_time(),
-        modified,
-        size: metadata.file_size(),
+
+    let mut information = BY_HANDLE_FILE_INFORMATION::default();
+    let succeeded =
+        unsafe { GetFileInformationByHandle(file.as_raw_handle() as _, &mut information) };
+    if succeeded == 0 {
+        return Err(map_io(
+            "query open handle identity",
+            path,
+            io::Error::last_os_error(),
+        ));
+    }
+    if information.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT != 0 {
+        return Err(GuardError::LinkTraversal {
+            path: path.to_path_buf(),
+        });
+    }
+    Ok(ObjectIdentity {
+        volume_serial: information.dwVolumeSerialNumber,
+        file_index: ((information.nFileIndexHigh as u64) << 32) | information.nFileIndexLow as u64,
     })
 }
 
 #[cfg(not(any(unix, windows)))]
-#[derive(Debug, Clone, PartialEq, Eq)]
-struct PathIdentity {
-    canonical: PathBuf,
+fn identity_from_file(_file: &File, _path: &Path) -> Result<ObjectIdentity, GuardError> {
+    Err(GuardError::Unsupported)
 }
 
-#[cfg(not(any(unix, windows)))]
-fn path_identity(path: &Path) -> Result<PathIdentity, GuardError> {
-    let metadata = symlink_metadata(path)?;
-    reject_link(path, &metadata)?;
-    Ok(PathIdentity {
-        canonical: fs::canonicalize(path).map_err(|source| GuardError::Io {
-            operation: "canonicalize",
-            path: path.to_path_buf(),
-            source,
-        })?,
-    })
-}
-
-fn symlink_metadata(path: &Path) -> Result<Metadata, GuardError> {
-    fs::symlink_metadata(path).map_err(|source| match source.kind() {
-        io::ErrorKind::NotFound => GuardError::NotFound {
-            path: path.to_path_buf(),
-        },
-        _ => GuardError::Io {
-            operation: "inspect path",
-            path: path.to_path_buf(),
-            source,
-        },
-    })
+fn normal_components(path: &Path, requested: &Path) -> Result<Vec<OsString>, GuardError> {
+    path.components()
+        .map(|component| match component {
+            Component::Normal(value) => Ok(value.to_os_string()),
+            _ => Err(GuardError::InvalidPath {
+                path: requested.to_path_buf(),
+            }),
+        })
+        .collect()
 }
 
 fn resolve_existing_path_no_links(path: &Path) -> Result<PathBuf, GuardError> {
@@ -504,8 +845,7 @@ fn resolve_existing_path_no_links(path: &Path) -> Result<PathBuf, GuardError> {
     for component in path.components() {
         current.push(component.as_os_str());
         match component {
-            Component::Prefix(_) => continue,
-            Component::CurDir => continue,
+            Component::Prefix(_) | Component::CurDir => continue,
             Component::ParentDir => {
                 return Err(GuardError::InvalidPath {
                     path: path.to_path_buf(),
@@ -517,10 +857,15 @@ fn resolve_existing_path_no_links(path: &Path) -> Result<PathBuf, GuardError> {
             }
         }
     }
-    fs::canonicalize(path).map_err(|source| GuardError::Io {
-        operation: "canonicalize",
-        path: path.to_path_buf(),
-        source,
+    fs::canonicalize(path).map_err(|source| map_io("canonicalize", path, source))
+}
+
+fn symlink_metadata(path: &Path) -> Result<Metadata, GuardError> {
+    fs::symlink_metadata(path).map_err(|source| match source.kind() {
+        io::ErrorKind::NotFound => GuardError::NotFound {
+            path: path.to_path_buf(),
+        },
+        _ => map_io("inspect path", path, source),
     })
 }
 
@@ -532,6 +877,40 @@ fn reject_link(path: &Path, metadata: &Metadata) -> Result<(), GuardError> {
     } else {
         Ok(())
     }
+}
+
+fn map_io(operation: &'static str, path: &Path, source: io::Error) -> GuardError {
+    if is_link_error(&source) {
+        return GuardError::LinkTraversal {
+            path: path.to_path_buf(),
+        };
+    }
+    match source.kind() {
+        io::ErrorKind::NotFound => GuardError::NotFound {
+            path: path.to_path_buf(),
+        },
+        io::ErrorKind::NotADirectory | io::ErrorKind::IsADirectory => GuardError::NotDirectory {
+            path: path.to_path_buf(),
+        },
+        io::ErrorKind::Unsupported => GuardError::Unsupported,
+        _ => GuardError::Io {
+            operation,
+            path: path.to_path_buf(),
+            source,
+        },
+    }
+}
+
+fn is_link_error(error: &io::Error) -> bool {
+    #[cfg(unix)]
+    if error.raw_os_error() == Some(40) {
+        return true;
+    }
+    #[cfg(windows)]
+    if matches!(error.raw_os_error(), Some(681 | 1920)) {
+        return true;
+    }
+    false
 }
 
 #[cfg(windows)]
@@ -566,14 +945,35 @@ fn contains_nul(path: &Path) -> bool {
 }
 
 #[cfg(windows)]
+fn canonical_root_key(path: &Path) -> CanonicalRootKey {
+    use std::os::windows::ffi::OsStrExt;
+
+    path.as_os_str()
+        .encode_wide()
+        .map(|unit| {
+            if (b'A' as u16..=b'Z' as u16).contains(&unit) {
+                unit + (b'a' - b'A') as u16
+            } else {
+                unit
+            }
+        })
+        .collect()
+}
+
+#[cfg(not(windows))]
+fn canonical_root_key(path: &Path) -> CanonicalRootKey {
+    path.to_path_buf()
+}
+
+#[cfg(windows)]
 fn path_starts_with(path: &Path, prefix: &Path) -> bool {
     let path_parts: Vec<_> = path
         .components()
-        .map(|part| part.as_os_str().to_string_lossy().to_ascii_lowercase())
+        .map(|part| windows_component_key(&part))
         .collect();
     let prefix_parts: Vec<_> = prefix
         .components()
-        .map(|part| part.as_os_str().to_string_lossy().to_ascii_lowercase())
+        .map(|part| windows_component_key(&part))
         .collect();
     path_parts.starts_with(&prefix_parts)
 }
@@ -619,7 +1019,7 @@ fn windows_component_key(component: &Component<'_>) -> Vec<u16> {
     }
     for unit in &mut key {
         if (b'A' as u16..=b'Z' as u16).contains(unit) {
-            *unit += b'a' as u16 - b'A' as u16;
+            *unit += (b'a' - b'A') as u16;
         }
     }
     key
