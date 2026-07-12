@@ -640,6 +640,7 @@ dependencies = [
  "getrandom",
  "json5",
  "keyring",
+ "orchester-modell",
  "orchester-protokoll",
  "orchester-vertrag",
  "orchester-verzeichnis",

@@ -2,6 +2,7 @@
 //! these stable configuration and credential boundaries.
 
 pub mod config;
+pub mod context;
 pub mod credentials;
 pub mod approval;
 pub mod audit;
