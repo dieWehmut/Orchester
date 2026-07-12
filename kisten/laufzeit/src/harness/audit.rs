@@ -5,6 +5,7 @@ use std::io::{self, BufRead, BufReader, Seek, SeekFrom, Write};
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 
+use fs2::FileExt;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
@@ -17,6 +18,8 @@ const MAX_TEXT_BYTES: usize = 512;
 pub enum AuditError {
     #[error("audit path is unavailable")]
     Io(#[source] io::Error),
+    #[error("audit path does not have user-only permissions")]
+    InsecurePermissions,
     #[error("audit record is invalid")]
     InvalidRecord,
     #[error("audit chain is corrupt")]
@@ -29,6 +32,7 @@ pub enum AuditError {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AuditInput {
+    pub event_id: String,
     pub occurred_at: String,
     pub actor: String,
     pub run_id: String,
@@ -43,6 +47,7 @@ impl AuditInput {
     /// Deterministic fixture constructor used by offline tests.
     pub fn test(sequence: u64, run_id: &str, action_id: &str, summary: &str) -> Self {
         Self {
+            event_id: format!("event-{sequence}"),
             occurred_at: format!("2026-07-12T00:00:{sequence:02}Z"),
             actor: "local-user".into(),
             run_id: run_id.into(),
@@ -56,10 +61,12 @@ impl AuditInput {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
 struct AuditEntry {
     schema_version: u16,
     sequence: u64,
     occurred_at: String,
+    event_id: String,
     actor: String,
     run_id: String,
     action_id: Option<String>,
@@ -94,17 +101,19 @@ impl JsonlAuditSink {
     pub fn open(path: impl AsRef<Path>) -> Result<Self, AuditError> {
         let path = path.as_ref().to_path_buf();
         if let Some(parent) = path.parent() {
+            let parent_existed = parent.exists();
             fs::create_dir_all(parent).map_err(AuditError::Io)?;
-            set_private_dir(parent);
+            ensure_private_dir(parent, !parent_existed)?;
         }
+        let file_existed = path.exists();
         let mut file = OpenOptions::new()
             .create(true)
             .read(true)
             .append(true)
             .open(&path)
             .map_err(AuditError::Io)?;
-        set_private_file(&path);
-        let (next_sequence, head_hash) = scan_file(&mut file)?;
+        ensure_private_file(&path, !file_existed)?;
+        let (next_sequence, head_hash) = with_exclusive_file(&mut file, scan_file)?;
         Ok(Self {
             path,
             file: Mutex::new(file),
@@ -127,58 +136,58 @@ impl JsonlAuditSink {
             .head_hash
             .lock()
             .map_err(|_| AuditError::LockPoisoned)?;
-        // Re-verify the durable file before every append.  A process must
-        // fail closed if another writer or a crash left a broken chain; it
-        // must never extend corrupted history with a seemingly valid tail.
-        file.flush().map_err(AuditError::Io)?;
-        file.seek(SeekFrom::Start(0)).map_err(AuditError::Io)?;
-        let (durable_next, durable_head) = scan_reader(BufReader::new(&mut *file))?;
-        file.seek(SeekFrom::End(0)).map_err(AuditError::Io)?;
-        if durable_next != *sequence || durable_head != *previous {
-            return Err(AuditError::Corrupt);
-        }
-        let current = *sequence;
-        let entry = AuditEntry {
-            schema_version: SCHEMA_VERSION,
-            sequence: current,
-            occurred_at: bounded_text(&input.occurred_at),
-            actor: bounded_id(&input.actor),
-            run_id: bounded_id(&input.run_id),
-            action_id: input.action_id.as_deref().map(bounded_id),
-            approval_id: input.approval_id.as_deref().map(bounded_id),
-            policy_rule: bounded_id(&input.policy_rule),
-            decision: bounded_id(&input.decision),
-            // Do not persist model/tool output.  The byte count is useful for
-            // diagnostics and cannot disclose an unknown future token format.
-            result_summary: format!("summary_bytes={}", input.result_summary.len()),
-            prev_hash: previous.clone(),
-            entry_hash: String::new(),
-        };
-        let hash = hash_entry(&entry)?;
-        let mut committed = entry;
-        committed.entry_hash = hex_hash(&hash);
-        let line = serde_json::to_vec(&committed).map_err(|_| AuditError::InvalidRecord)?;
-        file.write_all(&line).map_err(AuditError::Io)?;
-        file.write_all(b"\n").map_err(AuditError::Io)?;
-        file.sync_data().map_err(AuditError::Io)?;
-        *previous = committed.entry_hash.clone();
-        *sequence = current.checked_add(1).ok_or(AuditError::Sequence)?;
-        Ok(current)
+        with_exclusive_file(&mut file, |file| {
+            // Re-read while holding the OS lock. Multiple processes/sink
+            // instances can now safely converge on the durable head.
+            let (durable_next, durable_head) = scan_file(file)?;
+            *sequence = durable_next;
+            *previous = durable_head;
+            let current = *sequence;
+            let entry = AuditEntry {
+                schema_version: SCHEMA_VERSION,
+                sequence: current,
+                occurred_at: bounded_text(&input.occurred_at),
+                event_id: bounded_id(&input.event_id),
+                actor: bounded_id(&input.actor),
+                run_id: bounded_id(&input.run_id),
+                action_id: input.action_id.as_deref().map(bounded_id),
+                approval_id: input.approval_id.as_deref().map(bounded_id),
+                policy_rule: bounded_id(&input.policy_rule),
+                decision: bounded_id(&input.decision),
+                // Do not persist model/tool output. The byte count is useful
+                // for diagnostics and cannot disclose a future token format.
+                result_summary: format!("summary_bytes={}", input.result_summary.len()),
+                prev_hash: previous.clone(),
+                entry_hash: String::new(),
+            };
+            if entry.event_id.is_empty() || entry.run_id.is_empty() {
+                return Err(AuditError::InvalidRecord);
+            }
+            let hash = hash_entry(&entry)?;
+            let mut committed = entry;
+            committed.entry_hash = hex_hash(&hash);
+            let line = serde_json::to_vec(&committed).map_err(|_| AuditError::InvalidRecord)?;
+            file.write_all(&line).map_err(AuditError::Io)?;
+            file.write_all(b"\n").map_err(AuditError::Io)?;
+            file.sync_data().map_err(AuditError::Io)?;
+            *previous = committed.entry_hash.clone();
+            *sequence = current.checked_add(1).ok_or(AuditError::Sequence)?;
+            Ok(current)
+        })
     }
 
     pub fn verify(&self) -> Result<AuditVerification, AuditError> {
         let mut file = self.file.lock().map_err(|_| AuditError::LockPoisoned)?;
-        file.flush().map_err(AuditError::Io)?;
-        file.seek(SeekFrom::Start(0)).map_err(AuditError::Io)?;
-        let result = scan_reader(BufReader::new(&mut *file));
-        file.seek(SeekFrom::End(0)).map_err(AuditError::Io)?;
-        result.map(|(next, head)| AuditVerification {
-            entries: next.saturating_sub(1),
-            head_hash: if head == GENESIS {
-                None
-            } else {
-                decode_hash(&head).ok()
-            },
+        with_exclusive_file(&mut file, |file| {
+            let (next, head) = scan_file(file)?;
+            Ok(AuditVerification {
+                entries: next.saturating_sub(1),
+                head_hash: if head == GENESIS {
+                    None
+                } else {
+                    Some(decode_hash(&head)?)
+                },
+            })
         })
     }
 }
@@ -188,6 +197,20 @@ fn scan_file(file: &mut File) -> Result<(u64, String), AuditError> {
     let result = scan_reader(BufReader::new(&mut *file));
     file.seek(SeekFrom::End(0)).map_err(AuditError::Io)?;
     result
+}
+
+fn with_exclusive_file<T>(
+    file: &mut File,
+    operation: impl FnOnce(&mut File) -> Result<T, AuditError>,
+) -> Result<T, AuditError> {
+    file.lock_exclusive().map_err(AuditError::Io)?;
+    let result = operation(file);
+    let unlock = FileExt::unlock(file).map_err(AuditError::Io);
+    match (result, unlock) {
+        (Ok(value), Ok(())) => Ok(value),
+        (Err(error), _) => Err(error),
+        (Ok(_), Err(error)) => Err(error),
+    }
 }
 
 fn scan_reader<R: BufRead>(reader: R) -> Result<(u64, String), AuditError> {
@@ -265,19 +288,45 @@ fn bounded_id(value: &str) -> String {
 }
 
 #[cfg(unix)]
-fn set_private_dir(path: &Path) {
+fn ensure_private_dir(path: &Path, created: bool) -> Result<(), AuditError> {
     use std::os::unix::fs::PermissionsExt;
-    let _ = fs::set_permissions(path, fs::Permissions::from_mode(0o700));
+    let mode = fs::metadata(path)
+        .map_err(AuditError::Io)?
+        .permissions()
+        .mode()
+        & 0o777;
+    if created {
+        fs::set_permissions(path, fs::Permissions::from_mode(0o700)).map_err(AuditError::Io)
+    } else if mode == 0o700 {
+        Ok(())
+    } else {
+        Err(AuditError::InsecurePermissions)
+    }
 }
 
 #[cfg(not(unix))]
-fn set_private_dir(_path: &Path) {}
+fn ensure_private_dir(_path: &Path, _created: bool) -> Result<(), AuditError> {
+    Ok(())
+}
 
 #[cfg(unix)]
-fn set_private_file(path: &Path) {
+fn ensure_private_file(path: &Path, created: bool) -> Result<(), AuditError> {
     use std::os::unix::fs::PermissionsExt;
-    let _ = fs::set_permissions(path, fs::Permissions::from_mode(0o600));
+    let mode = fs::metadata(path)
+        .map_err(AuditError::Io)?
+        .permissions()
+        .mode()
+        & 0o777;
+    if created {
+        fs::set_permissions(path, fs::Permissions::from_mode(0o600)).map_err(AuditError::Io)
+    } else if mode == 0o600 {
+        Ok(())
+    } else {
+        Err(AuditError::InsecurePermissions)
+    }
 }
 
 #[cfg(not(unix))]
-fn set_private_file(_path: &Path) {}
+fn ensure_private_file(_path: &Path, _created: bool) -> Result<(), AuditError> {
+    Ok(())
+}

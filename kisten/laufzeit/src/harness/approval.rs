@@ -3,7 +3,7 @@
 use std::collections::HashMap;
 use std::fmt;
 use std::sync::atomic::{AtomicU64, Ordering};
-use std::sync::{RwLock, RwLockReadGuard, RwLockWriteGuard};
+use std::sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard};
 
 use orchester_protokoll::{ActionId, ApprovalId, ApprovalRequest, RunId};
 use sha2::{Digest, Sha256};
@@ -21,6 +21,8 @@ pub enum ApprovalState {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ApprovalBinding {
+    pub run_id: RunId,
+    pub action_id: ActionId,
     pub action_hash: String,
     pub workspace_identity: String,
     pub policy_snapshot_hash: String,
@@ -30,6 +32,8 @@ pub struct ApprovalBinding {
 impl ApprovalBinding {
     pub fn test(action: &str, workspace: &str, policy: &str, config: &str) -> Self {
         Self {
+            run_id: RunId::from("run-1"),
+            action_id: ActionId::from("action-1"),
             action_hash: action.into(),
             workspace_identity: workspace.into(),
             policy_snapshot_hash: policy.into(),
@@ -38,7 +42,9 @@ impl ApprovalBinding {
     }
 
     fn matches_request(&self, request: &ApprovalRequest) -> bool {
-        self.action_hash == request.action_hash
+        self.run_id == request.run_id
+            && self.action_id == request.action_id
+            && self.action_hash == request.action_hash
             && self.workspace_identity == request.workspace_identity
             && self.policy_snapshot_hash == request.policy_snapshot_hash
             && self.config_snapshot_hash == request.config_snapshot_hash
@@ -103,6 +109,19 @@ struct ApprovalRecord {
 pub struct ApprovalStore {
     records: RwLock<HashMap<ApprovalId, ApprovalRecord>>,
     next_nonce: AtomicU64,
+    clock: Arc<dyn Fn() -> u64 + Send + Sync>,
+}
+
+/// Deterministic clock handle for offline state-machine tests and demos.
+#[derive(Clone)]
+pub struct TestClock {
+    value: Arc<AtomicU64>,
+}
+
+impl TestClock {
+    pub fn set(&self, now_unix: u64) {
+        self.value.store(now_unix, Ordering::Relaxed);
+    }
 }
 
 impl Default for ApprovalStore {
@@ -113,9 +132,27 @@ impl Default for ApprovalStore {
 
 impl ApprovalStore {
     pub fn new() -> Self {
+        Self::with_clock(Arc::new(unix_now))
+    }
+
+    pub fn with_fixed_time(now_unix: u64) -> Self {
+        Self::with_clock(Arc::new(move || now_unix))
+    }
+
+    pub fn with_test_clock(now_unix: u64) -> (Self, TestClock) {
+        let value = Arc::new(AtomicU64::new(now_unix));
+        let clock_value = Arc::clone(&value);
+        (
+            Self::with_clock(Arc::new(move || clock_value.load(Ordering::Relaxed))),
+            TestClock { value },
+        )
+    }
+
+    fn with_clock(clock: Arc<dyn Fn() -> u64 + Send + Sync>) -> Self {
         Self {
             records: RwLock::new(HashMap::new()),
             next_nonce: AtomicU64::new(1),
+            clock,
         }
     }
 
@@ -126,6 +163,9 @@ impl ApprovalStore {
             .map_err(|_| ApprovalError::InvalidRequest)?;
         if input.owner_actor_id.trim().is_empty() || input.expires_at_unix == 0 {
             return Err(ApprovalError::InvalidRequest);
+        }
+        if input.expires_at_unix <= (self.clock)() {
+            return Err(ApprovalError::Expired);
         }
         let id = input.request.approval_id.clone();
         let mut records = self.write()?;
@@ -156,9 +196,9 @@ impl ApprovalStore {
         &self,
         approval_id: &ApprovalId,
         actor_id: &str,
-        now_unix: u64,
         binding: &ApprovalBinding,
     ) -> Result<CapabilityToken, ApprovalError> {
+        let now_unix = (self.clock)();
         let mut records = self.write()?;
         let record = records
             .get_mut(approval_id)
@@ -186,12 +226,8 @@ impl ApprovalStore {
         })
     }
 
-    pub fn deny(
-        &self,
-        approval_id: &ApprovalId,
-        actor_id: &str,
-        now_unix: u64,
-    ) -> Result<(), ApprovalError> {
+    pub fn deny(&self, approval_id: &ApprovalId, actor_id: &str) -> Result<(), ApprovalError> {
+        let now_unix = (self.clock)();
         let mut records = self.write()?;
         let record = records
             .get_mut(approval_id)
@@ -209,9 +245,9 @@ impl ApprovalStore {
         &self,
         capability: &CapabilityToken,
         actor_id: &str,
-        now_unix: u64,
         binding: &ApprovalBinding,
     ) -> Result<(), ApprovalError> {
+        let now_unix = (self.clock)();
         let mut records = self.write()?;
         let record = records
             .get_mut(&capability.approval_id)
@@ -339,4 +375,11 @@ fn hash_bytes(value: &[u8]) -> [u8; 32] {
     let mut hasher = Sha256::new();
     hasher.update(value);
     hasher.finalize().into()
+}
+
+fn unix_now() -> u64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_secs()
 }
