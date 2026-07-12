@@ -765,7 +765,7 @@ fn render_chat_panel<W: Write>(out: &mut W, width: usize) -> io::Result<()> {
         "model:     not configured    /model to change".to_string(),
         format!("directory: {cwd}"),
     ];
-    if width >= 96 {
+    if width >= 60 {
         render_portrait_info_box(out, width, &rows)
     } else {
         render_info_box(out, width, &rows)
@@ -807,14 +807,19 @@ fn render_portrait_info_box<W: Write>(
     width: usize,
     rows: &[String],
 ) -> io::Result<()> {
-    let panel_width = width.clamp(96, 120);
-    let right_width = panel_width.saturating_sub(47);
+    let panel_width = width.clamp(60, 120);
+    let portrait_width = if panel_width >= 96 { avatar::WIDTH } else { 24 };
+    let right_width = panel_width.saturating_sub(portrait_width + 7);
     let height = avatar::HEIGHT.max(rows.len());
 
     writeln!(out, "{DIM}+{}+{RESET}", "-".repeat(panel_width - 2))?;
     for row in 0..height {
         write!(out, "{DIM}|{RESET} ")?;
-        avatar::render_row(out, row)?;
+        if portrait_width == avatar::WIDTH {
+            avatar::render_row(out, row)?;
+        } else {
+            avatar::render_row_width(out, row, portrait_width)?;
+        }
         write!(out, " {DIM}|{RESET} ")?;
 
         let text = rows.get(row).map(String::as_str).unwrap_or("");
@@ -1354,10 +1359,15 @@ mod tests {
         assert!(wide.contains("@%%"));
 
         let mut medium = Vec::new();
-        render_chat_home(&mut medium, 95, "", &[], 0, false).unwrap();
+        render_chat_home(&mut medium, 80, "", &[], 0, false).unwrap();
         let medium = strip_ansi(&String::from_utf8(medium).unwrap());
-        assert!(medium.lines().all(|line| display_width(line) <= 95));
-        assert!(!medium.contains("@%%"));
+        assert!(medium.lines().all(|line| display_width(line) <= 80));
+        assert!(medium.chars().filter(|ch| *ch == '@').count() > 10);
+
+        let mut narrow = Vec::new();
+        render_chat_home(&mut narrow, 55, "", &[], 0, false).unwrap();
+        let narrow = strip_ansi(&String::from_utf8(narrow).unwrap());
+        assert!(!narrow.contains("@%%"));
     }
 
     fn strip_ansi(input: &str) -> String {

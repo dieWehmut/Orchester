@@ -58,10 +58,29 @@ fn tone(ch: char) -> Option<Tone> {
 }
 
 pub fn render_row<W: Write>(out: &mut W, row: usize) -> io::Result<()> {
+    render_row_width(out, row, WIDTH)
+}
+
+/// Render a row at a smaller terminal width by sampling the source columns.
+/// The character palette remains unchanged, so scaling never turns the art
+/// into a raster image or introduces a non-ASCII glyph.
+pub fn render_row_width<W: Write>(
+    out: &mut W,
+    row: usize,
+    requested_width: usize,
+) -> io::Result<()> {
+    let width = requested_width.min(WIDTH);
+    if width == 0 {
+        return Ok(());
+    }
     let text = ROWS.get(row).copied().unwrap_or("");
+    let source = text.chars().collect::<Vec<_>>();
+    let source_width = source.len().max(1);
     let mut active = None;
 
-    for ch in text.chars().chain(std::iter::repeat(' ')).take(WIDTH) {
+    for column in 0..width {
+        let source_column = column.saturating_mul(source_width) / width;
+        let ch = source.get(source_column).copied().unwrap_or(' ');
         let next = tone(ch);
         if next != active {
             if active.is_some() {
@@ -106,6 +125,15 @@ mod tests {
         assert_eq!(strip_ansi(&rendered).chars().count(), WIDTH);
         assert!(strip_ansi(&rendered).is_ascii());
         assert!(!rendered.contains('\u{2580}'));
+    }
+
+    #[test]
+    fn scaled_row_keeps_a_stable_ascii_width() {
+        let mut out = Vec::new();
+        render_row_width(&mut out, 3, 24).unwrap();
+        let rendered = String::from_utf8(out).unwrap();
+        assert_eq!(strip_ansi(&rendered).chars().count(), 24);
+        assert!(rendered.contains("\x1b[38;2;"));
     }
 
     #[test]
