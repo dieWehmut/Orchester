@@ -34,7 +34,13 @@ secrecy = "0.10"
 keyring = { version = "3.6", default-features = false }
 cap-std = "4.0.2"
 cap-fs-ext = "4.0.2"
-windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_Storage_FileSystem"] }
+windows-sys = { version = "0.61", features = [
+    "Win32_Foundation",
+    "Win32_Security",
+    "Win32_Storage_FileSystem",
+    "Win32_System_JobObjects",
+    "Win32_System_Threading",
+] }
 toml = "0.8"
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "process", "io-util", "io-std", "sync", "signal", "time"] }
 tokio-util = { version = "0.7", features = ["rt"] }

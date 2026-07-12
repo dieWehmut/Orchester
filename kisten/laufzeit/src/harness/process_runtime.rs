@@ -16,6 +16,7 @@ use tokio_util::sync::CancellationToken;
 use super::barrier::StartedTool;
 use super::governance::{PolicyEngine, WorkspaceGuard};
 use super::process::BoundedOutput;
+use super::process_tree::ProcessTree;
 
 const READ_BUFFER_BYTES: usize = 8 * 1024;
 const MAX_OUTPUT_BYTES: usize = 64 * 1024 * 1024;
@@ -102,6 +103,8 @@ pub enum ProcessError {
     CancelledBeforeStart,
     #[error("process could not be started")]
     SpawnFailed,
+    #[error("process could not be bound to its process tree")]
+    ProcessTreeUnavailable,
     #[error("process status could not be observed")]
     WaitFailed,
     #[error("process output could not be captured")]
@@ -174,7 +177,9 @@ impl ProcessRunner {
             return Err(ProcessError::PolicyDenied);
         }
 
+        let process_tree = ProcessTree::new().map_err(|_| ProcessError::ProcessTreeUnavailable)?;
         let mut command = Command::new(&spec.program);
+        process_tree.configure_command(&mut command);
         command
             .args(&spec.args)
             .current_dir(self.workspace.root().join(&spec.cwd))
@@ -186,6 +191,11 @@ impl ProcessRunner {
             .kill_on_drop(true);
         let started = Instant::now();
         let mut child = command.spawn().map_err(|_| ProcessError::SpawnFailed)?;
+        if process_tree.attach(&child).is_err() {
+            process_tree.terminate(&mut child);
+            let _ = child.wait().await;
+            return Err(ProcessError::ProcessTreeUnavailable);
+        }
         let stdout = child.stdout.take().ok_or(ProcessError::SpawnFailed)?;
         let stderr = child.stderr.take().ok_or(ProcessError::SpawnFailed)?;
         let output_limit = self.limits.max_output_bytes;
@@ -202,16 +212,16 @@ impl ProcessRunner {
                 }
                 Ok(None) => {}
                 Err(_) => {
-                    terminate_child(&mut child).await;
+                    terminate_child(&process_tree, &mut child).await;
                     return Err(ProcessError::WaitFailed);
                 }
             }
             if cancellation.is_cancelled() {
-                terminate_child(&mut child).await;
+                terminate_child(&process_tree, &mut child).await;
                 break CommandTermination::Cancelled;
             }
             if started.elapsed() >= self.limits.timeout {
-                terminate_child(&mut child).await;
+                terminate_child(&process_tree, &mut child).await;
                 break CommandTermination::TimedOut;
             }
             tokio::time::sleep(self.limits.poll_interval).await;
@@ -259,8 +269,8 @@ impl GovernedProcessRunner {
     }
 }
 
-async fn terminate_child(child: &mut tokio::process::Child) {
-    let _ = child.start_kill();
+async fn terminate_child(process_tree: &ProcessTree, child: &mut tokio::process::Child) {
+    process_tree.terminate(child);
     let _ = child.wait().await;
 }
 

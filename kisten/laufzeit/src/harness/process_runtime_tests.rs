@@ -8,6 +8,7 @@ use orchester_protokoll::{
 
 use super::*;
 use crate::harness::barrier::StartedTool;
+use crate::harness::process_tree::ProcessTree;
 
 fn root(name: &str) -> PathBuf {
     let root =
@@ -47,6 +48,31 @@ fn slow_process() -> AgentAction {
 #[cfg(unix)]
 fn slow_process() -> AgentAction {
     command("sleep", &["5"], "work")
+}
+
+#[tokio::test]
+async fn process_tree_attaches_and_terminates_a_running_child() {
+    let tree = ProcessTree::new().expect("create process tree");
+    let mut command = if cfg!(windows) {
+        let mut command = tokio::process::Command::new("ping");
+        command.args(["-n", "10", "-w", "1000", "127.0.0.1"]);
+        command
+    } else {
+        let mut command = tokio::process::Command::new("sleep");
+        command.arg("5");
+        command
+    };
+    tree.configure_command(&mut command);
+    let mut child = command.spawn().expect("spawn child");
+    tree.attach(&child).expect("attach child");
+
+    tree.terminate(&mut child);
+    let status = tokio::time::timeout(Duration::from_secs(2), child.wait())
+        .await
+        .expect("termination deadline")
+        .expect("wait for child");
+
+    assert!(!status.success());
 }
 
 #[tokio::test]
