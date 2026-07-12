@@ -13,12 +13,14 @@
 
 mod capability;
 mod event;
+mod harness;
 mod result;
 mod session;
 mod task;
 
 pub use capability::{Capability, TaskKind};
 pub use event::{ChangeKind, Event, TodoItem, ToolStatus};
+pub use harness::*;
 pub use result::{Outcome, RunResult, Usage};
 pub use session::SessionState;
 pub use task::Task;
