@@ -1,5 +1,9 @@
+#[cfg(unix)]
+use std::ffi::CString;
 use std::fs;
 use std::io::{self, Write};
+#[cfg(unix)]
+use std::os::unix::ffi::OsStrExt;
 #[cfg(unix)]
 use std::os::unix::net::UnixListener;
 #[cfg(windows)]
@@ -134,6 +138,28 @@ fn rejects_non_regular_file_types_without_opening_them() {
         GuardErrorKind::Unsupported
     );
     assert!(ws.root.join("src/value.txt").is_file());
+}
+
+#[cfg(unix)]
+#[test]
+fn fifo_read_is_rejected_without_blocking() {
+    let ws = TempWorkspace::new();
+    let fifo = ws.root.join("src/orchester.fifo");
+    let raw_path = CString::new(fifo.as_os_str().as_bytes()).expect("fifo path has no NUL");
+    let result = unsafe { libc::mkfifo(raw_path.as_ptr(), 0o600) };
+    assert_eq!(result, 0, "mkfifo: {}", io::Error::last_os_error());
+
+    let guard = ws.guard();
+    let started = std::time::Instant::now();
+    let error = guard
+        .read_file(Path::new("src/orchester.fifo"))
+        .expect_err("FIFO must never be treated as a regular source file");
+    assert_eq!(error.kind(), GuardErrorKind::Unsupported);
+    assert!(
+        started.elapsed() < Duration::from_secs(1),
+        "FIFO rejection took too long: {:?}",
+        started.elapsed()
+    );
 }
 
 #[test]

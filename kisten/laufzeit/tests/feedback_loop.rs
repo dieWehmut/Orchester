@@ -487,6 +487,22 @@ fn snapshot_limit_reports_only_the_bounded_detection_size() {
     fs::remove_dir_all(root).unwrap();
 }
 
+#[cfg(unix)]
+#[test]
+fn snapshot_stops_before_unbounded_directory_depth() {
+    let root = temp_workspace("deep-tree");
+    let mut current = root.join("src");
+    for _ in 0..140 {
+        current.push("d");
+        fs::create_dir(&current).unwrap();
+    }
+    fs::write(current.join("leaf.rs"), "deep").unwrap();
+
+    let snapshot = watcher(&root).capture().unwrap();
+    assert!(matches!(snapshot, SnapshotResult::LimitExceeded { .. }));
+    fs::remove_dir_all(root).unwrap();
+}
+
 #[tokio::test]
 async fn snapshot_lock_identity_is_derived_from_the_workspace_guard() {
     let root = temp_workspace("snapshot-lock-identity");

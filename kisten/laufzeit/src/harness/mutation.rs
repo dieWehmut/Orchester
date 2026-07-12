@@ -459,3 +459,36 @@ impl MutationTracker {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn structural_snapshot_admission_fails_closed_at_each_hard_limit() {
+        let limits = SnapshotLimits {
+            max_files: 4,
+            max_bytes: 64,
+        };
+
+        let mut entries = SnapshotAccumulator::new(limits);
+        entries.entry_count = MAX_SNAPSHOT_ENTRIES;
+        assert!(!entries.admit_file(Path::new("entry")));
+
+        let mut directories = SnapshotAccumulator::new(limits);
+        directories.directory_count = MAX_SNAPSHOT_DIRECTORIES;
+        assert!(!directories.admit_directory(Path::new("directory")));
+
+        let mut paths = SnapshotAccumulator::new(limits);
+        paths.path_bytes = MAX_SNAPSHOT_PATH_BYTES;
+        assert!(!paths.admit_file(Path::new("path")));
+
+        let mut files = SnapshotAccumulator::new(limits);
+        files.file_count = limits.max_files;
+        assert!(!files.admit_file(Path::new("file")));
+
+        let long_path = PathBuf::from("x".repeat(MAX_ENTRY_PATH_BYTES + 1));
+        let mut length = SnapshotAccumulator::new(limits);
+        assert!(!length.admit_file(&long_path));
+    }
+}
