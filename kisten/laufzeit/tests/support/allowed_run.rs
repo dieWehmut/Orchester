@@ -9,8 +9,8 @@ use orchester_protokoll::{
 
 pub(crate) struct AllowedRun {
     pub(crate) run_id: RunId,
-    turn_id: TurnId,
-    step_id: StepId,
+    pub(crate) turn_id: TurnId,
+    pub(crate) step_id: StepId,
     pub(crate) action_id: ActionId,
     pub(crate) owner: String,
     pub(crate) provider_call_id: CallId,

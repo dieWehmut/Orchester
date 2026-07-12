@@ -15,6 +15,7 @@ use orchester_protokoll::{
     StopReason, TurnId, HARNESS_SCHEMA_VERSION,
 };
 use rusqlite::{params, Connection, OptionalExtension, Transaction, TransactionBehavior};
+use secrecy::SecretString;
 use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
@@ -24,12 +25,70 @@ use crate::harness::approval::{
 };
 use crate::harness::audit::{AuditInput, AuditReceipt};
 use crate::harness::barrier::{ExecutionPermit, StartedTool};
+use crate::harness::feedback::FeedbackEngine;
+
+mod observation;
+
+use observation::DurableObservation;
 
 const MIGRATION_V1: &str = include_str!("../../migrations/0001_state.sql");
 const MIGRATION_V2: &str = include_str!("../../migrations/0002_approval_barrier.sql");
 const MIGRATION_V3: &str = include_str!("../../migrations/0003_model_phase.sql");
 const MIGRATION_V4: &str = include_str!("../../migrations/0004_action_model_binding.sql");
-const CURRENT_SCHEMA_VERSION: u32 = 4;
+const MIGRATION_V5: &str = include_str!("../../migrations/0005_observation_links.sql");
+const CURRENT_SCHEMA_VERSION: u32 = 5;
+const EXPECTED_V5_SCHEMA_OBJECT_HASHES: &[(&str, &str, &str)] = &[
+    (
+        "table",
+        "observations",
+        "ea5206d1c25cbc3fc3a889ad504c7fa5465bb62bb6224ce0626903d1a6296f92",
+    ),
+    (
+        "table",
+        "tool_attempts",
+        "15ce9d8701bc71b49d25454297cc308250b39a92259f4571e1ed40a2536fd43b",
+    ),
+    (
+        "index",
+        "idx_observations_call",
+        "ac543f95d91afa92083b12d1ddf82693441127bbe018ee66114e521b883f5ba5",
+    ),
+    (
+        "index",
+        "idx_observations_id_call",
+        "113010f6cf407cbc7e9ec9fb5351e85a6fa9b4c3e3ab2b165ecead32e915a059",
+    ),
+    (
+        "index",
+        "idx_tool_attempts_observation",
+        "37398af51b75b8b6de14b6349b39b90d975dcbdd3e868cac5491da029d44475e",
+    ),
+    (
+        "trigger",
+        "trg_observations_validate_tool_insert",
+        "d181fd622b1e6b72ccec764b22da0406c1657d4525f67b1b077d74d12e46613f",
+    ),
+    (
+        "trigger",
+        "trg_tool_attempts_validate_observation_insert",
+        "57e5147a2e5cf3231744df077e4c3963e34d30177df4f5446862647c3cb8215f",
+    ),
+    (
+        "trigger",
+        "trg_tool_attempts_validate_observation_update",
+        "92eeb02808900256d4bf36021ab041fa9d4cbac59f08aef74e31fd4d415e2e9f",
+    ),
+    (
+        "trigger",
+        "trg_observations_no_update",
+        "4bcc92e79ee07c842c193e282cc4ef6564ec19e125c21d546be58bde1a632e0a",
+    ),
+    (
+        "trigger",
+        "trg_observations_no_delete",
+        "93c96415b881eeff639407c7541581ad421d7514eb9be808d4c2a936bd2ab513",
+    ),
+];
 
 #[derive(Debug, Error)]
 pub enum StoreError {
@@ -75,6 +134,12 @@ impl From<serde_json::Error> for StoreError {
     fn from(error: serde_json::Error) -> Self {
         Self::Serialization(error)
     }
+}
+
+fn terminal_sanitizer(secrets: Vec<SecretString>) -> FeedbackEngine {
+    secrets
+        .into_iter()
+        .fold(FeedbackEngine::default(), FeedbackEngine::with_secret)
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -269,11 +334,29 @@ pub trait RunStore: Send + Sync {
 
 pub struct SqliteRunStore {
     connection: Mutex<Connection>,
+    terminal_sanitizer: Option<FeedbackEngine>,
 }
 
 impl SqliteRunStore {
+    /// Open a store for non-terminal state operations. Tool terminal events
+    /// fail closed until the caller explicitly supplies its secret set.
     pub fn open(path: impl AsRef<Path>) -> Result<Self, StoreError> {
-        let path = path.as_ref();
+        Self::open_configured(path.as_ref(), None)
+    }
+
+    /// Open a store whose terminal-event sanitizer knows every configured
+    /// credential that could appear in tool output.
+    pub fn open_with_terminal_secrets(
+        path: impl AsRef<Path>,
+        secrets: Vec<SecretString>,
+    ) -> Result<Self, StoreError> {
+        Self::open_configured(path.as_ref(), Some(terminal_sanitizer(secrets)))
+    }
+
+    fn open_configured(
+        path: &Path,
+        terminal_sanitizer: Option<FeedbackEngine>,
+    ) -> Result<Self, StoreError> {
         if let Some(parent) = path.parent() {
             let created = !parent.exists();
             std::fs::create_dir_all(parent).map_err(StoreError::Io)?;
@@ -284,16 +367,20 @@ impl SqliteRunStore {
         let shm_existed = state_sidecar(path, "-shm").exists();
         let connection = Connection::open(path)?;
         ensure_private_state_file(path, !file_existed)?;
-        let store = Self::initialize(connection, true)?;
+        let store = Self::initialize(connection, true, terminal_sanitizer)?;
         ensure_private_state_sidecars(path, wal_existed, shm_existed)?;
         Ok(store)
     }
 
     pub fn in_memory() -> Result<Self, StoreError> {
-        Self::initialize(Connection::open_in_memory()?, false)
+        Self::initialize(Connection::open_in_memory()?, false, None)
     }
 
-    fn initialize(mut connection: Connection, enable_wal: bool) -> Result<Self, StoreError> {
+    fn initialize(
+        mut connection: Connection,
+        enable_wal: bool,
+        terminal_sanitizer: Option<FeedbackEngine>,
+    ) -> Result<Self, StoreError> {
         connection.busy_timeout(Duration::from_secs(5))?;
         connection.execute_batch("PRAGMA foreign_keys = ON; PRAGMA synchronous = FULL;")?;
         apply_migrations(&mut connection)?;
@@ -302,6 +389,7 @@ impl SqliteRunStore {
         }
         Ok(Self {
             connection: Mutex::new(connection),
+            terminal_sanitizer,
         })
     }
 
@@ -1318,6 +1406,28 @@ fn apply_migrations(connection: &mut Connection) -> Result<(), StoreError> {
         }
         transaction.commit()?;
     }
+    let version = connection.query_row(
+        "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
+        [],
+        |row| row.get::<_, u32>(0),
+    )?;
+    if version < 5 {
+        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
+        let locked_version = transaction.query_row(
+            "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
+            [],
+            |row| row.get::<_, u32>(0),
+        )?;
+        if locked_version > CURRENT_SCHEMA_VERSION {
+            return Err(StoreError::Invariant(
+                "state database schema is newer than this binary".into(),
+            ));
+        }
+        if locked_version < 5 {
+            transaction.execute_batch(MIGRATION_V5)?;
+        }
+        transaction.commit()?;
+    }
     let migrated = connection.query_row(
         "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
         [],
@@ -1390,6 +1500,7 @@ fn verify_schema_shape(connection: &Connection) -> Result<(), StoreError> {
     )?;
     require_text_column(connection, "actions", "origin_model_call_id")?;
     require_model_phase_schema(connection)?;
+    require_observation_schema(connection)?;
     require_columns(
         connection,
         "approvals",
@@ -1500,15 +1611,372 @@ fn require_model_phase_schema(connection: &Connection) -> Result<(), StoreError>
         )
         .optional()?
         .ok_or(StoreError::Corrupt)?;
+    let compact_schema = compact_sql(&schema_sql);
+    if compact_schema.contains("check(model_phasein('not_started','running','completed'))") {
+        Ok(())
+    } else {
+        Err(StoreError::Corrupt)
+    }
+}
+
+fn require_observation_schema(connection: &Connection) -> Result<(), StoreError> {
+    require_columns(
+        connection,
+        "observations",
+        &[
+            "observation_id",
+            "run_id",
+            "step_id",
+            "call_id",
+            "kind",
+            "sanitized_payload",
+            "fingerprint",
+            "created_at",
+            "outcome",
+        ],
+    )?;
+    require_columns(
+        connection,
+        "tool_attempts",
+        &["call_id", "action_id", "observation_id"],
+    )?;
+
+    let mut statement = connection.prepare("PRAGMA table_info(observations)")?;
+    let mut rows = statement.query([])?;
+    let mut outcome_is_valid = false;
+    while let Some(row) = rows.next()? {
+        if row.get::<_, String>(1)? != "outcome" {
+            continue;
+        }
+        outcome_is_valid = row.get::<_, String>(2)?.eq_ignore_ascii_case("TEXT")
+            && row.get::<_, u32>(3)? == 1
+            && row.get::<_, Option<String>>(4)?.as_deref() == Some("'completed'");
+        break;
+    }
+    if !outcome_is_valid {
+        return Err(StoreError::Corrupt);
+    }
+
+    let schema_sql = connection
+        .query_row(
+            "SELECT sql FROM sqlite_schema WHERE type = 'table' AND name = 'observations'",
+            [],
+            |row| row.get::<_, String>(0),
+        )
+        .optional()?
+        .ok_or(StoreError::Corrupt)?;
     let compact_schema = schema_sql
         .chars()
         .filter(|character| !character.is_whitespace())
         .collect::<String>()
         .to_ascii_lowercase();
-    if compact_schema.contains("check(model_phasein('not_started','running','completed'))") {
+    if !compact_schema.contains("check(outcomein('completed','failed','absent'))") {
+        return Err(StoreError::Corrupt);
+    }
+
+    require_unique_index(
+        connection,
+        "observations",
+        "idx_observations_call",
+        &["call_id"],
+        false,
+    )?;
+    require_unique_index(
+        connection,
+        "observations",
+        "idx_observations_id_call",
+        &["observation_id", "call_id"],
+        false,
+    )?;
+    require_unique_index(
+        connection,
+        "tool_attempts",
+        "idx_tool_attempts_observation",
+        &["observation_id"],
+        true,
+    )?;
+    require_tool_attempt_observation_fk(connection)?;
+
+    let attempt_schema = connection
+        .query_row(
+            "SELECT sql FROM sqlite_schema WHERE type = 'table' AND name = 'tool_attempts'",
+            [],
+            |row| row.get::<_, String>(0),
+        )
+        .optional()?
+        .ok_or(StoreError::Corrupt)?;
+    let compact_attempt_schema = compact_sql(&attempt_schema);
+    for required in [
+        "foreignkey(observation_id,call_id)referencesobservations(observation_id,call_id)",
+        "statein('created','started')andobservation_idisnull",
+        "statein('completed','failed','cancelled','interrupted')andobservation_idisnotnull",
+    ] {
+        if !compact_attempt_schema.contains(required) {
+            return Err(StoreError::Corrupt);
+        }
+    }
+
+    require_trigger_fragments(
+        connection,
+        "trg_observations_validate_tool_insert",
+        &[
+            "beforeinsertonobservations",
+            "json_valid(new.sanitized_payload)!=1",
+            "length(cast(new.sanitized_payloadasblob))>65536",
+            "attempt.call_id=new.call_id",
+            "action.call_id=attempt.call_id",
+            "action.run_id=new.run_id",
+            "action.step_id=new.step_id",
+            "step.action_id=action.action_id",
+            "new.kind='tool.absent'andnew.outcome!='absent'",
+        ],
+    )?;
+    let binding_fragments = [
+        "observation.observation_id=new.observation_id",
+        "observation.call_id=new.call_id",
+        "observation.run_id=action.run_id",
+        "observation.step_id=action.step_id",
+        "action.call_id=new.call_id",
+        "step.action_id=action.action_id",
+        "new.state='completed'andobservation.kind='tool.completed'",
+        "new.state='failed'andobservation.kind='tool.failed'",
+    ];
+    require_trigger_fragments(
+        connection,
+        "trg_tool_attempts_validate_observation_insert",
+        &binding_fragments,
+    )?;
+    require_trigger_fragments(
+        connection,
+        "trg_tool_attempts_validate_observation_update",
+        &binding_fragments,
+    )?;
+    require_trigger_fragments(
+        connection,
+        "trg_observations_no_update",
+        &[
+            "beforeupdateonobservations",
+            "raise(abort,'durableobservationsareappend-only')",
+        ],
+    )?;
+    require_trigger_fragments(
+        connection,
+        "trg_observations_no_delete",
+        &[
+            "beforedeleteonobservations",
+            "raise(abort,'durableobservationsareappend-only')",
+        ],
+    )?;
+    require_schema_object_hashes(connection)?;
+    require_observation_row_integrity(connection)
+}
+
+fn compact_sql(sql: &str) -> String {
+    sql.chars()
+        .filter(|character| !character.is_whitespace())
+        .collect::<String>()
+        .to_ascii_lowercase()
+}
+
+fn require_unique_index(
+    connection: &Connection,
+    table: &str,
+    index: &str,
+    expected_columns: &[&str],
+    expected_partial: bool,
+) -> Result<(), StoreError> {
+    let mut statement = connection.prepare(&format!("PRAGMA index_list({table})"))?;
+    let mut rows = statement.query([])?;
+    let mut valid_metadata = false;
+    while let Some(row) = rows.next()? {
+        if row.get::<_, String>(1)? != index {
+            continue;
+        }
+        valid_metadata = row.get::<_, u32>(2)? == 1
+            && row.get::<_, String>(3)? == "c"
+            && (row.get::<_, u32>(4)? == 1) == expected_partial;
+        break;
+    }
+    if !valid_metadata {
+        return Err(StoreError::Corrupt);
+    }
+
+    let index_sql = connection
+        .query_row(
+            "SELECT sql FROM sqlite_schema WHERE type = 'index' AND name = ?1",
+            params![index],
+            |row| row.get::<_, String>(0),
+        )
+        .optional()?
+        .ok_or(StoreError::Corrupt)?;
+    let compact_index_sql = compact_sql(&index_sql);
+    if contains_sql_comment(&index_sql)
+        || (expected_partial && !compact_index_sql.contains("whereobservation_idisnotnull"))
+    {
+        return Err(StoreError::Corrupt);
+    }
+
+    let mut statement = connection.prepare(&format!("PRAGMA index_info({index})"))?;
+    let columns = statement
+        .query_map([], |row| row.get::<_, String>(2))?
+        .collect::<Result<Vec<_>, _>>()?;
+    if columns
+        .iter()
+        .map(String::as_str)
+        .eq(expected_columns.iter().copied())
+    {
         Ok(())
     } else {
         Err(StoreError::Corrupt)
+    }
+}
+
+fn require_tool_attempt_observation_fk(connection: &Connection) -> Result<(), StoreError> {
+    let mut statement = connection.prepare("PRAGMA foreign_key_list(tool_attempts)")?;
+    let rows = statement
+        .query_map([], |row| {
+            Ok((
+                row.get::<_, i64>(0)?,
+                row.get::<_, i64>(1)?,
+                row.get::<_, String>(2)?,
+                row.get::<_, String>(3)?,
+                row.get::<_, String>(4)?,
+            ))
+        })?
+        .collect::<Result<Vec<_>, _>>()?;
+    let mut observation_rows = rows
+        .into_iter()
+        .filter(|(_, _, table, _, _)| table == "observations")
+        .collect::<Vec<_>>();
+    observation_rows.sort_by_key(|(_, sequence, _, _, _)| *sequence);
+    let valid = matches!(
+        observation_rows.as_slice(),
+        [
+            (first_id, 0, _, first_from, first_to),
+            (second_id, 1, _, second_from, second_to),
+        ] if first_id == second_id
+            && first_from == "observation_id"
+            && first_to == "observation_id"
+            && second_from == "call_id"
+            && second_to == "call_id"
+    );
+    if valid {
+        Ok(())
+    } else {
+        Err(StoreError::Corrupt)
+    }
+}
+
+fn require_trigger_fragments(
+    connection: &Connection,
+    trigger: &str,
+    required_fragments: &[&str],
+) -> Result<(), StoreError> {
+    let sql = connection
+        .query_row(
+            "SELECT sql FROM sqlite_schema WHERE type = 'trigger' AND name = ?1",
+            params![trigger],
+            |row| row.get::<_, String>(0),
+        )
+        .optional()?
+        .ok_or(StoreError::Corrupt)?;
+    if contains_sql_comment(&sql) {
+        return Err(StoreError::Corrupt);
+    }
+    let compact = compact_sql(&sql);
+    if compact.contains("raise(abort,")
+        && required_fragments
+            .iter()
+            .all(|fragment| compact.contains(fragment))
+    {
+        Ok(())
+    } else {
+        Err(StoreError::Corrupt)
+    }
+}
+
+fn contains_sql_comment(sql: &str) -> bool {
+    sql.contains("--") || sql.contains("/*")
+}
+
+fn require_schema_object_hashes(connection: &Connection) -> Result<(), StoreError> {
+    for (kind, name, expected) in EXPECTED_V5_SCHEMA_OBJECT_HASHES {
+        let sql: String = connection
+            .query_row(
+                "SELECT sql FROM sqlite_schema WHERE type = ?1 AND name = ?2",
+                params![kind, name],
+                |row| row.get(0),
+            )
+            .optional()?
+            .ok_or(StoreError::Corrupt)?;
+        if contains_sql_comment(&sql) || hash_canonical_action(&compact_sql(&sql)) != *expected {
+            return Err(StoreError::Corrupt);
+        }
+    }
+    Ok(())
+}
+
+fn require_observation_row_integrity(connection: &Connection) -> Result<(), StoreError> {
+    let invalid_attempt: bool = connection
+        .query_row(
+            "SELECT 1
+             FROM tool_attempts AS attempt
+             JOIN actions AS action ON action.action_id = attempt.action_id
+             LEFT JOIN steps AS step
+               ON step.run_id = action.run_id AND step.step_id = action.step_id
+             LEFT JOIN observations AS observation
+               ON observation.observation_id = attempt.observation_id
+              AND observation.call_id = attempt.call_id
+             WHERE attempt.call_id != action.call_id
+                OR step.step_id IS NULL
+                OR step.action_id IS NULL
+                OR step.action_id != action.action_id
+                OR (attempt.state IN ('created', 'started')
+                    AND attempt.observation_id IS NOT NULL)
+                OR (attempt.state IN ('completed', 'failed', 'cancelled', 'interrupted')
+                    AND (
+                      attempt.observation_id IS NULL
+                      OR observation.observation_id IS NULL
+                      OR observation.run_id != action.run_id
+                      OR observation.step_id != action.step_id
+                      OR NOT (
+                        (observation.kind = 'tool.absent' AND observation.outcome = 'absent')
+                        OR (attempt.state = 'completed'
+                            AND observation.kind = 'tool.completed'
+                            AND observation.outcome = 'completed')
+                        OR (attempt.state = 'failed'
+                            AND observation.kind = 'tool.failed'
+                            AND observation.outcome = 'failed')
+                      )
+                    ))
+             LIMIT 1",
+            [],
+            |_| Ok(true),
+        )
+        .optional()?
+        .unwrap_or(false);
+    if invalid_attempt {
+        return Err(StoreError::Corrupt);
+    }
+
+    let orphan_tool_observation: bool = connection
+        .query_row(
+            "SELECT 1
+             FROM observations AS observation
+             LEFT JOIN tool_attempts AS attempt
+               ON attempt.observation_id = observation.observation_id
+              AND attempt.call_id = observation.call_id
+             WHERE observation.kind LIKE 'tool.%' AND attempt.call_id IS NULL
+             LIMIT 1",
+            [],
+            |_| Ok(true),
+        )
+        .optional()?
+        .unwrap_or(false);
+    if orphan_tool_observation {
+        Err(StoreError::Corrupt)
+    } else {
+        Ok(())
     }
 }
 
@@ -1631,6 +2099,8 @@ impl SqliteRunStore {
                 "terminal run cannot append an event".into(),
             ));
         }
+        let (input, terminal_observation) =
+            observation::prepare_terminal_input(run_id, input, self.terminal_sanitizer.as_ref())?;
         let started_action = match (&input.kind, permit_action_hash) {
             (HarnessEventKind::ToolStarted { action_id }, Some(expected_hash)) => {
                 let durable: Option<(String, String)> = transaction
@@ -1658,7 +2128,13 @@ impl SqliteRunStore {
             }
             (_, None) => None,
         };
-        apply_event_transition(&transaction, &snapshot, &input, permit_event_id)?;
+        apply_event_transition(
+            &transaction,
+            &snapshot,
+            &input,
+            permit_event_id,
+            terminal_observation.as_ref(),
+        )?;
         let event = HarnessEvent {
             schema_version: HARNESS_SCHEMA_VERSION,
             event_id: event_id(run_id, snapshot.next_sequence),
@@ -2702,6 +3178,7 @@ fn apply_event_transition(
     snapshot: &RunSnapshot,
     input: &EventAppend,
     permit_event_id: Option<&EventId>,
+    terminal_observation: Option<&DurableObservation>,
 ) -> Result<(), StoreError> {
     if input.turn_id != snapshot.current_turn_id || input.step_id != snapshot.current_step_id {
         return Err(StoreError::Invariant(
@@ -2933,7 +3410,18 @@ fn apply_event_transition(
                     "tool completion does not match a started attempt".into(),
                 ));
             }
-            finish_tool_attempt(transaction, snapshot, step_id, call_id, "completed")?;
+            let durable = terminal_observation.ok_or_else(|| {
+                StoreError::Invariant("tool completion requires a durable observation".into())
+            })?;
+            finish_tool_attempt(
+                transaction,
+                snapshot,
+                step_id,
+                call_id,
+                "completed",
+                durable,
+                &input.occurred_at,
+            )?;
         }
         HarnessEventKind::ToolFailed { .. } => {
             let call_id = input.call_id.as_ref().ok_or_else(|| {
@@ -2944,7 +3432,18 @@ fn apply_event_transition(
                     "tool failure does not match a started attempt".into(),
                 ));
             }
-            finish_tool_attempt(transaction, snapshot, step_id, call_id, "failed")?;
+            let durable = terminal_observation.ok_or_else(|| {
+                StoreError::Invariant("tool failure requires a durable observation".into())
+            })?;
+            finish_tool_attempt(
+                transaction,
+                snapshot,
+                step_id,
+                call_id,
+                "failed",
+                durable,
+                &input.occurred_at,
+            )?;
         }
         HarnessEventKind::ValidatorCompleted { .. } => {
             if snapshot.status != RunStatus::Running || step_status != "observed" {
@@ -2973,6 +3472,8 @@ fn finish_tool_attempt(
     step_id: &StepId,
     call_id: &CallId,
     terminal: &str,
+    observation: &DurableObservation,
+    occurred_at: &str,
 ) -> Result<(), StoreError> {
     let action_id = transaction
         .query_row(
@@ -2992,10 +3493,36 @@ fn finish_tool_attempt(
                 "tool attempt is not bound to the current step action and call".into(),
             )
         })?;
+    if observation.call_id != *call_id || observation.outcome != terminal {
+        return Err(StoreError::Invariant(
+            "terminal observation does not match the tool attempt".into(),
+        ));
+    }
+    transaction
+        .execute(
+            "INSERT INTO observations(
+               observation_id, run_id, step_id, call_id, kind,
+               sanitized_payload, fingerprint, created_at, outcome
+             ) VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
+            params![
+                observation.observation_id.0,
+                snapshot.run_id.0,
+                step_id.0,
+                observation.call_id.0,
+                observation.kind,
+                observation.payload,
+                observation.fingerprint,
+                occurred_at,
+                observation.outcome,
+            ],
+        )
+        .map_err(|error| map_constraint(error, "terminal observation is already linked"))?;
     let attempt = transaction.execute(
-        "UPDATE tool_attempts SET state = ?1, terminal_at = CURRENT_TIMESTAMP
-         WHERE call_id = ?2 AND action_id = ?3 AND state = 'started'",
-        params![terminal, call_id.0, action_id],
+        "UPDATE tool_attempts
+         SET state = ?1, terminal_at = CURRENT_TIMESTAMP, observation_id = ?4
+         WHERE call_id = ?2 AND action_id = ?3 AND state = 'started'
+           AND observation_id IS NULL",
+        params![terminal, call_id.0, action_id, observation.observation_id.0],
     )?;
     ensure_single_update(attempt)?;
     let action = transaction.execute(

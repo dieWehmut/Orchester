@@ -479,7 +479,7 @@ fn permit_cannot_start_after_durable_approval_expiry() {
 #[test]
 fn tool_start_requires_checkpoint_and_schema_permissions_are_checked() {
     let fixture = Fixture::new(PolicyDecision::Allow);
-    assert_eq!(fixture.store.schema_version().unwrap(), 4);
+    assert_eq!(fixture.store.schema_version().unwrap(), 5);
     let before = fixture.store.append_event(
         &fixture.owner,
         &fixture.run_id,
@@ -757,7 +757,7 @@ fn tool_completion_cannot_finish_another_runs_attempt() {
 }
 
 #[test]
-fn reopened_store_rejects_legacy_attempt_with_wrong_provider_call() {
+fn reopened_store_rejects_persisted_attempt_with_wrong_provider_call() {
     let fixture = Fixture::new(PolicyDecision::Allow);
     let barrier = PreExecutionBarrier::new(
         fixture.store.clone(),
@@ -793,20 +793,18 @@ fn reopened_store_rejects_legacy_attempt_with_wrong_provider_call() {
         .unwrap();
     drop(barrier);
 
-    let reopened = SqliteRunStore::open(&fixture.db).unwrap();
-    let result = reopened.append_event(
-        &fixture.owner,
-        &fixture.run_id,
-        fixture.tool_completed_input(&legacy_call_id),
-    );
-    let completions = reopened
+    assert!(matches!(
+        SqliteRunStore::open_with_terminal_secrets(&fixture.db, Vec::new()),
+        Err(StoreError::Corrupt)
+    ));
+    let completions = fixture
+        .store
         .events_owned(&fixture.run_id, &fixture.owner)
         .unwrap()
         .into_iter()
         .filter(|event| matches!(&event.kind, HarnessEventKind::ToolCompleted { .. }))
         .count();
 
-    assert!(result.is_err());
     assert_eq!(completions, 0);
 }
 
@@ -931,8 +929,8 @@ fn tool_failure_is_single_use_and_persists_all_terminal_states() {
 fn concurrent_tool_completion_has_one_durable_winner() {
     let fixture = Fixture::new(PolicyDecision::Allow);
     fixture.start_allowed_tool("concurrent-terminal-audit.jsonl");
-    let first = SqliteRunStore::open(&fixture.db).unwrap();
-    let second = SqliteRunStore::open(&fixture.db).unwrap();
+    let first = SqliteRunStore::open_with_terminal_secrets(&fixture.db, Vec::new()).unwrap();
+    let second = SqliteRunStore::open_with_terminal_secrets(&fixture.db, Vec::new()).unwrap();
     let start = Arc::new(Barrier::new(2));
     let owner = fixture.owner.clone();
     let run_id = fixture.run_id.clone();
@@ -1017,7 +1015,7 @@ impl Fixture {
             fixture_id
         ));
         let db = root.join("state.db");
-        let store = Arc::new(SqliteRunStore::open(&db).unwrap());
+        let store = Arc::new(SqliteRunStore::open_with_terminal_secrets(&db, Vec::new()).unwrap());
         let run_id = RunId::from("run-durable");
         let owner = "owner-durable".to_owned();
         store
