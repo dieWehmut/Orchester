@@ -18,6 +18,14 @@ pub struct BoundedOutput {
 }
 
 impl BoundedOutput {
+    pub(crate) fn from_parts(bytes: Vec<u8>, total_bytes: u64) -> Self {
+        Self {
+            truncated: total_bytes > bytes.len() as u64,
+            bytes,
+            total_bytes,
+        }
+    }
+
     pub fn bytes(&self) -> &[u8] {
         &self.bytes
     }

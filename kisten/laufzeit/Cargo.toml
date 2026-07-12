@@ -25,6 +25,7 @@ sha2 = { workspace = true }
 getrandom = { workspace = true }
 fs2 = { workspace = true }
 tokio = { workspace = true }
+tokio-util = { workspace = true }
 blake3 = { workspace = true }
 regex = { workspace = true }
 
