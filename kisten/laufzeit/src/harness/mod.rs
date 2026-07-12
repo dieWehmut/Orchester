@@ -8,6 +8,7 @@ pub mod config;
 pub mod context;
 pub mod credentials;
 pub mod feedback;
+pub mod files;
 pub mod governance;
 pub mod memory;
 pub mod mutation;
