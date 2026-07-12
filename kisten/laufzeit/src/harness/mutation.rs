@@ -12,6 +12,16 @@ use thiserror::Error;
 
 use super::governance::{GuardError, GuardErrorKind, WorkspaceGuard, WorkspaceLocks};
 
+// Structural limits are deliberately independent from the byte/file limits
+// exposed in the config.  Keeping these hard ceilings here preserves the
+// existing config wire shape while ensuring a hostile tree cannot consume
+// unbounded memory or recursion depth.
+const MAX_SNAPSHOT_ENTRIES: usize = 100_000;
+const MAX_SNAPSHOT_DIRECTORIES: usize = 20_000;
+const MAX_SNAPSHOT_DEPTH: usize = 128;
+const MAX_SNAPSHOT_PATH_BYTES: u64 = 4 * 1024 * 1024;
+const MAX_ENTRY_PATH_BYTES: usize = 16 * 1024;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct SnapshotLimits {
     pub max_files: usize,
@@ -120,7 +130,7 @@ impl WorkspaceSnapshotter {
     pub fn capture(&self) -> Result<SnapshotResult, SnapshotError> {
         let mut accumulator = SnapshotAccumulator::new(self.config.limits);
         for include in &self.config.includes {
-            match self.visit(include, &mut accumulator) {
+            match self.visit(include, &mut accumulator, 0) {
                 Ok(Some(limit)) => return Ok(limit),
                 Ok(None) => {}
                 Err(SnapshotError::Io { source, .. })
@@ -146,17 +156,27 @@ impl WorkspaceSnapshotter {
         &self,
         relative: &Path,
         accumulator: &mut SnapshotAccumulator,
+        depth: usize,
     ) -> Result<Option<SnapshotResult>, SnapshotError> {
         if self.excluded(relative) {
             return Ok(None);
         }
+        if depth > MAX_SNAPSHOT_DEPTH {
+            return Ok(Some(accumulator.limit_result()));
+        }
         match self.workspace.directory_entries(relative) {
-            Ok(mut children) => {
-                accumulator.record_directory(relative);
-                children.sort_by_key(|left| path_bytes(Path::new(left)));
+            Ok(children) => {
+                if !accumulator.admit_directory(relative) {
+                    return Ok(Some(accumulator.limit_result()));
+                }
+                // Consume the capability-backed stream incrementally.  We do
+                // not sort or collect names: the final digest is ordered by
+                // BTreeMap, while limits are enforced before the next entry
+                // can allocate another recursive frame.
                 for child in children {
+                    let child = child.map_err(|error| snapshot_guard_error(relative, error))?;
                     let child = relative.join(child);
-                    if let Some(limit) = self.visit(&child, accumulator)? {
+                    if let Some(limit) = self.visit(&child, accumulator, depth + 1)? {
                         return Ok(Some(limit));
                     }
                 }
@@ -179,12 +199,8 @@ impl WorkspaceSnapshotter {
                 path: relative.to_path_buf(),
             });
         }
-        let files = accumulator.file_count.saturating_add(1);
-        if files > accumulator.limits.max_files {
-            return Ok(Some(SnapshotResult::LimitExceeded {
-                files,
-                bytes: accumulator.byte_count,
-            }));
+        if !accumulator.admit_file(relative) {
+            return Ok(Some(accumulator.file_limit_result()));
         }
         let remaining = accumulator
             .limits
@@ -201,7 +217,7 @@ impl WorkspaceSnapshotter {
         let actual_bytes = accumulator.byte_count.saturating_add(content.len() as u64);
         if actual_bytes > accumulator.limits.max_bytes {
             return Ok(Some(SnapshotResult::LimitExceeded {
-                files,
+                files: accumulator.file_count.saturating_add(1),
                 bytes: accumulator.limits.max_bytes.saturating_add(1),
             }));
         }
@@ -221,6 +237,9 @@ struct SnapshotAccumulator {
     limits: SnapshotLimits,
     file_count: usize,
     byte_count: u64,
+    entry_count: usize,
+    directory_count: usize,
+    path_bytes: u64,
     entries: BTreeMap<PathBuf, EntryDigest>,
     files: BTreeMap<PathBuf, blake3::Hash>,
 }
@@ -231,28 +250,71 @@ impl SnapshotAccumulator {
             limits,
             file_count: 0,
             byte_count: 0,
+            entry_count: 0,
+            directory_count: 0,
+            path_bytes: 0,
             entries: BTreeMap::new(),
             files: BTreeMap::new(),
         }
     }
 
-    fn record_directory(&mut self, path: &Path) {
-        self.entries
-            .entry(path.to_path_buf())
-            .or_insert(EntryDigest {
+    fn admit_directory(&mut self, path: &Path) -> bool {
+        if !self.admit_entry(path, true) {
+            return false;
+        }
+        self.entries.insert(
+            path.to_path_buf(),
+            EntryDigest {
                 kind: b'd',
                 hash: blake3::hash(&[]),
-            });
+            },
+        );
+        true
+    }
+
+    fn admit_file(&mut self, path: &Path) -> bool {
+        self.admit_entry(path, false)
+    }
+
+    fn admit_entry(&mut self, path: &Path, directory: bool) -> bool {
+        let path_len = path_bytes(path).len();
+        if path_len > MAX_ENTRY_PATH_BYTES
+            || self.entry_count >= MAX_SNAPSHOT_ENTRIES
+            || (directory && self.directory_count >= MAX_SNAPSHOT_DIRECTORIES)
+            || (!directory && self.file_count >= self.limits.max_files)
+            || self.path_bytes.saturating_add(path_len as u64) > MAX_SNAPSHOT_PATH_BYTES
+        {
+            return false;
+        }
+        self.entry_count += 1;
+        self.path_bytes = self.path_bytes.saturating_add(path_len as u64);
+        if directory {
+            self.directory_count += 1;
+        }
+        true
     }
 
     fn record_file(&mut self, path: &Path, content: &[u8]) {
         let hash = blake3::hash(content);
-        if self.files.insert(path.to_path_buf(), hash).is_none() {
-            self.file_count += 1;
-            self.byte_count += content.len() as u64;
-        }
+        self.files.insert(path.to_path_buf(), hash);
+        self.file_count += 1;
+        self.byte_count += content.len() as u64;
         self.entries
             .insert(path.to_path_buf(), EntryDigest { kind: b'f', hash });
+    }
+
+    fn limit_result(&self) -> SnapshotResult {
+        SnapshotResult::LimitExceeded {
+            files: self.file_count,
+            bytes: self.byte_count,
+        }
+    }
+
+    fn file_limit_result(&self) -> SnapshotResult {
+        SnapshotResult::LimitExceeded {
+            files: self.file_count.saturating_add(1),
+            bytes: self.byte_count,
+        }
     }
 
     fn finish(self) -> WorkspaceSnapshot {

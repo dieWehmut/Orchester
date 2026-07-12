@@ -420,20 +420,20 @@ impl WorkspaceGuard {
         Ok(())
     }
 
-    pub(crate) fn directory_entries(&self, requested: &Path) -> Result<Vec<OsString>, GuardError> {
+    pub(crate) fn directory_entries(
+        &self,
+        requested: &Path,
+    ) -> Result<DirectoryEntries, GuardError> {
         let relative = self.normalize_request(requested, true)?;
         self.reject_protected(&relative, requested)?;
         let directory = self.open_directory(&relative, requested)?;
         let entries = directory
             .entries()
             .map_err(|source| map_io("read directory", requested, source))?;
-        entries
-            .map(|entry| {
-                entry
-                    .map(|entry| entry.file_name())
-                    .map_err(|source| map_io("read directory entry", requested, source))
-            })
-            .collect()
+        Ok(DirectoryEntries {
+            entries,
+            requested: requested.to_path_buf(),
+        })
     }
 
     pub(crate) fn open_snapshot_file(&self, requested: &Path) -> Result<File, GuardError> {
@@ -725,6 +725,29 @@ impl Drop for AtomicWriteTarget {
         if !self.committed {
             let _ = self.parent.remove_file(Path::new(&self.temp_name));
         }
+    }
+}
+
+/// A directory stream backed by an already-open capability.
+///
+/// Keeping the iterator instead of collecting names into a `Vec` means a
+/// hostile directory cannot force an unbounded allocation before snapshot
+/// limits are applied.  The snapshot layer stops consuming this stream as
+/// soon as any structural limit is reached.
+pub(crate) struct DirectoryEntries {
+    entries: cap_std::fs::ReadDir,
+    requested: PathBuf,
+}
+
+impl Iterator for DirectoryEntries {
+    type Item = Result<OsString, GuardError>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.entries.next().map(|entry| {
+            entry
+                .map(|entry| entry.file_name())
+                .map_err(|source| map_io("read directory entry", &self.requested, source))
+        })
     }
 }
 
