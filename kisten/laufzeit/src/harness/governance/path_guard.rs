@@ -354,13 +354,11 @@ impl<R: PathResolver> WorkspaceGuard<R> {
 
     fn normalize_request(&self, requested: &Path) -> Result<PathBuf, GuardError> {
         let relative = if requested.is_absolute() {
-            requested
-                .strip_prefix(&self.root)
-                .map_err(|_| GuardError::Outside {
-                    path: requested.to_path_buf(),
-                })?
+            strip_workspace_prefix(requested, &self.root).ok_or_else(|| GuardError::Outside {
+                path: requested.to_path_buf(),
+            })?
         } else {
-            requested
+            requested.to_path_buf()
         };
         let mut normalized = PathBuf::new();
         for component in relative.components() {
@@ -583,6 +581,53 @@ fn path_starts_with(path: &Path, prefix: &Path) -> bool {
 #[cfg(not(windows))]
 fn path_starts_with(path: &Path, prefix: &Path) -> bool {
     path.starts_with(prefix)
+}
+
+#[cfg(windows)]
+fn strip_workspace_prefix(path: &Path, prefix: &Path) -> Option<PathBuf> {
+    let path_components: Vec<_> = path.components().collect();
+    let prefix_components: Vec<_> = prefix.components().collect();
+    if path_components.len() < prefix_components.len()
+        || !path_components
+            .iter()
+            .zip(&prefix_components)
+            .all(|(path, prefix)| windows_component_key(path) == windows_component_key(prefix))
+    {
+        return None;
+    }
+
+    let mut relative = PathBuf::new();
+    for component in path_components.iter().skip(prefix_components.len()) {
+        match component {
+            Component::Normal(value) => relative.push(value),
+            Component::CurDir => {}
+            Component::ParentDir => relative.push(".."),
+            Component::Prefix(_) | Component::RootDir => return None,
+        }
+    }
+    Some(relative)
+}
+
+#[cfg(windows)]
+fn windows_component_key(component: &Component<'_>) -> Vec<u16> {
+    use std::os::windows::ffi::OsStrExt;
+
+    let mut key: Vec<u16> = component.as_os_str().encode_wide().collect();
+    let verbatim_prefix: Vec<u16> = "\\\\?\\".encode_utf16().collect();
+    if key.starts_with(&verbatim_prefix) {
+        key.drain(..verbatim_prefix.len());
+    }
+    for unit in &mut key {
+        if (b'A' as u16..=b'Z' as u16).contains(unit) {
+            *unit += b'a' as u16 - b'A' as u16;
+        }
+    }
+    key
+}
+
+#[cfg(not(windows))]
+fn strip_workspace_prefix(path: &Path, prefix: &Path) -> Option<PathBuf> {
+    path.strip_prefix(prefix).ok().map(PathBuf::from)
 }
 
 fn random_token() -> u64 {

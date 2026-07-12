@@ -95,6 +95,17 @@ fn permits_existing_reads_and_new_files_below_real_workspace_parents() {
 }
 
 #[test]
+fn accepts_an_absolute_path_that_is_inside_the_workspace() {
+    let ws = TempWorkspace::new();
+    fs::write(ws.root.join("src/lib.rs"), "pub fn demo() {}\n").unwrap();
+    let guard = ws.guard();
+
+    let absolute = ws.root.join("src/lib.rs");
+    let resolved = guard.resolve_read(&absolute).unwrap();
+    assert_eq!(resolved.final_path, fs::canonicalize(absolute).unwrap());
+}
+
+#[test]
 fn existing_directory_reports_its_parent_not_itself() {
     let ws = TempWorkspace::new();
     let guard = ws.guard();
