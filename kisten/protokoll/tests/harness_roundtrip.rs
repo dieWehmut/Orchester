@@ -22,14 +22,28 @@ fn action_recorded_uses_the_exact_top_level_fixture() {
                 start_line: None,
                 end_line: None,
             },
+            origin_model_call_id: Some("model-call-1".into()),
         },
     );
-    let expected = r#"{"schema_version":1,"event_id":"evt-1","run_id":"run-1","turn_id":null,"step_id":"step-1","call_id":null,"sequence":1,"occurred_at":"2026-07-10T00:00:00Z","kind":"action.recorded","payload":{"action_id":"act-1","action":{"tool":"read_file","path":"src/lib.rs","start_line":null,"end_line":null}}}"#;
+    let expected = r#"{"schema_version":1,"event_id":"evt-1","run_id":"run-1","turn_id":null,"step_id":"step-1","call_id":null,"sequence":1,"occurred_at":"2026-07-10T00:00:00Z","kind":"action.recorded","payload":{"action_id":"act-1","action":{"tool":"read_file","path":"src/lib.rs","start_line":null,"end_line":null},"origin_model_call_id":"model-call-1"}}"#;
     assert_eq!(serde_json::to_string(&event).unwrap(), expected);
     assert_eq!(
         serde_json::from_str::<HarnessEvent>(expected).unwrap(),
         event
     );
+}
+
+#[test]
+fn action_recorded_legacy_fixture_without_origin_still_decodes() {
+    let fixture = r#"{"kind":"action.recorded","payload":{"action_id":"act-legacy","action":{"tool":"read_file","path":"src/lib.rs","start_line":null,"end_line":null}}}"#;
+    let kind: HarnessEventKind = serde_json::from_str(fixture).unwrap();
+    assert!(matches!(
+        kind,
+        HarnessEventKind::ActionRecorded {
+            origin_model_call_id: None,
+            ..
+        }
+    ));
 }
 
 #[test]

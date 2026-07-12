@@ -501,6 +501,7 @@ pub enum HarnessEventKind {
     ActionRecorded {
         action_id: ActionId,
         action: AgentAction,
+        origin_model_call_id: Option<CallId>,
     },
     PolicyDecided {
         action_id: ActionId,
@@ -557,6 +558,8 @@ struct ModelCompletedPayload {
 struct ActionRecordedPayload {
     action_id: ActionId,
     action: AgentAction,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    origin_model_call_id: Option<CallId>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -651,6 +654,7 @@ impl HarnessEventKind {
                 Ok(Self::ActionRecorded {
                     action_id: value.action_id,
                     action: value.action,
+                    origin_model_call_id: value.origin_model_call_id,
                 })
             }
             "policy.decided" => {
@@ -778,13 +782,18 @@ where
                 },
             )?;
         }
-        HarnessEventKind::ActionRecorded { action_id, action } => {
+        HarnessEventKind::ActionRecorded {
+            action_id,
+            action,
+            origin_model_call_id,
+        } => {
             state.serialize_field("kind", "action.recorded")?;
             state.serialize_field(
                 "payload",
                 &ActionRecordedPayload {
                     action_id: action_id.clone(),
                     action: action.clone(),
+                    origin_model_call_id: origin_model_call_id.clone(),
                 },
             )?;
         }
