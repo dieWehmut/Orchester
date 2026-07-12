@@ -2,12 +2,17 @@ use std::collections::{BTreeMap, HashMap};
 use std::io::{self, BufRead, Write};
 
 use crossterm::cursor;
-use crossterm::event::{self, Event as TerminalEvent, KeyCode, KeyModifiers};
+use crossterm::event::{
+    self, Event as TerminalEvent, KeyCode, KeyEvent, KeyEventKind, KeyModifiers,
+};
 use crossterm::execute;
 use crossterm::terminal::{self, ClearType};
 use orchester_protokoll::{Capability, TaskKind};
 use orchester_vertrag::{AdapterAvailability, AvailabilityStatus};
 use orchester_verzeichnis::Registry;
+use unicode_width::{UnicodeWidthChar, UnicodeWidthStr};
+
+use crate::avatar;
 
 const DIM: &str = "\x1b[2m";
 const BOLD: &str = "\x1b[1m";
@@ -16,35 +21,7 @@ const GREEN: &str = "\x1b[32m";
 const YELLOW: &str = "\x1b[33m";
 const CYAN: &str = "\x1b[36m";
 const ORANGE: &str = "\x1b[38;5;208m";
-const PINK: &str = "\x1b[38;5;218m";
-const LAVENDER: &str = "\x1b[38;5;147m";
-const INK: &str = "\x1b[38;5;245m";
 const RESET: &str = "\x1b[0m";
-
-// Generated from D:\picture\dieWehmut-2.jpg as terminal character art so the
-// installed binary can render the portrait without reading the image file.
-const AVATAR_WIDTH: usize = 34;
-const AVATAR_LINES: &[&str] = &[
-    "%%=   .  :::-::::.:.::. .:. -#****",
-    "%%*  .. ...::.-::::::::..:. :*#***",
-    "%%%: .. ..:::::-::::-::::. . .+###",
-    "%%%+   ..-::----=------::.    :+#%",
-    "%%%#. ..:-:--======--=--.:..  :++#",
-    "%%%*. ..----=-====+==-=-:.:.. .*#*",
-    "%%#+ ..:---==-=++++++===-::.. -=*#",
-    "@%#- .::-===-+-=+++++==+-::....*-*",
-    "%##...:-==+==+=-=++=*+==-::..: .-",
-    "##+. .--=++=**+===+==++==::..:. ..",
-    "*#-. :--++==%#**#***+====-...::",
-    "#+   ---++=*@#%**%###+::--:.:::..",
-    "+.=..-=-++=#@##%**@%-..=:--=:::...",
-    ":+* :-=-++=%%%#%@##%+=++==*#-.:..:",
-    "*%=.--=-+++=::=#%@%%%****=*#::.. +",
-    "*%:.::==++:+-==%%%%%%%%##=+=:-: .+",
-    "#*.:.:==++=#*+#%%%%%%%%%*--.--+..-",
-    "%-.-::=:=+*%##%%%%%%%%%%+--::-+  +",
-    "* :#-:=:-++%%%%%%%%@%%%#+:=-::. .*",
-];
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AgentChoice {
@@ -68,6 +45,16 @@ pub enum PromptAction {
     PickAgent,
     LaunchAgent(String),
     ListAgents,
+    Help,
+    Quit,
+    Empty,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum HomeAction {
+    Submit(String),
+    PickAgent,
+    LaunchAgent(String),
     Help,
     Quit,
     Empty,
@@ -105,6 +92,75 @@ impl Drop for TerminalGuard {
         let _ = terminal::disable_raw_mode();
         let _ = execute!(io::stdout(), cursor::Show);
     }
+}
+
+pub fn run_home_tui(choices: &[AgentChoice]) -> io::Result<HomeAction> {
+    let _guard = TerminalGuard::enter()?;
+    let mut out = io::stdout();
+    let mut input = String::new();
+    let mut command_selected = 0usize;
+
+    loop {
+        let (cols, _) = terminal::size().unwrap_or((100, 30));
+        render_chat_home(
+            &mut out,
+            (cols as usize).clamp(50, 132),
+            &input,
+            choices,
+            command_selected,
+        )?;
+
+        let TerminalEvent::Key(key) = event::read()? else {
+            continue;
+        };
+        if !is_press(&key) {
+            continue;
+        }
+        if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('c') {
+            clear_screen(&mut out)?;
+            return Ok(HomeAction::Quit);
+        }
+
+        match key.code {
+            KeyCode::Enter => {
+                let action = parse_home_action(&input, choices);
+                if !matches!(action, HomeAction::Empty) {
+                    clear_screen(&mut out)?;
+                    return Ok(action);
+                }
+            }
+            KeyCode::Esc => {
+                if input.is_empty() {
+                    clear_screen(&mut out)?;
+                    return Ok(HomeAction::Quit);
+                }
+                input.clear();
+                command_selected = 0;
+            }
+            KeyCode::Backspace => {
+                input.pop();
+                command_selected = 0;
+            }
+            KeyCode::Up if input.starts_with('/') => {
+                command_selected = command_selected.saturating_sub(1);
+            }
+            KeyCode::Down if input.starts_with('/') => {
+                let matches = matching_commands(&input, choices);
+                if command_selected + 1 < matches.len() {
+                    command_selected += 1;
+                }
+            }
+            KeyCode::Char(ch) => {
+                input.push(ch);
+                command_selected = 0;
+            }
+            _ => {}
+        }
+    }
+}
+
+fn is_press(key: &KeyEvent) -> bool {
+    key.kind == KeyEventKind::Press
 }
 
 pub fn build_agent_choices(registry: &Registry) -> Vec<AgentChoice> {
@@ -178,6 +234,9 @@ pub fn select_agent_tui(
         let TerminalEvent::Key(key) = event::read()? else {
             continue;
         };
+        if !is_press(&key) {
+            continue;
+        }
         if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('c') {
             clear_screen(&mut out)?;
             return Ok(None);
@@ -382,6 +441,29 @@ pub fn parse_prompt_action(input: &str, choices: &[AgentChoice]) -> PromptAction
     }
 }
 
+pub fn parse_home_action(input: &str, choices: &[AgentChoice]) -> HomeAction {
+    let input = input.trim();
+    if input.is_empty() {
+        return HomeAction::Empty;
+    }
+    if !input.starts_with('/') {
+        return HomeAction::Submit(input.to_owned());
+    }
+    if matches!(input, "/delegate" | "/agents") {
+        return HomeAction::PickAgent;
+    }
+
+    match parse_prompt_action(input, choices) {
+        PromptAction::PickAgent => HomeAction::PickAgent,
+        PromptAction::ListAgents => HomeAction::PickAgent,
+        PromptAction::LaunchAgent(name) => HomeAction::LaunchAgent(name),
+        PromptAction::Help => HomeAction::Help,
+        PromptAction::Quit => HomeAction::Quit,
+        PromptAction::Empty => HomeAction::Help,
+        PromptAction::Run(prompt) => HomeAction::Submit(prompt),
+    }
+}
+
 pub fn render_agent_table<W: Write>(
     out: &mut W,
     choices: &[AgentChoice],
@@ -543,6 +625,33 @@ fn render_home<W: Write>(
     out.flush()
 }
 
+fn render_chat_home<W: Write>(
+    out: &mut W,
+    width: usize,
+    input: &str,
+    choices: &[AgentChoice],
+    command_selected: usize,
+) -> io::Result<()> {
+    clear_screen(out)?;
+    writeln!(
+        out,
+        "{ORANGE}{BOLD}Orchester{RESET} {DIM}v{}  coding agent workspace{RESET}",
+        env!("CARGO_PKG_VERSION")
+    )?;
+    render_home_panel(out, width, None)?;
+    writeln!(out)?;
+    writeln!(out, "{CYAN}> {RESET}{input}")?;
+    if input.starts_with('/') {
+        render_command_palette(out, input, choices, command_selected)?;
+    } else {
+        writeln!(
+            out,
+            "{DIM}Type a task or / for commands. Enter submits; Esc exits.{RESET}"
+        )?;
+    }
+    out.flush()
+}
+
 fn render_line_home<W: Write>(
     out: &mut W,
     choices: &[AgentChoice],
@@ -564,76 +673,93 @@ fn render_line_home<W: Write>(
     writeln!(out)
 }
 
+pub fn render_line_startup_home<W: Write>(out: &mut W) -> io::Result<()> {
+    let (cols, _) = terminal::size().unwrap_or((100, 30));
+    let width = (cols as usize).clamp(50, 132);
+
+    writeln!(
+        out,
+        "{ORANGE}{BOLD}Orchester{RESET} {DIM}v{}  coding agent workspace{RESET}",
+        env!("CARGO_PKG_VERSION")
+    )?;
+    render_home_panel(out, width, None)?;
+    writeln!(out)?;
+    writeln!(
+        out,
+        "{DIM}Type a task for Orchester, or /agent, /codex, /claude, /opencode.{RESET}"
+    )?;
+    writeln!(
+        out,
+        "{DIM}Use `orchester run --agent <name> <prompt>` for scripts.{RESET}"
+    )?;
+    write!(out, "{CYAN}orchester>{RESET} ")?;
+    out.flush()
+}
+
 fn render_home_panel<W: Write>(
     out: &mut W,
     width: usize,
     selected_agent: Option<&AgentChoice>,
 ) -> io::Result<()> {
     let content_width = width.saturating_sub(7);
-    let left_width = AVATAR_WIDTH
+    let left_width = avatar::AVATAR_WIDTH
         .min(content_width / 2 + 4)
         .min(content_width.saturating_sub(18))
         .max(12);
     let right_width = content_width.saturating_sub(left_width);
-    let selected = selected_agent
-        .map(|agent| format!("{} ({})", agent.name, launch_label(agent)))
-        .unwrap_or_else(|| "none".into());
     let cwd = std::env::current_dir()
         .map(|cwd| cwd.display().to_string())
         .unwrap_or_else(|_| ".".into());
-    let right_rows = [
-        "Welcome back".to_string(),
-        String::new(),
-        "Tips for getting started".to_string(),
-        "  Enter launches the highlighted CLI".to_string(),
-        "  / opens matching commands".to_string(),
-        String::new(),
-        "Agent choice".to_string(),
-        "  Choose on every Orchester launch".to_string(),
-        format!("  Selected: {selected}"),
-        String::new(),
-        "Commands".to_string(),
-        "  /agent  /list  /help  /quit".to_string(),
-        String::new(),
-        format!("cwd {cwd}"),
-    ];
+    let right_rows = match selected_agent {
+        Some(agent) => vec![
+            "Welcome back".to_string(),
+            String::new(),
+            "Tips for getting started".to_string(),
+            "  Enter launches the highlighted CLI".to_string(),
+            "  / opens matching commands".to_string(),
+            String::new(),
+            "Agent choice".to_string(),
+            "  Choose on every Orchester launch".to_string(),
+            format!("  Selected: {} ({})", agent.name, launch_label(agent)),
+            String::new(),
+            "Commands".to_string(),
+            "  /agent  /list  /help  /quit".to_string(),
+            String::new(),
+            format!("cwd {cwd}"),
+        ],
+        None => vec![
+            "Welcome back".to_string(),
+            String::new(),
+            "Orchester workspace".to_string(),
+            "  Self agent and delegated tools".to_string(),
+            "  Governance stays visible".to_string(),
+            String::new(),
+            "Start here".to_string(),
+            "  Type a task or / for commands".to_string(),
+            "  No external agent starts yet".to_string(),
+            String::new(),
+            "Workspace".to_string(),
+            format!("  {cwd}"),
+        ],
+    };
 
     writeln!(out, "{ORANGE}+{}+{RESET}", "-".repeat(width - 2))?;
-    let rows = AVATAR_LINES.len().max(right_rows.len());
+    let rows = avatar::AVATAR_HEIGHT.max(right_rows.len());
     for row in 0..rows {
-        let avatar = AVATAR_LINES.get(row).copied().unwrap_or("");
-        let avatar = truncate(avatar, left_width);
-        let avatar_pad = " ".repeat(left_width.saturating_sub(avatar.chars().count()));
+        let avatar_line = avatar::AVATAR_ROWS.get(row).copied().unwrap_or("");
+        let avatar_line = truncate(avatar_line, left_width);
+        let avatar_pad = " ".repeat(left_width.saturating_sub(display_width(&avatar_line)));
         let right = right_rows.get(row).map(String::as_str).unwrap_or("");
-        let right = truncate(right, right_width);
+        let right = truncate(&sanitize_terminal_text(right), right_width);
+        let right_pad = " ".repeat(right_width.saturating_sub(display_width(&right)));
 
         write!(out, "{ORANGE}|{RESET} ")?;
-        write_avatar_line(out, &avatar)?;
+        avatar::write_line(out, &avatar_line)?;
         write!(out, "{avatar_pad} {ORANGE}|{RESET} ")?;
-        write!(out, "{right:<right_width$}")?;
+        write!(out, "{right}{right_pad}")?;
         writeln!(out, " {ORANGE}|{RESET}")?;
     }
     writeln!(out, "{ORANGE}+{}+{RESET}", "-".repeat(width - 2))
-}
-
-fn write_avatar_line<W: Write>(out: &mut W, line: &str) -> io::Result<()> {
-    for ch in line.chars() {
-        if ch == ' ' {
-            write!(out, " ")?;
-        } else {
-            write!(out, "{}{ch}{RESET}", avatar_color(ch))?;
-        }
-    }
-    Ok(())
-}
-
-fn avatar_color(ch: char) -> &'static str {
-    match ch {
-        '@' | '%' | '#' => INK,
-        '*' | '+' | '=' => PINK,
-        '-' | ':' => LAVENDER,
-        _ => DIM,
-    }
 }
 
 fn render_command_palette<W: Write>(
@@ -677,6 +803,10 @@ fn read_line<R: BufRead>(input: &mut R) -> io::Result<Option<String>> {
     } else {
         Ok(Some(line))
     }
+}
+
+pub fn read_startup_line<R: BufRead>(input: &mut R) -> io::Result<Option<String>> {
+    read_line(input)
 }
 
 fn selectable_agents(choices: &[AgentChoice]) -> Vec<AgentChoice> {
@@ -876,14 +1006,40 @@ fn unavailable_names(choices: &[&AgentChoice]) -> String {
 }
 
 fn truncate(s: &str, max: usize) -> String {
-    let chars = s.chars().collect::<Vec<_>>();
-    if chars.len() <= max {
+    if display_width(s) <= max {
         return s.to_string();
     }
-    if max < 3 {
-        return chars.into_iter().take(max).collect();
+
+    let suffix = if max >= 3 { "..." } else { "" };
+    let budget = max.saturating_sub(display_width(suffix));
+    let mut width = 0;
+    let mut out = String::new();
+    for ch in s.chars() {
+        let ch_width = UnicodeWidthChar::width(ch).unwrap_or(0);
+        if width + ch_width > budget {
+            break;
+        }
+        out.push(ch);
+        width += ch_width;
     }
-    chars.into_iter().take(max - 3).collect::<String>() + "..."
+    out.push_str(suffix);
+    out
+}
+
+fn display_width(s: &str) -> usize {
+    UnicodeWidthStr::width(s)
+}
+
+fn sanitize_terminal_text(s: &str) -> String {
+    s.chars()
+        .flat_map(|ch| {
+            if ch.is_control() {
+                ch.escape_default().collect::<Vec<_>>()
+            } else {
+                vec![ch]
+            }
+        })
+        .collect()
 }
 
 fn is_quit(input: &str) -> bool {
@@ -994,11 +1150,79 @@ mod tests {
 
         let rendered = String::from_utf8_lossy(&out);
         let plain = strip_ansi(&rendered);
-        assert!(plain.contains("%%="), "home output:\n{rendered}");
+        assert!(plain.contains("/#\\"), "home output:\n{rendered}");
         assert!(
             rendered.contains("Choose on every Orchester launch"),
             "home output:\n{rendered}"
         );
+    }
+
+    #[test]
+    fn startup_home_is_distinct_from_the_delegate_picker() {
+        let mut out = Vec::new();
+
+        render_chat_home(&mut out, 100, "", &[], 0).unwrap();
+
+        let rendered = String::from_utf8_lossy(&out);
+        let plain = strip_ansi(&rendered);
+        assert!(
+            plain.contains("Welcome back"),
+            "startup output:\n{rendered}"
+        );
+        assert!(
+            plain.contains("Type a task or / for commands"),
+            "startup output:\n{rendered}"
+        );
+        assert!(
+            !plain.contains("Selected: codex") && !plain.contains("Choose agent"),
+            "startup must not look like a Codex session or delegate picker:\n{rendered}"
+        );
+        assert!(
+            rendered.contains("\x1b[38;5;"),
+            "the portrait should use embedded ANSI-colored ASCII cells:\n{rendered}"
+        );
+    }
+
+    #[test]
+    fn key_events_require_a_press_kind() {
+        assert!(is_press(&KeyEvent::new(KeyCode::Enter, KeyModifiers::NONE)));
+        assert!(!is_press(&KeyEvent::new_with_kind(
+            KeyCode::Enter,
+            KeyModifiers::NONE,
+            KeyEventKind::Release,
+        )));
+        assert!(!is_press(&KeyEvent::new_with_kind(
+            KeyCode::Enter,
+            KeyModifiers::NONE,
+            KeyEventKind::Repeat,
+        )));
+    }
+
+    #[test]
+    fn terminal_text_escapes_controls_and_counts_cjk_columns() {
+        assert_eq!(sanitize_terminal_text("a\n\x1b[31m"), "a\\n\\u{1b}[31m");
+        assert_eq!(display_width("数理"), 4);
+        assert_eq!(display_width(&truncate("数理逻辑", 5)), 5);
+    }
+
+    #[test]
+    fn home_input_prefers_self_prompt_and_slash_commands() {
+        let choices = vec![choice(
+            "codex",
+            AvailabilityStatus::Available,
+            Some("codex"),
+        )];
+
+        assert_eq!(
+            parse_home_action("summarize recent commits", &choices),
+            HomeAction::Submit("summarize recent commits".into())
+        );
+        assert_eq!(parse_home_action("/agent", &choices), HomeAction::PickAgent);
+        assert_eq!(
+            parse_home_action("/codex", &choices),
+            HomeAction::LaunchAgent("codex".into())
+        );
+        assert_eq!(parse_home_action("/quit", &choices), HomeAction::Quit);
     }
 
     fn strip_ansi(input: &str) -> String {

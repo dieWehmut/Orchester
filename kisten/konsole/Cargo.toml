@@ -21,3 +21,4 @@ serde_json = { workspace = true }
 futures = { workspace = true }
 thiserror = { workspace = true }
 crossterm = { workspace = true }
+unicode-width = { workspace = true }

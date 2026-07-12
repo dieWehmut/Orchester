@@ -154,7 +154,7 @@ fn no_args_can_run_interactive_mock_session() {
         .stdin
         .as_mut()
         .expect("stdin handle")
-        .write_all(b"mock\nhello interactive\n/quit\n")
+        .write_all(b"/agent\nmock\nhello interactive\n/quit\n")
         .expect("write interactive input");
     drop(child.stdin.take());
 
@@ -163,6 +163,10 @@ fn no_args_can_run_interactive_mock_session() {
     let out = stdout(&output);
     assert!(out.contains("Orchester"), "interactive output:\n{out}");
     assert!(out.contains("Welcome back"), "interactive output:\n{out}");
+    assert!(
+        out.contains("Type a task or / for commands"),
+        "startup output:\n{out}"
+    );
     assert!(
         out.contains("Available agents"),
         "interactive output:\n{out}"
@@ -177,6 +181,60 @@ fn no_args_can_run_interactive_mock_session() {
     );
 
     let _ = std::fs::remove_dir_all(home);
+}
+
+#[test]
+fn no_args_show_home_before_launching_any_agent() {
+    let home = temp_home("home");
+    let mut child = orchester()
+        .env("ORCHESTER_HOME", &home)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("spawn interactive orchester");
+
+    child
+        .stdin
+        .as_mut()
+        .expect("stdin handle")
+        .write_all(b"/quit\n")
+        .expect("write quit command");
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().expect("collect output");
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    assert!(out.contains("Welcome back"), "home output:\n{out}");
+    assert!(
+        out.contains("Type a task or / for commands"),
+        "home output:\n{out}"
+    );
+    assert!(
+        !out.contains("Launching codex") && !out.contains("Launching claude"),
+        "an agent launched before the home selection:\n{out}"
+    );
+
+    let _ = std::fs::remove_dir_all(home);
+}
+
+#[test]
+fn no_args_non_tty_requires_explicit_delegate_entrypoint() {
+    let output = orchester()
+        .stdin(Stdio::null())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .output()
+        .expect("run non-tty orchester");
+
+    assert_eq!(output.status.code(), Some(2), "stderr: {}", stderr(&output));
+    let out = stdout(&output);
+    assert!(
+        out.contains("Type a task or / for commands"),
+        "output:\n{out}"
+    );
+    assert!(out.contains("/agent"), "output:\n{out}");
+    assert!(!out.contains("Select agent"), "output:\n{out}");
 }
 
 #[test]

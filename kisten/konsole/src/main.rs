@@ -6,6 +6,7 @@
 //! exit code reflects the run outcome so scripts can branch on success/failure.
 
 mod args;
+mod avatar;
 mod interactive;
 mod render;
 
@@ -152,18 +153,44 @@ async fn run_interactive(registry: Registry) -> Result<ExitCode, CliError> {
 async fn run_terminal_interactive(registry: Registry) -> Result<ExitCode, CliError> {
     loop {
         let choices = interactive::build_agent_choices(&registry);
-        let Some(agent) = interactive::select_agent_tui(&choices, None)? else {
-            return Ok(ExitCode::SUCCESS);
-        };
-
-        if agent.native_command.is_some() {
-            if launch_native_agent(&agent)? == NativeLaunchStatus::Cancelled {
-                return Ok(ExitCode::from(130));
+        match interactive::run_home_tui(&choices)? {
+            interactive::HomeAction::Quit => return Ok(ExitCode::SUCCESS),
+            interactive::HomeAction::Help => {
+                let mut out = io::stdout().lock();
+                interactive::render_help(&mut out)?;
             }
-            continue;
+            interactive::HomeAction::Submit(prompt) => {
+                eprintln!(
+                    "orchester: self-agent harness is not configured yet; received task `{}`. Use /agent or /codex to delegate.",
+                    prompt
+                );
+            }
+            interactive::HomeAction::Empty => {}
+            interactive::HomeAction::PickAgent => {
+                if let Some(agent) = interactive::select_agent_tui(&choices, None)? {
+                    if agent.native_command.is_some() {
+                        if launch_native_agent(&agent)? == NativeLaunchStatus::Cancelled {
+                            return Ok(ExitCode::from(130));
+                        }
+                    } else {
+                        run_adapter_prompt_shell(&registry, agent).await?;
+                    }
+                }
+            }
+            interactive::HomeAction::LaunchAgent(name) => {
+                let Some(agent) = choices.iter().find(|choice| choice.name == name) else {
+                    eprintln!("orchester: unknown or unavailable agent `{name}`");
+                    continue;
+                };
+                if agent.native_command.is_some() {
+                    if launch_native_agent(agent)? == NativeLaunchStatus::Cancelled {
+                        return Ok(ExitCode::from(130));
+                    }
+                } else {
+                    run_adapter_prompt_shell(&registry, agent.clone()).await?;
+                }
+            }
         }
-
-        run_adapter_prompt_shell(&registry, agent).await?;
     }
 }
 
@@ -172,10 +199,39 @@ async fn run_line_interactive(registry: Registry) -> Result<ExitCode, CliError> 
     let stdin = io::stdin();
     let mut input = stdin.lock();
 
-    let Some(mut agent) = ({
+    {
         let mut out = io::stdout().lock();
-        interactive::select_agent_line(&mut input, &mut out, &choices, None)?
-    }) else {
+        interactive::render_line_startup_home(&mut out)?;
+    }
+
+    let Some(first_line) = interactive::read_startup_line(&mut input)? else {
+        return Ok(ExitCode::from(2));
+    };
+    let initial_action = interactive::parse_home_action(&first_line, &choices);
+    let mut initial_agent = match initial_action {
+        interactive::HomeAction::PickAgent => {
+            let mut out = io::stdout().lock();
+            interactive::select_agent_line(&mut input, &mut out, &choices, None)?
+        }
+        interactive::HomeAction::LaunchAgent(name) => choices
+            .iter()
+            .find(|choice| choice.name == name && choice.is_available())
+            .cloned(),
+        interactive::HomeAction::Quit => return Ok(ExitCode::SUCCESS),
+        interactive::HomeAction::Help => {
+            let mut out = io::stdout().lock();
+            interactive::render_help(&mut out)?;
+            None
+        }
+        interactive::HomeAction::Submit(_) | interactive::HomeAction::Empty => {
+            eprintln!(
+                "orchester: enter `/agent` or `/codex` to choose a delegate; use `orchester run --agent <name> <prompt>` for scripts"
+            );
+            return Ok(ExitCode::from(2));
+        }
+    };
+
+    let Some(mut agent) = initial_agent.take() else {
         return Ok(ExitCode::SUCCESS);
     };
 
