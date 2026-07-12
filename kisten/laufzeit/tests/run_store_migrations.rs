@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 use std::thread;
@@ -190,7 +191,7 @@ fn v2_state_database_backfills_model_phase_and_action_origin() {
 }
 
 #[test]
-fn v3_migration_rolls_back_when_version_write_fails() {
+fn unexpected_v2_trigger_is_rejected_and_upgrade_can_retry_after_removal() {
     let root = std::env::temp_dir().join(format!(
         "orchester-v3-rollback-{}-{}",
         std::process::id(),
@@ -278,7 +279,7 @@ fn v3_migration_rolls_back_when_version_write_fails() {
 }
 
 #[test]
-fn v4_migration_rolls_back_when_origin_version_write_fails() {
+fn unexpected_v3_trigger_is_rejected_and_upgrade_can_retry_after_removal() {
     let root = std::env::temp_dir().join(format!(
         "orchester-v4-rollback-{}-{}",
         std::process::id(),
@@ -578,7 +579,7 @@ fn database_claiming_v4_without_action_origin_is_rejected() {
 }
 
 #[test]
-fn v5_observation_links_roll_back_when_version_write_fails() {
+fn unexpected_v4_trigger_is_rejected_and_upgrade_can_retry_after_removal() {
     let root = std::env::temp_dir().join(format!(
         "orchester-v5-rollback-{}-{}",
         std::process::id(),
@@ -974,4 +975,415 @@ fn database_claiming_v5_with_weak_observation_links_is_rejected() {
         Err(StoreError::Corrupt)
     ));
     std::fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
+fn newer_schema_is_rejected_without_bootstrapping_v1_objects() {
+    let (root, db) = temporary_database("future-schema");
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    connection
+        .execute_batch(
+            "CREATE TABLE schema_versions(
+               version INTEGER PRIMARY KEY,
+               applied_at TEXT NOT NULL
+             );
+             INSERT INTO schema_versions(version, applied_at)
+               VALUES(6, CURRENT_TIMESTAMP);
+             PRAGMA user_version = 6;",
+        )
+        .unwrap();
+    drop(connection);
+    prepare_database_permissions(&root, &db);
+
+    assert!(matches!(
+        SqliteRunStore::open(&db),
+        Err(StoreError::Invariant(_))
+    ));
+
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    assert_eq!(schema_versions(&connection), vec![6]);
+    assert_eq!(user_version(&connection), 6);
+    assert!(!schema_object_exists(&connection, "table", "actors"));
+    drop(connection);
+    std::fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
+fn claimed_v4_shape_is_rejected_before_v5_can_mutate_it() {
+    let (root, db) = temporary_database("claimed-v4-shape");
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    apply_state_migrations(&connection, 3);
+    connection
+        .execute_batch(
+            "INSERT INTO schema_versions(version, applied_at)
+               VALUES(4, CURRENT_TIMESTAMP);
+             PRAGMA user_version = 4;",
+        )
+        .unwrap();
+    drop(connection);
+    prepare_database_permissions(&root, &db);
+
+    assert!(matches!(
+        SqliteRunStore::open(&db),
+        Err(StoreError::Corrupt)
+    ));
+
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    assert_eq!(schema_versions(&connection), vec![1, 2, 3, 4]);
+    assert_eq!(user_version(&connection), 4);
+    assert!(!column_exists(&connection, "observations", "outcome"));
+    drop(connection);
+    std::fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
+fn disagreeing_version_markers_are_rejected_without_advancing() {
+    let (root, db) = temporary_database("marker-disagreement");
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    apply_state_migrations(&connection, 4);
+    connection
+        .execute_batch("PRAGMA user_version = 3;")
+        .unwrap();
+    drop(connection);
+    prepare_database_permissions(&root, &db);
+
+    assert!(matches!(
+        SqliteRunStore::open(&db),
+        Err(StoreError::Corrupt)
+    ));
+
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    assert_eq!(schema_versions(&connection), vec![1, 2, 3, 4]);
+    assert_eq!(user_version(&connection), 3);
+    assert!(!column_exists(&connection, "observations", "outcome"));
+    drop(connection);
+    std::fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
+fn gapped_version_ledger_is_rejected_without_advancing() {
+    let (root, db) = temporary_database("gapped-ledger");
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    apply_state_migrations(&connection, 4);
+    connection
+        .execute("DELETE FROM schema_versions WHERE version = 3", [])
+        .unwrap();
+    drop(connection);
+    prepare_database_permissions(&root, &db);
+
+    assert!(matches!(
+        SqliteRunStore::open(&db),
+        Err(StoreError::Corrupt)
+    ));
+
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    assert_eq!(schema_versions(&connection), vec![1, 2, 4]);
+    assert_eq!(user_version(&connection), 4);
+    assert!(!column_exists(&connection, "observations", "outcome"));
+    drop(connection);
+    std::fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
+fn later_failure_rolls_the_entire_v1_to_latest_upgrade_back() {
+    let (root, db) = temporary_database("atomic-full-upgrade");
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    apply_state_migrations(&connection, 1);
+    connection
+        .execute_batch(
+            "INSERT INTO actors(actor_id, kind, subject_hash, created_at)
+             VALUES('owner-atomic', 'local_user', 'owner-atomic-hash',
+                    '2026-07-13T00:00:00Z');
+             INSERT INTO projects(
+               project_id, canonical_root, workspace_identity, created_at, updated_at
+             ) VALUES(
+               'project-atomic', '/workspace/atomic', 'workspace-atomic',
+               '2026-07-13T00:00:00Z', '2026-07-13T00:00:00Z'
+             );
+             INSERT INTO runs(
+               run_id, project_id, owner_actor_id, status, next_sequence,
+               current_turn_id, current_step_id, policy_snapshot_hash,
+               config_snapshot_hash, max_steps, steps_used, created_at, updated_at
+             ) VALUES(
+               'run-atomic', 'project-atomic', 'owner-atomic', 'running', 1,
+               'turn-atomic', 'step-atomic', 'policy-atomic', 'config-atomic',
+               4, 1, '2026-07-13T00:00:00Z', '2026-07-13T00:00:00Z'
+             );
+             INSERT INTO steps(
+               run_id, step_ordinal, step_id, turn_id, status, model_call_id,
+               started_at, finished_at
+             ) VALUES(
+               'run-atomic', 1, 'step-atomic', 'turn-atomic', 'observed',
+               'model-atomic', '2026-07-13T00:00:01Z',
+               '2026-07-13T00:00:03Z'
+             );
+             INSERT INTO actions(
+               action_id, run_id, step_id, call_id, kind, canonical_json,
+               action_hash, effect_class, state, created_at, terminal_at
+             ) VALUES(
+               'action-atomic', 'run-atomic', 'step-atomic', 'action-call-atomic',
+               'read_file', '{}', 'hash-atomic', 'read_only_idempotent',
+               'completed', '2026-07-13T00:00:01Z', '2026-07-13T00:00:03Z'
+             );
+             UPDATE steps SET action_id = 'action-atomic'
+             WHERE step_id = 'step-atomic';
+             INSERT INTO tool_attempts(
+               call_id, action_id, attempt_no, state, started_at, terminal_at
+             ) VALUES(
+               'attempt-call-atomic', 'action-atomic', 1, 'completed',
+               '2026-07-13T00:00:02Z', '2026-07-13T00:00:03Z'
+             );",
+        )
+        .unwrap();
+    drop(connection);
+    prepare_database_permissions(&root, &db);
+
+    assert!(SqliteRunStore::open(&db).is_err());
+
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    assert_eq!(schema_versions(&connection), vec![1]);
+    assert_eq!(user_version(&connection), 0);
+    assert!(!column_exists(&connection, "steps", "model_phase"));
+    assert!(!column_exists(
+        &connection,
+        "actions",
+        "origin_model_call_id"
+    ));
+    assert!(!column_exists(&connection, "observations", "outcome"));
+    connection
+        .execute(
+            "UPDATE tool_attempts SET call_id = 'action-call-atomic'
+             WHERE action_id = 'action-atomic'",
+            [],
+        )
+        .unwrap();
+    drop(connection);
+
+    let store = SqliteRunStore::open(&db).unwrap();
+    assert_eq!(store.schema_version().unwrap(), 5);
+    drop(store);
+    std::fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
+fn sqlite_with_user_objects_but_no_ledger_is_not_claimed() {
+    let (root, db) = temporary_database("foreign-sqlite");
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    connection
+        .execute_batch(
+            "CREATE TABLE user_notes(id INTEGER PRIMARY KEY, body TEXT NOT NULL);
+             INSERT INTO user_notes(body) VALUES('leave me alone');",
+        )
+        .unwrap();
+    drop(connection);
+    prepare_database_permissions(&root, &db);
+
+    assert!(matches!(
+        SqliteRunStore::open(&db),
+        Err(StoreError::Corrupt)
+    ));
+
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    assert!(!schema_object_exists(
+        &connection,
+        "table",
+        "schema_versions"
+    ));
+    assert!(!schema_object_exists(&connection, "table", "actors"));
+    let note: String = connection
+        .query_row("SELECT body FROM user_notes", [], |row| row.get(0))
+        .unwrap();
+    assert_eq!(note, "leave me alone");
+    drop(connection);
+    std::fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
+fn every_exact_historical_prefix_converges_on_latest_once() {
+    for through in 1..=4 {
+        let (root, db) = temporary_database(&format!("prefix-v{through}"));
+        let connection = rusqlite::Connection::open(&db).unwrap();
+        apply_state_migrations(&connection, through);
+        drop(connection);
+        prepare_database_permissions(&root, &db);
+
+        let store = SqliteRunStore::open(&db).unwrap();
+        assert_eq!(store.schema_version().unwrap(), 5);
+        drop(store);
+
+        let connection = rusqlite::Connection::open(&db).unwrap();
+        assert_eq!(schema_versions(&connection), vec![1, 2, 3, 4, 5]);
+        assert_eq!(user_version(&connection), 5);
+        drop(connection);
+        std::fs::remove_dir_all(root).unwrap();
+    }
+}
+
+#[test]
+fn marker_without_a_ledger_is_rejected_without_bootstrap() {
+    let (root, db) = temporary_database("marker-without-ledger");
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    connection
+        .execute_batch("PRAGMA user_version = 6;")
+        .unwrap();
+    drop(connection);
+    prepare_database_permissions(&root, &db);
+
+    assert!(matches!(
+        SqliteRunStore::open(&db),
+        Err(StoreError::Invariant(_))
+    ));
+
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    assert_eq!(user_version(&connection), 6);
+    assert!(!schema_object_exists(
+        &connection,
+        "table",
+        "schema_versions"
+    ));
+    assert!(!schema_object_exists(&connection, "table", "actors"));
+    drop(connection);
+    std::fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
+fn claimed_v1_with_weakened_table_constraints_is_rejected_without_advancing() {
+    let (root, db) = temporary_database("weak-v1-constraints");
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    apply_state_migrations(&connection, 1);
+    connection
+        .execute_batch(
+            "DROP INDEX idx_messages_run_turn;
+             ALTER TABLE messages RENAME TO messages_strong;
+             CREATE TABLE messages(
+               run_id TEXT,
+               ordinal INTEGER,
+               message_id TEXT,
+               turn_id TEXT,
+               role TEXT,
+               item_kind TEXT,
+               call_id TEXT,
+               sanitized_payload TEXT,
+               payload_hash TEXT,
+               occurred_at TEXT
+             );
+             CREATE INDEX idx_messages_run_turn
+               ON messages(run_id, turn_id, ordinal);
+             DROP TABLE messages_strong;",
+        )
+        .unwrap();
+    drop(connection);
+    prepare_database_permissions(&root, &db);
+
+    assert!(matches!(
+        SqliteRunStore::open(&db),
+        Err(StoreError::Corrupt)
+    ));
+
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    assert_eq!(schema_versions(&connection), vec![1]);
+    assert_eq!(user_version(&connection), 0);
+    assert!(!column_exists(&connection, "steps", "model_phase"));
+    drop(connection);
+    std::fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
+fn claimed_v2_with_weakened_partial_index_is_rejected_without_advancing() {
+    let (root, db) = temporary_database("weak-v2-partial-index");
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    apply_state_migrations(&connection, 2);
+    connection
+        .execute_batch(
+            "DROP INDEX idx_actions_policy_event;
+             CREATE UNIQUE INDEX idx_actions_policy_event
+               ON actions(policy_event_id) WHERE 0;",
+        )
+        .unwrap();
+    drop(connection);
+    prepare_database_permissions(&root, &db);
+
+    assert!(matches!(
+        SqliteRunStore::open(&db),
+        Err(StoreError::Corrupt)
+    ));
+
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    assert_eq!(schema_versions(&connection), vec![1, 2]);
+    assert_eq!(user_version(&connection), 2);
+    assert!(!column_exists(&connection, "steps", "model_phase"));
+    drop(connection);
+    std::fs::remove_dir_all(root).unwrap();
+}
+
+fn temporary_database(label: &str) -> (PathBuf, PathBuf) {
+    let root = std::env::temp_dir().join(format!(
+        "orchester-{label}-{}-{}",
+        std::process::id(),
+        NEXT.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir_all(&root).unwrap();
+    let db = root.join("state.db");
+    (root, db)
+}
+
+fn prepare_database_permissions(_root: &std::path::Path, _db: &std::path::Path) {
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        std::fs::set_permissions(_root, std::fs::Permissions::from_mode(0o700)).unwrap();
+        std::fs::set_permissions(_db, std::fs::Permissions::from_mode(0o600)).unwrap();
+    }
+}
+
+fn apply_state_migrations(connection: &rusqlite::Connection, through: usize) {
+    let migrations = [
+        include_str!("../migrations/0001_state.sql"),
+        include_str!("../migrations/0002_approval_barrier.sql"),
+        include_str!("../migrations/0003_model_phase.sql"),
+        include_str!("../migrations/0004_action_model_binding.sql"),
+    ];
+    for migration in migrations.iter().take(through) {
+        connection.execute_batch(migration).unwrap();
+    }
+}
+
+fn schema_versions(connection: &rusqlite::Connection) -> Vec<u32> {
+    connection
+        .prepare("SELECT version FROM schema_versions ORDER BY version")
+        .unwrap()
+        .query_map([], |row| row.get(0))
+        .unwrap()
+        .collect::<Result<_, _>>()
+        .unwrap()
+}
+
+fn user_version(connection: &rusqlite::Connection) -> u32 {
+    connection
+        .query_row("PRAGMA user_version", [], |row| row.get(0))
+        .unwrap()
+}
+
+fn schema_object_exists(connection: &rusqlite::Connection, kind: &str, name: &str) -> bool {
+    connection
+        .query_row(
+            "SELECT EXISTS(
+               SELECT 1 FROM sqlite_schema WHERE type = ?1 AND name = ?2
+             )",
+            rusqlite::params![kind, name],
+            |row| row.get(0),
+        )
+        .unwrap()
+}
+
+fn column_exists(connection: &rusqlite::Connection, table: &str, column: &str) -> bool {
+    connection
+        .query_row(
+            "SELECT EXISTS(
+               SELECT 1 FROM pragma_table_info(?1) WHERE name = ?2
+             )",
+            rusqlite::params![table, column],
+            |row| row.get(0),
+        )
+        .unwrap()
 }

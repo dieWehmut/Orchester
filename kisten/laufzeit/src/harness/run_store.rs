@@ -28,15 +28,10 @@ use crate::harness::barrier::{ExecutionPermit, StartedTool};
 use crate::harness::feedback::FeedbackEngine;
 
 mod observation;
+mod schema;
 
 use observation::DurableObservation;
 
-const MIGRATION_V1: &str = include_str!("../../migrations/0001_state.sql");
-const MIGRATION_V2: &str = include_str!("../../migrations/0002_approval_barrier.sql");
-const MIGRATION_V3: &str = include_str!("../../migrations/0003_model_phase.sql");
-const MIGRATION_V4: &str = include_str!("../../migrations/0004_action_model_binding.sql");
-const MIGRATION_V5: &str = include_str!("../../migrations/0005_observation_links.sql");
-const CURRENT_SCHEMA_VERSION: u32 = 5;
 const EXPECTED_V5_SCHEMA_OBJECT_HASHES: &[(&str, &str, &str)] = &[
     (
         "table",
@@ -383,7 +378,7 @@ impl SqliteRunStore {
     ) -> Result<Self, StoreError> {
         connection.busy_timeout(Duration::from_secs(5))?;
         connection.execute_batch("PRAGMA foreign_keys = ON; PRAGMA synchronous = FULL;")?;
-        apply_migrations(&mut connection)?;
+        schema::apply_migrations(&mut connection)?;
         if enable_wal {
             enable_wal_mode(&connection)?;
         }
@@ -1331,116 +1326,6 @@ impl ExecutionCandidate {
     }
 }
 
-fn apply_migrations(connection: &mut Connection) -> Result<(), StoreError> {
-    let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
-    transaction.execute_batch(MIGRATION_V1)?;
-    transaction.commit()?;
-    let version = connection.query_row(
-        "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
-        [],
-        |row| row.get::<_, u32>(0),
-    )?;
-    if version > CURRENT_SCHEMA_VERSION {
-        return Err(StoreError::Invariant(
-            "state database schema is newer than this binary".into(),
-        ));
-    }
-    if version < 2 {
-        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
-        let locked_version = transaction.query_row(
-            "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
-            [],
-            |row| row.get::<_, u32>(0),
-        )?;
-        if locked_version > CURRENT_SCHEMA_VERSION {
-            return Err(StoreError::Invariant(
-                "state database schema is newer than this binary".into(),
-            ));
-        }
-        if locked_version < 2 {
-            transaction.execute_batch(MIGRATION_V2)?;
-        }
-        transaction.commit()?;
-    }
-    let version = connection.query_row(
-        "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
-        [],
-        |row| row.get::<_, u32>(0),
-    )?;
-    if version < 3 {
-        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
-        let locked_version = transaction.query_row(
-            "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
-            [],
-            |row| row.get::<_, u32>(0),
-        )?;
-        if locked_version > CURRENT_SCHEMA_VERSION {
-            return Err(StoreError::Invariant(
-                "state database schema is newer than this binary".into(),
-            ));
-        }
-        if locked_version < 3 {
-            transaction.execute_batch(MIGRATION_V3)?;
-        }
-        transaction.commit()?;
-    }
-    let version = connection.query_row(
-        "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
-        [],
-        |row| row.get::<_, u32>(0),
-    )?;
-    if version < 4 {
-        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
-        let locked_version = transaction.query_row(
-            "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
-            [],
-            |row| row.get::<_, u32>(0),
-        )?;
-        if locked_version > CURRENT_SCHEMA_VERSION {
-            return Err(StoreError::Invariant(
-                "state database schema is newer than this binary".into(),
-            ));
-        }
-        if locked_version < 4 {
-            transaction.execute_batch(MIGRATION_V4)?;
-        }
-        transaction.commit()?;
-    }
-    let version = connection.query_row(
-        "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
-        [],
-        |row| row.get::<_, u32>(0),
-    )?;
-    if version < 5 {
-        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
-        let locked_version = transaction.query_row(
-            "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
-            [],
-            |row| row.get::<_, u32>(0),
-        )?;
-        if locked_version > CURRENT_SCHEMA_VERSION {
-            return Err(StoreError::Invariant(
-                "state database schema is newer than this binary".into(),
-            ));
-        }
-        if locked_version < 5 {
-            transaction.execute_batch(MIGRATION_V5)?;
-        }
-        transaction.commit()?;
-    }
-    let migrated = connection.query_row(
-        "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
-        [],
-        |row| row.get::<_, u32>(0),
-    )?;
-    let user_version =
-        connection.query_row("PRAGMA user_version", [], |row| row.get::<_, u32>(0))?;
-    if migrated != CURRENT_SCHEMA_VERSION || user_version != CURRENT_SCHEMA_VERSION {
-        return Err(StoreError::Corrupt);
-    }
-    verify_schema_shape(connection)
-}
-
 fn enable_wal_mode(connection: &Connection) -> Result<(), StoreError> {
     let mut last_busy = None;
     for _ in 0..100 {
@@ -1482,9 +1367,9 @@ fn verify_schema_shape(connection: &Connection) -> Result<(), StoreError> {
         [],
         |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
     )?;
-    if count != CURRENT_SCHEMA_VERSION
+    if count != schema::CURRENT_SCHEMA_VERSION
         || minimum != Some(1)
-        || maximum != Some(CURRENT_SCHEMA_VERSION)
+        || maximum != Some(schema::CURRENT_SCHEMA_VERSION)
     {
         return Err(StoreError::Corrupt);
     }
