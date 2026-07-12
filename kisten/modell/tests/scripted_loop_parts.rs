@@ -395,6 +395,25 @@ fn call_ids_remain_typed_across_model_and_decoder_boundaries() {
 }
 
 #[test]
+fn invalid_call_ids_are_rejected_without_retaining_unbounded_provider_text() {
+    let oversized = CallId::from("x".repeat(orchester_modell::MAX_CALL_ID_BYTES + 1));
+    let call = ToolCall::new(oversized, "read_file", r#"{"path":"a"}"#);
+    let error = ActionDecoder.decode(&call).expect_err("oversized call id");
+    assert!(matches!(
+        &error,
+        DecodeError::InvalidCallId {
+            call_id,
+            actual_bytes,
+            max_bytes,
+        } if call_id == &CallId::from("<invalid-call-id>")
+            && *actual_bytes == orchester_modell::MAX_CALL_ID_BYTES + 1
+            && *max_bytes == orchester_modell::MAX_CALL_ID_BYTES
+    ));
+    let rendered = format!("{error:?} {error}");
+    assert!(!rendered.contains(&"x".repeat(orchester_modell::MAX_CALL_ID_BYTES)));
+}
+
+#[test]
 fn raw_argument_json_is_bounded_before_deserialization() {
     let oversized = "x".repeat(MAX_ARGUMENTS_JSON_BYTES + 1);
     let call = ToolCall::new(

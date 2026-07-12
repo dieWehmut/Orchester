@@ -19,6 +19,7 @@ pub const MAX_COMMAND_PART_BYTES: usize = 16 * 1024;
 pub const MAX_LIST_ITEMS: usize = 128;
 /// Maximum byte length of a model/provider call identifier.
 pub const MAX_CALL_ID_BYTES: usize = 256;
+const INVALID_CALL_ID_SENTINEL: &str = "<invalid-call-id>";
 /// Maximum directory depth accepted by a `list_files` action.
 pub const MAX_LIST_DEPTH: u16 = 16;
 /// Maximum number of memory entries returned by a `recall` action.
@@ -281,6 +282,7 @@ impl ActionDecoder {
     }
 
     pub fn decode(&self, call: &ToolCall) -> Result<AgentAction, DecodeError> {
+        validate_call_id(call)?;
         let Some(tool) = ToolKind::from_name(&call.name) else {
             return Err(DecodeError::UnknownTool {
                 call_id: call.call_id.clone(),
@@ -605,23 +607,27 @@ struct FinishArgs {
 }
 
 fn validate_call_envelope(call: &ToolCall, tool: ToolKind) -> Result<(), DecodeError> {
-    let call_id = &call.call_id.0;
-    if call_id.is_empty()
-        || call_id.len() > MAX_CALL_ID_BYTES
-        || call_id.chars().any(char::is_control)
-    {
-        return Err(DecodeError::InvalidCallId {
-            call_id: call.call_id.clone(),
-            actual_bytes: call_id.len(),
-            max_bytes: MAX_CALL_ID_BYTES,
-        });
-    }
     if call.arguments_json.len() > MAX_ARGUMENTS_JSON_BYTES {
         return Err(DecodeError::ArgumentsTooLarge {
             call_id: call.call_id.clone(),
             tool,
             actual_bytes: call.arguments_json.len(),
             max_bytes: MAX_ARGUMENTS_JSON_BYTES,
+        });
+    }
+    Ok(())
+}
+
+fn validate_call_id(call: &ToolCall) -> Result<(), DecodeError> {
+    let call_id = &call.call_id.0;
+    if call_id.is_empty()
+        || call_id.len() > MAX_CALL_ID_BYTES
+        || call_id.chars().any(char::is_control)
+    {
+        return Err(DecodeError::InvalidCallId {
+            call_id: CallId::from(INVALID_CALL_ID_SENTINEL),
+            actual_bytes: call_id.len(),
+            max_bytes: MAX_CALL_ID_BYTES,
         });
     }
     Ok(())
