@@ -1,6 +1,6 @@
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicUsize, Ordering};
-use std::sync::Arc;
+use std::sync::{Arc, Barrier};
 use std::thread;
 
 use orchester_laufzeit::harness::approval::{
@@ -10,11 +10,12 @@ use orchester_laufzeit::harness::audit::{AuditError, AuditInput, AuditSink, Json
 use orchester_laufzeit::harness::barrier::{ExecutionAuthorization, PreExecutionBarrier};
 use orchester_laufzeit::harness::governance::PolicyEngine;
 use orchester_laufzeit::harness::run_store::{
-    action_hash, ActionRecord, EventAppend, NewRun, RunStore, SqliteRunStore, Transition,
+    action_hash, ActionRecord, EventAppend, NewRun, RunStore, SqliteRunStore, StoreError,
+    Transition,
 };
 use orchester_protokoll::{
-    ActionId, AgentAction, CallId, HarnessEventKind, Observation, ObservationId, PolicyDecision,
-    RunId, StepId, TurnId,
+    ActionId, AgentAction, CallId, FeedbackReport, HarnessEventKind, Observation, ObservationId,
+    PolicyDecision, RunId, StepId, TurnId,
 };
 
 #[path = "support/allowed_run.rs"]
@@ -809,6 +810,169 @@ fn reopened_store_rejects_legacy_attempt_with_wrong_provider_call() {
     assert_eq!(completions, 0);
 }
 
+#[test]
+fn wrong_observation_is_atomic_and_matching_completion_can_retry() {
+    let fixture = Fixture::new(PolicyDecision::Allow);
+    fixture.start_allowed_tool("wrong-observation-audit.jsonl");
+    let before = fixture
+        .store
+        .load_run_owned(&fixture.run_id, &fixture.owner)
+        .unwrap()
+        .next_sequence;
+    let mut wrong = fixture.tool_completed_input(&fixture.provider_call_id);
+    let HarnessEventKind::ToolCompleted { observation } = &mut wrong.kind else {
+        unreachable!("fixture must build a completion event")
+    };
+    observation.call_id = CallId::from("wrong-observation-call");
+
+    assert!(fixture
+        .store
+        .append_event(&fixture.owner, &fixture.run_id, wrong)
+        .is_err());
+    assert_eq!(
+        fixture.persisted_tool_states(&fixture.provider_call_id),
+        ("started".into(), "executing".into(), "tool_running".into())
+    );
+    assert_eq!(
+        fixture
+            .store
+            .load_run_owned(&fixture.run_id, &fixture.owner)
+            .unwrap()
+            .next_sequence,
+        before
+    );
+
+    fixture
+        .store
+        .append_event(
+            &fixture.owner,
+            &fixture.run_id,
+            fixture.tool_completed_input(&fixture.provider_call_id),
+        )
+        .unwrap();
+    let after_completion = fixture
+        .store
+        .load_run_owned(&fixture.run_id, &fixture.owner)
+        .unwrap()
+        .next_sequence;
+    assert_eq!(
+        fixture.persisted_tool_states(&fixture.provider_call_id),
+        ("completed".into(), "completed".into(), "observed".into())
+    );
+    assert!(fixture
+        .store
+        .append_event(
+            &fixture.owner,
+            &fixture.run_id,
+            fixture.tool_completed_input(&fixture.provider_call_id),
+        )
+        .is_err());
+    assert_eq!(
+        fixture
+            .store
+            .load_run_owned(&fixture.run_id, &fixture.owner)
+            .unwrap()
+            .next_sequence,
+        after_completion
+    );
+}
+
+#[test]
+fn tool_failure_is_single_use_and_persists_all_terminal_states() {
+    let fixture = Fixture::new(PolicyDecision::Allow);
+    fixture.start_allowed_tool("tool-failed-audit.jsonl");
+    let failed = fixture.tool_failed_input(&fixture.provider_call_id);
+
+    fixture
+        .store
+        .append_event(&fixture.owner, &fixture.run_id, failed.clone())
+        .unwrap();
+    let after_first = fixture
+        .store
+        .load_run_owned(&fixture.run_id, &fixture.owner)
+        .unwrap()
+        .next_sequence;
+    assert_eq!(
+        fixture.persisted_tool_states(&fixture.provider_call_id),
+        ("failed".into(), "failed".into(), "observed".into())
+    );
+
+    assert!(fixture
+        .store
+        .append_event(&fixture.owner, &fixture.run_id, failed)
+        .is_err());
+    assert!(fixture
+        .store
+        .append_event(
+            &fixture.owner,
+            &fixture.run_id,
+            fixture.tool_completed_input(&fixture.provider_call_id),
+        )
+        .is_err());
+    assert_eq!(
+        fixture
+            .store
+            .load_run_owned(&fixture.run_id, &fixture.owner)
+            .unwrap()
+            .next_sequence,
+        after_first
+    );
+    let failures = fixture
+        .store
+        .events_owned(&fixture.run_id, &fixture.owner)
+        .unwrap()
+        .into_iter()
+        .filter(|event| matches!(&event.kind, HarnessEventKind::ToolFailed { .. }))
+        .count();
+    assert_eq!(failures, 1);
+}
+
+#[test]
+fn concurrent_tool_completion_has_one_durable_winner() {
+    let fixture = Fixture::new(PolicyDecision::Allow);
+    fixture.start_allowed_tool("concurrent-terminal-audit.jsonl");
+    let first = SqliteRunStore::open(&fixture.db).unwrap();
+    let second = SqliteRunStore::open(&fixture.db).unwrap();
+    let start = Arc::new(Barrier::new(2));
+    let owner = fixture.owner.clone();
+    let run_id = fixture.run_id.clone();
+    let input = fixture.tool_completed_input(&fixture.provider_call_id);
+    let first_start = start.clone();
+    let first_owner = owner.clone();
+    let first_run_id = run_id.clone();
+    let first_input = input.clone();
+    let first_result = thread::spawn(move || {
+        first_start.wait();
+        first.append_event(&first_owner, &first_run_id, first_input)
+    });
+    let second_result = thread::spawn(move || {
+        start.wait();
+        second.append_event(&owner, &run_id, input)
+    });
+
+    let results = [first_result.join().unwrap(), second_result.join().unwrap()];
+    assert_eq!(results.iter().filter(|result| result.is_ok()).count(), 1);
+    assert_eq!(
+        results
+            .iter()
+            .filter(|result| matches!(result, Err(StoreError::Invariant(_))))
+            .count(),
+        1
+    );
+    let completions = fixture
+        .store
+        .events_owned(&fixture.run_id, &fixture.owner)
+        .unwrap()
+        .into_iter()
+        .filter(|event| matches!(&event.kind, HarnessEventKind::ToolCompleted { .. }))
+        .count();
+    assert_eq!(completions, 1);
+    assert_eq!(
+        fixture.persisted_tool_states(&fixture.provider_call_id),
+        ("completed".into(), "completed".into(), "observed".into())
+    );
+}
+
 #[cfg(unix)]
 #[test]
 fn insecure_existing_state_directory_is_rejected_without_chmod() {
@@ -1033,6 +1197,62 @@ impl Fixture {
                 },
             },
         }
+    }
+
+    fn tool_failed_input(&self, call_id: &CallId) -> EventAppend {
+        EventAppend {
+            turn_id: Some(TurnId::from("turn-durable")),
+            step_id: Some(self.step_id.clone()),
+            call_id: Some(call_id.clone()),
+            occurred_at: "2026-07-12T00:00:11Z".into(),
+            kind: HarnessEventKind::ToolFailed {
+                feedback: FeedbackReport {
+                    source: "read_file".into(),
+                    validator_id: None,
+                    exit_code: None,
+                    classification: "tool_error".into(),
+                    summary: "bounded failure".into(),
+                    stdout_tail: String::new(),
+                    stderr_tail: String::new(),
+                    fingerprint: "tool-failure".into(),
+                    retryable: false,
+                },
+            },
+        }
+    }
+
+    fn start_allowed_tool(&self, audit_name: &str) {
+        let barrier = PreExecutionBarrier::new(
+            self.store.clone(),
+            Arc::new(JsonlAuditSink::open(self.db.with_file_name(audit_name)).unwrap()),
+        );
+        let permit = barrier
+            .prepare(
+                &self.owner,
+                &self.run_id,
+                &self.action_id,
+                ExecutionAuthorization::Allow,
+                "ignored",
+            )
+            .unwrap();
+        barrier
+            .start_tool(&self.owner, &self.run_id, permit, self.tool_started_input())
+            .unwrap();
+    }
+
+    fn persisted_tool_states(&self, call_id: &CallId) -> (String, String, String) {
+        rusqlite::Connection::open(&self.db)
+            .unwrap()
+            .query_row(
+                "SELECT ta.state, a.state, s.status
+                 FROM tool_attempts ta
+                 JOIN actions a ON a.action_id = ta.action_id
+                 JOIN steps s ON s.run_id = a.run_id AND s.step_id = a.step_id
+                 WHERE a.action_id = ?1 AND ta.call_id = ?2",
+                [&self.action_id.0, &call_id.0],
+                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+            )
+            .unwrap()
     }
 }
 
