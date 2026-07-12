@@ -114,10 +114,11 @@ pub fn run_home_tui(choices: &[AgentChoice]) -> io::Result<HomeAction> {
     let mut show_help = false;
 
     loop {
-        let (cols, _) = terminal::size().unwrap_or((100, 30));
-        render_chat_home(
+        let (cols, rows) = terminal::size().unwrap_or((100, 30));
+        render_chat_home_in_viewport(
             &mut out,
-            (cols as usize).clamp(1, 132),
+            (cols as usize).clamp(2, 132),
+            (rows as usize).max(1),
             &input,
             choices,
             command_selected,
@@ -703,7 +704,7 @@ fn render_home_frame<W: Write>(
     writeln!(out)?;
     if command.starts_with('/') {
         writeln!(out, "{BOLD}> {command}{RESET}")?;
-        render_command_palette(out, command, choices, command_selected)?;
+        render_command_palette(out, command, choices, command_selected, PALETTE_ROWS, width)?;
     } else if !message.is_empty() {
         writeln!(out, "{YELLOW}{message}{RESET}")?;
     } else {
@@ -715,9 +716,30 @@ fn render_home_frame<W: Write>(
     Ok(())
 }
 
+#[cfg(test)]
 fn render_chat_home<W: Write>(
     out: &mut W,
     width: usize,
+    input: &str,
+    choices: &[AgentChoice],
+    command_selected: usize,
+    show_help: bool,
+) -> io::Result<()> {
+    render_chat_home_in_viewport(
+        out,
+        width,
+        usize::MAX,
+        input,
+        choices,
+        command_selected,
+        show_help,
+    )
+}
+
+fn render_chat_home_in_viewport<W: Write>(
+    out: &mut W,
+    width: usize,
+    height: usize,
     input: &str,
     choices: &[AgentChoice],
     command_selected: usize,
@@ -727,6 +749,7 @@ fn render_chat_home<W: Write>(
     render_chat_home_frame(
         &mut frame,
         width,
+        height,
         input,
         choices,
         command_selected,
@@ -738,26 +761,48 @@ fn render_chat_home<W: Write>(
 fn render_chat_home_frame<W: Write>(
     out: &mut W,
     width: usize,
+    height: usize,
     input: &str,
     choices: &[AgentChoice],
     command_selected: usize,
     show_help: bool,
 ) -> io::Result<()> {
-    if width < 50 {
-        writeln!(
-            out,
-            "{ORANGE}{BOLD}Orchester{RESET} {DIM}v{}{RESET}",
-            env!("CARGO_PKG_VERSION")
-        )?;
-        writeln!(
-            out,
-            "{DIM}{} {RESET}",
-            truncate("coding agent workspace", width)
-        )?;
-    } else {
-        render_chat_panel(out, width)?;
+    if height == 0 {
+        return Ok(());
     }
-    writeln!(out)?;
+
+    let desired_content_rows = desired_home_content_rows(width, input, choices, show_help);
+    let status_rows = usize::from(height >= 2);
+    let prompt_rows = 1;
+    let full_panel_rows = chat_panel_line_count(width);
+    let full_panel_total = full_panel_rows
+        .saturating_add(1)
+        .saturating_add(prompt_rows)
+        .saturating_add(desired_content_rows)
+        .saturating_add(status_rows);
+
+    let (header_rows, separator_rows, full_panel) = if width >= 50 && full_panel_total <= height {
+        (full_panel_rows, 1, true)
+    } else {
+        let minimum_body = prompt_rows
+            .saturating_add(status_rows)
+            .saturating_add(usize::from(desired_content_rows > 0));
+        match height.saturating_sub(minimum_body) {
+            remaining if remaining >= 3 => (2, 1, false),
+            remaining if remaining >= 1 => (1, 0, false),
+            _ => (0, 0, false),
+        }
+    };
+
+    if full_panel {
+        render_chat_panel(out, width)?;
+    } else {
+        render_compact_home_header(out, width, header_rows)?;
+    }
+    if separator_rows > 0 {
+        writeln!(out)?;
+    }
+
     let (prompt, prompt_style) = if input.is_empty() {
         (prompt_suggestion(), DIM)
     } else {
@@ -769,25 +814,87 @@ fn render_chat_home_frame<W: Write>(
         out,
         "\x1b[48;5;236m{CYAN}> {RESET}\x1b[48;5;236m{prompt_style}{prompt}{prompt_pad}{RESET}"
     )?;
+
+    let content_rows = height
+        .saturating_sub(header_rows)
+        .saturating_sub(separator_rows)
+        .saturating_sub(prompt_rows)
+        .saturating_sub(status_rows);
     if show_help {
-        render_home_help(out, width)?;
+        render_home_help(out, width, content_rows)?;
     } else if input.starts_with('/') {
         if width < 50 {
-            render_compact_command_palette(out, input, choices, command_selected, width)?;
+            render_compact_command_palette(
+                out,
+                input,
+                choices,
+                command_selected,
+                width,
+                content_rows.min(COMPACT_PALETTE_ROWS),
+            )?;
         } else {
-            render_command_palette(out, input, choices, command_selected)?;
+            render_command_palette(
+                out,
+                input,
+                choices,
+                command_selected,
+                content_rows.min(PALETTE_ROWS),
+                width,
+            )?;
         }
-    } else {
+    } else if content_rows > 0 {
         let hint = truncate(
             "Type a task or / for commands. Enter submits; Esc exits.",
             width,
         );
         writeln!(out, "{DIM}{hint}{RESET}")?;
     }
-    render_status_line(out, width)
+    if status_rows > 0 {
+        render_status_line(out, width)?;
+    }
+    Ok(())
 }
 
-fn render_home_help<W: Write>(out: &mut W, width: usize) -> io::Result<()> {
+fn desired_home_content_rows(
+    width: usize,
+    input: &str,
+    choices: &[AgentChoice],
+    show_help: bool,
+) -> usize {
+    if show_help {
+        return 6;
+    }
+    if input.starts_with('/') {
+        let matches = matching_commands(input, choices).len();
+        let limit = if width < 50 {
+            COMPACT_PALETTE_ROWS
+        } else {
+            PALETTE_ROWS
+        };
+        return matches.max(1).min(limit);
+    }
+    1
+}
+
+fn render_compact_home_header<W: Write>(out: &mut W, width: usize, rows: usize) -> io::Result<()> {
+    if rows > 0 {
+        writeln!(
+            out,
+            "{ORANGE}{BOLD}Orchester{RESET} {DIM}v{}{RESET}",
+            env!("CARGO_PKG_VERSION")
+        )?;
+    }
+    if rows > 1 {
+        writeln!(
+            out,
+            "{DIM}{} {RESET}",
+            truncate("coding agent workspace", width)
+        )?;
+    }
+    Ok(())
+}
+
+fn render_home_help<W: Write>(out: &mut W, width: usize, max_rows: usize) -> io::Result<()> {
     for line in [
         "/agent      choose a delegate",
         "/codex      launch Codex",
@@ -795,7 +902,10 @@ fn render_home_help<W: Write>(out: &mut W, width: usize) -> io::Result<()> {
         "/opencode   launch OpenCode",
         "/quit       exit Orchester",
         "Esc         close help",
-    ] {
+    ]
+    .into_iter()
+    .take(max_rows)
+    {
         writeln!(out, "{}", truncate(line, width))?;
     }
     Ok(())
@@ -807,17 +917,13 @@ fn render_compact_command_palette<W: Write>(
     choices: &[AgentChoice],
     selected: usize,
     width: usize,
+    max_rows: usize,
 ) -> io::Result<()> {
     let matches = matching_commands(command, choices);
-    let start = selection_window_start(selected, matches.len(), COMPACT_PALETTE_ROWS);
-    for (index, item) in matches
-        .iter()
-        .enumerate()
-        .skip(start)
-        .take(COMPACT_PALETTE_ROWS)
-    {
+    let start = selection_window_start(selected, matches.len(), max_rows);
+    for (index, item) in matches.iter().enumerate().skip(start).take(max_rows) {
         let marker = if index == selected { ">" } else { " " };
-        let line = format!("{marker} {} {}", item.name, item.description);
+        let line = sanitize_terminal_text(&format!("{marker} {} {}", item.name, item.description));
         writeln!(out, "{}", truncate(&line, width))?;
     }
     Ok(())
@@ -858,8 +964,17 @@ pub fn render_line_startup_home<W: Write>(out: &mut W) -> io::Result<()> {
 }
 
 fn render_chat_panel<W: Write>(out: &mut W, width: usize) -> io::Result<()> {
+    let rows = startup_panel_rows();
+    if width >= 60 {
+        render_portrait_info_box(out, width, &rows)
+    } else {
+        render_info_box(out, width, &rows)
+    }
+}
+
+fn startup_panel_rows() -> Vec<String> {
     let cwd = current_directory_text();
-    let rows = vec![
+    vec![
         format!(">_ Orchester (v{})", env!("CARGO_PKG_VERSION")),
         "Self-owned coding agent workspace".to_string(),
         String::new(),
@@ -879,11 +994,15 @@ fn render_chat_panel<W: Write>(out: &mut W, width: usize) -> io::Result<()> {
         String::new(),
         "Recent activity".to_string(),
         "No recent activity".to_string(),
-    ];
+    ]
+}
+
+fn chat_panel_line_count(width: usize) -> usize {
+    let info_rows = startup_panel_rows().len();
     if width >= 60 {
-        render_portrait_info_box(out, width, &rows)
+        avatar::HEIGHT.max(info_rows).saturating_add(2)
     } else {
-        render_info_box(out, width, &rows)
+        info_rows.saturating_add(2)
     }
 }
 
@@ -951,7 +1070,7 @@ fn render_status_line<W: Write>(out: &mut W, width: usize) -> io::Result<()> {
         "{}  |  model not configured  |  governed workspace",
         current_directory_text()
     );
-    writeln!(out, "{DIM}{}{RESET}", truncate(&status, width))
+    write!(out, "{DIM}{}{RESET}", truncate(&status, width))
 }
 
 fn current_directory_text() -> String {
@@ -979,22 +1098,27 @@ fn render_command_palette<W: Write>(
     command: &str,
     choices: &[AgentChoice],
     selected: usize,
+    max_rows: usize,
+    width: usize,
 ) -> io::Result<()> {
+    if max_rows == 0 {
+        return Ok(());
+    }
     let matches = matching_commands(command, choices);
     if matches.is_empty() {
         writeln!(out, "  {DIM}No matching commands{RESET}")?;
         return Ok(());
     }
-    let start = selection_window_start(selected, matches.len(), PALETTE_ROWS);
-    for (i, item) in matches.iter().enumerate().skip(start).take(PALETTE_ROWS) {
+    let start = selection_window_start(selected, matches.len(), max_rows);
+    for (i, item) in matches.iter().enumerate().skip(start).take(max_rows) {
         let marker = if i == selected { ">" } else { " " };
         let color = if i == selected { ORANGE } else { "" };
         let reset = if i == selected { RESET } else { "" };
-        writeln!(
-            out,
-            "  {color}{marker} {:<16}{reset} {DIM}{}{RESET}",
-            item.name, item.description
-        )?;
+        let name = truncate(&sanitize_terminal_text(&item.name), 16);
+        let name_pad = " ".repeat(16usize.saturating_sub(display_width(&name)));
+        let description = sanitize_terminal_text(&item.description);
+        let line = truncate(&format!("  {marker} {name}{name_pad} {description}"), width);
+        writeln!(out, "{color}{line}{reset}")?;
     }
     Ok(())
 }
@@ -1008,6 +1132,7 @@ fn clear_screen<W: Write>(out: &mut W) -> io::Result<()> {
 }
 
 fn present_frame<W: Write>(out: &mut W, frame: &[u8]) -> io::Result<()> {
+    let frame = frame.strip_suffix(b"\n").unwrap_or(frame);
     execute!(
         out,
         BeginSynchronizedUpdate,
@@ -1504,6 +1629,28 @@ mod tests {
     }
 
     #[test]
+    fn command_palette_sanitizes_untrusted_agent_labels() {
+        let choices = vec![choice(
+            "bad\n\x1b[31magent",
+            AvailabilityStatus::Available,
+            Some("native\n\x1b[2J"),
+        )];
+        let selected = matching_commands("/", &choices)
+            .iter()
+            .position(|item| item.name.starts_with("/bad"))
+            .unwrap();
+        let mut out = Vec::new();
+
+        render_chat_home(&mut out, 100, "/", &choices, selected, false).unwrap();
+
+        let rendered = String::from_utf8(out).unwrap();
+        let plain = strip_ansi(&rendered);
+        assert!(plain.contains("bad\\n\\u{1b}"));
+        assert!(plain.contains("native\\n\\u{1b}[2J"));
+        assert!(plain.lines().all(|line| display_width(line) <= 100));
+    }
+
+    #[test]
     fn selection_wraps_across_both_edges() {
         assert_eq!(wrapped_selection(0, 3, SelectionDirection::Previous), 2);
         assert_eq!(wrapped_selection(2, 3, SelectionDirection::Next), 0);
@@ -1525,6 +1672,19 @@ mod tests {
         assert!(
             !rendered.contains("\x1b[2J"),
             "interactive redraw must not clear the whole terminal:\n{rendered}"
+        );
+        assert!(
+            !rendered.contains("\n\x1b[?2026l"),
+            "a trailing newline can scroll a frame that exactly fills the viewport:\n{rendered}"
+        );
+
+        let mut one_row = Vec::new();
+        render_chat_home_in_viewport(&mut one_row, 80, 1, "/", &[], 0, false).unwrap();
+        assert!(
+            !String::from_utf8(one_row)
+                .unwrap()
+                .contains("\n\x1b[?2026l"),
+            "one-row frames must not end with a newline"
         );
     }
 
@@ -1612,6 +1772,103 @@ mod tests {
         render_chat_home(&mut narrow, 55, "", &[], 0, false).unwrap();
         let narrow = strip_ansi(&String::from_utf8(narrow).unwrap());
         assert!(!narrow.contains("@%%"));
+    }
+
+    #[test]
+    fn chat_home_respects_terminal_height_without_hiding_the_selection() {
+        let choices = (0..6)
+            .map(|index| {
+                choice(
+                    &format!("worker{index}"),
+                    AvailabilityStatus::Available,
+                    Some("worker"),
+                )
+            })
+            .collect::<Vec<_>>();
+        let selected = matching_commands("/", &choices)
+            .iter()
+            .position(|item| item.name == "/worker5")
+            .unwrap();
+
+        for (label, input, show_help) in [
+            ("empty", "", false),
+            ("slash", "/", false),
+            ("help", "", true),
+            (
+                "long task",
+                "explain the failing integration test and propose a minimal fix",
+                false,
+            ),
+        ] {
+            for height in [12, 24, 30] {
+                let mut out = Vec::new();
+                render_chat_home_in_viewport(
+                    &mut out, 100, height, input, &choices, selected, show_help,
+                )
+                .unwrap();
+                let raw = String::from_utf8(out).unwrap();
+                assert!(
+                    !raw.contains("\n\x1b[?2026l"),
+                    "{label} at {height} rows ended with a scrolling newline"
+                );
+                let plain = strip_ansi(&raw);
+                assert!(
+                    plain.lines().count() <= height,
+                    "{label} at {height} rows overflowed:\n{plain}"
+                );
+                assert!(
+                    plain.lines().all(|line| display_width(line) <= 100),
+                    "{label} at {height} rows exceeded its column budget:\n{plain}"
+                );
+                assert!(
+                    plain
+                        .lines()
+                        .any(|line| line.trim_start().starts_with("> ")),
+                    "{label} input row disappeared at height {height}:\n{plain}"
+                );
+                assert!(
+                    plain.contains("model not configured"),
+                    "{label} status row disappeared at height {height}:\n{plain}"
+                );
+                if label == "slash" {
+                    assert!(
+                        plain.lines().any(|line| line.contains("> /worker5")),
+                        "selected command disappeared at height {height}:\n{plain}"
+                    );
+                }
+                if label == "help" {
+                    assert!(
+                        plain.contains("/agent      choose a delegate"),
+                        "help content disappeared at height {height}:\n{plain}"
+                    );
+                }
+                if height <= 24 {
+                    assert!(
+                        !plain.lines().any(|line| line.starts_with('+')),
+                        "short viewport must use the compact header:\n{plain}"
+                    );
+                }
+            }
+        }
+
+        let mut empty = Vec::new();
+        render_chat_home_in_viewport(&mut empty, 100, 30, "", &[], 0, false).unwrap();
+        let empty = strip_ansi(&String::from_utf8(empty).unwrap());
+        assert!(empty.lines().count() <= 30);
+        assert_eq!(
+            empty.lines().filter(|line| line.starts_with('+')).count(),
+            2,
+            "30-row empty home should keep both panel borders:\n{empty}"
+        );
+        assert_eq!(
+            empty.lines().filter(|line| line.starts_with('|')).count(),
+            avatar::HEIGHT,
+            "30-row empty home should keep every portrait row:\n{empty}"
+        );
+        assert!(
+            empty.contains("@%%"),
+            "30-row empty home should keep portrait"
+        );
     }
 
     fn strip_ansi(input: &str) -> String {
