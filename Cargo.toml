@@ -2,6 +2,7 @@
 resolver = "2"
 members = [
     "kisten/protokoll",
+    "kisten/modell",
     "kisten/vertrag",
     "kisten/adapter",
     "kisten/verzeichnis",
@@ -19,6 +20,7 @@ rust-version = "1.80"
 [workspace.dependencies]
 # Internal crates (German role names; see handbuch/ARCHITEKTUR.md)
 orchester-protokoll = { path = "kisten/protokoll" }
+orchester-modell = { path = "kisten/modell" }
 orchester-vertrag = { path = "kisten/vertrag" }
 orchester-adapter = { path = "kisten/adapter" }
 orchester-verzeichnis = { path = "kisten/verzeichnis" }
@@ -29,6 +31,7 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 toml = "0.8"
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "process", "io-util", "io-std", "sync", "signal", "time"] }
+tokio-util = { version = "0.7", features = ["rt"] }
 tokio-stream = { version = "0.1", features = ["io-util"] }
 futures = "0.3"
 async-trait = "0.1"
