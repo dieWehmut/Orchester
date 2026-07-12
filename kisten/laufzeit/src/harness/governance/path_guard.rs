@@ -225,17 +225,10 @@ impl WorkspaceGuard {
                 path: requested_root.to_path_buf(),
             });
         }
-        let root = resolve_existing_path_no_links(requested_root)?;
-        // Resolve the path first for diagnostics, then compare the object that
-        // was observed by the ambient path lookup with the capability we open.
-        // A replacement between these two operations is therefore rejected
-        // instead of silently adopting a different workspace root.
-        let expected_root = path_identity(&root)?;
-        let root_dir = open_root_capability(&root)?;
-        let object = identity_from_dir(&root_dir, &root)?;
-        if object != expected_root {
-            return Err(GuardError::Changed { path: root });
-        }
+        let lexical_root = absolute_lexical_path(requested_root)?;
+        let root_dir = open_root_capability(&lexical_root)?;
+        let object = identity_from_dir(&root_dir, &lexical_root)?;
+        let root = canonical_display_path(&lexical_root, &object)?;
         let identity = WorkspaceIdentity {
             canonical_root: canonical_root_key(&root),
             object: object.clone(),
@@ -805,17 +798,87 @@ impl Iterator for DirectoryEntries {
 }
 
 fn open_root_capability(root: &Path) -> Result<Dir, GuardError> {
-    match (root.parent(), root.file_name()) {
-        (Some(parent), Some(name)) => {
-            let parent = Dir::open_ambient_dir(parent, cap_std::ambient_authority())
-                .map_err(|source| map_io("open workspace parent", root, source))?;
-            parent
-                .open_dir_nofollow(Path::new(name))
-                .map_err(|source| map_io("open workspace root", root, source))
+    let mut anchor = PathBuf::new();
+    let mut components = Vec::new();
+    for component in root.components() {
+        match component {
+            Component::Prefix(_) | Component::RootDir => anchor.push(component.as_os_str()),
+            Component::Normal(value) => components.push(value.to_os_string()),
+            Component::CurDir => {}
+            Component::ParentDir => {
+                return Err(GuardError::InvalidPath {
+                    path: root.to_path_buf(),
+                })
+            }
         }
-        _ => Dir::open_ambient_dir(root, cap_std::ambient_authority())
-            .map_err(|source| map_io("open filesystem root", root, source)),
     }
+    if anchor.as_os_str().is_empty() || !root.is_absolute() {
+        return Err(GuardError::InvalidPath {
+            path: root.to_path_buf(),
+        });
+    }
+    let mut directory = Dir::open_ambient_dir(&anchor, cap_std::ambient_authority())
+        .map_err(|source| map_io("open filesystem root", root, source))?;
+    for component in components {
+        directory = directory
+            .open_dir_nofollow(Path::new(&component))
+            .map_err(|source| map_io("open workspace root component", root, source))?;
+    }
+    Ok(directory)
+}
+
+fn absolute_lexical_path(requested: &Path) -> Result<PathBuf, GuardError> {
+    let absolute = if requested.is_absolute() {
+        requested.to_path_buf()
+    } else {
+        std::env::current_dir()
+            .map_err(|source| map_io("read current directory", requested, source))?
+            .join(requested)
+    };
+    let mut normalized = PathBuf::new();
+    for component in absolute.components() {
+        match component {
+            Component::Prefix(_) | Component::RootDir => normalized.push(component.as_os_str()),
+            Component::CurDir => {}
+            Component::Normal(value) => {
+                if invalid_platform_component(value) {
+                    return Err(GuardError::InvalidPath {
+                        path: requested.to_path_buf(),
+                    });
+                }
+                normalized.push(value);
+            }
+            Component::ParentDir => {
+                if !normalized.pop() {
+                    return Err(GuardError::InvalidPath {
+                        path: requested.to_path_buf(),
+                    });
+                }
+            }
+        }
+    }
+    if !normalized.is_absolute() {
+        return Err(GuardError::InvalidPath {
+            path: requested.to_path_buf(),
+        });
+    }
+    Ok(normalized)
+}
+
+fn canonical_display_path(
+    lexical_root: &Path,
+    expected_identity: &ObjectIdentity,
+) -> Result<PathBuf, GuardError> {
+    let candidate = fs::canonicalize(lexical_root)
+        .map_err(|source| map_io("canonicalize workspace display path", lexical_root, source))?;
+    let candidate_dir = open_root_capability(&candidate)?;
+    let candidate_identity = identity_from_dir(&candidate_dir, &candidate)?;
+    if &candidate_identity != expected_identity {
+        return Err(GuardError::Changed {
+            path: lexical_root.to_path_buf(),
+        });
+    }
+    Ok(candidate)
 }
 
 fn open_file_nofollow(
@@ -872,46 +935,6 @@ fn identity_from_dir(directory: &Dir, path: &Path) -> Result<ObjectIdentity, Gua
         .map_err(|source| map_io("clone directory handle", path, source))?
         .into_std_file();
     identity_from_file(&file, path)
-}
-
-#[cfg(windows)]
-fn path_identity(path: &Path) -> Result<ObjectIdentity, GuardError> {
-    // The stable std metadata API does not expose Windows file indexes
-    // without the `windows_by_handle` nightly feature.  Open a capability
-    // for the first observation instead; WorkspaceGuard::new immediately
-    // opens a second capability and compares both handle identities.
-    let directory = open_root_capability(path)?;
-    identity_from_dir(&directory, path)
-}
-
-#[cfg(not(windows))]
-fn path_identity(path: &Path) -> Result<ObjectIdentity, GuardError> {
-    let metadata =
-        fs::metadata(path).map_err(|source| map_io("inspect workspace root", path, source))?;
-    if !metadata.is_dir() {
-        return Err(GuardError::NotDirectory {
-            path: path.to_path_buf(),
-        });
-    }
-    identity_from_metadata(&metadata, path)
-}
-
-#[cfg(unix)]
-fn identity_from_metadata(metadata: &Metadata, _path: &Path) -> Result<ObjectIdentity, GuardError> {
-    use std::os::unix::fs::MetadataExt;
-
-    Ok(ObjectIdentity {
-        device: metadata.dev(),
-        inode: metadata.ino(),
-    })
-}
-
-#[cfg(not(any(unix, windows)))]
-fn identity_from_metadata(
-    _metadata: &Metadata,
-    _path: &Path,
-) -> Result<ObjectIdentity, GuardError> {
-    Err(GuardError::Unsupported)
 }
 
 #[cfg(unix)]

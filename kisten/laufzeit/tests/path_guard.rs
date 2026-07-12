@@ -99,6 +99,29 @@ fn rejects_ntfs_alternate_data_stream_paths() {
 }
 
 #[test]
+fn workspace_root_open_rejects_link_or_reparse_components() {
+    let ws = TempWorkspace::new();
+    let link = ws.root.parent().unwrap().join(format!(
+        "workspace-root-link-{}-{}",
+        std::process::id(),
+        NEXT_TEMP.fetch_add(1, Ordering::Relaxed)
+    ));
+    let _ = fs::remove_dir_all(&link);
+    if let Err(error) = create_directory_link(&ws.root, &link) {
+        if error.kind() == io::ErrorKind::PermissionDenied {
+            eprintln!("skipping root link test: {error}");
+            return;
+        }
+        panic!("create workspace root link: {error}");
+    }
+
+    let error = WorkspaceGuard::new(&link)
+        .expect_err("workspace root must be opened component-by-component without links");
+    assert_eq!(error.kind(), GuardErrorKind::LinkTraversal);
+    let _ = fs::remove_dir_all(link);
+}
+
+#[test]
 fn permits_existing_reads_and_new_files_below_real_workspace_parents() {
     let ws = TempWorkspace::new();
     fs::write(ws.root.join("src/lib.rs"), "pub fn demo() {}\n").unwrap();
