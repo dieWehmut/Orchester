@@ -609,7 +609,14 @@ impl WorkspaceGuard {
         for component in relative.components() {
             match component {
                 Component::CurDir => {}
-                Component::Normal(value) => normalized.push(value),
+                Component::Normal(value) => {
+                    if invalid_platform_component(value) {
+                        return Err(GuardError::InvalidPath {
+                            path: requested.to_path_buf(),
+                        });
+                    }
+                    normalized.push(value);
+                }
                 Component::ParentDir => {
                     if !normalized.pop() {
                         return Err(GuardError::Outside {
@@ -645,6 +652,19 @@ impl WorkspaceGuard {
             Ok(())
         }
     }
+}
+
+#[cfg(windows)]
+fn invalid_platform_component(component: &OsStr) -> bool {
+    // A colon in a non-prefix component selects an NTFS alternate data
+    // stream. Such a handle still reports as a regular file and would bypass
+    // the protected-file and content-boundary model.
+    component.to_string_lossy().contains(':')
+}
+
+#[cfg(not(windows))]
+fn invalid_platform_component(_component: &OsStr) -> bool {
+    false
 }
 
 /// A capability-relative temporary file which cleans itself up unless committed.

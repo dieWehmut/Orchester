@@ -84,6 +84,20 @@ fn rejects_parent_escape_absolute_outside_empty_and_nul_paths() {
     );
 }
 
+#[cfg(windows)]
+#[test]
+fn rejects_ntfs_alternate_data_stream_paths() {
+    let ws = TempWorkspace::new();
+    let guard = ws.guard();
+    let path = Path::new("src/value.txt:orchester-hidden");
+
+    let error = guard
+        .resolve_write(path)
+        .expect_err("alternate data streams must not enter the workspace capability model");
+    assert_eq!(error.kind(), GuardErrorKind::InvalidPath);
+    assert!(!ws.root.join(path).exists());
+}
+
 #[test]
 fn permits_existing_reads_and_new_files_below_real_workspace_parents() {
     let ws = TempWorkspace::new();
