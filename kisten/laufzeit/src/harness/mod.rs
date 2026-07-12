@@ -8,6 +8,7 @@ pub mod context;
 pub mod credentials;
 pub mod feedback;
 pub mod governance;
+pub mod memory;
 pub mod mutation;
 pub mod run_store;
 pub mod validator;
