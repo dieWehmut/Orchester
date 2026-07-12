@@ -3,6 +3,8 @@
 
 pub mod config;
 pub mod credentials;
+pub mod approval;
+pub mod audit;
 pub mod run_store;
 
 pub use config::{

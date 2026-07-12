@@ -18,6 +18,8 @@ secrecy = { workspace = true }
 keyring = { workspace = true }
 thiserror = { workspace = true }
 rusqlite = { workspace = true }
+sha2 = { workspace = true }
+getrandom = { workspace = true }
 
 [dev-dependencies]
 tokio = { workspace = true }
