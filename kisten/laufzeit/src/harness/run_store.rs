@@ -2866,18 +2866,20 @@ fn apply_event_transition(
                      JOIN steps s ON s.run_id = a.run_id AND s.step_id = a.step_id
                      WHERE a.run_id = ?1 AND a.action_id = ?2 AND a.state = 'ready'
                        AND a.audit_event_id = ?3
+                       AND a.call_id = ?4
                        AND a.origin_model_call_id IS NOT NULL
                        AND s.model_phase = 'completed'
                        AND a.origin_model_call_id = s.model_call_id
                        AND (a.policy_decision = 'allow' OR EXISTS(
                          SELECT 1 FROM approvals ap
                          WHERE ap.action_id = a.action_id AND ap.state = 'executing'
-                           AND ap.expires_at_unix > ?4
+                           AND ap.expires_at_unix > ?5
                        ))",
                     params![
                         snapshot.run_id.0,
                         action_id.0,
                         permit_event_id.0,
+                        call_id.0,
                         system_unix_now()
                     ],
                     |row| Ok((row.get(0)?, row.get(1)?)),
@@ -2913,8 +2915,9 @@ fn apply_event_transition(
                 params![call_id.0, action_id.0, input.occurred_at],
             )?;
             let step_updated = transaction.execute(
-                "UPDATE steps SET status = 'tool_running' WHERE step_id = ?1",
-                params![step_id.0],
+                "UPDATE steps SET status = 'tool_running'
+                 WHERE run_id = ?1 AND step_id = ?2 AND status = 'action_recorded'",
+                params![snapshot.run_id.0, step_id.0],
             )?;
             ensure_single_update(step_updated)?;
         }
@@ -2971,22 +2974,43 @@ fn finish_tool_attempt(
     call_id: &CallId,
     terminal: &str,
 ) -> Result<(), StoreError> {
+    let action_id = transaction
+        .query_row(
+            "SELECT a.action_id
+             FROM steps s
+             JOIN actions a ON a.run_id = s.run_id AND a.step_id = s.step_id
+                           AND a.action_id = s.action_id
+             JOIN tool_attempts ta ON ta.action_id = a.action_id AND ta.call_id = a.call_id
+             WHERE s.run_id = ?1 AND s.step_id = ?2 AND s.status = 'tool_running'
+               AND a.state = 'executing' AND a.call_id = ?3 AND ta.state = 'started'",
+            params![snapshot.run_id.0, step_id.0, call_id.0],
+            |row| row.get::<_, String>(0),
+        )
+        .optional()?
+        .ok_or_else(|| {
+            StoreError::Invariant(
+                "tool attempt is not bound to the current step action and call".into(),
+            )
+        })?;
     let attempt = transaction.execute(
         "UPDATE tool_attempts SET state = ?1, terminal_at = CURRENT_TIMESTAMP
-         WHERE call_id = ?2 AND state = 'started'",
-        params![terminal, call_id.0],
+         WHERE call_id = ?2 AND action_id = ?3 AND state = 'started'",
+        params![terminal, call_id.0, action_id],
     )?;
     ensure_single_update(attempt)?;
     let action = transaction.execute(
         "UPDATE actions SET state = ?1, terminal_at = CURRENT_TIMESTAMP
-         WHERE run_id = ?2 AND step_id = ?3 AND state = 'executing'",
-        params![terminal, snapshot.run_id.0, step_id.0],
+         WHERE run_id = ?2 AND step_id = ?3 AND action_id = ?4
+           AND call_id = ?5 AND state = 'executing'",
+        params![terminal, snapshot.run_id.0, step_id.0, action_id, call_id.0],
     )?;
     ensure_single_update(action)?;
-    transaction.execute(
-        "UPDATE steps SET status = 'observed', finished_at = CURRENT_TIMESTAMP WHERE step_id = ?1",
-        params![step_id.0],
+    let step = transaction.execute(
+        "UPDATE steps SET status = 'observed', finished_at = CURRENT_TIMESTAMP
+         WHERE run_id = ?1 AND step_id = ?2 AND action_id = ?3 AND status = 'tool_running'",
+        params![snapshot.run_id.0, step_id.0, action_id],
     )?;
+    ensure_single_update(step)?;
     Ok(())
 }
 

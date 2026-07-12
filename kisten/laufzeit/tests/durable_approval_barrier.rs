@@ -10,11 +10,17 @@ use orchester_laufzeit::harness::audit::{AuditError, AuditInput, AuditSink, Json
 use orchester_laufzeit::harness::barrier::{ExecutionAuthorization, PreExecutionBarrier};
 use orchester_laufzeit::harness::governance::PolicyEngine;
 use orchester_laufzeit::harness::run_store::{
-    action_hash, ActionRecord, NewRun, RunStore, SqliteRunStore, Transition,
+    action_hash, ActionRecord, EventAppend, NewRun, RunStore, SqliteRunStore, Transition,
 };
 use orchester_protokoll::{
-    ActionId, AgentAction, CallId, HarnessEventKind, PolicyDecision, RunId, StepId, TurnId,
+    ActionId, AgentAction, CallId, HarnessEventKind, Observation, ObservationId, PolicyDecision,
+    RunId, StepId, TurnId,
 };
+
+#[path = "support/allowed_run.rs"]
+mod allowed_run;
+
+use allowed_run::create_allowed_run;
 
 static NEXT: AtomicUsize = AtomicUsize::new(0);
 
@@ -601,6 +607,208 @@ fn tool_start_returns_the_durable_action_and_rejects_post_permit_replacement() {
     ));
 }
 
+#[test]
+fn tool_start_rejects_provider_call_mismatch_before_approval_consumption() {
+    let fixture = Fixture::new(PolicyDecision::Ask);
+    let durable = DurableApprovalStore::new(fixture.store.clone());
+    let approval_id = durable.request(fixture.approval_input(100)).unwrap();
+    let binding = fixture.binding();
+    let capability = durable
+        .approve(&approval_id, &fixture.owner, &binding)
+        .unwrap();
+    let barrier = PreExecutionBarrier::new(
+        fixture.store.clone(),
+        Arc::new(
+            JsonlAuditSink::open(fixture.db.with_file_name("call-mismatch-audit.jsonl")).unwrap(),
+        ),
+    );
+    let permit = barrier
+        .prepare(
+            &fixture.owner,
+            &fixture.run_id,
+            &fixture.action_id,
+            ExecutionAuthorization::Approval {
+                capability: &capability,
+                binding: &binding,
+            },
+            "ignored",
+        )
+        .unwrap();
+    let mut wrong_input = fixture.tool_started_input();
+    wrong_input.call_id = Some(CallId::from("mismatched-provider-call"));
+    assert!(barrier
+        .start_tool(&fixture.owner, &fixture.run_id, permit, wrong_input)
+        .is_err());
+    assert_eq!(
+        durable.state(&approval_id, &fixture.owner).unwrap(),
+        ApprovalState::Executing
+    );
+
+    let retry = barrier
+        .prepare(
+            &fixture.owner,
+            &fixture.run_id,
+            &fixture.action_id,
+            ExecutionAuthorization::Approval {
+                capability: &capability,
+                binding: &binding,
+            },
+            "ignored",
+        )
+        .unwrap();
+    barrier
+        .start_tool(
+            &fixture.owner,
+            &fixture.run_id,
+            retry,
+            fixture.tool_started_input(),
+        )
+        .unwrap();
+    assert_eq!(
+        durable.state(&approval_id, &fixture.owner).unwrap(),
+        ApprovalState::Consumed
+    );
+}
+
+#[test]
+fn tool_completion_cannot_finish_another_runs_attempt() {
+    let first = Fixture::new(PolicyDecision::Allow);
+    let second = create_allowed_run(first.store.as_ref(), "second");
+    let first_barrier = PreExecutionBarrier::new(
+        first.store.clone(),
+        Arc::new(JsonlAuditSink::open(first.db.with_file_name("cross-run-first.jsonl")).unwrap()),
+    );
+    let second_barrier = PreExecutionBarrier::new(
+        first.store.clone(),
+        Arc::new(JsonlAuditSink::open(first.db.with_file_name("cross-run-second.jsonl")).unwrap()),
+    );
+    let first_permit = first_barrier
+        .prepare(
+            &first.owner,
+            &first.run_id,
+            &first.action_id,
+            ExecutionAuthorization::Allow,
+            "ignored",
+        )
+        .unwrap();
+    first_barrier
+        .start_tool(
+            &first.owner,
+            &first.run_id,
+            first_permit,
+            first.tool_started_input(),
+        )
+        .unwrap();
+    let second_permit = second_barrier
+        .prepare(
+            &second.owner,
+            &second.run_id,
+            &second.action_id,
+            ExecutionAuthorization::Allow,
+            "ignored",
+        )
+        .unwrap();
+    second_barrier
+        .start_tool(
+            &second.owner,
+            &second.run_id,
+            second_permit,
+            second.tool_started_input(),
+        )
+        .unwrap();
+
+    let wrong = second.tool_completed_input(&first.provider_call_id);
+    let wrong_result = first
+        .store
+        .append_event(&second.owner, &second.run_id, wrong);
+    let first_result = first.store.append_event(
+        &first.owner,
+        &first.run_id,
+        first.tool_completed_input(&first.provider_call_id),
+    );
+    let second_result = first.store.append_event(
+        &second.owner,
+        &second.run_id,
+        second.tool_completed_input(&second.provider_call_id),
+    );
+    let first_events = first
+        .store
+        .events_owned(&first.run_id, &first.owner)
+        .unwrap();
+    let second_events = first
+        .store
+        .events_owned(&second.run_id, &second.owner)
+        .unwrap();
+    let first_completions = first_events
+        .iter()
+        .filter(|event| matches!(&event.kind, HarnessEventKind::ToolCompleted { .. }))
+        .count();
+    let second_completions = second_events
+        .iter()
+        .filter(|event| matches!(&event.kind, HarnessEventKind::ToolCompleted { .. }))
+        .count();
+
+    assert!(wrong_result.is_err());
+    assert!(first_result.is_ok());
+    assert!(second_result.is_ok());
+    assert_eq!(first_completions, 1);
+    assert_eq!(second_completions, 1);
+}
+
+#[test]
+fn reopened_store_rejects_legacy_attempt_with_wrong_provider_call() {
+    let fixture = Fixture::new(PolicyDecision::Allow);
+    let barrier = PreExecutionBarrier::new(
+        fixture.store.clone(),
+        Arc::new(
+            JsonlAuditSink::open(fixture.db.with_file_name("legacy-call-audit.jsonl")).unwrap(),
+        ),
+    );
+    let permit = barrier
+        .prepare(
+            &fixture.owner,
+            &fixture.run_id,
+            &fixture.action_id,
+            ExecutionAuthorization::Allow,
+            "ignored",
+        )
+        .unwrap();
+    barrier
+        .start_tool(
+            &fixture.owner,
+            &fixture.run_id,
+            permit,
+            fixture.tool_started_input(),
+        )
+        .unwrap();
+
+    let legacy_call_id = CallId::from("legacy-mismatched-provider-call");
+    rusqlite::Connection::open(&fixture.db)
+        .unwrap()
+        .execute(
+            "UPDATE tool_attempts SET call_id = ?1 WHERE call_id = ?2",
+            [&legacy_call_id.0, &fixture.provider_call_id.0],
+        )
+        .unwrap();
+    drop(barrier);
+
+    let reopened = SqliteRunStore::open(&fixture.db).unwrap();
+    let result = reopened.append_event(
+        &fixture.owner,
+        &fixture.run_id,
+        fixture.tool_completed_input(&legacy_call_id),
+    );
+    let completions = reopened
+        .events_owned(&fixture.run_id, &fixture.owner)
+        .unwrap()
+        .into_iter()
+        .filter(|event| matches!(&event.kind, HarnessEventKind::ToolCompleted { .. }))
+        .count();
+
+    assert!(result.is_err());
+    assert_eq!(completions, 0);
+}
+
 #[cfg(unix)]
 #[test]
 fn insecure_existing_state_directory_is_rejected_without_chmod() {
@@ -633,14 +841,16 @@ struct Fixture {
     owner: String,
     action: AgentAction,
     hash: String,
+    provider_call_id: CallId,
 }
 
 impl Fixture {
     fn new(decision: PolicyDecision) -> Self {
+        let fixture_id = NEXT.fetch_add(1, Ordering::Relaxed);
         let root = std::env::temp_dir().join(format!(
             "orchester-durable-{}-{}",
             std::process::id(),
-            NEXT.fetch_add(1, Ordering::Relaxed)
+            fixture_id
         ));
         let db = root.join("state.db");
         let store = Arc::new(SqliteRunStore::open(&db).unwrap());
@@ -717,6 +927,7 @@ impl Fixture {
         let hash = action_hash(&action).unwrap();
         let effect = PolicyEngine::new().evaluate(&action).unwrap().effect;
         let action_id = ActionId::from("action-durable");
+        let provider_call_id = CallId::from(format!("provider-tool-durable-{fixture_id}"));
         store
             .record_action(
                 &owner,
@@ -724,7 +935,7 @@ impl Fixture {
                     action_id: action_id.clone(),
                     run_id: run_id.clone(),
                     step_id: step_id.clone(),
-                    call_id: CallId::from("provider-tool-durable"),
+                    call_id: provider_call_id.clone(),
                     origin_model_call_id: call_id.clone(),
                     action: action.clone(),
                     action_hash: hash.clone(),
@@ -763,6 +974,7 @@ impl Fixture {
             owner,
             action,
             hash,
+            provider_call_id,
         }
     }
 
@@ -797,10 +1009,28 @@ impl Fixture {
         orchester_laufzeit::harness::run_store::EventAppend {
             turn_id: Some(TurnId::from("turn-durable")),
             step_id: Some(self.step_id.clone()),
-            call_id: Some(CallId::from("tool-call-durable")),
+            call_id: Some(self.provider_call_id.clone()),
             occurred_at: "2026-07-12T00:00:10Z".into(),
             kind: HarnessEventKind::ToolStarted {
                 action_id: self.action_id.clone(),
+            },
+        }
+    }
+
+    fn tool_completed_input(&self, call_id: &CallId) -> EventAppend {
+        EventAppend {
+            turn_id: Some(TurnId::from("turn-durable")),
+            step_id: Some(self.step_id.clone()),
+            call_id: Some(call_id.clone()),
+            occurred_at: "2026-07-12T00:00:11Z".into(),
+            kind: HarnessEventKind::ToolCompleted {
+                observation: Observation {
+                    observation_id: ObservationId::from(format!("observation-{}", call_id.0)),
+                    call_id: call_id.clone(),
+                    kind: "read_file".into(),
+                    summary: "ok".into(),
+                    data: serde_json::json!({"bytes": 0}),
+                },
             },
         }
     }
