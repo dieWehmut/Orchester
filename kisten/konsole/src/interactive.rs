@@ -12,8 +12,6 @@ use orchester_vertrag::{AdapterAvailability, AvailabilityStatus};
 use orchester_verzeichnis::Registry;
 use unicode_width::{UnicodeWidthChar, UnicodeWidthStr};
 
-use crate::avatar;
-
 const DIM: &str = "\x1b[2m";
 const BOLD: &str = "\x1b[1m";
 const RED: &str = "\x1b[31m";
@@ -597,12 +595,7 @@ fn render_home<W: Write>(
     let (cols, _) = terminal::size().unwrap_or((100, 30));
     let width = (cols as usize).clamp(50, 132);
 
-    writeln!(
-        out,
-        "{ORANGE}{BOLD}Orchester{RESET} {DIM}v{}  local agent conductor{RESET}",
-        env!("CARGO_PKG_VERSION")
-    )?;
-    render_home_panel(out, width, selected_agent)?;
+    render_delegate_panel(out, width, selected_agent)?;
     writeln!(out)?;
 
     writeln!(out, "{BOLD}Choose agent{RESET}")?;
@@ -671,16 +664,15 @@ fn render_chat_home<W: Write>(
             truncate("coding agent workspace", width)
         )?;
     } else {
-        writeln!(
-            out,
-            "{ORANGE}{BOLD}Orchester{RESET} {DIM}v{}  coding agent workspace{RESET}",
-            env!("CARGO_PKG_VERSION")
-        )?;
-        render_home_panel(out, width, None)?;
+        render_chat_panel(out, width)?;
     }
     writeln!(out)?;
     let prompt = truncate(&sanitize_terminal_text(input), width.saturating_sub(2));
-    writeln!(out, "{CYAN}> {RESET}{prompt}")?;
+    let prompt_pad = " ".repeat(width.saturating_sub(2 + display_width(&prompt)));
+    writeln!(
+        out,
+        "\x1b[48;5;236m{CYAN}> {RESET}\x1b[48;5;236m{prompt}{prompt_pad}{RESET}"
+    )?;
     if show_help {
         render_home_help(out, width)?;
     } else if input.starts_with('/') {
@@ -696,6 +688,7 @@ fn render_chat_home<W: Write>(
         );
         writeln!(out, "{DIM}{hint}{RESET}")?;
     }
+    render_status_line(out, width)?;
     out.flush()
 }
 
@@ -741,12 +734,7 @@ fn render_line_home<W: Write>(
     let width = (cols as usize).clamp(50, 132);
 
     writeln!(out)?;
-    writeln!(
-        out,
-        "{ORANGE}{BOLD}Orchester{RESET} {DIM}v{}  local agent conductor{RESET}",
-        env!("CARGO_PKG_VERSION")
-    )?;
-    render_home_panel(out, width, selected_agent)?;
+    render_delegate_panel(out, width, selected_agent)?;
     writeln!(out)
 }
 
@@ -754,12 +742,7 @@ pub fn render_line_startup_home<W: Write>(out: &mut W) -> io::Result<()> {
     let (cols, _) = terminal::size().unwrap_or((100, 30));
     let width = (cols as usize).clamp(50, 132);
 
-    writeln!(
-        out,
-        "{ORANGE}{BOLD}Orchester{RESET} {DIM}v{}  coding agent workspace{RESET}",
-        env!("CARGO_PKG_VERSION")
-    )?;
-    render_home_panel(out, width, None)?;
+    render_chat_panel(out, width)?;
     writeln!(out)?;
     writeln!(
         out,
@@ -773,70 +756,59 @@ pub fn render_line_startup_home<W: Write>(out: &mut W) -> io::Result<()> {
     out.flush()
 }
 
-fn render_home_panel<W: Write>(
+fn render_chat_panel<W: Write>(out: &mut W, width: usize) -> io::Result<()> {
+    let cwd = current_directory_text();
+    let rows = vec![
+        format!(">_ Orchester (v{})", env!("CARGO_PKG_VERSION")),
+        String::new(),
+        "model:     not configured    /model to change".to_string(),
+        format!("directory: {cwd}"),
+    ];
+    render_info_box(out, width, &rows)
+}
+
+fn render_delegate_panel<W: Write>(
     out: &mut W,
     width: usize,
     selected_agent: Option<&AgentChoice>,
 ) -> io::Result<()> {
-    let content_width = width.saturating_sub(7);
-    let left_width = avatar::AVATAR_WIDTH
-        .min(content_width / 2 + 4)
-        .min(content_width.saturating_sub(18))
-        .max(12);
-    let right_width = content_width.saturating_sub(left_width);
-    let cwd = std::env::current_dir()
-        .map(|cwd| cwd.display().to_string())
-        .unwrap_or_else(|_| ".".into());
-    let right_rows = match selected_agent {
-        Some(agent) => vec![
-            "Welcome back".to_string(),
-            String::new(),
-            "Tips for getting started".to_string(),
-            "  Enter launches the highlighted CLI".to_string(),
-            "  / opens matching commands".to_string(),
-            String::new(),
-            "Agent choice".to_string(),
-            "  Choose on every Orchester launch".to_string(),
-            format!("  Selected: {} ({})", agent.name, launch_label(agent)),
-            String::new(),
-            "Commands".to_string(),
-            "  /agent  /list  /help  /quit".to_string(),
-            String::new(),
-            format!("cwd {cwd}"),
-        ],
-        None => vec![
-            "Welcome back".to_string(),
-            String::new(),
-            "Orchester workspace".to_string(),
-            "  Self agent and delegated tools".to_string(),
-            "  Governance stays visible".to_string(),
-            String::new(),
-            "Start here".to_string(),
-            "  Type a task or / for commands".to_string(),
-            "  No external agent starts yet".to_string(),
-            String::new(),
-            "Workspace".to_string(),
-            format!("  {cwd}"),
-        ],
-    };
+    let selected = selected_agent
+        .map(|agent| format!("{} ({})", agent.name, launch_label(agent)))
+        .unwrap_or_else(|| "none".to_string());
+    let rows = vec![
+        "Delegated agent".to_string(),
+        String::new(),
+        format!("Selected: {selected}"),
+        format!("directory: {}", current_directory_text()),
+        "Enter launches; Esc returns to Orchester".to_string(),
+    ];
+    render_info_box(out, width, &rows)
+}
 
-    writeln!(out, "{ORANGE}+{}+{RESET}", "-".repeat(width - 2))?;
-    let rows = avatar::AVATAR_HEIGHT.max(right_rows.len());
-    for row in 0..rows {
-        let avatar_line = avatar::AVATAR_ROWS.get(row).copied().unwrap_or("");
-        let avatar_line = truncate(avatar_line, left_width);
-        let avatar_pad = " ".repeat(left_width.saturating_sub(display_width(&avatar_line)));
-        let right = right_rows.get(row).map(String::as_str).unwrap_or("");
-        let right = truncate(&sanitize_terminal_text(right), right_width);
-        let right_pad = " ".repeat(right_width.saturating_sub(display_width(&right)));
-
-        write!(out, "{ORANGE}|{RESET} ")?;
-        avatar::write_line(out, &avatar_line)?;
-        write!(out, "{avatar_pad} {ORANGE}|{RESET} ")?;
-        write!(out, "{right}{right_pad}")?;
-        writeln!(out, " {ORANGE}|{RESET}")?;
+fn render_info_box<W: Write>(out: &mut W, width: usize, rows: &[String]) -> io::Result<()> {
+    let panel_width = width.clamp(20, 84);
+    let content_width = panel_width.saturating_sub(4);
+    writeln!(out, "{DIM}+{}+{RESET}", "-".repeat(panel_width - 2))?;
+    for row in rows {
+        let row = truncate(&sanitize_terminal_text(row), content_width);
+        let pad = " ".repeat(content_width.saturating_sub(display_width(&row)));
+        writeln!(out, "{DIM}|{RESET} {row}{pad} {DIM}|{RESET}")?;
     }
-    writeln!(out, "{ORANGE}+{}+{RESET}", "-".repeat(width - 2))
+    writeln!(out, "{DIM}+{}+{RESET}", "-".repeat(panel_width - 2))
+}
+
+fn render_status_line<W: Write>(out: &mut W, width: usize) -> io::Result<()> {
+    let status = format!(
+        "{}  |  model not configured  |  governed workspace",
+        current_directory_text()
+    );
+    writeln!(out, "{DIM}{}{RESET}", truncate(&status, width))
+}
+
+fn current_directory_text() -> String {
+    std::env::current_dir()
+        .map(|cwd| sanitize_terminal_text(&cwd.display().to_string()))
+        .unwrap_or_else(|_| ".".into())
 }
 
 fn render_command_palette<W: Write>(
@@ -1215,7 +1187,7 @@ mod tests {
     }
 
     #[test]
-    fn home_renders_avatar_and_explicit_choice_copy() {
+    fn delegate_home_renders_explicit_selection_without_brand_art() {
         let choices = vec![choice(
             "codex",
             AvailabilityStatus::Available,
@@ -1227,11 +1199,15 @@ mod tests {
 
         let rendered = String::from_utf8_lossy(&out);
         let plain = strip_ansi(&rendered);
-        assert!(plain.contains("/#\\"), "home output:\n{rendered}");
         assert!(
-            rendered.contains("Choose on every Orchester launch"),
+            plain.contains("Delegated agent"),
             "home output:\n{rendered}"
         );
+        assert!(
+            plain.contains("Selected: codex"),
+            "home output:\n{rendered}"
+        );
+        assert!(!plain.contains("/#\\"), "home output:\n{rendered}");
     }
 
     #[test]
@@ -1243,9 +1219,11 @@ mod tests {
         let rendered = String::from_utf8_lossy(&out);
         let plain = strip_ansi(&rendered);
         assert!(
-            plain.contains("Welcome back"),
+            plain.contains(">_ Orchester"),
             "startup output:\n{rendered}"
         );
+        assert!(plain.contains("model:"), "startup output:\n{rendered}");
+        assert!(plain.contains("directory:"), "startup output:\n{rendered}");
         assert!(
             plain.contains("Type a task or / for commands"),
             "startup output:\n{rendered}"
@@ -1254,10 +1232,7 @@ mod tests {
             !plain.contains("Selected: codex") && !plain.contains("Choose agent"),
             "startup must not look like a Codex session or delegate picker:\n{rendered}"
         );
-        assert!(
-            rendered.contains("\x1b[38;5;"),
-            "the portrait should use embedded ANSI-colored ASCII cells:\n{rendered}"
-        );
+        assert!(!plain.contains("/#\\"), "startup output:\n{rendered}");
     }
 
     #[test]

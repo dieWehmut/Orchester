@@ -162,9 +162,9 @@ fn no_args_can_run_interactive_mock_session() {
     assert!(output.status.success(), "stderr:\n{}", stderr(&output));
     let out = stdout(&output);
     assert!(out.contains("Orchester"), "interactive output:\n{out}");
-    assert!(out.contains("Welcome back"), "interactive output:\n{out}");
+    assert!(out.contains(">_ Orchester"), "interactive output:\n{out}");
     assert!(
-        out.contains("Type a task or / for commands"),
+        out.contains("Type a task for Orchester"),
         "startup output:\n{out}"
     );
     assert!(
@@ -205,9 +205,9 @@ fn no_args_show_home_before_launching_any_agent() {
     let output = child.wait_with_output().expect("collect output");
     assert!(output.status.success(), "stderr:\n{}", stderr(&output));
     let out = stdout(&output);
-    assert!(out.contains("Welcome back"), "home output:\n{out}");
+    assert!(out.contains(">_ Orchester"), "home output:\n{out}");
     assert!(
-        out.contains("Type a task or / for commands"),
+        out.contains("Type a task for Orchester"),
         "home output:\n{out}"
     );
     assert!(
@@ -229,10 +229,7 @@ fn no_args_non_tty_requires_explicit_delegate_entrypoint() {
 
     assert_eq!(output.status.code(), Some(2), "stderr: {}", stderr(&output));
     let out = stdout(&output);
-    assert!(
-        out.contains("Type a task or / for commands"),
-        "output:\n{out}"
-    );
+    assert!(out.contains("Type a task for Orchester"), "output:\n{out}");
     assert!(out.contains("/agent"), "output:\n{out}");
     assert!(!out.contains("Select agent"), "output:\n{out}");
 }
