@@ -18,6 +18,7 @@ mod process_tree;
 pub mod run_store;
 pub mod tools;
 pub mod validator;
+pub mod workspace_write;
 
 pub use feedback::{
     BuiltFeedback, FailureLoopGuard, FeedbackClass, FeedbackEngine, FeedbackInput, FeedbackLimits,
@@ -31,6 +32,10 @@ pub use validator::{
     can_finish, FinishBlocked, ProcessResult, ProcessTermination, ValidatorClassification,
     ValidatorEngine, ValidatorEvaluation, ValidatorSpec, ValidatorSpecError, ValidatorState,
 };
+
+#[cfg(test)]
+#[path = "workspace_write_tests.rs"]
+mod workspace_write_tests;
 
 pub use config::{
     check_permissions, merge_security, require_user_permissions, ConfigError, ConfigLoader,
