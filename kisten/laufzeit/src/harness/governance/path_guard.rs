@@ -7,6 +7,8 @@ use std::path::{Component, Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{SystemTime, UNIX_EPOCH};
 
+#[cfg(unix)]
+use cap_fs_ext::OpenOptionsExt;
 use cap_fs_ext::{DirExt, FollowSymlinks, OpenOptionsFollowExt};
 use cap_std::fs::{Dir, File as CapFile, OpenOptions};
 use thiserror::Error;
@@ -270,6 +272,7 @@ impl WorkspaceGuard {
         let (parent, basename) = self.open_parent(&current.relative)?;
         let cap_file = open_file_nofollow(&parent, &basename, false, &current.requested)?;
         let file = cap_file.into_std();
+        ensure_regular_file(&file, &current.requested)?;
         let identity = identity_from_file(&file, &current.requested)?;
         if current.target_identity.as_ref() != Some(&identity) {
             return Err(GuardError::Changed {
@@ -384,6 +387,7 @@ impl WorkspaceGuard {
             .try_clone()
             .map_err(|source| map_io("clone rename source", from, source))?
             .into_std();
+        ensure_regular_file(&source_std, from)?;
         let source_identity = identity_from_file(&source_std, from)?;
 
         match to_parent.symlink_metadata(Path::new(&to_name)) {
@@ -407,6 +411,7 @@ impl WorkspaceGuard {
             .rename(Path::new(&from_name), &to_parent, Path::new(&to_name))
             .map_err(|source| map_io("rename", from, source))?;
         let renamed = open_file_nofollow(&to_parent, &to_name, false, to)?.into_std();
+        ensure_regular_file(&renamed, to)?;
         if identity_from_file(&renamed, to)? != source_identity {
             return Err(GuardError::Changed {
                 path: to.to_path_buf(),
@@ -509,6 +514,7 @@ impl WorkspaceGuard {
                 Ok(metadata) if metadata.is_file() => {
                     let target = open_file_nofollow(&directory, basename, false, requested)?;
                     let target = target.into_std();
+                    ensure_regular_file(&target, requested)?;
                     (
                         Some(identity_from_file(&target, requested)?),
                         Some(NodeKind::File),
@@ -748,10 +754,24 @@ fn open_file_nofollow(
     } else {
         options.read(true);
     }
+    // Opening a FIFO in blocking mode would let an attacker stall the
+    // harness before the post-open regular-file check can reject it.
+    #[cfg(unix)]
+    options.custom_flags(libc::O_NONBLOCK);
     options.follow(FollowSymlinks::No);
     parent
         .open_with(Path::new(basename), &options)
         .map_err(|source| map_io("open file without following links", requested, source))
+}
+
+fn ensure_regular_file(file: &File, path: &Path) -> Result<(), GuardError> {
+    let metadata = file
+        .metadata()
+        .map_err(|source| map_io("inspect opened file", path, source))?;
+    if !metadata.is_file() {
+        return Err(GuardError::Unsupported);
+    }
+    Ok(())
 }
 
 fn read_bounded(mut file: File, requested: &Path, max_bytes: u64) -> Result<Vec<u8>, GuardError> {
