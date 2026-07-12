@@ -7,7 +7,7 @@ use crossterm::event::{
     self, Event as TerminalEvent, KeyCode, KeyEvent, KeyEventKind, KeyModifiers,
 };
 use crossterm::execute;
-use crossterm::terminal::{self, ClearType};
+use crossterm::terminal::{self, BeginSynchronizedUpdate, ClearType, EndSynchronizedUpdate};
 use orchester_protokoll::{Capability, TaskKind};
 use orchester_vertrag::{AdapterAvailability, AvailabilityStatus};
 use orchester_verzeichnis::Registry;
@@ -618,7 +618,26 @@ fn render_home<W: Write>(
     command_selected: usize,
     message: &str,
 ) -> io::Result<()> {
-    clear_screen(out)?;
+    let mut frame = Vec::new();
+    render_home_frame(
+        &mut frame,
+        choices,
+        selected,
+        command,
+        command_selected,
+        message,
+    )?;
+    present_frame(out, &frame)
+}
+
+fn render_home_frame<W: Write>(
+    out: &mut W,
+    choices: &[AgentChoice],
+    selected: usize,
+    command: &str,
+    command_selected: usize,
+    message: &str,
+) -> io::Result<()> {
     let selectable = selectable_agents(choices);
     let selected_agent = selectable.get(selected);
     let (cols, _) = terminal::size().unwrap_or((100, 30));
@@ -670,7 +689,7 @@ fn render_home<W: Write>(
             "{DIM}Type / to search commands. Press q or Esc to exit.{RESET}"
         )?;
     }
-    out.flush()
+    Ok(())
 }
 
 fn render_chat_home<W: Write>(
@@ -681,7 +700,26 @@ fn render_chat_home<W: Write>(
     command_selected: usize,
     show_help: bool,
 ) -> io::Result<()> {
-    clear_screen(out)?;
+    let mut frame = Vec::new();
+    render_chat_home_frame(
+        &mut frame,
+        width,
+        input,
+        choices,
+        command_selected,
+        show_help,
+    )?;
+    present_frame(out, &frame)
+}
+
+fn render_chat_home_frame<W: Write>(
+    out: &mut W,
+    width: usize,
+    input: &str,
+    choices: &[AgentChoice],
+    command_selected: usize,
+    show_help: bool,
+) -> io::Result<()> {
     if width < 50 {
         writeln!(
             out,
@@ -718,8 +756,7 @@ fn render_chat_home<W: Write>(
         );
         writeln!(out, "{DIM}{hint}{RESET}")?;
     }
-    render_status_line(out, width)?;
-    out.flush()
+    render_status_line(out, width)
 }
 
 fn render_home_help<W: Write>(out: &mut W, width: usize) -> io::Result<()> {
@@ -904,6 +941,19 @@ fn render_no_runnable_agents<W: Write>(out: &mut W) -> io::Result<()> {
 
 fn clear_screen<W: Write>(out: &mut W) -> io::Result<()> {
     execute!(out, terminal::Clear(ClearType::All), cursor::MoveTo(0, 0))
+}
+
+fn present_frame<W: Write>(out: &mut W, frame: &[u8]) -> io::Result<()> {
+    execute!(
+        out,
+        BeginSynchronizedUpdate,
+        cursor::MoveTo(0, 0),
+        terminal::Clear(ClearType::FromCursorDown)
+    )?;
+    let write_result = out.write_all(frame);
+    let end_result = execute!(out, EndSynchronizedUpdate);
+    write_result.and(end_result)?;
+    out.flush()
 }
 
 fn read_line<R: BufRead>(input: &mut R) -> io::Result<Option<String>> {
@@ -1330,6 +1380,23 @@ mod tests {
         assert_eq!(wrapped_selection(2, 3, SelectionDirection::Next), 0);
         assert_eq!(wrapped_selection(9, 3, SelectionDirection::Next), 0);
         assert_eq!(wrapped_selection(0, 0, SelectionDirection::Previous), 0);
+    }
+
+    #[test]
+    fn interactive_frames_use_synchronized_partial_redraw() {
+        let mut out = Vec::new();
+
+        render_chat_home(&mut out, 80, "/", &[], 0, false).unwrap();
+
+        let rendered = String::from_utf8(out).unwrap();
+        assert!(
+            rendered.contains("\x1b[?2026h") && rendered.contains("\x1b[?2026l"),
+            "frame must be presented as one synchronized terminal update:\n{rendered}"
+        );
+        assert!(
+            !rendered.contains("\x1b[2J"),
+            "interactive redraw must not clear the whole terminal:\n{rendered}"
+        );
     }
 
     #[test]
