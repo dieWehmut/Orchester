@@ -1187,13 +1187,17 @@ fn insert_event(
 }
 
 fn ensure_schema(connection: &mut Connection) -> Result<(), MemoryError> {
-    let has_memory_versions = table_exists(connection, "memory_schema_versions")?;
-    let has_legacy_versions = table_exists(connection, "schema_versions")?;
+    // Serialize schema discovery with migration. Otherwise a concurrent opener
+    // can observe the legacy version table while another connection is midway
+    // through namespacing it and reject a valid first-open migration.
+    let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
+    let has_memory_versions = table_exists(&transaction, "memory_schema_versions")?;
+    let has_legacy_versions = table_exists(&transaction, "schema_versions")?;
     if has_memory_versions && has_legacy_versions {
         return Err(MemoryError::UnsupportedSchema);
     }
     if !has_memory_versions && !has_legacy_versions {
-        let user_objects: i64 = connection.query_row(
+        let user_objects: i64 = transaction.query_row(
             "SELECT COUNT(*) FROM sqlite_master
              WHERE name NOT LIKE 'sqlite_%'
                AND type IN ('table', 'index', 'trigger', 'view')",
@@ -1203,18 +1207,16 @@ fn ensure_schema(connection: &mut Connection) -> Result<(), MemoryError> {
         if user_objects != 0 {
             return Err(MemoryError::UnsupportedSchema);
         }
-        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
         transaction.execute_batch(BASE_MIGRATION)?;
-        transaction.commit()?;
     } else if has_legacy_versions {
-        let memory_marker = table_exists(connection, "memory_items")?
-            && table_exists(connection, "memory_events")?
-            && table_exists(connection, "memory_fts")?;
-        if !memory_marker || table_exists(connection, "runs")? {
+        let memory_marker = table_exists(&transaction, "memory_items")?
+            && table_exists(&transaction, "memory_events")?
+            && table_exists(&transaction, "memory_fts")?;
+        if !memory_marker || table_exists(&transaction, "runs")? {
             return Err(MemoryError::UnsupportedSchema);
         }
         let item_count: i64 =
-            connection.query_row("SELECT COUNT(*) FROM memory_items", [], |row| row.get(0))?;
+            transaction.query_row("SELECT COUNT(*) FROM memory_items", [], |row| row.get(0))?;
         if item_count != 0 {
             // Legacy rows predate owner/run provenance. Claiming an owner
             // automatically would turn a migration into an authorization
@@ -1223,7 +1225,6 @@ fn ensure_schema(connection: &mut Connection) -> Result<(), MemoryError> {
         }
     }
 
-    let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
     let mut versions = schema_versions(&transaction)?;
     if versions == [1] {
         transaction.execute_batch(ACCESS_MIGRATION)?;
