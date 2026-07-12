@@ -7,12 +7,13 @@ use tokio_util::sync::CancellationToken;
 
 /// A request summary safe to retain in deterministic test diagnostics.
 ///
-/// It deliberately contains counts, role/tool names, and the store flag only;
-/// message text, tool output, opaque values, argument JSON, and credentials are
-/// never copied into this type.
+/// It deliberately contains counts, fixed role variants, and the store flag
+/// only. Model names, tool names, message text, tool output, opaque values,
+/// argument JSON, and credentials are never copied into this type because any
+/// arbitrary provider/model-controlled string could contain a secret or
+/// terminal control sequence.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RequestSummary {
-    pub model: String,
     pub message_count: usize,
     pub message_roles: Vec<ModelRole>,
     pub item_count: usize,
@@ -20,15 +21,13 @@ pub struct RequestSummary {
     pub tool_call_item_count: usize,
     pub tool_result_item_count: usize,
     pub opaque_item_count: usize,
-    pub tool_definition_names: Vec<String>,
-    pub tool_call_names: Vec<String>,
+    pub tool_definition_count: usize,
     pub store: bool,
 }
 
 impl From<&ModelRequest> for RequestSummary {
     fn from(request: &ModelRequest) -> Self {
         let mut summary = Self {
-            model: request.model.clone(),
             message_count: request.messages.len(),
             message_roles: request
                 .messages
@@ -40,8 +39,7 @@ impl From<&ModelRequest> for RequestSummary {
             tool_call_item_count: 0,
             tool_result_item_count: 0,
             opaque_item_count: 0,
-            tool_definition_names: request.tools.iter().map(|tool| tool.name.clone()).collect(),
-            tool_call_names: Vec::new(),
+            tool_definition_count: request.tools.len(),
             store: request.store,
         };
 
@@ -50,9 +48,8 @@ impl From<&ModelRequest> for RequestSummary {
             for item in &message.items {
                 match item {
                     ModelItem::Text(_) => summary.text_item_count += 1,
-                    ModelItem::ToolCall(call) => {
+                    ModelItem::ToolCall(_) => {
                         summary.tool_call_item_count += 1;
-                        summary.tool_call_names.push(call.name.clone());
                     }
                     ModelItem::ToolResult { .. } => summary.tool_result_item_count += 1,
                     ModelItem::Opaque(_) => summary.opaque_item_count += 1,
