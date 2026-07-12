@@ -2,8 +2,8 @@
 
 use std::io::{self, Write};
 
-pub const WIDTH: usize = 40;
-pub const HEIGHT: usize = 18;
+pub const WIDTH: usize = 44;
+pub const HEIGHT: usize = 24;
 
 const RESET: &str = "\x1b[0m";
 
@@ -31,7 +31,7 @@ const ROWS: [&str; 24] = [
     "-    *..**@%%%@@%%%*=   .+#@@@@###@@@*    ",
     "==-  =+%##@@%%%@@@@+  -*@%@@@@@@@@@@%* .",
     "    +@%%%#@%%@@%%%%*#%%@%%%%%%%%%@@@@@",
-    "  -#%%@%%%@%%@@@@@@@@@@@@%@@@@@@@@#####@@+."
+    "  -#%%@%%%@%%@@@@@@@@@@@@%@@@@@@@@#####@@+.",
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq)]
