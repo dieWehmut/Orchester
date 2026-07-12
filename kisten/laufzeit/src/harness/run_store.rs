@@ -27,7 +27,8 @@ use crate::harness::barrier::{ExecutionPermit, StartedTool};
 
 const MIGRATION_V1: &str = include_str!("../../migrations/0001_state.sql");
 const MIGRATION_V2: &str = include_str!("../../migrations/0002_approval_barrier.sql");
-const CURRENT_SCHEMA_VERSION: u32 = 2;
+const MIGRATION_V3: &str = include_str!("../../migrations/0003_model_phase.sql");
+const CURRENT_SCHEMA_VERSION: u32 = 3;
 
 #[derive(Debug, Error)]
 pub enum StoreError {
@@ -1255,6 +1256,28 @@ fn apply_migrations(connection: &mut Connection) -> Result<(), StoreError> {
         }
         transaction.commit()?;
     }
+    let version = connection.query_row(
+        "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
+        [],
+        |row| row.get::<_, u32>(0),
+    )?;
+    if version < 3 {
+        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
+        let locked_version = transaction.query_row(
+            "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
+            [],
+            |row| row.get::<_, u32>(0),
+        )?;
+        if locked_version > CURRENT_SCHEMA_VERSION {
+            return Err(StoreError::Invariant(
+                "state database schema is newer than this binary".into(),
+            ));
+        }
+        if locked_version < 3 {
+            transaction.execute_batch(MIGRATION_V3)?;
+        }
+        transaction.commit()?;
+    }
     let migrated = connection.query_row(
         "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
         [],
@@ -1320,6 +1343,7 @@ fn verify_schema_shape(connection: &Connection) -> Result<(), StoreError> {
         "actions",
         &["policy_event_id", "audit_event_id", "audit_sequence"],
     )?;
+    require_model_phase_schema(connection)?;
     require_columns(
         connection,
         "approvals",
@@ -1378,6 +1402,47 @@ fn require_columns(
         .query_map([], |row| row.get::<_, String>(1))?
         .collect::<Result<HashSet<_>, _>>()?;
     if required.iter().all(|column| columns.contains(*column)) {
+        Ok(())
+    } else {
+        Err(StoreError::Corrupt)
+    }
+}
+
+fn require_model_phase_schema(connection: &Connection) -> Result<(), StoreError> {
+    let mut statement = connection.prepare("PRAGMA table_info(steps)")?;
+    let mut rows = statement.query([])?;
+    let mut column_is_valid = false;
+    while let Some(row) = rows.next()? {
+        let name = row.get::<_, String>(1)?;
+        if name != "model_phase" {
+            continue;
+        }
+        let declared_type = row.get::<_, String>(2)?;
+        let not_null = row.get::<_, u32>(3)?;
+        let default_value = row.get::<_, Option<String>>(4)?;
+        column_is_valid = declared_type.eq_ignore_ascii_case("TEXT")
+            && not_null == 1
+            && default_value.as_deref() == Some("'not_started'");
+        break;
+    }
+    if !column_is_valid {
+        return Err(StoreError::Corrupt);
+    }
+
+    let schema_sql = connection
+        .query_row(
+            "SELECT sql FROM sqlite_schema WHERE type = 'table' AND name = 'steps'",
+            [],
+            |row| row.get::<_, String>(0),
+        )
+        .optional()?
+        .ok_or(StoreError::Corrupt)?;
+    let compact_schema = schema_sql
+        .chars()
+        .filter(|character| !character.is_whitespace())
+        .collect::<String>()
+        .to_ascii_lowercase();
+    if compact_schema.contains("check(model_phasein('not_started','running','completed'))") {
         Ok(())
     } else {
         Err(StoreError::Corrupt)
