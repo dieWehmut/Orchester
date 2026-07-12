@@ -1,12 +1,14 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::{Arc, Barrier};
+use std::thread;
 
 use orchester_laufzeit::harness::run_store::{
     action_hash, ActionRecord, EffectClass, EventAppend, NewRun, RunStatus, RunStore,
     SqliteRunStore, StoreError, Transition,
 };
-use orchester_protokoll::HarnessEventKind;
 use orchester_protokoll::{AgentAction, CallId, RunId, StepId, StopReason, TurnId};
+use orchester_protokoll::{HarnessEvent, HarnessEventKind};
 
 static NEXT_TEMP: AtomicUsize = AtomicUsize::new(0);
 
@@ -61,6 +63,42 @@ fn complete_model(store: &SqliteRunStore, run_id: &RunId, owner: &str, step_id: 
     }
 }
 
+fn append_model_event(
+    store: &SqliteRunStore,
+    run_id: &RunId,
+    owner: &str,
+    step_id: &str,
+    call_id: &str,
+    kind: HarnessEventKind,
+) -> Result<HarnessEvent, StoreError> {
+    store.append_event(
+        owner,
+        run_id,
+        EventAppend {
+            turn_id: Some(TurnId::from("turn-1")),
+            step_id: Some(StepId::from(step_id)),
+            call_id: Some(CallId::from(call_id)),
+            occurred_at: "2026-07-12T00:00:02Z".into(),
+            kind,
+        },
+    )
+}
+
+fn step_model_state(path: &Path, step_id: &str) -> (String, Option<String>) {
+    let connection = rusqlite::Connection::open(path).unwrap();
+    connection
+        .query_row(
+            "SELECT model_phase, model_call_id FROM steps WHERE step_id = ?1",
+            [step_id],
+            |row| Ok((row.get(0)?, row.get(1)?)),
+        )
+        .unwrap()
+}
+
+fn remove_temp_db(path: &Path) {
+    std::fs::remove_dir_all(path.parent().unwrap()).unwrap();
+}
+
 #[test]
 fn state_transition_and_event_are_atomic_and_sequences_are_contiguous() {
     let store = SqliteRunStore::in_memory().unwrap();
@@ -113,6 +151,206 @@ fn state_transition_and_event_are_atomic_and_sequences_are_contiguous() {
             .next_sequence,
         4
     );
+}
+
+#[test]
+fn model_start_persists_running_phase_and_call_id() {
+    let path = temp_db("model-start-phase");
+    let run_id = RunId::from("run-model-start");
+    {
+        let store = SqliteRunStore::open(&path).unwrap();
+        store
+            .create_run(new_run("run-model-start", "owner-a"))
+            .unwrap();
+        start_step(&store, &run_id, "owner-a", "step-1");
+        append_model_event(
+            &store,
+            &run_id,
+            "owner-a",
+            "step-1",
+            "model-call-1",
+            HarnessEventKind::ModelStarted,
+        )
+        .unwrap();
+        let before_duplicate = store.events_owned(&run_id, "owner-a").unwrap();
+        let duplicate = append_model_event(
+            &store,
+            &run_id,
+            "owner-a",
+            "step-1",
+            "model-call-2",
+            HarnessEventKind::ModelStarted,
+        );
+        assert!(matches!(duplicate, Err(StoreError::Invariant(_))));
+        assert_eq!(
+            store.events_owned(&run_id, "owner-a").unwrap(),
+            before_duplicate
+        );
+    }
+
+    let state = step_model_state(&path, "step-1");
+    remove_temp_db(&path);
+    assert_eq!(state, ("running".into(), Some("model-call-1".into())));
+}
+
+#[test]
+fn model_completion_is_call_bound_atomic_and_single_shot() {
+    let path = temp_db("model-completion-cas");
+    let run_id = RunId::from("run-model-completion");
+    let store = SqliteRunStore::open(&path).unwrap();
+    store
+        .create_run(new_run("run-model-completion", "owner-a"))
+        .unwrap();
+    start_step(&store, &run_id, "owner-a", "step-1");
+    append_model_event(
+        &store,
+        &run_id,
+        "owner-a",
+        "step-1",
+        "model-call-1",
+        HarnessEventKind::ModelStarted,
+    )
+    .unwrap();
+
+    let before_wrong_call = store.events_owned(&run_id, "owner-a").unwrap();
+    assert!(matches!(
+        append_model_event(
+            &store,
+            &run_id,
+            "owner-a",
+            "step-1",
+            "model-call-2",
+            HarnessEventKind::ModelCompleted {
+                assistant_text: "wrong call".into(),
+            },
+        ),
+        Err(StoreError::Invariant(_))
+    ));
+    assert_eq!(
+        store.events_owned(&run_id, "owner-a").unwrap(),
+        before_wrong_call
+    );
+    assert_eq!(
+        store
+            .load_run_owned(&run_id, "owner-a")
+            .unwrap()
+            .next_sequence,
+        4
+    );
+
+    let completed = append_model_event(
+        &store,
+        &run_id,
+        "owner-a",
+        "step-1",
+        "model-call-1",
+        HarnessEventKind::ModelCompleted {
+            assistant_text: "done".into(),
+        },
+    )
+    .unwrap();
+    assert_eq!(completed.sequence, 4);
+    let after_completion = store.events_owned(&run_id, "owner-a").unwrap();
+    assert!(matches!(
+        append_model_event(
+            &store,
+            &run_id,
+            "owner-a",
+            "step-1",
+            "model-call-1",
+            HarnessEventKind::ModelCompleted {
+                assistant_text: "duplicate".into(),
+            },
+        ),
+        Err(StoreError::Invariant(_))
+    ));
+    assert_eq!(
+        store.events_owned(&run_id, "owner-a").unwrap(),
+        after_completion
+    );
+    assert_eq!(
+        store
+            .load_run_owned(&run_id, "owner-a")
+            .unwrap()
+            .next_sequence,
+        5
+    );
+    drop(store);
+
+    let state = step_model_state(&path, "step-1");
+    remove_temp_db(&path);
+    assert_eq!(state, ("completed".into(), Some("model-call-1".into())));
+}
+
+#[test]
+fn concurrent_model_completion_has_one_winner() {
+    let path = temp_db("concurrent-model-completion");
+    let run_id = RunId::from("run-concurrent-model");
+    {
+        let store = SqliteRunStore::open(&path).unwrap();
+        store
+            .create_run(new_run("run-concurrent-model", "owner-a"))
+            .unwrap();
+        start_step(&store, &run_id, "owner-a", "step-1");
+        append_model_event(
+            &store,
+            &run_id,
+            "owner-a",
+            "step-1",
+            "model-call-1",
+            HarnessEventKind::ModelStarted,
+        )
+        .unwrap();
+    }
+
+    let start = Arc::new(Barrier::new(2));
+    let stores = [
+        SqliteRunStore::open(&path).unwrap(),
+        SqliteRunStore::open(&path).unwrap(),
+    ];
+    let mut completions = Vec::new();
+    for store in stores {
+        let run_id = run_id.clone();
+        let start = start.clone();
+        completions.push(thread::spawn(move || {
+            start.wait();
+            append_model_event(
+                &store,
+                &run_id,
+                "owner-a",
+                "step-1",
+                "model-call-1",
+                HarnessEventKind::ModelCompleted {
+                    assistant_text: "done".into(),
+                },
+            )
+        }));
+    }
+    let outcomes = completions
+        .into_iter()
+        .map(|completion| completion.join().unwrap())
+        .collect::<Vec<_>>();
+
+    let reopened = SqliteRunStore::open(&path).unwrap();
+    let events = reopened.events_owned(&run_id, "owner-a").unwrap();
+    let completion_events = events
+        .iter()
+        .filter(|event| matches!(&event.kind, HarnessEventKind::ModelCompleted { .. }))
+        .count();
+    drop(reopened);
+    let state = step_model_state(&path, "step-1");
+    remove_temp_db(&path);
+
+    assert_eq!(outcomes.iter().filter(|outcome| outcome.is_ok()).count(), 1);
+    assert_eq!(
+        outcomes.iter().filter(|outcome| outcome.is_err()).count(),
+        1
+    );
+    assert!(outcomes
+        .iter()
+        .any(|outcome| matches!(outcome, Err(StoreError::Invariant(_)))));
+    assert_eq!(completion_events, 1);
+    assert_eq!(state, ("completed".into(), Some("model-call-1".into())));
 }
 
 #[test]

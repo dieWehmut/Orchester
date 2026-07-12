@@ -2642,15 +2642,19 @@ fn apply_event_transition(
                     "model start is illegal for the current step".into(),
                 ));
             }
-            transaction.execute(
-                "UPDATE steps SET status = 'model_running', model_call_id = ?1
-                 WHERE run_id = ?2 AND step_id = ?3 AND status = 'created'",
+            let updated = transaction.execute(
+                "UPDATE steps
+                 SET status = 'model_running', model_call_id = ?1,
+                     model_phase = 'running'
+                 WHERE run_id = ?2 AND step_id = ?3 AND status = 'created'
+                   AND model_phase = 'not_started' AND model_call_id IS NULL",
                 params![
                     input.call_id.as_ref().map(|id| id.0.as_str()),
                     snapshot.run_id.0,
                     step_id.0,
                 ],
             )?;
+            ensure_single_update(updated)?;
         }
         HarnessEventKind::ModelCompleted { assistant_text } => {
             if snapshot.status != RunStatus::Running
@@ -2662,16 +2666,17 @@ fn apply_event_transition(
                     "model completion is illegal or oversized".into(),
                 ));
             }
-            let expected: Option<String> = transaction.query_row(
-                "SELECT model_call_id FROM steps WHERE run_id = ?1 AND step_id = ?2",
-                params![snapshot.run_id.0, step_id.0],
-                |row| row.get(0),
+            let updated = transaction.execute(
+                "UPDATE steps SET model_phase = 'completed'
+                 WHERE run_id = ?1 AND step_id = ?2 AND status = 'model_running'
+                   AND model_phase = 'running' AND model_call_id = ?3",
+                params![
+                    snapshot.run_id.0,
+                    step_id.0,
+                    input.call_id.as_ref().map(|id| id.0.as_str()),
+                ],
             )?;
-            if expected.as_deref() != input.call_id.as_ref().map(|id| id.0.as_str()) {
-                return Err(StoreError::Invariant(
-                    "model completion call does not match model start".into(),
-                ));
-            }
+            ensure_single_update(updated)?;
         }
         HarnessEventKind::PolicyDecided {
             action_id,
