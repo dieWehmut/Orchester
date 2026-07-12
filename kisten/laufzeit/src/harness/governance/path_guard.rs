@@ -226,8 +226,16 @@ impl WorkspaceGuard {
             });
         }
         let root = resolve_existing_path_no_links(requested_root)?;
+        // Resolve the path first for diagnostics, then compare the object that
+        // was observed by the ambient path lookup with the capability we open.
+        // A replacement between these two operations is therefore rejected
+        // instead of silently adopting a different workspace root.
+        let expected_root = path_identity(&root)?;
         let root_dir = open_root_capability(&root)?;
         let object = identity_from_dir(&root_dir, &root)?;
+        if object != expected_root {
+            return Err(GuardError::Changed { path: root });
+        }
         let identity = WorkspaceIdentity {
             canonical_root: canonical_root_key(&root),
             object: object.clone(),
@@ -819,6 +827,46 @@ fn identity_from_dir(directory: &Dir, path: &Path) -> Result<ObjectIdentity, Gua
         .map_err(|source| map_io("clone directory handle", path, source))?
         .into_std_file();
     identity_from_file(&file, path)
+}
+
+#[cfg(windows)]
+fn path_identity(path: &Path) -> Result<ObjectIdentity, GuardError> {
+    // The stable std metadata API does not expose Windows file indexes
+    // without the `windows_by_handle` nightly feature.  Open a capability
+    // for the first observation instead; WorkspaceGuard::new immediately
+    // opens a second capability and compares both handle identities.
+    let directory = open_root_capability(path)?;
+    identity_from_dir(&directory, path)
+}
+
+#[cfg(not(windows))]
+fn path_identity(path: &Path) -> Result<ObjectIdentity, GuardError> {
+    let metadata =
+        fs::metadata(path).map_err(|source| map_io("inspect workspace root", path, source))?;
+    if !metadata.is_dir() {
+        return Err(GuardError::NotDirectory {
+            path: path.to_path_buf(),
+        });
+    }
+    identity_from_metadata(&metadata, path)
+}
+
+#[cfg(unix)]
+fn identity_from_metadata(metadata: &Metadata, _path: &Path) -> Result<ObjectIdentity, GuardError> {
+    use std::os::unix::fs::MetadataExt;
+
+    Ok(ObjectIdentity {
+        device: metadata.dev(),
+        inode: metadata.ino(),
+    })
+}
+
+#[cfg(not(any(unix, windows)))]
+fn identity_from_metadata(
+    _metadata: &Metadata,
+    _path: &Path,
+) -> Result<ObjectIdentity, GuardError> {
+    Err(GuardError::Unsupported)
 }
 
 #[cfg(unix)]
