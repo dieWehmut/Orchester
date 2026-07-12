@@ -146,6 +146,24 @@ pub struct ContextInput {
     pub store: bool,
 }
 
+#[derive(Clone, PartialEq, Eq)]
+pub struct ContinuationInput {
+    pub model: String,
+    pub history: Vec<TranscriptEntry>,
+    pub store: bool,
+}
+
+impl fmt::Debug for ContinuationInput {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("ContinuationInput")
+            .field("model", &"<redacted>")
+            .field("history_entries", &self.history.len())
+            .field("store", &self.store)
+            .finish()
+    }
+}
+
 impl fmt::Debug for ContextInput {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
@@ -176,6 +194,8 @@ pub enum ContextError {
     SecretDetected,
     #[error("model context limits are invalid")]
     InvalidLimits,
+    #[error("model continuation is missing a matching tool call and result")]
+    InvalidContinuation,
 }
 
 pub struct ContextAssembler {
@@ -195,9 +215,41 @@ impl ContextAssembler {
         if input.prompt.trim().is_empty() {
             return Err(ContextError::EmptyPrompt);
         }
-        self.reject_secret(&input.model)?;
-        self.reject_secret(&input.prompt)?;
-        for entry in &input.history {
+        self.assemble_inner(
+            input.model,
+            Some(input.prompt),
+            input.history,
+            input.store,
+            0,
+        )
+    }
+
+    pub fn assemble_continuation(
+        &self,
+        input: ContinuationInput,
+    ) -> Result<AssembledContext, ContextError> {
+        if self.limits.max_bytes == 0 || self.limits.max_history_entries < 2 {
+            return Err(ContextError::InvalidLimits);
+        }
+        if !has_matching_tool_tail(&input.history) {
+            return Err(ContextError::InvalidContinuation);
+        }
+        self.assemble_inner(input.model, None, input.history, input.store, 2)
+    }
+
+    fn assemble_inner(
+        &self,
+        model: String,
+        prompt: Option<String>,
+        history: Vec<TranscriptEntry>,
+        store: bool,
+        required_tail_entries: usize,
+    ) -> Result<AssembledContext, ContextError> {
+        self.reject_secret(&model)?;
+        if let Some(prompt) = prompt.as_deref() {
+            self.reject_secret(prompt)?;
+        }
+        for entry in &history {
             for value in entry.strings() {
                 self.reject_secret(value)?;
             }
@@ -206,40 +258,45 @@ impl ContextAssembler {
         let tools = tool_definitions();
         let tools_bytes = tools.iter().map(tool_bytes).sum::<usize>();
         let fixed_bytes =
-            SYSTEM_PROMPT.len() + input.model.len() + input.prompt.len() + tools_bytes;
+            SYSTEM_PROMPT.len() + model.len() + prompt.as_deref().map_or(0, str::len) + tools_bytes;
         if fixed_bytes > self.limits.max_bytes {
             return Err(ContextError::BudgetExceeded);
         }
 
-        let max_start = input
-            .history
+        let max_start = history
             .len()
             .saturating_sub(self.limits.max_history_entries);
         let mut start = max_start;
-        let mut history_bytes = input.history[start..]
+        let mut history_bytes = history[start..]
             .iter()
             .map(TranscriptEntry::byte_len)
             .sum::<usize>();
-        while start < input.history.len()
+        let required_tail_start = history.len().saturating_sub(required_tail_entries);
+        while start < history.len()
             && fixed_bytes.saturating_add(history_bytes) > self.limits.max_bytes
         {
-            history_bytes = history_bytes.saturating_sub(input.history[start].byte_len());
+            if required_tail_entries > 0 && start >= required_tail_start {
+                return Err(ContextError::BudgetExceeded);
+            }
+            history_bytes = history_bytes.saturating_sub(history[start].byte_len());
             start += 1;
         }
 
-        let omitted = &input.history[..start];
-        let retained = &input.history[start..];
+        let omitted = &history[..start];
+        let retained = &history[start..];
         let mut messages = Vec::with_capacity(retained.len() + 2);
         messages.push(text_message(ModelRole::System, SYSTEM_PROMPT.into()));
         messages.extend(retained.iter().map(TranscriptEntry::to_message));
-        messages.push(text_message(ModelRole::User, input.prompt));
+        if let Some(prompt) = prompt {
+            messages.push(text_message(ModelRole::User, prompt));
+        }
 
         Ok(AssembledContext {
             request: ModelRequest {
-                model: input.model,
+                model,
                 messages,
                 tools,
-                store: input.store,
+                store,
             },
             omitted_entries: omitted.len(),
             omitted_prefix_hash: transcript_hash(omitted),
@@ -258,6 +315,22 @@ impl ContextAssembler {
             Ok(())
         }
     }
+}
+
+fn has_matching_tool_tail(history: &[TranscriptEntry]) -> bool {
+    let Some((result, preceding)) = history.split_last() else {
+        return false;
+    };
+    let Some(call) = preceding.last() else {
+        return false;
+    };
+    matches!(
+        (call, result),
+        (
+            TranscriptEntry::ToolCall { call_id: call_id_a, .. },
+            TranscriptEntry::ToolResult { call_id: call_id_b, .. }
+        ) if call_id_a == call_id_b
+    )
 }
 
 fn text_message(role: ModelRole, text: String) -> ModelMessage {

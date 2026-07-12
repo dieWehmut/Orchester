@@ -1,5 +1,5 @@
 use orchester_laufzeit::harness::context::{
-    ContextAssembler, ContextError, ContextInput, ContextLimits, TranscriptEntry,
+    ContextAssembler, ContextError, ContextInput, ContextLimits, ContinuationInput, TranscriptEntry,
 };
 use orchester_modell::{ModelItem, ModelRole};
 use secrecy::SecretString;
@@ -115,4 +115,88 @@ fn oversized_prompt_fails_before_a_model_request_exists() {
         })
         .unwrap_err();
     assert!(matches!(err, ContextError::BudgetExceeded));
+}
+
+#[test]
+fn continuation_keeps_the_call_pair_without_repeating_the_user_prompt() {
+    let assembler = ContextAssembler::new(ContextLimits::default(), Vec::new());
+    let assembled = assembler
+        .assemble_continuation(ContinuationInput {
+            model: "test-model".into(),
+            history: vec![
+                TranscriptEntry::user("inspect the workspace"),
+                TranscriptEntry::tool_call("call-1", "read_file", r#"{"path":"src/lib.rs"}"#),
+                TranscriptEntry::tool_result("call-1", "bounded observation"),
+            ],
+            store: false,
+        })
+        .unwrap();
+
+    assert_eq!(
+        assembled
+            .request
+            .messages
+            .iter()
+            .map(|message| message.role)
+            .collect::<Vec<_>>(),
+        vec![
+            ModelRole::System,
+            ModelRole::User,
+            ModelRole::Assistant,
+            ModelRole::Tool,
+        ]
+    );
+    assert!(matches!(
+        &assembled.request.messages[2].items[0],
+        ModelItem::ToolCall(call) if call.call_id.0 == "call-1"
+    ));
+    assert!(matches!(
+        &assembled.request.messages[3].items[0],
+        ModelItem::ToolResult { call_id, output }
+            if call_id.0 == "call-1" && output == "bounded observation"
+    ));
+}
+
+#[test]
+fn continuation_rejects_unpaired_or_mismatched_tool_results() {
+    let assembler = ContextAssembler::new(ContextLimits::default(), Vec::new());
+    for history in [
+        vec![TranscriptEntry::tool_result("call-1", "orphan")],
+        vec![
+            TranscriptEntry::tool_call("call-1", "read_file", r#"{"path":"a"}"#),
+            TranscriptEntry::tool_result("call-2", "mismatch"),
+        ],
+    ] {
+        let error = assembler
+            .assemble_continuation(ContinuationInput {
+                model: "test-model".into(),
+                history,
+                store: false,
+            })
+            .unwrap_err();
+        assert!(matches!(error, ContextError::InvalidContinuation));
+    }
+}
+
+#[test]
+fn continuation_budget_never_splits_the_required_call_pair() {
+    let assembler = ContextAssembler::new(
+        ContextLimits {
+            max_bytes: 20_000,
+            max_history_entries: 2,
+        },
+        Vec::new(),
+    );
+    let error = assembler
+        .assemble_continuation(ContinuationInput {
+            model: "test-model".into(),
+            history: vec![
+                TranscriptEntry::tool_call("call-1", "read_file", r#"{"path":"a"}"#),
+                TranscriptEntry::tool_result("call-1", "x".repeat(20_000)),
+            ],
+            store: false,
+        })
+        .unwrap_err();
+
+    assert!(matches!(error, ContextError::BudgetExceeded));
 }
