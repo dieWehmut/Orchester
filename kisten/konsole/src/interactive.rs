@@ -1,6 +1,7 @@
 use std::collections::{BTreeMap, HashMap};
 use std::io::{self, BufRead, Write};
 
+use crate::avatar;
 use crossterm::cursor;
 use crossterm::event::{
     self, Event as TerminalEvent, KeyCode, KeyEvent, KeyEventKind, KeyModifiers,
@@ -764,7 +765,11 @@ fn render_chat_panel<W: Write>(out: &mut W, width: usize) -> io::Result<()> {
         "model:     not configured    /model to change".to_string(),
         format!("directory: {cwd}"),
     ];
-    render_info_box(out, width, &rows)
+    if width >= 96 {
+        render_portrait_info_box(out, width, &rows)
+    } else {
+        render_info_box(out, width, &rows)
+    }
 }
 
 fn render_delegate_panel<W: Write>(
@@ -793,6 +798,30 @@ fn render_info_box<W: Write>(out: &mut W, width: usize, rows: &[String]) -> io::
         let row = truncate(&sanitize_terminal_text(row), content_width);
         let pad = " ".repeat(content_width.saturating_sub(display_width(&row)));
         writeln!(out, "{DIM}|{RESET} {row}{pad} {DIM}|{RESET}")?;
+    }
+    writeln!(out, "{DIM}+{}+{RESET}", "-".repeat(panel_width - 2))
+}
+
+fn render_portrait_info_box<W: Write>(
+    out: &mut W,
+    width: usize,
+    rows: &[String],
+) -> io::Result<()> {
+    let panel_width = width.clamp(96, 120);
+    let right_width = panel_width.saturating_sub(47);
+    let height = avatar::HEIGHT.max(rows.len());
+
+    writeln!(out, "{DIM}+{}+{RESET}", "-".repeat(panel_width - 2))?;
+    for row in 0..height {
+        write!(out, "{DIM}|{RESET} ")?;
+        avatar::render_row(out, row)?;
+        write!(out, " {DIM}|{RESET} ")?;
+
+        let text = rows.get(row).map(String::as_str).unwrap_or("");
+        let text = truncate(&sanitize_terminal_text(text), right_width);
+        let pad = " ".repeat(right_width.saturating_sub(display_width(&text)));
+        write!(out, "{text}{pad} ")?;
+        writeln!(out, "{DIM}|{RESET}")?;
     }
     writeln!(out, "{DIM}+{}+{RESET}", "-".repeat(panel_width - 2))
 }
@@ -1232,7 +1261,22 @@ mod tests {
             !plain.contains("Selected: codex") && !plain.contains("Choose agent"),
             "startup must not look like a Codex session or delegate picker:\n{rendered}"
         );
-        assert!(!plain.contains("/#\\"), "startup output:\n{rendered}");
+        assert!(
+            rendered.contains("\x1b[38;2;"),
+            "wide startup should render the true-colour ASCII portrait:\n{rendered}"
+        );
+        assert!(
+            plain
+                .chars()
+                .filter(|ch| matches!(ch, '@' | '%' | '#'))
+                .count()
+                > 40,
+            "startup portrait should be recognisable as dense ASCII art:\n{rendered}"
+        );
+        assert!(
+            !plain.contains('\u{2580}'),
+            "startup portrait must not use raster half-block pixels:\n{rendered}"
+        );
     }
 
     #[test]
@@ -1299,6 +1343,21 @@ mod tests {
         let help = strip_ansi(&String::from_utf8(help).unwrap());
         assert!(help.contains("/agent      choose a delegate"));
         assert!(help.contains("Esc         close help"));
+    }
+
+    #[test]
+    fn portrait_home_respects_wide_and_medium_terminal_bounds() {
+        let mut wide = Vec::new();
+        render_chat_home(&mut wide, 100, "", &[], 0, false).unwrap();
+        let wide = strip_ansi(&String::from_utf8(wide).unwrap());
+        assert!(wide.lines().all(|line| display_width(line) <= 100));
+        assert!(wide.contains("@%%"));
+
+        let mut medium = Vec::new();
+        render_chat_home(&mut medium, 95, "", &[], 0, false).unwrap();
+        let medium = strip_ansi(&String::from_utf8(medium).unwrap());
+        assert!(medium.lines().all(|line| display_width(line) <= 95));
+        assert!(!medium.contains("@%%"));
     }
 
     fn strip_ansi(input: &str) -> String {

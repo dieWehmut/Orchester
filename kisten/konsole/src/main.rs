@@ -6,6 +6,7 @@
 //! exit code reflects the run outcome so scripts can branch on success/failure.
 
 mod args;
+mod avatar;
 mod interactive;
 mod render;
 
