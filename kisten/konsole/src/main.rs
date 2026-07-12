@@ -302,10 +302,9 @@ async fn run_line_interactive(registry: Registry) -> Result<ExitCode, CliError> 
                     if agent.native_command.is_some()
                         && io::stdin().is_terminal()
                         && io::stdout().is_terminal()
+                        && launch_native_agent(&agent)? == NativeLaunchStatus::Cancelled
                     {
-                        if launch_native_agent(&agent)? == NativeLaunchStatus::Cancelled {
-                            return Ok(ExitCode::from(130));
-                        }
+                        return Ok(ExitCode::from(130));
                     }
                 } else {
                     eprintln!("orchester: unknown agent `{name}`");
@@ -716,7 +715,7 @@ fn is_cancelled_status(status: &ExitStatus) -> bool {
     #[cfg(windows)]
     {
         const STATUS_CONTROL_C_EXIT: i32 = 0xC000_013A_u32 as i32;
-        return matches!(status.code(), Some(130) | Some(STATUS_CONTROL_C_EXIT));
+        matches!(status.code(), Some(130) | Some(STATUS_CONTROL_C_EXIT))
     }
 
     #[cfg(not(windows))]

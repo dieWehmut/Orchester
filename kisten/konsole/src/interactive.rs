@@ -99,15 +99,17 @@ pub fn run_home_tui(choices: &[AgentChoice]) -> io::Result<HomeAction> {
     let mut out = io::stdout();
     let mut input = String::new();
     let mut command_selected = 0usize;
+    let mut show_help = false;
 
     loop {
         let (cols, _) = terminal::size().unwrap_or((100, 30));
         render_chat_home(
             &mut out,
-            (cols as usize).clamp(50, 132),
+            (cols as usize).clamp(1, 132),
             &input,
             choices,
             command_selected,
+            show_help,
         )?;
 
         let TerminalEvent::Key(key) = event::read()? else {
@@ -123,13 +125,23 @@ pub fn run_home_tui(choices: &[AgentChoice]) -> io::Result<HomeAction> {
 
         match key.code {
             KeyCode::Enter => {
-                let action = parse_home_action(&input, choices);
+                let action = parse_home_action_selected(&input, choices, command_selected);
+                if matches!(action, HomeAction::Help) {
+                    input.clear();
+                    command_selected = 0;
+                    show_help = true;
+                    continue;
+                }
                 if !matches!(action, HomeAction::Empty) {
                     clear_screen(&mut out)?;
                     return Ok(action);
                 }
             }
             KeyCode::Esc => {
+                if show_help {
+                    show_help = false;
+                    continue;
+                }
                 if input.is_empty() {
                     clear_screen(&mut out)?;
                     return Ok(HomeAction::Quit);
@@ -140,6 +152,7 @@ pub fn run_home_tui(choices: &[AgentChoice]) -> io::Result<HomeAction> {
             KeyCode::Backspace => {
                 input.pop();
                 command_selected = 0;
+                show_help = false;
             }
             KeyCode::Up if input.starts_with('/') => {
                 command_selected = command_selected.saturating_sub(1);
@@ -153,6 +166,7 @@ pub fn run_home_tui(choices: &[AgentChoice]) -> io::Result<HomeAction> {
             KeyCode::Char(ch) => {
                 input.push(ch);
                 command_selected = 0;
+                show_help = false;
             }
             _ => {}
         }
@@ -442,6 +456,10 @@ pub fn parse_prompt_action(input: &str, choices: &[AgentChoice]) -> PromptAction
 }
 
 pub fn parse_home_action(input: &str, choices: &[AgentChoice]) -> HomeAction {
+    parse_home_action_selected(input, choices, 0)
+}
+
+fn parse_home_action_selected(input: &str, choices: &[AgentChoice], selected: usize) -> HomeAction {
     let input = input.trim();
     if input.is_empty() {
         return HomeAction::Empty;
@@ -453,7 +471,14 @@ pub fn parse_home_action(input: &str, choices: &[AgentChoice]) -> HomeAction {
         return HomeAction::PickAgent;
     }
 
-    match parse_prompt_action(input, choices) {
+    let matches = matching_commands(input, choices);
+    let selected_item = matches.get(selected);
+    let mut action = command_action(input, selected_item);
+    if matches!(action, PromptAction::Empty) && selected_item.is_some() {
+        action = command_action("/", selected_item);
+    }
+
+    match action {
         PromptAction::PickAgent => HomeAction::PickAgent,
         PromptAction::ListAgents => HomeAction::PickAgent,
         PromptAction::LaunchAgent(name) => HomeAction::LaunchAgent(name),
@@ -631,25 +656,77 @@ fn render_chat_home<W: Write>(
     input: &str,
     choices: &[AgentChoice],
     command_selected: usize,
+    show_help: bool,
 ) -> io::Result<()> {
     clear_screen(out)?;
-    writeln!(
-        out,
-        "{ORANGE}{BOLD}Orchester{RESET} {DIM}v{}  coding agent workspace{RESET}",
-        env!("CARGO_PKG_VERSION")
-    )?;
-    render_home_panel(out, width, None)?;
-    writeln!(out)?;
-    writeln!(out, "{CYAN}> {RESET}{input}")?;
-    if input.starts_with('/') {
-        render_command_palette(out, input, choices, command_selected)?;
+    if width < 50 {
+        writeln!(
+            out,
+            "{ORANGE}{BOLD}Orchester{RESET} {DIM}v{}{RESET}",
+            env!("CARGO_PKG_VERSION")
+        )?;
+        writeln!(
+            out,
+            "{DIM}{} {RESET}",
+            truncate("coding agent workspace", width)
+        )?;
     } else {
         writeln!(
             out,
-            "{DIM}Type a task or / for commands. Enter submits; Esc exits.{RESET}"
+            "{ORANGE}{BOLD}Orchester{RESET} {DIM}v{}  coding agent workspace{RESET}",
+            env!("CARGO_PKG_VERSION")
         )?;
+        render_home_panel(out, width, None)?;
+    }
+    writeln!(out)?;
+    let prompt = truncate(&sanitize_terminal_text(input), width.saturating_sub(2));
+    writeln!(out, "{CYAN}> {RESET}{prompt}")?;
+    if show_help {
+        render_home_help(out, width)?;
+    } else if input.starts_with('/') {
+        if width < 50 {
+            render_compact_command_palette(out, input, choices, command_selected, width)?;
+        } else {
+            render_command_palette(out, input, choices, command_selected)?;
+        }
+    } else {
+        let hint = truncate(
+            "Type a task or / for commands. Enter submits; Esc exits.",
+            width,
+        );
+        writeln!(out, "{DIM}{hint}{RESET}")?;
     }
     out.flush()
+}
+
+fn render_home_help<W: Write>(out: &mut W, width: usize) -> io::Result<()> {
+    for line in [
+        "/agent      choose a delegate",
+        "/codex      launch Codex",
+        "/claude     launch Claude",
+        "/opencode   launch OpenCode",
+        "/quit       exit Orchester",
+        "Esc         close help",
+    ] {
+        writeln!(out, "{}", truncate(line, width))?;
+    }
+    Ok(())
+}
+
+fn render_compact_command_palette<W: Write>(
+    out: &mut W,
+    command: &str,
+    choices: &[AgentChoice],
+    selected: usize,
+    width: usize,
+) -> io::Result<()> {
+    let matches = matching_commands(command, choices);
+    for (index, item) in matches.iter().take(6).enumerate() {
+        let marker = if index == selected { ">" } else { " " };
+        let line = format!("{marker} {} {}", item.name, item.description);
+        writeln!(out, "{}", truncate(&line, width))?;
+    }
+    Ok(())
 }
 
 fn render_line_home<W: Write>(
@@ -1161,7 +1238,7 @@ mod tests {
     fn startup_home_is_distinct_from_the_delegate_picker() {
         let mut out = Vec::new();
 
-        render_chat_home(&mut out, 100, "", &[], 0).unwrap();
+        render_chat_home(&mut out, 100, "", &[], 0, false).unwrap();
 
         let rendered = String::from_utf8_lossy(&out);
         let plain = strip_ansi(&rendered);
@@ -1223,6 +1300,30 @@ mod tests {
             HomeAction::LaunchAgent("codex".into())
         );
         assert_eq!(parse_home_action("/quit", &choices), HomeAction::Quit);
+        assert_eq!(
+            parse_home_action_selected("/", &choices, 5),
+            HomeAction::LaunchAgent("codex".into())
+        );
+        assert_eq!(
+            parse_home_action_selected("/cod", &choices, 0),
+            HomeAction::LaunchAgent("codex".into())
+        );
+    }
+
+    #[test]
+    fn compact_home_and_help_fit_their_modes() {
+        let mut compact = Vec::new();
+        render_chat_home(&mut compact, 30, "", &[], 0, false).unwrap();
+        let compact = strip_ansi(&String::from_utf8(compact).unwrap());
+        assert!(compact.contains("Orchester"));
+        assert!(!compact.contains("+----------------"));
+        assert!(compact.lines().all(|line| display_width(line) <= 30));
+
+        let mut help = Vec::new();
+        render_chat_home(&mut help, 80, "", &[], 0, true).unwrap();
+        let help = strip_ansi(&String::from_utf8(help).unwrap());
+        assert!(help.contains("/agent      choose a delegate"));
+        assert!(help.contains("Esc         close help"));
     }
 
     fn strip_ansi(input: &str) -> String {
