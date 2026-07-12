@@ -23,6 +23,8 @@ sha2 = { workspace = true }
 getrandom = { workspace = true }
 fs2 = { workspace = true }
 tokio = { workspace = true }
+blake3 = { workspace = true }
+regex = { workspace = true }
 
 [target.'cfg(windows)'.dependencies]
 keyring = { workspace = true, features = ["windows-native"] }

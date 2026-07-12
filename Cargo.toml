@@ -47,3 +47,5 @@ rusqlite = { version = "0.32", features = ["bundled"] }
 sha2 = "0.10"
 getrandom = "0.3"
 fs2 = "0.4"
+blake3 = "1"
+regex = "1"
