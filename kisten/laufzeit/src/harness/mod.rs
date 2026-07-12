@@ -12,6 +12,7 @@ pub mod files;
 pub mod governance;
 pub mod memory;
 pub mod mutation;
+pub mod process;
 pub mod run_store;
 pub mod tools;
 pub mod validator;
