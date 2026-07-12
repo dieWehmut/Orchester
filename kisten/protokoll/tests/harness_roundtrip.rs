@@ -127,6 +127,21 @@ fn approval_summary_is_normalized_and_redacted_before_it_is_serialized() {
 }
 
 #[test]
+fn generated_action_summary_does_not_copy_model_controlled_strings() {
+    let action = AgentAction::RunCommand {
+        program: "echo sk-model-controlled-secret".into(),
+        args: vec!["--header".into(), "Authorization: Bearer hidden".into()],
+        cwd: Some("workspace\u{1b}[31m".into()),
+    };
+    let summary = action.action_summary();
+    assert!(!summary.contains("sk-model-controlled-secret"));
+    assert!(!summary.contains("Authorization"));
+    assert!(!summary.contains("workspace"));
+    assert!(summary.contains("program_bytes="));
+    assert!(summary.contains("args_count=2"));
+}
+
+#[test]
 fn invalid_schema_and_sequence_are_rejected_at_the_wire_boundary() {
     let schema_fixture = r#"{"schema_version":2,"event_id":"evt-1","run_id":"run-1","turn_id":null,"step_id":null,"call_id":null,"sequence":1,"occurred_at":"2026-07-10T00:00:00Z","kind":"run.created","payload":{}}"#;
     let sequence_fixture = r#"{"schema_version":1,"event_id":"evt-1","run_id":"run-1","turn_id":null,"step_id":null,"call_id":null,"sequence":0,"occurred_at":"2026-07-10T00:00:00Z","kind":"run.created","payload":{}}"#;

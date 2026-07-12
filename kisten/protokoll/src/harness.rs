@@ -138,39 +138,63 @@ pub enum AgentAction {
 
 impl AgentAction {
     /// Build a short, side-effect-free summary suitable for an approval UI.
-    /// File contents and patches are represented by their size, never copied
-    /// into the summary.
+    ///
+    /// Every model-controlled string is represented by its byte length rather
+    /// than copied into the durable approval/audit view.  This is stronger
+    /// than relying on a credential-prefix regex: a newly introduced token
+    /// format or an ANSI/control payload cannot bypass the summary boundary.
     pub fn action_summary(&self) -> String {
         let raw = match self {
-            Self::ListFiles { path, depth } => format!("list_files path={path} depth={depth}"),
-            Self::SearchText { path, query } => {
-                format!("search_text path={path} query={query}")
+            Self::ListFiles { path, depth } => {
+                format!("list_files path_bytes={} depth={depth}", path.len())
             }
+            Self::SearchText { path, query } => format!(
+                "search_text path_bytes={} query_bytes={}",
+                path.len(),
+                query.len()
+            ),
             Self::ReadFile {
                 path,
                 start_line,
                 end_line,
             } => format!(
-                "read_file path={path} start_line={:?} end_line={:?}",
-                start_line, end_line
+                "read_file path_bytes={} start_line={:?} end_line={:?}",
+                path.len(),
+                start_line,
+                end_line
             ),
             Self::WriteFile { path, content } => {
-                format!("write_file path={path} content_bytes={}", content.len())
+                format!(
+                    "write_file path_bytes={} content_bytes={}",
+                    path.len(),
+                    content.len()
+                )
             }
             Self::ApplyPatch { patch } => format!("apply_patch patch_bytes={}", patch.len()),
             Self::RunCommand { program, args, cwd } => format!(
-                "run_command program={program} args={:?} cwd={:?}",
-                args, cwd
+                "run_command program_bytes={} args_count={} args_bytes={} cwd_bytes={}",
+                program.len(),
+                args.len(),
+                args.iter().map(String::len).sum::<usize>(),
+                cwd.as_deref().map_or(0, str::len)
             ),
-            Self::RunChecks { ids } => format!("run_checks ids={ids:?}"),
+            Self::RunChecks { ids } => format!(
+                "run_checks ids_count={} ids_bytes={}",
+                ids.len(),
+                ids.iter().map(String::len).sum::<usize>()
+            ),
             Self::Remember { kind, content } => format!(
                 "remember kind={} content_bytes={}",
                 memory_kind_name(kind),
                 content.len()
             ),
-            Self::Recall { query, limit } => format!("recall query={query} limit={limit}"),
-            Self::RequestApproval { reason } => format!("request_approval reason={reason}"),
-            Self::Finish { summary } => format!("finish summary={summary}"),
+            Self::Recall { query, limit } => {
+                format!("recall query_bytes={} limit={limit}", query.len())
+            }
+            Self::RequestApproval { reason } => {
+                format!("request_approval reason_bytes={}", reason.len())
+            }
+            Self::Finish { summary } => format!("finish summary_bytes={}", summary.len()),
         };
         normalize_action_summary(&raw)
     }
