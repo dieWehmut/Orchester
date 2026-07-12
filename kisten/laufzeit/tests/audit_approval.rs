@@ -70,6 +70,24 @@ fn independent_audit_sinks_share_one_locked_head_and_reject_unknown_fields() {
     fs::remove_dir(parent).ok();
 }
 
+#[test]
+fn audit_rejects_identifiers_that_would_normalize_or_truncate() {
+    let path = temp_path("identifier-integrity");
+    let sink = JsonlAuditSink::open(&path).unwrap();
+    let mut invalid = AuditInput::test(1, "run-1", "action-1", "invalid id");
+    invalid.event_id = "event/1".into();
+    assert!(sink.append(invalid).is_err());
+    assert_eq!(
+        sink.append(AuditInput::test(1, "run-1", "action-1", "valid"))
+            .unwrap(),
+        1
+    );
+    let parent = path.parent().unwrap().to_path_buf();
+    drop(sink);
+    fs::remove_file(path).ok();
+    fs::remove_dir(parent).ok();
+}
+
 #[cfg(unix)]
 #[test]
 fn audit_open_never_chmods_an_existing_insecure_parent() {

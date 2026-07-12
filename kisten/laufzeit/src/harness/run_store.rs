@@ -5,6 +5,7 @@
 //! callers can close the process, reopen the database, and resume from the
 //! exact persisted snapshot.
 
+use std::collections::HashSet;
 use std::path::Path;
 use std::sync::{Mutex, MutexGuard};
 use std::time::Duration;
@@ -18,7 +19,15 @@ use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
 
-const MIGRATION: &str = include_str!("../../migrations/0001_state.sql");
+use crate::harness::approval::{
+    ApprovalBinding, ApprovalRequestInput, ApprovalSnapshot, ApprovalState,
+};
+use crate::harness::audit::{AuditInput, AuditReceipt};
+use crate::harness::barrier::ExecutionPermit;
+
+const MIGRATION_V1: &str = include_str!("../../migrations/0001_state.sql");
+const MIGRATION_V2: &str = include_str!("../../migrations/0002_approval_barrier.sql");
+const CURRENT_SCHEMA_VERSION: u32 = 2;
 
 #[derive(Debug, Error)]
 pub enum StoreError {
@@ -36,6 +45,22 @@ pub enum StoreError {
     Serialization(#[source] serde_json::Error),
     #[error("run-store filesystem operation failed")]
     Io(#[source] std::io::Error),
+    #[error("run-store path does not have user-only permissions")]
+    InsecurePermissions,
+    #[error("approval was not found")]
+    ApprovalNotFound,
+    #[error("approval operation is not authorized")]
+    ApprovalUnauthorized,
+    #[error("approval has expired")]
+    ApprovalExpired,
+    #[error("approval binding no longer matches")]
+    ApprovalBindingMismatch,
+    #[error("approval is in an invalid state")]
+    ApprovalInvalidState,
+    #[error("approval requires a durable audit checkpoint")]
+    ApprovalAuditRequired,
+    #[error("approval capability is invalid")]
+    ApprovalNonceMismatch,
 }
 
 impl From<rusqlite::Error> for StoreError {
@@ -247,22 +272,31 @@ impl SqliteRunStore {
     pub fn open(path: impl AsRef<Path>) -> Result<Self, StoreError> {
         let path = path.as_ref();
         if let Some(parent) = path.parent() {
+            let created = !parent.exists();
             std::fs::create_dir_all(parent).map_err(StoreError::Io)?;
+            ensure_private_state_dir(parent, created)?;
         }
+        let file_existed = path.exists();
+        let wal_existed = state_sidecar(path, "-wal").exists();
+        let shm_existed = state_sidecar(path, "-shm").exists();
         let connection = Connection::open(path)?;
-        Self::initialize(connection)
+        ensure_private_state_file(path, !file_existed)?;
+        let store = Self::initialize(connection, true)?;
+        ensure_private_state_sidecars(path, wal_existed, shm_existed)?;
+        Ok(store)
     }
 
     pub fn in_memory() -> Result<Self, StoreError> {
-        Self::initialize(Connection::open_in_memory()?)
+        Self::initialize(Connection::open_in_memory()?, false)
     }
 
-    fn initialize(connection: Connection) -> Result<Self, StoreError> {
+    fn initialize(mut connection: Connection, enable_wal: bool) -> Result<Self, StoreError> {
         connection.busy_timeout(Duration::from_secs(5))?;
-        connection.execute_batch(
-            "PRAGMA foreign_keys = ON; PRAGMA synchronous = FULL; PRAGMA journal_mode = WAL;",
-        )?;
-        connection.execute_batch(MIGRATION)?;
+        connection.execute_batch("PRAGMA foreign_keys = ON; PRAGMA synchronous = FULL;")?;
+        apply_migrations(&mut connection)?;
+        if enable_wal {
+            enable_wal_mode(&connection)?;
+        }
         Ok(Self {
             connection: Mutex::new(connection),
         })
@@ -284,6 +318,1266 @@ impl SqliteRunStore {
         })?;
         rows.collect::<Result<Vec<_>, _>>()
             .map_err(StoreError::from)
+    }
+
+    pub fn schema_version(&self) -> Result<u32, StoreError> {
+        let connection = self.connection()?;
+        let version = connection.query_row(
+            "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
+            [],
+            |row| row.get::<_, u32>(0),
+        )?;
+        Ok(version)
+    }
+
+    pub(crate) fn persist_approval_request(
+        &self,
+        input: &ApprovalRequestInput,
+    ) -> Result<ApprovalSnapshot, StoreError> {
+        let mut connection = self.connection()?;
+        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
+        let run = load_snapshot(
+            &transaction,
+            &input.binding.run_id,
+            Some(&input.owner_actor_id),
+        )?;
+        if run.status != RunStatus::AwaitingApproval {
+            return Err(StoreError::Invariant(
+                "approval request requires an awaiting run".into(),
+            ));
+        }
+        let action_context = transaction
+            .query_row(
+                "SELECT a.action_hash, a.state, a.policy_decision, a.policy_rule_id,
+                        r.policy_snapshot_hash, r.config_snapshot_hash,
+                        p.workspace_identity
+                 FROM actions a
+                 JOIN runs r ON r.run_id = a.run_id
+                 JOIN projects p ON p.project_id = r.project_id
+                 WHERE a.action_id = ?1 AND a.run_id = ?2 AND r.owner_actor_id = ?3",
+                params![
+                    input.binding.action_id.0,
+                    input.binding.run_id.0,
+                    input.owner_actor_id
+                ],
+                |row| {
+                    Ok((
+                        row.get::<_, String>(0)?,
+                        row.get::<_, String>(1)?,
+                        row.get::<_, Option<String>>(2)?,
+                        row.get::<_, Option<String>>(3)?,
+                        row.get::<_, String>(4)?,
+                        row.get::<_, String>(5)?,
+                        row.get::<_, String>(6)?,
+                    ))
+                },
+            )
+            .optional()?;
+        let Some((action_hash, state, decision, rule_id, policy_hash, config_hash, workspace)) =
+            action_context
+        else {
+            return Err(StoreError::NotFound);
+        };
+        if state != "awaiting_approval"
+            || decision.as_deref() != Some("ask")
+            || action_hash != input.binding.action_hash
+            || policy_hash != input.binding.policy_snapshot_hash
+            || config_hash != input.binding.config_snapshot_hash
+            || workspace != input.binding.workspace_identity
+            || rule_id.as_deref() != Some(input.rule_id.as_str())
+        {
+            return Err(StoreError::Invariant(
+                "approval request binding does not match the action".into(),
+            ));
+        }
+        let request = input.protocol_request();
+        let created_at = request.created_at.clone();
+        let expires_at = request.expires_at.clone();
+        let event = HarnessEvent {
+            schema_version: HARNESS_SCHEMA_VERSION,
+            event_id: event_id(&input.binding.run_id, run.next_sequence),
+            run_id: input.binding.run_id.clone(),
+            turn_id: run.current_turn_id.clone(),
+            step_id: run.current_step_id.clone(),
+            call_id: None,
+            sequence: run.next_sequence,
+            occurred_at: created_at.clone(),
+            kind: HarnessEventKind::ApprovalRequested { request },
+        };
+        persist_event(&transaction, &event)?;
+        transaction
+            .execute(
+                "INSERT INTO approvals(
+                approval_id, run_id, action_id, owner_actor_id, state,
+                action_hash, action_summary, workspace_identity,
+                policy_snapshot_hash, config_snapshot_hash, risk, rule_id,
+                created_at, created_at_unix, expires_at, expires_at_unix,
+                approval_event_id, row_version
+             ) VALUES(?1, ?2, ?3, ?4, 'awaiting', ?5, ?6, ?7, ?8, ?9,
+                      ?10, ?11, ?12, ?13, ?14, ?15, ?16, 0)",
+                params![
+                    input.approval_id.0,
+                    input.binding.run_id.0,
+                    input.binding.action_id.0,
+                    input.owner_actor_id,
+                    input.binding.action_hash,
+                    input.action_summary,
+                    input.binding.workspace_identity,
+                    input.binding.policy_snapshot_hash,
+                    input.binding.config_snapshot_hash,
+                    input.risk,
+                    input.rule_id,
+                    created_at,
+                    input.created_at_unix,
+                    expires_at,
+                    input.expires_at_unix,
+                    event.event_id.0,
+                ],
+            )
+            .map_err(|error| map_constraint(error, "approval already exists or is invalid"))?;
+        advance_run(&transaction, &run, &event.occurred_at)?;
+        transaction.commit()?;
+        drop(connection);
+        self.load_approval(&input.approval_id, &input.owner_actor_id)
+    }
+
+    pub fn load_approval(
+        &self,
+        approval_id: &orchester_protokoll::ApprovalId,
+        owner_actor_id: &str,
+    ) -> Result<ApprovalSnapshot, StoreError> {
+        let connection = self.connection()?;
+        load_approval_row(&connection, approval_id, Some(owner_actor_id))
+    }
+
+    pub(crate) fn approve_approval(
+        &self,
+        approval_id: &orchester_protokoll::ApprovalId,
+        owner_actor_id: &str,
+        binding: &ApprovalBinding,
+        capability_nonce_hash: String,
+        now_unix: u64,
+    ) -> Result<ApprovalSnapshot, StoreError> {
+        let mut connection = self.connection()?;
+        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
+        let approval = load_approval_row(&transaction, approval_id, Some(owner_actor_id))?;
+        if approval.state != ApprovalState::Awaiting {
+            return Err(StoreError::ApprovalInvalidState);
+        }
+        let run = load_snapshot(&transaction, &approval.run_id, Some(owner_actor_id))?;
+        if now_unix >= approval.expires_at_unix {
+            let event = append_approval_event(
+                &transaction,
+                &run,
+                approval_id,
+                "expired",
+                &approval,
+                now_unix,
+            )?;
+            update_approval_state(
+                &transaction,
+                approval_id,
+                approval.row_version,
+                ApprovalState::Expired,
+                None,
+                None,
+                Some(&event.event_id),
+            )?;
+            close_waiting_approval(&transaction, &approval)?;
+            advance_run(&transaction, &run, &event.occurred_at)?;
+            transaction.commit()?;
+            drop(connection);
+            return Err(StoreError::ApprovalExpired);
+        }
+        if approval.binding != *binding
+            || !approval_context_matches(
+                &transaction,
+                &approval,
+                "awaiting_approval",
+                RunStatus::AwaitingApproval,
+            )?
+        {
+            let event = append_approval_event(
+                &transaction,
+                &run,
+                approval_id,
+                "invalidated",
+                &approval,
+                now_unix,
+            )?;
+            update_approval_state(
+                &transaction,
+                approval_id,
+                approval.row_version,
+                ApprovalState::Invalidated,
+                None,
+                None,
+                Some(&event.event_id),
+            )?;
+            close_waiting_approval(&transaction, &approval)?;
+            advance_run(&transaction, &run, &event.occurred_at)?;
+            transaction.commit()?;
+            drop(connection);
+            return Err(StoreError::ApprovalBindingMismatch);
+        }
+        let event = append_approval_event(
+            &transaction,
+            &run,
+            approval_id,
+            "approved",
+            &approval,
+            now_unix,
+        )?;
+        update_approval_state(
+            &transaction,
+            approval_id,
+            approval.row_version,
+            ApprovalState::Approved,
+            Some(&capability_nonce_hash),
+            Some(owner_actor_id),
+            Some(&event.event_id),
+        )?;
+        advance_run(&transaction, &run, &event.occurred_at)?;
+        transaction.commit()?;
+        drop(connection);
+        self.load_approval(approval_id, owner_actor_id)
+    }
+
+    pub(crate) fn deny_approval(
+        &self,
+        approval_id: &orchester_protokoll::ApprovalId,
+        owner_actor_id: &str,
+        now_unix: u64,
+    ) -> Result<ApprovalSnapshot, StoreError> {
+        let mut connection = self.connection()?;
+        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
+        let approval = load_approval_row(&transaction, approval_id, Some(owner_actor_id))?;
+        if approval.state != ApprovalState::Awaiting {
+            return Err(StoreError::ApprovalInvalidState);
+        }
+        let run = load_snapshot(&transaction, &approval.run_id, Some(owner_actor_id))?;
+        if now_unix >= approval.expires_at_unix {
+            let event = append_approval_event(
+                &transaction,
+                &run,
+                approval_id,
+                "expired",
+                &approval,
+                now_unix,
+            )?;
+            update_approval_state(
+                &transaction,
+                approval_id,
+                approval.row_version,
+                ApprovalState::Expired,
+                None,
+                None,
+                Some(&event.event_id),
+            )?;
+            close_waiting_approval(&transaction, &approval)?;
+            advance_run(&transaction, &run, &event.occurred_at)?;
+            transaction.commit()?;
+            drop(connection);
+            return Err(StoreError::ApprovalExpired);
+        }
+        let event = append_approval_event(
+            &transaction,
+            &run,
+            approval_id,
+            "denied",
+            &approval,
+            now_unix,
+        )?;
+        update_approval_state(
+            &transaction,
+            approval_id,
+            approval.row_version,
+            ApprovalState::Denied,
+            None,
+            Some(owner_actor_id),
+            Some(&event.event_id),
+        )?;
+        close_waiting_approval(&transaction, &approval)?;
+        advance_run(&transaction, &run, &event.occurred_at)?;
+        transaction.commit()?;
+        drop(connection);
+        self.load_approval(approval_id, owner_actor_id)
+    }
+
+    pub(crate) fn reissue_approval(
+        &self,
+        approval_id: &orchester_protokoll::ApprovalId,
+        owner_actor_id: &str,
+        binding: &ApprovalBinding,
+        capability_nonce_hash: String,
+        now_unix: u64,
+    ) -> Result<ApprovalSnapshot, StoreError> {
+        let mut connection = self.connection()?;
+        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
+        let approval = load_approval_row(&transaction, approval_id, Some(owner_actor_id))?;
+        let (action_state, run_status) = match approval.state {
+            ApprovalState::Approved => ("awaiting_approval", RunStatus::AwaitingApproval),
+            ApprovalState::Executing => ("ready", RunStatus::Running),
+            _ => return Err(StoreError::ApprovalInvalidState),
+        };
+        let run = load_snapshot(&transaction, &approval.run_id, Some(owner_actor_id))?;
+        if now_unix >= approval.expires_at_unix {
+            let event = append_approval_event(
+                &transaction,
+                &run,
+                approval_id,
+                "expired",
+                &approval,
+                now_unix,
+            )?;
+            update_approval_state(
+                &transaction,
+                approval_id,
+                approval.row_version,
+                ApprovalState::Expired,
+                None,
+                None,
+                Some(&event.event_id),
+            )?;
+            match approval.state {
+                ApprovalState::Approved => close_waiting_approval(&transaction, &approval)?,
+                ApprovalState::Executing => close_ready_approval(&transaction, &approval)?,
+                _ => unreachable!(),
+            }
+            advance_run(&transaction, &run, &event.occurred_at)?;
+            transaction.commit()?;
+            return Err(StoreError::ApprovalExpired);
+        }
+        if approval.binding != *binding
+            || !approval_context_matches(&transaction, &approval, action_state, run_status)?
+        {
+            let event = append_approval_event(
+                &transaction,
+                &run,
+                approval_id,
+                "invalidated",
+                &approval,
+                now_unix,
+            )?;
+            update_approval_state(
+                &transaction,
+                approval_id,
+                approval.row_version,
+                ApprovalState::Invalidated,
+                None,
+                None,
+                Some(&event.event_id),
+            )?;
+            match approval.state {
+                ApprovalState::Approved => close_waiting_approval(&transaction, &approval)?,
+                ApprovalState::Executing => close_ready_approval(&transaction, &approval)?,
+                _ => unreachable!(),
+            }
+            advance_run(&transaction, &run, &event.occurred_at)?;
+            transaction.commit()?;
+            return Err(StoreError::ApprovalBindingMismatch);
+        }
+        let event = append_approval_event(
+            &transaction,
+            &run,
+            approval_id,
+            "reissued",
+            &approval,
+            now_unix,
+        )?;
+        update_approval_state(
+            &transaction,
+            approval_id,
+            approval.row_version,
+            approval.state,
+            Some(&capability_nonce_hash),
+            Some(owner_actor_id),
+            Some(&event.event_id),
+        )?;
+        advance_run(&transaction, &run, &event.occurred_at)?;
+        transaction.commit()?;
+        drop(connection);
+        self.load_approval(approval_id, owner_actor_id)
+    }
+
+    pub(crate) fn consume_approval(
+        &self,
+        approval_id: &orchester_protokoll::ApprovalId,
+        owner_actor_id: &str,
+        binding: &ApprovalBinding,
+        capability_nonce_hash: String,
+        now_unix: u64,
+    ) -> Result<ApprovalSnapshot, StoreError> {
+        let mut connection = self.connection()?;
+        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
+        let approval = load_approval_row(&transaction, approval_id, Some(owner_actor_id))?;
+        if approval.state != ApprovalState::Approved {
+            return Err(StoreError::ApprovalInvalidState);
+        }
+        let run = load_snapshot(&transaction, &approval.run_id, Some(owner_actor_id))?;
+        if now_unix >= approval.expires_at_unix {
+            let event = append_approval_event(
+                &transaction,
+                &run,
+                approval_id,
+                "expired",
+                &approval,
+                now_unix,
+            )?;
+            update_approval_state(
+                &transaction,
+                approval_id,
+                approval.row_version,
+                ApprovalState::Expired,
+                None,
+                None,
+                Some(&event.event_id),
+            )?;
+            close_waiting_approval(&transaction, &approval)?;
+            advance_run(&transaction, &run, &event.occurred_at)?;
+            transaction.commit()?;
+            drop(connection);
+            return Err(StoreError::ApprovalExpired);
+        }
+        if approval.binding != *binding
+            || !approval_context_matches(
+                &transaction,
+                &approval,
+                "awaiting_approval",
+                RunStatus::AwaitingApproval,
+            )?
+        {
+            let event = append_approval_event(
+                &transaction,
+                &run,
+                approval_id,
+                "invalidated",
+                &approval,
+                now_unix,
+            )?;
+            update_approval_state(
+                &transaction,
+                approval_id,
+                approval.row_version,
+                ApprovalState::Invalidated,
+                None,
+                None,
+                Some(&event.event_id),
+            )?;
+            close_waiting_approval(&transaction, &approval)?;
+            advance_run(&transaction, &run, &event.occurred_at)?;
+            transaction.commit()?;
+            drop(connection);
+            return Err(StoreError::ApprovalBindingMismatch);
+        }
+        if approval.approval_event_id.as_ref().is_none()
+            || !capability_hash_matches(&transaction, &approval, &capability_nonce_hash)?
+        {
+            return Err(StoreError::ApprovalNonceMismatch);
+        }
+        let checkpoint: Option<i64> = transaction
+            .query_row(
+                "SELECT a.audit_sequence FROM actions a
+                 JOIN audit_checkpoints c ON c.event_id = a.audit_event_id
+                 WHERE a.action_id = ?1 AND a.run_id = ?2",
+                params![approval.action_id.0, approval.run_id.0],
+                |row| row.get(0),
+            )
+            .optional()?;
+        if checkpoint.is_none() {
+            return Err(StoreError::ApprovalAuditRequired);
+        }
+        let event = append_approval_event(
+            &transaction,
+            &run,
+            approval_id,
+            "executing",
+            &approval,
+            now_unix,
+        )?;
+        update_approval_state(
+            &transaction,
+            approval_id,
+            approval.row_version,
+            ApprovalState::Executing,
+            Some(&capability_nonce_hash),
+            None,
+            Some(&event.event_id),
+        )?;
+        let updated = transaction.execute(
+            "UPDATE actions SET state = 'ready'
+             WHERE action_id = ?1 AND run_id = ?2 AND state = 'awaiting_approval'",
+            params![approval.action_id.0, approval.run_id.0],
+        )?;
+        ensure_single_update(updated)?;
+        let step_updated = transaction.execute(
+            "UPDATE steps SET status = 'action_recorded'
+             WHERE step_id = ?1 AND status = 'awaiting_approval'",
+            params![current_step_id(
+                &transaction,
+                &approval.run_id,
+                &approval.action_id
+            )?],
+        )?;
+        ensure_single_update(step_updated)?;
+        let run_resumed = transaction.execute(
+            "UPDATE runs SET status = 'running'
+             WHERE run_id = ?1 AND status = 'awaiting_approval'",
+            params![approval.run_id.0],
+        )?;
+        ensure_single_update(run_resumed)?;
+        advance_run(&transaction, &run, &event.occurred_at)?;
+        transaction.commit()?;
+        drop(connection);
+        self.load_approval(approval_id, owner_actor_id)
+    }
+
+    pub(crate) fn recover_execution_approval(
+        &self,
+        approval_id: &orchester_protokoll::ApprovalId,
+        owner_actor_id: &str,
+        binding: &ApprovalBinding,
+        capability_nonce_hash: String,
+        now_unix: u64,
+    ) -> Result<ApprovalSnapshot, StoreError> {
+        let mut connection = self.connection()?;
+        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
+        let approval = load_approval_row(&transaction, approval_id, Some(owner_actor_id))?;
+        if approval.state != ApprovalState::Executing {
+            return Err(StoreError::ApprovalInvalidState);
+        }
+        if now_unix >= approval.expires_at_unix {
+            let run = load_snapshot(&transaction, &approval.run_id, Some(owner_actor_id))?;
+            let event = append_approval_event(
+                &transaction,
+                &run,
+                approval_id,
+                "expired",
+                &approval,
+                now_unix,
+            )?;
+            update_approval_state(
+                &transaction,
+                approval_id,
+                approval.row_version,
+                ApprovalState::Expired,
+                None,
+                None,
+                Some(&event.event_id),
+            )?;
+            close_ready_approval(&transaction, &approval)?;
+            advance_run(&transaction, &run, &event.occurred_at)?;
+            transaction.commit()?;
+            return Err(StoreError::ApprovalExpired);
+        }
+        if approval.binding != *binding
+            || !approval_context_matches(&transaction, &approval, "ready", RunStatus::Running)?
+        {
+            let run = load_snapshot(&transaction, &approval.run_id, Some(owner_actor_id))?;
+            let event = append_approval_event(
+                &transaction,
+                &run,
+                approval_id,
+                "invalidated",
+                &approval,
+                now_unix,
+            )?;
+            update_approval_state(
+                &transaction,
+                approval_id,
+                approval.row_version,
+                ApprovalState::Invalidated,
+                None,
+                None,
+                Some(&event.event_id),
+            )?;
+            close_ready_approval(&transaction, &approval)?;
+            advance_run(&transaction, &run, &event.occurred_at)?;
+            transaction.commit()?;
+            return Err(StoreError::ApprovalBindingMismatch);
+        }
+        if !capability_hash_matches(&transaction, &approval, &capability_nonce_hash)? {
+            return Err(StoreError::ApprovalNonceMismatch);
+        }
+        let checkpoint: Option<i64> = transaction
+            .query_row(
+                "SELECT a.audit_sequence FROM actions a
+                 JOIN audit_checkpoints c ON c.event_id = a.audit_event_id
+                 WHERE a.action_id = ?1 AND a.run_id = ?2 AND a.state = 'ready'",
+                params![approval.action_id.0, approval.run_id.0],
+                |row| row.get(0),
+            )
+            .optional()?;
+        if checkpoint.is_none() {
+            return Err(StoreError::ApprovalAuditRequired);
+        }
+        transaction.commit()?;
+        Ok(approval)
+    }
+
+    pub fn execution_candidate(
+        &self,
+        owner_actor_id: &str,
+        run_id: &RunId,
+        action_id: &ActionId,
+    ) -> Result<ExecutionCandidate, StoreError> {
+        let connection = self.connection()?;
+        let row: Option<ExecutionCandidateRow> = connection
+            .query_row(
+                "SELECT a.run_id, a.action_id, a.state, a.policy_decision,
+                        a.policy_rule_id, a.policy_event_id, a.audit_event_id,
+                        ap.approval_id, r.owner_actor_id
+                 FROM actions a
+                 JOIN runs r ON r.run_id = a.run_id
+                 LEFT JOIN approvals ap ON ap.action_id = a.action_id
+                 WHERE a.run_id = ?1 AND a.action_id = ?2 AND r.owner_actor_id = ?3",
+                params![run_id.0, action_id.0, owner_actor_id],
+                |row| {
+                    Ok((
+                        row.get(0)?,
+                        row.get(1)?,
+                        row.get(2)?,
+                        row.get(3)?,
+                        row.get(4)?,
+                        row.get(5)?,
+                        row.get(6)?,
+                        row.get(7)?,
+                        row.get(8)?,
+                    ))
+                },
+            )
+            .optional()?;
+        let Some((
+            row_run,
+            row_action,
+            state,
+            decision,
+            rule,
+            policy_event,
+            audit_event,
+            approval_id,
+            owner,
+        )) = row
+        else {
+            return Err(StoreError::NotFound);
+        };
+        let chosen_event =
+            audit_event.or_else(|| if state == "ready" { policy_event } else { None });
+        let event_id = if let Some(event) = chosen_event {
+            event
+        } else if matches!(
+            state.as_str(),
+            "awaiting_approval" | "approved" | "executing"
+        ) {
+            connection
+                .query_row(
+                    "SELECT approval_event_id FROM approvals
+                 WHERE approval_id = ?1 AND state IN ('approved', 'executing')",
+                    params![approval_id.as_deref().ok_or(StoreError::NotFound)?],
+                    |row| row.get::<_, Option<String>>(0),
+                )?
+                .ok_or(StoreError::NotFound)?
+        } else {
+            return Err(StoreError::Invariant(
+                "action has no policy or approval event candidate".into(),
+            ));
+        };
+        let occurred_at: String = connection.query_row(
+            "SELECT occurred_at FROM events WHERE event_id = ?1 AND run_id = ?2",
+            params![event_id, row_run],
+            |row| row.get(0),
+        )?;
+        let approved = approval_id.is_some();
+        Ok(ExecutionCandidate {
+            event_id: EventId::from(event_id),
+            run_id: RunId::from(row_run),
+            action_id: ActionId::from(row_action),
+            owner_actor_id: owner,
+            approval_id,
+            policy_rule: rule.unwrap_or_else(|| "unknown".into()),
+            decision: if approved {
+                "approved".into()
+            } else {
+                decision.unwrap_or_else(|| "allow".into())
+            },
+            occurred_at,
+        })
+    }
+
+    pub fn mark_execution_checkpoint(
+        &self,
+        owner_actor_id: &str,
+        candidate: &ExecutionCandidate,
+        receipt: &AuditReceipt,
+    ) -> Result<(), StoreError> {
+        if receipt.event_id() != candidate.event_id.0
+            || receipt.sequence() == 0
+            || receipt.synced_at() != candidate.occurred_at
+            || receipt.head_hash().len() != 64
+            || !receipt
+                .head_hash()
+                .bytes()
+                .all(|byte| byte.is_ascii_hexdigit())
+        {
+            return Err(StoreError::Invariant(
+                "audit receipt does not match execution candidate".into(),
+            ));
+        }
+        let mut connection = self.connection()?;
+        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
+        let owned: bool = transaction
+            .query_row(
+                "SELECT 1 FROM actions a JOIN runs r ON r.run_id = a.run_id
+                 WHERE a.run_id = ?1 AND a.action_id = ?2 AND r.owner_actor_id = ?3",
+                params![candidate.run_id.0, candidate.action_id.0, owner_actor_id],
+                |_| Ok(true),
+            )
+            .optional()?
+            .unwrap_or(false);
+        if !owned {
+            return Err(StoreError::NotFound);
+        }
+        let event_exists: bool = transaction
+            .query_row(
+                "SELECT 1 FROM events WHERE event_id = ?1 AND run_id = ?2",
+                params![candidate.event_id.0, candidate.run_id.0],
+                |_| Ok(true),
+            )
+            .optional()?
+            .unwrap_or(false);
+        if !event_exists {
+            return Err(StoreError::Invariant(
+                "audit receipt references an unknown database event".into(),
+            ));
+        }
+        let candidate_matches: bool = transaction
+            .query_row(
+                "SELECT 1 FROM actions a
+                 LEFT JOIN approvals ap ON ap.action_id = a.action_id
+                 WHERE a.run_id = ?1 AND a.action_id = ?2
+                   AND a.state IN ('ready', 'awaiting_approval')
+                   AND (
+                     a.audit_event_id = ?3
+                     OR (a.audit_event_id IS NULL AND (
+                       (a.policy_decision = 'allow' AND a.policy_event_id = ?3)
+                       OR (a.policy_decision = 'ask'
+                           AND ap.state = 'approved'
+                           AND ap.approval_event_id = ?3)
+                     ))
+                   )",
+                params![
+                    candidate.run_id.0,
+                    candidate.action_id.0,
+                    candidate.event_id.0
+                ],
+                |_| Ok(true),
+            )
+            .optional()?
+            .unwrap_or(false);
+        if !candidate_matches {
+            return Err(StoreError::Invariant(
+                "audit receipt does not match the current execution candidate".into(),
+            ));
+        }
+        let existing: Option<(String, i64, String, String)> = transaction
+            .query_row(
+                "SELECT audit_file, audit_sequence, head_hash, synced_at
+                 FROM audit_checkpoints WHERE event_id = ?1",
+                params![candidate.event_id.0],
+                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
+            )
+            .optional()?;
+        if let Some((file, sequence, head, synced)) = existing {
+            if file != receipt.audit_file().to_string_lossy()
+                || sequence != receipt.sequence() as i64
+                || head != receipt.head_hash()
+                || synced != receipt.synced_at()
+            {
+                return Err(StoreError::Invariant(
+                    "audit checkpoint conflicts with existing durable record".into(),
+                ));
+            }
+        } else {
+            transaction.execute(
+                "INSERT INTO audit_checkpoints(
+                    event_id, audit_file, audit_sequence, head_hash, synced_at
+                 ) VALUES(?1, ?2, ?3, ?4, ?5)",
+                params![
+                    candidate.event_id.0,
+                    receipt.audit_file().to_string_lossy().to_string(),
+                    receipt.sequence(),
+                    receipt.head_hash(),
+                    receipt.synced_at(),
+                ],
+            )?;
+        }
+        let updated = transaction.execute(
+            "UPDATE actions SET audit_event_id = ?1, audit_sequence = ?2
+             WHERE run_id = ?3 AND action_id = ?4
+               AND state IN ('ready', 'awaiting_approval')
+               AND (audit_event_id IS NULL OR audit_event_id = ?1)",
+            params![
+                candidate.event_id.0,
+                receipt.sequence(),
+                candidate.run_id.0,
+                candidate.action_id.0
+            ],
+        )?;
+        ensure_single_update(updated)?;
+        transaction.commit()?;
+        Ok(())
+    }
+
+    pub fn has_audit_checkpoint(&self, action_id: &ActionId) -> Result<bool, StoreError> {
+        let connection = self.connection()?;
+        let found: Option<i64> = connection
+            .query_row(
+                "SELECT 1 FROM actions a JOIN audit_checkpoints c
+                 ON c.event_id = a.audit_event_id WHERE a.action_id = ?1",
+                params![action_id.0],
+                |row| row.get(0),
+            )
+            .optional()?;
+        Ok(found.is_some())
+    }
+}
+
+/// A database-derived action/event binding used by the execution barrier.
+/// Callers cannot substitute an arbitrary event ID or policy snapshot.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ExecutionCandidate {
+    event_id: EventId,
+    run_id: RunId,
+    action_id: ActionId,
+    owner_actor_id: String,
+    approval_id: Option<String>,
+    policy_rule: String,
+    decision: String,
+    occurred_at: String,
+}
+
+type ExecutionCandidateRow = (
+    String,
+    String,
+    String,
+    Option<String>,
+    Option<String>,
+    Option<String>,
+    Option<String>,
+    Option<String>,
+    String,
+);
+
+type ApprovalRow = (
+    String,
+    String,
+    String,
+    String,
+    String,
+    String,
+    String,
+    String,
+    String,
+    String,
+    String,
+    String,
+    i64,
+    i64,
+    Option<String>,
+    i64,
+);
+
+impl ExecutionCandidate {
+    pub fn event_id(&self) -> &EventId {
+        &self.event_id
+    }
+
+    pub fn action_id(&self) -> &ActionId {
+        &self.action_id
+    }
+
+    pub fn approval_id(&self) -> Option<&str> {
+        self.approval_id.as_deref()
+    }
+
+    pub fn audit_input(&self, _occurred_at: impl Into<String>) -> AuditInput {
+        AuditInput {
+            event_id: self.event_id.0.clone(),
+            occurred_at: self.occurred_at.clone(),
+            actor: self.owner_actor_id.clone(),
+            run_id: self.run_id.0.clone(),
+            action_id: Some(self.action_id.0.clone()),
+            approval_id: self.approval_id.clone(),
+            policy_rule: self.policy_rule.clone(),
+            decision: self.decision.clone(),
+            result_summary: "execution candidate".into(),
+        }
+    }
+}
+
+fn apply_migrations(connection: &mut Connection) -> Result<(), StoreError> {
+    let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
+    transaction.execute_batch(MIGRATION_V1)?;
+    transaction.commit()?;
+    let version = connection.query_row(
+        "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
+        [],
+        |row| row.get::<_, u32>(0),
+    )?;
+    if version > CURRENT_SCHEMA_VERSION {
+        return Err(StoreError::Invariant(
+            "state database schema is newer than this binary".into(),
+        ));
+    }
+    if version < 2 {
+        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
+        let locked_version = transaction.query_row(
+            "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
+            [],
+            |row| row.get::<_, u32>(0),
+        )?;
+        if locked_version > CURRENT_SCHEMA_VERSION {
+            return Err(StoreError::Invariant(
+                "state database schema is newer than this binary".into(),
+            ));
+        }
+        if locked_version < 2 {
+            transaction.execute_batch(MIGRATION_V2)?;
+        }
+        transaction.commit()?;
+    }
+    let migrated = connection.query_row(
+        "SELECT COALESCE(MAX(version), 0) FROM schema_versions",
+        [],
+        |row| row.get::<_, u32>(0),
+    )?;
+    let user_version =
+        connection.query_row("PRAGMA user_version", [], |row| row.get::<_, u32>(0))?;
+    if migrated != CURRENT_SCHEMA_VERSION || user_version != CURRENT_SCHEMA_VERSION {
+        return Err(StoreError::Corrupt);
+    }
+    verify_schema_shape(connection)
+}
+
+fn enable_wal_mode(connection: &Connection) -> Result<(), StoreError> {
+    let mut last_busy = None;
+    for _ in 0..100 {
+        match connection.query_row("PRAGMA journal_mode = WAL", [], |row| {
+            row.get::<_, String>(0)
+        }) {
+            Ok(mode) if mode.eq_ignore_ascii_case("wal") => return Ok(()),
+            Ok(_) => {
+                return Err(StoreError::Invariant(
+                    "state database could not enter WAL mode".into(),
+                ))
+            }
+            Err(error) if sqlite_is_busy(&error) => {
+                last_busy = Some(error);
+                std::thread::sleep(Duration::from_millis(10));
+            }
+            Err(error) => return Err(StoreError::Database(error)),
+        }
+    }
+    Err(StoreError::Database(
+        last_busy.unwrap_or_else(|| rusqlite::Error::InvalidQuery),
+    ))
+}
+
+fn sqlite_is_busy(error: &rusqlite::Error) -> bool {
+    matches!(
+        error,
+        rusqlite::Error::SqliteFailure(details, _)
+            if matches!(
+                details.code,
+                rusqlite::ErrorCode::DatabaseBusy | rusqlite::ErrorCode::DatabaseLocked
+            )
+    )
+}
+
+fn verify_schema_shape(connection: &Connection) -> Result<(), StoreError> {
+    let (count, minimum, maximum): (u32, Option<u32>, Option<u32>) = connection.query_row(
+        "SELECT COUNT(*), MIN(version), MAX(version) FROM schema_versions",
+        [],
+        |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+    )?;
+    if count != CURRENT_SCHEMA_VERSION
+        || minimum != Some(1)
+        || maximum != Some(CURRENT_SCHEMA_VERSION)
+    {
+        return Err(StoreError::Corrupt);
+    }
+    require_columns(
+        connection,
+        "actions",
+        &["policy_event_id", "audit_event_id", "audit_sequence"],
+    )?;
+    require_columns(
+        connection,
+        "approvals",
+        &[
+            "approval_id",
+            "run_id",
+            "action_id",
+            "owner_actor_id",
+            "state",
+            "action_hash",
+            "action_summary",
+            "workspace_identity",
+            "policy_snapshot_hash",
+            "config_snapshot_hash",
+            "created_at_unix",
+            "expires_at_unix",
+            "capability_nonce_hash",
+            "approval_event_id",
+            "row_version",
+        ],
+    )?;
+    for index in [
+        "idx_actions_policy_event",
+        "idx_actions_audit_event",
+        "idx_audit_file_sequence",
+        "idx_approvals_run_owner",
+        "idx_approvals_state_expiry",
+        "idx_approvals_nonce_hash",
+    ] {
+        let present: bool = connection
+            .query_row(
+                "SELECT 1 FROM sqlite_schema WHERE type = 'index' AND name = ?1",
+                params![index],
+                |_| Ok(true),
+            )
+            .optional()?
+            .unwrap_or(false);
+        if !present {
+            return Err(StoreError::Corrupt);
+        }
+    }
+    let mut foreign_keys = connection.prepare("PRAGMA foreign_key_check")?;
+    if foreign_keys.query([])?.next()?.is_some() {
+        return Err(StoreError::Corrupt);
+    }
+    Ok(())
+}
+
+fn require_columns(
+    connection: &Connection,
+    table: &str,
+    required: &[&str],
+) -> Result<(), StoreError> {
+    let mut statement = connection.prepare(&format!("PRAGMA table_info({table})"))?;
+    let columns = statement
+        .query_map([], |row| row.get::<_, String>(1))?
+        .collect::<Result<HashSet<_>, _>>()?;
+    if required.iter().all(|column| columns.contains(*column)) {
+        Ok(())
+    } else {
+        Err(StoreError::Corrupt)
+    }
+}
+
+#[cfg(unix)]
+fn ensure_private_state_dir(path: &Path, created: bool) -> Result<(), StoreError> {
+    use std::os::unix::fs::PermissionsExt;
+    if created {
+        std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o700))
+            .map_err(StoreError::Io)?;
+    }
+    let mode = std::fs::metadata(path)
+        .map_err(StoreError::Io)?
+        .permissions()
+        .mode()
+        & 0o777;
+    if mode == 0o700 {
+        Ok(())
+    } else {
+        Err(StoreError::InsecurePermissions)
+    }
+}
+
+#[cfg(windows)]
+fn ensure_private_state_dir(_path: &Path, _created: bool) -> Result<(), StoreError> {
+    if crate::harness::config::check_permissions(_path)
+        .into_iter()
+        .all(|finding| finding.secure)
+    {
+        Ok(())
+    } else {
+        Err(StoreError::InsecurePermissions)
+    }
+}
+
+#[cfg(not(any(unix, windows)))]
+fn ensure_private_state_dir(_path: &Path, _created: bool) -> Result<(), StoreError> {
+    Err(StoreError::InsecurePermissions)
+}
+
+#[cfg(unix)]
+fn ensure_private_state_file(path: &Path, created: bool) -> Result<(), StoreError> {
+    use std::os::unix::fs::PermissionsExt;
+    if created {
+        std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o600))
+            .map_err(StoreError::Io)?;
+    }
+    let mode = std::fs::metadata(path)
+        .map_err(StoreError::Io)?
+        .permissions()
+        .mode()
+        & 0o777;
+    if mode == 0o600 {
+        Ok(())
+    } else {
+        Err(StoreError::InsecurePermissions)
+    }
+}
+
+#[cfg(unix)]
+fn ensure_private_state_sidecars(
+    path: &Path,
+    wal_existed: bool,
+    shm_existed: bool,
+) -> Result<(), StoreError> {
+    for (suffix, existed) in [("-wal", wal_existed), ("-shm", shm_existed)] {
+        let sidecar = state_sidecar(path, suffix);
+        if sidecar.exists() {
+            ensure_private_state_file(&sidecar, !existed)?;
+        }
+    }
+    Ok(())
+}
+
+#[cfg(not(unix))]
+fn ensure_private_state_sidecars(
+    _path: &Path,
+    _wal_existed: bool,
+    _shm_existed: bool,
+) -> Result<(), StoreError> {
+    Ok(())
+}
+
+fn state_sidecar(path: &Path, suffix: &str) -> std::path::PathBuf {
+    let mut value = path.as_os_str().to_os_string();
+    value.push(suffix);
+    value.into()
+}
+
+#[cfg(windows)]
+fn ensure_private_state_file(_path: &Path, _created: bool) -> Result<(), StoreError> {
+    if crate::harness::config::check_permissions(_path)
+        .into_iter()
+        .all(|finding| finding.secure)
+    {
+        Ok(())
+    } else {
+        Err(StoreError::InsecurePermissions)
+    }
+}
+
+#[cfg(not(any(unix, windows)))]
+fn ensure_private_state_file(_path: &Path, _created: bool) -> Result<(), StoreError> {
+    Err(StoreError::InsecurePermissions)
+}
+
+impl SqliteRunStore {
+    fn append_event_internal(
+        &self,
+        owner_actor_id: &str,
+        run_id: &RunId,
+        input: EventAppend,
+        permit_event_id: Option<&EventId>,
+    ) -> Result<HarnessEvent, StoreError> {
+        let mut connection = self.connection()?;
+        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
+        let snapshot = load_snapshot(&transaction, run_id, Some(owner_actor_id))?;
+        if snapshot.status.is_terminal() {
+            return Err(StoreError::Invariant(
+                "terminal run cannot append an event".into(),
+            ));
+        }
+        apply_event_transition(&transaction, &snapshot, &input, permit_event_id)?;
+        let event = HarnessEvent {
+            schema_version: HARNESS_SCHEMA_VERSION,
+            event_id: event_id(run_id, snapshot.next_sequence),
+            run_id: run_id.clone(),
+            turn_id: input.turn_id,
+            step_id: input.step_id,
+            call_id: input.call_id,
+            sequence: snapshot.next_sequence,
+            occurred_at: input.occurred_at.clone(),
+            kind: input.kind,
+        };
+        persist_event(&transaction, &event)?;
+        let mut events_written = 1u64;
+        if let HarnessEventKind::PolicyDecided { action_id, .. } = &event.kind {
+            let updated = transaction.execute(
+                "UPDATE actions SET policy_event_id = ?1
+                 WHERE run_id = ?2 AND action_id = ?3",
+                params![event.event_id.0, run_id.0, action_id.0],
+            )?;
+            ensure_single_update(updated)?;
+        }
+        if let HarnessEventKind::ToolStarted { action_id } = &event.kind {
+            let approval_id: Option<String> = transaction
+                .query_row(
+                    "SELECT approval_id FROM approvals
+                     WHERE action_id = ?1 AND state = 'consumed'",
+                    params![action_id.0],
+                    |row| row.get(0),
+                )
+                .optional()?;
+            if let Some(approval_id) = approval_id {
+                let resolution = HarnessEvent {
+                    schema_version: HARNESS_SCHEMA_VERSION,
+                    event_id: event_id(run_id, snapshot.next_sequence + 1),
+                    run_id: run_id.clone(),
+                    turn_id: event.turn_id.clone(),
+                    step_id: event.step_id.clone(),
+                    call_id: None,
+                    sequence: snapshot.next_sequence + 1,
+                    occurred_at: event.occurred_at.clone(),
+                    kind: HarnessEventKind::ApprovalResolved {
+                        approval_id: approval_id.clone().into(),
+                        decision: "consumed".into(),
+                    },
+                };
+                persist_event(&transaction, &resolution)?;
+                let updated = transaction.execute(
+                    "UPDATE approvals SET approval_event_id = ?1
+                     WHERE approval_id = ?2 AND state = 'consumed'",
+                    params![resolution.event_id.0, approval_id],
+                )?;
+                ensure_single_update(updated)?;
+                events_written = 2;
+            }
+        }
+        let updated = transaction.execute(
+            "UPDATE runs SET next_sequence = ?1, row_version = row_version + 1,
+               updated_at = ?2 WHERE run_id = ?3 AND row_version = ?4",
+            params![
+                snapshot.next_sequence + events_written,
+                input.occurred_at,
+                run_id.0,
+                snapshot.row_version,
+            ],
+        )?;
+        ensure_single_update(updated)?;
+        transaction.commit()?;
+        Ok(event)
+    }
+
+    pub(crate) fn append_tool_started_with_permit(
+        &self,
+        owner_actor_id: &str,
+        run_id: &RunId,
+        permit: ExecutionPermit,
+        input: EventAppend,
+    ) -> Result<HarnessEvent, StoreError> {
+        if !matches!(&input.kind, HarnessEventKind::ToolStarted { action_id: id } if id == permit.action_id())
+        {
+            return Err(StoreError::Invariant(
+                "ExecutionPermit does not match tool start action".into(),
+            ));
+        }
+        self.append_event_internal(owner_actor_id, run_id, input, Some(permit.event_id()))
     }
 }
 
@@ -602,40 +1896,12 @@ impl RunStore for SqliteRunStore {
         run_id: &RunId,
         input: EventAppend,
     ) -> Result<HarnessEvent, StoreError> {
-        let mut connection = self.connection()?;
-        let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
-        let snapshot = load_snapshot(&transaction, run_id, Some(owner_actor_id))?;
-        if snapshot.status.is_terminal() {
+        if matches!(input.kind, HarnessEventKind::ToolStarted { .. }) {
             return Err(StoreError::Invariant(
-                "terminal run cannot append an event".into(),
+                "tool start requires an ExecutionPermit".into(),
             ));
         }
-        apply_event_transition(&transaction, &snapshot, &input)?;
-        let event = HarnessEvent {
-            schema_version: HARNESS_SCHEMA_VERSION,
-            event_id: event_id(run_id, snapshot.next_sequence),
-            run_id: run_id.clone(),
-            turn_id: input.turn_id,
-            step_id: input.step_id,
-            call_id: input.call_id,
-            sequence: snapshot.next_sequence,
-            occurred_at: input.occurred_at.clone(),
-            kind: input.kind,
-        };
-        persist_event(&transaction, &event)?;
-        let updated = transaction.execute(
-            "UPDATE runs SET next_sequence = ?1, row_version = row_version + 1,
-               updated_at = ?2 WHERE run_id = ?3 AND row_version = ?4",
-            params![
-                snapshot.next_sequence + 1,
-                input.occurred_at,
-                run_id.0,
-                snapshot.row_version,
-            ],
-        )?;
-        ensure_single_update(updated)?;
-        transaction.commit()?;
-        Ok(event)
+        self.append_event_internal(owner_actor_id, run_id, input, None)
     }
 
     fn load_run_owned(
@@ -733,6 +1999,313 @@ fn load_snapshot(
             .optional()?
     };
     row.ok_or(StoreError::NotFound)?
+}
+
+fn load_approval_row(
+    connection: &Connection,
+    approval_id: &orchester_protokoll::ApprovalId,
+    owner_actor_id: Option<&str>,
+) -> Result<ApprovalSnapshot, StoreError> {
+    let row: Option<ApprovalRow> = if let Some(owner) = owner_actor_id {
+        connection
+            .query_row(
+                "SELECT approval_id, run_id, action_id, owner_actor_id, state,
+                        action_hash, action_summary, workspace_identity,
+                        policy_snapshot_hash, config_snapshot_hash, risk, rule_id,
+                        created_at_unix, expires_at_unix, approval_event_id,
+                        row_version
+                 FROM approvals WHERE approval_id = ?1 AND owner_actor_id = ?2",
+                params![approval_id.0, owner],
+                |row| {
+                    Ok((
+                        row.get(0)?,
+                        row.get(1)?,
+                        row.get(2)?,
+                        row.get(3)?,
+                        row.get(4)?,
+                        row.get(5)?,
+                        row.get(6)?,
+                        row.get(7)?,
+                        row.get(8)?,
+                        row.get(9)?,
+                        row.get(10)?,
+                        row.get(11)?,
+                        row.get(12)?,
+                        row.get(13)?,
+                        row.get(14)?,
+                        row.get(15)?,
+                    ))
+                },
+            )
+            .optional()?
+    } else {
+        connection
+            .query_row(
+                "SELECT approval_id, run_id, action_id, owner_actor_id, state,
+                        action_hash, action_summary, workspace_identity,
+                        policy_snapshot_hash, config_snapshot_hash, risk, rule_id,
+                        created_at_unix, expires_at_unix, approval_event_id,
+                        row_version
+                 FROM approvals WHERE approval_id = ?1",
+                params![approval_id.0],
+                |row| {
+                    Ok((
+                        row.get(0)?,
+                        row.get(1)?,
+                        row.get(2)?,
+                        row.get(3)?,
+                        row.get(4)?,
+                        row.get(5)?,
+                        row.get(6)?,
+                        row.get(7)?,
+                        row.get(8)?,
+                        row.get(9)?,
+                        row.get(10)?,
+                        row.get(11)?,
+                        row.get(12)?,
+                        row.get(13)?,
+                        row.get(14)?,
+                        row.get(15)?,
+                    ))
+                },
+            )
+            .optional()?
+    };
+    let Some((
+        approval_id,
+        run_id,
+        action_id,
+        owner_actor_id,
+        state,
+        action_hash,
+        action_summary,
+        workspace_identity,
+        policy_snapshot_hash,
+        config_snapshot_hash,
+        risk,
+        rule_id,
+        created_at_unix,
+        expires_at_unix,
+        approval_event_id,
+        row_version,
+    )) = row
+    else {
+        return Err(StoreError::NotFound);
+    };
+    Ok(ApprovalSnapshot {
+        approval_id: orchester_protokoll::ApprovalId::from(approval_id),
+        run_id: RunId::from(run_id.clone()),
+        action_id: ActionId::from(action_id.clone()),
+        owner_actor_id,
+        state: ApprovalState::from_db(&state).map_err(|_| StoreError::Corrupt)?,
+        binding: ApprovalBinding {
+            run_id: RunId::from(run_id),
+            action_id: ActionId::from(action_id),
+            action_hash,
+            workspace_identity,
+            policy_snapshot_hash,
+            config_snapshot_hash,
+        },
+        action_summary,
+        risk,
+        rule_id,
+        created_at_unix: u64::try_from(created_at_unix).map_err(|_| StoreError::Corrupt)?,
+        expires_at_unix: u64::try_from(expires_at_unix).map_err(|_| StoreError::Corrupt)?,
+        approval_event_id: approval_event_id.map(EventId::from),
+        row_version: u64::try_from(row_version).map_err(|_| StoreError::Corrupt)?,
+    })
+}
+
+fn advance_run(
+    transaction: &Transaction<'_>,
+    snapshot: &RunSnapshot,
+    occurred_at: &str,
+) -> Result<(), StoreError> {
+    let updated = transaction.execute(
+        "UPDATE runs SET next_sequence = ?1, row_version = row_version + 1,
+                updated_at = ?2 WHERE run_id = ?3 AND row_version = ?4",
+        params![
+            snapshot.next_sequence + 1,
+            occurred_at,
+            snapshot.run_id.0,
+            snapshot.row_version
+        ],
+    )?;
+    ensure_single_update(updated)
+}
+
+fn append_approval_event(
+    transaction: &Transaction<'_>,
+    run: &RunSnapshot,
+    approval_id: &orchester_protokoll::ApprovalId,
+    decision: &str,
+    _approval: &ApprovalSnapshot,
+    now_unix: u64,
+) -> Result<HarnessEvent, StoreError> {
+    let event = HarnessEvent {
+        schema_version: HARNESS_SCHEMA_VERSION,
+        event_id: event_id(&run.run_id, run.next_sequence),
+        run_id: run.run_id.clone(),
+        turn_id: run.current_turn_id.clone(),
+        step_id: run.current_step_id.clone(),
+        call_id: None,
+        sequence: run.next_sequence,
+        occurred_at: format!("unix:{now_unix}"),
+        kind: HarnessEventKind::ApprovalResolved {
+            approval_id: approval_id.clone(),
+            decision: decision.to_owned(),
+        },
+    };
+    persist_event(transaction, &event)?;
+    Ok(event)
+}
+
+fn update_approval_state(
+    transaction: &Transaction<'_>,
+    approval_id: &orchester_protokoll::ApprovalId,
+    row_version: u64,
+    state: ApprovalState,
+    capability_nonce_hash: Option<&str>,
+    decided_by_actor_id: Option<&str>,
+    approval_event_id: Option<&EventId>,
+) -> Result<(), StoreError> {
+    let updated = transaction.execute(
+        "UPDATE approvals SET state = ?1, capability_nonce_hash = ?2,
+                decided_by_actor_id = COALESCE(?3, decided_by_actor_id),
+                approval_event_id = ?4,
+                decided_at = CURRENT_TIMESTAMP,
+                row_version = row_version + 1
+         WHERE approval_id = ?5 AND row_version = ?6",
+        params![
+            state.as_db(),
+            capability_nonce_hash,
+            decided_by_actor_id,
+            approval_event_id.map(|id| id.0.as_str()),
+            approval_id.0,
+            row_version,
+        ],
+    )?;
+    ensure_single_update(updated)
+}
+
+fn capability_hash_matches(
+    transaction: &Transaction<'_>,
+    approval: &ApprovalSnapshot,
+    expected: &str,
+) -> Result<bool, StoreError> {
+    let stored: Option<String> = transaction
+        .query_row(
+            "SELECT capability_nonce_hash FROM approvals WHERE approval_id = ?1",
+            params![approval.approval_id.0],
+            |row| row.get(0),
+        )
+        .optional()?
+        .flatten();
+    Ok(stored.as_deref() == Some(expected))
+}
+
+fn approval_context_matches(
+    transaction: &Transaction<'_>,
+    approval: &ApprovalSnapshot,
+    action_state: &str,
+    run_status: RunStatus,
+) -> Result<bool, StoreError> {
+    let canonical_json: Option<String> = transaction
+        .query_row(
+            "SELECT a.canonical_json FROM actions a
+             JOIN runs r ON r.run_id = a.run_id
+             JOIN projects p ON p.project_id = r.project_id
+             WHERE a.run_id = ?1 AND a.action_id = ?2
+               AND r.owner_actor_id = ?3 AND a.action_hash = ?4
+               AND p.workspace_identity = ?5
+               AND r.policy_snapshot_hash = ?6
+               AND r.config_snapshot_hash = ?7
+               AND a.policy_decision = 'ask' AND a.policy_rule_id = ?8
+               AND a.state = ?9 AND r.status = ?10",
+            params![
+                approval.run_id.0,
+                approval.action_id.0,
+                approval.owner_actor_id,
+                approval.binding.action_hash,
+                approval.binding.workspace_identity,
+                approval.binding.policy_snapshot_hash,
+                approval.binding.config_snapshot_hash,
+                approval.rule_id,
+                action_state,
+                run_status.as_db(),
+            ],
+            |row| row.get(0),
+        )
+        .optional()?;
+    Ok(canonical_json
+        .as_deref()
+        .map(|json| hash_canonical_action(json) == approval.binding.action_hash)
+        .unwrap_or(false))
+}
+
+fn current_step_id(
+    transaction: &Transaction<'_>,
+    run_id: &RunId,
+    action_id: &ActionId,
+) -> Result<String, StoreError> {
+    transaction
+        .query_row(
+            "SELECT step_id FROM actions WHERE run_id = ?1 AND action_id = ?2",
+            params![run_id.0, action_id.0],
+            |row| row.get(0),
+        )
+        .optional()?
+        .ok_or(StoreError::NotFound)
+}
+
+fn close_waiting_approval(
+    transaction: &Transaction<'_>,
+    approval: &ApprovalSnapshot,
+) -> Result<(), StoreError> {
+    let action_updated = transaction.execute(
+        "UPDATE actions SET state = 'denied'
+         WHERE action_id = ?1 AND run_id = ?2 AND state = 'awaiting_approval'",
+        params![approval.action_id.0, approval.run_id.0],
+    )?;
+    ensure_single_update(action_updated)?;
+    let step_updated = transaction.execute(
+        "UPDATE steps SET status = 'observed'
+         WHERE step_id = ?1 AND status = 'awaiting_approval'",
+        params![current_step_id(
+            transaction,
+            &approval.run_id,
+            &approval.action_id
+        )?],
+    )?;
+    ensure_single_update(step_updated)?;
+    let run_resumed = transaction.execute(
+        "UPDATE runs SET status = 'running'
+         WHERE run_id = ?1 AND status = 'awaiting_approval'",
+        params![approval.run_id.0],
+    )?;
+    ensure_single_update(run_resumed)
+}
+
+fn close_ready_approval(
+    transaction: &Transaction<'_>,
+    approval: &ApprovalSnapshot,
+) -> Result<(), StoreError> {
+    let action_updated = transaction.execute(
+        "UPDATE actions SET state = 'denied'
+         WHERE action_id = ?1 AND run_id = ?2 AND state = 'ready'",
+        params![approval.action_id.0, approval.run_id.0],
+    )?;
+    ensure_single_update(action_updated)?;
+    let step_updated = transaction.execute(
+        "UPDATE steps SET status = 'observed'
+         WHERE step_id = ?1 AND status = 'action_recorded'",
+        params![current_step_id(
+            transaction,
+            &approval.run_id,
+            &approval.action_id
+        )?],
+    )?;
+    ensure_single_update(step_updated)
 }
 
 fn snapshot_from_row(row: &rusqlite::Row<'_>) -> rusqlite::Result<Result<RunSnapshot, StoreError>> {
@@ -932,6 +2505,7 @@ fn apply_event_transition(
     transaction: &Transaction<'_>,
     snapshot: &RunSnapshot,
     input: &EventAppend,
+    permit_event_id: Option<&EventId>,
 ) -> Result<(), StoreError> {
     if input.turn_id != snapshot.current_turn_id || input.step_id != snapshot.current_step_id {
         return Err(StoreError::Invariant(
@@ -1059,6 +2633,9 @@ fn apply_event_transition(
             }
         }
         HarnessEventKind::ToolStarted { action_id } => {
+            let permit_event_id = permit_event_id.ok_or_else(|| {
+                StoreError::Invariant("tool start requires an ExecutionPermit".into())
+            })?;
             let call_id = input.call_id.as_ref().ok_or_else(|| {
                 StoreError::Invariant("tool start requires a call identifier".into())
             })?;
@@ -1067,21 +2644,60 @@ fn apply_event_transition(
                     "tool start requires an allowed action".into(),
                 ));
             }
+            let checkpoint: Option<(i64, String)> = transaction
+                .query_row(
+                    "SELECT a.audit_sequence, a.policy_decision FROM actions a
+                     JOIN audit_checkpoints c ON c.event_id = a.audit_event_id
+                     WHERE a.run_id = ?1 AND a.action_id = ?2 AND a.state = 'ready'
+                       AND a.audit_event_id = ?3
+                       AND (a.policy_decision = 'allow' OR EXISTS(
+                         SELECT 1 FROM approvals ap
+                         WHERE ap.action_id = a.action_id AND ap.state = 'executing'
+                           AND ap.expires_at_unix > ?4
+                       ))",
+                    params![
+                        snapshot.run_id.0,
+                        action_id.0,
+                        permit_event_id.0,
+                        system_unix_now()
+                    ],
+                    |row| Ok((row.get(0)?, row.get(1)?)),
+                )
+                .optional()?;
+            let Some((_, policy_decision)) = checkpoint else {
+                return Err(StoreError::Invariant(
+                    "tool start requires a durable audit checkpoint".into(),
+                ));
+            };
             let updated = transaction.execute(
                 "UPDATE actions SET state = 'executing' WHERE run_id = ?1 AND step_id = ?2
                  AND action_id = ?3 AND state = 'ready'",
                 params![snapshot.run_id.0, step_id.0, action_id.0],
             )?;
             ensure_single_update(updated)?;
+            let approval_updated = transaction.execute(
+                "UPDATE approvals SET state = 'consumed', consumed_at = CURRENT_TIMESTAMP,
+                        capability_nonce_hash = NULL, row_version = row_version + 1
+                 WHERE action_id = ?1 AND state = 'executing'",
+                params![action_id.0],
+            )?;
+            if policy_decision == "ask" {
+                ensure_single_update(approval_updated)?;
+            } else if approval_updated != 0 {
+                return Err(StoreError::Invariant(
+                    "allow action unexpectedly consumed an approval".into(),
+                ));
+            }
             transaction.execute(
                 "INSERT INTO tool_attempts(call_id, action_id, attempt_no, state, started_at)
                  VALUES(?1, ?2, 1, 'started', ?3)",
                 params![call_id.0, action_id.0, input.occurred_at],
             )?;
-            transaction.execute(
+            let step_updated = transaction.execute(
                 "UPDATE steps SET status = 'tool_running' WHERE step_id = ?1",
                 params![step_id.0],
             )?;
+            ensure_single_update(step_updated)?;
         }
         HarnessEventKind::ToolCompleted { observation } => {
             let call_id = input.call_id.as_ref().ok_or_else(|| {
@@ -1169,4 +2785,11 @@ fn hash_canonical_action(canonical_json: &str) -> String {
         .iter()
         .map(|byte| format!("{byte:02x}"))
         .collect()
+}
+
+fn system_unix_now() -> u64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_secs()
 }

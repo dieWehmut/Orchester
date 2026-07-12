@@ -291,13 +291,17 @@ fn on_disk_store_recovers_terminal_state_and_exact_events() {
     assert!(reopened.foreign_key_violations().unwrap().is_empty());
 
     drop(reopened);
-    std::fs::remove_file(path).ok();
+    let parent = path.parent().unwrap().to_path_buf();
+    std::fs::remove_file(&path).ok();
+    std::fs::remove_dir(parent).ok();
 }
 
 fn temp_db(label: &str) -> PathBuf {
-    std::env::temp_dir().join(format!(
-        "orchester-{label}-{}-{}.db",
-        std::process::id(),
-        NEXT_TEMP.fetch_add(1, Ordering::Relaxed)
-    ))
+    std::env::temp_dir()
+        .join(format!(
+            "orchester-state-{label}-{}-{}",
+            std::process::id(),
+            NEXT_TEMP.fetch_add(1, Ordering::Relaxed)
+        ))
+        .join("state.db")
 }

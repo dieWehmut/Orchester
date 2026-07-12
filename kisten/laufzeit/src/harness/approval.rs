@@ -5,18 +5,51 @@ use std::fmt;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard};
 
-use orchester_protokoll::{ActionId, ApprovalId, ApprovalRequest, RunId};
+use orchester_protokoll::{ActionId, ApprovalId, ApprovalRequest, EventId, RunId};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
 
+use crate::harness::run_store::SqliteRunStore;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ApprovalState {
+    Requested,
     Awaiting,
     Approved,
     Denied,
     Expired,
     Invalidated,
+    Executing,
     Consumed,
+}
+
+impl ApprovalState {
+    pub(crate) fn as_db(self) -> &'static str {
+        match self {
+            Self::Requested => "requested",
+            Self::Awaiting => "awaiting",
+            Self::Approved => "approved",
+            Self::Denied => "denied",
+            Self::Expired => "expired",
+            Self::Invalidated => "invalidated",
+            Self::Executing => "executing",
+            Self::Consumed => "consumed",
+        }
+    }
+
+    pub(crate) fn from_db(value: &str) -> Result<Self, ApprovalError> {
+        match value {
+            "requested" => Ok(Self::Requested),
+            "awaiting" => Ok(Self::Awaiting),
+            "approved" => Ok(Self::Approved),
+            "denied" => Ok(Self::Denied),
+            "expired" => Ok(Self::Expired),
+            "invalidated" => Ok(Self::Invalidated),
+            "executing" => Ok(Self::Executing),
+            "consumed" => Ok(Self::Consumed),
+            _ => Err(ApprovalError::Storage),
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -41,7 +74,7 @@ impl ApprovalBinding {
         }
     }
 
-    fn matches_request(&self, request: &ApprovalRequest) -> bool {
+    pub(crate) fn matches_request(&self, request: &ApprovalRequest) -> bool {
         self.run_id == request.run_id
             && self.action_id == request.action_id
             && self.action_hash == request.action_hash
@@ -49,6 +82,59 @@ impl ApprovalBinding {
             && self.policy_snapshot_hash == request.policy_snapshot_hash
             && self.config_snapshot_hash == request.config_snapshot_hash
     }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ApprovalRequestInput {
+    pub approval_id: ApprovalId,
+    pub owner_actor_id: String,
+    pub binding: ApprovalBinding,
+    pub action_summary: String,
+    pub risk: String,
+    pub rule_id: String,
+    pub created_at: String,
+    pub expires_at: String,
+    pub created_at_unix: u64,
+    pub expires_at_unix: u64,
+}
+
+impl ApprovalRequestInput {
+    pub(crate) fn protocol_request(&self) -> ApprovalRequest {
+        ApprovalRequest {
+            approval_id: self.approval_id.clone(),
+            run_id: self.binding.run_id.clone(),
+            action_id: self.binding.action_id.clone(),
+            action_summary: self.action_summary.clone(),
+            action_hash: self.binding.action_hash.clone(),
+            workspace_identity: self.binding.workspace_identity.clone(),
+            policy_snapshot_hash: self.binding.policy_snapshot_hash.clone(),
+            config_snapshot_hash: self.binding.config_snapshot_hash.clone(),
+            risk: self.risk.clone(),
+            rule_id: self.rule_id.clone(),
+            // The integer deadlines are the authority. Keep the wire strings
+            // derived from them so display/audit timestamps cannot disagree
+            // with the expiry checks performed by the store.
+            created_at: format!("unix:{}", self.created_at_unix),
+            expires_at: format!("unix:{}", self.expires_at_unix),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ApprovalSnapshot {
+    pub approval_id: ApprovalId,
+    pub run_id: RunId,
+    pub action_id: ActionId,
+    pub owner_actor_id: String,
+    pub state: ApprovalState,
+    pub binding: ApprovalBinding,
+    pub action_summary: String,
+    pub risk: String,
+    pub rule_id: String,
+    pub created_at_unix: u64,
+    pub expires_at_unix: u64,
+    pub approval_event_id: Option<EventId>,
+    pub row_version: u64,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -80,6 +166,10 @@ pub enum ApprovalError {
     EntropyUnavailable,
     #[error("approval store lock is poisoned")]
     LockPoisoned,
+    #[error("approval persistence failed")]
+    Storage,
+    #[error("approval requires a durable audit checkpoint")]
+    AuditCheckpointRequired,
 }
 
 #[derive(Clone, PartialEq, Eq)]
@@ -335,6 +425,189 @@ impl ApprovalStore {
     }
 }
 
+/// SQLite-backed approval service.  Unlike [`ApprovalStore`], this type never
+/// keeps approval state in a process-local map; every transition is a CAS in
+/// `SqliteRunStore` and remains visible after reopen.
+pub struct DurableApprovalStore {
+    store: Arc<SqliteRunStore>,
+    next_nonce: AtomicU64,
+}
+
+impl DurableApprovalStore {
+    pub fn new(store: Arc<SqliteRunStore>) -> Self {
+        Self {
+            store,
+            next_nonce: AtomicU64::new(1),
+        }
+    }
+
+    pub fn store(&self) -> &Arc<SqliteRunStore> {
+        &self.store
+    }
+
+    pub fn request(&self, input: ApprovalRequestInput) -> Result<ApprovalId, ApprovalError> {
+        input
+            .protocol_request()
+            .validate()
+            .map_err(|_| ApprovalError::InvalidRequest)?;
+        let now_unix = unix_now();
+        if input.owner_actor_id.trim().is_empty()
+            || input.created_at_unix >= input.expires_at_unix
+            || input.created_at_unix > now_unix
+            || input.expires_at_unix <= now_unix
+        {
+            return Err(ApprovalError::InvalidRequest);
+        }
+        self.store
+            .persist_approval_request(&input)
+            .map_err(map_store_error)?;
+        Ok(input.approval_id)
+    }
+
+    pub fn state(
+        &self,
+        approval_id: &ApprovalId,
+        owner_actor_id: &str,
+    ) -> Result<ApprovalState, ApprovalError> {
+        self.store
+            .load_approval(approval_id, owner_actor_id)
+            .map(|snapshot| snapshot.state)
+            .map_err(map_store_error)
+    }
+
+    pub fn snapshot(
+        &self,
+        approval_id: &ApprovalId,
+        owner_actor_id: &str,
+    ) -> Result<ApprovalSnapshot, ApprovalError> {
+        self.store
+            .load_approval(approval_id, owner_actor_id)
+            .map_err(map_store_error)
+    }
+
+    pub fn approve(
+        &self,
+        approval_id: &ApprovalId,
+        actor_id: &str,
+        binding: &ApprovalBinding,
+    ) -> Result<CapabilityToken, ApprovalError> {
+        let now_unix = unix_now();
+        let counter = self.next_nonce.fetch_add(1, Ordering::Relaxed);
+        let nonce = create_nonce(approval_id, actor_id, now_unix, counter)?;
+        let capability_hash = hex_hash(&hash_bytes(&nonce));
+        let snapshot = self
+            .store
+            .approve_approval(approval_id, actor_id, binding, capability_hash, now_unix)
+            .map_err(map_store_error)?;
+        Ok(CapabilityToken {
+            approval_id: approval_id.clone(),
+            owner_actor_id: actor_id.to_owned(),
+            binding: binding.clone(),
+            expires_at_unix: snapshot.expires_at_unix,
+            nonce,
+        })
+    }
+
+    /// Replace a capability lost after the approval transaction committed.
+    /// Reissue atomically revokes the old nonce hash and preserves the human
+    /// decision; only the approval owner with the exact binding can do it.
+    pub fn reissue(
+        &self,
+        approval_id: &ApprovalId,
+        actor_id: &str,
+        binding: &ApprovalBinding,
+    ) -> Result<CapabilityToken, ApprovalError> {
+        let now_unix = unix_now();
+        let counter = self.next_nonce.fetch_add(1, Ordering::Relaxed);
+        let nonce = create_nonce(approval_id, actor_id, now_unix, counter)?;
+        let capability_hash = hex_hash(&hash_bytes(&nonce));
+        let snapshot = self
+            .store
+            .reissue_approval(approval_id, actor_id, binding, capability_hash, now_unix)
+            .map_err(map_store_error)?;
+        Ok(CapabilityToken {
+            approval_id: approval_id.clone(),
+            owner_actor_id: actor_id.to_owned(),
+            binding: binding.clone(),
+            expires_at_unix: snapshot.expires_at_unix,
+            nonce,
+        })
+    }
+
+    pub fn deny(&self, approval_id: &ApprovalId, actor_id: &str) -> Result<(), ApprovalError> {
+        self.store
+            .deny_approval(approval_id, actor_id, unix_now())
+            .map(|_| ())
+            .map_err(map_store_error)
+    }
+
+    pub fn consume(
+        &self,
+        capability: &CapabilityToken,
+        actor_id: &str,
+        binding: &ApprovalBinding,
+    ) -> Result<(), ApprovalError> {
+        let now_unix = unix_now();
+        capability.validate_for(actor_id, binding, now_unix)?;
+        self.store
+            .consume_approval(
+                &capability.approval_id,
+                actor_id,
+                binding,
+                hex_hash(&hash_bytes(&capability.nonce)),
+                now_unix,
+            )
+            .map(|_| ())
+            .map_err(map_store_error)
+    }
+}
+
+impl CapabilityToken {
+    pub fn approval_id(&self) -> &ApprovalId {
+        &self.approval_id
+    }
+
+    pub fn binding(&self) -> &ApprovalBinding {
+        &self.binding
+    }
+
+    pub(crate) fn nonce_hash(&self) -> String {
+        hex_hash(&hash_bytes(&self.nonce))
+    }
+
+    pub(crate) fn validate_for(
+        &self,
+        actor_id: &str,
+        binding: &ApprovalBinding,
+        now_unix: u64,
+    ) -> Result<(), ApprovalError> {
+        if self.owner_actor_id != actor_id {
+            return Err(ApprovalError::Unauthorized);
+        }
+        if self.binding != *binding {
+            return Err(ApprovalError::BindingMismatch);
+        }
+        if self.expires_at_unix <= now_unix {
+            return Err(ApprovalError::Expired);
+        }
+        Ok(())
+    }
+}
+
+fn map_store_error(error: crate::harness::run_store::StoreError) -> ApprovalError {
+    use crate::harness::run_store::StoreError;
+    match error {
+        StoreError::NotFound | StoreError::ApprovalNotFound => ApprovalError::NotFound,
+        StoreError::ApprovalUnauthorized => ApprovalError::Unauthorized,
+        StoreError::ApprovalExpired => ApprovalError::Expired,
+        StoreError::ApprovalBindingMismatch => ApprovalError::BindingMismatch,
+        StoreError::ApprovalInvalidState => ApprovalError::InvalidState,
+        StoreError::ApprovalAuditRequired => ApprovalError::AuditCheckpointRequired,
+        StoreError::ApprovalNonceMismatch => ApprovalError::InvalidCapability,
+        _ => ApprovalError::Storage,
+    }
+}
+
 fn authorize(record: &ApprovalRecord, actor_id: &str) -> Result<(), ApprovalError> {
     if record.owner_actor_id == actor_id {
         Ok(())
@@ -375,6 +648,10 @@ fn hash_bytes(value: &[u8]) -> [u8; 32] {
     let mut hasher = Sha256::new();
     hasher.update(value);
     hasher.finalize().into()
+}
+
+fn hex_hash(value: &[u8; 32]) -> String {
+    value.iter().map(|byte| format!("{byte:02x}")).collect()
 }
 
 fn unix_now() -> u64 {

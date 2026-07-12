@@ -1,5 +1,6 @@
 //! Append-only, redacted hash-chain audit sink.
 
+use std::collections::HashSet;
 use std::fs::{self, File, OpenOptions};
 use std::io::{self, BufRead, BufReader, Seek, SeekFrom, Write};
 use std::path::{Path, PathBuf};
@@ -13,6 +14,7 @@ use thiserror::Error;
 const SCHEMA_VERSION: u16 = 1;
 const GENESIS: &str = "0000000000000000000000000000000000000000000000000000000000000000";
 const MAX_TEXT_BYTES: usize = 512;
+const MAX_ID_CHARS: usize = 512;
 
 #[derive(Debug, Error)]
 pub enum AuditError {
@@ -28,6 +30,8 @@ pub enum AuditError {
     LockPoisoned,
     #[error("audit sequence is not contiguous")]
     Sequence,
+    #[error("audit event already exists with different content")]
+    EventConflict,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -41,6 +45,43 @@ pub struct AuditInput {
     pub policy_rule: String,
     pub decision: String,
     pub result_summary: String,
+}
+
+/// Durable result of an append+fsync operation.  Fields are private so a
+/// caller cannot forge a checkpoint accepted by the execution barrier.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AuditReceipt {
+    event_id: String,
+    audit_file: PathBuf,
+    sequence: u64,
+    head_hash: String,
+    synced_at: String,
+}
+
+impl AuditReceipt {
+    pub fn event_id(&self) -> &str {
+        &self.event_id
+    }
+
+    pub fn audit_file(&self) -> &Path {
+        &self.audit_file
+    }
+
+    pub fn sequence(&self) -> u64 {
+        self.sequence
+    }
+
+    pub fn head_hash(&self) -> &str {
+        &self.head_hash
+    }
+
+    pub fn synced_at(&self) -> &str {
+        &self.synced_at
+    }
+}
+
+pub trait AuditSink: Send + Sync {
+    fn append_and_sync(&self, input: AuditInput) -> Result<AuditReceipt, AuditError>;
 }
 
 impl AuditInput {
@@ -114,6 +155,7 @@ impl JsonlAuditSink {
             .map_err(AuditError::Io)?;
         ensure_private_file(&path, !file_existed)?;
         let (next_sequence, head_hash) = with_exclusive_file(&mut file, scan_file)?;
+        let path = fs::canonicalize(path).map_err(AuditError::Io)?;
         Ok(Self {
             path,
             file: Mutex::new(file),
@@ -127,6 +169,11 @@ impl JsonlAuditSink {
     }
 
     pub fn append(&self, input: AuditInput) -> Result<u64, AuditError> {
+        Ok(self.append_and_sync(input)?.sequence())
+    }
+
+    pub fn append_and_sync(&self, input: AuditInput) -> Result<AuditReceipt, AuditError> {
+        validate_audit_input(&input)?;
         let mut file = self.file.lock().map_err(|_| AuditError::LockPoisoned)?;
         let mut sequence = self
             .next_sequence
@@ -142,6 +189,22 @@ impl JsonlAuditSink {
             let (durable_next, durable_head) = scan_file(file)?;
             *sequence = durable_next;
             *previous = durable_head;
+            if let Some(existing) = find_event(file, &input.event_id)? {
+                if !audit_entry_matches(&existing, &input) {
+                    return Err(AuditError::EventConflict);
+                }
+                // A previous process may have crashed after writing the line
+                // but before returning its receipt. Re-sync before treating
+                // the existing entry as the durable side of reconciliation.
+                file.sync_data().map_err(AuditError::Io)?;
+                return Ok(AuditReceipt {
+                    event_id: existing.event_id,
+                    audit_file: self.path.clone(),
+                    sequence: existing.sequence,
+                    head_hash: existing.entry_hash,
+                    synced_at: existing.occurred_at,
+                });
+            }
             let current = *sequence;
             let entry = AuditEntry {
                 schema_version: SCHEMA_VERSION,
@@ -172,7 +235,13 @@ impl JsonlAuditSink {
             file.sync_data().map_err(AuditError::Io)?;
             *previous = committed.entry_hash.clone();
             *sequence = current.checked_add(1).ok_or(AuditError::Sequence)?;
-            Ok(current)
+            Ok(AuditReceipt {
+                event_id: committed.event_id,
+                audit_file: self.path.clone(),
+                sequence: current,
+                head_hash: committed.entry_hash,
+                synced_at: committed.occurred_at,
+            })
         })
     }
 
@@ -189,6 +258,12 @@ impl JsonlAuditSink {
                 },
             })
         })
+    }
+}
+
+impl AuditSink for JsonlAuditSink {
+    fn append_and_sync(&self, input: AuditInput) -> Result<AuditReceipt, AuditError> {
+        JsonlAuditSink::append_and_sync(self, input)
     }
 }
 
@@ -216,6 +291,7 @@ fn with_exclusive_file<T>(
 fn scan_reader<R: BufRead>(reader: R) -> Result<(u64, String), AuditError> {
     let mut expected_sequence = 1u64;
     let mut previous = GENESIS.to_owned();
+    let mut event_ids = HashSet::new();
     for line in reader.lines() {
         let line = line.map_err(AuditError::Io)?;
         if line.trim().is_empty() {
@@ -229,6 +305,9 @@ fn scan_reader<R: BufRead>(reader: R) -> Result<(u64, String), AuditError> {
         {
             return Err(AuditError::Corrupt);
         }
+        if !event_ids.insert(entry.event_id.clone()) {
+            return Err(AuditError::Corrupt);
+        }
         let expected_hash = hex_hash(&hash_entry(&entry)?);
         if expected_hash != entry.entry_hash {
             return Err(AuditError::Corrupt);
@@ -239,6 +318,61 @@ fn scan_reader<R: BufRead>(reader: R) -> Result<(u64, String), AuditError> {
             .ok_or(AuditError::Sequence)?;
     }
     Ok((expected_sequence, previous))
+}
+
+fn find_event(file: &mut File, event_id: &str) -> Result<Option<AuditEntry>, AuditError> {
+    file.seek(SeekFrom::Start(0)).map_err(AuditError::Io)?;
+    let target = bounded_id(event_id);
+    let mut found = None;
+    for line in BufReader::new(&mut *file).lines() {
+        let line = line.map_err(AuditError::Io)?;
+        if line.trim().is_empty() {
+            continue;
+        }
+        let entry: AuditEntry = serde_json::from_str(&line).map_err(|_| AuditError::Corrupt)?;
+        if entry.event_id == target {
+            found = Some(entry);
+            break;
+        }
+    }
+    file.seek(SeekFrom::End(0)).map_err(AuditError::Io)?;
+    Ok(found)
+}
+
+fn audit_entry_matches(entry: &AuditEntry, input: &AuditInput) -> bool {
+    entry.event_id == bounded_id(&input.event_id)
+        && entry.actor == bounded_id(&input.actor)
+        && entry.run_id == bounded_id(&input.run_id)
+        && entry.action_id == input.action_id.as_deref().map(bounded_id)
+        && entry.approval_id == input.approval_id.as_deref().map(bounded_id)
+        && entry.policy_rule == bounded_id(&input.policy_rule)
+        && entry.decision == bounded_id(&input.decision)
+        && entry.occurred_at == bounded_text(&input.occurred_at)
+        && entry.result_summary == format!("summary_bytes={}", input.result_summary.len())
+}
+
+fn validate_audit_input(input: &AuditInput) -> Result<(), AuditError> {
+    let required = [
+        input.event_id.as_str(),
+        input.actor.as_str(),
+        input.run_id.as_str(),
+        input.policy_rule.as_str(),
+        input.decision.as_str(),
+    ];
+    let optional = [input.action_id.as_deref(), input.approval_id.as_deref()];
+    if required.iter().any(|value| !is_canonical_id(value))
+        || optional
+            .iter()
+            .flatten()
+            .any(|value| !is_canonical_id(value))
+    {
+        return Err(AuditError::InvalidRecord);
+    }
+    Ok(())
+}
+
+fn is_canonical_id(value: &str) -> bool {
+    !value.is_empty() && value.chars().count() <= MAX_ID_CHARS && bounded_id(value) == value
 }
 
 fn hash_entry(entry: &AuditEntry) -> Result<[u8; 32], AuditError> {
@@ -283,7 +417,7 @@ fn bounded_id(value: &str) -> String {
         .filter(|character| {
             character.is_ascii_alphanumeric() || matches!(character, '.' | ':' | '_' | '-')
         })
-        .take(128)
+        .take(MAX_ID_CHARS)
         .collect()
 }
 
@@ -304,9 +438,21 @@ fn ensure_private_dir(path: &Path, created: bool) -> Result<(), AuditError> {
     }
 }
 
-#[cfg(not(unix))]
+#[cfg(windows)]
+fn ensure_private_dir(path: &Path, _created: bool) -> Result<(), AuditError> {
+    if crate::harness::config::check_permissions(path)
+        .into_iter()
+        .all(|finding| finding.secure)
+    {
+        Ok(())
+    } else {
+        Err(AuditError::InsecurePermissions)
+    }
+}
+
+#[cfg(not(any(unix, windows)))]
 fn ensure_private_dir(_path: &Path, _created: bool) -> Result<(), AuditError> {
-    Ok(())
+    Err(AuditError::InsecurePermissions)
 }
 
 #[cfg(unix)]
@@ -326,7 +472,19 @@ fn ensure_private_file(path: &Path, created: bool) -> Result<(), AuditError> {
     }
 }
 
-#[cfg(not(unix))]
+#[cfg(windows)]
+fn ensure_private_file(path: &Path, _created: bool) -> Result<(), AuditError> {
+    if crate::harness::config::check_permissions(path)
+        .into_iter()
+        .all(|finding| finding.secure)
+    {
+        Ok(())
+    } else {
+        Err(AuditError::InsecurePermissions)
+    }
+}
+
+#[cfg(not(any(unix, windows)))]
 fn ensure_private_file(_path: &Path, _created: bool) -> Result<(), AuditError> {
-    Ok(())
+    Err(AuditError::InsecurePermissions)
 }

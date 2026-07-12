@@ -3,6 +3,7 @@
 
 pub mod approval;
 pub mod audit;
+pub mod barrier;
 pub mod config;
 pub mod context;
 pub mod credentials;

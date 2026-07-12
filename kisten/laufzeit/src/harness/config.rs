@@ -896,16 +896,47 @@ pub fn require_user_permissions(path: impl AsRef<Path>) -> Result<(), ConfigErro
             }
         }
     }
-    #[cfg(not(unix))]
+    #[cfg(windows)]
+    {
+        let path = path.as_ref();
+        let mut paths = Vec::new();
+        if let Some(parent) = path.parent() {
+            paths.push(parent);
+        }
+        paths.push(path);
+        for candidate in paths {
+            for finding in check_permissions(candidate) {
+                if !finding.secure {
+                    return Err(ConfigError::InsecurePermissions {
+                        path: finding.path,
+                        expected: finding.expected,
+                        actual: finding.actual.unwrap_or_else(|| "unavailable".into()),
+                    });
+                }
+            }
+        }
+    }
+    #[cfg(not(any(unix, windows)))]
     let _ = path;
     Ok(())
 }
 
 #[cfg(windows)]
 fn check_windows_acl(path: PathBuf) -> Vec<PermissionDiagnostic> {
+    fn system_tool(name: &str) -> Option<PathBuf> {
+        std::env::var_os("SystemRoot")
+            .map(PathBuf::from)
+            .map(|root| root.join("System32").join(format!("{name}.exe")))
+            .filter(|candidate| candidate.is_file())
+    }
+
     use std::process::Command;
-    let acl_output = Command::new("icacls").arg(&path).output();
-    let Ok(acl_output) = acl_output else {
+    let acl_output = system_tool("icacls")
+        .map(|tool| Command::new(tool).arg(&path).output())
+        .transpose()
+        .ok()
+        .flatten();
+    let Some(acl_output) = acl_output else {
         return vec![PermissionDiagnostic {
             path,
             secure: false,
@@ -927,23 +958,31 @@ fn check_windows_acl(path: PathBuf) -> Vec<PermissionDiagnostic> {
         broad_principal && write_grant
     });
 
-    let owner = Command::new("powershell.exe")
-        .args([
-            "-NoLogo",
-            "-NoProfile",
-            "-NonInteractive",
-            "-Command",
-            "(Get-Acl -LiteralPath $env:ORCHESTER_DOCTOR_PATH).Owner",
-        ])
-        .env("ORCHESTER_DOCTOR_PATH", &path)
-        .output()
+    let owner = system_tool("WindowsPowerShell\\v1.0\\powershell")
+        .map(|tool| {
+            Command::new(tool)
+                .args([
+                    "-NoLogo",
+                    "-NoProfile",
+                    "-NonInteractive",
+                    "-Command",
+                    "(Get-Acl -LiteralPath $env:ORCHESTER_DOCTOR_PATH).Owner",
+                ])
+                .env("ORCHESTER_DOCTOR_PATH", &path)
+                .output()
+        })
+        .transpose()
         .ok()
+        .flatten()
         .filter(|output| output.status.success())
         .map(|output| String::from_utf8_lossy(&output.stdout).trim().to_owned())
         .filter(|owner| !owner.is_empty());
-    let identity = Command::new("whoami")
-        .output()
+    let identity = system_tool("whoami")
+        .map(Command::new)
+        .map(|mut command| command.output())
+        .transpose()
         .ok()
+        .flatten()
         .filter(|output| output.status.success())
         .map(|output| String::from_utf8_lossy(&output.stdout).trim().to_owned())
         .filter(|identity| !identity.is_empty());
