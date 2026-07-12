@@ -127,11 +127,11 @@ impl FeedbackEngine {
     pub fn build(&self, input: FeedbackInput) -> BuiltFeedback {
         // Sanitize and redact the complete diagnostic before either hashing or
         // truncating. This prevents truncation boundaries from leaking a token.
-        let source = self.sanitize(&input.source);
-        let validator_id = input.validator_id.as_ref().map(|id| self.sanitize(id));
-        let summary = self.sanitize(&input.summary);
-        let stdout = self.sanitize(&input.stdout);
-        let stderr = self.sanitize(&input.stderr);
+        let source = self.sanitize_text(&input.source);
+        let validator_id = input.validator_id.as_ref().map(|id| self.sanitize_text(id));
+        let summary = self.sanitize_text(&input.summary);
+        let stdout = self.sanitize_text(&input.stdout);
+        let stderr = self.sanitize_text(&input.stderr);
         let fingerprint = fingerprint(
             &source,
             validator_id.as_deref(),
@@ -165,7 +165,7 @@ impl FeedbackEngine {
         }
     }
 
-    fn sanitize(&self, input: &str) -> String {
+    pub(crate) fn sanitize_text(&self, input: &str) -> String {
         let mut sanitized = ansi_pattern().replace_all(input, "").into_owned();
         // Remove controls before exact-value redaction so an attacker cannot
         // split a configured secret with NUL/escape/newline bytes to evade the
@@ -315,7 +315,7 @@ fn authorization_pattern() -> &'static Regex {
 fn token_pattern() -> &'static Regex {
     static PATTERN: OnceLock<Regex> = OnceLock::new();
     PATTERN.get_or_init(|| {
-        Regex::new(r"(?i)\b(?:sk[-_]|ghp_|github_pat_|xox[baprs]-)[A-Za-z0-9._-]{5,}\b|\bAKIA[A-Z0-9]{12,}\b")
+        Regex::new(r"(?i)(?:sk[-_]|ghp_|github_pat_|xox[baprs]-)[A-Za-z0-9._-]{5,}\b|\bAKIA[A-Z0-9]{12,}\b")
             .unwrap()
     })
 }

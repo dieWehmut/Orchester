@@ -154,6 +154,24 @@ fn control_bytes_cannot_split_a_configured_secret_to_evade_redaction() {
 }
 
 #[test]
+fn provider_token_prefix_is_redacted_without_a_leading_word_boundary() {
+    let token = "sk-embedded-provider-secret-123456";
+    let built = FeedbackEngine::default().build(FeedbackInput {
+        source: "tool".into(),
+        validator_id: None,
+        exit_code: Some(1),
+        class: FeedbackClass::ToolFailed,
+        summary: String::new(),
+        stdout: format!("diagnostic\u{0}{token}"),
+        stderr: String::new(),
+        retryable: false,
+    });
+
+    assert!(!built.report.stdout_tail.contains(token));
+    assert!(built.report.stdout_tail.contains("[REDACTED_TOKEN]"));
+}
+
+#[test]
 fn volatile_diagnostic_fragments_share_one_stable_fingerprint() {
     let engine = FeedbackEngine::default();
     let report = |summary: &str, stdout: &str| {
