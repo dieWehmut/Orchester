@@ -23,6 +23,8 @@ const YELLOW: &str = "\x1b[33m";
 const CYAN: &str = "\x1b[36m";
 const ORANGE: &str = "\x1b[38;5;208m";
 const RESET: &str = "\x1b[0m";
+const COMPACT_PALETTE_ROWS: usize = 6;
+const PALETTE_ROWS: usize = 8;
 
 const PROMPT_SUGGESTIONS: [&str; 6] = [
     "Summarize recent commits",
@@ -208,6 +210,16 @@ fn wrapped_selection(selected: usize, item_count: usize, direction: SelectionDir
         SelectionDirection::Previous => selected - 1,
         SelectionDirection::Next => (selected + 1) % item_count,
     }
+}
+
+fn selection_window_start(selected: usize, item_count: usize, visible_rows: usize) -> usize {
+    if item_count <= visible_rows || visible_rows == 0 {
+        return 0;
+    }
+    selected
+        .min(item_count - 1)
+        .saturating_add(1)
+        .saturating_sub(visible_rows)
 }
 
 pub fn build_agent_choices(registry: &Registry) -> Vec<AgentChoice> {
@@ -797,7 +809,13 @@ fn render_compact_command_palette<W: Write>(
     width: usize,
 ) -> io::Result<()> {
     let matches = matching_commands(command, choices);
-    for (index, item) in matches.iter().take(6).enumerate() {
+    let start = selection_window_start(selected, matches.len(), COMPACT_PALETTE_ROWS);
+    for (index, item) in matches
+        .iter()
+        .enumerate()
+        .skip(start)
+        .take(COMPACT_PALETTE_ROWS)
+    {
         let marker = if index == selected { ">" } else { " " };
         let line = format!("{marker} {} {}", item.name, item.description);
         writeln!(out, "{}", truncate(&line, width))?;
@@ -967,7 +985,8 @@ fn render_command_palette<W: Write>(
         writeln!(out, "  {DIM}No matching commands{RESET}")?;
         return Ok(());
     }
-    for (i, item) in matches.iter().take(8).enumerate() {
+    let start = selection_window_start(selected, matches.len(), PALETTE_ROWS);
+    for (i, item) in matches.iter().enumerate().skip(start).take(PALETTE_ROWS) {
         let marker = if i == selected { ">" } else { " " };
         let color = if i == selected { ORANGE } else { "" };
         let reset = if i == selected { RESET } else { "" };
@@ -1449,6 +1468,39 @@ mod tests {
         let plain = strip_ansi(&rendered);
         let prompt_lines = plain.lines().filter(|line| line.trim() == "> /").count();
         assert_eq!(prompt_lines, 1, "command palette output:\n{rendered}");
+    }
+
+    #[test]
+    fn command_palette_scrolls_to_keep_the_selection_visible() {
+        let choices = (0..6)
+            .map(|index| {
+                choice(
+                    &format!("worker{index}"),
+                    AvailabilityStatus::Available,
+                    Some("worker"),
+                )
+            })
+            .collect::<Vec<_>>();
+        let selected = matching_commands("/", &choices)
+            .iter()
+            .position(|item| item.name == "/worker5")
+            .expect("test command must be present");
+
+        let mut wide = Vec::new();
+        render_chat_home(&mut wide, 100, "/", &choices, selected, false).unwrap();
+        let wide = strip_ansi(&String::from_utf8(wide).unwrap());
+        assert!(
+            wide.lines().any(|line| line.contains("> /worker5")),
+            "wide palette must keep the selected command visible:\n{wide}"
+        );
+
+        let mut compact = Vec::new();
+        render_chat_home(&mut compact, 40, "/", &choices, selected, false).unwrap();
+        let compact = strip_ansi(&String::from_utf8(compact).unwrap());
+        assert!(
+            compact.lines().any(|line| line.contains("> /worker5")),
+            "compact palette must keep the selected command visible:\n{compact}"
+        );
     }
 
     #[test]
