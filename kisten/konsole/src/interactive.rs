@@ -1,5 +1,7 @@
 use std::collections::{BTreeMap, HashMap};
 use std::io::{self, BufRead, Write};
+use std::sync::OnceLock;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::avatar;
 use crossterm::cursor;
@@ -21,6 +23,15 @@ const YELLOW: &str = "\x1b[33m";
 const CYAN: &str = "\x1b[36m";
 const ORANGE: &str = "\x1b[38;5;208m";
 const RESET: &str = "\x1b[0m";
+
+const PROMPT_SUGGESTIONS: [&str; 6] = [
+    "Summarize recent commits",
+    "Find and fix a bug in @filename",
+    "Explain how <filepath> works",
+    "Add tests for the current change",
+    "Review my working tree",
+    "Trace the cause of a failing command",
+];
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AgentChoice {
@@ -735,11 +746,16 @@ fn render_chat_home_frame<W: Write>(
         render_chat_panel(out, width)?;
     }
     writeln!(out)?;
-    let prompt = truncate(&sanitize_terminal_text(input), width.saturating_sub(2));
+    let (prompt, prompt_style) = if input.is_empty() {
+        (prompt_suggestion(), DIM)
+    } else {
+        (input, "")
+    };
+    let prompt = truncate(&sanitize_terminal_text(prompt), width.saturating_sub(2));
     let prompt_pad = " ".repeat(width.saturating_sub(2 + display_width(&prompt)));
     writeln!(
         out,
-        "\x1b[48;5;236m{CYAN}> {RESET}\x1b[48;5;236m{prompt}{prompt_pad}{RESET}"
+        "\x1b[48;5;236m{CYAN}> {RESET}\x1b[48;5;236m{prompt_style}{prompt}{prompt_pad}{RESET}"
     )?;
     if show_help {
         render_home_help(out, width)?;
@@ -827,9 +843,24 @@ fn render_chat_panel<W: Write>(out: &mut W, width: usize) -> io::Result<()> {
     let cwd = current_directory_text();
     let rows = vec![
         format!(">_ Orchester (v{})", env!("CARGO_PKG_VERSION")),
+        "Self-owned coding agent workspace".to_string(),
         String::new(),
-        "model:     not configured    /model to change".to_string(),
+        "Getting started".to_string(),
+        prompt_suggestion().to_string(),
+        String::new(),
+        "Workspace".to_string(),
         format!("directory: {cwd}"),
+        "model: not configured".to_string(),
+        "safety: governed".to_string(),
+        String::new(),
+        "Delegate agents".to_string(),
+        "/agent choose or switch agent".to_string(),
+        "/codex launch native Codex".to_string(),
+        "/claude launch native Claude".to_string(),
+        "/opencode launch native OpenCode".to_string(),
+        String::new(),
+        "Recent activity".to_string(),
+        "No recent activity".to_string(),
     ];
     if width >= 60 {
         render_portrait_info_box(out, width, &rows)
@@ -909,6 +940,20 @@ fn current_directory_text() -> String {
     std::env::current_dir()
         .map(|cwd| sanitize_terminal_text(&cwd.display().to_string()))
         .unwrap_or_else(|_| ".".into())
+}
+
+fn prompt_suggestion() -> &'static str {
+    static SUGGESTION: OnceLock<&'static str> = OnceLock::new();
+
+    SUGGESTION.get_or_init(|| {
+        let timestamp = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .map(|duration| duration.as_nanos())
+            .unwrap_or_default();
+        let entropy = timestamp ^ u128::from(std::process::id());
+        let index = (entropy % PROMPT_SUGGESTIONS.len() as u128) as usize;
+        PROMPT_SUGGESTIONS[index]
+    })
 }
 
 fn render_command_palette<W: Write>(
@@ -1359,6 +1404,38 @@ mod tests {
         assert!(
             !plain.contains('\u{2580}'),
             "startup portrait must not use raster half-block pixels:\n{rendered}"
+        );
+    }
+
+    #[test]
+    fn startup_home_offers_a_prompt_and_workspace_context() {
+        let mut out = Vec::new();
+
+        render_chat_home(&mut out, 100, "", &[], 0, false).unwrap();
+
+        let rendered = String::from_utf8(out).unwrap();
+        let plain = strip_ansi(&rendered);
+        let prompt_line = plain
+            .lines()
+            .find(|line| line.trim_start().starts_with("> "))
+            .expect("startup should render an input line");
+        assert_ne!(
+            prompt_line.trim(),
+            ">",
+            "empty input should show a task suggestion:\n{rendered}"
+        );
+        assert!(
+            plain.contains("Getting started"),
+            "startup output:\n{rendered}"
+        );
+        assert!(plain.contains("Workspace"), "startup output:\n{rendered}");
+        assert!(
+            plain.contains("Delegate agents"),
+            "startup output:\n{rendered}"
+        );
+        assert!(
+            plain.contains("Recent activity"),
+            "startup output:\n{rendered}"
         );
     }
 
