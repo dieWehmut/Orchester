@@ -246,6 +246,18 @@ fn policy_explanations_do_not_echo_model_controlled_arguments() {
 }
 
 #[test]
+fn network_probe_commands_require_approval() {
+    for program in ["ping", "ping6", "traceroute", "tracert.exe"] {
+        let intent = classify_command(program, &[OsString::from("127.0.0.1")]).unwrap();
+        assert!(intent.categories.contains(&CommandCategory::Network));
+        assert_eq!(
+            engine().evaluate_intent(&intent).decision,
+            PolicyDecision::Ask
+        );
+    }
+}
+
+#[test]
 fn explicit_approval_action_always_pauses_for_the_owner() {
     let result = engine()
         .evaluate(&AgentAction::RequestApproval {
