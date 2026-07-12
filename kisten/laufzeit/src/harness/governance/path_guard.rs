@@ -123,15 +123,10 @@ impl PathResolver for FilesystemResolver {
     }
 }
 
-#[cfg(windows)]
-type CanonicalRootKey = Vec<u16>;
-#[cfg(not(windows))]
-type CanonicalRootKey = PathBuf;
-
-/// An unforgeable lock key derived from the canonical root and its OS object id.
+/// An unforgeable lock key derived only from the OS object id of the root
+/// handle. Path spelling is deliberately excluded so aliases share a lock.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub(crate) struct WorkspaceIdentity {
-    canonical_root: CanonicalRootKey,
     object: ObjectIdentity,
 }
 
@@ -230,7 +225,6 @@ impl WorkspaceGuard {
         let object = identity_from_dir(&root_dir, &lexical_root)?;
         let root = canonical_display_path(&lexical_root, &object)?;
         let identity = WorkspaceIdentity {
-            canonical_root: canonical_root_key(&root),
             object: object.clone(),
         };
         Ok(Self {
@@ -1101,27 +1095,6 @@ fn contains_nul(path: &Path) -> bool {
 #[cfg(not(any(unix, windows)))]
 fn contains_nul(path: &Path) -> bool {
     path.to_string_lossy().contains('\0')
-}
-
-#[cfg(windows)]
-fn canonical_root_key(path: &Path) -> CanonicalRootKey {
-    use std::os::windows::ffi::OsStrExt;
-
-    path.as_os_str()
-        .encode_wide()
-        .map(|unit| {
-            if (b'A' as u16..=b'Z' as u16).contains(&unit) {
-                unit + (b'a' - b'A') as u16
-            } else {
-                unit
-            }
-        })
-        .collect()
-}
-
-#[cfg(not(windows))]
-fn canonical_root_key(path: &Path) -> CanonicalRootKey {
-    path.to_path_buf()
 }
 
 #[cfg(windows)]
