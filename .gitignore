@@ -5,7 +5,7 @@
 *.pdb
 sample
 # Keep Cargo.lock tracked (Orchester ships binaries).
-
+.cargo
 # ── Forschung: cloned reference repos ───────────────────────────────
 # 50+ upstream repos live here purely as read-only reference. Never commit
 # them (each carries its own .git). Keep only our own analysis + notes.
@@ -30,3 +30,7 @@ Thumbs.db
 *.swp
 .idea/
 .vscode/
+*.txt
+*.md
+!/README.md
+.playwright-mcp/
