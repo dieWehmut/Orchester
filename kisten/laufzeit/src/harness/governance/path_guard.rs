@@ -48,6 +48,8 @@ pub enum GuardError {
     NotDirectory { path: PathBuf },
     #[error("path identity changed after it was resolved: {path:?}")]
     Changed { path: PathBuf },
+    #[error("file content changed after it was resolved: {path:?}")]
+    ContentChanged { path: PathBuf },
     #[error("guarded read exceeds {limit} bytes: {path:?}")]
     LimitExceeded { path: PathBuf, limit: u64 },
     #[error("secure path operations are unsupported on this platform")]
@@ -70,7 +72,7 @@ impl GuardError {
             Self::Protected { .. } => GuardErrorKind::Protected,
             Self::NotFound { .. } => GuardErrorKind::NotFound,
             Self::NotDirectory { .. } => GuardErrorKind::NotDirectory,
-            Self::Changed { .. } => GuardErrorKind::Changed,
+            Self::Changed { .. } | Self::ContentChanged { .. } => GuardErrorKind::Changed,
             Self::LimitExceeded { .. } => GuardErrorKind::LimitExceeded,
             Self::Unsupported => GuardErrorKind::Unsupported,
             Self::Io { .. } => GuardErrorKind::Io,
@@ -148,6 +150,21 @@ struct ObjectIdentity {
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 struct ObjectIdentity;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) struct ContentFingerprint {
+    bytes: u64,
+    hash: blake3::Hash,
+}
+
+impl ContentFingerprint {
+    pub(crate) fn from_bytes(bytes: &[u8]) -> Self {
+        Self {
+            bytes: bytes.len() as u64,
+            hash: blake3::hash(bytes),
+        }
+    }
+}
+
 /// A checked path plus handle-derived identities for write-time revalidation.
 #[derive(Debug)]
 pub struct ResolvedPath {
@@ -163,6 +180,17 @@ pub struct ResolvedPath {
 }
 
 impl ResolvedPath {
+    /// Whether the resolved target existed when this capability was opened.
+    pub(crate) fn target_exists(&self) -> bool {
+        self.target_identity.is_some()
+    }
+
+    pub(crate) fn same_existing_target(&self, other: &Self) -> bool {
+        self.target_identity.is_some()
+            && self.root_identity == other.root_identity
+            && self.target_identity == other.target_identity
+    }
+
     /// Resolve again through directory capabilities and compare OS object ids.
     pub fn revalidate(&self, guard: &WorkspaceGuard) -> Result<ResolvedPath, GuardError> {
         let current = guard.resolve_normalized(&self.requested, self.mode)?;
@@ -258,6 +286,12 @@ impl WorkspaceGuard {
                 path: resolved.requested.clone(),
             });
         }
+        self.open_existing(resolved)
+    }
+
+    /// Open an existing file from either a read or write resolution. This is
+    /// crate-private so mutation backends can keep one identity across CAS.
+    pub(crate) fn open_existing(&self, resolved: &ResolvedPath) -> Result<File, GuardError> {
         let current = resolved.revalidate(self)?;
         if current.target_kind != Some(NodeKind::File) {
             return Err(GuardError::NotDirectory {
@@ -700,7 +734,21 @@ impl AtomicWriteTarget {
         self.file.as_mut().expect("atomic target file is open")
     }
 
-    pub fn commit(mut self) -> Result<(), GuardError> {
+    pub fn commit(self) -> Result<(), GuardError> {
+        self.commit_checked(None)
+    }
+
+    pub(crate) fn commit_if_unchanged(
+        self,
+        expected: ContentFingerprint,
+    ) -> Result<(), GuardError> {
+        self.commit_checked(Some(expected))
+    }
+
+    fn commit_checked(
+        mut self,
+        expected_content: Option<ContentFingerprint>,
+    ) -> Result<(), GuardError> {
         let temp_identity = {
             let file = self.file.as_ref().ok_or_else(|| GuardError::Changed {
                 path: self.destination_path.clone(),
@@ -717,44 +765,59 @@ impl AtomicWriteTarget {
                 .map_err(|source| map_io("sync atomic target", &self.display_path, source))?;
             drop(file);
         }
-        let current_target_identity =
-            match self.parent.symlink_metadata(Path::new(&self.final_name)) {
-                Ok(metadata) if metadata.file_type().is_symlink() => {
-                    return Err(GuardError::LinkTraversal {
-                        path: self.destination_path.clone(),
-                    });
-                }
-                Ok(metadata) if metadata.is_dir() => {
-                    return Err(GuardError::NotDirectory {
-                        path: self.destination_path.clone(),
-                    });
-                }
-                Ok(metadata) if metadata.is_file() => {
-                    let file = open_file_nofollow(
-                        &self.parent,
-                        &self.final_name,
-                        false,
-                        &self.destination_path,
-                    )?
-                    .into_std();
-                    ensure_regular_file(&file, &self.destination_path)?;
-                    Some(identity_from_file(&file, &self.destination_path)?)
-                }
-                Ok(_) => return Err(GuardError::Unsupported),
-                Err(error) if error.kind() == io::ErrorKind::NotFound => None,
-                Err(source) => {
-                    return Err(map_io(
-                        "inspect atomic destination",
-                        &self.destination_path,
-                        source,
-                    ));
-                }
-            };
+        let mut current_target = match self.parent.symlink_metadata(Path::new(&self.final_name)) {
+            Ok(metadata) if metadata.file_type().is_symlink() => {
+                return Err(GuardError::LinkTraversal {
+                    path: self.destination_path.clone(),
+                });
+            }
+            Ok(metadata) if metadata.is_dir() => {
+                return Err(GuardError::NotDirectory {
+                    path: self.destination_path.clone(),
+                });
+            }
+            Ok(metadata) if metadata.is_file() => {
+                let file = open_file_nofollow(
+                    &self.parent,
+                    &self.final_name,
+                    false,
+                    &self.destination_path,
+                )?
+                .into_std();
+                ensure_regular_file(&file, &self.destination_path)?;
+                Some((identity_from_file(&file, &self.destination_path)?, file))
+            }
+            Ok(_) => return Err(GuardError::Unsupported),
+            Err(error) if error.kind() == io::ErrorKind::NotFound => None,
+            Err(source) => {
+                return Err(map_io(
+                    "inspect atomic destination",
+                    &self.destination_path,
+                    source,
+                ));
+            }
+        };
+        let current_target_identity = current_target
+            .as_ref()
+            .map(|(identity, _)| identity.clone());
         if current_target_identity != self.expected_target_identity {
             return Err(GuardError::Changed {
                 path: self.destination_path.clone(),
             });
         }
+        if let Some(expected) = expected_content {
+            let matches = current_target
+                .as_mut()
+                .map(|(_, file)| content_matches(file, expected, &self.destination_path))
+                .transpose()?
+                .unwrap_or(false);
+            if !matches {
+                return Err(GuardError::ContentChanged {
+                    path: self.destination_path.clone(),
+                });
+            }
+        }
+        drop(current_target);
         self.parent
             .rename(
                 Path::new(&self.temp_name),
@@ -778,6 +841,30 @@ impl AtomicWriteTarget {
         self.committed = true;
         Ok(())
     }
+}
+
+fn content_matches(
+    file: &mut File,
+    expected: ContentFingerprint,
+    path: &Path,
+) -> Result<bool, GuardError> {
+    let mut hasher = blake3::Hasher::new();
+    let mut total = 0_u64;
+    let mut buffer = [0_u8; 8 * 1024];
+    loop {
+        let read = file
+            .read(&mut buffer)
+            .map_err(|source| map_io("verify destination content", path, source))?;
+        if read == 0 {
+            break;
+        }
+        total = total.saturating_add(read as u64);
+        if total > expected.bytes {
+            return Ok(false);
+        }
+        hasher.update(&buffer[..read]);
+    }
+    Ok(total == expected.bytes && hasher.finalize() == expected.hash)
 }
 
 impl Drop for AtomicWriteTarget {
@@ -1195,4 +1282,37 @@ fn random_token() -> u64 {
         .as_nanos()
         .hash(&mut hasher);
     hasher.finish()
+}
+
+#[cfg(test)]
+mod content_cas_tests {
+    use super::*;
+
+    #[test]
+    fn checked_commit_rejects_an_in_place_content_change() {
+        let root = std::env::temp_dir().join(format!(
+            "orchester-content-cas-{}-{}",
+            std::process::id(),
+            NEXT_TEMP_FILE.fetch_add(1, Ordering::Relaxed)
+        ));
+        let _ = fs::remove_dir_all(&root);
+        fs::create_dir_all(root.join("src")).unwrap();
+        fs::write(root.join("src/value.txt"), b"original").unwrap();
+        let guard = WorkspaceGuard::new(&root).unwrap();
+        let resolved = guard.resolve_write(Path::new("src/value.txt")).unwrap();
+        let mut target = guard.atomic_write_target(&resolved).unwrap();
+        target.file_mut().write_all(b"patched").unwrap();
+        let expected = ContentFingerprint::from_bytes(b"original");
+
+        fs::write(root.join("src/value.txt"), b"external").unwrap();
+        assert!(resolved.revalidate(&guard).is_ok(), "file identity changed");
+        let error = target
+            .commit_if_unchanged(expected)
+            .expect_err("same-inode content drift must fail CAS");
+
+        assert!(matches!(error, GuardError::ContentChanged { .. }));
+        assert_eq!(fs::read(root.join("src/value.txt")).unwrap(), b"external");
+        drop(guard);
+        fs::remove_dir_all(root).unwrap();
+    }
 }
