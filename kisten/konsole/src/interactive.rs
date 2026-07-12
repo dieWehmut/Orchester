@@ -154,13 +154,17 @@ pub fn run_home_tui(choices: &[AgentChoice]) -> io::Result<HomeAction> {
                 show_help = false;
             }
             KeyCode::Up if input.starts_with('/') => {
-                command_selected = command_selected.saturating_sub(1);
+                let matches = matching_commands(&input, choices);
+                command_selected = wrapped_selection(
+                    command_selected,
+                    matches.len(),
+                    SelectionDirection::Previous,
+                );
             }
             KeyCode::Down if input.starts_with('/') => {
                 let matches = matching_commands(&input, choices);
-                if command_selected + 1 < matches.len() {
-                    command_selected += 1;
-                }
+                command_selected =
+                    wrapped_selection(command_selected, matches.len(), SelectionDirection::Next);
             }
             KeyCode::Char(ch) => {
                 input.push(ch);
@@ -174,6 +178,25 @@ pub fn run_home_tui(choices: &[AgentChoice]) -> io::Result<HomeAction> {
 
 fn is_press(key: &KeyEvent) -> bool {
     key.kind == KeyEventKind::Press
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum SelectionDirection {
+    Previous,
+    Next,
+}
+
+fn wrapped_selection(selected: usize, item_count: usize, direction: SelectionDirection) -> usize {
+    if item_count == 0 {
+        return 0;
+    }
+
+    let selected = selected.min(item_count - 1);
+    match direction {
+        SelectionDirection::Previous if selected == 0 => item_count - 1,
+        SelectionDirection::Previous => selected - 1,
+        SelectionDirection::Next => (selected + 1) % item_count,
+    }
 }
 
 pub fn build_agent_choices(registry: &Registry) -> Vec<AgentChoice> {
@@ -269,12 +292,18 @@ pub fn select_agent_tui(
                     message.clear();
                 }
                 KeyCode::Up => {
-                    command_selected = command_selected.saturating_sub(1);
+                    command_selected = wrapped_selection(
+                        command_selected,
+                        matches.len(),
+                        SelectionDirection::Previous,
+                    );
                 }
                 KeyCode::Down => {
-                    if command_selected + 1 < matches.len() {
-                        command_selected += 1;
-                    }
+                    command_selected = wrapped_selection(
+                        command_selected,
+                        matches.len(),
+                        SelectionDirection::Next,
+                    );
                 }
                 KeyCode::Enter => {
                     let action = command_action(&command, matches.get(command_selected));
@@ -330,13 +359,12 @@ pub fn select_agent_tui(
                 return Ok(None);
             }
             KeyCode::Up => {
-                selected = selected.saturating_sub(1);
+                selected =
+                    wrapped_selection(selected, selectable.len(), SelectionDirection::Previous);
                 message.clear();
             }
             KeyCode::Down => {
-                if selected + 1 < selectable.len() {
-                    selected += 1;
-                }
+                selected = wrapped_selection(selected, selectable.len(), SelectionDirection::Next);
                 message.clear();
             }
             KeyCode::Enter => {
@@ -632,6 +660,7 @@ fn render_home<W: Write>(
 
     writeln!(out)?;
     if command.starts_with('/') {
+        writeln!(out, "{BOLD}> {command}{RESET}")?;
         render_command_palette(out, command, choices, command_selected)?;
     } else if !message.is_empty() {
         writeln!(out, "{YELLOW}{message}{RESET}")?;
@@ -851,7 +880,6 @@ fn render_command_palette<W: Write>(
     choices: &[AgentChoice],
     selected: usize,
 ) -> io::Result<()> {
-    writeln!(out, "{BOLD}> {command}{RESET}")?;
     let matches = matching_commands(command, choices);
     if matches.is_empty() {
         writeln!(out, "  {DIM}No matching commands{RESET}")?;
@@ -1282,6 +1310,26 @@ mod tests {
             !plain.contains('\u{2580}'),
             "startup portrait must not use raster half-block pixels:\n{rendered}"
         );
+    }
+
+    #[test]
+    fn command_palette_does_not_repeat_the_input_line() {
+        let mut out = Vec::new();
+
+        render_chat_home(&mut out, 100, "/", &[], 0, false).unwrap();
+
+        let rendered = String::from_utf8(out).unwrap();
+        let plain = strip_ansi(&rendered);
+        let prompt_lines = plain.lines().filter(|line| line.trim() == "> /").count();
+        assert_eq!(prompt_lines, 1, "command palette output:\n{rendered}");
+    }
+
+    #[test]
+    fn selection_wraps_across_both_edges() {
+        assert_eq!(wrapped_selection(0, 3, SelectionDirection::Previous), 2);
+        assert_eq!(wrapped_selection(2, 3, SelectionDirection::Next), 0);
+        assert_eq!(wrapped_selection(9, 3, SelectionDirection::Next), 0);
+        assert_eq!(wrapped_selection(0, 0, SelectionDirection::Previous), 0);
     }
 
     #[test]
