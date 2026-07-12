@@ -23,7 +23,7 @@ use crate::harness::approval::{
     ApprovalBinding, ApprovalRequestInput, ApprovalSnapshot, ApprovalState,
 };
 use crate::harness::audit::{AuditInput, AuditReceipt};
-use crate::harness::barrier::ExecutionPermit;
+use crate::harness::barrier::{ExecutionPermit, StartedTool};
 
 const MIGRATION_V1: &str = include_str!("../../migrations/0001_state.sql");
 const MIGRATION_V2: &str = include_str!("../../migrations/0002_approval_barrier.sql");
@@ -924,7 +924,7 @@ impl SqliteRunStore {
         let connection = self.connection()?;
         let row: Option<ExecutionCandidateRow> = connection
             .query_row(
-                "SELECT a.run_id, a.action_id, a.state, a.policy_decision,
+                "SELECT a.run_id, a.action_id, a.action_hash, a.state, a.policy_decision,
                         a.policy_rule_id, a.policy_event_id, a.audit_event_id,
                         ap.approval_id, r.owner_actor_id
                  FROM actions a
@@ -943,6 +943,7 @@ impl SqliteRunStore {
                         row.get(6)?,
                         row.get(7)?,
                         row.get(8)?,
+                        row.get(9)?,
                     ))
                 },
             )
@@ -950,6 +951,7 @@ impl SqliteRunStore {
         let Some((
             row_run,
             row_action,
+            action_hash,
             state,
             decision,
             rule,
@@ -992,6 +994,7 @@ impl SqliteRunStore {
             event_id: EventId::from(event_id),
             run_id: RunId::from(row_run),
             action_id: ActionId::from(row_action),
+            action_hash,
             owner_actor_id: owner,
             approval_id,
             policy_rule: rule.unwrap_or_else(|| "unknown".into()),
@@ -1149,6 +1152,7 @@ pub struct ExecutionCandidate {
     event_id: EventId,
     run_id: RunId,
     action_id: ActionId,
+    action_hash: String,
     owner_actor_id: String,
     approval_id: Option<String>,
     policy_rule: String,
@@ -1157,6 +1161,7 @@ pub struct ExecutionCandidate {
 }
 
 type ExecutionCandidateRow = (
+    String,
     String,
     String,
     String,
@@ -1194,6 +1199,10 @@ impl ExecutionCandidate {
 
     pub fn action_id(&self) -> &ActionId {
         &self.action_id
+    }
+
+    pub fn action_hash(&self) -> &str {
+        &self.action_hash
     }
 
     pub fn approval_id(&self) -> Option<&str> {
@@ -1484,7 +1493,8 @@ impl SqliteRunStore {
         run_id: &RunId,
         input: EventAppend,
         permit_event_id: Option<&EventId>,
-    ) -> Result<HarnessEvent, StoreError> {
+        permit_action_hash: Option<&str>,
+    ) -> Result<(HarnessEvent, Option<AgentAction>), StoreError> {
         let mut connection = self.connection()?;
         let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
         let snapshot = load_snapshot(&transaction, run_id, Some(owner_actor_id))?;
@@ -1493,6 +1503,33 @@ impl SqliteRunStore {
                 "terminal run cannot append an event".into(),
             ));
         }
+        let started_action = match (&input.kind, permit_action_hash) {
+            (HarnessEventKind::ToolStarted { action_id }, Some(expected_hash)) => {
+                let durable: Option<(String, String)> = transaction
+                    .query_row(
+                        "SELECT canonical_json, action_hash FROM actions
+                         WHERE run_id = ?1 AND action_id = ?2",
+                        params![run_id.0, action_id.0],
+                        |row| Ok((row.get(0)?, row.get(1)?)),
+                    )
+                    .optional()?;
+                let (canonical_json, stored_hash) = durable.ok_or(StoreError::NotFound)?;
+                let action: AgentAction = serde_json::from_str(&canonical_json)?;
+                if stored_hash != expected_hash || action_hash(&action)? != expected_hash {
+                    return Err(StoreError::Invariant(
+                        "durable action changed after execution authorization".into(),
+                    ));
+                }
+                Some(action)
+            }
+            (HarnessEventKind::ToolStarted { .. }, None) => None,
+            (_, Some(_)) => {
+                return Err(StoreError::Invariant(
+                    "execution action hash requires a tool-start event".into(),
+                ))
+            }
+            (_, None) => None,
+        };
         apply_event_transition(&transaction, &snapshot, &input, permit_event_id)?;
         let event = HarnessEvent {
             schema_version: HARNESS_SCHEMA_VERSION,
@@ -1561,7 +1598,7 @@ impl SqliteRunStore {
         )?;
         ensure_single_update(updated)?;
         transaction.commit()?;
-        Ok(event)
+        Ok((event, started_action))
     }
 
     pub(crate) fn append_tool_started_with_permit(
@@ -1570,14 +1607,24 @@ impl SqliteRunStore {
         run_id: &RunId,
         permit: ExecutionPermit,
         input: EventAppend,
-    ) -> Result<HarnessEvent, StoreError> {
+    ) -> Result<StartedTool, StoreError> {
         if !matches!(&input.kind, HarnessEventKind::ToolStarted { action_id: id } if id == permit.action_id())
         {
             return Err(StoreError::Invariant(
                 "ExecutionPermit does not match tool start action".into(),
             ));
         }
-        self.append_event_internal(owner_actor_id, run_id, input, Some(permit.event_id()))
+        let (event, action) = self.append_event_internal(
+            owner_actor_id,
+            run_id,
+            input,
+            Some(permit.event_id()),
+            Some(permit.action_hash()),
+        )?;
+        Ok(StartedTool::new(
+            event,
+            action.ok_or_else(|| StoreError::Invariant("tool start lost durable action".into()))?,
+        ))
     }
 }
 
@@ -1901,7 +1948,8 @@ impl RunStore for SqliteRunStore {
                 "tool start requires an ExecutionPermit".into(),
             ));
         }
-        self.append_event_internal(owner_actor_id, run_id, input, None)
+        self.append_event_internal(owner_actor_id, run_id, input, None, None)
+            .map(|(event, _)| event)
     }
 
     fn load_run_owned(

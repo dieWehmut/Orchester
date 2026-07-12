@@ -7,7 +7,7 @@
 
 use std::sync::Arc;
 
-use orchester_protokoll::{ActionId, EventId, HarnessEvent, RunId};
+use orchester_protokoll::{ActionId, AgentAction, EventId, HarnessEvent, RunId};
 use thiserror::Error;
 
 use super::approval::{ApprovalBinding, ApprovalError, CapabilityToken};
@@ -45,6 +45,7 @@ pub enum ExecutionAuthorization<'a> {
 #[derive(Debug)]
 pub struct ExecutionPermit {
     action_id: ActionId,
+    action_hash: String,
     event_id: EventId,
     receipt: AuditReceipt,
 }
@@ -58,12 +59,51 @@ impl ExecutionPermit {
         &self.event_id
     }
 
+    pub(crate) fn action_hash(&self) -> &str {
+        &self.action_hash
+    }
+
     pub fn audit_sequence(&self) -> u64 {
         self.receipt.sequence()
     }
 
     pub fn audit_head_hash(&self) -> &str {
         self.receipt.head_hash()
+    }
+}
+
+/// The exact durable action released at the one-shot tool-start boundary.
+/// Backends consume this value instead of a caller-supplied action payload.
+pub struct StartedTool {
+    event: HarnessEvent,
+    action: AgentAction,
+}
+
+impl StartedTool {
+    pub(crate) fn new(event: HarnessEvent, action: AgentAction) -> Self {
+        Self { event, action }
+    }
+
+    pub fn event(&self) -> &HarnessEvent {
+        &self.event
+    }
+
+    pub fn action(&self) -> &AgentAction {
+        &self.action
+    }
+
+    pub fn into_action(self) -> AgentAction {
+        self.action
+    }
+}
+
+impl std::fmt::Debug for StartedTool {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        formatter
+            .debug_struct("StartedTool")
+            .field("event_id", &self.event.event_id)
+            .field("action_summary", &self.action.action_summary())
+            .finish()
     }
 }
 
@@ -172,6 +212,7 @@ impl<S: AuditSink> PreExecutionBarrier<S> {
         }
         Ok(ExecutionPermit {
             action_id: candidate.action_id().clone(),
+            action_hash: candidate.action_hash().to_owned(),
             event_id: candidate.event_id().clone(),
             receipt,
         })
@@ -186,7 +227,7 @@ impl<S: AuditSink> PreExecutionBarrier<S> {
         run_id: &RunId,
         permit: ExecutionPermit,
         input: EventAppend,
-    ) -> Result<HarnessEvent, BarrierError> {
+    ) -> Result<StartedTool, BarrierError> {
         self.store
             .append_tool_started_with_permit(owner_actor_id, run_id, permit, input)
             .map_err(BarrierError::Checkpoint)

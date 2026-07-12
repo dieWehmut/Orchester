@@ -532,6 +532,76 @@ fn tool_start_requires_checkpoint_and_schema_permissions_are_checked() {
 }
 
 #[test]
+fn tool_start_returns_the_durable_action_and_rejects_post_permit_replacement() {
+    let fixture = Fixture::new(PolicyDecision::Allow);
+    let audit_path = fixture.db.with_file_name("action-binding-audit.jsonl");
+    let barrier = PreExecutionBarrier::new(
+        fixture.store.clone(),
+        Arc::new(JsonlAuditSink::open(&audit_path).unwrap()),
+    );
+    let permit = barrier
+        .prepare(
+            &fixture.owner,
+            &fixture.run_id,
+            &fixture.action_id,
+            ExecutionAuthorization::Allow,
+            "ignored",
+        )
+        .unwrap();
+    let replacement = AgentAction::ListFiles {
+        path: "different-path".into(),
+        depth: 1,
+    };
+    let replacement_json = serde_json::to_string(&replacement).unwrap();
+    let replacement_hash = action_hash(&replacement).unwrap();
+    rusqlite::Connection::open(&fixture.db)
+        .unwrap()
+        .execute(
+            "UPDATE actions SET canonical_json = ?1, action_hash = ?2 WHERE action_id = ?3",
+            rusqlite::params![replacement_json, replacement_hash, fixture.action_id.0],
+        )
+        .unwrap();
+
+    assert!(barrier
+        .start_tool(
+            &fixture.owner,
+            &fixture.run_id,
+            permit,
+            fixture.tool_started_input(),
+        )
+        .is_err());
+
+    let unchanged = Fixture::new(PolicyDecision::Allow);
+    let audit_path = unchanged.db.with_file_name("durable-action-audit.jsonl");
+    let barrier = PreExecutionBarrier::new(
+        unchanged.store.clone(),
+        Arc::new(JsonlAuditSink::open(&audit_path).unwrap()),
+    );
+    let permit = barrier
+        .prepare(
+            &unchanged.owner,
+            &unchanged.run_id,
+            &unchanged.action_id,
+            ExecutionAuthorization::Allow,
+            "ignored",
+        )
+        .unwrap();
+    let started = barrier
+        .start_tool(
+            &unchanged.owner,
+            &unchanged.run_id,
+            permit,
+            unchanged.tool_started_input(),
+        )
+        .unwrap();
+    assert_eq!(started.action(), &unchanged.action);
+    assert!(matches!(
+        started.event().kind,
+        HarnessEventKind::ToolStarted { .. }
+    ));
+}
+
+#[test]
 fn v1_state_database_is_upgraded_before_use() {
     let root = std::env::temp_dir().join(format!(
         "orchester-v1-migration-{}-{}",
