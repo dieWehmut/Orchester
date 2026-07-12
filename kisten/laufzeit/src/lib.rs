@@ -2,6 +2,7 @@
 //! Session state machine that summarizes a run.
 
 mod conductor;
+pub mod harness;
 mod session;
 mod store;
 
