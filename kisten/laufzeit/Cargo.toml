@@ -20,8 +20,6 @@ thiserror = { workspace = true }
 rusqlite = { workspace = true }
 sha2 = { workspace = true }
 getrandom = { workspace = true }
-
-[dev-dependencies]
 tokio = { workspace = true }
 
 [target.'cfg(windows)'.dependencies]
