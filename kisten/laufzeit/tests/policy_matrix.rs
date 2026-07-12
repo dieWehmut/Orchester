@@ -246,6 +246,18 @@ fn policy_explanations_do_not_echo_model_controlled_arguments() {
 }
 
 #[test]
+fn explicit_approval_action_always_pauses_for_the_owner() {
+    let result = engine()
+        .evaluate(&AgentAction::RequestApproval {
+            reason: "confirm the next step".into(),
+        })
+        .unwrap();
+    assert_eq!(result.decision, PolicyDecision::Ask);
+    assert_eq!(result.rule_id, "approval.explicit_checkpoint");
+    assert_eq!(result.effect, EffectClass::ReadOnlyIdempotent);
+}
+
+#[test]
 fn command_debug_does_not_echo_program_or_arguments() {
     let secret_program = OsStr::new(r"C:\private\api-key-tool.exe");
     let secret_arg = OsString::from("authorization-secret-marker");

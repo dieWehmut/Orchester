@@ -110,10 +110,10 @@ impl PolicyEngine {
                 let args = args.iter().map(OsString::from).collect::<Vec<_>>();
                 self.evaluate_command(program, &args)
             }
-            AgentAction::RequestApproval { .. } => allow(
-                "approval.request",
-                Risk::Low,
-                "approval request is a control-plane operation",
+            AgentAction::RequestApproval { .. } => ask(
+                "approval.explicit_checkpoint",
+                Risk::Medium,
+                "explicit approval requests always pause for the run owner",
                 EffectClass::ReadOnlyIdempotent,
             ),
             AgentAction::Finish { .. } => allow(
