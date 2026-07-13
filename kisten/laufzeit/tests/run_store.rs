@@ -254,6 +254,65 @@ fn provider_call_id_with_configured_secret_is_rejected_atomically() {
 }
 
 #[test]
+fn policy_rule_with_configured_secret_is_rejected_atomically() {
+    let path = temp_db("policy-rule-secret-rejection");
+    let run_id = RunId::from("run-policy-rule-secret");
+    let secret = "configured-policy-rule-credential";
+    {
+        let store = SqliteRunStore::open_with_terminal_secrets(
+            &path,
+            vec![SecretString::new(secret.to_owned().into_boxed_str())],
+        )
+        .unwrap();
+        store
+            .create_run(new_run("run-policy-rule-secret", "owner-a"))
+            .unwrap();
+        start_step(&store, &run_id, "owner-a", "step-1");
+        complete_model(&store, &run_id, "owner-a", "step-1");
+        let action = AgentAction::ReadFile {
+            path: "src/lib.rs".into(),
+            start_line: None,
+            end_line: None,
+        };
+        store
+            .record_action(
+                "owner-a",
+                test_action_record(
+                    &run_id,
+                    "step-1",
+                    "action-policy-rule-secret",
+                    "model-call-1",
+                    "provider-tool-1",
+                    action,
+                ),
+            )
+            .unwrap();
+        let before = store.events_owned(&run_id, "owner-a").unwrap();
+
+        assert!(matches!(
+            store.append_event(
+                "owner-a",
+                &run_id,
+                EventAppend {
+                    turn_id: Some(TurnId::from("turn-1")),
+                    step_id: Some(StepId::from("step-1")),
+                    call_id: None,
+                    occurred_at: "2026-07-12T00:00:04Z".into(),
+                    kind: HarnessEventKind::PolicyDecided {
+                        action_id: "action-policy-rule-secret".into(),
+                        decision: orchester_protokoll::PolicyDecision::Allow,
+                        rule_id: format!("workspace-{secret}"),
+                    },
+                },
+            ),
+            Err(StoreError::Invariant(_))
+        ));
+        assert_eq!(store.events_owned(&run_id, "owner-a").unwrap(), before);
+    }
+    remove_temp_db(&path);
+}
+
+#[test]
 fn model_completion_is_call_bound_atomic_and_single_shot() {
     let path = temp_db("model-completion-cas");
     let run_id = RunId::from("run-model-completion");

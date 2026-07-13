@@ -59,6 +59,19 @@ pub(super) fn canonicalize_kind(
         HarnessEventKind::ValidatorCompleted { feedback } => HarnessEventKind::ValidatorCompleted {
             feedback: sanitize_validator_feedback(&feedback, sanitizer),
         },
+        HarnessEventKind::PolicyDecided {
+            action_id,
+            decision,
+            rule_id,
+        } => {
+            ensure_durable_field("policy action identifier", &action_id.0, sanitizer)?;
+            ensure_durable_field("policy rule identifier", &rule_id, sanitizer)?;
+            HarnessEventKind::PolicyDecided {
+                action_id,
+                decision,
+                rule_id,
+            }
+        }
         HarnessEventKind::RunCompleted { reason, summary } => {
             let summary = canonicalize_summary(&summary, sanitizer);
             if summary.len() > MAX_MODEL_TEXT_BYTES {
