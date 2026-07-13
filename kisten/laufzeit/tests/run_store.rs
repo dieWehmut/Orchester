@@ -216,6 +216,44 @@ fn model_start_persists_running_phase_and_call_id() {
 }
 
 #[test]
+fn provider_call_id_with_configured_secret_is_rejected_atomically() {
+    let path = temp_db("provider-call-secret-rejection");
+    let run_id = RunId::from("run-provider-call-secret");
+    let secret = "configured-provider-call-credential";
+    {
+        let store = SqliteRunStore::open_with_terminal_secrets(
+            &path,
+            vec![SecretString::new(secret.to_owned().into_boxed_str())],
+        )
+        .unwrap();
+        store
+            .create_run(new_run("run-provider-call-secret", "owner-a"))
+            .unwrap();
+        start_step(&store, &run_id, "owner-a", "step-1");
+        let before = store.events_owned(&run_id, "owner-a").unwrap();
+
+        assert!(matches!(
+            append_model_event(
+                &store,
+                &run_id,
+                "owner-a",
+                "step-1",
+                &format!("provider-{secret}"),
+                HarnessEventKind::ModelStarted,
+            ),
+            Err(StoreError::Invariant(_))
+        ));
+        assert_eq!(store.events_owned(&run_id, "owner-a").unwrap(), before);
+    }
+
+    assert_eq!(
+        step_model_state(&path, "step-1"),
+        ("not_started".into(), None)
+    );
+    remove_temp_db(&path);
+}
+
+#[test]
 fn model_completion_is_call_bound_atomic_and_single_shot() {
     let path = temp_db("model-completion-cas");
     let run_id = RunId::from("run-model-completion");

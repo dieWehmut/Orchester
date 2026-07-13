@@ -5,13 +5,41 @@ use super::{EventAppend, StoreError};
 use crate::harness::feedback::{FeedbackClass, FeedbackEngine, FeedbackInput};
 
 const MAX_MODEL_TEXT_BYTES: usize = 65_536;
+const MAX_ENVELOPE_FIELD_BYTES: usize = 512;
 
 pub(super) fn canonicalize_input(
     input: EventAppend,
     sanitizer: &FeedbackEngine,
 ) -> Result<EventAppend, StoreError> {
+    if let Some(turn_id) = &input.turn_id {
+        ensure_durable_field("turn identifier", &turn_id.0, sanitizer)?;
+    }
+    if let Some(step_id) = &input.step_id {
+        ensure_durable_field("step identifier", &step_id.0, sanitizer)?;
+    }
+    if let Some(call_id) = &input.call_id {
+        ensure_durable_field("call identifier", &call_id.0, sanitizer)?;
+    }
+    ensure_durable_field("event timestamp", &input.occurred_at, sanitizer)?;
     let kind = canonicalize_kind(input.kind, sanitizer)?;
     Ok(EventAppend { kind, ..input })
+}
+
+fn ensure_durable_field(
+    field: &str,
+    value: &str,
+    sanitizer: &FeedbackEngine,
+) -> Result<(), StoreError> {
+    if value.is_empty()
+        || value.len() > MAX_ENVELOPE_FIELD_BYTES
+        || sanitizer.sanitize_text(value) != value
+    {
+        Err(StoreError::Invariant(format!(
+            "{field} is not eligible for durable persistence"
+        )))
+    } else {
+        Ok(())
+    }
 }
 
 pub(super) fn canonicalize_kind(
