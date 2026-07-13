@@ -207,12 +207,16 @@ fn completed_model_requires_durable_completion_transcript() {
             assistant_text: String::new(),
         },
     );
-    assert!(matches!(
-        store.resume_point_owned(
-            &missing.run_id,
+    store
+        .append_transcript_record(
             "owner-a",
-            "project-run-resume-missing",
-        ),
+            &missing.run_id,
+            TranscriptRecord::assistant("unrelated same-timestamp text"),
+            "2026-07-13T00:00:02Z",
+        )
+        .unwrap();
+    assert!(matches!(
+        store.resume_point_owned(&missing.run_id, "owner-a", "project-run-resume-missing",),
         Err(StoreError::Corrupt)
     ));
 }
@@ -297,6 +301,151 @@ fn recorded_action_returns_policy_evaluation_resume_point() {
         point.next,
         ResumeNext::EvaluatePolicy { ref action_id } if action_id.0 == "action-resume-action"
     ));
+}
+
+#[test]
+fn combined_empty_model_response_resumes_from_its_bound_action() {
+    let store = SqliteRunStore::in_memory().unwrap();
+    let run = store
+        .create_run(new_run("run-resume-empty-action", "owner-a"))
+        .unwrap();
+    start_step(&store, &run.run_id, "step-resume-empty-action");
+    model_event(
+        &store,
+        &run.run_id,
+        "step-resume-empty-action",
+        "model-call-empty-action",
+        HarnessEventKind::ModelStarted,
+    );
+    let action = AgentAction::ReadFile {
+        path: "src/lib.rs".into(),
+        start_line: None,
+        end_line: None,
+    };
+    store
+        .append_model_completed_with_action(
+            "owner-a",
+            &run.run_id,
+            EventAppend {
+                turn_id: Some(TurnId::from("turn-1")),
+                step_id: Some(StepId::from("step-resume-empty-action")),
+                call_id: Some(CallId::from("model-call-empty-action")),
+                occurred_at: "2026-07-13T00:00:03Z".into(),
+                kind: HarnessEventKind::ModelCompleted {
+                    assistant_text: String::new(),
+                },
+            },
+            ActionRecord {
+                action_id: "action-resume-empty-action".into(),
+                run_id: run.run_id.clone(),
+                step_id: StepId::from("step-resume-empty-action"),
+                call_id: CallId::from("provider-resume-empty-action"),
+                origin_model_call_id: CallId::from("model-call-empty-action"),
+                action_hash: action_hash(&action).unwrap(),
+                effect_class: PolicyEngine::new().evaluate(&action).unwrap().effect,
+                action,
+                occurred_at: "2026-07-13T00:00:09Z".into(),
+            },
+        )
+        .unwrap();
+
+    let point = store
+        .resume_point_owned(&run.run_id, "owner-a", "project-run-resume-empty-action")
+        .unwrap()
+        .unwrap();
+    assert!(matches!(point.next, ResumeNext::EvaluatePolicy { .. }));
+}
+
+#[test]
+fn resume_rejects_ready_allow_action_without_its_policy_event() {
+    let directory = std::env::temp_dir().join(format!(
+        "orchester-resume-policy-binding-{}-{}",
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    ));
+    std::fs::create_dir_all(&directory).unwrap();
+    let path = directory.join("state.db");
+    let run_id = RunId::from("run-resume-policy-binding");
+    {
+        let store = SqliteRunStore::open(&path).unwrap();
+        store
+            .create_run(new_run("run-resume-policy-binding", "owner-a"))
+            .unwrap();
+        start_step(&store, &run_id, "step-resume-policy-binding");
+        model_event(
+            &store,
+            &run_id,
+            "step-resume-policy-binding",
+            "model-call-policy-binding",
+            HarnessEventKind::ModelStarted,
+        );
+        model_event(
+            &store,
+            &run_id,
+            "step-resume-policy-binding",
+            "model-call-policy-binding",
+            HarnessEventKind::ModelCompleted {
+                assistant_text: "inspect".into(),
+            },
+        );
+        let action = AgentAction::ReadFile {
+            path: "src/lib.rs".into(),
+            start_line: None,
+            end_line: None,
+        };
+        store
+            .record_action(
+                "owner-a",
+                ActionRecord {
+                    action_id: "action-resume-policy-binding".into(),
+                    run_id: run_id.clone(),
+                    step_id: StepId::from("step-resume-policy-binding"),
+                    call_id: CallId::from("provider-resume-policy-binding"),
+                    origin_model_call_id: CallId::from("model-call-policy-binding"),
+                    action_hash: action_hash(&action).unwrap(),
+                    effect_class: PolicyEngine::new().evaluate(&action).unwrap().effect,
+                    action,
+                    occurred_at: "2026-07-13T00:00:03Z".into(),
+                },
+            )
+            .unwrap();
+        store
+            .append_event(
+                "owner-a",
+                &run_id,
+                EventAppend {
+                    turn_id: Some(TurnId::from("turn-1")),
+                    step_id: Some(StepId::from("step-resume-policy-binding")),
+                    call_id: None,
+                    occurred_at: "2026-07-13T00:00:04Z".into(),
+                    kind: HarnessEventKind::PolicyDecided {
+                        action_id: "action-resume-policy-binding".into(),
+                        decision: orchester_protokoll::PolicyDecision::Allow,
+                        rule_id: "workspace.read".into(),
+                    },
+                },
+            )
+            .unwrap();
+    }
+    let connection = rusqlite::Connection::open(&path).unwrap();
+    connection
+        .execute(
+            "UPDATE actions SET policy_event_id = NULL
+             WHERE action_id = 'action-resume-policy-binding'",
+            [],
+        )
+        .unwrap();
+    drop(connection);
+    let store = SqliteRunStore::open(&path).unwrap();
+    assert!(matches!(
+        store.resume_point_owned(&run_id, "owner-a", "project-run-resume-policy-binding",),
+        Err(StoreError::Corrupt)
+    ));
+    drop(store);
+    std::fs::remove_dir_all(directory).unwrap();
 }
 
 #[test]
@@ -527,7 +676,17 @@ fn interrupted_unknown_tool_requires_manual_reconciliation() {
 
 #[test]
 fn approval_resume_points_distinguish_request_wait_and_capability_recovery() {
-    let store = std::sync::Arc::new(SqliteRunStore::in_memory().unwrap());
+    let directory = std::env::temp_dir().join(format!(
+        "orchester-resume-approval-binding-{}-{}",
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    ));
+    std::fs::create_dir_all(&directory).unwrap();
+    let path = directory.join("state.db");
+    let store = std::sync::Arc::new(SqliteRunStore::open(&path).unwrap());
     let run = store
         .create_run(new_run("run-resume-approval", "owner-a"))
         .unwrap();
@@ -646,6 +805,23 @@ fn approval_resume_points_distinguish_request_wait_and_capability_recovery() {
         }
             if id.0 == "approval-resume-approval" && action_id.0 == "action-resume-approval"
     ));
+
+    let connection = rusqlite::Connection::open(&path).unwrap();
+    connection
+        .execute(
+            "UPDATE approvals SET config_snapshot_hash = 'drifted-config'
+             WHERE approval_id = 'approval-resume-approval'",
+            [],
+        )
+        .unwrap();
+    drop(connection);
+    assert!(matches!(
+        store.resume_point_owned(&run.run_id, "owner-a", "project-run-resume-approval",),
+        Err(StoreError::Corrupt)
+    ));
+    drop(approval);
+    drop(store);
+    std::fs::remove_dir_all(directory).unwrap();
 }
 
 #[test]

@@ -197,7 +197,7 @@ impl SqliteRunStore {
         Ok(records)
     }
 
-    fn codec(&self) -> TranscriptCodec {
+    pub(super) fn codec(&self) -> TranscriptCodec {
         TranscriptCodec::with_sanitizer(TranscriptLimits::default(), self.event_sanitizer.clone())
     }
 }

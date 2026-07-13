@@ -1,9 +1,13 @@
 use std::fmt;
 
-use orchester_protokoll::{ActionId, AgentAction, CallId, RunId, StepId, TurnId};
+use orchester_protokoll::{ActionId, CallId, RunId, StepId, TurnId};
 use rusqlite::{params, Connection, OptionalExtension};
 
+use crate::harness::transcript::TranscriptCodec;
+
 use super::{database::load_snapshot, RunSnapshot, RunStatus, SqliteRunStore, StoreError};
+
+mod evidence;
 
 #[derive(Clone, PartialEq, Eq)]
 pub struct ResumePoint {
@@ -111,13 +115,16 @@ impl SqliteRunStore {
         ensure_owner(owner_actor_id, &self.event_sanitizer)?;
         ensure_project(project_id, &self.event_sanitizer)?;
         let connection = self.connection()?;
+        let codec = self.codec();
         let mut statement = connection.prepare(
             "SELECT run_id FROM runs
              WHERE owner_actor_id = ?1 AND project_id = ?2
              ORDER BY updated_at, run_id",
         )?;
         let run_ids = statement
-            .query_map(params![owner_actor_id, project_id], |row| row.get::<_, String>(0))?
+            .query_map(params![owner_actor_id, project_id], |row| {
+                row.get::<_, String>(0)
+            })?
             .collect::<Result<Vec<_>, _>>()?;
         let mut points = Vec::new();
         for run_id in run_ids {
@@ -127,6 +134,7 @@ impl SqliteRunStore {
                 &run_id,
                 owner_actor_id,
                 project_id,
+                &codec,
             )? {
                 points.push(point);
             }
@@ -143,7 +151,8 @@ impl SqliteRunStore {
         ensure_owner(owner_actor_id, &self.event_sanitizer)?;
         ensure_project(project_id, &self.event_sanitizer)?;
         let connection = self.connection()?;
-        resume_point_from_connection(&connection, run_id, owner_actor_id, project_id)
+        let codec = self.codec();
+        resume_point_from_connection(&connection, run_id, owner_actor_id, project_id, &codec)
     }
 }
 
@@ -152,6 +161,7 @@ fn resume_point_from_connection(
     run_id: &RunId,
     owner_actor_id: &str,
     project_id: &str,
+    codec: &TranscriptCodec,
 ) -> Result<Option<ResumePoint>, StoreError> {
     let snapshot = load_snapshot(connection, run_id, Some(owner_actor_id))?;
     if snapshot.project_id != project_id {
@@ -160,7 +170,7 @@ fn resume_point_from_connection(
     if snapshot.status.is_terminal() && snapshot.status != RunStatus::InterruptedUnknownOutcome {
         return Ok(None);
     }
-    let next = derive_next(connection, &snapshot)?;
+    let next = derive_next(connection, &snapshot, codec)?;
     Ok(Some(ResumePoint {
         run_id: snapshot.run_id.clone(),
         project_id: snapshot.project_id.clone(),
@@ -171,7 +181,11 @@ fn resume_point_from_connection(
     }))
 }
 
-fn derive_next(connection: &Connection, run: &RunSnapshot) -> Result<ResumeNext, StoreError> {
+fn derive_next(
+    connection: &Connection,
+    run: &RunSnapshot,
+    codec: &TranscriptCodec,
+) -> Result<ResumeNext, StoreError> {
     match run.status {
         RunStatus::Created => {
             if run.current_step_id.is_none() && run.steps_used == 0 {
@@ -180,8 +194,8 @@ fn derive_next(connection: &Connection, run: &RunSnapshot) -> Result<ResumeNext,
                 Err(StoreError::Corrupt)
             }
         }
-        RunStatus::Running => derive_running(connection, run),
-        RunStatus::AwaitingApproval => derive_approval(connection, run),
+        RunStatus::Running => derive_running(connection, run, codec),
+        RunStatus::AwaitingApproval => derive_approval(connection, run, codec),
         RunStatus::Validating => {
             let step = load_step(connection, run)?.ok_or(StoreError::Corrupt)?;
             if matches!(
@@ -196,7 +210,7 @@ fn derive_next(connection: &Connection, run: &RunSnapshot) -> Result<ResumeNext,
                 Err(StoreError::Corrupt)
             }
         }
-        RunStatus::InterruptedUnknownOutcome => derive_unknown(connection, run),
+        RunStatus::InterruptedUnknownOutcome => derive_unknown(connection, run, codec),
         RunStatus::Succeeded
         | RunStatus::Failed
         | RunStatus::Cancelled
@@ -205,7 +219,11 @@ fn derive_next(connection: &Connection, run: &RunSnapshot) -> Result<ResumeNext,
     }
 }
 
-fn derive_running(connection: &Connection, run: &RunSnapshot) -> Result<ResumeNext, StoreError> {
+fn derive_running(
+    connection: &Connection,
+    run: &RunSnapshot,
+    codec: &TranscriptCodec,
+) -> Result<ResumeNext, StoreError> {
     let Some(step) = load_step(connection, run)? else {
         return if run.current_step_id.is_none() && run.steps_used == 0 {
             Ok(ResumeNext::StartStep)
@@ -235,7 +253,7 @@ fn derive_running(connection: &Connection, run: &RunSnapshot) -> Result<ResumeNe
                 }),
                 "completed" => {
                     let call_id = CallId::from(call_id);
-                    require_completed_transcript(connection, run, &step)?;
+                    require_completed_transcript(connection, run, &step, codec)?;
                     Ok(ResumeNext::ProcessModelOutput { call_id })
                 }
                 _ => Err(StoreError::Corrupt),
@@ -244,11 +262,16 @@ fn derive_running(connection: &Connection, run: &RunSnapshot) -> Result<ResumeNe
         "action_recorded" => {
             let action_id =
                 ActionId::from(step.action_id.as_ref().ok_or(StoreError::Corrupt)?.clone());
-            let action = load_action(connection, run, &step, &action_id)?;
+            let action = load_action(connection, run, &step, &action_id, codec)?;
             match action.state.as_str() {
-                "recorded" => Ok(ResumeNext::EvaluatePolicy { action_id }),
+                "recorded" => {
+                    require_unprocessed_policy(&action)?;
+                    Ok(ResumeNext::EvaluatePolicy { action_id })
+                }
                 "ready" if action.policy_decision.as_deref() == Some("allow") => {
-                    if action.approval_id.is_some() {
+                    require_policy_event(connection, run, &step, &action_id, &action, "allow")?;
+                    validate_optional_audit_checkpoint(connection, run, &action)?;
+                    if action.approval_id.is_some() || action.approval_state.is_some() {
                         Err(StoreError::Corrupt)
                     } else {
                         Ok(ResumeNext::PrepareExecution {
@@ -264,6 +287,8 @@ fn derive_running(connection: &Connection, run: &RunSnapshot) -> Result<ResumeNe
                             Some("approved" | "executing")
                         ) =>
                 {
+                    require_policy_event(connection, run, &step, &action_id, &action, "ask")?;
+                    validate_approval_binding(connection, run, &action_id, &action)?;
                     let approval_id = action.approval_id.ok_or(StoreError::Corrupt)?;
                     Ok(ResumeNext::RecoverApprovalCapability {
                         approval_id: approval_id.into(),
@@ -276,10 +301,11 @@ fn derive_running(connection: &Connection, run: &RunSnapshot) -> Result<ResumeNe
         "tool_running" => {
             let action_id =
                 ActionId::from(step.action_id.as_ref().ok_or(StoreError::Corrupt)?.clone());
-            let action = load_action(connection, run, &step, &action_id)?;
+            let action = load_action(connection, run, &step, &action_id, codec)?;
             if action.state != "executing" {
                 return Err(StoreError::Corrupt);
             }
+            validate_execution_evidence(connection, run, &step, &action_id, &action)?;
             let attempt_state: Option<String> = connection
                 .query_row(
                     "SELECT state FROM tool_attempts
@@ -301,16 +327,21 @@ fn derive_running(connection: &Connection, run: &RunSnapshot) -> Result<ResumeNe
     }
 }
 
-fn derive_approval(connection: &Connection, run: &RunSnapshot) -> Result<ResumeNext, StoreError> {
+fn derive_approval(
+    connection: &Connection,
+    run: &RunSnapshot,
+    codec: &TranscriptCodec,
+) -> Result<ResumeNext, StoreError> {
     let step = load_step(connection, run)?.ok_or(StoreError::Corrupt)?;
     if step.status != "awaiting_approval" {
         return Err(StoreError::Corrupt);
     }
     let action_id = ActionId::from(step.action_id.as_ref().ok_or(StoreError::Corrupt)?.clone());
-    let action = load_action(connection, run, &step, &action_id)?;
+    let action = load_action(connection, run, &step, &action_id, codec)?;
     if action.state != "awaiting_approval" || action.policy_decision.as_deref() != Some("ask") {
         return Err(StoreError::Corrupt);
     }
+    require_policy_event(connection, run, &step, &action_id, &action, "ask")?;
     let approval: Option<(String, String)> = connection
         .query_row(
             "SELECT approval_id, state FROM approvals
@@ -322,6 +353,7 @@ fn derive_approval(connection: &Connection, run: &RunSnapshot) -> Result<ResumeN
     let Some((approval_id, state)) = approval else {
         return Ok(ResumeNext::CreateApprovalRequest { action_id });
     };
+    validate_approval_binding(connection, run, &action_id, &action)?;
     match state.as_str() {
         "awaiting" => Ok(ResumeNext::AwaitApproval {
             approval_id: approval_id.into(),
@@ -334,7 +366,11 @@ fn derive_approval(connection: &Connection, run: &RunSnapshot) -> Result<ResumeN
     }
 }
 
-fn derive_unknown(connection: &Connection, run: &RunSnapshot) -> Result<ResumeNext, StoreError> {
+fn derive_unknown(
+    connection: &Connection,
+    run: &RunSnapshot,
+    codec: &TranscriptCodec,
+) -> Result<ResumeNext, StoreError> {
     let Some(step) = load_step(connection, run)? else {
         return Ok(ResumeNext::ManualReconciliation {
             stage: ResumeStage::MissingStep,
@@ -348,10 +384,11 @@ fn derive_unknown(connection: &Connection, run: &RunSnapshot) -> Result<ResumeNe
     }
     if step.status == "tool_running" {
         let action_id = ActionId::from(step.action_id.as_ref().ok_or(StoreError::Corrupt)?.clone());
-        let action = load_action(connection, run, &step, &action_id)?;
+        let action = load_action(connection, run, &step, &action_id, codec)?;
         if action.state != "executing" {
             return Err(StoreError::Corrupt);
         }
+        validate_execution_evidence(connection, run, &step, &action_id, &action)?;
         let attempt_state: Option<String> = connection
             .query_row(
                 "SELECT state FROM tool_attempts
@@ -402,101 +439,10 @@ fn load_step(connection: &Connection, run: &RunSnapshot) -> Result<Option<StepRo
         .optional()?;
     Ok(row)
 }
-
-struct ActionRow {
-    call_id: String,
-    state: String,
-    policy_decision: Option<String>,
-    approval_id: Option<String>,
-    approval_state: Option<String>,
-    origin_model_call_id: Option<String>,
-    canonical_json: String,
-    action_hash: String,
-}
-
-fn load_action(
-    connection: &Connection,
-    run: &RunSnapshot,
-    step: &StepRow,
-    action_id: &ActionId,
-) -> Result<ActionRow, StoreError> {
-    let row = connection
-        .query_row(
-            "SELECT a.call_id, a.state, a.policy_decision, ap.approval_id, ap.state,
-                    a.origin_model_call_id, a.canonical_json, a.action_hash
-             FROM actions a
-             LEFT JOIN approvals ap
-               ON ap.run_id = a.run_id AND ap.action_id = a.action_id
-              AND ap.owner_actor_id = ?4
-             WHERE a.run_id = ?1 AND a.step_id = ?2 AND a.action_id = ?3",
-            params![run.run_id.0, step.step_id, action_id.0, run.owner_actor_id],
-            |row| {
-                Ok(ActionRow {
-                    call_id: row.get(0)?,
-                    state: row.get(1)?,
-                    policy_decision: row.get(2)?,
-                    approval_id: row.get(3)?,
-                    approval_state: row.get(4)?,
-                    origin_model_call_id: row.get(5)?,
-                    canonical_json: row.get(6)?,
-                    action_hash: row.get(7)?,
-                })
-            },
-        )
-        .optional()?
-        .ok_or(StoreError::Corrupt)?;
-    let origin_model_call_id = row
-        .origin_model_call_id
-        .as_deref()
-        .ok_or(StoreError::Corrupt)?;
-    if step.model_phase != "completed"
-        || step.model_call_id.as_deref() != Some(origin_model_call_id)
-    {
-        return Err(StoreError::Corrupt);
-    }
-    let action: AgentAction =
-        serde_json::from_str(&row.canonical_json).map_err(|_| StoreError::Corrupt)?;
-    let canonical = serde_json::to_string(&action).map_err(|_| StoreError::Corrupt)?;
-    if canonical != row.canonical_json || super::hash_canonical_action(&canonical) != row.action_hash
-    {
-        return Err(StoreError::Corrupt);
-    }
-    Ok(row)
-}
-
-fn require_completed_transcript(
-    connection: &Connection,
-    run: &RunSnapshot,
-    step: &StepRow,
-) -> Result<(), StoreError> {
-    let call_id = step.model_call_id.as_deref().ok_or(StoreError::Corrupt)?;
-    let occurred_at: String = connection
-        .query_row(
-            "SELECT occurred_at FROM events
-             WHERE run_id = ?1 AND step_id = ?2 AND call_id = ?3
-               AND kind = 'model.completed'
-             ORDER BY sequence DESC LIMIT 1",
-            params![run.run_id.0, step.step_id, call_id],
-            |row| row.get(0),
-        )
-        .optional()?
-        .ok_or(StoreError::Corrupt)?;
-    let last_kind: Option<String> = connection
-        .query_row(
-            "SELECT kind FROM transcript_records
-             WHERE run_id = ?1 AND created_at = ?2
-             ORDER BY ordinal DESC LIMIT 1",
-            params![run.run_id.0, occurred_at],
-            |row| row.get(0),
-        )
-        .optional()?;
-    if matches!(last_kind.as_deref(), Some("assistant" | "tool_call")) {
-        Ok(())
-    } else {
-        Err(StoreError::Corrupt)
-    }
-}
-
+use evidence::{
+    load_action, require_completed_transcript, require_policy_event, require_unprocessed_policy,
+    validate_approval_binding, validate_execution_evidence, validate_optional_audit_checkpoint,
+};
 fn ensure_owner(
     owner: &str,
     sanitizer: &crate::harness::feedback::FeedbackEngine,

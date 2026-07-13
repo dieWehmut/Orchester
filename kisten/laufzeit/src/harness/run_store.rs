@@ -1197,6 +1197,14 @@ impl SqliteRunStore {
                     transcript::TranscriptBindingPhase::ModelResponse,
                     Some(response_range),
                 )?;
+            } else {
+                transcript::bind_transcript_range_in_transaction(
+                    &transaction,
+                    run_id,
+                    event.sequence,
+                    transcript::TranscriptBindingPhase::ModelResponse,
+                    None,
+                )?;
             }
         }
         if let Some(durable) = terminal_observation.as_ref() {
