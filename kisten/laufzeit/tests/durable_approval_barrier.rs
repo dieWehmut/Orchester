@@ -531,7 +531,7 @@ fn permit_cannot_start_after_durable_approval_expiry() {
 #[test]
 fn tool_start_requires_checkpoint_and_schema_permissions_are_checked() {
     let fixture = Fixture::new(PolicyDecision::Allow);
-    assert_eq!(fixture.store.schema_version().unwrap(), 5);
+    assert_eq!(fixture.store.schema_version().unwrap(), 6);
     let before = fixture.store.append_event(
         &fixture.owner,
         &fixture.run_id,
