@@ -2,7 +2,7 @@ use orchester_protokoll::{AgentAction, HarnessEventKind};
 use serde_json::Value;
 
 use super::{EventAppend, StoreError};
-use crate::harness::feedback::FeedbackEngine;
+use crate::harness::feedback::{FeedbackClass, FeedbackEngine, FeedbackInput};
 
 const MAX_MODEL_TEXT_BYTES: usize = 65_536;
 
@@ -20,9 +20,43 @@ pub(super) fn canonicalize_input(
             }
             HarnessEventKind::ModelCompleted { assistant_text }
         }
+        HarnessEventKind::ValidatorCompleted { feedback } => HarnessEventKind::ValidatorCompleted {
+            feedback: sanitize_validator_feedback(&feedback, sanitizer),
+        },
         kind => kind,
     };
     Ok(EventAppend { kind, ..input })
+}
+
+fn sanitize_validator_feedback(
+    feedback: &orchester_protokoll::FeedbackReport,
+    sanitizer: &FeedbackEngine,
+) -> orchester_protokoll::FeedbackReport {
+    sanitizer
+        .build(FeedbackInput {
+            source: feedback.source.clone(),
+            validator_id: feedback.validator_id.clone(),
+            exit_code: feedback.exit_code,
+            class: validator_feedback_class(&feedback.classification),
+            summary: feedback.summary.clone(),
+            stdout: feedback.stdout_tail.clone(),
+            stderr: feedback.stderr_tail.clone(),
+            retryable: feedback.retryable,
+        })
+        .report
+}
+
+fn validator_feedback_class(classification: &str) -> FeedbackClass {
+    match classification {
+        "validator_passed" => FeedbackClass::ValidatorPassed,
+        "validator_mutated_sources" => FeedbackClass::ValidatorMutatedSources,
+        "validator_output_truncated" => FeedbackClass::ValidatorOutputTruncated,
+        "snapshot_limit_exceeded" => FeedbackClass::SnapshotLimitExceeded,
+        "process_cancelled" => FeedbackClass::ProcessCancelled,
+        "process_timed_out" => FeedbackClass::ProcessTimedOut,
+        "process_spawn_failed" => FeedbackClass::ProcessSpawnFailed,
+        _ => FeedbackClass::ValidatorFailed,
+    }
 }
 
 pub(super) fn durable_action_json(

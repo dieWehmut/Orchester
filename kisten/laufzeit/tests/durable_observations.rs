@@ -131,6 +131,82 @@ fn failed_observation_rebuilds_sanitized_feedback_and_fingerprint() {
 }
 
 #[test]
+fn validator_feedback_is_sanitized_at_the_event_boundary() {
+    let fixture = Fixture::new("validator");
+    fixture.start_tool();
+    fixture
+        .store
+        .append_event(
+            &fixture.run.owner,
+            &fixture.run.run_id,
+            fixture
+                .run
+                .tool_completed_input(&fixture.run.provider_call_id),
+        )
+        .unwrap();
+
+    let event = fixture
+        .store
+        .append_event(
+            &fixture.run.owner,
+            &fixture.run.run_id,
+            EventAppend {
+                turn_id: Some(fixture.run.turn_id.clone()),
+                step_id: Some(fixture.run.step_id.clone()),
+                call_id: None,
+                occurred_at: "2026-07-12T00:00:12Z".into(),
+                kind: HarnessEventKind::ValidatorCompleted {
+                    feedback: FeedbackReport {
+                        source: "validator\u{1b}[31m".into(),
+                        validator_id: Some("cargo-check".into()),
+                        exit_code: Some(1),
+                        classification: "validator_failed".into(),
+                        summary: format!("failed with {SECRET}"),
+                        stdout_tail: format!("Authorization: Bearer {SECRET}"),
+                        stderr_tail: format!("stderr\0{SECRET}"),
+                        fingerprint: "caller-controlled-fingerprint".into(),
+                        retryable: true,
+                    },
+                },
+            },
+        )
+        .unwrap();
+    let HarnessEventKind::ValidatorCompleted { feedback } = &event.kind else {
+        panic!("validator event must remain a completion")
+    };
+    let event_payload = serde_json::to_value(feedback).unwrap();
+    let connection = rusqlite::Connection::open(&fixture.db).unwrap();
+    let row_payload: String = connection
+        .query_row(
+            "SELECT sanitized_payload FROM events WHERE kind = 'validator.completed'",
+            [],
+            |row| row.get(0),
+        )
+        .unwrap();
+    drop(connection);
+
+    let row_value: serde_json::Value = serde_json::from_str(&row_payload).unwrap();
+    assert_eq!(row_value.get("feedback"), Some(&event_payload));
+    assert!(!row_payload.contains(SECRET));
+    assert!(!row_payload.contains('\u{1b}'));
+    assert!(row_payload.contains("[REDACTED]"));
+    assert_ne!(feedback.fingerprint, "caller-controlled-fingerprint");
+
+    let reopened = SqliteRunStore::open(&fixture.db).unwrap();
+    let recovered = reopened
+        .events_owned(&fixture.run.run_id, &fixture.run.owner)
+        .unwrap()
+        .into_iter()
+        .find_map(|event| match event.kind {
+            HarnessEventKind::ValidatorCompleted { feedback } => Some(feedback),
+            _ => None,
+        })
+        .unwrap();
+    assert_eq!(serde_json::to_value(&recovered).unwrap(), event_payload);
+    drop(reopened);
+}
+
+#[test]
 fn terminal_write_requires_explicit_secret_aware_store_configuration() {
     let fixture = Fixture::new("unconfigured");
     fixture.start_tool();
