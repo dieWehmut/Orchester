@@ -449,16 +449,19 @@ fn require_completed_transcript(
         )
         .optional()?
         .ok_or(StoreError::Corrupt)?;
-    let count: i64 = connection.query_row(
-        "SELECT COUNT(*) FROM transcript_records
-         WHERE run_id = ?1 AND created_at = ?2",
-        params![run.run_id.0, occurred_at],
-        |row| row.get(0),
-    )?;
-    if count == 0 {
-        Err(StoreError::Corrupt)
-    } else {
+    let last_kind: Option<String> = connection
+        .query_row(
+            "SELECT kind FROM transcript_records
+             WHERE run_id = ?1 AND created_at = ?2
+             ORDER BY ordinal DESC LIMIT 1",
+            params![run.run_id.0, occurred_at],
+            |row| row.get(0),
+        )
+        .optional()?;
+    if matches!(last_kind.as_deref(), Some("assistant" | "tool_call")) {
         Ok(())
+    } else {
+        Err(StoreError::Corrupt)
     }
 }
 
