@@ -11,7 +11,7 @@ use orchester_laufzeit::harness::barrier::{ExecutionAuthorization, PreExecutionB
 use orchester_laufzeit::harness::governance::PolicyEngine;
 use orchester_laufzeit::harness::run_store::{
     action_hash, ActionRecord, EventAppend, NewRun, RunStore, SqliteRunStore, StoreError,
-    Transition,
+    ResumeNext, Transition,
 };
 use orchester_protokoll::{
     ActionId, AgentAction, CallId, FeedbackReport, HarnessEventKind, Observation, ObservationId,
@@ -302,6 +302,49 @@ fn approval_barrier_transitions_to_consumed_only_after_tool_start() {
             decision,
         } if resolved == &approval_id && decision == "consumed"
     ));
+}
+
+#[test]
+fn consumed_approval_keeps_the_original_audit_binding_for_resume() {
+    let fixture = Fixture::new(PolicyDecision::Ask);
+    let durable = DurableApprovalStore::new(fixture.store.clone());
+    let approval_id = durable.request(fixture.approval_input(100)).unwrap();
+    let binding = fixture.binding();
+    let capability = durable
+        .approve(&approval_id, &fixture.owner, &binding)
+        .unwrap();
+    let audit_path = fixture.db.with_file_name("resume-approval-audit.jsonl");
+    let sink = Arc::new(JsonlAuditSink::open(&audit_path).unwrap());
+    let barrier = PreExecutionBarrier::new(fixture.store.clone(), sink);
+    let permit = barrier
+        .prepare(
+            &fixture.owner,
+            &fixture.run_id,
+            &fixture.action_id,
+            ExecutionAuthorization::Approval {
+                capability: &capability,
+                binding: &binding,
+            },
+            "2026-07-12T00:00:10Z",
+        )
+        .unwrap();
+    barrier
+        .start_tool(
+            &fixture.owner,
+            &fixture.run_id,
+            permit,
+            fixture.tool_started_input(),
+        )
+        .unwrap();
+
+    let point = fixture
+        .store
+        .resume_point_owned(&fixture.run_id, &fixture.owner, "project-durable")
+        .unwrap()
+        .unwrap();
+    assert!(matches!(point.next, ResumeNext::ReconcileToolOutcome { .. }));
+    drop(durable);
+    std::fs::remove_file(audit_path).ok();
 }
 
 #[test]

@@ -203,21 +203,31 @@ pub(super) fn validate_optional_audit_checkpoint(
     let Some(event_id) = action.audit_event_id.as_deref() else {
         return Ok(());
     };
-    if action.policy_event_id.as_deref() != Some(event_id)
-        && action.approval_event_id.as_deref() != Some(event_id)
-    {
-        return Err(StoreError::Corrupt);
-    }
-    let event_exists = connection
+    let event: (String, String) = connection
         .query_row(
-            "SELECT 1 FROM events WHERE run_id = ?1 AND event_id = ?2",
+            "SELECT kind, sanitized_payload FROM events
+             WHERE run_id = ?1 AND event_id = ?2",
             params![run.run_id.0, event_id],
-            |_| Ok(true),
+            |row| Ok((row.get(0)?, row.get(1)?)),
         )
         .optional()?
-        .unwrap_or(false);
-    if !event_exists {
-        return Err(StoreError::Corrupt);
+        .ok_or(StoreError::Corrupt)?;
+    if action.policy_event_id.as_deref() == Some(event_id) {
+        if event.0 != "policy.decided" {
+            return Err(StoreError::Corrupt);
+        }
+    } else {
+        let approval_id = action.approval_id.as_deref().ok_or(StoreError::Corrupt)?;
+        let payload: Value = serde_json::from_str(&event.1).map_err(|_| StoreError::Corrupt)?;
+        if event.0 != "approval.resolved"
+            || payload.get("approval_id").and_then(Value::as_str) != Some(approval_id)
+            || !matches!(
+                payload.get("decision").and_then(Value::as_str),
+                Some("approved" | "reissued" | "executing")
+            )
+        {
+            return Err(StoreError::Corrupt);
+        }
     }
     let checkpoint: Option<(i64, String)> = connection
         .query_row(
