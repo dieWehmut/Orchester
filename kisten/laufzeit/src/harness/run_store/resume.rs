@@ -1,6 +1,6 @@
 use std::fmt;
 
-use orchester_protokoll::{ActionId, CallId, RunId, StepId, TurnId};
+use orchester_protokoll::{ActionId, AgentAction, CallId, RunId, StepId, TurnId};
 use rusqlite::{params, Connection, OptionalExtension};
 
 use super::{database::load_snapshot, RunSnapshot, RunStatus, SqliteRunStore, StoreError};
@@ -395,6 +395,9 @@ struct ActionRow {
     policy_decision: Option<String>,
     approval_id: Option<String>,
     approval_state: Option<String>,
+    origin_model_call_id: Option<String>,
+    canonical_json: String,
+    action_hash: String,
 }
 
 fn load_action(
@@ -405,7 +408,8 @@ fn load_action(
 ) -> Result<ActionRow, StoreError> {
     let row = connection
         .query_row(
-            "SELECT a.call_id, a.state, a.policy_decision, ap.approval_id, ap.state
+            "SELECT a.call_id, a.state, a.policy_decision, ap.approval_id, ap.state,
+                    a.origin_model_call_id, a.canonical_json, a.action_hash
              FROM actions a
              LEFT JOIN approvals ap
                ON ap.run_id = a.run_id AND ap.action_id = a.action_id
@@ -419,11 +423,30 @@ fn load_action(
                     policy_decision: row.get(2)?,
                     approval_id: row.get(3)?,
                     approval_state: row.get(4)?,
+                    origin_model_call_id: row.get(5)?,
+                    canonical_json: row.get(6)?,
+                    action_hash: row.get(7)?,
                 })
             },
         )
         .optional()?
         .ok_or(StoreError::Corrupt)?;
+    let origin_model_call_id = row
+        .origin_model_call_id
+        .as_deref()
+        .ok_or(StoreError::Corrupt)?;
+    if step.model_phase != "completed"
+        || step.model_call_id.as_deref() != Some(origin_model_call_id)
+    {
+        return Err(StoreError::Corrupt);
+    }
+    let action: AgentAction =
+        serde_json::from_str(&row.canonical_json).map_err(|_| StoreError::Corrupt)?;
+    let canonical = serde_json::to_string(&action).map_err(|_| StoreError::Corrupt)?;
+    if canonical != row.canonical_json || super::hash_canonical_action(&canonical) != row.action_hash
+    {
+        return Err(StoreError::Corrupt);
+    }
     Ok(row)
 }
 

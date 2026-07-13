@@ -268,6 +268,132 @@ fn recorded_action_returns_policy_evaluation_resume_point() {
 }
 
 #[test]
+fn action_resume_rejects_broken_model_and_hash_bindings() {
+    let directory = std::env::temp_dir().join(format!(
+        "orchester-resume-action-binding-{}-{}",
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    ));
+    std::fs::create_dir_all(&directory).unwrap();
+    let path = directory.join("state.db");
+    let run_id = RunId::from("run-resume-action-binding");
+    {
+        let store = SqliteRunStore::open(&path).unwrap();
+        store
+            .create_run(new_run("run-resume-action-binding", "owner-a"))
+            .unwrap();
+        start_step(&store, &run_id, "step-resume-action-binding");
+        model_event(
+            &store,
+            &run_id,
+            "step-resume-action-binding",
+            "model-call-action-binding",
+            HarnessEventKind::ModelStarted,
+        );
+        model_event(
+            &store,
+            &run_id,
+            "step-resume-action-binding",
+            "model-call-action-binding",
+            HarnessEventKind::ModelCompleted {
+                assistant_text: "inspect".into(),
+            },
+        );
+        let action = AgentAction::ReadFile {
+            path: "src/lib.rs".into(),
+            start_line: None,
+            end_line: None,
+        };
+        store
+            .record_action(
+                "owner-a",
+                ActionRecord {
+                    action_id: "action-resume-binding".into(),
+                    run_id: run_id.clone(),
+                    step_id: StepId::from("step-resume-action-binding"),
+                    call_id: CallId::from("provider-resume-binding"),
+                    origin_model_call_id: CallId::from("model-call-action-binding"),
+                    action_hash: action_hash(&action).unwrap(),
+                    effect_class: PolicyEngine::new().evaluate(&action).unwrap().effect,
+                    action,
+                    occurred_at: "2026-07-13T00:00:03Z".into(),
+                },
+            )
+            .unwrap();
+    }
+
+    let assert_corrupt = || {
+        let store = SqliteRunStore::open(&path).unwrap();
+        assert!(matches!(
+            store.resume_point_owned(&run_id, "owner-a"),
+            Err(StoreError::Corrupt)
+        ));
+    };
+    let connection = rusqlite::Connection::open(&path).unwrap();
+    let original_hash: String = connection
+        .query_row(
+            "SELECT action_hash FROM actions WHERE action_id = 'action-resume-binding'",
+            [],
+            |row| row.get(0),
+        )
+        .unwrap();
+
+    connection
+        .execute(
+            "UPDATE actions SET origin_model_call_id = NULL
+             WHERE action_id = 'action-resume-binding'",
+            [],
+        )
+        .unwrap();
+    assert_corrupt();
+
+    connection
+        .execute(
+            "UPDATE actions SET origin_model_call_id = 'model-call-action-binding'
+             WHERE action_id = 'action-resume-binding'",
+            [],
+        )
+        .unwrap();
+    connection
+        .execute(
+            "UPDATE steps SET model_phase = 'running'
+             WHERE step_id = 'step-resume-action-binding'",
+            [],
+        )
+        .unwrap();
+    assert_corrupt();
+
+    connection
+        .execute(
+            "UPDATE steps SET model_phase = 'completed'
+             WHERE step_id = 'step-resume-action-binding'",
+            [],
+        )
+        .unwrap();
+    connection
+        .execute(
+            "UPDATE actions SET action_hash = ?1
+             WHERE action_id = 'action-resume-binding'",
+            ["0".repeat(64)],
+        )
+        .unwrap();
+    assert_corrupt();
+
+    connection
+        .execute(
+            "UPDATE actions SET action_hash = ?1
+             WHERE action_id = 'action-resume-binding'",
+            [original_hash],
+        )
+        .unwrap();
+    drop(connection);
+    std::fs::remove_dir_all(directory).unwrap();
+}
+
+#[test]
 fn interrupted_unknown_model_requires_manual_reconciliation() {
     let store = SqliteRunStore::in_memory().unwrap();
     let run = store
