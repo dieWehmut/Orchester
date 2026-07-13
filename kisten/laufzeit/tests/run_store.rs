@@ -1272,6 +1272,46 @@ fn transcript_text_is_sanitized_and_tool_arguments_reject_escaped_secrets() {
     std::fs::remove_file(path).ok();
 }
 
+#[test]
+fn transcript_append_classifies_existing_noncanonical_wire_as_corrupt() {
+    let path = temp_db("transcript-corrupt-wire");
+    let run_id = RunId::from("run-transcript-corrupt");
+    {
+        let store = SqliteRunStore::open(&path).unwrap();
+        store
+            .create_run(new_run("run-transcript-corrupt", "owner-a"))
+            .unwrap();
+    }
+    let connection = rusqlite::Connection::open(&path).unwrap();
+    connection
+        .execute(
+            "INSERT INTO transcript_records(
+               run_id, ordinal, kind, call_id, wire_json, record_hash, created_at
+             ) VALUES(?1, 1, 'user', NULL, ?2, ?3, ?4)",
+            rusqlite::params![
+                run_id.0,
+                r#"{ "kind": "user", "text": "noncanonical" }"#,
+                "a".repeat(64),
+                "2026-07-12T00:00:01Z",
+            ],
+        )
+        .unwrap();
+    drop(connection);
+
+    let reopened = SqliteRunStore::open(&path).unwrap();
+    assert!(matches!(
+        reopened.append_transcript_record(
+            "owner-a",
+            &run_id,
+            TranscriptRecord::user("next"),
+            "2026-07-12T00:00:02Z",
+        ),
+        Err(StoreError::Corrupt)
+    ));
+    drop(reopened);
+    remove_temp_db(&path);
+}
+
 fn temp_db(label: &str) -> PathBuf {
     std::env::temp_dir()
         .join(format!(

@@ -58,10 +58,14 @@ impl SqliteRunStore {
                 return Err(StoreError::Corrupt);
             }
         }
-        let mut sequence_wires = prior_wires
+        let prior_wires = prior_wires
             .drain(..)
             .map(|(_, wire)| wire)
             .collect::<Vec<_>>();
+        codec
+            .decode_all(&prior_wires)
+            .map_err(|_| StoreError::Corrupt)?;
+        let mut sequence_wires = prior_wires;
         sequence_wires.push(wire.clone());
         codec.decode_all(&sequence_wires).map_err(map_input_error)?;
         let ordinal: i64 = transaction.query_row(
