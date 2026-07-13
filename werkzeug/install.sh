@@ -107,6 +107,14 @@ install_system_deps() {
         have_cmd git || winget_install "Git.Git" || true
         if ! have_cmd gcc; then
           winget_install "MSYS2.MSYS2" || true
+          for pacman in /c/msys64/usr/bin/pacman.exe /c/msys/usr/bin/pacman.exe; do
+            if [ -x "$pacman" ]; then
+              "$pacman" -Sy --needed --noconfirm mingw-w64-x86_64-gcc >/dev/null
+              break
+            fi
+          done
+          prepend_dir "/c/msys64/mingw64/bin"
+          prepend_dir "/c/msys/mingw64/bin"
         fi
       fi
       ;;
@@ -155,22 +163,28 @@ download_to_file() {
 install_rustup() {
   info "Installing Rust toolchain"
 
-  case "$(uname -s 2>/dev/null || echo unknown)" in
-    MINGW*|MSYS*|CYGWIN*)
-      rustup_init="${TMPDIR:-/tmp}/rustup-init.exe"
-      download_to_file "https://win.rustup.rs/x86_64" "$rustup_init" || die "failed to download rustup-init.exe"
-      "$rustup_init" -y --profile minimal
-      ;;
-    *)
-      rustup_sh="${TMPDIR:-/tmp}/rustup-init.sh"
-      download_to_file "https://sh.rustup.rs" "$rustup_sh" || die "failed to download rustup-init.sh"
-      sh "$rustup_sh" -y --profile minimal
-      ;;
-  esac
+  (
+    rustup_tmp_dir="$(mktemp -d "${TMPDIR:-/tmp}/orchester-rustup.XXXXXX")" || exit 1
+    trap 'rm -rf "$rustup_tmp_dir"' EXIT INT TERM
+    case "$(uname -s 2>/dev/null || echo unknown)" in
+      MINGW*|MSYS*|CYGWIN*)
+        rustup_init="$rustup_tmp_dir/rustup-init.exe"
+        download_to_file "https://win.rustup.rs/x86_64" "$rustup_init" || exit 1
+        "$rustup_init" -y --profile minimal
+        ;;
+      *)
+        rustup_sh="$rustup_tmp_dir/rustup-init.sh"
+        download_to_file "https://sh.rustup.rs" "$rustup_sh" || exit 1
+        sh "$rustup_sh" -y --profile minimal
+        ;;
+    esac
+  ) || die "Rust toolchain installation failed"
 
   [ -n "${HOME:-}" ] && prepend_dir "$HOME/.cargo/bin"
-  [ -n "${USERNAME:-}" ] && prepend_dir "/c/Users/$USERNAME/.cargo/bin"
-  prepend_dir "/c/Users/30119/.cargo/bin"
+  if [ -n "${USERPROFILE:-}" ] && have_cmd cygpath; then
+    user_profile_unix="$(cygpath -u "$USERPROFILE" 2>/dev/null || true)"
+    [ -n "$user_profile_unix" ] && prepend_dir "$user_profile_unix/.cargo/bin"
+  fi
   [ -n "${CARGO_HOME:-}" ] && prepend_dir "$CARGO_HOME/bin"
   export PATH
 }
@@ -182,7 +196,7 @@ ensure_dependencies() {
 
   case "$(uname -s 2>/dev/null || echo unknown)" in
     MINGW*|MSYS*|CYGWIN*)
-      have_cmd gcc || [ -x /d/software/gcc/mingw64/bin/gcc.exe ] || missing=true
+      have_cmd gcc || missing=true
       ;;
     *)
       have_cmd cc || have_cmd gcc || missing=true
@@ -475,20 +489,13 @@ done
 case "$(uname -s 2>/dev/null || echo unknown)" in
   MINGW*|MSYS*|CYGWIN*)
     EXE_SUFFIX=".exe"
-    # Match this repo's current Windows development setup when those paths exist.
-    if [ -z "${RUSTUP_HOME:-}" ] && [ -d /d/rust/rustup ]; then
-      export RUSTUP_HOME="D:/rust/rustup"
-    fi
-    if [ -d /d/software/gcc/mingw64/bin ]; then
-      PATH="/d/software/gcc/mingw64/bin:$PATH"
-    fi
-    prepend_dir "/d/software/git/Git/cmd"
-    prepend_dir "/d/software/git/Git/bin"
-    prepend_dir "/c/Program Files/Git/cmd"
-    prepend_dir "/c/Program Files/Git/bin"
+    [ -n "${ORCHESTER_GCC_BIN_DIR:-}" ] && prepend_dir "$ORCHESTER_GCC_BIN_DIR"
+    [ -n "${ORCHESTER_GIT_BIN_DIR:-}" ] && prepend_dir "$ORCHESTER_GIT_BIN_DIR"
     [ -n "${HOME:-}" ] && prepend_dir "$HOME/.cargo/bin"
-    [ -n "${USERNAME:-}" ] && prepend_dir "/c/Users/$USERNAME/.cargo/bin"
-    prepend_dir "/c/Users/30119/.cargo/bin"
+    if [ -n "${USERPROFILE:-}" ] && have_cmd cygpath; then
+      user_profile_unix="$(cygpath -u "$USERPROFILE" 2>/dev/null || true)"
+      [ -n "$user_profile_unix" ] && prepend_dir "$user_profile_unix/.cargo/bin"
+    fi
     ;;
   *)
     EXE_SUFFIX=""
@@ -548,7 +555,7 @@ mkdir -p "$BIN_DIR"
 info "Installing orchester to $BIN_DIR"
 (
   cd "$SRC_DIR"
-  cargo install --path kisten/konsole --force --root "$INSTALL_ROOT" --target "$CARGO_BUILD_TARGET"
+  cargo install --locked --path kisten/konsole --force --root "$INSTALL_ROOT" --target "$CARGO_BUILD_TARGET"
 )
 
 BIN="$BIN_DIR/orchester$EXE_SUFFIX"

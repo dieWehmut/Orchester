@@ -45,11 +45,17 @@ function Install-RustIfMissing {
 
     Write-Host "cargo not found; installing Rust toolchain..."
     if (-not (Invoke-WingetInstall "Rustlang.Rustup")) {
-        $rustup = Join-Path $env:TEMP "rustup-init.exe"
-        Invoke-WebRequest -Uri "https://win.rustup.rs/x86_64" -OutFile $rustup
-        & $rustup -y --profile minimal
-        if ($LASTEXITCODE -ne 0) {
-            throw "rustup-init failed with exit code $LASTEXITCODE"
+        $rustupDir = Join-Path ([System.IO.Path]::GetTempPath()) ("orchester-rustup-" + [guid]::NewGuid().ToString("N"))
+        New-Item -ItemType Directory -Force -Path $rustupDir | Out-Null
+        try {
+            $rustup = Join-Path $rustupDir "rustup-init.exe"
+            Invoke-WebRequest -Uri "https://win.rustup.rs/x86_64" -OutFile $rustup
+            & $rustup -y --profile minimal
+            if ($LASTEXITCODE -ne 0) {
+                throw "rustup-init failed with exit code $LASTEXITCODE"
+            }
+        } finally {
+            Remove-Item -LiteralPath $rustupDir -Recurse -Force -ErrorAction SilentlyContinue
         }
     }
 
@@ -68,16 +74,18 @@ function Install-GitIfMissing {
     if (-not (Invoke-WingetInstall "Git.Git")) {
         Write-Warning "Git could not be installed automatically. Continuing because local install does not require git."
     }
-    Prepend-PathIfExists "D:\software\git\Git\cmd"
     Prepend-PathIfExists "C:\Program Files\Git\cmd"
 }
 
 function Find-Gcc {
-    $candidates = @(
-        "D:\software\gcc\mingw64\bin\gcc.exe",
-        "D:\software\msys\msys2\mingw64\bin\gcc.exe",
-        "C:\msys64\mingw64\bin\gcc.exe"
-    )
+    $candidates = @()
+    if ($env:ORCHESTER_GCC_PATH) {
+        $candidates += $env:ORCHESTER_GCC_PATH
+    }
+    if ($env:ORCHESTER_MSYS2_ROOT) {
+        $candidates += Join-Path $env:ORCHESTER_MSYS2_ROOT "mingw64\bin\gcc.exe"
+    }
+    $candidates += "C:\msys64\mingw64\bin\gcc.exe"
     foreach ($candidate in $candidates) {
         if (Test-Path -LiteralPath $candidate) {
             return $candidate
@@ -108,19 +116,21 @@ function Install-MingwIfMissing {
     $gcc = Find-Gcc
     if (-not $gcc) {
         Write-Host "MinGW gcc not found; trying to install it..."
-        $pacmanCandidates = @(
-            "D:\software\msys\msys2\usr\bin\pacman.exe",
-            "C:\msys64\usr\bin\pacman.exe"
-        )
+        $pacmanCandidates = @()
+        if ($env:ORCHESTER_MSYS2_ROOT) {
+            $pacmanCandidates += Join-Path $env:ORCHESTER_MSYS2_ROOT "usr\bin\pacman.exe"
+        }
+        $pacmanCandidates += "C:\msys64\usr\bin\pacman.exe"
         $pacman = $pacmanCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
         if ($pacman) {
             & $pacman -Sy --needed --noconfirm mingw-w64-x86_64-gcc
         } else {
             Invoke-WingetInstall "MSYS2.MSYS2" | Out-Null
         }
-        Prepend-PathIfExists "D:\software\gcc\mingw64\bin"
-        Prepend-PathIfExists "D:\software\msys\msys2\mingw64\bin"
         Prepend-PathIfExists "C:\msys64\mingw64\bin"
+        if ($env:ORCHESTER_MSYS2_ROOT) {
+            Prepend-PathIfExists (Join-Path $env:ORCHESTER_MSYS2_ROOT "mingw64\bin")
+        }
         $gcc = Find-Gcc
     }
 
@@ -272,20 +282,14 @@ function Ensure-WindowsCommandShim([string]$Target) {
     return $shim
 }
 
-# This repo is currently configured for x86_64-pc-windows-gnu on this Windows
-# host. Keep these defaults local to the install process and allow callers to
-# override them if they already set a different Rust environment.
-if (-not $env:RUSTUP_HOME -and (Test-Path -LiteralPath "D:\rust\rustup")) {
-    $env:RUSTUP_HOME = "D:\rust\rustup"
-}
-
 Prepend-PathIfExists (Join-Path $env:USERPROFILE ".cargo\bin")
 if ($env:CARGO_HOME) {
     Prepend-PathIfExists (Join-Path $env:CARGO_HOME "bin")
 }
-Prepend-PathIfExists "D:\software\gcc\mingw64\bin"
-Prepend-PathIfExists "D:\software\git\Git\cmd"
 Prepend-PathIfExists "C:\Program Files\Git\cmd"
+if ($env:ORCHESTER_GCC_PATH) {
+    Prepend-PathIfExists (Split-Path -Parent $env:ORCHESTER_GCC_PATH)
+}
 
 Install-GitIfMissing
 Install-RustIfMissing
@@ -297,7 +301,7 @@ $cargo = Get-Command cargo -ErrorAction Stop
 New-Item -ItemType Directory -Force -Path $BinDir | Out-Null
 
 Write-Host "Installing orchester to $BinDir ..."
-& $cargo.Source install --path $PackagePath --force --root $InstallRoot
+& $cargo.Source install --locked --path $PackagePath --force --root $InstallRoot
 if ($LASTEXITCODE -ne 0) {
     throw "cargo install failed with exit code $LASTEXITCODE"
 }
