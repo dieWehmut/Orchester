@@ -28,6 +28,7 @@ use crate::harness::transcript::TranscriptRecord;
 mod database;
 mod model;
 mod observation;
+mod policy;
 mod resume;
 mod sanitized;
 mod schema;
@@ -1092,6 +1093,11 @@ impl SqliteRunStore {
         permit_action_hash: Option<&str>,
         request_transcript: Option<&[TranscriptRecord]>,
     ) -> Result<(HarnessEvent, Option<AgentAction>), StoreError> {
+        if matches!(&input.kind, HarnessEventKind::PolicyDecided { .. }) {
+            return Err(StoreError::Invariant(
+                "policy decisions must be calculated by decide_policy".into(),
+            ));
+        }
         let mut connection = self.connection()?;
         let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
         let snapshot = load_snapshot(&transaction, run_id, Some(owner_actor_id))?;

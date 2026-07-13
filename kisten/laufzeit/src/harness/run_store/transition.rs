@@ -109,20 +109,26 @@ pub(super) fn apply_event_transition(
             ensure_single_update(updated)?;
             match decision {
                 orchester_protokoll::PolicyDecision::Ask => {
-                    transaction.execute(
-                        "UPDATE steps SET status = 'awaiting_approval' WHERE step_id = ?1",
-                        params![step_id.0],
+                    let step_updated = transaction.execute(
+                        "UPDATE steps SET status = 'awaiting_approval'
+                         WHERE run_id = ?1 AND step_id = ?2 AND status = 'action_recorded'",
+                        params![snapshot.run_id.0, step_id.0],
                     )?;
-                    transaction.execute(
-                        "UPDATE runs SET status = 'awaiting_approval' WHERE run_id = ?1",
-                        params![snapshot.run_id.0],
+                    ensure_single_update(step_updated)?;
+                    let run_updated = transaction.execute(
+                        "UPDATE runs SET status = 'awaiting_approval'
+                         WHERE run_id = ?1 AND status = 'running' AND current_step_id = ?2",
+                        params![snapshot.run_id.0, step_id.0],
                     )?;
+                    ensure_single_update(run_updated)?;
                 }
                 orchester_protokoll::PolicyDecision::Deny => {
-                    transaction.execute(
-                        "UPDATE steps SET status = 'observed' WHERE step_id = ?1",
-                        params![step_id.0],
+                    let step_updated = transaction.execute(
+                        "UPDATE steps SET status = 'observed'
+                         WHERE run_id = ?1 AND step_id = ?2 AND status = 'action_recorded'",
+                        params![snapshot.run_id.0, step_id.0],
                     )?;
+                    ensure_single_update(step_updated)?;
                 }
                 orchester_protokoll::PolicyDecision::Allow => {}
             }

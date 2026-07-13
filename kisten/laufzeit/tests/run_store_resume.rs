@@ -25,7 +25,7 @@ fn new_run(id: &str, owner: &str) -> NewRun {
         owner_actor_id: owner.into(),
         canonical_root: format!("/workspace/{id}"),
         workspace_identity: format!("workspace-{id}"),
-        policy_snapshot_hash: "policy-v1".into(),
+        policy_snapshot_hash: PolicyEngine::snapshot_hash(),
         config_snapshot_hash: "config-v1".into(),
         max_steps: 4,
         occurred_at: "2026-07-13T00:00:00Z".into(),
@@ -222,8 +222,8 @@ fn policy_denial_is_valid_terminal_evidence_for_the_next_step() {
         },
     );
     let action = AgentAction::RunCommand {
-        program: "git".into(),
-        args: vec!["push".into()],
+        program: "rm".into(),
+        args: vec!["-rf".into(), "/".into()],
         cwd: None,
     };
     store
@@ -243,20 +243,11 @@ fn policy_denial_is_valid_terminal_evidence_for_the_next_step() {
         )
         .unwrap();
     store
-        .append_event(
+        .decide_policy(
             "owner-a",
             &run.run_id,
-            EventAppend {
-                turn_id: Some(TurnId::from("turn-1")),
-                step_id: Some(StepId::from("step-resume-policy-deny")),
-                call_id: None,
-                occurred_at: "2026-07-13T00:00:04Z".into(),
-                kind: HarnessEventKind::PolicyDecided {
-                    action_id: "action-policy-deny".into(),
-                    decision: orchester_protokoll::PolicyDecision::Deny,
-                    rule_id: "command.external_effect".into(),
-                },
-            },
+            &"action-policy-deny".into(),
+            "2026-07-13T00:00:04Z",
         )
         .unwrap();
 
@@ -908,20 +899,11 @@ fn resume_rejects_ready_allow_action_without_its_policy_event() {
             )
             .unwrap();
         store
-            .append_event(
+            .decide_policy(
                 "owner-a",
                 &run_id,
-                EventAppend {
-                    turn_id: Some(TurnId::from("turn-1")),
-                    step_id: Some(StepId::from("step-resume-policy-binding")),
-                    call_id: None,
-                    occurred_at: "2026-07-13T00:00:04Z".into(),
-                    kind: HarnessEventKind::PolicyDecided {
-                        action_id: "action-resume-policy-binding".into(),
-                        decision: orchester_protokoll::PolicyDecision::Allow,
-                        rule_id: "workspace.read".into(),
-                    },
-                },
+                &"action-resume-policy-binding".into(),
+                "2026-07-13T00:00:04Z",
             )
             .unwrap();
     }
@@ -1203,8 +1185,8 @@ fn approval_resume_points_distinguish_request_wait_and_capability_recovery() {
         },
     );
     let action = AgentAction::RunCommand {
-        program: "git".into(),
-        args: vec!["status".into()],
+        program: "cargo".into(),
+        args: vec!["add".into(), "serde".into()],
         cwd: None,
     };
     let action_hash_value = action_hash(&action).unwrap();
@@ -1225,20 +1207,11 @@ fn approval_resume_points_distinguish_request_wait_and_capability_recovery() {
         )
         .unwrap();
     store
-        .append_event(
+        .decide_policy(
             "owner-a",
             &run.run_id,
-            EventAppend {
-                turn_id: Some(TurnId::from("turn-1")),
-                step_id: Some(StepId::from("step-resume-approval")),
-                call_id: None,
-                occurred_at: "2026-07-13T00:00:04Z".into(),
-                kind: HarnessEventKind::PolicyDecided {
-                    action_id: "action-resume-approval".into(),
-                    decision: orchester_protokoll::PolicyDecision::Ask,
-                    rule_id: "command.external_effect".into(),
-                },
-            },
+            &"action-resume-approval".into(),
+            "2026-07-13T00:00:04Z",
         )
         .unwrap();
 
@@ -1260,7 +1233,7 @@ fn approval_resume_points_distinguish_request_wait_and_capability_recovery() {
         action_id: "action-resume-approval".into(),
         action_hash: action_hash_value,
         workspace_identity: "workspace-run-resume-approval".into(),
-        policy_snapshot_hash: "policy-v1".into(),
+        policy_snapshot_hash: PolicyEngine::snapshot_hash(),
         config_snapshot_hash: "config-v1".into(),
     };
     approval
@@ -1268,10 +1241,10 @@ fn approval_resume_points_distinguish_request_wait_and_capability_recovery() {
             approval_id: approval_id.clone(),
             owner_actor_id: "owner-a".into(),
             binding: binding.clone(),
-            action_summary: "run_command program_bytes=4 args_count=1 args_bytes=6 cwd_bytes=0"
+            action_summary: "run_command program_bytes=5 args_count=2 args_bytes=8 cwd_bytes=0"
                 .into(),
-            risk: "high".into(),
-            rule_id: "command.external_effect".into(),
+            risk: "medium".into(),
+            rule_id: "dependency.install".into(),
             created_at: format!("unix:{now}"),
             expires_at: format!("unix:{}", now + 600),
             created_at_unix: now - 1,

@@ -4,8 +4,8 @@ use orchester_laufzeit::harness::run_store::{
 };
 use orchester_laufzeit::harness::transcript::TranscriptRecord;
 use orchester_protokoll::{
-    ActionId, AgentAction, CallId, HarnessEventKind, Observation, ObservationId, PolicyDecision,
-    RunId, StepId, TurnId,
+    ActionId, AgentAction, CallId, HarnessEventKind, Observation, ObservationId, RunId, StepId,
+    TurnId,
 };
 
 pub(crate) struct AllowedRun {
@@ -68,7 +68,7 @@ pub(crate) fn create_allowed_run(store: &SqliteRunStore, label: &str) -> Allowed
             owner_actor_id: owner.clone(),
             canonical_root: format!("/workspace/{label}"),
             workspace_identity: format!("workspace-{label}"),
-            policy_snapshot_hash: format!("policy-{label}"),
+            policy_snapshot_hash: PolicyEngine::snapshot_hash(),
             config_snapshot_hash: format!("config-{label}"),
             max_steps: 4,
             occurred_at: "2026-07-12T00:00:00Z".into(),
@@ -136,20 +136,11 @@ pub(crate) fn create_allowed_run(store: &SqliteRunStore, label: &str) -> Allowed
         )
         .unwrap();
     store
-        .append_event(
+        .decide_policy(
             &owner,
             &run_id,
-            EventAppend {
-                turn_id: Some(turn_id.clone()),
-                step_id: Some(step_id.clone()),
-                call_id: None,
-                occurred_at: "2026-07-12T00:00:05Z".into(),
-                kind: HarnessEventKind::PolicyDecided {
-                    action_id: action_id.clone(),
-                    decision: PolicyDecision::Allow,
-                    rule_id: "workspace.read".into(),
-                },
-            },
+            &action_id,
+            "2026-07-12T00:00:05Z",
         )
         .unwrap();
 

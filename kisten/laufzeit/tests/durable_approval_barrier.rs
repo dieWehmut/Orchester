@@ -1121,7 +1121,7 @@ impl Fixture {
                 owner_actor_id: owner.clone(),
                 canonical_root: root.to_string_lossy().into_owned(),
                 workspace_identity: "workspace-durable".into(),
-                policy_snapshot_hash: "policy-durable".into(),
+                policy_snapshot_hash: PolicyEngine::snapshot_hash(),
                 config_snapshot_hash: "config-durable".into(),
                 max_steps: 4,
                 occurred_at: "2026-07-12T00:00:00Z".into(),
@@ -1204,24 +1204,11 @@ impl Fixture {
             )
             .unwrap();
         store
-            .append_event(
+            .decide_policy(
                 &owner,
                 &run_id,
-                orchester_laufzeit::harness::run_store::EventAppend {
-                    turn_id: Some(turn_id),
-                    step_id: Some(step_id.clone()),
-                    call_id: None,
-                    occurred_at: "2026-07-12T00:00:04Z".into(),
-                    kind: HarnessEventKind::PolicyDecided {
-                        action_id: action_id.clone(),
-                        decision,
-                        rule_id: if decision == PolicyDecision::Allow {
-                            "workspace.read".into()
-                        } else {
-                            "dependency.install".into()
-                        },
-                    },
-                },
+                &action_id,
+                "2026-07-12T00:00:04Z",
             )
             .unwrap();
         Self {
@@ -1243,7 +1230,7 @@ impl Fixture {
             action_id: self.action_id.clone(),
             action_hash: self.hash.clone(),
             workspace_identity: "workspace-durable".into(),
-            policy_snapshot_hash: "policy-durable".into(),
+            policy_snapshot_hash: PolicyEngine::snapshot_hash(),
             config_snapshot_hash: "config-durable".into(),
         }
     }

@@ -24,7 +24,7 @@ fn new_run(id: &str, owner: &str) -> NewRun {
         owner_actor_id: owner.to_owned(),
         canonical_root: format!("/workspace/{id}"),
         workspace_identity: format!("workspace-{id}"),
-        policy_snapshot_hash: "policy-v1".into(),
+        policy_snapshot_hash: orchester_laufzeit::harness::governance::PolicyEngine::snapshot_hash(),
         config_snapshot_hash: "config-v1".into(),
         max_steps: 8,
         occurred_at: "2026-07-12T00:00:00Z".into(),
@@ -756,20 +756,11 @@ fn every_write_requires_the_run_owner_and_approval_pause_blocks_new_steps() {
         )
         .unwrap();
     store
-        .append_event(
+        .decide_policy(
             "owner-a",
             &run.run_id,
-            EventAppend {
-                turn_id: Some(TurnId::from("turn-1")),
-                step_id: Some(StepId::from("step-1")),
-                call_id: Some(CallId::from("action-call-1")),
-                occurred_at: "2026-07-12T00:00:02Z".into(),
-                kind: HarnessEventKind::PolicyDecided {
-                    action_id: "approval-action".into(),
-                    decision: orchester_protokoll::PolicyDecision::Ask,
-                    rule_id: "git.write".into(),
-                },
-            },
+            &"approval-action".into(),
+            "2026-07-12T00:00:02Z",
         )
         .unwrap();
     assert!(matches!(
