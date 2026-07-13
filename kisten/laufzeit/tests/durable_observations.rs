@@ -51,8 +51,8 @@ fn completed_observation_is_sanitized_linked_and_recoverable() {
         )
         .unwrap()
         .unwrap();
-    assert_eq!(binding.first_ordinal, Some(2));
-    assert_eq!(binding.last_ordinal, Some(2));
+    assert_eq!(binding.first_ordinal, Some(3));
+    assert_eq!(binding.last_ordinal, Some(3));
     assert_eq!(binding.record_count, 1);
     let row = fixture.observation_row();
     let HarnessEventKind::ToolCompleted { observation } = event.kind else {
@@ -78,8 +78,8 @@ fn completed_observation_is_sanitized_linked_and_recoverable() {
         .store
         .transcript_owned(&fixture.run.run_id, &fixture.run.owner)
         .unwrap();
-    assert_eq!(transcript.len(), 2);
-    let TranscriptRecord::ToolResultJson { call_id, payload } = &transcript[1].record else {
+    assert_eq!(transcript.len(), 3);
+    let TranscriptRecord::ToolResultJson { call_id, payload } = &transcript[2].record else {
         panic!("expected a durable tool result");
     };
     assert_eq!(call_id.0, fixture.run.provider_call_id.0);
@@ -186,7 +186,9 @@ fn failed_observation_rebuilds_sanitized_feedback_and_fingerprint() {
         .store
         .transcript_owned(&fixture.run.run_id, &fixture.run.owner)
         .unwrap();
-    let TranscriptRecord::ToolResultJson { call_id, payload } = &transcript[1].record else {
+    let TranscriptRecord::ToolResultJson { call_id, payload } =
+        transcript.last().map(|row| &row.record).unwrap()
+    else {
         panic!("expected a durable failed tool result");
     };
     assert_eq!(call_id.0, fixture.run.provider_call_id.0);
