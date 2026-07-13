@@ -17,7 +17,7 @@ fn latest_schema_contains_bounded_append_only_transcript_records() {
     std::fs::create_dir_all(&root).unwrap();
     let db = root.join("state.db");
     let store = SqliteRunStore::open(&db).unwrap();
-    assert_eq!(store.schema_version().unwrap(), 7);
+    assert_eq!(store.schema_version().unwrap(), 8);
     drop(store);
 
     let connection = rusqlite::Connection::open(&db).unwrap();
@@ -189,7 +189,7 @@ fn v6_upgrade_does_not_guess_lifecycle_bindings_for_legacy_transcripts() {
     }
 
     let store = SqliteRunStore::open(&db).unwrap();
-    assert_eq!(store.schema_version().unwrap(), 7);
+    assert_eq!(store.schema_version().unwrap(), 8);
     drop(store);
     let connection = rusqlite::Connection::open(&db).unwrap();
     let binding_count: i64 = connection
@@ -225,7 +225,7 @@ fn v1_state_database_is_upgraded_to_latest_before_use() {
         std::fs::set_permissions(&db, std::fs::Permissions::from_mode(0o600)).unwrap();
     }
     let store = SqliteRunStore::open(&db).unwrap();
-    assert_eq!(store.schema_version().unwrap(), 7);
+    assert_eq!(store.schema_version().unwrap(), 8);
     drop(store);
     let connection = rusqlite::Connection::open(&db).unwrap();
     let columns: Vec<String> = connection
@@ -281,7 +281,7 @@ fn concurrent_v1_openers_converge_on_latest_migration() {
         }));
     }
     for opener in openers {
-        assert_eq!(opener.join().unwrap().unwrap(), 7);
+        assert_eq!(opener.join().unwrap().unwrap(), 8);
     }
     std::fs::remove_dir_all(root).unwrap();
 }
@@ -351,7 +351,7 @@ fn v2_state_database_backfills_model_phase_and_action_origin() {
     }
 
     let store = SqliteRunStore::open(&db).unwrap();
-    assert_eq!(store.schema_version().unwrap(), 7);
+    assert_eq!(store.schema_version().unwrap(), 8);
     drop(store);
     let connection = rusqlite::Connection::open(&db).unwrap();
     let phases = connection
@@ -470,7 +470,7 @@ fn unexpected_v2_trigger_is_rejected_and_upgrade_can_retry_after_removal() {
         .unwrap();
     drop(connection);
     let store = SqliteRunStore::open(&db).unwrap();
-    assert_eq!(store.schema_version().unwrap(), 7);
+    assert_eq!(store.schema_version().unwrap(), 8);
     drop(store);
     std::fs::remove_dir_all(root).unwrap();
 }
@@ -570,7 +570,7 @@ fn unexpected_v3_trigger_is_rejected_and_upgrade_can_retry_after_removal() {
     drop(connection);
 
     let store = SqliteRunStore::open(&db).unwrap();
-    assert_eq!(store.schema_version().unwrap(), 7);
+    assert_eq!(store.schema_version().unwrap(), 8);
     drop(store);
     let connection = rusqlite::Connection::open(&db).unwrap();
     let origin: String = connection
@@ -620,7 +620,7 @@ fn concurrent_v2_openers_converge_on_latest_migrations() {
         }));
     }
     for opener in openers {
-        assert_eq!(opener.join().unwrap().unwrap(), 7);
+        assert_eq!(opener.join().unwrap().unwrap(), 8);
     }
     std::fs::remove_dir_all(root).unwrap();
 }
@@ -839,7 +839,7 @@ fn unexpected_v4_trigger_is_rejected_and_upgrade_can_retry_after_removal() {
     drop(connection);
 
     let store = SqliteRunStore::open(&db).unwrap();
-    assert_eq!(store.schema_version().unwrap(), 7);
+    assert_eq!(store.schema_version().unwrap(), 8);
     drop(store);
     let connection = rusqlite::Connection::open(&db).unwrap();
     let outcome_shape: (String, u32, Option<String>) = connection
@@ -948,7 +948,7 @@ fn v4_terminal_attempts_receive_typed_absence_while_started_stays_unlinked() {
     }
 
     let store = SqliteRunStore::open(&db).unwrap();
-    assert_eq!(store.schema_version().unwrap(), 7);
+    assert_eq!(store.schema_version().unwrap(), 8);
     drop(store);
     let connection = rusqlite::Connection::open(&db).unwrap();
     let attempts = connection
@@ -1185,8 +1185,8 @@ fn newer_schema_is_rejected_without_bootstrapping_v1_objects() {
                applied_at TEXT NOT NULL
              );
              INSERT INTO schema_versions(version, applied_at)
-               VALUES(8, CURRENT_TIMESTAMP);
-             PRAGMA user_version = 8;",
+               VALUES(9, CURRENT_TIMESTAMP);
+             PRAGMA user_version = 9;",
         )
         .unwrap();
     drop(connection);
@@ -1198,8 +1198,8 @@ fn newer_schema_is_rejected_without_bootstrapping_v1_objects() {
     ));
 
     let connection = rusqlite::Connection::open(&db).unwrap();
-    assert_eq!(schema_versions(&connection), vec![8]);
-    assert_eq!(user_version(&connection), 8);
+    assert_eq!(schema_versions(&connection), vec![9]);
+    assert_eq!(user_version(&connection), 9);
     assert!(!schema_object_exists(&connection, "table", "actors"));
     drop(connection);
     std::fs::remove_dir_all(root).unwrap();
@@ -1357,7 +1357,7 @@ fn later_failure_rolls_the_entire_v1_to_latest_upgrade_back() {
     drop(connection);
 
     let store = SqliteRunStore::open(&db).unwrap();
-    assert_eq!(store.schema_version().unwrap(), 7);
+    assert_eq!(store.schema_version().unwrap(), 8);
     drop(store);
     std::fs::remove_dir_all(root).unwrap();
 }
@@ -1397,7 +1397,7 @@ fn sqlite_with_user_objects_but_no_ledger_is_not_claimed() {
 
 #[test]
 fn every_exact_historical_prefix_converges_on_latest_once() {
-    for through in 1..=4 {
+    for through in 1..=7 {
         let (root, db) = temporary_database(&format!("prefix-v{through}"));
         let connection = rusqlite::Connection::open(&db).unwrap();
         apply_state_migrations(&connection, through);
@@ -1405,12 +1405,12 @@ fn every_exact_historical_prefix_converges_on_latest_once() {
         prepare_database_permissions(&root, &db);
 
         let store = SqliteRunStore::open(&db).unwrap();
-        assert_eq!(store.schema_version().unwrap(), 7);
+        assert_eq!(store.schema_version().unwrap(), 8);
         drop(store);
 
         let connection = rusqlite::Connection::open(&db).unwrap();
-        assert_eq!(schema_versions(&connection), vec![1, 2, 3, 4, 5, 6, 7]);
-        assert_eq!(user_version(&connection), 7);
+        assert_eq!(schema_versions(&connection), vec![1, 2, 3, 4, 5, 6, 7, 8]);
+        assert_eq!(user_version(&connection), 8);
         drop(connection);
         std::fs::remove_dir_all(root).unwrap();
     }
@@ -1421,7 +1421,7 @@ fn marker_without_a_ledger_is_rejected_without_bootstrap() {
     let (root, db) = temporary_database("marker-without-ledger");
     let connection = rusqlite::Connection::open(&db).unwrap();
     connection
-        .execute_batch("PRAGMA user_version = 8;")
+        .execute_batch("PRAGMA user_version = 9;")
         .unwrap();
     drop(connection);
     prepare_database_permissions(&root, &db);
@@ -1432,7 +1432,7 @@ fn marker_without_a_ledger_is_rejected_without_bootstrap() {
     ));
 
     let connection = rusqlite::Connection::open(&db).unwrap();
-    assert_eq!(user_version(&connection), 8);
+    assert_eq!(user_version(&connection), 9);
     assert!(!schema_object_exists(
         &connection,
         "table",
@@ -1539,6 +1539,9 @@ fn apply_state_migrations(connection: &rusqlite::Connection, through: usize) {
         include_str!("../migrations/0002_approval_barrier.sql"),
         include_str!("../migrations/0003_model_phase.sql"),
         include_str!("../migrations/0004_action_model_binding.sql"),
+        include_str!("../migrations/0005_observation_links.sql"),
+        include_str!("../migrations/0006_transcript_records.sql"),
+        include_str!("../migrations/0007_transcript_bindings.sql"),
     ];
     for migration in migrations.iter().take(through) {
         connection.execute_batch(migration).unwrap();

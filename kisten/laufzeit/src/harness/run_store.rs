@@ -109,7 +109,11 @@ impl SqliteRunStore {
         terminal_sanitizer: Option<FeedbackEngine>,
     ) -> Result<Self, StoreError> {
         connection.busy_timeout(Duration::from_secs(5))?;
-        connection.execute_batch("PRAGMA foreign_keys = ON; PRAGMA synchronous = FULL;")?;
+        connection.execute_batch(
+            "PRAGMA foreign_keys = ON;
+             PRAGMA recursive_triggers = ON;
+             PRAGMA synchronous = FULL;",
+        )?;
         schema::apply_migrations(&mut connection)?;
         if enable_wal {
             storage::enable_wal_mode(&connection)?;

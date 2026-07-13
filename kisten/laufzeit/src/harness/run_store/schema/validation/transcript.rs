@@ -43,6 +43,20 @@ pub(super) fn verify_schema(connection: &Connection) -> Result<(), StoreError> {
     )
 }
 
+pub(super) fn verify_append_guard(connection: &Connection) -> Result<(), StoreError> {
+    require_trigger_fragments(
+        connection,
+        "trg_transcript_records_no_replace",
+        &[
+            "beforeinsertontranscript_records",
+            "whenexists(select1fromtranscript_records",
+            "new.run_id",
+            "new.ordinal",
+            "raise(abort,'durabletranscriptrecordsareappend-only')",
+        ],
+    )
+}
+
 fn require_column_types(connection: &Connection) -> Result<(), StoreError> {
     let mut statement = connection.prepare("PRAGMA table_info(transcript_records)")?;
     let columns = statement

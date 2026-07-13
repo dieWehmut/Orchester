@@ -91,6 +91,10 @@ pub(super) fn verify_schema_shape(
     if expected_version >= 7 {
         bindings::verify_schema(connection)?;
     }
+    if expected_version >= 8 {
+        transcript::verify_append_guard(connection)?;
+        bindings::verify_append_guard(connection)?;
+    }
     require_columns(
         connection,
         "approvals",

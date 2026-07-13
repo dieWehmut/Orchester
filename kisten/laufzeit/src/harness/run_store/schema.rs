@@ -29,6 +29,10 @@ const MIGRATIONS: &[(u32, &str)] = &[
         7,
         include_str!("../../../migrations/0007_transcript_bindings.sql"),
     ),
+    (
+        8,
+        include_str!("../../../migrations/0008_transcript_append_guards.sql"),
+    ),
 ];
 
 pub(super) const CURRENT_SCHEMA_VERSION: u32 = MIGRATIONS.len() as u32;

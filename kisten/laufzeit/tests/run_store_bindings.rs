@@ -121,6 +121,27 @@ fn binding_rows_enforce_shape_foreign_keys_and_append_only_updates() {
     let connection = enable_foreign_keys(&path);
     assert_sqlite_constraint(
         connection.execute(
+            "INSERT OR REPLACE INTO transcript_records(
+               run_id, ordinal, kind, call_id, wire_json, record_hash, created_at
+             ) SELECT run_id, ordinal, kind, call_id, wire_json, record_hash, created_at
+               FROM transcript_records WHERE run_id = ?1 AND ordinal = 1",
+            rusqlite::params![run_id.0],
+        ),
+        rusqlite::ffi::SQLITE_CONSTRAINT_TRIGGER,
+    );
+    assert_sqlite_constraint(
+        connection.execute(
+            "INSERT OR REPLACE INTO transcript_bindings(
+               run_id, event_sequence, phase, first_ordinal, last_ordinal, record_count
+             ) SELECT run_id, event_sequence, phase, first_ordinal, last_ordinal, record_count
+               FROM transcript_bindings
+              WHERE run_id = ?1 AND event_sequence = ?2 AND phase = 'model_request'",
+            rusqlite::params![run_id.0, event_sequence],
+        ),
+        rusqlite::ffi::SQLITE_CONSTRAINT_TRIGGER,
+    );
+    assert_sqlite_constraint(
+        connection.execute(
             "UPDATE transcript_bindings
              SET record_count = 0, first_ordinal = NULL, last_ordinal = NULL
              WHERE run_id = ?1 AND event_sequence = ?2 AND phase = 'model_request'",

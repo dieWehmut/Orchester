@@ -38,6 +38,21 @@ pub(super) fn verify_schema(connection: &Connection) -> Result<(), StoreError> {
     )
 }
 
+pub(super) fn verify_append_guard(connection: &Connection) -> Result<(), StoreError> {
+    require_trigger_fragments(
+        connection,
+        "trg_transcript_bindings_no_replace",
+        &[
+            "beforeinsertontranscript_bindings",
+            "whenexists(select1fromtranscript_bindings",
+            "new.run_id",
+            "new.event_sequence",
+            "new.phase",
+            "raise(abort,'transcriptbindingsareappend-only')",
+        ],
+    )
+}
+
 fn require_column_types(connection: &Connection) -> Result<(), StoreError> {
     let mut statement = connection.prepare("PRAGMA table_info(transcript_bindings)")?;
     let columns = statement
