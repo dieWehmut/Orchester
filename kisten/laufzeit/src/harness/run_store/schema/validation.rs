@@ -4,6 +4,8 @@ use rusqlite::{params, Connection, OptionalExtension};
 
 use super::super::{hash_canonical_action, StoreError};
 
+mod transcript;
+
 const EXPECTED_V5_SCHEMA_OBJECT_HASHES: &[(&str, &str, &str)] = &[
     (
         "table",
@@ -57,16 +59,16 @@ const EXPECTED_V5_SCHEMA_OBJECT_HASHES: &[(&str, &str, &str)] = &[
     ),
 ];
 
-pub(super) fn verify_schema_shape(connection: &Connection) -> Result<(), StoreError> {
+pub(super) fn verify_schema_shape(
+    connection: &Connection,
+    expected_version: u32,
+) -> Result<(), StoreError> {
     let (count, minimum, maximum): (u32, Option<u32>, Option<u32>) = connection.query_row(
         "SELECT COUNT(*), MIN(version), MAX(version) FROM schema_versions",
         [],
         |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
     )?;
-    if count != super::CURRENT_SCHEMA_VERSION
-        || minimum != Some(1)
-        || maximum != Some(super::CURRENT_SCHEMA_VERSION)
-    {
+    if count != expected_version || minimum != Some(1) || maximum != Some(expected_version) {
         return Err(StoreError::Corrupt);
     }
     require_columns(
@@ -82,6 +84,9 @@ pub(super) fn verify_schema_shape(connection: &Connection) -> Result<(), StoreEr
     require_text_column(connection, "actions", "origin_model_call_id")?;
     require_model_phase_schema(connection)?;
     require_observation_schema(connection)?;
+    if expected_version >= 6 {
+        transcript::verify_schema(connection)?;
+    }
     require_columns(
         connection,
         "approvals",

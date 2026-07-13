@@ -21,6 +21,10 @@ const MIGRATIONS: &[(u32, &str)] = &[
         5,
         include_str!("../../../migrations/0005_observation_links.sql"),
     ),
+    (
+        6,
+        include_str!("../../../migrations/0006_transcript_records.sql"),
+    ),
 ];
 
 pub(super) const CURRENT_SCHEMA_VERSION: u32 = MIGRATIONS.len() as u32;
@@ -45,7 +49,7 @@ pub(super) fn apply_migrations(connection: &mut Connection) -> Result<(), StoreE
     }
 
     verify_version_markers(&transaction, CURRENT_SCHEMA_VERSION)?;
-    verify_schema_shape(&transaction)?;
+    verify_schema_shape(&transaction, CURRENT_SCHEMA_VERSION)?;
     transaction.commit()?;
     Ok(())
 }
@@ -196,7 +200,7 @@ fn require_version_table_shape(transaction: &Transaction<'_>) -> Result<(), Stor
 fn verify_schema_at(transaction: &Transaction<'_>, version: u32) -> Result<(), StoreError> {
     require_reference_schema(transaction, version)?;
     if version >= 5 {
-        verify_schema_shape(transaction)?;
+        verify_schema_shape(transaction, version)?;
     } else {
         require_no_foreign_key_violations(transaction)?;
     }
