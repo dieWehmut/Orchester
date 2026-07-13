@@ -1436,7 +1436,7 @@ impl RunStore for SqliteRunStore {
             ));
         }
 
-        let canonical_json = serde_json::to_string(&action.action)?;
+        let canonical_json = sanitized::durable_action_json(&action.action, &self.event_sanitizer)?;
         let expected_hash = hash_canonical_action(&canonical_json);
         if action.action_hash != expected_hash {
             return Err(StoreError::Invariant(
