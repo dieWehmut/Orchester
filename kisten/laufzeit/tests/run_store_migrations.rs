@@ -117,6 +117,94 @@ fn latest_schema_contains_bounded_append_only_transcript_records() {
 }
 
 #[test]
+fn v6_upgrade_does_not_guess_lifecycle_bindings_for_legacy_transcripts() {
+    let root = std::env::temp_dir().join(format!(
+        "orchester-v6-binding-upgrade-{}-{}",
+        std::process::id(),
+        NEXT.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir_all(&root).unwrap();
+    let db = root.join("state.db");
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    connection
+        .execute_batch("PRAGMA foreign_keys = ON;")
+        .unwrap();
+    for migration in [
+        include_str!("../migrations/0001_state.sql"),
+        include_str!("../migrations/0002_approval_barrier.sql"),
+        include_str!("../migrations/0003_model_phase.sql"),
+        include_str!("../migrations/0004_action_model_binding.sql"),
+        include_str!("../migrations/0005_observation_links.sql"),
+        include_str!("../migrations/0006_transcript_records.sql"),
+    ] {
+        connection.execute_batch(migration).unwrap();
+    }
+    connection
+        .execute_batch(
+            "INSERT INTO actors(actor_id, kind, subject_hash, created_at)
+             VALUES('owner-v6-binding', 'local_user', 'subject-v6-binding',
+                    '2026-07-13T00:00:00Z');
+             INSERT INTO projects(
+               project_id, canonical_root, workspace_identity, created_at, updated_at
+             ) VALUES(
+               'project-v6-binding', '/workspace/v6-binding', 'workspace-v6-binding',
+               '2026-07-13T00:00:00Z', '2026-07-13T00:00:00Z'
+             );
+             INSERT INTO runs(
+               run_id, project_id, owner_actor_id, status, next_sequence,
+               current_turn_id, current_step_id, policy_snapshot_hash,
+               config_snapshot_hash, max_steps, steps_used, created_at, updated_at
+             ) VALUES(
+               'run-v6-binding', 'project-v6-binding', 'owner-v6-binding', 'running', 2,
+               'turn-v6-binding', 'step-v6-binding', 'policy-v6-binding',
+               'config-v6-binding', 4, 1, '2026-07-13T00:00:00Z',
+               '2026-07-13T00:00:00Z'
+             );
+             INSERT INTO events(
+               run_id, sequence, schema_version, event_id, turn_id, step_id, call_id,
+               kind, sanitized_payload, occurred_at
+             ) VALUES(
+               'run-v6-binding', 1, 1, 'event-v6-binding', 'turn-v6-binding',
+               'step-v6-binding', 'model-v6-binding', 'model.completed',
+               '{\"assistant_text\":\"legacy response\"}',
+               '2026-07-13T00:00:01Z'
+             );
+             INSERT INTO transcript_records(
+               run_id, ordinal, kind, call_id, wire_json, record_hash, created_at
+             ) VALUES(
+               'run-v6-binding', 1, 'assistant', NULL,
+               '{\"kind\":\"assistant\",\"text\":\"legacy response\"}',
+               '0000000000000000000000000000000000000000000000000000000000000000',
+               '2026-07-13T00:00:01Z'
+             );",
+        )
+        .unwrap();
+    drop(connection);
+
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        std::fs::set_permissions(&root, std::fs::Permissions::from_mode(0o700)).unwrap();
+        std::fs::set_permissions(&db, std::fs::Permissions::from_mode(0o600)).unwrap();
+    }
+
+    let store = SqliteRunStore::open(&db).unwrap();
+    assert_eq!(store.schema_version().unwrap(), 7);
+    drop(store);
+    let connection = rusqlite::Connection::open(&db).unwrap();
+    let binding_count: i64 = connection
+        .query_row(
+            "SELECT COUNT(*) FROM transcript_bindings WHERE run_id = 'run-v6-binding'",
+            [],
+            |row| row.get(0),
+        )
+        .unwrap();
+    assert_eq!(binding_count, 0);
+    drop(connection);
+    std::fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
 fn v1_state_database_is_upgraded_to_latest_before_use() {
     let root = std::env::temp_dir().join(format!(
         "orchester-v1-migration-{}-{}",
