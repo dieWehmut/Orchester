@@ -416,9 +416,9 @@ fn parse_path(raw: &str) -> Result<PathBuf, PatchError> {
 }
 
 fn path_key(path: &Path) -> String {
-    let mut key = path.to_string_lossy().replace('\\', "/");
+    let key = path.to_string_lossy().replace('\\', "/");
     #[cfg(windows)]
-    key.make_ascii_lowercase();
+    let key = key.to_ascii_lowercase();
     key
 }
 
