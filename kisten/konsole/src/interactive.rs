@@ -3,16 +3,17 @@ use std::io::{self, BufRead, Write};
 use std::sync::OnceLock;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+mod screen;
+
 use crate::avatar;
-use crossterm::cursor;
 use crossterm::event::{
     self, Event as TerminalEvent, KeyCode, KeyEvent, KeyEventKind, KeyModifiers,
 };
-use crossterm::execute;
-use crossterm::terminal::{self, BeginSynchronizedUpdate, ClearType, EndSynchronizedUpdate};
+use crossterm::terminal;
 use orchester_protokoll::{Capability, TaskKind};
 use orchester_vertrag::{AdapterAvailability, AvailabilityStatus};
 use orchester_verzeichnis::Registry;
+use screen::{FramePresenter, TerminalSession};
 use unicode_width::{UnicodeWidthChar, UnicodeWidthStr};
 
 const DIM: &str = "\x1b[2m";
@@ -89,35 +90,20 @@ struct CommandItem {
     agent: Option<String>,
 }
 
-struct TerminalGuard;
-
-impl TerminalGuard {
-    fn enter() -> io::Result<Self> {
-        terminal::enable_raw_mode()?;
-        execute!(io::stdout(), cursor::Hide)?;
-        Ok(Self)
-    }
-}
-
-impl Drop for TerminalGuard {
-    fn drop(&mut self) {
-        let _ = terminal::disable_raw_mode();
-        let _ = execute!(io::stdout(), cursor::Show);
-    }
-}
-
 pub fn run_home_tui(choices: &[AgentChoice]) -> io::Result<HomeAction> {
-    let _guard = TerminalGuard::enter()?;
+    let _session = TerminalSession::enter()?;
     let mut out = io::stdout();
+    let mut presenter = FramePresenter::default();
     let mut input = String::new();
     let mut command_selected = 0usize;
     let mut show_help = false;
 
     loop {
         let (cols, rows) = terminal::size().unwrap_or((100, 30));
-        render_chat_home_in_viewport(
+        present_chat_home_in_viewport(
+            &mut presenter,
             &mut out,
-            (cols as usize).clamp(2, 132),
+            viewport_content_width(cols),
             (rows as usize).max(1),
             &input,
             choices,
@@ -132,7 +118,6 @@ pub fn run_home_tui(choices: &[AgentChoice]) -> io::Result<HomeAction> {
             continue;
         }
         if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('c') {
-            clear_screen(&mut out)?;
             return Ok(HomeAction::Quit);
         }
 
@@ -146,7 +131,6 @@ pub fn run_home_tui(choices: &[AgentChoice]) -> io::Result<HomeAction> {
                     continue;
                 }
                 if !matches!(action, HomeAction::Empty) {
-                    clear_screen(&mut out)?;
                     return Ok(action);
                 }
             }
@@ -156,7 +140,6 @@ pub fn run_home_tui(choices: &[AgentChoice]) -> io::Result<HomeAction> {
                     continue;
                 }
                 if input.is_empty() {
-                    clear_screen(&mut out)?;
                     return Ok(HomeAction::Quit);
                 }
                 input.clear();
@@ -274,15 +257,17 @@ pub fn select_agent_tui(
         return Ok(None);
     }
 
-    let _guard = TerminalGuard::enter()?;
+    let _session = TerminalSession::enter()?;
     let mut out = io::stdout();
+    let mut presenter = FramePresenter::default();
     let mut selected = default_index(&selectable, default_agent);
     let mut command = String::new();
     let mut command_selected = 0usize;
     let mut message = String::new();
 
     loop {
-        render_home(
+        present_home(
+            &mut presenter,
             &mut out,
             choices,
             selected,
@@ -298,7 +283,6 @@ pub fn select_agent_tui(
             continue;
         }
         if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('c') {
-            clear_screen(&mut out)?;
             return Ok(None);
         }
 
@@ -333,12 +317,10 @@ pub fn select_agent_tui(
                     let action = command_action(&command, matches.get(command_selected));
                     match action {
                         PromptAction::Quit => {
-                            clear_screen(&mut out)?;
                             return Ok(None);
                         }
                         PromptAction::LaunchAgent(name) => {
                             if let Some(agent) = choices.iter().find(|choice| choice.name == name) {
-                                clear_screen(&mut out)?;
                                 return Ok(Some(agent.clone()));
                             }
                             message = format!("Agent not available: {name}");
@@ -370,7 +352,6 @@ pub fn select_agent_tui(
 
         match key.code {
             KeyCode::Esc => {
-                clear_screen(&mut out)?;
                 return Ok(None);
             }
             KeyCode::Char('/') => {
@@ -379,7 +360,6 @@ pub fn select_agent_tui(
                 message.clear();
             }
             KeyCode::Char('q') | KeyCode::Char('Q') => {
-                clear_screen(&mut out)?;
                 return Ok(None);
             }
             KeyCode::Up => {
@@ -392,7 +372,6 @@ pub fn select_agent_tui(
                 message.clear();
             }
             KeyCode::Enter => {
-                clear_screen(&mut out)?;
                 return Ok(Some(selectable[selected].clone()));
             }
             _ => {}
@@ -634,7 +613,27 @@ pub fn render_run_footer<W: Write>(
     writeln!(out)
 }
 
+#[cfg(test)]
 fn render_home<W: Write>(
+    out: &mut W,
+    choices: &[AgentChoice],
+    selected: usize,
+    command: &str,
+    command_selected: usize,
+    message: &str,
+) -> io::Result<()> {
+    render_home_frame(
+        out,
+        choices,
+        selected,
+        command,
+        command_selected,
+        message,
+    )
+}
+
+fn present_home<W: Write>(
+    presenter: &mut FramePresenter,
     out: &mut W,
     choices: &[AgentChoice],
     selected: usize,
@@ -651,7 +650,7 @@ fn render_home<W: Write>(
         command_selected,
         message,
     )?;
-    present_frame(out, &frame)
+    presenter.present(out, &frame)
 }
 
 fn render_home_frame<W: Write>(
@@ -665,7 +664,7 @@ fn render_home_frame<W: Write>(
     let selectable = selectable_agents(choices);
     let selected_agent = selectable.get(selected);
     let (cols, _) = terminal::size().unwrap_or((100, 30));
-    let width = (cols as usize).clamp(50, 132);
+    let width = viewport_content_width(cols).clamp(50, 132);
 
     render_delegate_panel(out, width, selected_agent)?;
     writeln!(out)?;
@@ -736,7 +735,30 @@ fn render_chat_home<W: Write>(
     )
 }
 
+#[cfg(test)]
 fn render_chat_home_in_viewport<W: Write>(
+    out: &mut W,
+    width: usize,
+    height: usize,
+    input: &str,
+    choices: &[AgentChoice],
+    command_selected: usize,
+    show_help: bool,
+) -> io::Result<()> {
+    render_chat_home_frame(
+        out,
+        width,
+        height,
+        input,
+        choices,
+        command_selected,
+        show_help,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn present_chat_home_in_viewport<W: Write>(
+    presenter: &mut FramePresenter,
     out: &mut W,
     width: usize,
     height: usize,
@@ -755,7 +777,7 @@ fn render_chat_home_in_viewport<W: Write>(
         command_selected,
         show_help,
     )?;
-    present_frame(out, &frame)
+    presenter.present(out, &frame)
 }
 
 fn render_chat_home_frame<W: Write>(
@@ -1073,6 +1095,10 @@ fn render_status_line<W: Write>(out: &mut W, width: usize) -> io::Result<()> {
     write!(out, "{DIM}{}{RESET}", truncate(&status, width))
 }
 
+fn viewport_content_width(cols: u16) -> usize {
+    usize::from(cols).saturating_sub(1).clamp(2, 132)
+}
+
 fn current_directory_text() -> String {
     std::env::current_dir()
         .map(|cwd| sanitize_terminal_text(&cwd.display().to_string()))
@@ -1125,24 +1151,6 @@ fn render_command_palette<W: Write>(
 
 fn render_no_runnable_agents<W: Write>(out: &mut W) -> io::Result<()> {
     writeln!(out, "{RED}No runnable agents were found.{RESET}")
-}
-
-fn clear_screen<W: Write>(out: &mut W) -> io::Result<()> {
-    execute!(out, terminal::Clear(ClearType::All), cursor::MoveTo(0, 0))
-}
-
-fn present_frame<W: Write>(out: &mut W, frame: &[u8]) -> io::Result<()> {
-    let frame = frame.strip_suffix(b"\n").unwrap_or(frame);
-    execute!(
-        out,
-        BeginSynchronizedUpdate,
-        cursor::MoveTo(0, 0),
-        terminal::Clear(ClearType::FromCursorDown)
-    )?;
-    let write_result = out.write_all(frame);
-    let end_result = execute!(out, EndSynchronizedUpdate);
-    write_result.and(end_result)?;
-    out.flush()
 }
 
 fn read_line<R: BufRead>(input: &mut R) -> io::Result<Option<String>> {
@@ -1603,9 +1611,7 @@ mod tests {
 
         let rendered = String::from_utf8(out).unwrap();
         let plain = strip_ansi(&rendered);
-        let mut palette = plain
-            .lines()
-            .skip_while(|line| line.trim_end() != "> /");
+        let mut palette = plain.lines().skip_while(|line| line.trim_end() != "> /");
         let prompt = palette
             .next()
             .expect("startup should render the slash input");
@@ -1683,10 +1689,28 @@ mod tests {
     }
 
     #[test]
+    fn interactive_layout_reserves_the_terminal_last_column() {
+        assert_eq!(viewport_content_width(80), 79);
+        assert_eq!(viewport_content_width(133), 132);
+        assert_eq!(viewport_content_width(200), 132);
+    }
+
+    #[test]
     fn interactive_frames_use_synchronized_partial_redraw() {
         let mut out = Vec::new();
+        let mut presenter = FramePresenter::default();
 
-        render_chat_home(&mut out, 80, "/", &[], 0, false).unwrap();
+        present_chat_home_in_viewport(
+            &mut presenter,
+            &mut out,
+            80,
+            usize::MAX,
+            "/",
+            &[],
+            0,
+            false,
+        )
+        .unwrap();
 
         let rendered = String::from_utf8(out).unwrap();
         assert!(
@@ -1698,12 +1722,27 @@ mod tests {
             "interactive redraw must not clear the whole terminal:\n{rendered}"
         );
         assert!(
+            !rendered.contains("\x1b[J") && !rendered.contains("\x1b[0J"),
+            "interactive redraw must not clear the remaining viewport:\n{rendered}"
+        );
+        assert!(
             !rendered.contains("\n\x1b[?2026l"),
             "a trailing newline can scroll a frame that exactly fills the viewport:\n{rendered}"
         );
 
         let mut one_row = Vec::new();
-        render_chat_home_in_viewport(&mut one_row, 80, 1, "/", &[], 0, false).unwrap();
+        let mut presenter = FramePresenter::default();
+        present_chat_home_in_viewport(
+            &mut presenter,
+            &mut one_row,
+            80,
+            1,
+            "/",
+            &[],
+            0,
+            false,
+        )
+        .unwrap();
         assert!(
             !String::from_utf8(one_row)
                 .unwrap()
