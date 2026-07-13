@@ -10,6 +10,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 $RepoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
+$InstallRoot = [System.IO.Path]::GetFullPath($InstallRoot)
 $BinDir = Join-Path $InstallRoot "bin"
 $PackagePath = Join-Path $RepoRoot "kisten\konsole"
 
@@ -26,6 +27,79 @@ function Prepend-PathIfExists([string]$PathItem) {
 
 function Test-Command([string]$Name) {
     return [bool](Get-Command $Name -ErrorAction SilentlyContinue)
+}
+
+function Assert-ReceiptValue([string]$Value, [string]$Name) {
+    if ($null -eq $Value) {
+        throw "receipt value '$Name' is missing"
+    }
+    foreach ($character in $Value.ToCharArray()) {
+        if ([char]::IsControl($character)) {
+            throw "receipt value '$Name' contains a control character"
+        }
+    }
+}
+
+function Write-InstallReceipt {
+    param(
+        [string]$ReceiptPath,
+        [string]$Root,
+        [string]$Binary,
+        [string]$BinaryHash,
+        [string]$Shim,
+        [string]$ShimHash,
+        [bool]$WindowsPathAdded,
+        [string]$WindowsPathItem
+    )
+
+    $shimValue = if ($Shim) { $Shim } else { "" }
+    $shimHashValue = if ($ShimHash) { $ShimHash } else { "" }
+    foreach ($pair in @(
+        @("install_root", $Root),
+        @("bin", $Binary),
+        @("binary_hash", $BinaryHash),
+        @("shim", $shimValue),
+        @("shim_hash", $shimHashValue)
+    )) {
+        Assert-ReceiptValue $pair[1] $pair[0]
+    }
+    if ($BinaryHash -notmatch '^[0-9a-f]{64}$') {
+        throw "binary hash is not a lowercase SHA-256 digest"
+    }
+    if ($ShimHash -and $ShimHash -notmatch '^[0-9a-f]{64}$') {
+        throw "shim hash is not a lowercase SHA-256 digest"
+    }
+    if ($WindowsPathAdded) {
+        Assert-ReceiptValue $WindowsPathItem "windows_path_item"
+    }
+
+    $receiptDir = Split-Path -Parent $ReceiptPath
+    New-Item -ItemType Directory -Force -Path $receiptDir | Out-Null
+    $lines = [System.Collections.Generic.List[string]]::new()
+    $lines.Add("schema`t1")
+    $lines.Add("install_root`t$Root")
+    $lines.Add("bin`t$Binary")
+    $lines.Add("binary_hash`t$BinaryHash")
+    $lines.Add("shim`t$shimValue")
+    $lines.Add("shim_hash`t$shimHashValue")
+    if ($WindowsPathAdded) {
+        $lines.Add("windows_path_item`t$WindowsPathItem")
+        $lines.Add("windows_path_added`t1")
+    }
+    $temporary = Join-Path $receiptDir (".install.receipt." + [guid]::NewGuid().ToString("N"))
+    $utf8 = New-Object System.Text.UTF8Encoding($false)
+    try {
+        [System.IO.File]::WriteAllText(
+            $temporary,
+            (($lines -join [Environment]::NewLine) + [Environment]::NewLine),
+            $utf8
+        )
+        Move-Item -LiteralPath $temporary -Destination $ReceiptPath -Force
+    } finally {
+        if (Test-Path -LiteralPath $temporary) {
+            Remove-Item -LiteralPath $temporary -Force -ErrorAction SilentlyContinue
+        }
+    }
 }
 
 function Invoke-WingetInstall([string]$Id) {
@@ -170,7 +244,7 @@ function Ensure-UserPath([string]$PathItem) {
     foreach ($part in $parts) {
         if ($part.Trim().TrimEnd('\').ToLowerInvariant() -eq $normalizedPathItem) {
             Write-Host "Windows user PATH already includes $PathItem"
-            return
+            return $false
         }
     }
 
@@ -181,6 +255,7 @@ function Ensure-UserPath([string]$PathItem) {
     }
     [Environment]::SetEnvironmentVariable("Path", $newPath, "User")
     Write-Host "Added $PathItem to Windows user PATH"
+    return $true
 }
 
 function Test-PathInProcessPath([string]$PathItem) {
@@ -311,8 +386,10 @@ if (-not (Test-Path -LiteralPath $Installed)) {
     throw "install completed but $Installed was not found"
 }
 
+$windowsPathAdded = $false
+$shim = $null
 if (-not $NoPathUpdate) {
-    Ensure-UserPath $BinDir
+    $windowsPathAdded = [bool](Ensure-UserPath $BinDir)
     Prepend-PathIfExists $BinDir
     $shim = Ensure-WindowsCommandShim $Installed
     if ($shim) {
@@ -331,6 +408,23 @@ Write-Host "Version check:"
 if ($LASTEXITCODE -ne 0) {
     throw "orchester --version failed with exit code $LASTEXITCODE"
 }
+
+$binaryHash = (Get-FileHash -LiteralPath $Installed -Algorithm SHA256).Hash.ToLowerInvariant()
+$shimHash = ""
+if ($shim) {
+    $shimHash = (Get-FileHash -LiteralPath $shim -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+$receiptArguments = @{
+    ReceiptPath = Join-Path $InstallRoot ".orchester\install.receipt"
+    Root = $InstallRoot
+    Binary = $Installed
+    BinaryHash = $binaryHash
+    Shim = if ($shim) { $shim } else { "" }
+    ShimHash = $shimHash
+    WindowsPathAdded = $windowsPathAdded
+    WindowsPathItem = $BinDir
+}
+Write-InstallReceipt @receiptArguments
 Write-Host ""
 if ($NoPathUpdate) {
     Write-Host "PATH update was skipped. Run '$Installed' directly or add '$BinDir' to PATH."

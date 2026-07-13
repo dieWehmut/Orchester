@@ -47,6 +47,26 @@ warn() { printf '%s[!]%s %s\n' "$C_YELLOW" "$C_RESET" "$*" >&2; }
 err() { printf '%s[x]%s %s\n' "$C_RED" "$C_RESET" "$*" >&2; }
 die() { err "$*"; exit 1; }
 
+sha256_file() {
+  file="$1"
+  if have_cmd sha256sum; then
+    sha256sum "$file" | cut -d ' ' -f 1
+  elif have_cmd shasum; then
+    shasum -a 256 "$file" | cut -d ' ' -f 1
+  elif have_cmd openssl; then
+    openssl dgst -sha256 "$file" | awk '{print $NF}'
+  else
+    return 127
+  fi
+}
+
+receipt_value() {
+  case "$1" in
+    *[![:print:]]*) return 1 ;;
+    *) return 0 ;;
+  esac
+}
+
 prepend_dir() {
   if [ -n "${1:-}" ] && [ -d "$1" ]; then
     PATH="$1:$PATH"
@@ -300,6 +320,8 @@ Write-Output "added"
 
   case "$result" in
     added)
+      WINDOWS_PATH_ITEM="$bin_dir_win"
+      WINDOWS_PATH_ADDED="1"
       ok "Added $bin_dir_win to Windows user PATH"
       ;;
     exists)
@@ -485,6 +507,8 @@ while [ "$#" -gt 0 ]; do
 done
 
 [ -n "$INSTALL_ROOT" ] || die "could not determine install root; set ORCHESTER_INSTALL_ROOT or HOME"
+mkdir -p "$INSTALL_ROOT"
+INSTALL_ROOT="$(CDPATH= cd -- "$INSTALL_ROOT" && pwd)" || die "could not resolve install root"
 
 case "$(uname -s 2>/dev/null || echo unknown)" in
   MINGW*|MSYS*|CYGWIN*)
@@ -523,12 +547,16 @@ if [ -n "$SCRIPT_DIR" ] && [ -f "$SCRIPT_DIR/../Cargo.toml" ] && [ -d "$SCRIPT_D
 fi
 
 TMP_DIR=""
+PATH_RECORDS_FILE=""
+RECEIPT_TMP_FILE=""
 cleanup() {
   if [ -n "$TMP_DIR" ] && [ "$KEEP_TMP" != "true" ]; then
     rm -rf "$TMP_DIR"
   elif [ -n "$TMP_DIR" ]; then
     warn "kept temporary source at $TMP_DIR"
   fi
+  [ -z "$PATH_RECORDS_FILE" ] || rm -f "$PATH_RECORDS_FILE"
+  [ -z "$RECEIPT_TMP_FILE" ] || rm -f "$RECEIPT_TMP_FILE"
 }
 trap cleanup EXIT INT TERM
 
@@ -561,12 +589,21 @@ info "Installing orchester to $BIN_DIR"
 BIN="$BIN_DIR/orchester$EXE_SUFFIX"
 [ -x "$BIN" ] || [ -f "$BIN" ] || die "install completed but $BIN was not found"
 
+PATH_RECORDS_FILE="$(mktemp "${TMPDIR:-/tmp}/orchester-paths.XXXXXX")" || die "could not create receipt staging file"
+SHIM=""
+WINDOWS_PATH_ITEM=""
+WINDOWS_PATH_ADDED="0"
+
 append_path_line() {
   profile="$1"
   line="export PATH=\"$BIN_DIR:\$PATH\""
   [ -f "$profile" ] || : > "$profile"
-  if ! grep -F "$BIN_DIR" "$profile" >/dev/null 2>&1; then
+  if ! grep -F "$line" "$profile" >/dev/null 2>&1; then
     printf '\n# Orchester CLI\n%s\n' "$line" >> "$profile"
+    receipt_value "$profile" || die "profile path contains unsupported control characters: $profile"
+    receipt_value "$line" || die "profile PATH line contains unsupported control characters"
+    printf 'path_profile\t%s\npath_added\t1\npath_line\t%s\npath_marker\t# Orchester CLI\n' \
+      "$profile" "$line" >> "$PATH_RECORDS_FILE"
     ok "Added $BIN_DIR to $profile"
   fi
 }
@@ -574,8 +611,8 @@ append_path_line() {
 if [ "$NO_PATH_UPDATE" != "true" ]; then
   if is_windows_shell; then
     ensure_windows_user_path "$BIN_DIR" || warn "Could not update Windows user PATH automatically; add $(to_windows_path "$BIN_DIR") manually."
-    if ensure_windows_command_shim "$BIN"; then
-      :
+    if shim_result="$(ensure_windows_command_shim "$BIN")"; then
+      SHIM="$shim_result"
     else
       warn "Open a new Windows terminal before running 'orchester' if this terminal cannot find it."
     fi
@@ -599,6 +636,36 @@ if [ "$NO_PATH_UPDATE" != "true" ]; then
       ;;
   esac
 fi
+
+RECEIPT_DIR="$INSTALL_ROOT/.orchester"
+mkdir -p "$RECEIPT_DIR"
+BINARY_HASH="$(sha256_file "$BIN")" || die "sha256 tool is required to write the install receipt"
+[ "${#BINARY_HASH}" -eq 64 ] || die "could not calculate a valid binary hash"
+case "$BINARY_HASH" in
+  *[!0-9a-f]*) die "could not calculate a lowercase binary hash" ;;
+esac
+SHIM_HASH=""
+if [ -n "$SHIM" ]; then
+  SHIM_HASH="$(sha256_file "$SHIM")" || die "could not calculate the command shim hash"
+fi
+receipt_value "$INSTALL_ROOT" || die "install root contains unsupported control characters"
+receipt_value "$BIN" || die "binary path contains unsupported control characters"
+RECEIPT_TMP_FILE="$(mktemp "$RECEIPT_DIR/.install.receipt.XXXXXX")" || die "could not stage install receipt"
+{
+  printf 'schema\t1\n'
+  printf 'install_root\t%s\n' "$INSTALL_ROOT"
+  printf 'bin\t%s\n' "$BIN"
+  printf 'binary_hash\t%s\n' "$BINARY_HASH"
+  printf 'shim\t%s\n' "$SHIM"
+  printf 'shim_hash\t%s\n' "$SHIM_HASH"
+  if [ "$WINDOWS_PATH_ADDED" = "1" ]; then
+    printf 'windows_path_item\t%s\nwindows_path_added\t1\n' "$WINDOWS_PATH_ITEM"
+  fi
+  cat "$PATH_RECORDS_FILE"
+} > "$RECEIPT_TMP_FILE"
+chmod 600 "$RECEIPT_TMP_FILE"
+mv -f "$RECEIPT_TMP_FILE" "$RECEIPT_DIR/install.receipt"
+RECEIPT_TMP_FILE=""
 
 ok "Installed $BIN"
 info "Version check:"
