@@ -28,6 +28,7 @@ use crate::harness::transcript::TranscriptRecord;
 mod database;
 mod model;
 mod observation;
+mod resume;
 mod sanitized;
 mod schema;
 mod storage;
@@ -42,6 +43,7 @@ use database::{
     load_snapshot, map_constraint, persist_event, policy_decision_name, status_for_stop,
     stop_reason_name, update_approval_state,
 };
+pub use resume::{ResumeNext, ResumePoint, ResumeStage};
 pub use transcript::{StoredTranscriptRecord, TranscriptAppendRange};
 pub use types::{
     ActionRecord, AuditCheckpoint, EffectClass, EventAppend, NewRun, RunSnapshot, RunStatus,
