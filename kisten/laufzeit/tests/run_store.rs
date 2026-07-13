@@ -1312,6 +1312,54 @@ fn transcript_append_classifies_existing_noncanonical_wire_as_corrupt() {
     remove_temp_db(&path);
 }
 
+#[test]
+fn transcript_batch_append_is_atomic_and_returns_one_contiguous_range() {
+    let store = SqliteRunStore::in_memory().unwrap();
+    let run = store
+        .create_run(new_run("run-transcript-batch", "owner-a"))
+        .unwrap();
+    store
+        .append_transcript_record(
+            "owner-a",
+            &run.run_id,
+            TranscriptRecord::user("inspect"),
+            "2026-07-12T00:00:01Z",
+        )
+        .unwrap();
+
+    let appended = store
+        .append_transcript_records(
+            "owner-a",
+            &run.run_id,
+            vec![
+                TranscriptRecord::assistant("reading the file"),
+                TranscriptRecord::tool_call("call-batch", "read_file", r#"{"path":"src/lib.rs"}"#),
+            ],
+            "2026-07-12T00:00:02Z",
+        )
+        .unwrap();
+    assert_eq!(appended.first_ordinal, 2);
+    assert_eq!(appended.last_ordinal, 3);
+
+    let before = store.transcript_owned(&run.run_id, "owner-a").unwrap();
+    assert!(matches!(
+        store.append_transcript_records(
+            "owner-a",
+            &run.run_id,
+            vec![
+                TranscriptRecord::tool_result("wrong-call", "invalid"),
+                TranscriptRecord::assistant("must not persist"),
+            ],
+            "2026-07-12T00:00:03Z",
+        ),
+        Err(StoreError::Invariant(_))
+    ));
+    assert_eq!(
+        store.transcript_owned(&run.run_id, "owner-a").unwrap(),
+        before
+    );
+}
+
 fn temp_db(label: &str) -> PathBuf {
     std::env::temp_dir()
         .join(format!(

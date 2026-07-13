@@ -40,7 +40,7 @@ use database::{
     load_snapshot, map_constraint, persist_event, policy_decision_name, status_for_stop,
     stop_reason_name, update_approval_state,
 };
-pub use transcript::StoredTranscriptRecord;
+pub use transcript::{StoredTranscriptRecord, TranscriptAppendRange};
 pub use types::{
     ActionRecord, AuditCheckpoint, EffectClass, EventAppend, NewRun, RunSnapshot, RunStatus,
     RunStore, StoreError, Transition,

@@ -1,5 +1,5 @@
 use orchester_protokoll::RunId;
-use rusqlite::{params, TransactionBehavior};
+use rusqlite::{params, Transaction, TransactionBehavior};
 use sha2::{Digest, Sha256};
 
 use crate::harness::feedback::FeedbackEngine;
@@ -16,6 +16,19 @@ pub struct StoredTranscriptRecord {
     pub created_at: String,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct TranscriptAppendRange {
+    pub first_ordinal: u64,
+    pub last_ordinal: u64,
+}
+
+struct CanonicalRecord {
+    kind: &'static str,
+    call_id: Option<String>,
+    wire: String,
+    record_hash: String,
+}
+
 impl SqliteRunStore {
     pub fn append_transcript_record(
         &self,
@@ -24,16 +37,32 @@ impl SqliteRunStore {
         record: TranscriptRecord,
         created_at: impl Into<String>,
     ) -> Result<u64, StoreError> {
+        self.append_transcript_records(owner_actor_id, run_id, vec![record], created_at)
+            .map(|range| range.first_ordinal)
+    }
+
+    pub fn append_transcript_records(
+        &self,
+        owner_actor_id: &str,
+        run_id: &RunId,
+        records: Vec<TranscriptRecord>,
+        created_at: impl Into<String>,
+    ) -> Result<TranscriptAppendRange, StoreError> {
+        if records.is_empty() {
+            return Err(StoreError::Invariant(
+                "transcript batch must contain at least one record".into(),
+            ));
+        }
         let created_at = created_at.into();
         ensure_field(owner_actor_id, &self.event_sanitizer)?;
         ensure_field(&run_id.0, &self.event_sanitizer)?;
         ensure_field(&created_at, &self.event_sanitizer)?;
 
         let codec = self.codec();
-        let wire = codec.encode(&record).map_err(map_input_error)?;
-        let canonical = codec.decode(&wire).map_err(|_| StoreError::Corrupt)?;
-        let (kind, call_id) = record_metadata(&canonical);
-        let record_hash = transcript_hash(&wire);
+        let canonical = records
+            .iter()
+            .map(|record| canonical_record(&codec, record))
+            .collect::<Result<Vec<_>, _>>()?;
 
         let mut connection = self.connection()?;
         let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
@@ -43,58 +72,46 @@ impl SqliteRunStore {
                 "terminal run cannot append a transcript record".into(),
             ));
         }
-        let mut prior_wires = transaction
-            .prepare(
-                "SELECT ordinal, wire_json FROM transcript_records
-                 WHERE run_id = ?1 ORDER BY ordinal",
-            )?
-            .query_map(params![run_id.0], |row| {
-                Ok((row.get::<_, i64>(0)?, row.get::<_, String>(1)?))
-            })?
-            .collect::<Result<Vec<_>, _>>()?;
-        for (position, (ordinal, _)) in prior_wires.iter().enumerate() {
-            let expected = i64::try_from(position + 1).map_err(|_| StoreError::Corrupt)?;
-            if *ordinal != expected {
-                return Err(StoreError::Corrupt);
-            }
-        }
-        let prior_wires = prior_wires
-            .drain(..)
-            .map(|(_, wire)| wire)
-            .collect::<Vec<_>>();
+        let prior_wires = load_prior_wires(&transaction, run_id, &codec)?;
         codec
             .decode_all(&prior_wires)
             .map_err(|_| StoreError::Corrupt)?;
         let mut sequence_wires = prior_wires;
-        sequence_wires.push(wire.clone());
+        sequence_wires.extend(canonical.iter().map(|record| record.wire.clone()));
         codec.decode_all(&sequence_wires).map_err(map_input_error)?;
-        let ordinal: i64 = transaction.query_row(
-            "SELECT COALESCE(MAX(ordinal), 0) + 1
-             FROM transcript_records WHERE run_id = ?1",
-            params![run_id.0],
-            |row| row.get(0),
-        )?;
-        let ordinal = u64::try_from(ordinal).map_err(|_| StoreError::Corrupt)?;
-        transaction
-            .execute(
-                "INSERT INTO transcript_records(
+        let first_ordinal = u64::try_from(sequence_wires.len() - canonical.len() + 1)
+            .map_err(|_| StoreError::Corrupt)?;
+        for (offset, record) in canonical.iter().enumerate() {
+            let ordinal = first_ordinal
+                .checked_add(u64::try_from(offset).map_err(|_| StoreError::Corrupt)?)
+                .ok_or(StoreError::Corrupt)?;
+            transaction
+                .execute(
+                    "INSERT INTO transcript_records(
                    run_id, ordinal, kind, call_id, wire_json, record_hash, created_at
                  ) VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7)",
-                params![
-                    run_id.0,
-                    ordinal,
-                    kind,
-                    call_id,
-                    wire,
-                    record_hash,
-                    created_at,
-                ],
-            )
-            .map_err(|error| {
-                map_constraint(error, "transcript record conflicts with durable state")
-            })?;
+                    params![
+                        run_id.0,
+                        ordinal,
+                        record.kind,
+                        record.call_id,
+                        record.wire,
+                        record.record_hash,
+                        created_at,
+                    ],
+                )
+                .map_err(|error| {
+                    map_constraint(error, "transcript record conflicts with durable state")
+                })?;
+        }
+        let last_ordinal = first_ordinal
+            .checked_add(u64::try_from(canonical.len() - 1).map_err(|_| StoreError::Corrupt)?)
+            .ok_or(StoreError::Corrupt)?;
         transaction.commit()?;
-        Ok(ordinal)
+        Ok(TranscriptAppendRange {
+            first_ordinal,
+            last_ordinal,
+        })
     }
 
     pub fn transcript_owned(
@@ -150,6 +167,57 @@ impl SqliteRunStore {
     fn codec(&self) -> TranscriptCodec {
         TranscriptCodec::with_sanitizer(TranscriptLimits::default(), self.event_sanitizer.clone())
     }
+}
+
+fn canonical_record(
+    codec: &TranscriptCodec,
+    record: &TranscriptRecord,
+) -> Result<CanonicalRecord, StoreError> {
+    let wire = codec.encode(record).map_err(map_input_error)?;
+    let canonical = codec.decode(&wire).map_err(|_| StoreError::Corrupt)?;
+    let (kind, call_id) = record_metadata(&canonical);
+    Ok(CanonicalRecord {
+        kind,
+        call_id: call_id.map(str::to_owned),
+        record_hash: transcript_hash(&wire),
+        wire,
+    })
+}
+
+fn load_prior_wires(
+    transaction: &Transaction<'_>,
+    run_id: &RunId,
+    codec: &TranscriptCodec,
+) -> Result<Vec<String>, StoreError> {
+    let mut statement = transaction.prepare(
+        "SELECT ordinal, kind, call_id, wire_json, record_hash
+         FROM transcript_records WHERE run_id = ?1 ORDER BY ordinal",
+    )?;
+    let rows = statement.query_map(params![run_id.0], |row| {
+        Ok((
+            row.get::<_, i64>(0)?,
+            row.get::<_, String>(1)?,
+            row.get::<_, Option<String>>(2)?,
+            row.get::<_, String>(3)?,
+            row.get::<_, String>(4)?,
+        ))
+    })?;
+    let mut wires = Vec::new();
+    for (position, row) in rows.enumerate() {
+        let (ordinal, kind, call_id, wire, record_hash) = row?;
+        let expected = i64::try_from(position + 1).map_err(|_| StoreError::Corrupt)?;
+        let record = codec.decode(&wire).map_err(|_| StoreError::Corrupt)?;
+        let (actual_kind, actual_call_id) = record_metadata(&record);
+        if ordinal != expected
+            || transcript_hash(&wire) != record_hash
+            || kind != actual_kind
+            || call_id.as_deref() != actual_call_id
+        {
+            return Err(StoreError::Corrupt);
+        }
+        wires.push(wire);
+    }
+    Ok(wires)
 }
 
 fn record_metadata(record: &TranscriptRecord) -> (&'static str, Option<&str>) {
