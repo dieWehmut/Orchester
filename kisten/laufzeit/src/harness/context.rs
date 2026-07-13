@@ -246,6 +246,9 @@ fn transcript_hash(entries: &[TranscriptEntry]) -> String {
             hasher.update((value.len() as u64).to_le_bytes());
             hasher.update(value.as_bytes());
         }
+        if let TranscriptEntry::Opaque { byte_len, .. } = entry {
+            hasher.update((*byte_len as u64).to_le_bytes());
+        }
     }
     hasher
         .finalize()

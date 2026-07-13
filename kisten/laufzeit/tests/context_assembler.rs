@@ -259,3 +259,61 @@ fn transcript_codec_rejects_oversized_records_and_unpaired_tool_results() {
         Err(TranscriptError::UnpairedToolResult)
     ));
 }
+
+#[test]
+fn transcript_codec_rejects_noncanonical_wire_and_escaped_tool_arguments() {
+    let codec = TranscriptCodec::new(
+        TranscriptLimits::default(),
+        vec![SecretString::new(
+            "provider-secret-value".to_owned().into_boxed_str(),
+        )],
+    );
+    assert!(matches!(
+        codec.decode(r#"{ "kind": "user", "text": "hello" }"#),
+        Err(TranscriptError::NonCanonical)
+    ));
+    assert!(matches!(
+        codec.decode(
+            r#"{"kind":"opaque","digest":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA","byte_len":1}"#
+        ),
+        Err(TranscriptError::InvalidWire)
+    ));
+    assert!(matches!(
+        codec.encode(&TranscriptRecord::tool_call(
+            "call-1",
+            "read_file",
+            r#"{"path":"provider-\u0073ecret-value"}"#
+        )),
+        Err(TranscriptError::InvalidWire)
+    ));
+}
+
+#[test]
+fn opaque_byte_length_changes_context_prefix_hash() {
+    let assembler = ContextAssembler::new(
+        ContextLimits {
+            max_bytes: 128 * 1024,
+            max_history_entries: 1,
+        },
+        Vec::new(),
+    );
+    let first = assembler
+        .assemble(input(vec![
+            TranscriptEntry::Opaque {
+                digest: "a".repeat(64),
+                byte_len: 1,
+            },
+            TranscriptEntry::user("retained"),
+        ]))
+        .unwrap();
+    let second = assembler
+        .assemble(input(vec![
+            TranscriptEntry::Opaque {
+                digest: "a".repeat(64),
+                byte_len: 2,
+            },
+            TranscriptEntry::user("retained"),
+        ]))
+        .unwrap();
+    assert_ne!(first.omitted_prefix_hash, second.omitted_prefix_hash);
+}

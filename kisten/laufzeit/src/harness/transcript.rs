@@ -225,6 +225,11 @@ impl TranscriptCodec {
         if canonical != record {
             return Err(TranscriptError::NonCanonical);
         }
+        let canonical_wire = serde_json::to_string(&WireRecord::from(&canonical))
+            .map_err(|_| TranscriptError::InvalidWire)?;
+        if canonical_wire != encoded {
+            return Err(TranscriptError::NonCanonical);
+        }
         Ok(record)
     }
 
@@ -291,7 +296,7 @@ impl TranscriptCodec {
             } => Ok(TranscriptRecord::ToolCall {
                 call_id: CallId::from(self.identifier(&call_id.0)?),
                 name: self.identifier(name)?,
-                arguments_json: self.text(arguments_json)?,
+                arguments_json: self.arguments(arguments_json)?,
             }),
             TranscriptRecord::ToolResult { call_id, output } => Ok(TranscriptRecord::ToolResult {
                 call_id: CallId::from(self.identifier(&call_id.0)?),
@@ -299,7 +304,9 @@ impl TranscriptCodec {
             }),
             TranscriptRecord::Opaque { digest, byte_len } => {
                 if digest.len() != 64
-                    || !digest.bytes().all(|byte| byte.is_ascii_hexdigit())
+                    || !digest
+                        .bytes()
+                        .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
                     || *byte_len > self.limits.max_opaque_bytes
                 {
                     return Err(TranscriptError::InvalidWire);
@@ -329,6 +336,16 @@ impl TranscriptCodec {
         }
     }
 
+    fn arguments(&self, value: &str) -> Result<String, TranscriptError> {
+        let parsed =
+            serde_json::from_str::<Value>(value).map_err(|_| TranscriptError::InvalidWire)?;
+        let sanitized = sanitize_json_value(parsed.clone(), &self.sanitizer);
+        if sanitized != parsed {
+            return Err(TranscriptError::InvalidWire);
+        }
+        serde_json::to_string(&parsed).map_err(|_| TranscriptError::InvalidWire)
+    }
+
     fn validate_limits(&self) -> Result<(), TranscriptError> {
         if self.limits.max_record_bytes == 0
             || self.limits.max_text_bytes == 0
@@ -339,6 +356,30 @@ impl TranscriptCodec {
         } else {
             Ok(())
         }
+    }
+}
+
+fn sanitize_json_value(value: Value, sanitizer: &FeedbackEngine) -> Value {
+    match value {
+        Value::String(text) => Value::String(sanitizer.sanitize_text(&text)),
+        Value::Array(values) => Value::Array(
+            values
+                .into_iter()
+                .map(|value| sanitize_json_value(value, sanitizer))
+                .collect(),
+        ),
+        Value::Object(fields) => Value::Object(
+            fields
+                .into_iter()
+                .map(|(key, value)| {
+                    (
+                        sanitizer.sanitize_text(&key),
+                        sanitize_json_value(value, sanitizer),
+                    )
+                })
+                .collect(),
+        ),
+        other => other,
     }
 }
 
