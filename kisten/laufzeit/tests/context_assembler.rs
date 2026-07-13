@@ -1,8 +1,12 @@
 use orchester_laufzeit::harness::context::{
     ContextAssembler, ContextError, ContextInput, ContextLimits, ContinuationInput, TranscriptEntry,
 };
+use orchester_laufzeit::harness::transcript::{
+    TranscriptCodec, TranscriptError, TranscriptLimits, TranscriptRecord,
+};
 use orchester_modell::{ModelItem, ModelRole};
 use secrecy::SecretString;
+use serde_json::json;
 
 fn input(history: Vec<TranscriptEntry>) -> ContextInput {
     ContextInput {
@@ -199,4 +203,59 @@ fn continuation_budget_never_splits_the_required_call_pair() {
         .unwrap_err();
 
     assert!(matches!(error, ContextError::BudgetExceeded));
+}
+
+#[test]
+fn bounded_transcript_codec_round_trips_redacted_records_and_opaque_references() {
+    let secret = "configured-transcript-secret";
+    let codec = TranscriptCodec::new(
+        TranscriptLimits {
+            max_record_bytes: 4_096,
+            max_text_bytes: 1_024,
+            max_opaque_bytes: 2_048,
+        },
+        vec![SecretString::new(secret.to_owned().into_boxed_str())],
+    );
+    let records = vec![
+        TranscriptRecord::system("system policy"),
+        TranscriptRecord::user("inspect the workspace"),
+        TranscriptRecord::assistant(format!("answer with {secret}")),
+        TranscriptRecord::tool_call("call-1", "read_file", r#"{"path":"src/lib.rs"}"#),
+        TranscriptRecord::tool_result("call-1", format!("Authorization: Bearer {secret}")),
+        TranscriptRecord::opaque_json(&json!({"provider_item": "opaque"}), &codec).unwrap(),
+    ];
+
+    codec.validate_sequence(&records).unwrap();
+    let encoded = codec.encode_all(&records).unwrap();
+    let joined = encoded.join("\n");
+    assert!(!joined.contains(secret));
+    assert!(!joined.contains('\u{1b}'));
+
+    let decoded = codec.decode_all(&encoded).unwrap();
+    assert_eq!(decoded.len(), records.len());
+    assert!(matches!(
+        &decoded[2],
+        TranscriptRecord::Assistant(text) if text.contains("[REDACTED]")
+    ));
+    assert!(matches!(decoded[5], TranscriptRecord::Opaque { .. }));
+}
+
+#[test]
+fn transcript_codec_rejects_oversized_records_and_unpaired_tool_results() {
+    let codec = TranscriptCodec::new(
+        TranscriptLimits {
+            max_record_bytes: 128,
+            max_text_bytes: 64,
+            max_opaque_bytes: 64,
+        },
+        Vec::new(),
+    );
+    assert!(matches!(
+        codec.encode(&TranscriptRecord::user("x".repeat(65))),
+        Err(TranscriptError::TextTooLarge)
+    ));
+    assert!(matches!(
+        codec.validate_sequence(&[TranscriptRecord::tool_result("call-1", "orphan")]),
+        Err(TranscriptError::UnpairedToolResult)
+    ));
 }

@@ -18,6 +18,7 @@ pub mod process_runtime;
 mod process_tree;
 pub mod run_store;
 pub mod tools;
+pub mod transcript;
 pub mod validator;
 pub mod workspace_patch;
 pub mod workspace_write;

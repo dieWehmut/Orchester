@@ -2,14 +2,13 @@
 
 use std::fmt;
 
-use orchester_modell::{
-    ModelItem, ModelMessage, ModelRequest, ModelRole, ToolCall, ToolDefinition,
-};
-use orchester_protokoll::CallId;
+use orchester_modell::{ModelItem, ModelMessage, ModelRequest, ModelRole, ToolDefinition};
 use secrecy::{ExposeSecret, SecretString};
 use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
+
+pub use super::transcript::TranscriptRecord as TranscriptEntry;
 
 const SYSTEM_PROMPT: &str = "You are the Orchester self-owned coding agent. Inspect the workspace with the provided structured tools. Produce at most one tool call per step. Never invent tool results. Use request_approval for a human checkpoint and finish only after required validation succeeds.";
 
@@ -25,116 +24,6 @@ impl Default for ContextLimits {
             max_bytes: 128 * 1024,
             max_history_entries: 64,
         }
-    }
-}
-
-#[derive(Clone, PartialEq, Eq)]
-pub enum TranscriptEntry {
-    User(String),
-    Assistant(String),
-    ToolCall {
-        call_id: CallId,
-        name: String,
-        arguments_json: String,
-    },
-    ToolResult {
-        call_id: CallId,
-        output: String,
-    },
-}
-
-impl TranscriptEntry {
-    pub fn user(text: impl Into<String>) -> Self {
-        Self::User(text.into())
-    }
-
-    pub fn assistant(text: impl Into<String>) -> Self {
-        Self::Assistant(text.into())
-    }
-
-    pub fn tool_call(
-        call_id: impl Into<CallId>,
-        name: impl Into<String>,
-        arguments_json: impl Into<String>,
-    ) -> Self {
-        Self::ToolCall {
-            call_id: call_id.into(),
-            name: name.into(),
-            arguments_json: arguments_json.into(),
-        }
-    }
-
-    pub fn tool_result(call_id: impl Into<CallId>, output: impl Into<String>) -> Self {
-        Self::ToolResult {
-            call_id: call_id.into(),
-            output: output.into(),
-        }
-    }
-
-    fn byte_len(&self) -> usize {
-        match self {
-            Self::User(text) | Self::Assistant(text) => text.len(),
-            Self::ToolCall {
-                call_id,
-                name,
-                arguments_json,
-            } => call_id.0.len() + name.len() + arguments_json.len(),
-            Self::ToolResult { call_id, output } => call_id.0.len() + output.len(),
-        }
-    }
-
-    fn strings(&self) -> Vec<&str> {
-        match self {
-            Self::User(text) | Self::Assistant(text) => vec![text],
-            Self::ToolCall {
-                call_id,
-                name,
-                arguments_json,
-            } => vec![&call_id.0, name, arguments_json],
-            Self::ToolResult { call_id, output } => vec![&call_id.0, output],
-        }
-    }
-
-    fn to_message(&self) -> ModelMessage {
-        match self {
-            Self::User(text) => text_message(ModelRole::User, text.clone()),
-            Self::Assistant(text) => text_message(ModelRole::Assistant, text.clone()),
-            Self::ToolCall {
-                call_id,
-                name,
-                arguments_json,
-            } => ModelMessage {
-                role: ModelRole::Assistant,
-                items: vec![ModelItem::ToolCall(ToolCall::new(
-                    call_id.clone(),
-                    name.clone(),
-                    arguments_json.clone(),
-                ))],
-            },
-            Self::ToolResult { call_id, output } => ModelMessage {
-                role: ModelRole::Tool,
-                items: vec![ModelItem::ToolResult {
-                    call_id: call_id.clone(),
-                    output: output.clone(),
-                }],
-            },
-        }
-    }
-}
-
-impl fmt::Debug for TranscriptEntry {
-    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let kind = match self {
-            Self::User(_) => "User",
-            Self::Assistant(_) => "Assistant",
-            Self::ToolCall { .. } => "ToolCall",
-            Self::ToolResult { .. } => "ToolResult",
-        };
-        formatter
-            .debug_struct("TranscriptEntry")
-            .field("kind", &kind)
-            .field("bytes", &self.byte_len())
-            .finish()
     }
 }
 
@@ -345,10 +234,12 @@ fn transcript_hash(entries: &[TranscriptEntry]) -> String {
     hasher.update(b"orchester-context-prefix-v1");
     for entry in entries {
         let kind = match entry {
+            TranscriptEntry::System(_) => 0u8,
             TranscriptEntry::User(_) => 1u8,
             TranscriptEntry::Assistant(_) => 2,
             TranscriptEntry::ToolCall { .. } => 3,
             TranscriptEntry::ToolResult { .. } => 4,
+            TranscriptEntry::Opaque { .. } => 5,
         };
         hasher.update([kind]);
         for value in entry.strings() {
