@@ -1585,6 +1585,118 @@ fn oversized_model_start_input_rolls_back_event_phase_and_transcript() {
         .is_empty());
 }
 
+#[test]
+fn model_completion_with_action_commits_response_and_tool_call_as_one_boundary() {
+    let store = SqliteRunStore::in_memory().unwrap();
+    let run = store
+        .create_run(new_run("run-model-action-boundary", "owner-a"))
+        .unwrap();
+    start_step(&store, &run.run_id, "owner-a", "step-model-action-boundary");
+    append_model_event(
+        &store,
+        &run.run_id,
+        "owner-a",
+        "step-model-action-boundary",
+        "model-call-action-boundary",
+        HarnessEventKind::ModelStarted,
+    )
+    .unwrap();
+    let action = test_action_record(
+        &run.run_id,
+        "step-model-action-boundary",
+        "action-model-action-boundary",
+        "model-call-action-boundary",
+        "provider-model-action-boundary",
+        AgentAction::ReadFile {
+            path: "src/lib.rs".into(),
+            start_line: None,
+            end_line: None,
+        },
+    );
+    let completion = EventAppend {
+        turn_id: Some(TurnId::from("turn-1")),
+        step_id: Some(StepId::from("step-model-action-boundary")),
+        call_id: Some(CallId::from("model-call-action-boundary")),
+        occurred_at: "2026-07-12T00:00:03Z".into(),
+        kind: HarnessEventKind::ModelCompleted {
+            assistant_text: "I will inspect the file".into(),
+        },
+    };
+    let (model_event, action_event) = store
+        .append_model_completed_with_action("owner-a", &run.run_id, completion, action)
+        .unwrap();
+    assert!(matches!(
+        model_event.kind,
+        HarnessEventKind::ModelCompleted { .. }
+    ));
+    assert!(matches!(
+        action_event.kind,
+        HarnessEventKind::ActionRecorded { .. }
+    ));
+    let records = store.transcript_owned(&run.run_id, "owner-a").unwrap();
+    assert!(matches!(
+        &records[..],
+        [
+            StoredTranscriptRecord {
+                record: TranscriptRecord::Assistant(_),
+                ..
+            },
+            StoredTranscriptRecord {
+                record: TranscriptRecord::ToolCall { .. },
+                ..
+            }
+        ]
+    ));
+}
+
+#[test]
+fn invalid_combined_model_action_rolls_back_model_completion_and_transcript() {
+    let store = SqliteRunStore::in_memory().unwrap();
+    let run = store
+        .create_run(new_run("run-model-action-rollback", "owner-a"))
+        .unwrap();
+    start_step(&store, &run.run_id, "owner-a", "step-model-action-rollback");
+    append_model_event(
+        &store,
+        &run.run_id,
+        "owner-a",
+        "step-model-action-rollback",
+        "model-call-action-rollback",
+        HarnessEventKind::ModelStarted,
+    )
+    .unwrap();
+    let before = store.events_owned(&run.run_id, "owner-a").unwrap();
+    let action = test_action_record(
+        &run.run_id,
+        "step-model-action-rollback",
+        "action-model-action-rollback",
+        "model-call-action-rollback",
+        "provider-model-action-rollback",
+        AgentAction::WriteFile {
+            path: "src/large.txt".into(),
+            content: "x".repeat(70 * 1024),
+        },
+    );
+    let completion = EventAppend {
+        turn_id: Some(TurnId::from("turn-1")),
+        step_id: Some(StepId::from("step-model-action-rollback")),
+        call_id: Some(CallId::from("model-call-action-rollback")),
+        occurred_at: "2026-07-12T00:00:03Z".into(),
+        kind: HarnessEventKind::ModelCompleted {
+            assistant_text: "must roll back".into(),
+        },
+    };
+    assert!(matches!(
+        store.append_model_completed_with_action("owner-a", &run.run_id, completion, action),
+        Err(StoreError::Invariant(_))
+    ));
+    assert_eq!(store.events_owned(&run.run_id, "owner-a").unwrap(), before);
+    assert!(store
+        .transcript_owned(&run.run_id, "owner-a")
+        .unwrap()
+        .is_empty());
+}
+
 fn temp_db(label: &str) -> PathBuf {
     std::env::temp_dir()
         .join(format!(
