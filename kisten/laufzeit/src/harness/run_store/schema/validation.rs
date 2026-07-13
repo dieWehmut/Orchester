@@ -5,6 +5,7 @@ use rusqlite::{params, Connection, OptionalExtension};
 use super::super::{hash_canonical_action, StoreError};
 
 mod transcript;
+mod bindings;
 
 const EXPECTED_V5_SCHEMA_OBJECT_HASHES: &[(&str, &str, &str)] = &[
     (
@@ -86,6 +87,9 @@ pub(super) fn verify_schema_shape(
     require_observation_schema(connection)?;
     if expected_version >= 6 {
         transcript::verify_schema(connection)?;
+    }
+    if expected_version >= 7 {
+        bindings::verify_schema(connection)?;
     }
     require_columns(
         connection,
