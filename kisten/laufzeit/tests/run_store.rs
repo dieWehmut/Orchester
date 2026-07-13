@@ -465,6 +465,16 @@ fn model_completion_redacts_configured_secrets_at_the_persistence_boundary() {
     assert!(!debug.contains(secret));
     assert!(debug.contains("[REDACTED]"));
     drop(reopened);
+
+    for entry in std::fs::read_dir(path.parent().unwrap()).unwrap() {
+        let entry = entry.unwrap();
+        let bytes = std::fs::read(entry.path()).unwrap();
+        assert!(
+            !String::from_utf8_lossy(&bytes).contains(secret),
+            "secret leaked into {:?}",
+            entry.path()
+        );
+    }
     remove_temp_db(&path);
 }
 
