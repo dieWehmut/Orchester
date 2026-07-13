@@ -26,6 +26,7 @@ const ORANGE: &str = "\x1b[38;5;208m";
 const RESET: &str = "\x1b[0m";
 const COMPACT_PALETTE_ROWS: usize = 6;
 const PALETTE_ROWS: usize = 8;
+const PICKER_PANEL_ROWS: usize = 7;
 
 const PROMPT_SUGGESTIONS: [&str; 6] = [
     "Summarize recent commits",
@@ -88,6 +89,17 @@ struct CommandItem {
     description: String,
     action: CommandAction,
     agent: Option<String>,
+}
+
+#[derive(Clone, Copy)]
+struct PickerView<'a> {
+    width: usize,
+    height: usize,
+    choices: &'a [AgentChoice],
+    selected: usize,
+    command: &'a str,
+    command_selected: usize,
+    message: &'a str,
 }
 
 pub fn run_home_tui(choices: &[AgentChoice]) -> io::Result<HomeAction> {
@@ -266,14 +278,19 @@ pub fn select_agent_tui(
     let mut message = String::new();
 
     loop {
+        let (cols, rows) = terminal::size().unwrap_or((100, 30));
         present_home(
             &mut presenter,
             &mut out,
-            choices,
-            selected,
-            &command,
-            command_selected,
-            &message,
+            PickerView {
+                width: viewport_content_width(cols),
+                height: usize::from(rows).max(1),
+                choices,
+                selected,
+                command: &command,
+                command_selected,
+                message: &message,
+            },
         )?;
 
         let TerminalEvent::Key(key) = event::read()? else {
@@ -624,95 +641,180 @@ fn render_home<W: Write>(
 ) -> io::Result<()> {
     render_home_frame(
         out,
-        choices,
-        selected,
-        command,
-        command_selected,
-        message,
+        PickerView {
+            width: 100,
+            height: usize::MAX,
+            choices,
+            selected,
+            command,
+            command_selected,
+            message,
+        },
     )
 }
 
 fn present_home<W: Write>(
     presenter: &mut FramePresenter,
     out: &mut W,
-    choices: &[AgentChoice],
-    selected: usize,
-    command: &str,
-    command_selected: usize,
-    message: &str,
+    view: PickerView<'_>,
 ) -> io::Result<()> {
     let mut frame = Vec::new();
-    render_home_frame(
-        &mut frame,
+    render_home_frame(&mut frame, view)?;
+    presenter.present(out, &frame)
+}
+
+fn render_home_frame<W: Write>(out: &mut W, view: PickerView<'_>) -> io::Result<()> {
+    let PickerView {
+        width,
+        height,
         choices,
         selected,
         command,
         command_selected,
         message,
-    )?;
-    presenter.present(out, &frame)
+    } = view;
+    if height == 0 {
+        return Ok(());
+    }
+    let selectable = selectable_agents(choices);
+    let selected = selected.min(selectable.len().saturating_sub(1));
+    let selected_agent = selectable.get(selected);
+    let width = width.clamp(2, 132);
+
+    if command.starts_with('/') {
+        return render_picker_command_frame(out, width, height, command, choices, command_selected);
+    }
+
+    let full_header = width >= 30 && height >= PICKER_PANEL_ROWS + 4;
+    let header_rows = if full_header {
+        render_delegate_panel(out, width, selected_agent)?;
+        writeln!(out)?;
+        writeln!(out, "{BOLD}Choose agent{RESET}")?;
+        PICKER_PANEL_ROWS + 2
+    } else {
+        let rows = if height >= 4 {
+            2
+        } else if height >= 2 {
+            1
+        } else {
+            0
+        };
+        render_compact_picker_header(out, width, rows, selected_agent)?;
+        rows
+    };
+
+    let footer_rows = usize::from(height > header_rows.saturating_add(1));
+    let list_rows = height
+        .saturating_sub(header_rows)
+        .saturating_sub(footer_rows);
+    let start = selection_window_start(selected, selectable.len(), list_rows);
+    for (index, choice) in selectable.iter().enumerate().skip(start).take(list_rows) {
+        render_picker_agent_row(out, width, index == selected, choice)?;
+    }
+    if footer_rows > 0 {
+        render_picker_footer(out, width, selected_agent, choices, message)?;
+    }
+    Ok(())
 }
 
-fn render_home_frame<W: Write>(
+fn render_picker_command_frame<W: Write>(
     out: &mut W,
-    choices: &[AgentChoice],
-    selected: usize,
+    width: usize,
+    height: usize,
     command: &str,
+    choices: &[AgentChoice],
     command_selected: usize,
-    message: &str,
 ) -> io::Result<()> {
-    let selectable = selectable_agents(choices);
-    let selected_agent = selectable.get(selected);
-    let (cols, _) = terminal::size().unwrap_or((100, 30));
-    let width = viewport_content_width(cols).clamp(50, 132);
-
-    render_delegate_panel(out, width, selected_agent)?;
-    writeln!(out)?;
-
-    writeln!(out, "{BOLD}Choose agent{RESET}")?;
-    for (i, choice) in selectable.iter().enumerate() {
-        let pointer = if i == selected { ">" } else { " " };
-        let row_color = if i == selected { CYAN } else { "" };
-        let row_reset = if i == selected { RESET } else { "" };
-        writeln!(
-            out,
-            " {row_color}{pointer} {name:<10}{row_reset} {status:<8} {kinds:<18} {launch}",
-            name = choice.name,
-            status = plain_status(choice.status),
-            kinds = choice.kinds,
-            launch = launch_label(choice)
-        )?;
-        if i == selected {
-            writeln!(out, "    {DIM}{}{RESET}", choice.detail)?;
-        }
+    let header_rows = usize::from(height >= 5);
+    let status_rows = usize::from(height >= 3);
+    if header_rows > 0 {
+        writeln!(out, "{BOLD}Agent commands{RESET}")?;
     }
-
-    let unavailable = choices
-        .iter()
-        .filter(|choice| !choice.is_available())
-        .collect::<Vec<_>>();
-    if !unavailable.is_empty() {
-        writeln!(out)?;
-        writeln!(
+    let prompt = truncate(&sanitize_terminal_text(&format!("> {command}")), width);
+    writeln!(out, "{BOLD}{prompt}{RESET}")?;
+    let palette_rows = height
+        .saturating_sub(header_rows)
+        .saturating_sub(1)
+        .saturating_sub(status_rows)
+        .min(PALETTE_ROWS);
+    render_command_palette(out, command, choices, command_selected, palette_rows, width)?;
+    if status_rows > 0 {
+        write!(
             out,
-            "{DIM}Unavailable: {}{RESET}",
-            unavailable_names(&unavailable)
-        )?;
-    }
-
-    writeln!(out)?;
-    if command.starts_with('/') {
-        writeln!(out, "{BOLD}> {command}{RESET}")?;
-        render_command_palette(out, command, choices, command_selected, PALETTE_ROWS, width)?;
-    } else if !message.is_empty() {
-        writeln!(out, "{YELLOW}{message}{RESET}")?;
-    } else {
-        writeln!(
-            out,
-            "{DIM}Type / to search commands. Press q or Esc to exit.{RESET}"
+            "{DIM}{}{RESET}",
+            truncate("Up/Down selects; Enter opens; Esc returns", width)
         )?;
     }
     Ok(())
+}
+
+fn render_compact_picker_header<W: Write>(
+    out: &mut W,
+    width: usize,
+    rows: usize,
+    selected_agent: Option<&AgentChoice>,
+) -> io::Result<()> {
+    if rows > 0 {
+        writeln!(out, "{BOLD}{}{RESET}", truncate("Choose agent", width))?;
+    }
+    if rows > 1 {
+        let selected = selected_agent
+            .map(|choice| format!("Selected: {} ({})", choice.name, launch_label(choice)))
+            .unwrap_or_else(|| "Selected: none".to_string());
+        writeln!(
+            out,
+            "{DIM}{}{RESET}",
+            truncate(&sanitize_terminal_text(&selected), width)
+        )?;
+    }
+    Ok(())
+}
+
+fn render_picker_agent_row<W: Write>(
+    out: &mut W,
+    width: usize,
+    selected: bool,
+    choice: &AgentChoice,
+) -> io::Result<()> {
+    let marker = if selected { ">" } else { " " };
+    let color = if selected { CYAN } else { "" };
+    let reset = if selected { RESET } else { "" };
+    let name = truncate(&sanitize_terminal_text(&choice.name), 12);
+    let name_pad = " ".repeat(12usize.saturating_sub(display_width(&name)));
+    let kinds = sanitize_terminal_text(&choice.kinds);
+    let line = format!(
+        "{marker} {name}{name_pad} {:<7} {kinds} {}",
+        plain_status(choice.status),
+        launch_label(choice)
+    );
+    writeln!(out, "{color}{}{reset}", truncate(&line, width))
+}
+
+fn render_picker_footer<W: Write>(
+    out: &mut W,
+    width: usize,
+    selected_agent: Option<&AgentChoice>,
+    choices: &[AgentChoice],
+    message: &str,
+) -> io::Result<()> {
+    let (style, footer) = if message.is_empty() {
+        let detail = selected_agent
+            .map(|choice| sanitize_terminal_text(&choice.detail))
+            .unwrap_or_else(|| "No runnable agent".to_string());
+        let unavailable = choices
+            .iter()
+            .filter(|choice| !choice.is_available())
+            .count();
+        (
+            DIM,
+            format!(
+                "{detail} | {unavailable} unavailable | Enter launches; / commands; Esc returns"
+            ),
+        )
+    } else {
+        (YELLOW, sanitize_terminal_text(message))
+    };
+    write!(out, "{style}{}{RESET}", truncate(&footer, width))
 }
 
 #[cfg(test)]
@@ -1355,14 +1457,6 @@ fn agent_rank(name: &str) -> u8 {
     }
 }
 
-fn unavailable_names(choices: &[&AgentChoice]) -> String {
-    choices
-        .iter()
-        .map(|choice| choice.name.as_str())
-        .collect::<Vec<_>>()
-        .join(", ")
-}
-
 fn truncate(s: &str, max: usize) -> String {
     if display_width(s) <= max {
         return s.to_string();
@@ -1517,6 +1611,143 @@ mod tests {
             "home output:\n{rendered}"
         );
         assert!(!plain.contains("/#\\"), "home output:\n{rendered}");
+    }
+
+    #[test]
+    fn delegate_picker_respects_the_viewport_and_keeps_selection_visible() {
+        let choices = (0..20)
+            .map(|index| {
+                choice(
+                    &format!("worker{index}"),
+                    AvailabilityStatus::Available,
+                    Some("worker"),
+                )
+            })
+            .collect::<Vec<_>>();
+        let mut out = Vec::new();
+
+        render_home_frame(
+            &mut out,
+            PickerView {
+                width: 40,
+                height: 8,
+                choices: &choices,
+                selected: 19,
+                command: "",
+                command_selected: 0,
+                message: "",
+            },
+        )
+        .unwrap();
+
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        assert!(
+            plain.lines().count() <= 8,
+            "picker exceeded its row budget:\n{plain}"
+        );
+        assert!(
+            plain.lines().all(|line| display_width(line) <= 40),
+            "picker exceeded its column budget:\n{plain}"
+        );
+        assert!(
+            plain.lines().any(|line| line.contains("> worker19")),
+            "selected agent is not visible:\n{plain}"
+        );
+    }
+
+    #[test]
+    fn delegate_picker_command_palette_stays_bounded_and_visible() {
+        let choices = (0..20)
+            .map(|index| {
+                choice(
+                    &format!("worker{index}"),
+                    AvailabilityStatus::Available,
+                    Some("worker"),
+                )
+            })
+            .collect::<Vec<_>>();
+        let selected = matching_commands("/", &choices).len() - 1;
+        let mut out = Vec::new();
+
+        render_home_frame(
+            &mut out,
+            PickerView {
+                width: 40,
+                height: 8,
+                choices: &choices,
+                selected: 19,
+                command: "/",
+                command_selected: selected,
+                message: "",
+            },
+        )
+        .unwrap();
+
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        assert!(
+            plain.lines().count() <= 8,
+            "picker palette exceeded its row budget:\n{plain}"
+        );
+        assert!(
+            plain.lines().all(|line| display_width(line) <= 40),
+            "picker palette exceeded its column budget:\n{plain}"
+        );
+        assert!(
+            plain.lines().any(|line| line.contains("> /worker19")),
+            "selected command is not visible:\n{plain}"
+        );
+    }
+
+    #[test]
+    fn leaving_delegate_commands_replaces_the_palette_without_global_clear() {
+        let choices = (0..8)
+            .map(|index| {
+                choice(
+                    &format!("worker{index}"),
+                    AvailabilityStatus::Available,
+                    Some("worker"),
+                )
+            })
+            .collect::<Vec<_>>();
+        let selected_command = matching_commands("/", &choices).len() - 1;
+        let mut presenter = FramePresenter::default();
+        let mut out = Vec::new();
+        present_home(
+            &mut presenter,
+            &mut out,
+            PickerView {
+                width: 40,
+                height: 8,
+                choices: &choices,
+                selected: 7,
+                command: "/",
+                command_selected: selected_command,
+                message: "",
+            },
+        )
+        .unwrap();
+        out.clear();
+
+        present_home(
+            &mut presenter,
+            &mut out,
+            PickerView {
+                width: 40,
+                height: 8,
+                choices: &choices,
+                selected: 7,
+                command: "",
+                command_selected: 0,
+                message: "",
+            },
+        )
+        .unwrap();
+
+        let update = String::from_utf8(out).unwrap();
+        assert!(!update.contains("/worker7"));
+        assert!(!update.contains("\x1b[J"));
+        assert!(!update.contains("\x1b[2J"));
+        assert!(update.contains("worker7"));
     }
 
     #[test]
