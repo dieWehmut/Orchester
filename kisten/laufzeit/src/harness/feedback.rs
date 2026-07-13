@@ -8,6 +8,49 @@ use secrecy::{ExposeSecret, SecretString};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
 
+/// Order-independent identity of the exact secret redaction set shared by
+/// context assembly and durable persistence. The digest is never serialized
+/// or displayed; it only prevents differently configured boundaries from
+/// being wired together.
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub struct SecretSetId([u8; 32]);
+
+impl SecretSetId {
+    pub fn empty() -> Self {
+        Self::from_secrets(&[])
+    }
+
+    pub(crate) fn from_secrets(secrets: &[SecretString]) -> Self {
+        let mut members = secrets
+            .iter()
+            .map(|secret| {
+                let value = secret.expose_secret();
+                let mut hasher = Sha256::new();
+                hasher.update(b"orchester-secret-member-v1\0");
+                hasher.update((value.len() as u64).to_be_bytes());
+                hasher.update(value.as_bytes());
+                let digest: [u8; 32] = hasher.finalize().into();
+                digest
+            })
+            .collect::<Vec<_>>();
+        members.sort_unstable();
+
+        let mut hasher = Sha256::new();
+        hasher.update(b"orchester-secret-set-v1\0");
+        hasher.update((members.len() as u64).to_be_bytes());
+        for member in members {
+            hasher.update(member);
+        }
+        Self(hasher.finalize().into())
+    }
+}
+
+impl std::fmt::Debug for SecretSetId {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        formatter.write_str("SecretSetId(<redacted>)")
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum FeedbackClass {
     DecodeError,
@@ -124,6 +167,25 @@ impl FeedbackEngine {
         self.limits
     }
 
+    pub(crate) fn secret_set_id(&self) -> SecretSetId {
+        SecretSetId::from_secrets(&self.secrets)
+    }
+
+    /// Detect sensitive material after applying the same terminal/control
+    /// normalization used by durable redaction. Callers that send data to a
+    /// provider can therefore reject a secret split by an escape or NUL byte
+    /// before the raw value crosses that boundary.
+    pub(crate) fn contains_sensitive_material(&self, input: &str) -> bool {
+        let normalized = normalize_text(input);
+        self.secrets.iter().any(|secret| {
+            let value = secret.expose_secret();
+            !value.is_empty() && normalized.contains(value)
+        }) || looks_like_secret(&normalized)
+            || private_key_pattern().is_match(&normalized)
+            || authorization_pattern().is_match(&normalized)
+            || token_pattern().is_match(&normalized)
+    }
+
     pub fn build(&self, input: FeedbackInput) -> BuiltFeedback {
         // Sanitize and redact the complete diagnostic before either hashing or
         // truncating. This prevents truncation boundaries from leaking a token.
@@ -166,11 +228,10 @@ impl FeedbackEngine {
     }
 
     pub(crate) fn sanitize_text(&self, input: &str) -> String {
-        let mut sanitized = ansi_pattern().replace_all(input, "").into_owned();
         // Remove controls before exact-value redaction so an attacker cannot
         // split a configured secret with NUL/escape/newline bytes to evade the
         // matcher while remaining visually reconstructable in a terminal.
-        sanitized.retain(|ch| !ch.is_control());
+        let mut sanitized = normalize_text(input);
         for secret in &self.secrets {
             let secret = secret.expose_secret();
             if !secret.is_empty() {
@@ -189,6 +250,28 @@ impl FeedbackEngine {
             .replace_all(&sanitized, "[REDACTED_TOKEN]")
             .into_owned()
     }
+}
+
+fn normalize_text(input: &str) -> String {
+    let mut normalized = ansi_pattern().replace_all(input, "").into_owned();
+    normalized.retain(|ch| !ch.is_control());
+    normalized
+}
+
+fn looks_like_secret(value: &str) -> bool {
+    let lower = value.to_ascii_lowercase();
+    [
+        "sk-",
+        "sk_",
+        "ghp_",
+        "github_pat_",
+        "xoxb-",
+        "xoxp-",
+        "authorization: bearer ",
+        "-----begin private key-----",
+    ]
+    .iter()
+    .any(|prefix| lower.contains(prefix))
 }
 
 fn fingerprint(

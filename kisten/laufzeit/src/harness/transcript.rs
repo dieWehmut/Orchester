@@ -24,11 +24,20 @@ pub struct TranscriptLimits {
 impl Default for TranscriptLimits {
     fn default() -> Self {
         Self {
-            max_record_bytes: 64 * 1024,
-            max_text_bytes: 32 * 1024,
+            max_record_bytes: Self::DEFAULT_MAX_RECORD_BYTES,
+            max_text_bytes: Self::DEFAULT_MAX_TEXT_BYTES,
             max_opaque_bytes: 16 * 1024,
         }
     }
+}
+
+impl TranscriptLimits {
+    pub const DEFAULT_MAX_RECORD_BYTES: usize = 64 * 1024;
+
+    /// The default text bound shared by durable model responses and transcript
+    /// records.  Keeping the coordinator below this limit prevents a provider
+    /// response from becoming impossible to persist after the call starts.
+    pub const DEFAULT_MAX_TEXT_BYTES: usize = 32 * 1024;
 }
 
 #[derive(Clone, PartialEq, Eq)]

@@ -11,12 +11,15 @@ use orchester_modell::{
     MAX_CONTENT_BYTES,
 };
 use orchester_protokoll::{AgentAction, CallId};
+use sha2::{Digest, Sha256};
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
 
 use super::context::{
     ContextAssembler, ContextError, ContextInput, ContinuationInput, TranscriptEntry,
 };
+use super::feedback::SecretSetId;
+use super::transcript::{TranscriptError, TranscriptRecord};
 
 const MAX_MODEL_BYTES: usize = 4 * 1024;
 const MAX_AGENT_STEPS: u32 = 256;
@@ -38,6 +41,23 @@ impl fmt::Debug for AgentLoopConfig {
             .field("max_text_bytes", &self.max_text_bytes)
             .field("store", &self.store)
             .finish()
+    }
+}
+
+impl AgentLoopConfig {
+    /// Stable digest for the immutable model-loop settings recorded in a run.
+    pub fn snapshot_hash(&self) -> String {
+        let mut hasher = Sha256::new();
+        hasher.update(b"orchester-agent-loop-config-v1\0");
+        hash_field(&mut hasher, self.model.as_bytes());
+        hasher.update(self.max_steps.to_be_bytes());
+        hasher.update((self.max_text_bytes as u64).to_be_bytes());
+        hasher.update([u8::from(self.store)]);
+        hasher
+            .finalize()
+            .iter()
+            .map(|byte| format!("{byte:02x}"))
+            .collect()
     }
 }
 
@@ -115,6 +135,10 @@ impl PendingAction {
 
     pub fn model_calls(&self) -> u32 {
         self.state.model_calls
+    }
+
+    pub fn usage(&self) -> ModelUsage {
+        self.state.usage
     }
 }
 
@@ -214,6 +238,37 @@ impl<M: LanguageModel> SelfAgentLoop<M> {
 
     pub fn model(&self) -> &M {
         &self.model
+    }
+
+    pub fn config_snapshot_hash(&self) -> String {
+        let mut hasher = Sha256::new();
+        hasher.update(b"orchester-self-agent-config-v1\0");
+        hash_field(&mut hasher, self.config.snapshot_hash().as_bytes());
+        hash_field(&mut hasher, self.context.snapshot_hash().as_bytes());
+        hasher
+            .finalize()
+            .iter()
+            .map(|byte| format!("{byte:02x}"))
+            .collect()
+    }
+
+    pub(crate) fn max_steps(&self) -> u32 {
+        self.config.max_steps
+    }
+
+    pub(crate) fn secret_set_id(&self) -> SecretSetId {
+        self.context.secret_set_id()
+    }
+
+    pub(crate) fn validate_durable_record(
+        &self,
+        record: &TranscriptRecord,
+    ) -> Result<(), TranscriptError> {
+        self.context.validate_durable_record(record)
+    }
+
+    pub(crate) fn is_durable_field(&self, value: &str, max_bytes: usize) -> bool {
+        self.context.is_durable_field(value, max_bytes)
     }
 
     pub async fn start(
@@ -370,6 +425,11 @@ impl<M: LanguageModel> SelfAgentLoop<M> {
             state,
         }))
     }
+}
+
+fn hash_field(hasher: &mut Sha256, value: &[u8]) {
+    hasher.update((value.len() as u64).to_be_bytes());
+    hasher.update(value);
 }
 
 impl PreparedOutcome {

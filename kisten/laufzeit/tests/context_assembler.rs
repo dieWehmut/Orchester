@@ -104,6 +104,19 @@ fn configured_and_key_shaped_secrets_are_rejected_without_echo() {
 }
 
 #[test]
+fn control_bytes_cannot_split_a_configured_secret_before_model_assembly() {
+    let secret = SecretString::new("configured-provider-secret".to_owned().into_boxed_str());
+    let assembler = ContextAssembler::new(ContextLimits::default(), vec![secret]);
+    let err = assembler
+        .assemble(ContextInput {
+            prompt: "use configured\u{0}-provider-secret".into(),
+            ..input(Vec::new())
+        })
+        .unwrap_err();
+    assert!(matches!(err, ContextError::SecretDetected));
+}
+
+#[test]
 fn oversized_prompt_fails_before_a_model_request_exists() {
     let assembler = ContextAssembler::new(
         ContextLimits {

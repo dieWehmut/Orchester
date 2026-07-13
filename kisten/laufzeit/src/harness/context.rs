@@ -3,12 +3,14 @@
 use std::fmt;
 
 use orchester_modell::{ModelItem, ModelMessage, ModelRequest, ModelRole, ToolDefinition};
-use secrecy::{ExposeSecret, SecretString};
+use secrecy::SecretString;
 use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
 
+use super::feedback::{FeedbackEngine, SecretSetId};
 pub use super::transcript::TranscriptRecord as TranscriptEntry;
+use super::transcript::{TranscriptCodec, TranscriptError, TranscriptLimits};
 
 const SYSTEM_PROMPT: &str = "You are the Orchester self-owned coding agent. Inspect the workspace with the provided structured tools. Produce at most one tool call per step. Never invent tool results. Use request_approval for a human checkpoint and finish only after required validation succeeds.";
 
@@ -95,6 +97,43 @@ pub struct ContextAssembler {
 impl ContextAssembler {
     pub fn new(limits: ContextLimits, secrets: Vec<SecretString>) -> Self {
         Self { limits, secrets }
+    }
+
+    pub(crate) fn secret_set_id(&self) -> SecretSetId {
+        SecretSetId::from_secrets(&self.secrets)
+    }
+
+    pub(crate) fn snapshot_hash(&self) -> String {
+        let mut hasher = Sha256::new();
+        hasher.update(b"orchester-context-config-v1\0");
+        hasher.update((self.limits.max_bytes as u64).to_be_bytes());
+        hasher.update((self.limits.max_history_entries as u64).to_be_bytes());
+        hash_context_field(&mut hasher, SYSTEM_PROMPT.as_bytes());
+        for tool in tool_definitions() {
+            hash_context_field(&mut hasher, tool.name.as_bytes());
+            hash_context_field(&mut hasher, tool.description.as_bytes());
+            let parameters = tool.parameters.to_string();
+            hash_context_field(&mut hasher, parameters.as_bytes());
+        }
+        hasher
+            .finalize()
+            .iter()
+            .map(|byte| format!("{byte:02x}"))
+            .collect()
+    }
+
+    pub(crate) fn validate_durable_record(
+        &self,
+        record: &TranscriptEntry,
+    ) -> Result<(), TranscriptError> {
+        let codec = TranscriptCodec::with_sanitizer(TranscriptLimits::default(), self.sanitizer());
+        codec.encode(record).map(|_| ())
+    }
+
+    pub(crate) fn is_durable_field(&self, value: &str, max_bytes: usize) -> bool {
+        !value.is_empty()
+            && value.len() <= max_bytes
+            && self.sanitizer().sanitize_text(value) == value
     }
 
     pub fn assemble(&self, input: ContextInput) -> Result<AssembledContext, ContextError> {
@@ -194,16 +233,24 @@ impl ContextAssembler {
     }
 
     fn reject_secret(&self, value: &str) -> Result<(), ContextError> {
-        if self.secrets.iter().any(|secret| {
-            let secret = secret.expose_secret();
-            !secret.is_empty() && value.contains(secret)
-        }) || looks_like_secret(value)
-        {
+        if self.sanitizer().contains_sensitive_material(value) {
             Err(ContextError::SecretDetected)
         } else {
             Ok(())
         }
     }
+
+    fn sanitizer(&self) -> FeedbackEngine {
+        self.secrets
+            .iter()
+            .cloned()
+            .fold(FeedbackEngine::default(), FeedbackEngine::with_secret)
+    }
+}
+
+fn hash_context_field(hasher: &mut Sha256, value: &[u8]) {
+    hasher.update((value.len() as u64).to_be_bytes());
+    hasher.update(value);
 }
 
 fn has_matching_tool_tail(history: &[TranscriptEntry]) -> bool {
@@ -263,22 +310,6 @@ fn transcript_hash(entries: &[TranscriptEntry]) -> String {
 
 fn tool_bytes(tool: &ToolDefinition) -> usize {
     tool.name.len() + tool.description.len() + tool.parameters.to_string().len()
-}
-
-fn looks_like_secret(value: &str) -> bool {
-    let lower = value.to_ascii_lowercase();
-    [
-        "sk-",
-        "sk_",
-        "ghp_",
-        "github_pat_",
-        "xoxb-",
-        "xoxp-",
-        "authorization: bearer ",
-        "-----begin private key-----",
-    ]
-    .iter()
-    .any(|prefix| lower.contains(prefix))
 }
 
 fn tool_definitions() -> Vec<ToolDefinition> {

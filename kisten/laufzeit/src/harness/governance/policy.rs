@@ -3,6 +3,7 @@
 use std::ffi::{OsStr, OsString};
 
 use orchester_protokoll::{AgentAction, PolicyDecision};
+use sha2::{Digest, Sha256};
 use thiserror::Error;
 
 use super::command::{classify_command, CommandCategory, CommandIntent};
@@ -72,6 +73,18 @@ pub enum PolicyError {
 pub struct PolicyEngine;
 
 impl PolicyEngine {
+    /// Stable identity for the built-in policy matrix.  A future configured
+    /// policy must replace this with its immutable manifest digest.
+    pub fn snapshot_hash() -> String {
+        let mut hasher = Sha256::new();
+        hasher.update(b"orchester-policy-v1\0");
+        hasher
+            .finalize()
+            .iter()
+            .map(|byte| format!("{byte:02x}"))
+            .collect()
+    }
+
     pub fn new() -> Self {
         Self
     }

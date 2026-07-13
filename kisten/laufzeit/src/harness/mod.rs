@@ -7,6 +7,7 @@ pub mod audit;
 pub mod barrier;
 pub mod config;
 pub mod context;
+pub mod coordinator;
 pub mod credentials;
 pub mod feedback;
 pub mod files;
@@ -25,7 +26,7 @@ pub mod workspace_write;
 
 pub use feedback::{
     BuiltFeedback, FailureLoopGuard, FeedbackClass, FeedbackEngine, FeedbackInput, FeedbackLimits,
-    FeedbackTruncation, LoopGuardConfigError,
+    FeedbackTruncation, LoopGuardConfigError, SecretSetId,
 };
 pub use mutation::{
     MutationObservation, MutationTracker, SnapshotError, SnapshotLimits, SnapshotResult,
