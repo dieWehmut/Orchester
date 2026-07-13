@@ -5,7 +5,7 @@ use std::thread;
 
 use orchester_laufzeit::harness::run_store::{
     action_hash, ActionRecord, EffectClass, EventAppend, NewRun, RunStatus, RunStore,
-    SqliteRunStore, StoreError, StoredTranscriptRecord, Transition,
+    SqliteRunStore, StoreError, StoredTranscriptRecord, TranscriptBindingPhase, Transition,
 };
 use orchester_laufzeit::harness::transcript::{
     TranscriptCodec, TranscriptLimits, TranscriptRecord,
@@ -373,6 +373,18 @@ fn model_completion_is_call_bound_atomic_and_single_shot() {
     )
     .unwrap();
     assert_eq!(completed.sequence, 4);
+    let binding = store
+        .transcript_binding_owned(
+            &run_id,
+            "owner-a",
+            completed.sequence,
+            TranscriptBindingPhase::ModelResponse,
+        )
+        .unwrap()
+        .unwrap();
+    assert_eq!(binding.first_ordinal, Some(1));
+    assert_eq!(binding.last_ordinal, Some(1));
+    assert_eq!(binding.record_count, 1);
     let after_completion = store.events_owned(&run_id, "owner-a").unwrap();
     assert!(matches!(
         append_model_event(
@@ -1628,7 +1640,7 @@ fn model_start_writes_new_request_records_in_the_same_transaction() {
         occurred_at: "2026-07-12T00:00:02Z".into(),
         kind: HarnessEventKind::ModelStarted,
     };
-    store
+    let event = store
         .append_model_started_with_transcript(
             "owner-a",
             &run.run_id,
@@ -1636,15 +1648,56 @@ fn model_start_writes_new_request_records_in_the_same_transaction() {
             vec![TranscriptRecord::user("inspect the workspace")],
         )
         .unwrap();
+    let binding = store
+        .transcript_binding_owned(
+            &run.run_id,
+            "owner-a",
+            event.sequence,
+            TranscriptBindingPhase::ModelRequest,
+        )
+        .unwrap()
+        .unwrap();
+    assert_eq!(binding.first_ordinal, Some(1));
+    assert_eq!(binding.last_ordinal, Some(1));
+    assert_eq!(binding.record_count, 1);
+
+    store
+        .append_transcript_record(
+            "owner-a",
+            &run.run_id,
+            TranscriptRecord::tool_call(
+                "call-after-request",
+                "read_file",
+                r#"{"path":"src/lib.rs"}"#,
+            ),
+            "2026-07-12T00:00:03Z",
+        )
+        .unwrap();
+    assert!(store
+        .transcript_binding_owned(
+            &run.run_id,
+            "owner-a",
+            event.sequence,
+            TranscriptBindingPhase::ModelRequest,
+        )
+        .unwrap()
+        .is_some());
 
     let records = store.transcript_owned(&run.run_id, "owner-a").unwrap();
     assert!(matches!(
         &records[..],
-        [StoredTranscriptRecord {
-            ordinal: 1,
-            record: TranscriptRecord::User(text),
-            ..
-        }] if text == "inspect the workspace"
+        [
+            StoredTranscriptRecord {
+                ordinal: 1,
+                record: TranscriptRecord::User(text),
+                ..
+            },
+            StoredTranscriptRecord {
+                ordinal: 2,
+                record: TranscriptRecord::ToolCall { .. },
+                ..
+            }
+        ] if text == "inspect the workspace"
     ));
 }
 
@@ -1796,6 +1849,30 @@ fn model_completion_with_action_commits_response_and_tool_call_as_one_boundary()
         action_event.kind,
         HarnessEventKind::ActionRecorded { .. }
     ));
+    let response_binding = store
+        .transcript_binding_owned(
+            &run.run_id,
+            "owner-a",
+            model_event.sequence,
+            TranscriptBindingPhase::ModelResponse,
+        )
+        .unwrap()
+        .unwrap();
+    assert_eq!(response_binding.first_ordinal, Some(1));
+    assert_eq!(response_binding.last_ordinal, Some(1));
+    assert_eq!(response_binding.record_count, 1);
+    let action_binding = store
+        .transcript_binding_owned(
+            &run.run_id,
+            "owner-a",
+            action_event.sequence,
+            TranscriptBindingPhase::Action,
+        )
+        .unwrap()
+        .unwrap();
+    assert_eq!(action_binding.first_ordinal, Some(2));
+    assert_eq!(action_binding.last_ordinal, Some(2));
+    assert_eq!(action_binding.record_count, 1);
     let records = store.transcript_owned(&run.run_id, "owner-a").unwrap();
     assert!(matches!(
         &records[..],
@@ -1810,6 +1887,80 @@ fn model_completion_with_action_commits_response_and_tool_call_as_one_boundary()
             }
         ]
     ));
+}
+
+#[test]
+fn combined_empty_model_response_binds_zero_records_before_the_action() {
+    let store = SqliteRunStore::in_memory().unwrap();
+    let run = store
+        .create_run(new_run("run-model-empty-action", "owner-a"))
+        .unwrap();
+    start_step(&store, &run.run_id, "owner-a", "step-model-empty-action");
+    append_model_event(
+        &store,
+        &run.run_id,
+        "owner-a",
+        "step-model-empty-action",
+        "model-call-empty-action",
+        HarnessEventKind::ModelStarted,
+    )
+    .unwrap();
+    let action = test_action_record(
+        &run.run_id,
+        "step-model-empty-action",
+        "action-model-empty-action",
+        "model-call-empty-action",
+        "provider-model-empty-action",
+        AgentAction::ReadFile {
+            path: "src/lib.rs".into(),
+            start_line: None,
+            end_line: None,
+        },
+    );
+    let (model_event, action_event) = store
+        .append_model_completed_with_action(
+            "owner-a",
+            &run.run_id,
+            EventAppend {
+                turn_id: Some(TurnId::from("turn-1")),
+                step_id: Some(StepId::from("step-model-empty-action")),
+                call_id: Some(CallId::from("model-call-empty-action")),
+                occurred_at: "2026-07-12T00:00:03Z".into(),
+                kind: HarnessEventKind::ModelCompleted {
+                    assistant_text: String::new(),
+                },
+            },
+            ActionRecord {
+                occurred_at: "2026-07-12T00:00:09Z".into(),
+                ..action
+            },
+        )
+        .unwrap();
+
+    let response = store
+        .transcript_binding_owned(
+            &run.run_id,
+            "owner-a",
+            model_event.sequence,
+            TranscriptBindingPhase::ModelResponse,
+        )
+        .unwrap()
+        .unwrap();
+    assert_eq!(response.first_ordinal, None);
+    assert_eq!(response.last_ordinal, None);
+    assert_eq!(response.record_count, 0);
+    let action = store
+        .transcript_binding_owned(
+            &run.run_id,
+            "owner-a",
+            action_event.sequence,
+            TranscriptBindingPhase::Action,
+        )
+        .unwrap()
+        .unwrap();
+    assert_eq!(action.first_ordinal, Some(1));
+    assert_eq!(action.last_ordinal, Some(1));
+    assert_eq!(action.record_count, 1);
 }
 
 #[test]

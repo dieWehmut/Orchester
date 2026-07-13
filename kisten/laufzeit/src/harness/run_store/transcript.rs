@@ -1,5 +1,5 @@
 use orchester_protokoll::{AgentAction, CallId, HarnessEvent, HarnessEventKind, RunId};
-use rusqlite::{params, Transaction, TransactionBehavior};
+use rusqlite::{params, OptionalExtension, Transaction, TransactionBehavior};
 use serde_json::Value;
 use sha2::{Digest, Sha256};
 
@@ -9,6 +9,8 @@ use crate::harness::transcript::{
 };
 
 use super::{database::load_snapshot, map_constraint, EventAppend, SqliteRunStore, StoreError};
+
+mod binding;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StoredTranscriptRecord {
@@ -23,6 +25,43 @@ pub struct TranscriptAppendRange {
     pub last_ordinal: u64,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum TranscriptBindingPhase {
+    ModelRequest,
+    ModelResponse,
+    Action,
+    ToolResult,
+}
+
+impl TranscriptBindingPhase {
+    fn as_db(self) -> &'static str {
+        match self {
+            Self::ModelRequest => "model_request",
+            Self::ModelResponse => "model_response",
+            Self::Action => "action",
+            Self::ToolResult => "tool_result",
+        }
+    }
+
+    fn expected_event(self, kind: &str) -> bool {
+        match self {
+            Self::ModelRequest => kind == "model.started",
+            Self::ModelResponse => kind == "model.completed",
+            Self::Action => kind == "action.recorded",
+            Self::ToolResult => matches!(kind, "tool.completed" | "tool.failed"),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TranscriptBinding {
+    pub event_sequence: u64,
+    pub phase: TranscriptBindingPhase,
+    pub first_ordinal: Option<u64>,
+    pub last_ordinal: Option<u64>,
+    pub record_count: u64,
+}
+
 struct CanonicalRecord {
     kind: &'static str,
     call_id: Option<String>,
@@ -31,6 +70,20 @@ struct CanonicalRecord {
 }
 
 impl SqliteRunStore {
+    pub fn transcript_binding_owned(
+        &self,
+        run_id: &RunId,
+        owner_actor_id: &str,
+        event_sequence: u64,
+        phase: TranscriptBindingPhase,
+    ) -> Result<Option<TranscriptBinding>, StoreError> {
+        ensure_field(owner_actor_id, &self.event_sanitizer)?;
+        let sequence = i64::try_from(event_sequence).map_err(|_| StoreError::Corrupt)?;
+        let connection = self.connection()?;
+        load_snapshot(&connection, run_id, Some(owner_actor_id))?;
+        load_binding(&connection, run_id, sequence, phase, &self.codec())
+    }
+
     pub fn append_model_started_with_transcript(
         &self,
         owner_actor_id: &str,
@@ -148,6 +201,116 @@ impl SqliteRunStore {
         TranscriptCodec::with_sanitizer(TranscriptLimits::default(), self.event_sanitizer.clone())
     }
 }
+
+pub(super) fn bind_transcript_range_in_transaction(
+    transaction: &Transaction<'_>,
+    run_id: &RunId,
+    event_sequence: u64,
+    phase: TranscriptBindingPhase,
+    range: Option<TranscriptAppendRange>,
+) -> Result<TranscriptBinding, StoreError> {
+    let event_sequence = i64::try_from(event_sequence).map_err(|_| StoreError::Corrupt)?;
+    let event_kind: Option<String> = transaction
+        .query_row(
+            "SELECT kind FROM events WHERE run_id = ?1 AND sequence = ?2",
+            params![run_id.0, event_sequence],
+            |row| row.get(0),
+        )
+        .optional()?;
+    let event_kind = event_kind.ok_or(StoreError::Corrupt)?;
+    if !phase.expected_event(&event_kind) {
+        return Err(StoreError::Invariant(
+            "transcript binding phase does not match lifecycle event".into(),
+        ));
+    }
+
+    let (first_ordinal, last_ordinal, record_count) = if let Some(range) = range {
+        if range.first_ordinal == 0 || range.last_ordinal < range.first_ordinal {
+            return Err(StoreError::Corrupt);
+        }
+        let count = range
+            .last_ordinal
+            .checked_sub(range.first_ordinal)
+            .and_then(|span| span.checked_add(1))
+            .ok_or(StoreError::Corrupt)?;
+        let first = i64::try_from(range.first_ordinal).map_err(|_| StoreError::Corrupt)?;
+        let last = i64::try_from(range.last_ordinal).map_err(|_| StoreError::Corrupt)?;
+        let actual: (i64, Option<i64>, Option<i64>) = transaction.query_row(
+            "SELECT COUNT(*), MIN(ordinal), MAX(ordinal)
+             FROM transcript_records
+             WHERE run_id = ?1 AND ordinal BETWEEN ?2 AND ?3",
+            params![run_id.0, first, last],
+            |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+        )?;
+        if actual.0 != i64::try_from(count).map_err(|_| StoreError::Corrupt)?
+            || actual.1 != Some(first)
+            || actual.2 != Some(last)
+        {
+            return Err(StoreError::Corrupt);
+        }
+        (Some(first), Some(last), count)
+    } else {
+        (None, None, 0)
+    };
+
+    transaction
+        .execute(
+            "INSERT INTO transcript_bindings(
+               run_id, event_sequence, phase, first_ordinal, last_ordinal, record_count
+             ) VALUES(?1, ?2, ?3, ?4, ?5, ?6)",
+            params![
+                run_id.0,
+                event_sequence,
+                phase.as_db(),
+                first_ordinal,
+                last_ordinal,
+                i64::try_from(record_count).map_err(|_| StoreError::Corrupt)?,
+            ],
+        )
+        .map_err(|error| map_constraint(error, "transcript binding already exists"))?;
+
+    Ok(TranscriptBinding {
+        event_sequence: u64::try_from(event_sequence).map_err(|_| StoreError::Corrupt)?,
+        phase,
+        first_ordinal: first_ordinal
+            .map(|ordinal| u64::try_from(ordinal).map_err(|_| StoreError::Corrupt))
+            .transpose()?,
+        last_ordinal: last_ordinal
+            .map(|ordinal| u64::try_from(ordinal).map_err(|_| StoreError::Corrupt))
+            .transpose()?,
+        record_count,
+    })
+}
+
+pub(super) fn current_transcript_range_in_transaction(
+    transaction: &Transaction<'_>,
+    run_id: &RunId,
+) -> Result<Option<TranscriptAppendRange>, StoreError> {
+    let (count, first, last): (i64, Option<i64>, Option<i64>) = transaction.query_row(
+        "SELECT COUNT(*), MIN(ordinal), MAX(ordinal)
+         FROM transcript_records WHERE run_id = ?1",
+        params![run_id.0],
+        |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+    )?;
+    if count == 0 {
+        if first.is_some() || last.is_some() {
+            return Err(StoreError::Corrupt);
+        }
+        return Ok(None);
+    }
+    let count = u64::try_from(count).map_err(|_| StoreError::Corrupt)?;
+    let first = u64::try_from(first.ok_or(StoreError::Corrupt)?).map_err(|_| StoreError::Corrupt)?;
+    let last = u64::try_from(last.ok_or(StoreError::Corrupt)?).map_err(|_| StoreError::Corrupt)?;
+    if last.checked_sub(first).and_then(|span| span.checked_add(1)) != Some(count) {
+        return Err(StoreError::Corrupt);
+    }
+    Ok(Some(TranscriptAppendRange {
+        first_ordinal: first,
+        last_ordinal: last,
+    }))
+}
+
+pub(super) use binding::load_binding;
 
 pub(super) fn append_records_in_transaction(
     transaction: &Transaction<'_>,

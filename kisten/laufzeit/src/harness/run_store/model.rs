@@ -55,16 +55,31 @@ impl SqliteRunStore {
                 "combined model action requires a model-completion event".into(),
             ));
         };
+        persist_event(&transaction, &model_event)?;
         if !assistant_text.is_empty() {
-            transcript::append_records_in_transaction(
+            let response_range = transcript::append_records_in_transaction(
                 &transaction,
                 run_id,
                 &[TranscriptRecord::assistant(assistant_text.clone())],
                 &model_event.occurred_at,
                 &self.event_sanitizer,
             )?;
+            transcript::bind_transcript_range_in_transaction(
+                &transaction,
+                run_id,
+                model_event.sequence,
+                transcript::TranscriptBindingPhase::ModelResponse,
+                Some(response_range),
+            )?;
+        } else {
+            transcript::bind_transcript_range_in_transaction(
+                &transaction,
+                run_id,
+                model_event.sequence,
+                transcript::TranscriptBindingPhase::ModelResponse,
+                None,
+            )?;
         }
-        persist_event(&transaction, &model_event)?;
         let advanced = transaction.execute(
             "UPDATE runs SET next_sequence = ?1, row_version = row_version + 1,
                updated_at = ?2 WHERE run_id = ?3 AND row_version = ?4",
@@ -198,14 +213,6 @@ impl SqliteRunStore {
                 action.occurred_at,
             ],
         )?;
-        transcript::append_records_in_transaction(
-            transaction,
-            &action.run_id,
-            &[transcript_record],
-            &action.occurred_at,
-            &self.event_sanitizer,
-        )?;
-
         let event = HarnessEvent {
             schema_version: HARNESS_SCHEMA_VERSION,
             event_id: event_id(&action.run_id, snapshot.next_sequence),
@@ -222,6 +229,20 @@ impl SqliteRunStore {
             },
         };
         persist_event(transaction, &event)?;
+        let action_range = transcript::append_records_in_transaction(
+            transaction,
+            &action.run_id,
+            &[transcript_record],
+            &action.occurred_at,
+            &self.event_sanitizer,
+        )?;
+        transcript::bind_transcript_range_in_transaction(
+            transaction,
+            &action.run_id,
+            event.sequence,
+            transcript::TranscriptBindingPhase::Action,
+            Some(action_range),
+        )?;
         let step_updated = transaction.execute(
             "UPDATE steps SET status = 'action_recorded', action_id = ?1
              WHERE run_id = ?2 AND step_id = ?3 AND action_id IS NULL",

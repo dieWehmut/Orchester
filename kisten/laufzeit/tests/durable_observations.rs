@@ -5,7 +5,9 @@ use std::thread;
 
 use orchester_laufzeit::harness::audit::JsonlAuditSink;
 use orchester_laufzeit::harness::barrier::{ExecutionAuthorization, PreExecutionBarrier};
-use orchester_laufzeit::harness::run_store::{EventAppend, RunStore, SqliteRunStore, StoreError};
+use orchester_laufzeit::harness::run_store::{
+    EventAppend, RunStore, SqliteRunStore, StoreError, TranscriptBindingPhase,
+};
 use orchester_laufzeit::harness::transcript::TranscriptRecord;
 use orchester_protokoll::{CallId, FeedbackReport, HarnessEventKind, ObservationId};
 use secrecy::SecretString;
@@ -39,6 +41,19 @@ fn completed_observation_is_sanitized_linked_and_recoverable() {
         .store
         .append_event(&fixture.run.owner, &fixture.run.run_id, input)
         .unwrap();
+    let binding = fixture
+        .store
+        .transcript_binding_owned(
+            &fixture.run.run_id,
+            &fixture.run.owner,
+            event.sequence,
+            TranscriptBindingPhase::ToolResult,
+        )
+        .unwrap()
+        .unwrap();
+    assert_eq!(binding.first_ordinal, Some(2));
+    assert_eq!(binding.last_ordinal, Some(2));
+    assert_eq!(binding.record_count, 1);
     let row = fixture.observation_row();
     let HarnessEventKind::ToolCompleted { observation } = event.kind else {
         panic!("terminal event must remain a completion")

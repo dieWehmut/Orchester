@@ -44,7 +44,9 @@ use database::{
     stop_reason_name, update_approval_state,
 };
 pub use resume::{ResumeNext, ResumePoint, ResumeStage};
-pub use transcript::{StoredTranscriptRecord, TranscriptAppendRange};
+pub use transcript::{
+    StoredTranscriptRecord, TranscriptAppendRange, TranscriptBinding, TranscriptBindingPhase,
+};
 pub use types::{
     ActionRecord, AuditCheckpoint, EffectClass, EventAppend, NewRun, RunSnapshot, RunStatus,
     RunStore, StoreError, Transition,
@@ -1134,6 +1136,7 @@ impl SqliteRunStore {
             occurred_at: input.occurred_at.clone(),
             kind: input.kind,
         };
+        persist_event(&transaction, &event)?;
         if let Some(records) = request_transcript {
             if !matches!(event.kind, HarnessEventKind::ModelStarted) {
                 return Err(StoreError::Invariant(
@@ -1165,15 +1168,34 @@ impl SqliteRunStore {
                     &self.event_sanitizer,
                 )?;
             }
+            let request_range = transcript::current_transcript_range_in_transaction(
+                &transaction,
+                run_id,
+            )?
+            .ok_or_else(|| StoreError::Invariant("model start requires request context".into()))?;
+            transcript::bind_transcript_range_in_transaction(
+                &transaction,
+                run_id,
+                event.sequence,
+                transcript::TranscriptBindingPhase::ModelRequest,
+                Some(request_range),
+            )?;
         }
         if let HarnessEventKind::ModelCompleted { assistant_text } = &event.kind {
             if !assistant_text.is_empty() {
-                transcript::append_records_in_transaction(
+                let response_range = transcript::append_records_in_transaction(
                     &transaction,
                     run_id,
                     &[TranscriptRecord::assistant(assistant_text.clone())],
                     &event.occurred_at,
                     &self.event_sanitizer,
+                )?;
+                transcript::bind_transcript_range_in_transaction(
+                    &transaction,
+                    run_id,
+                    event.sequence,
+                    transcript::TranscriptBindingPhase::ModelResponse,
+                    Some(response_range),
                 )?;
             }
         }
@@ -1187,16 +1209,22 @@ impl SqliteRunStore {
                 })?;
                 let payload = serde_json::from_str::<serde_json::Value>(&durable.payload)
                     .map_err(|_| StoreError::Corrupt)?;
-                transcript::append_records_in_transaction(
+                let result_range = transcript::append_records_in_transaction(
                     &transaction,
                     run_id,
                     &[TranscriptRecord::tool_result_json(call_id, payload)],
                     &event.occurred_at,
                     &self.event_sanitizer,
                 )?;
+                transcript::bind_transcript_range_in_transaction(
+                    &transaction,
+                    run_id,
+                    event.sequence,
+                    transcript::TranscriptBindingPhase::ToolResult,
+                    Some(result_range),
+                )?;
             }
         }
-        persist_event(&transaction, &event)?;
         let mut events_written = 1u64;
         if let HarnessEventKind::PolicyDecided { action_id, .. } = &event.kind {
             let updated = transaction.execute(
