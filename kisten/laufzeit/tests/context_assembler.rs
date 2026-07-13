@@ -162,6 +162,30 @@ fn continuation_keeps_the_call_pair_without_repeating_the_user_prompt() {
 }
 
 #[test]
+fn continuation_accepts_a_structured_tool_result_tail() {
+    let assembler = ContextAssembler::new(ContextLimits::default(), Vec::new());
+    let expected = json!({"data": {"safe": true}, "summary": "ok"});
+    let assembled = assembler
+        .assemble_continuation(ContinuationInput {
+            model: "test-model".into(),
+            history: vec![
+                TranscriptEntry::tool_call("call-json", "read_file", r#"{"path":"src/lib.rs"}"#),
+                TranscriptEntry::tool_result_json("call-json", expected.clone()),
+            ],
+            store: false,
+        })
+        .unwrap();
+
+    let ModelItem::ToolResult { call_id, output } =
+        &assembled.request.messages[2].items[0]
+    else {
+        panic!("expected structured tool result message");
+    };
+    assert_eq!(call_id.0, "call-json");
+    assert_eq!(serde_json::from_str::<serde_json::Value>(output).unwrap(), expected);
+}
+
+#[test]
 fn continuation_rejects_unpaired_or_mismatched_tool_results() {
     let assembler = ContextAssembler::new(ContextLimits::default(), Vec::new());
     for history in [

@@ -218,6 +218,9 @@ fn has_matching_tool_tail(history: &[TranscriptEntry]) -> bool {
         (
             TranscriptEntry::ToolCall { call_id: call_id_a, .. },
             TranscriptEntry::ToolResult { call_id: call_id_b, .. }
+        ) | (
+            TranscriptEntry::ToolCall { call_id: call_id_a, .. },
+            TranscriptEntry::ToolResultJson { call_id: call_id_b, .. }
         ) if call_id_a == call_id_b
     )
 }
