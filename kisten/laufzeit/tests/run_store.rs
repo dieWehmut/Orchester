@@ -9,6 +9,7 @@ use orchester_laufzeit::harness::run_store::{
 };
 use orchester_protokoll::{AgentAction, CallId, RunId, StepId, StopReason, TurnId};
 use orchester_protokoll::{HarnessEvent, HarnessEventKind};
+use secrecy::SecretString;
 
 static NEXT_TEMP: AtomicUsize = AtomicUsize::new(0);
 
@@ -301,6 +302,73 @@ fn model_completion_is_call_bound_atomic_and_single_shot() {
     let state = step_model_state(&path, "step-1");
     remove_temp_db(&path);
     assert_eq!(state, ("completed".into(), Some("model-call-1".into())));
+}
+
+#[test]
+fn model_completion_redacts_configured_secrets_at_the_persistence_boundary() {
+    let path = temp_db("model-completion-redaction");
+    let run_id = RunId::from("run-model-redaction");
+    let secret = "configured-model-credential-value";
+    {
+        let store = SqliteRunStore::open_with_terminal_secrets(
+            &path,
+            vec![SecretString::new(secret.to_owned().into_boxed_str())],
+        )
+        .unwrap();
+        store
+            .create_run(new_run("run-model-redaction", "owner-a"))
+            .unwrap();
+        start_step(&store, &run_id, "owner-a", "step-1");
+        append_model_event(
+            &store,
+            &run_id,
+            "owner-a",
+            "step-1",
+            "model-call-1",
+            HarnessEventKind::ModelStarted,
+        )
+        .unwrap();
+
+        let event = append_model_event(
+            &store,
+            &run_id,
+            "owner-a",
+            "step-1",
+            "model-call-1",
+            HarnessEventKind::ModelCompleted {
+                assistant_text: format!("Authorization: Bearer {secret}"),
+            },
+        )
+        .unwrap();
+        let event_json = serde_json::to_string(&event).unwrap();
+        assert!(!event_json.contains(secret));
+        assert!(event_json.contains("[REDACTED]"));
+
+        let connection = rusqlite::Connection::open(&path).unwrap();
+        let payload: String = connection
+            .query_row(
+                "SELECT sanitized_payload FROM events WHERE run_id = ?1 AND kind = 'model.completed'",
+                [&run_id.0],
+                |row| row.get(0),
+            )
+            .unwrap();
+        assert!(!payload.contains(secret));
+        assert!(payload.contains("[REDACTED]"));
+        drop(connection);
+    }
+
+    let reopened = SqliteRunStore::open(&path).unwrap();
+    let event = reopened
+        .events_owned(&run_id, "owner-a")
+        .unwrap()
+        .into_iter()
+        .find(|event| matches!(event.kind, HarnessEventKind::ModelCompleted { .. }))
+        .unwrap();
+    let debug = format!("{event:?}");
+    assert!(!debug.contains(secret));
+    assert!(debug.contains("[REDACTED]"));
+    drop(reopened);
+    remove_temp_db(&path);
 }
 
 #[test]

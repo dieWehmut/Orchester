@@ -26,6 +26,7 @@ use crate::harness::feedback::FeedbackEngine;
 
 mod database;
 mod observation;
+mod sanitized;
 mod schema;
 mod storage;
 mod transition;
@@ -51,6 +52,7 @@ fn terminal_sanitizer(secrets: Vec<SecretString>) -> FeedbackEngine {
 
 pub struct SqliteRunStore {
     connection: Mutex<Connection>,
+    event_sanitizer: FeedbackEngine,
     terminal_sanitizer: Option<FeedbackEngine>,
 }
 
@@ -106,6 +108,7 @@ impl SqliteRunStore {
         }
         Ok(Self {
             connection: Mutex::new(connection),
+            event_sanitizer: terminal_sanitizer.clone().unwrap_or_default(),
             terminal_sanitizer,
         })
     }
@@ -1067,6 +1070,7 @@ impl SqliteRunStore {
         }
         let (input, terminal_observation) =
             observation::prepare_terminal_input(run_id, input, self.terminal_sanitizer.as_ref())?;
+        let input = sanitized::canonicalize_input(input, &self.event_sanitizer)?;
         let started_action = match (&input.kind, permit_action_hash) {
             (HarnessEventKind::ToolStarted { action_id }, Some(expected_hash)) => {
                 let durable: Option<(String, String)> = transaction
