@@ -134,6 +134,13 @@ impl SqliteRunStore {
             });
             expected = expected.checked_add(1).ok_or(StoreError::Corrupt)?;
         }
+        let sequence = records
+            .iter()
+            .map(|stored| stored.record.clone())
+            .collect::<Vec<_>>();
+        codec
+            .validate_sequence(&sequence)
+            .map_err(|_| StoreError::Corrupt)?;
         Ok(records)
     }
 

@@ -7,10 +7,13 @@ use orchester_laufzeit::harness::run_store::{
     action_hash, ActionRecord, EffectClass, EventAppend, NewRun, RunStatus, RunStore,
     SqliteRunStore, StoreError, StoredTranscriptRecord, Transition,
 };
-use orchester_laufzeit::harness::transcript::TranscriptRecord;
+use orchester_laufzeit::harness::transcript::{
+    TranscriptCodec, TranscriptLimits, TranscriptRecord,
+};
 use orchester_protokoll::{AgentAction, CallId, RunId, StepId, StopReason, TurnId};
 use orchester_protokoll::{HarnessEvent, HarnessEventKind};
 use secrecy::SecretString;
+use sha2::{Digest, Sha256};
 
 static NEXT_TEMP: AtomicUsize = AtomicUsize::new(0);
 
@@ -1306,6 +1309,63 @@ fn transcript_append_classifies_existing_noncanonical_wire_as_corrupt() {
             TranscriptRecord::user("next"),
             "2026-07-12T00:00:02Z",
         ),
+        Err(StoreError::Corrupt)
+    ));
+    drop(reopened);
+    remove_temp_db(&path);
+}
+
+#[test]
+fn transcript_reader_rejects_a_cross_record_call_id_mismatch() {
+    let path = temp_db("transcript-corrupt-sequence");
+    let run_id = RunId::from("run-transcript-corrupt-sequence");
+    {
+        let store = SqliteRunStore::open(&path).unwrap();
+        store
+            .create_run(new_run("run-transcript-corrupt-sequence", "owner-a"))
+            .unwrap();
+    }
+
+    let codec = TranscriptCodec::new(TranscriptLimits::default(), Vec::new());
+    let records = [
+        TranscriptRecord::tool_call("call-a", "read_file", r#"{"path":"src/lib.rs"}"#),
+        TranscriptRecord::tool_result("call-b", "mismatched result"),
+    ];
+    let connection = rusqlite::Connection::open(&path).unwrap();
+    for (index, record) in records.iter().enumerate() {
+        let wire = codec.encode(record).unwrap();
+        let (kind, call_id) = match record {
+            TranscriptRecord::ToolCall { call_id, .. } => ("tool_call", call_id.0.as_str()),
+            TranscriptRecord::ToolResult { call_id, .. } => ("tool_result", call_id.0.as_str()),
+            _ => unreachable!(),
+        };
+        let mut hasher = Sha256::new();
+        hasher.update(b"orchester-transcript-record-v1");
+        hasher.update((wire.len() as u64).to_be_bytes());
+        hasher.update(wire.as_bytes());
+        let hash = format!("{:x}", hasher.finalize());
+        connection
+            .execute(
+                "INSERT INTO transcript_records(
+                   run_id, ordinal, kind, call_id, wire_json, record_hash, created_at
+                 ) VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+                rusqlite::params![
+                    run_id.0,
+                    i64::try_from(index + 1).unwrap(),
+                    kind,
+                    call_id,
+                    wire,
+                    hash,
+                    "2026-07-12T00:00:01Z",
+                ],
+            )
+            .unwrap();
+    }
+    drop(connection);
+
+    let reopened = SqliteRunStore::open(&path).unwrap();
+    assert!(matches!(
+        reopened.transcript_owned(&run_id, "owner-a"),
         Err(StoreError::Corrupt)
     ));
     drop(reopened);
