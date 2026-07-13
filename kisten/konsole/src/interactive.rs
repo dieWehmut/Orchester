@@ -1117,7 +1117,7 @@ fn render_command_palette<W: Write>(
         let name = truncate(&sanitize_terminal_text(&item.name), 16);
         let name_pad = " ".repeat(16usize.saturating_sub(display_width(&name)));
         let description = sanitize_terminal_text(&item.description);
-        let line = truncate(&format!("  {marker} {name}{name_pad} {description}"), width);
+        let line = truncate(&format!("{marker} {name}{name_pad} {description}"), width);
         writeln!(out, "{color}{line}{reset}")?;
     }
     Ok(())
@@ -1593,6 +1593,30 @@ mod tests {
         let plain = strip_ansi(&rendered);
         let prompt_lines = plain.lines().filter(|line| line.trim() == "> /").count();
         assert_eq!(prompt_lines, 1, "command palette output:\n{rendered}");
+    }
+
+    #[test]
+    fn command_palette_slashes_align_with_the_input() {
+        let mut out = Vec::new();
+
+        render_chat_home(&mut out, 100, "/", &[], 0, false).unwrap();
+
+        let rendered = String::from_utf8(out).unwrap();
+        let plain = strip_ansi(&rendered);
+        let mut palette = plain
+            .lines()
+            .skip_while(|line| line.trim_end() != "> /");
+        let prompt = palette
+            .next()
+            .expect("startup should render the slash input");
+        let candidate = palette
+            .find(|line| line.contains("/agent"))
+            .expect("palette should render the first slash command");
+        assert_eq!(
+            prompt.find('/'),
+            candidate.find('/'),
+            "input and command columns must align:\n{plain}"
+        );
     }
 
     #[test]
