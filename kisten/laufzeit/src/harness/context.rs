@@ -140,7 +140,7 @@ impl ContextAssembler {
         }
         for entry in &history {
             for value in entry.strings() {
-                self.reject_secret(value)?;
+                self.reject_secret(&value)?;
             }
         }
 
@@ -240,6 +240,7 @@ fn transcript_hash(entries: &[TranscriptEntry]) -> String {
             TranscriptEntry::ToolCall { .. } => 3,
             TranscriptEntry::ToolResult { .. } => 4,
             TranscriptEntry::Opaque { .. } => 5,
+            TranscriptEntry::ToolResultJson { .. } => 6,
         };
         hasher.update([kind]);
         for value in entry.strings() {

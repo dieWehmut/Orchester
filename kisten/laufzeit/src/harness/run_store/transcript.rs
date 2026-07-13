@@ -262,7 +262,10 @@ fn record_metadata(record: &TranscriptRecord) -> (&'static str, Option<&str>) {
         TranscriptRecord::User(_) => ("user", None),
         TranscriptRecord::Assistant(_) => ("assistant", None),
         TranscriptRecord::ToolCall { call_id, .. } => ("tool_call", Some(call_id.0.as_str())),
-        TranscriptRecord::ToolResult { call_id, .. } => ("tool_result", Some(call_id.0.as_str())),
+        TranscriptRecord::ToolResult { call_id, .. }
+        | TranscriptRecord::ToolResultJson { call_id, .. } => {
+            ("tool_result", Some(call_id.0.as_str()))
+        }
         TranscriptRecord::Opaque { .. } => ("opaque", None),
     }
 }

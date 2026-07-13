@@ -45,6 +45,10 @@ pub enum TranscriptRecord {
         call_id: CallId,
         output: String,
     },
+    ToolResultJson {
+        call_id: CallId,
+        payload: Value,
+    },
     Opaque {
         digest: String,
         byte_len: usize,
@@ -83,6 +87,13 @@ impl TranscriptRecord {
         }
     }
 
+    pub fn tool_result_json(call_id: impl Into<CallId>, payload: Value) -> Self {
+        Self::ToolResultJson {
+            call_id: call_id.into(),
+            payload,
+        }
+    }
+
     pub fn opaque_json(value: &Value, codec: &TranscriptCodec) -> Result<Self, TranscriptError> {
         codec.opaque_reference(value)
     }
@@ -96,20 +107,24 @@ impl TranscriptRecord {
                 arguments_json,
             } => call_id.0.len() + name.len() + arguments_json.len(),
             Self::ToolResult { call_id, output } => call_id.0.len() + output.len(),
+            Self::ToolResultJson { call_id, payload } => call_id.0.len() + json_len(payload),
             Self::Opaque { digest, .. } => digest.len(),
         }
     }
 
-    pub(crate) fn strings(&self) -> Vec<&str> {
+    pub(crate) fn strings(&self) -> Vec<String> {
         match self {
-            Self::System(text) | Self::User(text) | Self::Assistant(text) => vec![text],
+            Self::System(text) | Self::User(text) | Self::Assistant(text) => vec![text.clone()],
             Self::ToolCall {
                 call_id,
                 name,
                 arguments_json,
-            } => vec![&call_id.0, name, arguments_json],
-            Self::ToolResult { call_id, output } => vec![&call_id.0, output],
-            Self::Opaque { digest, .. } => vec![digest],
+            } => vec![call_id.0.clone(), name.clone(), arguments_json.clone()],
+            Self::ToolResult { call_id, output } => vec![call_id.0.clone(), output.clone()],
+            Self::ToolResultJson { call_id, payload } => {
+                vec![call_id.0.clone(), json_string(payload)]
+            }
+            Self::Opaque { digest, .. } => vec![digest.clone()],
         }
     }
 
@@ -137,6 +152,13 @@ impl TranscriptRecord {
                     output: output.clone(),
                 }],
             },
+            Self::ToolResultJson { call_id, payload } => ModelMessage {
+                role: ModelRole::Tool,
+                items: vec![ModelItem::ToolResult {
+                    call_id: call_id.clone(),
+                    output: json_string(payload),
+                }],
+            },
             Self::Opaque { digest, byte_len } => ModelMessage {
                 role: ModelRole::Assistant,
                 items: vec![ModelItem::Opaque(json!({
@@ -156,6 +178,7 @@ impl fmt::Debug for TranscriptRecord {
             Self::Assistant(_) => "Assistant",
             Self::ToolCall { .. } => "ToolCall",
             Self::ToolResult { .. } => "ToolResult",
+            Self::ToolResultJson { .. } => "ToolResultJson",
             Self::Opaque { .. } => "Opaque",
         };
         formatter
@@ -265,6 +288,10 @@ impl TranscriptCodec {
                     Some(pending) if pending == call_id => {}
                     _ => return Err(TranscriptError::UnpairedToolResult),
                 },
+                TranscriptRecord::ToolResultJson { call_id, .. } => match pending_call.take() {
+                    Some(pending) if pending == call_id => {}
+                    _ => return Err(TranscriptError::UnpairedToolResult),
+                },
                 _ if pending_call.is_some() => return Err(TranscriptError::UnpairedToolCall),
                 _ => {}
             }
@@ -306,6 +333,16 @@ impl TranscriptCodec {
                 call_id: CallId::from(self.identifier(&call_id.0)?),
                 output: self.text(output)?,
             }),
+            TranscriptRecord::ToolResultJson { call_id, payload } => {
+                let payload = sanitize_json_value(payload.clone(), &self.sanitizer);
+                if json_len(&payload) > self.limits.max_text_bytes {
+                    return Err(TranscriptError::TextTooLarge);
+                }
+                Ok(TranscriptRecord::ToolResultJson {
+                    call_id: CallId::from(self.identifier(&call_id.0)?),
+                    payload,
+                })
+            }
             TranscriptRecord::Opaque { digest, byte_len } => {
                 if digest.len() != 64
                     || !digest
@@ -408,6 +445,10 @@ enum WireRecord {
         call_id: String,
         output: String,
     },
+    ToolResultJson {
+        call_id: String,
+        payload: Value,
+    },
     Opaque {
         digest: String,
         byte_len: usize,
@@ -432,6 +473,10 @@ impl From<&TranscriptRecord> for WireRecord {
             TranscriptRecord::ToolResult { call_id, output } => Self::ToolResult {
                 call_id: call_id.0.clone(),
                 output: output.clone(),
+            },
+            TranscriptRecord::ToolResultJson { call_id, payload } => Self::ToolResultJson {
+                call_id: call_id.0.clone(),
+                payload: payload.clone(),
             },
             TranscriptRecord::Opaque { digest, byte_len } => Self::Opaque {
                 digest: digest.clone(),
@@ -460,6 +505,10 @@ impl From<WireRecord> for TranscriptRecord {
                 call_id: CallId::from(call_id),
                 output,
             },
+            WireRecord::ToolResultJson { call_id, payload } => Self::ToolResultJson {
+                call_id: CallId::from(call_id),
+                payload,
+            },
             WireRecord::Opaque { digest, byte_len } => Self::Opaque { digest, byte_len },
         }
     }
@@ -470,6 +519,14 @@ fn text_message(role: ModelRole, text: String) -> ModelMessage {
         role,
         items: vec![ModelItem::Text(text)],
     }
+}
+
+fn json_string(value: &Value) -> String {
+    serde_json::to_string(value).unwrap_or_else(|_| "null".into())
+}
+
+fn json_len(value: &Value) -> usize {
+    json_string(value).len()
 }
 
 fn hex(bytes: &[u8]) -> String {

@@ -6,6 +6,7 @@ use std::thread;
 use orchester_laufzeit::harness::audit::JsonlAuditSink;
 use orchester_laufzeit::harness::barrier::{ExecutionAuthorization, PreExecutionBarrier};
 use orchester_laufzeit::harness::run_store::{EventAppend, RunStore, SqliteRunStore, StoreError};
+use orchester_laufzeit::harness::transcript::TranscriptRecord;
 use orchester_protokoll::{CallId, FeedbackReport, HarnessEventKind, ObservationId};
 use secrecy::SecretString;
 
@@ -58,6 +59,19 @@ fn completed_observation_is_sanitized_linked_and_recoverable() {
     assert!(row.payload.contains("[REDACTED]"));
     assert!(!row.payload.contains('\u{1b}'));
     assert!(row.payload.len() <= 65_536);
+    let transcript = fixture
+        .store
+        .transcript_owned(&fixture.run.run_id, &fixture.run.owner)
+        .unwrap();
+    assert_eq!(transcript.len(), 2);
+    let TranscriptRecord::ToolResultJson { call_id, payload } = &transcript[1].record else {
+        panic!("expected a durable tool result");
+    };
+    assert_eq!(call_id.0, fixture.run.provider_call_id.0);
+    assert_eq!(
+        payload,
+        &serde_json::from_str::<serde_json::Value>(&row.payload).unwrap()
+    );
 
     let connection = rusqlite::Connection::open(&fixture.db).unwrap();
     assert!(connection
@@ -153,6 +167,18 @@ fn failed_observation_rebuilds_sanitized_feedback_and_fingerprint() {
     assert!(!row.payload.contains(SECRET));
     assert!(!row.payload.contains('\u{1b}'));
     assert!(row.payload.contains("[REDACTED]"));
+    let transcript = fixture
+        .store
+        .transcript_owned(&fixture.run.run_id, &fixture.run.owner)
+        .unwrap();
+    let TranscriptRecord::ToolResultJson { call_id, payload } = &transcript[1].record else {
+        panic!("expected a durable failed tool result");
+    };
+    assert_eq!(call_id.0, fixture.run.provider_call_id.0);
+    assert_eq!(
+        payload,
+        &serde_json::from_str::<serde_json::Value>(&row.payload).unwrap()
+    );
 }
 
 #[test]

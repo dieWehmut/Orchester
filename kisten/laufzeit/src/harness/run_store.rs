@@ -1141,6 +1141,25 @@ impl SqliteRunStore {
                 )?;
             }
         }
+        if let Some(durable) = terminal_observation.as_ref() {
+            if matches!(
+                event.kind,
+                HarnessEventKind::ToolCompleted { .. } | HarnessEventKind::ToolFailed { .. }
+            ) {
+                let call_id = event.call_id.clone().ok_or_else(|| {
+                    StoreError::Invariant("tool terminal event requires a call identifier".into())
+                })?;
+                let payload = serde_json::from_str::<serde_json::Value>(&durable.payload)
+                    .map_err(|_| StoreError::Corrupt)?;
+                transcript::append_records_in_transaction(
+                    &transaction,
+                    run_id,
+                    &[TranscriptRecord::tool_result_json(call_id, payload)],
+                    &event.occurred_at,
+                    &self.event_sanitizer,
+                )?;
+            }
+        }
         persist_event(&transaction, &event)?;
         let mut events_written = 1u64;
         if let HarnessEventKind::PolicyDecided { action_id, .. } = &event.kind {

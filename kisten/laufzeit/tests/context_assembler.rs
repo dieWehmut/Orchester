@@ -317,3 +317,33 @@ fn opaque_byte_length_changes_context_prefix_hash() {
         .unwrap();
     assert_ne!(first.omitted_prefix_hash, second.omitted_prefix_hash);
 }
+
+#[test]
+fn structured_tool_results_preserve_json_shape_after_recursive_redaction() {
+    let secret = "provider-structured-secret";
+    let codec = TranscriptCodec::new(
+        TranscriptLimits::default(),
+        vec![SecretString::new(secret.to_owned().into_boxed_str())],
+    );
+    let encoded = codec
+        .encode_all(&[
+            TranscriptRecord::tool_call("call-json", "read_file", r#"{"path":"src/lib.rs"}"#),
+            TranscriptRecord::tool_result_json(
+                "call-json",
+                json!({
+                    "summary": format!("Authorization: Bearer {secret}"),
+                    "data": {"token": secret, "safe": true},
+                }),
+            ),
+        ])
+        .unwrap();
+    assert!(!encoded.join("\n").contains(secret));
+
+    let decoded = codec.decode_all(&encoded).unwrap();
+    let TranscriptRecord::ToolResultJson { payload, .. } = &decoded[1] else {
+        panic!("expected structured tool result");
+    };
+    assert_eq!(payload["data"]["safe"], true);
+    assert_eq!(payload["data"]["token"], "[REDACTED]");
+    assert_eq!(payload["summary"], "Authorization: Bearer [REDACTED]");
+}
