@@ -327,13 +327,9 @@ fn derive_unknown(connection: &Connection, run: &RunSnapshot) -> Result<ResumeNe
         });
     };
     if step.status == "model_running" && step.model_phase == "running" {
-        return Ok(ResumeNext::ReconcileModelCall {
-            call_id: CallId::from(
-                step.model_call_id
-                    .as_ref()
-                    .ok_or(StoreError::Corrupt)?
-                    .clone(),
-            ),
+        step.model_call_id.as_ref().ok_or(StoreError::Corrupt)?;
+        return Ok(ResumeNext::ManualReconciliation {
+            stage: ResumeStage::ModelCall,
         });
     }
     if step.status == "tool_running" {
@@ -353,9 +349,8 @@ fn derive_unknown(connection: &Connection, run: &RunSnapshot) -> Result<ResumeNe
         if attempt_state.as_deref() != Some("started") {
             return Err(StoreError::Corrupt);
         }
-        return Ok(ResumeNext::ReconcileToolOutcome {
-            action_id,
-            call_id: CallId::from(action.call_id),
+        return Ok(ResumeNext::ManualReconciliation {
+            stage: ResumeStage::ToolOutcome,
         });
     }
     Ok(ResumeNext::ManualReconciliation {

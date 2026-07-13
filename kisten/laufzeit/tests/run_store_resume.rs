@@ -5,8 +5,8 @@ use orchester_laufzeit::harness::audit::JsonlAuditSink;
 use orchester_laufzeit::harness::barrier::{ExecutionAuthorization, PreExecutionBarrier};
 use orchester_laufzeit::harness::governance::PolicyEngine;
 use orchester_laufzeit::harness::run_store::{
-    action_hash, ActionRecord, EventAppend, NewRun, ResumeNext, RunStore, SqliteRunStore,
-    StoreError, Transition,
+    action_hash, ActionRecord, EventAppend, NewRun, ResumeNext, ResumeStage, RunStore,
+    SqliteRunStore, StoreError, Transition,
 };
 use orchester_laufzeit::harness::transcript::TranscriptRecord;
 use orchester_protokoll::{
@@ -268,7 +268,7 @@ fn recorded_action_returns_policy_evaluation_resume_point() {
 }
 
 #[test]
-fn interrupted_unknown_model_is_reconciled_without_automatic_retry() {
+fn interrupted_unknown_model_requires_manual_reconciliation() {
     let store = SqliteRunStore::in_memory().unwrap();
     let run = store
         .create_run(new_run("run-resume-unknown", "owner-a"))
@@ -296,7 +296,67 @@ fn interrupted_unknown_model_is_reconciled_without_automatic_retry() {
         .resume_point_owned(&run.run_id, "owner-a")
         .unwrap()
         .unwrap();
-    assert!(matches!(point.next, ResumeNext::ReconcileModelCall { .. }));
+    assert!(matches!(
+        point.next,
+        ResumeNext::ManualReconciliation {
+            stage: ResumeStage::ModelCall
+        }
+    ));
+}
+
+#[test]
+fn interrupted_unknown_tool_requires_manual_reconciliation() {
+    let store = Arc::new(SqliteRunStore::in_memory().unwrap());
+    let allowed = allowed_run::create_allowed_run(&store, "resume-unknown-tool");
+    let audit_path = std::env::temp_dir().join(format!(
+        "orchester-resume-unknown-audit-{}-{}.jsonl",
+        std::process::id(),
+        unix_now()
+    ));
+    let audit = Arc::new(JsonlAuditSink::open(&audit_path).unwrap());
+    let barrier = PreExecutionBarrier::new(store.clone(), audit.clone());
+    let permit = barrier
+        .prepare(
+            &allowed.owner,
+            &allowed.run_id,
+            &allowed.action_id,
+            ExecutionAuthorization::Allow,
+            "2026-07-13T00:00:06Z",
+        )
+        .unwrap();
+    barrier
+        .start_tool(
+            &allowed.owner,
+            &allowed.run_id,
+            permit,
+            allowed.tool_started_input(),
+        )
+        .unwrap();
+    store
+        .append_transition(
+            &allowed.run_id,
+            &allowed.owner,
+            Transition::Complete {
+                reason: StopReason::InterruptedUnknownOutcome,
+                summary: "tool outcome unknown".into(),
+                occurred_at: "2026-07-13T00:00:07Z".into(),
+            },
+        )
+        .unwrap();
+
+    let point = store
+        .resume_point_owned(&allowed.run_id, &allowed.owner)
+        .unwrap()
+        .unwrap();
+    assert!(matches!(
+        point.next,
+        ResumeNext::ManualReconciliation {
+            stage: ResumeStage::ToolOutcome
+        }
+    ));
+    drop(barrier);
+    drop(audit);
+    std::fs::remove_file(audit_path).ok();
 }
 
 #[test]
