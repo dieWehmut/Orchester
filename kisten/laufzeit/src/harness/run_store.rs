@@ -23,6 +23,7 @@ use crate::harness::approval::{
 use crate::harness::audit::{AuditInput, AuditReceipt};
 use crate::harness::barrier::{ExecutionPermit, StartedTool};
 use crate::harness::feedback::FeedbackEngine;
+use crate::harness::transcript::TranscriptRecord;
 
 mod database;
 mod observation;
@@ -1129,6 +1130,17 @@ impl SqliteRunStore {
             occurred_at: input.occurred_at.clone(),
             kind: input.kind,
         };
+        if let HarnessEventKind::ModelCompleted { assistant_text } = &event.kind {
+            if !assistant_text.is_empty() {
+                transcript::append_records_in_transaction(
+                    &transaction,
+                    run_id,
+                    &[TranscriptRecord::assistant(assistant_text.clone())],
+                    &event.occurred_at,
+                    &self.event_sanitizer,
+                )?;
+            }
+        }
         persist_event(&transaction, &event)?;
         let mut events_written = 1u64;
         if let HarnessEventKind::PolicyDecided { action_id, .. } = &event.kind {

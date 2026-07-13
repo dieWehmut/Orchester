@@ -1360,6 +1360,87 @@ fn transcript_batch_append_is_atomic_and_returns_one_contiguous_range() {
     );
 }
 
+#[test]
+fn model_completion_writes_assistant_transcript_in_the_same_transaction() {
+    let store = SqliteRunStore::in_memory().unwrap();
+    let run = store
+        .create_run(new_run("run-model-transcript", "owner-a"))
+        .unwrap();
+    start_step(&store, &run.run_id, "owner-a", "step-model-transcript");
+    append_model_event(
+        &store,
+        &run.run_id,
+        "owner-a",
+        "step-model-transcript",
+        "model-call-transcript",
+        HarnessEventKind::ModelStarted,
+    )
+    .unwrap();
+    append_model_event(
+        &store,
+        &run.run_id,
+        "owner-a",
+        "step-model-transcript",
+        "model-call-transcript",
+        HarnessEventKind::ModelCompleted {
+            assistant_text: "bounded model answer".into(),
+        },
+    )
+    .unwrap();
+
+    let records = store.transcript_owned(&run.run_id, "owner-a").unwrap();
+    assert!(matches!(
+        &records[..],
+        [StoredTranscriptRecord {
+            ordinal: 1,
+            record: TranscriptRecord::Assistant(text),
+            ..
+        }] if text == "bounded model answer"
+    ));
+}
+
+#[test]
+fn oversized_model_completion_rolls_back_event_and_transcript_together() {
+    let store = SqliteRunStore::in_memory().unwrap();
+    let run = store
+        .create_run(new_run("run-model-transcript-limit", "owner-a"))
+        .unwrap();
+    start_step(
+        &store,
+        &run.run_id,
+        "owner-a",
+        "step-model-transcript-limit",
+    );
+    append_model_event(
+        &store,
+        &run.run_id,
+        "owner-a",
+        "step-model-transcript-limit",
+        "model-call-limit",
+        HarnessEventKind::ModelStarted,
+    )
+    .unwrap();
+    let before = store.events_owned(&run.run_id, "owner-a").unwrap();
+    assert!(matches!(
+        append_model_event(
+            &store,
+            &run.run_id,
+            "owner-a",
+            "step-model-transcript-limit",
+            "model-call-limit",
+            HarnessEventKind::ModelCompleted {
+                assistant_text: "x".repeat(32 * 1024 + 1),
+            },
+        ),
+        Err(StoreError::Invariant(_))
+    ));
+    assert_eq!(store.events_owned(&run.run_id, "owner-a").unwrap(), before);
+    assert!(store
+        .transcript_owned(&run.run_id, "owner-a")
+        .unwrap()
+        .is_empty());
+}
+
 fn temp_db(label: &str) -> PathBuf {
     std::env::temp_dir()
         .join(format!(
