@@ -145,6 +145,11 @@ impl SqliteRunStore {
         &self,
         input: &ApprovalRequestInput,
     ) -> Result<ApprovalSnapshot, StoreError> {
+        sanitized::ensure_durable_field(
+            "approval owner identifier",
+            &input.owner_actor_id,
+            &self.event_sanitizer,
+        )?;
         let mut connection = self.connection()?;
         let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
         let run = load_snapshot(
@@ -205,13 +210,11 @@ impl SqliteRunStore {
                 "approval request binding does not match the action".into(),
             ));
         }
-        let action_summary =
-            sanitized::canonicalize_summary(&input.action_summary, &self.event_sanitizer);
-        let mut request = input.protocol_request();
-        request.action_summary = action_summary.clone();
-        request
-            .validate()
-            .map_err(|_| StoreError::Invariant("approval request is not canonical".into()))?;
+        let request = sanitized::canonicalize_approval_request(
+            input.protocol_request(),
+            &self.event_sanitizer,
+        )?;
+        let action_summary = request.action_summary.clone();
         let created_at = request.created_at.clone();
         let expires_at = request.expires_at.clone();
         let event = HarnessEvent {
@@ -223,7 +226,9 @@ impl SqliteRunStore {
             call_id: None,
             sequence: run.next_sequence,
             occurred_at: created_at.clone(),
-            kind: HarnessEventKind::ApprovalRequested { request },
+            kind: HarnessEventKind::ApprovalRequested {
+                request: request.clone(),
+            },
         };
         persist_event(&transaction, &event)?;
         transaction
@@ -237,17 +242,17 @@ impl SqliteRunStore {
              ) VALUES(?1, ?2, ?3, ?4, 'awaiting', ?5, ?6, ?7, ?8, ?9,
                       ?10, ?11, ?12, ?13, ?14, ?15, ?16, 0)",
                 params![
-                    input.approval_id.0,
-                    input.binding.run_id.0,
-                    input.binding.action_id.0,
+                    request.approval_id.0,
+                    request.run_id.0,
+                    request.action_id.0,
                     input.owner_actor_id,
-                    input.binding.action_hash,
+                    request.action_hash,
                     action_summary,
-                    input.binding.workspace_identity,
-                    input.binding.policy_snapshot_hash,
-                    input.binding.config_snapshot_hash,
-                    input.risk,
-                    input.rule_id,
+                    request.workspace_identity,
+                    request.policy_snapshot_hash,
+                    request.config_snapshot_hash,
+                    request.risk,
+                    request.rule_id,
                     created_at,
                     input.created_at_unix,
                     expires_at,

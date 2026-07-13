@@ -1,4 +1,6 @@
-use orchester_protokoll::{normalize_action_summary, AgentAction, HarnessEventKind};
+use orchester_protokoll::{
+    normalize_action_summary, AgentAction, ApprovalRequest, HarnessEventKind,
+};
 use serde_json::Value;
 
 use super::{EventAppend, StoreError};
@@ -72,6 +74,9 @@ pub(super) fn canonicalize_kind(
                 rule_id,
             }
         }
+        HarnessEventKind::ApprovalRequested { request } => HarnessEventKind::ApprovalRequested {
+            request: canonicalize_approval_request(request, sanitizer)?,
+        },
         HarnessEventKind::RunCompleted { reason, summary } => {
             let summary = canonicalize_summary(&summary, sanitizer);
             if summary.len() > MAX_MODEL_TEXT_BYTES {
@@ -87,6 +92,48 @@ pub(super) fn canonicalize_kind(
 
 pub(super) fn canonicalize_summary(input: &str, sanitizer: &FeedbackEngine) -> String {
     normalize_action_summary(&sanitizer.sanitize_text(input))
+}
+
+pub(super) fn canonicalize_approval_request(
+    mut request: ApprovalRequest,
+    sanitizer: &FeedbackEngine,
+) -> Result<ApprovalRequest, StoreError> {
+    ensure_durable_field("approval identifier", &request.approval_id.0, sanitizer)?;
+    ensure_durable_field("approval run identifier", &request.run_id.0, sanitizer)?;
+    ensure_durable_field(
+        "approval action identifier",
+        &request.action_id.0,
+        sanitizer,
+    )?;
+    ensure_durable_field("approval action hash", &request.action_hash, sanitizer)?;
+    ensure_durable_field(
+        "approval workspace identity",
+        &request.workspace_identity,
+        sanitizer,
+    )?;
+    ensure_durable_field(
+        "approval policy snapshot hash",
+        &request.policy_snapshot_hash,
+        sanitizer,
+    )?;
+    ensure_durable_field(
+        "approval config snapshot hash",
+        &request.config_snapshot_hash,
+        sanitizer,
+    )?;
+    ensure_durable_field("approval risk", &request.risk, sanitizer)?;
+    ensure_durable_field("approval rule identifier", &request.rule_id, sanitizer)?;
+    ensure_durable_field(
+        "approval creation timestamp",
+        &request.created_at,
+        sanitizer,
+    )?;
+    ensure_durable_field("approval expiry timestamp", &request.expires_at, sanitizer)?;
+    request.action_summary = canonicalize_summary(&request.action_summary, sanitizer);
+    request
+        .validate()
+        .map_err(|_| StoreError::Invariant("approval request is not canonical".into()))?;
+    Ok(request)
 }
 
 fn sanitize_validator_feedback(

@@ -90,6 +90,25 @@ fn approval_summary_is_sanitized_consistently_in_row_and_event() {
 }
 
 #[test]
+fn approval_metadata_with_provider_token_is_rejected_atomically() {
+    let fixture = Fixture::new(PolicyDecision::Ask);
+    let durable = DurableApprovalStore::new(fixture.store.clone());
+    let secret = "sk-approval-risk-secret-123456";
+    let mut input = fixture.approval_input(100);
+    input.risk = format!("risk-{secret}");
+
+    assert!(matches!(
+        durable.request(input),
+        Err(ApprovalError::Storage)
+    ));
+    let connection = rusqlite::Connection::open(&fixture.db).unwrap();
+    let approval_count: i64 = connection
+        .query_row("SELECT COUNT(*) FROM approvals", [], |row| row.get(0))
+        .unwrap();
+    assert_eq!(approval_count, 0);
+}
+
+#[test]
 fn lost_capability_can_be_reissued_only_to_the_approval_owner() {
     let fixture = Fixture::new(PolicyDecision::Ask);
     let durable = DurableApprovalStore::new(fixture.store.clone());
