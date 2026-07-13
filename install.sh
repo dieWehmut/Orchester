@@ -9,9 +9,12 @@ set -eu
 INSTALLER_URL="${ORCHESTER_INSTALL_SCRIPT_URL:-https://raw.githubusercontent.com/dieWehmut/Orchester/main/werkzeug/install.sh}"
 
 SCRIPT_DIR=""
-case "${0:-}" in
-  */*)
-    SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" 2>/dev/null && pwd || true)"
+SCRIPT_NAME=${0##*/}
+case "$SCRIPT_NAME" in
+  sh|dash|bash|zsh|ksh|ash)
+    ;;
+  *)
+    SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "${0:-}")" 2>/dev/null && pwd || true)"
     ;;
 esac
 
