@@ -1,3 +1,8 @@
+use orchester_laufzeit::harness::approval::{
+    ApprovalBinding, ApprovalRequestInput, DurableApprovalStore,
+};
+use orchester_laufzeit::harness::audit::JsonlAuditSink;
+use orchester_laufzeit::harness::barrier::{ExecutionAuthorization, PreExecutionBarrier};
 use orchester_laufzeit::harness::governance::PolicyEngine;
 use orchester_laufzeit::harness::run_store::{
     action_hash, ActionRecord, EventAppend, NewRun, ResumeNext, RunStore, SqliteRunStore,
@@ -5,8 +10,13 @@ use orchester_laufzeit::harness::run_store::{
 };
 use orchester_laufzeit::harness::transcript::TranscriptRecord;
 use orchester_protokoll::{
-    AgentAction, CallId, HarnessEventKind, RunId, StepId, StopReason, TurnId,
+    AgentAction, ApprovalId, CallId, HarnessEventKind, RunId, StepId, StopReason, TurnId,
 };
+use std::sync::Arc;
+
+#[path = "support/allowed_run.rs"]
+#[allow(dead_code)]
+mod allowed_run;
 
 fn new_run(id: &str, owner: &str) -> NewRun {
     NewRun {
@@ -111,6 +121,9 @@ fn resume_projection_reconciles_running_model_without_replay() {
         .resume_point_owned(&run.run_id, "owner-a")
         .unwrap()
         .unwrap();
+    let rendered = format!("{point:?}");
+    assert!(!rendered.contains("run-resume-model"));
+    assert!(!rendered.contains("model-call-resume"));
     assert!(matches!(
         point.next,
         ResumeNext::ReconcileModelCall { ref call_id } if call_id.0 == "model-call-resume"
@@ -284,4 +297,177 @@ fn interrupted_unknown_model_is_reconciled_without_automatic_retry() {
         .unwrap()
         .unwrap();
     assert!(matches!(point.next, ResumeNext::ReconcileModelCall { .. }));
+}
+
+#[test]
+fn approval_resume_points_distinguish_request_wait_and_capability_recovery() {
+    let store = std::sync::Arc::new(SqliteRunStore::in_memory().unwrap());
+    let run = store
+        .create_run(new_run("run-resume-approval", "owner-a"))
+        .unwrap();
+    start_step(&store, &run.run_id, "step-resume-approval");
+    model_event(
+        &store,
+        &run.run_id,
+        "step-resume-approval",
+        "model-call-approval",
+        HarnessEventKind::ModelStarted,
+    );
+    model_event(
+        &store,
+        &run.run_id,
+        "step-resume-approval",
+        "model-call-approval",
+        HarnessEventKind::ModelCompleted {
+            assistant_text: "request command approval".into(),
+        },
+    );
+    let action = AgentAction::RunCommand {
+        program: "git".into(),
+        args: vec!["status".into()],
+        cwd: None,
+    };
+    let action_hash_value = action_hash(&action).unwrap();
+    store
+        .record_action(
+            "owner-a",
+            ActionRecord {
+                action_id: "action-resume-approval".into(),
+                run_id: run.run_id.clone(),
+                step_id: StepId::from("step-resume-approval"),
+                call_id: CallId::from("provider-resume-approval"),
+                origin_model_call_id: CallId::from("model-call-approval"),
+                action_hash: action_hash_value.clone(),
+                effect_class: PolicyEngine::new().evaluate(&action).unwrap().effect,
+                action,
+                occurred_at: "2026-07-13T00:00:03Z".into(),
+            },
+        )
+        .unwrap();
+    store
+        .append_event(
+            "owner-a",
+            &run.run_id,
+            EventAppend {
+                turn_id: Some(TurnId::from("turn-1")),
+                step_id: Some(StepId::from("step-resume-approval")),
+                call_id: None,
+                occurred_at: "2026-07-13T00:00:04Z".into(),
+                kind: HarnessEventKind::PolicyDecided {
+                    action_id: "action-resume-approval".into(),
+                    decision: orchester_protokoll::PolicyDecision::Ask,
+                    rule_id: "command.external_effect".into(),
+                },
+            },
+        )
+        .unwrap();
+
+    let point = store
+        .resume_point_owned(&run.run_id, "owner-a")
+        .unwrap()
+        .unwrap();
+    assert!(matches!(
+        point.next,
+        ResumeNext::CreateApprovalRequest { ref action_id }
+            if action_id.0 == "action-resume-approval"
+    ));
+
+    let now = unix_now();
+    let approval = DurableApprovalStore::new(store.clone());
+    let approval_id: ApprovalId = "approval-resume-approval".into();
+    let binding = ApprovalBinding {
+        run_id: run.run_id.clone(),
+        action_id: "action-resume-approval".into(),
+        action_hash: action_hash_value,
+        workspace_identity: "workspace-run-resume-approval".into(),
+        policy_snapshot_hash: "policy-v1".into(),
+        config_snapshot_hash: "config-v1".into(),
+    };
+    approval
+        .request(ApprovalRequestInput {
+            approval_id: approval_id.clone(),
+            owner_actor_id: "owner-a".into(),
+            binding: binding.clone(),
+            action_summary: "run_command program_bytes=4 args_count=1 args_bytes=6 cwd_bytes=0"
+                .into(),
+            risk: "high".into(),
+            rule_id: "command.external_effect".into(),
+            created_at: format!("unix:{now}"),
+            expires_at: format!("unix:{}", now + 600),
+            created_at_unix: now - 1,
+            expires_at_unix: now + 600,
+        })
+        .unwrap();
+    let point = store
+        .resume_point_owned(&run.run_id, "owner-a")
+        .unwrap()
+        .unwrap();
+    assert!(matches!(
+        point.next,
+        ResumeNext::AwaitApproval { approval_id: ref id } if id.0 == "approval-resume-approval"
+    ));
+
+    approval.approve(&approval_id, "owner-a", &binding).unwrap();
+    let point = store
+        .resume_point_owned(&run.run_id, "owner-a")
+        .unwrap()
+        .unwrap();
+    assert!(matches!(
+        point.next,
+        ResumeNext::RecoverApprovalCapability {
+            approval_id: ref id,
+            ref action_id,
+        }
+            if id.0 == "approval-resume-approval" && action_id.0 == "action-resume-approval"
+    ));
+}
+
+#[test]
+fn started_tool_returns_reconcile_resume_point_without_replay() {
+    let store = Arc::new(SqliteRunStore::in_memory().unwrap());
+    let allowed = allowed_run::create_allowed_run(&store, "resume-tool");
+    let audit_path = std::env::temp_dir().join(format!(
+        "orchester-resume-audit-{}-{}.jsonl",
+        std::process::id(),
+        unix_now()
+    ));
+    let audit = Arc::new(JsonlAuditSink::open(&audit_path).unwrap());
+    let barrier = PreExecutionBarrier::new(store.clone(), audit.clone());
+    let permit = barrier
+        .prepare(
+            &allowed.owner,
+            &allowed.run_id,
+            &allowed.action_id,
+            ExecutionAuthorization::Allow,
+            "2026-07-13T00:00:06Z",
+        )
+        .unwrap();
+    barrier
+        .start_tool(
+            &allowed.owner,
+            &allowed.run_id,
+            permit,
+            allowed.tool_started_input(),
+        )
+        .unwrap();
+
+    let point = store
+        .resume_point_owned(&allowed.run_id, &allowed.owner)
+        .unwrap()
+        .unwrap();
+    assert!(matches!(
+        point.next,
+        ResumeNext::ReconcileToolOutcome { ref action_id, ref call_id }
+            if action_id == &allowed.action_id && call_id == &allowed.provider_call_id
+    ));
+    drop(barrier);
+    drop(audit);
+    std::fs::remove_file(audit_path).ok();
+}
+
+fn unix_now() -> u64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_secs()
 }
