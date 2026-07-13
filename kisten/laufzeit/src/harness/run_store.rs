@@ -52,6 +52,9 @@ pub use types::{
     RunStore, StoreError, Transition,
 };
 
+const MIGRATION_BUSY_TIMEOUT: Duration = Duration::from_secs(30);
+const OPERATION_BUSY_TIMEOUT: Duration = Duration::from_secs(5);
+
 fn terminal_sanitizer(secrets: Vec<SecretString>) -> FeedbackEngine {
     secrets
         .into_iter()
@@ -108,13 +111,14 @@ impl SqliteRunStore {
         enable_wal: bool,
         terminal_sanitizer: Option<FeedbackEngine>,
     ) -> Result<Self, StoreError> {
-        connection.busy_timeout(Duration::from_secs(5))?;
+        connection.busy_timeout(MIGRATION_BUSY_TIMEOUT)?;
         connection.execute_batch(
             "PRAGMA foreign_keys = ON;
              PRAGMA recursive_triggers = ON;
              PRAGMA synchronous = FULL;",
         )?;
         schema::apply_migrations(&mut connection)?;
+        connection.busy_timeout(OPERATION_BUSY_TIMEOUT)?;
         if enable_wal {
             storage::enable_wal_mode(&connection)?;
         }
