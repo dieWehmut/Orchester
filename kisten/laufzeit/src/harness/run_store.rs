@@ -1073,6 +1073,7 @@ impl SqliteRunStore {
         input: EventAppend,
         permit_event_id: Option<&EventId>,
         permit_action_hash: Option<&str>,
+        request_transcript: Option<&[TranscriptRecord]>,
     ) -> Result<(HarnessEvent, Option<AgentAction>), StoreError> {
         let mut connection = self.connection()?;
         let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
@@ -1130,6 +1131,33 @@ impl SqliteRunStore {
             occurred_at: input.occurred_at.clone(),
             kind: input.kind,
         };
+        if let Some(records) = request_transcript {
+            if !matches!(event.kind, HarnessEventKind::ModelStarted) {
+                return Err(StoreError::Invariant(
+                    "request transcript requires a model-start event".into(),
+                ));
+            }
+            if records.is_empty() {
+                if transcript::validate_records_in_transaction(
+                    &transaction,
+                    run_id,
+                    &self.event_sanitizer,
+                )? == 0
+                {
+                    return Err(StoreError::Invariant(
+                        "model start requires durable request context".into(),
+                    ));
+                }
+            } else {
+                transcript::append_records_in_transaction(
+                    &transaction,
+                    run_id,
+                    records,
+                    &event.occurred_at,
+                    &self.event_sanitizer,
+                )?;
+            }
+        }
         if let HarnessEventKind::ModelCompleted { assistant_text } = &event.kind {
             if !assistant_text.is_empty() {
                 transcript::append_records_in_transaction(
@@ -1238,6 +1266,7 @@ impl SqliteRunStore {
             input,
             Some(permit.event_id()),
             Some(permit.action_hash()),
+            None,
         )?;
         Ok(StartedTool::new(
             event,
@@ -1617,7 +1646,7 @@ impl RunStore for SqliteRunStore {
                 "tool start requires an ExecutionPermit".into(),
             ));
         }
-        self.append_event_internal(owner_actor_id, run_id, input, None, None)
+        self.append_event_internal(owner_actor_id, run_id, input, None, None, None)
             .map(|(event, _)| event)
     }
 

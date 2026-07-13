@@ -1515,6 +1515,76 @@ fn oversized_action_arguments_roll_back_action_and_tool_call_transcript() {
         .is_empty());
 }
 
+#[test]
+fn model_start_writes_new_request_records_in_the_same_transaction() {
+    let store = SqliteRunStore::in_memory().unwrap();
+    let run = store
+        .create_run(new_run("run-model-start-transcript", "owner-a"))
+        .unwrap();
+    start_step(
+        &store,
+        &run.run_id,
+        "owner-a",
+        "step-model-start-transcript",
+    );
+    let input = EventAppend {
+        turn_id: Some(TurnId::from("turn-1")),
+        step_id: Some(StepId::from("step-model-start-transcript")),
+        call_id: Some(CallId::from("model-call-start-transcript")),
+        occurred_at: "2026-07-12T00:00:02Z".into(),
+        kind: HarnessEventKind::ModelStarted,
+    };
+    store
+        .append_model_started_with_transcript(
+            "owner-a",
+            &run.run_id,
+            input,
+            vec![TranscriptRecord::user("inspect the workspace")],
+        )
+        .unwrap();
+
+    let records = store.transcript_owned(&run.run_id, "owner-a").unwrap();
+    assert!(matches!(
+        &records[..],
+        [StoredTranscriptRecord {
+            ordinal: 1,
+            record: TranscriptRecord::User(text),
+            ..
+        }] if text == "inspect the workspace"
+    ));
+}
+
+#[test]
+fn oversized_model_start_input_rolls_back_event_phase_and_transcript() {
+    let store = SqliteRunStore::in_memory().unwrap();
+    let run = store
+        .create_run(new_run("run-model-start-limit", "owner-a"))
+        .unwrap();
+    start_step(&store, &run.run_id, "owner-a", "step-model-start-limit");
+    let before = store.events_owned(&run.run_id, "owner-a").unwrap();
+    let input = EventAppend {
+        turn_id: Some(TurnId::from("turn-1")),
+        step_id: Some(StepId::from("step-model-start-limit")),
+        call_id: Some(CallId::from("model-call-start-limit")),
+        occurred_at: "2026-07-12T00:00:02Z".into(),
+        kind: HarnessEventKind::ModelStarted,
+    };
+    assert!(matches!(
+        store.append_model_started_with_transcript(
+            "owner-a",
+            &run.run_id,
+            input,
+            vec![TranscriptRecord::user("x".repeat(32 * 1024 + 1))],
+        ),
+        Err(StoreError::Invariant(_))
+    ));
+    assert_eq!(store.events_owned(&run.run_id, "owner-a").unwrap(), before);
+    assert!(store
+        .transcript_owned(&run.run_id, "owner-a")
+        .unwrap()
+        .is_empty());
+}
+
 fn temp_db(label: &str) -> PathBuf {
     std::env::temp_dir()
         .join(format!(

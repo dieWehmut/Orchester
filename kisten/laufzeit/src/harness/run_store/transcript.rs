@@ -1,4 +1,4 @@
-use orchester_protokoll::{AgentAction, CallId, RunId};
+use orchester_protokoll::{AgentAction, CallId, HarnessEvent, HarnessEventKind, RunId};
 use rusqlite::{params, Transaction, TransactionBehavior};
 use serde_json::Value;
 use sha2::{Digest, Sha256};
@@ -8,7 +8,7 @@ use crate::harness::transcript::{
     TranscriptCodec, TranscriptError, TranscriptLimits, TranscriptRecord,
 };
 
-use super::{database::load_snapshot, map_constraint, SqliteRunStore, StoreError};
+use super::{database::load_snapshot, map_constraint, EventAppend, SqliteRunStore, StoreError};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StoredTranscriptRecord {
@@ -31,6 +31,22 @@ struct CanonicalRecord {
 }
 
 impl SqliteRunStore {
+    pub fn append_model_started_with_transcript(
+        &self,
+        owner_actor_id: &str,
+        run_id: &RunId,
+        input: EventAppend,
+        records: Vec<TranscriptRecord>,
+    ) -> Result<HarnessEvent, StoreError> {
+        if !matches!(input.kind, HarnessEventKind::ModelStarted) {
+            return Err(StoreError::Invariant(
+                "request transcript requires a model-start event".into(),
+            ));
+        }
+        self.append_event_internal(owner_actor_id, run_id, input, None, None, Some(&records))
+            .map(|(event, _)| event)
+    }
+
     pub fn append_transcript_record(
         &self,
         owner_actor_id: &str,
@@ -184,6 +200,17 @@ pub(super) fn append_records_in_transaction(
         first_ordinal,
         last_ordinal,
     })
+}
+
+pub(super) fn validate_records_in_transaction(
+    transaction: &Transaction<'_>,
+    run_id: &RunId,
+    sanitizer: &FeedbackEngine,
+) -> Result<usize, StoreError> {
+    let codec = TranscriptCodec::with_sanitizer(TranscriptLimits::default(), sanitizer.clone());
+    let wires = load_prior_wires(transaction, run_id, &codec)?;
+    codec.decode_all(&wires).map_err(|_| StoreError::Corrupt)?;
+    Ok(wires.len())
 }
 
 pub(super) fn action_tool_call(
