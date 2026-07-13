@@ -276,6 +276,77 @@ function Test-PathInProcessPath([string]$PathItem) {
     return $false
 }
 
+function Get-NormalizedPathText([string]$PathItem) {
+    if ([string]::IsNullOrWhiteSpace($PathItem)) {
+        return $null
+    }
+    try {
+        return [System.IO.Path]::GetFullPath($PathItem).TrimEnd('\')
+    } catch {
+        return $null
+    }
+}
+
+function Test-PathWithinUserProfile([string]$PathItem) {
+    if ([string]::IsNullOrWhiteSpace($PathItem) -or -not [System.IO.Path]::IsPathRooted($PathItem)) {
+        return $false
+    }
+    $candidate = Get-NormalizedPathText $PathItem
+    $profile = Get-NormalizedPathText $env:USERPROFILE
+    if (-not $candidate -or -not $profile) {
+        return $false
+    }
+    if ([string]::Equals($candidate, $profile, [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $true
+    }
+    $prefix = $profile.TrimEnd('\') + '\'
+    return $candidate.StartsWith($prefix, [System.StringComparison]::OrdinalIgnoreCase)
+}
+
+function Test-NoReparseComponents([string]$PathItem) {
+    if (-not (Test-PathWithinUserProfile $PathItem)) {
+        return $false
+    }
+    $current = Get-NormalizedPathText $PathItem
+    $profile = Get-NormalizedPathText $env:USERPROFILE
+    while ($true) {
+        if (Test-Path -LiteralPath $current) {
+            $item = Get-Item -Force -LiteralPath $current
+            if ($item.Attributes -band [System.IO.FileAttributes]::ReparsePoint) {
+                return $false
+            }
+        }
+        if ([string]::Equals($current, $profile, [System.StringComparison]::OrdinalIgnoreCase)) {
+            return $true
+        }
+        $parent = Split-Path -Parent $current
+        if ([string]::IsNullOrWhiteSpace($parent) -or $parent -eq $current) {
+            return $false
+        }
+        $current = $parent
+    }
+}
+
+function Test-SafeShimDirectory([string]$PathItem) {
+    return (Test-PathWithinUserProfile $PathItem) -and (Test-NoReparseComponents $PathItem)
+}
+
+function Test-OwnedCommandShim([string]$PathItem) {
+    if (-not (Test-Path -LiteralPath $PathItem)) {
+        return $true
+    }
+    $item = Get-Item -Force -LiteralPath $PathItem
+    if ($item.PSIsContainer -or ($item.Attributes -band [System.IO.FileAttributes]::ReparsePoint)) {
+        return $false
+    }
+    $lines = @([System.IO.File]::ReadAllLines($PathItem))
+    return (
+        ($lines.Count -eq 2) -and
+        ($lines[0] -eq '@echo off') -and
+        ($lines[1] -match '^"[^"]*[\\/]orchester\.exe" %\*$')
+    )
+}
+
 function Test-WritableDirectory([string]$PathItem) {
     try {
         if (-not (Test-Path -LiteralPath $PathItem)) {
@@ -294,7 +365,9 @@ function Ensure-WindowsCommandShim([string]$Target) {
     $shimDir = $null
 
     if ($env:ORCHESTER_WINDOWS_SHIM_DIR) {
-        $shimDir = $env:ORCHESTER_WINDOWS_SHIM_DIR
+        if (Test-SafeShimDirectory $env:ORCHESTER_WINDOWS_SHIM_DIR) {
+            $shimDir = $env:ORCHESTER_WINDOWS_SHIM_DIR
+        }
     } else {
         $candidates = @()
         $localAppData = $env:LOCALAPPDATA
@@ -303,7 +376,7 @@ function Ensure-WindowsCommandShim([string]$Target) {
         }
         if ($localAppData) {
             $windowsApps = Join-Path $localAppData "Microsoft\WindowsApps"
-            if (Test-WritableDirectory $windowsApps) {
+            if ((Test-SafeShimDirectory $windowsApps) -and (Test-WritableDirectory $windowsApps) -and (Test-SafeShimDirectory $windowsApps)) {
                 $shimDir = $windowsApps
             }
         }
@@ -315,13 +388,7 @@ function Ensure-WindowsCommandShim([string]$Target) {
                 if ([string]::IsNullOrWhiteSpace($part) -or [string]::IsNullOrWhiteSpace($env:USERPROFILE)) {
                     continue
                 }
-                try {
-                    $normalizedPart = [System.IO.Path]::GetFullPath($part).TrimEnd('\').ToLowerInvariant()
-                    $normalizedProfile = [System.IO.Path]::GetFullPath($env:USERPROFILE).TrimEnd('\').ToLowerInvariant()
-                } catch {
-                    continue
-                }
-                if ($normalizedPart.StartsWith($normalizedProfile)) {
+                if (Test-PathWithinUserProfile $part) {
                     $candidates += $part
                 }
             }
@@ -340,7 +407,7 @@ function Ensure-WindowsCommandShim([string]$Target) {
                     continue
                 }
                 $seen[$key] = $true
-                if ((Test-Path -LiteralPath $candidate) -and (Test-PathInProcessPath $candidate) -and (Test-WritableDirectory $candidate)) {
+                if ((Test-SafeShimDirectory $candidate) -and (Test-Path -LiteralPath $candidate) -and (Test-PathInProcessPath $candidate) -and (Test-WritableDirectory $candidate) -and (Test-SafeShimDirectory $candidate)) {
                     $shimDir = $candidate
                     break
                 }
@@ -348,11 +415,14 @@ function Ensure-WindowsCommandShim([string]$Target) {
         }
     }
 
-    if ([string]::IsNullOrWhiteSpace($shimDir) -or -not (Test-WritableDirectory $shimDir)) {
+    if ([string]::IsNullOrWhiteSpace($shimDir) -or -not (Test-SafeShimDirectory $shimDir) -or -not (Test-WritableDirectory $shimDir) -or -not (Test-SafeShimDirectory $shimDir)) {
         return $null
     }
 
     $shim = Join-Path $shimDir "orchester.cmd"
+    if (-not (Test-OwnedCommandShim $shim)) {
+        return $null
+    }
     Set-Content -LiteralPath $shim -Value @("@echo off", "`"$Target`" %*") -Encoding ASCII
     return $shim
 }
