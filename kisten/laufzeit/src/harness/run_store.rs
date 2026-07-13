@@ -1297,10 +1297,45 @@ impl RunStore for SqliteRunStore {
             "INSERT OR IGNORE INTO actors(actor_id, kind, subject_hash, created_at) VALUES(?1, 'local_user', ?2, ?3)",
             params![input.owner_actor_id, input.owner_actor_id, input.occurred_at],
         )?;
-        transaction.execute(
-            "INSERT OR IGNORE INTO projects(project_id, canonical_root, workspace_identity, created_at, updated_at) VALUES(?1, ?2, ?3, ?4, ?4)",
-            params![input.project_id, input.canonical_root, input.workspace_identity, input.occurred_at],
-        )?;
+        let existing_project: Option<(String, String, bool)> = transaction
+            .query_row(
+                "SELECT p.canonical_root, p.workspace_identity,
+                        EXISTS(
+                          SELECT 1 FROM runs r
+                          WHERE r.project_id = p.project_id
+                            AND r.owner_actor_id <> ?2
+                        )
+                 FROM projects p WHERE p.project_id = ?1",
+                params![input.project_id, input.owner_actor_id],
+                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+            )
+            .optional()?;
+        if let Some((canonical_root, workspace_identity, has_foreign_owner)) = existing_project {
+            if canonical_root != input.canonical_root
+                || workspace_identity != input.workspace_identity
+                || has_foreign_owner
+            {
+                return Err(StoreError::Invariant(
+                    "project identity does not match its existing owner and workspace".into(),
+                ));
+            }
+        } else {
+            transaction
+                .execute(
+                    "INSERT INTO projects(
+                       project_id, canonical_root, workspace_identity, created_at, updated_at
+                     ) VALUES(?1, ?2, ?3, ?4, ?4)",
+                    params![
+                        input.project_id,
+                        input.canonical_root,
+                        input.workspace_identity,
+                        input.occurred_at
+                    ],
+                )
+                .map_err(|error| {
+                    map_constraint(error, "project identity already belongs to another project")
+                })?;
+        }
 
         let inserted = transaction.execute(
             "INSERT INTO runs(

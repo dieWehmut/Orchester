@@ -1083,6 +1083,40 @@ fn owner_scoped_lookup_does_not_reveal_foreign_run() {
 }
 
 #[test]
+fn project_identity_is_stable_and_owner_bound_across_runs() {
+    let store = SqliteRunStore::in_memory().unwrap();
+    let mut first = new_run("run-project-first", "owner-a");
+    first.project_id = "project-shared".into();
+    first.canonical_root = "/workspace/shared".into();
+    first.workspace_identity = "workspace-shared".into();
+    store.create_run(first).unwrap();
+
+    let mut same = new_run("run-project-second", "owner-a");
+    same.project_id = "project-shared".into();
+    same.canonical_root = "/workspace/shared".into();
+    same.workspace_identity = "workspace-shared".into();
+    store.create_run(same).unwrap();
+
+    let mut drifted = new_run("run-project-drifted", "owner-a");
+    drifted.project_id = "project-shared".into();
+    drifted.canonical_root = "/workspace/other".into();
+    drifted.workspace_identity = "workspace-other".into();
+    assert!(matches!(
+        store.create_run(drifted),
+        Err(StoreError::Invariant(_))
+    ));
+
+    let mut foreign = new_run("run-project-foreign", "owner-b");
+    foreign.project_id = "project-shared".into();
+    foreign.canonical_root = "/workspace/shared".into();
+    foreign.workspace_identity = "workspace-shared".into();
+    assert!(matches!(
+        store.create_run(foreign),
+        Err(StoreError::Invariant(_))
+    ));
+}
+
+#[test]
 fn on_disk_store_recovers_terminal_state_and_exact_events() {
     let path = temp_db("reopen");
     let run_id = RunId::from("run-4");
