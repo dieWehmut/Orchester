@@ -53,19 +53,56 @@ fn model_event(
     call_id: &str,
     kind: HarnessEventKind,
 ) {
+    let input = EventAppend {
+        turn_id: Some(TurnId::from("turn-1")),
+        step_id: Some(StepId::from(step_id)),
+        call_id: Some(CallId::from(call_id)),
+        occurred_at: "2026-07-13T00:00:02Z".into(),
+        kind,
+    };
+    if matches!(input.kind, HarnessEventKind::ModelStarted) {
+        store
+            .append_model_started_with_transcript(
+                "owner-a",
+                run_id,
+                input,
+                vec![TranscriptRecord::user("resume request context")],
+            )
+            .unwrap();
+    } else {
+        store.append_event("owner-a", run_id, input).unwrap();
+    }
+}
+
+#[test]
+fn resume_rejects_a_model_call_without_request_binding() {
+    let store = SqliteRunStore::in_memory().unwrap();
+    let run = store
+        .create_run(new_run("run-resume-unbound-model", "owner-a"))
+        .unwrap();
+    start_step(&store, &run.run_id, "step-resume-unbound-model");
     store
         .append_event(
             "owner-a",
-            run_id,
+            &run.run_id,
             EventAppend {
                 turn_id: Some(TurnId::from("turn-1")),
-                step_id: Some(StepId::from(step_id)),
-                call_id: Some(CallId::from(call_id)),
+                step_id: Some(StepId::from("step-resume-unbound-model")),
+                call_id: Some(CallId::from("model-call-unbound")),
                 occurred_at: "2026-07-13T00:00:02Z".into(),
-                kind,
+                kind: HarnessEventKind::ModelStarted,
             },
         )
         .unwrap();
+
+    assert!(matches!(
+        store.resume_point_owned(
+            &run.run_id,
+            "owner-a",
+            "project-run-resume-unbound-model",
+        ),
+        Err(StoreError::Corrupt)
+    ));
 }
 
 #[test]

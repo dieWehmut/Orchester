@@ -2,6 +2,7 @@ use orchester_laufzeit::harness::governance::PolicyEngine;
 use orchester_laufzeit::harness::run_store::{
     action_hash, ActionRecord, EventAppend, NewRun, RunStore, SqliteRunStore, Transition,
 };
+use orchester_laufzeit::harness::transcript::TranscriptRecord;
 use orchester_protokoll::{
     ActionId, AgentAction, CallId, HarnessEventKind, Observation, ObservationId, PolicyDecision,
     RunId, StepId, TurnId,
@@ -85,7 +86,7 @@ pub(crate) fn create_allowed_run(store: &SqliteRunStore, label: &str) -> Allowed
         )
         .unwrap();
     store
-        .append_event(
+        .append_model_started_with_transcript(
             &owner,
             &run_id,
             EventAppend {
@@ -95,6 +96,7 @@ pub(crate) fn create_allowed_run(store: &SqliteRunStore, label: &str) -> Allowed
                 occurred_at: "2026-07-12T00:00:02Z".into(),
                 kind: HarnessEventKind::ModelStarted,
             },
+            vec![TranscriptRecord::user("allowed run request context")],
         )
         .unwrap();
     store

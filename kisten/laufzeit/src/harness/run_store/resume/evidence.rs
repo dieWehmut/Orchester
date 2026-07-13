@@ -93,6 +93,7 @@ pub(super) fn load_action(
     if canonical != row.canonical_json || hash_canonical_action(&canonical) != row.action_hash {
         return Err(StoreError::Corrupt);
     }
+    load_model_request_binding(connection, run, step, codec)?;
     load_model_response_binding(connection, run, step, codec)?;
     let action_sequence: i64 = connection
         .query_row(
@@ -142,6 +143,43 @@ fn load_model_response_binding(
         &run.run_id,
         sequence,
         TranscriptBindingPhase::ModelResponse,
+        codec,
+    )?
+    .ok_or(StoreError::Corrupt)
+}
+
+pub(super) fn require_model_request_binding(
+    connection: &Connection,
+    run: &RunSnapshot,
+    step: &StepRow,
+    codec: &TranscriptCodec,
+) -> Result<(), StoreError> {
+    load_model_request_binding(connection, run, step, codec).map(|_| ())
+}
+
+fn load_model_request_binding(
+    connection: &Connection,
+    run: &RunSnapshot,
+    step: &StepRow,
+    codec: &TranscriptCodec,
+) -> Result<TranscriptBinding, StoreError> {
+    let call_id = step.model_call_id.as_deref().ok_or(StoreError::Corrupt)?;
+    let sequence: i64 = connection
+        .query_row(
+            "SELECT sequence FROM events
+             WHERE run_id = ?1 AND step_id = ?2 AND call_id = ?3
+               AND kind = 'model.started'
+             ORDER BY sequence DESC LIMIT 1",
+            params![run.run_id.0, step.step_id, call_id],
+            |row| row.get(0),
+        )
+        .optional()?
+        .ok_or(StoreError::Corrupt)?;
+    transcript::load_binding(
+        connection,
+        &run.run_id,
+        sequence,
+        TranscriptBindingPhase::ModelRequest,
         codec,
     )?
     .ok_or(StoreError::Corrupt)
@@ -409,6 +447,7 @@ pub(super) fn require_completed_transcript(
     step: &StepRow,
     codec: &TranscriptCodec,
 ) -> Result<(), StoreError> {
+    load_model_request_binding(connection, run, step, codec)?;
     let binding = load_model_response_binding(connection, run, step, codec)?;
     if binding.record_count > 0 {
         Ok(())

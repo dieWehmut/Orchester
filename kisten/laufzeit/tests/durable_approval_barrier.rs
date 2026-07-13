@@ -13,6 +13,7 @@ use orchester_laufzeit::harness::run_store::{
     action_hash, ActionRecord, EventAppend, NewRun, RunStore, SqliteRunStore, StoreError,
     ResumeNext, Transition,
 };
+use orchester_laufzeit::harness::transcript::TranscriptRecord;
 use orchester_protokoll::{
     ActionId, AgentAction, CallId, FeedbackReport, HarnessEventKind, Observation, ObservationId,
     PolicyDecision, RunId, StepId, TurnId,
@@ -1141,7 +1142,7 @@ impl Fixture {
             )
             .unwrap();
         store
-            .append_event(
+            .append_model_started_with_transcript(
                 &owner,
                 &run_id,
                 orchester_laufzeit::harness::run_store::EventAppend {
@@ -1151,6 +1152,7 @@ impl Fixture {
                     occurred_at: "2026-07-12T00:00:02Z".into(),
                     kind: HarnessEventKind::ModelStarted,
                 },
+                vec![TranscriptRecord::user("durable approval request context")],
             )
             .unwrap();
         store

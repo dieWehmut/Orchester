@@ -247,6 +247,7 @@ fn derive_running(
                 .as_ref()
                 .ok_or(StoreError::Corrupt)?
                 .clone();
+            evidence::require_model_request_binding(connection, run, &step, codec)?;
             match step.model_phase.as_str() {
                 "running" => Ok(ResumeNext::ReconcileModelCall {
                     call_id: CallId::from(call_id),
@@ -378,6 +379,7 @@ fn derive_unknown(
     };
     if step.status == "model_running" && step.model_phase == "running" {
         step.model_call_id.as_ref().ok_or(StoreError::Corrupt)?;
+        evidence::require_model_request_binding(connection, run, &step, codec)?;
         return Ok(ResumeNext::ManualReconciliation {
             stage: ResumeStage::ModelCall,
         });
