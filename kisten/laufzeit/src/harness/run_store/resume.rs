@@ -106,20 +106,28 @@ impl SqliteRunStore {
     pub fn resume_points_owned(
         &self,
         owner_actor_id: &str,
+        project_id: &str,
     ) -> Result<Vec<ResumePoint>, StoreError> {
         ensure_owner(owner_actor_id, &self.event_sanitizer)?;
+        ensure_project(project_id, &self.event_sanitizer)?;
         let connection = self.connection()?;
         let mut statement = connection.prepare(
-            "SELECT run_id FROM runs WHERE owner_actor_id = ?1 ORDER BY updated_at, run_id",
+            "SELECT run_id FROM runs
+             WHERE owner_actor_id = ?1 AND project_id = ?2
+             ORDER BY updated_at, run_id",
         )?;
         let run_ids = statement
-            .query_map(params![owner_actor_id], |row| row.get::<_, String>(0))?
+            .query_map(params![owner_actor_id, project_id], |row| row.get::<_, String>(0))?
             .collect::<Result<Vec<_>, _>>()?;
         let mut points = Vec::new();
         for run_id in run_ids {
             let run_id = RunId::from(run_id);
-            if let Some(point) = resume_point_from_connection(&connection, &run_id, owner_actor_id)?
-            {
+            if let Some(point) = resume_point_from_connection(
+                &connection,
+                &run_id,
+                owner_actor_id,
+                project_id,
+            )? {
                 points.push(point);
             }
         }
@@ -130,10 +138,12 @@ impl SqliteRunStore {
         &self,
         run_id: &RunId,
         owner_actor_id: &str,
+        project_id: &str,
     ) -> Result<Option<ResumePoint>, StoreError> {
         ensure_owner(owner_actor_id, &self.event_sanitizer)?;
+        ensure_project(project_id, &self.event_sanitizer)?;
         let connection = self.connection()?;
-        resume_point_from_connection(&connection, run_id, owner_actor_id)
+        resume_point_from_connection(&connection, run_id, owner_actor_id, project_id)
     }
 }
 
@@ -141,8 +151,12 @@ fn resume_point_from_connection(
     connection: &Connection,
     run_id: &RunId,
     owner_actor_id: &str,
+    project_id: &str,
 ) -> Result<Option<ResumePoint>, StoreError> {
     let snapshot = load_snapshot(connection, run_id, Some(owner_actor_id))?;
+    if snapshot.project_id != project_id {
+        return Err(StoreError::NotFound);
+    }
     if snapshot.status.is_terminal() && snapshot.status != RunStatus::InterruptedUnknownOutcome {
         return Ok(None);
     }
@@ -490,6 +504,19 @@ fn ensure_owner(
     if owner.is_empty() || owner.len() > 512 || sanitizer.sanitize_text(owner) != owner {
         Err(StoreError::Invariant(
             "resume owner is not eligible for lookup".into(),
+        ))
+    } else {
+        Ok(())
+    }
+}
+
+fn ensure_project(
+    project: &str,
+    sanitizer: &crate::harness::feedback::FeedbackEngine,
+) -> Result<(), StoreError> {
+    if project.is_empty() || project.len() > 512 || sanitizer.sanitize_text(project) != project {
+        Err(StoreError::Invariant(
+            "resume project identifier is not eligible for lookup".into(),
         ))
     } else {
         Ok(())

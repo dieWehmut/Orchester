@@ -74,16 +74,41 @@ fn resume_projection_is_owner_scoped_and_omits_terminal_runs() {
     let run = store
         .create_run(new_run("run-resume-created", "owner-a"))
         .unwrap();
-    let points = store.resume_points_owned("owner-a").unwrap();
+    let other = store
+        .create_run(new_run("run-resume-other-project", "owner-a"))
+        .unwrap();
+    let points = store
+        .resume_points_owned("owner-a", "project-run-resume-created")
+        .unwrap();
     assert_eq!(points.len(), 1);
     assert_eq!(points[0].run_id, run.run_id);
     assert!(matches!(points[0].next, ResumeNext::StartStep));
+    assert_eq!(
+        store
+            .resume_points_owned("owner-a", "project-run-resume-other-project")
+            .unwrap()
+            .first()
+            .map(|point| &point.run_id),
+        Some(&other.run_id)
+    );
     assert!(matches!(
-        store.resume_points_owned("owner-b"),
+        store.resume_point_owned(
+            &other.run_id,
+            "owner-a",
+            "project-run-resume-created",
+        ),
+        Err(StoreError::NotFound)
+    ));
+    assert!(matches!(
+        store.resume_points_owned("owner-b", "project-run-resume-created"),
         Ok(points) if points.is_empty()
     ));
     assert!(matches!(
-        store.resume_point_owned(&run.run_id, "owner-b"),
+        store.resume_point_owned(
+            &run.run_id,
+            "owner-b",
+            "project-run-resume-created",
+        ),
         Err(StoreError::NotFound)
     ));
 
@@ -99,7 +124,10 @@ fn resume_projection_is_owner_scoped_and_omits_terminal_runs() {
             },
         )
         .unwrap();
-    assert!(store.resume_points_owned("owner-a").unwrap().is_empty());
+    assert!(store
+        .resume_points_owned("owner-a", "project-run-resume-created")
+        .unwrap()
+        .is_empty());
 }
 
 #[test]
@@ -118,7 +146,7 @@ fn resume_projection_reconciles_running_model_without_replay() {
     );
 
     let point = store
-        .resume_point_owned(&run.run_id, "owner-a")
+        .resume_point_owned(&run.run_id, "owner-a", "project-run-resume-model")
         .unwrap()
         .unwrap();
     let rendered = format!("{point:?}");
@@ -154,7 +182,7 @@ fn completed_model_requires_durable_completion_transcript() {
         },
     );
     let point = store
-        .resume_point_owned(&run.run_id, "owner-a")
+        .resume_point_owned(&run.run_id, "owner-a", "project-run-resume-completed")
         .unwrap()
         .unwrap();
     assert!(matches!(point.next, ResumeNext::ProcessModelOutput { .. }));
@@ -180,7 +208,11 @@ fn completed_model_requires_durable_completion_transcript() {
         },
     );
     assert!(matches!(
-        store.resume_point_owned(&missing.run_id, "owner-a"),
+        store.resume_point_owned(
+            &missing.run_id,
+            "owner-a",
+            "project-run-resume-missing",
+        ),
         Err(StoreError::Corrupt)
     ));
 }
@@ -207,7 +239,7 @@ fn durable_model_start_context_is_accepted_by_resume_projection() {
         )
         .unwrap();
     let point = store
-        .resume_point_owned(&run.run_id, "owner-a")
+        .resume_point_owned(&run.run_id, "owner-a", "project-run-resume-request")
         .unwrap()
         .unwrap();
     assert!(matches!(point.next, ResumeNext::ReconcileModelCall { .. }));
@@ -258,7 +290,7 @@ fn recorded_action_returns_policy_evaluation_resume_point() {
         )
         .unwrap();
     let point = store
-        .resume_point_owned(&run.run_id, "owner-a")
+        .resume_point_owned(&run.run_id, "owner-a", "project-run-resume-action")
         .unwrap()
         .unwrap();
     assert!(matches!(
@@ -328,7 +360,11 @@ fn action_resume_rejects_broken_model_and_hash_bindings() {
     let assert_corrupt = || {
         let store = SqliteRunStore::open(&path).unwrap();
         assert!(matches!(
-            store.resume_point_owned(&run_id, "owner-a"),
+            store.resume_point_owned(
+                &run_id,
+                "owner-a",
+                "project-run-resume-action-binding",
+            ),
             Err(StoreError::Corrupt)
         ));
     };
@@ -419,7 +455,7 @@ fn interrupted_unknown_model_requires_manual_reconciliation() {
         )
         .unwrap();
     let point = store
-        .resume_point_owned(&run.run_id, "owner-a")
+        .resume_point_owned(&run.run_id, "owner-a", "project-run-resume-unknown")
         .unwrap()
         .unwrap();
     assert!(matches!(
@@ -471,7 +507,11 @@ fn interrupted_unknown_tool_requires_manual_reconciliation() {
         .unwrap();
 
     let point = store
-        .resume_point_owned(&allowed.run_id, &allowed.owner)
+        .resume_point_owned(
+            &allowed.run_id,
+            &allowed.owner,
+            "project-resume-unknown-tool",
+        )
         .unwrap()
         .unwrap();
     assert!(matches!(
@@ -549,7 +589,7 @@ fn approval_resume_points_distinguish_request_wait_and_capability_recovery() {
         .unwrap();
 
     let point = store
-        .resume_point_owned(&run.run_id, "owner-a")
+        .resume_point_owned(&run.run_id, "owner-a", "project-run-resume-approval")
         .unwrap()
         .unwrap();
     assert!(matches!(
@@ -585,7 +625,7 @@ fn approval_resume_points_distinguish_request_wait_and_capability_recovery() {
         })
         .unwrap();
     let point = store
-        .resume_point_owned(&run.run_id, "owner-a")
+        .resume_point_owned(&run.run_id, "owner-a", "project-run-resume-approval")
         .unwrap()
         .unwrap();
     assert!(matches!(
@@ -595,7 +635,7 @@ fn approval_resume_points_distinguish_request_wait_and_capability_recovery() {
 
     approval.approve(&approval_id, "owner-a", &binding).unwrap();
     let point = store
-        .resume_point_owned(&run.run_id, "owner-a")
+        .resume_point_owned(&run.run_id, "owner-a", "project-run-resume-approval")
         .unwrap()
         .unwrap();
     assert!(matches!(
@@ -638,7 +678,7 @@ fn started_tool_returns_reconcile_resume_point_without_replay() {
         .unwrap();
 
     let point = store
-        .resume_point_owned(&allowed.run_id, &allowed.owner)
+        .resume_point_owned(&allowed.run_id, &allowed.owner, "project-resume-tool")
         .unwrap()
         .unwrap();
     assert!(matches!(
