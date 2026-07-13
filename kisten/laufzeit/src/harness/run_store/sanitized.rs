@@ -25,7 +25,7 @@ pub(super) fn canonicalize_input(
     Ok(EventAppend { kind, ..input })
 }
 
-fn ensure_durable_field(
+pub(super) fn ensure_durable_field(
     field: &str,
     value: &str,
     sanitizer: &FeedbackEngine,

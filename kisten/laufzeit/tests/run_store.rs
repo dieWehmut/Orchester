@@ -459,6 +459,51 @@ fn action_with_configured_secret_is_rejected_before_durable_persistence() {
 }
 
 #[test]
+fn action_provider_call_id_with_configured_secret_is_rejected_atomically() {
+    let path = temp_db("action-provider-call-secret");
+    let run_id = RunId::from("run-action-provider-secret");
+    let secret = "configured-action-provider-credential";
+    {
+        let store = SqliteRunStore::open_with_terminal_secrets(
+            &path,
+            vec![SecretString::new(secret.to_owned().into_boxed_str())],
+        )
+        .unwrap();
+        store
+            .create_run(new_run("run-action-provider-secret", "owner-a"))
+            .unwrap();
+        start_step(&store, &run_id, "owner-a", "step-1");
+        complete_model(&store, &run_id, "owner-a", "step-1");
+        let before = store.events_owned(&run_id, "owner-a").unwrap();
+        let action = test_action_record(
+            &run_id,
+            "step-1",
+            "action-provider-secret",
+            "model-call-1",
+            &format!("provider-{secret}"),
+            AgentAction::ReadFile {
+                path: "src/lib.rs".into(),
+                start_line: None,
+                end_line: None,
+            },
+        );
+
+        assert!(matches!(
+            store.record_action("owner-a", action),
+            Err(StoreError::Invariant(_))
+        ));
+        assert_eq!(store.events_owned(&run_id, "owner-a").unwrap(), before);
+        let connection = rusqlite::Connection::open(&path).unwrap();
+        let action_count: i64 = connection
+            .query_row("SELECT COUNT(*) FROM actions", [], |row| row.get(0))
+            .unwrap();
+        assert_eq!(action_count, 0);
+        drop(connection);
+    }
+    remove_temp_db(&path);
+}
+
+#[test]
 fn run_completion_redacts_configured_secrets_at_the_persistence_boundary() {
     let path = temp_db("run-completion-redaction");
     let run_id = RunId::from("run-completion-redaction");

@@ -1442,6 +1442,32 @@ impl RunStore for SqliteRunStore {
                 "a step can record at most one action".into(),
             ));
         }
+        sanitized::ensure_durable_field(
+            "action identifier",
+            &action.action_id.0,
+            &self.event_sanitizer,
+        )?;
+        sanitized::ensure_durable_field("run identifier", &action.run_id.0, &self.event_sanitizer)?;
+        sanitized::ensure_durable_field(
+            "step identifier",
+            &action.step_id.0,
+            &self.event_sanitizer,
+        )?;
+        sanitized::ensure_durable_field(
+            "provider call identifier",
+            &action.call_id.0,
+            &self.event_sanitizer,
+        )?;
+        sanitized::ensure_durable_field(
+            "origin model call identifier",
+            &action.origin_model_call_id.0,
+            &self.event_sanitizer,
+        )?;
+        sanitized::ensure_durable_field(
+            "action timestamp",
+            &action.occurred_at,
+            &self.event_sanitizer,
+        )?;
 
         let canonical_json = sanitized::durable_action_json(&action.action, &self.event_sanitizer)?;
         let expected_hash = hash_canonical_action(&canonical_json);
