@@ -299,6 +299,17 @@ impl TranscriptCodec {
         Ok(())
     }
 
+    pub fn validate_provider_sequence(
+        &self,
+        records: &[TranscriptRecord],
+    ) -> Result<(), TranscriptError> {
+        self.validate_sequence(records)?;
+        if matches!(records.last(), Some(TranscriptRecord::ToolCall { .. })) {
+            return Err(TranscriptError::UnpairedToolCall);
+        }
+        Ok(())
+    }
+
     fn opaque_reference(&self, value: &Value) -> Result<TranscriptRecord, TranscriptError> {
         self.validate_limits()?;
         let encoded = serde_json::to_vec(value).map_err(|_| TranscriptError::InvalidWire)?;

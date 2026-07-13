@@ -1615,6 +1615,75 @@ fn model_start_writes_new_request_records_in_the_same_transaction() {
 }
 
 #[test]
+fn model_start_rejects_an_unclosed_request_transcript_atomically() {
+    let store = SqliteRunStore::in_memory().unwrap();
+    let run = store
+        .create_run(new_run("run-model-start-open", "owner-a"))
+        .unwrap();
+    start_step(&store, &run.run_id, "owner-a", "step-model-start-open");
+    let input = EventAppend {
+        turn_id: Some(TurnId::from("turn-1")),
+        step_id: Some(StepId::from("step-model-start-open")),
+        call_id: Some(CallId::from("model-call-start-open")),
+        occurred_at: "2026-07-12T00:00:02Z".into(),
+        kind: HarnessEventKind::ModelStarted,
+    };
+    let before = store.events_owned(&run.run_id, "owner-a").unwrap();
+    assert!(matches!(
+        store.append_model_started_with_transcript(
+            "owner-a",
+            &run.run_id,
+            input,
+            vec![
+                TranscriptRecord::user("inspect the workspace"),
+                TranscriptRecord::tool_call(
+                    "call-open",
+                    "read_file",
+                    r#"{"path":"src/lib.rs"}"#,
+                ),
+            ],
+        ),
+        Err(StoreError::Invariant(_))
+    ));
+    assert_eq!(store.events_owned(&run.run_id, "owner-a").unwrap(), before);
+    assert!(store
+        .transcript_owned(&run.run_id, "owner-a")
+        .unwrap()
+        .is_empty());
+
+    store
+        .append_transcript_records(
+            "owner-a",
+            &run.run_id,
+            vec![
+                TranscriptRecord::user("inspect the workspace"),
+                TranscriptRecord::tool_call(
+                    "call-existing-open",
+                    "read_file",
+                    r#"{"path":"src/lib.rs"}"#,
+                ),
+            ],
+            "2026-07-12T00:00:03Z",
+        )
+        .unwrap();
+    assert!(matches!(
+        store.append_model_started_with_transcript(
+            "owner-a",
+            &run.run_id,
+            EventAppend {
+                turn_id: Some(TurnId::from("turn-1")),
+                step_id: Some(StepId::from("step-model-start-open")),
+                call_id: Some(CallId::from("model-call-start-open-2")),
+                occurred_at: "2026-07-12T00:00:04Z".into(),
+                kind: HarnessEventKind::ModelStarted,
+            },
+            Vec::new(),
+        ),
+        Err(StoreError::Invariant(_))
+    ));
+}
+
+#[test]
 fn oversized_model_start_input_rolls_back_event_phase_and_transcript() {
     let store = SqliteRunStore::in_memory().unwrap();
     let run = store

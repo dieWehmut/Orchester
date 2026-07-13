@@ -209,15 +209,22 @@ pub(super) fn append_records_in_transaction(
     })
 }
 
-pub(super) fn validate_records_in_transaction(
+pub(super) fn validate_provider_records_in_transaction(
     transaction: &Transaction<'_>,
     run_id: &RunId,
     sanitizer: &FeedbackEngine,
 ) -> Result<usize, StoreError> {
     let codec = TranscriptCodec::with_sanitizer(TranscriptLimits::default(), sanitizer.clone());
     let wires = load_prior_wires(transaction, run_id, &codec)?;
-    codec.decode_all(&wires).map_err(|_| StoreError::Corrupt)?;
-    Ok(wires.len())
+    let records = codec
+        .decode_all(&wires)
+        .map_err(|_| StoreError::Corrupt)?;
+    codec
+        .validate_provider_sequence(&records)
+        .map_err(|_| {
+            StoreError::Invariant("model start requires a closed request transcript".into())
+        })?;
+    Ok(records.len())
 }
 
 pub(super) fn action_tool_call(

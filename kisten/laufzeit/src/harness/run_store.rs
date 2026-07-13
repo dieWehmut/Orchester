@@ -1141,7 +1141,7 @@ impl SqliteRunStore {
                 ));
             }
             if records.is_empty() {
-                if transcript::validate_records_in_transaction(
+                if transcript::validate_provider_records_in_transaction(
                     &transaction,
                     run_id,
                     &self.event_sanitizer,
@@ -1157,6 +1157,11 @@ impl SqliteRunStore {
                     run_id,
                     records,
                     &event.occurred_at,
+                    &self.event_sanitizer,
+                )?;
+                transcript::validate_provider_records_in_transaction(
+                    &transaction,
+                    run_id,
                     &self.event_sanitizer,
                 )?;
             }
