@@ -421,6 +421,62 @@ fn action_with_configured_secret_is_rejected_before_durable_persistence() {
 }
 
 #[test]
+fn run_completion_redacts_configured_secrets_at_the_persistence_boundary() {
+    let path = temp_db("run-completion-redaction");
+    let run_id = RunId::from("run-completion-redaction");
+    let secret = "configured-summary-credential-value";
+    {
+        let store = SqliteRunStore::open_with_terminal_secrets(
+            &path,
+            vec![SecretString::new(secret.to_owned().into_boxed_str())],
+        )
+        .unwrap();
+        store
+            .create_run(new_run("run-completion-redaction", "owner-a"))
+            .unwrap();
+        start_step(&store, &run_id, "owner-a", "step-1");
+
+        let event = store
+            .append_transition(
+                &run_id,
+                "owner-a",
+                Transition::Complete {
+                    reason: StopReason::Succeeded,
+                    summary: format!("completed with {secret}"),
+                    occurred_at: "2026-07-12T00:00:03Z".into(),
+                },
+            )
+            .unwrap();
+        let event_json = serde_json::to_string(&event).unwrap();
+        assert!(!event_json.contains(secret));
+        assert!(event_json.contains("[REDACTED]"));
+
+        let connection = rusqlite::Connection::open(&path).unwrap();
+        let payload: String = connection
+            .query_row(
+                "SELECT sanitized_payload FROM events WHERE kind = 'run.completed'",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap();
+        assert!(!payload.contains(secret));
+        assert!(payload.contains("[REDACTED]"));
+        drop(connection);
+    }
+
+    let reopened = SqliteRunStore::open(&path).unwrap();
+    let event = reopened
+        .events_owned(&run_id, "owner-a")
+        .unwrap()
+        .into_iter()
+        .find(|event| matches!(event.kind, HarnessEventKind::RunCompleted { .. }))
+        .unwrap();
+    assert!(!format!("{event:?}").contains(secret));
+    drop(reopened);
+    remove_temp_db(&path);
+}
+
+#[test]
 fn concurrent_model_completion_has_one_winner() {
     let path = temp_db("concurrent-model-completion");
     let run_id = RunId::from("run-concurrent-model");

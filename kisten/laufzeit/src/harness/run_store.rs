@@ -1372,6 +1372,7 @@ impl RunStore for SqliteRunStore {
                         summary,
                     }
                 };
+                let kind = sanitized::canonicalize_kind(kind, &self.event_sanitizer)?;
                 let event = HarnessEvent {
                     schema_version: HARNESS_SCHEMA_VERSION,
                     event_id: event_id(run_id, snapshot.next_sequence),

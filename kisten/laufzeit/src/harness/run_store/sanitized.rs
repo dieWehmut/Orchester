@@ -1,4 +1,4 @@
-use orchester_protokoll::{AgentAction, HarnessEventKind};
+use orchester_protokoll::{normalize_action_summary, AgentAction, HarnessEventKind};
 use serde_json::Value;
 
 use super::{EventAppend, StoreError};
@@ -10,7 +10,15 @@ pub(super) fn canonicalize_input(
     input: EventAppend,
     sanitizer: &FeedbackEngine,
 ) -> Result<EventAppend, StoreError> {
-    let kind = match input.kind {
+    let kind = canonicalize_kind(input.kind, sanitizer)?;
+    Ok(EventAppend { kind, ..input })
+}
+
+pub(super) fn canonicalize_kind(
+    kind: HarnessEventKind,
+    sanitizer: &FeedbackEngine,
+) -> Result<HarnessEventKind, StoreError> {
+    Ok(match kind {
         HarnessEventKind::ModelCompleted { assistant_text } => {
             let assistant_text = sanitizer.sanitize_text(&assistant_text);
             if assistant_text.len() > MAX_MODEL_TEXT_BYTES {
@@ -23,9 +31,17 @@ pub(super) fn canonicalize_input(
         HarnessEventKind::ValidatorCompleted { feedback } => HarnessEventKind::ValidatorCompleted {
             feedback: sanitize_validator_feedback(&feedback, sanitizer),
         },
+        HarnessEventKind::RunCompleted { reason, summary } => {
+            let summary = normalize_action_summary(&sanitizer.sanitize_text(&summary));
+            if summary.len() > MAX_MODEL_TEXT_BYTES {
+                return Err(StoreError::Invariant(
+                    "run completion summary exceeds the durable limit".into(),
+                ));
+            }
+            HarnessEventKind::RunCompleted { reason, summary }
+        }
         kind => kind,
-    };
-    Ok(EventAppend { kind, ..input })
+    })
 }
 
 fn sanitize_validator_feedback(
