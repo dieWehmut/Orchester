@@ -1,6 +1,6 @@
 use orchester_protokoll::{
-    ActionId, AgentAction, EventId, HarnessEvent, HarnessEventKind, RunId, StepId, StopReason,
-    TurnId, HARNESS_SCHEMA_VERSION,
+    ActionId, AgentAction, CallId, EventId, HarnessEvent, HarnessEventKind, RunId, StepId,
+    StopReason, TurnId, HARNESS_SCHEMA_VERSION,
 };
 use rusqlite::{params, Connection, OptionalExtension, Transaction};
 use serde_json::{json, Value};
@@ -411,7 +411,7 @@ pub(super) fn load_events(
     for row in rows {
         let (schema, event_id, turn_id, step_id, call_id, sequence, occurred_at, kind, payload) =
             row?;
-        let payload: Value = serde_json::from_str(&payload)?;
+        let payload: Value = serde_json::from_str(&payload).map_err(|_| StoreError::Corrupt)?;
         let value = json!({
             "schema_version": schema,
             "event_id": event_id,
@@ -424,9 +424,78 @@ pub(super) fn load_events(
             "kind": kind,
             "payload": payload,
         });
-        events.push(serde_json::from_value(value)?);
+        let event = serde_json::from_value(value).map_err(|_| StoreError::Corrupt)?;
+        events.push(normalize_action_event(connection, run_id, event)?);
     }
     Ok(events)
+}
+
+fn normalize_action_event(
+    connection: &Connection,
+    run_id: &RunId,
+    mut event: HarnessEvent,
+) -> Result<HarnessEvent, StoreError> {
+    let (action_id, action_summary, action_hash, event_origin) = match &event.kind {
+        HarnessEventKind::ActionRecorded {
+            action_id,
+            action_summary,
+            action_hash,
+            origin_model_call_id,
+        } => (
+            action_id,
+            action_summary.as_str(),
+            action_hash.as_str(),
+            origin_model_call_id.as_ref(),
+        ),
+        _ => return Ok(event),
+    };
+    let step_id = event.step_id.as_ref().ok_or(StoreError::Corrupt)?;
+    let call_id = event.call_id.as_ref().ok_or(StoreError::Corrupt)?;
+    type DurableActionRow = (String, String, Option<String>, String, String);
+    let durable: Option<DurableActionRow> = connection
+        .query_row(
+            "SELECT step_id, call_id, origin_model_call_id, canonical_json, action_hash
+             FROM actions WHERE run_id = ?1 AND action_id = ?2",
+            params![run_id.0, action_id.0],
+            |row| {
+                Ok((
+                    row.get(0)?,
+                    row.get(1)?,
+                    row.get(2)?,
+                    row.get(3)?,
+                    row.get(4)?,
+                ))
+            },
+        )
+        .optional()?;
+    let Some((durable_step, durable_call, durable_origin, canonical_json, durable_hash)) = durable
+    else {
+        return Err(StoreError::Corrupt);
+    };
+    let action: AgentAction =
+        serde_json::from_str(&canonical_json).map_err(|_| StoreError::Corrupt)?;
+    let canonical = serde_json::to_string(&action).map_err(|_| StoreError::Corrupt)?;
+    let derived_summary = action.action_summary();
+    if durable_step != step_id.0
+        || durable_call != call_id.0
+        || canonical != canonical_json
+        || hash_canonical_action(&canonical_json) != durable_hash
+    {
+        return Err(StoreError::Corrupt);
+    }
+    if action_summary != derived_summary
+        || action_hash != durable_hash
+        || event_origin.map(|origin| origin.0.as_str()) != durable_origin.as_deref()
+    {
+        return Err(StoreError::Corrupt);
+    }
+    event.kind = HarnessEventKind::ActionRecorded {
+        action_id: action_id.clone(),
+        action_summary: derived_summary,
+        action_hash: durable_hash,
+        origin_model_call_id: durable_origin.map(CallId::from),
+    };
+    Ok(event)
 }
 
 pub(super) fn persist_event(

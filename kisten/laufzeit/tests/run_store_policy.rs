@@ -356,7 +356,6 @@ fn snapshot_drift_and_tampered_action_state_fail_without_new_events() {
         end_line: None,
     };
     let (path, store, run_id, action_id) = seed_action(action.clone(), "tampered-json");
-    let before = store.events_owned(&run_id, "owner-tampered-json").unwrap();
     let canonical = serde_json::to_string(&action).unwrap();
     let connection = rusqlite::Connection::open(&path).unwrap();
     connection
@@ -375,10 +374,10 @@ fn snapshot_drift_and_tampered_action_state_fail_without_new_events() {
         ),
         Err(StoreError::Corrupt)
     ));
-    assert_eq!(
-        store.events_owned(&run_id, "owner-tampered-json").unwrap(),
-        before
-    );
+    assert!(matches!(
+        store.events_owned(&run_id, "owner-tampered-json"),
+        Err(StoreError::Corrupt)
+    ));
     drop(store);
     remove_temp_db(&path);
 

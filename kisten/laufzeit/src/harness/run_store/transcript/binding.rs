@@ -1,13 +1,38 @@
 use orchester_protokoll::{AgentAction, CallId, RunId};
 use rusqlite::{params, Connection, OptionalExtension};
+use serde::Deserialize;
 use serde_json::Value;
 
 use crate::harness::transcript::{TranscriptCodec, TranscriptRecord};
 
+use super::super::{hash_canonical_action, StoreError};
 use super::{
     action_tool_call, record_metadata, transcript_hash, TranscriptBinding, TranscriptBindingPhase,
 };
-use super::super::{hash_canonical_action, StoreError};
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ActionEventProjection {
+    action_id: String,
+    action_summary: String,
+    action_hash: String,
+    origin_model_call_id: String,
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct LegacyActionEventPayload {
+    action_id: String,
+    action: AgentAction,
+    origin_model_call_id: String,
+}
+
+struct EventBinding<'a> {
+    kind: &'a str,
+    step_id: Option<&'a str>,
+    call_id: Option<&'a str>,
+    payload: &'a str,
+}
 
 pub(in crate::harness::run_store) fn load_binding(
     connection: &Connection,
@@ -16,11 +41,19 @@ pub(in crate::harness::run_store) fn load_binding(
     phase: TranscriptBindingPhase,
     codec: &TranscriptCodec,
 ) -> Result<Option<TranscriptBinding>, StoreError> {
-    type BindingRow = (Option<i64>, Option<i64>, i64, String, Option<String>, String);
+    type BindingRow = (
+        Option<i64>,
+        Option<i64>,
+        i64,
+        String,
+        Option<String>,
+        Option<String>,
+        String,
+    );
     let row: Option<BindingRow> = connection
         .query_row(
             "SELECT b.first_ordinal, b.last_ordinal, b.record_count,
-                    e.kind, e.call_id, e.sanitized_payload
+                    e.kind, e.step_id, e.call_id, e.sanitized_payload
              FROM transcript_bindings b
              JOIN events e ON e.run_id = b.run_id AND e.sequence = b.event_sequence
              WHERE b.run_id = ?1 AND b.event_sequence = ?2 AND b.phase = ?3",
@@ -33,11 +66,13 @@ pub(in crate::harness::run_store) fn load_binding(
                     row.get(3)?,
                     row.get(4)?,
                     row.get(5)?,
+                    row.get(6)?,
                 ))
             },
         )
         .optional()?;
-    let Some((first, last, count, event_kind, event_call_id, event_payload)) = row else {
+    let Some((first, last, count, event_kind, event_step_id, event_call_id, event_payload)) = row
+    else {
         return Ok(None);
     };
     if !phase.expected_event(&event_kind) {
@@ -65,15 +100,13 @@ pub(in crate::harness::run_store) fn load_binding(
         last_ordinal,
         record_count,
     };
-    validate_binding_records(
-        connection,
-        run_id,
-        &binding,
-        &event_kind,
-        event_call_id.as_deref(),
-        &event_payload,
-        codec,
-    )?;
+    let event = EventBinding {
+        kind: &event_kind,
+        step_id: event_step_id.as_deref(),
+        call_id: event_call_id.as_deref(),
+        payload: &event_payload,
+    };
+    validate_binding_records(connection, run_id, &binding, &event, codec)?;
     Ok(Some(binding))
 }
 
@@ -81,13 +114,11 @@ fn validate_binding_records(
     connection: &Connection,
     run_id: &RunId,
     binding: &TranscriptBinding,
-    event_kind: &str,
-    event_call_id: Option<&str>,
-    event_payload: &str,
+    event: &EventBinding<'_>,
     codec: &TranscriptCodec,
 ) -> Result<(), StoreError> {
     let event_payload: Value =
-        serde_json::from_str(event_payload).map_err(|_| StoreError::Corrupt)?;
+        serde_json::from_str(event.payload).map_err(|_| StoreError::Corrupt)?;
     if binding.record_count == 0 {
         return if binding.phase == TranscriptBindingPhase::ModelResponse
             && event_payload.get("assistant_text") == Some(&Value::String(String::new()))
@@ -118,24 +149,21 @@ fn validate_binding_records(
                 .validate_provider_sequence(&records)
                 .map_err(|_| StoreError::Corrupt)
         }
-        TranscriptBindingPhase::ModelResponse => match (
-            records.as_slice(),
-            event_payload.get("assistant_text"),
-        ) {
-            ([TranscriptRecord::Assistant(text)], Some(Value::String(expected)))
-                if text == expected => Ok(()),
-            _ => Err(StoreError::Corrupt),
-        },
-        TranscriptBindingPhase::Action => validate_action_binding(
-            connection,
-            run_id,
-            &records,
-            event_kind,
-            event_call_id,
-            &event_payload,
-        ),
+        TranscriptBindingPhase::ModelResponse => {
+            match (records.as_slice(), event_payload.get("assistant_text")) {
+                ([TranscriptRecord::Assistant(text)], Some(Value::String(expected)))
+                    if text == expected =>
+                {
+                    Ok(())
+                }
+                _ => Err(StoreError::Corrupt),
+            }
+        }
+        TranscriptBindingPhase::Action => {
+            validate_action_binding(connection, run_id, &records, event, &event_payload)
+        }
         TranscriptBindingPhase::ToolResult => {
-            validate_tool_result_binding(&records, event_kind, event_call_id, &event_payload)
+            validate_tool_result_binding(&records, event.kind, event.call_id, &event_payload)
         }
     }
 }
@@ -144,48 +172,76 @@ fn validate_action_binding(
     connection: &Connection,
     run_id: &RunId,
     records: &[TranscriptRecord],
-    event_kind: &str,
-    event_call_id: Option<&str>,
+    event: &EventBinding<'_>,
     event_payload: &Value,
 ) -> Result<(), StoreError> {
     let [TranscriptRecord::ToolCall { call_id, .. }] = records else {
         return Err(StoreError::Corrupt);
     };
-    if event_call_id != Some(call_id.0.as_str()) || event_kind != "action.recorded" {
+    if event.call_id != Some(call_id.0.as_str()) || event.kind != "action.recorded" {
         return Err(StoreError::Corrupt);
     }
-    let action_id = event_payload
-        .get("action_id")
-        .and_then(Value::as_str)
-        .ok_or(StoreError::Corrupt)?;
-    let action_value = event_payload
-        .get("action")
-        .cloned()
-        .ok_or(StoreError::Corrupt)?;
-    let action: AgentAction =
-        serde_json::from_value(action_value).map_err(|_| StoreError::Corrupt)?;
-    let expected = action_tool_call(&CallId::from(call_id.0.clone()), &action)?;
-    let origin_model_call_id = event_payload
-        .get("origin_model_call_id")
-        .and_then(Value::as_str)
-        .ok_or(StoreError::Corrupt)?;
-    let durable: Option<(String, Option<String>, String, String)> = connection
+    let (action_id, projection, legacy_action, origin_model_call_id) =
+        if event_payload.get("action").is_some() {
+            let legacy: LegacyActionEventPayload =
+                serde_json::from_value(event_payload.clone()).map_err(|_| StoreError::Corrupt)?;
+            (
+                legacy.action_id,
+                None,
+                Some(legacy.action),
+                legacy.origin_model_call_id,
+            )
+        } else {
+            let projection: ActionEventProjection =
+                serde_json::from_value(event_payload.clone()).map_err(|_| StoreError::Corrupt)?;
+            (
+                projection.action_id.clone(),
+                Some((projection.action_summary, projection.action_hash)),
+                None,
+                projection.origin_model_call_id,
+            )
+        };
+    let durable: Option<(String, String, Option<String>, String, String)> = connection
         .query_row(
-            "SELECT call_id, origin_model_call_id, canonical_json, action_hash
+            "SELECT step_id, call_id, origin_model_call_id, canonical_json, action_hash
              FROM actions WHERE run_id = ?1 AND action_id = ?2",
             params![run_id.0, action_id],
-            |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
+            |row| {
+                Ok((
+                    row.get(0)?,
+                    row.get(1)?,
+                    row.get(2)?,
+                    row.get(3)?,
+                    row.get(4)?,
+                ))
+            },
         )
         .optional()?;
-    let Some((durable_call_id, durable_origin, canonical_json, action_hash)) = durable else {
+    let Some((durable_step_id, durable_call_id, durable_origin, canonical_json, action_hash)) =
+        durable
+    else {
         return Err(StoreError::Corrupt);
     };
+    let action: AgentAction =
+        serde_json::from_str(&canonical_json).map_err(|_| StoreError::Corrupt)?;
     let expected_json = serde_json::to_string(&action).map_err(|_| StoreError::Corrupt)?;
-    if durable_call_id != call_id.0
-        || durable_origin.as_deref() != Some(origin_model_call_id)
+    let expected = action_tool_call(&CallId::from(call_id.0.clone()), &action)?;
+    if event.step_id != Some(durable_step_id.as_str())
+        || durable_call_id != call_id.0
+        || durable_origin.as_deref() != Some(origin_model_call_id.as_str())
         || canonical_json != expected_json
         || hash_canonical_action(&canonical_json) != action_hash
         || expected != records[0]
+    {
+        return Err(StoreError::Corrupt);
+    }
+    if let Some((summary, projected_hash)) = projection {
+        if summary != action.action_summary() || projected_hash != action_hash {
+            return Err(StoreError::Corrupt);
+        }
+    } else if serde_json::to_string(&legacy_action.ok_or(StoreError::Corrupt)?)
+        .map_err(|_| StoreError::Corrupt)?
+        != canonical_json
     {
         return Err(StoreError::Corrupt);
     }

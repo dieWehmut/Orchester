@@ -9,10 +9,14 @@ use std::fmt;
 use serde::de::Error as DeError;
 use serde::ser::{Error as SerError, SerializeStruct};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use sha2::{Digest, Sha256};
 
-/// The only harness envelope schema currently accepted on the wire.
-pub const HARNESS_SCHEMA_VERSION: u16 = 1;
+/// The schema emitted by current harness writers.
+pub const HARNESS_SCHEMA_VERSION: u16 = 2;
+/// The previous envelope remains readable for offline recovery/migration.
+pub const LEGACY_HARNESS_SCHEMA_VERSION: u16 = 1;
 const MAX_ACTION_SUMMARY_CHARS: usize = 512;
+const ACTION_HASH_CHARS: usize = 64;
 
 macro_rules! string_id {
     ($name:ident) => {
@@ -53,6 +57,8 @@ pub enum ProtocolValidationError {
     EmptyActionSummary,
     ActionSummaryNotNormalized,
     ActionSummaryTooLong,
+    EmptyActionHash,
+    InvalidActionHash,
     ApprovalRunIdMismatch { outer: RunId, request: RunId },
 }
 
@@ -71,11 +77,15 @@ impl fmt::Display for ProtocolValidationError {
                     "harness sequence must be greater than zero (got {found})"
                 )
             }
-            Self::EmptyActionSummary => f.write_str("approval action summary must not be empty"),
+            Self::EmptyActionSummary => f.write_str("action summary must not be empty"),
             Self::ActionSummaryNotNormalized => {
-                f.write_str("approval action summary is not normalized or redacted")
+                f.write_str("action summary is not normalized or redacted")
             }
-            Self::ActionSummaryTooLong => f.write_str("approval action summary is too long"),
+            Self::ActionSummaryTooLong => f.write_str("action summary is too long"),
+            Self::EmptyActionHash => f.write_str("action hash must not be empty"),
+            Self::InvalidActionHash => {
+                f.write_str("action hash must be 64 lowercase hexadecimal characters")
+            }
             Self::ApprovalRunIdMismatch { outer, request } => write!(
                 f,
                 "approval request run binding does not match event run ({}/{})",
@@ -500,7 +510,8 @@ pub enum HarnessEventKind {
     },
     ActionRecorded {
         action_id: ActionId,
-        action: AgentAction,
+        action_summary: String,
+        action_hash: String,
         origin_model_call_id: Option<CallId>,
     },
     PolicyDecided {
@@ -557,9 +568,59 @@ struct ModelCompletedPayload {
 #[serde(deny_unknown_fields)]
 struct ActionRecordedPayload {
     action_id: ActionId,
+    action_summary: String,
+    action_hash: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    origin_model_call_id: Option<CallId>,
+}
+
+fn validate_action_recorded_fields(
+    action_summary: &str,
+    action_hash: &str,
+) -> Result<(), ProtocolValidationError> {
+    if action_summary.trim().is_empty() {
+        return Err(ProtocolValidationError::EmptyActionSummary);
+    }
+    if action_summary.len() > MAX_ACTION_SUMMARY_CHARS {
+        return Err(ProtocolValidationError::ActionSummaryTooLong);
+    }
+    if action_summary.chars().any(char::is_control)
+        || normalize_action_summary(action_summary) != action_summary
+    {
+        return Err(ProtocolValidationError::ActionSummaryNotNormalized);
+    }
+    if action_hash.is_empty() {
+        return Err(ProtocolValidationError::EmptyActionHash);
+    }
+    if action_hash.len() != ACTION_HASH_CHARS
+        || !action_hash
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || matches!(byte, b'a'..=b'f'))
+    {
+        return Err(ProtocolValidationError::InvalidActionHash);
+    }
+    Ok(())
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct LegacyActionRecordedPayload {
+    action_id: ActionId,
     action: AgentAction,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     origin_model_call_id: Option<CallId>,
+}
+
+/// Hash the canonical action JSON used by durable policy and approval bindings.
+pub fn canonical_action_hash(action: &AgentAction) -> Result<String, serde_json::Error> {
+    let canonical = serde_json::to_vec(action)?;
+    let mut hasher = Sha256::new();
+    hasher.update(canonical);
+    Ok(hasher
+        .finalize()
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect())
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -650,12 +711,28 @@ impl HarnessEventKind {
                 })
             }
             "action.recorded" => {
-                let value: ActionRecordedPayload = decode_payload(kind, payload)?;
-                Ok(Self::ActionRecorded {
-                    action_id: value.action_id,
-                    action: value.action,
-                    origin_model_call_id: value.origin_model_call_id,
-                })
+                match serde_json::from_value::<ActionRecordedPayload>(payload.clone()) {
+                    Ok(value) => {
+                        validate_action_recorded_fields(&value.action_summary, &value.action_hash)
+                            .map_err(|error| error.to_string())?;
+                        Ok(Self::ActionRecorded {
+                            action_id: value.action_id,
+                            action_summary: value.action_summary,
+                            action_hash: value.action_hash,
+                            origin_model_call_id: value.origin_model_call_id,
+                        })
+                    }
+                    Err(_) => {
+                        let value: LegacyActionRecordedPayload = decode_payload(kind, payload)?;
+                        Ok(Self::ActionRecorded {
+                            action_id: value.action_id,
+                            action_summary: value.action.action_summary(),
+                            action_hash: canonical_action_hash(&value.action)
+                                .map_err(|_| "legacy action event cannot be canonicalized")?,
+                            origin_model_call_id: value.origin_model_call_id,
+                        })
+                    }
+                }
             }
             "policy.decided" => {
                 let value: PolicyDecidedPayload = decode_payload(kind, payload)?;
@@ -728,6 +805,17 @@ impl HarnessEventKind {
                 reason: reason.clone(),
                 summary: normalize_action_summary(summary),
             },
+            Self::ActionRecorded {
+                action_id,
+                action_summary,
+                action_hash,
+                origin_model_call_id,
+            } => Self::ActionRecorded {
+                action_id: action_id.clone(),
+                action_summary: normalize_action_summary(action_summary),
+                action_hash: action_hash.clone(),
+                origin_model_call_id: origin_model_call_id.clone(),
+            },
             other => other.clone(),
         }
     }
@@ -784,7 +872,8 @@ where
         }
         HarnessEventKind::ActionRecorded {
             action_id,
-            action,
+            action_summary,
+            action_hash,
             origin_model_call_id,
         } => {
             state.serialize_field("kind", "action.recorded")?;
@@ -792,7 +881,8 @@ where
                 "payload",
                 &ActionRecordedPayload {
                     action_id: action_id.clone(),
-                    action: action.clone(),
+                    action_summary: action_summary.clone(),
+                    action_hash: action_hash.clone(),
                     origin_model_call_id: origin_model_call_id.clone(),
                 },
             )?;
@@ -898,6 +988,15 @@ impl Serialize for HarnessEventKind {
     where
         S: Serializer,
     {
+        if let HarnessEventKind::ActionRecorded {
+            action_summary,
+            action_hash,
+            ..
+        } = self
+        {
+            validate_action_recorded_fields(action_summary, action_hash)
+                .map_err(S::Error::custom)?;
+        }
         let mut state = serializer.serialize_struct("HarnessEventKind", 2)?;
         serialize_kind_fields(self, &mut state)?;
         state.end()
@@ -970,7 +1069,10 @@ impl HarnessEvent {
 
     /// Validate invariants which cannot be expressed by the JSON schema alone.
     pub fn validate(&self) -> Result<(), ProtocolValidationError> {
-        if self.schema_version != HARNESS_SCHEMA_VERSION {
+        if !matches!(
+            self.schema_version,
+            HARNESS_SCHEMA_VERSION | LEGACY_HARNESS_SCHEMA_VERSION
+        ) {
             return Err(ProtocolValidationError::UnsupportedSchemaVersion {
                 found: self.schema_version,
                 expected: HARNESS_SCHEMA_VERSION,
@@ -989,6 +1091,14 @@ impl HarnessEvent {
                     request: request.run_id.clone(),
                 });
             }
+        }
+        if let HarnessEventKind::ActionRecorded {
+            action_summary,
+            action_hash,
+            ..
+        } = &self.kind
+        {
+            validate_action_recorded_fields(action_summary, action_hash)?;
         }
         Ok(())
     }

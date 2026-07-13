@@ -1677,8 +1677,7 @@ impl RunStore for SqliteRunStore {
 
 /// Compute the durable hash used to bind an action to policy/approval records.
 pub fn action_hash(action: &AgentAction) -> Result<String, StoreError> {
-    let canonical_json = serde_json::to_string(action)?;
-    Ok(hash_canonical_action(&canonical_json))
+    orchester_protokoll::canonical_action_hash(action).map_err(StoreError::from)
 }
 
 fn hash_canonical_action(canonical_json: &str) -> String {

@@ -8,3 +8,4 @@ description = "Unified event/task protocol at the core of Orchester — the moat
 [dependencies]
 serde.workspace = true
 serde_json.workspace = true
+sha2.workspace = true

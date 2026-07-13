@@ -224,7 +224,8 @@ impl SqliteRunStore {
             occurred_at: action.occurred_at.clone(),
             kind: HarnessEventKind::ActionRecorded {
                 action_id: action.action_id.clone(),
-                action: action.action,
+                action_summary: action.action.action_summary(),
+                action_hash: action.action_hash.clone(),
                 origin_model_call_id: Some(action.origin_model_call_id.clone()),
             },
         };

@@ -17,15 +17,12 @@ fn action_recorded_uses_the_exact_top_level_fixture() {
         1,
         HarnessEventKind::ActionRecorded {
             action_id: ActionId::from("act-1"),
-            action: AgentAction::ReadFile {
-                path: "src/lib.rs".into(),
-                start_line: None,
-                end_line: None,
-            },
+            action_summary: "read_file path_bytes=10 start_line=None end_line=None".into(),
+            action_hash: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa".into(),
             origin_model_call_id: Some("model-call-1".into()),
         },
     );
-    let expected = r#"{"schema_version":1,"event_id":"evt-1","run_id":"run-1","turn_id":null,"step_id":"step-1","call_id":null,"sequence":1,"occurred_at":"2026-07-10T00:00:00Z","kind":"action.recorded","payload":{"action_id":"act-1","action":{"tool":"read_file","path":"src/lib.rs","start_line":null,"end_line":null},"origin_model_call_id":"model-call-1"}}"#;
+    let expected = r#"{"schema_version":2,"event_id":"evt-1","run_id":"run-1","turn_id":null,"step_id":"step-1","call_id":null,"sequence":1,"occurred_at":"2026-07-10T00:00:00Z","kind":"action.recorded","payload":{"action_id":"act-1","action_summary":"read_file path_bytes=10 start_line=None end_line=None","action_hash":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","origin_model_call_id":"model-call-1"}}"#;
     assert_eq!(serde_json::to_string(&event).unwrap(), expected);
     assert_eq!(
         serde_json::from_str::<HarnessEvent>(expected).unwrap(),
@@ -38,12 +35,24 @@ fn action_recorded_legacy_fixture_without_origin_still_decodes() {
     let fixture = r#"{"kind":"action.recorded","payload":{"action_id":"act-legacy","action":{"tool":"read_file","path":"src/lib.rs","start_line":null,"end_line":null}}}"#;
     let kind: HarnessEventKind = serde_json::from_str(fixture).unwrap();
     assert!(matches!(
-        kind,
+        &kind,
         HarnessEventKind::ActionRecorded {
             origin_model_call_id: None,
             ..
         }
     ));
+    let encoded = serde_json::to_string(&kind).unwrap();
+    assert!(!encoded.contains("src/lib.rs"));
+    assert!(!encoded.contains("\"action\""));
+    assert!(!format!("{kind:?}").contains("src/lib.rs"));
+}
+
+#[test]
+fn action_recorded_rejects_noncanonical_summary_and_hash() {
+    let control_summary = r#"{"kind":"action.recorded","payload":{"action_id":"act-1","action_summary":"read_file\u0000path_bytes=1","action_hash":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","origin_model_call_id":"model-call-1"}}"#;
+    let uppercase_hash = r#"{"kind":"action.recorded","payload":{"action_id":"act-1","action_summary":"read_file path_bytes=1","action_hash":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA","origin_model_call_id":"model-call-1"}}"#;
+    assert!(serde_json::from_str::<HarnessEventKind>(control_summary).is_err());
+    assert!(serde_json::from_str::<HarnessEventKind>(uppercase_hash).is_err());
 }
 
 #[test]
@@ -157,7 +166,7 @@ fn generated_action_summary_does_not_copy_model_controlled_strings() {
 
 #[test]
 fn invalid_schema_and_sequence_are_rejected_at_the_wire_boundary() {
-    let schema_fixture = r#"{"schema_version":2,"event_id":"evt-1","run_id":"run-1","turn_id":null,"step_id":null,"call_id":null,"sequence":1,"occurred_at":"2026-07-10T00:00:00Z","kind":"run.created","payload":{}}"#;
+    let schema_fixture = r#"{"schema_version":3,"event_id":"evt-1","run_id":"run-1","turn_id":null,"step_id":null,"call_id":null,"sequence":1,"occurred_at":"2026-07-10T00:00:00Z","kind":"run.created","payload":{}}"#;
     let sequence_fixture = r#"{"schema_version":1,"event_id":"evt-1","run_id":"run-1","turn_id":null,"step_id":null,"call_id":null,"sequence":0,"occurred_at":"2026-07-10T00:00:00Z","kind":"run.created","payload":{}}"#;
     assert!(serde_json::from_str::<HarnessEvent>(schema_fixture).is_err());
     assert!(serde_json::from_str::<HarnessEvent>(sequence_fixture).is_err());

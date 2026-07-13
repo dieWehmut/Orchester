@@ -1038,7 +1038,10 @@ fn legacy_action_without_completed_origin_cannot_reenter_policy_or_execution() {
     drop(connection);
 
     let store = SqliteRunStore::open(&path).unwrap();
-    let before = store.events_owned(&run_id, "owner-a").unwrap();
+    assert!(matches!(
+        store.events_owned(&run_id, "owner-a"),
+        Err(StoreError::Corrupt)
+    ));
     assert!(matches!(
         store.append_event(
             "owner-a",
@@ -1057,7 +1060,10 @@ fn legacy_action_without_completed_origin_cannot_reenter_policy_or_execution() {
         ),
         Err(StoreError::Invariant(_))
     ));
-    assert_eq!(store.events_owned(&run_id, "owner-a").unwrap(), before);
+    assert!(matches!(
+        store.events_owned(&run_id, "owner-a"),
+        Err(StoreError::Corrupt)
+    ));
     assert!(matches!(
         store.execution_candidate("owner-a", &run_id, &"legacy-action".into()),
         Err(StoreError::NotFound)
