@@ -201,6 +201,10 @@ impl TranscriptCodec {
         Self { limits, sanitizer }
     }
 
+    pub(crate) fn with_sanitizer(limits: TranscriptLimits, sanitizer: FeedbackEngine) -> Self {
+        Self { limits, sanitizer }
+    }
+
     pub fn encode(&self, record: &TranscriptRecord) -> Result<String, TranscriptError> {
         self.validate_limits()?;
         let canonical = self.canonicalize(record)?;

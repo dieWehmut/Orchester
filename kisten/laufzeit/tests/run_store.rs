@@ -5,8 +5,9 @@ use std::thread;
 
 use orchester_laufzeit::harness::run_store::{
     action_hash, ActionRecord, EffectClass, EventAppend, NewRun, RunStatus, RunStore,
-    SqliteRunStore, StoreError, Transition,
+    SqliteRunStore, StoreError, StoredTranscriptRecord, Transition,
 };
+use orchester_laufzeit::harness::transcript::TranscriptRecord;
 use orchester_protokoll::{AgentAction, CallId, RunId, StepId, StopReason, TurnId};
 use orchester_protokoll::{HarnessEvent, HarnessEventKind};
 use secrecy::SecretString;
@@ -1117,6 +1118,158 @@ fn on_disk_store_recovers_terminal_state_and_exact_events() {
     let parent = path.parent().unwrap().to_path_buf();
     std::fs::remove_file(&path).ok();
     std::fs::remove_dir(parent).ok();
+}
+
+#[test]
+fn transcript_records_are_owner_scoped_canonical_and_recover_after_reopen() {
+    let path = temp_db("transcript-reopen");
+    let run_id = RunId::from("run-transcript");
+    {
+        let store = SqliteRunStore::open(&path).unwrap();
+        store
+            .create_run(new_run("run-transcript", "owner-a"))
+            .unwrap();
+        assert_eq!(
+            store
+                .append_transcript_record(
+                    "owner-a",
+                    &run_id,
+                    TranscriptRecord::user("inspect the workspace"),
+                    "2026-07-12T00:00:01Z",
+                )
+                .unwrap(),
+            1
+        );
+        assert_eq!(
+            store
+                .append_transcript_record(
+                    "owner-a",
+                    &run_id,
+                    TranscriptRecord::tool_call(
+                        "call-1",
+                        "read_file",
+                        r#"{ "path": "src/lib.rs" }"#,
+                    ),
+                    "2026-07-12T00:00:02Z",
+                )
+                .unwrap(),
+            2
+        );
+        assert_eq!(
+            store
+                .append_transcript_record(
+                    "owner-a",
+                    &run_id,
+                    TranscriptRecord::tool_result("call-1", "bounded output"),
+                    "2026-07-12T00:00:03Z",
+                )
+                .unwrap(),
+            3
+        );
+    }
+
+    let reopened = SqliteRunStore::open(&path).unwrap();
+    let records = reopened.transcript_owned(&run_id, "owner-a").unwrap();
+    assert_eq!(records.len(), 3);
+    assert_eq!(records[0].ordinal, 1);
+    assert!(matches!(
+        &records[1],
+        StoredTranscriptRecord {
+            ordinal: 2,
+            record: TranscriptRecord::ToolCall { arguments_json, .. },
+            ..
+        } if arguments_json == r#"{"path":"src/lib.rs"}"#
+    ));
+    assert!(matches!(
+        &records[2].record,
+        TranscriptRecord::ToolResult { call_id, output }
+            if call_id.0 == "call-1" && output == "bounded output"
+    ));
+    assert!(matches!(
+        reopened.transcript_owned(&run_id, "owner-b"),
+        Err(StoreError::NotFound)
+    ));
+
+    drop(reopened);
+    let parent = path.parent().unwrap().to_path_buf();
+    std::fs::remove_file(&path).ok();
+    std::fs::remove_dir(parent).ok();
+}
+
+#[test]
+fn transcript_append_rejects_unpaired_result_without_partial_write() {
+    let store = SqliteRunStore::in_memory().unwrap();
+    let run = store
+        .create_run(new_run("run-transcript-sequence", "owner-a"))
+        .unwrap();
+    store
+        .append_transcript_record(
+            "owner-a",
+            &run.run_id,
+            TranscriptRecord::user("inspect the workspace"),
+            "2026-07-12T00:00:01Z",
+        )
+        .unwrap();
+
+    assert!(matches!(
+        store.append_transcript_record(
+            "owner-a",
+            &run.run_id,
+            TranscriptRecord::tool_result("missing-call", "orphan"),
+            "2026-07-12T00:00:02Z",
+        ),
+        Err(StoreError::Invariant(_))
+    ));
+    let records = store.transcript_owned(&run.run_id, "owner-a").unwrap();
+    assert_eq!(records.len(), 1);
+    assert_eq!(records[0].ordinal, 1);
+}
+
+#[test]
+fn transcript_text_is_sanitized_and_tool_arguments_reject_escaped_secrets() {
+    let secret = "provider-transcript-secret";
+    let path = std::env::temp_dir().join(format!(
+        "orchester-transcript-secret-{}-{}",
+        std::process::id(),
+        NEXT_TEMP.fetch_add(1, Ordering::Relaxed)
+    ));
+    let store = SqliteRunStore::open_with_terminal_secrets(
+        &path,
+        vec![SecretString::new(secret.to_owned().into_boxed_str())],
+    )
+    .unwrap();
+    let run = store
+        .create_run(new_run("run-transcript-secret", "owner-a"))
+        .unwrap();
+    store
+        .append_transcript_record(
+            "owner-a",
+            &run.run_id,
+            TranscriptRecord::assistant(format!("answer {secret}")),
+            "2026-07-12T00:00:01Z",
+        )
+        .unwrap();
+    assert!(matches!(
+        store.append_transcript_record(
+            "owner-a",
+            &run.run_id,
+            TranscriptRecord::tool_call(
+                "call-escaped",
+                "read_file",
+                r#"{"path":"provider-\u0074ranscript-secret"}"#,
+            ),
+            "2026-07-12T00:00:02Z",
+        ),
+        Err(StoreError::Invariant(_))
+    ));
+    let records = store.transcript_owned(&run.run_id, "owner-a").unwrap();
+    assert!(matches!(
+        &records[0].record,
+        TranscriptRecord::Assistant(text)
+            if text == "answer [REDACTED]"
+    ));
+    drop(store);
+    std::fs::remove_file(path).ok();
 }
 
 fn temp_db(label: &str) -> PathBuf {
