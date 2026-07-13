@@ -1,5 +1,6 @@
-use orchester_protokoll::RunId;
+use orchester_protokoll::{AgentAction, CallId, RunId};
 use rusqlite::{params, Transaction, TransactionBehavior};
+use serde_json::Value;
 use sha2::{Digest, Sha256};
 
 use crate::harness::feedback::FeedbackEngine;
@@ -183,6 +184,25 @@ pub(super) fn append_records_in_transaction(
         first_ordinal,
         last_ordinal,
     })
+}
+
+pub(super) fn action_tool_call(
+    call_id: &CallId,
+    action: &AgentAction,
+) -> Result<TranscriptRecord, StoreError> {
+    let mut value = serde_json::to_value(action)?;
+    let Value::Object(fields) = &mut value else {
+        return Err(StoreError::Invariant(
+            "durable action is not an object".into(),
+        ));
+    };
+    fields.remove("tool");
+    let arguments_json = serde_json::to_string(&value)?;
+    Ok(TranscriptRecord::tool_call(
+        call_id.clone(),
+        super::action_kind(action),
+        arguments_json,
+    ))
 }
 
 fn canonical_record(

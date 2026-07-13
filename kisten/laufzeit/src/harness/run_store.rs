@@ -1523,6 +1523,7 @@ impl RunStore for SqliteRunStore {
                 "action effect class does not match core policy classification".into(),
             ));
         }
+        let transcript_record = transcript::action_tool_call(&action.call_id, &action.action)?;
         transaction.execute(
             "INSERT INTO actions(
                 action_id, run_id, step_id, call_id, origin_model_call_id,
@@ -1540,6 +1541,13 @@ impl RunStore for SqliteRunStore {
                 action.effect_class.as_db(),
                 action.occurred_at,
             ],
+        )?;
+        transcript::append_records_in_transaction(
+            &transaction,
+            &action.run_id,
+            &[transcript_record],
+            &action.occurred_at,
+            &self.event_sanitizer,
         )?;
 
         let event = HarnessEvent {

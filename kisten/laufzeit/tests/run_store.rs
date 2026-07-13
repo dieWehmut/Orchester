@@ -1388,14 +1388,43 @@ fn model_completion_writes_assistant_transcript_in_the_same_transaction() {
     )
     .unwrap();
 
+    store
+        .record_action(
+            "owner-a",
+            test_action_record(
+                &run.run_id,
+                "step-model-transcript",
+                "action-model-transcript",
+                "model-call-transcript",
+                "provider-call-transcript",
+                AgentAction::ReadFile {
+                    path: "src/lib.rs".into(),
+                    start_line: None,
+                    end_line: None,
+                },
+            ),
+        )
+        .unwrap();
+
     let records = store.transcript_owned(&run.run_id, "owner-a").unwrap();
+    assert_eq!(records.len(), 2);
     assert!(matches!(
-        &records[..],
-        [StoredTranscriptRecord {
+        &records[0],
+        StoredTranscriptRecord {
             ordinal: 1,
             record: TranscriptRecord::Assistant(text),
             ..
-        }] if text == "bounded model answer"
+        } if text == "bounded model answer"
+    ));
+    assert!(matches!(
+        &records[1],
+        StoredTranscriptRecord {
+            ordinal: 2,
+            record: TranscriptRecord::ToolCall { call_id, name, arguments_json },
+            ..
+        } if call_id.0 == "provider-call-transcript"
+            && name == "read_file"
+            && arguments_json == r#"{"end_line":null,"path":"src/lib.rs","start_line":null}"#
     ));
 }
 
@@ -1432,6 +1461,51 @@ fn oversized_model_completion_rolls_back_event_and_transcript_together() {
                 assistant_text: "x".repeat(32 * 1024 + 1),
             },
         ),
+        Err(StoreError::Invariant(_))
+    ));
+    assert_eq!(store.events_owned(&run.run_id, "owner-a").unwrap(), before);
+    assert!(store
+        .transcript_owned(&run.run_id, "owner-a")
+        .unwrap()
+        .is_empty());
+}
+
+#[test]
+fn oversized_action_arguments_roll_back_action_and_tool_call_transcript() {
+    let store = SqliteRunStore::in_memory().unwrap();
+    let run = store
+        .create_run(new_run("run-action-transcript-limit", "owner-a"))
+        .unwrap();
+    start_step(
+        &store,
+        &run.run_id,
+        "owner-a",
+        "step-action-transcript-limit",
+    );
+    complete_model(
+        &store,
+        &run.run_id,
+        "owner-a",
+        "step-action-transcript-limit",
+    );
+    let before = store.events_owned(&run.run_id, "owner-a").unwrap();
+    let action = AgentAction::WriteFile {
+        path: "src/large.txt".into(),
+        content: "x".repeat(70 * 1024),
+    };
+    let record = ActionRecord {
+        action_id: "action-transcript-limit".into(),
+        run_id: run.run_id.clone(),
+        step_id: StepId::from("step-action-transcript-limit"),
+        call_id: CallId::from("provider-action-transcript-limit"),
+        origin_model_call_id: CallId::from("model-call-1"),
+        action_hash: action_hash(&action).unwrap(),
+        effect_class: EffectClass::WorkspaceMutation,
+        action,
+        occurred_at: "2026-07-12T00:00:03Z".into(),
+    };
+    assert!(matches!(
+        store.record_action("owner-a", record),
         Err(StoreError::Invariant(_))
     ));
     assert_eq!(store.events_owned(&run.run_id, "owner-a").unwrap(), before);
