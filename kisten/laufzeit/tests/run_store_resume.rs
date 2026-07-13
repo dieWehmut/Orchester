@@ -340,6 +340,144 @@ fn tool_terminal_resume_requires_exact_event_observation_and_result_binding() {
 }
 
 #[test]
+fn resume_rejects_audit_checkpoint_field_drift() {
+    let directory = std::env::temp_dir().join(format!(
+        "orchester-resume-audit-drift-{}-{}",
+        std::process::id(),
+        unix_now()
+    ));
+    std::fs::create_dir_all(&directory).unwrap();
+    let path = directory.join("state.db");
+    let store = Arc::new(SqliteRunStore::open_with_terminal_secrets(&path, Vec::new()).unwrap());
+    let allowed = allowed_run::create_allowed_run(&store, "resume-audit-drift");
+    let audit_path = directory.join("audit.jsonl");
+    let audit = Arc::new(JsonlAuditSink::open(&audit_path).unwrap());
+    let barrier = PreExecutionBarrier::new(store.clone(), audit);
+    let permit = barrier
+        .prepare(
+            &allowed.owner,
+            &allowed.run_id,
+            &allowed.action_id,
+            ExecutionAuthorization::Allow,
+            "2026-07-13T00:00:06Z",
+        )
+        .unwrap();
+    barrier
+        .start_tool(
+            &allowed.owner,
+            &allowed.run_id,
+            permit,
+            allowed.tool_started_input(),
+        )
+        .unwrap();
+    assert!(store
+        .resume_point_owned(
+            &allowed.run_id,
+            &allowed.owner,
+            "project-resume-audit-drift",
+        )
+        .unwrap()
+        .is_some());
+    drop(barrier);
+    drop(store);
+
+    let connection = rusqlite::Connection::open(&path).unwrap();
+    let (event_id, action_sequence, checkpoint_sequence, audit_file, head_hash, synced_at): (
+        String,
+        i64,
+        i64,
+        String,
+        String,
+        String,
+    ) = connection
+        .query_row(
+            "SELECT a.audit_event_id, a.audit_sequence, c.audit_sequence,
+                    c.audit_file, c.head_hash, c.synced_at
+             FROM actions a JOIN audit_checkpoints c ON c.event_id = a.audit_event_id
+             WHERE a.action_id = ?1",
+            rusqlite::params![allowed.action_id.0],
+            |row| {
+                Ok((
+                    row.get(0)?,
+                    row.get(1)?,
+                    row.get(2)?,
+                    row.get(3)?,
+                    row.get(4)?,
+                    row.get(5)?,
+                ))
+            },
+        )
+        .unwrap();
+    assert_eq!(action_sequence, checkpoint_sequence);
+    let assert_corrupt = || {
+        let store = SqliteRunStore::open_with_terminal_secrets(&path, Vec::new()).unwrap();
+        assert!(matches!(
+            store.resume_point_owned(
+                &allowed.run_id,
+                &allowed.owner,
+                "project-resume-audit-drift",
+            ),
+            Err(StoreError::Corrupt)
+        ));
+    };
+
+    connection
+        .execute(
+            "UPDATE actions SET audit_sequence = ?1 WHERE action_id = ?2",
+            rusqlite::params![action_sequence + 1, allowed.action_id.0],
+        )
+        .unwrap();
+    assert_corrupt();
+    connection
+        .execute(
+            "UPDATE actions SET audit_sequence = ?1 WHERE action_id = ?2",
+            rusqlite::params![action_sequence, allowed.action_id.0],
+        )
+        .unwrap();
+    connection
+        .execute(
+            "UPDATE audit_checkpoints SET synced_at = 'drifted' WHERE event_id = ?1",
+            rusqlite::params![event_id],
+        )
+        .unwrap();
+    assert_corrupt();
+    connection
+        .execute(
+            "UPDATE audit_checkpoints SET synced_at = ?1 WHERE event_id = ?2",
+            rusqlite::params![synced_at, event_id],
+        )
+        .unwrap();
+    connection
+        .execute(
+            "UPDATE audit_checkpoints SET head_hash = upper(head_hash) WHERE event_id = ?1",
+            rusqlite::params![event_id],
+        )
+        .unwrap();
+    assert_corrupt();
+    connection
+        .execute(
+            "UPDATE audit_checkpoints SET head_hash = ?1 WHERE event_id = ?2",
+            rusqlite::params![head_hash, event_id],
+        )
+        .unwrap();
+    connection
+        .execute(
+            "UPDATE audit_checkpoints SET audit_file = '' WHERE event_id = ?1",
+            rusqlite::params![event_id],
+        )
+        .unwrap();
+    assert_corrupt();
+    connection
+        .execute(
+            "UPDATE audit_checkpoints SET audit_file = ?1 WHERE event_id = ?2",
+            rusqlite::params![audit_file, event_id],
+        )
+        .unwrap();
+    drop(connection);
+    std::fs::remove_dir_all(directory).unwrap();
+}
+
+#[test]
 fn resume_projection_is_owner_scoped_and_omits_terminal_runs() {
     let store = SqliteRunStore::in_memory().unwrap();
     let run = store
@@ -572,6 +710,92 @@ fn recorded_action_returns_policy_evaluation_resume_point() {
         point.next,
         ResumeNext::EvaluatePolicy { ref action_id } if action_id.0 == "action-resume-action"
     ));
+}
+
+#[test]
+fn recorded_action_rejects_an_unbound_audit_sequence() {
+    let directory = std::env::temp_dir().join(format!(
+        "orchester-resume-unbound-audit-sequence-{}-{}",
+        std::process::id(),
+        unix_now()
+    ));
+    std::fs::create_dir_all(&directory).unwrap();
+    let path = directory.join("state.db");
+    let store = SqliteRunStore::open(&path).unwrap();
+    let run = store
+        .create_run(new_run("run-resume-unbound-audit-sequence", "owner-a"))
+        .unwrap();
+    start_step(
+        &store,
+        &run.run_id,
+        "step-resume-unbound-audit-sequence",
+    );
+    model_event(
+        &store,
+        &run.run_id,
+        "step-resume-unbound-audit-sequence",
+        "model-call-unbound-audit-sequence",
+        HarnessEventKind::ModelStarted,
+    );
+    model_event(
+        &store,
+        &run.run_id,
+        "step-resume-unbound-audit-sequence",
+        "model-call-unbound-audit-sequence",
+        HarnessEventKind::ModelCompleted {
+            assistant_text: "inspect".into(),
+        },
+    );
+    let action = AgentAction::ReadFile {
+        path: "src/lib.rs".into(),
+        start_line: None,
+        end_line: None,
+    };
+    store
+        .record_action(
+            "owner-a",
+            ActionRecord {
+                action_id: "action-resume-unbound-audit-sequence".into(),
+                run_id: run.run_id.clone(),
+                step_id: StepId::from("step-resume-unbound-audit-sequence"),
+                call_id: CallId::from("provider-resume-unbound-audit-sequence"),
+                origin_model_call_id: CallId::from("model-call-unbound-audit-sequence"),
+                action_hash: action_hash(&action).unwrap(),
+                effect_class: PolicyEngine::new().evaluate(&action).unwrap().effect,
+                action,
+                occurred_at: "2026-07-13T00:00:03Z".into(),
+            },
+        )
+        .unwrap();
+    assert!(store
+        .resume_point_owned(
+            &run.run_id,
+            "owner-a",
+            "project-run-resume-unbound-audit-sequence",
+        )
+        .unwrap()
+        .is_some());
+    drop(store);
+
+    let connection = rusqlite::Connection::open(&path).unwrap();
+    connection
+        .execute(
+            "UPDATE actions SET audit_sequence = 1 WHERE action_id = ?1",
+            rusqlite::params!["action-resume-unbound-audit-sequence"],
+        )
+        .unwrap();
+    drop(connection);
+    let store = SqliteRunStore::open(&path).unwrap();
+    assert!(matches!(
+        store.resume_point_owned(
+            &run.run_id,
+            "owner-a",
+            "project-run-resume-unbound-audit-sequence",
+        ),
+        Err(StoreError::Corrupt)
+    ));
+    drop(store);
+    std::fs::remove_dir_all(directory).unwrap();
 }
 
 #[test]

@@ -17,6 +17,7 @@ pub(super) struct ActionRow {
     policy_rule_id: Option<String>,
     policy_event_id: Option<String>,
     audit_event_id: Option<String>,
+    audit_sequence: Option<i64>,
     pub(super) approval_id: Option<String>,
     pub(super) approval_state: Option<String>,
     approval_action_hash: Option<String>,
@@ -41,7 +42,7 @@ pub(super) fn load_action(
     let row = connection
         .query_row(
             "SELECT a.call_id, a.state, a.policy_decision, a.policy_rule_id,
-                    a.policy_event_id, a.audit_event_id,
+                    a.policy_event_id, a.audit_event_id, a.audit_sequence,
                     ap.approval_id, ap.state, ap.action_hash,
                     ap.workspace_identity, ap.policy_snapshot_hash,
                     ap.config_snapshot_hash, ap.owner_actor_id, ap.rule_id,
@@ -61,18 +62,19 @@ pub(super) fn load_action(
                     policy_rule_id: row.get(3)?,
                     policy_event_id: row.get(4)?,
                     audit_event_id: row.get(5)?,
-                    approval_id: row.get(6)?,
-                    approval_state: row.get(7)?,
-                    approval_action_hash: row.get(8)?,
-                    approval_workspace_identity: row.get(9)?,
-                    approval_policy_snapshot_hash: row.get(10)?,
-                    approval_config_snapshot_hash: row.get(11)?,
-                    approval_owner_actor_id: row.get(12)?,
-                    approval_rule_id: row.get(13)?,
-                    approval_event_id: row.get(14)?,
-                    origin_model_call_id: row.get(15)?,
-                    canonical_json: row.get(16)?,
-                    action_hash: row.get(17)?,
+                    audit_sequence: row.get(6)?,
+                    approval_id: row.get(7)?,
+                    approval_state: row.get(8)?,
+                    approval_action_hash: row.get(9)?,
+                    approval_workspace_identity: row.get(10)?,
+                    approval_policy_snapshot_hash: row.get(11)?,
+                    approval_config_snapshot_hash: row.get(12)?,
+                    approval_owner_actor_id: row.get(13)?,
+                    approval_rule_id: row.get(14)?,
+                    approval_event_id: row.get(15)?,
+                    origin_model_call_id: row.get(16)?,
+                    canonical_json: row.get(17)?,
+                    action_hash: row.get(18)?,
                 })
             },
         )
@@ -190,6 +192,7 @@ pub(super) fn require_unprocessed_policy(action: &ActionRow) -> Result<(), Store
         && action.policy_rule_id.is_none()
         && action.policy_event_id.is_none()
         && action.audit_event_id.is_none()
+        && action.audit_sequence.is_none()
         && action.approval_id.is_none()
     {
         Ok(())
@@ -239,14 +242,18 @@ pub(super) fn validate_optional_audit_checkpoint(
     action: &ActionRow,
 ) -> Result<(), StoreError> {
     let Some(event_id) = action.audit_event_id.as_deref() else {
-        return Ok(());
+        return if action.audit_sequence.is_none() {
+            Ok(())
+        } else {
+            Err(StoreError::Corrupt)
+        };
     };
-    let event: (String, String) = connection
+    let event: (String, String, String) = connection
         .query_row(
-            "SELECT kind, sanitized_payload FROM events
+            "SELECT kind, sanitized_payload, occurred_at FROM events
              WHERE run_id = ?1 AND event_id = ?2",
             params![run.run_id.0, event_id],
-            |row| Ok((row.get(0)?, row.get(1)?)),
+            |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
         )
         .optional()?
         .ok_or(StoreError::Corrupt)?;
@@ -267,19 +274,28 @@ pub(super) fn validate_optional_audit_checkpoint(
             return Err(StoreError::Corrupt);
         }
     }
-    let checkpoint: Option<(i64, String)> = connection
+    let checkpoint: Option<(String, i64, String, String)> = connection
         .query_row(
-            "SELECT audit_sequence, head_hash FROM audit_checkpoints WHERE event_id = ?1",
+            "SELECT audit_file, audit_sequence, head_hash, synced_at
+             FROM audit_checkpoints WHERE event_id = ?1",
             params![event_id],
-            |row| Ok((row.get(0)?, row.get(1)?)),
+            |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
         )
         .optional()?;
-    let Some((sequence, head_hash)) = checkpoint else {
+    let Some((audit_file, sequence, head_hash, synced_at)) = checkpoint else {
         return Err(StoreError::Corrupt);
     };
-    if sequence <= 0
+    if action.audit_sequence != Some(sequence)
+        || sequence <= 0
+        || audit_file.is_empty()
+        || audit_file.len() > 4096
+        || audit_file.trim() != audit_file
+        || audit_file.chars().any(char::is_control)
+        || synced_at != event.2
         || head_hash.len() != 64
-        || !head_hash.bytes().all(|byte| byte.is_ascii_hexdigit())
+        || !head_hash
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || matches!(byte, b'a'..=b'f'))
     {
         return Err(StoreError::Corrupt);
     }
