@@ -397,6 +397,9 @@ fn approval_event_matches(
             resolved_event_matches(payload, kind, approval_id, &["executing", "reissued"])
         }
         Some("consumed") => resolved_event_matches(payload, kind, approval_id, &["consumed"]),
+        Some("denied") => resolved_event_matches(payload, kind, approval_id, &["denied"]),
+        Some("expired") => resolved_event_matches(payload, kind, approval_id, &["expired"]),
+        Some("invalidated") => resolved_event_matches(payload, kind, approval_id, &["invalidated"]),
         _ => false,
     }
 }
@@ -439,6 +442,181 @@ pub(super) fn validate_execution_evidence(
         return Err(StoreError::Corrupt);
     }
     validate_optional_audit_checkpoint(connection, run, action)
+}
+
+pub(super) fn validate_tool_started_event(
+    connection: &Connection,
+    run: &RunSnapshot,
+    step: &StepRow,
+    action_id: &ActionId,
+    action: &ActionRow,
+) -> Result<(), StoreError> {
+    let mut statement = connection.prepare(
+        "SELECT sanitized_payload FROM events
+         WHERE run_id = ?1 AND step_id = ?2 AND call_id = ?3 AND kind = 'tool.started'",
+    )?;
+    let rows = statement.query_map(
+        params![run.run_id.0, step.step_id, action.call_id.as_str()],
+        |row| row.get::<_, String>(0),
+    )?;
+    let events = rows.collect::<Result<Vec<_>, _>>()?;
+    let [payload] = events.as_slice() else {
+        return Err(StoreError::Corrupt);
+    };
+    let payload: Value = serde_json::from_str(payload).map_err(|_| StoreError::Corrupt)?;
+    if payload.get("action_id").and_then(Value::as_str) != Some(action_id.0.as_str()) {
+        return Err(StoreError::Corrupt);
+    }
+    Ok(())
+}
+
+pub(super) fn validate_terminal_step_evidence(
+    connection: &Connection,
+    run: &RunSnapshot,
+    step: &StepRow,
+    codec: &TranscriptCodec,
+) -> Result<(), StoreError> {
+    if step.status != "observed" {
+        return Err(StoreError::Corrupt);
+    }
+    let action_id = ActionId::from(step.action_id.as_ref().ok_or(StoreError::Corrupt)?.clone());
+    let action = load_action(connection, run, step, &action_id, codec)?;
+    match action.state.as_str() {
+        "denied" => validate_denied_evidence(connection, run, step, &action_id, &action),
+        "completed" | "failed" => {
+            validate_tool_terminal_evidence(connection, run, step, &action_id, &action, codec)
+        }
+        _ => Err(StoreError::Corrupt),
+    }
+}
+
+fn validate_denied_evidence(
+    connection: &Connection,
+    run: &RunSnapshot,
+    step: &StepRow,
+    action_id: &ActionId,
+    action: &ActionRow,
+) -> Result<(), StoreError> {
+    match action.policy_decision.as_deref() {
+        Some("deny") => {
+            require_policy_event(connection, run, step, action_id, action, "deny")?;
+            if action.approval_id.is_some() || action.approval_state.is_some() {
+                return Err(StoreError::Corrupt);
+            }
+        }
+        Some("ask")
+            if matches!(
+                action.approval_state.as_deref(),
+                Some("denied" | "expired" | "invalidated")
+            ) =>
+        {
+            require_policy_event(connection, run, step, action_id, action, "ask")?;
+            validate_approval_binding(connection, run, action_id, action)?;
+            validate_optional_audit_checkpoint(connection, run, action)?;
+        }
+        _ => return Err(StoreError::Corrupt),
+    }
+    Ok(())
+}
+
+fn validate_tool_terminal_evidence(
+    connection: &Connection,
+    run: &RunSnapshot,
+    step: &StepRow,
+    action_id: &ActionId,
+    action: &ActionRow,
+    codec: &TranscriptCodec,
+) -> Result<(), StoreError> {
+    validate_execution_evidence(connection, run, step, action_id, action)?;
+    validate_tool_started_event(connection, run, step, action_id, action)?;
+    let expected_state = action.state.as_str();
+    let expected_kind = if expected_state == "completed" {
+        "tool.completed"
+    } else {
+        "tool.failed"
+    };
+    let (attempt_state, observation_id): (String, Option<String>) = connection
+        .query_row(
+            "SELECT state, observation_id FROM tool_attempts
+             WHERE action_id = ?1 AND call_id = ?2",
+            params![action_id.0, action.call_id.as_str()],
+            |row| Ok((row.get(0)?, row.get(1)?)),
+        )
+        .optional()?
+        .ok_or(StoreError::Corrupt)?;
+    if attempt_state != expected_state {
+        return Err(StoreError::Corrupt);
+    }
+    let observation_id = observation_id.ok_or(StoreError::Corrupt)?;
+    let (observation_call, observation_kind, observation_payload, observation_outcome): (
+        String,
+        String,
+        String,
+        String,
+    ) = connection
+        .query_row(
+            "SELECT call_id, kind, sanitized_payload, outcome FROM observations
+             WHERE observation_id = ?1 AND run_id = ?2 AND step_id = ?3",
+            params![observation_id, run.run_id.0, step.step_id],
+            |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
+        )
+        .optional()?
+        .ok_or(StoreError::Corrupt)?;
+    if observation_call != action.call_id
+        || observation_kind != expected_kind
+        || observation_outcome != expected_state
+    {
+        return Err(StoreError::Corrupt);
+    }
+    let (event_sequence, event_payload) =
+        load_single_tool_event(connection, run, step, &action.call_id, expected_kind)?;
+    let event_value: Value =
+        serde_json::from_str(&event_payload).map_err(|_| StoreError::Corrupt)?;
+    let expected_payload = event_value
+        .get(if expected_state == "completed" {
+            "observation"
+        } else {
+            "feedback"
+        })
+        .ok_or(StoreError::Corrupt)?;
+    let observation_value: Value =
+        serde_json::from_str(&observation_payload).map_err(|_| StoreError::Corrupt)?;
+    if expected_payload != &observation_value {
+        return Err(StoreError::Corrupt);
+    }
+    let binding = transcript::load_binding(
+        connection,
+        &run.run_id,
+        event_sequence,
+        TranscriptBindingPhase::ToolResult,
+        codec,
+    )?
+    .ok_or(StoreError::Corrupt)?;
+    if binding.record_count != 1 {
+        return Err(StoreError::Corrupt);
+    }
+    Ok(())
+}
+
+fn load_single_tool_event(
+    connection: &Connection,
+    run: &RunSnapshot,
+    step: &StepRow,
+    call_id: &str,
+    kind: &str,
+) -> Result<(i64, String), StoreError> {
+    let mut statement = connection.prepare(
+        "SELECT sequence, sanitized_payload FROM events
+         WHERE run_id = ?1 AND step_id = ?2 AND call_id = ?3 AND kind = ?4",
+    )?;
+    let rows = statement.query_map(params![run.run_id.0, step.step_id, call_id, kind], |row| {
+        Ok((row.get::<_, i64>(0)?, row.get::<_, String>(1)?))
+    })?;
+    let events = rows.collect::<Result<Vec<_>, _>>()?;
+    let [(sequence, payload)] = events.as_slice() else {
+        return Err(StoreError::Corrupt);
+    };
+    Ok((*sequence, payload.clone()))
 }
 
 pub(super) fn require_completed_transcript(

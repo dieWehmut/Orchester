@@ -106,6 +106,240 @@ fn resume_rejects_a_model_call_without_request_binding() {
 }
 
 #[test]
+fn resume_rejects_tool_running_without_its_started_event() {
+    let directory = std::env::temp_dir().join(format!(
+        "orchester-resume-tool-start-evidence-{}-{}",
+        std::process::id(),
+        unix_now()
+    ));
+    std::fs::create_dir_all(&directory).unwrap();
+    let path = directory.join("state.db");
+    let store = Arc::new(SqliteRunStore::open_with_terminal_secrets(&path, Vec::new()).unwrap());
+    let allowed = allowed_run::create_allowed_run(&store, "resume-start-evidence");
+    let audit_path = directory.join("audit.jsonl");
+    let audit = Arc::new(JsonlAuditSink::open(&audit_path).unwrap());
+    let barrier = PreExecutionBarrier::new(store.clone(), audit);
+    let permit = barrier
+        .prepare(
+            &allowed.owner,
+            &allowed.run_id,
+            &allowed.action_id,
+            ExecutionAuthorization::Allow,
+            "2026-07-13T00:00:06Z",
+        )
+        .unwrap();
+    barrier
+        .start_tool(
+            &allowed.owner,
+            &allowed.run_id,
+            permit,
+            allowed.tool_started_input(),
+        )
+        .unwrap();
+    drop(barrier);
+    drop(store);
+
+    let connection = rusqlite::Connection::open(&path).unwrap();
+    connection
+        .execute(
+            "UPDATE events SET sanitized_payload = '{\"action_id\":\"tampered\"}'
+             WHERE run_id = ?1 AND kind = 'tool.started'",
+            rusqlite::params![allowed.run_id.0],
+        )
+        .unwrap();
+    drop(connection);
+    let store = SqliteRunStore::open_with_terminal_secrets(&path, Vec::new()).unwrap();
+    assert!(matches!(
+        store.resume_point_owned(
+            &allowed.run_id,
+            &allowed.owner,
+            "project-resume-start-evidence",
+        ),
+        Err(StoreError::Corrupt)
+    ));
+    drop(store);
+    std::fs::remove_dir_all(directory).unwrap();
+}
+
+#[test]
+fn resume_rejects_an_observed_step_without_terminal_evidence() {
+    let directory = std::env::temp_dir().join(format!(
+        "orchester-resume-observed-evidence-{}-{}",
+        std::process::id(),
+        unix_now()
+    ));
+    std::fs::create_dir_all(&directory).unwrap();
+    let path = directory.join("state.db");
+    let store = SqliteRunStore::open(&path).unwrap();
+    let run = store
+        .create_run(new_run("run-resume-observed-evidence", "owner-a"))
+        .unwrap();
+    start_step(&store, &run.run_id, "step-resume-observed-evidence");
+    drop(store);
+    let connection = rusqlite::Connection::open(&path).unwrap();
+    connection
+        .execute(
+            "UPDATE steps SET status = 'observed'
+             WHERE run_id = ?1 AND step_id = 'step-resume-observed-evidence'",
+            rusqlite::params![run.run_id.0],
+        )
+        .unwrap();
+    drop(connection);
+    let store = SqliteRunStore::open(&path).unwrap();
+    assert!(matches!(
+        store.resume_point_owned(
+            &run.run_id,
+            "owner-a",
+            "project-run-resume-observed-evidence",
+        ),
+        Err(StoreError::Corrupt)
+    ));
+    drop(store);
+    std::fs::remove_dir_all(directory).unwrap();
+}
+
+#[test]
+fn policy_denial_is_valid_terminal_evidence_for_the_next_step() {
+    let store = SqliteRunStore::in_memory().unwrap();
+    let run = store
+        .create_run(new_run("run-resume-policy-deny", "owner-a"))
+        .unwrap();
+    start_step(&store, &run.run_id, "step-resume-policy-deny");
+    model_event(
+        &store,
+        &run.run_id,
+        "step-resume-policy-deny",
+        "model-call-policy-deny",
+        HarnessEventKind::ModelStarted,
+    );
+    model_event(
+        &store,
+        &run.run_id,
+        "step-resume-policy-deny",
+        "model-call-policy-deny",
+        HarnessEventKind::ModelCompleted {
+            assistant_text: "run a command".into(),
+        },
+    );
+    let action = AgentAction::RunCommand {
+        program: "git".into(),
+        args: vec!["push".into()],
+        cwd: None,
+    };
+    store
+        .record_action(
+            "owner-a",
+            ActionRecord {
+                action_id: "action-policy-deny".into(),
+                run_id: run.run_id.clone(),
+                step_id: StepId::from("step-resume-policy-deny"),
+                call_id: CallId::from("provider-policy-deny"),
+                origin_model_call_id: CallId::from("model-call-policy-deny"),
+                action_hash: action_hash(&action).unwrap(),
+                effect_class: PolicyEngine::new().evaluate(&action).unwrap().effect,
+                action,
+                occurred_at: "2026-07-13T00:00:03Z".into(),
+            },
+        )
+        .unwrap();
+    store
+        .append_event(
+            "owner-a",
+            &run.run_id,
+            EventAppend {
+                turn_id: Some(TurnId::from("turn-1")),
+                step_id: Some(StepId::from("step-resume-policy-deny")),
+                call_id: None,
+                occurred_at: "2026-07-13T00:00:04Z".into(),
+                kind: HarnessEventKind::PolicyDecided {
+                    action_id: "action-policy-deny".into(),
+                    decision: orchester_protokoll::PolicyDecision::Deny,
+                    rule_id: "command.external_effect".into(),
+                },
+            },
+        )
+        .unwrap();
+
+    let point = store
+        .resume_point_owned(&run.run_id, "owner-a", "project-run-resume-policy-deny")
+        .unwrap()
+        .unwrap();
+    assert!(matches!(point.next, ResumeNext::StartNextStep));
+}
+
+#[test]
+fn tool_terminal_resume_requires_exact_event_observation_and_result_binding() {
+    let directory = std::env::temp_dir().join(format!(
+        "orchester-resume-tool-terminal-{}-{}",
+        std::process::id(),
+        unix_now()
+    ));
+    std::fs::create_dir_all(&directory).unwrap();
+    let path = directory.join("state.db");
+    let store = Arc::new(SqliteRunStore::open_with_terminal_secrets(&path, Vec::new()).unwrap());
+    let allowed = allowed_run::create_allowed_run(&store, "resume-terminal-evidence");
+    let audit_path = directory.join("audit.jsonl");
+    let audit = Arc::new(JsonlAuditSink::open(&audit_path).unwrap());
+    let barrier = PreExecutionBarrier::new(store.clone(), audit);
+    let permit = barrier
+        .prepare(
+            &allowed.owner,
+            &allowed.run_id,
+            &allowed.action_id,
+            ExecutionAuthorization::Allow,
+            "2026-07-13T00:00:06Z",
+        )
+        .unwrap();
+    barrier
+        .start_tool(
+            &allowed.owner,
+            &allowed.run_id,
+            permit,
+            allowed.tool_started_input(),
+        )
+        .unwrap();
+    store
+        .append_event(
+            &allowed.owner,
+            &allowed.run_id,
+            allowed.tool_completed_input(&allowed.provider_call_id),
+        )
+        .unwrap();
+    let point = store
+        .resume_point_owned(
+            &allowed.run_id,
+            &allowed.owner,
+            "project-resume-terminal-evidence",
+        )
+        .unwrap()
+        .unwrap();
+    assert!(matches!(point.next, ResumeNext::StartNextStep));
+    drop(barrier);
+    drop(store);
+
+    let connection = rusqlite::Connection::open(&path).unwrap();
+    connection
+        .execute(
+            "UPDATE events SET sanitized_payload = '{\"observation\":{\"tampered\":true}}'
+             WHERE run_id = ?1 AND kind = 'tool.completed'",
+            rusqlite::params![allowed.run_id.0],
+        )
+        .unwrap();
+    drop(connection);
+    let store = SqliteRunStore::open_with_terminal_secrets(&path, Vec::new()).unwrap();
+    assert!(matches!(
+        store.resume_point_owned(
+            &allowed.run_id,
+            &allowed.owner,
+            "project-resume-terminal-evidence",
+        ),
+        Err(StoreError::Corrupt)
+    ));
+    drop(store);
+    std::fs::remove_dir_all(directory).unwrap();
+}
+
+#[test]
 fn resume_projection_is_owner_scoped_and_omits_terminal_runs() {
     let store = SqliteRunStore::in_memory().unwrap();
     let run = store

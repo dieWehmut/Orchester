@@ -307,6 +307,7 @@ fn derive_running(
                 return Err(StoreError::Corrupt);
             }
             validate_execution_evidence(connection, run, &step, &action_id, &action)?;
+            evidence::validate_tool_started_event(connection, run, &step, &action_id, &action)?;
             let attempt_state: Option<String> = connection
                 .query_row(
                     "SELECT state FROM tool_attempts
@@ -323,7 +324,11 @@ fn derive_running(
                 call_id: CallId::from(action.call_id),
             })
         }
-        "observed" | "completed" | "failed" | "cancelled" => Ok(ResumeNext::StartNextStep),
+        "observed" => {
+            evidence::validate_terminal_step_evidence(connection, run, &step, codec)?;
+            Ok(ResumeNext::StartNextStep)
+        }
+        "completed" | "failed" | "cancelled" => Err(StoreError::Corrupt),
         _ => Err(StoreError::Corrupt),
     }
 }
@@ -391,6 +396,7 @@ fn derive_unknown(
             return Err(StoreError::Corrupt);
         }
         validate_execution_evidence(connection, run, &step, &action_id, &action)?;
+        evidence::validate_tool_started_event(connection, run, &step, &action_id, &action)?;
         let attempt_state: Option<String> = connection
             .query_row(
                 "SELECT state FROM tool_attempts
