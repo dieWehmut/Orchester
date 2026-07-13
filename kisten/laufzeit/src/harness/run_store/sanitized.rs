@@ -32,7 +32,7 @@ pub(super) fn canonicalize_kind(
             feedback: sanitize_validator_feedback(&feedback, sanitizer),
         },
         HarnessEventKind::RunCompleted { reason, summary } => {
-            let summary = normalize_action_summary(&sanitizer.sanitize_text(&summary));
+            let summary = canonicalize_summary(&summary, sanitizer);
             if summary.len() > MAX_MODEL_TEXT_BYTES {
                 return Err(StoreError::Invariant(
                     "run completion summary exceeds the durable limit".into(),
@@ -42,6 +42,10 @@ pub(super) fn canonicalize_kind(
         }
         kind => kind,
     })
+}
+
+pub(super) fn canonicalize_summary(input: &str, sanitizer: &FeedbackEngine) -> String {
+    normalize_action_summary(&sanitizer.sanitize_text(input))
 }
 
 fn sanitize_validator_feedback(

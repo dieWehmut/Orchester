@@ -205,7 +205,13 @@ impl SqliteRunStore {
                 "approval request binding does not match the action".into(),
             ));
         }
-        let request = input.protocol_request();
+        let action_summary =
+            sanitized::canonicalize_summary(&input.action_summary, &self.event_sanitizer);
+        let mut request = input.protocol_request();
+        request.action_summary = action_summary.clone();
+        request
+            .validate()
+            .map_err(|_| StoreError::Invariant("approval request is not canonical".into()))?;
         let created_at = request.created_at.clone();
         let expires_at = request.expires_at.clone();
         let event = HarnessEvent {
@@ -236,7 +242,7 @@ impl SqliteRunStore {
                     input.binding.action_id.0,
                     input.owner_actor_id,
                     input.binding.action_hash,
-                    input.action_summary,
+                    action_summary,
                     input.binding.workspace_identity,
                     input.binding.policy_snapshot_hash,
                     input.binding.config_snapshot_hash,

@@ -57,6 +57,39 @@ fn durable_approval_survives_reopen_and_is_owner_scoped() {
 }
 
 #[test]
+fn approval_summary_is_sanitized_consistently_in_row_and_event() {
+    let fixture = Fixture::new(PolicyDecision::Ask);
+    let durable = DurableApprovalStore::new(fixture.store.clone());
+    let secret = "sk-embedded-approval-secret-123456";
+    let mut input = fixture.approval_input(100);
+    input.action_summary = format!("run_command note={secret}");
+    let approval_id = durable.request(input).unwrap();
+
+    let connection = rusqlite::Connection::open(&fixture.db).unwrap();
+    let (summary, payload): (String, String) = connection
+        .query_row(
+            "SELECT approvals.action_summary, events.sanitized_payload
+             FROM approvals JOIN events ON events.event_id = approvals.approval_event_id
+             WHERE approvals.approval_id = ?1",
+            [&approval_id.0],
+            |row| Ok((row.get(0)?, row.get(1)?)),
+        )
+        .unwrap();
+    drop(connection);
+
+    assert!(!summary.contains(secret));
+    assert!(summary.contains("[REDACTED_TOKEN]"));
+    assert!(!payload.contains(secret));
+    let payload: serde_json::Value = serde_json::from_str(&payload).unwrap();
+    assert_eq!(
+        payload
+            .pointer("/request/action_summary")
+            .and_then(serde_json::Value::as_str),
+        Some(summary.as_str())
+    );
+}
+
+#[test]
 fn lost_capability_can_be_reissued_only_to_the_approval_owner() {
     let fixture = Fixture::new(PolicyDecision::Ask);
     let durable = DurableApprovalStore::new(fixture.store.clone());
