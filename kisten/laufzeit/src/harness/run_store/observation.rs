@@ -107,7 +107,7 @@ fn sanitize_observation(
     observation: &Observation,
     sanitizer: &FeedbackEngine,
 ) -> Result<Observation, StoreError> {
-    validate_observation_id(&observation.observation_id)?;
+    validate_observation_id(&observation.observation_id, sanitizer)?;
     let kind = sanitized_or_fallback(&observation.kind, sanitizer, MAX_KIND_BYTES, "unknown");
     let summary = sanitized_or_fallback(
         &observation.summary,
@@ -289,11 +289,15 @@ fn bounded_json<T: serde::Serialize>(value: &T) -> Result<String, StoreError> {
     }
 }
 
-fn validate_observation_id(observation_id: &ObservationId) -> Result<(), StoreError> {
+fn validate_observation_id(
+    observation_id: &ObservationId,
+    sanitizer: &FeedbackEngine,
+) -> Result<(), StoreError> {
     let value = &observation_id.0;
     if !value.is_empty()
         && value.len() <= MAX_OBSERVATION_ID_BYTES
         && !value.chars().any(char::is_control)
+        && sanitizer.sanitize_text(value) == *value
     {
         Ok(())
     } else {

@@ -90,6 +90,31 @@ fn completed_observation_is_sanitized_linked_and_recoverable() {
 }
 
 #[test]
+fn observation_id_with_configured_secret_is_rejected_before_persistence() {
+    let fixture = Fixture::new("observation-id");
+    fixture.start_tool();
+    let mut input = fixture
+        .run
+        .tool_completed_input(&fixture.run.provider_call_id);
+    let HarnessEventKind::ToolCompleted { observation } = &mut input.kind else {
+        unreachable!("fixture must build a completion")
+    };
+    observation.observation_id = ObservationId::from(format!("observation-{SECRET}"));
+
+    assert!(matches!(
+        fixture
+            .store
+            .append_event(&fixture.run.owner, &fixture.run.run_id, input),
+        Err(StoreError::Invariant(_))
+    ));
+    assert_eq!(fixture.observation_count(), 0);
+    assert_eq!(
+        fixture.tool_states(),
+        ("started".into(), "executing".into(), "tool_running".into())
+    );
+}
+
+#[test]
 fn failed_observation_rebuilds_sanitized_feedback_and_fingerprint() {
     let fixture = Fixture::new("failed");
     fixture.start_tool();
