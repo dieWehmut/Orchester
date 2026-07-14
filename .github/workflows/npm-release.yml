@@ -1,0 +1,328 @@
+name: npm-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Exact package version already pinned in npm/cli/package.json
+        required: true
+        default: "0.1.0"
+        type: string
+      submit:
+        description: Submit verified archives to npm staged publishing after approval
+        required: true
+        default: none
+        type: choice
+        options:
+          - none
+          - platforms
+          - meta
+
+permissions:
+  contents: read
+
+env:
+  RUST_TOOLCHAIN: "1.96.1"
+  NODE_VERSION: "24.8.0"
+  NPM_VERSION: "11.18.0"
+
+concurrency:
+  group: npm-release
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate release request
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Require a matching version tag for publishing
+        shell: bash
+        env:
+          SUBMIT: ${{ inputs.submit }}
+          REF_TYPE: ${{ github.ref_type }}
+          VERSION: ${{ inputs.version }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if [[ "$SUBMIT" != "none" ]]; then
+            [[ "$REF_TYPE" == "tag" ]]
+            [[ "$TAG" == "v$VERSION" ]]
+          fi
+
+  test:
+    name: Test release source
+    needs: validate
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout release commit
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: Setup pinned release tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          rustup toolchain install "$RUST_TOOLCHAIN" --profile minimal
+          rustup component add --toolchain "$RUST_TOOLCHAIN" clippy
+          npm install --global "npm@$NPM_VERSION" --ignore-scripts
+          [[ $(npm --version) == "$NPM_VERSION" ]]
+
+      - name: Test Rust workspace
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo +"$RUST_TOOLCHAIN" test --locked --workspace --all-targets
+          cargo +"$RUST_TOOLCHAIN" clippy --locked --workspace --all-targets -- -D warnings
+
+      - name: Test npm distribution tools
+        shell: bash
+        run: node --test npm/cli/test/*.test.cjs werkzeug/npm/*.test.mjs
+
+  build:
+    name: Build ${{ matrix.package }}
+    needs: validate
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - package: cli-linux-x64
+            runner: ubuntu-24.04
+            family: posix
+            rust_target: x86_64-unknown-linux-musl
+            binary: orchester
+          - package: cli-linux-arm64
+            runner: ubuntu-24.04-arm
+            family: posix
+            rust_target: aarch64-unknown-linux-musl
+            binary: orchester
+          - package: cli-darwin-x64
+            runner: macos-15-intel
+            family: posix
+            rust_target: x86_64-apple-darwin
+            binary: orchester
+          - package: cli-darwin-arm64
+            runner: macos-15
+            family: posix
+            rust_target: aarch64-apple-darwin
+            binary: orchester
+          - package: cli-win32-x64
+            runner: windows-2025
+            family: windows
+            rust_target: x86_64-pc-windows-msvc
+            binary: orchester.exe
+          - package: cli-win32-arm64
+            runner: windows-11-arm
+            family: windows
+            rust_target: aarch64-pc-windows-msvc
+            binary: orchester.exe
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Checkout release ref
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Build POSIX native archive
+        if: matrix.family == 'posix'
+        shell: bash
+        env:
+          RUST_TARGET: ${{ matrix.rust_target }}
+          BINARY: ${{ matrix.binary }}
+          PACKAGE: ${{ matrix.package }}
+        run: |
+          set -euo pipefail
+          rustup toolchain install "$RUST_TOOLCHAIN" --profile minimal
+          rustup target add --toolchain "$RUST_TOOLCHAIN" "$RUST_TARGET"
+          if [[ "$RUNNER_OS" == "Linux" ]]; then
+            sudo apt-get update
+            sudo apt-get install --yes musl-tools
+          fi
+          cargo +"$RUST_TOOLCHAIN" build --locked --release --target "$RUST_TARGET" -p orchester-konsole
+          mkdir -p "bundle/$RUST_TARGET/release"
+          cp "target/$RUST_TARGET/release/$BINARY" "bundle/$RUST_TARGET/release/$BINARY"
+          chmod 0755 "bundle/$RUST_TARGET/release/$BINARY"
+          tar -C bundle -czf "native-$PACKAGE.tar.gz" "$RUST_TARGET/release/$BINARY"
+
+      - name: Build Windows native archive
+        if: matrix.family == 'windows'
+        shell: pwsh
+        env:
+          RUST_TARGET: ${{ matrix.rust_target }}
+          BINARY: ${{ matrix.binary }}
+          PACKAGE: ${{ matrix.package }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          rustup toolchain install $env:RUST_TOOLCHAIN --profile minimal
+          rustup target add --toolchain $env:RUST_TOOLCHAIN $env:RUST_TARGET
+          cargo "+$env:RUST_TOOLCHAIN" build --locked --release --target $env:RUST_TARGET -p orchester-konsole
+          $destination = Join-Path "bundle" "$env:RUST_TARGET/release"
+          New-Item -ItemType Directory -Force -Path $destination | Out-Null
+          Copy-Item -LiteralPath "target/$env:RUST_TARGET/release/$env:BINARY" -Destination $destination
+          tar -C bundle -czf "native-$env:PACKAGE.tar.gz" "$env:RUST_TARGET/release/$env:BINARY"
+          if ($LASTEXITCODE -ne 0) { throw "failed to archive $env:RUST_TARGET" }
+
+      - name: Upload immutable native archive
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: native-${{ matrix.package }}.tar.gz
+          path: native-${{ matrix.package }}.tar.gz
+          archive: false
+          if-no-files-found: error
+          retention-days: 7
+
+  stage:
+    name: Stage and verify npm archives
+    needs: [build, test]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout release ref
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: Setup pinned npm
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --global "npm@$NPM_VERSION" --ignore-scripts
+          [[ $(npm --version) == "$NPM_VERSION" ]]
+
+      - name: Download native archives
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          path: native-archives
+          pattern: native-*
+          merge-multiple: true
+
+      - name: Stage, verify, and pack release archives
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          mkdir artifact-root
+          archives=(native-archives/native-*.tar.gz)
+          [[ ${#archives[@]} -eq 6 ]]
+          for archive in "${archives[@]}"; do
+            tar -xzf "$archive" -C artifact-root
+          done
+
+          node werkzeug/npm/stage.mjs \
+            --artifacts artifact-root \
+            --output staged \
+            --version "$VERSION"
+
+          mapfile -t platform_dirs < <(find staged -mindepth 1 -maxdepth 1 -type d -print | sort)
+          [[ ${#platform_dirs[@]} -eq 6 ]]
+          verify_args=()
+          for directory in "${platform_dirs[@]}"; do
+            verify_args+=(--platform-dir "$directory")
+          done
+          node werkzeug/npm/verify.mjs --meta npm/cli "${verify_args[@]}"
+
+          mkdir release
+          npm pack --ignore-scripts --pack-destination release npm/cli >/dev/null
+          for directory in "${platform_dirs[@]}"; do
+            npm pack --ignore-scripts --pack-destination release "$directory" >/dev/null
+          done
+          [[ $(find release -maxdepth 1 -type f -name '*.tgz' | wc -l) -eq 7 ]]
+          (cd release && sha256sum *.tgz > SHA256SUMS)
+          tar -C release -czf npm-release.tar.gz .
+
+      - name: Upload verified release archive
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: npm-release.tar.gz
+          path: npm-release.tar.gz
+          archive: false
+          if-no-files-found: error
+          retention-days: 30
+
+  submit:
+    name: Submit npm packages for approval
+    if: inputs.submit != 'none' && github.ref_type == 'tag'
+    needs: stage
+    runs-on: ubuntu-24.04
+    environment: npm-release
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout release ref
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Setup Node for trusted publishing
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - name: Setup pinned npm
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --global "npm@$NPM_VERSION" --ignore-scripts
+          [[ $(npm --version) == "$NPM_VERSION" ]]
+
+      - name: Download verified release archive
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: npm-release.tar.gz
+          path: .
+
+      - name: Stage platform packages before meta package
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+          SUBMIT: ${{ inputs.submit }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          [[ "$TAG" == "v$VERSION" ]]
+          mkdir release
+          tar -xzf npm-release.tar.gz -C release
+          (cd release && sha256sum --check SHA256SUMS)
+          [[ $(npm config get registry) == "https://registry.npmjs.org/" ]]
+
+          stage_package() {
+            local package="$1"
+            local archive="${package#@}"
+            archive="${archive//\//-}-$VERSION.tgz"
+            test -f "release/$archive"
+            npm stage publish "release/$archive" --access public --ignore-scripts
+          }
+
+          mapfile -t platform_packages < <(
+            node -e "for (const name of Object.keys(require('./npm/cli/package.json').optionalDependencies)) console.log(name)"
+          )
+          [[ ${#platform_packages[@]} -eq 6 ]]
+          if [[ "$SUBMIT" == "platforms" ]]; then
+            for package in "${platform_packages[@]}"; do
+              stage_package "$package"
+            done
+          elif [[ "$SUBMIT" == "meta" ]]; then
+            for package in "${platform_packages[@]}"; do
+              [[ $(npm view "$package@$VERSION" version) == "$VERSION" ]]
+            done
+            stage_package "@orchester/cli"
+          fi
