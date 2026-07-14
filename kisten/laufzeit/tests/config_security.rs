@@ -390,7 +390,62 @@ fn make_user_config_permissions_secure(directory: &std::path::Path, file: &std::
     std::fs::set_permissions(file, std::fs::Permissions::from_mode(0o600)).unwrap();
 }
 
-#[cfg(not(unix))]
+#[cfg(windows)]
+fn make_user_config_permissions_secure(directory: &std::path::Path, file: &std::path::Path) {
+    use std::process::Command;
+    use std::sync::OnceLock;
+
+    fn system_tool(relative: &str) -> std::path::PathBuf {
+        std::path::PathBuf::from(std::env::var_os("SystemRoot").unwrap())
+            .join("System32")
+            .join(relative)
+    }
+
+    static CURRENT_SID: OnceLock<String> = OnceLock::new();
+    let sid = CURRENT_SID.get_or_init(|| {
+        let output = Command::new(system_tool("WindowsPowerShell\\v1.0\\powershell.exe"))
+            .args([
+                "-NoLogo",
+                "-NoProfile",
+                "-NonInteractive",
+                "-Command",
+                "[System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value",
+            ])
+            .output()
+            .unwrap();
+        assert!(output.status.success());
+        String::from_utf8(output.stdout).unwrap().trim().to_owned()
+    });
+    let icacls = system_tool("icacls.exe");
+    for (path, grants) in [
+        (
+            directory,
+            [
+                format!("*{sid}:(OI)(CI)(F)"),
+                "*S-1-5-18:(OI)(CI)(F)".to_owned(),
+                "*S-1-5-32-544:(OI)(CI)(F)".to_owned(),
+            ],
+        ),
+        (
+            file,
+            [
+                format!("*{sid}:(F)"),
+                "*S-1-5-18:(F)".to_owned(),
+                "*S-1-5-32-544:(F)".to_owned(),
+            ],
+        ),
+    ] {
+        let output = Command::new(&icacls)
+            .arg(path)
+            .args(["/inheritance:r", "/grant:r"])
+            .args(grants)
+            .output()
+            .unwrap();
+        assert!(output.status.success());
+    }
+}
+
+#[cfg(not(any(unix, windows)))]
 fn make_user_config_permissions_secure(_directory: &std::path::Path, _file: &std::path::Path) {}
 
 #[test]
@@ -855,6 +910,43 @@ fn protected_user_file_still_rejects_malformed_secret_references() {
         ConfigLoader::test().load_user_file(&path),
         Err(ConfigError::InvalidSecretReference { .. })
     ));
+}
+
+#[test]
+fn protected_user_file_rejects_sources_larger_than_one_mibibyte() {
+    let root = TempConfigDir::new("protected-source-too-large");
+    let user_dir = root.path().join("home").join(".orchester");
+    std::fs::create_dir_all(&user_dir).unwrap();
+    let path = user_dir.join("orchester.jsonc");
+    let mut source = vec![b' '; 1024 * 1024 + 1];
+    source.extend_from_slice(b"{}");
+    std::fs::write(&path, source).unwrap();
+    make_user_config_permissions_secure(&user_dir, &path);
+
+    let error = ConfigLoader::test().load_user_file(&path).unwrap_err();
+    assert!(matches!(error, ConfigError::ProtectedFileTooLarge));
+    assert_eq!(
+        error.to_string(),
+        "protected configuration file exceeds the 1 MiB limit"
+    );
+}
+
+#[test]
+fn protected_user_file_rejects_invalid_utf8_without_echoing_bytes() {
+    let root = TempConfigDir::new("protected-source-invalid-utf8");
+    let user_dir = root.path().join("home").join(".orchester");
+    std::fs::create_dir_all(&user_dir).unwrap();
+    let path = user_dir.join("orchester.jsonc");
+    std::fs::write(&path, b"{\"env\":{\"API_KEY\":\"do-not-echo\"}}\xff").unwrap();
+    make_user_config_permissions_secure(&user_dir, &path);
+
+    let error = ConfigLoader::test().load_user_file(&path).unwrap_err();
+    assert!(matches!(error, ConfigError::ProtectedFileInvalidUtf8));
+    assert_eq!(
+        error.to_string(),
+        "protected configuration file is not valid UTF-8"
+    );
+    assert!(!error.to_string().contains("do-not-echo"));
 }
 
 #[cfg(unix)]

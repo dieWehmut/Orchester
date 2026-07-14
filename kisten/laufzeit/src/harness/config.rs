@@ -18,9 +18,11 @@ use serde::ser::SerializeMap;
 use serde::{Deserialize, Serialize, Serializer};
 use serde_json::Value;
 use thiserror::Error;
+use zeroize::Zeroize;
 
 use super::credentials::{CredentialError, CredentialStore, ProviderSecret};
 
+mod protected_file;
 mod provider;
 
 pub use provider::ResolvedModelProfile;
@@ -57,6 +59,14 @@ pub enum ConfigError {
         expected: String,
         actual: String,
     },
+    #[error("protected configuration file exceeds the 1 MiB limit")]
+    ProtectedFileTooLarge,
+    #[error("protected configuration file is not valid UTF-8")]
+    ProtectedFileInvalidUtf8,
+    #[error("protected configuration file I/O failed")]
+    ProtectedFileIo,
+    #[error("protected configuration file failed secure handle validation")]
+    ProtectedFileSecurity,
     #[error(transparent)]
     Credential(#[from] CredentialError),
 }
@@ -817,8 +827,10 @@ impl ConfigLoader {
     pub fn load_user_file(&self, path: impl AsRef<Path>) -> Result<UserConfig, ConfigError> {
         let path = path.as_ref();
         require_user_permissions(path)?;
-        let mut value = parse_jsonc(&fs::read_to_string(path)?)?;
+        let mut source = protected_file::read_protected_file(path)?;
+        let mut value = parse_jsonc(&source)?;
         let credential_vault = extract_protected_credentials(&mut value)?;
+        source.zeroize();
         self.load_user_value(value, credential_vault)
     }
 
