@@ -681,21 +681,20 @@ impl ConfigLoader {
         self.load_project_file(path).map(Some)
     }
 
-    /// Load the user-owned configuration, merge an optional workspace layer,
-    /// and validate the active model profile before returning it to callers.
+    /// Load the user-owned configuration and merge an optional workspace
+    /// layer. Model transport validation remains an explicit caller action.
     pub fn load_effective(&self, workspace: impl AsRef<Path>) -> Result<UserConfig, ConfigError> {
         let user = self.load_user_path()?;
         let project_path = self
             .project_path
             .clone()
             .unwrap_or_else(|| workspace.as_ref().join(PROJECT_CONFIG));
-        let effective = if project_path.exists() {
+        let effective = if project_path.try_exists()? {
             let project = self.load_project_file(project_path)?;
             self.merge_project(&user, &project)?
         } else {
             user
         };
-        effective.resolve_model_profile()?;
         Ok(effective)
     }
 

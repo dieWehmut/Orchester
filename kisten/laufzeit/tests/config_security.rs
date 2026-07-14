@@ -167,6 +167,75 @@ fn load_effective_treats_missing_project_config_as_empty() {
 }
 
 #[test]
+fn load_effective_keeps_non_model_settings_without_a_model_profile() {
+    let root = TempConfigDir::new("effective-config-without-model");
+    let user_dir = root.path().join("home").join(".orchester");
+    let workspace = root.path().join("workspace");
+    std::fs::create_dir_all(&user_dir).unwrap();
+    std::fs::create_dir_all(&workspace).unwrap();
+    let user_path = user_dir.join("orchester.jsonc");
+    std::fs::write(
+        &user_path,
+        r#"{
+            "governance": {
+                "tool_network": "deny",
+                "approval_ttl_seconds": 45
+            },
+            "limits": {
+                "max_steps": 12,
+                "max_minutes": 8,
+                "max_same_failure": 2,
+                "max_observation_bytes": 4096
+            },
+            "tui": {
+                "status_line": ["current-dir", "permissions"],
+                "status_line_use_colors": true
+            }
+        }"#,
+    )
+    .unwrap();
+    make_user_config_permissions_secure(&user_dir, &user_path);
+
+    let effective = ConfigLoader::test()
+        .with_user_path(&user_path)
+        .load_effective(&workspace)
+        .unwrap();
+
+    assert_eq!(effective.governance.tool_network, PolicyDecision::Deny);
+    assert_eq!(effective.governance.approval_ttl_seconds, 45);
+    assert_eq!(effective.limits.max_steps, 12);
+    assert_eq!(effective.limits.max_minutes, 8);
+    assert_eq!(effective.limits.max_same_failure, 2);
+    assert_eq!(effective.limits.max_observation_bytes, 4096);
+    assert_eq!(effective.tui.status_line, ["current-dir", "permissions"]);
+    assert!(effective.tui.status_line_use_colors);
+}
+
+#[test]
+fn load_effective_propagates_project_path_probe_errors() {
+    let root = TempConfigDir::new("effective-config-invalid-project-path");
+    let user_dir = root.path().join("home").join(".orchester");
+    let workspace = root.path().join("workspace");
+    std::fs::create_dir_all(&user_dir).unwrap();
+    std::fs::create_dir_all(&workspace).unwrap();
+    let user_path = user_dir.join("orchester.jsonc");
+    std::fs::write(
+        &user_path,
+        r#"{ "governance": { "tool_network": "deny" } }"#,
+    )
+    .unwrap();
+    make_user_config_permissions_secure(&user_dir, &user_path);
+
+    let error = ConfigLoader::test()
+        .with_user_path(&user_path)
+        .with_project_path(PathBuf::from("\0"))
+        .load_effective(&workspace)
+        .unwrap_err();
+
+    assert!(matches!(error, ConfigError::Io(_)));
+}
+
+#[test]
 fn model_profile_rejects_unknown_provider_and_empty_model() {
     let loader = ConfigLoader::test();
     let unknown = loader
