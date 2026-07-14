@@ -44,6 +44,10 @@ jobs:
           TAG: ${{ github.ref_name }}
         run: |
           set -euo pipefail
+          case "$SUBMIT" in
+            none|platforms|meta) ;;
+            *) echo "unsupported submit mode: $SUBMIT" >&2; exit 1 ;;
+          esac
           if [[ "$SUBMIT" != "none" ]]; then
             [[ "$REF_TYPE" == "tag" ]]
             [[ "$TAG" == "v$VERSION" ]]
@@ -325,4 +329,7 @@ jobs:
               [[ $(npm view "$package@$VERSION" version) == "$VERSION" ]]
             done
             stage_package "@orchester/cli"
+          else
+            echo "unsupported submit mode: $SUBMIT" >&2
+            exit 1
           fi

@@ -89,10 +89,12 @@ test('staged publishing is manual, OIDC-scoped, and orders platform packages bef
   );
   assert.match(workflow.slice(publishJob), /\[\[ "\$TAG" == "v\$VERSION" \]\]/);
   assert.match(workflow, /if \[\[ "\$SUBMIT" != "none" \]\]; then/);
+  assert.match(workflow, /case "\$SUBMIT" in[\s\S]*none\|platforms\|meta/);
   assert.match(workflow, /\[\[ "\$REF_TYPE" == "tag" \]\]/);
   assert.ok(platformLoop > oidcPermission);
   assert.ok(metaPublish > platformLoop);
   assert.match(workflow.slice(publishJob), /if \[\[ "\$SUBMIT" == "platforms" \]\]; then/);
+  assert.match(workflow.slice(publishJob), /unsupported submit mode: \$SUBMIT/);
   const platformPreflight = workflow.indexOf('npm view "$package@$VERSION" version', platformLoop);
   assert.ok(platformPreflight > platformLoop);
   assert.ok(metaPublish > platformPreflight);
