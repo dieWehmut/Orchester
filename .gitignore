@@ -34,3 +34,10 @@ Thumbs.db
 *.md
 !/README.md
 .playwright-mcp/
+
+# The startup portrait is a compile-time CLI asset; keep other samples local.
+!sample/
+sample/*
+!sample/logo/
+sample/logo/*
+!sample/logo/logo.txt

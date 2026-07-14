@@ -1774,19 +1774,19 @@ mod tests {
         );
         assert!(
             rendered.contains("\x1b[38;2;"),
-            "wide startup should render the true-colour ASCII portrait:\n{rendered}"
+            "wide startup should render the true-colour logo portrait:\n{rendered}"
         );
         assert!(
             plain
                 .chars()
-                .filter(|ch| matches!(ch, '@' | '%' | '#'))
+                .filter(|ch| *ch == '\u{2580}')
                 .count()
                 > 40,
-            "startup portrait should be recognisable as dense ASCII art:\n{rendered}"
+            "startup portrait should be recognisable as dense ANSI art:\n{rendered}"
         );
         assert!(
-            !plain.contains('\u{2580}'),
-            "startup portrait must not use raster half-block pixels:\n{rendered}"
+            !plain.contains("\u{923b}\u{20ac}"),
+            "startup portrait must not expose the source file's mojibake:\n{rendered}"
         );
     }
 
@@ -2054,18 +2054,18 @@ mod tests {
         render_chat_home(&mut wide, 100, "", &[], 0, false).unwrap();
         let wide = strip_ansi(&String::from_utf8(wide).unwrap());
         assert!(wide.lines().all(|line| display_width(line) <= 100));
-        assert!(wide.contains("@%%"));
+        assert!(wide.contains('\u{2580}'));
 
         let mut medium = Vec::new();
         render_chat_home(&mut medium, 80, "", &[], 0, false).unwrap();
         let medium = strip_ansi(&String::from_utf8(medium).unwrap());
         assert!(medium.lines().all(|line| display_width(line) <= 80));
-        assert!(medium.chars().filter(|ch| *ch == '@').count() > 10);
+        assert!(medium.chars().filter(|ch| *ch == '\u{2580}').count() > 10);
 
         let mut narrow = Vec::new();
         render_chat_home(&mut narrow, 55, "", &[], 0, false).unwrap();
         let narrow = strip_ansi(&String::from_utf8(narrow).unwrap());
-        assert!(!narrow.contains("@%%"));
+        assert!(!narrow.contains('\u{2580}'));
     }
 
     #[test]
@@ -2160,7 +2160,7 @@ mod tests {
             "30-row empty home should keep every portrait row:\n{empty}"
         );
         assert!(
-            empty.contains("@%%"),
+            empty.contains('\u{2580}'),
             "30-row empty home should keep portrait"
         );
     }
