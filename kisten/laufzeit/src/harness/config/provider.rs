@@ -1,10 +1,9 @@
 //! Resolution of the active, non-secret model transport profile.
 
 use std::fmt;
-use std::net::IpAddr;
-use std::str::FromStr;
 
 use super::{ConfigError, UserConfig};
+use url::{Host, Url};
 
 const RESPONSES_WIRE_API: &str = "responses";
 
@@ -147,27 +146,34 @@ fn validate_base_url(value: &str, path: &str) -> Result<(), ConfigError> {
     {
         return Err(validation(path, "provider base URL is not a valid URL"));
     }
-    let (scheme, rest) = value
-        .split_once("://")
-        .ok_or_else(|| validation(path, "provider base URL must use HTTPS"))?;
-    let authority = rest
-        .split(['/', '?', '#'])
-        .next()
-        .filter(|authority| !authority.is_empty())
+    let parsed = Url::parse(value)
+        .map_err(|_| validation(path, "provider base URL is not a valid URL"))?;
+    let host = parsed
+        .host()
         .ok_or_else(|| validation(path, "provider base URL must include a host"))?;
-    if authority.contains('@') {
+    if !parsed.username().is_empty() || parsed.password().is_some() {
         return Err(validation(
             path,
             "embedded credentials are not allowed in provider base URLs",
         ));
     }
-    let host = parse_host(authority)
-        .ok_or_else(|| validation(path, "provider base URL has an invalid host"))?;
+    if parsed.query().is_some() {
+        return Err(validation(
+            path,
+            "query parameters are not allowed in provider base URLs",
+        ));
+    }
+    if parsed.fragment().is_some() {
+        return Err(validation(
+            path,
+            "fragments are not allowed in provider base URLs",
+        ));
+    }
 
-    if scheme.eq_ignore_ascii_case("https") {
+    if parsed.scheme() == "https" {
         return Ok(());
     }
-    if scheme.eq_ignore_ascii_case("http") && is_loopback_host(host) {
+    if parsed.scheme() == "http" && is_loopback_host(host) {
         return Ok(());
     }
     Err(validation(
@@ -176,40 +182,14 @@ fn validate_base_url(value: &str, path: &str) -> Result<(), ConfigError> {
     ))
 }
 
-fn parse_host(authority: &str) -> Option<&str> {
-    if authority.starts_with('[') {
-        let end = authority.find(']')?;
-        let host = &authority[1..end];
-        let suffix = &authority[end + 1..];
-        if !suffix.is_empty()
-            && (!suffix.starts_with(':')
-                || suffix[1..].is_empty()
-                || !suffix[1..].chars().all(|ch| ch.is_ascii_digit()))
-        {
-            return None;
-        }
-        return (!host.is_empty()).then_some(host);
+fn is_loopback_host(host: Host<&str>) -> bool {
+    match host {
+        Host::Domain(domain) => domain
+            .trim_end_matches('.')
+            .eq_ignore_ascii_case("localhost"),
+        Host::Ipv4(address) => address.is_loopback(),
+        Host::Ipv6(address) => address.is_loopback(),
     }
-
-    let (host, port) = match authority.rsplit_once(':') {
-        Some((host, port)) if !host.contains(':') => (host, Some(port)),
-        Some(_) => return None,
-        None => (authority, None),
-    };
-    if host.is_empty()
-        || port.is_some_and(|port| port.is_empty() || !port.chars().all(|ch| ch.is_ascii_digit()))
-    {
-        return None;
-    }
-    Some(host)
-}
-
-fn is_loopback_host(host: &str) -> bool {
-    let host = host.trim_end_matches('.');
-    host.eq_ignore_ascii_case("localhost")
-        || IpAddr::from_str(host)
-            .map(|address| address.is_loopback())
-            .unwrap_or(false)
 }
 
 fn validation(path: impl Into<String>, message: impl Into<String>) -> ConfigError {

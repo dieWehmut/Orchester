@@ -57,7 +57,7 @@ fn resolved_model_profile_contains_transport_settings_but_no_secret() {
                 "model_providers": {
                     "Fake": {
                         "name": "Fake Provider",
-                        "base_url": "https://example.test/v1?token=do-not-echo",
+                        "base_url": "https://example.test/v1",
                         "api_key": "${env:FAKE_API_KEY}",
                         "wire_api": "responses",
                         "requires_openai_auth": true
@@ -71,10 +71,7 @@ fn resolved_model_profile_contains_transport_settings_but_no_secret() {
     assert_eq!(profile.provider, "Fake");
     assert_eq!(profile.provider_name, "Fake Provider");
     assert_eq!(profile.model, "fake-model");
-    assert_eq!(
-        profile.base_url,
-        "https://example.test/v1?token=do-not-echo"
-    );
+    assert_eq!(profile.base_url, "https://example.test/v1");
     assert_eq!(profile.wire_api, "responses");
     assert_eq!(profile.reasoning_effort.as_deref(), Some("high"));
     assert_eq!(profile.plan_mode_reasoning_effort.as_deref(), Some("ultra"));
@@ -264,7 +261,88 @@ fn model_profile_rejects_unknown_provider_and_empty_model() {
 }
 
 #[test]
-fn model_profile_accepts_only_supported_wire_api_and_safe_base_url() {
+fn model_profile_accepts_https_paths_ports_and_loopback_http() {
+    for base_url in [
+        "https://example.test:8443/v1/responses",
+        "http://localhost:9876/v1",
+        "http://127.0.0.1:9876/v1",
+        "http://[::1]:9876/v1",
+    ] {
+        let source = format!(
+            r#"{{
+                "model_provider": "Fake",
+                "model": "fake-model",
+                "model_providers": {{
+                    "Fake": {{ "base_url": {base_url:?}, "wire_api": "responses" }}
+                }}
+            }}"#
+        );
+        ConfigLoader::test()
+            .load_user(&source)
+            .unwrap()
+            .resolve_model_profile()
+            .unwrap();
+    }
+}
+
+#[test]
+fn model_profile_rejects_provider_url_credentials_query_and_fragment_without_echoing() {
+    for base_url in [
+        "https://do-not-echo@example.test/v1",
+        "https://example.test/v1?token=do-not-echo",
+        "https://example.test/v1#do-not-echo",
+    ] {
+        let source = format!(
+            r#"{{
+                "model_provider": "Fake",
+                "model": "fake-model",
+                "model_providers": {{
+                    "Fake": {{ "base_url": {base_url:?}, "wire_api": "responses" }}
+                }}
+            }}"#
+        );
+        let error = ConfigLoader::test()
+            .load_user(&source)
+            .unwrap()
+            .resolve_model_profile()
+            .unwrap_err();
+        assert!(
+            matches!(error, ConfigError::Validation { ref path, .. } if path == "model_providers.Fake.base_url")
+        );
+        assert!(!error.to_string().contains("do-not-echo"));
+    }
+}
+
+#[test]
+fn model_profile_rejects_malformed_provider_hosts_and_ports_without_echoing() {
+    for base_url in [
+        "https://",
+        "https://[do-not-echo]/v1",
+        "https://example.test:99999/do-not-echo",
+    ] {
+        let source = format!(
+            r#"{{
+                "model_provider": "Fake",
+                "model": "fake-model",
+                "model_providers": {{
+                    "Fake": {{ "base_url": {base_url:?}, "wire_api": "responses" }}
+                }}
+            }}"#
+        );
+        let error = ConfigLoader::test()
+            .load_user(&source)
+            .unwrap()
+            .resolve_model_profile()
+            .unwrap_err();
+        assert!(
+            matches!(error, ConfigError::Validation { ref path, .. } if path == "model_providers.Fake.base_url")
+        );
+        assert!(!error.to_string().contains("do-not-echo"));
+    }
+}
+
+#[test]
+fn model_profile_rejects_unsupported_wire_api_and_unsafe_url_schemes() {
     for (wire_api, base_url, expected_path) in [
         (
             "chat_completions",
@@ -278,7 +356,7 @@ fn model_profile_accepts_only_supported_wire_api_and_safe_base_url() {
         ),
         (
             "responses",
-            "http://example.test/v1?token=do-not-echo",
+            "http://example.test/v1",
             "model_providers.Fake.base_url",
         ),
     ] {
