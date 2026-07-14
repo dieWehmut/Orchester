@@ -77,12 +77,14 @@ test('staged publishing is manual, OIDC-scoped, and orders platform packages bef
   const workflow = fs.readFileSync(workflowPath, 'utf8');
   const publishJob = workflow.indexOf('\n  submit:');
   const oidcPermission = workflow.indexOf('id-token: write', publishJob);
-  const platformLoop = workflow.indexOf('for package in "${platform_packages[@]}"', publishJob);
+  const platformPreflight = workflow.indexOf('assert_platform_version_absent', publishJob);
+  const platformLoop = workflow.indexOf('for package in "${platform_packages[@]}"; do\n              stage_package', publishJob);
   const metaPublish = workflow.indexOf('stage_package "@orchester/cli"', publishJob);
 
   assert.ok(publishJob > 0);
   assert.match(workflow, /submit:\n\s+description: [^\n]+\n\s+required: true\n\s+default: none\n\s+type: choice\n\s+options:\n\s+- none\n\s+- platforms\n\s+- meta/);
   assert.ok(oidcPermission > publishJob);
+  assert.ok(platformPreflight > oidcPermission);
   assert.match(
     workflow.slice(publishJob),
     /if: inputs\.submit != 'none' && github\.ref_type == 'tag'/,
@@ -95,8 +97,8 @@ test('staged publishing is manual, OIDC-scoped, and orders platform packages bef
   assert.ok(metaPublish > platformLoop);
   assert.match(workflow.slice(publishJob), /if \[\[ "\$SUBMIT" == "platforms" \]\]; then/);
   assert.match(workflow.slice(publishJob), /unsupported submit mode: \$SUBMIT/);
-  const platformPreflight = workflow.indexOf('npm view "$package@$VERSION" version', platformLoop);
-  assert.ok(platformPreflight > platformLoop);
+  assert.ok(platformLoop > platformPreflight);
+  assert.match(workflow.slice(platformPreflight, platformLoop), /npm view "\$package@\$VERSION" version/);
   assert.ok(metaPublish > platformPreflight);
   assert.match(workflow.slice(publishJob), /npm stage publish/);
   assert.match(workflow.slice(publishJob), /npm stage publish "\.\/release\/\$archive"/);

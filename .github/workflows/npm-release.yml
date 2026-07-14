@@ -320,14 +320,36 @@ jobs:
             node -e "for (const name of Object.keys(require('./npm/cli/package.json').optionalDependencies)) console.log(name)"
           )
           [[ ${#platform_packages[@]} -eq 6 ]]
+
+          assert_platform_version_absent() {
+            local package="$1"
+            local output
+            if output=$(npm view "$package@$VERSION" version 2>&1); then
+              echo "version already exists: $package@$VERSION" >&2
+              exit 1
+            fi
+            if ! grep -Eq 'E404|404 Not Found|notarget' <<<"$output"; then
+              echo "could not prove version is absent for $package@$VERSION" >&2
+              echo "$output" >&2
+              exit 1
+            fi
+          }
+
+          if [[ "$SUBMIT" == "platforms" ]]; then
+            for package in "${platform_packages[@]}"; do
+              assert_platform_version_absent "$package"
+            done
+          else
+            for package in "${platform_packages[@]}"; do
+              [[ $(npm view "$package@$VERSION" version) == "$VERSION" ]]
+            done
+          fi
+
           if [[ "$SUBMIT" == "platforms" ]]; then
             for package in "${platform_packages[@]}"; do
               stage_package "$package"
             done
           elif [[ "$SUBMIT" == "meta" ]]; then
-            for package in "${platform_packages[@]}"; do
-              [[ $(npm view "$package@$VERSION" version) == "$VERSION" ]]
-            done
             stage_package "@orchester/cli"
           else
             echo "unsupported submit mode: $SUBMIT" >&2
