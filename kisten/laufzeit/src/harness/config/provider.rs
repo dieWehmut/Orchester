@@ -65,7 +65,7 @@ impl UserConfig {
                 "provider identifier contains an invalid character",
             ));
         }
-        let provider_config = self.model_providers.get(provider).ok_or_else(|| {
+        let provider_config = self.model_providers().get(provider).ok_or_else(|| {
             validation(
                 "model_provider",
                 "active provider does not name a configured user profile",

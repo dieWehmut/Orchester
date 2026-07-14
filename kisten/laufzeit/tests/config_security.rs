@@ -1,5 +1,5 @@
 use orchester_laufzeit::harness::config::{
-    merge_security, ConfigError, ConfigLoader, PolicyDecision, ProviderConfig, UserConfig,
+    merge_security, ConfigError, ConfigLoader, PolicyDecision, UserConfig,
 };
 use orchester_laufzeit::harness::credentials::{CredentialStore, InMemoryCredentialStore};
 use std::path::PathBuf;
@@ -555,11 +555,11 @@ fn protected_user_file_resolves_direct_credentials_and_redacts_every_view() {
 
     let config = ConfigLoader::test().load_user_file(&path).unwrap();
     let store = InMemoryCredentialStore::default();
-    assert_eq!(config.env["OPENAI_API_KEY"], "<redacted>");
-    assert_eq!(config.env["BUILD_CHANNEL"], "<redacted>");
-    assert_eq!(config.env["OPENAI_KEY_ALIAS"], "${env:OPENAI_API_KEY}");
+    assert_eq!(config.env()["OPENAI_API_KEY"], "<redacted>");
+    assert_eq!(config.env()["BUILD_CHANNEL"], "<redacted>");
+    assert_eq!(config.env()["OPENAI_KEY_ALIAS"], "${env:OPENAI_API_KEY}");
     assert_eq!(
-        config.model_providers["OpenAI"].api_key.as_deref(),
+        config.model_providers()["OpenAI"].api_key.as_deref(),
         Some("<redacted>")
     );
     assert_eq!(
@@ -592,7 +592,7 @@ fn protected_user_file_resolves_direct_credentials_and_redacts_every_view() {
     );
 
     let config_debug = format!("{:?}", config);
-    let provider_debug = format!("{:?}", config.model_providers["OpenAI"]);
+    let provider_debug = format!("{:?}", config.model_providers()["OpenAI"]);
     for rendered in [&config_debug, &provider_debug] {
         assert!(!rendered.contains("debug-base-url-marker"), "{rendered}");
         assert!(!rendered.contains("sk-protected-test-env"), "{rendered}");
@@ -606,11 +606,41 @@ fn protected_user_file_resolves_direct_credentials_and_redacts_every_view() {
 
     let serialized = serde_json::to_string(&config).unwrap();
     assert!(serialized.contains("debug-base-url-marker"));
+    let credential_view = config.redacted_with_credentials(&store).unwrap();
+    assert_eq!(
+        credential_view.value()["env"]["OPENAI_API_KEY"]["source"],
+        "protected-user-file"
+    );
+    assert_eq!(
+        credential_view.value()["env"]["OPENAI_API_KEY"]["present"],
+        true
+    );
+    assert_eq!(
+        credential_view.value()["env"]["BUILD_CHANNEL"]["source"],
+        "protected-user-file"
+    );
+    assert_eq!(
+        credential_view.value()["env"]["OPENAI_KEY_ALIAS"]["source"],
+        "${env:OPENAI_API_KEY}"
+    );
+    assert_eq!(
+        credential_view.value()["env"]["OPENAI_KEY_ALIAS"]["present"],
+        true
+    );
+    assert_eq!(
+        credential_view.value()["model_providers"]["OpenAI"]["api_key"]["source"],
+        "protected-user-file"
+    );
+    assert_eq!(
+        credential_view.value()["model_providers"]["OpenAI"]["api_key"]["present"],
+        true
+    );
+
     for rendered in [
         serialized,
         config.redacted_json(),
-        config.redacted_with_credentials(&store).unwrap().json(),
-        serde_json::to_string(&config.model_providers["OpenAI"]).unwrap(),
+        credential_view.json(),
+        serde_json::to_string(&config.model_providers()["OpenAI"]).unwrap(),
     ] {
         assert!(!rendered.contains("sk-protected-test-env"), "{rendered}");
         assert!(!rendered.contains("sk-protected-test-arbitrary-env"));
@@ -622,61 +652,67 @@ fn protected_user_file_resolves_direct_credentials_and_redacts_every_view() {
 }
 
 #[test]
-fn public_config_mutation_cannot_inherit_protected_literal_authority() {
-    let root = TempConfigDir::new("protected-mutation");
-    let user_dir = root.path().join("home").join(".orchester");
-    std::fs::create_dir_all(&user_dir).unwrap();
-    let path = user_dir.join("orchester.jsonc");
-    std::fs::write(
-        &path,
+fn serde_deserialized_config_has_no_protected_credential_vault() {
+    let config: UserConfig = serde_json::from_str(
         r#"{
-            "env": { "OPENAI_API_KEY": "sk-protected-test-original" },
+            "env": { "OPENAI_API_KEY": "<redacted>" },
             "model_providers": {
-                "OpenAI": { "api_key": "sk-protected-test-provider-original" }
+                "OpenAI": { "api_key": "<redacted>" }
             }
         }"#,
     )
     .unwrap();
-    make_user_config_permissions_secure(&user_dir, &path);
-
-    let mut config = ConfigLoader::test().load_user_file(&path).unwrap();
-    config.env.insert(
-        "INJECTED_API_KEY".to_owned(),
-        "sk-protected-test-injected".to_owned(),
-    );
-    config.env.insert(
-        "OPENAI_API_KEY".to_owned(),
-        "sk-protected-test-replaced".to_owned(),
-    );
-    config.env.insert(
-        "PUBLIC_MUTATION".to_owned(),
-        "opaque-protected-test-mutation".to_owned(),
-    );
-    let injected_provider = ProviderConfig {
-        api_key: Some("sk-protected-test-provider-injected".to_owned()),
-        ..ProviderConfig::default()
-    };
-    config
-        .model_providers
-        .insert("Injected".to_owned(), injected_provider);
-
     let store = InMemoryCredentialStore::default();
     for result in [
-        config.resolve_secret("INJECTED_API_KEY", &store),
         config.resolve_secret("OPENAI_API_KEY", &store),
-        config.resolve_provider_secret("Injected", &store),
+        config.resolve_provider_secret("OpenAI", &store),
     ] {
         assert!(matches!(result, Err(ConfigError::PlaintextSecret { .. })));
     }
+    assert!(config.env().contains_key("OPENAI_API_KEY"));
+    assert!(config.model_providers().contains_key("OpenAI"));
+}
 
-    for rendered in [
-        serde_json::to_string(&config).unwrap(),
-        format!("{config:?}"),
-        config.redacted_json(),
-        config.redacted_with_credentials(&store).unwrap().json(),
-    ] {
-        assert!(!rendered.contains("opaque-protected-test-mutation"));
-    }
+#[test]
+fn independent_protected_loads_with_same_slot_are_not_equal() {
+    let first_root = TempConfigDir::new("protected-identity-first");
+    let first_dir = first_root.path().join("home").join(".orchester");
+    std::fs::create_dir_all(&first_dir).unwrap();
+    let first_path = first_dir.join("orchester.jsonc");
+    std::fs::write(
+        &first_path,
+        r#"{ "env": { "OPENAI_API_KEY": "sk-protected-test-first" } }"#,
+    )
+    .unwrap();
+    make_user_config_permissions_secure(&first_dir, &first_path);
+
+    let second_root = TempConfigDir::new("protected-identity-second");
+    let second_dir = second_root.path().join("home").join(".orchester");
+    std::fs::create_dir_all(&second_dir).unwrap();
+    let second_path = second_dir.join("orchester.jsonc");
+    std::fs::write(
+        &second_path,
+        r#"{ "env": { "OPENAI_API_KEY": "sk-protected-test-second" } }"#,
+    )
+    .unwrap();
+    make_user_config_permissions_secure(&second_dir, &second_path);
+
+    let first = ConfigLoader::test().load_user_file(&first_path).unwrap();
+    let second = ConfigLoader::test().load_user_file(&second_path).unwrap();
+    assert_ne!(first, second);
+    assert_eq!(first, first.clone());
+
+    let empty_project = ConfigLoader::test().load_project("{}").unwrap();
+    assert_eq!(
+        first,
+        ConfigLoader::test()
+            .merge_project(&first, &empty_project)
+            .unwrap()
+    );
+
+    let inline_first = ConfigLoader::test().load_user("{}").unwrap();
+    let inline_second = ConfigLoader::test().load_user("{}").unwrap();
+    assert_eq!(inline_first, inline_second);
 }
 
 #[test]

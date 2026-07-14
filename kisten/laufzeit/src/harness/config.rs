@@ -120,7 +120,7 @@ pub struct UserConfig {
     #[serde(default = "default_version")]
     pub version: u32,
     #[serde(default, serialize_with = "serialize_env")]
-    pub env: BTreeMap<String, String>,
+    env: BTreeMap<String, String>,
     #[serde(default)]
     pub model_provider: Option<String>,
     /// Backward-compatible top-level spelling used by Codex-style config.
@@ -144,7 +144,7 @@ pub struct UserConfig {
     #[serde(default)]
     pub service_tier: Option<String>,
     #[serde(default)]
-    pub model_providers: BTreeMap<String, ProviderConfig>,
+    model_providers: BTreeMap<String, ProviderConfig>,
     #[serde(default)]
     pub projects: BTreeMap<String, ProjectTrustConfig>,
     #[serde(default)]
@@ -177,27 +177,41 @@ enum CredentialSlot {
 }
 
 #[derive(Clone, Default)]
-struct CredentialVault(Arc<BTreeMap<CredentialSlot, SecretString>>);
+struct CredentialVault(Option<Arc<BTreeMap<CredentialSlot, SecretString>>>);
 
 impl CredentialVault {
     fn from_values(values: BTreeMap<CredentialSlot, SecretString>) -> Self {
-        Self(Arc::new(values))
+        if values.is_empty() {
+            Self::default()
+        } else {
+            Self(Some(Arc::new(values)))
+        }
     }
 
     fn get(&self, slot: &CredentialSlot) -> Option<SecretString> {
-        self.0.get(slot).cloned()
+        self.0.as_ref()?.get(slot).cloned()
     }
 
     fn binds_marker(&self, slot: &CredentialSlot, value: &str) -> bool {
-        value == PROTECTED_CREDENTIAL_MARKER && self.0.contains_key(slot)
+        value == PROTECTED_CREDENTIAL_MARKER
+            && self
+                .0
+                .as_ref()
+                .is_some_and(|credentials| credentials.contains_key(slot))
     }
 }
 
 impl PartialEq for CredentialVault {
     fn eq(&self, other: &Self) -> bool {
-        self.0.keys().eq(other.0.keys())
+        match (&self.0, &other.0) {
+            (None, None) => true,
+            (Some(left), Some(right)) => Arc::ptr_eq(left, right),
+            _ => false,
+        }
     }
 }
+
+impl Eq for CredentialVault {}
 
 impl Default for UserConfig {
     fn default() -> Self {
@@ -237,6 +251,17 @@ impl fmt::Debug for UserConfig {
 }
 
 impl UserConfig {
+    /// Read the configured environment entries without exposing a mutable map.
+    pub fn env(&self) -> &BTreeMap<String, String> {
+        &self.env
+    }
+
+    /// Read provider profiles without exposing a mutable map. Provider values
+    /// remain validated configuration snapshots and cannot replace vault slots.
+    pub fn model_providers(&self) -> &BTreeMap<String, ProviderConfig> {
+        &self.model_providers
+    }
+
     fn validate(&self) -> Result<(), ConfigError> {
         if self.version != 1 {
             return Err(ConfigError::Validation {
@@ -405,7 +430,7 @@ impl UserConfig {
             message: format!("cannot build redacted view: {error}"),
         })?;
         Ok(RedactedConfig {
-            value: redact_value_with_credentials(value, self, store)?,
+            value: redact_value_with_credentials(value, self, store, &mut Vec::new())?,
         })
     }
 
@@ -1495,12 +1520,16 @@ fn redact_value_with_credentials<S: CredentialStore + ?Sized>(
     value: Value,
     config: &UserConfig,
     store: &S,
+    path: &mut Vec<ConfigPathSegment>,
 ) -> Result<Value, ConfigError> {
     match value {
         Value::Object(values) => {
             let mut redacted = serde_json::Map::new();
             for (name, child) in values {
-                let child = if is_sensitive_name(&name) {
+                path.push(ConfigPathSegment::Key(name.clone()));
+                let child = if credential_slot_for_path(path).is_some() {
+                    redact_credential_value(child, config, store, path)?
+                } else if is_sensitive_name(&name) {
                     match child {
                         Value::String(reference)
                             if SecretReference::parse(&reference).ok().flatten().is_some() =>
@@ -1516,19 +1545,50 @@ fn redact_value_with_credentials<S: CredentialStore + ?Sized>(
                         }),
                     }
                 } else {
-                    redact_value_with_credentials(child, config, store)?
+                    redact_value_with_credentials(child, config, store, path)?
                 };
+                path.pop();
                 redacted.insert(name, child);
             }
             Ok(Value::Object(redacted))
         }
-        Value::Array(values) => values
-            .into_iter()
-            .map(|child| redact_value_with_credentials(child, config, store))
-            .collect::<Result<Vec<_>, _>>()
-            .map(Value::Array),
+        Value::Array(values) => {
+            let mut redacted = Vec::with_capacity(values.len());
+            for (index, child) in values.into_iter().enumerate() {
+                path.push(ConfigPathSegment::Index(index));
+                redacted.push(redact_value_with_credentials(child, config, store, path)?);
+                path.pop();
+            }
+            Ok(Value::Array(redacted))
+        }
         Value::String(text) if looks_like_secret(&text) => Ok(Value::String("<redacted>".into())),
         other => Ok(other),
+    }
+}
+
+fn redact_credential_value<S: CredentialStore + ?Sized>(
+    value: Value,
+    config: &UserConfig,
+    store: &S,
+    path: &[ConfigPathSegment],
+) -> Result<Value, ConfigError> {
+    match value {
+        Value::String(marker) if vault_binds_path(&config.credential_vault, path, &marker) => {
+            Ok(serde_json::json!({
+                "source": "protected-user-file",
+                "present": true,
+            }))
+        }
+        Value::String(reference) if SecretReference::parse(&reference).ok().flatten().is_some() => {
+            Ok(serde_json::json!({
+                "source": reference,
+                "present": config.secret_reference_present(&reference, store)?,
+            }))
+        }
+        _ => Ok(serde_json::json!({
+            "source": "<redacted>",
+            "present": false,
+        })),
     }
 }
 
