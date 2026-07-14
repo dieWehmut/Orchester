@@ -7,11 +7,15 @@ use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 
 use fs2::FileExt;
-use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
 
-const SCHEMA_VERSION: u16 = 1;
+mod record;
+
+use record::{
+    hash_current, validate_action_projection, AuditEntryV2, AuditRecord, CURRENT_SCHEMA_VERSION,
+};
+
 const GENESIS: &str = "0000000000000000000000000000000000000000000000000000000000000000";
 const MAX_TEXT_BYTES: usize = 512;
 const MAX_ID_CHARS: usize = 512;
@@ -34,17 +38,32 @@ pub enum AuditError {
     EventConflict,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct AuditInput {
     pub event_id: String,
     pub occurred_at: String,
     pub actor: String,
     pub run_id: String,
     pub action_id: Option<String>,
+    pub action_summary: Option<String>,
+    pub action_hash: Option<String>,
     pub approval_id: Option<String>,
     pub policy_rule: String,
     pub decision: String,
     pub result_summary: String,
+}
+
+impl std::fmt::Debug for AuditInput {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        formatter
+            .debug_struct("AuditInput")
+            .field("event_id", &"<redacted>")
+            .field("run_id", &"<redacted>")
+            .field("action_present", &self.action_id.is_some())
+            .field("approval_present", &self.approval_id.is_some())
+            .field("result_bytes", &self.result_summary.len())
+            .finish_non_exhaustive()
+    }
 }
 
 /// Durable result of an append+fsync operation.  Fields are private so a
@@ -56,6 +75,9 @@ pub struct AuditReceipt {
     sequence: u64,
     head_hash: String,
     synced_at: String,
+    action_id: Option<String>,
+    action_summary: Option<String>,
+    action_hash: Option<String>,
 }
 
 impl AuditReceipt {
@@ -78,6 +100,18 @@ impl AuditReceipt {
     pub fn synced_at(&self) -> &str {
         &self.synced_at
     }
+
+    pub(crate) fn action_id(&self) -> Option<&str> {
+        self.action_id.as_deref()
+    }
+
+    pub(crate) fn action_summary(&self) -> Option<&str> {
+        self.action_summary.as_deref()
+    }
+
+    pub(crate) fn action_hash(&self) -> Option<&str> {
+        self.action_hash.as_deref()
+    }
 }
 
 pub trait AuditSink: Send + Sync {
@@ -87,36 +121,22 @@ pub trait AuditSink: Send + Sync {
 impl AuditInput {
     /// Deterministic fixture constructor used by offline tests.
     pub fn test(sequence: u64, run_id: &str, action_id: &str, summary: &str) -> Self {
+        let mut hasher = Sha256::new();
+        hasher.update(action_id.as_bytes());
         Self {
             event_id: format!("event-{sequence}"),
             occurred_at: format!("2026-07-12T00:00:{sequence:02}Z"),
             actor: "local-user".into(),
             run_id: run_id.into(),
             action_id: Some(action_id.into()),
+            action_summary: Some(format!("test_action summary_bytes={}", summary.len())),
+            action_hash: Some(hex_hash(&hasher.finalize().into())),
             approval_id: None,
             policy_rule: "test.rule".into(),
             decision: "allow".into(),
             result_summary: summary.into(),
         }
     }
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[serde(deny_unknown_fields)]
-struct AuditEntry {
-    schema_version: u16,
-    sequence: u64,
-    occurred_at: String,
-    event_id: String,
-    actor: String,
-    run_id: String,
-    action_id: Option<String>,
-    approval_id: Option<String>,
-    policy_rule: String,
-    decision: String,
-    result_summary: String,
-    prev_hash: String,
-    entry_hash: String,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -190,6 +210,9 @@ impl JsonlAuditSink {
             *sequence = durable_next;
             *previous = durable_head;
             if let Some(existing) = find_event(file, &input.event_id)? {
+                let AuditRecord::V2(existing) = existing else {
+                    return Err(AuditError::EventConflict);
+                };
                 if !audit_entry_matches(&existing, &input) {
                     return Err(AuditError::EventConflict);
                 }
@@ -203,17 +226,22 @@ impl JsonlAuditSink {
                     sequence: existing.sequence,
                     head_hash: existing.entry_hash,
                     synced_at: existing.occurred_at,
+                    action_id: existing.action_id,
+                    action_summary: existing.action_summary,
+                    action_hash: existing.action_hash,
                 });
             }
             let current = *sequence;
-            let entry = AuditEntry {
-                schema_version: SCHEMA_VERSION,
+            let entry = AuditEntryV2 {
+                schema_version: CURRENT_SCHEMA_VERSION,
                 sequence: current,
                 occurred_at: bounded_text(&input.occurred_at),
                 event_id: bounded_id(&input.event_id),
                 actor: bounded_id(&input.actor),
                 run_id: bounded_id(&input.run_id),
                 action_id: input.action_id.as_deref().map(bounded_id),
+                action_summary: input.action_summary.clone(),
+                action_hash: input.action_hash.clone(),
                 approval_id: input.approval_id.as_deref().map(bounded_id),
                 policy_rule: bounded_id(&input.policy_rule),
                 decision: bounded_id(&input.decision),
@@ -226,7 +254,7 @@ impl JsonlAuditSink {
             if entry.event_id.is_empty() || entry.run_id.is_empty() {
                 return Err(AuditError::InvalidRecord);
             }
-            let hash = hash_entry(&entry)?;
+            let hash = hash_current(&entry)?;
             let mut committed = entry;
             committed.entry_hash = hex_hash(&hash);
             let line = serde_json::to_vec(&committed).map_err(|_| AuditError::InvalidRecord)?;
@@ -241,6 +269,9 @@ impl JsonlAuditSink {
                 sequence: current,
                 head_hash: committed.entry_hash,
                 synced_at: committed.occurred_at,
+                action_id: committed.action_id,
+                action_summary: committed.action_summary,
+                action_hash: committed.action_hash,
             })
         })
     }
@@ -292,27 +323,30 @@ fn scan_reader<R: BufRead>(reader: R) -> Result<(u64, String), AuditError> {
     let mut expected_sequence = 1u64;
     let mut previous = GENESIS.to_owned();
     let mut event_ids = HashSet::new();
+    let mut saw_current = false;
     for line in reader.lines() {
         let line = line.map_err(AuditError::Io)?;
         if line.trim().is_empty() {
             continue;
         }
-        let entry: AuditEntry = serde_json::from_str(&line).map_err(|_| AuditError::Corrupt)?;
-        if entry.schema_version != SCHEMA_VERSION
-            || entry.sequence != expected_sequence
-            || entry.prev_hash != previous
-            || entry.entry_hash.len() != 64
+        let entry = AuditRecord::parse(&line)?;
+        entry.validate_semantics()?;
+        if (!entry.is_current() && saw_current)
+            || entry.sequence() != expected_sequence
+            || entry.previous_hash() != previous
+            || !is_lower_hex_hash(entry.entry_hash())
         {
             return Err(AuditError::Corrupt);
         }
-        if !event_ids.insert(entry.event_id.clone()) {
+        if !event_ids.insert(entry.event_id().to_owned()) {
             return Err(AuditError::Corrupt);
         }
-        let expected_hash = hex_hash(&hash_entry(&entry)?);
-        if expected_hash != entry.entry_hash {
+        let expected_hash = hex_hash(&entry.hash()?);
+        if expected_hash != entry.entry_hash() {
             return Err(AuditError::Corrupt);
         }
-        previous = entry.entry_hash;
+        saw_current |= entry.is_current();
+        previous = entry.entry_hash().to_owned();
         expected_sequence = expected_sequence
             .checked_add(1)
             .ok_or(AuditError::Sequence)?;
@@ -320,7 +354,7 @@ fn scan_reader<R: BufRead>(reader: R) -> Result<(u64, String), AuditError> {
     Ok((expected_sequence, previous))
 }
 
-fn find_event(file: &mut File, event_id: &str) -> Result<Option<AuditEntry>, AuditError> {
+fn find_event(file: &mut File, event_id: &str) -> Result<Option<AuditRecord>, AuditError> {
     file.seek(SeekFrom::Start(0)).map_err(AuditError::Io)?;
     let target = bounded_id(event_id);
     let mut found = None;
@@ -329,8 +363,8 @@ fn find_event(file: &mut File, event_id: &str) -> Result<Option<AuditEntry>, Aud
         if line.trim().is_empty() {
             continue;
         }
-        let entry: AuditEntry = serde_json::from_str(&line).map_err(|_| AuditError::Corrupt)?;
-        if entry.event_id == target {
+        let entry = AuditRecord::parse(&line)?;
+        if entry.event_id() == target {
             found = Some(entry);
             break;
         }
@@ -339,11 +373,13 @@ fn find_event(file: &mut File, event_id: &str) -> Result<Option<AuditEntry>, Aud
     Ok(found)
 }
 
-fn audit_entry_matches(entry: &AuditEntry, input: &AuditInput) -> bool {
+fn audit_entry_matches(entry: &AuditEntryV2, input: &AuditInput) -> bool {
     entry.event_id == bounded_id(&input.event_id)
         && entry.actor == bounded_id(&input.actor)
         && entry.run_id == bounded_id(&input.run_id)
         && entry.action_id == input.action_id.as_deref().map(bounded_id)
+        && entry.action_summary == input.action_summary
+        && entry.action_hash == input.action_hash
         && entry.approval_id == input.approval_id.as_deref().map(bounded_id)
         && entry.policy_rule == bounded_id(&input.policy_rule)
         && entry.decision == bounded_id(&input.decision)
@@ -368,6 +404,13 @@ fn validate_audit_input(input: &AuditInput) -> Result<(), AuditError> {
     {
         return Err(AuditError::InvalidRecord);
     }
+    if !validate_action_projection(
+        input.action_id.as_deref(),
+        input.action_summary.as_deref(),
+        input.action_hash.as_deref(),
+    ) {
+        return Err(AuditError::InvalidRecord);
+    }
     Ok(())
 }
 
@@ -375,21 +418,19 @@ fn is_canonical_id(value: &str) -> bool {
     !value.is_empty() && value.chars().count() <= MAX_ID_CHARS && bounded_id(value) == value
 }
 
-fn hash_entry(entry: &AuditEntry) -> Result<[u8; 32], AuditError> {
-    let mut unsigned = entry.clone();
-    unsigned.entry_hash.clear();
-    let bytes = serde_json::to_vec(&unsigned).map_err(|_| AuditError::InvalidRecord)?;
-    let mut hasher = Sha256::new();
-    hasher.update(bytes);
-    Ok(hasher.finalize().into())
-}
-
 fn hex_hash(hash: &[u8; 32]) -> String {
     hash.iter().map(|byte| format!("{byte:02x}")).collect()
 }
 
+fn is_lower_hex_hash(value: &str) -> bool {
+    value.len() == 64
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+}
+
 fn decode_hash(value: &str) -> Result<[u8; 32], AuditError> {
-    if value.len() != 64 {
+    if !is_lower_hex_hash(value) {
         return Err(AuditError::Corrupt);
     }
     let mut output = [0u8; 32];

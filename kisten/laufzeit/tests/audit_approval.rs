@@ -5,7 +5,8 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use orchester_laufzeit::harness::approval::{
     ApprovalBinding, ApprovalError, ApprovalState, ApprovalStore, CapabilityToken,
 };
-use orchester_laufzeit::harness::audit::{AuditInput, JsonlAuditSink};
+use orchester_laufzeit::harness::audit::{AuditError, AuditInput, JsonlAuditSink};
+use sha2::{Digest, Sha256};
 
 static NEXT: AtomicUsize = AtomicUsize::new(0);
 
@@ -82,6 +83,234 @@ fn audit_rejects_identifiers_that_would_normalize_or_truncate() {
             .unwrap(),
         1
     );
+    let parent = path.parent().unwrap().to_path_buf();
+    drop(sink);
+    fs::remove_file(path).ok();
+    fs::remove_dir(parent).ok();
+}
+
+#[test]
+fn audit_records_action_projection_and_rejects_same_event_drift() {
+    let path = temp_path("action-binding");
+    let sink = JsonlAuditSink::open(&path).unwrap();
+    let input = AuditInput::test(
+        1,
+        "run-action-binding",
+        "action-binding",
+        "OPENAI_API_KEY=sk-never-persist-this",
+    );
+    let expected_summary = "read_file path_bytes=12 start_line=None end_line=None".to_owned();
+    let expected_hash = "0123456789abcdef".repeat(4);
+    let mut input = input;
+    input.action_summary = Some(expected_summary.clone());
+    input.action_hash = Some(expected_hash.clone());
+    sink.append(input.clone()).unwrap();
+
+    let text = fs::read_to_string(&path).unwrap();
+    assert!(!text.contains("sk-never-persist-this"));
+    let entry: serde_json::Value = serde_json::from_str(text.trim()).unwrap();
+    assert_eq!(entry["schema_version"], 2);
+    assert_eq!(entry["action_id"], "action-binding");
+    assert_eq!(entry["action_summary"], expected_summary);
+    assert_eq!(entry["action_hash"], expected_hash);
+
+    let mut drifted_id = input.clone();
+    drifted_id.action_id = Some("different-action".into());
+    assert!(matches!(
+        sink.append(drifted_id),
+        Err(AuditError::EventConflict)
+    ));
+    let mut drifted_summary = input.clone();
+    drifted_summary.action_summary =
+        Some("read_file path_bytes=99 start_line=None end_line=None".into());
+    assert!(matches!(
+        sink.append(drifted_summary),
+        Err(AuditError::EventConflict)
+    ));
+    let mut drifted_hash = input;
+    drifted_hash.action_hash = Some("fedcba9876543210".repeat(4));
+    assert!(matches!(
+        sink.append(drifted_hash),
+        Err(AuditError::EventConflict)
+    ));
+    assert_eq!(fs::read_to_string(&path).unwrap().lines().count(), 1);
+    let parent = path.parent().unwrap().to_path_buf();
+    drop(sink);
+    fs::remove_file(path).ok();
+    fs::remove_dir(parent).ok();
+}
+
+#[test]
+fn audit_reads_v1_prefix_but_writes_only_v2_bindings() {
+    let path = temp_path("v1-prefix");
+    drop(JsonlAuditSink::open(&path).unwrap());
+    let legacy = r#"{"schema_version":1,"sequence":1,"occurred_at":"2026-07-12T00:00:01Z","event_id":"event-1","actor":"local-user","run_id":"run-legacy","action_id":"action-legacy","approval_id":null,"policy_rule":"test.rule","decision":"allow","result_summary":"summary_bytes=6","prev_hash":"0000000000000000000000000000000000000000000000000000000000000000","entry_hash":"388a0a8e5a8cac77b6a8a6d5b93668765d61e70c5764a60ebc50f6a124cc736e"}"#;
+    fs::write(&path, format!("{legacy}\n")).unwrap();
+
+    let sink = JsonlAuditSink::open(&path).unwrap();
+    assert_eq!(sink.verify().unwrap().entries, 1);
+    assert!(matches!(
+        sink.append(AuditInput::test(1, "run-legacy", "action-legacy", "legacy",)),
+        Err(AuditError::EventConflict)
+    ));
+    assert_eq!(
+        sink.append(AuditInput::test(2, "run-current", "action-current", "new"))
+            .unwrap(),
+        2
+    );
+    let entries = fs::read_to_string(&path)
+        .unwrap()
+        .lines()
+        .map(|line| serde_json::from_str::<serde_json::Value>(line).unwrap())
+        .collect::<Vec<_>>();
+    assert_eq!(entries[0]["schema_version"], 1);
+    assert_eq!(entries[1]["schema_version"], 2);
+    assert_eq!(
+        entries[1]["prev_hash"],
+        "388a0a8e5a8cac77b6a8a6d5b93668765d61e70c5764a60ebc50f6a124cc736e"
+    );
+    let parent = path.parent().unwrap().to_path_buf();
+    drop(sink);
+    fs::remove_file(path).ok();
+    fs::remove_dir(parent).ok();
+}
+
+#[test]
+fn audit_rejects_v1_after_v2_even_when_the_downgrade_record_is_self_consistent() {
+    let path = temp_path("v2-downgrade");
+    let sink = JsonlAuditSink::open(&path).unwrap();
+    sink.append(AuditInput::test(1, "run-current", "action-current", "new"))
+        .unwrap();
+    drop(sink);
+
+    let current = fs::read_to_string(&path).unwrap();
+    let current_entry: serde_json::Value = serde_json::from_str(current.trim()).unwrap();
+    let current_head = current_entry["entry_hash"].as_str().unwrap();
+    let unsigned_legacy = format!(
+        r#"{{"schema_version":1,"sequence":2,"occurred_at":"2026-07-12T00:00:02Z","event_id":"event-legacy-after-v2","actor":"local-user","run_id":"run-legacy","action_id":"action-legacy","approval_id":null,"policy_rule":"test.rule","decision":"allow","result_summary":"summary_bytes=6","prev_hash":"{current_head}","entry_hash":""}}"#
+    );
+    let legacy_hash = Sha256::digest(unsigned_legacy.as_bytes())
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>();
+    let legacy = unsigned_legacy.replacen(
+        r#""entry_hash":"""#,
+        &format!(r#""entry_hash":"{legacy_hash}""#),
+        1,
+    );
+    fs::write(&path, format!("{current}{legacy}\n")).unwrap();
+
+    assert!(matches!(
+        JsonlAuditSink::open(&path),
+        Err(AuditError::Corrupt)
+    ));
+    let parent = path.parent().unwrap().to_path_buf();
+    fs::remove_file(path).ok();
+    fs::remove_dir(parent).ok();
+}
+
+#[test]
+fn audit_rejects_noncanonical_action_projection() {
+    let path = temp_path("invalid-action-binding");
+    let sink = JsonlAuditSink::open(&path).unwrap();
+    let mut invalid_summary = AuditInput::test(1, "run-1", "action-1", "summary");
+    invalid_summary.action_summary = Some("run_command\nprogram_bytes=4".into());
+    assert!(matches!(
+        sink.append(invalid_summary),
+        Err(AuditError::InvalidRecord)
+    ));
+    let mut invalid_hash = AuditInput::test(1, "run-1", "action-1", "summary");
+    invalid_hash.action_hash = Some("A".repeat(64));
+    assert!(matches!(
+        sink.append(invalid_hash),
+        Err(AuditError::InvalidRecord)
+    ));
+    for missing in ["id", "summary", "hash"] {
+        let mut incomplete = AuditInput::test(1, "run-1", "action-1", "summary");
+        match missing {
+            "id" => incomplete.action_id = None,
+            "summary" => incomplete.action_summary = None,
+            "hash" => incomplete.action_hash = None,
+            _ => unreachable!(),
+        }
+        assert!(matches!(
+            sink.append(incomplete),
+            Err(AuditError::InvalidRecord)
+        ));
+    }
+    let mut no_action = AuditInput::test(1, "run-1", "action-1", "summary");
+    no_action.action_id = None;
+    no_action.action_summary = None;
+    no_action.action_hash = None;
+    assert_eq!(sink.append(no_action).unwrap(), 1);
+    let parent = path.parent().unwrap().to_path_buf();
+    drop(sink);
+    fs::remove_file(path).ok();
+    fs::remove_dir(parent).ok();
+}
+
+#[test]
+fn audit_rejects_self_consistent_v2_records_with_invalid_action_projection() {
+    let path = temp_path("invalid-wire-action-binding");
+    let sink = JsonlAuditSink::open(&path).unwrap();
+    sink.append(AuditInput::test(1, "run-1", "action-1", "summary"))
+        .unwrap();
+    let original = fs::read_to_string(&path).unwrap();
+    let entry: serde_json::Value = serde_json::from_str(original.trim()).unwrap();
+    let summary = entry["action_summary"].as_str().unwrap();
+    let incomplete_projection = resign_entry(&original.trim().replace(
+        &format!(r#""action_summary":"{summary}""#),
+        r#""action_summary":null"#,
+    ));
+    fs::write(&path, format!("{incomplete_projection}\n")).unwrap();
+    assert!(matches!(sink.verify(), Err(AuditError::Corrupt)));
+
+    let invalid_id = resign_entry(
+        &original
+            .trim()
+            .replace(r#""action_id":"action-1""#, r#""action_id":"action/1""#),
+    );
+    fs::write(&path, format!("{invalid_id}\n")).unwrap();
+    assert!(matches!(sink.verify(), Err(AuditError::Corrupt)));
+    let parent = path.parent().unwrap().to_path_buf();
+    drop(sink);
+    fs::remove_file(path).ok();
+    fs::remove_dir(parent).ok();
+}
+
+#[test]
+fn audit_rejects_self_consistent_v2_records_with_invalid_event_semantics() {
+    let path = temp_path("invalid-wire-semantics");
+    let sink = JsonlAuditSink::open(&path).unwrap();
+    sink.append(AuditInput::test(1, "run-1", "action-1", "summary"))
+        .unwrap();
+    let original = fs::read_to_string(&path).unwrap();
+
+    let valid_event_id = resign_entry(
+        &original
+            .trim()
+            .replace(r#""event_id":"event-1""#, r#""event_id":"event-2""#),
+    );
+    fs::write(&path, format!("{valid_event_id}\n")).unwrap();
+    assert!(
+        sink.verify().is_ok(),
+        "the resigned control record is valid"
+    );
+
+    let invalid_event_id = resign_entry(
+        &original
+            .trim()
+            .replace(r#""event_id":"event-1""#, r#""event_id":"event/1""#),
+    );
+    fs::write(&path, format!("{invalid_event_id}\n")).unwrap();
+    assert!(matches!(sink.verify(), Err(AuditError::Corrupt)));
+
+    let raw_result = resign_entry(&original.trim().replace(
+        r#""result_summary":"summary_bytes=7""#,
+        r#""result_summary":"OPENAI_API_KEY=sk-must-not-persist""#,
+    ));
+    fs::write(&path, format!("{raw_result}\n")).unwrap();
+    assert!(matches!(sink.verify(), Err(AuditError::Corrupt)));
     let parent = path.parent().unwrap().to_path_buf();
     drop(sink);
     fs::remove_file(path).ok();
@@ -170,4 +399,25 @@ fn temp_path(label: &str) -> PathBuf {
             NEXT.fetch_add(1, Ordering::Relaxed)
         ))
         .join("audit.jsonl")
+}
+
+fn resign_entry(line: &str) -> String {
+    let entry: serde_json::Value = serde_json::from_str(line).unwrap();
+    let unsigned = line.replacen(
+        &format!(
+            r#""entry_hash":"{}""#,
+            entry["entry_hash"].as_str().unwrap()
+        ),
+        r#""entry_hash":"""#,
+        1,
+    );
+    let hash = Sha256::digest(unsigned.as_bytes())
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>();
+    unsigned.replacen(
+        r#""entry_hash":"""#,
+        &format!(r#""entry_hash":"{hash}""#),
+        1,
+    )
 }

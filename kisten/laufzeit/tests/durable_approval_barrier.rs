@@ -10,8 +10,8 @@ use orchester_laufzeit::harness::audit::{AuditError, AuditInput, AuditSink, Json
 use orchester_laufzeit::harness::barrier::{ExecutionAuthorization, PreExecutionBarrier};
 use orchester_laufzeit::harness::governance::PolicyEngine;
 use orchester_laufzeit::harness::run_store::{
-    action_hash, ActionRecord, EventAppend, NewRun, RunStore, SqliteRunStore, StoreError,
-    ResumeNext, Transition,
+    action_hash, ActionRecord, EventAppend, NewRun, ResumeNext, RunStore, SqliteRunStore,
+    StoreError, Transition,
 };
 use orchester_laufzeit::harness::transcript::TranscriptRecord;
 use orchester_protokoll::{
@@ -343,7 +343,10 @@ fn consumed_approval_keeps_the_original_audit_binding_for_resume() {
         .resume_point_owned(&fixture.run_id, &fixture.owner, "project-durable")
         .unwrap()
         .unwrap();
-    assert!(matches!(point.next, ResumeNext::ReconcileToolOutcome { .. }));
+    assert!(matches!(
+        point.next,
+        ResumeNext::ReconcileToolOutcome { .. }
+    ));
     drop(durable);
     std::fs::remove_file(audit_path).ok();
 }
@@ -439,6 +442,161 @@ fn crash_after_audit_sync_reconciles_the_checkpoint_on_reopen() {
     assert_eq!(permit.action_id(), &fixture.action_id);
     assert!(reopened.has_audit_checkpoint(&fixture.action_id).unwrap());
     assert_eq!(sink.verify().unwrap().entries, 1);
+}
+
+#[test]
+fn checkpoint_rejects_receipt_for_a_different_action_projection() {
+    let fixture = Fixture::new(PolicyDecision::Allow);
+    let candidate = fixture
+        .store
+        .execution_candidate(&fixture.owner, &fixture.run_id, &fixture.action_id)
+        .unwrap();
+    let assert_rejected = |label: &str, wrong: AuditInput| {
+        let audit_path = fixture
+            .db
+            .with_file_name(format!("wrong-{label}-audit.jsonl"));
+        let sink = JsonlAuditSink::open(&audit_path).unwrap();
+        let receipt = sink.append_and_sync(wrong).unwrap();
+        assert!(matches!(
+            fixture
+                .store
+                .mark_execution_checkpoint(&fixture.owner, &candidate, &receipt),
+            Err(StoreError::Invariant(_))
+        ));
+        drop(sink);
+        std::fs::remove_file(audit_path).ok();
+    };
+    let mut wrong_hash = candidate.audit_input("ignored");
+    wrong_hash.action_hash = Some("b".repeat(64));
+    assert_rejected("hash", wrong_hash);
+    let mut wrong_summary = candidate.audit_input("ignored");
+    wrong_summary.action_summary =
+        Some("read_file path_bytes=999 start_line=None end_line=None".into());
+    assert_rejected("summary", wrong_summary);
+    let mut wrong_id = candidate.audit_input("ignored");
+    wrong_id.action_id = Some("different-action".into());
+    assert_rejected("id", wrong_id);
+    let checkpoint_count: i64 = rusqlite::Connection::open(&fixture.db)
+        .unwrap()
+        .query_row("SELECT COUNT(*) FROM audit_checkpoints", [], |row| {
+            row.get(0)
+        })
+        .unwrap();
+    assert_eq!(checkpoint_count, 0);
+}
+
+#[test]
+fn execution_candidate_rejects_noncanonical_action_json() {
+    let fixture = Fixture::new(PolicyDecision::Allow);
+    let canonical = serde_json::to_string(&fixture.action).unwrap();
+    let connection = rusqlite::Connection::open(&fixture.db).unwrap();
+    connection
+        .execute(
+            "UPDATE actions SET canonical_json = ?1 WHERE action_id = ?2",
+            rusqlite::params![format!(" {canonical}"), fixture.action_id.0],
+        )
+        .unwrap();
+    drop(connection);
+
+    assert!(matches!(
+        fixture
+            .store
+            .execution_candidate(&fixture.owner, &fixture.run_id, &fixture.action_id),
+        Err(StoreError::Corrupt)
+    ));
+}
+
+#[test]
+fn checkpoint_revalidates_canonical_action_after_the_audit_receipt_is_written() {
+    let fixture = Fixture::new(PolicyDecision::Allow);
+    let candidate = fixture
+        .store
+        .execution_candidate(&fixture.owner, &fixture.run_id, &fixture.action_id)
+        .unwrap();
+    let audit_path = fixture
+        .db
+        .with_file_name("post-receipt-action-drift-audit.jsonl");
+    let sink = JsonlAuditSink::open(&audit_path).unwrap();
+    let receipt = sink
+        .append_and_sync(candidate.audit_input("ignored"))
+        .unwrap();
+    let audit_text = std::fs::read_to_string(&audit_path).unwrap();
+    assert!(!audit_text.contains("src/lib.rs"));
+
+    let replacement = AgentAction::ListFiles {
+        path: "different-path".into(),
+        depth: 1,
+    };
+    let replacement_json = serde_json::to_string(&replacement).unwrap();
+    let replacement_hash = action_hash(&replacement).unwrap();
+    let connection = rusqlite::Connection::open(&fixture.db).unwrap();
+    connection
+        .execute(
+            "UPDATE actions SET canonical_json = ?1, action_hash = ?2 WHERE action_id = ?3",
+            rusqlite::params![replacement_json, replacement_hash, fixture.action_id.0],
+        )
+        .unwrap();
+    drop(connection);
+
+    assert!(matches!(
+        fixture
+            .store
+            .mark_execution_checkpoint(&fixture.owner, &candidate, &receipt),
+        Err(StoreError::Invariant(_))
+    ));
+    let checkpoint_count: i64 = rusqlite::Connection::open(&fixture.db)
+        .unwrap()
+        .query_row("SELECT COUNT(*) FROM audit_checkpoints", [], |row| {
+            row.get(0)
+        })
+        .unwrap();
+    assert_eq!(checkpoint_count, 0);
+}
+
+#[test]
+fn checkpoint_revalidates_the_bound_event_after_the_audit_receipt_is_written() {
+    for (label, mutation) in [
+        (
+            "payload",
+            "UPDATE events SET sanitized_payload = '{}' WHERE event_id = ?1",
+        ),
+        (
+            "occurred-at",
+            "UPDATE events SET occurred_at = 'tampered-time' WHERE event_id = ?1",
+        ),
+    ] {
+        let fixture = Fixture::new(PolicyDecision::Allow);
+        let candidate = fixture
+            .store
+            .execution_candidate(&fixture.owner, &fixture.run_id, &fixture.action_id)
+            .unwrap();
+        let audit_path = fixture
+            .db
+            .with_file_name(format!("post-receipt-event-{label}-audit.jsonl"));
+        let sink = JsonlAuditSink::open(&audit_path).unwrap();
+        let receipt = sink
+            .append_and_sync(candidate.audit_input("ignored"))
+            .unwrap();
+        let connection = rusqlite::Connection::open(&fixture.db).unwrap();
+        connection
+            .execute(mutation, [candidate.event_id().0.as_str()])
+            .unwrap();
+        drop(connection);
+
+        assert!(matches!(
+            fixture
+                .store
+                .mark_execution_checkpoint(&fixture.owner, &candidate, &receipt),
+            Err(StoreError::Corrupt)
+        ));
+        let checkpoint_count: i64 = rusqlite::Connection::open(&fixture.db)
+            .unwrap()
+            .query_row("SELECT COUNT(*) FROM audit_checkpoints", [], |row| {
+                row.get(0)
+            })
+            .unwrap();
+        assert_eq!(checkpoint_count, 0);
+    }
 }
 
 #[test]
@@ -1204,12 +1362,7 @@ impl Fixture {
             )
             .unwrap();
         store
-            .decide_policy(
-                &owner,
-                &run_id,
-                &action_id,
-                "2026-07-12T00:00:04Z",
-            )
+            .decide_policy(&owner, &run_id, &action_id, "2026-07-12T00:00:04Z")
             .unwrap();
         Self {
             db,

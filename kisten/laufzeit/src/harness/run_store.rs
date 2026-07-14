@@ -10,7 +10,7 @@ use std::sync::{Mutex, MutexGuard};
 use std::time::Duration;
 
 use orchester_protokoll::{
-    ActionId, AgentAction, EventId, HarnessEvent, HarnessEventKind, RunId, StopReason,
+    ActionId, AgentAction, EventId, HarnessEvent, HarnessEventKind, RunId, StepId, StopReason,
     HARNESS_SCHEMA_VERSION,
 };
 use rusqlite::{params, Connection, OptionalExtension, TransactionBehavior};
@@ -773,7 +773,7 @@ impl SqliteRunStore {
             .query_row(
                 "SELECT a.run_id, a.action_id, a.action_hash, a.state, a.policy_decision,
                         a.policy_rule_id, a.policy_event_id, a.audit_event_id,
-                        ap.approval_id, r.owner_actor_id
+                        ap.approval_id, r.owner_actor_id, a.canonical_json, a.step_id
                  FROM actions a
                  JOIN runs r ON r.run_id = a.run_id
                  JOIN steps s ON s.run_id = a.run_id AND s.step_id = a.step_id
@@ -795,6 +795,8 @@ impl SqliteRunStore {
                         row.get(7)?,
                         row.get(8)?,
                         row.get(9)?,
+                        row.get(10)?,
+                        row.get(11)?,
                     ))
                 },
             )
@@ -802,7 +804,7 @@ impl SqliteRunStore {
         let Some((
             row_run,
             row_action,
-            action_hash,
+            durable_action_hash,
             state,
             decision,
             rule,
@@ -810,10 +812,20 @@ impl SqliteRunStore {
             audit_event,
             approval_id,
             owner,
+            canonical_json,
+            step_id,
         )) = row
         else {
             return Err(StoreError::NotFound);
         };
+        let action: AgentAction =
+            serde_json::from_str(&canonical_json).map_err(|_| StoreError::Corrupt)?;
+        let canonical = serde_json::to_string(&action).map_err(|_| StoreError::Corrupt)?;
+        let recalculated_hash = action_hash(&action).map_err(|_| StoreError::Corrupt)?;
+        if canonical != canonical_json || recalculated_hash != durable_action_hash {
+            return Err(StoreError::Corrupt);
+        }
+        let action_summary = action.action_summary();
         let chosen_event =
             audit_event.or_else(|| if state == "ready" { policy_event } else { None });
         let event_id = if let Some(event) = chosen_event {
@@ -841,11 +853,13 @@ impl SqliteRunStore {
             |row| row.get(0),
         )?;
         let approved = approval_id.is_some();
-        Ok(ExecutionCandidate {
+        let candidate = ExecutionCandidate {
             event_id: EventId::from(event_id),
             run_id: RunId::from(row_run),
             action_id: ActionId::from(row_action),
-            action_hash,
+            step_id: StepId::from(step_id),
+            action_hash: durable_action_hash,
+            action_summary,
             owner_actor_id: owner,
             approval_id,
             policy_rule: rule.unwrap_or_else(|| "unknown".into()),
@@ -855,7 +869,9 @@ impl SqliteRunStore {
                 decision.unwrap_or_else(|| "allow".into())
             },
             occurred_at,
-        })
+        };
+        validate_execution_candidate_event(&connection, &candidate)?;
+        Ok(candidate)
     }
 
     pub fn mark_execution_checkpoint(
@@ -872,6 +888,9 @@ impl SqliteRunStore {
                 .head_hash()
                 .bytes()
                 .all(|byte| byte.is_ascii_hexdigit())
+            || receipt.action_id() != Some(candidate.action_id.0.as_str())
+            || receipt.action_summary() != Some(candidate.action_summary.as_str())
+            || receipt.action_hash() != Some(candidate.action_hash.as_str())
         {
             return Err(StoreError::Invariant(
                 "audit receipt does not match execution candidate".into(),
@@ -895,30 +914,40 @@ impl SqliteRunStore {
         if !owned {
             return Err(StoreError::NotFound);
         }
-        let event_exists: bool = transaction
-            .query_row(
-                "SELECT 1 FROM events WHERE event_id = ?1 AND run_id = ?2",
-                params![candidate.event_id.0, candidate.run_id.0],
-                |_| Ok(true),
-            )
-            .optional()?
-            .unwrap_or(false);
-        if !event_exists {
-            return Err(StoreError::Invariant(
-                "audit receipt references an unknown database event".into(),
-            ));
-        }
+        validate_execution_candidate_event(&transaction, candidate)?;
+        let expected_policy_decision = if candidate.approval_id.is_some() {
+            "ask"
+        } else {
+            candidate.decision.as_str()
+        };
         let candidate_matches: bool = transaction
             .query_row(
                 "SELECT 1 FROM actions a
+                 JOIN runs r ON r.run_id = a.run_id
+                 JOIN projects p ON p.project_id = r.project_id
                  JOIN steps s ON s.run_id = a.run_id AND s.step_id = a.step_id
                  LEFT JOIN approvals ap ON ap.action_id = a.action_id
                  WHERE a.run_id = ?1 AND a.action_id = ?2
                    AND a.origin_model_call_id IS NOT NULL
                    AND s.model_phase = 'completed'
-                   AND a.origin_model_call_id = s.model_call_id
-                   AND a.state IN ('ready', 'awaiting_approval')
-                   AND (
+                    AND a.origin_model_call_id = s.model_call_id
+                    AND a.state IN ('ready', 'awaiting_approval')
+                    AND a.policy_rule_id = ?4
+                    AND a.policy_decision = ?5
+                    AND (
+                      (?6 IS NULL AND ap.approval_id IS NULL)
+                      OR (
+                        ap.approval_id = ?6
+                        AND ap.state IN ('approved', 'executing')
+                        AND ap.action_hash = a.action_hash
+                        AND ap.workspace_identity = p.workspace_identity
+                        AND ap.policy_snapshot_hash = r.policy_snapshot_hash
+                        AND ap.config_snapshot_hash = r.config_snapshot_hash
+                        AND ap.owner_actor_id = r.owner_actor_id
+                        AND ap.rule_id = a.policy_rule_id
+                      )
+                    )
+                    AND (
                      a.audit_event_id = ?3
                      OR (a.audit_event_id IS NULL AND (
                        (a.policy_decision = 'allow' AND a.policy_event_id = ?3)
@@ -930,7 +959,10 @@ impl SqliteRunStore {
                 params![
                     candidate.run_id.0,
                     candidate.action_id.0,
-                    candidate.event_id.0
+                    candidate.event_id.0,
+                    candidate.policy_rule,
+                    expected_policy_decision,
+                    candidate.approval_id,
                 ],
                 |_| Ok(true),
             )
@@ -939,6 +971,26 @@ impl SqliteRunStore {
         if !candidate_matches {
             return Err(StoreError::Invariant(
                 "audit receipt does not match the current execution candidate".into(),
+            ));
+        }
+        let (canonical_json, durable_action_hash): (String, String) = transaction.query_row(
+            "SELECT canonical_json, action_hash FROM actions
+                 WHERE run_id = ?1 AND action_id = ?2",
+            params![candidate.run_id.0, candidate.action_id.0],
+            |row| Ok((row.get(0)?, row.get(1)?)),
+        )?;
+        let action: AgentAction =
+            serde_json::from_str(&canonical_json).map_err(|_| StoreError::Corrupt)?;
+        let canonical = serde_json::to_string(&action).map_err(|_| StoreError::Corrupt)?;
+        let recalculated_hash = action_hash(&action).map_err(|_| StoreError::Corrupt)?;
+        if canonical != canonical_json || recalculated_hash != durable_action_hash {
+            return Err(StoreError::Corrupt);
+        }
+        if durable_action_hash != candidate.action_hash
+            || action.action_summary() != candidate.action_summary
+        {
+            return Err(StoreError::Invariant(
+                "durable action no longer matches execution candidate".into(),
             ));
         }
         let existing: Option<(String, i64, String, String)> = transaction
@@ -977,12 +1029,14 @@ impl SqliteRunStore {
             "UPDATE actions SET audit_event_id = ?1, audit_sequence = ?2
              WHERE run_id = ?3 AND action_id = ?4
                AND state IN ('ready', 'awaiting_approval')
-               AND (audit_event_id IS NULL OR audit_event_id = ?1)",
+               AND (audit_event_id IS NULL OR audit_event_id = ?1)
+               AND action_hash = ?5",
             params![
                 candidate.event_id.0,
                 receipt.sequence(),
                 candidate.run_id.0,
-                candidate.action_id.0
+                candidate.action_id.0,
+                candidate.action_hash,
             ],
         )?;
         ensure_single_update(updated)?;
@@ -1011,7 +1065,9 @@ pub struct ExecutionCandidate {
     event_id: EventId,
     run_id: RunId,
     action_id: ActionId,
+    step_id: StepId,
     action_hash: String,
+    action_summary: String,
     owner_actor_id: String,
     approval_id: Option<String>,
     policy_rule: String,
@@ -1029,6 +1085,19 @@ type ExecutionCandidateRow = (
     Option<String>,
     Option<String>,
     Option<String>,
+    String,
+    String,
+    String,
+);
+
+type ExecutionCandidateEventRow = (
+    u16,
+    Option<String>,
+    Option<String>,
+    Option<String>,
+    u64,
+    String,
+    String,
     String,
 );
 
@@ -1050,6 +1119,88 @@ type ApprovalRow = (
     Option<String>,
     i64,
 );
+
+fn validate_execution_candidate_event(
+    connection: &Connection,
+    candidate: &ExecutionCandidate,
+) -> Result<(), StoreError> {
+    let row: Option<ExecutionCandidateEventRow> = connection
+        .query_row(
+            "SELECT schema_version, turn_id, step_id, call_id, sequence,
+                    occurred_at, kind, sanitized_payload
+             FROM events WHERE run_id = ?1 AND event_id = ?2",
+            params![candidate.run_id.0, candidate.event_id.0],
+            |row| {
+                Ok((
+                    row.get(0)?,
+                    row.get(1)?,
+                    row.get(2)?,
+                    row.get(3)?,
+                    row.get(4)?,
+                    row.get(5)?,
+                    row.get(6)?,
+                    row.get(7)?,
+                ))
+            },
+        )
+        .optional()?;
+    let Some((schema, turn_id, step_id, call_id, sequence, occurred_at, kind, payload)) = row
+    else {
+        return Err(StoreError::Corrupt);
+    };
+    let payload: serde_json::Value =
+        serde_json::from_str(&payload).map_err(|_| StoreError::Corrupt)?;
+    let event: HarnessEvent = serde_json::from_value(serde_json::json!({
+        "schema_version": schema,
+        "event_id": candidate.event_id.0,
+        "run_id": candidate.run_id.0,
+        "turn_id": turn_id,
+        "step_id": step_id,
+        "call_id": call_id,
+        "sequence": sequence,
+        "occurred_at": occurred_at,
+        "kind": kind,
+        "payload": payload,
+    }))
+    .map_err(|_| StoreError::Corrupt)?;
+    if event.step_id.as_ref() != Some(&candidate.step_id)
+        || event.call_id.is_some()
+        || event.occurred_at != candidate.occurred_at
+    {
+        return Err(StoreError::Corrupt);
+    }
+    let matches = match (&event.kind, candidate.approval_id.as_deref()) {
+        (
+            HarnessEventKind::PolicyDecided {
+                action_id,
+                decision,
+                rule_id,
+            },
+            None,
+        ) => {
+            action_id == &candidate.action_id
+                && policy_decision_name(*decision) == candidate.decision
+                && rule_id == &candidate.policy_rule
+        }
+        (
+            HarnessEventKind::ApprovalResolved {
+                approval_id,
+                decision,
+            },
+            Some(expected_approval),
+        ) => {
+            approval_id.0 == expected_approval
+                && candidate.decision == "approved"
+                && matches!(decision.as_str(), "approved" | "reissued" | "executing")
+        }
+        _ => false,
+    };
+    if matches {
+        Ok(())
+    } else {
+        Err(StoreError::Corrupt)
+    }
+}
 
 impl ExecutionCandidate {
     pub fn event_id(&self) -> &EventId {
@@ -1075,6 +1226,8 @@ impl ExecutionCandidate {
             actor: self.owner_actor_id.clone(),
             run_id: self.run_id.0.clone(),
             action_id: Some(self.action_id.0.clone()),
+            action_summary: Some(self.action_summary.clone()),
+            action_hash: Some(self.action_hash.clone()),
             approval_id: self.approval_id.clone(),
             policy_rule: self.policy_rule.clone(),
             decision: self.decision.clone(),
