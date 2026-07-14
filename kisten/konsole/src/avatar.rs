@@ -120,7 +120,6 @@ fn parse_logo() -> Logo {
         match character {
             '\u{feff}' | '\r' => {}
             '\n' => {
-                trim_plain_padding(rows.last_mut().expect("logo row exists"));
                 rows.push(Vec::new());
                 style = Style::default();
             }
@@ -152,22 +151,30 @@ fn parse_logo() -> Logo {
     while rows.last().is_some_and(Vec::is_empty) {
         rows.pop();
     }
-    // `chafa --size 66x30` is the source geometry.  Keep its right margin
-    // while downsampling so the portrait does not become horizontally wide.
-    let width = rows
-        .iter()
-        .map(Vec::len)
-        .max()
-        .unwrap_or(SOURCE_WIDTH)
-        .max(SOURCE_WIDTH);
+
+    // Chafa treats `--size 66x30` as a maximum. For the square source and
+    // `vhalf` symbols it emits 60 columns, so centre those cells in the
+    // requested canvas before responsive sampling.
+    let emitted_width = rows.iter().map(Vec::len).max().unwrap_or(SOURCE_WIDTH);
+    let width = emitted_width.max(SOURCE_WIDTH);
+    let left_padding = width.saturating_sub(emitted_width) / 2;
+    for row in &mut rows {
+        row.resize(emitted_width, plain_space());
+        if left_padding > 0 {
+            let mut centred = Vec::with_capacity(width);
+            centred.extend(std::iter::repeat(plain_space()).take(left_padding));
+            centred.append(row);
+            centred.resize(width, plain_space());
+            *row = centred;
+        }
+    }
     Logo { rows, width }
 }
 
-fn trim_plain_padding(row: &mut Vec<Cell>) {
-    while row.last().is_some_and(|cell| {
-        cell.character == ' ' && cell.style == Style::default()
-    }) {
-        row.pop();
+fn plain_space() -> Cell {
+    Cell {
+        character: ' ',
+        style: Style::default(),
     }
 }
 
@@ -227,10 +234,15 @@ mod tests {
     use super::*;
 
     #[test]
-    fn logo_source_matches_chafa_geometry_and_contains_half_blocks() {
+    fn logo_source_is_centered_in_the_requested_chafa_canvas() {
         let logo = LOGO.get_or_init(parse_logo);
         assert_eq!(logo.rows.len(), SOURCE_HEIGHT);
         assert_eq!(logo.width, SOURCE_WIDTH);
+        assert!(logo.rows.iter().all(|row| row.len() == SOURCE_WIDTH));
+        assert!(logo.rows.iter().all(|row| {
+            row[..3].iter().all(is_plain_space)
+                && row[SOURCE_WIDTH - 3..].iter().all(is_plain_space)
+        }));
         assert!(logo
             .rows
             .iter()
@@ -241,6 +253,10 @@ mod tests {
             .iter()
             .flat_map(|row| row.iter())
             .all(|cell| cell.character == ' ' || cell.character == '\u{2580}'));
+    }
+
+    fn is_plain_space(cell: &Cell) -> bool {
+        cell.character == ' ' && cell.style == Style::default()
     }
 
     #[test]
