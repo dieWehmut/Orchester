@@ -6,8 +6,10 @@ use std::sync::OnceLock;
 pub const WIDTH: usize = 44;
 pub const HEIGHT: usize = 20;
 
+const SOURCE_WIDTH: usize = 66;
+const SOURCE_HEIGHT: usize = 30;
 const RESET: &str = "\x1b[0m";
-const LOGO_SOURCE: &[u8] = include_bytes!("../../../sample/logo/logo.txt");
+const LOGO_SOURCE: &str = include_str!("../assets/logo.ansi");
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 struct Rgb(u8, u8, u8);
@@ -34,28 +36,47 @@ struct Logo {
 static LOGO: OnceLock<Logo> = OnceLock::new();
 
 pub fn render_row<W: Write>(out: &mut W, row: usize) -> io::Result<()> {
-    render_row_width(out, row, WIDTH)
+    render_row_size(out, row, WIDTH, HEIGHT)
 }
 
-/// Render a row at a smaller terminal width by sampling the source columns.
-/// The character palette remains unchanged, so scaling never turns the art
-/// into a raster image or introduces a non-ASCII glyph.
+/// Return the proportional portrait height for a bounded output width.
+pub fn height_for_width(requested_width: usize) -> usize {
+    let width = requested_width.min(WIDTH);
+    if width == 0 {
+        return 0;
+    }
+
+    ((width * SOURCE_HEIGHT + SOURCE_WIDTH / 2) / SOURCE_WIDTH).clamp(1, HEIGHT)
+}
+
+/// Render a row at a proportional terminal width.
 pub fn render_row_width<W: Write>(
     out: &mut W,
     row: usize,
     requested_width: usize,
 ) -> io::Result<()> {
+    render_row_size(out, row, requested_width, height_for_width(requested_width))
+}
+
+/// Render a row at an explicit bounded size by sampling the Chafa source.
+pub fn render_row_size<W: Write>(
+    out: &mut W,
+    row: usize,
+    requested_width: usize,
+    requested_height: usize,
+) -> io::Result<()> {
     let width = requested_width.min(WIDTH);
-    if width == 0 {
+    let height = requested_height.min(HEIGHT);
+    if width == 0 || height == 0 {
         return Ok(());
     }
 
-    if row >= HEIGHT {
+    if row >= height {
         return write!(out, "{}", " ".repeat(width));
     }
 
     let logo = LOGO.get_or_init(parse_logo);
-    let source_row = sample_index(row, HEIGHT, logo.rows.len());
+    let source_row = sample_index(row, height, logo.rows.len());
     let source = logo.rows.get(source_row);
     let source_width = logo.width.max(1);
     let mut active = Style::default();
@@ -91,10 +112,9 @@ fn sample_index(index: usize, output_len: usize, source_len: usize) -> usize {
 }
 
 fn parse_logo() -> Logo {
-    let source = decode_source();
     let mut rows = vec![Vec::new()];
     let mut style = Style::default();
-    let mut chars = source.chars().peekable();
+    let mut chars = LOGO_SOURCE.chars().peekable();
 
     while let Some(character) = chars.next() {
         match character {
@@ -119,14 +139,6 @@ fn parse_logo() -> Logo {
                     apply_sgr(&mut style, &parameters);
                 }
             }
-            // The source was saved after a code-page conversion of U+2580.
-            '\u{923b}' if matches!(chars.peek(), Some('\u{20ac}')) => {
-                chars.next();
-                rows.last_mut().expect("logo row exists").push(Cell {
-                    character: '\u{2580}',
-                    style,
-                });
-            }
             value if !value.is_control() => {
                 rows.last_mut().expect("logo row exists").push(Cell {
                     character: value,
@@ -142,19 +154,13 @@ fn parse_logo() -> Logo {
     }
     // `chafa --size 66x30` is the source geometry.  Keep its right margin
     // while downsampling so the portrait does not become horizontally wide.
-    let width = rows.iter().map(Vec::len).max().unwrap_or(66).max(66);
+    let width = rows
+        .iter()
+        .map(Vec::len)
+        .max()
+        .unwrap_or(SOURCE_WIDTH)
+        .max(SOURCE_WIDTH);
     Logo { rows, width }
-}
-
-fn decode_source() -> String {
-    if LOGO_SOURCE.starts_with(&[0xff, 0xfe]) {
-        let units = LOGO_SOURCE[2..]
-            .chunks_exact(2)
-            .map(|pair| u16::from_le_bytes([pair[0], pair[1]]))
-            .collect::<Vec<_>>();
-        return String::from_utf16_lossy(&units);
-    }
-    String::from_utf8_lossy(LOGO_SOURCE).into_owned()
 }
 
 fn trim_plain_padding(row: &mut Vec<Cell>) {
@@ -221,10 +227,10 @@ mod tests {
     use super::*;
 
     #[test]
-    fn logo_source_matches_chafa_geometry_and_decodes_half_blocks() {
+    fn logo_source_matches_chafa_geometry_and_contains_half_blocks() {
         let logo = LOGO.get_or_init(parse_logo);
-        assert_eq!(logo.rows.len(), 30);
-        assert_eq!(logo.width, 66);
+        assert_eq!(logo.rows.len(), SOURCE_HEIGHT);
+        assert_eq!(logo.width, SOURCE_WIDTH);
         assert!(logo
             .rows
             .iter()
@@ -258,6 +264,45 @@ mod tests {
         assert_eq!(strip_ansi(&rendered).chars().count(), 24);
         assert!(rendered.contains("\x1b[38;2;"));
         assert!(strip_ansi(&rendered).contains('\u{2580}'));
+    }
+
+    #[test]
+    fn responsive_height_preserves_the_source_aspect_ratio_and_bounds() {
+        assert_eq!(height_for_width(0), 0);
+        assert_eq!(height_for_width(1), 1);
+        assert_eq!(height_for_width(24), 11);
+        assert_eq!(height_for_width(WIDTH), HEIGHT);
+        assert_eq!(height_for_width(usize::MAX), HEIGHT);
+    }
+
+    #[test]
+    fn specified_render_size_keeps_half_blocks_colour_and_dimensions() {
+        let mut out = Vec::new();
+        render_row_size(&mut out, 5, 24, 11).unwrap();
+        let rendered = String::from_utf8(out).unwrap();
+
+        assert_eq!(strip_ansi(&rendered).chars().count(), 24);
+        assert!(strip_ansi(&rendered).contains('\u{2580}'));
+        assert!(rendered.contains("\x1b[38;2;"));
+        assert!(rendered.contains("\x1b[48;2;"));
+
+        let mut bounded = Vec::new();
+        render_row_size(&mut bounded, HEIGHT, usize::MAX, usize::MAX).unwrap();
+        assert_eq!(String::from_utf8(bounded).unwrap(), " ".repeat(WIDTH));
+
+        let mut empty = Vec::new();
+        render_row_size(&mut empty, 0, 0, 0).unwrap();
+        assert!(empty.is_empty());
+    }
+
+    #[test]
+    fn embedded_logo_is_utf8_without_terminal_cursor_controls() {
+        let source = std::str::from_utf8(LOGO_SOURCE.as_bytes()).expect("logo asset must be UTF-8");
+        assert!(source.contains('\u{2580}'));
+        assert!(source.contains("\x1b[38;2;"));
+        assert!(source.contains("\x1b[48;2;"));
+        assert!(!source.contains("\x1b[?25l"));
+        assert!(!source.contains("\x1b[?25h"));
     }
 
     #[test]

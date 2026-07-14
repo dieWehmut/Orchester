@@ -900,13 +900,13 @@ fn render_chat_home_frame<W: Write>(
     let prompt_rows = 1;
     let full_panel_rows = chat_panel_line_count(width);
     let full_panel_total = full_panel_rows
-        .saturating_add(1)
         .saturating_add(prompt_rows)
         .saturating_add(desired_content_rows)
         .saturating_add(status_rows);
 
     let (header_rows, separator_rows, full_panel) = if width >= 50 && full_panel_total <= height {
-        (full_panel_rows, 1, true)
+        let separator_rows = usize::from(full_panel_total.saturating_add(1) <= height);
+        (full_panel_rows, separator_rows, true)
     } else {
         let minimum_body = prompt_rows
             .saturating_add(status_rows)
@@ -1124,7 +1124,8 @@ fn startup_panel_rows() -> Vec<String> {
 fn chat_panel_line_count(width: usize) -> usize {
     let info_rows = startup_panel_rows().len();
     if width >= 60 {
-        avatar::HEIGHT.max(info_rows).saturating_add(2)
+        let (_, portrait_height) = portrait_size(width);
+        portrait_height.max(info_rows).saturating_add(2)
     } else {
         info_rows.saturating_add(2)
     }
@@ -1166,27 +1167,52 @@ fn render_portrait_info_box<W: Write>(
     rows: &[String],
 ) -> io::Result<()> {
     let panel_width = width.clamp(60, 120);
-    let portrait_width = if panel_width >= 96 { avatar::WIDTH } else { 24 };
+    let (portrait_width, portrait_height) = portrait_size(panel_width);
     let right_width = panel_width.saturating_sub(portrait_width + 7);
-    let height = avatar::HEIGHT.max(rows.len());
+    let height = portrait_height.max(rows.len());
+    let portrait_offset = vertical_center_offset(height, portrait_height);
+    let text_offset = vertical_center_offset(height, rows.len());
 
     writeln!(out, "{DIM}+{}+{RESET}", "-".repeat(panel_width - 2))?;
     for row in 0..height {
         write!(out, "{DIM}|{RESET} ")?;
-        if portrait_width == avatar::WIDTH {
-            avatar::render_row(out, row)?;
+        if row >= portrait_offset && row < portrait_offset.saturating_add(portrait_height) {
+            let portrait_row = row - portrait_offset;
+            if portrait_width == avatar::WIDTH && portrait_height == avatar::HEIGHT {
+                avatar::render_row(out, portrait_row)?;
+            } else {
+                avatar::render_row_width(out, portrait_row, portrait_width)?;
+            }
         } else {
-            avatar::render_row_width(out, row, portrait_width)?;
+            write!(out, "{}", " ".repeat(portrait_width))?;
         }
         write!(out, " {DIM}|{RESET} ")?;
 
-        let text = rows.get(row).map(String::as_str).unwrap_or("");
+        let text = row
+            .checked_sub(text_offset)
+            .and_then(|index| rows.get(index))
+            .map(String::as_str)
+            .unwrap_or("");
         let text = truncate(&sanitize_terminal_text(text), right_width);
         let pad = " ".repeat(right_width.saturating_sub(display_width(&text)));
         write!(out, "{text}{pad} ")?;
         writeln!(out, "{DIM}|{RESET}")?;
     }
     writeln!(out, "{DIM}+{}+{RESET}", "-".repeat(panel_width - 2))
+}
+
+fn portrait_size(width: usize) -> (usize, usize) {
+    let panel_width = width.clamp(60, 120);
+    let portrait_width = if panel_width >= 96 {
+        avatar::WIDTH
+    } else {
+        24.min(avatar::WIDTH)
+    };
+    (portrait_width, avatar::height_for_width(portrait_width))
+}
+
+fn vertical_center_offset(container: usize, content: usize) -> usize {
+    container.saturating_sub(content) / 2
 }
 
 fn render_status_line<W: Write>(out: &mut W, width: usize) -> io::Result<()> {
@@ -2066,6 +2092,46 @@ mod tests {
         render_chat_home(&mut narrow, 55, "", &[], 0, false).unwrap();
         let narrow = strip_ansi(&String::from_utf8(narrow).unwrap());
         assert!(!narrow.contains('\u{2580}'));
+    }
+
+    #[test]
+    fn empty_eighty_by_twenty_four_home_keeps_logo_prompt_and_status() {
+        let mut out = Vec::new();
+        render_chat_home_in_viewport(&mut out, 80, 24, "", &[], 0, false).unwrap();
+
+        let rendered = String::from_utf8(out).unwrap();
+        let plain = strip_ansi(&rendered);
+        assert!(
+            rendered.contains("\x1b[38;2;") && rendered.contains("\x1b[48;2;"),
+            "80x24 startup should keep the colour logo:\n{rendered}"
+        );
+        assert!(
+            plain.contains('\u{2580}'),
+            "80x24 startup should keep the half-block logo:\n{plain}"
+        );
+        assert!(
+            plain
+                .lines()
+                .any(|line| line.trim_start().starts_with("> ")),
+            "80x24 startup should keep the prompt:\n{plain}"
+        );
+        assert!(
+            plain.contains("model not configured"),
+            "80x24 startup should keep the status:\n{plain}"
+        );
+        assert!(
+            plain.lines().count() <= 24,
+            "80x24 startup overflowed:\n{plain}"
+        );
+    }
+
+    #[test]
+    fn portrait_geometry_scales_and_centres_with_the_panel() {
+        assert_eq!(portrait_size(80), (24, 11));
+        assert_eq!(portrait_size(100), (avatar::WIDTH, avatar::HEIGHT));
+        assert_eq!(portrait_size(usize::MAX), (avatar::WIDTH, avatar::HEIGHT));
+        assert_eq!(vertical_center_offset(19, 11), 4);
+        assert_eq!(vertical_center_offset(11, 19), 0);
     }
 
     #[test]
