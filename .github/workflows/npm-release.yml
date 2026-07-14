@@ -309,7 +309,7 @@ jobs:
             local archive="${package#@}"
             archive="${archive//\//-}-$VERSION.tgz"
             test -f "release/$archive"
-            npm stage publish "release/$archive" --access public --ignore-scripts
+            npm stage publish "./release/$archive" --access public --ignore-scripts
           }
 
           mapfile -t platform_packages < <(

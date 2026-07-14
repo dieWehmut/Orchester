@@ -97,6 +97,7 @@ test('staged publishing is manual, OIDC-scoped, and orders platform packages bef
   assert.ok(platformPreflight > platformLoop);
   assert.ok(metaPublish > platformPreflight);
   assert.match(workflow.slice(publishJob), /npm stage publish/);
+  assert.match(workflow.slice(publishJob), /npm stage publish "\.\/release\/\$archive"/);
   assert.equal(/\bnpm publish\b/.test(workflow.slice(publishJob)), false);
   assert.match(workflow, /concurrency:\n  group: npm-release\n  cancel-in-progress: false/);
   assert.equal(workflow.includes('NODE_AUTH_TOKEN'), false);
