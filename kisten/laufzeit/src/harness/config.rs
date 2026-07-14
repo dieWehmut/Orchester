@@ -6,13 +6,15 @@
 //! credentials, URLs, or weaker security decisions.
 
 use std::collections::BTreeMap;
+use std::fmt;
 use std::fs;
 use std::io;
 use std::path::{Path, PathBuf};
 
 pub use orchester_protokoll::PolicyDecision;
 use secrecy::SecretString;
-use serde::{Deserialize, Serialize};
+use serde::ser::SerializeMap;
+use serde::{Deserialize, Serialize, Serializer};
 use serde_json::Value;
 use thiserror::Error;
 
@@ -107,14 +109,14 @@ impl SecretReference {
 
 /// Top-level user configuration.  Security-sensitive nested objects reject
 /// unknown fields so typos cannot silently weaken governance.
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub struct UserConfig {
     #[serde(rename = "$schema", default, skip_serializing_if = "Option::is_none")]
     pub schema: Option<String>,
     #[serde(default = "default_version")]
     pub version: u32,
-    #[serde(default)]
+    #[serde(default, serialize_with = "serialize_env")]
     pub env: BTreeMap<String, String>,
     #[serde(default)]
     pub model_provider: Option<String>,
@@ -158,6 +160,25 @@ pub struct UserConfig {
     pub notice: Option<NoticeConfig>,
     #[serde(default)]
     pub plugins: BTreeMap<String, PluginConfig>,
+    /// The only source that can authorize literal credentials is a user file
+    /// that passed [`require_user_permissions`].  This is intentionally
+    /// private and skipped by serde so callers cannot forge it through the
+    /// public parsing/serialization surface.
+    #[serde(skip)]
+    credential_source: CredentialSource,
+}
+
+#[derive(Clone, Copy, Default, PartialEq, Eq)]
+enum CredentialSource {
+    #[default]
+    Untrusted,
+    ProtectedUserFile,
+}
+
+impl CredentialSource {
+    fn allows_plaintext_credentials(self) -> bool {
+        matches!(self, Self::ProtectedUserFile)
+    }
 }
 
 impl Default for UserConfig {
@@ -186,7 +207,14 @@ impl Default for UserConfig {
             windows: None,
             notice: None,
             plugins: BTreeMap::new(),
+            credential_source: CredentialSource::Untrusted,
         }
+    }
+}
+
+impl fmt::Debug for UserConfig {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt_redacted_debug("UserConfig", self, formatter)
     }
 }
 
@@ -200,7 +228,10 @@ impl UserConfig {
         }
         for (name, value) in &self.env {
             validate_reference_syntax(value, name)?;
-            if is_sensitive_name(name) && SecretReference::parse(value).ok().flatten().is_none() {
+            if is_sensitive_name(name)
+                && SecretReference::parse(value).ok().flatten().is_none()
+                && !self.credential_source.allows_plaintext_credentials()
+            {
                 return Err(ConfigError::PlaintextSecret { path: name.clone() });
             }
         }
@@ -211,7 +242,7 @@ impl UserConfig {
                         path: format!("model_providers.{provider}.api_key"),
                     }
                 })?;
-                if reference.is_none() {
+                if reference.is_none() && !self.credential_source.allows_plaintext_credentials() {
                     return Err(ConfigError::PlaintextSecret {
                         path: format!("model_providers.{provider}.api_key"),
                     });
@@ -257,9 +288,17 @@ impl UserConfig {
             SecretReference::parse(value).map_err(|_| ConfigError::InvalidSecretReference {
                 path: name.to_owned(),
             })?;
-        let reference = reference.ok_or_else(|| ConfigError::PlaintextSecret {
-            path: name.to_owned(),
-        })?;
+        let reference = match reference {
+            Some(reference) => reference,
+            None if self.credential_source.allows_plaintext_credentials() => {
+                return Ok(SecretString::new(value.to_owned().into_boxed_str()));
+            }
+            None => {
+                return Err(ConfigError::PlaintextSecret {
+                    path: name.to_owned(),
+                })
+            }
+        };
         stack.push(name.to_owned());
         let result = match reference {
             SecretReference::Provider(provider) => store
@@ -300,6 +339,9 @@ impl UserConfig {
                 .map(ProviderSecret::new)
                 .ok_or(ConfigError::SecretUnavailable { provider: name }),
             Some(SecretReference::Environment(name)) => self.resolve_secret(&name, store),
+            None if self.credential_source.allows_plaintext_credentials() => Ok(
+                ProviderSecret::new(SecretString::new(value.to_owned().into_boxed_str())),
+            ),
             None => Err(ConfigError::PlaintextSecret {
                 path: format!("model_providers.{provider}.api_key"),
             }),
@@ -384,20 +426,27 @@ pub struct ProjectConfig {
     pub tui: Option<TuiConfig>,
 }
 
-/// A named provider profile.  `api_key` must be a reference, never a secret.
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+/// A named provider profile.  Literal `api_key` values are accepted only from
+/// a protected user file and are always redacted when serialized or formatted.
+#[derive(Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(deny_unknown_fields)]
 pub struct ProviderConfig {
     #[serde(default)]
     pub name: Option<String>,
     #[serde(default)]
     pub base_url: Option<String>,
-    #[serde(default)]
+    #[serde(default, serialize_with = "serialize_provider_api_key")]
     pub api_key: Option<String>,
     #[serde(default)]
     pub wire_api: Option<String>,
     #[serde(default)]
     pub requires_openai_auth: bool,
+}
+
+impl fmt::Debug for ProviderConfig {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt_redacted_debug("ProviderConfig", self, formatter)
+    }
 }
 
 /// Security policy knobs.  The enum's ordering is intentional: a larger
@@ -564,6 +613,53 @@ impl RedactedConfig {
     }
 }
 
+fn serialize_env<S>(env: &BTreeMap<String, String>, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    let mut map = serializer.serialize_map(Some(env.len()))?;
+    for (name, value) in env {
+        let rendered = if is_sensitive_name(name) || looks_like_secret(value) {
+            redact_sensitive_literal(value)
+        } else {
+            value.as_str()
+        };
+        map.serialize_entry(name, rendered)?;
+    }
+    map.end()
+}
+
+fn serialize_provider_api_key<S>(value: &Option<String>, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    match value {
+        Some(value) => serializer.serialize_some(redact_sensitive_literal(value)),
+        None => serializer.serialize_none(),
+    }
+}
+
+fn redact_sensitive_literal(value: &str) -> &str {
+    if SecretReference::parse(value).ok().flatten().is_some() {
+        value
+    } else {
+        "<redacted>"
+    }
+}
+
+fn fmt_redacted_debug<T: Serialize>(
+    name: &str,
+    value: &T,
+    formatter: &mut fmt::Formatter<'_>,
+) -> fmt::Result {
+    let serialized =
+        serde_json::to_value(value).unwrap_or_else(|_| Value::String("<redacted>".to_owned()));
+    formatter
+        .debug_tuple(name)
+        .field(&redact_debug_value(serialized))
+        .finish()
+}
+
 /// Filesystem permission finding returned by `config doctor`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PermissionDiagnostic {
@@ -632,10 +728,19 @@ impl ConfigLoader {
     }
 
     pub fn load_user(&self, source: &str) -> Result<UserConfig, ConfigError> {
+        self.load_user_with_source(source, CredentialSource::Untrusted)
+    }
+
+    fn load_user_with_source(
+        &self,
+        source: &str,
+        credential_source: CredentialSource,
+    ) -> Result<UserConfig, ConfigError> {
         let value = parse_jsonc(source)?;
-        validate_user_value(&value)?;
+        validate_user_value(&value, credential_source)?;
         let mut config: UserConfig =
             serde_json::from_value(value).map_err(|error| ConfigError::Parse(error.to_string()))?;
+        config.credential_source = credential_source;
         if let Some(reviewer) = config.approvals_reviewer.take() {
             if reviewer.trim().is_empty() {
                 return Err(ConfigError::Validation {
@@ -660,7 +765,10 @@ impl ConfigLoader {
     pub fn load_user_file(&self, path: impl AsRef<Path>) -> Result<UserConfig, ConfigError> {
         let path = path.as_ref();
         require_user_permissions(path)?;
-        self.load_user(&fs::read_to_string(path)?)
+        self.load_user_with_source(
+            &fs::read_to_string(path)?,
+            CredentialSource::ProtectedUserFile,
+        )
     }
 
     pub fn load_project_file(&self, path: impl AsRef<Path>) -> Result<ProjectConfig, ConfigError> {
@@ -1053,11 +1161,18 @@ fn parse_jsonc(source: &str) -> Result<Value, ConfigError> {
     })
 }
 
-fn validate_user_value(value: &Value) -> Result<(), ConfigError> {
-    validate_plaintext_strings(value, "")
+fn validate_user_value(
+    value: &Value,
+    credential_source: CredentialSource,
+) -> Result<(), ConfigError> {
+    validate_plaintext_strings(value, "", credential_source)
 }
 
-fn validate_plaintext_strings(value: &Value, path: &str) -> Result<(), ConfigError> {
+fn validate_plaintext_strings(
+    value: &Value,
+    path: &str,
+    credential_source: CredentialSource,
+) -> Result<(), ConfigError> {
     match value {
         Value::Object(values) => {
             for (key, child) in values {
@@ -1069,20 +1184,27 @@ fn validate_plaintext_strings(value: &Value, path: &str) -> Result<(), ConfigErr
                                 path: child_path.clone(),
                             }
                         })?;
-                        if parsed.is_none() {
+                        if parsed.is_none()
+                            && !(credential_source.allows_plaintext_credentials()
+                                && is_plaintext_credential_path(&child_path))
+                        {
                             return Err(ConfigError::PlaintextSecret { path: child_path });
                         }
                     }
                 }
-                validate_plaintext_strings(child, &child_path)?;
+                validate_plaintext_strings(child, &child_path, credential_source)?;
             }
         }
         Value::Array(values) => {
             for (index, child) in values.iter().enumerate() {
-                validate_plaintext_strings(child, &format!("{path}[{index}]"))?;
+                validate_plaintext_strings(child, &format!("{path}[{index}]"), credential_source)?;
             }
         }
-        Value::String(text) if looks_like_secret(text) => {
+        Value::String(text)
+            if looks_like_secret(text)
+                && !(credential_source.allows_plaintext_credentials()
+                    && is_plaintext_credential_path(path)) =>
+        {
             return Err(ConfigError::PlaintextSecret {
                 path: if path.is_empty() {
                     "<root>".into()
@@ -1094,6 +1216,14 @@ fn validate_plaintext_strings(value: &Value, path: &str) -> Result<(), ConfigErr
         _ => {}
     }
     Ok(())
+}
+
+fn is_plaintext_credential_path(path: &str) -> bool {
+    path.strip_prefix("env.")
+        .is_some_and(|name| !name.is_empty())
+        || path
+            .strip_prefix("model_providers.")
+            .is_some_and(|profile| profile.ends_with(".api_key"))
 }
 
 fn validate_reference_syntax(value: &str, path: &str) -> Result<(), ConfigError> {
@@ -1218,6 +1348,35 @@ fn redact_value(value: Value) -> Value {
         ),
         Value::Array(values) => Value::Array(values.into_iter().map(redact_value).collect()),
         Value::String(text) if looks_like_secret(&text) => Value::String("<redacted>".into()),
+        other => other,
+    }
+}
+
+fn redact_debug_value(value: Value) -> Value {
+    match value {
+        Value::Object(values) => Value::Object(
+            values
+                .into_iter()
+                .map(|(name, child)| {
+                    let normalized = name
+                        .chars()
+                        .filter(|ch| ch.is_ascii_alphanumeric())
+                        .collect::<String>()
+                        .to_ascii_lowercase();
+                    let child = if is_sensitive_name(&name) || normalized == "baseurl" {
+                        match child {
+                            Value::String(_) => Value::String("[REDACTED]".to_owned()),
+                            other => redact_debug_value(other),
+                        }
+                    } else {
+                        redact_debug_value(child)
+                    };
+                    (name, child)
+                })
+                .collect(),
+        ),
+        Value::Array(values) => Value::Array(values.into_iter().map(redact_debug_value).collect()),
+        Value::String(text) if looks_like_secret(&text) => Value::String("[REDACTED]".to_owned()),
         other => other,
     }
 }

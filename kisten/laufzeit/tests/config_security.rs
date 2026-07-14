@@ -517,11 +517,183 @@ fn codex_style_user_config_aliases_remain_typed_and_safe() {
 
 #[test]
 fn plaintext_secret_is_rejected_at_user_config_boundary() {
-    let err = ConfigLoader::test()
-        .load_user(r#"{ "env": { "OPENAI_API_KEY": "plaintext-not-a-reference" } }"#)
-        .unwrap_err();
-    assert!(matches!(err, ConfigError::PlaintextSecret { .. }));
-    assert!(!err.to_string().contains("plaintext-not-a-reference"));
+    for source in [
+        r#"{ "env": { "OPENAI_API_KEY": "plaintext-not-a-reference" } }"#,
+        r#"{ "model_providers": { "OpenAI": { "api_key": "plaintext-not-a-reference" } } }"#,
+    ] {
+        let err = ConfigLoader::test().load_user(source).unwrap_err();
+        assert!(matches!(err, ConfigError::PlaintextSecret { .. }));
+        assert!(!err.to_string().contains("plaintext-not-a-reference"));
+    }
+}
+
+#[test]
+fn protected_user_file_resolves_direct_credentials_and_redacts_every_view() {
+    let root = TempConfigDir::new("protected-credentials");
+    let user_dir = root.path().join("home").join(".orchester");
+    std::fs::create_dir_all(&user_dir).unwrap();
+    let path = user_dir.join("orchester.jsonc");
+    std::fs::write(
+        &path,
+        r#"{
+            "env": { "OPENAI_API_KEY": "sk-protected-test-env" },
+            "model_providers": {
+                "OpenAI": {
+                    "name": "OpenAI",
+                    "base_url": "https://debug-base-url-marker.example/v1",
+                    "api_key": "sk-protected-test-provider"
+                }
+            }
+        }"#,
+    )
+    .unwrap();
+    make_user_config_permissions_secure(&user_dir, &path);
+
+    let config = ConfigLoader::test().load_user_file(&path).unwrap();
+    let store = InMemoryCredentialStore::default();
+    assert_eq!(
+        config
+            .resolve_secret("OPENAI_API_KEY", &store)
+            .unwrap()
+            .expose_for_provider(),
+        "sk-protected-test-env"
+    );
+    assert_eq!(
+        config
+            .resolve_provider_secret("OpenAI", &store)
+            .unwrap()
+            .expose_for_provider(),
+        "sk-protected-test-provider"
+    );
+
+    let config_debug = format!("{:?}", config);
+    let provider_debug = format!("{:?}", config.model_providers["OpenAI"]);
+    for rendered in [&config_debug, &provider_debug] {
+        assert!(!rendered.contains("debug-base-url-marker"), "{rendered}");
+        assert!(!rendered.contains("sk-protected-test-env"), "{rendered}");
+        assert!(
+            !rendered.contains("sk-protected-test-provider"),
+            "{rendered}"
+        );
+        assert!(rendered.contains("[REDACTED]"), "{rendered}");
+    }
+
+    let serialized = serde_json::to_string(&config).unwrap();
+    assert!(serialized.contains("debug-base-url-marker"));
+    for rendered in [
+        serialized,
+        config.redacted_json(),
+        config.redacted_with_credentials(&store).unwrap().json(),
+        serde_json::to_string(&config.model_providers["OpenAI"]).unwrap(),
+    ] {
+        assert!(!rendered.contains("sk-protected-test-env"), "{rendered}");
+        assert!(
+            !rendered.contains("sk-protected-test-provider"),
+            "{rendered}"
+        );
+    }
+}
+
+#[test]
+fn protected_user_file_supports_dotted_credential_names() {
+    let root = TempConfigDir::new("protected-dotted-credentials");
+    let user_dir = root.path().join("home").join(".orchester");
+    std::fs::create_dir_all(&user_dir).unwrap();
+    let path = user_dir.join("orchester.jsonc");
+    std::fs::write(
+        &path,
+        r#"{
+            "env": { "OPENAI.API_KEY": "sk-protected-test-dotted-env" },
+            "model_providers": {
+                "OpenAI.compat": { "api_key": "sk-protected-test-dotted-provider" }
+            }
+        }"#,
+    )
+    .unwrap();
+    make_user_config_permissions_secure(&user_dir, &path);
+
+    let config = ConfigLoader::test().load_user_file(&path).unwrap();
+    let store = InMemoryCredentialStore::default();
+    assert_eq!(
+        config
+            .resolve_secret("OPENAI.API_KEY", &store)
+            .unwrap()
+            .expose_for_provider(),
+        "sk-protected-test-dotted-env"
+    );
+    assert_eq!(
+        config
+            .resolve_provider_secret("OpenAI.compat", &store)
+            .unwrap()
+            .expose_for_provider(),
+        "sk-protected-test-dotted-provider"
+    );
+}
+
+#[test]
+fn protected_user_file_provenance_survives_project_merge() {
+    let root = TempConfigDir::new("protected-merge");
+    let user_dir = root.path().join("home").join(".orchester");
+    std::fs::create_dir_all(&user_dir).unwrap();
+    let path = user_dir.join("orchester.jsonc");
+    std::fs::write(
+        &path,
+        r#"{ "env": { "OPENAI_API_KEY": "sk-protected-test-merge" } }"#,
+    )
+    .unwrap();
+    make_user_config_permissions_secure(&user_dir, &path);
+
+    let loader = ConfigLoader::test();
+    let user = loader.load_user_file(&path).unwrap();
+    let project = loader
+        .load_project(r#"{ "model": "project-model" }"#)
+        .unwrap();
+    let merged = loader.merge_project(&user, &project).unwrap();
+    assert_eq!(merged.model.as_deref(), Some("project-model"));
+    assert_eq!(
+        merged
+            .resolve_secret("OPENAI_API_KEY", &InMemoryCredentialStore::default())
+            .unwrap()
+            .expose_for_provider(),
+        "sk-protected-test-merge"
+    );
+}
+
+#[test]
+fn protected_user_file_still_rejects_malformed_secret_references() {
+    let root = TempConfigDir::new("protected-malformed-reference");
+    let user_dir = root.path().join("home").join(".orchester");
+    std::fs::create_dir_all(&user_dir).unwrap();
+    let path = user_dir.join("orchester.jsonc");
+    std::fs::write(&path, r#"{ "env": { "OPENAI_API_KEY": "${secret:}" } }"#).unwrap();
+    make_user_config_permissions_secure(&user_dir, &path);
+
+    assert!(matches!(
+        ConfigLoader::test().load_user_file(&path),
+        Err(ConfigError::InvalidSecretReference { .. })
+    ));
+}
+
+#[cfg(unix)]
+#[test]
+fn insecure_user_file_cannot_enable_plaintext_credentials() {
+    use std::os::unix::fs::PermissionsExt;
+
+    let root = TempConfigDir::new("protected-insecure");
+    let user_dir = root.path().join("home").join(".orchester");
+    std::fs::create_dir_all(&user_dir).unwrap();
+    let path = user_dir.join("orchester.jsonc");
+    std::fs::write(
+        &path,
+        r#"{ "env": { "OPENAI_API_KEY": "sk-protected-test-insecure" } }"#,
+    )
+    .unwrap();
+    std::fs::set_permissions(&user_dir, std::fs::Permissions::from_mode(0o700)).unwrap();
+    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o644)).unwrap();
+
+    let error = ConfigLoader::test().load_user_file(&path).unwrap_err();
+    assert!(matches!(error, ConfigError::InsecurePermissions { .. }));
+    assert!(!error.to_string().contains("sk-protected-test-insecure"));
 }
 
 #[test]
