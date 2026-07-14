@@ -1,5 +1,5 @@
 use orchester_laufzeit::harness::config::{
-    merge_security, ConfigError, ConfigLoader, PolicyDecision,
+    merge_security, ConfigError, ConfigLoader, PolicyDecision, ProviderConfig, UserConfig,
 };
 use orchester_laufzeit::harness::credentials::{CredentialStore, InMemoryCredentialStore};
 use std::path::PathBuf;
@@ -536,7 +536,11 @@ fn protected_user_file_resolves_direct_credentials_and_redacts_every_view() {
     std::fs::write(
         &path,
         r#"{
-            "env": { "OPENAI_API_KEY": "sk-protected-test-env" },
+            "env": {
+                "OPENAI_API_KEY": "sk-protected-test-env",
+                "BUILD_CHANNEL": "sk-protected-test-arbitrary-env",
+                "OPENAI_KEY_ALIAS": "${env:OPENAI_API_KEY}"
+            },
             "model_providers": {
                 "OpenAI": {
                     "name": "OpenAI",
@@ -551,6 +555,13 @@ fn protected_user_file_resolves_direct_credentials_and_redacts_every_view() {
 
     let config = ConfigLoader::test().load_user_file(&path).unwrap();
     let store = InMemoryCredentialStore::default();
+    assert_eq!(config.env["OPENAI_API_KEY"], "<redacted>");
+    assert_eq!(config.env["BUILD_CHANNEL"], "<redacted>");
+    assert_eq!(config.env["OPENAI_KEY_ALIAS"], "${env:OPENAI_API_KEY}");
+    assert_eq!(
+        config.model_providers["OpenAI"].api_key.as_deref(),
+        Some("<redacted>")
+    );
     assert_eq!(
         config
             .resolve_secret("OPENAI_API_KEY", &store)
@@ -565,12 +576,27 @@ fn protected_user_file_resolves_direct_credentials_and_redacts_every_view() {
             .expose_for_provider(),
         "sk-protected-test-provider"
     );
+    assert_eq!(
+        config
+            .resolve_secret("BUILD_CHANNEL", &store)
+            .unwrap()
+            .expose_for_provider(),
+        "sk-protected-test-arbitrary-env"
+    );
+    assert_eq!(
+        config
+            .resolve_secret("OPENAI_KEY_ALIAS", &store)
+            .unwrap()
+            .expose_for_provider(),
+        "sk-protected-test-env"
+    );
 
     let config_debug = format!("{:?}", config);
     let provider_debug = format!("{:?}", config.model_providers["OpenAI"]);
     for rendered in [&config_debug, &provider_debug] {
         assert!(!rendered.contains("debug-base-url-marker"), "{rendered}");
         assert!(!rendered.contains("sk-protected-test-env"), "{rendered}");
+        assert!(!rendered.contains("sk-protected-test-arbitrary-env"));
         assert!(
             !rendered.contains("sk-protected-test-provider"),
             "{rendered}"
@@ -587,11 +613,94 @@ fn protected_user_file_resolves_direct_credentials_and_redacts_every_view() {
         serde_json::to_string(&config.model_providers["OpenAI"]).unwrap(),
     ] {
         assert!(!rendered.contains("sk-protected-test-env"), "{rendered}");
+        assert!(!rendered.contains("sk-protected-test-arbitrary-env"));
         assert!(
             !rendered.contains("sk-protected-test-provider"),
             "{rendered}"
         );
     }
+}
+
+#[test]
+fn public_config_mutation_cannot_inherit_protected_literal_authority() {
+    let root = TempConfigDir::new("protected-mutation");
+    let user_dir = root.path().join("home").join(".orchester");
+    std::fs::create_dir_all(&user_dir).unwrap();
+    let path = user_dir.join("orchester.jsonc");
+    std::fs::write(
+        &path,
+        r#"{
+            "env": { "OPENAI_API_KEY": "sk-protected-test-original" },
+            "model_providers": {
+                "OpenAI": { "api_key": "sk-protected-test-provider-original" }
+            }
+        }"#,
+    )
+    .unwrap();
+    make_user_config_permissions_secure(&user_dir, &path);
+
+    let mut config = ConfigLoader::test().load_user_file(&path).unwrap();
+    config.env.insert(
+        "INJECTED_API_KEY".to_owned(),
+        "sk-protected-test-injected".to_owned(),
+    );
+    config.env.insert(
+        "OPENAI_API_KEY".to_owned(),
+        "sk-protected-test-replaced".to_owned(),
+    );
+    config.env.insert(
+        "PUBLIC_MUTATION".to_owned(),
+        "opaque-protected-test-mutation".to_owned(),
+    );
+    let injected_provider = ProviderConfig {
+        api_key: Some("sk-protected-test-provider-injected".to_owned()),
+        ..ProviderConfig::default()
+    };
+    config
+        .model_providers
+        .insert("Injected".to_owned(), injected_provider);
+
+    let store = InMemoryCredentialStore::default();
+    for result in [
+        config.resolve_secret("INJECTED_API_KEY", &store),
+        config.resolve_secret("OPENAI_API_KEY", &store),
+        config.resolve_provider_secret("Injected", &store),
+    ] {
+        assert!(matches!(result, Err(ConfigError::PlaintextSecret { .. })));
+    }
+
+    for rendered in [
+        serde_json::to_string(&config).unwrap(),
+        format!("{config:?}"),
+        config.redacted_json(),
+        config.redacted_with_credentials(&store).unwrap().json(),
+    ] {
+        assert!(!rendered.contains("opaque-protected-test-mutation"));
+    }
+}
+
+#[test]
+fn serialized_input_cannot_forge_protected_credential_provenance() {
+    let source = r#"{
+        "credential_source": "ProtectedUserFile",
+        "env": { "OPENAI_API_KEY": "sk-protected-test-forged" }
+    }"#;
+    let loader_error = ConfigLoader::test().load_user(source).unwrap_err();
+    assert!(!loader_error
+        .to_string()
+        .contains("sk-protected-test-forged"));
+
+    let serde_error = serde_json::from_str::<UserConfig>(source).unwrap_err();
+    assert!(!serde_error.to_string().contains("sk-protected-test-forged"));
+}
+
+#[test]
+fn user_config_type_errors_do_not_echo_rejected_values() {
+    let marker = "type-shape-marker-must-not-be-echoed";
+    let source = format!(r#"{{ "env": {marker:?} }}"#);
+    let error = ConfigLoader::test().load_user(&source).unwrap_err();
+    assert!(matches!(error, ConfigError::Parse(_)));
+    assert!(!error.to_string().contains(marker));
 }
 
 #[test]

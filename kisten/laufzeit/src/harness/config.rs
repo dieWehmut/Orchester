@@ -10,6 +10,7 @@ use std::fmt;
 use std::fs;
 use std::io;
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
 
 pub use orchester_protokoll::PolicyDecision;
 use secrecy::SecretString;
@@ -28,6 +29,8 @@ pub use provider::ResolvedModelProfile;
 pub const USER_CONFIG: &str = ".orchester/orchester.jsonc";
 /// Relative path of a project/workspace configuration file.
 pub const PROJECT_CONFIG: &str = ".orchester/project.jsonc";
+
+const PROTECTED_CREDENTIAL_MARKER: &str = "<redacted>";
 
 /// Configuration loading and validation failures.
 #[derive(Debug, Error)]
@@ -160,24 +163,39 @@ pub struct UserConfig {
     pub notice: Option<NoticeConfig>,
     #[serde(default)]
     pub plugins: BTreeMap<String, PluginConfig>,
-    /// The only source that can authorize literal credentials is a user file
-    /// that passed [`require_user_permissions`].  This is intentionally
-    /// private and skipped by serde so callers cannot forge it through the
-    /// public parsing/serialization surface.
+    /// Literal credentials extracted from a protected user file. The immutable
+    /// vault is private and skipped by serde, so public field mutation cannot
+    /// create a new privileged credential binding.
     #[serde(skip)]
-    credential_source: CredentialSource,
+    credential_vault: CredentialVault,
 }
 
-#[derive(Clone, Copy, Default, PartialEq, Eq)]
-enum CredentialSource {
-    #[default]
-    Untrusted,
-    ProtectedUserFile,
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
+enum CredentialSlot {
+    Environment(String),
+    ProviderApiKey(String),
 }
 
-impl CredentialSource {
-    fn allows_plaintext_credentials(self) -> bool {
-        matches!(self, Self::ProtectedUserFile)
+#[derive(Clone, Default)]
+struct CredentialVault(Arc<BTreeMap<CredentialSlot, SecretString>>);
+
+impl CredentialVault {
+    fn from_values(values: BTreeMap<CredentialSlot, SecretString>) -> Self {
+        Self(Arc::new(values))
+    }
+
+    fn get(&self, slot: &CredentialSlot) -> Option<SecretString> {
+        self.0.get(slot).cloned()
+    }
+
+    fn binds_marker(&self, slot: &CredentialSlot, value: &str) -> bool {
+        value == PROTECTED_CREDENTIAL_MARKER && self.0.contains_key(slot)
+    }
+}
+
+impl PartialEq for CredentialVault {
+    fn eq(&self, other: &Self) -> bool {
+        self.0.keys().eq(other.0.keys())
     }
 }
 
@@ -207,7 +225,7 @@ impl Default for UserConfig {
             windows: None,
             notice: None,
             plugins: BTreeMap::new(),
-            credential_source: CredentialSource::Untrusted,
+            credential_vault: CredentialVault::default(),
         }
     }
 }
@@ -230,7 +248,9 @@ impl UserConfig {
             validate_reference_syntax(value, name)?;
             if is_sensitive_name(name)
                 && SecretReference::parse(value).ok().flatten().is_none()
-                && !self.credential_source.allows_plaintext_credentials()
+                && !self
+                    .credential_vault
+                    .binds_marker(&CredentialSlot::Environment(name.clone()), value)
             {
                 return Err(ConfigError::PlaintextSecret { path: name.clone() });
             }
@@ -242,7 +262,11 @@ impl UserConfig {
                         path: format!("model_providers.{provider}.api_key"),
                     }
                 })?;
-                if reference.is_none() && !self.credential_source.allows_plaintext_credentials() {
+                if reference.is_none()
+                    && !self
+                        .credential_vault
+                        .binds_marker(&CredentialSlot::ProviderApiKey(provider.clone()), value)
+                {
                     return Err(ConfigError::PlaintextSecret {
                         path: format!("model_providers.{provider}.api_key"),
                     });
@@ -284,21 +308,22 @@ impl UserConfig {
             .ok_or_else(|| ConfigError::SecretUnavailable {
                 provider: name.to_owned(),
             })?;
+        let slot = CredentialSlot::Environment(name.to_owned());
+        if value == PROTECTED_CREDENTIAL_MARKER {
+            return self
+                .credential_vault
+                .get(&slot)
+                .ok_or_else(|| ConfigError::PlaintextSecret {
+                    path: name.to_owned(),
+                });
+        }
         let reference =
             SecretReference::parse(value).map_err(|_| ConfigError::InvalidSecretReference {
                 path: name.to_owned(),
             })?;
-        let reference = match reference {
-            Some(reference) => reference,
-            None if self.credential_source.allows_plaintext_credentials() => {
-                return Ok(SecretString::new(value.to_owned().into_boxed_str()));
-            }
-            None => {
-                return Err(ConfigError::PlaintextSecret {
-                    path: name.to_owned(),
-                })
-            }
-        };
+        let reference = reference.ok_or_else(|| ConfigError::PlaintextSecret {
+            path: name.to_owned(),
+        })?;
         stack.push(name.to_owned());
         let result = match reference {
             SecretReference::Provider(provider) => store
@@ -329,6 +354,16 @@ impl UserConfig {
             .ok_or_else(|| ConfigError::SecretUnavailable {
                 provider: provider.to_owned(),
             })?;
+        let slot = CredentialSlot::ProviderApiKey(provider.to_owned());
+        if value == PROTECTED_CREDENTIAL_MARKER {
+            return self
+                .credential_vault
+                .get(&slot)
+                .map(ProviderSecret::new)
+                .ok_or_else(|| ConfigError::PlaintextSecret {
+                    path: format!("model_providers.{provider}.api_key"),
+                });
+        }
         let reference =
             SecretReference::parse(value).map_err(|_| ConfigError::InvalidSecretReference {
                 path: format!("model_providers.{provider}.api_key"),
@@ -339,9 +374,6 @@ impl UserConfig {
                 .map(ProviderSecret::new)
                 .ok_or(ConfigError::SecretUnavailable { provider: name }),
             Some(SecretReference::Environment(name)) => self.resolve_secret(&name, store),
-            None if self.credential_source.allows_plaintext_credentials() => Ok(
-                ProviderSecret::new(SecretString::new(value.to_owned().into_boxed_str())),
-            ),
             None => Err(ConfigError::PlaintextSecret {
                 path: format!("model_providers.{provider}.api_key"),
             }),
@@ -619,12 +651,7 @@ where
 {
     let mut map = serializer.serialize_map(Some(env.len()))?;
     for (name, value) in env {
-        let rendered = if is_sensitive_name(name) || looks_like_secret(value) {
-            redact_sensitive_literal(value)
-        } else {
-            value.as_str()
-        };
-        map.serialize_entry(name, rendered)?;
+        map.serialize_entry(name, redact_sensitive_literal(value))?;
     }
     map.end()
 }
@@ -728,19 +755,19 @@ impl ConfigLoader {
     }
 
     pub fn load_user(&self, source: &str) -> Result<UserConfig, ConfigError> {
-        self.load_user_with_source(source, CredentialSource::Untrusted)
+        self.load_user_value(parse_jsonc(source)?, CredentialVault::default())
     }
 
-    fn load_user_with_source(
+    fn load_user_value(
         &self,
-        source: &str,
-        credential_source: CredentialSource,
+        value: Value,
+        credential_vault: CredentialVault,
     ) -> Result<UserConfig, ConfigError> {
-        let value = parse_jsonc(source)?;
-        validate_user_value(&value, credential_source)?;
-        let mut config: UserConfig =
-            serde_json::from_value(value).map_err(|error| ConfigError::Parse(error.to_string()))?;
-        config.credential_source = credential_source;
+        validate_user_value(&value, &credential_vault)?;
+        let mut config: UserConfig = serde_json::from_value(value).map_err(|_| {
+            ConfigError::Parse("configuration values do not match the expected schema".into())
+        })?;
+        config.credential_vault = credential_vault;
         if let Some(reviewer) = config.approvals_reviewer.take() {
             if reviewer.trim().is_empty() {
                 return Err(ConfigError::Validation {
@@ -765,10 +792,9 @@ impl ConfigLoader {
     pub fn load_user_file(&self, path: impl AsRef<Path>) -> Result<UserConfig, ConfigError> {
         let path = path.as_ref();
         require_user_permissions(path)?;
-        self.load_user_with_source(
-            &fs::read_to_string(path)?,
-            CredentialSource::ProtectedUserFile,
-        )
+        let mut value = parse_jsonc(&fs::read_to_string(path)?)?;
+        let credential_vault = extract_protected_credentials(&mut value)?;
+        self.load_user_value(value, credential_vault)
     }
 
     pub fn load_project_file(&self, path: impl AsRef<Path>) -> Result<ProjectConfig, ConfigError> {
@@ -1161,56 +1187,111 @@ fn parse_jsonc(source: &str) -> Result<Value, ConfigError> {
     })
 }
 
-fn validate_user_value(
-    value: &Value,
-    credential_source: CredentialSource,
+#[derive(Clone)]
+enum ConfigPathSegment {
+    Key(String),
+    Index(usize),
+}
+
+fn extract_protected_credentials(value: &mut Value) -> Result<CredentialVault, ConfigError> {
+    let mut credentials = BTreeMap::new();
+    let Value::Object(root) = value else {
+        return Ok(CredentialVault::default());
+    };
+
+    if let Some(Value::Object(env)) = root.get_mut("env") {
+        for (name, value) in env {
+            let path = [
+                ConfigPathSegment::Key("env".to_owned()),
+                ConfigPathSegment::Key(name.clone()),
+            ];
+            extract_protected_literal(value, &path, &mut credentials)?;
+        }
+    }
+
+    if let Some(Value::Object(providers)) = root.get_mut("model_providers") {
+        for (provider, config) in providers {
+            let Value::Object(config) = config else {
+                continue;
+            };
+            let Some(api_key) = config.get_mut("api_key") else {
+                continue;
+            };
+            let path = [
+                ConfigPathSegment::Key("model_providers".to_owned()),
+                ConfigPathSegment::Key(provider.clone()),
+                ConfigPathSegment::Key("api_key".to_owned()),
+            ];
+            extract_protected_literal(api_key, &path, &mut credentials)?;
+        }
+    }
+
+    Ok(CredentialVault::from_values(credentials))
+}
+
+fn extract_protected_literal(
+    value: &mut Value,
+    path: &[ConfigPathSegment],
+    credentials: &mut BTreeMap<CredentialSlot, SecretString>,
 ) -> Result<(), ConfigError> {
-    validate_plaintext_strings(value, "", credential_source)
+    let Value::String(value) = value else {
+        return Ok(());
+    };
+    let reference =
+        SecretReference::parse(value).map_err(|_| ConfigError::InvalidSecretReference {
+            path: format_config_path(path),
+        })?;
+    if reference.is_some() {
+        return Ok(());
+    }
+    if let Some(slot) = credential_slot_for_path(path) {
+        let literal = std::mem::replace(value, PROTECTED_CREDENTIAL_MARKER.to_owned());
+        credentials.insert(slot, SecretString::new(literal.into_boxed_str()));
+    }
+    Ok(())
+}
+
+fn validate_user_value(value: &Value, vault: &CredentialVault) -> Result<(), ConfigError> {
+    validate_plaintext_strings(value, &mut Vec::new(), vault)
 }
 
 fn validate_plaintext_strings(
     value: &Value,
-    path: &str,
-    credential_source: CredentialSource,
+    path: &mut Vec<ConfigPathSegment>,
+    vault: &CredentialVault,
 ) -> Result<(), ConfigError> {
     match value {
         Value::Object(values) => {
             for (key, child) in values {
-                let child_path = join_path(path, key);
+                path.push(ConfigPathSegment::Key(key.clone()));
                 if is_sensitive_name(key) {
                     if let Value::String(text) = child {
                         let parsed = SecretReference::parse(text).map_err(|_| {
                             ConfigError::InvalidSecretReference {
-                                path: child_path.clone(),
+                                path: format_config_path(path),
                             }
                         })?;
-                        if parsed.is_none()
-                            && !(credential_source.allows_plaintext_credentials()
-                                && is_plaintext_credential_path(&child_path))
-                        {
-                            return Err(ConfigError::PlaintextSecret { path: child_path });
+                        if parsed.is_none() && !vault_binds_path(vault, path, text) {
+                            return Err(ConfigError::PlaintextSecret {
+                                path: format_config_path(path),
+                            });
                         }
                     }
                 }
-                validate_plaintext_strings(child, &child_path, credential_source)?;
+                validate_plaintext_strings(child, path, vault)?;
+                path.pop();
             }
         }
         Value::Array(values) => {
             for (index, child) in values.iter().enumerate() {
-                validate_plaintext_strings(child, &format!("{path}[{index}]"), credential_source)?;
+                path.push(ConfigPathSegment::Index(index));
+                validate_plaintext_strings(child, path, vault)?;
+                path.pop();
             }
         }
-        Value::String(text)
-            if looks_like_secret(text)
-                && !(credential_source.allows_plaintext_credentials()
-                    && is_plaintext_credential_path(path)) =>
-        {
+        Value::String(text) if looks_like_secret(text) && !vault_binds_path(vault, path, text) => {
             return Err(ConfigError::PlaintextSecret {
-                path: if path.is_empty() {
-                    "<root>".into()
-                } else {
-                    path.into()
-                },
+                path: format_config_path(path),
             });
         }
         _ => {}
@@ -1218,12 +1299,41 @@ fn validate_plaintext_strings(
     Ok(())
 }
 
-fn is_plaintext_credential_path(path: &str) -> bool {
-    path.strip_prefix("env.")
-        .is_some_and(|name| !name.is_empty())
-        || path
-            .strip_prefix("model_providers.")
-            .is_some_and(|profile| profile.ends_with(".api_key"))
+fn credential_slot_for_path(path: &[ConfigPathSegment]) -> Option<CredentialSlot> {
+    match path {
+        [ConfigPathSegment::Key(root), ConfigPathSegment::Key(name)] if root == "env" => {
+            Some(CredentialSlot::Environment(name.clone()))
+        }
+        [ConfigPathSegment::Key(root), ConfigPathSegment::Key(provider), ConfigPathSegment::Key(field)]
+            if root == "model_providers" && field == "api_key" =>
+        {
+            Some(CredentialSlot::ProviderApiKey(provider.clone()))
+        }
+        _ => None,
+    }
+}
+
+fn vault_binds_path(vault: &CredentialVault, path: &[ConfigPathSegment], value: &str) -> bool {
+    credential_slot_for_path(path).is_some_and(|slot| vault.binds_marker(&slot, value))
+}
+
+fn format_config_path(path: &[ConfigPathSegment]) -> String {
+    if path.is_empty() {
+        return "<root>".to_owned();
+    }
+    let mut rendered = String::new();
+    for segment in path {
+        match segment {
+            ConfigPathSegment::Key(key) => {
+                if !rendered.is_empty() {
+                    rendered.push('.');
+                }
+                rendered.push_str(key);
+            }
+            ConfigPathSegment::Index(index) => rendered.push_str(&format!("[{index}]")),
+        }
+    }
+    rendered
 }
 
 fn validate_reference_syntax(value: &str, path: &str) -> Result<(), ConfigError> {
