@@ -1,0 +1,29 @@
+{
+  "name": "@orchester/cli",
+  "version": "0.1.0",
+  "description": "Cross-platform launcher for Orchester",
+  "license": "MIT OR Apache-2.0",
+  "type": "commonjs",
+  "bin": {
+    "orchester": "bin/orchester.cjs"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "targets.json"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "optionalDependencies": {
+    "@orchester/cli-linux-x64": "0.1.0",
+    "@orchester/cli-linux-arm64": "0.1.0",
+    "@orchester/cli-darwin-x64": "0.1.0",
+    "@orchester/cli-darwin-arm64": "0.1.0",
+    "@orchester/cli-win32-x64": "0.1.0",
+    "@orchester/cli-win32-arm64": "0.1.0"
+  }
+}

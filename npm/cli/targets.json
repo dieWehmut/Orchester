@@ -1,0 +1,44 @@
+[
+  {
+    "platform": "linux",
+    "arch": "x64",
+    "packageName": "@orchester/cli-linux-x64",
+    "rustTarget": "x86_64-unknown-linux-musl",
+    "binaryPath": "bin/orchester"
+  },
+  {
+    "platform": "linux",
+    "arch": "arm64",
+    "packageName": "@orchester/cli-linux-arm64",
+    "rustTarget": "aarch64-unknown-linux-musl",
+    "binaryPath": "bin/orchester"
+  },
+  {
+    "platform": "darwin",
+    "arch": "x64",
+    "packageName": "@orchester/cli-darwin-x64",
+    "rustTarget": "x86_64-apple-darwin",
+    "binaryPath": "bin/orchester"
+  },
+  {
+    "platform": "darwin",
+    "arch": "arm64",
+    "packageName": "@orchester/cli-darwin-arm64",
+    "rustTarget": "aarch64-apple-darwin",
+    "binaryPath": "bin/orchester"
+  },
+  {
+    "platform": "win32",
+    "arch": "x64",
+    "packageName": "@orchester/cli-win32-x64",
+    "rustTarget": "x86_64-pc-windows-msvc",
+    "binaryPath": "bin/orchester.exe"
+  },
+  {
+    "platform": "win32",
+    "arch": "arm64",
+    "packageName": "@orchester/cli-win32-arm64",
+    "rustTarget": "aarch64-pc-windows-msvc",
+    "binaryPath": "bin/orchester.exe"
+  }
+]
