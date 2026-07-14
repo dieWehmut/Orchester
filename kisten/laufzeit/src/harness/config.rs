@@ -39,6 +39,8 @@ const PROTECTED_CREDENTIAL_MARKER: &str = "<redacted>";
 pub enum ConfigError {
     #[error("configuration I/O error: {0}")]
     Io(#[from] io::Error),
+    #[error("user home directory is unavailable")]
+    HomeDirectoryUnavailable,
     #[error("invalid JSONC configuration: {0}")]
     Parse(String),
     #[error("configuration field '{path}' is invalid: {message}")]
@@ -745,19 +747,20 @@ pub struct ConfigLoader {
     project_path: Option<PathBuf>,
 }
 
-impl Default for ConfigLoader {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 impl ConfigLoader {
-    pub fn new() -> Self {
-        let home = home_dir().unwrap_or_else(|| PathBuf::from("."));
-        Self {
+    pub fn new() -> Result<Self, ConfigError> {
+        Self::from_home_dir(home_dir())
+    }
+
+    fn from_home_dir(home: Option<PathBuf>) -> Result<Self, ConfigError> {
+        let home = home.ok_or(ConfigError::HomeDirectoryUnavailable)?;
+        if home.as_os_str().is_empty() || !home.is_absolute() {
+            return Err(ConfigError::HomeDirectoryUnavailable);
+        }
+        Ok(Self {
             user_path: home.join(USER_CONFIG),
             project_path: None,
-        }
+        })
     }
 
     /// Constructor used by unit/integration tests; no filesystem lookup is
@@ -839,17 +842,18 @@ impl ConfigLoader {
     }
 
     pub fn load_user_path(&self) -> Result<UserConfig, ConfigError> {
-        self.load_user_file(&self.user_path)
+        if path_entry_exists(&self.user_path)? {
+            self.load_user_file(&self.user_path)
+        } else {
+            Ok(UserConfig::default())
+        }
     }
 
     pub fn load_project_path(&self) -> Result<Option<ProjectConfig>, ConfigError> {
         let Some(path) = self.project_path.as_ref() else {
             return Ok(None);
         };
-        if !path.exists() {
-            return Ok(None);
-        }
-        self.load_project_file(path).map(Some)
+        self.load_project_file_if_exists(path)
     }
 
     /// Load the user-owned configuration and merge an optional workspace
@@ -860,13 +864,23 @@ impl ConfigLoader {
             .project_path
             .clone()
             .unwrap_or_else(|| workspace.as_ref().join(PROJECT_CONFIG));
-        let effective = if project_path.try_exists()? {
-            let project = self.load_project_file(project_path)?;
+        let effective = if let Some(project) = self.load_project_file_if_exists(&project_path)? {
             self.merge_project(&user, &project)?
         } else {
             user
         };
         Ok(effective)
+    }
+
+    fn load_project_file_if_exists(
+        &self,
+        path: &Path,
+    ) -> Result<Option<ProjectConfig>, ConfigError> {
+        if path_entry_exists(path)? {
+            self.load_project_file(path).map(Some)
+        } else {
+            Ok(None)
+        }
     }
 
     /// Apply a validated project configuration over a user configuration.
@@ -1612,6 +1626,14 @@ fn join_path(parent: &str, child: &str) -> String {
     }
 }
 
+fn path_entry_exists(path: &Path) -> io::Result<bool> {
+    match fs::symlink_metadata(path) {
+        Ok(_) => Ok(true),
+        Err(error) if error.kind() == io::ErrorKind::NotFound => Ok(false),
+        Err(error) => Err(error),
+    }
+}
+
 fn home_dir() -> Option<PathBuf> {
     #[cfg(windows)]
     {
@@ -1670,4 +1692,32 @@ fn default_status_line() -> Vec<String> {
     .into_iter()
     .map(str::to_owned)
     .collect()
+}
+
+#[cfg(test)]
+mod config_loader_tests {
+    use super::*;
+
+    #[test]
+    fn home_directory_resolution_fails_closed() {
+        for home in [None, Some(PathBuf::new()), Some(PathBuf::from("relative"))] {
+            assert!(matches!(
+                ConfigLoader::from_home_dir(home),
+                Err(ConfigError::HomeDirectoryUnavailable)
+            ));
+        }
+    }
+
+    #[test]
+    fn home_directory_resolution_builds_the_user_path() {
+        #[cfg(windows)]
+        let home = PathBuf::from(r"C:\Users\example");
+        #[cfg(not(windows))]
+        let home = PathBuf::from("/home/example");
+
+        let loader = ConfigLoader::from_home_dir(Some(home.clone())).unwrap();
+
+        assert_eq!(loader.user_path(), home.join(USER_CONFIG));
+        assert_eq!(loader.project_path(), None);
+    }
 }

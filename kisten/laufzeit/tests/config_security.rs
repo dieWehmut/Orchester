@@ -1,5 +1,5 @@
 use orchester_laufzeit::harness::config::{
-    merge_security, ConfigError, ConfigLoader, PolicyDecision, UserConfig,
+    merge_security, ConfigError, ConfigLoader, GovernanceConfig, PolicyDecision, UserConfig,
 };
 use orchester_laufzeit::harness::credentials::{CredentialStore, InMemoryCredentialStore};
 use std::path::PathBuf;
@@ -230,6 +230,121 @@ fn load_effective_propagates_project_path_probe_errors() {
         .unwrap_err();
 
     assert!(matches!(error, ConfigError::Io(_)));
+}
+
+#[test]
+fn missing_user_config_loads_governed_empty_defaults() {
+    let root = TempConfigDir::new("missing-user-config");
+    let missing = root
+        .path()
+        .join("home")
+        .join(".orchester")
+        .join("orchester.jsonc");
+
+    let config = ConfigLoader::test()
+        .with_user_path(missing)
+        .load_user_path()
+        .unwrap();
+
+    assert!(config.env().is_empty());
+    assert!(config.model_providers().is_empty());
+    assert_eq!(config.model_provider, None);
+    assert_eq!(config.model, None);
+    assert_eq!(config.governance, GovernanceConfig::default());
+    assert!(matches!(
+        config.resolve_model_profile(),
+        Err(ConfigError::Validation { ref path, .. }) if path == "model_provider"
+    ));
+}
+
+#[test]
+fn existing_invalid_user_config_is_not_treated_as_missing() {
+    let root = TempConfigDir::new("invalid-existing-user-config");
+    let user_dir = root.path().join("home").join(".orchester");
+    std::fs::create_dir_all(&user_dir).unwrap();
+    let path = user_dir.join("orchester.jsonc");
+    std::fs::write(&path, "{ invalid").unwrap();
+    make_user_config_permissions_secure(&user_dir, &path);
+
+    let error = ConfigLoader::test()
+        .with_user_path(path)
+        .load_user_path()
+        .unwrap_err();
+
+    assert!(matches!(error, ConfigError::Parse(_)));
+}
+
+#[test]
+fn missing_user_and_project_load_effective_defaults() {
+    let root = TempConfigDir::new("missing-effective-config");
+    let workspace = root.path().join("workspace");
+    std::fs::create_dir_all(&workspace).unwrap();
+    let user_path = root
+        .path()
+        .join("home")
+        .join(".orchester")
+        .join("orchester.jsonc");
+    let project_path = workspace.join(".orchester").join("project.jsonc");
+
+    let config = ConfigLoader::test()
+        .with_user_path(user_path)
+        .with_project_path(project_path)
+        .load_effective(&workspace)
+        .unwrap();
+
+    assert_eq!(config, UserConfig::default());
+}
+
+#[test]
+fn load_project_path_propagates_probe_errors() {
+    let error = ConfigLoader::test()
+        .with_project_path(PathBuf::from("\0"))
+        .load_project_path()
+        .unwrap_err();
+
+    assert!(matches!(error, ConfigError::Io(_)));
+}
+
+#[test]
+fn load_user_path_propagates_probe_errors() {
+    let error = ConfigLoader::test()
+        .with_user_path(PathBuf::from("\0"))
+        .load_user_path()
+        .unwrap_err();
+
+    assert!(matches!(error, ConfigError::Io(_)));
+}
+
+#[cfg(unix)]
+#[test]
+fn dangling_config_links_are_not_treated_as_missing() {
+    use std::os::unix::fs::{symlink, PermissionsExt};
+
+    let root = TempConfigDir::new("dangling-config-links");
+    let user_dir = root.path().join("home").join(".orchester");
+    std::fs::create_dir_all(&user_dir).unwrap();
+    std::fs::set_permissions(&user_dir, std::fs::Permissions::from_mode(0o700)).unwrap();
+    let user_link = user_dir.join("orchester.jsonc");
+    symlink(root.path().join("missing-user.jsonc"), &user_link).unwrap();
+
+    let user_error = ConfigLoader::test()
+        .with_user_path(user_link)
+        .load_user_path()
+        .unwrap_err();
+    assert!(matches!(
+        user_error,
+        ConfigError::InsecurePermissions { .. }
+            | ConfigError::ProtectedFileIo
+            | ConfigError::ProtectedFileSecurity
+    ));
+
+    let project_link = root.path().join("project.jsonc");
+    symlink(root.path().join("missing-project.jsonc"), &project_link).unwrap();
+    let project_error = ConfigLoader::test()
+        .with_project_path(project_link)
+        .load_project_path()
+        .unwrap_err();
+    assert!(matches!(project_error, ConfigError::Io(_)));
 }
 
 #[test]
