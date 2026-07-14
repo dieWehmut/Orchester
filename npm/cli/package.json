@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Cross-platform launcher for Orchester",
   "license": "MIT OR Apache-2.0",
+  "repository": "https://github.com/dieWehmut/Orchester",
   "type": "commonjs",
   "bin": {
     "orchester": "bin/orchester.cjs"
