@@ -264,7 +264,13 @@ test('uses exit code one when a child signal cannot be mirrored on Windows', asy
 });
 
 test('uses exit code one when forwarding a parent signal to the child throws', async () => {
-  const { child, completion, parentProcess } = startWithFakeChild({ platform: 'linux' });
+  const errors = [];
+  const { child, completion, parentProcess } = startWithFakeChild({
+    platform: 'linux',
+    writeError(message) {
+      errors.push(message);
+    },
+  });
   const privatePath = path.join(os.tmpdir(), 'private child state');
   child.kill = () => {
     throw new Error(`child kill failed at ${privatePath}`);
@@ -274,6 +280,60 @@ test('uses exit code one when forwarding a parent signal to the child throws', a
 
   assert.equal(await completion, 1);
   assert.equal(parentProcess.exitCode, 1);
+  assert.deepEqual(errors, [SPAWN_FAILURE]);
+  for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
+    assert.equal(parentProcess.listenerCount(signal), 0);
+  }
+  assert.equal(child.listenerCount('error'), 0);
+  assert.equal(child.listenerCount('exit'), 0);
+});
+
+test('uses exit code one when forwarding a parent signal returns false', async () => {
+  const errors = [];
+  const { child, completion, parentProcess } = startWithFakeChild({
+    platform: 'linux',
+    writeError(message) {
+      errors.push(message);
+    },
+  });
+  child.kill = () => false;
+  const timeout = Symbol('timeout');
+
+  parentProcess.emit('SIGINT');
+  const result = await Promise.race([
+    completion,
+    new Promise((resolve) => setTimeout(() => resolve(timeout), 100)),
+  ]);
+
+  if (result === timeout) child.emit('exit', 0, null);
+  assert.equal(result, 1);
+  assert.equal(parentProcess.exitCode, 1);
+  assert.deepEqual(errors, [SPAWN_FAILURE]);
+  for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
+    assert.equal(parentProcess.listenerCount(signal), 0);
+  }
+  assert.equal(child.listenerCount('error'), 0);
+  assert.equal(child.listenerCount('exit'), 0);
+});
+
+test('reports one safe error when signal forwarding emits error before returning false', async () => {
+  const errors = [];
+  const { child, completion, parentProcess } = startWithFakeChild({
+    platform: 'linux',
+    writeError(message) {
+      errors.push(message);
+    },
+  });
+  const privatePath = path.join(os.tmpdir(), 'private child state');
+  child.kill = () => {
+    child.emit('error', new Error(`child kill failed at ${privatePath}`));
+    return false;
+  };
+
+  assert.doesNotThrow(() => parentProcess.emit('SIGINT'));
+  assert.equal(await completion, 1);
+  assert.equal(parentProcess.exitCode, 1);
+  assert.deepEqual(errors, [SPAWN_FAILURE]);
   for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
     assert.equal(parentProcess.listenerCount(signal), 0);
   }

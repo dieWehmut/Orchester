@@ -116,6 +116,12 @@ function runNativeCli(options = {}) {
       settleCode(code ?? 1);
     };
 
+    const onSignalForwardingError = () => {
+      if (settled) return;
+      writeError(SPAWN_ERROR_MESSAGE);
+      settleCode(1);
+    };
+
     try {
       child = spawn(binary, args, {
         cwd,
@@ -135,9 +141,9 @@ function runNativeCli(options = {}) {
     for (const signal of forwardingSignals) {
       const listener = () => {
         try {
-          child.kill(signal);
+          if (!child.kill(signal)) onSignalForwardingError();
         } catch {
-          settleCode(1);
+          onSignalForwardingError();
         }
       };
       forwardingListeners.set(signal, listener);
