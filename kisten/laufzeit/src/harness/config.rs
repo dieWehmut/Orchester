@@ -1529,7 +1529,7 @@ fn redact_value_with_credentials<S: CredentialStore + ?Sized>(
                 path.push(ConfigPathSegment::Key(name.clone()));
                 let child = if credential_slot_for_path(path).is_some() {
                     redact_credential_value(child, config, store, path)?
-                } else if is_sensitive_name(&name) {
+                } else if is_sensitive_name(&name) && child.is_string() {
                     match child {
                         Value::String(reference)
                             if SecretReference::parse(&reference).ok().flatten().is_some() =>

@@ -652,6 +652,44 @@ fn protected_user_file_resolves_direct_credentials_and_redacts_every_view() {
 }
 
 #[test]
+fn credential_view_keeps_sensitive_provider_names_structural() {
+    let root = TempConfigDir::new("protected-provider-name");
+    let user_dir = root.path().join("home").join(".orchester");
+    std::fs::create_dir_all(&user_dir).unwrap();
+    let path = user_dir.join("orchester.jsonc");
+    std::fs::write(
+        &path,
+        r#"{
+            "model_providers": {
+                "Auth0": {
+                    "name": "Auth0",
+                    "base_url": "https://auth0.example/v1",
+                    "api_key": "sk-protected-test-auth0"
+                }
+            }
+        }"#,
+    )
+    .unwrap();
+    make_user_config_permissions_secure(&user_dir, &path);
+
+    let config = ConfigLoader::test().load_user_file(&path).unwrap();
+    let view = config
+        .redacted_with_credentials(&InMemoryCredentialStore::default())
+        .unwrap();
+
+    assert_eq!(view.value()["model_providers"]["Auth0"]["name"], "Auth0");
+    assert_eq!(
+        view.value()["model_providers"]["Auth0"]["api_key"]["source"],
+        "protected-user-file"
+    );
+    assert_eq!(
+        view.value()["model_providers"]["Auth0"]["api_key"]["present"],
+        true
+    );
+    assert!(!view.json().contains("sk-protected-test-auth0"));
+}
+
+#[test]
 fn serde_deserialized_config_has_no_protected_credential_vault() {
     let config: UserConfig = serde_json::from_str(
         r#"{
