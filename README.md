@@ -41,6 +41,22 @@ On Windows PowerShell from a cloned checkout:
 powershell -NoProfile -ExecutionPolicy Bypass -File .\werkzeug\install.ps1
 ```
 
+### npm package
+
+After the tagged npm release has been approved, the native package for the
+current platform is selected automatically by the meta package:
+
+```bash
+npm install -g @orchester/cli
+pnpm add -g @orchester/cli
+yarn global add @orchester/cli
+bun add -g @orchester/cli
+```
+
+The package has no lifecycle downloader. The release workflow publishes the
+six native platform packages first and submits `@orchester/cli` only after
+those versions are visible in the public registry.
+
 After installation:
 
 ```bash
