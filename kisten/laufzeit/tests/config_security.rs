@@ -2,6 +2,35 @@ use orchester_laufzeit::harness::config::{
     merge_security, ConfigError, ConfigLoader, PolicyDecision,
 };
 use orchester_laufzeit::harness::credentials::{CredentialStore, InMemoryCredentialStore};
+use std::path::PathBuf;
+use std::sync::atomic::{AtomicU64, Ordering};
+
+static NEXT_CONFIG_DIR: AtomicU64 = AtomicU64::new(0);
+
+struct TempConfigDir(PathBuf);
+
+impl TempConfigDir {
+    fn new(name: &str) -> Self {
+        let sequence = NEXT_CONFIG_DIR.fetch_add(1, Ordering::Relaxed);
+        let path = std::env::temp_dir().join(format!(
+            "orchester-{name}-{}-{sequence}",
+            std::process::id()
+        ));
+        let _ = std::fs::remove_dir_all(&path);
+        std::fs::create_dir_all(&path).unwrap();
+        Self(path)
+    }
+
+    fn path(&self) -> &std::path::Path {
+        &self.0
+    }
+}
+
+impl Drop for TempConfigDir {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_dir_all(&self.0);
+    }
+}
 
 #[test]
 fn project_config_cannot_override_credentials_or_relax_policy() {
@@ -12,6 +41,210 @@ fn project_config_cannot_override_credentials_or_relax_policy() {
     let err = ConfigLoader::test().load_project(project).unwrap_err();
     assert!(matches!(err, ConfigError::ForbiddenProjectField { .. }));
 }
+
+#[test]
+fn resolved_model_profile_contains_transport_settings_but_no_secret() {
+    let cfg = ConfigLoader::test()
+        .load_user(
+            r#"{
+                "env": { "FAKE_API_KEY": "${secret:Fake}" },
+                "model_provider": "Fake",
+                "model": "fake-model",
+                "model_reasoning_effort": "high",
+                "plan_mode_reasoning_effort": "ultra",
+                "disable_response_storage": true,
+                "service_tier": "priority",
+                "model_providers": {
+                    "Fake": {
+                        "name": "Fake Provider",
+                        "base_url": "https://example.test/v1?token=do-not-echo",
+                        "api_key": "${env:FAKE_API_KEY}",
+                        "wire_api": "responses",
+                        "requires_openai_auth": true
+                    }
+                }
+            }"#,
+        )
+        .unwrap();
+
+    let profile = cfg.resolve_model_profile().unwrap();
+    assert_eq!(profile.provider, "Fake");
+    assert_eq!(profile.provider_name, "Fake Provider");
+    assert_eq!(profile.model, "fake-model");
+    assert_eq!(
+        profile.base_url,
+        "https://example.test/v1?token=do-not-echo"
+    );
+    assert_eq!(profile.wire_api, "responses");
+    assert_eq!(profile.reasoning_effort.as_deref(), Some("high"));
+    assert_eq!(profile.plan_mode_reasoning_effort.as_deref(), Some("ultra"));
+    assert!(!profile.store);
+    assert_eq!(profile.service_tier.as_deref(), Some("priority"));
+    assert!(profile.requires_auth);
+
+    let debug = format!("{profile:?}");
+    assert!(!debug.contains("do-not-echo"));
+    assert!(!debug.contains("FAKE_API_KEY"));
+    assert!(!debug.contains("secret:Fake"));
+}
+
+#[test]
+fn load_effective_merges_workspace_project_before_resolving_profile() {
+    let root = TempConfigDir::new("effective-config");
+    let user_dir = root.path().join("home").join(".orchester");
+    let workspace = root.path().join("workspace");
+    let project_dir = workspace.join(".orchester");
+    std::fs::create_dir_all(&user_dir).unwrap();
+    std::fs::create_dir_all(&project_dir).unwrap();
+    let user_path = user_dir.join("orchester.jsonc");
+    std::fs::write(
+        &user_path,
+        r#"{
+            "model_provider": "Fake",
+            "model": "user-model",
+            "model_reasoning_effort": "medium",
+            "model_providers": {
+                "Fake": {
+                    "name": "Fake Provider",
+                    "base_url": "http://127.0.0.1:9876/v1",
+                    "wire_api": "responses"
+                }
+            }
+        }"#,
+    )
+    .unwrap();
+    std::fs::write(
+        project_dir.join("project.jsonc"),
+        r#"{
+            "model": "project-model",
+            "model_reasoning_effort": "high"
+        }"#,
+    )
+    .unwrap();
+    make_user_config_permissions_secure(&user_dir, &user_path);
+
+    let effective = ConfigLoader::test()
+        .with_user_path(&user_path)
+        .load_effective(&workspace)
+        .unwrap();
+    assert_eq!(effective.model.as_deref(), Some("project-model"));
+    assert_eq!(effective.model_reasoning_effort.as_deref(), Some("high"));
+    assert_eq!(
+        effective.resolve_model_profile().unwrap().base_url,
+        "http://127.0.0.1:9876/v1"
+    );
+}
+
+#[test]
+fn load_effective_treats_missing_project_config_as_empty() {
+    let root = TempConfigDir::new("effective-config-no-project");
+    let user_dir = root.path().join("home").join(".orchester");
+    let workspace = root.path().join("workspace");
+    std::fs::create_dir_all(&user_dir).unwrap();
+    std::fs::create_dir_all(&workspace).unwrap();
+    let user_path = user_dir.join("orchester.jsonc");
+    std::fs::write(
+        &user_path,
+        r#"{
+            "model_provider": "Fake",
+            "model": "user-model",
+            "model_providers": {
+                "Fake": {
+                    "base_url": "https://example.test/v1",
+                    "wire_api": "responses"
+                }
+            }
+        }"#,
+    )
+    .unwrap();
+    make_user_config_permissions_secure(&user_dir, &user_path);
+
+    let effective = ConfigLoader::test()
+        .with_user_path(&user_path)
+        .load_effective(&workspace)
+        .unwrap();
+    assert_eq!(effective.model.as_deref(), Some("user-model"));
+}
+
+#[test]
+fn model_profile_rejects_unknown_provider_and_empty_model() {
+    let loader = ConfigLoader::test();
+    let unknown = loader
+        .load_user(r#"{ "model_provider": "Missing", "model": "fake-model" }"#)
+        .unwrap()
+        .resolve_model_profile()
+        .unwrap_err();
+    assert!(
+        matches!(unknown, ConfigError::Validation { ref path, .. } if path == "model_provider")
+    );
+
+    let empty = loader
+        .load_user(
+            r#"{
+                "model_provider": "Fake",
+                "model": "  ",
+                "model_providers": {
+                    "Fake": { "base_url": "https://example.test", "wire_api": "responses" }
+                }
+            }"#,
+        )
+        .unwrap()
+        .resolve_model_profile()
+        .unwrap_err();
+    assert!(matches!(empty, ConfigError::Validation { ref path, .. } if path == "model"));
+}
+
+#[test]
+fn model_profile_accepts_only_supported_wire_api_and_safe_base_url() {
+    for (wire_api, base_url, expected_path) in [
+        (
+            "chat_completions",
+            "https://example.test/v1",
+            "model_providers.Fake.wire_api",
+        ),
+        (
+            "responses",
+            "file://do-not-echo/secret",
+            "model_providers.Fake.base_url",
+        ),
+        (
+            "responses",
+            "http://example.test/v1?token=do-not-echo",
+            "model_providers.Fake.base_url",
+        ),
+    ] {
+        let source = format!(
+            r#"{{
+                "model_provider": "Fake",
+                "model": "fake-model",
+                "model_providers": {{
+                    "Fake": {{ "base_url": {base_url:?}, "wire_api": {wire_api:?} }}
+                }}
+            }}"#
+        );
+        let error = ConfigLoader::test()
+            .load_user(&source)
+            .unwrap()
+            .resolve_model_profile()
+            .unwrap_err();
+        assert!(
+            matches!(error, ConfigError::Validation { ref path, .. } if path == expected_path),
+            "unexpected error: {error}"
+        );
+        assert!(!error.to_string().contains("do-not-echo"));
+    }
+}
+
+#[cfg(unix)]
+fn make_user_config_permissions_secure(directory: &std::path::Path, file: &std::path::Path) {
+    use std::os::unix::fs::PermissionsExt;
+
+    std::fs::set_permissions(directory, std::fs::Permissions::from_mode(0o700)).unwrap();
+    std::fs::set_permissions(file, std::fs::Permissions::from_mode(0o600)).unwrap();
+}
+
+#[cfg(not(unix))]
+fn make_user_config_permissions_secure(_directory: &std::path::Path, _file: &std::path::Path) {}
 
 #[test]
 fn project_sensitive_fields_are_rejected_recursively_without_echoing_values() {
