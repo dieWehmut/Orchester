@@ -8,6 +8,7 @@
 mod args;
 mod avatar;
 mod interactive;
+mod plugin;
 mod render;
 
 use std::collections::HashMap;
@@ -104,6 +105,9 @@ async fn run(cli: Cli) -> Result<ExitCode, CliError> {
                 render::render_sessions(&mut out, &records)?;
             }
             return Ok(ExitCode::SUCCESS);
+        }
+        Some(Command::Plugin(plugin_args)) => {
+            return plugin::run(&registry, plugin_args.command, json).map_err(CliError::Io);
         }
         Some(Command::Run(run)) => run.prompt,
         None => prompt,

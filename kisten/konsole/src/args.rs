@@ -59,6 +59,9 @@ pub enum Command {
 
     /// List locally recorded session metadata.
     Sessions,
+
+    /// Inspect and manage agent plugin packages.
+    Plugin(PluginArgs),
 }
 
 #[derive(Debug, Args)]
@@ -72,4 +75,24 @@ pub struct DoctorArgs {
     /// Exit non-zero if any adapter command is missing.
     #[arg(long)]
     pub strict: bool,
+}
+
+#[derive(Debug, Args)]
+pub struct PluginArgs {
+    #[command(subcommand)]
+    pub command: PluginCommand,
+}
+
+#[derive(Debug, Subcommand)]
+pub enum PluginCommand {
+    /// List validated plugin packages discovered at startup.
+    List,
+    /// Show one validated plugin package.
+    Status(PluginStatusArgs),
+}
+
+#[derive(Debug, Args)]
+pub struct PluginStatusArgs {
+    /// Plugin name without the `@orchester/` scope.
+    pub name: String,
 }

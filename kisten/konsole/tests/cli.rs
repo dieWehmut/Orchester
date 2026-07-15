@@ -152,6 +152,100 @@ fn relative_orchester_home_fails_without_echoing_the_value() {
 }
 
 #[test]
+fn plugin_list_reports_validated_package_metadata() {
+    let project = temp_home("plugin-list-project");
+    let home = temp_home("plugin-list-home");
+    std::fs::create_dir_all(&project).unwrap();
+    install_repository_plugin(&project.join("node_modules/@orchester"), "code");
+
+    let output = orchester()
+        .current_dir(&project)
+        .env("ORCHESTER_HOME", &home)
+        .args(["plugin", "list"])
+        .output()
+        .expect("list installed plugins");
+
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    for expected in [
+        "claude",
+        "Claude Code",
+        "@orchester/claude",
+        "0.1.0",
+        "project",
+    ] {
+        assert!(out.contains(expected), "missing {expected} in:\n{out}");
+    }
+    let _ = std::fs::remove_dir_all(project);
+    let _ = std::fs::remove_dir_all(home);
+}
+
+#[test]
+fn plugin_status_can_emit_validated_json() {
+    let project = temp_home("plugin-status-project");
+    let home = temp_home("plugin-status-home");
+    std::fs::create_dir_all(&project).unwrap();
+    install_repository_plugin(&project.join("node_modules/@orchester"), "code");
+
+    let output = orchester()
+        .current_dir(&project)
+        .env("ORCHESTER_HOME", &home)
+        .args(["plugin", "status", "claude", "--json"])
+        .output()
+        .expect("show plugin status");
+
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let value: serde_json::Value = serde_json::from_str(stdout(&output).trim()).unwrap();
+    assert_eq!(value["name"], "claude");
+    assert_eq!(value["displayName"], "Claude Code");
+    assert_eq!(value["packageName"], "@orchester/claude");
+    assert_eq!(value["version"], "0.1.0");
+    assert_eq!(value["origin"], "project");
+    let _ = std::fs::remove_dir_all(project);
+    let _ = std::fs::remove_dir_all(home);
+}
+
+#[test]
+fn empty_plugin_json_list_is_empty_jsonl() {
+    let project = temp_home("empty-plugin-list-project");
+    let home = temp_home("empty-plugin-list-home");
+    std::fs::create_dir_all(&project).unwrap();
+
+    let output = orchester()
+        .current_dir(&project)
+        .env("ORCHESTER_HOME", &home)
+        .args(["plugin", "list", "--json"])
+        .output()
+        .expect("list empty plugin registry");
+
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    assert!(stdout(&output).is_empty());
+    let _ = std::fs::remove_dir_all(project);
+    let _ = std::fs::remove_dir_all(home);
+}
+
+#[test]
+fn missing_plugin_status_is_redacted_and_fails() {
+    let project = temp_home("missing-plugin-project");
+    let home = temp_home("missing-plugin-home");
+    std::fs::create_dir_all(&project).unwrap();
+
+    let output = orchester()
+        .current_dir(&project)
+        .env("ORCHESTER_HOME", &home)
+        .args(["plugin", "status", "secret-plugin-name"])
+        .output()
+        .expect("show missing plugin status");
+
+    assert!(!output.status.success());
+    let err = stderr(&output);
+    assert!(err.contains("agent plugin is not installed"));
+    assert!(!err.contains("secret-plugin-name"));
+    let _ = std::fs::remove_dir_all(project);
+    let _ = std::fs::remove_dir_all(home);
+}
+
+#[test]
 fn doctor_reports_mock_adapter_available() {
     let output = orchester()
         .arg("doctor")
