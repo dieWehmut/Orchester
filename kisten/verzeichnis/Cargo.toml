@@ -11,6 +11,12 @@ orchester-protokoll = { workspace = true }
 orchester-vertrag = { workspace = true }
 orchester-adapter = { workspace = true }
 tracing = { workspace = true }
+cap-std = { workspace = true }
+cap-fs-ext = { workspace = true }
+regex = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
 
 [dev-dependencies]
 tokio = { workspace = true }

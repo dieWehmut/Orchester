@@ -866,9 +866,15 @@ dependencies = [
 name = "orchester-verzeichnis"
 version = "0.1.0"
 dependencies = [
+ "cap-fs-ext",
+ "cap-std",
  "orchester-adapter",
  "orchester-protokoll",
  "orchester-vertrag",
+ "regex",
+ "serde",
+ "serde_json",
+ "thiserror",
  "tokio",
  "tracing",
 ]

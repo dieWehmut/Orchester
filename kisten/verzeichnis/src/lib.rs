@@ -14,6 +14,10 @@ use orchester_adapter::{builtin, MockAdapter, BUILTIN_MANIFESTS};
 use orchester_protokoll::Capability;
 use orchester_vertrag::{AdapterAvailability, AdapterError, AgentAdapter, ManifestAdapter};
 
+mod plugin;
+
+pub use plugin::{load_agent_plugin, LoadedAgentPlugin, PluginError, PluginInfo};
+
 /// An index of adapters keyed by name.
 ///
 /// `BTreeMap` keeps `list()` output stable (alphabetical), which makes the CLI
