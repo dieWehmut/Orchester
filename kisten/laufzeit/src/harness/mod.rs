@@ -9,6 +9,7 @@ pub mod config;
 pub mod context;
 pub mod coordinator;
 pub mod credentials;
+pub mod evolution;
 pub mod feedback;
 pub mod files;
 pub mod governance;
