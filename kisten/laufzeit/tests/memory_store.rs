@@ -138,6 +138,10 @@ fn secret_candidates_are_rejected_before_any_database_write() {
             SecretCategory::AuthorizationHeader,
         ),
         (
+            "Authorization: Bearer\nhidden-value".to_owned(),
+            SecretCategory::AuthorizationHeader,
+        ),
+        (
             "-----BEGIN PRIVATE KEY-----".to_owned(),
             SecretCategory::PrivateKey,
         ),
@@ -458,6 +462,41 @@ fn control_format_and_metadata_secrets_never_enter_memory() {
             ..
         })
     ));
+    assert_eq!(owner.count().unwrap(), 0);
+}
+
+#[test]
+fn every_unicode_format_character_is_removed_before_configured_secret_scanning() {
+    let configured = "configured-provider-credential-2468";
+    let store = MemoryStore::in_memory_with_secrets(vec![SecretString::from(configured)]).unwrap();
+    let owner = access(&store, "project-a", "owner-a");
+    let agent = owner
+        .agent_access("run-project-a", "2026-07-12T08:01:00Z")
+        .unwrap();
+    let (left, right) = configured.split_at(15);
+
+    for (index, format_character) in ['\u{0600}', '\u{206a}', '\u{e0001}']
+        .into_iter()
+        .enumerate()
+    {
+        let mut candidate = proposal(
+            "project-a",
+            &format!("format-secret-{index}"),
+            "ordinary content",
+            "2026-07-12T09:00:00Z",
+        );
+        candidate.source = format!("{left}{format_character}{right}");
+        let error = agent.propose(candidate).unwrap_err();
+        assert!(matches!(
+            error,
+            MemoryError::SecretDetected {
+                category: SecretCategory::ConfiguredCredential,
+                ..
+            }
+        ));
+        assert!(!format!("{error:?}").contains(configured));
+    }
+
     assert_eq!(owner.count().unwrap(), 0);
 }
 

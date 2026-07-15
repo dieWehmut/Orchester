@@ -1,6 +1,5 @@
 //! Project-scoped durable memory with explicit human approval.
 
-use std::collections::BTreeMap;
 use std::fmt;
 use std::fs::{self, OpenOptions};
 use std::path::Path;
@@ -11,9 +10,12 @@ use getrandom::fill as fill_random;
 use orchester_protokoll::MemoryKind;
 use regex::Regex;
 use rusqlite::{params, Connection, OptionalExtension, Row, Transaction, TransactionBehavior};
-use secrecy::{ExposeSecret, SecretString};
+use secrecy::SecretString;
 use sha2::{Digest, Sha256};
 use thiserror::Error;
+
+pub use crate::harness::secret_scan::SecretCategory;
+use crate::harness::secret_scan::{SecretScanner, is_format_character};
 
 const BASE_MIGRATION: &str = include_str!("../../migrations/0001_memory.sql");
 const ACCESS_MIGRATION: &str = include_str!("../../migrations/0002_memory_access.sql");
@@ -31,8 +33,6 @@ const MAX_QUERY_TERMS: usize = 32;
 const MAX_QUERY_TERM_BYTES: usize = 64;
 const MAX_EVENTS: usize = 10_000;
 const MAX_ITEMS_PER_PROJECT: i64 = 10_000;
-const MAX_CONFIGURED_SECRET_BYTES: usize = 16 * 1024;
-const MAX_CONFIGURED_SECRETS: usize = 256;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum MemoryState {
@@ -195,15 +195,6 @@ pub struct MemoryEvent {
     pub occurred_at: String,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum SecretCategory {
-    ConfiguredCredential,
-    PrivateKey,
-    AuthorizationHeader,
-    ProviderToken,
-    HighEntropyToken,
-}
-
 #[derive(Debug, Error)]
 pub enum MemoryError {
     #[error("memory input is invalid")]
@@ -320,7 +311,7 @@ impl fmt::Debug for MemoryStore {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
             .debug_struct("MemoryStore")
-            .field("configured_secret_count", &self.scanner.configured.len())
+            .field("configured_secret_count", &self.scanner.configured_count())
             .field("max_recall_items", &self.max_recall_items)
             .finish_non_exhaustive()
     }
@@ -352,13 +343,8 @@ impl MemoryStore {
         mut connection: Connection,
         configured_secrets: Vec<SecretString>,
     ) -> Result<Self, MemoryError> {
-        if configured_secrets.len() > MAX_CONFIGURED_SECRETS
-            || configured_secrets
-                .iter()
-                .any(|secret| secret.expose_secret().len() > MAX_CONFIGURED_SECRET_BYTES)
-        {
-            return Err(MemoryError::InvalidInput);
-        }
+        let scanner =
+            SecretScanner::try_new(configured_secrets).map_err(|_| MemoryError::InvalidInput)?;
         connection.busy_timeout(Duration::from_secs(5))?;
         connection.execute_batch(
             "PRAGMA foreign_keys = ON;
@@ -371,7 +357,7 @@ impl MemoryStore {
         verify_integrity(&connection)?;
         Ok(Self {
             connection: Mutex::new(connection),
-            scanner: SecretScanner::new(configured_secrets),
+            scanner,
             max_recall_items: MAX_RECALL_ITEMS,
         })
     }
@@ -469,12 +455,16 @@ impl MemoryStore {
         I: IntoIterator<Item = &'a str>,
     {
         for field in fields {
-            if let Some(finding) = self.scanner.scan(field) {
-                return Err(MemoryError::SecretDetected {
-                    category: finding.category,
-                    start: finding.start,
-                    end: finding.end,
-                });
+            match self.scanner.scan(field) {
+                Ok(Some(finding)) => {
+                    return Err(MemoryError::SecretDetected {
+                        category: finding.category,
+                        start: finding.start,
+                        end: finding.end,
+                    });
+                }
+                Ok(None) => {}
+                Err(_) => return Err(MemoryError::InvalidInput),
             }
         }
         Ok(())
@@ -1684,41 +1674,6 @@ fn forbidden_content_character(character: char) -> bool {
     (character.is_control() && !matches!(character, '\n' | '\t')) || is_format_character(character)
 }
 
-fn is_format_character(character: char) -> bool {
-    matches!(
-        character,
-        '\u{00AD}'
-            | '\u{061C}'
-            | '\u{180E}'
-            | '\u{200B}'
-            | '\u{200C}'
-            | '\u{200D}'
-            | '\u{200E}'
-            | '\u{200F}'
-            | '\u{202A}'
-            | '\u{202B}'
-            | '\u{202C}'
-            | '\u{202D}'
-            | '\u{202E}'
-            | '\u{2060}'
-            | '\u{2061}'
-            | '\u{2062}'
-            | '\u{2063}'
-            | '\u{2064}'
-            | '\u{206A}'
-            | '\u{206B}'
-            | '\u{206C}'
-            | '\u{206D}'
-            | '\u{206E}'
-            | '\u{206F}'
-            | '\u{2066}'
-            | '\u{2067}'
-            | '\u{2068}'
-            | '\u{2069}'
-            | '\u{feff}'
-    )
-}
-
 fn validate_transition_input(
     project_id: &str,
     memory_id: &str,
@@ -1817,164 +1772,6 @@ fn literal_fts_query(query: &str) -> Option<String> {
 fn fts_term_pattern() -> &'static Regex {
     static PATTERN: OnceLock<Regex> = OnceLock::new();
     PATTERN.get_or_init(|| Regex::new(r"[\p{L}\p{N}_]+").expect("static FTS term pattern"))
-}
-
-#[derive(Debug, Clone, Copy)]
-struct SecretFinding {
-    category: SecretCategory,
-    start: usize,
-    end: usize,
-}
-
-struct SecretScanner {
-    configured: Vec<SecretString>,
-}
-
-impl SecretScanner {
-    fn new(configured: Vec<SecretString>) -> Self {
-        Self { configured }
-    }
-
-    fn scan(&self, input: &str) -> Option<SecretFinding> {
-        let normalized = NormalizedText::without_controls(input);
-        for secret in &self.configured {
-            let secret = secret.expose_secret();
-            if !secret.is_empty() {
-                if let Some(start) = normalized.text.find(secret) {
-                    return Some(normalized.finding(
-                        SecretCategory::ConfiguredCredential,
-                        start,
-                        start + secret.len(),
-                    ));
-                }
-            }
-        }
-        for (pattern, category) in [
-            (private_key_pattern(), SecretCategory::PrivateKey),
-            (authorization_pattern(), SecretCategory::AuthorizationHeader),
-            (provider_token_pattern(), SecretCategory::ProviderToken),
-        ] {
-            if let Some(matched) = pattern.find(&normalized.text) {
-                return Some(normalized.finding(category, matched.start(), matched.end()));
-            }
-        }
-        high_entropy_pattern()
-            .find_iter(&normalized.text)
-            .find(|candidate| high_entropy(candidate.as_str()))
-            .map(|candidate| {
-                normalized.finding(
-                    SecretCategory::HighEntropyToken,
-                    candidate.start(),
-                    candidate.end(),
-                )
-            })
-    }
-}
-
-struct NormalizedText {
-    text: String,
-    original_byte: Vec<usize>,
-    original_len: usize,
-}
-
-impl NormalizedText {
-    fn without_controls(input: &str) -> Self {
-        let mut text = String::with_capacity(input.len());
-        let mut original_byte = Vec::with_capacity(input.len());
-        for (start, character) in input.char_indices() {
-            if character.is_control() || is_format_character(character) {
-                continue;
-            }
-            text.push(character);
-            original_byte.extend((0..character.len_utf8()).map(|offset| start + offset));
-        }
-        Self {
-            text,
-            original_byte,
-            original_len: input.len(),
-        }
-    }
-
-    fn finding(&self, category: SecretCategory, start: usize, end: usize) -> SecretFinding {
-        let original_start = self
-            .original_byte
-            .get(start)
-            .copied()
-            .unwrap_or(self.original_len);
-        let original_end = end
-            .checked_sub(1)
-            .and_then(|index| self.original_byte.get(index).copied())
-            .map(|index| index.saturating_add(1))
-            .unwrap_or(original_start);
-        SecretFinding {
-            category,
-            start: original_start,
-            end: original_end,
-        }
-    }
-}
-
-fn private_key_pattern() -> &'static Regex {
-    static PATTERN: OnceLock<Regex> = OnceLock::new();
-    PATTERN.get_or_init(|| {
-        Regex::new(r"(?i)-----BEGIN [^-\r\n]*PRIVATE KEY-----").expect("static private-key pattern")
-    })
-}
-
-fn authorization_pattern() -> &'static Regex {
-    static PATTERN: OnceLock<Regex> = OnceLock::new();
-    PATTERN.get_or_init(|| {
-        Regex::new(r"(?i)authorization\s*:\s*(?:bearer|basic)\s+\S+")
-            .expect("static authorization pattern")
-    })
-}
-
-fn provider_token_pattern() -> &'static Regex {
-    static PATTERN: OnceLock<Regex> = OnceLock::new();
-    PATTERN.get_or_init(|| {
-        Regex::new(
-            r"(?i)(?:sk[-_][A-Za-z0-9._-]{8,}|ghp_[A-Za-z0-9]{8,}|github_pat_[A-Za-z0-9_]{8,}|xox[baprs]-[A-Za-z0-9-]{8,}|AKIA[A-Z0-9]{12,})",
-        )
-        .expect("static provider-token pattern")
-    })
-}
-
-fn high_entropy_pattern() -> &'static Regex {
-    static PATTERN: OnceLock<Regex> = OnceLock::new();
-    PATTERN.get_or_init(|| {
-        Regex::new(r"[A-Za-z0-9+/=_-]{24,}").expect("static high-entropy candidate pattern")
-    })
-}
-
-fn high_entropy(candidate: &str) -> bool {
-    let bytes = candidate.as_bytes();
-    if bytes.len() < 24 {
-        return false;
-    }
-    let classes = [
-        bytes.iter().any(u8::is_ascii_lowercase),
-        bytes.iter().any(u8::is_ascii_uppercase),
-        bytes.iter().any(u8::is_ascii_digit),
-        bytes
-            .iter()
-            .any(|byte| matches!(byte, b'+' | b'/' | b'=' | b'_' | b'-')),
-    ]
-    .into_iter()
-    .filter(|present| *present)
-    .count();
-    if classes < 3 {
-        return false;
-    }
-    let mut counts = BTreeMap::<u8, usize>::new();
-    for byte in bytes {
-        *counts.entry(*byte).or_default() += 1;
-    }
-    let length = bytes.len() as f64;
-    let entropy = counts.values().fold(0.0, |total, count| {
-        let probability = *count as f64 / length;
-        total - probability * probability.log2()
-    });
-    entropy >= 4.0
 }
 
 fn sha256_hex(input: &[u8]) -> String {
