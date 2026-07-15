@@ -1,0 +1,20 @@
+name = "claude"
+command = "claude"
+args = ["-p", "{prompt}", "--output-format", "stream-json", "--verbose"]
+resume_args = [
+    "-p", "{prompt}",
+    "--resume", "{session_id}",
+    "--output-format", "stream-json",
+    "--verbose",
+]
+kinds = ["code", "chat"]
+supports_resume = true
+streaming = true
+
+[parse]
+discriminator = "type"
+session_id = "session_id"
+
+[parse.map]
+assistant = { event = "message", text = "message.content[0].text" }
+result = { event = "result", text = "result" }

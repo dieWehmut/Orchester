@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "name": "claude",
+  "displayName": "Claude Code",
+  "packageName": "@orchester/claude",
+  "version": "0.1.0",
+  "adapterManifest": "manifests/claude.toml",
+  "command": "claude"
+}
