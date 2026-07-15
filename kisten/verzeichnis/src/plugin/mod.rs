@@ -1,4 +1,5 @@
 mod descriptor;
+mod discovery;
 mod package;
 
 use std::fmt;
@@ -8,6 +9,9 @@ use orchester_vertrag::{AgentAdapter, ManifestAdapter};
 use thiserror::Error;
 
 use descriptor::ValidatedDescriptor;
+
+pub(crate) use discovery::load_root;
+pub use discovery::{PluginOrigin, PluginRoot, RegisteredPlugin};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PluginInfo {
@@ -51,6 +55,10 @@ impl LoadedAgentPlugin {
 
     pub fn into_adapter(self) -> ManifestAdapter {
         self.adapter
+    }
+
+    pub(crate) fn into_parts(self) -> (PluginInfo, ManifestAdapter) {
+        (self.info, self.adapter)
     }
 }
 

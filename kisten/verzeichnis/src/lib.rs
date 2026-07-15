@@ -16,7 +16,10 @@ use orchester_vertrag::{AdapterAvailability, AdapterError, AgentAdapter, Manifes
 
 mod plugin;
 
-pub use plugin::{load_agent_plugin, LoadedAgentPlugin, PluginError, PluginInfo};
+pub use plugin::{
+    load_agent_plugin, LoadedAgentPlugin, PluginError, PluginInfo, PluginOrigin, PluginRoot,
+    RegisteredPlugin,
+};
 
 /// An index of adapters keyed by name.
 ///
@@ -24,6 +27,7 @@ pub use plugin::{load_agent_plugin, LoadedAgentPlugin, PluginError, PluginInfo};
 /// `list` command and its tests deterministic.
 pub struct Registry {
     adapters: BTreeMap<String, Arc<dyn AgentAdapter>>,
+    plugins: BTreeMap<String, RegisteredPlugin>,
 }
 
 impl Registry {
@@ -31,6 +35,7 @@ impl Registry {
     pub fn new() -> Self {
         Self {
             adapters: BTreeMap::new(),
+            plugins: BTreeMap::new(),
         }
     }
 
@@ -40,9 +45,19 @@ impl Registry {
     /// form a working registry. Individual malformed manifests are logged and
     /// skipped rather than aborting discovery.
     pub fn discover(manifest_dir: impl AsRef<Path>) -> Self {
+        Self::discover_with_plugin_roots(manifest_dir, std::iter::empty())
+    }
+
+    pub fn discover_with_plugin_roots(
+        manifest_dir: impl AsRef<Path>,
+        plugin_roots: impl IntoIterator<Item = PluginRoot>,
+    ) -> Self {
         let mut registry = Self::new();
         registry.register_builtins();
         registry.load_dir(manifest_dir.as_ref());
+        for root in plugin_roots {
+            registry.load_plugin_root(&root);
+        }
         registry
     }
 
@@ -86,6 +101,16 @@ impl Registry {
         self.adapters.insert(adapter.name().to_string(), adapter);
     }
 
+    fn load_plugin_root(&mut self, root: &PluginRoot) {
+        for loaded in plugin::load_root(root) {
+            let (info, adapter) = loaded.into_parts();
+            let name = info.name().to_owned();
+            self.insert(Arc::new(adapter));
+            self.plugins
+                .insert(name, RegisteredPlugin::new(info, root.origin()));
+        }
+    }
+
     /// Look up an adapter by name.
     pub fn get(&self, name: &str) -> Option<Arc<dyn AgentAdapter>> {
         self.adapters.get(name).cloned()
@@ -107,6 +132,10 @@ impl Registry {
     /// Availability checks for every registered adapter, alphabetical by name.
     pub fn availability(&self) -> Vec<AdapterAvailability> {
         self.adapters.values().map(|a| a.availability()).collect()
+    }
+
+    pub fn plugins(&self) -> Vec<RegisteredPlugin> {
+        self.plugins.values().cloned().collect()
     }
 
     /// Number of registered adapters.

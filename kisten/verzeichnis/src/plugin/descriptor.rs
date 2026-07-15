@@ -102,7 +102,7 @@ fn validate_descriptor(
     })
 }
 
-fn valid_name(value: &str) -> bool {
+pub(super) fn valid_name(value: &str) -> bool {
     name_pattern().is_match(value)
 }
 
