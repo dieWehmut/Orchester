@@ -17,8 +17,8 @@ use orchester_vertrag::{AdapterAvailability, AdapterError, AgentAdapter, Manifes
 mod plugin;
 
 pub use plugin::{
-    load_agent_plugin, LoadedAgentPlugin, PluginError, PluginInfo, PluginOrigin, PluginRoot,
-    RegisteredPlugin,
+    load_agent_plugin, standard_plugin_roots, LoadedAgentPlugin, PluginError, PluginInfo,
+    PluginOrigin, PluginRoot, PluginRootError, RegisteredPlugin,
 };
 
 /// An index of adapters keyed by name.

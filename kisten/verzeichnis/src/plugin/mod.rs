@@ -11,7 +11,9 @@ use thiserror::Error;
 use descriptor::ValidatedDescriptor;
 
 pub(crate) use discovery::load_root;
-pub use discovery::{PluginOrigin, PluginRoot, RegisteredPlugin};
+pub use discovery::{
+    PluginOrigin, PluginRoot, PluginRootError, RegisteredPlugin, standard_plugin_roots,
+};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PluginInfo {

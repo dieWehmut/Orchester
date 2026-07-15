@@ -2,10 +2,20 @@ use std::fmt;
 use std::fs;
 use std::path::{Path, PathBuf};
 
+use thiserror::Error;
+
 use super::descriptor::valid_name;
 use super::{LoadedAgentPlugin, PluginInfo, load_agent_plugin};
 
 const MAX_PLUGINS_PER_ROOT: usize = 64;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Error)]
+pub enum PluginRootError {
+    #[error("managed plugin home must be an absolute path")]
+    ManagedHomeNotAbsolute,
+    #[error("project plugin directory must be an absolute path")]
+    ProjectDirectoryNotAbsolute,
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PluginOrigin {
@@ -49,6 +59,30 @@ impl fmt::Debug for PluginRoot {
             .field("origin", &self.origin)
             .finish_non_exhaustive()
     }
+}
+
+pub fn standard_plugin_roots(
+    managed_home: impl AsRef<Path>,
+    project_directory: impl AsRef<Path>,
+) -> Result<[PluginRoot; 2], PluginRootError> {
+    let managed_home = managed_home.as_ref();
+    if !managed_home.is_absolute() {
+        return Err(PluginRootError::ManagedHomeNotAbsolute);
+    }
+    let project_directory = project_directory.as_ref();
+    if !project_directory.is_absolute() {
+        return Err(PluginRootError::ProjectDirectoryNotAbsolute);
+    }
+    Ok([
+        PluginRoot::managed(
+            managed_home
+                .join("plugins")
+                .join("npm")
+                .join("node_modules")
+                .join("@orchester"),
+        ),
+        PluginRoot::project(project_directory.join("node_modules").join("@orchester")),
+    ])
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
