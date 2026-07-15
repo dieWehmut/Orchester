@@ -24,7 +24,7 @@ use clap::Parser;
 
 use orchester_laufzeit::{Conductor, ConductorError, SessionRecord, SessionStore};
 use orchester_protokoll::{Outcome, RunResult, Task};
-use orchester_verzeichnis::Registry;
+use orchester_verzeichnis::{PluginRootError, Registry, standard_plugin_roots};
 
 use args::{Cli, Command};
 use interactive::{AgentChoice, PromptAction};
@@ -67,7 +67,7 @@ async fn run(cli: Cli) -> Result<ExitCode, CliError> {
         && !auto
         && prompt.is_none();
 
-    let registry = Registry::discover(MANIFEST_DIR);
+    let registry = discover_registry()?;
 
     if no_arg_launch {
         return run_interactive(registry).await;
@@ -332,7 +332,7 @@ async fn run_adapter_prompt_shell(
     let mut choices = interactive::build_agent_choices(registry);
     let stdin = io::stdin();
     let mut input = stdin.lock();
-    let conductor = Conductor::new(Registry::discover(MANIFEST_DIR));
+    let conductor = Conductor::new(registry.clone());
     let mut sessions: HashMap<String, String> = HashMap::new();
 
     loop {
@@ -766,6 +766,15 @@ fn session_store() -> SessionStore {
     SessionStore::new(orchester_home().join("sessions.jsonl"))
 }
 
+fn discover_registry() -> Result<Registry, CliError> {
+    let project_directory = std::env::current_dir()?;
+    let plugin_roots = standard_plugin_roots(orchester_home(), &project_directory)?;
+    Ok(Registry::discover_with_plugin_roots(
+        project_directory.join(MANIFEST_DIR),
+        plugin_roots,
+    ))
+}
+
 fn orchester_home() -> PathBuf {
     if let Some(path) = std::env::var_os("ORCHESTER_HOME") {
         return PathBuf::from(path);
@@ -882,6 +891,8 @@ enum CliError {
     NativeAgentUnavailable(String),
     #[error(transparent)]
     Conductor(#[from] ConductorError),
+    #[error(transparent)]
+    PluginRoot(#[from] PluginRootError),
     #[error(transparent)]
     Io(#[from] io::Error),
 }

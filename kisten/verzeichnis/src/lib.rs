@@ -25,6 +25,7 @@ pub use plugin::{
 ///
 /// `BTreeMap` keeps `list()` output stable (alphabetical), which makes the CLI
 /// `list` command and its tests deterministic.
+#[derive(Clone)]
 pub struct Registry {
     adapters: BTreeMap<String, Arc<dyn AgentAdapter>>,
     plugins: BTreeMap<String, RegisteredPlugin>,

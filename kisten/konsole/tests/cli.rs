@@ -1,5 +1,5 @@
 use std::io::Write;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -33,6 +33,24 @@ fn temp_home(name: &str) -> PathBuf {
     ))
 }
 
+fn install_repository_plugin(scope: &Path, marker: &str) {
+    let source = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .join("npm/plugins/claude");
+    let destination = scope.join("claude");
+    std::fs::create_dir_all(destination.join("manifests")).unwrap();
+    for relative in ["package.json", "orchester-plugin.json"] {
+        std::fs::copy(source.join(relative), destination.join(relative)).unwrap();
+    }
+    let manifest = std::fs::read_to_string(source.join("manifests/claude.toml"))
+        .unwrap()
+        .replace(
+            "kinds = [\"code\", \"chat\"]",
+            &format!("kinds = [\"{marker}\"]"),
+        );
+    std::fs::write(destination.join("manifests/claude.toml"), manifest).unwrap();
+}
+
 #[test]
 fn list_shows_builtin_adapters() {
     let output = orchester()
@@ -61,9 +79,76 @@ fn list_can_emit_capability_jsonl() {
         .collect();
 
     assert!(values.iter().any(|value| value["name"] == "mock"));
-    assert!(values
-        .iter()
-        .any(|value| value["name"] == "mock" && value["streaming"] == true));
+    assert!(
+        values
+            .iter()
+            .any(|value| value["name"] == "mock" && value["streaming"] == true)
+    );
+}
+
+#[test]
+fn list_discovers_project_npm_plugins() {
+    let project = temp_home("project-plugin");
+    let home = temp_home("project-plugin-home");
+    std::fs::create_dir_all(&project).unwrap();
+    install_repository_plugin(
+        &project.join("node_modules/@orchester"),
+        "project-plugin-marker",
+    );
+
+    let output = orchester()
+        .current_dir(&project)
+        .env("ORCHESTER_HOME", &home)
+        .arg("list")
+        .output()
+        .expect("list project plugin adapters");
+
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    assert!(stdout(&output).contains("project-plugin-marker"));
+    let _ = std::fs::remove_dir_all(project);
+    let _ = std::fs::remove_dir_all(home);
+}
+
+#[test]
+fn list_discovers_managed_npm_plugins() {
+    let project = temp_home("managed-plugin-project");
+    let home = temp_home("managed-plugin-home");
+    std::fs::create_dir_all(&project).unwrap();
+    install_repository_plugin(
+        &home.join("plugins/npm/node_modules/@orchester"),
+        "managed-plugin-marker",
+    );
+
+    let output = orchester()
+        .current_dir(&project)
+        .env("ORCHESTER_HOME", &home)
+        .arg("list")
+        .output()
+        .expect("list managed plugin adapters");
+
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    assert!(stdout(&output).contains("managed-plugin-marker"));
+    let _ = std::fs::remove_dir_all(project);
+    let _ = std::fs::remove_dir_all(home);
+}
+
+#[test]
+fn relative_orchester_home_fails_without_echoing_the_value() {
+    let project = temp_home("relative-home-project");
+    std::fs::create_dir_all(&project).unwrap();
+
+    let output = orchester()
+        .current_dir(&project)
+        .env("ORCHESTER_HOME", "relative-secret-home")
+        .arg("list")
+        .output()
+        .expect("reject relative Orchester home");
+
+    assert!(!output.status.success());
+    let err = stderr(&output);
+    assert!(err.contains("managed plugin home must be an absolute path"));
+    assert!(!err.contains("relative-secret-home"));
+    let _ = std::fs::remove_dir_all(project);
 }
 
 #[test]
@@ -109,10 +194,10 @@ fn run_subcommand_can_emit_event_jsonl() {
     assert!(output.status.success(), "stderr:\n{}", stderr(&output));
     let events = json_events(&output);
     assert_eq!(events.first().unwrap()["type"], "session_started");
-    assert!(events
-        .iter()
-        .any(|event| event["type"] == "result"
-            && event["text"].as_str().unwrap().contains("hello run")));
+    assert!(
+        events.iter().any(|event| event["type"] == "result"
+            && event["text"].as_str().unwrap().contains("hello run"))
+    );
 }
 
 #[test]
