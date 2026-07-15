@@ -1,10 +1,9 @@
 use std::fs::{File, OpenOptions};
-use std::mem::MaybeUninit;
 use std::os::unix::fs::OpenOptionsExt;
-use std::os::unix::io::AsRawFd;
 use std::path::Path;
 
 use super::ConfigError;
+use crate::harness::private_fs::{PrivateHandleError, validate_private_handle};
 
 const OPEN_FLAGS: i32 = libc::O_NOFOLLOW | libc::O_CLOEXEC | libc::O_NONBLOCK;
 
@@ -15,18 +14,15 @@ pub(super) fn open_validated_file(path: &Path) -> Result<File, ConfigError> {
         .open(path)
         .map_err(|_| ConfigError::ProtectedFileIo)?;
 
-    let mut stat = MaybeUninit::<libc::stat>::uninit();
-    if unsafe { libc::fstat(file.as_raw_fd(), stat.as_mut_ptr()) } != 0 {
-        return Err(ConfigError::ProtectedFileIo);
-    }
-    let stat = unsafe { stat.assume_init() };
-    if (stat.st_mode & libc::S_IFMT) != libc::S_IFREG
-        || stat.st_uid != unsafe { libc::geteuid() }
-        || (stat.st_mode & 0o7777) != 0o600
-    {
-        return Err(ConfigError::ProtectedFileSecurity);
-    }
+    validate_private_handle(&file, false).map_err(map_validation_error)?;
     Ok(file)
+}
+
+fn map_validation_error(error: PrivateHandleError) -> ConfigError {
+    match error {
+        PrivateHandleError::Io => ConfigError::ProtectedFileIo,
+        PrivateHandleError::Security => ConfigError::ProtectedFileSecurity,
+    }
 }
 
 #[cfg(test)]

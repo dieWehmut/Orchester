@@ -18,6 +18,7 @@ pub mod mutation;
 pub mod process;
 pub mod process_runtime;
 mod process_tree;
+pub(crate) mod private_fs;
 pub mod run_store;
 pub(crate) mod secret_scan;
 pub mod tools;
