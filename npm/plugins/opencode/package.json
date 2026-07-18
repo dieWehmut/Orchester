@@ -1,0 +1,14 @@
+{
+  "name": "@orchester/opencode",
+  "version": "0.1.0",
+  "description": "Pure-data agent adapter plugin for Orchester",
+  "license": "MIT OR Apache-2.0",
+  "repository": "https://github.com/dieWehmut/Orchester",
+  "files": [
+    "orchester-plugin.json",
+    "manifests"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

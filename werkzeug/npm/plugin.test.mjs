@@ -75,6 +75,16 @@ test('repository Codex package satisfies the locked pure-data contract', () => {
   });
 });
 
+test('repository OpenCode package satisfies the locked pure-data contract', () => {
+  assert.deepEqual(repositoryPackage('opencode'), {
+    adapterManifest: 'manifests/opencode.toml',
+    command: 'opencode',
+    name: 'opencode',
+    packageName: '@orchester/opencode',
+    version: '0.1.0',
+  });
+});
+
 test('lifecycle scripts, executable bins, and dependency graphs are rejected', () => {
   for (const [field, value] of [
     ['scripts', { postinstall: 'node install.js' }],

@@ -1,0 +1,19 @@
+name = "opencode"
+command = "opencode"
+args = ["run", "--format", "json", "{prompt}"]
+resume_args = ["run", "--format", "json", "--session", "{session_id}", "{prompt}"]
+kinds = ["code", "chat"]
+supports_resume = true
+streaming = true
+
+[parse]
+discriminator = "type"
+session_id = "sessionID"
+
+[parse.map]
+text = { event = "message", text = "part.text" }
+reasoning = { event = "reasoning", text = "part.text" }
+tool_use = { event = "tool_call", name = "part.tool", status = "part.state.status" }
+step_start = { event = "turn_started" }
+step_finish = { event = "turn_completed" }
+error = { event = "error", message = "error.message" }

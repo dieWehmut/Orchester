@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "name": "opencode",
+  "displayName": "OpenCode",
+  "packageName": "@orchester/opencode",
+  "version": "0.1.0",
+  "adapterManifest": "manifests/opencode.toml",
+  "command": "opencode"
+}
