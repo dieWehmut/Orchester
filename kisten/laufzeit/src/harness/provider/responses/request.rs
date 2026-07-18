@@ -1,5 +1,3 @@
-use std::io::{self, Write};
-
 use orchester_modell::{
     MAX_ARGUMENTS_JSON_BYTES, MAX_CALL_ID_BYTES, MAX_CONTENT_BYTES, ModelItem, ModelMessage,
     ModelRequest, ModelRole, ToolCall,
@@ -9,6 +7,8 @@ use serde_json::Value;
 use thiserror::Error;
 
 use crate::harness::provider::MAX_HTTP_REQUEST_BYTES;
+
+use super::json::{self, BoundedJsonError};
 
 const MAX_MODEL_BYTES: usize = 4 * 1024;
 const MAX_INPUT_ITEMS: usize = 512;
@@ -87,15 +87,10 @@ pub fn encode_responses_request(
         service_tier: options.service_tier.as_deref(),
     };
 
-    let mut output = BoundedBuffer::new(MAX_HTTP_REQUEST_BYTES);
-    if serde_json::to_writer(&mut output, &wire).is_err() {
-        return Err(if output.exceeded {
-            ResponsesRequestError::RequestTooLarge
-        } else {
-            ResponsesRequestError::Serialization
-        });
-    }
-    Ok(output.bytes)
+    json::to_bounded_vec(&wire, MAX_HTTP_REQUEST_BYTES).map_err(|error| match error {
+        BoundedJsonError::LimitExceeded => ResponsesRequestError::RequestTooLarge,
+        BoundedJsonError::Serialization => ResponsesRequestError::Serialization,
+    })
 }
 
 fn validate_options(options: &ResponsesRequestOptions) -> Result<(), ResponsesRequestError> {
@@ -125,7 +120,7 @@ fn encode_tools(
         if !validate_token(&tool.name, MAX_TOOL_NAME_BYTES)
             || tool.description.len() > MAX_TOOL_DESCRIPTION_BYTES
             || !tool.parameters.is_object()
-            || !json_fits(&tool.parameters, MAX_ARGUMENTS_JSON_BYTES)
+            || !json::fits(&tool.parameters, MAX_ARGUMENTS_JSON_BYTES)
         {
             return Err(ResponsesRequestError::InvalidTool);
         }
@@ -345,11 +340,6 @@ fn validate_token(value: &str, max_bytes: usize) -> bool {
             .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'_' | b'-' | b'.'))
 }
 
-fn json_fits(value: &Value, limit: usize) -> bool {
-    let mut counter = BoundedCounter::new(limit);
-    serde_json::to_writer(&mut counter, value).is_ok()
-}
-
 #[derive(Serialize)]
 struct WireRequest<'a> {
     model: &'a str,
@@ -418,68 +408,5 @@ impl TextKind {
         match self {
             Self::Input => WireContent::InputText { text },
         }
-    }
-}
-
-struct BoundedBuffer {
-    bytes: Vec<u8>,
-    limit: usize,
-    exceeded: bool,
-}
-
-impl BoundedBuffer {
-    fn new(limit: usize) -> Self {
-        Self {
-            bytes: Vec::with_capacity(limit.min(8 * 1024)),
-            limit,
-            exceeded: false,
-        }
-    }
-}
-
-impl Write for BoundedBuffer {
-    fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
-        let Some(next_len) = self.bytes.len().checked_add(bytes.len()) else {
-            self.exceeded = true;
-            return Err(io::Error::other("bounded JSON buffer exceeded"));
-        };
-        if next_len > self.limit {
-            self.exceeded = true;
-            return Err(io::Error::other("bounded JSON buffer exceeded"));
-        }
-        self.bytes.extend_from_slice(bytes);
-        Ok(bytes.len())
-    }
-
-    fn flush(&mut self) -> io::Result<()> {
-        Ok(())
-    }
-}
-
-struct BoundedCounter {
-    bytes: usize,
-    limit: usize,
-}
-
-impl BoundedCounter {
-    const fn new(limit: usize) -> Self {
-        Self { bytes: 0, limit }
-    }
-}
-
-impl Write for BoundedCounter {
-    fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
-        let Some(next_len) = self.bytes.checked_add(bytes.len()) else {
-            return Err(io::Error::other("bounded JSON counter exceeded"));
-        };
-        if next_len > self.limit {
-            return Err(io::Error::other("bounded JSON counter exceeded"));
-        }
-        self.bytes = next_len;
-        Ok(bytes.len())
-    }
-
-    fn flush(&mut self) -> io::Result<()> {
-        Ok(())
     }
 }
