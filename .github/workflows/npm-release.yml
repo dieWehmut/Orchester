@@ -16,6 +16,7 @@ on:
         options:
           - none
           - platforms
+          - plugins
           - meta
 
 permissions:
@@ -45,7 +46,7 @@ jobs:
         run: |
           set -euo pipefail
           case "$SUBMIT" in
-            none|platforms|meta) ;;
+            none|platforms|plugins|meta) ;;
             *) echo "unsupported submit mode: $SUBMIT" >&2; exit 1 ;;
           esac
           if [[ "$SUBMIT" != "none" ]]; then
@@ -301,7 +302,7 @@ jobs:
           name: npm-release.tar.gz
           path: .
 
-      - name: Stage platform packages before meta package
+      - name: Stage release packages in dependency order
         shell: bash
         env:
           VERSION: ${{ inputs.version }}
@@ -327,8 +328,13 @@ jobs:
             node -e "for (const name of Object.keys(require('./npm/cli/package.json').optionalDependencies)) console.log(name)"
           )
           [[ ${#platform_packages[@]} -eq 6 ]]
+          node werkzeug/npm/plugin-release.mjs --version "$VERSION"
+          mapfile -t plugin_packages < <(
+            node --input-type=module -e "import { OFFICIAL_AGENT_PLUGINS as names } from './werkzeug/npm/plugin-release.mjs'; for (const name of names) console.log('@orchester/' + name)"
+          )
+          [[ ${#plugin_packages[@]} -eq 3 ]]
 
-          assert_platform_version_absent() {
+          assert_version_absent() {
             local package="$1"
             local output
             if output=$(npm view "$package@$VERSION" version 2>&1); then
@@ -342,18 +348,41 @@ jobs:
             fi
           }
 
+          assert_version_present() {
+            local package="$1"
+            [[ $(npm view "$package@$VERSION" version) == "$VERSION" ]]
+          }
+
           if [[ "$SUBMIT" == "platforms" ]]; then
             for package in "${platform_packages[@]}"; do
-              assert_platform_version_absent "$package"
+              assert_version_absent "$package"
             done
-          else
+          elif [[ "$SUBMIT" == "plugins" ]]; then
             for package in "${platform_packages[@]}"; do
-              [[ $(npm view "$package@$VERSION" version) == "$VERSION" ]]
+              assert_version_present "$package"
             done
+            for package in "${plugin_packages[@]}"; do
+              assert_version_absent "$package"
+            done
+          elif [[ "$SUBMIT" == "meta" ]]; then
+            for package in "${platform_packages[@]}"; do
+              assert_version_present "$package"
+            done
+            for package in "${plugin_packages[@]}"; do
+              assert_version_present "$package"
+            done
+            assert_version_absent "@orchester/cli"
+          else
+            echo "unsupported submit mode: $SUBMIT" >&2
+            exit 1
           fi
 
           if [[ "$SUBMIT" == "platforms" ]]; then
             for package in "${platform_packages[@]}"; do
+              stage_package "$package"
+            done
+          elif [[ "$SUBMIT" == "plugins" ]]; then
+            for package in "${plugin_packages[@]}"; do
               stage_package "$package"
             done
           elif [[ "$SUBMIT" == "meta" ]]; then

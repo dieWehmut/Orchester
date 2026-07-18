@@ -88,36 +88,41 @@ test('release artifact contains the exact verified official plugin matrix', () =
   assert.match(stageJob, /-name '\*\.tgz' \| wc -l\) -eq 10/);
 });
 
-test('staged publishing is manual, OIDC-scoped, and orders platform packages before meta', () => {
+test('staged publishing is manual, OIDC-scoped, and orders platform, plugin, then meta packages', () => {
   const workflow = fs.readFileSync(workflowPath, 'utf8');
   const publishJob = workflow.indexOf('\n  submit:');
+  const publishSection = workflow.slice(publishJob);
   const oidcPermission = workflow.indexOf('id-token: write', publishJob);
-  const platformPreflight = workflow.indexOf('assert_platform_version_absent', publishJob);
-  const platformLoop = workflow.indexOf('for package in "${platform_packages[@]}"; do\n              stage_package', publishJob);
+  const versionPreflight = workflow.indexOf('assert_version_absent()', publishJob);
+  const pluginCollection = workflow.indexOf('OFFICIAL_AGENT_PLUGINS', publishJob);
+  const platformPublish = workflow.indexOf('for package in "${platform_packages[@]}"; do\n              stage_package', publishJob);
+  const pluginPublish = workflow.indexOf('for package in "${plugin_packages[@]}"; do\n              stage_package', publishJob);
   const metaPublish = workflow.indexOf('stage_package "@orchester/cli"', publishJob);
 
   assert.ok(publishJob > 0);
-  assert.match(workflow, /submit:\n\s+description: [^\n]+\n\s+required: true\n\s+default: none\n\s+type: choice\n\s+options:\n\s+- none\n\s+- platforms\n\s+- meta/);
+  assert.match(workflow, /submit:\n\s+description: [^\n]+\n\s+required: true\n\s+default: none\n\s+type: choice\n\s+options:\n\s+- none\n\s+- platforms\n\s+- plugins\n\s+- meta/);
   assert.ok(oidcPermission > publishJob);
-  assert.ok(platformPreflight > oidcPermission);
+  assert.ok(versionPreflight > oidcPermission);
+  assert.ok(pluginCollection > oidcPermission);
   assert.match(
-    workflow.slice(publishJob),
+    publishSection,
     /if: inputs\.submit != 'none' && github\.ref_type == 'tag'/,
   );
-  assert.match(workflow.slice(publishJob), /\[\[ "\$TAG" == "v\$VERSION" \]\]/);
+  assert.match(publishSection, /\[\[ "\$TAG" == "v\$VERSION" \]\]/);
   assert.match(workflow, /if \[\[ "\$SUBMIT" != "none" \]\]; then/);
-  assert.match(workflow, /case "\$SUBMIT" in[\s\S]*none\|platforms\|meta/);
+  assert.match(workflow, /case "\$SUBMIT" in[\s\S]*none\|platforms\|plugins\|meta/);
   assert.match(workflow, /\[\[ "\$REF_TYPE" == "tag" \]\]/);
-  assert.ok(platformLoop > oidcPermission);
-  assert.ok(metaPublish > platformLoop);
-  assert.match(workflow.slice(publishJob), /if \[\[ "\$SUBMIT" == "platforms" \]\]; then/);
-  assert.match(workflow.slice(publishJob), /unsupported submit mode: \$SUBMIT/);
-  assert.ok(platformLoop > platformPreflight);
-  assert.match(workflow.slice(platformPreflight, platformLoop), /npm view "\$package@\$VERSION" version/);
-  assert.ok(metaPublish > platformPreflight);
-  assert.match(workflow.slice(publishJob), /npm stage publish/);
-  assert.match(workflow.slice(publishJob), /npm stage publish "\.\/release\/\$archive"/);
-  assert.equal(/\bnpm publish\b/.test(workflow.slice(publishJob)), false);
+  assert.match(publishSection, /\[\[ \$\{#plugin_packages\[@\]\} -eq 3 \]\]/);
+  assert.match(publishSection, /if \[\[ "\$SUBMIT" == "plugins" \]\]; then[\s\S]*assert_version_present "\$package"[\s\S]*assert_version_absent "\$package"/);
+  assert.match(publishSection, /elif \[\[ "\$SUBMIT" == "meta" \]\]; then[\s\S]*assert_version_present "\$package"[\s\S]*assert_version_absent "@orchester\/cli"/);
+  assert.ok(platformPublish > versionPreflight);
+  assert.ok(pluginPublish > platformPublish);
+  assert.ok(metaPublish > pluginPublish);
+  assert.match(publishSection, /unsupported submit mode: \$SUBMIT/);
+  assert.match(publishSection, /npm view "\$package@\$VERSION" version/);
+  assert.match(publishSection, /npm stage publish/);
+  assert.match(publishSection, /npm stage publish "\.\/release\/\$archive"/);
+  assert.equal(/\bnpm publish\b/.test(publishSection), false);
   assert.match(workflow, /concurrency:\n  group: npm-release\n  cancel-in-progress: false/);
   assert.equal(workflow.includes('NODE_AUTH_TOKEN'), false);
   assert.equal(workflow.includes('NPM_TOKEN'), false);
