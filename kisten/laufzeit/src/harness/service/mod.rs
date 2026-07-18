@@ -2,6 +2,7 @@
 
 mod builder;
 mod identity;
+mod runtime;
 mod turn;
 
 use std::fmt;
@@ -22,6 +23,7 @@ pub use builder::{
 };
 use identity::WorkspaceIdentity;
 pub use identity::{IdentityError, WorkspaceIdentitySnapshot};
+pub use runtime::{SelfAgentOutcome, SelfAgentRuntime, SelfAgentRuntimeError};
 pub use turn::SelfAgentTurn;
 
 /// Errors raised before or during one self-agent turn.
