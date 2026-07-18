@@ -1,5 +1,6 @@
 //! TUI-independent entry point for the self-owned agent.
 
+mod builder;
 mod identity;
 mod turn;
 
@@ -15,6 +16,10 @@ use super::coordinator::{
     SystemCoordinatorClock,
 };
 use super::governance::PolicyEngine;
+pub use builder::{
+    build_self_agent_service, build_self_agent_service_with_transport, ProductionSelfAgentService,
+    SelfAgentBuildError,
+};
 use identity::WorkspaceIdentity;
 pub use identity::{IdentityError, WorkspaceIdentitySnapshot};
 pub use turn::SelfAgentTurn;
@@ -71,15 +76,24 @@ where
         owner_actor_id: impl Into<String>,
         clock: C,
     ) -> Result<Self, SelfAgentServiceError> {
+        let identity = WorkspaceIdentity::for_workspace(workspace_root, owner_actor_id)?;
+        Ok(Self::from_identity(loop_engine, store, identity, clock))
+    }
+
+    fn from_identity(
+        loop_engine: SelfAgentLoop<M>,
+        store: S,
+        identity: WorkspaceIdentity,
+        clock: C,
+    ) -> Self {
         let config_snapshot_hash = loop_engine.config_snapshot_hash();
         let max_steps = u64::from(loop_engine.max_steps());
-        let identity = WorkspaceIdentity::for_workspace(workspace_root, owner_actor_id)?;
-        Ok(Self {
+        Self {
             coordinator: DurableCoordinator::with_clock(loop_engine, store, clock),
             identity,
             config_snapshot_hash,
             max_steps,
-        })
+        }
     }
 
     pub fn identity(&self) -> WorkspaceIdentitySnapshot {
@@ -88,6 +102,10 @@ where
 
     pub fn store(&self) -> &S {
         self.coordinator.store()
+    }
+
+    pub fn model(&self) -> &M {
+        self.coordinator.model()
     }
 
     pub async fn start(
