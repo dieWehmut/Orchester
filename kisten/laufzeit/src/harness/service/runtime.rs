@@ -87,6 +87,13 @@ where
     M: LanguageModel,
     A: AuditSink,
 {
+    pub(super) fn from_parts(
+        service: SelfAgentService<M, Arc<SqliteRunStore>, SystemCoordinatorClock>,
+        execution: GovernedExecution<A, SystemCoordinatorClock>,
+    ) -> Self {
+        Self { service, execution }
+    }
+
     pub fn new(
         loop_engine: SelfAgentLoop<M>,
         store: Arc<SqliteRunStore>,
@@ -103,7 +110,7 @@ where
             owner_actor_id.clone(),
         )?;
         let execution = GovernedExecution::new(store, audit, executor, owner_actor_id)?;
-        Ok(Self { service, execution })
+        Ok(Self::from_parts(service, execution))
     }
 
     pub fn model(&self) -> &M {

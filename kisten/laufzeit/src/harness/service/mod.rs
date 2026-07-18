@@ -18,8 +18,10 @@ use super::coordinator::{
 };
 use super::governance::PolicyEngine;
 pub use builder::{
-    build_self_agent_service, build_self_agent_service_with_transport, ProductionSelfAgentService,
-    SelfAgentBuildError,
+    build_self_agent_runtime, build_self_agent_runtime_with_transport, build_self_agent_service,
+    build_self_agent_service_with_transport, ConfiguredSelfAgentRuntime,
+    ProductionSelfAgentRuntime, ProductionSelfAgentService, SelfAgentBuildError,
+    SelfAgentRuntimeBuildError,
 };
 use identity::WorkspaceIdentity;
 pub use identity::{IdentityError, WorkspaceIdentitySnapshot};

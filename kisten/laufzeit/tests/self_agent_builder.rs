@@ -9,7 +9,8 @@ use orchester_laufzeit::harness::provider::{
     HttpRequest, HttpResponse, HttpTransport, HttpTransportError,
 };
 use orchester_laufzeit::harness::service::{
-    build_self_agent_service, build_self_agent_service_with_transport, SelfAgentBuildError,
+    build_self_agent_runtime_with_transport, build_self_agent_service,
+    build_self_agent_service_with_transport, SelfAgentBuildError, SelfAgentOutcome,
 };
 use secrecy::SecretString;
 use serde_json::json;
@@ -72,9 +73,10 @@ fn credentials() -> InMemoryCredentialStore {
     store
 }
 
-#[derive(Clone, Default)]
+#[derive(Clone)]
 struct CaptureTransport {
     requests: Arc<Mutex<Vec<CapturedRequest>>>,
+    response: Arc<Vec<u8>>,
 }
 
 struct CapturedRequest {
@@ -83,8 +85,28 @@ struct CapturedRequest {
 }
 
 impl CaptureTransport {
+    fn with_response(response: serde_json::Value) -> Self {
+        Self {
+            requests: Arc::default(),
+            response: Arc::new(serde_json::to_vec(&response).expect("fixture response")),
+        }
+    }
+
     fn request_count(&self) -> usize {
         self.requests.lock().expect("capture lock").len()
+    }
+}
+
+impl Default for CaptureTransport {
+    fn default() -> Self {
+        Self::with_response(json!({
+            "status": "completed",
+            "output": [{
+                "type": "message",
+                "role": "assistant",
+                "content": [{"type":"output_text", "text":"ready"}]
+            }]
+        }))
     }
 }
 
@@ -107,20 +129,62 @@ impl HttpTransport for CaptureTransport {
                     .authorization()
                     .map(|secret| secret.expose_for_provider().to_owned()),
             });
-        HttpResponse::new(
-            200,
-            None,
-            serde_json::to_vec(&json!({
-                "status": "completed",
-                "output": [{
-                    "type": "message",
-                    "role": "assistant",
-                    "content": [{"type":"output_text", "text":"ready"}]
-                }]
-            }))
-            .expect("fixture"),
-        )
+        HttpResponse::new(200, None, self.response.as_ref().clone())
     }
+}
+
+#[tokio::test]
+async fn configured_runtime_executes_a_read_action_offline() {
+    let (workspace, state_db) = temp_paths("runtime");
+    std::fs::create_dir_all(workspace.join("src")).expect("source directory");
+    std::fs::write(
+        workspace.join("src/lib.rs"),
+        "pub const CONFIGURED: bool = true;\n",
+    )
+    .expect("source fixture");
+    let audit_log = state_db.with_file_name("audit.jsonl");
+    let transport = CaptureTransport::with_response(json!({
+        "status": "completed",
+        "output": [{
+            "type": "function_call",
+            "call_id": "provider-call-read",
+            "name": "read_file",
+            "arguments": "{\"path\":\"src/lib.rs\",\"start_line\":null,\"end_line\":null}",
+            "status": "completed"
+        }]
+    }));
+    let runtime = build_self_agent_runtime_with_transport(
+        &configured_user(),
+        &credentials(),
+        transport.clone(),
+        &workspace,
+        &state_db,
+        &audit_log,
+        "local-user",
+    )
+    .expect("configured runtime");
+
+    let outcome = runtime
+        .start("read the configured source", CancellationToken::new())
+        .await
+        .expect("outcome");
+    let SelfAgentOutcome::Tool {
+        outcome: orchester_laufzeit::harness::execution::GovernedToolOutcome::Completed(observation),
+        ..
+    } = outcome
+    else {
+        panic!("expected completed read");
+    };
+    assert_eq!(observation.kind, "read_file");
+    assert_eq!(
+        observation.data["content_lines"],
+        json!(["pub const CONFIGURED: bool = true;"])
+    );
+    assert_eq!(transport.request_count(), 1);
+    assert!(state_db.is_file());
+    assert!(audit_log.is_file());
+    drop(runtime);
+    cleanup(&state_db);
 }
 
 #[tokio::test]
