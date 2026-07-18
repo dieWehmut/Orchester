@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicUsize, Ordering};
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
 
 use orchester_laufzeit::harness::agent_loop::{AgentLoopConfig, SelfAgentLoop};
 use orchester_laufzeit::harness::context::{ContextAssembler, ContextLimits};
@@ -246,6 +246,38 @@ async fn model_and_store_ports_are_provider_free_and_ordered() {
             "model.completed"
         ]
     );
+}
+
+#[tokio::test]
+async fn coordinator_accepts_a_shared_store_for_governed_execution() {
+    let path = temp_db("shared-store");
+    let store = Arc::new(SqliteRunStore::open(&path).expect("store"));
+    let coordinator = DurableCoordinator::with_clock(
+        agent([Ok(ModelResponse {
+            assistant_text: "shared result".into(),
+            tool_call: None,
+            usage: ModelUsage::default(),
+            opaque_items: Vec::new(),
+        })]),
+        store.clone(),
+        FixedCoordinatorClock::new("2026-07-18T00:00:00Z"),
+    );
+
+    let outcome = coordinator
+        .start_new_run(input("run-shared-store"), CancellationToken::new())
+        .await
+        .expect("turn");
+    assert!(matches!(outcome, CoordinatorOutcome::Text { .. }));
+    assert_eq!(
+        store
+            .events_owned(&RunId::from("run-shared-store"), "owner-coordinator")
+            .expect("events")
+            .len(),
+        4
+    );
+    drop(coordinator);
+    drop(store);
+    remove_temp_db(&path);
 }
 
 #[tokio::test]

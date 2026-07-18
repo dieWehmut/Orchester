@@ -6,6 +6,8 @@
 //! boundary narrow makes the crash point explicit: a provider is never called
 //! until the durable store has accepted `model.started`.
 
+use std::sync::Arc;
+
 use orchester_modell::{LanguageModel, ModelError, ModelUsage};
 use orchester_protokoll::{ActionId, AgentAction, CallId, HarnessEventKind, RunId, StepId, TurnId};
 use thiserror::Error;
@@ -220,6 +222,72 @@ pub trait CoordinatorStore: Send + Sync {
         action_id: &ActionId,
         occurred_at: String,
     ) -> Result<PolicyResult, StoreError>;
+}
+
+impl<T> CoordinatorStore for Arc<T>
+where
+    T: CoordinatorStore + ?Sized,
+{
+    fn secret_set_id(&self) -> SecretSetId {
+        self.as_ref().secret_set_id()
+    }
+
+    fn create_run(&self, input: NewRun) -> Result<(), StoreError> {
+        self.as_ref().create_run(input)
+    }
+
+    fn append_transition(
+        &self,
+        run_id: &RunId,
+        owner_actor_id: &str,
+        transition: Transition,
+    ) -> Result<(), StoreError> {
+        self.as_ref()
+            .append_transition(run_id, owner_actor_id, transition)
+    }
+
+    fn append_model_started_with_transcript(
+        &self,
+        owner_actor_id: &str,
+        run_id: &RunId,
+        input: EventAppend,
+        records: Vec<TranscriptRecord>,
+    ) -> Result<(), StoreError> {
+        self.as_ref()
+            .append_model_started_with_transcript(owner_actor_id, run_id, input, records)
+    }
+
+    fn append_model_completed(
+        &self,
+        owner_actor_id: &str,
+        run_id: &RunId,
+        input: EventAppend,
+    ) -> Result<String, StoreError> {
+        self.as_ref()
+            .append_model_completed(owner_actor_id, run_id, input)
+    }
+
+    fn append_model_completed_with_action(
+        &self,
+        owner_actor_id: &str,
+        run_id: &RunId,
+        input: EventAppend,
+        action: ActionRecord,
+    ) -> Result<(), StoreError> {
+        self.as_ref()
+            .append_model_completed_with_action(owner_actor_id, run_id, input, action)
+    }
+
+    fn decide_policy(
+        &self,
+        owner_actor_id: &str,
+        run_id: &RunId,
+        action_id: &ActionId,
+        occurred_at: String,
+    ) -> Result<PolicyResult, StoreError> {
+        self.as_ref()
+            .decide_policy(owner_actor_id, run_id, action_id, occurred_at)
+    }
 }
 
 impl CoordinatorStore for SqliteRunStore {
