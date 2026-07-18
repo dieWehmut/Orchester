@@ -344,6 +344,37 @@ impl<M: LanguageModel> SelfAgentLoop<M> {
         state
             .history
             .push(TranscriptEntry::tool_result(pending.call_id, tool_result));
+        self.prepare_continuation_state(state, cancel)
+    }
+
+    pub(crate) fn prepare_durable_resume(
+        &self,
+        history: Vec<TranscriptEntry>,
+        model_calls: u32,
+        usage: ModelUsage,
+        cancel: &CancellationToken,
+    ) -> Result<PreparedModelStep, AgentLoopError> {
+        self.prepare_continuation_state(
+            LoopState {
+                history,
+                model_calls,
+                usage,
+            },
+            cancel,
+        )
+    }
+
+    fn prepare_continuation_state(
+        &self,
+        mut state: LoopState,
+        cancel: &CancellationToken,
+    ) -> Result<PreparedModelStep, AgentLoopError> {
+        if cancel.is_cancelled() {
+            return Err(ModelError::Cancelled.into());
+        }
+        if state.model_calls >= self.config.max_steps {
+            return Err(AgentLoopError::StepBudgetExceeded);
+        }
         let assembled = self.context.assemble_continuation(ContinuationInput {
             model: self.config.model.clone(),
             history: state.history.clone(),

@@ -4,11 +4,15 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
 
 use orchester_laufzeit::harness::agent_loop::{AgentLoopConfig, SelfAgentLoop};
+use orchester_laufzeit::harness::audit::JsonlAuditSink;
 use orchester_laufzeit::harness::context::{ContextAssembler, ContextLimits};
 use orchester_laufzeit::harness::coordinator::{
-    CoordinatorClock, CoordinatorError, CoordinatorInput, CoordinatorOutcome, CoordinatorStore,
-    DurableCoordinator, FixedCoordinatorClock,
+    CoordinatorClock, CoordinatorContinuationInput, CoordinatorError, CoordinatorInput,
+    CoordinatorOutcome, CoordinatorStore, DurableCoordinator, FixedCoordinatorClock,
 };
+use orchester_laufzeit::harness::execution::{GovernedExecution, GovernedToolOutcome};
+use orchester_laufzeit::harness::executor::ToolExecutor;
+use orchester_laufzeit::harness::files::FileToolLimits;
 use orchester_laufzeit::harness::governance::{PolicyEngine, PolicyResult};
 use orchester_laufzeit::harness::run_store::{
     ActionRecord, EventAppend, NewRun, ResumeNext, RunStore, SqliteRunStore, StoreError, Transition,
@@ -144,6 +148,15 @@ impl CoordinatorStore for RecordingStore {
     fn create_run(&self, _input: NewRun) -> Result<(), StoreError> {
         self.calls.lock().unwrap().push("run.created");
         Ok(())
+    }
+
+    fn load_continuation(
+        &self,
+        _run_id: &RunId,
+        _owner_actor_id: &str,
+    ) -> Result<orchester_laufzeit::harness::coordinator::CoordinatorContinuationState, StoreError>
+    {
+        Err(StoreError::NotFound)
     }
 
     fn append_transition(
@@ -751,5 +764,217 @@ async fn finish_tool_is_persisted_for_governance_instead_of_completing_the_run()
         .unwrap()
         .unwrap();
     assert!(matches!(resume.next, ResumeNext::PrepareExecution { .. }));
+    remove_temp_db(&path);
+}
+
+async fn continue_after_file_tool(label: &str, create_fixture: bool) -> GovernedToolOutcome {
+    let path = temp_db(label);
+    let workspace = path.parent().unwrap().join("workspace");
+    std::fs::create_dir_all(workspace.join("src")).unwrap();
+    if create_fixture {
+        std::fs::write(workspace.join("src/lib.rs"), "pub const VALUE: u8 = 7;\n").unwrap();
+    }
+
+    let mut first_response = ModelResponse::tool(
+        "provider-call-1",
+        "read_file",
+        r#"{"path":"src/lib.rs","start_line":null,"end_line":null}"#,
+    );
+    first_response.usage = ModelUsage {
+        input_tokens: 3,
+        output_tokens: 5,
+    };
+    let second_response = ModelResponse {
+        assistant_text: "inspection complete".into(),
+        tool_call: None,
+        usage: ModelUsage {
+            input_tokens: 7,
+            output_tokens: 11,
+        },
+        opaque_items: Vec::new(),
+    };
+    let store =
+        Arc::new(SqliteRunStore::open_with_terminal_secrets(&path, Vec::new()).expect("store"));
+    let coordinator = DurableCoordinator::with_clock(
+        agent([Ok(first_response)]),
+        store.clone(),
+        FixedCoordinatorClock::new("2026-07-18T00:00:01Z"),
+    );
+    let first = coordinator
+        .start_new_run(input(label), CancellationToken::new())
+        .await
+        .expect("first model step");
+    let CoordinatorOutcome::Action {
+        action_id, call_id, ..
+    } = first
+    else {
+        panic!("expected file action");
+    };
+    let audit = Arc::new(JsonlAuditSink::open(path.parent().unwrap().join("audit.jsonl")).unwrap());
+    let execution = GovernedExecution::with_clock(
+        store.clone(),
+        audit,
+        ToolExecutor::new(&workspace, FileToolLimits::default()).unwrap(),
+        "owner-coordinator",
+        FixedCoordinatorClock::new("2026-07-18T00:00:02Z"),
+    )
+    .unwrap();
+    let tool_outcome = execution
+        .execute(&RunId::from(label), &action_id, &call_id)
+        .expect("governed tool outcome");
+    assert_eq!(coordinator.model().call_count(), 1);
+    drop(execution);
+    drop(coordinator);
+    drop(store);
+
+    let store = Arc::new(
+        SqliteRunStore::open_with_terminal_secrets(&path, Vec::new()).expect("reopen store"),
+    );
+    let coordinator = DurableCoordinator::with_clock(
+        agent([Ok(second_response)]),
+        store.clone(),
+        FixedCoordinatorClock::new("2026-07-18T00:00:03Z"),
+    );
+
+    let continued = coordinator
+        .continue_run(
+            CoordinatorContinuationInput {
+                run_id: RunId::from(label),
+                owner_actor_id: "owner-coordinator".into(),
+                step_id: StepId::from("step-2"),
+                model_call_id: CallId::from("model-call-2"),
+                action_id: ActionId::from("action-2"),
+            },
+            CancellationToken::new(),
+        )
+        .await
+        .expect("continued model step");
+    assert!(matches!(
+        continued,
+        CoordinatorOutcome::Text {
+            ref text,
+            model_calls: 2,
+            usage: ModelUsage {
+                input_tokens: 10,
+                output_tokens: 16,
+            },
+        } if text == "inspection complete"
+    ));
+    assert_eq!(coordinator.model().call_count(), 1);
+    let summaries = coordinator.model().request_summaries();
+    assert_eq!(summaries[0].tool_call_item_count, 1);
+    assert_eq!(summaries[0].tool_result_item_count, 1);
+
+    let snapshot = store
+        .load_run_owned(&RunId::from(label), "owner-coordinator")
+        .unwrap();
+    assert_eq!(snapshot.steps_used, 2);
+    assert_eq!(snapshot.input_tokens_used, 10);
+    assert_eq!(snapshot.output_tokens_used, 16);
+    let events = store
+        .events_owned(&RunId::from(label), "owner-coordinator")
+        .unwrap();
+    assert_eq!(
+        events
+            .iter()
+            .filter(|event| matches!(
+                event.kind,
+                orchester_protokoll::HarnessEventKind::RunCreated
+            ))
+            .count(),
+        1
+    );
+    assert_eq!(
+        events
+            .iter()
+            .filter(|event| matches!(
+                event.kind,
+                orchester_protokoll::HarnessEventKind::StepStarted
+            ))
+            .count(),
+        2
+    );
+    let turn_ids = events
+        .iter()
+        .filter_map(|event| event.turn_id.as_ref())
+        .collect::<Vec<_>>();
+    assert!(turn_ids.windows(2).all(|pair| pair[0] == pair[1]));
+    drop(coordinator);
+    drop(store);
+    remove_temp_db(&path);
+    tool_outcome
+}
+
+#[tokio::test]
+async fn completed_tool_observation_continues_the_same_durable_run() {
+    assert!(matches!(
+        continue_after_file_tool("run-continue-completed", true).await,
+        GovernedToolOutcome::Completed(_)
+    ));
+}
+
+#[tokio::test]
+async fn failed_tool_observation_continues_the_same_durable_run() {
+    assert!(matches!(
+        continue_after_file_tool("run-continue-failed", false).await,
+        GovernedToolOutcome::Failed(_)
+    ));
+}
+
+#[tokio::test]
+async fn continuation_refuses_an_unobserved_action_before_calling_the_model() {
+    let path = temp_db("continuation-before-tool");
+    let coordinator = coordinator(
+        agent([
+            Ok(ModelResponse::tool(
+                "provider-call-1",
+                "read_file",
+                r#"{"path":"src/lib.rs","start_line":null,"end_line":null}"#,
+            )),
+            Ok(ModelResponse {
+                assistant_text: "must remain unused".into(),
+                tool_call: None,
+                usage: ModelUsage::default(),
+                opaque_items: Vec::new(),
+            }),
+        ]),
+        SqliteRunStore::open(&path).unwrap(),
+    );
+    coordinator
+        .start_new_run(
+            input("run-continuation-before-tool"),
+            CancellationToken::new(),
+        )
+        .await
+        .unwrap();
+
+    let error = coordinator
+        .continue_run(
+            CoordinatorContinuationInput {
+                run_id: RunId::from("run-continuation-before-tool"),
+                owner_actor_id: "owner-coordinator".into(),
+                step_id: StepId::from("step-2"),
+                model_call_id: CallId::from("model-call-2"),
+                action_id: ActionId::from("action-2"),
+            },
+            CancellationToken::new(),
+        )
+        .await
+        .unwrap_err();
+
+    assert!(matches!(
+        error,
+        CoordinatorError::Store(StoreError::Invariant(_))
+    ));
+    assert_eq!(coordinator.model().call_count(), 1);
+    let snapshot = coordinator
+        .store()
+        .load_run_owned(
+            &RunId::from("run-continuation-before-tool"),
+            "owner-coordinator",
+        )
+        .unwrap();
+    assert_eq!(snapshot.steps_used, 1);
+    drop(coordinator);
     remove_temp_db(&path);
 }
