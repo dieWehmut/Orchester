@@ -10,6 +10,7 @@ pub mod context;
 pub mod coordinator;
 pub mod credentials;
 pub mod evolution;
+pub mod execution;
 pub mod executor;
 pub mod feedback;
 pub mod files;

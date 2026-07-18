@@ -53,6 +53,22 @@ impl AllowedRun {
 }
 
 pub(crate) fn create_allowed_run(store: &SqliteRunStore, label: &str) -> AllowedRun {
+    create_run_with_action(
+        store,
+        label,
+        AgentAction::ReadFile {
+            path: format!("src/{label}.rs"),
+            start_line: None,
+            end_line: None,
+        },
+    )
+}
+
+pub(crate) fn create_run_with_action(
+    store: &SqliteRunStore,
+    label: &str,
+    action: AgentAction,
+) -> AllowedRun {
     let run_id = RunId::from(format!("run-{label}"));
     let turn_id = TurnId::from(format!("turn-{label}"));
     let step_id = StepId::from(format!("step-{label}"));
@@ -114,11 +130,6 @@ pub(crate) fn create_allowed_run(store: &SqliteRunStore, label: &str) -> Allowed
             },
         )
         .unwrap();
-    let action = AgentAction::ReadFile {
-        path: format!("src/{label}.rs"),
-        start_line: None,
-        end_line: None,
-    };
     store
         .record_action(
             &owner,
@@ -136,12 +147,7 @@ pub(crate) fn create_allowed_run(store: &SqliteRunStore, label: &str) -> Allowed
         )
         .unwrap();
     store
-        .decide_policy(
-            &owner,
-            &run_id,
-            &action_id,
-            "2026-07-12T00:00:05Z",
-        )
+        .decide_policy(&owner, &run_id, &action_id, "2026-07-12T00:00:05Z")
         .unwrap();
 
     AllowedRun {
