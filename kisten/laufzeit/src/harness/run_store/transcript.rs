@@ -96,7 +96,11 @@ impl SqliteRunStore {
                 "request transcript requires a model-start event".into(),
             ));
         }
-        self.append_event_internal(owner_actor_id, run_id, input, None, None, Some(&records))
+        let context = super::EventAppendContext {
+            request_transcript: Some(&records),
+            ..super::EventAppendContext::default()
+        };
+        self.append_event_internal(owner_actor_id, run_id, input, context)
             .map(|(event, _)| event)
     }
 
@@ -299,7 +303,8 @@ pub(super) fn current_transcript_range_in_transaction(
         return Ok(None);
     }
     let count = u64::try_from(count).map_err(|_| StoreError::Corrupt)?;
-    let first = u64::try_from(first.ok_or(StoreError::Corrupt)?).map_err(|_| StoreError::Corrupt)?;
+    let first =
+        u64::try_from(first.ok_or(StoreError::Corrupt)?).map_err(|_| StoreError::Corrupt)?;
     let last = u64::try_from(last.ok_or(StoreError::Corrupt)?).map_err(|_| StoreError::Corrupt)?;
     if last.checked_sub(first).and_then(|span| span.checked_add(1)) != Some(count) {
         return Err(StoreError::Corrupt);
@@ -379,14 +384,10 @@ pub(super) fn validate_provider_records_in_transaction(
 ) -> Result<usize, StoreError> {
     let codec = TranscriptCodec::with_sanitizer(TranscriptLimits::default(), sanitizer.clone());
     let wires = load_prior_wires(transaction, run_id, &codec)?;
-    let records = codec
-        .decode_all(&wires)
-        .map_err(|_| StoreError::Corrupt)?;
-    codec
-        .validate_provider_sequence(&records)
-        .map_err(|_| {
-            StoreError::Invariant("model start requires a closed request transcript".into())
-        })?;
+    let records = codec.decode_all(&wires).map_err(|_| StoreError::Corrupt)?;
+    codec.validate_provider_sequence(&records).map_err(|_| {
+        StoreError::Invariant("model start requires a closed request transcript".into())
+    })?;
     Ok(records.len())
 }
 

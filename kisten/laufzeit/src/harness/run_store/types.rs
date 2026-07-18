@@ -136,6 +136,8 @@ pub struct RunSnapshot {
     pub config_snapshot_hash: String,
     pub max_steps: u64,
     pub steps_used: u64,
+    pub input_tokens_used: u64,
+    pub output_tokens_used: u64,
     pub row_version: u64,
     pub stop_reason: Option<String>,
 }

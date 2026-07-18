@@ -17,7 +17,7 @@ pub(super) fn load_snapshot(
     let columns = "run_id, project_id, owner_actor_id, status, next_sequence,
         current_turn_id, current_step_id, mutation_generation,
         policy_snapshot_hash, config_snapshot_hash, max_steps, steps_used,
-        row_version, stop_reason";
+        input_tokens_used, output_tokens_used, row_version, stop_reason";
     let row = if let Some(owner) = owner_actor_id {
         connection
             .query_row(
@@ -364,8 +364,10 @@ pub(super) fn snapshot_from_row(
     let config_snapshot_hash = row.get(9)?;
     let max_steps = row.get(10)?;
     let steps_used = row.get(11)?;
-    let row_version = row.get(12)?;
-    let stop_reason = row.get(13)?;
+    let input_tokens_used = row.get(12)?;
+    let output_tokens_used = row.get(13)?;
+    let row_version = row.get(14)?;
+    let stop_reason = row.get(15)?;
     Ok(RunStatus::from_db(&status).map(|status| RunSnapshot {
         run_id,
         project_id,
@@ -379,6 +381,8 @@ pub(super) fn snapshot_from_row(
         config_snapshot_hash,
         max_steps,
         steps_used,
+        input_tokens_used,
+        output_tokens_used,
         row_version,
         stop_reason,
     }))

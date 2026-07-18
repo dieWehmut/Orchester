@@ -176,6 +176,7 @@ impl CoordinatorStore for RecordingStore {
         _owner_actor_id: &str,
         _run_id: &RunId,
         input: EventAppend,
+        _usage: ModelUsage,
     ) -> Result<String, StoreError> {
         let orchester_protokoll::HarnessEventKind::ModelCompleted { assistant_text } = input.kind
         else {
@@ -191,6 +192,7 @@ impl CoordinatorStore for RecordingStore {
         _run_id: &RunId,
         _input: EventAppend,
         _action: ActionRecord,
+        _usage: ModelUsage,
     ) -> Result<(), StoreError> {
         self.calls
             .lock()
@@ -442,6 +444,9 @@ async fn text_step_is_durable_before_the_next_resume_boundary() {
 
     let store = SqliteRunStore::open(&path).unwrap();
     let run_id = RunId::from("run-text");
+    let snapshot = store.load_run_owned(&run_id, "owner-coordinator").unwrap();
+    assert_eq!(snapshot.input_tokens_used, 3);
+    assert_eq!(snapshot.output_tokens_used, 5);
     let events = store.events_owned(&run_id, "owner-coordinator").unwrap();
     assert_eq!(
         events
@@ -469,6 +474,40 @@ async fn text_step_is_durable_before_the_next_resume_boundary() {
 }
 
 #[tokio::test]
+async fn oversized_model_usage_rolls_back_the_completion_transaction() {
+    let path = temp_db("oversized-model-usage");
+    let loop_engine = agent([Ok(ModelResponse {
+        assistant_text: "bounded answer".into(),
+        tool_call: None,
+        usage: ModelUsage {
+            input_tokens: u64::MAX,
+            output_tokens: 1,
+        },
+        opaque_items: Vec::new(),
+    })]);
+    let coordinator = coordinator(loop_engine, SqliteRunStore::open(&path).unwrap());
+
+    let error = coordinator
+        .start_new_run(input("run-oversized-model-usage"), CancellationToken::new())
+        .await
+        .unwrap_err();
+    assert!(matches!(
+        error,
+        CoordinatorError::Store(StoreError::Invariant(_))
+    ));
+    drop(coordinator);
+
+    let store = SqliteRunStore::open(&path).unwrap();
+    let run_id = RunId::from("run-oversized-model-usage");
+    let snapshot = store.load_run_owned(&run_id, "owner-coordinator").unwrap();
+    assert_eq!(snapshot.input_tokens_used, 0);
+    assert_eq!(snapshot.output_tokens_used, 0);
+    let events = store.events_owned(&run_id, "owner-coordinator").unwrap();
+    assert_eq!(events.last().unwrap().kind_name(), "model.started");
+    remove_temp_db(&path);
+}
+
+#[tokio::test]
 async fn tool_step_persists_the_store_owned_policy_decision() {
     let path = temp_db("tool");
     let mut response = ModelResponse::tool(
@@ -477,6 +516,10 @@ async fn tool_step_persists_the_store_owned_policy_decision() {
         r#"{"path":"src/lib.rs","start_line":null,"end_line":null}"#,
     );
     response.assistant_text = "I will inspect the file first.".into();
+    response.usage = ModelUsage {
+        input_tokens: 7,
+        output_tokens: 11,
+    };
     let loop_engine = agent([Ok(response)]);
     let coordinator = coordinator(loop_engine, SqliteRunStore::open(&path).unwrap());
 
@@ -496,6 +539,9 @@ async fn tool_step_persists_the_store_owned_policy_decision() {
 
     let store = SqliteRunStore::open(&path).unwrap();
     let run_id = RunId::from("run-tool");
+    let snapshot = store.load_run_owned(&run_id, "owner-coordinator").unwrap();
+    assert_eq!(snapshot.input_tokens_used, 7);
+    assert_eq!(snapshot.output_tokens_used, 11);
     let events = store.events_owned(&run_id, "owner-coordinator").unwrap();
     assert_eq!(
         events

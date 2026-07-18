@@ -205,6 +205,7 @@ pub trait CoordinatorStore: Send + Sync {
         owner_actor_id: &str,
         run_id: &RunId,
         input: EventAppend,
+        usage: ModelUsage,
     ) -> Result<String, StoreError>;
 
     fn append_model_completed_with_action(
@@ -213,6 +214,7 @@ pub trait CoordinatorStore: Send + Sync {
         run_id: &RunId,
         input: EventAppend,
         action: ActionRecord,
+        usage: ModelUsage,
     ) -> Result<(), StoreError>;
 
     fn decide_policy(
@@ -262,9 +264,10 @@ where
         owner_actor_id: &str,
         run_id: &RunId,
         input: EventAppend,
+        usage: ModelUsage,
     ) -> Result<String, StoreError> {
         self.as_ref()
-            .append_model_completed(owner_actor_id, run_id, input)
+            .append_model_completed(owner_actor_id, run_id, input, usage)
     }
 
     fn append_model_completed_with_action(
@@ -273,9 +276,15 @@ where
         run_id: &RunId,
         input: EventAppend,
         action: ActionRecord,
+        usage: ModelUsage,
     ) -> Result<(), StoreError> {
-        self.as_ref()
-            .append_model_completed_with_action(owner_actor_id, run_id, input, action)
+        self.as_ref().append_model_completed_with_action(
+            owner_actor_id,
+            run_id,
+            input,
+            action,
+            usage,
+        )
     }
 
     fn decide_policy(
@@ -330,8 +339,9 @@ impl CoordinatorStore for SqliteRunStore {
         owner_actor_id: &str,
         run_id: &RunId,
         input: EventAppend,
+        usage: ModelUsage,
     ) -> Result<String, StoreError> {
-        let event = <Self as RunStore>::append_event(self, owner_actor_id, run_id, input)?;
+        let event = self.append_model_completed_with_usage(owner_actor_id, run_id, input, usage)?;
         let HarnessEventKind::ModelCompleted { assistant_text } = event.kind else {
             return Err(StoreError::Invariant(
                 "coordinator completion did not persist a model event".into(),
@@ -346,13 +356,15 @@ impl CoordinatorStore for SqliteRunStore {
         run_id: &RunId,
         input: EventAppend,
         action: ActionRecord,
+        usage: ModelUsage,
     ) -> Result<(), StoreError> {
-        SqliteRunStore::append_model_completed_with_action(
+        SqliteRunStore::append_model_completed_with_action_and_usage(
             self,
             owner_actor_id,
             run_id,
             input,
             action,
+            usage,
         )
         .map(|_| ())
     }
@@ -474,6 +486,7 @@ where
             .model()
             .complete(prepared.request().clone(), cancel)
             .await?;
+        let response_usage = response.usage;
         if response.assistant_text.len() > TranscriptLimits::DEFAULT_MAX_TEXT_BYTES {
             return Err(CoordinatorError::DurableTextTooLarge);
         }
@@ -503,6 +516,7 @@ where
                     &owner,
                     &run_id,
                     completion_input(assistant_text),
+                    response_usage,
                 )?;
                 Ok(CoordinatorOutcome::Text {
                     text: durable_text,
@@ -532,6 +546,7 @@ where
                     &run_id,
                     completion_input(assistant_text),
                     record,
+                    response_usage,
                 )?;
                 let policy = self.store.decide_policy(
                     &owner,

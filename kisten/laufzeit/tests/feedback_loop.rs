@@ -58,6 +58,8 @@ fn run_at_generation(generation: u64) -> RunSnapshot {
         config_snapshot_hash: "config".into(),
         max_steps: 80,
         steps_used: 1,
+        input_tokens_used: 0,
+        output_tokens_used: 0,
         row_version: 1,
         stop_reason: None,
     }

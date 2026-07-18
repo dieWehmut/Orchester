@@ -9,6 +9,7 @@ use std::path::Path;
 use std::sync::{Mutex, MutexGuard};
 use std::time::Duration;
 
+use orchester_modell::ModelUsage;
 use orchester_protokoll::{
     ActionId, AgentAction, EventId, HarnessEvent, HarnessEventKind, RunId, StepId, StopReason,
     HARNESS_SCHEMA_VERSION,
@@ -1236,16 +1237,31 @@ impl ExecutionCandidate {
     }
 }
 
+#[derive(Default)]
+struct EventAppendContext<'a> {
+    permit_event_id: Option<&'a EventId>,
+    permit_action_hash: Option<&'a str>,
+    request_transcript: Option<&'a [TranscriptRecord]>,
+    model_usage: Option<ModelUsage>,
+}
+
 impl SqliteRunStore {
     fn append_event_internal(
         &self,
         owner_actor_id: &str,
         run_id: &RunId,
         input: EventAppend,
-        permit_event_id: Option<&EventId>,
-        permit_action_hash: Option<&str>,
-        request_transcript: Option<&[TranscriptRecord]>,
+        context: EventAppendContext<'_>,
     ) -> Result<(HarnessEvent, Option<AgentAction>), StoreError> {
+        if context.model_usage.is_some()
+            && !matches!(&input.kind, HarnessEventKind::ModelCompleted { .. })
+        {
+            return Err(StoreError::Invariant(
+                "model usage requires a model-completion event".into(),
+            ));
+        }
+        let (input_tokens, output_tokens) =
+            model_usage_deltas(context.model_usage.unwrap_or_default())?;
         if matches!(&input.kind, HarnessEventKind::PolicyDecided { .. }) {
             return Err(StoreError::Invariant(
                 "policy decisions must be calculated by decide_policy".into(),
@@ -1262,7 +1278,7 @@ impl SqliteRunStore {
         let (input, terminal_observation) =
             observation::prepare_terminal_input(run_id, input, self.terminal_sanitizer.as_ref())?;
         let input = sanitized::canonicalize_input(input, &self.event_sanitizer)?;
-        let started_action = match (&input.kind, permit_action_hash) {
+        let started_action = match (&input.kind, context.permit_action_hash) {
             (HarnessEventKind::ToolStarted { action_id }, Some(expected_hash)) => {
                 let durable: Option<(String, String)> = transaction
                     .query_row(
@@ -1293,7 +1309,7 @@ impl SqliteRunStore {
             &transaction,
             &snapshot,
             &input,
-            permit_event_id,
+            context.permit_event_id,
             terminal_observation.as_ref(),
         )?;
         let event = HarnessEvent {
@@ -1308,7 +1324,7 @@ impl SqliteRunStore {
             kind: input.kind,
         };
         persist_event(&transaction, &event)?;
-        if let Some(records) = request_transcript {
+        if let Some(records) = context.request_transcript {
             if !matches!(event.kind, HarnessEventKind::ModelStarted) {
                 return Err(StoreError::Invariant(
                     "request transcript requires a model-start event".into(),
@@ -1339,11 +1355,11 @@ impl SqliteRunStore {
                     &self.event_sanitizer,
                 )?;
             }
-            let request_range = transcript::current_transcript_range_in_transaction(
-                &transaction,
-                run_id,
-            )?
-            .ok_or_else(|| StoreError::Invariant("model start requires request context".into()))?;
+            let request_range =
+                transcript::current_transcript_range_in_transaction(&transaction, run_id)?
+                    .ok_or_else(|| {
+                        StoreError::Invariant("model start requires request context".into())
+                    })?;
             transcript::bind_transcript_range_in_transaction(
                 &transaction,
                 run_id,
@@ -1449,12 +1465,19 @@ impl SqliteRunStore {
         }
         let updated = transaction.execute(
             "UPDATE runs SET next_sequence = ?1, row_version = row_version + 1,
-               updated_at = ?2 WHERE run_id = ?3 AND row_version = ?4",
+               updated_at = ?2,
+               input_tokens_used = input_tokens_used + ?5,
+               output_tokens_used = output_tokens_used + ?6
+             WHERE run_id = ?3 AND row_version = ?4
+               AND input_tokens_used <= 9223372036854775807 - ?5
+               AND output_tokens_used <= 9223372036854775807 - ?6",
             params![
                 snapshot.next_sequence + events_written,
                 input.occurred_at,
                 run_id.0,
                 snapshot.row_version,
+                input_tokens,
+                output_tokens,
             ],
         )?;
         ensure_single_update(updated)?;
@@ -1475,18 +1498,36 @@ impl SqliteRunStore {
                 "ExecutionPermit does not match tool start action".into(),
             ));
         }
-        let (event, action) = self.append_event_internal(
-            owner_actor_id,
-            run_id,
-            input,
-            Some(permit.event_id()),
-            Some(permit.action_hash()),
-            None,
-        )?;
+        let context = EventAppendContext {
+            permit_event_id: Some(permit.event_id()),
+            permit_action_hash: Some(permit.action_hash()),
+            ..EventAppendContext::default()
+        };
+        let (event, action) = self.append_event_internal(owner_actor_id, run_id, input, context)?;
         Ok(StartedTool::new(
             event,
             action.ok_or_else(|| StoreError::Invariant("tool start lost durable action".into()))?,
         ))
+    }
+
+    pub fn append_model_completed_with_usage(
+        &self,
+        owner_actor_id: &str,
+        run_id: &RunId,
+        input: EventAppend,
+        usage: ModelUsage,
+    ) -> Result<HarnessEvent, StoreError> {
+        if !matches!(&input.kind, HarnessEventKind::ModelCompleted { .. }) {
+            return Err(StoreError::Invariant(
+                "model usage requires a model-completion event".into(),
+            ));
+        }
+        let context = EventAppendContext {
+            model_usage: Some(usage),
+            ..EventAppendContext::default()
+        };
+        self.append_event_internal(owner_actor_id, run_id, input, context)
+            .map(|(event, _)| event)
     }
 }
 
@@ -1756,7 +1797,7 @@ impl RunStore for SqliteRunStore {
                 "tool start requires an ExecutionPermit".into(),
             ));
         }
-        self.append_event_internal(owner_actor_id, run_id, input, None, None, None)
+        self.append_event_internal(owner_actor_id, run_id, input, EventAppendContext::default())
             .map(|(event, _)| event)
     }
 
@@ -1826,6 +1867,14 @@ impl RunStore for SqliteRunStore {
             .map(|_| ())
             .map_err(|error| map_constraint(error, "audit checkpoint already exists"))
     }
+}
+
+pub(super) fn model_usage_deltas(usage: ModelUsage) -> Result<(i64, i64), StoreError> {
+    let input_tokens = i64::try_from(usage.input_tokens)
+        .map_err(|_| StoreError::Invariant("model usage exceeds durable limits".into()))?;
+    let output_tokens = i64::try_from(usage.output_tokens)
+        .map_err(|_| StoreError::Invariant("model usage exceeds durable limits".into()))?;
+    Ok((input_tokens, output_tokens))
 }
 
 /// Compute the durable hash used to bind an action to policy/approval records.
