@@ -1,4 +1,5 @@
 use std::fmt;
+use std::sync::Arc;
 use std::time::Duration;
 
 use async_trait::async_trait;
@@ -39,7 +40,7 @@ pub enum HttpTransportError {
 pub struct HttpRequest {
     endpoint: Url,
     body: Vec<u8>,
-    authorization: Option<ProviderSecret>,
+    authorization: Option<Arc<ProviderSecret>>,
     timeout: Duration,
     response_limit: usize,
 }
@@ -56,7 +57,7 @@ impl HttpRequest {
         Ok(Self {
             endpoint,
             body,
-            authorization,
+            authorization: authorization.map(Arc::new),
             timeout: DEFAULT_HTTP_TIMEOUT,
             response_limit: DEFAULT_HTTP_RESPONSE_BYTES,
         })
@@ -87,7 +88,15 @@ impl HttpRequest {
     }
 
     pub fn authorization(&self) -> Option<&ProviderSecret> {
-        self.authorization.as_ref()
+        self.authorization.as_deref()
+    }
+
+    pub(crate) fn with_shared_authorization(
+        mut self,
+        authorization: Option<Arc<ProviderSecret>>,
+    ) -> Self {
+        self.authorization = authorization;
+        self
     }
 
     pub fn timeout(&self) -> Duration {
