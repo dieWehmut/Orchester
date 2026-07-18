@@ -1,0 +1,24 @@
+name = "codex"
+command = "codex"
+args = ["exec", "--json", "--skip-git-repo-check", "{prompt}"]
+resume_args = ["exec", "resume", "{session_id}", "--json", "--skip-git-repo-check", "{prompt}"]
+kinds = ["code", "review", "chat"]
+supports_resume = true
+streaming = true
+
+[parse]
+discriminator = "type"
+sub_discriminator = "item.type"
+session_id = "thread_id"
+
+[parse.map]
+"turn.started" = { event = "turn_started" }
+"turn.completed" = { event = "usage", input_tokens = "usage.input_tokens", output_tokens = "usage.output_tokens", cached_input_tokens = "usage.cached_input_tokens", reasoning_output_tokens = "usage.reasoning_output_tokens" }
+"turn.failed" = { event = "error", message = "error.message" }
+error = { event = "error", message = "message" }
+"item.completed/agent_message" = { event = "message", text = "item.text" }
+"item.completed/reasoning" = { event = "reasoning", text = "item.text" }
+"item.completed/command_execution" = { event = "tool_call", name = "item.command", status = "item.status", detail = "item.aggregated_output" }
+"item.completed/mcp_tool_call" = { event = "tool_call", name = "item.tool", status = "item.status" }
+"item.completed/file_change" = { event = "file_change", each = "item.changes", path = "path", kind = "kind" }
+"item.completed/todo_list" = { event = "todo_list", items = "item.items", item_text = "text", item_completed = "completed" }

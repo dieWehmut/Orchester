@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "name": "codex",
+  "displayName": "OpenAI Codex",
+  "packageName": "@orchester/codex",
+  "version": "0.1.0",
+  "adapterManifest": "manifests/codex.toml",
+  "command": "codex"
+}

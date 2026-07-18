@@ -12,6 +12,15 @@ const repositoryRoot = path.resolve(moduleDirectory, '../..');
 const packageRoot = path.join(repositoryRoot, 'npm/plugins/claude');
 const canonicalManifest = path.join(repositoryRoot, 'manifeste/claude.toml');
 
+function repositoryPackage(name) {
+  return verifyAgentPluginPackage({
+    canonicalManifest: path.join(repositoryRoot, `manifeste/${name}.toml`),
+    expectedName: `@orchester/${name}`,
+    expectedVersion: '0.1.0',
+    packageRoot: path.join(repositoryRoot, `npm/plugins/${name}`),
+  });
+}
+
 function fixture(mutator) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'orchester-plugin-package-'));
   const candidate = path.join(root, 'claude');
@@ -52,6 +61,16 @@ test('repository Claude package satisfies the locked pure-data contract', () => 
     command: 'claude',
     name: 'claude',
     packageName: '@orchester/claude',
+    version: '0.1.0',
+  });
+});
+
+test('repository Codex package satisfies the locked pure-data contract', () => {
+  assert.deepEqual(repositoryPackage('codex'), {
+    adapterManifest: 'manifests/codex.toml',
+    command: 'codex',
+    name: 'codex',
+    packageName: '@orchester/codex',
     version: '0.1.0',
   });
 });
