@@ -10,28 +10,31 @@ pub struct InstallTransaction {
     receipt: PathBuf,
 }
 
+pub struct ManagedPaths {
+    pub staging_root: PathBuf,
+    pub receipt_root: PathBuf,
+    pub scope: PathBuf,
+    pub trash_root: PathBuf,
+    pub target: PathBuf,
+    pub receipt: PathBuf,
+}
+
 impl InstallTransaction {
     pub fn new(orchester_home: &Path, name: &str) -> Result<Self, InstallError> {
-        if !orchester_home.is_absolute() {
-            return Err(InstallError::StagingUnavailable);
-        }
-        let npm_root = orchester_home.join("plugins").join("npm");
-        let staging_root = npm_root.join(".staging");
-        let receipt_root = npm_root.join(".receipts");
-        let scope = npm_root.join("node_modules").join("@orchester");
-        ensure_directory_tree(&staging_root)?;
-        ensure_directory_tree(&receipt_root)?;
-        ensure_directory_tree(&scope)?;
-        let target = scope.join(name);
-        let receipt = receipt_root.join(format!("{name}.json"));
-        if fs::symlink_metadata(&target).is_ok() || fs::symlink_metadata(&receipt).is_ok() {
+        let paths = managed_paths(orchester_home, name)?;
+        ensure_directory_tree(&paths.staging_root)?;
+        ensure_directory_tree(&paths.receipt_root)?;
+        ensure_directory_tree(&paths.scope)?;
+        if fs::symlink_metadata(&paths.target).is_ok()
+            || fs::symlink_metadata(&paths.receipt).is_ok()
+        {
             return Err(InstallError::AlreadyInstalled);
         }
-        let staging = create_staging_directory(&staging_root)?;
+        let staging = create_unique_directory(&paths.staging_root, "install")?;
         Ok(Self {
             staging,
-            target,
-            receipt,
+            target: paths.target,
+            receipt: paths.receipt,
         })
     }
 
@@ -53,13 +56,35 @@ impl InstallTransaction {
     }
 }
 
+pub fn managed_paths(orchester_home: &Path, name: &str) -> Result<ManagedPaths, InstallError> {
+    if !orchester_home.is_absolute()
+        || orchester_home
+            .components()
+            .any(|component| matches!(component, Component::CurDir | Component::ParentDir))
+    {
+        return Err(InstallError::StagingUnavailable);
+    }
+    let npm_root = orchester_home.join("plugins").join("npm");
+    let staging_root = npm_root.join(".staging");
+    let receipt_root = npm_root.join(".receipts");
+    let scope = npm_root.join("node_modules").join("@orchester");
+    Ok(ManagedPaths {
+        trash_root: npm_root.join(".trash"),
+        target: scope.join(name),
+        receipt: receipt_root.join(format!("{name}.json")),
+        staging_root,
+        receipt_root,
+        scope,
+    })
+}
+
 impl Drop for InstallTransaction {
     fn drop(&mut self) {
         let _ = fs::remove_dir_all(&self.staging);
     }
 }
 
-fn ensure_directory_tree(path: &Path) -> Result<(), InstallError> {
+pub fn ensure_directory_tree(path: &Path) -> Result<(), InstallError> {
     let mut current = PathBuf::new();
     for component in path.components() {
         match component {
@@ -89,14 +114,37 @@ fn ensure_directory_tree(path: &Path) -> Result<(), InstallError> {
     Ok(())
 }
 
-fn create_staging_directory(root: &Path) -> Result<PathBuf, InstallError> {
+pub fn verify_directory_tree(path: &Path) -> Result<bool, InstallError> {
+    let mut current = PathBuf::new();
+    for component in path.components() {
+        match component {
+            Component::Prefix(_) | Component::RootDir => {
+                current.push(component.as_os_str());
+                continue;
+            }
+            Component::Normal(_) => current.push(component.as_os_str()),
+            Component::CurDir | Component::ParentDir => {
+                return Err(InstallError::StagingUnavailable);
+            }
+        }
+        match fs::symlink_metadata(&current) {
+            Ok(metadata) if metadata.is_dir() && !is_link_or_reparse(&metadata) => {}
+            Ok(_) => return Err(InstallError::StagingUnavailable),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(false),
+            Err(_) => return Err(InstallError::StagingUnavailable),
+        }
+    }
+    Ok(true)
+}
+
+pub fn create_unique_directory(root: &Path, operation: &str) -> Result<PathBuf, InstallError> {
     let timestamp = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .map_err(|_| InstallError::StagingUnavailable)?
         .as_nanos();
     for attempt in 0..16_u8 {
         let path = root.join(format!(
-            "install-{}-{timestamp}-{attempt}",
+            "{operation}-{}-{timestamp}-{attempt}",
             std::process::id()
         ));
         match fs::create_dir(&path) {

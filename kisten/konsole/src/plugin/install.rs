@@ -1,6 +1,6 @@
 mod archive;
-mod receipt;
-mod store;
+pub(super) mod receipt;
+pub(super) mod store;
 
 use std::ffi::OsString;
 use std::fs;
@@ -128,7 +128,7 @@ fn find_archive(staging: &Path) -> Result<PathBuf, InstallError> {
     archive.ok_or(InstallError::InvalidArchive)
 }
 
-fn valid_name(value: &str) -> bool {
+pub(super) fn valid_name(value: &str) -> bool {
     let bytes = value.as_bytes();
     !bytes.is_empty()
         && bytes.len() <= 64

@@ -1,4 +1,5 @@
 mod install;
+mod remove;
 
 use std::io::{self, Write};
 use std::path::Path;
@@ -56,6 +57,48 @@ pub fn run(
                         info.version(),
                         info.package_name()
                     )?;
+                }
+                Ok(ExitCode::SUCCESS)
+            }
+            Err(error) => {
+                writeln!(io::stderr().lock(), "orchester: {error}")?;
+                Ok(ExitCode::FAILURE)
+            }
+        },
+        PluginCommand::Remove(args) => match remove::remove(orchester_home, &args.name) {
+            Ok(remove::RemoveOutcome::Removed(info)) => {
+                if json {
+                    writeln!(
+                        io::stdout().lock(),
+                        "{}",
+                        serde_json::json!({
+                            "name": info.name(),
+                            "displayName": info.display_name(),
+                            "packageName": info.package_name(),
+                            "version": info.version(),
+                            "removed": true,
+                        })
+                    )?;
+                } else {
+                    writeln!(
+                        io::stdout().lock(),
+                        "Removed {} {} ({})",
+                        info.display_name(),
+                        info.version(),
+                        info.package_name()
+                    )?;
+                }
+                Ok(ExitCode::SUCCESS)
+            }
+            Ok(remove::RemoveOutcome::NotInstalled) => {
+                if json {
+                    writeln!(
+                        io::stdout().lock(),
+                        "{}",
+                        serde_json::json!({"name": args.name, "removed": false})
+                    )?;
+                } else {
+                    writeln!(io::stdout().lock(), "Plugin is not installed")?;
                 }
                 Ok(ExitCode::SUCCESS)
             }
