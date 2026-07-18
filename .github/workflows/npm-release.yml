@@ -239,13 +239,20 @@ jobs:
             verify_args+=(--platform-dir "$directory")
           done
           node werkzeug/npm/verify.mjs --meta npm/cli "${verify_args[@]}"
+          node werkzeug/npm/plugin-release.mjs --version "$VERSION"
+
+          mapfile -t plugin_dirs < <(find npm/plugins -mindepth 1 -maxdepth 1 -type d -print | sort)
+          [[ ${#plugin_dirs[@]} -eq 3 ]]
 
           mkdir release
           npm pack --ignore-scripts --pack-destination release npm/cli >/dev/null
           for directory in "${platform_dirs[@]}"; do
             npm pack --ignore-scripts --pack-destination release "$directory" >/dev/null
           done
-          [[ $(find release -maxdepth 1 -type f -name '*.tgz' | wc -l) -eq 7 ]]
+          for directory in "${plugin_dirs[@]}"; do
+            npm pack --ignore-scripts --pack-destination release "$directory" >/dev/null
+          done
+          [[ $(find release -maxdepth 1 -type f -name '*.tgz' | wc -l) -eq 10 ]]
           (cd release && sha256sum *.tgz > SHA256SUMS)
           tar -C release -czf npm-release.tar.gz .
 

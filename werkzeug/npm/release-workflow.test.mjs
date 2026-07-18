@@ -73,6 +73,21 @@ test('release workflow uses current first-party actions and preserves native arc
   assert.match(workflow, /name: npm-release\.tar\.gz(?:.|\n)*?retention-days: 30/);
 });
 
+test('release artifact contains the exact verified official plugin matrix', () => {
+  const workflow = fs.readFileSync(workflowPath, 'utf8');
+  const stageJob = workflow.slice(workflow.indexOf('\n  stage:'), workflow.indexOf('\n  submit:'));
+  const verifyPlugins = stageJob.indexOf('node werkzeug/npm/plugin-release.mjs');
+  const findPlugins = stageJob.indexOf('find npm/plugins -mindepth 1 -maxdepth 1 -type d -print | sort');
+  const packPlugins = stageJob.indexOf('for directory in "${plugin_dirs[@]}"; do');
+
+  assert.ok(verifyPlugins > 0);
+  assert.ok(findPlugins > verifyPlugins);
+  assert.ok(packPlugins > findPlugins);
+  assert.match(stageJob, /\[\[ \$\{#plugin_dirs\[@\]\} -eq 3 \]\]/);
+  assert.match(stageJob, /npm pack --ignore-scripts --pack-destination release "\$directory"/);
+  assert.match(stageJob, /-name '\*\.tgz' \| wc -l\) -eq 10/);
+});
+
 test('staged publishing is manual, OIDC-scoped, and orders platform packages before meta', () => {
   const workflow = fs.readFileSync(workflowPath, 'utf8');
   const publishJob = workflow.indexOf('\n  submit:');
