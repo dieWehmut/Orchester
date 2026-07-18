@@ -21,6 +21,7 @@ mod process_tree;
 pub(crate) mod private_fs;
 pub mod provider;
 pub mod run_store;
+pub mod service;
 pub(crate) mod secret_scan;
 pub mod tools;
 pub mod transcript;
