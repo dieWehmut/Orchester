@@ -11,6 +11,7 @@ mod interactive;
 mod plugin;
 mod process;
 mod render;
+mod self_agent;
 
 use std::collections::HashMap;
 use std::io::{self, IsTerminal, Read, Write};
@@ -29,6 +30,8 @@ use args::{
 };
 use interactive::{AgentChoice, PluginAction, PromptAction};
 use process::{command_invocation, is_cancelled_status, resolve_command};
+use self_agent::{SelfAgentHost, SelfAgentHostError};
+use tokio_util::sync::CancellationToken;
 
 /// Directory holding on-disk manifests, relative to the current working dir.
 const MANIFEST_DIR: &str = "manifeste";
@@ -161,6 +164,10 @@ async fn run_interactive(registry: Registry) -> Result<ExitCode, CliError> {
 }
 
 async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, CliError> {
+    let mut self_agent = SelfAgentHost::new(
+        std::env::current_dir()?,
+        orchester_home().join("state").join("runs.db"),
+    );
     loop {
         let choices = interactive::build_agent_choices(&registry);
         match interactive::run_home_tui(&choices)? {
@@ -170,10 +177,17 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                 interactive::render_help(&mut out)?;
             }
             interactive::HomeAction::Submit(prompt) => {
-                eprintln!(
-                    "orchester: self-agent harness is not configured yet; received task `{}`. Use /agent or /codex to delegate.",
-                    prompt
-                );
+                match self_agent
+                    .submit(prompt, CancellationToken::new())
+                    .await
+                {
+                    Ok(turn) => {
+                        let mut out = io::stdout().lock();
+                        self_agent::render_turn(&mut out, &turn)?;
+                        return Ok(ExitCode::SUCCESS);
+                    }
+                    Err(error) => eprintln!("orchester: {error}"),
+                }
             }
             interactive::HomeAction::Empty => {}
             interactive::HomeAction::PickAgent => {
@@ -253,12 +267,19 @@ async fn run_line_interactive(registry: Registry) -> Result<ExitCode, CliError> 
             )?;
             return Ok(code);
         }
-        interactive::HomeAction::Submit(_) | interactive::HomeAction::Empty => {
-            eprintln!(
-                "orchester: enter `/agent` or `/codex` to choose a delegate; use `orchester run --agent <name> <prompt>` for scripts"
+        interactive::HomeAction::Submit(prompt) => {
+            let mut self_agent = SelfAgentHost::new(
+                std::env::current_dir()?,
+                orchester_home().join("state").join("runs.db"),
             );
-            return Ok(ExitCode::from(2));
+            let turn = self_agent
+                .submit(prompt, CancellationToken::new())
+                .await?;
+            let mut out = io::stdout().lock();
+            self_agent::render_turn(&mut out, &turn)?;
+            return Ok(ExitCode::SUCCESS);
         }
+        interactive::HomeAction::Empty => return Ok(ExitCode::from(2)),
     };
 
     let Some(mut agent) = initial_agent.take() else {
@@ -600,6 +621,8 @@ enum CliError {
     Conductor(#[from] ConductorError),
     #[error(transparent)]
     PluginRoot(#[from] PluginRootError),
+    #[error(transparent)]
+    SelfAgent(#[from] SelfAgentHostError),
     #[error(transparent)]
     Io(#[from] io::Error),
 }

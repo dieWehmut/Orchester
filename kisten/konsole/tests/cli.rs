@@ -216,6 +216,44 @@ fn no_args_non_tty_requires_explicit_delegate_entrypoint() {
 }
 
 #[test]
+fn home_prompt_enters_the_self_agent_configuration_path() {
+    let home = temp_home("self-agent-unconfigured");
+    std::fs::create_dir_all(&home).expect("create isolated home");
+    let mut child = orchester()
+        .env("ORCHESTER_HOME", &home)
+        .env("HOME", &home)
+        .env("USERPROFILE", &home)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("spawn interactive orchester");
+
+    child
+        .stdin
+        .as_mut()
+        .expect("stdin handle")
+        .write_all(b"summarize recent commits\n")
+        .expect("write self-agent task");
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().expect("collect output");
+    assert_eq!(output.status.code(), Some(1), "stderr: {}", stderr(&output));
+    let err = stderr(&output);
+    assert!(
+        err.contains("active model provider is not configured"),
+        "self-agent configuration error:\n{err}"
+    );
+    assert!(
+        !err.contains("self-agent harness is not configured yet")
+            && !err.contains("enter `/agent` or `/codex`"),
+        "legacy delegate placeholder was used:\n{err}"
+    );
+
+    let _ = std::fs::remove_dir_all(home);
+}
+
+#[test]
 fn run_records_session_metadata() {
     let home = temp_home("sessions");
     let run = orchester()

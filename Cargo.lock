@@ -1025,6 +1025,7 @@ dependencies = [
  "tar",
  "thiserror",
  "tokio",
+ "tokio-util",
  "unicode-width",
 ]
 
