@@ -1,11 +1,19 @@
+mod install;
+
 use std::io::{self, Write};
+use std::path::Path;
 use std::process::ExitCode;
 
 use orchester_verzeichnis::{PluginOrigin, RegisteredPlugin, Registry};
 
 use crate::args::PluginCommand;
 
-pub fn run(registry: &Registry, command: PluginCommand, json: bool) -> io::Result<ExitCode> {
+pub fn run(
+    registry: &Registry,
+    command: PluginCommand,
+    json: bool,
+    orchester_home: &Path,
+) -> io::Result<ExitCode> {
     match command {
         PluginCommand::List => {
             render_list(&mut io::stdout().lock(), &registry.plugins(), json)?;
@@ -26,6 +34,36 @@ pub fn run(registry: &Registry, command: PluginCommand, json: bool) -> io::Resul
             render_status(&mut io::stdout().lock(), plugin, json)?;
             Ok(ExitCode::SUCCESS)
         }
+        PluginCommand::Install(args) => match install::install(orchester_home, &args.name) {
+            Ok(info) => {
+                if json {
+                    writeln!(
+                        io::stdout().lock(),
+                        "{}",
+                        serde_json::json!({
+                            "name": info.name(),
+                            "displayName": info.display_name(),
+                            "packageName": info.package_name(),
+                            "version": info.version(),
+                            "origin": "managed",
+                        })
+                    )?;
+                } else {
+                    writeln!(
+                        io::stdout().lock(),
+                        "Installed {} {} ({})",
+                        info.display_name(),
+                        info.version(),
+                        info.package_name()
+                    )?;
+                }
+                Ok(ExitCode::SUCCESS)
+            }
+            Err(error) => {
+                writeln!(io::stderr().lock(), "orchester: {error}")?;
+                Ok(ExitCode::FAILURE)
+            }
+        },
     }
 }
 

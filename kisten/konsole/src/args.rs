@@ -89,10 +89,18 @@ pub enum PluginCommand {
     List,
     /// Show one validated plugin package.
     Status(PluginStatusArgs),
+    /// Install a validated agent plugin into Orchester's managed store.
+    Install(PluginInstallArgs),
 }
 
 #[derive(Debug, Args)]
 pub struct PluginStatusArgs {
+    /// Plugin name without the `@orchester/` scope.
+    pub name: String,
+}
+
+#[derive(Debug, Args)]
+pub struct PluginInstallArgs {
     /// Plugin name without the `@orchester/` scope.
     pub name: String,
 }

@@ -14,6 +14,13 @@ pub struct CommandInvocation {
     pub program: PathBuf,
     pub args: Vec<OsString>,
     pub envs: Vec<(OsString, OsString)>,
+    shell_backed: bool,
+}
+
+impl CommandInvocation {
+    pub fn uses_shell(&self) -> bool {
+        self.shell_backed
+    }
 }
 
 #[cfg(not(windows))]
@@ -22,6 +29,7 @@ pub fn command_invocation(executable: &Path, extra_args: Vec<OsString>) -> Comma
         program: executable.to_path_buf(),
         args: extra_args,
         envs: Vec::new(),
+        shell_backed: false,
     }
 }
 

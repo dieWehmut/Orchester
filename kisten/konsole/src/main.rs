@@ -105,7 +105,13 @@ async fn run(cli: Cli) -> Result<ExitCode, CliError> {
             return Ok(ExitCode::SUCCESS);
         }
         Some(Command::Plugin(plugin_args)) => {
-            return plugin::run(&registry, plugin_args.command, json).map_err(CliError::Io);
+            return plugin::run(
+                &registry,
+                plugin_args.command,
+                json,
+                &orchester_home(),
+            )
+            .map_err(CliError::Io);
         }
         Some(Command::Run(run)) => run.prompt,
         None => prompt,

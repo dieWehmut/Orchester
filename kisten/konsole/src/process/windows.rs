@@ -23,6 +23,7 @@ pub fn command_invocation(executable: &Path, extra_args: Vec<OsString>) -> Comma
             program: PathBuf::from("cmd.exe"),
             args,
             envs: Vec::new(),
+            shell_backed: true,
         };
     }
 
@@ -30,6 +31,7 @@ pub fn command_invocation(executable: &Path, extra_args: Vec<OsString>) -> Comma
         program: executable.to_path_buf(),
         args: extra_args,
         envs: Vec::new(),
+        shell_backed: false,
     }
 }
 
@@ -80,6 +82,7 @@ fn powershell_invocation(script: &Path, extra_args: Vec<OsString>) -> CommandInv
         program: PathBuf::from("powershell.exe"),
         args,
         envs: Vec::new(),
+        shell_backed: true,
     }
 }
 
@@ -99,6 +102,7 @@ fn cmd_shim_invocation(executable: &Path, extra_args: &[OsString]) -> Option<Com
         program,
         args,
         envs: node_path_env(&content),
+        shell_backed: false,
     })
 }
 
@@ -130,6 +134,7 @@ fn opencode_invocation(
         program: exe,
         args,
         envs: Vec::new(),
+        shell_backed: false,
     })
 }
 
@@ -244,6 +249,7 @@ node "%dp0%\node_modules\pkg\bin\cli.js" %*
             fs::canonicalize(script).unwrap()
         );
         assert_eq!(invocation.args[1], OsString::from("--version"));
+        assert!(!invocation.uses_shell());
         fs::remove_dir_all(dir).ok();
     }
 

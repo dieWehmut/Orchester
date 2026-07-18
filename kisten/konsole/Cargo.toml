@@ -22,3 +22,5 @@ futures = { workspace = true }
 thiserror = { workspace = true }
 crossterm = { workspace = true }
 unicode-width = { workspace = true }
+flate2 = { workspace = true }
+tar = { workspace = true }
