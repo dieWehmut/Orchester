@@ -12,6 +12,7 @@ orchester-modell = { workspace = true }
 orchester-vertrag = { workspace = true }
 orchester-verzeichnis = { workspace = true }
 async-trait = { workspace = true }
+reqwest = { workspace = true }
 futures = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }

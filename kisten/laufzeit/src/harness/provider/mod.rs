@@ -4,5 +4,5 @@ mod http;
 
 pub use http::{
     HttpRequest, HttpResponse, HttpTransport, HttpTransportError, MAX_HTTP_REQUEST_BYTES,
-    MAX_HTTP_RESPONSE_BYTES, MAX_HTTP_TIMEOUT,
+    MAX_HTTP_RESPONSE_BYTES, MAX_HTTP_TIMEOUT, ReqwestHttpTransport,
 };

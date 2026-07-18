@@ -8,6 +8,10 @@ use url::{Host, Url};
 
 use crate::harness::credentials::ProviderSecret;
 
+mod client;
+
+pub use client::ReqwestHttpTransport;
+
 pub const MAX_HTTP_REQUEST_BYTES: usize = 4 * 1024 * 1024;
 pub const MAX_HTTP_RESPONSE_BYTES: usize = 16 * 1024 * 1024;
 pub const MAX_HTTP_TIMEOUT: Duration = Duration::from_secs(5 * 60);
@@ -93,7 +97,6 @@ impl HttpRequest {
     pub fn response_limit(&self) -> usize {
         self.response_limit
     }
-
 }
 
 impl fmt::Debug for HttpRequest {
