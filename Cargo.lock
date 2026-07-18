@@ -845,6 +845,7 @@ dependencies = [
 name = "orchester-laufzeit"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
  "blake3",
  "cap-fs-ext",
  "cap-std",
