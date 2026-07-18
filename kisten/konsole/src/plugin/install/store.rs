@@ -7,6 +7,7 @@ use super::InstallError;
 pub struct InstallTransaction {
     staging: PathBuf,
     target: PathBuf,
+    receipt: PathBuf,
 }
 
 impl InstallTransaction {
@@ -16,26 +17,39 @@ impl InstallTransaction {
         }
         let npm_root = orchester_home.join("plugins").join("npm");
         let staging_root = npm_root.join(".staging");
+        let receipt_root = npm_root.join(".receipts");
         let scope = npm_root.join("node_modules").join("@orchester");
         ensure_directory_tree(&staging_root)?;
+        ensure_directory_tree(&receipt_root)?;
         ensure_directory_tree(&scope)?;
         let target = scope.join(name);
-        if fs::symlink_metadata(&target).is_ok() {
+        let receipt = receipt_root.join(format!("{name}.json"));
+        if fs::symlink_metadata(&target).is_ok() || fs::symlink_metadata(&receipt).is_ok() {
             return Err(InstallError::AlreadyInstalled);
         }
         let staging = create_staging_directory(&staging_root)?;
-        Ok(Self { staging, target })
+        Ok(Self {
+            staging,
+            target,
+            receipt,
+        })
     }
 
     pub fn staging_path(&self) -> &Path {
         &self.staging
     }
 
-    pub fn activate(&mut self, package: &Path) -> Result<(), InstallError> {
-        if fs::symlink_metadata(&self.target).is_ok() {
+    pub fn activate(&mut self, package: &Path, receipt: &Path) -> Result<(), InstallError> {
+        if fs::symlink_metadata(&self.target).is_ok() || fs::symlink_metadata(&self.receipt).is_ok()
+        {
             return Err(InstallError::AlreadyInstalled);
         }
-        fs::rename(package, &self.target).map_err(|_| InstallError::ActivationFailed)
+        fs::rename(package, &self.target).map_err(|_| InstallError::ActivationFailed)?;
+        if fs::rename(receipt, &self.receipt).is_err() {
+            let _ = fs::rename(&self.target, package);
+            return Err(InstallError::ActivationFailed);
+        }
+        Ok(())
     }
 }
 

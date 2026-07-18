@@ -1,4 +1,5 @@
 mod archive;
+mod receipt;
 mod store;
 
 use std::ffi::OsString;
@@ -58,7 +59,9 @@ pub fn install(orchester_home: &Path, name: &str) -> Result<PluginInfo, InstallE
         return Err(InstallError::InvalidPackage);
     }
     let info = loaded.info().clone();
-    transaction.activate(&package)?;
+    let staged_receipt = transaction.staging_path().join("receipt.json");
+    receipt::stage(&staged_receipt, &package, &info).map_err(|_| InstallError::ActivationFailed)?;
+    transaction.activate(&package, &staged_receipt)?;
     Ok(info)
 }
 

@@ -57,6 +57,10 @@ impl Fixture {
     fn installed_plugin(&self) -> PathBuf {
         self.home.join("plugins/npm/node_modules/@orchester/claude")
     }
+
+    fn ownership_receipt(&self) -> PathBuf {
+        self.home.join("plugins/npm/.receipts/claude.json")
+    }
 }
 
 impl Drop for Fixture {
@@ -81,6 +85,14 @@ fn plugin_install_materializes_a_validated_package_without_scripts() {
     assert!(installed.join("package.json").is_file());
     assert!(installed.join("orchester-plugin.json").is_file());
     assert!(installed.join("manifests/claude.toml").is_file());
+    let receipt_source = fs::read_to_string(fixture.ownership_receipt()).unwrap();
+    let receipt: serde_json::Value = serde_json::from_str(&receipt_source).unwrap();
+    assert_eq!(receipt["schemaVersion"], 1);
+    assert_eq!(receipt["name"], "claude");
+    assert_eq!(receipt["packageName"], "@orchester/claude");
+    assert_eq!(receipt["version"], "0.1.0");
+    assert_eq!(receipt["fingerprint"].as_str().unwrap().len(), 64);
+    assert!(!receipt_source.contains(fixture.root.to_string_lossy().as_ref()));
     let args = fs::read_to_string(&fixture.args_log).unwrap();
     for expected in [
         "pack",
@@ -108,6 +120,7 @@ fn plugin_install_rejects_extra_archive_members_before_activation() {
     assert!(!output.status.success());
     assert!(stderr(&output).contains("plugin package archive is invalid"));
     assert!(!fixture.installed_plugin().exists());
+    assert!(!fixture.ownership_receipt().exists());
 }
 
 #[test]
@@ -126,6 +139,7 @@ fn plugin_install_rejects_invalid_names_before_starting_npm() {
     assert!(!err.contains("secret-plugin"));
     assert!(!fixture.args_log.exists());
     assert!(!fixture.installed_plugin().exists());
+    assert!(!fixture.ownership_receipt().exists());
 }
 
 #[test]
