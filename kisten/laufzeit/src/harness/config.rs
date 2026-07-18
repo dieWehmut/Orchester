@@ -24,8 +24,10 @@ use super::credentials::{CredentialError, CredentialStore, ProviderSecret};
 
 mod protected_file;
 mod provider;
+mod secrets;
 
 pub use provider::ResolvedModelProfile;
+pub use secrets::ConfiguredSecretSet;
 
 /// Relative path of the per-user configuration file.
 pub const USER_CONFIG: &str = ".orchester/orchester.jsonc";
