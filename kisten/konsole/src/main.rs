@@ -164,10 +164,7 @@ async fn run_interactive(registry: Registry) -> Result<ExitCode, CliError> {
 }
 
 async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, CliError> {
-    let mut self_agent = SelfAgentHost::new(
-        std::env::current_dir()?,
-        orchester_home().join("state").join("runs.db"),
-    );
+    let mut self_agent = self_agent_host()?;
     loop {
         let choices = interactive::build_agent_choices(&registry);
         match interactive::run_home_tui(&choices)? {
@@ -181,9 +178,9 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                     .submit(prompt, CancellationToken::new())
                     .await
                 {
-                    Ok(turn) => {
+                    Ok(outcome) => {
                         let mut out = io::stdout().lock();
-                        self_agent::render_turn(&mut out, &turn)?;
+                        self_agent::render_outcome(&mut out, &outcome)?;
                         return Ok(ExitCode::SUCCESS);
                     }
                     Err(error) => eprintln!("orchester: {error}"),
@@ -268,15 +265,12 @@ async fn run_line_interactive(registry: Registry) -> Result<ExitCode, CliError> 
             return Ok(code);
         }
         interactive::HomeAction::Submit(prompt) => {
-            let mut self_agent = SelfAgentHost::new(
-                std::env::current_dir()?,
-                orchester_home().join("state").join("runs.db"),
-            );
-            let turn = self_agent
+            let mut self_agent = self_agent_host()?;
+            let outcome = self_agent
                 .submit(prompt, CancellationToken::new())
                 .await?;
             let mut out = io::stdout().lock();
-            self_agent::render_turn(&mut out, &turn)?;
+            self_agent::render_outcome(&mut out, &outcome)?;
             return Ok(ExitCode::SUCCESS);
         }
         interactive::HomeAction::Empty => return Ok(ExitCode::from(2)),
@@ -590,6 +584,15 @@ fn orchester_home() -> PathBuf {
         return PathBuf::from(path).join(".orchester");
     }
     PathBuf::from(".orchester")
+}
+
+fn self_agent_host() -> Result<SelfAgentHost, io::Error> {
+    let state_root = orchester_home().join("state");
+    Ok(SelfAgentHost::new(
+        std::env::current_dir()?,
+        state_root.join("runs.db"),
+        state_root.join("audit.jsonl"),
+    ))
 }
 
 /// Resolve the prompt argument: `-` (or absent with piped stdin) reads stdin.
