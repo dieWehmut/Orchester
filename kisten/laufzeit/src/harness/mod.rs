@@ -10,6 +10,7 @@ pub mod context;
 pub mod coordinator;
 pub mod credentials;
 pub mod evolution;
+pub mod executor;
 pub mod feedback;
 pub mod files;
 pub mod governance;
@@ -45,6 +46,10 @@ pub use validator::{
 #[cfg(test)]
 #[path = "workspace_write_tests.rs"]
 mod workspace_write_tests;
+
+#[cfg(test)]
+#[path = "executor_tests.rs"]
+mod executor_tests;
 
 #[cfg(test)]
 #[path = "workspace_patch_tests.rs"]
