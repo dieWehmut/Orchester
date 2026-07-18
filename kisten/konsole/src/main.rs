@@ -24,8 +24,10 @@ use orchester_laufzeit::{Conductor, ConductorError, SessionRecord, SessionStore}
 use orchester_protokoll::{Outcome, RunResult, Task};
 use orchester_verzeichnis::{PluginRootError, Registry, standard_plugin_roots};
 
-use args::{Cli, Command};
-use interactive::{AgentChoice, PromptAction};
+use args::{
+    Cli, Command, PluginCommand, PluginInstallArgs, PluginRemoveArgs, PluginStatusArgs,
+};
+use interactive::{AgentChoice, PluginAction, PromptAction};
 use process::{command_invocation, is_cancelled_status, resolve_command};
 
 /// Directory holding on-disk manifests, relative to the current working dir.
@@ -158,7 +160,7 @@ async fn run_interactive(registry: Registry) -> Result<ExitCode, CliError> {
     run_line_interactive(registry).await
 }
 
-async fn run_terminal_interactive(registry: Registry) -> Result<ExitCode, CliError> {
+async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, CliError> {
     loop {
         let choices = interactive::build_agent_choices(&registry);
         match interactive::run_home_tui(&choices)? {
@@ -182,6 +184,7 @@ async fn run_terminal_interactive(registry: Registry) -> Result<ExitCode, CliErr
                         }
                     } else {
                         run_adapter_prompt_shell(&registry, agent).await?;
+                        registry = discover_registry()?;
                     }
                 }
             }
@@ -196,7 +199,17 @@ async fn run_terminal_interactive(registry: Registry) -> Result<ExitCode, CliErr
                     }
                 } else {
                     run_adapter_prompt_shell(&registry, agent.clone()).await?;
+                    registry = discover_registry()?;
                 }
+            }
+            interactive::HomeAction::Plugins(action) => {
+                let _ = plugin::run(
+                    &registry,
+                    plugin_command(action),
+                    false,
+                    &orchester_home(),
+                )?;
+                registry = discover_registry()?;
             }
         }
     }
@@ -231,6 +244,15 @@ async fn run_line_interactive(registry: Registry) -> Result<ExitCode, CliError> 
             interactive::render_help(&mut out)?;
             None
         }
+        interactive::HomeAction::Plugins(action) => {
+            let code = plugin::run(
+                &registry,
+                plugin_command(action),
+                false,
+                &orchester_home(),
+            )?;
+            return Ok(code);
+        }
         interactive::HomeAction::Submit(_) | interactive::HomeAction::Empty => {
             eprintln!(
                 "orchester: enter `/agent` or `/codex` to choose a delegate; use `orchester run --agent <name> <prompt>` for scripts"
@@ -243,7 +265,7 @@ async fn run_line_interactive(registry: Registry) -> Result<ExitCode, CliError> 
         return Ok(ExitCode::SUCCESS);
     };
 
-    let conductor = Conductor::new(registry);
+    let mut conductor = Conductor::new(registry);
     let mut sessions: HashMap<String, String> = HashMap::new();
 
     loop {
@@ -323,6 +345,16 @@ async fn run_line_interactive(registry: Registry) -> Result<ExitCode, CliError> 
                 let mut out = io::stdout().lock();
                 interactive::render_agent_table(&mut out, &choices, Some(agent.name.as_str()))?;
             }
+            PromptAction::Plugins(action) => {
+                let _ = plugin::run(
+                    conductor.registry(),
+                    plugin_command(action),
+                    false,
+                    &orchester_home(),
+                )?;
+                conductor = Conductor::new(discover_registry()?);
+                choices = interactive::build_agent_choices(conductor.registry());
+            }
             PromptAction::Help => {
                 let mut out = io::stdout().lock();
                 interactive::render_help(&mut out)?;
@@ -340,7 +372,7 @@ async fn run_adapter_prompt_shell(
     let mut choices = interactive::build_agent_choices(registry);
     let stdin = io::stdin();
     let mut input = stdin.lock();
-    let conductor = Conductor::new(registry.clone());
+    let mut conductor = Conductor::new(registry.clone());
     let mut sessions: HashMap<String, String> = HashMap::new();
 
     loop {
@@ -386,7 +418,7 @@ async fn run_adapter_prompt_shell(
             }
             PromptAction::PickAgent => return Ok(()),
             PromptAction::LaunchAgent(name) => {
-                choices = interactive::build_agent_choices(registry);
+                choices = interactive::build_agent_choices(conductor.registry());
                 if let Some(next_agent) = choices.iter().find(|choice| choice.name == name) {
                     agent = next_agent.clone();
                     if agent.native_command.is_some() {
@@ -395,9 +427,19 @@ async fn run_adapter_prompt_shell(
                 }
             }
             PromptAction::ListAgents => {
-                choices = interactive::build_agent_choices(registry);
+                choices = interactive::build_agent_choices(conductor.registry());
                 let mut out = io::stdout().lock();
                 interactive::render_agent_table(&mut out, &choices, Some(agent.name.as_str()))?;
+            }
+            PromptAction::Plugins(action) => {
+                let _ = plugin::run(
+                    conductor.registry(),
+                    plugin_command(action),
+                    false,
+                    &orchester_home(),
+                )?;
+                conductor = Conductor::new(discover_registry()?);
+                choices = interactive::build_agent_choices(conductor.registry());
             }
             PromptAction::Help => {
                 let mut out = io::stdout().lock();
@@ -502,6 +544,15 @@ fn discover_registry() -> Result<Registry, CliError> {
         project_directory.join(MANIFEST_DIR),
         plugin_roots,
     ))
+}
+
+fn plugin_command(action: PluginAction) -> PluginCommand {
+    match action {
+        PluginAction::List => PluginCommand::List,
+        PluginAction::Status(name) => PluginCommand::Status(PluginStatusArgs { name }),
+        PluginAction::Install(name) => PluginCommand::Install(PluginInstallArgs { name }),
+        PluginAction::Remove(name) => PluginCommand::Remove(PluginRemoveArgs { name }),
+    }
 }
 
 fn orchester_home() -> PathBuf {

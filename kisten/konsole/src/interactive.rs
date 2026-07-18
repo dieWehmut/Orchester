@@ -14,8 +14,12 @@ use crossterm::terminal;
 use orchester_protokoll::{Capability, TaskKind};
 use orchester_vertrag::{AdapterAvailability, AvailabilityStatus};
 use orchester_verzeichnis::Registry;
-pub use commands::{HomeAction, PromptAction, parse_home_action, parse_prompt_action};
-use commands::{command_action, matching_commands, parse_home_action_selected};
+pub use commands::{
+    HomeAction, PluginAction, PromptAction, parse_home_action, parse_prompt_action,
+};
+use commands::{
+    command_action, matching_commands, matching_delegate_commands, parse_home_action_selected,
+};
 use screen::{FramePresenter, TerminalSession};
 use unicode_width::{UnicodeWidthChar, UnicodeWidthStr};
 
@@ -269,7 +273,7 @@ pub fn select_agent_tui(
         }
 
         if command.starts_with('/') {
-            let matches = matching_commands(&command, choices);
+            let matches = matching_delegate_commands(&command, choices);
             match key.code {
                 KeyCode::Esc => {
                     command.clear();
@@ -316,6 +320,11 @@ pub fn select_agent_tui(
                         }
                         PromptAction::Help => {
                             message = "Use Up/Down to choose an agent, Enter to launch it, or type / to search commands.".into();
+                            command.clear();
+                            command_selected = 0;
+                        }
+                        PromptAction::Plugins(_) => {
+                            message = "Return to the Orchester home to manage plugins.".into();
                             command.clear();
                             command_selected = 0;
                         }
@@ -495,7 +504,7 @@ pub fn render_agent_table<W: Write>(
     writeln!(out)?;
     writeln!(
         out,
-        "{DIM}Commands: /agent switch, /list agents, /help help, /quit exit.{RESET}"
+        "{DIM}Commands: /agent switch, /plugins manage, /help help, /quit exit.{RESET}"
     )
 }
 
@@ -504,6 +513,7 @@ pub fn render_help<W: Write>(out: &mut W) -> io::Result<()> {
     writeln!(out, "{BOLD}Interactive commands{RESET}")?;
     writeln!(out, "  /agent   choose another installed agent")?;
     writeln!(out, "  /list    show detected agent status")?;
+    writeln!(out, "  /plugins list, inspect, install, or remove plugins")?;
     writeln!(out, "  /help    show this help")?;
     writeln!(out, "  /quit    exit Orchester")?;
     writeln!(out, "  /codex   launch Codex CLI when installed")?;
@@ -651,7 +661,14 @@ fn render_picker_command_frame<W: Write>(
         .saturating_sub(1)
         .saturating_sub(status_rows)
         .min(PALETTE_ROWS);
-    render_command_palette(out, command, choices, command_selected, palette_rows, width)?;
+    render_delegate_command_palette(
+        out,
+        command,
+        choices,
+        command_selected,
+        palette_rows,
+        width,
+    )?;
     if status_rows > 0 {
         write!(
             out,
@@ -900,7 +917,7 @@ fn desired_home_content_rows(
     show_help: bool,
 ) -> usize {
     if show_help {
-        return 6;
+        return 7;
     }
     if input.starts_with('/') {
         let matches = matching_commands(input, choices).len();
@@ -935,6 +952,7 @@ fn render_compact_home_header<W: Write>(out: &mut W, width: usize, rows: usize) 
 fn render_home_help<W: Write>(out: &mut W, width: usize, max_rows: usize) -> io::Result<()> {
     for line in [
         "/agent      choose a delegate",
+        "/plugins    manage agent plugins",
         "/codex      launch Codex",
         "/claude     launch Claude",
         "/opencode   launch OpenCode",
@@ -1173,6 +1191,31 @@ fn render_command_palette<W: Write>(
         return Ok(());
     }
     let matches = matching_commands(command, choices);
+    render_command_items(out, &matches, selected, max_rows, width)
+}
+
+fn render_delegate_command_palette<W: Write>(
+    out: &mut W,
+    command: &str,
+    choices: &[AgentChoice],
+    selected: usize,
+    max_rows: usize,
+    width: usize,
+) -> io::Result<()> {
+    if max_rows == 0 {
+        return Ok(());
+    }
+    let matches = matching_delegate_commands(command, choices);
+    render_command_items(out, &matches, selected, max_rows, width)
+}
+
+fn render_command_items<W: Write>(
+    out: &mut W,
+    matches: &[commands::CommandItem],
+    selected: usize,
+    max_rows: usize,
+    width: usize,
+) -> io::Result<()> {
     if matches.is_empty() {
         writeln!(out, "  {DIM}No matching commands{RESET}")?;
         return Ok(());
@@ -1402,6 +1445,32 @@ mod tests {
     }
 
     #[test]
+    fn plugin_commands_preserve_typed_subcommands() {
+        let choices = vec![choice("mock", AvailabilityStatus::Available, None)];
+
+        assert_eq!(
+            parse_prompt_action("/plugins", &choices),
+            PromptAction::Plugins(PluginAction::List)
+        );
+        assert_eq!(
+            parse_prompt_action("/plugins status claude", &choices),
+            PromptAction::Plugins(PluginAction::Status("claude".into()))
+        );
+        assert_eq!(
+            parse_prompt_action("/plugins install claude", &choices),
+            PromptAction::Plugins(PluginAction::Install("claude".into()))
+        );
+        assert_eq!(
+            parse_prompt_action("/plugins remove claude", &choices),
+            PromptAction::Plugins(PluginAction::Remove("claude".into()))
+        );
+        assert_eq!(
+            parse_home_action("/plugins", &choices),
+            HomeAction::Plugins(PluginAction::List)
+        );
+    }
+
+    #[test]
     fn prompt_action_parses_dynamic_agent_command() {
         let choices = vec![choice(
             "codex",
@@ -1505,7 +1574,7 @@ mod tests {
                 )
             })
             .collect::<Vec<_>>();
-        let selected = matching_commands("/", &choices).len() - 1;
+        let selected = matching_delegate_commands("/", &choices).len() - 1;
         let mut out = Vec::new();
 
         render_home_frame(
@@ -1548,7 +1617,7 @@ mod tests {
                 )
             })
             .collect::<Vec<_>>();
-        let selected_command = matching_commands("/", &choices).len() - 1;
+        let selected_command = matching_delegate_commands("/", &choices).len() - 1;
         let mut presenter = FramePresenter::default();
         let mut out = Vec::new();
         present_home(

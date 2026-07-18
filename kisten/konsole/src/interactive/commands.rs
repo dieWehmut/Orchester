@@ -6,6 +6,7 @@ pub enum PromptAction {
     PickAgent,
     LaunchAgent(String),
     ListAgents,
+    Plugins(PluginAction),
     Help,
     Quit,
     Empty,
@@ -16,15 +17,25 @@ pub enum HomeAction {
     Submit(String),
     PickAgent,
     LaunchAgent(String),
+    Plugins(PluginAction),
     Help,
     Quit,
     Empty,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum PluginAction {
+    List,
+    Status(String),
+    Install(String),
+    Remove(String),
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum CommandAction {
     PickAgent,
     ListAgents,
+    Plugins,
     Help,
     Quit,
     LaunchAgent,
@@ -86,6 +97,7 @@ pub(super) fn parse_home_action_selected(
         PromptAction::PickAgent => HomeAction::PickAgent,
         PromptAction::ListAgents => HomeAction::PickAgent,
         PromptAction::LaunchAgent(name) => HomeAction::LaunchAgent(name),
+        PromptAction::Plugins(action) => HomeAction::Plugins(action),
         PromptAction::Help => HomeAction::Help,
         PromptAction::Quit => HomeAction::Quit,
         PromptAction::Empty => HomeAction::Help,
@@ -111,6 +123,13 @@ pub(super) fn matching_commands(query: &str, choices: &[AgentChoice]) -> Vec<Com
         .collect()
 }
 
+pub(super) fn matching_delegate_commands(query: &str, choices: &[AgentChoice]) -> Vec<CommandItem> {
+    matching_commands(query, choices)
+        .into_iter()
+        .filter(|item| item.action != CommandAction::Plugins)
+        .collect()
+}
+
 pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> PromptAction {
     let token = input
         .split_whitespace()
@@ -121,6 +140,11 @@ pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> Pro
     match token.as_str() {
         "/a" | "/agent" => return PromptAction::PickAgent,
         "/l" | "/list" | "/agents" | "/doctor" => return PromptAction::ListAgents,
+        "/plugin" | "/plugins" => {
+            return parse_plugin_action(input)
+                .map(PromptAction::Plugins)
+                .unwrap_or(PromptAction::Help);
+        }
         "/h" | "/help" => return PromptAction::Help,
         "/q" | "/quit" | "/exit" => return PromptAction::Quit,
         _ => {}
@@ -137,6 +161,7 @@ pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> Pro
     match item.action {
         CommandAction::PickAgent => PromptAction::PickAgent,
         CommandAction::ListAgents => PromptAction::ListAgents,
+        CommandAction::Plugins => PromptAction::Plugins(PluginAction::List),
         CommandAction::Help => PromptAction::Help,
         CommandAction::Quit => PromptAction::Quit,
         CommandAction::LaunchAgent => item
@@ -191,5 +216,28 @@ fn command_items(choices: &[AgentChoice]) -> Vec<CommandItem> {
             agent: Some(choice.name.clone()),
         });
     }
+    items.push(CommandItem {
+        name: "/plugins".into(),
+        description: "manage validated agent plugins".into(),
+        action: CommandAction::Plugins,
+        agent: None,
+    });
     items
+}
+
+fn parse_plugin_action(input: &str) -> Option<PluginAction> {
+    let mut parts = input.split_whitespace();
+    parts.next()?;
+    let operation = parts.next().unwrap_or("list").to_ascii_lowercase();
+    let name = parts.next();
+    if parts.next().is_some() {
+        return None;
+    }
+    match (operation.as_str(), name) {
+        ("list", None) => Some(PluginAction::List),
+        ("status", Some(name)) => Some(PluginAction::Status(name.to_owned())),
+        ("install", Some(name)) => Some(PluginAction::Install(name.to_owned())),
+        ("remove", Some(name)) => Some(PluginAction::Remove(name.to_owned())),
+        _ => None,
+    }
 }

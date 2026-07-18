@@ -5,6 +5,8 @@ mod plugin_fixture;
 mod support;
 
 use std::fs;
+use std::io::Write;
+use std::process::Stdio;
 
 use plugin_fixture::{PluginFixture, copy_repository_plugin};
 use support::{stderr, stdout};
@@ -114,5 +116,54 @@ fn plugin_install_rejects_unparsed_cmd_shims() {
     assert!(!output.status.success());
     assert!(stderr(&output).contains("npm launcher requires an unsafe shell fallback"));
     assert!(!fixture.args_log().exists());
+    assert!(!fixture.installed_plugin().exists());
+}
+
+#[test]
+fn interactive_plugins_install_uses_the_validated_backend() {
+    let fixture = PluginFixture::new("interactive-plugin-install", false);
+    let mut command = fixture.command();
+    let mut child = command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("start interactive install");
+    child
+        .stdin
+        .as_mut()
+        .unwrap()
+        .write_all(b"/plugins install claude\n")
+        .unwrap();
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().unwrap();
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    assert!(stdout(&output).contains("Installed Claude Code 0.1.0"));
+    assert!(fixture.installed_plugin().is_dir());
+    assert!(fixture.ownership_receipt().is_file());
+}
+
+#[test]
+fn interactive_plugins_mutation_preserves_backend_failure_status() {
+    let fixture = PluginFixture::new("interactive-plugin-failure", false);
+    let mut command = fixture.command();
+    let mut child = command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("start invalid interactive install");
+    child
+        .stdin
+        .as_mut()
+        .unwrap()
+        .write_all(b"/plugins install ../secret\n")
+        .unwrap();
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().unwrap();
+    assert!(!output.status.success());
+    assert!(stderr(&output).contains("plugin name is invalid"));
     assert!(!fixture.installed_plugin().exists());
 }

@@ -6,6 +6,7 @@ mod support;
 
 use std::fs;
 use std::io::Write;
+use std::process::Stdio;
 
 use plugin_fixture::{PluginFixture, copy_repository_plugin};
 use support::{stderr, stdout};
@@ -150,4 +151,35 @@ fn plugin_remove_does_not_touch_project_packages() {
     assert!(output.status.success(), "stderr:\n{}", stderr(&output));
     assert!(stdout(&output).contains("Plugin is not installed"));
     assert!(project_plugin.join("package.json").is_file());
+}
+
+#[test]
+fn interactive_plugins_remove_uses_the_owned_backend() {
+    let fixture = PluginFixture::new("interactive-plugin-remove", false);
+    let install = fixture
+        .command()
+        .args(["plugin", "install", "claude"])
+        .output()
+        .expect("install before interactive remove");
+    assert!(install.status.success(), "stderr:\n{}", stderr(&install));
+    let mut command = fixture.command();
+    let mut child = command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("start interactive remove");
+    child
+        .stdin
+        .as_mut()
+        .unwrap()
+        .write_all(b"/plugins remove claude\n")
+        .unwrap();
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().unwrap();
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    assert!(stdout(&output).contains("Removed Claude Code 0.1.0"));
+    assert!(!fixture.installed_plugin().exists());
+    assert!(!fixture.ownership_receipt().exists());
 }

@@ -1,6 +1,8 @@
 mod support;
 
+use std::io::Write;
 use std::path::{Path, PathBuf};
+use std::process::Stdio;
 
 use support::{orchester, stderr, stdout, temp_home};
 
@@ -177,6 +179,37 @@ fn missing_plugin_status_is_redacted_and_fails() {
     let err = stderr(&output);
     assert!(err.contains("agent plugin is not installed"));
     assert!(!err.contains("secret-plugin-name"));
+    let _ = std::fs::remove_dir_all(project);
+    let _ = std::fs::remove_dir_all(home);
+}
+
+#[test]
+fn interactive_plugins_command_lists_validated_packages() {
+    let project = temp_home("interactive-plugins-project");
+    let home = temp_home("interactive-plugins-home");
+    std::fs::create_dir_all(&project).unwrap();
+    install_repository_plugin(&project.join("node_modules/@orchester"), "code");
+    let mut child = orchester()
+        .current_dir(&project)
+        .env("ORCHESTER_HOME", &home)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("start interactive plugin list");
+    child
+        .stdin
+        .as_mut()
+        .unwrap()
+        .write_all(b"/plugins\n")
+        .unwrap();
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().unwrap();
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    assert!(out.contains("@orchester/claude"), "output:\n{out}");
+    assert!(out.contains("project"), "output:\n{out}");
     let _ = std::fs::remove_dir_all(project);
     let _ = std::fs::remove_dir_all(home);
 }
