@@ -1,10 +1,10 @@
 //! Durable boundary for one self-agent model step.
 //!
-//! The coordinator deliberately stops after recording a model response and,
-//! when present, its decoded action.  Governance, permit-bound execution, and
-//! validator-gated completion are subsequent phases.  Keeping this boundary
-//! narrow makes the crash point explicit: a provider is never called until the
-//! durable store has accepted `model.started`.
+//! The coordinator records a model response and decoded action, then asks the
+//! durable store for the authoritative policy decision. Permit-bound execution
+//! and validator-gated completion remain subsequent phases. Keeping this
+//! boundary narrow makes the crash point explicit: a provider is never called
+//! until the durable store has accepted `model.started`.
 
 use orchester_modell::{LanguageModel, ModelError, ModelUsage};
 use orchester_protokoll::{ActionId, AgentAction, CallId, HarnessEventKind, RunId, StepId, TurnId};
@@ -13,7 +13,7 @@ use tokio_util::sync::CancellationToken;
 
 use super::agent_loop::{AgentLoopError, PreparedOutcome, SelfAgentLoop};
 use super::feedback::SecretSetId;
-use super::governance::PolicyEngine;
+use super::governance::{PolicyEngine, PolicyResult};
 use super::run_store::{
     action_hash, ActionRecord, EventAppend, NewRun, RunStore, SqliteRunStore, StoreError,
     Transition,
@@ -135,6 +135,7 @@ pub enum CoordinatorOutcome {
         action_id: ActionId,
         call_id: CallId,
         action: AgentAction,
+        policy: PolicyResult,
         model_calls: u32,
         usage: ModelUsage,
     },
@@ -157,11 +158,14 @@ impl std::fmt::Debug for CoordinatorOutcome {
                 action_id: _,
                 call_id: _,
                 action,
+                policy,
                 model_calls,
                 usage,
             } => formatter
                 .debug_struct("Action")
                 .field("action_summary", &action.action_summary())
+                .field("policy_decision", &policy.decision)
+                .field("policy_rule_id", &policy.rule_id)
                 .field("model_calls", model_calls)
                 .field("usage", usage)
                 .finish(),
@@ -208,6 +212,14 @@ pub trait CoordinatorStore: Send + Sync {
         input: EventAppend,
         action: ActionRecord,
     ) -> Result<(), StoreError>;
+
+    fn decide_policy(
+        &self,
+        owner_actor_id: &str,
+        run_id: &RunId,
+        action_id: &ActionId,
+        occurred_at: String,
+    ) -> Result<PolicyResult, StoreError>;
 }
 
 impl CoordinatorStore for SqliteRunStore {
@@ -275,6 +287,17 @@ impl CoordinatorStore for SqliteRunStore {
             action,
         )
         .map(|_| ())
+    }
+
+    fn decide_policy(
+        &self,
+        owner_actor_id: &str,
+        run_id: &RunId,
+        action_id: &ActionId,
+        occurred_at: String,
+    ) -> Result<PolicyResult, StoreError> {
+        SqliteRunStore::decide_policy(self, owner_actor_id, run_id, action_id, occurred_at)
+            .map(|(_, result)| result)
     }
 }
 
@@ -442,10 +465,17 @@ where
                     completion_input(assistant_text),
                     record,
                 )?;
+                let policy = self.store.decide_policy(
+                    &owner,
+                    &run_id,
+                    &input.action_id,
+                    self.durable_timestamp()?,
+                )?;
                 Ok(CoordinatorOutcome::Action {
                     action_id: input.action_id,
                     call_id: pending.call_id().clone(),
                     action: pending.action().clone(),
+                    policy,
                     model_calls: pending.model_calls(),
                     usage: pending.usage(),
                 })

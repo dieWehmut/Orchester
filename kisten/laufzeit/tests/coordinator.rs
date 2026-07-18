@@ -9,14 +9,14 @@ use orchester_laufzeit::harness::coordinator::{
     CoordinatorClock, CoordinatorError, CoordinatorInput, CoordinatorOutcome, CoordinatorStore,
     DurableCoordinator, FixedCoordinatorClock,
 };
-use orchester_laufzeit::harness::governance::PolicyEngine;
+use orchester_laufzeit::harness::governance::{PolicyEngine, PolicyResult};
 use orchester_laufzeit::harness::run_store::{
     ActionRecord, EventAppend, NewRun, ResumeNext, RunStore, SqliteRunStore, StoreError, Transition,
 };
 use orchester_laufzeit::harness::transcript::TranscriptRecord;
 use orchester_laufzeit::harness::SecretSetId;
 use orchester_modell::{ModelError, ModelResponse, ModelUsage, ScriptedLlm};
-use orchester_protokoll::{ActionId, CallId, RunId, StepId, TurnId};
+use orchester_protokoll::{ActionId, AgentAction, CallId, PolicyDecision, RunId, StepId, TurnId};
 use secrecy::SecretString;
 use tokio_util::sync::CancellationToken;
 
@@ -197,6 +197,23 @@ impl CoordinatorStore for RecordingStore {
             .unwrap()
             .push("model.completed+action.recorded");
         Ok(())
+    }
+
+    fn decide_policy(
+        &self,
+        _owner_actor_id: &str,
+        _run_id: &RunId,
+        _action_id: &ActionId,
+        _occurred_at: String,
+    ) -> Result<PolicyResult, StoreError> {
+        self.calls.lock().unwrap().push("policy.decided");
+        PolicyEngine::new()
+            .evaluate(&AgentAction::ReadFile {
+                path: "src/lib.rs".into(),
+                start_line: None,
+                end_line: None,
+            })
+            .map_err(|_| StoreError::Invariant("test policy failed".into()))
     }
 }
 
@@ -420,7 +437,7 @@ async fn text_step_is_durable_before_the_next_resume_boundary() {
 }
 
 #[tokio::test]
-async fn tool_step_persists_action_before_policy_decision() {
+async fn tool_step_persists_the_store_owned_policy_decision() {
     let path = temp_db("tool");
     let mut response = ModelResponse::tool(
         "tool-call-1",
@@ -435,7 +452,14 @@ async fn tool_step_persists_action_before_policy_decision() {
         .start_new_run(input("run-tool"), CancellationToken::new())
         .await
         .unwrap();
-    assert!(matches!(outcome, CoordinatorOutcome::Action { .. }));
+    assert!(matches!(
+        outcome,
+        CoordinatorOutcome::Action {
+            ref policy,
+            ..
+        } if policy.decision == PolicyDecision::Allow
+            && policy.rule_id == "workspace.read"
+    ));
     drop(coordinator);
 
     let store = SqliteRunStore::open(&path).unwrap();
@@ -451,7 +475,8 @@ async fn tool_step_persists_action_before_policy_decision() {
             "step.started",
             "model.started",
             "model.completed",
-            "action.recorded"
+            "action.recorded",
+            "policy.decided"
         ]
     );
     let assistant_text = match &events[3].kind {
@@ -463,7 +488,7 @@ async fn tool_step_persists_action_before_policy_decision() {
         .resume_point_owned(&run_id, "owner-coordinator", "project-run-tool")
         .unwrap()
         .unwrap();
-    assert!(matches!(resume.next, ResumeNext::EvaluatePolicy { .. }));
+    assert!(matches!(resume.next, ResumeNext::PrepareExecution { .. }));
     remove_temp_db(&path);
 }
 
@@ -626,8 +651,10 @@ async fn finish_tool_is_persisted_for_governance_instead_of_completing_the_run()
         outcome,
         CoordinatorOutcome::Action {
             action: orchester_protokoll::AgentAction::Finish { .. },
+            ref policy,
             ..
-        }
+        } if policy.decision == PolicyDecision::Allow
+            && policy.rule_id == "run.finish"
     ));
     drop(coordinator);
 
@@ -637,10 +664,14 @@ async fn finish_tool_is_persisted_for_governance_instead_of_completing_the_run()
     assert!(events
         .iter()
         .all(|event| event.kind_name() != "run.completed"));
+    assert!(events
+        .iter()
+        .all(|event| event.kind_name() != "tool.started"));
+    assert_eq!(events.last().unwrap().kind_name(), "policy.decided");
     let resume = store
         .resume_point_owned(&run_id, "owner-coordinator", "project-run-finish")
         .unwrap()
         .unwrap();
-    assert!(matches!(resume.next, ResumeNext::EvaluatePolicy { .. }));
+    assert!(matches!(resume.next, ResumeNext::PrepareExecution { .. }));
     remove_temp_db(&path);
 }

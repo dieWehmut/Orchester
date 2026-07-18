@@ -9,7 +9,7 @@ use orchester_laufzeit::harness::service::{
     SelfAgentService, SelfAgentServiceError, SelfAgentTurn,
 };
 use orchester_modell::{ModelError, ModelResponse, ModelUsage, ScriptedLlm};
-use orchester_protokoll::{AgentAction, HarnessEventKind};
+use orchester_protokoll::{AgentAction, HarnessEventKind, PolicyDecision};
 use tokio_util::sync::CancellationToken;
 
 static NEXT_WORKSPACE: AtomicUsize = AtomicUsize::new(0);
@@ -124,6 +124,7 @@ async fn returns_a_policy_classified_action_with_durable_identity() {
         action_id,
         call_id,
         action,
+        policy,
         ..
     } = &turn
     else {
@@ -135,6 +136,8 @@ async fn returns_a_policy_classified_action_with_durable_identity() {
         action,
         AgentAction::ReadFile { path, .. } if path == "src/lib.rs"
     ));
+    assert_eq!(policy.decision, PolicyDecision::Allow);
+    assert_eq!(policy.rule_id, "workspace.read");
 
     let events = service
         .store()
@@ -143,6 +146,57 @@ async fn returns_a_policy_classified_action_with_durable_identity() {
     assert!(events
         .iter()
         .any(|event| matches!(event.kind, HarnessEventKind::ActionRecorded { .. })));
+    assert!(events
+        .iter()
+        .any(|event| matches!(event.kind, HarnessEventKind::PolicyDecided { .. })));
+    let _ = std::fs::remove_dir_all(workspace);
+}
+
+#[tokio::test]
+async fn exposes_a_policy_ask_for_external_network_commands() {
+    let workspace = temp_workspace("policy-review");
+    let service = service(
+        &workspace,
+        [Ok(ModelResponse::tool(
+            "provider-call-ask",
+            "run_command",
+            r#"{"program":"curl","args":["https://example.test"],"cwd":null}"#,
+        ))],
+    );
+    let turn = service
+        .start("fetch external data", CancellationToken::new())
+        .await
+        .expect("turn");
+
+    let SelfAgentTurn::Action { policy, .. } = turn else {
+        panic!("expected action");
+    };
+    assert_eq!(policy.decision, PolicyDecision::Ask);
+    assert_eq!(policy.rule_id, "network.external");
+    let _ = std::fs::remove_dir_all(workspace);
+}
+
+#[tokio::test]
+async fn exposes_a_policy_deny_for_root_destructive_commands() {
+    let workspace = temp_workspace("policy-deny");
+    let service = service(
+        &workspace,
+        [Ok(ModelResponse::tool(
+            "provider-call-deny",
+            "run_command",
+            r#"{"program":"rm","args":["-rf","/"],"cwd":null}"#,
+        ))],
+    );
+    let turn = service
+        .start("remove the root filesystem", CancellationToken::new())
+        .await
+        .expect("turn");
+
+    let SelfAgentTurn::Action { policy, .. } = turn else {
+        panic!("expected action");
+    };
+    assert_eq!(policy.decision, PolicyDecision::Deny);
+    assert_eq!(policy.rule_id, "system.destructive");
     let _ = std::fs::remove_dir_all(workspace);
 }
 

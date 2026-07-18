@@ -3,6 +3,8 @@ use std::fmt;
 use orchester_modell::ModelUsage;
 use orchester_protokoll::{ActionId, AgentAction, CallId, RunId};
 
+use super::super::governance::PolicyResult;
+
 /// The bounded result of one self-agent model step.
 pub enum SelfAgentTurn {
     Text {
@@ -16,6 +18,7 @@ pub enum SelfAgentTurn {
         action_id: ActionId,
         call_id: CallId,
         action: AgentAction,
+        policy: PolicyResult,
         model_calls: u32,
         usage: ModelUsage,
     },
@@ -39,6 +42,13 @@ impl SelfAgentTurn {
         match self {
             Self::Text { .. } => None,
             Self::Action { action, .. } => Some(action),
+        }
+    }
+
+    pub fn policy(&self) -> Option<&PolicyResult> {
+        match self {
+            Self::Text { .. } => None,
+            Self::Action { policy, .. } => Some(policy),
         }
     }
 
@@ -71,12 +81,15 @@ impl fmt::Debug for SelfAgentTurn {
                 .finish(),
             Self::Action {
                 action,
+                policy,
                 model_calls,
                 usage,
                 ..
             } => formatter
                 .debug_struct("Action")
                 .field("action_summary", &action.action_summary())
+                .field("policy_decision", &policy.decision)
+                .field("policy_rule_id", &policy.rule_id)
                 .field("model_calls", model_calls)
                 .field("usage", usage)
                 .finish(),

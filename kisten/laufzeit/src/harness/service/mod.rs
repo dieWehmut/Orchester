@@ -135,6 +135,7 @@ where
                 action_id,
                 call_id,
                 action,
+                policy,
                 model_calls,
                 usage,
             } => SelfAgentTurn::Action {
@@ -142,6 +143,7 @@ where
                 action_id,
                 call_id,
                 action,
+                policy,
                 model_calls,
                 usage,
             },

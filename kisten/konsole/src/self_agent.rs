@@ -8,6 +8,7 @@ use orchester_laufzeit::harness::service::{
     build_self_agent_service, ProductionSelfAgentService, SelfAgentBuildError,
     SelfAgentServiceError, SelfAgentTurn,
 };
+use orchester_protokoll::PolicyDecision;
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
 
@@ -86,13 +87,25 @@ pub fn render_turn(out: &mut impl Write, turn: &SelfAgentTurn) -> io::Result<()>
     writeln!(out)?;
     match turn {
         SelfAgentTurn::Text { text, .. } => writeln!(out, "{}", safe_terminal_text(text))?,
-        SelfAgentTurn::Action { action, .. } => {
+        SelfAgentTurn::Action { action, policy, .. } => {
             writeln!(
                 out,
                 "action: {}",
                 safe_terminal_text(&action.action_summary())
             )?;
-            writeln!(out, "{DIM}awaiting governed execution{RESET}")?;
+            writeln!(
+                out,
+                "policy: {} | rule {} | risk {:?}",
+                policy_name(policy.decision),
+                safe_terminal_text(&policy.rule_id),
+                policy.risk
+            )?;
+            let state = match policy.decision {
+                PolicyDecision::Allow => "ready for governed execution",
+                PolicyDecision::Ask => "human approval required",
+                PolicyDecision::Deny => "blocked by policy",
+            };
+            writeln!(out, "{DIM}{state}{RESET}")?;
         }
     }
     let usage = turn.usage();
@@ -104,6 +117,14 @@ pub fn render_turn(out: &mut impl Write, turn: &SelfAgentTurn) -> io::Result<()>
         usage.output_tokens
     )?;
     writeln!(out)
+}
+
+fn policy_name(decision: PolicyDecision) -> &'static str {
+    match decision {
+        PolicyDecision::Allow => "allow",
+        PolicyDecision::Ask => "ask",
+        PolicyDecision::Deny => "deny",
+    }
 }
 
 fn safe_terminal_text(text: &str) -> String {
@@ -119,7 +140,21 @@ fn safe_terminal_text(text: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use orchester_laufzeit::harness::governance::PolicyEngine;
     use orchester_protokoll::{ActionId, AgentAction, CallId, RunId};
+
+    fn action_turn(action: AgentAction) -> SelfAgentTurn {
+        let policy = PolicyEngine::new().evaluate(&action).expect("policy");
+        SelfAgentTurn::Action {
+            run_id: RunId::from("run-1"),
+            action_id: ActionId::from("action-1"),
+            call_id: CallId::from("call-1"),
+            action,
+            policy,
+            model_calls: 1,
+            usage: Default::default(),
+        }
+    }
 
     #[test]
     fn text_turn_rendering_preserves_lines_and_escapes_terminal_controls() {
@@ -140,23 +175,47 @@ mod tests {
 
     #[test]
     fn action_turn_rendering_uses_the_bounded_summary() {
-        let turn = SelfAgentTurn::Action {
-            run_id: RunId::from("run-1"),
-            action_id: ActionId::from("action-1"),
-            call_id: CallId::from("call-1"),
-            action: AgentAction::ReadFile {
-                path: "src/lib.rs".into(),
-                start_line: None,
-                end_line: None,
-            },
-            model_calls: 1,
-            usage: Default::default(),
-        };
+        let turn = action_turn(AgentAction::ReadFile {
+            path: "src/lib.rs".into(),
+            start_line: None,
+            end_line: None,
+        });
         let mut output = Vec::new();
         render_turn(&mut output, &turn).expect("render");
         let rendered = String::from_utf8(output).expect("UTF-8");
 
         assert!(rendered.contains("action: read_file path_bytes=10 start_line=None end_line=None"));
-        assert!(rendered.contains("awaiting governed execution"));
+        assert!(rendered.contains("policy: allow | rule workspace.read | risk Low"));
+        assert!(rendered.contains("ready for governed execution"));
+    }
+
+    #[test]
+    fn ask_policy_rendering_requests_human_approval() {
+        let turn = action_turn(AgentAction::RunCommand {
+            program: "curl".into(),
+            args: vec!["https://example.test".into()],
+            cwd: None,
+        });
+        let mut output = Vec::new();
+        render_turn(&mut output, &turn).expect("render");
+        let rendered = String::from_utf8(output).expect("UTF-8");
+
+        assert!(rendered.contains("policy: ask | rule network.external | risk Medium"));
+        assert!(rendered.contains("human approval required"));
+    }
+
+    #[test]
+    fn deny_policy_rendering_reports_the_policy_block() {
+        let turn = action_turn(AgentAction::RunCommand {
+            program: "rm".into(),
+            args: vec!["-rf".into(), "/".into()],
+            cwd: None,
+        });
+        let mut output = Vec::new();
+        render_turn(&mut output, &turn).expect("render");
+        let rendered = String::from_utf8(output).expect("UTF-8");
+
+        assert!(rendered.contains("policy: deny | rule system.destructive | risk Critical"));
+        assert!(rendered.contains("blocked by policy"));
     }
 }
