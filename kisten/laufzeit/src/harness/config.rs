@@ -35,6 +35,8 @@ pub const USER_CONFIG: &str = ".orchester/orchester.jsonc";
 pub const PROJECT_CONFIG: &str = ".orchester/project.jsonc";
 
 const PROTECTED_CREDENTIAL_MARKER: &str = "<redacted>";
+const MAX_MODEL_PROFILE_NAME_BYTES: usize = 128;
+const MAX_MODEL_PROFILE_VALUE_BYTES: usize = 256;
 
 /// Configuration loading and validation failures.
 #[derive(Debug, Error)]
@@ -160,6 +162,8 @@ pub struct UserConfig {
     #[serde(default)]
     model_providers: BTreeMap<String, ProviderConfig>,
     #[serde(default)]
+    model_profiles: BTreeMap<String, ModelProfileConfig>,
+    #[serde(default)]
     pub projects: BTreeMap<String, ProjectTrustConfig>,
     #[serde(default)]
     pub governance: GovernanceConfig,
@@ -244,6 +248,7 @@ impl Default for UserConfig {
             windows_wsl_setup_acknowledged: false,
             service_tier: None,
             model_providers: BTreeMap::new(),
+            model_profiles: BTreeMap::new(),
             projects: BTreeMap::new(),
             governance: GovernanceConfig::default(),
             limits: LimitsConfig::default(),
@@ -274,6 +279,11 @@ impl UserConfig {
     /// remain validated configuration snapshots and cannot replace vault slots.
     pub fn model_providers(&self) -> &BTreeMap<String, ProviderConfig> {
         &self.model_providers
+    }
+
+    /// Read named, transport-free model selections in stable key order.
+    pub fn model_profiles(&self) -> &BTreeMap<String, ModelProfileConfig> {
+        &self.model_profiles
     }
 
     fn validate(&self) -> Result<(), ConfigError> {
@@ -313,6 +323,39 @@ impl UserConfig {
             }
             if let Some(value) = config.base_url.as_deref() {
                 validate_reference_syntax(value, &format!("model_providers.{provider}.base_url"))?;
+            }
+        }
+        for (name, profile) in &self.model_profiles {
+            validate_model_profile_name(name, "model_profiles")?;
+            validate_model_profile_value(
+                &profile.model_provider,
+                &format!("model_profiles.{name}.model_provider"),
+            )?;
+            if !profile
+                .model_provider
+                .chars()
+                .all(|ch| ch.is_ascii_alphanumeric() || matches!(ch, '.' | '_' | '-'))
+            {
+                return Err(ConfigError::Validation {
+                    path: format!("model_profiles.{name}.model_provider"),
+                    message: "provider identifier contains an invalid character".into(),
+                });
+            }
+            validate_model_profile_value(&profile.model, &format!("model_profiles.{name}.model"))?;
+            for (field, value) in [
+                (
+                    "model_reasoning_effort",
+                    profile.model_reasoning_effort.as_deref(),
+                ),
+                (
+                    "plan_mode_reasoning_effort",
+                    profile.plan_mode_reasoning_effort.as_deref(),
+                ),
+                ("service_tier", profile.service_tier.as_deref()),
+            ] {
+                if let Some(value) = value {
+                    validate_model_profile_value(value, &format!("model_profiles.{name}.{field}"))?;
+                }
             }
         }
         Ok(())
@@ -512,6 +555,21 @@ pub struct ProviderConfig {
     pub wire_api: Option<String>,
     #[serde(default)]
     pub requires_openai_auth: bool,
+}
+
+/// A user-owned model choice. Provider endpoints and credentials stay in the
+/// provider map, so selecting a profile cannot introduce transport authority.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct ModelProfileConfig {
+    pub model_provider: String,
+    pub model: String,
+    #[serde(default)]
+    pub model_reasoning_effort: Option<String>,
+    #[serde(default)]
+    pub plan_mode_reasoning_effort: Option<String>,
+    #[serde(default)]
+    pub service_tier: Option<String>,
 }
 
 impl fmt::Debug for ProviderConfig {
@@ -1368,6 +1426,36 @@ fn credential_slot_for_path(path: &[ConfigPathSegment]) -> Option<CredentialSlot
 
 fn vault_binds_path(vault: &CredentialVault, path: &[ConfigPathSegment], value: &str) -> bool {
     credential_slot_for_path(path).is_some_and(|slot| vault.binds_marker(&slot, value))
+}
+
+pub(super) fn validate_model_profile_name(name: &str, path: &str) -> Result<(), ConfigError> {
+    if name.is_empty()
+        || name.len() > MAX_MODEL_PROFILE_NAME_BYTES
+        || !name
+            .chars()
+            .all(|ch| ch.is_ascii_alphanumeric() || matches!(ch, '.' | '_' | '-'))
+    {
+        return Err(ConfigError::Validation {
+            path: path.into(),
+            message: "model profile name is invalid".into(),
+        });
+    }
+    Ok(())
+}
+
+fn validate_model_profile_value(value: &str, path: &str) -> Result<(), ConfigError> {
+    if value.trim().is_empty()
+        || value.len() > MAX_MODEL_PROFILE_VALUE_BYTES
+        || value
+            .chars()
+            .any(|ch| ch.is_control() || ch.is_whitespace())
+    {
+        return Err(ConfigError::Validation {
+            path: path.into(),
+            message: "model profile value is invalid".into(),
+        });
+    }
+    Ok(())
 }
 
 fn format_config_path(path: &[ConfigPathSegment]) -> String {

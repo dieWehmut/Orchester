@@ -2,7 +2,7 @@
 
 use std::fmt;
 
-use super::{ConfigError, UserConfig};
+use super::{validate_model_profile_name, ConfigError, UserConfig};
 use url::{Host, Url};
 
 const RESPONSES_WIRE_API: &str = "responses";
@@ -118,6 +118,42 @@ impl UserConfig {
             service_tier: normalized_optional(self.service_tier.as_deref()),
             requires_auth: provider_config.requires_openai_auth,
         })
+    }
+
+    /// Return an effective configuration with one user-owned model profile
+    /// selected. The original configuration and protected credential vault are
+    /// left unchanged.
+    pub fn with_model_profile(&self, name: &str) -> Result<Self, ConfigError> {
+        validate_model_profile_name(name, "model_profile")?;
+        self.validate()?;
+        let profile = self
+            .model_profiles()
+            .get(name)
+            .ok_or_else(|| validation("model_profile", "named model profile is not configured"))?;
+        let mut selected = self.clone();
+        selected.model_provider = Some(profile.model_provider.clone());
+        selected.model = Some(profile.model.clone());
+        selected.model_reasoning_effort = profile.model_reasoning_effort.clone();
+        selected.plan_mode_reasoning_effort = profile.plan_mode_reasoning_effort.clone();
+        selected.service_tier = profile.service_tier.clone();
+        selected
+            .resolve_model_profile()
+            .map_err(|error| profile_selection_error(name, error))?;
+        Ok(selected)
+    }
+}
+
+fn profile_selection_error(name: &str, error: ConfigError) -> ConfigError {
+    match error {
+        ConfigError::Validation { path, message }
+            if path == "model_provider" || path == "model" =>
+        {
+            ConfigError::Validation {
+                path: format!("model_profiles.{name}.{path}"),
+                message,
+            }
+        }
+        error => error,
     }
 }
 
