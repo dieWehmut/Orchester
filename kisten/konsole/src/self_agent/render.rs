@@ -1,44 +1,61 @@
 use std::io::{self, Write};
 
 use orchester_laufzeit::harness::execution::GovernedToolOutcome;
-use orchester_laufzeit::harness::service::{SelfAgentOutcome, SelfAgentTurn};
+use orchester_laufzeit::harness::service::{SelfAgentRunOutcome, SelfAgentTurn};
 use orchester_protokoll::{Observation, PolicyDecision};
 use serde_json::Value;
 
 const DIM: &str = "\x1b[2m";
 const RESET: &str = "\x1b[0m";
 
-pub fn render_outcome(out: &mut impl Write, outcome: &SelfAgentOutcome) -> io::Result<()> {
+pub fn render_outcome(out: &mut impl Write, outcome: &SelfAgentRunOutcome) -> io::Result<()> {
+    let usage = outcome.usage();
+    render_parts(
+        out,
+        outcome.tool_steps().iter().map(|step| step.outcome()),
+        outcome.final_turn(),
+        outcome.model_calls(),
+        usage.input_tokens,
+        usage.output_tokens,
+    )
+}
+
+fn render_parts<'a>(
+    out: &mut impl Write,
+    tools: impl IntoIterator<Item = &'a GovernedToolOutcome>,
+    final_turn: &SelfAgentTurn,
+    model_calls: u32,
+    input_tokens: u64,
+    output_tokens: u64,
+) -> io::Result<()> {
     writeln!(out)?;
+    for tool in tools {
+        render_tool_outcome(out, tool)?;
+        writeln!(out)?;
+    }
+    render_model_turn(out, final_turn)?;
+
+    writeln!(
+        out,
+        "{DIM}-> model calls {} | tokens in {} / out {}{RESET}",
+        model_calls, input_tokens, output_tokens
+    )?;
+    writeln!(out)
+}
+
+fn render_tool_outcome(out: &mut impl Write, outcome: &GovernedToolOutcome) -> io::Result<()> {
     match outcome {
-        SelfAgentOutcome::Model(turn) => render_model_turn(out, turn)?,
-        SelfAgentOutcome::Tool {
-            outcome: GovernedToolOutcome::Completed(observation),
-            ..
-        } => render_observation(out, observation)?,
-        SelfAgentOutcome::Tool {
-            outcome: GovernedToolOutcome::Failed(feedback),
-            ..
-        } => {
+        GovernedToolOutcome::Completed(observation) => render_observation(out, observation),
+        GovernedToolOutcome::Failed(feedback) => {
             writeln!(out, "tool failed")?;
             writeln!(out, "{}", safe_terminal_text(&feedback.summary))?;
             writeln!(
                 out,
                 "{DIM}retryable: {}{RESET}",
                 if feedback.retryable { "yes" } else { "no" }
-            )?;
+            )
         }
     }
-
-    let usage = outcome.usage();
-    writeln!(
-        out,
-        "{DIM}-> model calls {} | tokens in {} / out {}{RESET}",
-        outcome.model_calls(),
-        usage.input_tokens,
-        usage.output_tokens
-    )?;
-    writeln!(out)
 }
 
 fn render_model_turn(out: &mut impl Write, turn: &SelfAgentTurn) -> io::Result<()> {
@@ -161,12 +178,37 @@ mod tests {
     };
 
     fn render_model(turn: SelfAgentTurn) -> String {
-        render(&SelfAgentOutcome::Model(turn))
+        let mut output = Vec::new();
+        let usage = turn.usage();
+        render_parts(
+            &mut output,
+            std::iter::empty(),
+            &turn,
+            turn.model_calls(),
+            usage.input_tokens,
+            usage.output_tokens,
+        )
+        .expect("render");
+        String::from_utf8(output).expect("UTF-8")
     }
 
-    fn render(outcome: &SelfAgentOutcome) -> String {
+    fn render_tool(outcome: GovernedToolOutcome) -> String {
         let mut output = Vec::new();
-        render_outcome(&mut output, outcome).expect("render");
+        let final_turn = SelfAgentTurn::Text {
+            run_id: RunId::from("run-1"),
+            text: "done".into(),
+            model_calls: 2,
+            usage: Default::default(),
+        };
+        render_parts(
+            &mut output,
+            std::iter::once(&outcome),
+            &final_turn,
+            final_turn.model_calls(),
+            final_turn.usage().input_tokens,
+            final_turn.usage().output_tokens,
+        )
+        .expect("render");
         String::from_utf8(output).expect("UTF-8")
     }
 
@@ -240,48 +282,35 @@ mod tests {
 
     #[test]
     fn completed_read_rendering_shows_the_sanitized_content_lines() {
-        let outcome = SelfAgentOutcome::Tool {
-            run_id: RunId::from("run-1"),
-            action_id: ActionId::from("action-1"),
+        let outcome = GovernedToolOutcome::Completed(Observation {
+            observation_id: ObservationId::from("observation-1"),
             call_id: CallId::from("call-1"),
-            outcome: GovernedToolOutcome::Completed(Observation {
-                observation_id: ObservationId::from("observation-1"),
-                call_id: CallId::from("call-1"),
-                kind: "read_file".into(),
-                summary: "read bytes=12 lines=2".into(),
-                data: serde_json::json!({"content_lines": ["first", "second"]}),
-            }),
-            model_calls: 1,
-            usage: Default::default(),
-        };
-        let rendered = render(&outcome);
+            kind: "read_file".into(),
+            summary: "read bytes=12 lines=2".into(),
+            data: serde_json::json!({"content_lines": ["first", "second"]}),
+        });
+        let rendered = render_tool(outcome);
 
         assert!(rendered.contains("tool: read_file"));
         assert!(rendered.contains("first\nsecond"));
-        assert!(rendered.contains("model calls 1 | tokens in 0 / out 0"));
+        assert!(rendered.contains("done"));
+        assert!(rendered.contains("model calls 2 | tokens in 0 / out 0"));
     }
 
     #[test]
     fn failed_tool_rendering_uses_only_the_sanitized_feedback_summary() {
-        let outcome = SelfAgentOutcome::Tool {
-            run_id: RunId::from("run-1"),
-            action_id: ActionId::from("action-1"),
-            call_id: CallId::from("call-1"),
-            outcome: GovernedToolOutcome::Failed(FeedbackReport {
-                source: "tool_executor".into(),
-                validator_id: None,
-                exit_code: None,
-                classification: "tool_failed".into(),
-                summary: "workspace filesystem operation failed".into(),
-                stdout_tail: String::new(),
-                stderr_tail: String::new(),
-                fingerprint: "fingerprint".into(),
-                retryable: true,
-            }),
-            model_calls: 1,
-            usage: Default::default(),
-        };
-        let rendered = render(&outcome);
+        let outcome = GovernedToolOutcome::Failed(FeedbackReport {
+            source: "tool_executor".into(),
+            validator_id: None,
+            exit_code: None,
+            classification: "tool_failed".into(),
+            summary: "workspace filesystem operation failed".into(),
+            stdout_tail: String::new(),
+            stderr_tail: String::new(),
+            fingerprint: "fingerprint".into(),
+            retryable: true,
+        });
+        let rendered = render_tool(outcome);
 
         assert!(rendered.contains("tool failed"));
         assert!(rendered.contains("workspace filesystem operation failed"));

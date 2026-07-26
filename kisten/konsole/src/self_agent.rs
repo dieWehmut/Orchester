@@ -4,7 +4,7 @@ use std::path::PathBuf;
 use orchester_laufzeit::harness::config::{ConfigError, ConfigLoader};
 use orchester_laufzeit::harness::credentials::KeyringCredentialStore;
 use orchester_laufzeit::harness::service::{
-    build_self_agent_runtime, ProductionSelfAgentRuntime, SelfAgentOutcome,
+    build_self_agent_runtime, ProductionSelfAgentRuntime, SelfAgentRunOutcome,
     SelfAgentRuntimeBuildError, SelfAgentRuntimeError,
 };
 use thiserror::Error;
@@ -47,13 +47,13 @@ impl SelfAgentHost {
         &mut self,
         prompt: String,
         cancel: CancellationToken,
-    ) -> Result<SelfAgentOutcome, SelfAgentHostError> {
+    ) -> Result<SelfAgentRunOutcome, SelfAgentHostError> {
         self.ensure_runtime()?;
         let runtime = self
             .runtime
             .as_ref()
             .ok_or(SelfAgentHostError::Initialization)?;
-        runtime.start(prompt, cancel).await.map_err(Into::into)
+        runtime.run(prompt, cancel).await.map_err(Into::into)
     }
 
     fn ensure_runtime(&mut self) -> Result<(), SelfAgentHostError> {

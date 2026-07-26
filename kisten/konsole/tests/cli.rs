@@ -1,8 +1,15 @@
 mod support;
 
+#[path = "support/loopback_responses.rs"]
+mod loopback_responses;
+#[path = "support/secure_config.rs"]
+mod secure_config;
+
 use std::io::Write;
 use std::process::Stdio;
 
+use loopback_responses::LoopbackResponses;
+use secure_config::write_user_config;
 use support::{orchester, stderr, stdout, temp_home};
 
 fn json_events(output: &std::process::Output) -> Vec<serde_json::Value> {
@@ -40,11 +47,9 @@ fn list_can_emit_capability_jsonl() {
         .collect();
 
     assert!(values.iter().any(|value| value["name"] == "mock"));
-    assert!(
-        values
-            .iter()
-            .any(|value| value["name"] == "mock" && value["streaming"] == true)
-    );
+    assert!(values
+        .iter()
+        .any(|value| value["name"] == "mock" && value["streaming"] == true));
 }
 
 #[test]
@@ -90,10 +95,10 @@ fn run_subcommand_can_emit_event_jsonl() {
     assert!(output.status.success(), "stderr:\n{}", stderr(&output));
     let events = json_events(&output);
     assert_eq!(events.first().unwrap()["type"], "session_started");
-    assert!(
-        events.iter().any(|event| event["type"] == "result"
-            && event["text"].as_str().unwrap().contains("hello run"))
-    );
+    assert!(events
+        .iter()
+        .any(|event| event["type"] == "result"
+            && event["text"].as_str().unwrap().contains("hello run")));
 }
 
 #[test]
@@ -251,6 +256,105 @@ fn home_prompt_enters_the_self_agent_configuration_path() {
     );
 
     let _ = std::fs::remove_dir_all(home);
+}
+
+#[test]
+fn home_prompt_runs_governed_tools_until_the_model_returns_text() {
+    let root = temp_home("self-agent-loop");
+    let home = root.join("home");
+    let workspace = root.join("workspace");
+    std::fs::create_dir_all(workspace.join("src")).expect("create workspace");
+    std::fs::write(
+        workspace.join("src/lib.rs"),
+        "pub const LOOPBACK_VALUE: u8 = 7;\n",
+    )
+    .expect("write workspace fixture");
+    let server = LoopbackResponses::start(vec![
+        serde_json::json!({
+            "status": "completed",
+            "output": [{
+                "type": "function_call",
+                "call_id": "provider-call-read",
+                "name": "read_file",
+                "arguments": "{\"path\":\"src/lib.rs\",\"start_line\":null,\"end_line\":null}",
+                "status": "completed"
+            }],
+            "usage": {"input_tokens": 3, "output_tokens": 5}
+        }),
+        serde_json::json!({
+            "status": "completed",
+            "output": [{
+                "type": "message",
+                "role": "assistant",
+                "content": [{"type": "output_text", "text": "loopback inspection complete"}]
+            }],
+            "usage": {"input_tokens": 7, "output_tokens": 11}
+        }),
+    ]);
+    let config = format!(
+        r#"{{
+            "model_provider": "Loopback",
+            "model": "gpt-loopback",
+            "disable_response_storage": true,
+            "model_providers": {{
+                "Loopback": {{
+                    "base_url": "{}",
+                    "api_key": "loopback-provider-secret-canary",
+                    "wire_api": "responses",
+                    "requires_openai_auth": true
+                }}
+            }},
+            "limits": {{"max_steps": 4, "max_observation_bytes": 65536}}
+        }}"#,
+        server.base_url()
+    );
+    write_user_config(&home, &config);
+    let mut child = orchester()
+        .current_dir(&workspace)
+        .env("ORCHESTER_HOME", &home)
+        .env("HOME", &home)
+        .env("USERPROFILE", &home)
+        .env_remove("HTTP_PROXY")
+        .env_remove("HTTPS_PROXY")
+        .env_remove("ALL_PROXY")
+        .env_remove("http_proxy")
+        .env_remove("https_proxy")
+        .env_remove("all_proxy")
+        .env("NO_PROXY", "127.0.0.1,localhost")
+        .env("no_proxy", "127.0.0.1,localhost")
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("spawn interactive orchester");
+    child
+        .stdin
+        .as_mut()
+        .expect("stdin handle")
+        .write_all(b"inspect the source\n")
+        .expect("write self-agent task");
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().expect("collect output");
+    let requests = server.finish();
+    assert!(
+        output.status.success(),
+        "stderr:\n{}\nloopback requests: {}",
+        stderr(&output),
+        requests.len()
+    );
+    let out = stdout(&output);
+    assert!(
+        out.contains("loopback inspection complete"),
+        "final model response was not rendered:\n{out}"
+    );
+    assert_eq!(requests.len(), 2, "expected one tool continuation");
+    let second = String::from_utf8_lossy(&requests[1]);
+    assert!(second.contains("function_call_output"));
+    assert!(second.contains("provider-call-read"));
+    assert!(second.contains("LOOPBACK_VALUE"));
+    assert!(!out.contains("loopback-provider-secret-canary"));
+    let _ = std::fs::remove_dir_all(root);
 }
 
 #[test]
