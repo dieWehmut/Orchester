@@ -35,6 +35,7 @@ pub const USER_CONFIG: &str = ".orchester/orchester.jsonc";
 pub const PROJECT_CONFIG: &str = ".orchester/project.jsonc";
 
 const PROTECTED_CREDENTIAL_MARKER: &str = "<redacted>";
+const MAX_MODEL_PROFILES: usize = 64;
 const MAX_MODEL_PROFILE_NAME_BYTES: usize = 128;
 const MAX_MODEL_PROFILE_VALUE_BYTES: usize = 256;
 
@@ -324,6 +325,12 @@ impl UserConfig {
             if let Some(value) = config.base_url.as_deref() {
                 validate_reference_syntax(value, &format!("model_providers.{provider}.base_url"))?;
             }
+        }
+        if self.model_profiles.len() > MAX_MODEL_PROFILES {
+            return Err(ConfigError::Validation {
+                path: "model_profiles".into(),
+                message: "too many model profiles are configured".into(),
+            });
         }
         for (name, profile) in &self.model_profiles {
             validate_model_profile_name(name, "model_profiles")?;

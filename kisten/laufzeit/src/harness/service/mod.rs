@@ -2,6 +2,7 @@
 
 mod builder;
 mod identity;
+mod model_catalog;
 mod runtime;
 mod status;
 mod turn;
@@ -27,6 +28,10 @@ pub use builder::{
 };
 use identity::WorkspaceIdentity;
 pub use identity::{IdentityError, WorkspaceIdentitySnapshot};
+pub use model_catalog::{
+    load_self_agent_model_catalog, select_self_agent_model_profile, SelfAgentModelCatalog,
+    SelfAgentModelCatalogError, SelfAgentModelChoice,
+};
 pub use runtime::{
     SelfAgentOutcome, SelfAgentRunOutcome, SelfAgentRuntime, SelfAgentRuntimeError,
     SelfAgentToolStep,

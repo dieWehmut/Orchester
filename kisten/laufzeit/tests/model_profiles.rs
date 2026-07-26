@@ -190,3 +190,28 @@ fn direct_deserialization_cannot_bypass_profile_value_validation() {
     ));
     assert!(!error.to_string().contains("gpt-test"));
 }
+
+#[test]
+fn profile_count_is_bounded_before_catalog_enumeration() {
+    let profiles = (0..65)
+        .map(|index| {
+            (
+                format!("profile-{index}"),
+                serde_json::json!({
+                    "model_provider": "OpenAI",
+                    "model": format!("gpt-{index}")
+                }),
+            )
+        })
+        .collect::<serde_json::Map<_, _>>();
+    let source = serde_json::json!({ "model_profiles": profiles }).to_string();
+
+    let error = ConfigLoader::test()
+        .load_user(&source)
+        .expect_err("profile count must be bounded");
+
+    assert!(matches!(
+        error,
+        ConfigError::Validation { ref path, .. } if path == "model_profiles"
+    ));
+}
