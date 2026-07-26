@@ -26,7 +26,10 @@ pub use builder::{
 };
 use identity::WorkspaceIdentity;
 pub use identity::{IdentityError, WorkspaceIdentitySnapshot};
-pub use runtime::{SelfAgentOutcome, SelfAgentRuntime, SelfAgentRuntimeError};
+pub use runtime::{
+    SelfAgentOutcome, SelfAgentRunOutcome, SelfAgentRuntime, SelfAgentRuntimeError,
+    SelfAgentToolStep,
+};
 pub use turn::SelfAgentTurn;
 
 /// Errors raised before or during one self-agent turn.

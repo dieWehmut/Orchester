@@ -9,7 +9,7 @@ use orchester_laufzeit::harness::executor::ToolExecutor;
 use orchester_laufzeit::harness::files::FileToolLimits;
 use orchester_laufzeit::harness::run_store::{RunStore, SqliteRunStore};
 use orchester_laufzeit::harness::service::{SelfAgentOutcome, SelfAgentRuntime, SelfAgentTurn};
-use orchester_modell::{ModelError, ModelResponse, ScriptedLlm};
+use orchester_modell::{ModelError, ModelResponse, ModelUsage, ScriptedLlm};
 use orchester_protokoll::{AgentAction, HarnessEventKind, PolicyDecision};
 use tokio_util::sync::CancellationToken;
 
@@ -39,6 +39,33 @@ fn loop_engine(
         },
     )
     .expect("loop")
+}
+
+fn tool_response(
+    call_id: &str,
+    name: &str,
+    arguments_json: &str,
+    input_tokens: u64,
+    output_tokens: u64,
+) -> ModelResponse {
+    let mut response = ModelResponse::tool(call_id, name, arguments_json);
+    response.usage = ModelUsage {
+        input_tokens,
+        output_tokens,
+    };
+    response
+}
+
+fn text_response(text: &str, input_tokens: u64, output_tokens: u64) -> ModelResponse {
+    ModelResponse {
+        assistant_text: text.into(),
+        tool_call: None,
+        usage: ModelUsage {
+            input_tokens,
+            output_tokens,
+        },
+        opaque_items: Vec::new(),
+    }
 }
 
 fn runtime(
@@ -168,6 +195,155 @@ async fn non_file_actions_remain_visible_without_crossing_the_audit_barrier() {
     ));
     assert_eq!(audit.verify().expect("audit").entries, 0);
     assert!(!root.join("workspace/src/generated.rs").exists());
+    drop(runtime);
+    drop(audit);
+    let _ = std::fs::remove_dir_all(root);
+}
+
+#[tokio::test]
+async fn run_executes_multiple_allowed_tools_then_returns_the_final_text() {
+    let root = temp_root("multi-step");
+    std::fs::write(
+        root.join("workspace/src/lib.rs"),
+        "pub const VALUE: u8 = 7;\n",
+    )
+    .expect("fixture");
+    let responses = [
+        Ok(tool_response(
+            "provider-call-list",
+            "list_files",
+            r#"{"path":"src","depth":1}"#,
+            3,
+            5,
+        )),
+        Ok(tool_response(
+            "provider-call-read",
+            "read_file",
+            r#"{"path":"src/lib.rs","start_line":null,"end_line":null}"#,
+            4,
+            6,
+        )),
+        Ok(text_response("inspection complete", 7, 11)),
+    ];
+    let (runtime, audit) = runtime(&root, responses);
+
+    let outcome = runtime
+        .run("inspect the source", CancellationToken::new())
+        .await
+        .expect("outcome");
+
+    assert_eq!(outcome.final_turn().text(), Some("inspection complete"));
+    assert_eq!(outcome.model_calls(), 3);
+    assert_eq!(outcome.usage().input_tokens, 14);
+    assert_eq!(outcome.usage().output_tokens, 22);
+    assert_eq!(outcome.tool_steps().len(), 2);
+    assert!(matches!(
+        outcome.tool_steps()[0].outcome(),
+        orchester_laufzeit::harness::execution::GovernedToolOutcome::Completed(observation)
+            if observation.kind == "list_files"
+    ));
+    assert!(matches!(
+        outcome.tool_steps()[1].outcome(),
+        orchester_laufzeit::harness::execution::GovernedToolOutcome::Completed(observation)
+            if observation.kind == "read_file"
+    ));
+    assert_eq!(audit.verify().expect("audit").entries, 2);
+    assert_eq!(runtime.model().call_count(), 3);
+    let events = runtime
+        .store()
+        .events_owned(outcome.run_id(), "local-user")
+        .expect("events");
+    assert_eq!(
+        events
+            .iter()
+            .filter(|event| matches!(event.kind, HarnessEventKind::RunCreated))
+            .count(),
+        1
+    );
+    let steps = events
+        .iter()
+        .filter(|event| matches!(event.kind, HarnessEventKind::StepStarted))
+        .collect::<Vec<_>>();
+    assert_eq!(steps.len(), 3);
+    assert!(steps
+        .windows(2)
+        .all(|pair| pair[0].turn_id == pair[1].turn_id));
+    drop(runtime);
+    drop(audit);
+    let _ = std::fs::remove_dir_all(root);
+}
+
+#[tokio::test]
+async fn run_stops_for_approval_after_returning_the_tool_observation_to_the_model() {
+    let root = temp_root("approval-pause");
+    std::fs::write(root.join("workspace/src/lib.rs"), "pub fn inspect() {}\n").expect("fixture");
+    let responses = [
+        Ok(tool_response(
+            "provider-call-read",
+            "read_file",
+            r#"{"path":"src/lib.rs","start_line":null,"end_line":null}"#,
+            2,
+            3,
+        )),
+        Ok(tool_response(
+            "provider-call-network",
+            "run_command",
+            r#"{"program":"curl","args":["https://example.test"],"cwd":null}"#,
+            5,
+            8,
+        )),
+    ];
+    let (runtime, audit) = runtime(&root, responses);
+
+    let outcome = runtime
+        .run("inspect then fetch", CancellationToken::new())
+        .await
+        .expect("outcome");
+
+    assert!(matches!(
+        outcome.final_turn(),
+        SelfAgentTurn::Action { policy, .. } if policy.decision == PolicyDecision::Ask
+    ));
+    assert_eq!(outcome.tool_steps().len(), 1);
+    assert_eq!(outcome.model_calls(), 2);
+    assert_eq!(audit.verify().expect("audit").entries, 1);
+    assert_eq!(runtime.model().call_count(), 2);
+    drop(runtime);
+    drop(audit);
+    let _ = std::fs::remove_dir_all(root);
+}
+
+#[tokio::test]
+async fn run_continues_after_a_governed_tool_failure() {
+    let root = temp_root("failed-tool");
+    let responses = [
+        Ok(tool_response(
+            "provider-call-read",
+            "read_file",
+            r#"{"path":"src/missing.rs","start_line":null,"end_line":null}"#,
+            2,
+            3,
+        )),
+        Ok(text_response("the requested file is missing", 5, 8)),
+    ];
+    let (runtime, audit) = runtime(&root, responses);
+
+    let outcome = runtime
+        .run("inspect the missing file", CancellationToken::new())
+        .await
+        .expect("outcome");
+
+    assert_eq!(
+        outcome.final_turn().text(),
+        Some("the requested file is missing")
+    );
+    assert!(matches!(
+        outcome.tool_steps()[0].outcome(),
+        orchester_laufzeit::harness::execution::GovernedToolOutcome::Failed(_)
+    ));
+    assert_eq!(outcome.model_calls(), 2);
+    assert_eq!(audit.verify().expect("audit").entries, 1);
+    assert_eq!(runtime.model().call_count(), 2);
     drop(runtime);
     drop(audit);
     let _ = std::fs::remove_dir_all(root);

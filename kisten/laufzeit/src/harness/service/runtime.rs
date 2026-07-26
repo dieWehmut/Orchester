@@ -1,3 +1,5 @@
+mod outcome;
+
 use std::fmt;
 use std::path::Path;
 use std::sync::Arc;
@@ -14,6 +16,8 @@ use crate::harness::coordinator::SystemCoordinatorClock;
 use crate::harness::execution::{GovernedExecution, GovernedExecutionError, GovernedToolOutcome};
 use crate::harness::executor::ToolExecutor;
 use crate::harness::run_store::SqliteRunStore;
+
+pub use outcome::{SelfAgentRunOutcome, SelfAgentToolStep};
 
 pub enum SelfAgentOutcome {
     Model(SelfAgentTurn),
@@ -75,6 +79,8 @@ pub enum SelfAgentRuntimeError {
     Service(#[from] SelfAgentServiceError),
     #[error(transparent)]
     Execution(#[from] GovernedExecutionError),
+    #[error("self-agent run was cancelled")]
+    Cancelled,
 }
 
 pub struct SelfAgentRuntime<M, A> {
@@ -162,6 +168,49 @@ where
             model_calls,
             usage,
         })
+    }
+
+    /// Advance one durable run across every automatically executable file
+    /// action, stopping at the next model response that needs a caller.
+    pub async fn run(
+        &self,
+        prompt: impl Into<String>,
+        cancel: CancellationToken,
+    ) -> Result<SelfAgentRunOutcome, SelfAgentRuntimeError> {
+        let mut turn = self.service.start(prompt, cancel.clone()).await?;
+        let mut tool_steps = Vec::new();
+
+        loop {
+            let Some((run_id, action_id, call_id)) = executable_file_action(&turn) else {
+                return Ok(SelfAgentRunOutcome::new(turn, tool_steps));
+            };
+            if cancel.is_cancelled() {
+                return Err(SelfAgentRuntimeError::Cancelled);
+            }
+
+            let outcome = self.execution.execute(&run_id, &action_id, &call_id)?;
+            tool_steps.push(SelfAgentToolStep::new(action_id, call_id, outcome));
+            turn = self.service.continue_run(run_id, cancel.clone()).await?;
+        }
+    }
+}
+
+fn executable_file_action(turn: &SelfAgentTurn) -> Option<(RunId, ActionId, CallId)> {
+    match turn {
+        SelfAgentTurn::Action {
+            run_id,
+            action_id,
+            call_id,
+            action:
+                AgentAction::ListFiles { .. }
+                | AgentAction::SearchText { .. }
+                | AgentAction::ReadFile { .. },
+            policy,
+            ..
+        } if policy.decision == PolicyDecision::Allow => {
+            Some((run_id.clone(), action_id.clone(), call_id.clone()))
+        }
+        SelfAgentTurn::Text { .. } | SelfAgentTurn::Action { .. } => None,
     }
 }
 
