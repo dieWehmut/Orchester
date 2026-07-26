@@ -15,7 +15,8 @@ use orchester_protokoll::{Capability, TaskKind};
 use orchester_vertrag::{AdapterAvailability, AvailabilityStatus};
 use orchester_verzeichnis::Registry;
 pub use commands::{
-    HomeAction, PluginAction, PromptAction, parse_home_action, parse_prompt_action,
+    HomeAction, PluginAction, PromptAction, WorkspaceCommand, parse_home_action,
+    parse_prompt_action,
 };
 use commands::{
     command_action, matching_commands, matching_delegate_commands, parse_home_action_selected,
@@ -328,6 +329,12 @@ pub fn select_agent_tui(
                             command.clear();
                             command_selected = 0;
                         }
+                        PromptAction::Workspace(_) => {
+                            message = "Return to the Orchester home to inspect workspace status."
+                                .into();
+                            command.clear();
+                            command_selected = 0;
+                        }
                         PromptAction::Run(_) => {}
                     }
                 }
@@ -504,7 +511,7 @@ pub fn render_agent_table<W: Write>(
     writeln!(out)?;
     writeln!(
         out,
-        "{DIM}Commands: /agent switch, /plugins manage, /help help, /quit exit.{RESET}"
+        "{DIM}Commands: /agent switch, /status inspect, /plugins manage, /help help, /quit exit.{RESET}"
     )
 }
 
@@ -513,6 +520,7 @@ pub fn render_help<W: Write>(out: &mut W) -> io::Result<()> {
     writeln!(out, "{BOLD}Interactive commands{RESET}")?;
     writeln!(out, "  /agent   choose another installed agent")?;
     writeln!(out, "  /list    show detected agent status")?;
+    writeln!(out, "  /status  show self-agent workspace status")?;
     writeln!(out, "  /plugins list, inspect, install, or remove plugins")?;
     writeln!(out, "  /help    show this help")?;
     writeln!(out, "  /quit    exit Orchester")?;
@@ -917,7 +925,7 @@ fn desired_home_content_rows(
     show_help: bool,
 ) -> usize {
     if show_help {
-        return 7;
+        return 8;
     }
     if input.starts_with('/') {
         let matches = matching_commands(input, choices).len();
@@ -952,6 +960,7 @@ fn render_compact_home_header<W: Write>(out: &mut W, width: usize, rows: usize) 
 fn render_home_help<W: Write>(out: &mut W, width: usize, max_rows: usize) -> io::Result<()> {
     for line in [
         "/agent      choose a delegate",
+        "/status     inspect self-agent state",
         "/plugins    manage agent plugins",
         "/codex      launch Codex",
         "/claude     launch Claude",
@@ -1009,7 +1018,7 @@ pub fn render_line_startup_home<W: Write>(out: &mut W) -> io::Result<()> {
     writeln!(out)?;
     writeln!(
         out,
-        "{DIM}Type a task for Orchester, or /agent, /codex, /claude, /opencode.{RESET}"
+        "{DIM}Type a task for Orchester, or /status, /agent, /codex, /claude, /opencode.{RESET}"
     )?;
     writeln!(
         out,
@@ -1442,6 +1451,21 @@ mod tests {
             PromptAction::ListAgents
         );
         assert_eq!(parse_prompt_action("?", &choices), PromptAction::Help);
+    }
+
+    #[test]
+    fn status_command_is_typed_in_home_and_delegate_prompts() {
+        let choices = vec![choice("mock", AvailabilityStatus::Available, None)];
+
+        assert_eq!(
+            parse_home_action("/status", &choices),
+            HomeAction::Workspace(WorkspaceCommand::Status)
+        );
+        assert_eq!(
+            parse_prompt_action("/status", &choices),
+            PromptAction::Workspace(WorkspaceCommand::Status)
+        );
+        assert_eq!(parse_home_action("/status now", &choices), HomeAction::Help);
     }
 
     #[test]
@@ -1930,8 +1954,12 @@ mod tests {
             HomeAction::LaunchAgent("codex".into())
         );
         assert_eq!(parse_home_action("/quit", &choices), HomeAction::Quit);
+        let codex_index = matching_commands("/", &choices)
+            .iter()
+            .position(|item| item.name == "/codex")
+            .expect("codex command");
         assert_eq!(
-            parse_home_action_selected("/", &choices, 5),
+            parse_home_action_selected("/", &choices, codex_index),
             HomeAction::LaunchAgent("codex".into())
         );
         assert_eq!(
@@ -1953,6 +1981,7 @@ mod tests {
         render_chat_home(&mut help, 80, "", &[], 0, true).unwrap();
         let help = strip_ansi(&String::from_utf8(help).unwrap());
         assert!(help.contains("/agent      choose a delegate"));
+        assert!(help.contains("/status     inspect self-agent state"));
         assert!(help.contains("Esc         close help"));
     }
 

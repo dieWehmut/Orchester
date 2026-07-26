@@ -259,6 +259,45 @@ fn home_prompt_enters_the_self_agent_configuration_path() {
 }
 
 #[test]
+fn status_command_reads_defaults_without_creating_run_state() {
+    let home = temp_home("status-defaults");
+    std::fs::create_dir_all(&home).expect("create isolated home");
+    let mut child = orchester()
+        .env("ORCHESTER_HOME", &home)
+        .env("HOME", &home)
+        .env("USERPROFILE", &home)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("spawn interactive orchester");
+    child
+        .stdin
+        .as_mut()
+        .expect("stdin handle")
+        .write_all(b"/status\n")
+        .expect("write status command");
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().expect("collect output");
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    assert!(out.contains("Self-agent status"), "status output:\n{out}");
+    assert!(
+        out.contains("model: not configured"),
+        "status output:\n{out}"
+    );
+    assert!(out.contains("state: not created"), "status output:\n{out}");
+    assert!(out.contains("network ask"), "status output:\n{out}");
+    assert!(out.contains("max steps 80"), "status output:\n{out}");
+    assert!(
+        !home.join("state/runs.db").exists(),
+        "read-only status created the run database"
+    );
+    let _ = std::fs::remove_dir_all(home);
+}
+
+#[test]
 fn home_prompt_runs_governed_tools_until_the_model_returns_text() {
     let root = temp_home("self-agent-loop");
     let home = root.join("home");

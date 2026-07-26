@@ -6,6 +6,7 @@ pub enum PromptAction {
     PickAgent,
     LaunchAgent(String),
     ListAgents,
+    Workspace(WorkspaceCommand),
     Plugins(PluginAction),
     Help,
     Quit,
@@ -17,6 +18,7 @@ pub enum HomeAction {
     Submit(String),
     PickAgent,
     LaunchAgent(String),
+    Workspace(WorkspaceCommand),
     Plugins(PluginAction),
     Help,
     Quit,
@@ -32,9 +34,15 @@ pub enum PluginAction {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum WorkspaceCommand {
+    Status,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum CommandAction {
     PickAgent,
     ListAgents,
+    Workspace(WorkspaceCommand),
     Plugins,
     Help,
     Quit,
@@ -97,6 +105,7 @@ pub(super) fn parse_home_action_selected(
         PromptAction::PickAgent => HomeAction::PickAgent,
         PromptAction::ListAgents => HomeAction::PickAgent,
         PromptAction::LaunchAgent(name) => HomeAction::LaunchAgent(name),
+        PromptAction::Workspace(command) => HomeAction::Workspace(command),
         PromptAction::Plugins(action) => HomeAction::Plugins(action),
         PromptAction::Help => HomeAction::Help,
         PromptAction::Quit => HomeAction::Quit,
@@ -140,6 +149,13 @@ pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> Pro
     match token.as_str() {
         "/a" | "/agent" => return PromptAction::PickAgent,
         "/l" | "/list" | "/agents" | "/doctor" => return PromptAction::ListAgents,
+        "/status" => {
+            return if input.split_whitespace().count() == 1 {
+                PromptAction::Workspace(WorkspaceCommand::Status)
+            } else {
+                PromptAction::Help
+            };
+        }
         "/plugin" | "/plugins" => {
             return parse_plugin_action(input)
                 .map(PromptAction::Plugins)
@@ -161,6 +177,7 @@ pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> Pro
     match item.action {
         CommandAction::PickAgent => PromptAction::PickAgent,
         CommandAction::ListAgents => PromptAction::ListAgents,
+        CommandAction::Workspace(command) => PromptAction::Workspace(command),
         CommandAction::Plugins => PromptAction::Plugins(PluginAction::List),
         CommandAction::Help => PromptAction::Help,
         CommandAction::Quit => PromptAction::Quit,
@@ -190,6 +207,12 @@ fn command_items(choices: &[AgentChoice]) -> Vec<CommandItem> {
             name: "/doctor".into(),
             description: "refresh local availability checks".into(),
             action: CommandAction::ListAgents,
+            agent: None,
+        },
+        CommandItem {
+            name: "/status".into(),
+            description: "show self-agent workspace status".into(),
+            action: CommandAction::Workspace(WorkspaceCommand::Status),
             agent: None,
         },
         CommandItem {

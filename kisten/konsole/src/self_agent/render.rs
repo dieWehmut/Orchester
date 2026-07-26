@@ -151,7 +151,7 @@ fn render_json(out: &mut impl Write, data: &Value) -> io::Result<()> {
     writeln!(out, "{}", safe_terminal_text(&encoded))
 }
 
-fn policy_name(decision: PolicyDecision) -> &'static str {
+pub(super) fn policy_name(decision: PolicyDecision) -> &'static str {
     match decision {
         PolicyDecision::Allow => "allow",
         PolicyDecision::Ask => "ask",
@@ -159,7 +159,7 @@ fn policy_name(decision: PolicyDecision) -> &'static str {
     }
 }
 
-fn safe_terminal_text(text: &str) -> String {
+pub(super) fn safe_terminal_text(text: &str) -> String {
     text.chars()
         .flat_map(|character| match character {
             '\n' | '\t' => vec![character],

@@ -28,7 +28,7 @@ use orchester_verzeichnis::{PluginRootError, Registry, standard_plugin_roots};
 use args::{
     Cli, Command, PluginCommand, PluginInstallArgs, PluginRemoveArgs, PluginStatusArgs,
 };
-use interactive::{AgentChoice, PluginAction, PromptAction};
+use interactive::{AgentChoice, PluginAction, PromptAction, WorkspaceCommand};
 use process::{command_invocation, is_cancelled_status, resolve_command};
 use self_agent::{SelfAgentHost, SelfAgentHostError};
 use tokio_util::sync::CancellationToken;
@@ -186,6 +186,10 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                     Err(error) => eprintln!("orchester: {error}"),
                 }
             }
+            interactive::HomeAction::Workspace(command) => {
+                render_workspace_command(&self_agent, command)?;
+                return Ok(ExitCode::SUCCESS);
+            }
             interactive::HomeAction::Empty => {}
             interactive::HomeAction::PickAgent => {
                 if let Some(agent) = interactive::select_agent_tui(&choices, None)? {
@@ -228,6 +232,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
 
 async fn run_line_interactive(registry: Registry) -> Result<ExitCode, CliError> {
     let mut choices = interactive::build_agent_choices(&registry);
+    let mut self_agent = self_agent_host()?;
     let stdin = io::stdin();
     let mut input = stdin.lock();
 
@@ -264,8 +269,11 @@ async fn run_line_interactive(registry: Registry) -> Result<ExitCode, CliError> 
             )?;
             return Ok(code);
         }
+        interactive::HomeAction::Workspace(command) => {
+            render_workspace_command(&self_agent, command)?;
+            return Ok(ExitCode::SUCCESS);
+        }
         interactive::HomeAction::Submit(prompt) => {
-            let mut self_agent = self_agent_host()?;
             let outcome = self_agent
                 .submit(prompt, CancellationToken::new())
                 .await?;
@@ -360,6 +368,9 @@ async fn run_line_interactive(registry: Registry) -> Result<ExitCode, CliError> 
                 let mut out = io::stdout().lock();
                 interactive::render_agent_table(&mut out, &choices, Some(agent.name.as_str()))?;
             }
+            PromptAction::Workspace(command) => {
+                render_workspace_command(&self_agent, command)?;
+            }
             PromptAction::Plugins(action) => {
                 let _ = plugin::run(
                     conductor.registry(),
@@ -389,6 +400,7 @@ async fn run_adapter_prompt_shell(
     let mut input = stdin.lock();
     let mut conductor = Conductor::new(registry.clone());
     let mut sessions: HashMap<String, String> = HashMap::new();
+    let self_agent = self_agent_host()?;
 
     loop {
         let resume = agent
@@ -445,6 +457,9 @@ async fn run_adapter_prompt_shell(
                 choices = interactive::build_agent_choices(conductor.registry());
                 let mut out = io::stdout().lock();
                 interactive::render_agent_table(&mut out, &choices, Some(agent.name.as_str()))?;
+            }
+            PromptAction::Workspace(command) => {
+                render_workspace_command(&self_agent, command)?;
             }
             PromptAction::Plugins(action) => {
                 let _ = plugin::run(
@@ -593,6 +608,20 @@ fn self_agent_host() -> Result<SelfAgentHost, io::Error> {
         state_root.join("runs.db"),
         state_root.join("audit.jsonl"),
     ))
+}
+
+fn render_workspace_command(
+    self_agent: &SelfAgentHost,
+    command: WorkspaceCommand,
+) -> Result<(), CliError> {
+    match command {
+        WorkspaceCommand::Status => {
+            let status = self_agent.status()?;
+            let mut out = io::stdout().lock();
+            self_agent::render_status(&mut out, &status)?;
+        }
+    }
+    Ok(())
 }
 
 /// Resolve the prompt argument: `-` (or absent with piped stdin) reads stdin.

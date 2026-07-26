@@ -4,15 +4,18 @@ use std::path::PathBuf;
 use orchester_laufzeit::harness::config::{ConfigError, ConfigLoader};
 use orchester_laufzeit::harness::credentials::KeyringCredentialStore;
 use orchester_laufzeit::harness::service::{
-    build_self_agent_runtime, ProductionSelfAgentRuntime, SelfAgentRunOutcome,
-    SelfAgentRuntimeBuildError, SelfAgentRuntimeError,
+    build_self_agent_runtime, load_self_agent_status, ProductionSelfAgentRuntime,
+    SelfAgentRunOutcome, SelfAgentRuntimeBuildError, SelfAgentRuntimeError, SelfAgentStatus,
+    SelfAgentStatusError,
 };
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
 
 mod render;
+mod status;
 
 pub use render::render_outcome;
+pub use status::render_status;
 
 #[derive(Debug, Error)]
 pub enum SelfAgentHostError {
@@ -22,6 +25,8 @@ pub enum SelfAgentHostError {
     Build(#[from] SelfAgentRuntimeBuildError),
     #[error(transparent)]
     Run(#[from] SelfAgentRuntimeError),
+    #[error(transparent)]
+    Status(#[from] SelfAgentStatusError),
     #[error("self-agent runtime initialization failed")]
     Initialization,
 }
@@ -54,6 +59,19 @@ impl SelfAgentHost {
             .as_ref()
             .ok_or(SelfAgentHostError::Initialization)?;
         runtime.run(prompt, cancel).await.map_err(Into::into)
+    }
+
+    pub fn status(&self) -> Result<SelfAgentStatus, SelfAgentHostError> {
+        let config = ConfigLoader::new()?.load_effective(&self.workspace)?;
+        let credentials = KeyringCredentialStore::new();
+        load_self_agent_status(
+            &config,
+            &credentials,
+            &self.workspace,
+            &self.state_database,
+            "local-user",
+        )
+        .map_err(Into::into)
     }
 
     fn ensure_runtime(&mut self) -> Result<(), SelfAgentHostError> {
