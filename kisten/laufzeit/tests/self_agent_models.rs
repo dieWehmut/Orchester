@@ -1,6 +1,7 @@
 use orchester_laufzeit::harness::config::{ConfigError, ConfigLoader, UserConfig};
 use orchester_laufzeit::harness::service::{
     load_self_agent_model_catalog, select_self_agent_model_profile, SelfAgentModelCatalogError,
+    SelfAgentModelSession,
 };
 
 fn configured(source: &str) -> UserConfig {
@@ -176,4 +177,130 @@ fn catalog_rejects_controlled_configured_metadata_before_projection() {
         ));
         assert!(!error.to_string().contains("gpt-test"));
     }
+}
+
+#[test]
+fn model_session_changes_only_future_effective_configuration() {
+    let config = configured(
+        r#"{
+            "model_provider": "OpenAI",
+            "model": "gpt-default",
+            "model_providers": {
+                "OpenAI": { "base_url": "https://example.test/v1" }
+            },
+            "model_profiles": {
+                "review": {
+                    "model_provider": "OpenAI",
+                    "model": "gpt-review",
+                    "model_reasoning_effort": "ultra"
+                }
+            }
+        }"#,
+    );
+    let mut session = SelfAgentModelSession::default();
+
+    let choice = session
+        .select_profile(&config, "review")
+        .expect("select session profile");
+    let effective = session
+        .effective_config(&config)
+        .expect("session configuration");
+    let catalog = session.catalog(&config).expect("session catalog");
+
+    assert_eq!(choice.profile.as_deref(), Some("review"));
+    assert_eq!(effective.model.as_deref(), Some("gpt-review"));
+    assert_eq!(config.model.as_deref(), Some("gpt-default"));
+    assert!(!format!("{session:?}").contains("review"));
+    assert_eq!(
+        catalog
+            .configured
+            .as_ref()
+            .and_then(|active| active.profile.as_deref()),
+        Some("review")
+    );
+}
+
+#[test]
+fn failed_model_session_selection_preserves_the_previous_choice() {
+    let config = configured(
+        r#"{
+            "model_providers": {
+                "OpenAI": { "base_url": "https://example.test/v1" }
+            },
+            "model_profiles": {
+                "fast": { "model_provider": "OpenAI", "model": "gpt-fast" }
+            }
+        }"#,
+    );
+    let mut session = SelfAgentModelSession::default();
+    session
+        .select_profile(&config, "fast")
+        .expect("select initial profile");
+
+    let error = session
+        .select_profile(&config, "missing-profile")
+        .expect_err("missing profile must fail");
+
+    assert_eq!(session.selected_profile(), Some("fast"));
+    assert!(!error.to_string().contains("missing-profile"));
+    assert_eq!(
+        session
+            .effective_config(&config)
+            .expect("retained configuration")
+            .model
+            .as_deref(),
+        Some("gpt-fast")
+    );
+}
+
+#[test]
+fn model_session_returns_to_configured_choice_atomically() {
+    let configured_default = configured(
+        r#"{
+            "model_provider": "OpenAI",
+            "model": "gpt-default",
+            "model_providers": {
+                "OpenAI": { "base_url": "https://example.test/v1" }
+            },
+            "model_profiles": {
+                "fast": { "model_provider": "OpenAI", "model": "gpt-fast" }
+            }
+        }"#,
+    );
+    let mut session = SelfAgentModelSession::default();
+    session
+        .select_profile(&configured_default, "fast")
+        .expect("select named profile");
+
+    let restored = session
+        .select_configured(&configured_default)
+        .expect("restore configured model");
+
+    assert_eq!(restored.profile, None);
+    assert_eq!(restored.model, "gpt-default");
+    assert_eq!(session.selected_profile(), None);
+
+    let no_default = configured(
+        r#"{
+            "model_providers": {
+                "OpenAI": { "base_url": "https://example.test/v1" }
+            },
+            "model_profiles": {
+                "fast": { "model_provider": "OpenAI", "model": "gpt-fast" }
+            }
+        }"#,
+    );
+    session
+        .select_profile(&no_default, "fast")
+        .expect("select named-only profile");
+
+    let error = session
+        .select_configured(&no_default)
+        .expect_err("missing configured model");
+
+    assert!(matches!(
+        error,
+        SelfAgentModelCatalogError::ConfiguredModelUnavailable
+    ));
+    assert_eq!(session.selected_profile(), Some("fast"));
 }

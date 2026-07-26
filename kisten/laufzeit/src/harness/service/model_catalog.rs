@@ -1,5 +1,7 @@
 //! Terminal-independent projection and selection of user-owned model profiles.
 
+use std::fmt;
+
 use crate::harness::config::{ConfigError, ResolvedModelProfile, UserConfig};
 use thiserror::Error;
 
@@ -26,6 +28,71 @@ pub struct SelfAgentModelChoice {
 pub enum SelfAgentModelCatalogError {
     #[error(transparent)]
     Config(#[from] ConfigError),
+    #[error("configured model is unavailable")]
+    ConfiguredModelUnavailable,
+}
+
+#[derive(Clone, Default)]
+pub struct SelfAgentModelSession {
+    selected_profile: Option<String>,
+}
+
+impl SelfAgentModelSession {
+    pub fn catalog(
+        &self,
+        config: &UserConfig,
+    ) -> Result<SelfAgentModelCatalog, SelfAgentModelCatalogError> {
+        let mut catalog = load_self_agent_model_catalog(config)?;
+        if let Some(name) = self.selected_profile.as_deref() {
+            let (_, choice) = select_self_agent_model_profile(config, name)?;
+            catalog.configured = Some(choice);
+        }
+        Ok(catalog)
+    }
+
+    pub fn effective_config(
+        &self,
+        config: &UserConfig,
+    ) -> Result<UserConfig, SelfAgentModelCatalogError> {
+        match self.selected_profile.as_deref() {
+            Some(name) => select_self_agent_model_profile(config, name).map(|(config, _)| config),
+            None => Ok(config.clone()),
+        }
+    }
+
+    pub fn select_profile(
+        &mut self,
+        config: &UserConfig,
+        name: &str,
+    ) -> Result<SelfAgentModelChoice, SelfAgentModelCatalogError> {
+        let (_, choice) = select_self_agent_model_profile(config, name)?;
+        self.selected_profile = choice.profile.clone();
+        Ok(choice)
+    }
+
+    pub fn select_configured(
+        &mut self,
+        config: &UserConfig,
+    ) -> Result<SelfAgentModelChoice, SelfAgentModelCatalogError> {
+        let choice = load_self_agent_model_catalog(config)?
+            .configured
+            .ok_or(SelfAgentModelCatalogError::ConfiguredModelUnavailable)?;
+        self.selected_profile = None;
+        Ok(choice)
+    }
+
+    pub fn selected_profile(&self) -> Option<&str> {
+        self.selected_profile.as_deref()
+    }
+}
+
+impl fmt::Debug for SelfAgentModelSession {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("SelfAgentModelSession")
+            .field("named_profile_selected", &self.selected_profile.is_some())
+            .finish()
+    }
 }
 
 pub fn load_self_agent_model_catalog(

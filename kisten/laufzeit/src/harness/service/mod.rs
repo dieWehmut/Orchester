@@ -30,7 +30,7 @@ use identity::WorkspaceIdentity;
 pub use identity::{IdentityError, WorkspaceIdentitySnapshot};
 pub use model_catalog::{
     load_self_agent_model_catalog, select_self_agent_model_profile, SelfAgentModelCatalog,
-    SelfAgentModelCatalogError, SelfAgentModelChoice,
+    SelfAgentModelCatalogError, SelfAgentModelChoice, SelfAgentModelSession,
 };
 pub use runtime::{
     SelfAgentOutcome, SelfAgentRunOutcome, SelfAgentRuntime, SelfAgentRuntimeError,
