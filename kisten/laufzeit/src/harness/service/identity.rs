@@ -7,7 +7,7 @@ use orchester_protokoll::{ActionId, CallId, RunId, StepId, TurnId};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
 
-use super::super::coordinator::CoordinatorInput;
+use super::super::coordinator::{CoordinatorContinuationInput, CoordinatorInput};
 use super::super::run_store::NewRun;
 
 const MAX_ID_BYTES: usize = 256;
@@ -119,6 +119,20 @@ impl WorkspaceIdentity {
             action_id: ActionId::from(format!("action-{token}")),
         };
         Ok((input, run_id))
+    }
+
+    pub(super) fn continuation_input(
+        &self,
+        run_id: RunId,
+    ) -> Result<CoordinatorContinuationInput, IdentityError> {
+        let token = random_token()?;
+        Ok(CoordinatorContinuationInput {
+            run_id,
+            owner_actor_id: self.owner_actor_id.clone(),
+            step_id: StepId::from(format!("step-{token}")),
+            model_call_id: CallId::from(format!("model-call-{token}")),
+            action_id: ActionId::from(format!("action-{token}")),
+        })
     }
 }
 

@@ -8,12 +8,13 @@ mod turn;
 use std::fmt;
 use std::path::Path;
 
+use orchester_protokoll::RunId;
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
 
 use super::agent_loop::SelfAgentLoop;
 use super::coordinator::{
-    CoordinatorClock, CoordinatorError, CoordinatorOutcome, CoordinatorStore, DurableCoordinator,
+    CoordinatorClock, CoordinatorError, CoordinatorStore, DurableCoordinator,
     SystemCoordinatorClock,
 };
 use super::governance::PolicyEngine;
@@ -124,34 +125,17 @@ where
             PolicyEngine::snapshot_hash(),
         )?;
         let outcome = self.coordinator.start_new_run(input, cancel).await?;
-        Ok(match outcome {
-            CoordinatorOutcome::Text {
-                text,
-                model_calls,
-                usage,
-            } => SelfAgentTurn::Text {
-                run_id,
-                text,
-                model_calls,
-                usage,
-            },
-            CoordinatorOutcome::Action {
-                action_id,
-                call_id,
-                action,
-                policy,
-                model_calls,
-                usage,
-            } => SelfAgentTurn::Action {
-                run_id,
-                action_id,
-                call_id,
-                action,
-                policy,
-                model_calls,
-                usage,
-            },
-        })
+        Ok(SelfAgentTurn::from_coordinator(run_id, outcome))
+    }
+
+    pub async fn continue_run(
+        &self,
+        run_id: RunId,
+        cancel: CancellationToken,
+    ) -> Result<SelfAgentTurn, SelfAgentServiceError> {
+        let input = self.identity.continuation_input(run_id.clone())?;
+        let outcome = self.coordinator.continue_run(input, cancel).await?;
+        Ok(SelfAgentTurn::from_coordinator(run_id, outcome))
     }
 }
 

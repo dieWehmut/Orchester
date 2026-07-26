@@ -3,6 +3,7 @@ use std::fmt;
 use orchester_modell::ModelUsage;
 use orchester_protokoll::{ActionId, AgentAction, CallId, RunId};
 
+use super::super::coordinator::CoordinatorOutcome;
 use super::super::governance::PolicyResult;
 
 /// The bounded result of one self-agent model step.
@@ -25,6 +26,37 @@ pub enum SelfAgentTurn {
 }
 
 impl SelfAgentTurn {
+    pub(super) fn from_coordinator(run_id: RunId, outcome: CoordinatorOutcome) -> Self {
+        match outcome {
+            CoordinatorOutcome::Text {
+                text,
+                model_calls,
+                usage,
+            } => Self::Text {
+                run_id,
+                text,
+                model_calls,
+                usage,
+            },
+            CoordinatorOutcome::Action {
+                action_id,
+                call_id,
+                action,
+                policy,
+                model_calls,
+                usage,
+            } => Self::Action {
+                run_id,
+                action_id,
+                call_id,
+                action,
+                policy,
+                model_calls,
+                usage,
+            },
+        }
+    }
+
     pub fn run_id(&self) -> &RunId {
         match self {
             Self::Text { run_id, .. } | Self::Action { run_id, .. } => run_id,

@@ -1,9 +1,14 @@
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::Arc;
 
 use orchester_laufzeit::harness::agent_loop::{AgentLoopConfig, SelfAgentLoop};
+use orchester_laufzeit::harness::audit::JsonlAuditSink;
 use orchester_laufzeit::harness::context::{ContextAssembler, ContextLimits};
 use orchester_laufzeit::harness::coordinator::FixedCoordinatorClock;
+use orchester_laufzeit::harness::execution::GovernedExecution;
+use orchester_laufzeit::harness::executor::ToolExecutor;
+use orchester_laufzeit::harness::files::FileToolLimits;
 use orchester_laufzeit::harness::run_store::{RunStatus, RunStore, SqliteRunStore};
 use orchester_laufzeit::harness::service::{
     SelfAgentService, SelfAgentServiceError, SelfAgentTurn,
@@ -242,5 +247,94 @@ fn rejects_missing_workspaces_and_invalid_owner_identifiers() {
     )
     .expect_err("invalid owner");
     assert!(matches!(error, SelfAgentServiceError::Identity(_)));
+    let _ = std::fs::remove_dir_all(workspace);
+}
+
+#[tokio::test]
+async fn continues_an_observed_tool_step_without_creating_a_second_run() {
+    let workspace = temp_workspace("continue");
+    std::fs::create_dir_all(workspace.join("src")).unwrap();
+    std::fs::write(workspace.join("src/lib.rs"), "pub const VALUE: u8 = 7;\n").unwrap();
+    let mut tool_response = ModelResponse::tool(
+        "provider-read-1",
+        "read_file",
+        r#"{"path":"src/lib.rs","start_line":null,"end_line":null}"#,
+    );
+    tool_response.usage = ModelUsage {
+        input_tokens: 3,
+        output_tokens: 5,
+    };
+    let final_response = ModelResponse {
+        assistant_text: "inspection complete".into(),
+        tool_call: None,
+        usage: ModelUsage {
+            input_tokens: 7,
+            output_tokens: 11,
+        },
+        opaque_items: Vec::new(),
+    };
+    let store = Arc::new(
+        SqliteRunStore::open_with_terminal_secrets(workspace.join("state/runs.db"), Vec::new())
+            .unwrap(),
+    );
+    let service = SelfAgentService::with_clock(
+        loop_engine([Ok(tool_response), Ok(final_response)]),
+        store.clone(),
+        &workspace,
+        "local-user",
+        FixedCoordinatorClock::new("2026-07-18T00:00:00Z"),
+    )
+    .unwrap();
+    let first = service
+        .start("inspect", CancellationToken::new())
+        .await
+        .unwrap();
+    let SelfAgentTurn::Action {
+        run_id,
+        action_id,
+        call_id,
+        ..
+    } = first
+    else {
+        panic!("expected read action");
+    };
+    let audit = Arc::new(JsonlAuditSink::open(workspace.join("state/audit.jsonl")).unwrap());
+    let execution = GovernedExecution::with_clock(
+        store.clone(),
+        audit,
+        ToolExecutor::new(&workspace, FileToolLimits::default()).unwrap(),
+        "local-user",
+        FixedCoordinatorClock::new("2026-07-18T00:00:01Z"),
+    )
+    .unwrap();
+    execution.execute(&run_id, &action_id, &call_id).unwrap();
+
+    let continued = service
+        .continue_run(run_id.clone(), CancellationToken::new())
+        .await
+        .unwrap();
+    assert_eq!(continued.run_id(), &run_id);
+    assert_eq!(continued.text(), Some("inspection complete"));
+    assert_eq!(continued.model_calls(), 2);
+    assert_eq!(continued.usage().input_tokens, 10);
+    assert_eq!(continued.usage().output_tokens, 16);
+    let events = store.events_owned(&run_id, "local-user").unwrap();
+    let steps = events
+        .iter()
+        .filter(|event| matches!(event.kind, HarnessEventKind::StepStarted))
+        .collect::<Vec<_>>();
+    assert_eq!(steps.len(), 2);
+    assert_ne!(steps[0].step_id, steps[1].step_id);
+    assert_eq!(steps[0].turn_id, steps[1].turn_id);
+    assert_eq!(
+        events
+            .iter()
+            .filter(|event| matches!(event.kind, HarnessEventKind::RunCreated))
+            .count(),
+        1
+    );
+    drop(execution);
+    drop(service);
+    drop(store);
     let _ = std::fs::remove_dir_all(workspace);
 }
