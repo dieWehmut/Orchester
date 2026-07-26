@@ -5,15 +5,17 @@ use orchester_laufzeit::harness::config::{ConfigError, ConfigLoader};
 use orchester_laufzeit::harness::credentials::KeyringCredentialStore;
 use orchester_laufzeit::harness::service::{
     build_self_agent_runtime, load_self_agent_status, ProductionSelfAgentRuntime,
-    SelfAgentRunOutcome, SelfAgentRuntimeBuildError, SelfAgentRuntimeError, SelfAgentStatus,
-    SelfAgentStatusError,
+    SelfAgentModelCatalog, SelfAgentModelCatalogError, SelfAgentModelSession, SelfAgentRunOutcome,
+    SelfAgentRuntimeBuildError, SelfAgentRuntimeError, SelfAgentStatus, SelfAgentStatusError,
 };
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
 
+mod models;
 mod render;
 mod status;
 
+pub use models::render_models;
 pub use render::render_outcome;
 pub use status::render_status;
 
@@ -27,6 +29,8 @@ pub enum SelfAgentHostError {
     Run(#[from] SelfAgentRuntimeError),
     #[error(transparent)]
     Status(#[from] SelfAgentStatusError),
+    #[error(transparent)]
+    Models(#[from] SelfAgentModelCatalogError),
     #[error("self-agent runtime initialization failed")]
     Initialization,
 }
@@ -35,6 +39,7 @@ pub struct SelfAgentHost {
     workspace: PathBuf,
     state_database: PathBuf,
     audit_log: PathBuf,
+    model_session: SelfAgentModelSession,
     runtime: Option<ProductionSelfAgentRuntime>,
 }
 
@@ -44,6 +49,7 @@ impl SelfAgentHost {
             workspace,
             state_database,
             audit_log,
+            model_session: SelfAgentModelSession::default(),
             runtime: None,
         }
     }
@@ -59,6 +65,11 @@ impl SelfAgentHost {
             .as_ref()
             .ok_or(SelfAgentHostError::Initialization)?;
         runtime.run(prompt, cancel).await.map_err(Into::into)
+    }
+
+    pub fn model_catalog(&self) -> Result<SelfAgentModelCatalog, SelfAgentHostError> {
+        let config = ConfigLoader::new()?.load_effective(&self.workspace)?;
+        self.model_session.catalog(&config).map_err(Into::into)
     }
 
     pub fn status(&self) -> Result<SelfAgentStatus, SelfAgentHostError> {

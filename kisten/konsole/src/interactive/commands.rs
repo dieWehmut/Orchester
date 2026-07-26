@@ -36,6 +36,12 @@ pub enum PluginAction {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum WorkspaceCommand {
     Status,
+    Model(ModelCommand),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ModelCommand {
+    Show,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -156,6 +162,13 @@ pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> Pro
                 PromptAction::Help
             };
         }
+        "/model" => {
+            return if input.split_whitespace().count() == 1 {
+                PromptAction::Workspace(WorkspaceCommand::Model(ModelCommand::Show))
+            } else {
+                PromptAction::Help
+            };
+        }
         "/plugin" | "/plugins" => {
             return parse_plugin_action(input)
                 .map(PromptAction::Plugins)
@@ -213,6 +226,12 @@ fn command_items(choices: &[AgentChoice]) -> Vec<CommandItem> {
             name: "/status".into(),
             description: "show self-agent workspace status".into(),
             action: CommandAction::Workspace(WorkspaceCommand::Status),
+            agent: None,
+        },
+        CommandItem {
+            name: "/model".into(),
+            description: "show configured self-agent models".into(),
+            action: CommandAction::Workspace(WorkspaceCommand::Model(ModelCommand::Show)),
             agent: None,
         },
         CommandItem {

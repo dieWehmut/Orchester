@@ -15,7 +15,7 @@ use orchester_protokoll::{Capability, TaskKind};
 use orchester_vertrag::{AdapterAvailability, AvailabilityStatus};
 use orchester_verzeichnis::Registry;
 pub use commands::{
-    HomeAction, PluginAction, PromptAction, WorkspaceCommand, parse_home_action,
+    HomeAction, ModelCommand, PluginAction, PromptAction, WorkspaceCommand, parse_home_action,
     parse_prompt_action,
 };
 use commands::{
@@ -511,7 +511,7 @@ pub fn render_agent_table<W: Write>(
     writeln!(out)?;
     writeln!(
         out,
-        "{DIM}Commands: /agent switch, /status inspect, /plugins manage, /help help, /quit exit.{RESET}"
+        "{DIM}Commands: /agent switch, /model choose, /status inspect, /plugins manage, /help help, /quit exit.{RESET}"
     )
 }
 
@@ -520,6 +520,7 @@ pub fn render_help<W: Write>(out: &mut W) -> io::Result<()> {
     writeln!(out, "{BOLD}Interactive commands{RESET}")?;
     writeln!(out, "  /agent   choose another installed agent")?;
     writeln!(out, "  /list    show detected agent status")?;
+    writeln!(out, "  /model   show configured self-agent models")?;
     writeln!(out, "  /status  show self-agent workspace status")?;
     writeln!(out, "  /plugins list, inspect, install, or remove plugins")?;
     writeln!(out, "  /help    show this help")?;
@@ -960,6 +961,7 @@ fn render_compact_home_header<W: Write>(out: &mut W, width: usize, rows: usize) 
 fn render_home_help<W: Write>(out: &mut W, width: usize, max_rows: usize) -> io::Result<()> {
     for line in [
         "/agent      choose a delegate",
+        "/model      inspect self-agent models",
         "/status     inspect self-agent state",
         "/plugins    manage agent plugins",
         "/codex      launch Codex",
@@ -1018,7 +1020,7 @@ pub fn render_line_startup_home<W: Write>(out: &mut W) -> io::Result<()> {
     writeln!(out)?;
     writeln!(
         out,
-        "{DIM}Type a task for Orchester, or /status, /agent, /codex, /claude, /opencode.{RESET}"
+        "{DIM}Type a task for Orchester, or /model, /status, /agent, /codex, /claude, /opencode.{RESET}"
     )?;
     writeln!(
         out,
@@ -1466,6 +1468,21 @@ mod tests {
             PromptAction::Workspace(WorkspaceCommand::Status)
         );
         assert_eq!(parse_home_action("/status now", &choices), HomeAction::Help);
+    }
+
+    #[test]
+    fn model_query_is_typed_in_home_and_delegate_prompts() {
+        let choices = vec![choice("mock", AvailabilityStatus::Available, None)];
+
+        assert_eq!(
+            parse_home_action("/model", &choices),
+            HomeAction::Workspace(WorkspaceCommand::Model(ModelCommand::Show))
+        );
+        assert_eq!(
+            parse_prompt_action("/model", &choices),
+            PromptAction::Workspace(WorkspaceCommand::Model(ModelCommand::Show))
+        );
+        assert_eq!(parse_home_action("/model fast", &choices), HomeAction::Help);
     }
 
     #[test]

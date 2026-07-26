@@ -298,6 +298,86 @@ fn status_command_reads_defaults_without_creating_run_state() {
 }
 
 #[test]
+fn model_command_projects_safe_configured_and_named_choices() {
+    let home = temp_home("model-catalog");
+    std::fs::create_dir_all(&home).expect("create isolated home");
+    write_user_config(
+        &home,
+        r#"{
+            "model_provider": "OpenAI",
+            "model": "gpt-default",
+            "model_reasoning_effort": "high",
+            "model_providers": {
+                "OpenAI": {
+                    "name": "OpenAI API",
+                    "base_url": "https://private-transport.example/v1",
+                    "api_key": "sk-model-command-secret-canary",
+                    "wire_api": "responses",
+                    "requires_openai_auth": true
+                }
+            },
+            "model_profiles": {
+                "fast": {
+                    "model_provider": "OpenAI",
+                    "model": "gpt-fast",
+                    "model_reasoning_effort": "low"
+                },
+                "review": {
+                    "model_provider": "OpenAI",
+                    "model": "gpt-review",
+                    "plan_mode_reasoning_effort": "ultra"
+                }
+            }
+        }"#,
+    );
+    let mut child = orchester()
+        .env("ORCHESTER_HOME", &home)
+        .env("HOME", &home)
+        .env("USERPROFILE", &home)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("spawn interactive orchester");
+    child
+        .stdin
+        .as_mut()
+        .expect("stdin handle")
+        .write_all(b"/model\n")
+        .expect("write model command");
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().expect("collect output");
+
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    assert!(out.contains("Self-agent models"), "model output:\n{out}");
+    assert!(out.contains("active: configured"), "model output:\n{out}");
+    assert!(out.contains("gpt-default"), "model output:\n{out}");
+    assert!(
+        out.contains("fast") && out.contains("gpt-fast"),
+        "model output:\n{out}"
+    );
+    assert!(
+        out.contains("review") && out.contains("gpt-review"),
+        "model output:\n{out}"
+    );
+    for forbidden in [
+        "private-transport",
+        "sk-model-command-secret-canary",
+        "wire_api",
+        "requires_openai_auth",
+    ] {
+        assert!(!out.contains(forbidden), "leaked {forbidden}:\n{out}");
+    }
+    assert!(
+        !home.join("state/runs.db").exists(),
+        "read-only model query created the run database"
+    );
+    let _ = std::fs::remove_dir_all(home);
+}
+
+#[test]
 fn home_prompt_runs_governed_tools_until_the_model_returns_text() {
     let root = temp_home("self-agent-loop");
     let home = root.join("home");

@@ -28,7 +28,7 @@ use orchester_verzeichnis::{PluginRootError, Registry, standard_plugin_roots};
 use args::{
     Cli, Command, PluginCommand, PluginInstallArgs, PluginRemoveArgs, PluginStatusArgs,
 };
-use interactive::{AgentChoice, PluginAction, PromptAction, WorkspaceCommand};
+use interactive::{AgentChoice, ModelCommand, PluginAction, PromptAction, WorkspaceCommand};
 use process::{command_invocation, is_cancelled_status, resolve_command};
 use self_agent::{SelfAgentHost, SelfAgentHostError};
 use tokio_util::sync::CancellationToken;
@@ -619,6 +619,11 @@ fn render_workspace_command(
             let status = self_agent.status()?;
             let mut out = io::stdout().lock();
             self_agent::render_status(&mut out, &status)?;
+        }
+        WorkspaceCommand::Model(ModelCommand::Show) => {
+            let models = self_agent.model_catalog()?;
+            let mut out = io::stdout().lock();
+            self_agent::render_models(&mut out, &models)?;
         }
     }
     Ok(())
