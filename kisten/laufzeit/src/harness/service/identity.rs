@@ -39,6 +39,16 @@ pub struct WorkspaceIdentitySnapshot {
     pub owner_actor_id: String,
 }
 
+impl WorkspaceIdentitySnapshot {
+    pub fn for_workspace(
+        workspace_root: impl AsRef<Path>,
+        owner_actor_id: impl Into<String>,
+    ) -> Result<Self, IdentityError> {
+        WorkspaceIdentity::for_workspace(workspace_root, owner_actor_id)
+            .map(|identity| identity.snapshot())
+    }
+}
+
 impl fmt::Debug for WorkspaceIdentitySnapshot {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter

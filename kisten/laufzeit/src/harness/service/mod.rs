@@ -3,6 +3,7 @@
 mod builder;
 mod identity;
 mod runtime;
+mod status;
 mod turn;
 
 use std::fmt;
@@ -29,6 +30,10 @@ pub use identity::{IdentityError, WorkspaceIdentitySnapshot};
 pub use runtime::{
     SelfAgentOutcome, SelfAgentRunOutcome, SelfAgentRuntime, SelfAgentRuntimeError,
     SelfAgentToolStep,
+};
+pub use status::{
+    load_self_agent_status, SelfAgentDurableStatus, SelfAgentGovernanceStatus,
+    SelfAgentLimitStatus, SelfAgentModelStatus, SelfAgentStatus, SelfAgentStatusError,
 };
 pub use turn::SelfAgentTurn;
 
