@@ -1,7 +1,7 @@
 use std::ffi::{OsStr, OsString};
 
 use orchester_laufzeit::harness::governance::{
-    classify_command, CommandCategory, EffectClass, PolicyEngine, Risk,
+    classify_command, CommandCategory, EffectClass, PolicyConstraints, PolicyEngine, Risk,
 };
 use orchester_protokoll::{AgentAction, PolicyDecision};
 
@@ -233,6 +233,57 @@ fn network_and_dependency_effects_require_approval() {
     assert_eq!(package.decision, PolicyDecision::Ask);
     assert_eq!(package.rule_id, "dependency.install");
     assert_eq!(package.effect, EffectClass::ExternalEffect);
+}
+
+#[test]
+fn configured_network_deny_tightens_network_and_dependency_actions() {
+    let engine = PolicyEngine::with_constraints(PolicyConstraints {
+        network: PolicyDecision::Deny,
+        ..PolicyConstraints::default()
+    });
+
+    for action in [
+        command("curl", &["https://example.test"]),
+        command("npm", &["install", "left-pad"]),
+    ] {
+        let result = engine.evaluate(&action).expect("known action evaluates");
+        assert_eq!(result.decision, PolicyDecision::Deny);
+        assert_eq!(result.rule_id, "network.configured_deny");
+    }
+}
+
+#[test]
+fn configured_allow_cannot_relax_core_network_or_shell_rules() {
+    let engine = PolicyEngine::with_constraints(PolicyConstraints {
+        network: PolicyDecision::Allow,
+        shell_interpreters: PolicyDecision::Allow,
+        ..PolicyConstraints::default()
+    });
+
+    let network = engine
+        .evaluate(&command("curl", &["https://example.test"]))
+        .expect("network action evaluates");
+    assert_eq!(network.decision, PolicyDecision::Ask);
+    assert_eq!(network.rule_id, "network.external");
+
+    let shell = engine
+        .evaluate(&command("powershell", &["-Command", "Get-ChildItem"]))
+        .expect("shell action evaluates");
+    assert_eq!(shell.decision, PolicyDecision::Deny);
+    assert_eq!(shell.rule_id, "shell.interpreter");
+}
+
+#[test]
+fn policy_snapshot_binds_effective_governance_constraints() {
+    let defaults = PolicyEngine::new();
+    let denied = PolicyEngine::with_constraints(PolicyConstraints {
+        network: PolicyDecision::Deny,
+        ..PolicyConstraints::default()
+    });
+
+    assert_eq!(defaults.snapshot_hash_value(), PolicyEngine::snapshot_hash());
+    assert_ne!(defaults.snapshot_hash_value(), denied.snapshot_hash_value());
+    assert!(!format!("{denied:?}").contains("example.test"));
 }
 
 #[test]

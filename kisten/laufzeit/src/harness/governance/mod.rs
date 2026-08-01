@@ -15,5 +15,6 @@ pub mod policy;
 pub use crate::harness::run_store::EffectClass;
 pub use command::{classify_command, CommandCategory, CommandIntent, CommandParseError};
 pub use policy::{
-    Decision, PolicyEngine, PolicyError, PolicyInput, PolicyResult, PolicyRule, Risk, RiskLevel,
+    Decision, PolicyConstraints, PolicyEngine, PolicyError, PolicyInput, PolicyResult, PolicyRule,
+    Risk, RiskLevel,
 };

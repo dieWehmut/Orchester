@@ -24,6 +24,24 @@ pub enum Risk {
 /// Compatibility alias for callers that prefer the longer name.
 pub type RiskLevel = Risk;
 
+/// User-owned governance values that may only tighten the built-in policy.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct PolicyConstraints {
+    pub network: PolicyDecision,
+    pub out_of_workspace: PolicyDecision,
+    pub shell_interpreters: PolicyDecision,
+}
+
+impl Default for PolicyConstraints {
+    fn default() -> Self {
+        Self {
+            network: PolicyDecision::Ask,
+            out_of_workspace: PolicyDecision::Deny,
+            shell_interpreters: PolicyDecision::Deny,
+        }
+    }
+}
+
 /// A policy result contains only bounded, static explanations.  It never
 /// copies the command arguments, which may contain credentials or source text.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -70,14 +88,26 @@ pub enum PolicyError {
 /// matrix.  It is intentionally cheap to clone and can later carry an
 /// immutable policy snapshot.
 #[derive(Debug, Clone, Default)]
-pub struct PolicyEngine;
+pub struct PolicyEngine {
+    constraints: PolicyConstraints,
+}
 
 impl PolicyEngine {
     /// Stable identity for the built-in policy matrix.  A future configured
     /// policy must replace this with its immutable manifest digest.
     pub fn snapshot_hash() -> String {
+        Self::new().snapshot_hash_value()
+    }
+
+    pub fn snapshot_hash_value(&self) -> String {
         let mut hasher = Sha256::new();
         hasher.update(b"orchester-policy-v1\0");
+        if self.constraints != PolicyConstraints::default() {
+            hasher.update(b"constraints\0");
+            hash_decision(&mut hasher, self.constraints.network);
+            hash_decision(&mut hasher, self.constraints.out_of_workspace);
+            hash_decision(&mut hasher, self.constraints.shell_interpreters);
+        }
         hasher
             .finalize()
             .iter()
@@ -86,7 +116,15 @@ impl PolicyEngine {
     }
 
     pub fn new() -> Self {
-        Self
+        Self::default()
+    }
+
+    pub fn with_constraints(constraints: PolicyConstraints) -> Self {
+        Self { constraints }
+    }
+
+    pub fn constraints(&self) -> PolicyConstraints {
+        self.constraints
     }
 
     /// Evaluate a decoded protocol action.
@@ -155,109 +193,127 @@ impl PolicyEngine {
     /// Evaluate an already parsed command intent.
     pub fn evaluate_intent(&self, intent: &CommandIntent) -> PolicyResult {
         let categories = &intent.categories;
-        if categories.contains(&CommandCategory::ShellInterpreter) {
-            return deny(
+        let result = if categories.contains(&CommandCategory::ShellInterpreter) {
+            deny(
                 "shell.interpreter",
                 Risk::High,
                 "shell and scripting interpreters are disabled",
                 EffectClass::ExternalEffect,
-            );
-        }
-        if categories.contains(&CommandCategory::PrivilegeEscalation) {
-            return deny(
+            )
+        } else if categories.contains(&CommandCategory::PrivilegeEscalation) {
+            deny(
                 "privilege.escalation",
                 Risk::Critical,
                 "privilege escalation is disabled",
                 EffectClass::ExternalEffect,
-            );
-        }
-        if categories.contains(&CommandCategory::UnsupportedWrapper) {
-            return deny(
+            )
+        } else if categories.contains(&CommandCategory::UnsupportedWrapper) {
+            deny(
                 "command.wrapper",
                 Risk::High,
                 "command wrappers can hide the executable or alter its environment",
                 EffectClass::ExternalEffect,
-            );
-        }
-        if categories.contains(&CommandCategory::Composite) {
-            return deny(
+            )
+        } else if categories.contains(&CommandCategory::Composite) {
+            deny(
                 "command.composite",
                 Risk::High,
                 "shell composition and redirection tokens are not accepted",
                 EffectClass::ExternalEffect,
-            );
-        }
-        if categories.contains(&CommandCategory::SystemDestructive) {
-            return deny(
+            )
+        } else if categories.contains(&CommandCategory::SystemDestructive) {
+            deny(
                 "system.destructive",
                 Risk::Critical,
                 "system or root-targeted destructive operation is disabled",
                 EffectClass::ExternalEffect,
-            );
-        }
-        if categories.contains(&CommandCategory::GitDestructive) {
-            return deny(
+            )
+        } else if categories.contains(&CommandCategory::GitDestructive) {
+            deny(
                 "git.destructive",
                 Risk::High,
                 "destructive Git history or repository operation requires denial",
                 EffectClass::WorkspaceMutation,
-            );
-        }
-        if categories.contains(&CommandCategory::PackageInstall) {
-            return ask(
+            )
+        } else if categories.contains(&CommandCategory::PackageInstall) {
+            ask(
                 "dependency.install",
                 Risk::Medium,
                 "dependency installation can execute code and access the network",
                 EffectClass::ExternalEffect,
-            );
-        }
-        if categories.contains(&CommandCategory::Network) {
-            return ask(
+            )
+        } else if categories.contains(&CommandCategory::Network) {
+            ask(
                 "network.external",
                 Risk::Medium,
                 "external network access requires human approval",
                 EffectClass::ExternalEffect,
-            );
-        }
-        if categories.contains(&CommandCategory::Delete) {
-            return ask(
+            )
+        } else if categories.contains(&CommandCategory::Delete) {
+            ask(
                 "filesystem.delete",
                 Risk::Medium,
                 "workspace deletion requires human approval",
                 EffectClass::WorkspaceMutation,
-            );
-        }
-        if categories.contains(&CommandCategory::GitWrite) {
-            return ask(
+            )
+        } else if categories.contains(&CommandCategory::GitWrite) {
+            ask(
                 "git.write",
                 Risk::Medium,
                 "Git repository mutation requires human approval",
                 EffectClass::WorkspaceMutation,
-            );
-        }
-        if categories.contains(&CommandCategory::WorkspaceWrite) {
-            return ask(
+            )
+        } else if categories.contains(&CommandCategory::WorkspaceWrite) {
+            ask(
                 "command.may_mutate",
                 Risk::Medium,
                 "the command may execute project code or write generated state",
                 EffectClass::MayMutate,
-            );
-        }
-        if categories.contains(&CommandCategory::ReadOnly) {
-            return allow(
+            )
+        } else if categories.contains(&CommandCategory::ReadOnly) {
+            allow(
                 "workspace.read",
                 Risk::Low,
                 "command is on the explicit read-only allowlist",
                 EffectClass::ReadOnlyIdempotent,
+            )
+        } else {
+            deny(
+                "command.unknown",
+                Risk::High,
+                "executable is not in the governed command catalog",
+                EffectClass::ExternalEffect,
+            )
+        };
+        self.apply_constraints(categories, result)
+    }
+
+    fn apply_constraints(
+        &self,
+        categories: &std::collections::BTreeSet<CommandCategory>,
+        result: PolicyResult,
+    ) -> PolicyResult {
+        if self.constraints.network > result.decision
+            && (categories.contains(&CommandCategory::Network)
+                || categories.contains(&CommandCategory::PackageInstall))
+        {
+            return deny(
+                "network.configured_deny",
+                result.risk,
+                "effective governance denies external network access",
+                result.effect,
             );
         }
-        deny(
-            "command.unknown",
-            Risk::High,
-            "executable is not in the governed command catalog",
-            EffectClass::ExternalEffect,
-        )
+        result
     }
+}
+
+fn hash_decision(hasher: &mut Sha256, decision: PolicyDecision) {
+    hasher.update([match decision {
+        PolicyDecision::Allow => 0,
+        PolicyDecision::Ask => 1,
+        PolicyDecision::Deny => 2,
+    }]);
 }
 
 fn allow(rule_id: &str, risk: Risk, reason: &str, effect: EffectClass) -> PolicyResult {
