@@ -36,6 +36,7 @@ pub enum PluginAction {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum WorkspaceCommand {
     Status,
+    Permissions,
     Model(ModelCommand),
 }
 
@@ -164,6 +165,13 @@ pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> Pro
                 PromptAction::Help
             };
         }
+        "/permissions" | "/permission" => {
+            return if input.split_whitespace().count() == 1 {
+                PromptAction::Workspace(WorkspaceCommand::Permissions)
+            } else {
+                PromptAction::Help
+            };
+        }
         "/model" => {
             return parse_model_command(input)
                 .map(|command| PromptAction::Workspace(WorkspaceCommand::Model(command)))
@@ -240,6 +248,12 @@ fn command_items(choices: &[AgentChoice]) -> Vec<CommandItem> {
             name: "/status".into(),
             description: "show self-agent workspace status".into(),
             action: CommandAction::Workspace(WorkspaceCommand::Status),
+            agent: None,
+        },
+        CommandItem {
+            name: "/permissions".into(),
+            description: "show effective self-agent permissions".into(),
+            action: CommandAction::Workspace(WorkspaceCommand::Permissions),
             agent: None,
         },
         CommandItem {

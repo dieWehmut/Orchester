@@ -298,6 +298,97 @@ fn status_command_reads_defaults_without_creating_run_state() {
 }
 
 #[test]
+fn permissions_command_projects_effective_policy_without_provider_or_state_access() {
+    let root = temp_home("permissions-command");
+    let home = root.join("home");
+    let workspace = root.join("workspace");
+    std::fs::create_dir_all(&workspace).expect("create workspace");
+    let server = LoopbackResponses::start(Vec::new());
+    let base_url = server.base_url().to_owned();
+    write_user_config(
+        &home,
+        &format!(
+            r#"{{
+                "model_provider": "Loopback",
+                "model": "gpt-permissions",
+                "model_providers": {{
+                    "Loopback": {{
+                        "base_url": "{}",
+                        "api_key": "permissions-secret-canary",
+                        "wire_api": "responses",
+                        "requires_openai_auth": true
+                    }}
+                }},
+                "governance": {{
+                    "approval_reviewer": "user",
+                    "tool_network": "deny",
+                    "out_of_workspace": "allow",
+                    "shell_interpreters": "allow",
+                    "approval_ttl_seconds": 900
+                }}
+            }}"#,
+            server.base_url()
+        ),
+    );
+    let mut child = orchester()
+        .current_dir(&workspace)
+        .env("ORCHESTER_HOME", &home)
+        .env("HOME", &home)
+        .env("USERPROFILE", &home)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("spawn interactive orchester");
+    child
+        .stdin
+        .as_mut()
+        .expect("stdin handle")
+        .write_all(b"/permissions\n")
+        .expect("write permissions command");
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().expect("collect output");
+    let requests = server.finish();
+
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    assert!(
+        out.contains("Self-agent permissions"),
+        "permissions output:\n{out}"
+    );
+    assert!(
+        out.contains("network: configured deny | effective deny"),
+        "permissions output:\n{out}"
+    );
+    assert!(
+        out.contains("outside: configured allow | effective deny"),
+        "permissions output:\n{out}"
+    );
+    assert!(
+        out.contains("shell: configured allow | effective deny"),
+        "permissions output:\n{out}"
+    );
+    assert!(
+        out.contains("CLI resolution: not available yet"),
+        "permissions output:\n{out}"
+    );
+    assert!(out.contains("append-only redacted hash chain"));
+    assert!(!out.contains(&base_url));
+    assert!(!out.contains("permissions-secret-canary"));
+    assert!(requests.is_empty(), "permission query called the provider");
+    assert!(
+        !home.join("state/runs.db").exists(),
+        "permission query created the run database"
+    );
+    assert!(
+        !home.join("state/audit.jsonl").exists(),
+        "permission query created the audit log"
+    );
+    let _ = std::fs::remove_dir_all(root);
+}
+
+#[test]
 fn model_command_projects_safe_configured_and_named_choices() {
     let home = temp_home("model-catalog");
     std::fs::create_dir_all(&home).expect("create isolated home");

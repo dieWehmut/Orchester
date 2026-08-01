@@ -4,19 +4,21 @@ use std::path::PathBuf;
 use orchester_laufzeit::harness::config::{ConfigError, ConfigLoader, UserConfig};
 use orchester_laufzeit::harness::credentials::KeyringCredentialStore;
 use orchester_laufzeit::harness::service::{
-    build_self_agent_runtime, load_self_agent_status, ProductionSelfAgentRuntime,
-    SelfAgentModelCatalog, SelfAgentModelCatalogError, SelfAgentModelChoice, SelfAgentModelSession,
-    SelfAgentRunOutcome, SelfAgentRuntimeBuildError, SelfAgentRuntimeError, SelfAgentStatus,
-    SelfAgentStatusError,
+    build_self_agent_runtime, load_self_agent_permissions, load_self_agent_status,
+    ProductionSelfAgentRuntime, SelfAgentModelCatalog, SelfAgentModelCatalogError,
+    SelfAgentModelChoice, SelfAgentModelSession, SelfAgentPermissionSnapshot, SelfAgentRunOutcome,
+    SelfAgentRuntimeBuildError, SelfAgentRuntimeError, SelfAgentStatus, SelfAgentStatusError,
 };
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
 
 mod models;
+mod permissions;
 mod render;
 mod status;
 
 pub use models::{render_model_selection, render_models};
+pub use permissions::render_permissions;
 pub use render::render_outcome;
 pub use status::render_status;
 
@@ -112,6 +114,11 @@ impl SelfAgentHost {
             "local-user",
         )
         .map_err(Into::into)
+    }
+
+    pub fn permissions(&self) -> Result<SelfAgentPermissionSnapshot, SelfAgentHostError> {
+        let config = self.selected_config()?;
+        Ok(load_self_agent_permissions(&config))
     }
 
     fn ensure_runtime(&mut self) -> Result<(), SelfAgentHostError> {
