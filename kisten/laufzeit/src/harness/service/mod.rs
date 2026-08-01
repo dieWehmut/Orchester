@@ -104,10 +104,25 @@ where
         identity: WorkspaceIdentity,
         clock: C,
     ) -> Self {
+        Self::from_identity_with_policy(loop_engine, store, identity, PolicyEngine::new(), clock)
+    }
+
+    fn from_identity_with_policy(
+        loop_engine: SelfAgentLoop<M>,
+        store: S,
+        identity: WorkspaceIdentity,
+        policy: PolicyEngine,
+        clock: C,
+    ) -> Self {
         let config_snapshot_hash = loop_engine.config_snapshot_hash();
         let max_steps = u64::from(loop_engine.max_steps());
         Self {
-            coordinator: DurableCoordinator::with_clock(loop_engine, store, clock),
+            coordinator: DurableCoordinator::with_policy_and_clock(
+                loop_engine,
+                store,
+                policy,
+                clock,
+            ),
             identity,
             config_snapshot_hash,
             max_steps,
@@ -135,7 +150,7 @@ where
             prompt.into(),
             self.config_snapshot_hash.clone(),
             self.max_steps,
-            PolicyEngine::snapshot_hash(),
+            self.coordinator.policy_snapshot_hash(),
         )?;
         let outcome = self.coordinator.start_new_run(input, cancel).await?;
         Ok(SelfAgentTurn::from_coordinator(run_id, outcome))

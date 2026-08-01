@@ -5,13 +5,16 @@ use std::sync::{Arc, Mutex};
 use async_trait::async_trait;
 use orchester_laufzeit::harness::config::ConfigLoader;
 use orchester_laufzeit::harness::credentials::{CredentialStore, InMemoryCredentialStore};
+use orchester_laufzeit::harness::governance::{PolicyConstraints, PolicyEngine};
 use orchester_laufzeit::harness::provider::{
     HttpRequest, HttpResponse, HttpTransport, HttpTransportError,
 };
+use orchester_laufzeit::harness::run_store::RunStore;
 use orchester_laufzeit::harness::service::{
     build_self_agent_runtime_with_transport, build_self_agent_service,
-    build_self_agent_service_with_transport, SelfAgentBuildError, SelfAgentOutcome,
+    build_self_agent_service_with_transport, SelfAgentBuildError, SelfAgentOutcome, SelfAgentTurn,
 };
+use orchester_protokoll::PolicyDecision;
 use secrecy::SecretString;
 use serde_json::json;
 use tokio_util::sync::CancellationToken;
@@ -224,6 +227,64 @@ async fn builds_and_runs_a_configured_durable_service_offline() {
     let rendered = format!("{service:?} {error:?} {error}");
     assert!(!rendered.contains(PROVIDER_SECRET));
     assert!(!rendered.contains(WORKSPACE_SECRET));
+    drop(service);
+    cleanup(&state_db);
+}
+
+#[tokio::test]
+async fn production_builder_binds_effective_network_denial_to_the_durable_run() {
+    let (workspace, state_db) = temp_paths("configured-policy");
+    let mut config = configured_user();
+    config.governance.tool_network = PolicyDecision::Deny;
+    let transport = CaptureTransport::with_response(json!({
+        "status": "completed",
+        "output": [{
+            "type": "function_call",
+            "call_id": "provider-call-network-denied",
+            "name": "run_command",
+            "arguments": "{\"program\":\"curl\",\"args\":[\"https://example.test\"],\"cwd\":null}",
+            "status": "completed"
+        }]
+    }));
+    let service = build_self_agent_service_with_transport(
+        &config,
+        &credentials(),
+        transport,
+        &workspace,
+        &state_db,
+        "local-user",
+    )
+    .expect("configured service");
+
+    let turn = service
+        .start("attempt network access", CancellationToken::new())
+        .await
+        .expect("turn");
+    let SelfAgentTurn::Action {
+        ref run_id,
+        ref policy,
+        ..
+    } = turn
+    else {
+        panic!("expected governed command action");
+    };
+    assert_eq!(policy.decision, PolicyDecision::Deny);
+    assert_eq!(policy.rule_id, "network.configured_deny");
+
+    let snapshot = service
+        .store()
+        .load_run_owned(run_id, "local-user")
+        .expect("run snapshot");
+    let configured_policy = PolicyEngine::with_constraints(PolicyConstraints {
+        network: PolicyDecision::Deny,
+        out_of_workspace: config.governance.out_of_workspace,
+        shell_interpreters: config.governance.shell_interpreters,
+    });
+    assert_eq!(
+        snapshot.policy_snapshot_hash,
+        configured_policy.snapshot_hash_value()
+    );
+    assert_ne!(snapshot.policy_snapshot_hash, PolicyEngine::snapshot_hash());
     drop(service);
     cleanup(&state_db);
 }

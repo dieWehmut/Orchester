@@ -39,6 +39,23 @@ impl SqliteRunStore {
         action_id: &ActionId,
         occurred_at: impl Into<String>,
     ) -> Result<(HarnessEvent, PolicyResult), StoreError> {
+        self.decide_policy_with_engine(
+            owner_actor_id,
+            run_id,
+            action_id,
+            occurred_at,
+            &PolicyEngine::new(),
+        )
+    }
+
+    pub fn decide_policy_with_engine(
+        &self,
+        owner_actor_id: &str,
+        run_id: &RunId,
+        action_id: &ActionId,
+        occurred_at: impl Into<String>,
+        policy: &PolicyEngine,
+    ) -> Result<(HarnessEvent, PolicyResult), StoreError> {
         let mut connection = self.connection()?;
         let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
         let result = decide_in_transaction(
@@ -48,6 +65,7 @@ impl SqliteRunStore {
             run_id,
             action_id,
             occurred_at.into(),
+            policy,
         )?;
         transaction.commit()?;
         Ok(result)
@@ -61,6 +79,7 @@ fn decide_in_transaction(
     run_id: &RunId,
     action_id: &ActionId,
     occurred_at: String,
+    policy: &PolicyEngine,
 ) -> Result<(HarnessEvent, PolicyResult), StoreError> {
     let snapshot = database::load_snapshot(transaction, run_id, Some(owner_actor_id))?;
     if snapshot.status != RunStatus::Running {
@@ -68,7 +87,7 @@ fn decide_in_transaction(
             "policy decision requires a running run".into(),
         ));
     }
-    if snapshot.policy_snapshot_hash != PolicyEngine::snapshot_hash() {
+    if snapshot.policy_snapshot_hash != policy.snapshot_hash_value() {
         return Err(StoreError::Invariant(
             "run policy snapshot does not match the active policy".into(),
         ));
@@ -161,7 +180,7 @@ fn decide_in_transaction(
     {
         return Err(StoreError::Corrupt);
     }
-    let result = PolicyEngine::new()
+    let result = policy
         .evaluate(&action)
         .map_err(|_| StoreError::Invariant("action policy classification failed".into()))?;
     if stored_effect != result.effect.as_db() {

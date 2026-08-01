@@ -14,6 +14,7 @@ use crate::harness::credentials::CredentialStore;
 use crate::harness::execution::{GovernedExecution, GovernedExecutionError};
 use crate::harness::executor::{ToolExecutor, ToolExecutorError};
 use crate::harness::files::FileToolLimits;
+use crate::harness::governance::{PolicyConstraints, PolicyEngine};
 use crate::harness::provider::responses::{
     build_responses_model, build_responses_model_with_transport, ConfiguredResponsesModel,
     ResponsesModelBuildError,
@@ -180,10 +181,16 @@ where
         state_database,
         secrets.values,
     )?);
-    Ok(SelfAgentService::from_identity(
+    let policy = PolicyEngine::with_constraints(PolicyConstraints {
+        network: config.governance.tool_network,
+        out_of_workspace: config.governance.out_of_workspace,
+        shell_interpreters: config.governance.shell_interpreters,
+    });
+    Ok(SelfAgentService::from_identity_with_policy(
         loop_engine,
         store,
         identity,
+        policy,
         SystemCoordinatorClock,
     ))
 }

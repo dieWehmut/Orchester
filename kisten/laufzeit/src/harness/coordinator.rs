@@ -243,6 +243,7 @@ pub trait CoordinatorStore: Send + Sync {
         run_id: &RunId,
         action_id: &ActionId,
         occurred_at: String,
+        policy: &PolicyEngine,
     ) -> Result<PolicyResult, StoreError>;
 }
 
@@ -321,9 +322,10 @@ where
         run_id: &RunId,
         action_id: &ActionId,
         occurred_at: String,
+        policy: &PolicyEngine,
     ) -> Result<PolicyResult, StoreError> {
         self.as_ref()
-            .decide_policy(owner_actor_id, run_id, action_id, occurred_at)
+            .decide_policy(owner_actor_id, run_id, action_id, occurred_at, policy)
     }
 }
 
@@ -411,9 +413,17 @@ impl CoordinatorStore for SqliteRunStore {
         run_id: &RunId,
         action_id: &ActionId,
         occurred_at: String,
+        policy: &PolicyEngine,
     ) -> Result<PolicyResult, StoreError> {
-        SqliteRunStore::decide_policy(self, owner_actor_id, run_id, action_id, occurred_at)
-            .map(|(_, result)| result)
+        SqliteRunStore::decide_policy_with_engine(
+            self,
+            owner_actor_id,
+            run_id,
+            action_id,
+            occurred_at,
+            policy,
+        )
+        .map(|(_, result)| result)
     }
 }
 
@@ -422,6 +432,7 @@ impl CoordinatorStore for SqliteRunStore {
 pub struct DurableCoordinator<M, S, C = SystemCoordinatorClock> {
     loop_engine: SelfAgentLoop<M>,
     store: S,
+    policy: PolicyEngine,
     clock: C,
 }
 
@@ -456,9 +467,19 @@ where
     C: CoordinatorClock,
 {
     pub fn with_clock(loop_engine: SelfAgentLoop<M>, store: S, clock: C) -> Self {
+        Self::with_policy_and_clock(loop_engine, store, PolicyEngine::new(), clock)
+    }
+
+    pub fn with_policy_and_clock(
+        loop_engine: SelfAgentLoop<M>,
+        store: S,
+        policy: PolicyEngine,
+        clock: C,
+    ) -> Self {
         Self {
             loop_engine,
             store,
+            policy,
             clock,
         }
     }
@@ -469,6 +490,10 @@ where
 
     pub fn store(&self) -> &S {
         &self.store
+    }
+
+    pub fn policy_snapshot_hash(&self) -> String {
+        self.policy.snapshot_hash_value()
     }
 
     pub async fn start_new_run(
@@ -637,7 +662,8 @@ where
                 })
             }
             PreparedOutcome::Pending(pending) => {
-                let effect_class = PolicyEngine::new()
+                let effect_class = self
+                    .policy
                     .evaluate(pending.action())
                     .map_err(|_| CoordinatorError::Policy)?
                     .effect_class();
@@ -665,6 +691,7 @@ where
                     &input.run_id,
                     &input.action_id,
                     self.durable_timestamp()?,
+                    &self.policy,
                 )?;
                 Ok(CoordinatorOutcome::Action {
                     action_id: input.action_id,
@@ -689,7 +716,7 @@ where
             || state.run.steps_used > state.run.max_steps
             || state.run.max_steps != u64::from(self.loop_engine.max_steps())
             || state.run.config_snapshot_hash != self.loop_engine.config_snapshot_hash()
-            || state.run.policy_snapshot_hash != PolicyEngine::snapshot_hash()
+            || state.run.policy_snapshot_hash != self.policy.snapshot_hash_value()
             || self.store.secret_set_id() != self.loop_engine.secret_set_id()
             || state.transcript.is_empty()
         {
@@ -732,7 +759,7 @@ where
     fn validate_dependencies(&self, input: &CoordinatorInput) -> Result<(), CoordinatorError> {
         if input.run.max_steps != u64::from(self.loop_engine.max_steps())
             || input.run.config_snapshot_hash != self.loop_engine.config_snapshot_hash()
-            || input.run.policy_snapshot_hash != PolicyEngine::snapshot_hash()
+            || input.run.policy_snapshot_hash != self.policy.snapshot_hash_value()
             || self.store.secret_set_id() != self.loop_engine.secret_set_id()
         {
             return Err(CoordinatorError::DependencyMismatch);

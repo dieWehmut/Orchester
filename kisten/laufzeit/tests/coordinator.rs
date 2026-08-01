@@ -220,9 +220,10 @@ impl CoordinatorStore for RecordingStore {
         _run_id: &RunId,
         _action_id: &ActionId,
         _occurred_at: String,
+        policy: &PolicyEngine,
     ) -> Result<PolicyResult, StoreError> {
         self.calls.lock().unwrap().push("policy.decided");
-        PolicyEngine::new()
+        policy
             .evaluate(&AgentAction::ReadFile {
                 path: "src/lib.rs".into(),
                 start_line: None,
