@@ -4,6 +4,7 @@ mod builder;
 mod identity;
 mod model_catalog;
 mod permissions;
+mod resume_catalog;
 mod runtime;
 mod status;
 mod turn;
@@ -36,6 +37,11 @@ pub use model_catalog::{
 pub use permissions::{
     load_self_agent_permissions, SelfAgentApprovalStatus, SelfAgentAuditStatus,
     SelfAgentPermissionGovernance, SelfAgentPermissionRule, SelfAgentPermissionSnapshot,
+};
+pub use resume_catalog::{
+    load_self_agent_resume_catalog, SelfAgentResumeAvailability, SelfAgentResumeCatalog,
+    SelfAgentResumeCatalogError, SelfAgentResumeEntry, SelfAgentResumeStage,
+    SelfAgentResumeStep,
 };
 pub use runtime::{
     SelfAgentOutcome, SelfAgentRunOutcome, SelfAgentRuntime, SelfAgentRuntimeError,

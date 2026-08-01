@@ -107,6 +107,53 @@ impl fmt::Debug for ResumePoint {
 }
 
 impl SqliteRunStore {
+    /// Load resumable points in durable newest-first order for picker/catalog
+    /// consumers.  The older projection remains ascending for compatibility
+    /// with status summaries and existing callers.
+    pub(crate) fn resume_points_owned_newest_first(
+        &self,
+        owner_actor_id: &str,
+        project_id: &str,
+        limit: usize,
+    ) -> Result<Vec<ResumePoint>, StoreError> {
+        ensure_owner(owner_actor_id, &self.event_sanitizer)?;
+        ensure_project(project_id, &self.event_sanitizer)?;
+        if limit == 0 || limit > 1024 {
+            return Err(StoreError::Invariant(
+                "resume catalog limit is outside the supported range".into(),
+            ));
+        }
+        let connection = self.connection()?;
+        let codec = self.codec();
+        let mut statement = connection.prepare(
+            "SELECT run_id FROM runs
+             WHERE owner_actor_id = ?1 AND project_id = ?2
+               AND status IN ('created', 'running', 'awaiting_approval',
+                              'validating', 'interrupted_unknown_outcome')
+             ORDER BY updated_at DESC, run_id DESC
+             LIMIT ?3",
+        )?;
+        let run_ids = statement
+            .query_map(params![owner_actor_id, project_id, limit as i64], |row| {
+                row.get::<_, String>(0)
+            })?
+            .collect::<Result<Vec<_>, _>>()?;
+        let mut points = Vec::new();
+        for run_id in run_ids {
+            let run_id = RunId::from(run_id);
+            if let Some(point) = resume_point_from_connection(
+                &connection,
+                &run_id,
+                owner_actor_id,
+                project_id,
+                &codec,
+            )? {
+                points.push(point);
+            }
+        }
+        Ok(points)
+    }
+
     pub fn resume_points_owned(
         &self,
         owner_actor_id: &str,
