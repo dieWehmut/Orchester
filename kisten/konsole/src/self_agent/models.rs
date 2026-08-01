@@ -32,6 +32,25 @@ pub fn render_models(out: &mut impl Write, catalog: &SelfAgentModelCatalog) -> i
     writeln!(out)
 }
 
+pub fn render_model_selection(
+    out: &mut impl Write,
+    choice: &SelfAgentModelChoice,
+) -> io::Result<()> {
+    let selection = choice.profile.as_deref().unwrap_or("configured");
+    writeln!(out)?;
+    writeln!(
+        out,
+        "{BOLD}Model selected{RESET}: {}",
+        safe_metadata(selection)
+    )?;
+    render_choice(out, choice, "  ")?;
+    writeln!(
+        out,
+        "{DIM}Applies to future turns in this session; configuration was not changed.{RESET}"
+    )?;
+    writeln!(out)
+}
+
 fn render_choice(
     out: &mut impl Write,
     choice: &SelfAgentModelChoice,
@@ -90,6 +109,21 @@ mod tests {
         assert!(rendered.contains("review\\nprofile"));
         assert!(!rendered.contains("gpt-default\x1b[31m"));
         assert!(!rendered.contains("review\nprofile"));
+    }
+
+    #[test]
+    fn selection_rendering_identifies_session_scope() {
+        let selected = choice(Some("fast"), "gpt-fast");
+        let mut output = Vec::new();
+
+        render_model_selection(&mut output, &selected).expect("render selected model");
+        let rendered = String::from_utf8(output).expect("UTF-8");
+
+        assert!(rendered.contains("Model selected"));
+        assert!(rendered.contains("fast"));
+        assert!(rendered.contains("gpt-fast"));
+        assert!(rendered.contains("future turns in this session"));
+        assert!(rendered.contains("configuration was not changed"));
     }
 
     fn choice(profile: Option<&str>, model: &str) -> SelfAgentModelChoice {

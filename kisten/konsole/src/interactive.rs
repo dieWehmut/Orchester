@@ -7,13 +7,6 @@ mod commands;
 mod screen;
 
 use crate::avatar;
-use crossterm::event::{
-    self, Event as TerminalEvent, KeyCode, KeyEvent, KeyEventKind, KeyModifiers,
-};
-use crossterm::terminal;
-use orchester_protokoll::{Capability, TaskKind};
-use orchester_vertrag::{AdapterAvailability, AvailabilityStatus};
-use orchester_verzeichnis::Registry;
 pub use commands::{
     HomeAction, ModelCommand, PluginAction, PromptAction, WorkspaceCommand, parse_home_action,
     parse_prompt_action,
@@ -21,6 +14,13 @@ pub use commands::{
 use commands::{
     command_action, matching_commands, matching_delegate_commands, parse_home_action_selected,
 };
+use crossterm::event::{
+    self, Event as TerminalEvent, KeyCode, KeyEvent, KeyEventKind, KeyModifiers,
+};
+use crossterm::terminal;
+use orchester_protokoll::{Capability, TaskKind};
+use orchester_vertrag::{AdapterAvailability, AvailabilityStatus};
+use orchester_verzeichnis::Registry;
 use screen::{FramePresenter, TerminalSession};
 use unicode_width::{UnicodeWidthChar, UnicodeWidthStr};
 
@@ -72,7 +72,18 @@ struct PickerView<'a> {
     message: &'a str,
 }
 
-pub fn run_home_tui(choices: &[AgentChoice]) -> io::Result<HomeAction> {
+#[derive(Clone, Copy)]
+struct ChatHomeView<'a> {
+    width: usize,
+    height: usize,
+    input: &'a str,
+    choices: &'a [AgentChoice],
+    command_selected: usize,
+    show_help: bool,
+    model_status: &'a str,
+}
+
+pub fn run_home_tui(choices: &[AgentChoice], model_status: &str) -> io::Result<HomeAction> {
     let _session = TerminalSession::enter()?;
     let mut out = io::stdout();
     let mut presenter = FramePresenter::default();
@@ -85,12 +96,15 @@ pub fn run_home_tui(choices: &[AgentChoice]) -> io::Result<HomeAction> {
         present_chat_home_in_viewport(
             &mut presenter,
             &mut out,
-            viewport_content_width(cols),
-            (rows as usize).max(1),
-            &input,
-            choices,
-            command_selected,
-            show_help,
+            ChatHomeView {
+                width: viewport_content_width(cols),
+                height: (rows as usize).max(1),
+                input: &input,
+                choices,
+                command_selected,
+                show_help,
+                model_status,
+            },
         )?;
 
         let TerminalEvent::Key(key) = event::read()? else {
@@ -768,69 +782,43 @@ fn render_chat_home<W: Write>(
 ) -> io::Result<()> {
     render_chat_home_in_viewport(
         out,
-        width,
-        usize::MAX,
-        input,
-        choices,
-        command_selected,
-        show_help,
+        ChatHomeView {
+            width,
+            height: usize::MAX,
+            input,
+            choices,
+            command_selected,
+            show_help,
+            model_status: "model not configured",
+        },
     )
 }
 
 #[cfg(test)]
-fn render_chat_home_in_viewport<W: Write>(
-    out: &mut W,
-    width: usize,
-    height: usize,
-    input: &str,
-    choices: &[AgentChoice],
-    command_selected: usize,
-    show_help: bool,
-) -> io::Result<()> {
-    render_chat_home_frame(
-        out,
-        width,
-        height,
-        input,
-        choices,
-        command_selected,
-        show_help,
-    )
+fn render_chat_home_in_viewport<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::Result<()> {
+    render_chat_home_frame(out, view)
 }
 
-#[allow(clippy::too_many_arguments)]
 fn present_chat_home_in_viewport<W: Write>(
     presenter: &mut FramePresenter,
     out: &mut W,
-    width: usize,
-    height: usize,
-    input: &str,
-    choices: &[AgentChoice],
-    command_selected: usize,
-    show_help: bool,
+    view: ChatHomeView<'_>,
 ) -> io::Result<()> {
     let mut frame = Vec::new();
-    render_chat_home_frame(
-        &mut frame,
+    render_chat_home_frame(&mut frame, view)?;
+    presenter.present(out, &frame)
+}
+
+fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::Result<()> {
+    let ChatHomeView {
         width,
         height,
         input,
         choices,
         command_selected,
         show_help,
-    )?;
-    presenter.present(out, &frame)
-}
-
-fn render_chat_home_frame<W: Write>(
-    out: &mut W,
-    width: usize,
-    height: usize,
-    input: &str,
-    choices: &[AgentChoice],
-    command_selected: usize,
-    show_help: bool,
-) -> io::Result<()> {
+        model_status,
+    } = view;
     if height == 0 {
         return Ok(());
     }
@@ -859,7 +847,7 @@ fn render_chat_home_frame<W: Write>(
     };
 
     if full_panel {
-        render_chat_panel(out, width)?;
+        render_chat_panel(out, width, model_status)?;
     } else {
         render_compact_home_header(out, width, header_rows)?;
     }
@@ -914,7 +902,7 @@ fn render_chat_home_frame<W: Write>(
         writeln!(out, "{DIM}{hint}{RESET}")?;
     }
     if status_rows > 0 {
-        render_status_line(out, width)?;
+        render_status_line(out, width, model_status)?;
     }
     Ok(())
 }
@@ -1012,11 +1000,11 @@ fn render_line_home<W: Write>(
     writeln!(out)
 }
 
-pub fn render_line_startup_home<W: Write>(out: &mut W) -> io::Result<()> {
+pub fn render_line_startup_home<W: Write>(out: &mut W, model_status: &str) -> io::Result<()> {
     let (cols, _) = terminal::size().unwrap_or((100, 30));
     let width = (cols as usize).clamp(50, 132);
 
-    render_chat_panel(out, width)?;
+    render_chat_panel(out, width, model_status)?;
     writeln!(out)?;
     writeln!(
         out,
@@ -1030,8 +1018,13 @@ pub fn render_line_startup_home<W: Write>(out: &mut W) -> io::Result<()> {
     out.flush()
 }
 
-fn render_chat_panel<W: Write>(out: &mut W, width: usize) -> io::Result<()> {
-    let rows = startup_panel_rows();
+pub fn render_line_continue_prompt<W: Write>(out: &mut W) -> io::Result<()> {
+    write!(out, "{CYAN}orchester>{RESET} ")?;
+    out.flush()
+}
+
+fn render_chat_panel<W: Write>(out: &mut W, width: usize, model_status: &str) -> io::Result<()> {
+    let rows = startup_panel_rows(model_status);
     if width >= 60 {
         render_portrait_info_box(out, width, &rows)
     } else {
@@ -1039,7 +1032,7 @@ fn render_chat_panel<W: Write>(out: &mut W, width: usize) -> io::Result<()> {
     }
 }
 
-fn startup_panel_rows() -> Vec<String> {
+fn startup_panel_rows(model_status: &str) -> Vec<String> {
     let cwd = current_directory_text();
     vec![
         format!(">_ Orchester (v{})", env!("CARGO_PKG_VERSION")),
@@ -1050,7 +1043,7 @@ fn startup_panel_rows() -> Vec<String> {
         String::new(),
         "Workspace".to_string(),
         format!("directory: {cwd}"),
-        "model: not configured".to_string(),
+        format!("model: {}", sanitize_terminal_text(model_status)),
         "safety: governed".to_string(),
         String::new(),
         "Delegate agents".to_string(),
@@ -1065,7 +1058,7 @@ fn startup_panel_rows() -> Vec<String> {
 }
 
 fn chat_panel_line_count(width: usize) -> usize {
-    let info_rows = startup_panel_rows().len();
+    let info_rows = startup_panel_rows("model not configured").len();
     if width >= 60 {
         let (_, portrait_height) = portrait_size(width);
         portrait_height.max(info_rows).saturating_add(2)
@@ -1158,10 +1151,11 @@ fn vertical_center_offset(container: usize, content: usize) -> usize {
     container.saturating_sub(content) / 2
 }
 
-fn render_status_line<W: Write>(out: &mut W, width: usize) -> io::Result<()> {
+fn render_status_line<W: Write>(out: &mut W, width: usize, model_status: &str) -> io::Result<()> {
     let status = format!(
-        "{}  |  model not configured  |  governed workspace",
-        current_directory_text()
+        "{}  |  {}  |  governed workspace",
+        current_directory_text(),
+        sanitize_terminal_text(model_status)
     );
     write!(out, "{DIM}{}{RESET}", truncate(&status, width))
 }
@@ -1482,7 +1476,20 @@ mod tests {
             parse_prompt_action("/model", &choices),
             PromptAction::Workspace(WorkspaceCommand::Model(ModelCommand::Show))
         );
-        assert_eq!(parse_home_action("/model fast", &choices), HomeAction::Help);
+        assert_eq!(
+            parse_home_action("/model fast", &choices),
+            HomeAction::Workspace(WorkspaceCommand::Model(ModelCommand::SelectProfile(
+                "fast".into()
+            )))
+        );
+        assert_eq!(
+            parse_prompt_action("/model --configured", &choices),
+            PromptAction::Workspace(WorkspaceCommand::Model(ModelCommand::UseConfigured))
+        );
+        assert_eq!(
+            parse_home_action("/model fast extra", &choices),
+            HomeAction::Help
+        );
     }
 
     #[test]
@@ -1883,12 +1890,15 @@ mod tests {
         present_chat_home_in_viewport(
             &mut presenter,
             &mut out,
-            80,
-            usize::MAX,
-            "/",
-            &[],
-            0,
-            false,
+            ChatHomeView {
+                width: 80,
+                height: usize::MAX,
+                input: "/",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "model not configured",
+            },
         )
         .unwrap();
 
@@ -1915,12 +1925,15 @@ mod tests {
         present_chat_home_in_viewport(
             &mut presenter,
             &mut one_row,
-            80,
-            1,
-            "/",
-            &[],
-            0,
-            false,
+            ChatHomeView {
+                width: 80,
+                height: 1,
+                input: "/",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "model not configured",
+            },
         )
         .unwrap();
         assert!(
@@ -2025,7 +2038,19 @@ mod tests {
     #[test]
     fn empty_eighty_by_twenty_four_home_keeps_logo_prompt_and_status() {
         let mut out = Vec::new();
-        render_chat_home_in_viewport(&mut out, 80, 24, "", &[], 0, false).unwrap();
+        render_chat_home_in_viewport(
+            &mut out,
+            ChatHomeView {
+                width: 80,
+                height: 24,
+                input: "",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "model not configured",
+            },
+        )
+        .unwrap();
 
         let rendered = String::from_utf8(out).unwrap();
         let plain = strip_ansi(&rendered);
@@ -2091,7 +2116,16 @@ mod tests {
             for height in [12, 24, 30] {
                 let mut out = Vec::new();
                 render_chat_home_in_viewport(
-                    &mut out, 100, height, input, &choices, selected, show_help,
+                    &mut out,
+                    ChatHomeView {
+                        width: 100,
+                        height,
+                        input,
+                        choices: &choices,
+                        command_selected: selected,
+                        show_help,
+                        model_status: "model not configured",
+                    },
                 )
                 .unwrap();
                 let raw = String::from_utf8(out).unwrap();
@@ -2140,7 +2174,19 @@ mod tests {
         }
 
         let mut empty = Vec::new();
-        render_chat_home_in_viewport(&mut empty, 100, 30, "", &[], 0, false).unwrap();
+        render_chat_home_in_viewport(
+            &mut empty,
+            ChatHomeView {
+                width: 100,
+                height: 30,
+                input: "",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "model not configured",
+            },
+        )
+        .unwrap();
         let empty = strip_ansi(&String::from_utf8(empty).unwrap());
         assert!(empty.lines().count() <= 30);
         assert_eq!(

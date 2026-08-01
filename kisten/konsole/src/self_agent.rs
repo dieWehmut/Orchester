@@ -1,12 +1,13 @@
 use std::fmt;
 use std::path::PathBuf;
 
-use orchester_laufzeit::harness::config::{ConfigError, ConfigLoader};
+use orchester_laufzeit::harness::config::{ConfigError, ConfigLoader, UserConfig};
 use orchester_laufzeit::harness::credentials::KeyringCredentialStore;
 use orchester_laufzeit::harness::service::{
     build_self_agent_runtime, load_self_agent_status, ProductionSelfAgentRuntime,
-    SelfAgentModelCatalog, SelfAgentModelCatalogError, SelfAgentModelSession, SelfAgentRunOutcome,
-    SelfAgentRuntimeBuildError, SelfAgentRuntimeError, SelfAgentStatus, SelfAgentStatusError,
+    SelfAgentModelCatalog, SelfAgentModelCatalogError, SelfAgentModelChoice, SelfAgentModelSession,
+    SelfAgentRunOutcome, SelfAgentRuntimeBuildError, SelfAgentRuntimeError, SelfAgentStatus,
+    SelfAgentStatusError,
 };
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
@@ -15,7 +16,7 @@ mod models;
 mod render;
 mod status;
 
-pub use models::render_models;
+pub use models::{render_model_selection, render_models};
 pub use render::render_outcome;
 pub use status::render_status;
 
@@ -68,12 +69,40 @@ impl SelfAgentHost {
     }
 
     pub fn model_catalog(&self) -> Result<SelfAgentModelCatalog, SelfAgentHostError> {
-        let config = ConfigLoader::new()?.load_effective(&self.workspace)?;
+        let config = self.load_config()?;
         self.model_session.catalog(&config).map_err(Into::into)
     }
 
+    pub fn model_label(&self) -> Result<String, SelfAgentHostError> {
+        let catalog = self.model_catalog()?;
+        Ok(match catalog.configured {
+            Some(active) => match active.reasoning_effort {
+                Some(reasoning) => format!("{} {reasoning}", active.model),
+                None => active.model,
+            },
+            None => "model not configured".into(),
+        })
+    }
+
+    pub fn select_model_profile(
+        &mut self,
+        name: &str,
+    ) -> Result<SelfAgentModelChoice, SelfAgentHostError> {
+        let config = self.load_config()?;
+        let choice = self.model_session.select_profile(&config, name)?;
+        self.runtime = None;
+        Ok(choice)
+    }
+
+    pub fn select_configured_model(&mut self) -> Result<SelfAgentModelChoice, SelfAgentHostError> {
+        let config = self.load_config()?;
+        let choice = self.model_session.select_configured(&config)?;
+        self.runtime = None;
+        Ok(choice)
+    }
+
     pub fn status(&self) -> Result<SelfAgentStatus, SelfAgentHostError> {
-        let config = ConfigLoader::new()?.load_effective(&self.workspace)?;
+        let config = self.selected_config()?;
         let credentials = KeyringCredentialStore::new();
         load_self_agent_status(
             &config,
@@ -89,7 +118,7 @@ impl SelfAgentHost {
         if self.runtime.is_some() {
             return Ok(());
         }
-        let config = ConfigLoader::new()?.load_effective(&self.workspace)?;
+        let config = self.selected_config()?;
         let credentials = KeyringCredentialStore::new();
         self.runtime = Some(build_self_agent_runtime(
             &config,
@@ -101,6 +130,19 @@ impl SelfAgentHost {
         )?);
         Ok(())
     }
+
+    fn load_config(&self) -> Result<UserConfig, SelfAgentHostError> {
+        ConfigLoader::new()?
+            .load_effective(&self.workspace)
+            .map_err(Into::into)
+    }
+
+    fn selected_config(&self) -> Result<UserConfig, SelfAgentHostError> {
+        let config = self.load_config()?;
+        self.model_session
+            .effective_config(&config)
+            .map_err(Into::into)
+    }
 }
 
 impl fmt::Debug for SelfAgentHost {
@@ -110,6 +152,10 @@ impl fmt::Debug for SelfAgentHost {
             .field("workspace", &"[REDACTED]")
             .field("state_database", &"[REDACTED]")
             .field("audit_log", &"[REDACTED]")
+            .field(
+                "named_model_selected",
+                &self.model_session.selected_profile().is_some(),
+            )
             .field("initialized", &self.runtime.is_some())
             .finish()
     }

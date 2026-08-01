@@ -378,6 +378,195 @@ fn model_command_projects_safe_configured_and_named_choices() {
 }
 
 #[test]
+fn model_selection_applies_to_the_next_turn_without_editing_config() {
+    let root = temp_home("model-selection");
+    let home = root.join("home");
+    let workspace = root.join("workspace");
+    std::fs::create_dir_all(&workspace).expect("create workspace");
+    let server = LoopbackResponses::start(vec![serde_json::json!({
+        "status": "completed",
+        "output": [{
+            "type": "message",
+            "role": "assistant",
+            "content": [{"type": "output_text", "text": "selected model response"}]
+        }],
+        "usage": {"input_tokens": 2, "output_tokens": 3}
+    })]);
+    let config = format!(
+        r#"{{
+            "model_provider": "Loopback",
+            "model": "gpt-default",
+            "disable_response_storage": true,
+            "model_providers": {{
+                "Loopback": {{
+                    "base_url": "{}",
+                    "api_key": "model-selection-secret-canary",
+                    "wire_api": "responses",
+                    "requires_openai_auth": true
+                }}
+            }},
+            "model_profiles": {{
+                "fast": {{
+                    "model_provider": "Loopback",
+                    "model": "gpt-fast",
+                    "model_reasoning_effort": "low"
+                }}
+            }}
+        }}"#,
+        server.base_url()
+    );
+    let config_path = write_user_config(&home, &config);
+    let mut child = orchester()
+        .current_dir(&workspace)
+        .env("ORCHESTER_HOME", &home)
+        .env("HOME", &home)
+        .env("USERPROFILE", &home)
+        .env_remove("HTTP_PROXY")
+        .env_remove("HTTPS_PROXY")
+        .env_remove("ALL_PROXY")
+        .env_remove("http_proxy")
+        .env_remove("https_proxy")
+        .env_remove("all_proxy")
+        .env("NO_PROXY", "127.0.0.1,localhost")
+        .env("no_proxy", "127.0.0.1,localhost")
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("spawn interactive orchester");
+    child
+        .stdin
+        .as_mut()
+        .expect("stdin handle")
+        .write_all(b"/model fast\nuse the selected model\n")
+        .expect("write model selection and prompt");
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().expect("collect output");
+    let requests = server.finish();
+
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    assert!(out.contains("Model selected"), "selection output:\n{out}");
+    assert!(
+        out.contains("fast") && out.contains("gpt-fast"),
+        "selection output:\n{out}"
+    );
+    assert!(
+        out.contains("selected model response"),
+        "model output:\n{out}"
+    );
+    assert!(!out.contains("model-selection-secret-canary"));
+    assert_eq!(requests.len(), 1, "expected one selected-model request");
+    let request = String::from_utf8_lossy(&requests[0]);
+    assert!(
+        request.contains("\"model\":\"gpt-fast\""),
+        "request:\n{request}"
+    );
+    assert!(
+        request.contains("use the selected model"),
+        "request:\n{request}"
+    );
+    assert_eq!(
+        std::fs::read_to_string(config_path).expect("read unchanged config"),
+        config,
+        "session selection edited the user configuration"
+    );
+    let _ = std::fs::remove_dir_all(root);
+}
+
+#[test]
+fn configured_model_restores_the_file_default_before_the_next_turn() {
+    let root = temp_home("model-configured");
+    let home = root.join("home");
+    let workspace = root.join("workspace");
+    std::fs::create_dir_all(&workspace).expect("create workspace");
+    let server = LoopbackResponses::start(vec![serde_json::json!({
+        "status": "completed",
+        "output": [{
+            "type": "message",
+            "role": "assistant",
+            "content": [{"type": "output_text", "text": "configured model response"}]
+        }],
+        "usage": {"input_tokens": 2, "output_tokens": 3}
+    })]);
+    let config = format!(
+        r#"{{
+            "model_provider": "Loopback",
+            "model": "gpt-default",
+            "disable_response_storage": true,
+            "model_providers": {{
+                "Loopback": {{
+                    "base_url": "{}",
+                    "api_key": "model-configured-secret-canary",
+                    "wire_api": "responses",
+                    "requires_openai_auth": true
+                }}
+            }},
+            "model_profiles": {{
+                "fast": {{
+                    "model_provider": "Loopback",
+                    "model": "gpt-fast"
+                }}
+            }}
+        }}"#,
+        server.base_url()
+    );
+    let config_path = write_user_config(&home, &config);
+    let mut child = orchester()
+        .current_dir(&workspace)
+        .env("ORCHESTER_HOME", &home)
+        .env("HOME", &home)
+        .env("USERPROFILE", &home)
+        .env_remove("HTTP_PROXY")
+        .env_remove("HTTPS_PROXY")
+        .env_remove("ALL_PROXY")
+        .env_remove("http_proxy")
+        .env_remove("https_proxy")
+        .env_remove("all_proxy")
+        .env("NO_PROXY", "127.0.0.1,localhost")
+        .env("no_proxy", "127.0.0.1,localhost")
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("spawn interactive orchester");
+    child
+        .stdin
+        .as_mut()
+        .expect("stdin handle")
+        .write_all(b"/model fast\n/model configured\nuse the configured model\n")
+        .expect("write model selections and prompt");
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().expect("collect output");
+    let requests = server.finish();
+
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    assert_eq!(out.matches("Model selected").count(), 2, "output:\n{out}");
+    assert!(out.contains("Model selected") && out.contains("configured"));
+    assert!(out.contains("configured model response"), "output:\n{out}");
+    assert!(!out.contains("model-configured-secret-canary"));
+    assert_eq!(requests.len(), 1, "expected one configured-model request");
+    let request = String::from_utf8_lossy(&requests[0]);
+    assert!(
+        request.contains("\"model\":\"gpt-default\""),
+        "request:\n{request}"
+    );
+    assert!(
+        request.contains("use the configured model"),
+        "request:\n{request}"
+    );
+    assert_eq!(
+        std::fs::read_to_string(config_path).expect("read unchanged config"),
+        config,
+        "configured selection edited the user configuration"
+    );
+    let _ = std::fs::remove_dir_all(root);
+}
+
+#[test]
 fn home_prompt_runs_governed_tools_until_the_model_returns_text() {
     let root = temp_home("self-agent-loop");
     let home = root.join("home");

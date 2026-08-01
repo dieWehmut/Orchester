@@ -167,7 +167,10 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
     let mut self_agent = self_agent_host()?;
     loop {
         let choices = interactive::build_agent_choices(&registry);
-        match interactive::run_home_tui(&choices)? {
+        let model_status = self_agent
+            .model_label()
+            .unwrap_or_else(|_| "model unavailable".into());
+        match interactive::run_home_tui(&choices, &model_status)? {
             interactive::HomeAction::Quit => return Ok(ExitCode::SUCCESS),
             interactive::HomeAction::Help => {
                 let mut out = io::stdout().lock();
@@ -187,8 +190,16 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                 }
             }
             interactive::HomeAction::Workspace(command) => {
-                render_workspace_command(&self_agent, command)?;
-                return Ok(ExitCode::SUCCESS);
+                let keep_home = matches!(
+                    command,
+                    WorkspaceCommand::Model(
+                        ModelCommand::SelectProfile(_) | ModelCommand::UseConfigured
+                    )
+                );
+                render_workspace_command(&mut self_agent, command)?;
+                if !keep_home {
+                    return Ok(ExitCode::SUCCESS);
+                }
             }
             interactive::HomeAction::Empty => {}
             interactive::HomeAction::PickAgent => {
@@ -238,50 +249,57 @@ async fn run_line_interactive(registry: Registry) -> Result<ExitCode, CliError> 
 
     {
         let mut out = io::stdout().lock();
-        interactive::render_line_startup_home(&mut out)?;
+        let model_status = self_agent
+            .model_label()
+            .unwrap_or_else(|_| "model unavailable".into());
+        interactive::render_line_startup_home(&mut out, &model_status)?;
     }
 
-    let Some(first_line) = interactive::read_startup_line(&mut input)? else {
-        return Ok(ExitCode::from(2));
-    };
-    let initial_action = interactive::parse_home_action(&first_line, &choices);
-    let mut initial_agent = match initial_action {
-        interactive::HomeAction::PickAgent => {
-            let mut out = io::stdout().lock();
-            interactive::select_agent_line(&mut input, &mut out, &choices, None)?
+    let mut received_input = false;
+    let mut initial_agent = loop {
+        let Some(line) = interactive::read_startup_line(&mut input)? else {
+            return Ok(if received_input {
+                ExitCode::SUCCESS
+            } else {
+                ExitCode::from(2)
+            });
+        };
+        received_input = true;
+        match interactive::parse_home_action(&line, &choices) {
+            interactive::HomeAction::PickAgent => {
+                let mut out = io::stdout().lock();
+                break interactive::select_agent_line(&mut input, &mut out, &choices, None)?;
+            }
+            interactive::HomeAction::LaunchAgent(name) => {
+                break choices
+                    .iter()
+                    .find(|choice| choice.name == name && choice.is_available())
+                    .cloned();
+            }
+            interactive::HomeAction::Quit => return Ok(ExitCode::SUCCESS),
+            interactive::HomeAction::Help => {
+                let mut out = io::stdout().lock();
+                interactive::render_help(&mut out)?;
+                interactive::render_line_continue_prompt(&mut out)?;
+            }
+            interactive::HomeAction::Plugins(action) => {
+                let code =
+                    plugin::run(&registry, plugin_command(action), false, &orchester_home())?;
+                return Ok(code);
+            }
+            interactive::HomeAction::Workspace(command) => {
+                render_workspace_command(&mut self_agent, command)?;
+                let mut out = io::stdout().lock();
+                interactive::render_line_continue_prompt(&mut out)?;
+            }
+            interactive::HomeAction::Submit(prompt) => {
+                let outcome = self_agent.submit(prompt, CancellationToken::new()).await?;
+                let mut out = io::stdout().lock();
+                self_agent::render_outcome(&mut out, &outcome)?;
+                return Ok(ExitCode::SUCCESS);
+            }
+            interactive::HomeAction::Empty => return Ok(ExitCode::from(2)),
         }
-        interactive::HomeAction::LaunchAgent(name) => choices
-            .iter()
-            .find(|choice| choice.name == name && choice.is_available())
-            .cloned(),
-        interactive::HomeAction::Quit => return Ok(ExitCode::SUCCESS),
-        interactive::HomeAction::Help => {
-            let mut out = io::stdout().lock();
-            interactive::render_help(&mut out)?;
-            None
-        }
-        interactive::HomeAction::Plugins(action) => {
-            let code = plugin::run(
-                &registry,
-                plugin_command(action),
-                false,
-                &orchester_home(),
-            )?;
-            return Ok(code);
-        }
-        interactive::HomeAction::Workspace(command) => {
-            render_workspace_command(&self_agent, command)?;
-            return Ok(ExitCode::SUCCESS);
-        }
-        interactive::HomeAction::Submit(prompt) => {
-            let outcome = self_agent
-                .submit(prompt, CancellationToken::new())
-                .await?;
-            let mut out = io::stdout().lock();
-            self_agent::render_outcome(&mut out, &outcome)?;
-            return Ok(ExitCode::SUCCESS);
-        }
-        interactive::HomeAction::Empty => return Ok(ExitCode::from(2)),
     };
 
     let Some(mut agent) = initial_agent.take() else {
@@ -369,7 +387,7 @@ async fn run_line_interactive(registry: Registry) -> Result<ExitCode, CliError> 
                 interactive::render_agent_table(&mut out, &choices, Some(agent.name.as_str()))?;
             }
             PromptAction::Workspace(command) => {
-                render_workspace_command(&self_agent, command)?;
+                render_workspace_command(&mut self_agent, command)?;
             }
             PromptAction::Plugins(action) => {
                 let _ = plugin::run(
@@ -400,7 +418,7 @@ async fn run_adapter_prompt_shell(
     let mut input = stdin.lock();
     let mut conductor = Conductor::new(registry.clone());
     let mut sessions: HashMap<String, String> = HashMap::new();
-    let self_agent = self_agent_host()?;
+    let mut self_agent = self_agent_host()?;
 
     loop {
         let resume = agent
@@ -459,7 +477,7 @@ async fn run_adapter_prompt_shell(
                 interactive::render_agent_table(&mut out, &choices, Some(agent.name.as_str()))?;
             }
             PromptAction::Workspace(command) => {
-                render_workspace_command(&self_agent, command)?;
+                render_workspace_command(&mut self_agent, command)?;
             }
             PromptAction::Plugins(action) => {
                 let _ = plugin::run(
@@ -611,7 +629,7 @@ fn self_agent_host() -> Result<SelfAgentHost, io::Error> {
 }
 
 fn render_workspace_command(
-    self_agent: &SelfAgentHost,
+    self_agent: &mut SelfAgentHost,
     command: WorkspaceCommand,
 ) -> Result<(), CliError> {
     match command {
@@ -624,6 +642,16 @@ fn render_workspace_command(
             let models = self_agent.model_catalog()?;
             let mut out = io::stdout().lock();
             self_agent::render_models(&mut out, &models)?;
+        }
+        WorkspaceCommand::Model(ModelCommand::SelectProfile(name)) => {
+            let selected = self_agent.select_model_profile(&name)?;
+            let mut out = io::stdout().lock();
+            self_agent::render_model_selection(&mut out, &selected)?;
+        }
+        WorkspaceCommand::Model(ModelCommand::UseConfigured) => {
+            let selected = self_agent.select_configured_model()?;
+            let mut out = io::stdout().lock();
+            self_agent::render_model_selection(&mut out, &selected)?;
         }
     }
     Ok(())

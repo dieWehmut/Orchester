@@ -33,18 +33,20 @@ pub enum PluginAction {
     Remove(String),
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum WorkspaceCommand {
     Status,
     Model(ModelCommand),
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ModelCommand {
     Show,
+    SelectProfile(String),
+    UseConfigured,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 enum CommandAction {
     PickAgent,
     ListAgents,
@@ -163,11 +165,9 @@ pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> Pro
             };
         }
         "/model" => {
-            return if input.split_whitespace().count() == 1 {
-                PromptAction::Workspace(WorkspaceCommand::Model(ModelCommand::Show))
-            } else {
-                PromptAction::Help
-            };
+            return parse_model_command(input)
+                .map(|command| PromptAction::Workspace(WorkspaceCommand::Model(command)))
+                .unwrap_or(PromptAction::Help);
         }
         "/plugin" | "/plugins" => {
             return parse_plugin_action(input)
@@ -187,7 +187,7 @@ pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> Pro
     let Some(item) = item else {
         return PromptAction::Empty;
     };
-    match item.action {
+    match item.action.clone() {
         CommandAction::PickAgent => PromptAction::PickAgent,
         CommandAction::ListAgents => PromptAction::ListAgents,
         CommandAction::Workspace(command) => PromptAction::Workspace(command),
@@ -199,6 +199,20 @@ pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> Pro
             .clone()
             .map(PromptAction::LaunchAgent)
             .unwrap_or(PromptAction::Empty),
+    }
+}
+
+fn parse_model_command(input: &str) -> Option<ModelCommand> {
+    let mut parts = input.split_whitespace();
+    parts.next()?;
+    let selection = parts.next();
+    if parts.next().is_some() {
+        return None;
+    }
+    match selection {
+        None => Some(ModelCommand::Show),
+        Some("configured" | "--configured") => Some(ModelCommand::UseConfigured),
+        Some(name) => Some(ModelCommand::SelectProfile(name.to_owned())),
     }
 }
 
