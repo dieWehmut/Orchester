@@ -3,6 +3,7 @@
 mod builder;
 mod identity;
 mod model_catalog;
+mod permissions;
 mod runtime;
 mod status;
 mod turn;
@@ -31,6 +32,10 @@ pub use identity::{IdentityError, WorkspaceIdentitySnapshot};
 pub use model_catalog::{
     load_self_agent_model_catalog, select_self_agent_model_profile, SelfAgentModelCatalog,
     SelfAgentModelCatalogError, SelfAgentModelChoice, SelfAgentModelSession,
+};
+pub use permissions::{
+    load_self_agent_permissions, SelfAgentApprovalStatus, SelfAgentAuditStatus,
+    SelfAgentPermissionGovernance, SelfAgentPermissionRule, SelfAgentPermissionSnapshot,
 };
 pub use runtime::{
     SelfAgentOutcome, SelfAgentRunOutcome, SelfAgentRuntime, SelfAgentRuntimeError,
