@@ -1,6 +1,6 @@
 use std::io::{self, Write};
 
-use orchester_laufzeit::harness::service::SelfAgentStatus;
+use orchester_laufzeit::harness::service::{SelfAgentModelReport, SelfAgentStatus};
 
 use super::render::{policy_name, safe_terminal_text};
 
@@ -17,37 +17,46 @@ pub fn render_status(out: &mut impl Write, status: &SelfAgentStatus) -> io::Resu
         safe_terminal_text(&status.workspace.canonical_root)
     )?;
 
-    if let Some(model) = &status.model {
-        writeln!(out, "model: {}", safe_terminal_text(&model.model))?;
-        writeln!(
-            out,
-            "provider: {} ({})",
-            safe_terminal_text(&model.provider_name),
-            safe_terminal_text(&model.provider)
-        )?;
-        writeln!(
-            out,
-            "reasoning: {} | plan {}",
-            optional_value(model.reasoning_effort.as_deref()),
-            optional_value(model.plan_reasoning_effort.as_deref())
-        )?;
-        writeln!(
-            out,
-            "responses: {} | service tier {} | auth {}",
-            if model.store_responses {
-                "stored"
-            } else {
-                "not stored"
-            },
-            optional_value(model.service_tier.as_deref()),
-            if model.requires_auth {
-                "required"
-            } else {
-                "not required"
-            }
-        )?;
-    } else {
-        writeln!(out, "model: not configured")?;
+    match &status.model {
+        SelfAgentModelReport::Configured(model) => {
+            writeln!(out, "model: {}", safe_terminal_text(&model.model))?;
+            writeln!(
+                out,
+                "provider: {} ({})",
+                safe_terminal_text(&model.provider_name),
+                safe_terminal_text(&model.provider)
+            )?;
+            writeln!(
+                out,
+                "reasoning: {} | plan {}",
+                optional_value(model.reasoning_effort.as_deref()),
+                optional_value(model.plan_reasoning_effort.as_deref())
+            )?;
+            writeln!(
+                out,
+                "responses: {} | service tier {} | auth {}",
+                if model.store_responses {
+                    "stored"
+                } else {
+                    "not stored"
+                },
+                optional_value(model.service_tier.as_deref()),
+                if model.requires_auth {
+                    "required"
+                } else {
+                    "not required"
+                }
+            )?;
+        }
+        SelfAgentModelReport::Unresolved { path, message } => {
+            writeln!(
+                out,
+                "model: unresolved ({}: {})",
+                safe_terminal_text(path),
+                safe_terminal_text(message)
+            )?;
+        }
+        SelfAgentModelReport::NotConfigured => writeln!(out, "model: not configured")?,
     }
 
     writeln!(
@@ -113,7 +122,7 @@ mod tests {
                 canonical_root: "C:\\workspace\x1b[31m".into(),
                 owner_actor_id: "private-owner-id".into(),
             },
-            model: Some(SelfAgentModelStatus {
+            model: SelfAgentModelReport::Configured(SelfAgentModelStatus {
                 provider: "OpenAI".into(),
                 provider_name: "OpenAI API".into(),
                 model: "gpt-test".into(),
@@ -167,7 +176,7 @@ mod tests {
     #[test]
     fn rendering_reports_unconfigured_model_and_absent_database() {
         let mut status = status();
-        status.model = None;
+        status.model = SelfAgentModelReport::NotConfigured;
         status.durable = SelfAgentDurableStatus::default();
         let mut output = Vec::new();
 
@@ -177,5 +186,27 @@ mod tests {
         assert!(rendered.contains("model: not configured"));
         assert!(rendered.contains("state: not created"));
         assert!(rendered.contains("No provider request was made."));
+    }
+
+    #[test]
+    fn an_unresolved_model_names_the_offending_field_and_still_reports_the_workspace() {
+        let mut status = status();
+        status.model = SelfAgentModelReport::Unresolved {
+            path: "model_provider".into(),
+            message: "active model provider is not configured\x1b[31m".into(),
+        };
+        let mut output = Vec::new();
+
+        render_status(&mut output, &status).expect("render status");
+        let rendered = String::from_utf8(output).expect("UTF-8");
+
+        assert!(rendered.contains("model: unresolved (model_provider:"));
+        assert!(rendered.contains("active model provider is not configured"));
+        // A broken profile must never read as an absent one.
+        assert!(!rendered.contains("model: not configured"));
+        // The rest of the diagnostic is the reason this degrades at all.
+        assert!(rendered.contains("network ask | outside deny | shell deny"));
+        assert!(rendered.contains("max steps 80"));
+        assert!(!rendered.contains("\x1b[31m"));
     }
 }

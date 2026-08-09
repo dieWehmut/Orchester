@@ -8,13 +8,34 @@ use crate::harness::config::{ConfigError, UserConfig};
 use crate::harness::credentials::CredentialStore;
 use crate::harness::run_store::{ResumeNext, ResumePoint, SqliteRunStore, StoreError};
 
+const MAX_METADATA_CHARS: usize = 200;
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SelfAgentStatus {
     pub workspace: WorkspaceIdentitySnapshot,
-    pub model: Option<SelfAgentModelStatus>,
+    pub model: SelfAgentModelReport,
     pub governance: SelfAgentGovernanceStatus,
     pub limits: SelfAgentLimitStatus,
     pub durable: SelfAgentDurableStatus,
+}
+
+/// How the active model configuration presents to a read-only caller.
+///
+/// Status is a diagnostic, so a configuration that cannot be resolved is
+/// reported rather than raised: refusing to describe a workspace is exactly
+/// the wrong response when the operator is trying to find out why it is
+/// misconfigured. Distinguishing [`Self::Unresolved`] from
+/// [`Self::NotConfigured`] keeps a broken profile from masquerading as an
+/// absent one. Execution paths still resolve strictly and still fail.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum SelfAgentModelReport {
+    /// Neither a provider nor a model is configured.
+    NotConfigured,
+    /// Model fields are present but do not form a usable transport profile.
+    /// Both members are validation metadata and carry no configured value.
+    Unresolved { path: String, message: String },
+    /// A complete, validated profile.
+    Configured(SelfAgentModelStatus),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -76,7 +97,7 @@ pub fn load_self_agent_status<S: CredentialStore + ?Sized>(
 ) -> Result<SelfAgentStatus, SelfAgentStatusError> {
     let owner_actor_id = owner_actor_id.into();
     let workspace = WorkspaceIdentitySnapshot::for_workspace(workspace_root, &owner_actor_id)?;
-    let model = model_status(config)?;
+    let model = model_status(config);
     let governance = SelfAgentGovernanceStatus {
         approval_reviewer: config.governance.approval_reviewer.clone(),
         network: config.governance.tool_network,
@@ -106,12 +127,15 @@ pub fn load_self_agent_status<S: CredentialStore + ?Sized>(
     })
 }
 
-fn model_status(config: &UserConfig) -> Result<Option<SelfAgentModelStatus>, ConfigError> {
+fn model_status(config: &UserConfig) -> SelfAgentModelReport {
     if config.model_provider.is_none() && config.model.is_none() {
-        return Ok(None);
+        return SelfAgentModelReport::NotConfigured;
     }
-    let profile = config.resolve_model_profile()?;
-    Ok(Some(SelfAgentModelStatus {
+    let profile = match config.resolve_model_profile() {
+        Ok(profile) => profile,
+        Err(error) => return unresolved_model(error),
+    };
+    SelfAgentModelReport::Configured(SelfAgentModelStatus {
         provider: profile.provider,
         provider_name: profile.provider_name,
         model: profile.model,
@@ -120,7 +144,35 @@ fn model_status(config: &UserConfig) -> Result<Option<SelfAgentModelStatus>, Con
         store_responses: profile.store,
         service_tier: profile.service_tier,
         requires_auth: profile.requires_auth,
-    }))
+    })
+}
+
+/// Project a resolution failure into bounded display metadata.
+///
+/// `resolve_model_profile` only reports [`ConfigError::Validation`], whose
+/// members are a field path and a static message, so nothing configured is
+/// echoed. Any other variant would indicate a load-time fault, so it is
+/// summarized without its payload.
+fn unresolved_model(error: ConfigError) -> SelfAgentModelReport {
+    let (path, message) = match error {
+        ConfigError::Validation { path, message } => (path, message),
+        _ => (
+            "model".to_owned(),
+            "active model configuration is unavailable".to_owned(),
+        ),
+    };
+    SelfAgentModelReport::Unresolved {
+        path: bounded_metadata(&path),
+        message: bounded_metadata(&message),
+    }
+}
+
+fn bounded_metadata(value: &str) -> String {
+    value
+        .chars()
+        .filter(|character| !character.is_control())
+        .take(MAX_METADATA_CHARS)
+        .collect()
 }
 
 fn durable_status<S: CredentialStore + ?Sized>(

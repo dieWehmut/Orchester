@@ -49,7 +49,8 @@ pub use runtime::{
 };
 pub use status::{
     load_self_agent_status, SelfAgentDurableStatus, SelfAgentGovernanceStatus,
-    SelfAgentLimitStatus, SelfAgentModelStatus, SelfAgentStatus, SelfAgentStatusError,
+    SelfAgentLimitStatus, SelfAgentModelReport, SelfAgentModelStatus, SelfAgentStatus,
+    SelfAgentStatusError,
 };
 pub use turn::SelfAgentTurn;
 
