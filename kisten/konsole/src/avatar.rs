@@ -1,4 +1,10 @@
 //! Embedded ANSI portrait for the interactive startup screen.
+//!
+//! `assets/logo.ansi` is generated from `sample/picture/icon.png` by
+//! `werkzeug/logo.sh`: the source is reduced to luminance while keeping its
+//! alpha channel, then rendered to half-block symbols. Transparency must
+//! survive that step so fully transparent pixels stay spaces and the panel
+//! background shows through instead of a black rectangle.
 
 use std::io::{self, Write};
 use std::sync::OnceLock;
@@ -319,6 +325,23 @@ mod tests {
         assert!(source.contains("\x1b[48;2;"));
         assert!(!source.contains("\x1b[?25l"));
         assert!(!source.contains("\x1b[?25h"));
+    }
+
+    #[test]
+    fn embedded_logo_is_greyscale() {
+        let logo = LOGO.get_or_init(parse_logo);
+        let colours = logo
+            .rows
+            .iter()
+            .flat_map(|row| row.iter())
+            .flat_map(|cell| [cell.style.foreground, cell.style.background])
+            .flatten();
+        for Rgb(red, green, blue) in colours {
+            assert!(
+                red == green && green == blue,
+                "portrait must stay greyscale, found ({red}, {green}, {blue})"
+            );
+        }
     }
 
     #[test]
