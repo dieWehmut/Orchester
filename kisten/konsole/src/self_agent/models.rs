@@ -1,6 +1,8 @@
 use std::io::{self, Write};
 
-use orchester_laufzeit::harness::service::{SelfAgentModelCatalog, SelfAgentModelChoice};
+use orchester_laufzeit::harness::service::{
+    SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentModelChoice,
+};
 
 const BOLD: &str = "\x1b[1m";
 const DIM: &str = "\x1b[2m";
@@ -9,13 +11,21 @@ const RESET: &str = "\x1b[0m";
 pub fn render_models(out: &mut impl Write, catalog: &SelfAgentModelCatalog) -> io::Result<()> {
     writeln!(out)?;
     writeln!(out, "{BOLD}Self-agent models{RESET}")?;
-    match catalog.configured.as_ref() {
-        Some(active) => {
+    match &catalog.active {
+        SelfAgentActiveModel::Configured(active) => {
             let selection = active.profile.as_deref().unwrap_or("configured");
             writeln!(out, "active: {}", safe_metadata(selection))?;
             render_choice(out, active, "  ")?;
         }
-        None => writeln!(out, "active: not configured")?,
+        SelfAgentActiveModel::Unresolved { path, message } => {
+            writeln!(
+                out,
+                "active: unresolved ({}: {})",
+                safe_metadata(path),
+                safe_metadata(message)
+            )?;
+        }
+        SelfAgentActiveModel::NotConfigured => writeln!(out, "active: not configured")?,
     }
 
     writeln!(out, "profiles:")?;
@@ -96,7 +106,7 @@ mod tests {
     #[test]
     fn rendering_sanitizes_catalog_metadata() {
         let catalog = SelfAgentModelCatalog {
-            configured: Some(choice(None, "gpt-default\x1b[31m")),
+            active: SelfAgentActiveModel::Configured(choice(None, "gpt-default\x1b[31m")),
             profiles: vec![choice(Some("review\nprofile"), "gpt-review")],
         };
         let mut output = Vec::new();
@@ -109,6 +119,29 @@ mod tests {
         assert!(rendered.contains("review\\nprofile"));
         assert!(!rendered.contains("gpt-default\x1b[31m"));
         assert!(!rendered.contains("review\nprofile"));
+    }
+
+    #[test]
+    fn an_unresolved_active_model_still_lists_selectable_profiles() {
+        let catalog = SelfAgentModelCatalog {
+            active: SelfAgentActiveModel::Unresolved {
+                path: "model_provider".into(),
+                message: "active model provider is not configured".into(),
+            },
+            profiles: vec![choice(Some("fast"), "gpt-fast")],
+        };
+        let mut output = Vec::new();
+
+        render_models(&mut output, &catalog).expect("render model catalog");
+        let rendered = String::from_utf8(output).expect("UTF-8");
+
+        assert!(rendered.contains("active: unresolved (model_provider:"));
+        assert!(rendered.contains("active model provider is not configured"));
+        // A broken active model must not read as an absent one, and it must
+        // not hide the profiles that would repair it.
+        assert!(!rendered.contains("active: not configured"));
+        assert!(rendered.contains("fast"));
+        assert!(rendered.contains("gpt-fast"));
     }
 
     #[test]

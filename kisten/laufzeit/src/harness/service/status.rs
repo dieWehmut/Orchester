@@ -3,12 +3,11 @@ use std::path::Path;
 use orchester_protokoll::PolicyDecision;
 use thiserror::Error;
 
+use super::unresolved::unresolved_metadata;
 use super::{IdentityError, WorkspaceIdentitySnapshot};
 use crate::harness::config::{ConfigError, UserConfig};
 use crate::harness::credentials::CredentialStore;
 use crate::harness::run_store::{ResumeNext, ResumePoint, SqliteRunStore, StoreError};
-
-const MAX_METADATA_CHARS: usize = 200;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SelfAgentStatus {
@@ -133,7 +132,10 @@ fn model_status(config: &UserConfig) -> SelfAgentModelReport {
     }
     let profile = match config.resolve_model_profile() {
         Ok(profile) => profile,
-        Err(error) => return unresolved_model(error),
+        Err(error) => {
+            let (path, message) = unresolved_metadata(error);
+            return SelfAgentModelReport::Unresolved { path, message };
+        }
     };
     SelfAgentModelReport::Configured(SelfAgentModelStatus {
         provider: profile.provider,
@@ -145,34 +147,6 @@ fn model_status(config: &UserConfig) -> SelfAgentModelReport {
         service_tier: profile.service_tier,
         requires_auth: profile.requires_auth,
     })
-}
-
-/// Project a resolution failure into bounded display metadata.
-///
-/// `resolve_model_profile` only reports [`ConfigError::Validation`], whose
-/// members are a field path and a static message, so nothing configured is
-/// echoed. Any other variant would indicate a load-time fault, so it is
-/// summarized without its payload.
-fn unresolved_model(error: ConfigError) -> SelfAgentModelReport {
-    let (path, message) = match error {
-        ConfigError::Validation { path, message } => (path, message),
-        _ => (
-            "model".to_owned(),
-            "active model configuration is unavailable".to_owned(),
-        ),
-    };
-    SelfAgentModelReport::Unresolved {
-        path: bounded_metadata(&path),
-        message: bounded_metadata(&message),
-    }
-}
-
-fn bounded_metadata(value: &str) -> String {
-    value
-        .chars()
-        .filter(|character| !character.is_control())
-        .take(MAX_METADATA_CHARS)
-        .collect()
 }
 
 fn durable_status<S: CredentialStore + ?Sized>(

@@ -2,6 +2,7 @@
 
 use std::fmt;
 
+use super::unresolved::unresolved_metadata;
 use crate::harness::config::{ConfigError, ResolvedModelProfile, UserConfig};
 use thiserror::Error;
 
@@ -9,8 +10,35 @@ const MAX_DISPLAY_FIELD_BYTES: usize = 256;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SelfAgentModelCatalog {
-    pub configured: Option<SelfAgentModelChoice>,
+    pub active: SelfAgentActiveModel,
     pub profiles: Vec<SelfAgentModelChoice>,
+}
+
+/// The model the next turn would use, as presented to a read-only caller.
+///
+/// Listing the catalog is how an operator finds a working profile, so an
+/// active model that cannot be resolved is reported rather than raised.
+/// Named profiles stay strict by contrast: offering a choice that
+/// [`select_self_agent_model_profile`] would refuse is worse than saying so.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum SelfAgentActiveModel {
+    /// Neither a provider nor a model is configured.
+    NotConfigured,
+    /// Model fields are present but do not form a usable profile. Both members
+    /// are validation metadata and carry no configured value.
+    Unresolved { path: String, message: String },
+    /// A complete, selectable choice.
+    Configured(SelfAgentModelChoice),
+}
+
+impl SelfAgentActiveModel {
+    /// The choice a caller may act on, if the active model is usable.
+    pub fn choice(&self) -> Option<&SelfAgentModelChoice> {
+        match self {
+            Self::Configured(choice) => Some(choice),
+            Self::NotConfigured | Self::Unresolved { .. } => None,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -45,7 +73,7 @@ impl SelfAgentModelSession {
         let mut catalog = load_self_agent_model_catalog(config)?;
         if let Some(name) = self.selected_profile.as_deref() {
             let (_, choice) = select_self_agent_model_profile(config, name)?;
-            catalog.configured = Some(choice);
+            catalog.active = SelfAgentActiveModel::Configured(choice);
         }
         Ok(catalog)
     }
@@ -70,13 +98,25 @@ impl SelfAgentModelSession {
         Ok(choice)
     }
 
+    /// Return to the configured default.
+    ///
+    /// Selection is an action, not a projection, so it stays strict: an
+    /// active model the catalog only *reports* as broken must not silently
+    /// become the session's choice. The reason travels with the refusal so
+    /// the caller learns which field to repair.
     pub fn select_configured(
         &mut self,
         config: &UserConfig,
     ) -> Result<SelfAgentModelChoice, SelfAgentModelCatalogError> {
-        let choice = load_self_agent_model_catalog(config)?
-            .configured
-            .ok_or(SelfAgentModelCatalogError::ConfiguredModelUnavailable)?;
+        let choice = match load_self_agent_model_catalog(config)?.active {
+            SelfAgentActiveModel::Configured(choice) => choice,
+            SelfAgentActiveModel::Unresolved { path, message } => {
+                return Err(ConfigError::Validation { path, message }.into())
+            }
+            SelfAgentActiveModel::NotConfigured => {
+                return Err(SelfAgentModelCatalogError::ConfiguredModelUnavailable)
+            }
+        };
         self.selected_profile = None;
         Ok(choice)
     }
@@ -98,20 +138,32 @@ impl fmt::Debug for SelfAgentModelSession {
 pub fn load_self_agent_model_catalog(
     config: &UserConfig,
 ) -> Result<SelfAgentModelCatalog, SelfAgentModelCatalogError> {
-    let configured = if config.model_provider.is_none() && config.model.is_none() {
-        None
-    } else {
-        Some(choice_from_resolved(None, config.resolve_model_profile()?)?)
-    };
+    let active = active_model(config)?;
     let mut profiles = Vec::with_capacity(config.model_profiles().len());
     for name in config.model_profiles().keys() {
         let (_, choice) = select_self_agent_model_profile(config, name)?;
         profiles.push(choice);
     }
-    Ok(SelfAgentModelCatalog {
-        configured,
-        profiles,
-    })
+    Ok(SelfAgentModelCatalog { active, profiles })
+}
+
+fn active_model(config: &UserConfig) -> Result<SelfAgentActiveModel, SelfAgentModelCatalogError> {
+    if config.model_provider.is_none() && config.model.is_none() {
+        return Ok(SelfAgentActiveModel::NotConfigured);
+    }
+    let resolved = match config.resolve_model_profile() {
+        Ok(resolved) => resolved,
+        Err(error) => return Ok(unresolved_active_model(error)),
+    };
+    match choice_from_resolved(None, resolved) {
+        Ok(choice) => Ok(SelfAgentActiveModel::Configured(choice)),
+        Err(error) => Ok(unresolved_active_model(error)),
+    }
+}
+
+fn unresolved_active_model(error: ConfigError) -> SelfAgentActiveModel {
+    let (path, message) = unresolved_metadata(error);
+    SelfAgentActiveModel::Unresolved { path, message }
 }
 
 pub fn select_self_agent_model_profile(

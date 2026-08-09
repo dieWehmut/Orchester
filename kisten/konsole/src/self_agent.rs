@@ -5,7 +5,7 @@ use orchester_laufzeit::harness::config::{ConfigError, ConfigLoader, UserConfig}
 use orchester_laufzeit::harness::credentials::KeyringCredentialStore;
 use orchester_laufzeit::harness::service::{
     build_self_agent_runtime, load_self_agent_permissions, load_self_agent_resume_catalog,
-    load_self_agent_status, ProductionSelfAgentRuntime, SelfAgentModelCatalog,
+    load_self_agent_status, ProductionSelfAgentRuntime, SelfAgentActiveModel, SelfAgentModelCatalog,
     SelfAgentModelCatalogError, SelfAgentModelChoice, SelfAgentModelSession,
     SelfAgentPermissionSnapshot, SelfAgentResumeCatalog, SelfAgentResumeCatalogError,
     SelfAgentRunOutcome, SelfAgentRuntimeBuildError, SelfAgentRuntimeError, SelfAgentStatus,
@@ -83,12 +83,15 @@ impl SelfAgentHost {
 
     pub fn model_label(&self) -> Result<String, SelfAgentHostError> {
         let catalog = self.model_catalog()?;
-        Ok(match catalog.configured {
-            Some(active) => match active.reasoning_effort {
+        Ok(match catalog.active {
+            SelfAgentActiveModel::Configured(active) => match active.reasoning_effort {
                 Some(reasoning) => format!("{} {reasoning}", active.model),
                 None => active.model,
             },
-            None => "model not configured".into(),
+            // The panel has room for one line, so it names the state rather
+            // than the reason; /model reports which field is at fault.
+            SelfAgentActiveModel::Unresolved { .. } => "model unresolved".into(),
+            SelfAgentActiveModel::NotConfigured => "model not configured".into(),
         })
     }
 

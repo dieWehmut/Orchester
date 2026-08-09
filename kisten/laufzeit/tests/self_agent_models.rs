@@ -1,7 +1,7 @@
 use orchester_laufzeit::harness::config::{ConfigError, ConfigLoader, UserConfig};
 use orchester_laufzeit::harness::service::{
-    load_self_agent_model_catalog, select_self_agent_model_profile, SelfAgentModelCatalogError,
-    SelfAgentModelSession,
+    load_self_agent_model_catalog, select_self_agent_model_profile, SelfAgentActiveModel,
+    SelfAgentModelCatalogError, SelfAgentModelSession,
 };
 
 fn configured(source: &str) -> UserConfig {
@@ -40,7 +40,7 @@ fn catalog_projects_configured_and_named_choices_without_transport_details() {
     );
 
     let catalog = load_self_agent_model_catalog(&config).expect("model catalog");
-    let current = catalog.configured.as_ref().expect("configured selection");
+    let current = catalog.active.choice().expect("configured selection");
 
     assert_eq!(current.profile, None);
     assert_eq!(current.provider, "OpenAI");
@@ -77,7 +77,7 @@ fn catalog_lists_named_choices_when_the_configured_default_is_absent() {
 
     let catalog = load_self_agent_model_catalog(&config).expect("model catalog");
 
-    assert!(catalog.configured.is_none());
+    assert_eq!(catalog.active, SelfAgentActiveModel::NotConfigured);
     assert_eq!(catalog.profiles.len(), 1);
     assert_eq!(catalog.profiles[0].profile.as_deref(), Some("offline"));
     assert_eq!(catalog.profiles[0].model, "local-model");
@@ -140,7 +140,7 @@ fn invalid_named_choices_fail_without_echoing_model_text() {
 }
 
 #[test]
-fn catalog_rejects_controlled_configured_metadata_before_projection() {
+fn catalog_reports_controlled_active_metadata_without_ever_projecting_it() {
     for (source, expected_path) in [
         (
             r#"{
@@ -168,15 +168,62 @@ fn catalog_rejects_controlled_configured_metadata_before_projection() {
     ] {
         let config = configured(source);
 
-        let error = load_self_agent_model_catalog(&config).expect_err("controlled metadata");
+        let catalog = load_self_agent_model_catalog(&config).expect("controlled metadata");
+        let projected = format!("{catalog:?}");
 
-        assert!(matches!(
-            error,
-            SelfAgentModelCatalogError::Config(ConfigError::Validation { ref path, .. })
-                if path == expected_path
-        ));
-        assert!(!error.to_string().contains("gpt-test"));
+        // The offending field is named so it can be repaired, but the value
+        // that failed validation is never carried into the projection.
+        let (path, message) = match catalog.active {
+            SelfAgentActiveModel::Unresolved { path, message } => (path, message),
+            other => panic!("expected an unresolved active model, found {other:?}"),
+        };
+        assert_eq!(path, expected_path);
+        assert_eq!(message, "model catalog metadata is invalid");
+        assert!(!projected.contains("gpt-test"));
+        assert!(!projected.contains('\u{1b}'));
     }
+}
+
+#[test]
+fn returning_to_an_unresolvable_active_model_is_refused_with_its_reason() {
+    let config = configured(
+        r#"{
+            "model_provider": "Missing",
+            "model": "gpt-default",
+            "model_providers": {
+                "OpenAI": { "base_url": "https://example.test/v1" }
+            },
+            "model_profiles": {
+                "fast": { "model_provider": "OpenAI", "model": "gpt-fast" }
+            }
+        }"#,
+    );
+    let mut session = SelfAgentModelSession::default();
+    session
+        .select_profile(&config, "fast")
+        .expect("select named profile");
+
+    // Listing degrades so the operator can see what is wrong...
+    let catalog = load_self_agent_model_catalog(&config).expect("catalog still lists profiles");
+    assert!(matches!(
+        catalog.active,
+        SelfAgentActiveModel::Unresolved { .. }
+    ));
+    assert_eq!(catalog.profiles.len(), 1);
+
+    // ...but selecting it is an action, so it refuses and keeps the previous
+    // working choice rather than adopting a model no turn could use.
+    let error = session
+        .select_configured(&config)
+        .expect_err("an unresolvable active model must not become the selection");
+
+    assert!(matches!(
+        error,
+        SelfAgentModelCatalogError::Config(ConfigError::Validation { ref path, .. })
+            if path == "model_provider"
+    ));
+    assert_eq!(session.selected_profile(), Some("fast"));
+    assert!(!error.to_string().contains("gpt-default"));
 }
 
 #[test]
@@ -213,8 +260,8 @@ fn model_session_changes_only_future_effective_configuration() {
     assert!(!format!("{session:?}").contains("review"));
     assert_eq!(
         catalog
-            .configured
-            .as_ref()
+            .active
+            .choice()
             .and_then(|active| active.profile.as_deref()),
         Some("review")
     );
