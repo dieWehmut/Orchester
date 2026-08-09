@@ -9,6 +9,9 @@ use std::io::Write;
 use std::process::Stdio;
 
 use loopback_responses::LoopbackResponses;
+use orchester_laufzeit::harness::governance::PolicyEngine;
+use orchester_laufzeit::harness::run_store::{NewRun, RunStore, SqliteRunStore};
+use orchester_laufzeit::harness::service::WorkspaceIdentitySnapshot;
 use secure_config::write_user_config;
 use support::{orchester, stderr, stdout, temp_home};
 
@@ -385,6 +388,97 @@ fn permissions_command_projects_effective_policy_without_provider_or_state_acces
         !home.join("state/audit.jsonl").exists(),
         "permission query created the audit log"
     );
+    let _ = std::fs::remove_dir_all(root);
+}
+
+#[test]
+fn resume_command_lists_an_opaque_durable_run_without_continuing_it() {
+    let root = temp_home("resume-command");
+    let home = root.join("home");
+    let workspace = root.join("workspace");
+    std::fs::create_dir_all(&workspace).expect("create workspace");
+    let state = home.join("state/runs.db");
+    let identity =
+        WorkspaceIdentitySnapshot::for_workspace(&workspace, "local-user").expect("identity");
+    let store = SqliteRunStore::open_with_terminal_secrets(&state, Vec::new()).expect("store");
+    store
+        .create_run(NewRun {
+            run_id: "run-cli-secret-internal".into(),
+            project_id: identity.project_id.clone(),
+            owner_actor_id: identity.owner_actor_id.clone(),
+            canonical_root: identity.canonical_root.clone(),
+            workspace_identity: identity.workspace_identity.clone(),
+            policy_snapshot_hash: PolicyEngine::snapshot_hash(),
+            config_snapshot_hash: "config-cli-resume".into(),
+            max_steps: 4,
+            occurred_at: "2026-07-31T00:00:00Z".into(),
+        })
+        .expect("create durable run");
+    drop(store);
+
+    let mut child = orchester()
+        .current_dir(&workspace)
+        .env("ORCHESTER_HOME", &home)
+        .env("HOME", &home)
+        .env("USERPROFILE", &home)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("spawn interactive orchester");
+    child
+        .stdin
+        .as_mut()
+        .expect("stdin handle")
+        .write_all(b"/resume\n")
+        .expect("write resume command");
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().expect("collect output");
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    assert!(
+        out.contains("Resumable self-agent runs"),
+        "resume output:\n{out}"
+    );
+    assert!(out.contains("ready | start step"), "resume output:\n{out}");
+    assert!(out.contains("r-"), "resume output:\n{out}");
+    assert!(!out.contains("run-cli-secret-internal"));
+    assert!(out.contains("no run was continued"));
+    let _ = std::fs::remove_dir_all(root);
+}
+
+#[test]
+fn resume_command_reports_missing_state_without_creating_it() {
+    let root = temp_home("resume-command-empty");
+    let home = root.join("home");
+    let workspace = root.join("workspace");
+    std::fs::create_dir_all(&workspace).expect("create workspace");
+
+    let mut child = orchester()
+        .current_dir(&workspace)
+        .env("ORCHESTER_HOME", &home)
+        .env("HOME", &home)
+        .env("USERPROFILE", &home)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("spawn interactive orchester");
+    child
+        .stdin
+        .as_mut()
+        .expect("stdin handle")
+        .write_all(b"/resume\n")
+        .expect("write resume command");
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().expect("collect output");
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    assert!(out.contains("no resumable runs"), "resume output:\n{out}");
+    assert!(!home.join("state/runs.db").exists());
+    assert!(!home.join("state/audit.jsonl").exists());
     let _ = std::fs::remove_dir_all(root);
 }
 

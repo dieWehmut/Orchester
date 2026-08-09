@@ -525,7 +525,7 @@ pub fn render_agent_table<W: Write>(
     writeln!(out)?;
     writeln!(
         out,
-        "{DIM}Commands: /agent switch, /model choose, /permissions inspect, /status inspect, /plugins manage, /help help, /quit exit.{RESET}"
+        "{DIM}Commands: /agent switch, /model choose, /resume list, /permissions inspect, /status inspect, /plugins manage, /help help, /quit exit.{RESET}"
     )
 }
 
@@ -536,6 +536,7 @@ pub fn render_help<W: Write>(out: &mut W) -> io::Result<()> {
     writeln!(out, "  /list    show detected agent status")?;
     writeln!(out, "  /model   show configured self-agent models")?;
     writeln!(out, "  /permissions show effective self-agent permissions")?;
+    writeln!(out, "  /resume  show resumable self-agent runs")?;
     writeln!(out, "  /status  show self-agent workspace status")?;
     writeln!(out, "  /plugins list, inspect, install, or remove plugins")?;
     writeln!(out, "  /help    show this help")?;
@@ -952,6 +953,7 @@ fn render_home_help<W: Write>(out: &mut W, width: usize, max_rows: usize) -> io:
         "/agent      choose a delegate",
         "/model      inspect self-agent models",
         "/permissions inspect effective permissions",
+        "/resume     inspect resumable runs",
         "/status     inspect self-agent state",
         "/plugins    manage agent plugins",
         "/codex      launch Codex",
@@ -1010,7 +1012,7 @@ pub fn render_line_startup_home<W: Write>(out: &mut W, model_status: &str) -> io
     writeln!(out)?;
     writeln!(
         out,
-        "{DIM}Type a task for Orchester, or /model, /permissions, /status, /agent, /codex, /claude, /opencode.{RESET}"
+        "{DIM}Type a task for Orchester, or /model, /resume, /permissions, /status, /agent, /codex, /claude, /opencode.{RESET}"
     )?;
     writeln!(
         out,
@@ -1480,6 +1482,24 @@ mod tests {
         );
         assert_eq!(
             parse_home_action("/permissions now", &choices),
+            HomeAction::Help
+        );
+    }
+
+    #[test]
+    fn resume_command_is_typed_in_home_and_delegate_prompts() {
+        let choices = vec![choice("mock", AvailabilityStatus::Available, None)];
+
+        assert_eq!(
+            parse_home_action("/resume", &choices),
+            HomeAction::Workspace(WorkspaceCommand::Resume)
+        );
+        assert_eq!(
+            parse_prompt_action("/resume", &choices),
+            PromptAction::Workspace(WorkspaceCommand::Resume)
+        );
+        assert_eq!(
+            parse_home_action("/resume latest", &choices),
             HomeAction::Help
         );
     }

@@ -37,6 +37,7 @@ pub enum PluginAction {
 pub enum WorkspaceCommand {
     Status,
     Permissions,
+    Resume,
     Model(ModelCommand),
 }
 
@@ -172,6 +173,13 @@ pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> Pro
                 PromptAction::Help
             };
         }
+        "/resume" => {
+            return if input.split_whitespace().count() == 1 {
+                PromptAction::Workspace(WorkspaceCommand::Resume)
+            } else {
+                PromptAction::Help
+            };
+        }
         "/model" => {
             return parse_model_command(input)
                 .map(|command| PromptAction::Workspace(WorkspaceCommand::Model(command)))
@@ -254,6 +262,12 @@ fn command_items(choices: &[AgentChoice]) -> Vec<CommandItem> {
             name: "/permissions".into(),
             description: "show effective self-agent permissions".into(),
             action: CommandAction::Workspace(WorkspaceCommand::Permissions),
+            agent: None,
+        },
+        CommandItem {
+            name: "/resume".into(),
+            description: "show resumable self-agent runs".into(),
+            action: CommandAction::Workspace(WorkspaceCommand::Resume),
             agent: None,
         },
         CommandItem {

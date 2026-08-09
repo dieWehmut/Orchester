@@ -4,10 +4,12 @@ use std::path::PathBuf;
 use orchester_laufzeit::harness::config::{ConfigError, ConfigLoader, UserConfig};
 use orchester_laufzeit::harness::credentials::KeyringCredentialStore;
 use orchester_laufzeit::harness::service::{
-    build_self_agent_runtime, load_self_agent_permissions, load_self_agent_status,
-    ProductionSelfAgentRuntime, SelfAgentModelCatalog, SelfAgentModelCatalogError,
-    SelfAgentModelChoice, SelfAgentModelSession, SelfAgentPermissionSnapshot, SelfAgentRunOutcome,
-    SelfAgentRuntimeBuildError, SelfAgentRuntimeError, SelfAgentStatus, SelfAgentStatusError,
+    build_self_agent_runtime, load_self_agent_permissions, load_self_agent_resume_catalog,
+    load_self_agent_status, ProductionSelfAgentRuntime, SelfAgentModelCatalog,
+    SelfAgentModelCatalogError, SelfAgentModelChoice, SelfAgentModelSession,
+    SelfAgentPermissionSnapshot, SelfAgentResumeCatalog, SelfAgentResumeCatalogError,
+    SelfAgentRunOutcome, SelfAgentRuntimeBuildError, SelfAgentRuntimeError, SelfAgentStatus,
+    SelfAgentStatusError,
 };
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
@@ -15,11 +17,13 @@ use tokio_util::sync::CancellationToken;
 mod models;
 mod permissions;
 mod render;
+mod resume;
 mod status;
 
 pub use models::{render_model_selection, render_models};
 pub use permissions::render_permissions;
 pub use render::render_outcome;
+pub use resume::render_resume;
 pub use status::render_status;
 
 #[derive(Debug, Error)]
@@ -32,6 +36,8 @@ pub enum SelfAgentHostError {
     Run(#[from] SelfAgentRuntimeError),
     #[error(transparent)]
     Status(#[from] SelfAgentStatusError),
+    #[error(transparent)]
+    Resume(#[from] SelfAgentResumeCatalogError),
     #[error(transparent)]
     Models(#[from] SelfAgentModelCatalogError),
     #[error("self-agent runtime initialization failed")]
@@ -119,6 +125,19 @@ impl SelfAgentHost {
     pub fn permissions(&self) -> Result<SelfAgentPermissionSnapshot, SelfAgentHostError> {
         let config = self.selected_config()?;
         Ok(load_self_agent_permissions(&config))
+    }
+
+    pub fn resume_catalog(&self) -> Result<SelfAgentResumeCatalog, SelfAgentHostError> {
+        let config = self.selected_config()?;
+        let credentials = KeyringCredentialStore::new();
+        load_self_agent_resume_catalog(
+            &config,
+            &credentials,
+            &self.workspace,
+            &self.state_database,
+            "local-user",
+        )
+        .map_err(Into::into)
     }
 
     fn ensure_runtime(&mut self) -> Result<(), SelfAgentHostError> {

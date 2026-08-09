@@ -643,6 +643,11 @@ fn render_workspace_command(
             let mut out = io::stdout().lock();
             self_agent::render_permissions(&mut out, &permissions)?;
         }
+        WorkspaceCommand::Resume => {
+            let catalog = self_agent.resume_catalog()?;
+            let mut out = io::stdout().lock();
+            self_agent::render_resume(&mut out, &catalog)?;
+        }
         WorkspaceCommand::Model(ModelCommand::Show) => {
             let models = self_agent.model_catalog()?;
             let mut out = io::stdout().lock();
