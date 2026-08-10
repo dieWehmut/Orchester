@@ -9,16 +9,44 @@ use orchester_verzeichnis::{PluginOrigin, RegisteredPlugin, Registry};
 
 use crate::args::PluginCommand;
 
+/// Whether a plugin command succeeded.
+///
+/// [`ExitCode`] is deliberately opaque and cannot be compared, so an
+/// interactive caller that wants to keep the session open has no way to notice
+/// a failure it did not propagate. Returning an inspectable outcome lets the
+/// prompt loops continue *and* still report the failure through the process
+/// exit status.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PluginOutcome {
+    Succeeded,
+    Failed,
+}
+
+impl PluginOutcome {
+    pub fn failed(self) -> bool {
+        self == Self::Failed
+    }
+}
+
+impl From<PluginOutcome> for ExitCode {
+    fn from(outcome: PluginOutcome) -> Self {
+        match outcome {
+            PluginOutcome::Succeeded => ExitCode::SUCCESS,
+            PluginOutcome::Failed => ExitCode::FAILURE,
+        }
+    }
+}
+
 pub fn run(
     registry: &Registry,
     command: PluginCommand,
     json: bool,
     orchester_home: &Path,
-) -> io::Result<ExitCode> {
+) -> io::Result<PluginOutcome> {
     match command {
         PluginCommand::List => {
             render_list(&mut io::stdout().lock(), &registry.plugins(), json)?;
-            Ok(ExitCode::SUCCESS)
+            Ok(PluginOutcome::Succeeded)
         }
         PluginCommand::Status(args) => {
             let plugins = registry.plugins();
@@ -30,10 +58,10 @@ pub fn run(
                     io::stderr().lock(),
                     "orchester: agent plugin is not installed"
                 )?;
-                return Ok(ExitCode::FAILURE);
+                return Ok(PluginOutcome::Failed);
             };
             render_status(&mut io::stdout().lock(), plugin, json)?;
-            Ok(ExitCode::SUCCESS)
+            Ok(PluginOutcome::Succeeded)
         }
         PluginCommand::Install(args) => match install::install(orchester_home, &args.name) {
             Ok(info) => {
@@ -58,11 +86,11 @@ pub fn run(
                         info.package_name()
                     )?;
                 }
-                Ok(ExitCode::SUCCESS)
+                Ok(PluginOutcome::Succeeded)
             }
             Err(error) => {
                 writeln!(io::stderr().lock(), "orchester: {error}")?;
-                Ok(ExitCode::FAILURE)
+                Ok(PluginOutcome::Failed)
             }
         },
         PluginCommand::Remove(args) => match remove::remove(orchester_home, &args.name) {
@@ -88,7 +116,7 @@ pub fn run(
                         info.package_name()
                     )?;
                 }
-                Ok(ExitCode::SUCCESS)
+                Ok(PluginOutcome::Succeeded)
             }
             Ok(remove::RemoveOutcome::NotInstalled) => {
                 if json {
@@ -100,11 +128,11 @@ pub fn run(
                 } else {
                     writeln!(io::stdout().lock(), "Plugin is not installed")?;
                 }
-                Ok(ExitCode::SUCCESS)
+                Ok(PluginOutcome::Succeeded)
             }
             Err(error) => {
                 writeln!(io::stderr().lock(), "orchester: {error}")?;
-                Ok(ExitCode::FAILURE)
+                Ok(PluginOutcome::Failed)
             }
         },
     }

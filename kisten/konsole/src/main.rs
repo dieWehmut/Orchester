@@ -116,6 +116,7 @@ async fn run(cli: Cli) -> Result<ExitCode, CliError> {
                 json,
                 &orchester_home(),
             )
+            .map(ExitCode::from)
             .map_err(CliError::Io);
         }
         Some(Command::Run(run)) => run.prompt,
@@ -283,7 +284,14 @@ async fn run_line_interactive(mut registry: Registry) -> Result<ExitCode, CliErr
                 interactive::render_line_continue_prompt(&mut out)?;
             }
             interactive::HomeAction::Plugins(action) => {
-                let _ = plugin::run(&registry, plugin_command(action), false, &orchester_home())?;
+                let outcome =
+                    plugin::run(&registry, plugin_command(action), false, &orchester_home())?;
+                // A mutation that was rejected must still reach the caller as a
+                // failing exit status, so only a successful command returns to
+                // the prompt.
+                if outcome.failed() {
+                    return Ok(ExitCode::from(outcome));
+                }
                 // Install and remove change what is on disk, so the home must
                 // re-read it rather than keep serving the startup snapshot.
                 registry = discover_registry()?;
