@@ -241,7 +241,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
     }
 }
 
-async fn run_line_interactive(registry: Registry) -> Result<ExitCode, CliError> {
+async fn run_line_interactive(mut registry: Registry) -> Result<ExitCode, CliError> {
     let mut choices = interactive::build_agent_choices(&registry);
     let mut self_agent = self_agent_host()?;
     let stdin = io::stdin();
@@ -283,9 +283,13 @@ async fn run_line_interactive(registry: Registry) -> Result<ExitCode, CliError> 
                 interactive::render_line_continue_prompt(&mut out)?;
             }
             interactive::HomeAction::Plugins(action) => {
-                let code =
-                    plugin::run(&registry, plugin_command(action), false, &orchester_home())?;
-                return Ok(code);
+                let _ = plugin::run(&registry, plugin_command(action), false, &orchester_home())?;
+                // Install and remove change what is on disk, so the home must
+                // re-read it rather than keep serving the startup snapshot.
+                registry = discover_registry()?;
+                choices = interactive::build_agent_choices(&registry);
+                let mut out = io::stdout().lock();
+                interactive::render_line_continue_prompt(&mut out)?;
             }
             interactive::HomeAction::Workspace(command) => {
                 render_workspace_command(&mut self_agent, command)?;

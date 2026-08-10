@@ -483,6 +483,44 @@ fn resume_command_reports_missing_state_without_creating_it() {
 }
 
 #[test]
+fn plugins_command_lists_installed_plugins_and_keeps_the_session_open() {
+    let home = temp_home("plugins-command");
+    std::fs::create_dir_all(&home).expect("create isolated home");
+
+    let mut child = orchester()
+        .env("ORCHESTER_HOME", &home)
+        .env("HOME", &home)
+        .env("USERPROFILE", &home)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("spawn interactive orchester");
+    child
+        .stdin
+        .as_mut()
+        .expect("stdin handle")
+        .write_all(b"/plugins\n/status\n")
+        .expect("write plugin and status commands");
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().expect("collect output");
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    assert!(
+        out.contains("no agent plugins installed"),
+        "plugin output:\n{out}"
+    );
+    // Listing plugins is a read-only report like every other slash command,
+    // so it must leave the operator at the prompt instead of ending the session.
+    assert!(
+        out.contains("Self-agent status"),
+        "the session ended after /plugins:\n{out}"
+    );
+    let _ = std::fs::remove_dir_all(home);
+}
+
+#[test]
 fn model_command_projects_safe_configured_and_named_choices() {
     let home = temp_home("model-catalog");
     std::fs::create_dir_all(&home).expect("create isolated home");
