@@ -16,10 +16,16 @@ their lifecycle.
 
 ## Install
 
-One-line install:
+One-line install on macOS and Linux:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/dieWehmut/Orchester/main/install.sh | sh
+```
+
+One-line install on Windows PowerShell:
+
+```powershell
+irm https://raw.githubusercontent.com/dieWehmut/Orchester/main/install.ps1 | iex
 ```
 
 The installer checks for required build dependencies (`git`, `curl`/`wget`,
@@ -39,6 +45,16 @@ On Windows PowerShell from a cloned checkout:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\werkzeug\install.ps1
+```
+
+Because `irm | iex` cannot bind parameters, the PowerShell one-liner reads its
+settings from the environment instead:
+
+```powershell
+$env:ORCHESTER_INSTALL_ROOT = "D:\tools\orchester"   # default: %USERPROFILE%\.cargo
+$env:ORCHESTER_NO_PATH_UPDATE = "1"                  # leave PATH untouched
+$env:ORCHESTER_REF = "main"                          # branch, tag, or commit
+irm https://raw.githubusercontent.com/dieWehmut/Orchester/main/install.ps1 | iex
 ```
 
 ### npm package
