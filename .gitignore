@@ -23,6 +23,10 @@ sample
 .env.*
 !.env.example
 tmp/
+# The governed process runtime calls env_clear() before spawning a tool, so a
+# powershell.exe child loses LOCALAPPDATA and writes its module cache relative
+# to the test's working directory instead of the user profile.
+**/Microsoft/Windows/PowerShell/
 
 # ── Editor / OS noise ───────────────────────────────────────────────
 .DS_Store
