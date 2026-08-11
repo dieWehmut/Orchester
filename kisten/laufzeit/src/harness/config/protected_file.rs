@@ -22,6 +22,12 @@ pub(super) fn read_protected_file(path: &Path) -> Result<Zeroizing<String>, Conf
     read_bounded_source(&mut file)
 }
 
+/// Run the loader's privacy gate and discard the handle, so a diagnostic can
+/// report the verdict the loader will reach without reading the secret.
+pub(super) fn check_protected_file(path: &Path) -> Result<(), ConfigError> {
+    open_validated_file(path).map(drop)
+}
+
 fn read_bounded_source<R: Read>(reader: &mut R) -> Result<Zeroizing<String>, ConfigError> {
     let mut bytes = Zeroizing::new(Vec::with_capacity(MAX_SOURCE_BYTES + 1));
     reader

@@ -1059,8 +1059,114 @@ impl ConfigLoader {
             }
             paths.push(self.user_path.clone());
         }
-        paths.into_iter().flat_map(check_permissions).collect()
+        let mut findings: Vec<_> = paths.into_iter().flat_map(check_permissions).collect();
+        // The permission checks above and the loader's privacy gate are separate
+        // implementations of "is this private", and they disagreed: a read-only
+        // grant to an untrusted principal refused the file while every finding
+        // said `ok`, leaving the human a refusal with nothing to act on.
+        // Reporting the gate itself is what keeps the two from contradicting.
+        if path_entry_exists(&self.user_path).unwrap_or(false) {
+            findings.push(privacy_gate_finding(&self.user_path));
+        }
+        findings
     }
+}
+
+/// Report the gate `load_user_file` will apply, so a refusal is always
+/// explained by a finding rather than by a bare sentence.
+fn privacy_gate_finding(path: &Path) -> PermissionDiagnostic {
+    let refused = protected_file::check_protected_file(path).is_err();
+    let grants = untrusted_grants(path);
+    // `icacls <file> /remove:g <group>` reports success and leaves an inherited
+    // ACE in place, so pointing at the file would send the human in a circle.
+    let inherited = grants.contains(INHERITED_MARKER);
+    PermissionDiagnostic {
+        path: path.to_path_buf(),
+        secure: !refused,
+        expected: "access limited to you, SYSTEM and Administrators".into(),
+        actual: Some(format!("untrusted_grants={grants}")),
+        message: match (refused, inherited) {
+            (false, _) => "the loader's privacy gate accepts this file".into(),
+            (true, true) => "an account outside that set can read this file, so the loader \
+                             refuses it; the grant is inherited, so revoke it on the parent \
+                             directory — removing it on the file alone reports success and \
+                             changes nothing"
+                .into(),
+            (true, false) => "an account outside that set can read this file, so the loader \
+                              refuses it; revoke the grant with icacls or chmod and reload"
+                .into(),
+        },
+    }
+}
+
+const INHERITED_MARKER: &str = "(inherited)";
+
+/// Name the grants behind a privacy-gate refusal.
+///
+/// Explanatory only: the verdict above comes from the gate itself, so this
+/// cannot contradict it — at worst it stays empty and the human inspects the
+/// ACL by hand.  Identities are translated to SIDs before being compared,
+/// because the well-known account *names* are localized while the SIDs are not.
+#[cfg(windows)]
+fn untrusted_grants(path: &Path) -> String {
+    const SCRIPT: &str = "\
+$ErrorActionPreference = 'Stop'
+$trusted = @(
+  [Security.Principal.WindowsIdentity]::GetCurrent().User.Value,
+  'S-1-5-18',
+  'S-1-5-32-544'
+)
+$inheritOnly = [Security.AccessControl.PropagationFlags]::InheritOnly
+foreach ($ace in (Get-Acl -LiteralPath $env:ORCHESTER_DOCTOR_PATH).Access) {
+  if ($ace.AccessControlType -ne 'Allow') { continue }
+  if ($ace.PropagationFlags -band $inheritOnly) { continue }
+  $sid = $ace.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value
+  if ($trusted -contains $sid) { continue }
+  if ($ace.IsInherited) {
+    '{0} (inherited)' -f $ace.IdentityReference.Value
+  } else {
+    $ace.IdentityReference.Value
+  }
+}";
+
+    let Some(tool) = system_tool("WindowsPowerShell\\v1.0\\powershell") else {
+        return String::new();
+    };
+    let output = std::process::Command::new(tool)
+        .args([
+            "-NoLogo",
+            "-NoProfile",
+            "-NonInteractive",
+            "-Command",
+            SCRIPT,
+        ])
+        .env("ORCHESTER_DOCTOR_PATH", path)
+        .output();
+    let Ok(output) = output else {
+        return String::new();
+    };
+    if !output.status.success() {
+        return String::new();
+    }
+    String::from_utf8_lossy(&output.stdout)
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty())
+        .collect::<Vec<_>>()
+        .join(", ")
+}
+
+#[cfg(not(windows))]
+fn untrusted_grants(_path: &Path) -> String {
+    String::new()
+}
+
+#[cfg(windows)]
+fn system_tool(name: &str) -> Option<PathBuf> {
+    std::env::var_os("SystemRoot")
+        .map(PathBuf::from)
+        .map(|root| root.join("System32").join(format!("{name}.exe")))
+        .filter(|candidate| candidate.is_file())
 }
 
 /// Merge one security decision from each configuration layer.  Project and
@@ -1206,13 +1312,6 @@ pub fn require_user_permissions(path: impl AsRef<Path>) -> Result<(), ConfigErro
 
 #[cfg(windows)]
 fn check_windows_acl(path: PathBuf) -> Vec<PermissionDiagnostic> {
-    fn system_tool(name: &str) -> Option<PathBuf> {
-        std::env::var_os("SystemRoot")
-            .map(PathBuf::from)
-            .map(|root| root.join("System32").join(format!("{name}.exe")))
-            .filter(|candidate| candidate.is_file())
-    }
-
     use std::process::Command;
     let acl_output = system_tool("icacls")
         .map(|tool| Command::new(tool).arg(&path).output())
@@ -1891,5 +1990,192 @@ mod config_loader_tests {
     #[test]
     fn a_missing_user_home_without_an_override_fails_closed() {
         assert_eq!(resolve_orchester_home(None, None), None);
+    }
+
+    /// A read-only grant to a principal outside the trusted set is exactly what
+    /// Codex's Windows sandbox leaves behind as `…\CodexSandboxUsers:(I)(RX)`,
+    /// and it is invisible to the broad-write scan: the loader refused the file
+    /// while every finding said `ok`, so `/config` printed "rejected" and "ok"
+    /// together and the human had nothing to act on.
+    ///
+    /// The property under test is agreement, in both directions — a refusal
+    /// must be explained, and an accepted file must not be alarmed about.
+    #[cfg(windows)]
+    #[test]
+    fn a_doctor_finding_explains_every_refusal_and_alarms_on_nothing_else() {
+        let home = windows_acl::scratch_home("doctor-privacy-gate");
+        let path = home.path().join(USER_CONFIG);
+        fs::write(&path, "{}").unwrap();
+        windows_acl::grant_trusted_only(home.path());
+        windows_acl::grant_trusted_only(&path);
+        let loader = ConfigLoader::from_orchester_home(Some(home.path().to_path_buf())).unwrap();
+
+        assert_agreement(&loader, &path, "trusted-only");
+
+        // `BUILTIN\Users` stands in for the sandbox group: untrusted, and
+        // granted read only, so the broad-write scan cannot see it.
+        windows_acl::add_read_grant(&path, "*S-1-5-32-545");
+
+        let findings = assert_agreement(&loader, &path, "untrusted read grant");
+        let offending = findings
+            .iter()
+            .find(|finding| !finding.is_ok())
+            .expect("a refusal must produce a finding");
+        let actual = offending.actual.as_deref().unwrap_or_default();
+        let (_, grants) = actual
+            .split_once("untrusted_grants=")
+            .unwrap_or_else(|| panic!("finding must name the grants to remove, got {actual:?}"));
+        assert!(
+            !grants.trim().is_empty(),
+            "finding must name at least one principal, got {actual:?}"
+        );
+    }
+
+    /// The real machine's grant is *inherited*: Codex's sandbox grants read on
+    /// `~/.orchester` and every file inside inherits it. `icacls <file>
+    /// /remove:g <group>` then reports "successfully processed 1 file" and
+    /// leaves the ACE in place, so a finding that prescribes it sends the human
+    /// in a circle. An inherited grant has to be labelled, because the repair
+    /// has to target the directory it came from.
+    #[cfg(windows)]
+    #[test]
+    fn an_inherited_grant_points_the_repair_at_the_directory_it_came_from() {
+        let home = windows_acl::scratch_home("doctor-inherited-grant");
+        windows_acl::grant_trusted_only(home.path());
+        windows_acl::add_inheritable_read_grant(home.path(), "*S-1-5-32-545");
+        // Created after the grant, so the ACE arrives by inheritance rather
+        // than by being written onto the file.
+        let path = home.path().join(USER_CONFIG);
+        fs::write(&path, "{}").unwrap();
+        let loader = ConfigLoader::from_orchester_home(Some(home.path().to_path_buf())).unwrap();
+
+        let findings = assert_agreement(&loader, &path, "inherited read grant");
+        let offending = findings
+            .iter()
+            .find(|finding| !finding.is_ok())
+            .expect("a refusal must produce a finding");
+        let actual = offending.actual.as_deref().unwrap_or_default();
+        assert!(
+            actual.contains("inherited"),
+            "an inherited grant must be labelled, got {actual:?}"
+        );
+        assert!(
+            offending.message.contains("directory"),
+            "the repair must name the directory to fix, got {:?}",
+            offending.message
+        );
+    }
+
+    /// Returns the findings so a caller can assert on the reason as well.
+    #[cfg(windows)]
+    fn assert_agreement(
+        loader: &ConfigLoader,
+        path: &Path,
+        phase: &str,
+    ) -> Vec<PermissionDiagnostic> {
+        let refused = loader.load_user_file(path).is_err();
+        let findings = loader.doctor();
+        let reported = findings.iter().any(|finding| !finding.is_ok());
+        assert_eq!(
+            refused, reported,
+            "{phase}: loader refusal ({refused}) and doctor findings ({reported}) disagree: {findings:#?}"
+        );
+        findings
+    }
+
+    #[cfg(windows)]
+    mod windows_acl {
+        use std::path::{Path, PathBuf};
+        use std::process::Command;
+        use std::sync::atomic::{AtomicU64, Ordering};
+        use std::sync::OnceLock;
+
+        pub(super) struct ScratchHome(PathBuf);
+
+        impl ScratchHome {
+            pub(super) fn path(&self) -> &Path {
+                &self.0
+            }
+        }
+
+        impl Drop for ScratchHome {
+            fn drop(&mut self) {
+                let _ = std::fs::remove_dir_all(&self.0);
+            }
+        }
+
+        pub(super) fn scratch_home(name: &str) -> ScratchHome {
+            static NEXT: AtomicU64 = AtomicU64::new(0);
+            let sequence = NEXT.fetch_add(1, Ordering::Relaxed);
+            let path = std::env::temp_dir().join(format!(
+                "orchester-{name}-{}-{sequence}",
+                std::process::id()
+            ));
+            let _ = std::fs::remove_dir_all(&path);
+            std::fs::create_dir_all(&path).unwrap();
+            ScratchHome(path)
+        }
+
+        pub(super) fn grant_trusted_only(path: &Path) {
+            let inheritable = path.is_dir();
+            let flags = if inheritable { "(OI)(CI)(F)" } else { "(F)" };
+            run_icacls(
+                path,
+                &["/inheritance:r", "/grant:r"],
+                &[
+                    format!("*{}:{flags}", current_sid()),
+                    format!("*S-1-5-18:{flags}"),
+                    format!("*S-1-5-32-544:{flags}"),
+                ],
+            );
+        }
+
+        pub(super) fn add_read_grant(path: &Path, sid: &str) {
+            run_icacls(path, &["/grant"], &[format!("{sid}:(RX)")]);
+        }
+
+        /// `(OI)(CI)` makes the grant propagate to files created afterwards,
+        /// which is how the sandbox grant reaches the config file.
+        pub(super) fn add_inheritable_read_grant(dir: &Path, sid: &str) {
+            run_icacls(dir, &["/grant"], &[format!("{sid}:(OI)(CI)(RX)")]);
+        }
+
+        fn run_icacls(path: &Path, options: &[&str], grants: &[String]) {
+            let output = Command::new(system_tool("icacls.exe"))
+                .arg(path)
+                .args(options)
+                .args(grants)
+                .output()
+                .unwrap();
+            assert!(
+                output.status.success(),
+                "icacls failed: {}",
+                String::from_utf8_lossy(&output.stderr)
+            );
+        }
+
+        fn system_tool(relative: &str) -> PathBuf {
+            PathBuf::from(std::env::var_os("SystemRoot").unwrap())
+                .join("System32")
+                .join(relative)
+        }
+
+        fn current_sid() -> &'static str {
+            static CURRENT_SID: OnceLock<String> = OnceLock::new();
+            CURRENT_SID.get_or_init(|| {
+                let output = Command::new(system_tool("WindowsPowerShell\\v1.0\\powershell.exe"))
+                    .args([
+                        "-NoLogo",
+                        "-NoProfile",
+                        "-NonInteractive",
+                        "-Command",
+                        "[System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value",
+                    ])
+                    .output()
+                    .unwrap();
+                assert!(output.status.success());
+                String::from_utf8(output.stdout).unwrap().trim().to_owned()
+            })
+        }
     }
 }
