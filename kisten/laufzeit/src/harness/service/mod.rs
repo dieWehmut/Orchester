@@ -1,6 +1,7 @@
 //! TUI-independent entry point for the self-owned agent.
 
 mod builder;
+mod credentials;
 mod identity;
 mod model_catalog;
 mod permissions;
@@ -29,6 +30,11 @@ pub use builder::{
     ProductionSelfAgentRuntime, ProductionSelfAgentService, SelfAgentBuildError,
     SelfAgentRuntimeBuildError,
 };
+pub use credentials::{
+    clear_provider_credential, resolve_credential_target, store_provider_credential,
+    wire_provider_reference, ConfigWiring, CredentialEntryError, CredentialTarget,
+    CredentialUpdate,
+};
 use identity::WorkspaceIdentity;
 pub use identity::{IdentityError, WorkspaceIdentitySnapshot};
 pub use model_catalog::{
@@ -41,8 +47,7 @@ pub use permissions::{
 };
 pub use resume_catalog::{
     load_self_agent_resume_catalog, SelfAgentResumeAvailability, SelfAgentResumeCatalog,
-    SelfAgentResumeCatalogError, SelfAgentResumeEntry, SelfAgentResumeStage,
-    SelfAgentResumeStep,
+    SelfAgentResumeCatalogError, SelfAgentResumeEntry, SelfAgentResumeStage, SelfAgentResumeStep,
 };
 pub use runtime::{
     SelfAgentOutcome, SelfAgentRunOutcome, SelfAgentRuntime, SelfAgentRuntimeError,

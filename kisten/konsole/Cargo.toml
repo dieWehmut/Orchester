@@ -19,6 +19,7 @@ clap = { workspace = true }
 tokio = { workspace = true }
 tokio-util = { workspace = true }
 serde_json = { workspace = true }
+secrecy = { workspace = true }
 futures = { workspace = true }
 thiserror = { workspace = true }
 crossterm = { workspace = true }

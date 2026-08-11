@@ -4,22 +4,29 @@ use std::path::PathBuf;
 use orchester_laufzeit::harness::config::{ConfigError, ConfigLoader, UserConfig};
 use orchester_laufzeit::harness::credentials::KeyringCredentialStore;
 use orchester_laufzeit::harness::service::{
-    build_self_agent_runtime, load_self_agent_permissions, load_self_agent_resume_catalog,
-    load_self_agent_status, ProductionSelfAgentRuntime, SelfAgentActiveModel, SelfAgentModelCatalog,
-    SelfAgentModelCatalogError, SelfAgentModelChoice, SelfAgentModelSession,
+    build_self_agent_runtime, clear_provider_credential, load_self_agent_permissions,
+    load_self_agent_resume_catalog, load_self_agent_status, resolve_credential_target,
+    store_provider_credential, wire_provider_reference, ConfigWiring, CredentialEntryError,
+    CredentialTarget, CredentialUpdate, ProductionSelfAgentRuntime, SelfAgentActiveModel,
+    SelfAgentModelCatalog, SelfAgentModelCatalogError, SelfAgentModelChoice, SelfAgentModelSession,
     SelfAgentPermissionSnapshot, SelfAgentResumeCatalog, SelfAgentResumeCatalogError,
     SelfAgentRunOutcome, SelfAgentRuntimeBuildError, SelfAgentRuntimeError, SelfAgentStatus,
     SelfAgentStatusError,
 };
+use secrecy::SecretString;
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
 
+mod credentials;
 mod models;
 mod permissions;
 mod render;
 mod resume;
 mod status;
 
+pub use credentials::{
+    render_credential_cleared, render_credential_stored, render_credential_target,
+};
 pub use models::{render_model_selection, render_models};
 pub use permissions::render_permissions;
 pub use render::render_outcome;
@@ -40,6 +47,8 @@ pub enum SelfAgentHostError {
     Resume(#[from] SelfAgentResumeCatalogError),
     #[error(transparent)]
     Models(#[from] SelfAgentModelCatalogError),
+    #[error(transparent)]
+    Credential(#[from] CredentialEntryError),
     #[error("self-agent runtime initialization failed")]
     Initialization,
 }
@@ -141,6 +150,41 @@ impl SelfAgentHost {
             "local-user",
         )
         .map_err(Into::into)
+    }
+
+    /// Describe the provider `/login` or `/logout` would act on, so the prompt
+    /// can name it before a key is pasted.
+    pub fn credential_target(
+        &self,
+        provider: Option<&str>,
+    ) -> Result<CredentialTarget, SelfAgentHostError> {
+        let config = self.load_config()?;
+        let credentials = KeyringCredentialStore::new();
+        resolve_credential_target(&config, &credentials, provider).map_err(Into::into)
+    }
+
+    /// Store a key and make it reachable from configuration.  No provider
+    /// request is made, so the result is stored but unverified.
+    pub fn store_credential(
+        &mut self,
+        target: &CredentialTarget,
+        secret: SecretString,
+    ) -> Result<(CredentialUpdate, ConfigWiring), SelfAgentHostError> {
+        let credentials = KeyringCredentialStore::new();
+        let update = store_provider_credential(&credentials, &target.provider, secret)?;
+        let loader = ConfigLoader::new()?;
+        let wiring = wire_provider_reference(loader.user_path(), target)?;
+        // The next turn must resolve against the key that was just stored.
+        self.runtime = None;
+        Ok((update, wiring))
+    }
+
+    /// Forget a stored key.  Reports whether one was actually present.
+    pub fn clear_credential(&mut self, provider: &str) -> Result<bool, SelfAgentHostError> {
+        let credentials = KeyringCredentialStore::new();
+        let removed = clear_provider_credential(&credentials, provider)?;
+        self.runtime = None;
+        Ok(removed)
     }
 
     fn ensure_runtime(&mut self) -> Result<(), SelfAgentHostError> {

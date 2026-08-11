@@ -5,14 +5,15 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 mod commands;
 mod screen;
+mod secret;
 
 use crate::avatar;
-pub use commands::{
-    HomeAction, ModelCommand, PluginAction, PromptAction, WorkspaceCommand, parse_home_action,
-    parse_prompt_action,
-};
 use commands::{
     command_action, matching_commands, matching_delegate_commands, parse_home_action_selected,
+};
+pub use commands::{
+    parse_home_action, parse_prompt_action, CredentialCommand, HomeAction, ModelCommand,
+    PluginAction, PromptAction, WorkspaceCommand,
 };
 use crossterm::event::{
     self, Event as TerminalEvent, KeyCode, KeyEvent, KeyEventKind, KeyModifiers,
@@ -22,6 +23,7 @@ use orchester_protokoll::{Capability, TaskKind};
 use orchester_vertrag::{AdapterAvailability, AvailabilityStatus};
 use orchester_verzeichnis::Registry;
 use screen::{FramePresenter, TerminalSession};
+pub use secret::prompt_secret;
 use unicode_width::{UnicodeWidthChar, UnicodeWidthStr};
 
 const DIM: &str = "\x1b[2m";
@@ -344,8 +346,8 @@ pub fn select_agent_tui(
                             command_selected = 0;
                         }
                         PromptAction::Workspace(_) => {
-                            message = "Return to the Orchester home to inspect workspace status."
-                                .into();
+                            message =
+                                "Return to the Orchester home to inspect workspace status.".into();
                             command.clear();
                             command_selected = 0;
                         }
@@ -525,7 +527,7 @@ pub fn render_agent_table<W: Write>(
     writeln!(out)?;
     writeln!(
         out,
-        "{DIM}Commands: /agent switch, /model choose, /resume list, /permissions inspect, /status inspect, /plugins manage, /help help, /quit exit.{RESET}"
+        "{DIM}Commands: /agent switch, /model choose, /resume list, /permissions inspect, /status inspect, /login key, /plugins manage, /help help, /quit exit.{RESET}"
     )
 }
 
@@ -538,6 +540,8 @@ pub fn render_help<W: Write>(out: &mut W) -> io::Result<()> {
     writeln!(out, "  /permissions show effective self-agent permissions")?;
     writeln!(out, "  /resume  show resumable self-agent runs")?;
     writeln!(out, "  /status  show self-agent workspace status")?;
+    writeln!(out, "  /login   store a provider API key in the OS keyring")?;
+    writeln!(out, "  /logout  forget a stored provider API key")?;
     writeln!(out, "  /plugins list, inspect, install, or remove plugins")?;
     writeln!(out, "  /help    show this help")?;
     writeln!(out, "  /quit    exit Orchester")?;
@@ -686,14 +690,7 @@ fn render_picker_command_frame<W: Write>(
         .saturating_sub(1)
         .saturating_sub(status_rows)
         .min(PALETTE_ROWS);
-    render_delegate_command_palette(
-        out,
-        command,
-        choices,
-        command_selected,
-        palette_rows,
-        width,
-    )?;
+    render_delegate_command_palette(out, command, choices, command_selected, palette_rows, width)?;
     if status_rows > 0 {
         write!(
             out,
@@ -955,6 +952,8 @@ fn render_home_help<W: Write>(out: &mut W, width: usize, max_rows: usize) -> io:
         "/permissions inspect effective permissions",
         "/resume     inspect resumable runs",
         "/status     inspect self-agent state",
+        "/login      store a provider API key",
+        "/logout     forget a provider API key",
         "/plugins    manage agent plugins",
         "/codex      launch Codex",
         "/claude     launch Claude",
@@ -1505,6 +1504,40 @@ mod tests {
     }
 
     #[test]
+    fn login_and_logout_are_typed_in_home_and_delegate_prompts() {
+        let choices = vec![choice("mock", AvailabilityStatus::Available, None)];
+
+        assert_eq!(
+            parse_home_action("/login", &choices),
+            HomeAction::Workspace(WorkspaceCommand::Credential(CredentialCommand::Login {
+                provider: None
+            }))
+        );
+        assert_eq!(
+            parse_prompt_action("/login OpenAI", &choices),
+            PromptAction::Workspace(WorkspaceCommand::Credential(CredentialCommand::Login {
+                provider: Some("OpenAI".into())
+            }))
+        );
+        assert_eq!(
+            parse_home_action("/logout", &choices),
+            HomeAction::Workspace(WorkspaceCommand::Credential(CredentialCommand::Logout {
+                provider: None
+            }))
+        );
+        assert_eq!(
+            parse_prompt_action("/logout OpenAI", &choices),
+            PromptAction::Workspace(WorkspaceCommand::Credential(CredentialCommand::Logout {
+                provider: Some("OpenAI".into())
+            }))
+        );
+        assert_eq!(
+            parse_prompt_action("/login OpenAI spare", &choices),
+            PromptAction::Help
+        );
+    }
+
+    #[test]
     fn model_query_is_typed_in_home_and_delegate_prompts() {
         let choices = vec![choice("mock", AvailabilityStatus::Available, None)];
 
@@ -1773,11 +1806,7 @@ mod tests {
             "wide startup should render the true-colour logo portrait:\n{rendered}"
         );
         assert!(
-            plain
-                .chars()
-                .filter(|ch| *ch == '\u{2580}')
-                .count()
-                > 40,
+            plain.chars().filter(|ch| *ch == '\u{2580}').count() > 40,
             "startup portrait should be recognisable as dense ANSI art:\n{rendered}"
         );
         assert!(
@@ -2053,6 +2082,24 @@ mod tests {
         assert!(help.contains("/agent      choose a delegate"));
         assert!(help.contains("/status     inspect self-agent state"));
         assert!(help.contains("Esc         close help"));
+    }
+
+    #[test]
+    fn every_help_surface_documents_credential_entry() {
+        // A command that exists but is undocumented is a command nobody finds,
+        // and both panels are hand-maintained lists that drift independently.
+        let mut home = Vec::new();
+        render_chat_home(&mut home, 80, "", &[], 0, true).unwrap();
+        let home = strip_ansi(&String::from_utf8(home).unwrap());
+        assert!(home.contains("/login"));
+        assert!(home.contains("/logout"));
+
+        let mut prompt = Vec::new();
+        render_help(&mut prompt).unwrap();
+        let prompt = strip_ansi(&String::from_utf8(prompt).unwrap());
+        assert!(prompt.contains("/login"));
+        assert!(prompt.contains("/logout"));
+        assert!(prompt.contains("keyring"));
     }
 
     #[test]

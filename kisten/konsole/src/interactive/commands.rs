@@ -39,6 +39,15 @@ pub enum WorkspaceCommand {
     Permissions,
     Resume,
     Model(ModelCommand),
+    Credential(CredentialCommand),
+}
+
+/// Provider credential entry.  `provider: None` means "whichever provider the
+/// effective config marks active", so the common case needs no argument.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum CredentialCommand {
+    Login { provider: Option<String> },
+    Logout { provider: Option<String> },
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -185,6 +194,24 @@ pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> Pro
                 .map(|command| PromptAction::Workspace(WorkspaceCommand::Model(command)))
                 .unwrap_or(PromptAction::Help);
         }
+        "/login" => {
+            return provider_argument(input)
+                .map(|provider| {
+                    PromptAction::Workspace(WorkspaceCommand::Credential(
+                        CredentialCommand::Login { provider },
+                    ))
+                })
+                .unwrap_or(PromptAction::Help);
+        }
+        "/logout" => {
+            return provider_argument(input)
+                .map(|provider| {
+                    PromptAction::Workspace(WorkspaceCommand::Credential(
+                        CredentialCommand::Logout { provider },
+                    ))
+                })
+                .unwrap_or(PromptAction::Help);
+        }
         "/plugin" | "/plugins" => {
             return parse_plugin_action(input)
                 .map(PromptAction::Plugins)
@@ -216,6 +243,18 @@ pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> Pro
             .map(PromptAction::LaunchAgent)
             .unwrap_or(PromptAction::Empty),
     }
+}
+
+/// Accept `/<command>` or `/<command> <provider>` and reject anything longer.
+/// `Some(None)` means "no provider named"; `None` means the input is malformed.
+fn provider_argument(input: &str) -> Option<Option<String>> {
+    let mut parts = input.split_whitespace();
+    parts.next()?;
+    let provider = parts.next().map(str::to_owned);
+    if parts.next().is_some() {
+        return None;
+    }
+    Some(provider)
 }
 
 fn parse_model_command(input: &str) -> Option<ModelCommand> {
@@ -274,6 +313,22 @@ fn command_items(choices: &[AgentChoice]) -> Vec<CommandItem> {
             name: "/model".into(),
             description: "show configured self-agent models".into(),
             action: CommandAction::Workspace(WorkspaceCommand::Model(ModelCommand::Show)),
+            agent: None,
+        },
+        CommandItem {
+            name: "/login".into(),
+            description: "store a provider API key".into(),
+            action: CommandAction::Workspace(WorkspaceCommand::Credential(
+                CredentialCommand::Login { provider: None },
+            )),
+            agent: None,
+        },
+        CommandItem {
+            name: "/logout".into(),
+            description: "forget a stored provider API key".into(),
+            action: CommandAction::Workspace(WorkspaceCommand::Credential(
+                CredentialCommand::Logout { provider: None },
+            )),
             agent: None,
         },
         CommandItem {

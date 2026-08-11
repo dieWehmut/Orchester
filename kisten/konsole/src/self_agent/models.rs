@@ -86,7 +86,9 @@ fn optional_value(value: Option<&str>) -> String {
     value.map(safe_metadata).unwrap_or_else(|| "default".into())
 }
 
-fn safe_metadata(value: &str) -> String {
+/// Escape every control character, newlines included.  Metadata is rendered on
+/// a single line, so a newline inside it could otherwise forge one.
+pub(super) fn safe_metadata(value: &str) -> String {
     value
         .chars()
         .flat_map(|character| {

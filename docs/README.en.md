@@ -190,6 +190,8 @@ Available in interactive mode (run `orchester` with no arguments):
 | `/permissions` | Show the effective permissions |
 | `/resume` | List resumable runs |
 | `/status` | Show the self-agent workspace status |
+| `/login` | Store a provider API key in the OS keyring; config keeps only a reference |
+| `/logout` | Forget a stored provider API key |
 | `/plugins` | Manage plugins (`list` / `status` / `install` / `remove`) |
 | `/claude` `/codex` `/opencode` | Launch the corresponding native agent |
 | `/help` | Show help |
@@ -205,6 +207,8 @@ Typing `/` opens the command palette — arrow keys to select, Enter to confirm.
 | `orchester list` | List discovered adapters and their capabilities |
 | `orchester doctor [--strict]` | Check local adapter availability |
 | `orchester sessions` | List locally recorded session metadata |
+| `orchester login [provider]` | Store a provider API key; omit the provider to use the active one |
+| `orchester logout [provider]` | Remove a stored provider API key |
 | `orchester plugin <list\|status\|install\|remove>` | Plugin management |
 
 Global flags: `--agent/-a`, `--resume`, `--model/-m`, `--json`.

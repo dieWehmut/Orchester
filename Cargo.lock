@@ -1020,6 +1020,7 @@ dependencies = [
  "orchester-protokoll",
  "orchester-vertrag",
  "orchester-verzeichnis",
+ "secrecy",
  "serde_json",
  "sha2",
  "tar",

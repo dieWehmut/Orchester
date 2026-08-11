@@ -16,19 +16,19 @@ mod self_agent;
 use std::collections::HashMap;
 use std::io::{self, IsTerminal, Read, Write};
 use std::path::PathBuf;
-use std::process::{Command as ProcessCommand, Stdio};
 use std::process::ExitCode;
+use std::process::{Command as ProcessCommand, Stdio};
 
 use clap::Parser;
 
 use orchester_laufzeit::{Conductor, ConductorError, SessionRecord, SessionStore};
 use orchester_protokoll::{Outcome, RunResult, Task};
-use orchester_verzeichnis::{PluginRootError, Registry, standard_plugin_roots};
+use orchester_verzeichnis::{standard_plugin_roots, PluginRootError, Registry};
 
-use args::{
-    Cli, Command, PluginCommand, PluginInstallArgs, PluginRemoveArgs, PluginStatusArgs,
+use args::{Cli, Command, PluginCommand, PluginInstallArgs, PluginRemoveArgs, PluginStatusArgs};
+use interactive::{
+    AgentChoice, CredentialCommand, ModelCommand, PluginAction, PromptAction, WorkspaceCommand,
 };
-use interactive::{AgentChoice, ModelCommand, PluginAction, PromptAction, WorkspaceCommand};
 use process::{command_invocation, is_cancelled_status, resolve_command};
 use self_agent::{SelfAgentHost, SelfAgentHostError};
 use tokio_util::sync::CancellationToken;
@@ -110,14 +110,29 @@ async fn run(cli: Cli) -> Result<ExitCode, CliError> {
             return Ok(ExitCode::SUCCESS);
         }
         Some(Command::Plugin(plugin_args)) => {
-            return plugin::run(
-                &registry,
-                plugin_args.command,
-                json,
-                &orchester_home(),
-            )
-            .map(ExitCode::from)
-            .map_err(CliError::Io);
+            return plugin::run(&registry, plugin_args.command, json, &orchester_home())
+                .map(ExitCode::from)
+                .map_err(CliError::Io);
+        }
+        Some(Command::Login(args)) => {
+            let mut self_agent = self_agent_host()?;
+            render_workspace_command(
+                &mut self_agent,
+                WorkspaceCommand::Credential(CredentialCommand::Login {
+                    provider: args.provider,
+                }),
+            )?;
+            return Ok(ExitCode::SUCCESS);
+        }
+        Some(Command::Logout(args)) => {
+            let mut self_agent = self_agent_host()?;
+            render_workspace_command(
+                &mut self_agent,
+                WorkspaceCommand::Credential(CredentialCommand::Logout {
+                    provider: args.provider,
+                }),
+            )?;
+            return Ok(ExitCode::SUCCESS);
         }
         Some(Command::Run(run)) => run.prompt,
         None => prompt,
@@ -178,10 +193,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                 interactive::render_help(&mut out)?;
             }
             interactive::HomeAction::Submit(prompt) => {
-                match self_agent
-                    .submit(prompt, CancellationToken::new())
-                    .await
-                {
+                match self_agent.submit(prompt, CancellationToken::new()).await {
                     Ok(outcome) => {
                         let mut out = io::stdout().lock();
                         self_agent::render_outcome(&mut out, &outcome)?;
@@ -230,12 +242,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                 }
             }
             interactive::HomeAction::Plugins(action) => {
-                let _ = plugin::run(
-                    &registry,
-                    plugin_command(action),
-                    false,
-                    &orchester_home(),
-                )?;
+                let _ = plugin::run(&registry, plugin_command(action), false, &orchester_home())?;
                 registry = discover_registry()?;
             }
         }
@@ -674,6 +681,29 @@ fn render_workspace_command(
             let selected = self_agent.select_configured_model()?;
             let mut out = io::stdout().lock();
             self_agent::render_model_selection(&mut out, &selected)?;
+        }
+        WorkspaceCommand::Credential(CredentialCommand::Login { provider }) => {
+            let target = self_agent.credential_target(provider.as_deref())?;
+            {
+                let mut out = io::stdout().lock();
+                self_agent::render_credential_target(&mut out, &target)?;
+            }
+            // The prompt writes to the same terminal, so the stdout lock is
+            // released before asking and retaken to confirm.
+            let Some(secret) = interactive::prompt_secret("API key")? else {
+                let mut out = io::stdout().lock();
+                writeln!(out, "cancelled; nothing was stored")?;
+                return Ok(());
+            };
+            let (update, wiring) = self_agent.store_credential(&target, secret)?;
+            let mut out = io::stdout().lock();
+            self_agent::render_credential_stored(&mut out, &update, &wiring)?;
+        }
+        WorkspaceCommand::Credential(CredentialCommand::Logout { provider }) => {
+            let target = self_agent.credential_target(provider.as_deref())?;
+            let removed = self_agent.clear_credential(&target.provider)?;
+            let mut out = io::stdout().lock();
+            self_agent::render_credential_cleared(&mut out, &target.provider, removed)?;
         }
     }
     Ok(())

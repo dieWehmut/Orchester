@@ -1,22 +1,136 @@
 use std::ffi::c_void;
 use std::fs::File;
 use std::mem::size_of;
+use std::os::windows::fs::OpenOptionsExt;
 use std::os::windows::io::AsRawHandle;
 use std::ptr::null_mut;
 
 use windows_sys::Win32::Foundation::{ERROR_SUCCESS, HANDLE};
 use windows_sys::Win32::Security::Authorization::{GetSecurityInfo, SE_FILE_OBJECT};
 use windows_sys::Win32::Security::{
-    ACE_HEADER, ACL, ACL_SIZE_INFORMATION, DACL_SECURITY_INFORMATION, GetAce, GetAclInformation,
-    INHERIT_ONLY_ACE, IsValidAcl, IsValidSid, OWNER_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR,
+    GetAce, GetAclInformation, IsValidAcl, IsValidSid, ACE_HEADER, ACL, ACL_SIZE_INFORMATION,
+    DACL_SECURITY_INFORMATION, INHERIT_ONLY_ACE, OWNER_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR,
     PSID,
 };
 use windows_sys::Win32::Storage::FileSystem::{
-    BY_HANDLE_FILE_INFORMATION, FILE_ATTRIBUTE_DIRECTORY, FILE_ATTRIBUTE_REPARSE_POINT,
-    FILE_TYPE_DISK, GetFileInformationByHandle, GetFileType,
+    GetFileInformationByHandle, GetFileType, BY_HANDLE_FILE_INFORMATION, FILE_ATTRIBUTE_DIRECTORY,
+    FILE_ATTRIBUTE_REPARSE_POINT, FILE_TYPE_DISK,
 };
 
 use super::PrivateHandleError;
+
+/// Create `path` and any missing ancestor, breaking ACL inheritance on each
+/// directory we create so it grants only this user, SYSTEM, and Administrators.
+///
+/// Directories that already exist are returned untouched: rewriting an ACL we
+/// did not establish could destroy grants another principal owns, which is the
+/// same reason the config loader only ever *reports* on foreign permissions.
+pub(crate) fn create_private_dir_all(path: &std::path::Path) -> std::io::Result<()> {
+    if path.is_dir() {
+        return Ok(());
+    }
+    if let Some(parent) = path.parent() {
+        if !parent.as_os_str().is_empty() {
+            create_private_dir_all(parent)?;
+        }
+    }
+    match std::fs::create_dir(path) {
+        Ok(()) => restrict_directory(path),
+        // Losing a race against another process that created the same directory
+        // is not a failure; its ACL is then not ours to rewrite.
+        Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists && path.is_dir() => Ok(()),
+        Err(error) => Err(error),
+    }
+}
+
+/// Write `contents` to a newly created file.
+///
+/// No ACL work is needed here: the file inherits the restricted grants of the
+/// directory [`create_private_dir_all`] just established.  `create_new` refuses
+/// to follow a reparse point planted at `path` or to truncate an existing file.
+pub(crate) fn write_private_file(path: &std::path::Path, contents: &str) -> std::io::Result<()> {
+    use std::io::Write;
+
+    let mut file = std::fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .custom_flags(windows_sys::Win32::Storage::FileSystem::FILE_FLAG_OPEN_REPARSE_POINT)
+        .open(path)?;
+    file.write_all(contents.as_bytes())
+}
+
+/// Replace a directory's inherited ACL with an explicit user-only one.
+///
+/// `icacls` is used rather than `SetNamedSecurityInfoW` because building an ACL
+/// by hand is a great deal of unsafe code for a one-shot grant, and shelling out
+/// to it is already how this crate inspects Windows permissions.
+fn restrict_directory(path: &std::path::Path) -> std::io::Result<()> {
+    let tool = std::env::var_os("SystemRoot")
+        .map(std::path::PathBuf::from)
+        .map(|root| root.join("System32").join("icacls.exe"))
+        .filter(|candidate| candidate.is_file())
+        .ok_or_else(|| std::io::Error::other("icacls is unavailable, so '{path}' cannot be made user-only; create it manually with a user-only ACL"))?;
+    let sid = current_user_sid_string()?;
+    // (OI)(CI) propagates to the configuration file created inside, so the
+    // secret it may hold inherits the same user-only grants.
+    let output = std::process::Command::new(tool)
+        .arg(path)
+        .args(["/inheritance:r", "/grant:r"])
+        .args([
+            format!("*{sid}:(OI)(CI)(F)"),
+            "*S-1-5-18:(OI)(CI)(F)".to_owned(),
+            "*S-1-5-32-544:(OI)(CI)(F)".to_owned(),
+        ])
+        .output()?;
+    if output.status.success() {
+        return Ok(());
+    }
+    // The directory exists but is not private, so leaving it behind would be a
+    // trap for the secret about to be written into it.
+    let _ = std::fs::remove_dir(path);
+    Err(std::io::Error::other(
+        "could not restrict the new directory to the current user",
+    ))
+}
+
+/// The current user's SID in `S-1-5-…` form, the unambiguous way to name a
+/// principal to `icacls`: an account name can be shadowed across domains.
+fn current_user_sid_string() -> std::io::Result<String> {
+    use windows_sys::Win32::Security::Authorization::ConvertSidToStringSidW;
+
+    let storage = current_user_sid()
+        .map_err(|_| std::io::Error::other("could not read the current user identity"))?;
+    let sid = unsafe {
+        (*(storage.as_ptr() as *const windows_sys::Win32::Security::TOKEN_USER))
+            .User
+            .Sid
+    };
+    let mut raw: *mut u16 = null_mut();
+    if unsafe { ConvertSidToStringSidW(sid, &mut raw) } == 0 || raw.is_null() {
+        return Err(std::io::Error::last_os_error());
+    }
+    let _guard = LocalStringGuard(raw);
+    let mut length = 0usize;
+    while unsafe { *raw.add(length) } != 0 {
+        length += 1;
+    }
+    String::from_utf16(unsafe { std::slice::from_raw_parts(raw, length) })
+        .map_err(|_| std::io::Error::other("the current user identity is not valid UTF-16"))
+}
+
+struct LocalStringGuard(*mut u16);
+
+impl Drop for LocalStringGuard {
+    fn drop(&mut self) {
+        if !self.0.is_null() {
+            unsafe {
+                windows_sys::Win32::Foundation::LocalFree(
+                    self.0 as windows_sys::Win32::Foundation::HLOCAL,
+                );
+            }
+        }
+    }
+}
 
 pub(crate) fn validate_private_handle(
     file: &File,
@@ -225,7 +339,7 @@ fn sid_is_allowed(sid: PSID, current: PSID) -> bool {
 }
 
 fn current_user_sid() -> Result<Vec<usize>, PrivateHandleError> {
-    use windows_sys::Win32::Security::{GetTokenInformation, TOKEN_QUERY, TokenUser};
+    use windows_sys::Win32::Security::{GetTokenInformation, TokenUser, TOKEN_QUERY};
     use windows_sys::Win32::System::Threading::{GetCurrentProcess, OpenProcessToken};
 
     let mut raw_token: HANDLE = null_mut();
@@ -297,8 +411,8 @@ mod tests {
     use std::os::windows::fs::OpenOptionsExt;
     use std::path::{Path, PathBuf};
     use std::process::Command;
-    use std::sync::OnceLock;
     use std::sync::atomic::{AtomicU64, Ordering};
+    use std::sync::OnceLock;
 
     use windows_sys::Win32::Storage::FileSystem::{
         FILE_FLAG_BACKUP_SEMANTICS, FILE_FLAG_OPEN_REPARSE_POINT, FILE_SHARE_READ,

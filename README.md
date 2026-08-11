@@ -190,6 +190,8 @@ orchester --agent claude --resume <session-id> "再补上测试"
 | `/permissions` | 查看当前生效的权限 |
 | `/resume` | 查看可续跑的运行记录 |
 | `/status` | 查看自建 Agent 的工作区状态 |
+| `/login` | 把服务商 API Key 存进系统钥匙串，配置里只留引用 |
+| `/logout` | 忘掉已存的服务商 API Key |
 | `/plugins` | 管理插件（`list` / `status` / `install` / `remove`） |
 | `/claude` `/codex` `/opencode` | 直接拉起对应的原生 Agent |
 | `/help` | 显示帮助 |
@@ -205,6 +207,8 @@ orchester --agent claude --resume <session-id> "再补上测试"
 | `orchester list` | 列出发现的适配器与能力 |
 | `orchester doctor [--strict]` | 体检本地 Agent 是否可用 |
 | `orchester sessions` | 列出本地记录的会话元数据 |
+| `orchester login [provider]` | 存入服务商 API Key，省略 provider 就用配置里当前激活的那个 |
+| `orchester logout [provider]` | 删掉已存的服务商 API Key |
 | `orchester plugin <list\|status\|install\|remove>` | 插件管理 |
 
 全局参数：`--agent/-a`、`--resume`、`--model/-m`、`--json`。

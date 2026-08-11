@@ -62,6 +62,18 @@ pub enum Command {
 
     /// Inspect and manage agent plugin packages.
     Plugin(PluginArgs),
+
+    /// Store a provider API key in the OS keyring.
+    Login(CredentialArgs),
+
+    /// Forget a provider API key held in the OS keyring.
+    Logout(CredentialArgs),
+}
+
+#[derive(Debug, Args)]
+pub struct CredentialArgs {
+    /// Provider name. Defaults to the one the effective config marks active.
+    pub provider: Option<String>,
 }
 
 #[derive(Debug, Args)]
@@ -111,4 +123,43 @@ pub struct PluginInstallArgs {
 pub struct PluginRemoveArgs {
     /// Plugin name without the `@orchester/` scope.
     pub name: String,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use clap::CommandFactory;
+
+    fn provider_of(argv: &[&str]) -> Option<String> {
+        match Cli::try_parse_from(argv).expect("parse").command {
+            Some(Command::Login(args) | Command::Logout(args)) => args.provider,
+            other => panic!("expected a credential command, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn credential_commands_default_to_the_active_provider() {
+        assert_eq!(provider_of(&["orchester", "login"]), None);
+        assert_eq!(provider_of(&["orchester", "logout"]), None);
+    }
+
+    #[test]
+    fn a_named_provider_is_carried_through() {
+        assert_eq!(
+            provider_of(&["orchester", "login", "OpenAI"]),
+            Some("OpenAI".into())
+        );
+    }
+
+    #[test]
+    fn a_second_positional_is_rejected_rather_than_silently_dropped() {
+        // `login OpenAI sk-live-…` is a plausible typo, and accepting it would
+        // leave the key in the shell history while storing nothing.
+        assert!(Cli::try_parse_from(["orchester", "login", "OpenAI", "extra"]).is_err());
+    }
+
+    #[test]
+    fn the_command_surface_stays_valid() {
+        Cli::command().debug_assert();
+    }
 }

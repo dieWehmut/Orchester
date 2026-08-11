@@ -4,6 +4,35 @@ use std::os::unix::io::AsRawFd;
 
 use super::PrivateHandleError;
 
+/// Create `path` and any missing ancestor as user-only.  The mode is applied at
+/// creation rather than afterwards, so a directory that will hold a secret is
+/// never briefly group- or world-readable.  Directories that already exist are
+/// left alone: only what we create is ours to restrict.
+pub(crate) fn create_private_dir_all(path: &std::path::Path) -> std::io::Result<()> {
+    use std::fs::DirBuilder;
+    use std::os::unix::fs::DirBuilderExt;
+
+    if path.is_dir() {
+        return Ok(());
+    }
+    DirBuilder::new().recursive(true).mode(0o700).create(path)
+}
+
+/// Write `contents` to a newly created user-only file.  `create_new` refuses to
+/// follow a symlink planted at `path` or to truncate an existing file, so a
+/// secret can never be diverted into somewhere it does not belong.
+pub(crate) fn write_private_file(path: &std::path::Path, contents: &str) -> std::io::Result<()> {
+    use std::io::Write;
+    use std::os::unix::fs::OpenOptionsExt;
+
+    let mut file = std::fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .mode(0o600)
+        .open(path)?;
+    file.write_all(contents.as_bytes())
+}
+
 pub(crate) fn validate_private_handle(
     file: &File,
     expect_directory: bool,
