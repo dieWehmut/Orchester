@@ -29,8 +29,11 @@ mod secrets;
 pub use provider::ResolvedModelProfile;
 pub use secrets::ConfiguredSecretSet;
 
-/// Relative path of the per-user configuration file.
-pub const USER_CONFIG: &str = ".orchester/orchester.jsonc";
+/// Name of the Orchester home directory, kept beside the `.claude` and
+/// `.codex` homes of the agents Orchester drives.
+pub const ORCHESTER_DIR: &str = ".orchester";
+/// Name of the per-user configuration file inside the Orchester home.
+pub const USER_CONFIG: &str = "orchester.jsonc";
 /// Relative path of a project/workspace configuration file.
 pub const PROJECT_CONFIG: &str = ".orchester/project.jsonc";
 
@@ -816,10 +819,10 @@ pub struct ConfigLoader {
 
 impl ConfigLoader {
     pub fn new() -> Result<Self, ConfigError> {
-        Self::from_home_dir(home_dir())
+        Self::from_orchester_home(orchester_home())
     }
 
-    fn from_home_dir(home: Option<PathBuf>) -> Result<Self, ConfigError> {
+    fn from_orchester_home(home: Option<PathBuf>) -> Result<Self, ConfigError> {
         let home = home.ok_or(ConfigError::HomeDirectoryUnavailable)?;
         if home.as_os_str().is_empty() || !home.is_absolute() {
             return Err(ConfigError::HomeDirectoryUnavailable);
@@ -1742,6 +1745,34 @@ fn home_dir() -> Option<PathBuf> {
     }
 }
 
+/// The Orchester home directory: everything Orchester owns lives here, so that
+/// one variable moves the configuration, the state database and the audit log
+/// together.  Resolving them separately once put the config and the state on
+/// different roots, and a key written by `orchester login` landed where the
+/// loader never looked.
+pub fn orchester_home() -> Option<PathBuf> {
+    resolve_orchester_home(
+        std::env::var_os("ORCHESTER_HOME").map(PathBuf::from),
+        home_dir(),
+    )
+}
+
+/// The decision itself, kept free of the environment so it can be tested
+/// without mutating process-global state.
+fn resolve_orchester_home(
+    explicit: Option<PathBuf>,
+    user_home: Option<PathBuf>,
+) -> Option<PathBuf> {
+    if let Some(explicit) = explicit {
+        // An empty variable expresses no preference; honouring it would resolve
+        // the configuration to a bare file name in the working directory.
+        if !explicit.as_os_str().is_empty() {
+            return Some(explicit);
+        }
+    }
+    user_home.map(|home| home.join(ORCHESTER_DIR))
+}
+
 fn default_version() -> u32 {
     1
 }
@@ -1795,11 +1826,18 @@ fn default_status_line() -> Vec<String> {
 mod config_loader_tests {
     use super::*;
 
+    fn absolute(name: &str) -> PathBuf {
+        #[cfg(windows)]
+        return PathBuf::from(format!(r"C:\Users\{name}"));
+        #[cfg(not(windows))]
+        return PathBuf::from(format!("/home/{name}"));
+    }
+
     #[test]
     fn home_directory_resolution_fails_closed() {
         for home in [None, Some(PathBuf::new()), Some(PathBuf::from("relative"))] {
             assert!(matches!(
-                ConfigLoader::from_home_dir(home),
+                ConfigLoader::from_orchester_home(home),
                 Err(ConfigError::HomeDirectoryUnavailable)
             ));
         }
@@ -1807,14 +1845,51 @@ mod config_loader_tests {
 
     #[test]
     fn home_directory_resolution_builds_the_user_path() {
-        #[cfg(windows)]
-        let home = PathBuf::from(r"C:\Users\example");
-        #[cfg(not(windows))]
-        let home = PathBuf::from("/home/example");
+        let home = absolute("example").join(ORCHESTER_DIR);
 
-        let loader = ConfigLoader::from_home_dir(Some(home.clone())).unwrap();
+        let loader = ConfigLoader::from_orchester_home(Some(home.clone())).unwrap();
 
         assert_eq!(loader.user_path(), home.join(USER_CONFIG));
         assert_eq!(loader.project_path(), None);
+    }
+
+    /// `ORCHESTER_HOME` has to move the configuration file, not just the state
+    /// directory; when it moved only one of them the two drifted onto separate
+    /// roots and `orchester login` wrote where the loader would never look.
+    #[test]
+    fn an_explicit_home_overrides_the_user_home() {
+        let explicit = absolute("explicit");
+
+        assert_eq!(
+            resolve_orchester_home(Some(explicit.clone()), Some(absolute("user"))),
+            Some(explicit)
+        );
+    }
+
+    #[test]
+    fn the_default_home_sits_beside_the_other_agent_homes() {
+        let user = absolute("user");
+
+        assert_eq!(
+            resolve_orchester_home(None, Some(user.clone())),
+            Some(user.join(ORCHESTER_DIR))
+        );
+    }
+
+    /// An unset variable and one set to nothing are the same intent, and
+    /// trusting the empty value would resolve the config to a bare file name.
+    #[test]
+    fn an_empty_override_is_ignored_rather_than_trusted() {
+        let user = absolute("user");
+
+        assert_eq!(
+            resolve_orchester_home(Some(PathBuf::new()), Some(user.clone())),
+            Some(user.join(ORCHESTER_DIR))
+        );
+    }
+
+    #[test]
+    fn a_missing_user_home_without_an_override_fails_closed() {
+        assert_eq!(resolve_orchester_home(None, None), None);
     }
 }

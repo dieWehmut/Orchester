@@ -57,11 +57,11 @@ mod executor_tests;
 mod workspace_patch_tests;
 
 pub use config::{
-    check_permissions, merge_security, require_user_permissions, ConfigError, ConfigLoader,
-    GovernanceConfig, GovernanceOverrides, LimitsConfig, LimitsOverrides, PermissionDiagnostic,
-    ProjectConfig, ProjectTrustConfig, ProviderConfig, RedactedConfig, ResolvedModelProfile,
-    SecretReference, SecretReferenceError, TuiConfig, UserConfig, ValidatorConfig, PROJECT_CONFIG,
-    USER_CONFIG,
+    check_permissions, merge_security, orchester_home, require_user_permissions, ConfigError,
+    ConfigLoader, GovernanceConfig, GovernanceOverrides, LimitsConfig, LimitsOverrides,
+    PermissionDiagnostic, ProjectConfig, ProjectTrustConfig, ProviderConfig, RedactedConfig,
+    ResolvedModelProfile, SecretReference, SecretReferenceError, TuiConfig, UserConfig,
+    ValidatorConfig, ORCHESTER_DIR, PROJECT_CONFIG, USER_CONFIG,
 };
 pub use credentials::{
     provider_secret, CredentialError, CredentialStore, InMemoryCredentialStore,

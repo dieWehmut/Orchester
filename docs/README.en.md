@@ -140,14 +140,14 @@ orchester --agent claude --resume <session-id> "and now add tests"
 
 ### 6. Configure
 
-The config directory comes from `ORCHESTER_HOME`. When unset, Windows uses `%LOCALAPPDATA%\Orchester` and other platforms use `~/.orchester`.
+The Orchester home is `~/.orchester` on every platform, kept beside the `~/.claude` and `~/.codex` homes of the agents it drives. `ORCHESTER_HOME` overrides that root as a whole, so the config and the state always move together.
 
 | Path | Purpose |
 |---|---|
-| `.orchester/orchester.jsonc` | User config: models, providers, governance policy, plugins |
-| `.orchester/project.jsonc` | Project config, validated as untrusted input — it cannot introduce credentials or relax security |
-| `state/runs.db` | Run records, read by `/resume` and `sessions` |
-| `state/audit.jsonl` | Hash-chain audit log |
+| `~/.orchester/orchester.jsonc` | User config: models, providers, governance policy, plugins |
+| `~/.orchester/state/runs.db` | Run records, read by `/resume` and `sessions` |
+| `~/.orchester/state/audit.jsonl` | Hash-chain audit log |
+| `<project>/.orchester/project.jsonc` | Project config, validated as untrusted input — it cannot introduce credentials or relax security |
 
 `orchester.jsonc` allows comments and looks roughly like this:
 

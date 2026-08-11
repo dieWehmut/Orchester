@@ -140,14 +140,14 @@ orchester --agent claude --resume <session-id> "再補上測試"
 
 ### 6. 設定
 
-設定目錄由 `ORCHESTER_HOME` 決定；沒設定時 Windows 用 `%LOCALAPPDATA%\Orchester`，其他平台用 `~/.orchester`。
+Orchester 的家目錄在所有平台上都是 `~/.orchester`，和它驅動的 agent 的 `~/.claude`、`~/.codex` 放在一起。`ORCHESTER_HOME` 會整體覆蓋這個根目錄，設定和狀態始終跟著一起走。
 
 | 路徑 | 作用 |
 |---|---|
-| `.orchester/orchester.jsonc` | 使用者層級設定：模型、供應商、治理策略、外掛 |
-| `.orchester/project.jsonc` | 專案層級設定，視為不可信輸入來驗證，不能引入憑證或放寬安全策略 |
-| `state/runs.db` | 執行記錄，`/resume` 與 `sessions` 讀它 |
-| `state/audit.jsonl` | 雜湊鏈稽核記錄 |
+| `~/.orchester/orchester.jsonc` | 使用者層級設定：模型、供應商、治理策略、外掛 |
+| `~/.orchester/state/runs.db` | 執行記錄，`/resume` 與 `sessions` 讀它 |
+| `~/.orchester/state/audit.jsonl` | 雜湊鏈稽核記錄 |
+| `<專案>/.orchester/project.jsonc` | 專案層級設定，視為不可信輸入來驗證，不能引入憑證或放寬安全策略 |
 
 `orchester.jsonc` 支援註解，結構大致如下：
 

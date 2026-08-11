@@ -1,6 +1,6 @@
 use std::io::{self, Write};
+use std::path::Path;
 
-use orchester_laufzeit::harness::config::USER_CONFIG;
 use orchester_laufzeit::harness::credentials::KEYRING_SERVICE;
 use orchester_laufzeit::harness::service::{ConfigWiring, CredentialTarget, CredentialUpdate};
 
@@ -50,25 +50,33 @@ pub fn render_credential_target(out: &mut impl Write, target: &CredentialTarget)
 
 /// Confirm a stored key: where it went, how the config reaches it, and the
 /// masked tail that lets a human recognize what they pasted.
+///
+/// `config_path` is reported rather than a fixed location because
+/// `ORCHESTER_HOME` moves the file; naming a constant path would send the
+/// reader looking for a key that is not there.
 pub fn render_credential_stored(
     out: &mut impl Write,
     update: &CredentialUpdate,
     wiring: &ConfigWiring,
+    config_path: &Path,
 ) -> io::Result<()> {
     let provider = safe_metadata(&update.provider);
     let reference = safe_metadata(&update.reference);
+    // The path reaches here from the environment, so it is escaped like every
+    // other rendered value: a newline in it could otherwise forge the `ok` line.
+    let config_path = safe_metadata(&config_path.display().to_string());
     writeln!(out)?;
     writeln!(out, "  stored   OS keyring (service: {KEYRING_SERVICE})")?;
     match wiring {
         ConfigWiring::Created => {
-            writeln!(out, "  created  {USER_CONFIG}")?;
+            writeln!(out, "  created  {config_path}")?;
             writeln!(
                 out,
                 "           model_providers.{provider}.api_key = {reference}"
             )?;
         }
         ConfigWiring::AlreadyReferenced => {
-            writeln!(out, "  wired    {USER_CONFIG}")?;
+            writeln!(out, "  wired    {config_path}")?;
             writeln!(
                 out,
                 "           model_providers.{provider}.api_key = {reference}"
@@ -77,7 +85,7 @@ pub fn render_credential_stored(
         // The config is human-owned and may carry comments, so it is never
         // rewritten; the human is handed the exact text to paste.
         ConfigWiring::NeedsReference { snippet } => {
-            writeln!(out, "  pending  {USER_CONFIG} — add this to reach the key:")?;
+            writeln!(out, "  pending  {config_path} — add this to reach the key:")?;
             for line in safe_terminal_text(snippet).lines() {
                 writeln!(out, "           {line}")?;
             }
@@ -128,6 +136,8 @@ fn config_state(target: &CredentialTarget) -> String {
 
 #[cfg(test)]
 mod tests {
+    use std::path::Path;
+
     use super::*;
 
     fn target(present: bool, base_url: Option<&str>) -> CredentialTarget {
@@ -178,7 +188,12 @@ mod tests {
     #[test]
     fn a_stored_key_reports_the_keyring_service_and_only_a_masked_tail() {
         let rendered = rendered(|out| {
-            render_credential_stored(out, &update(), &ConfigWiring::AlreadyReferenced)
+            render_credential_stored(
+                out,
+                &update(),
+                &ConfigWiring::AlreadyReferenced,
+                Path::new("/home/example/.orchester/orchester.jsonc"),
+            )
         });
 
         assert!(rendered.contains(KEYRING_SERVICE));
@@ -190,12 +205,41 @@ mod tests {
     }
 
     #[test]
-    fn a_created_config_is_reported_as_written() {
-        let rendered =
-            rendered(|out| render_credential_stored(out, &update(), &ConfigWiring::Created));
+    fn a_created_config_is_reported_at_the_path_it_was_written_to() {
+        let rendered = rendered(|out| {
+            render_credential_stored(
+                out,
+                &update(),
+                &ConfigWiring::Created,
+                Path::new("/tmp/elsewhere/orchester.jsonc"),
+            )
+        });
 
         assert!(rendered.contains("created"));
         assert!(rendered.contains("${secret:OpenAI}"));
+        // `ORCHESTER_HOME` can move the file, so naming a fixed location would
+        // send the reader looking for a key that is not there.
+        assert!(rendered.contains("/tmp/elsewhere/orchester.jsonc"));
+    }
+
+    /// The path comes from `ORCHESTER_HOME`, so it is attacker-influenced in
+    /// exactly the way every other rendered value is.  The renderer emits its
+    /// own escapes for the `ok` line, so what must be absent is specifically an
+    /// escape the renderer never writes.
+    #[test]
+    fn a_home_holding_control_characters_cannot_forge_confirmation_lines() {
+        let rendered = rendered(|out| {
+            render_credential_stored(
+                out,
+                &update(),
+                &ConfigWiring::Created,
+                Path::new("/tmp/\u{1b}[31mred\nok  forged/orchester.jsonc"),
+            )
+        });
+
+        assert!(rendered.contains("\\u{1b}[31m"));
+        assert!(!rendered.contains("\u{1b}[31m"));
+        assert!(!rendered.contains("\nok  forged"));
     }
 
     #[test]
@@ -204,7 +248,14 @@ mod tests {
             snippet: "\"model_providers\": { \"OpenAI\": { \"api_key\": \"${secret:OpenAI}\" } }"
                 .into(),
         };
-        let rendered = rendered(|out| render_credential_stored(out, &update(), &wiring));
+        let rendered = rendered(|out| {
+            render_credential_stored(
+                out,
+                &update(),
+                &wiring,
+                Path::new("/home/x/orchester.jsonc"),
+            )
+        });
 
         assert!(rendered.contains("add this"));
         assert!(rendered.contains("\"api_key\": \"${secret:OpenAI}\""));

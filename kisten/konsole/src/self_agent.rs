@@ -165,18 +165,23 @@ impl SelfAgentHost {
 
     /// Store a key and make it reachable from configuration.  No provider
     /// request is made, so the result is stored but unverified.
+    ///
+    /// The resolved configuration path is returned alongside the outcome:
+    /// `ORCHESTER_HOME` moves that file, so only the loader knows where the
+    /// reference was actually written.
     pub fn store_credential(
         &mut self,
         target: &CredentialTarget,
         secret: SecretString,
-    ) -> Result<(CredentialUpdate, ConfigWiring), SelfAgentHostError> {
+    ) -> Result<(CredentialUpdate, ConfigWiring, PathBuf), SelfAgentHostError> {
         let credentials = KeyringCredentialStore::new();
         let update = store_provider_credential(&credentials, &target.provider, secret)?;
         let loader = ConfigLoader::new()?;
-        let wiring = wire_provider_reference(loader.user_path(), target)?;
+        let config_path = loader.user_path().to_path_buf();
+        let wiring = wire_provider_reference(&config_path, target)?;
         // The next turn must resolve against the key that was just stored.
         self.runtime = None;
-        Ok((update, wiring))
+        Ok((update, wiring, config_path))
     }
 
     /// Forget a stored key.  Reports whether one was actually present.

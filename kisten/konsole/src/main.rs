@@ -622,20 +622,14 @@ fn plugin_command(action: PluginAction) -> PluginCommand {
     }
 }
 
+/// The Orchester home, resolved by the runtime so the CLI and the config
+/// loader can never disagree about where Orchester keeps its files.
+///
+/// A home that cannot be resolved stays relative on purpose: the plugin layer
+/// rejects it with a message that does not echo the offending value.
 fn orchester_home() -> PathBuf {
-    if let Some(path) = std::env::var_os("ORCHESTER_HOME") {
-        return PathBuf::from(path);
-    }
-    if let Some(path) = std::env::var_os("LOCALAPPDATA") {
-        return PathBuf::from(path).join("Orchester");
-    }
-    if let Some(path) = std::env::var_os("USERPROFILE") {
-        return PathBuf::from(path).join(".orchester");
-    }
-    if let Some(path) = std::env::var_os("HOME") {
-        return PathBuf::from(path).join(".orchester");
-    }
-    PathBuf::from(".orchester")
+    orchester_laufzeit::harness::orchester_home()
+        .unwrap_or_else(|| PathBuf::from(orchester_laufzeit::harness::ORCHESTER_DIR))
 }
 
 fn self_agent_host() -> Result<SelfAgentHost, io::Error> {
@@ -695,9 +689,9 @@ fn render_workspace_command(
                 writeln!(out, "cancelled; nothing was stored")?;
                 return Ok(());
             };
-            let (update, wiring) = self_agent.store_credential(&target, secret)?;
+            let (update, wiring, config_path) = self_agent.store_credential(&target, secret)?;
             let mut out = io::stdout().lock();
-            self_agent::render_credential_stored(&mut out, &update, &wiring)?;
+            self_agent::render_credential_stored(&mut out, &update, &wiring, &config_path)?;
         }
         WorkspaceCommand::Credential(CredentialCommand::Logout { provider }) => {
             let target = self_agent.credential_target(provider.as_deref())?;

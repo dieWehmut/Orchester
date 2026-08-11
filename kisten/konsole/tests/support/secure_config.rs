@@ -1,11 +1,16 @@
 use std::path::{Path, PathBuf};
 
+/// Write a user configuration into an Orchester home, with the private
+/// permissions the loader insists on.
+///
+/// `home` is the Orchester home itself — the directory `ORCHESTER_HOME` names —
+/// not the surrounding user home, so the file lands exactly where the loader
+/// looks for it.
 pub fn write_user_config(home: &Path, source: &str) -> PathBuf {
-    let directory = home.join(".orchester");
-    std::fs::create_dir_all(&directory).expect("create config directory");
-    let file = directory.join("orchester.jsonc");
+    std::fs::create_dir_all(home).expect("create config directory");
+    let file = home.join("orchester.jsonc");
     std::fs::write(&file, source).expect("write user config");
-    make_permissions_secure(&directory, &file);
+    make_permissions_secure(home, &file);
     file
 }
 

@@ -140,14 +140,14 @@ orchester --agent claude --resume <session-id> "再补上测试"
 
 ### 6. 配置
 
-配置目录由 `ORCHESTER_HOME` 决定；没设置时 Windows 用 `%LOCALAPPDATA%\Orchester`，其他平台用 `~/.orchester`。
+Orchester 的家目录在所有平台上都是 `~/.orchester`，和它驱动的 agent 的 `~/.claude`、`~/.codex` 放在一起。`ORCHESTER_HOME` 会整体覆盖这个根目录，配置和状态始终跟着一起走。
 
 | 路径 | 作用 |
 |---|---|
-| `.orchester/orchester.jsonc` | 用户级配置：模型、供应商、治理策略、插件 |
-| `.orchester/project.jsonc` | 项目级配置，作为不可信输入校验，不能引入凭据或放宽安全策略 |
-| `state/runs.db` | 运行记录，`/resume` 与 `sessions` 读它 |
-| `state/audit.jsonl` | 哈希链审计日志 |
+| `~/.orchester/orchester.jsonc` | 用户级配置：模型、供应商、治理策略、插件 |
+| `~/.orchester/state/runs.db` | 运行记录，`/resume` 与 `sessions` 读它 |
+| `~/.orchester/state/audit.jsonl` | 哈希链审计日志 |
+| `<项目>/.orchester/project.jsonc` | 项目级配置，作为不可信输入校验，不能引入凭据或放宽安全策略 |
 
 `orchester.jsonc` 支持注释，结构大致如下：
 
