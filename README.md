@@ -145,7 +145,8 @@ Orchester 的家目录在所有平台上都是 `~/.orchester`，和它驱动的 
 | 路径 | 作用 |
 |---|---|
 | `~/.orchester/orchester.jsonc` | 用户级配置：模型、供应商、治理策略、插件 |
-| `~/.orchester/state/runs.db` | 运行记录，`/resume` 与 `sessions` 读它 |
+| `~/.orchester/sessions.jsonl` | 委派 Agent 的会话记录，`sessions` 读它 |
+| `~/.orchester/state/runs.db` | 自建 Agent 的运行记录，`/resume` 读它 |
 | `~/.orchester/state/audit.jsonl` | 哈希链审计日志 |
 | `<项目>/.orchester/project.jsonc` | 项目级配置，作为不可信输入校验，不能引入凭据或放宽安全策略 |
 

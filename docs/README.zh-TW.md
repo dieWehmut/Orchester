@@ -145,7 +145,8 @@ Orchester 的家目錄在所有平台上都是 `~/.orchester`，和它驅動的 
 | 路徑 | 作用 |
 |---|---|
 | `~/.orchester/orchester.jsonc` | 使用者層級設定：模型、供應商、治理策略、外掛 |
-| `~/.orchester/state/runs.db` | 執行記錄，`/resume` 與 `sessions` 讀它 |
+| `~/.orchester/sessions.jsonl` | 委派 Agent 的工作階段記錄，`sessions` 讀它 |
+| `~/.orchester/state/runs.db` | 自建 Agent 的執行記錄，`/resume` 讀它 |
 | `~/.orchester/state/audit.jsonl` | 雜湊鏈稽核記錄 |
 | `<專案>/.orchester/project.jsonc` | 專案層級設定，視為不可信輸入來驗證，不能引入憑證或放寬安全策略 |
 

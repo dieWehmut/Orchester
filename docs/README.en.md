@@ -145,7 +145,8 @@ The Orchester home is `~/.orchester` on every platform, kept beside the `~/.clau
 | Path | Purpose |
 |---|---|
 | `~/.orchester/orchester.jsonc` | User config: models, providers, governance policy, plugins |
-| `~/.orchester/state/runs.db` | Run records, read by `/resume` and `sessions` |
+| `~/.orchester/sessions.jsonl` | Delegated-agent session records, read by `sessions` |
+| `~/.orchester/state/runs.db` | Self-agent run records, read by `/resume` |
 | `~/.orchester/state/audit.jsonl` | Hash-chain audit log |
 | `<project>/.orchester/project.jsonc` | Project config, validated as untrusted input — it cannot introduce credentials or relax security |
 
