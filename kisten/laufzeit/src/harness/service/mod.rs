@@ -1,6 +1,7 @@
 //! TUI-independent entry point for the self-owned agent.
 
 mod builder;
+mod config_view;
 mod credentials;
 mod identity;
 mod model_catalog;
@@ -30,6 +31,7 @@ pub use builder::{
     ProductionSelfAgentRuntime, ProductionSelfAgentService, SelfAgentBuildError,
     SelfAgentRuntimeBuildError,
 };
+pub use config_view::{load_self_agent_config_view, ConfigResolution, SelfAgentConfigView};
 pub use credentials::{
     clear_provider_credential, resolve_credential_target, store_provider_credential,
     wire_provider_reference, ConfigWiring, CredentialEntryError, CredentialTarget,
