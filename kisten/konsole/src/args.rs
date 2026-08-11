@@ -63,6 +63,9 @@ pub enum Command {
     /// Inspect and manage agent plugin packages.
     Plugin(PluginArgs),
 
+    /// Show the resolved self-agent configuration with secrets redacted.
+    Config,
+
     /// Store a provider API key in the OS keyring.
     Login(CredentialArgs),
 

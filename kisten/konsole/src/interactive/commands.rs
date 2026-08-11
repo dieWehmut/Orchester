@@ -36,6 +36,7 @@ pub enum PluginAction {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum WorkspaceCommand {
     Status,
+    Config,
     Permissions,
     Resume,
     Model(ModelCommand),
@@ -175,6 +176,16 @@ pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> Pro
                 PromptAction::Help
             };
         }
+        // Matched on the token before the palette fallback: `/model` is described
+        // as "show configured self-agent models", so a description substring match
+        // would otherwise route `/config` there.
+        "/config" => {
+            return if input.split_whitespace().count() == 1 {
+                PromptAction::Workspace(WorkspaceCommand::Config)
+            } else {
+                PromptAction::Help
+            };
+        }
         "/permissions" | "/permission" => {
             return if input.split_whitespace().count() == 1 {
                 PromptAction::Workspace(WorkspaceCommand::Permissions)
@@ -295,6 +306,12 @@ fn command_items(choices: &[AgentChoice]) -> Vec<CommandItem> {
             name: "/status".into(),
             description: "show self-agent workspace status".into(),
             action: CommandAction::Workspace(WorkspaceCommand::Status),
+            agent: None,
+        },
+        CommandItem {
+            name: "/config".into(),
+            description: "show resolved self-agent configuration".into(),
+            action: CommandAction::Workspace(WorkspaceCommand::Config),
             agent: None,
         },
         CommandItem {

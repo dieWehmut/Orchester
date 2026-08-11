@@ -188,6 +188,7 @@ Available in interactive mode (run `orchester` with no arguments):
 |---|---|
 | `/agent` | Choose or switch the delegate agent |
 | `/model` | Inspect the self-agent model catalog, switch profile |
+| `/config` | Show the resolved configuration: both layers, redacted body, permission findings — and still report the path and the reason when the config cannot be read |
 | `/permissions` | Show the effective permissions |
 | `/resume` | List resumable runs |
 | `/status` | Show the self-agent workspace status |
@@ -208,6 +209,7 @@ Typing `/` opens the command palette — arrow keys to select, Enter to confirm.
 | `orchester list` | List discovered adapters and their capabilities |
 | `orchester doctor [--strict]` | Check local adapter availability |
 | `orchester sessions` | List locally recorded session metadata |
+| `orchester config` | Print the resolved configuration; secrets appear as references only |
 | `orchester login [provider]` | Store a provider API key; omit the provider to use the active one |
 | `orchester logout [provider]` | Remove a stored provider API key |
 | `orchester plugin <list\|status\|install\|remove>` | Plugin management |

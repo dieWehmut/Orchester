@@ -188,6 +188,7 @@ Orchester 的家目录在所有平台上都是 `~/.orchester`，和它驱动的 
 |---|---|
 | `/agent` | 选择或切换要委派的 Agent |
 | `/model` | 查看自建 Agent 的模型目录、切换配置档 |
+| `/config` | 查看解析后的配置：两层来源、去敏内容、权限体检；配置读不进去时也照样报路径和原因 |
 | `/permissions` | 查看当前生效的权限 |
 | `/resume` | 查看可续跑的运行记录 |
 | `/status` | 查看自建 Agent 的工作区状态 |
@@ -208,6 +209,7 @@ Orchester 的家目录在所有平台上都是 `~/.orchester`，和它驱动的 
 | `orchester list` | 列出发现的适配器与能力 |
 | `orchester doctor [--strict]` | 体检本地 Agent 是否可用 |
 | `orchester sessions` | 列出本地记录的会话元数据 |
+| `orchester config` | 打印解析后的配置，密钥只显示引用 |
 | `orchester login [provider]` | 存入服务商 API Key，省略 provider 就用配置里当前激活的那个 |
 | `orchester logout [provider]` | 删掉已存的服务商 API Key |
 | `orchester plugin <list\|status\|install\|remove>` | 插件管理 |

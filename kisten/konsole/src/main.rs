@@ -114,6 +114,11 @@ async fn run(cli: Cli) -> Result<ExitCode, CliError> {
                 .map(ExitCode::from)
                 .map_err(CliError::Io);
         }
+        Some(Command::Config) => {
+            let mut self_agent = self_agent_host()?;
+            render_workspace_command(&mut self_agent, WorkspaceCommand::Config)?;
+            return Ok(ExitCode::SUCCESS);
+        }
         Some(Command::Login(args)) => {
             let mut self_agent = self_agent_host()?;
             render_workspace_command(
@@ -650,6 +655,11 @@ fn render_workspace_command(
             let status = self_agent.status()?;
             let mut out = io::stdout().lock();
             self_agent::render_status(&mut out, &status)?;
+        }
+        WorkspaceCommand::Config => {
+            let view = self_agent.config_view()?;
+            let mut out = io::stdout().lock();
+            self_agent::render_config(&mut out, &view)?;
         }
         WorkspaceCommand::Permissions => {
             let permissions = self_agent.permissions()?;

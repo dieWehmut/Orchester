@@ -527,7 +527,7 @@ pub fn render_agent_table<W: Write>(
     writeln!(out)?;
     writeln!(
         out,
-        "{DIM}Commands: /agent switch, /model choose, /resume list, /permissions inspect, /status inspect, /login key, /plugins manage, /help help, /quit exit.{RESET}"
+        "{DIM}Commands: /agent switch, /model choose, /config inspect, /resume list, /permissions inspect, /status inspect, /login key, /plugins manage, /help help, /quit exit.{RESET}"
     )
 }
 
@@ -537,6 +537,7 @@ pub fn render_help<W: Write>(out: &mut W) -> io::Result<()> {
     writeln!(out, "  /agent   choose another installed agent")?;
     writeln!(out, "  /list    show detected agent status")?;
     writeln!(out, "  /model   show configured self-agent models")?;
+    writeln!(out, "  /config  show resolved self-agent configuration")?;
     writeln!(out, "  /permissions show effective self-agent permissions")?;
     writeln!(out, "  /resume  show resumable self-agent runs")?;
     writeln!(out, "  /status  show self-agent workspace status")?;
@@ -949,6 +950,7 @@ fn render_home_help<W: Write>(out: &mut W, width: usize, max_rows: usize) -> io:
     for line in [
         "/agent      choose a delegate",
         "/model      inspect self-agent models",
+        "/config     inspect resolved configuration",
         "/permissions inspect effective permissions",
         "/resume     inspect resumable runs",
         "/status     inspect self-agent state",
@@ -1483,6 +1485,24 @@ mod tests {
             parse_home_action("/permissions now", &choices),
             HomeAction::Help
         );
+    }
+
+    /// `/config` is the one command that must work when configuration does not,
+    /// so it is routed like any other workspace command rather than being
+    /// reachable only through the palette.
+    #[test]
+    fn config_command_is_typed_in_home_and_delegate_prompts() {
+        let choices = vec![choice("mock", AvailabilityStatus::Available, None)];
+
+        assert_eq!(
+            parse_home_action("/config", &choices),
+            HomeAction::Workspace(WorkspaceCommand::Config)
+        );
+        assert_eq!(
+            parse_prompt_action("/config", &choices),
+            PromptAction::Workspace(WorkspaceCommand::Config)
+        );
+        assert_eq!(parse_home_action("/config now", &choices), HomeAction::Help);
     }
 
     #[test]

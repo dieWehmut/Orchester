@@ -4,19 +4,20 @@ use std::path::PathBuf;
 use orchester_laufzeit::harness::config::{ConfigError, ConfigLoader, UserConfig};
 use orchester_laufzeit::harness::credentials::KeyringCredentialStore;
 use orchester_laufzeit::harness::service::{
-    build_self_agent_runtime, clear_provider_credential, load_self_agent_permissions,
-    load_self_agent_resume_catalog, load_self_agent_status, resolve_credential_target,
-    store_provider_credential, wire_provider_reference, ConfigWiring, CredentialEntryError,
-    CredentialTarget, CredentialUpdate, ProductionSelfAgentRuntime, SelfAgentActiveModel,
-    SelfAgentModelCatalog, SelfAgentModelCatalogError, SelfAgentModelChoice, SelfAgentModelSession,
-    SelfAgentPermissionSnapshot, SelfAgentResumeCatalog, SelfAgentResumeCatalogError,
-    SelfAgentRunOutcome, SelfAgentRuntimeBuildError, SelfAgentRuntimeError, SelfAgentStatus,
-    SelfAgentStatusError,
+    build_self_agent_runtime, clear_provider_credential, load_self_agent_config_view,
+    load_self_agent_permissions, load_self_agent_resume_catalog, load_self_agent_status,
+    resolve_credential_target, store_provider_credential, wire_provider_reference, ConfigWiring,
+    CredentialEntryError, CredentialTarget, CredentialUpdate, ProductionSelfAgentRuntime,
+    SelfAgentActiveModel, SelfAgentConfigView, SelfAgentModelCatalog, SelfAgentModelCatalogError,
+    SelfAgentModelChoice, SelfAgentModelSession, SelfAgentPermissionSnapshot,
+    SelfAgentResumeCatalog, SelfAgentResumeCatalogError, SelfAgentRunOutcome,
+    SelfAgentRuntimeBuildError, SelfAgentRuntimeError, SelfAgentStatus, SelfAgentStatusError,
 };
 use secrecy::SecretString;
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
 
+mod config;
 mod credentials;
 mod models;
 mod permissions;
@@ -24,6 +25,7 @@ mod render;
 mod resume;
 mod status;
 
+pub use config::render_config;
 pub use credentials::{
     render_credential_cleared, render_credential_stored, render_credential_target,
 };
@@ -132,6 +134,23 @@ impl SelfAgentHost {
             "local-user",
         )
         .map_err(Into::into)
+    }
+
+    /// Project configuration for display.
+    ///
+    /// Deliberately does not go through [`Self::load_config`]: every other
+    /// command `?`-propagates a load failure and leaves the human with one bare
+    /// sentence, and this command exists to answer exactly that case. Only
+    /// `ConfigLoader::new` can fail here, and only when the home directory
+    /// cannot be located at all — the one state with no path worth reporting.
+    pub fn config_view(&self) -> Result<SelfAgentConfigView, SelfAgentHostError> {
+        let loader = ConfigLoader::new()?;
+        let credentials = KeyringCredentialStore::new();
+        Ok(load_self_agent_config_view(
+            &loader,
+            &credentials,
+            &self.workspace,
+        ))
     }
 
     pub fn permissions(&self) -> Result<SelfAgentPermissionSnapshot, SelfAgentHostError> {
