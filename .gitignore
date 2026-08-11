@@ -27,7 +27,7 @@ tmp/
 # powershell.exe child loses LOCALAPPDATA and writes its module cache relative
 # to the test's working directory instead of the user profile.
 **/Microsoft/Windows/PowerShell/
-
+prompt
 # ── Editor / OS noise ───────────────────────────────────────────────
 .DS_Store
 Thumbs.db
@@ -37,4 +37,6 @@ Thumbs.db
 *.txt
 *.md
 !/README.md
+!/docs/README.zh-TW.md
+!/docs/README.en.md
 .playwright-mcp/
