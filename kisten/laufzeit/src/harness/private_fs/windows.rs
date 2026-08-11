@@ -45,9 +45,16 @@ pub(crate) fn create_private_dir_all(path: &std::path::Path) -> std::io::Result<
 
 /// Write `contents` to a newly created file.
 ///
-/// No ACL work is needed here: the file inherits the restricted grants of the
-/// directory [`create_private_dir_all`] just established.  `create_new` refuses
-/// to follow a reparse point planted at `path` or to truncate an existing file.
+/// The ACL is tightened while the file is still empty, so the secret is never on
+/// disk behind grants it did not choose.  Inheriting the directory's grants is
+/// not enough: [`create_private_dir_all`] leaves a pre-existing directory alone,
+/// so a home created before Orchester ran may carry a foreign grant that the
+/// file would otherwise inherit -- and the loader would then refuse to read the
+/// configuration Orchester itself had just written.
+///
+/// `create_new` refuses to follow a reparse point planted at `path` or to
+/// truncate an existing file, which is also what makes tightening the ACL safe:
+/// the file can only be one this call just created.
 pub(crate) fn write_private_file(path: &std::path::Path, contents: &str) -> std::io::Result<()> {
     use std::io::Write;
 
@@ -56,41 +63,63 @@ pub(crate) fn write_private_file(path: &std::path::Path, contents: &str) -> std:
         .create_new(true)
         .custom_flags(windows_sys::Win32::Storage::FileSystem::FILE_FLAG_OPEN_REPARSE_POINT)
         .open(path)?;
+    if let Err(error) = restrict_to_current_user(path, false) {
+        // Still empty, so nothing has leaked; leaving it behind would be a trap
+        // for the next writer, who would find the path already taken.
+        drop(file);
+        let _ = std::fs::remove_file(path);
+        return Err(error);
+    }
     file.write_all(contents.as_bytes())
 }
 
 /// Replace a directory's inherited ACL with an explicit user-only one.
+fn restrict_directory(path: &std::path::Path) -> std::io::Result<()> {
+    // (OI)(CI) propagates to anything created inside, so a subdirectory we make
+    // later starts out private too.
+    restrict_to_current_user(path, true).inspect_err(|_| {
+        // The directory exists but is not private, so leaving it behind would be
+        // a trap for the secret about to be written into it.
+        let _ = std::fs::remove_dir(path);
+    })
+}
+
+/// Replace `path`'s inherited ACL with an explicit grant to this user, SYSTEM
+/// and Administrators -- the same set [`sid_is_allowed`] accepts.
 ///
 /// `icacls` is used rather than `SetNamedSecurityInfoW` because building an ACL
 /// by hand is a great deal of unsafe code for a one-shot grant, and shelling out
 /// to it is already how this crate inspects Windows permissions.
-fn restrict_directory(path: &std::path::Path) -> std::io::Result<()> {
+fn restrict_to_current_user(path: &std::path::Path, propagate: bool) -> std::io::Result<()> {
     let tool = std::env::var_os("SystemRoot")
         .map(std::path::PathBuf::from)
         .map(|root| root.join("System32").join("icacls.exe"))
         .filter(|candidate| candidate.is_file())
-        .ok_or_else(|| std::io::Error::other("icacls is unavailable, so '{path}' cannot be made user-only; create it manually with a user-only ACL"))?;
+        .ok_or_else(|| {
+            std::io::Error::other(format!(
+                "icacls is unavailable, so '{}' cannot be made user-only; \
+                 create it manually with a user-only ACL",
+                path.display()
+            ))
+        })?;
     let sid = current_user_sid_string()?;
-    // (OI)(CI) propagates to the configuration file created inside, so the
-    // secret it may hold inherits the same user-only grants.
+    let grant = if propagate { "(OI)(CI)(F)" } else { "(F)" };
     let output = std::process::Command::new(tool)
         .arg(path)
         .args(["/inheritance:r", "/grant:r"])
         .args([
-            format!("*{sid}:(OI)(CI)(F)"),
-            "*S-1-5-18:(OI)(CI)(F)".to_owned(),
-            "*S-1-5-32-544:(OI)(CI)(F)".to_owned(),
+            format!("*{sid}:{grant}"),
+            format!("*S-1-5-18:{grant}"),
+            format!("*S-1-5-32-544:{grant}"),
         ])
         .output()?;
     if output.status.success() {
         return Ok(());
     }
-    // The directory exists but is not private, so leaving it behind would be a
-    // trap for the secret about to be written into it.
-    let _ = std::fs::remove_dir(path);
-    Err(std::io::Error::other(
-        "could not restrict the new directory to the current user",
-    ))
+    Err(std::io::Error::other(format!(
+        "could not restrict '{}' to the current user",
+        path.display()
+    )))
 }
 
 /// The current user's SID in `S-1-5-…` form, the unambiguous way to name a
@@ -490,6 +519,27 @@ mod tests {
             .unwrap()
     }
 
+    fn open_file(path: &Path) -> File {
+        OpenOptions::new()
+            .read(true)
+            .share_mode(FILE_SHARE_READ)
+            .custom_flags(FILE_FLAG_OPEN_REPARSE_POINT)
+            .open(path)
+            .unwrap()
+    }
+
+    /// `BUILTIN\Users` stands in for the sandbox group a host may already have
+    /// granted on the Orchester home; `(OI)(CI)` is what makes it reach files
+    /// created inside afterwards.
+    fn add_inheritable_read_grant(directory: &Path, sid: &str) {
+        let output = Command::new(system_tool("icacls.exe"))
+            .arg(directory)
+            .args(["/grant", &format!("*{sid}:(OI)(CI)(RX)")])
+            .output()
+            .unwrap();
+        assert!(output.status.success());
+    }
+
     #[test]
     fn ace_evaluator_accepts_only_trusted_non_inherited_allows() {
         assert!(evaluate_ace(AceKind::Allow, false, true).is_ok());
@@ -510,5 +560,22 @@ mod tests {
             validate_private_handle(&directory, false),
             Err(PrivateHandleError::Security)
         );
+    }
+
+    /// A pre-existing Orchester home may already carry a foreign grant, and
+    /// `create_private_dir_all` deliberately leaves such a directory alone.  A
+    /// file written into it must still be private on its own, the way the unix
+    /// implementation gets for free from `mode(0o600)` at creation -- otherwise
+    /// `/login` writes a configuration that the loader then refuses to read.
+    #[test]
+    fn a_file_written_into_a_shared_directory_is_still_private() {
+        let root = TempDir::new();
+        apply_strict_acl(&root.0);
+        add_inheritable_read_grant(&root.0, "S-1-5-32-545");
+        let path = root.0.join("orchester.jsonc");
+
+        write_private_file(&path, "{}").unwrap();
+
+        assert_eq!(validate_private_handle(&open_file(&path), false), Ok(()));
     }
 }
