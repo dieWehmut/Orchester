@@ -150,7 +150,7 @@ impl<S: AuditSink> PreExecutionBarrier<S> {
             .map_err(BarrierError::Candidate)?;
         match &authorization {
             ExecutionAuthorization::Allow if candidate.approval_id().is_some() => {
-                return Err(BarrierError::ApprovalRequired)
+                return Err(BarrierError::ApprovalRequired);
             }
             ExecutionAuthorization::Approval {
                 capability,

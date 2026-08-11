@@ -8,7 +8,7 @@ use std::fs;
 use std::io::Write;
 use std::process::Stdio;
 
-use plugin_fixture::{PluginFixture, copy_repository_plugin};
+use plugin_fixture::{copy_repository_plugin, PluginFixture};
 use support::{stderr, stdout};
 
 #[test]

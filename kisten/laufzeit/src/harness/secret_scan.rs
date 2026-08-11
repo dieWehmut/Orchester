@@ -300,12 +300,10 @@ mod tests {
 
     #[test]
     fn configured_secret_bounds_fail_without_retaining_input() {
-        assert!(
-            SecretScanner::try_new(vec![SecretString::from(
-                "x".repeat(MAX_CONFIGURED_SECRET_BYTES + 1)
-            )])
-            .is_err()
-        );
+        assert!(SecretScanner::try_new(vec![SecretString::from(
+            "x".repeat(MAX_CONFIGURED_SECRET_BYTES + 1)
+        )])
+        .is_err());
         let too_many = (0..=MAX_CONFIGURED_SECRETS)
             .map(|index| SecretString::from(format!("secret-{index}")))
             .collect();

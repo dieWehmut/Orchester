@@ -116,7 +116,9 @@ fn require_table_constraints(connection: &Connection) -> Result<(), StoreError> 
 fn require_primary_key(connection: &Connection) -> Result<(), StoreError> {
     let mut statement = connection.prepare("PRAGMA table_info(transcript_bindings)")?;
     let mut columns = statement
-        .query_map([], |row| Ok((row.get::<_, String>(1)?, row.get::<_, u32>(5)?)))?
+        .query_map([], |row| {
+            Ok((row.get::<_, String>(1)?, row.get::<_, u32>(5)?))
+        })?
         .collect::<Result<Vec<_>, _>>()?;
     columns.retain(|(_, position)| *position > 0);
     columns.sort_by_key(|(_, position)| *position);

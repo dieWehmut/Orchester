@@ -7,7 +7,7 @@ use windows_sys::Win32::Storage::FileSystem::{
 };
 
 use super::ConfigError;
-use crate::harness::private_fs::{PrivateHandleError, validate_private_handle};
+use crate::harness::private_fs::{validate_private_handle, PrivateHandleError};
 
 pub(super) fn open_validated_file(path: &Path) -> Result<File, ConfigError> {
     let file = OpenOptions::new()
@@ -23,9 +23,7 @@ pub(super) fn open_validated_file(path: &Path) -> Result<File, ConfigError> {
 
 fn map_validation_error(error: PrivateHandleError) -> ConfigError {
     match error {
-        PrivateHandleError::Io | PrivateHandleError::Security => {
-            ConfigError::ProtectedFileSecurity
-        }
+        PrivateHandleError::Io | PrivateHandleError::Security => ConfigError::ProtectedFileSecurity,
     }
 }
 

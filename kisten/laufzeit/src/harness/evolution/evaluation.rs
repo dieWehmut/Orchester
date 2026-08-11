@@ -3,10 +3,10 @@ use std::fmt;
 use serde::de::Error as DeError;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-use super::EvolutionError;
 use super::candidate::CandidateManifestV1;
 use super::identity::{CandidateId, Encoder, EvaluationId, EvolutionDigest};
 use super::snapshots::{EvaluationSnapshotInput, EvaluationSnapshots};
+use super::EvolutionError;
 
 const EVALUATION_DOMAIN: &[u8] = b"orchester-evaluation-id-v1";
 

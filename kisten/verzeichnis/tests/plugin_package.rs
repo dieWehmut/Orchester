@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
 
 use orchester_vertrag::AgentAdapter;
-use orchester_verzeichnis::{PluginError, load_agent_plugin};
+use orchester_verzeichnis::{load_agent_plugin, PluginError};
 
 static NEXT_FIXTURE: AtomicU64 = AtomicU64::new(0);
 

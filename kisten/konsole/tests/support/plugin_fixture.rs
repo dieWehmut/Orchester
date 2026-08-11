@@ -6,8 +6,8 @@ use std::fs;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
-use flate2::Compression;
 use flate2::write::GzEncoder;
+use flate2::Compression;
 
 use crate::support::{orchester, temp_home};
 

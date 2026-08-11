@@ -15,7 +15,7 @@ pub(super) fn enable_wal_mode(connection: &Connection) -> Result<(), StoreError>
             Ok(_) => {
                 return Err(StoreError::Invariant(
                     "state database could not enter WAL mode".into(),
-                ))
+                ));
             }
             Err(error) if sqlite_is_busy(&error) => {
                 last_busy = Some(error);

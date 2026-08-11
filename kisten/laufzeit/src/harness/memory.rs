@@ -15,7 +15,7 @@ use sha2::{Digest, Sha256};
 use thiserror::Error;
 
 pub use crate::harness::secret_scan::SecretCategory;
-use crate::harness::secret_scan::{SecretScanner, is_format_character};
+use crate::harness::secret_scan::{is_format_character, SecretScanner};
 
 const BASE_MIGRATION: &str = include_str!("../../migrations/0001_memory.sql");
 const ACCESS_MIGRATION: &str = include_str!("../../migrations/0002_memory_access.sql");

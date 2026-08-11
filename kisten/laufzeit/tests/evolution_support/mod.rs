@@ -113,9 +113,7 @@ pub fn evaluation(
 
 pub fn assert_lower_hex(value: &str) {
     assert_eq!(value.len(), 64);
-    assert!(
-        value
-            .bytes()
-            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
-    );
+    assert!(value
+        .bytes()
+        .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte)));
 }

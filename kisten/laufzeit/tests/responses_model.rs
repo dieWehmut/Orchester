@@ -3,7 +3,7 @@ use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 use async_trait::async_trait;
-use orchester_laufzeit::harness::credentials::{InMemoryCredentialStore, provider_secret};
+use orchester_laufzeit::harness::credentials::{provider_secret, InMemoryCredentialStore};
 use orchester_laufzeit::harness::provider::responses::{
     ResponsesLanguageModel, ResponsesModelError, ResponsesRequestOptions,
 };
@@ -13,7 +13,7 @@ use orchester_laufzeit::harness::provider::{
 use orchester_modell::{
     LanguageModel, ModelError, ModelItem, ModelMessage, ModelRequest, ModelRole,
 };
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use tokio_util::sync::CancellationToken;
 
 const SECRET_CANARY: &str = "sk-responses-model-secret";

@@ -1301,7 +1301,7 @@ impl SqliteRunStore {
             (_, Some(_)) => {
                 return Err(StoreError::Invariant(
                     "execution action hash requires a tool-start event".into(),
-                ))
+                ));
             }
             (_, None) => None,
         };

@@ -12,7 +12,7 @@ use crate::harness::provider::{
     HttpRequest, HttpResponse, HttpTransport, HttpTransportError, MAX_HTTP_RESPONSE_BYTES,
 };
 
-use super::{ResponsesRequestOptions, decode_responses_response, encode_responses_request};
+use super::{decode_responses_response, encode_responses_request, ResponsesRequestOptions};
 
 /// Configuration errors raised while constructing a Responses model.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Error)]

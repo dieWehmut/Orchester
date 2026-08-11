@@ -24,7 +24,8 @@ fn new_run(id: &str, owner: &str) -> NewRun {
         owner_actor_id: owner.to_owned(),
         canonical_root: format!("/workspace/{id}"),
         workspace_identity: format!("workspace-{id}"),
-        policy_snapshot_hash: orchester_laufzeit::harness::governance::PolicyEngine::snapshot_hash(),
+        policy_snapshot_hash: orchester_laufzeit::harness::governance::PolicyEngine::snapshot_hash(
+        ),
         config_snapshot_hash: "config-v1".into(),
         max_steps: 8,
         occurred_at: "2026-07-12T00:00:00Z".into(),
@@ -1720,11 +1721,7 @@ fn model_start_rejects_an_unclosed_request_transcript_atomically() {
             input,
             vec![
                 TranscriptRecord::user("inspect the workspace"),
-                TranscriptRecord::tool_call(
-                    "call-open",
-                    "read_file",
-                    r#"{"path":"src/lib.rs"}"#,
-                ),
+                TranscriptRecord::tool_call("call-open", "read_file", r#"{"path":"src/lib.rs"}"#,),
             ],
         ),
         Err(StoreError::Invariant(_))

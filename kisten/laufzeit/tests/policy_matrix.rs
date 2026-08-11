@@ -281,7 +281,10 @@ fn policy_snapshot_binds_effective_governance_constraints() {
         ..PolicyConstraints::default()
     });
 
-    assert_eq!(defaults.snapshot_hash_value(), PolicyEngine::snapshot_hash());
+    assert_eq!(
+        defaults.snapshot_hash_value(),
+        PolicyEngine::snapshot_hash()
+    );
     assert_ne!(defaults.snapshot_hash_value(), denied.snapshot_hash_value());
     assert!(!format!("{denied:?}").contains("example.test"));
 }

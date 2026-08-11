@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
 
 use orchester_verzeichnis::{
-    PluginOrigin, PluginRoot, PluginRootError, Registry, standard_plugin_roots,
+    standard_plugin_roots, PluginOrigin, PluginRoot, PluginRootError, Registry,
 };
 
 static NEXT_FIXTURE: AtomicU64 = AtomicU64::new(0);

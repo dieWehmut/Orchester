@@ -96,11 +96,7 @@ fn resume_rejects_a_model_call_without_request_binding() {
         .unwrap();
 
     assert!(matches!(
-        store.resume_point_owned(
-            &run.run_id,
-            "owner-a",
-            "project-run-resume-unbound-model",
-        ),
+        store.resume_point_owned(&run.run_id, "owner-a", "project-run-resume-unbound-model",),
         Err(StoreError::Corrupt)
     ));
 }
@@ -492,11 +488,7 @@ fn resume_projection_is_owner_scoped_and_omits_terminal_runs() {
         Some(&other.run_id)
     );
     assert!(matches!(
-        store.resume_point_owned(
-            &other.run_id,
-            "owner-a",
-            "project-run-resume-created",
-        ),
+        store.resume_point_owned(&other.run_id, "owner-a", "project-run-resume-created",),
         Err(StoreError::NotFound)
     ));
     assert!(matches!(
@@ -504,11 +496,7 @@ fn resume_projection_is_owner_scoped_and_omits_terminal_runs() {
         Ok(points) if points.is_empty()
     ));
     assert!(matches!(
-        store.resume_point_owned(
-            &run.run_id,
-            "owner-b",
-            "project-run-resume-created",
-        ),
+        store.resume_point_owned(&run.run_id, "owner-b", "project-run-resume-created",),
         Err(StoreError::NotFound)
     ));
 
@@ -716,11 +704,7 @@ fn recorded_action_rejects_an_unbound_audit_sequence() {
     let run = store
         .create_run(new_run("run-resume-unbound-audit-sequence", "owner-a"))
         .unwrap();
-    start_step(
-        &store,
-        &run.run_id,
-        "step-resume-unbound-audit-sequence",
-    );
+    start_step(&store, &run.run_id, "step-resume-unbound-audit-sequence");
     model_event(
         &store,
         &run.run_id,
@@ -986,11 +970,7 @@ fn action_resume_rejects_broken_model_and_hash_bindings() {
     let assert_corrupt = || {
         let store = SqliteRunStore::open(&path).unwrap();
         assert!(matches!(
-            store.resume_point_owned(
-                &run_id,
-                "owner-a",
-                "project-run-resume-action-binding",
-            ),
+            store.resume_point_owned(&run_id, "owner-a", "project-run-resume-action-binding",),
             Err(StoreError::Corrupt)
         ));
     };

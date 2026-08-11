@@ -34,12 +34,10 @@ fn candidate_wire_round_trip_recomputes_id_and_rejects_tampering() {
     assert_eq!(candidate, decoded);
 
     let tampered_id = encoded.replace(candidate.candidate_id().as_str(), &"b".repeat(64));
-    assert!(
-        serde_json::from_str::<CandidateManifestV1>(&tampered_id)
-            .unwrap_err()
-            .to_string()
-            .contains("evolution identity is corrupt")
-    );
+    assert!(serde_json::from_str::<CandidateManifestV1>(&tampered_id)
+        .unwrap_err()
+        .to_string()
+        .contains("evolution identity is corrupt"));
 
     let tampered_payload = encoded.replace(&"a".repeat(64), &"c".repeat(64));
     assert!(
@@ -50,20 +48,16 @@ fn candidate_wire_round_trip_recomputes_id_and_rejects_tampering() {
     );
 
     let unknown_schema = encoded.replace("\"schema_version\":1", "\"schema_version\":2");
-    assert!(
-        serde_json::from_str::<CandidateManifestV1>(&unknown_schema)
-            .unwrap_err()
-            .to_string()
-            .contains("evolution schema is unsupported")
-    );
+    assert!(serde_json::from_str::<CandidateManifestV1>(&unknown_schema)
+        .unwrap_err()
+        .to_string()
+        .contains("evolution schema is unsupported"));
 
     let unknown_field = encoded.replacen('{', "{\"unexpected\":true,", 1);
-    assert!(
-        serde_json::from_str::<CandidateManifestV1>(&unknown_field)
-            .unwrap_err()
-            .to_string()
-            .contains("evolution input is invalid")
-    );
+    assert!(serde_json::from_str::<CandidateManifestV1>(&unknown_field)
+        .unwrap_err()
+        .to_string()
+        .contains("evolution input is invalid"));
 }
 
 #[test]
@@ -75,37 +69,29 @@ fn evaluation_wire_round_trip_recomputes_id_and_rejects_tampering() {
     assert_eq!(key, decoded);
 
     let tampered_id = encoded.replace(key.evaluation_id().as_str(), &"c".repeat(64));
-    assert!(
-        serde_json::from_str::<EvaluationKey>(&tampered_id)
-            .unwrap_err()
-            .to_string()
-            .contains("evolution identity is corrupt")
-    );
+    assert!(serde_json::from_str::<EvaluationKey>(&tampered_id)
+        .unwrap_err()
+        .to_string()
+        .contains("evolution identity is corrupt"));
 
     let tampered_snapshot = encoded.replacen(&"1".repeat(64), &"a".repeat(64), 1);
-    assert!(
-        serde_json::from_str::<EvaluationKey>(&tampered_snapshot)
-            .unwrap_err()
-            .to_string()
-            .contains("evolution identity is corrupt")
-    );
+    assert!(serde_json::from_str::<EvaluationKey>(&tampered_snapshot)
+        .unwrap_err()
+        .to_string()
+        .contains("evolution identity is corrupt"));
 
     let mut unknown_schema = serde_json::to_value(&key).unwrap();
     unknown_schema["schema_version"] = 2.into();
-    assert!(
-        serde_json::from_value::<EvaluationKey>(unknown_schema)
-            .unwrap_err()
-            .to_string()
-            .contains("evolution schema is unsupported")
-    );
+    assert!(serde_json::from_value::<EvaluationKey>(unknown_schema)
+        .unwrap_err()
+        .to_string()
+        .contains("evolution schema is unsupported"));
 
     let unknown_field = encoded.replacen('{', "{\"unexpected\":true,", 1);
-    assert!(
-        serde_json::from_str::<EvaluationKey>(&unknown_field)
-            .unwrap_err()
-            .to_string()
-            .contains("evolution input is invalid")
-    );
+    assert!(serde_json::from_str::<EvaluationKey>(&unknown_field)
+        .unwrap_err()
+        .to_string()
+        .contains("evolution input is invalid"));
 }
 
 #[test]

@@ -3,7 +3,7 @@ use std::os::unix::fs::OpenOptionsExt;
 use std::path::Path;
 
 use super::ConfigError;
-use crate::harness::private_fs::{PrivateHandleError, validate_private_handle};
+use crate::harness::private_fs::{validate_private_handle, PrivateHandleError};
 
 const OPEN_FLAGS: i32 = libc::O_NOFOLLOW | libc::O_CLOEXEC | libc::O_NONBLOCK;
 

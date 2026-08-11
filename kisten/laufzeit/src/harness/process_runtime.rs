@@ -208,7 +208,7 @@ impl ProcessRunner {
                     break status
                         .code()
                         .map(CommandTermination::Exited)
-                        .unwrap_or(CommandTermination::Signaled)
+                        .unwrap_or(CommandTermination::Signaled);
                 }
                 Ok(None) => {}
                 Err(_) => {

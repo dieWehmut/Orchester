@@ -100,7 +100,9 @@ mod tests {
         assert_eq!(result.outcome, Outcome::Success);
         assert_eq!(result.session_id.as_deref(), Some("mock-session"));
         assert!(result.final_text.contains("hello"));
-        assert!(seen.iter().any(|e| matches!(e, Event::SessionStarted { .. })));
+        assert!(seen
+            .iter()
+            .any(|e| matches!(e, Event::SessionStarted { .. })));
     }
 
     #[tokio::test]

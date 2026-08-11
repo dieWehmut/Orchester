@@ -12,7 +12,7 @@ use descriptor::ValidatedDescriptor;
 
 pub(crate) use discovery::load_root;
 pub use discovery::{
-    PluginOrigin, PluginRoot, PluginRootError, RegisteredPlugin, standard_plugin_roots,
+    standard_plugin_roots, PluginOrigin, PluginRoot, PluginRootError, RegisteredPlugin,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]

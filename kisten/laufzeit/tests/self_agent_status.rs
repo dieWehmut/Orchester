@@ -163,7 +163,10 @@ fn invalid_active_model_configuration_is_not_reported_as_unconfigured() {
         }
         other => panic!("expected an unresolved model report, found {other:?}"),
     };
-    assert!(reason.contains("configured user profile"), "reason: {reason}");
+    assert!(
+        reason.contains("configured user profile"),
+        "reason: {reason}"
+    );
     assert!(!state_database(&workspace).exists());
     let _ = std::fs::remove_dir_all(workspace);
 }

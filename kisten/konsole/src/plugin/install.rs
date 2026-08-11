@@ -9,7 +9,7 @@ use std::process::{Command, Stdio};
 use std::thread;
 use std::time::{Duration, Instant};
 
-use orchester_verzeichnis::{PluginInfo, load_agent_plugin};
+use orchester_verzeichnis::{load_agent_plugin, PluginInfo};
 use thiserror::Error;
 
 use crate::process::{command_invocation, resolve_command};

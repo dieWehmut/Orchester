@@ -1,11 +1,11 @@
 use orchester_laufzeit::harness::provider::responses::{
-    ResponsesRequestError, ResponsesRequestOptions, encode_responses_request,
+    encode_responses_request, ResponsesRequestError, ResponsesRequestOptions,
 };
 use orchester_modell::{
     ModelItem, ModelMessage, ModelRequest, ModelRole, ToolCall, ToolDefinition,
 };
 use orchester_protokoll::CallId;
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 
 const PROMPT_CANARY: &str = "prompt-canary-not-in-errors";
 

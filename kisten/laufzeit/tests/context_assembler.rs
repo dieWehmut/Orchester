@@ -189,13 +189,14 @@ fn continuation_accepts_a_structured_tool_result_tail() {
         })
         .unwrap();
 
-    let ModelItem::ToolResult { call_id, output } =
-        &assembled.request.messages[2].items[0]
-    else {
+    let ModelItem::ToolResult { call_id, output } = &assembled.request.messages[2].items[0] else {
         panic!("expected structured tool result message");
     };
     assert_eq!(call_id.0, "call-json");
-    assert_eq!(serde_json::from_str::<serde_json::Value>(output).unwrap(), expected);
+    assert_eq!(
+        serde_json::from_str::<serde_json::Value>(output).unwrap(),
+        expected
+    );
 }
 
 #[test]

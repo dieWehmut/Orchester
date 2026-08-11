@@ -910,7 +910,7 @@ fn open_root_capability(root: &Path) -> Result<Dir, GuardError> {
             Component::ParentDir => {
                 return Err(GuardError::InvalidPath {
                     path: root.to_path_buf(),
-                })
+                });
             }
         }
     }

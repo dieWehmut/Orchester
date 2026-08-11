@@ -71,9 +71,7 @@ mod tests {
         // the resume template must begin with the `resume` subcommand positionally.
         let manifest: AdapterManifest =
             toml::from_str(CODEX_MANIFEST).expect("codex manifest parses");
-        let resume = manifest
-            .resume_args
-            .expect("codex declares resume_args");
+        let resume = manifest.resume_args.expect("codex declares resume_args");
         assert_eq!(resume[0], "exec");
         assert_eq!(resume[1], "resume");
         assert_eq!(resume[2], "{session_id}");

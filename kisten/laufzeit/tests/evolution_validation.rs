@@ -1,7 +1,7 @@
 mod evolution_support;
 
 use evolution_support::*;
-use orchester_laufzeit::harness::evolution::{CandidateState, EvolutionError, can_transition};
+use orchester_laufzeit::harness::evolution::{can_transition, CandidateState, EvolutionError};
 
 const MAX_ARTIFACT_BYTES: usize = 16 * 1024 * 1024;
 

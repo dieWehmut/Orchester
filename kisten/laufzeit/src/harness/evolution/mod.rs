@@ -12,7 +12,7 @@ mod snapshots;
 mod validation;
 
 pub use candidate::{
-    ArtifactRef, CandidateKind, CandidateManifestV1, CandidateState, EvolutionScope, can_transition,
+    can_transition, ArtifactRef, CandidateKind, CandidateManifestV1, CandidateState, EvolutionScope,
 };
 pub use error::EvolutionError;
 pub use evaluation::EvaluationKey;

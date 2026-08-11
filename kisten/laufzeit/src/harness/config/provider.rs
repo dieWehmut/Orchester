@@ -182,8 +182,8 @@ fn validate_base_url(value: &str, path: &str) -> Result<(), ConfigError> {
     {
         return Err(validation(path, "provider base URL is not a valid URL"));
     }
-    let parsed = Url::parse(value)
-        .map_err(|_| validation(path, "provider base URL is not a valid URL"))?;
+    let parsed =
+        Url::parse(value).map_err(|_| validation(path, "provider base URL is not a valid URL"))?;
     let host = parsed
         .host()
         .ok_or_else(|| validation(path, "provider base URL must include a host"))?;

@@ -4,7 +4,7 @@ use std::sync::mpsc::{self, Receiver};
 use std::thread::{self, JoinHandle};
 use std::time::Duration;
 
-use orchester_laufzeit::harness::credentials::{InMemoryCredentialStore, provider_secret};
+use orchester_laufzeit::harness::credentials::{provider_secret, InMemoryCredentialStore};
 use orchester_laufzeit::harness::provider::{
     HttpRequest, HttpTransport, HttpTransportError, ReqwestHttpTransport,
 };

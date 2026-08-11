@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 use thiserror::Error;
 
 use super::descriptor::valid_name;
-use super::{LoadedAgentPlugin, PluginInfo, load_agent_plugin};
+use super::{load_agent_plugin, LoadedAgentPlugin, PluginInfo};
 
 const MAX_PLUGINS_PER_ROOT: usize = 64;
 

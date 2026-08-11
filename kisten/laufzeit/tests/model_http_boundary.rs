@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use orchester_laufzeit::harness::credentials::{InMemoryCredentialStore, provider_secret};
+use orchester_laufzeit::harness::credentials::{provider_secret, InMemoryCredentialStore};
 use orchester_laufzeit::harness::provider::{
     HttpRequest, HttpResponse, HttpTransport, HttpTransportError, MAX_HTTP_REQUEST_BYTES,
     MAX_HTTP_RESPONSE_BYTES, MAX_HTTP_TIMEOUT,

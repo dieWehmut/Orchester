@@ -154,7 +154,10 @@ fn usage_accumulates() {
 fn capability_and_session_state_roundtrip() {
     let cap = Capability_sample();
     let json = serde_json::to_string(&cap).unwrap();
-    assert_eq!(serde_json::from_str::<orchester_protokoll::Capability>(&json).unwrap(), cap);
+    assert_eq!(
+        serde_json::from_str::<orchester_protokoll::Capability>(&json).unwrap(),
+        cap
+    );
 
     for s in [
         SessionState::Starting,

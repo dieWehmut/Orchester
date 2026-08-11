@@ -4,8 +4,8 @@ use rusqlite::{params, Connection, OptionalExtension};
 
 use super::super::{hash_canonical_action, StoreError};
 
-mod transcript;
 mod bindings;
+mod transcript;
 
 const EXPECTED_V5_SCHEMA_OBJECT_HASHES: &[(&str, &str, &str)] = &[
     (

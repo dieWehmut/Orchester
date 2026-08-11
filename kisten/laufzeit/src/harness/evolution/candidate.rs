@@ -3,11 +3,11 @@ use std::fmt;
 use serde::de::Error as DeError;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-use super::EvolutionError;
 use super::identity::{CandidateId, Encoder, EvolutionDigest, RevisionId};
 use super::validation::{
-    MAX_FORMAT_BYTES, MAX_IDENTIFIER_BYTES, expiry_is_later, validate_text, validate_timestamp,
+    expiry_is_later, validate_text, validate_timestamp, MAX_FORMAT_BYTES, MAX_IDENTIFIER_BYTES,
 };
+use super::EvolutionError;
 
 const MAX_ARTIFACT_BYTES: usize = 16 * 1024 * 1024;
 const CANDIDATE_DOMAIN: &[u8] = b"orchester-candidate-id-v1";

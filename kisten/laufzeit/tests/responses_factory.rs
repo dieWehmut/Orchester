@@ -4,7 +4,7 @@ use async_trait::async_trait;
 use orchester_laufzeit::harness::config::ConfigLoader;
 use orchester_laufzeit::harness::credentials::InMemoryCredentialStore;
 use orchester_laufzeit::harness::provider::responses::{
-    ResponsesModelBuildError, build_responses_model, build_responses_model_with_transport,
+    build_responses_model, build_responses_model_with_transport, ResponsesModelBuildError,
 };
 use orchester_laufzeit::harness::provider::{
     HttpRequest, HttpResponse, HttpTransport, HttpTransportError,
@@ -12,7 +12,7 @@ use orchester_laufzeit::harness::provider::{
 use orchester_modell::{
     LanguageModel, ModelError, ModelItem, ModelMessage, ModelRequest, ModelRole,
 };
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use tokio_util::sync::CancellationToken;
 
 const SECRET_CANARY: &str = "sk-configured-responses-secret";

@@ -111,10 +111,10 @@ impl SelfAgentModelSession {
         let choice = match load_self_agent_model_catalog(config)?.active {
             SelfAgentActiveModel::Configured(choice) => choice,
             SelfAgentActiveModel::Unresolved { path, message } => {
-                return Err(ConfigError::Validation { path, message }.into())
+                return Err(ConfigError::Validation { path, message }.into());
             }
             SelfAgentActiveModel::NotConfigured => {
-                return Err(SelfAgentModelCatalogError::ConfiguredModelUnavailable)
+                return Err(SelfAgentModelCatalogError::ConfiguredModelUnavailable);
             }
         };
         self.selected_profile = None;

@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::Path;
 
-use orchester_verzeichnis::{PluginInfo, load_agent_plugin};
+use orchester_verzeichnis::{load_agent_plugin, PluginInfo};
 use thiserror::Error;
 
 use super::install::{receipt, store, valid_name};

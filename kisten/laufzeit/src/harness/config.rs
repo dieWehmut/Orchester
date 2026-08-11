@@ -1116,7 +1116,7 @@ pub fn check_permissions(path: impl AsRef<Path>) -> Vec<PermissionDiagnostic> {
                     expected: "readable metadata".into(),
                     actual: None,
                     message: format!("cannot inspect permissions: {error}"),
-                }]
+                }];
             }
         };
         let mode = metadata.permissions().mode() & 0o777;
