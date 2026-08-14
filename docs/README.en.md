@@ -29,9 +29,9 @@
 
 ---
 
-`Orchester` is an **orchestration runtime for heterogeneous coding agents**, written in Rust. It launches the agents you already have — Claude Code, Codex CLI, OpenCode — as subprocesses, normalizes their native JSONL output into one event protocol, and drives them through one CLI and one lifecycle.
+`Orchester` is an **independent coding agent** written in Rust. It owns task understanding, context assembly, planning, model calls, tool execution, validation feedback, memory, human approval, and durable recovery.
 
-Orchester is explicitly **not** another coding agent. It never re-implements planning, tool calls, memory, or context management. The moat is the **protocol**: get the unified `Event` stream right and adding a new agent usually means shipping one TOML manifest, no Rust.
+Claude Code, Codex CLI, OpenCode, and other external agents are optional delegation capabilities. Orchester can drive them through manifests and a unified event protocol, but they do not define Orchester's identity or take ownership of its core loop.
 
 ## Links
 
@@ -40,14 +40,14 @@ Orchester is explicitly **not** another coding agent. It never re-implements pla
 
 ## Features
 
-- One event protocol: a `Task` goes in, an `Event` stream comes out, a `RunResult` closes the run
-- Manifest-driven adapters — adding an agent normally means writing TOML
-- Four built-in adapters: `claude`, `codex`, `opencode`, `mock`
-- Session capture and `--resume`
-- `--json` emits Orchester's own JSONL, so Orchester can be piped into another Orchester
-- Interactive terminal: slash commands, command palette, startup portrait
-- Self-hosted agent harness: memory, hash-chain audit, credential vault, policy engine, human approvals
-- `doctor` checks local agent availability
+- Independent agent loop: context → model → action → policy/approval → tool → feedback/memory → stop
+- Governed file and command tools with path guards, validators, and a hash-chain audit
+- Durable runs, project memory, one-shot approvals, and `--resume` recovery
+- Interactive terminal with `/status`, `/permissions`, `/resume`, `/model`, `/plugins`, and related commands
+- One event protocol: a `Task` goes in, an `Event` stream comes out, and a `RunResult` closes the run
+- Optional external-agent delegation through manifest-driven `claude`, `codex`, `opencode`, and `mock` adapters
+- `--json` emits Orchester's own JSONL for integration with other tools
+- `doctor` checks the local runtime and optional external agents
 - Plugin management
 - One-line installers (macOS / Linux / Windows) and npm distribution
 
@@ -127,7 +127,7 @@ cargo run -p orchester-konsole -- --agent mock "hello"
 cargo run -p orchester-konsole -- --agent mock --json "hello"
 ```
 
-### 5. Use a real agent
+### 5. Delegate to an external agent (optional)
 
 Once the corresponding agent CLI is installed and authenticated:
 
@@ -146,7 +146,7 @@ The Orchester home is `~/.orchester` on every platform, kept beside the `~/.clau
 |---|---|
 | `~/.orchester/orchester.jsonc` | User config: models, providers, governance policy, plugins |
 | `~/.orchester/sessions.jsonl` | Delegated-agent session records, read by `sessions` |
-| `~/.orchester/state/runs.db` | Self-agent run records, read by `/resume` |
+| `~/.orchester/state/runs.db` | Orchester run records, read by `/resume` |
 | `~/.orchester/state/audit.jsonl` | Hash-chain audit log |
 | `<project>/.orchester/project.jsonc` | Project config, validated as untrusted input — it cannot introduce credentials or relax security |
 
@@ -158,12 +158,9 @@ The Orchester home is `~/.orchester` on every platform, kept beside the `~/.clau
   "model_provider": "OpenAI",
   "model": "gpt-5.6-sol",
   "model_reasoning_effort": "high",
-  "env": {
-    // Reference the credential vault instead of inlining a plaintext key.
-    "OPENAI_API_KEY": "${secret:OpenAI}"
-  },
   "model_providers": {
     "OpenAI": {
+      "name": "OpenAI",
       "base_url": "https://api.openai.com/v1",
       "wire_api": "responses",
       "api_key": "${secret:OpenAI}"
@@ -178,7 +175,7 @@ The Orchester home is `~/.orchester` on every platform, kept beside the `~/.clau
 }
 ```
 
-`${secret:Provider}` resolves through the credential vault and `${env:NAME}` resolves against another configured environment entry. A literal `api_key` is accepted only from a **protected** user config file — `0600` on the file and `0700` on the directory under Unix, a tightened ACL under Windows — and is always redacted when serialized or formatted into an error.
+`${secret:Provider}` resolves through the credential vault and `${env:NAME}` remains available for legacy or non-provider environment entries. Put the selected provider's `base_url`, `wire_api`, and `api_key` directly in `model_providers`; a present `api_key` enables Bearer authentication by default, so no separate `env` relay or `requires_openai_auth` flag is required. A literal `api_key` is accepted only from a **protected** user config file — `0600` on the file and `0700` on the directory under Unix, a tightened ACL under Windows — and is always redacted when serialized or formatted into an error.
 
 ## Slash commands
 
@@ -187,11 +184,11 @@ Available in interactive mode (run `orchester` with no arguments):
 | Command | Purpose |
 |---|---|
 | `/agent` | Choose or switch the delegate agent |
-| `/model` | Inspect the self-agent model catalog, switch profile |
+| `/model` | Inspect Orchester's model catalog, switch profile |
 | `/config` | Show the resolved configuration: both layers, redacted body, permission findings — and still report the path and the reason when the config cannot be read |
 | `/permissions` | Show the effective permissions |
 | `/resume` | List resumable runs |
-| `/status` | Show the self-agent workspace status |
+| `/status` | Show Orchester's workspace status |
 | `/login` | Store a provider API key in the OS keyring; config keeps only a reference |
 | `/logout` | Forget a stored provider API key |
 | `/plugins` | Manage plugins (`list` / `status` / `install` / `remove`) |
@@ -217,7 +214,7 @@ Typing `/` opens the command palette — arrow keys to select, Enter to confirm.
 Global flags: `--agent/-a`, `--resume`, `--model/-m`, `--json`.
 `--agents`, `--parallel`, and `--auto` are parsed but not yet wired; they fail loudly with "not yet implemented" rather than silently doing the wrong thing.
 
-## Adding an agent
+## Adding an external agent (optional)
 
 Adding an agent normally means shipping a **manifest**, not writing code. Drop a TOML file into `manifeste/`:
 
@@ -247,21 +244,23 @@ A disk manifest wins over a built-in of the same name, so tweaking a built-in ag
 ## How it works
 
 ```
-User ──▶ orchester (konsole) ──▶ Conductor (laufzeit)
-                                     │
-                                     ├─ Registry (verzeichnis) ── built-ins + manifeste/*.toml
-                                     ├─ Session  (laufzeit)     ── Starting→Running→Completed/Failed
-                                     └─ Adapter  (vertrag)      ── spawn subprocess, parse JSONL stdout
-                                           │                        └─▶ normalize ─▶ protokoll::Event
-                                           ▼
-                              claude / codex / opencode / mock
+Developer ──▶ orchester CLI ──▶ Application Service
+                                      │
+                                      ├─▶ Independent Agent Runtime
+                                      │     Context → Model → Action
+                                      │     → Policy/Approval → Tool
+                                      │     → Feedback/Memory/Stop
+                                      │
+                                      └─▶ Optional Delegation
+                                            Registry → Adapter
+                                            → claude / codex / opencode / mock
 ```
 
-The key finding that grounds this design: every target agent converges on the same headless shape — spawn a subprocess, pass a prompt, read line-delimited JSON from stdout, capture a session id for resume. Orchester models exactly that shape and maps each vendor's JSONL into one vendor-neutral `Event` enum.
+Orchester's independent loop always owns execution authority and the stop decision. External-agent delegation is a separate, optional path: adapters spawn subprocesses, parse JSONL, retain session metadata, and convert results into the unified `Event` stream.
 
 ## Repository layout
 
-Crates use German role names:
+Crates are separated by responsibility:
 
 ```text
 kisten/            # Cargo workspace members
@@ -270,7 +269,7 @@ kisten/            # Cargo workspace members
   vertrag/         # adapter contract: AgentAdapter trait + ManifestAdapter engine
   adapter/         # built-ins: mock + compile-time embedded claude/codex/opencode
   verzeichnis/     # registry: discover built-ins + load manifeste/*.toml
-  laufzeit/        # runtime: Conductor, Session, and the harness/ subsystems
+  laufzeit/        # runtime: independent agent loop, Conductor, Session, and governance subsystems
   konsole/         # the orchester CLI binary
 manifeste/         # declarative adapter definitions
 werkzeug/          # install and development helper scripts
@@ -278,7 +277,7 @@ npm/               # npm distribution packages
 .github/           # CI and release workflows
 ```
 
-`kisten/laufzeit/src/harness/` is the self-agent execution shell: config, credentials, memory, audit, policy, approvals, tool registry, process sandbox contract, validators, and the feedback engine.
+`kisten/laufzeit/src/harness/` is the independent agent core: config, credentials, context, model boundary, memory, audit, policy, approvals, tool registry, process sandbox contract, validators, and the feedback engine.
 
 ## Common commands
 
@@ -291,12 +290,12 @@ cargo clippy --all-targets -- -D warnings
 
 ## Roadmap
 
-- **v0.1 (current) — unify agent invocation:** single-agent runs, JSONL and rendered output, a registry overridable by disk manifests, session capture and resume, a mock adapter for deterministic tests.
-- **v0.2 — reliable local runtime:** config directory, `doctor`, persistent session metadata, richer capabilities, a fuller TUI, more manifest adapters.
-- **v0.5 — multi-agent orchestration:** parallel runs, result aggregation and comparison, PR-review workflow, cancellation and timeouts, Git preflight, worktree-per-agent.
-- **v1.0 — agent workflow runtime:** DAG workflows, checkpoint/resume, human approval interrupts, MCP/ACP bridge, cost- and latency-aware routing, optional web UI, a plugin system beyond manifests.
+- **v0.1 (current) — independent agent foundation:** autonomous loop, governed tools, approvals, feedback, memory, recovery, JSONL, and deterministic mock tests.
+- **v0.2 — reliable local agent:** complete config home, `doctor`, durable runs, richer terminal interaction, validators, and plugins.
+- **v0.5 — advanced delegation:** optional parallel external-agent runs, result aggregation and comparison, PR-review workflows, cancellation and timeouts, Git preflight, and isolated worktrees.
+- **v1.0 — agent workflow runtime:** DAG workflows, checkpoint/resume, human approval interrupts, MCP/ACP bridge, cost- and latency-aware routing, and a plugin system beyond manifests.
 
-> Design principle: small at the center (protocol, adapter contract, registry, runtime), broad at the edges (manifests, subprocess adapters, future MCP/ACP bridges, workflow and UI layers). Don't reimplement agent internals — make agents interoperable through one runtime and one event stream.
+> Design principle: Orchester owns its main loop, execution authority, and stop conditions. Protocols, manifests, and adapters extend optional delegation without handing control of the core agent to an external process.
 
 ## Contributing
 
@@ -312,5 +311,3 @@ Issues and pull requests are welcome. To keep maintenance smooth, please follow 
 ## License
 
 MIT OR Apache-2.0. See [LICENSE-MIT](../LICENSE-MIT) and [LICENSE-APACHE](../LICENSE-APACHE).
-
-

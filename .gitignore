@@ -32,6 +32,8 @@ prompt
 .DS_Store
 Thumbs.db
 *.swp
+docs/local
+/docs/superpowers/
 .idea/
 .vscode/
 *.txt

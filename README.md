@@ -29,9 +29,9 @@
 
 ---
 
-`Orchester` 是一个用 Rust 写的**异构编码 Agent 编排运行时**。它把你已经装好的 Claude Code、Codex CLI、OpenCode 等 Agent 当作子进程拉起，把它们各自的 JSONL 输出归一化成同一套事件协议，再用同一个 CLI、同一套生命周期驱动。
+`Orchester` 是一个用 Rust 编写的**独立 Coding Agent**。它自行负责任务理解、上下文组织、计划、模型调用、工具执行、验证反馈、记忆、人工审批和持久化恢复。
 
-Orchester 本身**不是**另一个编码 Agent，它不重新实现规划、工具调用、记忆或上下文管理。护城河是**协议**：只要统一的 `Event` 流设计对了，接入一个新 Agent 通常只需要一份 TOML 清单，不用写 Rust。
+Claude Code、Codex CLI、OpenCode 等外部 Agent 只是可选委派能力。Orchester 可以通过清单驱动它们并统一事件协议，但外部 Agent 不定义 Orchester 的身份，也不接管它的核心循环。
 
 ## 示例
 
@@ -40,14 +40,14 @@ Orchester 本身**不是**另一个编码 Agent，它不重新实现规划、工
 
 ## 功能
 
+- 独立 Agent 主循环：上下文 → 模型 → 动作 → 策略/审批 → 工具 → 反馈/记忆 → 停止
+- 受治理的文件与命令工具，配套路径护栏、验证器和哈希链审计
+- 持久化运行、项目记忆、一次性审批与 `--resume` 恢复
+- 交互式终端：`/status`、`/permissions`、`/resume`、`/model`、`/plugins` 等命令
 - 统一事件协议：`Task` 进，`Event` 流出，`RunResult` 收尾
-- 清单驱动的适配器，新增 Agent 通常只写一份 TOML
-- 内置 `claude`、`codex`、`opencode`、`mock` 四个适配器
-- 会话捕获与 `--resume` 续跑
-- `--json` 直接输出 Orchester 自己的 JSONL，可以再喂给另一个 Orchester
-- 交互式终端：斜杠命令、命令面板、启动头像
-- 自建 Agent Harness：记忆、哈希链审计、凭据保管、策略引擎、人工审批
-- `doctor` 体检本地 Agent 可用性
+- 可选外部 Agent 委派：清单驱动的 `claude`、`codex`、`opencode`、`mock` 适配器
+- `--json` 直接输出 Orchester 自己的 JSONL，可以接给其他工具
+- `doctor` 检查本地运行环境与可选外部 Agent
 - 插件管理
 - 一行安装脚本（macOS / Linux / Windows）与 npm 分发
 
@@ -127,7 +127,7 @@ cargo run -p orchester-konsole -- --agent mock "hello"
 cargo run -p orchester-konsole -- --agent mock --json "hello"
 ```
 
-### 5. 接入真实 Agent
+### 5. 调用外部 Agent（可选）
 
 本地装好并登录过对应的 Agent CLI 之后：
 
@@ -146,7 +146,7 @@ Orchester 的家目录在所有平台上都是 `~/.orchester`，和它驱动的 
 |---|---|
 | `~/.orchester/orchester.jsonc` | 用户级配置：模型、供应商、治理策略、插件 |
 | `~/.orchester/sessions.jsonl` | 委派 Agent 的会话记录，`sessions` 读它 |
-| `~/.orchester/state/runs.db` | 自建 Agent 的运行记录，`/resume` 读它 |
+| `~/.orchester/state/runs.db` | Orchester 的运行记录，`/resume` 读它 |
 | `~/.orchester/state/audit.jsonl` | 哈希链审计日志 |
 | `<项目>/.orchester/project.jsonc` | 项目级配置，作为不可信输入校验，不能引入凭据或放宽安全策略 |
 
@@ -158,12 +158,9 @@ Orchester 的家目录在所有平台上都是 `~/.orchester`，和它驱动的 
   "model_provider": "OpenAI",
   "model": "gpt-5.6-sol",
   "model_reasoning_effort": "high",
-  "env": {
-    // 引用凭据保管库，而不是把明文写进配置
-    "OPENAI_API_KEY": "${secret:OpenAI}"
-  },
   "model_providers": {
     "OpenAI": {
+      "name": "OpenAI",
       "base_url": "https://api.openai.com/v1",
       "wire_api": "responses",
       "api_key": "${secret:OpenAI}"
@@ -178,7 +175,7 @@ Orchester 的家目录在所有平台上都是 `~/.orchester`，和它驱动的 
 }
 ```
 
-字段值里的 `${secret:供应商名}` 会去凭据保管库取值，`${env:变量名}` 会去别的环境项取值。字面量 `api_key` 只在**受保护的**用户配置文件里才被接受：Unix 上要求 `0600`、目录 `0700`，Windows 上要求收紧过的 ACL；序列化和报错时一律脱敏。
+字段值里的 `${secret:供应商名}` 会去凭据保管库取值，`${env:变量名}` 仍可用于旧配置或非供应商环境项。请直接在 `model_providers` 中配置当前供应商的 `base_url`、`wire_api` 和 `api_key`；只要存在 `api_key` 就会默认启用 Bearer 认证，不需要单独用 `env` 转接，也不需要 `requires_openai_auth`。字面量 `api_key` 只在**受保护的**用户配置文件里才被接受：Unix 上要求 `0600`、目录 `0700`，Windows 上要求收紧过的 ACL；序列化和报错时一律脱敏。
 
 ## 斜杠命令
 
@@ -187,11 +184,11 @@ Orchester 的家目录在所有平台上都是 `~/.orchester`，和它驱动的 
 | 命令 | 作用 |
 |---|---|
 | `/agent` | 选择或切换要委派的 Agent |
-| `/model` | 查看自建 Agent 的模型目录、切换配置档 |
+| `/model` | 查看 Orchester 的模型目录、切换配置档 |
 | `/config` | 查看解析后的配置：两层来源、去敏内容、权限体检；配置读不进去时也照样报路径和原因 |
 | `/permissions` | 查看当前生效的权限 |
 | `/resume` | 查看可续跑的运行记录 |
-| `/status` | 查看自建 Agent 的工作区状态 |
+| `/status` | 查看 Orchester 的工作区状态 |
 | `/login` | 把服务商 API Key 存进系统钥匙串，配置里只留引用 |
 | `/logout` | 忘掉已存的服务商 API Key |
 | `/plugins` | 管理插件（`list` / `status` / `install` / `remove`） |
@@ -217,7 +214,7 @@ Orchester 的家目录在所有平台上都是 `~/.orchester`，和它驱动的 
 全局参数：`--agent/-a`、`--resume`、`--model/-m`、`--json`。
 `--agents`、`--parallel`、`--auto` 已经占好位但还没接线，调用会明确报「尚未实现」，而不是悄悄跑错。
 
-## 添加一个新的 Agent
+## 添加外部 Agent（可选）
 
 正常情况下加 Agent 是写**清单**，不是写代码。把一份 TOML 放进 `manifeste/`：
 
@@ -247,21 +244,23 @@ result    = { event = "result",  text = "result" }
 ## 工作原理
 
 ```
-User ──▶ orchester (konsole) ──▶ Conductor (laufzeit)
-                                     │
-                                     ├─ Registry (verzeichnis) ── 内置 + manifeste/*.toml
-                                     ├─ Session  (laufzeit)     ── Starting→Running→Completed/Failed
-                                     └─ Adapter  (vertrag)      ── 起子进程，解析 stdout 的 JSONL
-                                           │                        └─▶ 归一化 ─▶ protokoll::Event
-                                           ▼
-                              claude / codex / opencode / mock
+Developer ──▶ orchester CLI ──▶ Application Service
+                                      │
+                                      ├─▶ Independent Agent Runtime
+                                      │     Context → Model → Action
+                                      │     → Policy/Approval → Tool
+                                      │     → Feedback/Memory/Stop
+                                      │
+                                      └─▶ Optional Delegation
+                                            Registry → Adapter
+                                            → claude / codex / opencode / mock
 ```
 
-支撑这套设计的关键观察是：所有目标 Agent 的 headless 形态都收敛到同一个骨架——起子进程、传 prompt、从 stdout 读按行分隔的 JSON、抓一个 session id 用于续跑。所以 Orchester 就照这个骨架建模，把各家的 JSONL 映射到同一个厂商无关的 `Event` 枚举上。
+Orchester 的独立主循环始终拥有执行权和停止决定。外部 Agent 委派是另一条可选路径：适配器负责启动子进程、解析 JSONL 和保留会话元数据，并把结果转换成统一 `Event` 流。
 
 ## 项目结构
 
-crate 用德语角色名命名：
+crate 按职责拆分：
 
 ```text
 kisten/            # Cargo workspace 成员
@@ -270,7 +269,7 @@ kisten/            # Cargo workspace 成员
   vertrag/         # 适配器契约：AgentAdapter trait + ManifestAdapter 引擎
   adapter/         # 内置适配器：mock + 编译期内嵌的 claude/codex/opencode
   verzeichnis/     # 注册表：发现内置 + 加载 manifeste/*.toml
-  laufzeit/        # 运行时：Conductor、Session，以及 harness/ 子系统
+  laufzeit/        # 运行时：独立 Agent 主循环、Conductor、Session 与治理子系统
   konsole/         # orchester CLI 二进制
 manifeste/         # 声明式适配器定义
 werkzeug/          # 安装与开发辅助脚本
@@ -278,7 +277,7 @@ npm/               # npm 分发包
 .github/           # CI 与发布工作流
 ```
 
-`kisten/laufzeit/src/harness/` 是自建 Agent 的执行壳：配置、凭据、记忆、审计、策略、审批、工具注册表、进程沙箱契约、校验器与反馈引擎。
+`kisten/laufzeit/src/harness/` 是独立 Agent 核心：配置、凭据、上下文、模型边界、记忆、审计、策略、审批、工具注册表、进程沙箱契约、校验器与反馈引擎。
 
 ## 常用命令
 
@@ -291,12 +290,12 @@ cargo clippy --all-targets -- -D warnings
 
 ## 路线图
 
-- **v0.1（当前）统一调用**：单 Agent 运行、JSONL 与渲染两种输出、可被磁盘清单覆盖的注册表、会话捕获与续跑、用于确定性测试的 mock 适配器。
-- **v0.2 稳定本地运行时**：配置目录、`doctor`、持久化会话元数据、更丰富的能力描述、更完整的 TUI、更多清单适配器。
-- **v0.5 多 Agent 编排**：并行运行、结果聚合与对比、PR review 工作流、取消与超时、Git 预检、每个 Agent 一个 worktree。
-- **v1.0 Agent 工作流运行时**：DAG 工作流、检查点与恢复、人工审批中断、MCP/ACP 桥接、按成本与延迟路由、可选 Web UI、清单之外的插件体系。
+- **v0.1（当前）独立 Agent 基础**：自主主循环、受治理工具、审批、反馈、记忆、恢复、JSONL 与确定性 mock 测试。
+- **v0.2 稳定本地 Agent**：完整配置目录、`doctor`、持久化运行、更完整的终端交互、验证器和插件。
+- **v0.5 高级委派**：可选外部 Agent 并行运行、结果聚合与对比、PR review 工作流、取消与超时、Git 预检和独立 worktree。
+- **v1.0 Agent 工作流运行时**：DAG 工作流、检查点与恢复、人工审批中断、MCP/ACP 桥接、按成本与延迟路由、清单之外的插件体系。
 
-> 设计原则：中心小（协议、适配器契约、注册表、运行时），边缘宽（清单、子进程适配器、未来的 MCP/ACP 桥、工作流与 UI 层）。不要重新实现 Agent 内部，而是用一个运行时和一条事件流把它们连起来。
+> 设计原则：Orchester 拥有自己的主循环、执行权和停止条件。协议、清单和适配器用于扩展可选委派能力，不把核心智能体控制权交给外部进程。
 
 ## 贡献指南
 
@@ -312,5 +311,3 @@ cargo clippy --all-targets -- -D warnings
 ## 许可
 
 MIT OR Apache-2.0，见 [LICENSE-MIT](LICENSE-MIT) 与 [LICENSE-APACHE](LICENSE-APACHE)。
-
-
