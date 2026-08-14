@@ -7,7 +7,10 @@ use windows_sys::Win32::Storage::FileSystem::{
 };
 
 use super::ConfigError;
-use crate::harness::private_fs::{validate_private_handle, PrivateHandleError};
+use crate::harness::private_fs::{
+    restrict_private_file, validate_private_handle, validate_private_handle_identity,
+    PrivateHandleError,
+};
 
 pub(super) fn open_validated_file(path: &Path) -> Result<File, ConfigError> {
     let file = OpenOptions::new()
@@ -17,13 +20,16 @@ pub(super) fn open_validated_file(path: &Path) -> Result<File, ConfigError> {
         .custom_flags(FILE_FLAG_OPEN_REPARSE_POINT)
         .open(path)
         .map_err(|_| ConfigError::ProtectedFileIo)?;
-    validate_private_handle(&file, false).map_err(map_validation_error)?;
-    Ok(file)
-}
-
-fn map_validation_error(error: PrivateHandleError) -> ConfigError {
-    match error {
-        PrivateHandleError::Io | PrivateHandleError::Security => ConfigError::ProtectedFileSecurity,
+    match validate_private_handle(&file, false) {
+        Ok(()) => Ok(file),
+        Err(PrivateHandleError::Io) => Err(ConfigError::ProtectedFileIo),
+        Err(PrivateHandleError::Security) => {
+            validate_private_handle_identity(&file, false)
+                .map_err(|_| ConfigError::ProtectedFileSecurity)?;
+            restrict_private_file(path).map_err(|_| ConfigError::ProtectedFileRepair)?;
+            validate_private_handle(&file, false).map_err(|_| ConfigError::ProtectedFileRepair)?;
+            Ok(file)
+        }
     }
 }
 
@@ -98,6 +104,16 @@ mod tests {
         assert!(output.status.success());
     }
 
+    fn open_read_handle(path: &Path) -> File {
+        OpenOptions::new()
+            .read(true)
+            .access_mode(FILE_GENERIC_READ)
+            .share_mode(FILE_SHARE_READ)
+            .custom_flags(FILE_FLAG_OPEN_REPARSE_POINT)
+            .open(path)
+            .unwrap()
+    }
+
     fn write_strict_file(root: &TempDir, source: &[u8]) -> std::path::PathBuf {
         let path = root.join("config.jsonc");
         fs::write(&path, source).unwrap();
@@ -141,20 +157,27 @@ mod tests {
     }
 
     #[test]
-    fn builtin_users_allow_is_rejected_by_real_handle_validation() {
+    fn inherited_untrusted_read_grant_is_restricted_before_reading() {
         let root = TempDir::new();
-        let path = write_strict_file(&root, b"{}");
-        let output = Command::new(system_tool("icacls.exe"))
-            .arg(&path)
-            .args(["/grant", "*S-1-5-32-545:(R)"])
-            .output()
-            .unwrap();
-        assert!(output.status.success());
+        apply_acl(
+            &root.0,
+            &[
+                format!("*{}:(OI)(CI)(F)", current_sid()),
+                "*S-1-5-18:(OI)(CI)(F)".to_owned(),
+                "*S-1-5-32-544:(OI)(CI)(F)".to_owned(),
+                "*S-1-5-32-545:(OI)(CI)(RX)".to_owned(),
+            ],
+        );
+        let path = root.join("config.jsonc");
+        fs::write(&path, b"{}").unwrap();
 
-        assert!(matches!(
-            read_protected_file(&path),
-            Err(ConfigError::ProtectedFileSecurity)
-        ));
+        let source = read_protected_file(&path).expect("safe ACL repair");
+
+        assert_eq!(&*source, "{}");
+        assert_eq!(
+            validate_private_handle(&open_read_handle(&path), false),
+            Ok(())
+        );
     }
 
     #[test]

@@ -59,8 +59,7 @@ fn resolved_model_profile_contains_transport_settings_but_no_secret() {
                         "name": "Fake Provider",
                         "base_url": "https://example.test/v1",
                         "api_key": "${env:FAKE_API_KEY}",
-                        "wire_api": "responses",
-                        "requires_openai_auth": true
+                        "wire_api": "responses"
                     }
                 }
             }"#,
@@ -560,6 +559,21 @@ fn make_user_config_permissions_secure(directory: &std::path::Path, file: &std::
     }
 }
 
+#[cfg(windows)]
+fn grant_windows_access(path: &std::path::Path, grant: &str) {
+    use std::process::Command;
+
+    let icacls = std::path::PathBuf::from(std::env::var_os("SystemRoot").unwrap())
+        .join("System32")
+        .join("icacls.exe");
+    let output = Command::new(icacls)
+        .arg(path)
+        .args(["/grant", grant])
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+}
+
 #[cfg(not(any(unix, windows)))]
 fn make_user_config_permissions_secure(_directory: &std::path::Path, _file: &std::path::Path) {}
 
@@ -819,6 +833,45 @@ fn protected_user_file_resolves_direct_credentials_and_redacts_every_view() {
             "{rendered}"
         );
     }
+}
+
+#[cfg(windows)]
+#[test]
+fn windows_loader_restricts_a_current_user_config_before_reading_a_literal_key() {
+    let root = TempConfigDir::new("windows-acl-repair");
+    let user_dir = root.path().join("home").join(".orchester");
+    std::fs::create_dir_all(&user_dir).unwrap();
+    let path = user_dir.join("orchester.jsonc");
+    std::fs::write(
+        &path,
+        r#"{
+            "model_provider": "OpenAI",
+            "model": "test-model",
+            "model_providers": {
+                "OpenAI": {
+                    "base_url": "https://example.test/v1",
+                    "wire_api": "responses",
+                    "api_key": "sk-protected-windows-repair"
+                }
+            }
+        }"#,
+    )
+    .unwrap();
+    make_user_config_permissions_secure(&user_dir, &path);
+    grant_windows_access(&path, "*S-1-5-32-545:(M)");
+
+    let config = ConfigLoader::test()
+        .load_user_file(&path)
+        .expect("current-user file ACL should be repaired");
+
+    assert!(config.resolve_model_profile().unwrap().requires_auth);
+    assert_eq!(
+        config
+            .resolve_provider_secret("OpenAI", &InMemoryCredentialStore::default())
+            .unwrap()
+            .expose_for_provider(),
+        "sk-protected-windows-repair"
+    );
 }
 
 #[test]

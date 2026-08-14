@@ -95,8 +95,7 @@ fn configured_user() -> orchester_laufzeit::harness::config::UserConfig {
                         "name": "OpenAI Compatible",
                         "base_url": "http://127.0.0.1:4567/v1",
                         "api_key": "${secret:OpenAI}",
-                        "wire_api": "responses",
-                        "requires_openai_auth": true
+                        "wire_api": "responses"
                     }
                 }
             }"#,
@@ -193,8 +192,7 @@ fn unauthenticated_profiles_build_without_a_credential() {
                 "model_providers": {
                     "Local": {
                         "base_url": "http://localhost:4567/v1",
-                        "wire_api": "responses",
-                        "requires_openai_auth": false
+                        "wire_api": "responses"
                     }
                 }
             }"#,
@@ -211,4 +209,68 @@ fn unauthenticated_profiles_build_without_a_credential() {
     let production = build_responses_model(&config, &InMemoryCredentialStore::default())
         .expect("production transport should construct without connecting");
     assert_eq!(production.profile().model, "local-model");
+}
+
+#[test]
+fn an_explicit_false_keeps_a_keyed_provider_unauthenticated() {
+    let config = ConfigLoader::test()
+        .load_user(
+            r#"{
+                "model_provider": "Local",
+                "model": "local-model",
+                "model_providers": {
+                    "Local": {
+                        "base_url": "http://localhost:4567/v1",
+                        "wire_api": "responses",
+                        "api_key": "${secret:Local}",
+                        "requires_openai_auth": false
+                    }
+                }
+            }"#,
+        )
+        .expect("valid local config");
+
+    let model = build_responses_model_with_transport(
+        &config,
+        &InMemoryCredentialStore::default(),
+        CaptureTransport::default(),
+    )
+    .expect("explicit false must not resolve a credential");
+
+    assert!(!model.profile().requires_auth);
+}
+
+#[tokio::test]
+async fn only_the_selected_provider_secret_is_resolved() {
+    let config = ConfigLoader::test()
+        .load_user(
+            r#"{
+                "model_provider": "Router",
+                "model": "router-model",
+                "model_providers": {
+                    "Unused": {
+                        "base_url": "https://unused.example/v1",
+                        "wire_api": "responses",
+                        "api_key": "${secret:Unused}"
+                    },
+                    "Router": {
+                        "base_url": "http://127.0.0.1:4567/v1",
+                        "wire_api": "responses",
+                        "api_key": "${secret:Router}"
+                    }
+                }
+            }"#,
+        )
+        .expect("valid selected provider config");
+    let credentials = InMemoryCredentialStore::with("Router", SECRET_CANARY);
+    let transport = CaptureTransport::default();
+    let model = build_responses_model_with_transport(&config, &credentials, transport.clone())
+        .expect("only the selected secret is required");
+
+    model
+        .complete(request("router-model", true), CancellationToken::new())
+        .await
+        .expect("captured response");
+
+    assert_eq!(transport.first_request().2.as_deref(), Some(SECRET_CANARY));
 }

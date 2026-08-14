@@ -25,9 +25,11 @@ use super::credentials::{CredentialError, CredentialStore, ProviderSecret};
 mod protected_file;
 mod provider;
 mod secrets;
+mod template;
 
 pub use provider::ResolvedModelProfile;
 pub use secrets::ConfiguredSecretSet;
+pub use template::{HOME_DIRECTORIES, USER_CONFIG_TEMPLATE};
 
 /// Name of the Orchester home directory, kept beside the `.claude` and
 /// `.codex` homes of the agents Orchester drives.
@@ -75,8 +77,14 @@ pub enum ConfigError {
     ProtectedFileInvalidUtf8,
     #[error("protected configuration file I/O failed")]
     ProtectedFileIo,
-    #[error("protected configuration file failed secure handle validation")]
+    #[error(
+        "protected configuration file is not a private regular file owned by the current user"
+    )]
     ProtectedFileSecurity,
+    #[error(
+        "protected configuration file permissions could not be restricted to the current user"
+    )]
+    ProtectedFileRepair,
     #[error(transparent)]
     Credential(#[from] CredentialError),
 }
@@ -563,8 +571,8 @@ pub struct ProviderConfig {
     pub api_key: Option<String>,
     #[serde(default)]
     pub wire_api: Option<String>,
-    #[serde(default)]
-    pub requires_openai_auth: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub requires_openai_auth: Option<bool>,
 }
 
 /// A user-owned model choice. Provider endpoints and credentials stay in the
@@ -1260,10 +1268,9 @@ pub fn check_permissions(path: impl AsRef<Path>) -> Vec<PermissionDiagnostic> {
     }
 }
 
-/// Enforce user-only modes on Unix before loading a user configuration.  On
-/// Windows the loader remains read-only and `doctor` reports ACL ownership and
-/// grants, because automatically rewriting an ACL owned by another principal
-/// would be unsafe.
+/// Enforce user-only modes on Unix before loading a user configuration. On
+/// Windows the locked-handle loader verifies ownership before repairing only
+/// the final file's ACL.
 pub fn require_user_permissions(path: impl AsRef<Path>) -> Result<(), ConfigError> {
     #[cfg(unix)]
     {
@@ -1286,25 +1293,7 @@ pub fn require_user_permissions(path: impl AsRef<Path>) -> Result<(), ConfigErro
         }
     }
     #[cfg(windows)]
-    {
-        let path = path.as_ref();
-        let mut paths = Vec::new();
-        if let Some(parent) = path.parent() {
-            paths.push(parent);
-        }
-        paths.push(path);
-        for candidate in paths {
-            for finding in check_permissions(candidate) {
-                if !finding.secure {
-                    return Err(ConfigError::InsecurePermissions {
-                        path: finding.path,
-                        expected: finding.expected,
-                        actual: finding.actual.unwrap_or_else(|| "unavailable".into()),
-                    });
-                }
-            }
-        }
-    }
+    let _ = path;
     #[cfg(not(any(unix, windows)))]
     let _ = path;
     Ok(())
@@ -1992,17 +1981,10 @@ mod config_loader_tests {
         assert_eq!(resolve_orchester_home(None, None), None);
     }
 
-    /// A read-only grant to a principal outside the trusted set is exactly what
-    /// Codex's Windows sandbox leaves behind as `…\CodexSandboxUsers:(I)(RX)`,
-    /// and it is invisible to the broad-write scan: the loader refused the file
-    /// while every finding said `ok`, so `/config` printed "rejected" and "ok"
-    /// together and the human had nothing to act on.
-    ///
-    /// The property under test is agreement, in both directions — a refusal
-    /// must be explained, and an accepted file must not be alarmed about.
+    /// An extra read grant is repairable when the current user owns the file.
     #[cfg(windows)]
     #[test]
-    fn a_doctor_finding_explains_every_refusal_and_alarms_on_nothing_else() {
+    fn a_repairable_read_grant_loads_and_leaves_no_doctor_finding() {
         let home = windows_acl::scratch_home("doctor-privacy-gate");
         let path = home.path().join(USER_CONFIG);
         fs::write(&path, "{}").unwrap();
@@ -2010,36 +1992,20 @@ mod config_loader_tests {
         windows_acl::grant_trusted_only(&path);
         let loader = ConfigLoader::from_orchester_home(Some(home.path().to_path_buf())).unwrap();
 
-        assert_agreement(&loader, &path, "trusted-only");
-
         // `BUILTIN\Users` stands in for the sandbox group: untrusted, and
         // granted read only, so the broad-write scan cannot see it.
         windows_acl::add_read_grant(&path, "*S-1-5-32-545");
 
-        let findings = assert_agreement(&loader, &path, "untrusted read grant");
-        let offending = findings
-            .iter()
-            .find(|finding| !finding.is_ok())
-            .expect("a refusal must produce a finding");
-        let actual = offending.actual.as_deref().unwrap_or_default();
-        let (_, grants) = actual
-            .split_once("untrusted_grants=")
-            .unwrap_or_else(|| panic!("finding must name the grants to remove, got {actual:?}"));
-        assert!(
-            !grants.trim().is_empty(),
-            "finding must name at least one principal, got {actual:?}"
-        );
+        loader.load_user_file(&path).expect("repairable config");
+        let findings = loader.doctor();
+        assert!(findings.iter().all(PermissionDiagnostic::is_ok));
     }
 
-    /// The real machine's grant is *inherited*: Codex's sandbox grants read on
-    /// `~/.orchester` and every file inside inherits it. `icacls <file>
-    /// /remove:g <group>` then reports "successfully processed 1 file" and
-    /// leaves the ACE in place, so a finding that prescribes it sends the human
-    /// in a circle. An inherited grant has to be labelled, because the repair
-    /// has to target the directory it came from.
+    /// Breaking inheritance on the file removes an inherited untrusted grant
+    /// without rewriting the parent directory.
     #[cfg(windows)]
     #[test]
-    fn an_inherited_grant_points_the_repair_at_the_directory_it_came_from() {
+    fn an_inherited_grant_is_removed_from_the_file_during_load() {
         let home = windows_acl::scratch_home("doctor-inherited-grant");
         windows_acl::grant_trusted_only(home.path());
         windows_acl::add_inheritable_read_grant(home.path(), "*S-1-5-32-545");
@@ -2049,38 +2015,10 @@ mod config_loader_tests {
         fs::write(&path, "{}").unwrap();
         let loader = ConfigLoader::from_orchester_home(Some(home.path().to_path_buf())).unwrap();
 
-        let findings = assert_agreement(&loader, &path, "inherited read grant");
-        let offending = findings
-            .iter()
-            .find(|finding| !finding.is_ok())
-            .expect("a refusal must produce a finding");
-        let actual = offending.actual.as_deref().unwrap_or_default();
-        assert!(
-            actual.contains("inherited"),
-            "an inherited grant must be labelled, got {actual:?}"
-        );
-        assert!(
-            offending.message.contains("directory"),
-            "the repair must name the directory to fix, got {:?}",
-            offending.message
-        );
-    }
-
-    /// Returns the findings so a caller can assert on the reason as well.
-    #[cfg(windows)]
-    fn assert_agreement(
-        loader: &ConfigLoader,
-        path: &Path,
-        phase: &str,
-    ) -> Vec<PermissionDiagnostic> {
-        let refused = loader.load_user_file(path).is_err();
+        loader.load_user_file(&path).expect("repairable config");
         let findings = loader.doctor();
-        let reported = findings.iter().any(|finding| !finding.is_ok());
-        assert_eq!(
-            refused, reported,
-            "{phase}: loader refusal ({refused}) and doctor findings ({reported}) disagree: {findings:#?}"
-        );
-        findings
+        assert!(findings.iter().all(PermissionDiagnostic::is_ok));
+        assert!(!untrusted_grants(&path).contains(INHERITED_MARKER));
     }
 
     #[cfg(windows)]

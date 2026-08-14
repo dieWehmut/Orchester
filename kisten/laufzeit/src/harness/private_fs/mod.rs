@@ -12,7 +12,10 @@ pub(crate) enum PrivateHandleError {
 #[cfg(unix)]
 pub(crate) use unix::{create_private_dir_all, validate_private_handle, write_private_file};
 #[cfg(windows)]
-pub(crate) use windows::{create_private_dir_all, validate_private_handle, write_private_file};
+pub(crate) use windows::{
+    create_private_dir_all, restrict_private_file, validate_private_handle,
+    validate_private_handle_identity, write_private_file,
+};
 
 #[cfg(not(any(unix, windows)))]
 pub(crate) fn validate_private_handle(

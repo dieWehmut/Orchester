@@ -116,7 +116,9 @@ impl UserConfig {
             ),
             store: !self.disable_response_storage,
             service_tier: normalized_optional(self.service_tier.as_deref()),
-            requires_auth: provider_config.requires_openai_auth,
+            requires_auth: provider_config
+                .requires_openai_auth
+                .unwrap_or(provider_config.api_key.is_some()),
         })
     }
 

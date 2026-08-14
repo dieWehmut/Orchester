@@ -135,11 +135,13 @@ mod tests {
     #[test]
     fn a_rejected_configuration_still_names_the_file_and_the_reason() {
         let rendered = render(&view(ConfigResolution::Rejected {
-            reason: "protected configuration file failed secure handle validation".into(),
+            reason: "protected configuration file is not a private regular file owned by the current user"
+                .into(),
         }));
 
         assert!(rendered.contains("D:\\home\\.orchester\\orchester.jsonc"));
-        assert!(rendered.contains("failed secure handle validation"));
+        assert!(rendered.contains("not a private regular file owned by the current user"));
+        assert!(!rendered.contains("failed secure handle validation"));
     }
 
     #[test]

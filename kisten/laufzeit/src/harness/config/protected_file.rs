@@ -23,7 +23,8 @@ pub(super) fn read_protected_file(path: &Path) -> Result<Zeroizing<String>, Conf
 }
 
 /// Run the loader's privacy gate and discard the handle, so a diagnostic can
-/// report the verdict the loader will reach without reading the secret.
+/// report the verdict the loader will reach without reading the secret. On
+/// Windows this may tighten a current-user-owned file before reporting it.
 pub(super) fn check_protected_file(path: &Path) -> Result<(), ConfigError> {
     open_validated_file(path).map(drop)
 }

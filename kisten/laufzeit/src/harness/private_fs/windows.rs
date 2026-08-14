@@ -122,6 +122,67 @@ fn restrict_to_current_user(path: &std::path::Path, propagate: bool) -> std::io:
     )))
 }
 
+/// `icacls /grant:r` replaces grants for the named SIDs but preserves other
+/// explicit ACEs. Remove every non-trusted allow ACE after inheritance is
+/// broken so a file cannot retain a broad grant from an older ACL.
+fn remove_untrusted_grants(path: &std::path::Path) -> std::io::Result<()> {
+    let powershell = std::env::var_os("SystemRoot")
+        .map(std::path::PathBuf::from)
+        .map(|root| {
+            root.join("System32")
+                .join(r"WindowsPowerShell\v1.0\powershell.exe")
+        })
+        .filter(|candidate| candidate.is_file())
+        .ok_or_else(|| std::io::Error::other("Windows PowerShell is unavailable"))?;
+    let icacls = std::env::var_os("SystemRoot")
+        .map(std::path::PathBuf::from)
+        .map(|root| root.join("System32").join("icacls.exe"))
+        .filter(|candidate| candidate.is_file())
+        .ok_or_else(|| std::io::Error::other("icacls is unavailable"))?;
+    const SCRIPT: &str = r#"
+$ErrorActionPreference = 'Stop'
+$trusted = @(
+  [Security.Principal.WindowsIdentity]::GetCurrent().User.Value,
+  'S-1-5-18',
+  'S-1-5-32-544'
+)
+$untrusted = @(
+  foreach ($ace in (Get-Acl -LiteralPath $env:ORCHESTER_RESTRICT_PATH).Access) {
+    if ($ace.AccessControlType -ne [Security.AccessControl.AccessControlType]::Allow) { continue }
+    $sid = $ace.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value
+    if ($trusted -notcontains $sid) { "*$sid" }
+  }
+) | Sort-Object -Unique
+if ($untrusted.Count -gt 0) {
+  & $env:ORCHESTER_RESTRICT_ICACLS $env:ORCHESTER_RESTRICT_PATH '/remove:g' $untrusted | Out-Null
+  if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+}
+"#;
+    let output = std::process::Command::new(powershell)
+        .args([
+            "-NoLogo",
+            "-NoProfile",
+            "-NonInteractive",
+            "-Command",
+            SCRIPT,
+        ])
+        .env("ORCHESTER_RESTRICT_PATH", path)
+        .env("ORCHESTER_RESTRICT_ICACLS", icacls)
+        .output()?;
+    if output.status.success() {
+        Ok(())
+    } else {
+        Err(std::io::Error::other(
+            "could not remove untrusted file grants",
+        ))
+    }
+}
+
+pub(crate) fn restrict_private_file(path: &std::path::Path) -> std::io::Result<()> {
+    restrict_to_current_user(path, false)?;
+    remove_untrusted_grants(path)
+}
+
 /// The current user's SID in `S-1-5-…` form, the unambiguous way to name a
 /// principal to `icacls`: an account name can be shadowed across domains.
 fn current_user_sid_string() -> std::io::Result<String> {
@@ -165,6 +226,20 @@ pub(crate) fn validate_private_handle(
     file: &File,
     expect_directory: bool,
 ) -> Result<(), PrivateHandleError> {
+    let handle = validate_handle_kind(file, expect_directory)?;
+    validate_owner(handle)?;
+    validate_dacl(handle)
+}
+
+pub(crate) fn validate_private_handle_identity(
+    file: &File,
+    expect_directory: bool,
+) -> Result<(), PrivateHandleError> {
+    let handle = validate_handle_kind(file, expect_directory)?;
+    validate_owner(handle)
+}
+
+fn validate_handle_kind(file: &File, expect_directory: bool) -> Result<HANDLE, PrivateHandleError> {
     let handle = file.as_raw_handle();
     let mut information = BY_HANDLE_FILE_INFORMATION::default();
     if unsafe { GetFileInformationByHandle(handle, &mut information) } == 0 {
@@ -176,7 +251,7 @@ pub(crate) fn validate_private_handle(
     {
         return Err(PrivateHandleError::Security);
     }
-    validate_security(handle)
+    Ok(handle)
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -196,7 +271,7 @@ fn evaluate_ace(kind: AceKind, inherit_only: bool, trusted: bool) -> Result<(), 
     }
 }
 
-fn validate_security(handle: HANDLE) -> Result<(), PrivateHandleError> {
+fn validate_owner(handle: HANDLE) -> Result<(), PrivateHandleError> {
     let current_sid_storage = current_user_sid()?;
     let current_sid = unsafe {
         (*(current_sid_storage.as_ptr() as *const windows_sys::Win32::Security::TOKEN_USER))
@@ -205,29 +280,54 @@ fn validate_security(handle: HANDLE) -> Result<(), PrivateHandleError> {
     };
 
     let mut owner: PSID = null_mut();
+    let mut descriptor: PSECURITY_DESCRIPTOR = null_mut();
+    let status = unsafe {
+        GetSecurityInfo(
+            handle,
+            SE_FILE_OBJECT,
+            OWNER_SECURITY_INFORMATION,
+            &mut owner,
+            null_mut(),
+            null_mut(),
+            null_mut(),
+            &mut descriptor,
+        )
+    };
+    let _descriptor_guard = SecurityDescriptorGuard(descriptor);
+    if status != ERROR_SUCCESS
+        || owner.is_null()
+        || unsafe { IsValidSid(owner) } == 0
+        || unsafe { windows_sys::Win32::Security::EqualSid(owner, current_sid) } == 0
+    {
+        return Err(PrivateHandleError::Security);
+    }
+    Ok(())
+}
+
+fn validate_dacl(handle: HANDLE) -> Result<(), PrivateHandleError> {
+    let current_sid_storage = current_user_sid()?;
+    let current_sid = unsafe {
+        (*(current_sid_storage.as_ptr() as *const windows_sys::Win32::Security::TOKEN_USER))
+            .User
+            .Sid
+    };
+
     let mut dacl: *mut ACL = null_mut();
     let mut descriptor: PSECURITY_DESCRIPTOR = null_mut();
     let status = unsafe {
         GetSecurityInfo(
             handle,
             SE_FILE_OBJECT,
-            OWNER_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION,
-            &mut owner,
+            DACL_SECURITY_INFORMATION,
+            null_mut(),
             null_mut(),
             &mut dacl,
             null_mut(),
             &mut descriptor,
         )
     };
-    // Owner and DACL pointers borrow this allocation for the checks below.
     let _descriptor_guard = SecurityDescriptorGuard(descriptor);
-    if status != ERROR_SUCCESS
-        || owner.is_null()
-        || dacl.is_null()
-        || unsafe { IsValidSid(owner) } == 0
-        || unsafe { IsValidAcl(dacl) } == 0
-        || unsafe { windows_sys::Win32::Security::EqualSid(owner, current_sid) } == 0
-    {
+    if status != ERROR_SUCCESS || dacl.is_null() || unsafe { IsValidAcl(dacl) } == 0 {
         return Err(PrivateHandleError::Security);
     }
 
