@@ -90,6 +90,7 @@ async fn posts_json_with_bearer_auth_and_returns_bounded_response() {
     let wire_lower = wire.to_ascii_lowercase();
     assert!(wire.starts_with("POST /v1/responses HTTP/1.1\r\n"));
     assert!(wire_lower.contains("content-type: application/json\r\n"));
+    assert!(!wire_lower.contains("codex_cli_rs/"));
     assert!(wire_lower.contains(&format!("authorization: bearer {SECRET_CANARY}\r\n")));
     assert!(wire.ends_with(BODY_CANARY));
     assert_eq!(response.status(), 200);

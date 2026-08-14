@@ -2,11 +2,19 @@ use std::fmt;
 use std::time::Duration;
 
 use futures::StreamExt;
-use reqwest::header::{CONTENT_TYPE, RETRY_AFTER};
+use reqwest::header::{CONTENT_TYPE, RETRY_AFTER, USER_AGENT};
 use reqwest::redirect::Policy;
 use tokio_util::sync::CancellationToken;
+use url::Url;
 
 use super::{HttpRequest, HttpResponse, HttpTransport, HttpTransportError};
+
+const AGENTROUTER_RESPONSES_COMPAT_USER_AGENT: &str = concat!(
+    "codex_cli_rs/",
+    env!("CARGO_PKG_VERSION"),
+    " orchester/",
+    env!("CARGO_PKG_VERSION")
+);
 
 /// The production HTTP implementation for provider-neutral model requests.
 ///
@@ -33,6 +41,7 @@ impl ReqwestHttpTransport {
         let authorization = request.authorization;
         let timeout = request.timeout;
         let response_limit = request.response_limit;
+        let compatibility_user_agent = compatibility_user_agent(&endpoint);
 
         let mut builder = self
             .client
@@ -40,6 +49,9 @@ impl ReqwestHttpTransport {
             .timeout(timeout)
             .header(CONTENT_TYPE, "application/json")
             .body(body);
+        if let Some(user_agent) = compatibility_user_agent {
+            builder = builder.header(USER_AGENT, user_agent);
+        }
         if let Some(secret) = authorization {
             builder = builder.bearer_auth(secret.expose_for_provider());
         }
@@ -69,6 +81,32 @@ impl ReqwestHttpTransport {
             body.extend_from_slice(&chunk);
         }
         HttpResponse::new(status, retry_after, body)
+    }
+}
+
+fn compatibility_user_agent(endpoint: &Url) -> Option<&'static str> {
+    endpoint
+        .host_str()
+        .filter(|host| host.eq_ignore_ascii_case("agentrouter.org"))
+        .map(|_| AGENTROUTER_RESPONSES_COMPAT_USER_AGENT)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn compatibility_user_agent_is_limited_to_agentrouter() {
+        let agentrouter = Url::parse("https://agentrouter.org/v1/responses").unwrap();
+        let ordinary = Url::parse("https://api.example.test/v1/responses").unwrap();
+        let lookalike = Url::parse("https://agentrouter.org.example.test/v1/responses").unwrap();
+
+        assert_eq!(
+            compatibility_user_agent(&agentrouter),
+            Some(AGENTROUTER_RESPONSES_COMPAT_USER_AGENT)
+        );
+        assert_eq!(compatibility_user_agent(&ordinary), None);
+        assert_eq!(compatibility_user_agent(&lookalike), None);
     }
 }
 
