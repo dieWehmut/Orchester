@@ -44,6 +44,26 @@ impl UserConfig {
         &self,
         store: &S,
     ) -> Result<ConfiguredSecretSet, ConfigError> {
+        self.resolve_configured_secrets_with_provider(None, store)
+    }
+
+    /// Resolve secrets needed by the active runtime. Environment references
+    /// remain available to sanitize tool output, while provider credentials
+    /// are limited to the selected provider so an unused profile cannot block
+    /// startup merely because its key is absent.
+    pub fn resolve_configured_secrets_for_provider<S: CredentialStore + ?Sized>(
+        &self,
+        provider: &str,
+        store: &S,
+    ) -> Result<ConfiguredSecretSet, ConfigError> {
+        self.resolve_configured_secrets_with_provider(Some(provider), store)
+    }
+
+    fn resolve_configured_secrets_with_provider<S: CredentialStore + ?Sized>(
+        &self,
+        selected_provider: Option<&str>,
+        store: &S,
+    ) -> Result<ConfiguredSecretSet, ConfigError> {
         let mut values = Vec::new();
 
         if let Some(vault) = self.credential_vault.0.as_ref() {
@@ -63,6 +83,9 @@ impl UserConfig {
         }
 
         for (provider, config) in self.model_providers() {
+            if selected_provider.is_some_and(|selected| selected != provider) {
+                continue;
+            }
             let Some(value) = config.api_key.as_deref() else {
                 continue;
             };

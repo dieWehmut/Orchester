@@ -231,6 +231,46 @@ async fn builds_and_runs_a_configured_durable_service_offline() {
     cleanup(&state_db);
 }
 
+#[test]
+fn unselected_provider_credentials_do_not_block_service_construction() {
+    let (workspace, state_db) = temp_paths("unselected-provider");
+    let config = ConfigLoader::test()
+        .load_user(
+            r#"{
+                "model_provider": "OpenAI",
+                "model": "gpt-configured",
+                "model_providers": {
+                    "OpenAI": {
+                        "base_url": "http://127.0.0.1:4567/v1",
+                        "api_key": "${secret:OpenAI}",
+                        "wire_api": "responses"
+                    },
+                    "Router": {
+                        "base_url": "https://agentrouter.org/v1",
+                        "api_key": "${secret:Router}",
+                        "wire_api": "responses"
+                    }
+                }
+            }"#,
+        )
+        .expect("valid multi-provider config");
+    let credentials = InMemoryCredentialStore::with("OpenAI", PROVIDER_SECRET);
+
+    let service = build_self_agent_service_with_transport(
+        &config,
+        &credentials,
+        CaptureTransport::default(),
+        &workspace,
+        &state_db,
+        "local-user",
+    )
+    .expect("an unselected provider must not require a credential");
+
+    assert_eq!(service.model().profile().provider, "OpenAI");
+    drop(service);
+    cleanup(&state_db);
+}
+
 #[tokio::test]
 async fn production_builder_binds_effective_network_denial_to_the_durable_run() {
     let (workspace, state_db) = temp_paths("configured-policy");

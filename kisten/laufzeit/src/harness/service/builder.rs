@@ -164,7 +164,8 @@ where
     S: CredentialStore + ?Sized,
     T: HttpTransport + 'static,
 {
-    let secrets = config.resolve_configured_secrets(credentials)?;
+    let secrets =
+        config.resolve_configured_secrets_for_provider(&model.profile().provider, credentials)?;
     let identity = WorkspaceIdentity::for_workspace(workspace_root, owner_actor_id)?;
     let profile = model.profile().clone();
     let loop_engine = SelfAgentLoop::new(
