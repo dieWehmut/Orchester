@@ -37,6 +37,7 @@ pub enum HttpTransportError {
     ResponseTooLarge,
 }
 
+#[derive(Clone)]
 pub struct HttpRequest {
     endpoint: Url,
     body: Vec<u8>,

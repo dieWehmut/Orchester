@@ -175,6 +175,23 @@ async fn performs_reusable_authenticated_responses_calls() {
 }
 
 #[tokio::test]
+async fn retries_a_transient_transport_failure_once() {
+    let transport = FakeTransport::with_responses([
+        Err(HttpTransportError::Transport),
+        Ok(success("recovered")),
+    ]);
+    let model = authenticated_model("https://example.test/v1/", transport.clone());
+
+    let response = model
+        .complete(request("retry me"), CancellationToken::new())
+        .await
+        .expect("transient transport failure should be retried");
+
+    assert_eq!(response.assistant_text, "recovered");
+    assert_eq!(transport.requests().len(), 2);
+}
+
+#[tokio::test]
 async fn classifies_http_and_transport_failures_without_provider_bodies() {
     let cases = [
         (

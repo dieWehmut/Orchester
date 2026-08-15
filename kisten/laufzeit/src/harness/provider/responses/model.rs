@@ -1,5 +1,6 @@
 use std::fmt;
 use std::sync::Arc;
+use std::time::Duration;
 
 use async_trait::async_trait;
 use orchester_modell::{LanguageModel, ModelError, ModelRequest, ModelResponse};
@@ -13,6 +14,9 @@ use crate::harness::provider::{
 };
 
 use super::{decode_responses_response, encode_responses_request, ResponsesRequestOptions};
+
+const MAX_TRANSIENT_TRANSPORT_ATTEMPTS: usize = 2;
+const TRANSIENT_TRANSPORT_RETRY_DELAY: Duration = Duration::from_millis(100);
 
 /// Configuration errors raised while constructing a Responses model.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Error)]
@@ -76,12 +80,23 @@ impl<T: HttpTransport + 'static> LanguageModel for ResponsesLanguageModel<T> {
             .with_response_limit(MAX_HTTP_RESPONSE_BYTES)
             .map_err(map_transport_error)?
             .with_shared_authorization(self.authorization.clone());
-        let response = self
-            .transport
-            .send(request, cancel)
-            .await
-            .map_err(map_transport_error)?;
-        decode_http_response(response)
+        let mut attempt = 1;
+        loop {
+            match self.transport.send(request.clone(), cancel.clone()).await {
+                Ok(response) => return decode_http_response(response),
+                Err(HttpTransportError::Transport)
+                    if attempt < MAX_TRANSIENT_TRANSPORT_ATTEMPTS =>
+                {
+                    attempt += 1;
+                    tokio::select! {
+                        biased;
+                        _ = cancel.cancelled() => return Err(ModelError::Cancelled),
+                        _ = tokio::time::sleep(TRANSIENT_TRANSPORT_RETRY_DELAY) => {}
+                    }
+                }
+                Err(error) => return Err(map_transport_error(error)),
+            }
+        }
     }
 }
 
