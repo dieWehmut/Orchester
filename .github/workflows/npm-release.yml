@@ -64,7 +64,7 @@ jobs:
 
           if git rev-parse --verify --quiet "refs/tags/$TAG" >/dev/null; then
             TAG_COMMIT=$(git rev-list -n 1 "$TAG")
-            if ! git diff --quiet "$TAG_COMMIT" "$GITHUB_SHA" -- . ':!.github/workflows/npm-release.yml'; then
+            if ! git diff --quiet "$TAG_COMMIT" "$GITHUB_SHA" -- . ':!.github/workflows/npm-release.yml' ':!werkzeug/npm/release-workflow.test.mjs'; then
               echo "existing $TAG differs from the release commit outside npm-release.yml" >&2
               exit 1
             fi
@@ -305,7 +305,7 @@ jobs:
           git fetch --force --tags origin
           if git rev-parse --verify --quiet "refs/tags/$TAG" >/dev/null; then
             TAG_COMMIT=$(git rev-list -n 1 "$TAG")
-            if ! git diff --quiet "$TAG_COMMIT" "$GITHUB_SHA" -- . ':!.github/workflows/npm-release.yml'; then
+                if ! git diff --quiet "$TAG_COMMIT" "$GITHUB_SHA" -- . ':!.github/workflows/npm-release.yml' ':!werkzeug/npm/release-workflow.test.mjs'; then
               echo "existing $TAG differs from the release commit outside npm-release.yml" >&2
               exit 1
             fi

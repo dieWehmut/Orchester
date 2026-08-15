@@ -117,7 +117,7 @@ test('one dispatch tags, publishes, releases, and verifies v0.1.0 in dependency 
   assert.match(workflow.slice(tagJob, publishJob), /git push origin "refs\/tags\/\$TAG"/);
   assert.match(
     workflow,
-    /git diff --quiet "\$TAG_COMMIT" "\$GITHUB_SHA" -- \. ':!\.github\/workflows\/npm-release\.yml'/,
+    /git diff --quiet "\$TAG_COMMIT" "\$GITHUB_SHA" -- \. ':!\.github\/workflows\/npm-release\.yml' ':!werkzeug\/npm\/release-workflow\.test\.mjs'/,
   );
   assert.ok(oidcPermission > publishJob);
   assert.ok(versionProbe > oidcPermission);
