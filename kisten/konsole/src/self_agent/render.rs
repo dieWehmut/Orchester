@@ -20,6 +20,22 @@ pub fn render_outcome(out: &mut impl Write, outcome: &SelfAgentRunOutcome) -> io
     )
 }
 
+/// Capture the human-readable outcome for the full-screen transcript.
+///
+/// The normal renderer writes to the terminal and uses only the local DIM and
+/// RESET styles. The transcript stores plain text so the frame renderer can
+/// apply its own role colors without leaking terminal control sequences.
+pub fn render_outcome_transcript(outcome: &SelfAgentRunOutcome) -> io::Result<String> {
+    let mut rendered = Vec::new();
+    render_outcome(&mut rendered, outcome)?;
+    let rendered = String::from_utf8(rendered).map_err(io::Error::other)?;
+    Ok(strip_render_styles(&rendered).trim().to_owned())
+}
+
+fn strip_render_styles(text: &str) -> String {
+    text.replace(DIM, "").replace(RESET, "")
+}
+
 fn render_parts<'a>(
     out: &mut impl Write,
     tools: impl IntoIterator<Item = &'a GovernedToolOutcome>,
@@ -238,6 +254,12 @@ mod tests {
         assert!(rendered.contains("first\n\\u{1b}[31msecond"));
         assert!(!rendered.contains("\x1b[31msecond"));
         assert!(rendered.contains("model calls 1 | tokens in 0 / out 0"));
+    }
+
+    #[test]
+    fn transcript_style_stripping_removes_renderer_codes_only() {
+        let rendered = format!("{DIM}status{RESET} value");
+        assert_eq!(strip_render_styles(&rendered), "status value");
     }
 
     #[test]

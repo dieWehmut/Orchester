@@ -75,20 +75,20 @@ struct PickerView<'a> {
 }
 
 #[derive(Clone, Copy)]
-struct ChatHomeView<'a> {
-    width: usize,
-    height: usize,
-    input: &'a str,
-    choices: &'a [AgentChoice],
-    command_selected: usize,
-    show_help: bool,
-    model_status: &'a str,
-    transcript: &'a [TranscriptEntry],
-    busy: Option<&'a str>,
+pub(crate) struct ChatHomeView<'a> {
+    pub(crate) width: usize,
+    pub(crate) height: usize,
+    pub(crate) input: &'a str,
+    pub(crate) choices: &'a [AgentChoice],
+    pub(crate) command_selected: usize,
+    pub(crate) show_help: bool,
+    pub(crate) model_status: &'a str,
+    pub(crate) transcript: &'a [TranscriptEntry],
+    pub(crate) busy: Option<&'a str>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum TranscriptRole {
+pub(crate) enum TranscriptRole {
     User,
     Assistant,
     Status,
@@ -96,106 +96,171 @@ enum TranscriptRole {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-struct TranscriptEntry {
-    role: TranscriptRole,
-    text: String,
+pub(crate) struct TranscriptEntry {
+    pub(crate) role: TranscriptRole,
+    pub(crate) text: String,
 }
 
 impl TranscriptEntry {
-    #[cfg(test)]
-    fn new(role: TranscriptRole, text: impl Into<String>) -> Self {
+    pub(crate) fn new(role: TranscriptRole, text: impl Into<String>) -> Self {
         Self {
             role,
             text: text.into(),
         }
     }
+
+    pub(crate) fn user(text: impl Into<String>) -> Self {
+        Self::new(TranscriptRole::User, text)
+    }
+
+    pub(crate) fn assistant(text: impl Into<String>) -> Self {
+        Self::new(TranscriptRole::Assistant, text)
+    }
+
+    pub(crate) fn status(text: impl Into<String>) -> Self {
+        Self::new(TranscriptRole::Status, text)
+    }
+
+    pub(crate) fn error(text: impl Into<String>) -> Self {
+        Self::new(TranscriptRole::Error, text)
+    }
+}
+
+pub(crate) struct ChatSession {
+    _terminal: TerminalSession,
+    presenter: FramePresenter,
+}
+
+impl ChatSession {
+    pub(crate) fn enter() -> io::Result<Self> {
+        Ok(Self {
+            _terminal: TerminalSession::enter()?,
+            presenter: FramePresenter::default(),
+        })
+    }
+
+    pub(crate) fn present(&mut self, view: ChatHomeView<'_>) -> io::Result<()> {
+        let mut out = io::stdout();
+        present_chat_home_in_viewport(&mut self.presenter, &mut out, view)
+    }
+
+    pub(crate) fn read_key(&self) -> io::Result<Option<KeyEvent>> {
+        match event::read()? {
+            TerminalEvent::Key(key) => Ok(Some(key)),
+            _ => Ok(None),
+        }
+    }
+
+    pub(crate) fn viewport(&self) -> (usize, usize) {
+        let (cols, rows) = terminal::size().unwrap_or((100, 30));
+        (viewport_content_width(cols), usize::from(rows).max(1))
+    }
 }
 
 pub fn run_home_tui(choices: &[AgentChoice], model_status: &str) -> io::Result<HomeAction> {
-    let _session = TerminalSession::enter()?;
-    let mut out = io::stdout();
-    let mut presenter = FramePresenter::default();
+    let mut session = ChatSession::enter()?;
     let mut input = String::new();
     let mut command_selected = 0usize;
     let mut show_help = false;
 
     loop {
-        let (cols, rows) = terminal::size().unwrap_or((100, 30));
-        present_chat_home_in_viewport(
-            &mut presenter,
-            &mut out,
-            ChatHomeView {
-                width: viewport_content_width(cols),
-                height: (rows as usize).max(1),
-                input: &input,
-                choices,
-                command_selected,
-                show_help,
-                model_status,
-                transcript: &[],
-                busy: None,
-            },
-        )?;
+        let (width, height) = session.viewport();
+        session.present(ChatHomeView {
+            width,
+            height,
+            input: &input,
+            choices,
+            command_selected,
+            show_help,
+            model_status,
+            transcript: &[],
+            busy: None,
+        })?;
 
-        let TerminalEvent::Key(key) = event::read()? else {
+        let Some(key) = session.read_key()? else {
             continue;
         };
-        if !is_press(&key) {
-            continue;
+        if let Some(action) = handle_chat_key(
+            key,
+            &mut input,
+            &mut command_selected,
+            &mut show_help,
+            choices,
+        ) {
+            return Ok(action);
         }
-        if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('c') {
-            return Ok(HomeAction::Quit);
-        }
+    }
+}
 
-        match key.code {
-            KeyCode::Enter => {
-                let action = parse_home_action_selected(&input, choices, command_selected);
-                if matches!(action, HomeAction::Help) {
-                    input.clear();
-                    command_selected = 0;
-                    show_help = true;
-                    continue;
-                }
-                if !matches!(action, HomeAction::Empty) {
-                    return Ok(action);
-                }
-            }
-            KeyCode::Esc => {
-                if show_help {
-                    show_help = false;
-                    continue;
-                }
-                if input.is_empty() {
-                    return Ok(HomeAction::Quit);
-                }
+pub(crate) fn handle_chat_key(
+    key: KeyEvent,
+    input: &mut String,
+    command_selected: &mut usize,
+    show_help: &mut bool,
+    choices: &[AgentChoice],
+) -> Option<HomeAction> {
+    if !is_press(&key) {
+        return None;
+    }
+    if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('c') {
+        return Some(HomeAction::Quit);
+    }
+
+    match key.code {
+        KeyCode::Enter => {
+            let action = parse_home_action_selected(input, choices, *command_selected);
+            if matches!(action, HomeAction::Help) {
                 input.clear();
-                command_selected = 0;
+                *command_selected = 0;
+                *show_help = true;
+                return None;
             }
-            KeyCode::Backspace => {
-                input.pop();
-                command_selected = 0;
-                show_help = false;
+            if matches!(action, HomeAction::Empty) {
+                None
+            } else {
+                Some(action)
             }
-            KeyCode::Up if input.starts_with('/') => {
-                let matches = matching_commands(&input, choices);
-                command_selected = wrapped_selection(
-                    command_selected,
-                    matches.len(),
-                    SelectionDirection::Previous,
-                );
-            }
-            KeyCode::Down if input.starts_with('/') => {
-                let matches = matching_commands(&input, choices);
-                command_selected =
-                    wrapped_selection(command_selected, matches.len(), SelectionDirection::Next);
-            }
-            KeyCode::Char(ch) => {
-                input.push(ch);
-                command_selected = 0;
-                show_help = false;
-            }
-            _ => {}
         }
+        KeyCode::Esc => {
+            if *show_help {
+                *show_help = false;
+                return None;
+            }
+            if input.is_empty() {
+                return Some(HomeAction::Quit);
+            }
+            input.clear();
+            *command_selected = 0;
+            None
+        }
+        KeyCode::Backspace => {
+            input.pop();
+            *command_selected = 0;
+            *show_help = false;
+            None
+        }
+        KeyCode::Up if input.starts_with('/') => {
+            let matches = matching_commands(input, choices);
+            *command_selected = wrapped_selection(
+                *command_selected,
+                matches.len(),
+                SelectionDirection::Previous,
+            );
+            None
+        }
+        KeyCode::Down if input.starts_with('/') => {
+            let matches = matching_commands(input, choices);
+            *command_selected =
+                wrapped_selection(*command_selected, matches.len(), SelectionDirection::Next);
+            None
+        }
+        KeyCode::Char(ch) => {
+            input.push(ch);
+            *command_selected = 0;
+            *show_help = false;
+            None
+        }
+        _ => None,
     }
 }
 
@@ -848,11 +913,26 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
         command_selected,
         show_help,
         model_status,
-        transcript: _,
-        busy: _,
+        transcript,
+        busy,
     } = view;
     if height == 0 {
         return Ok(());
+    }
+
+    if !transcript.is_empty() || busy.is_some() {
+        return render_transcript_chat_frame(
+            out,
+            width,
+            height,
+            input,
+            choices,
+            command_selected,
+            show_help,
+            model_status,
+            transcript,
+            busy,
+        );
     }
 
     let desired_content_rows = desired_home_content_rows(width, input, choices, show_help);
@@ -937,6 +1017,112 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
         render_status_line(out, width, model_status)?;
     }
     Ok(())
+}
+
+fn render_transcript_chat_frame<W: Write>(
+    out: &mut W,
+    width: usize,
+    height: usize,
+    input: &str,
+    choices: &[AgentChoice],
+    command_selected: usize,
+    show_help: bool,
+    model_status: &str,
+    transcript: &[TranscriptEntry],
+    busy: Option<&str>,
+) -> io::Result<()> {
+    let status_rows = usize::from(height >= 2);
+    let composer_rows = 1;
+    let header_rows = if height >= 5 { 2 } else { 0 };
+    let separator_rows = usize::from(height >= 5);
+    let content_rows = height
+        .saturating_sub(header_rows)
+        .saturating_sub(separator_rows)
+        .saturating_sub(composer_rows)
+        .saturating_sub(status_rows);
+
+    if header_rows > 0 {
+        render_compact_home_header(out, width, header_rows)?;
+    }
+    if separator_rows > 0 {
+        writeln!(out)?;
+    }
+
+    if show_help {
+        render_home_help(out, width, content_rows)?;
+    } else if input.starts_with('/') {
+        if width < 50 {
+            render_compact_command_palette(
+                out,
+                input,
+                choices,
+                command_selected,
+                width,
+                content_rows.min(COMPACT_PALETTE_ROWS),
+            )?;
+        } else {
+            render_command_palette(
+                out,
+                input,
+                choices,
+                command_selected,
+                content_rows.min(PALETTE_ROWS),
+                width,
+            )?;
+        }
+    } else {
+        let mut lines = transcript_lines(width, transcript);
+        if let Some(busy) = busy {
+            lines.push(format!("{ORANGE}* {RESET}{}", sanitize_terminal_text(busy)));
+        }
+        let start = lines.len().saturating_sub(content_rows);
+        for line in lines.into_iter().skip(start) {
+            writeln!(out, "{line}")?;
+        }
+    }
+
+    let prompt = if input.is_empty() {
+        prompt_suggestion()
+    } else {
+        input
+    };
+    let prompt_style = if input.is_empty() { DIM } else { "" };
+    let prompt = truncate(&sanitize_terminal_text(prompt), width.saturating_sub(2));
+    let prompt_pad = " ".repeat(width.saturating_sub(2 + display_width(&prompt)));
+    writeln!(
+        out,
+        "\x1b[48;5;236m{CYAN}> {RESET}\x1b[48;5;236m{prompt_style}{prompt}{prompt_pad}{RESET}"
+    )?;
+
+    if status_rows > 0 {
+        render_status_line(out, width, model_status)?;
+    }
+    Ok(())
+}
+
+fn transcript_lines(width: usize, transcript: &[TranscriptEntry]) -> Vec<String> {
+    transcript
+        .iter()
+        .flat_map(|entry| {
+            let (prefix, style) = match entry.role {
+                TranscriptRole::User => ("> ", CYAN),
+                TranscriptRole::Assistant => ("", ORANGE),
+                TranscriptRole::Status => ("", DIM),
+                TranscriptRole::Error => ("error: ", RED),
+            };
+            let text = sanitize_terminal_text(&entry.text);
+            let mut lines = text.lines().map(str::to_owned).collect::<Vec<_>>();
+            if lines.is_empty() {
+                lines.push(String::new());
+            }
+            lines.into_iter().map(move |line| {
+                format!(
+                    "{style}{}{RESET}",
+                    truncate(&format!("{prefix}{line}"), width)
+                )
+            })
+        })
+        .collect()
 }
 
 fn desired_home_content_rows(
@@ -1426,6 +1612,79 @@ fn is_quit(input: &str) -> bool {
 mod tests {
     use super::*;
     use std::io::Cursor;
+
+    #[test]
+    fn chat_key_reducer_submits_and_preserves_quit_semantics() {
+        let choices = vec![choice("mock", AvailabilityStatus::Available, None)];
+        let mut input = String::from("hello");
+        let mut selected = 0;
+        let mut show_help = false;
+
+        let submit = handle_chat_key(
+            KeyEvent::new(KeyCode::Enter, KeyModifiers::NONE),
+            &mut input,
+            &mut selected,
+            &mut show_help,
+            &choices,
+        );
+        assert_eq!(submit, Some(HomeAction::Submit("hello".into())));
+        assert_eq!(input, "hello");
+
+        input.clear();
+        assert_eq!(
+            handle_chat_key(
+                KeyEvent::new(KeyCode::Esc, KeyModifiers::NONE),
+                &mut input,
+                &mut selected,
+                &mut show_help,
+                &choices,
+            ),
+            Some(HomeAction::Quit)
+        );
+        assert_eq!(
+            handle_chat_key(
+                KeyEvent::new(KeyCode::Char('c'), KeyModifiers::CONTROL),
+                &mut input,
+                &mut selected,
+                &mut show_help,
+                &choices,
+            ),
+            Some(HomeAction::Quit)
+        );
+    }
+
+    #[test]
+    fn chat_key_reducer_toggles_help_without_submitting() {
+        let choices = vec![choice("mock", AvailabilityStatus::Available, None)];
+        let mut input = String::from("/help");
+        let mut selected = 0;
+        let mut show_help = false;
+
+        assert_eq!(
+            handle_chat_key(
+                KeyEvent::new(KeyCode::Enter, KeyModifiers::NONE),
+                &mut input,
+                &mut selected,
+                &mut show_help,
+                &choices,
+            ),
+            None
+        );
+        assert!(input.is_empty());
+        assert!(show_help);
+
+        assert_eq!(
+            handle_chat_key(
+                KeyEvent::new(KeyCode::Esc, KeyModifiers::NONE),
+                &mut input,
+                &mut selected,
+                &mut show_help,
+                &choices,
+            ),
+            None
+        );
+        assert!(!show_help);
+    }
 
     #[test]
     fn select_agent_accepts_name() {

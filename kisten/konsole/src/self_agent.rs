@@ -31,7 +31,7 @@ pub use credentials::{
 };
 pub use models::{render_model_selection, render_models};
 pub use permissions::render_permissions;
-pub use render::render_outcome;
+pub use render::{render_outcome, render_outcome_transcript};
 pub use resume::render_resume;
 pub use status::render_status;
 
