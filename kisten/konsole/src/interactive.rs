@@ -83,6 +83,32 @@ struct ChatHomeView<'a> {
     command_selected: usize,
     show_help: bool,
     model_status: &'a str,
+    transcript: &'a [TranscriptEntry],
+    busy: Option<&'a str>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum TranscriptRole {
+    User,
+    Assistant,
+    Status,
+    Error,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct TranscriptEntry {
+    role: TranscriptRole,
+    text: String,
+}
+
+impl TranscriptEntry {
+    #[cfg(test)]
+    fn new(role: TranscriptRole, text: impl Into<String>) -> Self {
+        Self {
+            role,
+            text: text.into(),
+        }
+    }
 }
 
 pub fn run_home_tui(choices: &[AgentChoice], model_status: &str) -> io::Result<HomeAction> {
@@ -106,6 +132,8 @@ pub fn run_home_tui(choices: &[AgentChoice], model_status: &str) -> io::Result<H
                 command_selected,
                 show_help,
                 model_status,
+                transcript: &[],
+                busy: None,
             },
         )?;
 
@@ -790,6 +818,8 @@ fn render_chat_home<W: Write>(
             command_selected,
             show_help,
             model_status: "model not configured",
+            transcript: &[],
+            busy: None,
         },
     )
 }
@@ -818,6 +848,8 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
         command_selected,
         show_help,
         model_status,
+        transcript: _,
+        busy: _,
     } = view;
     if height == 0 {
         return Ok(());
@@ -1987,6 +2019,8 @@ mod tests {
                 command_selected: 0,
                 show_help: false,
                 model_status: "model not configured",
+                transcript: &[],
+                busy: None,
             },
         )
         .unwrap();
@@ -2022,6 +2056,8 @@ mod tests {
                 command_selected: 0,
                 show_help: false,
                 model_status: "model not configured",
+                transcript: &[],
+                busy: None,
             },
         )
         .unwrap();
@@ -2030,6 +2066,39 @@ mod tests {
                 .unwrap()
                 .contains("\n\x1b[?2026l"),
             "one-row frames must not end with a newline"
+        );
+    }
+
+    #[test]
+    fn chat_home_renders_transcript_busy_state_and_fixed_composer() {
+        let transcript = vec![
+            TranscriptEntry::new(TranscriptRole::User, "old task"),
+            TranscriptEntry::new(TranscriptRole::Assistant, "newest answer"),
+        ];
+        let mut out = Vec::new();
+        render_chat_home_in_viewport(
+            &mut out,
+            ChatHomeView {
+                width: 80,
+                height: 12,
+                input: "next task",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "gpt-test",
+                transcript: &transcript,
+                busy: Some("Creating..."),
+            },
+        )
+        .unwrap();
+
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        assert!(plain.contains("newest answer"), "transcript:\n{plain}");
+        assert!(plain.contains("Creating..."), "busy state:\n{plain}");
+        assert!(plain.contains("> next task"), "composer:\n{plain}");
+        assert!(
+            plain.lines().count() <= 12,
+            "transcript frame overflowed:\n{plain}"
         );
     }
 
@@ -2155,6 +2224,8 @@ mod tests {
                 command_selected: 0,
                 show_help: false,
                 model_status: "model not configured",
+                transcript: &[],
+                busy: None,
             },
         )
         .unwrap();
@@ -2232,6 +2303,8 @@ mod tests {
                         command_selected: selected,
                         show_help,
                         model_status: "model not configured",
+                        transcript: &[],
+                        busy: None,
                     },
                 )
                 .unwrap();
@@ -2291,6 +2364,8 @@ mod tests {
                 command_selected: 0,
                 show_help: false,
                 model_status: "model not configured",
+                transcript: &[],
+                busy: None,
             },
         )
         .unwrap();
