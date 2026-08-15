@@ -136,20 +136,54 @@ impl<T: HttpTransport + 'static> LanguageModel for ResponsesLanguageModel<T> {
             .with_response_limit(MAX_HTTP_RESPONSE_BYTES)
             .map_err(map_transport_error)?
             .with_shared_authorization(self.authorization.clone());
-        let response = self
-            .transport
-            .send_stream(request, cancel.clone())
-            .await
-            .map_err(map_transport_error)?;
-        match response.status() {
-            200..=299 => decode_responses_event_stream(response, cancel, Some(events.as_ref()))
+        let mut attempt = 1;
+        loop {
+            if cancel.is_cancelled() {
+                return Err(ModelError::Cancelled);
+            }
+            match self
+                .transport
+                .send_stream(request.clone(), cancel.clone())
                 .await
-                .map_err(map_event_error),
-            401 => Err(ModelError::Authentication),
-            403 => Err(ModelError::Forbidden),
-            429 => Err(ModelError::rate_limited(response.retry_after())),
-            408 | 425 | 500..=599 => Err(ModelError::Transport),
-            _ => Err(ModelError::Protocol),
+            {
+                Ok(response)
+                    if retryable_response_status(response.status())
+                        && attempt < MAX_TRANSIENT_TRANSPORT_ATTEMPTS =>
+                {
+                    attempt += 1;
+                    tokio::select! {
+                        biased;
+                        _ = cancel.cancelled() => return Err(ModelError::Cancelled),
+                        _ = tokio::time::sleep(TRANSIENT_TRANSPORT_RETRY_DELAY) => {}
+                    }
+                }
+                Err(error)
+                    if retryable_transport_error(error)
+                        && attempt < MAX_TRANSIENT_TRANSPORT_ATTEMPTS =>
+                {
+                    attempt += 1;
+                    tokio::select! {
+                        biased;
+                        _ = cancel.cancelled() => return Err(ModelError::Cancelled),
+                        _ = tokio::time::sleep(TRANSIENT_TRANSPORT_RETRY_DELAY) => {}
+                    }
+                }
+                Ok(response) => {
+                    return match response.status() {
+                        200..=299 => {
+                            decode_responses_event_stream(response, cancel, Some(events.as_ref()))
+                                .await
+                                .map_err(map_event_error)
+                        }
+                        401 => Err(ModelError::Authentication),
+                        403 => Err(ModelError::Forbidden),
+                        429 => Err(ModelError::rate_limited(response.retry_after())),
+                        408 | 425 | 500..=599 => Err(ModelError::Transport),
+                        _ => Err(ModelError::Protocol),
+                    };
+                }
+                Err(error) => return Err(map_transport_error(error)),
+            }
         }
     }
 }

@@ -238,6 +238,29 @@ async fn rejects_streams_without_a_completed_event() {
 }
 
 #[tokio::test]
+async fn retries_a_transient_stream_status_before_emitting_deltas() {
+    let transport = FakeTransport::with_responses([
+        Ok(HttpResponse::new(503, None, BODY_CANARY.as_bytes().to_vec()).unwrap()),
+        Ok(streamed_success()),
+    ]);
+    let model = authenticated_model("https://example.test/v1", transport.clone());
+    let deltas = Arc::new(Mutex::new(Vec::new()));
+
+    let response = model
+        .complete_with_events(
+            request("retry stream"),
+            CancellationToken::new(),
+            Some(Arc::new(CollectingSink(Arc::clone(&deltas)))),
+        )
+        .await
+        .expect("transient stream status should be retried");
+
+    assert_eq!(response.assistant_text, "hello world");
+    assert_eq!(*deltas.lock().expect("deltas lock"), ["hello ", "world"]);
+    assert_eq!(transport.requests().len(), 2);
+}
+
+#[tokio::test]
 async fn retries_a_transient_transport_failure_once() {
     let transport = FakeTransport::with_responses([
         Err(HttpTransportError::Transport),
