@@ -200,6 +200,7 @@ struct TerminalChatState {
     transcript: Vec<TranscriptEntry>,
     pending: VecDeque<QueuedChatAction>,
     busy: Option<String>,
+    scroll_offset: usize,
 }
 
 impl TerminalChatState {
@@ -213,6 +214,7 @@ impl TerminalChatState {
             &self.transcript,
             self.busy.as_deref(),
         )
+        .with_scroll(self.scroll_offset)
     }
 
     fn clear_input(&mut self) {
@@ -221,16 +223,22 @@ impl TerminalChatState {
         self.show_help = false;
     }
 
+    fn append_transcript(&mut self, entry: TranscriptEntry) {
+        self.transcript.push(entry);
+        self.scroll_offset = 0;
+    }
+
     fn queue_action(&mut self, action: interactive::HomeAction) {
         match action {
             interactive::HomeAction::Submit(prompt) => {
                 self.clear_input();
-                self.transcript.push(TranscriptEntry::user(&prompt));
+                self.append_transcript(TranscriptEntry::user(&prompt));
                 self.pending.push_back(QueuedChatAction::Prompt(prompt));
             }
             interactive::HomeAction::Empty => {}
             other => {
                 self.clear_input();
+                self.append_transcript(TranscriptEntry::status(queued_command_label(&other)));
                 self.pending.push_back(QueuedChatAction::Command(other));
             }
         }
@@ -245,6 +253,48 @@ enum ModelTurnResult {
 fn busy_label(tick: usize) -> String {
     const FRAMES: [&str; 4] = ["Creating  ", "Creating .", "Creating ..", "Creating ..."];
     FRAMES[tick % FRAMES.len()].to_owned()
+}
+
+fn queued_command_label(action: &interactive::HomeAction) -> String {
+    let command = match action {
+        interactive::HomeAction::Workspace(command) => workspace_command_label(command),
+        interactive::HomeAction::Plugins(PluginAction::List) => "/plugins".into(),
+        interactive::HomeAction::Plugins(PluginAction::Status(name)) => {
+            format!("/plugins status {name}")
+        }
+        interactive::HomeAction::Plugins(PluginAction::Install(name)) => {
+            format!("/plugins install {name}")
+        }
+        interactive::HomeAction::Plugins(PluginAction::Remove(name)) => {
+            format!("/plugins remove {name}")
+        }
+        interactive::HomeAction::PickAgent => "/agent".into(),
+        interactive::HomeAction::LaunchAgent(name) => format!("/{name}"),
+        interactive::HomeAction::Help => "/help".into(),
+        interactive::HomeAction::Quit => "/quit".into(),
+        interactive::HomeAction::Submit(_) | interactive::HomeAction::Empty => "command".into(),
+    };
+    interactive::clean_transcript_text(&format!("Queued: {command}"))
+}
+
+fn workspace_command_label(command: &WorkspaceCommand) -> String {
+    match command {
+        WorkspaceCommand::Status => "/status".into(),
+        WorkspaceCommand::Config => "/config".into(),
+        WorkspaceCommand::Permissions => "/permissions".into(),
+        WorkspaceCommand::Resume => "/resume".into(),
+        WorkspaceCommand::Model(ModelCommand::Show) => "/model".into(),
+        WorkspaceCommand::Model(ModelCommand::SelectProfile(name)) => format!("/model {name}"),
+        WorkspaceCommand::Model(ModelCommand::UseConfigured) => "/model configured".into(),
+        WorkspaceCommand::Credential(CredentialCommand::Login { provider }) => provider
+            .as_deref()
+            .map(|provider| format!("/login {provider}"))
+            .unwrap_or_else(|| "/login".into()),
+        WorkspaceCommand::Credential(CredentialCommand::Logout { provider }) => provider
+            .as_deref()
+            .map(|provider| format!("/logout {provider}"))
+            .unwrap_or_else(|| "/logout".into()),
+    }
 }
 
 async fn await_model_turn(
@@ -274,11 +324,12 @@ async fn await_model_turn(
                 state.busy = Some(busy_label(tick));
                 if !cancel_requested {
                     while let Some(key) = chat.try_read_key()? {
-                        let Some(action) = interactive::handle_chat_key(
+                        let Some(action) = interactive::handle_chat_key_with_scroll(
                             key,
                             &mut state.input,
                             &mut state.command_selected,
                             &mut state.show_help,
+                            &mut state.scroll_offset,
                             choices,
                         ) else {
                             continue;
@@ -327,16 +378,16 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                             Ok(outcome) => {
                                 let rendered = self_agent::render_outcome_transcript(&outcome)?;
                                 if rendered.is_empty() {
-                                    state
-                                        .transcript
-                                        .push(TranscriptEntry::status("No response returned."));
+                                    state.append_transcript(TranscriptEntry::status(
+                                        "No response returned.",
+                                    ));
                                 } else {
-                                    state.transcript.push(TranscriptEntry::assistant(rendered));
+                                    state.append_transcript(TranscriptEntry::assistant(rendered));
                                 }
                             }
-                            Err(error) => state
-                                .transcript
-                                .push(TranscriptEntry::error(error.to_string())),
+                            Err(error) => {
+                                state.append_transcript(TranscriptEntry::error(error.to_string()))
+                            }
                         },
                     }
                     state.busy = None;
@@ -347,7 +398,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                         state.queue_action(interactive::HomeAction::Submit(prompt));
                     }
                     interactive::HomeAction::Workspace(command) => {
-                        let label = format!("/{command:?}");
+                        let label = workspace_command_label(&command);
                         drop(chat);
                         let mut rendered = Vec::new();
                         let result =
@@ -359,18 +410,18 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                     &String::from_utf8_lossy(&rendered),
                                 );
                                 if output.is_empty() {
-                                    state.transcript.push(TranscriptEntry::status(format!(
+                                    state.append_transcript(TranscriptEntry::status(format!(
                                         "{label} completed"
                                     )));
                                 } else {
-                                    state.transcript.push(TranscriptEntry::status(format!(
+                                    state.append_transcript(TranscriptEntry::status(format!(
                                         "{label}\n{output}"
                                     )));
                                 }
                             }
-                            Err(error) => state
-                                .transcript
-                                .push(TranscriptEntry::error(error.to_string())),
+                            Err(error) => {
+                                state.append_transcript(TranscriptEntry::error(error.to_string()))
+                            }
                         }
                     }
                     interactive::HomeAction::Empty => {}
@@ -392,16 +443,16 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                 chat = interactive::ChatSession::enter()?;
                                 match result {
                                     Ok(()) => registry = discover_registry()?,
-                                    Err(error) => state
-                                        .transcript
-                                        .push(TranscriptEntry::error(error.to_string())),
+                                    Err(error) => state.append_transcript(TranscriptEntry::error(
+                                        error.to_string(),
+                                    )),
                                 }
                             }
                         }
                     }
                     interactive::HomeAction::LaunchAgent(name) => {
                         let Some(agent) = choices.iter().find(|choice| choice.name == name) else {
-                            state.transcript.push(TranscriptEntry::error(format!(
+                            state.append_transcript(TranscriptEntry::error(format!(
                                 "unknown or unavailable agent `{name}`"
                             )));
                             continue;
@@ -420,8 +471,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                             match result {
                                 Ok(()) => registry = discover_registry()?,
                                 Err(error) => state
-                                    .transcript
-                                    .push(TranscriptEntry::error(error.to_string())),
+                                    .append_transcript(TranscriptEntry::error(error.to_string())),
                             }
                         }
                     }
@@ -435,7 +485,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                         chat = interactive::ChatSession::enter()?;
                         match result {
                             Ok((outcome, _, error)) if outcome.failed() => {
-                                state.transcript.push(TranscriptEntry::error(
+                                state.append_transcript(TranscriptEntry::error(
                                     if error.is_empty() {
                                         "plugin command failed".into()
                                     } else {
@@ -444,7 +494,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                 ));
                             }
                             Ok((_, output, _)) => {
-                                state.transcript.push(TranscriptEntry::status(
+                                state.append_transcript(TranscriptEntry::status(
                                     if output.is_empty() {
                                         "/plugins completed".into()
                                     } else {
@@ -453,9 +503,9 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                 ));
                                 registry = discover_registry()?;
                             }
-                            Err(error) => state
-                                .transcript
-                                .push(TranscriptEntry::error(error.to_string())),
+                            Err(error) => {
+                                state.append_transcript(TranscriptEntry::error(error.to_string()))
+                            }
                         }
                     }
                     interactive::HomeAction::Help => state.show_help = true,
@@ -469,11 +519,12 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
         let Some(key) = chat.read_key()? else {
             continue;
         };
-        if let Some(action) = interactive::handle_chat_key(
+        if let Some(action) = interactive::handle_chat_key_with_scroll(
             key,
             &mut state.input,
             &mut state.command_selected,
             &mut state.show_help,
+            &mut state.scroll_offset,
             &choices,
         ) {
             if matches!(action, interactive::HomeAction::Quit) {
@@ -1040,6 +1091,25 @@ mod tests {
         assert_eq!(busy_label(1), "Creating .");
         assert_eq!(busy_label(4), "Creating  ");
         assert!(busy_label(99).len() <= "Creating ...".len());
+    }
+
+    #[test]
+    fn queued_workspace_command_is_recorded_with_a_sanitized_marker() {
+        let mut state = TerminalChatState {
+            input: "/status\x1b[31m".into(),
+            ..TerminalChatState::default()
+        };
+
+        state.queue_action(interactive::HomeAction::Workspace(WorkspaceCommand::Status));
+
+        assert_eq!(state.transcript.len(), 1);
+        assert_eq!(state.transcript[0].text, "Queued: /status");
+        assert!(matches!(
+            state.pending.front(),
+            Some(QueuedChatAction::Command(
+                interactive::HomeAction::Workspace(WorkspaceCommand::Status)
+            ))
+        ));
     }
 
     #[test]

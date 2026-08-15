@@ -36,6 +36,7 @@ const ORANGE: &str = "\x1b[38;5;208m";
 const RESET: &str = "\x1b[0m";
 const COMPACT_PALETTE_ROWS: usize = 6;
 const PALETTE_ROWS: usize = 8;
+const SCROLL_PAGE_ROWS: usize = 8;
 const PICKER_PANEL_ROWS: usize = 7;
 
 const PROMPT_SUGGESTIONS: [&str; 6] = [
@@ -85,6 +86,7 @@ pub(crate) struct ChatHomeView<'a> {
     pub(crate) model_status: &'a str,
     pub(crate) transcript: &'a [TranscriptEntry],
     pub(crate) busy: Option<&'a str>,
+    pub(crate) scroll_offset: usize,
 }
 
 impl<'a> ChatHomeView<'a> {
@@ -107,7 +109,13 @@ impl<'a> ChatHomeView<'a> {
             model_status,
             transcript,
             busy,
+            scroll_offset: 0,
         }
+    }
+
+    pub(crate) fn with_scroll(mut self, scroll_offset: usize) -> Self {
+        self.scroll_offset = scroll_offset;
+        self
     }
 }
 
@@ -197,11 +205,31 @@ impl ChatSession {
     }
 }
 
+#[cfg(test)]
 pub(crate) fn handle_chat_key(
     key: KeyEvent,
     input: &mut String,
     command_selected: &mut usize,
     show_help: &mut bool,
+    choices: &[AgentChoice],
+) -> Option<HomeAction> {
+    let mut scroll_offset = 0;
+    handle_chat_key_with_scroll(
+        key,
+        input,
+        command_selected,
+        show_help,
+        &mut scroll_offset,
+        choices,
+    )
+}
+
+pub(crate) fn handle_chat_key_with_scroll(
+    key: KeyEvent,
+    input: &mut String,
+    command_selected: &mut usize,
+    show_help: &mut bool,
+    scroll_offset: &mut usize,
     choices: &[AgentChoice],
 ) -> Option<HomeAction> {
     if !is_press(&key) {
@@ -212,6 +240,26 @@ pub(crate) fn handle_chat_key(
     }
 
     match key.code {
+        KeyCode::PageUp => {
+            *scroll_offset = scroll_offset.saturating_add(SCROLL_PAGE_ROWS);
+            None
+        }
+        KeyCode::PageDown => {
+            *scroll_offset = if *scroll_offset == usize::MAX {
+                0
+            } else {
+                scroll_offset.saturating_sub(SCROLL_PAGE_ROWS)
+            };
+            None
+        }
+        KeyCode::Home => {
+            *scroll_offset = usize::MAX;
+            None
+        }
+        KeyCode::End => {
+            *scroll_offset = 0;
+            None
+        }
         KeyCode::Enter => {
             let action = parse_home_action_selected(input, choices, *command_selected);
             if matches!(action, HomeAction::Help) {
@@ -890,6 +938,7 @@ fn render_chat_home<W: Write>(
             model_status: "model not configured",
             transcript: &[],
             busy: None,
+            scroll_offset: 0,
         },
     )
 }
@@ -920,6 +969,7 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
         model_status,
         transcript,
         busy,
+        scroll_offset,
     } = view;
     if height == 0 {
         return Ok(());
@@ -938,6 +988,7 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
                 model_status,
                 transcript,
                 busy,
+                scroll_offset,
             },
         );
     }
@@ -1037,6 +1088,7 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
         model_status,
         transcript,
         busy,
+        scroll_offset,
     } = view;
     let status_rows = usize::from(height >= 2);
     let composer_rows = 1;
@@ -1056,34 +1108,35 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
     }
 
     if show_help {
-        render_home_help(out, width, content_rows)?;
-    } else if input.starts_with('/') {
-        if width < 50 {
-            render_compact_command_palette(
-                out,
-                input,
-                choices,
-                command_selected,
-                width,
-                content_rows.min(COMPACT_PALETTE_ROWS),
-            )?;
-        } else {
-            render_command_palette(
-                out,
-                input,
-                choices,
-                command_selected,
-                content_rows.min(PALETTE_ROWS),
-                width,
-            )?;
+        let busy_rows = usize::from(busy.is_some() && content_rows > 0);
+        render_home_help(out, width, content_rows.saturating_sub(busy_rows))?;
+        if let Some(busy) = busy {
+            writeln!(out, "{ORANGE}* {RESET}{}", sanitize_terminal_text(busy))?;
         }
     } else {
-        let mut lines = transcript_lines(width, transcript);
+        let reserve_history_row = usize::from(!transcript.is_empty() && content_rows > 0);
+        let busy_rows = usize::from(busy.is_some() && content_rows > 0);
+        let palette_rows = content_rows
+            .saturating_sub(reserve_history_row)
+            .saturating_sub(busy_rows);
+        let palette = if input.starts_with('/') {
+            command_palette_lines(input, choices, command_selected, width, palette_rows)?
+        } else {
+            Vec::new()
+        };
+        let history_rows = content_rows
+            .saturating_sub(busy_rows)
+            .saturating_sub(palette.len());
+        render_scrolled_transcript(
+            out,
+            &transcript_lines(width, transcript),
+            history_rows,
+            scroll_offset,
+        )?;
         if let Some(busy) = busy {
-            lines.push(format!("{ORANGE}* {RESET}{}", sanitize_terminal_text(busy)));
+            writeln!(out, "{ORANGE}* {RESET}{}", sanitize_terminal_text(busy))?;
         }
-        let start = lines.len().saturating_sub(content_rows);
-        for line in lines.into_iter().skip(start) {
+        for line in palette {
             writeln!(out, "{line}")?;
         }
     }
@@ -1130,6 +1183,55 @@ fn transcript_lines(width: usize, transcript: &[TranscriptEntry]) -> Vec<String>
             })
         })
         .collect()
+}
+
+fn render_scrolled_transcript<W: Write>(
+    out: &mut W,
+    lines: &[String],
+    visible_rows: usize,
+    scroll_offset: usize,
+) -> io::Result<()> {
+    let max_offset = lines.len().saturating_sub(visible_rows);
+    let offset = scroll_offset.min(max_offset);
+    let end = lines.len().saturating_sub(offset);
+    let start = end.saturating_sub(visible_rows);
+    for line in &lines[start..end] {
+        writeln!(out, "{line}")?;
+    }
+    Ok(())
+}
+
+fn command_palette_lines(
+    command: &str,
+    choices: &[AgentChoice],
+    selected: usize,
+    width: usize,
+    max_rows: usize,
+) -> io::Result<Vec<String>> {
+    let mut out = Vec::new();
+    if width < 50 {
+        render_compact_command_palette(
+            &mut out,
+            command,
+            choices,
+            selected,
+            width,
+            max_rows.min(COMPACT_PALETTE_ROWS),
+        )?;
+    } else {
+        render_command_palette(
+            &mut out,
+            command,
+            choices,
+            selected,
+            max_rows.min(PALETTE_ROWS),
+            width,
+        )?;
+    }
+    Ok(String::from_utf8_lossy(&out)
+        .lines()
+        .map(str::to_owned)
+        .collect())
 }
 
 fn desired_home_content_rows(
@@ -1720,6 +1822,69 @@ mod tests {
             None
         );
         assert!(!show_help);
+    }
+
+    #[test]
+    fn chat_key_reducer_scrolls_without_displacing_slash_palette_selection() {
+        let choices = vec![choice("mock", AvailabilityStatus::Available, None)];
+        let mut input = String::from("/status");
+        let mut selected = 0;
+        let mut show_help = false;
+        let mut scroll_offset = 0;
+
+        assert_eq!(
+            handle_chat_key_with_scroll(
+                KeyEvent::new(KeyCode::PageUp, KeyModifiers::NONE),
+                &mut input,
+                &mut selected,
+                &mut show_help,
+                &mut scroll_offset,
+                &choices,
+            ),
+            None
+        );
+        assert!(scroll_offset > 0);
+
+        handle_chat_key_with_scroll(
+            KeyEvent::new(KeyCode::Home, KeyModifiers::NONE),
+            &mut input,
+            &mut selected,
+            &mut show_help,
+            &mut scroll_offset,
+            &choices,
+        );
+        assert_eq!(scroll_offset, usize::MAX);
+
+        handle_chat_key_with_scroll(
+            KeyEvent::new(KeyCode::PageDown, KeyModifiers::NONE),
+            &mut input,
+            &mut selected,
+            &mut show_help,
+            &mut scroll_offset,
+            &choices,
+        );
+        assert_eq!(scroll_offset, 0);
+
+        handle_chat_key_with_scroll(
+            KeyEvent::new(KeyCode::End, KeyModifiers::NONE),
+            &mut input,
+            &mut selected,
+            &mut show_help,
+            &mut scroll_offset,
+            &choices,
+        );
+        assert_eq!(scroll_offset, 0);
+
+        scroll_offset = 3;
+        handle_chat_key_with_scroll(
+            KeyEvent::new(KeyCode::Up, KeyModifiers::NONE),
+            &mut input,
+            &mut selected,
+            &mut show_help,
+            &mut scroll_offset,
+            &choices,
+        );
+        assert_eq!(scroll_offset, 3);
     }
 
     #[test]
@@ -2322,6 +2487,7 @@ mod tests {
                 model_status: "model not configured",
                 transcript: &[],
                 busy: None,
+                scroll_offset: 0,
             },
         )
         .unwrap();
@@ -2359,6 +2525,7 @@ mod tests {
                 model_status: "model not configured",
                 transcript: &[],
                 busy: None,
+                scroll_offset: 0,
             },
         )
         .unwrap();
@@ -2389,6 +2556,7 @@ mod tests {
                 model_status: "gpt-test",
                 transcript: &transcript,
                 busy: Some("Creating..."),
+                scroll_offset: 0,
             },
         )
         .unwrap();
@@ -2400,6 +2568,125 @@ mod tests {
         assert!(
             plain.lines().count() <= 12,
             "transcript frame overflowed:\n{plain}"
+        );
+    }
+
+    #[test]
+    fn busy_palette_and_transcript_are_visible_together() {
+        let transcript = vec![TranscriptEntry::status("previous output")];
+        let mut out = Vec::new();
+        render_chat_home_in_viewport(
+            &mut out,
+            ChatHomeView {
+                width: 80,
+                height: 12,
+                input: "/status",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "gpt-test",
+                transcript: &transcript,
+                busy: Some("Creating .."),
+                scroll_offset: 0,
+            },
+        )
+        .unwrap();
+
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        assert!(plain.contains("previous output"), "transcript:\n{plain}");
+        assert!(plain.contains("/status"), "command palette:\n{plain}");
+        assert!(plain.contains("Creating .."), "busy marker:\n{plain}");
+    }
+
+    #[test]
+    fn help_view_preserves_busy_marker_while_transcript_exists() {
+        let transcript = vec![TranscriptEntry::status("previous output")];
+        let mut out = Vec::new();
+        render_chat_home_in_viewport(
+            &mut out,
+            ChatHomeView {
+                width: 80,
+                height: 12,
+                input: "",
+                choices: &[],
+                command_selected: 0,
+                show_help: true,
+                model_status: "gpt-test",
+                transcript: &transcript,
+                busy: Some("Creating .."),
+                scroll_offset: 0,
+            },
+        )
+        .unwrap();
+
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        assert!(
+            plain.contains("/agent      choose a delegate"),
+            "help:\n{plain}"
+        );
+        assert!(plain.contains("Creating .."), "busy marker:\n{plain}");
+    }
+
+    #[test]
+    fn busy_marker_remains_visible_while_help_is_open() {
+        let transcript = vec![TranscriptEntry::status("previous output")];
+        let mut out = Vec::new();
+        render_chat_home_in_viewport(
+            &mut out,
+            ChatHomeView {
+                width: 80,
+                height: 12,
+                input: "",
+                choices: &[],
+                command_selected: 0,
+                show_help: true,
+                model_status: "gpt-test",
+                transcript: &transcript,
+                busy: Some("Creating ..."),
+                scroll_offset: 0,
+            },
+        )
+        .unwrap();
+
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        assert!(plain.contains("/agent"), "help:\n{plain}");
+        assert!(plain.contains("Creating ..."), "busy marker:\n{plain}");
+    }
+
+    #[test]
+    fn transcript_scroll_offsets_reach_both_ends_and_keep_composer() {
+        let transcript = (0..20)
+            .map(|index| TranscriptEntry::status(format!("line {index:02}")))
+            .collect::<Vec<_>>();
+
+        let render = |scroll_offset| {
+            let mut out = Vec::new();
+            render_chat_home_in_viewport(
+                &mut out,
+                ChatHomeView {
+                    width: 80,
+                    height: 8,
+                    input: "draft",
+                    choices: &[],
+                    command_selected: 0,
+                    show_help: false,
+                    model_status: "gpt-test",
+                    transcript: &transcript,
+                    busy: None,
+                    scroll_offset,
+                },
+            )
+            .unwrap();
+            strip_ansi(&String::from_utf8(out).unwrap())
+        };
+
+        let newest = render(0);
+        let oldest = render(usize::MAX);
+        assert!(newest.contains("line 19"), "newest transcript:\n{newest}");
+        assert!(oldest.contains("line 00"), "oldest transcript:\n{oldest}");
+        assert!(
+            oldest.contains("> draft"),
+            "composer disappeared:\n{oldest}"
         );
     }
 
@@ -2527,6 +2814,7 @@ mod tests {
                 model_status: "model not configured",
                 transcript: &[],
                 busy: None,
+                scroll_offset: 0,
             },
         )
         .unwrap();
@@ -2606,6 +2894,7 @@ mod tests {
                         model_status: "model not configured",
                         transcript: &[],
                         busy: None,
+                        scroll_offset: 0,
                     },
                 )
                 .unwrap();
@@ -2667,6 +2956,7 @@ mod tests {
                 model_status: "model not configured",
                 transcript: &[],
                 busy: None,
+                scroll_offset: 0,
             },
         )
         .unwrap();
