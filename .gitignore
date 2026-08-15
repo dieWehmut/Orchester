@@ -43,3 +43,4 @@ docs/local
 !/docs/README.en.md
 !/npm/cli/README.md
 .playwright-mcp/
+.superpowers/
