@@ -304,3 +304,11 @@ fn rejects_unsafe_endpoints_and_redacts_model_debug_output() {
     assert!(!rendered.contains(SECRET_CANARY));
     assert!(rendered.contains("authorization_present: true"));
 }
+
+#[test]
+fn forbidden_model_errors_point_to_permissions_and_balance() {
+    let message = ModelError::Forbidden.to_string();
+    assert!(message.contains("permissions"));
+    assert!(message.contains("balance"));
+    assert!(message.contains("endpoint"));
+}
