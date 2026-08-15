@@ -200,9 +200,11 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
             interactive::HomeAction::Submit(prompt) => {
                 match self_agent.submit(prompt, CancellationToken::new()).await {
                     Ok(outcome) => {
-                        let mut out = io::stdout().lock();
-                        self_agent::render_outcome(&mut out, &outcome)?;
-                        return Ok(ExitCode::SUCCESS);
+                        {
+                            let mut out = io::stdout().lock();
+                            self_agent::render_outcome(&mut out, &outcome)?;
+                        }
+                        return run_line_interactive_with_host(registry, self_agent, false).await;
                     }
                     Err(error) => eprintln!("orchester: {error}"),
                 }
@@ -254,18 +256,28 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
     }
 }
 
-async fn run_line_interactive(mut registry: Registry) -> Result<ExitCode, CliError> {
+async fn run_line_interactive(registry: Registry) -> Result<ExitCode, CliError> {
+    run_line_interactive_with_host(registry, self_agent_host()?, true).await
+}
+
+async fn run_line_interactive_with_host(
+    mut registry: Registry,
+    mut self_agent: SelfAgentHost,
+    render_startup: bool,
+) -> Result<ExitCode, CliError> {
     let mut choices = interactive::build_agent_choices(&registry);
-    let mut self_agent = self_agent_host()?;
     let stdin = io::stdin();
     let mut input = stdin.lock();
 
-    {
+    if render_startup {
         let mut out = io::stdout().lock();
         let model_status = self_agent
             .model_label()
             .unwrap_or_else(|_| "model unavailable".into());
         interactive::render_line_startup_home(&mut out, &model_status)?;
+    } else {
+        let mut out = io::stdout().lock();
+        interactive::render_line_continue_prompt(&mut out)?;
     }
 
     let mut received_input = false;
