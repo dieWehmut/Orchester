@@ -957,6 +957,87 @@ fn home_prompt_keeps_the_self_agent_session_open_for_multiple_turns() {
 }
 
 #[test]
+fn home_prompt_keeps_the_session_open_after_a_model_error() {
+    let root = temp_home("self-agent-error-then-retry");
+    let home = root.join("home");
+    let workspace = root.join("workspace");
+    std::fs::create_dir_all(&workspace).expect("create workspace");
+    let server = LoopbackResponses::start(vec![
+        serde_json::json!({}),
+        serde_json::json!({
+            "status": "completed",
+            "output": [{
+                "type": "message",
+                "role": "assistant",
+                "content": [{"type": "output_text", "text": "recovered after error"}]
+            }],
+            "usage": {"input_tokens": 5, "output_tokens": 7}
+        }),
+    ]);
+    write_user_config(
+        &home,
+        &format!(
+            r#"{{
+                "model_provider": "Loopback",
+                "model": "gpt-loopback",
+                "disable_response_storage": true,
+                "model_providers": {{
+                    "Loopback": {{
+                        "base_url": "{}",
+                        "api_key": "error-retry-secret-canary",
+                        "wire_api": "responses",
+                        "requires_openai_auth": true
+                    }}
+                }}
+            }}"#,
+            server.base_url()
+        ),
+    );
+    let mut child = orchester()
+        .current_dir(&workspace)
+        .env("ORCHESTER_HOME", &home)
+        .env_remove("HTTP_PROXY")
+        .env_remove("HTTPS_PROXY")
+        .env_remove("ALL_PROXY")
+        .env_remove("http_proxy")
+        .env_remove("https_proxy")
+        .env_remove("all_proxy")
+        .env("NO_PROXY", "127.0.0.1,localhost")
+        .env("no_proxy", "127.0.0.1,localhost")
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("spawn interactive orchester");
+    child
+        .stdin
+        .as_mut()
+        .expect("stdin handle")
+        .write_all(b"first prompt\nsecond prompt\n/quit\n")
+        .expect("write prompts after model error");
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().expect("collect output");
+    let requests = server.finish();
+
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    assert!(
+        stderr(&output).contains("orchester: model protocol failed"),
+        "stderr:\n{}",
+        stderr(&output)
+    );
+    assert!(out.contains("recovered after error"), "output:\n{out}");
+    assert_eq!(
+        requests.len(),
+        2,
+        "the error closed the interactive session"
+    );
+    assert!(!out.contains("error-retry-secret-canary"));
+    let _ = std::fs::remove_dir_all(root);
+}
+
+#[test]
 fn run_records_session_metadata() {
     let home = temp_home("sessions");
     let run = orchester()

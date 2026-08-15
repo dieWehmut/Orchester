@@ -509,9 +509,12 @@ async fn run_line_interactive_with_host(
     }
 
     let mut received_input = false;
+    let mut had_error = false;
     let mut initial_agent = loop {
         let Some(line) = interactive::read_startup_line(&mut input)? else {
-            return Ok(if received_input {
+            return Ok(if had_error {
+                ExitCode::FAILURE
+            } else if received_input {
                 ExitCode::SUCCESS
             } else {
                 ExitCode::from(2)
@@ -557,10 +560,21 @@ async fn run_line_interactive_with_host(
                 interactive::render_line_continue_prompt(&mut out)?;
             }
             interactive::HomeAction::Submit(prompt) => {
-                let outcome = self_agent.submit(prompt, CancellationToken::new()).await?;
-                let mut out = io::stdout().lock();
-                self_agent::render_outcome(&mut out, &outcome)?;
-                interactive::render_line_continue_prompt(&mut out)?;
+                match self_agent.submit(prompt, CancellationToken::new()).await {
+                    Ok(outcome) => {
+                        let mut out = io::stdout().lock();
+                        self_agent::render_outcome(&mut out, &outcome)?;
+                        interactive::render_line_continue_prompt(&mut out)?;
+                    }
+                    Err(error) => {
+                        had_error = true;
+                        let mut err = io::stderr().lock();
+                        writeln!(err, "orchester: {error}")?;
+                        drop(err);
+                        let mut out = io::stdout().lock();
+                        interactive::render_line_continue_prompt(&mut out)?;
+                    }
+                }
             }
             interactive::HomeAction::Empty => return Ok(ExitCode::from(2)),
         }
