@@ -38,7 +38,11 @@ test('release workflow builds every native target before staging packages', () =
   assert.match(workflow, /\n  test:\n/);
   assert.match(workflow, /\n  build:\n(?:.|\n)*?    needs: validate\n/);
   assert.match(workflow, /\n  stage:\n(?:.|\n)*?    needs: \[build, test\]\n/);
-  assert.equal(workflow.match(/ref: \$\{\{ github\.sha \}\}/g)?.length, 4);
+  assert.match(workflow, /\n  publish:\n(?:.|\n)*?    needs: stage\n/);
+  assert.match(workflow, /\n  tag:\n(?:.|\n)*?    needs: \[stage, publish\]\n/);
+  assert.match(workflow, /\n  release:\n(?:.|\n)*?    needs: \[stage, tag\]\n/);
+  assert.match(workflow, /\n  verify:\n(?:.|\n)*?    needs: \[publish, release\]\n/);
+  assert.ok((workflow.match(/ref: \$\{\{ github\.sha \}\}/g)?.length ?? 0) >= 4);
   assert.equal(workflow.includes('inputs.ref'), false);
 });
 
@@ -57,11 +61,13 @@ test('release workflow uses current first-party actions and preserves native arc
   }
   assert.match(workflow, /archive: false/);
   assert.match(workflow, /if-no-files-found: error/);
-  assert.equal(workflow.match(/name: npm-release\.tar\.gz/g)?.length, 2);
+  assert.ok((workflow.match(/name: npm-release\.tar\.gz/g)?.length ?? 0) >= 3);
   const stageSection = workflow.slice(workflow.indexOf('  stage:'));
-  const submitSection = workflow.slice(workflow.indexOf('  submit:'));
+  const publishSection = workflow.slice(workflow.indexOf('  publish:'));
+  const releaseSection = workflow.slice(workflow.indexOf('  release:'));
   assert.match(stageSection, /name: npm-release\.tar\.gz\n\s+path: npm-release\.tar\.gz\n\s+archive: false/);
-  assert.match(submitSection, /name: npm-release\.tar\.gz\n\s+path: \./);
+  assert.match(publishSection, /name: npm-release\.tar\.gz\n\s+path: \./);
+  assert.match(releaseSection, /name: npm-release\.tar\.gz\n\s+path: \./);
   assert.match(workflow, /RUST_TOOLCHAIN: "1\.96\.1"/);
   assert.match(workflow, /NODE_VERSION: "24\.8\.0"/);
   assert.match(workflow, /NPM_VERSION: "11\.18\.0"/);
@@ -75,7 +81,7 @@ test('release workflow uses current first-party actions and preserves native arc
 
 test('release artifact contains the exact verified official plugin matrix', () => {
   const workflow = fs.readFileSync(workflowPath, 'utf8');
-  const stageJob = workflow.slice(workflow.indexOf('\n  stage:'), workflow.indexOf('\n  submit:'));
+  const stageJob = workflow.slice(workflow.indexOf('\n  stage:'), workflow.indexOf('\n  tag:'));
   const verifyPlugins = stageJob.indexOf('node werkzeug/npm/plugin-release.mjs');
   const findPlugins = stageJob.indexOf('find npm/plugins -mindepth 1 -maxdepth 1 -type d -print | sort');
   const packPlugins = stageJob.indexOf('for directory in "${plugin_dirs[@]}"; do');
@@ -84,46 +90,47 @@ test('release artifact contains the exact verified official plugin matrix', () =
   assert.ok(findPlugins > verifyPlugins);
   assert.ok(packPlugins > findPlugins);
   assert.match(stageJob, /\[\[ \$\{#plugin_dirs\[@\]\} -eq 3 \]\]/);
-  assert.match(stageJob, /npm pack --ignore-scripts --pack-destination release "\$directory"/);
+  assert.match(stageJob, /npm pack --ignore-scripts --pack-destination release \.\/npm\/cli/);
+  assert.match(stageJob, /npm pack --ignore-scripts --pack-destination release "\.\/\$directory"/);
   assert.match(stageJob, /-name '\*\.tgz' \| wc -l\) -eq 10/);
 });
 
-test('staged publishing is manual, OIDC-scoped, and orders platform, plugin, then meta packages', () => {
+test('one dispatch tags, publishes, releases, and verifies v0.1.0 in dependency order', () => {
   const workflow = fs.readFileSync(workflowPath, 'utf8');
-  const publishJob = workflow.indexOf('\n  submit:');
+  const tagJob = workflow.indexOf('\n  tag:');
+  const publishJob = workflow.indexOf('\n  publish:');
   const publishSection = workflow.slice(publishJob);
   const oidcPermission = workflow.indexOf('id-token: write', publishJob);
-  const versionPreflight = workflow.indexOf('assert_version_absent()', publishJob);
+  const versionProbe = workflow.indexOf('published_version()', publishJob);
   const pluginCollection = workflow.indexOf('OFFICIAL_AGENT_PLUGINS', publishJob);
-  const platformPublish = workflow.indexOf('for package in "${platform_packages[@]}"; do\n              stage_package', publishJob);
-  const pluginPublish = workflow.indexOf('for package in "${plugin_packages[@]}"; do\n              stage_package', publishJob);
-  const metaPublish = workflow.indexOf('stage_package "@orchester/cli"', publishJob);
+  const platformPublish = workflow.indexOf('for package in "${platform_packages[@]}"; do', publishJob);
+  const pluginPublish = workflow.indexOf('for package in "${plugin_packages[@]}"; do', publishJob);
+  const metaPublish = workflow.indexOf('publish_package "@orchester/cli"', publishJob);
 
+  assert.ok(tagJob > 0);
   assert.ok(publishJob > 0);
-  assert.match(workflow, /submit:\n\s+description: [^\n]+\n\s+required: true\n\s+default: none\n\s+type: choice\n\s+options:\n\s+- none\n\s+- platforms\n\s+- plugins\n\s+- meta/);
+  assert.match(workflow, /workflow_dispatch:\n\s+inputs:\n\s+version:\n\s+description: [^\n]+\n\s+required: true\n\s+default: "0\.1\.0"\n\s+type: string/);
+  assert.equal(workflow.includes('submit:'), false);
+  assert.equal(workflow.includes('inputs.submit'), false);
+  assert.match(workflow.slice(tagJob, publishJob), /permissions:\n\s+contents: write/);
+  assert.match(workflow.slice(tagJob, publishJob), /git tag -a "\$TAG" "\$GITHUB_SHA"/);
+  assert.match(workflow.slice(tagJob, publishJob), /git push origin "refs\/tags\/\$TAG"/);
   assert.ok(oidcPermission > publishJob);
-  assert.ok(versionPreflight > oidcPermission);
+  assert.ok(versionProbe > oidcPermission);
   assert.ok(pluginCollection > oidcPermission);
-  assert.match(
-    publishSection,
-    /if: inputs\.submit != 'none' && github\.ref_type == 'tag'/,
-  );
-  assert.match(publishSection, /\[\[ "\$TAG" == "v\$VERSION" \]\]/);
-  assert.match(workflow, /if \[\[ "\$SUBMIT" != "none" \]\]; then/);
-  assert.match(workflow, /case "\$SUBMIT" in[\s\S]*none\|platforms\|plugins\|meta/);
-  assert.match(workflow, /\[\[ "\$REF_TYPE" == "tag" \]\]/);
+  assert.match(publishSection, /NODE_AUTH_TOKEN: \$\{\{ secrets\.NPM_TOKEN \}\}/);
+  assert.match(publishSection, /environment: npm-release/);
   assert.match(publishSection, /\[\[ \$\{#plugin_packages\[@\]\} -eq 3 \]\]/);
-  assert.match(publishSection, /if \[\[ "\$SUBMIT" == "plugins" \]\]; then[\s\S]*assert_version_present "\$package"[\s\S]*assert_version_absent "\$package"/);
-  assert.match(publishSection, /elif \[\[ "\$SUBMIT" == "meta" \]\]; then[\s\S]*assert_version_present "\$package"[\s\S]*assert_version_absent "@orchester\/cli"/);
-  assert.ok(platformPublish > versionPreflight);
+  assert.match(publishSection, /if \[\[ -z "\$\{NODE_AUTH_TOKEN:-\}" \]\]; then/);
+  assert.match(publishSection, /NPM_TOKEN is required to bootstrap/);
+  assert.ok(platformPublish > versionProbe);
   assert.ok(pluginPublish > platformPublish);
   assert.ok(metaPublish > pluginPublish);
-  assert.match(publishSection, /unsupported submit mode: \$SUBMIT/);
   assert.match(publishSection, /npm view "\$package@\$VERSION" version/);
-  assert.match(publishSection, /npm stage publish/);
-  assert.match(publishSection, /npm stage publish "\.\/release\/\$archive"/);
-  assert.equal(/\bnpm publish\b/.test(publishSection), false);
-  assert.match(workflow, /concurrency:\n  group: npm-release\n  cancel-in-progress: false/);
-  assert.equal(workflow.includes('NODE_AUTH_TOKEN'), false);
-  assert.equal(workflow.includes('NPM_TOKEN'), false);
+  assert.match(publishSection, /npm publish "\.\/release\/\$archive" --access public --provenance --ignore-scripts/);
+  assert.equal(workflow.includes('npm stage publish'), false);
+  assert.match(workflow, /gh release create "\$TAG"/);
+  assert.match(workflow, /gh release upload "\$TAG" release\/\* npm-release\.tar\.gz --clobber/);
+  assert.match(workflow, /concurrency:\n  group: npm-release-\$\{\{ inputs\.version \}\}\n  cancel-in-progress: false/);
+  assert.match(workflow, /npm view "@orchester\/cli@\$VERSION" version/);
 });

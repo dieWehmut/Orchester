@@ -4,20 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Exact package version already pinned in npm/cli/package.json
+        description: Exact version pinned across the Rust and npm packages
         required: true
         default: "0.1.0"
         type: string
-      submit:
-        description: Submit verified archives to npm staged publishing after approval
-        required: true
-        default: none
-        type: choice
-        options:
-          - none
-          - platforms
-          - plugins
-          - meta
 
 permissions:
   contents: read
@@ -28,7 +18,7 @@ env:
   NPM_VERSION: "11.18.0"
 
 concurrency:
-  group: npm-release
+  group: npm-release-${{ inputs.version }}
   cancel-in-progress: false
 
 jobs:
@@ -36,22 +26,44 @@ jobs:
     name: Validate release request
     runs-on: ubuntu-24.04
     steps:
-      - name: Require a matching version tag for publishing
+      - name: Checkout release commit
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Validate the pinned version and existing tag
         shell: bash
         env:
-          SUBMIT: ${{ inputs.submit }}
-          REF_TYPE: ${{ github.ref_type }}
           VERSION: ${{ inputs.version }}
-          TAG: ${{ github.ref_name }}
+          TAG: v${{ inputs.version }}
         run: |
           set -euo pipefail
-          case "$SUBMIT" in
-            none|platforms|plugins|meta) ;;
-            *) echo "unsupported submit mode: $SUBMIT" >&2; exit 1 ;;
-          esac
-          if [[ "$SUBMIT" != "none" ]]; then
-            [[ "$REF_TYPE" == "tag" ]]
-            [[ "$TAG" == "v$VERSION" ]]
+          [[ "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$ ]]
+          [[ $(node -p "require('./npm/cli/package.json').version") == "$VERSION" ]]
+
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const version = process.env.VERSION;
+          const cli = JSON.parse(fs.readFileSync('npm/cli/package.json', 'utf8'));
+          for (const [name, pinned] of Object.entries(cli.optionalDependencies ?? {})) {
+            if (pinned !== version) throw new Error(`${name} is pinned to ${pinned}, not ${version}`);
+          }
+          for (const directory of fs.readdirSync('npm/plugins')) {
+            const plugin = JSON.parse(fs.readFileSync(`npm/plugins/${directory}/package.json`, 'utf8'));
+            if (plugin.version !== version) {
+              throw new Error(`${plugin.name} is pinned to ${plugin.version}, not ${version}`);
+            }
+          }
+          NODE
+
+          cargo metadata --locked --no-deps --format-version 1 |
+            node -e 'let body=""; process.stdin.on("data", chunk => body += chunk); process.stdin.on("end", () => { const metadata=JSON.parse(body); const expected=process.env.VERSION; for (const package of metadata.packages) if (package.version !== expected) throw new Error(`${package.name} is ${package.version}, not ${expected}`); });'
+
+          if git rev-parse --verify --quiet "refs/tags/$TAG" >/dev/null; then
+            [[ $(git rev-list -n 1 "$TAG") == "$GITHUB_SHA" ]]
           fi
 
   test:
@@ -185,7 +197,7 @@ jobs:
           retention-days: 7
 
   stage:
-    name: Stage and verify npm archives
+    name: Stage and verify release archives
     needs: [build, test]
     runs-on: ubuntu-24.04
     steps:
@@ -246,12 +258,12 @@ jobs:
           [[ ${#plugin_dirs[@]} -eq 3 ]]
 
           mkdir release
-          npm pack --ignore-scripts --pack-destination release npm/cli >/dev/null
+          npm pack --ignore-scripts --pack-destination release ./npm/cli >/dev/null
           for directory in "${platform_dirs[@]}"; do
-            npm pack --ignore-scripts --pack-destination release "$directory" >/dev/null
+            npm pack --ignore-scripts --pack-destination release "./$directory" >/dev/null
           done
           for directory in "${plugin_dirs[@]}"; do
-            npm pack --ignore-scripts --pack-destination release "$directory" >/dev/null
+            npm pack --ignore-scripts --pack-destination release "./$directory" >/dev/null
           done
           [[ $(find release -maxdepth 1 -type f -name '*.tgz' | wc -l) -eq 10 ]]
           (cd release && sha256sum *.tgz > SHA256SUMS)
@@ -266,9 +278,38 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-  submit:
-    name: Submit npm packages for approval
-    if: inputs.submit != 'none' && github.ref_type == 'tag'
+  tag:
+    name: Tag v${{ inputs.version }}
+    needs: [stage, publish]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout validated release commit
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Create and push the release tag
+        shell: bash
+        env:
+          TAG: v${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          git fetch --force --tags origin
+          if git rev-parse --verify --quiet "refs/tags/$TAG" >/dev/null; then
+            [[ $(git rev-list -n 1 "$TAG") == "$GITHUB_SHA" ]]
+            exit 0
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git tag -a "$TAG" "$GITHUB_SHA" -m "Orchester $TAG"
+          git push origin "refs/tags/$TAG"
+
+  publish:
+    name: Publish npm packages
     needs: stage
     runs-on: ubuntu-24.04
     environment: npm-release
@@ -282,7 +323,7 @@ jobs:
           ref: ${{ github.sha }}
           persist-credentials: false
 
-      - name: Setup Node for trusted publishing
+      - name: Setup Node for npm publishing
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -302,26 +343,45 @@ jobs:
           name: npm-release.tar.gz
           path: .
 
-      - name: Stage release packages in dependency order
+      - name: Publish packages in dependency order
         shell: bash
         env:
           VERSION: ${{ inputs.version }}
-          SUBMIT: ${{ inputs.submit }}
-          TAG: ${{ github.ref_name }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           set -euo pipefail
-          [[ "$TAG" == "v$VERSION" ]]
           mkdir release
           tar -xzf npm-release.tar.gz -C release
           (cd release && sha256sum --check SHA256SUMS)
           [[ $(npm config get registry) == "https://registry.npmjs.org/" ]]
 
-          stage_package() {
+          published_version() {
+            npm view "$1@$VERSION" version 2>/dev/null || true
+          }
+
+          wait_for_version() {
+            local package="$1"
+            for attempt in {1..30}; do
+              if [[ $(published_version "$package") == "$VERSION" ]]; then
+                return 0
+              fi
+              sleep 10
+            done
+            echo "npm registry did not expose $package@$VERSION in time" >&2
+            return 1
+          }
+
+          publish_package() {
             local package="$1"
             local archive="${package#@}"
             archive="${archive//\//-}-$VERSION.tgz"
             test -f "release/$archive"
-            npm stage publish "./release/$archive" --access public --ignore-scripts
+            if [[ $(published_version "$package") == "$VERSION" ]]; then
+              echo "$package@$VERSION is already published"
+              return 0
+            fi
+            npm publish "./release/$archive" --access public --provenance --ignore-scripts
+            wait_for_version "$package"
           }
 
           mapfile -t platform_packages < <(
@@ -334,60 +394,110 @@ jobs:
           )
           [[ ${#plugin_packages[@]} -eq 3 ]]
 
-          assert_version_absent() {
-            local package="$1"
-            local output
-            if output=$(npm view "$package@$VERSION" version 2>&1); then
-              echo "version already exists: $package@$VERSION" >&2
-              exit 1
-            fi
-            if ! grep -Eq 'E404|404 Not Found|notarget' <<<"$output"; then
-              echo "could not prove version is absent for $package@$VERSION" >&2
-              echo "$output" >&2
-              exit 1
-            fi
-          }
+          if [[ -z "${NODE_AUTH_TOKEN:-}" ]]; then
+            unset NODE_AUTH_TOKEN
+            for package in "${platform_packages[@]}" "${plugin_packages[@]}" "@orchester/cli"; do
+              if ! npm view "$package" name >/dev/null 2>&1; then
+                echo "NPM_TOKEN is required to bootstrap $package; publish v0.1.0 once with a granular npm token, then configure npm Trusted Publishing for this workflow" >&2
+                exit 1
+              fi
+            done
+          fi
 
-          assert_version_present() {
-            local package="$1"
+          for package in "${platform_packages[@]}"; do
+            publish_package "$package"
+          done
+          for package in "${plugin_packages[@]}"; do
+            publish_package "$package"
+          done
+          publish_package "@orchester/cli"
+
+  release:
+    name: Create GitHub Release
+    needs: [stage, tag]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Download verified npm archive
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: npm-release.tar.gz
+          path: .
+
+      - name: Download native archives
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          path: native-archives
+          pattern: native-*
+          merge-multiple: true
+
+      - name: Publish release assets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          mkdir release
+          tar -xzf npm-release.tar.gz -C release
+          (cd release && sha256sum --check SHA256SUMS)
+          cp native-archives/native-*.tar.gz release/
+          (cd release && sha256sum *.tgz native-*.tar.gz > SHA256SUMS)
+
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$TAG" release/* npm-release.tar.gz --clobber --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$TAG" release/* npm-release.tar.gz \
+              --repo "$GITHUB_REPOSITORY" \
+              --verify-tag \
+              --title "Orchester $TAG" \
+              --generate-notes
+          fi
+
+  verify:
+    name: Verify published release
+    needs: [publish, release]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout release ref
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - name: Verify npm and GitHub publication
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+          TAG: v${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          mapfile -t packages < <(
+            node --input-type=module <<'NODE'
+            import fs from 'node:fs';
+            const cli = JSON.parse(fs.readFileSync('npm/cli/package.json', 'utf8'));
+            for (const name of Object.keys(cli.optionalDependencies)) console.log(name);
+            for (const directory of fs.readdirSync('npm/plugins')) {
+              console.log(JSON.parse(fs.readFileSync(`npm/plugins/${directory}/package.json`, 'utf8')).name);
+            }
+            console.log(cli.name);
+            NODE
+          )
+          [[ ${#packages[@]} -eq 10 ]]
+          for package in "${packages[@]}"; do
             [[ $(npm view "$package@$VERSION" version) == "$VERSION" ]]
-          }
-
-          if [[ "$SUBMIT" == "platforms" ]]; then
-            for package in "${platform_packages[@]}"; do
-              assert_version_absent "$package"
-            done
-          elif [[ "$SUBMIT" == "plugins" ]]; then
-            for package in "${platform_packages[@]}"; do
-              assert_version_present "$package"
-            done
-            for package in "${plugin_packages[@]}"; do
-              assert_version_absent "$package"
-            done
-          elif [[ "$SUBMIT" == "meta" ]]; then
-            for package in "${platform_packages[@]}"; do
-              assert_version_present "$package"
-            done
-            for package in "${plugin_packages[@]}"; do
-              assert_version_present "$package"
-            done
-            assert_version_absent "@orchester/cli"
-          else
-            echo "unsupported submit mode: $SUBMIT" >&2
-            exit 1
-          fi
-
-          if [[ "$SUBMIT" == "platforms" ]]; then
-            for package in "${platform_packages[@]}"; do
-              stage_package "$package"
-            done
-          elif [[ "$SUBMIT" == "plugins" ]]; then
-            for package in "${plugin_packages[@]}"; do
-              stage_package "$package"
-            done
-          elif [[ "$SUBMIT" == "meta" ]]; then
-            stage_package "@orchester/cli"
-          else
-            echo "unsupported submit mode: $SUBMIT" >&2
-            exit 1
-          fi
+          done
+          [[ $(npm view "@orchester/cli@$VERSION" version) == "$VERSION" ]]
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json tagName,isDraft,isPrerelease \
+            --jq 'select(.tagName == env.TAG and .isDraft == false and .isPrerelease == false)'
