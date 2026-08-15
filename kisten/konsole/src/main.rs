@@ -427,18 +427,32 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                     }
                     interactive::HomeAction::Plugins(action) => {
                         drop(chat);
-                        let result = plugin::run(
+                        let result = run_plugin_command_to_transcript(
                             &registry,
                             plugin_command(action),
-                            false,
                             &orchester_home(),
                         );
                         chat = interactive::ChatSession::enter()?;
                         match result {
-                            Ok(outcome) if outcome.failed() => state
-                                .transcript
-                                .push(TranscriptEntry::error("plugin command failed")),
-                            Ok(_) => registry = discover_registry()?,
+                            Ok((outcome, _, error)) if outcome.failed() => {
+                                state.transcript.push(TranscriptEntry::error(
+                                    if error.is_empty() {
+                                        "plugin command failed".into()
+                                    } else {
+                                        error
+                                    },
+                                ));
+                            }
+                            Ok((_, output, _)) => {
+                                state.transcript.push(TranscriptEntry::status(
+                                    if output.is_empty() {
+                                        "/plugins completed".into()
+                                    } else {
+                                        format!("/plugins\n{output}")
+                                    },
+                                ));
+                                registry = discover_registry()?;
+                            }
                             Err(error) => state
                                 .transcript
                                 .push(TranscriptEntry::error(error.to_string())),
@@ -853,6 +867,19 @@ fn plugin_command(action: PluginAction) -> PluginCommand {
     }
 }
 
+fn run_plugin_command_to_transcript(
+    registry: &Registry,
+    command: PluginCommand,
+    orchester_home: &std::path::Path,
+) -> io::Result<(plugin::PluginOutcome, String, String)> {
+    let mut out = Vec::new();
+    let mut err = Vec::new();
+    let outcome = plugin::run_to(registry, command, false, orchester_home, &mut out, &mut err)?;
+    let output = interactive::clean_transcript_text(&String::from_utf8_lossy(&out));
+    let error = interactive::clean_transcript_text(&String::from_utf8_lossy(&err));
+    Ok((outcome, output, error))
+}
+
 /// The Orchester home, resolved by the runtime so the CLI and the config
 /// loader can never disagree about where Orchester keeps its files.
 ///
@@ -973,6 +1000,7 @@ enum CliError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::path::Path;
 
     #[test]
     fn queued_prompt_is_recorded_before_a_busy_turn_starts() {
@@ -998,5 +1026,19 @@ mod tests {
         assert_eq!(busy_label(1), "Creating .");
         assert_eq!(busy_label(4), "Creating  ");
         assert!(busy_label(99).len() <= "Creating ...".len());
+    }
+
+    #[test]
+    fn plugin_command_output_is_captured_for_the_chat_transcript() {
+        let (outcome, output, error) = run_plugin_command_to_transcript(
+            &Registry::new(),
+            PluginCommand::List,
+            Path::new("unused"),
+        )
+        .expect("capture plugin output");
+
+        assert_eq!(outcome, plugin::PluginOutcome::Succeeded);
+        assert_eq!(output, "no agent plugins installed");
+        assert!(error.is_empty());
     }
 }

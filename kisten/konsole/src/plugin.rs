@@ -43,9 +43,22 @@ pub fn run(
     json: bool,
     orchester_home: &Path,
 ) -> io::Result<PluginOutcome> {
+    let mut out = io::stdout().lock();
+    let mut err = io::stderr().lock();
+    run_to(registry, command, json, orchester_home, &mut out, &mut err)
+}
+
+pub fn run_to<W: Write, E: Write>(
+    registry: &Registry,
+    command: PluginCommand,
+    json: bool,
+    orchester_home: &Path,
+    out: &mut W,
+    err: &mut E,
+) -> io::Result<PluginOutcome> {
     match command {
         PluginCommand::List => {
-            render_list(&mut io::stdout().lock(), &registry.plugins(), json)?;
+            render_list(out, &registry.plugins(), json)?;
             Ok(PluginOutcome::Succeeded)
         }
         PluginCommand::Status(args) => {
@@ -54,20 +67,17 @@ pub fn run(
                 .iter()
                 .find(|plugin| plugin.info().name() == args.name)
             else {
-                writeln!(
-                    io::stderr().lock(),
-                    "orchester: agent plugin is not installed"
-                )?;
+                writeln!(err, "orchester: agent plugin is not installed")?;
                 return Ok(PluginOutcome::Failed);
             };
-            render_status(&mut io::stdout().lock(), plugin, json)?;
+            render_status(out, plugin, json)?;
             Ok(PluginOutcome::Succeeded)
         }
         PluginCommand::Install(args) => match install::install(orchester_home, &args.name) {
             Ok(info) => {
                 if json {
                     writeln!(
-                        io::stdout().lock(),
+                        out,
                         "{}",
                         serde_json::json!({
                             "name": info.name(),
@@ -79,7 +89,7 @@ pub fn run(
                     )?;
                 } else {
                     writeln!(
-                        io::stdout().lock(),
+                        out,
                         "Installed {} {} ({})",
                         info.display_name(),
                         info.version(),
@@ -89,7 +99,7 @@ pub fn run(
                 Ok(PluginOutcome::Succeeded)
             }
             Err(error) => {
-                writeln!(io::stderr().lock(), "orchester: {error}")?;
+                writeln!(err, "orchester: {error}")?;
                 Ok(PluginOutcome::Failed)
             }
         },
@@ -97,7 +107,7 @@ pub fn run(
             Ok(remove::RemoveOutcome::Removed(info)) => {
                 if json {
                     writeln!(
-                        io::stdout().lock(),
+                        out,
                         "{}",
                         serde_json::json!({
                             "name": info.name(),
@@ -109,7 +119,7 @@ pub fn run(
                     )?;
                 } else {
                     writeln!(
-                        io::stdout().lock(),
+                        out,
                         "Removed {} {} ({})",
                         info.display_name(),
                         info.version(),
@@ -121,17 +131,17 @@ pub fn run(
             Ok(remove::RemoveOutcome::NotInstalled) => {
                 if json {
                     writeln!(
-                        io::stdout().lock(),
+                        out,
                         "{}",
                         serde_json::json!({"name": args.name, "removed": false})
                     )?;
                 } else {
-                    writeln!(io::stdout().lock(), "Plugin is not installed")?;
+                    writeln!(out, "Plugin is not installed")?;
                 }
                 Ok(PluginOutcome::Succeeded)
             }
             Err(error) => {
-                writeln!(io::stderr().lock(), "orchester: {error}")?;
+                writeln!(err, "orchester: {error}")?;
                 Ok(PluginOutcome::Failed)
             }
         },
@@ -192,5 +202,33 @@ fn origin_word(origin: PluginOrigin) -> &'static str {
     match origin {
         PluginOrigin::Managed => "managed",
         PluginOrigin::Project => "project",
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn run_to_captures_plugin_output_for_interactive_rendering() {
+        let mut out = Vec::new();
+        let mut err = Vec::new();
+
+        let outcome = run_to(
+            &Registry::new(),
+            PluginCommand::List,
+            false,
+            Path::new("unused"),
+            &mut out,
+            &mut err,
+        )
+        .expect("run plugin list");
+
+        assert_eq!(outcome, PluginOutcome::Succeeded);
+        assert_eq!(
+            String::from_utf8(out).unwrap(),
+            "no agent plugins installed\n"
+        );
+        assert!(err.is_empty());
     }
 }
