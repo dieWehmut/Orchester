@@ -14,6 +14,7 @@ mod unresolved;
 
 use std::fmt;
 use std::path::Path;
+use std::sync::Arc;
 
 use orchester_protokoll::RunId;
 use thiserror::Error;
@@ -166,13 +167,25 @@ where
         prompt: impl Into<String>,
         cancel: CancellationToken,
     ) -> Result<SelfAgentTurn, SelfAgentServiceError> {
+        self.start_with_events(prompt, cancel, None).await
+    }
+
+    pub async fn start_with_events(
+        &self,
+        prompt: impl Into<String>,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn orchester_modell::ModelEventSink>>,
+    ) -> Result<SelfAgentTurn, SelfAgentServiceError> {
         let (input, run_id) = self.identity.coordinator_input(
             prompt.into(),
             self.config_snapshot_hash.clone(),
             self.max_steps,
             self.coordinator.policy_snapshot_hash(),
         )?;
-        let outcome = self.coordinator.start_new_run(input, cancel).await?;
+        let outcome = self
+            .coordinator
+            .start_new_run_with_events(input, cancel, events)
+            .await?;
         Ok(SelfAgentTurn::from_coordinator(run_id, outcome))
     }
 
@@ -181,8 +194,20 @@ where
         run_id: RunId,
         cancel: CancellationToken,
     ) -> Result<SelfAgentTurn, SelfAgentServiceError> {
+        self.continue_run_with_events(run_id, cancel, None).await
+    }
+
+    pub async fn continue_run_with_events(
+        &self,
+        run_id: RunId,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn orchester_modell::ModelEventSink>>,
+    ) -> Result<SelfAgentTurn, SelfAgentServiceError> {
         let input = self.identity.continuation_input(run_id.clone())?;
-        let outcome = self.coordinator.continue_run(input, cancel).await?;
+        let outcome = self
+            .coordinator
+            .continue_run_with_events(input, cancel, events)
+            .await?;
         Ok(SelfAgentTurn::from_coordinator(run_id, outcome))
     }
 }

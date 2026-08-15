@@ -2,6 +2,7 @@ use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
+use async_trait::async_trait;
 use orchester_laufzeit::harness::agent_loop::{AgentLoopConfig, SelfAgentLoop};
 use orchester_laufzeit::harness::audit::JsonlAuditSink;
 use orchester_laufzeit::harness::context::{ContextAssembler, ContextLimits};
@@ -9,9 +10,70 @@ use orchester_laufzeit::harness::executor::ToolExecutor;
 use orchester_laufzeit::harness::files::FileToolLimits;
 use orchester_laufzeit::harness::run_store::{RunStore, SqliteRunStore};
 use orchester_laufzeit::harness::service::{SelfAgentOutcome, SelfAgentRuntime, SelfAgentTurn};
-use orchester_modell::{ModelError, ModelResponse, ModelUsage, ScriptedLlm};
+use orchester_modell::{
+    LanguageModel, ModelError, ModelEventSink, ModelRequest, ModelResponse, ModelUsage, ScriptedLlm,
+};
 use orchester_protokoll::{AgentAction, HarnessEventKind, PolicyDecision};
 use tokio_util::sync::CancellationToken;
+
+struct EventfulModel {
+    inner: ScriptedLlm,
+}
+
+#[async_trait]
+impl LanguageModel for EventfulModel {
+    async fn complete(
+        &self,
+        request: ModelRequest,
+        cancel: CancellationToken,
+    ) -> Result<ModelResponse, ModelError> {
+        self.inner.complete(request, cancel).await
+    }
+
+    async fn complete_with_events(
+        &self,
+        request: ModelRequest,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+    ) -> Result<ModelResponse, ModelError> {
+        let response = self.inner.complete(request, cancel).await?;
+        if let Some(events) = events {
+            if response.assistant_text == "inspection complete" {
+                events.text_delta("inspection ");
+                events.text_delta("complete");
+            } else if !response.assistant_text.is_empty() {
+                events.text_delta(&response.assistant_text);
+            }
+        }
+        Ok(response)
+    }
+}
+
+fn eventful_loop_engine(
+    responses: impl IntoIterator<Item = Result<ModelResponse, ModelError>>,
+) -> SelfAgentLoop<EventfulModel> {
+    SelfAgentLoop::new(
+        EventfulModel {
+            inner: ScriptedLlm::new(responses),
+        },
+        ContextAssembler::new(ContextLimits::default(), Vec::new()),
+        AgentLoopConfig {
+            model: "test-model".into(),
+            max_steps: 8,
+            max_text_bytes: 64 * 1024,
+            store: false,
+        },
+    )
+    .expect("loop")
+}
+
+struct CollectingSink(Arc<std::sync::Mutex<Vec<String>>>);
+
+impl ModelEventSink for CollectingSink {
+    fn text_delta(&self, delta: &str) {
+        self.0.lock().expect("sink lock").push(delta.to_owned());
+    }
+}
 
 static NEXT_ROOT: AtomicUsize = AtomicUsize::new(0);
 
@@ -268,6 +330,60 @@ async fn run_executes_multiple_allowed_tools_then_returns_the_final_text() {
     assert!(steps
         .windows(2)
         .all(|pair| pair[0].turn_id == pair[1].turn_id));
+    drop(runtime);
+    drop(audit);
+    let _ = std::fs::remove_dir_all(root);
+}
+
+#[tokio::test]
+async fn run_with_events_forwards_ordered_text_without_changing_tool_sequence() {
+    let root = temp_root("events");
+    std::fs::write(
+        root.join("workspace/src/lib.rs"),
+        "pub const VALUE: u8 = 7;\n",
+    )
+    .expect("fixture");
+    let store = Arc::new(
+        SqliteRunStore::open_with_terminal_secrets(root.join("state/runs.db"), Vec::new())
+            .expect("store"),
+    );
+    let audit = Arc::new(JsonlAuditSink::open(root.join("audit/events.jsonl")).expect("audit"));
+    let runtime = SelfAgentRuntime::new(
+        eventful_loop_engine([
+            Ok(tool_response(
+                "provider-call-read",
+                "read_file",
+                r#"{"path":"src/lib.rs","start_line":null,"end_line":null}"#,
+                2,
+                3,
+            )),
+            Ok(text_response("inspection complete", 4, 5)),
+        ]),
+        store,
+        audit.clone(),
+        ToolExecutor::new(root.join("workspace"), FileToolLimits::default()).expect("executor"),
+        root.join("workspace"),
+        "local-user",
+    )
+    .expect("runtime");
+    let deltas = Arc::new(std::sync::Mutex::new(Vec::new()));
+
+    let outcome = runtime
+        .run_with_events(
+            "inspect the source",
+            CancellationToken::new(),
+            Some(Arc::new(CollectingSink(Arc::clone(&deltas)))),
+        )
+        .await
+        .expect("outcome");
+
+    assert_eq!(outcome.final_turn().text(), Some("inspection complete"));
+    assert_eq!(outcome.tool_steps().len(), 1);
+    assert_eq!(
+        *deltas.lock().expect("sink lock"),
+        ["inspection ", "complete"]
+    );
+    assert_eq!(audit.verify().expect("audit").entries, 1);
     drop(runtime);
     drop(audit);
     let _ = std::fs::remove_dir_all(root);

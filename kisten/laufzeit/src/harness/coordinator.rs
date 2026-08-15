@@ -8,7 +8,7 @@
 
 use std::sync::Arc;
 
-use orchester_modell::{LanguageModel, ModelError, ModelUsage};
+use orchester_modell::{LanguageModel, ModelError, ModelEventSink, ModelUsage};
 use orchester_protokoll::{ActionId, AgentAction, CallId, HarnessEventKind, RunId, StepId, TurnId};
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
@@ -501,6 +501,15 @@ where
         input: CoordinatorInput,
         cancel: CancellationToken,
     ) -> Result<CoordinatorOutcome, CoordinatorError> {
+        self.start_new_run_with_events(input, cancel, None).await
+    }
+
+    pub async fn start_new_run_with_events(
+        &self,
+        input: CoordinatorInput,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+    ) -> Result<CoordinatorOutcome, CoordinatorError> {
         self.validate_input(&input)?;
         self.validate_dependencies(&input)?;
 
@@ -548,6 +557,7 @@ where
                 action_id: input.action_id,
             },
             cancel,
+            events,
         )
         .await
     }
@@ -556,6 +566,15 @@ where
         &self,
         input: CoordinatorContinuationInput,
         cancel: CancellationToken,
+    ) -> Result<CoordinatorOutcome, CoordinatorError> {
+        self.continue_run_with_events(input, cancel, None).await
+    }
+
+    pub async fn continue_run_with_events(
+        &self,
+        input: CoordinatorContinuationInput,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
     ) -> Result<CoordinatorOutcome, CoordinatorError> {
         self.validate_continuation_input(&input)?;
         let state = self
@@ -606,6 +625,7 @@ where
                 action_id: input.action_id,
             },
             cancel,
+            events,
         )
         .await
     }
@@ -615,13 +635,14 @@ where
         prepared: PreparedModelStep,
         input: CoordinatorStepInput,
         cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
     ) -> Result<CoordinatorOutcome, CoordinatorError> {
         // This durable boundary is the last fallible operation before the
         // provider call. Failures after it resume as ReconcileModelCall.
         let response = self
             .loop_engine
             .model()
-            .complete(prepared.request().clone(), cancel)
+            .complete_with_events(prepared.request().clone(), cancel, events)
             .await?;
         let response_usage = response.usage;
         if response.assistant_text.len() > TranscriptLimits::DEFAULT_MAX_TEXT_BYTES {

@@ -5,10 +5,11 @@
 //! later layers before returning one bounded observation to `resume`.
 
 use std::fmt;
+use std::sync::Arc;
 
 use orchester_modell::{
-    ActionDecoder, DecodeError, LanguageModel, ModelError, ModelRequest, ModelResponse, ModelUsage,
-    MAX_CONTENT_BYTES,
+    ActionDecoder, DecodeError, LanguageModel, ModelError, ModelEventSink, ModelRequest,
+    ModelResponse, ModelUsage, MAX_CONTENT_BYTES,
 };
 use orchester_protokoll::{AgentAction, CallId};
 use sha2::{Digest, Sha256};
@@ -276,10 +277,19 @@ impl<M: LanguageModel> SelfAgentLoop<M> {
         prompt: impl Into<String>,
         cancel: CancellationToken,
     ) -> Result<AgentLoopOutcome, AgentLoopError> {
+        self.start_with_events(prompt, cancel, None).await
+    }
+
+    pub async fn start_with_events(
+        &self,
+        prompt: impl Into<String>,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+    ) -> Result<AgentLoopOutcome, AgentLoopError> {
         let prepared = self.prepare_start(prompt, &cancel)?;
         let response = self
             .model
-            .complete(prepared.request.clone(), cancel)
+            .complete_with_events(prepared.request.clone(), cancel, events)
             .await?;
         Ok(self.complete_prepared(prepared, response)?.into_public())
     }
@@ -290,10 +300,21 @@ impl<M: LanguageModel> SelfAgentLoop<M> {
         tool_result: impl Into<String>,
         cancel: CancellationToken,
     ) -> Result<AgentLoopOutcome, AgentLoopError> {
+        self.resume_with_events(pending, tool_result, cancel, None)
+            .await
+    }
+
+    pub async fn resume_with_events(
+        &self,
+        pending: PendingAction,
+        tool_result: impl Into<String>,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+    ) -> Result<AgentLoopOutcome, AgentLoopError> {
         let prepared = self.prepare_resume(pending, tool_result, &cancel)?;
         let response = self
             .model
-            .complete(prepared.request.clone(), cancel)
+            .complete_with_events(prepared.request.clone(), cancel, events)
             .await?;
         Ok(self.complete_prepared(prepared, response)?.into_public())
     }

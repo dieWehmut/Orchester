@@ -4,7 +4,7 @@ use std::fmt;
 use std::path::Path;
 use std::sync::Arc;
 
-use orchester_modell::{LanguageModel, ModelUsage};
+use orchester_modell::{LanguageModel, ModelEventSink, ModelUsage};
 use orchester_protokoll::{ActionId, AgentAction, CallId, PolicyDecision, RunId};
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
@@ -177,7 +177,19 @@ where
         prompt: impl Into<String>,
         cancel: CancellationToken,
     ) -> Result<SelfAgentRunOutcome, SelfAgentRuntimeError> {
-        let mut turn = self.service.start(prompt, cancel.clone()).await?;
+        self.run_with_events(prompt, cancel, None).await
+    }
+
+    pub async fn run_with_events(
+        &self,
+        prompt: impl Into<String>,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+    ) -> Result<SelfAgentRunOutcome, SelfAgentRuntimeError> {
+        let mut turn = self
+            .service
+            .start_with_events(prompt, cancel.clone(), events.clone())
+            .await?;
         let mut tool_steps = Vec::new();
 
         loop {
@@ -190,7 +202,10 @@ where
 
             let outcome = self.execution.execute(&run_id, &action_id, &call_id)?;
             tool_steps.push(SelfAgentToolStep::new(action_id, call_id, outcome));
-            turn = self.service.continue_run(run_id, cancel.clone()).await?;
+            turn = self
+                .service
+                .continue_run_with_events(run_id, cancel.clone(), events.clone())
+                .await?;
         }
     }
 }

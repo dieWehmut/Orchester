@@ -1,5 +1,6 @@
 use std::fmt;
 use std::path::PathBuf;
+use std::sync::Arc;
 
 use orchester_laufzeit::harness::config::{ConfigError, ConfigLoader, UserConfig};
 use orchester_laufzeit::harness::credentials::KeyringCredentialStore;
@@ -13,6 +14,7 @@ use orchester_laufzeit::harness::service::{
     SelfAgentResumeCatalog, SelfAgentResumeCatalogError, SelfAgentRunOutcome,
     SelfAgentRuntimeBuildError, SelfAgentRuntimeError, SelfAgentStatus, SelfAgentStatusError,
 };
+use orchester_modell::ModelEventSink;
 use secrecy::SecretString;
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
@@ -79,12 +81,24 @@ impl SelfAgentHost {
         prompt: String,
         cancel: CancellationToken,
     ) -> Result<SelfAgentRunOutcome, SelfAgentHostError> {
+        self.submit_with_events(prompt, cancel, None).await
+    }
+
+    pub async fn submit_with_events(
+        &mut self,
+        prompt: String,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+    ) -> Result<SelfAgentRunOutcome, SelfAgentHostError> {
         self.ensure_runtime()?;
         let runtime = self
             .runtime
             .as_ref()
             .ok_or(SelfAgentHostError::Initialization)?;
-        runtime.run(prompt, cancel).await.map_err(Into::into)
+        runtime
+            .run_with_events(prompt, cancel, events)
+            .await
+            .map_err(Into::into)
     }
 
     pub fn model_catalog(&self) -> Result<SelfAgentModelCatalog, SelfAgentHostError> {
