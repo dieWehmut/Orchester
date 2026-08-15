@@ -194,13 +194,13 @@ test('keeps one Windows PATH binding and prefixes the Node runtime directory', (
 
 test('discovers cached Yarn Classic directly without invoking Corepack', () => {
   const yarn = managers.get('yarn');
-  if (!yarn) return;
+  // PATH-provided Yarn descriptors intentionally carry no inferred version;
+  // only the cache descriptor proves the pinned Corepack release.
+  if (!yarn || yarn.source !== 'corepack-cache') return;
 
   assert.equal(yarn.version, '1.22.22');
-  if (yarn.source === 'corepack-cache') {
-    assert.equal(path.resolve(yarn.command), path.resolve(process.execPath));
-    assert.match(yarn.prefixArgs[0], /corepack[\\/]v1[\\/]yarn[\\/]1\.22\.22/);
-  }
+  assert.equal(path.resolve(yarn.command), path.resolve(process.execPath));
+  assert.match(yarn.prefixArgs[0], /corepack[\\/]v1[\\/]yarn[\\/]1\.22\.22/);
 });
 
 test('parses the require-all switch and rejects all other CLI input', () => {
