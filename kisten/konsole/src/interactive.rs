@@ -87,6 +87,30 @@ pub(crate) struct ChatHomeView<'a> {
     pub(crate) busy: Option<&'a str>,
 }
 
+impl<'a> ChatHomeView<'a> {
+    pub(crate) fn new(
+        input: &'a str,
+        choices: &'a [AgentChoice],
+        command_selected: usize,
+        show_help: bool,
+        model_status: &'a str,
+        transcript: &'a [TranscriptEntry],
+        busy: Option<&'a str>,
+    ) -> Self {
+        Self {
+            width: 0,
+            height: 0,
+            input,
+            choices,
+            command_selected,
+            show_help,
+            model_status,
+            transcript,
+            busy,
+        }
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum TranscriptRole {
     User,
@@ -144,6 +168,15 @@ impl ChatSession {
         present_chat_home_in_viewport(&mut self.presenter, &mut out, view)
     }
 
+    pub(crate) fn present_view(&mut self, view: ChatHomeView<'_>) -> io::Result<()> {
+        let (width, height) = self.viewport();
+        self.present(ChatHomeView {
+            width,
+            height,
+            ..view
+        })
+    }
+
     pub(crate) fn read_key(&self) -> io::Result<Option<KeyEvent>> {
         match event::read()? {
             TerminalEvent::Key(key) => Ok(Some(key)),
@@ -154,41 +187,6 @@ impl ChatSession {
     pub(crate) fn viewport(&self) -> (usize, usize) {
         let (cols, rows) = terminal::size().unwrap_or((100, 30));
         (viewport_content_width(cols), usize::from(rows).max(1))
-    }
-}
-
-pub fn run_home_tui(choices: &[AgentChoice], model_status: &str) -> io::Result<HomeAction> {
-    let mut session = ChatSession::enter()?;
-    let mut input = String::new();
-    let mut command_selected = 0usize;
-    let mut show_help = false;
-
-    loop {
-        let (width, height) = session.viewport();
-        session.present(ChatHomeView {
-            width,
-            height,
-            input: &input,
-            choices,
-            command_selected,
-            show_help,
-            model_status,
-            transcript: &[],
-            busy: None,
-        })?;
-
-        let Some(key) = session.read_key()? else {
-            continue;
-        };
-        if let Some(action) = handle_chat_key(
-            key,
-            &mut input,
-            &mut command_selected,
-            &mut show_help,
-            choices,
-        ) {
-            return Ok(action);
-        }
     }
 }
 
@@ -923,15 +921,17 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
     if !transcript.is_empty() || busy.is_some() {
         return render_transcript_chat_frame(
             out,
-            width,
-            height,
-            input,
-            choices,
-            command_selected,
-            show_help,
-            model_status,
-            transcript,
-            busy,
+            ChatHomeView {
+                width,
+                height,
+                input,
+                choices,
+                command_selected,
+                show_help,
+                model_status,
+                transcript,
+                busy,
+            },
         );
     }
 
@@ -1019,18 +1019,18 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
     Ok(())
 }
 
-fn render_transcript_chat_frame<W: Write>(
-    out: &mut W,
-    width: usize,
-    height: usize,
-    input: &str,
-    choices: &[AgentChoice],
-    command_selected: usize,
-    show_help: bool,
-    model_status: &str,
-    transcript: &[TranscriptEntry],
-    busy: Option<&str>,
-) -> io::Result<()> {
+fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::Result<()> {
+    let ChatHomeView {
+        width,
+        height,
+        input,
+        choices,
+        command_selected,
+        show_help,
+        model_status,
+        transcript,
+        busy,
+    } = view;
     let status_rows = usize::from(height >= 2);
     let composer_rows = 1;
     let header_rows = if height >= 5 { 2 } else { 0 };

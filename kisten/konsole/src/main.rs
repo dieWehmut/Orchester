@@ -27,7 +27,8 @@ use orchester_verzeichnis::{standard_plugin_roots, PluginRootError, Registry};
 
 use args::{Cli, Command, PluginCommand, PluginInstallArgs, PluginRemoveArgs, PluginStatusArgs};
 use interactive::{
-    AgentChoice, CredentialCommand, ModelCommand, PluginAction, PromptAction, WorkspaceCommand,
+    AgentChoice, ChatHomeView, CredentialCommand, ModelCommand, PluginAction, PromptAction,
+    TranscriptEntry, WorkspaceCommand,
 };
 use process::{command_invocation, is_cancelled_status, resolve_command};
 use self_agent::{SelfAgentHost, SelfAgentHostError};
@@ -186,72 +187,148 @@ async fn run_interactive(registry: Registry) -> Result<ExitCode, CliError> {
 
 async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, CliError> {
     let mut self_agent = self_agent_host()?;
+    let mut chat = interactive::ChatSession::enter()?;
+    let mut transcript = Vec::new();
+    let mut input = String::new();
+    let mut command_selected = 0usize;
+    let mut show_help = false;
+    let mut busy = None;
+
     loop {
         let choices = interactive::build_agent_choices(&registry);
         let model_status = self_agent
             .model_label()
             .unwrap_or_else(|_| "model unavailable".into());
-        match interactive::run_home_tui(&choices, &model_status)? {
+        chat.present_view(ChatHomeView::new(
+            &input,
+            &choices,
+            command_selected,
+            show_help,
+            &model_status,
+            &transcript,
+            busy.as_deref(),
+        ))?;
+
+        let Some(key) = chat.read_key()? else {
+            continue;
+        };
+        let Some(action) = interactive::handle_chat_key(
+            key,
+            &mut input,
+            &mut command_selected,
+            &mut show_help,
+            &choices,
+        ) else {
+            continue;
+        };
+
+        match action {
             interactive::HomeAction::Quit => return Ok(ExitCode::SUCCESS),
-            interactive::HomeAction::Help => {
-                let mut out = io::stdout().lock();
-                interactive::render_help(&mut out)?;
-            }
             interactive::HomeAction::Submit(prompt) => {
+                input.clear();
+                command_selected = 0;
+                show_help = false;
+                transcript.push(TranscriptEntry::user(&prompt));
+                busy = Some("Creating...".to_owned());
+                chat.present_view(ChatHomeView::new(
+                    &input,
+                    &choices,
+                    command_selected,
+                    show_help,
+                    &model_status,
+                    &transcript,
+                    busy.as_deref(),
+                ))?;
+
                 match self_agent.submit(prompt, CancellationToken::new()).await {
                     Ok(outcome) => {
-                        {
-                            let mut out = io::stdout().lock();
-                            self_agent::render_outcome(&mut out, &outcome)?;
+                        let rendered = self_agent::render_outcome_transcript(&outcome)?;
+                        if rendered.is_empty() {
+                            transcript.push(TranscriptEntry::status("No response returned."));
+                        } else {
+                            transcript.push(TranscriptEntry::assistant(rendered));
                         }
-                        return run_line_interactive_with_host(registry, self_agent, false).await;
                     }
-                    Err(error) => eprintln!("orchester: {error}"),
+                    Err(error) => transcript.push(TranscriptEntry::error(error.to_string())),
                 }
+                busy = None;
             }
             interactive::HomeAction::Workspace(command) => {
-                let keep_home = matches!(
-                    command,
-                    WorkspaceCommand::Model(
-                        ModelCommand::SelectProfile(_) | ModelCommand::UseConfigured
-                    )
-                );
-                render_workspace_command(&mut self_agent, command)?;
-                if !keep_home {
-                    return Ok(ExitCode::SUCCESS);
+                let label = format!("/{command:?}");
+                drop(chat);
+                let result = render_workspace_command(&mut self_agent, command);
+                chat = interactive::ChatSession::enter()?;
+                match result {
+                    Ok(()) => {
+                        transcript.push(TranscriptEntry::status(format!("{label} completed")))
+                    }
+                    Err(error) => transcript.push(TranscriptEntry::error(error.to_string())),
                 }
             }
             interactive::HomeAction::Empty => {}
             interactive::HomeAction::PickAgent => {
-                if let Some(agent) = interactive::select_agent_tui(&choices, None)? {
+                drop(chat);
+                let selected = interactive::select_agent_tui(&choices, None)?;
+                chat = interactive::ChatSession::enter()?;
+                if let Some(agent) = selected {
                     if agent.native_command.is_some() {
-                        if launch_native_agent(&agent)? == NativeLaunchStatus::Cancelled {
+                        drop(chat);
+                        let status = launch_native_agent(&agent)?;
+                        chat = interactive::ChatSession::enter()?;
+                        if status == NativeLaunchStatus::Cancelled {
                             return Ok(ExitCode::from(130));
                         }
                     } else {
-                        run_adapter_prompt_shell(&registry, agent).await?;
-                        registry = discover_registry()?;
+                        drop(chat);
+                        let result = run_adapter_prompt_shell(&registry, agent).await;
+                        chat = interactive::ChatSession::enter()?;
+                        match result {
+                            Ok(()) => registry = discover_registry()?,
+                            Err(error) => {
+                                transcript.push(TranscriptEntry::error(error.to_string()))
+                            }
+                        }
                     }
                 }
             }
             interactive::HomeAction::LaunchAgent(name) => {
                 let Some(agent) = choices.iter().find(|choice| choice.name == name) else {
-                    eprintln!("orchester: unknown or unavailable agent `{name}`");
+                    transcript.push(TranscriptEntry::error(format!(
+                        "unknown or unavailable agent `{name}`"
+                    )));
                     continue;
                 };
                 if agent.native_command.is_some() {
-                    if launch_native_agent(agent)? == NativeLaunchStatus::Cancelled {
+                    drop(chat);
+                    let status = launch_native_agent(agent)?;
+                    chat = interactive::ChatSession::enter()?;
+                    if status == NativeLaunchStatus::Cancelled {
                         return Ok(ExitCode::from(130));
                     }
                 } else {
-                    run_adapter_prompt_shell(&registry, agent.clone()).await?;
-                    registry = discover_registry()?;
+                    drop(chat);
+                    let result = run_adapter_prompt_shell(&registry, agent.clone()).await;
+                    chat = interactive::ChatSession::enter()?;
+                    match result {
+                        Ok(()) => registry = discover_registry()?,
+                        Err(error) => transcript.push(TranscriptEntry::error(error.to_string())),
+                    }
                 }
             }
             interactive::HomeAction::Plugins(action) => {
-                let _ = plugin::run(&registry, plugin_command(action), false, &orchester_home())?;
-                registry = discover_registry()?;
+                drop(chat);
+                let result =
+                    plugin::run(&registry, plugin_command(action), false, &orchester_home());
+                chat = interactive::ChatSession::enter()?;
+                match result {
+                    Ok(outcome) if outcome.failed() => {
+                        transcript.push(TranscriptEntry::error("plugin command failed"))
+                    }
+                    Ok(_) => registry = discover_registry()?,
+                    Err(error) => transcript.push(TranscriptEntry::error(error.to_string())),
+                }
             }
+            interactive::HomeAction::Help => show_help = true,
         }
     }
 }
