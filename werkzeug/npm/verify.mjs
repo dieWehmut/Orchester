@@ -361,6 +361,7 @@ function assertSameMembers(metadata, entries) {
 
 function assertMetaMembers(entries) {
   const required = new Set([
+    'README.md',
     'bin/orchester.cjs',
     'lib/process.cjs',
     'lib/target.cjs',

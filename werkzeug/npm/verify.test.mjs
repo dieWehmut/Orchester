@@ -41,11 +41,12 @@ function createFixture(t) {
     name: metaManifest.name,
     version: metaManifest.version,
     bin: { orchester: 'bin/orchester.cjs' },
-    files: ['bin', 'lib', 'targets.json'],
+    files: ['README.md', 'bin', 'lib', 'targets.json'],
     optionalDependencies: {
       '@orchester/cli-linux-x64': metaManifest.version,
     },
   }, {
+    'README.md': '# @orchester/cli\n',
     'bin/orchester.cjs': '#!/usr/bin/env node\n',
     'lib/process.cjs': 'module.exports = {};\n',
     'lib/target.cjs': 'module.exports = {};\n',

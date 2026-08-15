@@ -41,4 +41,5 @@ docs/local
 !/README.md
 !/docs/README.zh-TW.md
 !/docs/README.en.md
+!/npm/cli/README.md
 .playwright-mcp/

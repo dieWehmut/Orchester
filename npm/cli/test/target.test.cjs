@@ -98,7 +98,7 @@ test('meta package pins every platform package without lifecycle scripts', () =>
   assert.equal(packageJson.type, 'commonjs');
   assert.equal(packageJson.repository, 'https://github.com/dieWehmut/Orchester');
   assert.deepEqual(packageJson.engines, { node: '>=18' });
-  assert.deepEqual(packageJson.files, ['bin', 'lib', 'targets.json']);
+  assert.deepEqual(packageJson.files, ['README.md', 'bin', 'lib', 'targets.json']);
   assert.deepEqual(packageJson.publishConfig, { access: 'public' });
   assert.equal(packageJson.bin.orchester, 'bin/orchester.cjs');
 
