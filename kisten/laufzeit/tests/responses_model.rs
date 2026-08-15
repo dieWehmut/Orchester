@@ -192,6 +192,75 @@ async fn retries_a_transient_transport_failure_once() {
 }
 
 #[tokio::test]
+async fn retries_a_transient_http_failure_once() {
+    let transport = FakeTransport::with_responses([
+        Ok(HttpResponse::new(503, None, BODY_CANARY.into()).unwrap()),
+        Ok(success("recovered")),
+    ]);
+    let model = authenticated_model("https://example.test/v1/", transport.clone());
+
+    let response = model
+        .complete(request("retry http"), CancellationToken::new())
+        .await
+        .expect("transient HTTP failure should be retried");
+
+    assert_eq!(response.assistant_text, "recovered");
+    assert_eq!(transport.requests().len(), 2);
+}
+
+#[tokio::test]
+async fn retries_a_transient_timeout_once() {
+    let transport =
+        FakeTransport::with_responses([Err(HttpTransportError::Timeout), Ok(success("recovered"))]);
+    let model = authenticated_model("https://example.test/v1/", transport.clone());
+
+    let response = model
+        .complete(request("retry timeout"), CancellationToken::new())
+        .await
+        .expect("transient timeout should be retried");
+
+    assert_eq!(response.assistant_text, "recovered");
+    assert_eq!(transport.requests().len(), 2);
+}
+
+#[tokio::test]
+async fn transient_retries_are_bounded_after_two_failures() {
+    let transport = FakeTransport::with_responses([
+        Ok(HttpResponse::new(503, None, BODY_CANARY.into()).unwrap()),
+        Ok(HttpResponse::new(503, None, BODY_CANARY.into()).unwrap()),
+        Ok(success("must not be reached")),
+    ]);
+    let model = authenticated_model("https://example.test/v1/", transport.clone());
+
+    let error = model
+        .complete(request("retry bound"), CancellationToken::new())
+        .await
+        .expect_err("retry budget should be bounded");
+
+    assert_eq!(error, ModelError::Transport);
+    assert_eq!(transport.requests().len(), 2);
+}
+
+#[tokio::test]
+async fn cancellation_during_retry_backoff_prevents_second_send() {
+    let transport = FakeTransport::with_responses([
+        Err(HttpTransportError::Transport),
+        Ok(success("must not be reached")),
+    ]);
+    let model = authenticated_model("https://example.test/v1/", transport.clone());
+    let cancel = CancellationToken::new();
+    let task = tokio::spawn({
+        let cancel = cancel.clone();
+        async move { model.complete(request("cancel retry"), cancel).await }
+    });
+
+    tokio::time::sleep(Duration::from_millis(10)).await;
+    cancel.cancel();
+    assert_eq!(task.await.expect("model task"), Err(ModelError::Cancelled));
+    assert_eq!(transport.requests().len(), 1);
+}
+
+#[tokio::test]
 async fn classifies_http_and_transport_failures_without_provider_bodies() {
     let cases = [
         (

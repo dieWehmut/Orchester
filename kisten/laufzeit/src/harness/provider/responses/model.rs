@@ -82,10 +82,13 @@ impl<T: HttpTransport + 'static> LanguageModel for ResponsesLanguageModel<T> {
             .with_shared_authorization(self.authorization.clone());
         let mut attempt = 1;
         loop {
+            if cancel.is_cancelled() {
+                return Err(ModelError::Cancelled);
+            }
             match self.transport.send(request.clone(), cancel.clone()).await {
-                Ok(response) => return decode_http_response(response),
-                Err(HttpTransportError::Transport)
-                    if attempt < MAX_TRANSIENT_TRANSPORT_ATTEMPTS =>
+                Ok(response)
+                    if retryable_response_status(response.status())
+                        && attempt < MAX_TRANSIENT_TRANSPORT_ATTEMPTS =>
                 {
                     attempt += 1;
                     tokio::select! {
@@ -94,10 +97,33 @@ impl<T: HttpTransport + 'static> LanguageModel for ResponsesLanguageModel<T> {
                         _ = tokio::time::sleep(TRANSIENT_TRANSPORT_RETRY_DELAY) => {}
                     }
                 }
+                Err(error)
+                    if retryable_transport_error(error)
+                        && attempt < MAX_TRANSIENT_TRANSPORT_ATTEMPTS =>
+                {
+                    attempt += 1;
+                    tokio::select! {
+                        biased;
+                        _ = cancel.cancelled() => return Err(ModelError::Cancelled),
+                        _ = tokio::time::sleep(TRANSIENT_TRANSPORT_RETRY_DELAY) => {}
+                    }
+                }
+                Ok(response) => return decode_http_response(response),
                 Err(error) => return Err(map_transport_error(error)),
             }
         }
     }
+}
+
+fn retryable_response_status(status: u16) -> bool {
+    matches!(status, 408 | 425 | 500..=599)
+}
+
+fn retryable_transport_error(error: HttpTransportError) -> bool {
+    matches!(
+        error,
+        HttpTransportError::Timeout | HttpTransportError::Transport
+    )
 }
 
 fn decode_http_response(response: HttpResponse) -> Result<ModelResponse, ModelError> {
