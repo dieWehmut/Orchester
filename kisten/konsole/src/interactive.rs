@@ -184,6 +184,13 @@ impl ChatSession {
         }
     }
 
+    pub(crate) fn try_read_key(&self) -> io::Result<Option<KeyEvent>> {
+        if !event::poll(std::time::Duration::ZERO)? {
+            return Ok(None);
+        }
+        self.read_key()
+    }
+
     pub(crate) fn viewport(&self) -> (usize, usize) {
         let (cols, rows) = terminal::size().unwrap_or((100, 30));
         (viewport_content_width(cols), usize::from(rows).max(1))

@@ -13,14 +13,16 @@ mod process;
 mod render;
 mod self_agent;
 
-use std::collections::HashMap;
+use std::collections::{HashMap, VecDeque};
 use std::io::{self, IsTerminal, Read, Write};
 use std::path::PathBuf;
 use std::process::ExitCode;
 use std::process::{Command as ProcessCommand, Stdio};
+use std::time::Duration;
 
 use clap::Parser;
 
+use orchester_laufzeit::harness::service::SelfAgentRunOutcome;
 use orchester_laufzeit::{Conductor, ConductorError, SessionRecord, SessionStore};
 use orchester_protokoll::{Outcome, RunResult, Task};
 use orchester_verzeichnis::{standard_plugin_roots, PluginRootError, Registry};
@@ -185,157 +187,285 @@ async fn run_interactive(registry: Registry) -> Result<ExitCode, CliError> {
     run_line_interactive(registry).await
 }
 
+enum QueuedChatAction {
+    Prompt(String),
+    Command(interactive::HomeAction),
+}
+
+#[derive(Default)]
+struct TerminalChatState {
+    input: String,
+    command_selected: usize,
+    show_help: bool,
+    transcript: Vec<TranscriptEntry>,
+    pending: VecDeque<QueuedChatAction>,
+    busy: Option<String>,
+}
+
+impl TerminalChatState {
+    fn view<'a>(&'a self, choices: &'a [AgentChoice], model_status: &'a str) -> ChatHomeView<'a> {
+        ChatHomeView::new(
+            &self.input,
+            choices,
+            self.command_selected,
+            self.show_help,
+            model_status,
+            &self.transcript,
+            self.busy.as_deref(),
+        )
+    }
+
+    fn clear_input(&mut self) {
+        self.input.clear();
+        self.command_selected = 0;
+        self.show_help = false;
+    }
+
+    fn queue_action(&mut self, action: interactive::HomeAction) {
+        match action {
+            interactive::HomeAction::Submit(prompt) => {
+                self.clear_input();
+                self.transcript.push(TranscriptEntry::user(&prompt));
+                self.pending.push_back(QueuedChatAction::Prompt(prompt));
+            }
+            interactive::HomeAction::Empty => {}
+            other => {
+                self.clear_input();
+                self.pending.push_back(QueuedChatAction::Command(other));
+            }
+        }
+    }
+}
+
+enum ModelTurnResult {
+    Completed(Box<Result<SelfAgentRunOutcome, SelfAgentHostError>>),
+    Quit,
+}
+
+fn busy_label(tick: usize) -> String {
+    const FRAMES: [&str; 4] = ["Creating  ", "Creating .", "Creating ..", "Creating ..."];
+    FRAMES[tick % FRAMES.len()].to_owned()
+}
+
+async fn await_model_turn(
+    chat: &mut interactive::ChatSession,
+    self_agent: &mut SelfAgentHost,
+    state: &mut TerminalChatState,
+    choices: &[AgentChoice],
+    model_status: &str,
+    prompt: String,
+) -> Result<ModelTurnResult, CliError> {
+    let cancel = CancellationToken::new();
+    let request = self_agent.submit(prompt, cancel.clone());
+    tokio::pin!(request);
+    let mut tick = 0usize;
+    let mut cancel_requested = false;
+
+    loop {
+        tokio::select! {
+            result = &mut request => {
+                if cancel_requested {
+                    return Ok(ModelTurnResult::Quit);
+                }
+                return Ok(ModelTurnResult::Completed(Box::new(result)));
+            }
+            _ = tokio::time::sleep(Duration::from_millis(120)) => {
+                tick = tick.wrapping_add(1);
+                state.busy = Some(busy_label(tick));
+                if !cancel_requested {
+                    while let Some(key) = chat.try_read_key()? {
+                        let Some(action) = interactive::handle_chat_key(
+                            key,
+                            &mut state.input,
+                            &mut state.command_selected,
+                            &mut state.show_help,
+                            choices,
+                        ) else {
+                            continue;
+                        };
+                        if matches!(action, interactive::HomeAction::Quit) {
+                            cancel.cancel();
+                            cancel_requested = true;
+                        } else {
+                            state.queue_action(action);
+                        }
+                    }
+                }
+                chat.present_view(state.view(choices, model_status))?;
+            }
+        }
+    }
+}
+
 async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, CliError> {
     let mut self_agent = self_agent_host()?;
     let mut chat = interactive::ChatSession::enter()?;
-    let mut transcript = Vec::new();
-    let mut input = String::new();
-    let mut command_selected = 0usize;
-    let mut show_help = false;
-    let mut busy = None;
+    let mut state = TerminalChatState::default();
 
     loop {
         let choices = interactive::build_agent_choices(&registry);
         let model_status = self_agent
             .model_label()
             .unwrap_or_else(|_| "model unavailable".into());
-        chat.present_view(ChatHomeView::new(
-            &input,
-            &choices,
-            command_selected,
-            show_help,
-            &model_status,
-            &transcript,
-            busy.as_deref(),
-        ))?;
-
-        let Some(key) = chat.read_key()? else {
-            continue;
-        };
-        let Some(action) = interactive::handle_chat_key(
-            key,
-            &mut input,
-            &mut command_selected,
-            &mut show_help,
-            &choices,
-        ) else {
-            continue;
-        };
-
-        match action {
-            interactive::HomeAction::Quit => return Ok(ExitCode::SUCCESS),
-            interactive::HomeAction::Submit(prompt) => {
-                input.clear();
-                command_selected = 0;
-                show_help = false;
-                transcript.push(TranscriptEntry::user(&prompt));
-                busy = Some("Creating...".to_owned());
-                chat.present_view(ChatHomeView::new(
-                    &input,
-                    &choices,
-                    command_selected,
-                    show_help,
-                    &model_status,
-                    &transcript,
-                    busy.as_deref(),
-                ))?;
-
-                match self_agent.submit(prompt, CancellationToken::new()).await {
-                    Ok(outcome) => {
-                        let rendered = self_agent::render_outcome_transcript(&outcome)?;
-                        if rendered.is_empty() {
-                            transcript.push(TranscriptEntry::status("No response returned."));
-                        } else {
-                            transcript.push(TranscriptEntry::assistant(rendered));
-                        }
+        if let Some(queued) = state.pending.pop_front() {
+            match queued {
+                QueuedChatAction::Prompt(prompt) => {
+                    state.busy = Some(busy_label(0));
+                    chat.present_view(state.view(&choices, &model_status))?;
+                    match await_model_turn(
+                        &mut chat,
+                        &mut self_agent,
+                        &mut state,
+                        &choices,
+                        &model_status,
+                        prompt,
+                    )
+                    .await?
+                    {
+                        ModelTurnResult::Quit => return Ok(ExitCode::SUCCESS),
+                        ModelTurnResult::Completed(result) => match *result {
+                            Ok(outcome) => {
+                                let rendered = self_agent::render_outcome_transcript(&outcome)?;
+                                if rendered.is_empty() {
+                                    state
+                                        .transcript
+                                        .push(TranscriptEntry::status("No response returned."));
+                                } else {
+                                    state.transcript.push(TranscriptEntry::assistant(rendered));
+                                }
+                            }
+                            Err(error) => state
+                                .transcript
+                                .push(TranscriptEntry::error(error.to_string())),
+                        },
                     }
-                    Err(error) => transcript.push(TranscriptEntry::error(error.to_string())),
+                    state.busy = None;
                 }
-                busy = None;
-            }
-            interactive::HomeAction::Workspace(command) => {
-                let label = format!("/{command:?}");
-                drop(chat);
-                let mut rendered = Vec::new();
-                let result = render_workspace_command_to(&mut self_agent, command, &mut rendered);
-                chat = interactive::ChatSession::enter()?;
-                match result {
-                    Ok(()) => {
-                        let output =
-                            interactive::clean_transcript_text(&String::from_utf8_lossy(&rendered));
-                        if output.is_empty() {
-                            transcript.push(TranscriptEntry::status(format!("{label} completed")));
-                        } else {
-                            transcript.push(TranscriptEntry::status(format!("{label}\n{output}")));
-                        }
+                QueuedChatAction::Command(action) => match action {
+                    interactive::HomeAction::Quit => return Ok(ExitCode::SUCCESS),
+                    interactive::HomeAction::Submit(prompt) => {
+                        state.queue_action(interactive::HomeAction::Submit(prompt));
                     }
-                    Err(error) => transcript.push(TranscriptEntry::error(error.to_string())),
-                }
-            }
-            interactive::HomeAction::Empty => {}
-            interactive::HomeAction::PickAgent => {
-                drop(chat);
-                let selected = interactive::select_agent_tui(&choices, None)?;
-                chat = interactive::ChatSession::enter()?;
-                if let Some(agent) = selected {
-                    if agent.native_command.is_some() {
+                    interactive::HomeAction::Workspace(command) => {
+                        let label = format!("/{command:?}");
                         drop(chat);
-                        let status = launch_native_agent(&agent)?;
-                        chat = interactive::ChatSession::enter()?;
-                        if status == NativeLaunchStatus::Cancelled {
-                            return Ok(ExitCode::from(130));
-                        }
-                    } else {
-                        drop(chat);
-                        let result = run_adapter_prompt_shell(&registry, agent).await;
+                        let mut rendered = Vec::new();
+                        let result =
+                            render_workspace_command_to(&mut self_agent, command, &mut rendered);
                         chat = interactive::ChatSession::enter()?;
                         match result {
-                            Ok(()) => registry = discover_registry()?,
-                            Err(error) => {
-                                transcript.push(TranscriptEntry::error(error.to_string()))
+                            Ok(()) => {
+                                let output = interactive::clean_transcript_text(
+                                    &String::from_utf8_lossy(&rendered),
+                                );
+                                if output.is_empty() {
+                                    state.transcript.push(TranscriptEntry::status(format!(
+                                        "{label} completed"
+                                    )));
+                                } else {
+                                    state.transcript.push(TranscriptEntry::status(format!(
+                                        "{label}\n{output}"
+                                    )));
+                                }
+                            }
+                            Err(error) => state
+                                .transcript
+                                .push(TranscriptEntry::error(error.to_string())),
+                        }
+                    }
+                    interactive::HomeAction::Empty => {}
+                    interactive::HomeAction::PickAgent => {
+                        drop(chat);
+                        let selected = interactive::select_agent_tui(&choices, None)?;
+                        chat = interactive::ChatSession::enter()?;
+                        if let Some(agent) = selected {
+                            if agent.native_command.is_some() {
+                                drop(chat);
+                                let status = launch_native_agent(&agent)?;
+                                chat = interactive::ChatSession::enter()?;
+                                if status == NativeLaunchStatus::Cancelled {
+                                    return Ok(ExitCode::from(130));
+                                }
+                            } else {
+                                drop(chat);
+                                let result = run_adapter_prompt_shell(&registry, agent).await;
+                                chat = interactive::ChatSession::enter()?;
+                                match result {
+                                    Ok(()) => registry = discover_registry()?,
+                                    Err(error) => state
+                                        .transcript
+                                        .push(TranscriptEntry::error(error.to_string())),
+                                }
                             }
                         }
                     }
-                }
-            }
-            interactive::HomeAction::LaunchAgent(name) => {
-                let Some(agent) = choices.iter().find(|choice| choice.name == name) else {
-                    transcript.push(TranscriptEntry::error(format!(
-                        "unknown or unavailable agent `{name}`"
-                    )));
-                    continue;
-                };
-                if agent.native_command.is_some() {
-                    drop(chat);
-                    let status = launch_native_agent(agent)?;
-                    chat = interactive::ChatSession::enter()?;
-                    if status == NativeLaunchStatus::Cancelled {
-                        return Ok(ExitCode::from(130));
+                    interactive::HomeAction::LaunchAgent(name) => {
+                        let Some(agent) = choices.iter().find(|choice| choice.name == name) else {
+                            state.transcript.push(TranscriptEntry::error(format!(
+                                "unknown or unavailable agent `{name}`"
+                            )));
+                            continue;
+                        };
+                        if agent.native_command.is_some() {
+                            drop(chat);
+                            let status = launch_native_agent(agent)?;
+                            chat = interactive::ChatSession::enter()?;
+                            if status == NativeLaunchStatus::Cancelled {
+                                return Ok(ExitCode::from(130));
+                            }
+                        } else {
+                            drop(chat);
+                            let result = run_adapter_prompt_shell(&registry, agent.clone()).await;
+                            chat = interactive::ChatSession::enter()?;
+                            match result {
+                                Ok(()) => registry = discover_registry()?,
+                                Err(error) => state
+                                    .transcript
+                                    .push(TranscriptEntry::error(error.to_string())),
+                            }
+                        }
                     }
-                } else {
-                    drop(chat);
-                    let result = run_adapter_prompt_shell(&registry, agent.clone()).await;
-                    chat = interactive::ChatSession::enter()?;
-                    match result {
-                        Ok(()) => registry = discover_registry()?,
-                        Err(error) => transcript.push(TranscriptEntry::error(error.to_string())),
+                    interactive::HomeAction::Plugins(action) => {
+                        drop(chat);
+                        let result = plugin::run(
+                            &registry,
+                            plugin_command(action),
+                            false,
+                            &orchester_home(),
+                        );
+                        chat = interactive::ChatSession::enter()?;
+                        match result {
+                            Ok(outcome) if outcome.failed() => state
+                                .transcript
+                                .push(TranscriptEntry::error("plugin command failed")),
+                            Ok(_) => registry = discover_registry()?,
+                            Err(error) => state
+                                .transcript
+                                .push(TranscriptEntry::error(error.to_string())),
+                        }
                     }
-                }
+                    interactive::HomeAction::Help => state.show_help = true,
+                },
             }
-            interactive::HomeAction::Plugins(action) => {
-                drop(chat);
-                let result =
-                    plugin::run(&registry, plugin_command(action), false, &orchester_home());
-                chat = interactive::ChatSession::enter()?;
-                match result {
-                    Ok(outcome) if outcome.failed() => {
-                        transcript.push(TranscriptEntry::error("plugin command failed"))
-                    }
-                    Ok(_) => registry = discover_registry()?,
-                    Err(error) => transcript.push(TranscriptEntry::error(error.to_string())),
-                }
+            continue;
+        }
+
+        state.busy = None;
+        chat.present_view(state.view(&choices, &model_status))?;
+        let Some(key) = chat.read_key()? else {
+            continue;
+        };
+        if let Some(action) = interactive::handle_chat_key(
+            key,
+            &mut state.input,
+            &mut state.command_selected,
+            &mut state.show_help,
+            &choices,
+        ) {
+            if matches!(action, interactive::HomeAction::Quit) {
+                return Ok(ExitCode::SUCCESS);
             }
-            interactive::HomeAction::Help => show_help = true,
+            state.queue_action(action);
         }
     }
 }
@@ -838,4 +968,35 @@ enum CliError {
     SelfAgent(#[from] SelfAgentHostError),
     #[error(transparent)]
     Io(#[from] io::Error),
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn queued_prompt_is_recorded_before_a_busy_turn_starts() {
+        let mut state = TerminalChatState {
+            input: "next question".into(),
+            ..TerminalChatState::default()
+        };
+
+        state.queue_action(interactive::HomeAction::Submit("next question".into()));
+
+        assert!(state.input.is_empty());
+        assert_eq!(state.transcript.len(), 1);
+        assert_eq!(state.transcript[0].text, "next question");
+        assert!(matches!(
+            state.pending.front(),
+            Some(QueuedChatAction::Prompt(prompt)) if prompt == "next question"
+        ));
+    }
+
+    #[test]
+    fn busy_animation_cycles_without_growing_the_label() {
+        assert_eq!(busy_label(0), "Creating  ");
+        assert_eq!(busy_label(1), "Creating .");
+        assert_eq!(busy_label(4), "Creating  ");
+        assert!(busy_label(99).len() <= "Creating ...".len());
+    }
 }
