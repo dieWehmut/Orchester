@@ -922,8 +922,25 @@ fn open_root_capability(root: &Path) -> Result<Dir, GuardError> {
     let mut directory = Dir::open_ambient_dir(&anchor, cap_std::ambient_authority())
         .map_err(|source| map_io("open filesystem root", root, source))?;
     for component in components {
+        let component_path = Path::new(&component);
+        match directory.symlink_metadata(component_path) {
+            Ok(metadata) if metadata.is_symlink() => {
+                return Err(GuardError::LinkTraversal {
+                    path: root.to_path_buf(),
+                });
+            }
+            Ok(metadata) if !metadata.is_dir() => {
+                return Err(GuardError::NotDirectory {
+                    path: root.to_path_buf(),
+                });
+            }
+            Ok(_) => {}
+            Err(source) => {
+                return Err(map_io("inspect workspace root component", root, source));
+            }
+        }
         directory = directory
-            .open_dir_nofollow(Path::new(&component))
+            .open_dir_nofollow(component_path)
             .map_err(|source| map_io("open workspace root component", root, source))?;
     }
     Ok(directory)
