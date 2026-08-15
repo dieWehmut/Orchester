@@ -869,6 +869,94 @@ fn home_prompt_runs_governed_tools_until_the_model_returns_text() {
 }
 
 #[test]
+fn home_prompt_keeps_the_self_agent_session_open_for_multiple_turns() {
+    let root = temp_home("self-agent-multiple-turns");
+    let home = root.join("home");
+    let workspace = root.join("workspace");
+    std::fs::create_dir_all(&workspace).expect("create workspace");
+    let server = LoopbackResponses::start(vec![
+        serde_json::json!({
+            "status": "completed",
+            "output": [{
+                "type": "message",
+                "role": "assistant",
+                "content": [{"type": "output_text", "text": "first rendered answer"}]
+            }],
+            "usage": {"input_tokens": 2, "output_tokens": 3}
+        }),
+        serde_json::json!({
+            "status": "completed",
+            "output": [{
+                "type": "message",
+                "role": "assistant",
+                "content": [{"type": "output_text", "text": "second rendered answer"}]
+            }],
+            "usage": {"input_tokens": 5, "output_tokens": 7}
+        }),
+    ]);
+    write_user_config(
+        &home,
+        &format!(
+            r#"{{
+                "model_provider": "Loopback",
+                "model": "gpt-loopback",
+                "disable_response_storage": true,
+                "model_providers": {{
+                    "Loopback": {{
+                        "base_url": "{}",
+                        "api_key": "multi-turn-secret-canary",
+                        "wire_api": "responses",
+                        "requires_openai_auth": true
+                    }}
+                }}
+            }}"#,
+            server.base_url()
+        ),
+    );
+    let mut child = orchester()
+        .current_dir(&workspace)
+        .env("ORCHESTER_HOME", &home)
+        .env_remove("HTTP_PROXY")
+        .env_remove("HTTPS_PROXY")
+        .env_remove("ALL_PROXY")
+        .env_remove("http_proxy")
+        .env_remove("https_proxy")
+        .env_remove("all_proxy")
+        .env("NO_PROXY", "127.0.0.1,localhost")
+        .env("no_proxy", "127.0.0.1,localhost")
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("spawn interactive orchester");
+    child
+        .stdin
+        .as_mut()
+        .expect("stdin handle")
+        .write_all(b"first prompt\nsecond prompt\n/quit\n")
+        .expect("write two self-agent turns and quit");
+    drop(child.stdin.take());
+
+    let output = child.wait_with_output().expect("collect output");
+    let requests = server.finish();
+
+    assert!(output.status.success(), "stderr:\n{}", stderr(&output));
+    let out = stdout(&output);
+    assert!(out.contains("first rendered answer"), "output:\n{out}");
+    assert!(out.contains("second rendered answer"), "output:\n{out}");
+    assert_eq!(
+        out.matches("orchester>").count(),
+        3,
+        "the prompt was not rendered after each answer:\n{out}"
+    );
+    assert_eq!(requests.len(), 2, "expected two model requests");
+    assert!(String::from_utf8_lossy(&requests[0]).contains("first prompt"));
+    assert!(String::from_utf8_lossy(&requests[1]).contains("second prompt"));
+    assert!(!out.contains("multi-turn-secret-canary"));
+    let _ = std::fs::remove_dir_all(root);
+}
+
+#[test]
 fn run_records_session_metadata() {
     let home = temp_home("sessions");
     let run = orchester()

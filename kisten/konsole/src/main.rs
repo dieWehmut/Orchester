@@ -320,7 +320,7 @@ async fn run_line_interactive(mut registry: Registry) -> Result<ExitCode, CliErr
                 let outcome = self_agent.submit(prompt, CancellationToken::new()).await?;
                 let mut out = io::stdout().lock();
                 self_agent::render_outcome(&mut out, &outcome)?;
-                return Ok(ExitCode::SUCCESS);
+                interactive::render_line_continue_prompt(&mut out)?;
             }
             interactive::HomeAction::Empty => return Ok(ExitCode::from(2)),
         }
