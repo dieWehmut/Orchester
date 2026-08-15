@@ -11,7 +11,7 @@ use orchester_laufzeit::harness::provider::{
     HttpRequest, HttpResponse, HttpTransport, HttpTransportError,
 };
 use orchester_modell::{
-    LanguageModel, ModelError, ModelItem, ModelMessage, ModelRequest, ModelRole,
+    LanguageModel, ModelError, ModelEventSink, ModelItem, ModelMessage, ModelRequest, ModelRole,
 };
 use serde_json::{json, Value};
 use tokio_util::sync::CancellationToken;
@@ -35,6 +35,14 @@ struct CapturedRequest {
     endpoint: String,
     body: Value,
     authorization: Option<String>,
+}
+
+struct CollectingSink(Arc<Mutex<Vec<String>>>);
+
+impl ModelEventSink for CollectingSink {
+    fn text_delta(&self, delta: &str) {
+        self.0.lock().expect("sink lock").push(delta.to_owned());
+    }
 }
 
 impl FakeTransport {
@@ -126,6 +134,15 @@ fn success(text: &str) -> HttpResponse {
     .expect("bounded fixture")
 }
 
+fn streamed_success() -> HttpResponse {
+    HttpResponse::new(
+        200,
+        None,
+        b"event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"delta\":\"hello \"}\n\nevent: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"delta\":\"world\"}\n\nevent: response.completed\ndata: {\"type\":\"response.completed\",\"response\":{\"status\":\"completed\",\"output\":[{\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"hello world\"}]}]}}\n\n".to_vec(),
+    )
+    .expect("bounded SSE fixture")
+}
+
 fn authenticated_model(
     base_url: &str,
     transport: FakeTransport,
@@ -171,7 +188,53 @@ async fn performs_reusable_authenticated_responses_calls() {
         assert_eq!(body["reasoning"]["effort"], "ultra");
         assert_eq!(body["service_tier"], "default");
         assert_eq!(body["store"], false);
+        assert_eq!(body["stream"], false);
     }
+}
+
+#[tokio::test]
+async fn forwards_bounded_responses_text_deltas_and_requires_completion() {
+    let transport = FakeTransport::with_responses([Ok(streamed_success())]);
+    let model = authenticated_model("https://example.test/v1", transport.clone());
+    let deltas = Arc::new(Mutex::new(Vec::new()));
+
+    let response = model
+        .complete_with_events(
+            request("stream me"),
+            CancellationToken::new(),
+            Some(Arc::new(CollectingSink(Arc::clone(&deltas)))),
+        )
+        .await
+        .expect("streamed response");
+
+    assert_eq!(response.assistant_text, "hello world");
+    assert_eq!(*deltas.lock().expect("deltas lock"), ["hello ", "world"]);
+    let requests = transport.requests();
+    assert_eq!(requests.len(), 1);
+    assert_eq!(requests[0].1["stream"], true);
+}
+
+#[tokio::test]
+async fn rejects_streams_without_a_completed_event() {
+    let response = HttpResponse::new(
+        200,
+        None,
+        b"event: response.output_text.delta\ndata: {\"delta\":\"partial\"}\n\n".to_vec(),
+    )
+    .expect("bounded SSE fixture");
+    let model = authenticated_model(
+        "https://example.test/v1",
+        FakeTransport::with_responses([Ok(response)]),
+    );
+    let error = model
+        .complete_with_events(
+            request("incomplete"),
+            CancellationToken::new(),
+            Some(Arc::new(CollectingSink(Arc::new(Mutex::new(Vec::new()))))),
+        )
+        .await
+        .expect_err("missing completion should fail");
+    assert_eq!(error, ModelError::Protocol);
 }
 
 #[tokio::test]

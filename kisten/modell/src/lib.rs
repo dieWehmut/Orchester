@@ -20,6 +20,6 @@ pub use decoder::{
 };
 pub use scripted::{RequestSummary, ScriptedLlm};
 pub use types::{
-    LanguageModel, ModelError, ModelItem, ModelMessage, ModelRequest, ModelResponse, ModelRole,
-    ModelUsage, RetryAfter, RetryMetadata, ToolCall, ToolDefinition,
+    LanguageModel, ModelError, ModelEventSink, ModelItem, ModelMessage, ModelRequest,
+    ModelResponse, ModelRole, ModelUsage, RetryAfter, RetryMetadata, ToolCall, ToolDefinition,
 };

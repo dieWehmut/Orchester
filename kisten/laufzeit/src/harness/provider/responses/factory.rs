@@ -1,7 +1,8 @@
 use std::fmt;
+use std::sync::Arc;
 
 use async_trait::async_trait;
-use orchester_modell::{LanguageModel, ModelError, ModelRequest, ModelResponse};
+use orchester_modell::{LanguageModel, ModelError, ModelEventSink, ModelRequest, ModelResponse};
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
 
@@ -55,6 +56,20 @@ impl<T: HttpTransport + 'static> LanguageModel for ConfiguredResponsesModel<T> {
             return Err(ModelError::Protocol);
         }
         self.inner.complete(request, cancel).await
+    }
+
+    async fn complete_with_events(
+        &self,
+        request: ModelRequest,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+    ) -> Result<ModelResponse, ModelError> {
+        if request.model != self.profile.model || request.store != self.profile.store {
+            return Err(ModelError::Protocol);
+        }
+        self.inner
+            .complete_with_events(request, cancel, events)
+            .await
     }
 }
 

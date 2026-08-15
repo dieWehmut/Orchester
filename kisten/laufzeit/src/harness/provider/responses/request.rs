@@ -60,6 +60,22 @@ pub fn encode_responses_request(
     request: &ModelRequest,
     options: &ResponsesRequestOptions,
 ) -> Result<Vec<u8>, ResponsesRequestError> {
+    encode_responses_request_with_stream(request, options, false)
+}
+
+/// Encode a Responses request that asks the provider for Server-Sent Events.
+pub fn encode_responses_stream_request(
+    request: &ModelRequest,
+    options: &ResponsesRequestOptions,
+) -> Result<Vec<u8>, ResponsesRequestError> {
+    encode_responses_request_with_stream(request, options, true)
+}
+
+fn encode_responses_request_with_stream(
+    request: &ModelRequest,
+    options: &ResponsesRequestOptions,
+    stream: bool,
+) -> Result<Vec<u8>, ResponsesRequestError> {
     validate_plain_value(&request.model, MAX_MODEL_BYTES)
         .then_some(())
         .ok_or(ResponsesRequestError::InvalidModel)?;
@@ -83,7 +99,7 @@ pub fn encode_responses_request(
             .as_deref()
             .map(|effort| WireReasoning { effort }),
         store: request.store,
-        stream: false,
+        stream,
         service_tier: options.service_tier.as_deref(),
     };
 

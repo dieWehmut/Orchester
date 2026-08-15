@@ -7,7 +7,7 @@ use reqwest::redirect::Policy;
 use tokio_util::sync::CancellationToken;
 use url::Url;
 
-use super::{HttpRequest, HttpResponse, HttpTransport, HttpTransportError};
+use super::{HttpRequest, HttpResponse, HttpResponseStream, HttpTransport, HttpTransportError};
 
 const AGENTROUTER_RESPONSES_COMPAT_USER_AGENT: &str = concat!(
     "codex_cli_rs/",
@@ -36,27 +36,12 @@ impl ReqwestHttpTransport {
     }
 
     async fn send_inner(&self, request: HttpRequest) -> Result<HttpResponse, HttpTransportError> {
-        let endpoint = request.endpoint;
-        let body = request.body;
-        let authorization = request.authorization;
-        let timeout = request.timeout;
         let response_limit = request.response_limit;
-        let compatibility_user_agent = compatibility_user_agent(&endpoint);
-
-        let mut builder = self
-            .client
-            .post(endpoint)
-            .timeout(timeout)
-            .header(CONTENT_TYPE, "application/json")
-            .body(body);
-        if let Some(user_agent) = compatibility_user_agent {
-            builder = builder.header(USER_AGENT, user_agent);
-        }
-        if let Some(secret) = authorization {
-            builder = builder.bearer_auth(secret.expose_for_provider());
-        }
-
-        let response = builder.send().await.map_err(map_reqwest_error)?;
+        let response = self
+            .request_builder(&request)
+            .send()
+            .await
+            .map_err(map_reqwest_error)?;
         if response
             .content_length()
             .is_some_and(|length| length > response_limit as u64)
@@ -64,13 +49,7 @@ impl ReqwestHttpTransport {
             return Err(HttpTransportError::ResponseTooLarge);
         }
 
-        let status = response.status().as_u16();
-        let retry_after = response
-            .headers()
-            .get(RETRY_AFTER)
-            .and_then(|value| value.to_str().ok())
-            .and_then(|value| value.trim().parse::<u64>().ok())
-            .map(Duration::from_secs);
+        let (status, retry_after) = response_metadata(&response);
         let mut stream = response.bytes_stream();
         let mut body = Vec::new();
         while let Some(chunk) = stream.next().await {
@@ -82,6 +61,67 @@ impl ReqwestHttpTransport {
         }
         HttpResponse::new(status, retry_after, body)
     }
+
+    async fn send_stream_inner(
+        &self,
+        request: HttpRequest,
+    ) -> Result<HttpResponseStream, HttpTransportError> {
+        let response_limit = request.response_limit;
+        let response = self
+            .request_builder(&request)
+            .send()
+            .await
+            .map_err(map_reqwest_error)?;
+        if response
+            .content_length()
+            .is_some_and(|length| length > response_limit as u64)
+        {
+            return Err(HttpTransportError::ResponseTooLarge);
+        }
+
+        let (status, retry_after) = response_metadata(&response);
+        let chunks = futures::stream::try_unfold(
+            (response.bytes_stream(), 0usize),
+            move |(mut body, total)| async move {
+                let Some(chunk) = body.next().await else {
+                    return Ok(None);
+                };
+                let chunk = chunk.map_err(map_reqwest_error)?;
+                if chunk.len() > response_limit.saturating_sub(total) {
+                    return Err(HttpTransportError::ResponseTooLarge);
+                }
+                let next_total = total + chunk.len();
+                Ok(Some((chunk.to_vec(), (body, next_total))))
+            },
+        );
+        HttpResponseStream::new(status, retry_after, Box::pin(chunks))
+    }
+
+    fn request_builder(&self, request: &HttpRequest) -> reqwest::RequestBuilder {
+        let mut builder = self
+            .client
+            .post(request.endpoint.clone())
+            .timeout(request.timeout)
+            .header(CONTENT_TYPE, "application/json")
+            .body(request.body.clone());
+        if let Some(user_agent) = compatibility_user_agent(&request.endpoint) {
+            builder = builder.header(USER_AGENT, user_agent);
+        }
+        if let Some(secret) = &request.authorization {
+            builder = builder.bearer_auth(secret.expose_for_provider());
+        }
+        builder
+    }
+}
+
+fn response_metadata(response: &reqwest::Response) -> (u16, Option<Duration>) {
+    let retry_after = response
+        .headers()
+        .get(RETRY_AFTER)
+        .and_then(|value| value.to_str().ok())
+        .and_then(|value| value.trim().parse::<u64>().ok())
+        .map(Duration::from_secs);
+    (response.status().as_u16(), retry_after)
 }
 
 fn compatibility_user_agent(endpoint: &Url) -> Option<&'static str> {
@@ -112,6 +152,18 @@ impl HttpTransport for ReqwestHttpTransport {
             biased;
             _ = cancel.cancelled() => Err(HttpTransportError::Cancelled),
             result = self.send_inner(request) => result,
+        }
+    }
+
+    async fn send_stream(
+        &self,
+        request: HttpRequest,
+        cancel: CancellationToken,
+    ) -> Result<HttpResponseStream, HttpTransportError> {
+        tokio::select! {
+            biased;
+            _ = cancel.cancelled() => Err(HttpTransportError::Cancelled),
+            result = self.send_stream_inner(request) => result,
         }
     }
 }

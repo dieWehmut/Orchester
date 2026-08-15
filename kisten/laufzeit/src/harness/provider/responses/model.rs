@@ -3,7 +3,7 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use async_trait::async_trait;
-use orchester_modell::{LanguageModel, ModelError, ModelRequest, ModelResponse};
+use orchester_modell::{LanguageModel, ModelError, ModelEventSink, ModelRequest, ModelResponse};
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
 use url::Url;
@@ -13,7 +13,10 @@ use crate::harness::provider::{
     HttpRequest, HttpResponse, HttpTransport, HttpTransportError, MAX_HTTP_RESPONSE_BYTES,
 };
 
-use super::{decode_responses_response, encode_responses_request, ResponsesRequestOptions};
+use super::{
+    decode_responses_event_stream, decode_responses_response, encode_responses_request,
+    encode_responses_stream_request, ResponsesRequestOptions,
+};
 
 const MAX_TRANSIENT_TRANSPORT_ATTEMPTS: usize = 2;
 const TRANSIENT_TRANSPORT_RETRY_DELAY: Duration = Duration::from_millis(100);
@@ -113,6 +116,42 @@ impl<T: HttpTransport + 'static> LanguageModel for ResponsesLanguageModel<T> {
             }
         }
     }
+
+    async fn complete_with_events(
+        &self,
+        request: ModelRequest,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+    ) -> Result<ModelResponse, ModelError> {
+        let Some(events) = events else {
+            return self.complete(request, cancel).await;
+        };
+        if cancel.is_cancelled() {
+            return Err(ModelError::Cancelled);
+        }
+        let body = encode_responses_stream_request(&request, &self.options)
+            .map_err(|_| ModelError::Protocol)?;
+        let request = HttpRequest::new(self.endpoint.clone(), body, None)
+            .map_err(map_transport_error)?
+            .with_response_limit(MAX_HTTP_RESPONSE_BYTES)
+            .map_err(map_transport_error)?
+            .with_shared_authorization(self.authorization.clone());
+        let response = self
+            .transport
+            .send_stream(request, cancel.clone())
+            .await
+            .map_err(map_transport_error)?;
+        match response.status() {
+            200..=299 => decode_responses_event_stream(response, cancel, Some(events.as_ref()))
+                .await
+                .map_err(map_event_error),
+            401 => Err(ModelError::Authentication),
+            403 => Err(ModelError::Forbidden),
+            429 => Err(ModelError::rate_limited(response.retry_after())),
+            408 | 425 | 500..=599 => Err(ModelError::Transport),
+            _ => Err(ModelError::Protocol),
+        }
+    }
 }
 
 fn retryable_response_status(status: u16) -> bool {
@@ -144,6 +183,14 @@ fn map_transport_error(error: HttpTransportError) -> ModelError {
         HttpTransportError::InvalidRequest
         | HttpTransportError::InvalidResponse
         | HttpTransportError::ResponseTooLarge => ModelError::Protocol,
+    }
+}
+
+fn map_event_error(error: super::ResponsesResponseError) -> ModelError {
+    match error {
+        super::ResponsesResponseError::Cancelled => ModelError::Cancelled,
+        super::ResponsesResponseError::Transport => ModelError::Transport,
+        _ => ModelError::Protocol,
     }
 }
 

@@ -1,8 +1,10 @@
 use std::fmt;
+use std::pin::Pin;
 use std::sync::Arc;
 use std::time::Duration;
 
 use async_trait::async_trait;
+use futures::Stream;
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
 use url::{Host, Url};
@@ -128,6 +130,62 @@ pub struct HttpResponse {
     body: Vec<u8>,
 }
 
+/// A bounded response body delivered incrementally with its HTTP metadata.
+pub struct HttpResponseStream {
+    status: u16,
+    retry_after: Option<Duration>,
+    chunks: Pin<Box<dyn Stream<Item = Result<Vec<u8>, HttpTransportError>> + Send>>,
+}
+
+impl HttpResponseStream {
+    pub(crate) fn from_response(response: HttpResponse) -> Self {
+        let HttpResponse {
+            status,
+            retry_after,
+            body,
+        } = response;
+        Self {
+            status,
+            retry_after,
+            chunks: Box::pin(futures::stream::once(async move { Ok(body) })),
+        }
+    }
+
+    pub(crate) fn new(
+        status: u16,
+        retry_after: Option<Duration>,
+        chunks: Pin<Box<dyn Stream<Item = Result<Vec<u8>, HttpTransportError>> + Send>>,
+    ) -> Result<Self, HttpTransportError> {
+        if !(100..=599).contains(&status) {
+            return Err(HttpTransportError::InvalidResponse);
+        }
+        Ok(Self {
+            status,
+            retry_after: retry_after.map(|delay| delay.min(MAX_RETRY_AFTER)),
+            chunks,
+        })
+    }
+
+    pub fn status(&self) -> u16 {
+        self.status
+    }
+
+    pub fn retry_after(&self) -> Option<Duration> {
+        self.retry_after
+    }
+}
+
+impl Stream for HttpResponseStream {
+    type Item = Result<Vec<u8>, HttpTransportError>;
+
+    fn poll_next(
+        mut self: Pin<&mut Self>,
+        context: &mut std::task::Context<'_>,
+    ) -> std::task::Poll<Option<Self::Item>> {
+        self.chunks.as_mut().poll_next(context)
+    }
+}
+
 impl HttpResponse {
     pub fn new(
         status: u16,
@@ -182,6 +240,16 @@ pub trait HttpTransport: Send + Sync {
         request: HttpRequest,
         cancel: CancellationToken,
     ) -> Result<HttpResponse, HttpTransportError>;
+
+    async fn send_stream(
+        &self,
+        request: HttpRequest,
+        cancel: CancellationToken,
+    ) -> Result<HttpResponseStream, HttpTransportError> {
+        self.send(request, cancel)
+            .await
+            .map(HttpResponseStream::from_response)
+    }
 }
 
 fn valid_endpoint(endpoint: &Url) -> bool {

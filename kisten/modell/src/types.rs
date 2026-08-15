@@ -2,6 +2,7 @@ use async_trait::async_trait;
 use orchester_protokoll::CallId;
 use serde_json::Value;
 use std::fmt;
+use std::sync::Arc;
 use std::time::Duration;
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
@@ -287,6 +288,14 @@ impl ModelError {
     }
 }
 
+/// Receives provider-neutral text events during a model completion.
+///
+/// Implementations should keep this callback non-blocking. Provider adapters
+/// bound event payloads before they cross the model boundary.
+pub trait ModelEventSink: Send + Sync {
+    fn text_delta(&self, delta: &str);
+}
+
 /// Provider-neutral, loop-free single-call model interface.
 #[async_trait]
 pub trait LanguageModel: Send + Sync {
@@ -295,6 +304,26 @@ pub trait LanguageModel: Send + Sync {
         request: ModelRequest,
         cancel: CancellationToken,
     ) -> Result<ModelResponse, ModelError>;
+
+    /// Complete a request while optionally forwarding text events.
+    ///
+    /// Legacy providers only implement [`Self::complete`]. Their completed
+    /// assistant text is emitted once here so callers can use one event-aware
+    /// path without changing provider behavior.
+    async fn complete_with_events(
+        &self,
+        request: ModelRequest,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+    ) -> Result<ModelResponse, ModelError> {
+        let response = self.complete(request, cancel).await?;
+        if let Some(events) = events {
+            if !response.assistant_text.is_empty() {
+                events.text_delta(&response.assistant_text);
+            }
+        }
+        Ok(response)
+    }
 }
 
 struct Redacted;
@@ -302,5 +331,55 @@ struct Redacted;
 impl fmt::Debug for Redacted {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("<redacted>")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use async_trait::async_trait;
+    use std::sync::{Arc, Mutex};
+
+    struct LegacyModel;
+
+    #[async_trait]
+    impl LanguageModel for LegacyModel {
+        async fn complete(
+            &self,
+            _request: ModelRequest,
+            _cancel: CancellationToken,
+        ) -> Result<ModelResponse, ModelError> {
+            Ok(ModelResponse {
+                assistant_text: "legacy response".to_owned(),
+                tool_call: None,
+                usage: ModelUsage::default(),
+                opaque_items: Vec::new(),
+            })
+        }
+    }
+
+    struct CollectingSink(Arc<Mutex<Vec<String>>>);
+
+    impl ModelEventSink for CollectingSink {
+        fn text_delta(&self, delta: &str) {
+            self.0.lock().unwrap().push(delta.to_owned());
+        }
+    }
+
+    #[tokio::test]
+    async fn legacy_models_emit_final_text_once_through_event_api() {
+        let deltas = Arc::new(Mutex::new(Vec::new()));
+        let model = LegacyModel;
+        let response = model
+            .complete_with_events(
+                ModelRequest::test(),
+                CancellationToken::new(),
+                Some(Arc::new(CollectingSink(Arc::clone(&deltas)))),
+            )
+            .await
+            .expect("legacy completion should succeed");
+
+        assert_eq!(response.assistant_text, "legacy response");
+        assert_eq!(*deltas.lock().unwrap(), vec!["legacy response"]);
     }
 }
