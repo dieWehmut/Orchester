@@ -570,6 +570,7 @@ fn model_errors_expose_bounded_retry_metadata_without_provider_text() {
     for error in [
         authentication,
         rate_limited,
+        ModelError::Forbidden,
         ModelError::Transport,
         ModelError::Protocol,
     ] {

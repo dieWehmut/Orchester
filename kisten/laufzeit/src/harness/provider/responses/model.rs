@@ -88,7 +88,8 @@ impl<T: HttpTransport + 'static> LanguageModel for ResponsesLanguageModel<T> {
 fn decode_http_response(response: HttpResponse) -> Result<ModelResponse, ModelError> {
     match response.status() {
         200..=299 => decode_responses_response(response.body()).map_err(|_| ModelError::Protocol),
-        401 | 403 => Err(ModelError::Authentication),
+        401 => Err(ModelError::Authentication),
+        403 => Err(ModelError::Forbidden),
         429 => Err(ModelError::rate_limited(response.retry_after())),
         408 | 425 | 500..=599 => Err(ModelError::Transport),
         _ => Err(ModelError::Protocol),

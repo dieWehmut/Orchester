@@ -254,6 +254,8 @@ pub enum ModelError {
     ScriptExhausted,
     #[error("model authentication failed")]
     Authentication,
+    #[error("model access forbidden; check model permissions and endpoint")]
+    Forbidden,
     #[error("model rate limited")]
     RateLimited { retry_after: Option<RetryAfter> },
     #[error("model transport failed")]
@@ -278,6 +280,7 @@ impl ModelError {
             Self::Cancelled
             | Self::ScriptExhausted
             | Self::Authentication
+            | Self::Forbidden
             | Self::Transport
             | Self::Protocol => RetryMetadata::never(),
         }

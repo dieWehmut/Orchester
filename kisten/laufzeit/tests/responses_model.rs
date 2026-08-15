@@ -182,6 +182,10 @@ async fn classifies_http_and_transport_failures_without_provider_bodies() {
             ModelError::Authentication,
         ),
         (
+            Ok(HttpResponse::new(403, None, BODY_CANARY.into()).unwrap()),
+            ModelError::Forbidden,
+        ),
+        (
             Ok(HttpResponse::new(400, None, BODY_CANARY.into()).unwrap()),
             ModelError::Protocol,
         ),
