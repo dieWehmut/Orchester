@@ -256,11 +256,18 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
             interactive::HomeAction::Workspace(command) => {
                 let label = format!("/{command:?}");
                 drop(chat);
-                let result = render_workspace_command(&mut self_agent, command);
+                let mut rendered = Vec::new();
+                let result = render_workspace_command_to(&mut self_agent, command, &mut rendered);
                 chat = interactive::ChatSession::enter()?;
                 match result {
                     Ok(()) => {
-                        transcript.push(TranscriptEntry::status(format!("{label} completed")))
+                        let output =
+                            interactive::clean_transcript_text(&String::from_utf8_lossy(&rendered));
+                        if output.is_empty() {
+                            transcript.push(TranscriptEntry::status(format!("{label} completed")));
+                        } else {
+                            transcript.push(TranscriptEntry::status(format!("{label}\n{output}")));
+                        }
                     }
                     Err(error) => transcript.push(TranscriptEntry::error(error.to_string())),
                 }
@@ -739,64 +746,60 @@ fn render_workspace_command(
     self_agent: &mut SelfAgentHost,
     command: WorkspaceCommand,
 ) -> Result<(), CliError> {
+    let mut out = io::stdout().lock();
+    render_workspace_command_to(self_agent, command, &mut out)
+}
+
+fn render_workspace_command_to<W: Write>(
+    self_agent: &mut SelfAgentHost,
+    command: WorkspaceCommand,
+    out: &mut W,
+) -> Result<(), CliError> {
     match command {
         WorkspaceCommand::Status => {
             let status = self_agent.status()?;
-            let mut out = io::stdout().lock();
-            self_agent::render_status(&mut out, &status)?;
+            self_agent::render_status(out, &status)?;
         }
         WorkspaceCommand::Config => {
             let view = self_agent.config_view()?;
-            let mut out = io::stdout().lock();
-            self_agent::render_config(&mut out, &view)?;
+            self_agent::render_config(out, &view)?;
         }
         WorkspaceCommand::Permissions => {
             let permissions = self_agent.permissions()?;
-            let mut out = io::stdout().lock();
-            self_agent::render_permissions(&mut out, &permissions)?;
+            self_agent::render_permissions(out, &permissions)?;
         }
         WorkspaceCommand::Resume => {
             let catalog = self_agent.resume_catalog()?;
-            let mut out = io::stdout().lock();
-            self_agent::render_resume(&mut out, &catalog)?;
+            self_agent::render_resume(out, &catalog)?;
         }
         WorkspaceCommand::Model(ModelCommand::Show) => {
             let models = self_agent.model_catalog()?;
-            let mut out = io::stdout().lock();
-            self_agent::render_models(&mut out, &models)?;
+            self_agent::render_models(out, &models)?;
         }
         WorkspaceCommand::Model(ModelCommand::SelectProfile(name)) => {
             let selected = self_agent.select_model_profile(&name)?;
-            let mut out = io::stdout().lock();
-            self_agent::render_model_selection(&mut out, &selected)?;
+            self_agent::render_model_selection(out, &selected)?;
         }
         WorkspaceCommand::Model(ModelCommand::UseConfigured) => {
             let selected = self_agent.select_configured_model()?;
-            let mut out = io::stdout().lock();
-            self_agent::render_model_selection(&mut out, &selected)?;
+            self_agent::render_model_selection(out, &selected)?;
         }
         WorkspaceCommand::Credential(CredentialCommand::Login { provider }) => {
             let target = self_agent.credential_target(provider.as_deref())?;
-            {
-                let mut out = io::stdout().lock();
-                self_agent::render_credential_target(&mut out, &target)?;
-            }
+            self_agent::render_credential_target(out, &target)?;
             // The prompt writes to the same terminal, so the stdout lock is
             // released before asking and retaken to confirm.
             let Some(secret) = interactive::prompt_secret("API key")? else {
-                let mut out = io::stdout().lock();
                 writeln!(out, "cancelled; nothing was stored")?;
                 return Ok(());
             };
             let (update, wiring, config_path) = self_agent.store_credential(&target, secret)?;
-            let mut out = io::stdout().lock();
-            self_agent::render_credential_stored(&mut out, &update, &wiring, &config_path)?;
+            self_agent::render_credential_stored(out, &update, &wiring, &config_path)?;
         }
         WorkspaceCommand::Credential(CredentialCommand::Logout { provider }) => {
             let target = self_agent.credential_target(provider.as_deref())?;
             let removed = self_agent.clear_credential(&target.provider)?;
-            let mut out = io::stdout().lock();
-            self_agent::render_credential_cleared(&mut out, &target.provider, removed)?;
+            self_agent::render_credential_cleared(out, &target.provider, removed)?;
         }
     }
     Ok(())

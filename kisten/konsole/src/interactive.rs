@@ -1604,6 +1604,35 @@ fn sanitize_terminal_text(s: &str) -> String {
         .collect()
 }
 
+pub(crate) fn clean_transcript_text(s: &str) -> String {
+    let mut cleaned = String::new();
+    let mut chars = s.chars().peekable();
+    while let Some(character) = chars.next() {
+        if character == '\x1b' {
+            if matches!(chars.peek(), Some('[')) {
+                chars.next();
+                for terminator in chars.by_ref() {
+                    if ('@'..='~').contains(&terminator) {
+                        break;
+                    }
+                }
+            } else {
+                let _ = chars.next();
+            }
+            continue;
+        }
+        if character == '\r' {
+            continue;
+        }
+        if character.is_control() && character != '\n' && character != '\t' {
+            cleaned.extend(character.escape_default());
+        } else {
+            cleaned.push(character);
+        }
+    }
+    cleaned.trim().to_owned()
+}
+
 fn is_quit(input: &str) -> bool {
     matches!(input, "/quit" | "/exit" | "/q" | "quit" | "exit" | "q")
 }
@@ -1684,6 +1713,12 @@ mod tests {
             None
         );
         assert!(!show_help);
+    }
+
+    #[test]
+    fn clean_transcript_text_removes_styles_without_losing_lines() {
+        let text = format!("{BOLD}status{RESET}\nsecond\x1b[31m line{RESET}");
+        assert_eq!(clean_transcript_text(&text), "status\nsecond line");
     }
 
     #[test]
