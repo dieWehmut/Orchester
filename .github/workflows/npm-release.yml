@@ -484,15 +484,16 @@ jobs:
         run: |
           set -euo pipefail
           mapfile -t packages < <(
-            node --input-type=module <<'NODE'
-            import fs from 'node:fs';
-            const cli = JSON.parse(fs.readFileSync('npm/cli/package.json', 'utf8'));
-            for (const name of Object.keys(cli.optionalDependencies)) console.log(name);
-            for (const directory of fs.readdirSync('npm/plugins')) {
-              console.log(JSON.parse(fs.readFileSync(`npm/plugins/${directory}/package.json`, 'utf8')).name);
-            }
-            console.log(cli.name);
-            NODE
+            node --input-type=module -e '
+              import fs from "node:fs";
+              const cli = JSON.parse(fs.readFileSync("npm/cli/package.json", "utf8"));
+              for (const name of Object.keys(cli.optionalDependencies)) console.log(name);
+              for (const directory of fs.readdirSync("npm/plugins")) {
+                const manifest = JSON.parse(fs.readFileSync("npm/plugins/" + directory + "/package.json", "utf8"));
+                console.log(manifest.name);
+              }
+              console.log(cli.name);
+            '
           )
           [[ ${#packages[@]} -eq 10 ]]
           for package in "${packages[@]}"; do
