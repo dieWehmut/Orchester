@@ -63,7 +63,11 @@ jobs:
             node -e 'let body=""; process.stdin.on("data", chunk => body += chunk); process.stdin.on("end", () => { const metadata=JSON.parse(body); const expected=process.env.VERSION; for (const package of metadata.packages) if (package.version !== expected) throw new Error(`${package.name} is ${package.version}, not ${expected}`); });'
 
           if git rev-parse --verify --quiet "refs/tags/$TAG" >/dev/null; then
-            [[ $(git rev-list -n 1 "$TAG") == "$GITHUB_SHA" ]]
+            TAG_COMMIT=$(git rev-list -n 1 "$TAG")
+            if ! git diff --quiet "$TAG_COMMIT" "$GITHUB_SHA" -- . ':!.github/workflows/npm-release.yml'; then
+              echo "existing $TAG differs from the release commit outside npm-release.yml" >&2
+              exit 1
+            fi
           fi
 
   test:
@@ -300,7 +304,11 @@ jobs:
           set -euo pipefail
           git fetch --force --tags origin
           if git rev-parse --verify --quiet "refs/tags/$TAG" >/dev/null; then
-            [[ $(git rev-list -n 1 "$TAG") == "$GITHUB_SHA" ]]
+            TAG_COMMIT=$(git rev-list -n 1 "$TAG")
+            if ! git diff --quiet "$TAG_COMMIT" "$GITHUB_SHA" -- . ':!.github/workflows/npm-release.yml'; then
+              echo "existing $TAG differs from the release commit outside npm-release.yml" >&2
+              exit 1
+            fi
             exit 0
           fi
           git config user.name github-actions[bot]
