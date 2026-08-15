@@ -1275,11 +1275,7 @@ fn transcript_append_rejects_unpaired_result_without_partial_write() {
 #[test]
 fn transcript_text_is_sanitized_and_tool_arguments_reject_escaped_secrets() {
     let secret = "provider-transcript-secret";
-    let path = std::env::temp_dir().join(format!(
-        "orchester-transcript-secret-{}-{}",
-        std::process::id(),
-        NEXT_TEMP.fetch_add(1, Ordering::Relaxed)
-    ));
+    let path = temp_db("transcript-secret");
     let store = SqliteRunStore::open_with_terminal_secrets(
         &path,
         vec![SecretString::new(secret.to_owned().into_boxed_str())],
@@ -1316,7 +1312,7 @@ fn transcript_text_is_sanitized_and_tool_arguments_reject_escaped_secrets() {
             if text == "answer [REDACTED]"
     ));
     drop(store);
-    std::fs::remove_file(path).ok();
+    remove_temp_db(&path);
 }
 
 #[test]

@@ -14,7 +14,6 @@ fn latest_schema_contains_bounded_append_only_transcript_records() {
         std::process::id(),
         NEXT.fetch_add(1, Ordering::Relaxed)
     ));
-    std::fs::create_dir_all(&root).unwrap();
     let db = root.join("state.db");
     let store = SqliteRunStore::open(&db).unwrap();
     assert_eq!(store.schema_version().unwrap(), 8);

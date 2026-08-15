@@ -108,7 +108,6 @@ fn resume_rejects_tool_running_without_its_started_event() {
         std::process::id(),
         unix_now()
     ));
-    std::fs::create_dir_all(&directory).unwrap();
     let path = directory.join("state.db");
     let store = Arc::new(SqliteRunStore::open_with_terminal_secrets(&path, Vec::new()).unwrap());
     let allowed = allowed_run::create_allowed_run(&store, "resume-start-evidence");
@@ -164,7 +163,6 @@ fn resume_rejects_an_observed_step_without_terminal_evidence() {
         std::process::id(),
         unix_now()
     ));
-    std::fs::create_dir_all(&directory).unwrap();
     let path = directory.join("state.db");
     let store = SqliteRunStore::open(&path).unwrap();
     let run = store
@@ -261,7 +259,6 @@ fn tool_terminal_resume_requires_exact_event_observation_and_result_binding() {
         std::process::id(),
         unix_now()
     ));
-    std::fs::create_dir_all(&directory).unwrap();
     let path = directory.join("state.db");
     let store = Arc::new(SqliteRunStore::open_with_terminal_secrets(&path, Vec::new()).unwrap());
     let allowed = allowed_run::create_allowed_run(&store, "resume-terminal-evidence");
@@ -333,7 +330,6 @@ fn resume_rejects_audit_checkpoint_field_drift() {
         std::process::id(),
         unix_now()
     ));
-    std::fs::create_dir_all(&directory).unwrap();
     let path = directory.join("state.db");
     let store = Arc::new(SqliteRunStore::open_with_terminal_secrets(&path, Vec::new()).unwrap());
     let allowed = allowed_run::create_allowed_run(&store, "resume-audit-drift");
@@ -698,7 +694,6 @@ fn recorded_action_rejects_an_unbound_audit_sequence() {
         std::process::id(),
         unix_now()
     ));
-    std::fs::create_dir_all(&directory).unwrap();
     let path = directory.join("state.db");
     let store = SqliteRunStore::open(&path).unwrap();
     let run = store
@@ -836,7 +831,6 @@ fn resume_rejects_ready_allow_action_without_its_policy_event() {
             .unwrap()
             .as_nanos()
     ));
-    std::fs::create_dir_all(&directory).unwrap();
     let path = directory.join("state.db");
     let run_id = RunId::from("run-resume-policy-binding");
     {
@@ -919,7 +913,6 @@ fn action_resume_rejects_broken_model_and_hash_bindings() {
             .unwrap()
             .as_nanos()
     ));
-    std::fs::create_dir_all(&directory).unwrap();
     let path = directory.join("state.db");
     let run_id = RunId::from("run-resume-action-binding");
     {
@@ -1076,11 +1069,13 @@ fn interrupted_unknown_model_requires_manual_reconciliation() {
 fn interrupted_unknown_tool_requires_manual_reconciliation() {
     let store = Arc::new(SqliteRunStore::in_memory().unwrap());
     let allowed = allowed_run::create_allowed_run(&store, "resume-unknown-tool");
-    let audit_path = std::env::temp_dir().join(format!(
-        "orchester-resume-unknown-audit-{}-{}.jsonl",
-        std::process::id(),
-        unix_now()
-    ));
+    let audit_path = std::env::temp_dir()
+        .join(format!(
+            "orchester-resume-unknown-audit-{}-{}",
+            std::process::id(),
+            unix_now()
+        ))
+        .join("audit.jsonl");
     let audit = Arc::new(JsonlAuditSink::open(&audit_path).unwrap());
     let barrier = PreExecutionBarrier::new(store.clone(), audit.clone());
     let permit = barrier
@@ -1128,7 +1123,7 @@ fn interrupted_unknown_tool_requires_manual_reconciliation() {
     ));
     drop(barrier);
     drop(audit);
-    std::fs::remove_file(audit_path).ok();
+    std::fs::remove_dir_all(audit_path.parent().unwrap()).ok();
 }
 
 #[test]
@@ -1141,7 +1136,6 @@ fn approval_resume_points_distinguish_request_wait_and_capability_recovery() {
             .unwrap()
             .as_nanos()
     ));
-    std::fs::create_dir_all(&directory).unwrap();
     let path = directory.join("state.db");
     let store = std::sync::Arc::new(SqliteRunStore::open(&path).unwrap());
     let run = store
@@ -1276,11 +1270,13 @@ fn approval_resume_points_distinguish_request_wait_and_capability_recovery() {
 fn started_tool_returns_reconcile_resume_point_without_replay() {
     let store = Arc::new(SqliteRunStore::in_memory().unwrap());
     let allowed = allowed_run::create_allowed_run(&store, "resume-tool");
-    let audit_path = std::env::temp_dir().join(format!(
-        "orchester-resume-audit-{}-{}.jsonl",
-        std::process::id(),
-        unix_now()
-    ));
+    let audit_path = std::env::temp_dir()
+        .join(format!(
+            "orchester-resume-audit-{}-{}",
+            std::process::id(),
+            unix_now()
+        ))
+        .join("audit.jsonl");
     let audit = Arc::new(JsonlAuditSink::open(&audit_path).unwrap());
     let barrier = PreExecutionBarrier::new(store.clone(), audit.clone());
     let permit = barrier
@@ -1312,7 +1308,7 @@ fn started_tool_returns_reconcile_resume_point_without_replay() {
     ));
     drop(barrier);
     drop(audit);
-    std::fs::remove_file(audit_path).ok();
+    std::fs::remove_dir_all(audit_path.parent().unwrap()).ok();
 }
 
 fn unix_now() -> u64 {

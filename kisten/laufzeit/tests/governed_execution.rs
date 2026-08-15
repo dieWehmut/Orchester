@@ -41,6 +41,12 @@ fn temp_root(label: &str) -> PathBuf {
         NEXT_ROOT.fetch_add(1, Ordering::Relaxed)
     ));
     std::fs::create_dir_all(root.join("workspace/src")).expect("create workspace");
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        std::fs::set_permissions(&root, std::fs::Permissions::from_mode(0o700))
+            .expect("protect test root");
+    }
     root
 }
 

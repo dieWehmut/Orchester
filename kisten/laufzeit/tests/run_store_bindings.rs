@@ -20,7 +20,6 @@ fn temporary_database(label: &str) -> (PathBuf, PathBuf) {
         std::process::id(),
         NEXT.fetch_add(1, Ordering::Relaxed)
     ));
-    std::fs::create_dir_all(&root).unwrap();
     (root.clone(), root.join("state.db"))
 }
 
