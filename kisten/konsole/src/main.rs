@@ -18,12 +18,14 @@ use std::io::{self, IsTerminal, Read, Write};
 use std::path::PathBuf;
 use std::process::ExitCode;
 use std::process::{Command as ProcessCommand, Stdio};
+use std::sync::Arc;
 use std::time::Duration;
 
 use clap::Parser;
 
 use orchester_laufzeit::harness::service::SelfAgentRunOutcome;
 use orchester_laufzeit::{Conductor, ConductorError, SessionRecord, SessionStore};
+use orchester_modell::ModelEventSink;
 use orchester_protokoll::{Outcome, RunResult, Task};
 use orchester_verzeichnis::{standard_plugin_roots, PluginRootError, Registry};
 
@@ -34,6 +36,7 @@ use interactive::{
 };
 use process::{command_invocation, is_cancelled_status, resolve_command};
 use self_agent::{SelfAgentHost, SelfAgentHostError};
+use tokio::sync::mpsc;
 use tokio_util::sync::CancellationToken;
 
 /// Directory holding on-disk manifests, relative to the current working dir.
@@ -228,6 +231,41 @@ impl TerminalChatState {
         self.scroll_offset = 0;
     }
 
+    fn begin_assistant_transcript(&mut self) -> usize {
+        let index = self.transcript.len();
+        self.append_transcript(TranscriptEntry::assistant(String::new()));
+        index
+    }
+
+    fn append_assistant_delta(&mut self, index: usize, delta: &str) {
+        let Some(entry) = self.transcript.get_mut(index) else {
+            return;
+        };
+        if entry.role != interactive::TranscriptRole::Assistant {
+            return;
+        }
+        let delta = interactive::clean_transcript_delta(delta);
+        let remaining = orchester_modell::MAX_CONTENT_BYTES.saturating_sub(entry.text.len());
+        if remaining == 0 {
+            return;
+        }
+        let mut end = delta.len().min(remaining);
+        while end > 0 && !delta.is_char_boundary(end) {
+            end -= 1;
+        }
+        entry.text.push_str(&delta[..end]);
+        self.scroll_offset = 0;
+    }
+
+    fn replace_transcript(&mut self, index: usize, entry: TranscriptEntry) {
+        if let Some(current) = self.transcript.get_mut(index) {
+            *current = entry;
+            self.scroll_offset = 0;
+        } else {
+            self.append_transcript(entry);
+        }
+    }
+
     fn queue_action(&mut self, action: interactive::HomeAction) {
         match action {
             interactive::HomeAction::Submit(prompt) => {
@@ -248,6 +286,16 @@ impl TerminalChatState {
 enum ModelTurnResult {
     Completed(Box<Result<SelfAgentRunOutcome, SelfAgentHostError>>),
     Quit,
+}
+
+struct TtyEventSink {
+    sender: mpsc::UnboundedSender<String>,
+}
+
+impl ModelEventSink for TtyEventSink {
+    fn text_delta(&self, delta: &str) {
+        let _ = self.sender.send(delta.to_owned());
+    }
 }
 
 fn busy_label(tick: usize) -> String {
@@ -304,9 +352,12 @@ async fn await_model_turn(
     choices: &[AgentChoice],
     model_status: &str,
     prompt: String,
+    assistant_index: usize,
 ) -> Result<ModelTurnResult, CliError> {
     let cancel = CancellationToken::new();
-    let request = self_agent.submit(prompt, cancel.clone());
+    let (sender, mut deltas) = mpsc::unbounded_channel();
+    let sink: Arc<dyn ModelEventSink> = Arc::new(TtyEventSink { sender });
+    let request = self_agent.submit_with_events(prompt, cancel.clone(), Some(sink));
     tokio::pin!(request);
     let mut tick = 0usize;
     let mut cancel_requested = false;
@@ -317,7 +368,16 @@ async fn await_model_turn(
                 if cancel_requested {
                     return Ok(ModelTurnResult::Quit);
                 }
+                while let Ok(delta) = deltas.try_recv() {
+                    state.append_assistant_delta(assistant_index, &delta);
+                }
                 return Ok(ModelTurnResult::Completed(Box::new(result)));
+            }
+            delta = deltas.recv() => {
+                if let Some(delta) = delta {
+                    state.append_assistant_delta(assistant_index, &delta);
+                    chat.present_view(state.view(choices, model_status))?;
+                }
             }
             _ = tokio::time::sleep(Duration::from_millis(120)) => {
                 tick = tick.wrapping_add(1);
@@ -361,6 +421,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
         if let Some(queued) = state.pending.pop_front() {
             match queued {
                 QueuedChatAction::Prompt(prompt) => {
+                    let assistant_index = state.begin_assistant_transcript();
                     state.busy = Some(busy_label(0));
                     chat.present_view(state.view(&choices, &model_status))?;
                     match await_model_turn(
@@ -370,6 +431,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                         &choices,
                         &model_status,
                         prompt,
+                        assistant_index,
                     )
                     .await?
                     {
@@ -378,16 +440,21 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                             Ok(outcome) => {
                                 let rendered = self_agent::render_outcome_transcript(&outcome)?;
                                 if rendered.is_empty() {
-                                    state.append_transcript(TranscriptEntry::status(
-                                        "No response returned.",
-                                    ));
+                                    state.replace_transcript(
+                                        assistant_index,
+                                        TranscriptEntry::status("No response returned."),
+                                    );
                                 } else {
-                                    state.append_transcript(TranscriptEntry::assistant(rendered));
+                                    state.replace_transcript(
+                                        assistant_index,
+                                        TranscriptEntry::assistant(rendered),
+                                    );
                                 }
                             }
-                            Err(error) => {
-                                state.append_transcript(TranscriptEntry::error(error.to_string()))
-                            }
+                            Err(error) => state.replace_transcript(
+                                assistant_index,
+                                TranscriptEntry::error(error.to_string()),
+                            ),
                         },
                     }
                     state.busy = None;
@@ -1110,6 +1177,22 @@ mod tests {
                 interactive::HomeAction::Workspace(WorkspaceCommand::Status)
             ))
         ));
+    }
+
+    #[test]
+    fn streamed_deltas_update_one_assistant_transcript_entry() {
+        let mut state = TerminalChatState::default();
+
+        let assistant = state.begin_assistant_transcript();
+        state.append_assistant_delta(assistant, "hello ");
+        state.append_assistant_delta(assistant, "world");
+
+        assert_eq!(state.transcript.len(), 1);
+        assert_eq!(
+            state.transcript[assistant].role,
+            interactive::TranscriptRole::Assistant
+        );
+        assert_eq!(state.transcript[assistant].text, "hello world");
     }
 
     #[test]

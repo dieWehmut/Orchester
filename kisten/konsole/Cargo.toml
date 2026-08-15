@@ -15,6 +15,7 @@ orchester-protokoll = { workspace = true }
 orchester-vertrag = { workspace = true }
 orchester-verzeichnis = { workspace = true }
 orchester-laufzeit = { workspace = true }
+orchester-modell = { workspace = true }
 clap = { workspace = true }
 tokio = { workspace = true }
 tokio-util = { workspace = true }

@@ -1017,6 +1017,7 @@ dependencies = [
  "flate2",
  "futures",
  "orchester-laufzeit",
+ "orchester-modell",
  "orchester-protokoll",
  "orchester-vertrag",
  "orchester-verzeichnis",
