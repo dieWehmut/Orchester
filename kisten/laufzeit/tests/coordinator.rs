@@ -770,6 +770,8 @@ async fn finish_tool_is_persisted_for_governance_instead_of_completing_the_run()
 
 async fn continue_after_file_tool(label: &str, create_fixture: bool) -> GovernedToolOutcome {
     let path = temp_db(label);
+    let store =
+        Arc::new(SqliteRunStore::open_with_terminal_secrets(&path, Vec::new()).expect("store"));
     let workspace = path.parent().unwrap().join("workspace");
     std::fs::create_dir_all(workspace.join("src")).unwrap();
     if create_fixture {
@@ -794,8 +796,6 @@ async fn continue_after_file_tool(label: &str, create_fixture: bool) -> Governed
         },
         opaque_items: Vec::new(),
     };
-    let store =
-        Arc::new(SqliteRunStore::open_with_terminal_secrets(&path, Vec::new()).expect("store"));
     let coordinator = DurableCoordinator::with_clock(
         agent([Ok(first_response)]),
         store.clone(),
