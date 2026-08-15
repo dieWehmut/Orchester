@@ -91,25 +91,6 @@ fn compatibility_user_agent(endpoint: &Url) -> Option<&'static str> {
         .map(|_| AGENTROUTER_RESPONSES_COMPAT_USER_AGENT)
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn compatibility_user_agent_is_limited_to_agentrouter() {
-        let agentrouter = Url::parse("https://agentrouter.org/v1/responses").unwrap();
-        let ordinary = Url::parse("https://api.example.test/v1/responses").unwrap();
-        let lookalike = Url::parse("https://agentrouter.org.example.test/v1/responses").unwrap();
-
-        assert_eq!(
-            compatibility_user_agent(&agentrouter),
-            Some(AGENTROUTER_RESPONSES_COMPAT_USER_AGENT)
-        );
-        assert_eq!(compatibility_user_agent(&ordinary), None);
-        assert_eq!(compatibility_user_agent(&lookalike), None);
-    }
-}
-
 impl fmt::Debug for ReqwestHttpTransport {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
@@ -142,5 +123,24 @@ fn map_reqwest_error(error: reqwest::Error) -> HttpTransportError {
         HttpTransportError::InvalidRequest
     } else {
         HttpTransportError::Transport
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn compatibility_user_agent_is_limited_to_agentrouter() {
+        let agentrouter = Url::parse("https://agentrouter.org/v1/responses").unwrap();
+        let ordinary = Url::parse("https://api.example.test/v1/responses").unwrap();
+        let lookalike = Url::parse("https://agentrouter.org.example.test/v1/responses").unwrap();
+
+        assert_eq!(
+            compatibility_user_agent(&agentrouter),
+            Some(AGENTROUTER_RESPONSES_COMPAT_USER_AGENT)
+        );
+        assert_eq!(compatibility_user_agent(&ordinary), None);
+        assert_eq!(compatibility_user_agent(&lookalike), None);
     }
 }
