@@ -6,8 +6,8 @@ use orchester_laufzeit::harness::credentials::InMemoryCredentialStore;
 use orchester_laufzeit::harness::governance::PolicyEngine;
 use orchester_laufzeit::harness::run_store::{NewRun, RunStore, SqliteRunStore, Transition};
 use orchester_laufzeit::harness::service::{
-    load_self_agent_resume_catalog, SelfAgentResumeAvailability, SelfAgentResumeStep,
-    WorkspaceIdentitySnapshot,
+    load_self_agent_resume_catalog, resolve_self_agent_resume_handle, SelfAgentResumeAvailability,
+    SelfAgentResumeStep, WorkspaceIdentitySnapshot,
 };
 use orchester_protokoll::{StepId, StopReason, TurnId};
 
@@ -193,4 +193,43 @@ fn terminal_runs_do_not_hide_older_resumable_runs_from_the_bounded_query() {
     assert_eq!(catalog.entries[0].step, SelfAgentResumeStep::StartStep);
     assert!(!format!("{catalog:?}").contains("run-terminal-newer"));
     let _ = std::fs::remove_dir_all(workspace_root);
+}
+
+#[test]
+fn opaque_resume_handles_are_owner_and_workspace_scoped() {
+    let workspace_root = temp_workspace("handle-scope");
+    let other_workspace = temp_workspace("handle-other-workspace");
+    let state = state_database(&workspace_root);
+    let identity =
+        WorkspaceIdentitySnapshot::for_workspace(&workspace_root, "local-user").expect("identity");
+    let store = SqliteRunStore::open_with_terminal_secrets(&state, Vec::new()).expect("store");
+    create_run(
+        &store,
+        &identity,
+        "run-private-scoped",
+        "2026-07-31T00:00:00Z",
+    );
+    let config = ConfigLoader::test().load_user("{}").expect("config");
+    let catalog = load_self_agent_resume_catalog(
+        &config,
+        &InMemoryCredentialStore::default(),
+        &workspace_root,
+        &state,
+        "local-user",
+    )
+    .expect("catalog");
+    let handle = &catalog.entries[0].handle;
+
+    let resolved = resolve_self_agent_resume_handle(&store, &identity, handle).expect("resolved");
+    assert_eq!(resolved.0, "run-private-scoped");
+
+    let other_owner = WorkspaceIdentitySnapshot::for_workspace(&workspace_root, "other-user")
+        .expect("other owner");
+    assert!(resolve_self_agent_resume_handle(&store, &other_owner, handle).is_err());
+    let other_identity = WorkspaceIdentitySnapshot::for_workspace(&other_workspace, "local-user")
+        .expect("other workspace");
+    assert!(resolve_self_agent_resume_handle(&store, &other_identity, handle).is_err());
+
+    let _ = std::fs::remove_dir_all(workspace_root);
+    let _ = std::fs::remove_dir_all(other_workspace);
 }

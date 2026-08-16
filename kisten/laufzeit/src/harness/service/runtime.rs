@@ -9,7 +9,10 @@ use orchester_protokoll::{ActionId, AgentAction, CallId, PolicyDecision, RunId};
 use thiserror::Error;
 use tokio_util::sync::CancellationToken;
 
-use super::{SelfAgentService, SelfAgentServiceError, SelfAgentTurn};
+use super::{
+    resolve_self_agent_resume_handle, SelfAgentResumeTargetError, SelfAgentService,
+    SelfAgentServiceError, SelfAgentTurn,
+};
 use crate::harness::agent_loop::SelfAgentLoop;
 use crate::harness::audit::AuditSink;
 use crate::harness::coordinator::SystemCoordinatorClock;
@@ -80,6 +83,8 @@ pub enum SelfAgentRuntimeError {
     Service(#[from] SelfAgentServiceError),
     #[error(transparent)]
     Execution(#[from] GovernedExecutionError),
+    #[error(transparent)]
+    Resume(#[from] SelfAgentResumeTargetError),
     #[error("self-agent run was cancelled")]
     Cancelled,
 }
@@ -191,10 +196,42 @@ where
         cancel: CancellationToken,
         events: Option<Arc<dyn ModelEventSink>>,
     ) -> Result<SelfAgentRunOutcome, SelfAgentRuntimeError> {
-        let mut turn = self
+        let turn = self
             .service
             .start_with_events(prompt, cancel.clone(), events.clone())
             .await?;
+        self.drive_turn(turn, cancel, events).await
+    }
+
+    pub async fn resume(
+        &self,
+        handle: &str,
+        cancel: CancellationToken,
+    ) -> Result<SelfAgentRunOutcome, SelfAgentRuntimeError> {
+        self.resume_with_events(handle, cancel, None).await
+    }
+
+    pub async fn resume_with_events(
+        &self,
+        handle: &str,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+    ) -> Result<SelfAgentRunOutcome, SelfAgentRuntimeError> {
+        let identity = self.service.identity();
+        let run_id = resolve_self_agent_resume_handle(self.store(), &identity, handle)?;
+        let turn = self
+            .service
+            .continue_run_with_events(run_id, cancel.clone(), events.clone())
+            .await?;
+        self.drive_turn(turn, cancel, events).await
+    }
+
+    async fn drive_turn(
+        &self,
+        mut turn: SelfAgentTurn,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+    ) -> Result<SelfAgentRunOutcome, SelfAgentRuntimeError> {
         let mut tool_steps = Vec::new();
 
         loop {

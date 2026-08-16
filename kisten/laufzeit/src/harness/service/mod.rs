@@ -49,8 +49,9 @@ pub use permissions::{
     SelfAgentPermissionGovernance, SelfAgentPermissionRule, SelfAgentPermissionSnapshot,
 };
 pub use resume_catalog::{
-    load_self_agent_resume_catalog, SelfAgentResumeAvailability, SelfAgentResumeCatalog,
-    SelfAgentResumeCatalogError, SelfAgentResumeEntry, SelfAgentResumeStage, SelfAgentResumeStep,
+    load_self_agent_resume_catalog, resolve_self_agent_resume_handle, SelfAgentResumeAvailability,
+    SelfAgentResumeCatalog, SelfAgentResumeCatalogError, SelfAgentResumeEntry,
+    SelfAgentResumeStage, SelfAgentResumeStep, SelfAgentResumeTargetError,
 };
 pub use runtime::{
     SelfAgentOutcome, SelfAgentRunOutcome, SelfAgentRuntime, SelfAgentRuntimeError,

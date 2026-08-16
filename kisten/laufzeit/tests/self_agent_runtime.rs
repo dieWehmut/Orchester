@@ -5,11 +5,16 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use orchester_laufzeit::harness::agent_loop::{AgentLoopConfig, SelfAgentLoop};
 use orchester_laufzeit::harness::audit::JsonlAuditSink;
+use orchester_laufzeit::harness::config::ConfigLoader;
 use orchester_laufzeit::harness::context::{ContextAssembler, ContextLimits};
+use orchester_laufzeit::harness::credentials::InMemoryCredentialStore;
 use orchester_laufzeit::harness::executor::ToolExecutor;
 use orchester_laufzeit::harness::files::FileToolLimits;
 use orchester_laufzeit::harness::run_store::{RunStore, SqliteRunStore};
-use orchester_laufzeit::harness::service::{SelfAgentOutcome, SelfAgentRuntime, SelfAgentTurn};
+use orchester_laufzeit::harness::service::{
+    load_self_agent_resume_catalog, SelfAgentOutcome, SelfAgentResumeAvailability,
+    SelfAgentRuntime, SelfAgentTurn,
+};
 use orchester_modell::{
     LanguageModel, ModelError, ModelEventSink, ModelRequest, ModelResponse, ModelUsage, ScriptedLlm,
 };
@@ -419,6 +424,88 @@ async fn run_with_events_forwards_ordered_text_without_changing_tool_sequence() 
     );
     assert_eq!(audit.verify().expect("audit").entries, 1);
     drop(runtime);
+    drop(audit);
+    let _ = std::fs::remove_dir_all(root);
+}
+
+#[tokio::test]
+async fn resume_with_events_continues_the_selected_opaque_handle() {
+    let root = temp_root("resume-handle");
+    std::fs::write(
+        root.join("workspace/src/lib.rs"),
+        "pub const VALUE: u8 = 7;\n",
+    )
+    .expect("fixture");
+    let state_database = root.join("state/runs.db");
+    let store = Arc::new(
+        SqliteRunStore::open_with_terminal_secrets(&state_database, Vec::new()).expect("store"),
+    );
+    let audit = Arc::new(JsonlAuditSink::open(root.join("audit/events.jsonl")).expect("audit"));
+    let runtime = SelfAgentRuntime::new(
+        eventful_loop_engine([
+            Ok(tool_response(
+                "provider-call-read",
+                "read_file",
+                r#"{"path":"src/lib.rs","start_line":null,"end_line":null}"#,
+                2,
+                3,
+            )),
+            Ok(text_response("resumed inspection", 4, 5)),
+        ]),
+        Arc::clone(&store),
+        audit.clone(),
+        ToolExecutor::new(root.join("workspace"), FileToolLimits::default()).expect("executor"),
+        root.join("workspace"),
+        "local-user",
+    )
+    .expect("runtime");
+
+    let paused = runtime
+        .start("inspect the source", CancellationToken::new())
+        .await
+        .expect("paused run");
+    let paused_run_id = paused.run_id().clone();
+    let catalog = load_self_agent_resume_catalog(
+        &ConfigLoader::test().load_user("{}").expect("config"),
+        &InMemoryCredentialStore::default(),
+        root.join("workspace"),
+        &state_database,
+        "local-user",
+    )
+    .expect("catalog");
+    assert_eq!(catalog.entries.len(), 1);
+    assert_eq!(
+        catalog.entries[0].availability,
+        SelfAgentResumeAvailability::Ready
+    );
+    let handle = catalog.entries[0].handle.clone();
+    let deltas = Arc::new(std::sync::Mutex::new(Vec::new()));
+
+    let outcome = runtime
+        .resume_with_events(
+            &handle,
+            CancellationToken::new(),
+            Some(Arc::new(CollectingSink(Arc::clone(&deltas)))),
+        )
+        .await
+        .expect("resumed run");
+
+    assert_eq!(outcome.run_id(), &paused_run_id);
+    assert_eq!(outcome.final_turn().text(), Some("resumed inspection"));
+    assert_eq!(*deltas.lock().expect("sink lock"), ["resumed inspection"]);
+    let events = store
+        .events_owned(&paused_run_id, "local-user")
+        .expect("events");
+    assert_eq!(
+        events
+            .iter()
+            .filter(|event| matches!(event.kind, HarnessEventKind::RunCreated))
+            .count(),
+        1,
+        "resuming must not create a replacement run"
+    );
+    drop(runtime);
+    drop(store);
     drop(audit);
     let _ = std::fs::remove_dir_all(root);
 }

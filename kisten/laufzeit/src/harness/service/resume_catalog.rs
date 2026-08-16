@@ -102,6 +102,18 @@ pub enum SelfAgentResumeCatalogError {
     Io(#[source] std::io::Error),
 }
 
+#[derive(Debug, Error)]
+pub enum SelfAgentResumeTargetError {
+    #[error("selected self-agent run is not available in this workspace")]
+    Unavailable,
+    #[error("selected self-agent run requires approval before it can continue")]
+    ApprovalRequired,
+    #[error("selected self-agent run requires manual reconciliation before it can continue")]
+    ReconciliationRequired,
+    #[error(transparent)]
+    Store(#[from] StoreError),
+}
+
 /// Load resumable points for the current owner and workspace without creating
 /// a state database when one does not already exist.
 pub fn load_self_agent_resume_catalog<S: CredentialStore + ?Sized>(
@@ -134,6 +146,38 @@ pub fn load_self_agent_resume_catalog<S: CredentialStore + ?Sized>(
         MAX_RESUME_ENTRIES + 1,
     )?;
     project_resume_points(&workspace.project_id, points)
+}
+
+/// Resolve one public resume handle inside the exact store, owner, and
+/// workspace that will perform the continuation. Hidden or stale handles are
+/// deliberately indistinguishable from foreign handles.
+pub fn resolve_self_agent_resume_handle(
+    store: &SqliteRunStore,
+    workspace: &WorkspaceIdentitySnapshot,
+    handle: &str,
+) -> Result<RunId, SelfAgentResumeTargetError> {
+    if !valid_handle(handle) {
+        return Err(SelfAgentResumeTargetError::Unavailable);
+    }
+    let mut points = store.resume_points_owned_newest_first(
+        &workspace.owner_actor_id,
+        &workspace.project_id,
+        MAX_RESUME_ENTRIES + 1,
+    )?;
+    points.truncate(MAX_RESUME_ENTRIES);
+    let point = points
+        .into_iter()
+        .find(|point| opaque_handle(&workspace.project_id, &point.run_id) == handle)
+        .ok_or(SelfAgentResumeTargetError::Unavailable)?;
+    match classify(&point.next).0 {
+        SelfAgentResumeAvailability::Ready => Ok(point.run_id),
+        SelfAgentResumeAvailability::ApprovalRequired => {
+            Err(SelfAgentResumeTargetError::ApprovalRequired)
+        }
+        SelfAgentResumeAvailability::ReconciliationRequired => {
+            Err(SelfAgentResumeTargetError::ReconciliationRequired)
+        }
+    }
 }
 
 fn project_resume_points(
@@ -248,6 +292,14 @@ fn opaque_handle(project_id: &str, run_id: &RunId) -> String {
         .map(|byte| format!("{byte:02x}"))
         .collect::<String>();
     format!("{HANDLE_PREFIX}{encoded}")
+}
+
+fn valid_handle(handle: &str) -> bool {
+    handle.len() == HANDLE_PREFIX.len() + 32
+        && handle.starts_with(HANDLE_PREFIX)
+        && handle[HANDLE_PREFIX.len()..]
+            .bytes()
+            .all(|byte| byte.is_ascii_hexdigit())
 }
 
 fn hash_field(hasher: &mut Sha256, value: &[u8]) {
