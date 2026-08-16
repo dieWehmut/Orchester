@@ -433,7 +433,10 @@ fn resume_command_lists_an_opaque_durable_run_without_continuing_it() {
         out.contains("Resumable self-agent runs"),
         "resume output:\n{out}"
     );
-    assert!(out.contains("ready | start step"), "resume output:\n{out}");
+    assert!(
+        out.contains("unsupported | start step"),
+        "resume output:\n{out}"
+    );
     assert!(out.contains("r-"), "resume output:\n{out}");
     assert!(!out.contains("run-cli-secret-internal"));
     assert!(out.contains("no run was continued"));
