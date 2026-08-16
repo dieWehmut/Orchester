@@ -3,7 +3,7 @@
   "name": "opencode",
   "displayName": "OpenCode",
   "packageName": "@orchester/opencode",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "adapterManifest": "manifests/opencode.toml",
   "command": "opencode"
 }

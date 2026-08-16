@@ -3,7 +3,7 @@
   "name": "claude",
   "displayName": "Claude Code",
   "packageName": "@orchester/claude",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "adapterManifest": "manifests/claude.toml",
   "command": "claude"
 }

@@ -16,7 +16,7 @@ function repositoryPackage(name) {
   return verifyAgentPluginPackage({
     canonicalManifest: path.join(repositoryRoot, `manifeste/${name}.toml`),
     expectedName: `@orchester/${name}`,
-    expectedVersion: '0.1.0',
+    expectedVersion: '0.1.1',
     packageRoot: path.join(repositoryRoot, `npm/plugins/${name}`),
   });
 }
@@ -52,7 +52,7 @@ test('repository Claude package satisfies the locked pure-data contract', () => 
   const verified = verifyAgentPluginPackage({
     canonicalManifest,
     expectedName: '@orchester/claude',
-    expectedVersion: '0.1.0',
+    expectedVersion: '0.1.1',
     packageRoot,
   });
 
@@ -61,7 +61,7 @@ test('repository Claude package satisfies the locked pure-data contract', () => 
     command: 'claude',
     name: 'claude',
     packageName: '@orchester/claude',
-    version: '0.1.0',
+    version: '0.1.1',
   });
 });
 
@@ -71,7 +71,7 @@ test('repository Codex package satisfies the locked pure-data contract', () => {
     command: 'codex',
     name: 'codex',
     packageName: '@orchester/codex',
-    version: '0.1.0',
+    version: '0.1.1',
   });
 });
 
@@ -81,7 +81,7 @@ test('repository OpenCode package satisfies the locked pure-data contract', () =
     command: 'opencode',
     name: 'opencode',
     packageName: '@orchester/opencode',
-    version: '0.1.0',
+    version: '0.1.1',
   });
 });
 
@@ -102,7 +102,7 @@ test('lifecycle scripts, executable bins, and dependency graphs are rejected', (
         verifyAgentPluginPackage({
           canonicalManifest,
           expectedName: '@orchester/claude',
-          expectedVersion: '0.1.0',
+          expectedVersion: '0.1.1',
           packageRoot: candidate,
         });
       }),
@@ -115,7 +115,7 @@ test('descriptor identity, schema, and adapter path fail closed', () => {
     (descriptor) => { descriptor.schemaVersion = 2; },
     (descriptor) => { descriptor.name = 'codex'; },
     (descriptor) => { descriptor.packageName = '@orchester/codex'; },
-    (descriptor) => { descriptor.version = '0.1.1'; },
+    (descriptor) => { descriptor.version = '0.1.2'; },
     (descriptor) => { descriptor.adapterManifest = '../claude.toml'; },
     (descriptor) => { descriptor.command = 'claude --dangerous'; },
   ]) {
@@ -125,7 +125,7 @@ test('descriptor identity, schema, and adapter path fail closed', () => {
         verifyAgentPluginPackage({
           canonicalManifest,
           expectedName: '@orchester/claude',
-          expectedVersion: '0.1.0',
+          expectedVersion: '0.1.1',
           packageRoot: candidate,
         });
       }),
@@ -140,7 +140,7 @@ test('manifest drift and undeclared package members are rejected', () => {
       verifyAgentPluginPackage({
         canonicalManifest,
         expectedName: '@orchester/claude',
-        expectedVersion: '0.1.0',
+        expectedVersion: '0.1.1',
         packageRoot: candidate,
       });
     }),
@@ -152,7 +152,7 @@ test('manifest drift and undeclared package members are rejected', () => {
       verifyAgentPluginPackage({
         canonicalManifest,
         expectedName: '@orchester/claude',
-        expectedVersion: '0.1.0',
+        expectedVersion: '0.1.1',
         packageRoot: candidate,
       });
     }),
@@ -181,7 +181,7 @@ test('linked package members are rejected when the host permits links', (context
       verifyAgentPluginPackage({
         canonicalManifest,
         expectedName: '@orchester/claude',
-        expectedVersion: '0.1.0',
+        expectedVersion: '0.1.1',
         packageRoot: candidate,
       });
     });

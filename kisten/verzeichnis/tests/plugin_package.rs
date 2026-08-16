@@ -60,7 +60,7 @@ fn repository_claude_package_loads_as_a_validated_adapter() {
     assert_eq!(plugin.info().name(), "claude");
     assert_eq!(plugin.info().display_name(), "Claude Code");
     assert_eq!(plugin.info().package_name(), "@orchester/claude");
-    assert_eq!(plugin.info().version(), "0.1.0");
+    assert_eq!(plugin.info().version(), "0.1.1");
     assert_eq!(plugin.adapter().name(), "claude");
     assert_eq!(plugin.adapter().native_command(), Some("claude"));
     assert!(!format!("{plugin:?}").contains("stream-json"));

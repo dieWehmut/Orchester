@@ -94,7 +94,7 @@ test('target manifest contains exactly the unique supported targets', () => {
 
 test('meta package pins every platform package without lifecycle scripts', () => {
   assert.equal(packageJson.name, '@orchester/cli');
-  assert.equal(packageJson.version, '0.1.0');
+  assert.equal(packageJson.version, '0.1.1');
   assert.equal(packageJson.type, 'commonjs');
   assert.equal(packageJson.repository, 'https://github.com/dieWehmut/Orchester');
   assert.deepEqual(packageJson.engines, { node: '>=18' });
@@ -105,7 +105,7 @@ test('meta package pins every platform package without lifecycle scripts', () =>
   assert.deepEqual(
     packageJson.optionalDependencies,
     Object.fromEntries(
-      expectedTargets.map(({ packageName }) => [packageName, '0.1.0']),
+      expectedTargets.map(({ packageName }) => [packageName, '0.1.1']),
     ),
   );
 

@@ -22,7 +22,7 @@ fn plugin_install_materializes_a_validated_package_without_scripts() {
         .expect("install plugin");
 
     assert!(output.status.success(), "stderr:\n{}", stderr(&output));
-    assert!(stdout(&output).contains("Installed Claude Code 0.1.0"));
+    assert!(stdout(&output).contains("Installed Claude Code 0.1.1"));
     let installed = fixture.installed_plugin();
     assert!(installed.join("package.json").is_file());
     assert!(installed.join("orchester-plugin.json").is_file());
@@ -32,7 +32,7 @@ fn plugin_install_materializes_a_validated_package_without_scripts() {
     assert_eq!(receipt["schemaVersion"], 1);
     assert_eq!(receipt["name"], "claude");
     assert_eq!(receipt["packageName"], "@orchester/claude");
-    assert_eq!(receipt["version"], "0.1.0");
+    assert_eq!(receipt["version"], "0.1.1");
     assert_eq!(receipt["fingerprint"].as_str().unwrap().len(), 64);
     assert!(!receipt_source.contains(fixture.root().to_string_lossy().as_ref()));
     let args = fs::read_to_string(fixture.args_log()).unwrap();
@@ -42,7 +42,7 @@ fn plugin_install_materializes_a_validated_package_without_scripts() {
         "--no-audit",
         "--no-fund",
         "--pack-destination",
-        "@orchester/claude@0.1.0",
+        "@orchester/claude@0.1.1",
     ] {
         assert!(args.lines().any(|arg| arg == expected), "npm args:\n{args}");
     }
@@ -139,7 +139,7 @@ fn interactive_plugins_install_uses_the_validated_backend() {
 
     let output = child.wait_with_output().unwrap();
     assert!(output.status.success(), "stderr:\n{}", stderr(&output));
-    assert!(stdout(&output).contains("Installed Claude Code 0.1.0"));
+    assert!(stdout(&output).contains("Installed Claude Code 0.1.1"));
     assert!(fixture.installed_plugin().is_dir());
     assert!(fixture.ownership_receipt().is_file());
 }

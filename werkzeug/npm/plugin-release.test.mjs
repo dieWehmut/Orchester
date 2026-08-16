@@ -39,7 +39,7 @@ function fixture(t) {
 
 test('repository exposes the exact version-locked official plugin matrix', () => {
   const verified = verifyOfficialAgentPlugins({
-    expectedVersion: '0.1.0',
+    expectedVersion: '0.1.1',
     repositoryRoot,
   });
 
@@ -48,9 +48,9 @@ test('repository exposes the exact version-locked official plugin matrix', () =>
     packageName,
     version,
   })), [
-    { name: 'claude', packageName: '@orchester/claude', version: '0.1.0' },
-    { name: 'codex', packageName: '@orchester/codex', version: '0.1.0' },
-    { name: 'opencode', packageName: '@orchester/opencode', version: '0.1.0' },
+    { name: 'claude', packageName: '@orchester/claude', version: '0.1.1' },
+    { name: 'codex', packageName: '@orchester/codex', version: '0.1.1' },
+    { name: 'opencode', packageName: '@orchester/opencode', version: '0.1.1' },
   ]);
 });
 
@@ -60,7 +60,7 @@ test('release matrix rejects missing and unexpected plugin directories', (t) => 
   fs.mkdirSync(path.join(root, 'npm/plugins/foreign'));
 
   assert.throws(
-    () => verifyOfficialAgentPlugins({ expectedVersion: '0.1.0', repositoryRoot: root }),
+    () => verifyOfficialAgentPlugins({ expectedVersion: '0.1.1', repositoryRoot: root }),
     (error) => error?.code === 'ORCHESTER_PLUGIN_RELEASE_MATRIX',
   );
 });
@@ -69,7 +69,7 @@ test('release matrix version must match the CLI package', (t) => {
   const root = fixture(t);
 
   assert.throws(
-    () => verifyOfficialAgentPlugins({ expectedVersion: '0.1.1', repositoryRoot: root }),
+    () => verifyOfficialAgentPlugins({ expectedVersion: '0.1.2', repositoryRoot: root }),
     (error) => error?.code === 'ORCHESTER_PLUGIN_RELEASE_VERSION',
   );
 });
@@ -78,7 +78,7 @@ test('command line verifies the repository plugin matrix', () => {
   const result = spawnSync(process.execPath, [
     path.join(moduleDirectory, 'plugin-release.mjs'),
     '--version',
-    '0.1.0',
+    '0.1.1',
   ], { encoding: 'utf8', timeout: 10_000 });
 
   assert.equal(result.status, 0);
