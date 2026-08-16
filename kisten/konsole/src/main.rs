@@ -388,6 +388,11 @@ impl TerminalOverlay {
             actions,
             parent: None,
         };
+        overlay.view.selected = overlay
+            .actions
+            .iter()
+            .position(|action| matches!(action, OverlayAction::Theme(theme) if *theme == current))
+            .unwrap_or_default();
         overlay.refresh_theme_preview(current);
         overlay
     }
@@ -1702,6 +1707,7 @@ mod tests {
             overlay.actions.get(4),
             Some(OverlayAction::Theme(theme::Theme::LightColorblind))
         ));
+        assert_eq!(overlay.view.selected, 4);
     }
 
     #[test]
