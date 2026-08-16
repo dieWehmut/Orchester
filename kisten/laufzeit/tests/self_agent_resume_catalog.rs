@@ -7,7 +7,7 @@ use orchester_laufzeit::harness::governance::PolicyEngine;
 use orchester_laufzeit::harness::run_store::{NewRun, RunStore, SqliteRunStore, Transition};
 use orchester_laufzeit::harness::service::{
     load_self_agent_resume_catalog, resolve_self_agent_resume_handle, SelfAgentResumeAvailability,
-    SelfAgentResumeStep, WorkspaceIdentitySnapshot,
+    SelfAgentResumeStep, SelfAgentResumeTargetError, WorkspaceIdentitySnapshot,
 };
 use orchester_protokoll::{StepId, StopReason, TurnId};
 
@@ -94,7 +94,7 @@ fn reports_current_workspace_runs_newest_first_through_opaque_handles() {
     assert!(!first.entries[1].latest);
     assert_eq!(
         first.entries[0].availability,
-        SelfAgentResumeAvailability::Ready
+        SelfAgentResumeAvailability::Unsupported
     );
     assert_eq!(first.entries[0].step, SelfAgentResumeStep::StartStep);
     assert_eq!(
@@ -220,15 +220,27 @@ fn opaque_resume_handles_are_owner_and_workspace_scoped() {
     .expect("catalog");
     let handle = &catalog.entries[0].handle;
 
-    let resolved = resolve_self_agent_resume_handle(&store, &identity, handle).expect("resolved");
-    assert_eq!(resolved.0, "run-private-scoped");
+    assert_eq!(
+        catalog.entries[0].availability,
+        SelfAgentResumeAvailability::Unsupported
+    );
+    assert!(matches!(
+        resolve_self_agent_resume_handle(&store, &identity, handle),
+        Err(SelfAgentResumeTargetError::Unsupported)
+    ));
 
     let other_owner = WorkspaceIdentitySnapshot::for_workspace(&workspace_root, "other-user")
         .expect("other owner");
-    assert!(resolve_self_agent_resume_handle(&store, &other_owner, handle).is_err());
+    assert!(matches!(
+        resolve_self_agent_resume_handle(&store, &other_owner, handle),
+        Err(SelfAgentResumeTargetError::Unavailable)
+    ));
     let other_identity = WorkspaceIdentitySnapshot::for_workspace(&other_workspace, "local-user")
         .expect("other workspace");
-    assert!(resolve_self_agent_resume_handle(&store, &other_identity, handle).is_err());
+    assert!(matches!(
+        resolve_self_agent_resume_handle(&store, &other_identity, handle),
+        Err(SelfAgentResumeTargetError::Unavailable)
+    ));
 
     let _ = std::fs::remove_dir_all(workspace_root);
     let _ = std::fs::remove_dir_all(other_workspace);

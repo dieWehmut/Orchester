@@ -54,11 +54,12 @@ pub struct SelfAgentResumeEntry {
     pub latest: bool,
 }
 
-/// Whether the coordinator can inspect this point without an explicit human
-/// decision or an external-outcome reconciliation.
+/// Whether the current continuation path can execute this point, or which
+/// external decision blocks it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SelfAgentResumeAvailability {
     Ready,
+    Unsupported,
     ApprovalRequired,
     ReconciliationRequired,
 }
@@ -106,6 +107,8 @@ pub enum SelfAgentResumeCatalogError {
 pub enum SelfAgentResumeTargetError {
     #[error("selected self-agent run is not available in this workspace")]
     Unavailable,
+    #[error("selected self-agent run is not supported by this continuation path")]
+    Unsupported,
     #[error("selected self-agent run requires approval before it can continue")]
     ApprovalRequired,
     #[error("selected self-agent run requires manual reconciliation before it can continue")]
@@ -171,6 +174,7 @@ pub fn resolve_self_agent_resume_handle(
         .ok_or(SelfAgentResumeTargetError::Unavailable)?;
     match classify(&point.next).0 {
         SelfAgentResumeAvailability::Ready => Ok(point.run_id),
+        SelfAgentResumeAvailability::Unsupported => Err(SelfAgentResumeTargetError::Unsupported),
         SelfAgentResumeAvailability::ApprovalRequired => {
             Err(SelfAgentResumeTargetError::ApprovalRequired)
         }
@@ -217,23 +221,23 @@ fn project_resume_points(
 fn classify(next: &ResumeNext) -> (SelfAgentResumeAvailability, SelfAgentResumeStep) {
     match next {
         ResumeNext::StartStep => (
-            SelfAgentResumeAvailability::Ready,
+            SelfAgentResumeAvailability::Unsupported,
             SelfAgentResumeStep::StartStep,
         ),
         ResumeNext::StartModel { .. } => (
-            SelfAgentResumeAvailability::Ready,
+            SelfAgentResumeAvailability::Unsupported,
             SelfAgentResumeStep::StartModel,
         ),
         ResumeNext::ProcessModelOutput { .. } => (
-            SelfAgentResumeAvailability::Ready,
+            SelfAgentResumeAvailability::Unsupported,
             SelfAgentResumeStep::ProcessModelOutput,
         ),
         ResumeNext::EvaluatePolicy { .. } => (
-            SelfAgentResumeAvailability::Ready,
+            SelfAgentResumeAvailability::Unsupported,
             SelfAgentResumeStep::EvaluatePolicy,
         ),
         ResumeNext::PrepareExecution { .. } => (
-            SelfAgentResumeAvailability::Ready,
+            SelfAgentResumeAvailability::Unsupported,
             SelfAgentResumeStep::PrepareExecution,
         ),
         ResumeNext::StartNextStep => (
@@ -241,7 +245,7 @@ fn classify(next: &ResumeNext) -> (SelfAgentResumeAvailability, SelfAgentResumeS
             SelfAgentResumeStep::StartNextStep,
         ),
         ResumeNext::ContinueValidation { .. } => (
-            SelfAgentResumeAvailability::Ready,
+            SelfAgentResumeAvailability::Unsupported,
             SelfAgentResumeStep::ContinueValidation,
         ),
         ResumeNext::CreateApprovalRequest { .. } => (
@@ -318,28 +322,28 @@ mod tests {
         let cases = [
             (
                 ResumeNext::StartStep,
-                SelfAgentResumeAvailability::Ready,
+                SelfAgentResumeAvailability::Unsupported,
                 SelfAgentResumeStep::StartStep,
             ),
             (
                 ResumeNext::StartModel {
                     step_id: StepId::from("step"),
                 },
-                SelfAgentResumeAvailability::Ready,
+                SelfAgentResumeAvailability::Unsupported,
                 SelfAgentResumeStep::StartModel,
             ),
             (
                 ResumeNext::ProcessModelOutput {
                     call_id: CallId::from("call"),
                 },
-                SelfAgentResumeAvailability::Ready,
+                SelfAgentResumeAvailability::Unsupported,
                 SelfAgentResumeStep::ProcessModelOutput,
             ),
             (
                 ResumeNext::EvaluatePolicy {
                     action_id: ActionId::from("action"),
                 },
-                SelfAgentResumeAvailability::Ready,
+                SelfAgentResumeAvailability::Unsupported,
                 SelfAgentResumeStep::EvaluatePolicy,
             ),
             (
@@ -347,7 +351,7 @@ mod tests {
                     action_id: ActionId::from("action"),
                     call_id: CallId::from("call"),
                 },
-                SelfAgentResumeAvailability::Ready,
+                SelfAgentResumeAvailability::Unsupported,
                 SelfAgentResumeStep::PrepareExecution,
             ),
             (
@@ -360,7 +364,7 @@ mod tests {
                     step_id: None,
                     mutation_generation: 1,
                 },
-                SelfAgentResumeAvailability::Ready,
+                SelfAgentResumeAvailability::Unsupported,
                 SelfAgentResumeStep::ContinueValidation,
             ),
             (

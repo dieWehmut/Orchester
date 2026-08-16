@@ -369,6 +369,7 @@ fn policy_label(value: PolicyDecision) -> &'static str {
 fn resume_availability_label(value: SelfAgentResumeAvailability) -> &'static str {
     match value {
         SelfAgentResumeAvailability::Ready => "ready",
+        SelfAgentResumeAvailability::Unsupported => "unsupported",
         SelfAgentResumeAvailability::ApprovalRequired => "approval required",
         SelfAgentResumeAvailability::ReconciliationRequired => "reconciliation required",
     }

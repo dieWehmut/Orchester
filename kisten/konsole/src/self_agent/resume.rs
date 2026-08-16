@@ -42,6 +42,7 @@ fn render_entry(out: &mut impl Write, entry: &SelfAgentResumeEntry) -> io::Resul
 fn availability_name(value: SelfAgentResumeAvailability) -> &'static str {
     match value {
         SelfAgentResumeAvailability::Ready => "ready",
+        SelfAgentResumeAvailability::Unsupported => "unsupported",
         SelfAgentResumeAvailability::ApprovalRequired => "approval required",
         SelfAgentResumeAvailability::ReconciliationRequired => "reconciliation required",
     }
@@ -86,12 +87,22 @@ mod tests {
         let catalog = SelfAgentResumeCatalog {
             database_present: true,
             truncated: true,
-            entries: vec![SelfAgentResumeEntry {
-                handle: "r-opaque\x1b[31m".into(),
-                availability: SelfAgentResumeAvailability::ReconciliationRequired,
-                step: SelfAgentResumeStep::ManualReconciliation(SelfAgentResumeStage::ModelCall),
-                latest: true,
-            }],
+            entries: vec![
+                SelfAgentResumeEntry {
+                    handle: "r-opaque\x1b[31m".into(),
+                    availability: SelfAgentResumeAvailability::ReconciliationRequired,
+                    step: SelfAgentResumeStep::ManualReconciliation(
+                        SelfAgentResumeStage::ModelCall,
+                    ),
+                    latest: true,
+                },
+                SelfAgentResumeEntry {
+                    handle: "r-unsupported".into(),
+                    availability: SelfAgentResumeAvailability::Unsupported,
+                    step: SelfAgentResumeStep::StartStep,
+                    latest: false,
+                },
+            ],
         };
         let mut output = Vec::new();
 
@@ -101,6 +112,7 @@ mod tests {
         assert!(rendered.contains("Resumable self-agent runs"));
         assert!(rendered.contains("r-opaque\\u{1b}[31m"));
         assert!(rendered.contains("reconciliation required | manual reconciliation (model call)"));
+        assert!(rendered.contains("r-unsupported | unsupported | start step"));
         assert!(rendered.contains("showing the newest bounded entries only"));
         assert!(!rendered.contains("r-opaque\x1b[31m"));
         assert!(rendered.contains("no run was continued"));
