@@ -1092,15 +1092,36 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
     } = view;
     let status_rows = usize::from(height >= 2);
     let composer_rows = 1;
-    let header_rows = if height >= 5 { 2 } else { 0 };
-    let separator_rows = usize::from(height >= 5);
+    let full_panel_rows = chat_panel_line_count(width);
+    let full_panel = width >= 50
+        && full_panel_rows
+            .saturating_add(composer_rows)
+            .saturating_add(status_rows)
+            .saturating_add(1)
+            <= height;
+    let header_rows = if full_panel {
+        full_panel_rows
+    } else if height >= 5 {
+        2
+    } else {
+        0
+    };
+    let separator_rows = usize::from(
+        height
+            > header_rows
+                .saturating_add(composer_rows)
+                .saturating_add(status_rows)
+                .saturating_add(1),
+    );
     let content_rows = height
         .saturating_sub(header_rows)
         .saturating_sub(separator_rows)
         .saturating_sub(composer_rows)
         .saturating_sub(status_rows);
 
-    if header_rows > 0 {
+    if full_panel {
+        render_chat_panel(out, width, model_status)?;
+    } else if header_rows > 0 {
         render_compact_home_header(out, width, header_rows)?;
     }
     if separator_rows > 0 {
@@ -2579,6 +2600,45 @@ mod tests {
             plain.lines().count() <= 12,
             "transcript frame overflowed:\n{plain}"
         );
+    }
+
+    #[test]
+    fn wide_chat_keeps_the_startup_panel_after_transcript_activity() {
+        let transcript = vec![TranscriptEntry::assistant(
+            "The answer stays in this session.",
+        )];
+        let mut out = Vec::new();
+
+        render_chat_home_in_viewport(
+            &mut out,
+            ChatHomeView {
+                width: 100,
+                height: 44,
+                input: "follow-up",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "gpt-test",
+                transcript: &transcript,
+                busy: None,
+                scroll_offset: 0,
+            },
+        )
+        .unwrap();
+
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        assert!(
+            plain.contains(">_ Orchester"),
+            "the initial workspace panel must remain the stable top region:\n{plain}"
+        );
+        assert_eq!(
+            plain.lines().filter(|line| line.starts_with('+')).count(),
+            2,
+            "the full startup panel borders must remain visible:\n{plain}"
+        );
+        assert!(plain.contains("The answer stays in this session."));
+        assert!(plain.contains("> follow-up"));
+        assert!(plain.lines().count() <= 44, "frame overflowed:\n{plain}");
     }
 
     #[test]
