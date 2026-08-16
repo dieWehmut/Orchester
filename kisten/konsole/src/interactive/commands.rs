@@ -430,10 +430,6 @@ fn parse_plugin_action(input: &str) -> Option<PluginAction> {
 }
 
 #[cfg(test)]
-#[path = "../theme.rs"]
-mod theme_under_test;
-
-#[cfg(test)]
 mod tests {
     use super::*;
 

@@ -8,12 +8,13 @@ mod screen;
 mod secret;
 
 use crate::avatar;
+use crate::theme::{Theme, ThemePalette};
 use commands::{
     command_action, matching_commands, matching_delegate_commands, parse_home_action_selected,
 };
 pub use commands::{
     parse_home_action, parse_prompt_action, CredentialCommand, HomeAction, ModelCommand,
-    PluginAction, PromptAction, WorkspaceCommand,
+    PluginAction, PromptAction, ThemeCommand, WorkspaceCommand,
 };
 use crossterm::event::{
     self, Event as TerminalEvent, KeyCode, KeyEvent, KeyEventKind, KeyModifiers,
@@ -88,6 +89,7 @@ pub(crate) struct ChatHomeView<'a> {
     pub(crate) busy: Option<&'a str>,
     pub(crate) scroll_offset: usize,
     pub(crate) overlay: Option<&'a CommandOverlay>,
+    pub(crate) theme: Theme,
 }
 
 impl<'a> ChatHomeView<'a> {
@@ -112,6 +114,7 @@ impl<'a> ChatHomeView<'a> {
             busy,
             scroll_offset: 0,
             overlay: None,
+            theme: Theme::default(),
         }
     }
 
@@ -122,6 +125,11 @@ impl<'a> ChatHomeView<'a> {
 
     pub(crate) fn with_overlay(mut self, overlay: Option<&'a CommandOverlay>) -> Self {
         self.overlay = overlay;
+        self
+    }
+
+    pub(crate) fn with_theme(mut self, theme: Theme) -> Self {
+        self.theme = theme;
         self
     }
 }
@@ -1051,6 +1059,7 @@ fn render_chat_home<W: Write>(
             busy: None,
             scroll_offset: 0,
             overlay: None,
+            theme: Theme::default(),
         },
     )
 }
@@ -1083,6 +1092,7 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
         busy,
         scroll_offset,
         overlay,
+        theme,
     } = view;
     if height == 0 {
         return Ok(());
@@ -1103,6 +1113,7 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
                 busy,
                 scroll_offset,
                 overlay,
+                theme,
             },
         );
     }
@@ -1148,7 +1159,8 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
     let prompt_pad = " ".repeat(width.saturating_sub(2 + display_width(&prompt)));
     writeln!(
         out,
-        "\x1b[48;5;236m{CYAN}> {RESET}\x1b[48;5;236m{prompt_style}{prompt}{prompt_pad}{RESET}"
+        "\x1b[48;5;236m{}> {RESET}\x1b[48;5;236m{prompt_style}{prompt}{prompt_pad}{RESET}",
+        theme.palette().accent
     )?;
 
     let content_rows = height
@@ -1204,7 +1216,9 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
         busy,
         scroll_offset,
         overlay,
+        theme,
     } = view;
+    let palette = theme.palette();
     let status_rows = usize::from(height >= 2);
     let composer_rows = 1;
     let full_panel_rows = chat_panel_line_count(width);
@@ -1244,12 +1258,17 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
     }
 
     if let Some(overlay) = overlay {
-        render_command_overlay(out, overlay, width, content_rows)?;
+        render_command_overlay(out, overlay, width, content_rows, palette)?;
     } else if show_help {
         let busy_rows = usize::from(busy.is_some() && content_rows > 0);
         render_home_help(out, width, content_rows.saturating_sub(busy_rows))?;
         if let Some(busy) = busy {
-            writeln!(out, "{ORANGE}* {RESET}{}", sanitize_terminal_text(busy))?;
+            writeln!(
+                out,
+                "{}* {RESET}{}",
+                palette.accent,
+                sanitize_terminal_text(busy)
+            )?;
         }
     } else {
         let reserve_history_row = usize::from(!transcript.is_empty() && content_rows > 0);
@@ -1257,24 +1276,29 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
         let palette_rows = content_rows
             .saturating_sub(reserve_history_row)
             .saturating_sub(busy_rows);
-        let palette = if input.starts_with('/') {
+        let command_palette = if input.starts_with('/') {
             command_palette_lines(input, choices, command_selected, width, palette_rows)?
         } else {
             Vec::new()
         };
         let history_rows = content_rows
             .saturating_sub(busy_rows)
-            .saturating_sub(palette.len());
+            .saturating_sub(command_palette.len());
         render_scrolled_transcript(
             out,
-            &transcript_lines(width, transcript),
+            &transcript_lines(width, transcript, palette),
             history_rows,
             scroll_offset,
         )?;
         if let Some(busy) = busy {
-            writeln!(out, "{ORANGE}* {RESET}{}", sanitize_terminal_text(busy))?;
+            writeln!(
+                out,
+                "{}* {RESET}{}",
+                palette.accent,
+                sanitize_terminal_text(busy)
+            )?;
         }
-        for line in palette {
+        for line in command_palette {
             writeln!(out, "{line}")?;
         }
     }
@@ -1289,7 +1313,8 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
     let prompt_pad = " ".repeat(width.saturating_sub(2 + display_width(&prompt)));
     writeln!(
         out,
-        "\x1b[48;5;236m{CYAN}> {RESET}\x1b[48;5;236m{prompt_style}{prompt}{prompt_pad}{RESET}"
+        "\x1b[48;5;236m{}> {RESET}\x1b[48;5;236m{prompt_style}{prompt}{prompt_pad}{RESET}",
+        palette.accent
     )?;
 
     if status_rows > 0 {
@@ -1303,6 +1328,7 @@ fn render_command_overlay<W: Write>(
     overlay: &CommandOverlay,
     width: usize,
     max_rows: usize,
+    palette: ThemePalette,
 ) -> io::Result<()> {
     if max_rows == 0 {
         return Ok(());
@@ -1310,12 +1336,14 @@ fn render_command_overlay<W: Write>(
 
     let mut rows = Vec::new();
     rows.push(format!(
-        "{BOLD}{ORANGE}{}{RESET}",
+        "{BOLD}{}{}{RESET}",
+        palette.accent,
         truncate(&sanitize_terminal_text(&overlay.title), width)
     ));
     if !overlay.description.is_empty() {
         rows.push(format!(
-            "{DIM}{}{RESET}",
+            "{}{}{RESET}",
+            palette.dim,
             truncate(&sanitize_terminal_text(&overlay.description), width)
         ));
     }
@@ -1348,7 +1376,7 @@ fn render_command_overlay<W: Write>(
             width,
         );
         if index == overlay.selected {
-            rows.push(format!("{YELLOW}{line}{RESET}"));
+            rows.push(format!("{}{line}{RESET}", palette.selection));
         } else {
             rows.push(line);
         }
@@ -1362,7 +1390,8 @@ fn render_command_overlay<W: Write>(
     }
     if footer_rows > 0 {
         rows.push(format!(
-            "{DIM}{}{RESET}",
+            "{}{}{RESET}",
+            palette.dim,
             truncate(&sanitize_terminal_text(&overlay.footer), width)
         ));
     }
@@ -1373,15 +1402,19 @@ fn render_command_overlay<W: Write>(
     Ok(())
 }
 
-fn transcript_lines(width: usize, transcript: &[TranscriptEntry]) -> Vec<String> {
+fn transcript_lines(
+    width: usize,
+    transcript: &[TranscriptEntry],
+    palette: ThemePalette,
+) -> Vec<String> {
     transcript
         .iter()
         .flat_map(|entry| {
             let (prefix, style) = match entry.role {
-                TranscriptRole::User => ("> ", CYAN),
-                TranscriptRole::Assistant => ("", ORANGE),
-                TranscriptRole::Status => ("", DIM),
-                TranscriptRole::Error => ("error: ", RED),
+                TranscriptRole::User => ("> ", palette.accent),
+                TranscriptRole::Assistant => ("", palette.accent),
+                TranscriptRole::Status => ("", palette.dim),
+                TranscriptRole::Error => ("error: ", palette.warning),
             };
             let text = sanitize_terminal_text(&entry.text);
             let mut lines = text.lines().map(str::to_owned).collect::<Vec<_>>();
@@ -2712,6 +2745,7 @@ mod tests {
                 busy: None,
                 scroll_offset: 0,
                 overlay: None,
+                theme: Theme::default(),
             },
         )
         .unwrap();
@@ -2751,6 +2785,7 @@ mod tests {
                 busy: None,
                 scroll_offset: 0,
                 overlay: None,
+                theme: Theme::default(),
             },
         )
         .unwrap();
@@ -2783,6 +2818,7 @@ mod tests {
                 busy: Some("Creating..."),
                 scroll_offset: 0,
                 overlay: None,
+                theme: Theme::default(),
             },
         )
         .unwrap();
@@ -2818,6 +2854,7 @@ mod tests {
                 busy: None,
                 scroll_offset: 0,
                 overlay: None,
+                theme: Theme::default(),
             },
         )
         .unwrap();
@@ -2864,6 +2901,7 @@ mod tests {
                 busy: None,
                 scroll_offset: 0,
                 overlay: Some(&overlay),
+                theme: Theme::default(),
             },
         )
         .unwrap();
@@ -2911,6 +2949,40 @@ mod tests {
     }
 
     #[test]
+    fn command_overlay_uses_the_active_theme_palette() {
+        let overlay = CommandOverlay::new(
+            "Select theme",
+            "Preview",
+            vec![OverlayItem::new("Light mode", "light")],
+        );
+        let mut out = Vec::new();
+
+        render_chat_home_in_viewport(
+            &mut out,
+            ChatHomeView {
+                width: 80,
+                height: 18,
+                input: "",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "gpt-test",
+                transcript: &[],
+                busy: None,
+                scroll_offset: 0,
+                overlay: Some(&overlay),
+                theme: Theme::Light,
+            },
+        )
+        .unwrap();
+
+        let rendered = String::from_utf8(out).unwrap();
+        let palette = Theme::Light.palette();
+        assert!(rendered.contains(palette.accent));
+        assert!(rendered.contains(palette.selection));
+    }
+
+    #[test]
     fn busy_palette_and_transcript_are_visible_together() {
         let transcript = vec![TranscriptEntry::status("previous output")];
         let mut out = Vec::new();
@@ -2928,6 +3000,7 @@ mod tests {
                 busy: Some("Creating .."),
                 scroll_offset: 0,
                 overlay: None,
+                theme: Theme::default(),
             },
         )
         .unwrap();
@@ -2956,6 +3029,7 @@ mod tests {
                 busy: Some("Creating .."),
                 scroll_offset: 0,
                 overlay: None,
+                theme: Theme::default(),
             },
         )
         .unwrap();
@@ -2986,6 +3060,7 @@ mod tests {
                 busy: Some("Creating ..."),
                 scroll_offset: 0,
                 overlay: None,
+                theme: Theme::default(),
             },
         )
         .unwrap();
@@ -3017,6 +3092,7 @@ mod tests {
                     busy: None,
                     scroll_offset,
                     overlay: None,
+                    theme: Theme::default(),
                 },
             )
             .unwrap();
@@ -3159,6 +3235,7 @@ mod tests {
                 busy: None,
                 scroll_offset: 0,
                 overlay: None,
+                theme: Theme::default(),
             },
         )
         .unwrap();
@@ -3240,6 +3317,7 @@ mod tests {
                         busy: None,
                         scroll_offset: 0,
                         overlay: None,
+                        theme: Theme::default(),
                     },
                 )
                 .unwrap();
@@ -3303,6 +3381,7 @@ mod tests {
                 busy: None,
                 scroll_offset: 0,
                 overlay: None,
+                theme: Theme::default(),
             },
         )
         .unwrap();

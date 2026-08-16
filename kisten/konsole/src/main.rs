@@ -12,6 +12,7 @@ mod plugin;
 mod process;
 mod render;
 mod self_agent;
+mod theme;
 
 use std::collections::{HashMap, VecDeque};
 use std::io::{self, IsTerminal, Read, Write};
@@ -34,7 +35,7 @@ use orchester_verzeichnis::{standard_plugin_roots, PluginRootError, Registry};
 use args::{Cli, Command, PluginCommand, PluginInstallArgs, PluginRemoveArgs, PluginStatusArgs};
 use interactive::{
     AgentChoice, ChatHomeView, CommandOverlay, CredentialCommand, ModelCommand, OverlayInput,
-    OverlayItem, PluginAction, PromptAction, TranscriptEntry, WorkspaceCommand,
+    OverlayItem, PluginAction, PromptAction, ThemeCommand, TranscriptEntry, WorkspaceCommand,
 };
 use process::{command_invocation, is_cancelled_status, resolve_command};
 use self_agent::{SelfAgentHost, SelfAgentHostError};
@@ -202,6 +203,7 @@ enum OverlayAction {
     Close,
     ModelConfigured,
     ModelProfile(String),
+    Theme(theme::Theme),
 }
 
 #[derive(Debug, Clone)]
@@ -271,6 +273,26 @@ impl TerminalOverlay {
             actions,
         }
     }
+
+    fn themes(current: theme::Theme) -> Self {
+        let mut items = Vec::new();
+        let mut actions = Vec::new();
+        for candidate in theme::Theme::all() {
+            items.push(
+                OverlayItem::new(candidate.label(), candidate.name()).current(candidate == current),
+            );
+            actions.push(OverlayAction::Theme(candidate));
+        }
+        Self {
+            view: CommandOverlay::new(
+                "Select theme",
+                "Preview colors live; Esc restores the previous theme.",
+                items,
+            )
+            .with_footer("Up/Down preview  |  Enter save  |  Esc cancel"),
+            actions,
+        }
+    }
 }
 
 #[derive(Default)]
@@ -283,6 +305,8 @@ struct TerminalChatState {
     busy: Option<String>,
     scroll_offset: usize,
     overlay: Option<TerminalOverlay>,
+    active_theme: theme::Theme,
+    theme_before_overlay: Option<theme::Theme>,
 }
 
 impl TerminalChatState {
@@ -298,6 +322,7 @@ impl TerminalChatState {
         )
         .with_scroll(self.scroll_offset)
         .with_overlay(self.overlay.as_ref().map(|overlay| &overlay.view))
+        .with_theme(self.active_theme)
     }
 
     fn clear_input(&mut self) {
@@ -492,7 +517,10 @@ async fn await_model_turn(
 async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, CliError> {
     let mut self_agent = self_agent_host()?;
     let mut chat = interactive::ChatSession::enter()?;
-    let mut state = TerminalChatState::default();
+    let mut state = TerminalChatState {
+        active_theme: theme::load_user_theme(),
+        ..TerminalChatState::default()
+    };
 
     loop {
         let choices = interactive::build_agent_choices(&registry);
@@ -510,10 +538,34 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                 .as_mut()
                 .and_then(|overlay| interactive::handle_overlay_key(key, &mut overlay.view));
             let Some(overlay_input) = overlay_input else {
+                if let Some(theme) = state.overlay.as_ref().and_then(|overlay| {
+                    overlay
+                        .actions
+                        .get(overlay.view.selected)
+                        .and_then(|action| match action {
+                            OverlayAction::Theme(theme) => Some(*theme),
+                            _ => None,
+                        })
+                }) {
+                    state.active_theme = theme;
+                    if let Some(overlay) = state.overlay.as_mut() {
+                        for (index, item) in overlay.view.items.iter_mut().enumerate() {
+                            item.current = matches!(
+                                overlay.actions.get(index),
+                                Some(OverlayAction::Theme(candidate)) if *candidate == theme
+                            );
+                        }
+                    }
+                }
                 continue;
             };
             match overlay_input {
-                OverlayInput::Cancel => state.overlay = None,
+                OverlayInput::Cancel => {
+                    if let Some(previous) = state.theme_before_overlay.take() {
+                        state.active_theme = previous;
+                    }
+                    state.overlay = None;
+                }
                 OverlayInput::Confirm(index) => {
                     let action = state
                         .overlay
@@ -533,7 +585,9 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                     OverlayAction::ModelProfile(name) => {
                                         self_agent.select_model_profile(&name)?
                                     }
-                                    OverlayAction::Close => unreachable!(),
+                                    OverlayAction::Close | OverlayAction::Theme(_) => {
+                                        unreachable!()
+                                    }
                                 };
                                 self_agent::render_model_selection(&mut rendered, &choice)?;
                                 Ok(())
@@ -546,6 +600,20 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                 Err(error) => TerminalOverlay::error("/model", &error),
                             });
                         }
+                        OverlayAction::Theme(selected) => match theme::persist_user_theme(selected)
+                        {
+                            Ok(()) => {
+                                state.active_theme = selected;
+                                state.theme_before_overlay = None;
+                                state.overlay = Some(TerminalOverlay::report(
+                                    "/theme",
+                                    &format!("Theme saved\n{}", selected.label()),
+                                ));
+                            }
+                            Err(error) => {
+                                state.overlay = Some(TerminalOverlay::error("/theme", &error));
+                            }
+                        },
                     }
                 }
             }
@@ -605,6 +673,27 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                     Ok(catalog) => TerminalOverlay::models(&catalog),
                                     Err(error) => TerminalOverlay::error(&label, &error),
                                 });
+                            }
+                            WorkspaceCommand::Theme(ThemeCommand::Show) => {
+                                state.theme_before_overlay = Some(state.active_theme);
+                                state.overlay = Some(TerminalOverlay::themes(state.active_theme));
+                            }
+                            WorkspaceCommand::Theme(ThemeCommand::Select(name)) => {
+                                let selected = theme::Theme::from_stored_name(&name);
+                                match theme::persist_user_theme(selected) {
+                                    Ok(()) => {
+                                        state.active_theme = selected;
+                                        state.theme_before_overlay = None;
+                                        state.overlay = Some(TerminalOverlay::report(
+                                            "/theme",
+                                            &format!("Theme saved\n{}", selected.label()),
+                                        ));
+                                    }
+                                    Err(error) => {
+                                        state.overlay =
+                                            Some(TerminalOverlay::error("/theme", &error));
+                                    }
+                                }
                             }
                             WorkspaceCommand::Credential(command) => {
                                 drop(chat);
@@ -1325,6 +1414,26 @@ mod tests {
             .actions
             .iter()
             .all(|action| matches!(action, OverlayAction::Close)));
+    }
+
+    #[test]
+    fn theme_overlay_marks_exactly_the_persisted_theme_as_current() {
+        let overlay = TerminalOverlay::themes(theme::Theme::LightColorblind);
+
+        assert_eq!(
+            overlay
+                .view
+                .items
+                .iter()
+                .filter(|item| item.current)
+                .map(|item| item.detail.as_str())
+                .collect::<Vec<_>>(),
+            vec!["light-colorblind"]
+        );
+        assert!(matches!(
+            overlay.actions.get(4),
+            Some(OverlayAction::Theme(theme::Theme::LightColorblind))
+        ));
     }
 
     #[test]

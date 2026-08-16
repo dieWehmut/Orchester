@@ -1,3 +1,7 @@
+use std::fs;
+use std::io;
+use std::path::PathBuf;
+
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum Theme {
     #[default]
@@ -42,6 +46,18 @@ impl Theme {
             Self::LightColorblind => "light-colorblind",
             Self::DarkAnsi => "dark-ansi",
             Self::LightAnsi => "light-ansi",
+        }
+    }
+
+    pub(crate) const fn label(self) -> &'static str {
+        match self {
+            Self::Default => "Default",
+            Self::Dark => "Dark mode",
+            Self::Light => "Light mode",
+            Self::DarkColorblind => "Dark mode (colorblind-friendly)",
+            Self::LightColorblind => "Light mode (colorblind-friendly)",
+            Self::DarkAnsi => "Dark mode (ANSI colors only)",
+            Self::LightAnsi => "Light mode (ANSI colors only)",
         }
     }
 
@@ -92,6 +108,29 @@ impl Theme {
             },
         }
     }
+}
+
+const THEME_FILE: &str = "tui-theme";
+
+pub(crate) fn load_user_theme() -> Theme {
+    theme_path()
+        .and_then(|path| fs::read_to_string(path).ok())
+        .map(|name| Theme::from_stored_name(&name))
+        .unwrap_or_default()
+}
+
+pub(crate) fn persist_user_theme(theme: Theme) -> io::Result<()> {
+    let Some(path) = theme_path() else {
+        return Ok(());
+    };
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent)?;
+    }
+    fs::write(path, format!("{}\n", theme.name()))
+}
+
+fn theme_path() -> Option<PathBuf> {
+    orchester_laufzeit::harness::orchester_home().map(|home| home.join(THEME_FILE))
 }
 
 #[cfg(test)]
