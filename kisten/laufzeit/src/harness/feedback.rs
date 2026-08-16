@@ -11,7 +11,8 @@ use thiserror::Error;
 use crate::harness::secret_scan::is_format_character;
 
 const STREAM_GUARD_BYTES: usize = 64;
-const MAX_STREAM_BYTES: usize = 256 * 1024;
+const STREAM_SCAN_INTERVAL_BYTES: usize = 256;
+const MAX_STREAM_BYTES: usize = orchester_modell::MAX_CONTENT_BYTES;
 
 /// Order-independent identity of the exact secret redaction set shared by
 /// context assembly and durable persistence. The digest is never serialized
@@ -265,30 +266,54 @@ pub struct StreamingRedactor {
     raw: String,
     visible: String,
     guard_bytes: usize,
+    last_scan_bytes: usize,
 }
 
 impl StreamingRedactor {
     pub fn new(secrets: Vec<SecretString>) -> Self {
-        let guard_bytes = secrets
+        let sanitizer = secrets
+            .into_iter()
+            .fold(FeedbackEngine::default(), FeedbackEngine::with_secret);
+        Self::from_sanitizer(sanitizer)
+    }
+
+    pub(crate) fn from_sanitizer(sanitizer: FeedbackEngine) -> Self {
+        let guard_bytes = sanitizer
+            .secrets
             .iter()
             .map(|secret| secret.expose_secret().len())
             .max()
             .unwrap_or_default()
             .max(STREAM_GUARD_BYTES);
-        let sanitizer = secrets
-            .into_iter()
-            .fold(FeedbackEngine::default(), FeedbackEngine::with_secret);
         Self {
             sanitizer,
             raw: String::new(),
             visible: String::new(),
             guard_bytes,
+            last_scan_bytes: 0,
         }
+    }
+
+    /// Start a fresh provider response while retaining the exact sanitizer.
+    pub fn begin_response(&mut self) {
+        self.raw.clear();
+        self.visible.clear();
+        self.last_scan_bytes = 0;
     }
 
     /// Append raw provider text and return the full safe snapshot to render.
     pub fn push(&mut self, delta: &str) -> &str {
-        append_bounded(&mut self.raw, delta, MAX_STREAM_BYTES);
+        if !append_bounded(&mut self.raw, delta, MAX_STREAM_BYTES) {
+            return &self.visible;
+        }
+        let scan_delta = self.raw.len().saturating_sub(self.last_scan_bytes);
+        let first_scan_ready = self.last_scan_bytes == 0 && self.raw.len() > self.guard_bytes;
+        let interval_ready = scan_delta >= STREAM_SCAN_INTERVAL_BYTES;
+        let final_bounded_scan = self.raw.len() == MAX_STREAM_BYTES;
+        if !first_scan_ready && !interval_ready && !final_bounded_scan {
+            return &self.visible;
+        }
+        self.last_scan_bytes = self.raw.len();
         let sanitized = self.sanitizer.sanitize_text(&self.raw);
         if self.sanitizer.contains_sensitive_material(&sanitized) {
             return &self.visible;
@@ -307,6 +332,8 @@ impl StreamingRedactor {
         } else {
             sanitized
         };
+        self.raw.clear();
+        self.last_scan_bytes = 0;
         &self.visible
     }
 }
@@ -317,17 +344,22 @@ impl std::fmt::Debug for StreamingRedactor {
             .debug_struct("StreamingRedactor")
             .field("raw_bytes", &self.raw.len())
             .field("visible_bytes", &self.visible.len())
+            .field("last_scan_bytes", &self.last_scan_bytes)
             .finish_non_exhaustive()
     }
 }
 
-fn append_bounded(target: &mut String, value: &str, limit: usize) {
+fn append_bounded(target: &mut String, value: &str, limit: usize) -> bool {
     let remaining = limit.saturating_sub(target.len());
     let mut end = value.len().min(remaining);
     while end > 0 && !value.is_char_boundary(end) {
         end -= 1;
     }
+    if end == 0 {
+        return false;
+    }
     target.push_str(&value[..end]);
+    true
 }
 
 fn guarded_prefix_end(value: &str, guard_bytes: usize) -> usize {

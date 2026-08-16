@@ -40,8 +40,22 @@ struct CapturedRequest {
 struct CollectingSink(Arc<Mutex<Vec<String>>>);
 
 impl ModelEventSink for CollectingSink {
+    fn response_started(&self) {
+        self.0
+            .lock()
+            .expect("sink lock")
+            .push("<started>".to_owned());
+    }
+
     fn text_delta(&self, delta: &str) {
         self.0.lock().expect("sink lock").push(delta.to_owned());
+    }
+
+    fn response_completed(&self) {
+        self.0
+            .lock()
+            .expect("sink lock")
+            .push("<completed>".to_owned());
     }
 }
 
@@ -208,7 +222,10 @@ async fn forwards_bounded_responses_text_deltas_and_requires_completion() {
         .expect("streamed response");
 
     assert_eq!(response.assistant_text, "hello world");
-    assert_eq!(*deltas.lock().expect("deltas lock"), ["hello ", "world"]);
+    assert_eq!(
+        *deltas.lock().expect("deltas lock"),
+        ["<started>", "hello ", "world", "<completed>"]
+    );
     let requests = transport.requests();
     assert_eq!(requests.len(), 1);
     assert_eq!(requests[0].1["stream"], true);
@@ -226,15 +243,20 @@ async fn rejects_streams_without_a_completed_event() {
         "https://example.test/v1",
         FakeTransport::with_responses([Ok(response)]),
     );
+    let events = Arc::new(Mutex::new(Vec::new()));
     let error = model
         .complete_with_events(
             request("incomplete"),
             CancellationToken::new(),
-            Some(Arc::new(CollectingSink(Arc::new(Mutex::new(Vec::new()))))),
+            Some(Arc::new(CollectingSink(Arc::clone(&events)))),
         )
         .await
         .expect_err("missing completion should fail");
     assert_eq!(error, ModelError::Protocol);
+    assert_eq!(
+        *events.lock().expect("events lock"),
+        ["<started>", "partial"]
+    );
 }
 
 #[tokio::test]
@@ -256,7 +278,10 @@ async fn retries_a_transient_stream_status_before_emitting_deltas() {
         .expect("transient stream status should be retried");
 
     assert_eq!(response.assistant_text, "hello world");
-    assert_eq!(*deltas.lock().expect("deltas lock"), ["hello ", "world"]);
+    assert_eq!(
+        *deltas.lock().expect("deltas lock"),
+        ["<started>", "hello ", "world", "<completed>"]
+    );
     assert_eq!(transport.requests().len(), 2);
 }
 

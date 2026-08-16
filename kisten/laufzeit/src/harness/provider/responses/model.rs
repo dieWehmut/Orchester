@@ -171,9 +171,18 @@ impl<T: HttpTransport + 'static> LanguageModel for ResponsesLanguageModel<T> {
                 Ok(response) => {
                     return match response.status() {
                         200..=299 => {
-                            decode_responses_event_stream(response, cancel, Some(events.as_ref()))
-                                .await
-                                .map_err(map_event_error)
+                            events.response_started();
+                            let decoded = decode_responses_event_stream(
+                                response,
+                                cancel,
+                                Some(events.as_ref()),
+                            )
+                            .await
+                            .map_err(map_event_error);
+                            if decoded.is_ok() {
+                                events.response_completed();
+                            }
+                            decoded
                         }
                         401 => Err(ModelError::Authentication),
                         403 => Err(ModelError::Forbidden),

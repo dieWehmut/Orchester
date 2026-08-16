@@ -23,7 +23,7 @@ use crate::harness::approval::{
 };
 use crate::harness::audit::{AuditInput, AuditReceipt};
 use crate::harness::barrier::{ExecutionPermit, StartedTool};
-use crate::harness::feedback::{FeedbackEngine, SecretSetId};
+use crate::harness::feedback::{FeedbackEngine, SecretSetId, StreamingRedactor};
 use crate::harness::transcript::TranscriptRecord;
 
 mod database;
@@ -161,6 +161,10 @@ impl SqliteRunStore {
 
     pub(crate) fn secret_set_id(&self) -> SecretSetId {
         self.event_sanitizer.secret_set_id()
+    }
+
+    pub(crate) fn streaming_redactor(&self) -> StreamingRedactor {
+        StreamingRedactor::from_sanitizer(self.event_sanitizer.clone())
     }
 
     pub(crate) fn persist_approval_request(

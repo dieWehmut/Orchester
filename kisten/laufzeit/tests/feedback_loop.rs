@@ -295,6 +295,20 @@ fn streaming_redactor_fails_closed_for_incomplete_provider_token_prefixes() {
 }
 
 #[test]
+fn streaming_redactor_starts_a_new_response_after_finish() {
+    let mut redactor = StreamingRedactor::new(Vec::new());
+
+    redactor.push(&format!("first response {}", "a".repeat(80)));
+    let first = redactor.finish().to_owned();
+    redactor.push(&format!("second response {}", "b".repeat(80)));
+    let second = redactor.finish().to_owned();
+
+    assert!(first.contains("first response"));
+    assert!(second.contains("second response"));
+    assert!(!second.contains("first response"));
+}
+
+#[test]
 fn volatile_diagnostic_fragments_share_one_stable_fingerprint() {
     let engine = FeedbackEngine::default();
     let report = |summary: &str, stdout: &str| {

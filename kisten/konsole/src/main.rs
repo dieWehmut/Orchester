@@ -41,7 +41,7 @@ use interactive::{
 };
 use process::{command_invocation, is_cancelled_status, resolve_command};
 use self_agent::{SelfAgentHost, SelfAgentHostError};
-use tokio::sync::mpsc;
+use tokio::sync::watch;
 use tokio_util::sync::CancellationToken;
 use workspace_overlay::WorkspaceInspection;
 
@@ -552,18 +552,52 @@ enum ModelTurnResult {
     Quit,
 }
 
+fn model_turn_redactor(
+    result: Result<StreamingRedactor, SelfAgentHostError>,
+) -> Result<StreamingRedactor, ModelTurnResult> {
+    result.map_err(|error| ModelTurnResult::Completed(Box::new(Err(error))))
+}
+
 struct TtyEventSink {
-    sender: mpsc::UnboundedSender<String>,
+    sender: watch::Sender<String>,
     redactor: Mutex<StreamingRedactor>,
 }
 
+impl TtyEventSink {
+    fn publish(&self, snapshot: String) {
+        let changed = self.sender.borrow().as_str() != snapshot;
+        if changed {
+            self.sender.send_replace(snapshot);
+        }
+    }
+}
+
 impl ModelEventSink for TtyEventSink {
+    fn response_started(&self) {
+        let Ok(mut redactor) = self.redactor.lock() else {
+            return;
+        };
+        redactor.begin_response();
+        drop(redactor);
+        self.publish(String::new());
+    }
+
     fn text_delta(&self, delta: &str) {
         let Ok(mut redactor) = self.redactor.lock() else {
             return;
         };
         let snapshot = redactor.push(delta).to_owned();
-        let _ = self.sender.send(snapshot);
+        drop(redactor);
+        self.publish(snapshot);
+    }
+
+    fn response_completed(&self) {
+        let Ok(mut redactor) = self.redactor.lock() else {
+            return;
+        };
+        let snapshot = redactor.finish().to_owned();
+        drop(redactor);
+        self.publish(snapshot);
     }
 }
 
@@ -625,10 +659,14 @@ async fn await_model_turn(
     assistant_index: usize,
 ) -> Result<ModelTurnResult, CliError> {
     let cancel = CancellationToken::new();
-    let (sender, mut deltas) = mpsc::unbounded_channel();
+    let (sender, mut deltas) = watch::channel(String::new());
+    let redactor = match model_turn_redactor(self_agent.streaming_redactor()) {
+        Ok(redactor) => redactor,
+        Err(result) => return Ok(result),
+    };
     let sink: Arc<dyn ModelEventSink> = Arc::new(TtyEventSink {
         sender,
-        redactor: Mutex::new(self_agent.streaming_redactor()?),
+        redactor: Mutex::new(redactor),
     });
     let request = self_agent.submit_with_events(prompt, cancel.clone(), Some(sink));
     tokio::pin!(request);
@@ -641,13 +679,13 @@ async fn await_model_turn(
                 if cancel_requested {
                     return Ok(ModelTurnResult::Quit);
                 }
-                while let Ok(delta) = deltas.try_recv() {
-                    state.replace_assistant_snapshot(assistant_index, &delta);
-                }
+                let delta = deltas.borrow_and_update().clone();
+                state.replace_assistant_snapshot(assistant_index, &delta);
                 return Ok(ModelTurnResult::Completed(Box::new(result)));
             }
-            delta = deltas.recv() => {
-                if let Some(delta) = delta {
+            changed = deltas.changed() => {
+                if changed.is_ok() {
+                    let delta = deltas.borrow_and_update().clone();
                     state.replace_assistant_snapshot(assistant_index, &delta);
                     chat.present_view(state.view(choices, model_status))?;
                 }
@@ -1969,7 +2007,7 @@ mod tests {
 
     #[test]
     fn tty_event_sink_redacts_a_secret_split_across_provider_deltas() {
-        let (sender, mut snapshots) = mpsc::unbounded_channel();
+        let (sender, mut snapshots) = watch::channel(String::new());
         let sink = TtyEventSink {
             sender,
             redactor: Mutex::new(StreamingRedactor::new(vec![SecretString::new(
@@ -1979,11 +2017,61 @@ mod tests {
 
         sink.text_delta(&format!("safe {} stream-secret-", "x".repeat(80)));
         sink.text_delta("canary done");
+        sink.response_completed();
 
-        let first = snapshots.try_recv().expect("first safe snapshot");
-        let second = snapshots.try_recv().expect("second safe snapshot");
-        assert!(!first.contains("stream-secret-"));
-        assert!(!second.contains("stream-secret-canary"));
+        let latest = snapshots.borrow_and_update().clone();
+        assert!(!latest.contains("stream-secret-canary"));
+        assert!(latest.contains("[REDACTED]"));
+    }
+
+    #[test]
+    fn tty_event_sink_starts_each_model_response_with_fresh_state() {
+        let (sender, mut snapshots) = watch::channel(String::new());
+        let sink = TtyEventSink {
+            sender,
+            redactor: Mutex::new(StreamingRedactor::new(Vec::new())),
+        };
+
+        sink.response_started();
+        sink.text_delta(&format!("first response {}", "a".repeat(300)));
+        sink.response_completed();
+        sink.response_started();
+        sink.text_delta(&format!("second response {}", "b".repeat(300)));
+        sink.response_completed();
+
+        let latest = snapshots.borrow_and_update().clone();
+        assert!(latest.contains("second response"));
+        assert!(!latest.contains("first response"));
+    }
+
+    #[test]
+    fn tty_event_sink_keeps_only_the_latest_stream_snapshot() {
+        let (sender, mut snapshots) = watch::channel(String::new());
+        let sink = TtyEventSink {
+            sender,
+            redactor: Mutex::new(StreamingRedactor::new(Vec::new())),
+        };
+
+        sink.response_started();
+        for index in 0..64 {
+            sink.text_delta(&format!("chunk-{index:04} {}", "x".repeat(256)));
+        }
+        sink.response_completed();
+
+        assert!(snapshots.has_changed().expect("open snapshot channel"));
+        let latest = snapshots.borrow_and_update().clone();
+        assert!(latest.contains("chunk-0000"));
+        assert!(!snapshots.has_changed().expect("open snapshot channel"));
+    }
+
+    #[test]
+    fn streaming_redactor_initialization_error_stays_inside_the_chat_turn() {
+        let result = model_turn_redactor(Err(SelfAgentHostError::Initialization));
+
+        let Err(ModelTurnResult::Completed(error)) = result else {
+            panic!("initialization error escaped the chat turn");
+        };
+        assert!(matches!(*error, Err(SelfAgentHostError::Initialization)));
     }
 
     #[test]

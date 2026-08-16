@@ -293,7 +293,11 @@ impl ModelError {
 /// Implementations should keep this callback non-blocking. Provider adapters
 /// bound event payloads before they cross the model boundary.
 pub trait ModelEventSink: Send + Sync {
+    fn response_started(&self) {}
+
     fn text_delta(&self, delta: &str);
+
+    fn response_completed(&self) {}
 }
 
 /// Provider-neutral, loop-free single-call model interface.
@@ -316,11 +320,15 @@ pub trait LanguageModel: Send + Sync {
         cancel: CancellationToken,
         events: Option<Arc<dyn ModelEventSink>>,
     ) -> Result<ModelResponse, ModelError> {
+        if let Some(events) = events.as_ref() {
+            events.response_started();
+        }
         let response = self.complete(request, cancel).await?;
         if let Some(events) = events {
             if !response.assistant_text.is_empty() {
                 events.text_delta(&response.assistant_text);
             }
+            events.response_completed();
         }
         Ok(response)
     }
@@ -361,8 +369,16 @@ mod tests {
     struct CollectingSink(Arc<Mutex<Vec<String>>>);
 
     impl ModelEventSink for CollectingSink {
+        fn response_started(&self) {
+            self.0.lock().unwrap().push("<started>".to_owned());
+        }
+
         fn text_delta(&self, delta: &str) {
             self.0.lock().unwrap().push(delta.to_owned());
+        }
+
+        fn response_completed(&self) {
+            self.0.lock().unwrap().push("<completed>".to_owned());
         }
     }
 
@@ -380,6 +396,9 @@ mod tests {
             .expect("legacy completion should succeed");
 
         assert_eq!(response.assistant_text, "legacy response");
-        assert_eq!(*deltas.lock().unwrap(), vec!["legacy response"]);
+        assert_eq!(
+            *deltas.lock().unwrap(),
+            vec!["<started>", "legacy response", "<completed>"]
+        );
     }
 }

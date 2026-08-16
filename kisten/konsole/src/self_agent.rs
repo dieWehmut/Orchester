@@ -127,12 +127,12 @@ impl SelfAgentHost {
             .map_err(Into::into)
     }
 
-    pub fn streaming_redactor(&self) -> Result<StreamingRedactor, SelfAgentHostError> {
-        let config = self.selected_config()?;
-        let provider = config.resolve_model_profile()?.provider;
-        let credentials = KeyringCredentialStore::new();
-        let secrets = config.resolve_configured_secrets_for_provider(&provider, &credentials)?;
-        Ok(secrets.into_streaming_redactor())
+    pub fn streaming_redactor(&mut self) -> Result<StreamingRedactor, SelfAgentHostError> {
+        self.ensure_runtime()?;
+        self.runtime
+            .as_ref()
+            .map(ProductionSelfAgentRuntime::streaming_redactor)
+            .ok_or(SelfAgentHostError::Initialization)
     }
 
     pub fn model_label(&self) -> Result<String, SelfAgentHostError> {

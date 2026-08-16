@@ -14,6 +14,7 @@ use orchester_modell::{
     LanguageModel, ModelError, ModelEventSink, ModelRequest, ModelResponse, ModelUsage, ScriptedLlm,
 };
 use orchester_protokoll::{AgentAction, HarnessEventKind, PolicyDecision};
+use secrecy::SecretString;
 use tokio_util::sync::CancellationToken;
 
 struct EventfulModel {
@@ -152,6 +153,39 @@ fn runtime(
     )
     .expect("runtime");
     (runtime, audit)
+}
+
+#[test]
+fn runtime_streaming_redactor_uses_the_durable_secret_snapshot() {
+    let root = temp_root("streaming-secrets");
+    let secret = "runtime-provider-secret";
+    let store = Arc::new(
+        SqliteRunStore::open_with_terminal_secrets(
+            root.join("state/runs.db"),
+            vec![SecretString::new(secret.to_owned().into_boxed_str())],
+        )
+        .expect("store"),
+    );
+    let audit = Arc::new(JsonlAuditSink::open(root.join("audit/events.jsonl")).expect("audit"));
+    let runtime = SelfAgentRuntime::new(
+        loop_engine(std::iter::empty()),
+        store,
+        audit.clone(),
+        ToolExecutor::new(root.join("workspace"), FileToolLimits::default()).expect("executor"),
+        root.join("workspace"),
+        "local-user",
+    )
+    .expect("runtime");
+
+    let mut redactor = runtime.streaming_redactor();
+    redactor.push(&format!("safe {} {secret}", "x".repeat(80)));
+    let visible = redactor.finish().to_owned();
+
+    assert!(!visible.contains(secret));
+    assert!(visible.contains("[REDACTED]"));
+    drop(runtime);
+    drop(audit);
+    let _ = std::fs::remove_dir_all(root);
 }
 
 #[tokio::test]

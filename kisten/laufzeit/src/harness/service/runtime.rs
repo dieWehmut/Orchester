@@ -15,6 +15,7 @@ use crate::harness::audit::AuditSink;
 use crate::harness::coordinator::SystemCoordinatorClock;
 use crate::harness::execution::{GovernedExecution, GovernedExecutionError, GovernedToolOutcome};
 use crate::harness::executor::ToolExecutor;
+use crate::harness::feedback::StreamingRedactor;
 use crate::harness::run_store::SqliteRunStore;
 
 pub use outcome::{SelfAgentRunOutcome, SelfAgentToolStep};
@@ -125,6 +126,10 @@ where
 
     pub fn store(&self) -> &Arc<SqliteRunStore> {
         self.service.store()
+    }
+
+    pub fn streaming_redactor(&self) -> StreamingRedactor {
+        self.store().streaming_redactor()
     }
 
     pub async fn start(
