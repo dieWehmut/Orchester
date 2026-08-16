@@ -792,7 +792,7 @@ pub fn render_agent_table<W: Write>(
     writeln!(out)?;
     writeln!(
         out,
-        "{DIM}Commands: /agent switch, /model choose, /config inspect, /resume list, /permissions inspect, /status inspect, /login key, /plugins manage, /help help, /quit exit.{RESET}"
+        "{DIM}Commands: /agent switch, /model choose, /theme colors, /config inspect, /resume list, /permissions inspect, /status inspect, /login key, /plugins manage, /help help, /quit exit.{RESET}"
     )
 }
 
@@ -802,6 +802,7 @@ pub fn render_help<W: Write>(out: &mut W) -> io::Result<()> {
     writeln!(out, "  /agent   choose another installed agent")?;
     writeln!(out, "  /list    show detected agent status")?;
     writeln!(out, "  /model   show configured self-agent models")?;
+    writeln!(out, "  /theme   preview and choose the terminal theme")?;
     writeln!(out, "  /config  show resolved self-agent configuration")?;
     writeln!(out, "  /permissions show effective self-agent permissions")?;
     writeln!(out, "  /resume  show resumable self-agent runs")?;
@@ -1536,6 +1537,7 @@ fn render_home_help<W: Write>(out: &mut W, width: usize, max_rows: usize) -> io:
     for line in [
         "/agent      choose a delegate",
         "/model      inspect self-agent models",
+        "/theme      preview terminal colors",
         "/config     inspect resolved configuration",
         "/permissions inspect effective permissions",
         "/resume     inspect resumable runs",
@@ -1599,7 +1601,7 @@ pub fn render_line_startup_home<W: Write>(out: &mut W, model_status: &str) -> io
     writeln!(out)?;
     writeln!(
         out,
-        "{DIM}Type a task for Orchester, or /model, /resume, /permissions, /status, /agent, /codex, /claude, /opencode.{RESET}"
+        "{DIM}Type a task for Orchester, or /model, /theme, /resume, /permissions, /status, /agent, /codex, /claude, /opencode.{RESET}"
     )?;
     writeln!(
         out,
@@ -3321,6 +3323,34 @@ mod tests {
         assert!(prompt.contains("/login"));
         assert!(prompt.contains("/logout"));
         assert!(prompt.contains("keyring"));
+    }
+
+    #[test]
+    fn every_help_surface_documents_theme_selection() {
+        let mut home = Vec::new();
+        render_chat_home(&mut home, 80, "", &[], 0, true).unwrap();
+
+        let mut prompt = Vec::new();
+        render_help(&mut prompt).unwrap();
+
+        let mut startup = Vec::new();
+        render_line_startup_home(&mut startup, "gpt-test").unwrap();
+
+        let mut agents = Vec::new();
+        render_agent_table(&mut agents, &[], None).unwrap();
+
+        for (surface, rendered) in [
+            ("home", home),
+            ("prompt help", prompt),
+            ("line startup", startup),
+            ("agent table", agents),
+        ] {
+            let plain = strip_ansi(&String::from_utf8(rendered).unwrap());
+            assert!(
+                plain.contains("/theme"),
+                "{surface} omitted the theme command:\n{plain}"
+            );
+        }
     }
 
     #[test]
