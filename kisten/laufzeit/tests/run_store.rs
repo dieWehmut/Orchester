@@ -496,6 +496,89 @@ fn model_completion_redacts_configured_secrets_at_the_persistence_boundary() {
 }
 
 #[test]
+fn model_completion_preserves_safe_multiline_text() {
+    let path = temp_db("model-completion-multiline");
+    let run_id = RunId::from("run-model-multiline");
+    let store = SqliteRunStore::open_with_terminal_secrets(&path, Vec::new()).unwrap();
+    store
+        .create_run(new_run("run-model-multiline", "owner-a"))
+        .unwrap();
+    start_step(&store, &run_id, "owner-a", "step-1");
+    append_model_event(
+        &store,
+        &run_id,
+        "owner-a",
+        "step-1",
+        "model-call-1",
+        HarnessEventKind::ModelStarted,
+    )
+    .unwrap();
+
+    let event = append_model_event(
+        &store,
+        &run_id,
+        "owner-a",
+        "step-1",
+        "model-call-1",
+        HarnessEventKind::ModelCompleted {
+            assistant_text: "first line\nsecond line\nthird line".into(),
+        },
+    )
+    .unwrap();
+
+    let HarnessEventKind::ModelCompleted { assistant_text } = event.kind else {
+        panic!("model completion event");
+    };
+    assert_eq!(assistant_text, "first line\nsecond line\nthird line");
+    drop(store);
+    remove_temp_db(&path);
+}
+
+#[test]
+fn model_completion_fails_closed_for_a_secret_split_across_lines() {
+    let path = temp_db("model-completion-split-secret");
+    let run_id = RunId::from("run-model-split-secret");
+    let secret = "configured-provider-secret";
+    let store = SqliteRunStore::open_with_terminal_secrets(
+        &path,
+        vec![SecretString::new(secret.to_owned().into_boxed_str())],
+    )
+    .unwrap();
+    store
+        .create_run(new_run("run-model-split-secret", "owner-a"))
+        .unwrap();
+    start_step(&store, &run_id, "owner-a", "step-1");
+    append_model_event(
+        &store,
+        &run_id,
+        "owner-a",
+        "step-1",
+        "model-call-1",
+        HarnessEventKind::ModelStarted,
+    )
+    .unwrap();
+
+    let event = append_model_event(
+        &store,
+        &run_id,
+        "owner-a",
+        "step-1",
+        "model-call-1",
+        HarnessEventKind::ModelCompleted {
+            assistant_text: "configured-provider-\nsecret".into(),
+        },
+    )
+    .unwrap();
+
+    let HarnessEventKind::ModelCompleted { assistant_text } = event.kind else {
+        panic!("model completion event");
+    };
+    assert_eq!(assistant_text, "[REDACTED]");
+    drop(store);
+    remove_temp_db(&path);
+}
+
+#[test]
 fn action_with_configured_secret_is_rejected_before_durable_persistence() {
     let path = temp_db("action-secret-rejection");
     let run_id = RunId::from("run-action-secret");

@@ -237,7 +237,19 @@ impl FeedbackEngine {
         // Remove controls before exact-value redaction so an attacker cannot
         // split a configured secret with NUL/escape/newline bytes to evade the
         // matcher while remaining visually reconstructable in a terminal.
-        let mut sanitized = normalize_text(input);
+        self.redact_text(normalize_text(input))
+    }
+
+    pub(crate) fn sanitize_model_text(&self, input: &str) -> String {
+        let sanitized = self.redact_text(normalize_model_text(input));
+        if self.contains_sensitive_material(&sanitized) {
+            "[REDACTED]".into()
+        } else {
+            sanitized
+        }
+    }
+
+    fn redact_text(&self, mut sanitized: String) -> String {
         for secret in &self.secrets {
             let secret = secret.expose_secret();
             if !secret.is_empty() {
@@ -314,7 +326,7 @@ impl StreamingRedactor {
             return &self.visible;
         }
         self.last_scan_bytes = self.raw.len();
-        let sanitized = self.sanitizer.sanitize_text(&self.raw);
+        let sanitized = self.sanitizer.sanitize_model_text(&self.raw);
         if self.sanitizer.contains_sensitive_material(&sanitized) {
             return &self.visible;
         }
@@ -326,7 +338,7 @@ impl StreamingRedactor {
 
     /// Flush the final safe snapshot after the provider stream completes.
     pub fn finish(&mut self) -> &str {
-        let sanitized = self.sanitizer.sanitize_text(&self.raw);
+        let sanitized = self.sanitizer.sanitize_model_text(&self.raw);
         self.visible = if self.sanitizer.contains_sensitive_material(&sanitized) {
             "[REDACTED]".into()
         } else {
@@ -376,25 +388,17 @@ fn normalize_text(input: &str) -> String {
     normalized
 }
 
+fn normalize_model_text(input: &str) -> String {
+    let mut normalized = ansi_pattern().replace_all(input, "").into_owned();
+    normalized
+        .retain(|ch| !is_format_character(ch) && (!ch.is_control() || matches!(ch, '\n' | '\t')));
+    normalized
+}
+
 fn looks_like_secret(value: &str) -> bool {
-    let lower = value.to_ascii_lowercase();
     private_key_begin_pattern().is_match(value)
-        || [
-            "sk-",
-            "sk_",
-            "ghp_",
-            "github_pat_",
-            "xoxa-",
-            "xoxb-",
-            "xoxp-",
-            "xoxr-",
-            "xoxs-",
-            "akia",
-            "authorization: bearer ",
-            "authorization: basic ",
-        ]
-        .iter()
-        .any(|prefix| lower.contains(prefix))
+        || provider_token_prefix_pattern().is_match(value)
+        || authorization_prefix_pattern().is_match(value)
 }
 
 fn fingerprint(
@@ -526,10 +530,26 @@ fn authorization_pattern() -> &'static Regex {
         .get_or_init(|| Regex::new(r"(?i)(authorization\s*:\s*(?:bearer|basic)\s+)[^\s]+").unwrap())
 }
 
+fn authorization_prefix_pattern() -> &'static Regex {
+    static PATTERN: OnceLock<Regex> = OnceLock::new();
+    PATTERN.get_or_init(|| {
+        Regex::new(r"(?i)authorization\s*:\s*(?:bearer|basic)\s+")
+            .expect("static authorization prefix pattern")
+    })
+}
+
+fn provider_token_prefix_pattern() -> &'static Regex {
+    static PATTERN: OnceLock<Regex> = OnceLock::new();
+    PATTERN.get_or_init(|| {
+        Regex::new(r"(?i)(?:^|[^A-Za-z0-9])(?:sk[-_]|ghp_|github_pat_|xox[baprs]-|AKIA)")
+            .expect("static provider-token prefix pattern")
+    })
+}
+
 fn token_pattern() -> &'static Regex {
     static PATTERN: OnceLock<Regex> = OnceLock::new();
     PATTERN.get_or_init(|| {
-        Regex::new(r"(?i)(?:sk[-_]|ghp_|github_pat_|xox[baprs]-)[A-Za-z0-9._-]{5,}\b|\bAKIA[A-Z0-9]{12,}\b")
+        Regex::new(r"(?i)(?:sk[-_]|ghp_|github_pat_|xox[baprs]-)[A-Za-z0-9._-]{8,}\b|\bAKIA[A-Z0-9]{12,}\b")
             .unwrap()
     })
 }

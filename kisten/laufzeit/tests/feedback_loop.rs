@@ -309,6 +309,26 @@ fn streaming_redactor_starts_a_new_response_after_finish() {
 }
 
 #[test]
+fn streaming_redactor_preserves_multiline_model_text() {
+    let mut redactor = StreamingRedactor::new(Vec::new());
+
+    redactor.push("first line\nsecond line\nthird line");
+    let visible = redactor.finish().to_owned();
+
+    assert_eq!(visible, "first line\nsecond line\nthird line");
+}
+
+#[test]
+fn streaming_redactor_does_not_treat_embedded_prefix_text_as_a_token() {
+    let mut redactor = StreamingRedactor::new(Vec::new());
+
+    redactor.push("Use task-based planning and risk-aware checks.");
+    let visible = redactor.finish().to_owned();
+
+    assert_eq!(visible, "Use task-based planning and risk-aware checks.");
+}
+
+#[test]
 fn volatile_diagnostic_fragments_share_one_stable_fingerprint() {
     let engine = FeedbackEngine::default();
     let report = |summary: &str, stdout: &str| {

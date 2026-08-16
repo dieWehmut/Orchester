@@ -50,7 +50,7 @@ pub(super) fn canonicalize_kind(
 ) -> Result<HarnessEventKind, StoreError> {
     Ok(match kind {
         HarnessEventKind::ModelCompleted { assistant_text } => {
-            let assistant_text = sanitizer.sanitize_text(&assistant_text);
+            let assistant_text = sanitizer.sanitize_model_text(&assistant_text);
             if assistant_text.len() > MAX_MODEL_TEXT_BYTES {
                 return Err(StoreError::Invariant(
                     "model completion text exceeds the durable limit".into(),
