@@ -201,6 +201,7 @@ enum QueuedChatAction {
 #[derive(Debug, Clone)]
 enum OverlayAction {
     Close,
+    Inspect(Vec<String>),
     ModelConfigured,
     ModelProfile(String),
     Theme(theme::Theme),
@@ -214,25 +215,43 @@ struct TerminalOverlay {
 
 impl TerminalOverlay {
     fn report(label: &str, output: &str) -> Self {
-        let mut items = interactive::clean_transcript_text(output)
+        let cleaned = interactive::clean_transcript_text(output);
+        let rows = cleaned
             .lines()
             .map(str::trim)
             .filter(|line| !line.is_empty())
-            .map(|line| OverlayItem::new(line, ""))
+            .collect::<Vec<_>>();
+        let mut items = rows
+            .iter()
+            .map(|line| report_overlay_item(line))
             .collect::<Vec<_>>();
         if items.is_empty() {
             items.push(OverlayItem::new("No results", ""));
         }
-        let actions = vec![OverlayAction::Close; items.len()];
+        let mut actions = rows
+            .into_iter()
+            .map(|line| OverlayAction::Inspect(vec![line.to_owned()]))
+            .collect::<Vec<_>>();
+        if actions.is_empty() {
+            actions.push(OverlayAction::Inspect(vec!["No results".into()]));
+        }
         Self {
             view: CommandOverlay::new(
                 format!("{label} result"),
                 "This result remains visible until you close it.",
                 items,
             )
-            .with_footer("Up/Down inspect  |  Enter/Esc close"),
+            .with_footer("Up/Down select  |  Enter inspect  |  Esc close"),
             actions,
         }
+    }
+
+    fn inspect(&mut self, index: usize) -> bool {
+        let Some(OverlayAction::Inspect(details)) = self.actions.get(index) else {
+            return false;
+        };
+        self.view.details = details.clone();
+        true
     }
 
     fn error(label: &str, error: &impl std::fmt::Display) -> Self {
@@ -292,6 +311,15 @@ impl TerminalOverlay {
             .with_footer("Up/Down preview  |  Enter save  |  Esc cancel"),
             actions,
         }
+    }
+}
+
+fn report_overlay_item(line: &str) -> OverlayItem {
+    match line.split_once(':') {
+        Some((label, detail)) if !label.trim().is_empty() => {
+            OverlayItem::new(label.trim(), detail.trim())
+        }
+        _ => OverlayItem::new(line, ""),
     }
 }
 
@@ -575,6 +603,11 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                         .unwrap_or(OverlayAction::Close);
                     match action {
                         OverlayAction::Close => state.overlay = None,
+                        OverlayAction::Inspect(_) => {
+                            if let Some(overlay) = state.overlay.as_mut() {
+                                overlay.inspect(index);
+                            }
+                        }
                         OverlayAction::ModelConfigured | OverlayAction::ModelProfile(_) => {
                             let mut rendered = Vec::new();
                             let result: Result<(), CliError> = (|| {
@@ -585,7 +618,9 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                     OverlayAction::ModelProfile(name) => {
                                         self_agent.select_model_profile(&name)?
                                     }
-                                    OverlayAction::Close | OverlayAction::Theme(_) => {
+                                    OverlayAction::Close
+                                    | OverlayAction::Inspect(_)
+                                    | OverlayAction::Theme(_) => {
                                         unreachable!()
                                     }
                                 };
@@ -1425,7 +1460,7 @@ mod tests {
 
     #[test]
     fn command_report_overlay_is_bounded_to_selectable_sanitized_rows() {
-        let overlay = TerminalOverlay::report(
+        let mut overlay = TerminalOverlay::report(
             "/status",
             "\x1b[1mSelf-agent status\x1b[0m\nmodel: gpt-test\nstate: ready",
         );
@@ -1433,12 +1468,17 @@ mod tests {
         assert_eq!(overlay.view.title, "/status result");
         assert_eq!(overlay.view.items.len(), 3);
         assert_eq!(overlay.view.items[0].label, "Self-agent status");
+        assert_eq!(overlay.view.items[1].label, "model");
+        assert_eq!(overlay.view.items[1].detail, "gpt-test");
         assert!(!overlay.view.items[0].label.contains('\x1b'));
         assert_eq!(overlay.actions.len(), overlay.view.items.len());
         assert!(overlay
             .actions
             .iter()
-            .all(|action| matches!(action, OverlayAction::Close)));
+            .all(|action| matches!(action, OverlayAction::Inspect(_))));
+        assert!(overlay.view.footer.contains("Enter inspect"));
+        assert!(overlay.inspect(1));
+        assert_eq!(overlay.view.details, vec!["model: gpt-test"]);
     }
 
     #[test]
