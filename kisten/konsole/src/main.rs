@@ -13,6 +13,7 @@ mod process;
 mod render;
 mod self_agent;
 mod theme;
+mod workspace_overlay;
 
 use std::collections::{HashMap, VecDeque};
 use std::io::{self, IsTerminal, Read, Write};
@@ -41,6 +42,7 @@ use process::{command_invocation, is_cancelled_status, resolve_command};
 use self_agent::{SelfAgentHost, SelfAgentHostError};
 use tokio::sync::mpsc;
 use tokio_util::sync::CancellationToken;
+use workspace_overlay::WorkspaceInspection;
 
 /// Directory holding on-disk manifests, relative to the current working dir.
 const MANIFEST_DIR: &str = "manifeste";
@@ -258,6 +260,30 @@ impl TerminalOverlay {
         Self::report(label, &format!("Error\n{error}"))
     }
 
+    fn inspection(inspection: WorkspaceInspection) -> Self {
+        let WorkspaceInspection {
+            title,
+            description,
+            entries,
+            footer,
+        } = inspection;
+        let mut items = Vec::with_capacity(entries.len().max(1));
+        let mut actions = Vec::with_capacity(entries.len().max(1));
+        for entry in entries {
+            items.push(OverlayItem::new(entry.label, entry.detail).current(entry.current));
+            actions.push(OverlayAction::Inspect(entry.details));
+        }
+        if items.is_empty() {
+            items.push(OverlayItem::new("No results", ""));
+            actions.push(OverlayAction::Inspect(vec![
+                "No results are available for this workspace.".into(),
+            ]));
+        }
+        Self {
+            view: CommandOverlay::new(title, description, items).with_footer(footer),
+            actions,
+        }
+    }
     fn models(catalog: &SelfAgentModelCatalog) -> Self {
         let current = match &catalog.active {
             SelfAgentActiveModel::Configured(choice) => {
@@ -703,6 +729,38 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                     interactive::HomeAction::Workspace(command) => {
                         let label = workspace_command_label(&command);
                         match command {
+                            WorkspaceCommand::Status => {
+                                state.overlay = Some(match self_agent.status() {
+                                    Ok(status) => TerminalOverlay::inspection(
+                                        workspace_overlay::status(&status),
+                                    ),
+                                    Err(error) => TerminalOverlay::error(&label, &error),
+                                });
+                            }
+                            WorkspaceCommand::Config => {
+                                state.overlay = Some(match self_agent.config_view() {
+                                    Ok(view) => TerminalOverlay::inspection(
+                                        workspace_overlay::config(&view),
+                                    ),
+                                    Err(error) => TerminalOverlay::error(&label, &error),
+                                });
+                            }
+                            WorkspaceCommand::Permissions => {
+                                state.overlay = Some(match self_agent.permissions() {
+                                    Ok(permissions) => TerminalOverlay::inspection(
+                                        workspace_overlay::permissions(&permissions),
+                                    ),
+                                    Err(error) => TerminalOverlay::error(&label, &error),
+                                });
+                            }
+                            WorkspaceCommand::Resume => {
+                                state.overlay = Some(match self_agent.resume_catalog() {
+                                    Ok(catalog) => TerminalOverlay::inspection(
+                                        workspace_overlay::resume(&catalog),
+                                    ),
+                                    Err(error) => TerminalOverlay::error(&label, &error),
+                                });
+                            }
                             WorkspaceCommand::Model(ModelCommand::Show) => {
                                 state.overlay = Some(match self_agent.model_catalog() {
                                     Ok(catalog) => TerminalOverlay::models(&catalog),
@@ -816,6 +874,12 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                         }
                     }
                     interactive::HomeAction::Plugins(action) => {
+                        if matches!(&action, PluginAction::List) {
+                            state.overlay = Some(TerminalOverlay::inspection(
+                                workspace_overlay::plugins(&registry.plugins()),
+                            ));
+                            continue;
+                        }
                         let result = run_plugin_command_to_transcript(
                             &registry,
                             plugin_command(action),
