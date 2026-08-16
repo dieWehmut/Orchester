@@ -588,10 +588,16 @@ fn model_turn_redactor(
 struct TtyEventSink {
     sender: watch::Sender<String>,
     redactor: Mutex<StreamingRedactor>,
+    #[cfg(test)]
+    publish_hook: Option<Arc<dyn Fn(&str) + Send + Sync>>,
 }
 
 impl TtyEventSink {
     fn publish(&self, snapshot: String) {
+        #[cfg(test)]
+        if let Some(hook) = self.publish_hook.as_ref() {
+            hook(&snapshot);
+        }
         let changed = self.sender.borrow().as_str() != snapshot;
         if changed {
             self.sender.send_replace(snapshot);
@@ -605,8 +611,8 @@ impl ModelEventSink for TtyEventSink {
             return;
         };
         redactor.begin_response();
-        drop(redactor);
         self.publish(String::new());
+        drop(redactor);
     }
 
     fn text_delta(&self, delta: &str) {
@@ -614,8 +620,8 @@ impl ModelEventSink for TtyEventSink {
             return;
         };
         let snapshot = redactor.push(delta).to_owned();
-        drop(redactor);
         self.publish(snapshot);
+        drop(redactor);
     }
 
     fn response_completed(&self) {
@@ -623,8 +629,8 @@ impl ModelEventSink for TtyEventSink {
             return;
         };
         let snapshot = redactor.finish().to_owned();
-        drop(redactor);
         self.publish(snapshot);
+        drop(redactor);
     }
 }
 
@@ -694,6 +700,8 @@ async fn await_model_turn(
     let sink: Arc<dyn ModelEventSink> = Arc::new(TtyEventSink {
         sender,
         redactor: Mutex::new(redactor),
+        #[cfg(test)]
+        publish_hook: None,
     });
     let request = async {
         match turn {
@@ -1734,6 +1742,7 @@ mod tests {
     };
     use secrecy::SecretString;
     use std::path::Path;
+    use std::sync::{Condvar, Mutex as StdMutex};
 
     #[test]
     fn queued_prompt_is_recorded_before_a_busy_turn_starts() {
@@ -2137,6 +2146,7 @@ mod tests {
             redactor: Mutex::new(StreamingRedactor::new(vec![SecretString::new(
                 "stream-secret-canary".to_owned().into_boxed_str(),
             )])),
+            publish_hook: None,
         };
 
         sink.text_delta(&format!("safe {} stream-secret-", "x".repeat(80)));
@@ -2154,6 +2164,7 @@ mod tests {
         let sink = TtyEventSink {
             sender,
             redactor: Mutex::new(StreamingRedactor::new(Vec::new())),
+            publish_hook: None,
         };
 
         sink.response_started();
@@ -2174,6 +2185,7 @@ mod tests {
         let sink = TtyEventSink {
             sender,
             redactor: Mutex::new(StreamingRedactor::new(Vec::new())),
+            publish_hook: None,
         };
 
         sink.response_started();
@@ -2186,6 +2198,68 @@ mod tests {
         let latest = snapshots.borrow_and_update().clone();
         assert!(latest.contains("chunk-0000"));
         assert!(!snapshots.has_changed().expect("open snapshot channel"));
+    }
+
+    #[test]
+    fn tty_event_sink_never_publishes_an_older_concurrent_snapshot_last() {
+        #[derive(Default)]
+        struct PublishOrder {
+            first_waiting: bool,
+            second_published: bool,
+        }
+
+        let (sender, snapshots) = watch::channel(String::new());
+        let order = Arc::new((StdMutex::new(PublishOrder::default()), Condvar::new()));
+        let hook_order = Arc::clone(&order);
+        let sink = Arc::new(TtyEventSink {
+            sender,
+            redactor: Mutex::new(StreamingRedactor::new(Vec::new())),
+            publish_hook: Some(Arc::new(move |snapshot| {
+                let (state, changed) = &*hook_order;
+                let mut state = state.lock().expect("publish order lock");
+                if snapshot.starts_with("first") && !snapshot.contains("second") {
+                    state.first_waiting = true;
+                    changed.notify_all();
+                    while !state.second_published {
+                        let (next, timeout) = changed
+                            .wait_timeout(state, Duration::from_secs(1))
+                            .expect("publish order wait");
+                        state = next;
+                        if timeout.timed_out() {
+                            break;
+                        }
+                    }
+                } else if snapshot.contains("second") {
+                    state.second_published = true;
+                    changed.notify_all();
+                }
+            })),
+        });
+
+        let first_sink = Arc::clone(&sink);
+        let first =
+            std::thread::spawn(move || first_sink.text_delta(&format!("first{}", "a".repeat(128))));
+        {
+            let (state, changed) = &*order;
+            let state = state.lock().expect("publish order lock");
+            let (state, _) = changed
+                .wait_timeout_while(state, Duration::from_secs(2), |state| !state.first_waiting)
+                .expect("first publish wait");
+            assert!(state.first_waiting, "first snapshot never reached publish");
+        }
+
+        let second_sink = Arc::clone(&sink);
+        let second = std::thread::spawn(move || {
+            second_sink.text_delta(&format!("second{}", "b".repeat(512)))
+        });
+        first.join().expect("first delta thread");
+        second.join().expect("second delta thread");
+
+        assert!(
+            order.0.lock().expect("publish order lock").second_published,
+            "newer snapshot never reached publish"
+        );
+        assert!(snapshots.borrow().contains("second"));
     }
 
     #[test]
