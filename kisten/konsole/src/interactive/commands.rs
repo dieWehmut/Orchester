@@ -40,6 +40,7 @@ pub enum WorkspaceCommand {
     Permissions,
     Resume,
     Model(ModelCommand),
+    Theme(ThemeCommand),
     Credential(CredentialCommand),
 }
 
@@ -56,6 +57,12 @@ pub enum ModelCommand {
     Show,
     SelectProfile(String),
     UseConfigured,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ThemeCommand {
+    Show,
+    Select(String),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -205,6 +212,11 @@ pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> Pro
                 .map(|command| PromptAction::Workspace(WorkspaceCommand::Model(command)))
                 .unwrap_or(PromptAction::Help);
         }
+        "/theme" => {
+            return parse_theme_command(input)
+                .map(|command| PromptAction::Workspace(WorkspaceCommand::Theme(command)))
+                .unwrap_or(PromptAction::Help);
+        }
         "/login" => {
             return provider_argument(input)
                 .map(|provider| {
@@ -282,6 +294,19 @@ fn parse_model_command(input: &str) -> Option<ModelCommand> {
     }
 }
 
+fn parse_theme_command(input: &str) -> Option<ThemeCommand> {
+    let mut parts = input.split_whitespace();
+    parts.next()?;
+    let selection = parts.next();
+    if parts.next().is_some() {
+        return None;
+    }
+    match selection {
+        None => Some(ThemeCommand::Show),
+        Some(name) => Some(ThemeCommand::Select(name.to_ascii_lowercase())),
+    }
+}
+
 fn command_items(choices: &[AgentChoice]) -> Vec<CommandItem> {
     let mut items = vec![
         CommandItem {
@@ -330,6 +355,12 @@ fn command_items(choices: &[AgentChoice]) -> Vec<CommandItem> {
             name: "/model".into(),
             description: "show configured self-agent models".into(),
             action: CommandAction::Workspace(WorkspaceCommand::Model(ModelCommand::Show)),
+            agent: None,
+        },
+        CommandItem {
+            name: "/theme".into(),
+            description: "choose the terminal theme".into(),
+            action: CommandAction::Workspace(WorkspaceCommand::Theme(ThemeCommand::Show)),
             agent: None,
         },
         CommandItem {
@@ -395,5 +426,46 @@ fn parse_plugin_action(input: &str) -> Option<PluginAction> {
         ("install", Some(name)) => Some(PluginAction::Install(name.to_owned())),
         ("remove", Some(name)) => Some(PluginAction::Remove(name.to_owned())),
         _ => None,
+    }
+}
+
+#[cfg(test)]
+#[path = "../theme.rs"]
+mod theme_under_test;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn theme_command_opens_picker_or_selects_named_theme() {
+        assert_eq!(
+            parse_prompt_action("/theme", &[]),
+            PromptAction::Workspace(WorkspaceCommand::Theme(ThemeCommand::Show))
+        );
+        assert_eq!(
+            parse_home_action("/theme light", &[]),
+            HomeAction::Workspace(WorkspaceCommand::Theme(ThemeCommand::Select(
+                "light".into()
+            )))
+        );
+        assert_eq!(
+            parse_prompt_action("/theme light extra", &[]),
+            PromptAction::Help
+        );
+    }
+
+    #[test]
+    fn command_palette_contains_theme_picker() {
+        let theme = command_items(&[])
+            .into_iter()
+            .find(|item| item.name == "/theme")
+            .expect("theme command");
+
+        assert_eq!(theme.description, "choose the terminal theme");
+        assert_eq!(
+            command_action("/", Some(&theme)),
+            PromptAction::Workspace(WorkspaceCommand::Theme(ThemeCommand::Show))
+        );
     }
 }
