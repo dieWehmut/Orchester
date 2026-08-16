@@ -1118,35 +1118,9 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
         );
     }
 
-    let desired_content_rows = desired_home_content_rows(width, input, choices, show_help);
-    let status_rows = usize::from(height >= 2);
-    let prompt_rows = 1;
-    let full_panel_rows = chat_panel_line_count(width);
-    let full_panel_total = full_panel_rows
-        .saturating_add(prompt_rows)
-        .saturating_add(desired_content_rows)
-        .saturating_add(status_rows);
-
-    let (header_rows, separator_rows, full_panel) = if width >= 50 && full_panel_total <= height {
-        let separator_rows = usize::from(full_panel_total.saturating_add(1) <= height);
-        (full_panel_rows, separator_rows, true)
-    } else {
-        let minimum_body = prompt_rows
-            .saturating_add(status_rows)
-            .saturating_add(usize::from(desired_content_rows > 0));
-        match height.saturating_sub(minimum_body) {
-            remaining if remaining >= 3 => (2, 1, false),
-            remaining if remaining >= 1 => (1, 0, false),
-            _ => (0, 0, false),
-        }
-    };
-
-    if full_panel {
-        render_chat_panel(out, width, model_status)?;
-    } else {
-        render_compact_home_header(out, width, header_rows)?;
-    }
-    if separator_rows > 0 {
+    let layout = chat_frame_layout(width, height);
+    render_chat_header(out, width, model_status, layout.header)?;
+    if layout.separator_rows > 0 {
         writeln!(out)?;
     }
 
@@ -1163,11 +1137,7 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
         theme.palette().accent
     )?;
 
-    let content_rows = height
-        .saturating_sub(header_rows)
-        .saturating_sub(separator_rows)
-        .saturating_sub(prompt_rows)
-        .saturating_sub(status_rows);
+    let content_rows = layout.content_rows;
     if show_help {
         render_home_help(out, width, content_rows)?;
     } else if input.starts_with('/') {
@@ -1197,7 +1167,7 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
         );
         writeln!(out, "{DIM}{hint}{RESET}")?;
     }
-    if status_rows > 0 {
+    if layout.status_rows > 0 {
         render_status_line(out, width, model_status)?;
     }
     Ok(())
@@ -1219,41 +1189,11 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
         theme,
     } = view;
     let palette = theme.palette();
-    let status_rows = usize::from(height >= 2);
-    let composer_rows = 1;
-    let full_panel_rows = chat_panel_line_count(width);
-    let full_panel = width >= 50
-        && full_panel_rows
-            .saturating_add(composer_rows)
-            .saturating_add(status_rows)
-            .saturating_add(1)
-            <= height;
-    let header_rows = if full_panel {
-        full_panel_rows
-    } else if height >= 5 {
-        2
-    } else {
-        0
-    };
-    let separator_rows = usize::from(
-        height
-            > header_rows
-                .saturating_add(composer_rows)
-                .saturating_add(status_rows)
-                .saturating_add(1),
-    );
-    let content_rows = height
-        .saturating_sub(header_rows)
-        .saturating_sub(separator_rows)
-        .saturating_sub(composer_rows)
-        .saturating_sub(status_rows);
+    let layout = chat_frame_layout(width, height);
+    let content_rows = layout.content_rows;
 
-    if full_panel {
-        render_chat_panel(out, width, model_status)?;
-    } else if header_rows > 0 {
-        render_compact_home_header(out, width, header_rows)?;
-    }
-    if separator_rows > 0 {
+    render_chat_header(out, width, model_status, layout.header)?;
+    if layout.separator_rows > 0 {
         writeln!(out)?;
     }
 
@@ -1317,7 +1257,7 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
         palette.accent
     )?;
 
-    if status_rows > 0 {
+    if layout.status_rows > 0 {
         render_status_line(out, width, model_status)?;
     }
     Ok(())
@@ -1480,25 +1420,98 @@ fn command_palette_lines(
         .collect())
 }
 
-fn desired_home_content_rows(
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ChatHeaderLayout {
+    Panel { portrait_width: Option<usize> },
+    Compact { rows: usize },
+}
+
+impl ChatHeaderLayout {
+    fn rows(self, width: usize) -> usize {
+        match self {
+            Self::Panel { portrait_width } => {
+                chat_panel_line_count_with_portrait(width, portrait_width)
+            }
+            Self::Compact { rows } => rows,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+struct ChatFrameLayout {
+    header: ChatHeaderLayout,
+    separator_rows: usize,
+    content_rows: usize,
+    status_rows: usize,
+}
+
+fn chat_frame_layout(width: usize, height: usize) -> ChatFrameLayout {
+    let composer_rows = usize::from(height > 0);
+    let status_rows = usize::from(height >= 2);
+    let minimum_content_rows = usize::from(height > composer_rows.saturating_add(status_rows));
+    let maximum_header_rows = height
+        .saturating_sub(composer_rows)
+        .saturating_sub(status_rows)
+        .saturating_sub(minimum_content_rows);
+
+    let panel = if width >= 50 {
+        let preferred_portrait = (width >= 60).then(|| portrait_size(width).0);
+        let compact_portrait = (width >= 60).then_some(24.min(avatar::WIDTH));
+        [preferred_portrait, compact_portrait]
+            .into_iter()
+            .find(|portrait_width| {
+                chat_panel_line_count_with_portrait(width, *portrait_width) <= maximum_header_rows
+            })
+    } else {
+        None
+    };
+
+    let header = if let Some(portrait_width) = panel {
+        ChatHeaderLayout::Panel { portrait_width }
+    } else if width >= 50 && chat_panel_line_count_with_portrait(width, None) <= maximum_header_rows
+    {
+        ChatHeaderLayout::Panel {
+            portrait_width: None,
+        }
+    } else {
+        ChatHeaderLayout::Compact {
+            rows: maximum_header_rows.min(2),
+        }
+    };
+    let header_rows = header.rows(width);
+    let separator_rows = usize::from(
+        height
+            > header_rows
+                .saturating_add(composer_rows)
+                .saturating_add(status_rows)
+                .saturating_add(minimum_content_rows),
+    );
+    let content_rows = height
+        .saturating_sub(header_rows)
+        .saturating_sub(separator_rows)
+        .saturating_sub(composer_rows)
+        .saturating_sub(status_rows);
+
+    ChatFrameLayout {
+        header,
+        separator_rows,
+        content_rows,
+        status_rows,
+    }
+}
+
+fn render_chat_header<W: Write>(
+    out: &mut W,
     width: usize,
-    input: &str,
-    choices: &[AgentChoice],
-    show_help: bool,
-) -> usize {
-    if show_help {
-        return 8;
+    model_status: &str,
+    header: ChatHeaderLayout,
+) -> io::Result<()> {
+    match header {
+        ChatHeaderLayout::Panel { portrait_width } => {
+            render_chat_panel_with_portrait(out, width, model_status, portrait_width)
+        }
+        ChatHeaderLayout::Compact { rows } => render_compact_home_header(out, width, rows),
     }
-    if input.starts_with('/') {
-        let matches = matching_commands(input, choices).len();
-        let limit = if width < 50 {
-            COMPACT_PALETTE_ROWS
-        } else {
-            PALETTE_ROWS
-        };
-        return matches.max(1).min(limit);
-    }
-    1
 }
 
 fn render_compact_home_header<W: Write>(out: &mut W, width: usize, rows: usize) -> io::Result<()> {
@@ -1602,9 +1615,19 @@ pub fn render_line_continue_prompt<W: Write>(out: &mut W) -> io::Result<()> {
 }
 
 fn render_chat_panel<W: Write>(out: &mut W, width: usize, model_status: &str) -> io::Result<()> {
+    let portrait_width = (width >= 60).then(|| portrait_size(width).0);
+    render_chat_panel_with_portrait(out, width, model_status, portrait_width)
+}
+
+fn render_chat_panel_with_portrait<W: Write>(
+    out: &mut W,
+    width: usize,
+    model_status: &str,
+    portrait_width: Option<usize>,
+) -> io::Result<()> {
     let rows = startup_panel_rows(model_status);
-    if width >= 60 {
-        render_portrait_info_box(out, width, &rows)
+    if let Some(portrait_width) = portrait_width {
+        render_portrait_info_box(out, width, &rows, portrait_width)
     } else {
         render_info_box(out, width, &rows)
     }
@@ -1635,10 +1658,10 @@ fn startup_panel_rows(model_status: &str) -> Vec<String> {
     ]
 }
 
-fn chat_panel_line_count(width: usize) -> usize {
+fn chat_panel_line_count_with_portrait(width: usize, portrait_width: Option<usize>) -> usize {
     let info_rows = startup_panel_rows("model not configured").len();
-    if width >= 60 {
-        let (_, portrait_height) = portrait_size(width);
+    if width >= 60 && portrait_width.is_some() {
+        let portrait_height = avatar::height_for_width(portrait_width.unwrap_or_default());
         portrait_height.max(info_rows).saturating_add(2)
     } else {
         info_rows.saturating_add(2)
@@ -1679,9 +1702,11 @@ fn render_portrait_info_box<W: Write>(
     out: &mut W,
     width: usize,
     rows: &[String],
+    portrait_width: usize,
 ) -> io::Result<()> {
     let panel_width = width.clamp(60, 120);
-    let (portrait_width, portrait_height) = portrait_size(panel_width);
+    let portrait_width = portrait_width.min(avatar::WIDTH);
+    let portrait_height = avatar::height_for_width(portrait_width);
     let right_width = panel_width.saturating_sub(portrait_width + 7);
     let height = portrait_height.max(rows.len());
     let portrait_offset = vertical_center_offset(height, portrait_height);
@@ -2875,6 +2900,106 @@ mod tests {
     }
 
     #[test]
+    fn command_palette_and_open_overlay_keep_the_same_top_geometry() {
+        let mut before = Vec::new();
+        render_chat_home_in_viewport(
+            &mut before,
+            ChatHomeView {
+                width: 100,
+                height: 44,
+                input: "/",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "gpt-test",
+                transcript: &[],
+                busy: None,
+                scroll_offset: 0,
+                overlay: None,
+                theme: Theme::default(),
+            },
+        )
+        .unwrap();
+
+        let overlay = CommandOverlay::new(
+            "Status",
+            "Select a section to inspect.",
+            vec![OverlayItem::new("Model", "configured")],
+        );
+        let mut after = Vec::new();
+        render_chat_home_in_viewport(
+            &mut after,
+            ChatHomeView {
+                width: 100,
+                height: 44,
+                input: "",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "gpt-test",
+                transcript: &[],
+                busy: None,
+                scroll_offset: 0,
+                overlay: Some(&overlay),
+                theme: Theme::default(),
+            },
+        )
+        .unwrap();
+
+        let before = strip_ansi(&String::from_utf8(before).unwrap());
+        let after = strip_ansi(&String::from_utf8(after).unwrap());
+        let before_header = before.lines().take(23).collect::<Vec<_>>();
+        let after_header = after.lines().take(23).collect::<Vec<_>>();
+        assert_eq!(
+            before_header, after_header,
+            "top panel changed:\n{before}\n---\n{after}"
+        );
+        assert!(after.contains("Status"));
+    }
+
+    #[test]
+    fn startup_panel_does_not_collapse_when_command_palette_opens_at_boundary() {
+        let render = |input: &str, overlay: Option<&CommandOverlay>| {
+            let mut out = Vec::new();
+            render_chat_home_in_viewport(
+                &mut out,
+                ChatHomeView {
+                    width: 100,
+                    height: 24,
+                    input,
+                    choices: &[],
+                    command_selected: 0,
+                    show_help: false,
+                    model_status: "gpt-test",
+                    transcript: &[],
+                    busy: None,
+                    scroll_offset: 0,
+                    overlay,
+                    theme: Theme::default(),
+                },
+            )
+            .unwrap();
+            strip_ansi(&String::from_utf8(out).unwrap())
+        };
+
+        let overlay = CommandOverlay::new(
+            "Status",
+            "Select a section to inspect.",
+            vec![OverlayItem::new("Model", "configured")],
+        );
+        for (label, frame) in [
+            ("initial", render("", None)),
+            ("palette", render("/", None)),
+            ("overlay", render("", Some(&overlay))),
+        ] {
+            assert!(
+                frame.contains(">_ Orchester"),
+                "{label} frame lost the stable startup panel:\n{frame}"
+            );
+        }
+    }
+
+    #[test]
     fn command_overlay_is_visible_below_the_stable_workspace_panel() {
         let mut overlay = CommandOverlay::new(
             "Select model",
@@ -3357,10 +3482,15 @@ mod tests {
                         "help content disappeared at height {height}:\n{plain}"
                     );
                 }
-                if height <= 24 {
+                if height < 24 {
                     assert!(
                         !plain.lines().any(|line| line.starts_with('+')),
                         "short viewport must use the compact header:\n{plain}"
+                    );
+                } else {
+                    assert!(
+                        plain.contains(">_ Orchester"),
+                        "roomy viewport must preserve the full startup panel:\n{plain}"
                     );
                 }
             }
