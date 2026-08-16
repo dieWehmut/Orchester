@@ -378,7 +378,7 @@ impl TerminalOverlay {
             );
             actions.push(OverlayAction::Theme(candidate));
         }
-        Self {
+        let mut overlay = Self {
             view: CommandOverlay::new(
                 "Select theme",
                 "Preview colors live; Esc restores the previous theme.",
@@ -387,7 +387,19 @@ impl TerminalOverlay {
             .with_footer("Up/Down preview  |  Enter save  |  Esc cancel"),
             actions,
             parent: None,
-        }
+        };
+        overlay.refresh_theme_preview(current);
+        overlay
+    }
+
+    fn refresh_theme_preview(&mut self, selected: theme::Theme) {
+        self.view.details = vec![
+            format!("Preview: {} ({})", selected.label(), selected.name()),
+            "  accent: headings and active controls".into(),
+            "  selection: current option and focus".into(),
+            "  + assistant output remains readable".into(),
+            "  - inactive text stays dimmed".into(),
+        ];
     }
 }
 
@@ -398,6 +410,21 @@ fn report_overlay_item(line: &str) -> OverlayItem {
         }
         _ => OverlayItem::new(line, ""),
     }
+}
+
+fn model_effort_overlay_for_target(
+    catalog: &SelfAgentModelCatalog,
+    target: ModelSelectionTarget,
+) -> Option<TerminalOverlay> {
+    let choice = match &target {
+        ModelSelectionTarget::Configured => catalog.active.choice().cloned(),
+        ModelSelectionTarget::Profile(name) => catalog
+            .profiles
+            .iter()
+            .find(|choice| choice.profile.as_deref() == Some(name))
+            .cloned(),
+    }?;
+    Some(TerminalOverlay::model_efforts(target, &choice))
 }
 
 #[derive(Default)]
@@ -660,6 +687,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                 Some(OverlayAction::Theme(candidate)) if *candidate == theme
                             );
                         }
+                        overlay.refresh_theme_preview(theme);
                     }
                 }
                 continue;
@@ -704,26 +732,10 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                             let parent = state.overlay.take();
                             state.overlay = Some(match self_agent.model_catalog() {
                                 Ok(catalog) => {
-                                    let choice = match &target {
-                                        ModelSelectionTarget::Configured => {
-                                            catalog.active.choice().cloned()
-                                        }
-                                        ModelSelectionTarget::Profile(name) => catalog
-                                            .profiles
-                                            .iter()
-                                            .find(|choice| choice.profile.as_deref() == Some(name))
-                                            .cloned(),
-                                    };
-                                    match choice {
-                                        Some(choice) => match parent {
-                                            Some(parent) => {
-                                                TerminalOverlay::model_efforts(target, &choice)
-                                                    .with_parent(parent)
-                                            }
-                                            None => TerminalOverlay::error(
-                                                "/model",
-                                                &"model picker state is unavailable",
-                                            ),
+                                    match model_effort_overlay_for_target(&catalog, target) {
+                                        Some(child) => match parent {
+                                            Some(parent) => child.with_parent(parent),
+                                            None => child,
                                         },
                                         None => TerminalOverlay::error(
                                             "/model",
@@ -863,6 +875,36 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                     Err(error) => TerminalOverlay::error(&label, &error),
                                 });
                             }
+                            WorkspaceCommand::Model(ModelCommand::SelectProfile(name)) => {
+                                state.overlay = Some(match self_agent.model_catalog() {
+                                    Ok(catalog) => model_effort_overlay_for_target(
+                                        &catalog,
+                                        ModelSelectionTarget::Profile(name),
+                                    )
+                                    .unwrap_or_else(|| {
+                                        TerminalOverlay::error(
+                                            &label,
+                                            &"selected model is unavailable",
+                                        )
+                                    }),
+                                    Err(error) => TerminalOverlay::error(&label, &error),
+                                });
+                            }
+                            WorkspaceCommand::Model(ModelCommand::UseConfigured) => {
+                                state.overlay = Some(match self_agent.model_catalog() {
+                                    Ok(catalog) => model_effort_overlay_for_target(
+                                        &catalog,
+                                        ModelSelectionTarget::Configured,
+                                    )
+                                    .unwrap_or_else(|| {
+                                        TerminalOverlay::error(
+                                            &label,
+                                            &"configured model is unavailable",
+                                        )
+                                    }),
+                                    Err(error) => TerminalOverlay::error(&label, &error),
+                                });
+                            }
                             WorkspaceCommand::Theme(ThemeCommand::Show) => {
                                 state.theme_before_overlay = Some(state.active_theme);
                                 state.overlay = Some(TerminalOverlay::themes(state.active_theme));
@@ -893,21 +935,6 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                     &mut rendered,
                                 );
                                 chat = interactive::ChatSession::enter()?;
-                                state.overlay = Some(match result {
-                                    Ok(()) => TerminalOverlay::report(
-                                        &label,
-                                        &String::from_utf8_lossy(&rendered),
-                                    ),
-                                    Err(error) => TerminalOverlay::error(&label, &error),
-                                });
-                            }
-                            command => {
-                                let mut rendered = Vec::new();
-                                let result = render_workspace_command_to(
-                                    &mut self_agent,
-                                    command,
-                                    &mut rendered,
-                                );
                                 state.overlay = Some(match result {
                                     Ok(()) => TerminalOverlay::report(
                                         &label,
@@ -1659,6 +1686,37 @@ mod tests {
             overlay.actions.get(4),
             Some(OverlayAction::Theme(theme::Theme::LightColorblind))
         ));
+    }
+
+    #[test]
+    fn theme_overlay_contains_a_preview_for_the_selected_palette() {
+        let overlay = TerminalOverlay::themes(theme::Theme::DarkColorblind);
+
+        assert!(overlay
+            .view
+            .details
+            .iter()
+            .any(|line| line.contains("Preview: Dark mode (colorblind-friendly)")));
+        assert!(overlay
+            .view
+            .details
+            .iter()
+            .any(|line| line.contains("assistant output")));
+    }
+
+    #[test]
+    fn theme_preview_refreshes_without_rebuilding_the_option_list() {
+        let mut overlay = TerminalOverlay::themes(theme::Theme::Default);
+        let item_count = overlay.view.items.len();
+
+        overlay.refresh_theme_preview(theme::Theme::Light);
+
+        assert_eq!(overlay.view.items.len(), item_count);
+        assert!(overlay
+            .view
+            .details
+            .first()
+            .is_some_and(|line| line.contains("Preview: Light")));
     }
 
     #[test]
