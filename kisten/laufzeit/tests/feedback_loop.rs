@@ -4,6 +4,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 
 use orchester_laufzeit::harness::feedback::{
     FailureLoopGuard, FeedbackClass, FeedbackEngine, FeedbackInput, FeedbackLimits,
+    StreamingRedactor,
 };
 use orchester_laufzeit::harness::governance::WorkspaceLocks;
 use orchester_laufzeit::harness::mutation::{
@@ -171,6 +172,52 @@ fn provider_token_prefix_is_redacted_without_a_leading_word_boundary() {
 
     assert!(!built.report.stdout_tail.contains(token));
     assert!(built.report.stdout_tail.contains("[REDACTED_TOKEN]"));
+}
+
+#[test]
+fn streaming_redactor_holds_and_redacts_a_configured_secret_split_across_chunks() {
+    let secret = "configured-provider-secret";
+    let mut redactor =
+        StreamingRedactor::new(vec![SecretString::new(secret.to_owned().into_boxed_str())]);
+
+    redactor.push(&format!("safe preface {} ", "x".repeat(80)));
+    let partial = redactor.push("configured-provider-").to_owned();
+    let complete = redactor.push("secret and safe suffix").to_owned();
+    let final_text = redactor.finish().to_owned();
+
+    assert!(!partial.contains("configured-provider-"));
+    assert!(!complete.contains(secret));
+    assert!(!final_text.contains(secret));
+    assert!(final_text.contains("[REDACTED]"));
+}
+
+#[test]
+fn streaming_redactor_never_exposes_a_split_provider_token() {
+    let mut redactor = StreamingRedactor::new(Vec::new());
+
+    redactor.push(&format!("safe preface {} ", "x".repeat(80)));
+    let partial = redactor.push("sk-ab").to_owned();
+    let complete = redactor.push("cdefghijkl ").to_owned();
+    let final_text = redactor.finish().to_owned();
+
+    assert!(!partial.contains("sk-ab"));
+    assert!(!complete.contains("sk-abcdefghijk"));
+    assert!(!final_text.contains("sk-abcdefghijk"));
+    assert!(final_text.contains("[REDACTED_TOKEN]"));
+}
+
+#[test]
+fn streaming_redactor_fails_closed_for_an_unterminated_private_key() {
+    let mut redactor = StreamingRedactor::new(Vec::new());
+
+    redactor.push(&format!("safe preface {} ", "x".repeat(80)));
+    let partial = redactor
+        .push("-----BEGIN PRIVATE KEY-----\nprivate-material")
+        .to_owned();
+    let final_text = redactor.finish().to_owned();
+
+    assert!(!partial.contains("PRIVATE KEY"));
+    assert_eq!(final_text, "[REDACTED]");
 }
 
 #[test]

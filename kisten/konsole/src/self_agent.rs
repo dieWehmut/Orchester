@@ -14,6 +14,7 @@ use orchester_laufzeit::harness::service::{
     SelfAgentResumeCatalog, SelfAgentResumeCatalogError, SelfAgentRunOutcome,
     SelfAgentRuntimeBuildError, SelfAgentRuntimeError, SelfAgentStatus, SelfAgentStatusError,
 };
+use orchester_laufzeit::harness::StreamingRedactor;
 use orchester_modell::ModelEventSink;
 use secrecy::SecretString;
 use thiserror::Error;
@@ -124,6 +125,14 @@ impl SelfAgentHost {
         default_session
             .select_configured(&config)
             .map_err(Into::into)
+    }
+
+    pub fn streaming_redactor(&self) -> Result<StreamingRedactor, SelfAgentHostError> {
+        let config = self.selected_config()?;
+        let provider = config.resolve_model_profile()?.provider;
+        let credentials = KeyringCredentialStore::new();
+        let secrets = config.resolve_configured_secrets_for_provider(&provider, &credentials)?;
+        Ok(secrets.into_streaming_redactor())
     }
 
     pub fn model_label(&self) -> Result<String, SelfAgentHostError> {

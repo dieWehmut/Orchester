@@ -8,6 +8,9 @@ use secrecy::{ExposeSecret, SecretString};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
 
+const STREAM_GUARD_BYTES: usize = 64;
+const MAX_STREAM_BYTES: usize = 256 * 1024;
+
 /// Order-independent identity of the exact secret redaction set shared by
 /// context assembly and durable persistence. The digest is never serialized
 /// or displayed; it only prevents differently configured boundaries from
@@ -250,6 +253,90 @@ impl FeedbackEngine {
             .replace_all(&sanitized, "[REDACTED_TOKEN]")
             .into_owned()
     }
+}
+
+/// Incrementally redacts one provider text stream without exposing chunk
+/// boundaries. The visible value is a complete snapshot, so callers can
+/// replace previously rendered text when a later chunk completes a token.
+pub struct StreamingRedactor {
+    sanitizer: FeedbackEngine,
+    raw: String,
+    visible: String,
+    guard_bytes: usize,
+}
+
+impl StreamingRedactor {
+    pub fn new(secrets: Vec<SecretString>) -> Self {
+        let guard_bytes = secrets
+            .iter()
+            .map(|secret| secret.expose_secret().len())
+            .max()
+            .unwrap_or_default()
+            .max(STREAM_GUARD_BYTES);
+        let sanitizer = secrets
+            .into_iter()
+            .fold(FeedbackEngine::default(), FeedbackEngine::with_secret);
+        Self {
+            sanitizer,
+            raw: String::new(),
+            visible: String::new(),
+            guard_bytes,
+        }
+    }
+
+    /// Append raw provider text and return the full safe snapshot to render.
+    pub fn push(&mut self, delta: &str) -> &str {
+        append_bounded(&mut self.raw, delta, MAX_STREAM_BYTES);
+        let normalized = normalize_text(&self.raw);
+        let sanitized = self.sanitizer.sanitize_text(&self.raw);
+        if self.sanitizer.contains_sensitive_material(&self.raw) && sanitized == normalized {
+            return &self.visible;
+        }
+        let end = guarded_prefix_end(&sanitized, self.guard_bytes);
+        self.visible.clear();
+        self.visible.push_str(&sanitized[..end]);
+        &self.visible
+    }
+
+    /// Flush the final safe snapshot after the provider stream completes.
+    pub fn finish(&mut self) -> &str {
+        let normalized = normalize_text(&self.raw);
+        let sanitized = self.sanitizer.sanitize_text(&self.raw);
+        self.visible =
+            if self.sanitizer.contains_sensitive_material(&self.raw) && sanitized == normalized {
+                "[REDACTED]".into()
+            } else {
+                sanitized
+            };
+        &self.visible
+    }
+}
+
+impl std::fmt::Debug for StreamingRedactor {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        formatter
+            .debug_struct("StreamingRedactor")
+            .field("raw_bytes", &self.raw.len())
+            .field("visible_bytes", &self.visible.len())
+            .finish_non_exhaustive()
+    }
+}
+
+fn append_bounded(target: &mut String, value: &str, limit: usize) {
+    let remaining = limit.saturating_sub(target.len());
+    let mut end = value.len().min(remaining);
+    while end > 0 && !value.is_char_boundary(end) {
+        end -= 1;
+    }
+    target.push_str(&value[..end]);
+}
+
+fn guarded_prefix_end(value: &str, guard_bytes: usize) -> usize {
+    let mut end = value.len().saturating_sub(guard_bytes);
+    while end > 0 && !value.is_char_boundary(end) {
+        end -= 1;
+    }
+    end
 }
 
 fn normalize_text(input: &str) -> String {

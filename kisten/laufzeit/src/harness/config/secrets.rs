@@ -2,6 +2,8 @@ use std::fmt;
 
 use secrecy::{ExposeSecret, SecretString};
 
+use crate::harness::feedback::StreamingRedactor;
+
 use super::{
     ConfigError, CredentialStore, SecretReference, UserConfig, PROTECTED_CREDENTIAL_MARKER,
 };
@@ -25,6 +27,10 @@ impl ConfiguredSecretSet {
 
     pub fn is_empty(&self) -> bool {
         self.values.is_empty()
+    }
+
+    pub fn into_streaming_redactor(self) -> StreamingRedactor {
+        StreamingRedactor::new(self.values)
     }
 }
 

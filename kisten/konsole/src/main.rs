@@ -20,7 +20,7 @@ use std::io::{self, IsTerminal, Read, Write};
 use std::path::PathBuf;
 use std::process::ExitCode;
 use std::process::{Command as ProcessCommand, Stdio};
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 use clap::Parser;
@@ -28,6 +28,7 @@ use clap::Parser;
 use orchester_laufzeit::harness::service::{
     SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentModelChoice, SelfAgentRunOutcome,
 };
+use orchester_laufzeit::harness::StreamingRedactor;
 use orchester_laufzeit::{Conductor, ConductorError, SessionRecord, SessionStore};
 use orchester_modell::ModelEventSink;
 use orchester_protokoll::{Outcome, RunResult, Task};
@@ -503,23 +504,20 @@ impl TerminalChatState {
         index
     }
 
-    fn append_assistant_delta(&mut self, index: usize, delta: &str) {
+    fn replace_assistant_snapshot(&mut self, index: usize, snapshot: &str) {
         let Some(entry) = self.transcript.get_mut(index) else {
             return;
         };
         if entry.role != interactive::TranscriptRole::Assistant {
             return;
         }
-        let delta = interactive::clean_transcript_delta(delta);
-        let remaining = orchester_modell::MAX_CONTENT_BYTES.saturating_sub(entry.text.len());
-        if remaining == 0 {
-            return;
-        }
-        let mut end = delta.len().min(remaining);
-        while end > 0 && !delta.is_char_boundary(end) {
+        let snapshot = interactive::clean_transcript_text(snapshot);
+        let mut end = snapshot.len().min(orchester_modell::MAX_CONTENT_BYTES);
+        while end > 0 && !snapshot.is_char_boundary(end) {
             end -= 1;
         }
-        entry.text.push_str(&delta[..end]);
+        entry.text.clear();
+        entry.text.push_str(&snapshot[..end]);
         self.scroll_offset = 0;
     }
 
@@ -556,11 +554,16 @@ enum ModelTurnResult {
 
 struct TtyEventSink {
     sender: mpsc::UnboundedSender<String>,
+    redactor: Mutex<StreamingRedactor>,
 }
 
 impl ModelEventSink for TtyEventSink {
     fn text_delta(&self, delta: &str) {
-        let _ = self.sender.send(delta.to_owned());
+        let Ok(mut redactor) = self.redactor.lock() else {
+            return;
+        };
+        let snapshot = redactor.push(delta).to_owned();
+        let _ = self.sender.send(snapshot);
     }
 }
 
@@ -623,7 +626,10 @@ async fn await_model_turn(
 ) -> Result<ModelTurnResult, CliError> {
     let cancel = CancellationToken::new();
     let (sender, mut deltas) = mpsc::unbounded_channel();
-    let sink: Arc<dyn ModelEventSink> = Arc::new(TtyEventSink { sender });
+    let sink: Arc<dyn ModelEventSink> = Arc::new(TtyEventSink {
+        sender,
+        redactor: Mutex::new(self_agent.streaming_redactor()?),
+    });
     let request = self_agent.submit_with_events(prompt, cancel.clone(), Some(sink));
     tokio::pin!(request);
     let mut tick = 0usize;
@@ -636,13 +642,13 @@ async fn await_model_turn(
                     return Ok(ModelTurnResult::Quit);
                 }
                 while let Ok(delta) = deltas.try_recv() {
-                    state.append_assistant_delta(assistant_index, &delta);
+                    state.replace_assistant_snapshot(assistant_index, &delta);
                 }
                 return Ok(ModelTurnResult::Completed(Box::new(result)));
             }
             delta = deltas.recv() => {
                 if let Some(delta) = delta {
-                    state.append_assistant_delta(assistant_index, &delta);
+                    state.replace_assistant_snapshot(assistant_index, &delta);
                     chat.present_view(state.view(choices, model_status))?;
                 }
             }
@@ -1645,6 +1651,7 @@ enum CliError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use secrecy::SecretString;
     use std::path::Path;
 
     #[test]
@@ -1945,12 +1952,12 @@ mod tests {
     }
 
     #[test]
-    fn streamed_deltas_update_one_assistant_transcript_entry() {
+    fn streamed_snapshots_replace_one_assistant_transcript_entry() {
         let mut state = TerminalChatState::default();
 
         let assistant = state.begin_assistant_transcript();
-        state.append_assistant_delta(assistant, "hello ");
-        state.append_assistant_delta(assistant, "world");
+        state.replace_assistant_snapshot(assistant, "hello ");
+        state.replace_assistant_snapshot(assistant, "hello world");
 
         assert_eq!(state.transcript.len(), 1);
         assert_eq!(
@@ -1958,6 +1965,25 @@ mod tests {
             interactive::TranscriptRole::Assistant
         );
         assert_eq!(state.transcript[assistant].text, "hello world");
+    }
+
+    #[test]
+    fn tty_event_sink_redacts_a_secret_split_across_provider_deltas() {
+        let (sender, mut snapshots) = mpsc::unbounded_channel();
+        let sink = TtyEventSink {
+            sender,
+            redactor: Mutex::new(StreamingRedactor::new(vec![SecretString::new(
+                "stream-secret-canary".to_owned().into_boxed_str(),
+            )])),
+        };
+
+        sink.text_delta(&format!("safe {} stream-secret-", "x".repeat(80)));
+        sink.text_delta("canary done");
+
+        let first = snapshots.try_recv().expect("first safe snapshot");
+        let second = snapshots.try_recv().expect("second safe snapshot");
+        assert!(!first.contains("stream-secret-"));
+        assert!(!second.contains("stream-secret-canary"));
     }
 
     #[test]

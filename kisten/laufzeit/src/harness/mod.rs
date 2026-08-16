@@ -33,7 +33,7 @@ pub mod workspace_write;
 
 pub use feedback::{
     BuiltFeedback, FailureLoopGuard, FeedbackClass, FeedbackEngine, FeedbackInput, FeedbackLimits,
-    FeedbackTruncation, LoopGuardConfigError, SecretSetId,
+    FeedbackTruncation, LoopGuardConfigError, SecretSetId, StreamingRedactor,
 };
 pub use mutation::{
     MutationObservation, MutationTracker, SnapshotError, SnapshotLimits, SnapshotResult,
