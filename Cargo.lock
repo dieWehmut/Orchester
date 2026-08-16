@@ -1029,6 +1029,7 @@ dependencies = [
  "tokio",
  "tokio-util",
  "unicode-width",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]

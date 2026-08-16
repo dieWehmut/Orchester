@@ -28,3 +28,9 @@ unicode-width = { workspace = true }
 flate2 = { workspace = true }
 tar = { workspace = true }
 sha2 = { workspace = true }
+
+[target.'cfg(windows)'.dev-dependencies]
+windows-sys = { workspace = true, features = [
+    "Win32_System_Console",
+    "Win32_System_Pipes",
+] }
