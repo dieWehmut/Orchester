@@ -23,7 +23,9 @@ use std::time::Duration;
 
 use clap::Parser;
 
-use orchester_laufzeit::harness::service::SelfAgentRunOutcome;
+use orchester_laufzeit::harness::service::{
+    SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentRunOutcome,
+};
 use orchester_laufzeit::{Conductor, ConductorError, SessionRecord, SessionStore};
 use orchester_modell::ModelEventSink;
 use orchester_protokoll::{Outcome, RunResult, Task};
@@ -31,8 +33,8 @@ use orchester_verzeichnis::{standard_plugin_roots, PluginRootError, Registry};
 
 use args::{Cli, Command, PluginCommand, PluginInstallArgs, PluginRemoveArgs, PluginStatusArgs};
 use interactive::{
-    AgentChoice, ChatHomeView, CredentialCommand, ModelCommand, PluginAction, PromptAction,
-    TranscriptEntry, WorkspaceCommand,
+    AgentChoice, ChatHomeView, CommandOverlay, CredentialCommand, ModelCommand, OverlayInput,
+    OverlayItem, PluginAction, PromptAction, TranscriptEntry, WorkspaceCommand,
 };
 use process::{command_invocation, is_cancelled_status, resolve_command};
 use self_agent::{SelfAgentHost, SelfAgentHostError};
@@ -195,6 +197,82 @@ enum QueuedChatAction {
     Command(interactive::HomeAction),
 }
 
+#[derive(Debug, Clone)]
+enum OverlayAction {
+    Close,
+    ModelConfigured,
+    ModelProfile(String),
+}
+
+#[derive(Debug, Clone)]
+struct TerminalOverlay {
+    view: CommandOverlay,
+    actions: Vec<OverlayAction>,
+}
+
+impl TerminalOverlay {
+    fn report(label: &str, output: &str) -> Self {
+        let mut items = interactive::clean_transcript_text(output)
+            .lines()
+            .map(str::trim)
+            .filter(|line| !line.is_empty())
+            .map(|line| OverlayItem::new(line, ""))
+            .collect::<Vec<_>>();
+        if items.is_empty() {
+            items.push(OverlayItem::new("No results", ""));
+        }
+        let actions = vec![OverlayAction::Close; items.len()];
+        Self {
+            view: CommandOverlay::new(
+                format!("{label} result"),
+                "This result remains visible until you close it.",
+                items,
+            )
+            .with_footer("Up/Down inspect  |  Enter/Esc close"),
+            actions,
+        }
+    }
+
+    fn error(label: &str, error: &impl std::fmt::Display) -> Self {
+        Self::report(label, &format!("Error\n{error}"))
+    }
+
+    fn models(catalog: &SelfAgentModelCatalog) -> Self {
+        let current = match &catalog.active {
+            SelfAgentActiveModel::Configured(choice) => {
+                choice.profile.as_deref().unwrap_or("configured")
+            }
+            SelfAgentActiveModel::Unresolved { .. } | SelfAgentActiveModel::NotConfigured => "",
+        };
+        let mut items =
+            vec![
+                OverlayItem::new("configured", "Use the model resolved from configuration")
+                    .current(current == "configured"),
+            ];
+        let mut actions = vec![OverlayAction::ModelConfigured];
+        for choice in &catalog.profiles {
+            let name = choice.profile.as_deref().unwrap_or("unnamed");
+            let detail = format!(
+                "{} | {} | reasoning {}",
+                choice.model,
+                choice.provider_name,
+                choice.reasoning_effort.as_deref().unwrap_or("default")
+            );
+            items.push(OverlayItem::new(name, detail).current(current == name));
+            actions.push(OverlayAction::ModelProfile(name.to_owned()));
+        }
+        Self {
+            view: CommandOverlay::new(
+                "Select model",
+                "Choose the model used for future turns in this session.",
+                items,
+            )
+            .with_footer("Up/Down select  |  Enter apply  |  Esc cancel"),
+            actions,
+        }
+    }
+}
+
 #[derive(Default)]
 struct TerminalChatState {
     input: String,
@@ -204,6 +282,7 @@ struct TerminalChatState {
     pending: VecDeque<QueuedChatAction>,
     busy: Option<String>,
     scroll_offset: usize,
+    overlay: Option<TerminalOverlay>,
 }
 
 impl TerminalChatState {
@@ -218,6 +297,7 @@ impl TerminalChatState {
             self.busy.as_deref(),
         )
         .with_scroll(self.scroll_offset)
+        .with_overlay(self.overlay.as_ref().map(|overlay| &overlay.view))
     }
 
     fn clear_input(&mut self) {
@@ -334,6 +414,7 @@ fn workspace_command_label(command: &WorkspaceCommand) -> String {
         WorkspaceCommand::Model(ModelCommand::Show) => "/model".into(),
         WorkspaceCommand::Model(ModelCommand::SelectProfile(name)) => format!("/model {name}"),
         WorkspaceCommand::Model(ModelCommand::UseConfigured) => "/model configured".into(),
+        WorkspaceCommand::Theme(_) => "/theme".into(),
         WorkspaceCommand::Credential(CredentialCommand::Login { provider }) => provider
             .as_deref()
             .map(|provider| format!("/login {provider}"))
@@ -418,6 +499,58 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
         let model_status = self_agent
             .model_label()
             .unwrap_or_else(|_| "model unavailable".into());
+        if state.overlay.is_some() {
+            state.busy = None;
+            chat.present_view(state.view(&choices, &model_status))?;
+            let Some(key) = chat.read_key()? else {
+                continue;
+            };
+            let overlay_input = state
+                .overlay
+                .as_mut()
+                .and_then(|overlay| interactive::handle_overlay_key(key, &mut overlay.view));
+            let Some(overlay_input) = overlay_input else {
+                continue;
+            };
+            match overlay_input {
+                OverlayInput::Cancel => state.overlay = None,
+                OverlayInput::Confirm(index) => {
+                    let action = state
+                        .overlay
+                        .as_ref()
+                        .and_then(|overlay| overlay.actions.get(index))
+                        .cloned()
+                        .unwrap_or(OverlayAction::Close);
+                    match action {
+                        OverlayAction::Close => state.overlay = None,
+                        OverlayAction::ModelConfigured | OverlayAction::ModelProfile(_) => {
+                            let mut rendered = Vec::new();
+                            let result: Result<(), CliError> = (|| {
+                                let choice = match action {
+                                    OverlayAction::ModelConfigured => {
+                                        self_agent.select_configured_model()?
+                                    }
+                                    OverlayAction::ModelProfile(name) => {
+                                        self_agent.select_model_profile(&name)?
+                                    }
+                                    OverlayAction::Close => unreachable!(),
+                                };
+                                self_agent::render_model_selection(&mut rendered, &choice)?;
+                                Ok(())
+                            })();
+                            state.overlay = Some(match result {
+                                Ok(()) => TerminalOverlay::report(
+                                    "/model",
+                                    &String::from_utf8_lossy(&rendered),
+                                ),
+                                Err(error) => TerminalOverlay::error("/model", &error),
+                            });
+                        }
+                    }
+                }
+            }
+            continue;
+        }
         if let Some(queued) = state.pending.pop_front() {
             match queued {
                 QueuedChatAction::Prompt(prompt) => {
@@ -466,28 +599,44 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                     }
                     interactive::HomeAction::Workspace(command) => {
                         let label = workspace_command_label(&command);
-                        drop(chat);
-                        let mut rendered = Vec::new();
-                        let result =
-                            render_workspace_command_to(&mut self_agent, command, &mut rendered);
-                        chat = interactive::ChatSession::enter()?;
-                        match result {
-                            Ok(()) => {
-                                let output = interactive::clean_transcript_text(
-                                    &String::from_utf8_lossy(&rendered),
-                                );
-                                if output.is_empty() {
-                                    state.append_transcript(TranscriptEntry::status(format!(
-                                        "{label} completed"
-                                    )));
-                                } else {
-                                    state.append_transcript(TranscriptEntry::status(format!(
-                                        "{label}\n{output}"
-                                    )));
-                                }
+                        match command {
+                            WorkspaceCommand::Model(ModelCommand::Show) => {
+                                state.overlay = Some(match self_agent.model_catalog() {
+                                    Ok(catalog) => TerminalOverlay::models(&catalog),
+                                    Err(error) => TerminalOverlay::error(&label, &error),
+                                });
                             }
-                            Err(error) => {
-                                state.append_transcript(TranscriptEntry::error(error.to_string()))
+                            WorkspaceCommand::Credential(command) => {
+                                drop(chat);
+                                let mut rendered = Vec::new();
+                                let result = render_workspace_command_to(
+                                    &mut self_agent,
+                                    WorkspaceCommand::Credential(command),
+                                    &mut rendered,
+                                );
+                                chat = interactive::ChatSession::enter()?;
+                                state.overlay = Some(match result {
+                                    Ok(()) => TerminalOverlay::report(
+                                        &label,
+                                        &String::from_utf8_lossy(&rendered),
+                                    ),
+                                    Err(error) => TerminalOverlay::error(&label, &error),
+                                });
+                            }
+                            command => {
+                                let mut rendered = Vec::new();
+                                let result = render_workspace_command_to(
+                                    &mut self_agent,
+                                    command,
+                                    &mut rendered,
+                                );
+                                state.overlay = Some(match result {
+                                    Ok(()) => TerminalOverlay::report(
+                                        &label,
+                                        &String::from_utf8_lossy(&rendered),
+                                    ),
+                                    Err(error) => TerminalOverlay::error(&label, &error),
+                                });
                             }
                         }
                     }
@@ -543,35 +692,29 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                         }
                     }
                     interactive::HomeAction::Plugins(action) => {
-                        drop(chat);
                         let result = run_plugin_command_to_transcript(
                             &registry,
                             plugin_command(action),
                             &orchester_home(),
                         );
-                        chat = interactive::ChatSession::enter()?;
                         match result {
                             Ok((outcome, _, error)) if outcome.failed() => {
-                                state.append_transcript(TranscriptEntry::error(
-                                    if error.is_empty() {
-                                        "plugin command failed".into()
-                                    } else {
-                                        error
-                                    },
+                                let error = if error.is_empty() {
+                                    "plugin command failed".into()
+                                } else {
+                                    error
+                                };
+                                state.overlay = Some(TerminalOverlay::report(
+                                    "/plugins",
+                                    &format!("Error\n{error}"),
                                 ));
                             }
                             Ok((_, output, _)) => {
-                                state.append_transcript(TranscriptEntry::status(
-                                    if output.is_empty() {
-                                        "/plugins completed".into()
-                                    } else {
-                                        format!("/plugins\n{output}")
-                                    },
-                                ));
+                                state.overlay = Some(TerminalOverlay::report("/plugins", &output));
                                 registry = discover_registry()?;
                             }
                             Err(error) => {
-                                state.append_transcript(TranscriptEntry::error(error.to_string()))
+                                state.overlay = Some(TerminalOverlay::error("/plugins", &error));
                             }
                         }
                     }
@@ -1073,6 +1216,12 @@ fn render_workspace_command_to<W: Write>(
             let selected = self_agent.select_configured_model()?;
             self_agent::render_model_selection(out, &selected)?;
         }
+        WorkspaceCommand::Theme(_) => {
+            writeln!(
+                out,
+                "Use /theme in an interactive terminal to choose a theme."
+            )?;
+        }
         WorkspaceCommand::Credential(CredentialCommand::Login { provider }) => {
             let target = self_agent.credential_target(provider.as_deref())?;
             self_agent::render_credential_target(out, &target)?;
@@ -1158,6 +1307,24 @@ mod tests {
         assert_eq!(busy_label(1), "Creating .");
         assert_eq!(busy_label(4), "Creating  ");
         assert!(busy_label(99).len() <= "Creating ...".len());
+    }
+
+    #[test]
+    fn command_report_overlay_is_bounded_to_selectable_sanitized_rows() {
+        let overlay = TerminalOverlay::report(
+            "/status",
+            "\x1b[1mSelf-agent status\x1b[0m\nmodel: gpt-test\nstate: ready",
+        );
+
+        assert_eq!(overlay.view.title, "/status result");
+        assert_eq!(overlay.view.items.len(), 3);
+        assert_eq!(overlay.view.items[0].label, "Self-agent status");
+        assert!(!overlay.view.items[0].label.contains('\x1b'));
+        assert_eq!(overlay.actions.len(), overlay.view.items.len());
+        assert!(overlay
+            .actions
+            .iter()
+            .all(|action| matches!(action, OverlayAction::Close)));
     }
 
     #[test]

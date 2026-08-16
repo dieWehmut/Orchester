@@ -87,6 +87,7 @@ pub(crate) struct ChatHomeView<'a> {
     pub(crate) transcript: &'a [TranscriptEntry],
     pub(crate) busy: Option<&'a str>,
     pub(crate) scroll_offset: usize,
+    pub(crate) overlay: Option<&'a CommandOverlay>,
 }
 
 impl<'a> ChatHomeView<'a> {
@@ -110,11 +111,71 @@ impl<'a> ChatHomeView<'a> {
             transcript,
             busy,
             scroll_offset: 0,
+            overlay: None,
         }
     }
 
     pub(crate) fn with_scroll(mut self, scroll_offset: usize) -> Self {
         self.scroll_offset = scroll_offset;
+        self
+    }
+
+    pub(crate) fn with_overlay(mut self, overlay: Option<&'a CommandOverlay>) -> Self {
+        self.overlay = overlay;
+        self
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct OverlayItem {
+    pub(crate) label: String,
+    pub(crate) detail: String,
+    pub(crate) current: bool,
+}
+
+impl OverlayItem {
+    pub(crate) fn new(label: impl Into<String>, detail: impl Into<String>) -> Self {
+        Self {
+            label: label.into(),
+            detail: detail.into(),
+            current: false,
+        }
+    }
+
+    pub(crate) fn current(mut self, current: bool) -> Self {
+        self.current = current;
+        self
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct CommandOverlay {
+    pub(crate) title: String,
+    pub(crate) description: String,
+    pub(crate) items: Vec<OverlayItem>,
+    pub(crate) selected: usize,
+    pub(crate) details: Vec<String>,
+    pub(crate) footer: String,
+}
+
+impl CommandOverlay {
+    pub(crate) fn new(
+        title: impl Into<String>,
+        description: impl Into<String>,
+        items: Vec<OverlayItem>,
+    ) -> Self {
+        Self {
+            title: title.into(),
+            description: description.into(),
+            items,
+            selected: 0,
+            details: Vec::new(),
+            footer: "Enter confirm  |  Esc close".into(),
+        }
+    }
+
+    pub(crate) fn with_footer(mut self, footer: impl Into<String>) -> Self {
+        self.footer = footer.into();
         self
     }
 }
@@ -311,6 +372,56 @@ pub(crate) fn handle_chat_key_with_scroll(
             input.push(ch);
             *command_selected = 0;
             *show_help = false;
+            None
+        }
+        _ => None,
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum OverlayInput {
+    Confirm(usize),
+    Cancel,
+}
+
+pub(crate) fn handle_overlay_key(
+    key: KeyEvent,
+    overlay: &mut CommandOverlay,
+) -> Option<OverlayInput> {
+    if !is_press(&key) {
+        return None;
+    }
+    if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('c') {
+        return Some(OverlayInput::Cancel);
+    }
+
+    match key.code {
+        KeyCode::Esc => Some(OverlayInput::Cancel),
+        KeyCode::Enter => Some(OverlayInput::Confirm(
+            overlay.selected.min(overlay.items.len().saturating_sub(1)),
+        )),
+        KeyCode::Up => {
+            overlay.selected = wrapped_selection(
+                overlay.selected,
+                overlay.items.len(),
+                SelectionDirection::Previous,
+            );
+            None
+        }
+        KeyCode::Down => {
+            overlay.selected = wrapped_selection(
+                overlay.selected,
+                overlay.items.len(),
+                SelectionDirection::Next,
+            );
+            None
+        }
+        KeyCode::Home => {
+            overlay.selected = 0;
+            None
+        }
+        KeyCode::End => {
+            overlay.selected = overlay.items.len().saturating_sub(1);
             None
         }
         _ => None,
@@ -939,6 +1050,7 @@ fn render_chat_home<W: Write>(
             transcript: &[],
             busy: None,
             scroll_offset: 0,
+            overlay: None,
         },
     )
 }
@@ -970,12 +1082,13 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
         transcript,
         busy,
         scroll_offset,
+        overlay,
     } = view;
     if height == 0 {
         return Ok(());
     }
 
-    if !transcript.is_empty() || busy.is_some() {
+    if !transcript.is_empty() || busy.is_some() || overlay.is_some() {
         return render_transcript_chat_frame(
             out,
             ChatHomeView {
@@ -989,6 +1102,7 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
                 transcript,
                 busy,
                 scroll_offset,
+                overlay,
             },
         );
     }
@@ -1089,6 +1203,7 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
         transcript,
         busy,
         scroll_offset,
+        overlay,
     } = view;
     let status_rows = usize::from(height >= 2);
     let composer_rows = 1;
@@ -1128,7 +1243,9 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
         writeln!(out)?;
     }
 
-    if show_help {
+    if let Some(overlay) = overlay {
+        render_command_overlay(out, overlay, width, content_rows)?;
+    } else if show_help {
         let busy_rows = usize::from(busy.is_some() && content_rows > 0);
         render_home_help(out, width, content_rows.saturating_sub(busy_rows))?;
         if let Some(busy) = busy {
@@ -1177,6 +1294,81 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
 
     if status_rows > 0 {
         render_status_line(out, width, model_status)?;
+    }
+    Ok(())
+}
+
+fn render_command_overlay<W: Write>(
+    out: &mut W,
+    overlay: &CommandOverlay,
+    width: usize,
+    max_rows: usize,
+) -> io::Result<()> {
+    if max_rows == 0 {
+        return Ok(());
+    }
+
+    let mut rows = Vec::new();
+    rows.push(format!(
+        "{BOLD}{ORANGE}{}{RESET}",
+        truncate(&sanitize_terminal_text(&overlay.title), width)
+    ));
+    if !overlay.description.is_empty() {
+        rows.push(format!(
+            "{DIM}{}{RESET}",
+            truncate(&sanitize_terminal_text(&overlay.description), width)
+        ));
+    }
+
+    let footer_rows = usize::from(!overlay.footer.is_empty() && max_rows > rows.len());
+    let body_rows = max_rows
+        .saturating_sub(rows.len())
+        .saturating_sub(footer_rows);
+    let item_rows = if overlay.details.is_empty() {
+        body_rows
+    } else if overlay.items.is_empty() {
+        0
+    } else {
+        body_rows.div_ceil(2).min(overlay.items.len())
+    };
+    let start = selection_window_start(overlay.selected, overlay.items.len(), item_rows);
+    for (index, item) in overlay.items.iter().enumerate().skip(start).take(item_rows) {
+        let marker = if index == overlay.selected { ">" } else { " " };
+        let current = if item.current { " [current]" } else { "" };
+        let detail = if item.detail.is_empty() {
+            String::new()
+        } else {
+            format!("  {}", sanitize_terminal_text(&item.detail))
+        };
+        let line = truncate(
+            &format!(
+                "{marker} {}{current}{detail}",
+                sanitize_terminal_text(&item.label)
+            ),
+            width,
+        );
+        if index == overlay.selected {
+            rows.push(format!("{YELLOW}{line}{RESET}"));
+        } else {
+            rows.push(line);
+        }
+    }
+
+    let detail_rows = max_rows
+        .saturating_sub(rows.len())
+        .saturating_sub(footer_rows);
+    for detail in overlay.details.iter().take(detail_rows) {
+        rows.push(truncate(&sanitize_terminal_text(detail), width));
+    }
+    if footer_rows > 0 {
+        rows.push(format!(
+            "{DIM}{}{RESET}",
+            truncate(&sanitize_terminal_text(&overlay.footer), width)
+        ));
+    }
+
+    for row in rows.into_iter().take(max_rows) {
+        writeln!(out, "{row}")?;
     }
     Ok(())
 }
@@ -2519,6 +2711,7 @@ mod tests {
                 transcript: &[],
                 busy: None,
                 scroll_offset: 0,
+                overlay: None,
             },
         )
         .unwrap();
@@ -2557,6 +2750,7 @@ mod tests {
                 transcript: &[],
                 busy: None,
                 scroll_offset: 0,
+                overlay: None,
             },
         )
         .unwrap();
@@ -2588,6 +2782,7 @@ mod tests {
                 transcript: &transcript,
                 busy: Some("Creating..."),
                 scroll_offset: 0,
+                overlay: None,
             },
         )
         .unwrap();
@@ -2622,6 +2817,7 @@ mod tests {
                 transcript: &transcript,
                 busy: None,
                 scroll_offset: 0,
+                overlay: None,
             },
         )
         .unwrap();
@@ -2642,6 +2838,79 @@ mod tests {
     }
 
     #[test]
+    fn command_overlay_is_visible_below_the_stable_workspace_panel() {
+        let mut overlay = CommandOverlay::new(
+            "Select model",
+            "Choose the model used for future turns.",
+            vec![
+                OverlayItem::new("configured", "Use the model from configuration").current(true),
+                OverlayItem::new("fast", "gpt-fast | low latency"),
+            ],
+        );
+        overlay.details = vec!["Preview".into(), "provider: OpenAI".into()];
+        let mut out = Vec::new();
+
+        render_chat_home_in_viewport(
+            &mut out,
+            ChatHomeView {
+                width: 100,
+                height: 44,
+                input: "",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "gpt-test",
+                transcript: &[],
+                busy: None,
+                scroll_offset: 0,
+                overlay: Some(&overlay),
+            },
+        )
+        .unwrap();
+
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        assert!(plain.contains(">_ Orchester"), "stable top:\n{plain}");
+        assert!(plain.contains("Select model"), "overlay title:\n{plain}");
+        assert!(plain.contains("> configured"), "selected row:\n{plain}");
+        assert!(plain.contains("current"), "current marker:\n{plain}");
+        assert!(plain.contains("provider: OpenAI"), "preview:\n{plain}");
+        assert!(plain.contains("Enter confirm"), "footer:\n{plain}");
+        assert!(plain.lines().count() <= 44, "frame overflowed:\n{plain}");
+    }
+
+    #[test]
+    fn command_overlay_navigation_wraps_and_confirms_the_visible_selection() {
+        let mut overlay = CommandOverlay::new(
+            "Select model",
+            "",
+            vec![
+                OverlayItem::new("configured", ""),
+                OverlayItem::new("fast", ""),
+            ],
+        );
+
+        assert_eq!(
+            handle_overlay_key(KeyEvent::new(KeyCode::Up, KeyModifiers::NONE), &mut overlay,),
+            None
+        );
+        assert_eq!(overlay.selected, 1);
+        assert_eq!(
+            handle_overlay_key(
+                KeyEvent::new(KeyCode::Enter, KeyModifiers::NONE),
+                &mut overlay,
+            ),
+            Some(OverlayInput::Confirm(1))
+        );
+        assert_eq!(
+            handle_overlay_key(
+                KeyEvent::new(KeyCode::Esc, KeyModifiers::NONE),
+                &mut overlay,
+            ),
+            Some(OverlayInput::Cancel)
+        );
+    }
+
+    #[test]
     fn busy_palette_and_transcript_are_visible_together() {
         let transcript = vec![TranscriptEntry::status("previous output")];
         let mut out = Vec::new();
@@ -2658,6 +2927,7 @@ mod tests {
                 transcript: &transcript,
                 busy: Some("Creating .."),
                 scroll_offset: 0,
+                overlay: None,
             },
         )
         .unwrap();
@@ -2685,6 +2955,7 @@ mod tests {
                 transcript: &transcript,
                 busy: Some("Creating .."),
                 scroll_offset: 0,
+                overlay: None,
             },
         )
         .unwrap();
@@ -2714,6 +2985,7 @@ mod tests {
                 transcript: &transcript,
                 busy: Some("Creating ..."),
                 scroll_offset: 0,
+                overlay: None,
             },
         )
         .unwrap();
@@ -2744,6 +3016,7 @@ mod tests {
                     transcript: &transcript,
                     busy: None,
                     scroll_offset,
+                    overlay: None,
                 },
             )
             .unwrap();
@@ -2885,6 +3158,7 @@ mod tests {
                 transcript: &[],
                 busy: None,
                 scroll_offset: 0,
+                overlay: None,
             },
         )
         .unwrap();
@@ -2965,6 +3239,7 @@ mod tests {
                         transcript: &[],
                         busy: None,
                         scroll_offset: 0,
+                        overlay: None,
                     },
                 )
                 .unwrap();
@@ -3027,6 +3302,7 @@ mod tests {
                 transcript: &[],
                 busy: None,
                 scroll_offset: 0,
+                overlay: None,
             },
         )
         .unwrap();
