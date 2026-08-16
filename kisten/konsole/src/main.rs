@@ -414,10 +414,11 @@ fn report_overlay_item(line: &str) -> OverlayItem {
 
 fn model_effort_overlay_for_target(
     catalog: &SelfAgentModelCatalog,
+    configured: Option<&SelfAgentModelChoice>,
     target: ModelSelectionTarget,
 ) -> Option<TerminalOverlay> {
     let choice = match &target {
-        ModelSelectionTarget::Configured => catalog.active.choice().cloned(),
+        ModelSelectionTarget::Configured => configured.cloned(),
         ModelSelectionTarget::Profile(name) => catalog
             .profiles
             .iter()
@@ -425,6 +426,22 @@ fn model_effort_overlay_for_target(
             .cloned(),
     }?;
     Some(TerminalOverlay::model_efforts(target, &choice))
+}
+
+fn load_model_effort_overlay(
+    self_agent: &SelfAgentHost,
+    target: ModelSelectionTarget,
+) -> Result<Option<TerminalOverlay>, SelfAgentHostError> {
+    let catalog = self_agent.model_catalog()?;
+    let configured = match target {
+        ModelSelectionTarget::Configured => Some(self_agent.configured_model_choice()?),
+        ModelSelectionTarget::Profile(_) => None,
+    };
+    Ok(model_effort_overlay_for_target(
+        &catalog,
+        configured.as_ref(),
+        target,
+    ))
 }
 
 #[derive(Default)]
@@ -730,21 +747,18 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                 _ => unreachable!(),
                             };
                             let parent = state.overlay.take();
-                            state.overlay = Some(match self_agent.model_catalog() {
-                                Ok(catalog) => {
-                                    match model_effort_overlay_for_target(&catalog, target) {
-                                        Some(child) => match parent {
-                                            Some(parent) => child.with_parent(parent),
-                                            None => child,
-                                        },
-                                        None => TerminalOverlay::error(
-                                            "/model",
-                                            &"selected model is unavailable",
-                                        ),
-                                    }
-                                }
-                                Err(error) => TerminalOverlay::error("/model", &error),
-                            });
+                            state.overlay =
+                                Some(match load_model_effort_overlay(&self_agent, target) {
+                                    Ok(Some(child)) => match parent {
+                                        Some(parent) => child.with_parent(parent),
+                                        None => child,
+                                    },
+                                    Ok(None) => TerminalOverlay::error(
+                                        "/model",
+                                        &"selected model is unavailable",
+                                    ),
+                                    Err(error) => TerminalOverlay::error("/model", &error),
+                                });
                         }
                         OverlayAction::ModelEffort { target, effort } => {
                             let mut rendered = Vec::new();
@@ -876,34 +890,36 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                 });
                             }
                             WorkspaceCommand::Model(ModelCommand::SelectProfile(name)) => {
-                                state.overlay = Some(match self_agent.model_catalog() {
-                                    Ok(catalog) => model_effort_overlay_for_target(
-                                        &catalog,
+                                state.overlay = Some(
+                                    match load_model_effort_overlay(
+                                        &self_agent,
                                         ModelSelectionTarget::Profile(name),
-                                    )
-                                    .unwrap_or_else(|| {
-                                        TerminalOverlay::error(
-                                            &label,
-                                            &"selected model is unavailable",
-                                        )
-                                    }),
-                                    Err(error) => TerminalOverlay::error(&label, &error),
-                                });
+                                    ) {
+                                        Ok(overlay) => overlay.unwrap_or_else(|| {
+                                            TerminalOverlay::error(
+                                                &label,
+                                                &"selected model is unavailable",
+                                            )
+                                        }),
+                                        Err(error) => TerminalOverlay::error(&label, &error),
+                                    },
+                                );
                             }
                             WorkspaceCommand::Model(ModelCommand::UseConfigured) => {
-                                state.overlay = Some(match self_agent.model_catalog() {
-                                    Ok(catalog) => model_effort_overlay_for_target(
-                                        &catalog,
+                                state.overlay = Some(
+                                    match load_model_effort_overlay(
+                                        &self_agent,
                                         ModelSelectionTarget::Configured,
-                                    )
-                                    .unwrap_or_else(|| {
-                                        TerminalOverlay::error(
-                                            &label,
-                                            &"configured model is unavailable",
-                                        )
-                                    }),
-                                    Err(error) => TerminalOverlay::error(&label, &error),
-                                });
+                                    ) {
+                                        Ok(overlay) => overlay.unwrap_or_else(|| {
+                                            TerminalOverlay::error(
+                                                &label,
+                                                &"configured model is unavailable",
+                                            )
+                                        }),
+                                        Err(error) => TerminalOverlay::error(&label, &error),
+                                    },
+                                );
                             }
                             WorkspaceCommand::Theme(ThemeCommand::Show) => {
                                 state.theme_before_overlay = Some(state.active_theme);
@@ -1801,6 +1817,40 @@ mod tests {
                 effort: None,
             })
         ));
+    }
+
+    #[test]
+    fn configured_effort_picker_does_not_reuse_the_active_named_profile() {
+        let configured = SelfAgentModelChoice {
+            profile: None,
+            provider: "openai".into(),
+            provider_name: "OpenAI".into(),
+            model: "gpt-default".into(),
+            reasoning_effort: Some("medium".into()),
+            plan_reasoning_effort: None,
+            service_tier: None,
+        };
+        let active_profile = SelfAgentModelChoice {
+            profile: Some("fast".into()),
+            model: "gpt-fast".into(),
+            reasoning_effort: Some("low".into()),
+            ..configured.clone()
+        };
+        let catalog = SelfAgentModelCatalog {
+            active: SelfAgentActiveModel::Configured(active_profile.clone()),
+            profiles: vec![active_profile],
+        };
+
+        let overlay = model_effort_overlay_for_target(
+            &catalog,
+            Some(&configured),
+            ModelSelectionTarget::Configured,
+        )
+        .expect("configured picker");
+
+        assert!(overlay.view.description.contains("gpt-default"));
+        assert!(!overlay.view.description.contains("gpt-fast"));
+        assert!(overlay.view.items[2].current, "medium must be current");
     }
 
     #[test]

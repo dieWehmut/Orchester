@@ -117,6 +117,15 @@ impl SelfAgentHost {
         Ok(catalog)
     }
 
+    /// Resolve the file-backed default without changing the session choice.
+    pub fn configured_model_choice(&self) -> Result<SelfAgentModelChoice, SelfAgentHostError> {
+        let config = self.load_config()?;
+        let mut default_session = SelfAgentModelSession::default();
+        default_session
+            .select_configured(&config)
+            .map_err(Into::into)
+    }
+
     pub fn model_label(&self) -> Result<String, SelfAgentHostError> {
         let catalog = self.model_catalog()?;
         Ok(match catalog.active {
