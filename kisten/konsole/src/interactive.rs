@@ -38,6 +38,8 @@ const COMPACT_PALETTE_ROWS: usize = 6;
 const PALETTE_ROWS: usize = 8;
 const SCROLL_PAGE_ROWS: usize = 8;
 const PICKER_PANEL_ROWS: usize = 7;
+const MINIMUM_CHAT_CONTENT_ROWS: usize = 6;
+const COMPACT_WORKSPACE_PANEL_ROWS: usize = 6;
 
 const PROMPT_SUGGESTIONS: [&str; 6] = [
     "Summarize recent commits",
@@ -1492,6 +1494,7 @@ fn command_palette_lines(
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum ChatHeaderLayout {
     Panel { portrait_width: Option<usize> },
+    CompactPanel,
     Compact { rows: usize },
 }
 
@@ -1501,6 +1504,7 @@ impl ChatHeaderLayout {
             Self::Panel { portrait_width } => {
                 chat_panel_line_count_with_portrait(width, portrait_width)
             }
+            Self::CompactPanel => COMPACT_WORKSPACE_PANEL_ROWS,
             Self::Compact { rows } => rows,
         }
     }
@@ -1517,7 +1521,14 @@ struct ChatFrameLayout {
 fn chat_frame_layout(width: usize, height: usize) -> ChatFrameLayout {
     let composer_rows = usize::from(height > 0);
     let status_rows = usize::from(height >= 2);
-    let minimum_content_rows = usize::from(height > composer_rows.saturating_add(status_rows));
+    let available_content_rows = height
+        .saturating_sub(composer_rows)
+        .saturating_sub(status_rows);
+    let minimum_content_rows = if available_content_rows == 0 {
+        0
+    } else {
+        MINIMUM_CHAT_CONTENT_ROWS.min(available_content_rows.saturating_sub(1).max(1))
+    };
     let maximum_header_rows = height
         .saturating_sub(composer_rows)
         .saturating_sub(status_rows)
@@ -1542,6 +1553,8 @@ fn chat_frame_layout(width: usize, height: usize) -> ChatFrameLayout {
         ChatHeaderLayout::Panel {
             portrait_width: None,
         }
+    } else if width >= 50 && COMPACT_WORKSPACE_PANEL_ROWS <= maximum_header_rows {
+        ChatHeaderLayout::CompactPanel
     } else {
         ChatHeaderLayout::Compact {
             rows: maximum_header_rows.min(2),
@@ -1580,8 +1593,26 @@ fn render_chat_header<W: Write>(
         ChatHeaderLayout::Panel { portrait_width } => {
             render_chat_panel_with_portrait(out, width, model_status, portrait_width, palette)
         }
+        ChatHeaderLayout::CompactPanel => {
+            render_compact_workspace_panel(out, width, model_status, palette)
+        }
         ChatHeaderLayout::Compact { rows } => render_compact_home_header(out, width, rows, palette),
     }
+}
+
+fn render_compact_workspace_panel<W: Write>(
+    out: &mut W,
+    width: usize,
+    model_status: &str,
+    palette: ThemePalette,
+) -> io::Result<()> {
+    let rows = vec![
+        format!(">_ Orchester (v{})", env!("CARGO_PKG_VERSION")),
+        "Self-owned coding agent workspace".to_string(),
+        format!("directory: {}", current_directory_text()),
+        format!("model: {}", sanitize_terminal_text(model_status)),
+    ];
+    render_info_box(out, width, &rows, palette)
 }
 
 fn render_compact_home_header<W: Write>(
@@ -3137,6 +3168,188 @@ mod tests {
     }
 
     #[test]
+    fn constrained_chat_states_keep_the_same_bordered_workspace_header() {
+        let transcript = [TranscriptEntry::assistant("partial answer")];
+        let overlay = CommandOverlay::new(
+            "Status",
+            "Select a section to inspect.",
+            vec![OverlayItem::new("Model", "configured")],
+        );
+
+        for width in [79, 80, 99, 100] {
+            let layout = chat_frame_layout(width, 24);
+            assert_eq!(layout.header.rows(width), 6, "{width}x24 header rows");
+            assert_eq!(layout.separator_rows, 1, "{width}x24 separator rows");
+            assert_eq!(layout.content_rows, 15, "{width}x24 body rows");
+            assert_eq!(layout.status_rows, 1, "{width}x24 status rows");
+
+            let render = |input: &str,
+                          transcript: &[TranscriptEntry],
+                          busy: Option<&str>,
+                          overlay: Option<&CommandOverlay>| {
+                let mut out = Vec::new();
+                render_chat_home_in_viewport(
+                    &mut out,
+                    ChatHomeView {
+                        width,
+                        height: 24,
+                        input,
+                        choices: &[],
+                        command_selected: 0,
+                        show_help: false,
+                        model_status: "gpt-test",
+                        transcript,
+                        busy,
+                        scroll_offset: 0,
+                        overlay,
+                        theme: Theme::default(),
+                    },
+                )
+                .unwrap();
+                strip_ansi(&String::from_utf8(out).unwrap())
+            };
+            let frames = [
+                ("initial", render("", &[], None, None)),
+                ("palette", render("/", &[], None, None)),
+                (
+                    "streaming",
+                    render("next task", &transcript, Some("Creating..."), None),
+                ),
+                ("overlay", render("", &[], None, Some(&overlay))),
+            ];
+            let expected_header = frames[0]
+                .1
+                .lines()
+                .take(6)
+                .map(str::to_owned)
+                .collect::<Vec<_>>();
+
+            assert_eq!(expected_header.len(), 6);
+            assert!(expected_header[0].starts_with('+'));
+            assert!(
+                expected_header[5].starts_with('+'),
+                "{width}x24 compact workspace panel has no lower border:\n{}",
+                frames[0].1
+            );
+            assert!(expected_header
+                .iter()
+                .any(|line| line.contains(">_ Orchester")));
+            assert!(expected_header
+                .iter()
+                .any(|line| line.contains("directory:")));
+            assert!(expected_header
+                .iter()
+                .any(|line| line.contains("model: gpt-test")));
+
+            for (label, frame) in &frames[1..] {
+                let header = frame.lines().take(6).collect::<Vec<_>>();
+                assert_eq!(
+                    header,
+                    expected_header
+                        .iter()
+                        .map(String::as_str)
+                        .collect::<Vec<_>>(),
+                    "{label} changed the {width}x24 workspace header:\n{frame}"
+                );
+            }
+
+            for (label, frame) in &frames {
+                let lines = frame.lines().collect::<Vec<_>>();
+                assert_eq!(
+                    lines.len(),
+                    24,
+                    "{label} did not fill the {width}x24 viewport:\n{frame}"
+                );
+                assert!(
+                    lines[22].trim_start().starts_with("> "),
+                    "{label} composer moved from row 22 at {width}x24:\n{frame}"
+                );
+                assert!(
+                    lines[23].contains("governed workspace"),
+                    "{label} status moved from row 23 at {width}x24:\n{frame}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn eighty_by_twenty_four_streaming_shows_partial_answer_and_busy_marker() {
+        let transcript = [TranscriptEntry::assistant(
+            "first response line\npartial answer",
+        )];
+        let mut out = Vec::new();
+
+        render_chat_home_in_viewport(
+            &mut out,
+            ChatHomeView {
+                width: 80,
+                height: 24,
+                input: "next task",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "gpt-test",
+                transcript: &transcript,
+                busy: Some("Creating..."),
+                scroll_offset: 0,
+                overlay: None,
+                theme: Theme::default(),
+            },
+        )
+        .unwrap();
+
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        assert!(
+            plain.contains("partial answer"),
+            "streamed answer:\n{plain}"
+        );
+        assert!(plain.contains("Creating..."), "busy marker:\n{plain}");
+        assert!(plain.contains("> next task"), "composer:\n{plain}");
+        assert!(plain.lines().count() <= 24, "frame overflowed:\n{plain}");
+    }
+
+    #[test]
+    fn eighty_by_twenty_four_overlay_shows_selection_and_inspection_detail() {
+        let mut overlay = CommandOverlay::new(
+            "Select model",
+            "Choose the model used for future turns.",
+            vec![
+                OverlayItem::new("configured", "Use the configured model").current(true),
+                OverlayItem::new("fast", "gpt-fast | low latency"),
+            ],
+        );
+        overlay.details = vec!["Preview".into(), "provider: OpenAI".into()];
+        let mut out = Vec::new();
+
+        render_chat_home_in_viewport(
+            &mut out,
+            ChatHomeView {
+                width: 80,
+                height: 24,
+                input: "",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "gpt-test",
+                transcript: &[],
+                busy: None,
+                scroll_offset: 0,
+                overlay: Some(&overlay),
+                theme: Theme::default(),
+            },
+        )
+        .unwrap();
+
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        assert!(plain.contains("> configured"), "selected row:\n{plain}");
+        assert!(
+            plain.contains("provider: OpenAI"),
+            "inspection detail:\n{plain}"
+        );
+        assert!(plain.lines().count() <= 24, "frame overflowed:\n{plain}");
+    }
+
+    #[test]
     fn composer_row_is_stable_across_home_palette_overlay_and_streaming() {
         let overlay = CommandOverlay::new(
             "Status",
@@ -3661,7 +3874,7 @@ mod tests {
     }
 
     #[test]
-    fn empty_eighty_by_twenty_four_home_keeps_logo_prompt_and_status() {
+    fn empty_eighty_by_twenty_four_home_keeps_workspace_prompt_and_status() {
         let mut out = Vec::new();
         render_chat_home_in_viewport(
             &mut out,
@@ -3682,16 +3895,19 @@ mod tests {
         )
         .unwrap();
 
-        let rendered = String::from_utf8(out).unwrap();
-        let plain = strip_ansi(&rendered);
-        assert!(
-            rendered.contains("\x1b[38;2;") && rendered.contains("\x1b[48;2;"),
-            "80x24 startup should keep the colour logo:\n{rendered}"
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        let borders = plain
+            .lines()
+            .enumerate()
+            .filter_map(|(row, line)| line.starts_with('+').then_some(row))
+            .collect::<Vec<_>>();
+        assert_eq!(
+            borders,
+            vec![0, 5],
+            "80x24 startup should use the compact bordered workspace panel:\n{plain}"
         );
-        assert!(
-            plain.contains('\u{2580}'),
-            "80x24 startup should keep the half-block logo:\n{plain}"
-        );
+        assert!(plain.contains(">_ Orchester"), "80x24 brand:\n{plain}");
+        assert!(plain.contains("directory:"), "80x24 workspace:\n{plain}");
         assert!(
             plain
                 .lines()
