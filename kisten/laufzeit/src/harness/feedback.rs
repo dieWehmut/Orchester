@@ -8,6 +8,8 @@ use secrecy::{ExposeSecret, SecretString};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
 
+use crate::harness::secret_scan::is_format_character;
+
 const STREAM_GUARD_BYTES: usize = 64;
 const MAX_STREAM_BYTES: usize = 256 * 1024;
 
@@ -287,9 +289,8 @@ impl StreamingRedactor {
     /// Append raw provider text and return the full safe snapshot to render.
     pub fn push(&mut self, delta: &str) -> &str {
         append_bounded(&mut self.raw, delta, MAX_STREAM_BYTES);
-        let normalized = normalize_text(&self.raw);
         let sanitized = self.sanitizer.sanitize_text(&self.raw);
-        if self.sanitizer.contains_sensitive_material(&self.raw) && sanitized == normalized {
+        if self.sanitizer.contains_sensitive_material(&sanitized) {
             return &self.visible;
         }
         let end = guarded_prefix_end(&sanitized, self.guard_bytes);
@@ -300,14 +301,12 @@ impl StreamingRedactor {
 
     /// Flush the final safe snapshot after the provider stream completes.
     pub fn finish(&mut self) -> &str {
-        let normalized = normalize_text(&self.raw);
         let sanitized = self.sanitizer.sanitize_text(&self.raw);
-        self.visible =
-            if self.sanitizer.contains_sensitive_material(&self.raw) && sanitized == normalized {
-                "[REDACTED]".into()
-            } else {
-                sanitized
-            };
+        self.visible = if self.sanitizer.contains_sensitive_material(&sanitized) {
+            "[REDACTED]".into()
+        } else {
+            sanitized
+        };
         &self.visible
     }
 }
@@ -341,24 +340,29 @@ fn guarded_prefix_end(value: &str, guard_bytes: usize) -> usize {
 
 fn normalize_text(input: &str) -> String {
     let mut normalized = ansi_pattern().replace_all(input, "").into_owned();
-    normalized.retain(|ch| !ch.is_control());
+    normalized.retain(|ch| !ch.is_control() && !is_format_character(ch));
     normalized
 }
 
 fn looks_like_secret(value: &str) -> bool {
     let lower = value.to_ascii_lowercase();
-    [
-        "sk-",
-        "sk_",
-        "ghp_",
-        "github_pat_",
-        "xoxb-",
-        "xoxp-",
-        "authorization: bearer ",
-        "-----begin private key-----",
-    ]
-    .iter()
-    .any(|prefix| lower.contains(prefix))
+    private_key_begin_pattern().is_match(value)
+        || [
+            "sk-",
+            "sk_",
+            "ghp_",
+            "github_pat_",
+            "xoxa-",
+            "xoxb-",
+            "xoxp-",
+            "xoxr-",
+            "xoxs-",
+            "akia",
+            "authorization: bearer ",
+            "authorization: basic ",
+        ]
+        .iter()
+        .any(|prefix| lower.contains(prefix))
 }
 
 fn fingerprint(
@@ -473,6 +477,14 @@ fn private_key_pattern() -> &'static Regex {
     PATTERN.get_or_init(|| {
         Regex::new(r"(?s)-----BEGIN [^-\r\n]*PRIVATE KEY-----.*?-----END [^-\r\n]*PRIVATE KEY-----")
             .unwrap()
+    })
+}
+
+fn private_key_begin_pattern() -> &'static Regex {
+    static PATTERN: OnceLock<Regex> = OnceLock::new();
+    PATTERN.get_or_init(|| {
+        Regex::new(r"(?i)-----BEGIN [^-\r\n]*PRIVATE KEY-----")
+            .expect("static private-key prefix pattern")
     })
 }
 

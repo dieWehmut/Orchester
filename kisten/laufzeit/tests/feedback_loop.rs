@@ -221,6 +221,80 @@ fn streaming_redactor_fails_closed_for_an_unterminated_private_key() {
 }
 
 #[test]
+fn streaming_redactor_fails_closed_for_typed_private_key_headers() {
+    for key_type in ["RSA ", "EC ", "OPENSSH "] {
+        let mut redactor = StreamingRedactor::new(Vec::new());
+        redactor.push(&format!("safe preface {} ", "x".repeat(80)));
+
+        let exposed = redactor
+            .push(&format!(
+                "-----BEGIN {key_type}PRIVATE KEY-----\n{}",
+                "private-material".repeat(8)
+            ))
+            .to_owned();
+        let final_text = redactor.finish().to_owned();
+
+        assert!(!exposed.contains("PRIVATE KEY"), "key type {key_type}");
+        assert_eq!(final_text, "[REDACTED]", "key type {key_type}");
+    }
+}
+
+#[test]
+fn streaming_redactor_stays_closed_after_an_earlier_token_was_redacted() {
+    let mut redactor = StreamingRedactor::new(Vec::new());
+    redactor.push(&format!("safe preface {} ", "x".repeat(80)));
+    redactor.push("sk-abcdefghijk ");
+
+    let exposed = redactor
+        .push(&format!(
+            "-----BEGIN PRIVATE KEY-----\n{}",
+            "private-material".repeat(8)
+        ))
+        .to_owned();
+    let final_text = redactor.finish().to_owned();
+
+    assert!(!exposed.contains("PRIVATE KEY"));
+    assert_eq!(final_text, "[REDACTED]");
+}
+
+#[test]
+fn streaming_redactor_removes_format_characters_before_secret_matching() {
+    let secret = "configured-provider-secret";
+    let mut redactor =
+        StreamingRedactor::new(vec![SecretString::new(secret.to_owned().into_boxed_str())]);
+    redactor.push(&format!("safe preface {} ", "x".repeat(80)));
+
+    let exposed = redactor
+        .push(&format!(
+            "configured\u{200b}-provider-secret {}",
+            "safe-suffix".repeat(8)
+        ))
+        .to_owned();
+    let final_text = redactor.finish().to_owned();
+
+    assert!(!exposed.contains("configured"));
+    assert!(!final_text.contains("configured"));
+    assert!(!final_text.contains('\u{200b}'));
+    assert!(final_text.contains("[REDACTED]"));
+}
+
+#[test]
+fn streaming_redactor_fails_closed_for_incomplete_provider_token_prefixes() {
+    for prefix in ["xoxa-abc", "xoxr-abc", "xoxs-abc", "AKIAABC"] {
+        let mut redactor = StreamingRedactor::new(Vec::new());
+        redactor.push(&format!("safe preface {} ", "x".repeat(80)));
+
+        let exposed = redactor
+            .push(&format!("{prefix} {}", "safe-suffix".repeat(8)))
+            .to_owned();
+        let final_text = redactor.finish().to_owned();
+
+        assert!(!exposed.contains(prefix), "prefix {prefix}");
+        assert_eq!(final_text, "[REDACTED]", "prefix {prefix}");
+    }
+}
+
+#[test]
 fn volatile_diagnostic_fragments_share_one_stable_fingerprint() {
     let engine = FeedbackEngine::default();
     let report = |summary: &str, stdout: &str| {
