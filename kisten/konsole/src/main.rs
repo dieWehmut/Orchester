@@ -425,10 +425,17 @@ fn model_effort_overlay_for_target(
     let choice = match &target {
         ModelSelectionTarget::Configured => configured.cloned(),
         ModelSelectionTarget::Profile(name) => catalog
-            .profiles
-            .iter()
-            .find(|choice| choice.profile.as_deref() == Some(name))
-            .cloned(),
+            .active
+            .choice()
+            .filter(|choice| choice.profile.as_deref() == Some(name))
+            .cloned()
+            .or_else(|| {
+                catalog
+                    .profiles
+                    .iter()
+                    .find(|choice| choice.profile.as_deref() == Some(name))
+                    .cloned()
+            }),
     }?;
     Some(TerminalOverlay::model_efforts(target, &choice))
 }
@@ -1857,6 +1864,35 @@ mod tests {
         assert!(overlay.view.description.contains("gpt-default"));
         assert!(!overlay.view.description.contains("gpt-fast"));
         assert!(overlay.view.items[2].current, "medium must be current");
+    }
+
+    #[test]
+    fn active_profile_effort_picker_uses_the_session_override() {
+        let stored = SelfAgentModelChoice {
+            profile: Some("fast".into()),
+            provider: "openai".into(),
+            provider_name: "OpenAI".into(),
+            model: "gpt-fast".into(),
+            reasoning_effort: Some("low".into()),
+            plan_reasoning_effort: None,
+            service_tier: None,
+        };
+        let mut active = stored.clone();
+        active.reasoning_effort = Some("ultra".into());
+        let catalog = SelfAgentModelCatalog {
+            active: SelfAgentActiveModel::Configured(active),
+            profiles: vec![stored],
+        };
+
+        let overlay = model_effort_overlay_for_target(
+            &catalog,
+            None,
+            ModelSelectionTarget::Profile("fast".into()),
+        )
+        .expect("profile picker");
+
+        assert!(overlay.view.items[5].current, "ultra must be current");
+        assert!(!overlay.view.items[1].current, "stored low must not win");
     }
 
     #[test]
