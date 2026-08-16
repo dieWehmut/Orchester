@@ -26,7 +26,7 @@ use std::time::Duration;
 use clap::Parser;
 
 use orchester_laufzeit::harness::service::{
-    SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentRunOutcome,
+    SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentModelChoice, SelfAgentRunOutcome,
 };
 use orchester_laufzeit::{Conductor, ConductorError, SessionRecord, SessionStore};
 use orchester_modell::ModelEventSink;
@@ -206,13 +206,24 @@ enum OverlayAction {
     Inspect(Vec<String>),
     ModelConfigured,
     ModelProfile(String),
+    ModelEffort {
+        target: ModelSelectionTarget,
+        effort: Option<String>,
+    },
     Theme(theme::Theme),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum ModelSelectionTarget {
+    Configured,
+    Profile(String),
 }
 
 #[derive(Debug, Clone)]
 struct TerminalOverlay {
     view: CommandOverlay,
     actions: Vec<OverlayAction>,
+    parent: Option<Box<TerminalOverlay>>,
 }
 
 impl TerminalOverlay {
@@ -245,6 +256,7 @@ impl TerminalOverlay {
             )
             .with_footer("Up/Down select  |  Enter inspect  |  Esc close"),
             actions,
+            parent: None,
         }
     }
 
@@ -282,6 +294,7 @@ impl TerminalOverlay {
         Self {
             view: CommandOverlay::new(title, description, items).with_footer(footer),
             actions,
+            parent: None,
         }
     }
     fn models(catalog: &SelfAgentModelCatalog) -> Self {
@@ -314,9 +327,46 @@ impl TerminalOverlay {
                 "Choose the model used for future turns in this session.",
                 items,
             )
-            .with_footer("Up/Down select  |  Enter apply  |  Esc cancel"),
+            .with_footer("Up/Down select  |  Enter choose effort  |  Esc cancel"),
             actions,
+            parent: None,
         }
+    }
+
+    fn model_efforts(target: ModelSelectionTarget, choice: &SelfAgentModelChoice) -> Self {
+        const EFFORTS: [(&str, Option<&str>, &str); 6] = [
+            ("default", None, "Provider default"),
+            ("low", Some("low"), "Fastest reasoning"),
+            ("medium", Some("medium"), "Balanced reasoning"),
+            ("high", Some("high"), "Deeper reasoning"),
+            ("xhigh", Some("xhigh"), "Extended reasoning"),
+            ("ultra", Some("ultra"), "Maximum reasoning"),
+        ];
+        let current = choice.reasoning_effort.as_deref();
+        let mut items = Vec::with_capacity(EFFORTS.len());
+        let mut actions = Vec::with_capacity(EFFORTS.len());
+        for (label, effort, detail) in EFFORTS {
+            items.push(OverlayItem::new(label, detail).current(current == effort));
+            actions.push(OverlayAction::ModelEffort {
+                target: target.clone(),
+                effort: effort.map(str::to_owned),
+            });
+        }
+        Self {
+            view: CommandOverlay::new(
+                "Select reasoning effort",
+                format!("{} for {}", choice.model, choice.provider_name),
+                items,
+            )
+            .with_footer("Up/Down select  |  Enter apply  |  Esc back"),
+            actions,
+            parent: None,
+        }
+    }
+
+    fn with_parent(mut self, parent: TerminalOverlay) -> Self {
+        self.parent = Some(Box::new(parent));
+        self
     }
 
     fn themes(current: theme::Theme) -> Self {
@@ -336,6 +386,7 @@ impl TerminalOverlay {
             )
             .with_footer("Up/Down preview  |  Enter save  |  Esc cancel"),
             actions,
+            parent: None,
         }
     }
 }
@@ -615,10 +666,18 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
             };
             match overlay_input {
                 OverlayInput::Cancel => {
-                    if let Some(previous) = state.theme_before_overlay.take() {
-                        state.active_theme = previous;
+                    let parent = state
+                        .overlay
+                        .as_mut()
+                        .and_then(|overlay| overlay.parent.take());
+                    if let Some(parent) = parent {
+                        state.overlay = Some(*parent);
+                    } else {
+                        if let Some(previous) = state.theme_before_overlay.take() {
+                            state.active_theme = previous;
+                        }
+                        state.overlay = None;
                     }
-                    state.overlay = None;
                 }
                 OverlayInput::Confirm(index) => {
                     let action = state
@@ -635,20 +694,57 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                             }
                         }
                         OverlayAction::ModelConfigured | OverlayAction::ModelProfile(_) => {
+                            let target = match action {
+                                OverlayAction::ModelConfigured => ModelSelectionTarget::Configured,
+                                OverlayAction::ModelProfile(name) => {
+                                    ModelSelectionTarget::Profile(name)
+                                }
+                                _ => unreachable!(),
+                            };
+                            let parent = state.overlay.take();
+                            state.overlay = Some(match self_agent.model_catalog() {
+                                Ok(catalog) => {
+                                    let choice = match &target {
+                                        ModelSelectionTarget::Configured => {
+                                            catalog.active.choice().cloned()
+                                        }
+                                        ModelSelectionTarget::Profile(name) => catalog
+                                            .profiles
+                                            .iter()
+                                            .find(|choice| choice.profile.as_deref() == Some(name))
+                                            .cloned(),
+                                    };
+                                    match choice {
+                                        Some(choice) => match parent {
+                                            Some(parent) => {
+                                                TerminalOverlay::model_efforts(target, &choice)
+                                                    .with_parent(parent)
+                                            }
+                                            None => TerminalOverlay::error(
+                                                "/model",
+                                                &"model picker state is unavailable",
+                                            ),
+                                        },
+                                        None => TerminalOverlay::error(
+                                            "/model",
+                                            &"selected model is unavailable",
+                                        ),
+                                    }
+                                }
+                                Err(error) => TerminalOverlay::error("/model", &error),
+                            });
+                        }
+                        OverlayAction::ModelEffort { target, effort } => {
                             let mut rendered = Vec::new();
                             let result: Result<(), CliError> = (|| {
-                                let choice = match action {
-                                    OverlayAction::ModelConfigured => {
-                                        self_agent.select_configured_model()?
-                                    }
-                                    OverlayAction::ModelProfile(name) => {
-                                        self_agent.select_model_profile(&name)?
-                                    }
-                                    OverlayAction::Close
-                                    | OverlayAction::Inspect(_)
-                                    | OverlayAction::Theme(_) => {
-                                        unreachable!()
-                                    }
+                                let choice = match target {
+                                    ModelSelectionTarget::Configured => self_agent
+                                        .select_configured_model_with_effort(effort.as_deref())?,
+                                    ModelSelectionTarget::Profile(name) => self_agent
+                                        .select_model_profile_with_effort(
+                                            &name,
+                                            effort.as_deref(),
+                                        )?,
                                 };
                                 self_agent::render_model_selection(&mut rendered, &choice)?;
                                 Ok(())
@@ -1563,6 +1659,120 @@ mod tests {
             overlay.actions.get(4),
             Some(OverlayAction::Theme(theme::Theme::LightColorblind))
         ));
+    }
+
+    #[test]
+    fn model_overlay_prompts_for_effort_before_applying_a_choice() {
+        let catalog = SelfAgentModelCatalog {
+            active: SelfAgentActiveModel::Configured(
+                orchester_laufzeit::harness::service::SelfAgentModelChoice {
+                    profile: None,
+                    provider: "openai".into(),
+                    provider_name: "OpenAI".into(),
+                    model: "gpt-test".into(),
+                    reasoning_effort: Some("high".into()),
+                    plan_reasoning_effort: None,
+                    service_tier: None,
+                },
+            ),
+            profiles: Vec::new(),
+        };
+
+        let overlay = TerminalOverlay::models(&catalog);
+
+        assert!(overlay.view.footer.contains("choose effort"));
+    }
+
+    #[test]
+    fn model_effort_overlay_marks_the_catalogued_effort_and_keeps_target() {
+        let choice = SelfAgentModelChoice {
+            profile: Some("balanced".into()),
+            provider: "openai".into(),
+            provider_name: "OpenAI".into(),
+            model: "gpt-test".into(),
+            reasoning_effort: Some("high".into()),
+            plan_reasoning_effort: None,
+            service_tier: None,
+        };
+
+        let overlay = TerminalOverlay::model_efforts(
+            ModelSelectionTarget::Profile("balanced".into()),
+            &choice,
+        );
+
+        assert_eq!(
+            overlay
+                .view
+                .items
+                .iter()
+                .filter(|item| item.current)
+                .map(|item| item.label.as_str())
+                .collect::<Vec<_>>(),
+            vec!["high"]
+        );
+        assert_eq!(overlay.view.items.len(), 6);
+        assert!(matches!(
+            overlay.actions.get(3),
+            Some(OverlayAction::ModelEffort {
+                target: ModelSelectionTarget::Profile(name),
+                effort: Some(effort),
+            }) if name == "balanced" && effort == "high"
+        ));
+        assert!(overlay.view.footer.contains("Esc back"));
+    }
+
+    #[test]
+    fn model_effort_overlay_uses_provider_default_when_no_effort_is_configured() {
+        let choice = SelfAgentModelChoice {
+            profile: None,
+            provider: "openai".into(),
+            provider_name: "OpenAI".into(),
+            model: "gpt-test".into(),
+            reasoning_effort: None,
+            plan_reasoning_effort: None,
+            service_tier: None,
+        };
+
+        let overlay = TerminalOverlay::model_efforts(ModelSelectionTarget::Configured, &choice);
+
+        assert!(overlay.view.items[0].current);
+        assert!(matches!(
+            overlay.actions.first(),
+            Some(OverlayAction::ModelEffort {
+                target: ModelSelectionTarget::Configured,
+                effort: None,
+            })
+        ));
+    }
+
+    #[test]
+    fn model_effort_overlay_keeps_a_parent_for_escape_back_navigation() {
+        let choice = SelfAgentModelChoice {
+            profile: Some("balanced".into()),
+            provider: "openai".into(),
+            provider_name: "OpenAI".into(),
+            model: "gpt-test".into(),
+            reasoning_effort: Some("medium".into()),
+            plan_reasoning_effort: None,
+            service_tier: None,
+        };
+        let parent = TerminalOverlay::models(&SelfAgentModelCatalog {
+            active: SelfAgentActiveModel::Configured(choice.clone()),
+            profiles: vec![choice.clone()],
+        });
+        let child = TerminalOverlay::model_efforts(
+            ModelSelectionTarget::Profile("balanced".into()),
+            &choice,
+        )
+        .with_parent(parent);
+
+        assert_eq!(
+            child
+                .parent
+                .as_ref()
+                .map(|parent| parent.view.title.as_str()),
+            Some("Select model")
+        );
     }
 
     #[test]

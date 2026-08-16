@@ -62,6 +62,10 @@ pub struct SelfAgentHost {
     state_database: PathBuf,
     audit_log: PathBuf,
     model_session: SelfAgentModelSession,
+    /// A picker choice is session-scoped: it must affect future turns without
+    /// rewriting the user's protected configuration file. `Some(None)` is an
+    /// explicit request for the provider default, distinct from no override.
+    reasoning_effort_override: Option<Option<String>>,
     runtime: Option<ProductionSelfAgentRuntime>,
 }
 
@@ -72,6 +76,7 @@ impl SelfAgentHost {
             state_database,
             audit_log,
             model_session: SelfAgentModelSession::default(),
+            reasoning_effort_override: None,
             runtime: None,
         }
     }
@@ -103,7 +108,13 @@ impl SelfAgentHost {
 
     pub fn model_catalog(&self) -> Result<SelfAgentModelCatalog, SelfAgentHostError> {
         let config = self.load_config()?;
-        self.model_session.catalog(&config).map_err(Into::into)
+        let mut catalog = self.model_session.catalog(&config)?;
+        if let Some(effort) = self.reasoning_effort_override.as_ref() {
+            if let SelfAgentActiveModel::Configured(choice) = &mut catalog.active {
+                choice.reasoning_effort = effort.clone();
+            }
+        }
+        Ok(catalog)
     }
 
     pub fn model_label(&self) -> Result<String, SelfAgentHostError> {
@@ -126,6 +137,7 @@ impl SelfAgentHost {
     ) -> Result<SelfAgentModelChoice, SelfAgentHostError> {
         let config = self.load_config()?;
         let choice = self.model_session.select_profile(&config, name)?;
+        self.reasoning_effort_override = None;
         self.runtime = None;
         Ok(choice)
     }
@@ -133,8 +145,32 @@ impl SelfAgentHost {
     pub fn select_configured_model(&mut self) -> Result<SelfAgentModelChoice, SelfAgentHostError> {
         let config = self.load_config()?;
         let choice = self.model_session.select_configured(&config)?;
+        self.reasoning_effort_override = None;
         self.runtime = None;
         Ok(choice)
+    }
+
+    /// Select a named profile and apply a session-only reasoning effort.
+    /// `None` means the provider default and is intentionally different from
+    /// leaving the current override untouched.
+    pub fn select_model_profile_with_effort(
+        &mut self,
+        name: &str,
+        effort: Option<&str>,
+    ) -> Result<SelfAgentModelChoice, SelfAgentHostError> {
+        let choice = self.select_model_profile(name)?;
+        self.reasoning_effort_override = Some(normalize_reasoning_effort(effort));
+        Ok(self.choice_with_effort(choice))
+    }
+
+    /// Select the configured model and apply a session-only reasoning effort.
+    pub fn select_configured_model_with_effort(
+        &mut self,
+        effort: Option<&str>,
+    ) -> Result<SelfAgentModelChoice, SelfAgentHostError> {
+        let choice = self.select_configured_model()?;
+        self.reasoning_effort_override = Some(normalize_reasoning_effort(effort));
+        Ok(self.choice_with_effort(choice))
     }
 
     pub fn status(&self) -> Result<SelfAgentStatus, SelfAgentHostError> {
@@ -249,11 +285,30 @@ impl SelfAgentHost {
     }
 
     fn selected_config(&self) -> Result<UserConfig, SelfAgentHostError> {
-        let config = self.load_config()?;
-        self.model_session
+        let mut config = self.load_config()?;
+        config = self
+            .model_session
             .effective_config(&config)
-            .map_err(Into::into)
+            .map_err(SelfAgentHostError::from)?;
+        if let Some(effort) = self.reasoning_effort_override.as_ref() {
+            config.model_reasoning_effort = effort.clone();
+        }
+        Ok(config)
     }
+
+    fn choice_with_effort(&self, mut choice: SelfAgentModelChoice) -> SelfAgentModelChoice {
+        if let Some(effort) = self.reasoning_effort_override.as_ref() {
+            choice.reasoning_effort = effort.clone();
+        }
+        choice
+    }
+}
+
+fn normalize_reasoning_effort(effort: Option<&str>) -> Option<String> {
+    effort
+        .map(str::trim)
+        .filter(|effort| !effort.is_empty() && !effort.eq_ignore_ascii_case("default"))
+        .map(str::to_ascii_lowercase)
 }
 
 impl fmt::Debug for SelfAgentHost {
