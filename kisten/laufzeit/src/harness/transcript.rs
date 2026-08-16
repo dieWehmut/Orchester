@@ -339,7 +339,9 @@ impl TranscriptCodec {
         match record {
             TranscriptRecord::System(text) => Ok(TranscriptRecord::System(self.text(text)?)),
             TranscriptRecord::User(text) => Ok(TranscriptRecord::User(self.text(text)?)),
-            TranscriptRecord::Assistant(text) => Ok(TranscriptRecord::Assistant(self.text(text)?)),
+            TranscriptRecord::Assistant(text) => {
+                Ok(TranscriptRecord::Assistant(self.model_text(text)?))
+            }
             TranscriptRecord::ToolCall {
                 call_id,
                 name,
@@ -379,6 +381,15 @@ impl TranscriptCodec {
 
     fn text(&self, value: &str) -> Result<String, TranscriptError> {
         let sanitized = self.sanitizer.sanitize_text(value);
+        if sanitized.len() > self.limits.max_text_bytes {
+            Err(TranscriptError::TextTooLarge)
+        } else {
+            Ok(sanitized)
+        }
+    }
+
+    fn model_text(&self, value: &str) -> Result<String, TranscriptError> {
+        let sanitized = self.sanitizer.sanitize_model_text(value);
         if sanitized.len() > self.limits.max_text_bytes {
             Err(TranscriptError::TextTooLarge)
         } else {

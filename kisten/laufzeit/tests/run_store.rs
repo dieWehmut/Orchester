@@ -496,7 +496,7 @@ fn model_completion_redacts_configured_secrets_at_the_persistence_boundary() {
 }
 
 #[test]
-fn model_completion_preserves_safe_multiline_text() {
+fn model_completion_and_transcript_preserve_safe_multiline_text() {
     let path = temp_db("model-completion-multiline");
     let run_id = RunId::from("run-model-multiline");
     let store = SqliteRunStore::open_with_terminal_secrets(&path, Vec::new()).unwrap();
@@ -530,6 +530,15 @@ fn model_completion_preserves_safe_multiline_text() {
         panic!("model completion event");
     };
     assert_eq!(assistant_text, "first line\nsecond line\nthird line");
+    let transcript = store.transcript_owned(&run_id, "owner-a").unwrap();
+    let [StoredTranscriptRecord {
+        record: TranscriptRecord::Assistant(text),
+        ..
+    }] = transcript.as_slice()
+    else {
+        panic!("assistant transcript record");
+    };
+    assert_eq!(text, "first line\nsecond line\nthird line");
     drop(store);
     remove_temp_db(&path);
 }
