@@ -585,11 +585,14 @@ fn model_turn_redactor(
     result.map_err(|error| ModelTurnResult::Completed(Box::new(Err(error))))
 }
 
+#[cfg(test)]
+type TtyPublishHook = Arc<dyn Fn(&str) + Send + Sync>;
+
 struct TtyEventSink {
     sender: watch::Sender<String>,
     redactor: Mutex<StreamingRedactor>,
     #[cfg(test)]
-    publish_hook: Option<Arc<dyn Fn(&str) + Send + Sync>>,
+    publish_hook: Option<TtyPublishHook>,
 }
 
 impl TtyEventSink {
