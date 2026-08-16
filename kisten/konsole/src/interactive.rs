@@ -33,7 +33,6 @@ const RED: &str = "\x1b[31m";
 const GREEN: &str = "\x1b[32m";
 const YELLOW: &str = "\x1b[33m";
 const CYAN: &str = "\x1b[36m";
-const ORANGE: &str = "\x1b[38;5;208m";
 const RESET: &str = "\x1b[0m";
 const COMPACT_PALETTE_ROWS: usize = 6;
 const PALETTE_ROWS: usize = 8;
@@ -1120,7 +1119,8 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
     }
 
     let layout = chat_frame_layout(width, height);
-    render_chat_header(out, width, model_status, layout.header)?;
+    let palette = theme.palette();
+    render_chat_header(out, width, model_status, layout.header, palette)?;
     if layout.separator_rows > 0 {
         writeln!(out)?;
     }
@@ -1138,6 +1138,7 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
                 command_selected,
                 width,
                 content_rows.min(COMPACT_PALETTE_ROWS),
+                palette,
             )?;
         } else {
             render_command_palette(
@@ -1147,6 +1148,7 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
                 command_selected,
                 content_rows.min(PALETTE_ROWS),
                 width,
+                palette,
             )?;
         }
     } else if content_rows > 0 {
@@ -1154,12 +1156,12 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
             "Type a task or / for commands. Enter submits; Esc exits.",
             width,
         );
-        writeln!(&mut body, "{DIM}{hint}{RESET}")?;
+        writeln!(&mut body, "{}{hint}{RESET}", palette.dim)?;
     }
     render_fixed_body(out, &body, content_rows)?;
-    render_composer(out, width, input, theme.palette().accent)?;
+    render_composer(out, width, input, palette)?;
     if layout.status_rows > 0 {
-        render_status_line(out, width, model_status)?;
+        render_status_line(out, width, model_status, palette)?;
     }
     Ok(())
 }
@@ -1183,7 +1185,7 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
     let layout = chat_frame_layout(width, height);
     let content_rows = layout.content_rows;
 
-    render_chat_header(out, width, model_status, layout.header)?;
+    render_chat_header(out, width, model_status, layout.header, palette)?;
     if layout.separator_rows > 0 {
         writeln!(out)?;
     }
@@ -1209,7 +1211,14 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
             .saturating_sub(reserve_history_row)
             .saturating_sub(busy_rows);
         let command_palette = if input.starts_with('/') {
-            command_palette_lines(input, choices, command_selected, width, palette_rows)?
+            command_palette_lines(
+                input,
+                choices,
+                command_selected,
+                width,
+                palette_rows,
+                palette,
+            )?
         } else {
             Vec::new()
         };
@@ -1235,10 +1244,10 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
         }
     }
     render_fixed_body(out, &body, content_rows)?;
-    render_composer(out, width, input, palette.accent)?;
+    render_composer(out, width, input, palette)?;
 
     if layout.status_rows > 0 {
-        render_status_line(out, width, model_status)?;
+        render_status_line(out, width, model_status, palette)?;
     }
     Ok(())
 }
@@ -1270,19 +1279,22 @@ fn render_composer<W: Write>(
     out: &mut W,
     width: usize,
     input: &str,
-    accent: &str,
+    palette: ThemePalette,
 ) -> io::Result<()> {
     let prompt = if input.is_empty() {
         prompt_suggestion()
     } else {
         input
     };
-    let prompt_style = if input.is_empty() { DIM } else { "" };
+    let prompt_style = if input.is_empty() { palette.dim } else { "" };
     let prompt = truncate(&sanitize_terminal_text(prompt), width.saturating_sub(2));
     let prompt_pad = " ".repeat(width.saturating_sub(2 + display_width(&prompt)));
     writeln!(
         out,
-        "\x1b[48;5;236m{accent}> {RESET}\x1b[48;5;236m{prompt_style}{prompt}{prompt_pad}{RESET}"
+        "{}{accent}> {RESET}{}{prompt_style}{prompt}{prompt_pad}{RESET}",
+        palette.composer_background,
+        palette.composer_background,
+        accent = palette.accent,
     )
 }
 
@@ -1444,6 +1456,7 @@ fn command_palette_lines(
     selected: usize,
     width: usize,
     max_rows: usize,
+    palette: ThemePalette,
 ) -> io::Result<Vec<String>> {
     let mut out = Vec::new();
     if width < 50 {
@@ -1454,6 +1467,7 @@ fn command_palette_lines(
             selected,
             width,
             max_rows.min(COMPACT_PALETTE_ROWS),
+            palette,
         )?;
     } else {
         render_command_palette(
@@ -1463,6 +1477,7 @@ fn command_palette_lines(
             selected,
             max_rows.min(PALETTE_ROWS),
             width,
+            palette,
         )?;
     }
     Ok(String::from_utf8_lossy(&out)
@@ -1556,27 +1571,36 @@ fn render_chat_header<W: Write>(
     width: usize,
     model_status: &str,
     header: ChatHeaderLayout,
+    palette: ThemePalette,
 ) -> io::Result<()> {
     match header {
         ChatHeaderLayout::Panel { portrait_width } => {
-            render_chat_panel_with_portrait(out, width, model_status, portrait_width)
+            render_chat_panel_with_portrait(out, width, model_status, portrait_width, palette)
         }
-        ChatHeaderLayout::Compact { rows } => render_compact_home_header(out, width, rows),
+        ChatHeaderLayout::Compact { rows } => render_compact_home_header(out, width, rows, palette),
     }
 }
 
-fn render_compact_home_header<W: Write>(out: &mut W, width: usize, rows: usize) -> io::Result<()> {
+fn render_compact_home_header<W: Write>(
+    out: &mut W,
+    width: usize,
+    rows: usize,
+    palette: ThemePalette,
+) -> io::Result<()> {
     if rows > 0 {
         writeln!(
             out,
-            "{ORANGE}{BOLD}Orchester{RESET} {DIM}v{}{RESET}",
+            "{}{BOLD}Orchester{RESET} {}v{}{RESET}",
+            palette.accent,
+            palette.dim,
             env!("CARGO_PKG_VERSION")
         )?;
     }
     if rows > 1 {
         writeln!(
             out,
-            "{DIM}{} {RESET}",
+            "{}{} {RESET}",
+            palette.dim,
             truncate("coding agent workspace", width)
         )?;
     }
@@ -1616,13 +1640,19 @@ fn render_compact_command_palette<W: Write>(
     selected: usize,
     width: usize,
     max_rows: usize,
+    palette: ThemePalette,
 ) -> io::Result<()> {
     let matches = matching_commands(command, choices);
     let start = selection_window_start(selected, matches.len(), max_rows);
     for (index, item) in matches.iter().enumerate().skip(start).take(max_rows) {
         let marker = if index == selected { ">" } else { " " };
         let line = sanitize_terminal_text(&format!("{marker} {} {}", item.name, item.description));
-        writeln!(out, "{}", truncate(&line, width))?;
+        let style = if index == selected {
+            palette.selection
+        } else {
+            ""
+        };
+        writeln!(out, "{style}{}{RESET}", truncate(&line, width))?;
     }
     Ok(())
 }
@@ -1668,7 +1698,13 @@ pub fn render_line_continue_prompt<W: Write>(out: &mut W) -> io::Result<()> {
 
 fn render_chat_panel<W: Write>(out: &mut W, width: usize, model_status: &str) -> io::Result<()> {
     let portrait_width = (width >= 60).then(|| portrait_size(width).0);
-    render_chat_panel_with_portrait(out, width, model_status, portrait_width)
+    render_chat_panel_with_portrait(
+        out,
+        width,
+        model_status,
+        portrait_width,
+        Theme::default().palette(),
+    )
 }
 
 fn render_chat_panel_with_portrait<W: Write>(
@@ -1676,12 +1712,13 @@ fn render_chat_panel_with_portrait<W: Write>(
     width: usize,
     model_status: &str,
     portrait_width: Option<usize>,
+    palette: ThemePalette,
 ) -> io::Result<()> {
     let rows = startup_panel_rows(model_status);
     if let Some(portrait_width) = portrait_width {
-        render_portrait_info_box(out, width, &rows, portrait_width)
+        render_portrait_info_box(out, width, &rows, portrait_width, palette)
     } else {
-        render_info_box(out, width, &rows)
+        render_info_box(out, width, &rows, palette)
     }
 }
 
@@ -1735,19 +1772,38 @@ fn render_delegate_panel<W: Write>(
         format!("directory: {}", current_directory_text()),
         "Enter launches; Esc returns to Orchester".to_string(),
     ];
-    render_info_box(out, width, &rows)
+    render_info_box(out, width, &rows, Theme::default().palette())
 }
 
-fn render_info_box<W: Write>(out: &mut W, width: usize, rows: &[String]) -> io::Result<()> {
+fn render_info_box<W: Write>(
+    out: &mut W,
+    width: usize,
+    rows: &[String],
+    palette: ThemePalette,
+) -> io::Result<()> {
     let panel_width = width.clamp(20, 84);
     let content_width = panel_width.saturating_sub(4);
-    writeln!(out, "{DIM}+{}+{RESET}", "-".repeat(panel_width - 2))?;
+    writeln!(
+        out,
+        "{}+{}+{RESET}",
+        palette.dim,
+        "-".repeat(panel_width - 2)
+    )?;
     for row in rows {
         let row = truncate(&sanitize_terminal_text(row), content_width);
         let pad = " ".repeat(content_width.saturating_sub(display_width(&row)));
-        writeln!(out, "{DIM}|{RESET} {row}{pad} {DIM}|{RESET}")?;
+        writeln!(
+            out,
+            "{}|{RESET} {row}{pad} {}|{RESET}",
+            palette.dim, palette.dim
+        )?;
     }
-    writeln!(out, "{DIM}+{}+{RESET}", "-".repeat(panel_width - 2))
+    writeln!(
+        out,
+        "{}+{}+{RESET}",
+        palette.dim,
+        "-".repeat(panel_width - 2)
+    )
 }
 
 fn render_portrait_info_box<W: Write>(
@@ -1755,6 +1811,7 @@ fn render_portrait_info_box<W: Write>(
     width: usize,
     rows: &[String],
     portrait_width: usize,
+    palette: ThemePalette,
 ) -> io::Result<()> {
     let panel_width = width.clamp(60, 120);
     let portrait_width = portrait_width.min(avatar::WIDTH);
@@ -1764,9 +1821,14 @@ fn render_portrait_info_box<W: Write>(
     let portrait_offset = vertical_center_offset(height, portrait_height);
     let text_offset = vertical_center_offset(height, rows.len());
 
-    writeln!(out, "{DIM}+{}+{RESET}", "-".repeat(panel_width - 2))?;
+    writeln!(
+        out,
+        "{}+{}+{RESET}",
+        palette.dim,
+        "-".repeat(panel_width - 2)
+    )?;
     for row in 0..height {
-        write!(out, "{DIM}|{RESET} ")?;
+        write!(out, "{}|{RESET} ", palette.dim)?;
         if row >= portrait_offset && row < portrait_offset.saturating_add(portrait_height) {
             let portrait_row = row - portrait_offset;
             if portrait_width == avatar::WIDTH && portrait_height == avatar::HEIGHT {
@@ -1777,7 +1839,7 @@ fn render_portrait_info_box<W: Write>(
         } else {
             write!(out, "{}", " ".repeat(portrait_width))?;
         }
-        write!(out, " {DIM}|{RESET} ")?;
+        write!(out, " {}|{RESET} ", palette.dim)?;
 
         let text = row
             .checked_sub(text_offset)
@@ -1787,9 +1849,14 @@ fn render_portrait_info_box<W: Write>(
         let text = truncate(&sanitize_terminal_text(text), right_width);
         let pad = " ".repeat(right_width.saturating_sub(display_width(&text)));
         write!(out, "{text}{pad} ")?;
-        writeln!(out, "{DIM}|{RESET}")?;
+        writeln!(out, "{}|{RESET}", palette.dim)?;
     }
-    writeln!(out, "{DIM}+{}+{RESET}", "-".repeat(panel_width - 2))
+    writeln!(
+        out,
+        "{}+{}+{RESET}",
+        palette.dim,
+        "-".repeat(panel_width - 2)
+    )
 }
 
 fn portrait_size(width: usize) -> (usize, usize) {
@@ -1806,13 +1873,18 @@ fn vertical_center_offset(container: usize, content: usize) -> usize {
     container.saturating_sub(content) / 2
 }
 
-fn render_status_line<W: Write>(out: &mut W, width: usize, model_status: &str) -> io::Result<()> {
+fn render_status_line<W: Write>(
+    out: &mut W,
+    width: usize,
+    model_status: &str,
+    palette: ThemePalette,
+) -> io::Result<()> {
     let status = format!(
         "{}  |  {}  |  governed workspace",
         current_directory_text(),
         sanitize_terminal_text(model_status)
     );
-    write!(out, "{DIM}{}{RESET}", truncate(&status, width))
+    write!(out, "{}{}{RESET}", palette.dim, truncate(&status, width))
 }
 
 fn viewport_content_width(cols: u16) -> usize {
@@ -1846,12 +1918,13 @@ fn render_command_palette<W: Write>(
     selected: usize,
     max_rows: usize,
     width: usize,
+    palette: ThemePalette,
 ) -> io::Result<()> {
     if max_rows == 0 {
         return Ok(());
     }
     let matches = matching_commands(command, choices);
-    render_command_items(out, &matches, selected, max_rows, width)
+    render_command_items(out, &matches, selected, max_rows, width, palette)
 }
 
 fn render_delegate_command_palette<W: Write>(
@@ -1866,7 +1939,14 @@ fn render_delegate_command_palette<W: Write>(
         return Ok(());
     }
     let matches = matching_delegate_commands(command, choices);
-    render_command_items(out, &matches, selected, max_rows, width)
+    render_command_items(
+        out,
+        &matches,
+        selected,
+        max_rows,
+        width,
+        Theme::default().palette(),
+    )
 }
 
 fn render_command_items<W: Write>(
@@ -1875,16 +1955,17 @@ fn render_command_items<W: Write>(
     selected: usize,
     max_rows: usize,
     width: usize,
+    palette: ThemePalette,
 ) -> io::Result<()> {
     if matches.is_empty() {
-        writeln!(out, "  {DIM}No matching commands{RESET}")?;
+        writeln!(out, "  {}No matching commands{RESET}", palette.dim)?;
         return Ok(());
     }
     let start = selection_window_start(selected, matches.len(), max_rows);
     for (i, item) in matches.iter().enumerate().skip(start).take(max_rows) {
         let marker = if i == selected { ">" } else { " " };
-        let color = if i == selected { ORANGE } else { "" };
-        let reset = if i == selected { RESET } else { "" };
+        let color = if i == selected { palette.selection } else { "" };
+        let reset = RESET;
         let name = truncate(&sanitize_terminal_text(&item.name), 16);
         let name_pad = " ".repeat(16usize.saturating_sub(display_width(&name)));
         let description = sanitize_terminal_text(&item.description);
@@ -3248,6 +3329,51 @@ mod tests {
         let palette = Theme::Light.palette();
         assert!(rendered.contains(palette.accent));
         assert!(rendered.contains(palette.selection));
+    }
+
+    #[test]
+    fn full_chat_surface_uses_the_active_theme_palette() {
+        let theme = Theme::Light;
+        let palette = theme.palette();
+        let mut out = Vec::new();
+        render_chat_home_in_viewport(
+            &mut out,
+            ChatHomeView {
+                width: 100,
+                height: 44,
+                input: "/",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "gpt-test",
+                transcript: &[],
+                busy: None,
+                scroll_offset: 0,
+                overlay: None,
+                theme,
+            },
+        )
+        .unwrap();
+
+        let rendered = String::from_utf8(out).unwrap();
+        let first = rendered.lines().next().expect("panel border");
+        let status = rendered.lines().last().expect("status row");
+        assert!(
+            first.contains(palette.dim),
+            "panel ignored theme:\n{rendered}"
+        );
+        assert!(
+            rendered.contains(palette.selection),
+            "command selection ignored theme:\n{rendered}"
+        );
+        assert!(
+            rendered.contains(palette.composer_background),
+            "composer ignored theme:\n{rendered}"
+        );
+        assert!(
+            status.contains(palette.dim),
+            "status ignored theme:\n{rendered}"
+        );
     }
 
     #[test]

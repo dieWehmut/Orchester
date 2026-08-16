@@ -20,6 +20,7 @@ pub(crate) struct ThemePalette {
     pub(crate) selection: &'static str,
     pub(crate) warning: &'static str,
     pub(crate) dim: &'static str,
+    pub(crate) composer_background: &'static str,
 }
 
 impl Theme {
@@ -75,36 +76,42 @@ impl Theme {
                 selection: "\x1b[38;5;222m",
                 warning: "\x1b[33m",
                 dim: "\x1b[2m",
+                composer_background: "\x1b[48;5;236m",
             },
             Self::Light => ThemePalette {
                 accent: "\x1b[38;2;0;95;135m",
                 selection: "\x1b[38;2;0;75;115m",
                 warning: "\x1b[38;2;145;75;0m",
                 dim: "\x1b[38;2;95;95;95m",
+                composer_background: "\x1b[48;2;245;245;245m",
             },
             Self::DarkColorblind => ThemePalette {
                 accent: "\x1b[38;2;86;180;233m",
                 selection: "\x1b[38;2;230;159;0m",
                 warning: "\x1b[38;2;240;228;66m",
                 dim: "\x1b[38;2;158;158;158m",
+                composer_background: "\x1b[48;2;20;24;28m",
             },
             Self::LightColorblind => ThemePalette {
                 accent: "\x1b[38;2;0;114;178m",
                 selection: "\x1b[38;2;213;94;0m",
                 warning: "\x1b[38;2;160;110;0m",
                 dim: "\x1b[38;2;90;90;90m",
+                composer_background: "\x1b[48;2;250;250;250m",
             },
             Self::DarkAnsi => ThemePalette {
                 accent: "\x1b[36m",
                 selection: "\x1b[96m",
                 warning: "\x1b[33m",
                 dim: "\x1b[90m",
+                composer_background: "\x1b[40m",
             },
             Self::LightAnsi => ThemePalette {
                 accent: "\x1b[34m",
                 selection: "\x1b[94m",
                 warning: "\x1b[31m",
                 dim: "\x1b[90m",
+                composer_background: "\x1b[47m",
             },
         }
     }
@@ -168,6 +175,11 @@ mod tests {
             assert!(!palette.selection.is_empty(), "{} selection", theme.name());
             assert!(!palette.warning.is_empty(), "{} warning", theme.name());
             assert!(!palette.dim.is_empty(), "{} dim", theme.name());
+            assert!(
+                !palette.composer_background.is_empty(),
+                "{} composer background",
+                theme.name()
+            );
         }
     }
 }
