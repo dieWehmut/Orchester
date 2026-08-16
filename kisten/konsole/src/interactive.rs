@@ -1125,26 +1125,14 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
         writeln!(out)?;
     }
 
-    let (prompt, prompt_style) = if input.is_empty() {
-        (prompt_suggestion(), DIM)
-    } else {
-        (input, "")
-    };
-    let prompt = truncate(&sanitize_terminal_text(prompt), width.saturating_sub(2));
-    let prompt_pad = " ".repeat(width.saturating_sub(2 + display_width(&prompt)));
-    writeln!(
-        out,
-        "\x1b[48;5;236m{}> {RESET}\x1b[48;5;236m{prompt_style}{prompt}{prompt_pad}{RESET}",
-        theme.palette().accent
-    )?;
-
     let content_rows = layout.content_rows;
+    let mut body = Vec::new();
     if show_help {
-        render_home_help(out, width, content_rows)?;
+        render_home_help(&mut body, width, content_rows)?;
     } else if input.starts_with('/') {
         if width < 50 {
             render_compact_command_palette(
-                out,
+                &mut body,
                 input,
                 choices,
                 command_selected,
@@ -1153,7 +1141,7 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
             )?;
         } else {
             render_command_palette(
-                out,
+                &mut body,
                 input,
                 choices,
                 command_selected,
@@ -1166,8 +1154,10 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
             "Type a task or / for commands. Enter submits; Esc exits.",
             width,
         );
-        writeln!(out, "{DIM}{hint}{RESET}")?;
+        writeln!(&mut body, "{DIM}{hint}{RESET}")?;
     }
+    render_fixed_body(out, &body, content_rows)?;
+    render_composer(out, width, input, theme.palette().accent)?;
     if layout.status_rows > 0 {
         render_status_line(out, width, model_status)?;
     }
@@ -1198,14 +1188,15 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
         writeln!(out)?;
     }
 
+    let mut body = Vec::new();
     if let Some(overlay) = overlay {
-        render_command_overlay(out, overlay, width, content_rows, palette)?;
+        render_command_overlay(&mut body, overlay, width, content_rows, palette)?;
     } else if show_help {
         let busy_rows = usize::from(busy.is_some() && content_rows > 0);
-        render_home_help(out, width, content_rows.saturating_sub(busy_rows))?;
+        render_home_help(&mut body, width, content_rows.saturating_sub(busy_rows))?;
         if let Some(busy) = busy {
             writeln!(
-                out,
+                &mut body,
                 "{}* {RESET}{}",
                 palette.accent,
                 sanitize_terminal_text(busy)
@@ -1226,24 +1217,61 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
             .saturating_sub(busy_rows)
             .saturating_sub(command_palette.len());
         render_scrolled_transcript(
-            out,
+            &mut body,
             &transcript_lines(width, transcript, palette),
             history_rows,
             scroll_offset,
         )?;
         if let Some(busy) = busy {
             writeln!(
-                out,
+                &mut body,
                 "{}* {RESET}{}",
                 palette.accent,
                 sanitize_terminal_text(busy)
             )?;
         }
         for line in command_palette {
-            writeln!(out, "{line}")?;
+            writeln!(&mut body, "{line}")?;
         }
     }
+    render_fixed_body(out, &body, content_rows)?;
+    render_composer(out, width, input, palette.accent)?;
 
+    if layout.status_rows > 0 {
+        render_status_line(out, width, model_status)?;
+    }
+    Ok(())
+}
+
+fn render_fixed_body<W: Write>(out: &mut W, body: &[u8], rows: usize) -> io::Result<()> {
+    // `render_chat_home` uses a very large height as an unbounded rendering
+    // sentinel in unit tests and line-mode helpers. Never allocate or loop a
+    // terminal-sized buffer for that synthetic value.
+    if rows > 10_000 {
+        out.write_all(body)?;
+        return Ok(());
+    }
+    let body = body.strip_suffix(b"\n").unwrap_or(body);
+    let body_rows = if body.is_empty() {
+        Vec::new()
+    } else {
+        body.split(|byte| *byte == b'\n').collect::<Vec<_>>()
+    };
+    for row in 0..rows {
+        if let Some(content) = body_rows.get(row) {
+            out.write_all(content)?;
+        }
+        writeln!(out)?;
+    }
+    Ok(())
+}
+
+fn render_composer<W: Write>(
+    out: &mut W,
+    width: usize,
+    input: &str,
+    accent: &str,
+) -> io::Result<()> {
     let prompt = if input.is_empty() {
         prompt_suggestion()
     } else {
@@ -1254,14 +1282,8 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
     let prompt_pad = " ".repeat(width.saturating_sub(2 + display_width(&prompt)));
     writeln!(
         out,
-        "\x1b[48;5;236m{}> {RESET}\x1b[48;5;236m{prompt_style}{prompt}{prompt_pad}{RESET}",
-        palette.accent
-    )?;
-
-    if layout.status_rows > 0 {
-        render_status_line(out, width, model_status)?;
-    }
-    Ok(())
+        "\x1b[48;5;236m{accent}> {RESET}\x1b[48;5;236m{prompt_style}{prompt}{prompt_pad}{RESET}"
+    )
 }
 
 fn render_command_overlay<W: Write>(
@@ -1272,6 +1294,34 @@ fn render_command_overlay<W: Write>(
     palette: ThemePalette,
 ) -> io::Result<()> {
     if max_rows == 0 {
+        return Ok(());
+    }
+
+    // A short viewport must still expose the current choice. The title and
+    // description are useful in roomy terminals, but hiding the only option
+    // makes an overlay look inert and leaves Enter with no visible effect.
+    if max_rows <= 2 && !overlay.items.is_empty() {
+        let index = overlay.selected.min(overlay.items.len().saturating_sub(1));
+        let item = &overlay.items[index];
+        let current = if item.current { " [current]" } else { "" };
+        let detail = if item.detail.is_empty() {
+            String::new()
+        } else {
+            format!("  {}", sanitize_terminal_text(&item.detail))
+        };
+        let line = truncate(
+            &format!("> {}{current}{detail}", sanitize_terminal_text(&item.label)),
+            width,
+        );
+        writeln!(out, "{}{line}{RESET}", palette.selection)?;
+        if max_rows == 2 && !overlay.footer.is_empty() {
+            writeln!(
+                out,
+                "{}{}{RESET}",
+                palette.dim,
+                truncate(&sanitize_terminal_text(&overlay.footer), width)
+            )?;
+        }
         return Ok(());
     }
 
@@ -2668,12 +2718,13 @@ mod tests {
 
         let rendered = String::from_utf8(out).unwrap();
         let plain = strip_ansi(&rendered);
-        let mut palette = plain.lines().skip_while(|line| line.trim_end() != "> /");
-        let prompt = palette
-            .next()
+        let prompt = plain
+            .lines()
+            .find(|line| line.trim_end() == "> /")
             .expect("startup should render the slash input");
-        let candidate = palette
-            .find(|line| line.contains("/agent"))
+        let candidate = plain
+            .lines()
+            .find(|line| line.trim_start().starts_with("> /agent"))
             .expect("palette should render the first slash command");
         assert_eq!(
             prompt.find('/'),
@@ -2999,6 +3050,96 @@ mod tests {
                 "{label} frame lost the stable startup panel:\n{frame}"
             );
         }
+    }
+
+    #[test]
+    fn composer_row_is_stable_across_home_palette_overlay_and_streaming() {
+        let overlay = CommandOverlay::new(
+            "Status",
+            "Select a section to inspect.",
+            vec![OverlayItem::new("Model", "configured")],
+        );
+        let transcript = [TranscriptEntry::assistant("partial answer")];
+        let render = |input: &str,
+                      transcript: &[TranscriptEntry],
+                      busy: Option<&str>,
+                      overlay: Option<&CommandOverlay>| {
+            let mut out = Vec::new();
+            render_chat_home_in_viewport(
+                &mut out,
+                ChatHomeView {
+                    width: 100,
+                    height: 44,
+                    input,
+                    choices: &[],
+                    command_selected: 0,
+                    show_help: false,
+                    model_status: "gpt-test",
+                    transcript,
+                    busy,
+                    scroll_offset: 0,
+                    overlay,
+                    theme: Theme::default(),
+                },
+            )
+            .unwrap();
+            strip_ansi(&String::from_utf8(out).unwrap())
+        };
+        let frames = [
+            render("", &[], None, None),
+            render("/", &[], None, None),
+            render("", &[], None, Some(&overlay)),
+            render("next task", &transcript, Some("Creating..."), None),
+        ];
+        let composer_rows = frames
+            .iter()
+            .map(|frame| {
+                frame
+                    .lines()
+                    .position(|line| {
+                        line.trim_start().starts_with("> ") && display_width(line) >= 99
+                    })
+                    .expect("composer row")
+            })
+            .collect::<Vec<_>>();
+        assert!(
+            composer_rows.windows(2).all(|rows| rows[0] == rows[1]),
+            "composer moved between frames: {composer_rows:?}\n{}",
+            frames.join("\n---\n")
+        );
+    }
+
+    #[test]
+    fn boundary_overlay_keeps_the_selected_row_visible() {
+        let overlay = CommandOverlay::new(
+            "Status",
+            "Select a section to inspect.",
+            vec![OverlayItem::new("Model", "configured").current(true)],
+        );
+        let mut out = Vec::new();
+        render_chat_home_in_viewport(
+            &mut out,
+            ChatHomeView {
+                width: 100,
+                height: 24,
+                input: "",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "gpt-test",
+                transcript: &[],
+                busy: None,
+                scroll_offset: 0,
+                overlay: Some(&overlay),
+                theme: Theme::default(),
+            },
+        )
+        .unwrap();
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        assert!(
+            plain.contains("> Model"),
+            "selected row is hidden:\n{plain}"
+        );
     }
 
     #[test]
