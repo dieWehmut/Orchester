@@ -107,6 +107,23 @@ impl SelfAgentHost {
             .map_err(Into::into)
     }
 
+    pub async fn resume_with_events(
+        &mut self,
+        handle: &str,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+    ) -> Result<SelfAgentRunOutcome, SelfAgentHostError> {
+        self.ensure_runtime()?;
+        let runtime = self
+            .runtime
+            .as_ref()
+            .ok_or(SelfAgentHostError::Initialization)?;
+        runtime
+            .resume_with_events(handle, cancel, events)
+            .await
+            .map_err(Into::into)
+    }
+
     pub fn model_catalog(&self) -> Result<SelfAgentModelCatalog, SelfAgentHostError> {
         let config = self.load_config()?;
         let mut catalog = self.model_session.catalog(&config)?;
@@ -342,5 +359,35 @@ impl fmt::Debug for SelfAgentHost {
             )
             .field("initialized", &self.runtime.is_some())
             .finish()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::future::Future;
+    use std::pin::Pin;
+
+    type ResumeFuture<'a> =
+        Pin<Box<dyn Future<Output = Result<SelfAgentRunOutcome, SelfAgentHostError>> + 'a>>;
+    type ResumeEntrypoint = for<'a> fn(
+        &'a mut SelfAgentHost,
+        &'a str,
+        CancellationToken,
+        Option<Arc<dyn ModelEventSink>>,
+    ) -> ResumeFuture<'a>;
+
+    fn invoke_resume<'a>(
+        host: &'a mut SelfAgentHost,
+        handle: &'a str,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+    ) -> ResumeFuture<'a> {
+        Box::pin(host.resume_with_events(handle, cancel, events))
+    }
+
+    #[test]
+    fn host_exposes_eventful_resume_entrypoint() {
+        let _: ResumeEntrypoint = invoke_resume;
     }
 }

@@ -293,20 +293,32 @@ pub(crate) fn resume(catalog: &SelfAgentResumeCatalog) -> WorkspaceInspection {
         .map(|entry| {
             let availability = resume_availability_label(entry.availability);
             let step = resume_step_label(entry.step);
+            let action = match entry.availability {
+                SelfAgentResumeAvailability::Ready => "Press Enter to continue this durable run.",
+                SelfAgentResumeAvailability::Unsupported => {
+                    "Continuation from this stage is not supported in this build."
+                }
+                SelfAgentResumeAvailability::ApprovalRequired => {
+                    "Resume is disabled until the pending approval is resolved."
+                }
+                SelfAgentResumeAvailability::ReconciliationRequired => {
+                    "Resume is disabled until manual reconciliation is complete."
+                }
+            };
             WorkspaceInspectionEntry::new(
                 &entry.handle,
                 format!("{availability} | {step}"),
                 vec![
                     format!("availability: {availability}"),
                     format!("next step: {step}"),
-                    "Continuation is read-only in this build; no run was changed.".into(),
+                    action.into(),
                 ],
             )
             .current(entry.latest)
         })
         .collect();
 
-    inspection(
+    let mut inspection = inspection(
         "Resumable self-agent runs",
         if catalog.truncated {
             "Newest bounded entries are shown. Select one to inspect."
@@ -314,7 +326,9 @@ pub(crate) fn resume(catalog: &SelfAgentResumeCatalog) -> WorkspaceInspection {
             "Select a run to inspect its continuation state."
         },
         entries,
-    )
+    );
+    inspection.footer = "Up/Down select  |  Enter resume/inspect  |  Esc close".into();
+    inspection
 }
 
 pub(crate) fn plugins(plugins: &[RegisteredPlugin]) -> WorkspaceInspection {
@@ -485,7 +499,7 @@ mod tests {
     }
 
     #[test]
-    fn config_permissions_and_resume_are_typed_inspection_lists() {
+    fn config_and_permissions_are_typed_inspection_lists() {
         let config_view = SelfAgentConfigView {
             user_path: PathBuf::from("D:\\home\\orchester.jsonc"),
             user_present: true,
@@ -512,26 +526,64 @@ mod tests {
             .iter()
             .any(|entry| entry.label == "Approvals"));
 
-        let catalog = SelfAgentResumeCatalog {
-            database_present: true,
-            truncated: false,
-            entries: vec![SelfAgentResumeEntry {
-                handle: "r-safe".into(),
-                availability: SelfAgentResumeAvailability::Ready,
-                step: SelfAgentResumeStep::StartModel,
-                latest: true,
-            }],
-        };
-        let resume = resume(&catalog);
-        assert_eq!(resume.entries[0].label, "r-safe");
-        assert!(resume.entries[0].current);
-        assert!(resume.entries[0]
-            .details
-            .iter()
-            .any(|line| line.contains("read-only")));
-
         let plugins = plugins(&[]);
         assert_eq!(plugins.title, "Installed agent plugins");
         assert!(plugins.entries.is_empty());
+    }
+
+    #[test]
+    fn resume_rows_explain_ready_and_disabled_states() {
+        let catalog = SelfAgentResumeCatalog {
+            database_present: true,
+            truncated: false,
+            entries: vec![
+                SelfAgentResumeEntry {
+                    handle: "r-ready".into(),
+                    availability: SelfAgentResumeAvailability::Ready,
+                    step: SelfAgentResumeStep::StartNextStep,
+                    latest: true,
+                },
+                SelfAgentResumeEntry {
+                    handle: "r-unsupported".into(),
+                    availability: SelfAgentResumeAvailability::Unsupported,
+                    step: SelfAgentResumeStep::StartStep,
+                    latest: false,
+                },
+                SelfAgentResumeEntry {
+                    handle: "r-approval".into(),
+                    availability: SelfAgentResumeAvailability::ApprovalRequired,
+                    step: SelfAgentResumeStep::AwaitApproval,
+                    latest: false,
+                },
+                SelfAgentResumeEntry {
+                    handle: "r-reconcile".into(),
+                    availability: SelfAgentResumeAvailability::ReconciliationRequired,
+                    step: SelfAgentResumeStep::ReconcileToolOutcome,
+                    latest: false,
+                },
+            ],
+        };
+
+        let view = resume(&catalog);
+
+        assert!(view.entries[0].current);
+        assert!(view.entries[0]
+            .details
+            .iter()
+            .any(|line| line.contains("Enter") && line.contains("continue")));
+        assert!(view.entries[1]
+            .details
+            .iter()
+            .any(|line| line.contains("not supported")));
+        assert!(view.entries[2]
+            .details
+            .iter()
+            .any(|line| line.contains("approval") && line.contains("disabled")));
+        assert!(view.entries[3]
+            .details
+            .iter()
+            .any(|line| line.contains("reconciliation") && line.contains("disabled")));
+        assert!(view.footer.contains("Enter resume/inspect"));
+        assert!(!format!("{view:?}").contains("read-only in this build"));
     }
 }

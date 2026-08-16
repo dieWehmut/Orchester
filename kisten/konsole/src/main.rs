@@ -26,7 +26,8 @@ use std::time::Duration;
 use clap::Parser;
 
 use orchester_laufzeit::harness::service::{
-    SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentModelChoice, SelfAgentRunOutcome,
+    SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentModelChoice, SelfAgentResumeAvailability,
+    SelfAgentResumeCatalog, SelfAgentRunOutcome,
 };
 use orchester_laufzeit::harness::StreamingRedactor;
 use orchester_laufzeit::{Conductor, ConductorError, SessionRecord, SessionStore};
@@ -196,8 +197,14 @@ async fn run_interactive(registry: Registry) -> Result<ExitCode, CliError> {
     run_line_interactive(registry).await
 }
 
-enum QueuedChatAction {
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum ModelTurnRequest {
     Prompt(String),
+    Resume(String),
+}
+
+enum QueuedChatAction {
+    Turn(ModelTurnRequest),
     Command(interactive::HomeAction),
 }
 
@@ -205,6 +212,7 @@ enum QueuedChatAction {
 enum OverlayAction {
     Close,
     Inspect(Vec<String>),
+    Resume(String),
     ModelConfigured,
     ModelProfile(String),
     ModelEffort {
@@ -298,6 +306,17 @@ impl TerminalOverlay {
             parent: None,
         }
     }
+
+    fn resume(catalog: &SelfAgentResumeCatalog) -> Self {
+        let mut overlay = Self::inspection(workspace_overlay::resume(catalog));
+        for (index, entry) in catalog.entries.iter().enumerate() {
+            if entry.availability == SelfAgentResumeAvailability::Ready {
+                overlay.actions[index] = OverlayAction::Resume(entry.handle.clone());
+            }
+        }
+        overlay
+    }
+
     fn models(catalog: &SelfAgentModelCatalog) -> Self {
         let current = match &catalog.active {
             SelfAgentActiveModel::Configured(choice) => {
@@ -535,7 +554,8 @@ impl TerminalChatState {
             interactive::HomeAction::Submit(prompt) => {
                 self.clear_input();
                 self.append_transcript(TranscriptEntry::user(&prompt));
-                self.pending.push_back(QueuedChatAction::Prompt(prompt));
+                self.pending
+                    .push_back(QueuedChatAction::Turn(ModelTurnRequest::Prompt(prompt)));
             }
             interactive::HomeAction::Empty => {}
             other => {
@@ -544,6 +564,13 @@ impl TerminalChatState {
                 self.pending.push_back(QueuedChatAction::Command(other));
             }
         }
+    }
+
+    fn queue_resume(&mut self, handle: String) {
+        self.overlay = None;
+        self.append_transcript(TranscriptEntry::status("Resuming selected run..."));
+        self.pending
+            .push_back(QueuedChatAction::Turn(ModelTurnRequest::Resume(handle)));
     }
 }
 
@@ -655,7 +682,7 @@ async fn await_model_turn(
     state: &mut TerminalChatState,
     choices: &[AgentChoice],
     model_status: &str,
-    prompt: String,
+    turn: ModelTurnRequest,
     assistant_index: usize,
 ) -> Result<ModelTurnResult, CliError> {
     let cancel = CancellationToken::new();
@@ -668,7 +695,20 @@ async fn await_model_turn(
         sender,
         redactor: Mutex::new(redactor),
     });
-    let request = self_agent.submit_with_events(prompt, cancel.clone(), Some(sink));
+    let request = async {
+        match turn {
+            ModelTurnRequest::Prompt(prompt) => {
+                self_agent
+                    .submit_with_events(prompt, cancel.clone(), Some(sink))
+                    .await
+            }
+            ModelTurnRequest::Resume(handle) => {
+                self_agent
+                    .resume_with_events(&handle, cancel.clone(), Some(sink))
+                    .await
+            }
+        }
+    };
     tokio::pin!(request);
     let mut tick = 0usize;
     let mut cancel_requested = false;
@@ -794,6 +834,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                 overlay.inspect(index);
                             }
                         }
+                        OverlayAction::Resume(handle) => state.queue_resume(handle),
                         OverlayAction::ModelConfigured | OverlayAction::ModelProfile(_) => {
                             let target = match action {
                                 OverlayAction::ModelConfigured => ModelSelectionTarget::Configured,
@@ -860,7 +901,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
         }
         if let Some(queued) = state.pending.pop_front() {
             match queued {
-                QueuedChatAction::Prompt(prompt) => {
+                QueuedChatAction::Turn(request) => {
                     let assistant_index = state.begin_assistant_transcript();
                     state.busy = Some(busy_label(0));
                     chat.present_view(state.view(&choices, &model_status))?;
@@ -870,7 +911,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                         &mut state,
                         &choices,
                         &model_status,
-                        prompt,
+                        request,
                         assistant_index,
                     )
                     .await?
@@ -933,9 +974,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                             }
                             WorkspaceCommand::Resume => {
                                 state.overlay = Some(match self_agent.resume_catalog() {
-                                    Ok(catalog) => TerminalOverlay::inspection(
-                                        workspace_overlay::resume(&catalog),
-                                    ),
+                                    Ok(catalog) => TerminalOverlay::resume(&catalog),
                                     Err(error) => TerminalOverlay::error(&label, &error),
                                 });
                             }
@@ -1689,6 +1728,10 @@ enum CliError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use orchester_laufzeit::harness::service::{
+        SelfAgentResumeAvailability, SelfAgentResumeCatalog, SelfAgentResumeEntry,
+        SelfAgentResumeStep,
+    };
     use secrecy::SecretString;
     use std::path::Path;
 
@@ -1706,7 +1749,8 @@ mod tests {
         assert_eq!(state.transcript[0].text, "next question");
         assert!(matches!(
             state.pending.front(),
-            Some(QueuedChatAction::Prompt(prompt)) if prompt == "next question"
+            Some(QueuedChatAction::Turn(ModelTurnRequest::Prompt(prompt)))
+                if prompt == "next question"
         ));
     }
 
@@ -1739,6 +1783,86 @@ mod tests {
         assert!(overlay.view.footer.contains("Enter inspect"));
         assert!(overlay.inspect(1));
         assert_eq!(overlay.view.details, vec!["model: gpt-test"]);
+    }
+
+    #[test]
+    fn resume_overlay_assigns_resume_actions_only_to_ready_rows() {
+        let catalog = SelfAgentResumeCatalog {
+            database_present: true,
+            truncated: false,
+            entries: vec![
+                SelfAgentResumeEntry {
+                    handle: "r-ready".into(),
+                    availability: SelfAgentResumeAvailability::Ready,
+                    step: SelfAgentResumeStep::StartNextStep,
+                    latest: true,
+                },
+                SelfAgentResumeEntry {
+                    handle: "r-unsupported".into(),
+                    availability: SelfAgentResumeAvailability::Unsupported,
+                    step: SelfAgentResumeStep::StartStep,
+                    latest: false,
+                },
+                SelfAgentResumeEntry {
+                    handle: "r-approval".into(),
+                    availability: SelfAgentResumeAvailability::ApprovalRequired,
+                    step: SelfAgentResumeStep::AwaitApproval,
+                    latest: false,
+                },
+                SelfAgentResumeEntry {
+                    handle: "r-reconcile".into(),
+                    availability: SelfAgentResumeAvailability::ReconciliationRequired,
+                    step: SelfAgentResumeStep::ReconcileToolOutcome,
+                    latest: false,
+                },
+            ],
+        };
+
+        let overlay = TerminalOverlay::resume(&catalog);
+
+        assert_eq!(overlay.actions.len(), overlay.view.items.len());
+        assert!(matches!(
+            overlay.actions.first(),
+            Some(OverlayAction::Resume(handle)) if handle == "r-ready"
+        ));
+        assert!(overlay
+            .actions
+            .iter()
+            .skip(1)
+            .all(|action| matches!(action, OverlayAction::Inspect(_))));
+    }
+
+    #[test]
+    fn queued_resume_closes_the_overlay_without_adding_a_user_prompt() {
+        let catalog = SelfAgentResumeCatalog {
+            database_present: true,
+            truncated: false,
+            entries: vec![SelfAgentResumeEntry {
+                handle: "r-ready".into(),
+                availability: SelfAgentResumeAvailability::Ready,
+                step: SelfAgentResumeStep::StartNextStep,
+                latest: true,
+            }],
+        };
+        let mut state = TerminalChatState {
+            overlay: Some(TerminalOverlay::resume(&catalog)),
+            ..TerminalChatState::default()
+        };
+
+        state.queue_resume("r-ready".into());
+
+        assert!(state.overlay.is_none());
+        assert_eq!(state.transcript.len(), 1);
+        assert_eq!(
+            state.transcript[0].role,
+            interactive::TranscriptRole::Status
+        );
+        assert_eq!(state.transcript[0].text, "Resuming selected run...");
+        assert!(matches!(
+            state.pending.front(),
+            Some(QueuedChatAction::Turn(ModelTurnRequest::Resume(handle)))
+                if handle == "r-ready"
+        ));
     }
 
     #[test]
