@@ -148,7 +148,7 @@ pub(super) fn matching_commands(query: &str, choices: &[AgentChoice]) -> Vec<Com
         .unwrap_or(query)
         .trim_start_matches('/')
         .to_ascii_lowercase();
-    command_items(choices)
+    let mut matches = command_items(choices)
         .into_iter()
         .filter(|item| {
             let name = item.name.trim_start_matches('/').to_ascii_lowercase();
@@ -156,7 +156,15 @@ pub(super) fn matching_commands(query: &str, choices: &[AgentChoice]) -> Vec<Com
                 || name.starts_with(&normalized)
                 || item.description.to_ascii_lowercase().contains(&normalized)
         })
-        .collect()
+        .collect::<Vec<_>>();
+    matches.sort_by_key(|item| {
+        !item
+            .name
+            .trim_start_matches('/')
+            .to_ascii_lowercase()
+            .starts_with(&normalized)
+    });
+    matches
 }
 
 pub(super) fn matching_delegate_commands(query: &str, choices: &[AgentChoice]) -> Vec<CommandItem> {
@@ -463,5 +471,55 @@ mod tests {
             command_action("/", Some(&theme)),
             PromptAction::Workspace(WorkspaceCommand::Theme(ThemeCommand::Show))
         );
+    }
+
+    #[test]
+    fn partial_command_selection_confirms_the_highlighted_item() {
+        assert_eq!(
+            parse_home_action_selected("/sta", &[], 0),
+            HomeAction::Workspace(WorkspaceCommand::Status)
+        );
+        assert_eq!(
+            parse_home_action_selected("/mod", &[], 0),
+            HomeAction::Workspace(WorkspaceCommand::Model(ModelCommand::Show))
+        );
+        assert_eq!(
+            parse_home_action_selected("/res", &[], 0),
+            HomeAction::Workspace(WorkspaceCommand::Resume)
+        );
+    }
+
+    #[test]
+    fn command_name_prefixes_rank_before_description_matches() {
+        let status = matching_commands("/sta", &[]);
+        assert_eq!(
+            status.first().map(|item| item.name.as_str()),
+            Some("/status")
+        );
+        assert!(status.iter().any(|item| item.name == "/list"));
+
+        let resume = matching_commands("/res", &[]);
+        assert_eq!(
+            resume.first().map(|item| item.name.as_str()),
+            Some("/resume")
+        );
+        assert!(resume.iter().any(|item| item.name == "/config"));
+    }
+
+    #[test]
+    fn exact_commands_with_invalid_arguments_still_show_help() {
+        for input in [
+            "/status extra",
+            "/resume extra",
+            "/model fast extra",
+            "/theme light extra",
+            "/plugins list extra",
+        ] {
+            assert_eq!(
+                parse_home_action_selected(input, &[], 0),
+                HomeAction::Help,
+                "{input} must not fall back to the highlighted palette item"
+            );
+        }
     }
 }
