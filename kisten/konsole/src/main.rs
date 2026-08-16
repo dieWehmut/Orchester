@@ -1305,12 +1305,7 @@ fn render_workspace_command_to<W: Write>(
             let selected = self_agent.select_configured_model()?;
             self_agent::render_model_selection(out, &selected)?;
         }
-        WorkspaceCommand::Theme(_) => {
-            writeln!(
-                out,
-                "Use /theme in an interactive terminal to choose a theme."
-            )?;
-        }
+        WorkspaceCommand::Theme(command) => render_theme_command_to(out, command)?,
         WorkspaceCommand::Credential(CredentialCommand::Login { provider }) => {
             let target = self_agent.credential_target(provider.as_deref())?;
             self_agent::render_credential_target(out, &target)?;
@@ -1327,6 +1322,36 @@ fn render_workspace_command_to<W: Write>(
             let target = self_agent.credential_target(provider.as_deref())?;
             let removed = self_agent.clear_credential(&target.provider)?;
             self_agent::render_credential_cleared(out, &target.provider, removed)?;
+        }
+    }
+    Ok(())
+}
+
+fn render_theme_command_to<W: Write>(out: &mut W, command: ThemeCommand) -> Result<(), CliError> {
+    match command {
+        ThemeCommand::Show => {
+            writeln!(out, "Terminal themes")?;
+            let current = theme::load_user_theme();
+            for candidate in theme::Theme::all() {
+                writeln!(
+                    out,
+                    "{} {} ({})",
+                    if candidate == current { ">" } else { " " },
+                    candidate.label(),
+                    candidate.name()
+                )?;
+            }
+            writeln!(out, "Use /theme <name> to save a theme.")?;
+        }
+        ThemeCommand::Select(name) => {
+            let selected = theme::Theme::from_stored_name(&name);
+            theme::persist_user_theme(selected)?;
+            writeln!(
+                out,
+                "Theme saved: {} ({})",
+                selected.label(),
+                selected.name()
+            )?;
         }
     }
     Ok(())
