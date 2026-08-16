@@ -1419,8 +1419,11 @@ fn transcript_lines(
                 TranscriptRole::Status => ("", palette.dim),
                 TranscriptRole::Error => ("error: ", palette.warning),
             };
-            let text = sanitize_terminal_text(&entry.text);
-            let mut lines = text.lines().map(str::to_owned).collect::<Vec<_>>();
+            let mut lines = entry
+                .text
+                .lines()
+                .map(sanitize_terminal_text)
+                .collect::<Vec<_>>();
             if lines.is_empty() {
                 lines.push(String::new());
             }
@@ -3462,6 +3465,23 @@ mod tests {
         let plain = strip_ansi(&String::from_utf8(out).unwrap());
         assert!(plain.contains("/agent"), "help:\n{plain}");
         assert!(plain.contains("Creating ..."), "busy marker:\n{plain}");
+    }
+
+    #[test]
+    fn transcript_lines_render_each_logical_line_as_a_visible_row() {
+        let transcript = [TranscriptEntry::assistant(
+            "first response\nsecond response\nthird response",
+        )];
+
+        let rows = transcript_lines(80, &transcript, Theme::default().palette())
+            .into_iter()
+            .map(|line| strip_ansi(&line))
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            rows,
+            vec!["first response", "second response", "third response"]
+        );
     }
 
     #[test]
