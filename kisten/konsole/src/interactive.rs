@@ -3253,6 +3253,16 @@ mod tests {
                 );
             }
 
+            let expected_status = frames[0]
+                .1
+                .lines()
+                .nth(23)
+                .expect("the constrained frame has a status row");
+            assert!(
+                expected_status.contains("gpt-test"),
+                "the {width}x24 status row lost the active model: {expected_status}"
+            );
+
             for (label, frame) in &frames {
                 let lines = frame.lines().collect::<Vec<_>>();
                 assert_eq!(
@@ -3264,8 +3274,8 @@ mod tests {
                     lines[22].trim_start().starts_with("> "),
                     "{label} composer moved from row 22 at {width}x24:\n{frame}"
                 );
-                assert!(
-                    lines[23].contains("governed workspace"),
+                assert_eq!(
+                    lines[23], expected_status,
                     "{label} status moved from row 23 at {width}x24:\n{frame}"
                 );
             }
