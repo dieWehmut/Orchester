@@ -26,8 +26,8 @@ use std::time::Duration;
 use clap::Parser;
 
 use orchester_laufzeit::harness::service::{
-    SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentModelChoice, SelfAgentResumeAvailability,
-    SelfAgentResumeCatalog, SelfAgentRunOutcome,
+    SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentModelChoice, SelfAgentProviderState,
+    SelfAgentResumeAvailability, SelfAgentResumeCatalog, SelfAgentRunOutcome,
 };
 use orchester_laufzeit::harness::StreamingRedactor;
 use orchester_laufzeit::{Conductor, ConductorError, SessionRecord, SessionStore};
@@ -215,6 +215,7 @@ enum OverlayAction {
     Resume(String),
     ModelConfigured,
     ModelProfile(String),
+    ModelProvider(String),
     ModelEffort {
         target: ModelSelectionTarget,
         effort: Option<String>,
@@ -226,6 +227,7 @@ enum OverlayAction {
 enum ModelSelectionTarget {
     Configured,
     Profile(String),
+    Provider(String),
 }
 
 #[derive(Debug, Clone)]
@@ -318,16 +320,13 @@ impl TerminalOverlay {
     }
 
     fn models(catalog: &SelfAgentModelCatalog) -> Self {
-        let current = match &catalog.active {
-            SelfAgentActiveModel::Configured(choice) => {
-                choice.profile.as_deref().unwrap_or("configured")
-            }
-            SelfAgentActiveModel::Unresolved { .. } | SelfAgentActiveModel::NotConfigured => "",
-        };
+        // Compared as a target rather than by name: a provider key is free to
+        // match a profile name, and a string compare would mark the wrong row.
+        let current = model_selection_current(catalog);
         let mut items =
             vec![
                 OverlayItem::new("configured", "Use the model resolved from configuration")
-                    .current(current == "configured"),
+                    .current(current.as_ref() == Some(&ModelSelectionTarget::Configured)),
             ];
         let mut actions = vec![OverlayAction::ModelConfigured];
         for choice in &catalog.profiles {
@@ -338,8 +337,29 @@ impl TerminalOverlay {
                 choice.provider_name,
                 choice.reasoning_effort.as_deref().unwrap_or("default")
             );
-            items.push(OverlayItem::new(name, detail).current(current == name));
+            let target = ModelSelectionTarget::Profile(name.to_owned());
+            items.push(OverlayItem::new(name, detail).current(current.as_ref() == Some(&target)));
             actions.push(OverlayAction::ModelProfile(name.to_owned()));
+        }
+        for provider in &catalog.providers {
+            let target = ModelSelectionTarget::Provider(provider.provider.clone());
+            let (detail, action) = match &provider.state {
+                SelfAgentProviderState::Selectable { model, wire_api } => (
+                    format!("{model} | {} | {wire_api}", provider.provider_name),
+                    OverlayAction::ModelProvider(provider.provider.clone()),
+                ),
+                // An entry that cannot be used is still listed, so Enter
+                // explains what to repair instead of failing the selection.
+                SelfAgentProviderState::Unavailable { path, message } => (
+                    format!("unavailable | {path}"),
+                    OverlayAction::Inspect(vec![format!("{path}: {message}")]),
+                ),
+            };
+            items.push(
+                OverlayItem::new(format!("provider {}", provider.provider), detail)
+                    .current(current.as_ref() == Some(&target)),
+            );
+            actions.push(action);
         }
         Self {
             view: CommandOverlay::new(
@@ -437,13 +457,33 @@ fn report_overlay_item(line: &str) -> OverlayItem {
     }
 }
 
+/// Which row of the model overlay reflects the session's selection.
+///
+/// A provider switch keeps the configured model, so the active choice alone
+/// cannot distinguish it from the configured default; `selected_provider` is
+/// the only field that can, and it therefore wins.
+fn model_selection_current(catalog: &SelfAgentModelCatalog) -> Option<ModelSelectionTarget> {
+    if let Some(provider) = catalog.selected_provider.as_deref() {
+        return Some(ModelSelectionTarget::Provider(provider.to_owned()));
+    }
+    match &catalog.active {
+        SelfAgentActiveModel::Configured(choice) => Some(match choice.profile.as_deref() {
+            Some(name) => ModelSelectionTarget::Profile(name.to_owned()),
+            None => ModelSelectionTarget::Configured,
+        }),
+        SelfAgentActiveModel::Unresolved { .. } | SelfAgentActiveModel::NotConfigured => None,
+    }
+}
+
 fn model_effort_overlay_for_target(
     catalog: &SelfAgentModelCatalog,
-    configured: Option<&SelfAgentModelChoice>,
+    resolved: Option<&SelfAgentModelChoice>,
     target: ModelSelectionTarget,
 ) -> Option<TerminalOverlay> {
     let choice = match &target {
-        ModelSelectionTarget::Configured => configured.cloned(),
+        // Both are resolved by the caller: neither has a row in `profiles`,
+        // and a provider switch is only visible once it has been applied.
+        ModelSelectionTarget::Configured | ModelSelectionTarget::Provider(_) => resolved.cloned(),
         ModelSelectionTarget::Profile(name) => catalog
             .active
             .choice()
@@ -465,13 +505,16 @@ fn load_model_effort_overlay(
     target: ModelSelectionTarget,
 ) -> Result<Option<TerminalOverlay>, SelfAgentHostError> {
     let catalog = self_agent.model_catalog()?;
-    let configured = match target {
+    let resolved = match &target {
         ModelSelectionTarget::Configured => Some(self_agent.configured_model_choice()?),
+        ModelSelectionTarget::Provider(provider) => {
+            Some(self_agent.provider_model_choice(provider)?)
+        }
         ModelSelectionTarget::Profile(_) => None,
     };
     Ok(model_effort_overlay_for_target(
         &catalog,
-        configured.as_ref(),
+        resolved.as_ref(),
         target,
     ))
 }
@@ -672,6 +715,9 @@ fn workspace_command_label(command: &WorkspaceCommand) -> String {
         WorkspaceCommand::Resume => "/resume".into(),
         WorkspaceCommand::Model(ModelCommand::Show) => "/model".into(),
         WorkspaceCommand::Model(ModelCommand::SelectProfile(name)) => format!("/model {name}"),
+        WorkspaceCommand::Model(ModelCommand::SelectProvider(provider)) => {
+            format!("/model provider {provider}")
+        }
         WorkspaceCommand::Model(ModelCommand::UseConfigured) => "/model configured".into(),
         WorkspaceCommand::Theme(_) => "/theme".into(),
         WorkspaceCommand::Credential(CredentialCommand::Login { provider }) => provider
@@ -865,11 +911,16 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                             }
                         }
                         OverlayAction::Resume(handle) => state.queue_resume(handle),
-                        OverlayAction::ModelConfigured | OverlayAction::ModelProfile(_) => {
+                        OverlayAction::ModelConfigured
+                        | OverlayAction::ModelProfile(_)
+                        | OverlayAction::ModelProvider(_) => {
                             let target = match action {
                                 OverlayAction::ModelConfigured => ModelSelectionTarget::Configured,
                                 OverlayAction::ModelProfile(name) => {
                                     ModelSelectionTarget::Profile(name)
+                                }
+                                OverlayAction::ModelProvider(provider) => {
+                                    ModelSelectionTarget::Provider(provider)
                                 }
                                 _ => unreachable!(),
                             };
@@ -896,6 +947,11 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                     ModelSelectionTarget::Profile(name) => self_agent
                                         .select_model_profile_with_effort(
                                             &name,
+                                            effort.as_deref(),
+                                        )?,
+                                    ModelSelectionTarget::Provider(provider) => self_agent
+                                        .select_model_provider_with_effort(
+                                            &provider,
                                             effort.as_deref(),
                                         )?,
                                 };
@@ -1041,6 +1097,22 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                             TerminalOverlay::error(
                                                 &label,
                                                 &"configured model is unavailable",
+                                            )
+                                        }),
+                                        Err(error) => TerminalOverlay::error(&label, &error),
+                                    },
+                                );
+                            }
+                            WorkspaceCommand::Model(ModelCommand::SelectProvider(provider)) => {
+                                state.overlay = Some(
+                                    match load_model_effort_overlay(
+                                        &self_agent,
+                                        ModelSelectionTarget::Provider(provider),
+                                    ) {
+                                        Ok(overlay) => overlay.unwrap_or_else(|| {
+                                            TerminalOverlay::error(
+                                                &label,
+                                                &"selected provider is unavailable",
                                             )
                                         }),
                                         Err(error) => TerminalOverlay::error(&label, &error),
@@ -1672,6 +1744,10 @@ fn render_workspace_command_to<W: Write>(
             let selected = self_agent.select_model_profile(&name)?;
             self_agent::render_model_selection(out, &selected)?;
         }
+        WorkspaceCommand::Model(ModelCommand::SelectProvider(provider)) => {
+            let selected = self_agent.select_model_provider(&provider)?;
+            self_agent::render_model_selection(out, &selected)?;
+        }
         WorkspaceCommand::Model(ModelCommand::UseConfigured) => {
             let selected = self_agent.select_configured_model()?;
             self_agent::render_model_selection(out, &selected)?;
@@ -1767,8 +1843,8 @@ enum CliError {
 mod tests {
     use super::*;
     use orchester_laufzeit::harness::service::{
-        SelfAgentResumeAvailability, SelfAgentResumeCatalog, SelfAgentResumeEntry,
-        SelfAgentResumeStep,
+        SelfAgentProviderChoice, SelfAgentResumeAvailability, SelfAgentResumeCatalog,
+        SelfAgentResumeEntry, SelfAgentResumeStep,
     };
     use secrecy::SecretString;
     use std::path::Path;
@@ -1783,6 +1859,14 @@ mod tests {
             profiles,
             providers: Vec::new(),
             selected_provider: None,
+        }
+    }
+
+    fn provider_choice(provider: &str, state: SelfAgentProviderState) -> SelfAgentProviderChoice {
+        SelfAgentProviderChoice {
+            provider: provider.into(),
+            provider_name: format!("{provider} API"),
+            state,
         }
     }
 
@@ -1991,6 +2075,114 @@ mod tests {
     }
 
     #[test]
+    fn model_overlay_lists_providers_and_marks_the_selected_one() {
+        let mut catalog = model_catalog(
+            SelfAgentActiveModel::Configured(SelfAgentModelChoice {
+                profile: None,
+                provider: "relay".into(),
+                provider_name: "relay API".into(),
+                model: "gpt-test".into(),
+                reasoning_effort: None,
+                plan_reasoning_effort: None,
+                service_tier: None,
+            }),
+            Vec::new(),
+        );
+        catalog.providers = vec![
+            provider_choice(
+                "openai",
+                SelfAgentProviderState::Selectable {
+                    model: "gpt-test".into(),
+                    wire_api: "responses".into(),
+                },
+            ),
+            provider_choice(
+                "relay",
+                SelfAgentProviderState::Selectable {
+                    model: "gpt-test".into(),
+                    wire_api: "anthropic".into(),
+                },
+            ),
+        ];
+        catalog.selected_provider = Some("relay".into());
+
+        let overlay = TerminalOverlay::models(&catalog);
+
+        assert_eq!(
+            overlay
+                .view
+                .items
+                .iter()
+                .filter(|item| item.current)
+                .map(|item| item.label.as_str())
+                .collect::<Vec<_>>(),
+            vec!["provider relay"]
+        );
+        // A provider switch keeps the configured model, so the configured row
+        // must not also read as current.
+        assert!(!overlay.view.items[0].current);
+        assert!(overlay.view.items[1].detail.contains("responses"));
+        assert!(matches!(
+            overlay.actions.last(),
+            Some(OverlayAction::ModelProvider(provider)) if provider == "relay"
+        ));
+    }
+
+    #[test]
+    fn an_unavailable_provider_explains_itself_instead_of_being_selected() {
+        let mut catalog = model_catalog(SelfAgentActiveModel::NotConfigured, Vec::new());
+        catalog.providers = vec![provider_choice(
+            "broken",
+            SelfAgentProviderState::Unavailable {
+                path: "model_providers.broken.base_url".into(),
+                message: "provider base URL is not configured".into(),
+            },
+        )];
+
+        let overlay = TerminalOverlay::models(&catalog);
+
+        assert!(overlay.view.items[1].detail.contains("unavailable"));
+        assert!(overlay.view.items[1]
+            .detail
+            .contains("model_providers.broken.base_url"));
+        assert!(matches!(
+            overlay.actions.last(),
+            Some(OverlayAction::Inspect(details))
+                if details[0].contains("provider base URL is not configured")
+        ));
+    }
+
+    #[test]
+    fn a_provider_row_is_not_matched_by_a_profile_of_the_same_name() {
+        let named = SelfAgentModelChoice {
+            profile: Some("relay".into()),
+            provider: "openai".into(),
+            provider_name: "OpenAI".into(),
+            model: "gpt-fast".into(),
+            reasoning_effort: None,
+            plan_reasoning_effort: None,
+            service_tier: None,
+        };
+        let mut catalog =
+            model_catalog(SelfAgentActiveModel::Configured(named.clone()), vec![named]);
+        catalog.providers = vec![provider_choice(
+            "relay",
+            SelfAgentProviderState::Selectable {
+                model: "gpt-fast".into(),
+                wire_api: "responses".into(),
+            },
+        )];
+
+        let overlay = TerminalOverlay::models(&catalog);
+
+        assert!(overlay.view.items[1].current, "the profile row is current");
+        assert!(
+            !overlay.view.items[2].current,
+            "a provider key must not inherit a profile's selection"
+        );
+    }
+
+    #[test]
     fn model_effort_overlay_marks_the_catalogued_effort_and_keeps_target() {
         let choice = SelfAgentModelChoice {
             profile: Some("balanced".into()),
@@ -2110,6 +2302,45 @@ mod tests {
 
         assert!(overlay.view.items[5].current, "ultra must be current");
         assert!(!overlay.view.items[1].current, "stored low must not win");
+    }
+
+    #[test]
+    fn provider_effort_picker_uses_the_resolved_switch_not_the_catalog() {
+        let active = SelfAgentModelChoice {
+            profile: None,
+            provider: "openai".into(),
+            provider_name: "OpenAI".into(),
+            model: "gpt-default".into(),
+            reasoning_effort: Some("low".into()),
+            plan_reasoning_effort: None,
+            service_tier: None,
+        };
+        let switched = SelfAgentModelChoice {
+            provider: "relay".into(),
+            provider_name: "relay API".into(),
+            reasoning_effort: Some("high".into()),
+            ..active.clone()
+        };
+        let catalog = model_catalog(SelfAgentActiveModel::Configured(active), Vec::new());
+
+        let overlay = model_effort_overlay_for_target(
+            &catalog,
+            Some(&switched),
+            ModelSelectionTarget::Provider("relay".into()),
+        )
+        .expect("provider picker");
+
+        // The catalog has no row for a provider switch, so the picker has to
+        // describe the resolved choice the caller handed it.
+        assert!(overlay.view.description.contains("relay API"));
+        assert!(overlay.view.items[3].current, "high must be current");
+        assert!(matches!(
+            overlay.actions.first(),
+            Some(OverlayAction::ModelEffort {
+                target: ModelSelectionTarget::Provider(provider),
+                effort: None,
+            }) if provider == "relay"
+        ));
     }
 
     #[test]

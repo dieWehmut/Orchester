@@ -1,7 +1,7 @@
 use std::io::{self, Write};
 
 use orchester_laufzeit::harness::service::{
-    SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentModelChoice,
+    SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentModelChoice, SelfAgentProviderState,
 };
 
 const BOLD: &str = "\x1b[1m";
@@ -36,6 +36,38 @@ pub fn render_models(out: &mut impl Write, catalog: &SelfAgentModelCatalog) -> i
             let name = choice.profile.as_deref().unwrap_or("unnamed");
             writeln!(out, "  {}", safe_metadata(name))?;
             render_choice(out, choice, "    ")?;
+        }
+    }
+
+    writeln!(out, "providers:")?;
+    if catalog.providers.is_empty() {
+        writeln!(out, "  none configured")?;
+    } else {
+        for provider in &catalog.providers {
+            let selected = catalog.selected_provider.as_deref() == Some(provider.provider.as_str());
+            writeln!(
+                out,
+                "  {}{}",
+                safe_metadata(&provider.provider),
+                if selected { " (selected)" } else { "" }
+            )?;
+            match &provider.state {
+                SelfAgentProviderState::Selectable { model, wire_api } => writeln!(
+                    out,
+                    "    model: {} | provider: {} | wire: {}",
+                    safe_metadata(model),
+                    safe_metadata(&provider.provider_name),
+                    safe_metadata(wire_api)
+                )?,
+                // The field to repair is the whole point of listing an entry
+                // that cannot be selected.
+                SelfAgentProviderState::Unavailable { path, message } => writeln!(
+                    out,
+                    "    unavailable: {} ({})",
+                    safe_metadata(path),
+                    safe_metadata(message)
+                )?,
+            }
         }
     }
     writeln!(out, "{DIM}No provider request was made.{RESET}")?;
@@ -104,6 +136,7 @@ pub(super) fn safe_metadata(value: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use orchester_laufzeit::harness::service::SelfAgentProviderChoice;
 
     #[test]
     fn rendering_sanitizes_catalog_metadata() {
@@ -159,6 +192,54 @@ mod tests {
         assert!(rendered.contains("gpt-fast"));
         assert!(rendered.contains("future turns in this session"));
         assert!(rendered.contains("configuration was not changed"));
+    }
+
+    #[test]
+    fn the_provider_listing_names_the_wire_and_the_field_to_repair() {
+        let mut catalog = catalog(
+            SelfAgentActiveModel::Configured(choice(None, "gpt-default")),
+            Vec::new(),
+        );
+        catalog.providers = vec![
+            SelfAgentProviderChoice {
+                provider: "relay".into(),
+                provider_name: "relay API".into(),
+                state: SelfAgentProviderState::Selectable {
+                    model: "gpt-default".into(),
+                    wire_api: "anthropic".into(),
+                },
+            },
+            SelfAgentProviderChoice {
+                provider: "broken".into(),
+                provider_name: "broken".into(),
+                state: SelfAgentProviderState::Unavailable {
+                    path: "model_providers.broken.base_url".into(),
+                    message: "provider base URL is not configured".into(),
+                },
+            },
+        ];
+        catalog.selected_provider = Some("relay".into());
+        let mut output = Vec::new();
+
+        render_models(&mut output, &catalog).expect("render model catalog");
+        let rendered = String::from_utf8(output).expect("UTF-8");
+
+        assert!(rendered.contains("providers:"));
+        assert!(rendered.contains("relay (selected)"));
+        assert!(rendered.contains("wire: anthropic"));
+        assert!(rendered.contains("unavailable: model_providers.broken.base_url"));
+        assert!(rendered.contains("provider base URL is not configured"));
+    }
+
+    #[test]
+    fn an_empty_provider_block_reads_as_absent_rather_than_broken() {
+        let catalog = catalog(SelfAgentActiveModel::NotConfigured, Vec::new());
+        let mut output = Vec::new();
+
+        render_models(&mut output, &catalog).expect("render model catalog");
+        let rendered = String::from_utf8(output).expect("UTF-8");
+
+        assert_eq!(rendered.matches("none configured").count(), 2);
     }
 
     fn catalog(

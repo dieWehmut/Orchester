@@ -56,6 +56,7 @@ pub enum CredentialCommand {
 pub enum ModelCommand {
     Show,
     SelectProfile(String),
+    SelectProvider(String),
     UseConfigured,
 }
 
@@ -291,15 +292,23 @@ fn provider_argument(input: &str) -> Option<Option<String>> {
 fn parse_model_command(input: &str) -> Option<ModelCommand> {
     let mut parts = input.split_whitespace();
     parts.next()?;
-    let selection = parts.next();
+    let command = match (parts.next(), parts.next()) {
+        (None, _) => ModelCommand::Show,
+        // A provider needs the keyword: a bare token already selects a named
+        // profile, so a provider key that happened to match one would
+        // silently pick the wrong thing.
+        (Some("provider"), Some(name)) => ModelCommand::SelectProvider(name.to_owned()),
+        // The keyword alone is incomplete rather than a profile that happens to
+        // be called `provider`.
+        (Some("provider"), None) => return None,
+        (Some("configured" | "--configured"), None) => ModelCommand::UseConfigured,
+        (Some(name), None) => ModelCommand::SelectProfile(name.to_owned()),
+        (Some(_), Some(_)) => return None,
+    };
     if parts.next().is_some() {
         return None;
     }
-    match selection {
-        None => Some(ModelCommand::Show),
-        Some("configured" | "--configured") => Some(ModelCommand::UseConfigured),
-        Some(name) => Some(ModelCommand::SelectProfile(name.to_owned())),
-    }
+    Some(command)
 }
 
 fn parse_theme_command(input: &str) -> Option<ThemeCommand> {
@@ -361,7 +370,7 @@ fn command_items(choices: &[AgentChoice]) -> Vec<CommandItem> {
         },
         CommandItem {
             name: "/model".into(),
-            description: "show configured self-agent models".into(),
+            description: "choose a self-agent model or provider".into(),
             action: CommandAction::Workspace(WorkspaceCommand::Model(ModelCommand::Show)),
             agent: None,
         },
@@ -507,11 +516,28 @@ mod tests {
     }
 
     #[test]
+    fn a_provider_selection_needs_its_keyword_and_exactly_one_name() {
+        assert_eq!(
+            parse_model_command("/model provider relay"),
+            Some(ModelCommand::SelectProvider("relay".into()))
+        );
+        // A bare token stays a profile, so a provider key can never be picked
+        // by accident.
+        assert_eq!(
+            parse_model_command("/model relay"),
+            Some(ModelCommand::SelectProfile("relay".into()))
+        );
+        assert_eq!(parse_model_command("/model provider"), None);
+        assert_eq!(parse_model_command("/model provider relay extra"), None);
+    }
+
+    #[test]
     fn exact_commands_with_invalid_arguments_still_show_help() {
         for input in [
             "/status extra",
             "/resume extra",
             "/model fast extra",
+            "/model provider",
             "/theme light extra",
             "/plugins list extra",
         ] {

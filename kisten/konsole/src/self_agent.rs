@@ -144,6 +144,20 @@ impl SelfAgentHost {
             .map_err(Into::into)
     }
 
+    /// Resolve what switching to `provider` would produce, without changing the
+    /// session choice.
+    ///
+    /// A throwaway session keeps this a projection: the effort picker needs the
+    /// resolved model before the user has committed to anything.
+    pub fn provider_model_choice(
+        &self,
+        provider: &str,
+    ) -> Result<SelfAgentModelChoice, SelfAgentHostError> {
+        let config = self.load_config()?;
+        let mut probe = SelfAgentModelSession::default();
+        probe.select_provider(&config, provider).map_err(Into::into)
+    }
+
     pub fn streaming_redactor(&mut self) -> Result<StreamingRedactor, SelfAgentHostError> {
         self.ensure_runtime()?;
         self.runtime
@@ -185,6 +199,19 @@ impl SelfAgentHost {
         Ok(choice)
     }
 
+    /// Route future turns through another configured provider, keeping the
+    /// active model. Replaces any named profile the session had selected.
+    pub fn select_model_provider(
+        &mut self,
+        provider: &str,
+    ) -> Result<SelfAgentModelChoice, SelfAgentHostError> {
+        let config = self.load_config()?;
+        let choice = self.model_session.select_provider(&config, provider)?;
+        self.reasoning_effort_override = None;
+        self.runtime = None;
+        Ok(choice)
+    }
+
     /// Select a named profile and apply a session-only reasoning effort.
     /// `None` means the provider default and is intentionally different from
     /// leaving the current override untouched.
@@ -204,6 +231,17 @@ impl SelfAgentHost {
         effort: Option<&str>,
     ) -> Result<SelfAgentModelChoice, SelfAgentHostError> {
         let choice = self.select_configured_model()?;
+        self.reasoning_effort_override = Some(normalize_reasoning_effort(effort));
+        Ok(self.choice_with_effort(choice))
+    }
+
+    /// Switch provider and apply a session-only reasoning effort.
+    pub fn select_model_provider_with_effort(
+        &mut self,
+        provider: &str,
+        effort: Option<&str>,
+    ) -> Result<SelfAgentModelChoice, SelfAgentHostError> {
+        let choice = self.select_model_provider(provider)?;
         self.reasoning_effort_override = Some(normalize_reasoning_effort(effort));
         Ok(self.choice_with_effort(choice))
     }
@@ -356,6 +394,10 @@ impl fmt::Debug for SelfAgentHost {
             .field(
                 "named_model_selected",
                 &self.model_session.selected_profile().is_some(),
+            )
+            .field(
+                "provider_selected",
+                &self.model_session.selected_provider().is_some(),
             )
             .field("initialized", &self.runtime.is_some())
             .finish()

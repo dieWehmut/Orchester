@@ -802,7 +802,7 @@ pub fn render_help<W: Write>(out: &mut W) -> io::Result<()> {
     writeln!(out, "{BOLD}Interactive commands{RESET}")?;
     writeln!(out, "  /agent   choose another installed agent")?;
     writeln!(out, "  /list    show detected agent status")?;
-    writeln!(out, "  /model   show configured self-agent models")?;
+    writeln!(out, "  /model   choose a self-agent model or provider")?;
     writeln!(out, "  /theme   preview and choose the terminal theme")?;
     writeln!(out, "  /config  show resolved self-agent configuration")?;
     writeln!(out, "  /permissions show effective self-agent permissions")?;
@@ -1645,7 +1645,7 @@ fn render_compact_home_header<W: Write>(
 fn render_home_help<W: Write>(out: &mut W, width: usize, max_rows: usize) -> io::Result<()> {
     for line in [
         "/agent      choose a delegate",
-        "/model      inspect self-agent models",
+        "/model      choose a model or provider",
         "/theme      preview terminal colors",
         "/config     inspect resolved configuration",
         "/permissions inspect effective permissions",
