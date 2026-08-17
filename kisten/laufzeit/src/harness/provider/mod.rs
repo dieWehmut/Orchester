@@ -4,6 +4,7 @@ mod http;
 pub mod responses;
 
 pub use http::{
-    HttpRequest, HttpResponse, HttpResponseStream, HttpTransport, HttpTransportError,
-    ReqwestHttpTransport, MAX_HTTP_REQUEST_BYTES, MAX_HTTP_RESPONSE_BYTES, MAX_HTTP_TIMEOUT,
+    CredentialHeader, HttpRequest, HttpResponse, HttpResponseStream, HttpTransport,
+    HttpTransportError, ReqwestHttpTransport, MAX_HTTP_PROTOCOL_HEADERS, MAX_HTTP_REQUEST_BYTES,
+    MAX_HTTP_RESPONSE_BYTES, MAX_HTTP_TIMEOUT,
 };

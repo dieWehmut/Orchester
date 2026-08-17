@@ -6,7 +6,7 @@ use std::time::Duration;
 
 use orchester_laufzeit::harness::credentials::{provider_secret, InMemoryCredentialStore};
 use orchester_laufzeit::harness::provider::{
-    HttpRequest, HttpTransport, HttpTransportError, ReqwestHttpTransport,
+    CredentialHeader, HttpRequest, HttpTransport, HttpTransportError, ReqwestHttpTransport,
 };
 use tokio_util::sync::CancellationToken;
 use url::Url;
@@ -100,6 +100,49 @@ async fn posts_json_with_bearer_auth_and_returns_bounded_response() {
     assert_eq!(response.status(), 200);
     assert_eq!(response.retry_after(), Some(Duration::from_secs(7)));
     assert_eq!(response.body(), br#"{"ok":true}"#);
+}
+
+#[tokio::test]
+async fn anthropic_credentials_travel_in_x_api_key_with_the_protocol_version() {
+    let (endpoint, captured, server) = serve_once(
+        b"HTTP/1.1 200 OK\r\nContent-Length: 11\r\nConnection: close\r\n\r\n{\"ok\":true}".to_vec(),
+    );
+    let request = request(endpoint)
+        .with_credential_header(CredentialHeader::ApiKey)
+        .with_protocol_headers(vec![("anthropic-version", "2023-06-01")])
+        .expect("bounded protocol headers");
+    ReqwestHttpTransport::new()
+        .expect("build client")
+        .send(request, CancellationToken::new())
+        .await
+        .expect("HTTP response");
+    server.join().expect("server thread");
+
+    let wire = String::from_utf8(captured.recv().expect("captured request")).expect("HTTP text");
+    let wire_lower = wire.to_ascii_lowercase();
+    assert!(wire_lower.contains(&format!("x-api-key: {SECRET_CANARY}\r\n")));
+    assert!(wire_lower.contains("anthropic-version: 2023-06-01\r\n"));
+    // Anthropic rejects a bearer-presented API key, so the credential must not
+    // be duplicated into the header the OpenAI wire uses.
+    assert!(!wire_lower.contains("authorization:"));
+}
+
+#[test]
+fn protocol_headers_are_bounded_and_reject_unsendable_values() {
+    let endpoint = Url::parse("https://provider.example/v1/messages").expect("URL");
+    let over_budget = vec![("a", "1"), ("b", "2"), ("c", "3"), ("d", "4"), ("e", "5")];
+    for headers in [
+        over_budget,
+        vec![("anthropic-version", "")],
+        vec![("", "1")],
+    ] {
+        assert_eq!(
+            request(endpoint.clone())
+                .with_protocol_headers(headers)
+                .unwrap_err(),
+            HttpTransportError::InvalidRequest
+        );
+    }
 }
 
 #[tokio::test]

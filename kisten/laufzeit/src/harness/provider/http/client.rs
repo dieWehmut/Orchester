@@ -7,7 +7,10 @@ use reqwest::redirect::Policy;
 use tokio_util::sync::CancellationToken;
 use url::Url;
 
-use super::{HttpRequest, HttpResponse, HttpResponseStream, HttpTransport, HttpTransportError};
+use super::{
+    CredentialHeader, HttpRequest, HttpResponse, HttpResponseStream, HttpTransport,
+    HttpTransportError,
+};
 
 const DEFAULT_USER_AGENT: &str = concat!("orchester/", env!("CARGO_PKG_VERSION"));
 
@@ -113,8 +116,17 @@ impl ReqwestHttpTransport {
         if let Some(user_agent) = compatibility_user_agent(&request.endpoint) {
             builder = builder.header(USER_AGENT, user_agent);
         }
+        for (name, value) in request.protocol_headers() {
+            builder = builder.header(*name, *value);
+        }
         if let Some(secret) = &request.authorization {
-            builder = builder.bearer_auth(secret.expose_for_provider());
+            builder = match request.credential_header() {
+                CredentialHeader::Bearer => builder.bearer_auth(secret.expose_for_provider()),
+                CredentialHeader::ApiKey => builder.header(
+                    CredentialHeader::ApiKey.header_name(),
+                    secret.expose_for_provider(),
+                ),
+            };
         }
         builder
     }
