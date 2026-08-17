@@ -6,9 +6,8 @@ use serde::Serialize;
 use serde_json::Value;
 use thiserror::Error;
 
+use crate::harness::provider::json::{self, BoundedJsonError};
 use crate::harness::provider::MAX_HTTP_REQUEST_BYTES;
-
-use super::json::{self, BoundedJsonError};
 
 const MAX_MODEL_BYTES: usize = 4 * 1024;
 const MAX_INPUT_ITEMS: usize = 512;

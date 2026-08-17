@@ -8,10 +8,12 @@ use serde::Deserialize;
 use serde_json::{Map, Value};
 use thiserror::Error;
 
+use crate::harness::provider::json;
+use crate::harness::provider::sse::{
+    boundary_length, find_event_boundary, parse_event_frame, MalformedFrame,
+};
 use crate::harness::provider::{HttpResponseStream, HttpTransportError, MAX_HTTP_RESPONSE_BYTES};
 use tokio_util::sync::CancellationToken;
-
-use super::json;
 
 const MAX_OUTPUT_ITEMS: usize = 512;
 const MAX_CONTENT_ITEMS: usize = 1_024;
@@ -162,28 +164,8 @@ fn map_stream_error(error: HttpTransportError) -> ResponsesResponseError {
     }
 }
 
-fn find_event_boundary(bytes: &[u8]) -> Option<usize> {
-    let lf = bytes
-        .windows(2)
-        .position(|window| window == b"\n\n")
-        .map(|index| index + 2);
-    let crlf = bytes
-        .windows(4)
-        .position(|window| window == b"\r\n\r\n")
-        .map(|index| index + 4);
-    match (lf, crlf) {
-        (Some(left), Some(right)) => Some(left.min(right)),
-        (Some(index), None) | (None, Some(index)) => Some(index),
-        (None, None) => None,
-    }
-}
-
-fn boundary_length(bytes: &[u8]) -> usize {
-    if bytes.ends_with(b"\r\n\r\n") {
-        4
-    } else {
-        2
-    }
+fn map_frame_error(_error: MalformedFrame) -> ResponsesResponseError {
+    ResponsesResponseError::InvalidEventStream
 }
 
 fn decode_event_frame(
@@ -191,32 +173,13 @@ fn decode_event_frame(
     emitted_bytes: &mut usize,
     events: Option<&dyn ModelEventSink>,
 ) -> Result<Option<ModelResponse>, ResponsesResponseError> {
-    let frame =
-        std::str::from_utf8(frame).map_err(|_| ResponsesResponseError::InvalidEventStream)?;
-    let mut event_name = None;
-    let mut data = String::new();
-    for line in frame.lines() {
-        let line = line.strip_suffix('\r').unwrap_or(line);
-        if line.starts_with(':') {
-            continue;
-        }
-        if let Some(value) = line.strip_prefix("event:") {
-            event_name = Some(value.trim());
-        } else if let Some(value) = line.strip_prefix("data:") {
-            if !data.is_empty() {
-                data.push('\n');
-            }
-            data.push_str(value.trim_start());
-        } else if !line.trim().is_empty() {
-            return Err(ResponsesResponseError::InvalidEventStream);
-        }
-    }
-    if data.is_empty() {
+    let Some(frame) = parse_event_frame(frame).map_err(map_frame_error)? else {
         return Ok(None);
-    }
-    let value: Value =
-        serde_json::from_str(&data).map_err(|_| ResponsesResponseError::InvalidEventStream)?;
-    let kind = event_name
+    };
+    let value: Value = serde_json::from_str(&frame.data)
+        .map_err(|_| ResponsesResponseError::InvalidEventStream)?;
+    let kind = frame
+        .name
         .or_else(|| value.get("type").and_then(Value::as_str))
         .ok_or(ResponsesResponseError::InvalidEventStream)?;
     match kind {

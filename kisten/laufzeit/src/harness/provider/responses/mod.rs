@@ -1,7 +1,6 @@
 //! Explicit OpenAI Responses wire mappings.
 
 mod factory;
-mod json;
 mod model;
 mod request;
 mod response;
