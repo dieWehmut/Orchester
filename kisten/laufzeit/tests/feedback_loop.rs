@@ -157,6 +157,53 @@ fn control_bytes_cannot_split_a_configured_secret_to_evade_redaction() {
 }
 
 #[test]
+fn configured_secrets_are_normalized_before_exact_value_matching() {
+    let normalized = "normalized-configured-secret";
+    let engine = FeedbackEngine::default().with_secret(SecretString::new(
+        "normalized-configured\u{200b}-secret"
+            .to_owned()
+            .into_boxed_str(),
+    ));
+    let built = engine.build(FeedbackInput {
+        source: "tool".into(),
+        validator_id: None,
+        exit_code: Some(1),
+        class: FeedbackClass::ToolFailed,
+        summary: String::new(),
+        stdout: normalized.into(),
+        stderr: String::new(),
+        retryable: false,
+    });
+
+    assert!(!built.report.stdout_tail.contains(normalized));
+    assert!(built.report.stdout_tail.contains("[REDACTED]"));
+}
+
+#[test]
+fn longer_configured_secrets_are_redacted_before_their_prefixes() {
+    let sensitive_suffix = "synthetic-sensitive-suffix";
+    let engine = FeedbackEngine::default()
+        .with_secret(SecretString::new(
+            "shared-prefix".to_owned().into_boxed_str(),
+        ))
+        .with_secret(SecretString::new(
+            format!("shared-prefix-{sensitive_suffix}").into_boxed_str(),
+        ));
+    let built = engine.build(FeedbackInput {
+        source: "tool".into(),
+        validator_id: None,
+        exit_code: Some(1),
+        class: FeedbackClass::ToolFailed,
+        summary: String::new(),
+        stdout: format!("shared-prefix-{sensitive_suffix}"),
+        stderr: String::new(),
+        retryable: false,
+    });
+
+    assert!(!built.report.stdout_tail.contains(sensitive_suffix));
+}
+
+#[test]
 fn provider_token_prefix_is_redacted_without_a_leading_word_boundary() {
     let token = "sk-embedded-provider-secret-123456";
     let built = FeedbackEngine::default().build(FeedbackInput {
@@ -172,6 +219,28 @@ fn provider_token_prefix_is_redacted_without_a_leading_word_boundary() {
 
     assert!(!built.report.stdout_tail.contains(token));
     assert!(built.report.stdout_tail.contains("[REDACTED_TOKEN]"));
+}
+
+#[test]
+fn configured_secret_replacement_cannot_mask_private_key_detection() {
+    let sensitive_payload = "synthetic-sensitive-key-material";
+    let engine = FeedbackEngine::default()
+        .with_secret(SecretString::new("PRIVATE".to_owned().into_boxed_str()));
+    let built = engine.build(FeedbackInput {
+        source: "tool".into(),
+        validator_id: None,
+        exit_code: Some(1),
+        class: FeedbackClass::ToolFailed,
+        summary: String::new(),
+        stdout: format!(
+            "-----BEGIN PRIVATE KEY-----\n{sensitive_payload}\n-----END PRIVATE KEY-----"
+        ),
+        stderr: String::new(),
+        retryable: false,
+    });
+
+    assert!(!built.report.stdout_tail.contains(sensitive_payload));
+    assert!(built.report.stdout_tail.contains("[REDACTED_PRIVATE_KEY]"));
 }
 
 #[test]
@@ -306,6 +375,130 @@ fn streaming_redactor_starts_a_new_response_after_finish() {
     assert!(first.contains("first response"));
     assert!(second.contains("second response"));
     assert!(!second.contains("first response"));
+}
+
+#[test]
+fn streaming_redactor_does_not_leak_a_secret_split_across_responses() {
+    let secret = "cross-response-configured-secret";
+    let mut redactor =
+        StreamingRedactor::new(vec![SecretString::new(secret.to_owned().into_boxed_str())]);
+
+    redactor.push("safe first response: cross-response-configured-");
+    let first = redactor.finish().to_owned();
+    redactor.begin_response();
+    redactor.push("secret and safe second response");
+    let second = redactor.finish().to_owned();
+    let observed = format!("{first}{second}");
+
+    assert!(!observed.contains(secret));
+}
+
+#[test]
+fn streaming_redactor_blocks_detector_prefixes_split_across_responses() {
+    for (first_delta, second_delta, sensitive_value) in [
+        (
+            "safe response s",
+            "k-synthetic-token-value",
+            "sk-synthetic-token-value",
+        ),
+        (
+            "safe response -----BEGIN PRI",
+            "VATE KEY-----\nsynthetic-key-material",
+            "PRIVATE KEY-----\nsynthetic-key-material",
+        ),
+        (
+            "safe response Authorization: Bea",
+            "rer synthetic-authorization-value",
+            "Authorization: Bearer synthetic-authorization-value",
+        ),
+    ] {
+        let mut redactor = StreamingRedactor::new(Vec::new());
+        redactor.push(first_delta);
+        let first = redactor.finish().to_owned();
+        redactor.begin_response();
+        redactor.push(second_delta);
+        let second = redactor.finish().to_owned();
+        let observed = format!("{first}{second}");
+
+        assert!(!observed.contains(sensitive_value));
+    }
+}
+
+#[test]
+fn streaming_redactor_hides_a_token_body_after_a_prior_response_prefix() {
+    let sensitive_body = "synthetic-token-body-value";
+    let mut redactor = StreamingRedactor::new(Vec::new());
+
+    redactor.push("safe response sk-");
+    redactor.finish();
+    redactor.begin_response();
+    redactor.push(sensitive_body);
+    let current = redactor.finish().to_owned();
+
+    assert!(!current.contains(sensitive_body));
+}
+
+#[test]
+fn streaming_redactor_hides_authorization_after_a_prior_response_prefix() {
+    let sensitive_credential = "synthetic-authorization-value";
+    let mut redactor = StreamingRedactor::new(Vec::new());
+
+    redactor.push("safe response Authorization: Bearer ");
+    redactor.finish();
+    redactor.begin_response();
+    redactor.push(sensitive_credential);
+    let current = redactor.finish().to_owned();
+
+    assert!(!current.contains(sensitive_credential));
+}
+
+#[test]
+fn streaming_redactor_hides_private_key_body_after_a_prior_response_header() {
+    let sensitive_body = "synthetic-private-key-material".repeat(8);
+    let mut redactor = StreamingRedactor::new(Vec::new());
+
+    redactor.push("safe response -----BEGIN PRIVATE KEY-----");
+    redactor.finish();
+    redactor.begin_response();
+    redactor.push(&format!("{sensitive_body}\n-----END PRIVATE KEY-----"));
+    let current = redactor.finish().to_owned();
+
+    assert!(!current.contains(&sensitive_body));
+}
+
+#[test]
+fn response_boundary_does_not_hide_safe_text_around_a_current_response_token() {
+    let mut redactor = StreamingRedactor::new(Vec::new());
+
+    redactor.push("safe previous response ");
+    redactor.finish();
+    redactor.begin_response();
+    redactor.push("sk-synthetic-token-value with safe current text");
+    let current = redactor.finish().to_owned();
+
+    assert!(current.contains("[REDACTED_TOKEN]"));
+    assert!(current.contains("with safe current text"));
+}
+
+#[test]
+fn streaming_redactor_bounds_full_snapshot_refreshes_as_output_grows() {
+    const TOTAL_BYTES: usize = 64 * 1024;
+    const CHUNK_BYTES: usize = 256;
+    let mut redactor = StreamingRedactor::new(Vec::new());
+    let chunk = "x".repeat(CHUNK_BYTES);
+    let mut previous = String::new();
+    let mut refreshes = 0usize;
+
+    for _ in 0..(TOTAL_BYTES / CHUNK_BYTES) {
+        let snapshot = redactor.push(&chunk);
+        if snapshot != previous {
+            previous = snapshot.to_owned();
+            refreshes += 1;
+        }
+    }
+
+    assert!(refreshes <= 12);
+    assert!(redactor.finish().len() <= TOTAL_BYTES);
 }
 
 #[test]

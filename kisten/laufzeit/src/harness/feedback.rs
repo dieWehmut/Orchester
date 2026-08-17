@@ -13,6 +13,10 @@ use crate::harness::secret_scan::is_format_character;
 const STREAM_GUARD_BYTES: usize = 64;
 const STREAM_SCAN_INTERVAL_BYTES: usize = 256;
 const MAX_STREAM_BYTES: usize = orchester_modell::MAX_CONTENT_BYTES;
+const STREAM_BOUNDARY_GUARD_BYTES: usize = MAX_STREAM_BYTES;
+const PRIVATE_KEY_SENTINEL: &str = "\u{0}\u{1}";
+const AUTHORIZATION_SENTINEL: &str = "\u{0}\u{2}";
+const TOKEN_SENTINEL: &str = "\u{0}\u{3}";
 
 /// Order-independent identity of the exact secret redaction set shared by
 /// context assembly and durable persistence. The digest is never serialized
@@ -146,6 +150,7 @@ pub struct BuiltFeedback {
 pub struct FeedbackEngine {
     limits: FeedbackLimits,
     secrets: Vec<SecretString>,
+    normalized_secrets: Vec<SecretString>,
 }
 
 impl Default for FeedbackEngine {
@@ -159,12 +164,29 @@ impl FeedbackEngine {
         Self {
             limits,
             secrets: Vec::new(),
+            normalized_secrets: Vec::new(),
         }
     }
 
     /// Add a configured secret to the exact-value redaction set.  The value is
     /// kept in a secrecy wrapper and is never formatted or serialized.
     pub fn with_secret(mut self, secret: SecretString) -> Self {
+        for normalized in [
+            normalize_text(secret.expose_secret()),
+            normalize_model_text(secret.expose_secret()),
+        ] {
+            if !normalized.is_empty()
+                && !self
+                    .normalized_secrets
+                    .iter()
+                    .any(|candidate| candidate.expose_secret() == normalized)
+            {
+                self.normalized_secrets
+                    .push(SecretString::new(normalized.into_boxed_str()));
+            }
+        }
+        self.normalized_secrets
+            .sort_by_key(|secret| std::cmp::Reverse(secret.expose_secret().len()));
         self.secrets.push(secret);
         self
     }
@@ -183,7 +205,7 @@ impl FeedbackEngine {
     /// before the raw value crosses that boundary.
     pub(crate) fn contains_sensitive_material(&self, input: &str) -> bool {
         let normalized = normalize_text(input);
-        self.secrets.iter().any(|secret| {
+        self.normalized_secrets.iter().any(|secret| {
             let value = secret.expose_secret();
             !value.is_empty() && normalized.contains(value)
         }) || looks_like_secret(&normalized)
@@ -241,7 +263,11 @@ impl FeedbackEngine {
     }
 
     pub(crate) fn sanitize_model_text(&self, input: &str) -> String {
-        let sanitized = self.redact_text(normalize_model_text(input));
+        self.sanitize_normalized_model_text(normalize_model_text(input))
+    }
+
+    fn sanitize_normalized_model_text(&self, normalized: String) -> String {
+        let sanitized = self.redact_text(normalized);
         if self.contains_sensitive_material(&sanitized) {
             "[REDACTED]".into()
         } else {
@@ -250,23 +276,50 @@ impl FeedbackEngine {
     }
 
     fn redact_text(&self, mut sanitized: String) -> String {
-        for secret in &self.secrets {
+        // Protect detector matches with control sentinels that normalized input
+        // and normalized configured secrets cannot contain. Exact-value
+        // replacement therefore cannot break a detector match or rewrite its
+        // eventual marker.
+        sanitized = private_key_pattern()
+            .replace_all(&sanitized, PRIVATE_KEY_SENTINEL)
+            .into_owned();
+        sanitized = authorization_pattern()
+            .replace_all(&sanitized, |captures: &Captures<'_>| {
+                format!("{}{AUTHORIZATION_SENTINEL}", &captures[1])
+            })
+            .into_owned();
+        sanitized = token_pattern()
+            .replace_all(&sanitized, TOKEN_SENTINEL)
+            .into_owned();
+        for secret in &self.normalized_secrets {
             let secret = secret.expose_secret();
             if !secret.is_empty() {
                 sanitized = sanitized.replace(secret, "[REDACTED]");
             }
         }
-        sanitized = private_key_pattern()
-            .replace_all(&sanitized, "[REDACTED_PRIVATE_KEY]")
-            .into_owned();
-        sanitized = authorization_pattern()
-            .replace_all(&sanitized, |captures: &Captures<'_>| {
-                format!("{}[REDACTED]", &captures[1])
-            })
-            .into_owned();
-        token_pattern()
-            .replace_all(&sanitized, "[REDACTED_TOKEN]")
-            .into_owned()
+        sanitized = sanitized.replace(PRIVATE_KEY_SENTINEL, "[REDACTED_PRIVATE_KEY]");
+        sanitized = sanitized.replace(AUTHORIZATION_SENTINEL, "[REDACTED]");
+        sanitized.replace(TOKEN_SENTINEL, "[REDACTED_TOKEN]")
+    }
+
+    fn sensitive_material_crosses_boundary(&self, previous: &str, current: &str) -> bool {
+        if previous.is_empty() || current.is_empty() {
+            return false;
+        }
+        let boundary = previous.len();
+        let mut combined = String::with_capacity(boundary.saturating_add(current.len()));
+        combined.push_str(previous);
+        combined.push_str(current);
+
+        self.normalized_secrets
+            .iter()
+            .any(|secret| literal_crosses_boundary(&combined, boundary, secret.expose_secret()))
+            || regex_crosses_boundary(token_pattern(), &combined, boundary)
+            || regex_crosses_boundary(authorization_pattern(), &combined, boundary)
+            || regex_crosses_boundary(private_key_pattern(), &combined, boundary)
+            || provider_token_prefix_crosses_boundary(&combined, boundary)
+            || regex_crosses_boundary(private_key_begin_pattern(), &combined, boundary)
+            || regex_crosses_boundary(authorization_prefix_pattern(), &combined, boundary)
     }
 }
 
@@ -277,8 +330,10 @@ pub struct StreamingRedactor {
     sanitizer: FeedbackEngine,
     raw: String,
     visible: String,
+    previous_response_tail: String,
     guard_bytes: usize,
-    last_scan_bytes: usize,
+    boundary_guard_bytes: usize,
+    next_scan_bytes: usize,
 }
 
 impl StreamingRedactor {
@@ -291,7 +346,7 @@ impl StreamingRedactor {
 
     pub(crate) fn from_sanitizer(sanitizer: FeedbackEngine) -> Self {
         let guard_bytes = sanitizer
-            .secrets
+            .normalized_secrets
             .iter()
             .map(|secret| secret.expose_secret().len())
             .max()
@@ -301,16 +356,19 @@ impl StreamingRedactor {
             sanitizer,
             raw: String::new(),
             visible: String::new(),
+            previous_response_tail: String::new(),
             guard_bytes,
-            last_scan_bytes: 0,
+            boundary_guard_bytes: guard_bytes.max(STREAM_BOUNDARY_GUARD_BYTES),
+            next_scan_bytes: guard_bytes.saturating_add(1).min(MAX_STREAM_BYTES),
         }
     }
 
     /// Start a fresh provider response while retaining the exact sanitizer.
     pub fn begin_response(&mut self) {
+        self.remember_response_tail();
         self.raw.clear();
         self.visible.clear();
-        self.last_scan_bytes = 0;
+        self.next_scan_bytes = self.guard_bytes.saturating_add(1).min(MAX_STREAM_BYTES);
     }
 
     /// Append raw provider text and return the full safe snapshot to render.
@@ -318,15 +376,15 @@ impl StreamingRedactor {
         if !append_bounded(&mut self.raw, delta, MAX_STREAM_BYTES) {
             return &self.visible;
         }
-        let scan_delta = self.raw.len().saturating_sub(self.last_scan_bytes);
-        let first_scan_ready = self.last_scan_bytes == 0 && self.raw.len() > self.guard_bytes;
-        let interval_ready = scan_delta >= STREAM_SCAN_INTERVAL_BYTES;
         let final_bounded_scan = self.raw.len() == MAX_STREAM_BYTES;
-        if !first_scan_ready && !interval_ready && !final_bounded_scan {
+        if self.raw.len() < self.next_scan_bytes && !final_bounded_scan {
             return &self.visible;
         }
-        self.last_scan_bytes = self.raw.len();
-        let sanitized = self.sanitizer.sanitize_model_text(&self.raw);
+        // Each complete snapshot costs O(raw bytes). Grow the next threshold
+        // geometrically so the sum of all rescanned prefixes is O(total bytes)
+        // while still producing early incremental output.
+        self.next_scan_bytes = next_stream_scan_bytes(self.raw.len());
+        let sanitized = self.sanitize_current_response();
         if self.sanitizer.contains_sensitive_material(&sanitized) {
             return &self.visible;
         }
@@ -338,15 +396,44 @@ impl StreamingRedactor {
 
     /// Flush the final safe snapshot after the provider stream completes.
     pub fn finish(&mut self) -> &str {
-        let sanitized = self.sanitizer.sanitize_model_text(&self.raw);
+        let sanitized = self.sanitize_current_response();
         self.visible = if self.sanitizer.contains_sensitive_material(&sanitized) {
             "[REDACTED]".into()
         } else {
             sanitized
         };
+        self.remember_response_tail();
         self.raw.clear();
-        self.last_scan_bytes = 0;
+        self.next_scan_bytes = self.guard_bytes.saturating_add(1).min(MAX_STREAM_BYTES);
         &self.visible
+    }
+
+    fn sanitize_current_response(&self) -> String {
+        let current = normalize_model_text(&self.raw);
+        let boundary_prefix = utf8_prefix(&current, self.boundary_guard_bytes);
+        if self
+            .sanitizer
+            .sensitive_material_crosses_boundary(&self.previous_response_tail, boundary_prefix)
+        {
+            "[REDACTED]".into()
+        } else {
+            self.sanitizer.sanitize_normalized_model_text(current)
+        }
+    }
+
+    fn remember_response_tail(&mut self) {
+        if self.raw.is_empty() {
+            return;
+        }
+        let current = normalize_model_text(&self.raw);
+        let mut combined = String::with_capacity(
+            self.previous_response_tail
+                .len()
+                .saturating_add(current.len()),
+        );
+        combined.push_str(&self.previous_response_tail);
+        combined.push_str(&current);
+        self.previous_response_tail = utf8_suffix(&combined, self.boundary_guard_bytes).to_owned();
     }
 }
 
@@ -356,7 +443,12 @@ impl std::fmt::Debug for StreamingRedactor {
             .debug_struct("StreamingRedactor")
             .field("raw_bytes", &self.raw.len())
             .field("visible_bytes", &self.visible.len())
-            .field("last_scan_bytes", &self.last_scan_bytes)
+            .field(
+                "previous_response_tail_bytes",
+                &self.previous_response_tail.len(),
+            )
+            .field("boundary_guard_bytes", &self.boundary_guard_bytes)
+            .field("next_scan_bytes", &self.next_scan_bytes)
             .finish_non_exhaustive()
     }
 }
@@ -380,6 +472,61 @@ fn guarded_prefix_end(value: &str, guard_bytes: usize) -> usize {
         end -= 1;
     }
     end
+}
+
+fn next_stream_scan_bytes(scanned_bytes: usize) -> usize {
+    scanned_bytes
+        .saturating_add(scanned_bytes.max(STREAM_SCAN_INTERVAL_BYTES))
+        .min(MAX_STREAM_BYTES)
+}
+
+fn literal_crosses_boundary(value: &str, boundary: usize, needle: &str) -> bool {
+    if needle.is_empty() || needle.len() <= 1 {
+        return false;
+    }
+    let mut search_start = boundary.saturating_sub(needle.len() - 1);
+    while search_start > 0 && !value.is_char_boundary(search_start) {
+        search_start -= 1;
+    }
+    for (start, _) in value[search_start..].match_indices(needle) {
+        let start = search_start + start;
+        if start >= boundary {
+            return false;
+        }
+        if start.saturating_add(needle.len()) > boundary {
+            return true;
+        }
+    }
+    false
+}
+
+fn regex_crosses_boundary(pattern: &Regex, value: &str, boundary: usize) -> bool {
+    for matched in pattern.find_iter(value) {
+        if matched.start() >= boundary {
+            return false;
+        }
+        if matched.end() > boundary {
+            return true;
+        }
+    }
+    false
+}
+
+fn provider_token_prefix_crosses_boundary(value: &str, boundary: usize) -> bool {
+    for matched in provider_token_boundary_pattern().find_iter(value) {
+        if matched.start() >= boundary {
+            return false;
+        }
+        let has_token_boundary = matched.start() == 0
+            || value[..matched.start()]
+                .chars()
+                .next_back()
+                .is_some_and(|ch| !ch.is_ascii_alphanumeric());
+        if has_token_boundary && matched.end() > boundary {
+            return true;
+        }
+    }
+    false
 }
 
 fn normalize_text(input: &str) -> String {
@@ -543,6 +690,14 @@ fn provider_token_prefix_pattern() -> &'static Regex {
     PATTERN.get_or_init(|| {
         Regex::new(r"(?i)(?:^|[^A-Za-z0-9])(?:sk[-_]|ghp_|github_pat_|xox[baprs]-|AKIA)")
             .expect("static provider-token prefix pattern")
+    })
+}
+
+fn provider_token_boundary_pattern() -> &'static Regex {
+    static PATTERN: OnceLock<Regex> = OnceLock::new();
+    PATTERN.get_or_init(|| {
+        Regex::new(r"(?i)(?:sk[-_]|ghp_|github_pat_|xox[baprs]-|AKIA)")
+            .expect("static provider-token boundary pattern")
     })
 }
 
