@@ -770,6 +770,12 @@ async fn await_model_turn(
     }
 }
 
+fn model_status_label(self_agent: &SelfAgentHost) -> String {
+    self_agent
+        .model_label()
+        .unwrap_or_else(|_| "model unavailable".into())
+}
+
 async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, CliError> {
     let mut self_agent = self_agent_host()?;
     let mut chat = interactive::ChatSession::enter()?;
@@ -778,11 +784,24 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
         ..TerminalChatState::default()
     };
 
+    // Both of these are expensive enough that recomputing them per keypress is
+    // what made typing feel laggy: `build_agent_choices` probes every adapter
+    // command against every PATH directory (times every PATHEXT suffix on
+    // Windows), and `model_label` re-reads, re-parses and re-validates the user
+    // configuration from disk. Cache them and refresh only when the registry or
+    // the selected model actually changes.
+    let mut choices = interactive::build_agent_choices(&registry);
+    let mut model_status = model_status_label(&self_agent);
+    let mut agents_stale = false;
+    let mut model_stale = false;
+
     loop {
-        let choices = interactive::build_agent_choices(&registry);
-        let model_status = self_agent
-            .model_label()
-            .unwrap_or_else(|_| "model unavailable".into());
+        if std::mem::take(&mut agents_stale) {
+            choices = interactive::build_agent_choices(&registry);
+        }
+        if std::mem::take(&mut model_stale) {
+            model_status = model_status_label(&self_agent);
+        }
         if state.overlay.is_some() {
             state.busy = None;
             chat.present_view(state.view(&choices, &model_status))?;
@@ -883,6 +902,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                 self_agent::render_model_selection(&mut rendered, &choice)?;
                                 Ok(())
                             })();
+                            model_stale = true;
                             state.overlay = Some(match result {
                                 Ok(()) => TerminalOverlay::report(
                                     "/model",
@@ -1085,7 +1105,10 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                 let result = run_adapter_prompt_shell(&registry, agent).await;
                                 chat = interactive::ChatSession::enter()?;
                                 match result {
-                                    Ok(()) => registry = discover_registry()?,
+                                    Ok(()) => {
+                                        registry = discover_registry()?;
+                                        agents_stale = true;
+                                    }
                                     Err(error) => state.append_transcript(TranscriptEntry::error(
                                         error.to_string(),
                                     )),
@@ -1112,7 +1135,10 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                             let result = run_adapter_prompt_shell(&registry, agent.clone()).await;
                             chat = interactive::ChatSession::enter()?;
                             match result {
-                                Ok(()) => registry = discover_registry()?,
+                                Ok(()) => {
+                                    registry = discover_registry()?;
+                                    agents_stale = true;
+                                }
                                 Err(error) => state
                                     .append_transcript(TranscriptEntry::error(error.to_string())),
                             }
@@ -1145,6 +1171,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                             Ok((_, output, _)) => {
                                 state.overlay = Some(TerminalOverlay::report("/plugins", &output));
                                 registry = discover_registry()?;
+                                agents_stale = true;
                             }
                             Err(error) => {
                                 state.overlay = Some(TerminalOverlay::error("/plugins", &error));
