@@ -5,7 +5,11 @@ use std::fmt;
 use super::{validate_model_profile_name, ConfigError, UserConfig};
 use url::{Host, Url};
 
-const RESPONSES_WIRE_API: &str = "responses";
+/// The wire APIs the harness has an adapter for. Configuration validates against
+/// these names and the provider layer dispatches on them, so the accepted set
+/// cannot drift away from the set that can actually be built.
+pub const RESPONSES_WIRE_API: &str = "responses";
+pub const ANTHROPIC_WIRE_API: &str = "anthropic";
 
 /// The validated provider settings needed to construct a model transport.
 ///
@@ -90,10 +94,10 @@ impl UserConfig {
             .as_deref()
             .unwrap_or(RESPONSES_WIRE_API)
             .trim();
-        if wire_api != RESPONSES_WIRE_API {
+        if !matches!(wire_api, RESPONSES_WIRE_API | ANTHROPIC_WIRE_API) {
             return Err(validation(
                 wire_api_path,
-                "unsupported wire API; supported value is 'responses'",
+                "unsupported wire API; supported values are 'responses' and 'anthropic'",
             ));
         }
 

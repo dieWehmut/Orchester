@@ -3,11 +3,9 @@ use std::sync::{Arc, Mutex};
 use async_trait::async_trait;
 use orchester_laufzeit::harness::config::ConfigLoader;
 use orchester_laufzeit::harness::credentials::InMemoryCredentialStore;
-use orchester_laufzeit::harness::provider::responses::{
-    build_responses_model, build_responses_model_with_transport, ResponsesModelBuildError,
-};
 use orchester_laufzeit::harness::provider::{
-    HttpRequest, HttpResponse, HttpTransport, HttpTransportError,
+    build_wire_model, build_wire_model_with_transport, HttpRequest, HttpResponse, HttpTransport,
+    HttpTransportError, WireModelBuildError,
 };
 use orchester_modell::{
     LanguageModel, ModelError, ModelItem, ModelMessage, ModelRequest, ModelRole,
@@ -120,7 +118,7 @@ async fn builds_a_profile_bound_model_with_resolved_authentication() {
     let config = configured_user();
     let credentials = InMemoryCredentialStore::with("OpenAI", SECRET_CANARY);
     let transport = CaptureTransport::default();
-    let model = build_responses_model_with_transport(&config, &credentials, transport.clone())
+    let model = build_wire_model_with_transport(&config, &credentials, transport.clone())
         .expect("configured model");
 
     assert_eq!(model.profile().provider, "OpenAI");
@@ -151,7 +149,7 @@ async fn rejects_model_or_storage_drift_before_transport() {
     let config = configured_user();
     let credentials = InMemoryCredentialStore::with("OpenAI", SECRET_CANARY);
     let transport = CaptureTransport::default();
-    let model = build_responses_model_with_transport(&config, &credentials, transport.clone())
+    let model = build_wire_model_with_transport(&config, &credentials, transport.clone())
         .expect("configured model");
 
     for request in [
@@ -171,13 +169,13 @@ async fn rejects_model_or_storage_drift_before_transport() {
 
 #[test]
 fn required_credentials_fail_before_model_construction_without_leaking() {
-    let error = build_responses_model_with_transport(
+    let error = build_wire_model_with_transport(
         &configured_user(),
         &InMemoryCredentialStore::default(),
         CaptureTransport::default(),
     )
     .expect_err("missing credential should fail");
-    assert!(matches!(error, ResponsesModelBuildError::Config(_)));
+    assert!(matches!(error, WireModelBuildError::Config(_)));
     let rendered = format!("{error:?} {error}");
     assert!(!rendered.contains(SECRET_CANARY));
 }
@@ -198,7 +196,7 @@ fn unauthenticated_profiles_build_without_a_credential() {
             }"#,
         )
         .expect("valid local config");
-    let model = build_responses_model_with_transport(
+    let model = build_wire_model_with_transport(
         &config,
         &InMemoryCredentialStore::default(),
         CaptureTransport::default(),
@@ -206,7 +204,7 @@ fn unauthenticated_profiles_build_without_a_credential() {
     .expect("no credential required");
     assert!(!format!("{model:?}").contains("authorization_present: true"));
 
-    let production = build_responses_model(&config, &InMemoryCredentialStore::default())
+    let production = build_wire_model(&config, &InMemoryCredentialStore::default())
         .expect("production transport should construct without connecting");
     assert_eq!(production.profile().model, "local-model");
 }
@@ -230,7 +228,7 @@ fn an_explicit_false_keeps_a_keyed_provider_unauthenticated() {
         )
         .expect("valid local config");
 
-    let model = build_responses_model_with_transport(
+    let model = build_wire_model_with_transport(
         &config,
         &InMemoryCredentialStore::default(),
         CaptureTransport::default(),
@@ -264,7 +262,7 @@ async fn only_the_selected_provider_secret_is_resolved() {
         .expect("valid selected provider config");
     let credentials = InMemoryCredentialStore::with("Router", SECRET_CANARY);
     let transport = CaptureTransport::default();
-    let model = build_responses_model_with_transport(&config, &credentials, transport.clone())
+    let model = build_wire_model_with_transport(&config, &credentials, transport.clone())
         .expect("only the selected secret is required");
 
     model

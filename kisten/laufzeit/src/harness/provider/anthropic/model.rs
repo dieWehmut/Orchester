@@ -10,61 +10,70 @@ use url::Url;
 use crate::harness::credentials::ProviderSecret;
 use crate::harness::provider::retry::send_with_retry;
 use crate::harness::provider::{
-    HttpRequest, HttpResponse, HttpTransport, HttpTransportError, MAX_HTTP_RESPONSE_BYTES,
+    CredentialHeader, HttpRequest, HttpResponse, HttpTransport, HttpTransportError,
+    MAX_HTTP_RESPONSE_BYTES,
 };
 
 use super::{
-    decode_responses_event_stream, decode_responses_response, encode_responses_request,
-    encode_responses_stream_request, ResponsesRequestOptions,
+    decode_anthropic_event_stream, decode_anthropic_response, encode_anthropic_request,
+    encode_anthropic_stream_request, AnthropicRequestOptions, AnthropicResponseError,
 };
 
-/// Configuration errors raised while constructing a Responses model.
+/// The Messages protocol revision every request pins. Anthropic requires the
+/// header and treats its absence as an unversioned, rejected call.
+const ANTHROPIC_VERSION: (&str, &str) = ("anthropic-version", "2023-06-01");
+
+/// Configuration errors raised while constructing a Messages model.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Error)]
-pub enum ResponsesModelError {
-    #[error("Responses provider endpoint is invalid")]
+pub enum AnthropicModelError {
+    #[error("Messages provider endpoint is invalid")]
     InvalidEndpoint,
 }
 
-/// A unary OpenAI Responses adapter over an injectable HTTP transport.
-pub struct ResponsesLanguageModel<T> {
+/// A unary Anthropic Messages adapter over an injectable HTTP transport.
+pub struct AnthropicLanguageModel<T> {
     transport: T,
     endpoint: Url,
     authorization: Option<Arc<ProviderSecret>>,
-    options: ResponsesRequestOptions,
+    options: AnthropicRequestOptions,
 }
 
-impl<T: HttpTransport> ResponsesLanguageModel<T> {
+impl<T: HttpTransport> AnthropicLanguageModel<T> {
     pub fn new(
         base_url: &str,
         transport: T,
         authorization: Option<ProviderSecret>,
-        options: ResponsesRequestOptions,
-    ) -> Result<Self, ResponsesModelError> {
+        options: AnthropicRequestOptions,
+    ) -> Result<Self, AnthropicModelError> {
         Ok(Self {
             transport,
-            endpoint: responses_endpoint(base_url)?,
+            endpoint: messages_endpoint(base_url)?,
             authorization: authorization.map(Arc::new),
             options,
         })
     }
 }
-
-impl<T> ResponsesLanguageModel<T> {
-    /// Wrap an encoded body in the request shape Responses expects: the
-    /// credential travels as a bearer token, written by the transport rather
-    /// than by this module.
+impl<T> AnthropicLanguageModel<T> {
+    /// Wrap an encoded body in the request shape Messages expects: the
+    /// credential travels in `x-api-key` and the protocol revision travels
+    /// beside it, both written by the transport rather than by this module.
     fn http_request(&self, body: Vec<u8>) -> Result<HttpRequest, ModelError> {
         HttpRequest::new(self.endpoint.clone(), body, None)
             .and_then(|request| request.with_response_limit(MAX_HTTP_RESPONSE_BYTES))
-            .map(|request| request.with_shared_authorization(self.authorization.clone()))
+            .and_then(|request| request.with_protocol_headers(vec![ANTHROPIC_VERSION]))
+            .map(|request| {
+                request
+                    .with_credential_header(CredentialHeader::ApiKey)
+                    .with_shared_authorization(self.authorization.clone())
+            })
             .map_err(map_transport_error)
     }
 }
 
-impl<T> fmt::Debug for ResponsesLanguageModel<T> {
+impl<T> fmt::Debug for AnthropicLanguageModel<T> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
-            .debug_struct("ResponsesLanguageModel")
+            .debug_struct("AnthropicLanguageModel")
             .field("endpoint", &"[REDACTED]")
             .field(
                 "authorization_present",
@@ -76,7 +85,7 @@ impl<T> fmt::Debug for ResponsesLanguageModel<T> {
 }
 
 #[async_trait]
-impl<T: HttpTransport + 'static> LanguageModel for ResponsesLanguageModel<T> {
+impl<T: HttpTransport + 'static> LanguageModel for AnthropicLanguageModel<T> {
     async fn complete(
         &self,
         request: ModelRequest,
@@ -86,7 +95,7 @@ impl<T: HttpTransport + 'static> LanguageModel for ResponsesLanguageModel<T> {
             return Err(ModelError::Cancelled);
         }
         let body =
-            encode_responses_request(&request, &self.options).map_err(|_| ModelError::Protocol)?;
+            encode_anthropic_request(&request, &self.options).map_err(|_| ModelError::Protocol)?;
         let request = self.http_request(body)?;
         let response = send_with_retry(&request, &cancel, |request, cancel| {
             self.transport.send(request, cancel)
@@ -108,7 +117,7 @@ impl<T: HttpTransport + 'static> LanguageModel for ResponsesLanguageModel<T> {
         if cancel.is_cancelled() {
             return Err(ModelError::Cancelled);
         }
-        let body = encode_responses_stream_request(&request, &self.options)
+        let body = encode_anthropic_stream_request(&request, &self.options)
             .map_err(|_| ModelError::Protocol)?;
         let request = self.http_request(body)?;
         let response = send_with_retry(&request, &cancel, |request, cancel| {
@@ -120,9 +129,9 @@ impl<T: HttpTransport + 'static> LanguageModel for ResponsesLanguageModel<T> {
             200..=299 => {
                 events.response_started();
                 let decoded =
-                    decode_responses_event_stream(response, cancel, Some(events.as_ref()))
+                    decode_anthropic_event_stream(response, cancel, Some(events.as_ref()))
                         .await
-                        .map_err(map_event_error);
+                        .map_err(map_response_error);
                 if decoded.is_ok() {
                     events.response_completed();
                 }
@@ -132,10 +141,9 @@ impl<T: HttpTransport + 'static> LanguageModel for ResponsesLanguageModel<T> {
         }
     }
 }
-
 fn decode_http_response(response: HttpResponse) -> Result<ModelResponse, ModelError> {
     match response.status() {
-        200..=299 => decode_responses_response(response.body()).map_err(|_| ModelError::Protocol),
+        200..=299 => decode_anthropic_response(response.body()).map_err(map_response_error),
         status => Err(status_error(status, response.retry_after())),
     }
 }
@@ -160,36 +168,40 @@ fn map_transport_error(error: HttpTransportError) -> ModelError {
     }
 }
 
-fn map_event_error(error: super::ResponsesResponseError) -> ModelError {
+fn map_response_error(error: AnthropicResponseError) -> ModelError {
     match error {
-        super::ResponsesResponseError::Cancelled => ModelError::Cancelled,
-        super::ResponsesResponseError::Transport => ModelError::Transport,
+        AnthropicResponseError::Cancelled => ModelError::Cancelled,
+        AnthropicResponseError::Transport => ModelError::Transport,
         _ => ModelError::Protocol,
     }
 }
 
-fn responses_endpoint(base_url: &str) -> Result<Url, ResponsesModelError> {
+/// Derive the Messages endpoint from a configured provider base URL.
+///
+/// A relay may be configured with the bare host, with `/v1`, or with the full
+/// path, and all three name the same endpoint.
+fn messages_endpoint(base_url: &str) -> Result<Url, AnthropicModelError> {
     if base_url.is_empty()
         || base_url
             .chars()
             .any(|character| character.is_control() || character.is_whitespace())
     {
-        return Err(ResponsesModelError::InvalidEndpoint);
+        return Err(AnthropicModelError::InvalidEndpoint);
     }
-    let mut endpoint = Url::parse(base_url).map_err(|_| ResponsesModelError::InvalidEndpoint)?;
+    let mut endpoint = Url::parse(base_url).map_err(|_| AnthropicModelError::InvalidEndpoint)?;
     let base_path = endpoint.path().trim_end_matches('/');
-    let path = if base_path.ends_with("/responses") {
+    let path = if base_path.ends_with("/messages") {
         base_path.to_owned()
     } else if base_path.ends_with("/v1") {
-        format!("{base_path}/responses")
+        format!("{base_path}/messages")
     } else if base_path.is_empty() {
-        "/v1/responses".to_owned()
+        "/v1/messages".to_owned()
     } else {
-        format!("{base_path}/v1/responses")
+        format!("{base_path}/v1/messages")
     };
     endpoint.set_path(&path);
 
     HttpRequest::new(endpoint.clone(), Vec::new(), None)
-        .map_err(|_| ResponsesModelError::InvalidEndpoint)?;
+        .map_err(|_| AnthropicModelError::InvalidEndpoint)?;
     Ok(endpoint)
 }

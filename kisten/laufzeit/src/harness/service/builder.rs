@@ -15,28 +15,26 @@ use crate::harness::execution::{GovernedExecution, GovernedExecutionError};
 use crate::harness::executor::{ToolExecutor, ToolExecutorError};
 use crate::harness::files::FileToolLimits;
 use crate::harness::governance::{PolicyConstraints, PolicyEngine};
-use crate::harness::provider::responses::{
-    build_responses_model, build_responses_model_with_transport, ConfiguredResponsesModel,
-    ResponsesModelBuildError,
+use crate::harness::provider::{
+    build_wire_model, build_wire_model_with_transport, ConfiguredWireModel, HttpTransport,
+    ReqwestHttpTransport, WireModelBuildError,
 };
-use crate::harness::provider::{HttpTransport, ReqwestHttpTransport};
 use crate::harness::run_store::{SqliteRunStore, StoreError};
 
 pub type ProductionSelfAgentService = SelfAgentService<
-    ConfiguredResponsesModel<ReqwestHttpTransport>,
+    ConfiguredWireModel<ReqwestHttpTransport>,
     Arc<SqliteRunStore>,
     SystemCoordinatorClock,
 >;
 
-pub type ConfiguredSelfAgentRuntime<T> =
-    SelfAgentRuntime<ConfiguredResponsesModel<T>, JsonlAuditSink>;
+pub type ConfiguredSelfAgentRuntime<T> = SelfAgentRuntime<ConfiguredWireModel<T>, JsonlAuditSink>;
 
 pub type ProductionSelfAgentRuntime = ConfiguredSelfAgentRuntime<ReqwestHttpTransport>;
 
 #[derive(Debug, Error)]
 pub enum SelfAgentBuildError {
     #[error(transparent)]
-    Model(#[from] ResponsesModelBuildError),
+    Model(#[from] WireModelBuildError),
     #[error(transparent)]
     Config(#[from] ConfigError),
     #[error(transparent)]
@@ -66,7 +64,7 @@ pub fn build_self_agent_service<S: CredentialStore + ?Sized>(
     state_database: impl AsRef<Path>,
     owner_actor_id: impl Into<String>,
 ) -> Result<ProductionSelfAgentService, SelfAgentBuildError> {
-    let model = build_responses_model(config, credentials)?;
+    let model = build_wire_model(config, credentials)?;
     finish_build(
         config,
         credentials,
@@ -85,14 +83,14 @@ pub fn build_self_agent_service_with_transport<S, T>(
     state_database: impl AsRef<Path>,
     owner_actor_id: impl Into<String>,
 ) -> Result<
-    SelfAgentService<ConfiguredResponsesModel<T>, Arc<SqliteRunStore>, SystemCoordinatorClock>,
+    SelfAgentService<ConfiguredWireModel<T>, Arc<SqliteRunStore>, SystemCoordinatorClock>,
     SelfAgentBuildError,
 >
 where
     S: CredentialStore + ?Sized,
     T: HttpTransport + 'static,
 {
-    let model = build_responses_model_with_transport(config, credentials, transport)?;
+    let model = build_wire_model_with_transport(config, credentials, transport)?;
     finish_build(
         config,
         credentials,
@@ -152,12 +150,12 @@ where
 fn finish_build<S, T>(
     config: &UserConfig,
     credentials: &S,
-    model: ConfiguredResponsesModel<T>,
+    model: ConfiguredWireModel<T>,
     workspace_root: impl AsRef<Path>,
     state_database: impl AsRef<Path>,
     owner_actor_id: impl Into<String>,
 ) -> Result<
-    SelfAgentService<ConfiguredResponsesModel<T>, Arc<SqliteRunStore>, SystemCoordinatorClock>,
+    SelfAgentService<ConfiguredWireModel<T>, Arc<SqliteRunStore>, SystemCoordinatorClock>,
     SelfAgentBuildError,
 >
 where
@@ -198,11 +196,7 @@ where
 
 fn finish_runtime<T>(
     config: &UserConfig,
-    service: SelfAgentService<
-        ConfiguredResponsesModel<T>,
-        Arc<SqliteRunStore>,
-        SystemCoordinatorClock,
-    >,
+    service: SelfAgentService<ConfiguredWireModel<T>, Arc<SqliteRunStore>, SystemCoordinatorClock>,
     workspace_root: &Path,
     audit_log: impl AsRef<Path>,
     owner_actor_id: String,

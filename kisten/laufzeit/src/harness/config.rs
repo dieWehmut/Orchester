@@ -27,7 +27,7 @@ mod provider;
 mod secrets;
 mod template;
 
-pub use provider::ResolvedModelProfile;
+pub use provider::{ResolvedModelProfile, ANTHROPIC_WIRE_API, RESPONSES_WIRE_API};
 pub use secrets::ConfiguredSecretSet;
 pub use template::{HOME_DIRECTORIES, USER_CONFIG_TEMPLATE};
 
