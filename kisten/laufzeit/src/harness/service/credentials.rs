@@ -132,9 +132,10 @@ pub enum ConfigWiring {
     Created,
     /// The config already reaches a stored secret through a reference.
     AlreadyReferenced,
-    /// A config exists but names no reference for this provider.  It is
-    /// human-owned and may carry comments, so it is never rewritten in place;
-    /// the caller shows `snippet` instead.
+    /// A config exists but names no reference for this provider. `/login` only
+    /// ever creates a configuration, never edits one, so the caller shows
+    /// `snippet` for the human to paste. Editing an existing file is what the
+    /// provider form does instead, and it splices one member at a time.
     NeedsReference { snippet: String },
 }
 
@@ -163,8 +164,9 @@ pub fn wire_provider_reference(
     Ok(ConfigWiring::Created)
 }
 
-/// The `model_providers` block a human pastes into a config Orchester will not
-/// touch.  Two spaces of indent match the template below.
+/// The `model_providers` block a human pastes in themselves, because `/login`
+/// does not edit an existing file. Two spaces of indent match the template
+/// below.
 fn reference_snippet(target: &CredentialTarget) -> String {
     let CredentialTarget {
         provider,
@@ -198,8 +200,9 @@ fn initial_config(target: &CredentialTarget) -> String {
         .unwrap_or_default();
     format!(
         "// Orchester user configuration.\n\
-         // Created by `orchester login`.  Orchester never rewrites this file in\n\
-         // place, so comments and formatting are yours to keep.\n\
+         // Created by `orchester login`.  Orchester only ever edits this file one\n\
+         // member at a time, keeping the previous version beside it, so comments\n\
+         // and formatting are yours to keep.\n\
          {{\n  \
            \"version\": 1,\n\n  \
            // The provider used when no model profile overrides it.\n  \
@@ -224,7 +227,9 @@ fn json_string(value: &str) -> String {
     serde_json::Value::String(value.to_owned()).to_string()
 }
 
-fn provider_reference(provider: &str) -> String {
+/// The `${secret:<provider>}` indirection a configuration uses to reach a key
+/// held by the credential store.
+pub(super) fn provider_reference(provider: &str) -> String {
     SecretReference::Provider(provider.to_owned()).as_str()
 }
 
@@ -536,7 +541,8 @@ mod tests {
         };
         assert!(snippet.contains("\"OpenAI\""));
         assert!(snippet.contains("${secret:OpenAI}"));
-        // A human-owned file with comments is never edited in place.
+        // `/login` only creates a configuration; editing one belongs to the
+        // provider form.
         assert_eq!(fs::read_to_string(&path).expect("read config"), original);
     }
 }

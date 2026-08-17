@@ -22,11 +22,14 @@ use zeroize::Zeroize;
 
 use super::credentials::{CredentialError, CredentialStore, ProviderSecret};
 
+mod document;
+mod editor;
 mod protected_file;
 mod provider;
 mod secrets;
 mod template;
 
+pub use editor::{ConfigEdit, ConfigValue};
 pub use provider::{ResolvedModelProfile, ANTHROPIC_WIRE_API, RESPONSES_WIRE_API};
 pub use secrets::ConfiguredSecretSet;
 pub use template::{HOME_DIRECTORIES, USER_CONFIG_TEMPLATE};
@@ -55,6 +58,8 @@ pub enum ConfigError {
     Parse(String),
     #[error("configuration field '{path}' is invalid: {message}")]
     Validation { path: String, message: String },
+    #[error("the user configuration cannot be edited in place: {reason}")]
+    Uneditable { reason: String },
     #[error("project configuration field '{path}' is not allowed")]
     ForbiddenProjectField { path: String },
     #[error("project configuration would relax the user security policy")]

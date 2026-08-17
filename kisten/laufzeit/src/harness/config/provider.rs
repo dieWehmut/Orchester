@@ -162,6 +162,31 @@ impl UserConfig {
         selected.resolve_model_profile()?;
         Ok(selected)
     }
+
+    /// Resolve a provider entry that is not in this configuration yet, the way a
+    /// later load of it would.
+    ///
+    /// An editor that wrote an entry the loader then refuses would leave every
+    /// later command failing on a file Orchester wrote itself, so a draft is
+    /// only accepted if it resolves here first. The candidate is selected in
+    /// order to be resolved — resolution only ever inspects the active provider
+    /// — but nothing is selected in `self`, and the caller decides separately
+    /// whether the selection is worth writing down.
+    pub fn resolve_provider_entry(
+        &self,
+        provider: &str,
+        entry: super::ProviderConfig,
+        model: Option<&str>,
+    ) -> Result<ResolvedModelProfile, ConfigError> {
+        validate_provider_identifier(provider, "model_providers")?;
+        let mut candidate = self.clone();
+        candidate.model_providers.insert(provider.to_owned(), entry);
+        candidate.model_provider = Some(provider.to_owned());
+        if let Some(model) = model {
+            candidate.model = Some(model.to_owned());
+        }
+        candidate.resolve_model_profile()
+    }
 }
 
 fn profile_selection_error(name: &str, error: ConfigError) -> ConfigError {
