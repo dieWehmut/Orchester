@@ -9,6 +9,8 @@ use url::Url;
 
 use super::{HttpRequest, HttpResponse, HttpResponseStream, HttpTransport, HttpTransportError};
 
+const DEFAULT_USER_AGENT: &str = concat!("orchester/", env!("CARGO_PKG_VERSION"));
+
 const AGENTROUTER_RESPONSES_COMPAT_USER_AGENT: &str = concat!(
     "codex_cli_rs/",
     env!("CARGO_PKG_VERSION"),
@@ -30,6 +32,10 @@ impl ReqwestHttpTransport {
         reqwest::Client::builder()
             .redirect(Policy::none())
             .connect_timeout(Duration::from_secs(10))
+            // A default agent belongs on the client, not on each call site: a
+            // provider fronted by a bot filter answers 403 to a POST that names
+            // no agent, and that reaches the operator as an unexplained refusal.
+            .user_agent(DEFAULT_USER_AGENT)
             .build()
             .map(|client| Self { client })
             .map_err(|_| HttpTransportError::Transport)

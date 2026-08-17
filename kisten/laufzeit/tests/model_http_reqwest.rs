@@ -90,6 +90,10 @@ async fn posts_json_with_bearer_auth_and_returns_bounded_response() {
     let wire_lower = wire.to_ascii_lowercase();
     assert!(wire.starts_with("POST /v1/responses HTTP/1.1\r\n"));
     assert!(wire_lower.contains("content-type: application/json\r\n"));
+    // Every request carries an identifying agent. Providers behind a bot filter
+    // answer 403 to a headerless POST, which reaches the operator as an opaque
+    // "forbidden" and looks like a rejected credential.
+    assert!(wire_lower.contains("user-agent: orchester/"));
     assert!(!wire_lower.contains("codex_cli_rs/"));
     assert!(wire_lower.contains(&format!("authorization: bearer {SECRET_CANARY}\r\n")));
     assert!(wire.ends_with(BODY_CANARY));
