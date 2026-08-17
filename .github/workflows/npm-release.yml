@@ -6,7 +6,7 @@ on:
       version:
         description: Exact version pinned across the Rust and npm packages
         required: true
-        default: "0.1.1"
+        default: "0.1.2"
         type: string
 
 permissions:
@@ -406,7 +406,7 @@ jobs:
             unset NODE_AUTH_TOKEN
             for package in "${platform_packages[@]}" "${plugin_packages[@]}" "@orchester/cli"; do
               if ! npm view "$package" name >/dev/null 2>&1; then
-                echo "NPM_TOKEN is required to bootstrap $package; publish v0.1.1 once with a granular npm token, then configure npm Trusted Publishing for this workflow" >&2
+                echo "NPM_TOKEN is required to bootstrap $package; publish v0.1.2 once with a granular npm token, then configure npm Trusted Publishing for this workflow" >&2
                 exit 1
               fi
             done

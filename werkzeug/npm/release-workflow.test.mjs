@@ -95,7 +95,7 @@ test('release artifact contains the exact verified official plugin matrix', () =
   assert.match(stageJob, /-name '\*\.tgz' \| wc -l\) -eq 10/);
 });
 
-test('one dispatch tags, publishes, releases, and verifies v0.1.1 in dependency order', () => {
+test('one dispatch tags, publishes, releases, and verifies v0.1.2 in dependency order', () => {
   const workflow = fs.readFileSync(workflowPath, 'utf8');
   const tagJob = workflow.indexOf('\n  tag:');
   const publishJob = workflow.indexOf('\n  publish:');
@@ -109,7 +109,7 @@ test('one dispatch tags, publishes, releases, and verifies v0.1.1 in dependency 
 
   assert.ok(tagJob > 0);
   assert.ok(publishJob > 0);
-  assert.match(workflow, /workflow_dispatch:\n\s+inputs:\n\s+version:\n\s+description: [^\n]+\n\s+required: true\n\s+default: "0\.1\.1"\n\s+type: string/);
+  assert.match(workflow, /workflow_dispatch:\n\s+inputs:\n\s+version:\n\s+description: [^\n]+\n\s+required: true\n\s+default: "0\.1\.2"\n\s+type: string/);
   assert.equal(workflow.includes('submit:'), false);
   assert.equal(workflow.includes('inputs.submit'), false);
   assert.match(workflow.slice(tagJob, publishJob), /permissions:\n\s+contents: write/);

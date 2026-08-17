@@ -27,7 +27,7 @@ fn plugin_remove_deletes_only_receipted_managed_packages_and_is_idempotent() {
         .output()
         .expect("remove plugin");
     assert!(removed.status.success(), "stderr:\n{}", stderr(&removed));
-    assert!(stdout(&removed).contains("Removed Claude Code 0.1.1"));
+    assert!(stdout(&removed).contains("Removed Claude Code 0.1.2"));
     assert!(!fixture.installed_plugin().exists());
     assert!(!fixture.ownership_receipt().exists());
 
@@ -179,7 +179,7 @@ fn interactive_plugins_remove_uses_the_owned_backend() {
 
     let output = child.wait_with_output().unwrap();
     assert!(output.status.success(), "stderr:\n{}", stderr(&output));
-    assert!(stdout(&output).contains("Removed Claude Code 0.1.1"));
+    assert!(stdout(&output).contains("Removed Claude Code 0.1.2"));
     assert!(!fixture.installed_plugin().exists());
     assert!(!fixture.ownership_receipt().exists());
 }

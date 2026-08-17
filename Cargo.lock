@@ -998,7 +998,7 @@ checksum = "384b8ab6d37215f3c5301a95a4accb5d64aa607f1fcb26a11b5303878451b4fe"
 
 [[package]]
 name = "orchester-adapter"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "async-trait",
  "futures",
@@ -1010,7 +1010,7 @@ dependencies = [
 
 [[package]]
 name = "orchester-konsole"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "clap",
  "crossterm",
@@ -1034,7 +1034,7 @@ dependencies = [
 
 [[package]]
 name = "orchester-laufzeit"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "async-trait",
  "blake3",
@@ -1067,7 +1067,7 @@ dependencies = [
 
 [[package]]
 name = "orchester-modell"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "async-trait",
  "orchester-protokoll",
@@ -1080,7 +1080,7 @@ dependencies = [
 
 [[package]]
 name = "orchester-protokoll"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "serde",
  "serde_json",
@@ -1089,7 +1089,7 @@ dependencies = [
 
 [[package]]
 name = "orchester-vertrag"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "async-trait",
  "futures",
@@ -1105,7 +1105,7 @@ dependencies = [
 
 [[package]]
 name = "orchester-verzeichnis"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "cap-fs-ext",
  "cap-std",

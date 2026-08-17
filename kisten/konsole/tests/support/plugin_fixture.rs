@@ -150,7 +150,7 @@ const destinationIndex = args.indexOf("--pack-destination");
 if (destinationIndex < 0 || !args[destinationIndex + 1]) process.exit(2);
 fs.copyFileSync(
   process.env.ORCHESTER_TEST_ARCHIVE,
-  path.join(args[destinationIndex + 1], "orchester-claude-0.1.1.tgz"),
+  path.join(args[destinationIndex + 1], "orchester-claude-0.1.2.tgz"),
 );
 fs.writeFileSync(process.env.ORCHESTER_TEST_ARGS_LOG, args.join("\n") + "\n");
 "#,
@@ -179,7 +179,7 @@ for argument in "$@"; do
   previous=$argument
 done
 test -n "$destination"
-cp "$ORCHESTER_TEST_ARCHIVE" "$destination/orchester-claude-0.1.1.tgz"
+cp "$ORCHESTER_TEST_ARCHIVE" "$destination/orchester-claude-0.1.2.tgz"
 printf '%s\n' "$@" > "$ORCHESTER_TEST_ARGS_LOG"
 "#,
     )

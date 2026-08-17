@@ -109,7 +109,7 @@ fn plugin_list_reports_validated_package_metadata() {
         "claude",
         "Claude Code",
         "@orchester/claude",
-        "0.1.1",
+        "0.1.2",
         "project",
     ] {
         assert!(out.contains(expected), "missing {expected} in:\n{out}");
@@ -137,7 +137,7 @@ fn plugin_status_can_emit_validated_json() {
     assert_eq!(value["name"], "claude");
     assert_eq!(value["displayName"], "Claude Code");
     assert_eq!(value["packageName"], "@orchester/claude");
-    assert_eq!(value["version"], "0.1.1");
+    assert_eq!(value["version"], "0.1.2");
     assert_eq!(value["origin"], "project");
     let _ = std::fs::remove_dir_all(project);
     let _ = std::fs::remove_dir_all(home);
