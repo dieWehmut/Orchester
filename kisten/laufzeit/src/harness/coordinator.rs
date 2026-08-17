@@ -16,6 +16,7 @@ use tokio_util::sync::CancellationToken;
 use super::agent_loop::{AgentLoopError, PreparedModelStep, PreparedOutcome, SelfAgentLoop};
 use super::feedback::SecretSetId;
 use super::governance::{PolicyEngine, PolicyResult};
+use super::model_events::complete_model_call;
 use super::run_store::{
     action_hash, ActionRecord, EventAppend, NewRun, RunStore, SqliteRunStore, StoreError,
     Transition,
@@ -639,11 +640,13 @@ where
     ) -> Result<CoordinatorOutcome, CoordinatorError> {
         // This durable boundary is the last fallible operation before the
         // provider call. Failures after it resume as ReconcileModelCall.
-        let response = self
-            .loop_engine
-            .model()
-            .complete_with_events(prepared.request().clone(), cancel, events)
-            .await?;
+        let response = complete_model_call(
+            self.loop_engine.model(),
+            prepared.request().clone(),
+            cancel,
+            events,
+        )
+        .await?;
         let response_usage = response.usage;
         if response.assistant_text.len() > TranscriptLimits::DEFAULT_MAX_TEXT_BYTES {
             return Err(CoordinatorError::DurableTextTooLarge);

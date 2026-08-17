@@ -16,6 +16,7 @@ pub mod feedback;
 pub mod files;
 pub mod governance;
 pub mod memory;
+mod model_events;
 pub mod mutation;
 pub(crate) mod private_fs;
 pub mod process;

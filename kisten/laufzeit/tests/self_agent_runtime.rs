@@ -76,8 +76,49 @@ fn eventful_loop_engine(
 struct CollectingSink(Arc<std::sync::Mutex<Vec<String>>>);
 
 impl ModelEventSink for CollectingSink {
+    fn response_started(&self) {
+        self.0
+            .lock()
+            .expect("sink lock")
+            .push("<started>".to_owned());
+    }
+
     fn text_delta(&self, delta: &str) {
         self.0.lock().expect("sink lock").push(delta.to_owned());
+    }
+
+    fn response_completed(&self) {
+        self.0
+            .lock()
+            .expect("sink lock")
+            .push("<completed>".to_owned());
+    }
+}
+
+struct PrematureCompletionErrorModel;
+
+#[async_trait]
+impl LanguageModel for PrematureCompletionErrorModel {
+    async fn complete(
+        &self,
+        _request: ModelRequest,
+        _cancel: CancellationToken,
+    ) -> Result<ModelResponse, ModelError> {
+        Err(ModelError::Transport)
+    }
+
+    async fn complete_with_events(
+        &self,
+        _request: ModelRequest,
+        _cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+    ) -> Result<ModelResponse, ModelError> {
+        if let Some(events) = events {
+            events.response_started();
+            events.text_delta("guarded tail");
+            events.response_completed();
+        }
+        Err(ModelError::Transport)
     }
 }
 
@@ -420,7 +461,14 @@ async fn run_with_events_forwards_ordered_text_without_changing_tool_sequence() 
     assert_eq!(outcome.tool_steps().len(), 1);
     assert_eq!(
         *deltas.lock().expect("sink lock"),
-        ["inspection ", "complete"]
+        [
+            "<started>",
+            "<completed>",
+            "<started>",
+            "inspection ",
+            "complete",
+            "<completed>"
+        ]
     );
     assert_eq!(audit.verify().expect("audit").entries, 1);
     drop(runtime);
@@ -492,7 +540,10 @@ async fn resume_with_events_continues_the_selected_opaque_handle() {
 
     assert_eq!(outcome.run_id(), &paused_run_id);
     assert_eq!(outcome.final_turn().text(), Some("resumed inspection"));
-    assert_eq!(*deltas.lock().expect("sink lock"), ["resumed inspection"]);
+    assert_eq!(
+        *deltas.lock().expect("sink lock"),
+        ["<started>", "resumed inspection", "<completed>"]
+    );
     let events = store
         .events_owned(&paused_run_id, "local-user")
         .expect("events");
@@ -508,6 +559,40 @@ async fn resume_with_events_continues_the_selected_opaque_handle() {
     drop(store);
     drop(audit);
     let _ = std::fs::remove_dir_all(root);
+}
+
+#[tokio::test]
+async fn model_error_does_not_complete_the_event_stream() {
+    let loop_engine = SelfAgentLoop::new(
+        PrematureCompletionErrorModel,
+        ContextAssembler::new(ContextLimits::default(), Vec::new()),
+        AgentLoopConfig {
+            model: "test-model".into(),
+            max_steps: 8,
+            max_text_bytes: 64 * 1024,
+            store: false,
+        },
+    )
+    .expect("loop");
+    let events = Arc::new(std::sync::Mutex::new(Vec::new()));
+
+    let error = loop_engine
+        .start_with_events(
+            "fail after a partial response",
+            CancellationToken::new(),
+            Some(Arc::new(CollectingSink(Arc::clone(&events)))),
+        )
+        .await
+        .expect_err("model error must be preserved");
+
+    assert!(matches!(
+        error,
+        orchester_laufzeit::harness::agent_loop::AgentLoopError::Model(ModelError::Transport)
+    ));
+    assert_eq!(
+        *events.lock().expect("sink lock"),
+        ["<started>", "guarded tail"]
+    );
 }
 
 #[tokio::test]

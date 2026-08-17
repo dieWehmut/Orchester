@@ -20,6 +20,7 @@ use super::context::{
     ContextAssembler, ContextError, ContextInput, ContinuationInput, TranscriptEntry,
 };
 use super::feedback::SecretSetId;
+use super::model_events::complete_model_call;
 use super::transcript::{TranscriptError, TranscriptRecord};
 
 const MAX_MODEL_BYTES: usize = 4 * 1024;
@@ -287,10 +288,8 @@ impl<M: LanguageModel> SelfAgentLoop<M> {
         events: Option<Arc<dyn ModelEventSink>>,
     ) -> Result<AgentLoopOutcome, AgentLoopError> {
         let prepared = self.prepare_start(prompt, &cancel)?;
-        let response = self
-            .model
-            .complete_with_events(prepared.request.clone(), cancel, events)
-            .await?;
+        let response =
+            complete_model_call(&self.model, prepared.request.clone(), cancel, events).await?;
         Ok(self.complete_prepared(prepared, response)?.into_public())
     }
 
@@ -312,10 +311,8 @@ impl<M: LanguageModel> SelfAgentLoop<M> {
         events: Option<Arc<dyn ModelEventSink>>,
     ) -> Result<AgentLoopOutcome, AgentLoopError> {
         let prepared = self.prepare_resume(pending, tool_result, &cancel)?;
-        let response = self
-            .model
-            .complete_with_events(prepared.request.clone(), cancel, events)
-            .await?;
+        let response =
+            complete_model_call(&self.model, prepared.request.clone(), cancel, events).await?;
         Ok(self.complete_prepared(prepared, response)?.into_public())
     }
 
