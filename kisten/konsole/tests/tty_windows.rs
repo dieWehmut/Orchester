@@ -5,6 +5,7 @@ mod conpty;
 
 use std::ffi::OsString;
 use std::path::{Path, PathBuf};
+use std::sync::{Mutex, OnceLock};
 use std::time::Duration;
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -13,8 +14,18 @@ use conpty::ConPty;
 const READY_TIMEOUT: Duration = Duration::from_secs(10);
 const COMMAND_TIMEOUT: Duration = Duration::from_secs(30);
 
+static CONPTY_TEST_LOCK: OnceLock<Mutex<()>> = OnceLock::new();
+
+fn conpty_test_guard() -> std::sync::MutexGuard<'static, ()> {
+    CONPTY_TEST_LOCK
+        .get_or_init(|| Mutex::new(()))
+        .lock()
+        .expect("ConPTY test lock")
+}
+
 #[test]
 fn conpty_captures_a_native_console_process() {
+    let _guard = conpty_test_guard();
     let workspace = temp_home("conpty-native-workspace");
     std::fs::create_dir_all(&workspace).expect("create native ConPTY workspace");
     let system_root = std::env::var_os("SystemRoot").expect("SystemRoot");
@@ -41,6 +52,7 @@ fn conpty_captures_a_native_console_process() {
 
 #[test]
 fn status_overlay_keeps_one_full_screen_session_and_stable_header() {
+    let _guard = conpty_test_guard();
     let home = temp_home("conpty-home");
     let workspace = temp_home("conpty-workspace");
     std::fs::create_dir_all(&home).expect("create ConPTY home");
@@ -89,6 +101,7 @@ fn status_overlay_keeps_one_full_screen_session_and_stable_header() {
 
 #[test]
 fn command_pickers_share_one_stable_full_screen_session() {
+    let _guard = conpty_test_guard();
     let home = temp_home("conpty-command-pickers-home");
     let workspace = temp_home("conpty-command-pickers-workspace");
     std::fs::create_dir_all(&home).expect("create command-picker ConPTY home");
