@@ -1268,10 +1268,11 @@ fn render_fixed_body<W: Write>(out: &mut W, body: &[u8], rows: usize) -> io::Res
     } else {
         body.split(|byte| *byte == b'\n').collect::<Vec<_>>()
     };
-    for row in 0..rows {
-        if let Some(content) = body_rows.get(row) {
-            out.write_all(content)?;
-        }
+    // `rows` is a ceiling, not a quota. Padding the body out to the full
+    // viewport would push the composer to the last terminal row and leave a
+    // gap between the hint and the input the operator is typing into.
+    for content in body_rows.iter().take(rows) {
+        out.write_all(content)?;
         writeln!(out)?;
     }
     Ok(())
@@ -3253,30 +3254,28 @@ mod tests {
                 );
             }
 
-            let expected_status = frames[0]
-                .1
-                .lines()
-                .nth(23)
-                .expect("the constrained frame has a status row");
-            assert!(
-                expected_status.contains("gpt-test"),
-                "the {width}x24 status row lost the active model: {expected_status}"
-            );
-
             for (label, frame) in &frames {
                 let lines = frame.lines().collect::<Vec<_>>();
-                assert_eq!(
-                    lines.len(),
-                    24,
-                    "{label} did not fill the {width}x24 viewport:\n{frame}"
+                assert!(
+                    lines.len() <= 24,
+                    "{label} overflowed the {width}x24 viewport:\n{frame}"
+                );
+                // The frame is as tall as its content, never taller: the
+                // composer and status row trail the last content row instead of
+                // being pushed to the bottom of the terminal.
+                let status = lines.last().expect("status row");
+                let composer = lines[lines.len() - 2];
+                assert!(
+                    composer.trim_start().starts_with("> "),
+                    "{label} composer is not the row above the status line at {width}x24:\n{frame}"
                 );
                 assert!(
-                    lines[22].trim_start().starts_with("> "),
-                    "{label} composer moved from row 22 at {width}x24:\n{frame}"
+                    status.contains("gpt-test"),
+                    "{label} status row lost the active model at {width}x24:\n{frame}"
                 );
-                assert_eq!(
-                    lines[23], expected_status,
-                    "{label} status moved from row 23 at {width}x24:\n{frame}"
+                assert!(
+                    !lines[lines.len() - 3].trim().is_empty(),
+                    "{label} left a padding row above the composer at {width}x24:\n{frame}"
                 );
             }
         }
@@ -3359,8 +3358,11 @@ mod tests {
         assert!(plain.lines().count() <= 24, "frame overflowed:\n{plain}");
     }
 
+    /// The composer is anchored to the content, not to the bottom of the
+    /// terminal: a tall terminal must not open a gap between the last rendered
+    /// row and the line the operator is typing into.
     #[test]
-    fn composer_row_is_stable_across_home_palette_overlay_and_streaming() {
+    fn composer_trails_the_last_content_row_in_every_state() {
         let overlay = CommandOverlay::new(
             "Status",
             "Select a section to inspect.",
@@ -3392,28 +3394,30 @@ mod tests {
             .unwrap();
             strip_ansi(&String::from_utf8(out).unwrap())
         };
-        let frames = [
-            render("", &[], None, None),
-            render("/", &[], None, None),
-            render("", &[], None, Some(&overlay)),
-            render("next task", &transcript, Some("Creating..."), None),
-        ];
-        let composer_rows = frames
-            .iter()
-            .map(|frame| {
-                frame
-                    .lines()
-                    .position(|line| {
-                        line.trim_start().starts_with("> ") && display_width(line) >= 99
-                    })
-                    .expect("composer row")
-            })
-            .collect::<Vec<_>>();
-        assert!(
-            composer_rows.windows(2).all(|rows| rows[0] == rows[1]),
-            "composer moved between frames: {composer_rows:?}\n{}",
-            frames.join("\n---\n")
-        );
+        for (label, frame) in [
+            ("home", render("", &[], None, None)),
+            ("palette", render("/", &[], None, None)),
+            ("overlay", render("", &[], None, Some(&overlay))),
+            (
+                "streaming",
+                render("next task", &transcript, Some("Creating..."), None),
+            ),
+        ] {
+            let lines = frame.lines().collect::<Vec<_>>();
+            let composer = lines
+                .iter()
+                .position(|line| line.trim_start().starts_with("> ") && display_width(line) >= 99)
+                .unwrap_or_else(|| panic!("{label} has no composer row:\n{frame}"));
+            assert_eq!(
+                composer,
+                lines.len() - 2,
+                "{label} composer is not directly above the status row:\n{frame}"
+            );
+            assert!(
+                !lines[composer - 1].trim().is_empty(),
+                "{label} padded the viewport above the composer:\n{frame}"
+            );
+        }
     }
 
     #[test]
