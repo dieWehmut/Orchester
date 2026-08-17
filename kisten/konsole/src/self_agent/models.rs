@@ -107,10 +107,10 @@ mod tests {
 
     #[test]
     fn rendering_sanitizes_catalog_metadata() {
-        let catalog = SelfAgentModelCatalog {
-            active: SelfAgentActiveModel::Configured(choice(None, "gpt-default\x1b[31m")),
-            profiles: vec![choice(Some("review\nprofile"), "gpt-review")],
-        };
+        let catalog = catalog(
+            SelfAgentActiveModel::Configured(choice(None, "gpt-default\x1b[31m")),
+            vec![choice(Some("review\nprofile"), "gpt-review")],
+        );
         let mut output = Vec::new();
 
         render_models(&mut output, &catalog).expect("render model catalog");
@@ -125,13 +125,13 @@ mod tests {
 
     #[test]
     fn an_unresolved_active_model_still_lists_selectable_profiles() {
-        let catalog = SelfAgentModelCatalog {
-            active: SelfAgentActiveModel::Unresolved {
+        let catalog = catalog(
+            SelfAgentActiveModel::Unresolved {
                 path: "model_provider".into(),
                 message: "active model provider is not configured".into(),
             },
-            profiles: vec![choice(Some("fast"), "gpt-fast")],
-        };
+            vec![choice(Some("fast"), "gpt-fast")],
+        );
         let mut output = Vec::new();
 
         render_models(&mut output, &catalog).expect("render model catalog");
@@ -159,6 +159,18 @@ mod tests {
         assert!(rendered.contains("gpt-fast"));
         assert!(rendered.contains("future turns in this session"));
         assert!(rendered.contains("configuration was not changed"));
+    }
+
+    fn catalog(
+        active: SelfAgentActiveModel,
+        profiles: Vec<SelfAgentModelChoice>,
+    ) -> SelfAgentModelCatalog {
+        SelfAgentModelCatalog {
+            active,
+            profiles,
+            providers: Vec::new(),
+            selected_provider: None,
+        }
     }
 
     fn choice(profile: Option<&str>, model: &str) -> SelfAgentModelChoice {

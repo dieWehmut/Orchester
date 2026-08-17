@@ -2,7 +2,7 @@
 
 use std::fmt;
 
-use super::{validate_model_profile_name, ConfigError, UserConfig};
+use super::{validate_model_profile_name, validate_provider_identifier, ConfigError, UserConfig};
 use url::{Host, Url};
 
 /// The wire APIs the harness has an adapter for. Configuration validates against
@@ -60,15 +60,7 @@ impl UserConfig {
             "model_provider",
             "active model provider is not configured",
         )?;
-        if !provider
-            .chars()
-            .all(|ch| ch.is_ascii_alphanumeric() || matches!(ch, '.' | '_' | '-'))
-        {
-            return Err(validation(
-                "model_provider",
-                "provider identifier contains an invalid character",
-            ));
-        }
+        validate_provider_identifier(provider, "model_provider")?;
         let provider_config = self.model_providers().get(provider).ok_or_else(|| {
             validation(
                 "model_provider",
@@ -145,6 +137,29 @@ impl UserConfig {
         selected
             .resolve_model_profile()
             .map_err(|error| profile_selection_error(name, error))?;
+        Ok(selected)
+    }
+
+    /// Return an effective configuration with a different entry of the
+    /// user-owned `model_providers` block selected.
+    ///
+    /// A provider entry carries the transport, not the model name, so the
+    /// active model and every reasoning setting are deliberately kept: relays
+    /// mirror another provider's model names, and switching between them is
+    /// exactly what this supports. Changing the model belongs to a named
+    /// profile or to editing configuration.
+    pub fn with_model_provider(&self, provider: &str) -> Result<Self, ConfigError> {
+        validate_provider_identifier(provider, "model_provider")?;
+        self.validate()?;
+        if !self.model_providers().contains_key(provider) {
+            return Err(validation(
+                "model_provider",
+                "active provider does not name a configured user profile",
+            ));
+        }
+        let mut selected = self.clone();
+        selected.model_provider = Some(provider.to_owned());
+        selected.resolve_model_profile()?;
         Ok(selected)
     }
 }

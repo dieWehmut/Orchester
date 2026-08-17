@@ -1,7 +1,7 @@
 use orchester_laufzeit::harness::config::{ConfigError, ConfigLoader, UserConfig};
 use orchester_laufzeit::harness::service::{
     load_self_agent_model_catalog, select_self_agent_model_profile, SelfAgentActiveModel,
-    SelfAgentModelCatalogError, SelfAgentModelSession,
+    SelfAgentModelCatalogError, SelfAgentModelSession, SelfAgentProviderState,
 };
 
 fn configured(source: &str) -> UserConfig {
@@ -58,7 +58,6 @@ fn catalog_projects_configured_and_named_choices_without_transport_details() {
     let rendered = format!("{catalog:?}");
     assert!(!rendered.contains("catalog-private"));
     assert!(!rendered.contains("CatalogSecret"));
-    assert!(!rendered.contains("wire_api"));
     assert!(!rendered.contains("requires_auth"));
 }
 
@@ -179,6 +178,13 @@ fn catalog_reports_controlled_active_metadata_without_ever_projecting_it() {
         };
         assert_eq!(path, expected_path);
         assert_eq!(message, "model catalog metadata is invalid");
+        // The provider listing reports the model a switch would resolve to, so
+        // it has to degrade for the same reason the active model did rather
+        // than become the second route the value escapes through.
+        assert!(catalog
+            .providers
+            .iter()
+            .all(|provider| !provider.is_selectable()));
         assert!(!projected.contains("gpt-test"));
         assert!(!projected.contains('\u{1b}'));
     }
@@ -298,6 +304,217 @@ fn failed_model_session_selection_preserves_the_previous_choice() {
             .as_deref(),
         Some("gpt-fast")
     );
+}
+
+#[test]
+fn catalog_lists_every_configured_provider_with_the_wire_it_speaks() {
+    let config = configured(
+        r#"{
+            "model_provider": "OpenAI",
+            "model": "claude-opus",
+            "model_providers": {
+                "Anthropic": {
+                    "name": "Anthropic",
+                    "base_url": "https://relay-private.example/",
+                    "wire_api": "anthropic"
+                },
+                "OpenAI": {
+                    "base_url": "https://openai-private.example/v1"
+                },
+                "Broken": { "wire_api": "responses" }
+            }
+        }"#,
+    );
+
+    let catalog = load_self_agent_model_catalog(&config).expect("model catalog");
+
+    assert_eq!(
+        catalog
+            .providers
+            .iter()
+            .map(|provider| provider.provider.as_str())
+            .collect::<Vec<_>>(),
+        vec!["Anthropic", "Broken", "OpenAI"]
+    );
+    // A provider carries the transport, not the model, so every selectable
+    // entry resolves to the one configured model.
+    assert_eq!(
+        catalog.providers[0].state,
+        SelfAgentProviderState::Selectable {
+            model: "claude-opus".into(),
+            wire_api: "anthropic".into()
+        }
+    );
+    assert_eq!(catalog.providers[0].provider_name, "Anthropic");
+    // An unnamed provider is listed under its key, and the default wire is
+    // reported rather than left blank.
+    assert_eq!(catalog.providers[2].provider_name, "OpenAI");
+    assert_eq!(
+        catalog.providers[2].state,
+        SelfAgentProviderState::Selectable {
+            model: "claude-opus".into(),
+            wire_api: "responses".into()
+        }
+    );
+    // A provider that cannot be used is still listed, with the field to repair.
+    assert!(!catalog.providers[1].is_selectable());
+    assert_eq!(
+        catalog.providers[1].state,
+        SelfAgentProviderState::Unavailable {
+            path: "model_providers.Broken.base_url".into(),
+            message: "provider base URL is not configured".into()
+        }
+    );
+    assert_eq!(catalog.selected_provider, None);
+    let rendered = format!("{catalog:?}");
+    assert!(!rendered.contains("relay-private"));
+    assert!(!rendered.contains("openai-private"));
+}
+
+#[test]
+fn selecting_a_provider_switches_the_transport_and_keeps_the_model() {
+    let config = configured(
+        r#"{
+            "model_provider": "OpenAI",
+            "model": "claude-opus",
+            "model_reasoning_effort": "high",
+            "model_providers": {
+                "OpenAI": { "base_url": "https://example.test/v1" },
+                "Relay": {
+                    "name": "Anthropic relay",
+                    "base_url": "https://relay.example/",
+                    "wire_api": "anthropic"
+                }
+            }
+        }"#,
+    );
+    let mut session = SelfAgentModelSession::default();
+
+    let choice = session
+        .select_provider(&config, "Relay")
+        .expect("select configured provider");
+    let effective = session
+        .effective_config(&config)
+        .expect("session configuration");
+    let catalog = session.catalog(&config).expect("session catalog");
+
+    assert_eq!(choice.provider, "Relay");
+    assert_eq!(choice.provider_name, "Anthropic relay");
+    assert_eq!(choice.model, "claude-opus");
+    assert_eq!(choice.reasoning_effort.as_deref(), Some("high"));
+    // A provider switch is not a named profile, so it leaves the profile empty
+    // and is reported separately.
+    assert_eq!(choice.profile, None);
+    assert_eq!(session.selected_provider(), Some("Relay"));
+    assert_eq!(session.selected_profile(), None);
+    assert_eq!(catalog.selected_provider.as_deref(), Some("Relay"));
+    assert_eq!(effective.model_provider.as_deref(), Some("Relay"));
+    assert_eq!(effective.model.as_deref(), Some("claude-opus"));
+    assert_eq!(config.model_provider.as_deref(), Some("OpenAI"));
+    assert!(!format!("{session:?}").contains("Relay"));
+}
+
+#[test]
+fn an_unusable_provider_is_listed_but_never_becomes_the_selection() {
+    let config = configured(
+        r#"{
+            "model_provider": "OpenAI",
+            "model": "do-not-echo-provider-model",
+            "model_providers": {
+                "OpenAI": { "base_url": "https://example.test/v1" },
+                "Unsupported": {
+                    "base_url": "https://example.test/v1",
+                    "wire_api": "grpc"
+                }
+            }
+        }"#,
+    );
+    let mut session = SelfAgentModelSession::default();
+
+    let catalog = load_self_agent_model_catalog(&config).expect("catalog still lists providers");
+    let listed = catalog
+        .providers
+        .iter()
+        .find(|provider| provider.provider == "Unsupported")
+        .expect("unusable provider is listed");
+    let error = session
+        .select_provider(&config, "Unsupported")
+        .expect_err("an unusable provider must not become the selection");
+
+    assert!(matches!(
+        listed.state,
+        SelfAgentProviderState::Unavailable { ref path, .. }
+            if path == "model_providers.Unsupported.wire_api"
+    ));
+    assert!(matches!(
+        error,
+        SelfAgentModelCatalogError::Config(ConfigError::Validation { ref path, .. })
+            if path == "model_providers.Unsupported.wire_api"
+    ));
+    assert_eq!(session.selected_provider(), None);
+    assert!(!error.to_string().contains("do-not-echo-provider-model"));
+
+    let missing = session
+        .select_provider(&config, "Absent")
+        .expect_err("an unconfigured provider must fail");
+    assert!(!missing.to_string().contains("Absent"));
+}
+
+#[test]
+fn a_provider_and_a_named_profile_replace_one_another() {
+    let config = configured(
+        r#"{
+            "model_provider": "OpenAI",
+            "model": "gpt-default",
+            "model_providers": {
+                "OpenAI": { "base_url": "https://example.test/v1" },
+                "Relay": { "base_url": "https://relay.example/", "wire_api": "anthropic" }
+            },
+            "model_profiles": {
+                "fast": { "model_provider": "OpenAI", "model": "gpt-fast" }
+            }
+        }"#,
+    );
+    let mut session = SelfAgentModelSession::default();
+
+    session
+        .select_provider(&config, "Relay")
+        .expect("select provider");
+    session
+        .select_profile(&config, "fast")
+        .expect("select named profile");
+
+    // A named profile names its own provider, so the earlier provider switch
+    // must not survive underneath it.
+    assert_eq!(session.selected_provider(), None);
+    assert_eq!(session.selected_profile(), Some("fast"));
+    assert_eq!(
+        session
+            .effective_config(&config)
+            .expect("profile configuration")
+            .model_provider
+            .as_deref(),
+        Some("OpenAI")
+    );
+
+    session
+        .select_provider(&config, "Relay")
+        .expect("switch back to a provider");
+    assert_eq!(session.selected_profile(), None);
+    assert_eq!(
+        session
+            .effective_config(&config)
+            .expect("provider configuration")
+            .model
+            .as_deref(),
+        Some("gpt-default")
+    );
+
+    session
+        .select_configured(&config)
+        .expect("return to the configured default");
+    assert_eq!(session.selected_provider(), None);
+    assert_eq!(session.selected_profile(), None);
 }
 
 #[test]

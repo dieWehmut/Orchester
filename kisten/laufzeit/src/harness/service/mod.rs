@@ -41,8 +41,10 @@ pub use credentials::{
 use identity::WorkspaceIdentity;
 pub use identity::{IdentityError, WorkspaceIdentitySnapshot};
 pub use model_catalog::{
-    load_self_agent_model_catalog, select_self_agent_model_profile, SelfAgentActiveModel,
-    SelfAgentModelCatalog, SelfAgentModelCatalogError, SelfAgentModelChoice, SelfAgentModelSession,
+    load_self_agent_model_catalog, select_self_agent_model_profile,
+    select_self_agent_model_provider, SelfAgentActiveModel, SelfAgentModelCatalog,
+    SelfAgentModelCatalogError, SelfAgentModelChoice, SelfAgentModelSession,
+    SelfAgentProviderChoice, SelfAgentProviderState,
 };
 pub use permissions::{
     load_self_agent_permissions, SelfAgentApprovalStatus, SelfAgentAuditStatus,

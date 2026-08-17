@@ -1527,6 +1527,20 @@ fn vault_binds_path(vault: &CredentialVault, path: &[ConfigPathSegment], value: 
 }
 
 pub(super) fn validate_model_profile_name(name: &str, path: &str) -> Result<(), ConfigError> {
+    validate_identifier(name, path, "model profile name is invalid")
+}
+
+/// A `model_providers` key. Bounded and ASCII-only because it is interpolated
+/// into the field paths that failures report.
+pub(super) fn validate_provider_identifier(name: &str, path: &str) -> Result<(), ConfigError> {
+    validate_identifier(
+        name,
+        path,
+        "provider identifier contains an invalid character",
+    )
+}
+
+fn validate_identifier(name: &str, path: &str, message: &str) -> Result<(), ConfigError> {
     if name.is_empty()
         || name.len() > MAX_MODEL_PROFILE_NAME_BYTES
         || !name
@@ -1535,7 +1549,7 @@ pub(super) fn validate_model_profile_name(name: &str, path: &str) -> Result<(), 
     {
         return Err(ConfigError::Validation {
             path: path.into(),
-            message: "model profile name is invalid".into(),
+            message: message.into(),
         });
     }
     Ok(())

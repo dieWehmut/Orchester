@@ -1774,6 +1774,18 @@ mod tests {
     use std::path::Path;
     use std::sync::{Condvar, Mutex as StdMutex};
 
+    fn model_catalog(
+        active: SelfAgentActiveModel,
+        profiles: Vec<SelfAgentModelChoice>,
+    ) -> SelfAgentModelCatalog {
+        SelfAgentModelCatalog {
+            active,
+            profiles,
+            providers: Vec::new(),
+            selected_provider: None,
+        }
+    }
+
     #[test]
     fn queued_prompt_is_recorded_before_a_busy_turn_starts() {
         let mut state = TerminalChatState {
@@ -1958,8 +1970,8 @@ mod tests {
 
     #[test]
     fn model_overlay_prompts_for_effort_before_applying_a_choice() {
-        let catalog = SelfAgentModelCatalog {
-            active: SelfAgentActiveModel::Configured(
+        let catalog = model_catalog(
+            SelfAgentActiveModel::Configured(
                 orchester_laufzeit::harness::service::SelfAgentModelChoice {
                     profile: None,
                     provider: "openai".into(),
@@ -1970,8 +1982,8 @@ mod tests {
                     service_tier: None,
                 },
             ),
-            profiles: Vec::new(),
-        };
+            Vec::new(),
+        );
 
         let overlay = TerminalOverlay::models(&catalog);
 
@@ -2057,10 +2069,10 @@ mod tests {
             reasoning_effort: Some("low".into()),
             ..configured.clone()
         };
-        let catalog = SelfAgentModelCatalog {
-            active: SelfAgentActiveModel::Configured(active_profile.clone()),
-            profiles: vec![active_profile],
-        };
+        let catalog = model_catalog(
+            SelfAgentActiveModel::Configured(active_profile.clone()),
+            vec![active_profile],
+        );
 
         let overlay = model_effort_overlay_for_target(
             &catalog,
@@ -2087,10 +2099,7 @@ mod tests {
         };
         let mut active = stored.clone();
         active.reasoning_effort = Some("ultra".into());
-        let catalog = SelfAgentModelCatalog {
-            active: SelfAgentActiveModel::Configured(active),
-            profiles: vec![stored],
-        };
+        let catalog = model_catalog(SelfAgentActiveModel::Configured(active), vec![stored]);
 
         let overlay = model_effort_overlay_for_target(
             &catalog,
@@ -2114,10 +2123,10 @@ mod tests {
             plan_reasoning_effort: None,
             service_tier: None,
         };
-        let parent = TerminalOverlay::models(&SelfAgentModelCatalog {
-            active: SelfAgentActiveModel::Configured(choice.clone()),
-            profiles: vec![choice.clone()],
-        });
+        let parent = TerminalOverlay::models(&model_catalog(
+            SelfAgentActiveModel::Configured(choice.clone()),
+            vec![choice.clone()],
+        ));
         let child = TerminalOverlay::model_efforts(
             ModelSelectionTarget::Profile("balanced".into()),
             &choice,
