@@ -256,11 +256,14 @@ impl ConPty {
                 ));
             }
             if Instant::now() >= deadline {
+                let start = self.captured.len().saturating_sub(4_000);
+                let preview = String::from_utf8_lossy(&self.captured[start..]);
                 return Err(io::Error::new(
                     io::ErrorKind::TimedOut,
                     format!(
-                        "timed out waiting for marker {:?}",
-                        String::from_utf8_lossy(marker)
+                        "timed out waiting for marker {:?}; output tail: {}",
+                        String::from_utf8_lossy(marker),
+                        preview.chars().take(4_000).collect::<String>()
                     ),
                 ));
             }

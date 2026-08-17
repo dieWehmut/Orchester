@@ -11,6 +11,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use conpty::ConPty;
 
 const READY_TIMEOUT: Duration = Duration::from_secs(10);
+const COMMAND_TIMEOUT: Duration = Duration::from_secs(30);
 
 #[test]
 fn conpty_captures_a_native_console_process() {
@@ -80,6 +81,86 @@ fn status_overlay_keeps_one_full_screen_session_and_stable_header() {
     assert!(
         !contains(&output[initial_end..home_end], b"\x1b[2J"),
         "interactive frame updates must not clear the full screen"
+    );
+
+    let _ = std::fs::remove_dir_all(home);
+    let _ = std::fs::remove_dir_all(workspace);
+}
+
+#[test]
+fn command_pickers_share_one_stable_full_screen_session() {
+    let home = temp_home("conpty-command-pickers-home");
+    let workspace = temp_home("conpty-command-pickers-workspace");
+    std::fs::create_dir_all(&home).expect("create command-picker ConPTY home");
+    std::fs::create_dir_all(&workspace).expect("create command-picker ConPTY workspace");
+    let mut session = ConPty::spawn(
+        Path::new(env!("CARGO_BIN_EXE_orchester")),
+        &workspace,
+        &[(
+            OsString::from("ORCHESTER_HOME"),
+            home.as_os_str().to_os_string(),
+        )],
+        120,
+        40,
+    )
+    .expect("spawn Orchester in ConPTY");
+
+    let initial_end = session
+        .read_until(b">_ Orchester", READY_TIMEOUT)
+        .expect("initial workspace panel");
+    let mut cursor = initial_end;
+    for (command, title, footer) in [
+        ("/permissions", "Self-agent permissions", "Enter inspect"),
+        ("/model", "Select model", "Enter choose effort"),
+        (
+            "/resume",
+            "Resumable self-agent runs",
+            "Enter resume/inspect",
+        ),
+        ("/status", "Self-agent status", "Enter inspect"),
+        ("/config", "Self-agent configuration", "Enter inspect"),
+        ("/plugins", "Installed agent plugins", "Enter inspect"),
+        ("/theme", "Select theme", "Enter save"),
+    ] {
+        session
+            .write(format!("{command}\r").as_bytes())
+            .expect("open command picker");
+        cursor = session
+            .read_until_since(cursor, footer.as_bytes(), COMMAND_TIMEOUT)
+            .unwrap_or_else(|error| {
+                panic!("{command} picker {title:?} was not selectable: {error}")
+            });
+        session.write(b"\x1b").expect("close command picker");
+        cursor = session
+            .read_until_since(cursor, b"\x1b[?2026h", COMMAND_TIMEOUT)
+            .unwrap_or_else(|error| panic!("{command} did not restore the home frame: {error}"));
+    }
+    session.write(b"/quit\r").expect("quit TUI");
+    let (exit_code, output) = session
+        .wait_for_exit(READY_TIMEOUT)
+        .expect("Orchester exits after command-picker smoke test");
+
+    assert_eq!(exit_code, 0);
+    assert_eq!(count(&output, b"\x1b[?1049h"), 1, "alternate screen enter");
+    assert_eq!(count(&output, b"\x1b[?1049l"), 1, "alternate screen leave");
+    assert_eq!(count(&output, b">_ Orchester"), 1, "stable top panel");
+    for title in [
+        "Self-agent permissions",
+        "Select model",
+        "Resumable self-agent runs",
+        "Self-agent status",
+        "Self-agent configuration",
+        "Installed agent plugins",
+        "Select theme",
+    ] {
+        assert!(
+            contains(&output, title.as_bytes()),
+            "command picker title did not render: {title}"
+        );
+    }
+    assert!(
+        !contains(&output[initial_end..], b"\x1b[2J"),
+        "command picker transitions must not clear the full screen"
     );
 
     let _ = std::fs::remove_dir_all(home);
