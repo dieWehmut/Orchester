@@ -1,0 +1,9 @@
+packages:
+  - '*'
+
+# pnpm 10 refuses to run a dependency's install scripts unless it is listed here.
+# esbuild needs its postinstall to place the platform binary Vite and Vitest exec,
+# so without this entry every build fails at "you installed esbuild for another
+# platform" — which reads like a corrupt download rather than a policy decision.
+onlyBuiltDependencies:
+  - esbuild

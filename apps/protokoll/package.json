@@ -1,0 +1,14 @@
+{
+  "name": "@orchester/protokoll",
+  "version": "0.1.2",
+  "private": true,
+  "type": "module",
+  "description": "TypeScript mirror of the Orchester wire protocol",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  }
+}

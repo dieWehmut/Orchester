@@ -16,6 +16,19 @@ sample
 /agent-research/
 /forschung/.analysis_parts/
 
+# ── Frontend build output ───────────────────────────────────────────
+# The JavaScript workspace lives in apps/. Its lockfile IS tracked (the Pages
+# and desktop builds run --frozen-lockfile), everything derived is not.
+node_modules/
+apps/*/dist/
+apps/website/dist-*/
+.vite/
+*.tsbuildinfo
+# apps/web builds straight into the server crate that serves it.
+/kisten/netz/static/
+# Tauri generates these next to src-tauri; the config beside them is tracked.
+apps/desktop/src-tauri/gen/
+
 # ── Local runtime / tooling state ───────────────────────────────────
 .remember/logs/
 .remember/tmp/
@@ -42,5 +55,7 @@ docs/local
 !/docs/README.zh-TW.md
 !/docs/README.en.md
 !/npm/cli/README.md
+!/docs/PLAN-FRONTENDS.md
+!/apps/README.md
 .playwright-mcp/
 .superpowers/

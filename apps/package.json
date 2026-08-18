@@ -1,0 +1,16 @@
+{
+  "name": "@orchester/apps",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.32.1",
+  "description": "Orchester frontends: the local WebUI, the desktop shell and the project site",
+  "scripts": {
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.2",
+    "typescript": "5.9.3",
+    "vitest": "^4.1.10"
+  }
+}
