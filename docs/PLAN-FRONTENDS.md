@@ -76,7 +76,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   tests.
 - [x] F0-022: Add `AppPopover.vue` with anchor placement and dismiss tests.
 - [x] F0-023: Export overlay primitives and add `overlays.test.ts`.
-- [ ] F0-024: Add `InlineAlert.vue` and live-region tests.
+- [x] F0-024: Add `InlineAlert.vue` and live-region tests.
 - [ ] F0-025: Add `EmptyState.vue` and action-slot tests.
 - [ ] F0-026: Add `SkeletonBlock.vue` and reduced-motion tests.
 - [ ] F0-027: Add `ProgressBar.vue` with bounded-value tests.
