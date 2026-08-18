@@ -10,11 +10,13 @@ export { default as AppSegmentedControl } from './components/AppSegmentedControl
 export { default as AppSwitch } from './components/AppSwitch.vue'
 export { default as AppTabs } from './components/AppTabs.vue'
 export { default as AppTextarea } from './components/AppTextarea.vue'
+export { default as AppTooltip } from './components/AppTooltip.vue'
 export { default as ColorSchemePicker } from './components/ColorSchemePicker.vue'
 export { default as IconButton } from './components/IconButton.vue'
 export { default as Spinner } from './components/Spinner.vue'
 export { default as StatusDot } from './components/StatusDot.vue'
 export { default as ThemeToggle } from './components/ThemeToggle.vue'
+export { default as VisuallyHidden } from './components/VisuallyHidden.vue'
 
 export type {
   AppFieldControlProps,
