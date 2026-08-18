@@ -124,7 +124,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   linker and record the toolchain requirement. Local ARM64 validation is
   blocked until Visual Studio Build Tools are installed; see
   `docs/BUILD-TOOLCHAIN.md`.
-- [ ] P1-020: Commit and push the protocol wave as separate Rust and TypeScript
+- [x] P1-020: Commit and push the protocol wave as separate Rust and TypeScript
   commits.
 
 ## Wave N1: Rust `kisten/netz` service
