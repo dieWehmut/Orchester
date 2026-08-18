@@ -1,0 +1,26 @@
+{
+  "name": "@orchester/design",
+  "version": "0.1.2",
+  "private": true,
+  "type": "module",
+  "description": "Design tokens and primitives shared by every Orchester frontend",
+  "exports": {
+    ".": "./src/index.ts",
+    "./tokens.css": "./src/tokens.css"
+  },
+  "scripts": {
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/test-utils": "^2.4.6",
+    "jsdom": "^30.0.1",
+    "vite": "^7.1.2",
+    "vue": "3.5.18",
+    "vue-tsc": "^3.2.5"
+  }
+}

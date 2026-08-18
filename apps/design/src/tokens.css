@@ -1,0 +1,319 @@
+/*
+ * Orchester design tokens.
+ *
+ * Two independent axes, both expressed as attributes on <html>:
+ *
+ *   data-theme="dark|light"          the neutral surfaces and text
+ *   data-color-scheme="amber|…"      the accent hue
+ *
+ * They are separate because they answer different questions. "Is this room
+ * bright?" is an accessibility and environment question the OS already has an
+ * opinion about; "which accent do I like?" is taste. Folding them into one
+ * `theme="dark-amber"` axis would make eight values where two lists of four do,
+ * and would break the moment a fifth accent arrived.
+ *
+ * Dark is the default: this is a tool that sits next to a terminal.
+ */
+
+:root {
+  /* ── Spacing: a 4px step, named by step count rather than by t-shirt size,
+     because "is lg bigger than xl" is a question nobody should have to ask. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* ── Typography */
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', 'Noto Sans SC', sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'JetBrains Mono', 'SFMono-Regular',
+    Consolas, 'Liberation Mono', monospace;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --text-xs: 11px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-md: 16px;
+  --text-lg: 19px;
+  --text-xl: 24px;
+  --text-2xl: 31px;
+  --text-3xl: 40px;
+  --text-4xl: 52px;
+
+  --leading-tight: 1.25;
+  --leading-normal: 1.55;
+  --leading-relaxed: 1.75;
+
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  /* ── Shape */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* ── Motion. Overridden to 1ms under prefers-reduced-motion below rather than
+     to 0, because a zero-duration transition never fires transitionend and code
+     that waits for it hangs. */
+  --transition-fast: 140ms;
+  --transition-normal: 240ms;
+  --transition-slow: 420ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ── Layout constants the three faces agree on */
+  --sidebar-width: 264px;
+  --inspector-width: 320px;
+  --content-max: 1180px;
+  --header-height: 56px;
+}
+
+/* ══ Neutrals: dark ══════════════════════════════════════════════════════ */
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-bg-base: #0e1013;
+  --color-bg-surface: #16191f;
+  --color-bg-element: #1d2129;
+  --color-bg-elevated: #242932;
+  --color-bg-input: #12151a;
+  --color-bg-overlay: rgb(8 9 11 / 72%);
+
+  --color-border-base: #262b34;
+  --color-border-strong: #363d49;
+
+  --color-text-primary: #e8eaed;
+  --color-text-secondary: #a4abb6;
+  --color-text-tertiary: #6d7581;
+  --color-text-inverse: #0e1013;
+
+  --color-status-success: #5fbf8a;
+  --color-status-error: #e4736f;
+  --color-status-warning: #e0b25e;
+  --color-status-info: #6ea8e8;
+  --color-status-neutral: #7c8593;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
+  --shadow-md: 0 4px 14px rgb(0 0 0 / 38%);
+  --shadow-lg: 0 16px 44px rgb(0 0 0 / 46%);
+}
+
+/* ══ Neutrals: light ═════════════════════════════════════════════════════ */
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --color-bg-base: #fbfaf8;
+  --color-bg-surface: #ffffff;
+  --color-bg-element: #f3f1ec;
+  --color-bg-elevated: #ffffff;
+  --color-bg-input: #f7f5f1;
+  --color-bg-overlay: rgb(35 32 29 / 34%);
+
+  --color-border-base: #e7e2da;
+  --color-border-strong: #d2ccc2;
+
+  --color-text-primary: #23201d;
+  --color-text-secondary: #5f5951;
+  --color-text-tertiary: #8d867c;
+  --color-text-inverse: #ffffff;
+
+  --color-status-success: #2f8f5e;
+  --color-status-error: #c1443f;
+  --color-status-warning: #99700f;
+  --color-status-info: #2e6fb0;
+  --color-status-neutral: #6f7681;
+
+  --shadow-sm: 0 1px 2px rgb(35 32 29 / 6%);
+  --shadow-md: 0 4px 16px rgb(35 32 29 / 8%);
+  --shadow-lg: 0 16px 44px rgb(35 32 29 / 12%);
+}
+
+/* ══ Accents ═════════════════════════════════════════════════════════════
+   Each scheme is declared twice, because an accent that reads well on #0e1013
+   is unreadable on #fbfaf8. The light variants are darkened until accent-on-base
+   clears WCAG AA for body text, which is why they look muted next to their dark
+   counterparts — that is the point, not a mistake.
+
+   --color-accent-contrast is the text colour to use *on top of* an accent fill.
+   Keeping it a token stops every button from guessing white and failing on amber.
+*/
+
+[data-theme='dark'][data-color-scheme='amber'] {
+  --color-accent: #d8a24a;
+  --color-accent-hover: #e6b360;
+  --color-accent-muted: rgb(216 162 74 / 16%);
+  --color-accent-border: rgb(216 162 74 / 38%);
+  --color-accent-contrast: #17130a;
+  --color-glow: rgb(216 162 74 / 26%);
+}
+
+[data-theme='light'][data-color-scheme='amber'] {
+  --color-accent: #96671a;
+  --color-accent-hover: #7c5514;
+  --color-accent-muted: rgb(150 103 26 / 12%);
+  --color-accent-border: rgb(150 103 26 / 30%);
+  --color-accent-contrast: #ffffff;
+  --color-glow: rgb(150 103 26 / 16%);
+}
+
+[data-theme='dark'][data-color-scheme='violet'] {
+  --color-accent: #a58bf0;
+  --color-accent-hover: #b7a1f5;
+  --color-accent-muted: rgb(165 139 240 / 16%);
+  --color-accent-border: rgb(165 139 240 / 38%);
+  --color-accent-contrast: #130f22;
+  --color-glow: rgb(165 139 240 / 26%);
+}
+
+[data-theme='light'][data-color-scheme='violet'] {
+  --color-accent: #6244c4;
+  --color-accent-hover: #5136a8;
+  --color-accent-muted: rgb(98 68 196 / 12%);
+  --color-accent-border: rgb(98 68 196 / 30%);
+  --color-accent-contrast: #ffffff;
+  --color-glow: rgb(98 68 196 / 16%);
+}
+
+[data-theme='dark'][data-color-scheme='teal'] {
+  --color-accent: #4fbfad;
+  --color-accent-hover: #64d0bf;
+  --color-accent-muted: rgb(79 191 173 / 16%);
+  --color-accent-border: rgb(79 191 173 / 38%);
+  --color-accent-contrast: #08201d;
+  --color-glow: rgb(79 191 173 / 26%);
+}
+
+[data-theme='light'][data-color-scheme='teal'] {
+  --color-accent: #1c7568;
+  --color-accent-hover: #145b51;
+  --color-accent-muted: rgb(28 117 104 / 12%);
+  --color-accent-border: rgb(28 117 104 / 30%);
+  --color-accent-contrast: #ffffff;
+  --color-glow: rgb(28 117 104 / 16%);
+}
+
+[data-theme='dark'][data-color-scheme='rose'] {
+  --color-accent: #e88aa4;
+  --color-accent-hover: #f09db4;
+  --color-accent-muted: rgb(232 138 164 / 16%);
+  --color-accent-border: rgb(232 138 164 / 38%);
+  --color-accent-contrast: #241016;
+  --color-glow: rgb(232 138 164 / 26%);
+}
+
+[data-theme='light'][data-color-scheme='rose'] {
+  --color-accent: #b03a5c;
+  --color-accent-hover: #932e4b;
+  --color-accent-muted: rgb(176 58 92 / 12%);
+  --color-accent-border: rgb(176 58 92 / 30%);
+  --color-accent-contrast: #ffffff;
+  --color-glow: rgb(176 58 92 / 16%);
+}
+
+/* ══ Base element styles ═════════════════════════════════════════════════ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-bg-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-accent-hover);
+  text-decoration: underline;
+}
+
+/* A visible focus ring, keyboard-only. Removing the outline without replacing it
+   is the single most common way a keyboard user loses their place. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+
+::-webkit-scrollbar {
+  width: var(--space-2);
+  height: var(--space-2);
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-tertiary);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 1ms;
+    --transition-normal: 1ms;
+    --transition-slow: 1ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
