@@ -110,7 +110,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] P1-008: Export the UI protocol from `kisten/protokoll/src/lib.rs`.
 - [x] P1-009: Add TypeScript `UiEventEnvelope` and discriminated UI event types.
 - [x] P1-010: Add TypeScript guards for envelope version, sequence, and IDs.
-- [ ] P1-011: Add TypeScript `ApiErrorDto`, `RunSnapshotDto`, and resync DTOs.
+- [x] P1-011: Add TypeScript `ApiErrorDto`, `RunSnapshotDto`, and resync DTOs.
 - [ ] P1-012: Add TypeScript approval queue/decision DTOs matching Rust fields.
 - [ ] P1-013: Add TypeScript tool invocation DTOs keyed only by `call_id`.
 - [ ] P1-014: Add JSON fixture builders for happy, approval, failure, and

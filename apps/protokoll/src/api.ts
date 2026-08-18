@@ -8,6 +8,7 @@
  */
 
 import type { ApprovalId, Usage } from './event'
+import type { RunId, UiApprovalRequest, UiEventEnvelope } from './ui'
 
 /** An adapter the registry discovered, and whether its binary is on PATH. */
 export interface AgentSummary {
@@ -114,9 +115,66 @@ export interface RunSummaryDto {
   stopped: boolean
 }
 
+/** Durable run states exposed by the snapshot endpoint. */
+export type RunStateDto =
+  | 'created'
+  | 'running'
+  | 'awaiting_approval'
+  | 'validating'
+  | 'succeeded'
+  | 'failed'
+  | 'cancelled'
+  | 'paused'
+
+/** A bounded replay window and the approvals needed to render it safely. */
+export interface RunSnapshotDto {
+  run_id: RunId
+  state: RunStateDto
+  events: UiEventEnvelope[]
+  pending_approvals: UiApprovalRequest[]
+  oldest_sequence: number
+  latest_sequence: number
+  next_sequence: number
+  updated_at: string
+}
+
+/** Request a replay after a sequence already held by the browser. */
+export interface RunReplayRequestDto {
+  after_sequence: number
+  limit?: number
+}
+
+export interface RunReplayResponseDto {
+  run_id: RunId
+  events: UiEventEnvelope[]
+  first_sequence: number | null
+  last_sequence: number | null
+  has_more: boolean
+}
+
+export type ResyncReason = 'retention_exceeded' | 'sequence_gap' | 'schema_mismatch'
+
+/** Explicitly tells a client to fetch a fresh snapshot instead of guessing. */
+export interface ResyncRequiredDto {
+  type: 'resync_required'
+  run_id: RunId
+  requested_after_sequence: number
+  oldest_sequence: number
+  latest_sequence: number
+  reason: ResyncReason
+}
+
+export type RunStreamFrameDto =
+  | { type: 'event'; event: UiEventEnvelope }
+  | ResyncRequiredDto
+
 /** The shape every failing endpoint returns. */
 export interface ApiErrorDto {
   error: string
   /** A stable machine-readable code; the prose in `error` may be reworded. */
   code: string
+  /** Correlates a browser error with server logs without exposing internals. */
+  request_id?: string
+  /** False for validation/auth/conflict errors that should not be retried. */
+  retryable?: boolean
 }
