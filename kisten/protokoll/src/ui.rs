@@ -710,6 +710,110 @@ mod tests {
         );
     }
 
+    fn all_event_variants() -> Vec<UiEventEnvelope> {
+        let run_id = RunId::from("run-roundtrip");
+        let approval = UiApprovalRequest {
+            approval_id: ApprovalId::from("approval-roundtrip"),
+            run_id: run_id.clone(),
+            row_version: 2,
+            risk: "high".into(),
+            action: "write_file path=src/main.rs".into(),
+            reason: "workspace policy".into(),
+            expires_at: Some("2026-08-19T01:00:00Z".into()),
+        };
+        let kinds = vec![
+            UiEventKind::RunStarted {
+                title: Some("Roundtrip".into()),
+            },
+            UiEventKind::TurnStarted,
+            UiEventKind::Message {
+                text: "hello".into(),
+            },
+            UiEventKind::MessageDelta {
+                text: "world".into(),
+                final_chunk: false,
+            },
+            UiEventKind::Reasoning {
+                text: "digest".into(),
+            },
+            UiEventKind::ToolCall {
+                call_id: CallId::from("call-roundtrip"),
+                name: "read_file".into(),
+                state: UiToolState::Succeeded,
+                detail: Some("src/main.rs".into()),
+            },
+            UiEventKind::FileChange {
+                path: "src/main.rs".into(),
+                kind: ChangeKind::Update,
+            },
+            UiEventKind::TodoList {
+                items: vec![TodoItem {
+                    text: "verify".into(),
+                    completed: false,
+                }],
+            },
+            UiEventKind::Usage {
+                input_tokens: 1,
+                output_tokens: 2,
+                cached_input_tokens: 3,
+                reasoning_output_tokens: 4,
+            },
+            UiEventKind::ApprovalRequested { approval },
+            UiEventKind::ApprovalResolved {
+                resolution: UiApprovalResolution {
+                    approval_id: ApprovalId::from("approval-roundtrip"),
+                    row_version: 3,
+                    decision: UiApprovalDecision::Approved,
+                },
+            },
+            UiEventKind::Validation {
+                validation: UiValidation {
+                    ok: true,
+                    summary: "checks passed".into(),
+                    details: None,
+                },
+            },
+            UiEventKind::RunStopped {
+                reason: StopReason::Succeeded,
+            },
+            UiEventKind::Error {
+                code: "runtime_error".into(),
+                message: "safe message".into(),
+            },
+        ];
+
+        kinds
+            .into_iter()
+            .enumerate()
+            .map(|(index, kind)| {
+                let call_id = if matches!(kind, UiEventKind::ToolCall { .. }) {
+                    Some(CallId::from("call-roundtrip"))
+                } else {
+                    None
+                };
+                UiEventEnvelope {
+                    schema_version: UI_SCHEMA_VERSION,
+                    event_id: EventId::from(format!("event-{index}")),
+                    run_id: run_id.clone(),
+                    turn_id: Some(TurnId::from("turn-roundtrip")),
+                    call_id,
+                    sequence: index as u64 + 1,
+                    occurred_at: "2026-08-19T00:00:00Z".into(),
+                    kind,
+                }
+            })
+            .collect()
+    }
+
+    #[test]
+    fn every_ui_event_variant_roundtrips() {
+        for event in all_event_variants() {
+            let value = serde_json::to_value(&event).unwrap();
+            let decoded: UiEventEnvelope = serde_json::from_value(value).unwrap();
+            assert_eq!(decoded, event, "roundtrip failed for {:?}", event.kind);
+        }
+    }
+
     #[test]
     fn unknown_envelope_fields_are_rejected() {
         let raw = r#"{

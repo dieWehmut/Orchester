@@ -106,7 +106,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] P1-005: Add explicit tool states queued/running/succeeded/failed/cancelled.
 - [x] P1-006: Add approval request/resolution DTOs with `approval_id`,
   `row_version`, risk summary, and redacted action.
-- [ ] P1-007: Add Rust round-trip tests for every UI event variant.
+- [x] P1-007: Add Rust round-trip tests for every UI event variant.
 - [ ] P1-008: Export the UI protocol from `kisten/protokoll/src/lib.rs`.
 - [ ] P1-009: Add TypeScript `UiEventEnvelope` and discriminated UI event types.
 - [ ] P1-010: Add TypeScript guards for envelope version, sequence, and IDs.
