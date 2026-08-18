@@ -90,7 +90,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   light, and all four color schemes.
 - [x] F0-033: Add `apps/design/src/index.css` reset contract and verify it does
   not style consumer layout elements.
-- [ ] F0-034: Add design package README with import examples and supported
+- [x] F0-034: Add design package README with import examples and supported
   keyboard contracts.
 - [ ] F0-035: Run package typecheck/test and publish the design wave commit
   checkpoint.
