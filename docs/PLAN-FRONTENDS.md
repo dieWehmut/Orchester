@@ -72,7 +72,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] F0-019: Export navigation primitives and add `navigation.test.ts`.
 - [x] F0-020: Add `AppDialog.vue` with focus trap, restore-focus, and Escape
   tests.
-- [ ] F0-021: Add `AppDrawer.vue` with side placement and body-scroll-lock
+- [x] F0-021: Add `AppDrawer.vue` with side placement and body-scroll-lock
   tests.
 - [ ] F0-022: Add `AppPopover.vue` with anchor placement and dismiss tests.
 - [ ] F0-023: Export overlay primitives and add `overlays.test.ts`.
