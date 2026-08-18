@@ -13,6 +13,7 @@ static-files = ["tower-http/fs"]
 
 [dependencies]
 axum = { workspace = true }
+orchester-anwendung = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 thiserror = { workspace = true }

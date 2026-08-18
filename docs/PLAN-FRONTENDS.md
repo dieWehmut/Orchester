@@ -136,6 +136,8 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   - [x] N1-003a: Validate that configured bind addresses are loopback-only.
   - [x] N1-003b: Allocate and expose an ephemeral port-`0` listener.
 - [ ] N1-004: Add workspace selection validation using `OrchesterPaths`.
+  - [x] N1-004a: Wire the application-layer path dependency into `netz`.
+  - [ ] N1-004b: Validate and canonicalize selected workspace directories.
 - [ ] N1-005: Add server lifecycle start/stop tests without a real socket.
 - [ ] N1-006: Add `GET /api/v1/health` and typed health tests.
 - [ ] N1-007: Add `GET /api/v1/bootstrap` with safe workspace/status data.
