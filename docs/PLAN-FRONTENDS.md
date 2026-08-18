@@ -129,7 +129,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 
 ## Wave N1: Rust `kisten/netz` service
 
-- [ ] N1-001: Create `kisten/netz/Cargo.toml` with axum, tower, tokio, and
+- [x] N1-001: Create `kisten/netz/Cargo.toml` with axum, tower, tokio, and
   static-file feature boundaries.
 - [ ] N1-002: Add `kisten/netz/src/lib.rs` and a typed `ServerConfig`.
 - [ ] N1-003: Add loopback bind validation and port `0` allocation tests.
