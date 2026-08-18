@@ -92,7 +92,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   not style consumer layout elements.
 - [x] F0-034: Add design package README with import examples and supported
   keyboard contracts.
-- [ ] F0-035: Run package typecheck/test and publish the design wave commit
+- [x] F0-035: Run package typecheck/test and publish the design wave commit
   checkpoint.
 
 ## Wave P1: browser protocol and fixtures
