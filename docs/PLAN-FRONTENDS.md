@@ -70,7 +70,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] F0-017: Add `AppTooltip.vue` with hover/focus and reduced-motion tests.
 - [x] F0-018: Add `VisuallyHidden.vue` and its DOM visibility test.
 - [x] F0-019: Export navigation primitives and add `navigation.test.ts`.
-- [ ] F0-020: Add `AppDialog.vue` with focus trap, restore-focus, and Escape
+- [x] F0-020: Add `AppDialog.vue` with focus trap, restore-focus, and Escape
   tests.
 - [ ] F0-021: Add `AppDrawer.vue` with side placement and body-scroll-lock
   tests.
