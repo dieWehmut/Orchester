@@ -1,0 +1,139 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`theme token contracts > keeps every accent scheme complete in dark and light modes > dark-amber 1`] = `
+{
+  "--color-accent": "#d8a24a",
+  "--color-accent-border": "rgb(216 162 74 / 38%)",
+  "--color-accent-contrast": "#17130a",
+  "--color-accent-hover": "#e6b360",
+  "--color-accent-muted": "rgb(216 162 74 / 16%)",
+  "--color-glow": "rgb(216 162 74 / 26%)",
+}
+`;
+
+exports[`theme token contracts > keeps every accent scheme complete in dark and light modes > dark-rose 1`] = `
+{
+  "--color-accent": "#e88aa4",
+  "--color-accent-border": "rgb(232 138 164 / 38%)",
+  "--color-accent-contrast": "#241016",
+  "--color-accent-hover": "#f09db4",
+  "--color-accent-muted": "rgb(232 138 164 / 16%)",
+  "--color-glow": "rgb(232 138 164 / 26%)",
+}
+`;
+
+exports[`theme token contracts > keeps every accent scheme complete in dark and light modes > dark-teal 1`] = `
+{
+  "--color-accent": "#4fbfad",
+  "--color-accent-border": "rgb(79 191 173 / 38%)",
+  "--color-accent-contrast": "#08201d",
+  "--color-accent-hover": "#64d0bf",
+  "--color-accent-muted": "rgb(79 191 173 / 16%)",
+  "--color-glow": "rgb(79 191 173 / 26%)",
+}
+`;
+
+exports[`theme token contracts > keeps every accent scheme complete in dark and light modes > dark-violet 1`] = `
+{
+  "--color-accent": "#a58bf0",
+  "--color-accent-border": "rgb(165 139 240 / 38%)",
+  "--color-accent-contrast": "#130f22",
+  "--color-accent-hover": "#b7a1f5",
+  "--color-accent-muted": "rgb(165 139 240 / 16%)",
+  "--color-glow": "rgb(165 139 240 / 26%)",
+}
+`;
+
+exports[`theme token contracts > keeps every accent scheme complete in dark and light modes > light-amber 1`] = `
+{
+  "--color-accent": "#96671a",
+  "--color-accent-border": "rgb(150 103 26 / 30%)",
+  "--color-accent-contrast": "#ffffff",
+  "--color-accent-hover": "#7c5514",
+  "--color-accent-muted": "rgb(150 103 26 / 12%)",
+  "--color-glow": "rgb(150 103 26 / 16%)",
+}
+`;
+
+exports[`theme token contracts > keeps every accent scheme complete in dark and light modes > light-rose 1`] = `
+{
+  "--color-accent": "#b03a5c",
+  "--color-accent-border": "rgb(176 58 92 / 30%)",
+  "--color-accent-contrast": "#ffffff",
+  "--color-accent-hover": "#932e4b",
+  "--color-accent-muted": "rgb(176 58 92 / 12%)",
+  "--color-glow": "rgb(176 58 92 / 16%)",
+}
+`;
+
+exports[`theme token contracts > keeps every accent scheme complete in dark and light modes > light-teal 1`] = `
+{
+  "--color-accent": "#1c7568",
+  "--color-accent-border": "rgb(28 117 104 / 30%)",
+  "--color-accent-contrast": "#ffffff",
+  "--color-accent-hover": "#145b51",
+  "--color-accent-muted": "rgb(28 117 104 / 12%)",
+  "--color-glow": "rgb(28 117 104 / 16%)",
+}
+`;
+
+exports[`theme token contracts > keeps every accent scheme complete in dark and light modes > light-violet 1`] = `
+{
+  "--color-accent": "#6244c4",
+  "--color-accent-border": "rgb(98 68 196 / 30%)",
+  "--color-accent-contrast": "#ffffff",
+  "--color-accent-hover": "#5136a8",
+  "--color-accent-muted": "rgb(98 68 196 / 12%)",
+  "--color-glow": "rgb(98 68 196 / 16%)",
+}
+`;
+
+exports[`theme token contracts > keeps neutral surfaces complete in both themes 1`] = `
+{
+  "--color-bg-base": "#0e1013",
+  "--color-bg-element": "#1d2129",
+  "--color-bg-elevated": "#242932",
+  "--color-bg-input": "#12151a",
+  "--color-bg-overlay": "rgb(8 9 11 / 72%)",
+  "--color-bg-surface": "#16191f",
+  "--color-border-base": "#262b34",
+  "--color-border-strong": "#363d49",
+  "--color-status-error": "#e4736f",
+  "--color-status-info": "#6ea8e8",
+  "--color-status-neutral": "#7c8593",
+  "--color-status-success": "#5fbf8a",
+  "--color-status-warning": "#e0b25e",
+  "--color-text-inverse": "#0e1013",
+  "--color-text-primary": "#e8eaed",
+  "--color-text-secondary": "#a4abb6",
+  "--color-text-tertiary": "#6d7581",
+  "--shadow-lg": "0 16px 44px rgb(0 0 0 / 46%)",
+  "--shadow-md": "0 4px 14px rgb(0 0 0 / 38%)",
+  "--shadow-sm": "0 1px 2px rgb(0 0 0 / 40%)",
+}
+`;
+
+exports[`theme token contracts > keeps neutral surfaces complete in both themes 2`] = `
+{
+  "--color-bg-base": "#fbfaf8",
+  "--color-bg-element": "#f3f1ec",
+  "--color-bg-elevated": "#ffffff",
+  "--color-bg-input": "#f7f5f1",
+  "--color-bg-overlay": "rgb(35 32 29 / 34%)",
+  "--color-bg-surface": "#ffffff",
+  "--color-border-base": "#e7e2da",
+  "--color-border-strong": "#d2ccc2",
+  "--color-status-error": "#c1443f",
+  "--color-status-info": "#2e6fb0",
+  "--color-status-neutral": "#6f7681",
+  "--color-status-success": "#2f8f5e",
+  "--color-status-warning": "#99700f",
+  "--color-text-inverse": "#ffffff",
+  "--color-text-primary": "#23201d",
+  "--color-text-secondary": "#5f5951",
+  "--color-text-tertiary": "#8d867c",
+  "--shadow-lg": "0 16px 44px rgb(35 32 29 / 12%)",
+  "--shadow-md": "0 4px 16px rgb(35 32 29 / 8%)",
+  "--shadow-sm": "0 1px 2px rgb(35 32 29 / 6%)",
+}
+`;

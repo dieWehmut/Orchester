@@ -86,7 +86,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   the lockfile entries required by the design package.
 - [x] F0-031: Replace the hand-drawn theme toggle glyph with Lucide icons and
   add an icon accessibility test.
-- [ ] F0-032: Add design package CSS custom-property snapshot tests for dark,
+- [x] F0-032: Add design package CSS custom-property snapshot tests for dark,
   light, and all four color schemes.
 - [ ] F0-033: Add `apps/design/src/index.css` reset contract and verify it does
   not style consumer layout elements.
