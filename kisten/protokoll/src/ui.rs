@@ -11,7 +11,9 @@ use serde::de::Error as DeError;
 use serde::ser::Error as SerError;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-use crate::harness::{ApprovalId, CallId, EventId, RunId, StopReason, TurnId};
+use crate::harness::{
+    normalize_action_summary, ApprovalId, CallId, EventId, RunId, StopReason, TurnId,
+};
 use crate::{ChangeKind, TodoItem};
 
 /// The first version of the browser envelope.
@@ -89,7 +91,7 @@ pub struct UiUsage {
 
 /// A browser-safe approval request. Durable hashes and workspace identities
 /// stay in the harness journal; the UI receives only the decision context.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct UiApprovalRequest {
     pub approval_id: ApprovalId,
@@ -100,6 +102,57 @@ pub struct UiApprovalRequest {
     pub reason: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub expires_at: Option<String>,
+}
+
+impl UiApprovalRequest {
+    fn sanitized(&self) -> Self {
+        Self {
+            approval_id: self.approval_id.clone(),
+            run_id: self.run_id.clone(),
+            row_version: self.row_version,
+            risk: redact_ui_text(&self.risk),
+            action: redact_ui_text(&self.action),
+            reason: redact_ui_text(&self.reason),
+            expires_at: self.expires_at.clone(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct UiApprovalRequestWire {
+    approval_id: ApprovalId,
+    run_id: RunId,
+    row_version: u64,
+    risk: String,
+    action: String,
+    reason: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    expires_at: Option<String>,
+}
+
+impl From<&UiApprovalRequest> for UiApprovalRequestWire {
+    fn from(value: &UiApprovalRequest) -> Self {
+        let sanitized = value.sanitized();
+        Self {
+            approval_id: sanitized.approval_id,
+            run_id: sanitized.run_id,
+            row_version: sanitized.row_version,
+            risk: sanitized.risk,
+            action: sanitized.action,
+            reason: sanitized.reason,
+            expires_at: sanitized.expires_at,
+        }
+    }
+}
+
+impl Serialize for UiApprovalRequest {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        UiApprovalRequestWire::from(self).serialize(serializer)
+    }
 }
 
 /// A validation result that is safe to show in a transcript.
@@ -172,15 +225,168 @@ pub enum UiEventKind {
     },
 }
 
+/// Remove host-specific roots while keeping a useful relative tail for the
+/// file tree. The root marker is intentionally not a username or workspace
+/// name.
+pub fn redact_ui_path(input: &str) -> String {
+    let normalized = input.trim().replace('\\', "/");
+    let absolute = normalized.starts_with('/')
+        || normalized.starts_with("~/")
+        || (normalized.len() >= 3
+            && normalized.as_bytes()[1] == b':'
+            && normalized.as_bytes()[2] == b'/');
+    let mut parts = normalized
+        .split('/')
+        .filter(|part| !part.is_empty() && *part != ".")
+        .collect::<Vec<_>>();
+
+    if parts.is_empty() {
+        return "[REDACTED_PATH]".into();
+    }
+
+    if absolute {
+        let keep_from = parts.len().saturating_sub(3);
+        parts = parts.split_off(keep_from);
+        return format!("[ROOT]/{}", parts.join("/"));
+    }
+
+    if parts.iter().any(|part| *part == "..") {
+        return parts
+            .into_iter()
+            .map(|part| if part == ".." { "[PARENT]" } else { part })
+            .collect::<Vec<_>>()
+            .join("/");
+    }
+
+    parts.join("/")
+}
+
+/// Normalize and redact display text before it can cross the browser boundary.
+///
+/// Action summaries already have conservative credential handling in the
+/// harness. This wrapper additionally removes absolute path roots from tokens
+/// such as path=/Users/name/project/file.rs.
+pub fn redact_ui_text(input: &str) -> String {
+    let normalized = normalize_action_summary(input);
+    normalized
+        .split_whitespace()
+        .map(|token| {
+            if token.contains("://") {
+                return "[REDACTED_URL]".to_owned();
+            }
+            if let Some(separator) = token.find(['=', ':']) {
+                let key = &token[..separator];
+                let value = &token[separator + 1..];
+                if value.starts_with('/')
+                    || value.starts_with("~/")
+                    || (value.len() >= 3
+                        && value.as_bytes()[1] == b':'
+                        && value.as_bytes()[2] == b'/')
+                {
+                    return format!("{key}={}", redact_ui_path(value));
+                }
+            }
+            if token.starts_with('/')
+                || token.starts_with("~/")
+                || (token.len() >= 3 && token.as_bytes()[1] == b':' && token.as_bytes()[2] == b'/')
+            {
+                return redact_ui_path(token);
+            }
+            token.to_owned()
+        })
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
+impl UiEventKind {
+    fn sanitized(&self) -> Self {
+        match self {
+            Self::RunStarted { title } => Self::RunStarted {
+                title: title.as_deref().map(redact_ui_text),
+            },
+            Self::TurnStarted => Self::TurnStarted,
+            Self::Message { text } => Self::Message {
+                text: redact_ui_text(text),
+            },
+            Self::MessageDelta { text, final_chunk } => Self::MessageDelta {
+                text: redact_ui_text(text),
+                final_chunk: *final_chunk,
+            },
+            Self::Reasoning { text } => Self::Reasoning {
+                text: redact_ui_text(text),
+            },
+            Self::ToolCall {
+                call_id,
+                name,
+                state,
+                detail,
+            } => Self::ToolCall {
+                call_id: call_id.clone(),
+                name: redact_ui_text(name),
+                state: *state,
+                detail: detail.as_deref().map(redact_ui_text),
+            },
+            Self::FileChange { path, kind } => Self::FileChange {
+                path: redact_ui_path(path),
+                kind: *kind,
+            },
+            Self::TodoList { items } => Self::TodoList {
+                items: items
+                    .iter()
+                    .map(|item| TodoItem {
+                        text: redact_ui_text(&item.text),
+                        completed: item.completed,
+                    })
+                    .collect(),
+            },
+            Self::Usage {
+                input_tokens,
+                output_tokens,
+                cached_input_tokens,
+                reasoning_output_tokens,
+            } => Self::Usage {
+                input_tokens: *input_tokens,
+                output_tokens: *output_tokens,
+                cached_input_tokens: *cached_input_tokens,
+                reasoning_output_tokens: *reasoning_output_tokens,
+            },
+            Self::ApprovalRequested { approval } => Self::ApprovalRequested {
+                approval: approval.sanitized(),
+            },
+            Self::ApprovalResolved {
+                approval_id,
+                row_version,
+                decision,
+            } => Self::ApprovalResolved {
+                approval_id: approval_id.clone(),
+                row_version: *row_version,
+                decision: *decision,
+            },
+            Self::Validation { validation } => Self::Validation {
+                validation: UiValidation {
+                    ok: validation.ok,
+                    summary: redact_ui_text(&validation.summary),
+                    details: validation.details.as_deref().map(redact_ui_text),
+                },
+            },
+            Self::RunStopped { reason } => Self::RunStopped {
+                reason: reason.clone(),
+            },
+            Self::Error { code, message } => Self::Error {
+                code: redact_ui_text(code),
+                message: redact_ui_text(message),
+            },
+        }
+    }
+}
+
 /// The stream envelope consumed by browser clients.
 #[derive(Debug, Clone, PartialEq)]
 pub struct UiEventEnvelope {
     pub schema_version: u16,
     pub event_id: EventId,
     pub run_id: RunId,
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub turn_id: Option<TurnId>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub call_id: Option<CallId>,
     pub sequence: u64,
     pub occurred_at: String,
@@ -212,7 +418,7 @@ impl From<&UiEventEnvelope> for UiEventEnvelopeWire {
             call_id: value.call_id.clone(),
             sequence: value.sequence,
             occurred_at: value.occurred_at.clone(),
-            kind: value.kind.clone(),
+            kind: value.kind.sanitized(),
         }
     }
 }
@@ -250,6 +456,13 @@ impl UiEventEnvelope {
         }
         Ok(())
     }
+
+    fn sanitized(&self) -> Self {
+        Self {
+            kind: self.kind.sanitized(),
+            ..self.clone()
+        }
+    }
 }
 
 impl Serialize for UiEventEnvelope {
@@ -257,8 +470,9 @@ impl Serialize for UiEventEnvelope {
     where
         S: Serializer,
     {
-        self.validate().map_err(S::Error::custom)?;
-        UiEventEnvelopeWire::from(self).serialize(serializer)
+        let sanitized = self.sanitized();
+        sanitized.validate().map_err(S::Error::custom)?;
+        UiEventEnvelopeWire::from(&sanitized).serialize(serializer)
     }
 }
 
@@ -405,6 +619,77 @@ mod tests {
         assert_eq!(
             event.validate(),
             Err(UiProtocolValidationError::EmptyEventId)
+        );
+    }
+
+    #[test]
+    fn redacts_absolute_paths_and_credential_tokens() {
+        assert_eq!(
+            redact_ui_path(r"C:\Users\alice\project\src\main.rs"),
+            "[ROOT]/project/src/main.rs"
+        );
+        assert_eq!(
+            redact_ui_text("api_key=sk-live-secret path=/Users/alice/project/src/main.rs"),
+            "api_key=[REDACTED] path=[ROOT]/project/src/main.rs"
+        );
+    }
+
+    #[test]
+    fn serialization_sanitizes_messages_tools_and_approvals() {
+        let event = envelope(UiEventKind::ToolCall {
+            call_id: CallId::from("call-redact"),
+            name: "run_command".into(),
+            state: UiToolState::Running,
+            detail: Some("Authorization: Bearer sk-live-secret".into()),
+        });
+        let json = serde_json::to_string(&event).unwrap();
+        assert!(!json.contains("sk-live-secret"));
+        assert!(json.contains("[REDACTED]"));
+
+        let approval = envelope(UiEventKind::ApprovalRequested {
+            approval: UiApprovalRequest {
+                approval_id: ApprovalId::from("approval-redact"),
+                run_id: RunId::from("run-1"),
+                row_version: 1,
+                risk: "provider api_key=sk-provider-secret".into(),
+                action: "write_file path=/Users/alice/project/file.rs".into(),
+                reason: "credential token=secret-value".into(),
+                expires_at: None,
+            },
+        });
+        let json = serde_json::to_string(&approval).unwrap();
+        assert!(!json.contains("sk-provider-secret"));
+        assert!(!json.contains("secret-value"));
+        assert!(!json.contains("/Users/alice"));
+        assert!(json.contains("[ROOT]/project/file.rs"));
+
+        let direct_json = serde_json::to_string(match approval.kind {
+            UiEventKind::ApprovalRequested { approval } => approval,
+            _ => unreachable!(),
+        })
+        .unwrap();
+        assert!(!direct_json.contains("sk-provider-secret"));
+    }
+
+    #[test]
+    fn provider_payloads_are_not_part_of_the_ui_schema() {
+        let raw = r#"{
+            "schema_version": 1,
+            "event_id": "event-1",
+            "run_id": "run-1",
+            "sequence": 1,
+            "occurred_at": "2026-08-19T00:00:00Z",
+            "kind": {
+                "type": "error",
+                "code": "provider_error",
+                "message": "provider failed",
+                "provider": {"base_url": "https://secret.example"}
+            }
+        }"#;
+        assert!(serde_json::from_str::<UiEventEnvelope>(raw).is_err());
+        assert_eq!(
+            redact_ui_text("provider response https://secret.example/api"),
+            "provider response [REDACTED_URL]"
         );
     }
 }
