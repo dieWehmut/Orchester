@@ -5,6 +5,12 @@ export interface AppFieldControlProps {
   required: boolean
 }
 
+export interface AppTabOption {
+  id: string
+  label: string
+  disabled?: boolean
+}
+
 export interface AppSelectOption {
   value: string
   label: string
