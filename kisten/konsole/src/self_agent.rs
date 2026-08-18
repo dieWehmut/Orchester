@@ -7,8 +7,9 @@ use orchester_laufzeit::harness::credentials::KeyringCredentialStore;
 use orchester_laufzeit::harness::service::{
     build_self_agent_runtime, clear_provider_credential, load_self_agent_config_view,
     load_self_agent_permissions, load_self_agent_resume_catalog, load_self_agent_status,
-    resolve_credential_target, store_provider_credential, wire_provider_reference, ConfigWiring,
-    CredentialEntryError, CredentialTarget, CredentialUpdate, ProductionSelfAgentRuntime,
+    provider_draft, resolve_credential_target, store_provider_credential, wire_provider_reference,
+    write_self_agent_provider, ConfigWiring, CredentialEntryError, CredentialTarget,
+    CredentialUpdate, ProductionSelfAgentRuntime, ProviderDraft, ProviderEdit, ProviderEditError,
     SelfAgentActiveModel, SelfAgentConfigView, SelfAgentModelCatalog, SelfAgentModelCatalogError,
     SelfAgentModelChoice, SelfAgentModelSession, SelfAgentPermissionSnapshot,
     SelfAgentResumeCatalog, SelfAgentResumeCatalogError, SelfAgentRunOutcome,
@@ -32,7 +33,7 @@ pub use config::render_config;
 pub use credentials::{
     render_credential_cleared, render_credential_stored, render_credential_target,
 };
-pub use models::{render_model_selection, render_models};
+pub use models::{render_model_selection, render_models, render_provider_written, safe_metadata};
 pub use permissions::render_permissions;
 pub use render::{render_outcome, render_outcome_transcript};
 pub use resume::render_resume;
@@ -54,6 +55,8 @@ pub enum SelfAgentHostError {
     Models(#[from] SelfAgentModelCatalogError),
     #[error(transparent)]
     Credential(#[from] CredentialEntryError),
+    #[error(transparent)]
+    ProviderEdit(#[from] ProviderEditError),
     #[error("self-agent runtime initialization failed")]
     Initialization,
 }
@@ -332,6 +335,44 @@ impl SelfAgentHost {
         let removed = clear_provider_credential(&credentials, provider)?;
         self.runtime = None;
         Ok(removed)
+    }
+
+    /// Project the provider entry a form should open on.  `None` means the
+    /// provider is not configured yet, so the form is adding rather than
+    /// editing.
+    pub fn provider_draft(
+        &self,
+        provider: &str,
+    ) -> Result<Option<ProviderDraft>, SelfAgentHostError> {
+        let config = self.load_config()?;
+        Ok(provider_draft(&config, provider))
+    }
+
+    /// Write one `model_providers` entry into the user's configuration file,
+    /// storing `secret` under the reference the entry names.
+    ///
+    /// The configuration on disk is the source every later command reads, so the
+    /// cached runtime is dropped unconditionally.  An activated entry also
+    /// replaces this session's provider choice: a session override would
+    /// otherwise mask the default that was just written and make the edit look
+    /// as though it had been ignored.
+    pub fn write_provider(
+        &mut self,
+        draft: &ProviderDraft,
+        secret: Option<SecretString>,
+    ) -> Result<ProviderEdit, SelfAgentHostError> {
+        let loader = ConfigLoader::new()?;
+        let config = loader.load_effective(&self.workspace)?;
+        let credentials = KeyringCredentialStore::new();
+        let edit = write_self_agent_provider(&loader, &config, &credentials, draft, secret)?;
+        self.runtime = None;
+        if edit.activated {
+            let written = loader.load_effective(&self.workspace)?;
+            self.model_session
+                .select_provider(&written, &edit.provider)?;
+            self.reasoning_effort_override = None;
+        }
+        Ok(edit)
     }
 
     fn ensure_runtime(&mut self) -> Result<(), SelfAgentHostError> {

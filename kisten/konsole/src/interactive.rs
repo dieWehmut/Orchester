@@ -4,6 +4,7 @@ use std::sync::OnceLock;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 mod commands;
+mod provider_form;
 mod screen;
 mod secret;
 
@@ -23,6 +24,7 @@ use crossterm::terminal;
 use orchester_protokoll::{Capability, TaskKind};
 use orchester_vertrag::{AdapterAvailability, AvailabilityStatus};
 use orchester_verzeichnis::Registry;
+pub use provider_form::prompt_provider_form;
 use screen::{FramePresenter, TerminalSession};
 pub use secret::prompt_secret;
 use unicode_width::{UnicodeWidthChar, UnicodeWidthStr};

@@ -26,8 +26,9 @@ use std::time::Duration;
 use clap::Parser;
 
 use orchester_laufzeit::harness::service::{
-    SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentModelChoice, SelfAgentProviderState,
-    SelfAgentResumeAvailability, SelfAgentResumeCatalog, SelfAgentRunOutcome,
+    ProviderDraft, SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentModelChoice,
+    SelfAgentProviderState, SelfAgentResumeAvailability, SelfAgentResumeCatalog,
+    SelfAgentRunOutcome,
 };
 use orchester_laufzeit::harness::StreamingRedactor;
 use orchester_laufzeit::{Conductor, ConductorError, SessionRecord, SessionStore};
@@ -719,6 +720,10 @@ fn workspace_command_label(command: &WorkspaceCommand) -> String {
             format!("/model provider {provider}")
         }
         WorkspaceCommand::Model(ModelCommand::UseConfigured) => "/model configured".into(),
+        WorkspaceCommand::Model(ModelCommand::EditProvider(provider)) => provider
+            .as_deref()
+            .map(|provider| format!("/model edit {provider}"))
+            .unwrap_or_else(|| "/model add".into()),
         WorkspaceCommand::Theme(_) => "/theme".into(),
         WorkspaceCommand::Credential(CredentialCommand::Login { provider }) => provider
             .as_deref()
@@ -1118,6 +1123,31 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                         Err(error) => TerminalOverlay::error(&label, &error),
                                     },
                                 );
+                            }
+                            WorkspaceCommand::Model(ModelCommand::EditProvider(provider)) => {
+                                // The form owns the terminal while it runs, for
+                                // the same reason `/login` does: the key is read
+                                // through raw mode of its own.
+                                drop(chat);
+                                let mut rendered = Vec::new();
+                                let result = render_workspace_command_to(
+                                    &mut self_agent,
+                                    WorkspaceCommand::Model(ModelCommand::EditProvider(provider)),
+                                    &mut rendered,
+                                );
+                                chat = interactive::ChatSession::enter()?;
+                                // A written entry can change the active model, and
+                                // a cancelled form cannot — but the flag only
+                                // costs one reload, and getting it wrong leaves a
+                                // stale model on the status line.
+                                model_stale = true;
+                                state.overlay = Some(match result {
+                                    Ok(()) => TerminalOverlay::report(
+                                        &label,
+                                        &String::from_utf8_lossy(&rendered),
+                                    ),
+                                    Err(error) => TerminalOverlay::error(&label, &error),
+                                });
                             }
                             WorkspaceCommand::Theme(ThemeCommand::Show) => {
                                 state.theme_before_overlay = Some(state.active_theme);
@@ -1751,6 +1781,29 @@ fn render_workspace_command_to<W: Write>(
         WorkspaceCommand::Model(ModelCommand::UseConfigured) => {
             let selected = self_agent.select_configured_model()?;
             self_agent::render_model_selection(out, &selected)?;
+        }
+        WorkspaceCommand::Model(ModelCommand::EditProvider(provider)) => {
+            // A key that names nothing is not an error: the form opens blank
+            // under it and adds the entry. Refusing would throw away the key the
+            // human typed to answer a question they have already been asked.
+            let defaults = match provider {
+                Some(provider) => self_agent
+                    .provider_draft(&provider)?
+                    .unwrap_or(ProviderDraft {
+                        provider,
+                        ..ProviderDraft::default()
+                    }),
+                None => ProviderDraft::default(),
+            };
+            let Some(form) = interactive::prompt_provider_form(&defaults)? else {
+                // The form printed this too, but on the terminal it is drawn on;
+                // the caller may be about to replace that with a frame, so the
+                // outcome has to reach the transcript as well.
+                writeln!(out, "cancelled; nothing was written")?;
+                return Ok(());
+            };
+            let edit = self_agent.write_provider(&form.draft, form.secret)?;
+            self_agent::render_provider_written(out, &edit)?;
         }
         WorkspaceCommand::Theme(command) => render_theme_command_to(out, command)?,
         WorkspaceCommand::Credential(CredentialCommand::Login { provider }) => {

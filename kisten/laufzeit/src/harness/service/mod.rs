@@ -52,7 +52,8 @@ pub use permissions::{
     SelfAgentPermissionGovernance, SelfAgentPermissionRule, SelfAgentPermissionSnapshot,
 };
 pub use provider_editor::{
-    write_self_agent_provider, ProviderDraft, ProviderEdit, ProviderEditError, PROVIDER_WIRE_APIS,
+    provider_draft, write_self_agent_provider, ProviderDraft, ProviderEdit, ProviderEditError,
+    PROVIDER_WIRE_APIS,
 };
 pub use resume_catalog::{
     load_self_agent_resume_catalog, resolve_self_agent_resume_handle, SelfAgentResumeAvailability,

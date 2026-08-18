@@ -58,6 +58,10 @@ pub enum ModelCommand {
     SelectProfile(String),
     SelectProvider(String),
     UseConfigured,
+    /// Open the provider form.  `None` adds an entry; `Some(provider)` opens on
+    /// the entry that key names, which may not exist yet — the form then adds it
+    /// under that key rather than refusing.
+    EditProvider(Option<String>),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -301,6 +305,16 @@ fn parse_model_command(input: &str) -> Option<ModelCommand> {
         // The keyword alone is incomplete rather than a profile that happens to
         // be called `provider`.
         (Some("provider"), None) => return None,
+        // `add` and `edit` are keywords for the same reason `provider` is. That
+        // makes a profile literally named `add` unreachable here, which is the
+        // price of a verb a human can guess.
+        (Some("add" | "new"), None) => ModelCommand::EditProvider(None),
+        (Some("add" | "new" | "edit"), Some(name)) => {
+            ModelCommand::EditProvider(Some(name.to_owned()))
+        }
+        // Editing needs to know what: without a key it would silently become
+        // "add", which writes a different entry than the human asked for.
+        (Some("edit"), None) => return None,
         (Some("configured" | "--configured"), None) => ModelCommand::UseConfigured,
         (Some(name), None) => ModelCommand::SelectProfile(name.to_owned()),
         (Some(_), Some(_)) => return None,
@@ -372,6 +386,14 @@ fn command_items(choices: &[AgentChoice]) -> Vec<CommandItem> {
             name: "/model".into(),
             description: "choose a self-agent model or provider".into(),
             action: CommandAction::Workspace(WorkspaceCommand::Model(ModelCommand::Show)),
+            agent: None,
+        },
+        CommandItem {
+            name: "/model add".into(),
+            description: "add or edit a model provider".into(),
+            action: CommandAction::Workspace(WorkspaceCommand::Model(ModelCommand::EditProvider(
+                None,
+            ))),
             agent: None,
         },
         CommandItem {
@@ -529,6 +551,44 @@ mod tests {
         );
         assert_eq!(parse_model_command("/model provider"), None);
         assert_eq!(parse_model_command("/model provider relay extra"), None);
+    }
+
+    #[test]
+    fn the_provider_form_can_be_opened_empty_or_on_a_named_entry() {
+        assert_eq!(
+            parse_model_command("/model add"),
+            Some(ModelCommand::EditProvider(None))
+        );
+        assert_eq!(
+            parse_model_command("/model edit relay"),
+            Some(ModelCommand::EditProvider(Some("relay".into())))
+        );
+        assert_eq!(
+            parse_model_command("/model add relay"),
+            Some(ModelCommand::EditProvider(Some("relay".into())))
+        );
+        // Editing needs its target; falling back to "add" would write a
+        // different entry than the one that was asked for.
+        assert_eq!(parse_model_command("/model edit"), None);
+        assert_eq!(parse_model_command("/model add relay extra"), None);
+    }
+
+    #[test]
+    fn the_command_palette_offers_the_provider_form() {
+        let form = command_items(&[])
+            .into_iter()
+            .find(|item| item.name == "/model add")
+            .expect("provider form command");
+
+        assert_eq!(
+            command_action("/", Some(&form)),
+            PromptAction::Workspace(WorkspaceCommand::Model(ModelCommand::EditProvider(None)))
+        );
+        // Typing the name out has to reach the same place as picking it.
+        assert_eq!(
+            parse_home_action_selected("/model add", &[], 0),
+            HomeAction::Workspace(WorkspaceCommand::Model(ModelCommand::EditProvider(None)))
+        );
     }
 
     #[test]

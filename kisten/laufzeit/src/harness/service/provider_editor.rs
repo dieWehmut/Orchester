@@ -163,6 +163,35 @@ pub fn write_self_agent_provider<S: CredentialStore + ?Sized>(
     })
 }
 
+/// Project the entry `provider` names so a form can open on what is already
+/// configured instead of on blank fields.
+///
+/// `None` means no such entry exists and the form is adding one rather than
+/// editing.
+///
+/// The stored `api_key` is deliberately not projected. It is supposed to be a
+/// `${secret:…}` reference, but a hand-written configuration may hold a literal
+/// key, and a form that pre-filled it would put that key on screen. Everything
+/// else is passed through exactly as written, including a value the loader would
+/// refuse: showing it is what lets the human see the field to repair, and
+/// submitting it unchanged is what names it.
+pub fn provider_draft(config: &UserConfig, provider: &str) -> Option<ProviderDraft> {
+    let entry = config.model_providers().get(provider)?;
+    Some(ProviderDraft {
+        provider: provider.to_owned(),
+        name: entry.name.clone().unwrap_or_default(),
+        base_url: entry.base_url.clone().unwrap_or_default(),
+        // Absent means `responses` to the loader, so the form must show the wire
+        // that would actually be used rather than an empty field.
+        wire_api: entry
+            .wire_api
+            .clone()
+            .unwrap_or_else(|| RESPONSES_WIRE_API.to_owned()),
+        model: config.model.clone().unwrap_or_default(),
+        activate: config.model_provider.as_deref() == Some(provider),
+    })
+}
+
 /// The members written for the entry itself, in the order a human reads them:
 /// what it is called, where it is, how it is spoken to, and how it is
 /// authenticated.
@@ -489,5 +518,48 @@ mod tests {
                 "{wire} is offered but would be refused"
             );
         }
+    }
+
+    #[test]
+    fn an_existing_entry_is_projected_for_editing_without_its_key() {
+        let config = config(
+            r#"{
+  "model_provider": "relay",
+  "model": "claude-opus-4-6",
+  "model_providers": {
+    "relay": {
+      "name": "Relay API",
+      "base_url": "https://relay.test/v1",
+      "wire_api": "anthropic",
+      "api_key": "${secret:relay}"
+    }
+  }
+}"#,
+        );
+
+        let projected = provider_draft(&config, "relay").expect("existing entry");
+
+        assert_eq!(projected, draft());
+        // Nothing on the draft can carry a key, which is what makes it safe to
+        // echo every field back to the human.
+        assert!(!format!("{projected:?}").contains("secret:"));
+        assert_eq!(provider_draft(&config, "missing"), None);
+    }
+
+    #[test]
+    fn an_entry_without_a_wire_is_projected_as_the_wire_it_would_resolve_to() {
+        let config = config(
+            r#"{
+  "model_providers": { "relay": { "base_url": "https://relay.test/v1" } }
+}"#,
+        );
+
+        let projected = provider_draft(&config, "relay").expect("existing entry");
+
+        assert_eq!(projected.wire_api, RESPONSES_WIRE_API);
+        assert_eq!(projected.name, "");
+        // Not the active provider, so re-submitting the form must not silently
+        // promote it.
+        assert!(!projected.activate);
     }
 }

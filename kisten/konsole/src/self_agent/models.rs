@@ -1,7 +1,10 @@
 use std::io::{self, Write};
+use std::path::Path;
 
+use orchester_laufzeit::harness::credentials::KEYRING_SERVICE;
 use orchester_laufzeit::harness::service::{
-    SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentModelChoice, SelfAgentProviderState,
+    ProviderEdit, SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentModelChoice,
+    SelfAgentProviderState,
 };
 
 const BOLD: &str = "\x1b[1m";
@@ -93,6 +96,62 @@ pub fn render_model_selection(
     writeln!(out)
 }
 
+/// Confirm a written provider entry: what it resolves to, what happened to the
+/// text that was there, and what still has to happen before it can be used.
+///
+/// The path is reported rather than described because `ORCHESTER_HOME` moves the
+/// file, and the backup is named because it is the only way back.
+pub fn render_provider_written(out: &mut impl Write, edit: &ProviderEdit) -> io::Result<()> {
+    let provider = safe_metadata(&edit.provider);
+    writeln!(out)?;
+    writeln!(out, "{BOLD}Provider saved{RESET}: {provider}")?;
+    writeln!(
+        out,
+        "  model: {} | provider: {} | wire: {}",
+        safe_metadata(&edit.model),
+        safe_metadata(&edit.provider_name),
+        safe_metadata(&edit.wire_api)
+    )?;
+    writeln!(
+        out,
+        "  {}  {}",
+        if edit.created { "created" } else { "updated" },
+        safe_path(&edit.path)
+    )?;
+    if let Some(backup) = &edit.backup {
+        writeln!(out, "  previous {}", safe_path(backup))?;
+    }
+    writeln!(out, "  api_key  {}", safe_metadata(&edit.reference))?;
+    // The reference is written either way, so what the human needs to know is
+    // whether anything now resolves through it.
+    if edit.credential_stored {
+        writeln!(out, "  stored   OS keyring (service: {KEYRING_SERVICE})")?;
+    } else {
+        writeln!(
+            out,
+            "  keyring  unchanged — /login {provider} stores a key under that reference"
+        )?;
+    }
+    if edit.activated {
+        writeln!(
+            out,
+            "{DIM}Active from the next turn, and the default for later sessions.{RESET}"
+        )?;
+    } else {
+        writeln!(
+            out,
+            "{DIM}Written but not activated; /model provider {provider} switches to it.{RESET}"
+        )?;
+    }
+    writeln!(out)
+}
+
+/// Paths reach here from `ORCHESTER_HOME`, so they are escaped like every other
+/// rendered value: a newline in one could otherwise forge a line of its own.
+fn safe_path(path: &Path) -> String {
+    safe_metadata(&path.display().to_string())
+}
+
 fn render_choice(
     out: &mut impl Write,
     choice: &SelfAgentModelChoice,
@@ -120,7 +179,11 @@ fn optional_value(value: Option<&str>) -> String {
 
 /// Escape every control character, newlines included.  Metadata is rendered on
 /// a single line, so a newline inside it could otherwise forge one.
-pub(super) fn safe_metadata(value: &str) -> String {
+///
+/// Public beyond this module because the provider form echoes configured values
+/// back as prompt defaults, and a second copy of this rule could only drift
+/// from it.
+pub fn safe_metadata(value: &str) -> String {
     value
         .chars()
         .flat_map(|character| {
@@ -137,6 +200,7 @@ pub(super) fn safe_metadata(value: &str) -> String {
 mod tests {
     use super::*;
     use orchester_laufzeit::harness::service::SelfAgentProviderChoice;
+    use std::path::PathBuf;
 
     #[test]
     fn rendering_sanitizes_catalog_metadata() {
@@ -240,6 +304,85 @@ mod tests {
         let rendered = String::from_utf8(output).expect("UTF-8");
 
         assert_eq!(rendered.matches("none configured").count(), 2);
+    }
+
+    #[test]
+    fn a_written_provider_names_the_file_the_backup_and_the_reference() {
+        let rendered = rendered_edit(edit());
+
+        // The provider belongs on the header line itself, which carries the bold
+        // reset between the title and the key.
+        assert!(rendered.contains(&format!("Provider saved{RESET}: relay")));
+        assert!(rendered.contains("wire: anthropic"));
+        assert!(rendered.contains("updated  /home/x/.orchester/orchester.jsonc"));
+        assert!(rendered.contains("previous /home/x/.orchester/orchester.jsonc.bak"));
+        assert!(rendered.contains("${secret:relay}"));
+        assert!(rendered.contains(KEYRING_SERVICE));
+    }
+
+    #[test]
+    fn a_created_file_is_not_reported_as_an_update_and_has_no_previous_text() {
+        let rendered = rendered_edit(ProviderEdit {
+            created: true,
+            backup: None,
+            ..edit()
+        });
+
+        assert!(rendered.contains("created  /home/x/.orchester/orchester.jsonc"));
+        assert!(!rendered.contains("updated"));
+        assert!(!rendered.contains("previous"));
+    }
+
+    /// A reference with nothing behind it is the one outcome a human has to act
+    /// on, so it must not be reported in the same words as a stored key.
+    #[test]
+    fn an_entry_written_without_a_key_says_what_is_still_missing() {
+        let rendered = rendered_edit(ProviderEdit {
+            credential_stored: false,
+            activated: false,
+            ..edit()
+        });
+
+        assert!(rendered.contains("keyring  unchanged"));
+        assert!(rendered.contains("/login relay"));
+        assert!(!rendered.contains("stored   OS keyring"));
+        // Not activated, so the confirmation must say how to reach it instead of
+        // implying the next turn already uses it.
+        assert!(rendered.contains("/model provider relay"));
+        assert!(!rendered.contains("Active from the next turn"));
+    }
+
+    #[test]
+    fn a_path_carrying_terminal_controls_cannot_forge_a_confirmation_line() {
+        let rendered = rendered_edit(ProviderEdit {
+            path: PathBuf::from("/home/\u{1b}[31mx\nstored   forged/orchester.jsonc"),
+            ..edit()
+        });
+
+        assert!(rendered.contains("\\u{1b}[31m"));
+        assert!(!rendered.contains("\u{1b}[31m"));
+        assert!(!rendered.contains("\nstored   forged"));
+    }
+
+    fn edit() -> ProviderEdit {
+        ProviderEdit {
+            provider: "relay".into(),
+            provider_name: "Relay API".into(),
+            model: "claude-opus-4-6".into(),
+            wire_api: "anthropic".into(),
+            activated: true,
+            reference: "${secret:relay}".into(),
+            credential_stored: true,
+            path: PathBuf::from("/home/x/.orchester/orchester.jsonc"),
+            created: false,
+            backup: Some(PathBuf::from("/home/x/.orchester/orchester.jsonc.bak")),
+        }
+    }
+
+    fn rendered_edit(edit: ProviderEdit) -> String {
+        let mut output = Vec::new();
+        render_provider_written(&mut output, &edit).expect("render provider edit");
+        String::from_utf8(output).expect("UTF-8")
     }
 
     fn catalog(
