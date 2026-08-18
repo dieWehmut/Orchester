@@ -46,6 +46,18 @@ export interface SessionBootstrapDto {
   expires_at: number
 }
 
+export const FRAGMENT_AUTH_SCHEMA_VERSION = 1 as const
+
+export interface FragmentTokenExchangeRequestDto {
+  schema_version: typeof FRAGMENT_AUTH_SCHEMA_VERSION
+  /** Read from `location.hash`, posted once, then removed from browser history. */
+  fragment_token: string
+}
+
+export interface FragmentTokenExchangeResponseDto extends SessionBootstrapDto {
+  schema_version: typeof FRAGMENT_AUTH_SCHEMA_VERSION
+}
+
 /** An adapter the registry discovered, and whether its binary is on PATH. */
 export interface AgentSummary {
   id: string
