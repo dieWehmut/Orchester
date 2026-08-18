@@ -7,13 +7,15 @@ mod config;
 mod health;
 mod lifecycle;
 mod listener;
+mod router;
 mod workspace;
 
 pub use bootstrap::{bootstrap_response, BootstrapDto, BootstrapWorkspaceDto, ServerContext};
 pub use config::{ServerConfig, ServerConfigError, StaticAssets};
-pub use health::{app_router, health_handler, health_response, HealthDto};
+pub use health::{health_handler, health_response, HealthDto};
 pub use lifecycle::{
     wait_for_shutdown, LifecycleError, ServerControl, ServerLifecycle, ServerState,
 };
 pub use listener::{bind_listener, ServerBindError};
+pub use router::app_router;
 pub use workspace::{select_workspace, WorkspaceSelectionError};

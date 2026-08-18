@@ -1,7 +1,6 @@
 use axum::{
     http::{header, HeaderMap},
-    routing::get,
-    Json, Router,
+    Json,
 };
 use serde::Serialize;
 
@@ -23,14 +22,14 @@ pub fn health_response() -> HealthDto {
 }
 
 pub async fn health_handler() -> (HeaderMap, Json<HealthDto>) {
+    (no_store_headers(), Json(health_response()))
+}
+
+pub(crate) fn no_store_headers() -> HeaderMap {
     let mut headers = HeaderMap::new();
     headers.insert(
         header::CACHE_CONTROL,
         "no-store".parse().expect("static header"),
     );
-    (headers, Json(health_response()))
-}
-
-pub fn app_router() -> Router {
-    Router::new().route("/api/v1/health", get(health_handler))
+    headers
 }
