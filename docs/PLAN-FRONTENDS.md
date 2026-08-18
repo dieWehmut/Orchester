@@ -158,7 +158,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   - [x] N1-009c: Enforce cookie and CSRF headers on state-changing routes.
 - [ ] N1-010: Add fragment-token exchange that never persists tokens.
   - [x] N1-010a: Define one-time fragment exchange request/response DTOs.
-  - [ ] N1-010b: Consume registered fragment token hashes exactly once.
+  - [x] N1-010b: Consume registered fragment token hashes exactly once.
   - [ ] N1-010c: Add POST exchange route with URL-fragment-safe semantics.
 - [ ] N1-011: Add typed API error mapping and JSON content-type tests.
 - [ ] N1-012: Add agent catalog route backed by `Registry`.

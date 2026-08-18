@@ -4,6 +4,7 @@
 
 mod bootstrap;
 mod config;
+mod fragment;
 mod health;
 mod lifecycle;
 mod listener;
@@ -13,6 +14,7 @@ mod workspace;
 
 pub use bootstrap::{bootstrap_response, BootstrapDto, BootstrapWorkspaceDto, ServerContext};
 pub use config::{ServerConfig, ServerConfigError, StaticAssets};
+pub use fragment::{FragmentTokenStore, FragmentTokenStoreError};
 pub use health::{health_handler, health_response, HealthDto};
 pub use lifecycle::{
     wait_for_shutdown, LifecycleError, ServerControl, ServerLifecycle, ServerState,

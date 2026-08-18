@@ -1,6 +1,8 @@
 use std::time::Duration;
 
-use orchester_netz::{SessionStore, SessionStoreError};
+use orchester_netz::{
+    FragmentTokenStore, FragmentTokenStoreError, SessionStore, SessionStoreError,
+};
 
 #[test]
 fn session_store_issues_distinct_tokens_and_validates_csrf() {
@@ -40,4 +42,27 @@ fn session_bootstrap_debug_output_redacts_raw_tokens() {
     assert!(!debug.contains(&issued.session_cookie));
     assert!(!debug.contains(&issued.csrf_token));
     assert!(debug.contains("REDACTED"));
+}
+
+#[test]
+fn fragment_tokens_are_consumed_once_and_only_hashes_are_retained() {
+    let store = FragmentTokenStore::new(Duration::from_secs(300));
+    store
+        .register("fragment-secret")
+        .expect("register fragment");
+
+    assert!(store.consume("fragment-secret"));
+    assert!(!store.consume("fragment-secret"));
+    assert!(!store.consume("other-fragment"));
+}
+
+#[test]
+fn fragment_store_rejects_empty_tokens_and_expired_entries() {
+    let store = FragmentTokenStore::new(Duration::ZERO);
+    assert_eq!(store.register(""), Err(FragmentTokenStoreError::EmptyToken));
+
+    store
+        .register("expired-fragment")
+        .expect("register fragment");
+    assert!(!store.consume("expired-fragment"));
 }
