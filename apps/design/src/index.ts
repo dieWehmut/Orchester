@@ -4,6 +4,7 @@ export { default as AppCard } from './components/AppCard.vue'
 export { default as AppCheckbox } from './components/AppCheckbox.vue'
 export { default as AppField } from './components/AppField.vue'
 export { default as AppInput } from './components/AppInput.vue'
+export { default as AppMenu } from './components/AppMenu.vue'
 export { default as AppSelect } from './components/AppSelect.vue'
 export { default as AppSegmentedControl } from './components/AppSegmentedControl.vue'
 export { default as AppSwitch } from './components/AppSwitch.vue'
@@ -17,6 +18,7 @@ export { default as ThemeToggle } from './components/ThemeToggle.vue'
 
 export type {
   AppFieldControlProps,
+  AppMenuItem,
   AppSegmentOption,
   AppSelectOption,
   AppTabOption,

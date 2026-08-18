@@ -22,3 +22,9 @@ export interface AppSegmentOption {
   label: string
   disabled?: boolean
 }
+
+export interface AppMenuItem {
+  id: string
+  label: string
+  disabled?: boolean
+}

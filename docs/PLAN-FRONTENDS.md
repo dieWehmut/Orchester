@@ -64,9 +64,9 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] F0-012: Export all form primitives from `apps/design/src/index.ts`.
 - [x] F0-013: Add `apps/design/test/forms.test.ts` for cross-primitive ARIA
   invariants and run the complete design suite.
-- [ ] F0-014: Add `AppTabs.vue` with roving focus and manual activation tests.
-- [ ] F0-015: Add `AppSegmentedControl.vue` with selected-state tests.
-- [ ] F0-016: Add `AppMenu.vue` with Escape, arrow, and outside-click tests.
+- [x] F0-014: Add `AppTabs.vue` with roving focus and manual activation tests.
+- [x] F0-015: Add `AppSegmentedControl.vue` with selected-state tests.
+- [x] F0-016: Add `AppMenu.vue` with Escape, arrow, and outside-click tests.
 - [ ] F0-017: Add `AppTooltip.vue` with hover/focus and reduced-motion tests.
 - [ ] F0-018: Add `VisuallyHidden.vue` and its DOM visibility test.
 - [ ] F0-019: Export navigation primitives and add `navigation.test.ts`.
