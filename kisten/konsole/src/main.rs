@@ -26,6 +26,7 @@ use std::time::Duration;
 
 use clap::Parser;
 
+use orchester_anwendung::OrchesterPaths;
 use orchester_laufzeit::harness::service::{
     ProviderDraft, SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentModelChoice,
     SelfAgentProviderState, SelfAgentResumeAvailability, SelfAgentResumeCatalog,
@@ -1806,12 +1807,7 @@ fn orchester_home() -> PathBuf {
 }
 
 fn self_agent_host() -> Result<SelfAgentHost, io::Error> {
-    let state_root = orchester_home().join("state");
-    Ok(SelfAgentHost::new(
-        std::env::current_dir()?,
-        state_root.join("runs.db"),
-        state_root.join("audit.jsonl"),
-    ))
+    Ok(SelfAgentHost::for_paths(&OrchesterPaths::discover()?))
 }
 
 fn render_workspace_command(

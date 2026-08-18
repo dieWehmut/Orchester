@@ -19,5 +19,7 @@
 //! decides what it looks like.
 
 mod paths;
+mod self_agent;
 
 pub use paths::OrchesterPaths;
+pub use self_agent::{SelfAgentHost, SelfAgentHostError};
