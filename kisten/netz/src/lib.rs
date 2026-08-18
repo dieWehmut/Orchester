@@ -2,12 +2,14 @@
 
 //! Loopback HTTP and WebSocket service for Orchester frontends.
 
+mod bootstrap;
 mod config;
 mod health;
 mod lifecycle;
 mod listener;
 mod workspace;
 
+pub use bootstrap::{bootstrap_response, BootstrapDto, BootstrapWorkspaceDto, ServerContext};
 pub use config::{ServerConfig, ServerConfigError, StaticAssets};
 pub use health::{app_router, health_handler, health_response, HealthDto};
 pub use lifecycle::{

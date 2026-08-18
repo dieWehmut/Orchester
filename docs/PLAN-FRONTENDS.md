@@ -147,7 +147,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   - [x] N1-006c: Verify status, JSON content type, and unknown-route behavior.
 - [ ] N1-007: Add `GET /api/v1/bootstrap` with safe workspace/status data.
   - [x] N1-007a: Define the path-free bootstrap wire contract.
-  - [ ] N1-007b: Project safe workspace and lifecycle state in Rust.
+  - [x] N1-007b: Project safe workspace and lifecycle state in Rust.
   - [ ] N1-007c: Route and verify the bootstrap response over HTTP.
 - [ ] N1-008: Add request ID middleware and response header tests.
 - [ ] N1-009: Add cookie session bootstrap and CSRF token validation.

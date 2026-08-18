@@ -3,7 +3,8 @@ use std::sync::Arc;
 
 use tokio::sync::watch;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
+#[serde(rename_all = "snake_case")]
 #[repr(u8)]
 pub enum ServerState {
     Starting = 0,
