@@ -613,6 +613,13 @@ pub fn select_agent_tui(
                             command.clear();
                             command_selected = 0;
                         }
+                        // The check is a network call, and this picker is a
+                        // synchronous key loop with no runtime to await on.
+                        PromptAction::Update => {
+                            message = "Return to the Orchester home to check for an update.".into();
+                            command.clear();
+                            command_selected = 0;
+                        }
                         PromptAction::Workspace(_) => {
                             message =
                                 "Return to the Orchester home to inspect workspace status.".into();
@@ -813,6 +820,7 @@ pub fn render_help<W: Write>(out: &mut W) -> io::Result<()> {
     writeln!(out, "  /login   store a provider API key in the OS keyring")?;
     writeln!(out, "  /logout  forget a stored provider API key")?;
     writeln!(out, "  /plugins list, inspect, install, or remove plugins")?;
+    writeln!(out, "  /update  check for a newer Orchester release")?;
     writeln!(out, "  /help    show this help")?;
     writeln!(out, "  /quit    exit Orchester")?;
     writeln!(out, "  /codex   launch Codex CLI when installed")?;

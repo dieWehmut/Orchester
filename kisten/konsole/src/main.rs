@@ -13,6 +13,7 @@ mod process;
 mod render;
 mod self_agent;
 mod theme;
+mod update;
 mod workspace_overlay;
 
 use std::collections::{HashMap, VecDeque};
@@ -701,6 +702,7 @@ fn queued_command_label(action: &interactive::HomeAction) -> String {
         }
         interactive::HomeAction::PickAgent => "/agent".into(),
         interactive::HomeAction::LaunchAgent(name) => format!("/{name}"),
+        interactive::HomeAction::Update => "/update".into(),
         interactive::HomeAction::Help => "/help".into(),
         interactive::HomeAction::Quit => "/quit".into(),
         interactive::HomeAction::Submit(_) | interactive::HomeAction::Empty => "command".into(),
@@ -1280,6 +1282,15 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                             }
                         }
                     }
+                    interactive::HomeAction::Update => {
+                        let outcome = update::check().await;
+                        let mut rendered = Vec::new();
+                        render_release_check(&mut rendered, &outcome)?;
+                        state.overlay = Some(TerminalOverlay::report(
+                            "/update",
+                            &String::from_utf8_lossy(&rendered),
+                        ));
+                    }
                     interactive::HomeAction::Help => state.show_help = true,
                 },
             }
@@ -1375,6 +1386,12 @@ async fn run_line_interactive_with_host(
                 registry = discover_registry()?;
                 choices = interactive::build_agent_choices(&registry);
                 let mut out = io::stdout().lock();
+                interactive::render_line_continue_prompt(&mut out)?;
+            }
+            interactive::HomeAction::Update => {
+                let outcome = update::check().await;
+                let mut out = io::stdout().lock();
+                render_release_check(&mut out, &outcome)?;
                 interactive::render_line_continue_prompt(&mut out)?;
             }
             interactive::HomeAction::Workspace(command) => {
@@ -1500,6 +1517,11 @@ async fn run_line_interactive_with_host(
                 conductor = Conductor::new(discover_registry()?);
                 choices = interactive::build_agent_choices(conductor.registry());
             }
+            PromptAction::Update => {
+                let outcome = update::check().await;
+                let mut out = io::stdout().lock();
+                render_release_check(&mut out, &outcome)?;
+            }
             PromptAction::Help => {
                 let mut out = io::stdout().lock();
                 interactive::render_help(&mut out)?;
@@ -1589,6 +1611,11 @@ async fn run_adapter_prompt_shell(
                 )?;
                 conductor = Conductor::new(discover_registry()?);
                 choices = interactive::build_agent_choices(conductor.registry());
+            }
+            PromptAction::Update => {
+                let outcome = update::check().await;
+                let mut out = io::stdout().lock();
+                render_release_check(&mut out, &outcome)?;
             }
             PromptAction::Help => {
                 let mut out = io::stdout().lock();
@@ -1742,6 +1769,25 @@ fn render_workspace_command(
 ) -> Result<(), CliError> {
     let mut out = io::stdout().lock();
     render_workspace_command_to(self_agent, command, &mut out)
+}
+
+/// Print the outcome of a release check.
+///
+/// A failed check is a line, not an error: a machine that is offline has nothing
+/// to fix, and `/update` must not end the session over it.
+///
+/// Kept separate from the check itself so the rendering stays synchronous — it
+/// is called from four loops, two of which write into a buffer that becomes an
+/// overlay rather than to a terminal.
+fn render_release_check<W: Write>(
+    out: &mut W,
+    outcome: &Result<update::ReleaseStatus, update::UpdateCheckError>,
+) -> Result<(), CliError> {
+    match outcome {
+        Ok(status) => update::render_status(out, status)?,
+        Err(error) => writeln!(out, "Update check failed: {error}")?,
+    }
+    Ok(())
 }
 
 fn render_workspace_command_to<W: Write>(

@@ -1021,6 +1021,7 @@ dependencies = [
  "orchester-protokoll",
  "orchester-vertrag",
  "orchester-verzeichnis",
+ "reqwest",
  "secrecy",
  "serde_json",
  "sha2",

@@ -8,6 +8,10 @@ pub enum PromptAction {
     ListAgents,
     Workspace(WorkspaceCommand),
     Plugins(PluginAction),
+    /// Ask the release index whether a newer Orchester exists.  Not a
+    /// [`WorkspaceCommand`]: it touches no workspace and no self-agent state,
+    /// only the installation this binary came from.
+    Update,
     Help,
     Quit,
     Empty,
@@ -20,6 +24,7 @@ pub enum HomeAction {
     LaunchAgent(String),
     Workspace(WorkspaceCommand),
     Plugins(PluginAction),
+    Update,
     Help,
     Quit,
     Empty,
@@ -76,6 +81,7 @@ enum CommandAction {
     ListAgents,
     Workspace(WorkspaceCommand),
     Plugins,
+    Update,
     Help,
     Quit,
     LaunchAgent,
@@ -139,6 +145,7 @@ pub(super) fn parse_home_action_selected(
         PromptAction::LaunchAgent(name) => HomeAction::LaunchAgent(name),
         PromptAction::Workspace(command) => HomeAction::Workspace(command),
         PromptAction::Plugins(action) => HomeAction::Plugins(action),
+        PromptAction::Update => HomeAction::Update,
         PromptAction::Help => HomeAction::Help,
         PromptAction::Quit => HomeAction::Quit,
         PromptAction::Empty => HomeAction::Help,
@@ -253,6 +260,13 @@ pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> Pro
                 .map(PromptAction::Plugins)
                 .unwrap_or(PromptAction::Help);
         }
+        "/update" | "/upgrade" => {
+            return if input.split_whitespace().count() == 1 {
+                PromptAction::Update
+            } else {
+                PromptAction::Help
+            };
+        }
         "/h" | "/help" => return PromptAction::Help,
         "/q" | "/quit" | "/exit" => return PromptAction::Quit,
         _ => {}
@@ -271,6 +285,7 @@ pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> Pro
         CommandAction::ListAgents => PromptAction::ListAgents,
         CommandAction::Workspace(command) => PromptAction::Workspace(command),
         CommandAction::Plugins => PromptAction::Plugins(PluginAction::List),
+        CommandAction::Update => PromptAction::Update,
         CommandAction::Help => PromptAction::Help,
         CommandAction::Quit => PromptAction::Quit,
         CommandAction::LaunchAgent => item
@@ -416,6 +431,12 @@ fn command_items(choices: &[AgentChoice]) -> Vec<CommandItem> {
             action: CommandAction::Workspace(WorkspaceCommand::Credential(
                 CredentialCommand::Logout { provider: None },
             )),
+            agent: None,
+        },
+        CommandItem {
+            name: "/update".into(),
+            description: "check for a newer Orchester release".into(),
+            action: CommandAction::Update,
             agent: None,
         },
         CommandItem {
@@ -592,6 +613,24 @@ mod tests {
     }
 
     #[test]
+    fn the_update_check_is_reachable_by_name_and_from_the_palette() {
+        for input in ["/update", "/upgrade", "/UPDATE"] {
+            assert_eq!(
+                parse_prompt_action(input, &[]),
+                PromptAction::Update,
+                "{input} must reach the release check"
+            );
+        }
+        let item = command_items(&[])
+            .into_iter()
+            .find(|item| item.name == "/update")
+            .expect("update command");
+
+        assert_eq!(command_action("/", Some(&item)), PromptAction::Update);
+        assert_eq!(parse_home_action("/update", &[]), HomeAction::Update);
+    }
+
+    #[test]
     fn exact_commands_with_invalid_arguments_still_show_help() {
         for input in [
             "/status extra",
@@ -600,6 +639,9 @@ mod tests {
             "/model provider",
             "/theme light extra",
             "/plugins list extra",
+            // The check takes no argument, so a second token is a typo rather
+            // than a version to install.
+            "/update 0.2.0",
         ] {
             assert_eq!(
                 parse_home_action_selected(input, &[], 0),

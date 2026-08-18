@@ -22,6 +22,7 @@ tokio-util = { workspace = true }
 serde_json = { workspace = true }
 secrecy = { workspace = true }
 futures = { workspace = true }
+reqwest = { workspace = true }
 thiserror = { workspace = true }
 crossterm = { workspace = true }
 unicode-width = { workspace = true }
