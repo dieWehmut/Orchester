@@ -46,6 +46,16 @@ describe('AppButton', () => {
     expect(wrapper.attributes('disabled')).toBeUndefined()
   })
 
+  it('marks busy as aria-disabled and suppresses duplicate clicks', async () => {
+    const wrapper = mount(AppButton, { props: { busy: true } })
+
+    expect(wrapper.attributes('aria-disabled')).toBe('true')
+
+    await wrapper.trigger('click')
+
+    expect(wrapper.emitted('click')).toBeUndefined()
+  })
+
   it('reports idle as aria-busy="false", which is what ARIA defaults to', () => {
     expect(mount(AppButton).attributes('aria-busy')).toBe('false')
   })

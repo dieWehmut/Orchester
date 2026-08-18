@@ -26,7 +26,15 @@ const props = withDefaults(
   { variant: 'primary', size: 'md', disabled: false, busy: false, type: 'button', block: false },
 )
 
-defineEmits<{ click: [event: MouseEvent] }>()
+const emit = defineEmits<{ click: [event: MouseEvent] }>()
+
+function handleClick(event: MouseEvent): void {
+  if (props.busy) {
+    event.preventDefault()
+    return
+  }
+  emit('click', event)
+}
 
 const classes = computed(() => [
   'app-button',
@@ -42,7 +50,8 @@ const classes = computed(() => [
     :type="type"
     :disabled="disabled"
     :aria-busy="busy"
-    @click="$emit('click', $event)"
+    :aria-disabled="busy"
+    @click="handleClick"
   >
     <span class="app-button__label"><slot /></span>
   </button>
