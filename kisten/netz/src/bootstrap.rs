@@ -3,13 +3,16 @@ use std::{path::Path, sync::Arc, time::Duration};
 use orchester_anwendung::OrchesterPaths;
 use serde::Serialize;
 
-use crate::{ServerControl, ServerState, SessionStore};
+use crate::{
+    FragmentTokenStore, FragmentTokenStoreError, ServerControl, ServerState, SessionStore,
+};
 
 #[derive(Debug, Clone)]
 pub struct ServerContext {
     paths: Option<OrchesterPaths>,
     control: ServerControl,
     sessions: Arc<SessionStore>,
+    fragments: Arc<FragmentTokenStore>,
 }
 
 impl ServerContext {
@@ -18,6 +21,7 @@ impl ServerContext {
             paths,
             control,
             sessions: Arc::new(SessionStore::new(Duration::from_secs(8 * 60 * 60))),
+            fragments: Arc::new(FragmentTokenStore::new(Duration::from_secs(5 * 60))),
         }
     }
 
@@ -31,6 +35,14 @@ impl ServerContext {
 
     pub(crate) fn sessions(&self) -> &SessionStore {
         &self.sessions
+    }
+
+    pub fn provision_fragment_token(&self, token: &str) -> Result<(), FragmentTokenStoreError> {
+        self.fragments.register(token)
+    }
+
+    pub(crate) fn fragments(&self) -> &FragmentTokenStore {
+        &self.fragments
     }
 }
 

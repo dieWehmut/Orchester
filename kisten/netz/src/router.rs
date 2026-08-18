@@ -10,7 +10,7 @@ use tower_http::request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetReques
 use crate::{
     bootstrap::{bootstrap_response, BootstrapDto},
     health::{health_handler, no_store_headers},
-    session::{session_bootstrap_handler, session_revoke_handler},
+    session::{fragment_exchange_handler, session_bootstrap_handler, session_revoke_handler},
     ServerContext,
 };
 
@@ -20,6 +20,7 @@ pub fn app_router(context: ServerContext) -> Router {
         .route("/api/v1/bootstrap", get(bootstrap_handler))
         .route("/api/v1/session", get(session_bootstrap_handler))
         .route("/api/v1/session/revoke", post(session_revoke_handler))
+        .route("/api/v1/auth/fragment", post(fragment_exchange_handler))
         .layer(
             ServiceBuilder::new()
                 .layer(SetRequestIdLayer::x_request_id(MakeRequestUuid))

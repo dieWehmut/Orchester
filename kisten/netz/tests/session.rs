@@ -1,7 +1,8 @@
 use std::time::Duration;
 
 use orchester_netz::{
-    FragmentTokenStore, FragmentTokenStoreError, SessionStore, SessionStoreError,
+    FragmentTokenExchangeRequestDto, FragmentTokenStore, FragmentTokenStoreError, SessionStore,
+    SessionStoreError,
 };
 
 #[test]
@@ -65,4 +66,16 @@ fn fragment_store_rejects_empty_tokens_and_expired_entries() {
         .register("expired-fragment")
         .expect("register fragment");
     assert!(!store.consume("expired-fragment"));
+}
+
+#[test]
+fn fragment_exchange_debug_output_redacts_the_raw_token() {
+    let request = FragmentTokenExchangeRequestDto {
+        schema_version: 1,
+        fragment_token: "fragment-secret".into(),
+    };
+    let debug = format!("{request:?}");
+
+    assert!(!debug.contains("fragment-secret"));
+    assert!(debug.contains("REDACTED"));
 }

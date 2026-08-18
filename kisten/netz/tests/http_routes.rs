@@ -249,3 +249,87 @@ async fn revoke_requires_csrf_and_accepts_the_issued_cookie_once() {
         .expect("repeated revoke response");
     assert_eq!(repeated.status(), StatusCode::FORBIDDEN);
 }
+
+#[tokio::test]
+async fn fragment_exchange_consumes_a_registered_token_once() {
+    let context = test_context();
+    context
+        .provision_fragment_token("fragment-for-browser")
+        .expect("fragment token");
+    let router = app_router(context);
+
+    let exchanged = router
+        .clone()
+        .oneshot(
+            Request::post("/api/v1/auth/fragment")
+                .header(header::CONTENT_TYPE, "application/json")
+                .body(Body::from(
+                    r#"{"schema_version":1,"fragment_token":"fragment-for-browser"}"#,
+                ))
+                .expect("fragment exchange request"),
+        )
+        .await
+        .expect("fragment exchange response");
+    assert_eq!(exchanged.status(), StatusCode::OK);
+    assert!(exchanged.headers().get(header::SET_COOKIE).is_some());
+
+    let repeated = router
+        .clone()
+        .oneshot(
+            Request::post("/api/v1/auth/fragment")
+                .header(header::CONTENT_TYPE, "application/json")
+                .body(Body::from(
+                    r#"{"schema_version":1,"fragment_token":"fragment-for-browser"}"#,
+                ))
+                .expect("repeated fragment exchange request"),
+        )
+        .await
+        .expect("repeated fragment exchange response");
+    assert_eq!(repeated.status(), StatusCode::UNAUTHORIZED);
+
+    let query = router
+        .oneshot(
+            Request::get("/api/v1/auth/fragment?fragment_token=fragment-for-browser")
+                .body(Body::empty())
+                .expect("query fragment request"),
+        )
+        .await
+        .expect("query fragment response");
+    assert_eq!(query.status(), StatusCode::METHOD_NOT_ALLOWED);
+}
+
+#[tokio::test]
+async fn fragment_exchange_rejects_schema_mismatch_without_consuming_token() {
+    let context = test_context();
+    context
+        .provision_fragment_token("schema-token")
+        .expect("fragment token");
+    let router = app_router(context);
+
+    let invalid_schema = router
+        .clone()
+        .oneshot(
+            Request::post("/api/v1/auth/fragment")
+                .header(header::CONTENT_TYPE, "application/json")
+                .body(Body::from(
+                    r#"{"schema_version":99,"fragment_token":"schema-token"}"#,
+                ))
+                .expect("invalid schema request"),
+        )
+        .await
+        .expect("invalid schema response");
+    assert_eq!(invalid_schema.status(), StatusCode::BAD_REQUEST);
+
+    let valid = router
+        .oneshot(
+            Request::post("/api/v1/auth/fragment")
+                .header(header::CONTENT_TYPE, "application/json")
+                .body(Body::from(
+                    r#"{"schema_version":1,"fragment_token":"schema-token"}"#,
+                ))
+                .expect("valid schema request"),
+        )
+        .await
+        .expect("valid schema response");
+    assert_eq!(valid.status(), StatusCode::OK);
+}

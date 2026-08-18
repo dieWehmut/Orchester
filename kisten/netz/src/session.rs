@@ -9,7 +9,7 @@ use axum::{
 };
 use cookie::{Cookie, SameSite};
 use getrandom::fill as fill_random;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
 
@@ -22,6 +22,23 @@ pub struct SessionBootstrapDto {
     pub schema_version: u8,
     pub csrf_token: String,
     pub expires_at: u64,
+}
+
+#[derive(Clone, PartialEq, Eq, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct FragmentTokenExchangeRequestDto {
+    pub schema_version: u8,
+    pub fragment_token: String,
+}
+
+impl std::fmt::Debug for FragmentTokenExchangeRequestDto {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        formatter
+            .debug_struct("FragmentTokenExchangeRequestDto")
+            .field("schema_version", &self.schema_version)
+            .field("fragment_token", &"[REDACTED]")
+            .finish()
+    }
 }
 
 #[derive(Clone, PartialEq, Eq)]
@@ -126,6 +143,25 @@ impl SessionStore {
 
 pub async fn session_bootstrap_handler(
     State(context): State<ServerContext>,
+) -> Result<(HeaderMap, Json<SessionBootstrapDto>), StatusCode> {
+    issue_session_response(&context)
+}
+
+pub async fn fragment_exchange_handler(
+    State(context): State<ServerContext>,
+    Json(request): Json<FragmentTokenExchangeRequestDto>,
+) -> Result<(HeaderMap, Json<SessionBootstrapDto>), StatusCode> {
+    if request.schema_version != 1 {
+        return Err(StatusCode::BAD_REQUEST);
+    }
+    if !context.fragments().consume(&request.fragment_token) {
+        return Err(StatusCode::UNAUTHORIZED);
+    }
+    issue_session_response(&context)
+}
+
+fn issue_session_response(
+    context: &ServerContext,
 ) -> Result<(HeaderMap, Json<SessionBootstrapDto>), StatusCode> {
     let issued = context
         .sessions()
