@@ -254,10 +254,23 @@ export type RunStreamFrameDto =
   | ResyncRequiredDto
 
 /** The shape every failing endpoint returns. */
+export type ApiErrorCode =
+  | 'bad_request'
+  | 'method_not_allowed'
+  | 'not_found'
+  | 'unauthorized'
+  | 'forbidden'
+  | 'conflict'
+  | 'resync_required'
+  | 'validation_failed'
+  | 'runtime_error'
+  | 'unavailable'
+  | 'internal'
+
 export interface ApiErrorDto {
   error: string
   /** A stable machine-readable code; the prose in `error` may be reworded. */
-  code: string
+  code: ApiErrorCode
   /** Correlates a browser error with server logs without exposing internals. */
   request_id?: string
   /** False for validation/auth/conflict errors that should not be retried. */
