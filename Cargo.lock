@@ -1193,6 +1193,7 @@ name = "orchester-netz"
 version = "0.1.2"
 dependencies = [
  "axum",
+ "orchester-anwendung",
  "serde",
  "serde_json",
  "thiserror",
