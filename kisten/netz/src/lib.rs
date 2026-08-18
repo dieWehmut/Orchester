@@ -8,6 +8,7 @@ mod health;
 mod lifecycle;
 mod listener;
 mod router;
+mod session;
 mod workspace;
 
 pub use bootstrap::{bootstrap_response, BootstrapDto, BootstrapWorkspaceDto, ServerContext};
@@ -18,4 +19,5 @@ pub use lifecycle::{
 };
 pub use listener::{bind_listener, ServerBindError};
 pub use router::app_router;
+pub use session::{SessionBootstrap, SessionStore, SessionStoreError};
 pub use workspace::{select_workspace, WorkspaceSelectionError};
