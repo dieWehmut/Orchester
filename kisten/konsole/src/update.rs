@@ -1,27 +1,34 @@
-//! Asking the release index whether a newer Orchester has been published.
+//! Asking the release index whether a newer Orchester has been published, and
+//! running the install when a human asks for it.
 //!
 //! The launcher is distributed as an npm package, so the registry entry for that
 //! package is the authority on what "latest" means — the same place an update
-//! would come from. Nothing here writes anything: the check reports, and
-//! installing is a separate, explicit step.
+//! would come from. Nothing installs on its own: the check reports, the offer
+//! waits for an answer, and only an explicit choice runs npm.
 //!
 //! Everything the registry says is treated as hostile. A version is only
 //! accepted if it parses into [`Version`], and every rendered version is
 //! reconstructed from those parsed numbers, so no byte of a network response is
-//! ever printed to a terminal or spliced into a URL.
+//! ever printed to a terminal or spliced into a URL or an argument.
 
 use std::cmp::Ordering;
+use std::ffi::OsString;
 use std::fmt;
-use std::io::{self, Write};
-use std::time::Duration;
+use std::io::{self, BufRead, Read, Write};
+use std::process::{Command, Stdio};
+use std::thread;
+use std::time::{Duration, Instant};
 
 use futures::StreamExt;
 use reqwest::header::ACCEPT;
 use reqwest::redirect::Policy;
 use thiserror::Error;
 
-/// What a human has to run to move to the published release.
-pub const UPDATE_COMMAND: &str = "npm install -g @orchester/cli";
+use crate::interactive::clean_transcript_text;
+use crate::process::{command_invocation, resolve_command};
+
+/// The npm package the launcher is published as.
+const PACKAGE: &str = "@orchester/cli";
 
 /// The registry document for whatever `latest` currently points at.
 const RELEASE_ENDPOINT: &str = "https://registry.npmjs.org/@orchester/cli/latest";
@@ -41,6 +48,16 @@ const USER_AGENT: &str = concat!("orchester/", env!("CARGO_PKG_VERSION"));
 /// Longer than any release of ours and short enough that a hostile answer
 /// cannot become a wall of text on the way to being rejected.
 const MAX_VERSION_BYTES: usize = 32;
+
+/// A global install fetches a package tree over the network, so this is
+/// generous — but bounded, so a wedged npm cannot hold the session forever.
+const INSTALL_TIMEOUT: Duration = Duration::from_secs(300);
+
+const POLL_INTERVAL: Duration = Duration::from_millis(25);
+
+/// npm says little with `--no-progress`; past this it is repeating itself, and
+/// the session should not grow a buffer because a mirror is chatty.
+const OUTPUT_LIMIT: usize = 32 * 1024;
 
 /// A published version, parsed into the parts a comparison needs.
 ///
@@ -261,7 +278,18 @@ fn release_notes_url(version: &Version) -> Option<String> {
         .map(|_| format!("{repository}/releases/tag/v{version}"))
 }
 
-/// Report the outcome of a check as text.
+/// The command that moves this installation to `version`, as a human would type
+/// it.
+///
+/// The version is spliced from parsed numbers, so this can be printed and can be
+/// handed to npm without either becoming an injection point. The flags the real
+/// invocation adds are left out: they only suppress npm's noise, and a line a
+/// human is meant to be able to retype should not carry them.
+pub fn update_command(version: &Version) -> String {
+    format!("npm install -g {PACKAGE}@{version}")
+}
+
+/// Report how the running binary compares to the published release.
 ///
 /// Written into whatever the caller owns: the real terminal from a line-based
 /// prompt, or a buffer that the full-screen chat turns into an overlay.
@@ -278,10 +306,199 @@ pub fn render_status(out: &mut impl Write, status: &ReleaseStatus) -> io::Result
         "\u{2728} Update available! {} -> {}",
         status.running, status.latest
     )?;
-    if let Some(notes) = status.notes_url() {
-        writeln!(out, "Release notes: {notes}")?;
+    match status.notes_url() {
+        Some(notes) => writeln!(out, "Release notes: {notes}"),
+        None => Ok(()),
     }
-    writeln!(out, "Run `{UPDATE_COMMAND}` to update.")
+}
+
+/// What a human chose when told a newer release exists.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum UpdateChoice {
+    Install,
+    Skip,
+}
+
+/// Offer the update and read the answer.
+///
+/// Only the install option installs. Every other answer — a blank line, a typo,
+/// or end of input from a piped session — skips, because replacing the binary a
+/// human is running is not a thing to do on a guess.
+pub fn prompt_update_choice(
+    input: &mut impl BufRead,
+    out: &mut impl Write,
+    status: &ReleaseStatus,
+) -> io::Result<UpdateChoice> {
+    render_status(out, status)?;
+    writeln!(out)?;
+    writeln!(
+        out,
+        "  1. Update now (runs `{}`)",
+        update_command(&status.latest)
+    )?;
+    writeln!(out, "  2. Skip")?;
+    write!(out, "Choose [1-2]: ")?;
+    out.flush()?;
+
+    let mut answer = String::new();
+    if input.read_line(&mut answer)? == 0 {
+        writeln!(out)?;
+        return Ok(UpdateChoice::Skip);
+    }
+    Ok(match answer.trim() {
+        "1" => UpdateChoice::Install,
+        _ => UpdateChoice::Skip,
+    })
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Error)]
+pub enum InstallError {
+    #[error("npm is not on PATH")]
+    NpmUnavailable,
+    #[error("the npm launcher would have to go through a shell")]
+    UnsafeNpmLauncher,
+    #[error("npm could not be started")]
+    NotStarted,
+    #[error("npm did not finish in time")]
+    TimedOut,
+}
+
+/// What npm did, as a human needs to see it.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InstallReport {
+    pub succeeded: bool,
+    pub output: String,
+}
+
+/// Install `version` globally through npm.
+///
+/// The exact version is pinned rather than `latest`, so what lands is what the
+/// human was shown and agreed to, even if the registry moves in between.
+pub fn install(version: &Version) -> Result<InstallReport, InstallError> {
+    let executable = resolve_command("npm").ok_or(InstallError::NpmUnavailable)?;
+    // `@orchester/cli` declares no install scripts — the platform binary arrives
+    // as an optional dependency — so refusing to run any is free here, and it
+    // keeps a compromised dependency in the tree from executing on this machine.
+    let arguments = vec![
+        OsString::from("install"),
+        OsString::from("--global"),
+        OsString::from("--ignore-scripts"),
+        OsString::from("--no-audit"),
+        OsString::from("--no-fund"),
+        OsString::from("--no-progress"),
+        // The spec is built from parsed numbers and cannot look like a flag, but
+        // `--` means npm never has to be trusted to agree about that.
+        OsString::from("--"),
+        OsString::from(format!("{PACKAGE}@{version}")),
+    ];
+    let invocation = command_invocation(&executable, arguments);
+    if invocation.uses_shell() {
+        return Err(InstallError::UnsafeNpmLauncher);
+    }
+
+    let mut command = Command::new(&invocation.program);
+    command
+        .args(&invocation.args)
+        // A global install can ask to confirm something; with no stdin it fails
+        // and says so instead of waiting for a keystroke nobody will send.
+        .stdin(Stdio::null())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped());
+    for (key, value) in &invocation.envs {
+        command.env(key, value);
+    }
+    let mut child = command.spawn().map_err(|_| InstallError::NotStarted)?;
+    // Each pipe is drained by a thread of its own: npm writes diagnostics to
+    // stderr and results to stdout, and reading one to the end first would block
+    // forever once the other filled its buffer.
+    let stdout = child.stdout.take().map(drain_on_thread);
+    let stderr = child.stderr.take().map(drain_on_thread);
+
+    let deadline = Instant::now() + INSTALL_TIMEOUT;
+    let status = loop {
+        match child.try_wait().map_err(|_| InstallError::NotStarted)? {
+            Some(status) => break status,
+            None if Instant::now() < deadline => thread::sleep(POLL_INTERVAL),
+            None => {
+                let _ = child.kill();
+                let _ = child.wait();
+                return Err(InstallError::TimedOut);
+            }
+        }
+    };
+
+    let mut output = collected(stdout);
+    output.push_str(&collected(stderr));
+    Ok(InstallReport {
+        succeeded: status.success(),
+        // npm draws its own colours and cursor moves. This is the last point
+        // before those bytes reach a terminal, so they stop here.
+        output: clean_transcript_text(&output),
+    })
+}
+
+/// Report what an install attempt did.
+///
+/// A failure is reported, not returned: the session survives it, and the human
+/// is left holding the command they can run by hand.
+pub fn render_install(
+    out: &mut impl Write,
+    version: &Version,
+    result: &Result<InstallReport, InstallError>,
+) -> io::Result<()> {
+    let command = update_command(version);
+    writeln!(out, "Updating Orchester via `{command}`...")?;
+    match result {
+        Ok(report) => {
+            if !report.output.is_empty() {
+                writeln!(out, "{}", report.output)?;
+            }
+            if report.succeeded {
+                writeln!(
+                    out,
+                    "\u{1f389} Update ran successfully! Please restart Orchester."
+                )
+            } else {
+                writeln!(out, "Update failed. Run `{command}` to see why.")
+            }
+        }
+        Err(error) => writeln!(out, "Update failed: {error}. Run `{command}` to update."),
+    }
+}
+
+fn drain_on_thread(source: impl Read + Send + 'static) -> thread::JoinHandle<String> {
+    thread::spawn(move || drain(source))
+}
+
+fn collected(reader: Option<thread::JoinHandle<String>>) -> String {
+    reader
+        .and_then(|reader| reader.join().ok())
+        .unwrap_or_default()
+}
+
+/// Read a pipe to its end, keeping the first [`OUTPUT_LIMIT`] bytes.
+///
+/// Reading past the limit rather than stopping at it matters: a reader that
+/// walks away leaves npm blocked on a full pipe until the timeout kills it,
+/// which would turn a chatty success into a reported failure.
+fn drain(mut source: impl Read) -> String {
+    let mut kept = Vec::new();
+    let mut buffer = [0u8; 8 * 1024];
+    let mut truncated = false;
+    loop {
+        let read = match source.read(&mut buffer) {
+            Ok(0) | Err(_) => break,
+            Ok(read) => read,
+        };
+        let room = OUTPUT_LIMIT.saturating_sub(kept.len());
+        truncated |= read > room;
+        kept.extend_from_slice(&buffer[..read.min(room)]);
+    }
+    let mut text = String::from_utf8_lossy(&kept).into_owned();
+    if truncated {
+        text.push_str("\n... npm printed more than is shown here.");
+    }
+    text
 }
 
 #[cfg(test)]
@@ -302,6 +519,24 @@ mod tests {
             },
         )
         .expect("render");
+        String::from_utf8(out).expect("UTF-8")
+    }
+
+    /// Drive the offer from a scripted answer, as a piped session would.
+    fn offered(answer: &str) -> (UpdateChoice, String) {
+        let status = ReleaseStatus {
+            running: version("0.1.2"),
+            latest: version("0.2.0"),
+        };
+        let mut input = io::Cursor::new(answer.as_bytes());
+        let mut out = Vec::new();
+        let choice = prompt_update_choice(&mut input, &mut out, &status).expect("prompt");
+        (choice, String::from_utf8(out).expect("UTF-8"))
+    }
+
+    fn installed(result: Result<InstallReport, InstallError>) -> String {
+        let mut out = Vec::new();
+        render_install(&mut out, &version("0.2.0"), &result).expect("render");
         String::from_utf8(out).expect("UTF-8")
     }
 
@@ -384,12 +619,11 @@ mod tests {
     }
 
     #[test]
-    fn being_behind_is_reported_with_the_two_versions_and_the_command() {
+    fn being_behind_is_reported_with_the_two_versions_and_the_notes() {
         let text = rendered("0.1.2", "0.2.0");
 
         assert!(text.contains("Update available! 0.1.2 -> 0.2.0"));
         assert!(text.contains("/releases/tag/v0.2.0"));
-        assert!(text.contains(UPDATE_COMMAND));
     }
 
     /// A local build ahead of the registry is common while developing, and being
@@ -401,5 +635,99 @@ mod tests {
             assert!(text.contains("is the published release"), "{text}");
             assert!(!text.contains("Update available"), "{text}");
         }
+    }
+
+    /// The command is printed for a human to retype and is also what npm is
+    /// asked to do, so the version in it has to be the one that was offered.
+    #[test]
+    fn the_update_command_pins_the_published_version() {
+        assert_eq!(
+            update_command(&version("0.2.0")),
+            "npm install -g @orchester/cli@0.2.0"
+        );
+    }
+
+    #[test]
+    fn the_offer_names_both_choices_and_the_command_it_would_run() {
+        let (choice, text) = offered("1\n");
+
+        assert_eq!(choice, UpdateChoice::Install);
+        assert!(text.contains("Update available! 0.1.2 -> 0.2.0"), "{text}");
+        assert!(
+            text.contains("1. Update now (runs `npm install -g @orchester/cli@0.2.0`)"),
+            "{text}"
+        );
+        assert!(text.contains("2. Skip"), "{text}");
+    }
+
+    /// Replacing the binary a human is running is not something to do on a
+    /// guess, so only the install answer installs — a stray keystroke, an empty
+    /// line, or a piped session that answers nothing all skip.
+    #[test]
+    fn anything_but_the_install_answer_skips() {
+        for answer in ["2\n", "\n", "y\n", "1 2\n", "11\n", ""] {
+            let (choice, _) = offered(answer);
+            assert_eq!(choice, UpdateChoice::Skip, "must skip: {answer:?}");
+        }
+    }
+
+    #[test]
+    fn a_successful_install_shows_npm_output_and_asks_for_a_restart() {
+        let text = installed(Ok(InstallReport {
+            succeeded: true,
+            output: "added 1 package".into(),
+        }));
+
+        assert!(text.contains("Updating Orchester via `npm install -g @orchester/cli@0.2.0`"));
+        assert!(text.contains("added 1 package"), "{text}");
+        assert!(text.contains("Please restart Orchester."), "{text}");
+    }
+
+    /// A failed install must leave the human with the command rather than a
+    /// dead end, and must not claim a restart will help.
+    #[test]
+    fn a_failed_install_hands_back_the_command() {
+        let failed = installed(Ok(InstallReport {
+            succeeded: false,
+            output: "npm error EACCES".into(),
+        }));
+        assert!(failed.contains("npm error EACCES"), "{failed}");
+        assert!(
+            failed.contains("Run `npm install -g @orchester/cli@0.2.0`"),
+            "{failed}"
+        );
+        assert!(!failed.contains("successfully"), "{failed}");
+
+        let missing = installed(Err(InstallError::NpmUnavailable));
+        assert!(missing.contains("npm is not on PATH"), "{missing}");
+        assert!(
+            missing.contains("Run `npm install -g @orchester/cli@0.2.0`"),
+            "{missing}"
+        );
+    }
+
+    /// npm paints its own colours and moves the cursor. Those bytes are drained
+    /// from a pipe, so the drain is the last place they can be stopped.
+    #[test]
+    fn npm_output_keeps_its_lines_and_loses_its_control_bytes() {
+        let noisy = "\x1b[32madded\x1b[0m 1 package\r\nin 2s\x07\n";
+
+        assert_eq!(
+            clean_transcript_text(&drain(io::Cursor::new(noisy))),
+            "added 1 package\nin 2s\\u{7}"
+        );
+    }
+
+    /// A chatty mirror must not grow the session's memory, and the drain has to
+    /// keep reading anyway or npm blocks on a full pipe until it is killed.
+    #[test]
+    fn oversized_npm_output_is_cut_and_says_so() {
+        let flood = "x".repeat(OUTPUT_LIMIT * 2);
+
+        let text = drain(io::Cursor::new(flood));
+
+        assert!(text.starts_with(&"x".repeat(OUTPUT_LIMIT)));
+        assert!(text.ends_with("... npm printed more than is shown here."));
+        assert!(text.len() < OUTPUT_LIMIT * 2);
     }
 }

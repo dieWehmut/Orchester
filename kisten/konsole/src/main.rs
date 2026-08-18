@@ -17,7 +17,7 @@ mod update;
 mod workspace_overlay;
 
 use std::collections::{HashMap, VecDeque};
-use std::io::{self, IsTerminal, Read, Write};
+use std::io::{self, BufRead, IsTerminal, Read, Write};
 use std::path::PathBuf;
 use std::process::ExitCode;
 use std::process::{Command as ProcessCommand, Stdio};
@@ -222,6 +222,7 @@ enum OverlayAction {
         target: ModelSelectionTarget,
         effort: Option<String>,
     },
+    Update(update::Version),
     Theme(theme::Theme),
 }
 
@@ -409,6 +410,40 @@ impl TerminalOverlay {
     fn with_parent(mut self, parent: TerminalOverlay) -> Self {
         self.parent = Some(Box::new(parent));
         self
+    }
+
+    /// Offer the published release as a choice between installing and skipping.
+    fn update_offer(status: &update::ReleaseStatus) -> Self {
+        let items = vec![
+            OverlayItem::new(
+                "Update now",
+                format!("runs `{}`", update::update_command(&status.latest)),
+            ),
+            OverlayItem::new("Skip", format!("keep running {}", status.running)),
+        ];
+        // Skipping closes rather than installing nothing, so Esc and the second
+        // row mean the same thing — which is what a human expects of a footer
+        // that says Esc skips.
+        let actions = vec![
+            OverlayAction::Update(status.latest.clone()),
+            OverlayAction::Close,
+        ];
+        Self {
+            view: CommandOverlay::new(
+                format!(
+                    "\u{2728} Update available! {} -> {}",
+                    status.running, status.latest
+                ),
+                match status.notes_url() {
+                    Some(notes) => format!("Release notes: {notes}"),
+                    None => "A newer Orchester has been published.".into(),
+                },
+                items,
+            )
+            .with_footer("Up/Down select  |  Enter choose  |  Esc skip"),
+            actions,
+            parent: None,
+        }
     }
 
     fn themes(current: theme::Theme) -> Self {
@@ -974,6 +1009,27 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                 Err(error) => TerminalOverlay::error("/model", &error),
                             });
                         }
+                        OverlayAction::Update(version) => {
+                            // npm takes minutes on a cold cache. Without a frame
+                            // drawn first the session simply stops answering,
+                            // which reads as a hang rather than as work.
+                            let command = update::update_command(&version);
+                            state.overlay = Some(TerminalOverlay::report(
+                                "/update",
+                                &format!("Updating Orchester via `{command}`..."),
+                            ));
+                            chat.present_view(state.view(&choices, &model_status))?;
+                            let mut rendered = Vec::new();
+                            update::render_install(
+                                &mut rendered,
+                                &version,
+                                &update::install(&version),
+                            )?;
+                            state.overlay = Some(TerminalOverlay::report(
+                                "/update",
+                                &String::from_utf8_lossy(&rendered),
+                            ));
+                        }
                         OverlayAction::Theme(selected) => match theme::persist_user_theme(selected)
                         {
                             Ok(()) => {
@@ -1284,12 +1340,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                     }
                     interactive::HomeAction::Update => {
                         let outcome = update::check().await;
-                        let mut rendered = Vec::new();
-                        render_release_check(&mut rendered, &outcome)?;
-                        state.overlay = Some(TerminalOverlay::report(
-                            "/update",
-                            &String::from_utf8_lossy(&rendered),
-                        ));
+                        state.overlay = Some(update_overlay(&outcome)?);
                     }
                     interactive::HomeAction::Help => state.show_help = true,
                 },
@@ -1391,7 +1442,7 @@ async fn run_line_interactive_with_host(
             interactive::HomeAction::Update => {
                 let outcome = update::check().await;
                 let mut out = io::stdout().lock();
-                render_release_check(&mut out, &outcome)?;
+                offer_update_on_terminal(&mut input, &mut out, &outcome)?;
                 interactive::render_line_continue_prompt(&mut out)?;
             }
             interactive::HomeAction::Workspace(command) => {
@@ -1520,7 +1571,7 @@ async fn run_line_interactive_with_host(
             PromptAction::Update => {
                 let outcome = update::check().await;
                 let mut out = io::stdout().lock();
-                render_release_check(&mut out, &outcome)?;
+                offer_update_on_terminal(&mut input, &mut out, &outcome)?;
             }
             PromptAction::Help => {
                 let mut out = io::stdout().lock();
@@ -1615,7 +1666,7 @@ async fn run_adapter_prompt_shell(
             PromptAction::Update => {
                 let outcome = update::check().await;
                 let mut out = io::stdout().lock();
-                render_release_check(&mut out, &outcome)?;
+                offer_update_on_terminal(&mut input, &mut out, &outcome)?;
             }
             PromptAction::Help => {
                 let mut out = io::stdout().lock();
@@ -1788,6 +1839,50 @@ fn render_release_check<W: Write>(
         Err(error) => writeln!(out, "Update check failed: {error}")?,
     }
     Ok(())
+}
+
+/// Report a release check and, when it found a newer release, offer to install
+/// it on the terminal the question was asked from.
+///
+/// Shared by every line-based loop, and kept synchronous so no terminal lock is
+/// held across an await: the caller does the network call, then hands the answer
+/// here with stdin and stdout in hand.
+fn offer_update_on_terminal(
+    input: &mut impl BufRead,
+    out: &mut impl Write,
+    outcome: &Result<update::ReleaseStatus, update::UpdateCheckError>,
+) -> Result<(), CliError> {
+    let Ok(status) = outcome else {
+        return render_release_check(out, outcome);
+    };
+    if !status.is_behind() {
+        return render_release_check(out, outcome);
+    }
+    if update::prompt_update_choice(input, out, status)? == update::UpdateChoice::Skip {
+        return Ok(());
+    }
+    update::render_install(out, &status.latest, &update::install(&status.latest))?;
+    Ok(())
+}
+
+/// Turn a release check into the overlay the full-screen chat shows for it.
+///
+/// A check that came back current, or failed, still produces an overlay: the
+/// human asked a question, and silence would read as a broken command.
+fn update_overlay(
+    outcome: &Result<update::ReleaseStatus, update::UpdateCheckError>,
+) -> Result<TerminalOverlay, CliError> {
+    if let Ok(status) = outcome {
+        if status.is_behind() {
+            return Ok(TerminalOverlay::update_offer(status));
+        }
+    }
+    let mut rendered = Vec::new();
+    render_release_check(&mut rendered, outcome)?;
+    Ok(TerminalOverlay::report(
+        "/update",
+        &String::from_utf8_lossy(&rendered),
+    ))
 }
 
 fn render_workspace_command_to<W: Write>(
@@ -2017,6 +2112,50 @@ mod tests {
         assert!(overlay.view.footer.contains("Enter inspect"));
         assert!(overlay.inspect(1));
         assert_eq!(overlay.view.details, vec!["model: gpt-test"]);
+    }
+
+    fn release_status(running: &str, latest: &str) -> update::ReleaseStatus {
+        update::ReleaseStatus {
+            running: update::Version::parse(running).expect("parses"),
+            latest: update::Version::parse(latest).expect("parses"),
+        }
+    }
+
+    /// Installing replaces the binary the human is running, so the offer has to
+    /// appear only when there is something newer — and never as a side effect of
+    /// a check that could not reach the registry.
+    #[test]
+    fn only_a_behind_release_offers_an_install() {
+        let offer = update_overlay(&Ok(release_status("0.1.2", "0.2.0"))).expect("overlay");
+
+        assert!(
+            offer
+                .view
+                .title
+                .contains("Update available! 0.1.2 -> 0.2.0"),
+            "{}",
+            offer.view.title
+        );
+        assert!(offer.view.items[0].detail.contains("@orchester/cli@0.2.0"));
+        assert!(
+            matches!(offer.actions.first(), Some(OverlayAction::Update(version)) if version.to_string() == "0.2.0")
+        );
+        assert!(matches!(offer.actions.get(1), Some(OverlayAction::Close)));
+
+        for outcome in [
+            Ok(release_status("0.2.0", "0.2.0")),
+            Ok(release_status("0.3.0", "0.2.0")),
+            Err(update::UpdateCheckError::Unreachable),
+        ] {
+            let overlay = update_overlay(&outcome).expect("overlay");
+            assert!(
+                overlay
+                    .actions
+                    .iter()
+                    .all(|action| matches!(action, OverlayAction::Inspect(_))),
+                "{outcome:?} must not offer an install"
+            );
+        }
     }
 
     #[test]
