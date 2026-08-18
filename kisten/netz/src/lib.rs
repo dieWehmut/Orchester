@@ -2,6 +2,7 @@
 
 //! Loopback HTTP and WebSocket service for Orchester frontends.
 
+mod api_error;
 mod bootstrap;
 mod config;
 mod fragment;
@@ -12,6 +13,7 @@ mod router;
 mod session;
 mod workspace;
 
+pub use api_error::{api_error_response, ApiErrorBody, ApiErrorCode, ApiErrorResponse};
 pub use bootstrap::{bootstrap_response, BootstrapDto, BootstrapWorkspaceDto, ServerContext};
 pub use config::{ServerConfig, ServerConfigError, StaticAssets};
 pub use fragment::{FragmentTokenStore, FragmentTokenStoreError};
