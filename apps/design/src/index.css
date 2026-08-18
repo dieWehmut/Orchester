@@ -1,0 +1,55 @@
+/*
+ * Application-neutral reset for consumers that opt into the design package.
+ * Layout ownership stays with each app; this file only normalizes primitives.
+ */
+
+:where(*, *::before, *::after) {
+  box-sizing: border-box;
+}
+
+:where(html) {
+  min-width: 320px;
+  background: var(--color-bg-base, #0e1013);
+  color: var(--color-text-primary, #e8eaed);
+  font-family: var(--font-body, system-ui, sans-serif);
+  text-size-adjust: 100%;
+}
+
+:where(body) {
+  min-block-size: 100vh;
+  margin: 0;
+  background: var(--color-bg-base, #0e1013);
+  color: inherit;
+}
+
+:where(button, input, select, textarea) {
+  font: inherit;
+}
+
+:where(button, [role='button']) {
+  cursor: pointer;
+}
+
+:where(button:disabled, [aria-disabled='true']) {
+  cursor: not-allowed;
+}
+
+:where(img, svg, video, canvas) {
+  display: block;
+  max-inline-size: 100%;
+}
+
+:where(a) {
+  color: inherit;
+}
+
+:where(:focus-visible) {
+  outline: 2px solid var(--color-accent, #d8a24a);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(*, *::before, *::after) {
+    scroll-behavior: auto;
+  }
+}

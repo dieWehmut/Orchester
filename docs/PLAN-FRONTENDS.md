@@ -88,7 +88,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   add an icon accessibility test.
 - [x] F0-032: Add design package CSS custom-property snapshot tests for dark,
   light, and all four color schemes.
-- [ ] F0-033: Add `apps/design/src/index.css` reset contract and verify it does
+- [x] F0-033: Add `apps/design/src/index.css` reset contract and verify it does
   not style consumer layout elements.
 - [ ] F0-034: Add design package README with import examples and supported
   keyboard contracts.
