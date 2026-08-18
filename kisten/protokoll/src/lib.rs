@@ -25,3 +25,4 @@ pub use harness::*;
 pub use result::{Outcome, RunResult, Usage};
 pub use session::SessionState;
 pub use task::Task;
+pub use ui::*;
