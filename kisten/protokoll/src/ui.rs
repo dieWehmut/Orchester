@@ -26,12 +26,25 @@ pub const LEGACY_EVENT_SCHEMA_VERSION: u16 = 0;
 /// A browser protocol invariant violation.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum UiProtocolValidationError {
-    UnsupportedSchemaVersion { found: u16, expected: u16 },
-    InvalidSequence { found: u64 },
+    UnsupportedSchemaVersion {
+        found: u16,
+        expected: u16,
+    },
+    InvalidSequence {
+        found: u64,
+    },
     EmptyEventId,
     EmptyRunId,
+    EmptyCallId,
     EmptyOccurredAt,
-    ApprovalRunIdMismatch { outer: RunId, request: RunId },
+    ApprovalRunIdMismatch {
+        outer: RunId,
+        request: RunId,
+    },
+    ToolCallIdMismatch {
+        envelope: Option<CallId>,
+        payload: CallId,
+    },
 }
 
 impl fmt::Display for UiProtocolValidationError {
@@ -46,11 +59,17 @@ impl fmt::Display for UiProtocolValidationError {
             }
             Self::EmptyEventId => f.write_str("UI event id must not be empty"),
             Self::EmptyRunId => f.write_str("UI run id must not be empty"),
+            Self::EmptyCallId => f.write_str("UI tool call id must not be empty"),
             Self::EmptyOccurredAt => f.write_str("UI event timestamp must not be empty"),
             Self::ApprovalRunIdMismatch { outer, request } => write!(
                 f,
                 "UI approval request run binding does not match event run ({}/{})",
                 outer.0, request.0
+            ),
+            Self::ToolCallIdMismatch { envelope, payload } => write!(
+                f,
+                "UI tool call id does not match envelope ({:?}/{})",
+                envelope, payload.0
             ),
         }
     }
@@ -454,6 +473,17 @@ impl UiEventEnvelope {
                 });
             }
         }
+        if let UiEventKind::ToolCall { call_id, .. } = &self.kind {
+            if call_id.0.trim().is_empty() {
+                return Err(UiProtocolValidationError::EmptyCallId);
+            }
+            if self.call_id.as_ref() != Some(call_id) {
+                return Err(UiProtocolValidationError::ToolCallIdMismatch {
+                    envelope: self.call_id.clone(),
+                    payload: call_id.clone(),
+                });
+            }
+        }
         Ok(())
     }
 
@@ -526,17 +556,63 @@ mod tests {
 
     #[test]
     fn tool_state_and_call_id_are_stable_wire_values() {
-        let event = envelope(UiEventKind::ToolCall {
+        let mut event = envelope(UiEventKind::ToolCall {
             call_id: CallId::from("call-7"),
             name: "read_file".into(),
             state: UiToolState::Running,
             detail: None,
         });
+        event.call_id = Some(CallId::from("call-7"));
         let json = serde_json::to_value(event).unwrap();
         assert_eq!(json["kind"]["type"], "tool_call");
         assert_eq!(json["kind"]["call_id"], "call-7");
         assert_eq!(json["kind"]["state"], "running");
         assert!(json["kind"].get("detail").is_none());
+    }
+
+    #[test]
+    fn tool_frames_reject_missing_or_mismatched_envelope_call_ids() {
+        let event = envelope(UiEventKind::ToolCall {
+            call_id: CallId::from("call-7"),
+            name: "read_file".into(),
+            state: UiToolState::Queued,
+            detail: None,
+        });
+        assert!(matches!(
+            event.validate(),
+            Err(UiProtocolValidationError::ToolCallIdMismatch { .. })
+        ));
+
+        let mut mismatched = event;
+        mismatched.call_id = Some(CallId::from("call-other"));
+        assert!(matches!(
+            mismatched.validate(),
+            Err(UiProtocolValidationError::ToolCallIdMismatch { .. })
+        ));
+    }
+
+    #[test]
+    fn same_named_tools_keep_distinct_call_ids() {
+        let mut first = envelope(UiEventKind::ToolCall {
+            call_id: CallId::from("call-a"),
+            name: "run_command".into(),
+            state: UiToolState::Running,
+            detail: None,
+        });
+        first.call_id = Some(CallId::from("call-a"));
+        let mut second = first.clone();
+        second.event_id = EventId::from("event-2");
+        second.call_id = Some(CallId::from("call-b"));
+        second.kind = UiEventKind::ToolCall {
+            call_id: CallId::from("call-b"),
+            name: "run_command".into(),
+            state: UiToolState::Succeeded,
+            detail: None,
+        };
+
+        assert_eq!(first.validate(), Ok(()));
+        assert_eq!(second.validate(), Ok(()));
+        assert_ne!(first.call_id, second.call_id);
     }
 
     #[test]
