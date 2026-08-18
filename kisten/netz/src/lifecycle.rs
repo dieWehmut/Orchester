@@ -1,4 +1,7 @@
 use std::sync::atomic::{AtomicU8, Ordering};
+use std::sync::Arc;
+
+use tokio::sync::watch;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
@@ -17,6 +20,77 @@ pub enum LifecycleError {
 #[derive(Debug)]
 pub struct ServerLifecycle {
     state: AtomicU8,
+}
+
+#[derive(Debug, Clone)]
+pub struct ServerControl {
+    lifecycle: Arc<ServerLifecycle>,
+    shutdown: watch::Sender<bool>,
+}
+
+impl ServerControl {
+    pub fn new() -> Self {
+        let (shutdown, _) = watch::channel(false);
+        Self {
+            lifecycle: Arc::new(ServerLifecycle::new()),
+            shutdown,
+        }
+    }
+
+    pub fn state(&self) -> ServerState {
+        self.lifecycle.state()
+    }
+
+    pub fn start(&self) -> Result<(), LifecycleError> {
+        self.lifecycle.transition(ServerState::Running)
+    }
+
+    pub fn request_shutdown(&self) -> Result<bool, LifecycleError> {
+        match self.state() {
+            ServerState::Running => match self.lifecycle.transition(ServerState::Stopping) {
+                Ok(()) => Ok(!self.shutdown.send_replace(true)),
+                Err(LifecycleError::InvalidTransition {
+                    from: ServerState::Stopping | ServerState::Stopped,
+                    ..
+                }) => Ok(false),
+                Err(error) => Err(error),
+            },
+            ServerState::Stopping | ServerState::Stopped => Ok(false),
+            ServerState::Starting => Err(LifecycleError::InvalidTransition {
+                from: ServerState::Starting,
+                to: ServerState::Stopping,
+            }),
+        }
+    }
+
+    pub fn complete_shutdown(&self) -> Result<(), LifecycleError> {
+        if self.state() == ServerState::Stopped {
+            return Ok(());
+        }
+        self.lifecycle.transition(ServerState::Stopped)
+    }
+
+    pub fn subscribe_shutdown(&self) -> watch::Receiver<bool> {
+        self.shutdown.subscribe()
+    }
+}
+
+impl Default for ServerControl {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+pub async fn wait_for_shutdown(mut receiver: watch::Receiver<bool>) {
+    if *receiver.borrow() {
+        return;
+    }
+
+    while receiver.changed().await.is_ok() {
+        if *receiver.borrow() {
+            return;
+        }
+    }
 }
 
 impl ServerLifecycle {

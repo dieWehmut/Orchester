@@ -8,6 +8,8 @@ mod listener;
 mod workspace;
 
 pub use config::{ServerConfig, ServerConfigError, StaticAssets};
-pub use lifecycle::{LifecycleError, ServerLifecycle, ServerState};
+pub use lifecycle::{
+    wait_for_shutdown, LifecycleError, ServerControl, ServerLifecycle, ServerState,
+};
 pub use listener::{bind_listener, ServerBindError};
 pub use workspace::{select_workspace, WorkspaceSelectionError};
