@@ -1009,6 +1009,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "orchester-anwendung"
+version = "0.1.2"
+dependencies = [
+ "orchester-laufzeit",
+ "orchester-modell",
+ "orchester-protokoll",
+ "orchester-verzeichnis",
+ "secrecy",
+ "thiserror",
+ "tokio",
+ "tokio-util",
+]
+
+[[package]]
 name = "orchester-konsole"
 version = "0.1.2"
 dependencies = [
@@ -1016,6 +1030,7 @@ dependencies = [
  "crossterm",
  "flate2",
  "futures",
+ "orchester-anwendung",
  "orchester-laufzeit",
  "orchester-modell",
  "orchester-protokoll",
