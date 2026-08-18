@@ -103,7 +103,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] P1-003: Add Rust redaction tests for paths, credentials, provider data,
   and action arguments.
 - [x] P1-004: Add stable `call_id` to the browser-facing tool lifecycle type.
-- [ ] P1-005: Add explicit tool states queued/running/succeeded/failed/cancelled.
+- [x] P1-005: Add explicit tool states queued/running/succeeded/failed/cancelled.
 - [ ] P1-006: Add approval request/resolution DTOs with `approval_id`,
   `row_version`, risk summary, and redacted action.
 - [ ] P1-007: Add Rust round-trip tests for every UI event variant.

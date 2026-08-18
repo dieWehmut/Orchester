@@ -616,6 +616,23 @@ mod tests {
     }
 
     #[test]
+    fn all_tool_states_have_explicit_wire_names() {
+        let states = [
+            (UiToolState::Queued, "queued"),
+            (UiToolState::Running, "running"),
+            (UiToolState::Succeeded, "succeeded"),
+            (UiToolState::Failed, "failed"),
+            (UiToolState::Cancelled, "cancelled"),
+        ];
+        for (state, expected) in states {
+            assert_eq!(
+                serde_json::to_string(&state).unwrap(),
+                format!("\"{expected}\"")
+            );
+        }
+    }
+
+    #[test]
     fn unknown_envelope_fields_are_rejected() {
         let raw = r#"{
             "schema_version": 1,
