@@ -1,11 +1,19 @@
 export { default as AppBadge } from './components/AppBadge.vue'
 export { default as AppButton } from './components/AppButton.vue'
 export { default as AppCard } from './components/AppCard.vue'
+export { default as AppCheckbox } from './components/AppCheckbox.vue'
+export { default as AppField } from './components/AppField.vue'
+export { default as AppInput } from './components/AppInput.vue'
+export { default as AppSelect } from './components/AppSelect.vue'
+export { default as AppSwitch } from './components/AppSwitch.vue'
+export { default as AppTextarea } from './components/AppTextarea.vue'
 export { default as ColorSchemePicker } from './components/ColorSchemePicker.vue'
 export { default as IconButton } from './components/IconButton.vue'
 export { default as Spinner } from './components/Spinner.vue'
 export { default as StatusDot } from './components/StatusDot.vue'
 export { default as ThemeToggle } from './components/ThemeToggle.vue'
+
+export type { AppSelectOption } from './components/form-types'
 
 export { APPEARANCE_BOOTSTRAP_SCRIPT } from './appearance-script'
 
