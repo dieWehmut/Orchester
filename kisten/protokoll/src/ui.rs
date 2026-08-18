@@ -842,6 +842,30 @@ mod tests {
     }
 
     #[test]
+    fn duplicate_envelope_and_kind_fields_are_rejected() {
+        let duplicate_sequence = r#"{
+            "schema_version": 1,
+            "event_id": "event-1",
+            "run_id": "run-1",
+            "sequence": 1,
+            "sequence": 2,
+            "occurred_at": "2026-08-19T00:00:00Z",
+            "kind": {"type": "turn_started"}
+        }"#;
+        assert!(serde_json::from_str::<UiEventEnvelope>(duplicate_sequence).is_err());
+
+        let duplicate_kind_field = r#"{
+            "schema_version": 1,
+            "event_id": "event-1",
+            "run_id": "run-1",
+            "sequence": 1,
+            "occurred_at": "2026-08-19T00:00:00Z",
+            "kind": {"type": "message", "text": "first", "text": "second"}
+        }"#;
+        assert!(serde_json::from_str::<UiEventEnvelope>(duplicate_kind_field).is_err());
+    }
+
+    #[test]
     fn invalid_sequence_and_schema_are_rejected() {
         let mut event = envelope(UiEventKind::TurnStarted);
         event.sequence = 0;
