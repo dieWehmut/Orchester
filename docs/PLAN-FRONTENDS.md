@@ -67,7 +67,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] F0-014: Add `AppTabs.vue` with roving focus and manual activation tests.
 - [x] F0-015: Add `AppSegmentedControl.vue` with selected-state tests.
 - [x] F0-016: Add `AppMenu.vue` with Escape, arrow, and outside-click tests.
-- [ ] F0-017: Add `AppTooltip.vue` with hover/focus and reduced-motion tests.
+- [x] F0-017: Add `AppTooltip.vue` with hover/focus and reduced-motion tests.
 - [ ] F0-018: Add `VisuallyHidden.vue` and its DOM visibility test.
 - [ ] F0-019: Export navigation primitives and add `navigation.test.ts`.
 - [ ] F0-020: Add `AppDialog.vue` with focus trap, restore-focus, and Escape
