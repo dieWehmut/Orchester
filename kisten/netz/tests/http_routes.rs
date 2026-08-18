@@ -92,3 +92,45 @@ async fn bootstrap_route_returns_the_safe_context_snapshot() {
     );
     assert!(!json.to_string().contains("private-home"));
 }
+
+#[tokio::test]
+async fn routes_generate_a_request_id_when_the_client_does_not_send_one() {
+    let response = app_router(test_context())
+        .oneshot(
+            Request::get("/api/v1/health")
+                .body(Body::empty())
+                .expect("health request"),
+        )
+        .await
+        .expect("health response");
+
+    let value = response
+        .headers()
+        .get("x-request-id")
+        .expect("generated request id")
+        .to_str()
+        .expect("request id text");
+    assert_eq!(value.len(), 36);
+    assert_eq!(value.as_bytes()[8], b'-');
+    assert_eq!(value.as_bytes()[13], b'-');
+    assert_eq!(value.as_bytes()[18], b'-');
+    assert_eq!(value.as_bytes()[23], b'-');
+}
+
+#[tokio::test]
+async fn routes_propagate_a_client_request_id() {
+    let response = app_router(test_context())
+        .oneshot(
+            Request::get("/api/v1/health")
+                .header("x-request-id", "browser-request-123")
+                .body(Body::empty())
+                .expect("health request"),
+        )
+        .await
+        .expect("health response");
+
+    assert_eq!(
+        response.headers().get("x-request-id").unwrap(),
+        "browser-request-123"
+    );
+}

@@ -149,7 +149,9 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   - [x] N1-007a: Define the path-free bootstrap wire contract.
   - [x] N1-007b: Project safe workspace and lifecycle state in Rust.
   - [x] N1-007c: Route and verify the bootstrap response over HTTP.
-- [ ] N1-008: Add request ID middleware and response header tests.
+- [x] N1-008: Add request ID middleware and response header tests.
+  - [x] N1-008a: Generate UUID request IDs when clients omit the header.
+  - [x] N1-008b: Propagate client/generated IDs on every routed response.
 - [ ] N1-009: Add cookie session bootstrap and CSRF token validation.
 - [ ] N1-010: Add fragment-token exchange that never persists tokens.
 - [ ] N1-011: Add typed API error mapping and JSON content-type tests.
