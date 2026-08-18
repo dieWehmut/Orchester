@@ -139,6 +139,8 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   - [x] N1-004a: Wire the application-layer path dependency into `netz`.
   - [x] N1-004b: Validate and canonicalize selected workspace directories.
 - [ ] N1-005: Add server lifecycle start/stop tests without a real socket.
+  - [x] N1-005a: Define and test the ordered server lifecycle state machine.
+  - [ ] N1-005b: Add observable shutdown control without opening a socket.
 - [ ] N1-006: Add `GET /api/v1/health` and typed health tests.
 - [ ] N1-007: Add `GET /api/v1/bootstrap` with safe workspace/status data.
 - [ ] N1-008: Add request ID middleware and response header tests.
