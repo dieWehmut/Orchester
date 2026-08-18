@@ -81,7 +81,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] F0-026: Add `SkeletonBlock.vue` and reduced-motion tests.
 - [x] F0-027: Add `ProgressBar.vue` with bounded-value tests.
 - [x] F0-028: Add `ToastRegion.vue` with queue, timeout, and dismiss tests.
-- [ ] F0-029: Export feedback primitives and add `feedback.test.ts`.
+- [x] F0-029: Export feedback primitives and add `feedback.test.ts`.
 - [ ] F0-030: Add `lucide-vue-next` as the icon dependency and update only
   the lockfile entries required by the design package.
 - [ ] F0-031: Replace the hand-drawn theme toggle glyph with Lucide icons and
