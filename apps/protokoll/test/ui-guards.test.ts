@@ -84,4 +84,62 @@ describe('parseUiEventEnvelope', () => {
   it('returns null for malformed JSON', () => {
     expect(parseUiEventEnvelopeJson('{"schema_version":')).toBeNull()
   })
+
+  it('rejects duplicate envelope and nested fields before values are overwritten', () => {
+    const duplicateSequence = JSON.stringify(validEnvelope()).replace(
+      '"sequence":1',
+      '"sequence":1,"sequence":2',
+    )
+    const duplicateState = JSON.stringify(validEnvelope()).replace(
+      '"state":"running"',
+      '"state":"running","state":"succeeded"',
+    )
+
+    expect(parseUiEventEnvelopeJson(duplicateSequence)).toBeNull()
+    expect(parseUiEventEnvelopeJson(duplicateState)).toBeNull()
+  })
+
+  it('rejects every missing required envelope field', () => {
+    for (const key of [
+      'schema_version',
+      'event_id',
+      'run_id',
+      'sequence',
+      'occurred_at',
+      'kind',
+    ] as const) {
+      const candidate = validEnvelope()
+      delete candidate[key]
+      expect(parseUiEventEnvelope(candidate), key).toBeNull()
+    }
+  })
+
+  it('rejects unknown outer, kind, and nested fields', () => {
+    expect(parseUiEventEnvelope({ ...validEnvelope(), provider_payload: {} })).toBeNull()
+    expect(
+      parseUiEventEnvelope({
+        ...validEnvelope(),
+        kind: { ...(validEnvelope().kind as Record<string, unknown>), raw_arguments: [] },
+      }),
+    ).toBeNull()
+
+    const { call_id: _callId, ...approvalBase } = validEnvelope()
+    expect(
+      parseUiEventEnvelope({
+        ...approvalBase,
+        kind: {
+          type: 'approval_requested',
+          approval: {
+            approval_id: 'approval-1',
+            run_id: 'run-1',
+            row_version: 1,
+            risk: 'high',
+            action: 'write_file path=src/main.rs',
+            reason: 'workspace write',
+            action_hash: 'must-not-cross-the-browser-boundary',
+          },
+        },
+      }),
+    ).toBeNull()
+  })
 })

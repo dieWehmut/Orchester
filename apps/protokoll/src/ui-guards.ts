@@ -22,8 +22,39 @@ import {
   type UiToolState,
   type UiValidation,
 } from './ui'
+import { visit } from 'jsonc-parser'
 
 type UnknownRecord = Record<string, unknown>
+
+function containsDuplicateJsonKeys(text: string): boolean {
+  const objectKeys: Set<string>[] = []
+  let invalid = false
+  visit(
+    text,
+    {
+      onObjectBegin: () => {
+        objectKeys.push(new Set())
+      },
+      onObjectProperty: (property) => {
+        const keys = objectKeys[objectKeys.length - 1]
+        if (keys === undefined) {
+          invalid = true
+          return
+        }
+        if (keys.has(property)) invalid = true
+        keys.add(property)
+      },
+      onObjectEnd: () => {
+        objectKeys.pop()
+      },
+      onError: () => {
+        invalid = true
+      },
+    },
+    { disallowComments: true, allowTrailingComma: false },
+  )
+  return invalid || objectKeys.length !== 0
+}
 
 function isRecord(value: unknown): value is UnknownRecord {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -292,6 +323,7 @@ export function parseUiEventEnvelope(raw: unknown): UiEventEnvelope | null {
 }
 
 export function parseUiEventEnvelopeJson(line: string): UiEventEnvelope | null {
+  if (containsDuplicateJsonKeys(line)) return null
   try {
     return parseUiEventEnvelope(JSON.parse(line) as unknown)
   } catch {

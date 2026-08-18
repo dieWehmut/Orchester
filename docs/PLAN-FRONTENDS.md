@@ -115,7 +115,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] P1-013: Add TypeScript tool invocation DTOs keyed only by `call_id`.
 - [x] P1-014: Add JSON fixture builders for happy, approval, failure, and
   reconnect paths.
-- [ ] P1-015: Add protocol tests for duplicate, missing, and unknown fields.
+- [x] P1-015: Add protocol tests for duplicate, missing, and unknown fields.
 - [ ] P1-016: Add protocol schema-version compatibility tests for legacy v1
   and UI v1.
 - [ ] P1-017: Add a generated fixture manifest consumed by website and web.

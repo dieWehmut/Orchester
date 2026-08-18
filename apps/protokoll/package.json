@@ -10,5 +10,8 @@
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run"
+  },
+  "dependencies": {
+    "jsonc-parser": "^3.3.1"
   }
 }
