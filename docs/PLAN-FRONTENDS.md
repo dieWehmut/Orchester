@@ -133,6 +133,8 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   static-file feature boundaries.
 - [x] N1-002: Add `kisten/netz/src/lib.rs` and a typed `ServerConfig`.
 - [ ] N1-003: Add loopback bind validation and port `0` allocation tests.
+  - [x] N1-003a: Validate that configured bind addresses are loopback-only.
+  - [ ] N1-003b: Allocate and expose an ephemeral port-`0` listener.
 - [ ] N1-004: Add workspace selection validation using `OrchesterPaths`.
 - [ ] N1-005: Add server lifecycle start/stop tests without a real socket.
 - [ ] N1-006: Add `GET /api/v1/health` and typed health tests.

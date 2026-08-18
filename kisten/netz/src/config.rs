@@ -8,6 +8,11 @@ pub enum StaticAssets {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ServerConfigError {
+    NonLoopbackBind { ip: IpAddr },
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ServerConfig {
     bind_ip: IpAddr,
     port: u16,
@@ -33,6 +38,14 @@ impl ServerConfig {
 
     pub fn socket_addr(&self) -> SocketAddr {
         SocketAddr::new(self.bind_ip, self.port)
+    }
+
+    pub fn validate_loopback(&self) -> Result<(), ServerConfigError> {
+        if self.bind_ip.is_loopback() {
+            Ok(())
+        } else {
+            Err(ServerConfigError::NonLoopbackBind { ip: self.bind_ip })
+        }
     }
 
     pub fn static_assets(&self) -> &StaticAssets {

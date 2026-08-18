@@ -4,4 +4,4 @@
 
 mod config;
 
-pub use config::{ServerConfig, StaticAssets};
+pub use config::{ServerConfig, ServerConfigError, StaticAssets};
