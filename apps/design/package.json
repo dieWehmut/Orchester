@@ -22,5 +22,8 @@
     "vite": "^7.1.2",
     "vue": "3.5.18",
     "vue-tsc": "^3.2.5"
+  },
+  "dependencies": {
+    "@lucide/vue": "^1.32.0"
   }
 }
