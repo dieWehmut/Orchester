@@ -17,6 +17,7 @@ mod harness;
 mod result;
 mod session;
 mod task;
+mod ui;
 
 pub use capability::{Capability, TaskKind};
 pub use event::{ChangeKind, Event, TodoItem, ToolStatus};

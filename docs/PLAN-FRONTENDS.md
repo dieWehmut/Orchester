@@ -97,7 +97,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 
 ## Wave P1: browser protocol and fixtures
 
-- [ ] P1-001: Add Rust `kisten/protokoll/src/ui.rs` envelope types with
+- [x] P1-001: Add Rust `kisten/protokoll/src/ui.rs` envelope types with
   `UiEventEnvelope`, `UiEventKind`, and strict unknown-field rejection.
 - [ ] P1-002: Add Rust `UiEventEnvelope` sequence and run-binding validation.
 - [ ] P1-003: Add Rust redaction tests for paths, credentials, provider data,
