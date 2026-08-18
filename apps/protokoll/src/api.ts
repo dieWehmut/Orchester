@@ -19,6 +19,23 @@ export interface HealthDto {
   schema_version: typeof HEALTH_SCHEMA_VERSION
 }
 
+export const BOOTSTRAP_SCHEMA_VERSION = 1 as const
+
+export type BootstrapServerState = 'starting' | 'running' | 'stopping' | 'stopped'
+
+export interface BootstrapWorkspaceDto {
+  selected: boolean
+  /** A display-only basename; never an absolute or relative path. */
+  name: string | null
+}
+
+export interface BootstrapDto {
+  schema_version: typeof BOOTSTRAP_SCHEMA_VERSION
+  service_version: string
+  server_state: BootstrapServerState
+  workspace: BootstrapWorkspaceDto
+}
+
 /** An adapter the registry discovered, and whether its binary is on PATH. */
 export interface AgentSummary {
   id: string
