@@ -131,7 +131,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 
 - [x] N1-001: Create `kisten/netz/Cargo.toml` with axum, tower, tokio, and
   static-file feature boundaries.
-- [ ] N1-002: Add `kisten/netz/src/lib.rs` and a typed `ServerConfig`.
+- [x] N1-002: Add `kisten/netz/src/lib.rs` and a typed `ServerConfig`.
 - [ ] N1-003: Add loopback bind validation and port `0` allocation tests.
 - [ ] N1-004: Add workspace selection validation using `OrchesterPaths`.
 - [ ] N1-005: Add server lifecycle start/stop tests without a real socket.
