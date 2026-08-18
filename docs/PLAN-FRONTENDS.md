@@ -84,7 +84,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] F0-029: Export feedback primitives and add `feedback.test.ts`.
 - [x] F0-030: Add `@lucide/vue` as the icon dependency and update only
   the lockfile entries required by the design package.
-- [ ] F0-031: Replace the hand-drawn theme toggle glyph with Lucide icons and
+- [x] F0-031: Replace the hand-drawn theme toggle glyph with Lucide icons and
   add an icon accessibility test.
 - [ ] F0-032: Add design package CSS custom-property snapshot tests for dark,
   light, and all four color schemes.
