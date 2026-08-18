@@ -3,6 +3,7 @@
 mod builder;
 mod config_view;
 mod credentials;
+mod events;
 mod identity;
 mod model_catalog;
 mod permissions;
@@ -39,6 +40,8 @@ pub use credentials::{
     wire_provider_reference, ConfigWiring, CredentialEntryError, CredentialTarget,
     CredentialUpdate,
 };
+pub use events::RunEventSink;
+use events::RunNarrator;
 use identity::WorkspaceIdentity;
 pub use identity::{IdentityError, WorkspaceIdentitySnapshot};
 pub use model_catalog::{

@@ -10,8 +10,8 @@ use thiserror::Error;
 use tokio_util::sync::CancellationToken;
 
 use super::{
-    resolve_self_agent_resume_handle, SelfAgentResumeTargetError, SelfAgentService,
-    SelfAgentServiceError, SelfAgentTurn,
+    resolve_self_agent_resume_handle, RunEventSink, RunNarrator, SelfAgentResumeTargetError,
+    SelfAgentService, SelfAgentServiceError, SelfAgentTurn,
 };
 use crate::harness::agent_loop::SelfAgentLoop;
 use crate::harness::audit::AuditSink;
@@ -196,11 +196,25 @@ where
         cancel: CancellationToken,
         events: Option<Arc<dyn ModelEventSink>>,
     ) -> Result<SelfAgentRunOutcome, SelfAgentRuntimeError> {
+        self.run_streaming(prompt, cancel, events, None).await
+    }
+
+    /// Run while narrating the unified [`orchester_protokoll::Event`] stream to
+    /// `run_events`, for a frontend that does not own the run.
+    pub async fn run_streaming(
+        &self,
+        prompt: impl Into<String>,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+        run_events: Option<Arc<dyn RunEventSink>>,
+    ) -> Result<SelfAgentRunOutcome, SelfAgentRuntimeError> {
+        let narrator = self.narrator(run_events);
         let turn = self
             .service
             .start_with_events(prompt, cancel.clone(), events.clone())
-            .await?;
-        self.drive_turn(turn, cancel, events).await
+            .await
+            .inspect_err(|error| narrator.failed(&error.to_string()))?;
+        self.drive_turn(turn, cancel, events, &narrator).await
     }
 
     pub async fn resume(
@@ -217,13 +231,36 @@ where
         cancel: CancellationToken,
         events: Option<Arc<dyn ModelEventSink>>,
     ) -> Result<SelfAgentRunOutcome, SelfAgentRuntimeError> {
+        self.resume_streaming(handle, cancel, events, None).await
+    }
+
+    /// Resume while narrating the unified event stream to `run_events`.
+    pub async fn resume_streaming(
+        &self,
+        handle: &str,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+        run_events: Option<Arc<dyn RunEventSink>>,
+    ) -> Result<SelfAgentRunOutcome, SelfAgentRuntimeError> {
+        let narrator = self.narrator(run_events);
         let identity = self.service.identity();
-        let run_id = resolve_self_agent_resume_handle(self.store(), &identity, handle)?;
+        let run_id = match resolve_self_agent_resume_handle(self.store(), &identity, handle) {
+            Ok(run_id) => run_id,
+            Err(error) => {
+                narrator.failed(&error.to_string());
+                return Err(error.into());
+            }
+        };
         let turn = self
             .service
             .continue_run_with_events(run_id, cancel.clone(), events.clone())
-            .await?;
-        self.drive_turn(turn, cancel, events).await
+            .await
+            .inspect_err(|error| narrator.failed(&error.to_string()))?;
+        self.drive_turn(turn, cancel, events, &narrator).await
+    }
+
+    fn narrator(&self, run_events: Option<Arc<dyn RunEventSink>>) -> RunNarrator {
+        RunNarrator::new(run_events, self.streaming_redactor())
     }
 
     async fn drive_turn(
@@ -231,23 +268,37 @@ where
         mut turn: SelfAgentTurn,
         cancel: CancellationToken,
         events: Option<Arc<dyn ModelEventSink>>,
+        narrator: &RunNarrator,
     ) -> Result<SelfAgentRunOutcome, SelfAgentRuntimeError> {
         let mut tool_steps = Vec::new();
+        narrator.started(turn.run_id());
 
         loop {
             let Some((run_id, action_id, call_id)) = executable_file_action(&turn) else {
+                narrator.finished(&turn);
                 return Ok(SelfAgentRunOutcome::new(turn, tool_steps));
             };
             if cancel.is_cancelled() {
+                narrator.cancelled();
                 return Err(SelfAgentRuntimeError::Cancelled);
             }
+            let action = turn
+                .action()
+                .expect("an executable action turn carries its action");
 
-            let outcome = self.execution.execute(&run_id, &action_id, &call_id)?;
+            narrator.tool_started(action);
+            let outcome = self
+                .execution
+                .execute(&run_id, &action_id, &call_id)
+                .inspect_err(|error| narrator.failed(&error.to_string()))?;
+            narrator.tool_finished(action, &outcome);
+
             tool_steps.push(SelfAgentToolStep::new(action_id, call_id, outcome));
             turn = self
                 .service
                 .continue_run_with_events(run_id, cancel.clone(), events.clone())
-                .await?;
+                .await
+                .inspect_err(|error| narrator.failed(&error.to_string()))?;
         }
     }
 }

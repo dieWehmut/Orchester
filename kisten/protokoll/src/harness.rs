@@ -147,6 +147,29 @@ pub enum AgentAction {
 }
 
 impl AgentAction {
+    /// The protocol's name for the tool this action calls.
+    ///
+    /// This is the `tool` serde tag, so it stays in step with the wire format.
+    /// Frontends label a tool call with it, which is why it is an accessor
+    /// rather than something callers re-derive by splitting
+    /// [`AgentAction::action_summary`] — that summary is a redaction, not a
+    /// parseable record.
+    pub fn tool_name(&self) -> &'static str {
+        match self {
+            Self::ListFiles { .. } => "list_files",
+            Self::SearchText { .. } => "search_text",
+            Self::ReadFile { .. } => "read_file",
+            Self::WriteFile { .. } => "write_file",
+            Self::ApplyPatch { .. } => "apply_patch",
+            Self::RunCommand { .. } => "run_command",
+            Self::RunChecks { .. } => "run_checks",
+            Self::Remember { .. } => "remember",
+            Self::Recall { .. } => "recall",
+            Self::RequestApproval { .. } => "request_approval",
+            Self::Finish { .. } => "finish",
+        }
+    }
+
     /// Build a short, side-effect-free summary suitable for an approval UI.
     ///
     /// Every model-controlled string is represented by its byte length rather
