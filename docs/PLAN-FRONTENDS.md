@@ -118,7 +118,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] P1-015: Add protocol tests for duplicate, missing, and unknown fields.
 - [x] P1-016: Add protocol schema-version compatibility tests for legacy v1
   and UI v1.
-- [ ] P1-017: Add a generated fixture manifest consumed by website and web.
+- [x] P1-017: Add a generated fixture manifest consumed by website and web.
 - [ ] P1-018: Add protocol documentation in `apps/protokoll/README.md`.
 - [ ] P1-019: Run TypeScript and Rust protocol checks with the available MSVC
   linker and record the toolchain requirement.
