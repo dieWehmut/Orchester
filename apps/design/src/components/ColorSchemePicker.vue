@@ -7,6 +7,8 @@
  * Labels come from the caller, keyed by `ColorSchemeOption.labelKey`, so a
  * localised app and an unlocalised one can both use it.
  */
+import { nextTick } from 'vue'
+
 import { COLOR_SCHEME_OPTIONS, type ColorScheme } from '../theme'
 import { useAppearance } from '../composables/useAppearance'
 
@@ -23,12 +25,37 @@ const props = withDefaults(
 )
 
 const { colorScheme, setColorScheme } = useAppearance()
+
+function onKeydown(event: KeyboardEvent, index: number): void {
+  const key = event.key
+  const lastIndex = COLOR_SCHEME_OPTIONS.length - 1
+  let nextIndex: number | null = null
+
+  if (key === 'ArrowRight' || key === 'ArrowDown') nextIndex = index === lastIndex ? 0 : index + 1
+  if (key === 'ArrowLeft' || key === 'ArrowUp') nextIndex = index === 0 ? lastIndex : index - 1
+  if (key === 'Home') nextIndex = 0
+  if (key === 'End') nextIndex = lastIndex
+  if (nextIndex === null) return
+
+  const nextOption = COLOR_SCHEME_OPTIONS[nextIndex]
+  if (!nextOption) return
+
+  event.preventDefault()
+  setColorScheme(nextOption.id)
+
+  const group = event.currentTarget instanceof HTMLElement
+    ? event.currentTarget.closest('[role="radiogroup"]')
+    : null
+  void nextTick(() => {
+    group?.querySelectorAll<HTMLButtonElement>('[role="radio"]')[nextIndex]?.focus()
+  })
+}
 </script>
 
 <template>
   <div class="scheme-picker" role="radiogroup" :aria-label="groupLabel">
     <button
-      v-for="option in COLOR_SCHEME_OPTIONS"
+      v-for="(option, index) in COLOR_SCHEME_OPTIONS"
       :key="option.id"
       class="scheme-picker__swatch"
       :class="[
@@ -38,9 +65,11 @@ const { colorScheme, setColorScheme } = useAppearance()
       type="button"
       role="radio"
       :aria-checked="colorScheme === option.id"
+      :tabindex="colorScheme === option.id ? 0 : -1"
       :title="props.label(option.labelKey, option.id)"
       :aria-label="props.label(option.labelKey, option.id)"
       @click="setColorScheme(option.id)"
+      @keydown="onKeydown($event, index)"
     />
   </div>
 </template>
