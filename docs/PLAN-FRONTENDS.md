@@ -121,7 +121,9 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] P1-017: Add a generated fixture manifest consumed by website and web.
 - [x] P1-018: Add protocol documentation in `apps/protokoll/README.md`.
 - [ ] P1-019: Run TypeScript and Rust protocol checks with the available MSVC
-  linker and record the toolchain requirement.
+  linker and record the toolchain requirement. Local ARM64 validation is
+  blocked until Visual Studio Build Tools are installed; see
+  `docs/BUILD-TOOLCHAIN.md`.
 - [ ] P1-020: Commit and push the protocol wave as separate Rust and TypeScript
   commits.
 
