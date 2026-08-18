@@ -16,3 +16,9 @@ export interface AppSelectOption {
   label: string
   disabled?: boolean
 }
+
+export interface AppSegmentOption {
+  id: string
+  label: string
+  disabled?: boolean
+}
