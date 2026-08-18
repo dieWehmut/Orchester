@@ -78,7 +78,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] F0-023: Export overlay primitives and add `overlays.test.ts`.
 - [x] F0-024: Add `InlineAlert.vue` and live-region tests.
 - [x] F0-025: Add `EmptyState.vue` and action-slot tests.
-- [ ] F0-026: Add `SkeletonBlock.vue` and reduced-motion tests.
+- [x] F0-026: Add `SkeletonBlock.vue` and reduced-motion tests.
 - [ ] F0-027: Add `ProgressBar.vue` with bounded-value tests.
 - [ ] F0-028: Add `ToastRegion.vue` with queue, timeout, and dismiss tests.
 - [ ] F0-029: Export feedback primitives and add `feedback.test.ts`.
