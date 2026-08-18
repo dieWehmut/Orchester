@@ -2,8 +2,8 @@
 //! must be stable and self-inverse (`T -> json -> T`).
 
 use orchester_protokoll::{
-    ChangeKind, Event, Outcome, RunResult, SessionState, Task, TaskKind, TodoItem, ToolStatus,
-    Usage,
+    ChangeKind, Event, Outcome, RunResult, SessionState, StopReason, Task, TaskKind, TodoItem,
+    ToolStatus, Usage,
 };
 
 fn roundtrip_event(e: &Event) -> Event {
@@ -70,8 +70,16 @@ fn all_event_variants_roundtrip() {
             reasoning_output_tokens: 3,
         }),
         Event::TurnCompleted,
+        Event::ApprovalRequired {
+            approval_id: "apr-1".into(),
+            action: "write_file path_bytes=12 content_bytes=340".into(),
+            reason: "writes outside the workspace".into(),
+        },
         Event::Result {
             text: "done".into(),
+        },
+        Event::Stopped {
+            reason: StopReason::AwaitingApproval,
         },
         Event::Error {
             message: "boom".into(),
@@ -95,6 +103,30 @@ fn usage_event_flattens_fields_alongside_tag() {
     assert_eq!(json["type"], "usage");
     assert_eq!(json["input_tokens"], 100);
     assert_eq!(json["output_tokens"], 200);
+}
+
+#[test]
+fn stop_and_approval_have_a_flat_frontend_shape() {
+    // A frontend reads these two off the wire, so their JSON must stay flat:
+    // the reason is a bare snake_case string and the id is a bare string, not
+    // an object wrapping the newtype.
+    let json = serde_json::to_value(Event::Stopped {
+        reason: StopReason::BudgetExceeded,
+    })
+    .unwrap();
+    assert_eq!(json["type"], "stopped");
+    assert_eq!(json["reason"], "budget_exceeded");
+
+    let json = serde_json::to_value(Event::ApprovalRequired {
+        approval_id: "apr-7".into(),
+        action: "run_command program_bytes=2 args=1".into(),
+        reason: "network access".into(),
+    })
+    .unwrap();
+    assert_eq!(json["type"], "approval_required");
+    assert_eq!(json["approval_id"], "apr-7");
+    assert_eq!(json["action"], "run_command program_bytes=2 args=1");
+    assert_eq!(json["reason"], "network access");
 }
 
 #[test]

@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+use crate::harness::{ApprovalId, StopReason};
 use crate::result::Usage;
 
 /// A single normalized event in an agent run.
@@ -36,8 +37,26 @@ pub enum Event {
     Usage(Usage),
     /// The current turn completed.
     TurnCompleted,
+    /// A governed action needs a human decision before the run can continue.
+    ///
+    /// `action` is the redacted one-line summary produced by
+    /// [`crate::AgentAction::action_summary`], never raw model output: this event
+    /// leaves the process and reaches a browser, and the approval prompt is
+    /// exactly where a leaked credential would be read.
+    ApprovalRequired {
+        approval_id: ApprovalId,
+        action: String,
+        reason: String,
+    },
     /// The final assistant message / run result text.
     Result { text: String },
+    /// The run stopped, and why.
+    ///
+    /// Distinct from [`Event::Result`] and [`Event::Error`] because a governed run
+    /// has outcomes that are neither: it can stop waiting for an approval or
+    /// because it ran out of budget, and a frontend has to offer a different next
+    /// step for each.
+    Stopped { reason: StopReason },
     /// A fatal error surfaced by the agent or the adapter.
     Error { message: String },
 }

@@ -9,7 +9,7 @@
 use std::io::Write;
 
 use orchester_laufzeit::SessionRecord;
-use orchester_protokoll::{Capability, ChangeKind, Event, TaskKind, ToolStatus};
+use orchester_protokoll::{Capability, ChangeKind, Event, StopReason, TaskKind, ToolStatus};
 use orchester_vertrag::{AdapterAvailability, AvailabilityStatus};
 
 // Minimal ANSI palette. Kept here rather than pulling a styling crate for v0.1.
@@ -17,6 +17,7 @@ const DIM: &str = "\x1b[2m";
 const ITALIC: &str = "\x1b[3m";
 const RED: &str = "\x1b[31m";
 const GREEN: &str = "\x1b[32m";
+const YELLOW: &str = "\x1b[33m";
 const RESET: &str = "\x1b[0m";
 
 /// Render a single event to `out` in human-readable form.
@@ -76,6 +77,18 @@ pub fn render_event(out: &mut impl Write, event: &Event) -> std::io::Result<()> 
             u.input_tokens, u.output_tokens, u.cached_input_tokens
         ),
         Event::Error { message } => writeln!(out, "{RED}error: {message}{RESET}"),
+        Event::Stopped { reason } => {
+            writeln!(out, "{DIM}■ stopped ({}){RESET}", stop_word(reason))
+        }
+        Event::ApprovalRequired {
+            approval_id,
+            action,
+            reason,
+        } => writeln!(
+            out,
+            "{YELLOW}? approval required: {action} — {reason} [{}]{RESET}",
+            approval_id.0
+        ),
     }
 }
 
@@ -178,6 +191,18 @@ fn status_word(s: ToolStatus) -> &'static str {
     }
 }
 
+fn stop_word(reason: &StopReason) -> &'static str {
+    match reason {
+        StopReason::Succeeded => "succeeded",
+        StopReason::Failed => "failed",
+        StopReason::Cancelled => "cancelled",
+        StopReason::AwaitingApproval => "awaiting approval",
+        StopReason::BudgetExceeded => "budget exceeded",
+        StopReason::RepeatedFailure => "repeated failure",
+        StopReason::InterruptedUnknownOutcome => "interrupted, outcome unknown",
+    }
+}
+
 fn kind_word(k: &TaskKind) -> String {
     match k {
         TaskKind::Code => "code".into(),
@@ -234,6 +259,26 @@ mod tests {
             message: "boom".into(),
         });
         assert!(out.contains("error: boom"));
+    }
+
+    #[test]
+    fn stopped_names_the_reason() {
+        let out = rendered(&Event::Stopped {
+            reason: StopReason::AwaitingApproval,
+        });
+        assert!(out.contains("awaiting approval"), "{out}");
+    }
+
+    #[test]
+    fn approval_shows_action_reason_and_id() {
+        let out = rendered(&Event::ApprovalRequired {
+            approval_id: "apr-3".into(),
+            action: "write_file path_bytes=9 content_bytes=42".into(),
+            reason: "outside the workspace".into(),
+        });
+        assert!(out.contains("write_file path_bytes=9"), "{out}");
+        assert!(out.contains("outside the workspace"), "{out}");
+        assert!(out.contains("apr-3"), "{out}");
     }
 
     #[test]

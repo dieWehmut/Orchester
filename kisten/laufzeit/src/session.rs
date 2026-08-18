@@ -6,7 +6,7 @@
 //! ownership) makes the whole normalization → summary path unit-testable without
 //! spawning anything, and lets the CLI drive the same logic while it renders.
 
-use orchester_protokoll::{Event, Outcome, RunResult, SessionState, Usage};
+use orchester_protokoll::{Event, Outcome, RunResult, SessionState, StopReason, Usage};
 
 /// Accumulates the outcome of a single agent run from its event stream.
 #[derive(Debug, Clone)]
@@ -45,6 +45,7 @@ impl Session {
     /// State transitions:
     /// * `SessionStarted` → record id, `Starting`/`Running` → `Running`
     /// * `Result`         → capture final text, → `Completed`
+    /// * `Stopped`        → map the [`StopReason`] onto a terminal state
     /// * `Error`          → capture message, → `Failed`
     /// * `Usage`          → accumulate token counts
     ///
@@ -62,6 +63,7 @@ impl Session {
                     self.state = SessionState::Completed;
                 }
             }
+            Event::Stopped { reason } => self.observe_stop(reason),
             Event::Error { message } => {
                 self.error_message = Some(message.clone());
                 self.state = SessionState::Failed;
@@ -110,6 +112,25 @@ impl Session {
         if self.state == SessionState::Starting {
             self.state = SessionState::Running;
         }
+    }
+
+    /// Map a harness [`StopReason`] onto the coarser [`SessionState`].
+    ///
+    /// [`SessionState`] has no "paused" member, so the reasons that mean *stopped
+    /// without finishing, but not in error* (`AwaitingApproval`) land on
+    /// `Cancelled`: the task is unfinished and the exit code must be non-zero,
+    /// but calling it a failure would be a lie. The nuance is not lost — the
+    /// `Stopped` event carries the exact reason to whoever is watching the stream.
+    fn observe_stop(&mut self, reason: &StopReason) {
+        self.state = match reason {
+            StopReason::Succeeded if self.state == SessionState::Failed => SessionState::Failed,
+            StopReason::Succeeded => SessionState::Completed,
+            StopReason::Cancelled | StopReason::AwaitingApproval => SessionState::Cancelled,
+            StopReason::Failed
+            | StopReason::BudgetExceeded
+            | StopReason::RepeatedFailure
+            | StopReason::InterruptedUnknownOutcome => SessionState::Failed,
+        };
     }
 }
 
@@ -194,5 +215,36 @@ mod tests {
         let mut s = Session::new();
         s.observe(&Event::Message { text: "hi".into() });
         assert_eq!(s.finish().outcome, Outcome::Success);
+    }
+
+    #[test]
+    fn stop_reason_decides_the_outcome() {
+        for (reason, expected) in [
+            (StopReason::Succeeded, Outcome::Success),
+            (StopReason::Failed, Outcome::Failed),
+            (StopReason::Cancelled, Outcome::Cancelled),
+            (StopReason::AwaitingApproval, Outcome::Cancelled),
+            (StopReason::BudgetExceeded, Outcome::Failed),
+            (StopReason::RepeatedFailure, Outcome::Failed),
+            (StopReason::InterruptedUnknownOutcome, Outcome::Failed),
+        ] {
+            let mut s = Session::new();
+            s.observe(&Event::Stopped {
+                reason: reason.clone(),
+            });
+            assert_eq!(s.finish().outcome, expected, "wrong outcome for {reason:?}");
+        }
+    }
+
+    #[test]
+    fn a_stop_never_hides_an_earlier_error() {
+        let mut s = Session::new();
+        s.observe(&Event::Error {
+            message: "boom".into(),
+        });
+        s.observe(&Event::Stopped {
+            reason: StopReason::Succeeded,
+        });
+        assert_eq!(s.state(), SessionState::Failed);
     }
 }
