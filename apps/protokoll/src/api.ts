@@ -36,6 +36,16 @@ export interface BootstrapDto {
   workspace: BootstrapWorkspaceDto
 }
 
+export const SESSION_SCHEMA_VERSION = 1 as const
+
+export interface SessionBootstrapDto {
+  schema_version: typeof SESSION_SCHEMA_VERSION
+  /** Returned once; never persisted by the browser. */
+  csrf_token: string
+  /** Unix seconds when the browser must bootstrap a new session. */
+  expires_at: number
+}
+
 /** An adapter the registry discovered, and whether its binary is on PATH. */
 export interface AgentSummary {
   id: string
