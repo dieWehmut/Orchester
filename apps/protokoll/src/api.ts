@@ -108,6 +108,43 @@ export interface ApprovalDecision {
   approve: boolean
 }
 
+export type ApprovalQueueState = 'pending' | 'approved' | 'denied' | 'expired' | 'stale'
+
+export interface ApprovalQueueItemDto {
+  approval_id: ApprovalId
+  run_id: RunId
+  row_version: number
+  risk: string
+  action: string
+  reason: string
+  state: ApprovalQueueState
+  created_at: string
+  expires_at: string | null
+}
+
+export interface ApprovalQueueDto {
+  run_id: RunId
+  items: ApprovalQueueItemDto[]
+}
+
+export type ApprovalDecisionKind = 'approved' | 'denied'
+
+export interface ApprovalDecisionRequestDto {
+  approval_id: ApprovalId
+  row_version: number
+  decision: ApprovalDecisionKind
+  idempotency_key: string
+}
+
+export type ApprovalDecisionStatus = 'applied' | 'already_applied' | 'stale' | 'expired'
+
+export interface ApprovalDecisionResponseDto {
+  status: ApprovalDecisionStatus
+  approval_id: ApprovalId
+  row_version: number
+  decision: ApprovalDecisionKind | 'stale' | 'expired'
+}
+
 /** What a finished run cost, for a footer that outlives the stream. */
 export interface RunSummaryDto {
   run_id: string
