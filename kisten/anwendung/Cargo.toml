@@ -1,0 +1,20 @@
+[package]
+name = "orchester-anwendung"
+description = "Orchester application service: the UI-agnostic layer every frontend calls"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+orchester-laufzeit = { workspace = true }
+orchester-modell = { workspace = true }
+orchester-protokoll = { workspace = true }
+orchester-verzeichnis = { workspace = true }
+secrecy = { workspace = true }
+thiserror = { workspace = true }
+tokio-util = { workspace = true }
+
+[dev-dependencies]
+tokio = { workspace = true }

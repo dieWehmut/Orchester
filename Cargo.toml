@@ -7,6 +7,7 @@ members = [
     "kisten/adapter",
     "kisten/verzeichnis",
     "kisten/laufzeit",
+    "kisten/anwendung",
     "kisten/konsole",
 ]
 
@@ -25,6 +26,7 @@ orchester-vertrag = { path = "kisten/vertrag" }
 orchester-adapter = { path = "kisten/adapter" }
 orchester-verzeichnis = { path = "kisten/verzeichnis" }
 orchester-laufzeit = { path = "kisten/laufzeit" }
+orchester-anwendung = { path = "kisten/anwendung" }
 
 # External
 serde = { version = "1", features = ["derive"] }
