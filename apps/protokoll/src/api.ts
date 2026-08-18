@@ -10,6 +10,15 @@
 import type { ApprovalId, Usage } from './event'
 import type { RunId, UiApprovalRequest, UiEventEnvelope } from './ui'
 
+export const HEALTH_SCHEMA_VERSION = 1 as const
+
+export interface HealthDto {
+  status: 'ok'
+  service: 'orchester'
+  version: string
+  schema_version: typeof HEALTH_SCHEMA_VERSION
+}
+
 /** An adapter the registry discovered, and whether its binary is on PATH. */
 export interface AgentSummary {
   id: string
