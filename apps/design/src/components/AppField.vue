@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+import type { AppFieldControlProps } from './form-types'
+
 const props = withDefaults(
   defineProps<{
     id: string
@@ -15,6 +17,7 @@ const props = withDefaults(
 defineSlots<{
   default(props: {
     controlId: string
+    controlProps: AppFieldControlProps
     describedBy: string | undefined
     invalid: boolean
     required: boolean
@@ -30,6 +33,14 @@ const describedBy = computed<string | undefined>(() => {
   return ids.length > 0 ? ids.join(' ') : undefined
 })
 const invalid = computed(() => Boolean(props.error))
+const controlProps = computed<AppFieldControlProps>(() => {
+  const base = {
+    id: props.id,
+    invalid: invalid.value,
+    required: props.required,
+  }
+  return describedBy.value ? { ...base, describedBy: describedBy.value } : base
+})
 </script>
 
 <template>
@@ -42,6 +53,7 @@ const invalid = computed(() => Boolean(props.error))
     <div class="app-field__control">
       <slot
         :control-id="id"
+        :control-props="controlProps"
         :described-by="describedBy"
         :invalid="invalid"
         :required="required"

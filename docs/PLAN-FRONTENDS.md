@@ -54,15 +54,15 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 
 ## Wave F0: repository and design-system foundations
 
-- [ ] F0-006: Add `apps/design/src/components/AppField.vue` with label,
+- [x] F0-006: Add `apps/design/src/components/AppField.vue` with label,
   hint, error, `aria-describedby`, and an isolated component test.
-- [ ] F0-007: Add `AppInput.vue` and its controlled-value/disabled/error tests.
-- [ ] F0-008: Add `AppTextarea.vue` with deterministic row sizing and tests.
-- [ ] F0-009: Add `AppSelect.vue` with native keyboard semantics and tests.
-- [ ] F0-010: Add `AppCheckbox.vue` with indeterminate and label wiring tests.
-- [ ] F0-011: Add `AppSwitch.vue` with `role=switch` and keyboard tests.
-- [ ] F0-012: Export all form primitives from `apps/design/src/index.ts`.
-- [ ] F0-013: Add `apps/design/test/forms.test.ts` for cross-primitive ARIA
+- [x] F0-007: Add `AppInput.vue` and its controlled-value/disabled/error tests.
+- [x] F0-008: Add `AppTextarea.vue` with deterministic row sizing and tests.
+- [x] F0-009: Add `AppSelect.vue` with native keyboard semantics and tests.
+- [x] F0-010: Add `AppCheckbox.vue` with indeterminate and label wiring tests.
+- [x] F0-011: Add `AppSwitch.vue` with `role=switch` and keyboard tests.
+- [x] F0-012: Export all form primitives from `apps/design/src/index.ts`.
+- [x] F0-013: Add `apps/design/test/forms.test.ts` for cross-primitive ARIA
   invariants and run the complete design suite.
 - [ ] F0-014: Add `AppTabs.vue` with roving focus and manual activation tests.
 - [ ] F0-015: Add `AppSegmentedControl.vue` with selected-state tests.

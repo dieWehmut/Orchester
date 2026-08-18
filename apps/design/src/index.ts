@@ -13,7 +13,7 @@ export { default as Spinner } from './components/Spinner.vue'
 export { default as StatusDot } from './components/StatusDot.vue'
 export { default as ThemeToggle } from './components/ThemeToggle.vue'
 
-export type { AppSelectOption } from './components/form-types'
+export type { AppFieldControlProps, AppSelectOption } from './components/form-types'
 
 export { APPEARANCE_BOOTSTRAP_SCRIPT } from './appearance-script'
 
