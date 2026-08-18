@@ -58,9 +58,9 @@
   /* ── Shape */
   --radius-xs: 4px;
   --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-md: 8px;
+  --radius-lg: 8px;
+  --radius-xl: 8px;
   --radius-full: 9999px;
 
   /* ── Motion. Overridden to 1ms under prefers-reduced-motion below rather than
@@ -74,9 +74,30 @@
 
   /* ── Layout constants the three faces agree on */
   --sidebar-width: 264px;
+  --sidebar-min-width: 220px;
+  --sidebar-max-width: 360px;
   --inspector-width: 320px;
+  --inspector-min-width: 280px;
+  --inspector-max-width: 420px;
   --content-max: 1180px;
   --header-height: 56px;
+
+  /* Stable controls prevent labels and busy states from shifting layouts. */
+  --control-height-sm: 32px;
+  --control-height-md: 36px;
+  --control-height-lg: 44px;
+
+  /* Shared responsive thresholds for the workspace and the site. */
+  --breakpoint-mobile: 640px;
+  --breakpoint-tablet: 900px;
+  --breakpoint-desktop: 1280px;
+
+  /* Layer ordering is explicit so drawers, dialogs and toasts never overlap
+     unpredictably across independently mounted apps. */
+  --z-header: 10;
+  --z-drawer: 40;
+  --z-dialog: 60;
+  --z-toast: 80;
 }
 
 /* ══ Neutrals: dark ══════════════════════════════════════════════════════ */
