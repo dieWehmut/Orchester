@@ -13,6 +13,7 @@ static-files = ["tower-http/fs"]
 
 [dependencies]
 axum = { workspace = true }
+cookie = "0.18.2"
 getrandom = { workspace = true }
 orchester-anwendung = { workspace = true }
 serde = { workspace = true }

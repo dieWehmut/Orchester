@@ -19,5 +19,8 @@ pub use lifecycle::{
 };
 pub use listener::{bind_listener, ServerBindError};
 pub use router::app_router;
-pub use session::{SessionBootstrap, SessionStore, SessionStoreError};
+pub use session::{
+    session_bootstrap_handler, session_revoke_handler, SessionBootstrap, SessionBootstrapDto,
+    SessionStore, SessionStoreError, SESSION_COOKIE_NAME,
+};
 pub use workspace::{select_workspace, WorkspaceSelectionError};

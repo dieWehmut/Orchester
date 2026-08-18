@@ -1,19 +1,24 @@
-use std::path::Path;
+use std::{path::Path, sync::Arc, time::Duration};
 
 use orchester_anwendung::OrchesterPaths;
 use serde::Serialize;
 
-use crate::{ServerControl, ServerState};
+use crate::{ServerControl, ServerState, SessionStore};
 
 #[derive(Debug, Clone)]
 pub struct ServerContext {
     paths: Option<OrchesterPaths>,
     control: ServerControl,
+    sessions: Arc<SessionStore>,
 }
 
 impl ServerContext {
     pub fn new(paths: Option<OrchesterPaths>, control: ServerControl) -> Self {
-        Self { paths, control }
+        Self {
+            paths,
+            control,
+            sessions: Arc::new(SessionStore::new(Duration::from_secs(8 * 60 * 60))),
+        }
     }
 
     pub fn paths(&self) -> Option<&OrchesterPaths> {
@@ -22,6 +27,10 @@ impl ServerContext {
 
     pub fn control(&self) -> &ServerControl {
         &self.control
+    }
+
+    pub(crate) fn sessions(&self) -> &SessionStore {
+        &self.sessions
     }
 }
 

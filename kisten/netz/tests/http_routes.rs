@@ -134,3 +134,118 @@ async fn routes_propagate_a_client_request_id() {
         "browser-request-123"
     );
 }
+
+#[tokio::test]
+async fn session_bootstrap_sets_an_http_only_cookie_and_returns_only_csrf_json() {
+    let router = app_router(test_context());
+    let response = router
+        .oneshot(
+            Request::get("/api/v1/session")
+                .body(Body::empty())
+                .expect("session request"),
+        )
+        .await
+        .expect("session response");
+
+    assert_eq!(response.status(), StatusCode::OK);
+    let cookie = response
+        .headers()
+        .get(header::SET_COOKIE)
+        .expect("session cookie")
+        .to_str()
+        .expect("cookie text");
+    assert!(cookie.starts_with("orchester_session="));
+    assert!(cookie.contains("HttpOnly"));
+    assert!(cookie.contains("SameSite=Lax"));
+    assert!(cookie.contains("Path=/"));
+
+    let body = to_bytes(response.into_body(), usize::MAX)
+        .await
+        .expect("session body");
+    let json: Value = serde_json::from_slice(&body).expect("session JSON");
+    assert!(json["csrf_token"].as_str().is_some());
+    assert!(json["expires_at"].as_u64().unwrap_or_default() > 0);
+    assert!(!json.to_string().contains("session_cookie"));
+}
+
+#[tokio::test]
+async fn revoke_requires_csrf_and_accepts_the_issued_cookie_once() {
+    let router = app_router(test_context());
+    let denied = router
+        .clone()
+        .oneshot(
+            Request::post("/api/v1/session/revoke")
+                .body(Body::empty())
+                .expect("revoke request"),
+        )
+        .await
+        .expect("revoke response");
+    assert_eq!(denied.status(), StatusCode::FORBIDDEN);
+
+    let issued = router
+        .clone()
+        .oneshot(
+            Request::get("/api/v1/session")
+                .body(Body::empty())
+                .expect("session request"),
+        )
+        .await
+        .expect("session response");
+    let set_cookie = issued
+        .headers()
+        .get(header::SET_COOKIE)
+        .expect("session cookie")
+        .to_str()
+        .expect("cookie text")
+        .to_owned();
+    let cookie = set_cookie
+        .split(';')
+        .next()
+        .expect("cookie pair")
+        .to_owned();
+    let body = to_bytes(issued.into_body(), usize::MAX)
+        .await
+        .expect("session body");
+    let csrf = serde_json::from_slice::<Value>(&body).expect("session JSON")["csrf_token"]
+        .as_str()
+        .expect("csrf token")
+        .to_owned();
+
+    let invalid = router
+        .clone()
+        .oneshot(
+            Request::post("/api/v1/session/revoke")
+                .header(header::COOKIE, &cookie)
+                .header("x-csrf-token", "wrong")
+                .body(Body::empty())
+                .expect("invalid revoke request"),
+        )
+        .await
+        .expect("invalid revoke response");
+    assert_eq!(invalid.status(), StatusCode::FORBIDDEN);
+
+    let accepted = router
+        .clone()
+        .oneshot(
+            Request::post("/api/v1/session/revoke")
+                .header(header::COOKIE, &cookie)
+                .header("x-csrf-token", &csrf)
+                .body(Body::empty())
+                .expect("valid revoke request"),
+        )
+        .await
+        .expect("valid revoke response");
+    assert_eq!(accepted.status(), StatusCode::NO_CONTENT);
+
+    let repeated = router
+        .oneshot(
+            Request::post("/api/v1/session/revoke")
+                .header(header::COOKIE, &cookie)
+                .header("x-csrf-token", &csrf)
+                .body(Body::empty())
+                .expect("repeated revoke request"),
+        )
+        .await
+        .expect("repeated revoke response");
+    assert_eq!(repeated.status(), StatusCode::FORBIDDEN);
+}

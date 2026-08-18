@@ -152,10 +152,10 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] N1-008: Add request ID middleware and response header tests.
   - [x] N1-008a: Generate UUID request IDs when clients omit the header.
   - [x] N1-008b: Propagate client/generated IDs on every routed response.
-- [ ] N1-009: Add cookie session bootstrap and CSRF token validation.
+- [x] N1-009: Add cookie session bootstrap and CSRF token validation.
   - [x] N1-009a: Define the session bootstrap and CSRF response contract.
   - [x] N1-009b: Store only hashed expiring session/CSRF tokens.
-  - [ ] N1-009c: Enforce cookie and CSRF headers on state-changing routes.
+  - [x] N1-009c: Enforce cookie and CSRF headers on state-changing routes.
 - [ ] N1-010: Add fragment-token exchange that never persists tokens.
 - [ ] N1-011: Add typed API error mapping and JSON content-type tests.
 - [ ] N1-012: Add agent catalog route backed by `Registry`.

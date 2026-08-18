@@ -2,9 +2,27 @@ use std::collections::HashMap;
 use std::sync::Mutex;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
+use axum::{
+    extract::State,
+    http::{header, HeaderMap, StatusCode},
+    Json,
+};
+use cookie::{Cookie, SameSite};
 use getrandom::fill as fill_random;
+use serde::Serialize;
 use sha2::{Digest, Sha256};
 use thiserror::Error;
+
+use crate::{health::no_store_headers, ServerContext};
+
+pub const SESSION_COOKIE_NAME: &str = "orchester_session";
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+pub struct SessionBootstrapDto {
+    pub schema_version: u8,
+    pub csrf_token: String,
+    pub expires_at: u64,
+}
 
 #[derive(Clone, PartialEq, Eq)]
 pub struct SessionBootstrap {
@@ -103,6 +121,71 @@ impl SessionStore {
             .expect("session store lock")
             .remove(&digest(session_cookie))
             .is_some()
+    }
+}
+
+pub async fn session_bootstrap_handler(
+    State(context): State<ServerContext>,
+) -> Result<(HeaderMap, Json<SessionBootstrapDto>), StatusCode> {
+    let issued = context
+        .sessions()
+        .issue()
+        .map_err(|_| StatusCode::SERVICE_UNAVAILABLE)?;
+    let cookie = Cookie::build((SESSION_COOKIE_NAME, issued.session_cookie))
+        .http_only(true)
+        .same_site(SameSite::Lax)
+        .path("/")
+        .build();
+    let mut headers = no_store_headers();
+    headers.insert(
+        header::SET_COOKIE,
+        cookie
+            .to_string()
+            .parse()
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?,
+    );
+    Ok((
+        headers,
+        Json(SessionBootstrapDto {
+            schema_version: 1,
+            csrf_token: issued.csrf_token,
+            expires_at: issued.expires_at,
+        }),
+    ))
+}
+
+pub async fn session_revoke_handler(
+    State(context): State<ServerContext>,
+    headers: HeaderMap,
+) -> StatusCode {
+    let Some(cookie_header) = headers
+        .get(header::COOKIE)
+        .and_then(|value| value.to_str().ok())
+    else {
+        return StatusCode::FORBIDDEN;
+    };
+    let Some(session_cookie) = Cookie::split_parse(cookie_header)
+        .filter_map(Result::ok)
+        .find(|cookie| cookie.name() == SESSION_COOKIE_NAME)
+    else {
+        return StatusCode::FORBIDDEN;
+    };
+    let Some(csrf_token) = headers
+        .get("x-csrf-token")
+        .and_then(|value| value.to_str().ok())
+    else {
+        return StatusCode::FORBIDDEN;
+    };
+    if !context
+        .sessions()
+        .validate(session_cookie.value(), csrf_token)
+    {
+        return StatusCode::FORBIDDEN;
+    }
+    if context.sessions().revoke(session_cookie.value()) {
+        StatusCode::NO_CONTENT
+    } else {
+        StatusCode::FORBIDDEN
     }
 }
 
