@@ -36,6 +36,8 @@ pub enum UiProtocolValidationError {
     EmptyEventId,
     EmptyRunId,
     EmptyCallId,
+    EmptyApprovalId,
+    InvalidApprovalRowVersion,
     EmptyOccurredAt,
     ApprovalRunIdMismatch {
         outer: RunId,
@@ -60,6 +62,10 @@ impl fmt::Display for UiProtocolValidationError {
             Self::EmptyEventId => f.write_str("UI event id must not be empty"),
             Self::EmptyRunId => f.write_str("UI run id must not be empty"),
             Self::EmptyCallId => f.write_str("UI tool call id must not be empty"),
+            Self::EmptyApprovalId => f.write_str("UI approval id must not be empty"),
+            Self::InvalidApprovalRowVersion => {
+                f.write_str("UI approval row version must be greater than zero")
+            }
             Self::EmptyOccurredAt => f.write_str("UI event timestamp must not be empty"),
             Self::ApprovalRunIdMismatch { outer, request } => write!(
                 f,
@@ -135,6 +141,19 @@ impl UiApprovalRequest {
             expires_at: self.expires_at.clone(),
         }
     }
+
+    fn validate(&self) -> Result<(), UiProtocolValidationError> {
+        if self.approval_id.0.trim().is_empty() {
+            return Err(UiProtocolValidationError::EmptyApprovalId);
+        }
+        if self.run_id.0.trim().is_empty() {
+            return Err(UiProtocolValidationError::EmptyRunId);
+        }
+        if self.row_version == 0 {
+            return Err(UiProtocolValidationError::InvalidApprovalRowVersion);
+        }
+        Ok(())
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -171,6 +190,27 @@ impl Serialize for UiApprovalRequest {
         S: Serializer,
     {
         UiApprovalRequestWire::from(self).serialize(serializer)
+    }
+}
+
+/// The outcome returned after an approval row is changed.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct UiApprovalResolution {
+    pub approval_id: ApprovalId,
+    pub row_version: u64,
+    pub decision: UiApprovalDecision,
+}
+
+impl UiApprovalResolution {
+    fn validate(&self) -> Result<(), UiProtocolValidationError> {
+        if self.approval_id.0.trim().is_empty() {
+            return Err(UiProtocolValidationError::EmptyApprovalId);
+        }
+        if self.row_version == 0 {
+            return Err(UiProtocolValidationError::InvalidApprovalRowVersion);
+        }
+        Ok(())
     }
 }
 
@@ -228,9 +268,7 @@ pub enum UiEventKind {
         approval: UiApprovalRequest,
     },
     ApprovalResolved {
-        approval_id: ApprovalId,
-        row_version: u64,
-        decision: UiApprovalDecision,
+        resolution: UiApprovalResolution,
     },
     Validation {
         validation: UiValidation,
@@ -372,14 +410,8 @@ impl UiEventKind {
             Self::ApprovalRequested { approval } => Self::ApprovalRequested {
                 approval: approval.sanitized(),
             },
-            Self::ApprovalResolved {
-                approval_id,
-                row_version,
-                decision,
-            } => Self::ApprovalResolved {
-                approval_id: approval_id.clone(),
-                row_version: *row_version,
-                decision: *decision,
+            Self::ApprovalResolved { resolution } => Self::ApprovalResolved {
+                resolution: resolution.clone(),
             },
             Self::Validation { validation } => Self::Validation {
                 validation: UiValidation {
@@ -466,12 +498,16 @@ impl UiEventEnvelope {
             return Err(UiProtocolValidationError::EmptyOccurredAt);
         }
         if let UiEventKind::ApprovalRequested { approval } = &self.kind {
+            approval.validate()?;
             if approval.run_id != self.run_id {
                 return Err(UiProtocolValidationError::ApprovalRunIdMismatch {
                     outer: self.run_id.clone(),
                     request: approval.run_id.clone(),
                 });
             }
+        }
+        if let UiEventKind::ApprovalResolved { resolution } = &self.kind {
+            resolution.validate()?;
         }
         if let UiEventKind::ToolCall { call_id, .. } = &self.kind {
             if call_id.0.trim().is_empty() {
@@ -630,6 +666,48 @@ mod tests {
                 format!("\"{expected}\"")
             );
         }
+    }
+
+    #[test]
+    fn approval_request_and_resolution_require_row_versions() {
+        let mut request = UiApprovalRequest {
+            approval_id: ApprovalId::from("approval-1"),
+            run_id: RunId::from("run-1"),
+            row_version: 0,
+            risk: "high".into(),
+            action: "write_file".into(),
+            reason: "policy".into(),
+            expires_at: None,
+        };
+        assert_eq!(
+            request.validate(),
+            Err(UiProtocolValidationError::InvalidApprovalRowVersion)
+        );
+        request.row_version = 1;
+
+        let resolution = UiApprovalResolution {
+            approval_id: request.approval_id,
+            row_version: 1,
+            decision: UiApprovalDecision::Approved,
+        };
+        let mut event = envelope(UiEventKind::ApprovalResolved {
+            resolution: resolution.clone(),
+        });
+        assert_eq!(event.validate(), Ok(()));
+        assert_eq!(
+            serde_json::to_value(&event).unwrap()["kind"]["resolution"]["decision"],
+            "approved"
+        );
+        event.kind = UiEventKind::ApprovalResolved {
+            resolution: UiApprovalResolution {
+                row_version: 0,
+                ..resolution
+            },
+        };
+        assert_eq!(
+            event.validate(),
+            Err(UiProtocolValidationError::InvalidApprovalRowVersion)
+        );
     }
 
     #[test]

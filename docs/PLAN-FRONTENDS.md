@@ -104,7 +104,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   and action arguments.
 - [x] P1-004: Add stable `call_id` to the browser-facing tool lifecycle type.
 - [x] P1-005: Add explicit tool states queued/running/succeeded/failed/cancelled.
-- [ ] P1-006: Add approval request/resolution DTOs with `approval_id`,
+- [x] P1-006: Add approval request/resolution DTOs with `approval_id`,
   `row_version`, risk summary, and redacted action.
 - [ ] P1-007: Add Rust round-trip tests for every UI event variant.
 - [ ] P1-008: Export the UI protocol from `kisten/protokoll/src/lib.rs`.
