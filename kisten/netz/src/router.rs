@@ -12,6 +12,7 @@ use crate::{
     api_error::{api_error_response, request_id_from_headers, ApiErrorCode, ApiErrorResponse},
     bootstrap::{bootstrap_response, BootstrapDto},
     health::{health_handler, no_store_headers},
+    model_catalog::model_catalog_handler,
     session::{fragment_exchange_handler, session_bootstrap_handler, session_revoke_handler},
     ServerContext,
 };
@@ -21,6 +22,7 @@ pub fn app_router(context: ServerContext) -> Router {
         .route("/api/v1/health", get(health_handler))
         .route("/api/v1/bootstrap", get(bootstrap_handler))
         .route("/api/v1/agents", get(agent_catalog_handler))
+        .route("/api/v1/models", get(model_catalog_handler))
         .route("/api/v1/session", get(session_bootstrap_handler))
         .route("/api/v1/session/revoke", post(session_revoke_handler))
         .route("/api/v1/auth/fragment", post(fragment_exchange_handler))

@@ -169,11 +169,11 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   - [x] N1-012b: Project registry capabilities and availability safely.
   - [x] N1-012c: Bind the workspace registry into server context.
   - [x] N1-012d: Route and verify the agent catalog over HTTP.
-- [ ] N1-013: Add model catalog route backed by `SelfAgentHost`.
+- [x] N1-013: Add model catalog route backed by `SelfAgentHost`.
   - [x] N1-013a: Define the versioned, endpoint-free model catalog contract.
   - [x] N1-013b: Project `SelfAgentHost` model choices into safe DTOs.
   - [x] N1-013c: Bind one read-only model host to server context.
-  - [ ] N1-013d: Route and verify the model catalog over HTTP.
+  - [x] N1-013d: Route and verify the model catalog over HTTP.
 - [ ] N1-014: Add session list/detail routes with pagination cursors.
 - [ ] N1-015: Add run snapshot route backed by `RunStore`.
 - [ ] N1-016: Add run submit route with client request idempotency.

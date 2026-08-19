@@ -1,7 +1,14 @@
+use axum::{extract::State, http::HeaderMap, Json};
 use orchester_laufzeit::harness::service::{
     SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentModelChoice, SelfAgentProviderState,
 };
 use serde::Serialize;
+
+use crate::{
+    api_error::{api_error_response, request_id_from_headers, ApiErrorCode, ApiErrorResponse},
+    bootstrap::ServerContext,
+    health::no_store_headers,
+};
 
 pub const MODEL_CATALOG_SCHEMA_VERSION: u8 = 1;
 
@@ -121,6 +128,20 @@ pub fn model_catalog_response(catalog: &SelfAgentModelCatalog) -> ModelCatalogDt
         providers,
         profiles,
     }
+}
+
+pub(crate) async fn model_catalog_handler(
+    State(context): State<ServerContext>,
+    headers: HeaderMap,
+) -> Result<(HeaderMap, Json<ModelCatalogDto>), ApiErrorResponse> {
+    let request_id = request_id_from_headers(&headers);
+    let host = context
+        .model_host()
+        .ok_or_else(|| api_error_response(ApiErrorCode::Unavailable, request_id))?;
+    let catalog = host
+        .model_catalog()
+        .map_err(|_| api_error_response(ApiErrorCode::Unavailable, request_id))?;
+    Ok((no_store_headers(), Json(model_catalog_response(&catalog))))
 }
 
 fn model_choice(choice: &SelfAgentModelChoice) -> ModelChoiceDto {
