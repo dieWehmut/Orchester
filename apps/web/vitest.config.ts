@@ -5,5 +5,8 @@ export default defineConfig({
   plugins: [vue()],
   test: {
     environment: 'jsdom',
+    pool: 'threads',
+    fileParallelism: false,
+    maxWorkers: 1,
   },
 })
