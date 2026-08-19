@@ -835,6 +835,17 @@ impl ConfigLoader {
         Self::from_orchester_home(orchester_home())
     }
 
+    /// Use an explicit user configuration path for an embedded frontend.
+    ///
+    /// The caller owns path selection; normal permission and bounded-read
+    /// checks still run when the file is loaded.
+    pub fn for_user_path(path: impl Into<PathBuf>) -> Self {
+        Self {
+            user_path: path.into(),
+            project_path: None,
+        }
+    }
+
     fn from_orchester_home(home: Option<PathBuf>) -> Result<Self, ConfigError> {
         let home = home.ok_or(ConfigError::HomeDirectoryUnavailable)?;
         if home.as_os_str().is_empty() || !home.is_absolute() {
@@ -849,10 +860,7 @@ impl ConfigLoader {
     /// Constructor used by unit/integration tests; no filesystem lookup is
     /// performed by the inline loaders.
     pub fn test() -> Self {
-        Self {
-            user_path: PathBuf::new(),
-            project_path: None,
-        }
+        Self::for_user_path(PathBuf::new())
     }
 
     pub fn with_project_path(mut self, path: impl Into<PathBuf>) -> Self {
@@ -1957,6 +1965,16 @@ mod config_loader_tests {
         let loader = ConfigLoader::from_orchester_home(Some(home.clone())).unwrap();
 
         assert_eq!(loader.user_path(), home.join(USER_CONFIG));
+        assert_eq!(loader.project_path(), None);
+    }
+
+    #[test]
+    fn embedded_frontends_can_bind_an_explicit_user_config_path() {
+        let path = absolute("embedded").join("custom-orchester.jsonc");
+
+        let loader = ConfigLoader::for_user_path(path.clone());
+
+        assert_eq!(loader.user_path(), path);
         assert_eq!(loader.project_path(), None);
     }
 

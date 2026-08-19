@@ -2,7 +2,7 @@ use std::fmt;
 use std::path::PathBuf;
 use std::sync::Arc;
 
-use orchester_laufzeit::harness::config::{ConfigError, ConfigLoader, UserConfig};
+use orchester_laufzeit::harness::config::{ConfigError, ConfigLoader, UserConfig, USER_CONFIG};
 use orchester_laufzeit::harness::credentials::KeyringCredentialStore;
 use orchester_laufzeit::harness::service::{
     build_self_agent_runtime, clear_provider_credential, load_self_agent_config_view,
@@ -56,6 +56,7 @@ pub struct SelfAgentHost {
     workspace: PathBuf,
     state_database: PathBuf,
     audit_log: PathBuf,
+    config_loader: Option<ConfigLoader>,
     model_session: SelfAgentModelSession,
     /// A picker choice is session-scoped: it must affect future turns without
     /// rewriting the user's protected configuration file. `Some(None)` is an
@@ -71,11 +72,13 @@ impl SelfAgentHost {
     /// a WebUI and the terminal open the same run database rather than each
     /// joining its own file names onto the home directory.
     pub fn for_paths(paths: &OrchesterPaths) -> Self {
-        Self::new(
+        let mut host = Self::new(
             paths.workspace().to_path_buf(),
             paths.run_database(),
             paths.audit_log(),
-        )
+        );
+        host.config_loader = Some(ConfigLoader::for_user_path(paths.home().join(USER_CONFIG)));
+        host
     }
 
     pub fn new(workspace: PathBuf, state_database: PathBuf, audit_log: PathBuf) -> Self {
@@ -83,6 +86,7 @@ impl SelfAgentHost {
             workspace,
             state_database,
             audit_log,
+            config_loader: None,
             model_session: SelfAgentModelSession::default(),
             reasoning_effort_override: None,
             runtime: None,
@@ -271,10 +275,11 @@ impl SelfAgentHost {
     /// Deliberately does not go through [`Self::load_config`]: every other
     /// command `?`-propagates a load failure and leaves the human with one bare
     /// sentence, and this command exists to answer exactly that case. Only
-    /// `ConfigLoader::new` can fail here, and only when the home directory
-    /// cannot be located at all — the one state with no path worth reporting.
+    /// Resolving a legacy host's loader can fail only when the home directory
+    /// cannot be located; hosts built from [`OrchesterPaths`] are already bound
+    /// to the explicit home selected by the frontend.
     pub fn config_view(&self) -> Result<SelfAgentConfigView, SelfAgentHostError> {
-        let loader = ConfigLoader::new()?;
+        let loader = self.config_loader()?;
         let credentials = KeyringCredentialStore::new();
         Ok(load_self_agent_config_view(
             &loader,
@@ -325,7 +330,7 @@ impl SelfAgentHost {
     ) -> Result<(CredentialUpdate, ConfigWiring, PathBuf), SelfAgentHostError> {
         let credentials = KeyringCredentialStore::new();
         let update = store_provider_credential(&credentials, &target.provider, secret)?;
-        let loader = ConfigLoader::new()?;
+        let loader = self.config_loader()?;
         let config_path = loader.user_path().to_path_buf();
         let wiring = wire_provider_reference(&config_path, target)?;
         // The next turn must resolve against the key that was just stored.
@@ -365,7 +370,7 @@ impl SelfAgentHost {
         draft: &ProviderDraft,
         secret: Option<SecretString>,
     ) -> Result<ProviderEdit, SelfAgentHostError> {
-        let loader = ConfigLoader::new()?;
+        let loader = self.config_loader()?;
         let config = loader.load_effective(&self.workspace)?;
         let credentials = KeyringCredentialStore::new();
         let edit = write_self_agent_provider(&loader, &config, &credentials, draft, secret)?;
@@ -397,8 +402,16 @@ impl SelfAgentHost {
     }
 
     fn load_config(&self) -> Result<UserConfig, SelfAgentHostError> {
-        ConfigLoader::new()?
+        self.config_loader()?
             .load_effective(&self.workspace)
+            .map_err(Into::into)
+    }
+
+    fn config_loader(&self) -> Result<ConfigLoader, SelfAgentHostError> {
+        self.config_loader
+            .clone()
+            .map(Ok)
+            .unwrap_or_else(ConfigLoader::new)
             .map_err(Into::into)
     }
 
@@ -452,8 +465,28 @@ impl fmt::Debug for SelfAgentHost {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use orchester_laufzeit::harness::service::SelfAgentActiveModel;
+    use std::fs;
     use std::future::Future;
     use std::pin::Pin;
+    use std::sync::{Mutex, OnceLock};
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    static ENV_LOCK: OnceLock<Mutex<()>> = OnceLock::new();
+
+    struct EnvironmentRestore {
+        previous: Option<std::ffi::OsString>,
+    }
+
+    impl Drop for EnvironmentRestore {
+        fn drop(&mut self) {
+            if let Some(previous) = self.previous.take() {
+                std::env::set_var("ORCHESTER_HOME", previous);
+            } else {
+                std::env::remove_var("ORCHESTER_HOME");
+            }
+        }
+    }
 
     type ResumeFuture<'a> =
         Pin<Box<dyn Future<Output = Result<SelfAgentRunOutcome, SelfAgentHostError>> + 'a>>;
@@ -476,5 +509,54 @@ mod tests {
     #[test]
     fn host_exposes_eventful_resume_entrypoint() {
         let _: ResumeEntrypoint = invoke_resume;
+    }
+
+    #[test]
+    fn for_paths_binds_model_configuration_to_the_explicit_home() {
+        let _lock = ENV_LOCK.get_or_init(|| Mutex::new(())).lock().unwrap();
+        let root = std::env::temp_dir().join(format!(
+            "orchester-host-paths-{}",
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .expect("system clock")
+                .as_nanos()
+        ));
+        let explicit_home = root.join("explicit-home");
+        let unrelated_home = root.join("unrelated-home");
+        let workspace = root.join("workspace");
+        fs::create_dir_all(&explicit_home).expect("explicit home");
+        fs::create_dir_all(&unrelated_home).expect("unrelated home");
+        fs::create_dir_all(&workspace).expect("workspace");
+        let config = explicit_home.join("orchester.jsonc");
+        fs::write(
+            &config,
+            r#"{
+                "model_provider": "OpenAI",
+                "model": "gpt-explicit",
+                "model_providers": {
+                    "OpenAI": { "base_url": "https://example.test/v1" }
+                }
+            }"#,
+        )
+        .expect("model config");
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            fs::set_permissions(&config, fs::Permissions::from_mode(0o600))
+                .expect("private config permissions");
+        }
+        let previous = std::env::var_os("ORCHESTER_HOME");
+        std::env::set_var("ORCHESTER_HOME", &unrelated_home);
+        let _restore = EnvironmentRestore { previous };
+
+        let paths = OrchesterPaths::new(&explicit_home, &workspace);
+        let host = SelfAgentHost::for_paths(&paths);
+        let catalog = host.model_catalog().expect("model catalog");
+
+        assert!(matches!(
+            catalog.active,
+            SelfAgentActiveModel::Configured(ref choice) if choice.model == "gpt-explicit"
+        ));
+        let _ = fs::remove_dir_all(root);
     }
 }

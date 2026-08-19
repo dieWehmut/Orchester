@@ -53,3 +53,18 @@ discriminator = "type"
     assert!(context.registry().get("custom").is_some());
     assert_eq!(context.registry().len(), 5);
 }
+
+#[test]
+fn server_context_binds_a_model_host_only_for_a_selected_workspace() {
+    let workspace = TempWorkspace::new();
+    let paths = workspace.paths();
+
+    let selected = ServerContext::new(Some(paths.clone()), ServerControl::new());
+    let unselected = ServerContext::new(None, ServerControl::new());
+
+    assert!(selected.model_host().is_some());
+    assert!(unselected.model_host().is_none());
+    let debug = format!("{selected:?}");
+    assert!(!debug.contains(paths.home().to_string_lossy().as_ref()));
+    assert!(!debug.contains(paths.workspace().to_string_lossy().as_ref()));
+}
