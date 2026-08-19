@@ -8,11 +8,13 @@ import {
   type BootstrapStoreOptions,
 } from './bootstrap'
 import { createSessionsStore, type SessionsStore } from './sessions'
+import { createRunStore, type RunStore } from './run'
 
 export interface AppStores {
   http: HttpClient
   bootstrap: BootstrapStore
   sessions: SessionsStore
+  run: RunStore
   getCsrfToken: () => string | null
   start: () => Promise<void>
   install: (app: App) => void
@@ -44,11 +46,13 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
 
   const bootstrap = createBootstrapStore(bootstrapOptions)
   const sessions = createSessionsStore(createSessionsApi(http))
+  const run = createRunStore()
 
   const stores: AppStores = {
     http,
     bootstrap,
     sessions,
+    run,
     getCsrfToken: () => csrfToken,
     async start(): Promise<void> {
       await bootstrap.load()
