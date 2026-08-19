@@ -8,6 +8,7 @@ use tower::ServiceBuilder;
 use tower_http::request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer};
 
 use crate::{
+    api_error::{api_error_response, request_id_from_headers, ApiErrorCode, ApiErrorResponse},
     bootstrap::{bootstrap_response, BootstrapDto},
     health::{health_handler, no_store_headers},
     session::{fragment_exchange_handler, session_bootstrap_handler, session_revoke_handler},
@@ -21,12 +22,25 @@ pub fn app_router(context: ServerContext) -> Router {
         .route("/api/v1/session", get(session_bootstrap_handler))
         .route("/api/v1/session/revoke", post(session_revoke_handler))
         .route("/api/v1/auth/fragment", post(fragment_exchange_handler))
+        .fallback(not_found_handler)
+        .method_not_allowed_fallback(method_not_allowed_handler)
         .layer(
             ServiceBuilder::new()
                 .layer(SetRequestIdLayer::x_request_id(MakeRequestUuid))
                 .layer(PropagateRequestIdLayer::x_request_id()),
         )
         .with_state(context)
+}
+
+async fn not_found_handler(headers: HeaderMap) -> ApiErrorResponse {
+    api_error_response(ApiErrorCode::NotFound, request_id_from_headers(&headers))
+}
+
+async fn method_not_allowed_handler(headers: HeaderMap) -> ApiErrorResponse {
+    api_error_response(
+        ApiErrorCode::MethodNotAllowed,
+        request_id_from_headers(&headers),
+    )
 }
 
 async fn bootstrap_handler(

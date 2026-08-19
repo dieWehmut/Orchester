@@ -3,7 +3,7 @@ use std::sync::Mutex;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use axum::{
-    extract::State,
+    extract::{rejection::JsonRejection, State},
     http::{header, HeaderMap, StatusCode},
     Json,
 };
@@ -13,7 +13,11 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
 
-use crate::{health::no_store_headers, ServerContext};
+use crate::{
+    api_error::{api_error_response, request_id_from_headers, ApiErrorCode, ApiErrorResponse},
+    health::no_store_headers,
+    ServerContext,
+};
 
 pub const SESSION_COOKIE_NAME: &str = "orchester_session";
 
@@ -143,30 +147,36 @@ impl SessionStore {
 
 pub async fn session_bootstrap_handler(
     State(context): State<ServerContext>,
-) -> Result<(HeaderMap, Json<SessionBootstrapDto>), StatusCode> {
-    issue_session_response(&context)
+    headers: HeaderMap,
+) -> Result<(HeaderMap, Json<SessionBootstrapDto>), ApiErrorResponse> {
+    issue_session_response(&context, request_id_from_headers(&headers))
 }
 
 pub async fn fragment_exchange_handler(
     State(context): State<ServerContext>,
-    Json(request): Json<FragmentTokenExchangeRequestDto>,
-) -> Result<(HeaderMap, Json<SessionBootstrapDto>), StatusCode> {
+    headers: HeaderMap,
+    request: Result<Json<FragmentTokenExchangeRequestDto>, JsonRejection>,
+) -> Result<(HeaderMap, Json<SessionBootstrapDto>), ApiErrorResponse> {
+    let request_id = request_id_from_headers(&headers);
+    let Json(request) =
+        request.map_err(|_| api_error_response(ApiErrorCode::BadRequest, request_id))?;
     if request.schema_version != 1 {
-        return Err(StatusCode::BAD_REQUEST);
+        return Err(api_error_response(ApiErrorCode::BadRequest, request_id));
     }
     if !context.fragments().consume(&request.fragment_token) {
-        return Err(StatusCode::UNAUTHORIZED);
+        return Err(api_error_response(ApiErrorCode::Unauthorized, request_id));
     }
-    issue_session_response(&context)
+    issue_session_response(&context, request_id)
 }
 
 fn issue_session_response(
     context: &ServerContext,
-) -> Result<(HeaderMap, Json<SessionBootstrapDto>), StatusCode> {
+    request_id: Option<&str>,
+) -> Result<(HeaderMap, Json<SessionBootstrapDto>), ApiErrorResponse> {
     let issued = context
         .sessions()
         .issue()
-        .map_err(|_| StatusCode::SERVICE_UNAVAILABLE)?;
+        .map_err(|_| api_error_response(ApiErrorCode::Unavailable, request_id))?;
     let cookie = Cookie::build((SESSION_COOKIE_NAME, issued.session_cookie))
         .http_only(true)
         .same_site(SameSite::Lax)
@@ -178,7 +188,7 @@ fn issue_session_response(
         cookie
             .to_string()
             .parse()
-            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?,
+            .map_err(|_| api_error_response(ApiErrorCode::Internal, request_id))?,
     );
     Ok((
         headers,
@@ -193,35 +203,36 @@ fn issue_session_response(
 pub async fn session_revoke_handler(
     State(context): State<ServerContext>,
     headers: HeaderMap,
-) -> StatusCode {
+) -> Result<StatusCode, ApiErrorResponse> {
+    let request_id = request_id_from_headers(&headers);
     let Some(cookie_header) = headers
         .get(header::COOKIE)
         .and_then(|value| value.to_str().ok())
     else {
-        return StatusCode::FORBIDDEN;
+        return Err(api_error_response(ApiErrorCode::Forbidden, request_id));
     };
     let Some(session_cookie) = Cookie::split_parse(cookie_header)
         .filter_map(Result::ok)
         .find(|cookie| cookie.name() == SESSION_COOKIE_NAME)
     else {
-        return StatusCode::FORBIDDEN;
+        return Err(api_error_response(ApiErrorCode::Forbidden, request_id));
     };
     let Some(csrf_token) = headers
         .get("x-csrf-token")
         .and_then(|value| value.to_str().ok())
     else {
-        return StatusCode::FORBIDDEN;
+        return Err(api_error_response(ApiErrorCode::Forbidden, request_id));
     };
     if !context
         .sessions()
         .validate(session_cookie.value(), csrf_token)
     {
-        return StatusCode::FORBIDDEN;
+        return Err(api_error_response(ApiErrorCode::Forbidden, request_id));
     }
     if context.sessions().revoke(session_cookie.value()) {
-        StatusCode::NO_CONTENT
+        Ok(StatusCode::NO_CONTENT)
     } else {
-        StatusCode::FORBIDDEN
+        Err(api_error_response(ApiErrorCode::Forbidden, request_id))
     }
 }
 

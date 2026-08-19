@@ -296,6 +296,15 @@ async fn fragment_exchange_consumes_a_registered_token_once() {
         .await
         .expect("query fragment response");
     assert_eq!(query.status(), StatusCode::METHOD_NOT_ALLOWED);
+    assert_eq!(
+        query.headers().get(header::CONTENT_TYPE).unwrap(),
+        "application/json"
+    );
+    let body = to_bytes(query.into_body(), usize::MAX)
+        .await
+        .expect("method not allowed body");
+    let json: Value = serde_json::from_slice(&body).expect("method not allowed JSON");
+    assert_eq!(json["code"], "method_not_allowed");
 }
 
 #[tokio::test]
@@ -332,4 +341,55 @@ async fn fragment_exchange_rejects_schema_mismatch_without_consuming_token() {
         .await
         .expect("valid schema response");
     assert_eq!(valid.status(), StatusCode::OK);
+}
+
+#[tokio::test]
+async fn unknown_api_routes_return_typed_json_errors() {
+    let response = app_router(test_context())
+        .oneshot(
+            Request::get("/api/v1/not-found")
+                .body(Body::empty())
+                .expect("not found request"),
+        )
+        .await
+        .expect("not found response");
+
+    assert_eq!(response.status(), StatusCode::NOT_FOUND);
+    assert_eq!(
+        response.headers().get(header::CONTENT_TYPE).unwrap(),
+        "application/json"
+    );
+    assert!(response.headers().get("x-request-id").is_some());
+    let body = to_bytes(response.into_body(), usize::MAX)
+        .await
+        .expect("not found body");
+    let json: Value = serde_json::from_slice(&body).expect("not found JSON");
+    assert_eq!(json["code"], "not_found");
+    assert_eq!(json["error"], "resource not found");
+}
+
+#[tokio::test]
+async fn malformed_json_returns_a_redacted_bad_request() {
+    let response = app_router(test_context())
+        .oneshot(
+            Request::post("/api/v1/auth/fragment")
+                .header(header::CONTENT_TYPE, "application/json")
+                .body(Body::from("{not-json"))
+                .expect("malformed request"),
+        )
+        .await
+        .expect("malformed response");
+
+    assert_eq!(response.status(), StatusCode::BAD_REQUEST);
+    assert_eq!(
+        response.headers().get(header::CONTENT_TYPE).unwrap(),
+        "application/json"
+    );
+    let body = to_bytes(response.into_body(), usize::MAX)
+        .await
+        .expect("malformed body");
+    let json: Value = serde_json::from_slice(&body).expect("malformed JSON error");
+    assert_eq!(json["code"], "bad_request");
+    assert_eq!(json["error"], "request is invalid");
+    assert!(!json.to_string().contains("not-json"));
 }

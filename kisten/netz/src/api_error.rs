@@ -1,4 +1,8 @@
-use axum::http::StatusCode;
+use axum::{
+    http::{header, HeaderMap, StatusCode},
+    response::{IntoResponse, Response},
+    Json,
+};
 use serde::Serialize;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
@@ -29,6 +33,21 @@ pub struct ApiErrorBody {
 pub struct ApiErrorResponse {
     pub status: StatusCode,
     pub body: ApiErrorBody,
+}
+
+impl IntoResponse for ApiErrorResponse {
+    fn into_response(self) -> Response {
+        let mut response = (self.status, Json(self.body)).into_response();
+        response.headers_mut().insert(
+            header::CACHE_CONTROL,
+            "no-store".parse().expect("static cache-control header"),
+        );
+        response
+    }
+}
+
+pub(crate) fn request_id_from_headers(headers: &HeaderMap) -> Option<&str> {
+    headers.get("x-request-id")?.to_str().ok()
 }
 
 pub fn api_error_response(code: ApiErrorCode, request_id: Option<&str>) -> ApiErrorResponse {
