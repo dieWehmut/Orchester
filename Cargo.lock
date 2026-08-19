@@ -1133,6 +1133,7 @@ dependencies = [
  "orchester-protokoll",
  "orchester-verzeichnis",
  "secrecy",
+ "sha2",
  "thiserror",
  "tokio",
  "tokio-util",

@@ -177,7 +177,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   - [x] N1-013e: Bind host configuration loading to explicit `OrchesterPaths`.
 - [ ] N1-014: Add session list/detail routes with pagination cursors.
   - [x] N1-014a: Define versioned delegate-history page/detail contracts.
-  - [ ] N1-014b: Add stable opaque IDs and cursor paging in the application layer.
+  - [x] N1-014b: Add stable opaque IDs and cursor paging in the application layer.
   - [ ] N1-014c: Project bounded summary and path-free detail DTOs.
   - [ ] N1-014d: Bind delegate history to server context.
   - [ ] N1-014e: Route and verify paginated session listing.
