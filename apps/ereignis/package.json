@@ -1,0 +1,26 @@
+{
+  "name": "@orchester/ereignis",
+  "version": "0.1.2",
+  "private": true,
+  "type": "module",
+  "description": "Pure deterministic run projections and shared Vue run views",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@orchester/design": "workspace:*",
+    "@orchester/protokoll": "workspace:*",
+    "vue": "3.5.18"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/test-utils": "^2.4.6",
+    "jsdom": "^30.0.1",
+    "vite": "^7.1.2",
+    "vue-tsc": "^3.2.5"
+  }
+}
