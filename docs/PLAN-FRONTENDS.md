@@ -265,6 +265,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [ ] W1-015: Build single-column mobile header and full-height drawers.
 - [x] W1-016: Build session list, loading, empty, error, and unavailable states.
   - [x] W1-016a: Connect opaque session detail selection to the transcript pane.
+- [x] W1-007d: Install one application store instance and bootstrap connection state in the app shell.
 - [ ] W1-017: Build agent/model/effort pickers with unavailable handling.
 - [ ] W1-018: Build composer Enter/Shift+Enter and size-limit behavior.
 - [ ] W1-019: Build submit, cancel, and busy double-submit protection.
