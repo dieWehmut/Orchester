@@ -1,8 +1,14 @@
+<script setup lang="ts">
+import { useI18n } from '../i18n'
+
+const { t } = useI18n()
+</script>
+
 <template>
   <section class="route-placeholder" data-testid="settings-view">
-    <p class="route-placeholder__eyebrow">Configuration</p>
-    <h1>Settings</h1>
-    <p>Provider credentials, model selection, and appearance controls will appear here.</p>
+    <p class="route-placeholder__eyebrow">{{ t('settings.eyebrow') }}</p>
+    <h1>{{ t('settings.title') }}</h1>
+    <p>{{ t('settings.description') }}</p>
   </section>
 </template>
 

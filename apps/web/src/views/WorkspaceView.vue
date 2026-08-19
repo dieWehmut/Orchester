@@ -1,8 +1,14 @@
+<script setup lang="ts">
+import { useI18n } from '../i18n'
+
+const { t } = useI18n()
+</script>
+
 <template>
   <section class="route-placeholder" data-testid="workspace-view">
-    <p class="route-placeholder__eyebrow">Local workspace</p>
-    <h1>Workspace</h1>
-    <p>Session history, run transcript, and context tools will appear here.</p>
+    <p class="route-placeholder__eyebrow">{{ t('workspace.eyebrow') }}</p>
+    <h1>{{ t('workspace.title') }}</h1>
+    <p>{{ t('workspace.description') }}</p>
   </section>
 </template>
 

@@ -1,0 +1,27 @@
+{
+  "app": {
+    "name": "Orchester",
+    "workspace": "Agent workspace",
+    "runtimePending": "Runtime pending"
+  },
+  "routes": {
+    "workspace": "Workspace",
+    "settings": "Settings",
+    "notFound": "Page not found"
+  },
+  "workspace": {
+    "eyebrow": "Local workspace",
+    "title": "Workspace",
+    "description": "Session history, run transcript, and context tools will appear here."
+  },
+  "settings": {
+    "eyebrow": "Configuration",
+    "title": "Settings",
+    "description": "Provider credentials, model selection, and appearance controls will appear here."
+  },
+  "notFound": {
+    "eyebrow": "404",
+    "description": "The requested workspace route does not exist.",
+    "return": "Return to workspace"
+  }
+}

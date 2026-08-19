@@ -1,0 +1,27 @@
+{
+  "app": {
+    "name": "Orchester",
+    "workspace": "智能体工作区",
+    "runtimePending": "运行时连接等待中"
+  },
+  "routes": {
+    "workspace": "工作区",
+    "settings": "设置",
+    "notFound": "页面不存在"
+  },
+  "workspace": {
+    "eyebrow": "本地工作区",
+    "title": "工作区",
+    "description": "会话历史、运行记录和上下文工具将在这里显示。"
+  },
+  "settings": {
+    "eyebrow": "配置",
+    "title": "设置",
+    "description": "供应商凭据、模型选择和外观控制将在这里显示。"
+  },
+  "notFound": {
+    "eyebrow": "404",
+    "description": "请求的工作区路径不存在。",
+    "return": "返回工作区"
+  }
+}

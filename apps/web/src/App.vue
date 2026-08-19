@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { StatusDot, ThemeToggle } from '@orchester/design'
+
+import { useI18n } from './i18n'
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -8,15 +12,15 @@ import { StatusDot, ThemeToggle } from '@orchester/design'
       <div class="brand-lockup">
         <div class="brand-mark" aria-hidden="true">O</div>
         <div>
-          <strong data-testid="product-name">Orchester</strong>
-          <span>Agent workspace</span>
+          <strong data-testid="product-name">{{ t('app.name') }}</strong>
+          <span>{{ t('app.workspace') }}</span>
         </div>
       </div>
 
       <div class="header-actions">
         <div class="connection-state" aria-label="Runtime connection pending">
           <StatusDot status="idle" label="Runtime connection pending" :pulse="false" />
-          <span>Runtime pending</span>
+          <span>{{ t('app.runtimePending') }}</span>
         </div>
         <ThemeToggle />
       </div>

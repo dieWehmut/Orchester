@@ -1,9 +1,17 @@
+<script setup lang="ts">
+import { useI18n } from '../i18n'
+
+const { t } = useI18n()
+</script>
+
 <template>
   <section class="route-placeholder" data-testid="not-found-view">
-    <p class="route-placeholder__eyebrow">404</p>
-    <h1>Page not found</h1>
-    <p>The requested workspace route does not exist.</p>
-    <RouterLink class="route-placeholder__link" to="/workspace">Return to workspace</RouterLink>
+    <p class="route-placeholder__eyebrow">{{ t('notFound.eyebrow') }}</p>
+    <h1>{{ t('routes.notFound') }}</h1>
+    <p>{{ t('notFound.description') }}</p>
+    <RouterLink class="route-placeholder__link" to="/workspace">
+      {{ t('notFound.return') }}
+    </RouterLink>
   </section>
 </template>
 

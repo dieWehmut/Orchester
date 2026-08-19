@@ -1,0 +1,27 @@
+{
+  "app": {
+    "name": "Orchester",
+    "workspace": "代理工作區",
+    "runtimePending": "執行環境連線等待中"
+  },
+  "routes": {
+    "workspace": "工作區",
+    "settings": "設定",
+    "notFound": "找不到頁面"
+  },
+  "workspace": {
+    "eyebrow": "本機工作區",
+    "title": "工作區",
+    "description": "工作階段歷史、執行記錄與內容工具將顯示於此。"
+  },
+  "settings": {
+    "eyebrow": "設定",
+    "title": "設定",
+    "description": "供應商憑證、模型選擇與外觀控制將顯示於此。"
+  },
+  "notFound": {
+    "eyebrow": "404",
+    "description": "要求的工作區路徑不存在。",
+    "return": "返回工作區"
+  }
+}
