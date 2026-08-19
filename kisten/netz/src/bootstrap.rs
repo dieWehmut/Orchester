@@ -1,6 +1,6 @@
 use std::{fmt, path::Path, sync::Arc, time::Duration};
 
-use orchester_anwendung::{OrchesterPaths, SelfAgentHost};
+use orchester_anwendung::{OrchesterPaths, SelfAgentHost, SessionHistory};
 use orchester_verzeichnis::{standard_plugin_roots, Registry};
 use serde::Serialize;
 
@@ -14,6 +14,7 @@ pub struct ServerContext {
     control: ServerControl,
     registry: Arc<Registry>,
     model_host: Option<Arc<SelfAgentHost>>,
+    session_history: Option<Arc<SessionHistory>>,
     sessions: Arc<SessionStore>,
     fragments: Arc<FragmentTokenStore>,
 }
@@ -22,11 +23,13 @@ impl ServerContext {
     pub fn new(paths: Option<OrchesterPaths>, control: ServerControl) -> Self {
         let registry = Arc::new(discover_registry(paths.as_ref()));
         let model_host = paths.as_ref().map(SelfAgentHost::for_paths).map(Arc::new);
+        let session_history = paths.as_ref().map(SessionHistory::for_paths).map(Arc::new);
         Self {
             paths,
             control,
             registry,
             model_host,
+            session_history,
             sessions: Arc::new(SessionStore::new(Duration::from_secs(8 * 60 * 60))),
             fragments: Arc::new(FragmentTokenStore::new(Duration::from_secs(5 * 60))),
         }
@@ -46,6 +49,10 @@ impl ServerContext {
 
     pub fn model_host(&self) -> Option<&SelfAgentHost> {
         self.model_host.as_deref()
+    }
+
+    pub fn session_history(&self) -> Option<&SessionHistory> {
+        self.session_history.as_deref()
     }
 
     pub(crate) fn sessions(&self) -> &SessionStore {
