@@ -38,6 +38,19 @@
     "loadMore": "Load more",
     "resumable": "Resumable"
   },
+  "transcript": {
+    "emptyTitle": "New run",
+    "emptyDescription": "Select a previous session or start a new run.",
+    "loading": "Loading session",
+    "loadError": "Session details unavailable",
+    "prompt": "Request",
+    "result": "Result",
+    "usage": "Usage",
+    "inputTokens": "Input",
+    "outputTokens": "Output",
+    "reasoningTokens": "Reasoning",
+    "cachedTokens": "Cached"
+  },
   "inspector": {
     "label": "Workspace inspector",
     "context": "Context",

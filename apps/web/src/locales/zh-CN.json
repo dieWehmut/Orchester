@@ -38,6 +38,19 @@
     "loadMore": "加载更多",
     "resumable": "可恢复"
   },
+  "transcript": {
+    "emptyTitle": "新运行",
+    "emptyDescription": "选择历史会话或开始新的运行。",
+    "loading": "正在加载会话",
+    "loadError": "无法加载会话详情",
+    "prompt": "请求",
+    "result": "结果",
+    "usage": "用量",
+    "inputTokens": "输入",
+    "outputTokens": "输出",
+    "reasoningTokens": "推理",
+    "cachedTokens": "缓存"
+  },
   "inspector": {
     "label": "工作区检查器",
     "context": "上下文",

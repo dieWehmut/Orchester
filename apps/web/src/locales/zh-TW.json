@@ -38,6 +38,19 @@
     "loadMore": "載入更多",
     "resumable": "可恢復"
   },
+  "transcript": {
+    "emptyTitle": "新增執行",
+    "emptyDescription": "選擇歷史工作階段或開始新的執行。",
+    "loading": "正在載入工作階段",
+    "loadError": "無法載入工作階段詳細資料",
+    "prompt": "請求",
+    "result": "結果",
+    "usage": "用量",
+    "inputTokens": "輸入",
+    "outputTokens": "輸出",
+    "reasoningTokens": "推理",
+    "cachedTokens": "快取"
+  },
   "inspector": {
     "label": "工作區檢查器",
     "context": "內容",
