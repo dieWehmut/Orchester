@@ -1,25 +1,29 @@
-use std::{path::Path, sync::Arc, time::Duration};
+use std::{fmt, path::Path, sync::Arc, time::Duration};
 
 use orchester_anwendung::OrchesterPaths;
+use orchester_verzeichnis::{standard_plugin_roots, Registry};
 use serde::Serialize;
 
 use crate::{
     FragmentTokenStore, FragmentTokenStoreError, ServerControl, ServerState, SessionStore,
 };
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct ServerContext {
     paths: Option<OrchesterPaths>,
     control: ServerControl,
+    registry: Arc<Registry>,
     sessions: Arc<SessionStore>,
     fragments: Arc<FragmentTokenStore>,
 }
 
 impl ServerContext {
     pub fn new(paths: Option<OrchesterPaths>, control: ServerControl) -> Self {
+        let registry = Arc::new(discover_registry(paths.as_ref()));
         Self {
             paths,
             control,
+            registry,
             sessions: Arc::new(SessionStore::new(Duration::from_secs(8 * 60 * 60))),
             fragments: Arc::new(FragmentTokenStore::new(Duration::from_secs(5 * 60))),
         }
@@ -33,6 +37,10 @@ impl ServerContext {
         &self.control
     }
 
+    pub fn registry(&self) -> &Registry {
+        &self.registry
+    }
+
     pub(crate) fn sessions(&self) -> &SessionStore {
         &self.sessions
     }
@@ -43,6 +51,32 @@ impl ServerContext {
 
     pub(crate) fn fragments(&self) -> &FragmentTokenStore {
         &self.fragments
+    }
+}
+
+impl fmt::Debug for ServerContext {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("ServerContext")
+            .field("workspace_selected", &self.paths.is_some())
+            .field("server_state", &self.control.state())
+            .field("agent_count", &self.registry.len())
+            .finish_non_exhaustive()
+    }
+}
+
+fn discover_registry(paths: Option<&OrchesterPaths>) -> Registry {
+    let Some(paths) = paths else {
+        let mut registry = Registry::new();
+        registry.register_builtins();
+        return registry;
+    };
+
+    match standard_plugin_roots(paths.home(), paths.workspace()) {
+        Ok(plugin_roots) => {
+            Registry::discover_with_plugin_roots(paths.manifest_dir(), plugin_roots)
+        }
+        Err(_) => Registry::discover(paths.manifest_dir()),
     }
 }
 
