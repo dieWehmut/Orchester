@@ -1,0 +1,28 @@
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+#app {
+  min-block-size: 100vh;
+}
+
+.scaffold {
+  inline-size: min(100% - (2 * var(--space-6)), var(--content-max));
+  margin-inline: auto;
+  padding-block: var(--space-20);
+}
+
+.scaffold__eyebrow {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.scaffold h1 {
+  max-inline-size: 16ch;
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-3xl);
+  line-height: var(--leading-tight);
+  letter-spacing: 0;
+}
