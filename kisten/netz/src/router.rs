@@ -204,6 +204,12 @@ async fn serve_static_request(root: Arc<PathBuf>, request: Request) -> Response 
 #[cfg(feature = "static-files")]
 fn safe_relative_path(path: &str) -> Option<PathBuf> {
     let decoded = decode_uri_path(path)?;
+    // Do not reinterpret a second layer of percent encoding. A path such as
+    // `%252e%252e/secret` must not become a traversal after a later proxy or
+    // filesystem layer decodes it again.
+    if decoded.contains('%') {
+        return None;
+    }
     let mut relative = PathBuf::new();
     for component in decoded.split('/') {
         if component.is_empty() || component == "." {
