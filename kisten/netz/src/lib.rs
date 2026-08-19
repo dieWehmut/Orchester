@@ -33,7 +33,7 @@ pub use model_catalog::{
     model_catalog_response, ActiveModelDto, ModelCatalogDto, ModelChoiceDto, ModelProfileDto,
     ProviderChoiceDto, ProviderChoiceStateDto, MODEL_CATALOG_SCHEMA_VERSION,
 };
-pub use router::app_router;
+pub use router::{app_router, app_router_with_static_assets};
 pub use session::{
     fragment_exchange_handler, session_bootstrap_handler, session_revoke_handler,
     FragmentTokenExchangeRequestDto, SessionBootstrap, SessionBootstrapDto, SessionStore,
