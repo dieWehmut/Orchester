@@ -12,7 +12,7 @@ default = []
 static-files = ["tower-http/fs"]
 
 [dependencies]
-axum = { workspace = true }
+axum = { workspace = true, features = ["query"] }
 cookie = "0.18.2"
 getrandom = { workspace = true }
 orchester-anwendung = { workspace = true }

@@ -13,6 +13,7 @@ mod listener;
 mod model_catalog;
 mod router;
 mod session;
+mod session_history;
 mod workspace;
 
 pub use agent_catalog::{
@@ -37,5 +38,10 @@ pub use session::{
     fragment_exchange_handler, session_bootstrap_handler, session_revoke_handler,
     FragmentTokenExchangeRequestDto, SessionBootstrap, SessionBootstrapDto, SessionStore,
     SessionStoreError, SESSION_COOKIE_NAME,
+};
+pub use session_history::{
+    session_detail_response, session_page_response, SessionDetailDto, SessionOutcomeDto,
+    SessionPageDto, SessionSummaryDto, SESSION_HISTORY_SCHEMA_VERSION, SESSION_LIST_DEFAULT_LIMIT,
+    SESSION_PROMPT_MAX_CHARS, SESSION_RESULT_MAX_CHARS,
 };
 pub use workspace::{select_workspace, WorkspaceSelectionError};

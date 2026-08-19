@@ -127,13 +127,34 @@ export interface ModelCatalogDto {
   profiles: ModelProfileDto[]
 }
 
+export const SESSION_HISTORY_SCHEMA_VERSION = 1 as const
+
+export type SessionOutcomeDto = 'success' | 'failed' | 'cancelled'
+
 export interface SessionSummaryDto {
-  /** The opaque handle `orchester --resume` accepts. */
-  handle: string
-  started_at: string
+  /** Opaque history identifier; never the external agent's native session ID. */
+  id: string
+  source: 'delegate'
+  recorded_at_unix: number
   title: string
-  stage: string
+  agent: string
+  model: string | null
+  outcome: SessionOutcomeDto
   resumable: boolean
+}
+
+export interface SessionPageDto {
+  schema_version: typeof SESSION_HISTORY_SCHEMA_VERSION
+  items: SessionSummaryDto[]
+  /** Opaque ID of the last returned item, or null when the page is terminal. */
+  next_cursor: string | null
+}
+
+export interface SessionDetailDto extends SessionSummaryDto {
+  schema_version: typeof SESSION_HISTORY_SCHEMA_VERSION
+  prompt: string
+  final_text: string
+  usage: Usage
 }
 
 export interface ConfigViewDto {
@@ -154,7 +175,7 @@ export interface StatusDto {
 
 export interface StartRunRequest {
   prompt: string
-  /** A handle from {@link SessionSummaryDto} to continue instead of starting fresh. */
+  /** A durable self-agent resume handle from the dedicated resume catalog. */
   resume?: string
 }
 
