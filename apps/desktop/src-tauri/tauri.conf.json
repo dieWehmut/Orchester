@@ -16,6 +16,17 @@
     "frontendDist": "../../web/dist"
   },
   "app": {
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' asset: http://asset.localhost data: blob:; font-src 'self'; connect-src 'self' ipc: http://ipc.localhost; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; navigate-to 'self'",
+      "devCsp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' asset: http://asset.localhost data: blob:; font-src 'self'; connect-src 'self' ipc: http://ipc.localhost http://127.0.0.1:4173 ws://127.0.0.1:4173; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; navigate-to 'self'",
+      "freezePrototype": true,
+      "dangerousDisableAssetCspModification": false,
+      "assetProtocol": {
+        "enable": false,
+        "scope": []
+      },
+      "capabilities": ["default"]
+    },
     "windows": [
       {
         "label": "main",
@@ -24,7 +35,8 @@
         "height": 800,
         "minWidth": 960,
         "minHeight": 640,
-        "resizable": true
+        "resizable": true,
+        "devtools": false
       }
     ]
   },
