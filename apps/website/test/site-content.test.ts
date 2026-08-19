@@ -1,6 +1,6 @@
 import { mount, type VueWrapper } from '@vue/test-utils'
 import { createMemoryHistory } from 'vue-router'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import ArchitectureView from '../src/views/ArchitectureView.vue'
 import HomeView from '../src/views/HomeView.vue'
@@ -54,7 +54,22 @@ describe('website content views', () => {
 
     expect(wrapper.get('main[data-page="install"] h1').text()).toContain('Install')
     expect(wrapper.get('[data-install-steps]').findAll('[data-install-step]')).toHaveLength(3)
-    expect(wrapper.get('[data-install-steps] code').text()).toContain('pnpm')
+    expect(wrapper.get('[data-install-step="02"] code').text()).toContain('pnpm')
     expect(wrapper.get('[data-install-prerequisites]')).toBeTruthy()
+  })
+
+  it('copies an install command and exposes a success label', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText },
+    })
+    const wrapper = await mountView(InstallView, '/install')
+
+    const copy = wrapper.get('[data-install-step="01"] .command-block__copy')
+    await copy.trigger('click')
+
+    expect(writeText).toHaveBeenCalledWith(expect.stringContaining('git clone'))
+    expect(copy.attributes('aria-label')).toContain('Copied')
   })
 })
