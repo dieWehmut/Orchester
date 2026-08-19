@@ -23,14 +23,7 @@ import { StatusDot, ThemeToggle } from '@orchester/design'
     </header>
 
     <main aria-label="Agent workspace">
-      <section class="workspace-placeholder">
-        <p class="workspace-kicker">Local workspace</p>
-        <h1>Ready for the agent workspace</h1>
-        <p>
-          The runtime transport, session rail, run transcript and inspector mount here as
-          independent workspace modules.
-        </p>
-      </section>
+      <RouterView />
     </main>
   </div>
 </template>

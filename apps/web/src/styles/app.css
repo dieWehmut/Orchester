@@ -89,35 +89,6 @@ main {
   min-block-size: calc(100vh - var(--header-height));
 }
 
-.workspace-placeholder {
-  display: grid;
-  min-block-size: calc(100vh - var(--header-height));
-  align-content: center;
-  justify-items: center;
-  padding: var(--space-8);
-  text-align: center;
-}
-
-.workspace-placeholder h1 {
-  max-inline-size: 640px;
-  margin: var(--space-2) 0;
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0;
-}
-
-.workspace-placeholder p:last-child {
-  max-inline-size: 620px;
-  margin: 0;
-  color: var(--color-text-secondary);
-}
-
-.workspace-kicker {
-  margin: 0;
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-}
-
 @media (max-width: 640px) {
   .connection-state span,
   .brand-lockup span {
@@ -130,7 +101,4 @@ main {
     padding: 0;
   }
 
-  .workspace-placeholder {
-    padding: var(--space-5);
-  }
 }
