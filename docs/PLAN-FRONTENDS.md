@@ -248,7 +248,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] W1-002: Add router with workspace/settings/not-found lazy routes.
 - [x] W1-003: Add English, Simplified Chinese, and Traditional Chinese locale
   dictionaries with stable message keys.
-- [ ] W1-004: Add typed HTTP client with cookies, CSRF, request IDs, and abort.
+- [x] W1-004: Add typed HTTP client with cookies, CSRF, request IDs, and abort.
 - [ ] W1-005: Add API error normalization and retry classification.
 - [ ] W1-006: Add bootstrap store and fragment-token URL cleanup.
 - [ ] W1-007: Add session, model, workspace, settings, and layout stores.
