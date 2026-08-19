@@ -244,7 +244,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 
 ## Wave W1: local WebUI application
 
-- [ ] W1-001: Scaffold Vite app, entrypoint, app shell, and no-flash bootstrap.
+- [x] W1-001: Scaffold Vite app, entrypoint, app shell, and no-flash bootstrap.
 - [ ] W1-002: Add router with workspace/settings/not-found lazy routes.
 - [ ] W1-003: Add English, Simplified Chinese, and Traditional Chinese locale
   dictionaries with stable message keys.
