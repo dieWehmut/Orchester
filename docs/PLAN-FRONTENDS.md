@@ -254,6 +254,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [ ] W1-007: Add session, model, workspace, settings, and layout stores.
   - [x] W1-007a: Add typed session list/detail API client.
   - [x] W1-007b: Add paginated session list/detail store.
+  - [x] W1-007c: Compose bootstrap and session stores over one in-memory CSRF client.
 - [ ] W1-008: Add run store backed by the pure ereignis projector.
 - [ ] W1-009: Add optimistic user row deduplication by client request ID.
 - [ ] W1-010: Add one-time-ticket WebSocket transport with bounded backoff.
