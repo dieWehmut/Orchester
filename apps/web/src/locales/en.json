@@ -2,7 +2,11 @@
   "app": {
     "name": "Orchester",
     "workspace": "Agent workspace",
-    "runtimePending": "Runtime pending"
+    "runtimePending": "Runtime pending",
+    "connected": "Connected",
+    "offline": "Offline",
+    "connectionError": "Connection error",
+    "unknownWorkspace": "No workspace selected"
   },
   "routes": {
     "workspace": "Workspace",
@@ -23,5 +27,27 @@
     "eyebrow": "404",
     "description": "The requested workspace route does not exist.",
     "return": "Return to workspace"
+  },
+  "sessions": {
+    "title": "Sessions",
+    "new": "New session",
+    "empty": "No sessions yet",
+    "emptyDescription": "Completed delegate runs will appear here.",
+    "loadError": "Session history unavailable",
+    "retry": "Retry",
+    "loadMore": "Load more",
+    "resumable": "Resumable"
+  },
+  "inspector": {
+    "label": "Workspace inspector",
+    "context": "Context",
+    "approvals": "Approvals",
+    "changes": "Changes",
+    "contextTitle": "Workspace context",
+    "contextDescription": "Files, runtime metadata, and selected session context will appear here.",
+    "approvalsTitle": "Approvals",
+    "approvalsDescription": "Pending governance decisions will appear here when a run pauses.",
+    "changesTitle": "Changes",
+    "changesDescription": "Observed file changes and diffs will appear here."
   }
 }

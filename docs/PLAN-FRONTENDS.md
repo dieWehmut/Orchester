@@ -259,10 +259,10 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [ ] W1-010: Add one-time-ticket WebSocket transport with bounded backoff.
 - [ ] W1-011: Add heartbeat, terminal close, replay, and resync callbacks.
 - [x] W1-012: Build desktop three-column `WorkspaceShell`.
-- [ ] W1-013: Build `WorkspaceHeader`, session rail, and inspector dock.
+- [x] W1-013: Build `WorkspaceHeader`, session rail, and inspector dock.
 - [ ] W1-014: Build responsive drawers for 900-1279px layouts.
 - [ ] W1-015: Build single-column mobile header and full-height drawers.
-- [ ] W1-016: Build session list, loading, empty, error, and unavailable states.
+- [x] W1-016: Build session list, loading, empty, error, and unavailable states.
 - [ ] W1-017: Build agent/model/effort pickers with unavailable handling.
 - [ ] W1-018: Build composer Enter/Shift+Enter and size-limit behavior.
 - [ ] W1-019: Build submit, cancel, and busy double-submit protection.

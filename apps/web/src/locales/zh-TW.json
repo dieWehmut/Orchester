@@ -2,7 +2,11 @@
   "app": {
     "name": "Orchester",
     "workspace": "代理工作區",
-    "runtimePending": "執行環境連線等待中"
+    "runtimePending": "執行環境連線等待中",
+    "connected": "已連線",
+    "offline": "離線",
+    "connectionError": "連線錯誤",
+    "unknownWorkspace": "尚未選擇工作區"
   },
   "routes": {
     "workspace": "工作區",
@@ -23,5 +27,27 @@
     "eyebrow": "404",
     "description": "要求的工作區路徑不存在。",
     "return": "返回工作區"
+  },
+  "sessions": {
+    "title": "工作階段",
+    "new": "新增工作階段",
+    "empty": "尚無工作階段",
+    "emptyDescription": "已完成的委派執行將顯示於此。",
+    "loadError": "無法載入工作階段歷史",
+    "retry": "重試",
+    "loadMore": "載入更多",
+    "resumable": "可恢復"
+  },
+  "inspector": {
+    "label": "工作區檢查器",
+    "context": "內容",
+    "approvals": "審批",
+    "changes": "變更",
+    "contextTitle": "工作區內容",
+    "contextDescription": "檔案、執行環境中繼資料與所選工作階段內容將顯示於此。",
+    "approvalsTitle": "審批",
+    "approvalsDescription": "執行暫停時，待處理的治理決策將顯示於此。",
+    "changesTitle": "變更",
+    "changesDescription": "偵測到的檔案變更與差異將顯示於此。"
   }
 }

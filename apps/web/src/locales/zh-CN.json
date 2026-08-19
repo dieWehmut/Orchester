@@ -2,7 +2,11 @@
   "app": {
     "name": "Orchester",
     "workspace": "智能体工作区",
-    "runtimePending": "运行时连接等待中"
+    "runtimePending": "运行时连接等待中",
+    "connected": "已连接",
+    "offline": "离线",
+    "connectionError": "连接错误",
+    "unknownWorkspace": "未选择工作区"
   },
   "routes": {
     "workspace": "工作区",
@@ -23,5 +27,27 @@
     "eyebrow": "404",
     "description": "请求的工作区路径不存在。",
     "return": "返回工作区"
+  },
+  "sessions": {
+    "title": "会话",
+    "new": "新建会话",
+    "empty": "暂无会话",
+    "emptyDescription": "已完成的委派运行会显示在这里。",
+    "loadError": "无法加载会话历史",
+    "retry": "重试",
+    "loadMore": "加载更多",
+    "resumable": "可恢复"
+  },
+  "inspector": {
+    "label": "工作区检查器",
+    "context": "上下文",
+    "approvals": "审批",
+    "changes": "变更",
+    "contextTitle": "工作区上下文",
+    "contextDescription": "文件、运行时元数据和所选会话上下文会显示在这里。",
+    "approvalsTitle": "审批",
+    "approvalsDescription": "运行暂停时，待处理的治理决策会显示在这里。",
+    "changesTitle": "变更",
+    "changesDescription": "检测到的文件变更和差异会显示在这里。"
   }
 }
