@@ -58,14 +58,23 @@ export interface FragmentTokenExchangeResponseDto extends SessionBootstrapDto {
   schema_version: typeof FRAGMENT_AUTH_SCHEMA_VERSION
 }
 
-/** An adapter the registry discovered, and whether its binary is on PATH. */
+export const AGENT_CATALOG_SCHEMA_VERSION = 1 as const
+
+export type AgentAvailabilityDto = 'available' | 'missing' | 'unknown'
+
+/** An adapter projected from the registry without executable paths or commands. */
 export interface AgentSummary {
   id: string
   name: string
-  description: string
-  capabilities: string[]
-  /** False when the adapter is known but its executable is not installed. */
-  available: boolean
+  task_kinds: string[]
+  supports_resume: boolean
+  streaming: boolean
+  availability: AgentAvailabilityDto
+}
+
+export interface AgentCatalogDto {
+  schema_version: typeof AGENT_CATALOG_SCHEMA_VERSION
+  agents: AgentSummary[]
 }
 
 /** The model that turns will actually run on. */
