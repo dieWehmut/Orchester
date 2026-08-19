@@ -250,7 +250,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   dictionaries with stable message keys.
 - [x] W1-004: Add typed HTTP client with cookies, CSRF, request IDs, and abort.
 - [x] W1-005: Add API error normalization and retry classification.
-- [ ] W1-006: Add bootstrap store and fragment-token URL cleanup.
+- [x] W1-006: Add bootstrap store and fragment-token URL cleanup.
 - [ ] W1-007: Add session, model, workspace, settings, and layout stores.
 - [ ] W1-008: Add run store backed by the pure ereignis projector.
 - [ ] W1-009: Add optimistic user row deduplication by client request ID.
