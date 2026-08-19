@@ -1,6 +1,9 @@
+use axum::{extract::State, http::HeaderMap, Json};
 use orchester_protokoll::TaskKind;
 use orchester_verzeichnis::Registry;
 use serde::Serialize;
+
+use crate::{bootstrap::ServerContext, health::no_store_headers};
 
 pub const AGENT_CATALOG_SCHEMA_VERSION: u8 = 1;
 
@@ -57,6 +60,15 @@ pub fn agent_catalog_response(registry: &Registry) -> AgentCatalogDto {
         schema_version: AGENT_CATALOG_SCHEMA_VERSION,
         agents,
     }
+}
+
+pub(crate) async fn agent_catalog_handler(
+    State(context): State<ServerContext>,
+) -> (HeaderMap, Json<AgentCatalogDto>) {
+    (
+        no_store_headers(),
+        Json(agent_catalog_response(context.registry())),
+    )
 }
 
 fn task_kind_name(kind: &TaskKind) -> String {

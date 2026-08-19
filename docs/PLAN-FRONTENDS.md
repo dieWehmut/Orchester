@@ -164,11 +164,11 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   - [x] N1-011a: Define stable machine-readable API error codes.
   - [x] N1-011b: Map server failures to redacted JSON error responses.
   - [x] N1-011c: Verify error status/content type across route failures.
-- [ ] N1-012: Add agent catalog route backed by `Registry`.
+- [x] N1-012: Add agent catalog route backed by `Registry`.
   - [x] N1-012a: Define a versioned, path-free agent catalog contract.
   - [x] N1-012b: Project registry capabilities and availability safely.
   - [x] N1-012c: Bind the workspace registry into server context.
-  - [ ] N1-012d: Route and verify the agent catalog over HTTP.
+  - [x] N1-012d: Route and verify the agent catalog over HTTP.
 - [ ] N1-013: Add model catalog route backed by `SelfAgentHost`.
 - [ ] N1-014: Add session list/detail routes with pagination cursors.
 - [ ] N1-015: Add run snapshot route backed by `RunStore`.
