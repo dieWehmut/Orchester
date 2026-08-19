@@ -1,0 +1,15 @@
+{
+  "name": "@orchester/desktop",
+  "version": "0.1.2",
+  "private": true,
+  "type": "module",
+  "description": "Tauri shell for the Orchester WebUI",
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.11.4"
+  }
+}
