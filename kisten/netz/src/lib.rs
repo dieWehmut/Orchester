@@ -10,6 +10,7 @@ mod fragment;
 mod health;
 mod lifecycle;
 mod listener;
+mod model_catalog;
 mod router;
 mod session;
 mod workspace;
@@ -27,6 +28,10 @@ pub use lifecycle::{
     wait_for_shutdown, LifecycleError, ServerControl, ServerLifecycle, ServerState,
 };
 pub use listener::{bind_listener, ServerBindError};
+pub use model_catalog::{
+    model_catalog_response, ActiveModelDto, ModelCatalogDto, ModelChoiceDto, ModelProfileDto,
+    ProviderChoiceDto, ProviderChoiceStateDto, MODEL_CATALOG_SCHEMA_VERSION,
+};
 pub use router::app_router;
 pub use session::{
     fragment_exchange_handler, session_bootstrap_handler, session_revoke_handler,
