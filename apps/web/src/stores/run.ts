@@ -15,6 +15,7 @@ export type RunConnectionStatus =
   | 'reconnecting'
   | 'offline'
   | 'closed'
+  | 'error'
 
 export interface RunStore {
   view: Readonly<Ref<RunView>>

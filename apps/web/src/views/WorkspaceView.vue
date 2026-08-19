@@ -3,11 +3,17 @@ import InspectorDock from '../components/layout/InspectorDock.vue'
 import WorkspaceResponsive from '../components/layout/WorkspaceResponsive.vue'
 import SessionRail from '../components/sessions/SessionRail.vue'
 import SessionTranscript from '../components/sessions/SessionTranscript.vue'
+import RunPanel from '../components/run/RunPanel.vue'
 import { useI18n } from '../i18n'
 import { useAppStores } from '../stores/app'
+import { computed } from 'vue'
 
 const { t } = useI18n()
-const { sessions } = useAppStores()
+const { sessions, run } = useAppStores()
+const runView = computed(() => run.view.value)
+const runConnectionStatus = computed(() => run.connectionStatus.value)
+const runProjectionStatus = computed(() => run.projectionStatus.value)
+const runErrorMessage = computed(() => run.error.value?.message ?? null)
 const {
   status,
   detailStatus,
@@ -18,6 +24,15 @@ const {
   error,
   detailError,
 } = sessions
+
+function handleRunSubmit(): void {
+  run.setConnectionStatus('error')
+  run.setError(new Error('Run service is not connected yet'))
+}
+
+function handleRunCancel(): void {
+  run.reset()
+}
 </script>
 
 <template>
@@ -41,7 +56,16 @@ const {
       />
     </template>
 
-    <SessionTranscript :status="detailStatus" :session="selected" :error="detailError" />
+    <RunPanel
+      v-if="!selected"
+      :view="runView"
+      :connection-status="runConnectionStatus"
+      :projection-status="runProjectionStatus"
+      :error-message="runErrorMessage"
+      @submit="handleRunSubmit"
+      @cancel="handleRunCancel"
+    />
+    <SessionTranscript v-else :status="detailStatus" :session="selected" :error="detailError" />
 
     <template #inspector>
       <InspectorDock />

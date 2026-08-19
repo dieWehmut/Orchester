@@ -270,7 +270,6 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [ ] W1-017: Build agent/model/effort pickers with unavailable handling.
   - [x] W1-017a: Add the typed run start, cancel, resume, snapshot, and replay
     client over the shared protocol DTOs.
-- [ ] W1-018: Build composer Enter/Shift+Enter and size-limit behavior.
 - [x] W1-018: Build composer Enter/Shift+Enter and size-limit behavior.
   - [x] W1-018a: Add the typed approval queue and row-version decision client
     over the shared protocol DTOs.
