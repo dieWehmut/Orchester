@@ -1,6 +1,7 @@
 use axum::body::{to_bytes, Body};
 use axum::http::{header, Request, StatusCode};
 use serde_json::Value;
+#[cfg(feature = "static-files")]
 use std::{
     fs,
     path::{Path, PathBuf},
@@ -8,14 +9,15 @@ use std::{
 };
 use tower::ServiceExt;
 
-use orchester_netz::{
-    app_router_with_static_assets, ServerContext, ServerControl, StaticAssets,
-};
+use orchester_netz::{app_router_with_static_assets, ServerContext, ServerControl, StaticAssets};
 
+#[cfg(feature = "static-files")]
 static NEXT_FIXTURE: AtomicU64 = AtomicU64::new(0);
 
+#[cfg(feature = "static-files")]
 struct StaticFixture(PathBuf);
 
+#[cfg(feature = "static-files")]
 impl StaticFixture {
     fn new() -> Self {
         let nonce = NEXT_FIXTURE.fetch_add(1, Ordering::Relaxed);
@@ -41,6 +43,7 @@ impl StaticFixture {
     }
 }
 
+#[cfg(feature = "static-files")]
 impl Drop for StaticFixture {
     fn drop(&mut self) {
         let _ = fs::remove_dir_all(&self.0);
@@ -96,7 +99,10 @@ async fn configured_static_assets_serve_files_and_spa_deep_links() {
         .await
         .expect("asset response");
     assert_eq!(asset.status(), StatusCode::OK);
-    assert_eq!(asset.headers().get(header::CONTENT_TYPE).unwrap(), "text/javascript");
+    assert_eq!(
+        asset.headers().get(header::CONTENT_TYPE).unwrap(),
+        "text/javascript"
+    );
     assert_eq!(
         asset.headers().get(header::CACHE_CONTROL).unwrap(),
         "no-cache"
@@ -115,7 +121,10 @@ async fn configured_static_assets_serve_files_and_spa_deep_links() {
         .await
         .expect("deep link response");
     assert_eq!(deep_link.status(), StatusCode::OK);
-    assert_eq!(deep_link.headers().get(header::CONTENT_TYPE).unwrap(), "text/html");
+    assert_eq!(
+        deep_link.headers().get(header::CONTENT_TYPE).unwrap(),
+        "text/html"
+    );
     assert_eq!(
         deep_link.headers().get(header::CACHE_CONTROL).unwrap(),
         "no-cache"
@@ -123,7 +132,10 @@ async fn configured_static_assets_serve_files_and_spa_deep_links() {
     let deep_link_body = to_bytes(deep_link.into_body(), usize::MAX)
         .await
         .expect("deep link body");
-    assert_eq!(&deep_link_body[..], b"<!doctype html><title>Orchester</title>");
+    assert_eq!(
+        &deep_link_body[..],
+        b"<!doctype html><title>Orchester</title>"
+    );
 }
 
 #[cfg(feature = "static-files")]
@@ -145,7 +157,10 @@ async fn configured_static_assets_keep_unknown_api_routes_as_typed_json() {
     .expect("unknown API response");
 
     assert_eq!(response.status(), StatusCode::NOT_FOUND);
-    assert_eq!(response.headers().get(header::CONTENT_TYPE).unwrap(), "application/json");
+    assert_eq!(
+        response.headers().get(header::CONTENT_TYPE).unwrap(),
+        "application/json"
+    );
     let body = to_bytes(response.into_body(), usize::MAX)
         .await
         .expect("unknown API body");
