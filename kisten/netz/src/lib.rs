@@ -41,7 +41,7 @@ pub use session::{
 };
 pub use session_history::{
     session_detail_response, session_page_response, SessionDetailDto, SessionOutcomeDto,
-    SessionPageDto, SessionSummaryDto, SESSION_HISTORY_SCHEMA_VERSION, SESSION_PROMPT_MAX_CHARS,
-    SESSION_RESULT_MAX_CHARS,
+    SessionPageDto, SessionSummaryDto, SESSION_HISTORY_SCHEMA_VERSION, SESSION_LIST_DEFAULT_LIMIT,
+    SESSION_PROMPT_MAX_CHARS, SESSION_RESULT_MAX_CHARS,
 };
 pub use workspace::{select_workspace, WorkspaceSelectionError};

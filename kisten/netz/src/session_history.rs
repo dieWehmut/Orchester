@@ -1,9 +1,21 @@
 use std::fmt;
 
+use axum::{
+    extract::{rejection::QueryRejection, Query, State},
+    http::HeaderMap,
+    Json,
+};
 use orchester_anwendung::{SessionHistoryDetail, SessionHistoryPage, SessionHistorySummary};
 use orchester_protokoll::{Outcome, Usage};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
+use crate::{
+    api_error::{api_error_response, request_id_from_headers, ApiErrorCode, ApiErrorResponse},
+    bootstrap::ServerContext,
+    health::no_store_headers,
+};
+
+pub const SESSION_LIST_DEFAULT_LIMIT: usize = 20;
 pub const SESSION_HISTORY_SCHEMA_VERSION: u8 = 1;
 pub const SESSION_PROMPT_MAX_CHARS: usize = 65_536;
 pub const SESSION_RESULT_MAX_CHARS: usize = 262_144;
@@ -55,6 +67,12 @@ pub struct SessionDetailDto {
     pub usage: Usage,
 }
 
+#[derive(Debug, Default, Deserialize)]
+pub(crate) struct SessionListQuery {
+    cursor: Option<String>,
+    limit: Option<usize>,
+}
+
 impl fmt::Debug for SessionDetailDto {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
@@ -99,6 +117,36 @@ pub fn session_detail_response(detail: &SessionHistoryDetail) -> SessionDetailDt
         final_text: bounded_text(&detail.final_text, SESSION_RESULT_MAX_CHARS),
         usage: detail.usage,
     }
+}
+
+pub(crate) async fn session_list_handler(
+    State(context): State<ServerContext>,
+    headers: HeaderMap,
+    query: Result<Query<SessionListQuery>, QueryRejection>,
+) -> Result<(HeaderMap, Json<SessionPageDto>), ApiErrorResponse> {
+    let request_id = request_id_from_headers(&headers);
+    let query = query
+        .map_err(|_| api_error_response(ApiErrorCode::BadRequest, request_id))?
+        .0;
+    let limit = query.limit.unwrap_or(SESSION_LIST_DEFAULT_LIMIT);
+    if !(1..=100).contains(&limit) {
+        return Err(api_error_response(ApiErrorCode::BadRequest, request_id));
+    }
+
+    let history = context
+        .session_history()
+        .ok_or_else(|| api_error_response(ApiErrorCode::Unavailable, request_id))?;
+    let page = history
+        .page(query.cursor.as_deref(), limit)
+        .map_err(|error| {
+            let code = match error {
+                orchester_anwendung::SessionHistoryError::InvalidCursor => ApiErrorCode::BadRequest,
+                orchester_anwendung::SessionHistoryError::Io(_)
+                | orchester_anwendung::SessionHistoryError::NotFound => ApiErrorCode::Unavailable,
+            };
+            api_error_response(code, request_id)
+        })?;
+    Ok((no_store_headers(), Json(session_page_response(&page))))
 }
 
 fn session_summary_response(summary: &SessionHistorySummary) -> SessionSummaryDto {
