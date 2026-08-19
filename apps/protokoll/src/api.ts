@@ -77,13 +77,23 @@ export interface AgentCatalogDto {
   agents: AgentSummary[]
 }
 
+export const MODEL_CATALOG_SCHEMA_VERSION = 1 as const
+
+export interface ModelChoiceDto {
+  profile: string | null
+  provider: string
+  provider_name: string
+  model: string
+  reasoning_effort: string | null
+  plan_reasoning_effort: string | null
+  service_tier: string | null
+}
+
 /** The model that turns will actually run on. */
 export type ActiveModelDto =
   | {
       state: 'configured'
-      model: string
-      provider: string
-      reasoning_effort: string | null
+      choice: ModelChoiceDto
     }
   | {
       /** Configuration named a model but something it depends on is missing. */
@@ -95,27 +105,24 @@ export type ActiveModelDto =
   | { state: 'not_configured' }
 
 export interface ProviderChoiceDto {
+  id: string
   name: string
-  wire_api: string
-  base_url: string
-  model: string
-  /**
-   * Whether a key is present in the OS keyring. Never the key itself, and never
-   * a prefix of it: a "credential hint" is a credential.
-   */
-  credential_present: boolean
   active: boolean
+  state: 'selectable' | 'unavailable'
+  model: string | null
+  wire_api: string | null
+  field: string | null
+  reason: string | null
 }
 
-export interface ModelProfileDto {
-  name: string
-  model: string
-  provider: string
-  reasoning_effort: string | null
+export interface ModelProfileDto extends ModelChoiceDto {
+  profile: string
 }
 
 export interface ModelCatalogDto {
+  schema_version: typeof MODEL_CATALOG_SCHEMA_VERSION
   active: ActiveModelDto
+  selected_provider: string | null
   providers: ProviderChoiceDto[]
   profiles: ModelProfileDto[]
 }
