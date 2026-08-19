@@ -268,7 +268,11 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   - [x] W1-016a: Connect opaque session detail selection to the transcript pane.
 - [x] W1-007d: Install one application store instance and bootstrap connection state in the app shell.
 - [ ] W1-017: Build agent/model/effort pickers with unavailable handling.
+  - [x] W1-017a: Add the typed run start, cancel, resume, snapshot, and replay
+    client over the shared protocol DTOs.
 - [ ] W1-018: Build composer Enter/Shift+Enter and size-limit behavior.
+  - [x] W1-018a: Add the typed approval queue and row-version decision client
+    over the shared protocol DTOs.
 - [ ] W1-019: Build submit, cancel, and busy double-submit protection.
 - [ ] W1-020: Integrate run panel, connection banner, footer, and resync UI.
 - [ ] W1-021: Build approval queue and decision dialog with stale handling.
