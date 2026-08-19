@@ -15,14 +15,29 @@ async function mountShell(): Promise<{
   await router.isReady()
 
   const wrapper = mount(SiteShell, {
+    attachTo: document.body,
     global: { plugins: [router] },
     slots: { default: '<main data-test-content>Content</main>' },
   })
 
+  mountedWrappers.push(wrapper)
+
   return { wrapper, router }
 }
 
+const mountedWrappers: VueWrapper[] = []
+
+async function flushUi(): Promise<void> {
+  await nextTick()
+  await new Promise<void>((resolve) => setTimeout(resolve, 20))
+  await nextTick()
+}
+
 afterEach(() => {
+  for (const wrapper of mountedWrappers.splice(0)) {
+    wrapper.unmount()
+  }
+  document.body.replaceChildren()
   document.body.style.overflow = ''
 })
 
@@ -40,16 +55,17 @@ describe('SiteShell', () => {
   it('opens the mobile navigation, closes on Escape, and restores focus', async () => {
     const { wrapper } = await mountShell()
     const trigger = wrapper.get('[data-mobile-nav-trigger]')
+    ;(trigger.element as HTMLButtonElement).focus()
 
     await trigger.trigger('click')
-    await nextTick()
+    await flushUi()
 
     expect(wrapper.get('[data-mobile-nav]')).toBeTruthy()
     expect(document.activeElement).toBe(wrapper.get('[data-drawer-close]').element)
     expect(document.body.style.overflow).toBe('hidden')
 
     await wrapper.get('[data-mobile-nav] .app-drawer').trigger('keydown', { key: 'Escape' })
-    await nextTick()
+    await flushUi()
 
     expect(wrapper.find('[data-mobile-nav]').exists()).toBe(false)
     expect(document.activeElement).toBe(trigger.element)
@@ -62,7 +78,7 @@ describe('SiteShell', () => {
 
     await wrapper.get('[data-mobile-nav] [data-site-link="/install"]').trigger('click')
     await router.isReady()
-    await nextTick()
+    await flushUi()
 
     expect(router.currentRoute.value.name).toBe('install')
     expect(wrapper.find('[data-mobile-nav]').exists()).toBe(false)
