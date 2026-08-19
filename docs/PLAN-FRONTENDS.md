@@ -174,6 +174,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   - [x] N1-013b: Project `SelfAgentHost` model choices into safe DTOs.
   - [x] N1-013c: Bind one read-only model host to server context.
   - [x] N1-013d: Route and verify the model catalog over HTTP.
+  - [x] N1-013e: Bind host configuration loading to explicit `OrchesterPaths`.
 - [ ] N1-014: Add session list/detail routes with pagination cursors.
 - [ ] N1-015: Add run snapshot route backed by `RunStore`.
 - [ ] N1-016: Add run submit route with client request idempotency.

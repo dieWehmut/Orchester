@@ -2,27 +2,10 @@ use axum::body::{to_bytes, Body};
 use axum::http::{header, Request, StatusCode};
 use serde_json::Value;
 use std::fs;
-use std::sync::{Mutex, OnceLock};
 use std::time::{SystemTime, UNIX_EPOCH};
 use tower::ServiceExt;
 
 use orchester_netz::{app_router, ServerContext, ServerControl};
-
-static ENV_LOCK: OnceLock<Mutex<()>> = OnceLock::new();
-
-struct EnvironmentRestore {
-    previous: Option<std::ffi::OsString>,
-}
-
-impl Drop for EnvironmentRestore {
-    fn drop(&mut self) {
-        if let Some(previous) = self.previous.take() {
-            std::env::set_var("ORCHESTER_HOME", previous);
-        } else {
-            std::env::remove_var("ORCHESTER_HOME");
-        }
-    }
-}
 
 #[tokio::test]
 async fn model_catalog_without_workspace_returns_a_typed_unavailable_error() {
@@ -87,7 +70,6 @@ async fn model_catalog_route_does_not_echo_configuration_failures() {
 
 #[tokio::test]
 async fn model_catalog_route_projects_a_configured_workspace_model() {
-    let _lock = ENV_LOCK.get_or_init(|| Mutex::new(())).lock().unwrap();
     let root = std::env::temp_dir().join(format!(
         "orchester-model-route-valid-{}",
         SystemTime::now()
@@ -120,10 +102,6 @@ async fn model_catalog_route_projects_a_configured_workspace_model() {
         }"#,
     )
     .expect("model config");
-    let previous = std::env::var_os("ORCHESTER_HOME");
-    std::env::set_var("ORCHESTER_HOME", &home);
-    let _restore = EnvironmentRestore { previous };
-
     let response = app_router(ServerContext::new(
         Some(orchester_anwendung::OrchesterPaths::new(&home, &workspace)),
         ServerControl::new(),
