@@ -258,7 +258,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [ ] W1-009: Add optimistic user row deduplication by client request ID.
 - [ ] W1-010: Add one-time-ticket WebSocket transport with bounded backoff.
 - [ ] W1-011: Add heartbeat, terminal close, replay, and resync callbacks.
-- [ ] W1-012: Build desktop three-column `WorkspaceShell`.
+- [x] W1-012: Build desktop three-column `WorkspaceShell`.
 - [ ] W1-013: Build `WorkspaceHeader`, session rail, and inspector dock.
 - [ ] W1-014: Build responsive drawers for 900-1279px layouts.
 - [ ] W1-015: Build single-column mobile header and full-height drawers.
