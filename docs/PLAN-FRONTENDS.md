@@ -261,8 +261,8 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [ ] W1-011: Add heartbeat, terminal close, replay, and resync callbacks.
 - [x] W1-012: Build desktop three-column `WorkspaceShell`.
 - [x] W1-013: Build `WorkspaceHeader`, session rail, and inspector dock.
-- [ ] W1-014: Build responsive drawers for 900-1279px layouts.
-- [ ] W1-015: Build single-column mobile header and full-height drawers.
+- [x] W1-014: Build responsive drawers for 900-1279px layouts.
+- [x] W1-015: Build single-column mobile header and full-height drawers.
 - [x] W1-016: Build session list, loading, empty, error, and unavailable states.
   - [x] W1-016a: Connect opaque session detail selection to the transcript pane.
 - [x] W1-007d: Install one application store instance and bootstrap connection state in the app shell.

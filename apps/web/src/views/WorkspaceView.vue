@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import InspectorDock from '../components/layout/InspectorDock.vue'
-import WorkspaceShell from '../components/layout/WorkspaceShell.vue'
+import WorkspaceResponsive from '../components/layout/WorkspaceResponsive.vue'
 import SessionRail from '../components/sessions/SessionRail.vue'
 import SessionTranscript from '../components/sessions/SessionTranscript.vue'
+import { useI18n } from '../i18n'
 import { useAppStores } from '../stores/app'
 
+const { t } = useI18n()
 const { sessions } = useAppStores()
 const {
   status,
@@ -19,7 +21,12 @@ const {
 </script>
 
 <template>
-  <WorkspaceShell data-testid="workspace-view">
+  <WorkspaceResponsive
+    data-testid="workspace-view"
+    :sessions-title="t('sessions.title')"
+    :inspector-title="t('inspector.label')"
+    :controls-label="t('inspector.label')"
+  >
     <template #sessions>
       <SessionRail
         :status="status"
@@ -39,5 +46,5 @@ const {
     <template #inspector>
       <InspectorDock />
     </template>
-  </WorkspaceShell>
+  </WorkspaceResponsive>
 </template>
