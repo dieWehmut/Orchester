@@ -11,6 +11,7 @@ import {
   Workflow,
 } from '@lucide/vue'
 
+import workspaceScreenshot from '../assets/orchester-workspace.png'
 import SiteShell from '../components/site/SiteShell.vue'
 import {
   governancePrinciples,
@@ -58,33 +59,13 @@ const iconMap: Record<HomeIcon, typeof Eye> = {
 
         <div
           class="workspace-preview"
-          role="img"
-          aria-label="Preview of the Orchester three-column workspace"
           data-workspace-preview
         >
-          <div class="workspace-preview__bar" aria-hidden="true">
-            <span class="workspace-preview__brand">O/ workspace</span>
-            <span class="workspace-preview__status"><span></span> local</span>
-          </div>
-          <div class="workspace-preview__columns" aria-hidden="true">
-            <aside class="workspace-preview__rail">
-              <span class="workspace-preview__label">Sessions</span>
-              <span class="workspace-preview__item workspace-preview__item--active">Review auth flow</span>
-              <span class="workspace-preview__item">Refactor provider</span>
-              <span class="workspace-preview__item">Test workspace</span>
-            </aside>
-            <div class="workspace-preview__transcript">
-              <span class="workspace-preview__label">Run timeline</span>
-              <div class="workspace-preview__message workspace-preview__message--user">Inspect the boundary.</div>
-              <div class="workspace-preview__message">The service is ready for approval.</div>
-              <div class="workspace-preview__tool"><span></span> check_workspace <b>ready</b></div>
-            </div>
-            <aside class="workspace-preview__inspector">
-              <span class="workspace-preview__label">Inspector</span>
-              <span class="workspace-preview__metric">3 <small>events</small></span>
-              <span class="workspace-preview__metric">0 <small>secrets exposed</small></span>
-            </aside>
-          </div>
+          <img
+            class="workspace-preview__image"
+            :src="workspaceScreenshot"
+            alt="Orchester WebUI workspace with a sessions rail, run transcript, and inspector panel"
+          />
         </div>
       </section>
 

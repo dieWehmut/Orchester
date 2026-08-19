@@ -286,11 +286,11 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 
 - [ ] S1-001: Scaffold the independent Vite website package and base-path helper.
 - [ ] S1-002: Copy `index.html` to `404.html` at closeBundle for deep links.
-- [ ] S1-003: Add lazy router, three locales, and not-found view.
-- [ ] S1-004: Build site shell with keyboard-safe mobile navigation.
-- [ ] S1-005: Build product hero using a real WebUI screenshot asset.
-- [ ] S1-006: Build capability, adapter, and governance content sections.
-- [ ] S1-007: Build architecture and install views from typed content modules.
+- [x] S1-003: Add lazy router, three locales, and not-found view.
+- [x] S1-004: Build site shell with keyboard-safe mobile navigation.
+- [x] S1-005: Build product hero using a real WebUI screenshot asset.
+- [x] S1-006: Build capability, adapter, and governance content sections.
+- [x] S1-007: Build architecture and install views from typed content modules.
 - [ ] S1-008: Add fixture-driven `DemoRuntime` with no network access.
 - [ ] S1-009: Reuse ereignis timeline and tool/approval components in the demo.
 - [ ] S1-010: Add explicit simulated-demo state and deterministic replay tests.

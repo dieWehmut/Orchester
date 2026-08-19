@@ -39,6 +39,7 @@ describe('website content views', () => {
     expect(wrapper.get('[data-adapter-grid]').findAll('article')).toHaveLength(3)
     expect(wrapper.get('[data-governance-section]')).toBeTruthy()
     expect(wrapper.get('[data-home-hero] [data-site-link="/install"]')).toBeTruthy()
+    expect(wrapper.get('[data-workspace-preview] img').attributes('alt')).toContain('sessions rail')
   })
 
   it('renders architecture stages from a complete typed flow', async () => {
