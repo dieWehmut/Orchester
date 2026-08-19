@@ -70,6 +70,10 @@ async fn disabled_static_assets_keep_non_api_routes_as_typed_json_404() {
         response.headers().get(header::CONTENT_TYPE).unwrap(),
         "application/json"
     );
+    assert_eq!(
+        response.headers().get(header::CACHE_CONTROL).unwrap(),
+        "no-store"
+    );
     let body = to_bytes(response.into_body(), usize::MAX)
         .await
         .expect("not found body");
@@ -196,4 +200,47 @@ async fn api_prefix_variants_do_not_fall_through_to_the_spa_document() {
         .expect("malformed API prefix body");
     let json: Value = serde_json::from_slice(&body).expect("malformed API prefix JSON");
     assert_eq!(json["code"], "not_found");
+}
+
+#[cfg(feature = "static-files")]
+#[tokio::test]
+async fn static_assets_reject_encoded_traversal_without_disclosing_paths() {
+    let fixture = StaticFixture::new();
+    fixture.write("index.html", "<!doctype html>");
+    let secret_name = format!("orchester-netz-outside-{}.txt", std::process::id());
+    let outside = fixture.path().parent().unwrap().join(&secret_name);
+    fs::write(&outside, "outside-secret").expect("write outside fixture");
+
+    let router = app_router_with_static_assets(
+        test_context(),
+        StaticAssets::Directory(fixture.path().to_owned()),
+    );
+    for path in [
+        format!("/%2e%2e/{secret_name}"),
+        format!("/%252e%252e/{secret_name}"),
+        format!("/%2e%2e%5c{secret_name}"),
+    ] {
+        let response = router
+            .clone()
+            .oneshot(
+                Request::get(path)
+                    .body(Body::empty())
+                    .expect("traversal request"),
+            )
+            .await
+            .expect("traversal response");
+        assert_eq!(response.status(), StatusCode::NOT_FOUND);
+        assert_eq!(
+            response.headers().get(header::CACHE_CONTROL).unwrap(),
+            "no-cache"
+        );
+        let body = to_bytes(response.into_body(), usize::MAX)
+            .await
+            .expect("traversal body");
+        let text = String::from_utf8_lossy(&body);
+        assert!(!text.contains("outside-secret"));
+        assert!(!text.contains(fixture.path().to_string_lossy().as_ref()));
+    }
+
+    let _ = fs::remove_file(outside);
 }

@@ -132,7 +132,7 @@ async fn serve_static_request(root: Arc<PathBuf>, request: Request) -> Response 
     use axum::http::{header, Method};
 
     let request_path = request.uri().path();
-    if request_path == "/api/v1" || request_path.starts_with("/api/v1/") {
+    if request_path.starts_with("/api/v1") {
         return api_error_response(
             ApiErrorCode::NotFound,
             request_id_from_headers(request.headers()),
