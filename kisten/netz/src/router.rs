@@ -14,7 +14,7 @@ use crate::{
     health::{health_handler, no_store_headers},
     model_catalog::model_catalog_handler,
     session::{fragment_exchange_handler, session_bootstrap_handler, session_revoke_handler},
-    session_history::session_list_handler,
+    session_history::{session_detail_handler, session_list_handler},
     ServerContext,
 };
 
@@ -25,6 +25,7 @@ pub fn app_router(context: ServerContext) -> Router {
         .route("/api/v1/agents", get(agent_catalog_handler))
         .route("/api/v1/models", get(model_catalog_handler))
         .route("/api/v1/sessions", get(session_list_handler))
+        .route("/api/v1/sessions/{id}", get(session_detail_handler))
         .route("/api/v1/session", get(session_bootstrap_handler))
         .route("/api/v1/session/revoke", post(session_revoke_handler))
         .route("/api/v1/auth/fragment", post(fragment_exchange_handler))

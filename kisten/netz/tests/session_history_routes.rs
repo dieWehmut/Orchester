@@ -155,3 +155,55 @@ async fn session_list_route_redacts_corrupt_history_storage_errors() {
     assert!(!wire.contains("private-broken-record"));
     assert!(!wire.contains(paths.home().to_string_lossy().as_ref()));
 }
+
+#[tokio::test]
+async fn session_detail_route_returns_the_flat_opaque_history_record() {
+    let root = TempRoot::new();
+    let paths = root.paths();
+    SessionStore::new(paths.session_log())
+        .append(&record(7, "inspect the selected workspace"))
+        .unwrap();
+    let context = ServerContext::new(Some(paths), ServerControl::new());
+    let (status, page) = json_response(context.clone(), "/api/v1/sessions").await;
+    assert_eq!(status, StatusCode::OK);
+    let id = page["items"][0]["id"].as_str().expect("session id");
+
+    let (status, detail) = json_response(context, &format!("/api/v1/sessions/{id}")).await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(detail["schema_version"], 1);
+    assert_eq!(detail["id"], id);
+    assert_eq!(detail["source"], "delegate");
+    assert_eq!(detail["prompt"], "inspect the selected workspace");
+    assert_eq!(detail["final_text"], "result 7");
+    assert!(detail.get("summary").is_none());
+    assert!(detail.get("cwd").is_none());
+    assert!(detail.get("session_id").is_none());
+    assert!(!detail.to_string().contains("native-7"));
+}
+
+#[tokio::test]
+async fn session_detail_route_hides_lookup_and_workspace_failures() {
+    let root = TempRoot::new();
+    for id in [
+        "not-a-session",
+        "s-00000000000000000000000000000000",
+        "s-zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+    ] {
+        let (status, missing) = json_response(
+            ServerContext::new(Some(root.paths()), ServerControl::new()),
+            &format!("/api/v1/sessions/{id}"),
+        )
+        .await;
+        assert_eq!(status, StatusCode::NOT_FOUND, "{id}");
+        assert_eq!(missing["code"], "not_found", "{id}");
+        assert!(!missing.to_string().contains(id), "{id}");
+    }
+
+    let (status, unavailable) = json_response(
+        ServerContext::new(None, ServerControl::new()),
+        "/api/v1/sessions/s-00000000000000000000000000000000",
+    )
+    .await;
+    assert_eq!(status, StatusCode::SERVICE_UNAVAILABLE);
+    assert_eq!(unavailable["code"], "unavailable");
+}

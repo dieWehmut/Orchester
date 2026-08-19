@@ -175,13 +175,13 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   - [x] N1-013c: Bind one read-only model host to server context.
   - [x] N1-013d: Route and verify the model catalog over HTTP.
   - [x] N1-013e: Bind host configuration loading to explicit `OrchesterPaths`.
-- [ ] N1-014: Add session list/detail routes with pagination cursors.
+- [x] N1-014: Add session list/detail routes with pagination cursors.
   - [x] N1-014a: Define versioned delegate-history page/detail contracts.
   - [x] N1-014b: Add stable opaque IDs and cursor paging in the application layer.
   - [x] N1-014c: Project bounded summary and path-free detail DTOs.
   - [x] N1-014d: Bind delegate history to server context.
   - [x] N1-014e: Route and verify paginated session listing.
-  - [ ] N1-014f: Route and verify opaque session detail lookup.
+  - [x] N1-014f: Route and verify opaque session detail lookup.
 - [ ] N1-015: Add run snapshot route backed by `RunStore`.
 - [ ] N1-016: Add run submit route with client request idempotency.
 - [ ] N1-017: Add run cancel route with explicit cancellation result.

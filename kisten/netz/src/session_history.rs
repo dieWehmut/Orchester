@@ -1,7 +1,7 @@
 use std::fmt;
 
 use axum::{
-    extract::{rejection::QueryRejection, Query, State},
+    extract::{rejection::QueryRejection, Path, Query, State},
     http::HeaderMap,
     Json,
 };
@@ -149,6 +149,30 @@ pub(crate) async fn session_list_handler(
     Ok((no_store_headers(), Json(session_page_response(&page))))
 }
 
+pub(crate) async fn session_detail_handler(
+    State(context): State<ServerContext>,
+    Path(id): Path<String>,
+    headers: HeaderMap,
+) -> Result<(HeaderMap, Json<SessionDetailDto>), ApiErrorResponse> {
+    let request_id = request_id_from_headers(&headers);
+    let history = context
+        .session_history()
+        .ok_or_else(|| api_error_response(ApiErrorCode::Unavailable, request_id))?;
+    if !is_opaque_session_id(&id) {
+        return Err(api_error_response(ApiErrorCode::NotFound, request_id));
+    }
+
+    let detail = history.detail(&id).map_err(|error| {
+        let code = match error {
+            orchester_anwendung::SessionHistoryError::Io(_) => ApiErrorCode::Unavailable,
+            orchester_anwendung::SessionHistoryError::InvalidCursor
+            | orchester_anwendung::SessionHistoryError::NotFound => ApiErrorCode::NotFound,
+        };
+        api_error_response(code, request_id)
+    })?;
+    Ok((no_store_headers(), Json(session_detail_response(&detail))))
+}
+
 fn session_summary_response(summary: &SessionHistorySummary) -> SessionSummaryDto {
     SessionSummaryDto {
         id: summary.id.clone(),
@@ -179,4 +203,13 @@ fn bounded_text(value: &str, max_chars: usize) -> String {
     let mut output = value.chars().take(content_limit).collect::<String>();
     output.push_str("...");
     output
+}
+
+fn is_opaque_session_id(value: &str) -> bool {
+    let bytes = value.as_bytes();
+    bytes.len() == 34
+        && bytes.starts_with(b"s-")
+        && bytes[2..]
+            .iter()
+            .all(|byte| byte.is_ascii_digit() || matches!(byte, b'a'..=b'f'))
 }
