@@ -46,7 +46,7 @@ describe('website content views', () => {
 
     expect(wrapper.get('main[data-page="architecture"] h1').text()).toContain('Architecture')
     expect(wrapper.get('[data-architecture-flow]').findAll('[data-architecture-stage]')).toHaveLength(4)
-    expect(wrapper.get('[data-architecture-boundary]').text()).toContain('loopback')
+    expect(wrapper.get('[data-architecture-boundary]').text().toLowerCase()).toContain('loopback')
   })
 
   it('renders install steps with copyable shell commands', async () => {
