@@ -167,3 +167,33 @@ async fn configured_static_assets_keep_unknown_api_routes_as_typed_json() {
     let json: Value = serde_json::from_slice(&body).expect("unknown API JSON");
     assert_eq!(json["code"], "not_found");
 }
+
+#[cfg(feature = "static-files")]
+#[tokio::test]
+async fn api_prefix_variants_do_not_fall_through_to_the_spa_document() {
+    let fixture = StaticFixture::new();
+    fixture.write("index.html", "<!doctype html>");
+
+    let response = app_router_with_static_assets(
+        test_context(),
+        StaticAssets::Directory(fixture.path().to_owned()),
+    )
+    .oneshot(
+        Request::get("/api/v1-malformed")
+            .body(Body::empty())
+            .expect("malformed API prefix request"),
+    )
+    .await
+    .expect("malformed API prefix response");
+
+    assert_eq!(response.status(), StatusCode::NOT_FOUND);
+    assert_eq!(
+        response.headers().get(header::CONTENT_TYPE).unwrap(),
+        "application/json"
+    );
+    let body = to_bytes(response.into_body(), usize::MAX)
+        .await
+        .expect("malformed API prefix body");
+    let json: Value = serde_json::from_slice(&body).expect("malformed API prefix JSON");
+    assert_eq!(json["code"], "not_found");
+}
