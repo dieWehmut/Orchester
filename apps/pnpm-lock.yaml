@@ -54,6 +54,9 @@ importers:
       '@orchester/design':
         specifier: workspace:*
         version: link:../design
+      '@orchester/protokoll':
+        specifier: workspace:*
+        version: link:../protokoll
       vue:
         specifier: 3.5.18
         version: 3.5.18(typescript@5.9.3)
