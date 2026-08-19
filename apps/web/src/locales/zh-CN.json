@@ -1,0 +1,66 @@
+{
+  "app": {
+    "name": "Orchester",
+    "workspace": "智能体工作区",
+    "runtimePending": "运行时连接等待中",
+    "connected": "已连接",
+    "offline": "离线",
+    "connectionError": "连接错误",
+    "unknownWorkspace": "未选择工作区"
+  },
+  "routes": {
+    "workspace": "工作区",
+    "settings": "设置",
+    "notFound": "页面不存在"
+  },
+  "workspace": {
+    "eyebrow": "本地工作区",
+    "title": "工作区",
+    "description": "会话历史、运行记录和上下文工具将在这里显示。"
+  },
+  "settings": {
+    "eyebrow": "配置",
+    "title": "设置",
+    "description": "供应商凭据、模型选择和外观控制将在这里显示。"
+  },
+  "notFound": {
+    "eyebrow": "404",
+    "description": "请求的工作区路径不存在。",
+    "return": "返回工作区"
+  },
+  "sessions": {
+    "title": "会话",
+    "new": "新建会话",
+    "empty": "暂无会话",
+    "emptyDescription": "已完成的委派运行会显示在这里。",
+    "loadError": "无法加载会话历史",
+    "retry": "重试",
+    "loadMore": "加载更多",
+    "resumable": "可恢复"
+  },
+  "transcript": {
+    "emptyTitle": "新运行",
+    "emptyDescription": "选择历史会话或开始新的运行。",
+    "loading": "正在加载会话",
+    "loadError": "无法加载会话详情",
+    "prompt": "请求",
+    "result": "结果",
+    "usage": "用量",
+    "inputTokens": "输入",
+    "outputTokens": "输出",
+    "reasoningTokens": "推理",
+    "cachedTokens": "缓存"
+  },
+  "inspector": {
+    "label": "工作区检查器",
+    "context": "上下文",
+    "approvals": "审批",
+    "changes": "变更",
+    "contextTitle": "工作区上下文",
+    "contextDescription": "文件、运行时元数据和所选会话上下文会显示在这里。",
+    "approvalsTitle": "审批",
+    "approvalsDescription": "运行暂停时，待处理的治理决策会显示在这里。",
+    "changesTitle": "变更",
+    "changesDescription": "检测到的文件变更和差异会显示在这里。"
+  }
+}

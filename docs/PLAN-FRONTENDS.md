@@ -244,25 +244,35 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 
 ## Wave W1: local WebUI application
 
-- [ ] W1-001: Scaffold Vite app, entrypoint, app shell, and no-flash bootstrap.
-- [ ] W1-002: Add router with workspace/settings/not-found lazy routes.
-- [ ] W1-003: Add English, Simplified Chinese, and Traditional Chinese locale
+- [x] W1-001: Scaffold Vite app, entrypoint, app shell, and no-flash bootstrap.
+- [x] W1-002: Add router with workspace/settings/not-found lazy routes.
+- [x] W1-003: Add English, Simplified Chinese, and Traditional Chinese locale
   dictionaries with stable message keys.
-- [ ] W1-004: Add typed HTTP client with cookies, CSRF, request IDs, and abort.
-- [ ] W1-005: Add API error normalization and retry classification.
-- [ ] W1-006: Add bootstrap store and fragment-token URL cleanup.
+- [x] W1-004: Add typed HTTP client with cookies, CSRF, request IDs, and abort.
+- [x] W1-005: Add API error normalization and retry classification.
+- [x] W1-006: Add bootstrap store and fragment-token URL cleanup.
 - [ ] W1-007: Add session, model, workspace, settings, and layout stores.
-- [ ] W1-008: Add run store backed by the pure ereignis projector.
+  - [x] W1-007a: Add typed session list/detail API client.
+  - [x] W1-007b: Add paginated session list/detail store.
+  - [x] W1-007c: Compose bootstrap and session stores over one in-memory CSRF client.
+- [x] W1-008: Add run store backed by the pure ereignis projector.
 - [ ] W1-009: Add optimistic user row deduplication by client request ID.
 - [ ] W1-010: Add one-time-ticket WebSocket transport with bounded backoff.
 - [ ] W1-011: Add heartbeat, terminal close, replay, and resync callbacks.
-- [ ] W1-012: Build desktop three-column `WorkspaceShell`.
-- [ ] W1-013: Build `WorkspaceHeader`, session rail, and inspector dock.
-- [ ] W1-014: Build responsive drawers for 900-1279px layouts.
-- [ ] W1-015: Build single-column mobile header and full-height drawers.
-- [ ] W1-016: Build session list, loading, empty, error, and unavailable states.
+- [x] W1-012: Build desktop three-column `WorkspaceShell`.
+- [x] W1-013: Build `WorkspaceHeader`, session rail, and inspector dock.
+- [x] W1-014: Build responsive drawers for 900-1279px layouts.
+- [x] W1-015: Build single-column mobile header and full-height drawers.
+- [x] W1-015a: Stabilize Vitest worker scheduling for the Windows workspace.
+- [x] W1-016: Build session list, loading, empty, error, and unavailable states.
+  - [x] W1-016a: Connect opaque session detail selection to the transcript pane.
+- [x] W1-007d: Install one application store instance and bootstrap connection state in the app shell.
 - [ ] W1-017: Build agent/model/effort pickers with unavailable handling.
-- [ ] W1-018: Build composer Enter/Shift+Enter and size-limit behavior.
+  - [x] W1-017a: Add the typed run start, cancel, resume, snapshot, and replay
+    client over the shared protocol DTOs.
+- [x] W1-018: Build composer Enter/Shift+Enter and size-limit behavior.
+  - [x] W1-018a: Add the typed approval queue and row-version decision client
+    over the shared protocol DTOs.
 - [ ] W1-019: Build submit, cancel, and busy double-submit protection.
 - [ ] W1-020: Integrate run panel, connection banner, footer, and resync UI.
 - [ ] W1-021: Build approval queue and decision dialog with stale handling.

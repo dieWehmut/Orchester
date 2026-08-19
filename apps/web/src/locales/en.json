@@ -1,0 +1,66 @@
+{
+  "app": {
+    "name": "Orchester",
+    "workspace": "Agent workspace",
+    "runtimePending": "Runtime pending",
+    "connected": "Connected",
+    "offline": "Offline",
+    "connectionError": "Connection error",
+    "unknownWorkspace": "No workspace selected"
+  },
+  "routes": {
+    "workspace": "Workspace",
+    "settings": "Settings",
+    "notFound": "Page not found"
+  },
+  "workspace": {
+    "eyebrow": "Local workspace",
+    "title": "Workspace",
+    "description": "Session history, run transcript, and context tools will appear here."
+  },
+  "settings": {
+    "eyebrow": "Configuration",
+    "title": "Settings",
+    "description": "Provider credentials, model selection, and appearance controls will appear here."
+  },
+  "notFound": {
+    "eyebrow": "404",
+    "description": "The requested workspace route does not exist.",
+    "return": "Return to workspace"
+  },
+  "sessions": {
+    "title": "Sessions",
+    "new": "New session",
+    "empty": "No sessions yet",
+    "emptyDescription": "Completed delegate runs will appear here.",
+    "loadError": "Session history unavailable",
+    "retry": "Retry",
+    "loadMore": "Load more",
+    "resumable": "Resumable"
+  },
+  "transcript": {
+    "emptyTitle": "New run",
+    "emptyDescription": "Select a previous session or start a new run.",
+    "loading": "Loading session",
+    "loadError": "Session details unavailable",
+    "prompt": "Request",
+    "result": "Result",
+    "usage": "Usage",
+    "inputTokens": "Input",
+    "outputTokens": "Output",
+    "reasoningTokens": "Reasoning",
+    "cachedTokens": "Cached"
+  },
+  "inspector": {
+    "label": "Workspace inspector",
+    "context": "Context",
+    "approvals": "Approvals",
+    "changes": "Changes",
+    "contextTitle": "Workspace context",
+    "contextDescription": "Files, runtime metadata, and selected session context will appear here.",
+    "approvalsTitle": "Approvals",
+    "approvalsDescription": "Pending governance decisions will appear here when a run pauses.",
+    "changesTitle": "Changes",
+    "changesDescription": "Observed file changes and diffs will appear here."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "@orchester/web",
+  "version": "0.1.2",
+  "private": true,
+  "type": "module",
+  "description": "Local Orchester WebUI",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit -p tsconfig.json && vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@orchester/design": "workspace:*",
+    "@orchester/ereignis": "workspace:*",
+    "@orchester/protokoll": "workspace:*",
+    "vue": "3.5.18",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/test-utils": "^2.4.6",
+    "jsdom": "^30.0.1",
+    "vite": "^7.1.2",
+    "vue-tsc": "^3.2.5"
+  }
+}

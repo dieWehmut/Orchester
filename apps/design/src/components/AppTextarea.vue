@@ -14,10 +14,18 @@ const props = withDefaults(
     describedBy?: string
     invalid?: boolean
     required?: boolean
+    maxLength?: number
     disabled?: boolean
     readonly?: boolean
   }>(),
-  { rows: 4, wrap: 'soft', invalid: false, required: false, disabled: false, readonly: false },
+  {
+    rows: 4,
+    wrap: 'soft',
+    invalid: false,
+    required: false,
+    disabled: false,
+    readonly: false,
+  },
 )
 
 const emit = defineEmits<{
@@ -32,6 +40,7 @@ const optionalAttributes = computed<Record<string, string>>(() => {
   if (props.describedBy) attributes['aria-describedby'] = props.describedBy
   if (props.invalid) attributes['aria-invalid'] = 'true'
   if (props.required) attributes['aria-required'] = 'true'
+  if (props.maxLength !== undefined) attributes.maxlength = String(props.maxLength)
   return attributes
 })
 

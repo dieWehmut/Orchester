@@ -59,3 +59,4 @@ docs/local
 !/apps/README.md
 .playwright-mcp/
 .superpowers/
+.worktrees/

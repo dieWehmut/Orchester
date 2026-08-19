@@ -41,4 +41,12 @@ describe('AppTextarea', () => {
     expect(textarea.attributes('aria-describedby')).toBeUndefined()
     expect(textarea.attributes('disabled')).toBeDefined()
   })
+
+  it('exposes a native maximum length for bounded prompts', () => {
+    const wrapper = mount(AppTextarea, {
+      props: { modelValue: '', id: 'prompt', maxLength: 8000 },
+    })
+
+    expect(wrapper.get('textarea').attributes('maxlength')).toBe('8000')
+  })
 })
