@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { EmptyState, InlineAlert } from '@orchester/design'
+import { InlineAlert } from '@orchester/design'
 import type { RunView } from '@orchester/ereignis'
 
 import ConnectionBanner, { type ConnectionBannerStatus } from './ConnectionBanner.vue'
+import EmptyWorkspace from './EmptyWorkspace.vue'
 import RunComposer from './RunComposer.vue'
 import RunFooter from './RunFooter.vue'
 import RunTimeline from './RunTimeline.vue'
@@ -13,6 +14,7 @@ const props = withDefaults(
     connectionStatus?: ConnectionBannerStatus
     projectionStatus?: 'idle' | 'ready' | 'gap' | 'error'
     busy?: boolean
+    conversationStarted?: boolean
     errorMessage?: string | null
     emptyTitle?: string
     emptyDescription?: string
@@ -21,6 +23,7 @@ const props = withDefaults(
     connectionStatus: 'idle',
     projectionStatus: 'idle',
     busy: false,
+    conversationStarted: false,
     errorMessage: null,
     emptyTitle: 'New run',
     emptyDescription: 'Start a run to see events here.',
@@ -41,12 +44,15 @@ const emit = defineEmits<{
     </InlineAlert>
     <div class="run-panel__stream">
       <RunTimeline v-if="props.view.timeline.length > 0" :view="props.view" />
-      <EmptyState
-        v-else
+      <EmptyWorkspace
+        v-else-if="!props.conversationStarted"
         :title="props.emptyTitle"
         :description="props.emptyDescription"
         data-run-empty
       />
+      <div v-else class="run-panel__awaiting" data-run-awaiting-events role="status" aria-live="polite">
+        <span>{{ props.busy ? 'Starting run…' : 'Waiting for run events…' }}</span>
+      </div>
     </div>
     <RunFooter :view="props.view" />
     <RunComposer :busy="props.busy" @submit="emit('submit', $event)" @cancel="emit('cancel')" />
@@ -65,5 +71,13 @@ const emit = defineEmits<{
   min-block-size: 0;
   flex: 1;
   overflow: auto;
+}
+
+.run-panel__awaiting {
+  display: grid;
+  min-block-size: 100%;
+  place-items: center;
+  color: var(--color-text-tertiary);
+  font-size: var(--text-sm);
 }
 </style>
