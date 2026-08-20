@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import InspectorDock from '../components/layout/InspectorDock.vue'
 import WorkspaceResponsive from '../components/layout/WorkspaceResponsive.vue'
-import SessionRail from '../components/sessions/SessionRail.vue'
+import WorkspaceSidebar from '../components/layout/WorkspaceSidebar.vue'
 import SessionTranscript from '../components/sessions/SessionTranscript.vue'
 import RunPanel from '../components/run/RunPanel.vue'
 import { useI18n } from '../i18n'
@@ -10,11 +10,15 @@ import { computed } from 'vue'
 
 const { t } = useI18n()
 const { sessions, run } = useAppStores()
+const { agents } = useAppStores()
 const runView = computed(() => run.view.value)
 const runConnectionStatus = computed(() => run.connectionStatus.value)
 const runProjectionStatus = computed(() => run.projectionStatus.value)
 const runErrorMessage = computed(() => run.error.value?.message ?? null)
 const conversationStarted = computed(() => run.conversationStarted.value)
+const agentStatus = computed(() => agents.status)
+const agentSnapshot = computed(() => agents.snapshot)
+const agentError = computed(() => agents.error?.message ?? null)
 const {
   status,
   detailStatus,
@@ -49,15 +53,18 @@ async function handleRunCancel(): Promise<void> {
     :controls-label="t('inspector.label')"
   >
     <template #sessions>
-      <SessionRail
-        :status="status"
-        :items="items"
-        :selected-id="selectedId"
+      <WorkspaceSidebar
+        :session-status="status"
+        :sessions="items"
+        :selected-session-id="selectedId"
         :next-cursor="nextCursor"
-        :error="error"
-        @select="sessions.select"
-        @refresh="sessions.load"
-        @load-more="sessions.loadMore"
+        :session-error="error"
+        :agent-status="agentStatus"
+        :agent-snapshot="agentSnapshot"
+        :agent-error="agentError"
+        @select-session="sessions.select"
+        @refresh-sessions="sessions.load"
+        @load-more-sessions="sessions.loadMore"
         @new-session="sessions.select(null)"
       />
     </template>
