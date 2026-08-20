@@ -232,7 +232,7 @@ pub enum UiEventKind {
         #[serde(skip_serializing_if = "Option::is_none")]
         title: Option<String>,
     },
-    TurnStarted,
+    TurnStarted {},
     Message {
         text: String,
     },
@@ -302,9 +302,31 @@ pub fn redact_ui_path(input: &str) -> String {
     }
 
     if absolute {
-        let keep_from = parts.len().saturating_sub(3);
-        parts = parts.split_off(keep_from);
-        return format!("[ROOT]/{}", parts.join("/"));
+        let home_prefix_len = if parts.first() == Some(&"~") {
+            Some(1)
+        } else if parts.len() >= 2
+            && matches!(parts[0].to_ascii_lowercase().as_str(), "users" | "home")
+        {
+            Some(2)
+        } else if parts.len() >= 3
+            && parts[0].ends_with(':')
+            && parts[1].eq_ignore_ascii_case("users")
+        {
+            Some(3)
+        } else {
+            None
+        };
+        parts = if let Some(prefix_len) = home_prefix_len {
+            parts.split_off(prefix_len.min(parts.len()))
+        } else {
+            let keep_from = parts.len().saturating_sub(3);
+            parts.split_off(keep_from)
+        };
+        return if parts.is_empty() {
+            "[ROOT]".into()
+        } else {
+            format!("[ROOT]/{}", parts.join("/"))
+        };
     }
 
     if parts.iter().any(|part| *part == "..") {
@@ -338,14 +360,16 @@ pub fn redact_ui_text(input: &str) -> String {
                     || value.starts_with("~/")
                     || (value.len() >= 3
                         && value.as_bytes()[1] == b':'
-                        && value.as_bytes()[2] == b'/')
+                        && matches!(value.as_bytes()[2], b'/' | b'\\'))
                 {
                     return format!("{key}={}", redact_ui_path(value));
                 }
             }
             if token.starts_with('/')
                 || token.starts_with("~/")
-                || (token.len() >= 3 && token.as_bytes()[1] == b':' && token.as_bytes()[2] == b'/')
+                || (token.len() >= 3
+                    && token.as_bytes()[1] == b':'
+                    && matches!(token.as_bytes()[2], b'/' | b'\\'))
             {
                 return redact_ui_path(token);
             }
@@ -361,7 +385,7 @@ impl UiEventKind {
             Self::RunStarted { title } => Self::RunStarted {
                 title: title.as_deref().map(redact_ui_text),
             },
-            Self::TurnStarted => Self::TurnStarted,
+            Self::TurnStarted {} => Self::TurnStarted {},
             Self::Message { text } => Self::Message {
                 text: redact_ui_text(text),
             },
@@ -582,7 +606,7 @@ mod tests {
 
     #[test]
     fn envelope_keeps_metadata_and_nested_discriminator() {
-        let json = serde_json::to_value(envelope(UiEventKind::TurnStarted)).unwrap();
+        let json = serde_json::to_value(envelope(UiEventKind::TurnStarted {})).unwrap();
         assert_eq!(json["schema_version"], UI_SCHEMA_VERSION);
         assert_eq!(json["event_id"], "event-1");
         assert_eq!(json["run_id"], "run-1");
@@ -725,7 +749,7 @@ mod tests {
             UiEventKind::RunStarted {
                 title: Some("Roundtrip".into()),
             },
-            UiEventKind::TurnStarted,
+            UiEventKind::TurnStarted {},
             UiEventKind::Message {
                 text: "hello".into(),
             },
@@ -867,7 +891,7 @@ mod tests {
 
     #[test]
     fn invalid_sequence_and_schema_are_rejected() {
-        let mut event = envelope(UiEventKind::TurnStarted);
+        let mut event = envelope(UiEventKind::TurnStarted {});
         event.sequence = 0;
         assert_eq!(
             event.validate(),
@@ -909,7 +933,7 @@ mod tests {
 
     #[test]
     fn empty_run_and_event_ids_are_rejected() {
-        let mut event = envelope(UiEventKind::TurnStarted);
+        let mut event = envelope(UiEventKind::TurnStarted {});
         event.run_id = RunId::from(" ");
         assert_eq!(event.validate(), Err(UiProtocolValidationError::EmptyRunId));
 
@@ -931,16 +955,25 @@ mod tests {
             redact_ui_text("api_key=sk-live-secret path=/Users/alice/project/src/main.rs"),
             "api_key=[REDACTED] path=[ROOT]/project/src/main.rs"
         );
+        assert_eq!(
+            redact_ui_text(r"failed path=C:\Users\alice\project\transcript.json"),
+            "failed path=[ROOT]/project/transcript.json"
+        );
+        assert_eq!(
+            redact_ui_text("Authorization: Bearer sk-live-secret"),
+            "Authorization: [REDACTED] [REDACTED]"
+        );
     }
 
     #[test]
     fn serialization_sanitizes_messages_tools_and_approvals() {
-        let event = envelope(UiEventKind::ToolCall {
+        let mut event = envelope(UiEventKind::ToolCall {
             call_id: CallId::from("call-redact"),
             name: "run_command".into(),
             state: UiToolState::Running,
             detail: Some("Authorization: Bearer sk-live-secret".into()),
         });
+        event.call_id = Some(CallId::from("call-redact"));
         let json = serde_json::to_string(&event).unwrap();
         assert!(!json.contains("sk-live-secret"));
         assert!(json.contains("[REDACTED]"));
@@ -962,7 +995,7 @@ mod tests {
         assert!(!json.contains("/Users/alice"));
         assert!(json.contains("[ROOT]/project/file.rs"));
 
-        let direct_json = serde_json::to_string(match approval.kind {
+        let direct_json = serde_json::to_string(match &approval.kind {
             UiEventKind::ApprovalRequested { approval } => approval,
             _ => unreachable!(),
         })
