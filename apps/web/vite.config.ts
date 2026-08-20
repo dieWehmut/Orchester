@@ -9,6 +9,7 @@ export default defineConfig({
     // The shared projection package is source-only until the workspace build
     // publishes package links. Keep Vite tests and dev mode deterministic.
     alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
       '@orchester/ereignis': fileURLToPath(
         new URL('../ereignis/src/index.ts', import.meta.url),
       ),
