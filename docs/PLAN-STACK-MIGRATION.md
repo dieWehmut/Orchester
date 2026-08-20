@@ -48,9 +48,9 @@ The website is a separate Astro app and never calls localhost.
 
 ## W2: WebUI Foundation (`feat/web-stack-foundation`)
 
-- [ ] W2-001 Add pinned Pinia, Tailwind CSS, Tailwind Vite plugin, shadcn
+- [x] W2-001 Add pinned Pinia, Tailwind CSS, Tailwind Vite plugin, shadcn
   utility, and Lucide dependencies to `apps/web/package.json`.
-- [ ] W2-002 Regenerate only the required `apps/pnpm-lock.yaml` importer and
+- [x] W2-002 Regenerate only the required `apps/pnpm-lock.yaml` importer and
   package entries with a frozen-install check.
 - [ ] W2-003 Add the Tailwind Vite plugin without changing the dev port.
 - [ ] W2-004 Add a dedicated Tailwind entry stylesheet and preserve the shared
@@ -78,7 +78,8 @@ The website is a separate Astro app and never calls localhost.
 - [ ] W2-021 Add Tabs/Dropdown tests for roving focus and selected semantics.
 - [ ] W2-022 Add Tooltip source wrapper for unfamiliar icon buttons.
 - [ ] W2-023 Add Tooltip tests for focus, hover, and reduced motion.
-- [ ] W2-024 Define a single icon import boundary using `lucide-vue-next`.
+- [ ] W2-024 Define a single icon import boundary using the maintained
+  `@lucide/vue` package.
 - [ ] W2-025 Replace new hand-drawn icons in WebUI files with Lucide icons.
 - [ ] W2-026 Add Tailwind content/source scanning for Vue and TS files.
 - [ ] W2-027 Add a CSS snapshot test for dark/light and four color schemes.
