@@ -52,15 +52,15 @@ The website is a separate Astro app and never calls localhost.
   utility, and Lucide dependencies to `apps/web/package.json`.
 - [x] W2-002 Regenerate only the required `apps/pnpm-lock.yaml` importer and
   package entries with a frozen-install check.
-- [ ] W2-003 Add the Tailwind Vite plugin without changing the dev port.
-- [ ] W2-004 Add a dedicated Tailwind entry stylesheet and preserve the shared
+- [x] W2-003 Add the Tailwind Vite plugin without changing the dev port.
+- [x] W2-004 Add a dedicated Tailwind entry stylesheet and preserve the shared
   appearance bootstrap order.
-- [ ] W2-005 Add a CSS-variable bridge from `@orchester/design` tokens to the
+- [x] W2-005 Add a CSS-variable bridge from `@orchester/design` tokens to the
   Tailwind theme; do not duplicate color values in components.
-- [ ] W2-006 Add `components.json` for shadcn-vue source generation and record
+- [x] W2-006 Add `components.json` for shadcn-vue source generation and record
   the alias contract.
-- [ ] W2-007 Add the `cn()` utility using `clsx` and `tailwind-merge`.
-- [ ] W2-008 Test `cn()` deterministic merge precedence and arbitrary values.
+- [x] W2-007 Add the `cn()` utility using `clsx` and `tailwind-merge`.
+- [x] W2-008 Test `cn()` deterministic merge precedence and arbitrary values.
 - [ ] W2-009 Add the first shadcn-vue Button source component with keyboard and
   disabled semantics.
 - [ ] W2-010 Add Button variants for primary, quiet, destructive, and icon-only
@@ -245,6 +245,80 @@ The website is a separate Astro app and never calls localhost.
 - [ ] W9-015 Run Rust workspace checks and all frontend release gates.
 - [ ] W9-016 Publish a versioned protocol compatibility note.
 - [ ] W9-017 Merge only after all required branch PRs are green.
+
+## W10: Agent Fleet and Codex-Style Workspace (`feat/web-pinia-migration`)
+
+This wave defines the visible agent fleet before provider-specific process
+integration. Availability (installed/configured/authenticated) is separate
+from activity (idle/running/waiting approval). A browser cannot inspect
+arbitrary operating-system windows, so `active_windows` means Orchester-owned
+workspace views until a Tauri window registry supplies a stronger source.
+
+- [ ] W10-001 Add `AgentRuntimeSummaryDto` and a versioned fleet snapshot to
+  `apps/protokoll`; keep provider IDs, display labels, and icon keys safe for
+  rendering and reject unknown fields at the boundary.
+- [ ] W10-002 Add availability and activity enums with independent guards;
+  never derive `running` from process existence alone.
+- [ ] W10-003 Add active window/session/run/subagent counts and an explicit
+  `window_count_source` (`managed_sessions` or `tauri_windows`).
+- [ ] W10-004 Add redacted heartbeat and last-error fields; prohibit absolute
+  paths, credentials, command lines, and transcript contents in the DTO.
+- [ ] W10-005 Add deterministic fleet fixtures for Codex, Claude Code,
+  DeepSeek, unavailable, and auth-required states.
+- [ ] W10-006 Add `/api/v1/agents/status` client and snapshot refresh policy.
+- [ ] W10-007 Add a WebSocket status-frame contract with sequence and resync
+  handling, independent from run event frames.
+- [ ] W10-008 Add a Pinia agent store with isolated loading/error/stale state.
+- [ ] W10-009 Add provider metadata and Lucide icon mapping without hand-drawn
+  SVG or provider brand asset copying.
+- [ ] W10-010 Add `AgentFleetPanel` with one row per known agent, icon, status
+  dot, accessible label, and active counts.
+- [ ] W10-011 Add compact running-subagent badges to the owning session/project
+  row; parent idle plus child running must remain distinguishable.
+- [ ] W10-012 Add an agent detail drawer showing sessions, runs, subagents,
+  heartbeat age, and redacted error state.
+- [ ] W10-013 Add Codex thread status projection for `not_loaded`, `idle`,
+  `active`, and `system_error`, plus running-turn count updates.
+- [ ] W10-014 Add Claude hook bridge projection for SessionStart/End,
+  SubagentStart/Stop, Stop, and Notification with parent-agent linkage.
+- [ ] W10-015 Add DeepSeek descendant indexing projection and explicit teardown
+  semantics for child handles.
+- [ ] W10-016 Add the Codex-style left rail sections: brand/new chat,
+  projects, sessions, and agent fleet; preserve keyboard navigation.
+- [ ] W10-017 Add a dedicated `OrchesterMark` component for the center empty
+  state; it must be an original local mark and disappear after first submit or
+  first run event.
+- [ ] W10-018 Add empty-state transition tests proving the large mark is absent
+  once a conversation has started, even while the first event is pending.
+- [ ] W10-019 Add compact connecting/running state for a started run with no
+  events; do not re-show the marketing-style empty state.
+- [ ] W10-020 Add bottom composer behavior matching the reference interaction:
+  multiline input, Enter submit, Shift+Enter newline, cancel while active.
+- [ ] W10-021 Add project/session selection and a visible selected-row state;
+  loading failures must retain the prior selection.
+- [ ] W10-022 Add responsive drawers at tablet/mobile widths without hiding
+  projects, sessions, agents, approvals, or settings.
+- [ ] W10-023 Add no-overlap visual checks at 1440x900, 1024x768, and 390x844.
+- [ ] W10-024 Add keyboard/focus tests for rail disclosure, agent drawer,
+  composer, and empty-state controls.
+- [ ] W10-025 Add a Rust redaction test for fleet snapshots and status frames.
+- [ ] W10-026 Add Rust registry/provider status aggregation with unavailable
+  and auth-required outcomes that do not fail the whole snapshot.
+- [ ] W10-027 Add Codex app-server status adapter integration tests using
+  thread/status/changed and turn start/complete fixtures.
+- [ ] W10-028 Add Claude hook ingestion tests for parent/child lifecycle and
+  redacted transcript paths.
+- [ ] W10-029 Add DeepSeek subagent-count integration fixtures and stale-child
+  cleanup tests.
+- [ ] W10-030 Add Tauri managed-window registry source and map its count to the
+  same fleet DTO without changing browser semantics.
+- [ ] W10-031 Add browser E2E coverage for multiple active sessions and a
+  parent with a running subagent.
+- [ ] W10-032 Add browser E2E coverage for unavailable/auth-required agents and
+  reconnecting fleet status.
+- [ ] W10-033 Add a release screenshot fixture generated from the WebUI build;
+  website may consume the asset but must not call localhost.
+- [ ] W10-034 Run the fleet/workspace wave gate before merging its branch.
 
 ## Acceptance Gates
 
