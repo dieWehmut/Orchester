@@ -73,6 +73,13 @@ pub struct AgentFleetSnapshotDto {
     pub agents: Vec<AgentRuntimeSummaryDto>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "type", rename_all = "snake_case", deny_unknown_fields)]
+pub enum AgentFleetStreamFrameDto {
+    Snapshot { snapshot: AgentFleetSnapshotDto },
+    Heartbeat { sequence: u64, sent_at: String },
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum AgentStatusValidationError {
     UnsupportedSchemaVersion { found: u8, expected: u8 },
