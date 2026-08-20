@@ -56,7 +56,11 @@ async fn agent_status_route_returns_a_redaction_safe_runtime_snapshot() {
     assert_eq!(mock["active_runs"], 0);
     assert_eq!(mock["active_subagents"], 0);
     assert_eq!(mock["window_count_source"], "managed_sessions");
-    assert!(mock["capabilities"].as_array().unwrap().iter().any(|item| item == "streaming"));
+    assert!(mock["capabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|item| item == "streaming"));
 
     let wire = String::from_utf8(body.to_vec()).expect("UTF-8 response");
     assert!(!wire.contains("command"));
