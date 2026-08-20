@@ -232,7 +232,7 @@ pub enum UiEventKind {
         #[serde(skip_serializing_if = "Option::is_none")]
         title: Option<String>,
     },
-    TurnStarted,
+    TurnStarted {},
     Message {
         text: String,
     },
@@ -385,7 +385,7 @@ impl UiEventKind {
             Self::RunStarted { title } => Self::RunStarted {
                 title: title.as_deref().map(redact_ui_text),
             },
-            Self::TurnStarted => Self::TurnStarted,
+            Self::TurnStarted {} => Self::TurnStarted {},
             Self::Message { text } => Self::Message {
                 text: redact_ui_text(text),
             },
@@ -606,7 +606,7 @@ mod tests {
 
     #[test]
     fn envelope_keeps_metadata_and_nested_discriminator() {
-        let json = serde_json::to_value(envelope(UiEventKind::TurnStarted)).unwrap();
+        let json = serde_json::to_value(envelope(UiEventKind::TurnStarted {})).unwrap();
         assert_eq!(json["schema_version"], UI_SCHEMA_VERSION);
         assert_eq!(json["event_id"], "event-1");
         assert_eq!(json["run_id"], "run-1");
@@ -749,7 +749,7 @@ mod tests {
             UiEventKind::RunStarted {
                 title: Some("Roundtrip".into()),
             },
-            UiEventKind::TurnStarted,
+            UiEventKind::TurnStarted {},
             UiEventKind::Message {
                 text: "hello".into(),
             },
@@ -891,7 +891,7 @@ mod tests {
 
     #[test]
     fn invalid_sequence_and_schema_are_rejected() {
-        let mut event = envelope(UiEventKind::TurnStarted);
+        let mut event = envelope(UiEventKind::TurnStarted {});
         event.sequence = 0;
         assert_eq!(
             event.validate(),
@@ -933,7 +933,7 @@ mod tests {
 
     #[test]
     fn empty_run_and_event_ids_are_rejected() {
-        let mut event = envelope(UiEventKind::TurnStarted);
+        let mut event = envelope(UiEventKind::TurnStarted {});
         event.run_id = RunId::from(" ");
         assert_eq!(event.validate(), Err(UiProtocolValidationError::EmptyRunId));
 
