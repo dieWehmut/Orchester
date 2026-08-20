@@ -263,4 +263,53 @@ describe('run socket lifecycle', () => {
     expect(scheduled).toHaveLength(1)
     expect(errors.at(-1)?.message).toContain('reconnect budget exhausted')
   })
+
+  it('refreshes the liveness deadline for every valid frame', async () => {
+    const cancelled: unknown[] = []
+    const client = createRunSocket({
+      ticketProvider: () => 'ws://127.0.0.1/events/ticket',
+      webSocketFactory: factory,
+      schedule,
+      cancelScheduled: (handle) => cancelled.push(handle),
+      livenessTimeoutMs: 30_000,
+    })
+
+    const connected = client.connect()
+    await Promise.resolve()
+    sockets[0]!.open()
+    await connected
+
+    expect(scheduled.map(({ delay }) => delay)).toEqual([30_000])
+    sockets[0]!.message(JSON.stringify({ type: 'event', event: envelope }))
+
+    expect(cancelled).toEqual([1])
+    expect(scheduled.map(({ delay }) => delay)).toEqual([30_000, 30_000])
+  })
+
+  it('closes a stale connection and enters bounded reconnect', async () => {
+    const errors: Error[] = []
+    const client = createRunSocket({
+      ticketProvider: () => 'ws://127.0.0.1/events/ticket',
+      webSocketFactory: factory,
+      schedule,
+      livenessTimeoutMs: 500,
+      backoff: {
+        initialDelayMs: 100,
+        maxAttempts: 2,
+        jitterRatio: 0,
+      },
+      onError: (error) => errors.push(error),
+    })
+
+    const connected = client.connect()
+    await Promise.resolve()
+    sockets[0]!.open()
+    await connected
+    scheduled[0]!.callback()
+
+    expect(sockets[0]!.closeCalls).toBe(1)
+    expect(client.status).toBe('reconnecting')
+    expect(scheduled.map(({ delay }) => delay)).toEqual([500, 100])
+    expect(errors.at(-1)?.message).toContain('liveness timeout')
+  })
 })

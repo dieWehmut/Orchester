@@ -32,6 +32,8 @@ export interface RunSocketOptions {
   afterSequence?: () => number
   webSocketFactory?: (url: string) => WebSocketLike
   backoff?: ReconnectBackoffOptions
+  /** Optional client-side liveness deadline; no wire heartbeat is invented. */
+  livenessTimeoutMs?: number
   schedule?: (callback: () => void, delay: number) => unknown
   cancelScheduled?: (handle: unknown) => void
   onEvent?: (event: UiEventEnvelope) => void
@@ -84,6 +86,7 @@ export function createRunSocket(options: RunSocketOptions): RunSocket {
   let manuallyClosed = false
   let connectionPromise: Promise<void> | null = null
   let reconnectHandle: unknown | null = null
+  let livenessHandle: unknown | null = null
 
   function setStatus(status: RunSocketStatus): void {
     if (currentStatus === status) return
@@ -95,6 +98,31 @@ export function createRunSocket(options: RunSocketOptions): RunSocket {
     const error = asError(cause)
     options.onError?.(error)
     return error
+  }
+
+  function clearLivenessTimer(): void {
+    if (livenessHandle === null) return
+    cancelScheduled(livenessHandle)
+    livenessHandle = null
+  }
+
+  function armLivenessTimer(): void {
+    clearLivenessTimer()
+    const timeout = options.livenessTimeoutMs
+    if (
+      timeout === undefined ||
+      !Number.isFinite(timeout) ||
+      !Number.isSafeInteger(timeout) ||
+      timeout <= 0
+    ) {
+      return
+    }
+    livenessHandle = schedule(() => {
+      livenessHandle = null
+      if (manuallyClosed || socket === null) return
+      reportError(new Error('Run socket liveness timeout'))
+      socket.close(4000, 'liveness timeout')
+    }, timeout)
   }
 
   function scheduleReconnect(cause?: unknown): void {
@@ -149,6 +177,7 @@ export function createRunSocket(options: RunSocketOptions): RunSocket {
             opened = true
             backoff.reset()
             setStatus('connected')
+            armLivenessTimer()
             resolve()
           }
           socket.onmessage = (message) => {
@@ -161,6 +190,7 @@ export function createRunSocket(options: RunSocketOptions): RunSocket {
               reportError(new TypeError('Invalid run stream frame'))
               return
             }
+            armLivenessTimer()
             if (frame.type === 'event') {
               options.onEvent?.(frame.event)
               if (frame.event.kind.type === 'run_stopped') close()
@@ -173,6 +203,7 @@ export function createRunSocket(options: RunSocketOptions): RunSocket {
             if (!opened) reject(error)
           }
           socket.onclose = () => {
+            clearLivenessTimer()
             socket = null
             connectionPromise = null
             if (manuallyClosed) {
@@ -208,6 +239,7 @@ export function createRunSocket(options: RunSocketOptions): RunSocket {
 
   function close(): void {
     manuallyClosed = true
+    clearLivenessTimer()
     if (reconnectHandle !== null) {
       cancelScheduled(reconnectHandle)
       reconnectHandle = null
