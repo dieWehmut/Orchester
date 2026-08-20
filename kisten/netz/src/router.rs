@@ -28,7 +28,7 @@ use tower::Service;
 
 use crate::{
     agent_catalog::agent_catalog_handler,
-    agent_status::agent_status_handler,
+    agent_status::{agent_status_handler, agent_status_socket_handler},
     api_error::{api_error_response, request_id_from_headers, ApiErrorCode, ApiErrorResponse},
     bootstrap::{bootstrap_response, BootstrapDto},
     config::StaticAssets,
@@ -73,6 +73,7 @@ fn api_router() -> Router<ServerContext> {
         .route("/bootstrap", get(bootstrap_handler))
         .route("/agents", get(agent_catalog_handler))
         .route("/agents/status", get(agent_status_handler))
+        .route("/agents/status/ws", get(agent_status_socket_handler))
         .route("/models", get(model_catalog_handler))
         .route("/sessions", get(session_list_handler))
         .route("/sessions/{id}", get(session_detail_handler))

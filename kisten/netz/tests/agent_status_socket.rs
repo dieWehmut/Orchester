@@ -1,6 +1,6 @@
 use std::net::SocketAddr;
 
-use futures::{SinkExt, StreamExt};
+use futures::StreamExt;
 use serde_json::Value;
 use tokio::net::TcpListener;
 use tokio_tungstenite::{connect_async, tungstenite::Message};
@@ -12,7 +12,12 @@ async fn read_json<S>(stream: &mut tokio_tungstenite::WebSocketStream<S>) -> Val
 where
     S: tokio::io::AsyncRead + tokio::io::AsyncWrite + Unpin,
 {
-    match stream.next().await.expect("socket frame").expect("socket message") {
+    match stream
+        .next()
+        .await
+        .expect("socket frame")
+        .expect("socket message")
+    {
         Message::Text(text) => serde_json::from_str(&text).expect("JSON frame"),
         other => panic!("expected text frame, got {other:?}"),
     }
@@ -30,11 +35,9 @@ async fn agent_status_socket_streams_snapshot_updates_and_heartbeats() {
             .expect("serve test router");
     });
 
-    let (mut socket, _) = connect_async(format!(
-        "ws://{address}/api/v1/agents/status/ws"
-    ))
-    .await
-    .expect("connect agent status socket");
+    let (mut socket, _) = connect_async(format!("ws://{address}/api/v1/agents/status/ws"))
+        .await
+        .expect("connect agent status socket");
     let initial = read_json(&mut socket).await;
     assert_eq!(initial["type"], "snapshot");
     assert_eq!(initial["snapshot"]["sequence"], 1);

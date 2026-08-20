@@ -10,7 +10,15 @@ use std::{
     sync::{Arc, RwLock},
 };
 
-use axum::{extract::State, http::HeaderMap, Json};
+use axum::{
+    extract::{
+        ws::{Message, WebSocket},
+        State, WebSocketUpgrade,
+    },
+    http::HeaderMap,
+    response::Response,
+    Json,
+};
 use orchester_protokoll::{
     AgentActivityState, AgentAvailabilityState, AgentFleetSnapshotDto, AgentFleetStreamFrameDto,
     AgentRuntimeSummaryDto, AgentStatusValidationError, AgentWindowCountSource, Capability,
@@ -196,6 +204,86 @@ pub(crate) async fn agent_status_handler(
                 .unwrap_or_else(|_| agent_status_response(context.registry())),
         ),
     )
+}
+
+pub(crate) async fn agent_status_socket_handler(
+    State(context): State<ServerContext>,
+    upgrade: WebSocketUpgrade,
+) -> Response {
+    upgrade.on_upgrade(move |socket| stream_agent_status(socket, context))
+}
+
+async fn stream_agent_status(mut socket: WebSocket, context: ServerContext) {
+    let store = context.agent_status_store().clone();
+    let mut receiver = store.subscribe();
+    let Ok(snapshot) = store.snapshot() else {
+        return;
+    };
+    let mut latest_sequence = snapshot.sequence;
+    if send_stream_frame(&mut socket, AgentFleetStreamFrameDto::Snapshot { snapshot })
+        .await
+        .is_err()
+    {
+        return;
+    }
+
+    loop {
+        tokio::select! {
+            incoming = socket.recv() => match incoming {
+                Some(Ok(Message::Close(_))) | None => break,
+                Some(Ok(Message::Ping(payload))) => {
+                    if socket.send(Message::Pong(payload)).await.is_err() {
+                        break;
+                    }
+                }
+                Some(Ok(_)) => {}
+                Some(Err(_)) => break,
+            },
+            frame = receiver.recv() => match frame {
+                Ok(AgentFleetStreamFrameDto::Snapshot { snapshot }) => {
+                    if snapshot.sequence <= latest_sequence {
+                        continue;
+                    }
+                    latest_sequence = snapshot.sequence;
+                    if send_stream_frame(
+                        &mut socket,
+                        AgentFleetStreamFrameDto::Snapshot { snapshot },
+                    ).await.is_err() {
+                        break;
+                    }
+                }
+                Ok(frame @ AgentFleetStreamFrameDto::Heartbeat { .. }) => {
+                    if send_stream_frame(&mut socket, frame).await.is_err() {
+                        break;
+                    }
+                }
+                Err(broadcast::error::RecvError::Lagged(_)) => {
+                    let Ok(snapshot) = store.snapshot() else {
+                        break;
+                    };
+                    latest_sequence = snapshot.sequence;
+                    if send_stream_frame(
+                        &mut socket,
+                        AgentFleetStreamFrameDto::Snapshot { snapshot },
+                    ).await.is_err() {
+                        break;
+                    }
+                }
+                Err(broadcast::error::RecvError::Closed) => break,
+            }
+        }
+    }
+}
+
+async fn send_stream_frame(
+    socket: &mut WebSocket,
+    frame: AgentFleetStreamFrameDto,
+) -> Result<(), ()> {
+    let text = serde_json::to_string(&frame).map_err(|_| ())?;
+    socket
+        .send(Message::Text(text.into()))
+        .await
+        .map_err(|_| ())
 }
 
 fn runtime_summary(
