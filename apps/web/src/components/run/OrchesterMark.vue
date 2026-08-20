@@ -23,9 +23,7 @@ withDefaults(
   place-items: center;
   border: 1px solid var(--color-accent-border);
   border-radius: 28px;
-  background:
-    radial-gradient(circle at 50% 42%, var(--color-accent-muted), transparent 66%),
-    var(--color-bg-surface);
+  background: var(--color-bg-surface);
   color: var(--color-accent);
   box-shadow: 0 18px 48px rgb(0 0 0 / 22%);
 }

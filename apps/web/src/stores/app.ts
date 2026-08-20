@@ -1,4 +1,5 @@
 import { inject, type App, type InjectionKey } from 'vue'
+import type { Pinia } from 'pinia'
 
 import { createHttpClient, type HttpClient } from '../api/http'
 import { createRunsApi, type RunsApi } from '../api/runs'
@@ -10,6 +11,9 @@ import {
 } from './bootstrap'
 import { createSessionsStore, type SessionsStore } from './sessions'
 import { createRunStore, type RunStore } from './run'
+import { createAppPinia } from './pinia'
+import { useAgentFleetStore } from './agent-fleet'
+import { createAgentsApi } from '../api/agents'
 
 export interface AppStores {
   http: HttpClient
@@ -17,6 +21,8 @@ export interface AppStores {
   bootstrap: BootstrapStore
   sessions: SessionsStore
   run: RunStore
+  agents: ReturnType<typeof useAgentFleetStore>
+  pinia: Pinia
   getCsrfToken: () => string | null
   start: () => Promise<void>
   install: (app: App) => void
@@ -50,6 +56,9 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
   const sessions = createSessionsStore(createSessionsApi(http))
   const runs = createRunsApi(http)
   const run = createRunStore(runs)
+  const pinia = createAppPinia()
+  const agents = useAgentFleetStore(pinia)
+  agents.configure(createAgentsApi(http))
 
   const stores: AppStores = {
     http,
@@ -57,14 +66,17 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
     bootstrap,
     sessions,
     run,
+    agents,
+    pinia,
     getCsrfToken: () => csrfToken,
     async start(): Promise<void> {
       await bootstrap.load()
       if (bootstrap.status.value === 'ready' && bootstrap.context.value?.workspace.selected) {
-        await sessions.load()
+        await Promise.all([sessions.load(), agents.load()])
       }
     },
     install(app: App): void {
+      app.use(pinia)
       app.provide(APP_STORES_KEY, stores)
     },
   }

@@ -89,9 +89,9 @@ The website is a separate Astro app and never calls localhost.
 
 ## W3: Pinia Migration (`feat/web-pinia-migration`)
 
-- [ ] W3-001 Add a test-only Pinia factory that creates an isolated store per
+- [x] W3-001 Add a test-only Pinia factory that creates an isolated store per
   test and never shares active Pinia state.
-- [ ] W3-002 Add the application Pinia plugin to `main.ts`.
+- [x] W3-002 Add the application Pinia plugin to `main.ts`.
 - [ ] W3-003 Define the bootstrap store with typed state and actions.
 - [ ] W3-004 Move fragment-token exchange and URL cleanup into bootstrap actions.
 - [ ] W3-005 Test bootstrap loading, success, and error states in Pinia.
@@ -254,24 +254,24 @@ from activity (idle/running/waiting approval). A browser cannot inspect
 arbitrary operating-system windows, so `active_windows` means Orchester-owned
 workspace views until a Tauri window registry supplies a stronger source.
 
-- [ ] W10-001 Add `AgentRuntimeSummaryDto` and a versioned fleet snapshot to
+- [x] W10-001 Add `AgentRuntimeSummaryDto` and a versioned fleet snapshot to
   `apps/protokoll`; keep provider IDs, display labels, and icon keys safe for
   rendering and reject unknown fields at the boundary.
-- [ ] W10-002 Add availability and activity enums with independent guards;
+- [x] W10-002 Add availability and activity enums with independent guards;
   never derive `running` from process existence alone.
-- [ ] W10-003 Add active window/session/run/subagent counts and an explicit
+- [x] W10-003 Add active window/session/run/subagent counts and an explicit
   `window_count_source` (`managed_sessions` or `tauri_windows`).
-- [ ] W10-004 Add redacted heartbeat and last-error fields; prohibit absolute
+- [x] W10-004 Add redacted heartbeat and last-error fields; prohibit absolute
   paths, credentials, command lines, and transcript contents in the DTO.
-- [ ] W10-005 Add deterministic fleet fixtures for Codex, Claude Code,
+- [x] W10-005 Add deterministic fleet fixtures for Codex, Claude Code,
   DeepSeek, unavailable, and auth-required states.
-- [ ] W10-006 Add `/api/v1/agents/status` client and snapshot refresh policy.
+- [x] W10-006 Add `/api/v1/agents/status` client and snapshot refresh policy.
 - [ ] W10-007 Add a WebSocket status-frame contract with sequence and resync
   handling, independent from run event frames.
-- [ ] W10-008 Add a Pinia agent store with isolated loading/error/stale state.
-- [ ] W10-009 Add provider metadata and Lucide icon mapping without hand-drawn
+- [x] W10-008 Add a Pinia agent store with isolated loading/error/stale state.
+- [x] W10-009 Add provider metadata and Lucide icon mapping without hand-drawn
   SVG or provider brand asset copying.
-- [ ] W10-010 Add `AgentFleetPanel` with one row per known agent, icon, status
+- [x] W10-010 Add `AgentFleetPanel` with one row per known agent, icon, status
   dot, accessible label, and active counts.
 - [ ] W10-011 Add compact running-subagent badges to the owning session/project
   row; parent idle plus child running must remain distinguishable.
@@ -285,12 +285,12 @@ workspace views until a Tauri window registry supplies a stronger source.
   semantics for child handles.
 - [ ] W10-016 Add the Codex-style left rail sections: brand/new chat,
   projects, sessions, and agent fleet; preserve keyboard navigation.
-- [ ] W10-017 Add a dedicated `OrchesterMark` component for the center empty
+- [x] W10-017 Add a dedicated `OrchesterMark` component for the center empty
   state; it must be an original local mark and disappear after first submit or
   first run event.
-- [ ] W10-018 Add empty-state transition tests proving the large mark is absent
+- [x] W10-018 Add empty-state transition tests proving the large mark is absent
   once a conversation has started, even while the first event is pending.
-- [ ] W10-019 Add compact connecting/running state for a started run with no
+- [x] W10-019 Add compact connecting/running state for a started run with no
   events; do not re-show the marketing-style empty state.
 - [ ] W10-020 Add bottom composer behavior matching the reference interaction:
   multiline input, Enter submit, Shift+Enter newline, cancel while active.
