@@ -329,7 +329,7 @@ pub fn redact_ui_path(input: &str) -> String {
         };
     }
 
-    if parts.iter().any(|part| *part == "..") {
+    if parts.contains(&"..") {
         return parts
             .into_iter()
             .map(|part| if part == ".." { "[PARENT]" } else { part })
