@@ -4,6 +4,11 @@ import {
   type UiEventEnvelope,
 } from '@orchester/protokoll'
 
+import {
+  createReconnectBackoff,
+  type ReconnectBackoffOptions,
+} from './backoff'
+
 export type RunSocketStatus =
   | 'idle'
   | 'connecting'
@@ -26,6 +31,9 @@ export interface RunSocketOptions {
   ticketProvider: () => string | Promise<string>
   afterSequence?: () => number
   webSocketFactory?: (url: string) => WebSocketLike
+  backoff?: ReconnectBackoffOptions
+  schedule?: (callback: () => void, delay: number) => unknown
+  cancelScheduled?: (handle: unknown) => void
   onEvent?: (event: UiEventEnvelope) => void
   onResyncRequired?: (frame: ResyncRequiredDto) => void
   onError?: (error: Error) => void
@@ -40,6 +48,14 @@ export interface RunSocket {
 
 function defaultWebSocketFactory(url: string): WebSocketLike {
   return new WebSocket(url)
+}
+
+function defaultSchedule(callback: () => void, delay: number): unknown {
+  return globalThis.setTimeout(callback, delay)
+}
+
+function defaultCancelScheduled(handle: unknown): void {
+  globalThis.clearTimeout(handle as ReturnType<typeof globalThis.setTimeout>)
 }
 
 function withReplayCursor(ticketUrl: string, afterSequence: number): string {
@@ -60,10 +76,14 @@ function asError(cause: unknown): Error {
 
 export function createRunSocket(options: RunSocketOptions): RunSocket {
   const createWebSocket = options.webSocketFactory ?? defaultWebSocketFactory
+  const backoff = createReconnectBackoff(options.backoff)
+  const schedule = options.schedule ?? defaultSchedule
+  const cancelScheduled = options.cancelScheduled ?? defaultCancelScheduled
   let socket: WebSocketLike | null = null
   let currentStatus: RunSocketStatus = 'idle'
   let manuallyClosed = false
   let connectionPromise: Promise<void> | null = null
+  let reconnectHandle: unknown | null = null
 
   function setStatus(status: RunSocketStatus): void {
     if (currentStatus === status) return
@@ -77,12 +97,37 @@ export function createRunSocket(options: RunSocketOptions): RunSocket {
     return error
   }
 
-  function connect(): Promise<void> {
-    if (connectionPromise) return connectionPromise
-    if (manuallyClosed) return Promise.reject(new Error('Run socket is closed'))
+  function scheduleReconnect(cause?: unknown): void {
+    if (manuallyClosed || reconnectHandle !== null) return
+    const delay = backoff.next()
+    if (delay === null) {
+      setStatus('fatal')
+      const error = new Error('Run socket reconnect budget exhausted')
+      if (cause !== undefined) error.cause = cause
+      reportError(error)
+      return
+    }
 
-    setStatus('connecting')
-    connectionPromise = Promise.resolve(options.ticketProvider()).then(
+    setStatus('reconnecting')
+    reconnectHandle = schedule(() => {
+      reconnectHandle = null
+      const reconnecting = openConnection(true)
+      void reconnecting.catch(() => undefined)
+    }, delay)
+  }
+
+  function openConnection(reconnecting: boolean): Promise<void> {
+    setStatus(reconnecting ? 'reconnecting' : 'connecting')
+    let ticket: string | Promise<string>
+    try {
+      ticket = options.ticketProvider()
+    } catch (cause) {
+      const error = reportError(cause)
+      if (reconnecting) scheduleReconnect(error)
+      else setStatus('fatal')
+      return Promise.reject(error)
+    }
+    const pending = Promise.resolve(ticket).then(
       (ticketUrl) =>
         new Promise<void>((resolve, reject) => {
           let opened = false
@@ -102,6 +147,7 @@ export function createRunSocket(options: RunSocketOptions): RunSocket {
 
           socket.onopen = () => {
             opened = true
+            backoff.reset()
             setStatus('connected')
             resolve()
           }
@@ -115,8 +161,12 @@ export function createRunSocket(options: RunSocketOptions): RunSocket {
               reportError(new TypeError('Invalid run stream frame'))
               return
             }
-            if (frame.type === 'event') options.onEvent?.(frame.event)
-            else options.onResyncRequired?.(frame)
+            if (frame.type === 'event') {
+              options.onEvent?.(frame.event)
+              if (frame.event.kind.type === 'run_stopped') close()
+            } else {
+              options.onResyncRequired?.(frame)
+            }
           }
           socket.onerror = () => {
             const error = reportError(new Error('Run socket connection failed'))
@@ -129,20 +179,39 @@ export function createRunSocket(options: RunSocketOptions): RunSocket {
               setStatus('closed')
               return
             }
-            if (!opened) reject(reportError(new Error('Run socket closed before opening')))
-            setStatus('offline')
+            let closeError: Error | undefined
+            if (!opened) {
+              closeError = reportError(new Error('Run socket closed before opening'))
+              reject(closeError)
+            }
+            scheduleReconnect(closeError)
           }
         }),
       (cause) => {
-        setStatus('fatal')
-        throw reportError(cause)
+        const error = reportError(cause)
+        if (reconnecting) scheduleReconnect(error)
+        else setStatus('fatal')
+        throw error
       },
     )
+    connectionPromise = pending
+    return pending
+  }
+
+  function connect(): Promise<void> {
+    if (connectionPromise) return connectionPromise
+    if (manuallyClosed) return Promise.reject(new Error('Run socket is closed'))
+
+    connectionPromise = openConnection(false)
     return connectionPromise
   }
 
   function close(): void {
     manuallyClosed = true
+    if (reconnectHandle !== null) {
+      cancelScheduled(reconnectHandle)
+      reconnectHandle = null
+    }
     const activeSocket = socket
     socket = null
     connectionPromise = null

@@ -3,6 +3,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { eventId, runId, type UiEventEnvelope } from '@orchester/protokoll'
 import { createRunSocket, type WebSocketLike } from '../src/transport/run-socket'
 
+interface ScheduledTask {
+  callback: () => void
+  delay: number
+}
+
 class FakeWebSocket implements WebSocketLike {
   readonly url: string
   readyState = 0
@@ -49,13 +54,20 @@ const envelope: UiEventEnvelope = {
 describe('run socket lifecycle', () => {
   let sockets: FakeWebSocket[]
   let factory: (url: string) => WebSocketLike
+  let scheduled: ScheduledTask[]
+  let schedule: (callback: () => void, delay: number) => number
 
   beforeEach(() => {
     sockets = []
+    scheduled = []
     factory = vi.fn((url: string) => {
       const socket = new FakeWebSocket(url)
       sockets.push(socket)
       return socket
+    })
+    schedule = vi.fn((callback: () => void, delay: number) => {
+      scheduled.push({ callback, delay })
+      return scheduled.length
     })
   })
 
@@ -151,5 +163,104 @@ describe('run socket lifecycle', () => {
     await expect(connected).rejects.toThrow('Run socket is closed')
     expect(sockets).toEqual([])
     expect(client.status).toBe('closed')
+  })
+
+  it('reconnects with a fresh ticket and the latest replay cursor', async () => {
+    let cursor = 2
+    const ticketProvider = vi
+      .fn<() => string>()
+      .mockReturnValueOnce('ws://127.0.0.1/events/ticket-one')
+      .mockReturnValueOnce('ws://127.0.0.1/events/ticket-two')
+    const statuses: string[] = []
+    const client = createRunSocket({
+      ticketProvider,
+      afterSequence: () => cursor,
+      webSocketFactory: factory,
+      schedule,
+      backoff: {
+        initialDelayMs: 125,
+        factor: 2,
+        maxDelayMs: 500,
+        maxAttempts: 3,
+        jitterRatio: 0,
+      },
+      onStatus: (status) => statuses.push(status),
+    })
+
+    const connected = client.connect()
+    await Promise.resolve()
+    sockets[0]!.open()
+    await connected
+    sockets[0]!.remoteClose()
+
+    expect(scheduled).toHaveLength(1)
+    expect(scheduled[0]!.delay).toBe(125)
+    expect(client.status).toBe('reconnecting')
+
+    cursor = 8
+    scheduled[0]!.callback()
+    await Promise.resolve()
+    await Promise.resolve()
+
+    expect(ticketProvider).toHaveBeenCalledTimes(2)
+    expect(sockets[1]!.url).toBe(
+      'ws://127.0.0.1/events/ticket-two?after_sequence=8',
+    )
+    sockets[1]!.open()
+    expect(client.status).toBe('connected')
+    expect(statuses).toEqual(['connecting', 'connected', 'reconnecting', 'connected'])
+  })
+
+  it('permanently closes after a terminal run event', async () => {
+    const client = createRunSocket({
+      ticketProvider: () => 'ws://127.0.0.1/events/ticket',
+      webSocketFactory: factory,
+      schedule,
+    })
+    const terminalEvent: UiEventEnvelope = {
+      ...envelope,
+      event_id: eventId('event-terminal'),
+      sequence: 2,
+      kind: { type: 'run_stopped', reason: 'succeeded' },
+    }
+
+    const connected = client.connect()
+    await Promise.resolve()
+    sockets[0]!.open()
+    await connected
+    sockets[0]!.message(JSON.stringify({ type: 'event', event: terminalEvent }))
+
+    expect(sockets[0]!.closeCalls).toBe(1)
+    expect(scheduled).toEqual([])
+    expect(client.status).toBe('closed')
+  })
+
+  it('enters a fatal state when the reconnect budget is exhausted', async () => {
+    const errors: Error[] = []
+    const client = createRunSocket({
+      ticketProvider: () => 'ws://127.0.0.1/events/ticket',
+      webSocketFactory: factory,
+      schedule,
+      backoff: {
+        initialDelayMs: 50,
+        maxAttempts: 1,
+        jitterRatio: 0,
+      },
+      onError: (error) => errors.push(error),
+    })
+
+    const connected = client.connect()
+    await Promise.resolve()
+    sockets[0]!.open()
+    await connected
+    sockets[0]!.remoteClose()
+    scheduled[0]!.callback()
+    await Promise.resolve()
+    await Promise.resolve()
+    sockets[1]!.remoteClose()
+
+    expect(client.status).toBe('fatal')
+    expect(scheduled).toHaveLength(1)
+    expect(errors.at(-1)?.message).toContain('reconnect budget exhausted')
   })
 })
