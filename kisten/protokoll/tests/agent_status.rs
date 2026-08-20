@@ -1,6 +1,6 @@
 use orchester_protokoll::{
-    AgentActivityState, AgentAvailabilityState, AgentFleetSnapshotDto, AgentRuntimeSummaryDto,
-    AgentFleetStreamFrameDto, AgentWindowCountSource, AGENT_STATUS_SCHEMA_VERSION,
+    AgentActivityState, AgentAvailabilityState, AgentFleetSnapshotDto, AgentFleetStreamFrameDto,
+    AgentRuntimeSummaryDto, AgentWindowCountSource, AGENT_STATUS_SCHEMA_VERSION,
 };
 
 fn agent(id: &str) -> AgentRuntimeSummaryDto {
@@ -56,13 +56,15 @@ fn fleet_stream_frames_have_strict_snapshot_and_heartbeat_shapes() {
         }
     );
 
-    assert!(serde_json::from_value::<AgentFleetStreamFrameDto>(serde_json::json!({
-        "type": "heartbeat",
-        "sequence": 7,
-        "sent_at": "2026-08-20T08:00:03Z",
-        "provider_payload": true
-    }))
-    .is_err());
+    assert!(
+        serde_json::from_value::<AgentFleetStreamFrameDto>(serde_json::json!({
+            "type": "heartbeat",
+            "sequence": 7,
+            "sent_at": "2026-08-20T08:00:03Z",
+            "provider_payload": true
+        }))
+        .is_err()
+    );
 }
 
 #[test]
