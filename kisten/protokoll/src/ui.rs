@@ -338,14 +338,16 @@ pub fn redact_ui_text(input: &str) -> String {
                     || value.starts_with("~/")
                     || (value.len() >= 3
                         && value.as_bytes()[1] == b':'
-                        && value.as_bytes()[2] == b'/')
+                        && matches!(value.as_bytes()[2], b'/' | b'\\'))
                 {
                     return format!("{key}={}", redact_ui_path(value));
                 }
             }
             if token.starts_with('/')
                 || token.starts_with("~/")
-                || (token.len() >= 3 && token.as_bytes()[1] == b':' && token.as_bytes()[2] == b'/')
+                || (token.len() >= 3
+                    && token.as_bytes()[1] == b':'
+                    && matches!(token.as_bytes()[2], b'/' | b'\\'))
             {
                 return redact_ui_path(token);
             }
@@ -931,6 +933,10 @@ mod tests {
             redact_ui_text("api_key=sk-live-secret path=/Users/alice/project/src/main.rs"),
             "api_key=[REDACTED] path=[ROOT]/project/src/main.rs"
         );
+        assert_eq!(
+            redact_ui_text(r"failed path=C:\Users\alice\project\transcript.json"),
+            "failed path=[ROOT]/alice/project/transcript.json"
+        );
     }
 
     #[test]
@@ -962,7 +968,7 @@ mod tests {
         assert!(!json.contains("/Users/alice"));
         assert!(json.contains("[ROOT]/project/file.rs"));
 
-        let direct_json = serde_json::to_string(match approval.kind {
+        let direct_json = serde_json::to_string(match &approval.kind {
             UiEventKind::ApprovalRequested { approval } => approval,
             _ => unreachable!(),
         })
