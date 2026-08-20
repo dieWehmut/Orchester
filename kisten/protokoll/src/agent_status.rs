@@ -88,7 +88,9 @@ impl fmt::Display for AgentStatusValidationError {
                 formatter,
                 "unsupported agent status schema version {found}; expected {expected}"
             ),
-            Self::InvalidSequence => formatter.write_str("agent status sequence must be greater than zero"),
+            Self::InvalidSequence => {
+                formatter.write_str("agent status sequence must be greater than zero")
+            }
             Self::InvalidField(field) => write!(formatter, "invalid agent status field {field}"),
             Self::DuplicateAgentId(id) => write!(formatter, "duplicate agent id {id}"),
         }
@@ -158,14 +160,6 @@ impl TryFrom<AgentRuntimeSummaryWire> for AgentRuntimeSummaryDto {
     type Error = AgentStatusValidationError;
 
     fn try_from(value: AgentRuntimeSummaryWire) -> Result<Self, Self::Error> {
-        validate_text(&value.agent_id, "agent_id")?;
-        validate_text(&value.provider, "provider")?;
-        validate_text(&value.display_name, "display_name")?;
-        validate_icon_key(&value.icon_key)?;
-        validate_text(&value.updated_at, "updated_at")?;
-        if let Some(heartbeat) = &value.last_heartbeat_at {
-            validate_text(heartbeat, "last_heartbeat_at")?;
-        }
         let last_error = value.last_error.map(|error| redact_ui_text(&error));
         let capabilities = value
             .capabilities
@@ -173,7 +167,7 @@ impl TryFrom<AgentRuntimeSummaryWire> for AgentRuntimeSummaryDto {
             .map(|capability| redact_ui_text(&capability))
             .collect();
 
-        Ok(Self {
+        let agent = Self {
             agent_id: value.agent_id,
             provider: value.provider,
             display_name: value.display_name,
@@ -192,7 +186,9 @@ impl TryFrom<AgentRuntimeSummaryWire> for AgentRuntimeSummaryDto {
             last_error,
             capabilities,
             updated_at: value.updated_at,
-        })
+        };
+        agent.validate()?;
+        Ok(agent)
     }
 }
 
@@ -215,7 +211,11 @@ impl From<&AgentRuntimeSummaryDto> for AgentRuntimeSummaryWire {
             window_count_source: value.window_count_source,
             last_heartbeat_at: value.last_heartbeat_at.clone(),
             last_error: value.last_error.as_deref().map(redact_ui_text),
-            capabilities: value.capabilities.iter().map(|item| redact_ui_text(item)).collect(),
+            capabilities: value
+                .capabilities
+                .iter()
+                .map(|item| redact_ui_text(item))
+                .collect(),
             updated_at: value.updated_at.clone(),
         }
     }
@@ -226,6 +226,7 @@ impl Serialize for AgentRuntimeSummaryDto {
     where
         S: Serializer,
     {
+        self.validate().map_err(S::Error::custom)?;
         AgentRuntimeSummaryWire::from(self).serialize(serializer)
     }
 }
@@ -244,31 +245,18 @@ impl TryFrom<AgentFleetSnapshotWire> for AgentFleetSnapshotDto {
     type Error = AgentStatusValidationError;
 
     fn try_from(value: AgentFleetSnapshotWire) -> Result<Self, Self::Error> {
-        if value.schema_version != AGENT_STATUS_SCHEMA_VERSION {
-            return Err(AgentStatusValidationError::UnsupportedSchemaVersion {
-                found: value.schema_version,
-                expected: AGENT_STATUS_SCHEMA_VERSION,
-            });
-        }
-        if value.sequence == 0 {
-            return Err(AgentStatusValidationError::InvalidSequence);
-        }
-        validate_text(&value.generated_at, "generated_at")?;
-        let mut ids = BTreeSet::new();
         let mut agents = Vec::with_capacity(value.agents.len());
         for wire in value.agents {
-            let agent = AgentRuntimeSummaryDto::try_from(wire)?;
-            if !ids.insert(agent.agent_id.clone()) {
-                return Err(AgentStatusValidationError::DuplicateAgentId(agent.agent_id));
-            }
-            agents.push(agent);
+            agents.push(AgentRuntimeSummaryDto::try_from(wire)?);
         }
-        Ok(Self {
+        let snapshot = Self {
             schema_version: value.schema_version,
             sequence: value.sequence,
             generated_at: value.generated_at,
             agents,
-        })
+        };
+        snapshot.validate()?;
+        Ok(snapshot)
     }
 }
 
@@ -278,7 +266,11 @@ impl From<&AgentFleetSnapshotDto> for AgentFleetSnapshotWire {
             schema_version: value.schema_version,
             sequence: value.sequence,
             generated_at: value.generated_at.clone(),
-            agents: value.agents.iter().map(AgentRuntimeSummaryWire::from).collect(),
+            agents: value
+                .agents
+                .iter()
+                .map(AgentRuntimeSummaryWire::from)
+                .collect(),
         }
     }
 }
@@ -288,19 +280,54 @@ impl Serialize for AgentFleetSnapshotDto {
     where
         S: Serializer,
     {
-        if self.schema_version != AGENT_STATUS_SCHEMA_VERSION {
-            return Err(S::Error::custom(
-                AgentStatusValidationError::UnsupportedSchemaVersion {
-                    found: self.schema_version,
-                    expected: AGENT_STATUS_SCHEMA_VERSION,
-                },
-            ));
-        }
-        if self.sequence == 0 {
-            return Err(S::Error::custom(AgentStatusValidationError::InvalidSequence));
-        }
+        self.validate().map_err(S::Error::custom)?;
         let wire = AgentFleetSnapshotWire::from(self);
         wire.serialize(serializer)
+    }
+}
+
+impl AgentRuntimeSummaryDto {
+    pub fn validate(&self) -> Result<(), AgentStatusValidationError> {
+        validate_text(&self.agent_id, "agent_id")?;
+        validate_text(&self.provider, "provider")?;
+        validate_text(&self.display_name, "display_name")?;
+        validate_icon_key(&self.icon_key)?;
+        validate_text(&self.updated_at, "updated_at")?;
+        if let Some(heartbeat) = &self.last_heartbeat_at {
+            validate_text(heartbeat, "last_heartbeat_at")?;
+        }
+        for capability in &self.capabilities {
+            validate_text(capability, "capabilities")?;
+            if capability.len() > 80 || capability.contains(['/', '\\']) {
+                return Err(AgentStatusValidationError::InvalidField("capabilities"));
+            }
+        }
+        Ok(())
+    }
+}
+
+impl AgentFleetSnapshotDto {
+    pub fn validate(&self) -> Result<(), AgentStatusValidationError> {
+        if self.schema_version != AGENT_STATUS_SCHEMA_VERSION {
+            return Err(AgentStatusValidationError::UnsupportedSchemaVersion {
+                found: self.schema_version,
+                expected: AGENT_STATUS_SCHEMA_VERSION,
+            });
+        }
+        if self.sequence == 0 {
+            return Err(AgentStatusValidationError::InvalidSequence);
+        }
+        validate_text(&self.generated_at, "generated_at")?;
+        let mut ids = BTreeSet::new();
+        for agent in &self.agents {
+            agent.validate()?;
+            if !ids.insert(agent.agent_id.clone()) {
+                return Err(AgentStatusValidationError::DuplicateAgentId(
+                    agent.agent_id.clone(),
+                ));
+            }
+        }
+        Ok(())
     }
 }
 
