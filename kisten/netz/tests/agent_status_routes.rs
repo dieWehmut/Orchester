@@ -3,9 +3,7 @@ use axum::http::{header, Request, StatusCode};
 use serde_json::Value;
 use tower::ServiceExt;
 
-use orchester_netz::{
-    app_router, AgentRuntimeStatusUpdate, ServerContext, ServerControl,
-};
+use orchester_netz::{app_router, AgentRuntimeStatusUpdate, ServerContext, ServerControl};
 use orchester_protokoll::{AgentActivityState, AgentWindowCountSource};
 
 #[tokio::test]
