@@ -3,7 +3,10 @@ use axum::http::{header, Request, StatusCode};
 use serde_json::Value;
 use tower::ServiceExt;
 
-use orchester_netz::{app_router, ServerContext, ServerControl};
+use orchester_netz::{
+    app_router, AgentRuntimeStatusUpdate, ServerContext, ServerControl,
+};
+use orchester_protokoll::{AgentActivityState, AgentWindowCountSource};
 
 #[tokio::test]
 async fn agent_status_route_returns_a_redaction_safe_runtime_snapshot() {
@@ -66,4 +69,51 @@ async fn agent_status_route_returns_a_redaction_safe_runtime_snapshot() {
     assert!(!wire.contains("command"));
     assert!(!wire.contains("PATH"));
     assert!(!wire.contains("\\\\"));
+}
+
+#[tokio::test]
+async fn agent_status_route_reflects_runtime_updates_from_the_shared_context() {
+    let context = ServerContext::new(None, ServerControl::new());
+    context
+        .agent_status_store()
+        .update(AgentRuntimeStatusUpdate {
+            agent_id: "codex".to_owned(),
+            activity: AgentActivityState::Running,
+            active_windows: 2,
+            active_sessions: 3,
+            active_runs: 2,
+            active_subagents: 1,
+            window_count_source: AgentWindowCountSource::ManagedSessions,
+            last_heartbeat_at: Some("2026-08-20T12:00:00Z".to_owned()),
+            last_error: None,
+            updated_at: "2026-08-20T12:00:01Z".to_owned(),
+        })
+        .expect("update runtime status");
+
+    let response = app_router(context)
+        .oneshot(
+            Request::get("/api/v1/agents/status")
+                .body(Body::empty())
+                .expect("agent status request"),
+        )
+        .await
+        .expect("agent status response");
+    assert_eq!(response.status(), StatusCode::OK);
+
+    let body = to_bytes(response.into_body(), usize::MAX)
+        .await
+        .expect("agent status body");
+    let json: Value = serde_json::from_slice(&body).expect("agent status JSON");
+    assert_eq!(json["sequence"], 2);
+    let codex = json["agents"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|agent| agent["agent_id"] == "codex")
+        .expect("codex status");
+    assert_eq!(codex["activity"], "running");
+    assert_eq!(codex["active_windows"], 2);
+    assert_eq!(codex["active_sessions"], 3);
+    assert_eq!(codex["active_runs"], 2);
+    assert_eq!(codex["active_subagents"], 1);
 }
