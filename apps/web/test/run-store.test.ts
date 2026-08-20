@@ -3,11 +3,44 @@ import {
   runId,
   type RunSnapshotDto,
 } from '@orchester/protokoll'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { createRunStore } from '../src/stores/run'
+import type { RunsApi } from '../src/api/runs'
 
 describe('run store', () => {
+  it('submits once, stores the returned run id, and rejects a duplicate while busy', async () => {
+    const start = vi.fn(async () => ({ run_id: 'run-submit', events_url: '/events/run-submit' }))
+    const api = { start } as unknown as RunsApi
+    const store = createRunStore(api, { idempotencyKey: () => 'request-1' })
+
+    const first = store.submit(' Inspect the workspace ')
+    const duplicate = store.submit('Inspect again')
+
+    expect(await duplicate).toBeNull()
+    expect(await first).toMatchObject({ run_id: 'run-submit' })
+    expect(start).toHaveBeenCalledTimes(1)
+    expect(start).toHaveBeenCalledWith(
+      { prompt: 'Inspect the workspace' },
+      { idempotencyKey: 'request-1' },
+    )
+    expect(store.runId.value).toBe('run-submit')
+    expect(store.lifecycle.value).toBe('running')
+  })
+
+  it('cancels the active run and reaches a terminal lifecycle state', async () => {
+    const cancel = vi.fn(async () => ({ run_id: 'run-cancel', stopped: true, usage: {} }))
+    const api = { cancel } as unknown as RunsApi
+    const store = createRunStore(api)
+    store.runId.value = 'run-cancel'
+    store.lifecycle.value = 'running'
+
+    await expect(store.cancel()).resolves.toMatchObject({ stopped: true })
+    expect(cancel).toHaveBeenCalledWith('run-cancel')
+    expect(store.lifecycle.value).toBe('completed')
+    expect(store.connectionStatus.value).toBe('closed')
+  })
+
   it('keeps the first event for a replayed sequence and exposes a gap', () => {
     const store = createRunStore()
     const first = fixtureEnvelope(1, { type: 'run_started', title: 'First' })
