@@ -273,7 +273,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] W1-018: Build composer Enter/Shift+Enter and size-limit behavior.
   - [x] W1-018a: Add the typed approval queue and row-version decision client
     over the shared protocol DTOs.
-- [ ] W1-019: Build submit, cancel, and busy double-submit protection.
+- [x] W1-019: Build submit, cancel, and busy double-submit protection.
 - [ ] W1-020: Integrate run panel, connection banner, footer, and resync UI.
 - [ ] W1-021: Build approval queue and decision dialog with stale handling.
 - [ ] W1-022: Build read-only file tree, preview, and diff views.

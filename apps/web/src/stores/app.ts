@@ -1,6 +1,7 @@
 import { inject, type App, type InjectionKey } from 'vue'
 
 import { createHttpClient, type HttpClient } from '../api/http'
+import { createRunsApi, type RunsApi } from '../api/runs'
 import { createSessionsApi } from '../api/sessions'
 import {
   createBootstrapStore,
@@ -12,6 +13,7 @@ import { createRunStore, type RunStore } from './run'
 
 export interface AppStores {
   http: HttpClient
+  runs: RunsApi
   bootstrap: BootstrapStore
   sessions: SessionsStore
   run: RunStore
@@ -46,10 +48,12 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
 
   const bootstrap = createBootstrapStore(bootstrapOptions)
   const sessions = createSessionsStore(createSessionsApi(http))
-  const run = createRunStore()
+  const runs = createRunsApi(http)
+  const run = createRunStore(runs)
 
   const stores: AppStores = {
     http,
+    runs,
     bootstrap,
     sessions,
     run,

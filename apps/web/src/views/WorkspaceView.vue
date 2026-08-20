@@ -25,13 +25,18 @@ const {
   detailError,
 } = sessions
 
-function handleRunSubmit(): void {
-  run.setConnectionStatus('error')
-  run.setError(new Error('Run service is not connected yet'))
+const runBusy = computed(() =>
+  run.lifecycle.value === 'submitting' ||
+  run.lifecycle.value === 'running' ||
+  run.lifecycle.value === 'cancelling',
+)
+
+async function handleRunSubmit(prompt: string): Promise<void> {
+  await run.submit(prompt)
 }
 
-function handleRunCancel(): void {
-  run.reset()
+async function handleRunCancel(): Promise<void> {
+  await run.cancel()
 }
 </script>
 
@@ -62,6 +67,7 @@ function handleRunCancel(): void {
       :connection-status="runConnectionStatus"
       :projection-status="runProjectionStatus"
       :error-message="runErrorMessage"
+      :busy="runBusy"
       @submit="handleRunSubmit"
       @cancel="handleRunCancel"
     />

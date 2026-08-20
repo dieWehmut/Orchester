@@ -7,6 +7,7 @@ describe('app stores composition', () => {
     const stores = createAppStores()
 
     expect(stores.http).toBe(stores.http)
+    expect(stores.runs).toBeDefined()
     expect(stores.bootstrap.status.value).toBe('idle')
     expect(stores.sessions.status.value).toBe('idle')
     expect(stores.getCsrfToken()).toBeNull()
