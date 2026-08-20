@@ -11,7 +11,21 @@ describe('RunPanel', () => {
     expect(wrapper.get('[data-run-panel]')).toBeTruthy()
     expect(wrapper.get('[data-run-composer]')).toBeTruthy()
     expect(wrapper.get('[data-run-footer]')).toBeTruthy()
-    expect(wrapper.text()).toContain('New run')
+    expect(wrapper.get('[data-empty-workspace]')).toBeTruthy()
+    expect(wrapper.get('[data-orchester-mark]')).toBeTruthy()
+  })
+
+  it('removes the large mark immediately after a conversation starts', async () => {
+    const wrapper = mount(RunPanel, {
+      props: { view: createEmptyRunView(), conversationStarted: false },
+    })
+
+    expect(wrapper.find('[data-orchester-mark]').exists()).toBe(true)
+    await wrapper.setProps({ conversationStarted: true, busy: true })
+
+    expect(wrapper.find('[data-orchester-mark]').exists()).toBe(false)
+    expect(wrapper.get('[data-run-awaiting-events]')).toBeTruthy()
+    expect(wrapper.get('[data-run-composer]')).toBeTruthy()
   })
 
   it('forwards submit and cancel intents without fetching', async () => {

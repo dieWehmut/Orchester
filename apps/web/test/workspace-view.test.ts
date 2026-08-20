@@ -1,6 +1,7 @@
 import type { BootstrapDto, SessionDetailDto, SessionSummaryDto } from '@orchester/protokoll'
 import { flushPromises, mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
+import { nextTick } from 'vue'
 
 import type { HttpClient } from '../src/api/http'
 import { createAppStores } from '../src/stores/app'
@@ -31,6 +32,18 @@ const detail: SessionDetailDto = {
 }
 
 describe('WorkspaceView', () => {
+  it('hides the centered mark as soon as the active run starts', async () => {
+    const stores = createAppStores()
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+
+    expect(wrapper.get('[data-orchester-mark]')).toBeTruthy()
+    stores.run.conversationStarted.value = true
+    await nextTick()
+
+    expect(wrapper.find('[data-orchester-mark]').exists()).toBe(false)
+    expect(wrapper.get('[data-run-awaiting-events]')).toBeTruthy()
+  })
+
   it('connects the session rail, selected transcript, and inspector to application stores', async () => {
     const http = {
       get: vi.fn(async (path: string) => {

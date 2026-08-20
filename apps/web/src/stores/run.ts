@@ -33,6 +33,8 @@ export type RunConnectionStatus =
 
 export interface RunStore {
   runId: Ref<string | null>
+  /** True once the user submitted a prompt or the server delivered a run event. */
+  conversationStarted: Ref<boolean>
   lifecycle: Ref<RunLifecycle>
   view: Readonly<Ref<RunView>>
   events: Readonly<Ref<readonly UiEventEnvelope[]>>
@@ -73,6 +75,7 @@ function requestOptions(idempotencyKey: string): StartRunOptions {
 
 export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): RunStore {
   const runId = ref<string | null>(null)
+  const conversationStarted = ref(false)
   const lifecycle = ref<RunLifecycle>('idle')
   const view = shallowRef<RunView>(projectRunEvents([]))
   const events = shallowRef<readonly UiEventEnvelope[]>([])
@@ -95,6 +98,7 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
 
   function applySnapshot(snapshot: RunSnapshotDto): void {
     projectedRunId = snapshot.run_id
+    conversationStarted.value = true
     firstSequence = snapshot.oldest_sequence > 0 ? snapshot.oldest_sequence : 1
     headSequence = snapshot.latest_sequence
     journal.clear()
@@ -115,6 +119,7 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
       throw new RangeError('event belongs to another run')
     }
     projectedRunId ??= event.run_id
+    conversationStarted.value = true
     if (event.sequence < firstSequence) return false
     const key = eventKey(event)
     if (journal.has(key)) return false
@@ -143,6 +148,7 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
     }
 
     lifecycle.value = 'submitting'
+    conversationStarted.value = true
     connectionStatus.value = 'connecting'
     error.value = null
     try {
@@ -185,6 +191,7 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
 
   function reset(): void {
     runId.value = null
+    conversationStarted.value = false
     lifecycle.value = 'idle'
     projectedRunId = null
     firstSequence = 1
@@ -199,6 +206,7 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
 
   return {
     runId,
+    conversationStarted,
     lifecycle,
     view,
     events,

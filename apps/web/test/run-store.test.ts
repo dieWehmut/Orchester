@@ -26,6 +26,7 @@ describe('run store', () => {
     )
     expect(store.runId.value).toBe('run-submit')
     expect(store.lifecycle.value).toBe('running')
+    expect(store.conversationStarted.value).toBe(true)
   })
 
   it('cancels the active run and reaches a terminal lifecycle state', async () => {
@@ -57,6 +58,7 @@ describe('run store', () => {
     expect(store.view.value.latestSequence).toBe(1)
     expect(store.projectionStatus.value).toBe('gap')
     expect(store.events.value).toHaveLength(2)
+    expect(store.conversationStarted.value).toBe(true)
   })
 
   it('replaces the journal on a bounded snapshot', () => {
@@ -108,5 +110,14 @@ describe('run store', () => {
     store.clearError()
     expect(store.projectionStatus.value).toBe('idle')
     expect(store.connectionStatus.value).toBe('reconnecting')
+  })
+
+  it('clears conversation state only when starting a new session', async () => {
+    const store = createRunStore()
+    store.applyEvent(fixtureEnvelope(1, { type: 'run_started' }))
+
+    expect(store.conversationStarted.value).toBe(true)
+    store.reset()
+    expect(store.conversationStarted.value).toBe(false)
   })
 })

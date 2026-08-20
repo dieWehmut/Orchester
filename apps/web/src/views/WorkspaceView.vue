@@ -14,6 +14,7 @@ const runView = computed(() => run.view.value)
 const runConnectionStatus = computed(() => run.connectionStatus.value)
 const runProjectionStatus = computed(() => run.projectionStatus.value)
 const runErrorMessage = computed(() => run.error.value?.message ?? null)
+const conversationStarted = computed(() => run.conversationStarted.value)
 const {
   status,
   detailStatus,
@@ -68,6 +69,7 @@ async function handleRunCancel(): Promise<void> {
       :projection-status="runProjectionStatus"
       :error-message="runErrorMessage"
       :busy="runBusy"
+      :conversation-started="conversationStarted"
       @submit="handleRunSubmit"
       @cancel="handleRunCancel"
     />
