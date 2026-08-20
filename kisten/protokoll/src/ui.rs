@@ -302,9 +302,31 @@ pub fn redact_ui_path(input: &str) -> String {
     }
 
     if absolute {
-        let keep_from = parts.len().saturating_sub(3);
-        parts = parts.split_off(keep_from);
-        return format!("[ROOT]/{}", parts.join("/"));
+        let home_prefix_len = if parts.first() == Some(&"~") {
+            Some(1)
+        } else if parts.len() >= 2
+            && matches!(parts[0].to_ascii_lowercase().as_str(), "users" | "home")
+        {
+            Some(2)
+        } else if parts.len() >= 3
+            && parts[0].ends_with(':')
+            && parts[1].eq_ignore_ascii_case("users")
+        {
+            Some(3)
+        } else {
+            None
+        };
+        parts = if let Some(prefix_len) = home_prefix_len {
+            parts.split_off(prefix_len.min(parts.len()))
+        } else {
+            let keep_from = parts.len().saturating_sub(3);
+            parts.split_off(keep_from)
+        };
+        return if parts.is_empty() {
+            "[ROOT]".into()
+        } else {
+            format!("[ROOT]/{}", parts.join("/"))
+        };
     }
 
     if parts.iter().any(|part| *part == "..") {
@@ -935,18 +957,23 @@ mod tests {
         );
         assert_eq!(
             redact_ui_text(r"failed path=C:\Users\alice\project\transcript.json"),
-            "failed path=[ROOT]/alice/project/transcript.json"
+            "failed path=[ROOT]/project/transcript.json"
+        );
+        assert_eq!(
+            redact_ui_text("Authorization: Bearer sk-live-secret"),
+            "Authorization: [REDACTED] [REDACTED]"
         );
     }
 
     #[test]
     fn serialization_sanitizes_messages_tools_and_approvals() {
-        let event = envelope(UiEventKind::ToolCall {
+        let mut event = envelope(UiEventKind::ToolCall {
             call_id: CallId::from("call-redact"),
             name: "run_command".into(),
             state: UiToolState::Running,
             detail: Some("Authorization: Bearer sk-live-secret".into()),
         });
+        event.call_id = Some(CallId::from("call-redact"));
         let json = serde_json::to_string(&event).unwrap();
         assert!(!json.contains("sk-live-secret"));
         assert!(json.contains("[REDACTED]"));
