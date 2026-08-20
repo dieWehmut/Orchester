@@ -1,4 +1,5 @@
 export * from './api'
+export * from './agent-status'
 export * from './stream-guards'
 export * from './event'
 export * from './guards'
