@@ -1,6 +1,6 @@
 use orchester_protokoll::{
     AgentActivityState, AgentAvailabilityState, AgentFleetSnapshotDto, AgentRuntimeSummaryDto,
-    AgentWindowCountSource, AGENT_STATUS_SCHEMA_VERSION,
+    AgentFleetStreamFrameDto, AgentWindowCountSource, AGENT_STATUS_SCHEMA_VERSION,
 };
 
 fn agent(id: &str) -> AgentRuntimeSummaryDto {
@@ -24,6 +24,45 @@ fn agent(id: &str) -> AgentRuntimeSummaryDto {
         capabilities: vec!["streaming".into(), "resume".into()],
         updated_at: "2026-08-20T08:00:01Z".into(),
     }
+}
+
+#[test]
+fn fleet_stream_frames_have_strict_snapshot_and_heartbeat_shapes() {
+    let snapshot = AgentFleetSnapshotDto {
+        schema_version: AGENT_STATUS_SCHEMA_VERSION,
+        sequence: 7,
+        generated_at: "2026-08-20T08:00:02Z".into(),
+        agents: vec![agent("codex-main")],
+    };
+    let frame = AgentFleetStreamFrameDto::Snapshot {
+        snapshot: snapshot.clone(),
+    };
+    let value = serde_json::to_value(frame).expect("serialize snapshot frame");
+    assert_eq!(value["type"], "snapshot");
+    assert_eq!(value["snapshot"]["sequence"], 7);
+
+    let heartbeat = serde_json::json!({
+        "type": "heartbeat",
+        "sequence": 7,
+        "sent_at": "2026-08-20T08:00:03Z"
+    });
+    let decoded: AgentFleetStreamFrameDto =
+        serde_json::from_value(heartbeat).expect("decode heartbeat");
+    assert_eq!(
+        decoded,
+        AgentFleetStreamFrameDto::Heartbeat {
+            sequence: 7,
+            sent_at: "2026-08-20T08:00:03Z".into(),
+        }
+    );
+
+    assert!(serde_json::from_value::<AgentFleetStreamFrameDto>(serde_json::json!({
+        "type": "heartbeat",
+        "sequence": 7,
+        "sent_at": "2026-08-20T08:00:03Z",
+        "provider_payload": true
+    }))
+    .is_err());
 }
 
 #[test]
