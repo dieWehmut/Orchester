@@ -1,4 +1,9 @@
-import type { BootstrapDto, SessionDetailDto, SessionSummaryDto } from '@orchester/protokoll'
+import {
+  AGENT_FLEET_FIXTURE,
+  type BootstrapDto,
+  type SessionDetailDto,
+  type SessionSummaryDto,
+} from '@orchester/protokoll'
 import { flushPromises, mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
@@ -42,6 +47,16 @@ describe('WorkspaceView', () => {
 
     expect(wrapper.find('[data-orchester-mark]').exists()).toBe(false)
     expect(wrapper.get('[data-run-awaiting-events]')).toBeTruthy()
+  })
+
+  it('places the agent fleet below sessions in the shared left rail', () => {
+    const stores = createAppStores()
+    stores.agents.snapshot = AGENT_FLEET_FIXTURE
+    stores.agents.status = 'ready'
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+
+    expect(wrapper.get('[data-pane="sessions"] [data-agent-fleet]')).toBeTruthy()
+    expect(wrapper.get('[data-pane="sessions"] [data-agent-id="codex-main"]')).toBeTruthy()
   })
 
   it('connects the session rail, selected transcript, and inspector to application stores', async () => {
