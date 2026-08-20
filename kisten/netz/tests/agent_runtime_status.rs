@@ -2,7 +2,9 @@ use orchester_netz::{
     agent_status_response, AgentRuntimeStatusError, AgentRuntimeStatusStore,
     AgentRuntimeStatusUpdate,
 };
-use orchester_protokoll::{AgentActivityState, AgentWindowCountSource};
+use orchester_protokoll::{
+    AgentActivityState, AgentFleetStreamFrameDto, AgentWindowCountSource,
+};
 use orchester_verzeichnis::Registry;
 
 fn registry() -> Registry {
@@ -80,4 +82,25 @@ fn runtime_store_redacts_failure_paths_before_the_snapshot_leaves_the_server() {
     assert!(!wire.contains(r"C:\\Users"));
     assert!(!wire.contains("alice"));
     assert!(wire.contains("[ROOT]/project/transcript.json"));
+}
+
+#[test]
+fn runtime_store_broadcasts_snapshots_and_heartbeats_to_subscribers() {
+    let store = AgentRuntimeStatusStore::new(agent_status_response(&registry()))
+        .expect("valid initial fleet");
+    let mut receiver = store.subscribe();
+
+    store.update(running_codex()).expect("record update");
+    assert!(matches!(
+        receiver.try_recv().expect("snapshot frame"),
+        AgentFleetStreamFrameDto::Snapshot { snapshot } if snapshot.sequence == 2
+    ));
+
+    store
+        .heartbeat("2026-08-20T12:00:02Z")
+        .expect("record heartbeat");
+    assert!(matches!(
+        receiver.try_recv().expect("heartbeat frame"),
+        AgentFleetStreamFrameDto::Heartbeat { sequence: 2, .. }
+    ));
 }
