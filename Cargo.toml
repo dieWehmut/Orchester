@@ -58,6 +58,7 @@ reqwest = { version = "=0.12.28", default-features = false, features = ["rustls-
 thiserror = "2"
 clap = { version = "4", features = ["derive"] }
 tracing = "0.1"
+time = { version = "0.3", features = ["formatting", "macros"] }
 crossterm = "0.29"
 unicode-width = "0.2"
 rusqlite = { version = "0.32", features = ["bundled"] }
