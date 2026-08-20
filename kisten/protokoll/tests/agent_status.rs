@@ -60,14 +60,24 @@ fn fleet_status_rejects_unknown_fields_duplicate_ids_and_invalid_sequence() {
         agents: vec![agent("same"), agent("same")],
         ..snapshot.clone()
     };
-    assert!(serde_json::from_value::<AgentFleetSnapshotDto>(
-        serde_json::to_value(duplicate).unwrap()
-    )
-    .is_err());
+    assert!(serde_json::to_value(&duplicate).is_err());
+    assert!(
+        serde_json::from_value::<AgentFleetSnapshotDto>(serde_json::json!({
+            "schema_version": 1,
+            "sequence": 1,
+            "generated_at": "2026-08-20T08:00:02Z",
+            "agents": [agent("same"), agent("same")]
+        }))
+        .is_err()
+    );
 
     let mut invalid = serde_json::to_value(snapshot).unwrap();
     invalid["sequence"] = 0.into();
     assert!(serde_json::from_value::<AgentFleetSnapshotDto>(invalid).is_err());
+
+    let mut invalid_agent = agent("invalid-icon");
+    invalid_agent.icon_key = "../secret".into();
+    assert!(serde_json::to_value(invalid_agent).is_err());
 }
 
 #[test]
