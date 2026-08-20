@@ -12,13 +12,14 @@ use std::{
 
 use axum::{extract::State, http::HeaderMap, Json};
 use orchester_protokoll::{
-    AgentActivityState, AgentAvailabilityState, AgentFleetSnapshotDto, AgentRuntimeSummaryDto,
-    AgentStatusValidationError, AgentWindowCountSource, Capability, TaskKind,
-    AGENT_STATUS_SCHEMA_VERSION,
+    AgentActivityState, AgentAvailabilityState, AgentFleetSnapshotDto, AgentFleetStreamFrameDto,
+    AgentRuntimeSummaryDto, AgentStatusValidationError, AgentWindowCountSource, Capability,
+    TaskKind, AGENT_STATUS_SCHEMA_VERSION,
 };
 use orchester_vertrag::{AdapterAvailability, AvailabilityStatus};
 use orchester_verzeichnis::Registry;
 use time::{format_description::well_known::Rfc3339, OffsetDateTime};
+use tokio::sync::broadcast;
 
 use crate::{bootstrap::ServerContext, health::no_store_headers};
 
@@ -64,6 +65,7 @@ impl std::error::Error for AgentRuntimeStatusError {}
 #[derive(Clone)]
 pub struct AgentRuntimeStatusStore {
     snapshot: Arc<RwLock<AgentFleetSnapshotDto>>,
+    frames: broadcast::Sender<AgentFleetStreamFrameDto>,
 }
 
 impl AgentRuntimeStatusStore {
@@ -71,8 +73,10 @@ impl AgentRuntimeStatusStore {
         snapshot
             .validate()
             .map_err(AgentRuntimeStatusError::InvalidSnapshot)?;
+        let (frames, _) = broadcast::channel(32);
         Ok(Self {
             snapshot: Arc::new(RwLock::new(snapshot)),
+            frames,
         })
     }
 
@@ -114,8 +118,29 @@ impl AgentRuntimeStatusStore {
         next.generated_at = update.updated_at;
         next.validate()
             .map_err(AgentRuntimeStatusError::InvalidSnapshot)?;
+        let frame = AgentFleetStreamFrameDto::Snapshot {
+            snapshot: next.clone(),
+        };
         *guard = next;
+        drop(guard);
+        let _ = self.frames.send(frame);
         Ok(next_sequence)
+    }
+
+    pub fn subscribe(&self) -> broadcast::Receiver<AgentFleetStreamFrameDto> {
+        self.frames.subscribe()
+    }
+
+    pub fn heartbeat(&self, sent_at: impl Into<String>) -> Result<(), AgentRuntimeStatusError> {
+        let sent_at = sent_at.into();
+        if sent_at.trim().is_empty() {
+            return Err(AgentRuntimeStatusError::InvalidUpdate("sent_at"));
+        }
+        let sequence = self.snapshot()?.sequence;
+        let _ = self
+            .frames
+            .send(AgentFleetStreamFrameDto::Heartbeat { sequence, sent_at });
+        Ok(())
     }
 }
 

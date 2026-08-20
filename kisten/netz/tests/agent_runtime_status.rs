@@ -2,9 +2,7 @@ use orchester_netz::{
     agent_status_response, AgentRuntimeStatusError, AgentRuntimeStatusStore,
     AgentRuntimeStatusUpdate,
 };
-use orchester_protokoll::{
-    AgentActivityState, AgentFleetStreamFrameDto, AgentWindowCountSource,
-};
+use orchester_protokoll::{AgentActivityState, AgentFleetStreamFrameDto, AgentWindowCountSource};
 use orchester_verzeichnis::Registry;
 
 fn registry() -> Registry {
