@@ -5,10 +5,16 @@
 //! runtime manager reports live handles, activity and managed-session counts
 //! therefore remain explicit zeroes rather than guessed process data.
 
+use std::{
+    fmt,
+    sync::{Arc, RwLock},
+};
+
 use axum::{extract::State, http::HeaderMap, Json};
 use orchester_protokoll::{
     AgentActivityState, AgentAvailabilityState, AgentFleetSnapshotDto, AgentRuntimeSummaryDto,
-    AgentWindowCountSource, Capability, TaskKind, AGENT_STATUS_SCHEMA_VERSION,
+    AgentStatusValidationError, AgentWindowCountSource, Capability, TaskKind,
+    AGENT_STATUS_SCHEMA_VERSION,
 };
 use orchester_vertrag::{AdapterAvailability, AvailabilityStatus};
 use orchester_verzeichnis::Registry;
@@ -17,6 +23,118 @@ use time::{format_description::well_known::Rfc3339, OffsetDateTime};
 use crate::{bootstrap::ServerContext, health::no_store_headers};
 
 pub const AGENT_STATUS_ROUTE_SCHEMA_VERSION: u8 = AGENT_STATUS_SCHEMA_VERSION;
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AgentRuntimeStatusUpdate {
+    pub agent_id: String,
+    pub activity: AgentActivityState,
+    pub active_windows: u64,
+    pub active_sessions: u64,
+    pub active_runs: u64,
+    pub active_subagents: u64,
+    pub window_count_source: AgentWindowCountSource,
+    pub last_heartbeat_at: Option<String>,
+    pub last_error: Option<String>,
+    pub updated_at: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum AgentRuntimeStatusError {
+    InvalidSnapshot(AgentStatusValidationError),
+    InvalidUpdate(&'static str),
+    UnknownAgent,
+    SequenceExhausted,
+    LockPoisoned,
+}
+
+impl fmt::Display for AgentRuntimeStatusError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::InvalidSnapshot(error) => write!(formatter, "invalid agent snapshot: {error}"),
+            Self::InvalidUpdate(field) => write!(formatter, "invalid agent update field {field}"),
+            Self::UnknownAgent => formatter.write_str("agent is not registered"),
+            Self::SequenceExhausted => formatter.write_str("agent status sequence exhausted"),
+            Self::LockPoisoned => formatter.write_str("agent status lock is poisoned"),
+        }
+    }
+}
+
+impl std::error::Error for AgentRuntimeStatusError {}
+
+#[derive(Clone)]
+pub struct AgentRuntimeStatusStore {
+    snapshot: Arc<RwLock<AgentFleetSnapshotDto>>,
+}
+
+impl AgentRuntimeStatusStore {
+    pub fn new(snapshot: AgentFleetSnapshotDto) -> Result<Self, AgentRuntimeStatusError> {
+        snapshot
+            .validate()
+            .map_err(AgentRuntimeStatusError::InvalidSnapshot)?;
+        Ok(Self {
+            snapshot: Arc::new(RwLock::new(snapshot)),
+        })
+    }
+
+    pub fn snapshot(&self) -> Result<AgentFleetSnapshotDto, AgentRuntimeStatusError> {
+        self.snapshot
+            .read()
+            .map(|snapshot| snapshot.clone())
+            .map_err(|_| AgentRuntimeStatusError::LockPoisoned)
+    }
+
+    pub fn update(&self, update: AgentRuntimeStatusUpdate) -> Result<u64, AgentRuntimeStatusError> {
+        validate_update(&update)?;
+        let mut guard = self
+            .snapshot
+            .write()
+            .map_err(|_| AgentRuntimeStatusError::LockPoisoned)?;
+        let next_sequence = guard
+            .sequence
+            .checked_add(1)
+            .ok_or(AgentRuntimeStatusError::SequenceExhausted)?;
+        let mut next = guard.clone();
+        let Some(agent) = next
+            .agents
+            .iter_mut()
+            .find(|agent| agent.agent_id == update.agent_id)
+        else {
+            return Err(AgentRuntimeStatusError::UnknownAgent);
+        };
+        agent.activity = update.activity;
+        agent.active_windows = update.active_windows;
+        agent.active_sessions = update.active_sessions;
+        agent.active_runs = update.active_runs;
+        agent.active_subagents = update.active_subagents;
+        agent.window_count_source = update.window_count_source;
+        agent.last_heartbeat_at = update.last_heartbeat_at;
+        agent.last_error = update.last_error;
+        agent.updated_at = update.updated_at.clone();
+        next.sequence = next_sequence;
+        next.generated_at = update.updated_at;
+        next.validate()
+            .map_err(AgentRuntimeStatusError::InvalidSnapshot)?;
+        *guard = next;
+        Ok(next_sequence)
+    }
+}
+
+fn validate_update(update: &AgentRuntimeStatusUpdate) -> Result<(), AgentRuntimeStatusError> {
+    if update.agent_id.trim().is_empty() {
+        return Err(AgentRuntimeStatusError::InvalidUpdate("agent_id"));
+    }
+    if update.updated_at.trim().is_empty() {
+        return Err(AgentRuntimeStatusError::InvalidUpdate("updated_at"));
+    }
+    if update
+        .last_heartbeat_at
+        .as_deref()
+        .is_some_and(|value| value.trim().is_empty())
+    {
+        return Err(AgentRuntimeStatusError::InvalidUpdate("last_heartbeat_at"));
+    }
+    Ok(())
+}
 
 /// Build one redaction-safe snapshot from the registry.
 pub fn agent_status_response(registry: &Registry) -> AgentFleetSnapshotDto {
