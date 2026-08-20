@@ -5,6 +5,7 @@ use orchester_verzeichnis::{standard_plugin_roots, Registry};
 use serde::Serialize;
 
 use crate::{
+    agent_status::{agent_status_response, AgentRuntimeStatusStore},
     FragmentTokenStore, FragmentTokenStoreError, ServerControl, ServerState, SessionStore,
 };
 
@@ -13,6 +14,7 @@ pub struct ServerContext {
     paths: Option<OrchesterPaths>,
     control: ServerControl,
     registry: Arc<Registry>,
+    agent_status: Arc<AgentRuntimeStatusStore>,
     model_host: Option<Arc<SelfAgentHost>>,
     session_history: Option<Arc<SessionHistory>>,
     sessions: Arc<SessionStore>,
@@ -22,12 +24,17 @@ pub struct ServerContext {
 impl ServerContext {
     pub fn new(paths: Option<OrchesterPaths>, control: ServerControl) -> Self {
         let registry = Arc::new(discover_registry(paths.as_ref()));
+        let agent_status = Arc::new(
+            AgentRuntimeStatusStore::new(agent_status_response(&registry))
+                .expect("registry status projection must validate"),
+        );
         let model_host = paths.as_ref().map(SelfAgentHost::for_paths).map(Arc::new);
         let session_history = paths.as_ref().map(SessionHistory::for_paths).map(Arc::new);
         Self {
             paths,
             control,
             registry,
+            agent_status,
             model_host,
             session_history,
             sessions: Arc::new(SessionStore::new(Duration::from_secs(8 * 60 * 60))),
@@ -45,6 +52,10 @@ impl ServerContext {
 
     pub fn registry(&self) -> &Registry {
         &self.registry
+    }
+
+    pub fn agent_status_store(&self) -> &AgentRuntimeStatusStore {
+        &self.agent_status
     }
 
     pub fn model_host(&self) -> Option<&SelfAgentHost> {

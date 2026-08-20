@@ -164,7 +164,12 @@ pub(crate) async fn agent_status_handler(
 ) -> (HeaderMap, Json<AgentFleetSnapshotDto>) {
     (
         no_store_headers(),
-        Json(agent_status_response(context.registry())),
+        Json(
+            context
+                .agent_status_store()
+                .snapshot()
+                .unwrap_or_else(|_| agent_status_response(context.registry())),
+        ),
     )
 }
 
