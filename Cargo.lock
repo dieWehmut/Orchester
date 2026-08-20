@@ -1219,6 +1219,7 @@ version = "0.1.2"
 dependencies = [
  "axum",
  "cookie",
+ "futures",
  "getrandom 0.3.4",
  "mime_guess",
  "orchester-anwendung",
@@ -1232,6 +1233,7 @@ dependencies = [
  "thiserror",
  "time",
  "tokio",
+ "tokio-tungstenite",
  "tower",
  "tower-http 0.7.0",
  "tracing",
