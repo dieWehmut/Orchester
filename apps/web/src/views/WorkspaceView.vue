@@ -15,6 +15,7 @@ const { sessions, run, agents, bootstrap, models } = useAppStores()
 const runView = computed(() => run.view.value)
 const changeSummaries = computed(() => summarizeFileChanges(runView.value.fileChanges))
 const selectedChangePath = ref<string | null>(null)
+const selectedAgentId = ref<string | null>(null)
 const runConnectionStatus = computed(() => run.connectionStatus.value)
 const runProjectionStatus = computed(() => run.projectionStatus.value)
 const runErrorMessage = computed(() => run.error.value?.message ?? null)
@@ -50,6 +51,10 @@ async function handleRunSubmit(prompt: string): Promise<void> {
 async function handleRunCancel(): Promise<void> {
   await run.cancel()
 }
+
+function handleAgentSelect(agentId: string): void {
+  selectedAgentId.value = agentId
+}
 </script>
 
 <template>
@@ -70,10 +75,12 @@ async function handleRunCancel(): Promise<void> {
         :agent-stream-status="agentStreamStatus"
         :agent-snapshot="agentSnapshot"
         :agent-error="agentError"
+        :selected-agent-id="selectedAgentId"
         @select-session="sessions.select"
         @refresh-sessions="sessions.load"
         @load-more-sessions="sessions.loadMore"
         @new-session="sessions.select(null)"
+        @select-agent="handleAgentSelect"
       />
     </template>
 

@@ -10,7 +10,13 @@ import {
   agentCountMessageKey,
 } from './agent-presenter'
 
-const props = defineProps<{ agent: AgentRuntimeSummaryDto }>()
+const props = withDefaults(
+  defineProps<{
+    agent: AgentRuntimeSummaryDto
+    selected?: boolean
+  }>(),
+  { selected: false },
+)
 const { t } = useI18n()
 
 defineEmits<{
@@ -31,7 +37,9 @@ function dotStatus(agent: AgentRuntimeSummaryDto): 'idle' | 'running' | 'waiting
 <template>
   <button
     class="agent-fleet-row"
+    :class="{ 'agent-fleet-row--selected': props.selected }"
     type="button"
+    :aria-pressed="props.selected"
     :aria-label="`${props.agent.display_name}, ${activityLabel()}`"
     @click="$emit('select', props.agent.agent_id)"
   >
@@ -91,6 +99,11 @@ function dotStatus(agent: AgentRuntimeSummaryDto): 'idle' | 'running' | 'waiting
   border-color: var(--color-border-base);
   background: var(--color-bg-element);
   outline: none;
+}
+
+.agent-fleet-row--selected {
+  border-color: var(--color-accent-border);
+  background: var(--color-accent-muted);
 }
 
 .agent-fleet-row__identity,

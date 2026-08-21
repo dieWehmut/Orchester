@@ -17,6 +17,7 @@ defineProps<{
   agentStreamStatus: AgentStatusSocketStatus
   agentSnapshot: AgentFleetSnapshotDto | null
   agentError: string | null
+  selectedAgentId: string | null
 }>()
 
 defineEmits<{
@@ -48,6 +49,7 @@ defineEmits<{
       :stream-status="agentStreamStatus"
       :snapshot="agentSnapshot"
       :error="agentError"
+      :selected-agent-id="selectedAgentId"
       @select="$emit('selectAgent', $event)"
     />
   </div>

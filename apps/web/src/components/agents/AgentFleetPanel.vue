@@ -15,8 +15,9 @@ const props = withDefaults(
     streamStatus?: AgentStatusSocketStatus
     snapshot: AgentFleetSnapshotDto | null
     error?: string | null
+    selectedAgentId?: string | null
   }>(),
-  { error: null, streamStatus: 'idle' },
+  { error: null, streamStatus: 'idle', selectedAgentId: null },
 )
 
 defineEmits<{
@@ -78,7 +79,11 @@ function agentStreamStatusTone(status: AgentStatusSocketStatus): 'neutral' | 'su
 
       <ul class="agent-fleet__list">
         <li v-for="agent in props.snapshot?.agents ?? []" :key="agent.agent_id" :data-agent-id="agent.agent_id">
-          <AgentFleetRow :agent="agent" @select="$emit('select', $event)" />
+          <AgentFleetRow
+            :agent="agent"
+            :selected="agent.agent_id === props.selectedAgentId"
+            @select="$emit('select', $event)"
+          />
         </li>
       </ul>
     </div>
