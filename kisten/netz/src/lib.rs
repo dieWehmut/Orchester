@@ -3,6 +3,7 @@
 //! Loopback HTTP and WebSocket service for Orchester frontends.
 
 mod agent_catalog;
+mod agent_process;
 mod agent_status;
 mod api_error;
 mod bootstrap;
@@ -21,6 +22,7 @@ pub use agent_catalog::{
     agent_catalog_response, AgentAvailabilityDto, AgentCatalogDto, AgentSummaryDto,
     AGENT_CATALOG_SCHEMA_VERSION,
 };
+pub use agent_process::{provider_for_process_name, AgentProcessSnapshot};
 pub use agent_status::{
     agent_status_response, AgentRuntimeStatusError, AgentRuntimeStatusStore,
     AgentRuntimeStatusUpdate, AGENT_STATUS_ROUTE_SCHEMA_VERSION,
