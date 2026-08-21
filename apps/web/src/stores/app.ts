@@ -13,7 +13,9 @@ import { createSessionsStore, type SessionsStore } from './sessions'
 import { createRunStore, type RunStore } from './run'
 import { createAppPinia } from './pinia'
 import { useAgentFleetStore } from './agent-fleet'
+import type { AgentStatusStreamFactory } from './agent-fleet'
 import { createAgentsApi } from '../api/agents'
+import { createAgentStatusSocket } from '../transport/agent-status-socket'
 
 export interface AppStores {
   http: HttpClient
@@ -25,6 +27,7 @@ export interface AppStores {
   pinia: Pinia
   getCsrfToken: () => string | null
   start: () => Promise<void>
+  stop: () => void
   install: (app: App) => void
 }
 
@@ -32,6 +35,7 @@ export interface AppStoresOptions {
   http?: HttpClient
   location?: BootstrapStoreOptions['location']
   history?: BootstrapStoreOptions['history']
+  agentStatusStreamFactory?: AgentStatusStreamFactory | null
 }
 
 const APP_STORES_KEY: InjectionKey<AppStores> = Symbol('orchester-app-stores')
@@ -58,7 +62,11 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
   const run = createRunStore(runs)
   const pinia = createAppPinia()
   const agents = useAgentFleetStore(pinia)
-  agents.configure(createAgentsApi(http))
+  const agentStatusStreamFactory =
+    options.agentStatusStreamFactory === undefined
+      ? createAgentStatusSocket
+      : options.agentStatusStreamFactory
+  agents.configure(createAgentsApi(http), agentStatusStreamFactory ?? undefined)
 
   const stores: AppStores = {
     http,
@@ -72,8 +80,11 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
     async start(): Promise<void> {
       await bootstrap.load()
       if (bootstrap.status.value === 'ready' && bootstrap.context.value?.workspace.selected) {
-        await Promise.all([sessions.load(), agents.load()])
+        await Promise.all([sessions.load(), agents.start()])
       }
+    },
+    stop(): void {
+      agents.stop()
     },
     install(app: App): void {
       app.use(pinia)

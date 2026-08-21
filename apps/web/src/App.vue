@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 
 import WorkspaceHeader from './components/layout/WorkspaceHeader.vue'
 import type { RuntimeConnection } from './components/layout/WorkspaceHeader.vue'
@@ -16,6 +16,11 @@ const workspaceName = computed(() => stores.bootstrap.context.value?.workspace.n
 onMounted(() => {
   void stores.start()
 })
+
+onUnmounted(() => {
+  stores.stop()
+})
+
 </script>
 
 <template>
