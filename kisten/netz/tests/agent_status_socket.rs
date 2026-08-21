@@ -1,11 +1,15 @@
 use std::net::SocketAddr;
+use std::sync::Arc;
 
 use futures::StreamExt;
 use serde_json::Value;
 use tokio::net::TcpListener;
 use tokio_tungstenite::{connect_async, tungstenite::Message};
 
-use orchester_netz::{app_router, AgentRuntimeStatusUpdate, ServerContext, ServerControl};
+use orchester_netz::{
+    app_router, AgentProcessSnapshot, AgentProcessSource, AgentRuntimeStatusUpdate, ServerContext,
+    ServerControl,
+};
 use orchester_protokoll::{AgentActivityState, AgentWindowCountSource};
 
 async fn read_json<S>(stream: &mut tokio_tungstenite::WebSocketStream<S>) -> Value
@@ -25,7 +29,11 @@ where
 
 #[tokio::test]
 async fn agent_status_socket_streams_snapshot_updates_and_heartbeats() {
-    let context = ServerContext::new(None, ServerControl::new());
+    let context = ServerContext::with_agent_process_source(
+        None,
+        ServerControl::new(),
+        Arc::new(FixedProcessSource),
+    );
     let updates = context.clone();
     let listener = TcpListener::bind("127.0.0.1:0").await.expect("bind socket");
     let address: SocketAddr = listener.local_addr().expect("socket address");
@@ -68,6 +76,15 @@ async fn agent_status_socket_streams_snapshot_updates_and_heartbeats() {
 
     socket.close(None).await.expect("close socket");
     server.abort();
+}
+
+#[derive(Clone, Copy)]
+struct FixedProcessSource;
+
+impl AgentProcessSource for FixedProcessSource {
+    fn snapshot(&self) -> AgentProcessSnapshot {
+        AgentProcessSnapshot::default()
+    }
 }
 
 fn runtime_update() -> AgentRuntimeStatusUpdate {

@@ -29,7 +29,9 @@ use orchester_verzeichnis::Registry;
 use time::{format_description::well_known::Rfc3339, OffsetDateTime};
 use tokio::sync::broadcast;
 
-use crate::{bootstrap::ServerContext, health::no_store_headers};
+use crate::{
+    agent_process::AgentProcessSnapshot, bootstrap::ServerContext, health::no_store_headers,
+};
 
 pub const AGENT_STATUS_ROUTE_SCHEMA_VERSION: u8 = AGENT_STATUS_SCHEMA_VERSION;
 
@@ -135,6 +137,69 @@ impl AgentRuntimeStatusStore {
         Ok(next_sequence)
     }
 
+    /// Reconcile redaction-safe external process counts with the shared snapshot.
+    /// Managed sessions, runs, and subagents remain untouched.
+    pub fn reconcile_external_processes(
+        &self,
+        processes: &AgentProcessSnapshot,
+        updated_at: impl Into<String>,
+    ) -> Result<bool, AgentRuntimeStatusError> {
+        let updated_at = updated_at.into();
+        if updated_at.trim().is_empty() {
+            return Err(AgentRuntimeStatusError::InvalidUpdate("updated_at"));
+        }
+
+        let mut guard = self
+            .snapshot
+            .write()
+            .map_err(|_| AgentRuntimeStatusError::LockPoisoned)?;
+        let mut next = guard.clone();
+        let mut changed = false;
+        for agent in &mut next.agents {
+            let observed = processes.count(&agent.provider);
+            if observed > 0 {
+                if agent.active_windows != observed
+                    || agent.window_count_source != AgentWindowCountSource::ExternalProcesses
+                    || agent.activity != AgentActivityState::Running
+                {
+                    agent.active_windows = observed;
+                    agent.activity = AgentActivityState::Running;
+                    agent.window_count_source = AgentWindowCountSource::ExternalProcesses;
+                    agent.last_heartbeat_at = Some(updated_at.clone());
+                    agent.updated_at = updated_at.clone();
+                    changed = true;
+                }
+            } else if agent.window_count_source == AgentWindowCountSource::ExternalProcesses
+                && agent.active_windows != 0
+            {
+                agent.active_windows = 0;
+                agent.activity = activity_without_external_processes(agent.availability);
+                agent.last_heartbeat_at = Some(updated_at.clone());
+                agent.updated_at = updated_at.clone();
+                changed = true;
+            }
+        }
+
+        if !changed {
+            return Ok(false);
+        }
+
+        next.sequence = next
+            .sequence
+            .checked_add(1)
+            .ok_or(AgentRuntimeStatusError::SequenceExhausted)?;
+        next.generated_at = updated_at;
+        next.validate()
+            .map_err(AgentRuntimeStatusError::InvalidSnapshot)?;
+        let frame = AgentFleetStreamFrameDto::Snapshot {
+            snapshot: next.clone(),
+        };
+        *guard = next;
+        drop(guard);
+        let _ = self.frames.send(frame);
+        Ok(true)
+    }
+
     pub fn subscribe(&self) -> broadcast::Receiver<AgentFleetStreamFrameDto> {
         self.frames.subscribe()
     }
@@ -169,6 +234,16 @@ fn validate_update(update: &AgentRuntimeStatusUpdate) -> Result<(), AgentRuntime
     Ok(())
 }
 
+fn activity_without_external_processes(availability: AgentAvailabilityState) -> AgentActivityState {
+    match availability {
+        AgentAvailabilityState::Available => AgentActivityState::Idle,
+        AgentAvailabilityState::Unavailable | AgentAvailabilityState::AuthRequired => {
+            AgentActivityState::Offline
+        }
+        AgentAvailabilityState::Error => AgentActivityState::Error,
+    }
+}
+
 /// Build one redaction-safe snapshot from the registry.
 pub fn agent_status_response(registry: &Registry) -> AgentFleetSnapshotDto {
     let now = now_rfc3339();
@@ -195,6 +270,7 @@ pub fn agent_status_response(registry: &Registry) -> AgentFleetSnapshotDto {
 pub(crate) async fn agent_status_handler(
     State(context): State<ServerContext>,
 ) -> (HeaderMap, Json<AgentFleetSnapshotDto>) {
+    let _ = context.refresh_agent_processes().await;
     (
         no_store_headers(),
         Json(

@@ -5,6 +5,7 @@ use orchester_verzeichnis::{standard_plugin_roots, Registry};
 use serde::Serialize;
 
 use crate::{
+    agent_process::{AgentProcessSource, SystemAgentProcessSource},
     agent_status::{agent_status_response, AgentRuntimeStatusStore},
     FragmentTokenStore, FragmentTokenStoreError, ServerControl, ServerState, SessionStore,
 };
@@ -15,6 +16,7 @@ pub struct ServerContext {
     control: ServerControl,
     registry: Arc<Registry>,
     agent_status: Arc<AgentRuntimeStatusStore>,
+    agent_process_source: Arc<dyn AgentProcessSource>,
     model_host: Option<Arc<SelfAgentHost>>,
     session_history: Option<Arc<SessionHistory>>,
     sessions: Arc<SessionStore>,
@@ -23,6 +25,14 @@ pub struct ServerContext {
 
 impl ServerContext {
     pub fn new(paths: Option<OrchesterPaths>, control: ServerControl) -> Self {
+        Self::with_agent_process_source(paths, control, Arc::new(SystemAgentProcessSource))
+    }
+
+    pub fn with_agent_process_source(
+        paths: Option<OrchesterPaths>,
+        control: ServerControl,
+        agent_process_source: Arc<dyn AgentProcessSource>,
+    ) -> Self {
         let registry = Arc::new(discover_registry(paths.as_ref()));
         let agent_status = Arc::new(
             AgentRuntimeStatusStore::new(agent_status_response(&registry))
@@ -35,6 +45,7 @@ impl ServerContext {
             control,
             registry,
             agent_status,
+            agent_process_source,
             model_host,
             session_history,
             sessions: Arc::new(SessionStore::new(Duration::from_secs(8 * 60 * 60))),
@@ -56,6 +67,12 @@ impl ServerContext {
 
     pub fn agent_status_store(&self) -> &AgentRuntimeStatusStore {
         &self.agent_status
+    }
+
+    pub async fn refresh_agent_processes(&self) -> Result<bool, crate::AgentRuntimeStatusError> {
+        let snapshot = self.agent_process_source.snapshot();
+        self.agent_status
+            .reconcile_external_processes(&snapshot, now_rfc3339())
     }
 
     pub fn model_host(&self) -> Option<&SelfAgentHost> {
@@ -103,6 +120,12 @@ fn discover_registry(paths: Option<&OrchesterPaths>) -> Registry {
         }
         Err(_) => Registry::discover(paths.manifest_dir()),
     }
+}
+
+fn now_rfc3339() -> String {
+    time::OffsetDateTime::now_utc()
+        .format(&time::format_description::well_known::Rfc3339)
+        .unwrap_or_else(|_| "1970-01-01T00:00:00Z".to_owned())
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]

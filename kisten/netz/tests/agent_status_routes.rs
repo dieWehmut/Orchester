@@ -1,14 +1,40 @@
+use std::sync::Arc;
+
 use axum::body::{to_bytes, Body};
 use axum::http::{header, Request, StatusCode};
 use serde_json::Value;
 use tower::ServiceExt;
 
-use orchester_netz::{app_router, AgentRuntimeStatusUpdate, ServerContext, ServerControl};
-use orchester_protokoll::{AgentActivityState, AgentWindowCountSource};
+use orchester_netz::{
+    app_router, AgentProcessSnapshot, AgentProcessSource, AgentRuntimeStatusUpdate, ServerContext,
+    ServerControl,
+};
+use orchester_protokoll::{
+    AgentActivityState, AgentWindowCountSource, AGENT_STATUS_SCHEMA_VERSION,
+};
+
+#[derive(Clone)]
+struct FixedProcessSource(AgentProcessSnapshot);
+
+impl AgentProcessSource for FixedProcessSource {
+    fn snapshot(&self) -> AgentProcessSnapshot {
+        self.0.clone()
+    }
+}
+
+fn context_with_processes(names: impl IntoIterator<Item = &'static str>) -> ServerContext {
+    ServerContext::with_agent_process_source(
+        None,
+        ServerControl::new(),
+        Arc::new(FixedProcessSource(
+            AgentProcessSnapshot::from_process_names(names),
+        )),
+    )
+}
 
 #[tokio::test]
 async fn agent_status_route_returns_a_redaction_safe_runtime_snapshot() {
-    let response = app_router(ServerContext::new(None, ServerControl::new()))
+    let response = app_router(context_with_processes([]))
         .oneshot(
             Request::get("/api/v1/agents/status")
                 .body(Body::empty())
@@ -32,7 +58,7 @@ async fn agent_status_route_returns_a_redaction_safe_runtime_snapshot() {
         .await
         .expect("agent status body");
     let json: Value = serde_json::from_slice(&body).expect("agent status JSON");
-    assert_eq!(json["schema_version"], 1);
+    assert_eq!(json["schema_version"], AGENT_STATUS_SCHEMA_VERSION);
     assert_eq!(json["sequence"], 1);
     assert!(json["generated_at"].as_str().unwrap().ends_with('Z'));
 
@@ -70,8 +96,42 @@ async fn agent_status_route_returns_a_redaction_safe_runtime_snapshot() {
 }
 
 #[tokio::test]
+async fn agent_status_route_refreshes_external_process_counts_before_responding() {
+    let context = context_with_processes(["codex.exe", "CODEX", "codex.exe"]);
+    let response = app_router(context.clone())
+        .oneshot(
+            Request::get("/api/v1/agents/status")
+                .body(Body::empty())
+                .expect("agent status request"),
+        )
+        .await
+        .expect("agent status response");
+
+    let body = to_bytes(response.into_body(), usize::MAX)
+        .await
+        .expect("agent status body");
+    let json: Value = serde_json::from_slice(&body).expect("agent status JSON");
+    assert_eq!(json["sequence"], 2);
+    let codex = json["agents"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|agent| agent["agent_id"] == "codex")
+        .expect("codex status");
+    assert_eq!(codex["activity"], "running");
+    assert_eq!(codex["active_windows"], 3);
+    assert_eq!(codex["window_count_source"], "external_processes");
+
+    context
+        .refresh_agent_processes()
+        .await
+        .expect("repeat process refresh");
+    assert_eq!(context.agent_status_store().snapshot().unwrap().sequence, 2);
+}
+
+#[tokio::test]
 async fn agent_status_route_reflects_runtime_updates_from_the_shared_context() {
-    let context = ServerContext::new(None, ServerControl::new());
+    let context = context_with_processes([]);
     context
         .agent_status_store()
         .update(AgentRuntimeStatusUpdate {
