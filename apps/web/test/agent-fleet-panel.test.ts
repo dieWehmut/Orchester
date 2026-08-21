@@ -5,6 +5,20 @@ import { describe, expect, it } from 'vitest'
 import { AgentFleetPanel } from '../src/features/agent-presence'
 
 describe('AgentFleetPanel', () => {
+  it('groups active runtimes before agents that need attention', () => {
+    const wrapper = mount(AgentFleetPanel, {
+      props: { status: 'ready', snapshot: AGENT_FLEET_FIXTURE },
+    })
+
+    expect(
+      wrapper.findAll('[data-agent-group]').map((group) => group.attributes('data-agent-group')),
+    ).toEqual(['active', 'attention'])
+    expect(wrapper.get('[data-agent-group="active"] [data-agent-group-windows]').text()).toContain(
+      '4 windows',
+    )
+    expect(wrapper.get('[data-agent-group="attention"]').text()).toContain('Needs attention')
+  })
+
   it('shows every provider icon, activity label, managed windows, and subagent count', () => {
     const wrapper = mount(AgentFleetPanel, {
       props: { status: 'ready', snapshot: AGENT_FLEET_FIXTURE },

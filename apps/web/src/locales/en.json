@@ -19,6 +19,12 @@
     "statusUnavailable": "Agent status unavailable",
     "runtimeSnapshotMissing": "The runtime did not return an agent snapshot.",
     "showingLastKnown": "Showing last known status",
+    "groupCountLabel": "agents",
+    "groups": {
+      "active": "Active",
+      "ready": "Ready",
+      "attention": "Needs attention"
+    },
     "stream": {
       "live": "Live",
       "connecting": "Connecting",

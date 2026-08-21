@@ -19,6 +19,12 @@
     "statusUnavailable": "智能体状态不可用",
     "runtimeSnapshotMissing": "运行时没有返回智能体快照。",
     "showingLastKnown": "显示最近已知状态",
+    "groupCountLabel": "个智能体",
+    "groups": {
+      "active": "活动中",
+      "ready": "就绪",
+      "attention": "需要处理"
+    },
     "stream": {
       "live": "实时",
       "connecting": "连接中",

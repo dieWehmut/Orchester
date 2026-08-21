@@ -19,6 +19,12 @@
     "statusUnavailable": "代理狀態無法取得",
     "runtimeSnapshotMissing": "執行環境沒有回傳代理快照。",
     "showingLastKnown": "顯示最近已知狀態",
+    "groupCountLabel": "個代理",
+    "groups": {
+      "active": "執行中",
+      "ready": "就緒",
+      "attention": "需要處理"
+    },
     "stream": {
       "live": "即時",
       "connecting": "連線中",
