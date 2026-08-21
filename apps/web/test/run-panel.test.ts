@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 
 import { createEmptyRunView } from '@orchester/ereignis'
 import RunPanel from '../src/components/run/RunPanel.vue'
+import { MODEL_CATALOG_FIXTURE } from './fixtures/model-catalog'
 
 describe('RunPanel', () => {
   it('renders an actionable empty run with composer and footer', () => {
@@ -39,5 +40,19 @@ describe('RunPanel', () => {
     await wrapper.setProps({ busy: true })
     await wrapper.get('button').trigger('click')
     expect(wrapper.emitted('cancel')).toHaveLength(1)
+  })
+
+  it('forwards workspace and model state into the composer context', () => {
+    const wrapper = mount(RunPanel, {
+      props: {
+        view: createEmptyRunView(),
+        workspaceName: 'Orchester',
+        modelCatalog: MODEL_CATALOG_FIXTURE,
+        modelStatus: 'ready',
+      },
+    })
+
+    expect(wrapper.get('[data-project-context]').text()).toContain('Orchester')
+    expect(wrapper.get('[data-model-context-model]').text()).toContain('gpt-5.6')
   })
 })
