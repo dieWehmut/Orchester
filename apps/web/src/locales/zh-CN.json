@@ -61,6 +61,17 @@
     "approvalsTitle": "审批",
     "approvalsDescription": "运行暂停时，待处理的治理决策会显示在这里。",
     "changesTitle": "变更",
-    "changesDescription": "检测到的文件变更和差异会显示在这里。"
+    "changesDescription": "检测到的文件变更和差异会显示在这里。",
+    "file": "个文件",
+    "files": "个文件",
+    "observedEvents": "观测事件",
+    "added": "新增",
+    "modified": "修改",
+    "deleted": "删除",
+    "event": "个事件",
+    "events": "个事件",
+    "sequence": "序号 #",
+    "noFileChanges": "暂无文件变更",
+    "noFileChangesDescription": "活动运行报告的文件变更会显示在这里。"
   }
 }

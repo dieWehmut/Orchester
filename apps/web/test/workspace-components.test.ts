@@ -1,10 +1,13 @@
 import type { SessionSummaryDto } from '@orchester/protokoll'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
+import { h } from 'vue'
 
 import InspectorDock from '../src/components/layout/InspectorDock.vue'
 import WorkspaceHeader from '../src/components/layout/WorkspaceHeader.vue'
 import SessionRail from '../src/components/sessions/SessionRail.vue'
+import ChangeInspector from '../src/components/changes/ChangeInspector.vue'
+import type { ChangeSummary } from '../src/components/changes/change-summary'
 
 const session: SessionSummaryDto = {
   id: 's-11111111111111111111111111111111',
@@ -51,5 +54,25 @@ describe('workspace components', () => {
     await wrapper.findAll('[role="tab"]')[1]?.trigger('click')
 
     expect(wrapper.get('[data-inspector-panel]').text()).toContain('Approvals')
+  })
+
+  it('renders a named changes slot when the changes tab is selected', async () => {
+    const changes: ChangeSummary[] = [
+      {
+        path: 'src/app.ts',
+        kind: 'update',
+        latestSequence: 3,
+        latestOccurredAt: '2026-08-21T00:00:03Z',
+        eventCount: 2,
+        history: [],
+      },
+    ]
+    const wrapper = mount(InspectorDock, {
+      slots: { changes: () => h(ChangeInspector, { changes }) },
+    })
+
+    await wrapper.findAll('[role="tab"]')[2]?.trigger('click')
+
+    expect(wrapper.get('[data-change-path="src/app.ts"]').text()).toContain('src/app.ts')
   })
 })

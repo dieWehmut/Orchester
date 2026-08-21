@@ -3,6 +3,10 @@ import {
   type BootstrapDto,
   type SessionDetailDto,
   type SessionSummaryDto,
+  eventId,
+  runId,
+  UI_SCHEMA_VERSION,
+  type UiEventEnvelope,
 } from '@orchester/protokoll'
 import { flushPromises, mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
@@ -104,4 +108,34 @@ describe('WorkspaceView', () => {
     expect(wrapper.get('[data-session-transcript]').text()).toContain(detail.final_text)
     expect(wrapper.find('[data-pane="inspector"]').exists()).toBe(true)
   })
+
+  it('projects active run file changes into the inspector changes tab', async () => {
+    const stores = createAppStores()
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+    const first = fileChangeEvent(1, 'src/app.ts', 'add')
+    const latest = fileChangeEvent(2, 'src/app.ts', 'update')
+
+    stores.run.applyEvent(first)
+    stores.run.applyEvent(latest)
+    await nextTick()
+    await wrapper.findAll('[role="tab"]')[2]?.trigger('click')
+
+    expect(wrapper.get('[data-change-path="src/app.ts"]').text()).toContain('Modified')
+    expect(wrapper.get('[data-change-path="src/app.ts"]').text()).toContain('2 events')
+  })
 })
+
+function fileChangeEvent(
+  sequence: number,
+  path: string,
+  kind: 'add' | 'update' | 'delete',
+): UiEventEnvelope {
+  return {
+    schema_version: UI_SCHEMA_VERSION,
+    event_id: eventId(`event-${sequence}`),
+    run_id: runId('run-changes'),
+    sequence,
+    occurred_at: `2026-08-21T00:00:0${sequence}Z`,
+    kind: { type: 'file_change', path, kind },
+  }
+}
