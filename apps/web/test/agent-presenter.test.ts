@@ -47,5 +47,8 @@ describe('agent presenter helpers', () => {
     expect(agentWindowSourceMessageKey('tauri_windows')).toBe(
       'agents.windowSource.desktopWindows',
     )
+    expect(agentWindowSourceMessageKey('external_processes')).toBe(
+      'agents.windowSource.externalProcesses',
+    )
   })
 })

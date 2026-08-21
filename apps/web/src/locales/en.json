@@ -15,7 +15,8 @@
     "windowSourceLabel": "Window count source",
     "windowSource": {
       "managedSessions": "Managed sessions",
-      "desktopWindows": "Desktop windows"
+      "desktopWindows": "Desktop windows",
+      "externalProcesses": "External processes"
     },
     "availabilityLabel": "Availability",
     "capabilities": "Capabilities",

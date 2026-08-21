@@ -1,4 +1,7 @@
-import { AGENT_FLEET_FIXTURE } from '@orchester/protokoll'
+import {
+  AGENT_EXTERNAL_PROCESS_FIXTURE,
+  AGENT_FLEET_FIXTURE,
+} from '@orchester/protokoll'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
@@ -22,5 +25,14 @@ describe('AgentMetrics', () => {
 
     expect(wrapper.get('[data-agent-metrics]').attributes('aria-label')).toContain('1 window')
     expect(wrapper.find('[data-agent-window-source]').exists()).toBe(false)
+  })
+
+  it('labels external process instance counts without calling them managed sessions', () => {
+    const wrapper = mount(AgentMetrics, {
+      props: { agent: AGENT_EXTERNAL_PROCESS_FIXTURE.agents[0]!, variant: 'detail' },
+    })
+
+    expect(wrapper.get('[data-agent-window-source]').text()).toContain('External processes')
+    expect(wrapper.get('[data-agent-metrics]').attributes('aria-label')).toContain('3 windows')
   })
 })
