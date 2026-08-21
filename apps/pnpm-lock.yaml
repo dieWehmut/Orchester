@@ -97,6 +97,9 @@ importers:
       '@orchester/protokoll':
         specifier: workspace:*
         version: link:../protokoll
+      '@tauri-apps/api':
+        specifier: 2.11.1
+        version: 2.11.1
       '@vue/devtools-api':
         specifier: ^8.1.5
         version: 8.2.1
@@ -808,6 +811,9 @@ packages:
     resolution: {integrity: sha512-gKpExv4RbB9luVG+SucTXoqPZv/gzu/Yvz6BNO+8kpNxJ2x+I/ulryzl5W9BRciahZGp5Tls3Dp5XP1ztVGbMw==}
     peerDependencies:
       vue: ^2.7.0 || ^3.0.0
+
+  '@tauri-apps/api@2.11.1':
+    resolution: {integrity: sha512-M2FPuYND2m+wh5hfW9ZpSdxMPdEJovPBWwoHJmwUpysTYNHaOkVFN419m/K0LIgjb/7KU2vBgsUepJWugQCvAA==}
 
   '@tauri-apps/cli-darwin-arm64@2.11.4':
     resolution: {integrity: sha512-1ryOF3ZhpZ/nemHV5zVwBQBz9jDGKmKPvWPADOhc83ig0P4bMc2iER4NbC6r9sjeIZ6RVQ4g3RZIYvezhcl4TQ==}
@@ -2220,6 +2226,8 @@ snapshots:
     dependencies:
       '@tanstack/virtual-core': 3.17.8
       vue: 3.5.18(typescript@5.9.3)
+
+  '@tauri-apps/api@2.11.1': {}
 
   '@tauri-apps/cli-darwin-arm64@2.11.4':
     optional: true

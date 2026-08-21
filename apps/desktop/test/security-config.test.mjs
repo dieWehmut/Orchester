@@ -76,6 +76,7 @@ test('desktop security configuration is explicit and deny-by-default', async () 
     'core:window:allow-minimize',
     'core:window:allow-toggle-maximize',
     'core:window:allow-start-dragging',
+    'core:window:allow-is-maximized',
   ])
   assert.ok(capability.permissions.every((permission) => permission.startsWith('core:window:')))
   assert.ok(!capability.permissions.some((permission) => permission.startsWith('shell:')))
@@ -83,6 +84,8 @@ test('desktop security configuration is explicit and deny-by-default', async () 
 
   assert.equal(config.app.windows.length, 1)
   assert.equal(config.app.windows[0].label, 'main')
+  assert.equal(config.app.windows[0].decorations, false)
+  assert.equal(config.app.windows[0].shadow, true)
   assert.equal(config.app.windows[0].devtools, false)
   assert.deepEqual(config.bundle.icon, ['icons/icon.png', 'icons/icon.ico'])
 })
