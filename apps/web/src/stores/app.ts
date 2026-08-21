@@ -4,6 +4,7 @@ import type { Pinia } from 'pinia'
 import { createHttpClient, type HttpClient } from '../api/http'
 import { createRunsApi, type RunsApi } from '../api/runs'
 import { createSessionsApi } from '../api/sessions'
+import { createModelsApi } from '../api/models'
 import {
   createBootstrapStore,
   type BootstrapStore,
@@ -16,6 +17,7 @@ import { useAgentFleetStore } from './agent-fleet'
 import type { AgentStatusStreamFactory } from './agent-fleet'
 import { createAgentsApi } from '../api/agents'
 import { createAgentStatusSocket } from '../transport/agent-status-socket'
+import { useModelCatalogStore } from './model-catalog'
 
 export interface AppStores {
   http: HttpClient
@@ -24,6 +26,7 @@ export interface AppStores {
   sessions: SessionsStore
   run: RunStore
   agents: ReturnType<typeof useAgentFleetStore>
+  models: ReturnType<typeof useModelCatalogStore>
   pinia: Pinia
   getCsrfToken: () => string | null
   start: () => Promise<void>
@@ -62,11 +65,13 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
   const run = createRunStore(runs)
   const pinia = createAppPinia()
   const agents = useAgentFleetStore(pinia)
+  const models = useModelCatalogStore(pinia)
   const agentStatusStreamFactory =
     options.agentStatusStreamFactory === undefined
       ? createAgentStatusSocket
       : options.agentStatusStreamFactory
   agents.configure(createAgentsApi(http), agentStatusStreamFactory ?? undefined)
+  models.configure(createModelsApi(http))
 
   const stores: AppStores = {
     http,
@@ -75,12 +80,13 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
     sessions,
     run,
     agents,
+    models,
     pinia,
     getCsrfToken: () => csrfToken,
     async start(): Promise<void> {
       await bootstrap.load()
       if (bootstrap.status.value === 'ready' && bootstrap.context.value?.workspace.selected) {
-        await Promise.all([sessions.load(), agents.start()])
+        await Promise.all([sessions.load(), agents.start(), models.load()])
       }
     },
     stop(): void {
