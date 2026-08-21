@@ -90,6 +90,21 @@ describe('model catalog guards', () => {
     expect(parseModelCatalog({ ...catalog, profiles: [catalog.profiles[0], catalog.profiles[0]] })).toBeNull()
   })
 
+  it('accepts a configured catalog whose selected provider is implicit in the active choice', () => {
+    const implicitSelection = { ...catalog, selected_provider: null }
+
+    expect(parseModelCatalog(implicitSelection)).toEqual(implicitSelection)
+  })
+
+  it('rejects profiles without a non-empty profile identifier', () => {
+    expect(
+      parseModelCatalog({
+        ...catalog,
+        profiles: [{ ...catalog.profiles[0], profile: null }],
+      }),
+    ).toBeNull()
+  })
+
   it('rejects endpoint, credential, and filesystem details in browser-visible reasons', () => {
     for (const reason of [
       'Provider failed at https://relay.example/v1',
