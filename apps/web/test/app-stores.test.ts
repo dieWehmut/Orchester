@@ -7,6 +7,7 @@ import type {
   AgentStatusSocket,
   AgentStatusSocketOptions,
 } from '../src/transport/agent-status-socket'
+import { MODEL_CATALOG_FIXTURE } from './fixtures/model-catalog'
 
 describe('app stores composition', () => {
   it('shares one HTTP client and in-memory CSRF token across domain stores', () => {
@@ -15,8 +16,10 @@ describe('app stores composition', () => {
     expect(stores.http).toBe(stores.http)
     expect(stores.runs).toBeDefined()
     expect(stores.agents).toBeDefined()
+    expect(stores.models).toBeDefined()
     expect(stores.bootstrap.status.value).toBe('idle')
     expect(stores.sessions.status.value).toBe('idle')
+    expect(stores.models.status).toBe('idle')
     expect(stores.getCsrfToken()).toBeNull()
   })
 
@@ -31,6 +34,8 @@ describe('app stores composition', () => {
 
     expect(stream.connect).toHaveBeenCalledOnce()
     expect(stores.agents.snapshot?.sequence).toBe(12)
+    expect(stores.models.activeChoice?.model).toBe('gpt-5.6')
+    expect(stores.models.status).toBe('ready')
 
     stores.stop()
 
@@ -55,6 +60,7 @@ function fakeHttp(): HttpClient {
         return { schema_version: 1, csrf_token: 'csrf', expires_at: 1_800_000_000 }
       }
       if (path === '/agents/status') return AGENT_FLEET_FIXTURE
+      if (path === '/models') return MODEL_CATALOG_FIXTURE
       return { schema_version: 1, items: [], next_cursor: null }
     },
     post: async () => undefined,
