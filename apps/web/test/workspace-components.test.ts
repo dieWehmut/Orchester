@@ -75,4 +75,11 @@ describe('workspace components', () => {
 
     expect(wrapper.get('[data-change-path="src/app.ts"]').text()).toContain('src/app.ts')
   })
+
+  it('accepts a controlled active inspector tab', () => {
+    const wrapper = mount(InspectorDock, { props: { activeTab: 'changes' } })
+
+    expect(wrapper.findAll('[role="tab"]')[2]?.attributes('aria-selected')).toBe('true')
+    expect(wrapper.get('[data-inspector-panel]').text()).toContain('Changes')
+  })
 })

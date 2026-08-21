@@ -78,6 +78,18 @@ describe('WorkspaceView', () => {
     expect(wrapper.get('[data-agent-id="codex-main"] button').attributes('aria-pressed')).toBe('true')
   })
 
+  it('opens the agent context inspector after selecting an agent', async () => {
+    const stores = createAppStores()
+    stores.agents.snapshot = AGENT_FLEET_FIXTURE
+    stores.agents.status = 'ready'
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+
+    await wrapper.get('[data-agent-id="codex-main"] button').trigger('click')
+
+    expect(wrapper.get('[data-agent-details-name]').text()).toBe('Codex')
+    expect(wrapper.findAll('[role="tab"]')[0]?.attributes('aria-selected')).toBe('true')
+  })
+
   it('passes bootstrap workspace and model catalog state to the empty composer', () => {
     const stores = createAppStores()
     stores.bootstrap.context.value = {
