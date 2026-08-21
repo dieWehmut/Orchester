@@ -11,6 +11,7 @@ import { nextTick } from 'vue'
 import type { HttpClient } from '../src/api/http'
 import { createAppStores } from '../src/stores/app'
 import WorkspaceView from '../src/views/WorkspaceView.vue'
+import { MODEL_CATALOG_FIXTURE } from './fixtures/model-catalog'
 
 const summary: SessionSummaryDto = {
   id: 's-11111111111111111111111111111111',
@@ -57,6 +58,24 @@ describe('WorkspaceView', () => {
 
     expect(wrapper.get('[data-pane="sessions"] [data-agent-fleet]')).toBeTruthy()
     expect(wrapper.get('[data-pane="sessions"] [data-agent-id="codex-main"]')).toBeTruthy()
+  })
+
+  it('passes bootstrap workspace and model catalog state to the empty composer', () => {
+    const stores = createAppStores()
+    stores.bootstrap.context.value = {
+      schema_version: 1,
+      service_version: '0.1.2',
+      server_state: 'running',
+      workspace: { selected: true, name: 'Orchester' },
+    } satisfies BootstrapDto
+    stores.bootstrap.status.value = 'ready'
+    stores.models.catalog = MODEL_CATALOG_FIXTURE
+    stores.models.status = 'ready'
+
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+
+    expect(wrapper.get('[data-project-context]').text()).toContain('Orchester')
+    expect(wrapper.get('[data-model-context-model]').text()).toContain('gpt-5.6')
   })
 
   it('connects the session rail, selected transcript, and inspector to application stores', async () => {
