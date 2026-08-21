@@ -62,20 +62,17 @@ onMounted(() => {
     data-window-chrome
     @dblclick.self="toggleMaximize"
   >
-    <button
-      class="window-chrome__drag-region"
-      data-tauri-drag-region
-      type="button"
-      :aria-label="title"
-      :title="title"
-      @mousedown="startDragging"
-      @dblclick="toggleMaximize"
-    >
-      <span class="window-chrome__mark" aria-hidden="true">O</span>
-      <span class="window-chrome__title">{{ title }}</span>
-    </button>
-
     <div class="window-chrome__controls" aria-label="Window controls">
+      <button
+        class="window-chrome__control window-chrome__control--close"
+        data-window-action="close"
+        type="button"
+        :aria-label="closeLabel"
+        :title="closeLabel"
+        @click="close"
+      >
+        <X :size="15" :stroke-width="1.8" aria-hidden="true" />
+      </button>
       <button
         class="window-chrome__control"
         data-window-action="minimize"
@@ -97,17 +94,19 @@ onMounted(() => {
         <Square v-if="!maximized" :size="13" :stroke-width="1.8" aria-hidden="true" />
         <Maximize2 v-else :size="14" :stroke-width="1.8" aria-hidden="true" />
       </button>
-      <button
-        class="window-chrome__control window-chrome__control--close"
-        data-window-action="close"
-        type="button"
-        :aria-label="closeLabel"
-        :title="closeLabel"
-        @click="close"
-      >
-        <X :size="15" :stroke-width="1.8" aria-hidden="true" />
-      </button>
     </div>
+    <button
+      class="window-chrome__drag-region"
+      data-tauri-drag-region
+      type="button"
+      :aria-label="title"
+      :title="title"
+      @mousedown="startDragging"
+      @dblclick="toggleMaximize"
+    >
+      <span class="window-chrome__mark" aria-hidden="true">O</span>
+      <span class="window-chrome__title">{{ title }}</span>
+    </button>
   </div>
 </template>
 
@@ -116,7 +115,7 @@ onMounted(() => {
   display: flex;
   block-size: var(--desktop-titlebar-height, 36px);
   align-items: stretch;
-  justify-content: space-between;
+  justify-content: flex-start;
   border-block-end: 1px solid var(--color-border-base);
   background: var(--color-bg-surface);
   color: var(--color-text-secondary);
@@ -162,28 +161,59 @@ onMounted(() => {
 .window-chrome__controls {
   display: flex;
   align-items: stretch;
+  gap: 2px;
+  padding-inline: 10px 6px;
 }
 
 .window-chrome__control {
+  position: relative;
   display: grid;
-  inline-size: 44px;
+  inline-size: 22px;
   block-size: var(--desktop-titlebar-height, 36px);
   place-items: center;
   border: 0;
-  border-inline-start: 1px solid transparent;
   background: transparent;
   color: var(--color-text-secondary);
   cursor: pointer;
 }
 
-.window-chrome__control:hover {
-  background: var(--color-bg-element);
-  color: var(--color-text-primary);
+.window-chrome__control::before {
+  content: '';
+  position: absolute;
+  inline-size: 12px;
+  block-size: 12px;
+  border-radius: var(--radius-full);
+  background: currentColor;
 }
 
-.window-chrome__control--close:hover {
-  background: var(--color-status-error);
-  color: var(--color-text-inverse);
+.window-chrome__control :deep(svg) {
+  position: relative;
+  z-index: 1;
+  inline-size: 9px;
+  block-size: 9px;
+  color: #302f2d;
+  opacity: 0;
+}
+
+.window-chrome__control:hover {
+  background: transparent;
+  filter: brightness(1.08);
+}
+
+.window-chrome__controls:hover .window-chrome__control :deep(svg) {
+  opacity: 0.82;
+}
+
+.window-chrome__control--close {
+  color: #f06a63;
+}
+
+.window-chrome__control[data-window-action='minimize'] {
+  color: #e3b341;
+}
+
+.window-chrome__control[data-window-action='maximize'] {
+  color: #58c56e;
 }
 
 @media (max-width: 640px) {
@@ -192,7 +222,7 @@ onMounted(() => {
   }
 
   .window-chrome__control {
-    inline-size: 40px;
+    inline-size: 22px;
   }
 }
 </style>

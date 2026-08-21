@@ -41,6 +41,9 @@ describe('WindowChrome', () => {
     const wrapper = mount(WindowChrome, { props: { controller, title: 'Orchester' } })
 
     expect(wrapper.get('[data-tauri-drag-region]').attributes('aria-label')).toBe('Orchester')
+    expect(
+      wrapper.findAll('[data-window-action]').map((control) => control.attributes('data-window-action')),
+    ).toEqual(['close', 'minimize', 'maximize'])
     expect(wrapper.get('[data-window-action="minimize"]').attributes('aria-label')).toBe(
       'Minimize window',
     )
