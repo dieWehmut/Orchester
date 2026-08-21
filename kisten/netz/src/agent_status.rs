@@ -55,6 +55,7 @@ pub enum AgentRuntimeStatusError {
     InvalidUpdate(&'static str),
     UnknownAgent,
     SequenceExhausted,
+    ProcessRefreshFailed,
     LockPoisoned,
 }
 
@@ -65,6 +66,7 @@ impl fmt::Display for AgentRuntimeStatusError {
             Self::InvalidUpdate(field) => write!(formatter, "invalid agent update field {field}"),
             Self::UnknownAgent => formatter.write_str("agent is not registered"),
             Self::SequenceExhausted => formatter.write_str("agent status sequence exhausted"),
+            Self::ProcessRefreshFailed => formatter.write_str("agent process refresh task failed"),
             Self::LockPoisoned => formatter.write_str("agent status lock is poisoned"),
         }
     }
@@ -165,7 +167,6 @@ impl AgentRuntimeStatusStore {
                     agent.active_windows = observed;
                     agent.activity = AgentActivityState::Running;
                     agent.window_count_source = AgentWindowCountSource::ExternalProcesses;
-                    agent.last_heartbeat_at = Some(updated_at.clone());
                     agent.updated_at = updated_at.clone();
                     changed = true;
                 }
@@ -173,8 +174,7 @@ impl AgentRuntimeStatusStore {
                 && agent.active_windows != 0
             {
                 agent.active_windows = 0;
-                agent.activity = activity_without_external_processes(agent.availability);
-                agent.last_heartbeat_at = Some(updated_at.clone());
+                agent.activity = activity_without_external_processes(agent);
                 agent.updated_at = updated_at.clone();
                 changed = true;
             }
@@ -234,8 +234,11 @@ fn validate_update(update: &AgentRuntimeStatusUpdate) -> Result<(), AgentRuntime
     Ok(())
 }
 
-fn activity_without_external_processes(availability: AgentAvailabilityState) -> AgentActivityState {
-    match availability {
+fn activity_without_external_processes(agent: &AgentRuntimeSummaryDto) -> AgentActivityState {
+    if agent.active_sessions > 0 || agent.active_runs > 0 || agent.active_subagents > 0 {
+        return AgentActivityState::Running;
+    }
+    match agent.availability {
         AgentAvailabilityState::Available => AgentActivityState::Idle,
         AgentAvailabilityState::Unavailable | AgentAvailabilityState::AuthRequired => {
             AgentActivityState::Offline
@@ -286,6 +289,8 @@ pub(crate) async fn agent_status_socket_handler(
     State(context): State<ServerContext>,
     upgrade: WebSocketUpgrade,
 ) -> Response {
+    let _ = context.refresh_agent_processes().await;
+    context.start_agent_process_monitor();
     upgrade.on_upgrade(move |socket| stream_agent_status(socket, context))
 }
 

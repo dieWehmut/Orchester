@@ -147,4 +147,26 @@ fn runtime_store_reconciles_external_processes_without_losing_managed_counts() {
         receiver.try_recv(),
         Err(tokio::sync::broadcast::error::TryRecvError::Empty)
     ));
+
+    assert!(store
+        .reconcile_external_processes(&AgentProcessSnapshot::default(), "2026-08-22T08:00:02Z",)
+        .expect("record process exit"));
+    let snapshot = store.snapshot().expect("runtime snapshot after exit");
+    let codex = snapshot
+        .agents
+        .iter()
+        .find(|agent| agent.agent_id == "codex")
+        .expect("codex status");
+    assert_eq!(snapshot.sequence, 4);
+    assert_eq!(codex.activity, AgentActivityState::Running);
+    assert_eq!(codex.active_windows, 0);
+    assert_eq!(codex.active_sessions, 3);
+    assert_eq!(codex.active_runs, 2);
+    assert_eq!(codex.active_subagents, 1);
+}
+
+#[test]
+fn process_monitor_start_is_safe_without_a_tokio_runtime() {
+    let context = orchester_netz::ServerContext::new(None, orchester_netz::ServerControl::new());
+    assert!(!context.start_agent_process_monitor());
 }
