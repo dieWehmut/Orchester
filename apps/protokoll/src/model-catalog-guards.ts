@@ -74,6 +74,7 @@ function parseChoice(
   const planReasoningEffort = nullableText(raw.plan_reasoning_effort)
   const serviceTier = nullableText(raw.service_tier)
   if (
+    (profileRequired && profile === null) ||
     profile === undefined ||
     provider === null ||
     providerName === null ||
@@ -208,7 +209,7 @@ export function parseModelCatalog(raw: unknown): ModelCatalogDto | null {
     const selected = providers.find((provider) => provider.id === selectedProvider)
     if (!selected || !selected.active) return null
     if (providers.some((provider) => provider.id !== selectedProvider && provider.active)) return null
-  } else if (providers.some((provider) => provider.active)) {
+  } else if (providers.filter((provider) => provider.active).length > 1) {
     return null
   }
 
