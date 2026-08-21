@@ -9,8 +9,7 @@ import { useAppStores } from '../stores/app'
 import { computed } from 'vue'
 
 const { t } = useI18n()
-const { sessions, run } = useAppStores()
-const { agents } = useAppStores()
+const { sessions, run, agents, bootstrap, models } = useAppStores()
 const runView = computed(() => run.view.value)
 const runConnectionStatus = computed(() => run.connectionStatus.value)
 const runProjectionStatus = computed(() => run.projectionStatus.value)
@@ -20,6 +19,9 @@ const agentStatus = computed(() => agents.status)
 const agentStreamStatus = computed(() => agents.streamStatus)
 const agentSnapshot = computed(() => agents.snapshot)
 const agentError = computed(() => agents.error?.message ?? null)
+const workspaceName = computed(() => bootstrap.context.value?.workspace.name ?? null)
+const modelCatalog = computed(() => models.catalog)
+const modelStatus = computed(() => models.status)
 const {
   status,
   detailStatus,
@@ -79,6 +81,9 @@ async function handleRunCancel(): Promise<void> {
       :error-message="runErrorMessage"
       :busy="runBusy"
       :conversation-started="conversationStarted"
+      :workspace-name="workspaceName"
+      :model-catalog="modelCatalog"
+      :model-status="modelStatus"
       @submit="handleRunSubmit"
       @cancel="handleRunCancel"
     />
