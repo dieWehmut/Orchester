@@ -42,6 +42,13 @@ test('stack manifest exposes stable launch and deployment metadata', async () =>
     artifactDirectory: 'apps/website/dist',
     workflow: '.github/workflows/pages.yml',
   })
+  assert.deepEqual(manifest.toolchain, {
+    node: '>=22.12.0',
+    pagesNode: '24.8.0',
+    pnpm: '10.32.1',
+    rust: '>=1.80.0',
+    windowsAbi: 'msvc',
+  })
 })
 
 test('checked-in package, Vite, Tauri, and Pages settings match the manifest', async () => {

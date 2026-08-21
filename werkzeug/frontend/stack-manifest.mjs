@@ -13,6 +13,14 @@ function expectedViteUrl(surface) {
   return `http://${surface.host}:${surface.port}/`
 }
 
+function normalizedVersion(value) {
+  const match = String(value).match(/(\d+)(?:\.(\d+))?(?:\.(\d+))?/)
+  if (!match) return null
+  const parts = match.slice(1).map((part) => Number(part ?? 0))
+  while (parts.length > 1 && parts.at(-1) === 0) parts.pop()
+  return parts.join('.')
+}
+
 function requireText(contents, expected, source, errors, label = expected) {
   if (!contents.includes(expected)) {
     errors.push(`${source} does not match ${label}`)
@@ -57,6 +65,14 @@ function validateManifestShape(manifest) {
   }
   if (typeof manifest?.pages?.workflow !== 'string') errors.push('Pages must expose its workflow')
 
+  if (typeof manifest?.toolchain?.node !== 'string') errors.push('toolchain must declare Node.js')
+  if (typeof manifest?.toolchain?.pagesNode !== 'string') {
+    errors.push('toolchain must declare the Pages Node.js version')
+  }
+  if (typeof manifest?.toolchain?.pnpm !== 'string') errors.push('toolchain must declare pnpm')
+  if (typeof manifest?.toolchain?.rust !== 'string') errors.push('toolchain must declare Rust')
+  if (manifest?.toolchain?.windowsAbi !== 'msvc') errors.push('Windows ABI must be msvc')
+
   return errors
 }
 
@@ -73,8 +89,10 @@ export async function validateStackManifest(repositoryRoot, manifest) {
   const desktop = manifest.surfaces.desktop
   const pages = manifest.pages
 
-  const [webPackage, websitePackage, desktopPackage, tauriConfig, webVite, websiteVite, workflow] =
+  const [appsPackage, rootCargo, webPackage, websitePackage, desktopPackage, tauriConfig, webVite, websiteVite, workflow] =
     await Promise.all([
+      readJson(resolve(repositoryRoot, 'apps/package.json')),
+      readFile(resolve(repositoryRoot, 'Cargo.toml'), 'utf8'),
       readJson(resolve(repositoryRoot, 'apps/web/package.json')),
       readJson(resolve(repositoryRoot, 'apps/website/package.json')),
       readJson(resolve(repositoryRoot, 'apps/desktop/package.json')),
@@ -83,6 +101,14 @@ export async function validateStackManifest(repositoryRoot, manifest) {
       readFile(resolve(repositoryRoot, 'apps/website/vite.config.ts'), 'utf8'),
       readFile(resolve(repositoryRoot, pages.workflow), 'utf8'),
     ])
+
+  if (appsPackage.packageManager !== `pnpm@${manifest.toolchain.pnpm}`) {
+    errors.push('apps/package.json packageManager does not match the toolchain contract')
+  }
+  const cargoRustVersion = rootCargo.match(/rust-version\s*=\s*"([^"]+)"/)?.[1]
+  if (normalizedVersion(cargoRustVersion) !== normalizedVersion(manifest.toolchain.rust)) {
+    errors.push('Cargo.toml does not match minimum Rust version')
+  }
 
   for (const [surfaceName, surface, packageManifest] of [
     ['webui', webui, webPackage],
@@ -119,6 +145,13 @@ export async function validateStackManifest(repositoryRoot, manifest) {
   requireText(beforeDevScript, '--strictPort', 'Tauri beforeDevCommand', errors)
 
   requireText(workflow, `BASE_PATH: ${pages.basePath}`, pages.workflow, errors, 'Pages base path')
+  requireText(
+    workflow,
+    `NODE_VERSION: "${manifest.toolchain.pagesNode}"`,
+    pages.workflow,
+    errors,
+    'Pages Node.js version',
+  )
   requireText(
     workflow,
     `--filter ${website.package} build`,

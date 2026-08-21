@@ -8,6 +8,8 @@
     "dev:desktop": "node ../werkzeug/frontend/launch.mjs desktop",
     "dev:webui": "node ../werkzeug/frontend/launch.mjs webui",
     "dev:website": "node ../werkzeug/frontend/launch.mjs website",
+    "doctor:desktop": "node ../werkzeug/frontend/doctor.mjs desktop",
+    "doctor:web": "node ../werkzeug/frontend/doctor.mjs web",
     "stack:verify": "node ../werkzeug/frontend/stack-manifest.mjs",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test"

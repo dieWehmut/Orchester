@@ -27,5 +27,12 @@
     "url": "https://diewehmut.github.io/Orchester/",
     "artifactDirectory": "apps/website/dist",
     "workflow": ".github/workflows/pages.yml"
+  },
+  "toolchain": {
+    "node": ">=22.12.0",
+    "pagesNode": "24.8.0",
+    "pnpm": "10.32.1",
+    "rust": ">=1.80.0",
+    "windowsAbi": "msvc"
   }
 }

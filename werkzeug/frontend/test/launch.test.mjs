@@ -46,16 +46,39 @@ test('launch argument parsing is explicit and rejects unsupported surfaces', () 
   assert.deepEqual(parseLaunchArguments(['webui', '--dry-run']), {
     surface: 'webui',
     dryRun: true,
-    skipDoctor: false,
-  })
-  assert.deepEqual(parseLaunchArguments(['desktop', '--skip-doctor']), {
-    surface: 'desktop',
-    dryRun: false,
-    skipDoctor: true,
   })
   assert.throws(() => parseLaunchArguments([]), /surface is required/)
   assert.throws(() => parseLaunchArguments(['pages']), /Unknown surface/)
-  assert.throws(() => parseLaunchArguments(['webui', '--skip-doctor']), /desktop only/)
+  assert.throws(() => parseLaunchArguments(['desktop', '--skip-doctor']), /Unknown launch option/)
+})
+
+test('desktop launch stops before spawning when its required doctor report fails', async () => {
+  let spawned = false
+  const output = []
+
+  const exitCode = await (await import('../launch.mjs')).launch(['desktop'], {
+    repositoryRoot,
+    inspectDesktopEnvironment: async () => ({
+      profile: 'desktop',
+      platform: 'win32',
+      architecture: 'arm64',
+      checks: [{
+        id: 'windows-linker-shadowed',
+        status: 'fail',
+        message: 'MSYS link.exe shadows the Microsoft linker.',
+        remediation: 'Open Developer PowerShell.',
+      }],
+    }),
+    spawnProcess: async () => {
+      spawned = true
+      return 0
+    },
+    write: (chunk) => output.push(chunk),
+  })
+
+  assert.equal(exitCode, 1)
+  assert.equal(spawned, false)
+  assert.match(output.join(''), /FAIL.*windows-linker-shadowed/)
 })
 
 test('runLaunchPlan delegates to the injected process runner and propagates its exit code', async () => {

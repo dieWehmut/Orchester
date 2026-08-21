@@ -7,6 +7,11 @@ import {
   readStackManifest,
   validateStackManifest,
 } from './stack-manifest.mjs'
+import {
+  hasDiagnosticFailures,
+  inspectHostEnvironment,
+} from './environment.mjs'
+import { formatDoctorReport } from './doctor.mjs'
 
 const surfaceNames = ['webui', 'website', 'desktop']
 
@@ -15,17 +20,12 @@ export function parseLaunchArguments(args) {
   if (!surface) throw new Error('A surface is required: webui, website, or desktop')
   if (!surfaceNames.includes(surface)) throw new Error(`Unknown surface: ${surface}`)
 
-  const supportedFlags = new Set(['--dry-run', '--skip-doctor'])
+  const supportedFlags = new Set(['--dry-run'])
   const unsupported = flags.find((flag) => !supportedFlags.has(flag))
   if (unsupported) throw new Error(`Unknown launch option: ${unsupported}`)
-  if (surface !== 'desktop' && flags.includes('--skip-doctor')) {
-    throw new Error('--skip-doctor is for desktop only')
-  }
-
   return {
     surface,
     dryRun: flags.includes('--dry-run'),
-    skipDoctor: flags.includes('--skip-doctor'),
   }
 }
 
@@ -84,6 +84,21 @@ export async function launch(args, dependencies = {}) {
   if (options.dryRun) {
     process.stdout.write(`${JSON.stringify(plan, null, 2)}\n`)
     return 0
+  }
+
+  if (plan.requiresDesktopDoctor) {
+    const inspect = dependencies.inspectDesktopEnvironment ?? inspectHostEnvironment
+    const write = dependencies.write ?? ((chunk) => process.stdout.write(chunk))
+    const report = await inspect({
+      profile: 'desktop',
+      minimums: {
+        node: manifest.toolchain.node.replace('>=', ''),
+        pnpm: manifest.toolchain.pnpm,
+        rust: manifest.toolchain.rust.replace('>=', ''),
+      },
+    })
+    write(formatDoctorReport(report))
+    if (hasDiagnosticFailures(report)) return 1
   }
 
   if (plan.url) process.stdout.write(`launch: ${plan.surface} -> ${plan.url}\n`)
