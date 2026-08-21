@@ -4,7 +4,7 @@ import { AppBadge, EmptyState, StatusDot } from '@orchester/design'
 import { computed } from 'vue'
 
 import { useI18n } from '../../../i18n'
-import AgentIcon from './AgentIcon.vue'
+import AgentProviderMark from './AgentProviderMark.vue'
 import {
   activeAgentCounts,
   agentActivityMessageKey,
@@ -12,6 +12,7 @@ import {
   agentDotStatus,
   agentCountMessageKey,
 } from '../agent-presenter'
+import { agentProviderPresentation } from '../provider-presentation'
 
 const props = defineProps<{
   agent: AgentRuntimeSummaryDto | null
@@ -22,17 +23,18 @@ const activityLabel = computed(() => (props.agent ? t(agentActivityMessageKey(pr
 const availabilityLabel = computed(() =>
   props.agent ? t(agentAvailabilityMessageKey(props.agent)) : '',
 )
+const provider = computed(() => (props.agent ? agentProviderPresentation(props.agent) : null))
 </script>
 
 <template>
   <section v-if="props.agent" class="agent-details" data-agent-details>
     <header class="agent-details__header">
       <span :data-agent-details-icon="props.agent.icon_key">
-        <AgentIcon :icon-key="props.agent.icon_key" />
+        <AgentProviderMark :agent="props.agent" />
       </span>
       <div class="agent-details__identity">
         <strong data-agent-details-name>{{ props.agent.display_name }}</strong>
-        <span>{{ props.agent.provider }}</span>
+        <span data-agent-provider-label>{{ provider?.label }}</span>
       </div>
       <StatusDot
         :status="agentDotStatus(props.agent)"

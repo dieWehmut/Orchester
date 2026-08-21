@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import type { AgentRuntimeSummaryDto } from '@orchester/protokoll'
 import { StatusDot } from '@orchester/design'
+import { computed } from 'vue'
 import { useI18n } from '../../../i18n'
 
-import AgentIcon from './AgentIcon.vue'
+import AgentProviderMark from './AgentProviderMark.vue'
 import {
   activeAgentCounts,
   agentActivityMessageKey,
   agentCountMessageKey,
   agentDotStatus,
 } from '../agent-presenter'
+import { agentProviderPresentation } from '../provider-presentation'
 
 const props = withDefaults(
   defineProps<{
@@ -19,6 +21,7 @@ const props = withDefaults(
   { selected: false },
 )
 const { t } = useI18n()
+const provider = computed(() => agentProviderPresentation(props.agent))
 
 defineEmits<{
   select: [agentId: string]
@@ -36,10 +39,10 @@ const activityLabel = () => t(agentActivityMessageKey(props.agent))
     :aria-label="`${props.agent.display_name}, ${activityLabel()}`"
     @click="$emit('select', props.agent.agent_id)"
   >
-    <AgentIcon :icon-key="props.agent.icon_key" />
+    <AgentProviderMark :agent="props.agent" />
     <span class="agent-fleet-row__identity">
       <strong>{{ props.agent.display_name }}</strong>
-      <span>{{ props.agent.provider }}</span>
+      <span data-agent-provider-label>{{ provider.label }}</span>
     </span>
     <span class="agent-fleet-row__state">
       <span class="agent-fleet-row__activity">

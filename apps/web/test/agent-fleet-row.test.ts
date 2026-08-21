@@ -15,6 +15,8 @@ describe('AgentFleetRow', () => {
     const wrapper = mount(AgentFleetRow, { props: { agent } })
 
     expect(wrapper.get('[data-agent-icon="generic"]')).toBeTruthy()
+    expect(wrapper.get('[data-agent-provider="codex"]')).toBeTruthy()
+    expect(wrapper.get('[data-agent-provider-label]').text()).toBe('OpenAI')
     await wrapper.get('button').trigger('click')
     expect(wrapper.emitted('select')).toEqual([[agent.agent_id]])
   })
@@ -24,6 +26,9 @@ describe('AgentFleetRow', () => {
     if (!source) throw new Error('fixture must contain Codex')
     const wrapper = mount(AgentFleetRow, { props: { agent: source } })
 
+    expect(wrapper.get('[data-agent-provider="codex"]').attributes('data-agent-provider-tone')).toBe(
+      'success',
+    )
     expect(wrapper.get('[data-active-windows]').text()).toBe('2')
     expect(wrapper.get('[data-active-runs]').text()).toBe('2')
     expect(wrapper.get('[data-active-subagents]').text()).toBe('1')

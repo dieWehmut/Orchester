@@ -19,6 +19,8 @@ describe('AgentDetails', () => {
     expect(wrapper.get('[data-agent-details]')).toBeTruthy()
     expect(wrapper.get('[data-agent-details-icon="codex"]')).toBeTruthy()
     expect(wrapper.get('[data-agent-details-name]').text()).toBe('Codex')
+    expect(wrapper.get('[data-agent-provider-label]').text()).toBe('OpenAI')
+    expect(wrapper.get('[data-agent-provider="codex"]')).toBeTruthy()
     expect(wrapper.get('[data-agent-details-activity]').text()).toContain('Running')
     expect(wrapper.get('[data-agent-detail="windows"] [data-agent-detail-value]').text()).toBe('2')
     expect(wrapper.get('[data-agent-detail="runs"] [data-agent-detail-value]').text()).toBe('2')
