@@ -6,11 +6,18 @@ on:
       - main
     paths:
       - .github/workflows/pages.yml
+      - Cargo.toml
+      - apps/stack.manifest.json
       - apps/website/**
       - apps/design/**
+      - apps/web/package.json
+      - apps/web/vite.config.ts
+      - apps/desktop/package.json
+      - apps/desktop/src-tauri/tauri.conf.json
       - apps/package.json
       - apps/pnpm-lock.yaml
       - apps/pnpm-workspace.yaml
+      - werkzeug/frontend/**
   workflow_dispatch:
 
 permissions:
@@ -62,6 +69,14 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: pnpm --dir apps install --frozen-lockfile
+
+      - name: Test frontend tooling
+        shell: bash
+        run: pnpm --dir apps test:tooling
+
+      - name: Verify stack manifest
+        shell: bash
+        run: pnpm --dir apps stack:verify
 
       - name: Typecheck website
         shell: bash

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "surfaces": {
+    "webui": {
+      "kind": "vite",
+      "package": "@orchester/web",
+      "host": "127.0.0.1",
+      "port": 4173,
+      "url": "http://127.0.0.1:4173/"
+    },
+    "website": {
+      "kind": "vite",
+      "package": "@orchester/website",
+      "host": "127.0.0.1",
+      "port": 4174,
+      "url": "http://127.0.0.1:4174/"
+    },
+    "desktop": {
+      "kind": "tauri",
+      "package": "@orchester/desktop",
+      "frontend": "webui"
+    }
+  },
+  "pages": {
+    "surface": "website",
+    "basePath": "/Orchester/",
+    "url": "https://diewehmut.github.io/Orchester/",
+    "artifactDirectory": "apps/website/dist",
+    "workflow": ".github/workflows/pages.yml"
+  },
+  "toolchain": {
+    "node": ">=22.12.0",
+    "pagesNode": "24.8.0",
+    "pnpm": "10.32.1",
+    "rust": ">=1.80.0",
+    "windowsAbi": "msvc"
+  }
+}
