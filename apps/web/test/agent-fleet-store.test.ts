@@ -77,14 +77,14 @@ describe('agent fleet Pinia store', () => {
       ...AGENT_FLEET_FIXTURE,
       sequence: 13,
       agents: AGENT_FLEET_FIXTURE.agents.map((agent) =>
-        agent.agent_id === 'codex'
+        agent.agent_id === 'codex-main'
           ? { ...agent, activity: 'running', active_windows: 4 }
           : agent,
       ),
     })
 
     expect(store.snapshot?.sequence).toBe(13)
-    expect(store.activeWindowCount).toBe(7)
+    expect(store.activeWindowCount).toBe(6)
     expect(store.status).toBe('ready')
     expect(store.error).toBeNull()
   })
@@ -117,6 +117,23 @@ describe('agent fleet Pinia store', () => {
 
     expect(stream.close).toHaveBeenCalledOnce()
     expect(store.streamStatus).toBe('idle')
+  })
+
+  it('still opens the live stream when the initial REST snapshot is unavailable', async () => {
+    const store = useAgentFleetStore()
+    const api = { status: vi.fn(async () => Promise.reject(new TypeError('offline'))) } as unknown as AgentsApi
+    const stream = createFakeStream()
+
+    store.configure(api, stream.factory)
+    await store.start()
+
+    expect(stream.connect).toHaveBeenCalledOnce()
+    expect(store.status).toBe('error')
+
+    stream.options?.onSnapshot?.(AGENT_FLEET_FIXTURE)
+
+    expect(store.snapshot?.sequence).toBe(12)
+    expect(store.status).toBe('ready')
   })
 })
 
