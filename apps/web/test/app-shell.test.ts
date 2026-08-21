@@ -82,5 +82,6 @@ function fakeDesktopWindow(): DesktopWindowController {
     close: async () => undefined,
     startDragging: async () => undefined,
     isMaximized: async () => false,
+    listenMaximized: () => () => undefined,
   }
 }

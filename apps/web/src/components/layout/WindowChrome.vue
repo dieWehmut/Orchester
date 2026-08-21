@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Maximize2, Minus, Square, X } from '@lucide/vue'
-import { onMounted, ref } from 'vue'
 
+import { useWindowChrome } from '../../composables/use-window-chrome'
 import {
   desktopWindow,
   type DesktopWindowController,
@@ -26,33 +26,11 @@ const props = withDefaults(
 )
 
 const controller = props.controller ?? desktopWindow
-const maximized = ref(false)
-
-async function syncMaximized(): Promise<void> {
-  if (!controller.enabled) return
-  maximized.value = await controller.isMaximized()
-}
-
-async function minimize(): Promise<void> {
-  await controller.minimize()
-}
-
-async function toggleMaximize(): Promise<void> {
-  await controller.toggleMaximize()
-  await syncMaximized()
-}
-
-async function close(): Promise<void> {
-  await controller.close()
-}
+const { close, maximized, minimize, toggleMaximize } = useWindowChrome(controller)
 
 async function startDragging(): Promise<void> {
   await controller.startDragging()
 }
-
-onMounted(() => {
-  void syncMaximized()
-})
 </script>
 
 <template>
