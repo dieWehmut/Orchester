@@ -1,10 +1,9 @@
 import { mount } from '@vue/test-utils'
-import { createMemoryHistory } from 'vue-router'
+import { createMemoryHistory, createRouter } from 'vue-router'
 import { describe, expect, it } from 'vitest'
 
 import GiscusComments from '../src/components/site/GiscusComments.vue'
 import { parseGiscusConfig } from '../src/comments/giscus-config'
-import { createWebsiteRouter } from '../src/router'
 
 const publicConfig = parseGiscusConfig({
   VITE_GISCUS_REPO: 'dieWehmut/Orchester',
@@ -13,19 +12,30 @@ const publicConfig = parseGiscusConfig({
   VITE_GISCUS_CATEGORY_ID: 'DIC_example',
 })!
 
+function createTestRouter() {
+  return createRouter({
+    history: createMemoryHistory(),
+    routes: [
+      { path: '/', component: { template: '<div />' } },
+      { path: '/architecture', component: { template: '<div />' } },
+    ],
+  })
+}
+
 describe('GiscusComments', () => {
   it('renders a configuration hint without injecting a third-party script', async () => {
-    const router = createWebsiteRouter(createMemoryHistory())
+    const router = createTestRouter()
     await router.push('/')
     await router.isReady()
     const wrapper = mount(GiscusComments, { global: { plugins: [router] } })
 
     expect(wrapper.get('[data-giscus-disabled]').text()).toContain('Comments are not enabled')
     expect(document.querySelector('script[src="https://giscus.app/client.js"]')).toBeNull()
+    wrapper.unmount()
   })
 
   it('injects a lazy Giscus script only when the public config is complete', async () => {
-    const router = createWebsiteRouter(createMemoryHistory())
+    const router = createTestRouter()
     await router.push('/architecture')
     await router.isReady()
     const wrapper = mount(GiscusComments, {
