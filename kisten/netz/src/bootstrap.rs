@@ -1,4 +1,12 @@
-use std::{fmt, path::Path, sync::Arc, time::Duration};
+use std::{
+    fmt,
+    path::Path,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
+    },
+    time::Duration,
+};
 
 use orchester_anwendung::{OrchesterPaths, SelfAgentHost, SessionHistory};
 use orchester_verzeichnis::{standard_plugin_roots, Registry};
@@ -17,6 +25,7 @@ pub struct ServerContext {
     registry: Arc<Registry>,
     agent_status: Arc<AgentRuntimeStatusStore>,
     agent_process_source: Arc<dyn AgentProcessSource>,
+    agent_process_monitor_started: Arc<AtomicBool>,
     model_host: Option<Arc<SelfAgentHost>>,
     session_history: Option<Arc<SessionHistory>>,
     sessions: Arc<SessionStore>,
@@ -46,6 +55,7 @@ impl ServerContext {
             registry,
             agent_status,
             agent_process_source,
+            agent_process_monitor_started: Arc::new(AtomicBool::new(false)),
             model_host,
             session_history,
             sessions: Arc::new(SessionStore::new(Duration::from_secs(8 * 60 * 60))),
@@ -70,9 +80,48 @@ impl ServerContext {
     }
 
     pub async fn refresh_agent_processes(&self) -> Result<bool, crate::AgentRuntimeStatusError> {
-        let snapshot = self.agent_process_source.snapshot();
+        let source = Arc::clone(&self.agent_process_source);
+        let snapshot = tokio::task::spawn_blocking(move || source.snapshot())
+            .await
+            .map_err(|_| crate::AgentRuntimeStatusError::ProcessRefreshFailed)?;
         self.agent_status
             .reconcile_external_processes(&snapshot, now_rfc3339())
+    }
+
+    /// Start the shared external-process monitor once for this server context.
+    /// The task exits when the server lifecycle publishes its shutdown signal.
+    pub fn start_agent_process_monitor(&self) -> bool {
+        let Ok(runtime) = tokio::runtime::Handle::try_current() else {
+            return false;
+        };
+        if self
+            .agent_process_monitor_started
+            .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+            .is_err()
+        {
+            return false;
+        }
+
+        let context = self.clone();
+        runtime.spawn(async move {
+            let mut shutdown = context.control.subscribe_shutdown();
+            let first_tick = tokio::time::Instant::now() + Duration::from_secs(2);
+            let mut ticker = tokio::time::interval_at(first_tick, Duration::from_secs(2));
+            loop {
+                tokio::select! {
+                    biased;
+                    changed = shutdown.changed() => {
+                        if changed.is_err() || *shutdown.borrow() {
+                            break;
+                        }
+                    }
+                    _ = ticker.tick() => {
+                        let _ = context.refresh_agent_processes().await;
+                    }
+                }
+            }
+        });
+        true
     }
 
     pub fn model_host(&self) -> Option<&SelfAgentHost> {
