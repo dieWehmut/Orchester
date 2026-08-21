@@ -18,4 +18,15 @@ describe('AgentFleetRow', () => {
     await wrapper.get('button').trigger('click')
     expect(wrapper.emitted('select')).toEqual([[agent.agent_id]])
   })
+
+  it('renders windows, active runs, and subagent counts as separate metrics', () => {
+    const source = AGENT_FLEET_FIXTURE.agents[0]
+    if (!source) throw new Error('fixture must contain Codex')
+    const wrapper = mount(AgentFleetRow, { props: { agent: source } })
+
+    expect(wrapper.get('[data-active-windows]').text()).toBe('2')
+    expect(wrapper.get('[data-active-runs]').text()).toBe('2')
+    expect(wrapper.get('[data-active-subagents]').text()).toBe('1')
+    expect(wrapper.findAll('[data-agent-count]')).toHaveLength(3)
+  })
 })

@@ -8,6 +8,38 @@
     "connectionError": "连接错误",
     "unknownWorkspace": "未选择工作区"
   },
+  "agents": {
+    "title": "智能体",
+    "runtimeFleet": "运行时集群",
+    "activeMetrics": "活动智能体指标",
+    "statusUnavailable": "智能体状态不可用",
+    "runtimeSnapshotMissing": "运行时没有返回智能体快照。",
+    "showingLastKnown": "显示最近已知状态",
+    "stream": {
+      "live": "实时",
+      "connecting": "连接中",
+      "reconnecting": "重新连接中",
+      "offline": "离线",
+      "stopped": "已停止",
+      "notConnected": "未连接"
+    },
+    "activity": {
+      "signInRequired": "需要登录",
+      "unavailable": "不可用",
+      "error": "错误",
+      "running": "运行中",
+      "waitingApproval": "等待审批",
+      "starting": "启动中",
+      "stopping": "停止中",
+      "idle": "空闲",
+      "offline": "离线"
+    },
+    "counts": {
+      "windows": "窗口",
+      "runs": "运行",
+      "subagents": "子智能体"
+    }
+  },
   "routes": {
     "workspace": "工作区",
     "settings": "设置",

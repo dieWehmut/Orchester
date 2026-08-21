@@ -22,10 +22,15 @@ export type AgentStreamStatusMessageKey =
   | 'agents.stream.notConnected'
 
 export type AgentCountKey = 'windows' | 'runs' | 'subagents'
+export type AgentCountMessageKey = `agents.counts.${AgentCountKey}`
 
 export interface AgentCountEntry {
   readonly key: AgentCountKey
   readonly count: number
+}
+
+export function agentCountMessageKey(key: AgentCountKey): AgentCountMessageKey {
+  return `agents.counts.${key}`
 }
 
 export function agentActivityMessageKey(agent: AgentRuntimeSummaryDto): AgentActivityMessageKey {
