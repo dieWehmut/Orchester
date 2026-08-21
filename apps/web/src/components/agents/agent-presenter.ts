@@ -21,6 +21,12 @@ export type AgentStreamStatusMessageKey =
   | 'agents.stream.stopped'
   | 'agents.stream.notConnected'
 
+export type AgentAvailabilityMessageKey =
+  | 'agents.availability.available'
+  | 'agents.availability.unavailable'
+  | 'agents.availability.authRequired'
+  | 'agents.availability.error'
+
 export type AgentCountKey = 'windows' | 'runs' | 'subagents'
 export type AgentCountMessageKey = `agents.counts.${AgentCountKey}`
 
@@ -72,6 +78,31 @@ export function agentStreamStatusMessageKey(
     case 'idle':
       return 'agents.stream.notConnected'
   }
+}
+
+export function agentAvailabilityMessageKey(
+  agent: AgentRuntimeSummaryDto,
+): AgentAvailabilityMessageKey {
+  switch (agent.availability) {
+    case 'available':
+      return 'agents.availability.available'
+    case 'unavailable':
+      return 'agents.availability.unavailable'
+    case 'auth_required':
+      return 'agents.availability.authRequired'
+    case 'error':
+      return 'agents.availability.error'
+  }
+}
+
+export function agentDotStatus(
+  agent: AgentRuntimeSummaryDto,
+): 'idle' | 'running' | 'waiting' | 'success' | 'error' {
+  if (agent.availability === 'auth_required' || agent.activity === 'waiting_approval') return 'waiting'
+  if (agent.availability === 'unavailable' || agent.activity === 'offline') return 'idle'
+  if (agent.availability === 'error' || agent.activity === 'error') return 'error'
+  if (agent.activity === 'running' || agent.activity === 'starting' || agent.activity === 'stopping') return 'running'
+  return 'success'
 }
 
 export function activeAgentCounts(agent: AgentRuntimeSummaryDto): AgentCountEntry[] {

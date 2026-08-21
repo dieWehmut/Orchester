@@ -12,6 +12,10 @@
     "title": "Agents",
     "runtimeFleet": "Runtime fleet",
     "activeMetrics": "Active agent metrics",
+    "availabilityLabel": "Availability",
+    "capabilities": "Capabilities",
+    "noCapabilities": "No declared capabilities",
+    "noSelection": "No agent selected",
     "statusUnavailable": "Agent status unavailable",
     "runtimeSnapshotMissing": "The runtime did not return an agent snapshot.",
     "showingLastKnown": "Showing last known status",
@@ -33,6 +37,12 @@
       "stopping": "Stopping",
       "idle": "Idle",
       "offline": "Offline"
+    },
+    "availability": {
+      "available": "Available",
+      "unavailable": "Unavailable",
+      "authRequired": "Sign in required",
+      "error": "Error"
     },
     "counts": {
       "windows": "windows",

@@ -12,6 +12,10 @@
     "title": "代理",
     "runtimeFleet": "執行環境代理群",
     "activeMetrics": "目前代理指標",
+    "availabilityLabel": "可用性",
+    "capabilities": "能力",
+    "noCapabilities": "未宣告能力",
+    "noSelection": "尚未選擇代理",
     "statusUnavailable": "代理狀態無法取得",
     "runtimeSnapshotMissing": "執行環境沒有回傳代理快照。",
     "showingLastKnown": "顯示最近已知狀態",
@@ -33,6 +37,12 @@
       "stopping": "停止中",
       "idle": "閒置",
       "offline": "離線"
+    },
+    "availability": {
+      "available": "可用",
+      "unavailable": "無法使用",
+      "authRequired": "需要登入",
+      "error": "錯誤"
     },
     "counts": {
       "windows": "視窗",

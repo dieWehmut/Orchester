@@ -8,6 +8,7 @@ import {
   activeAgentCounts,
   agentActivityMessageKey,
   agentCountMessageKey,
+  agentDotStatus,
 } from './agent-presenter'
 
 const props = withDefaults(
@@ -24,14 +25,6 @@ defineEmits<{
 }>()
 
 const activityLabel = () => t(agentActivityMessageKey(props.agent))
-
-function dotStatus(agent: AgentRuntimeSummaryDto): 'idle' | 'running' | 'waiting' | 'success' | 'error' {
-  if (agent.availability === 'auth_required' || agent.activity === 'waiting_approval') return 'waiting'
-  if (agent.availability === 'unavailable' || agent.activity === 'offline') return 'idle'
-  if (agent.availability === 'error' || agent.activity === 'error') return 'error'
-  if (agent.activity === 'running' || agent.activity === 'starting' || agent.activity === 'stopping') return 'running'
-  return 'success'
-}
 </script>
 
 <template>
@@ -51,7 +44,7 @@ function dotStatus(agent: AgentRuntimeSummaryDto): 'idle' | 'running' | 'waiting
     <span class="agent-fleet-row__state">
       <span class="agent-fleet-row__activity">
         <StatusDot
-          :status="dotStatus(props.agent)"
+          :status="agentDotStatus(props.agent)"
           :label="activityLabel()"
           :pulse="props.agent.activity === 'running'"
         />
