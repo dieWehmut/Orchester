@@ -1,4 +1,14 @@
-use orchester_netz::{provider_for_process_name, AgentProcessSnapshot};
+use orchester_netz::{provider_for_process_name, AgentProcessSnapshot, AgentProcessSource};
+
+struct FixedProcessSource {
+    names: Vec<&'static str>,
+}
+
+impl AgentProcessSource for FixedProcessSource {
+    fn snapshot(&self) -> AgentProcessSnapshot {
+        AgentProcessSnapshot::from_process_names(self.names.iter().copied())
+    }
+}
 
 #[test]
 fn provider_matching_is_exact_and_case_insensitive() {
@@ -41,4 +51,16 @@ fn snapshot_keeps_only_provider_instance_counts() {
         .into_iter()
         .collect()
     );
+}
+
+#[test]
+fn process_sources_are_injectable_without_exposing_raw_metadata() {
+    let source: Box<dyn AgentProcessSource> = Box::new(FixedProcessSource {
+        names: vec!["codex.exe", "codex.exe", "claude", "unrelated.exe"],
+    });
+
+    let snapshot = source.snapshot();
+    assert_eq!(snapshot.count("codex"), 2);
+    assert_eq!(snapshot.count("claude"), 1);
+    assert_eq!(snapshot.provider_counts().len(), 2);
 }

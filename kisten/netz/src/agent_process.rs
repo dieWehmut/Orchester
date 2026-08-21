@@ -7,6 +7,34 @@
 
 use std::collections::BTreeMap;
 
+use sysinfo::{ProcessRefreshKind, ProcessesToUpdate, System};
+
+/// Supplies already-aggregated process presence to the runtime status layer.
+pub trait AgentProcessSource: Send + Sync {
+    fn snapshot(&self) -> AgentProcessSnapshot;
+}
+
+/// Read-only operating-system process source used by the production server.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct SystemAgentProcessSource;
+
+impl AgentProcessSource for SystemAgentProcessSource {
+    fn snapshot(&self) -> AgentProcessSnapshot {
+        let mut system = System::new();
+        system.refresh_processes_specifics(
+            ProcessesToUpdate::All,
+            true,
+            ProcessRefreshKind::nothing(),
+        );
+        AgentProcessSnapshot::from_process_names(
+            system
+                .processes()
+                .values()
+                .map(|process| process.name().to_string_lossy()),
+        )
+    }
+}
+
 /// Aggregated instances of known agent executables.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct AgentProcessSnapshot {
