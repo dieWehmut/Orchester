@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use orchester_netz::{provider_for_process_name, AgentProcessSnapshot, AgentProcessSource};
 
 struct FixedProcessSource {
@@ -43,13 +45,13 @@ fn snapshot_keeps_only_provider_instance_counts() {
     assert_eq!(snapshot.count("node"), 0);
     assert_eq!(
         snapshot.provider_counts(),
-        [
-            ("claude".to_owned(), 1),
-            ("codex".to_owned(), 2),
-            ("opencode".to_owned(), 2),
+        &[
+            ("claude".to_owned(), 1_u64),
+            ("codex".to_owned(), 2_u64),
+            ("opencode".to_owned(), 2_u64),
         ]
         .into_iter()
-        .collect()
+        .collect::<BTreeMap<_, _>>()
     );
 }
 
