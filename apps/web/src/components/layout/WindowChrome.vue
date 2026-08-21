@@ -114,7 +114,7 @@ onMounted(() => {
 <style scoped>
 .window-chrome {
   display: flex;
-  block-size: 36px;
+  block-size: var(--desktop-titlebar-height, 36px);
   align-items: stretch;
   justify-content: space-between;
   border-block-end: 1px solid var(--color-border-base);
@@ -167,7 +167,7 @@ onMounted(() => {
 .window-chrome__control {
   display: grid;
   inline-size: 44px;
-  block-size: 36px;
+  block-size: var(--desktop-titlebar-height, 36px);
   place-items: center;
   border: 0;
   border-inline-start: 1px solid transparent;

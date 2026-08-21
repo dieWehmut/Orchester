@@ -10,16 +10,19 @@
 }
 
 .app-shell {
+  --desktop-titlebar-height: 0px;
+  --app-top-chrome-height: calc(var(--header-height) + var(--desktop-titlebar-height));
+
   min-block-size: 100vh;
   background: var(--color-bg-base);
 }
 
 .app-shell--desktop {
-  --app-chrome-offset: 36px;
+  --desktop-titlebar-height: 36px;
 }
 
 main {
-  min-block-size: calc(100vh - var(--header-height));
+  min-block-size: calc(100vh - var(--app-top-chrome-height));
 }
 
 @media (max-width: 640px) {

@@ -18,7 +18,7 @@ const { t } = useI18n()
 <style scoped>
 .route-placeholder {
   display: grid;
-  min-block-size: calc(100vh - var(--header-height));
+  min-block-size: calc(100vh - var(--app-top-chrome-height, var(--header-height)));
   align-content: center;
   justify-items: center;
   gap: var(--space-2);
