@@ -10,11 +10,11 @@ describe('ModelContextControl', () => {
       props: { catalog: MODEL_CATALOG_FIXTURE, status: 'ready' },
     })
 
-    expect(wrapper.get('[data-model-context]').exists()).toBe(true)
+    expect(wrapper.find('[data-model-context]').exists()).toBe(true)
     expect(wrapper.get('[data-model-context-model]').text()).toContain('gpt-5.6')
     expect(wrapper.get('[data-model-context-provider]').text()).toContain('OpenAI')
     expect(wrapper.get('[data-model-context-effort]').text()).toContain('high')
-    expect(wrapper.get('[data-model-context-status]').exists()).toBe(false)
+    expect(wrapper.find('[data-model-context-status]').exists()).toBe(false)
   })
 
   it('keeps the last active context visible while the catalog is stale', () => {
