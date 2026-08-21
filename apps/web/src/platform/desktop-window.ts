@@ -32,6 +32,14 @@ const browserWindow: DesktopWindowController = {
   isMaximized: async () => false,
 }
 
+async function runWindowAction(action: () => Promise<void>): Promise<void> {
+  try {
+    await action()
+  } catch {
+    // Native window actions are best-effort UI affordances.
+  }
+}
+
 export function createDesktopWindowController(
   runtime: DesktopWindowRuntime = {
     enabled: isTauri(),
@@ -42,10 +50,10 @@ export function createDesktopWindowController(
 
   return {
     enabled: true,
-    minimize: () => runtime.window!.minimize(),
-    toggleMaximize: () => runtime.window!.toggleMaximize(),
-    close: () => runtime.window!.close(),
-    startDragging: () => runtime.window!.startDragging(),
+    minimize: () => runWindowAction(() => runtime.window!.minimize()),
+    toggleMaximize: () => runWindowAction(() => runtime.window!.toggleMaximize()),
+    close: () => runWindowAction(() => runtime.window!.close()),
+    startDragging: () => runWindowAction(() => runtime.window!.startDragging()),
     isMaximized: () => runtime.window!.isMaximized(),
   }
 }

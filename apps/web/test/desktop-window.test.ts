@@ -48,4 +48,22 @@ describe('desktop window adapter', () => {
 
     expect(handle.calls).toEqual(['startDragging', 'minimize', 'toggleMaximize', 'close'])
   })
+
+  it('absorbs native window action failures', async () => {
+    const handle = fakeWindow()
+    handle.minimize = vi.fn(async () => {
+      throw new Error('minimize failed')
+    })
+    handle.toggleMaximize = vi.fn(async () => {
+      throw new Error('toggle failed')
+    })
+    handle.close = vi.fn(async () => {
+      throw new Error('close failed')
+    })
+    const controller = createDesktopWindowController({ enabled: true, window: handle })
+
+    await expect(controller.minimize()).resolves.toBeUndefined()
+    await expect(controller.toggleMaximize()).resolves.toBeUndefined()
+    await expect(controller.close()).resolves.toBeUndefined()
+  })
 })
