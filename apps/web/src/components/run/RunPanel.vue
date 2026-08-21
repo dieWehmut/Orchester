@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { InlineAlert } from '@orchester/design'
 import type { RunView } from '@orchester/ereignis'
+import type { ModelCatalogDto } from '@orchester/protokoll'
 
 import ConnectionBanner, { type ConnectionBannerStatus } from './ConnectionBanner.vue'
 import EmptyWorkspace from './EmptyWorkspace.vue'
 import RunComposer from './RunComposer.vue'
 import RunFooter from './RunFooter.vue'
 import RunTimeline from './RunTimeline.vue'
+import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
 
 const props = withDefaults(
   defineProps<{
@@ -18,6 +20,9 @@ const props = withDefaults(
     errorMessage?: string | null
     emptyTitle?: string
     emptyDescription?: string
+    workspaceName?: string | null
+    modelCatalog?: ModelCatalogDto | null
+    modelStatus?: ModelCatalogStoreStatus
   }>(),
   {
     connectionStatus: 'idle',
@@ -27,6 +32,9 @@ const props = withDefaults(
     errorMessage: null,
     emptyTitle: 'New run',
     emptyDescription: 'Start a run to see events here.',
+    workspaceName: null,
+    modelCatalog: null,
+    modelStatus: 'idle',
   },
 )
 
@@ -55,7 +63,14 @@ const emit = defineEmits<{
       </div>
     </div>
     <RunFooter :view="props.view" />
-    <RunComposer :busy="props.busy" @submit="emit('submit', $event)" @cancel="emit('cancel')" />
+    <RunComposer
+      :busy="props.busy"
+      :workspace-name="props.workspaceName"
+      :model-catalog="props.modelCatalog"
+      :model-status="props.modelStatus"
+      @submit="emit('submit', $event)"
+      @cancel="emit('cancel')"
+    />
   </section>
 </template>
 
