@@ -77,10 +77,9 @@ describe('SiteShell', () => {
     await wrapper.get('[data-mobile-nav-trigger]').trigger('click')
 
     await wrapper.get('[data-mobile-nav] [data-site-link="/install"]').trigger('click')
-    await router.isReady()
+    await expect.poll(() => router.currentRoute.value.name).toBe('install')
     await flushUi()
 
-    expect(router.currentRoute.value.name).toBe('install')
     expect(wrapper.find('[data-mobile-nav]').exists()).toBe(false)
   })
 })
