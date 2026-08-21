@@ -20,6 +20,10 @@ env:
   NODE_VERSION: "24.8.0"
   PNPM_VERSION: "10.32.1"
   BASE_PATH: /Orchester/
+  VITE_GISCUS_REPO: ${{ vars.GISCUS_REPO }}
+  VITE_GISCUS_REPO_ID: ${{ vars.GISCUS_REPO_ID }}
+  VITE_GISCUS_CATEGORY: ${{ vars.GISCUS_CATEGORY }}
+  VITE_GISCUS_CATEGORY_ID: ${{ vars.GISCUS_CATEGORY_ID }}
 
 concurrency:
   group: github-pages

@@ -33,6 +33,10 @@ describe('GitHub Pages workflow', () => {
     expect(workflow).toContain('pnpm --dir apps --filter @orchester/website test')
     expect(workflow).toContain('pnpm --dir apps --filter @orchester/website build')
     expect(workflow).toContain('BASE_PATH: /Orchester/')
+    expect(workflow).toContain('VITE_GISCUS_REPO: ${{ vars.GISCUS_REPO }}')
+    expect(workflow).toContain('VITE_GISCUS_REPO_ID: ${{ vars.GISCUS_REPO_ID }}')
+    expect(workflow).toContain('VITE_GISCUS_CATEGORY: ${{ vars.GISCUS_CATEGORY }}')
+    expect(workflow).toContain('VITE_GISCUS_CATEGORY_ID: ${{ vars.GISCUS_CATEGORY_ID }}')
     expect(workflow).toContain('path: apps/website/dist')
   })
 

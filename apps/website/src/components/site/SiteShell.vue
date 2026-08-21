@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 
 import MobileNav from './MobileNav.vue'
+import GiscusComments from './GiscusComments.vue'
 import SiteFooter from './SiteFooter.vue'
 import SiteHeader from './SiteHeader.vue'
 
@@ -15,6 +16,7 @@ const mobileOpen = ref(false)
     <MobileNav v-model:open="mobileOpen" />
     <div id="site-content" class="site-shell__content">
       <slot />
+      <GiscusComments />
     </div>
     <SiteFooter />
   </div>
