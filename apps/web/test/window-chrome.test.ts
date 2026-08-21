@@ -34,9 +34,6 @@ function fakeController(options: { rejectActions?: boolean } = {}): DesktopWindo
       calls.push('close')
       if (options.rejectActions) throw new Error('close failed')
     }),
-    startDragging: vi.fn(async () => {
-      calls.push('startDragging')
-    }),
     isMaximized: vi.fn(async () => maximized),
     listenMaximized: vi.fn((nextListener) => {
       listener = nextListener
@@ -72,7 +69,7 @@ describe('WindowChrome', () => {
     await wrapper.get('[data-window-action="maximize"]').trigger('click')
     await wrapper.get('[data-window-action="close"]').trigger('click')
 
-    expect(controller.calls).toEqual(['startDragging', 'minimize', 'toggleMaximize', 'close'])
+    expect(controller.calls).toEqual(['minimize', 'toggleMaximize', 'close'])
     expect(wrapper.get('[data-window-action="maximize"]').attributes('aria-label')).toBe(
       'Restore window',
     )

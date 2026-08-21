@@ -7,7 +7,6 @@ export interface DesktopWindowHandle {
   minimize: () => Promise<void>
   toggleMaximize: () => Promise<void>
   close: () => Promise<void>
-  startDragging: () => Promise<void>
   isMaximized: () => Promise<boolean>
   onResized: (listener: () => void) => Promise<DesktopWindowUnlisten>
   onFocusChanged: (listener: () => void) => Promise<DesktopWindowUnlisten>
@@ -18,7 +17,6 @@ export interface DesktopWindowController {
   minimize: () => Promise<void>
   toggleMaximize: () => Promise<void>
   close: () => Promise<void>
-  startDragging: () => Promise<void>
   isMaximized: () => Promise<boolean>
   listenMaximized: (listener: (maximized: boolean) => void) => DesktopWindowUnlisten
 }
@@ -33,7 +31,6 @@ const browserWindow: DesktopWindowController = {
   minimize: async () => undefined,
   toggleMaximize: async () => undefined,
   close: async () => undefined,
-  startDragging: async () => undefined,
   isMaximized: async () => false,
   listenMaximized: () => () => undefined,
 }
@@ -119,7 +116,6 @@ export function createDesktopWindowController(
     minimize: () => runWindowAction(() => runtime.window!.minimize()),
     toggleMaximize: () => runWindowAction(() => runtime.window!.toggleMaximize()),
     close: () => runWindowAction(() => runtime.window!.close()),
-    startDragging: () => runWindowAction(() => runtime.window!.startDragging()),
     isMaximized: () => runtime.window!.isMaximized(),
     listenMaximized: (listener) => listenToMaximizedState(runtime.window!, listener),
   }

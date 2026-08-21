@@ -27,10 +27,6 @@ const props = withDefaults(
 
 const controller = props.controller ?? desktopWindow
 const { close, maximized, minimize, toggleMaximize } = useWindowChrome(controller)
-
-async function startDragging(): Promise<void> {
-  await controller.startDragging()
-}
 </script>
 
 <template>
@@ -79,7 +75,6 @@ async function startDragging(): Promise<void> {
       type="button"
       :aria-label="title"
       :title="title"
-      @mousedown="startDragging"
       @dblclick="toggleMaximize"
     >
       <span class="window-chrome__mark" aria-hidden="true">O</span>

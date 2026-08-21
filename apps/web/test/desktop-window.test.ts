@@ -38,9 +38,6 @@ function fakeWindow(): DesktopWindowHandle & {
     close: vi.fn(async () => {
       calls.push('close')
     }),
-    startDragging: vi.fn(async () => {
-      calls.push('startDragging')
-    }),
     isMaximized: vi.fn(async () => maximized),
     onFocusChanged: vi.fn(async (listener: () => void) => {
       focusListeners.push(listener)
@@ -66,13 +63,12 @@ describe('desktop window adapter', () => {
     const controller = createDesktopWindowController({ enabled: true, window: handle })
 
     expect(controller.enabled).toBe(true)
-    await controller.startDragging()
     await controller.minimize()
     await controller.toggleMaximize()
     await controller.close()
     await expect(controller.isMaximized()).resolves.toBe(true)
 
-    expect(handle.calls).toEqual(['startDragging', 'minimize', 'toggleMaximize', 'close'])
+    expect(handle.calls).toEqual(['minimize', 'toggleMaximize', 'close'])
   })
 
   it('absorbs native window action failures', async () => {
