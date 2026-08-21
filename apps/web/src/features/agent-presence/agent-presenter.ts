@@ -28,15 +28,38 @@ export type AgentAvailabilityMessageKey =
   | 'agents.availability.error'
 
 export type AgentCountKey = 'windows' | 'runs' | 'subagents'
-export type AgentCountMessageKey = `agents.counts.${AgentCountKey}`
+export type AgentCountMessageKey =
+  | 'agents.counts.window'
+  | 'agents.counts.windows'
+  | 'agents.counts.run'
+  | 'agents.counts.runs'
+  | 'agents.counts.subagent'
+  | 'agents.counts.subagents'
+
+export type AgentWindowSourceMessageKey =
+  | 'agents.windowSource.managedSessions'
+  | 'agents.windowSource.desktopWindows'
 
 export interface AgentCountEntry {
   readonly key: AgentCountKey
   readonly count: number
 }
 
-export function agentCountMessageKey(key: AgentCountKey): AgentCountMessageKey {
+export function agentCountMessageKey(key: AgentCountKey, count = 2): AgentCountMessageKey {
+  if (count === 1) {
+    if (key === 'windows') return 'agents.counts.window'
+    if (key === 'runs') return 'agents.counts.run'
+    return 'agents.counts.subagent'
+  }
   return `agents.counts.${key}`
+}
+
+export function agentWindowSourceMessageKey(
+  source: AgentRuntimeSummaryDto['window_count_source'],
+): AgentWindowSourceMessageKey {
+  return source === 'tauri_windows'
+    ? 'agents.windowSource.desktopWindows'
+    : 'agents.windowSource.managedSessions'
 }
 
 export function agentActivityMessageKey(agent: AgentRuntimeSummaryDto): AgentActivityMessageKey {

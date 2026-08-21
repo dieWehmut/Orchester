@@ -3,11 +3,12 @@ import type { AgentFleetSnapshotDto } from '@orchester/protokoll'
 import { AppBadge, InlineAlert, SkeletonBlock } from '@orchester/design'
 import { computed } from 'vue'
 
-import { useI18n } from '../../i18n'
-import type { AgentFleetStoreStatus } from '../../stores/agent-fleet'
-import type { AgentStatusSocketStatus } from '../../transport/agent-status-socket'
-import AgentFleetRow from './AgentFleetRow.vue'
-import { agentStreamStatusMessageKey } from './agent-presenter'
+import { useI18n } from '../../../i18n'
+import type { AgentFleetStoreStatus } from '../../../stores/agent-fleet'
+import type { AgentStatusSocketStatus } from '../../../transport/agent-status-socket'
+import { agentStreamStatusMessageKey } from '../agent-presenter'
+import { groupAgentFleet } from '../fleet-groups'
+import AgentFleetGroup from './AgentFleetGroup.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -26,6 +27,7 @@ defineEmits<{
 
 const { t } = useI18n()
 const streamStatusLabel = computed(() => t(agentStreamStatusMessageKey(props.streamStatus)))
+const groups = computed(() => groupAgentFleet(props.snapshot?.agents ?? []))
 
 function agentStreamStatusTone(status: AgentStatusSocketStatus): 'neutral' | 'success' | 'warning' | 'error' {
   if (status === 'connected') return 'success'
@@ -77,15 +79,15 @@ function agentStreamStatusTone(status: AgentStatusSocketStatus): 'neutral' | 'su
         {{ props.error }}
       </InlineAlert>
 
-      <ul class="agent-fleet__list">
-        <li v-for="agent in props.snapshot?.agents ?? []" :key="agent.agent_id" :data-agent-id="agent.agent_id">
-          <AgentFleetRow
-            :agent="agent"
-            :selected="agent.agent_id === props.selectedAgentId"
-            @select="$emit('select', $event)"
-          />
-        </li>
-      </ul>
+      <div class="agent-fleet__groups">
+        <AgentFleetGroup
+          v-for="group in groups"
+          :key="group.key"
+          :group="group"
+          :selected-agent-id="props.selectedAgentId"
+          @select="$emit('select', $event)"
+        />
+      </div>
     </div>
   </section>
 </template>
@@ -128,12 +130,9 @@ function agentStreamStatusTone(status: AgentStatusSocketStatus): 'neutral' | 'su
   font-size: var(--text-xs);
 }
 
-.agent-fleet__list {
+.agent-fleet__groups {
   display: grid;
-  gap: var(--space-1);
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  gap: var(--space-2);
 }
 
 .agent-fleet__stale {

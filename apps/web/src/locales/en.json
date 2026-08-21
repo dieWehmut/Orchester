@@ -12,6 +12,11 @@
     "title": "Agents",
     "runtimeFleet": "Runtime fleet",
     "activeMetrics": "Active agent metrics",
+    "windowSourceLabel": "Window count source",
+    "windowSource": {
+      "managedSessions": "Managed sessions",
+      "desktopWindows": "Desktop windows"
+    },
     "availabilityLabel": "Availability",
     "capabilities": "Capabilities",
     "noCapabilities": "No declared capabilities",
@@ -19,6 +24,12 @@
     "statusUnavailable": "Agent status unavailable",
     "runtimeSnapshotMissing": "The runtime did not return an agent snapshot.",
     "showingLastKnown": "Showing last known status",
+    "groupCountLabel": "agents",
+    "groups": {
+      "active": "Active",
+      "ready": "Ready",
+      "attention": "Needs attention"
+    },
     "stream": {
       "live": "Live",
       "connecting": "Connecting",
@@ -45,8 +56,11 @@
       "error": "Error"
     },
     "counts": {
+      "window": "window",
       "windows": "windows",
+      "run": "run",
       "runs": "runs",
+      "subagent": "subagent",
       "subagents": "subagents"
     }
   },

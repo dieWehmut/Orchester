@@ -3,15 +3,15 @@ import type { AgentRuntimeSummaryDto } from '@orchester/protokoll'
 import { AppBadge, EmptyState, StatusDot } from '@orchester/design'
 import { computed } from 'vue'
 
-import { useI18n } from '../../i18n'
-import AgentIcon from './AgentIcon.vue'
+import { useI18n } from '../../../i18n'
+import AgentProviderMark from './AgentProviderMark.vue'
+import AgentMetrics from './AgentMetrics.vue'
 import {
-  activeAgentCounts,
   agentActivityMessageKey,
   agentAvailabilityMessageKey,
   agentDotStatus,
-  agentCountMessageKey,
-} from './agent-presenter'
+} from '../agent-presenter'
+import { agentProviderPresentation } from '../provider-presentation'
 
 const props = defineProps<{
   agent: AgentRuntimeSummaryDto | null
@@ -22,17 +22,18 @@ const activityLabel = computed(() => (props.agent ? t(agentActivityMessageKey(pr
 const availabilityLabel = computed(() =>
   props.agent ? t(agentAvailabilityMessageKey(props.agent)) : '',
 )
+const provider = computed(() => (props.agent ? agentProviderPresentation(props.agent) : null))
 </script>
 
 <template>
   <section v-if="props.agent" class="agent-details" data-agent-details>
     <header class="agent-details__header">
       <span :data-agent-details-icon="props.agent.icon_key">
-        <AgentIcon :icon-key="props.agent.icon_key" />
+        <AgentProviderMark :agent="props.agent" />
       </span>
       <div class="agent-details__identity">
         <strong data-agent-details-name>{{ props.agent.display_name }}</strong>
-        <span>{{ props.agent.provider }}</span>
+        <span data-agent-provider-label>{{ provider?.label }}</span>
       </div>
       <StatusDot
         :status="agentDotStatus(props.agent)"
@@ -49,12 +50,7 @@ const availabilityLabel = computed(() =>
       <strong>{{ availabilityLabel }}</strong>
     </div>
 
-    <dl class="agent-details__metrics">
-      <div v-for="entry in activeAgentCounts(props.agent)" :key="entry.key" :data-agent-detail="entry.key">
-        <dt>{{ t(agentCountMessageKey(entry.key)) }}</dt>
-        <dd data-agent-detail-value>{{ entry.count }}</dd>
-      </div>
-    </dl>
+    <AgentMetrics :agent="props.agent" variant="detail" />
 
     <section class="agent-details__capabilities" aria-labelledby="agent-capabilities-title">
       <h3 id="agent-capabilities-title">{{ t('agents.capabilities') }}</h3>
@@ -123,36 +119,6 @@ const availabilityLabel = computed(() =>
 .agent-details__availability strong {
   color: var(--color-text-secondary);
   font-weight: var(--weight-medium);
-}
-
-.agent-details__metrics {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-2);
-  margin: 0;
-}
-
-.agent-details__metrics > div {
-  min-inline-size: 0;
-  padding: var(--space-2);
-  border: 1px solid var(--color-border-base);
-  border-radius: var(--radius-sm);
-  background: var(--color-bg-element);
-}
-
-.agent-details__metrics dt {
-  overflow: hidden;
-  color: var(--color-text-tertiary);
-  font-size: var(--text-xs);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.agent-details__metrics dd {
-  margin: var(--space-1) 0 0;
-  color: var(--color-text-primary);
-  font-family: var(--font-mono);
-  font-size: var(--text-lg);
 }
 
 .agent-details__capabilities {

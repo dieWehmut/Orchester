@@ -5,7 +5,7 @@ import {
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import AgentFleetRow from '../src/components/agents/AgentFleetRow.vue'
+import { AgentFleetRow } from '../src/features/agent-presence'
 
 describe('AgentFleetRow', () => {
   it('renders a fallback icon for an unknown provider key and emits the agent id', async () => {
@@ -15,6 +15,8 @@ describe('AgentFleetRow', () => {
     const wrapper = mount(AgentFleetRow, { props: { agent } })
 
     expect(wrapper.get('[data-agent-icon="generic"]')).toBeTruthy()
+    expect(wrapper.get('[data-agent-provider="codex"]')).toBeTruthy()
+    expect(wrapper.get('[data-agent-provider-label]').text()).toBe('OpenAI')
     await wrapper.get('button').trigger('click')
     expect(wrapper.emitted('select')).toEqual([[agent.agent_id]])
   })
@@ -24,10 +26,16 @@ describe('AgentFleetRow', () => {
     if (!source) throw new Error('fixture must contain Codex')
     const wrapper = mount(AgentFleetRow, { props: { agent: source } })
 
+    expect(wrapper.get('[data-agent-provider="codex"]').attributes('data-agent-provider-tone')).toBe(
+      'success',
+    )
     expect(wrapper.get('[data-active-windows]').text()).toBe('2')
     expect(wrapper.get('[data-active-runs]').text()).toBe('2')
     expect(wrapper.get('[data-active-subagents]').text()).toBe('1')
     expect(wrapper.findAll('[data-agent-count]')).toHaveLength(3)
+    expect(wrapper.get('button').attributes('aria-label')).toContain('OpenAI')
+    expect(wrapper.get('button').attributes('aria-label')).toContain('2 windows')
+    expect(wrapper.get('button').attributes('aria-label')).toContain('1 subagent')
   })
 
   it('exposes selected state through button semantics', () => {

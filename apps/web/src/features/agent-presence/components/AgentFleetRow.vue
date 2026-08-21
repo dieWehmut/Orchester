@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import type { AgentRuntimeSummaryDto } from '@orchester/protokoll'
 import { StatusDot } from '@orchester/design'
-import { useI18n } from '../../i18n'
+import { computed } from 'vue'
+import { useI18n } from '../../../i18n'
 
-import AgentIcon from './AgentIcon.vue'
+import AgentProviderMark from './AgentProviderMark.vue'
+import AgentMetrics from './AgentMetrics.vue'
 import {
   activeAgentCounts,
   agentActivityMessageKey,
   agentCountMessageKey,
   agentDotStatus,
-} from './agent-presenter'
+} from '../agent-presenter'
+import { agentProviderPresentation } from '../provider-presentation'
 
 const props = withDefaults(
   defineProps<{
@@ -19,12 +22,17 @@ const props = withDefaults(
   { selected: false },
 )
 const { t } = useI18n()
+const provider = computed(() => agentProviderPresentation(props.agent))
+const activityLabel = computed(() => t(agentActivityMessageKey(props.agent)))
+const metricSummary = computed(() =>
+  activeAgentCounts(props.agent)
+    .map((entry) => `${entry.count} ${t(agentCountMessageKey(entry.key, entry.count))}`)
+    .join(', '),
+)
 
 defineEmits<{
   select: [agentId: string]
 }>()
-
-const activityLabel = () => t(agentActivityMessageKey(props.agent))
 </script>
 
 <template>
@@ -33,39 +41,24 @@ const activityLabel = () => t(agentActivityMessageKey(props.agent))
     :class="{ 'agent-fleet-row--selected': props.selected }"
     type="button"
     :aria-pressed="props.selected"
-    :aria-label="`${props.agent.display_name}, ${activityLabel()}`"
+    :aria-label="`${props.agent.display_name}, ${provider.label}, ${activityLabel}, ${metricSummary}`"
     @click="$emit('select', props.agent.agent_id)"
   >
-    <AgentIcon :icon-key="props.agent.icon_key" />
+    <AgentProviderMark :agent="props.agent" />
     <span class="agent-fleet-row__identity">
       <strong>{{ props.agent.display_name }}</strong>
-      <span>{{ props.agent.provider }}</span>
+      <span data-agent-provider-label>{{ provider.label }}</span>
     </span>
     <span class="agent-fleet-row__state">
       <span class="agent-fleet-row__activity">
         <StatusDot
           :status="agentDotStatus(props.agent)"
-          :label="activityLabel()"
+          :label="activityLabel"
           :pulse="props.agent.activity === 'running'"
         />
-        <span data-agent-activity>{{ activityLabel() }}</span>
+        <span data-agent-activity>{{ activityLabel }}</span>
       </span>
-      <span class="agent-fleet-row__counts" :aria-label="t('agents.activeMetrics')">
-        <span
-          v-for="entry in activeAgentCounts(props.agent)"
-          :key="entry.key"
-          class="agent-fleet-row__count"
-          data-agent-count
-          :title="t(agentCountMessageKey(entry.key))"
-        >
-          <span class="agent-fleet-row__count-label">{{ t(agentCountMessageKey(entry.key)) }}</span>
-          <strong
-            :data-active-windows="entry.key === 'windows' ? '' : undefined"
-            :data-active-runs="entry.key === 'runs' ? '' : undefined"
-            :data-active-subagents="entry.key === 'subagents' ? '' : undefined"
-          >{{ entry.count }}</strong>
-        </span>
-      </span>
+      <AgentMetrics :agent="props.agent" variant="compact" />
     </span>
   </button>
 </template>
@@ -101,9 +94,7 @@ const activityLabel = () => t(agentActivityMessageKey(props.agent))
 
 .agent-fleet-row__identity,
 .agent-fleet-row__state,
-.agent-fleet-row__activity,
-.agent-fleet-row__counts,
-.agent-fleet-row__count {
+.agent-fleet-row__activity {
   display: flex;
   min-inline-size: 0;
   align-items: center;
@@ -125,8 +116,7 @@ const activityLabel = () => t(agentActivityMessageKey(props.agent))
   white-space: nowrap;
 }
 
-.agent-fleet-row__identity > span,
-.agent-fleet-row__count-label {
+.agent-fleet-row__identity > span {
   color: var(--color-text-tertiary);
   font-size: var(--text-xs);
 }
@@ -137,8 +127,7 @@ const activityLabel = () => t(agentActivityMessageKey(props.agent))
   gap: 3px;
 }
 
-.agent-fleet-row__activity,
-.agent-fleet-row__counts {
+.agent-fleet-row__activity {
   gap: var(--space-1);
 }
 
@@ -148,19 +137,4 @@ const activityLabel = () => t(agentActivityMessageKey(props.agent))
   white-space: nowrap;
 }
 
-.agent-fleet-row__counts {
-  justify-content: flex-end;
-  gap: var(--space-2);
-}
-
-.agent-fleet-row__count {
-  gap: 3px;
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-}
-
-.agent-fleet-row__count strong {
-  color: var(--color-text-secondary);
-  font-weight: var(--weight-medium);
-}
 </style>

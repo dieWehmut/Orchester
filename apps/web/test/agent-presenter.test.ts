@@ -3,9 +3,11 @@ import { describe, expect, it } from 'vitest'
 
 import {
   agentActivityMessageKey,
+  agentCountMessageKey,
   agentStreamStatusMessageKey,
+  agentWindowSourceMessageKey,
   activeAgentCounts,
-} from '../src/components/agents/agent-presenter'
+} from '../src/features/agent-presence'
 
 describe('agent presenter helpers', () => {
   it('maps availability and activity to stable locale keys', () => {
@@ -33,5 +35,17 @@ describe('agent presenter helpers', () => {
       { key: 'runs', count: 2 },
       { key: 'subagents', count: 1 },
     ])
+  })
+
+  it('selects singular metric copy and explains the runtime window source', () => {
+    expect(agentCountMessageKey('windows', 1)).toBe('agents.counts.window')
+    expect(agentCountMessageKey('runs', 2)).toBe('agents.counts.runs')
+    expect(agentCountMessageKey('subagents', 1)).toBe('agents.counts.subagent')
+    expect(agentWindowSourceMessageKey('managed_sessions')).toBe(
+      'agents.windowSource.managedSessions',
+    )
+    expect(agentWindowSourceMessageKey('tauri_windows')).toBe(
+      'agents.windowSource.desktopWindows',
+    )
   })
 })
