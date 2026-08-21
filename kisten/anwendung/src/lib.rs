@@ -20,6 +20,11 @@
 
 mod paths;
 mod self_agent;
+mod session_history;
 
 pub use paths::OrchesterPaths;
 pub use self_agent::{SelfAgentHost, SelfAgentHostError};
+pub use session_history::{
+    SessionHistory, SessionHistoryDetail, SessionHistoryError, SessionHistoryPage,
+    SessionHistorySummary,
+};
