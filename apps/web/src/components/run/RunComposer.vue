@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { AppButton, AppTextarea } from '@orchester/design'
+import type { ModelCatalogDto } from '@orchester/protokoll'
 import { computed, ref, watch } from 'vue'
+
+import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
+import ComposerContextBar from './ComposerContextBar.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -13,6 +17,10 @@ const props = withDefaults(
     cancelLabel?: string
     inputLabel?: string
     characterCountLabel?: string
+    workspaceName?: string | null
+    modelCatalog?: ModelCatalogDto | null
+    modelStatus?: ModelCatalogStoreStatus
+    approvalLabel?: string
   }>(),
   {
     modelValue: '',
@@ -24,6 +32,10 @@ const props = withDefaults(
     cancelLabel: 'Stop',
     inputLabel: 'Task prompt',
     characterCountLabel: 'characters',
+    workspaceName: null,
+    modelCatalog: null,
+    modelStatus: 'idle',
+    approvalLabel: 'Ask for approval',
   },
 )
 
@@ -69,6 +81,12 @@ function handleKeydown(event: KeyboardEvent): void {
 
 <template>
   <form class="run-composer" data-run-composer @submit.prevent="submit">
+    <ComposerContextBar
+      :workspace-name="props.workspaceName"
+      :model-catalog="props.modelCatalog"
+      :model-status="props.modelStatus"
+      :approval-label="props.approvalLabel"
+    />
     <label class="run-composer__label" for="run-prompt">{{ props.inputLabel }}</label>
     <AppTextarea
       id="run-prompt"
