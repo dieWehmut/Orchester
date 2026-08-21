@@ -53,4 +53,25 @@ describe('AgentFleetPanel', () => {
 
     expect(wrapper.get('[data-agent-stream-status]').text()).toBe('Reconnecting')
   })
+
+  it('uses the selected locale for fleet status copy', async () => {
+    const wrapper = mount(AgentFleetPanel, {
+      props: { status: 'ready', snapshot: AGENT_FLEET_FIXTURE },
+    })
+
+    expect(wrapper.get('[data-agent-fleet-title]').text()).toBe('Agents')
+    expect(wrapper.get('[data-agent-id="codex-main"] [data-agent-activity]').text()).toContain('Running')
+  })
+
+  it('marks the selected agent row and emits a selection intent', async () => {
+    const wrapper = mount(AgentFleetPanel, {
+      props: { status: 'ready', snapshot: AGENT_FLEET_FIXTURE, selectedAgentId: 'codex-main' },
+    })
+
+    expect(wrapper.get('[data-agent-id="codex-main"] .agent-fleet-row').classes()).toContain(
+      'agent-fleet-row--selected',
+    )
+    await wrapper.get('[data-agent-id="deepseek-research"] button').trigger('click')
+    expect(wrapper.emitted('select')).toEqual([['deepseek-research']])
+  })
 })

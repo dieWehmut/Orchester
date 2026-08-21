@@ -8,6 +8,48 @@
     "connectionError": "Connection error",
     "unknownWorkspace": "No workspace selected"
   },
+  "agents": {
+    "title": "Agents",
+    "runtimeFleet": "Runtime fleet",
+    "activeMetrics": "Active agent metrics",
+    "availabilityLabel": "Availability",
+    "capabilities": "Capabilities",
+    "noCapabilities": "No declared capabilities",
+    "noSelection": "No agent selected",
+    "statusUnavailable": "Agent status unavailable",
+    "runtimeSnapshotMissing": "The runtime did not return an agent snapshot.",
+    "showingLastKnown": "Showing last known status",
+    "stream": {
+      "live": "Live",
+      "connecting": "Connecting",
+      "reconnecting": "Reconnecting",
+      "offline": "Offline",
+      "stopped": "Stopped",
+      "notConnected": "Not connected"
+    },
+    "activity": {
+      "signInRequired": "Sign in required",
+      "unavailable": "Unavailable",
+      "error": "Error",
+      "running": "Running",
+      "waitingApproval": "Waiting approval",
+      "starting": "Starting",
+      "stopping": "Stopping",
+      "idle": "Idle",
+      "offline": "Offline"
+    },
+    "availability": {
+      "available": "Available",
+      "unavailable": "Unavailable",
+      "authRequired": "Sign in required",
+      "error": "Error"
+    },
+    "counts": {
+      "windows": "windows",
+      "runs": "runs",
+      "subagents": "subagents"
+    }
+  },
   "routes": {
     "workspace": "Workspace",
     "settings": "Settings",

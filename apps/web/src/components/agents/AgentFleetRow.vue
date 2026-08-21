@@ -1,51 +1,39 @@
 <script setup lang="ts">
 import type { AgentRuntimeSummaryDto } from '@orchester/protokoll'
 import { StatusDot } from '@orchester/design'
+import { useI18n } from '../../i18n'
 
 import AgentIcon from './AgentIcon.vue'
+import {
+  activeAgentCounts,
+  agentActivityMessageKey,
+  agentCountMessageKey,
+  agentDotStatus,
+} from './agent-presenter'
 
-const props = defineProps<{ agent: AgentRuntimeSummaryDto }>()
+const props = withDefaults(
+  defineProps<{
+    agent: AgentRuntimeSummaryDto
+    selected?: boolean
+  }>(),
+  { selected: false },
+)
+const { t } = useI18n()
 
 defineEmits<{
   select: [agentId: string]
 }>()
 
-function activityLabel(agent: AgentRuntimeSummaryDto): string {
-  if (agent.availability === 'auth_required') return 'Sign in required'
-  if (agent.availability === 'unavailable') return 'Unavailable'
-  if (agent.availability === 'error') return 'Error'
-  switch (agent.activity) {
-    case 'running':
-      return 'Running'
-    case 'waiting_approval':
-      return 'Waiting approval'
-    case 'starting':
-      return 'Starting'
-    case 'stopping':
-      return 'Stopping'
-    case 'idle':
-      return 'Idle'
-    case 'offline':
-      return 'Offline'
-    case 'error':
-      return 'Error'
-  }
-}
-
-function dotStatus(agent: AgentRuntimeSummaryDto): 'idle' | 'running' | 'waiting' | 'success' | 'error' {
-  if (agent.availability === 'auth_required' || agent.activity === 'waiting_approval') return 'waiting'
-  if (agent.availability === 'unavailable' || agent.activity === 'offline') return 'idle'
-  if (agent.availability === 'error' || agent.activity === 'error') return 'error'
-  if (agent.activity === 'running' || agent.activity === 'starting' || agent.activity === 'stopping') return 'running'
-  return 'success'
-}
+const activityLabel = () => t(agentActivityMessageKey(props.agent))
 </script>
 
 <template>
   <button
     class="agent-fleet-row"
+    :class="{ 'agent-fleet-row--selected': props.selected }"
     type="button"
-    :aria-label="`${props.agent.display_name}, ${activityLabel(props.agent)}`"
+    :aria-pressed="props.selected"
+    :aria-label="`${props.agent.display_name}, ${activityLabel()}`"
     @click="$emit('select', props.agent.agent_id)"
   >
     <AgentIcon :icon-key="props.agent.icon_key" />
@@ -56,24 +44,26 @@ function dotStatus(agent: AgentRuntimeSummaryDto): 'idle' | 'running' | 'waiting
     <span class="agent-fleet-row__state">
       <span class="agent-fleet-row__activity">
         <StatusDot
-          :status="dotStatus(props.agent)"
-          :label="activityLabel(props.agent)"
+          :status="agentDotStatus(props.agent)"
+          :label="activityLabel()"
           :pulse="props.agent.activity === 'running'"
         />
-        <span data-agent-activity>{{ activityLabel(props.agent) }}</span>
+        <span data-agent-activity>{{ activityLabel() }}</span>
       </span>
-      <span class="agent-fleet-row__counts" aria-label="Active windows and subagents">
-        <span class="agent-fleet-row__count" title="Orchester-managed windows">
-          <span class="agent-fleet-row__count-label">windows</span>
-          <strong data-active-windows>{{ props.agent.active_windows }}</strong>
-        </span>
+      <span class="agent-fleet-row__counts" :aria-label="t('agents.activeMetrics')">
         <span
-          v-if="props.agent.active_subagents > 0"
+          v-for="entry in activeAgentCounts(props.agent)"
+          :key="entry.key"
           class="agent-fleet-row__count"
-          title="Running subagents"
+          data-agent-count
+          :title="t(agentCountMessageKey(entry.key))"
         >
-          <span class="agent-fleet-row__count-label">subagents</span>
-          <strong data-active-subagents>{{ props.agent.active_subagents }}</strong>
+          <span class="agent-fleet-row__count-label">{{ t(agentCountMessageKey(entry.key)) }}</span>
+          <strong
+            :data-active-windows="entry.key === 'windows' ? '' : undefined"
+            :data-active-runs="entry.key === 'runs' ? '' : undefined"
+            :data-active-subagents="entry.key === 'subagents' ? '' : undefined"
+          >{{ entry.count }}</strong>
         </span>
       </span>
     </span>
@@ -102,6 +92,11 @@ function dotStatus(agent: AgentRuntimeSummaryDto): 'idle' | 'running' | 'waiting
   border-color: var(--color-border-base);
   background: var(--color-bg-element);
   outline: none;
+}
+
+.agent-fleet-row--selected {
+  border-color: var(--color-accent-border);
+  background: var(--color-accent-muted);
 }
 
 .agent-fleet-row__identity,

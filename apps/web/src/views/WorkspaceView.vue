@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import AgentDetails from '../components/agents/AgentDetails.vue'
 import ChangeInspector from '../components/changes/ChangeInspector.vue'
 import { summarizeFileChanges } from '../components/changes/change-summary'
 import InspectorDock from '../components/layout/InspectorDock.vue'
+import type { InspectorTab } from '../components/layout/inspector-tabs'
 import WorkspaceResponsive from '../components/layout/WorkspaceResponsive.vue'
 import WorkspaceSidebar from '../components/layout/WorkspaceSidebar.vue'
 import SessionTranscript from '../components/sessions/SessionTranscript.vue'
@@ -15,6 +17,8 @@ const { sessions, run, agents, bootstrap, models } = useAppStores()
 const runView = computed(() => run.view.value)
 const changeSummaries = computed(() => summarizeFileChanges(runView.value.fileChanges))
 const selectedChangePath = ref<string | null>(null)
+const selectedAgentId = ref<string | null>(null)
+const activeInspectorTab = ref<InspectorTab>('context')
 const runConnectionStatus = computed(() => run.connectionStatus.value)
 const runProjectionStatus = computed(() => run.projectionStatus.value)
 const runErrorMessage = computed(() => run.error.value?.message ?? null)
@@ -23,6 +27,9 @@ const agentStatus = computed(() => agents.status)
 const agentStreamStatus = computed(() => agents.streamStatus)
 const agentSnapshot = computed(() => agents.snapshot)
 const agentError = computed(() => agents.error?.message ?? null)
+const selectedAgent = computed(
+  () => agentSnapshot.value?.agents.find((agent) => agent.agent_id === selectedAgentId.value) ?? null,
+)
 const workspaceName = computed(() => bootstrap.context.value?.workspace.name ?? null)
 const modelCatalog = computed(() => models.catalog)
 const modelStatus = computed(() => models.status)
@@ -50,6 +57,15 @@ async function handleRunSubmit(prompt: string): Promise<void> {
 async function handleRunCancel(): Promise<void> {
   await run.cancel()
 }
+
+function handleAgentSelect(agentId: string): void {
+  selectedAgentId.value = agentId
+  activeInspectorTab.value = 'context'
+}
+
+function handleInspectorTabChange(tab: InspectorTab): void {
+  activeInspectorTab.value = tab
+}
 </script>
 
 <template>
@@ -70,10 +86,12 @@ async function handleRunCancel(): Promise<void> {
         :agent-stream-status="agentStreamStatus"
         :agent-snapshot="agentSnapshot"
         :agent-error="agentError"
+        :selected-agent-id="selectedAgentId"
         @select-session="sessions.select"
         @refresh-sessions="sessions.load"
         @load-more-sessions="sessions.loadMore"
         @new-session="sessions.select(null)"
+        @select-agent="handleAgentSelect"
       />
     </template>
 
@@ -94,7 +112,13 @@ async function handleRunCancel(): Promise<void> {
     <SessionTranscript v-else :status="detailStatus" :session="selected" :error="detailError" />
 
     <template #inspector>
-      <InspectorDock>
+      <InspectorDock
+        :active-tab="activeInspectorTab"
+        @update:active-tab="handleInspectorTabChange"
+      >
+        <template #context>
+          <AgentDetails :agent="selectedAgent" />
+        </template>
         <template #changes>
           <ChangeInspector
             :changes="changeSummaries"

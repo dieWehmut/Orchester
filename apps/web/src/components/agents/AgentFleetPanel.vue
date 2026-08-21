@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import type { AgentFleetSnapshotDto } from '@orchester/protokoll'
 import { AppBadge, InlineAlert, SkeletonBlock } from '@orchester/design'
+import { computed } from 'vue'
 
+import { useI18n } from '../../i18n'
 import type { AgentFleetStoreStatus } from '../../stores/agent-fleet'
 import type { AgentStatusSocketStatus } from '../../transport/agent-status-socket'
 import AgentFleetRow from './AgentFleetRow.vue'
+import { agentStreamStatusMessageKey } from './agent-presenter'
 
 const props = withDefaults(
   defineProps<{
@@ -12,37 +15,19 @@ const props = withDefaults(
     streamStatus?: AgentStatusSocketStatus
     snapshot: AgentFleetSnapshotDto | null
     error?: string | null
+    selectedAgentId?: string | null
   }>(),
-  { error: null, streamStatus: 'idle' },
+  { error: null, streamStatus: 'idle', selectedAgentId: null },
 )
 
 defineEmits<{
   select: [agentId: string]
 }>()
 
-</script>
+const { t } = useI18n()
+const streamStatusLabel = computed(() => t(agentStreamStatusMessageKey(props.streamStatus)))
 
-<script lang="ts">
-export function agentStreamStatusLabel(status: AgentStatusSocketStatus): string {
-  switch (status) {
-    case 'connected':
-      return 'Live'
-    case 'connecting':
-      return 'Connecting'
-    case 'reconnecting':
-      return 'Reconnecting'
-    case 'fatal':
-      return 'Offline'
-    case 'closed':
-      return 'Stopped'
-    case 'idle':
-      return 'Not connected'
-  }
-}
-
-export function agentStreamStatusTone(
-  status: AgentStatusSocketStatus,
-): 'neutral' | 'success' | 'warning' | 'error' {
+function agentStreamStatusTone(status: AgentStatusSocketStatus): 'neutral' | 'success' | 'warning' | 'error' {
   if (status === 'connected') return 'success'
   if (status === 'reconnecting' || status === 'connecting') return 'warning'
   if (status === 'fatal') return 'error'
@@ -54,8 +39,8 @@ export function agentStreamStatusTone(
   <section class="agent-fleet" data-agent-fleet aria-labelledby="agent-fleet-title">
     <header class="agent-fleet__header">
       <div>
-        <h2 id="agent-fleet-title">Agents</h2>
-        <p>Runtime fleet</p>
+        <h2 id="agent-fleet-title" data-agent-fleet-title>{{ t('agents.title') }}</h2>
+        <p>{{ t('agents.runtimeFleet') }}</p>
       </div>
       <div class="agent-fleet__header-meta">
         <AppBadge
@@ -63,7 +48,7 @@ export function agentStreamStatusTone(
           :tone="agentStreamStatusTone(props.streamStatus)"
           mono
         >
-          {{ agentStreamStatusLabel(props.streamStatus) }}
+          {{ streamStatusLabel }}
         </AppBadge>
         <AppBadge tone="neutral" mono>{{ props.snapshot?.agents.length ?? 0 }}</AppBadge>
       </div>
@@ -76,9 +61,9 @@ export function agentStreamStatusTone(
     <InlineAlert
       v-else-if="props.status === 'error' && !props.snapshot"
       tone="error"
-      title="Agent status unavailable"
+      :title="t('agents.statusUnavailable')"
     >
-      {{ props.error || 'The runtime did not return an agent snapshot.' }}
+      {{ props.error || t('agents.runtimeSnapshotMissing') }}
     </InlineAlert>
 
     <div v-else>
@@ -87,14 +72,18 @@ export function agentStreamStatusTone(
         class="agent-fleet__stale"
         data-agent-fleet-stale
         tone="warning"
-        title="Showing last known status"
+        :title="t('agents.showingLastKnown')"
       >
         {{ props.error }}
       </InlineAlert>
 
       <ul class="agent-fleet__list">
         <li v-for="agent in props.snapshot?.agents ?? []" :key="agent.agent_id" :data-agent-id="agent.agent_id">
-          <AgentFleetRow :agent="agent" @select="$emit('select', $event)" />
+          <AgentFleetRow
+            :agent="agent"
+            :selected="agent.agent_id === props.selectedAgentId"
+            @select="$emit('select', $event)"
+          />
         </li>
       </ul>
     </div>
