@@ -90,4 +90,3 @@
 - [ ] Add an external-process fixture demonstrating Codex running with multiple instances.
 - [ ] Run Rust protocol/netz tests, TypeScript protocol tests, WebUI tests/typecheck/build, and `git diff --check`.
 - [ ] Commit as `test(agent-status): cover external process presence`.
-
