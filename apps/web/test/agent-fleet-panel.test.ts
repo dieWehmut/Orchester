@@ -2,7 +2,7 @@ import { AGENT_FLEET_FIXTURE } from '@orchester/protokoll'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import AgentFleetPanel from '../src/components/agents/AgentFleetPanel.vue'
+import { AgentFleetPanel } from '../src/features/agent-presence'
 
 describe('AgentFleetPanel', () => {
   it('shows every provider icon, activity label, managed windows, and subagent count', () => {

@@ -2,7 +2,7 @@ import { AGENT_FLEET_FIXTURE } from '@orchester/protokoll'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import AgentDetails from '../src/components/agents/AgentDetails.vue'
+import { AgentDetails } from '../src/features/agent-presence'
 
 describe('AgentDetails', () => {
   it('renders a neutral empty state when no agent is selected', () => {

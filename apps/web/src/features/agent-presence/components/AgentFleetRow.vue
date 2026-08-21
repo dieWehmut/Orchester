@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { AgentRuntimeSummaryDto } from '@orchester/protokoll'
 import { StatusDot } from '@orchester/design'
-import { useI18n } from '../../i18n'
+import { useI18n } from '../../../i18n'
 
 import AgentIcon from './AgentIcon.vue'
 import {
@@ -9,7 +9,7 @@ import {
   agentActivityMessageKey,
   agentCountMessageKey,
   agentDotStatus,
-} from './agent-presenter'
+} from '../agent-presenter'
 
 const props = withDefaults(
   defineProps<{

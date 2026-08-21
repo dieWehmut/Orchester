@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { AgentFleetSnapshotDto, SessionSummaryDto } from '@orchester/protokoll'
 
-import AgentFleetPanel from '../agents/AgentFleetPanel.vue'
+import { AgentFleetPanel } from '../../features/agent-presence'
 import SessionRail from '../sessions/SessionRail.vue'
 import type { AgentFleetStoreStatus } from '../../stores/agent-fleet'
 import type { AgentStatusSocketStatus } from '../../transport/agent-status-socket'

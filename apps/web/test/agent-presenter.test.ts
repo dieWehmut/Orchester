@@ -5,7 +5,7 @@ import {
   agentActivityMessageKey,
   agentStreamStatusMessageKey,
   activeAgentCounts,
-} from '../src/components/agents/agent-presenter'
+} from '../src/features/agent-presence'
 
 describe('agent presenter helpers', () => {
   it('maps availability and activity to stable locale keys', () => {

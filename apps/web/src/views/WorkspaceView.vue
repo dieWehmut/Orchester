@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AgentDetails from '../components/agents/AgentDetails.vue'
+import { AgentDetails } from '../features/agent-presence'
 import ChangeInspector from '../components/changes/ChangeInspector.vue'
 import { summarizeFileChanges } from '../components/changes/change-summary'
 import InspectorDock from '../components/layout/InspectorDock.vue'

@@ -1,0 +1,5 @@
+export { default as AgentDetails } from './components/AgentDetails.vue'
+export { default as AgentFleetPanel } from './components/AgentFleetPanel.vue'
+export { default as AgentFleetRow } from './components/AgentFleetRow.vue'
+export { default as AgentIcon } from './components/AgentIcon.vue'
+export * from './agent-presenter'

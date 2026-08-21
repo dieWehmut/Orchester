@@ -5,7 +5,7 @@ import {
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import AgentFleetRow from '../src/components/agents/AgentFleetRow.vue'
+import { AgentFleetRow } from '../src/features/agent-presence'
 
 describe('AgentFleetRow', () => {
   it('renders a fallback icon for an unknown provider key and emits the agent id', async () => {

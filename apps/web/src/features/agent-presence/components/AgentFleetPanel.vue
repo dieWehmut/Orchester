@@ -3,11 +3,11 @@ import type { AgentFleetSnapshotDto } from '@orchester/protokoll'
 import { AppBadge, InlineAlert, SkeletonBlock } from '@orchester/design'
 import { computed } from 'vue'
 
-import { useI18n } from '../../i18n'
-import type { AgentFleetStoreStatus } from '../../stores/agent-fleet'
-import type { AgentStatusSocketStatus } from '../../transport/agent-status-socket'
+import { useI18n } from '../../../i18n'
+import type { AgentFleetStoreStatus } from '../../../stores/agent-fleet'
+import type { AgentStatusSocketStatus } from '../../../transport/agent-status-socket'
 import AgentFleetRow from './AgentFleetRow.vue'
-import { agentStreamStatusMessageKey } from './agent-presenter'
+import { agentStreamStatusMessageKey } from '../agent-presenter'
 
 const props = withDefaults(
   defineProps<{

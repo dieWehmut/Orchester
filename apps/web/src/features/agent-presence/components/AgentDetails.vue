@@ -3,7 +3,7 @@ import type { AgentRuntimeSummaryDto } from '@orchester/protokoll'
 import { AppBadge, EmptyState, StatusDot } from '@orchester/design'
 import { computed } from 'vue'
 
-import { useI18n } from '../../i18n'
+import { useI18n } from '../../../i18n'
 import AgentIcon from './AgentIcon.vue'
 import {
   activeAgentCounts,
@@ -11,7 +11,7 @@ import {
   agentAvailabilityMessageKey,
   agentDotStatus,
   agentCountMessageKey,
-} from './agent-presenter'
+} from '../agent-presenter'
 
 const props = defineProps<{
   agent: AgentRuntimeSummaryDto | null
