@@ -12,6 +12,11 @@
     "title": "Agents",
     "runtimeFleet": "Runtime fleet",
     "activeMetrics": "Active agent metrics",
+    "windowSourceLabel": "Window count source",
+    "windowSource": {
+      "managedSessions": "Managed sessions",
+      "desktopWindows": "Desktop windows"
+    },
     "availabilityLabel": "Availability",
     "capabilities": "Capabilities",
     "noCapabilities": "No declared capabilities",
@@ -51,8 +56,11 @@
       "error": "Error"
     },
     "counts": {
+      "window": "window",
       "windows": "windows",
+      "run": "run",
       "runs": "runs",
+      "subagent": "subagent",
       "subagents": "subagents"
     }
   },

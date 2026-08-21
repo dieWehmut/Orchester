@@ -12,6 +12,11 @@
     "title": "智能体",
     "runtimeFleet": "运行时集群",
     "activeMetrics": "活动智能体指标",
+    "windowSourceLabel": "窗口计数来源",
+    "windowSource": {
+      "managedSessions": "托管会话",
+      "desktopWindows": "桌面窗口"
+    },
     "availabilityLabel": "可用性",
     "capabilities": "能力",
     "noCapabilities": "未声明能力",
@@ -51,8 +56,11 @@
       "error": "错误"
     },
     "counts": {
+      "window": "窗口",
       "windows": "窗口",
+      "run": "运行",
       "runs": "运行",
+      "subagent": "子智能体",
       "subagents": "子智能体"
     }
   },

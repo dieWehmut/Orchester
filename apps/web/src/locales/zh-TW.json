@@ -12,6 +12,11 @@
     "title": "代理",
     "runtimeFleet": "執行環境代理群",
     "activeMetrics": "目前代理指標",
+    "windowSourceLabel": "視窗計數來源",
+    "windowSource": {
+      "managedSessions": "受管工作階段",
+      "desktopWindows": "桌面視窗"
+    },
     "availabilityLabel": "可用性",
     "capabilities": "能力",
     "noCapabilities": "未宣告能力",
@@ -51,8 +56,11 @@
       "error": "錯誤"
     },
     "counts": {
+      "window": "視窗",
       "windows": "視窗",
+      "run": "執行",
       "runs": "執行",
+      "subagent": "子代理",
       "subagents": "子代理"
     }
   },

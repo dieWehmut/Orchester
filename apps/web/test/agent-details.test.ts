@@ -25,6 +25,7 @@ describe('AgentDetails', () => {
     expect(wrapper.get('[data-agent-detail="windows"] [data-agent-detail-value]').text()).toBe('2')
     expect(wrapper.get('[data-agent-detail="runs"] [data-agent-detail-value]').text()).toBe('2')
     expect(wrapper.get('[data-agent-detail="subagents"] [data-agent-detail-value]').text()).toBe('1')
+    expect(wrapper.get('[data-agent-window-source]').text()).toContain('Managed sessions')
     expect(wrapper.get('[data-agent-capabilities]').text()).toContain('streaming')
     expect(wrapper.get('[data-agent-capabilities]').text()).toContain('subagents')
   })

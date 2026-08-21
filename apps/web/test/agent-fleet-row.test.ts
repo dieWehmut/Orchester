@@ -33,6 +33,9 @@ describe('AgentFleetRow', () => {
     expect(wrapper.get('[data-active-runs]').text()).toBe('2')
     expect(wrapper.get('[data-active-subagents]').text()).toBe('1')
     expect(wrapper.findAll('[data-agent-count]')).toHaveLength(3)
+    expect(wrapper.get('button').attributes('aria-label')).toContain('OpenAI')
+    expect(wrapper.get('button').attributes('aria-label')).toContain('2 windows')
+    expect(wrapper.get('button').attributes('aria-label')).toContain('1 subagent')
   })
 
   it('exposes selected state through button semantics', () => {
