@@ -2,8 +2,9 @@
 //!
 //! This is a projection, not a process inspection API. Providers may report
 //! availability independently from activity, while window counts identify the
-//! source that produced them (`managed_sessions` in a browser and
-//! `tauri_windows` once the desktop registry is available).
+//! source that produced them (`managed_sessions` in a browser,
+//! `tauri_windows` once the desktop registry is available, and
+//! `external_processes` for redaction-safe operating-system process counts).
 
 use std::{collections::BTreeSet, fmt};
 
@@ -13,7 +14,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::redact_ui_text;
 
-pub const AGENT_STATUS_SCHEMA_VERSION: u8 = 1;
+pub const AGENT_STATUS_SCHEMA_VERSION: u8 = 2;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -41,6 +42,7 @@ pub enum AgentActivityState {
 pub enum AgentWindowCountSource {
     ManagedSessions,
     TauriWindows,
+    ExternalProcesses,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

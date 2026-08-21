@@ -77,12 +77,38 @@ fn fleet_status_roundtrips_with_the_browser_field_names() {
     };
 
     let value = serde_json::to_value(&snapshot).expect("serialize fleet snapshot");
-    assert_eq!(value["schema_version"], 1);
+    assert_eq!(value["schema_version"], AGENT_STATUS_SCHEMA_VERSION);
     assert_eq!(value["agents"][0]["agent_id"], "codex-main");
     assert_eq!(value["agents"][0]["activity"], "running");
 
     let decoded: AgentFleetSnapshotDto = serde_json::from_value(value).expect("decode snapshot");
     assert_eq!(decoded, snapshot);
+}
+
+#[test]
+fn fleet_status_accepts_external_process_instance_counts() {
+    let snapshot = AgentFleetSnapshotDto {
+        schema_version: 2,
+        sequence: 8,
+        generated_at: "2026-08-22T08:00:02Z".into(),
+        agents: vec![AgentRuntimeSummaryDto {
+            active_windows: 3,
+            window_count_source: AgentWindowCountSource::ExternalProcesses,
+            ..agent("codex-main")
+        }],
+    };
+
+    let value = serde_json::to_value(&snapshot).expect("serialize external process snapshot");
+    assert_eq!(value["schema_version"], 2);
+    assert_eq!(
+        value["agents"][0]["window_count_source"],
+        "external_processes"
+    );
+    assert_eq!(
+        serde_json::from_value::<AgentFleetSnapshotDto>(value)
+            .expect("decode external process snapshot"),
+        snapshot
+    );
 }
 
 #[test]
@@ -104,7 +130,7 @@ fn fleet_status_rejects_unknown_fields_duplicate_ids_and_invalid_sequence() {
     assert!(serde_json::to_value(&duplicate).is_err());
     assert!(
         serde_json::from_value::<AgentFleetSnapshotDto>(serde_json::json!({
-            "schema_version": 1,
+            "schema_version": AGENT_STATUS_SCHEMA_VERSION,
             "sequence": 1,
             "generated_at": "2026-08-20T08:00:02Z",
             "agents": [agent("same"), agent("same")]
