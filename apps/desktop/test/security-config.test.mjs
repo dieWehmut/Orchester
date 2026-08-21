@@ -83,6 +83,8 @@ test('desktop security configuration is explicit and deny-by-default', async () 
 
   assert.equal(config.app.windows.length, 1)
   assert.equal(config.app.windows[0].label, 'main')
+  assert.equal(config.app.windows[0].decorations, false)
+  assert.equal(config.app.windows[0].shadow, true)
   assert.equal(config.app.windows[0].devtools, false)
   assert.deepEqual(config.bundle.icon, ['icons/icon.png', 'icons/icon.ico'])
 })
