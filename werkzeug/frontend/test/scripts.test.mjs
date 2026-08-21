@@ -16,5 +16,8 @@ test('apps package exposes unambiguous surface and doctor commands', async () =>
   assert.equal(manifest.scripts['doctor:web'], 'node ../werkzeug/frontend/doctor.mjs web')
   assert.equal(Object.hasOwn(manifest.scripts, 'doctor'), false)
   assert.equal(manifest.scripts['test:tooling'], 'node --test ../werkzeug/frontend/test/*.test.mjs')
-  assert.equal(manifest.scripts.test, 'pnpm run test:tooling && pnpm -r test')
+  assert.equal(
+    manifest.scripts.test,
+    'pnpm run test:tooling && pnpm -r test && pnpm --filter @orchester/desktop test:security',
+  )
 })

@@ -13,7 +13,7 @@
     "stack:verify": "node ../werkzeug/frontend/stack-manifest.mjs",
     "test:tooling": "node --test ../werkzeug/frontend/test/*.test.mjs",
     "typecheck": "pnpm -r typecheck",
-    "test": "pnpm run test:tooling && pnpm -r test"
+    "test": "pnpm run test:tooling && pnpm -r test && pnpm --filter @orchester/desktop test:security"
   },
   "devDependencies": {
     "@types/node": "^25.3.2",
