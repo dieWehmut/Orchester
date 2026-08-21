@@ -25,6 +25,23 @@ where.exe link.exe
 cargo test --workspace
 ```
 
+The frontend workspace exposes the same checks in a machine-readable doctor:
+
+```powershell
+pnpm --dir apps doctor:desktop
+node werkzeug/frontend/doctor.mjs desktop --json
+```
+
+Required failures return a non-zero exit code and block `pnpm --dir apps
+dev:desktop`. The stable Windows failure IDs include:
+
+| ID | Meaning | Repair |
+| --- | --- | --- |
+| `windows-linker-shadowed` | An MSYS/MinGW `link.exe` appears before Microsoft's linker. | Open an architecture-matched Visual Studio Developer PowerShell and remove the MSYS/MinGW bin directory from that shell's `PATH`. |
+| `windows-msvc-compiler-missing` | `cl.exe` is absent from `PATH`. | Install Visual Studio Build Tools with **Desktop development with C++**, the matching ARM64/x64 tools, and Windows SDK, then reopen Developer PowerShell. |
+| `windows-msvc-linker-missing` | No `link.exe` is available. | Install the matching MSVC toolset and use its Developer PowerShell. |
+| `windows-rust-abi` | Rust is not using a `*-pc-windows-msvc` host/target. | Install and select the matching stable MSVC toolchain with rustup. |
+
 `where.exe link.exe` must resolve to a Visual Studio installation, for example
 `...\VC\Tools\MSVC\...\bin\Hostarm64\arm64\link.exe` or the corresponding
 x64 host/target path. If it resolves to `msys*\usr\bin\link.exe`, remove that
@@ -49,6 +66,12 @@ That `link.exe` is the MSYS GNU linker. It rejects rustc's MSVC arguments with
 test binaries on this host. `cargo fmt --all -- --check` and all TypeScript
 protocol typecheck/unit tests remain runnable and must still be used for local
 feedback.
+
+The doctor confirms this host as `win32/arm64`, reports Node.js and pnpm as
+usable for the WebUI, and reports `windows-linker-shadowed` plus
+`windows-msvc-compiler-missing` for the desktop profile. Do not mark a native
+Tauri build successful until those failures are gone and the actual Rust build
+command completes.
 
 ## GitHub Actions
 
