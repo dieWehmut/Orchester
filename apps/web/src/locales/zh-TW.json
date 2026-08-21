@@ -61,6 +61,17 @@
     "approvalsTitle": "審批",
     "approvalsDescription": "執行暫停時，待處理的治理決策將顯示於此。",
     "changesTitle": "變更",
-    "changesDescription": "偵測到的檔案變更與差異將顯示於此。"
+    "changesDescription": "偵測到的檔案變更與差異將顯示於此。",
+    "file": "個檔案",
+    "files": "個檔案",
+    "observedEvents": "觀測事件",
+    "added": "新增",
+    "modified": "修改",
+    "deleted": "刪除",
+    "event": "個事件",
+    "events": "個事件",
+    "sequence": "序號 #",
+    "noFileChanges": "尚無檔案變更",
+    "noFileChangesDescription": "目前執行回報的檔案變更將顯示於此。"
   }
 }

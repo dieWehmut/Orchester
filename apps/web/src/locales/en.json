@@ -61,6 +61,17 @@
     "approvalsTitle": "Approvals",
     "approvalsDescription": "Pending governance decisions will appear here when a run pauses.",
     "changesTitle": "Changes",
-    "changesDescription": "Observed file changes and diffs will appear here."
+    "changesDescription": "Observed file changes and diffs will appear here.",
+    "file": "file",
+    "files": "files",
+    "observedEvents": "Observed events",
+    "added": "Added",
+    "modified": "Modified",
+    "deleted": "Deleted",
+    "event": "event",
+    "events": "events",
+    "sequence": "#",
+    "noFileChanges": "No file changes",
+    "noFileChangesDescription": "File changes reported by the active run will appear here."
   }
 }

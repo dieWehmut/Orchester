@@ -4,6 +4,7 @@ import { AppBadge, EmptyState } from '@orchester/design'
 import { computed } from 'vue'
 
 import type { ChangeSummary } from './change-summary'
+import { useI18n } from '../../i18n'
 
 const props = withDefaults(
   defineProps<{
@@ -13,20 +14,25 @@ const props = withDefaults(
   { selectedPath: null },
 )
 
+const { t } = useI18n()
+
 defineEmits<{
   select: [path: string]
 }>()
 
-const countLabel = computed(() => `${props.changes.length} changed ${props.changes.length === 1 ? 'file' : 'files'}`)
+const countLabel = computed(
+  () =>
+    `${props.changes.length} ${props.changes.length === 1 ? t('inspector.file') : t('inspector.files')}`,
+)
 
 function kindLabel(kind: ChangeSummary['kind']): string {
   switch (kind) {
     case 'add':
-      return 'Added'
+      return t('inspector.added')
     case 'update':
-      return 'Modified'
+      return t('inspector.modified')
     case 'delete':
-      return 'Deleted'
+      return t('inspector.deleted')
   }
 }
 
@@ -46,13 +52,13 @@ function badgeTone(kind: ChangeSummary['kind']): 'success' | 'info' | 'error' {
   <section class="change-inspector" :aria-label="countLabel">
     <header v-if="props.changes.length > 0" class="change-inspector__header">
       <strong>{{ countLabel }}</strong>
-      <span>Observed events</span>
+      <span>{{ t('inspector.observedEvents') }}</span>
     </header>
 
     <div v-if="props.changes.length === 0" data-change-empty>
       <EmptyState
-        title="No file changes"
-        description="File changes reported by the active run will appear here."
+        :title="t('inspector.noFileChanges')"
+        :description="t('inspector.noFileChangesDescription')"
       />
     </div>
 
@@ -79,8 +85,8 @@ function badgeTone(kind: ChangeSummary['kind']): 'success' | 'info' | 'error' {
           <span class="change-inspector__path">{{ change.path }}</span>
           <span class="change-inspector__meta">
             <AppBadge :tone="badgeTone(change.kind)">{{ kindLabel(change.kind) }}</AppBadge>
-            <span>{{ change.eventCount }} {{ change.eventCount === 1 ? 'event' : 'events' }}</span>
-            <span class="change-inspector__sequence">#{{ change.latestSequence }}</span>
+            <span>{{ change.eventCount }} {{ change.eventCount === 1 ? t('inspector.event') : t('inspector.events') }}</span>
+            <span class="change-inspector__sequence">{{ t('inspector.sequence') }}{{ change.latestSequence }}</span>
           </span>
         </span>
       </button>

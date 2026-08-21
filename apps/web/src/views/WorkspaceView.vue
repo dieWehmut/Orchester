@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import ChangeInspector from '../components/changes/ChangeInspector.vue'
+import { summarizeFileChanges } from '../components/changes/change-summary'
 import InspectorDock from '../components/layout/InspectorDock.vue'
 import WorkspaceResponsive from '../components/layout/WorkspaceResponsive.vue'
 import WorkspaceSidebar from '../components/layout/WorkspaceSidebar.vue'
@@ -6,11 +8,13 @@ import SessionTranscript from '../components/sessions/SessionTranscript.vue'
 import RunPanel from '../components/run/RunPanel.vue'
 import { useI18n } from '../i18n'
 import { useAppStores } from '../stores/app'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const { t } = useI18n()
 const { sessions, run, agents, bootstrap, models } = useAppStores()
 const runView = computed(() => run.view.value)
+const changeSummaries = computed(() => summarizeFileChanges(runView.value.fileChanges))
+const selectedChangePath = ref<string | null>(null)
 const runConnectionStatus = computed(() => run.connectionStatus.value)
 const runProjectionStatus = computed(() => run.projectionStatus.value)
 const runErrorMessage = computed(() => run.error.value?.message ?? null)
@@ -90,7 +94,15 @@ async function handleRunCancel(): Promise<void> {
     <SessionTranscript v-else :status="detailStatus" :session="selected" :error="detailError" />
 
     <template #inspector>
-      <InspectorDock />
+      <InspectorDock>
+        <template #changes>
+          <ChangeInspector
+            :changes="changeSummaries"
+            :selected-path="selectedChangePath"
+            @select="selectedChangePath = $event"
+          />
+        </template>
+      </InspectorDock>
     </template>
   </WorkspaceResponsive>
 </template>
