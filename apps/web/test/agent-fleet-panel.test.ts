@@ -37,4 +37,20 @@ describe('AgentFleetPanel', () => {
     expect(wrapper.get('[data-agent-fleet-stale]').text()).toContain('Runtime is offline')
     expect(wrapper.findAll('[data-agent-id]')).toHaveLength(5)
   })
+
+  it('shows whether agent status updates are live or reconnecting', async () => {
+    const wrapper = mount(AgentFleetPanel, {
+      props: {
+        status: 'ready',
+        streamStatus: 'connected',
+        snapshot: AGENT_FLEET_FIXTURE,
+      },
+    })
+
+    expect(wrapper.get('[data-agent-stream-status]').text()).toBe('Live')
+
+    await wrapper.setProps({ streamStatus: 'reconnecting' })
+
+    expect(wrapper.get('[data-agent-stream-status]').text()).toBe('Reconnecting')
+  })
 })
