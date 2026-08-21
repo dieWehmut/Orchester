@@ -17,6 +17,7 @@ const runProjectionStatus = computed(() => run.projectionStatus.value)
 const runErrorMessage = computed(() => run.error.value?.message ?? null)
 const conversationStarted = computed(() => run.conversationStarted.value)
 const agentStatus = computed(() => agents.status)
+const agentStreamStatus = computed(() => agents.streamStatus)
 const agentSnapshot = computed(() => agents.snapshot)
 const agentError = computed(() => agents.error?.message ?? null)
 const {
@@ -60,6 +61,7 @@ async function handleRunCancel(): Promise<void> {
         :next-cursor="nextCursor"
         :session-error="error"
         :agent-status="agentStatus"
+        :agent-stream-status="agentStreamStatus"
         :agent-snapshot="agentSnapshot"
         :agent-error="agentError"
         @select-session="sessions.select"

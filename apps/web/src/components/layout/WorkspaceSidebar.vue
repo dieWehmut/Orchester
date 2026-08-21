@@ -4,6 +4,7 @@ import type { AgentFleetSnapshotDto, SessionSummaryDto } from '@orchester/protok
 import AgentFleetPanel from '../agents/AgentFleetPanel.vue'
 import SessionRail from '../sessions/SessionRail.vue'
 import type { AgentFleetStoreStatus } from '../../stores/agent-fleet'
+import type { AgentStatusSocketStatus } from '../../transport/agent-status-socket'
 import type { SessionsStatus } from '../../stores/sessions'
 
 defineProps<{
@@ -13,6 +14,7 @@ defineProps<{
   nextCursor: string | null
   sessionError: { message: string; retryable: boolean } | null
   agentStatus: AgentFleetStoreStatus
+  agentStreamStatus: AgentStatusSocketStatus
   agentSnapshot: AgentFleetSnapshotDto | null
   agentError: string | null
 }>()
@@ -43,6 +45,7 @@ defineEmits<{
     <AgentFleetPanel
       class="workspace-sidebar__agents"
       :status="agentStatus"
+      :stream-status="agentStreamStatus"
       :snapshot="agentSnapshot"
       :error="agentError"
       @select="$emit('selectAgent', $event)"

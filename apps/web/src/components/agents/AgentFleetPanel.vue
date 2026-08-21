@@ -3,21 +3,51 @@ import type { AgentFleetSnapshotDto } from '@orchester/protokoll'
 import { AppBadge, InlineAlert, SkeletonBlock } from '@orchester/design'
 
 import type { AgentFleetStoreStatus } from '../../stores/agent-fleet'
+import type { AgentStatusSocketStatus } from '../../transport/agent-status-socket'
 import AgentFleetRow from './AgentFleetRow.vue'
 
 const props = withDefaults(
   defineProps<{
     status: AgentFleetStoreStatus
+    streamStatus?: AgentStatusSocketStatus
     snapshot: AgentFleetSnapshotDto | null
     error?: string | null
   }>(),
-  { error: null },
+  { error: null, streamStatus: 'idle' },
 )
 
 defineEmits<{
   select: [agentId: string]
 }>()
 
+</script>
+
+<script lang="ts">
+export function agentStreamStatusLabel(status: AgentStatusSocketStatus): string {
+  switch (status) {
+    case 'connected':
+      return 'Live'
+    case 'connecting':
+      return 'Connecting'
+    case 'reconnecting':
+      return 'Reconnecting'
+    case 'fatal':
+      return 'Offline'
+    case 'closed':
+      return 'Stopped'
+    case 'idle':
+      return 'Not connected'
+  }
+}
+
+export function agentStreamStatusTone(
+  status: AgentStatusSocketStatus,
+): 'neutral' | 'success' | 'warning' | 'error' {
+  if (status === 'connected') return 'success'
+  if (status === 'reconnecting' || status === 'connecting') return 'warning'
+  if (status === 'fatal') return 'error'
+  return 'neutral'
+}
 </script>
 
 <template>
@@ -27,7 +57,16 @@ defineEmits<{
         <h2 id="agent-fleet-title">Agents</h2>
         <p>Runtime fleet</p>
       </div>
-      <AppBadge tone="neutral" mono>{{ props.snapshot?.agents.length ?? 0 }}</AppBadge>
+      <div class="agent-fleet__header-meta">
+        <AppBadge
+          data-agent-stream-status
+          :tone="agentStreamStatusTone(props.streamStatus)"
+          mono
+        >
+          {{ agentStreamStatusLabel(props.streamStatus) }}
+        </AppBadge>
+        <AppBadge tone="neutral" mono>{{ props.snapshot?.agents.length ?? 0 }}</AppBadge>
+      </div>
     </header>
 
     <div v-if="props.status === 'loading' && !props.snapshot" class="agent-fleet__loading" role="status">
@@ -74,6 +113,13 @@ defineEmits<{
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
+}
+
+.agent-fleet__header-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
 }
 
 .agent-fleet__header h2,
