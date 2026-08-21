@@ -1,4 +1,5 @@
 export * from './api'
+export * from './model-catalog-guards'
 export * from './agent-status'
 export * from './agent-stream'
 export * from './stream-guards'
