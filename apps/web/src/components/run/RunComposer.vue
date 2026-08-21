@@ -130,9 +130,13 @@ function handleKeydown(event: KeyboardEvent): void {
 .run-composer {
   display: grid;
   gap: var(--space-2);
+  max-inline-size: 54rem;
+  margin-inline: auto;
   padding: var(--space-4);
-  border-block-start: 1px solid var(--color-border-base);
+  border: 1px solid var(--color-border-base);
+  border-radius: 1.25rem;
   background: var(--color-bg-surface);
+  box-shadow: 0 12px 34px rgb(0 0 0 / 14%);
 }
 
 .run-composer__label {
@@ -146,6 +150,22 @@ function handleKeydown(event: KeyboardEvent): void {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
+}
+
+.run-composer :deep(.composer-context) {
+  padding: 0 0 var(--space-2);
+  border-block-end: 1px solid var(--color-border-base);
+}
+
+.run-composer :deep(.app-textarea) {
+  min-block-size: 5rem;
+  border-color: transparent;
+  background: var(--color-bg-element);
+  border-radius: 0.875rem;
+}
+
+.run-composer :deep(.app-textarea:focus-visible) {
+  border-color: var(--color-accent);
 }
 
 .run-composer__count {
@@ -162,6 +182,7 @@ function handleKeydown(event: KeyboardEvent): void {
 @media (max-width: 640px) {
   .run-composer {
     padding: var(--space-3);
+    border-radius: 1rem;
   }
 
   .run-composer__footer {

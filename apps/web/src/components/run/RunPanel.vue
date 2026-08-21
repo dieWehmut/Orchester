@@ -88,11 +88,23 @@ const emit = defineEmits<{
   overflow: auto;
 }
 
+.run-panel :deep(.run-composer) {
+  inline-size: calc(100% - var(--space-8));
+  margin-block: var(--space-3) var(--space-4);
+}
+
 .run-panel__awaiting {
   display: grid;
   min-block-size: 100%;
   place-items: center;
   color: var(--color-text-tertiary);
   font-size: var(--text-sm);
+}
+
+@media (max-width: 640px) {
+  .run-panel :deep(.run-composer) {
+    inline-size: calc(100% - var(--space-4));
+    margin-block: var(--space-2);
+  }
 }
 </style>
