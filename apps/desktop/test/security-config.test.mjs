@@ -76,6 +76,7 @@ test('desktop security configuration is explicit and deny-by-default', async () 
     'core:window:allow-minimize',
     'core:window:allow-toggle-maximize',
     'core:window:allow-start-dragging',
+    'core:window:allow-is-maximized',
   ])
   assert.ok(capability.permissions.every((permission) => permission.startsWith('core:window:')))
   assert.ok(!capability.permissions.some((permission) => permission.startsWith('shell:')))
