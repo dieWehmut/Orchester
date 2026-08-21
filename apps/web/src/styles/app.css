@@ -14,6 +14,10 @@
   background: var(--color-bg-base);
 }
 
+.app-shell--desktop {
+  --app-chrome-offset: 36px;
+}
+
 main {
   min-block-size: calc(100vh - var(--header-height));
 }
