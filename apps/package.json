@@ -11,8 +11,9 @@
     "doctor:desktop": "node ../werkzeug/frontend/doctor.mjs desktop",
     "doctor:web": "node ../werkzeug/frontend/doctor.mjs web",
     "stack:verify": "node ../werkzeug/frontend/stack-manifest.mjs",
+    "test:tooling": "node --test ../werkzeug/frontend/test/*.test.mjs",
     "typecheck": "pnpm -r typecheck",
-    "test": "pnpm -r test"
+    "test": "pnpm run test:tooling && pnpm -r test"
   },
   "devDependencies": {
     "@types/node": "^25.3.2",
