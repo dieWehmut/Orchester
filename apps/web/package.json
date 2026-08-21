@@ -12,10 +12,11 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@lucide/vue": "^1.32.0",
     "@orchester/design": "workspace:*",
     "@orchester/ereignis": "workspace:*",
     "@orchester/protokoll": "workspace:*",
-    "@lucide/vue": "^1.32.0",
+    "@tauri-apps/api": "2.11.1",
     "@vue/devtools-api": "^8.1.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -26,8 +27,8 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.1",
     "@tailwindcss/vite": "^4.3.3",
+    "@vitejs/plugin-vue": "^6.0.1",
     "@vue/test-utils": "^2.4.6",
     "jsdom": "^30.0.1",
     "tailwindcss": "^4.3.3",
