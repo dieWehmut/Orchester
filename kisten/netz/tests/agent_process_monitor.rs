@@ -27,22 +27,6 @@ impl AgentProcessSource for MutableProcessSource {
     }
 }
 
-async fn wait_for_sequence(context: &ServerContext, expected: u64) {
-    for _ in 0..100 {
-        if context
-            .agent_status_store()
-            .snapshot()
-            .expect("runtime snapshot")
-            .sequence
-            >= expected
-        {
-            return;
-        }
-        tokio::task::yield_now().await;
-    }
-    panic!("agent process monitor did not reach sequence {expected}");
-}
-
 #[tokio::test(start_paused = true)]
 async fn process_monitor_publishes_changes_once_and_stops_with_the_server() {
     let control = ServerControl::new();
@@ -57,7 +41,11 @@ async fn process_monitor_publishes_changes_once_and_stops_with_the_server() {
 
     source.replace(vec!["codex.exe", "codex.exe"]);
     tokio::time::advance(Duration::from_secs(2)).await;
-    wait_for_sequence(&context, 2).await;
+    let frame = receiver.recv().await.expect("monitor snapshot");
+    assert!(matches!(
+        frame,
+        AgentFleetStreamFrameDto::Snapshot { ref snapshot } if snapshot.sequence == 2
+    ));
 
     let snapshot = context.agent_status_store().snapshot().expect("snapshot");
     let codex = snapshot
@@ -72,11 +60,6 @@ async fn process_monitor_publishes_changes_once_and_stops_with_the_server() {
         codex.window_count_source,
         AgentWindowCountSource::ExternalProcesses
     );
-    assert!(matches!(
-        receiver.try_recv().expect("monitor snapshot"),
-        AgentFleetStreamFrameDto::Snapshot { snapshot } if snapshot.sequence == 2
-    ));
-
     tokio::time::advance(Duration::from_secs(2)).await;
     tokio::task::yield_now().await;
     assert_eq!(context.agent_status_store().snapshot().unwrap().sequence, 2);
