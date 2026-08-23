@@ -32,16 +32,17 @@ async fn process_monitor_publishes_changes_once_and_stops_with_the_server() {
     let control = ServerControl::new();
     control.start().expect("start server lifecycle");
     let source = MutableProcessSource::default();
+    source.replace(vec!["codex.exe", "codex.exe"]);
     let context =
         ServerContext::with_agent_process_source(None, control.clone(), Arc::new(source.clone()));
     let mut receiver = context.agent_status_store().subscribe();
 
     assert!(context.start_agent_process_monitor());
     assert!(!context.start_agent_process_monitor());
-
-    source.replace(vec!["codex.exe", "codex.exe"]);
-    tokio::time::advance(Duration::from_secs(2)).await;
-    let frame = receiver.recv().await.expect("monitor snapshot");
+    let frame = tokio::time::timeout(Duration::from_secs(1), receiver.recv())
+        .await
+        .expect("startup process refresh timeout")
+        .expect("startup process snapshot");
     assert!(matches!(
         frame,
         AgentFleetStreamFrameDto::Snapshot { ref snapshot } if snapshot.sequence == 2
@@ -60,14 +61,29 @@ async fn process_monitor_publishes_changes_once_and_stops_with_the_server() {
         codex.window_count_source,
         AgentWindowCountSource::ExternalProcesses
     );
+    source.replace(vec!["codex.exe", "codex.exe", "codex.exe"]);
     tokio::time::advance(Duration::from_secs(2)).await;
-    tokio::task::yield_now().await;
-    assert_eq!(context.agent_status_store().snapshot().unwrap().sequence, 2);
+    let frame = tokio::time::timeout(Duration::from_secs(1), receiver.recv())
+        .await
+        .expect("scheduled process refresh timeout")
+        .expect("scheduled process snapshot");
+    assert!(matches!(
+        frame,
+        AgentFleetStreamFrameDto::Snapshot { ref snapshot }
+            if snapshot.sequence == 3
+                && snapshot.agents.iter().any(|agent| {
+                    agent.agent_id == "codex" && agent.active_windows == 3
+                })
+    ));
 
     assert!(control.request_shutdown().expect("request shutdown"));
-    tokio::task::yield_now().await;
-    source.replace(vec!["codex.exe", "codex.exe", "codex.exe"]);
+    source.replace(vec!["codex.exe", "codex.exe", "codex.exe", "codex.exe"]);
     tokio::time::advance(Duration::from_secs(4)).await;
-    tokio::task::yield_now().await;
-    assert_eq!(context.agent_status_store().snapshot().unwrap().sequence, 2);
+    assert!(
+        tokio::time::timeout(Duration::from_secs(1), receiver.recv())
+            .await
+            .is_err(),
+        "shutdown monitor published another process snapshot"
+    );
+    assert_eq!(context.agent_status_store().snapshot().unwrap().sequence, 3);
 }
