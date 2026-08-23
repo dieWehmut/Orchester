@@ -112,6 +112,34 @@ describe('run store', () => {
     expect(sockets.sockets[0]?.close).toHaveBeenCalledOnce()
   })
 
+  it('does not attach a stale stream when the store stops before snapshot hydration', async () => {
+    const run = runId('run-stale')
+    let resolveSnapshot!: (snapshot: RunSnapshotDto) => void
+    const start = vi.fn(async () => ({ run_id: run, events_url: 'wss://runtime/events/stale' }))
+    const snapshot = new Promise<RunSnapshotDto>((resolve) => {
+      resolveSnapshot = resolve
+    })
+    const api = { start, snapshot: vi.fn(() => snapshot) } as unknown as RunsApi
+    const sockets = createFakeRunSocketFactory()
+    const store = createRunStore(api, { runSocketFactory: sockets.factory })
+
+    await store.submit('Stop before hydration')
+    store.stop()
+    resolveSnapshot({
+      run_id: run,
+      state: 'running',
+      events: [],
+      pending_approvals: [],
+      oldest_sequence: 0,
+      latest_sequence: 0,
+      next_sequence: 1,
+      updated_at: '2026-08-19T00:00:00.000Z',
+    })
+    await Promise.resolve()
+    await Promise.resolve()
+    expect(sockets.sockets).toHaveLength(0)
+  })
+
   it('cancels the active run and reaches a terminal lifecycle state', async () => {
     const cancel = vi.fn(async () => ({ run_id: 'run-cancel', stopped: true, usage: {} }))
     const api = { cancel } as unknown as RunsApi

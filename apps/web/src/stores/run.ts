@@ -98,6 +98,7 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
   const makeIdempotencyKey = options.idempotencyKey ?? defaultIdempotencyKey
   const runSocketFactory = options.runSocketFactory
   let activeSocket: RunSocket | null = null
+  let streamEpoch = 0
 
   function rebuild(): void {
     const ordered = [...journal.values()].sort((left, right) => left.sequence - right.sequence)
@@ -152,22 +153,24 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
   }
 
   function stop(): void {
+    streamEpoch += 1
     activeSocket?.close()
     activeSocket = null
   }
 
-  async function attachRunStream(response: StartRunResponse): Promise<void> {
+  async function attachRunStream(response: StartRunResponse, epoch: number): Promise<void> {
     if (!api || !runSocketFactory || typeof api.snapshot !== 'function') return
     const expectedRunId = response.run_id
     try {
       const snapshot = await api.snapshot(expectedRunId)
-      if (runId.value !== expectedRunId) return
+      if (streamEpoch !== epoch || runId.value !== expectedRunId) return
       applySnapshot(snapshot)
 
       const socket = runSocketFactory({
         ticketProvider: () => response.events_url,
         afterSequence: () => events.value.at(-1)?.sequence ?? 0,
         onEvent: (event) => {
+          if (streamEpoch !== epoch || runId.value !== expectedRunId) return
           try {
             applyEvent(event)
             if (event.kind.type === 'run_stopped') {
@@ -179,20 +182,26 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
         },
         onResyncRequired: () => {
           void api.snapshot(expectedRunId).then((freshSnapshot) => {
-            if (runId.value === expectedRunId) applySnapshot(freshSnapshot)
+            if (streamEpoch === epoch && runId.value === expectedRunId) applySnapshot(freshSnapshot)
           }).catch((cause) => {
-            if (runId.value === expectedRunId) setError(cause)
+            if (streamEpoch === epoch && runId.value === expectedRunId) setError(cause)
           })
         },
         onError: (cause) => {
-          if (runId.value === expectedRunId) setError(cause)
+          if (streamEpoch === epoch && runId.value === expectedRunId) setError(cause)
         },
-        onStatus: setSocketStatus,
+        onStatus: (status) => {
+          if (streamEpoch === epoch) setSocketStatus(status)
+        },
       })
+      if (streamEpoch !== epoch || runId.value !== expectedRunId) {
+        socket.close()
+        return
+      }
       activeSocket = socket
       await socket.connect()
     } catch (cause) {
-      if (runId.value !== expectedRunId) return
+      if (streamEpoch !== epoch || runId.value !== expectedRunId) return
       lifecycle.value = 'failed'
       connectionStatus.value = 'error'
       setError(cause)
@@ -215,6 +224,7 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
     conversationStarted.value = true
     connectionStatus.value = 'connecting'
     error.value = null
+    const streamEpochForRun = streamEpoch
     try {
       const response = await api.start(
         { prompt: normalizedPrompt },
@@ -223,7 +233,7 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
       runId.value = response.run_id
       lifecycle.value = 'running'
       connectionStatus.value = 'connecting'
-      void attachRunStream(response)
+      void attachRunStream(response, streamEpochForRun)
       return response
     } catch (cause) {
       lifecycle.value = 'failed'
