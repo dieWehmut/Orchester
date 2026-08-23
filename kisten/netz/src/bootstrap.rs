@@ -105,6 +105,17 @@ impl ServerContext {
         let context = self.clone();
         runtime.spawn(async move {
             let mut shutdown = context.control.subscribe_shutdown();
+            if *shutdown.borrow() {
+                return;
+            }
+
+            // Reconcile once at startup so the first observed process state does
+            // not depend on when the spawned task gets its first scheduler turn.
+            let _ = context.refresh_agent_processes().await;
+            if *shutdown.borrow() {
+                return;
+            }
+
             let first_tick = tokio::time::Instant::now() + Duration::from_secs(2);
             let mut ticker = tokio::time::interval_at(first_tick, Duration::from_secs(2));
             loop {

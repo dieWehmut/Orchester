@@ -54,7 +54,6 @@ async fn process_monitor_publishes_changes_once_and_stops_with_the_server() {
 
     assert!(context.start_agent_process_monitor());
     assert!(!context.start_agent_process_monitor());
-    tokio::task::yield_now().await;
 
     source.replace(vec!["codex.exe", "codex.exe"]);
     tokio::time::advance(Duration::from_secs(2)).await;
