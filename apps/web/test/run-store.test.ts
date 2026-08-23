@@ -5,8 +5,29 @@ import {
 } from '@orchester/protokoll'
 import { describe, expect, it, vi } from 'vitest'
 
-import { createRunStore } from '../src/stores/run'
+import { createRunStore, type RunSocketFactory } from '../src/stores/run'
 import type { RunsApi } from '../src/api/runs'
+
+function createFakeRunSocketFactory() {
+  const sockets: Array<{
+    options: Parameters<RunSocketFactory>[0]
+    connect: ReturnType<typeof vi.fn>
+    close: ReturnType<typeof vi.fn>
+  }> = []
+  const factory: RunSocketFactory = (options) => {
+    const socket = {
+      options,
+      connect: vi.fn(async () => {
+        options.onStatus?.('connected')
+      }),
+      close: vi.fn(),
+      status: 'idle' as const,
+    }
+    sockets.push(socket)
+    return socket
+  }
+  return { factory, sockets }
+}
 
 describe('run store', () => {
   it('submits once, stores the returned run id, and rejects a duplicate while busy', async () => {
@@ -27,6 +48,68 @@ describe('run store', () => {
     expect(store.runId.value).toBe('run-submit')
     expect(store.lifecycle.value).toBe('running')
     expect(store.conversationStarted.value).toBe(true)
+  })
+
+  it('hydrates the snapshot and opens the server-issued event stream after submit', async () => {
+    const run = runId('run-live')
+    const snapshot: RunSnapshotDto = {
+      run_id: run,
+      state: 'running',
+      events: [{ ...fixtureEnvelope(1, { type: 'run_started', title: 'Live run' }), run_id: run }],
+      pending_approvals: [],
+      oldest_sequence: 1,
+      latest_sequence: 1,
+      next_sequence: 2,
+      updated_at: '2026-08-19T00:00:01.000Z',
+    }
+    const start = vi.fn(async () => ({ run_id: run, events_url: 'wss://runtime/events/live' }))
+    const snapshotRequest = vi.fn(async () => snapshot)
+    const api = { start, snapshot: snapshotRequest } as unknown as RunsApi
+    const sockets = createFakeRunSocketFactory()
+    const store = createRunStore(api, { runSocketFactory: sockets.factory })
+
+    await expect(store.submit('Inspect the live workspace')).resolves.toMatchObject({ run_id: run })
+    await vi.waitFor(() => expect(snapshotRequest).toHaveBeenCalledWith(run))
+
+    expect(store.view.value.title).toBe('Live run')
+    expect(sockets.sockets).toHaveLength(1)
+    expect(sockets.sockets[0]?.options.ticketProvider()).toBe('wss://runtime/events/live')
+    expect(sockets.sockets[0]?.options.afterSequence?.()).toBe(1)
+    expect(store.connectionStatus.value).toBe('connected')
+
+    sockets.sockets[0]?.options.onEvent?.({
+      ...fixtureEnvelope(2, { type: 'message', text: 'The workspace is ready.' }),
+      run_id: run,
+    })
+    expect(store.events.value.at(-1)?.kind).toMatchObject({
+      type: 'message',
+      text: 'The workspace is ready.',
+    })
+  })
+
+  it('closes the active event stream when the store stops', async () => {
+    const run = runId('run-stop')
+    const start = vi.fn(async () => ({ run_id: run, events_url: 'wss://runtime/events/stop' }))
+    const api = {
+      start,
+      snapshot: vi.fn(async () => ({
+        run_id: run,
+        state: 'running' as const,
+        events: [],
+        pending_approvals: [],
+        oldest_sequence: 0,
+        latest_sequence: 0,
+        next_sequence: 1,
+        updated_at: '2026-08-19T00:00:00.000Z',
+      })),
+    } as unknown as RunsApi
+    const sockets = createFakeRunSocketFactory()
+    const store = createRunStore(api, { runSocketFactory: sockets.factory })
+
+    await store.submit('Stop after start')
+    await vi.waitFor(() => expect(sockets.sockets).toHaveLength(1))
+    store.stop()
+    expect(sockets.sockets[0]?.close).toHaveBeenCalledOnce()
   })
 
   it('cancels the active run and reaches a terminal lifecycle state', async () => {
