@@ -60,7 +60,7 @@ const windowSource = computed(() =>
     class="agent-metrics__source"
     data-agent-window-source
   >
-    {{ t('agents.windowSourceLabel') }} · {{ windowSource }}
+    {{ t('agents.windowSourceLabel') }}: {{ windowSource }}
   </p>
 </template>
 

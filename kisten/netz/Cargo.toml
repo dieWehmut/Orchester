@@ -24,6 +24,7 @@ orchester-verzeichnis = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 sha2 = { workspace = true }
+sysinfo = { workspace = true }
 thiserror = { workspace = true }
 time = { workspace = true }
 tokio = { workspace = true }
@@ -33,4 +34,5 @@ tracing = { workspace = true }
 
 [dev-dependencies]
 futures = { workspace = true }
+tokio = { workspace = true, features = ["test-util"] }
 tokio-tungstenite = "0.29"

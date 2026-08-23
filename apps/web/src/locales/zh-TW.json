@@ -15,7 +15,8 @@
     "windowSourceLabel": "視窗計數來源",
     "windowSource": {
       "managedSessions": "受管工作階段",
-      "desktopWindows": "桌面視窗"
+      "desktopWindows": "桌面視窗",
+      "externalProcesses": "外部程序"
     },
     "availabilityLabel": "可用性",
     "capabilities": "能力",

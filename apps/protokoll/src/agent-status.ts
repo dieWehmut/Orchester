@@ -1,6 +1,6 @@
 /** Redaction-safe runtime status shared by the WebUI, website fixtures, and Tauri. */
 
-export const AGENT_STATUS_SCHEMA_VERSION = 1 as const
+export const AGENT_STATUS_SCHEMA_VERSION = 2 as const
 
 export type AgentAvailabilityState =
   | 'available'
@@ -34,11 +34,15 @@ export const AGENT_ACTIVITY_STATES = [
   'error',
 ] as const satisfies readonly AgentActivityState[]
 
-export type AgentWindowCountSource = 'managed_sessions' | 'tauri_windows'
+export type AgentWindowCountSource =
+  | 'managed_sessions'
+  | 'tauri_windows'
+  | 'external_processes'
 
 export const AGENT_WINDOW_COUNT_SOURCES = [
   'managed_sessions',
   'tauri_windows',
+  'external_processes',
 ] as const satisfies readonly AgentWindowCountSource[]
 
 export interface AgentRuntimeSummaryDto {

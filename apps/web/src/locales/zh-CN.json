@@ -15,7 +15,8 @@
     "windowSourceLabel": "窗口计数来源",
     "windowSource": {
       "managedSessions": "托管会话",
-      "desktopWindows": "桌面窗口"
+      "desktopWindows": "桌面窗口",
+      "externalProcesses": "外部进程"
     },
     "availabilityLabel": "可用性",
     "capabilities": "能力",

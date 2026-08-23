@@ -1,10 +1,19 @@
-use std::{fmt, path::Path, sync::Arc, time::Duration};
+use std::{
+    fmt,
+    path::Path,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
+    },
+    time::Duration,
+};
 
 use orchester_anwendung::{OrchesterPaths, SelfAgentHost, SessionHistory};
 use orchester_verzeichnis::{standard_plugin_roots, Registry};
 use serde::Serialize;
 
 use crate::{
+    agent_process::{AgentProcessSource, SystemAgentProcessSource},
     agent_status::{agent_status_response, AgentRuntimeStatusStore},
     FragmentTokenStore, FragmentTokenStoreError, ServerControl, ServerState, SessionStore,
 };
@@ -15,6 +24,8 @@ pub struct ServerContext {
     control: ServerControl,
     registry: Arc<Registry>,
     agent_status: Arc<AgentRuntimeStatusStore>,
+    agent_process_source: Arc<dyn AgentProcessSource>,
+    agent_process_monitor_started: Arc<AtomicBool>,
     model_host: Option<Arc<SelfAgentHost>>,
     session_history: Option<Arc<SessionHistory>>,
     sessions: Arc<SessionStore>,
@@ -23,6 +34,14 @@ pub struct ServerContext {
 
 impl ServerContext {
     pub fn new(paths: Option<OrchesterPaths>, control: ServerControl) -> Self {
+        Self::with_agent_process_source(paths, control, Arc::new(SystemAgentProcessSource))
+    }
+
+    pub fn with_agent_process_source(
+        paths: Option<OrchesterPaths>,
+        control: ServerControl,
+        agent_process_source: Arc<dyn AgentProcessSource>,
+    ) -> Self {
         let registry = Arc::new(discover_registry(paths.as_ref()));
         let agent_status = Arc::new(
             AgentRuntimeStatusStore::new(agent_status_response(&registry))
@@ -35,6 +54,8 @@ impl ServerContext {
             control,
             registry,
             agent_status,
+            agent_process_source,
+            agent_process_monitor_started: Arc::new(AtomicBool::new(false)),
             model_host,
             session_history,
             sessions: Arc::new(SessionStore::new(Duration::from_secs(8 * 60 * 60))),
@@ -56,6 +77,62 @@ impl ServerContext {
 
     pub fn agent_status_store(&self) -> &AgentRuntimeStatusStore {
         &self.agent_status
+    }
+
+    pub async fn refresh_agent_processes(&self) -> Result<bool, crate::AgentRuntimeStatusError> {
+        let source = Arc::clone(&self.agent_process_source);
+        let snapshot = tokio::task::spawn_blocking(move || source.snapshot())
+            .await
+            .map_err(|_| crate::AgentRuntimeStatusError::ProcessRefreshFailed)?;
+        self.agent_status
+            .reconcile_external_processes(&snapshot, now_rfc3339())
+    }
+
+    /// Start the shared external-process monitor once for this server context.
+    /// The task exits when the server lifecycle publishes its shutdown signal.
+    pub fn start_agent_process_monitor(&self) -> bool {
+        let Ok(runtime) = tokio::runtime::Handle::try_current() else {
+            return false;
+        };
+        if self
+            .agent_process_monitor_started
+            .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+            .is_err()
+        {
+            return false;
+        }
+
+        let context = self.clone();
+        runtime.spawn(async move {
+            let mut shutdown = context.control.subscribe_shutdown();
+            if *shutdown.borrow() {
+                return;
+            }
+
+            // Reconcile once at startup so the first observed process state does
+            // not depend on when the spawned task gets its first scheduler turn.
+            let _ = context.refresh_agent_processes().await;
+            if *shutdown.borrow() {
+                return;
+            }
+
+            let first_tick = tokio::time::Instant::now() + Duration::from_secs(2);
+            let mut ticker = tokio::time::interval_at(first_tick, Duration::from_secs(2));
+            loop {
+                tokio::select! {
+                    biased;
+                    changed = shutdown.changed() => {
+                        if changed.is_err() || *shutdown.borrow() {
+                            break;
+                        }
+                    }
+                    _ = ticker.tick() => {
+                        let _ = context.refresh_agent_processes().await;
+                    }
+                }
+            }
+        });
+        true
     }
 
     pub fn model_host(&self) -> Option<&SelfAgentHost> {
@@ -103,6 +180,12 @@ fn discover_registry(paths: Option<&OrchesterPaths>) -> Registry {
         }
         Err(_) => Registry::discover(paths.manifest_dir()),
     }
+}
+
+fn now_rfc3339() -> String {
+    time::OffsetDateTime::now_utc()
+        .format(&time::format_description::well_known::Rfc3339)
+        .unwrap_or_else(|_| "1970-01-01T00:00:00Z".to_owned())
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]

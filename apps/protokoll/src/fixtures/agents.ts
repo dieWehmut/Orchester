@@ -111,3 +111,18 @@ export const AGENT_FLEET_FIXTURE = {
     },
   ],
 } satisfies AgentFleetSnapshotDto
+
+/** Runtime-discovery fixture for desktop and local WebUI process presence. */
+export const AGENT_EXTERNAL_PROCESS_FIXTURE = {
+  schema_version: AGENT_STATUS_SCHEMA_VERSION,
+  sequence: 13,
+  generated_at: '2026-08-22T08:11:00.000Z',
+  agents: [
+    {
+      ...AGENT_FLEET_FIXTURE.agents[0]!,
+      active_windows: 3,
+      window_count_source: 'external_processes',
+      updated_at: '2026-08-22T08:11:00.000Z',
+    },
+  ],
+} satisfies AgentFleetSnapshotDto

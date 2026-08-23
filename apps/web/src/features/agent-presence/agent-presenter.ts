@@ -39,6 +39,7 @@ export type AgentCountMessageKey =
 export type AgentWindowSourceMessageKey =
   | 'agents.windowSource.managedSessions'
   | 'agents.windowSource.desktopWindows'
+  | 'agents.windowSource.externalProcesses'
 
 export interface AgentCountEntry {
   readonly key: AgentCountKey
@@ -57,9 +58,9 @@ export function agentCountMessageKey(key: AgentCountKey, count = 2): AgentCountM
 export function agentWindowSourceMessageKey(
   source: AgentRuntimeSummaryDto['window_count_source'],
 ): AgentWindowSourceMessageKey {
-  return source === 'tauri_windows'
-    ? 'agents.windowSource.desktopWindows'
-    : 'agents.windowSource.managedSessions'
+  if (source === 'tauri_windows') return 'agents.windowSource.desktopWindows'
+  if (source === 'external_processes') return 'agents.windowSource.externalProcesses'
+  return 'agents.windowSource.managedSessions'
 }
 
 export function agentActivityMessageKey(agent: AgentRuntimeSummaryDto): AgentActivityMessageKey {

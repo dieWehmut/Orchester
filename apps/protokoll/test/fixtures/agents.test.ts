@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  AGENT_EXTERNAL_PROCESS_FIXTURE,
   AGENT_FLEET_FIXTURE,
   parseAgentFleetSnapshot,
 } from '../../src/index'
@@ -31,9 +32,22 @@ describe('agent fleet fixture', () => {
   })
 
   it('contains no local paths or credentials', () => {
-    const serialized = JSON.stringify(AGENT_FLEET_FIXTURE)
+    const serialized = JSON.stringify([
+      AGENT_FLEET_FIXTURE,
+      AGENT_EXTERNAL_PROCESS_FIXTURE,
+    ])
 
     expect(serialized).not.toMatch(/[A-Z]:\\|\/(?:home|Users|private|tmp|var)\//i)
     expect(serialized).not.toMatch(/api[_-]?key|password|secret|bearer\s|token[=:]/i)
+  })
+
+  it('models externally discovered Codex processes without managed session metadata', () => {
+    const parsed = parseAgentFleetSnapshot(AGENT_EXTERNAL_PROCESS_FIXTURE)
+
+    expect(parsed?.agents[0]).toMatchObject({
+      provider: 'codex',
+      active_windows: 3,
+      window_count_source: 'external_processes',
+    })
   })
 })

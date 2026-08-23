@@ -1,5 +1,5 @@
 use orchester_netz::{
-    agent_status_response, AgentRuntimeStatusError, AgentRuntimeStatusStore,
+    agent_status_response, AgentProcessSnapshot, AgentRuntimeStatusError, AgentRuntimeStatusStore,
     AgentRuntimeStatusUpdate,
 };
 use orchester_protokoll::{AgentActivityState, AgentFleetStreamFrameDto, AgentWindowCountSource};
@@ -101,4 +101,72 @@ fn runtime_store_broadcasts_snapshots_and_heartbeats_to_subscribers() {
         receiver.try_recv().expect("heartbeat frame"),
         AgentFleetStreamFrameDto::Heartbeat { sequence: 2, .. }
     ));
+}
+
+#[test]
+fn runtime_store_reconciles_external_processes_without_losing_managed_counts() {
+    let store = AgentRuntimeStatusStore::new(agent_status_response(&registry()))
+        .expect("valid initial fleet");
+    store
+        .update(running_codex())
+        .expect("managed runtime update");
+    let mut receiver = store.subscribe();
+
+    let processes =
+        AgentProcessSnapshot::from_process_names(["codex.exe", "codex.exe", "codex.exe"]);
+    assert!(store
+        .reconcile_external_processes(&processes, "2026-08-22T08:00:00Z")
+        .expect("reconcile process snapshot"));
+
+    let snapshot = store.snapshot().expect("runtime snapshot");
+    assert_eq!(snapshot.sequence, 3);
+    let codex = snapshot
+        .agents
+        .iter()
+        .find(|agent| agent.agent_id == "codex")
+        .expect("codex status");
+    assert_eq!(codex.activity, AgentActivityState::Running);
+    assert_eq!(codex.active_windows, 3);
+    assert_eq!(codex.active_sessions, 3);
+    assert_eq!(codex.active_runs, 2);
+    assert_eq!(codex.active_subagents, 1);
+    assert_eq!(
+        codex.window_count_source,
+        AgentWindowCountSource::ExternalProcesses
+    );
+    assert!(matches!(
+        receiver.try_recv().expect("external process frame"),
+        AgentFleetStreamFrameDto::Snapshot { snapshot } if snapshot.sequence == 3
+    ));
+
+    assert!(!store
+        .reconcile_external_processes(&processes, "2026-08-22T08:00:01Z")
+        .expect("ignore unchanged process snapshot"));
+    assert_eq!(store.snapshot().unwrap().sequence, 3);
+    assert!(matches!(
+        receiver.try_recv(),
+        Err(tokio::sync::broadcast::error::TryRecvError::Empty)
+    ));
+
+    assert!(store
+        .reconcile_external_processes(&AgentProcessSnapshot::default(), "2026-08-22T08:00:02Z",)
+        .expect("record process exit"));
+    let snapshot = store.snapshot().expect("runtime snapshot after exit");
+    let codex = snapshot
+        .agents
+        .iter()
+        .find(|agent| agent.agent_id == "codex")
+        .expect("codex status");
+    assert_eq!(snapshot.sequence, 4);
+    assert_eq!(codex.activity, AgentActivityState::Running);
+    assert_eq!(codex.active_windows, 0);
+    assert_eq!(codex.active_sessions, 3);
+    assert_eq!(codex.active_runs, 2);
+    assert_eq!(codex.active_subagents, 1);
+}
+
+#[test]
+fn process_monitor_start_is_safe_without_a_tokio_runtime() {
+    let context = orchester_netz::ServerContext::new(None, orchester_netz::ServerControl::new());
+    assert!(!context.start_agent_process_monitor());
 }

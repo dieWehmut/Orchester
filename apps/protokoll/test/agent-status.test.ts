@@ -50,6 +50,25 @@ describe('agent fleet status DTO', () => {
     expect(isAgentFleetSnapshot(parsed)).toBe(true)
   })
 
+  it('accepts aggregated external agent process instances', () => {
+    const parsed = parseAgentFleetSnapshot({
+      ...snapshot,
+      schema_version: 2,
+      agents: [
+        {
+          ...baseAgent,
+          active_windows: 3,
+          window_count_source: 'external_processes',
+        },
+      ],
+    })
+
+    expect(parsed?.agents[0]).toMatchObject({
+      active_windows: 3,
+      window_count_source: 'external_processes',
+    })
+  })
+
   it('keeps an unavailable provider in the snapshot without inventing activity', () => {
     const parsed = parseAgentFleetSnapshot({
       ...snapshot,
@@ -104,6 +123,12 @@ describe('agent fleet status DTO', () => {
       parseAgentFleetSnapshot({
         ...snapshot,
         agents: [{ ...baseAgent, icon_key: 'claude/../../secret' }],
+      }),
+    ).toBeNull()
+    expect(
+      parseAgentFleetSnapshot({
+        ...snapshot,
+        agents: [{ ...baseAgent, window_count_source: 'provider_windows' }],
       }),
     ).toBeNull()
   })
