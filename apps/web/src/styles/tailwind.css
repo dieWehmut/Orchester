@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@source "../";
+
+@theme inline {
+  --color-orchester-bg-base: var(--color-bg-base);
+  --color-orchester-bg-surface: var(--color-bg-surface);
+  --color-orchester-bg-element: var(--color-bg-element);
+  --color-orchester-bg-elevated: var(--color-bg-elevated);
+  --color-orchester-border: var(--color-border-base);
+  --color-orchester-border-strong: var(--color-border-strong);
+  --color-orchester-text: var(--color-text-primary);
+  --color-orchester-text-secondary: var(--color-text-secondary);
+  --color-orchester-text-tertiary: var(--color-text-tertiary);
+  --color-orchester-accent: var(--color-accent);
+  --color-orchester-accent-hover: var(--color-accent-hover);
+  --color-orchester-success: var(--color-status-success);
+  --color-orchester-warning: var(--color-status-warning);
+  --color-orchester-error: var(--color-status-error);
+  --font-sans: var(--font-body);
+  --font-orchester-mono: var(--font-mono);
+}

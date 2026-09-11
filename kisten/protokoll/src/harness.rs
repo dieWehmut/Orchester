@@ -257,7 +257,7 @@ pub fn normalize_action_summary(input: &str) -> String {
     for token in collapsed.split(' ') {
         if redact_next {
             output.push("[REDACTED]".to_owned());
-            redact_next = false;
+            redact_next = token.eq_ignore_ascii_case("bearer");
             continue;
         }
 

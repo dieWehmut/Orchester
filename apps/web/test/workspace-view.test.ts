@@ -1,10 +1,21 @@
-import type { BootstrapDto, SessionDetailDto, SessionSummaryDto } from '@orchester/protokoll'
+import {
+  AGENT_FLEET_FIXTURE,
+  type BootstrapDto,
+  type SessionDetailDto,
+  type SessionSummaryDto,
+  eventId,
+  runId,
+  UI_SCHEMA_VERSION,
+  type UiEventEnvelope,
+} from '@orchester/protokoll'
 import { flushPromises, mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
+import { nextTick } from 'vue'
 
 import type { HttpClient } from '../src/api/http'
 import { createAppStores } from '../src/stores/app'
 import WorkspaceView from '../src/views/WorkspaceView.vue'
+import { MODEL_CATALOG_FIXTURE } from './fixtures/model-catalog'
 
 const summary: SessionSummaryDto = {
   id: 's-11111111111111111111111111111111',
@@ -31,6 +42,72 @@ const detail: SessionDetailDto = {
 }
 
 describe('WorkspaceView', () => {
+  it('hides the centered mark as soon as the active run starts', async () => {
+    const stores = createAppStores()
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+
+    expect(wrapper.get('[data-orchester-mark]')).toBeTruthy()
+    stores.run.conversationStarted.value = true
+    await nextTick()
+
+    expect(wrapper.find('[data-orchester-mark]').exists()).toBe(false)
+    expect(wrapper.get('[data-run-awaiting-events]')).toBeTruthy()
+  })
+
+  it('places the agent fleet below sessions in the shared left rail', () => {
+    const stores = createAppStores()
+    stores.agents.snapshot = AGENT_FLEET_FIXTURE
+    stores.agents.status = 'ready'
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+
+    expect(wrapper.get('[data-pane="sessions"] [data-agent-fleet]')).toBeTruthy()
+    expect(wrapper.get('[data-pane="sessions"] [data-agent-id="codex-main"]')).toBeTruthy()
+  })
+
+  it('keeps the selected agent visible in the shared left rail', async () => {
+    const stores = createAppStores()
+    stores.agents.snapshot = AGENT_FLEET_FIXTURE
+    stores.agents.status = 'ready'
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+
+    await wrapper.get('[data-agent-id="codex-main"] button').trigger('click')
+
+    expect(wrapper.get('[data-agent-id="codex-main"] button').classes()).toContain(
+      'agent-fleet-row--selected',
+    )
+    expect(wrapper.get('[data-agent-id="codex-main"] button').attributes('aria-pressed')).toBe('true')
+  })
+
+  it('opens the agent context inspector after selecting an agent', async () => {
+    const stores = createAppStores()
+    stores.agents.snapshot = AGENT_FLEET_FIXTURE
+    stores.agents.status = 'ready'
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+
+    await wrapper.get('[data-agent-id="codex-main"] button').trigger('click')
+
+    expect(wrapper.get('[data-agent-details-name]').text()).toBe('Codex')
+    expect(wrapper.findAll('[role="tab"]')[0]?.attributes('aria-selected')).toBe('true')
+  })
+
+  it('passes bootstrap workspace and model catalog state to the empty composer', () => {
+    const stores = createAppStores()
+    stores.bootstrap.context.value = {
+      schema_version: 1,
+      service_version: '0.1.2',
+      server_state: 'running',
+      workspace: { selected: true, name: 'Orchester' },
+    } satisfies BootstrapDto
+    stores.bootstrap.status.value = 'ready'
+    stores.models.catalog = MODEL_CATALOG_FIXTURE
+    stores.models.status = 'ready'
+
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+
+    expect(wrapper.get('[data-project-context]').text()).toContain('Orchester')
+    expect(wrapper.get('[data-model-context-model]').text()).toContain('gpt-5.6')
+  })
+
   it('connects the session rail, selected transcript, and inspector to application stores', async () => {
     const http = {
       get: vi.fn(async (path: string) => {
@@ -57,4 +134,34 @@ describe('WorkspaceView', () => {
     expect(wrapper.get('[data-session-transcript]').text()).toContain(detail.final_text)
     expect(wrapper.find('[data-pane="inspector"]').exists()).toBe(true)
   })
+
+  it('projects active run file changes into the inspector changes tab', async () => {
+    const stores = createAppStores()
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+    const first = fileChangeEvent(1, 'src/app.ts', 'add')
+    const latest = fileChangeEvent(2, 'src/app.ts', 'update')
+
+    stores.run.applyEvent(first)
+    stores.run.applyEvent(latest)
+    await nextTick()
+    await wrapper.findAll('[role="tab"]')[2]?.trigger('click')
+
+    expect(wrapper.get('[data-change-path="src/app.ts"]').text()).toContain('Modified')
+    expect(wrapper.get('[data-change-path="src/app.ts"]').text()).toContain('2 events')
+  })
 })
+
+function fileChangeEvent(
+  sequence: number,
+  path: string,
+  kind: 'add' | 'update' | 'delete',
+): UiEventEnvelope {
+  return {
+    schema_version: UI_SCHEMA_VERSION,
+    event_id: eventId(`event-${sequence}`),
+    run_id: runId('run-changes'),
+    sequence,
+    occurred_at: `2026-08-21T00:00:0${sequence}Z`,
+    kind: { type: 'file_change', path, kind },
+  }
+}

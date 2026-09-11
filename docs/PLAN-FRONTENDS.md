@@ -273,7 +273,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] W1-018: Build composer Enter/Shift+Enter and size-limit behavior.
   - [x] W1-018a: Add the typed approval queue and row-version decision client
     over the shared protocol DTOs.
-- [ ] W1-019: Build submit, cancel, and busy double-submit protection.
+- [x] W1-019: Build submit, cancel, and busy double-submit protection.
 - [ ] W1-020: Integrate run panel, connection banner, footer, and resync UI.
 - [ ] W1-021: Build approval queue and decision dialog with stale handling.
 - [ ] W1-022: Build read-only file tree, preview, and diff views.
@@ -293,11 +293,11 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 
 - [ ] S1-001: Scaffold the independent Vite website package and base-path helper.
 - [ ] S1-002: Copy `index.html` to `404.html` at closeBundle for deep links.
-- [ ] S1-003: Add lazy router, three locales, and not-found view.
-- [ ] S1-004: Build site shell with keyboard-safe mobile navigation.
-- [ ] S1-005: Build product hero using a real WebUI screenshot asset.
-- [ ] S1-006: Build capability, adapter, and governance content sections.
-- [ ] S1-007: Build architecture and install views from typed content modules.
+- [x] S1-003: Add lazy router, three locales, and not-found view.
+- [x] S1-004: Build site shell with keyboard-safe mobile navigation.
+- [x] S1-005: Build product hero using a real WebUI screenshot asset.
+- [x] S1-006: Build capability, adapter, and governance content sections.
+- [x] S1-007: Build architecture and install views from typed content modules.
 - [ ] S1-008: Add fixture-driven `DemoRuntime` with no network access.
 - [ ] S1-009: Reuse ereignis timeline and tool/approval components in the demo.
 - [ ] S1-010: Add explicit simulated-demo state and deterministic replay tests.

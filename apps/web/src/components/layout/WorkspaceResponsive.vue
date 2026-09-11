@@ -77,7 +77,7 @@ const inspectorOpen = ref(false)
 
 <style scoped>
 .workspace-responsive {
-  min-block-size: calc(100vh - var(--header-height));
+  min-block-size: calc(100vh - var(--app-top-chrome-height, var(--header-height)));
 }
 
 .workspace-responsive__mobile-controls {
@@ -90,7 +90,7 @@ const inspectorOpen = ref(false)
     minmax(var(--sidebar-min-width), var(--sidebar-width))
     minmax(0, 1fr)
     minmax(var(--inspector-min-width), var(--inspector-width));
-  min-block-size: calc(100vh - var(--header-height));
+  min-block-size: calc(100vh - var(--app-top-chrome-height, var(--header-height)));
   overflow: hidden;
 }
 
@@ -133,7 +133,9 @@ const inspectorOpen = ref(false)
 
   .workspace-responsive__grid {
     grid-template-columns: minmax(0, 1fr);
-    min-block-size: calc(100vh - var(--header-height) - var(--control-height-lg));
+    min-block-size: calc(
+      100vh - var(--app-top-chrome-height, var(--header-height)) - var(--control-height-lg)
+    );
   }
 
   .workspace-responsive__desktop-sessions,

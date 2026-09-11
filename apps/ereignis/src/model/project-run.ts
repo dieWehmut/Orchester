@@ -4,9 +4,10 @@ import type {
   UiEventEnvelope,
 } from '@orchester/protokoll'
 
-import { eventKey, gapKey } from './event-key'
+import { eventKey, gapKey, timelineItemKey } from './event-key'
 import {
   createEmptyRunView,
+  type FileChangeTimelineItem,
   type GapTimelineItem,
   type RunStatus,
   type RunView,
@@ -154,6 +155,7 @@ function projectLifecycle(
   let title = view.title
   let status: RunStatus = view.status
   let stop = view.stop
+  const fileChanges: FileChangeTimelineItem[] = [...view.fileChanges]
 
   for (const event of events) {
     switch (event.kind.type) {
@@ -165,12 +167,23 @@ function projectLifecycle(
         status = event.kind.reason
         stop = toRunStop(event)
         break
+      case 'file_change':
+        fileChanges.push({
+          type: 'file_change',
+          key: timelineItemKey(event),
+          sequence: event.sequence,
+          occurredAt: event.occurred_at,
+          turnId: event.turn_id ?? null,
+          path: event.kind.path,
+          kind: event.kind.kind,
+        })
+        break
       default:
         break
     }
   }
 
-  return { ...view, title, status, stop }
+  return { ...view, title, status, stop, fileChanges }
 }
 
 function toRunStop(event: UiEventEnvelope): RunStopView {

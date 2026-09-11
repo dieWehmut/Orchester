@@ -32,10 +32,22 @@ every app on the next HMR tick.
 
 ## Commands
 
+`apps/stack.manifest.json` is the machine-readable source for surface package
+names, local ports, Pages metadata, and toolchain requirements. Use the stable
+workspace commands instead of copying package filters into new scripts:
+
 ```sh
-pnpm install          # once, from this directory
-pnpm run typecheck    # vue-tsc / tsc across every package
-pnpm run test         # vitest across every package
+pnpm install              # once, from this directory
+pnpm run doctor:web       # Node/pnpm preflight
+pnpm run doctor:desktop   # adds Rust and native desktop checks
+pnpm run dev:webui        # http://127.0.0.1:4173/
+pnpm run dev:website      # http://127.0.0.1:4174/
+pnpm run dev:desktop      # Tauri; runs WebUI itself after preflight
+pnpm run stack:verify     # reject package/port/Tauri/Pages drift
+pnpm run typecheck        # vue-tsc / tsc across every package
+pnpm run test             # tooling contract plus package tests
 ```
 
-Per-app commands live in each app's own `package.json`.
+See `docs/FRONTENDS-OPERATIONS.md` for Pages, Giscus, Windows ARM64/MSVC, and
+production-build details. Per-app focused commands remain in each app's own
+`package.json`.

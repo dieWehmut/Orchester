@@ -19,7 +19,7 @@
     minmax(var(--sidebar-min-width), var(--sidebar-width))
     minmax(0, 1fr)
     minmax(var(--inspector-min-width), var(--inspector-width));
-  min-block-size: calc(100vh - var(--header-height));
+  min-block-size: calc(100vh - var(--app-top-chrome-height, var(--header-height)));
   overflow: hidden;
   background: var(--color-bg-base);
 }

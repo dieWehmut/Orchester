@@ -10,7 +10,7 @@ fn ui_protocol_is_exported_from_the_crate_root() {
         call_id: None,
         sequence: 1,
         occurred_at: "2026-08-19T00:00:00Z".into(),
-        kind: UiEventKind::TurnStarted,
+        kind: UiEventKind::TurnStarted {},
     };
 
     assert_eq!(event.schema_version, UI_SCHEMA_VERSION);

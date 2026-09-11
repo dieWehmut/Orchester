@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url'
 export default defineConfig({
   resolve: {
     alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
       '@orchester/ereignis': fileURLToPath(
         new URL('../ereignis/src/index.ts', import.meta.url),
       ),

@@ -49,6 +49,35 @@ describe('run event projection', () => {
     })
   })
 
+  it('projects contiguous file change events into the run view', () => {
+    const view = projectRunEvents([
+      fixtureEnvelope(1, { type: 'run_started', title: 'Inspect changes' }),
+      fixtureEnvelope(2, { type: 'file_change', path: 'src/app.ts', kind: 'add' }),
+      fixtureEnvelope(3, { type: 'file_change', path: 'src/app.ts', kind: 'update' }),
+    ])
+
+    expect(view.fileChanges).toEqual([
+      {
+        type: 'file_change',
+        key: 'file-change:event-fixture-2',
+        sequence: 2,
+        occurredAt: '2026-08-19T00:00:01.000Z',
+        turnId: 'turn-fixture',
+        path: 'src/app.ts',
+        kind: 'add',
+      },
+      {
+        type: 'file_change',
+        key: 'file-change:event-fixture-3',
+        sequence: 3,
+        occurredAt: '2026-08-19T00:00:02.000Z',
+        turnId: 'turn-fixture',
+        path: 'src/app.ts',
+        kind: 'update',
+      },
+    ])
+  })
+
   it('buffers events beyond missing ranges and emits deterministic gap markers', () => {
     const view = projectRunEvents([
       fixtureEnvelope(6, { type: 'message', text: 'Still buffered' }),

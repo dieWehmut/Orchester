@@ -58,6 +58,7 @@ reqwest = { version = "=0.12.28", default-features = false, features = ["rustls-
 thiserror = "2"
 clap = { version = "4", features = ["derive"] }
 tracing = "0.1"
+time = { version = "0.3", features = ["formatting", "macros"] }
 crossterm = "0.29"
 unicode-width = "0.2"
 rusqlite = { version = "0.32", features = ["bundled"] }
@@ -72,3 +73,4 @@ tar = "0.4"
 axum = { version = "0.8.9", default-features = false, features = ["http1", "json", "tokio", "tower-log", "tracing", "ws"] }
 tower = { version = "0.5.3", features = ["util"] }
 tower-http = { version = "0.7.0", default-features = false, features = ["cors", "request-id", "trace"] }
+sysinfo = { version = "=0.33.1", default-features = false, features = ["system"] }

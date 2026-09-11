@@ -3,11 +3,25 @@ import { AppTabs, EmptyState, type AppTabOption } from '@orchester/design'
 import { computed, ref } from 'vue'
 
 import { useI18n } from '../../i18n'
+import { isInspectorTab, type InspectorTab } from './inspector-tabs'
 
-type InspectorTab = 'context' | 'approvals' | 'changes'
+const props = defineProps<{
+  activeTab?: InspectorTab
+}>()
+
+const emit = defineEmits<{
+  'update:activeTab': [value: InspectorTab]
+}>()
 
 const { t } = useI18n()
-const activeTab = ref<InspectorTab>('context')
+const uncontrolledActiveTab = ref<InspectorTab>('context')
+const activeTab = computed<InspectorTab>({
+  get: () => props.activeTab ?? uncontrolledActiveTab.value,
+  set: (value) => {
+    if (props.activeTab === undefined) uncontrolledActiveTab.value = value
+    emit('update:activeTab', value)
+  },
+})
 const tabs = computed<AppTabOption[]>(() => [
   { id: 'context', label: t('inspector.context') },
   { id: 'approvals', label: t('inspector.approvals') },
@@ -29,7 +43,7 @@ const panel = computed(() => ({
 })[activeTab.value])
 
 function selectTab(id: string): void {
-  if (id === 'context' || id === 'approvals' || id === 'changes') activeTab.value = id
+  if (isInspectorTab(id)) activeTab.value = id
 }
 </script>
 

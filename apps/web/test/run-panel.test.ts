@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 
 import { createEmptyRunView } from '@orchester/ereignis'
 import RunPanel from '../src/components/run/RunPanel.vue'
+import { MODEL_CATALOG_FIXTURE } from './fixtures/model-catalog'
 
 describe('RunPanel', () => {
   it('renders an actionable empty run with composer and footer', () => {
@@ -11,7 +12,21 @@ describe('RunPanel', () => {
     expect(wrapper.get('[data-run-panel]')).toBeTruthy()
     expect(wrapper.get('[data-run-composer]')).toBeTruthy()
     expect(wrapper.get('[data-run-footer]')).toBeTruthy()
-    expect(wrapper.text()).toContain('New run')
+    expect(wrapper.get('[data-empty-workspace]')).toBeTruthy()
+    expect(wrapper.get('[data-orchester-mark]')).toBeTruthy()
+  })
+
+  it('removes the large mark immediately after a conversation starts', async () => {
+    const wrapper = mount(RunPanel, {
+      props: { view: createEmptyRunView(), conversationStarted: false },
+    })
+
+    expect(wrapper.find('[data-orchester-mark]').exists()).toBe(true)
+    await wrapper.setProps({ conversationStarted: true, busy: true })
+
+    expect(wrapper.find('[data-orchester-mark]').exists()).toBe(false)
+    expect(wrapper.get('[data-run-awaiting-events]')).toBeTruthy()
+    expect(wrapper.get('[data-run-composer]')).toBeTruthy()
   })
 
   it('forwards submit and cancel intents without fetching', async () => {
@@ -25,5 +40,19 @@ describe('RunPanel', () => {
     await wrapper.setProps({ busy: true })
     await wrapper.get('button').trigger('click')
     expect(wrapper.emitted('cancel')).toHaveLength(1)
+  })
+
+  it('forwards workspace and model state into the composer context', () => {
+    const wrapper = mount(RunPanel, {
+      props: {
+        view: createEmptyRunView(),
+        workspaceName: 'Orchester',
+        modelCatalog: MODEL_CATALOG_FIXTURE,
+        modelStatus: 'ready',
+      },
+    })
+
+    expect(wrapper.get('[data-project-context]').text()).toContain('Orchester')
+    expect(wrapper.get('[data-model-context-model]').text()).toContain('gpt-5.6')
   })
 })

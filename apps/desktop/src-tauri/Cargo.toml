@@ -1,0 +1,18 @@
+[package]
+name = "orchester-desktop"
+description = "Native desktop shell for Orchester"
+version = "0.1.2"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/dieWehmut/Orchester"
+rust-version = "1.80"
+publish = false
+
+[build-dependencies]
+tauri-build = { version = "2.6.3", features = [] }
+
+[dependencies]
+tauri = { version = "2.11.1", features = [] }
+
+# Keep the desktop crate independent from the repository's Rust workspace.
+[workspace]
