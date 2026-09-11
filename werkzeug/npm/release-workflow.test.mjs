@@ -10,8 +10,12 @@ const targets = JSON.parse(
   fs.readFileSync(path.join(repositoryRoot, 'npm/cli/targets.json'), 'utf8'),
 );
 
+function readWorkflow() {
+  return fs.readFileSync(workflowPath, 'utf8').replace(/\r\n/g, '\n');
+}
+
 test('release workflow builds every native target before staging packages', () => {
-  const workflow = fs.readFileSync(workflowPath, 'utf8');
+  const workflow = readWorkflow();
 
   for (const target of targets) {
     assert.match(workflow, new RegExp(`rust_target: ${target.rustTarget}`));
@@ -47,7 +51,7 @@ test('release workflow builds every native target before staging packages', () =
 });
 
 test('release workflow uses current first-party actions and preserves native archives', () => {
-  const workflow = fs.readFileSync(workflowPath, 'utf8');
+  const workflow = readWorkflow();
 
   const pinnedActions = [
     ['checkout', '9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0', 'v7'],
@@ -80,7 +84,7 @@ test('release workflow uses current first-party actions and preserves native arc
 });
 
 test('release artifact contains the exact verified official plugin matrix', () => {
-  const workflow = fs.readFileSync(workflowPath, 'utf8');
+  const workflow = readWorkflow();
   const stageJob = workflow.slice(workflow.indexOf('\n  stage:'), workflow.indexOf('\n  tag:'));
   const verifyPlugins = stageJob.indexOf('node werkzeug/npm/plugin-release.mjs');
   const findPlugins = stageJob.indexOf('find npm/plugins -mindepth 1 -maxdepth 1 -type d -print | sort');
@@ -96,7 +100,7 @@ test('release artifact contains the exact verified official plugin matrix', () =
 });
 
 test('one dispatch tags, publishes, releases, and verifies v0.1.2 in dependency order', () => {
-  const workflow = fs.readFileSync(workflowPath, 'utf8');
+  const workflow = readWorkflow();
   const tagJob = workflow.indexOf('\n  tag:');
   const publishJob = workflow.indexOf('\n  publish:');
   const publishSection = workflow.slice(publishJob);
@@ -137,4 +141,15 @@ test('one dispatch tags, publishes, releases, and verifies v0.1.2 in dependency 
   assert.match(workflow, /gh release upload "\$TAG" release\/\* npm-release\.tar\.gz --clobber/);
   assert.match(workflow, /concurrency:\n  group: npm-release-\$\{\{ inputs\.version \}\}\n  cancel-in-progress: false/);
   assert.match(workflow, /npm view "@orchester\/cli@\$VERSION" version/);
+});
+
+test('release notes contain the changelog body instead of a generated compare-link only', () => {
+  const workflow = readWorkflow();
+  const releaseSection = workflow.slice(workflow.indexOf('\n  release:'));
+
+  assert.match(releaseSection, /actions\/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7/);
+  assert.match(releaseSection, /git log .*\$PREVIOUS_TAG\.\.\$TAG/);
+  assert.match(releaseSection, /--notes-file release-notes\.md/);
+  assert.match(releaseSection, /## Full Changelog/);
+  assert.equal(releaseSection.includes('--generate-notes'), false);
 });

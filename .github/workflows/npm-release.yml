@@ -427,6 +427,13 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Checkout release ref and history
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
       - name: Download verified npm archive
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
@@ -453,14 +460,36 @@ jobs:
           cp native-archives/native-*.tar.gz release/
           (cd release && sha256sum *.tgz native-*.tar.gz > SHA256SUMS)
 
+          PREVIOUS_TAG=""
+          while IFS= read -r candidate; do
+            if [[ "$candidate" != "$TAG" ]]; then
+              PREVIOUS_TAG="$candidate"
+              break
+            fi
+          done < <(git tag --sort=-creatordate)
+
+          {
+            echo "## Full Changelog"
+            echo
+            if [[ -n "$PREVIOUS_TAG" ]]; then
+              git log --pretty=format:'- %s (%h)' "$PREVIOUS_TAG..$TAG"
+            else
+              git log --pretty=format:'- %s (%h)' "$TAG"
+            fi
+            echo
+          } > release-notes.md
+
           if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release edit "$TAG" \
+              --repo "$GITHUB_REPOSITORY" \
+              --notes-file release-notes.md
             gh release upload "$TAG" release/* npm-release.tar.gz --clobber --repo "$GITHUB_REPOSITORY"
           else
             gh release create "$TAG" release/* npm-release.tar.gz \
               --repo "$GITHUB_REPOSITORY" \
               --verify-tag \
               --title "Orchester $TAG" \
-              --generate-notes
+              --notes-file release-notes.md
           fi
 
   verify:
