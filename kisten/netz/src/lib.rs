@@ -14,6 +14,7 @@ mod lifecycle;
 mod listener;
 mod model_catalog;
 mod router;
+mod run;
 mod run_contract;
 mod session;
 mod session_history;

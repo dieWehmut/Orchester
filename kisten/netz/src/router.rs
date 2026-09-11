@@ -34,6 +34,9 @@ use crate::{
     config::StaticAssets,
     health::{health_handler, no_store_headers},
     model_catalog::model_catalog_handler,
+    run::{
+        cancel_run_handler, replay_run_handler, snapshot_run_handler, start_run_handler,
+    },
     session::{fragment_exchange_handler, session_bootstrap_handler, session_revoke_handler},
     session_history::{session_detail_handler, session_list_handler},
     ServerContext,
@@ -75,6 +78,10 @@ fn api_router() -> Router<ServerContext> {
         .route("/agents/status", get(agent_status_handler))
         .route("/agents/status/ws", get(agent_status_socket_handler))
         .route("/models", get(model_catalog_handler))
+        .route("/runs", post(start_run_handler))
+        .route("/runs/{id}", get(snapshot_run_handler))
+        .route("/runs/{id}/replay", post(replay_run_handler))
+        .route("/runs/{id}/cancel", post(cancel_run_handler))
         .route("/sessions", get(session_list_handler))
         .route("/sessions/{id}", get(session_detail_handler))
         .route("/session", get(session_bootstrap_handler))
