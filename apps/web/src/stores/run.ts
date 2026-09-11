@@ -158,11 +158,15 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
     activeSocket = null
   }
 
-  async function attachRunStream(response: StartRunResponse, epoch: number): Promise<void> {
+  async function attachRunStream(
+    response: StartRunResponse,
+    epoch: number,
+    hydratedSnapshot?: RunSnapshotDto,
+  ): Promise<void> {
     if (!api || !runSocketFactory || typeof api.snapshot !== 'function') return
     const expectedRunId = response.run_id
     try {
-      const snapshot = await api.snapshot(expectedRunId)
+      const snapshot = hydratedSnapshot ?? (await api.snapshot(expectedRunId))
       if (streamEpoch !== epoch || runId.value !== expectedRunId) return
       applySnapshot(snapshot)
 
@@ -181,10 +185,16 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
           }
         },
         onResyncRequired: () => {
-          void api.snapshot(expectedRunId).then((freshSnapshot) => {
-            if (streamEpoch === epoch && runId.value === expectedRunId) applySnapshot(freshSnapshot)
-          }).catch((cause) => {
-            if (streamEpoch === epoch && runId.value === expectedRunId) setError(cause)
+          if (streamEpoch !== epoch || runId.value !== expectedRunId) return
+          const nextEpoch = epoch + 1
+          streamEpoch = nextEpoch
+          activeSocket?.close()
+          activeSocket = null
+          void attachRunStream(response, nextEpoch).catch((cause) => {
+            if (streamEpoch === nextEpoch && runId.value === expectedRunId) {
+              connectionStatus.value = 'error'
+              setError(cause)
+            }
           })
         },
         onError: (cause) => {
@@ -200,9 +210,12 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
       }
       activeSocket = socket
       await socket.connect()
+      if (streamEpoch !== epoch || runId.value !== expectedRunId) {
+        socket.close()
+        if (activeSocket === socket) activeSocket = null
+      }
     } catch (cause) {
       if (streamEpoch !== epoch || runId.value !== expectedRunId) return
-      lifecycle.value = 'failed'
       connectionStatus.value = 'error'
       setError(cause)
     }
