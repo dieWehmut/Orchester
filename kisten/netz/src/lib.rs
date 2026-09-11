@@ -16,6 +16,7 @@ mod model_catalog;
 mod router;
 mod run;
 mod run_contract;
+mod run_registry;
 mod session;
 mod session_history;
 mod workspace;
