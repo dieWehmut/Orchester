@@ -12,6 +12,7 @@ import {
 } from './bootstrap'
 import { createSessionsStore, type SessionsStore } from './sessions'
 import { createRunStore, type RunStore } from './run'
+import { createRunSocket } from '../transport/run-socket'
 import { createAppPinia } from './pinia'
 import { useAgentFleetStore } from './agent-fleet'
 import type { AgentStatusStreamFactory } from './agent-fleet'
@@ -62,7 +63,7 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
   const bootstrap = createBootstrapStore(bootstrapOptions)
   const sessions = createSessionsStore(createSessionsApi(http))
   const runs = createRunsApi(http)
-  const run = createRunStore(runs)
+  const run = createRunStore(runs, { runSocketFactory: createRunSocket })
   const pinia = createAppPinia()
   const agents = useAgentFleetStore(pinia)
   const models = useModelCatalogStore(pinia)
@@ -90,6 +91,7 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
       }
     },
     stop(): void {
+      run.stop()
       agents.stop()
     },
     install(app: App): void {

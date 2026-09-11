@@ -13,6 +13,11 @@ import type {
 import { ref, shallowRef, type Ref } from 'vue'
 
 import type { RunsApi, StartRunOptions } from '../api/runs'
+import {
+  type RunSocket,
+  type RunSocketOptions,
+  type RunSocketStatus,
+} from '../transport/run-socket'
 
 export type RunProjectionStatus = 'idle' | 'ready' | 'gap' | 'error'
 export type RunLifecycle =
@@ -43,6 +48,7 @@ export interface RunStore {
   error: Readonly<Ref<Error | null>>
   submit: (prompt: string) => Promise<StartRunResponse | null>
   cancel: () => Promise<RunSummaryDto | null>
+  stop: () => void
   applySnapshot: (snapshot: RunSnapshotDto) => void
   applyEvent: (event: UiEventEnvelope) => boolean
   setConnectionStatus: (status: RunConnectionStatus) => void
@@ -53,7 +59,10 @@ export interface RunStore {
 
 export interface RunStoreOptions {
   idempotencyKey?: () => string
+  runSocketFactory?: RunSocketFactory
 }
+
+export type RunSocketFactory = (options: RunSocketOptions) => RunSocket
 
 function asError(cause: unknown): Error {
   return cause instanceof Error ? cause : new Error(String(cause))
@@ -87,6 +96,9 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
   let headSequence: number | undefined
   const journal = new Map<string, UiEventEnvelope>()
   const makeIdempotencyKey = options.idempotencyKey ?? defaultIdempotencyKey
+  const runSocketFactory = options.runSocketFactory
+  let activeSocket: RunSocket | null = null
+  let streamEpoch = 0
 
   function rebuild(): void {
     const ordered = [...journal.values()].sort((left, right) => left.sequence - right.sequence)
@@ -135,6 +147,80 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
     projectionStatus.value = 'error'
   }
 
+  function setSocketStatus(status: RunSocketStatus): void {
+    const mapped: RunConnectionStatus = status === 'fatal' ? 'error' : status
+    connectionStatus.value = mapped
+  }
+
+  function stop(): void {
+    streamEpoch += 1
+    activeSocket?.close()
+    activeSocket = null
+  }
+
+  async function attachRunStream(
+    response: StartRunResponse,
+    epoch: number,
+    hydratedSnapshot?: RunSnapshotDto,
+  ): Promise<void> {
+    if (!api || !runSocketFactory || typeof api.snapshot !== 'function') return
+    const expectedRunId = response.run_id
+    try {
+      const snapshot = hydratedSnapshot ?? (await api.snapshot(expectedRunId))
+      if (streamEpoch !== epoch || runId.value !== expectedRunId) return
+      applySnapshot(snapshot)
+
+      const socket = runSocketFactory({
+        ticketProvider: () => response.events_url,
+        afterSequence: () => events.value.at(-1)?.sequence ?? 0,
+        onEvent: (event) => {
+          if (streamEpoch !== epoch || runId.value !== expectedRunId) return
+          try {
+            applyEvent(event)
+            if (event.kind.type === 'run_stopped') {
+              lifecycle.value = event.kind.reason === 'succeeded' ? 'completed' : 'failed'
+            }
+          } catch (cause) {
+            setError(cause)
+          }
+        },
+        onResyncRequired: () => {
+          if (streamEpoch !== epoch || runId.value !== expectedRunId) return
+          const nextEpoch = epoch + 1
+          streamEpoch = nextEpoch
+          activeSocket?.close()
+          activeSocket = null
+          void attachRunStream(response, nextEpoch).catch((cause) => {
+            if (streamEpoch === nextEpoch && runId.value === expectedRunId) {
+              connectionStatus.value = 'error'
+              setError(cause)
+            }
+          })
+        },
+        onError: (cause) => {
+          if (streamEpoch === epoch && runId.value === expectedRunId) setError(cause)
+        },
+        onStatus: (status) => {
+          if (streamEpoch === epoch) setSocketStatus(status)
+        },
+      })
+      if (streamEpoch !== epoch || runId.value !== expectedRunId) {
+        socket.close()
+        return
+      }
+      activeSocket = socket
+      await socket.connect()
+      if (streamEpoch !== epoch || runId.value !== expectedRunId) {
+        socket.close()
+        if (activeSocket === socket) activeSocket = null
+      }
+    } catch (cause) {
+      if (streamEpoch !== epoch || runId.value !== expectedRunId) return
+      connectionStatus.value = 'error'
+      setError(cause)
+    }
+  }
+
   async function submit(prompt: string): Promise<StartRunResponse | null> {
     const normalizedPrompt = prompt.trim()
     if (!normalizedPrompt || lifecycle.value === 'submitting' || lifecycle.value === 'running' || lifecycle.value === 'cancelling') {
@@ -151,6 +237,7 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
     conversationStarted.value = true
     connectionStatus.value = 'connecting'
     error.value = null
+    const streamEpochForRun = streamEpoch
     try {
       const response = await api.start(
         { prompt: normalizedPrompt },
@@ -159,6 +246,7 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
       runId.value = response.run_id
       lifecycle.value = 'running'
       connectionStatus.value = 'connecting'
+      void attachRunStream(response, streamEpochForRun)
       return response
     } catch (cause) {
       lifecycle.value = 'failed'
@@ -171,6 +259,7 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
   async function cancel(): Promise<RunSummaryDto | null> {
     if (!api || !runId.value || lifecycle.value !== 'running') return null
     lifecycle.value = 'cancelling'
+    stop()
     try {
       const summary = await api.cancel(runId.value)
       lifecycle.value = 'completed'
@@ -190,6 +279,7 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
   }
 
   function reset(): void {
+    stop()
     runId.value = null
     conversationStarted.value = false
     lifecycle.value = 'idle'
@@ -215,6 +305,7 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
     error,
     submit,
     cancel,
+    stop,
     applySnapshot,
     applyEvent,
     setConnectionStatus: (status) => {

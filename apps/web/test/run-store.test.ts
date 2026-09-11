@@ -5,8 +5,29 @@ import {
 } from '@orchester/protokoll'
 import { describe, expect, it, vi } from 'vitest'
 
-import { createRunStore } from '../src/stores/run'
+import { createRunStore, type RunSocketFactory } from '../src/stores/run'
 import type { RunsApi } from '../src/api/runs'
+
+function createFakeRunSocketFactory() {
+  const sockets: Array<{
+    options: Parameters<RunSocketFactory>[0]
+    connect: ReturnType<typeof vi.fn>
+    close: ReturnType<typeof vi.fn>
+  }> = []
+  const factory: RunSocketFactory = (options) => {
+    const socket = {
+      options,
+      connect: vi.fn(async () => {
+        options.onStatus?.('connected')
+      }),
+      close: vi.fn(),
+      status: 'idle' as const,
+    }
+    sockets.push(socket)
+    return socket
+  }
+  return { factory, sockets }
+}
 
 describe('run store', () => {
   it('submits once, stores the returned run id, and rejects a duplicate while busy', async () => {
@@ -27,6 +48,196 @@ describe('run store', () => {
     expect(store.runId.value).toBe('run-submit')
     expect(store.lifecycle.value).toBe('running')
     expect(store.conversationStarted.value).toBe(true)
+  })
+
+  it('hydrates the snapshot and opens the server-issued event stream after submit', async () => {
+    const run = runId('run-live')
+    const snapshot: RunSnapshotDto = {
+      run_id: run,
+      state: 'running',
+      events: [{ ...fixtureEnvelope(1, { type: 'run_started', title: 'Live run' }), run_id: run }],
+      pending_approvals: [],
+      oldest_sequence: 1,
+      latest_sequence: 1,
+      next_sequence: 2,
+      updated_at: '2026-08-19T00:00:01.000Z',
+    }
+    const start = vi.fn(async () => ({ run_id: run, events_url: 'wss://runtime/events/live' }))
+    const snapshotRequest = vi.fn(async () => snapshot)
+    const api = { start, snapshot: snapshotRequest } as unknown as RunsApi
+    const sockets = createFakeRunSocketFactory()
+    const store = createRunStore(api, { runSocketFactory: sockets.factory })
+
+    await expect(store.submit('Inspect the live workspace')).resolves.toMatchObject({ run_id: run })
+    await vi.waitFor(() => expect(snapshotRequest).toHaveBeenCalledWith(run))
+
+    expect(store.view.value.title).toBe('Live run')
+    expect(sockets.sockets).toHaveLength(1)
+    expect(sockets.sockets[0]?.options.ticketProvider()).toBe('wss://runtime/events/live')
+    expect(sockets.sockets[0]?.options.afterSequence?.()).toBe(1)
+    expect(store.connectionStatus.value).toBe('connected')
+
+    sockets.sockets[0]?.options.onEvent?.({
+      ...fixtureEnvelope(2, { type: 'message', text: 'The workspace is ready.' }),
+      run_id: run,
+    })
+    expect(store.events.value.at(-1)?.kind).toMatchObject({
+      type: 'message',
+      text: 'The workspace is ready.',
+    })
+  })
+
+  it('closes the active event stream when the store stops', async () => {
+    const run = runId('run-stop')
+    const start = vi.fn(async () => ({ run_id: run, events_url: 'wss://runtime/events/stop' }))
+    const api = {
+      start,
+      snapshot: vi.fn(async () => ({
+        run_id: run,
+        state: 'running' as const,
+        events: [],
+        pending_approvals: [],
+        oldest_sequence: 0,
+        latest_sequence: 0,
+        next_sequence: 1,
+        updated_at: '2026-08-19T00:00:00.000Z',
+      })),
+    } as unknown as RunsApi
+    const sockets = createFakeRunSocketFactory()
+    const store = createRunStore(api, { runSocketFactory: sockets.factory })
+
+    await store.submit('Stop after start')
+    await vi.waitFor(() => expect(sockets.sockets).toHaveLength(1))
+    store.stop()
+    expect(sockets.sockets[0]?.close).toHaveBeenCalledOnce()
+  })
+
+  it('does not attach a stale stream when the store stops before snapshot hydration', async () => {
+    const run = runId('run-stale')
+    let resolveSnapshot!: (snapshot: RunSnapshotDto) => void
+    const start = vi.fn(async () => ({ run_id: run, events_url: 'wss://runtime/events/stale' }))
+    const snapshot = new Promise<RunSnapshotDto>((resolve) => {
+      resolveSnapshot = resolve
+    })
+    const api = { start, snapshot: vi.fn(() => snapshot) } as unknown as RunsApi
+    const sockets = createFakeRunSocketFactory()
+    const store = createRunStore(api, { runSocketFactory: sockets.factory })
+
+    await store.submit('Stop before hydration')
+    store.stop()
+    resolveSnapshot({
+      run_id: run,
+      state: 'running',
+      events: [],
+      pending_approvals: [],
+      oldest_sequence: 0,
+      latest_sequence: 0,
+      next_sequence: 1,
+      updated_at: '2026-08-19T00:00:00.000Z',
+    })
+    await Promise.resolve()
+    await Promise.resolve()
+    expect(sockets.sockets).toHaveLength(0)
+  })
+
+  it('keeps the run active when only the event transport fails', async () => {
+    const run = runId('run-transport-failure')
+    const api = {
+      start: vi.fn(async () => ({
+        run_id: run,
+        events_url: 'wss://runtime/events/transport-failure',
+      })),
+      snapshot: vi.fn(async () => ({
+        run_id: run,
+        state: 'running' as const,
+        events: [],
+        pending_approvals: [],
+        oldest_sequence: 0,
+        latest_sequence: 0,
+        next_sequence: 1,
+        updated_at: '2026-08-19T00:00:00.000Z',
+      })),
+    } as unknown as RunsApi
+    const transportError = new Error('event transport unavailable')
+    const runSocketFactory: RunSocketFactory = (options) => ({
+      status: 'idle',
+      connect: vi.fn(async () => {
+        options.onStatus?.('fatal')
+        options.onError?.(transportError)
+        throw transportError
+      }),
+      close: vi.fn(),
+    })
+    const store = createRunStore(api, { runSocketFactory })
+
+    await store.submit('Keep the run active')
+    await vi.waitFor(() => expect(store.error.value?.message).toBe(transportError.message))
+
+    expect(store.lifecycle.value).toBe('running')
+    expect(store.connectionStatus.value).toBe('error')
+  })
+
+  it('replaces a resyncing socket and ignores events from the superseded stream', async () => {
+    const run = runId('run-resync')
+    const initialSnapshot: RunSnapshotDto = {
+      run_id: run,
+      state: 'running',
+      events: [{ ...fixtureEnvelope(1, { type: 'run_started', title: 'Resync run' }), run_id: run }],
+      pending_approvals: [],
+      oldest_sequence: 1,
+      latest_sequence: 1,
+      next_sequence: 2,
+      updated_at: '2026-08-19T00:00:01.000Z',
+    }
+    const freshSnapshot: RunSnapshotDto = {
+      ...initialSnapshot,
+      events: [
+        initialSnapshot.events[0]!,
+        { ...fixtureEnvelope(2, { type: 'message', text: 'Recovered snapshot' }), run_id: run },
+      ],
+      latest_sequence: 2,
+      next_sequence: 3,
+      updated_at: '2026-08-19T00:00:02.000Z',
+    }
+    const api = {
+      start: vi.fn(async () => ({ run_id: run, events_url: 'wss://runtime/events/resync' })),
+      snapshot: vi
+        .fn<() => Promise<RunSnapshotDto>>()
+        .mockResolvedValueOnce(initialSnapshot)
+        .mockResolvedValueOnce(freshSnapshot),
+    } as unknown as RunsApi
+    const sockets = createFakeRunSocketFactory()
+    const store = createRunStore(api, { runSocketFactory: sockets.factory })
+
+    await store.submit('Recover the stream')
+    await vi.waitFor(() => expect(sockets.sockets).toHaveLength(1))
+    sockets.sockets[0]?.options.onResyncRequired?.({
+      type: 'resync_required',
+      run_id: run,
+      requested_after_sequence: 1,
+      oldest_sequence: 1,
+      latest_sequence: 2,
+      reason: 'sequence_gap',
+    })
+    await vi.waitFor(() => expect(sockets.sockets).toHaveLength(2))
+
+    expect(sockets.sockets[0]?.close).toHaveBeenCalledOnce()
+    expect(sockets.sockets[1]?.options.afterSequence?.()).toBe(2)
+
+    sockets.sockets[0]?.options.onEvent?.({
+      ...fixtureEnvelope(3, { type: 'message', text: 'Stale transport event' }),
+      run_id: run,
+    })
+    expect(store.events.value).toHaveLength(2)
+
+    sockets.sockets[1]?.options.onEvent?.({
+      ...fixtureEnvelope(3, { type: 'message', text: 'Current transport event' }),
+      run_id: run,
+    })
+    expect(store.events.value.at(-1)?.kind).toMatchObject({
+      type: 'message',
+      text: 'Current transport event',
+    })
   })
 
   it('cancels the active run and reaches a terminal lifecycle state', async () => {
