@@ -138,3 +138,14 @@ test('one dispatch tags, publishes, releases, and verifies v0.1.2 in dependency 
   assert.match(workflow, /concurrency:\n  group: npm-release-\$\{\{ inputs\.version \}\}\n  cancel-in-progress: false/);
   assert.match(workflow, /npm view "@orchester\/cli@\$VERSION" version/);
 });
+
+test('release notes contain the changelog body instead of a generated compare-link only', () => {
+  const workflow = fs.readFileSync(workflowPath, 'utf8');
+  const releaseSection = workflow.slice(workflow.indexOf('\n  release:'));
+
+  assert.match(releaseSection, /actions\/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7/);
+  assert.match(releaseSection, /git log .*\$PREVIOUS_TAG\.\.\$TAG/);
+  assert.match(releaseSection, /--notes-file release-notes\.md/);
+  assert.match(releaseSection, /## Full Changelog/);
+  assert.equal(releaseSection.includes('--generate-notes'), false);
+});
