@@ -67,7 +67,7 @@ async fn replay_route_reports_not_found_without_a_bound_run() {
 }
 
 #[tokio::test]
-async fn cancel_route_reports_unavailable_without_a_bound_run() {
+async fn cancel_route_reports_not_found_without_a_bound_run() {
     let response = app_router(test_context())
         .oneshot(
             Request::post("/api/v1/runs/run-1/cancel")
@@ -77,6 +77,6 @@ async fn cancel_route_reports_unavailable_without_a_bound_run() {
         .await
         .expect("cancel response");
 
-    assert_eq!(response.status(), StatusCode::SERVICE_UNAVAILABLE);
-    assert_eq!(error_code(response).await, "unavailable");
+    assert_eq!(response.status(), StatusCode::NOT_FOUND);
+    assert_eq!(error_code(response).await, "not_found");
 }

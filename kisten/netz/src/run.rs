@@ -14,7 +14,9 @@ use orchester_protokoll::RunId;
 use crate::{
     api_error::{api_error_response, request_id_from_headers, ApiErrorCode, ApiErrorResponse},
     health::no_store_headers,
-    run_contract::{RunReplayRequestDto, RunReplayResponseDto, RunSnapshotDto, StartRunRequest},
+    run_contract::{
+        RunReplayRequestDto, RunReplayResponseDto, RunSnapshotDto, RunSummaryDto, StartRunRequest,
+    },
     run_registry::{RunHandle, RunRegistryError},
     ServerContext,
 };
@@ -68,14 +70,17 @@ pub(crate) async fn replay_run_handler(
 }
 
 pub(crate) async fn cancel_run_handler(
-    State(_context): State<ServerContext>,
+    State(context): State<ServerContext>,
     headers: HeaderMap,
-    Path(_run_id): Path<String>,
-) -> Result<(HeaderMap, Json<serde_json::Value>), ApiErrorResponse> {
-    Err(api_error_response(
-        ApiErrorCode::Unavailable,
-        request_id_from_headers(&headers),
-    ))
+    Path(run_id): Path<String>,
+) -> Result<(HeaderMap, Json<RunSummaryDto>), ApiErrorResponse> {
+    let request_id = request_id_from_headers(&headers);
+    let run = registered_run(&context, run_id, request_id)?;
+    let summary = run
+        .cancel()
+        .await
+        .map_err(|error| run_error_response(error, request_id))?;
+    Ok((no_store_headers(), Json(summary)))
 }
 
 fn registered_run(
@@ -207,6 +212,41 @@ mod tests {
         assert_eq!(response.status(), StatusCode::CONFLICT);
         let error = json_body(response).await;
         assert_eq!(error["code"], "resync_required");
+    }
+
+    #[tokio::test]
+    async fn cancel_is_idempotent_and_emits_one_terminal_event() {
+        let context = ServerContext::new(None, ServerControl::new());
+        let run = context.runs().create().expect("create run");
+        run.append(UiEventKind::RunStarted { title: None })
+            .await
+            .expect("append run start");
+        let path = format!("/api/v1/runs/{}/cancel", run.id().0);
+
+        for _ in 0..2 {
+            let response = app_router(context.clone())
+                .oneshot(
+                    Request::post(&path)
+                        .body(Body::empty())
+                        .expect("cancel request"),
+                )
+                .await
+                .expect("cancel response");
+
+            assert_eq!(response.status(), StatusCode::OK);
+            assert_eq!(
+                response.headers().get(header::CACHE_CONTROL),
+                Some(&header::HeaderValue::from_static("no-store"))
+            );
+            let summary = json_body(response).await;
+            assert_eq!(summary["run_id"], run.id().0);
+            assert_eq!(summary["stopped"], true);
+        }
+
+        let snapshot = run.snapshot().await.expect("cancelled snapshot");
+        assert_eq!(snapshot.state, crate::run_contract::RunStateDto::Cancelled);
+        assert_eq!(snapshot.events.len(), 2);
+        assert!(run.cancellation_token().is_cancelled());
     }
 
     async fn json_body(response: Response) -> Value {
