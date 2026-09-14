@@ -14,7 +14,7 @@ use orchester_protokoll::RunId;
 use crate::{
     api_error::{api_error_response, request_id_from_headers, ApiErrorCode, ApiErrorResponse},
     health::no_store_headers,
-    run_contract::{RunReplayRequestDto, RunSnapshotDto, StartRunRequest},
+    run_contract::{RunReplayRequestDto, RunReplayResponseDto, RunSnapshotDto, StartRunRequest},
     run_registry::{RunHandle, RunRegistryError},
     ServerContext,
 };
@@ -48,18 +48,23 @@ pub(crate) async fn snapshot_run_handler(
 }
 
 pub(crate) async fn replay_run_handler(
-    State(_context): State<ServerContext>,
+    State(context): State<ServerContext>,
     headers: HeaderMap,
-    Path(_run_id): Path<String>,
+    Path(run_id): Path<String>,
     request: Result<Json<RunReplayRequestDto>, JsonRejection>,
-) -> Result<(HeaderMap, Json<serde_json::Value>), ApiErrorResponse> {
+) -> Result<(HeaderMap, Json<RunReplayResponseDto>), ApiErrorResponse> {
     let request_id = request_id_from_headers(&headers);
     let Json(request) =
         request.map_err(|_| api_error_response(ApiErrorCode::BadRequest, request_id))?;
-    request
+    let limit = request
         .bounded_limit()
         .map_err(|_| api_error_response(ApiErrorCode::ValidationFailed, request_id))?;
-    Err(api_error_response(ApiErrorCode::Unavailable, request_id))
+    let run = registered_run(&context, run_id, request_id)?;
+    let replay = run
+        .replay(request.after_sequence, Some(limit))
+        .await
+        .map_err(|error| run_error_response(error, request_id))?;
+    Ok((no_store_headers(), Json(replay)))
 }
 
 pub(crate) async fn cancel_run_handler(
@@ -102,6 +107,7 @@ mod tests {
     use axum::{
         body::{to_bytes, Body},
         http::{header, Request, StatusCode},
+        response::Response,
     };
     use orchester_protokoll::UiEventKind;
     use serde_json::Value;
@@ -134,15 +140,79 @@ mod tests {
             response.headers().get(header::CACHE_CONTROL),
             Some(&header::HeaderValue::from_static("no-store"))
         );
-        let body = to_bytes(response.into_body(), usize::MAX)
-            .await
-            .expect("snapshot body");
-        let snapshot = serde_json::from_slice::<Value>(&body).expect("snapshot JSON");
+        let snapshot = json_body(response).await;
         assert_eq!(snapshot["run_id"], run.id().0);
         assert_eq!(snapshot["state"], "running");
         assert_eq!(snapshot["oldest_sequence"], 1);
         assert_eq!(snapshot["latest_sequence"], 1);
         assert_eq!(snapshot["next_sequence"], 2);
         assert_eq!(snapshot["events"][0]["kind"]["type"], "run_started");
+    }
+
+    #[tokio::test]
+    async fn replay_returns_a_bounded_page_after_the_requested_sequence() {
+        let context = ServerContext::new(None, ServerControl::new());
+        let run = context.runs().create().expect("create run");
+        for text in ["one", "two", "three"] {
+            run.append(UiEventKind::Message { text: text.into() })
+                .await
+                .expect("append message");
+        }
+
+        let response = app_router(context)
+            .oneshot(
+                Request::post(format!("/api/v1/runs/{}/replay", run.id().0))
+                    .header(header::CONTENT_TYPE, "application/json")
+                    .body(Body::from(r#"{"after_sequence":1,"limit":1}"#))
+                    .expect("replay request"),
+            )
+            .await
+            .expect("replay response");
+
+        assert_eq!(response.status(), StatusCode::OK);
+        assert_eq!(
+            response.headers().get(header::CACHE_CONTROL),
+            Some(&header::HeaderValue::from_static("no-store"))
+        );
+        let replay = json_body(response).await;
+        assert_eq!(replay["run_id"], run.id().0);
+        assert_eq!(replay["first_sequence"], 2);
+        assert_eq!(replay["last_sequence"], 2);
+        assert_eq!(replay["events"][0]["kind"]["text"], "two");
+        assert_eq!(replay["has_more"], true);
+    }
+
+    #[tokio::test]
+    async fn replay_requires_resync_when_the_requested_sequence_was_evicted() {
+        let context = ServerContext::new(None, ServerControl::new());
+        let run = context.runs().create().expect("create run");
+        for index in 0..257 {
+            run.append(UiEventKind::Message {
+                text: format!("event {index}"),
+            })
+            .await
+            .expect("append retained event");
+        }
+
+        let response = app_router(context)
+            .oneshot(
+                Request::post(format!("/api/v1/runs/{}/replay", run.id().0))
+                    .header(header::CONTENT_TYPE, "application/json")
+                    .body(Body::from(r#"{"after_sequence":0}"#))
+                    .expect("replay request"),
+            )
+            .await
+            .expect("replay response");
+
+        assert_eq!(response.status(), StatusCode::CONFLICT);
+        let error = json_body(response).await;
+        assert_eq!(error["code"], "resync_required");
+    }
+
+    async fn json_body(response: Response) -> Value {
+        let body = to_bytes(response.into_body(), usize::MAX)
+            .await
+            .expect("response body");
+        serde_json::from_slice::<Value>(&body).expect("response JSON")
     }
 }
