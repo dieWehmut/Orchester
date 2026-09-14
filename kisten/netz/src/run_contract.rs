@@ -23,19 +23,29 @@ pub struct StartRunRequest {
 
 impl StartRunRequest {
     pub fn validate(&self) -> Result<(), RunRequestValidationError> {
-        validate_text(
+        validate_text_bounds(
             &self.prompt,
             RUN_PROMPT_MAX_CHARS,
             RunRequestValidationError::EmptyPrompt,
             RunRequestValidationError::PromptTooLong,
         )?;
+        if self
+            .prompt
+            .chars()
+            .any(|character| character.is_control() && !matches!(character, '\n' | '\r' | '\t'))
+        {
+            return Err(RunRequestValidationError::InvalidPrompt);
+        }
         if let Some(resume) = &self.resume {
-            validate_text(
+            validate_text_bounds(
                 resume,
                 RUN_RESUME_MAX_CHARS,
                 RunRequestValidationError::EmptyResume,
                 RunRequestValidationError::ResumeTooLong,
             )?;
+            if resume.chars().any(char::is_control) {
+                return Err(RunRequestValidationError::InvalidResume);
+            }
         }
         Ok(())
     }
@@ -110,7 +120,9 @@ pub enum ResyncReason {
 #[derive(Debug, Clone, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum RunStreamFrameDto {
-    Event { event: UiEventEnvelope },
+    Event {
+        event: UiEventEnvelope,
+    },
     ResyncRequired {
         run_id: RunId,
         requested_after_sequence: u64,
@@ -131,8 +143,10 @@ pub struct RunSummaryDto {
 pub enum RunRequestValidationError {
     EmptyPrompt,
     PromptTooLong,
+    InvalidPrompt,
     EmptyResume,
     ResumeTooLong,
+    InvalidResume,
     InvalidReplayLimit,
 }
 
@@ -141,8 +155,10 @@ impl std::fmt::Display for RunRequestValidationError {
         let message = match self {
             Self::EmptyPrompt => "prompt must not be empty",
             Self::PromptTooLong => "prompt exceeds the maximum length",
+            Self::InvalidPrompt => "prompt contains an invalid control character",
             Self::EmptyResume => "resume handle must not be empty",
             Self::ResumeTooLong => "resume handle exceeds the maximum length",
+            Self::InvalidResume => "resume handle contains an invalid control character",
             Self::InvalidReplayLimit => "replay limit is outside the allowed range",
         };
         formatter.write_str(message)
@@ -151,7 +167,7 @@ impl std::fmt::Display for RunRequestValidationError {
 
 impl std::error::Error for RunRequestValidationError {}
 
-fn validate_text(
+fn validate_text_bounds(
     value: &str,
     max_chars: usize,
     empty: RunRequestValidationError,
@@ -162,9 +178,6 @@ fn validate_text(
     }
     if value.chars().count() > max_chars {
         return Err(too_long);
-    }
-    if value.chars().any(char::is_control) {
-        return Err(RunRequestValidationError::PromptTooLong);
     }
     Ok(())
 }
@@ -186,7 +199,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn start_request_rejects_blank_and_control_prompt() {
+    fn start_request_rejects_blank_prompt() {
         assert_eq!(
             StartRunRequest {
                 prompt: "  ".into(),
@@ -195,14 +208,38 @@ mod tests {
             .validate(),
             Err(RunRequestValidationError::EmptyPrompt)
         );
-        assert!(matches!(
+    }
+
+    #[test]
+    fn start_request_accepts_multiline_prompt() {
+        assert_eq!(
             StartRunRequest {
-                prompt: "hello\nworld".into(),
+                prompt: "inspect the workspace\nthen\tfix the issue".into(),
                 resume: None,
             }
             .validate(),
-            Err(RunRequestValidationError::PromptTooLong)
-        ));
+            Ok(())
+        );
+    }
+
+    #[test]
+    fn start_request_reports_invalid_control_characters_by_field() {
+        assert_eq!(
+            StartRunRequest {
+                prompt: "inspect\0workspace".into(),
+                resume: None,
+            }
+            .validate(),
+            Err(RunRequestValidationError::InvalidPrompt)
+        );
+        assert_eq!(
+            StartRunRequest {
+                prompt: "inspect workspace".into(),
+                resume: Some("run\0handle".into()),
+            }
+            .validate(),
+            Err(RunRequestValidationError::InvalidResume)
+        );
     }
 
     #[test]
