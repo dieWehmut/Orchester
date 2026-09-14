@@ -13,11 +13,9 @@ use time::{format_description::well_known::Rfc3339, OffsetDateTime};
 use tokio::sync::{broadcast, Mutex};
 use tokio_util::sync::CancellationToken;
 
-use crate::{
-    run_contract::{
-        state_from_stop_reason, RunReplayResponseDto, RunSnapshotDto, RunStateDto,
-        RunStreamFrameDto, RunSummaryDto, RUN_REPLAY_DEFAULT_LIMIT, RUN_REPLAY_MAX_LIMIT,
-    },
+use crate::run_contract::{
+    state_from_stop_reason, RunReplayResponseDto, RunSnapshotDto, RunStateDto, RunStreamFrameDto,
+    RunSummaryDto, RUN_REPLAY_DEFAULT_LIMIT, RUN_REPLAY_MAX_LIMIT,
 };
 
 const DEFAULT_RETENTION: usize = 256;
@@ -25,6 +23,12 @@ const DEFAULT_RETENTION: usize = 256;
 #[derive(Clone)]
 pub(crate) struct RunRegistry {
     inner: Arc<RegistryInner>,
+}
+
+impl Default for RunRegistry {
+    fn default() -> Self {
+        Self::new(DEFAULT_RETENTION)
+    }
 }
 
 struct RegistryInner {
@@ -427,6 +431,9 @@ mod tests {
         assert!(second.stopped);
         assert_eq!(first.run_id, second.run_id);
         assert!(run.cancellation_token().is_cancelled());
-        assert_eq!(run.snapshot().await.expect("snapshot").state, RunStateDto::Cancelled);
+        assert_eq!(
+            run.snapshot().await.expect("snapshot").state,
+            RunStateDto::Cancelled
+        );
     }
 }
