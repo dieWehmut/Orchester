@@ -13,8 +13,7 @@ async fn error_code(response: axum::response::Response) -> String {
     let body = to_bytes(response.into_body(), usize::MAX)
         .await
         .expect("error body");
-    serde_json::from_slice::<Value>(&body)
-        .expect("error JSON")["code"]
+    serde_json::from_slice::<Value>(&body).expect("error JSON")["code"]
         .as_str()
         .expect("error code")
         .to_owned()
@@ -37,7 +36,7 @@ async fn start_route_reports_unavailable_without_a_selected_workspace() {
 }
 
 #[tokio::test]
-async fn snapshot_route_reports_unavailable_without_a_bound_run() {
+async fn snapshot_route_reports_not_found_without_a_bound_run() {
     let response = app_router(test_context())
         .oneshot(
             Request::get("/api/v1/runs/run-1")
@@ -47,8 +46,8 @@ async fn snapshot_route_reports_unavailable_without_a_bound_run() {
         .await
         .expect("snapshot response");
 
-    assert_eq!(response.status(), StatusCode::SERVICE_UNAVAILABLE);
-    assert_eq!(error_code(response).await, "unavailable");
+    assert_eq!(response.status(), StatusCode::NOT_FOUND);
+    assert_eq!(error_code(response).await, "not_found");
 }
 
 #[tokio::test]
