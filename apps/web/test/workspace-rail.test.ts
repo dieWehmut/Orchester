@@ -1,7 +1,8 @@
 ﻿import { AGENT_FLEET_FIXTURE, type BootstrapDto } from '@orchester/protokoll'
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
+import { createAppRouter } from '../src/router'
 import { createAppStores } from '../src/stores/app'
 import WorkspaceView from '../src/views/WorkspaceView.vue'
 
@@ -27,10 +28,28 @@ describe('WorkspaceView Codex-style rail', () => {
       .findAll('[data-pane="sessions"] [data-rail-section]')
       .map((node) => node.attributes('data-rail-section'))
 
-    expect(sections).toEqual(['brand', 'primary', 'projects', 'sessions', 'fleet'])
+    expect(sections).toEqual(['brand', 'primary', 'projects', 'sessions', 'fleet', 'account'])
     expect(wrapper.get('[data-rail-section="projects"]').text()).toContain('Orchester')
     expect(wrapper.get('[data-rail-section="sessions"] [data-session-rail]')).toBeTruthy()
     expect(wrapper.get('[data-rail-section="fleet"] [data-agent-fleet]')).toBeTruthy()
+  })
+
+  it('shows the account footer identity and opens the settings route', async () => {
+    await import('../src/views/SettingsView.vue')
+    const router = createAppRouter('memory')
+    await router.push('/workspace')
+    await router.isReady()
+    const wrapper = mount(WorkspaceView, {
+      global: { plugins: [readyStores(), router] },
+    })
+
+    expect(wrapper.get('[data-rail-account]').text()).toContain('Orchester')
+    expect(wrapper.get('[data-rail-account]').text()).toContain('Local runtime')
+
+    await wrapper.get('[data-rail-action="settings"]').trigger('click')
+    await vi.waitFor(() => {
+      expect(router.currentRoute.value.name).toBe('settings')
+    })
   })
 
   it('starts a new chat from the rail action', async () => {
