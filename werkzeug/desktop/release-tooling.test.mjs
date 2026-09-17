@@ -61,5 +61,8 @@ test('the desktop version is pinned consistently across the release manifests', 
   const cargoVersion = /^version = "(.+)"$/m.exec(cargo)?.[1];
   assert.equal(config.version, manifest.version);
   assert.equal(config.version, cargoVersion);
-  assert.doesNotThrow(() => assertInputs(config.version));
+});
+
+test('version mismatches fail before a build starts', () => {
+  assert.throws(() => assertInputs('9.9.9'), /does not match 9\.9\.9/);
 });
