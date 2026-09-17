@@ -91,7 +91,7 @@ export async function validateStackManifest(repositoryRoot, manifest) {
 
   const [appsPackage, rootCargo, webPackage, websitePackage, desktopPackage, tauriConfig, webVite, websiteVite, workflow] =
     await Promise.all([
-      readJson(resolve(repositoryRoot, 'apps/package.json')),
+      readJson(resolve(repositoryRoot, 'package.json')),
       readFile(resolve(repositoryRoot, 'Cargo.toml'), 'utf8'),
       readJson(resolve(repositoryRoot, 'apps/web/package.json')),
       readJson(resolve(repositoryRoot, 'apps/website/package.json')),
@@ -103,7 +103,7 @@ export async function validateStackManifest(repositoryRoot, manifest) {
     ])
 
   if (appsPackage.packageManager !== `pnpm@${manifest.toolchain.pnpm}`) {
-    errors.push('apps/package.json packageManager does not match the toolchain contract')
+    errors.push('package.json packageManager does not match the toolchain contract')
   }
   const cargoRustVersion = rootCargo.match(/rust-version\s*=\s*"([^"]+)"/)?.[1]
   if (normalizedVersion(cargoRustVersion) !== normalizedVersion(manifest.toolchain.rust)) {
@@ -141,8 +141,14 @@ export async function validateStackManifest(repositoryRoot, manifest) {
     errors.push(`Tauri devUrl does not match the ${webui.url} WebUI surface`)
   }
   const beforeDevScript = tauriConfig.build?.beforeDevCommand?.script ?? ''
+  if (tauriConfig.build?.beforeDevCommand?.cwd !== '../../..') {
+    errors.push('Tauri beforeDevCommand must run from the repository workspace root')
+  }
   requireText(beforeDevScript, `--filter ${webui.package} dev`, 'Tauri beforeDevCommand', errors)
   requireText(beforeDevScript, '--strictPort', 'Tauri beforeDevCommand', errors)
+  if (tauriConfig.build?.beforeBuildCommand?.cwd !== '../../..') {
+    errors.push('Tauri beforeBuildCommand must run from the repository workspace root')
+  }
 
   requireText(workflow, `BASE_PATH: ${pages.basePath}`, pages.workflow, errors, 'Pages base path')
   requireText(

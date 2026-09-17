@@ -5,11 +5,11 @@
   "identifier": "io.github.diewehmut.orchester",
   "build": {
     "beforeDevCommand": {
-      "cwd": "../..",
+      "cwd": "../../..",
       "script": "pnpm --filter @orchester/web dev -- --strictPort"
     },
     "beforeBuildCommand": {
-      "cwd": "../..",
+      "cwd": "../../..",
       "script": "pnpm --filter @orchester/web build"
     },
     "devUrl": "http://127.0.0.1:4173",

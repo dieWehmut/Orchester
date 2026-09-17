@@ -33,6 +33,12 @@ test('the pnpm workspace root is the repository root, like the reference layout'
 
   const npmrc = await readFile(resolve(repositoryRoot, '.npmrc'), 'utf8')
   assert.match(npmrc, /strict-peer-dependencies=false/)
+
+  const tauri = JSON.parse(
+    await readFile(resolve(repositoryRoot, 'apps/desktop/src-tauri/tauri.conf.json'), 'utf8'),
+  )
+  assert.equal(tauri.build.beforeDevCommand.cwd, '../../..')
+  assert.equal(tauri.build.beforeBuildCommand.cwd, '../../..')
 })
 
 test('the workspace files no longer live inside apps/', async () => {
