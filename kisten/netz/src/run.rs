@@ -21,8 +21,8 @@ use crate::{
     api_error::{api_error_response, request_id_from_headers, ApiErrorCode, ApiErrorResponse},
     health::no_store_headers,
     run_contract::{
-        RunReplayRequestDto, RunReplayResponseDto, RunSnapshotDto, RunStreamFrameDto, RunSummaryDto,
-        StartRunRequest,
+        RunReplayRequestDto, RunReplayResponseDto, RunSnapshotDto, RunStreamFrameDto,
+        RunSummaryDto, StartRunRequest,
     },
     run_registry::{RunHandle, RunRegistryError},
     ServerContext,
@@ -456,7 +456,10 @@ mod tests {
         let error = connect_async(format!("ws://{address}/api/v1/runs/run-missing/events"))
             .await
             .expect_err("unknown runs must not upgrade");
-        assert!(error.to_string().contains("404") || format!("{error:?}").contains("404"), "{error:?}");
+        assert!(
+            error.to_string().contains("404") || format!("{error:?}").contains("404"),
+            "{error:?}"
+        );
     }
 
     async fn serve(context: ServerContext) -> SocketAddr {
@@ -489,5 +492,4 @@ mod tests {
             .expect("response body");
         serde_json::from_slice::<Value>(&body).expect("response JSON")
     }
-
 }
