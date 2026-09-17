@@ -2859,6 +2859,111 @@ mod tests {
         );
     }
 
+    /// Codex opens its slash-command popup underneath the input line, above the
+    /// status row. The Orchester palette must follow the same order instead of
+    /// covering the transcript area above the composer.
+    #[test]
+    fn command_palette_opens_under_the_input_line_like_codex() {
+        let mut out = Vec::new();
+
+        render_chat_home_in_viewport(
+            &mut out,
+            ChatHomeView {
+                width: 100,
+                height: 24,
+                input: "/",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "gpt-test",
+                transcript: &[],
+                busy: None,
+                scroll_offset: 0,
+                overlay: None,
+                theme: Theme::default(),
+            },
+        )
+        .unwrap();
+
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        let lines = plain.lines().collect::<Vec<_>>();
+        let composer = composer_row(&lines, 100);
+        let first_command = lines
+            .iter()
+            .position(|line| line.trim_start().starts_with("> /agent"))
+            .expect("the palette must render its selected command");
+        let status = lines
+            .iter()
+            .rposition(|line| line.contains("gpt-test"))
+            .expect("the status row must stay visible");
+
+        assert!(
+            composer < first_command,
+            "the palette must open under the input line:\n{plain}"
+        );
+        assert_eq!(
+            status,
+            lines.len() - 1,
+            "the status row must remain the last row:\n{plain}"
+        );
+        assert!(
+            first_command < status,
+            "the palette must stay above the status row:\n{plain}"
+        );
+        assert!(lines.len() <= 24, "24-row frame overflowed:\n{plain}");
+        assert_eq!(
+            lines.iter().filter(|line| line.trim_end() == "> /").count(),
+            1,
+            "the input line must render exactly once:\n{plain}"
+        );
+    }
+
+    #[test]
+    fn transcript_command_palette_opens_under_the_input_line() {
+        let transcript = [TranscriptEntry::assistant("previous answer")];
+        let mut out = Vec::new();
+
+        render_chat_home_in_viewport(
+            &mut out,
+            ChatHomeView {
+                width: 80,
+                height: 24,
+                input: "/st",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "gpt-test",
+                transcript: &transcript,
+                busy: None,
+                scroll_offset: 0,
+                overlay: None,
+                theme: Theme::default(),
+            },
+        )
+        .unwrap();
+
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        let lines = plain.lines().collect::<Vec<_>>();
+        let composer = composer_row(&lines, 80);
+        let palette = lines
+            .iter()
+            .position(|line| line.trim_start().starts_with("> /status"))
+            .unwrap_or_else(|| panic!("the palette must render the matching command:\n{plain}"));
+
+        assert!(
+            composer < palette,
+            "the palette must open under the input line:\n{plain}"
+        );
+        assert_eq!(
+            lines
+                .iter()
+                .position(|line| line.contains("previous answer")),
+            Some(0),
+            "the transcript must stay above the composer:\n{plain}"
+        );
+        assert!(lines.len() <= 24, "24-row frame overflowed:\n{plain}");
+    }
+
     #[test]
     fn command_palette_scrolls_to_keep_the_selection_visible() {
         let choices = (0..6)
@@ -3272,21 +3377,35 @@ mod tests {
                 );
                 // The frame is as tall as its content, never taller: the
                 // composer and status row trail the last content row instead of
-                // being pushed to the bottom of the terminal.
+                // being pushed to the bottom of the terminal. Opening the
+                // palette inserts it between the composer and the status row,
+                // the way Codex stacks its slash-command popup.
                 let status = lines.last().expect("status row");
-                let composer = lines[lines.len() - 2];
-                assert!(
-                    composer.trim_start().starts_with("> "),
-                    "{label} composer is not the row above the status line at {width}x24:\n{frame}"
-                );
                 assert!(
                     status.contains("gpt-test"),
                     "{label} status row lost the active model at {width}x24:\n{frame}"
                 );
+                let composer = composer_row(&lines, width);
                 assert!(
-                    !lines[lines.len() - 3].trim().is_empty(),
+                    !lines[composer - 1].trim().is_empty(),
                     "{label} left a padding row above the composer at {width}x24:\n{frame}"
                 );
+                if *label == "palette" {
+                    assert!(
+                        lines[composer + 1].trim_start().starts_with("> /agent"),
+                        "{label} palette must open under the composer at {width}x24:\n{frame}"
+                    );
+                    assert!(
+                        composer + 1 < lines.len() - 1,
+                        "{label} status row must stay under the palette at {width}x24:\n{frame}"
+                    );
+                } else {
+                    assert_eq!(
+                        composer,
+                        lines.len() - 2,
+                        "{label} composer is not the row above the status line at {width}x24:\n{frame}"
+                    );
+                }
             }
         }
     }
@@ -3414,19 +3533,27 @@ mod tests {
             ),
         ] {
             let lines = frame.lines().collect::<Vec<_>>();
-            let composer = lines
-                .iter()
-                .position(|line| line.trim_start().starts_with("> ") && display_width(line) >= 99)
-                .unwrap_or_else(|| panic!("{label} has no composer row:\n{frame}"));
-            assert_eq!(
-                composer,
-                lines.len() - 2,
-                "{label} composer is not directly above the status row:\n{frame}"
-            );
+            let composer = composer_row(&lines, 100);
             assert!(
                 !lines[composer - 1].trim().is_empty(),
                 "{label} padded the viewport above the composer:\n{frame}"
             );
+            if label == "palette" {
+                assert!(
+                    lines[composer + 1].trim_start().starts_with("> /agent"),
+                    "{label} palette must open under the composer:\n{frame}"
+                );
+                assert!(
+                    lines.last().expect("status row").contains("gpt-test"),
+                    "{label} status row must stay under the palette:\n{frame}"
+                );
+            } else {
+                assert_eq!(
+                    composer,
+                    lines.len() - 2,
+                    "{label} composer is not directly above the status row:\n{frame}"
+                );
+            }
         }
     }
 
@@ -4088,6 +4215,16 @@ mod tests {
             empty.contains('\u{2580}'),
             "30-row empty home should keep portrait"
         );
+    }
+
+    /// The composer is the only row the renderer pads out to the full frame
+    /// width, so this finds the input line without assuming how many palette
+    /// rows follow it.
+    fn composer_row(lines: &[&str], width: usize) -> usize {
+        lines
+            .iter()
+            .rposition(|line| line.starts_with("> ") && display_width(line) == width)
+            .unwrap_or_else(|| panic!("no composer row in:\n{}", lines.join("\n")))
     }
 
     fn strip_ansi(input: &str) -> String {
