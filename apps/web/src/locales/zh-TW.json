@@ -77,6 +77,7 @@
     "eyebrow": "本機工作區",
     "title": "工作區",
     "description": "工作階段歷史、執行記錄與內容工具將顯示於此。",
+    "greeting": "你想讓我們在 {name} 中建構什麼？",
     "projects": "專案",
     "projectFallback": "未選擇專案"
   },

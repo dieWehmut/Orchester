@@ -37,6 +37,7 @@ const selectedAgent = computed(
 const workspaceName = computed(() => bootstrap.context.value?.workspace.name ?? null)
 const modelCatalog = computed(() => models.catalog)
 const modelStatus = computed(() => models.status)
+const greeting = computed(() => t('workspace.greeting', { name: t('app.name') }))
 const {
   status,
   detailStatus,
@@ -121,6 +122,7 @@ function handleOpenSettings(): void {
     <RunPanel
       v-if="!selected"
       :view="runView"
+      :empty-title="greeting"
       :connection-status="runConnectionStatus"
       :projection-status="runProjectionStatus"
       :error-message="runErrorMessage"
