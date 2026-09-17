@@ -81,12 +81,6 @@ function handleKeydown(event: KeyboardEvent): void {
 
 <template>
   <form class="run-composer" data-run-composer @submit.prevent="submit">
-    <ComposerContextBar
-      :workspace-name="props.workspaceName"
-      :model-catalog="props.modelCatalog"
-      :model-status="props.modelStatus"
-      :approval-label="props.approvalLabel"
-    />
     <label class="run-composer__label" for="run-prompt">{{ props.inputLabel }}</label>
     <AppTextarea
       id="run-prompt"
@@ -98,15 +92,23 @@ function handleKeydown(event: KeyboardEvent): void {
       @update:model-value="update"
       @keydown="handleKeydown"
     />
-    <div class="run-composer__footer">
-      <span class="run-composer__count" aria-live="polite">
-        {{ draft.length }} / {{ props.maxLength }} {{ props.characterCountLabel }}
-      </span>
+    <div class="run-composer__footer" data-composer-footer>
+      <ComposerContextBar
+        class="run-composer__context"
+        :workspace-name="props.workspaceName"
+        :model-catalog="props.modelCatalog"
+        :model-status="props.modelStatus"
+        :approval-label="props.approvalLabel"
+      />
       <div class="run-composer__actions">
+        <span class="run-composer__count" aria-live="polite">
+          {{ draft.length }} / {{ props.maxLength }} {{ props.characterCountLabel }}
+        </span>
         <AppButton
           v-if="props.busy"
           type="button"
           variant="danger"
+          data-composer-action="cancel"
           :aria-label="props.cancelLabel"
           @click="emit('cancel')"
         >
@@ -116,6 +118,7 @@ function handleKeydown(event: KeyboardEvent): void {
           v-else
           type="submit"
           variant="primary"
+          data-composer-action="submit"
           :disabled="!canSubmit"
           :aria-label="props.submitLabel"
         >
@@ -147,14 +150,17 @@ function handleKeydown(event: KeyboardEvent): void {
 
 .run-composer__footer {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   gap: var(--space-3);
+  padding-block-start: var(--space-1);
 }
 
-.run-composer :deep(.composer-context) {
-  padding: 0 0 var(--space-2);
-  border-block-end: 1px solid var(--color-border-base);
+.run-composer__context {
+  min-inline-size: 0;
+  flex: 1;
+  padding: 0;
+  border: 0;
 }
 
 .run-composer :deep(.app-textarea) {
@@ -176,6 +182,8 @@ function handleKeydown(event: KeyboardEvent): void {
 
 .run-composer__actions {
   display: flex;
+  flex: 0 0 auto;
+  align-items: center;
   gap: var(--space-2);
 }
 
