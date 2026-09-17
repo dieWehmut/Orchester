@@ -15,6 +15,7 @@ use serde::Serialize;
 use crate::{
     agent_process::{AgentProcessSource, SystemAgentProcessSource},
     agent_status::{agent_status_response, AgentRuntimeStatusStore},
+    run_registry::RunRegistry,
     FragmentTokenStore, FragmentTokenStoreError, ServerControl, ServerState, SessionStore,
 };
 
@@ -28,6 +29,7 @@ pub struct ServerContext {
     agent_process_monitor_started: Arc<AtomicBool>,
     model_host: Option<Arc<SelfAgentHost>>,
     session_history: Option<Arc<SessionHistory>>,
+    runs: RunRegistry,
     sessions: Arc<SessionStore>,
     fragments: Arc<FragmentTokenStore>,
 }
@@ -58,6 +60,7 @@ impl ServerContext {
             agent_process_monitor_started: Arc::new(AtomicBool::new(false)),
             model_host,
             session_history,
+            runs: RunRegistry::default(),
             sessions: Arc::new(SessionStore::new(Duration::from_secs(8 * 60 * 60))),
             fragments: Arc::new(FragmentTokenStore::new(Duration::from_secs(5 * 60))),
         }
@@ -141,6 +144,10 @@ impl ServerContext {
 
     pub fn session_history(&self) -> Option<&SessionHistory> {
         self.session_history.as_deref()
+    }
+
+    pub(crate) fn runs(&self) -> &RunRegistry {
+        &self.runs
     }
 
     pub(crate) fn sessions(&self) -> &SessionStore {
@@ -228,4 +235,20 @@ fn safe_basename(path: &Path) -> Option<String> {
         return None;
     }
     Some(name.to_owned())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn cloned_contexts_share_the_run_registry() {
+        let context = ServerContext::new(None, ServerControl::new());
+        let cloned = context.clone();
+        let run = context.runs().create().expect("create run");
+
+        let shared = cloned.runs().get(run.id()).expect("shared run");
+
+        assert_eq!(shared.id(), run.id());
+    }
 }
