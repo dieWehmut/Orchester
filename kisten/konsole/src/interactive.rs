@@ -1138,31 +1138,25 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
     }
 
     let content_rows = layout.content_rows;
+    // Codex opens its slash-command popup underneath the input line, above the
+    // status row. The palette therefore claims its rows from the body and is
+    // written after the composer instead of covering the transcript area.
+    let command_palette = if !show_help && input.starts_with('/') {
+        command_palette_lines(
+            input,
+            choices,
+            command_selected,
+            width,
+            content_rows,
+            palette,
+        )?
+    } else {
+        Vec::new()
+    };
+    let body_rows = content_rows.saturating_sub(command_palette.len());
     let mut body = Vec::new();
     if show_help {
         render_home_help(&mut body, width, content_rows)?;
-    } else if input.starts_with('/') {
-        if width < 50 {
-            render_compact_command_palette(
-                &mut body,
-                input,
-                choices,
-                command_selected,
-                width,
-                content_rows.min(COMPACT_PALETTE_ROWS),
-                palette,
-            )?;
-        } else {
-            render_command_palette(
-                &mut body,
-                input,
-                choices,
-                command_selected,
-                content_rows.min(PALETTE_ROWS),
-                width,
-                palette,
-            )?;
-        }
     } else if content_rows > 0 {
         let hint = truncate(
             "Type a task or / for commands. Enter submits; Esc exits.",
@@ -1170,8 +1164,9 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
         );
         writeln!(&mut body, "{}{hint}{RESET}", palette.dim)?;
     }
-    render_fixed_body(out, &body, content_rows)?;
+    render_fixed_body(out, &body, body_rows)?;
     render_composer(out, width, input, palette)?;
+    render_command_palette_lines(out, &command_palette)?;
     if layout.status_rows > 0 {
         render_status_line(out, width, model_status, palette)?;
     }
@@ -1203,6 +1198,7 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
     }
 
     let mut body = Vec::new();
+    let mut command_palette = Vec::new();
     if let Some(overlay) = overlay {
         render_command_overlay(&mut body, overlay, width, content_rows, palette)?;
     } else if show_help {
@@ -1222,7 +1218,7 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
         let palette_rows = content_rows
             .saturating_sub(reserve_history_row)
             .saturating_sub(busy_rows);
-        let command_palette = if input.starts_with('/') {
+        command_palette = if input.starts_with('/') {
             command_palette_lines(
                 input,
                 choices,
@@ -1251,15 +1247,26 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
                 sanitize_terminal_text(busy)
             )?;
         }
-        for line in command_palette {
-            writeln!(&mut body, "{line}")?;
-        }
     }
-    render_fixed_body(out, &body, content_rows)?;
+    render_fixed_body(
+        out,
+        &body,
+        content_rows.saturating_sub(command_palette.len()),
+    )?;
     render_composer(out, width, input, palette)?;
+    // The palette opens under the composer, the way Codex stacks its
+    // slash-command popup above the status row.
+    render_command_palette_lines(out, &command_palette)?;
 
     if layout.status_rows > 0 {
         render_status_line(out, width, model_status, palette)?;
+    }
+    Ok(())
+}
+
+fn render_command_palette_lines<W: Write>(out: &mut W, lines: &[String]) -> io::Result<()> {
+    for line in lines {
+        writeln!(out, "{line}")?;
     }
     Ok(())
 }
