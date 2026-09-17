@@ -80,7 +80,42 @@
   "settings": {
     "eyebrow": "配置",
     "title": "设置",
-    "description": "供应商凭据、模型选择和外观控制将在这里显示。"
+    "description": "供应商凭据、模型选择和外观控制将在这里显示。",
+    "sections": {
+      "general": "常规",
+      "appearance": "外观",
+      "providers": "提供商",
+      "about": "关于"
+    },
+    "language": {
+      "title": "语言",
+      "description": "当前工作区的界面语言。"
+    },
+    "theme": {
+      "title": "主题",
+      "description": "整个外壳的浅色或深色表面。",
+      "toLight": "切换到浅色主题",
+      "toDark": "切换到深色主题"
+    },
+    "colorScheme": {
+      "title": "配色方案",
+      "description": "所有表面共用的操作调色板。"
+    },
+    "appearance": {
+      "dark": "深色",
+      "light": "浅色"
+    },
+    "locale": {
+      "en": "English",
+      "zhCN": "简体中文",
+      "zhTW": "繁體中文"
+    },
+    "providers": {
+      "description": "提供商凭证和模型默认值保留在本地运行时；浏览器不会存储它们。"
+    },
+    "about": {
+      "description": "Orchester 将本地 Rust 运行时与 Web 工作区、桌面外壳和命令行客户端结合在一起。"
+    }
   },
   "notFound": {
     "eyebrow": "404",

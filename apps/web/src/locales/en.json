@@ -80,7 +80,42 @@
   "settings": {
     "eyebrow": "Configuration",
     "title": "Settings",
-    "description": "Provider credentials, model selection, and appearance controls will appear here."
+    "description": "Provider credentials, model selection, and appearance controls will appear here.",
+    "sections": {
+      "general": "General",
+      "appearance": "Appearance",
+      "providers": "Providers",
+      "about": "About"
+    },
+    "language": {
+      "title": "Language",
+      "description": "Interface language for this workspace."
+    },
+    "theme": {
+      "title": "Theme",
+      "description": "Light or dark surface for the whole shell.",
+      "toLight": "Switch to light theme",
+      "toDark": "Switch to dark theme"
+    },
+    "colorScheme": {
+      "title": "Color scheme",
+      "description": "Operational palette used by every surface."
+    },
+    "appearance": {
+      "dark": "Dark",
+      "light": "Light"
+    },
+    "locale": {
+      "en": "English",
+      "zhCN": "简体中文",
+      "zhTW": "繁體中文"
+    },
+    "providers": {
+      "description": "Provider credentials and model defaults stay on the local runtime; the browser never stores them."
+    },
+    "about": {
+      "description": "Orchester pairs a local Rust runtime with a web workspace, a desktop shell and a command-line client."
+    }
   },
   "notFound": {
     "eyebrow": "404",
