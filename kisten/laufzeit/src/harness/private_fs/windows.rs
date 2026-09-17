@@ -621,7 +621,7 @@ pub(crate) fn untrusted_grants(path: &std::path::Path) -> Vec<UntrustedGrant> {
         };
         if offset
             .checked_add(size_of::<ACE_HEADER>())
-            .is_none_or(|end| end > acl_bytes)
+            .map_or(true, |end| end > acl_bytes)
         {
             break;
         }
@@ -630,7 +630,7 @@ pub(crate) fn untrusted_grants(path: &std::path::Path) -> Vec<UntrustedGrant> {
         if ace_bytes < size_of::<ACE_HEADER>()
             || offset
                 .checked_add(ace_bytes)
-                .is_none_or(|end| end > acl_bytes)
+                .map_or(true, |end| end > acl_bytes)
         {
             break;
         }
