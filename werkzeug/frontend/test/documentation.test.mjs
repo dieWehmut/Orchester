@@ -46,3 +46,19 @@ test('apps readme routes contributors through the stable surface commands', asyn
   assert.ok(readme.includes('pnpm run dev:website'))
   assert.ok(readme.includes('pnpm run dev:desktop'))
 })
+
+test('desktop download and install guidance ships in every readme', async () => {
+  const readmes = await Promise.all(
+    ['README.md', 'docs/README.en.md', 'docs/README.zh-TW.md'].map((name) =>
+      readFile(resolve(repositoryRoot, name), 'utf8'),
+    ),
+  )
+
+  for (const readme of readmes) {
+    assert.ok(readme.includes('desktop-v*'), 'the desktop release tag pattern is missing')
+    assert.ok(readme.includes('_x64-setup.exe'), 'the x64 installer name is missing')
+    assert.ok(readme.includes('_arm64-setup.exe'), 'the arm64 installer name is missing')
+    assert.ok(readme.includes('SHA256SUMS'), 'the checksum guidance is missing')
+    assert.ok(readme.includes('uninstall.exe'), 'the uninstall guidance is missing')
+  }
+})

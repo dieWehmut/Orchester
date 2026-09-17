@@ -99,7 +99,20 @@ bun add -g @orchester/cli
 
 The package has no lifecycle downloader. The release workflow publishes the six native platform packages first and submits `@orchester/cli` only after those versions are visible in the public registry.
 
-### 3. Build from source
+### 3. Desktop application
+
+Download `Orchester_<version>_x64-setup.exe` or `Orchester_<version>_arm64-setup.exe`
+from the `desktop-v*` release on
+[GitHub Releases](https://github.com/dieWehmut/Orchester/releases).
+
+The installer is per-user and needs no administrator rights. It creates desktop and
+Start-menu shortcuts and provisions WebView2 silently when the runtime is missing.
+Uninstall through Settings → Apps or the `uninstall.exe` in the install directory.
+
+Every release ships a `SHA256SUMS`; verify a download with
+`Get-FileHash -Algorithm SHA256 <installer>`.
+
+### 4. Build from source
 
 Without the installer you need a Rust 1.80+ toolchain:
 
@@ -109,7 +122,7 @@ cd Orchester
 cargo build --release
 ```
 
-### 4. First run
+### 5. First run
 
 The built-in `mock` adapter spawns no subprocess and needs no API key, so it exercises the whole pipeline on its own:
 
@@ -127,7 +140,7 @@ cargo run -p orchester-konsole -- --agent mock "hello"
 cargo run -p orchester-konsole -- --agent mock --json "hello"
 ```
 
-### 5. Delegate to an external agent (optional)
+### 6. Delegate to an external agent (optional)
 
 Once the corresponding agent CLI is installed and authenticated:
 
@@ -138,7 +151,7 @@ orchester --agent claude --resume <session-id> "and now add tests"
 
 `--json` writes each event as one line of Orchester's own protocol on **stdout** (the human-readable footer goes to stderr), so Orchester can be piped into another tool — or into another Orchester.
 
-### 6. Configure
+### 7. Configure
 
 The Orchester home is `~/.orchester` on every platform, kept beside the `~/.claude` and `~/.codex` homes of the agents it drives. `ORCHESTER_HOME` overrides that root as a whole, so the config and the state always move together.
 
