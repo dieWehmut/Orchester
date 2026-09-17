@@ -140,6 +140,10 @@
   "transcript": {
     "emptyTitle": "New run",
     "emptyDescription": "Select a previous session or start a new run.",
+    "newChatTitle": "New chat",
+    "share": "Share",
+    "more": "More options",
+    "togglePanel": "Toggle inspector",
     "loading": "Loading session",
     "loadError": "Session details unavailable",
     "prompt": "Request",

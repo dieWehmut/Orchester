@@ -7,16 +7,17 @@ const props = withDefaults(
     sessionsTitle: string
     inspectorTitle: string
     controlsLabel?: string
+    inspectorOpen?: boolean
   }>(),
-  { controlsLabel: 'Workspace panels' },
+  { controlsLabel: 'Workspace panels', inspectorOpen: true },
 )
 
 const sessionsOpen = ref(false)
-const inspectorOpen = ref(false)
+const inspectorDrawerOpen = ref(false)
 </script>
 
 <template>
-  <div class="workspace-responsive">
+  <div class="workspace-responsive" :class="{ 'workspace-responsive--inspector-closed': !props.inspectorOpen }">
     <nav
       class="workspace-responsive__mobile-controls"
       data-mobile-controls
@@ -36,7 +37,7 @@ const inspectorOpen = ref(false)
         size="sm"
         data-mobile-inspector
         :aria-label="props.inspectorTitle"
-        @click="inspectorOpen = true"
+        @click="inspectorDrawerOpen = true"
       >
         {{ props.inspectorTitle }}
       </AppButton>
@@ -60,6 +61,8 @@ const inspectorOpen = ref(false)
       <aside
         class="workspace-responsive__desktop-inspector"
         data-pane="inspector"
+        :data-inspector-open="String(props.inspectorOpen)"
+        :hidden="!props.inspectorOpen"
         aria-label="Inspector"
       >
         <slot name="inspector" />
@@ -69,7 +72,7 @@ const inspectorOpen = ref(false)
     <AppDrawer v-model:open="sessionsOpen" :title="props.sessionsTitle" side="left">
       <slot name="sessions" />
     </AppDrawer>
-    <AppDrawer v-model:open="inspectorOpen" :title="props.inspectorTitle" side="right">
+    <AppDrawer v-model:open="inspectorDrawerOpen" :title="props.inspectorTitle" side="right">
       <slot name="inspector" />
     </AppDrawer>
   </div>
@@ -92,6 +95,12 @@ const inspectorOpen = ref(false)
     minmax(var(--inspector-min-width), var(--inspector-width));
   min-block-size: calc(100vh - var(--app-top-chrome-height, var(--header-height)));
   overflow: hidden;
+}
+
+.workspace-responsive--inspector-closed .workspace-responsive__grid {
+  grid-template-columns:
+    minmax(var(--sidebar-min-width), var(--sidebar-width))
+    minmax(0, 1fr);
 }
 
 .workspace-responsive__desktop-sessions,

@@ -6,6 +6,7 @@ import InspectorDock from '../components/layout/InspectorDock.vue'
 import type { InspectorTab } from '../components/layout/inspector-tabs'
 import WorkspaceResponsive from '../components/layout/WorkspaceResponsive.vue'
 import WorkspaceSidebar from '../components/layout/WorkspaceSidebar.vue'
+import ThreadBar from '../components/layout/ThreadBar.vue'
 import SessionTranscript from '../components/sessions/SessionTranscript.vue'
 import RunPanel from '../components/run/RunPanel.vue'
 import { useI18n } from '../i18n'
@@ -21,6 +22,7 @@ const changeSummaries = computed(() => summarizeFileChanges(runView.value.fileCh
 const selectedChangePath = ref<string | null>(null)
 const selectedAgentId = ref<string | null>(null)
 const activeInspectorTab = ref<InspectorTab>('context')
+const inspectorOpen = ref(true)
 const runConnectionStatus = computed(() => run.connectionStatus.value)
 const runProjectionStatus = computed(() => run.projectionStatus.value)
 const runErrorMessage = computed(() => run.error.value?.message ?? null)
@@ -45,6 +47,8 @@ const {
   error,
   detailError,
 } = sessions
+
+const threadTitle = computed(() => selected.value?.title ?? t('transcript.newChatTitle'))
 
 const runBusy = computed(() =>
   run.lifecycle.value === 'submitting' ||
@@ -80,6 +84,7 @@ function handleOpenSettings(): void {
     :sessions-title="t('sessions.title')"
     :inspector-title="t('inspector.label')"
     :controls-label="t('inspector.label')"
+    :inspector-open="inspectorOpen"
   >
     <template #sessions>
       <WorkspaceSidebar
@@ -103,6 +108,15 @@ function handleOpenSettings(): void {
         @open-settings="handleOpenSettings"
       />
     </template>
+
+    <ThreadBar
+      :title="threadTitle"
+      :share-label="t('transcript.share')"
+      :more-label="t('transcript.more')"
+      :panel-label="t('transcript.togglePanel')"
+      :panel-open="inspectorOpen"
+      @toggle-panel="inspectorOpen = !inspectorOpen"
+    />
 
     <RunPanel
       v-if="!selected"
