@@ -15,6 +15,7 @@ mod listener;
 mod model_catalog;
 mod router;
 mod run;
+mod run_bridge;
 mod run_contract;
 mod run_registry;
 mod session;
