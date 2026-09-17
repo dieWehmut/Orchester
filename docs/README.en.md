@@ -196,7 +196,7 @@ Available in interactive mode (run `orchester` with no arguments):
 | `/help` | Show help |
 | `/quit` | Exit; `/exit` and `/q` are synonyms |
 
-Typing `/` opens the command palette — arrow keys to select, Enter to confirm.
+Typing `/` opens the command palette under the input line, the way Codex does — arrow keys to select, Enter to confirm.
 
 ## Command line
 
