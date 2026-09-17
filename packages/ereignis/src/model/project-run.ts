@@ -4,10 +4,10 @@ import type {
   UiEventEnvelope,
 } from '@orchester/protokoll'
 
-import { eventKey, gapKey, timelineItemKey } from './event-key'
+import { eventKey, gapKey } from './event-key'
+import { approvalView, projectConversation } from './project-conversation'
 import {
   createEmptyRunView,
-  type FileChangeTimelineItem,
   type GapTimelineItem,
   type RunStatus,
   type RunView,
@@ -53,6 +53,14 @@ export function projectRunSnapshot(snapshot: RunSnapshotDto): RunView {
 
   return {
     ...view,
+    approvals: [
+      ...view.approvals.filter((approval) => approval.state !== 'pending'),
+      ...snapshot.pending_approvals.map((request) => {
+        if (request.run_id !== snapshot.run_id) throw new RangeError('approval belongs to another run')
+        const previous = view.approvals.find((approval) => approval.approvalId === request.approval_id)
+        return approvalView(request, previous?.requestedSequence ?? null)
+      }),
+    ],
     // The snapshot state is authoritative even when its bounded event window
     // does not include the corresponding lifecycle event.
     status: snapshotStateToStatus(snapshot.state),
@@ -141,7 +149,7 @@ function withSequenceState(
 ): RunView {
   return {
     ...view,
-    timeline: gaps.map(toGapTimelineItem),
+    timeline: [...view.timeline, ...gaps.map(toGapTimelineItem)],
     latestSequence,
     bufferedSequences: [...bufferedSequences],
     gaps: [...gaps],
@@ -155,7 +163,6 @@ function projectLifecycle(
   let title = view.title
   let status: RunStatus = view.status
   let stop = view.stop
-  const fileChanges: FileChangeTimelineItem[] = [...view.fileChanges]
 
   for (const event of events) {
     switch (event.kind.type) {
@@ -167,23 +174,12 @@ function projectLifecycle(
         status = event.kind.reason
         stop = toRunStop(event)
         break
-      case 'file_change':
-        fileChanges.push({
-          type: 'file_change',
-          key: timelineItemKey(event),
-          sequence: event.sequence,
-          occurredAt: event.occurred_at,
-          turnId: event.turn_id ?? null,
-          path: event.kind.path,
-          kind: event.kind.kind,
-        })
-        break
       default:
         break
     }
   }
 
-  return { ...view, title, status, stop, fileChanges }
+  return { ...view, ...projectConversation(events), runId: view.runId, title, status, stop }
 }
 
 function toRunStop(event: UiEventEnvelope): RunStopView {
