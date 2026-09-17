@@ -1078,7 +1078,7 @@ fn render_chat_home<W: Write>(
 
 #[cfg(test)]
 fn render_chat_home_in_viewport<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::Result<()> {
-    render_chat_home_frame(out, view)
+    render_chat_home_frame(out, view).map(|_| ())
 }
 
 fn present_chat_home_in_viewport<W: Write>(
@@ -1087,11 +1087,31 @@ fn present_chat_home_in_viewport<W: Write>(
     view: ChatHomeView<'_>,
 ) -> io::Result<()> {
     let mut frame = Vec::new();
-    render_chat_home_frame(&mut frame, view)?;
-    presenter.present(out, &frame)
+    let caret = render_chat_home_frame(&mut frame, view)?;
+    presenter.present(out, &frame)?;
+    presenter.place_caret(out, caret)
 }
 
-fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::Result<()> {
+/// Where the terminal cursor belongs so the operator can see an insertion point
+/// while typing. Coordinates are frame cells; the presenter writes the frame
+/// from row 0, so a frame row is a terminal row.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) struct CaretPosition {
+    pub(crate) column: u16,
+    pub(crate) row: u16,
+}
+
+fn caret_position(composer_row: usize, column: u16, hidden: bool) -> Option<CaretPosition> {
+    (!hidden).then(|| CaretPosition {
+        column,
+        row: composer_row as u16,
+    })
+}
+
+fn render_chat_home_frame<W: Write>(
+    out: &mut W,
+    view: ChatHomeView<'_>,
+) -> io::Result<Option<CaretPosition>> {
     let ChatHomeView {
         width,
         height,
@@ -1107,7 +1127,7 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
         theme,
     } = view;
     if height == 0 {
-        return Ok(());
+        return Ok(None);
     }
 
     if !transcript.is_empty() || busy.is_some() || overlay.is_some() {
@@ -1164,16 +1184,24 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
         );
         writeln!(&mut body, "{}{hint}{RESET}", palette.dim)?;
     }
-    render_fixed_body(out, &body, body_rows)?;
-    render_composer(out, width, input, palette)?;
+    let body_height = render_fixed_body(out, &body, body_rows)?;
+    let caret_column = render_composer(out, width, input, palette)?;
+    let caret = caret_position(
+        layout.header.rows(width) + layout.separator_rows + body_height,
+        caret_column,
+        show_help,
+    );
     render_command_palette_lines(out, &command_palette)?;
     if layout.status_rows > 0 {
         render_status_line(out, width, model_status, busy, palette)?;
     }
-    Ok(())
+    Ok(caret)
 }
 
-fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::Result<()> {
+fn render_transcript_chat_frame<W: Write>(
+    out: &mut W,
+    view: ChatHomeView<'_>,
+) -> io::Result<Option<CaretPosition>> {
     let ChatHomeView {
         width,
         height,
@@ -1248,12 +1276,17 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
             )?;
         }
     }
-    render_fixed_body(
+    let body_height = render_fixed_body(
         out,
         &body,
         content_rows.saturating_sub(command_palette.len()),
     )?;
-    render_composer(out, width, input, palette)?;
+    let caret_column = render_composer(out, width, input, palette)?;
+    let caret = caret_position(
+        layout.header.rows(width) + layout.separator_rows + body_height,
+        caret_column,
+        show_help || overlay.is_some(),
+    );
     // The palette opens under the composer, the way Codex stacks its
     // slash-command popup above the status row.
     render_command_palette_lines(out, &command_palette)?;
@@ -1261,7 +1294,7 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
     if layout.status_rows > 0 {
         render_status_line(out, width, model_status, busy, palette)?;
     }
-    Ok(())
+    Ok(caret)
 }
 
 fn render_command_palette_lines<W: Write>(out: &mut W, lines: &[String]) -> io::Result<()> {
@@ -1271,13 +1304,18 @@ fn render_command_palette_lines<W: Write>(out: &mut W, lines: &[String]) -> io::
     Ok(())
 }
 
-fn render_fixed_body<W: Write>(out: &mut W, body: &[u8], rows: usize) -> io::Result<()> {
+fn render_fixed_body<W: Write>(out: &mut W, body: &[u8], rows: usize) -> io::Result<usize> {
     // `render_chat_home` uses a very large height as an unbounded rendering
     // sentinel in unit tests and line-mode helpers. Never allocate or loop a
     // terminal-sized buffer for that synthetic value.
     if rows > 10_000 {
         out.write_all(body)?;
-        return Ok(());
+        let body = body.strip_suffix(b"\n").unwrap_or(body);
+        return Ok(if body.is_empty() {
+            0
+        } else {
+            body.split(|byte| *byte == b'\n').count()
+        });
     }
     let body = body.strip_suffix(b"\n").unwrap_or(body);
     let body_rows = if body.is_empty() {
@@ -1288,19 +1326,25 @@ fn render_fixed_body<W: Write>(out: &mut W, body: &[u8], rows: usize) -> io::Res
     // `rows` is a ceiling, not a quota. Padding the body out to the full
     // viewport would push the composer to the last terminal row and leave a
     // gap between the hint and the input the operator is typing into.
+    let mut written = 0;
     for content in body_rows.iter().take(rows) {
         out.write_all(content)?;
         writeln!(out)?;
+        written += 1;
     }
-    Ok(())
+    Ok(written)
 }
 
+/// Writes the input row and reports where the insertion point sits, so the
+/// presenter can park the terminal cursor there. Codex keeps a real caret in
+/// the composer instead of a hand-drawn glyph, which is also what makes it
+/// blink at the terminal's own rate.
 fn render_composer<W: Write>(
     out: &mut W,
     width: usize,
     input: &str,
     palette: ThemePalette,
-) -> io::Result<()> {
+) -> io::Result<u16> {
     let prompt = if input.is_empty() {
         prompt_suggestion()
     } else {
@@ -1308,6 +1352,7 @@ fn render_composer<W: Write>(
     };
     let prompt_style = if input.is_empty() { palette.dim } else { "" };
     let prompt = truncate(&sanitize_terminal_text(prompt), width.saturating_sub(2));
+    let caret = display_width(&prompt).saturating_add(2);
     let prompt_pad = " ".repeat(width.saturating_sub(2 + display_width(&prompt)));
     writeln!(
         out,
@@ -1315,7 +1360,8 @@ fn render_composer<W: Write>(
         palette.composer_background,
         palette.composer_background,
         accent = palette.accent,
-    )
+    )?;
+    Ok(caret.min(width.saturating_sub(1)) as u16)
 }
 
 fn render_command_overlay<W: Write>(
@@ -2985,6 +3031,66 @@ mod tests {
             "the transcript must stay above the composer:\n{plain}"
         );
         assert!(lines.len() <= 24, "24-row frame overflowed:\n{plain}");
+    }
+
+    #[test]
+    fn the_frame_reports_the_insertion_point_after_the_typed_text() {
+        let transcript = [TranscriptEntry::assistant("partial answer")];
+        let render = |input: &str,
+                      transcript: &[TranscriptEntry],
+                      show_help: bool,
+                      overlay: Option<&CommandOverlay>| {
+            let mut out = Vec::new();
+            let caret = render_chat_home_frame(
+                &mut out,
+                ChatHomeView {
+                    width: 80,
+                    height: 24,
+                    input,
+                    choices: &[],
+                    command_selected: 0,
+                    show_help,
+                    model_status: "gpt-test",
+                    transcript,
+                    busy: None,
+                    scroll_offset: 0,
+                    overlay,
+                    theme: Theme::default(),
+                },
+            )
+            .unwrap();
+            (caret, strip_ansi(&String::from_utf8(out).unwrap()))
+        };
+
+        for (label, input, transcript) in [
+            ("home", "hello", &[][..]),
+            ("transcript", "hi", &transcript[..]),
+            ("palette", "/", &[][..]),
+        ] {
+            let (caret, plain) = render(input, transcript, false, None);
+            let caret = caret.unwrap_or_else(|| panic!("{label} lost the caret:\n{plain}"));
+            let composer = plain
+                .lines()
+                .position(|line| line.trim_end() == format!("> {input}"))
+                .unwrap_or_else(|| panic!("{label} has no composer row:\n{plain}"));
+            assert_eq!(
+                usize::from(caret.row),
+                composer,
+                "{label} caret row:\n{plain}"
+            );
+            assert_eq!(
+                usize::from(caret.column),
+                input.len() + 2,
+                "{label} caret column:\n{plain}"
+            );
+        }
+
+        let overlay =
+            CommandOverlay::new("Status", "", vec![OverlayItem::new("Model", "configured")]);
+        let (caret, plain) = render("", &[], false, Some(&overlay));
+        assert!(caret.is_none(), "an overlay owns the input:\n{plain}");
+        let (caret, plain) = render("", &[], true, None);
+        assert!(caret.is_none(), "the help view owns the input:\n{plain}");
     }
 
     #[test]
