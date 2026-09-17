@@ -121,7 +121,7 @@ pub enum ResyncReason {
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum RunStreamFrameDto {
     Event {
-        event: UiEventEnvelope,
+        event: Box<UiEventEnvelope>,
     },
     ResyncRequired {
         run_id: RunId,
