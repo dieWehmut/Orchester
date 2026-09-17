@@ -172,22 +172,22 @@
    Keeping it a token stops every button from guessing white and failing on amber.
 */
 
-[data-theme='dark'][data-color-scheme='amber'] {
-  --color-accent: #d8a24a;
-  --color-accent-hover: #e6b360;
-  --color-accent-muted: rgb(216 162 74 / 16%);
-  --color-accent-border: rgb(216 162 74 / 38%);
-  --color-accent-contrast: #17130a;
-  --color-glow: rgb(216 162 74 / 26%);
+[data-theme='dark'][data-color-scheme='codex'] {
+  --color-accent: #89b4fa;
+  --color-accent-hover: #a6c8ff;
+  --color-accent-muted: rgb(137 180 250 / 16%);
+  --color-accent-border: rgb(137 180 250 / 38%);
+  --color-accent-contrast: #0d1524;
+  --color-glow: rgb(137 180 250 / 26%);
 }
 
-[data-theme='light'][data-color-scheme='amber'] {
-  --color-accent: #96671a;
-  --color-accent-hover: #7c5514;
-  --color-accent-muted: rgb(150 103 26 / 12%);
-  --color-accent-border: rgb(150 103 26 / 30%);
+[data-theme='light'][data-color-scheme='codex'] {
+  --color-accent: #1f5dc4;
+  --color-accent-hover: #17499e;
+  --color-accent-muted: rgb(31 93 196 / 12%);
+  --color-accent-border: rgb(31 93 196 / 30%);
   --color-accent-contrast: #ffffff;
-  --color-glow: rgb(150 103 26 / 16%);
+  --color-glow: rgb(31 93 196 / 16%);
 }
 
 [data-theme='dark'][data-color-scheme='violet'] {

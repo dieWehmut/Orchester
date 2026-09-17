@@ -520,6 +520,49 @@ impl Drop for WinHandle {
     }
 }
 
+/// Whether `path` is owned by the user running this process.
+///
+/// The permission doctor used to answer this by spawning PowerShell for
+/// `Get-Acl` and `whoami` and comparing `DOMAIN\user` strings. That is two
+/// processes per inspected path, and the doctor runs for the config, the audit
+/// log, the memory database and the run store -- which is what made opening a
+/// menu in the TUI and the WebUI take seconds. Comparing owner SIDs through the
+/// same token lookup the ACL gate already uses keeps the answer and drops the
+/// subprocesses.
+pub(crate) fn path_owner_is_current_user(path: &std::path::Path) -> std::io::Result<bool> {
+    use std::os::windows::ffi::OsStrExt;
+
+    use windows_sys::Win32::Security::Authorization::{GetNamedSecurityInfoW, SE_FILE_OBJECT};
+
+    let wide: Vec<u16> = path.as_os_str().encode_wide().chain(Some(0)).collect();
+    let mut owner: PSID = null_mut();
+    let mut descriptor: PSECURITY_DESCRIPTOR = null_mut();
+    let status = unsafe {
+        GetNamedSecurityInfoW(
+            wide.as_ptr(),
+            SE_FILE_OBJECT,
+            OWNER_SECURITY_INFORMATION,
+            &mut owner,
+            null_mut(),
+            null_mut(),
+            null_mut(),
+            &mut descriptor,
+        )
+    };
+    let _descriptor_guard = SecurityDescriptorGuard(descriptor);
+    if status != ERROR_SUCCESS || owner.is_null() || unsafe { IsValidSid(owner) } == 0 {
+        return Err(std::io::Error::other("cannot read the path owner"));
+    }
+
+    let current = current_user_sid().map_err(|_| std::io::Error::other("cannot read the token"))?;
+    let current_sid = unsafe {
+        (*(current.as_ptr() as *const windows_sys::Win32::Security::TOKEN_USER))
+            .User
+            .Sid
+    };
+    Ok(unsafe { windows_sys::Win32::Security::EqualSid(owner, current_sid) } != 0)
+}
+
 struct SecurityDescriptorGuard(PSECURITY_DESCRIPTOR);
 
 impl Drop for SecurityDescriptorGuard {
@@ -550,6 +593,19 @@ mod tests {
     use super::*;
 
     static NEXT_DIR: AtomicU64 = AtomicU64::new(0);
+
+    /// The permission doctor must recognize a file this process created as its
+    /// own without spawning a helper, and must fail closed on a path it cannot
+    /// read at all.
+    #[test]
+    fn the_path_owner_check_answers_from_the_security_descriptor() {
+        let root = TempDir::new();
+        let owned = root.0.join("owned.txt");
+        fs::write(&owned, b"contents").unwrap();
+
+        assert!(path_owner_is_current_user(&owned).unwrap());
+        assert!(path_owner_is_current_user(&root.0.join("missing.txt")).is_err());
+    }
 
     struct TempDir(PathBuf);
 

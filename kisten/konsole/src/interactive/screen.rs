@@ -7,6 +7,8 @@ use crossterm::terminal::{
     EndSynchronizedUpdate, EnterAlternateScreen, LeaveAlternateScreen,
 };
 
+use super::CaretPosition;
+
 pub(super) struct TerminalSession;
 
 impl TerminalSession {
@@ -86,6 +88,21 @@ impl FramePresenter {
         self.rows = rows;
         Ok(())
     }
+
+    /// Parks the terminal cursor on the composer's insertion point. The frame
+    /// never draws a caret glyph: a real cursor is what blinks, moves with the
+    /// text, and lands after wide characters.
+    pub(super) fn place_caret<W: Write>(
+        &self,
+        out: &mut W,
+        caret: Option<CaretPosition>,
+    ) -> io::Result<()> {
+        match caret {
+            Some(caret) => execute!(out, cursor::MoveTo(caret.column, caret.row), cursor::Show)?,
+            None => execute!(out, cursor::Hide)?,
+        }
+        out.flush()
+    }
 }
 
 fn frame_rows(frame: &[u8]) -> Vec<Vec<u8>> {
@@ -119,6 +136,36 @@ mod tests {
         assert!(update.contains("gamma"));
         assert!(!update.contains("\x1b[J"));
         assert!(!update.contains("\x1b[2J"));
+    }
+
+    #[test]
+    fn the_caret_is_shown_on_the_composer_and_hidden_without_one() {
+        let mut presenter = FramePresenter::default();
+        let mut out = Vec::new();
+        presenter.present(&mut out, b"alpha\nbeta\n").unwrap();
+        out.clear();
+
+        presenter
+            .place_caret(&mut out, Some(CaretPosition { column: 7, row: 1 }))
+            .unwrap();
+
+        let update = String::from_utf8_lossy(&out).into_owned();
+        assert!(
+            update.contains("\x1b[2;8H"),
+            "the cursor must move to the insertion point: {update:?}"
+        );
+        assert!(
+            update.contains("\x1b[?25h"),
+            "the cursor must be visible while typing: {update:?}"
+        );
+
+        out.clear();
+        presenter.place_caret(&mut out, None).unwrap();
+        let update = String::from_utf8_lossy(&out).into_owned();
+        assert!(
+            update.contains("\x1b[?25l"),
+            "an overlay or help view must hide the caret: {update:?}"
+        );
     }
 
     #[test]

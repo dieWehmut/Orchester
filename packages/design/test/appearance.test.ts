@@ -116,9 +116,9 @@ describe('initAppearance', () => {
   it('applies both axes to the document', () => {
     const applied = initAppearance()
 
-    expect(applied).toEqual({ theme: 'dark', colorScheme: 'amber' })
+    expect(applied).toEqual({ theme: 'dark', colorScheme: 'codex' })
     expect(root().getAttribute(THEME_ATTRIBUTE)).toBe('dark')
-    expect(root().getAttribute(COLOR_SCHEME_ATTRIBUTE)).toBe('amber')
+    expect(root().getAttribute(COLOR_SCHEME_ATTRIBUTE)).toBe('codex')
   })
 
   it('mirrors the theme onto the color-scheme property so browser UI follows', () => {
@@ -153,7 +153,7 @@ describe('initAppearance', () => {
     localStorage.setItem(THEME_STORAGE_KEY, 'midnight')
     localStorage.setItem(COLOR_SCHEME_STORAGE_KEY, 'chartreuse')
 
-    expect(initAppearance()).toEqual({ theme: 'dark', colorScheme: 'amber' })
+    expect(initAppearance()).toEqual({ theme: 'dark', colorScheme: 'codex' })
   })
 
   it('survives a localStorage that throws on access', () => {

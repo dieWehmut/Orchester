@@ -55,4 +55,17 @@ describe('RunPanel', () => {
     expect(wrapper.get('[data-project-context]').text()).toContain('Orchester')
     expect(wrapper.get('[data-model-context-model]').text()).toContain('gpt-5.6')
   })
+
+  it('animates a run activity indicator only while a run is busy', async () => {
+    const wrapper = mount(RunPanel, {
+      props: { view: createEmptyRunView(), busy: true },
+    })
+
+    const indicator = wrapper.get('[data-run-activity]')
+    expect(indicator.attributes('role')).toBe('status')
+    expect(indicator.attributes('aria-label')).toBe('Run in progress')
+
+    await wrapper.setProps({ busy: false })
+    expect(wrapper.find('[data-run-activity]').exists()).toBe(false)
+  })
 })

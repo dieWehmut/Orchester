@@ -72,11 +72,11 @@ impl Theme {
     pub(crate) const fn palette(self) -> ThemePalette {
         match self {
             Self::Default | Self::Dark => ThemePalette {
-                accent: "\x1b[38;5;208m",
-                selection: "\x1b[38;5;222m",
-                warning: "\x1b[33m",
+                accent: "\x1b[38;2;137;180;250m",
+                selection: "\x1b[38;2;205;214;244m",
+                warning: "\x1b[38;2;243;139;168m",
                 dim: "\x1b[2m",
-                composer_background: "\x1b[48;5;236m",
+                composer_background: "\x1b[48;2;41;41;41m",
             },
             Self::Light => ThemePalette {
                 accent: "\x1b[38;2;0;95;135m",
@@ -192,22 +192,26 @@ mod tests {
         for theme in [Theme::Default, Theme::Dark] {
             let palette = theme.palette();
             assert_eq!(
-                palette.accent, "\x1b[38;2;137;180;250m",
+                palette.accent,
+                "\x1b[38;2;137;180;250m",
                 "{} accent",
                 theme.name()
             );
             assert_eq!(
-                palette.selection, "\x1b[38;2;205;214;244m",
+                palette.selection,
+                "\x1b[38;2;205;214;244m",
                 "{} selection",
                 theme.name()
             );
             assert_eq!(
-                palette.warning, "\x1b[38;2;243;139;168m",
+                palette.warning,
+                "\x1b[38;2;243;139;168m",
                 "{} warning",
                 theme.name()
             );
             assert_eq!(
-                palette.composer_background, "\x1b[48;2;41;41;41m",
+                palette.composer_background,
+                "\x1b[48;2;41;41;41m",
                 "{} composer band",
                 theme.name()
             );

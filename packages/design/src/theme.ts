@@ -9,14 +9,14 @@
 export const THEME_MODES = ['light', 'dark'] as const
 export type ThemeMode = (typeof THEME_MODES)[number]
 
-export const COLOR_SCHEMES = ['amber', 'violet', 'teal', 'rose'] as const
+export const COLOR_SCHEMES = ['codex', 'violet', 'teal', 'rose'] as const
 export type ColorScheme = (typeof COLOR_SCHEMES)[number]
 
 /** Dark, because this tool sits next to a terminal. */
 export const DEFAULT_THEME: ThemeMode = 'dark'
 
-/** Brass, for an orchestra. */
-export const DEFAULT_COLOR_SCHEME: ColorScheme = 'amber'
+/** Codex blue: the restrained accent the operator asked the surfaces to copy. */
+export const DEFAULT_COLOR_SCHEME: ColorScheme = 'codex'
 
 export const THEME_ATTRIBUTE = 'data-theme'
 export const COLOR_SCHEME_ATTRIBUTE = 'data-color-scheme'

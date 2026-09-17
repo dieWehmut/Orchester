@@ -3,9 +3,9 @@
 // These values intentionally mirror theme.ts; the appearance tests assert the
 // public storage keys and defaults so the two axes cannot drift silently.
 const THEME_MODES = ['light', 'dark'] as const
-const COLOR_SCHEMES = ['amber', 'violet', 'teal', 'rose'] as const
+const COLOR_SCHEMES = ['codex', 'violet', 'teal', 'rose'] as const
 const DEFAULT_THEME = 'dark'
-const DEFAULT_COLOR_SCHEME = 'amber'
+const DEFAULT_COLOR_SCHEME = 'codex'
 const THEME_ATTRIBUTE = 'data-theme'
 const COLOR_SCHEME_ATTRIBUTE = 'data-color-scheme'
 const THEME_STORAGE_KEY = 'orchester:theme'

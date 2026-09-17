@@ -153,7 +153,7 @@ describe('ColorSchemePicker', () => {
     })
 
     expect(wrapper.findAll('[role="radio"]')[0]?.attributes('aria-label')).toBe(
-      'translated:colorScheme.amber',
+      'translated:colorScheme.codex',
     )
   })
 
