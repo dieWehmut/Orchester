@@ -190,7 +190,7 @@ impl RunHandle {
             .map(|event| event.sequence)
             .unwrap_or(state.next_sequence);
         let frame = RunStreamFrameDto::Event {
-            event: Box::new(event.clone()),
+            event: event.clone(),
         };
         drop(state);
         let _ = self.entry.frames.send(frame);

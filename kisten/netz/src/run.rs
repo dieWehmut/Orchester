@@ -206,10 +206,10 @@ async fn stream_run_events(
     let mut latest_sequence = after_sequence;
     for event in replay.events {
         latest_sequence = event.sequence;
-        let frame = RunStreamFrameDto::Event {
-            event: Box::new(event),
-        };
-        if send_run_frame(&mut socket, frame).await.is_err() {
+        if send_run_frame(&mut socket, RunStreamFrameDto::Event { event })
+            .await
+            .is_err()
+        {
             return;
         }
     }
@@ -232,10 +232,10 @@ async fn stream_run_events(
                         continue;
                     }
                     latest_sequence = event.sequence;
-                    let frame = RunStreamFrameDto::Event {
-                        event: Box::new(*event),
-                    };
-                    if send_run_frame(&mut socket, frame).await.is_err() {
+                    if send_run_frame(&mut socket, RunStreamFrameDto::Event { event })
+                        .await
+                        .is_err()
+                    {
                         break;
                     }
                 }
