@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AppButton, AppTextarea } from '@orchester/design'
+import { AppButton, AppTextarea, Spinner } from '@orchester/design'
 import type { ModelCatalogDto } from '@orchester/protokoll'
 import { computed, ref, watch } from 'vue'
 
@@ -15,6 +15,7 @@ const props = withDefaults(
     placeholder?: string
     submitLabel?: string
     cancelLabel?: string
+    activityLabel?: string
     inputLabel?: string
     characterCountLabel?: string
     workspaceName?: string | null
@@ -30,6 +31,7 @@ const props = withDefaults(
     placeholder: 'Describe the task',
     submitLabel: 'Run',
     cancelLabel: 'Stop',
+    activityLabel: 'Run in progress',
     inputLabel: 'Task prompt',
     characterCountLabel: 'characters',
     workspaceName: null,
@@ -104,6 +106,13 @@ function handleKeydown(event: KeyboardEvent): void {
         {{ draft.length }} / {{ props.maxLength }} {{ props.characterCountLabel }}
       </span>
       <div class="run-composer__actions">
+        <Spinner
+          v-if="props.busy"
+          data-run-activity
+          class="run-composer__activity"
+          :size="14"
+          :label="props.activityLabel"
+        />
         <AppButton
           v-if="props.busy"
           type="button"
@@ -182,6 +191,10 @@ function handleKeydown(event: KeyboardEvent): void {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+}
+
+.run-composer__activity {
+  margin-inline-end: var(--space-1);
 }
 
 @media (max-width: 640px) {
