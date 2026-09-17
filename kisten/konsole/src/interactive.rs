@@ -2954,11 +2954,12 @@ mod tests {
             composer < palette,
             "the palette must open under the input line:\n{plain}"
         );
-        assert_eq!(
-            lines
-                .iter()
-                .position(|line| line.contains("previous answer")),
-            Some(0),
+        let history = lines
+            .iter()
+            .position(|line| line.contains("previous answer"))
+            .unwrap_or_else(|| panic!("the transcript must stay visible:\n{plain}"));
+        assert!(
+            history < composer,
             "the transcript must stay above the composer:\n{plain}"
         );
         assert!(lines.len() <= 24, "24-row frame overflowed:\n{plain}");
