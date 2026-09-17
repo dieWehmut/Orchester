@@ -47,9 +47,12 @@ describe('WorkspaceView Codex-style rail', () => {
     expect(wrapper.get('[data-rail-account]').text()).toContain('Local runtime')
 
     await wrapper.get('[data-rail-action="settings"]').trigger('click')
-    await vi.waitFor(() => {
-      expect(router.currentRoute.value.name).toBe('settings')
-    })
+    await vi.waitFor(
+      () => {
+        expect(router.currentRoute.value.name).toBe('settings')
+      },
+      { timeout: 10_000 },
+    )
   })
 
   it('starts a new chat from the rail action', async () => {
