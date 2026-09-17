@@ -34,5 +34,6 @@ tracing = { workspace = true }
 
 [dev-dependencies]
 futures = { workspace = true }
+reqwest = { workspace = true, features = ["json"] }
 tokio = { workspace = true, features = ["test-util"] }
 tokio-tungstenite = "0.29"

@@ -295,6 +295,9 @@ pub(crate) async fn agent_status_socket_handler(
 }
 
 async fn stream_agent_status(mut socket: WebSocket, context: ServerContext) {
+    let shutdown = context.control().subscribe_shutdown();
+    let shutdown = crate::wait_for_shutdown(shutdown);
+    tokio::pin!(shutdown);
     let store = context.agent_status_store().clone();
     let mut receiver = store.subscribe();
     let Ok(snapshot) = store.snapshot() else {
@@ -310,6 +313,10 @@ async fn stream_agent_status(mut socket: WebSocket, context: ServerContext) {
 
     loop {
         tokio::select! {
+            _ = &mut shutdown => {
+                let _ = socket.send(Message::Close(None)).await;
+                break;
+            },
             incoming = socket.recv() => match incoming {
                 Some(Ok(Message::Close(_))) | None => break,
                 Some(Ok(Message::Ping(payload))) => {
