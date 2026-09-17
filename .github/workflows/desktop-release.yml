@@ -1,0 +1,346 @@
+﻿name: desktop-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Exact desktop version pinned in the Tauri and desktop manifests
+        required: true
+        default: "0.1.2"
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  RUST_TOOLCHAIN: "1.96.1"
+  NODE_VERSION: "24.8.0"
+  PNPM_VERSION: "10.32.1"
+
+concurrency:
+  group: desktop-release-${{ inputs.version }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate release request
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout release commit
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Validate the pinned desktop version and existing tag
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+          TAG: desktop-v${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          [[ "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$ ]]
+          [[ $(node -p "require('./apps/desktop/package.json').version") == "$VERSION" ]]
+          [[ $(node -p "require('./apps/desktop/src-tauri/tauri.conf.json').version") == "$VERSION" ]]
+          [[ $(sed -n 's/^version = "\(.*\)"/\1/p' apps/desktop/src-tauri/Cargo.toml | head -1) == "$VERSION" ]]
+
+          if git rev-parse --verify --quiet "refs/tags/$TAG" >/dev/null; then
+            TAG_COMMIT=$(git rev-list -n 1 "$TAG")
+            if ! git diff --quiet "$TAG_COMMIT" "$GITHUB_SHA" -- . ':!.github/workflows/desktop-release.yml' ':!werkzeug/desktop/release-workflow.test.mjs'; then
+              echo "existing $TAG differs from the release commit outside desktop-release.yml" >&2
+              exit 1
+            fi
+          fi
+
+  test:
+    name: Test release source
+    needs: validate
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout release commit
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: Setup pinned release tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          rustup toolchain install "$RUST_TOOLCHAIN" --profile minimal
+          rustup component add --toolchain "$RUST_TOOLCHAIN" clippy
+          npm install --global "pnpm@$PNPM_VERSION" --ignore-scripts
+          [[ $(pnpm --version) == "$PNPM_VERSION" ]]
+
+      - name: Install workspace dependencies
+        shell: bash
+        run: pnpm install --frozen-lockfile
+
+      - name: Test Rust workspace
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo +"$RUST_TOOLCHAIN" test --locked --workspace --all-targets
+          cargo +"$RUST_TOOLCHAIN" clippy --locked --workspace --all-targets -- -D warnings
+
+      - name: Test desktop release tooling
+        shell: bash
+        run: node --test werkzeug/desktop/test/*.test.mjs
+
+      - name: Test desktop security configuration
+        shell: bash
+        run: pnpm --filter @orchester/desktop test:security
+
+      - name: Build WebUI payload
+        shell: bash
+        run: pnpm --filter @orchester/web build
+
+      - name: Verify the NSIS bundle contract
+        shell: bash
+        run: node werkzeug/desktop/verify-bundle.mjs
+
+  build:
+    name: Build ${{ matrix.arch }} installer
+    needs: validate
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x64
+            runner: windows-2025
+            rust_target: x86_64-pc-windows-msvc
+          - arch: arm64
+            runner: windows-11-arm
+            rust_target: aarch64-pc-windows-msvc
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Checkout release ref
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: Setup pinned build tools
+        shell: pwsh
+        env:
+          RUST_TARGET: ${{ matrix.rust_target }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          rustup toolchain install $env:RUST_TOOLCHAIN --profile minimal
+          rustup target add --toolchain $env:RUST_TOOLCHAIN $env:RUST_TARGET
+          npm install --global "pnpm@$env:PNPM_VERSION" --ignore-scripts
+          if ((pnpm --version) -ne $env:PNPM_VERSION) { throw "pnpm $env:PNPM_VERSION is required" }
+
+      - name: Install workspace dependencies
+        shell: pwsh
+        run: pnpm install --frozen-lockfile
+
+      - name: Build the NSIS installer
+        shell: pwsh
+        env:
+          RUST_TARGET: ${{ matrix.rust_target }}
+          ARCH: ${{ matrix.arch }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          node werkzeug/desktop/build-installer.mjs --arch $env:ARCH --rust-target $env:RUST_TARGET --version $env:VERSION
+
+      - name: Verify install, shortcut, launch, and uninstall
+        shell: pwsh
+        env:
+          ARCH: ${{ matrix.arch }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          pwsh -File werkzeug/desktop/verify-install.ps1 -Arch $env:ARCH -Version $env:VERSION
+
+      - name: Upload immutable installer
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: desktop-installer-${{ matrix.arch }}
+          path: desktop-installers/*.exe
+          archive: false
+          if-no-files-found: error
+          retention-days: 7
+
+  stage:
+    name: Stage and verify installers
+    needs: [build, test]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout release ref
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: Download installers
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          path: desktop-installers
+          pattern: desktop-installer-*
+          merge-multiple: true
+
+      - name: Stage, verify, and checksum installers
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          node werkzeug/desktop/stage-release.mjs \
+            --installers desktop-installers \
+            --output release \
+            --version "$VERSION"
+
+      - name: Upload verified release archive
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: desktop-release.tar.gz
+          path: desktop-release.tar.gz
+          archive: false
+          if-no-files-found: error
+          retention-days: 30
+
+  tag:
+    name: Tag desktop-v${{ inputs.version }}
+    needs: stage
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout validated release commit
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Create the immutable desktop tag
+        shell: bash
+        env:
+          TAG: desktop-v${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          if git rev-parse --verify --quiet "refs/tags/$TAG" >/dev/null; then
+            [[ $(git rev-list -n 1 "$TAG") == "$GITHUB_SHA" ]]
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag --annotate "$TAG" --message "Orchester desktop $TAG" "$GITHUB_SHA"
+          git push origin "refs/tags/$TAG"
+
+  release:
+    name: Create GitHub Release
+    needs: [stage, tag]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout release ref and history
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Download verified release archive
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: desktop-release.tar.gz
+          path: .
+
+      - name: Publish release assets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: desktop-v${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          mkdir release
+          tar -xzf desktop-release.tar.gz -C release
+          (cd release && sha256sum --check SHA256SUMS)
+
+          PREVIOUS_TAG=""
+          while IFS= read -r candidate; do
+            if [[ "$candidate" != "$TAG" ]]; then
+              PREVIOUS_TAG="$candidate"
+              break
+            fi
+          done < <(git tag --list 'desktop-v*' --sort=-creatordate)
+
+          {
+            echo "## Full Changelog"
+            echo
+            if [[ -n "$PREVIOUS_TAG" ]]; then
+              git log --pretty=format:'- %s (%h)' "$PREVIOUS_TAG..$TAG"
+            else
+              git log --pretty=format:'- %s (%h)' "$TAG"
+            fi
+            echo
+          } > release-notes.md
+
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release edit "$TAG" \
+              --repo "$GITHUB_REPOSITORY" \
+              --notes-file release-notes.md
+            gh release upload "$TAG" release/* --clobber --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$TAG" release/* \
+              --repo "$GITHUB_REPOSITORY" \
+              --verify-tag \
+              --title "Orchester Desktop $TAG" \
+              --notes-file release-notes.md
+          fi
+
+  verify:
+    name: Verify published release
+    needs: release
+    runs-on: windows-2025
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout release ref
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Verify published assets and hashes
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+          TAG: desktop-v${{ inputs.version }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $release = gh release view $env:TAG --repo $env:GITHUB_REPOSITORY --json tagName,isDraft,isPrerelease,assets | ConvertFrom-Json
+          if ($release.tagName -ne $env:TAG) { throw "release tag mismatch" }
+          if ($release.isDraft -or $release.isPrerelease) { throw "release must be published and stable" }
+          $expected = @("Orchester_$($env:VERSION)_x64-setup.exe", "Orchester_$($env:VERSION)_arm64-setup.exe", "SHA256SUMS")
+          $names = $release.assets | ForEach-Object { $_.name }
+          foreach ($asset in $expected) {
+            if ($names -notcontains $asset) { throw "missing release asset $asset" }
+          }
+          if (($release.assets | Where-Object { $_.size -le 0 }).Count -gt 0) { throw "release assets must be nonempty" }
+          node werkzeug/desktop/verify-release.mjs --tag $env:TAG --version $env:VERSION
