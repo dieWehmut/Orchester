@@ -73,7 +73,9 @@
   "workspace": {
     "eyebrow": "本機工作區",
     "title": "工作區",
-    "description": "工作階段歷史、執行記錄與內容工具將顯示於此。"
+    "description": "工作階段歷史、執行記錄與內容工具將顯示於此。",
+    "projects": "專案",
+    "projectFallback": "未選擇專案"
   },
   "settings": {
     "eyebrow": "設定",
@@ -93,7 +95,9 @@
     "loadError": "無法載入工作階段歷史",
     "retry": "重試",
     "loadMore": "載入更多",
-    "resumable": "可恢復"
+    "resumable": "可恢復",
+    "newChat": "新建對話",
+    "railTitle": "最近會話"
   },
   "transcript": {
     "emptyTitle": "新增執行",

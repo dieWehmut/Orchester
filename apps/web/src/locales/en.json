@@ -73,7 +73,9 @@
   "workspace": {
     "eyebrow": "Local workspace",
     "title": "Workspace",
-    "description": "Session history, run transcript, and context tools will appear here."
+    "description": "Session history, run transcript, and context tools will appear here.",
+    "projects": "Projects",
+    "projectFallback": "No project selected"
   },
   "settings": {
     "eyebrow": "Configuration",
@@ -93,7 +95,9 @@
     "loadError": "Session history unavailable",
     "retry": "Retry",
     "loadMore": "Load more",
-    "resumable": "Resumable"
+    "resumable": "Resumable",
+    "newChat": "New chat",
+    "railTitle": "Recent sessions"
   },
   "transcript": {
     "emptyTitle": "New run",

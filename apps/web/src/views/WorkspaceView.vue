@@ -77,6 +77,8 @@ function handleInspectorTabChange(tab: InspectorTab): void {
   >
     <template #sessions>
       <WorkspaceSidebar
+        :product-name="t('app.name')"
+        :workspace-name="workspaceName"
         :session-status="status"
         :sessions="items"
         :selected-session-id="selectedId"
@@ -103,7 +105,7 @@ function handleInspectorTabChange(tab: InspectorTab): void {
       :error-message="runErrorMessage"
       :busy="runBusy"
       :conversation-started="conversationStarted"
-      :workspace-name="workspaceName"
+        :workspace-name="workspaceName"
       :model-catalog="modelCatalog"
       :model-status="modelStatus"
       @submit="handleRunSubmit"

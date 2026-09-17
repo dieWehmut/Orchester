@@ -73,7 +73,9 @@
   "workspace": {
     "eyebrow": "本地工作区",
     "title": "工作区",
-    "description": "会话历史、运行记录和上下文工具将在这里显示。"
+    "description": "会话历史、运行记录和上下文工具将在这里显示。",
+    "projects": "项目",
+    "projectFallback": "未选择项目"
   },
   "settings": {
     "eyebrow": "配置",
@@ -93,7 +95,9 @@
     "loadError": "无法加载会话历史",
     "retry": "重试",
     "loadMore": "加载更多",
-    "resumable": "可恢复"
+    "resumable": "可恢复",
+    "newChat": "新建对话",
+    "railTitle": "最近会话"
   },
   "transcript": {
     "emptyTitle": "新运行",
