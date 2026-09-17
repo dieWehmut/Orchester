@@ -1168,7 +1168,7 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
     render_composer(out, width, input, palette)?;
     render_command_palette_lines(out, &command_palette)?;
     if layout.status_rows > 0 {
-        render_status_line(out, width, model_status, palette)?;
+        render_status_line(out, width, model_status, busy, palette)?;
     }
     Ok(())
 }
@@ -1259,7 +1259,7 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
     render_command_palette_lines(out, &command_palette)?;
 
     if layout.status_rows > 0 {
-        render_status_line(out, width, model_status, palette)?;
+        render_status_line(out, width, model_status, busy, palette)?;
     }
     Ok(())
 }
@@ -1925,17 +1925,32 @@ fn vertical_center_offset(container: usize, content: usize) -> usize {
     container.saturating_sub(content) / 2
 }
 
+/// The Codex-style bottom bar: directory, model (with its reasoning effort),
+/// the effective access policy, and the live turn state as its own trailing
+/// segment. An idle session keeps the three standing segments only, so the row
+/// does not flicker while the operator types.
+fn status_segments(model_status: &str, progress: Option<&str>) -> Vec<String> {
+    let mut segments = vec![
+        current_directory_text(),
+        sanitize_terminal_text(model_status),
+        "governed workspace".to_string(),
+    ];
+    if let Some(progress) = progress.map(sanitize_terminal_text) {
+        if !progress.trim().is_empty() {
+            segments.push(progress);
+        }
+    }
+    segments
+}
+
 fn render_status_line<W: Write>(
     out: &mut W,
     width: usize,
     model_status: &str,
+    progress: Option<&str>,
     palette: ThemePalette,
 ) -> io::Result<()> {
-    let status = format!(
-        "{}  |  {}  |  governed workspace",
-        current_directory_text(),
-        sanitize_terminal_text(model_status)
-    );
+    let status = status_segments(model_status, progress).join("  |  ");
     write!(out, "{}{}{RESET}", palette.dim, truncate(&status, width))
 }
 
@@ -3778,6 +3793,88 @@ mod tests {
         assert!(plain.contains("previous output"), "transcript:\n{plain}");
         assert!(plain.contains("/status"), "command palette:\n{plain}");
         assert!(plain.contains("Creating .."), "busy marker:\n{plain}");
+    }
+
+    #[test]
+    fn status_bar_segments_follow_the_codex_bar_order() {
+        let directory = current_directory_text();
+
+        assert_eq!(
+            status_segments("gpt-test high", None),
+            vec![
+                directory.clone(),
+                "gpt-test high".to_string(),
+                "governed workspace".to_string(),
+            ],
+            "an idle session keeps directory, model, and access"
+        );
+        assert_eq!(
+            status_segments("gpt-test high", Some("Creating...")),
+            vec![
+                directory,
+                "gpt-test high".to_string(),
+                "governed workspace".to_string(),
+                "Creating...".to_string(),
+            ],
+            "the live turn state trails the standing segments"
+        );
+        assert_eq!(
+            status_segments("gpt-test", Some("   ")).len(),
+            3,
+            "a blank turn state must not open an empty segment"
+        );
+    }
+
+    #[test]
+    fn status_bar_shows_the_live_turn_state_under_the_composer() {
+        let transcript = [TranscriptEntry::assistant("partial answer")];
+        let status_row = |busy: Option<&str>| {
+            let mut out = Vec::new();
+            render_chat_home_in_viewport(
+                &mut out,
+                ChatHomeView {
+                    width: 100,
+                    height: 24,
+                    input: "next task",
+                    choices: &[],
+                    command_selected: 0,
+                    show_help: false,
+                    model_status: "gpt-test high",
+                    transcript: &transcript,
+                    busy,
+                    scroll_offset: 0,
+                    overlay: None,
+                    theme: Theme::default(),
+                },
+            )
+            .unwrap();
+            let plain = strip_ansi(&String::from_utf8(out).unwrap());
+            plain.lines().last().unwrap_or_default().to_string()
+        };
+
+        let working = status_row(Some("Creating..."));
+        assert!(
+            working.contains("gpt-test high"),
+            "model segment with its effort:\n{working}"
+        );
+        assert!(
+            working.contains("governed workspace"),
+            "access segment:\n{working}"
+        );
+        assert!(
+            working.contains("Creating..."),
+            "progress segment:\n{working}"
+        );
+
+        let idle = status_row(None);
+        assert!(
+            idle.contains("governed workspace"),
+            "idle status bar:\n{idle}"
+        );
+        assert!(
+            !idle.contains("Creating..."),
+            "an idle bar must not claim progress:\n{idle}"
+        );
     }
 
     #[test]
