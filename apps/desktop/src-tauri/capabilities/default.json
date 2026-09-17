@@ -1,17 +1,8 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Minimal permissions for the main window and the local development server.",
+  "description": "No static grants. The embedded runtime grants window controls to its exact loopback origin at startup.",
   "windows": ["main"],
-  "local": true,
-  "remote": {
-    "urls": ["http://127.0.0.1:4173/*"]
-  },
-  "permissions": [
-    "core:window:allow-close",
-    "core:window:allow-minimize",
-    "core:window:allow-toggle-maximize",
-    "core:window:allow-start-dragging",
-    "core:window:allow-is-maximized"
-  ]
+  "local": false,
+  "permissions": []
 }
