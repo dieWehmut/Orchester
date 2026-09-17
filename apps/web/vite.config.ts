@@ -11,7 +11,7 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       '@orchester/ereignis': fileURLToPath(
-        new URL('../ereignis/src/index.ts', import.meta.url),
+        new URL('../../packages/ereignis/src/index.ts', import.meta.url),
       ),
     },
   },

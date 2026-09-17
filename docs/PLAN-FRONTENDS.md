@@ -11,7 +11,7 @@ the CLI contract or leaking governed runtime data.
 **Architecture:** Rust remains the source of truth. `kisten/netz` owns loopback
 HTTP/WebSocket serving and maps safe DTOs from `laufzeit`/`anwendung`; the
 browser receives a versioned, redacted UI event envelope with replayable
-sequence numbers. `apps/protokoll` owns wire types, `apps/ereignis` owns pure
+sequence numbers. `packages/protokoll` owns wire types, `packages/ereignis` owns pure
 deterministic projections and Vue run components, `apps/web` owns transport,
 auth, routing, and stores, `apps/website` owns a static fixture-driven demo,
 and `apps/desktop` embeds the same web bundle.
@@ -31,7 +31,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
    from a legacy `stopped` event.
 5. A full snapshot replaces a collection. Client code never incrementally merges
    a directory snapshot or silently drops a failed response.
-6. `apps/ereignis` has no fetch, WebSocket, Pinia, router, or application i18n.
+6. `packages/ereignis` has no fetch, WebSocket, Pinia, router, or application i18n.
 7. `apps/website` never contacts localhost. Its demo replays the same fixtures
    used by `apps/web` tests.
 8. GitHub Pages is deployed only by a pinned GitHub Actions workflow from
@@ -41,7 +41,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 
 ## Current baseline
 
-- [x] F0-001: Commit the existing `apps/design` source closure and the related
+- [x] F0-001: Commit the existing `packages/design` source closure and the related
   lockfile hunk (`10f528f`).
 - [x] F0-002: Add the shared no-flash appearance bootstrap script and tests
   (`efbc420`).
@@ -54,15 +54,15 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 
 ## Wave F0: repository and design-system foundations
 
-- [x] F0-006: Add `apps/design/src/components/AppField.vue` with label,
+- [x] F0-006: Add `packages/design/src/components/AppField.vue` with label,
   hint, error, `aria-describedby`, and an isolated component test.
 - [x] F0-007: Add `AppInput.vue` and its controlled-value/disabled/error tests.
 - [x] F0-008: Add `AppTextarea.vue` with deterministic row sizing and tests.
 - [x] F0-009: Add `AppSelect.vue` with native keyboard semantics and tests.
 - [x] F0-010: Add `AppCheckbox.vue` with indeterminate and label wiring tests.
 - [x] F0-011: Add `AppSwitch.vue` with `role=switch` and keyboard tests.
-- [x] F0-012: Export all form primitives from `apps/design/src/index.ts`.
-- [x] F0-013: Add `apps/design/test/forms.test.ts` for cross-primitive ARIA
+- [x] F0-012: Export all form primitives from `packages/design/src/index.ts`.
+- [x] F0-013: Add `packages/design/test/forms.test.ts` for cross-primitive ARIA
   invariants and run the complete design suite.
 - [x] F0-014: Add `AppTabs.vue` with roving focus and manual activation tests.
 - [x] F0-015: Add `AppSegmentedControl.vue` with selected-state tests.
@@ -88,7 +88,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
   add an icon accessibility test.
 - [x] F0-032: Add design package CSS custom-property snapshot tests for dark,
   light, and all four color schemes.
-- [x] F0-033: Add `apps/design/src/index.css` reset contract and verify it does
+- [x] F0-033: Add `packages/design/src/index.css` reset contract and verify it does
   not style consumer layout elements.
 - [x] F0-034: Add design package README with import examples and supported
   keyboard contracts.
@@ -119,7 +119,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [x] P1-016: Add protocol schema-version compatibility tests for legacy v1
   and UI v1.
 - [x] P1-017: Add a generated fixture manifest consumed by website and web.
-- [x] P1-018: Add protocol documentation in `apps/protokoll/README.md`.
+- [x] P1-018: Add protocol documentation in `packages/protokoll/README.md`.
 - [ ] P1-019: Run TypeScript and Rust protocol checks with the available MSVC
   linker and record the toolchain requirement. Local ARM64 validation is
   blocked until Visual Studio Build Tools are installed; see
@@ -211,7 +211,7 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 - [ ] N1-039: Add Rust documentation for local threat model and limitations.
 - [ ] N1-040: Run Rust fmt, clippy, unit, and integration gates; commit/push.
 
-## Wave E1: `apps/ereignis` pure projection package
+## Wave E1: `packages/ereignis` pure projection package
 
 - [ ] E1-001: Scaffold package metadata, tsconfig, Vitest setup, and source
   index with only Vue/protokoll/design dependencies.

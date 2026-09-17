@@ -9,7 +9,7 @@ on:
       - Cargo.toml
       - apps/stack.manifest.json
       - apps/website/**
-      - apps/design/**
+      - packages/design/**
       - apps/web/package.json
       - apps/web/vite.config.ts
       - apps/desktop/package.json

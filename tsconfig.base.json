@@ -20,10 +20,10 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@orchester/protokoll": ["./protokoll/src/index.ts"],
-      "@orchester/design": ["./design/src/index.ts"],
-      "@orchester/design/*": ["./design/src/*"],
-      "@orchester/ereignis": ["./ereignis/src/index.ts"]
+      "@orchester/protokoll": ["./packages/protokoll/src/index.ts"],
+      "@orchester/design": ["./packages/design/src/index.ts"],
+      "@orchester/design/*": ["./packages/design/src/*"],
+      "@orchester/ereignis": ["./packages/ereignis/src/index.ts"]
     }
   }
 }

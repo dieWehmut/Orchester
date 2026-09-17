@@ -18,70 +18,11 @@ importers:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@25.9.5)(jsdom@30.0.1)(vite@8.2.1(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0))
 
-  apps/design:
-    dependencies:
-      '@lucide/vue':
-        specifier: ^1.32.0
-        version: 1.32.0(vue@3.5.18(typescript@5.9.3))
-    devDependencies:
-      '@vitejs/plugin-vue':
-        specifier: ^6.0.1
-        version: 6.0.8(vite@7.3.6(@types/node@25.9.5)(jiti@2.7.0)(lightningcss@1.33.0))(vue@3.5.18(typescript@5.9.3))
-      '@vue/test-utils':
-        specifier: ^2.4.6
-        version: 2.4.11(@vue/compiler-dom@3.5.41)(@vue/server-renderer@3.5.18(vue@3.5.18(typescript@5.9.3)))(vue@3.5.18(typescript@5.9.3))
-      jsdom:
-        specifier: ^30.0.1
-        version: 30.0.1
-      vite:
-        specifier: ^7.1.2
-        version: 7.3.6(@types/node@25.9.5)(jiti@2.7.0)(lightningcss@1.33.0)
-      vue:
-        specifier: 3.5.18
-        version: 3.5.18(typescript@5.9.3)
-      vue-tsc:
-        specifier: ^3.2.5
-        version: 3.3.10(typescript@5.9.3)
-
   apps/desktop:
     devDependencies:
       '@tauri-apps/cli':
         specifier: 2.11.4
         version: 2.11.4
-
-  apps/ereignis:
-    dependencies:
-      '@orchester/design':
-        specifier: workspace:*
-        version: link:../design
-      '@orchester/protokoll':
-        specifier: workspace:*
-        version: link:../protokoll
-      vue:
-        specifier: 3.5.18
-        version: 3.5.18(typescript@5.9.3)
-    devDependencies:
-      '@vitejs/plugin-vue':
-        specifier: ^6.0.1
-        version: 6.0.8(vite@7.3.6(@types/node@25.9.5)(jiti@2.7.0)(lightningcss@1.33.0))(vue@3.5.18(typescript@5.9.3))
-      '@vue/test-utils':
-        specifier: ^2.4.6
-        version: 2.4.11(@vue/compiler-dom@3.5.41)(@vue/server-renderer@3.5.18(vue@3.5.18(typescript@5.9.3)))(vue@3.5.18(typescript@5.9.3))
-      jsdom:
-        specifier: ^30.0.1
-        version: 30.0.1
-      vite:
-        specifier: ^7.1.2
-        version: 7.3.6(@types/node@25.9.5)(jiti@2.7.0)(lightningcss@1.33.0)
-      vue-tsc:
-        specifier: ^3.2.5
-        version: 3.3.10(typescript@5.9.3)
-
-  apps/protokoll:
-    dependencies:
-      jsonc-parser:
-        specifier: ^3.3.1
-        version: 3.3.1
 
   apps/web:
     dependencies:
@@ -90,13 +31,13 @@ importers:
         version: 1.32.0(vue@3.5.18(typescript@5.9.3))
       '@orchester/design':
         specifier: workspace:*
-        version: link:../design
+        version: link:../../packages/design
       '@orchester/ereignis':
         specifier: workspace:*
-        version: link:../ereignis
+        version: link:../../packages/ereignis
       '@orchester/protokoll':
         specifier: workspace:*
-        version: link:../protokoll
+        version: link:../../packages/protokoll
       '@tauri-apps/api':
         specifier: 2.11.1
         version: 2.11.1
@@ -154,7 +95,7 @@ importers:
         version: 1.32.0(vue@3.5.18(typescript@5.9.3))
       '@orchester/design':
         specifier: workspace:*
-        version: link:../design
+        version: link:../../packages/design
       vue:
         specifier: 3.5.18
         version: 3.5.18(typescript@5.9.3)
@@ -180,6 +121,65 @@ importers:
       vue-tsc:
         specifier: ^3.2.5
         version: 3.3.10(typescript@5.9.3)
+
+  packages/design:
+    dependencies:
+      '@lucide/vue':
+        specifier: ^1.32.0
+        version: 1.32.0(vue@3.5.18(typescript@5.9.3))
+    devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.1
+        version: 6.0.8(vite@7.3.6(@types/node@25.9.5)(jiti@2.7.0)(lightningcss@1.33.0))(vue@3.5.18(typescript@5.9.3))
+      '@vue/test-utils':
+        specifier: ^2.4.6
+        version: 2.4.11(@vue/compiler-dom@3.5.41)(@vue/server-renderer@3.5.18(vue@3.5.18(typescript@5.9.3)))(vue@3.5.18(typescript@5.9.3))
+      jsdom:
+        specifier: ^30.0.1
+        version: 30.0.1
+      vite:
+        specifier: ^7.1.2
+        version: 7.3.6(@types/node@25.9.5)(jiti@2.7.0)(lightningcss@1.33.0)
+      vue:
+        specifier: 3.5.18
+        version: 3.5.18(typescript@5.9.3)
+      vue-tsc:
+        specifier: ^3.2.5
+        version: 3.3.10(typescript@5.9.3)
+
+  packages/ereignis:
+    dependencies:
+      '@orchester/design':
+        specifier: workspace:*
+        version: link:../design
+      '@orchester/protokoll':
+        specifier: workspace:*
+        version: link:../protokoll
+      vue:
+        specifier: 3.5.18
+        version: 3.5.18(typescript@5.9.3)
+    devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.1
+        version: 6.0.8(vite@7.3.6(@types/node@25.9.5)(jiti@2.7.0)(lightningcss@1.33.0))(vue@3.5.18(typescript@5.9.3))
+      '@vue/test-utils':
+        specifier: ^2.4.6
+        version: 2.4.11(@vue/compiler-dom@3.5.41)(@vue/server-renderer@3.5.18(vue@3.5.18(typescript@5.9.3)))(vue@3.5.18(typescript@5.9.3))
+      jsdom:
+        specifier: ^30.0.1
+        version: 30.0.1
+      vite:
+        specifier: ^7.1.2
+        version: 7.3.6(@types/node@25.9.5)(jiti@2.7.0)(lightningcss@1.33.0)
+      vue-tsc:
+        specifier: ^3.2.5
+        version: 3.3.10(typescript@5.9.3)
+
+  packages/protokoll:
+    dependencies:
+      jsonc-parser:
+        specifier: ^3.3.1
+        version: 3.3.1
 
 packages:
 

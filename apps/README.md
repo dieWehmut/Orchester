@@ -1,15 +1,15 @@
-# apps — the Orchester frontends
+# apps — the Orchester surfaces
 
-Orchester has one runtime and several faces. The repository-root pnpm workspace
-currently discovers the JavaScript packages in this directory.
+Orchester has one runtime and several faces. This tier holds exactly the three
+surfaces the product ships; the shared packages they consume live in `packages/`.
 
-| Package | What it is |
+| Surface or package | What it is |
 | --- | --- |
-| `protokoll` | `@orchester/protokoll` — the TypeScript mirror of the Rust wire protocol |
-| `design` | `@orchester/design` — design tokens and primitives shared by every face |
-| `ereignis` | `@orchester/ereignis` — the components that render an agent run |
+| `packages/protokoll` | `@orchester/protokoll` — the TypeScript mirror of the Rust wire protocol |
+| `packages/design` | `@orchester/design` — design tokens and primitives shared by every face |
+| `packages/ereignis` | `@orchester/ereignis` — the components that render an agent run |
 | `web` | the local WebUI served by `orchester web` |
-| `website` | the project site published to GitHub Pages |
+| `web/site` | the project site published to GitHub Pages |
 | `desktop` | the Tauri shell, which loads the `web` bundle |
 
 ## Why three shared packages instead of one app
