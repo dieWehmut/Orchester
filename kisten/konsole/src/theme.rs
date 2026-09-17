@@ -192,22 +192,26 @@ mod tests {
         for theme in [Theme::Default, Theme::Dark] {
             let palette = theme.palette();
             assert_eq!(
-                palette.accent, "\x1b[38;2;137;180;250m",
+                palette.accent,
+                "\x1b[38;2;137;180;250m",
                 "{} accent",
                 theme.name()
             );
             assert_eq!(
-                palette.selection, "\x1b[38;2;205;214;244m",
+                palette.selection,
+                "\x1b[38;2;205;214;244m",
                 "{} selection",
                 theme.name()
             );
             assert_eq!(
-                palette.warning, "\x1b[38;2;243;139;168m",
+                palette.warning,
+                "\x1b[38;2;243;139;168m",
                 "{} warning",
                 theme.name()
             );
             assert_eq!(
-                palette.composer_background, "\x1b[48;2;41;41;41m",
+                palette.composer_background,
+                "\x1b[48;2;41;41;41m",
                 "{} composer band",
                 theme.name()
             );
