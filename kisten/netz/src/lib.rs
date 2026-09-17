@@ -8,6 +8,8 @@ mod agent_status;
 mod api_error;
 mod bootstrap;
 mod config;
+#[cfg(feature = "static-files")]
+mod embedded;
 mod fragment;
 mod health;
 mod lifecycle;
@@ -32,6 +34,8 @@ pub use agent_status::{
 pub use api_error::{api_error_response, ApiErrorBody, ApiErrorCode, ApiErrorResponse};
 pub use bootstrap::{bootstrap_response, BootstrapDto, BootstrapWorkspaceDto, ServerContext};
 pub use config::{ServerConfig, ServerConfigError, StaticAssets};
+#[cfg(feature = "static-files")]
+pub use embedded::EmbeddedServer;
 pub use fragment::{FragmentTokenStore, FragmentTokenStoreError};
 pub use health::{health_handler, health_response, HealthDto};
 pub use lifecycle::{

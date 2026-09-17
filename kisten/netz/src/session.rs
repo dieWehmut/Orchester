@@ -116,6 +116,21 @@ impl SessionStore {
         self.validate_result(session_cookie, csrf_token).is_ok()
     }
 
+    /// Authenticate read requests and WebSocket upgrades without exposing the
+    /// CSRF token to a URL. Mutations must additionally call `validate`.
+    pub fn validate_cookie(&self, session_cookie: &str) -> bool {
+        let hash = digest(session_cookie);
+        let mut sessions = self.sessions.lock().expect("session store lock");
+        match sessions.get(&hash) {
+            Some(session) if SystemTime::now() < session.expires_at => true,
+            Some(_) => {
+                sessions.remove(&hash);
+                false
+            }
+            None => false,
+        }
+    }
+
     pub fn validate_result(
         &self,
         session_cookie: &str,

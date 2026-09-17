@@ -69,21 +69,16 @@ test('desktop security configuration is explicit and deny-by-default', async () 
 
   assert.equal(capability.identifier, 'default')
   assert.deepEqual(capability.windows, ['main'])
-  assert.equal(capability.local, true)
-  assert.deepEqual(capability.remote?.urls, ['http://127.0.0.1:4173/*'])
-  assert.deepEqual(capability.permissions, [
-    'core:window:allow-close',
-    'core:window:allow-minimize',
-    'core:window:allow-toggle-maximize',
-    'core:window:allow-start-dragging',
-    'core:window:allow-is-maximized',
-  ])
+  assert.equal(capability.local, false)
+  assert.equal(capability.remote, undefined)
+  assert.deepEqual(capability.permissions, [])
   assert.ok(capability.permissions.every((permission) => permission.startsWith('core:window:')))
   assert.ok(!capability.permissions.some((permission) => permission.startsWith('shell:')))
   assert.ok(!capability.permissions.some((permission) => permission.startsWith('opener:')))
 
   assert.equal(config.app.windows.length, 1)
   assert.equal(config.app.windows[0].label, 'main')
+  assert.equal(config.app.windows[0].create, false)
   assert.equal(config.app.windows[0].decorations, false)
   assert.equal(config.app.windows[0].shadow, true)
   assert.equal(config.app.windows[0].devtools, false)
