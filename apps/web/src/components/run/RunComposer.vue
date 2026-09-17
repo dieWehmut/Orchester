@@ -81,6 +81,13 @@ function handleKeydown(event: KeyboardEvent): void {
 
 <template>
   <form class="run-composer" data-run-composer @submit.prevent="submit">
+    <ComposerContextBar
+      class="run-composer__commands"
+      :workspace-name="props.workspaceName"
+      :model-catalog="props.modelCatalog"
+      :model-status="props.modelStatus"
+      :approval-label="props.approvalLabel"
+    />
     <label class="run-composer__label" for="run-prompt">{{ props.inputLabel }}</label>
     <AppTextarea
       id="run-prompt"
@@ -93,17 +100,10 @@ function handleKeydown(event: KeyboardEvent): void {
       @keydown="handleKeydown"
     />
     <div class="run-composer__footer" data-composer-footer>
-      <ComposerContextBar
-        class="run-composer__context"
-        :workspace-name="props.workspaceName"
-        :model-catalog="props.modelCatalog"
-        :model-status="props.modelStatus"
-        :approval-label="props.approvalLabel"
-      />
+      <span class="run-composer__count" aria-live="polite">
+        {{ draft.length }} / {{ props.maxLength }} {{ props.characterCountLabel }}
+      </span>
       <div class="run-composer__actions">
-        <span class="run-composer__count" aria-live="polite">
-          {{ draft.length }} / {{ props.maxLength }} {{ props.characterCountLabel }}
-        </span>
         <AppButton
           v-if="props.busy"
           type="button"
@@ -150,17 +150,15 @@ function handleKeydown(event: KeyboardEvent): void {
 
 .run-composer__footer {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-  padding-block-start: var(--space-1);
 }
 
-.run-composer__context {
+.run-composer__commands {
   min-inline-size: 0;
-  flex: 1;
-  padding: 0;
-  border: 0;
+  padding: 0 0 var(--space-2);
+  border-block-end: 1px solid var(--color-border-base);
 }
 
 .run-composer :deep(.app-textarea) {
@@ -182,7 +180,6 @@ function handleKeydown(event: KeyboardEvent): void {
 
 .run-composer__actions {
   display: flex;
-  flex: 0 0 auto;
   align-items: center;
   gap: var(--space-2);
 }
