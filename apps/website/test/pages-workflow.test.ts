@@ -28,10 +28,10 @@ describe('GitHub Pages workflow', () => {
   })
 
   it('installs and verifies the website before uploading its base-path build', () => {
-    expect(workflow).toContain('pnpm --dir apps install --frozen-lockfile')
-    expect(workflow).toContain('pnpm --dir apps --filter @orchester/website typecheck')
-    expect(workflow).toContain('pnpm --dir apps --filter @orchester/website test')
-    expect(workflow).toContain('pnpm --dir apps --filter @orchester/website build')
+    expect(workflow).toContain('pnpm install --frozen-lockfile')
+    expect(workflow).toContain('pnpm --filter @orchester/website typecheck')
+    expect(workflow).toContain('pnpm --filter @orchester/website test')
+    expect(workflow).toContain('pnpm --filter @orchester/website build')
     expect(workflow).toContain('BASE_PATH: /Orchester/')
     expect(workflow).toContain('VITE_GISCUS_REPO: ${{ vars.GISCUS_REPO }}')
     expect(workflow).toContain('VITE_GISCUS_REPO_ID: ${{ vars.GISCUS_REPO_ID }}')
