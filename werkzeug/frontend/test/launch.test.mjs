@@ -19,7 +19,7 @@ test('launch plans use the declared packages and strict Vite ports', async () =>
   assert.deepEqual(createLaunchPlan('webui', manifest, repositoryRoot), {
     surface: 'webui',
     command: 'pnpm',
-    args: ['--dir', 'apps', '--filter', '@orchester/web', 'dev', '--', '--strictPort'],
+    args: ['--filter', '@orchester/web', 'dev', '--', '--strictPort'],
     cwd: repositoryRoot,
     url: 'http://127.0.0.1:4173/',
     requiresDesktopDoctor: false,
@@ -27,7 +27,7 @@ test('launch plans use the declared packages and strict Vite ports', async () =>
   assert.deepEqual(createLaunchPlan('website', manifest, repositoryRoot), {
     surface: 'website',
     command: 'pnpm',
-    args: ['--dir', 'apps', '--filter', '@orchester/website', 'dev', '--', '--strictPort'],
+    args: ['--filter', '@orchester/website', 'dev', '--', '--strictPort'],
     cwd: repositoryRoot,
     url: 'http://127.0.0.1:4174/',
     requiresDesktopDoctor: false,
@@ -35,7 +35,7 @@ test('launch plans use the declared packages and strict Vite ports', async () =>
   assert.deepEqual(createLaunchPlan('desktop', manifest, repositoryRoot), {
     surface: 'desktop',
     command: 'pnpm',
-    args: ['--dir', 'apps', '--filter', '@orchester/desktop', 'dev'],
+    args: ['--filter', '@orchester/desktop', 'dev'],
     cwd: repositoryRoot,
     url: null,
     requiresDesktopDoctor: true,
@@ -85,7 +85,7 @@ test('runLaunchPlan delegates to the injected process runner and propagates its 
   const plan = {
     surface: 'webui',
     command: 'pnpm',
-    args: ['--dir', 'apps'],
+    args: ['--filter', '@orchester/web'],
     cwd: repositoryRoot,
     url: 'http://127.0.0.1:4173/',
     requiresDesktopDoctor: false,
@@ -102,7 +102,7 @@ test('runLaunchPlan delegates to the injected process runner and propagates its 
   assert.equal(exitCode, 23)
   assert.deepEqual(calls, [{
     command: 'pnpm',
-    args: ['--dir', 'apps'],
+    args: ['--filter', '@orchester/web'],
     options: { cwd: repositoryRoot, stdio: 'inherit', shell: process.platform === 'win32' },
   }])
 })

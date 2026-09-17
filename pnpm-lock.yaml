@@ -18,7 +18,7 @@ importers:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@25.9.5)(jsdom@30.0.1)(vite@8.2.1(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0))
 
-  design:
+  apps/design:
     dependencies:
       '@lucide/vue':
         specifier: ^1.32.0
@@ -43,13 +43,13 @@ importers:
         specifier: ^3.2.5
         version: 3.3.10(typescript@5.9.3)
 
-  desktop:
+  apps/desktop:
     devDependencies:
       '@tauri-apps/cli':
         specifier: 2.11.4
         version: 2.11.4
 
-  ereignis:
+  apps/ereignis:
     dependencies:
       '@orchester/design':
         specifier: workspace:*
@@ -77,13 +77,13 @@ importers:
         specifier: ^3.2.5
         version: 3.3.10(typescript@5.9.3)
 
-  protokoll:
+  apps/protokoll:
     dependencies:
       jsonc-parser:
         specifier: ^3.3.1
         version: 3.3.1
 
-  web:
+  apps/web:
     dependencies:
       '@lucide/vue':
         specifier: ^1.32.0
@@ -147,7 +147,7 @@ importers:
         specifier: ^3.2.5
         version: 3.3.10(typescript@5.9.3)
 
-  website:
+  apps/website:
     dependencies:
       '@lucide/vue':
         specifier: ^1.32.0

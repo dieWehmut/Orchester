@@ -33,7 +33,7 @@ export function createLaunchPlan(surfaceName, manifest, repositoryRoot = default
   const surface = manifest.surfaces[surfaceName]
   if (!surface) throw new Error(`Unknown surface: ${surfaceName}`)
 
-  const args = ['--dir', 'apps', '--filter', surface.package, 'dev']
+  const args = ['--filter', surface.package, 'dev']
   if (surface.kind === 'vite') args.push('--', '--strictPort')
 
   return {

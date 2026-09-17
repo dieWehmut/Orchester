@@ -64,6 +64,6 @@ preferences are honored by animated feedback primitives.
 ## Local checks
 
 ```sh
-pnpm --dir apps --filter @orchester/design typecheck
-pnpm --dir apps --filter @orchester/design test
+pnpm --filter @orchester/design typecheck
+pnpm --filter @orchester/design test
 ```

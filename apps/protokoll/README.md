@@ -89,8 +89,8 @@ at one. Do not create website-only event shapes.
 Run from the repository root:
 
 ```sh
-pnpm --dir apps --filter @orchester/protokoll typecheck
-pnpm --dir apps --filter @orchester/protokoll test
+pnpm --filter @orchester/protokoll typecheck
+pnpm --filter @orchester/protokoll test
 cargo test -p orchester-protokoll
 ```
 

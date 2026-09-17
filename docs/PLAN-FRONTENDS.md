@@ -338,11 +338,11 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 ## Checkpoint commands
 
 ```text
-pnpm --dir apps install --frozen-lockfile
-pnpm --dir apps typecheck
-pnpm --dir apps test
-pnpm --dir apps --filter @orchester/web build
-pnpm --dir apps --filter @orchester/website build
+pnpm install --frozen-lockfile
+pnpm typecheck
+pnpm test
+pnpm --filter @orchester/web build
+pnpm --filter @orchester/website build
 cargo fmt --all -- --check
 cargo clippy --all-targets -- -D warnings
 cargo test --workspace

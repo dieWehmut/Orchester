@@ -1,0 +1,23 @@
+{
+  "name": "@orchester/workspace",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.32.1",
+  "description": "Orchester JavaScript workspace",
+  "scripts": {
+    "dev:desktop": "node werkzeug/frontend/launch.mjs desktop",
+    "dev:webui": "node werkzeug/frontend/launch.mjs webui",
+    "dev:website": "node werkzeug/frontend/launch.mjs website",
+    "doctor:desktop": "node werkzeug/frontend/doctor.mjs desktop",
+    "doctor:web": "node werkzeug/frontend/doctor.mjs web",
+    "stack:verify": "node werkzeug/frontend/stack-manifest.mjs",
+    "test:tooling": "node --test werkzeug/frontend/test/*.test.mjs",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm run test:tooling && pnpm -r test && pnpm --filter @orchester/desktop test:security"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.2",
+    "typescript": "5.9.3",
+    "vitest": "^4.1.10"
+  }
+}

@@ -11,13 +11,13 @@ test('frontend operations documents every stable launch and verification command
   const operations = await readFile(resolve(repositoryRoot, 'docs/FRONTENDS-OPERATIONS.md'), 'utf8')
 
   for (const command of [
-    'pnpm --dir apps doctor:web',
-    'pnpm --dir apps doctor:desktop',
-    'pnpm --dir apps dev:webui',
-    'pnpm --dir apps dev:website',
-    'pnpm --dir apps dev:desktop',
-    'pnpm --dir apps stack:verify',
-    'pnpm --dir apps test:tooling',
+    'pnpm doctor:web',
+    'pnpm doctor:desktop',
+    'pnpm dev:webui',
+    'pnpm dev:website',
+    'pnpm dev:desktop',
+    'pnpm stack:verify',
+    'pnpm test:tooling',
   ]) {
     assert.ok(operations.includes(command), `${command} is missing from frontend operations`)
   }
@@ -33,7 +33,7 @@ test('toolchain guide names the machine-readable linker failures and supported r
 
   assert.ok(guide.includes('windows-linker-shadowed'))
   assert.ok(guide.includes('windows-msvc-compiler-missing'))
-  assert.ok(guide.includes('pnpm --dir apps doctor:desktop'))
+  assert.ok(guide.includes('pnpm doctor:desktop'))
   assert.match(guide, /Desktop development with C\+\+/)
   assert.match(guide, /Developer PowerShell/)
 })

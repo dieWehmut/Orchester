@@ -38,10 +38,10 @@ rebased or recreated from the merged integration head before opening its PR.
 
 | Surface | Source | Development command | Local URL/output |
 | --- | --- | --- | --- |
-| WebUI | `apps/web` | `pnpm --dir apps --filter @orchester/web dev` | `http://127.0.0.1:4173/` |
-| Site | `apps/website` | `pnpm --dir apps --filter @orchester/website dev` | Astro dev URL |
+| WebUI | `apps/web` | `pnpm --filter @orchester/web dev` | `http://127.0.0.1:4173/` |
+| Site | `apps/website` | `pnpm --filter @orchester/website dev` | Astro dev URL |
 | Pages | `.github/workflows/pages.yml` | push/Actions workflow | `https://dieWehmut.github.io/Orchester/` |
-| Desktop | `apps/desktop` | `pnpm --dir apps --filter @orchester/desktop dev` | Tauri window |
+| Desktop | `apps/desktop` | `pnpm --filter @orchester/desktop dev` | Tauri window |
 
 WebUI production build is the only bundle consumed by Tauri and `kisten/netz`.
 The website is a separate Astro app and never calls localhost.
@@ -50,7 +50,7 @@ The website is a separate Astro app and never calls localhost.
 
 - [x] W2-001 Add pinned Pinia, Tailwind CSS, Tailwind Vite plugin, shadcn
   utility, and Lucide dependencies to `apps/web/package.json`.
-- [x] W2-002 Regenerate only the required `apps/pnpm-lock.yaml` importer and
+- [x] W2-002 Regenerate only the required `pnpm-lock.yaml` importer and
   package entries with a frozen-install check.
 - [x] W2-003 Add the Tailwind Vite plugin without changing the dev port.
 - [x] W2-004 Add a dedicated Tailwind entry stylesheet and preserve the shared
@@ -326,12 +326,12 @@ Every WebUI commit must pass the narrow package command plus `git diff --check`.
 Wave gates are:
 
 ```powershell
-pnpm --dir apps install --frozen-lockfile
-pnpm --dir apps --filter @orchester/protokoll typecheck
-pnpm --dir apps --filter @orchester/protokoll test
-pnpm --dir apps --filter @orchester/web typecheck
-pnpm --dir apps --filter @orchester/web test
-pnpm --dir apps --filter @orchester/web build
+pnpm install --frozen-lockfile
+pnpm --filter @orchester/protokoll typecheck
+pnpm --filter @orchester/protokoll test
+pnpm --filter @orchester/web typecheck
+pnpm --filter @orchester/web test
+pnpm --filter @orchester/web build
 ```
 
 The site gate additionally runs Astro typecheck/test/build with

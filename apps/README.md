@@ -1,7 +1,7 @@
 # apps — the Orchester frontends
 
-Orchester has one runtime and several faces. This directory holds the JavaScript
-half of them.
+Orchester has one runtime and several faces. The repository-root pnpm workspace
+currently discovers the JavaScript packages in this directory.
 
 | Package | What it is |
 | --- | --- |
@@ -34,10 +34,11 @@ every app on the next HMR tick.
 
 `apps/stack.manifest.json` is the machine-readable source for surface package
 names, local ports, Pages metadata, and toolchain requirements. Use the stable
-workspace commands instead of copying package filters into new scripts:
+workspace commands from the repository root instead of copying package filters
+into new scripts:
 
 ```sh
-pnpm install              # once, from this directory
+pnpm install              # once, from the repository root
 pnpm run doctor:web       # Node/pnpm preflight
 pnpm run doctor:desktop   # adds Rust and native desktop checks
 pnpm run dev:webui        # http://127.0.0.1:4173/

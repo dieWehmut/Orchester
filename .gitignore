@@ -17,9 +17,11 @@ sample
 /forschung/.analysis_parts/
 
 # ── Frontend build output ───────────────────────────────────────────
-# The JavaScript workspace lives in apps/. Its lockfile IS tracked (the Pages
-# and desktop builds run --frozen-lockfile), everything derived is not.
+# The JavaScript workspace starts at the repository root. Its lockfile IS
+# tracked (the Pages and desktop builds run --frozen-lockfile), everything
+# derived is not.
 node_modules/
+/.pnpm-store/
 apps/*/dist/
 apps/website/dist-*/
 .vite/
