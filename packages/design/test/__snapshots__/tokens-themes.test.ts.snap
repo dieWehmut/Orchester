@@ -11,6 +11,17 @@ exports[`theme token contracts > keeps every accent scheme complete in dark and 
 }
 `;
 
+exports[`theme token contracts > keeps every accent scheme complete in dark and light modes > dark-codex 1`] = `
+{
+  "--color-accent": "#89b4fa",
+  "--color-accent-border": "rgb(137 180 250 / 38%)",
+  "--color-accent-contrast": "#0d1524",
+  "--color-accent-hover": "#a6c8ff",
+  "--color-accent-muted": "rgb(137 180 250 / 16%)",
+  "--color-glow": "rgb(137 180 250 / 26%)",
+}
+`;
+
 exports[`theme token contracts > keeps every accent scheme complete in dark and light modes > dark-rose 1`] = `
 {
   "--color-accent": "#e88aa4",
@@ -52,6 +63,17 @@ exports[`theme token contracts > keeps every accent scheme complete in dark and 
   "--color-accent-hover": "#7c5514",
   "--color-accent-muted": "rgb(150 103 26 / 12%)",
   "--color-glow": "rgb(150 103 26 / 16%)",
+}
+`;
+
+exports[`theme token contracts > keeps every accent scheme complete in dark and light modes > light-codex 1`] = `
+{
+  "--color-accent": "#1f5dc4",
+  "--color-accent-border": "rgb(31 93 196 / 30%)",
+  "--color-accent-contrast": "#ffffff",
+  "--color-accent-hover": "#17499e",
+  "--color-accent-muted": "rgb(31 93 196 / 12%)",
+  "--color-glow": "rgb(31 93 196 / 16%)",
 }
 `;
 

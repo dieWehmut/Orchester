@@ -153,7 +153,7 @@ describe('initAppearance', () => {
     localStorage.setItem(THEME_STORAGE_KEY, 'midnight')
     localStorage.setItem(COLOR_SCHEME_STORAGE_KEY, 'chartreuse')
 
-    expect(initAppearance()).toEqual({ theme: 'dark', colorScheme: 'amber' })
+    expect(initAppearance()).toEqual({ theme: 'dark', colorScheme: 'codex' })
   })
 
   it('survives a localStorage that throws on access', () => {

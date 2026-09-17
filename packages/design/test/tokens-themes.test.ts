@@ -38,7 +38,7 @@ describe('theme token contracts', () => {
 
   it('keeps every accent scheme complete in dark and light modes', () => {
     for (const theme of ['dark', 'light'] as const) {
-      for (const scheme of ['amber', 'violet', 'teal', 'rose'] as const) {
+      for (const scheme of ['codex', 'violet', 'teal', 'rose'] as const) {
         const block = readBlock(
           "[data-theme='" + theme + "'][data-color-scheme='" + scheme + "']",
         )
