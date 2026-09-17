@@ -10,9 +10,10 @@ const repositoryRoot = path.resolve(moduleDirectory, '../..');
 const expectedArchitectures = ['x64', 'arm64'];
 const installerPrefix = 'Orchester_';
 
-function fail(message) {
-  process.stderr.write(`verify-release: ${message}\n`);
-  process.exit(1);
+export function fail(message) {
+  const error = new Error(`verify-release: ${message}`);
+  error.code = 'ORCHESTER_DESKTOP_VERIFY';
+  throw error;
 }
 
 export function parseArguments(args) {
@@ -53,8 +54,7 @@ function run(command, args, options = {}) {
   return result.stdout ?? '';
 }
 
-const invokedDirectly = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
-if (invokedDirectly) {
+function main() {
   const options = parseArguments(process.argv.slice(2));
   const tag = options.tag;
   const version = options.version;
@@ -103,4 +103,14 @@ if (invokedDirectly) {
   }
 
   process.stdout.write(`verify-release: ${tag} assets download and match SHA256SUMS\n`);
+}
+
+const invokedDirectly = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (invokedDirectly) {
+  try {
+    main();
+  } catch (error) {
+    process.stderr.write(`${error.message}\n`);
+    process.exit(1);
+  }
 }

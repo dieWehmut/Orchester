@@ -9,9 +9,10 @@ const repositoryRoot = path.resolve(moduleDirectory, '../..');
 
 const expectedArchitectures = ['x64', 'arm64'];
 
-function fail(message) {
-  process.stderr.write(`stage-release: ${message}\n`);
-  process.exit(1);
+export function fail(message) {
+  const error = new Error(`stage-release: ${message}`);
+  error.code = 'ORCHESTER_DESKTOP_STAGE';
+  throw error;
 }
 
 export function parseArguments(args) {
@@ -38,8 +39,7 @@ export function sha256(file) {
   return crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 }
 
-const invokedDirectly = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
-if (invokedDirectly) {
+function main() {
   const options = parseArguments(process.argv.slice(2));
   const installers = options.installers;
   const output = options.output;
@@ -75,4 +75,14 @@ if (invokedDirectly) {
   if (packed.error) fail(`tar failed to start: ${packed.error.message}`);
   if (packed.status !== 0) fail(`tar exited with ${packed.status}`);
   process.stdout.write(`stage-release: staged ${assets.join(', ')} and SHA256SUMS\n`);
+}
+
+const invokedDirectly = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (invokedDirectly) {
+  try {
+    main();
+  } catch (error) {
+    process.stderr.write(`${error.message}\n`);
+    process.exit(1);
+  }
 }

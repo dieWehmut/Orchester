@@ -92,7 +92,7 @@ jobs:
 
       - name: Test desktop release tooling
         shell: bash
-        run: node --test werkzeug/desktop/test/*.test.mjs
+        run: node --test werkzeug/desktop/*.test.mjs
 
       - name: Test desktop security configuration
         shell: bash

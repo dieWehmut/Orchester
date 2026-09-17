@@ -14,9 +14,36 @@ const architectures = new Map([
   ['arm64', 'aarch64-pc-windows-msvc'],
 ]);
 
-function fail(message) {
-  process.stderr.write(`build-installer: ${message}\n`);
-  process.exit(1);
+export function fail(message) {
+  const error = new Error(`build-installer: ${message}`);
+  error.code = 'ORCHESTER_DESKTOP_BUILD';
+  throw error;
+}
+
+function main() {
+  const options = parseArguments(process.argv.slice(2));
+  const arch = options.arch;
+  const rustTarget = options['rust-target'];
+  const version = options.version;
+  if (!arch || !rustTarget || !version) fail('--arch, --rust-target, and --version are required');
+  if (architectures.get(arch) !== rustTarget) fail(`--rust-target must be ${architectures.get(arch)} for ${arch}`);
+  assertInputs(version);
+
+  run('pnpm', ['--filter', '@orchester/web', 'build']);
+  run('pnpm', ['--filter', '@orchester/desktop', 'build', '--', '--target', rustTarget, '--bundles', 'nsis']);
+
+  const bundleDirectory = path.join(desktopRoot, 'src-tauri/target', rustTarget, 'release/bundle/nsis');
+  const produced = fs.existsSync(bundleDirectory)
+    ? fs.readdirSync(bundleDirectory).filter((name) => name.endsWith('.exe'))
+    : [];
+  if (produced.length !== 1) fail(`expected one NSIS installer in ${bundleDirectory}, found ${produced.length}`);
+
+  fs.mkdirSync(outputDirectory, { recursive: true });
+  const destination = path.join(outputDirectory, installerName(version, arch));
+  fs.copyFileSync(path.join(bundleDirectory, produced[0]), destination);
+  const size = fs.statSync(destination).size;
+  if (size <= 0) fail('produced installer is empty');
+  process.stdout.write(`build-installer: wrote ${path.relative(repositoryRoot, destination)} (${size} bytes)\n`);
 }
 
 export function parseArguments(args) {
@@ -67,27 +94,10 @@ export function assertInputs(version) {
 
 const invokedDirectly = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (invokedDirectly) {
-  const options = parseArguments(process.argv.slice(2));
-  const arch = options.arch;
-  const rustTarget = options['rust-target'];
-  const version = options.version;
-  if (!arch || !rustTarget || !version) fail('--arch, --rust-target, and --version are required');
-  if (architectures.get(arch) !== rustTarget) fail(`--rust-target must be ${architectures.get(arch)} for ${arch}`);
-  assertInputs(version);
-
-  run('pnpm', ['--filter', '@orchester/web', 'build']);
-  run('pnpm', ['--filter', '@orchester/desktop', 'build', '--', '--target', rustTarget, '--bundles', 'nsis']);
-
-  const bundleDirectory = path.join(desktopRoot, 'src-tauri/target', rustTarget, 'release/bundle/nsis');
-  const produced = fs.existsSync(bundleDirectory)
-    ? fs.readdirSync(bundleDirectory).filter((name) => name.endsWith('.exe'))
-    : [];
-  if (produced.length !== 1) fail(`expected one NSIS installer in ${bundleDirectory}, found ${produced.length}`);
-
-  fs.mkdirSync(outputDirectory, { recursive: true });
-  const destination = path.join(outputDirectory, installerName(version, arch));
-  fs.copyFileSync(path.join(bundleDirectory, produced[0]), destination);
-  const size = fs.statSync(destination).size;
-  if (size <= 0) fail('produced installer is empty');
-  process.stdout.write(`build-installer: wrote ${path.relative(repositoryRoot, destination)} (${size} bytes)\n`);
+  try {
+    main();
+  } catch (error) {
+    process.stderr.write(`${error.message}\n`);
+    process.exit(1);
+  }
 }

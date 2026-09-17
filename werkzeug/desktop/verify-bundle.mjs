@@ -6,9 +6,10 @@ const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(moduleDirectory, '../..');
 const desktopRoot = path.join(repositoryRoot, 'apps/desktop');
 
-function fail(message) {
-  process.stderr.write(`verify-bundle: ${message}\n`);
-  process.exit(1);
+export function fail(message) {
+  const error = new Error(`verify-bundle: ${message}`);
+  error.code = 'ORCHESTER_DESKTOP_BUNDLE';
+  throw error;
 }
 
 function readJson(file) {
@@ -46,6 +47,11 @@ export function verifyBundleContract() {
 
 const invokedDirectly = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (invokedDirectly) {
-  verifyBundleContract();
-  process.stdout.write('verify-bundle: NSIS bundle contract holds and the web payload exists\n');
+  try {
+    verifyBundleContract();
+    process.stdout.write('verify-bundle: NSIS bundle contract holds and the web payload exists\n');
+  } catch (error) {
+    process.stderr.write(`${error.message}\n`);
+    process.exit(1);
+  }
 }
