@@ -1342,46 +1342,24 @@ fn check_windows_acl(path: PathBuf) -> Vec<PermissionDiagnostic> {
         broad_principal && write_grant
     });
 
-    let owner = system_tool("WindowsPowerShell\\v1.0\\powershell")
-        .map(|tool| {
-            Command::new(tool)
-                .args([
-                    "-NoLogo",
-                    "-NoProfile",
-                    "-NonInteractive",
-                    "-Command",
-                    "(Get-Acl -LiteralPath $env:ORCHESTER_DOCTOR_PATH).Owner",
-                ])
-                .env("ORCHESTER_DOCTOR_PATH", &path)
-                .output()
-        })
-        .transpose()
-        .ok()
-        .flatten()
-        .filter(|output| output.status.success())
-        .map(|output| String::from_utf8_lossy(&output.stdout).trim().to_owned())
-        .filter(|owner| !owner.is_empty());
-    let identity = system_tool("whoami")
-        .map(Command::new)
-        .map(|mut command| command.output())
-        .transpose()
-        .ok()
-        .flatten()
-        .filter(|output| output.status.success())
-        .map(|output| String::from_utf8_lossy(&output.stdout).trim().to_owned())
-        .filter(|identity| !identity.is_empty());
-    let owner_matches = match (&owner, &identity) {
-        (Some(owner), Some(identity)) => owner.eq_ignore_ascii_case(identity),
-        _ => false,
-    };
+    // Ownership is read from the file's security descriptor and compared as
+    // SIDs. The previous `Get-Acl`/`whoami` pair spawned two processes per
+    // inspected path, and this check runs for the config, the audit log, the
+    // memory database and the run store, so every menu that touched them paid
+    // for it.
+    let owner_matches =
+        crate::harness::private_fs::path_owner_is_current_user(&path).unwrap_or(false);
 
     // This is deliberately conservative: an ACL that cannot be confidently
     // recognized as user-only is reported as a doctor finding.
     let secure = acl_output.status.success() && owner_matches && !broad_write;
     let actual = format!(
-        "owner={}; identity={}; broad_write={broad_write}",
-        owner.as_deref().unwrap_or("unavailable"),
-        identity.as_deref().unwrap_or("unavailable")
+        "owner={}; broad_write={broad_write}",
+        if owner_matches {
+            "current user"
+        } else {
+            "not current user"
+        }
     );
     vec![PermissionDiagnostic {
         path,
