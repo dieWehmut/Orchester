@@ -3,14 +3,14 @@ use std::fs::File;
 use std::mem::size_of;
 use std::os::windows::fs::OpenOptionsExt;
 use std::os::windows::io::AsRawHandle;
-use std::ptr::null_mut;
+use std::ptr::{null, null_mut};
 
 use windows_sys::Win32::Foundation::{ERROR_SUCCESS, HANDLE};
 use windows_sys::Win32::Security::Authorization::{GetSecurityInfo, SE_FILE_OBJECT};
 use windows_sys::Win32::Security::{
     GetAce, GetAclInformation, IsValidAcl, IsValidSid, ACE_HEADER, ACL, ACL_SIZE_INFORMATION,
-    DACL_SECURITY_INFORMATION, INHERIT_ONLY_ACE, OWNER_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR,
-    PSID,
+    DACL_SECURITY_INFORMATION, INHERITED_ACE, INHERIT_ONLY_ACE, OWNER_SECURITY_INFORMATION,
+    PSECURITY_DESCRIPTOR, PSID,
 };
 use windows_sys::Win32::Storage::FileSystem::{
     GetFileInformationByHandle, GetFileType, BY_HANDLE_FILE_INFORMATION, FILE_ATTRIBUTE_DIRECTORY,
@@ -563,6 +563,176 @@ pub(crate) fn path_owner_is_current_user(path: &std::path::Path) -> std::io::Res
     Ok(unsafe { windows_sys::Win32::Security::EqualSid(owner, current_sid) } != 0)
 }
 
+/// One allow-ACE that grants access to a principal outside the trusted set.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct UntrustedGrant {
+    pub(crate) principal: String,
+    pub(crate) inherited: bool,
+}
+
+/// Grants on `path` that name a principal outside {current user, SYSTEM,
+/// Administrators}: the accounts the configuration loader will refuse to read a
+/// file for.
+///
+/// The permission doctor used to ask this of PowerShell, which translated every
+/// ACE through `Get-Acl`. Measured on this machine that script cost 2.1-3.4 s
+/// per call, and the doctor runs for the config file, which is why opening
+/// `/config` -- and the WebUI's config view -- took seconds. Reading the DACL
+/// directly answers the same question without spawning a process. Principal
+/// names are resolved the same way the script's `IdentityReference.Value` was,
+/// with the SID as the fallback so a lookup failure cannot silently drop a
+/// finding.
+pub(crate) fn untrusted_grants(path: &std::path::Path) -> Vec<UntrustedGrant> {
+    let Some((dacl, descriptor)) = open_dacl(path) else {
+        return Vec::new();
+    };
+    let _descriptor_guard = SecurityDescriptorGuard(descriptor);
+
+    let current = current_user_sid().ok();
+    let current_sid = current.as_ref().map(|storage| unsafe {
+        (*(storage.as_ptr() as *const windows_sys::Win32::Security::TOKEN_USER))
+            .User
+            .Sid
+    });
+
+    let mut size = ACL_SIZE_INFORMATION::default();
+    if unsafe {
+        GetAclInformation(
+            dacl,
+            &mut size as *mut _ as *mut c_void,
+            size_of::<ACL_SIZE_INFORMATION>() as u32,
+            windows_sys::Win32::Security::AclSizeInformation,
+        )
+    } == 0
+    {
+        return Vec::new();
+    }
+
+    let acl_start = dacl as usize;
+    let acl_bytes = size.AclBytesInUse as usize;
+    let mut grants = Vec::new();
+    for index in 0..size.AceCount {
+        let mut raw: *mut c_void = null_mut();
+        if unsafe { GetAce(dacl, index, &mut raw) } == 0 || raw.is_null() {
+            break;
+        }
+        let Some(offset) = (raw as usize).checked_sub(acl_start) else {
+            break;
+        };
+        if offset
+            .checked_add(size_of::<ACE_HEADER>())
+            .map_or(true, |end| end > acl_bytes)
+        {
+            break;
+        }
+        let header = unsafe { *(raw as *const ACE_HEADER) };
+        let ace_bytes = header.AceSize as usize;
+        if ace_bytes < size_of::<ACE_HEADER>()
+            || offset
+                .checked_add(ace_bytes)
+                .map_or(true, |end| end > acl_bytes)
+        {
+            break;
+        }
+        if header.AceType
+            != windows_sys::Win32::System::SystemServices::ACCESS_ALLOWED_ACE_TYPE as u8
+        {
+            continue;
+        }
+        // (OI)/(CI)/inherit-only ACEs do not apply to this object.
+        if header.AceFlags & INHERIT_ONLY_ACE as u8 != 0 {
+            continue;
+        }
+        let Some(sid) = ace_sid(raw, ace_bytes) else {
+            continue;
+        };
+        if current_sid.is_some_and(|current| sid_is_allowed(sid, current)) {
+            continue;
+        }
+        grants.push(UntrustedGrant {
+            principal: sid_label(sid),
+            inherited: header.AceFlags & INHERITED_ACE as u8 != 0,
+        });
+    }
+    grants
+}
+
+fn open_dacl(path: &std::path::Path) -> Option<(*mut ACL, PSECURITY_DESCRIPTOR)> {
+    use std::os::windows::ffi::OsStrExt;
+
+    use windows_sys::Win32::Security::Authorization::{GetNamedSecurityInfoW, SE_FILE_OBJECT};
+
+    let wide: Vec<u16> = path.as_os_str().encode_wide().chain(Some(0)).collect();
+    let mut dacl: *mut ACL = null_mut();
+    let mut descriptor: PSECURITY_DESCRIPTOR = null_mut();
+    let status = unsafe {
+        GetNamedSecurityInfoW(
+            wide.as_ptr(),
+            SE_FILE_OBJECT,
+            DACL_SECURITY_INFORMATION,
+            null_mut(),
+            null_mut(),
+            &mut dacl,
+            null_mut(),
+            &mut descriptor,
+        )
+    };
+    if status != ERROR_SUCCESS || dacl.is_null() || unsafe { IsValidAcl(dacl) } == 0 {
+        if !descriptor.is_null() {
+            drop(SecurityDescriptorGuard(descriptor));
+        }
+        return None;
+    }
+    Some((dacl, descriptor))
+}
+
+/// A principal's display name, falling back to its SID so a name lookup that
+/// fails still names the account the human has to revoke.
+fn sid_label(sid: PSID) -> String {
+    use windows_sys::Win32::Security::{LookupAccountSidW, SID_NAME_USE};
+
+    let mut name = [0u16; 256];
+    let mut domain = [0u16; 256];
+    let mut name_length = name.len() as u32;
+    let mut domain_length = domain.len() as u32;
+    let mut usage: SID_NAME_USE = 0;
+    let resolved = unsafe {
+        LookupAccountSidW(
+            null(),
+            sid,
+            name.as_mut_ptr(),
+            &mut name_length,
+            domain.as_mut_ptr(),
+            &mut domain_length,
+            &mut usage,
+        )
+    };
+    if resolved != 0 {
+        let account = String::from_utf16_lossy(&name[..name_length as usize]);
+        let domain = String::from_utf16_lossy(&domain[..domain_length as usize]);
+        if domain.is_empty() {
+            return account;
+        }
+        return format!("{domain}\\{account}");
+    }
+    sid_to_string(sid).unwrap_or_else(|| "unknown principal".to_owned())
+}
+
+fn sid_to_string(sid: PSID) -> Option<String> {
+    use windows_sys::Win32::Security::Authorization::ConvertSidToStringSidW;
+
+    let mut raw: *mut u16 = null_mut();
+    if unsafe { ConvertSidToStringSidW(sid, &mut raw) } == 0 || raw.is_null() {
+        return None;
+    }
+    let _guard = LocalStringGuard(raw);
+    let mut length = 0usize;
+    while unsafe { *raw.add(length) } != 0 {
+        length += 1;
+    }
+    String::from_utf16(unsafe { std::slice::from_raw_parts(raw, length) }).ok()
+}
+
 struct SecurityDescriptorGuard(PSECURITY_DESCRIPTOR);
 
 impl Drop for SecurityDescriptorGuard {
@@ -605,6 +775,51 @@ mod tests {
 
         assert!(path_owner_is_current_user(&owned).unwrap());
         assert!(path_owner_is_current_user(&root.0.join("missing.txt")).is_err());
+    }
+
+    /// The doctor names the principals behind a refusal: an inherited grant to
+    /// Authenticated Users (S-1-5-11) must be reported as inherited, and a
+    /// fixture that does not carry one must stay quiet.
+    #[test]
+    fn untrusted_grants_reports_an_inherited_authenticated_users_grant() {
+        let names_authenticated_users = |grants: &[UntrustedGrant]| {
+            grants.iter().any(|grant| {
+                grant.principal.contains("S-1-5-11")
+                    || grant.principal.to_lowercase().contains("users")
+            })
+        };
+
+        let root = TempDir::new();
+        // A directory Orchester establishes for private state starts from the
+        // trusted set, so the fixture shows exactly what a foreign grant adds.
+        let private = root.0.join("private");
+        create_private_dir_all(&private).unwrap();
+        let before = private.join("before.txt");
+        fs::write(&before, b"contents").unwrap();
+        assert!(
+            !names_authenticated_users(&untrusted_grants(&before)),
+            "a private directory must not start with an authenticated-users grant"
+        );
+
+        let shared = root.0.join("shared");
+        fs::create_dir(&shared).unwrap();
+        let output = Command::new(system_tool("icacls.exe"))
+            .arg(&shared)
+            .args(["/grant", "*S-1-5-11:(OI)(CI)(M)"])
+            .output()
+            .expect("seed an inherited grant");
+        assert!(output.status.success(), "seed an inherited grant");
+
+        let inherited = shared.join("inherited.txt");
+        fs::write(&inherited, b"contents").unwrap();
+        let grants = untrusted_grants(&inherited);
+        assert!(
+            grants
+                .iter()
+                .any(|grant| grant.inherited
+                    && names_authenticated_users(std::slice::from_ref(grant))),
+            "an inherited authenticated-users grant must be reported as inherited: {grants:?}"
+        );
     }
 
     struct TempDir(PathBuf);

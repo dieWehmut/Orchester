@@ -1102,7 +1102,7 @@ pub(crate) struct CaretPosition {
 }
 
 fn caret_position(composer_row: usize, column: u16, hidden: bool) -> Option<CaretPosition> {
-    (!hidden).then(|| CaretPosition {
+    (!hidden).then_some(CaretPosition {
         column,
         row: composer_row as u16,
     })
