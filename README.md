@@ -273,7 +273,9 @@ kisten/            # Cargo workspace 成员
   konsole/         # orchester CLI 二进制
 manifeste/         # 声明式适配器定义
 werkzeug/          # 安装与开发辅助脚本
-npm/               # npm 分发包
+apps/              # 产品表面：cli / web / desktop
+packages/          # 共享 TypeScript 包
+npm/               # npm 发布附加产物（cli 平台包、插件）
 .github/           # CI 与发布工作流
 ```
 

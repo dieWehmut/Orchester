@@ -421,9 +421,18 @@ test('real Node child preserves dangerous arguments and the launcher mirrors exi
   assert.deepEqual(JSON.parse(fs.readFileSync(outputPath, 'utf8')), dangerousArguments);
 });
 
-test('source bin reports only the missing platform package and exact install commands', () => {
+test('source bin reports only the missing platform package and exact install commands', (t) => {
   const target = resolveTarget();
-  const binPath = path.resolve(__dirname, '../bin/orchester.cjs');
+  // The workspace links the real platform package next to this package, so run
+  // a copy without node_modules to exercise the missing-package path.
+  const isolatedRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'orchester-cli-missing-'));
+  t.after(() => fs.rmSync(isolatedRoot, { force: true, recursive: true }));
+  for (const relative of ['bin', 'lib', 'package.json', 'targets.json']) {
+    fs.cpSync(path.resolve(__dirname, '..', relative), path.join(isolatedRoot, relative), {
+      recursive: true,
+    });
+  }
+  const binPath = path.join(isolatedRoot, 'bin/orchester.cjs');
   const environment = {
     ...process.env,
     ORCHESTER_BINARY_PATH: process.execPath,

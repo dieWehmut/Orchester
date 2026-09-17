@@ -11,10 +11,10 @@ import { stagePlatformPackages as stagePlatformPackagesImpl } from './stage.mjs'
 const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(moduleDirectory, '../..');
 const metaPackage = JSON.parse(
-  fs.readFileSync(path.join(repositoryRoot, 'npm/cli/package.json'), 'utf8'),
+  fs.readFileSync(path.join(repositoryRoot, 'apps/cli/package.json'), 'utf8'),
 );
 const targets = JSON.parse(
-  fs.readFileSync(path.join(repositoryRoot, 'npm/cli/targets.json'), 'utf8'),
+  fs.readFileSync(path.join(repositoryRoot, 'apps/cli/targets.json'), 'utf8'),
 );
 
 function nativeHeader({ platform, arch }) {

@@ -14,7 +14,7 @@ import {
 const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(moduleDirectory, '../..');
 const metaManifest = JSON.parse(
-  fs.readFileSync(path.join(repositoryRoot, 'npm/cli/package.json'), 'utf8'),
+  fs.readFileSync(path.join(repositoryRoot, 'apps/cli/package.json'), 'utf8'),
 );
 
 function writeJson(file, value) {

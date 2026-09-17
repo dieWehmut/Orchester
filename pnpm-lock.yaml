@@ -18,6 +18,27 @@ importers:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@25.9.5)(jsdom@30.0.1)(vite@8.2.1(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0))
 
+  apps/cli:
+    optionalDependencies:
+      '@orchester/cli-darwin-arm64':
+        specifier: 0.1.2
+        version: 0.1.2
+      '@orchester/cli-darwin-x64':
+        specifier: 0.1.2
+        version: 0.1.2
+      '@orchester/cli-linux-arm64':
+        specifier: 0.1.2
+        version: 0.1.2
+      '@orchester/cli-linux-x64':
+        specifier: 0.1.2
+        version: 0.1.2
+      '@orchester/cli-win32-arm64':
+        specifier: 0.1.2
+        version: 0.1.2
+      '@orchester/cli-win32-x64':
+        specifier: 0.1.2
+        version: 0.1.2
+
   apps/desktop:
     devDependencies:
       '@tauri-apps/cli':
@@ -465,6 +486,42 @@ packages:
 
   '@one-ini/wasm@0.1.1':
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
+
+  '@orchester/cli-darwin-arm64@0.1.2':
+    resolution: {integrity: sha512-RjW9/V6iwNkMY3b2OvA8oGZZnJjkn/3EMEC1dfXxtwsokxqqt8XRoRlnbxTFZJkxsYmaIVSx8kGJ40lrui3PKQ==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@orchester/cli-darwin-x64@0.1.2':
+    resolution: {integrity: sha512-EIyxJgFvwW2sjeN/ki5PI+XtMZx7faQohJvfrWLDWzZ2HZnfuC83f2UigB4r62DFXeiWX6ID2OTABU2F8seF9g==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@orchester/cli-linux-arm64@0.1.2':
+    resolution: {integrity: sha512-haPNzqsHmTCyfOAAVh3PiB6IOSZC0TcV00Ir+OQnesm4Vp1GHMWSQjOnWE0+s6aSuIcDTIpwLQzL2NdIRsgd7g==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@orchester/cli-linux-x64@0.1.2':
+    resolution: {integrity: sha512-c896AHpMjbz4SLbxNZ/fUPdwO4mKAYzltdEymbqd17cAK6XanjPCAZV9nOy9A9rn6HOO2J7nCOjjWjXnGqJuow==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [linux]
+
+  '@orchester/cli-win32-arm64@0.1.2':
+    resolution: {integrity: sha512-4j1FZRj4OHGFZ9YpHNwVjqvGCIBYIeFCZY3GZSyX54yojDvBwRTHK4efObsZgWzxFmppkV+xbQ7biVRl3/HuCA==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@orchester/cli-win32-x64@0.1.2':
+    resolution: {integrity: sha512-ZjeXD1vkpcx7socmbiS7/FsmUqEO6+AAP3I1SH4iqyxF+4AJmBB3zh0/jRFRt5aoRI2jKrHb2LvpW1q+5Lfa3A==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [win32]
 
   '@oxc-project/types@0.144.0':
     resolution: {integrity: sha512-nuhZIOLuI6TFQ32I/WnUx+SCPY7SdSKwgnFHydAuoS1+Z4BRcaP+RRJmGzl9lw+0OFF7UmaESf7KQRXaNLHypg==}
@@ -2021,6 +2078,24 @@ snapshots:
     optional: true
 
   '@one-ini/wasm@0.1.1': {}
+
+  '@orchester/cli-darwin-arm64@0.1.2':
+    optional: true
+
+  '@orchester/cli-darwin-x64@0.1.2':
+    optional: true
+
+  '@orchester/cli-linux-arm64@0.1.2':
+    optional: true
+
+  '@orchester/cli-linux-x64@0.1.2':
+    optional: true
+
+  '@orchester/cli-win32-arm64@0.1.2':
+    optional: true
+
+  '@orchester/cli-win32-x64@0.1.2':
+    optional: true
 
   '@oxc-project/types@0.144.0': {}
 
