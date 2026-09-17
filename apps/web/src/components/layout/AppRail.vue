@@ -1,7 +1,7 @@
 ﻿<script setup lang="ts">
-import { SquarePen } from '@lucide/vue'
+import { CircleUser, Settings, SquarePen } from '@lucide/vue'
 
-import { AppButton } from '@orchester/design'
+import { AppButton, IconButton } from '@orchester/design'
 
 withDefaults(
   defineProps<{
@@ -11,12 +11,21 @@ withDefaults(
     projectsLabel: string
     sessionsLabel: string
     fleetLabel: string
+    accountName?: string | null
+    accountHint?: string | null
+    settingsLabel?: string
   }>(),
-  { workspaceName: null },
+  {
+    workspaceName: null,
+    accountName: null,
+    accountHint: null,
+    settingsLabel: 'Settings',
+  },
 )
 
 defineEmits<{
   newSession: []
+  openSettings: []
 }>()
 </script>
 
@@ -56,13 +65,30 @@ defineEmits<{
       <h2 class="app-rail__heading">{{ fleetLabel }}</h2>
       <slot name="fleet" />
     </div>
+
+    <div class="app-rail__section app-rail__account" data-rail-section="account">
+      <div class="app-rail__account-identity" data-rail-account>
+        <CircleUser :size="18" aria-hidden="true" />
+        <span class="app-rail__account-copy">
+          <strong>{{ accountName || productName }}</strong>
+          <span v-if="accountHint">{{ accountHint }}</span>
+        </span>
+      </div>
+      <IconButton
+        :label="settingsLabel"
+        data-rail-action="settings"
+        @click="$emit('openSettings')"
+      >
+        <Settings :size="16" aria-hidden="true" />
+      </IconButton>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .app-rail {
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr) minmax(0, 1fr) auto;
+  grid-template-rows: auto auto minmax(0, 1fr) minmax(0, 1fr) auto auto;
   block-size: 100%;
   min-block-size: 0;
   background: var(--color-bg-surface);
@@ -81,6 +107,46 @@ defineEmits<{
 .app-rail__section--footer {
   border-block-start: 1px solid var(--color-border-base);
   background: color-mix(in srgb, var(--color-bg-surface) 94%, var(--color-bg-base));
+}
+
+.app-rail__account {
+  display: flex;
+  min-inline-size: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  border-block-start: 1px solid var(--color-border-base);
+  background: color-mix(in srgb, var(--color-bg-surface) 90%, var(--color-bg-base));
+}
+
+.app-rail__account-identity {
+  display: flex;
+  min-inline-size: 0;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-text-secondary);
+}
+
+.app-rail__account-copy {
+  display: grid;
+  min-inline-size: 0;
+  line-height: var(--leading-tight);
+}
+
+.app-rail__account-copy strong {
+  overflow: hidden;
+  color: var(--color-text-primary);
+  font-size: var(--text-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-rail__account-copy span {
+  overflow: hidden;
+  color: var(--color-text-tertiary);
+  font-size: var(--text-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .app-rail__section[data-rail-section='brand'] {

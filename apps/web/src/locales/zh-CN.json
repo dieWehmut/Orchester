@@ -8,6 +8,9 @@
     "connectionError": "连接错误",
     "unknownWorkspace": "未选择工作区"
   },
+  "account": {
+    "localRuntime": "本地运行时"
+  },
   "agents": {
     "title": "智能体",
     "runtimeFleet": "运行时集群",

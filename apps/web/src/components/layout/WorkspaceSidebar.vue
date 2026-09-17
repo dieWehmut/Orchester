@@ -31,6 +31,7 @@ defineEmits<{
   loadMoreSessions: []
   newSession: []
   selectAgent: [id: string]
+  openSettings: []
 }>()
 
 const { t } = useI18n()
@@ -45,7 +46,11 @@ const { t } = useI18n()
     :projects-label="t('workspace.projects')"
     :sessions-label="t('sessions.railTitle')"
     :fleet-label="t('agents.title')"
+    :account-name="props.productName"
+    :account-hint="t('account.localRuntime')"
+    :settings-label="t('settings.title')"
     @new-session="$emit('newSession')"
+    @open-settings="$emit('openSettings')"
   >
     <template #projects>
       <ProjectList

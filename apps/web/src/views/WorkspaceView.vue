@@ -10,9 +10,11 @@ import SessionTranscript from '../components/sessions/SessionTranscript.vue'
 import RunPanel from '../components/run/RunPanel.vue'
 import { useI18n } from '../i18n'
 import { useAppStores } from '../stores/app'
-import { computed, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
+import { routerKey } from 'vue-router'
 
 const { t } = useI18n()
+const appRouter = inject(routerKey, null)
 const { sessions, run, agents, bootstrap, models } = useAppStores()
 const runView = computed(() => run.view.value)
 const changeSummaries = computed(() => summarizeFileChanges(runView.value.fileChanges))
@@ -66,6 +68,10 @@ function handleAgentSelect(agentId: string): void {
 function handleInspectorTabChange(tab: InspectorTab): void {
   activeInspectorTab.value = tab
 }
+
+function handleOpenSettings(): void {
+  void appRouter?.push({ name: 'settings' })
+}
 </script>
 
 <template>
@@ -94,6 +100,7 @@ function handleInspectorTabChange(tab: InspectorTab): void {
         @load-more-sessions="sessions.loadMore"
         @new-session="sessions.select(null)"
         @select-agent="handleAgentSelect"
+        @open-settings="handleOpenSettings"
       />
     </template>
 

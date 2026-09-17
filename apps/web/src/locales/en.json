@@ -8,6 +8,9 @@
     "connectionError": "Connection error",
     "unknownWorkspace": "No workspace selected"
   },
+  "account": {
+    "localRuntime": "Local runtime"
+  },
   "agents": {
     "title": "Agents",
     "runtimeFleet": "Runtime fleet",

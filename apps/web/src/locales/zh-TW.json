@@ -8,6 +8,9 @@
     "connectionError": "連線錯誤",
     "unknownWorkspace": "尚未選擇工作區"
   },
+  "account": {
+    "localRuntime": "本機執行環境"
+  },
   "agents": {
     "title": "代理",
     "runtimeFleet": "執行環境代理群",
