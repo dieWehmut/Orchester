@@ -8,7 +8,7 @@ on:
       - .github/workflows/pages.yml
       - Cargo.toml
       - apps/stack.manifest.json
-      - apps/website/**
+      - apps/web/site/**
       - packages/design/**
       - apps/web/package.json
       - apps/web/vite.config.ts
@@ -94,7 +94,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v4
         with:
-          path: apps/website/dist
+          path: apps/web/site/dist
 
   deploy:
     name: Deploy website

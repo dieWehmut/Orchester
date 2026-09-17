@@ -88,14 +88,14 @@ importers:
         specifier: ^3.2.5
         version: 3.3.10(typescript@5.9.3)
 
-  apps/website:
+  apps/web/site:
     dependencies:
       '@lucide/vue':
         specifier: ^1.32.0
         version: 1.32.0(vue@3.5.18(typescript@5.9.3))
       '@orchester/design':
         specifier: workspace:*
-        version: link:../../packages/design
+        version: link:../../../packages/design
       vue:
         specifier: 3.5.18
         version: 3.5.18(typescript@5.9.3)

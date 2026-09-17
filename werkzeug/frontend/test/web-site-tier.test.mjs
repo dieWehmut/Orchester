@@ -1,6 +1,6 @@
 ﻿import test from 'node:test'
 import assert from 'node:assert/strict'
-import { stat } from 'node:fs/promises'
+import { readFile, stat } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -15,6 +15,11 @@ async function exists(path) {
     return false
   }
 }
+
+test('the workspace glob covers the deeper site payload', async () => {
+  const workspace = await readFile(resolve(repositoryRoot, 'pnpm-workspace.yaml'), 'utf8')
+  assert.match(workspace, /apps\/web\/site/)
+})
 
 test('the GitHub Pages site is the site surface of apps/web', async () => {
   assert.equal(

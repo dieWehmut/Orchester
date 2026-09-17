@@ -1,5 +1,8 @@
 packages:
   - 'apps/*'
+  # The Pages site is the second payload of apps/web, so it sits one level
+  # deeper than the surface glob and needs its own explicit entry.
+  - 'apps/web/site'
   - 'packages/*'
 
 # pnpm 10 refuses to run a dependency's install scripts unless it is listed here.

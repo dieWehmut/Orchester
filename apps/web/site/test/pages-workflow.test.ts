@@ -3,7 +3,7 @@ import { resolve } from 'node:path'
 
 import { beforeAll, describe, expect, it } from 'vitest'
 
-const workflowPath = resolve(process.cwd(), '../../.github/workflows/pages.yml')
+const workflowPath = resolve(process.cwd(), '../../../.github/workflows/pages.yml')
 
 let workflow = ''
 
@@ -37,7 +37,7 @@ describe('GitHub Pages workflow', () => {
     expect(workflow).toContain('VITE_GISCUS_REPO_ID: ${{ vars.GISCUS_REPO_ID }}')
     expect(workflow).toContain('VITE_GISCUS_CATEGORY: ${{ vars.GISCUS_CATEGORY }}')
     expect(workflow).toContain('VITE_GISCUS_CATEGORY_ID: ${{ vars.GISCUS_CATEGORY_ID }}')
-    expect(workflow).toContain('path: apps/website/dist')
+    expect(workflow).toContain('path: apps/web/site/dist')
   })
 
   it('limits deployment to the Pages environment and cancels stale runs', () => {

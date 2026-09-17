@@ -94,11 +94,11 @@ export async function validateStackManifest(repositoryRoot, manifest) {
       readJson(resolve(repositoryRoot, 'package.json')),
       readFile(resolve(repositoryRoot, 'Cargo.toml'), 'utf8'),
       readJson(resolve(repositoryRoot, 'apps/web/package.json')),
-      readJson(resolve(repositoryRoot, 'apps/website/package.json')),
+      readJson(resolve(repositoryRoot, 'apps/web/site/package.json')),
       readJson(resolve(repositoryRoot, 'apps/desktop/package.json')),
       readJson(resolve(repositoryRoot, 'apps/desktop/src-tauri/tauri.conf.json')),
       readFile(resolve(repositoryRoot, 'apps/web/vite.config.ts'), 'utf8'),
-      readFile(resolve(repositoryRoot, 'apps/website/vite.config.ts'), 'utf8'),
+      readFile(resolve(repositoryRoot, 'apps/web/site/vite.config.ts'), 'utf8'),
       readFile(resolve(repositoryRoot, pages.workflow), 'utf8'),
     ])
 
@@ -125,14 +125,14 @@ export async function validateStackManifest(repositoryRoot, manifest) {
   requireText(
     websiteVite,
     `host: '${website.host}'`,
-    'apps/website/vite.config.ts',
+    'apps/web/site/vite.config.ts',
     errors,
     'website host',
   )
   requireText(
     websiteVite,
     `port: ${website.port}`,
-    'apps/website/vite.config.ts',
+    'apps/web/site/vite.config.ts',
     errors,
     'website port',
   )

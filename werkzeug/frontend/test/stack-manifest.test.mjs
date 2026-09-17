@@ -39,7 +39,7 @@ test('stack manifest exposes stable launch and deployment metadata', async () =>
     surface: 'website',
     basePath: '/Orchester/',
     url: 'https://diewehmut.github.io/Orchester/',
-    artifactDirectory: 'apps/website/dist',
+    artifactDirectory: 'apps/web/site/dist',
     workflow: '.github/workflows/pages.yml',
   })
   assert.deepEqual(manifest.toolchain, {

@@ -13,6 +13,10 @@ export default defineConfig({
   },
   plugins: [vue()],
   test: {
+    // The Pages site is a second payload under this package and runs its own
+    // Vitest config. Keep this run to the WebUI sources so one package's suite
+    // cannot silently adopt the other's tests.
+    include: ['test/**/*.test.ts'],
     environment: 'jsdom',
     pool: 'threads',
     fileParallelism: false,

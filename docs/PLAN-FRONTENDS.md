@@ -13,7 +13,7 @@ HTTP/WebSocket serving and maps safe DTOs from `laufzeit`/`anwendung`; the
 browser receives a versioned, redacted UI event envelope with replayable
 sequence numbers. `packages/protokoll` owns wire types, `packages/ereignis` owns pure
 deterministic projections and Vue run components, `apps/web` owns transport,
-auth, routing, and stores, `apps/website` owns a static fixture-driven demo,
+auth, routing, and stores, `apps/web/site` owns a static fixture-driven demo,
 and `apps/desktop` embeds the same web bundle.
 
 **Tech Stack:** Rust 2021, Tokio, SQLite, Axum (server), Vue 3, TypeScript,
@@ -32,10 +32,10 @@ Vite, Vitest, Playwright, pnpm, Tauri 2, GitHub Actions Pages deployment.
 5. A full snapshot replaces a collection. Client code never incrementally merges
    a directory snapshot or silently drops a failed response.
 6. `packages/ereignis` has no fetch, WebSocket, Pinia, router, or application i18n.
-7. `apps/website` never contacts localhost. Its demo replays the same fixtures
+7. `apps/web/site` never contacts localhost. Its demo replays the same fixtures
    used by `apps/web` tests.
 8. GitHub Pages is deployed only by a pinned GitHub Actions workflow from
-   `apps/website/dist`; no checked-in generated output is used.
+   `apps/web/site/dist`; no checked-in generated output is used.
 9. Every task below ends with a focused test command, a workspace check, an
    atomic commit, and `git push`.
 

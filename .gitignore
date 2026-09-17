@@ -23,7 +23,9 @@ sample
 node_modules/
 /.pnpm-store/
 apps/*/dist/
-apps/website/dist-*/
+# The Pages site is nested deeper than the surface glob.
+apps/web/site/dist/
+apps/web/site/dist-*/
 .vite/
 *.tsbuildinfo
 # apps/web builds straight into the server crate that serves it.

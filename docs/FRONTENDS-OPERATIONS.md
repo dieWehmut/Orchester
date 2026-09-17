@@ -71,7 +71,7 @@ Remove-Item Env:BASE_PATH
 ```
 
 The deployment contract is `BASE_PATH=/Orchester/`, artifact directory
-`apps/website/dist`, and public URL
+`apps/web/site/dist`, and public URL
 `https://diewehmut.github.io/Orchester/`. GitHub Actions is the only supported
 deployment mechanism: `.github/workflows/pages.yml` runs frozen install,
 tooling tests, manifest verification, website typecheck/tests/build, artifact
