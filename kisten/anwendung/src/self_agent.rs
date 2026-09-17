@@ -10,10 +10,11 @@ use orchester_laufzeit::harness::service::{
     provider_draft, resolve_credential_target, store_provider_credential, wire_provider_reference,
     write_self_agent_provider, ConfigWiring, CredentialEntryError, CredentialTarget,
     CredentialUpdate, ProductionSelfAgentRuntime, ProviderDraft, ProviderEdit, ProviderEditError,
-    SelfAgentActiveModel, SelfAgentConfigView, SelfAgentModelCatalog, SelfAgentModelCatalogError,
-    SelfAgentModelChoice, SelfAgentModelSession, SelfAgentPermissionSnapshot,
-    SelfAgentResumeCatalog, SelfAgentResumeCatalogError, SelfAgentRunOutcome,
-    SelfAgentRuntimeBuildError, SelfAgentRuntimeError, SelfAgentStatus, SelfAgentStatusError,
+    RunEventSink, SelfAgentActiveModel, SelfAgentConfigView, SelfAgentModelCatalog,
+    SelfAgentModelCatalogError, SelfAgentModelChoice, SelfAgentModelSession,
+    SelfAgentPermissionSnapshot, SelfAgentResumeCatalog, SelfAgentResumeCatalogError,
+    SelfAgentRunOutcome, SelfAgentRuntimeBuildError, SelfAgentRuntimeError, SelfAgentStatus,
+    SelfAgentStatusError,
 };
 use orchester_laufzeit::harness::StreamingRedactor;
 use orchester_modell::ModelEventSink;
@@ -131,6 +132,49 @@ impl SelfAgentHost {
             .ok_or(SelfAgentHostError::Initialization)?;
         runtime
             .resume_with_events(handle, cancel, events)
+            .await
+            .map_err(Into::into)
+    }
+
+    /// Run a turn while narrating the vendor-neutral event stream as well.
+    ///
+    /// `ModelEventSink` carries the model's text deltas; `RunEventSink` carries
+    /// the unified [`orchester_protokoll::Event`] vocabulary (tool calls, usage,
+    /// stop reasons). A frontend that does not own the run needs both, and this
+    /// is the only entry point that hands it the narrated one.
+    pub async fn submit_narrated(
+        &mut self,
+        prompt: String,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+        run_events: Option<Arc<dyn RunEventSink>>,
+    ) -> Result<SelfAgentRunOutcome, SelfAgentHostError> {
+        self.ensure_runtime()?;
+        let runtime = self
+            .runtime
+            .as_ref()
+            .ok_or(SelfAgentHostError::Initialization)?;
+        runtime
+            .run_streaming(prompt, cancel, events, run_events)
+            .await
+            .map_err(Into::into)
+    }
+
+    /// Resume a durable run while narrating the vendor-neutral event stream.
+    pub async fn resume_narrated(
+        &mut self,
+        handle: &str,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+        run_events: Option<Arc<dyn RunEventSink>>,
+    ) -> Result<SelfAgentRunOutcome, SelfAgentHostError> {
+        self.ensure_runtime()?;
+        let runtime = self
+            .runtime
+            .as_ref()
+            .ok_or(SelfAgentHostError::Initialization)?;
+        runtime
+            .resume_streaming(handle, cancel, events, run_events)
             .await
             .map_err(Into::into)
     }

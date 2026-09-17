@@ -4,6 +4,8 @@
 //! until a context has a runtime manager.  Keeping the handlers in place makes
 //! the wire contract observable and gives later runtime work a stable seam.
 
+use std::sync::Arc;
+
 use axum::{
     extract::{
         rejection::JsonRejection,
@@ -14,32 +16,90 @@ use axum::{
     response::{IntoResponse, Response},
     Json,
 };
+use orchester_anwendung::SelfAgentHost;
+use orchester_laufzeit::harness::service::RunEventSink;
 use orchester_protokoll::RunId;
 use serde::Deserialize;
 
 use crate::{
     api_error::{api_error_response, request_id_from_headers, ApiErrorCode, ApiErrorResponse},
     health::no_store_headers,
+    run_bridge::{drain_run_events, RegistryRunSink},
     run_contract::{
         RunReplayRequestDto, RunReplayResponseDto, RunSnapshotDto, RunStreamFrameDto,
-        RunSummaryDto, StartRunRequest,
+        RunSummaryDto, StartRunRequest, StartRunResponse,
     },
     run_registry::{RunHandle, RunRegistryError},
     ServerContext,
 };
 
 pub(crate) async fn start_run_handler(
-    State(_context): State<ServerContext>,
+    State(context): State<ServerContext>,
     headers: HeaderMap,
     request: Result<Json<StartRunRequest>, JsonRejection>,
-) -> Result<(HeaderMap, Json<serde_json::Value>), ApiErrorResponse> {
+) -> Result<(HeaderMap, Json<StartRunResponse>), ApiErrorResponse> {
     let request_id = request_id_from_headers(&headers);
     let Json(request) =
         request.map_err(|_| api_error_response(ApiErrorCode::BadRequest, request_id))?;
     request
         .validate()
         .map_err(|_| api_error_response(ApiErrorCode::ValidationFailed, request_id))?;
-    Err(api_error_response(ApiErrorCode::Unavailable, request_id))
+
+    // Without paths there is no configuration to run: the same availability
+    // answer this route gave before a runtime existed.
+    let paths = context
+        .paths()
+        .cloned()
+        .ok_or_else(|| api_error_response(ApiErrorCode::Unavailable, request_id))?;
+
+    let run = context
+        .runs()
+        .create()
+        .map_err(|error| run_error_response(error, request_id))?;
+    let run_id = run.id().clone();
+    let cancel = run.cancellation_token();
+    let events_url = run_events_url(&headers, &run_id);
+
+    let (sink, receiver) = RegistryRunSink::channel();
+    let drain = drain_run_events(run.clone(), run_id.clone(), receiver);
+    let StartRunRequest { prompt, resume } = request;
+    tokio::spawn(async move {
+        let drain = drain;
+        let run_task = async move {
+            // One host per run: the host's run entry points take `&mut self`, and
+            // sharing it would serialise runs the registry keeps independent.
+            let mut host = SelfAgentHost::for_paths(&paths);
+            let sink: Arc<dyn RunEventSink> = Arc::new(sink);
+            let _ = match resume {
+                Some(handle) => {
+                    host.resume_narrated(&handle, cancel, None, Some(sink))
+                        .await
+                }
+                None => host.submit_narrated(prompt, cancel, None, Some(sink)).await,
+            };
+            // `sink` is dropped here, which closes the channel and lets the
+            // drain task finish; `run_task` owns it so this is the only copy.
+        };
+        run_task.await;
+        drain.await;
+    });
+
+    Ok((
+        no_store_headers(),
+        Json(StartRunResponse { run_id, events_url }),
+    ))
+}
+
+/// The absolute socket URL for a run, built from the request the client made so
+/// it never has to reconstruct a URL from a port it guessed.
+fn run_events_url(headers: &HeaderMap, run_id: &RunId) -> String {
+    let host = headers
+        .get(axum::http::header::HOST)
+        .and_then(|value| value.to_str().ok())
+        .map(str::trim)
+        .filter(|host| !host.is_empty())
+        .unwrap_or("127.0.0.1");
+    format!("ws://{host}/runs/{}/events", run_id.0)
 }
 
 pub(crate) async fn snapshot_run_handler(

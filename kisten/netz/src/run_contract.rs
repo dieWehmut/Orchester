@@ -117,6 +117,15 @@ pub enum ResyncReason {
     SchemaMismatch,
 }
 
+/// One frame on the run's event socket.
+///
+/// `Event` is several times the size of `ResyncRequired`, and that is the shape
+/// of the contract rather than an oversight: the envelope carries the whole UI
+/// event, and this enum exists to be serialized straight onto a socket, not to
+/// sit in a collection. Boxing the variant would add an allocation to every
+/// streamed frame to shrink a value that is written and dropped immediately, so
+/// the lint is answered here instead of in the type.
+#[allow(clippy::large_enum_variant)]
 #[derive(Debug, Clone, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum RunStreamFrameDto {
