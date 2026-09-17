@@ -1989,6 +1989,42 @@ fn status_segments(model_status: &str, progress: Option<&str>) -> Vec<String> {
     segments
 }
 
+const STATUS_SEPARATOR: &str = "  |  ";
+
+fn joined_status_width(segments: &[String]) -> usize {
+    let text = segments
+        .iter()
+        .map(|segment| display_width(segment))
+        .sum::<usize>();
+    text + STATUS_SEPARATOR.len() * segments.len().saturating_sub(1)
+}
+
+/// Lays the Codex-style status segments into the available width. A deep
+/// checkout path must not crowd the row: the directory gives up its width
+/// first, and only its own segment is truncated, so the model, the access
+/// policy, and the live turn state stay readable. When the trailing segments
+/// alone exceed the row, the line falls back to a plain truncation.
+fn fit_status_segments(segments: &[String], width: usize) -> String {
+    if segments.is_empty() {
+        return String::new();
+    }
+    if joined_status_width(segments) <= width {
+        return segments.join(STATUS_SEPARATOR);
+    }
+    if segments.len() == 1 {
+        return truncate(&segments[0], width);
+    }
+
+    let tail = &segments[1..];
+    let directory_budget = width
+        .saturating_sub(joined_status_width(tail) + STATUS_SEPARATOR.len())
+        .max(1);
+    let mut laid_out = vec![truncate(&segments[0], directory_budget)];
+    laid_out.extend(tail.iter().cloned());
+
+    truncate(&laid_out.join(STATUS_SEPARATOR), width)
+}
+
 fn render_status_line<W: Write>(
     out: &mut W,
     width: usize,
@@ -1996,7 +2032,7 @@ fn render_status_line<W: Write>(
     progress: Option<&str>,
     palette: ThemePalette,
 ) -> io::Result<()> {
-    let status = status_segments(model_status, progress).join("  |  ");
+    let status = fit_status_segments(&status_segments(model_status, progress), width);
     write!(out, "{}{}{RESET}", palette.dim, truncate(&status, width))
 }
 
@@ -3928,6 +3964,53 @@ mod tests {
             status_segments("gpt-test", Some("   ")).len(),
             3,
             "a blank turn state must not open an empty segment"
+        );
+    }
+
+    /// A deep checkout path must not crowd the Codex-style status row: the
+    /// model, the access policy, and the live turn state stay readable even
+    /// when the directory segment is long enough to fill the whole width.
+    /// The helper ships with its test because this assertion is what pins the
+    /// per-segment budget the renderer now relies on.
+    #[test]
+    fn status_bar_keeps_the_trailing_segments_when_the_directory_is_long() {
+        let mut out = Vec::new();
+        render_status_line(
+            &mut out,
+            100,
+            "gpt-test high",
+            Some("Creating..."),
+            Theme::default().palette(),
+        )
+        .unwrap();
+        let row = strip_ansi(&String::from_utf8(out).unwrap());
+        let segments = vec![
+            "x".repeat(400),
+            "gpt-test high".to_string(),
+            "governed workspace".to_string(),
+            "Creating...".to_string(),
+        ];
+
+        assert!(
+            display_width(&row) <= 100,
+            "status row exceeded its width:\n{row}"
+        );
+        let trimmed = fit_status_segments(&segments, 100);
+        assert!(
+            trimmed.contains("gpt-test high"),
+            "model segment survives a long directory:\n{trimmed}"
+        );
+        assert!(
+            trimmed.contains("governed workspace"),
+            "access segment survives a long directory:\n{trimmed}"
+        );
+        assert!(
+            trimmed.contains("Creating..."),
+            "turn state survives a long directory:\n{trimmed}"
+        );
+        assert!(
+            display_width(&trimmed) <= 100,
+            "trimmed segments exceeded their width:\n{trimmed}"
         );
     }
 
