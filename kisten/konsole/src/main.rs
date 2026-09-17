@@ -2081,10 +2081,11 @@ mod tests {
 
     #[test]
     fn busy_animation_cycles_without_growing_the_label() {
-        assert_eq!(busy_label(0), "Creating  ");
-        assert_eq!(busy_label(1), "Creating .");
-        assert_eq!(busy_label(4), "Creating  ");
-        assert!(busy_label(99).len() <= "Creating ...".len());
+        assert_eq!(busy_label(0), "⠋ Creating…");
+        assert_eq!(busy_label(1), "⠙ Creating…");
+        assert_eq!(busy_label(2), "⠹ Creating…");
+        assert_eq!(busy_label(10), busy_label(0));
+        assert!(busy_label(99).len() <= busy_label(0).len());
     }
 
     #[test]
