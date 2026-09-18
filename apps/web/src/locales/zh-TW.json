@@ -194,6 +194,11 @@
     "foreground": {
       "title": "前景",
       "description": "主題使用的主要文字顏色。"
+    },
+    "fontWeight": {
+      "title": "字重",
+      "regular": "一般",
+      "medium": "中等"
     }
   },
   "notFound": {

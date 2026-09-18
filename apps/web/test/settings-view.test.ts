@@ -152,6 +152,23 @@ describe('SettingsView', () => {
     expect(localStorage.getItem('orchester:content-font')).toBe('ui')
   })
 
+  it('sets a weight per face, because the UI and content faces differ', async () => {
+    const wrapper = mount(SettingsView)
+
+    const uiRow = wrapper.get('[data-appearance-field="ui-font"]')
+    const contentRow = wrapper.get('[data-appearance-field="content-font"]')
+
+    await uiRow.findAll('select')[1].setValue('medium')
+    expect(document.documentElement.getAttribute('data-ui-font-weight')).toBe('medium')
+    expect(localStorage.getItem('orchester:ui-font-weight')).toBe('medium')
+
+    // The content face is still on its own default: one row, one axis.
+    expect(document.documentElement.getAttribute('data-content-font-weight')).toBe('regular')
+
+    await contentRow.findAll('select')[1].setValue('medium')
+    expect(document.documentElement.getAttribute('data-content-font-weight')).toBe('medium')
+  })
+
   it('offers the translucent rail only where a window can composite behind it', async () => {
     const wrapper = mount(SettingsView)
     const toggle = wrapper.get('[data-appearance-field="rail-appearance"] [role="switch"]')

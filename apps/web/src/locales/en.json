@@ -194,6 +194,11 @@
     "foreground": {
       "title": "Foreground",
       "description": "The colour the theme paints primary text in."
+    },
+    "fontWeight": {
+      "title": "Font weight",
+      "regular": "Regular",
+      "medium": "Medium"
     }
   },
   "notFound": {

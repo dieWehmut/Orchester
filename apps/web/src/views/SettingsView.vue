@@ -108,6 +108,21 @@ const uiFontValue = computed({
   set: (value: string) => appearance.setUiFont(value as never),
 })
 
+const fontWeightOptions = computed(() => [
+  { value: 'regular', label: t('settings.fontWeight.regular') },
+  { value: 'medium', label: t('settings.fontWeight.medium') },
+])
+
+const uiFontWeightValue = computed({
+  get: () => appearance.uiFontWeight.value,
+  set: (value: string) => appearance.setUiFontWeight(value as never),
+})
+
+const contentFontWeightValue = computed({
+  get: () => appearance.contentFontWeight.value,
+  set: (value: string) => appearance.setContentFontWeight(value as never),
+})
+
 const contentFontOptions = computed(() => [
   { value: 'ui', label: t('settings.contentFont.ui') },
   { value: 'mono', label: t('settings.contentFont.mono') },
@@ -375,12 +390,20 @@ const previewAfter = computed(() => [
               <strong>{{ t('settings.uiFont.title') }}</strong>
               <span>{{ t('settings.uiFont.description') }}</span>
             </div>
-            <AppSelect
-              v-model="uiFontValue"
-              class="settings-view__control"
-              :options="uiFontOptions"
-              :aria-label="t('settings.uiFont.title')"
-            />
+            <div class="settings-view__row-control">
+              <AppSelect
+                v-model="uiFontValue"
+                class="settings-view__control"
+                :options="uiFontOptions"
+                :aria-label="t('settings.uiFont.title')"
+              />
+              <AppSelect
+                v-model="uiFontWeightValue"
+                class="settings-view__control settings-view__control--narrow"
+                :options="fontWeightOptions"
+                :aria-label="t('settings.fontWeight.title')"
+              />
+            </div>
           </div>
 
           <div class="settings-view__row" data-appearance-field="content-font">
@@ -388,12 +411,20 @@ const previewAfter = computed(() => [
               <strong>{{ t('settings.contentFont.title') }}</strong>
               <span>{{ t('settings.contentFont.description') }}</span>
             </div>
-            <AppSelect
-              v-model="contentFontValue"
-              class="settings-view__control"
-              :options="contentFontOptions"
-              :aria-label="t('settings.contentFont.title')"
-            />
+            <div class="settings-view__row-control">
+              <AppSelect
+                v-model="contentFontValue"
+                class="settings-view__control"
+                :options="contentFontOptions"
+                :aria-label="t('settings.contentFont.title')"
+              />
+              <AppSelect
+                v-model="contentFontWeightValue"
+                class="settings-view__control settings-view__control--narrow"
+                :options="fontWeightOptions"
+                :aria-label="t('settings.fontWeight.title')"
+              />
+            </div>
           </div>
 
           <div class="settings-view__row" data-appearance-field="rail-appearance">
@@ -653,6 +684,12 @@ const previewAfter = computed(() => [
 
 .settings-view__control {
   inline-size: 13rem;
+}
+
+/* The weight select is one word wide in every language, so it gets a third of
+   the row rather than competing with the face beside it. */
+.settings-view__control--narrow {
+  inline-size: 7rem;
 }
 
 /* The background and foreground rows report what the theme already resolves
