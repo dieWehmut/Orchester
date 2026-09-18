@@ -3,35 +3,53 @@ import { computed, readonly, ref, type ComputedRef, type Ref } from 'vue'
 import { clearStored, readStored, writeStored } from '../storage'
 import {
   COLOR_SCHEME_STORAGE_KEY,
+  CONTENT_FONT_STORAGE_KEY,
   DEFAULT_COLOR_SCHEME,
+  DEFAULT_CONTENT_FONT,
   DEFAULT_INTENSITY,
+  DEFAULT_RAIL_APPEARANCE,
   DEFAULT_SURFACE,
   DEFAULT_THEME,
+  DEFAULT_UI_FONT,
   INTENSITY_STORAGE_KEY,
+  RAIL_APPEARANCE_STORAGE_KEY,
   REDUCED_MOTION_STORAGE_KEY,
   THEME_STORAGE_KEY,
+  UI_FONT_STORAGE_KEY,
   applyColorSchemeToDocument,
+  applyContentFontToDocument,
   applyIntensityToDocument,
   applyPlatformToDocument,
+  applyRailAppearanceToDocument,
   applyReducedMotionToDocument,
   applySurfaceToDocument,
   applyThemeToDocument,
+  applyUiFontToDocument,
   isColorScheme,
+  isContentFont,
   isIntensity,
+  isRailAppearance,
   isThemeMode,
   isThemePreference,
+  isUiFont,
   readDocumentColorScheme,
+  readDocumentContentFont,
   readDocumentIntensity,
+  readDocumentRailAppearance,
   readDocumentReducedMotion,
   readDocumentSurface,
+  readDocumentUiFont,
   readDocumentTheme,
   readSystemPlatform,
   readSystemTheme,
   resolveThemePreference,
   type ColorScheme,
+  type ContentFont,
   type Intensity,
+  type RailAppearance,
   type ReducedMotionPreference,
   type Surface,
+  type UiFont,
   type ThemeMode,
   type ThemePreference,
 } from '../theme'
@@ -51,6 +69,9 @@ const intensity = ref<Intensity>(DEFAULT_INTENSITY)
 /** `null` means the operating system decides. */
 const reducedMotion = ref<ReducedMotionPreference>(null)
 const surface = ref<Surface>(DEFAULT_SURFACE)
+const uiFont = ref<UiFont>(DEFAULT_UI_FONT)
+const contentFont = ref<ContentFont>(DEFAULT_CONTENT_FONT)
+const railAppearance = ref<RailAppearance>(DEFAULT_RAIL_APPEARANCE)
 
 let initialized = false
 let stopWatchingSystem: (() => void) | null = null
@@ -101,11 +122,17 @@ export function initAppearance(): {
   intensity: Intensity
   reducedMotion: ReducedMotionPreference
   surface: Surface
+  uiFont: UiFont
+  contentFont: ContentFont
+  railAppearance: RailAppearance
 } {
   const storedTheme = readStored(THEME_STORAGE_KEY)
   const storedScheme = readStored(COLOR_SCHEME_STORAGE_KEY)
   const storedIntensity = readStored(INTENSITY_STORAGE_KEY)
   const storedReducedMotion = readStored(REDUCED_MOTION_STORAGE_KEY)
+  const storedUiFont = readStored(UI_FONT_STORAGE_KEY)
+  const storedContentFont = readStored(CONTENT_FONT_STORAGE_KEY)
+  const storedRailAppearance = readStored(RAIL_APPEARANCE_STORAGE_KEY)
 
   // A stored `light`/`dark` from before this axis existed is still an explicit
   // choice, so it is read as one rather than coerced to `system`.
@@ -144,6 +171,24 @@ export function initAppearance(): {
   applySurfaceToDocument(surface.value)
   applyPlatformToDocument(readSystemPlatform())
 
+  // Fonts and the rail's opacity are tastes rather than environment facts, so
+  // an attribute already on the element (written by the bootstrap script from
+  // the same storage) is as good an input as the storage itself.
+  uiFont.value = isUiFont(storedUiFont)
+    ? storedUiFont
+    : (readDocumentUiFont() ?? DEFAULT_UI_FONT)
+  applyUiFontToDocument(uiFont.value)
+
+  contentFont.value = isContentFont(storedContentFont)
+    ? storedContentFont
+    : (readDocumentContentFont() ?? DEFAULT_CONTENT_FONT)
+  applyContentFontToDocument(contentFont.value)
+
+  railAppearance.value = isRailAppearance(storedRailAppearance)
+    ? storedRailAppearance
+    : (readDocumentRailAppearance() ?? DEFAULT_RAIL_APPEARANCE)
+  applyRailAppearanceToDocument(railAppearance.value)
+
   if (!stopWatchingSystem) watchSystemTheme()
   initialized = true
   return {
@@ -152,6 +197,9 @@ export function initAppearance(): {
     intensity: intensity.value,
     reducedMotion: reducedMotion.value,
     surface: surface.value,
+    uiFont: uiFont.value,
+    contentFont: contentFont.value,
+    railAppearance: railAppearance.value,
   }
 }
 
@@ -166,6 +214,9 @@ export function resetAppearanceForTests(): void {
   intensity.value = DEFAULT_INTENSITY
   reducedMotion.value = null
   surface.value = DEFAULT_SURFACE
+  uiFont.value = DEFAULT_UI_FONT
+  contentFont.value = DEFAULT_CONTENT_FONT
+  railAppearance.value = DEFAULT_RAIL_APPEARANCE
 }
 
 export interface AppearanceApi {
@@ -176,6 +227,9 @@ export interface AppearanceApi {
   intensity: Readonly<Ref<Intensity>>
   reducedMotion: Readonly<Ref<ReducedMotionPreference>>
   surface: Readonly<Ref<Surface>>
+  uiFont: Readonly<Ref<UiFont>>
+  contentFont: Readonly<Ref<ContentFont>>
+  railAppearance: Readonly<Ref<RailAppearance>>
   isDark: ComputedRef<boolean>
   /** Whether motion should be suppressed right now, OS included. */
   prefersReducedMotion: ComputedRef<boolean>
@@ -186,6 +240,9 @@ export interface AppearanceApi {
   setIntensity: (next: Intensity) => void
   setReducedMotion: (next: ReducedMotionPreference) => void
   setSurface: (next: Surface) => void
+  setUiFont: (next: UiFont) => void
+  setContentFont: (next: ContentFont) => void
+  setRailAppearance: (next: RailAppearance) => void
 }
 
 export function useAppearance(): AppearanceApi {
@@ -198,6 +255,9 @@ export function useAppearance(): AppearanceApi {
     intensity: readonly(intensity),
     reducedMotion: readonly(reducedMotion),
     surface: readonly(surface),
+    uiFont: readonly(uiFont),
+    contentFont: readonly(contentFont),
+    railAppearance: readonly(railAppearance),
     isDark: computed(() => theme.value === 'dark'),
     prefersReducedMotion: computed(() => {
       if (reducedMotion.value === 'true') return true
@@ -242,6 +302,21 @@ export function useAppearance(): AppearanceApi {
       // Deliberately not persisted: the surface describes the build, not a taste.
       surface.value = next
       applySurfaceToDocument(next)
+    },
+    setUiFont: (next: UiFont) => {
+      uiFont.value = next
+      applyUiFontToDocument(next)
+      writeStored(UI_FONT_STORAGE_KEY, next)
+    },
+    setContentFont: (next: ContentFont) => {
+      contentFont.value = next
+      applyContentFontToDocument(next)
+      writeStored(CONTENT_FONT_STORAGE_KEY, next)
+    },
+    setRailAppearance: (next: RailAppearance) => {
+      railAppearance.value = next
+      applyRailAppearanceToDocument(next)
+      writeStored(RAIL_APPEARANCE_STORAGE_KEY, next)
     },
   }
 }

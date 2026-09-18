@@ -6,20 +6,32 @@ const THEME_MODES = ['light', 'dark'] as const
 const COLOR_SCHEMES = ['codex', 'violet', 'teal', 'rose'] as const
 const INTENSITIES = ['calm', 'vivid'] as const
 const SURFACES = ['web', 'site', 'desktop'] as const
+const UI_FONTS = ['system', 'sans', 'serif'] as const
+const CONTENT_FONTS = ['ui', 'mono'] as const
+const RAIL_APPEARANCES = ['solid', 'translucent'] as const
 const DEFAULT_THEME = 'dark'
 const DEFAULT_COLOR_SCHEME = 'rose'
 const DEFAULT_INTENSITY = 'vivid'
 const DEFAULT_SURFACE = 'web'
+const DEFAULT_UI_FONT = 'system'
+const DEFAULT_CONTENT_FONT = 'mono'
+const DEFAULT_RAIL_APPEARANCE = 'solid'
 const THEME_ATTRIBUTE = 'data-theme'
 const COLOR_SCHEME_ATTRIBUTE = 'data-color-scheme'
 const INTENSITY_ATTRIBUTE = 'data-intensity'
 const REDUCED_MOTION_ATTRIBUTE = 'data-reduced-motion'
 const SURFACE_ATTRIBUTE = 'data-orchester-surface'
+const UI_FONT_ATTRIBUTE = 'data-ui-font'
+const CONTENT_FONT_ATTRIBUTE = 'data-content-font'
+const RAIL_APPEARANCE_ATTRIBUTE = 'data-rail-appearance'
 const OS_ATTRIBUTE = 'data-orchester-os'
 const THEME_STORAGE_KEY = 'orchester:theme'
 const COLOR_SCHEME_STORAGE_KEY = 'orchester:color-scheme'
 const INTENSITY_STORAGE_KEY = 'orchester:intensity'
 const REDUCED_MOTION_STORAGE_KEY = 'orchester:reduced-motion'
+const UI_FONT_STORAGE_KEY = 'orchester:ui-font'
+const CONTENT_FONT_STORAGE_KEY = 'orchester:content-font'
+const RAIL_APPEARANCE_STORAGE_KEY = 'orchester:rail-appearance'
 
 /**
  * Inline this script in `<head>` before loading application styles.
@@ -39,6 +51,9 @@ export const APPEARANCE_BOOTSTRAP_SCRIPT = `(() => {
   const schemes = ${JSON.stringify(COLOR_SCHEMES)};
   const intensities = ${JSON.stringify(INTENSITIES)};
   const surfaces = ${JSON.stringify(SURFACES)};
+  const uiFonts = ${JSON.stringify(UI_FONTS)};
+  const contentFonts = ${JSON.stringify(CONTENT_FONTS)};
+  const railAppearances = ${JSON.stringify(RAIL_APPEARANCES)};
   let stored = {};
   try {
     const storage = globalThis.localStorage;
@@ -48,6 +63,9 @@ export const APPEARANCE_BOOTSTRAP_SCRIPT = `(() => {
         scheme: storage.getItem(${JSON.stringify(COLOR_SCHEME_STORAGE_KEY)}),
         intensity: storage.getItem(${JSON.stringify(INTENSITY_STORAGE_KEY)}),
         reducedMotion: storage.getItem(${JSON.stringify(REDUCED_MOTION_STORAGE_KEY)}),
+        uiFont: storage.getItem(${JSON.stringify(UI_FONT_STORAGE_KEY)}),
+        contentFont: storage.getItem(${JSON.stringify(CONTENT_FONT_STORAGE_KEY)}),
+        railAppearance: storage.getItem(${JSON.stringify(RAIL_APPEARANCE_STORAGE_KEY)}),
       };
     }
   } catch {}
@@ -79,11 +97,20 @@ export const APPEARANCE_BOOTSTRAP_SCRIPT = `(() => {
   // set outranks the default, because only the host knows how it was packaged.
   const surface = pick(surfaces, root.getAttribute(${JSON.stringify(SURFACE_ATTRIBUTE)}), stored.surface)
     || ${JSON.stringify(DEFAULT_SURFACE)};
+  const uiFont = pick(uiFonts, stored.uiFont, root.getAttribute(${JSON.stringify(UI_FONT_ATTRIBUTE)}))
+    || ${JSON.stringify(DEFAULT_UI_FONT)};
+  const contentFont = pick(contentFonts, stored.contentFont, root.getAttribute(${JSON.stringify(CONTENT_FONT_ATTRIBUTE)}))
+    || ${JSON.stringify(DEFAULT_CONTENT_FONT)};
+  const railAppearance = pick(railAppearances, stored.railAppearance, root.getAttribute(${JSON.stringify(RAIL_APPEARANCE_ATTRIBUTE)}))
+    || ${JSON.stringify(DEFAULT_RAIL_APPEARANCE)};
 
   root.setAttribute(${JSON.stringify(THEME_ATTRIBUTE)}, theme);
   root.setAttribute(${JSON.stringify(COLOR_SCHEME_ATTRIBUTE)}, scheme);
   root.setAttribute(${JSON.stringify(INTENSITY_ATTRIBUTE)}, intensity);
   root.setAttribute(${JSON.stringify(SURFACE_ATTRIBUTE)}, surface);
+  root.setAttribute(${JSON.stringify(UI_FONT_ATTRIBUTE)}, uiFont);
+  root.setAttribute(${JSON.stringify(CONTENT_FONT_ATTRIBUTE)}, contentFont);
+  root.setAttribute(${JSON.stringify(RAIL_APPEARANCE_ATTRIBUTE)}, railAppearance);
   root.style.colorScheme = theme;
 
   // Reduced motion has three states. Write nothing when the user has no

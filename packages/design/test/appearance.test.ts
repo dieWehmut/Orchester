@@ -3,8 +3,11 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import {
   COLOR_SCHEME_ATTRIBUTE,
   COLOR_SCHEME_STORAGE_KEY,
+  CONTENT_FONT_ATTRIBUTE,
+  RAIL_APPEARANCE_ATTRIBUTE,
   THEME_ATTRIBUTE,
   THEME_STORAGE_KEY,
+  UI_FONT_ATTRIBUTE,
   initAppearance,
   resetAppearanceForTests,
   useAppearance,
@@ -102,6 +105,9 @@ beforeEach(() => {
   localStorage.clear()
   root().removeAttribute(THEME_ATTRIBUTE)
   root().removeAttribute(COLOR_SCHEME_ATTRIBUTE)
+  root().removeAttribute(UI_FONT_ATTRIBUTE)
+  root().removeAttribute(CONTENT_FONT_ATTRIBUTE)
+  root().removeAttribute(RAIL_APPEARANCE_ATTRIBUTE)
   root().style.removeProperty('color-scheme')
   resetAppearanceForTests()
   stubMatchMedia(null)
@@ -122,6 +128,9 @@ describe('initAppearance', () => {
       intensity: 'vivid',
       reducedMotion: null,
       surface: 'web',
+      uiFont: 'system',
+      contentFont: 'mono',
+      railAppearance: 'solid',
     })
     expect(root().getAttribute(THEME_ATTRIBUTE)).toBe('dark')
     expect(root().getAttribute(COLOR_SCHEME_ATTRIBUTE)).toBe('rose')
@@ -165,6 +174,9 @@ describe('initAppearance', () => {
       intensity: 'vivid',
       reducedMotion: null,
       surface: 'web',
+      uiFont: 'system',
+      contentFont: 'mono',
+      railAppearance: 'solid',
     })
   })
 

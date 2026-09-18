@@ -172,6 +172,55 @@ export function isSurface(value: unknown): value is Surface {
   return typeof value === 'string' && (SURFACES as readonly string[]).includes(value)
 }
 
+/* ═ UI font ════════════════════════════════════════
+   Which face the interface is set in. Three options rather than a font list:
+   a governance tool inside a workspace has to agree with the surrounding
+   editor, and "system" is the only value that can promise that. `serif` is
+   offered for readers who want one; anything else is a font manager. */
+
+export const UI_FONTS = ['system', 'sans', 'serif'] as const
+export type UiFont = (typeof UI_FONTS)[number]
+
+export const DEFAULT_UI_FONT: UiFont = 'system'
+export const UI_FONT_ATTRIBUTE = 'data-ui-font'
+export const UI_FONT_STORAGE_KEY = 'orchester:ui-font'
+
+export function isUiFont(value: unknown): value is UiFont {
+  return typeof value === 'string' && (UI_FONTS as readonly string[]).includes(value)
+}
+
+/* ══ Content font ══════════════════════════════════════
+   The face for transcripts, diffs and code. `ui` makes the content track the
+   interface face instead of naming a second family, which is what the reference
+   calls "same as interface". */
+
+export const CONTENT_FONTS = ['ui', 'mono'] as const
+export type ContentFont = (typeof CONTENT_FONTS)[number]
+
+export const DEFAULT_CONTENT_FONT: ContentFont = 'mono'
+export const CONTENT_FONT_ATTRIBUTE = 'data-content-font'
+export const CONTENT_FONT_STORAGE_KEY = 'orchester:content-font'
+
+export function isContentFont(value: unknown): value is ContentFont {
+  return typeof value === 'string' && (CONTENT_FONTS as readonly string[]).includes(value)
+}
+
+/* ══ Rail appearance ════════════════════════════════════
+   Whether the task rail is opaque or borrows the desktop behind the window.
+   Only the desktop shell can honour translucency, so the attribute is written
+   everywhere but the surface supplies the effect. */
+
+export const RAIL_APPEARANCE_VALUES = ['solid', 'translucent'] as const
+export type RailAppearance = (typeof RAIL_APPEARANCE_VALUES)[number]
+
+export const DEFAULT_RAIL_APPEARANCE: RailAppearance = 'solid'
+export const RAIL_APPEARANCE_ATTRIBUTE = 'data-rail-appearance'
+export const RAIL_APPEARANCE_STORAGE_KEY = 'orchester:rail-appearance'
+
+export function isRailAppearance(value: unknown): value is RailAppearance {
+  return typeof value === 'string' && (RAIL_APPEARANCE_VALUES as readonly string[]).includes(value)
+}
+
 /* ═ Platform ═══════════════════════════════════════════════════════════════
    Chrome differs per platform — traffic lights on one side, caption buttons on
    the other — and doing that with a user-agent test inside every component
@@ -250,4 +299,37 @@ export function readDocumentPlatform(): Platform | null {
   if (!hasDocument()) return null
   const current = document.documentElement.getAttribute(OS_ATTRIBUTE)
   return (PLATFORMS as readonly string[]).includes(current ?? '') ? (current as Platform) : null
+}
+
+export function applyUiFontToDocument(font: UiFont): void {
+  if (!hasDocument()) return
+  document.documentElement.setAttribute(UI_FONT_ATTRIBUTE, font)
+}
+
+export function applyContentFontToDocument(font: ContentFont): void {
+  if (!hasDocument()) return
+  document.documentElement.setAttribute(CONTENT_FONT_ATTRIBUTE, font)
+}
+
+export function applyRailAppearanceToDocument(appearance: RailAppearance): void {
+  if (!hasDocument()) return
+  document.documentElement.setAttribute(RAIL_APPEARANCE_ATTRIBUTE, appearance)
+}
+
+export function readDocumentUiFont(): UiFont | null {
+  if (!hasDocument()) return null
+  const current = document.documentElement.getAttribute(UI_FONT_ATTRIBUTE)
+  return isUiFont(current) ? current : null
+}
+
+export function readDocumentContentFont(): ContentFont | null {
+  if (!hasDocument()) return null
+  const current = document.documentElement.getAttribute(CONTENT_FONT_ATTRIBUTE)
+  return isContentFont(current) ? current : null
+}
+
+export function readDocumentRailAppearance(): RailAppearance | null {
+  if (!hasDocument()) return null
+  const current = document.documentElement.getAttribute(RAIL_APPEARANCE_ATTRIBUTE)
+  return isRailAppearance(current) ? current : null
 }
