@@ -216,13 +216,29 @@ consumes (702 properties map `--vscode-*` onto `--app-color-*`):
 | `decoration-unchanged` | `--gray-fixed-300` | `--gray-fixed-600` |
 
 The single most surprising finding: **the primary button is achromatic and
-inverts.** In dark mode it is near-black `#0d0d0d` with near-black text
-`--gray-fixed-1000`… on a `#212121` surface. In light mode it is near-black text
-colour on white. Codex does *not* paint its accent blue onto primary buttons; the
-accent is reserved for links, focus, tips and active states. This is a deliberate,
-unusual choice and it is what makes the product read as calm rather than as a
-"blue app". Orchester currently uses the accent as the primary button fill, so
-this is a real divergence to decide on (§13).
+inverts.** The shell does not use the `--app-color-*` bridge for it; it uses the
+L1 pair, which resolves as:
+
+| | `--color-background-primary-solid` | `--color-text-primary-solid` |
+|---|---|---|
+| dark | `--gray-950` = **`#f3f3f3`** (near-white) | `--color-text-inverse` = `--gray-0` = **`#0d0d0d`** |
+| light | `--gray-900` = **`#181818`** (near-black) | `--color-text-inverse` = `--gray-0` = **`#fff`** |
+
+So the primary action is a **white button with black text in dark mode**, and a
+near-black button with white text in light mode. Codex does *not* paint its accent
+blue onto primary buttons; the accent is reserved for links, focus, tips and
+active states. This is a deliberate, unusual choice and it is what makes the
+product read as calm rather than as a "blue app". Orchester currently uses the
+accent as the primary button fill, so this is a real divergence to decide on
+(§12).
+
+(A related trap in the same bundle: the VS Code bridge sets
+`--app-color-background-button-primary` and `--app-color-text-button-primary` to
+the *same* `--gray-fixed-1000 #0d0d0d` in dark mode, which would be invisible.
+That pair only feeds `--vscode-button-*` and is overridden by the editor in the
+extension; the desktop shell renders from the L1 pair above. Reading only the
+`--app-color-*` layer would have produced the wrong conclusion — which is why
+every claim here was traced to the selector that actually wins.)
 
 Note also that `text-foreground-secondary` and `-tertiary` collapse to the *same*
 value as `text-foreground` in the app layer — hierarchy in the Codex shell comes
