@@ -3,6 +3,7 @@
 // These values intentionally mirror theme.ts; the appearance tests assert the
 // public storage keys and defaults so the axes cannot drift silently.
 const THEME_MODES = ['light', 'dark'] as const
+const THEME_PREFERENCES = ['system', 'light', 'dark'] as const
 const COLOR_SCHEMES = ['codex', 'violet', 'teal', 'rose'] as const
 const INTENSITIES = ['calm', 'vivid'] as const
 const SURFACES = ['web', 'site', 'desktop'] as const
@@ -35,6 +36,7 @@ const REDUCED_MOTION_STORAGE_KEY = 'orchester:reduced-motion'
 export const APPEARANCE_BOOTSTRAP_SCRIPT = `(() => {
   const root = document.documentElement;
   const themes = ${JSON.stringify(THEME_MODES)};
+  const preferences = ${JSON.stringify(['system', 'light', 'dark'])};
   const schemes = ${JSON.stringify(COLOR_SCHEMES)};
   const intensities = ${JSON.stringify(INTENSITIES)};
   const surfaces = ${JSON.stringify(SURFACES)};
@@ -63,8 +65,13 @@ export const APPEARANCE_BOOTSTRAP_SCRIPT = `(() => {
       ? 'light'
       : ${JSON.stringify(DEFAULT_THEME)};
 
-  const theme = pick(themes, stored.theme, root.getAttribute(${JSON.stringify(THEME_ATTRIBUTE)}), systemTheme)
-    || ${JSON.stringify(DEFAULT_THEME)};
+  // "system" is stored as a preference but must resolve to a real theme here,
+  // because the data-theme attribute is what the stylesheet matches on.
+  const preference = pick(preferences, stored.theme) || 'system';
+  const theme = preference === 'system'
+    ? systemTheme
+    : preference || pick(themes, root.getAttribute(${JSON.stringify(THEME_ATTRIBUTE)}), systemTheme)
+      || ${JSON.stringify(DEFAULT_THEME)};
   const scheme = pick(schemes, stored.scheme, root.getAttribute(${JSON.stringify(COLOR_SCHEME_ATTRIBUTE)}))
     || ${JSON.stringify(DEFAULT_COLOR_SCHEME)};
   const intensity = pick(intensities, stored.intensity, root.getAttribute(${JSON.stringify(INTENSITY_ATTRIBUTE)}))

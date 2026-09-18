@@ -15,6 +15,29 @@ export type ColorScheme = (typeof COLOR_SCHEMES)[number]
 /** Dark, because this tool sits next to a terminal. */
 export const DEFAULT_THEME: ThemeMode = 'dark'
 
+/* ── Theme preference ─────────────────────────────────────────────
+   Three choices, two themes. "System" is a preference, not a palette: it means
+   "whichever of the two the operating system is asking for right now", which is
+   a different thing from "light" and has to survive a restart as such. The
+   `data-theme` attribute therefore still only ever names a real theme, and this
+   axis is what the settings surface selects on. */
+
+export const THEME_PREFERENCES = ['system', 'light', 'dark'] as const
+export type ThemePreference = (typeof THEME_PREFERENCES)[number]
+
+export function isThemePreference(value: unknown): value is ThemePreference {
+  return typeof value === 'string' && (THEME_PREFERENCES as readonly string[]).includes(value)
+}
+
+/** Resolve a preference against what the operating system is asking for. */
+export function resolveThemePreference(
+  preference: ThemePreference,
+  systemTheme: ThemeMode | null,
+): ThemeMode {
+  if (preference === 'system') return systemTheme ?? DEFAULT_THEME
+  return preference
+}
+
 /**
  * Orchester's own hue.
  *

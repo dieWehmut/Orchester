@@ -19,6 +19,7 @@ import {
   isColorScheme,
   isIntensity,
   isThemeMode,
+  isThemePreference,
   readDocumentColorScheme,
   readDocumentIntensity,
   readDocumentReducedMotion,
@@ -26,11 +27,13 @@ import {
   readDocumentTheme,
   readSystemPlatform,
   readSystemTheme,
+  resolveThemePreference,
   type ColorScheme,
   type Intensity,
   type ReducedMotionPreference,
   type Surface,
   type ThemeMode,
+  type ThemePreference,
 } from '../theme'
 
 /**
@@ -41,6 +44,8 @@ import {
  * would also let two subtrees disagree about a value that is physically global.
  */
 const theme = ref<ThemeMode>(DEFAULT_THEME)
+/** `system` is a preference, not a palette; `theme` above is always resolved. */
+const themePreference = ref<ThemePreference>('system')
 const colorScheme = ref<ColorScheme>(DEFAULT_COLOR_SCHEME)
 const intensity = ref<Intensity>(DEFAULT_INTENSITY)
 /** `null` means the operating system decides. */
@@ -48,13 +53,16 @@ const reducedMotion = ref<ReducedMotionPreference>(null)
 const surface = ref<Surface>(DEFAULT_SURFACE)
 
 let initialized = false
-/** True once the user has chosen, after which the OS no longer overrides. */
-let themeIsExplicit = false
 let stopWatchingSystem: (() => void) | null = null
 
 function setTheme(next: ThemeMode): void {
   theme.value = next
   applyThemeToDocument(next)
+}
+
+/** Re-resolve `system` against whatever the OS is asking for right now. */
+function applyThemePreference(): void {
+  setTheme(resolveThemePreference(themePreference.value, readSystemTheme()))
 }
 
 function setColorScheme(next: ColorScheme): void {
@@ -72,7 +80,7 @@ function watchSystemTheme(): void {
   if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return
   const query = window.matchMedia('(prefers-color-scheme: light)')
   const onChange = (event: MediaQueryListEvent): void => {
-    if (themeIsExplicit) return
+    if (themePreference.value !== 'system') return
     setTheme(event.matches ? 'light' : 'dark')
   }
   query.addEventListener('change', onChange)
@@ -99,12 +107,18 @@ export function initAppearance(): {
   const storedIntensity = readStored(INTENSITY_STORAGE_KEY)
   const storedReducedMotion = readStored(REDUCED_MOTION_STORAGE_KEY)
 
-  themeIsExplicit = isThemeMode(storedTheme)
+  // A stored `light`/`dark` from before this axis existed is still an explicit
+  // choice, so it is read as one rather than coerced to `system`.
+  if (isThemePreference(storedTheme)) themePreference.value = storedTheme
+  else themePreference.value = isThemeMode(storedTheme) ? storedTheme : 'system'
 
+  // A data-theme already on the element came from the bootstrap script, which
+  // resolved the same inputs against the same OS. Trust it over a fresh reading,
+  // or the hydrated app "corrects" a correct value and flashes.
   setTheme(
-    isThemeMode(storedTheme)
-      ? storedTheme
-      : (readDocumentTheme() ?? readSystemTheme() ?? DEFAULT_THEME),
+    themePreference.value === 'system'
+      ? (readDocumentTheme() ?? readSystemTheme() ?? DEFAULT_THEME)
+      : themePreference.value,
   )
   setColorScheme(
     isColorScheme(storedScheme)
@@ -144,7 +158,7 @@ export function initAppearance(): {
 /** Reset the module singleton. Exists for tests, which need a clean document. */
 export function resetAppearanceForTests(): void {
   initialized = false
-  themeIsExplicit = false
+  themePreference.value = 'system'
   stopWatchingSystem?.()
   stopWatchingSystem = null
   theme.value = DEFAULT_THEME
@@ -156,6 +170,8 @@ export function resetAppearanceForTests(): void {
 
 export interface AppearanceApi {
   theme: Readonly<Ref<ThemeMode>>
+  /** What the user asked for: `system`, `light` or `dark`. */
+  themePreference: Readonly<Ref<ThemePreference>>
   colorScheme: Readonly<Ref<ColorScheme>>
   intensity: Readonly<Ref<Intensity>>
   reducedMotion: Readonly<Ref<ReducedMotionPreference>>
@@ -164,6 +180,7 @@ export interface AppearanceApi {
   /** Whether motion should be suppressed right now, OS included. */
   prefersReducedMotion: ComputedRef<boolean>
   setTheme: (next: ThemeMode) => void
+  setThemePreference: (next: ThemePreference) => void
   toggleTheme: () => void
   setColorScheme: (next: ColorScheme) => void
   setIntensity: (next: Intensity) => void
@@ -176,6 +193,7 @@ export function useAppearance(): AppearanceApi {
 
   return {
     theme: readonly(theme),
+    themePreference: readonly(themePreference),
     colorScheme: readonly(colorScheme),
     intensity: readonly(intensity),
     reducedMotion: readonly(reducedMotion),
@@ -188,13 +206,18 @@ export function useAppearance(): AppearanceApi {
       return window.matchMedia('(prefers-reduced-motion: reduce)').matches
     }),
     setTheme: (next: ThemeMode) => {
-      themeIsExplicit = true
+      themePreference.value = next
       setTheme(next)
+      writeStored(THEME_STORAGE_KEY, next)
+    },
+    setThemePreference: (next: ThemePreference) => {
+      themePreference.value = next
+      applyThemePreference()
       writeStored(THEME_STORAGE_KEY, next)
     },
     toggleTheme: () => {
       const next: ThemeMode = theme.value === 'dark' ? 'light' : 'dark'
-      themeIsExplicit = true
+      themePreference.value = next
       setTheme(next)
       writeStored(THEME_STORAGE_KEY, next)
     },

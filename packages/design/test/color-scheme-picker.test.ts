@@ -22,8 +22,14 @@ describe('ColorSchemePicker keyboard navigation', () => {
     const wrapper = mount(ColorSchemePicker, { attachTo: document.body })
     const swatches = wrapper.findAll('[role="radio"]')
 
-    expect(swatches[0]?.attributes('tabindex')).toBe('0')
-    expect(swatches.slice(1).every((swatch) => swatch.attributes('tabindex') === '-1')).toBe(true)
+    const selected = swatches.filter((swatch) => swatch.attributes('aria-checked') === 'true')
+    expect(selected).toHaveLength(1)
+    expect(selected[0]?.attributes('tabindex')).toBe('0')
+    expect(
+      swatches
+        .filter((swatch) => swatch.attributes('aria-checked') !== 'true')
+        .every((swatch) => swatch.attributes('tabindex') === '-1'),
+    ).toBe(true)
   })
 
   it('selects and focuses the next swatch with ArrowRight', async () => {
