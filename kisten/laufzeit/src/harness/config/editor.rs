@@ -243,6 +243,21 @@ mod tests {
         }
     }
 
+    /// Seed a configuration the loader will accept.
+    ///
+    /// The loader requires the file to be user-only, and a plain write is 0644
+    /// under the runner's umask: these tests passed on Windows, where the gate
+    /// reads ACLs, and failed on ubuntu-24.04 with `expected: "600"`.
+    fn seed_config(path: &std::path::Path, source: &str) {
+        fs::write(path, source).expect("seed a configuration");
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            fs::set_permissions(path, fs::Permissions::from_mode(0o600))
+                .expect("private configuration permissions");
+        }
+    }
+
     fn entry() -> ConfigValue {
         ConfigValue::Object(vec![
             (
@@ -302,7 +317,7 @@ mod tests {
                  \"direct\": { \"base_url\": \"https://api.anthropic.com\" }\n  \
                }\n\
              }\n";
-        fs::write(&path, original).expect("seed a configuration");
+        seed_config(&path, original);
 
         loader(&path)
             .edit_user_config(&provider_edit())
@@ -321,7 +336,7 @@ mod tests {
         let root = TempDir::new();
         let path = root.join("orchester.jsonc");
         let original = "{ \"version\": 1 }\n";
-        fs::write(&path, original).expect("seed a configuration");
+        seed_config(&path, original);
 
         let edit = loader(&path)
             .edit_user_config(&provider_edit())
@@ -375,7 +390,7 @@ mod tests {
         let root = TempDir::new();
         let path = root.join("orchester.jsonc");
         let original = "[1, 2]\n";
-        fs::write(&path, original).expect("seed a configuration");
+        seed_config(&path, original);
 
         let error = loader(&path)
             .edit_user_config(&provider_edit())
@@ -407,11 +422,10 @@ mod tests {
     fn a_rendered_block_carries_the_indentation_of_the_block_it_lands_in() {
         let root = TempDir::new();
         let path = root.join("orchester.jsonc");
-        fs::write(
+        seed_config(
             &path,
             "{\n  \"model_providers\": {\n    \"direct\": { \"base_url\": \"https://direct.test\" }\n  }\n}\n",
-        )
-        .expect("seed a configuration");
+        );
 
         loader(&path)
             .edit_user_config(&provider_edit())
