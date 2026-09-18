@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AgentDetails } from '../features/agent-presence'
+import { AgentDetails, agentActivityMessageKey } from '../features/agent-presence'
 import ChangeInspector from '../components/changes/ChangeInspector.vue'
 import { summarizeFileChanges } from '../components/changes/change-summary'
 import InspectorDock from '../components/layout/InspectorDock.vue'
@@ -50,6 +50,32 @@ const {
 } = sessions
 
 const threadTitle = computed(() => selected.value?.title ?? t('transcript.newChatTitle'))
+
+/**
+ * The identity above the transcript.
+ *
+ * A run does not carry the agent it was delegated to, so the header falls back
+ * to the fleet's own choice: the agent the user picked in the rail, or the one
+ * the runtime reports as busy. Naming nobody is worse than naming the fleet's
+ * guess — an empty header reads as "no one is answering".
+ */
+const threadAgent = computed(() => {
+  const fleet = agentSnapshot.value?.agents ?? []
+  return (
+    fleet.find((agent) => agent.agent_id === selectedAgentId.value) ??
+    fleet.find((agent) => agent.activity === 'running') ??
+    fleet[0] ??
+    null
+  )
+})
+
+const threadAgentName = computed(() => threadAgent.value?.display_name ?? t('app.name'))
+
+const threadAgentStatus = computed(() =>
+  threadAgent.value ? t(agentActivityMessageKey(threadAgent.value)) : null,
+)
+
+const threadAgentOnline = computed(() => threadAgent.value?.availability === 'available')
 
 const runBusy = computed(() =>
   run.lifecycle.value === 'submitting' ||
@@ -112,7 +138,11 @@ function handleOpenSettings(): void {
 
     <ThreadBar
       :title="threadTitle"
+      :agent-name="threadAgentName"
+      :agent-status="threadAgentStatus"
+      :agent-online="threadAgentOnline"
       :share-label="t('transcript.share')"
+      :share-text="t('transcript.share')"
       :more-label="t('transcript.more')"
       :panel-label="t('transcript.togglePanel')"
       :panel-open="inspectorOpen"
