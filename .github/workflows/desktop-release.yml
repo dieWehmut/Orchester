@@ -90,6 +90,12 @@ jobs:
           cargo +"$RUST_TOOLCHAIN" test --locked --workspace --all-targets
           cargo +"$RUST_TOOLCHAIN" clippy --locked --workspace --all-targets -- -D warnings
 
+      - name: Build WebUI payload
+        shell: bash
+        run: pnpm --filter @orchester/web build
+
+      # The tooling suite asserts the bundle payload exists, so it runs after
+      # the payload is built rather than assuming one is checked in.
       - name: Test desktop release tooling
         shell: bash
         run: node --test werkzeug/desktop/*.test.mjs
@@ -97,10 +103,6 @@ jobs:
       - name: Test desktop security configuration
         shell: bash
         run: pnpm --filter @orchester/desktop test:security
-
-      - name: Build WebUI payload
-        shell: bash
-        run: pnpm --filter @orchester/web build
 
       - name: Verify the NSIS bundle contract
         shell: bash
