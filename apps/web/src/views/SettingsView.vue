@@ -727,6 +727,16 @@ const previewAfter = computed(() => [
   gap: var(--space-2);
 }
 
+/* The reset makes every svg a block, so an icon beside a label breaks onto its
+   own line. The label is turned into a row here rather than changing the reset,
+   which the rest of the product relies on. */
+.settings-view__table-actions :deep(.app-button__label) {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  white-space: nowrap;
+}
+
 /* The picker is opened from the button beside it; showing a bare file control
    in the header would be a second, uglier way to do the same thing. */
 .settings-view__file {
