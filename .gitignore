@@ -40,6 +40,9 @@ apps/desktop/src-tauri/gen/
 .env.*
 !.env.example
 tmp/
+# Session scratch: extraction scripts, fetched pages and intermediate reports.
+# Never part of a commit; the durable conclusions live in docs/design.
+/_scratch/
 # The governed process runtime calls env_clear() before spawning a tool, so a
 # powershell.exe child loses LOCALAPPDATA and writes its module cache relative
 # to the test's working directory instead of the user profile.
@@ -61,6 +64,11 @@ docs/local
 !/npm/cli/README.md
 !/docs/PLAN-FRONTENDS.md
 !/apps/README.md
+# The Codex-informed UI design record is a tracked deliverable. The blanket
+# *.md rule above exists to keep session notes out, so these need to opt back
+# in explicitly — the directory first, then the files inside it.
+!/docs/design/
+!/docs/design/*.md
 .playwright-mcp/
 .superpowers/
 .worktrees/
