@@ -200,7 +200,11 @@ jobs:
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           path: desktop-installers
-          pattern: desktop-installer-*
+          # The uploads are raw files (`archive: false`), so each artifact is
+          # named after the installer it holds rather than after the `name:`
+          # input: the first staging run filtered on `desktop-installer-*` and
+          # downloaded 0 of the 2 artifacts that were sitting right there.
+          pattern: Orchester_*-setup.exe
           merge-multiple: true
 
       - name: Stage, verify, and checksum installers
