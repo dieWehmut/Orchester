@@ -42,7 +42,15 @@ describe('Orchester app icon', () => {
   })
 
   it('uses the same artwork for the rail badge instead of a letter tile', () => {
-    const wrapper = mount(AppRail, { props: { productName: 'Orchester' } })
+    const wrapper = mount(AppRail, {
+      props: {
+        productName: 'Orchester',
+        newSessionLabel: 'New session',
+        projectsLabel: 'Projects',
+        sessionsLabel: 'Sessions',
+        fleetLabel: 'Agents',
+      },
+    })
 
     const badge = wrapper.get('[data-rail-mark]')
     expect(badge.element.tagName).toBe('IMG')
