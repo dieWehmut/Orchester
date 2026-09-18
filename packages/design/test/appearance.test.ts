@@ -119,7 +119,7 @@ describe('initAppearance', () => {
     expect(applied).toEqual({
       theme: 'dark',
       colorScheme: 'codex',
-      intensity: 'calm',
+      intensity: 'vivid',
       reducedMotion: null,
       surface: 'web',
     })
@@ -162,7 +162,7 @@ describe('initAppearance', () => {
     expect(initAppearance()).toEqual({
       theme: 'dark',
       colorScheme: 'codex',
-      intensity: 'calm',
+      intensity: 'vivid',
       reducedMotion: null,
       surface: 'web',
     })

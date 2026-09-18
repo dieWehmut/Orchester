@@ -84,8 +84,8 @@ describe('intensity axis', () => {
     expect(isIntensity(null)).toBe(false)
   })
 
-  it('defaults to calm, the restrained treatment', () => {
-    expect(DEFAULT_INTENSITY).toBe('calm')
+  it('defaults to vivid, the accent-forward treatment', () => {
+    expect(DEFAULT_INTENSITY).toBe('vivid')
   })
 
   it('round-trips through the document', () => {
@@ -163,20 +163,20 @@ describe('platform detection', () => {
 
 describe('initAppearance', () => {
   it('sets every axis, not just the two it used to own', () => {
-    localStorage.setItem(INTENSITY_STORAGE_KEY, 'vivid')
+    localStorage.setItem(INTENSITY_STORAGE_KEY, 'calm')
     localStorage.setItem(REDUCED_MOTION_STORAGE_KEY, 'true')
 
     initAppearance()
 
-    expect(document.documentElement.getAttribute(INTENSITY_ATTRIBUTE)).toBe('vivid')
+    expect(document.documentElement.getAttribute(INTENSITY_ATTRIBUTE)).toBe('calm')
     expect(document.documentElement.getAttribute(REDUCED_MOTION_ATTRIBUTE)).toBe('true')
     expect(document.documentElement.getAttribute(OS_ATTRIBUTE)).toBeTruthy()
   })
 
-  it('defaults intensity to calm and reduced motion to the operating system', () => {
+  it('defaults intensity to vivid and reduced motion to the operating system', () => {
     initAppearance()
 
-    expect(document.documentElement.getAttribute(INTENSITY_ATTRIBUTE)).toBe('calm')
+    expect(document.documentElement.getAttribute(INTENSITY_ATTRIBUTE)).toBe('vivid')
     expect(document.documentElement.hasAttribute(REDUCED_MOTION_ATTRIBUTE)).toBe(false)
   })
 
@@ -232,10 +232,10 @@ describe('bootstrap script', () => {
     expect(document.documentElement.hasAttribute(REDUCED_MOTION_ATTRIBUTE)).toBe(false)
   })
 
-  it('defaults intensity to calm and announces the platform', () => {
+  it('defaults intensity to vivid and announces the platform', () => {
     runBootstrap()
 
-    expect(document.documentElement.getAttribute(INTENSITY_ATTRIBUTE)).toBe('calm')
+    expect(document.documentElement.getAttribute(INTENSITY_ATTRIBUTE)).toBe('vivid')
     expect(PLATFORMS).toContain(document.documentElement.getAttribute(OS_ATTRIBUTE))
   })
 

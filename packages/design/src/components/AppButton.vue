@@ -98,12 +98,14 @@ const classes = computed(() => [
 }
 
 .app-button--primary {
-  background: var(--color-accent);
-  color: var(--color-accent-contrast);
+  /* The action pair, not the accent directly: the intensity axis swaps it
+     between the accent and an inverted neutral without this file knowing. */
+  background: var(--color-action-solid);
+  color: var(--color-action-contrast);
 }
 
 .app-button--primary:hover:not(:disabled) {
-  background: var(--color-accent-hover);
+  background: var(--color-action-solid-hover);
 }
 
 .app-button--secondary {

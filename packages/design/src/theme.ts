@@ -91,17 +91,18 @@ export function readSystemTheme(): ThemeMode | null {
 /* ══ Intensity ══════════════════════════════════════════════════════════════
    How loudly the accent is allowed to speak.
 
+   `vivid` spends the accent on the primary action. It is the default because
+   Orchester's own surfaces are built that way: a governed run is consequential
+   and the control that starts it should be the most findable thing on screen.
    `calm` keeps the accent for focus, links and active markers and renders the
-   primary action achromatic — the behaviour the Codex surfaces converge on and
-   the right default for a tool that sits beside a terminal for hours. `vivid`
-   spends the accent on fills, which is what Orchester looked like before this
-   axis existed. Two words, one axis: a third would mean nobody could tell them
-   apart, and eight would mean nobody would try. */
+   primary action as an inverted neutral, which is the restraint the surface
+   this design learned from applies. Two words, one axis: a third would mean
+   nobody could tell them apart, and eight would mean nobody would try. */
 
 export const INTENSITIES = ['calm', 'vivid'] as const
 export type Intensity = (typeof INTENSITIES)[number]
 
-export const DEFAULT_INTENSITY: Intensity = 'calm'
+export const DEFAULT_INTENSITY: Intensity = 'vivid'
 export const INTENSITY_ATTRIBUTE = 'data-intensity'
 export const INTENSITY_STORAGE_KEY = 'orchester:intensity'
 
