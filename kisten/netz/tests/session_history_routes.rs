@@ -143,6 +143,16 @@ async fn session_list_route_redacts_corrupt_history_storage_errors() {
     fs::create_dir_all(paths.home()).expect("history home");
     fs::write(paths.session_log(), r#"{"prompt":"private-broken-record"}"#)
         .expect("corrupt history");
+    // State reads go through the same user-only permission gate as the config,
+    // and a fresh temp directory is 0755 under the runner's umask.
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        fs::set_permissions(paths.home(), fs::Permissions::from_mode(0o700))
+            .expect("private history home");
+        fs::set_permissions(paths.session_log(), fs::Permissions::from_mode(0o600))
+            .expect("private history file");
+    }
 
     let (status, error) = json_response(
         ServerContext::new(Some(paths.clone()), ServerControl::new()),
