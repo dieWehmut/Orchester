@@ -1,0 +1,42 @@
+import { existsSync, readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { mount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
+
+import OrchesterMark from '../src/components/run/OrchesterMark.vue'
+
+function fromPackageRoot(relativePath: string): string {
+  return resolve(process.cwd(), relativePath)
+}
+
+describe('Orchester app icon', () => {
+  it('links the icon assets from the document head', () => {
+    const html = readFileSync(fromPackageRoot('index.html'), 'utf8')
+
+    expect(html).toMatch(/<link[^>]+rel="icon"[^>]+href="\/favicon\.png"/)
+    expect(html).toMatch(/<link[^>]+rel="apple-touch-icon"[^>]+href="\/apple-touch-icon\.png"/)
+  })
+
+  it('ships every icon asset the app points at', () => {
+    for (const asset of [
+      'public/favicon.png',
+      'public/apple-touch-icon.png',
+      'public/icon-512.png',
+      'src/assets/orchester-mark.png',
+    ]) {
+      expect(existsSync(fromPackageRoot(asset)), asset).toBe(true)
+    }
+  })
+
+  it('renders the brand mark as the shipped artwork', () => {
+    const wrapper = mount(OrchesterMark, { props: { size: 96 } })
+
+    const mark = wrapper.get('[data-orchester-mark]')
+    const image = mark.get('img')
+    expect(image.attributes('src')).toContain('orchester-mark')
+    expect(image.attributes('width')).toBe('96')
+    expect(image.attributes('height')).toBe('96')
+    expect(image.attributes('alt')).toBe('')
+    expect(image.attributes('aria-hidden')).toBe('true')
+  })
+})
