@@ -239,7 +239,10 @@ jobs:
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
-          persist-credentials: false
+          # This job pushes the tag with `git push`, so the checkout has to keep
+          # the token in the remote: with persist-credentials: false the push
+          # failed with "could not read Username for 'https://github.com'".
+          # The write permission it needs is declared above.
 
       - name: Create the immutable desktop tag
         shell: bash
