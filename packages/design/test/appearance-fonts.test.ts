@@ -14,6 +14,17 @@ import {
   RAIL_APPEARANCE_STORAGE_KEY,
   UI_FONTS,
   CONTENT_FONTS,
+  FONT_WEIGHTS,
+  DEFAULT_FONT_WEIGHT,
+  UI_FONT_WEIGHT_ATTRIBUTE,
+  CONTENT_FONT_WEIGHT_ATTRIBUTE,
+  UI_FONT_WEIGHT_STORAGE_KEY,
+  CONTENT_FONT_WEIGHT_STORAGE_KEY,
+  applyContentFontWeightToDocument,
+  applyFontWeightToDocument,
+  isFontWeight,
+  readDocumentContentFontWeight,
+  readDocumentFontWeight,
   applyContentFontToDocument,
   applyRailAppearanceToDocument,
   applyUiFontToDocument,
@@ -52,6 +63,8 @@ const MANAGED_ATTRIBUTES = [
   UI_FONT_ATTRIBUTE,
   CONTENT_FONT_ATTRIBUTE,
   RAIL_APPEARANCE_ATTRIBUTE,
+  UI_FONT_WEIGHT_ATTRIBUTE,
+  CONTENT_FONT_WEIGHT_ATTRIBUTE,
 ]
 
 afterEach(() => {
@@ -130,6 +143,37 @@ describe('rail appearance axis', () => {
   })
 })
 
+describe('font weight axis', () => {
+  it('offers exactly regular and medium, and guards against anything else', () => {
+    expect([...FONT_WEIGHTS]).toEqual(['regular', 'medium'])
+    expect(isFontWeight('regular')).toBe(true)
+    expect(isFontWeight('medium')).toBe(true)
+    expect(isFontWeight('black')).toBe(false)
+  })
+
+  it('defaults to the regular weight', () => {
+    expect(DEFAULT_FONT_WEIGHT).toBe('regular')
+  })
+
+  it('round-trips through the document', () => {
+    applyFontWeightToDocument('medium')
+    expect(document.documentElement.getAttribute(UI_FONT_WEIGHT_ATTRIBUTE)).toBe('medium')
+    expect(readDocumentFontWeight()).toBe('medium')
+
+    applyContentFontWeightToDocument('medium')
+    expect(document.documentElement.getAttribute(CONTENT_FONT_WEIGHT_ATTRIBUTE)).toBe('medium')
+    expect(readDocumentContentFontWeight()).toBe('medium')
+  })
+
+  it('reports null for an unknown document value', () => {
+    document.documentElement.setAttribute(UI_FONT_WEIGHT_ATTRIBUTE, 'ultra')
+    expect(readDocumentFontWeight()).toBeNull()
+
+    document.documentElement.setAttribute(CONTENT_FONT_WEIGHT_ATTRIBUTE, 'ultra')
+    expect(readDocumentContentFontWeight()).toBeNull()
+  })
+})
+
 describe('appearance api', () => {
   it('exposes the three axes and persists what it sets', () => {
     initAppearance()
@@ -138,25 +182,35 @@ describe('appearance api', () => {
     appearance.setUiFont('serif')
     appearance.setContentFont('ui')
     appearance.setRailAppearance('translucent')
+    appearance.setUiFontWeight('medium')
+    appearance.setContentFontWeight('medium')
 
     expect(localStorage.getItem(UI_FONT_STORAGE_KEY)).toBe('serif')
     expect(localStorage.getItem(CONTENT_FONT_STORAGE_KEY)).toBe('ui')
     expect(localStorage.getItem(RAIL_APPEARANCE_STORAGE_KEY)).toBe('translucent')
+    expect(localStorage.getItem(UI_FONT_WEIGHT_STORAGE_KEY)).toBe('medium')
+    expect(localStorage.getItem(CONTENT_FONT_WEIGHT_STORAGE_KEY)).toBe('medium')
     expect(document.documentElement.getAttribute(UI_FONT_ATTRIBUTE)).toBe('serif')
     expect(document.documentElement.getAttribute(CONTENT_FONT_ATTRIBUTE)).toBe('ui')
     expect(document.documentElement.getAttribute(RAIL_APPEARANCE_ATTRIBUTE)).toBe('translucent')
+    expect(document.documentElement.getAttribute(UI_FONT_WEIGHT_ATTRIBUTE)).toBe('medium')
+    expect(document.documentElement.getAttribute(CONTENT_FONT_WEIGHT_ATTRIBUTE)).toBe('medium')
   })
 
   it('reads stored preferences on init', () => {
     localStorage.setItem(UI_FONT_STORAGE_KEY, 'sans')
     localStorage.setItem(CONTENT_FONT_STORAGE_KEY, 'ui')
     localStorage.setItem(RAIL_APPEARANCE_STORAGE_KEY, 'translucent')
+    localStorage.setItem(UI_FONT_WEIGHT_STORAGE_KEY, 'medium')
+    localStorage.setItem(CONTENT_FONT_WEIGHT_STORAGE_KEY, 'medium')
 
     initAppearance()
 
     expect(document.documentElement.getAttribute(UI_FONT_ATTRIBUTE)).toBe('sans')
     expect(document.documentElement.getAttribute(CONTENT_FONT_ATTRIBUTE)).toBe('ui')
     expect(document.documentElement.getAttribute(RAIL_APPEARANCE_ATTRIBUTE)).toBe('translucent')
+    expect(document.documentElement.getAttribute(UI_FONT_WEIGHT_ATTRIBUTE)).toBe('medium')
+    expect(document.documentElement.getAttribute(CONTENT_FONT_WEIGHT_ATTRIBUTE)).toBe('medium')
   })
 })
 
@@ -165,12 +219,16 @@ describe('bootstrap script', () => {
     localStorage.setItem(UI_FONT_STORAGE_KEY, 'serif')
     localStorage.setItem(CONTENT_FONT_STORAGE_KEY, 'ui')
     localStorage.setItem(RAIL_APPEARANCE_STORAGE_KEY, 'translucent')
+    localStorage.setItem(UI_FONT_WEIGHT_STORAGE_KEY, 'medium')
+    localStorage.setItem(CONTENT_FONT_WEIGHT_STORAGE_KEY, 'medium')
 
     runBootstrap()
 
     expect(document.documentElement.getAttribute(UI_FONT_ATTRIBUTE)).toBe('serif')
     expect(document.documentElement.getAttribute(CONTENT_FONT_ATTRIBUTE)).toBe('ui')
     expect(document.documentElement.getAttribute(RAIL_APPEARANCE_ATTRIBUTE)).toBe('translucent')
+    expect(document.documentElement.getAttribute(UI_FONT_WEIGHT_ATTRIBUTE)).toBe('medium')
+    expect(document.documentElement.getAttribute(CONTENT_FONT_WEIGHT_ATTRIBUTE)).toBe('medium')
   })
 
   it('falls back to the defaults when nothing is stored', () => {
@@ -179,6 +237,8 @@ describe('bootstrap script', () => {
     expect(document.documentElement.getAttribute(UI_FONT_ATTRIBUTE)).toBe('system')
     expect(document.documentElement.getAttribute(CONTENT_FONT_ATTRIBUTE)).toBe('mono')
     expect(document.documentElement.getAttribute(RAIL_APPEARANCE_ATTRIBUTE)).toBe('solid')
+    expect(document.documentElement.getAttribute(UI_FONT_WEIGHT_ATTRIBUTE)).toBe('regular')
+    expect(document.documentElement.getAttribute(CONTENT_FONT_WEIGHT_ATTRIBUTE)).toBe('regular')
   })
 
   it('stays dependency-free so the shell can inline it', () => {

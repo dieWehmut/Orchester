@@ -4,6 +4,8 @@ import {
   COLOR_SCHEME_ATTRIBUTE,
   COLOR_SCHEME_STORAGE_KEY,
   CONTENT_FONT_ATTRIBUTE,
+  UI_FONT_WEIGHT_ATTRIBUTE,
+  CONTENT_FONT_WEIGHT_ATTRIBUTE,
   RAIL_APPEARANCE_ATTRIBUTE,
   THEME_ATTRIBUTE,
   THEME_STORAGE_KEY,
@@ -108,6 +110,8 @@ beforeEach(() => {
   root().removeAttribute(UI_FONT_ATTRIBUTE)
   root().removeAttribute(CONTENT_FONT_ATTRIBUTE)
   root().removeAttribute(RAIL_APPEARANCE_ATTRIBUTE)
+  root().removeAttribute(UI_FONT_WEIGHT_ATTRIBUTE)
+  root().removeAttribute(CONTENT_FONT_WEIGHT_ATTRIBUTE)
   root().style.removeProperty('color-scheme')
   resetAppearanceForTests()
   stubMatchMedia(null)
@@ -131,6 +135,8 @@ describe('initAppearance', () => {
       uiFont: 'system',
       contentFont: 'mono',
       railAppearance: 'solid',
+      uiFontWeight: 'regular',
+      contentFontWeight: 'regular',
     })
     expect(root().getAttribute(THEME_ATTRIBUTE)).toBe('dark')
     expect(root().getAttribute(COLOR_SCHEME_ATTRIBUTE)).toBe('rose')
@@ -177,6 +183,8 @@ describe('initAppearance', () => {
       uiFont: 'system',
       contentFont: 'mono',
       railAppearance: 'solid',
+      uiFontWeight: 'regular',
+      contentFontWeight: 'regular',
     })
   })
 
