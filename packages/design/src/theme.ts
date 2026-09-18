@@ -87,3 +87,137 @@ export function readSystemTheme(): ThemeMode | null {
   if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark'
   return null
 }
+
+/* ══ Intensity ══════════════════════════════════════════════════════════════
+   How loudly the accent is allowed to speak.
+
+   `calm` keeps the accent for focus, links and active markers and renders the
+   primary action achromatic — the behaviour the Codex surfaces converge on and
+   the right default for a tool that sits beside a terminal for hours. `vivid`
+   spends the accent on fills, which is what Orchester looked like before this
+   axis existed. Two words, one axis: a third would mean nobody could tell them
+   apart, and eight would mean nobody would try. */
+
+export const INTENSITIES = ['calm', 'vivid'] as const
+export type Intensity = (typeof INTENSITIES)[number]
+
+export const DEFAULT_INTENSITY: Intensity = 'calm'
+export const INTENSITY_ATTRIBUTE = 'data-intensity'
+export const INTENSITY_STORAGE_KEY = 'orchester:intensity'
+
+export function isIntensity(value: unknown): value is Intensity {
+  return typeof value === 'string' && (INTENSITIES as readonly string[]).includes(value)
+}
+
+/* ══ Reduced motion ════════════════════════════════════════════════════════
+   Three states, not two. `null` means "do what the operating system says",
+   which is not the same as `'false'`: a user on a reduced-motion desktop who
+   still wants our transitions has to be able to say so, and that requires an
+   explicit value that can defeat the media query. */
+
+export const REDUCED_MOTION_VALUES = ['true', 'false'] as const
+export type ReducedMotionValue = (typeof REDUCED_MOTION_VALUES)[number]
+/** `null` defers to `prefers-reduced-motion`. */
+export type ReducedMotionPreference = ReducedMotionValue | null
+
+export const REDUCED_MOTION_ATTRIBUTE = 'data-reduced-motion'
+export const REDUCED_MOTION_STORAGE_KEY = 'orchester:reduced-motion'
+
+export function isReducedMotionPreference(value: unknown): value is ReducedMotionPreference {
+  return value === null || (REDUCED_MOTION_VALUES as readonly unknown[]).includes(value)
+}
+
+/* ══ Surface ════════════════════════════════════════════════════════════════
+   Which face is rendering. This is a property of the build, not a taste, so it
+   is announced by the host (the desktop shell sets it before the bundle loads)
+   and is deliberately never persisted. */
+
+export const SURFACES = ['web', 'site', 'desktop'] as const
+export type Surface = (typeof SURFACES)[number]
+
+export const DEFAULT_SURFACE: Surface = 'web'
+export const SURFACE_ATTRIBUTE = 'data-orchester-surface'
+
+export function isSurface(value: unknown): value is Surface {
+  return typeof value === 'string' && (SURFACES as readonly string[]).includes(value)
+}
+
+/* ═ Platform ═══════════════════════════════════════════════════════════════
+   Chrome differs per platform — traffic lights on one side, caption buttons on
+   the other — and doing that with a user-agent test inside every component
+   would spread the same string match across the tree. It is resolved once,
+   here, and published as a root attribute. */
+
+export const PLATFORMS = ['macos', 'windows', 'linux'] as const
+export type Platform = (typeof PLATFORMS)[number]
+
+export const OS_ATTRIBUTE = 'data-orchester-os'
+
+/**
+ * Which platform a user-agent string describes.
+ *
+ * Falls back to Linux rather than guessing: an unrecognised string is far more
+ * likely to be a stripped-down webview than a phone, and of the three mistakes
+ * available this is the one that lays out a window sensibly everywhere.
+ */
+export function detectPlatform(userAgent: string): Platform {
+  const value = userAgent.toLowerCase()
+  if (value.includes('mac os') || value.includes('macintosh')) return 'macos'
+  if (value.includes('windows')) return 'windows'
+  return 'linux'
+}
+
+export function readSystemPlatform(): Platform {
+  if (typeof navigator === 'undefined') return 'linux'
+  const agent = typeof navigator.userAgent === 'string' ? navigator.userAgent : ''
+  return detectPlatform(agent)
+}
+
+export function applyIntensityToDocument(intensity: Intensity): void {
+  if (!hasDocument()) return
+  document.documentElement.setAttribute(INTENSITY_ATTRIBUTE, intensity)
+}
+
+export function applyReducedMotionToDocument(preference: ReducedMotionPreference): void {
+  if (!hasDocument()) return
+  const root = document.documentElement
+  // `null` removes the attribute rather than writing a third value, so the
+  // stylesheet's `:not([data-reduced-motion='false'])` guard can tell "no
+  // opinion" apart from "explicitly on".
+  if (preference === null) root.removeAttribute(REDUCED_MOTION_ATTRIBUTE)
+  else root.setAttribute(REDUCED_MOTION_ATTRIBUTE, preference)
+}
+
+export function applySurfaceToDocument(surface: Surface): void {
+  if (!hasDocument()) return
+  document.documentElement.setAttribute(SURFACE_ATTRIBUTE, surface)
+}
+
+export function applyPlatformToDocument(platform: Platform): void {
+  if (!hasDocument()) return
+  document.documentElement.setAttribute(OS_ATTRIBUTE, platform)
+}
+
+export function readDocumentIntensity(): Intensity | null {
+  if (!hasDocument()) return null
+  const current = document.documentElement.getAttribute(INTENSITY_ATTRIBUTE)
+  return isIntensity(current) ? current : null
+}
+
+export function readDocumentReducedMotion(): ReducedMotionPreference {
+  if (!hasDocument()) return null
+  const current = document.documentElement.getAttribute(REDUCED_MOTION_ATTRIBUTE)
+  return current === 'true' || current === 'false' ? current : null
+}
+
+export function readDocumentSurface(): Surface | null {
+  if (!hasDocument()) return null
+  const current = document.documentElement.getAttribute(SURFACE_ATTRIBUTE)
+  return isSurface(current) ? current : null
+}
+
+export function readDocumentPlatform(): Platform | null {
+  if (!hasDocument()) return null
+  const current = document.documentElement.getAttribute(OS_ATTRIBUTE)
+  return (PLATFORMS as readonly string[]).includes(current ?? '') ? (current as Platform) : null
+}

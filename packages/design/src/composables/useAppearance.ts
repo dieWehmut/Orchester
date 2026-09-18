@@ -1,19 +1,35 @@
 import { computed, readonly, ref, type ComputedRef, type Ref } from 'vue'
 
-import { readStored, writeStored } from '../storage'
+import { clearStored, readStored, writeStored } from '../storage'
 import {
   COLOR_SCHEME_STORAGE_KEY,
   DEFAULT_COLOR_SCHEME,
+  DEFAULT_INTENSITY,
+  DEFAULT_SURFACE,
   DEFAULT_THEME,
+  INTENSITY_STORAGE_KEY,
+  REDUCED_MOTION_STORAGE_KEY,
   THEME_STORAGE_KEY,
   applyColorSchemeToDocument,
+  applyIntensityToDocument,
+  applyPlatformToDocument,
+  applyReducedMotionToDocument,
+  applySurfaceToDocument,
   applyThemeToDocument,
   isColorScheme,
+  isIntensity,
   isThemeMode,
   readDocumentColorScheme,
+  readDocumentIntensity,
+  readDocumentReducedMotion,
+  readDocumentSurface,
   readDocumentTheme,
+  readSystemPlatform,
   readSystemTheme,
   type ColorScheme,
+  type Intensity,
+  type ReducedMotionPreference,
+  type Surface,
   type ThemeMode,
 } from '../theme'
 
@@ -26,6 +42,10 @@ import {
  */
 const theme = ref<ThemeMode>(DEFAULT_THEME)
 const colorScheme = ref<ColorScheme>(DEFAULT_COLOR_SCHEME)
+const intensity = ref<Intensity>(DEFAULT_INTENSITY)
+/** `null` means the operating system decides. */
+const reducedMotion = ref<ReducedMotionPreference>(null)
+const surface = ref<Surface>(DEFAULT_SURFACE)
 
 let initialized = false
 /** True once the user has chosen, after which the OS no longer overrides. */
@@ -67,9 +87,17 @@ function watchSystemTheme(): void {
  * how the first paint and the hydrated app agree, instead of the app "correcting"
  * a correct value and flashing.
  */
-export function initAppearance(): { theme: ThemeMode; colorScheme: ColorScheme } {
+export function initAppearance(): {
+  theme: ThemeMode
+  colorScheme: ColorScheme
+  intensity: Intensity
+  reducedMotion: ReducedMotionPreference
+  surface: Surface
+} {
   const storedTheme = readStored(THEME_STORAGE_KEY)
   const storedScheme = readStored(COLOR_SCHEME_STORAGE_KEY)
+  const storedIntensity = readStored(INTENSITY_STORAGE_KEY)
+  const storedReducedMotion = readStored(REDUCED_MOTION_STORAGE_KEY)
 
   themeIsExplicit = isThemeMode(storedTheme)
 
@@ -84,9 +112,33 @@ export function initAppearance(): { theme: ThemeMode; colorScheme: ColorScheme }
       : (readDocumentColorScheme() ?? DEFAULT_COLOR_SCHEME),
   )
 
+  intensity.value = isIntensity(storedIntensity)
+    ? storedIntensity
+    : (readDocumentIntensity() ?? DEFAULT_INTENSITY)
+  applyIntensityToDocument(intensity.value)
+
+  const documentReducedMotion = readDocumentReducedMotion()
+  reducedMotion.value =
+    storedReducedMotion === 'true' || storedReducedMotion === 'false'
+      ? storedReducedMotion
+      : documentReducedMotion
+  applyReducedMotionToDocument(reducedMotion.value)
+
+  // The surface is announced by the host rather than stored, so a pre-set
+  // attribute is the only real input and the default is the fallback.
+  surface.value = readDocumentSurface() ?? DEFAULT_SURFACE
+  applySurfaceToDocument(surface.value)
+  applyPlatformToDocument(readSystemPlatform())
+
   if (!stopWatchingSystem) watchSystemTheme()
   initialized = true
-  return { theme: theme.value, colorScheme: colorScheme.value }
+  return {
+    theme: theme.value,
+    colorScheme: colorScheme.value,
+    intensity: intensity.value,
+    reducedMotion: reducedMotion.value,
+    surface: surface.value,
+  }
 }
 
 /** Reset the module singleton. Exists for tests, which need a clean document. */
@@ -97,15 +149,26 @@ export function resetAppearanceForTests(): void {
   stopWatchingSystem = null
   theme.value = DEFAULT_THEME
   colorScheme.value = DEFAULT_COLOR_SCHEME
+  intensity.value = DEFAULT_INTENSITY
+  reducedMotion.value = null
+  surface.value = DEFAULT_SURFACE
 }
 
 export interface AppearanceApi {
   theme: Readonly<Ref<ThemeMode>>
   colorScheme: Readonly<Ref<ColorScheme>>
+  intensity: Readonly<Ref<Intensity>>
+  reducedMotion: Readonly<Ref<ReducedMotionPreference>>
+  surface: Readonly<Ref<Surface>>
   isDark: ComputedRef<boolean>
+  /** Whether motion should be suppressed right now, OS included. */
+  prefersReducedMotion: ComputedRef<boolean>
   setTheme: (next: ThemeMode) => void
   toggleTheme: () => void
   setColorScheme: (next: ColorScheme) => void
+  setIntensity: (next: Intensity) => void
+  setReducedMotion: (next: ReducedMotionPreference) => void
+  setSurface: (next: Surface) => void
 }
 
 export function useAppearance(): AppearanceApi {
@@ -114,7 +177,16 @@ export function useAppearance(): AppearanceApi {
   return {
     theme: readonly(theme),
     colorScheme: readonly(colorScheme),
+    intensity: readonly(intensity),
+    reducedMotion: readonly(reducedMotion),
+    surface: readonly(surface),
     isDark: computed(() => theme.value === 'dark'),
+    prefersReducedMotion: computed(() => {
+      if (reducedMotion.value === 'true') return true
+      if (reducedMotion.value === 'false') return false
+      if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false
+      return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    }),
     setTheme: (next: ThemeMode) => {
       themeIsExplicit = true
       setTheme(next)
@@ -129,6 +201,24 @@ export function useAppearance(): AppearanceApi {
     setColorScheme: (next: ColorScheme) => {
       setColorScheme(next)
       writeStored(COLOR_SCHEME_STORAGE_KEY, next)
+    },
+    setIntensity: (next: Intensity) => {
+      intensity.value = next
+      applyIntensityToDocument(next)
+      writeStored(INTENSITY_STORAGE_KEY, next)
+    },
+    setReducedMotion: (next: ReducedMotionPreference) => {
+      reducedMotion.value = next
+      applyReducedMotionToDocument(next)
+      // `null` clears the preference rather than storing a third value, so
+      // "follow the OS" is reachable again after an explicit choice.
+      if (next === null) clearStored(REDUCED_MOTION_STORAGE_KEY)
+      else writeStored(REDUCED_MOTION_STORAGE_KEY, next)
+    },
+    setSurface: (next: Surface) => {
+      // Deliberately not persisted: the surface describes the build, not a taste.
+      surface.value = next
+      applySurfaceToDocument(next)
     },
   }
 }
