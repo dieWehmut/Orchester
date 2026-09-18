@@ -586,6 +586,12 @@ mod tests {
         #[cfg(unix)]
         {
             use std::os::unix::fs::PermissionsExt;
+            // The loader requires the config's directory to be user-only as
+            // well as the file, and a fresh temp directory is 0755 under the
+            // runner's umask: without this the test fails on Linux while
+            // passing on Windows, where the gate reads ACLs instead.
+            fs::set_permissions(&explicit_home, fs::Permissions::from_mode(0o700))
+                .expect("private home permissions");
             fs::set_permissions(&config, fs::Permissions::from_mode(0o600))
                 .expect("private config permissions");
         }
