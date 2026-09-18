@@ -35,7 +35,7 @@ function main() {
   run('pnpm', ['--filter', '@orchester/web', 'build']);
   assertInputs(version);
 
-  run('pnpm', ['--filter', '@orchester/desktop', 'build', '--', '--target', rustTarget, '--bundles', 'nsis']);
+  run('pnpm', ['--filter', '@orchester/desktop', 'exec', 'tauri', 'build', '--target', rustTarget, '--bundles', 'nsis']);
 
   const bundleDirectory = path.join(desktopRoot, 'src-tauri/target', rustTarget, 'release/bundle/nsis');
   const produced = fs.existsSync(bundleDirectory)
