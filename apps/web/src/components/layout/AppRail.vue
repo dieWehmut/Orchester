@@ -1,7 +1,9 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { CircleUser, Settings, SquarePen } from '@lucide/vue'
 
 import { AppButton, IconButton } from '@orchester/design'
+
+import mark from '../../assets/orchester-mark.png'
 
 withDefaults(
   defineProps<{
@@ -32,7 +34,9 @@ defineEmits<{
 <template>
   <div class="app-rail" data-app-rail>
     <div class="app-rail__section" data-rail-section="brand">
-      <span class="app-rail__mark" aria-hidden="true">{{ productName.slice(0, 1) }}</span>
+      <span class="app-rail__mark-slot" aria-hidden="true">
+        <img class="app-rail__mark" data-rail-mark :src="mark" alt="" draggable="false" />
+      </span>
       <span class="app-rail__identity">
         <strong>{{ productName }}</strong>
         <span v-if="workspaceName">{{ workspaceName }}</span>
@@ -157,18 +161,22 @@ defineEmits<{
   border-block-end: 1px solid var(--color-border-base);
 }
 
-.app-rail__mark {
+.app-rail__mark-slot {
   display: grid;
   inline-size: 32px;
   block-size: 32px;
   flex: 0 0 32px;
   place-items: center;
-  border: 1px solid var(--color-accent-border);
+  overflow: hidden;
+  border: 1px solid var(--color-border-base);
   border-radius: var(--radius-sm);
-  background: var(--color-accent-muted);
-  color: var(--color-accent);
-  font-family: var(--font-mono);
-  font-weight: var(--weight-semibold);
+}
+
+.app-rail__mark {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  user-select: none;
 }
 
 .app-rail__identity {
