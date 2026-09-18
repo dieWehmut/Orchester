@@ -148,9 +148,9 @@ describe('intent matrix', () => {
     }
   })
 
-  it('keeps the focus border on the accent hue in both themes', () => {
-    expect(dark).toMatch(/--color-border-focus:\s*var\(--blue-300\)/)
-    expect(light).toMatch(/--color-border-focus:\s*var\(--blue-300\)/)
+  it('keeps the focus border on the brand hue in both themes', () => {
+    expect(dark).toMatch(/--color-border-focus:\s*var\(--pink-300\)/)
+    expect(light).toMatch(/--color-border-focus:\s*var\(--pink-500\)/)
   })
 })
 
