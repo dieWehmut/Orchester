@@ -186,6 +186,14 @@
     "translucentRail": {
       "title": "Translucent sidebar",
       "description": "Show the sidebar as a translucent sheet for a more immersive desktop window."
+    },
+    "background": {
+      "title": "Background",
+      "description": "The colour the theme paints the page in."
+    },
+    "foreground": {
+      "title": "Foreground",
+      "description": "The colour the theme paints primary text in."
     }
   },
   "notFound": {

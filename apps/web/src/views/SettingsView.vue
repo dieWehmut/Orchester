@@ -344,6 +344,32 @@ const previewAfter = computed(() => [
             </div>
           </div>
 
+          <div class="settings-view__row" data-appearance-field="background">
+            <div class="settings-view__row-copy">
+              <strong>{{ t('settings.background.title') }}</strong>
+              <span>{{ t('settings.background.description') }}</span>
+            </div>
+            <span
+              class="settings-view__readout"
+              data-color-readout
+              :style="{ background: 'var(--color-bg-base)' }"
+              aria-hidden="true"
+            />
+          </div>
+
+          <div class="settings-view__row" data-appearance-field="foreground">
+            <div class="settings-view__row-copy">
+              <strong>{{ t('settings.foreground.title') }}</strong>
+              <span>{{ t('settings.foreground.description') }}</span>
+            </div>
+            <span
+              class="settings-view__readout"
+              data-color-readout
+              :style="{ background: 'var(--color-text-primary)' }"
+              aria-hidden="true"
+            />
+          </div>
+
           <div class="settings-view__row" data-appearance-field="ui-font">
             <div class="settings-view__row-copy">
               <strong>{{ t('settings.uiFont.title') }}</strong>
@@ -627,6 +653,18 @@ const previewAfter = computed(() => [
 
 .settings-view__control {
   inline-size: 13rem;
+}
+
+/* The background and foreground rows report what the theme already resolves
+   to. They deliberately hold no control: the two colours are an outcome of the
+   theme choice, and a hex picker here would be a second theme editor. */
+.settings-view__readout {
+  display: inline-block;
+  inline-size: 1.4rem;
+  block-size: 1.4rem;
+  flex: 0 0 auto;
+  border: 1px solid var(--color-border-emphasis);
+  border-radius: var(--radius-full);
 }
 
 .settings-view__swatch {

@@ -186,6 +186,14 @@
     "translucentRail": {
       "title": "半透明側邊欄",
       "description": "讓側邊欄呈現半透明效果，增強桌面沉浸感。"
+    },
+    "background": {
+      "title": "背景",
+      "description": "主題使用的介面背景顏色。"
+    },
+    "foreground": {
+      "title": "前景",
+      "description": "主題使用的主要文字顏色。"
     }
   },
   "notFound": {

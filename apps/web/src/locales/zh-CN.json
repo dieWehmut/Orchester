@@ -186,6 +186,14 @@
     "translucentRail": {
       "title": "半透明侧边栏",
       "description": "让侧边栏呈现半透明效果，增强桌面沉浸感。"
+    },
+    "background": {
+      "title": "背景",
+      "description": "主题使用的界面背景颜色。"
+    },
+    "foreground": {
+      "title": "前景",
+      "description": "主题使用的主要文字颜色。"
     }
   },
   "notFound": {
