@@ -1,4 +1,4 @@
-﻿# Verifies the produced NSIS installer on a clean Windows runner:
+# Verifies the produced NSIS installer on a clean Windows runner:
 # install silently, prove the desktop and Start-menu shortcuts exist, launch the
 # installed executable, then uninstall and confirm the traces are gone.
 [CmdletBinding()]
@@ -17,6 +17,10 @@ if (-not (Test-Path -LiteralPath $installerPath)) {
 }
 
 $productName = 'Orchester'
+# The bundle installs the crate's binary rather than the product name: Tauri
+# packages `apps/desktop/src-tauri`'s `[[bin]] name = "orchester-desktop"`, and
+# the first dispatch of this workflow failed here looking for `Orchester.exe`.
+$binaryName = 'orchester-desktop'
 $installDirectory = Join-Path $env:LOCALAPPDATA $productName
 $desktopShortcut = Join-Path ([Environment]::GetFolderPath('Desktop')) "$productName.lnk"
 $startMenuShortcut = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\$productName.lnk"
@@ -45,7 +49,7 @@ Remove-InstallationTraces
 $install = Start-Process -FilePath $installerPath -ArgumentList '/S' -Wait -PassThru
 if ($install.ExitCode -ne 0) { throw "installer exited with $($install.ExitCode)" }
 
-$executable = Join-Path $installDirectory "$productName.exe"
+$executable = Join-Path $installDirectory "$binaryName.exe"
 if (-not (Test-Path -LiteralPath $executable)) { throw "installation did not place $executable" }
 
 foreach ($shortcut in @($desktopShortcut, $startMenuShortcut)) {
