@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import {
   APPEARANCE_BOOTSTRAP_SCRIPT,
@@ -29,6 +29,10 @@ function stubSystemTheme(theme: 'light' | 'dark'): void {
       dispatchEvent: () => false,
     }) as MediaQueryList) as typeof window.matchMedia
 }
+
+afterEach(() => {
+  window.matchMedia = originalMatchMedia
+})
 
 beforeEach(() => {
   localStorage.clear()
