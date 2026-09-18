@@ -1,32 +1,62 @@
-﻿<script setup lang="ts">
-import { Info, Palette, Plug, Settings2 } from '@lucide/vue'
+<script setup lang="ts">
+/**
+ * The settings surface.
+ *
+ * Laid out like the reference: a titled section list on the left, and on the
+ * right the appearance screen — three theme cards, a live code preview, then a
+ * table of the individual axes. The table is the part that matters: it names
+ * every axis, shows the value it currently holds in the colour or sample it
+ * produces, and lets each be changed without hunting through the shell.
+ */
+import {
+  Bell,
+  Compass,
+  Download,
+  Info,
+  MonitorSmartphone,
+  Moon,
+  Palette,
+  Plug,
+  Settings2,
+  UserRound,
+} from '@lucide/vue'
 import {
   AppBadge,
   AppSegmentedControl,
   AppSelect,
+  AppSwitch,
+  CodePreview,
   ColorSchemePicker,
-  ThemeToggle,
+  EmptyState,
+  ThemePreviewCard,
   initAppearance,
   useAppearance,
   type AppearanceApi,
   type ThemeMode,
+  type ThemePreference,
 } from '@orchester/design'
 import { computed, ref } from 'vue'
 
 import { useI18n } from '../i18n'
 
-type SettingsSection = 'general' | 'appearance' | 'providers' | 'about'
+type SettingsSection = 'general' | 'notifications' | 'import' | 'profile' | 'appearance' | 'providers' | 'about'
 
 const { t, locale, setLocale } = useI18n()
 
 initAppearance()
 const appearance: AppearanceApi = useAppearance()
 
-const activeSection = ref<SettingsSection>('general')
+const activeSection = ref<SettingsSection>('appearance')
 
-const sections: { id: SettingsSection; labelKey: Parameters<typeof t>[0]; icon: typeof Info }[] = [
+const generalSections: { id: SettingsSection; labelKey: Parameters<typeof t>[0]; icon: typeof Info }[] = [
   { id: 'general', labelKey: 'settings.sections.general', icon: Settings2 },
+  { id: 'notifications', labelKey: 'settings.sections.notifications', icon: Bell },
+  { id: 'import', labelKey: 'settings.sections.import', icon: Download },
+  { id: 'profile', labelKey: 'settings.sections.profile', icon: UserRound },
   { id: 'appearance', labelKey: 'settings.sections.appearance', icon: Palette },
+]
+
+const integrationSections: { id: SettingsSection; labelKey: Parameters<typeof t>[0]; icon: typeof Info }[] = [
   { id: 'providers', labelKey: 'settings.sections.providers', icon: Plug },
   { id: 'about', labelKey: 'settings.sections.about', icon: Info },
 ]
@@ -42,14 +72,82 @@ const localeValue = computed({
   set: (value: string) => setLocale(value),
 })
 
-const appearanceSummary = computed(() =>
-  appearance.isDark.value ? t('settings.appearance.dark') : t('settings.appearance.light'),
-)
+const themeCards = computed<
+  { value: ThemePreference; label: string; icon: typeof MonitorSmartphone }[]
+>(() => [
+  { value: 'system', label: t('settings.appearance.system'), icon: MonitorSmartphone },
+  { value: 'light', label: t('settings.appearance.light'), icon: Compass },
+  { value: 'dark', label: t('settings.appearance.dark'), icon: Moon },
+])
 
 const themeValue = computed({
   get: () => appearance.theme.value,
   set: (value: string) => appearance.setTheme(value as ThemeMode),
 })
+
+const schemeOptions = computed(() => [
+  { value: 'rose', label: t('settings.colorScheme.rose') },
+  { value: 'codex', label: t('settings.colorScheme.codex') },
+  { value: 'violet', label: t('settings.colorScheme.violet') },
+  { value: 'teal', label: t('settings.colorScheme.teal') },
+])
+
+const schemeValue = computed({
+  get: () => appearance.colorScheme.value,
+  set: (value: string) => appearance.setColorScheme(value as never),
+})
+
+const intensityOptions = computed(() => [
+  { value: 'vivid', label: t('settings.intensity.vivid') },
+  { value: 'calm', label: t('settings.intensity.calm') },
+])
+
+const intensityValue = computed({
+  get: () => appearance.intensity.value,
+  set: (value: string) => appearance.setIntensity(value as never),
+})
+
+/**
+ * Reduced motion is a switch over three states: on, off, or whatever the OS
+ * says. The switch is only ever the two explicit states, and the hint under it
+ * reports which of the three is in force.
+ */
+const reducedMotionValue = computed({
+  get: () => appearance.prefersReducedMotion.value,
+  set: (value: boolean) => appearance.setReducedMotion(value ? 'true' : 'false'),
+})
+
+const reducedMotionSource = computed(() =>
+  appearance.reducedMotion.value === null
+    ? t('settings.reducedMotion.system')
+    : t('settings.reducedMotion.explicit'),
+)
+
+const schemeSwatch = computed(
+  () =>
+    ({
+      rose: '#f472b6',
+      codex: '#339cff',
+      violet: '#ad7bf9',
+      teal: '#4fbfad',
+    })[appearance.colorScheme.value],
+)
+
+const previewBefore = computed(() => [
+  'const themePreview: ThemeConfig = {',
+  '  surface: "sidebar",',
+  '  accent: "#2563eb",',
+  '  contrast: 42,',
+  '};',
+])
+
+const previewAfter = computed(() => [
+  'const themePreview: ThemeConfig = {',
+  '  surface: "sidebar-elevated",',
+  `  accent: "${schemeSwatch.value}",`,
+  '  contrast: 68,',
+  '};',
+])
 </script>
 
 <template>
@@ -57,8 +155,27 @@ const themeValue = computed({
     <nav class="settings-view__nav" data-settings-nav :aria-label="t('settings.title')">
       <p class="settings-view__eyebrow">{{ t('settings.eyebrow') }}</p>
       <h1>{{ t('settings.title') }}</h1>
+
+      <p class="settings-view__group">{{ t('settings.groups.personal') }}</p>
       <ul class="settings-view__list">
-        <li v-for="section in sections" :key="section.id">
+        <li v-for="section in generalSections" :key="section.id">
+          <button
+            class="settings-view__link"
+            :class="{ 'settings-view__link--active': activeSection === section.id }"
+            type="button"
+            :data-settings-nav-link="section.id"
+            :aria-current="activeSection === section.id"
+            @click="activeSection = section.id"
+          >
+            <component :is="section.icon" :size="16" aria-hidden="true" />
+            {{ t(section.labelKey) }}
+          </button>
+        </li>
+      </ul>
+
+      <p class="settings-view__group">{{ t('settings.groups.integrations') }}</p>
+      <ul class="settings-view__list">
+        <li v-for="section in integrationSections" :key="section.id">
           <button
             class="settings-view__link"
             :class="{ 'settings-view__link--active': activeSection === section.id }"
@@ -89,53 +206,158 @@ const themeValue = computed({
           </div>
           <AppSelect
             v-model="localeValue"
+            class="settings-view__control"
             :options="localeOptions"
             :aria-label="t('settings.language.title')"
           />
         </div>
-        <div class="settings-view__row">
-          <div class="settings-view__row-copy">
-            <strong>{{ t('settings.theme.title') }}</strong>
-            <span>{{ t('settings.theme.description') }}</span>
-          </div>
-          <div class="settings-view__row-control">
-            <AppBadge tone="neutral" mono>{{ appearanceSummary }}</AppBadge>
-            <ThemeToggle
-              :label-dark="t('settings.theme.toLight')"
-              :label-light="t('settings.theme.toDark')"
+      </section>
+
+      <section
+        class="settings-view__panel settings-view__panel--appearance"
+        data-settings-section="appearance"
+        :aria-selected="activeSection === 'appearance'"
+        :hidden="activeSection !== 'appearance'"
+      >
+        <header class="settings-view__headline">
+          <h2>{{ t('settings.sections.appearance') }}</h2>
+          <p>{{ t('settings.appearance.description') }}</p>
+        </header>
+
+        <div class="settings-view__cards" role="radiogroup" :aria-label="t('settings.appearance.title')">
+          <ThemePreviewCard
+            v-for="card in themeCards"
+            :key="card.value"
+            :value="card.value"
+            :label="card.label"
+            :group-label="t('settings.appearance.title')"
+            :selected="appearance.themePreference.value === card.value"
+            @select="appearance.setThemePreference($event)"
+          />
+        </div>
+
+        <CodePreview
+          :before="previewBefore"
+          :after="previewAfter"
+          :title="t('settings.preview.title')"
+          :hint="t('settings.preview.hint')"
+        />
+
+        <div class="settings-view__table">
+          <header class="settings-view__table-head">
+            <h3>{{ t('settings.table.title') }}</h3>
+          </header>
+
+          <div class="settings-view__row" data-appearance-field="theme">
+            <div class="settings-view__row-copy">
+              <strong>{{ t('settings.appearance.title') }}</strong>
+              <span>{{ t('settings.appearance.hint') }}</span>
+            </div>
+            <AppSegmentedControl
+              v-model="themeValue"
+              :options="[
+                { id: 'dark', label: t('settings.appearance.dark') },
+                { id: 'light', label: t('settings.appearance.light') },
+              ]"
+              :ariaLabel="t('settings.appearance.title')"
             />
+          </div>
+
+          <div class="settings-view__row" data-appearance-field="scheme">
+            <div class="settings-view__row-copy">
+              <strong>{{ t('settings.colorScheme.title') }}</strong>
+              <span>{{ t('settings.colorScheme.description') }}</span>
+            </div>
+            <div class="settings-view__row-control">
+              <AppSelect
+                v-model="schemeValue"
+                class="settings-view__control"
+                :options="schemeOptions"
+                :aria-label="t('settings.colorScheme.title')"
+              />
+              <span
+                class="settings-view__swatch"
+                :style="{ background: schemeSwatch }"
+                aria-hidden="true"
+              />
+              <ColorSchemePicker />
+            </div>
+          </div>
+
+          <div class="settings-view__row" data-appearance-field="intensity">
+            <div class="settings-view__row-copy">
+              <strong>{{ t('settings.intensity.title') }}</strong>
+              <span>{{ t('settings.intensity.description') }}</span>
+            </div>
+            <AppSelect
+              v-model="intensityValue"
+              class="settings-view__control"
+              :options="intensityOptions"
+              :aria-label="t('settings.intensity.title')"
+            />
+          </div>
+
+          <div class="settings-view__row" data-appearance-field="reduced-motion">
+            <div class="settings-view__row-copy">
+              <strong>{{ t('settings.reducedMotion.title') }}</strong>
+              <span>{{ t('settings.reducedMotion.description') }}</span>
+            </div>
+            <div class="settings-view__row-control">
+              <AppBadge tone="neutral" mono>{{ reducedMotionSource }}</AppBadge>
+              <AppSwitch
+                v-model="reducedMotionValue"
+                :label="t('settings.reducedMotion.title')"
+              />
+            </div>
+          </div>
+
+          <div class="settings-view__row" data-appearance-field="surface">
+            <div class="settings-view__row-copy">
+              <strong>{{ t('settings.surface.title') }}</strong>
+              <span>{{ t('settings.surface.description') }}</span>
+            </div>
+            <AppBadge tone="neutral" mono>{{ appearance.surface.value }}</AppBadge>
           </div>
         </div>
       </section>
 
       <section
         class="settings-view__panel"
-        data-settings-section="appearance"
-        :aria-selected="activeSection === 'appearance'"
-        :hidden="activeSection !== 'appearance'"
+        data-settings-section="notifications"
+        :aria-selected="activeSection === 'notifications'"
+        :hidden="activeSection !== 'notifications'"
       >
-        <h2>{{ t('settings.sections.appearance') }}</h2>
-        <div class="settings-view__row settings-view__row--stacked">
-          <div class="settings-view__row-copy">
-            <strong>{{ t('settings.colorScheme.title') }}</strong>
-            <span>{{ t('settings.colorScheme.description') }}</span>
-          </div>
-          <ColorSchemePicker />
-        </div>
-        <div class="settings-view__row">
-          <div class="settings-view__row-copy">
-            <strong>{{ t('settings.theme.title') }}</strong>
-            <span>{{ t('settings.theme.description') }}</span>
-          </div>
-          <AppSegmentedControl
-            v-model="themeValue"
-            :options="[
-              { id: 'dark', label: t('settings.appearance.dark') },
-              { id: 'light', label: t('settings.appearance.light') },
-            ]"
-            :ariaLabel="t('settings.theme.title')"
-          />
-        </div>
+        <h2>{{ t('settings.sections.notifications') }}</h2>
+        <EmptyState
+          :title="t('settings.notifications.title')"
+          :description="t('settings.notifications.description')"
+        />
+      </section>
+
+      <section
+        class="settings-view__panel"
+        data-settings-section="import"
+        :aria-selected="activeSection === 'import'"
+        :hidden="activeSection !== 'import'"
+      >
+        <h2>{{ t('settings.sections.import') }}</h2>
+        <EmptyState
+          :title="t('settings.import.title')"
+          :description="t('settings.import.description')"
+        />
+      </section>
+
+      <section
+        class="settings-view__panel"
+        data-settings-section="profile"
+        :aria-selected="activeSection === 'profile'"
+        :hidden="activeSection !== 'profile'"
+      >
+        <h2>{{ t('settings.sections.profile') }}</h2>
+        <EmptyState
+          :title="t('settings.profile.title')"
+          :description="t('settings.profile.description')"
+        />
       </section>
 
       <section
@@ -164,19 +386,20 @@ const themeValue = computed({
 <style scoped>
 .settings-view {
   display: grid;
-  grid-template-columns: minmax(15rem, 18rem) minmax(0, 1fr);
+  grid-template-columns: minmax(14rem, 17rem) minmax(0, 1fr);
   min-block-size: calc(100vh - var(--app-top-chrome-height, var(--header-height)));
-  background: var(--color-bg-base);
+  background: var(--color-surface-tertiary);
 }
 
 .settings-view__nav {
-  padding: var(--space-6) var(--space-4);
-  border-inline-end: 1px solid var(--color-border-base);
-  background: var(--color-bg-surface);
+  padding: var(--space-4) var(--space-3);
+  border-inline-end: 1px solid var(--color-border-default);
+  background: var(--color-surface-secondary);
 }
 
 .settings-view__eyebrow {
   margin: 0 0 var(--space-1);
+  padding-inline: var(--space-2);
   color: var(--color-text-tertiary);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
@@ -185,12 +408,20 @@ const themeValue = computed({
 
 .settings-view__nav h1 {
   margin: 0 0 var(--space-4);
+  padding-inline: var(--space-2);
   font-size: var(--text-lg);
+}
+
+.settings-view__group {
+  margin: var(--space-4) var(--space-2) var(--space-2);
+  color: var(--color-text-tertiary);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
 }
 
 .settings-view__list {
   display: grid;
-  gap: var(--space-1);
+  gap: 2px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -199,11 +430,11 @@ const themeValue = computed({
 .settings-view__link {
   display: flex;
   inline-size: 100%;
-  min-block-size: var(--control-height-md);
+  min-block-size: var(--density-row-height);
   align-items: center;
-  gap: var(--space-2);
-  padding-inline: var(--space-3);
-  border: 1px solid transparent;
+  gap: var(--space-3);
+  padding-inline: var(--space-2);
+  border: 0;
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--color-text-secondary);
@@ -214,12 +445,11 @@ const themeValue = computed({
 }
 
 .settings-view__link:hover {
-  background: var(--color-bg-element);
+  background: var(--color-surface-base);
   color: var(--color-text-primary);
 }
 
 .settings-view__link--active {
-  border-color: var(--color-accent-border);
   background: var(--color-accent-muted);
   color: var(--color-text-primary);
 }
@@ -228,58 +458,108 @@ const themeValue = computed({
   display: grid;
   align-content: start;
   gap: var(--space-4);
-  padding: var(--space-6);
+  min-inline-size: 0;
+  padding: var(--space-6) var(--space-8);
+  overflow: auto;
 }
 
 .settings-view__panel {
   display: grid;
-  gap: var(--space-3);
-  max-inline-size: 46rem;
-  padding: var(--space-5);
-  border: 1px solid var(--color-border-base);
-  border-radius: var(--radius-md);
-  background: var(--color-bg-surface);
+  gap: var(--space-4);
+  inline-size: min(100%, 68rem);
+  margin-inline: auto;
 }
 
-.settings-view__panel h2 {
+.settings-view__panel[hidden] {
+  display: none;
+}
+
+.settings-view__headline h2,
+.settings-view__panel > h2 {
   margin: 0;
-  font-size: var(--text-base);
+  font-size: var(--text-xl);
+  letter-spacing: -0.01em;
+}
+
+.settings-view__headline p {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+.settings-view__cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.settings-view__table {
+  overflow: hidden;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-base);
+}
+
+.settings-view__table-head {
+  padding: var(--space-3) var(--space-4);
+  border-block-end: 1px solid var(--color-border-default);
+}
+
+.settings-view__table-head h3 {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
 }
 
 .settings-view__row {
   display: flex;
+  min-block-size: 3rem;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  padding-block: var(--space-3);
-  border-block-start: 1px solid var(--color-border-base);
+  padding: var(--space-2) var(--space-4);
 }
 
-.settings-view__row--stacked {
-  flex-direction: column;
-  align-items: stretch;
+.settings-view__table .settings-view__row + .settings-view__row {
+  border-block-start: 1px solid var(--color-border-default);
 }
 
 .settings-view__row-copy {
   display: grid;
-  gap: var(--space-1);
+  gap: 2px;
+  min-inline-size: 0;
 }
 
 .settings-view__row-copy strong {
   font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
 }
 
 .settings-view__row-copy span,
 .settings-view__note {
   margin: 0;
-  color: var(--color-text-secondary);
-  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+  font-size: var(--text-xs);
 }
 
 .settings-view__row-control {
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   gap: var(--space-2);
+}
+
+.settings-view__control {
+  inline-size: 13rem;
+}
+
+.settings-view__swatch {
+  display: inline-block;
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  flex: 0 0 auto;
+  border: 1px solid var(--color-border-emphasis);
+  border-radius: var(--radius-full);
 }
 
 @media (max-width: 900px) {
@@ -289,7 +569,24 @@ const themeValue = computed({
 
   .settings-view__nav {
     border-inline-end: 0;
-    border-block-end: 1px solid var(--color-border-base);
+    border-block-end: 1px solid var(--color-border-default);
+  }
+
+  .settings-view__cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .settings-view__panels {
+    padding: var(--space-4);
+  }
+
+  .settings-view__row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .settings-view__control {
+    inline-size: 100%;
   }
 }
 </style>

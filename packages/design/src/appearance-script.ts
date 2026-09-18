@@ -3,7 +3,6 @@
 // These values intentionally mirror theme.ts; the appearance tests assert the
 // public storage keys and defaults so the axes cannot drift silently.
 const THEME_MODES = ['light', 'dark'] as const
-const THEME_PREFERENCES = ['system', 'light', 'dark'] as const
 const COLOR_SCHEMES = ['codex', 'violet', 'teal', 'rose'] as const
 const INTENSITIES = ['calm', 'vivid'] as const
 const SURFACES = ['web', 'site', 'desktop'] as const

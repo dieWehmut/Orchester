@@ -88,8 +88,11 @@
     "sections": {
       "general": "一般",
       "appearance": "外觀",
-      "providers": "提供者",
-      "about": "關於"
+      "providers": "供應商",
+      "about": "關於",
+      "notifications": "通知",
+      "import": "匯入",
+      "profile": "個人資料"
     },
     "language": {
       "title": "語言",
@@ -102,12 +105,20 @@
       "toDark": "切換到深色主題"
     },
     "colorScheme": {
-      "title": "配色方案",
-      "description": "所有表面共用的操作調色盤。"
+      "title": "強調色",
+      "description": "應用程式中的主色調，用於按鈕、連結等強調元素。",
+      "rose": "Orchester 粉",
+      "codex": "Codex 藍",
+      "violet": "紫羅蘭",
+      "teal": "青綠"
     },
     "appearance": {
       "dark": "深色",
-      "light": "淺色"
+      "light": "淺色",
+      "title": "主題",
+      "description": "自訂 Orchester 的外觀，讓它更符合你的偏好。",
+      "system": "系統",
+      "hint": "選擇預設的淺色與深色介面。"
     },
     "locale": {
       "en": "English",
@@ -119,6 +130,45 @@
     },
     "about": {
       "description": "Orchester 將本地 Rust 執行時與 Web 工作區、桌面外殼和命令列客戶端結合在一起。"
+    },
+    "groups": {
+      "personal": "個人",
+      "integrations": "整合"
+    },
+    "intensity": {
+      "title": "強調強度",
+      "description": "強調色在主操作上的使用力度。",
+      "vivid": "鮮明",
+      "calm": "克制"
+    },
+    "reducedMotion": {
+      "title": "減少動態效果",
+      "description": "將過場與動畫壓縮到最低限度。",
+      "system": "跟隨系統",
+      "explicit": "手動"
+    },
+    "surface": {
+      "title": "執行形態",
+      "description": "目前渲染的介面：本機 WebUI、專案網站或桌面視窗。"
+    },
+    "preview": {
+      "title": "程式碼預覽",
+      "hint": "預覽目前主題下的程式碼風格"
+    },
+    "table": {
+      "title": "外觀設定"
+    },
+    "notifications": {
+      "title": "尚無通知規則",
+      "description": "執行與審批通知將在這裡設定。"
+    },
+    "import": {
+      "title": "尚無可匯入內容",
+      "description": "從另一台機器匯入工作階段、憑證與工作區設定。"
+    },
+    "profile": {
+      "title": "本機資料",
+      "description": "身分資訊保存在本機，由執行階段管理，而不是帳號。"
     }
   },
   "notFound": {

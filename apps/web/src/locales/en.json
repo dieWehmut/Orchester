@@ -89,7 +89,10 @@
       "general": "General",
       "appearance": "Appearance",
       "providers": "Providers",
-      "about": "About"
+      "about": "About",
+      "notifications": "Notifications",
+      "import": "Import",
+      "profile": "Profile"
     },
     "language": {
       "title": "Language",
@@ -102,12 +105,20 @@
       "toDark": "Switch to dark theme"
     },
     "colorScheme": {
-      "title": "Color scheme",
-      "description": "Operational palette used by every surface."
+      "title": "Accent colour",
+      "description": "The main colour for buttons, links, and other highlights.",
+      "rose": "Orchester pink",
+      "codex": "Codex blue",
+      "violet": "Violet",
+      "teal": "Teal"
     },
     "appearance": {
       "dark": "Dark",
-      "light": "Light"
+      "light": "Light",
+      "title": "Theme",
+      "description": "Customise how Orchester looks and feels.",
+      "system": "System",
+      "hint": "Preset light and dark surfaces."
     },
     "locale": {
       "en": "English",
@@ -119,6 +130,45 @@
     },
     "about": {
       "description": "Orchester pairs a local Rust runtime with a web workspace, a desktop shell and a command-line client."
+    },
+    "groups": {
+      "personal": "Personal",
+      "integrations": "Integrations"
+    },
+    "intensity": {
+      "title": "Accent intensity",
+      "description": "How loudly the accent speaks on primary actions.",
+      "vivid": "Vivid",
+      "calm": "Calm"
+    },
+    "reducedMotion": {
+      "title": "Reduced motion",
+      "description": "Collapse transitions and animations to a minimum.",
+      "system": "Follow system",
+      "explicit": "Manual"
+    },
+    "surface": {
+      "title": "Surface",
+      "description": "Which face is rendering: the WebUI, the site, or the desktop window."
+    },
+    "preview": {
+      "title": "Code preview",
+      "hint": "Preview code style under the current theme"
+    },
+    "table": {
+      "title": "Appearance settings"
+    },
+    "notifications": {
+      "title": "No notification rules",
+      "description": "Run and approval notifications will be configurable here."
+    },
+    "import": {
+      "title": "Nothing to import",
+      "description": "Import sessions, credentials and workspace settings from another machine."
+    },
+    "profile": {
+      "title": "Local profile",
+      "description": "Identity stays on this machine; the runtime owns it, not an account."
     }
   },
   "notFound": {
