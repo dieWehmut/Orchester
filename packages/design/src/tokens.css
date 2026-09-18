@@ -299,6 +299,13 @@
   --font-display:
     'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+  /* The two alternative interface faces the settings page offers. The system
+     face is the existing `--font-body` stack, so choosing it means writing no
+     override at all. */
+  --font-ui-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', 'Noto Sans SC', sans-serif;
+  --font-ui-serif: ui-serif, Georgia, Cambria, 'Times New Roman', 'Noto Serif SC',
+    Times, serif;
 
   --tracking-tight: -0.025em;
   --tracking-normal: 0em;
@@ -439,6 +446,11 @@
      The rail's maximum is derived from the viewport rather than fixed, so it
      can never grow until the transcript has no room left. 360px is the
      transcript's floor, not a guess. */
+  /* The rail's own face. `solid` is the default and the only value a browser
+     or site surface can honestly render; the desktop shell re-tints this into
+     a translucent sheet when the user asks for one. */
+  --rail-surface: var(--color-bg-surface);
+  --rail-blur: none;
   --rail-width: clamp(240px, 288px, min(420px, calc(100vw - 360px)));
   --rail-min-width: 240px;
   --rail-preferred-width: 288px;
@@ -831,6 +843,39 @@
   --color-action-solid: var(--color-text-emphasis);
   --color-action-solid-hover: var(--color-text-default);
   --color-action-contrast: var(--gray-0);
+}
+
+/* ─ Font axes. These re-point the public faces rather than adding parallel
+   ones, so a component that already asks for `--font-body` or `--font-mono`
+   follows the setting without being edited. `system` and `mono` are the
+   defaults and therefore write no override: the literal stack above is what
+   they resolve to. */
+[data-ui-font='sans'] {
+  --font-body: var(--font-ui-sans);
+}
+
+[data-ui-font='serif'] {
+  --font-body: var(--font-ui-serif);
+}
+
+/* "Same as the interface" is a reference, not a second family: pointing the
+   content face at `--font-body` keeps them in step when the UI face moves. */
+[data-content-font='ui'] {
+  --font-mono: var(--font-body);
+}
+
+/* ─ Rail appearance. Translucency is a desktop-window effect: there has to be
+   something behind the window to see. The attribute is written everywhere, so
+   the surfaces that cannot composite say so here instead of each component
+   guessing from its own build. */
+[data-rail-appearance='translucent'] {
+  --rail-surface: color-mix(in srgb, var(--color-bg-surface) 72%, transparent);
+  --rail-blur: blur(18px) saturate(140%);
+}
+
+[data-rail-appearance='translucent'][data-orchester-surface='web'],
+[data-rail-appearance='translucent'][data-orchester-surface='site'] {
+  --rail-blur: none;
 }
 
 /* ══ Base element styles ═════════════════════════════════════════════════ */

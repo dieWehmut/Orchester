@@ -95,7 +95,8 @@ defineEmits<{
   grid-template-rows: auto auto minmax(0, 1fr) minmax(0, 1fr) auto auto;
   block-size: 100%;
   min-block-size: 0;
-  background: var(--color-bg-surface);
+  background: var(--rail-surface);
+  backdrop-filter: var(--rail-blur);
 }
 
 .app-rail__section {
@@ -110,7 +111,7 @@ defineEmits<{
 
 .app-rail__section--footer {
   border-block-start: 1px solid var(--color-border-base);
-  background: color-mix(in srgb, var(--color-bg-surface) 94%, var(--color-bg-base));
+  background: color-mix(in srgb, var(--color-bg-base) 6%, var(--rail-surface));
 }
 
 .app-rail__account {
@@ -120,7 +121,7 @@ defineEmits<{
   justify-content: space-between;
   gap: var(--space-2);
   border-block-start: 1px solid var(--color-border-base);
-  background: color-mix(in srgb, var(--color-bg-surface) 90%, var(--color-bg-base));
+  background: color-mix(in srgb, var(--color-bg-base) 10%, var(--rail-surface));
 }
 
 .app-rail__account-identity {
