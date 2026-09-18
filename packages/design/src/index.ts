@@ -40,10 +40,15 @@ export type { ToastItem, ToastTone } from './components/toast-types'
 export { APPEARANCE_BOOTSTRAP_SCRIPT } from './appearance-script'
 
 export {
+  APPEARANCE_PROFILE_VERSION,
+  exportAppearanceProfile,
+  importAppearanceProfile,
   initAppearance,
+  resetAppearance,
   resetAppearanceForTests,
   useAppearance,
   type AppearanceApi,
+  type AppearanceProfile,
 } from './composables/useAppearance'
 
 export {

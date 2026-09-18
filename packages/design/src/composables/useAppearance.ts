@@ -84,6 +84,21 @@ const railAppearance = ref<RailAppearance>(DEFAULT_RAIL_APPEARANCE)
 const uiFontWeight = ref<FontWeight>(DEFAULT_FONT_WEIGHT)
 const contentFontWeight = ref<FontWeight>(DEFAULT_FONT_WEIGHT)
 
+/** The version of the profile payload `exportAppearanceProfile` writes. */
+export const APPEARANCE_PROFILE_VERSION = 1
+
+export interface AppearanceProfile {
+  version: number
+  theme?: ThemeMode
+  colorScheme?: ColorScheme
+  intensity?: Intensity
+  uiFont?: UiFont
+  contentFont?: ContentFont
+  railAppearance?: RailAppearance
+  uiFontWeight?: FontWeight
+  contentFontWeight?: FontWeight
+}
+
 let initialized = false
 let stopWatchingSystem: (() => void) | null = null
 
@@ -246,6 +261,128 @@ export function resetAppearanceForTests(): void {
   railAppearance.value = DEFAULT_RAIL_APPEARANCE
   uiFontWeight.value = DEFAULT_FONT_WEIGHT
   contentFontWeight.value = DEFAULT_FONT_WEIGHT
+}
+
+/**
+ * A profile is the set of choices, named as values rather than as storage keys.
+ *
+ * Storage keys are a local detail — they can be renamed, and two builds can
+ * disagree about them — while the profile is the thing a user hands to someone
+ * else or keeps in a dotfile.
+ */
+export function exportAppearanceProfile(): AppearanceProfile {
+  return {
+    version: APPEARANCE_PROFILE_VERSION,
+    theme: themePreference.value === 'system' ? undefined : themePreference.value,
+    colorScheme: colorScheme.value,
+    intensity: intensity.value,
+    uiFont: uiFont.value,
+    contentFont: contentFont.value,
+    railAppearance: railAppearance.value,
+    uiFontWeight: uiFontWeight.value,
+    contentFontWeight: contentFontWeight.value,
+  }
+}
+
+/**
+ * Apply a profile, or refuse it whole.
+ *
+ * A profile arrives from a file or another machine, so it is validated before
+ * anything is written: half-applying a broken one would leave the user with a
+ * mixture of two themes and no way to tell which choice came from where.
+ */
+export function importAppearanceProfile(candidate: unknown): boolean {
+  if (!candidate || typeof candidate !== 'object') return false
+  const profile = candidate as Record<string, unknown>
+
+  const theme = profile.theme === undefined ? 'system' : profile.theme
+  if (!isThemePreference(theme)) return false
+  if (profile.colorScheme !== undefined && !isColorScheme(profile.colorScheme)) return false
+  if (profile.intensity !== undefined && !isIntensity(profile.intensity)) return false
+  if (profile.uiFont !== undefined && !isUiFont(profile.uiFont)) return false
+  if (profile.contentFont !== undefined && !isContentFont(profile.contentFont)) return false
+  if (profile.railAppearance !== undefined && !isRailAppearance(profile.railAppearance)) return false
+  if (profile.uiFontWeight !== undefined && !isFontWeight(profile.uiFontWeight)) return false
+  if (profile.contentFontWeight !== undefined && !isFontWeight(profile.contentFontWeight)) return false
+
+  if (theme !== 'system') {
+    themePreference.value = theme
+    setTheme(theme)
+    writeStored(THEME_STORAGE_KEY, theme)
+  }
+
+  if (isColorScheme(profile.colorScheme)) {
+    setColorScheme(profile.colorScheme)
+    writeStored(COLOR_SCHEME_STORAGE_KEY, profile.colorScheme)
+  }
+  if (isIntensity(profile.intensity)) {
+    intensity.value = profile.intensity
+    applyIntensityToDocument(profile.intensity)
+    writeStored(INTENSITY_STORAGE_KEY, profile.intensity)
+  }
+  if (isUiFont(profile.uiFont)) {
+    uiFont.value = profile.uiFont
+    applyUiFontToDocument(profile.uiFont)
+    writeStored(UI_FONT_STORAGE_KEY, profile.uiFont)
+  }
+  if (isContentFont(profile.contentFont)) {
+    contentFont.value = profile.contentFont
+    applyContentFontToDocument(profile.contentFont)
+    writeStored(CONTENT_FONT_STORAGE_KEY, profile.contentFont)
+  }
+  if (isRailAppearance(profile.railAppearance)) {
+    railAppearance.value = profile.railAppearance
+    applyRailAppearanceToDocument(profile.railAppearance)
+    writeStored(RAIL_APPEARANCE_STORAGE_KEY, profile.railAppearance)
+  }
+  if (isFontWeight(profile.uiFontWeight)) {
+    uiFontWeight.value = profile.uiFontWeight
+    applyFontWeightToDocument(profile.uiFontWeight)
+    writeStored(UI_FONT_WEIGHT_STORAGE_KEY, profile.uiFontWeight)
+  }
+  if (isFontWeight(profile.contentFontWeight)) {
+    contentFontWeight.value = profile.contentFontWeight
+    applyContentFontWeightToDocument(profile.contentFontWeight)
+    writeStored(CONTENT_FONT_WEIGHT_STORAGE_KEY, profile.contentFontWeight)
+  }
+
+  return true
+}
+
+/** Put every axis back to its default and forget what was stored. */
+export function resetAppearance(): void {
+  for (const key of [
+    THEME_STORAGE_KEY,
+    COLOR_SCHEME_STORAGE_KEY,
+    INTENSITY_STORAGE_KEY,
+    REDUCED_MOTION_STORAGE_KEY,
+    UI_FONT_STORAGE_KEY,
+    CONTENT_FONT_STORAGE_KEY,
+    RAIL_APPEARANCE_STORAGE_KEY,
+    UI_FONT_WEIGHT_STORAGE_KEY,
+    CONTENT_FONT_WEIGHT_STORAGE_KEY,
+  ]) {
+    clearStored(key)
+  }
+
+  themePreference.value = 'system'
+  setColorScheme(DEFAULT_COLOR_SCHEME)
+  colorScheme.value = DEFAULT_COLOR_SCHEME
+  intensity.value = DEFAULT_INTENSITY
+  applyIntensityToDocument(DEFAULT_INTENSITY)
+  reducedMotion.value = null
+  applyReducedMotionToDocument(null)
+  uiFont.value = DEFAULT_UI_FONT
+  applyUiFontToDocument(DEFAULT_UI_FONT)
+  contentFont.value = DEFAULT_CONTENT_FONT
+  applyContentFontToDocument(DEFAULT_CONTENT_FONT)
+  railAppearance.value = DEFAULT_RAIL_APPEARANCE
+  applyRailAppearanceToDocument(DEFAULT_RAIL_APPEARANCE)
+  uiFontWeight.value = DEFAULT_FONT_WEIGHT
+  applyFontWeightToDocument(DEFAULT_FONT_WEIGHT)
+  contentFontWeight.value = DEFAULT_FONT_WEIGHT
+  applyContentFontWeightToDocument(DEFAULT_FONT_WEIGHT)
+  applyThemePreference()
 }
 
 export interface AppearanceApi {
