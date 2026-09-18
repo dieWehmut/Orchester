@@ -343,9 +343,20 @@ impl MemoryStore {
         mut connection: Connection,
         configured_secrets: Vec<SecretString>,
     ) -> Result<Self, MemoryError> {
+        /// Opening the store runs its schema work under SQLite's write lock, and
+        /// two concurrent first opens can wait far longer than an interactive
+        /// query: this test failed on a loaded linux runner with `database is
+        /// locked` under the interactive budget. Mirrors the run store's
+        /// migration budget.
+        const MIGRATION_BUSY_TIMEOUT: Duration = Duration::from_secs(30);
+        /// Wait budget once the store is open: a locked memory database means
+        /// another writer holds it briefly, and half a minute of stall would be
+        /// worse for a caller than reporting the contention.
+        const INTERACTIVE_BUSY_TIMEOUT: Duration = Duration::from_secs(5);
+
         let scanner =
             SecretScanner::try_new(configured_secrets).map_err(|_| MemoryError::InvalidInput)?;
-        connection.busy_timeout(Duration::from_secs(5))?;
+        connection.busy_timeout(MIGRATION_BUSY_TIMEOUT)?;
         connection.execute_batch(
             "PRAGMA foreign_keys = ON;
              PRAGMA synchronous = FULL;
@@ -355,6 +366,7 @@ impl MemoryStore {
         ensure_schema(&mut connection)?;
         verify_schema(&connection)?;
         verify_integrity(&connection)?;
+        connection.busy_timeout(INTERACTIVE_BUSY_TIMEOUT)?;
         Ok(Self {
             connection: Mutex::new(connection),
             scanner,
