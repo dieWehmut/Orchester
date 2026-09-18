@@ -220,6 +220,15 @@ mod tests {
             ));
             let _ = fs::remove_dir_all(&path);
             fs::create_dir_all(&path).expect("create scratch directory");
+            // The loader requires a user-only directory, and a fresh temp
+            // directory is 0755 under the runner's umask: these tests passed on
+            // Windows, where the gate reads ACLs, and failed on ubuntu-24.04.
+            #[cfg(unix)]
+            {
+                use std::os::unix::fs::PermissionsExt;
+                fs::set_permissions(&path, fs::Permissions::from_mode(0o700))
+                    .expect("private scratch directory");
+            }
             Self(path)
         }
 

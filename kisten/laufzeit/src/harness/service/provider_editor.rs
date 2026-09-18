@@ -281,6 +281,14 @@ mod tests {
             ));
             let _ = fs::remove_dir_all(&path);
             fs::create_dir_all(&path).expect("create scratch directory");
+            // See the editor fixture: the loader wants a user-only directory,
+            // which a fresh temp directory is not under the runner's umask.
+            #[cfg(unix)]
+            {
+                use std::os::unix::fs::PermissionsExt;
+                fs::set_permissions(&path, fs::Permissions::from_mode(0o700))
+                    .expect("private scratch directory");
+            }
             Self(path)
         }
 
