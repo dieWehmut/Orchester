@@ -116,7 +116,13 @@ describe('initAppearance', () => {
   it('applies both axes to the document', () => {
     const applied = initAppearance()
 
-    expect(applied).toEqual({ theme: 'dark', colorScheme: 'codex' })
+    expect(applied).toEqual({
+      theme: 'dark',
+      colorScheme: 'codex',
+      intensity: 'calm',
+      reducedMotion: null,
+      surface: 'web',
+    })
     expect(root().getAttribute(THEME_ATTRIBUTE)).toBe('dark')
     expect(root().getAttribute(COLOR_SCHEME_ATTRIBUTE)).toBe('codex')
   })
@@ -153,7 +159,13 @@ describe('initAppearance', () => {
     localStorage.setItem(THEME_STORAGE_KEY, 'midnight')
     localStorage.setItem(COLOR_SCHEME_STORAGE_KEY, 'chartreuse')
 
-    expect(initAppearance()).toEqual({ theme: 'dark', colorScheme: 'codex' })
+    expect(initAppearance()).toEqual({
+      theme: 'dark',
+      colorScheme: 'codex',
+      intensity: 'calm',
+      reducedMotion: null,
+      surface: 'web',
+    })
   })
 
   it('survives a localStorage that throws on access', () => {
