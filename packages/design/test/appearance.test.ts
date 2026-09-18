@@ -118,13 +118,13 @@ describe('initAppearance', () => {
 
     expect(applied).toEqual({
       theme: 'dark',
-      colorScheme: 'codex',
+      colorScheme: 'rose',
       intensity: 'vivid',
       reducedMotion: null,
       surface: 'web',
     })
     expect(root().getAttribute(THEME_ATTRIBUTE)).toBe('dark')
-    expect(root().getAttribute(COLOR_SCHEME_ATTRIBUTE)).toBe('codex')
+    expect(root().getAttribute(COLOR_SCHEME_ATTRIBUTE)).toBe('rose')
   })
 
   it('mirrors the theme onto the color-scheme property so browser UI follows', () => {
@@ -161,7 +161,7 @@ describe('initAppearance', () => {
 
     expect(initAppearance()).toEqual({
       theme: 'dark',
-      colorScheme: 'codex',
+      colorScheme: 'rose',
       intensity: 'vivid',
       reducedMotion: null,
       surface: 'web',

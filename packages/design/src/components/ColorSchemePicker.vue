@@ -100,13 +100,15 @@ function onKeydown(event: KeyboardEvent, index: number): void {
 }
 
 /* Literal hues, not tokens: a swatch has to show the colour you would be
-   switching *to*, and the tokens always describe the scheme already active. */
-.scheme-picker__swatch--amber {
-  background: #d8a24a;
+   switching *to*, and the tokens always describe the scheme already active.
+   These are the dark-theme accents, because a swatch sits on a dark rail as
+   often as on a light one and the light accents are the same hue, muddied. */
+.scheme-picker__swatch--codex {
+  background: #339cff;
 }
 
 .scheme-picker__swatch--violet {
-  background: #a58bf0;
+  background: #ad7bf9;
 }
 
 .scheme-picker__swatch--teal {
@@ -114,6 +116,6 @@ function onKeydown(event: KeyboardEvent, index: number): void {
 }
 
 .scheme-picker__swatch--rose {
-  background: #e88aa4;
+  background: #f472b6;
 }
 </style>

@@ -15,8 +15,14 @@ export type ColorScheme = (typeof COLOR_SCHEMES)[number]
 /** Dark, because this tool sits next to a terminal. */
 export const DEFAULT_THEME: ThemeMode = 'dark'
 
-/** Codex blue: the restrained accent the operator asked the surfaces to copy. */
-export const DEFAULT_COLOR_SCHEME: ColorScheme = 'codex'
+/**
+ * Orchester's own hue.
+ *
+ * The mark, the desktop icon and the send button are all the same pink, so the
+ * default accent is the colour of the product rather than of the design it
+ * learned its anatomy from.
+ */
+export const DEFAULT_COLOR_SCHEME: ColorScheme = 'rose'
 
 export const THEME_ATTRIBUTE = 'data-theme'
 export const COLOR_SCHEME_ATTRIBUTE = 'data-color-scheme'

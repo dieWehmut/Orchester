@@ -58,7 +58,7 @@ describe('APPEARANCE_BOOTSTRAP_SCRIPT', () => {
     runBootstrap()
 
     expect(document.documentElement.getAttribute(THEME_ATTRIBUTE)).toBe('light')
-    expect(document.documentElement.getAttribute(COLOR_SCHEME_ATTRIBUTE)).toBe('codex')
+    expect(document.documentElement.getAttribute(COLOR_SCHEME_ATTRIBUTE)).toBe('rose')
   })
 
   it('keeps booting when storage access is blocked', () => {
@@ -73,7 +73,7 @@ describe('APPEARANCE_BOOTSTRAP_SCRIPT', () => {
     try {
       expect(() => runBootstrap()).not.toThrow()
       expect(document.documentElement.getAttribute(THEME_ATTRIBUTE)).toBe('dark')
-      expect(document.documentElement.getAttribute(COLOR_SCHEME_ATTRIBUTE)).toBe('codex')
+      expect(document.documentElement.getAttribute(COLOR_SCHEME_ATTRIBUTE)).toBe('rose')
     } finally {
       if (descriptor) Object.defineProperty(globalThis, 'localStorage', descriptor)
     }
