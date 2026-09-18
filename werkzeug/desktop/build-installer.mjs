@@ -76,7 +76,12 @@ function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
     cwd: options.cwd ?? repositoryRoot,
     stdio: 'inherit',
-    shell: false,
+    // pnpm is a .cmd shim on Windows and spawnSync without a shell cannot
+    // resolve it, so the installer jobs died with "pnpm failed to start:
+    // spawnSync pnpm ENOENT" while the same name resolves on Unix. Every
+    // argument here is static or validated (semver version, known arch), so the
+    // shell buys resolution without adding an injection surface.
+    shell: process.platform === 'win32',
     env: process.env,
   });
   if (result.error) fail(`${command} failed to start: ${result.error.message}`);
