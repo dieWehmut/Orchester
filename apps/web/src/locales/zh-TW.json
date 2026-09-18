@@ -169,6 +169,23 @@
     "profile": {
       "title": "本機資料",
       "description": "身分資訊保存在本機，由執行階段管理，而不是帳號。"
+    },
+    "uiFont": {
+      "title": "UI 字型",
+      "description": "介面中使用的字型。",
+      "system": "系統預設",
+      "sans": "無襯線",
+      "serif": "襯線"
+    },
+    "contentFont": {
+      "title": "內容字型",
+      "description": "編輯器等內容區域的字型。",
+      "ui": "與介面字型相同",
+      "mono": "等寬"
+    },
+    "translucentRail": {
+      "title": "半透明側邊欄",
+      "description": "讓側邊欄呈現半透明效果，增強桌面沉浸感。"
     }
   },
   "notFound": {

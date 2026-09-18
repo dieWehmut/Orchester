@@ -169,6 +169,23 @@
     "profile": {
       "title": "Local profile",
       "description": "Identity stays on this machine; the runtime owns it, not an account."
+    },
+    "uiFont": {
+      "title": "UI font",
+      "description": "The face used across the interface.",
+      "system": "System default",
+      "sans": "Sans",
+      "serif": "Serif"
+    },
+    "contentFont": {
+      "title": "Content font",
+      "description": "The face used for code and transcripts.",
+      "ui": "Same as interface",
+      "mono": "Monospace"
+    },
+    "translucentRail": {
+      "title": "Translucent sidebar",
+      "description": "Show the sidebar as a translucent sheet for a more immersive desktop window."
     }
   },
   "notFound": {

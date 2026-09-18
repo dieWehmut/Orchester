@@ -140,6 +140,29 @@ describe('SettingsView', () => {
     expect(wrapper.get('[data-appearance-field="surface"]').text()).toContain('web')
   })
 
+  it('selects the interface and content faces from the appearance table', async () => {
+    const wrapper = mount(SettingsView)
+
+    await wrapper.get('[data-appearance-field="ui-font"] select').setValue('serif')
+    expect(document.documentElement.getAttribute('data-ui-font')).toBe('serif')
+    expect(localStorage.getItem('orchester:ui-font')).toBe('serif')
+
+    await wrapper.get('[data-appearance-field="content-font"] select').setValue('ui')
+    expect(document.documentElement.getAttribute('data-content-font')).toBe('ui')
+    expect(localStorage.getItem('orchester:content-font')).toBe('ui')
+  })
+
+  it('offers the translucent rail only where a window can composite behind it', async () => {
+    const wrapper = mount(SettingsView)
+    const toggle = wrapper.get('[data-appearance-field="rail-appearance"] [role="switch"]')
+
+    // The browser surface has nothing behind the window to see through.
+    expect(toggle.attributes('disabled')).toBeDefined()
+
+    await toggle.trigger('click')
+    expect(localStorage.getItem('orchester:rail-appearance')).toBeNull()
+  })
+
   it('renders a live code preview that shows the active accents', () => {
     const wrapper = mount(SettingsView)
 

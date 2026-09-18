@@ -97,6 +97,39 @@ const schemeValue = computed({
   set: (value: string) => appearance.setColorScheme(value as never),
 })
 
+const uiFontOptions = computed(() => [
+  { value: 'system', label: t('settings.uiFont.system') },
+  { value: 'sans', label: t('settings.uiFont.sans') },
+  { value: 'serif', label: t('settings.uiFont.serif') },
+])
+
+const uiFontValue = computed({
+  get: () => appearance.uiFont.value,
+  set: (value: string) => appearance.setUiFont(value as never),
+})
+
+const contentFontOptions = computed(() => [
+  { value: 'ui', label: t('settings.contentFont.ui') },
+  { value: 'mono', label: t('settings.contentFont.mono') },
+])
+
+const contentFontValue = computed({
+  get: () => appearance.contentFont.value,
+  set: (value: string) => appearance.setContentFont(value as never),
+})
+
+/**
+ * Translucency needs a window behind it to see through, so the switch is only
+ * offered where the shell can honour it. Elsewhere the row still explains what
+ * the setting is and says why it is off rather than pretending it applied.
+ */
+const supportsTranslucency = computed(() => appearance.surface.value === 'desktop')
+
+const railAppearanceValue = computed({
+  get: () => appearance.railAppearance.value === 'translucent',
+  set: (value: boolean) => appearance.setRailAppearance(value ? 'translucent' : 'solid'),
+})
+
 const intensityOptions = computed(() => [
   { value: 'vivid', label: t('settings.intensity.vivid') },
   { value: 'calm', label: t('settings.intensity.calm') },
@@ -307,6 +340,49 @@ const previewAfter = computed(() => [
               <AppSwitch
                 v-model="reducedMotionValue"
                 :label="t('settings.reducedMotion.title')"
+              />
+            </div>
+          </div>
+
+          <div class="settings-view__row" data-appearance-field="ui-font">
+            <div class="settings-view__row-copy">
+              <strong>{{ t('settings.uiFont.title') }}</strong>
+              <span>{{ t('settings.uiFont.description') }}</span>
+            </div>
+            <AppSelect
+              v-model="uiFontValue"
+              class="settings-view__control"
+              :options="uiFontOptions"
+              :aria-label="t('settings.uiFont.title')"
+            />
+          </div>
+
+          <div class="settings-view__row" data-appearance-field="content-font">
+            <div class="settings-view__row-copy">
+              <strong>{{ t('settings.contentFont.title') }}</strong>
+              <span>{{ t('settings.contentFont.description') }}</span>
+            </div>
+            <AppSelect
+              v-model="contentFontValue"
+              class="settings-view__control"
+              :options="contentFontOptions"
+              :aria-label="t('settings.contentFont.title')"
+            />
+          </div>
+
+          <div class="settings-view__row" data-appearance-field="rail-appearance">
+            <div class="settings-view__row-copy">
+              <strong>{{ t('settings.translucentRail.title') }}</strong>
+              <span>{{ t('settings.translucentRail.description') }}</span>
+            </div>
+            <div class="settings-view__row-control">
+              <AppBadge v-if="!supportsTranslucency" tone="neutral" mono>
+                {{ appearance.surface.value }}
+              </AppBadge>
+              <AppSwitch
+                v-model="railAppearanceValue"
+                :disabled="!supportsTranslucency"
+                :label="t('settings.translucentRail.title')"
               />
             </div>
           </div>

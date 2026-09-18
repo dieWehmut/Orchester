@@ -169,6 +169,23 @@
     "profile": {
       "title": "本地资料",
       "description": "身份信息保存在本机，由运行时管理，而不是账号。"
+    },
+    "uiFont": {
+      "title": "UI 字体",
+      "description": "界面中使用的字体。",
+      "system": "系统默认",
+      "sans": "无衬线",
+      "serif": "衬线"
+    },
+    "contentFont": {
+      "title": "内容字体",
+      "description": "编辑器等内容区域的字体。",
+      "ui": "与界面字体相同",
+      "mono": "等宽"
+    },
+    "translucentRail": {
+      "title": "半透明侧边栏",
+      "description": "让侧边栏呈现半透明效果，增强桌面沉浸感。"
     }
   },
   "notFound": {
