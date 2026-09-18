@@ -1,4 +1,4 @@
-﻿import { spawnSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -27,9 +27,14 @@ function main() {
   const version = options.version;
   if (!arch || !rustTarget || !version) fail('--arch, --rust-target, and --version are required');
   if (architectures.get(arch) !== rustTarget) fail(`--rust-target must be ${architectures.get(arch)} for ${arch}`);
+
+  // The WebUI payload is what this script produces for the bundle, so it is
+  // built before the inputs are asserted. Asserting it first meant a clean
+  // checkout always failed here: CI has no apps/web/dist, and the release job
+  // died before it ever reached the build.
+  run('pnpm', ['--filter', '@orchester/web', 'build']);
   assertInputs(version);
 
-  run('pnpm', ['--filter', '@orchester/web', 'build']);
   run('pnpm', ['--filter', '@orchester/desktop', 'build', '--', '--target', rustTarget, '--bundles', 'nsis']);
 
   const bundleDirectory = path.join(desktopRoot, 'src-tauri/target', rustTarget, 'release/bundle/nsis');
