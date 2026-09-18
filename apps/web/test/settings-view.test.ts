@@ -158,14 +158,19 @@ describe('SettingsView', () => {
     const uiRow = wrapper.get('[data-appearance-field="ui-font"]')
     const contentRow = wrapper.get('[data-appearance-field="content-font"]')
 
-    await uiRow.findAll('select')[1].setValue('medium')
+    const uiFaces = uiRow.findAll('select')
+    const contentFaces = contentRow.findAll('select')
+    expect(uiFaces).toHaveLength(2)
+    expect(contentFaces).toHaveLength(2)
+
+    await uiFaces[1]!.setValue('medium')
     expect(document.documentElement.getAttribute('data-ui-font-weight')).toBe('medium')
     expect(localStorage.getItem('orchester:ui-font-weight')).toBe('medium')
 
     // The content face is still on its own default: one row, one axis.
     expect(document.documentElement.getAttribute('data-content-font-weight')).toBe('regular')
 
-    await contentRow.findAll('select')[1].setValue('medium')
+    await contentFaces[1]!.setValue('medium')
     expect(document.documentElement.getAttribute('data-content-font-weight')).toBe('medium')
   })
 
