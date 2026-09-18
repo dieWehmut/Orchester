@@ -4,6 +4,7 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
 import OrchesterMark from '../src/components/run/OrchesterMark.vue'
+import AppRail from '../src/components/layout/AppRail.vue'
 
 function fromPackageRoot(relativePath: string): string {
   return resolve(process.cwd(), relativePath)
@@ -38,5 +39,14 @@ describe('Orchester app icon', () => {
     expect(image.attributes('width')).toBe('96')
     expect(image.attributes('height')).toBe('96')
     expect(image.attributes('alt')).toBe('')
+  })
+
+  it('uses the same artwork for the rail badge instead of a letter tile', () => {
+    const wrapper = mount(AppRail, { props: { productName: 'Orchester' } })
+
+    const badge = wrapper.get('[data-rail-mark]')
+    expect(badge.element.tagName).toBe('IMG')
+    expect(badge.attributes('src')).toContain('orchester-mark')
+    expect(badge.attributes('alt')).toBe('')
   })
 })
