@@ -1,9 +1,10 @@
 ﻿<script setup lang="ts">
-import { Info, Palette, Plug, Settings2 } from '@lucide/vue'
+import { Info, Palette, PawPrint, Plug, Settings2 } from '@lucide/vue'
 import {
   AppBadge,
   AppSegmentedControl,
   AppSelect,
+  AppSwitch,
   ColorSchemePicker,
   ThemeToggle,
   initAppearance,
@@ -13,20 +14,28 @@ import {
 } from '@orchester/design'
 import { computed, ref } from 'vue'
 
+import { usePetVisibility } from '../features/pet'
 import { useI18n } from '../i18n'
 
-type SettingsSection = 'general' | 'appearance' | 'providers' | 'about'
+type SettingsSection = 'general' | 'appearance' | 'pet' | 'providers' | 'about'
 
 const { t, locale, setLocale } = useI18n()
 
 initAppearance()
 const appearance: AppearanceApi = useAppearance()
+const petVisibility = usePetVisibility()
+
+const petVisible = computed({
+  get: () => petVisibility.visible.value,
+  set: (value: boolean) => (value ? petVisibility.show() : petVisibility.hide()),
+})
 
 const activeSection = ref<SettingsSection>('general')
 
 const sections: { id: SettingsSection; labelKey: Parameters<typeof t>[0]; icon: typeof Info }[] = [
   { id: 'general', labelKey: 'settings.sections.general', icon: Settings2 },
   { id: 'appearance', labelKey: 'settings.sections.appearance', icon: Palette },
+  { id: 'pet', labelKey: 'pet.title', icon: PawPrint },
   { id: 'providers', labelKey: 'settings.sections.providers', icon: Plug },
   { id: 'about', labelKey: 'settings.sections.about', icon: Info },
 ]
@@ -136,6 +145,23 @@ const themeValue = computed({
             :ariaLabel="t('settings.theme.title')"
           />
         </div>
+      </section>
+
+      <section
+        class="settings-view__panel"
+        data-settings-section="pet"
+        :aria-selected="activeSection === 'pet'"
+        :hidden="activeSection !== 'pet'"
+      >
+        <h2>{{ t('pet.title') }}</h2>
+        <div class="settings-view__row">
+          <div class="settings-view__row-copy">
+            <strong>{{ t('pet.visibility.title') }}</strong>
+            <span>{{ t('pet.visibility.description') }}</span>
+          </div>
+          <AppSwitch v-model="petVisible" :label="t('pet.visibility.title')" />
+        </div>
+        <p class="settings-view__note">{{ t('pet.description') }}</p>
       </section>
 
       <section
