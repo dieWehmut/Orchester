@@ -156,7 +156,12 @@
       "hint": "預覽目前主題下的程式碼風格"
     },
     "table": {
-      "title": "外觀設定"
+      "title": "外觀設定",
+      "hint": "這些選擇保存在本機，並在首次繪製前還原。",
+      "import": "匯入主題",
+      "export": "匯出主題",
+      "reset": "重設",
+      "invalid": "這個檔案不是 Orchester 的外觀設定。"
     },
     "notifications": {
       "title": "尚無通知規則",

@@ -89,7 +89,8 @@ export const APPEARANCE_PROFILE_VERSION = 1
 
 export interface AppearanceProfile {
   version: number
-  theme?: ThemeMode
+  /** Absent or `system` both mean "follow the operating system". */
+  theme?: ThemeMode | undefined
   colorScheme?: ColorScheme
   intensity?: Intensity
   uiFont?: UiFont

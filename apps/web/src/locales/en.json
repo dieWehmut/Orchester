@@ -156,7 +156,12 @@
       "hint": "Preview code style under the current theme"
     },
     "table": {
-      "title": "Appearance settings"
+      "title": "Appearance settings",
+      "hint": "These choices are kept on this machine and restored before the first paint.",
+      "import": "Import theme",
+      "export": "Export theme",
+      "reset": "Reset",
+      "invalid": "That file is not an Orchester appearance profile."
     },
     "notifications": {
       "title": "No notification rules",

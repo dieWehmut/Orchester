@@ -156,7 +156,12 @@
       "hint": "预览当前主题下的代码风格"
     },
     "table": {
-      "title": "外观设置"
+      "title": "外观设置",
+      "hint": "这些选择保存在本机，并在首次绘制前恢复。",
+      "import": "导入主题",
+      "export": "导出主题",
+      "reset": "重置",
+      "invalid": "这个文件不是 Orchester 的外观配置。"
     },
     "notifications": {
       "title": "暂无通知规则",

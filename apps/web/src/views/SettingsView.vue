@@ -17,11 +17,14 @@ import {
   Moon,
   Palette,
   Plug,
+  RotateCcw,
   Settings2,
+  Upload,
   UserRound,
 } from '@lucide/vue'
 import {
   AppBadge,
+  AppButton,
   AppSegmentedControl,
   AppSelect,
   AppSwitch,
@@ -29,7 +32,10 @@ import {
   ColorSchemePicker,
   EmptyState,
   ThemePreviewCard,
+  exportAppearanceProfile,
+  importAppearanceProfile,
   initAppearance,
+  resetAppearance,
   useAppearance,
   type AppearanceApi,
   type ThemeMode,
@@ -42,6 +48,8 @@ import { useI18n } from '../i18n'
 type SettingsSection = 'general' | 'notifications' | 'import' | 'profile' | 'appearance' | 'providers' | 'about'
 
 const { t, locale, setLocale } = useI18n()
+
+const importTrigger = ref<HTMLInputElement | null>(null)
 
 initAppearance()
 const appearance: AppearanceApi = useAppearance()
@@ -189,6 +197,48 @@ const previewBefore = computed(() => [
   '};',
 ])
 
+/**
+ * Export, import and reset for the whole appearance profile.
+ *
+ * The file carries the values, not the storage keys, so it survives the local
+ * storage layout changing underneath it. Import reports failure instead of
+ * throwing: a file the user picked by hand is the most likely place for a
+ * malformed profile to come from.
+ */
+const profileError = ref('')
+
+function exportProfile(): void {
+  profileError.value = ''
+  const blob = new Blob([JSON.stringify(exportAppearanceProfile(), null, 2)], {
+    type: 'application/json',
+  })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = 'orchester-appearance.json'
+  link.click()
+  URL.revokeObjectURL(url)
+}
+
+function resetProfile(): void {
+  profileError.value = ''
+  resetAppearance()
+}
+
+async function importProfile(event: Event): Promise<void> {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  input.value = ''
+  if (!file) return
+
+  try {
+    const parsed: unknown = JSON.parse(await file.text())
+    profileError.value = importAppearanceProfile(parsed) ? '' : t('settings.table.invalid')
+  } catch {
+    profileError.value = t('settings.table.invalid')
+  }
+}
+
 const previewAfter = computed(() => [
   'const themePreview: ThemeConfig = {',
   '  surface: "sidebar-elevated",',
@@ -294,7 +344,35 @@ const previewAfter = computed(() => [
         <div class="settings-view__table">
           <header class="settings-view__table-head">
             <h3>{{ t('settings.table.title') }}</h3>
+            <div class="settings-view__table-actions" data-settings-actions>
+              <AppButton
+                variant="secondary"
+                size="sm"
+                data-action="import"
+                @click="importTrigger?.click()"
+              >
+                <Upload :size="14" aria-hidden="true" />
+                {{ t('settings.table.import') }}
+              </AppButton>
+              <AppButton variant="secondary" size="sm" data-action="export" @click="exportProfile">
+                <Download :size="14" aria-hidden="true" />
+                {{ t('settings.table.export') }}
+              </AppButton>
+              <AppButton variant="secondary" size="sm" data-action="reset" @click="resetProfile">
+                <RotateCcw :size="14" aria-hidden="true" />
+                {{ t('settings.table.reset') }}
+              </AppButton>
+            </div>
+            <input
+              ref="importTrigger"
+              type="file"
+              accept="application/json,.json"
+              class="settings-view__file"
+              :aria-label="t('settings.table.import')"
+              @change="importProfile"
+            />
           </header>
+          <p v-if="profileError" class="settings-view__note" role="alert">{{ profileError }}</p>
 
           <div class="settings-view__row" data-appearance-field="theme">
             <div class="settings-view__row-copy">
@@ -634,8 +712,29 @@ const previewAfter = computed(() => [
 }
 
 .settings-view__table-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
   border-block-end: 1px solid var(--color-border-default);
+}
+
+.settings-view__table-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* The picker is opened from the button beside it; showing a bare file control
+   in the header would be a second, uglier way to do the same thing. */
+.settings-view__file {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
 }
 
 .settings-view__table-head h3 {
