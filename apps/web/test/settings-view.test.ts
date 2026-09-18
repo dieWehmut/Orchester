@@ -163,6 +163,20 @@ describe('SettingsView', () => {
     expect(localStorage.getItem('orchester:rail-appearance')).toBeNull()
   })
 
+  it('reports the background and foreground the theme resolves to', () => {
+    const wrapper = mount(SettingsView)
+
+    // Read-only readouts, not pickers: the two colours are what the chosen
+    // theme resolves to, and a hex box here would be a second theme editor.
+    const background = wrapper.get('[data-appearance-field="background"]')
+    const foreground = wrapper.get('[data-appearance-field="foreground"]')
+
+    expect(background.find('[data-color-readout]').exists()).toBe(true)
+    expect(foreground.find('[data-color-readout]').exists()).toBe(true)
+    expect(background.find('select').exists()).toBe(false)
+    expect(foreground.find('select').exists()).toBe(false)
+  })
+
   it('renders a live code preview that shows the active accents', () => {
     const wrapper = mount(SettingsView)
 
