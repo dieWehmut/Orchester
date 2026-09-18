@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import SettingsView from '../src/views/SettingsView.vue'
@@ -197,6 +197,50 @@ describe('SettingsView', () => {
     expect(foreground.find('[data-color-readout]').exists()).toBe(true)
     expect(background.find('select').exists()).toBe(false)
     expect(foreground.find('select').exists()).toBe(false)
+  })
+
+  it('offers import, export and reset above the appearance table', () => {
+    const wrapper = mount(SettingsView)
+    const actions = wrapper.get('[data-settings-actions]')
+
+    // Named by their action attribute rather than their label: the labels are
+    // translated, and a test that pins the English ones would break the moment
+    // the suite ran under another locale.
+    expect(actions.findAll('button')).toHaveLength(3)
+    for (const action of ['import', 'export', 'reset']) {
+      expect(actions.get(`[data-action="${action}"]`).text().length).toBeGreaterThan(0)
+    }
+    expect(actions.get('[data-action="import"]').text()).toContain('Import')
+    expect(actions.get('[data-action="export"]').text()).toContain('Export')
+    expect(actions.get('[data-action="reset"]').text()).toContain('Reset')
+  })
+
+  it('resets every axis and forgets what was stored', async () => {
+    const wrapper = mount(SettingsView)
+
+    await wrapper.get('[data-appearance-field="ui-font"] select').setValue('serif')
+    expect(localStorage.getItem('orchester:ui-font')).toBe('serif')
+
+    await wrapper.get('[data-settings-actions] [data-action="reset"]').trigger('click')
+
+    expect(localStorage.getItem('orchester:ui-font')).toBeNull()
+    expect(document.documentElement.getAttribute('data-ui-font')).toBe('system')
+  })
+
+  it('reports a file that is not a profile instead of half-applying it', async () => {
+    const wrapper = mount(SettingsView)
+    const input = wrapper.get('input[type="file"]')
+    const file = new File(['{"version":1,"colorScheme":"chartreuse"}'], 'broken.json', {
+      type: 'application/json',
+    })
+
+    Object.defineProperty(input.element, 'files', { value: [file], configurable: true })
+    // The handler reads the file, so the rejection lands a tick after the event.
+    await input.trigger('change')
+    await flushPromises()
+
+    expect(wrapper.get('[role="alert"]').text().length).toBeGreaterThan(0)
+    expect(document.documentElement.getAttribute('data-color-scheme')).not.toBe('chartreuse')
   })
 
   it('renders a live code preview that shows the active accents', () => {
