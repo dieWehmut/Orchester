@@ -4,8 +4,10 @@ import { clearStored, readStored, writeStored } from '../storage'
 import {
   COLOR_SCHEME_STORAGE_KEY,
   CONTENT_FONT_STORAGE_KEY,
+  CONTENT_FONT_WEIGHT_STORAGE_KEY,
   DEFAULT_COLOR_SCHEME,
   DEFAULT_CONTENT_FONT,
+  DEFAULT_FONT_WEIGHT,
   DEFAULT_INTENSITY,
   DEFAULT_RAIL_APPEARANCE,
   DEFAULT_SURFACE,
@@ -16,8 +18,11 @@ import {
   REDUCED_MOTION_STORAGE_KEY,
   THEME_STORAGE_KEY,
   UI_FONT_STORAGE_KEY,
+  UI_FONT_WEIGHT_STORAGE_KEY,
   applyColorSchemeToDocument,
   applyContentFontToDocument,
+  applyContentFontWeightToDocument,
+  applyFontWeightToDocument,
   applyIntensityToDocument,
   applyPlatformToDocument,
   applyRailAppearanceToDocument,
@@ -28,12 +33,15 @@ import {
   isColorScheme,
   isContentFont,
   isIntensity,
+  isFontWeight,
   isRailAppearance,
   isThemeMode,
   isThemePreference,
   isUiFont,
   readDocumentColorScheme,
   readDocumentContentFont,
+  readDocumentContentFontWeight,
+  readDocumentFontWeight,
   readDocumentIntensity,
   readDocumentRailAppearance,
   readDocumentReducedMotion,
@@ -45,6 +53,7 @@ import {
   resolveThemePreference,
   type ColorScheme,
   type ContentFont,
+  type FontWeight,
   type Intensity,
   type RailAppearance,
   type ReducedMotionPreference,
@@ -72,6 +81,8 @@ const surface = ref<Surface>(DEFAULT_SURFACE)
 const uiFont = ref<UiFont>(DEFAULT_UI_FONT)
 const contentFont = ref<ContentFont>(DEFAULT_CONTENT_FONT)
 const railAppearance = ref<RailAppearance>(DEFAULT_RAIL_APPEARANCE)
+const uiFontWeight = ref<FontWeight>(DEFAULT_FONT_WEIGHT)
+const contentFontWeight = ref<FontWeight>(DEFAULT_FONT_WEIGHT)
 
 let initialized = false
 let stopWatchingSystem: (() => void) | null = null
@@ -125,6 +136,8 @@ export function initAppearance(): {
   uiFont: UiFont
   contentFont: ContentFont
   railAppearance: RailAppearance
+  uiFontWeight: FontWeight
+  contentFontWeight: FontWeight
 } {
   const storedTheme = readStored(THEME_STORAGE_KEY)
   const storedScheme = readStored(COLOR_SCHEME_STORAGE_KEY)
@@ -133,6 +146,8 @@ export function initAppearance(): {
   const storedUiFont = readStored(UI_FONT_STORAGE_KEY)
   const storedContentFont = readStored(CONTENT_FONT_STORAGE_KEY)
   const storedRailAppearance = readStored(RAIL_APPEARANCE_STORAGE_KEY)
+  const storedUiFontWeight = readStored(UI_FONT_WEIGHT_STORAGE_KEY)
+  const storedContentFontWeight = readStored(CONTENT_FONT_WEIGHT_STORAGE_KEY)
 
   // A stored `light`/`dark` from before this axis existed is still an explicit
   // choice, so it is read as one rather than coerced to `system`.
@@ -189,6 +204,16 @@ export function initAppearance(): {
     : (readDocumentRailAppearance() ?? DEFAULT_RAIL_APPEARANCE)
   applyRailAppearanceToDocument(railAppearance.value)
 
+  uiFontWeight.value = isFontWeight(storedUiFontWeight)
+    ? storedUiFontWeight
+    : (readDocumentFontWeight() ?? DEFAULT_FONT_WEIGHT)
+  applyFontWeightToDocument(uiFontWeight.value)
+
+  contentFontWeight.value = isFontWeight(storedContentFontWeight)
+    ? storedContentFontWeight
+    : (readDocumentContentFontWeight() ?? DEFAULT_FONT_WEIGHT)
+  applyContentFontWeightToDocument(contentFontWeight.value)
+
   if (!stopWatchingSystem) watchSystemTheme()
   initialized = true
   return {
@@ -200,6 +225,8 @@ export function initAppearance(): {
     uiFont: uiFont.value,
     contentFont: contentFont.value,
     railAppearance: railAppearance.value,
+    uiFontWeight: uiFontWeight.value,
+    contentFontWeight: contentFontWeight.value,
   }
 }
 
@@ -217,6 +244,8 @@ export function resetAppearanceForTests(): void {
   uiFont.value = DEFAULT_UI_FONT
   contentFont.value = DEFAULT_CONTENT_FONT
   railAppearance.value = DEFAULT_RAIL_APPEARANCE
+  uiFontWeight.value = DEFAULT_FONT_WEIGHT
+  contentFontWeight.value = DEFAULT_FONT_WEIGHT
 }
 
 export interface AppearanceApi {
@@ -230,6 +259,8 @@ export interface AppearanceApi {
   uiFont: Readonly<Ref<UiFont>>
   contentFont: Readonly<Ref<ContentFont>>
   railAppearance: Readonly<Ref<RailAppearance>>
+  uiFontWeight: Readonly<Ref<FontWeight>>
+  contentFontWeight: Readonly<Ref<FontWeight>>
   isDark: ComputedRef<boolean>
   /** Whether motion should be suppressed right now, OS included. */
   prefersReducedMotion: ComputedRef<boolean>
@@ -243,6 +274,8 @@ export interface AppearanceApi {
   setUiFont: (next: UiFont) => void
   setContentFont: (next: ContentFont) => void
   setRailAppearance: (next: RailAppearance) => void
+  setUiFontWeight: (next: FontWeight) => void
+  setContentFontWeight: (next: FontWeight) => void
 }
 
 export function useAppearance(): AppearanceApi {
@@ -258,6 +291,8 @@ export function useAppearance(): AppearanceApi {
     uiFont: readonly(uiFont),
     contentFont: readonly(contentFont),
     railAppearance: readonly(railAppearance),
+    uiFontWeight: readonly(uiFontWeight),
+    contentFontWeight: readonly(contentFontWeight),
     isDark: computed(() => theme.value === 'dark'),
     prefersReducedMotion: computed(() => {
       if (reducedMotion.value === 'true') return true
@@ -317,6 +352,16 @@ export function useAppearance(): AppearanceApi {
       railAppearance.value = next
       applyRailAppearanceToDocument(next)
       writeStored(RAIL_APPEARANCE_STORAGE_KEY, next)
+    },
+    setUiFontWeight: (next: FontWeight) => {
+      uiFontWeight.value = next
+      applyFontWeightToDocument(next)
+      writeStored(UI_FONT_WEIGHT_STORAGE_KEY, next)
+    },
+    setContentFontWeight: (next: FontWeight) => {
+      contentFontWeight.value = next
+      applyContentFontWeightToDocument(next)
+      writeStored(CONTENT_FONT_WEIGHT_STORAGE_KEY, next)
     },
   }
 }

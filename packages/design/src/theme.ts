@@ -205,6 +205,28 @@ export function isContentFont(value: unknown): value is ContentFont {
   return typeof value === 'string' && (CONTENT_FONTS as readonly string[]).includes(value)
 }
 
+/* ══ Font weight ═══════════════════════════════════════════════════════
+   One step, not a scale. Regular and medium are the only two weights the
+   interface uses for running text, and offering five would be a font manager
+   rather than a setting. */
+
+export const FONT_WEIGHTS = ['regular', 'medium'] as const
+export type FontWeight = (typeof FONT_WEIGHTS)[number]
+
+export const DEFAULT_FONT_WEIGHT: FontWeight = 'regular'
+export const UI_FONT_WEIGHT_ATTRIBUTE = 'data-ui-font-weight'
+export const CONTENT_FONT_WEIGHT_ATTRIBUTE = 'data-content-font-weight'
+export const UI_FONT_WEIGHT_STORAGE_KEY = 'orchester:ui-font-weight'
+export const CONTENT_FONT_WEIGHT_STORAGE_KEY = 'orchester:content-font-weight'
+
+/** Kept as the name of the attribute pair for callers that only read one. */
+export const FONT_WEIGHT_ATTRIBUTE = UI_FONT_WEIGHT_ATTRIBUTE
+export const FONT_WEIGHT_STORAGE_KEY = UI_FONT_WEIGHT_STORAGE_KEY
+
+export function isFontWeight(value: unknown): value is FontWeight {
+  return typeof value === 'string' && (FONT_WEIGHTS as readonly string[]).includes(value)
+}
+
 /* ══ Rail appearance ════════════════════════════════════
    Whether the task rail is opaque or borrows the desktop behind the window.
    Only the desktop shell can honour translucency, so the attribute is written
@@ -332,4 +354,31 @@ export function readDocumentRailAppearance(): RailAppearance | null {
   if (!hasDocument()) return null
   const current = document.documentElement.getAttribute(RAIL_APPEARANCE_ATTRIBUTE)
   return isRailAppearance(current) ? current : null
+}
+
+function applyWeightAttribute(attribute: string, weight: FontWeight): void {
+  if (!hasDocument()) return
+  document.documentElement.setAttribute(attribute, weight)
+}
+
+function readWeightAttribute(attribute: string): FontWeight | null {
+  if (!hasDocument()) return null
+  const current = document.documentElement.getAttribute(attribute)
+  return isFontWeight(current) ? current : null
+}
+
+export function applyFontWeightToDocument(weight: FontWeight): void {
+  applyWeightAttribute(UI_FONT_WEIGHT_ATTRIBUTE, weight)
+}
+
+export function applyContentFontWeightToDocument(weight: FontWeight): void {
+  applyWeightAttribute(CONTENT_FONT_WEIGHT_ATTRIBUTE, weight)
+}
+
+export function readDocumentFontWeight(): FontWeight | null {
+  return readWeightAttribute(UI_FONT_WEIGHT_ATTRIBUTE)
+}
+
+export function readDocumentContentFontWeight(): FontWeight | null {
+  return readWeightAttribute(CONTENT_FONT_WEIGHT_ATTRIBUTE)
 }
