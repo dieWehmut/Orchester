@@ -33,10 +33,10 @@ describe('Orchester app icon', () => {
 
     const mark = wrapper.get('[data-orchester-mark]')
     const image = mark.get('img')
+    expect(mark.attributes('aria-hidden')).toBe('true')
     expect(image.attributes('src')).toContain('orchester-mark')
     expect(image.attributes('width')).toBe('96')
     expect(image.attributes('height')).toBe('96')
     expect(image.attributes('alt')).toBe('')
-    expect(image.attributes('aria-hidden')).toBe('true')
   })
 })
