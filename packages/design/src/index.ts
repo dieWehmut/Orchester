@@ -37,6 +37,8 @@ export type { ToastItem, ToastTone } from './components/toast-types'
 
 export { APPEARANCE_BOOTSTRAP_SCRIPT } from './appearance-script'
 
+export { clearStored, readStored, writeStored } from './storage'
+
 export {
   initAppearance,
   resetAppearanceForTests,

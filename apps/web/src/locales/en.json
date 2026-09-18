@@ -81,6 +81,23 @@
     "projects": "Projects",
     "projectFallback": "No project selected"
   },
+  "pet": {
+    "label": "Orchester companion",
+    "show": "Show companion",
+    "hide": "Hide companion",
+    "title": "Companion",
+    "description": "The ambient xiaoxuan companion that mirrors the active run.",
+    "visibility": {
+      "title": "Show companion",
+      "description": "Draw the ambient companion above the composer."
+    },
+    "notification": {
+      "running": "Running",
+      "waiting": "Needs input",
+      "review": "Ready",
+      "failed": "Blocked"
+    }
+  },
   "settings": {
     "eyebrow": "Configuration",
     "title": "Settings",
