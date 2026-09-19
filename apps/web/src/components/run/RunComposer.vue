@@ -7,6 +7,8 @@ import { computed, ref, watch } from 'vue'
 import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
 import ApprovalPresetControl, { type ApprovalPreset } from './ApprovalPresetControl.vue'
 import ComposerContextBar from './ComposerContextBar.vue'
+import CommandPalette, { type CommandEntry } from './CommandPalette.vue'
+import { COMPOSER_COMMANDS } from './composer-commands'
 
 const props = withDefaults(
   defineProps<{
@@ -19,6 +21,8 @@ const props = withDefaults(
     dragActive?: boolean
     /** The approval scope for the next run. */
     approvalPreset?: ApprovalPreset
+    /** The `/` vocabulary available in this deployment. */
+    commands?: readonly CommandEntry[]
     maxLength?: number
     placeholder?: string
     submitLabel?: string
@@ -37,6 +41,7 @@ const props = withDefaults(
     lifecycle: null,
     dragActive: false,
     approvalPreset: 'ask',
+    commands: () => COMPOSER_COMMANDS,
     maxLength: 8000,
     placeholder: 'Describe the task',
     submitLabel: 'Run',
@@ -56,16 +61,26 @@ const emit = defineEmits<{
   cancel: []
   'drop-files': [files: File[]]
   'update:approvalPreset': [value: ApprovalPreset]
+  'run-command': [id: string]
 }>()
 
 const draft = ref(props.modelValue)
 const dragActive = ref(false)
+const commandsClosed = ref(false)
 
 watch(
   () => props.modelValue,
   (value) => {
     if (value !== draft.value) draft.value = value
   },
+)
+
+/**
+ * The palette is open while the draft is a command being typed. Closing it by
+ * hand keeps it closed for that draft, so Escape does not fight the watcher.
+ */
+const paletteOpen = computed(
+  () => !commandsClosed.value && /^\/[^\s]*$/.test(draft.value),
 )
 
 /** A drag is only about files; dragging selected text is not a drop. */
@@ -149,6 +164,7 @@ const canSubmit = computed(
 
 function update(value: string): void {
   draft.value = value
+  commandsClosed.value = false
   emit('update:modelValue', value)
 }
 
@@ -158,6 +174,11 @@ function submit(): void {
 }
 
 function handleKeydown(event: KeyboardEvent): void {
+  if (event.key === 'Escape' && paletteOpen.value) {
+    event.preventDefault()
+    commandsClosed.value = true
+    return
+  }
   if (event.key !== 'Enter' || event.shiftKey || event.isComposing) return
   event.preventDefault()
   submit()
@@ -182,6 +203,13 @@ function handleKeydown(event: KeyboardEvent): void {
       :workspace-name="props.workspaceName"
       :model-catalog="props.modelCatalog"
       :model-status="props.modelStatus"
+    />
+    <CommandPalette
+      :open="paletteOpen"
+      :commands="props.commands"
+      :query="draft"
+      @select="emit('run-command', $event)"
+      @close="commandsClosed = true"
     />
     <label class="run-composer__label" for="run-prompt">{{ props.inputLabel }}</label>
     <AppTextarea
