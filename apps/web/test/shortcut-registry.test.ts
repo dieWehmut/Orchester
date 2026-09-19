@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import {
+  captureShortcut,
   createShortcutRegistry,
   DEFAULT_SHORTCUTS,
   formatShortcut,
@@ -115,5 +116,90 @@ describe("shortcut registry", () => {
       expect(seen.has(serialized)).toBe(false)
       seen.add(serialized)
     }
+  })
+
+  it("finds the shortcut an event is asking for", () => {
+    const registry = createShortcutRegistry()
+    registry.register(definition())
+    registry.register(definition({ id: "composer.focus", keys: ["Mod", "L"] }))
+
+    const event = { key: "l", metaKey: false, ctrlKey: true, shiftKey: false, altKey: false }
+
+    expect(registry.match(event, "windows")?.id).toBe("composer.focus")
+    expect(registry.match({ ...event, key: "z" }, "windows")).toBeUndefined()
+  })
+
+  it("resolves a match through the effective keys, not the registered ones", () => {
+    const registry = createShortcutRegistry()
+    registry.register(definition())
+    registry.rebind("palette.open", ["Mod", "P"])
+
+    const event = { key: "p", metaKey: true, ctrlKey: false, shiftKey: false, altKey: false }
+
+    expect(registry.match(event, "macos")?.id).toBe("palette.open")
+    expect(
+      registry.match({ ...event, key: "k" }, "macos"),
+    ).toBeUndefined()
+  })
+
+  it("tells a subscriber when the bindings change", () => {
+    const registry = createShortcutRegistry()
+    const seen: string[] = []
+    const unsubscribe = registry.subscribe(() => seen.push("changed"))
+
+    registry.register(definition())
+    registry.rebind("palette.open", ["Mod", "J"])
+    registry.resetAll()
+
+    // Registering is a change too: an editor open while a component mounts has
+    // to grow a row for it, or it lists less than the app answers to.
+    expect(seen).toEqual(["changed", "changed", "changed"])
+
+    unsubscribe()
+    registry.rebind("palette.open", ["Mod", "Z"])
+    expect(seen).toHaveLength(3)
+  })
+})
+
+describe("shortcut capture", () => {
+  const event = (key: string, modifiers: Partial<KeyboardEvent> = {}) =>
+    ({
+      key,
+      metaKey: false,
+      ctrlKey: false,
+      shiftKey: false,
+      altKey: false,
+      ...modifiers,
+    }) as KeyboardEvent
+
+  it("captures the modifier as Mod so the binding stays portable", () => {
+    expect(captureShortcut(event("k", { ctrlKey: true }), "windows")).toEqual(["Mod", "K"])
+    expect(captureShortcut(event("k", { metaKey: true }), "macos")).toEqual(["Mod", "K"])
+  })
+
+  it("keeps the shift and alt modifiers it saw", () => {
+    expect(captureShortcut(event("k", { ctrlKey: true, shiftKey: true }), "windows")).toEqual([
+      "Mod",
+      "Shift",
+      "K",
+    ])
+    expect(captureShortcut(event("k", { metaKey: true, altKey: true }), "macos")).toEqual([
+      "Mod",
+      "Alt",
+      "K",
+    ])
+  })
+
+  it("refuses a chord with no modifier, which would swallow typing", () => {
+    expect(captureShortcut(event("k"), "windows")).toBeUndefined()
+  })
+
+  it("refuses the modifiers on their own", () => {
+    expect(captureShortcut(event("Control", { ctrlKey: true }), "windows")).toBeUndefined()
+    expect(captureShortcut(event("Shift", { shiftKey: true }), "windows")).toBeUndefined()
+  })
+
+  it("names a letter by its upper-case form so the editor reads naturally", () => {
+    expect(captureShortcut(event("b", { ctrlKey: true }), "windows")).toEqual(["Mod", "B"])
   })
 })

@@ -71,12 +71,6 @@ export const DEFAULT_SHORTCUTS: readonly ShortcutDefinition[] = [
     group: 'Layout',
     keys: ['Mod', ','],
   },
-  {
-    id: 'tab.close',
-    label: 'Close the active tab',
-    group: 'Layout',
-    keys: ['Mod', 'W'],
-  },
 ]
 
 const MODIFIER_LABELS: Record<Platform, string> = {
@@ -130,6 +124,37 @@ export interface ShortcutRegistry {
   effectiveKeys: (id: string) => readonly ShortcutKey[] | undefined
   rebind: (id: string, keys: readonly ShortcutKey[]) => void
   resetAll: () => void
+  /** The registered shortcut an event is asking for, if any. */
+  match: (event: ShortcutEvent, platform: Platform) => ShortcutRegistration | undefined
+  /** Notified whenever the set of bindings or their keys change. */
+  subscribe: (listener: () => void) => () => void
+}
+
+/** Keys that only exist to modify another key. */
+const MODIFIER_KEY_NAMES = new Set(['Alt', 'AltGraph', 'Control', 'Meta', 'Shift'])
+
+/**
+ * Turns the next keypress into a portable binding.
+ *
+ * The modifier is stored as `Mod` rather than as whichever key the platform
+ * happens to use, so a binding made on a Mac still works when the same profile
+ * is opened on Windows. A chord with no modifier is refused: binding `K` would
+ * make the letter unusable everywhere the app listens.
+ */
+export function captureShortcut(
+  event: ShortcutEvent,
+  platform: Platform,
+): readonly ShortcutKey[] | undefined {
+  if (MODIFIER_KEY_NAMES.has(event.key)) return undefined
+
+  const modHeld = platform === 'macos' ? event.metaKey : event.ctrlKey
+  if (!modHeld) return undefined
+
+  const keys: ShortcutKey[] = ['Mod']
+  if (event.shiftKey) keys.push('Shift')
+  if (event.altKey) keys.push('Alt')
+  keys.push(event.key.length === 1 ? event.key.toUpperCase() : event.key)
+  return keys
 }
 
 function serialize(keys: readonly ShortcutKey[]): string {
@@ -139,6 +164,11 @@ function serialize(keys: readonly ShortcutKey[]): string {
 export function createShortcutRegistry(): ShortcutRegistry {
   const registrations = new Map<string, ShortcutRegistration>()
   const overrides = new Map<string, readonly ShortcutKey[]>()
+  const listeners = new Set<() => void>()
+
+  function notify(): void {
+    for (const listener of listeners) listener()
+  }
 
   /**
    * A user's rebinding wins over the component's own keys. Nothing else does:
@@ -167,8 +197,10 @@ export function createShortcutRegistry(): ShortcutRegistry {
         )
       }
       registrations.set(shortcut.id, shortcut)
+      notify()
       return () => {
         registrations.delete(shortcut.id)
+        notify()
       }
     },
 
@@ -190,10 +222,26 @@ export function createShortcutRegistry(): ShortcutRegistry {
         )
       }
       overrides.set(id, [...keys])
+      notify()
     },
 
     resetAll() {
       overrides.clear()
+      notify()
+    },
+
+    match(event, platform) {
+      for (const registration of registrations.values()) {
+        if (matchShortcut(keysFor(registration.id), event, platform)) return registration
+      }
+      return undefined
+    },
+
+    subscribe(listener) {
+      listeners.add(listener)
+      return () => {
+        listeners.delete(listener)
+      }
     },
   }
 }
