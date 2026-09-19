@@ -79,4 +79,54 @@ describe('RunPanel', () => {
     await wrapper.setProps({ lifecycle: 'running' })
     expect(wrapper.get('[data-run-composer]').attributes('data-composer-state')).toBe('running')
   })
+
+  it('shows the plan strip above the composer once the run has a plan', () => {
+    const view = createEmptyRunView()
+    const withPlan = {
+      ...view,
+      todos: [
+        { text: 'Read the runtime', completed: true },
+        { text: 'Patch the boundary', completed: false },
+      ],
+    }
+    const wrapper = mount(RunPanel, { props: { view: withPlan } })
+
+    const strip = wrapper.get('[data-plan-strip]')
+    expect(strip.attributes('data-plan-state')).toBe('active')
+    expect(strip.get('[data-plan-current]').text()).toContain('Patch the boundary')
+
+    // The strip sits between the transcript and the composer: it describes the
+    // run, so it belongs above the input that continues it.
+    const stream = wrapper.get('[data-run-panel] .run-panel__stream').element
+    const composer = wrapper.get('[data-run-composer]').element
+    expect(
+      strip.element.compareDocumentPosition(stream) & Node.DOCUMENT_POSITION_PRECEDING,
+    ).toBeTruthy()
+    expect(
+      strip.element.compareDocumentPosition(composer) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+  })
+
+  it('hides the plan strip when the run has no plan', () => {
+    const wrapper = mount(RunPanel, { props: { view: createEmptyRunView() } })
+
+    expect(wrapper.find('[data-plan-strip]').exists()).toBe(false)
+  })
+
+  it('marks the plan blocked while the run is waiting for the user', () => {
+    const view = createEmptyRunView()
+    const wrapper = mount(RunPanel, {
+      props: {
+        view: {
+          ...view,
+          status: 'awaiting_approval',
+          todos: [{ text: 'Wait for the approval', completed: false }],
+        },
+      },
+    })
+
+    const strip = wrapper.get('[data-plan-strip]')
+    expect(strip.attributes('data-plan-state')).toBe('blocked')
+    expect(strip.attributes('data-plan-needs-input')).toBe('true')
+  })
 })
