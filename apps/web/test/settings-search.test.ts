@@ -43,6 +43,7 @@ describe("settings search", () => {
       "notifications",
       "import",
       "profile",
+      "keybindings",
       "providers",
       "about",
     ])

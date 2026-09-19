@@ -52,6 +52,7 @@ describe('SettingsView', () => {
       'notifications',
       'import',
       'profile',
+      'keybindings',
       'providers',
       'about',
     ])
