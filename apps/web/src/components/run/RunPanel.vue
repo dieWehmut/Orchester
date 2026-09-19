@@ -2,7 +2,7 @@
 import { InlineAlert } from '@orchester/design'
 import type { RunView } from '@orchester/ereignis'
 import type { ModelCatalogDto } from '@orchester/protokoll'
-import { computed } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 
 import type { RunLifecycle } from '../../stores/run'
 import ConnectionBanner, { type ConnectionBannerStatus } from './ConnectionBanner.vue'
@@ -11,6 +11,7 @@ import PlanStrip from './PlanStrip.vue'
 import RunComposer from './RunComposer.vue'
 import RunFooter from './RunFooter.vue'
 import RunTimeline from './RunTimeline.vue'
+import { readScrollState, stickDecision, type ScrollState } from './scroll-state'
 import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
 
 const props = withDefaults(
@@ -53,6 +54,41 @@ const emit = defineEmits<{
  * `awaiting_approval` means the next move is not the agent's to make.
  */
 const planBlocked = computed(() => props.view.status === 'awaiting_approval')
+
+const stream = ref<HTMLElement | null>(null)
+const scrollState = ref<ScrollState>({ canScrollUp: false, canScrollDown: false, atBottom: true })
+
+function measure(): void {
+  const element = stream.value
+  if (!element) return
+  scrollState.value = readScrollState({
+    scrollTop: element.scrollTop,
+    scrollHeight: element.scrollHeight,
+    clientHeight: element.clientHeight,
+  })
+}
+
+function scrollToBottom(): void {
+  const element = stream.value
+  if (!element) return
+  element.scrollTop = element.scrollHeight
+  measure()
+}
+
+/**
+ * New output follows the run only while the reader is still at the bottom;
+ * once they scroll back to read, the transcript holds still instead of
+ * dragging the page away from them.
+ */
+watch(
+  () => props.view.timeline.length,
+  async () => {
+    const position = scrollState.value.atBottom ? 'at-bottom' : 'reading-back'
+    await nextTick()
+    if (stickDecision(position, 'appended') === 'stick') scrollToBottom()
+    else measure()
+  },
+)
 </script>
 
 <template>
@@ -61,7 +97,14 @@ const planBlocked = computed(() => props.view.status === 'awaiting_approval')
     <InlineAlert v-if="props.errorMessage" tone="error" data-run-error>
       {{ props.errorMessage }}
     </InlineAlert>
-    <div class="run-panel__stream">
+    <div
+      ref="stream"
+      class="run-panel__stream"
+      data-transcript-scroll
+      :data-can-scroll-up="scrollState.canScrollUp"
+      :data-can-scroll-down="scrollState.canScrollDown"
+      @scroll.passive="measure"
+    >
       <RunTimeline v-if="props.view.timeline.length > 0" :view="props.view" />
       <EmptyWorkspace
         v-else-if="!props.conversationStarted"
@@ -73,6 +116,15 @@ const planBlocked = computed(() => props.view.status === 'awaiting_approval')
         <span>{{ props.busy ? 'Starting run…' : 'Waiting for run events…' }}</span>
       </div>
     </div>
+    <button
+      v-if="scrollState.canScrollDown"
+      class="run-panel__to-bottom"
+      type="button"
+      data-scroll-to-bottom
+      @click="scrollToBottom"
+    >
+      Jump to the latest
+    </button>
     <RunFooter :view="props.view" />
     <PlanStrip
       :todos="props.view.todos"
@@ -103,6 +155,19 @@ const planBlocked = computed(() => props.view.status === 'awaiting_approval')
   min-block-size: 0;
   flex: 1;
   overflow: auto;
+}
+
+.run-panel__to-bottom {
+  align-self: center;
+  margin-block-start: calc(-1 * var(--space-6));
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border-base);
+  border-radius: 999px;
+  background: var(--color-bg-surface);
+  box-shadow: var(--shadow-200);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: var(--text-xs);
 }
 
 .run-panel :deep(.run-composer) {
