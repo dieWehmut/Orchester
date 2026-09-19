@@ -1,11 +1,11 @@
 <template>
   <div class="workspace-shell">
-    <aside class="workspace-shell__sessions" data-pane="sessions" aria-label="Sessions">
+    <nav class="workspace-shell__sessions" data-pane="sessions" aria-label="Sessions">
       <slot name="sessions" />
-    </aside>
-    <section class="workspace-shell__transcript" data-pane="transcript" aria-label="Run transcript">
+    </nav>
+    <main class="workspace-shell__transcript" data-pane="transcript" aria-label="Run transcript">
       <slot />
-    </section>
+    </main>
     <aside class="workspace-shell__inspector" data-pane="inspector" aria-label="Inspector">
       <slot name="inspector" />
     </aside>

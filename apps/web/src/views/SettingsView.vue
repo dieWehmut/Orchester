@@ -383,7 +383,7 @@ const previewAfter = computed(() => [
       </ul>
     </nav>
 
-    <div class="settings-view__panels">
+    <main class="settings-view__panels" aria-label="Settings">
       <section
         class="settings-view__panel"
         data-settings-section="general"
@@ -704,7 +704,7 @@ const previewAfter = computed(() => [
         <h2>{{ t('settings.sections.about') }}</h2>
         <p class="settings-view__note">{{ t('settings.about.description') }}</p>
       </section>
-    </div>
+    </main>
   </div>
 </template>
 

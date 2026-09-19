@@ -21,7 +21,9 @@
   --desktop-titlebar-height: 36px;
 }
 
-main {
+/* The routed view declares the main landmark, so the outlet that holds it
+   only has to claim the vertical space under the chrome. */
+.app-shell__outlet {
   min-block-size: calc(100vh - var(--app-top-chrome-height));
 }
 

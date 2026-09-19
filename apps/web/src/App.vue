@@ -42,8 +42,8 @@ useShortcutListener()
     <WindowChrome :controller="windowController" />
     <WorkspaceHeader :connection="connection" :workspace-name="workspaceName" />
 
-    <main aria-label="Agent workspace">
+    <div class="app-shell__outlet">
       <RouterView />
-    </main>
+    </div>
   </div>
 </template>

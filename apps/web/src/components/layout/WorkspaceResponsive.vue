@@ -44,20 +44,20 @@ const inspectorDrawerOpen = ref(false)
     </nav>
 
     <div class="workspace-responsive__grid">
-      <aside
+      <nav
         class="workspace-responsive__desktop-sessions"
         data-pane="sessions"
         aria-label="Sessions"
       >
         <slot name="sessions" />
-      </aside>
-      <section
+      </nav>
+      <main
         class="workspace-responsive__transcript"
         data-pane="transcript"
         aria-label="Run transcript"
       >
         <slot />
-      </section>
+      </main>
       <aside
         class="workspace-responsive__desktop-inspector"
         data-pane="inspector"
