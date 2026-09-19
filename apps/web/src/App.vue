@@ -9,6 +9,7 @@ import {
   type DesktopWindowController,
 } from './platform/desktop-window'
 import { useAppStores } from './stores/app'
+import { useShortcutListener } from './shortcuts'
 
 const props = defineProps<{
   desktopController?: DesktopWindowController
@@ -31,6 +32,9 @@ onUnmounted(() => {
   stores.stop()
 })
 
+// One listener for the whole app: a shortcut works from wherever focus is,
+// which is what makes it a shortcut rather than a key binding on a pane.
+useShortcutListener()
 </script>
 
 <template>

@@ -11,6 +11,7 @@ import SessionTranscript from '../components/sessions/SessionTranscript.vue'
 import RunPanel from '../components/run/RunPanel.vue'
 import { useI18n } from '../i18n'
 import { useAppStores } from '../stores/app'
+import { useShortcut } from '../shortcuts'
 import { computed, inject, ref } from 'vue'
 import { routerKey } from 'vue-router'
 
@@ -104,6 +105,36 @@ function handleInspectorTabChange(tab: InspectorTab): void {
 function handleOpenSettings(): void {
   void appRouter?.push({ name: 'settings' })
 }
+
+/**
+ * The shortcuts the workspace owns.
+ *
+ * Registered by the mounted view rather than by the shell, so the two panes
+ * the shell cannot see 鈥?the inspector and the settings route 鈥?are only
+ * bound while there is something to bind them to.
+ */
+useShortcut(
+  {
+    id: 'inspector.toggle',
+    label: 'Toggle the inspector',
+    group: 'Layout',
+    keys: ['Mod', 'B'],
+  },
+  () => {
+    inspectorOpen.value = !inspectorOpen.value
+  },
+)
+
+useShortcut(
+  {
+    id: 'settings.open',
+    label: 'Open settings',
+    group: 'Layout',
+    keys: ['Mod', ','],
+  },
+  handleOpenSettings,
+)
+
 </script>
 
 <template>
