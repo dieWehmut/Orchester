@@ -135,6 +135,10 @@
       "personal": "個人",
       "integrations": "整合"
     },
+    "search": {
+      "placeholder": "搜尋設定",
+      "empty": "沒有符合的設定項目。"
+    },
     "intensity": {
       "title": "強調強度",
       "description": "強調色在主操作上的使用力度。",

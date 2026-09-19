@@ -135,6 +135,10 @@
       "personal": "个人",
       "integrations": "集成"
     },
+    "search": {
+      "placeholder": "搜索设置",
+      "empty": "没有匹配的设置项。"
+    },
     "intensity": {
       "title": "强调强度",
       "description": "强调色在主操作上的使用力度。",

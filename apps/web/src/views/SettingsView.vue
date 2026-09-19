@@ -18,6 +18,7 @@ import {
   Palette,
   Plug,
   RotateCcw,
+  Search,
   Settings2,
   Upload,
   UserRound,
@@ -44,6 +45,12 @@ import {
 import { computed, ref } from 'vue'
 
 import { useI18n } from '../i18n'
+import {
+  filterSettingsSections,
+  SETTINGS_SECTIONS,
+  type SettingsSectionEntry,
+  type SettingsSectionId,
+} from '../components/settings/settings-search'
 
 type SettingsSection = 'general' | 'notifications' | 'import' | 'profile' | 'appearance' | 'providers' | 'about'
 
@@ -56,18 +63,57 @@ const appearance: AppearanceApi = useAppearance()
 
 const activeSection = ref<SettingsSection>('appearance')
 
-const generalSections: { id: SettingsSection; labelKey: Parameters<typeof t>[0]; icon: typeof Info }[] = [
-  { id: 'general', labelKey: 'settings.sections.general', icon: Settings2 },
-  { id: 'notifications', labelKey: 'settings.sections.notifications', icon: Bell },
-  { id: 'import', labelKey: 'settings.sections.import', icon: Download },
-  { id: 'profile', labelKey: 'settings.sections.profile', icon: UserRound },
-  { id: 'appearance', labelKey: 'settings.sections.appearance', icon: Palette },
+interface SettingsNavEntry {
+  id: SettingsSection
+  labelKey: Parameters<typeof t>[0]
+  icon: typeof Info
+  group: 'personal' | 'integrations'
+}
+
+const navEntries: readonly SettingsNavEntry[] = [
+  { id: 'general', labelKey: 'settings.sections.general', icon: Settings2, group: 'personal' },
+  { id: 'notifications', labelKey: 'settings.sections.notifications', icon: Bell, group: 'personal' },
+  { id: 'import', labelKey: 'settings.sections.import', icon: Download, group: 'personal' },
+  { id: 'profile', labelKey: 'settings.sections.profile', icon: UserRound, group: 'personal' },
+  { id: 'appearance', labelKey: 'settings.sections.appearance', icon: Palette, group: 'personal' },
+  { id: 'providers', labelKey: 'settings.sections.providers', icon: Plug, group: 'integrations' },
+  { id: 'about', labelKey: 'settings.sections.about', icon: Info, group: 'integrations' },
 ]
 
-const integrationSections: { id: SettingsSection; labelKey: Parameters<typeof t>[0]; icon: typeof Info }[] = [
-  { id: 'providers', labelKey: 'settings.sections.providers', icon: Plug },
-  { id: 'about', labelKey: 'settings.sections.about', icon: Info },
-]
+/**
+ * Search across the nav.
+ *
+ * The query is matched against the section's translated name as well as the
+ * vocabulary the search module carries, in that section's order. Filtering the
+ * nav rather than the panels keeps a match visible as a destination: a reader
+ * searching for "fonts" still lands on the appearance screen they know, with
+ * its own controls, instead of on a list of loose rows.
+ */
+const settingsQuery = ref('')
+
+const filteredSections = computed<readonly SettingsNavEntry[]>(() => {
+  const searchable: readonly (SettingsNavEntry & SettingsSectionEntry)[] = navEntries.map(
+    (entry) => {
+      const vocabulary = SETTINGS_SECTIONS.find((section) => section.id === (entry.id as SettingsSectionId))
+      return {
+        ...entry,
+        label: t(entry.labelKey),
+        keywords: vocabulary?.keywords ?? [],
+      }
+    },
+  )
+  const matched = filterSettingsSections(searchable, settingsQuery.value)
+  const matchedIds = new Set(matched.map((entry) => entry.id))
+  return navEntries.filter((entry) => matchedIds.has(entry.id))
+})
+
+const generalSections = computed(() =>
+  filteredSections.value.filter((entry) => entry.group === 'personal'),
+)
+
+const integrationSections = computed(() =>
+  filteredSections.value.filter((entry) => entry.group === 'integrations'),
+)
 
 const localeOptions = computed(() => [
   { value: 'en', label: t('settings.locale.en') },
@@ -254,8 +300,29 @@ const previewAfter = computed(() => [
       <p class="settings-view__eyebrow">{{ t('settings.eyebrow') }}</p>
       <h1>{{ t('settings.title') }}</h1>
 
-      <p class="settings-view__group">{{ t('settings.groups.personal') }}</p>
-      <ul class="settings-view__list">
+      <label class="settings-view__search" data-settings-search>
+        <Search :size="15" aria-hidden="true" />
+        <input
+          v-model="settingsQuery"
+          type="search"
+          :placeholder="t('settings.search.placeholder')"
+          :aria-label="t('settings.search.placeholder')"
+        />
+      </label>
+
+      <p
+        v-if="settingsQuery.trim().length > 0 && filteredSections.length === 0"
+        class="settings-view__search-empty"
+        data-settings-search-empty
+        role="status"
+      >
+        {{ t('settings.search.empty') }}
+      </p>
+
+      <p v-if="generalSections.length > 0" class="settings-view__group">
+        {{ t('settings.groups.personal') }}
+      </p>
+      <ul v-if="generalSections.length > 0" class="settings-view__list">
         <li v-for="section in generalSections" :key="section.id">
           <button
             class="settings-view__link"
@@ -271,8 +338,10 @@ const previewAfter = computed(() => [
         </li>
       </ul>
 
-      <p class="settings-view__group">{{ t('settings.groups.integrations') }}</p>
-      <ul class="settings-view__list">
+      <p v-if="integrationSections.length > 0" class="settings-view__group">
+        {{ t('settings.groups.integrations') }}
+      </p>
+      <ul v-if="integrationSections.length > 0" class="settings-view__list">
         <li v-for="section in integrationSections" :key="section.id">
           <button
             class="settings-view__link"
@@ -628,6 +697,42 @@ const previewAfter = computed(() => [
   color: var(--color-text-tertiary);
   font-size: var(--text-xs);
   font-weight: var(--weight-medium);
+}
+
+.settings-view__search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 var(--space-2) var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-base);
+  color: var(--color-text-tertiary);
+}
+
+.settings-view__search:focus-within {
+  border-color: var(--color-border-focus);
+}
+
+.settings-view__search input {
+  inline-size: 100%;
+  min-inline-size: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-primary);
+  font: inherit;
+  font-size: var(--text-sm);
+}
+
+.settings-view__search input:focus {
+  outline: none;
+}
+
+.settings-view__search-empty {
+  margin: 0 var(--space-2) var(--space-2);
+  color: var(--color-text-tertiary);
+  font-size: var(--text-sm);
 }
 
 .settings-view__list {

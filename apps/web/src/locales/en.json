@@ -135,6 +135,10 @@
       "personal": "Personal",
       "integrations": "Integrations"
     },
+    "search": {
+      "placeholder": "Search settings",
+      "empty": "No settings match that search."
+    },
     "intensity": {
       "title": "Accent intensity",
       "description": "How loudly the accent speaks on primary actions.",
