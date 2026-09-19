@@ -54,6 +54,25 @@ describe('WorkspaceView', () => {
     expect(wrapper.get('[data-run-awaiting-events]')).toBeTruthy()
   })
 
+  it('names the composer state from the run store lifecycle', async () => {
+    const stores = createAppStores()
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+
+    expect(wrapper.get('[data-run-composer]').attributes('data-composer-state')).toBe('idle')
+
+    stores.run.lifecycle.value = 'submitting'
+    await nextTick()
+    expect(wrapper.get('[data-run-composer]').attributes('data-composer-state')).toBe('submitting')
+
+    stores.run.lifecycle.value = 'running'
+    await nextTick()
+    expect(wrapper.get('[data-run-composer]').attributes('data-composer-state')).toBe('running')
+
+    stores.run.lifecycle.value = 'cancelling'
+    await nextTick()
+    expect(wrapper.get('[data-run-composer]').attributes('data-composer-state')).toBe('cancelling')
+  })
+
   it('places the agent fleet below sessions in the shared left rail', () => {
     const stores = createAppStores()
     stores.agents.snapshot = AGENT_FLEET_FIXTURE

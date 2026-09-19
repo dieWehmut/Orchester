@@ -68,4 +68,15 @@ describe('RunPanel', () => {
     await wrapper.setProps({ busy: false })
     expect(wrapper.find('[data-run-activity]').exists()).toBe(false)
   })
+
+  it('names the composer state from the run lifecycle the panel is given', async () => {
+    const wrapper = mount(RunPanel, {
+      props: { view: createEmptyRunView(), lifecycle: 'submitting' },
+    })
+
+    expect(wrapper.get('[data-run-composer]').attributes('data-composer-state')).toBe('submitting')
+
+    await wrapper.setProps({ lifecycle: 'running' })
+    expect(wrapper.get('[data-run-composer]').attributes('data-composer-state')).toBe('running')
+  })
 })
