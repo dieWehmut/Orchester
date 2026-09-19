@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { RunView, TimelineItem } from '@orchester/ereignis'
+import ToolCallCard from './ToolCallCard.vue'
 
 defineProps<{
   view: RunView
@@ -44,8 +45,14 @@ function assertNever(value: never): never {
       :class="`run-timeline__item--${item.type}`"
       :data-item-type="item.type"
     >
-      <span class="run-timeline__sequence">{{ item.sequence }}</span>
-      <span class="run-timeline__body">{{ itemText(item) }}</span>
+      <template v-if="item.type === 'tool'">
+        <span class="run-timeline__sequence">{{ item.sequence }}</span>
+        <ToolCallCard :item="item" />
+      </template>
+      <template v-else>
+        <span class="run-timeline__sequence">{{ item.sequence }}</span>
+        <span class="run-timeline__body">{{ itemText(item) }}</span>
+      </template>
     </li>
   </ol>
 </template>
