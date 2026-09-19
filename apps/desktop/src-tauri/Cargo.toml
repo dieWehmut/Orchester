@@ -12,7 +12,7 @@ publish = false
 tauri-build = { version = "2.6.3", features = [] }
 
 [dependencies]
-tauri = { version = "2.11.1", features = [] }
+tauri = { version = "2.11.1", features = ["tray-icon"] }
 
 # Keep the desktop crate independent from the repository's Rust workspace.
 [workspace]
