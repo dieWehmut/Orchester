@@ -38,7 +38,7 @@ describe('RunPanel', () => {
     expect(wrapper.emitted('submit')).toEqual([['Inspect the workspace']])
 
     await wrapper.setProps({ busy: true })
-    await wrapper.get('button').trigger('click')
+    await wrapper.get('[data-composer-action="cancel"]').trigger('click')
     expect(wrapper.emitted('cancel')).toHaveLength(1)
   })
 

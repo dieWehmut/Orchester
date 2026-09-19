@@ -32,7 +32,7 @@ describe('RunComposer', () => {
     const textarea = wrapper.get('textarea')
 
     await textarea.trigger('keydown', { key: 'Enter' })
-    await wrapper.get('button').trigger('click')
+    await wrapper.get('[data-composer-action="cancel"]').trigger('click')
 
     expect(wrapper.emitted('submit')).toBeUndefined()
     expect(wrapper.emitted('cancel')).toHaveLength(1)

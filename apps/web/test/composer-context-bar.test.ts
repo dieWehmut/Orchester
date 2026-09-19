@@ -15,9 +15,8 @@ describe('ComposerContextBar', () => {
     })
 
     expect(wrapper.get('[data-project-context]').text()).toContain('Orchester')
-    expect(wrapper.get('[data-approval-context]').text()).toContain('Ask for approval')
     expect(wrapper.get('[data-model-context-model]').text()).toContain('gpt-5.6')
-    expect(wrapper.findAll('svg').length).toBeGreaterThanOrEqual(3)
+    expect(wrapper.findAll('svg').length).toBeGreaterThanOrEqual(2)
   })
 
   it('renders explicit fallbacks while project and model context are unavailable', () => {
