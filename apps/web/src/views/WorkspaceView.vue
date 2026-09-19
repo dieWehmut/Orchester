@@ -19,6 +19,7 @@ const { t } = useI18n()
 const appRouter = inject(routerKey, null)
 const { sessions, run, agents, bootstrap, models } = useAppStores()
 const runView = computed(() => run.view.value)
+const runEvents = computed(() => run.events.value)
 const changeSummaries = computed(() => summarizeFileChanges(runView.value.fileChanges))
 const selectedChangePath = ref<string | null>(null)
 const selectedAgentId = ref<string | null>(null)
@@ -184,6 +185,7 @@ useShortcut(
     <RunPanel
       v-if="!selected"
       :view="runView"
+      :events="runEvents"
       :empty-title="greeting"
       :connection-status="runConnectionStatus"
       :projection-status="runProjectionStatus"

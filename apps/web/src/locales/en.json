@@ -236,6 +236,20 @@
     "newChat": "New chat",
     "railTitle": "Recent sessions"
   },
+  "run": {
+    "announce": {
+      "started": "Run started",
+      "succeeded": "Run finished",
+      "failed": "Run failed",
+      "cancelled": "Run cancelled",
+      "budgetExceeded": "Run stopped: budget exceeded",
+      "interrupted": "Run interrupted; the outcome is unknown",
+      "approval": "Approval requested",
+      "turnComplete": "Turn complete",
+      "validation": "Validation passed: {summary}",
+      "validationFailed": "Validation failed: {summary}"
+    }
+  },
   "transcript": {
     "emptyTitle": "New run",
     "emptyDescription": "Select a previous session or start a new run.",

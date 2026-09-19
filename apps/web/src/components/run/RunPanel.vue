@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { InlineAlert } from '@orchester/design'
 import type { RunView } from '@orchester/ereignis'
-import type { ModelCatalogDto } from '@orchester/protokoll'
+import type { ModelCatalogDto, UiEventEnvelope } from '@orchester/protokoll'
 import { computed, nextTick, ref, watch } from 'vue'
 
 import type { RunLifecycle } from '../../stores/run'
 import ConnectionBanner, { type ConnectionBannerStatus } from './ConnectionBanner.vue'
 import EmptyWorkspace from './EmptyWorkspace.vue'
 import PlanStrip from './PlanStrip.vue'
+import RunAnnouncer from './RunAnnouncer.vue'
 import RunComposer from './RunComposer.vue'
 import RunFooter from './RunFooter.vue'
 import RunTimeline from './RunTimeline.vue'
@@ -17,6 +18,8 @@ import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
 const props = withDefaults(
   defineProps<{
     view: RunView
+    /** The journal the announcer reads; history is not announced. */
+    events?: readonly UiEventEnvelope[]
     connectionStatus?: ConnectionBannerStatus
     projectionStatus?: 'idle' | 'ready' | 'gap' | 'error'
     busy?: boolean
@@ -30,6 +33,7 @@ const props = withDefaults(
     modelStatus?: ModelCatalogStoreStatus
   }>(),
   {
+    events: () => [],
     connectionStatus: 'idle',
     projectionStatus: 'idle',
     busy: false,
@@ -93,6 +97,7 @@ watch(
 
 <template>
   <section class="run-panel" data-run-panel>
+    <RunAnnouncer :events="props.events" />
     <ConnectionBanner :status="props.connectionStatus" />
     <InlineAlert v-if="props.errorMessage" tone="error" data-run-error>
       {{ props.errorMessage }}

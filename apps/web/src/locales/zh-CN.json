@@ -236,6 +236,20 @@
     "newChat": "新建对话",
     "railTitle": "最近会话"
   },
+  "run": {
+    "announce": {
+      "started": "运行已开始",
+      "succeeded": "运行已完成",
+      "failed": "运行失败",
+      "cancelled": "运行已取消",
+      "budgetExceeded": "运行因超出预算而停止",
+      "interrupted": "运行已中断，结果未知",
+      "approval": "请求审批",
+      "turnComplete": "回合完成",
+      "validation": "验证通过：{summary}",
+      "validationFailed": "验证失败：{summary}"
+    }
+  },
   "transcript": {
     "emptyTitle": "新运行",
     "emptyDescription": "选择历史会话或开始新的运行。",

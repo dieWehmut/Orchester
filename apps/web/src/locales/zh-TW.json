@@ -236,6 +236,20 @@
     "newChat": "新建對話",
     "railTitle": "最近會話"
   },
+  "run": {
+    "announce": {
+      "started": "執行已開始",
+      "succeeded": "執行已完成",
+      "failed": "執行失敗",
+      "cancelled": "執行已取消",
+      "budgetExceeded": "執行因超出預算而停止",
+      "interrupted": "執行已中斷，結果未知",
+      "approval": "請求審批",
+      "turnComplete": "回合完成",
+      "validation": "驗證通過：{summary}",
+      "validationFailed": "驗證失敗：{summary}"
+    }
+  },
   "transcript": {
     "emptyTitle": "新增執行",
     "emptyDescription": "選擇歷史工作階段或開始新的執行。",
