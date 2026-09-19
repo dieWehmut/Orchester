@@ -92,7 +92,16 @@
       "about": "About",
       "notifications": "Notifications",
       "import": "Import",
-      "profile": "Profile"
+      "profile": "Profile",
+      "keybindings": "Keybindings"
+    },
+    "keybindings": {
+      "description": "Every shortcut here is one a mounted part of the app answers; changing one changes what the app does.",
+      "search": "Search shortcuts",
+      "change": "Change",
+      "capture": "Press the new keys",
+      "reset": "Reset all",
+      "empty": "No shortcut matches that."
     },
     "language": {
       "title": "Language",

@@ -16,6 +16,7 @@ import {
   MonitorSmartphone,
   Moon,
   Palette,
+  Keyboard,
   Plug,
   RotateCcw,
   Search,
@@ -45,6 +46,9 @@ import {
 import { computed, ref } from 'vue'
 
 import { useI18n } from '../i18n'
+import ShortcutEditor from '../components/settings/ShortcutEditor.vue'
+import { readDocumentPlatform, readSystemPlatform } from '@orchester/design'
+import { shortcutRegistry } from '../shortcuts'
 import {
   filterSettingsSections,
   SETTINGS_SECTIONS,
@@ -52,7 +56,15 @@ import {
   type SettingsSectionId,
 } from '../components/settings/settings-search'
 
-type SettingsSection = 'general' | 'notifications' | 'import' | 'profile' | 'appearance' | 'providers' | 'about'
+type SettingsSection =
+  | 'general'
+  | 'notifications'
+  | 'import'
+  | 'profile'
+  | 'appearance'
+  | 'keybindings'
+  | 'providers'
+  | 'about'
 
 const { t, locale, setLocale } = useI18n()
 
@@ -76,6 +88,12 @@ const navEntries: readonly SettingsNavEntry[] = [
   { id: 'import', labelKey: 'settings.sections.import', icon: Download, group: 'personal' },
   { id: 'profile', labelKey: 'settings.sections.profile', icon: UserRound, group: 'personal' },
   { id: 'appearance', labelKey: 'settings.sections.appearance', icon: Palette, group: 'personal' },
+  {
+    id: 'keybindings',
+    labelKey: 'settings.sections.keybindings',
+    icon: Keyboard,
+    group: 'personal',
+  },
   { id: 'providers', labelKey: 'settings.sections.providers', icon: Plug, group: 'integrations' },
   { id: 'about', labelKey: 'settings.sections.about', icon: Info, group: 'integrations' },
 ]
@@ -193,6 +211,13 @@ const contentFontValue = computed({
  * the setting is and says why it is off rather than pretending it applied.
  */
 const supportsTranslucency = computed(() => appearance.surface.value === 'desktop')
+
+/**
+ * The platform the editor names its modifier for. The document attribute is
+ * the shell's own answer, and the user agent is the fallback for a surface
+ * that has not set it yet.
+ */
+const shortcutPlatform = computed(() => readDocumentPlatform() ?? readSystemPlatform())
 
 const railAppearanceValue = computed({
   get: () => appearance.railAppearance.value === 'translucent',
@@ -637,6 +662,26 @@ const previewAfter = computed(() => [
         <EmptyState
           :title="t('settings.profile.title')"
           :description="t('settings.profile.description')"
+        />
+      </section>
+
+      <section
+        class="settings-view__panel"
+        data-settings-section="keybindings"
+        :aria-selected="activeSection === 'keybindings'"
+        :hidden="activeSection !== 'keybindings'"
+      >
+        <h2>{{ t('settings.sections.keybindings') }}</h2>
+        <p class="settings-view__note">{{ t('settings.keybindings.description') }}</p>
+        <ShortcutEditor
+          :registry="shortcutRegistry"
+          :platform="shortcutPlatform"
+          :search-label="t('settings.keybindings.search')"
+          :search-placeholder="t('settings.keybindings.search')"
+          :record-label="t('settings.keybindings.change')"
+          :capture-label="t('settings.keybindings.capture')"
+          :reset-label="t('settings.keybindings.reset')"
+          :empty-label="t('settings.keybindings.empty')"
         />
       </section>
 

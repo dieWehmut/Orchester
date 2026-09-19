@@ -92,7 +92,16 @@
       "about": "关于",
       "notifications": "通知",
       "import": "导入",
-      "profile": "个人资料"
+      "profile": "个人资料",
+      "keybindings": "快捷键"
+    },
+    "keybindings": {
+      "description": "这里的每个快捷键都由应用中已挂载的某个部分响应；改动它就会改动应用的行为。",
+      "search": "搜索快捷键",
+      "change": "更改",
+      "capture": "按下新的按键",
+      "reset": "全部重置",
+      "empty": "没有匹配的快捷键。"
     },
     "language": {
       "title": "语言",

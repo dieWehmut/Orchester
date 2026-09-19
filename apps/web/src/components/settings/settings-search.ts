@@ -12,6 +12,7 @@ export type SettingsSectionId =
   | 'notifications'
   | 'import'
   | 'profile'
+  | 'keybindings'
   | 'providers'
   | 'about'
 
@@ -37,6 +38,11 @@ export const SETTINGS_SECTIONS: readonly SettingsSectionEntry<SettingsSectionId>
   { id: 'notifications', label: 'Notifications', keywords: ['alerts', 'toast', 'sound'] },
   { id: 'import', label: 'Import', keywords: ['profile', 'file', 'restore'] },
   { id: 'profile', label: 'Profile', keywords: ['account', 'identity', 'avatar'] },
+  {
+    id: 'keybindings',
+    label: 'Keybindings',
+    keywords: ['shortcut', 'keyboard', 'hotkey', 'binding', 'keys'],
+  },
   { id: 'providers', label: 'Providers', keywords: ['model', 'api key', 'endpoint'] },
   { id: 'about', label: 'About', keywords: ['version', 'licence', 'license', 'build'] },
 ]
