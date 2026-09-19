@@ -110,12 +110,12 @@ const classes = computed(() => [
 
 .app-button--secondary {
   background: var(--color-bg-element);
-  border-color: var(--color-border-base);
+  border-color: var(--color-border-control);
   color: var(--color-text-primary);
 }
 
 .app-button--secondary:hover:not(:disabled) {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-control-hover);
   background: var(--color-bg-elevated);
 }
 

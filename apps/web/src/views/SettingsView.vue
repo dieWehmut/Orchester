@@ -750,7 +750,7 @@ const previewAfter = computed(() => [
   gap: var(--space-2);
   margin: 0 var(--space-2) var(--space-2);
   padding: var(--space-1) var(--space-2);
-  border: 1px solid var(--color-border-default);
+  border: 1px solid var(--color-border-control);
   border-radius: var(--radius-sm);
   background: var(--color-surface-base);
   color: var(--color-text-tertiary);

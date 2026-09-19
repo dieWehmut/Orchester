@@ -70,7 +70,7 @@ function toggle(): void {
   width: 36px;
   height: 20px;
   padding: 2px;
-  border: 1px solid var(--color-border-strong);
+  border: 1px solid var(--color-border-control);
   border-radius: var(--radius-full);
   background: var(--color-bg-element);
   transition:

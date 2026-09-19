@@ -62,7 +62,7 @@ function onInput(event: Event): void {
   min-width: 0;
   min-height: var(--control-height-md);
   padding: 0 var(--space-3);
-  border: 1px solid var(--color-border-base);
+  border: 1px solid var(--color-border-control);
   border-radius: var(--radius-sm);
   background: var(--color-bg-input);
   color: var(--color-text-primary);
@@ -78,7 +78,7 @@ function onInput(event: Event): void {
 }
 
 .app-input:hover:not(:disabled) {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-control-hover);
 }
 
 .app-input:focus-visible {

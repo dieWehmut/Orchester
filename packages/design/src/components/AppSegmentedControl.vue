@@ -81,7 +81,7 @@ function onKeydown(event: KeyboardEvent, index: number): void {
   align-items: stretch;
   max-width: 100%;
   padding: var(--space-1);
-  border: 1px solid var(--color-border-base);
+  border: 1px solid var(--color-border-control);
   border-radius: var(--radius-sm);
   background: var(--color-bg-element);
 }

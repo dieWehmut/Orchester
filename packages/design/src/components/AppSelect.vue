@@ -66,7 +66,7 @@ function onChange(event: Event): void {
   min-width: 0;
   min-height: var(--control-height-md);
   padding: 0 var(--space-8) 0 var(--space-3);
-  border: 1px solid var(--color-border-base);
+  border: 1px solid var(--color-border-control);
   border-radius: var(--radius-sm);
   background:
     var(--color-bg-input)
@@ -84,7 +84,7 @@ function onChange(event: Event): void {
 }
 
 .app-select:hover:not(:disabled) {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-control-hover);
 }
 
 .app-select:focus-visible {
