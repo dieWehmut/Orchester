@@ -46,6 +46,47 @@ describe("RunComposer state", () => {
     expect(wrapper.get("[data-run-composer]").attributes("data-composer-state")).toBe("dragging")
   })
 
+  it("enters the dragging state from a file drag and leaves it when the drag ends", async () => {
+    const wrapper = mount(RunComposer, { props: { modelValue: "" } })
+    const form = wrapper.get("[data-run-composer]")
+
+    expect(form.attributes("data-composer-drag-active")).toBe("false")
+
+    await form.trigger("dragenter", { dataTransfer: { types: ["Files"] } })
+    expect(form.attributes("data-composer-state")).toBe("dragging")
+    expect(form.attributes("data-composer-drag-active")).toBe("true")
+
+    // Dragging over a child fires dragleave for the parent; the drag is only
+    // over once the pointer leaves the composer itself.
+    await form.trigger("dragleave", { relatedTarget: wrapper.get("textarea").element })
+    expect(form.attributes("data-composer-state")).toBe("dragging")
+
+    await form.trigger("dragleave", { relatedTarget: document.body })
+    expect(form.attributes("data-composer-state")).not.toBe("dragging")
+  })
+
+  it("ignores a drag of text rather than files", async () => {
+    const wrapper = mount(RunComposer, { props: { modelValue: "" } })
+    const form = wrapper.get("[data-run-composer]")
+
+    await form.trigger("dragenter", { dataTransfer: { types: ["text/plain"] } })
+
+    expect(form.attributes("data-composer-state")).toBe("idle")
+  })
+
+  it("leaves the dragging state when the file is dropped", async () => {
+    const wrapper = mount(RunComposer, { props: { modelValue: "" } })
+    const form = wrapper.get("[data-run-composer]")
+
+    await form.trigger("dragenter", { dataTransfer: { types: ["Files"] } })
+    expect(form.attributes("data-composer-drag-active")).toBe("true")
+
+    await form.trigger("drop", { dataTransfer: { types: ["Files"] } })
+
+    expect(form.attributes("data-composer-drag-active")).toBe("false")
+    expect(form.attributes("data-composer-state")).toBe("idle")
+  })
+
   it("grows the prompt from one row and never past twelve", () => {
     const wrapper = mount(RunComposer, { props: { modelValue: "" } })
     const textarea = wrapper.get("textarea")
