@@ -129,4 +129,15 @@ describe('RunPanel', () => {
     expect(strip.attributes('data-plan-state')).toBe('blocked')
     expect(strip.attributes('data-plan-needs-input')).toBe('true')
   })
+
+  it('reports the transcript scroll flags and hides the scroll-to-bottom control', () => {
+    const wrapper = mount(RunPanel, { props: { view: createEmptyRunView() } })
+    const stream = wrapper.get('[data-transcript-scroll]')
+
+    // jsdom reports a zero-height box; the reader starts where content that
+    // fits leaves them: at the bottom, with nothing to scroll to.
+    expect(stream.attributes('data-can-scroll-up')).toBe('false')
+    expect(stream.attributes('data-can-scroll-down')).toBe('false')
+    expect(wrapper.find('[data-scroll-to-bottom]').exists()).toBe(false)
+  })
 })
