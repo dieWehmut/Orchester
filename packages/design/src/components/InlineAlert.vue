@@ -103,7 +103,7 @@ const live = computed(() => (role.value === 'alert' ? 'assertive' : 'polite'))
 }
 
 .inline-alert__dismiss:focus-visible {
-  outline: 2px solid var(--color-accent, #d8a24a);
+  outline: 2px solid var(--color-border-focus);
   outline-offset: 2px;
 }
 </style>

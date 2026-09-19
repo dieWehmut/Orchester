@@ -267,7 +267,7 @@ onBeforeUnmount(() => {
 
 .app-drawer__close:focus-visible,
 .app-drawer__footer :deep(button):focus-visible {
-  outline: 2px solid var(--color-accent, #d8a24a);
+  outline: 2px solid var(--color-border-focus);
   outline-offset: 2px;
 }
 

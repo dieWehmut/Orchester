@@ -86,7 +86,7 @@ const titleId = 'empty-state-title-' + ++nextEmptyStateId
 }
 
 .empty-state__button:focus-visible {
-  outline: 2px solid var(--color-accent, #d8a24a);
+  outline: 2px solid var(--color-border-focus);
   outline-offset: 2px;
 }
 </style>
