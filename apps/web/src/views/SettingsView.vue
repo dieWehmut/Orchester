@@ -758,6 +758,11 @@ const previewAfter = computed(() => [
 
 .settings-view__search:focus-within {
   border-color: var(--color-border-focus);
+  /* The wrapper painting its own boundary is a replacement for the ring on
+     the input, which is why the input can drop the shared outline. The
+     replacement has to be at least as visible: the focus colour on the ring
+     and on this border are the same token. */
+  box-shadow: 0 0 0 1px var(--color-border-focus);
 }
 
 .settings-view__search input {
@@ -771,6 +776,9 @@ const previewAfter = computed(() => [
 }
 
 .settings-view__search input:focus {
+  /* The field is borderless and the wrapper draws the focus boundary, so the
+     default ring would double it. The wrapper's `:focus-within` rule above is
+     the replacement §7 requires. */
   outline: none;
 }
 

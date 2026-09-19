@@ -145,11 +145,19 @@ function badgeTone(kind: ChangeSummary['kind']): 'success' | 'info' | 'error' {
 }
 
 .change-inspector__row:hover,
-.change-inspector__row:focus-visible,
 .change-inspector__row--selected {
   border-color: var(--color-border-base);
   background: var(--color-bg-element);
-  outline: none;
+}
+
+.change-inspector__row:focus-visible {
+  /* Hover and focus used to collapse into one rule that removed the outline,
+     which left a keyboard user with a state they could not see. Focus keeps
+     the ring; hover keeps the background. */
+  border-color: var(--color-border-base);
+  background: var(--color-bg-element);
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: -2px;
 }
 
 .change-inspector__row--selected {

@@ -217,16 +217,19 @@ onBeforeUnmount(() => {
   justify-content: center;
   min-block-size: var(--control-height-md, 2.25rem);
   padding: 0 0.625rem;
-  border: 1px solid var(--color-border, #394149);
+  border: 1px solid var(--color-border-control);
   border-radius: 6px;
-  background: var(--color-surface, #15191d);
-  color: var(--color-text, #f2f4f5);
+  background: var(--color-bg-element);
+  color: var(--color-text-primary);
   cursor: pointer;
 }
 
 .app-menu__trigger:focus-visible,
 .app-menu__item:focus-visible {
-  outline: 2px solid var(--color-focus, #e6a23c);
+  /* The vocabulary this file used - `--color-border`, `--color-surface`,
+     `--color-focus` - is not defined anywhere in the token file, so every one
+     of these fell back to a hard-coded hex. They now speak the real roles. */
+  outline: 2px solid var(--color-border-focus);
   outline-offset: 2px;
 }
 
@@ -236,9 +239,9 @@ onBeforeUnmount(() => {
   inset-block-start: calc(100% + 0.25rem);
   min-inline-size: 10rem;
   padding: 0.25rem;
-  border: 1px solid var(--color-border, #394149);
+  border: 1px solid var(--color-border-emphasis);
   border-radius: 6px;
-  background: var(--color-surface-raised, #20262c);
+  background: var(--color-bg-elevated);
   box-shadow: 0 10px 24px rgb(0 0 0 / 22%);
 }
 
@@ -253,18 +256,18 @@ onBeforeUnmount(() => {
   border: 0;
   border-radius: 4px;
   background: transparent;
-  color: var(--color-text, #f2f4f5);
+  color: var(--color-text-primary);
   text-align: start;
   cursor: pointer;
 }
 
 .app-menu__item:hover:not(:disabled),
 .app-menu__item:focus-visible {
-  background: var(--color-surface-hover, #2a323a);
+  background: var(--color-bg-element);
 }
 
 .app-menu__item:disabled {
-  color: var(--color-text-muted, #89929b);
+  color: var(--color-text-disabled);
   cursor: not-allowed;
   opacity: 0.6;
 }
