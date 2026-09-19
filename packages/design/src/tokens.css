@@ -573,7 +573,9 @@
      needs a real subordinate grey, but it does not need five of them. ── */
   --color-text-emphasis: var(--gray-1000);
   --color-text-default: var(--gray-700);
-  --color-text-subtle: var(--gray-600);
+  /* `--gray-600` reads 4.08:1 on the elevated surface, under the 4.5:1 body
+     contract, so the tertiary step moves one notch lighter in dark. */
+  --color-text-subtle: var(--gray-650);
   --color-text-disabled: var(--gray-500);
   --color-surface-base: var(--gray-200);
   --color-surface-secondary: var(--gray-100);
@@ -582,34 +584,40 @@
   --color-border-subtle: var(--alpha-06);
   --color-border-default: var(--alpha-12);
   --color-border-emphasis: var(--alpha-20);
+  /* The boundary of an input, a select or a segmented control. A separator
+     only has to part two surfaces, but this line is the only thing that says
+     "this is a control", so it is held to the 3:1 non-text bar and the
+     separator roles are not. */
+  --color-border-control: var(--alpha-40);
+  --color-border-control-hover: var(--alpha-50);
   --color-border-focus: var(--pink-300);
 
   /* ─ Intent matrix: meaning × treatment, all four present for every
      intent so a component never has to invent a colour. ─────────────── */
   --color-intent-info-text: var(--blue-200);
   --color-intent-info-surface: var(--blue-a50);
-  --color-intent-info-border: var(--blue-500);
-  --color-intent-info-solid: var(--blue-500);
-  --color-intent-success-text: var(--green-400);
+  --color-intent-info-border: var(--blue-400);
+  --color-intent-info-solid: var(--blue-400);
+  --color-intent-success-text: var(--green-300);
   --color-intent-success-surface: var(--green-a50);
-  --color-intent-success-border: var(--green-600);
+  --color-intent-success-border: var(--green-400);
   --color-intent-success-solid: var(--green-500);
-  --color-intent-warning-text: var(--orange-500);
+  --color-intent-warning-text: var(--orange-200);
   --color-intent-warning-surface: var(--orange-a50);
-  --color-intent-warning-border: var(--orange-500);
+  --color-intent-warning-border: var(--orange-400);
   --color-intent-warning-solid: var(--orange-500);
-  --color-intent-caution-text: var(--yellow-500);
+  --color-intent-caution-text: var(--yellow-300);
   --color-intent-caution-surface: var(--yellow-a50);
-  --color-intent-caution-border: var(--yellow-700);
+  --color-intent-caution-border: var(--yellow-400);
   --color-intent-caution-solid: var(--yellow-500);
-  --color-intent-danger-text: var(--red-500);
+  --color-intent-danger-text: var(--red-200);
   --color-intent-danger-surface: var(--red-a50);
-  --color-intent-danger-border: var(--red-500);
-  --color-intent-danger-solid: var(--red-500);
-  --color-intent-discovery-text: var(--pink-300);
+  --color-intent-danger-border: var(--red-300);
+  --color-intent-danger-solid: var(--red-400);
+  --color-intent-discovery-text: var(--pink-200);
   --color-intent-discovery-surface: var(--pink-a50);
-  --color-intent-discovery-border: var(--pink-500);
-  --color-intent-discovery-solid: var(--pink-500);
+  --color-intent-discovery-border: var(--pink-300);
+  --color-intent-discovery-solid: var(--pink-400);
 
   /* ── Named elevations. The stroke is what actually separates surfaces;
      the blur only stops them looking pasted on. ────────────────────── */
@@ -712,6 +720,8 @@
   --color-border-subtle: var(--alpha-05);
   --color-border-default: var(--alpha-10);
   --color-border-emphasis: var(--alpha-15);
+  --color-border-control: var(--alpha-50);
+  --color-border-control-hover: var(--alpha-60);
   --color-border-focus: var(--pink-500);
 
   --color-intent-info-text: var(--blue-500);
@@ -720,16 +730,16 @@
   --color-intent-info-solid: var(--blue-500);
   --color-intent-success-text: var(--green-700);
   --color-intent-success-surface: var(--green-a25);
-  --color-intent-success-border: var(--green-500);
+  --color-intent-success-border: var(--green-600);
   --color-intent-success-solid: var(--green-500);
   --color-intent-warning-text: var(--orange-700);
   --color-intent-warning-surface: var(--orange-a25);
   --color-intent-warning-border: var(--orange-500);
   --color-intent-warning-solid: var(--orange-500);
-  --color-intent-caution-text: var(--yellow-700);
+  --color-intent-caution-text: var(--yellow-800);
   --color-intent-caution-surface: var(--yellow-a25);
-  --color-intent-caution-border: var(--yellow-700);
-  --color-intent-caution-solid: var(--yellow-500);
+  --color-intent-caution-border: var(--yellow-800);
+  --color-intent-caution-solid: var(--yellow-700);
   --color-intent-danger-text: var(--red-700);
   --color-intent-danger-surface: var(--red-a25);
   --color-intent-danger-border: var(--red-500);
