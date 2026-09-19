@@ -52,9 +52,11 @@ const emit = defineEmits<{
   'update:modelValue': [value: string]
   submit: [prompt: string]
   cancel: []
+  'drop-files': [files: File[]]
 }>()
 
 const draft = ref(props.modelValue)
+const dragActive = ref(false)
 
 watch(
   () => props.modelValue,
@@ -63,13 +65,40 @@ watch(
   },
 )
 
+/** A drag is only about files; dragging selected text is not a drop. */
+function dragCarriesFiles(event: DragEvent): boolean {
+  return Array.from(event.dataTransfer?.types ?? []).includes('Files')
+}
+
+function handleDragEnter(event: DragEvent): void {
+  if (!dragCarriesFiles(event)) return
+  dragActive.value = true
+}
+
+/**
+ * Dragging across a child fires `dragleave` for every ancestor it crosses.
+ * The drag has only left the composer once the pointer is outside it, so the
+ * state clears on the containment test rather than on the event alone.
+ */
+function handleDragLeave(event: DragEvent): void {
+  const next = event.relatedTarget
+  const current = event.currentTarget
+  if (next instanceof Node && current instanceof Node && current.contains(next)) return
+  dragActive.value = false
+}
+
+function handleDrop(event: DragEvent): void {
+  dragActive.value = false
+  emit('drop-files', Array.from(event.dataTransfer?.files ?? []))
+}
+
 /**
  * The composer's own state, named rather than derived from whichever control is
  * disabled. `dragging` outranks the lifecycle because a drop target that does
  * not say it is one is a drop target nobody uses.
  */
 const composerState = computed(() => {
-  if (props.dragActive) return 'dragging'
+  if (props.dragActive || dragActive.value) return 'dragging'
   if (props.lifecycle === 'submitting') return 'submitting'
   if (props.lifecycle === 'running') return 'running'
   if (props.lifecycle === 'cancelling') return 'cancelling'
@@ -137,6 +166,11 @@ function handleKeydown(event: KeyboardEvent): void {
     class="run-composer"
     data-run-composer
     :data-composer-state="composerState"
+    :data-composer-drag-active="props.dragActive || dragActive"
+    @dragenter.prevent="handleDragEnter"
+    @dragover.prevent
+    @dragleave="handleDragLeave"
+    @drop.prevent="handleDrop"
     @submit.prevent="submit"
   >
     <ComposerContextBar
@@ -211,6 +245,14 @@ function handleKeydown(event: KeyboardEvent): void {
   color: var(--color-text-secondary);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
+}
+
+/* The drop target has to look like one: a drag that leaves the composer
+   unchanged reads as a drag the composer did not notice. */
+.run-composer[data-composer-drag-active='true'] {
+  border-color: var(--color-accent);
+  border-style: dashed;
+  background: color-mix(in oklab, var(--color-accent) 6%, var(--color-bg-surface));
 }
 
 .run-composer__footer {
