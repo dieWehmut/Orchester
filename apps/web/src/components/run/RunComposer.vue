@@ -5,6 +5,7 @@ import type { ModelCatalogDto } from '@orchester/protokoll'
 import { computed, ref, watch } from 'vue'
 
 import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
+import ApprovalPresetControl, { type ApprovalPreset } from './ApprovalPresetControl.vue'
 import ComposerContextBar from './ComposerContextBar.vue'
 
 const props = withDefaults(
@@ -16,6 +17,8 @@ const props = withDefaults(
     lifecycle?: RunLifecycle | null
     /** Whether a file drag is hovering the composer right now. */
     dragActive?: boolean
+    /** The approval scope for the next run. */
+    approvalPreset?: ApprovalPreset
     maxLength?: number
     placeholder?: string
     submitLabel?: string
@@ -26,7 +29,6 @@ const props = withDefaults(
     workspaceName?: string | null
     modelCatalog?: ModelCatalogDto | null
     modelStatus?: ModelCatalogStoreStatus
-    approvalLabel?: string
   }>(),
   {
     modelValue: '',
@@ -34,6 +36,7 @@ const props = withDefaults(
     disabled: false,
     lifecycle: null,
     dragActive: false,
+    approvalPreset: 'ask',
     maxLength: 8000,
     placeholder: 'Describe the task',
     submitLabel: 'Run',
@@ -44,7 +47,6 @@ const props = withDefaults(
     workspaceName: null,
     modelCatalog: null,
     modelStatus: 'idle',
-    approvalLabel: 'Ask for approval',
   },
 )
 
@@ -53,6 +55,7 @@ const emit = defineEmits<{
   submit: [prompt: string]
   cancel: []
   'drop-files': [files: File[]]
+  'update:approvalPreset': [value: ApprovalPreset]
 }>()
 
 const draft = ref(props.modelValue)
@@ -167,6 +170,7 @@ function handleKeydown(event: KeyboardEvent): void {
     data-run-composer
     :data-composer-state="composerState"
     :data-composer-drag-active="props.dragActive || dragActive"
+    :data-composer-danger="props.approvalPreset === 'full-access'"
     @dragenter.prevent="handleDragEnter"
     @dragover.prevent
     @dragleave="handleDragLeave"
@@ -178,7 +182,6 @@ function handleKeydown(event: KeyboardEvent): void {
       :workspace-name="props.workspaceName"
       :model-catalog="props.modelCatalog"
       :model-status="props.modelStatus"
-      :approval-label="props.approvalLabel"
     />
     <label class="run-composer__label" for="run-prompt">{{ props.inputLabel }}</label>
     <AppTextarea
@@ -195,6 +198,10 @@ function handleKeydown(event: KeyboardEvent): void {
       <span class="run-composer__count" aria-live="polite">
         {{ draft.length }} / {{ props.maxLength }} {{ props.characterCountLabel }}
       </span>
+      <ApprovalPresetControl
+        :model-value="props.approvalPreset"
+        @update:model-value="emit('update:approvalPreset', $event)"
+      />
       <div class="run-composer__actions">
         <Spinner
           v-if="isBusy"
