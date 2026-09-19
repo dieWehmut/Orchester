@@ -82,6 +82,7 @@ const runBusy = computed(() =>
   run.lifecycle.value === 'running' ||
   run.lifecycle.value === 'cancelling',
 )
+const runLifecycle = computed(() => run.lifecycle.value)
 
 async function handleRunSubmit(prompt: string): Promise<void> {
   await run.submit(prompt)
@@ -157,6 +158,7 @@ function handleOpenSettings(): void {
       :projection-status="runProjectionStatus"
       :error-message="runErrorMessage"
       :busy="runBusy"
+      :lifecycle="runLifecycle"
       :conversation-started="conversationStarted"
         :workspace-name="workspaceName"
       :model-catalog="modelCatalog"

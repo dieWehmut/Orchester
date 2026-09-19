@@ -3,6 +3,7 @@ import { InlineAlert } from '@orchester/design'
 import type { RunView } from '@orchester/ereignis'
 import type { ModelCatalogDto } from '@orchester/protokoll'
 
+import type { RunLifecycle } from '../../stores/run'
 import ConnectionBanner, { type ConnectionBannerStatus } from './ConnectionBanner.vue'
 import EmptyWorkspace from './EmptyWorkspace.vue'
 import RunComposer from './RunComposer.vue'
@@ -16,6 +17,7 @@ const props = withDefaults(
     connectionStatus?: ConnectionBannerStatus
     projectionStatus?: 'idle' | 'ready' | 'gap' | 'error'
     busy?: boolean
+    lifecycle?: RunLifecycle | null
     conversationStarted?: boolean
     errorMessage?: string | null
     emptyTitle?: string
@@ -28,6 +30,7 @@ const props = withDefaults(
     connectionStatus: 'idle',
     projectionStatus: 'idle',
     busy: false,
+    lifecycle: null,
     conversationStarted: false,
     errorMessage: null,
     emptyTitle: 'New run',
@@ -65,6 +68,7 @@ const emit = defineEmits<{
     <RunFooter :view="props.view" />
     <RunComposer
       :busy="props.busy"
+      :lifecycle="props.lifecycle"
       :workspace-name="props.workspaceName"
       :model-catalog="props.modelCatalog"
       :model-status="props.modelStatus"

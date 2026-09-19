@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { AppButton, AppTextarea, Spinner } from '@orchester/design'
+import type { RunLifecycle } from '../../stores/run'
 import type { ModelCatalogDto } from '@orchester/protokoll'
 import { computed, ref, watch } from 'vue'
 
@@ -11,6 +12,10 @@ const props = withDefaults(
     modelValue?: string
     busy?: boolean
     disabled?: boolean
+    /** Where the run is in its lifecycle. `busy` is derived from it when given. */
+    lifecycle?: RunLifecycle | null
+    /** Whether a file drag is hovering the composer right now. */
+    dragActive?: boolean
     maxLength?: number
     placeholder?: string
     submitLabel?: string
@@ -27,6 +32,8 @@ const props = withDefaults(
     modelValue: '',
     busy: false,
     disabled: false,
+    lifecycle: null,
+    dragActive: false,
     maxLength: 8000,
     placeholder: 'Describe the task',
     submitLabel: 'Run',
@@ -56,11 +63,55 @@ watch(
   },
 )
 
+/**
+ * The composer's own state, named rather than derived from whichever control is
+ * disabled. `dragging` outranks the lifecycle because a drop target that does
+ * not say it is one is a drop target nobody uses.
+ */
+const composerState = computed(() => {
+  if (props.dragActive) return 'dragging'
+  if (props.lifecycle === 'submitting') return 'submitting'
+  if (props.lifecycle === 'running') return 'running'
+  if (props.lifecycle === 'cancelling') return 'cancelling'
+  return 'idle'
+})
+
+/**
+ * `busy` is the control-level truth (an input that must not accept a second
+ * prompt); the lifecycle names why. Deriving it here keeps the two from
+ * drifting: a caller that knows the lifecycle does not also have to remember
+ * to set `busy`.
+ */
+const isBusy = computed(
+  () =>
+    props.busy ||
+    props.lifecycle === 'submitting' ||
+    props.lifecycle === 'running' ||
+    props.lifecycle === 'cancelling',
+)
+
+/**
+ * Auto-grow between one and twelve rows, counting wrapped lines as well as
+ * explicit newlines. A fixed box either wastes space on a one-line prompt or
+ * scrolls a long one out of sight while the user is still writing it.
+ */
+const MIN_ROWS = 1
+const MAX_ROWS = 12
+
+const rowCount = computed(() => {
+  const explicit = draft.value.split('\n').length
+  // Long single lines wrap; 72 characters is the estimate the measure implies.
+  const wrapped = draft.value
+    .split('\n')
+    .reduce((total, line) => total + Math.max(1, Math.ceil(line.length / 72)), 0)
+  return Math.min(MAX_ROWS, Math.max(MIN_ROWS, Math.max(explicit, wrapped)))
+})
+
 const canSubmit = computed(
   () =>
     draft.value.trim().length > 0 &&
     draft.value.length <= props.maxLength &&
-    !props.busy &&
+    !isBusy.value &&
     !props.disabled,
 )
 
@@ -82,7 +133,12 @@ function handleKeydown(event: KeyboardEvent): void {
 </script>
 
 <template>
-  <form class="run-composer" data-run-composer @submit.prevent="submit">
+  <form
+    class="run-composer"
+    data-run-composer
+    :data-composer-state="composerState"
+    @submit.prevent="submit"
+  >
     <ComposerContextBar
       class="run-composer__commands"
       :workspace-name="props.workspaceName"
@@ -96,8 +152,8 @@ function handleKeydown(event: KeyboardEvent): void {
       :model-value="draft"
       :placeholder="props.placeholder"
       :max-length="props.maxLength"
-      :disabled="props.disabled || props.busy"
-      :rows="4"
+      :disabled="props.disabled || isBusy"
+      :rows="rowCount"
       @update:model-value="update"
       @keydown="handleKeydown"
     />
@@ -107,14 +163,14 @@ function handleKeydown(event: KeyboardEvent): void {
       </span>
       <div class="run-composer__actions">
         <Spinner
-          v-if="props.busy"
+          v-if="isBusy"
           data-run-activity
           class="run-composer__activity"
           :size="14"
           :label="props.activityLabel"
         />
         <AppButton
-          v-if="props.busy"
+          v-if="isBusy"
           type="button"
           variant="danger"
           data-composer-action="cancel"
