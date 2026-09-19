@@ -2,10 +2,12 @@
 import { InlineAlert } from '@orchester/design'
 import type { RunView } from '@orchester/ereignis'
 import type { ModelCatalogDto } from '@orchester/protokoll'
+import { computed } from 'vue'
 
 import type { RunLifecycle } from '../../stores/run'
 import ConnectionBanner, { type ConnectionBannerStatus } from './ConnectionBanner.vue'
 import EmptyWorkspace from './EmptyWorkspace.vue'
+import PlanStrip from './PlanStrip.vue'
 import RunComposer from './RunComposer.vue'
 import RunFooter from './RunFooter.vue'
 import RunTimeline from './RunTimeline.vue'
@@ -45,6 +47,12 @@ const emit = defineEmits<{
   submit: [prompt: string]
   cancel: []
 }>()
+
+/**
+ * A run waiting on the user is the one case the plan strip has to escalate:
+ * `awaiting_approval` means the next move is not the agent's to make.
+ */
+const planBlocked = computed(() => props.view.status === 'awaiting_approval')
 </script>
 
 <template>
@@ -66,6 +74,11 @@ const emit = defineEmits<{
       </div>
     </div>
     <RunFooter :view="props.view" />
+    <PlanStrip
+      :todos="props.view.todos"
+      :validation="props.view.validation"
+      :blocked="planBlocked"
+    />
     <RunComposer
       :busy="props.busy"
       :lifecycle="props.lifecycle"
