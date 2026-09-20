@@ -174,6 +174,26 @@ describe('type scales', () => {
     }
   })
 
+  it('orders every step of both scales by size, so a scale is a scale', () => {
+    // The plan asks for monotonicity: `lg` must be larger than `md`. A scale
+    // that is merely bound is not yet ordered, and an unordered scale renders
+    // headings that jump around between levels.
+    const size = (name: string): number => {
+      const match = root.match(new RegExp(`--font-${name}-size:\\s*([0-9.]+)rem`))
+      if (!match) throw new Error(`missing size for ${name}`)
+      return Number(match[1])
+    }
+    for (const scale of ['heading', 'text'] as const) {
+      const steps = scale === 'heading' ? HEADING : TEXT
+      const sizes = steps.map((step) => size(`${scale}-${step}`))
+      for (let i = 1; i < sizes.length; i += 1) {
+        expect(sizes[i], `${scale}-${steps[i]} > ${scale}-${steps[i - 1]}`).toBeGreaterThan(
+          sizes[i - 1]!,
+        )
+      }
+    }
+  })
+
   it('declares the tracking and weight primitives the scales reference', () => {
     for (const token of ['--tracking-tight', '--tracking-normal', '--tracking-wide']) {
       expect(root).toContain(token)
@@ -197,6 +217,15 @@ describe('shape scale', () => {
         new RegExp(`--radius-${step}:\\s*calc\\(var\\(--radius-${step}-base\\) \\* var\\(--corner-radius-scale\\)\\)`),
       )
     }
+  })
+
+  it('resolves the large radius the plan names', () => {
+    // The plan states the resolved value, not just the derivation: 0.625rem at
+    // a 1.25 multiplier is 0.78125rem. Asserting the derivation alone would
+    // pass if either number drifted.
+    const base = Number(root.match(/--radius-lg-base:\s*([0-9.]+)rem/)![1])
+    const scale = Number(root.match(/--corner-radius-scale:\s*([0-9.]+)/)![1])
+    expect(base * scale).toBeCloseTo(0.78125, 5)
   })
 
   it('gives Orchester the softer Codex corner', () => {
