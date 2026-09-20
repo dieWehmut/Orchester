@@ -74,6 +74,10 @@ const topFade = computed(() => fadeDecision(scrollState.value))
  */
 const unread = ref(0)
 
+/** The scroller's own measurements, handed to the timeline that virtualises. */
+const scrollTop = ref(0)
+const viewportHeight = ref(0)
+
 const unreadLabel = computed(() =>
   unread.value > 0
     ? t('transcript.unreadCount', { count: String(unread.value) })
@@ -83,6 +87,8 @@ const unreadLabel = computed(() =>
 function measure(): void {
   const element = stream.value
   if (!element) return
+  viewportHeight.value = element.clientHeight
+  scrollTop.value = element.scrollTop
   scrollState.value = readScrollState({
     scrollTop: element.scrollTop,
     scrollHeight: element.scrollHeight,
@@ -131,7 +137,12 @@ watch(
       :data-can-scroll-down="scrollState.canScrollDown"
       @scroll.passive="measure"
     >
-      <RunTimeline v-if="props.view.timeline.length > 0" :view="props.view" />
+      <RunTimeline
+        v-if="props.view.timeline.length > 0"
+        :view="props.view"
+        :scroll-top="scrollTop"
+        :viewport-height="viewportHeight"
+      />
       <EmptyWorkspace
         v-else-if="!props.conversationStarted"
         :title="props.emptyTitle"
