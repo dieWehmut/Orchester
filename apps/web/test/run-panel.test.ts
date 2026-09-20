@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
 import { createEmptyRunView } from '@orchester/ereignis'
@@ -138,6 +138,52 @@ describe('RunPanel', () => {
     // fits leaves them: at the bottom, with nothing to scroll to.
     expect(stream.attributes('data-can-scroll-up')).toBe('false')
     expect(stream.attributes('data-can-scroll-down')).toBe('false')
+    expect(wrapper.find('[data-scroll-to-bottom]').exists()).toBe(false)
+  })
+
+  it('announces output that arrives while the reader is reading back', async () => {
+    const view = createEmptyRunView()
+    const wrapper = mount(RunPanel, { props: { view } })
+    const stream = wrapper.get('[data-transcript-scroll]').element as HTMLElement
+
+    // Scroll the reader away from the bottom, then let a turn arrive. The jump
+    // writes scrollTop, so the stub has to accept the write.
+    Object.defineProperty(stream, 'scrollTop', { value: 100, writable: true, configurable: true })
+    Object.defineProperty(stream, 'scrollHeight', { value: 1200, writable: true, configurable: true })
+    Object.defineProperty(stream, 'clientHeight', { value: 400, writable: true, configurable: true })
+    await stream.dispatchEvent(new Event('scroll'))
+
+    await wrapper.setProps({
+      view: {
+        ...view,
+        timeline: [
+          {
+            type: 'message' as const,
+            key: 'message-1',
+            sequence: 1,
+            occurredAt: '2026-09-20T06:00:00Z',
+            turnId: null,
+            role: 'assistant' as const,
+            text: 'still working',
+            final: true,
+          },
+        ],
+      },
+    })
+    // The watcher defers a tick before deciding, so it measures the transcript
+    // the new turn actually produced.
+    await flushPromises()
+
+    // The run kept producing while they read, so the control says how much
+    // rather than pretending nothing happened.
+    expect(wrapper.get('[data-scroll-unread-dot]').text()).toContain('1')
+    expect(wrapper.get('[data-scroll-to-bottom]').attributes('data-scroll-unread')).toBe('true')
+
+    // Asking for the bottom is also how the reader marks it read; the count may
+    // not survive the jump or the control would nag forever. Landing at the
+    // bottom also retires the control itself, because there is nowhere to jump.
+    await wrapper.get('[data-scroll-to-bottom]').trigger('click')
+    expect(wrapper.find('[data-scroll-unread-dot]').exists()).toBe(false)
     expect(wrapper.find('[data-scroll-to-bottom]').exists()).toBe(false)
   })
 

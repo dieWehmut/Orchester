@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest"
 
-import { fadeDecision, readScrollState, stickDecision } from "../src/components/run/scroll-state"
+import {
+  fadeDecision,
+  readScrollState,
+  stickDecision,
+  unreadAfter,
+} from "../src/components/run/scroll-state"
 
 /**
  * The transcript sticks to the bottom only while the reader is already there.
@@ -54,6 +59,15 @@ describe("run transcript scroll state", () => {
 
   it("follows when the reader asks for the bottom from anywhere", () => {
     expect(stickDecision("reading-back", "jump-requested")).toBe("stick")
+  })
+
+  it("counts output that arrives while the reader is reading back", () => {
+    // The indicator is what tells a reader who has scrolled away that the run
+    // kept producing. Output that arrives while they are at the bottom is
+    // already read, so it never counts.
+    expect(unreadAfter(0, "hold")).toBe(1)
+    expect(unreadAfter(4, "hold")).toBe(5)
+    expect(unreadAfter(4, "stick")).toBe(0)
   })
 
   it("shows the top fade only once there is content above the reader", () => {
