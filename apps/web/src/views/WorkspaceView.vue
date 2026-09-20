@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { AgentDetails, agentActivityMessageKey } from '../features/agent-presence'
 import ChangeInspector from '../components/changes/ChangeInspector.vue'
+import ApprovalsQueue from '../components/changes/ApprovalsQueue.vue'
 import ReviewPanel from '../components/changes/ReviewPanel.vue'
 import { turnIndexByPath, withTurns } from '../components/changes/review-filters'
 import { summarizeFileChanges } from '../components/changes/change-summary'
@@ -30,7 +31,7 @@ import { routerKey } from 'vue-router'
 
 const { t } = useI18n()
 const appRouter = inject(routerKey, null)
-const { sessions, run, agents, bootstrap, models, review } = useAppStores()
+const { sessions, run, agents, bootstrap, models, review, approvals } = useAppStores()
 const runView = computed(() => run.view.value)
 const runEvents = computed(() => run.events.value)
 const changeSummaries = computed(() => summarizeFileChanges(runView.value.fileChanges))
@@ -244,6 +245,23 @@ function handleInspectorTabChange(tab: InspectorTab): void {
   activeInspectorTab.value = tab
 }
 
+/**
+ * A decision the reader took in the queue.
+ *
+ * The row version is what makes a stale entry detectable, so it is sent back
+ * with the decision rather than resolved here: the runtime owns the row and
+ * only it can say whether the version the reader saw is still current.
+ */
+function handleApprovalDecision(decision: {
+  approvalId: string
+  rowVersion: number
+  decision: 'approved' | 'denied'
+}): void {
+  const activeRunId = run.runId.value
+  if (activeRunId === null) return
+  void approvals.decide(activeRunId, decision)
+}
+
 function handleOpenSettings(): void {
   void appRouter?.push({ name: 'settings' })
 }
@@ -360,6 +378,13 @@ useShortcut(
       >
         <template #context>
           <AgentDetails :agent="selectedAgent" />
+        </template>
+        <template #approvals>
+          <ApprovalsQueue
+            :approvals="runView.approvals"
+            :superseded="approvals.superseded"
+            @decide="handleApprovalDecision"
+          />
         </template>
         <template #changes>
           <ReviewPanel

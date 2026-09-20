@@ -21,6 +21,8 @@ import { createAgentStatusSocket } from '../transport/agent-status-socket'
 import { useModelCatalogStore } from './model-catalog'
 import { createWorkspaceReviewApi } from '../api/workspace-review'
 import { useWorkspaceReviewStore } from './workspace-review'
+import { useApprovalsStore } from './approvals'
+import { createApprovalsApi } from '../api/approvals'
 
 export interface AppStores {
   http: HttpClient
@@ -31,6 +33,7 @@ export interface AppStores {
   agents: ReturnType<typeof useAgentFleetStore>
   models: ReturnType<typeof useModelCatalogStore>
   review: ReturnType<typeof useWorkspaceReviewStore>
+  approvals: ReturnType<typeof useApprovalsStore>
   pinia: Pinia
   getCsrfToken: () => string | null
   start: () => Promise<void>
@@ -71,6 +74,7 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
   const agents = useAgentFleetStore(pinia)
   const models = useModelCatalogStore(pinia)
   const review = useWorkspaceReviewStore(pinia)
+  const approvals = useApprovalsStore(pinia)
   const agentStatusStreamFactory =
     options.agentStatusStreamFactory === undefined
       ? createAgentStatusSocket
@@ -78,6 +82,7 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
   agents.configure(createAgentsApi(http), agentStatusStreamFactory ?? undefined)
   models.configure(createModelsApi(http))
   review.configure(createWorkspaceReviewApi(http))
+  approvals.configure(createApprovalsApi(http))
 
   const stores: AppStores = {
     http,
@@ -88,6 +93,7 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
     agents,
     models,
     review,
+    approvals,
     pinia,
     getCsrfToken: () => csrfToken,
     async start(): Promise<void> {
