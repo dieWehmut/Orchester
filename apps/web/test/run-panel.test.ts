@@ -140,4 +140,22 @@ describe('RunPanel', () => {
     expect(stream.attributes('data-can-scroll-down')).toBe('false')
     expect(wrapper.find('[data-scroll-to-bottom]').exists()).toBe(false)
   })
+
+  it('carries the top fade as state rather than as an always-on decoration', async () => {
+    const wrapper = mount(RunPanel, { props: { view: createEmptyRunView() } })
+    const stream = wrapper.get('[data-transcript-scroll]').element as HTMLElement
+    const fade = wrapper.get('[data-transcript-fade]')
+
+    // Nothing is above the reader on a transcript that fits, so the fade is
+    // hidden; the same element becomes visible once there is content above.
+    expect(fade.attributes('data-transcript-fade')).toBe('hidden')
+
+    // jsdom does not lay out, so the box the measurement reads is written by
+    // hand: the same element the reader scrolls, now scrolled away from its top.
+    Object.defineProperty(stream, 'scrollTop', { value: 200, configurable: true })
+    Object.defineProperty(stream, 'scrollHeight', { value: 1200, configurable: true })
+    Object.defineProperty(stream, 'clientHeight', { value: 400, configurable: true })
+    await stream.dispatchEvent(new Event('scroll'))
+    expect(fade.attributes('data-transcript-fade')).toBe('visible')
+  })
 })

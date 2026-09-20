@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { readScrollState, stickDecision } from "../src/components/run/scroll-state"
+import { fadeDecision, readScrollState, stickDecision } from "../src/components/run/scroll-state"
 
 /**
  * The transcript sticks to the bottom only while the reader is already there.
@@ -54,6 +54,16 @@ describe("run transcript scroll state", () => {
 
   it("follows when the reader asks for the bottom from anywhere", () => {
     expect(stickDecision("reading-back", "jump-requested")).toBe("stick")
+  })
+
+  it("shows the top fade only once there is content above the reader", () => {
+    // The fade under the header is the reader's only signal that the transcript
+    // continues upward, so it may not be drawn on a transcript that is already
+    // at its top. It rides the same flag the scroll contract already reports.
+    expect(fadeDecision({ canScrollUp: false, canScrollDown: true, atBottom: false })).toBe("hidden")
+    expect(fadeDecision({ canScrollUp: true, canScrollDown: true, atBottom: false })).toBe("visible")
+    expect(fadeDecision({ canScrollUp: true, canScrollDown: false, atBottom: true })).toBe("visible")
+    expect(fadeDecision({ canScrollUp: false, canScrollDown: false, atBottom: true })).toBe("hidden")
   })
 })
 
