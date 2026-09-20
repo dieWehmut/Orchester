@@ -25,7 +25,7 @@ const activeTab = computed<InspectorTab>({
 const tabs = computed<AppTabOption[]>(() => [
   { id: 'context', label: t('inspector.context') },
   { id: 'approvals', label: t('inspector.approvals') },
-  { id: 'changes', label: t('inspector.changes') },
+  { id: 'changes', label: t('inspector.review') },
 ])
 const panel = computed(() => ({
   context: {
@@ -37,8 +37,10 @@ const panel = computed(() => ({
     description: t('inspector.approvalsDescription'),
   },
   changes: {
-    title: t('inspector.changesTitle'),
-    description: t('inspector.changesDescription'),
+    // Section 4.7 names this tab Review: it is the working copy change set,
+    // not only the changes this run reported.
+    title: t('inspector.reviewTitle'),
+    description: t('inspector.reviewDescription'),
   },
 })[activeTab.value])
 

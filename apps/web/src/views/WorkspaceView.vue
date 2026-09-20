@@ -90,7 +90,7 @@ const shellTabs = computed<readonly ShellTab[]>(() => {
   const tabs: ShellTab[] = [{ id: 'run', kind: 'run', label: threadTitle.value }]
   tabs.push({ id: 'inspector', kind: 'agent', label: t('inspector.label') })
   if (changeSummaries.value.length > 0) {
-    tabs.push({ id: 'changes', kind: 'diff', label: t('inspector.changes') })
+    tabs.push({ id: 'changes', kind: 'diff', label: t('inspector.review') })
   }
   return tabs
 })
