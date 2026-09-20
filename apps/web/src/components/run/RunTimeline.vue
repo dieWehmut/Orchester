@@ -4,6 +4,7 @@ import { computed, nextTick, onMounted, ref, watch } from 'vue'
 
 import ReasoningDisclosure from './ReasoningDisclosure.vue'
 import ToolCallCard from './ToolCallCard.vue'
+import { arrivalState, streamingContainment, type ArrivalState } from './streaming-text'
 import { virtualWindow } from './virtual-window'
 
 const props = withDefaults(
@@ -40,6 +41,18 @@ const windowRange = computed(() =>
 const mounted = computed(() =>
   props.view.timeline.slice(windowRange.value.start, windowRange.value.end),
 )
+
+/**
+ * The arrival mark for a row. Only messages arrive word by word, so only they
+ * carry one; a tool card is settled the moment it is written.
+ */
+function rowArrival(item: TimelineItem): ArrivalState {
+  return item.type === 'message' ? arrivalState(item) : 'settled'
+}
+
+function rowStyle(item: TimelineItem): Record<string, string> {
+  return rowArrival(item) === 'streaming' ? { ...streamingContainment } : {}
+}
 
 function measure(): void {
   const element = list.value
@@ -122,6 +135,8 @@ function assertNever(value: never): never {
       :class="`run-timeline__item--${item.type}`"
       :data-item-type="item.type"
       :data-virtualized-turn="windowRange.start + index"
+      :data-arrival-state="rowArrival(item)"
+      :style="rowStyle(item)"
     >
       <template v-if="item.type === 'tool'">
         <span class="run-timeline__sequence">{{ item.sequence }}</span>
