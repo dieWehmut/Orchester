@@ -6,6 +6,7 @@ import {
   desktopWindow,
   type DesktopWindowController,
 } from '../../platform/desktop-window'
+import { useI18n } from '../../i18n'
 
 const props = withDefaults(
   defineProps<{
@@ -24,6 +25,8 @@ const props = withDefaults(
     closeLabel: 'Close window',
   },
 )
+
+const { t } = useI18n()
 
 const controller = props.controller ?? desktopWindow
 const platform = controller.platform ?? 'linux'
@@ -48,7 +51,7 @@ const { close, maximized, minimize, toggleMaximize } = useWindowChrome(controlle
       <span class="window-chrome__mark" aria-hidden="true">O</span>
       <span class="window-chrome__title">{{ title }}</span>
     </div>
-    <div v-if="platform !== 'macos'" class="window-chrome__controls" aria-label="Window controls">
+    <div v-if="platform !== 'macos'" class="window-chrome__controls" :aria-label="t('window.controls')">
       <button
         class="window-chrome__control"
         data-window-action="minimize"

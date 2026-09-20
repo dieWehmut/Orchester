@@ -299,8 +299,8 @@ function handleOpenSettings(): void {
 useShortcut(
   {
     id: 'inspector.toggle',
-    label: 'Toggle the inspector',
-    group: 'Layout',
+    labelKey: 'shortcuts.labels.inspectorToggle',
+    groupKey: 'shortcuts.groups.layout',
     keys: ['Mod', 'B'],
   },
   () => {
@@ -311,8 +311,8 @@ useShortcut(
 useShortcut(
   {
     id: 'settings.open',
-    label: 'Open settings',
-    group: 'Layout',
+    labelKey: 'shortcuts.labels.settingsOpen',
+    groupKey: 'shortcuts.groups.layout',
     keys: ['Mod', ','],
   },
   handleOpenSettings,
@@ -364,8 +364,8 @@ if (desktopWindowController?.enabled) {
   useShortcut(
     {
       id: 'window.close',
-      label: 'Close the active tab',
-      group: 'Layout',
+      labelKey: 'shortcuts.labels.windowClose',
+      groupKey: 'shortcuts.groups.layout',
       keys: ['Mod', 'W'],
     },
     handleWindowCloseChord,

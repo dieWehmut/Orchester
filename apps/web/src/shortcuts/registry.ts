@@ -10,20 +10,49 @@
 
 import type { Platform } from '@orchester/design'
 
+import type { MessageKey } from '../i18n'
+
 export type ShortcutKey = string
 
 export interface ShortcutDefinition {
   /** Stable identity, used for rebinding and reset. */
   readonly id: string
-  /** What the shortcut does, in the words the editor shows. */
-  readonly label: string
+  /**
+   * What the shortcut does, as a locale key rather than as words.
+   *
+   * The registry is shared vocabulary: the WebUI renders these in the reader's
+   * language, and a second client with no locale service can still read the
+   * identity it needs. Words stored here would be a third copy to translate.
+   */
+  readonly labelKey: MessageKey
   /** The part of the app it belongs to, for grouping in the editor. */
-  readonly group: string
+  readonly groupKey: MessageKey
   /** `Mod` is Cmd on macOS and Ctrl everywhere else. */
   readonly keys: readonly ShortcutKey[]
 }
 
 export type ShortcutRegistration = ShortcutDefinition
+
+/**
+ * The chord a rebinding asked for is already taken.
+ *
+ * A conflict is data rather than a sentence: the registry knows which binding
+ * kept the chord, and the surface that can translate is the one that renders
+ * the message. A string thrown from here could only be English.
+ */
+export class ShortcutConflictError extends Error {
+  readonly keys: readonly ShortcutKey[]
+  readonly otherId: string
+  readonly otherLabelKey: MessageKey
+
+  constructor(keys: readonly ShortcutKey[], otherId: string, otherLabelKey: MessageKey) {
+    super(`The shortcut ${keys.join('+')} is already bound to ${otherId}.`)
+    this.name = 'ShortcutConflictError'
+    this.keys = [...keys]
+    this.otherId = otherId
+    this.otherLabelKey = otherLabelKey
+  }
+}
 
 export interface ShortcutEvent {
   readonly key: string
@@ -47,38 +76,38 @@ export interface ShortcutEvent {
 export const DEFAULT_SHORTCUTS: readonly ShortcutDefinition[] = [
   {
     id: 'palette.open',
-    label: 'Open the command palette',
-    group: 'Composer',
+    labelKey: 'shortcuts.labels.paletteOpen',
+    groupKey: 'shortcuts.groups.composer',
     keys: ['Mod', 'K'],
   },
   {
     id: 'composer.focus',
-    label: 'Focus the composer',
-    group: 'Composer',
+    labelKey: 'shortcuts.labels.composerFocus',
+    groupKey: 'shortcuts.groups.composer',
     keys: ['Mod', 'L'],
   },
   {
     id: 'session.new',
-    label: 'Start a new session',
-    group: 'Sessions',
+    labelKey: 'shortcuts.labels.sessionNew',
+    groupKey: 'shortcuts.groups.sessions',
     keys: ['Mod', 'N'],
   },
   {
     id: 'inspector.toggle',
-    label: 'Toggle the inspector',
-    group: 'Layout',
+    labelKey: 'shortcuts.labels.inspectorToggle',
+    groupKey: 'shortcuts.groups.layout',
     keys: ['Mod', 'B'],
   },
   {
     id: 'settings.open',
-    label: 'Open settings',
-    group: 'Layout',
+    labelKey: 'shortcuts.labels.settingsOpen',
+    groupKey: 'shortcuts.groups.layout',
     keys: ['Mod', ','],
   },
   {
     id: 'window.close',
-    label: 'Close the active tab',
-    group: 'Layout',
+    labelKey: 'shortcuts.labels.windowClose',
+    groupKey: 'shortcuts.groups.layout',
     keys: ['Mod', 'W'],
   },
 ]
@@ -189,10 +218,10 @@ export function createShortcutRegistry(): ShortcutRegistry {
     return overrides.get(id) ?? registrations.get(id)?.keys ?? []
   }
 
-  function findConflict(id: string, keys: readonly ShortcutKey[]): string | undefined {
-    for (const otherId of registrations.keys()) {
-      if (otherId === id) continue
-      if (serialize(keysFor(otherId)) === serialize(keys)) return otherId
+  function findConflict(id: string, keys: readonly ShortcutKey[]): ShortcutDefinition | undefined {
+    for (const other of registrations.values()) {
+      if (other.id === id) continue
+      if (serialize(keysFor(other.id)) === serialize(keys)) return other
     }
     return undefined
   }
@@ -202,9 +231,7 @@ export function createShortcutRegistry(): ShortcutRegistry {
       const effective = overrides.get(shortcut.id) ?? shortcut.keys
       const conflict = findConflict(shortcut.id, effective)
       if (conflict !== undefined) {
-        throw new Error(
-          `The shortcut ${serialize(effective)} is already bound to ${conflict}.`,
-        )
+        throw new ShortcutConflictError(effective, conflict.id, conflict.labelKey)
       }
       registrations.set(shortcut.id, shortcut)
       notify()
@@ -227,9 +254,7 @@ export function createShortcutRegistry(): ShortcutRegistry {
       if (!registrations.has(id)) return
       const conflict = findConflict(id, keys)
       if (conflict !== undefined) {
-        throw new Error(
-          `The shortcut ${serialize(keys)} is already bound to ${conflict}.`,
-        )
+        throw new ShortcutConflictError(keys, conflict.id, conflict.labelKey)
       }
       overrides.set(id, [...keys])
       notify()

@@ -9,7 +9,8 @@ import ApprovalPresetControl, { type ApprovalPreset } from './ApprovalPresetCont
 import { readRunSettings, writeRunSettings, type RunSettings } from './run-settings'
 import ComposerContextBar from './ComposerContextBar.vue'
 import CommandPalette, { type CommandEntry } from './CommandPalette.vue'
-import { COMPOSER_COMMANDS } from './composer-commands'
+import { COMPOSER_COMMANDS, type ComposerCommand } from './composer-commands'
+import { useI18n } from '../../i18n'
 
 const props = withDefaults(
   defineProps<{
@@ -29,7 +30,7 @@ const props = withDefaults(
      */
     settingsKey?: string | null
     /** The `/` vocabulary available in this deployment. */
-    commands?: readonly CommandEntry[]
+    commands?: readonly ComposerCommand[]
     maxLength?: number
     placeholder?: string
     submitLabel?: string
@@ -51,17 +52,13 @@ const props = withDefaults(
     settingsKey: null,
     commands: () => COMPOSER_COMMANDS,
     maxLength: 8000,
-    placeholder: 'Describe the task',
-    submitLabel: 'Run',
-    cancelLabel: 'Stop',
-    activityLabel: 'Run in progress',
-    inputLabel: 'Task prompt',
-    characterCountLabel: 'characters',
     workspaceName: null,
     modelCatalog: null,
     modelStatus: 'idle',
   },
 )
+
+const { t } = useI18n()
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]
@@ -104,6 +101,18 @@ function updateApprovalPreset(value: ApprovalPreset): void {
 
 const draft = ref(props.modelValue)
 const dragActive = ref(false)
+/**
+ * The palette reads descriptions as text, so the keys become words here,
+ * where the locale service is in scope.
+ */
+const paletteCommands = computed<readonly CommandEntry[]>(() =>
+  props.commands.map((command) => ({
+    id: command.id,
+    name: command.name,
+    description: t(command.descriptionKey),
+  })),
+)
+
 const commandsClosed = ref(false)
 
 watch(
@@ -244,16 +253,16 @@ function handleKeydown(event: KeyboardEvent): void {
     />
     <CommandPalette
       :open="paletteOpen"
-      :commands="props.commands"
+      :commands="paletteCommands"
       :query="draft"
       @select="emit('run-command', $event)"
       @close="commandsClosed = true"
     />
-    <label class="run-composer__label" for="run-prompt">{{ props.inputLabel }}</label>
+    <label class="run-composer__label" for="run-prompt">{{ props.inputLabel ?? t('run.taskPrompt') }}</label>
     <AppTextarea
       id="run-prompt"
       :model-value="draft"
-      :placeholder="props.placeholder"
+      :placeholder="props.placeholder ?? t('run.describeTask')"
       :max-length="props.maxLength"
       :disabled="props.disabled || isBusy"
       :rows="rowCount"
@@ -262,7 +271,7 @@ function handleKeydown(event: KeyboardEvent): void {
     />
     <div class="run-composer__footer" data-composer-footer>
       <span class="run-composer__count" aria-live="polite">
-        {{ draft.length }} / {{ props.maxLength }} {{ props.characterCountLabel }}
+        {{ draft.length }} / {{ props.maxLength }} {{ props.characterCountLabel ?? t('run.characters') }}
       </span>
       <ApprovalPresetControl
         :model-value="approvalPreset"
@@ -274,17 +283,17 @@ function handleKeydown(event: KeyboardEvent): void {
           data-run-activity
           class="run-composer__activity"
           :size="14"
-          :label="props.activityLabel"
+          :label="props.activityLabel ?? t('run.runInProgress')"
         />
         <AppButton
           v-if="isBusy"
           type="button"
           variant="danger"
           data-composer-action="cancel"
-          :aria-label="props.cancelLabel"
+          :aria-label="props.cancelLabel ?? t('run.stop')"
           @click="emit('cancel')"
         >
-          {{ props.cancelLabel }}
+          {{ props.cancelLabel ?? t('run.stop') }}
         </AppButton>
         <AppButton
           v-else
@@ -292,9 +301,9 @@ function handleKeydown(event: KeyboardEvent): void {
           variant="primary"
           data-composer-action="submit"
           :disabled="!canSubmit"
-          :aria-label="props.submitLabel"
+          :aria-label="props.submitLabel ?? t('run.submit')"
         >
-          {{ props.submitLabel }}
+          {{ props.submitLabel ?? t('run.submit') }}
         </AppButton>
       </div>
     </div>

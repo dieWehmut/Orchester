@@ -11,6 +11,8 @@ import { AppButton, AppMenu, type AppMenuItem } from '@orchester/design'
 import { ShieldCheck } from '@lucide/vue'
 import { computed, ref } from 'vue'
 
+import { useI18n } from '../../i18n'
+
 export type ApprovalPreset = 'ask' | 'governed' | 'full-access'
 
 const props = withDefaults(
@@ -28,26 +30,19 @@ const props = withDefaults(
   }>(),
   {
     modelValue: 'ask',
-    label: 'Ask',
-    governLabel: 'Governed',
-    fullAccessLabel: 'Full access',
-    confirmTitle: 'Give the run full access?',
-    confirmDescription:
-      'Full access lets the agent change files and reach the network without stopping to ask. It applies to the next run.',
-    confirmAcceptLabel: 'Use full access',
-    confirmCancelLabel: 'Keep the current preset',
-    menuLabel: 'Approval preset',
   },
 )
+
+const { t } = useI18n()
 
 const emit = defineEmits<{
   'update:modelValue': [value: ApprovalPreset]
 }>()
 
 const PRESETS: readonly { id: ApprovalPreset; label: () => string }[] = [
-  { id: 'ask', label: () => props.label },
-  { id: 'governed', label: () => props.governLabel },
-  { id: 'full-access', label: () => props.fullAccessLabel },
+  { id: 'ask', label: () => props.label ?? t('run.ask') },
+  { id: 'governed', label: () => props.governLabel ?? t('run.governed') },
+  { id: 'full-access', label: () => props.fullAccessLabel ?? t('run.fullAccess') },
 ]
 
 const menuItems = computed<AppMenuItem[]>(() =>
@@ -89,7 +84,7 @@ function cancel(): void {
     :data-approval-preset-state="props.modelValue"
     :data-approval-preset-danger="isDanger"
   >
-    <AppMenu :label="`${menuLabel}: ${currentLabel}`" :items="menuItems" align="end" @select="choose">
+    <AppMenu :label="`${props.menuLabel ?? t('run.approvalPreset')}: ${currentLabel}`" :items="menuItems" align="end" @select="choose">
       <template #trigger>
         <span class="approval-preset__trigger" data-approval-preset-trigger>
           <ShieldCheck :size="15" aria-hidden="true" />
@@ -103,10 +98,10 @@ function cancel(): void {
       class="approval-preset__confirm"
       data-approval-preset-confirm
       role="alertdialog"
-      :aria-label="confirmTitle"
+      :aria-label="props.confirmTitle ?? t('run.fullAccessTitle')"
     >
-      <p class="approval-preset__confirm-title">{{ confirmTitle }}</p>
-      <p class="approval-preset__confirm-copy">{{ confirmDescription }}</p>
+      <p class="approval-preset__confirm-title">{{ props.confirmTitle ?? t('run.fullAccessTitle') }}</p>
+      <p class="approval-preset__confirm-copy">{{ props.confirmDescription ?? t('run.fullAccessDescription') }}</p>
       <div class="approval-preset__confirm-actions">
         <AppButton
           variant="ghost"
@@ -114,7 +109,7 @@ function cancel(): void {
           data-approval-preset-confirm="cancel"
           @click="cancel"
         >
-          {{ confirmCancelLabel }}
+          {{ props.confirmCancelLabel ?? t('run.fullAccessCancel') }}
         </AppButton>
         <AppButton
           variant="danger"
@@ -122,7 +117,7 @@ function cancel(): void {
           data-approval-preset-confirm="accept"
           @click="accept"
         >
-          {{ confirmAcceptLabel }}
+          {{ props.confirmAcceptLabel ?? t('run.fullAccessAccept') }}
         </AppButton>
       </div>
     </div>

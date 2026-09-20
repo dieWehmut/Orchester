@@ -28,6 +28,7 @@ const props = withDefaults(
     lifecycle?: RunLifecycle | null
     conversationStarted?: boolean
     errorMessage?: string | null
+    /** Overridden by the workspace, which greets with the project name. */
     emptyTitle?: string
     emptyDescription?: string
     workspaceName?: string | null
@@ -44,8 +45,6 @@ const props = withDefaults(
     lifecycle: null,
     conversationStarted: false,
     errorMessage: null,
-    emptyTitle: 'New run',
-    emptyDescription: 'Start a run to see events here.',
     workspaceName: null,
     modelCatalog: null,
     modelStatus: 'idle',
@@ -163,12 +162,12 @@ watch(
       />
       <EmptyWorkspace
         v-else-if="!props.conversationStarted"
-        :title="props.emptyTitle"
-        :description="props.emptyDescription"
+        :title="props.emptyTitle ?? t('run.newRun')"
+        :description="props.emptyDescription ?? t('run.newRunDescription')"
         data-run-empty
       />
       <div v-else class="run-panel__awaiting" data-run-awaiting-events role="status" aria-live="polite">
-        <span>{{ props.busy ? 'Starting run…' : 'Waiting for run events…' }}</span>
+        <span>{{ props.busy ? t('run.starting') : t('run.awaiting') }}</span>
       </div>
     </div>
     <div

@@ -11,6 +11,8 @@ import type { UiValidation } from '@orchester/protokoll'
 import { ListChecks, TriangleAlert } from '@lucide/vue'
 import { computed, ref } from 'vue'
 
+import { useI18n } from '../../i18n'
+
 export interface PlanTodo {
   text: string
   completed: boolean
@@ -29,10 +31,10 @@ const props = withDefaults(
     todos: () => [],
     validation: null,
     blocked: false,
-    expandLabel: 'Show the full plan',
-    collapseLabel: 'Hide the full plan',
   },
 )
+
+const { t } = useI18n()
 
 type PlanState = 'idle' | 'active' | 'blocked' | 'done'
 type SegmentState = 'done' | 'current' | 'pending'
@@ -82,7 +84,7 @@ function segmentState(index: number): SegmentState {
         {{ currentTodo.text }}
       </span>
       <span v-else class="plan-strip__current" data-plan-current-complete>
-        Plan complete
+        {{ t('run.planComplete') }}
       </span>
 
       <span
@@ -108,7 +110,7 @@ function segmentState(index: number): SegmentState {
         :aria-expanded="expanded"
         @click="expanded = !expanded"
       >
-        {{ expanded ? collapseLabel : expandLabel }}
+        {{ expanded ? props.collapseLabel ?? t('run.hidePlan') : props.expandLabel ?? t('run.showPlan') }}
       </button>
     </div>
 

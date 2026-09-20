@@ -101,7 +101,8 @@
       "change": "Change",
       "capture": "Press the new keys",
       "reset": "Reset all shortcuts",
-      "empty": "No shortcut matches that."
+      "empty": "No shortcut matches that.",
+      "conflict": "{keys} is already bound to {other}."
     },
     "language": {
       "title": "Language",
@@ -146,7 +147,10 @@
     },
     "search": {
       "placeholder": "Search settings",
-      "empty": "No settings match that search."
+      "empty": "No settings match that search.",
+      "shortcut": "Search shortcuts",
+      "change": "Change",
+      "capture": "Press the new keys"
     },
     "intensity": {
       "title": "Accent intensity",
@@ -255,7 +259,42 @@
       "turnComplete": "Turn complete",
       "validation": "Validation passed: {summary}",
       "validationFailed": "Validation failed: {summary}"
-    }
+    },
+    "ask": "Ask",
+    "governed": "Governed",
+    "fullAccess": "Full access",
+    "fullAccessTitle": "Give the run full access?",
+    "fullAccessDescription": "Full access lets the agent change files and reach the network without stopping to ask. It applies to the next run.",
+    "fullAccessAccept": "Use full access",
+    "fullAccessCancel": "Keep the current preset",
+    "approvalPreset": "Approval preset",
+    "connection": "Connection",
+    "sequence": "Sequence",
+    "usage": "Usage",
+    "runUsage": "Run usage",
+    "characters": "characters",
+    "chooseProject": "Choose project",
+    "starting": "Starting run…",
+    "awaiting": "Waiting for run events…",
+    "newRun": "New run",
+    "newRunDescription": "Start a run to see events here.",
+    "describeTask": "Describe the task",
+    "taskPrompt": "Task prompt",
+    "runInProgress": "Run in progress",
+    "modelUnavailable": "Model unavailable",
+    "planComplete": "Plan complete",
+    "showPlan": "Show the full plan",
+    "hidePlan": "Hide the full plan",
+    "reasoning": "Reasoning",
+    "showReasoning": "Show the reasoning",
+    "hideReasoning": "Hide the reasoning",
+    "showCallDetail": "Show the call detail",
+    "hideCallDetail": "Hide the call detail",
+    "noCommandMatch": "No command matches that.",
+    "loadingCommands": "Loading commands…",
+    "submit": "Run",
+    "stop": "Stop",
+    "settingsTitle": "Settings"
   },
   "transcript": {
     "emptyTitle": "New run",
@@ -275,7 +314,8 @@
     "cachedTokens": "Cached",
     "jumpToLatest": "Jump to the latest",
     "unread": "New output below",
-    "unreadCount": "{count} new events"
+    "unreadCount": "{count} new events",
+    "messageNavigation": "Message navigation"
   },
   "inspector": {
     "label": "Workspace inspector",
@@ -324,7 +364,18 @@
     "expires": "Expires",
     "nothingToDecide": "Nothing to decide",
     "nothingToDecideDescription": "Approvals requested by the active run will appear here.",
-    "queueLabel": "Pending approvals"
+    "queueLabel": "Pending approvals",
+    "diff": {
+      "preview": "Diff preview",
+      "empty": "No diff preview",
+      "emptyDescription": "A bounded text preview will appear when the runtime provides one.",
+      "refused": "Preview unavailable",
+      "refusedDescription": "Binary or control-heavy content is not rendered in the browser.",
+      "text": "Text preview",
+      "truncated": "Truncated text preview",
+      "showing": "Showing {lines} of {totalLines} lines and {bytes} of {totalBytes} bytes.",
+      "bytes": "{count} bytes"
+    }
   },
   "bottomPanel": {
     "label": "Bottom panel",
@@ -342,6 +393,41 @@
     "closeTitle": "Close Orchester?",
     "closeDescription": "A run is still working. Closing the window hides Orchester; the run keeps going until you quit from the tray.",
     "closeCancel": "Keep working",
-    "closeAccept": "Close window"
+    "closeAccept": "Close window",
+    "controls": "Window controls"
+  },
+  "layout": {
+    "workspacePanels": "Workspace panels",
+    "sessions": "Sessions",
+    "transcript": "Run transcript",
+    "inspector": "Inspector",
+    "resizeRail": "Resize the task rail",
+    "resizeInspector": "Resize the inspector"
+  },
+  "shortcuts": {
+    "groups": {
+      "composer": "Composer",
+      "sessions": "Sessions",
+      "layout": "Layout"
+    },
+    "labels": {
+      "paletteOpen": "Open the command palette",
+      "composerFocus": "Focus the composer",
+      "sessionNew": "Start a new session",
+      "inspectorToggle": "Toggle the inspector",
+      "settingsOpen": "Open settings",
+      "windowClose": "Close the active tab"
+    }
+  },
+  "commands": {
+    "agent": "choose a delegate",
+    "model": "choose a model or provider",
+    "theme": "preview the workspace theme",
+    "config": "inspect the resolved configuration",
+    "resume": "resume a recorded session",
+    "permissions": "inspect the approval policy",
+    "status": "inspect the runtime status",
+    "plugins": "manage the installed plugins",
+    "help": "show this list"
   }
 }

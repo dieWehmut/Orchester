@@ -2,7 +2,10 @@
 import type { RunView } from '@orchester/ereignis'
 import { computed, ref } from 'vue'
 
+import { useI18n } from '../../i18n'
 import { railMarks } from './message-rail'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   view: RunView
@@ -33,7 +36,7 @@ function choose(index: number): void {
     data-message-rail
     :data-scrubbing="String(scrubbing)"
     role="navigation"
-    aria-label="Message navigation"
+    :aria-label="t('transcript.messageNavigation')"
     @pointerdown="scrubbing = true"
     @pointerup="scrubbing = false"
     @pointerleave="scrubbing = false"

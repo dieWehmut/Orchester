@@ -101,7 +101,8 @@
       "change": "更改",
       "capture": "按下新的按键",
       "reset": "重置全部快捷键",
-      "empty": "没有匹配的快捷键。"
+      "empty": "没有匹配的快捷键。",
+      "conflict": "{keys} 已绑定到 {other}。"
     },
     "language": {
       "title": "语言",
@@ -146,7 +147,10 @@
     },
     "search": {
       "placeholder": "搜索设置",
-      "empty": "没有匹配的设置项。"
+      "empty": "没有匹配的设置项。",
+      "shortcut": "搜索快捷键",
+      "change": "更改",
+      "capture": "按下新的按键"
     },
     "intensity": {
       "title": "强调强度",
@@ -255,7 +259,42 @@
       "turnComplete": "回合完成",
       "validation": "验证通过：{summary}",
       "validationFailed": "验证失败：{summary}"
-    }
+    },
+    "ask": "询问",
+    "governed": "受控",
+    "fullAccess": "完全访问",
+    "fullAccessTitle": "给该运行完全访问权？",
+    "fullAccessDescription": "完全访问允许智能体直接修改文件并访问网络，不再询问。它对下一次运行生效。",
+    "fullAccessAccept": "使用完全访问",
+    "fullAccessCancel": "保持当前预设",
+    "approvalPreset": "审批预设",
+    "connection": "连接",
+    "sequence": "序列",
+    "usage": "用量",
+    "runUsage": "运行用量",
+    "characters": "字符",
+    "chooseProject": "选择项目",
+    "starting": "正在启动运行…",
+    "awaiting": "等待运行事件…",
+    "newRun": "新建运行",
+    "newRunDescription": "启动一次运行后，事件会在这里显示。",
+    "describeTask": "描述任务",
+    "taskPrompt": "任务提示词",
+    "runInProgress": "运行进行中",
+    "modelUnavailable": "模型不可用",
+    "planComplete": "计划已完成",
+    "showPlan": "展开完整计划",
+    "hidePlan": "收起完整计划",
+    "reasoning": "推理",
+    "showReasoning": "展开推理",
+    "hideReasoning": "收起推理",
+    "showCallDetail": "展开调用详情",
+    "hideCallDetail": "收起调用详情",
+    "noCommandMatch": "没有匹配的命令。",
+    "loadingCommands": "正在加载命令…",
+    "submit": "运行",
+    "stop": "停止",
+    "settingsTitle": "设置"
   },
   "transcript": {
     "emptyTitle": "新运行",
@@ -275,7 +314,8 @@
     "cachedTokens": "缓存",
     "jumpToLatest": "跳到最新",
     "unread": "下方有新输出",
-    "unreadCount": "{count} 条新事件"
+    "unreadCount": "{count} 条新事件",
+    "messageNavigation": "消息导航"
   },
   "inspector": {
     "label": "工作区检查器",
@@ -324,7 +364,18 @@
     "expires": "过期时间",
     "nothingToDecide": "没有待决定事项",
     "nothingToDecideDescription": "当前运行请求的审批会显示在这里。",
-    "queueLabel": "待处理审批"
+    "queueLabel": "待处理审批",
+    "diff": {
+      "preview": "差异预览",
+      "empty": "暂无差异预览",
+      "emptyDescription": "运行时提供内容后，这里会显示有限长度的文本预览。",
+      "refused": "无法预览",
+      "refusedDescription": "二进制或控制符密集的内容不在浏览器中渲染。",
+      "text": "文本预览",
+      "truncated": "已截断的文本预览",
+      "showing": "显示 {totalLines} 行中的 {lines} 行，以及 {totalBytes} 字节中的 {bytes} 字节。",
+      "bytes": "{count} 字节"
+    }
   },
   "bottomPanel": {
     "label": "底部面板",
@@ -342,6 +393,41 @@
     "closeTitle": "关闭 Orchester？",
     "closeDescription": "仍有任务正在运行。关闭窗口只会隐藏 Orchester，任务会继续运行，直到你从托盘退出。",
     "closeCancel": "继续工作",
-    "closeAccept": "关闭窗口"
+    "closeAccept": "关闭窗口",
+    "controls": "窗口控件"
+  },
+  "layout": {
+    "workspacePanels": "工作区面板",
+    "sessions": "会话",
+    "transcript": "运行记录",
+    "inspector": "检查器",
+    "resizeRail": "调整任务栏宽度",
+    "resizeInspector": "调整检查器宽度"
+  },
+  "shortcuts": {
+    "groups": {
+      "composer": "输入区",
+      "sessions": "会话",
+      "layout": "布局"
+    },
+    "labels": {
+      "paletteOpen": "打开命令面板",
+      "composerFocus": "聚焦输入区",
+      "sessionNew": "开始新会话",
+      "inspectorToggle": "切换检查器",
+      "settingsOpen": "打开设置",
+      "windowClose": "关闭当前标签页"
+    }
+  },
+  "commands": {
+    "agent": "选择委派对象",
+    "model": "选择模型或提供商",
+    "theme": "预览工作区主题",
+    "config": "查看已解析的配置",
+    "resume": "恢复已记录的会话",
+    "permissions": "查看审批策略",
+    "status": "查看运行时状态",
+    "plugins": "管理已安装的插件",
+    "help": "显示此列表"
   }
 }

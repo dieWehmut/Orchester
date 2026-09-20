@@ -12,9 +12,11 @@ import { AppButton, AppInput } from '@orchester/design'
 import type { Platform } from '@orchester/design'
 import { computed, onUnmounted, ref } from 'vue'
 
+import { useI18n } from '../../i18n'
 import {
   captureShortcut,
   formatShortcut,
+  ShortcutConflictError,
   type ShortcutEvent,
   type ShortcutRegistry,
 } from '../../shortcuts/registry'
@@ -29,6 +31,8 @@ const props = defineProps<{
   resetLabel?: string
   emptyLabel?: string
 }>()
+
+const { t } = useI18n()
 
 const query = ref('')
 const recording = ref<string | null>(null)
@@ -56,8 +60,8 @@ const rows = computed<readonly EditorRow[]>(() => {
   void revision.value
   return props.registry.list().map((shortcut) => ({
     id: shortcut.id,
-    label: shortcut.label,
-    group: shortcut.group,
+    label: t(shortcut.labelKey),
+    group: t(shortcut.groupKey),
     keys: props.registry.effectiveKeys(shortcut.id) ?? shortcut.keys,
   }))
 })
@@ -101,7 +105,16 @@ function onCaptureKeydown(id: string, event: KeyboardEvent): void {
     props.registry.rebind(id, captured)
   } catch (thrown) {
     // A chord that is already taken keeps its owner: the reader is told which
-    // one, rather than the app silently stealing a working shortcut.
+    // one, rather than the app silently stealing a working shortcut. The
+    // registry reports the clash as a structured conflict so the sentence can
+    // be written in the reader's language.
+    if (thrown instanceof ShortcutConflictError) {
+      error.value = t('settings.keybindings.conflict', {
+        keys: formatShortcut(thrown.keys, props.platform),
+        other: t(thrown.otherLabelKey),
+      })
+      return
+    }
     error.value = thrown instanceof Error ? thrown.message : String(thrown)
   }
   recording.value = null
@@ -121,17 +134,17 @@ function resetAll(): void {
         type="search"
         class="shortcut-editor__search"
         data-shortcut-search
-        :aria-label="props.searchLabel ?? 'Search shortcuts'"
-        :placeholder="props.searchPlaceholder ?? 'Search shortcuts'"
+        :aria-label="props.searchLabel ?? t('settings.keybindings.search')"
+        :placeholder="props.searchPlaceholder ?? t('settings.keybindings.search')"
       />
       <AppButton variant="secondary" size="sm" data-shortcut-reset @click="resetAll">
-        {{ props.resetLabel ?? 'Reset all' }}
+        {{ props.resetLabel ?? t('settings.keybindings.reset') }}
       </AppButton>
     </header>
 
     <p v-if="error" class="shortcut-editor__error" data-shortcut-error role="alert">{{ error }}</p>
     <p v-if="matches.length === 0" class="shortcut-editor__empty" data-shortcut-empty role="status">
-      {{ props.emptyLabel ?? 'No shortcut matches that.' }}
+      {{ props.emptyLabel ?? t('settings.keybindings.empty') }}
     </p>
 
     <div v-for="group in groups" :key="group.name" class="shortcut-editor__group" :data-shortcut-group="group.name">
@@ -152,7 +165,7 @@ function resetAll(): void {
             variant="ghost"
             size="sm"
             data-shortcut-record
-            :aria-label="`${props.recordLabel ?? 'Change'} ${row.label}`"
+            :aria-label="`${props.recordLabel ?? t('settings.keybindings.change')} ${row.label}`"
             @click="beginRecording(row.id)"
           >
             {{ props.recordLabel ?? 'Change' }}
@@ -163,8 +176,8 @@ function resetAll(): void {
             data-shortcut-capture
             type="text"
             readonly
-            :aria-label="props.captureLabel ?? 'Press the new shortcut'"
-            :placeholder="props.captureLabel ?? 'Press the new keys'"
+            :aria-label="props.captureLabel ?? t('settings.keybindings.capture')"
+            :placeholder="props.captureLabel ?? t('settings.keybindings.capture')"
             @keydown.prevent="onCaptureKeydown(row.id, $event)"
           />
         </li>

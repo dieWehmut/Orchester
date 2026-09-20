@@ -410,7 +410,7 @@ const previewAfter = computed(() => [
       </ul>
     </nav>
 
-    <main class="settings-view__panels" aria-label="Settings">
+    <main class="settings-view__panels" :aria-label="t('settings.title')">
       <section
         class="settings-view__panel"
         data-settings-section="general"

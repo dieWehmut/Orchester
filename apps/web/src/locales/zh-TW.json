@@ -100,8 +100,9 @@
       "search": "搜尋快速鍵",
       "change": "變更",
       "capture": "按下新的按鍵",
-      "reset": "重設全部快速鍵",
-      "empty": "沒有符合的快速鍵。"
+      "reset": "重設全部快捷鍵",
+      "empty": "沒有符合的快速鍵。",
+      "conflict": "{keys} 已綁定到 {other}。"
     },
     "language": {
       "title": "語言",
@@ -146,7 +147,10 @@
     },
     "search": {
       "placeholder": "搜尋設定",
-      "empty": "沒有符合的設定項目。"
+      "empty": "沒有符合的設定項目。",
+      "shortcut": "搜尋快捷鍵",
+      "change": "變更",
+      "capture": "按下新的按鍵"
     },
     "intensity": {
       "title": "強調強度",
@@ -255,7 +259,42 @@
       "turnComplete": "回合完成",
       "validation": "驗證通過：{summary}",
       "validationFailed": "驗證失敗：{summary}"
-    }
+    },
+    "ask": "詢問",
+    "governed": "受控",
+    "fullAccess": "完全存取",
+    "fullAccessTitle": "給該執行完全存取權？",
+    "fullAccessDescription": "完全存取允許智能代理直接修改檔案並存取網路，不再詢問。它對下一次執行生效。",
+    "fullAccessAccept": "使用完全存取",
+    "fullAccessCancel": "保持目前預設",
+    "approvalPreset": "審批預設",
+    "connection": "連線",
+    "sequence": "序列",
+    "usage": "用量",
+    "runUsage": "執行用量",
+    "characters": "字元",
+    "chooseProject": "選擇專案",
+    "starting": "正在啟動執行…",
+    "awaiting": "等待執行事件…",
+    "newRun": "新建執行",
+    "newRunDescription": "啟動一次執行後，事件會在這裡顯示。",
+    "describeTask": "描述任務",
+    "taskPrompt": "任務提示詞",
+    "runInProgress": "執行進行中",
+    "modelUnavailable": "模型不可用",
+    "planComplete": "計畫已完成",
+    "showPlan": "展開完整計畫",
+    "hidePlan": "收起完整計畫",
+    "reasoning": "推理",
+    "showReasoning": "展開推理",
+    "hideReasoning": "收起推理",
+    "showCallDetail": "展開呼叫詳情",
+    "hideCallDetail": "收起呼叫詳情",
+    "noCommandMatch": "沒有相符的指令。",
+    "loadingCommands": "正在載入指令…",
+    "submit": "執行",
+    "stop": "停止",
+    "settingsTitle": "設定"
   },
   "transcript": {
     "emptyTitle": "新增執行",
@@ -275,7 +314,8 @@
     "cachedTokens": "快取",
     "jumpToLatest": "跳到最新",
     "unread": "下方有新輸出",
-    "unreadCount": "{count} 則新事件"
+    "unreadCount": "{count} 則新事件",
+    "messageNavigation": "訊息導覽"
   },
   "inspector": {
     "label": "工作區檢查器",
@@ -324,7 +364,18 @@
     "expires": "過期時間",
     "nothingToDecide": "沒有待決定事項",
     "nothingToDecideDescription": "目前執行請求的審批會顯示在這裡。",
-    "queueLabel": "待處理審批"
+    "queueLabel": "待處理審批",
+    "diff": {
+      "preview": "差異預覽",
+      "empty": "暫無差異預覽",
+      "emptyDescription": "執行時提供內容後，這裡會顯示限長的文字預覽。",
+      "refused": "無法預覽",
+      "refusedDescription": "二進位或控制碼密集的內容不會在瀏覽器中渲染。",
+      "text": "文字預覽",
+      "truncated": "已截斷的文字預覽",
+      "showing": "顯示 {totalLines} 行中的 {lines} 行，以及 {totalBytes} 位元組中的 {bytes} 位元組。",
+      "bytes": "{count} 位元組"
+    }
   },
   "bottomPanel": {
     "label": "底部面板",
@@ -342,6 +393,41 @@
     "closeTitle": "關閉 Orchester？",
     "closeDescription": "仍有任務正在執行。關閉視窗只會隱藏 Orchester，任務會繼續執行，直到你從托盤結束。",
     "closeCancel": "繼續工作",
-    "closeAccept": "關閉視窗"
+    "closeAccept": "關閉視窗",
+    "controls": "視窗控件"
+  },
+  "layout": {
+    "workspacePanels": "工作區面板",
+    "sessions": "會話",
+    "transcript": "執行記錄",
+    "inspector": "檢查器",
+    "resizeRail": "調整任務欄寬度",
+    "resizeInspector": "調整檢查器寬度"
+  },
+  "shortcuts": {
+    "groups": {
+      "composer": "輸入區",
+      "sessions": "會話",
+      "layout": "布局"
+    },
+    "labels": {
+      "paletteOpen": "開啟指令面板",
+      "composerFocus": "聚焦輸入區",
+      "sessionNew": "開始新會話",
+      "inspectorToggle": "切換檢查器",
+      "settingsOpen": "開啟設定",
+      "windowClose": "關閉目前分頁"
+    }
+  },
+  "commands": {
+    "agent": "選擇委派對象",
+    "model": "選擇模型或提供者",
+    "theme": "預覽工作區主題",
+    "config": "檢視已解析的設定",
+    "resume": "恢復已記錄的會話",
+    "permissions": "檢視審批策略",
+    "status": "檢視執行時狀態",
+    "plugins": "管理已安裝的外掛",
+    "help": "顯示此清單"
   }
 }

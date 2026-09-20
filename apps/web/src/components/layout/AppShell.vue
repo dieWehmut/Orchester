@@ -19,6 +19,8 @@ import { AppButton, AppDrawer } from '@orchester/design'
 import type { RailAppearance } from '@orchester/design'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 
+import { useI18n } from '../../i18n'
+
 import {
   INSPECTOR_MAX_WIDTH,
   INSPECTOR_MIN_WIDTH,
@@ -32,6 +34,8 @@ import {
   readShellWidths,
   writeShellWidths,
 } from './shell-widths'
+
+const { t } = useI18n()
 
 const props = withDefaults(
   defineProps<{
@@ -49,13 +53,10 @@ const props = withDefaults(
     inspectorResizeLabel?: string
   }>(),
   {
-    controlsLabel: 'Workspace panels',
     inspectorOpen: true,
     railAppearance: 'solid',
     inspectorFullWidth: false,
     inspectorTab: 'context',
-    railResizeLabel: 'Resize the task rail',
-    inspectorResizeLabel: 'Resize the inspector',
   },
 )
 
@@ -150,7 +151,7 @@ onBeforeUnmount(endDrag)
     <nav
       class="app-shell__mobile-controls"
       data-mobile-controls
-      :aria-label="props.controlsLabel"
+      :aria-label="props.controlsLabel ?? t('layout.workspacePanels')"
     >
       <AppButton
         variant="ghost"
@@ -180,7 +181,7 @@ onBeforeUnmount(endDrag)
         :data-rail-appearance="props.railAppearance"
         :data-rail-width="railWidth"
         :style="{ '--rail-width': railWidth + 'px' }"
-        aria-label="Sessions"
+        :aria-label="t('layout.sessions')"
       >
         <slot name="sessions" />
         <span
@@ -189,7 +190,7 @@ onBeforeUnmount(endDrag)
           role="separator"
           tabindex="0"
           aria-orientation="vertical"
-          :aria-label="props.railResizeLabel"
+          :aria-label="props.railResizeLabel ?? t('layout.resizeRail')"
           :aria-valuenow="railWidth"
           :aria-valuemin="RAIL_MIN_WIDTH"
           :aria-valuemax="RAIL_MAX_WIDTH"
@@ -204,7 +205,7 @@ onBeforeUnmount(endDrag)
         class="app-shell__transcript"
         data-pane="transcript"
         data-transcript
-        aria-label="Run transcript"
+        :aria-label="t('layout.transcript')"
       >
         <slot />
       </main>
@@ -218,7 +219,7 @@ onBeforeUnmount(endDrag)
         :data-inspector-width="inspectorWidth"
         :style="{ '--inspector-width': inspectorWidth + 'px' }"
         :hidden="!props.inspectorOpen"
-        aria-label="Inspector"
+        :aria-label="t('layout.inspector')"
       >
         <span
           class="app-shell__resize"
@@ -226,7 +227,7 @@ onBeforeUnmount(endDrag)
           role="separator"
           tabindex="0"
           aria-orientation="vertical"
-          :aria-label="props.inspectorResizeLabel"
+          :aria-label="props.inspectorResizeLabel ?? t('layout.resizeInspector')"
           :aria-valuenow="inspectorWidth"
           :aria-valuemin="INSPECTOR_MIN_WIDTH"
           :aria-valuemax="INSPECTOR_MAX_WIDTH"
