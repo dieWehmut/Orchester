@@ -54,12 +54,12 @@ wave, which lands with an updated snapshot.
 
 ## Wave U4 — composer and plan strip
 
-- [ ] U4-01: Restructure the composer into top tray / input / footer with `data-composer-state`.
-- [ ] U4-02: Add the approval-preset footer dropdown with the three presets and the risky-combination dialog.
-- [ ] U4-03: Make model/effort/preset run-scoped rather than global.
-- [ ] U4-04: Add drag-and-drop file affordance (`data-composer-drag-active`).
-- [ ] U4-05: Add the `/` command palette with explicit empty and loading states.
-- [ ] U4-06: Add the plan strip with segmented progress and the blocked/needs-input treatment.
+- [x] U4-01: Restructure the composer into top tray / input / footer with `data-composer-state`.
+- [x] U4-02: Add the approval-preset footer dropdown with the three presets and the risky-combination dialog.
+- [x] U4-03: Make model/effort/preset run-scoped rather than global.
+- [x] U4-04: Add drag-and-drop file affordance (`data-composer-drag-active`).
+- [x] U4-05: Add the `/` command palette with explicit empty and loading states.
+- [x] U4-06: Add the plan strip with segmented progress and the blocked/needs-input treatment.
 
 ## Wave U5 — inspector
 
