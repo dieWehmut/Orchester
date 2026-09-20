@@ -8,7 +8,8 @@
     ".": "./src/index.ts",
     "./appearance-script": "./src/appearance-script.ts",
     "./index.css": "./src/index.css",
-    "./tokens.css": "./src/tokens.css"
+    "./tokens.css": "./src/tokens.css",
+    "./storage": "./src/storage.ts"
   },
   "scripts": {
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
