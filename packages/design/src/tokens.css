@@ -472,6 +472,16 @@
   --window-chrome-height: 38px;
   --titlebar-hit-target: 32px;
 
+  /* The face of each colour scheme, for the one control that has to show a
+     scheme the reader is not currently in: a swatch painted with the active
+     scheme's --color-accent would show the colour they already have. Each is
+     the scheme's dark accent, because the swatch sits on a dark rail as often
+     as on a light one and the light accents are the same hue, muddied. */
+  --scheme-codex-face: var(--blue-300);
+  --scheme-violet-face: var(--purple-300);
+  --scheme-teal-face: #4fbfad;
+  --scheme-rose-face: var(--pink-300);
+
   /* The smallest a control may be to be worth aiming at, in either axis.
      Section 7 sets the floor and gives compact density the larger one, because
      compact tightens the visuals and the target is what has to stay reachable. */
