@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { FileWarning, ScissorsLineDashed } from '@lucide/vue'
-import { AppBadge, EmptyState, InlineAlert } from '@orchester/design'
-import { computed } from 'vue'
+import { FileWarning, ScissorsLineDashed, WrapText } from '@lucide/vue'
+import { AppBadge, EmptyState, IconButton, InlineAlert } from '@orchester/design'
+import { computed, ref } from 'vue'
 
+import { useI18n } from '../../i18n'
+import { readDiffWrap, writeDiffWrap } from './diff-wrap'
 import { prepareDiffText } from './safe-diff'
 
 const props = withDefaults(
@@ -19,6 +21,20 @@ const prepared = computed(() =>
     ? { status: 'empty' as const }
     : prepareDiffText(props.text, { maxBytes: props.maxBytes, maxLines: props.maxLines }),
 )
+
+const { t } = useI18n()
+
+/**
+ * Section 4.7's line-wrap toggle. The choice is the reader's and is remembered,
+ * because re-deciding it for every diff in a long change set is the friction the
+ * toggle exists to remove.
+ */
+const wrapped = ref(readDiffWrap())
+
+function toggleWrap(): void {
+  wrapped.value = !wrapped.value
+  writeDiffWrap(wrapped.value)
+}
 </script>
 
 <template>
@@ -50,9 +66,19 @@ const prepared = computed(() =>
           <FileWarning v-else :size="15" aria-hidden="true" />
           {{ prepared.status === 'truncated' ? 'Truncated text preview' : 'Text preview' }}
         </span>
-        <AppBadge :tone="prepared.status === 'truncated' ? 'warning' : 'neutral'" mono>
-          {{ prepared.byteCount }} bytes
-        </AppBadge>
+        <span class="safe-diff-preview__actions">
+          <AppBadge :tone="prepared.status === 'truncated' ? 'warning' : 'neutral'" mono>
+            {{ prepared.byteCount }} bytes
+          </AppBadge>
+          <IconButton
+            :label="t('inspector.wrapLines')"
+            :active="wrapped"
+            :data-diff-wrap-toggle="true"
+            @click="toggleWrap"
+          >
+            <WrapText :size="15" :stroke-width="1.8" />
+          </IconButton>
+        </span>
       </header>
 
       <p
@@ -64,7 +90,13 @@ const prepared = computed(() =>
         {{ prepared.byteCount }} of {{ prepared.originalByteCount }} bytes.
       </p>
 
-      <pre class="safe-diff-preview__text" data-diff-text>{{ prepared.text }}</pre>
+      <pre
+        class="safe-diff-preview__text"
+        :class="{ 'safe-diff-preview__text--wrapped': wrapped }"
+        data-diff-text
+        :data-diff-wrap="wrapped ? 'on' : 'off'"
+        v-text="prepared.text"
+      />
     </template>
   </section>
 </template>
@@ -117,5 +149,16 @@ const prepared = computed(() =>
   line-height: 1.6;
   tab-size: 2;
   white-space: pre;
+}
+
+.safe-diff-preview__text--wrapped {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.safe-diff-preview__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 </style>
