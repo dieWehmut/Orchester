@@ -44,8 +44,8 @@ wave, which lands with an updated snapshot.
 
 ## Wave U3 — transcript
 
-- [ ] U3-01: Add explicit scroll state (`data-can-scroll-up/down`) and the top fade.
-- [ ] U3-02: Add the scroll-to-bottom button with its unread indicator.
+- [x] U3-01: Add explicit scroll state (`data-can-scroll-up/down`) and the top fade.
+- [x] U3-02: Add the scroll-to-bottom button with its unread indicator.
 - [ ] U3-03: Virtualise turns.
 - [ ] U3-04: Add the floating message navigation rail with scrubbing.
 - [ ] U3-05: Restyle tool-invocation cards by `call_id`, with collapsed summary and expandable body.
