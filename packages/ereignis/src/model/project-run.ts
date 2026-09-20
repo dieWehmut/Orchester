@@ -1,4 +1,5 @@
 import type {
+  ApprovalId,
   RunId,
   RunSnapshotDto,
   UiEventEnvelope,
@@ -129,7 +130,10 @@ function projectEventCollection(
     options.headSequence,
   )
   const empty = createEmptyRunView(runId)
-  const projected = projectLifecycle(empty, appliedEvents)
+  const projected = projectApprovals(
+    projectLifecycle(empty, appliedEvents),
+    appliedEvents,
+  )
   return withSequenceState(projected, latestSequence, bufferedSequences, gaps)
 }
 
@@ -184,6 +188,83 @@ function projectLifecycle(
   }
 
   return { ...view, title, status, stop, fileChanges }
+}
+
+/**
+ * The approval queue's data, task E1-012.
+ *
+ * A request opens an entry and a resolution closes the same one, keyed by
+ * approval id, so the queue shows one row per approval rather than a request
+ * the reader has to correlate with a decision of their own. A resolution that
+ * arrives without a request still projects: the runtime knows about an
+ * approval this bounded event window never showed, and hiding it would leave
+ * the queue claiming there is nothing to decide.
+ */
+function projectApprovals(
+  view: RunView,
+  events: readonly UiEventEnvelope[],
+): RunView {
+  if (events.length === 0) return view
+
+  const approvals = [...view.approvals]
+  const indexByApproval = new Map<string, number>()
+
+  /** The entry's place in the queue, opening a pending one when it is new. */
+  const indexOf = (approvalId: ApprovalId): number => {
+    const existing = indexByApproval.get(approvalId)
+    if (existing !== undefined) return existing
+    const index = approvals.length
+    indexByApproval.set(approvalId, index)
+    approvals.push({
+      key: `approval:${approvalId}`,
+      approvalId,
+      runId: view.runId ?? events[0]!.run_id,
+      rowVersion: 0,
+      risk: '',
+      action: '',
+      reason: '',
+      expiresAt: null,
+      state: 'pending',
+      requestedSequence: null,
+      resolvedSequence: null,
+    })
+    return index
+  }
+
+  for (const event of events) {
+    switch (event.kind.type) {
+      case 'approval_requested': {
+        const request = event.kind.approval
+        const index = indexOf(request.approval_id)
+        approvals[index] = {
+          ...approvals[index]!,
+          runId: request.run_id,
+          rowVersion: request.row_version,
+          risk: request.risk,
+          action: request.action,
+          reason: request.reason,
+          expiresAt: request.expires_at ?? null,
+          state: 'pending',
+          requestedSequence: event.sequence,
+        }
+        break
+      }
+      case 'approval_resolved': {
+        const resolution = event.kind.resolution
+        const index = indexOf(resolution.approval_id)
+        approvals[index] = {
+          ...approvals[index]!,
+          rowVersion: resolution.row_version,
+          state: resolution.decision,
+          resolvedSequence: event.sequence,
+        }
+        break
+      }
+      default:
+        break
+    }
+  }
+  return { ...view, approvals }
 }
 
 function toRunStop(event: UiEventEnvelope): RunStopView {
