@@ -21,6 +21,10 @@
   --desktop-titlebar-height: var(--window-chrome-height, 38px);
 }
 
+:root[data-orchester-os='windows'] .app-shell--desktop {
+  --desktop-titlebar-height: 32px;
+}
+
 /* The routed view declares the main landmark, so the outlet that holds it
    only has to claim the vertical space under the chrome. */
 .app-shell__outlet {

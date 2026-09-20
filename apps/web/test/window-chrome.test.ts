@@ -44,6 +44,26 @@ function fakeController(options: { rejectActions?: boolean } = {}): DesktopWindo
 }
 
 describe('WindowChrome', () => {
+  it('leaves drag-region double clicks to Tauri so the window is not toggled twice', async () => {
+    const controller = fakeController()
+    const wrapper = mount(WindowChrome, { props: { controller } })
+    await wrapper.get('[data-tauri-drag-region]').trigger('dblclick')
+    expect(controller.calls).toEqual([])
+    wrapper.unmount()
+  })
+
+  it('places Windows captions after the drag region in native button order', () => {
+    const controller = Object.assign(fakeController(), { platform: 'windows' as const })
+    const wrapper = mount(WindowChrome, { props: { controller } })
+
+    expect(wrapper.attributes('data-window-platform')).toBe('windows')
+    expect(wrapper.findAll('[data-window-action]').map((button) => button.attributes('data-window-action')))
+      .toEqual(['minimize', 'maximize', 'close'])
+    expect(wrapper.get('[data-window-action="maximize"]').attributes('data-native-snap-target')).toBe('true')
+    expect(wrapper.get('[data-window-action="maximize"]').element.closest('[data-tauri-drag-region]')).toBeNull()
+    wrapper.unmount()
+  })
+
   it('reserves the macOS native traffic lights without drawing duplicate controls', () => {
     const controller = Object.assign(fakeController(), { platform: 'macos' as const })
     const wrapper = mount(WindowChrome, { props: { controller } })
@@ -70,7 +90,7 @@ describe('WindowChrome', () => {
     expect(wrapper.get('[data-tauri-drag-region]').attributes('aria-label')).toBe('Orchester')
     expect(
       wrapper.findAll('[data-window-action]').map((control) => control.attributes('data-window-action')),
-    ).toEqual(['close', 'minimize', 'maximize'])
+    ).toEqual(['minimize', 'maximize', 'close'])
     expect(wrapper.get('[data-window-action="minimize"]').attributes('aria-label')).toBe(
       'Minimize window',
     )

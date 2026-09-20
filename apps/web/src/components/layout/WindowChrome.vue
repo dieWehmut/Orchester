@@ -36,20 +36,18 @@ const { close, maximized, minimize, toggleMaximize } = useWindowChrome(controlle
     class="window-chrome"
     data-window-chrome
     :data-window-platform="platform"
-    @dblclick.self="toggleMaximize"
   >
     <div v-if="platform === 'macos'" class="window-chrome__traffic-lights" data-native-traffic-lights aria-hidden="true" />
-    <div v-else class="window-chrome__controls" aria-label="Window controls">
-      <button
-        class="window-chrome__control window-chrome__control--close"
-        data-window-action="close"
-        type="button"
-        :aria-label="closeLabel"
-        :title="closeLabel"
-        @click="close"
-      >
-        <X :size="15" :stroke-width="1.8" aria-hidden="true" />
-      </button>
+    <div
+      class="window-chrome__drag-region"
+      data-tauri-drag-region="deep"
+      :aria-label="title"
+      :title="title"
+    >
+      <span class="window-chrome__mark" aria-hidden="true">O</span>
+      <span class="window-chrome__title">{{ title }}</span>
+    </div>
+    <div v-if="platform !== 'macos'" class="window-chrome__controls" aria-label="Window controls">
       <button
         class="window-chrome__control"
         data-window-action="minimize"
@@ -63,6 +61,7 @@ const { close, maximized, minimize, toggleMaximize } = useWindowChrome(controlle
       <button
         class="window-chrome__control"
         data-window-action="maximize"
+        :data-native-snap-target="platform === 'windows' ? 'true' : undefined"
         type="button"
         :aria-label="maximized ? restoreLabel : maximizeLabel"
         :title="maximized ? restoreLabel : maximizeLabel"
@@ -71,18 +70,17 @@ const { close, maximized, minimize, toggleMaximize } = useWindowChrome(controlle
         <Square v-if="!maximized" :size="13" :stroke-width="1.8" aria-hidden="true" />
         <Maximize2 v-else :size="14" :stroke-width="1.8" aria-hidden="true" />
       </button>
+      <button
+        class="window-chrome__control window-chrome__control--close"
+        data-window-action="close"
+        type="button"
+        :aria-label="closeLabel"
+        :title="closeLabel"
+        @click="close"
+      >
+        <X :size="15" :stroke-width="1.8" aria-hidden="true" />
+      </button>
     </div>
-    <button
-      class="window-chrome__drag-region"
-      data-tauri-drag-region
-      type="button"
-      :aria-label="title"
-      :title="title"
-      @dblclick="toggleMaximize"
-    >
-      <span class="window-chrome__mark" aria-hidden="true">O</span>
-      <span class="window-chrome__title">{{ title }}</span>
-    </button>
   </div>
 </template>
 
@@ -104,6 +102,10 @@ const { close, maximized, minimize, toggleMaximize } = useWindowChrome(controlle
 
 .window-chrome__traffic-lights {
   flex: 0 0 80px;
+}
+
+.window-chrome[data-window-platform='windows'] {
+  block-size: 32px;
 }
 
 .window-chrome__drag-region {
@@ -144,60 +146,33 @@ const { close, maximized, minimize, toggleMaximize } = useWindowChrome(controlle
 
 .window-chrome__controls {
   display: flex;
-  align-items: stretch;
-  gap: 2px;
-  padding-inline: 10px 6px;
+  flex: 0 0 auto;
+  align-items: start;
 }
 
 .window-chrome__control {
   position: relative;
   display: grid;
-  min-inline-size: var(--titlebar-hit-target, 32px);
-  block-size: var(--desktop-titlebar-height, 36px);
+  inline-size: 46px;
+  min-inline-size: 46px;
+  block-size: 32px;
+  min-block-size: 32px;
+  padding: 0;
   place-items: center;
   border: 0;
+  border-radius: 0;
   background: transparent;
   color: var(--color-text-secondary);
-  cursor: pointer;
-}
-
-.window-chrome__control::before {
-  content: '';
-  position: absolute;
-  inline-size: 12px;
-  block-size: 12px;
-  border-radius: var(--radius-full);
-  background: currentColor;
-}
-
-.window-chrome__control :deep(svg) {
-  position: relative;
-  z-index: 1;
-  inline-size: 9px;
-  block-size: 9px;
-  color: #302f2d;
-  opacity: 0;
+  cursor: default;
 }
 
 .window-chrome__control:hover {
-  background: transparent;
-  filter: brightness(1.08);
+  background: var(--color-bg-element);
 }
 
-.window-chrome__controls:hover .window-chrome__control :deep(svg) {
-  opacity: 0.82;
-}
-
-.window-chrome__control--close {
-  color: #f06a63;
-}
-
-.window-chrome__control[data-window-action='minimize'] {
-  color: #e3b341;
-}
-
-.window-chrome__control[data-window-action='maximize'] {
-  color: #58c56e;
+.window-chrome__control--close:hover {
+  background: var(--color-intent-danger-solid);
+  color: var(--color-text-inverse);
 }
 
 @media (max-width: 640px) {
@@ -205,8 +180,5 @@ const { close, maximized, minimize, toggleMaximize } = useWindowChrome(controlle
     display: none;
   }
 
-  .window-chrome__control {
-    min-inline-size: var(--titlebar-hit-target, 32px);
-  }
 }
 </style>

@@ -14,6 +14,17 @@ use tauri::{
 
 const MAIN_WINDOW: &str = "main";
 
+/// Called after the main webview exists; also reusable by the embedded-runtime shell.
+pub fn setup_native_chrome(app: &App) -> Result<(), Box<dyn std::error::Error>> {
+    #[cfg(windows)]
+    if let Some(window) = app.get_webview_window(MAIN_WINDOW) {
+        orchester_native_chrome::install(window.hwnd()?.0)?;
+    }
+    #[cfg(not(windows))]
+    let _ = app;
+    Ok(())
+}
+
 /// Shows and focuses the main window, restoring it if it was minimised.
 ///
 /// Every entry that has to make the window visible goes through here, so a
@@ -79,6 +90,7 @@ fn setup_tray(app: &App) -> tauri::Result<()> {
 pub fn run() -> tauri::Result<()> {
     tauri::Builder::default()
         .setup(|app| {
+            setup_native_chrome(app)?;
             if let Err(error) = setup_tray(app) {
                 eprintln!("orchester-desktop: the tray is unavailable: {error}");
             }
