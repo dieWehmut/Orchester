@@ -8,6 +8,7 @@ import { useI18n } from '../../i18n'
 import type { RunLifecycle } from '../../stores/run'
 import ConnectionBanner, { type ConnectionBannerStatus } from './ConnectionBanner.vue'
 import EmptyWorkspace from './EmptyWorkspace.vue'
+import MessageRail from './MessageRail.vue'
 import PlanStrip from './PlanStrip.vue'
 import RunAnnouncer from './RunAnnouncer.vue'
 import RunComposer from './RunComposer.vue'
@@ -96,6 +97,20 @@ function measure(): void {
   })
 }
 
+/**
+ * The rail reports a timeline index; the transcript turns it into a scroll
+ * position. The rows carry their index, so the jump is to the row the reader
+ * was shown rather than to an estimate of where it might be.
+ */
+function scrollToTurn(index: number): void {
+  const element = stream.value
+  if (!element) return
+  const row = element.querySelector<HTMLElement>(`[data-virtualized-turn="${index}"]`)
+  if (!row) return
+  row.scrollIntoView({ block: 'start' })
+  measure()
+}
+
 function scrollToBottom(): void {
   const element = stream.value
   if (!element) return
@@ -175,6 +190,7 @@ watch(
       >{{ unreadLabel }}</span>
       <span v-else>{{ t('transcript.jumpToLatest') }}</span>
     </button>
+    <MessageRail :view="props.view" @select="scrollToTurn" />
     <RunFooter :view="props.view" />
     <PlanStrip
       :todos="props.view.todos"
