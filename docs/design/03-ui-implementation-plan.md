@@ -13,18 +13,18 @@ wave, which lands with an updated snapshot.
 
 ## Wave U0 — token foundation
 
-- [ ] U0-01: Add the neutral ramp (`--gray-fixed-*`, `--gray-*`) to `packages/design/src/tokens.css` and assert every step exists in both themes.
-- [ ] U0-02: Add the six accent ramps and their alpha variants; assert the `codex` scheme resolves to `--blue-300` in dark and `--blue-500` in light.
-- [ ] U0-03: Add the `--alpha-*` scale over `--alpha-base`; assert the base flips with the theme.
-- [ ] U0-04: Add the L1 intent matrix (`--color-intent-*-{text,surface,border,solid}`, `--color-text-*`, `--color-surface-*`, `--color-border-*`); assert every intent has all four treatments in both themes.
-- [ ] U0-05: Add the heading and text type scales with bound line-height/tracking/weight; assert monotonicity of size across each scale.
-- [ ] U0-06: Add `--radius-*-base` and `--corner-radius-scale`, deriving every `--radius-*`; assert `1.25` is the default and that `--radius-lg` resolves to `0.78125rem`.
-- [ ] U0-07: Add `--border-width-hairline` and the elevation geometry/shadow tokens; assert `--elevation-stroke` uses the hairline.
-- [ ] U0-08: Add the motion curves and `--ease-*`; assert the reduced-motion override still collapses durations.
-- [ ] U0-09: Add the shell layout tokens (rail clamp, inspector clamp, tab strip, bottom panel, composer) and assert the rail clamp never leaves less than 360px for the transcript.
-- [ ] U0-10: Add the density axis (`--density-row-height`, `--density-gap`) behind `[data-density]`.
-- [ ] U0-11: Export the new token names from a typed `TOKEN_GROUPS` map for tests and tooling.
-- [ ] U0-12: Update the token snapshot and commit wave U0.
+- [x] U0-01: Add the neutral ramp (`--gray-fixed-*`, `--gray-*`) to `packages/design/src/tokens.css` and assert every step exists in both themes.
+- [x] U0-02: Add the six accent ramps and their alpha variants; assert the `codex` scheme resolves to `--blue-300` in dark and `--blue-500` in light.
+- [x] U0-03: Add the `--alpha-*` scale over `--alpha-base`; assert the base flips with the theme.
+- [x] U0-04: Add the L1 intent matrix (`--color-intent-*-{text,surface,border,solid}`, `--color-text-*`, `--color-surface-*`, `--color-border-*`); assert every intent has all four treatments in both themes.
+- [x] U0-05: Add the heading and text type scales with bound line-height/tracking/weight; assert monotonicity of size across each scale.
+- [x] U0-06: Add `--radius-*-base` and `--corner-radius-scale`, deriving every `--radius-*`; assert `1.25` is the default and that `--radius-lg` resolves to `0.78125rem`.
+- [x] U0-07: Add `--border-width-hairline` and the elevation geometry/shadow tokens; assert `--elevation-stroke` uses the hairline.
+- [x] U0-08: Add the motion curves and `--ease-*`; assert the reduced-motion override still collapses durations.
+- [x] U0-09: Add the shell layout tokens (rail clamp, inspector clamp, tab strip, bottom panel, composer) and assert the rail clamp never leaves less than 360px for the transcript.
+- [x] U0-10: Add the density axis (`--density-row-height`, `--density-gap`) behind `[data-density]`.
+- [x] U0-11: Export the new token names from a typed `TOKEN_GROUPS` map for tests and tooling.
+- [x] U0-12: Update the token snapshot and commit wave U0.
 
 ## Wave U1 — theme and appearance plumbing
 
