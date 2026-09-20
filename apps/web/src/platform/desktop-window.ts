@@ -1,5 +1,6 @@
 import { isTauri } from '@tauri-apps/api/core'
 import { getCurrentWindow } from '@tauri-apps/api/window'
+import { readSystemPlatform, type Platform } from '@orchester/design'
 
 export type DesktopWindowUnlisten = () => void
 
@@ -14,6 +15,7 @@ export interface DesktopWindowHandle {
 
 export interface DesktopWindowController {
   readonly enabled: boolean
+  readonly platform?: Platform
   minimize: () => Promise<void>
   toggleMaximize: () => Promise<void>
   close: () => Promise<void>
@@ -24,6 +26,7 @@ export interface DesktopWindowController {
 export interface DesktopWindowRuntime {
   enabled: boolean
   window: DesktopWindowHandle | null
+  platform?: Platform
 }
 
 const browserWindow: DesktopWindowController = {
@@ -113,6 +116,7 @@ export function createDesktopWindowController(
 
   return {
     enabled: true,
+    platform: runtime.platform ?? readSystemPlatform(),
     minimize: () => runWindowAction(() => runtime.window!.minimize()),
     toggleMaximize: () => runWindowAction(() => runtime.window!.toggleMaximize()),
     close: () => runWindowAction(() => runtime.window!.close()),

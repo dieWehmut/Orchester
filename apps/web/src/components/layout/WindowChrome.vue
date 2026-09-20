@@ -26,6 +26,7 @@ const props = withDefaults(
 )
 
 const controller = props.controller ?? desktopWindow
+const platform = controller.platform ?? 'linux'
 const { close, maximized, minimize, toggleMaximize } = useWindowChrome(controller)
 </script>
 
@@ -34,9 +35,11 @@ const { close, maximized, minimize, toggleMaximize } = useWindowChrome(controlle
     v-if="controller.enabled"
     class="window-chrome"
     data-window-chrome
+    :data-window-platform="platform"
     @dblclick.self="toggleMaximize"
   >
-    <div class="window-chrome__controls" aria-label="Window controls">
+    <div v-if="platform === 'macos'" class="window-chrome__traffic-lights" data-native-traffic-lights aria-hidden="true" />
+    <div v-else class="window-chrome__controls" aria-label="Window controls">
       <button
         class="window-chrome__control window-chrome__control--close"
         data-window-action="close"
@@ -93,6 +96,14 @@ const { close, maximized, minimize, toggleMaximize } = useWindowChrome(controlle
   background: var(--color-bg-surface);
   color: var(--color-text-secondary);
   user-select: none;
+}
+
+.window-chrome[data-window-platform='macos'] {
+  block-size: var(--window-chrome-height, 38px);
+}
+
+.window-chrome__traffic-lights {
+  flex: 0 0 80px;
 }
 
 .window-chrome__drag-region {

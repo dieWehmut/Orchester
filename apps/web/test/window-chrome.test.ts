@@ -44,6 +44,17 @@ function fakeController(options: { rejectActions?: boolean } = {}): DesktopWindo
 }
 
 describe('WindowChrome', () => {
+  it('reserves the macOS native traffic lights without drawing duplicate controls', () => {
+    const controller = Object.assign(fakeController(), { platform: 'macos' as const })
+    const wrapper = mount(WindowChrome, { props: { controller } })
+
+    expect(wrapper.attributes('data-window-platform')).toBe('macos')
+    expect(wrapper.findAll('[data-window-action]')).toHaveLength(0)
+    expect(wrapper.get('[data-native-traffic-lights]').attributes('aria-hidden')).toBe('true')
+    expect(wrapper.get('[data-tauri-drag-region]').find('[data-window-action]').exists()).toBe(false)
+    wrapper.unmount()
+  })
+
   it('does not render browser-only window controls', () => {
     const wrapper = mount(WindowChrome, {
       props: { controller: { enabled: false } as DesktopWindowController },
