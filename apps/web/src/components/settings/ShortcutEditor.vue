@@ -218,7 +218,9 @@ function resetAll(): void {
 
 .shortcut-editor__row {
   display: flex;
-  min-block-size: var(--density-row-height);
+  /* Same floor as the settings navigation row: the density row height tightens
+     the visual, but the target stays at the section 7 floor even in compact. */
+  min-block-size: max(var(--density-row-height), var(--hit-target-min, 32px));
   align-items: center;
   gap: var(--space-3);
 }

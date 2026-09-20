@@ -799,7 +799,10 @@ const previewAfter = computed(() => [
 .settings-view__link {
   display: flex;
   inline-size: 100%;
-  min-block-size: var(--density-row-height);
+  /* The density row height is the visual; the hit-target floor is the promise.
+     Compact drops the row to 26 px, so the floor has to outrank it rather than
+     ride along beside it. */
+  min-block-size: max(var(--density-row-height), var(--hit-target-min, 32px));
   align-items: center;
   gap: var(--space-3);
   padding-inline: var(--space-2);
