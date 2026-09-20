@@ -76,7 +76,8 @@ const titleId = 'empty-state-title-' + ++nextEmptyStateId
 }
 
 .empty-state__button {
-  min-block-size: var(--control-height-md, 2.25rem);
+  min-inline-size: var(--hit-target-min, 32px);
+  min-block-size: max(var(--hit-target-min, 32px), var(--control-height-md, 2.25rem));
   padding: 0 var(--space-3, 0.75rem);
   border: 1px solid var(--color-accent-border, #80602f);
   border-radius: var(--radius-sm, 6px);

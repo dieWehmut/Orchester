@@ -472,6 +472,11 @@
   --window-chrome-height: 38px;
   --titlebar-hit-target: 32px;
 
+  /* The smallest a control may be to be worth aiming at, in either axis.
+     Section 7 sets the floor and gives compact density the larger one, because
+     compact tightens the visuals and the target is what has to stay reachable. */
+  --hit-target-min: 32px;
+
   /* ═ Density ═══════════════════════════════════════════════════════════
      A row height and a gap are enough: everything dense in this product is a
      list, and lists read better when one number controls them. */
@@ -1024,4 +1029,8 @@ a:hover {
 :root[data-density='compact'] {
   --density-row-height: 26px;
   --density-gap: var(--space-2);
+
+  /* Compact shrinks the drawing, not the target: section 7 raises the floor to
+     40x40 here so a denser list is still one a pointer can hit. */
+  --hit-target-min: 40px;
 }

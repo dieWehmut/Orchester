@@ -112,8 +112,8 @@ function onKeydown(event: KeyboardEvent, index: number): void {
 
 .app-tabs__tab {
   position: relative;
-  min-width: 0;
-  min-height: var(--control-height-md);
+  min-inline-size: var(--hit-target-min, 32px);
+  min-height: max(var(--hit-target-min, 32px), var(--control-height-md));
   padding: var(--space-2) var(--space-3);
   border: 0;
   background: transparent;

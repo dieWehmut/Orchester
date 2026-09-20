@@ -50,6 +50,8 @@ function toggle(): void {
 <style scoped>
 .app-switch {
   display: inline-flex;
+  min-inline-size: var(--hit-target-min, 32px);
+  min-block-size: var(--hit-target-min, 32px);
   align-items: center;
   gap: var(--space-2);
   min-width: 0;

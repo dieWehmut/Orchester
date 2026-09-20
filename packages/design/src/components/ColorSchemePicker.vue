@@ -81,21 +81,34 @@ function onKeydown(event: KeyboardEvent, index: number): void {
   gap: var(--space-2);
 }
 
+/* The button carries the hit-target floor; the colour a reader compares across
+   schemes is painted on the pseudo-element inside it. Growing the button would
+   draw four 32 px dots, and an overlay hit area would overlap the neighbours. */
 .scheme-picker__swatch {
-  width: 16px;
-  height: 16px;
+  display: inline-grid;
+  min-inline-size: var(--hit-target-min, 32px);
+  min-block-size: var(--hit-target-min, 32px);
   padding: 0;
+  border: 0;
+  background: transparent;
+  place-items: center;
+  cursor: pointer;
+}
+
+.scheme-picker__swatch::before {
+  content: '';
+  inline-size: 16px;
+  block-size: 16px;
   border: 2px solid transparent;
   border-radius: var(--radius-full);
-  cursor: pointer;
   transition: transform var(--transition-fast) var(--ease-out);
 }
 
-.scheme-picker__swatch:hover {
+.scheme-picker__swatch:hover::before {
   transform: scale(1.16);
 }
 
-.scheme-picker__swatch--active {
+.scheme-picker__swatch--active::before {
   border-color: var(--color-text-primary);
 }
 
@@ -103,19 +116,19 @@ function onKeydown(event: KeyboardEvent, index: number): void {
    switching *to*, and the tokens always describe the scheme already active.
    These are the dark-theme accents, because a swatch sits on a dark rail as
    often as on a light one and the light accents are the same hue, muddied. */
-.scheme-picker__swatch--codex {
+.scheme-picker__swatch--codex::before {
   background: #339cff;
 }
 
-.scheme-picker__swatch--violet {
+.scheme-picker__swatch--violet::before {
   background: #ad7bf9;
 }
 
-.scheme-picker__swatch--teal {
+.scheme-picker__swatch--teal::before {
   background: #4fbfad;
 }
 
-.scheme-picker__swatch--rose {
+.scheme-picker__swatch--rose::before {
   background: #f472b6;
 }
 </style>

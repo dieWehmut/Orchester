@@ -213,9 +213,10 @@ onBeforeUnmount(() => {
 
 .app-menu__trigger {
   display: inline-flex;
+  min-inline-size: var(--hit-target-min, 32px);
+  min-block-size: max(var(--hit-target-min, 32px), var(--control-height-md, 2.25rem));
   align-items: center;
   justify-content: center;
-  min-block-size: var(--control-height-md, 2.25rem);
   padding: 0 0.625rem;
   border: 1px solid var(--color-border-control);
   border-radius: 6px;
@@ -251,7 +252,9 @@ onBeforeUnmount(() => {
 
 .app-menu__item {
   display: block;
+  min-inline-size: var(--hit-target-min, 32px);
   inline-size: 100%;
+  min-block-size: var(--hit-target-min, 32px);
   padding: 0.5rem 0.625rem;
   border: 0;
   border-radius: 4px;

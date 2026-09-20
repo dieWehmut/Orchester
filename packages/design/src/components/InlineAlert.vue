@@ -93,7 +93,8 @@ const live = computed(() => (role.value === 'alert' ? 'assertive' : 'polite'))
 
 .inline-alert__dismiss {
   flex: 0 0 auto;
-  min-block-size: var(--control-height-sm, 2rem);
+  min-block-size: max(var(--hit-target-min, 32px), var(--control-height-sm, 2rem));
+  min-inline-size: var(--hit-target-min, 32px);
   padding: 0 var(--space-2, 0.5rem);
   border: 1px solid var(--color-border-base, #262b34);
   border-radius: var(--radius-xs, 4px);

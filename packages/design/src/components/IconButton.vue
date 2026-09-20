@@ -38,8 +38,8 @@ defineEmits<{ click: [event: MouseEvent] }>()
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  min-inline-size: var(--hit-target-min, 32px);
+  min-block-size: var(--hit-target-min, 32px);
   padding: 0;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);

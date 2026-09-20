@@ -71,6 +71,8 @@ function onChange(event: Event): void {
   display: inline-flex;
   align-items: flex-start;
   gap: var(--space-2);
+  min-inline-size: var(--hit-target-min, 32px);
+  min-block-size: var(--hit-target-min, 32px);
   min-width: 0;
   color: var(--color-text-primary);
   font-size: var(--text-sm);

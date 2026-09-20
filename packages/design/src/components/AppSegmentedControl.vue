@@ -87,8 +87,8 @@ function onKeydown(event: KeyboardEvent, index: number): void {
 }
 
 .app-segmented-control__option {
-  min-width: 0;
-  min-height: var(--control-height-sm);
+  min-inline-size: var(--hit-target-min, 32px);
+  min-height: max(var(--hit-target-min, 32px), var(--control-height-sm));
   padding: var(--space-1) var(--space-3);
   border: 1px solid transparent;
   border-radius: var(--radius-xs);

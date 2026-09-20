@@ -60,6 +60,8 @@ const classes = computed(() => [
 <style scoped>
 .app-button {
   display: inline-flex;
+  min-inline-size: var(--hit-target-min, 32px);
+  min-block-size: var(--hit-target-min, 32px);
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
