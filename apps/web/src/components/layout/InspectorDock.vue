@@ -5,9 +5,20 @@ import { computed, ref } from 'vue'
 import { useI18n } from '../../i18n'
 import { isInspectorTab, type InspectorTab } from './inspector-tabs'
 
-const props = defineProps<{
-  activeTab?: InspectorTab
-}>()
+const props = withDefaults(
+  defineProps<{
+    activeTab?: InspectorTab
+    /**
+     * Whether the terminal lives in the inspector, section 4.7.
+     *
+     * The preference decides, and the dock is told rather than asking, so a
+     * terminal the reader moved to the bottom panel leaves no tab here that
+     * opens nothing.
+     */
+    terminal?: boolean
+  }>(),
+  { terminal: false },
+)
 
 const emit = defineEmits<{
   'update:activeTab': [value: InspectorTab]
@@ -26,6 +37,7 @@ const tabs = computed<AppTabOption[]>(() => [
   { id: 'context', label: t('inspector.context') },
   { id: 'approvals', label: t('inspector.approvals') },
   { id: 'changes', label: t('inspector.review') },
+  ...(props.terminal ? [{ id: 'terminal', label: t('bottomPanel.terminal') }] : []),
 ])
 const panel = computed(() => ({
   context: {
@@ -41,6 +53,10 @@ const panel = computed(() => ({
     // not only the changes this run reported.
     title: t('inspector.reviewTitle'),
     description: t('inspector.reviewDescription'),
+  },
+  terminal: {
+    title: t('bottomPanel.terminal'),
+    description: t('bottomPanel.terminalEmpty'),
   },
 })[activeTab.value])
 

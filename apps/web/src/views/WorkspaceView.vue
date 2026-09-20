@@ -11,6 +11,10 @@ import BottomPanel from '../components/layout/BottomPanel.vue'
 import TabStrip from '../components/layout/TabStrip.vue'
 import { reorderTab, type ShellTab } from '../components/layout/tab-strip'
 import {
+  readTerminalPlacement,
+  type TerminalPlacement,
+} from '../components/layout/terminal-placement'
+import {
   readTabStripState,
   writeTabStripState,
 } from '../components/layout/tab-strip-persistence'
@@ -48,6 +52,14 @@ const reviewLastTurn = computed(() => runView.value.turns.length || null)
 const selectedChangePath = ref<string | null>(null)
 const selectedAgentId = ref<string | null>(null)
 const activeInspectorTab = ref<InspectorTab>('context')
+/**
+ * Where the terminal lives, section 4.7.
+ *
+ * The preference is read once on mount and written when the reader changes the
+ * setting, so the two surfaces below can be composed from it rather than each
+ * deciding for itself where the terminal goes.
+ */
+const terminalPlacement = ref<TerminalPlacement>(readTerminalPlacement())
 const inspectorOpen = ref(true)
 const runConnectionStatus = computed(() => run.connectionStatus.value)
 const runProjectionStatus = computed(() => run.projectionStatus.value)
@@ -157,12 +169,23 @@ function persistTabs(): void {
 watch([orderedShellTabs, activeTabId], persistTabs)
 
 
-/** The three surfaces region I holds, named through the locale. */
-const bottomPanelTabs = computed(() => [
-  { id: 'terminal', label: t('bottomPanel.terminal') },
-  { id: 'output', label: t('bottomPanel.output') },
-  { id: 'audit', label: t('bottomPanel.audit') },
-])
+/**
+ * The surfaces region I holds, named through the locale, section 2.
+ *
+ * The terminal is only one of them while the preference puts it there: a
+ * preference that moves the terminal to the inspector has to take it off the
+ * panel, or the reader gets two terminals and a panel whose first tab opens
+ * nothing they asked for.
+ */
+const bottomPanelTabs = computed(() =>
+  [
+    { id: 'terminal', label: t('bottomPanel.terminal'), placement: 'bottom' as const },
+    { id: 'output', label: t('bottomPanel.output'), placement: null },
+    { id: 'audit', label: t('bottomPanel.audit'), placement: null },
+  ]
+    .filter((tab) => tab.placement === null || tab.placement === terminalPlacement.value)
+    .map(({ id, label }) => ({ id, label })),
+)
 
 /**
  * The identity above the transcript.
@@ -332,6 +355,7 @@ useShortcut(
     <template #inspector>
       <InspectorDock
         :active-tab="activeInspectorTab"
+        :terminal="terminalPlacement === 'inspector'"
         @update:active-tab="handleInspectorTabChange"
       >
         <template #context>
@@ -348,6 +372,9 @@ useShortcut(
             :selected-path="selectedChangePath"
             @select="selectedChangePath = $event"
           />
+        </template>
+        <template #terminal>
+          <p class="workspace-view__panel-note">{{ t('bottomPanel.terminalEmpty') }}</p>
         </template>
       </InspectorDock>
     </template>

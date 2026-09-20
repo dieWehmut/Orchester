@@ -29,7 +29,11 @@ export interface SettingsSectionEntry<Id extends string = string> {
  * language.
  */
 export const SETTINGS_SECTIONS: readonly SettingsSectionEntry<SettingsSectionId>[] = [
-  { id: 'general', label: 'General', keywords: ['language', 'locale', 'startup'] },
+  {
+    id: 'general',
+    label: 'General',
+    keywords: ['language', 'locale', 'startup', 'terminal', 'bottom panel', 'inspector'],
+  },
   {
     id: 'appearance',
     label: 'Appearance',
