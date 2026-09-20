@@ -66,7 +66,9 @@ wave, which lands with an updated snapshot.
 - [x] U5-01: Add the `Review` tab with change filters (all/staged/unstaged/branch/last turn).
 - [x] U5-02: Order the file tree identically to the diff list and add expand/collapse navigation.
 - [x] U5-03: Add the line-wrap toggle for diffs.
-- [ ] U5-04: Add the `Approvals` queue with risk summary, scoped choices and the superseded state.
+- [x] U5-04: Add the `Approvals` queue with risk summary, scoped choices and the superseded state.
+  - `Allow for run` renders disabled: the protocol carries `approved`/`denied`
+    only, and a run-scoped grant needs a scope the runtime does not have yet.
 - [x] U5-05: Add terminal placement preference (inspector vs bottom panel).
 
 ## Wave U6 — desktop chrome
