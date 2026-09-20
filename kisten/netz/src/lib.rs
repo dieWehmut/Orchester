@@ -17,6 +17,7 @@ mod router;
 mod session;
 mod session_history;
 mod workspace;
+mod workspace_review;
 
 pub use agent_catalog::{
     agent_catalog_response, AgentAvailabilityDto, AgentCatalogDto, AgentSummaryDto,
@@ -54,3 +55,7 @@ pub use session_history::{
     SESSION_PROMPT_MAX_CHARS, SESSION_RESULT_MAX_CHARS,
 };
 pub use workspace::{select_workspace, WorkspaceSelectionError};
+pub use workspace_review::{
+    workspace_review_response, WorkspaceReviewChangeDto, WorkspaceReviewDto,
+    WorkspaceReviewKindDto, WORKSPACE_REVIEW_SCHEMA_VERSION,
+};

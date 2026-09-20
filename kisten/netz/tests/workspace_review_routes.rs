@@ -11,8 +11,8 @@ use tower::ServiceExt;
 use orchester_anwendung::OrchesterPaths;
 use orchester_netz::{app_router, ServerContext, ServerControl};
 
-/// The Review tab reads the working copy through the runtime, never from the
-/// browser. `GET /api/v1/workspace/review` is how it asks.
+// The Review tab reads the working copy through the runtime, never from the
+// browser. `GET /api/v1/workspace/review` is how it asks.
 
 struct TempRepo(PathBuf);
 

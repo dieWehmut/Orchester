@@ -36,6 +36,7 @@ use crate::{
     model_catalog::model_catalog_handler,
     session::{fragment_exchange_handler, session_bootstrap_handler, session_revoke_handler},
     session_history::{session_detail_handler, session_list_handler},
+    workspace_review::workspace_review_handler,
     ServerContext,
 };
 
@@ -77,6 +78,7 @@ fn api_router() -> Router<ServerContext> {
         .route("/models", get(model_catalog_handler))
         .route("/sessions", get(session_list_handler))
         .route("/sessions/{id}", get(session_detail_handler))
+        .route("/workspace/review", get(workspace_review_handler))
         .route("/session", get(session_bootstrap_handler))
         .route("/session/revoke", post(session_revoke_handler))
         .route("/auth/fragment", post(fragment_exchange_handler))
