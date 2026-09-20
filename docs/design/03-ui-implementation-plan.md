@@ -28,11 +28,11 @@ wave, which lands with an updated snapshot.
 
 ## Wave U1 — theme and appearance plumbing
 
-- [ ] U1-01: Add `data-intensity` (`calm` | `vivid`) as a third appearance axis in `theme.ts`, the bootstrap script, and storage.
-- [ ] U1-02: Add `data-reduced-motion` as an explicit, overridable root attribute with `true`/`false`/system semantics.
-- [ ] U1-03: Add `data-orchester-surface` and `data-orchester-os` root attributes with detection helpers.
-- [ ] U1-04: Extend the no-flash bootstrap script to set all four axes before first paint, and assert it stays dependency-free.
-- [ ] U1-05: Extend `useAppearance` and the settings view to expose intensity and reduced motion.
+- [x] U1-01: Add `data-intensity` (`calm` | `vivid`) as a third appearance axis in `theme.ts`, the bootstrap script, and storage.
+- [x] U1-02: Add `data-reduced-motion` as an explicit, overridable root attribute with `true`/`false`/system semantics.
+- [x] U1-03: Add `data-orchester-surface` and `data-orchester-os` root attributes with detection helpers.
+- [x] U1-04: Extend the no-flash bootstrap script to set all four axes before first paint, and assert it stays dependency-free.
+- [x] U1-05: Extend `useAppearance` and the settings view to expose intensity and reduced motion.
 
 ## Wave U2 — shell restructure
 
