@@ -187,6 +187,48 @@ describe('RunPanel', () => {
     expect(wrapper.find('[data-scroll-to-bottom]').exists()).toBe(false)
   })
 
+  it('mounts the message rail on the transcript and jumps to the turn chosen', async () => {
+    const view = {
+      ...createEmptyRunView(),
+      timeline: [
+        {
+          type: 'message' as const,
+          key: 'message-1',
+          sequence: 1,
+          occurredAt: '2026-09-20T06:00:00Z',
+          turnId: null,
+          role: 'user' as const,
+          text: 'first question',
+          final: true,
+        },
+        {
+          type: 'message' as const,
+          key: 'message-2',
+          sequence: 2,
+          occurredAt: '2026-09-20T06:01:00Z',
+          turnId: null,
+          role: 'user' as const,
+          text: 'second question',
+          final: true,
+        },
+      ],
+    }
+    const wrapper = mount(RunPanel, { props: { view } })
+
+    const rail = wrapper.get('[data-message-rail]')
+    expect(rail.findAll('[data-rail-mark]')).toHaveLength(2)
+
+    // jsdom has no layout, so scrollIntoView is recorded rather than performed.
+    const scrolled: number[] = []
+    for (const row of wrapper.findAll('[data-virtualized-turn]')) {
+      Object.defineProperty(row.element, 'scrollIntoView', {
+        value: () => scrolled.push(Number(row.attributes('data-virtualized-turn'))),
+      })
+    }
+    await rail.findAll('[data-rail-mark]')[1]!.trigger('click')
+    expect(scrolled).toEqual([1])
+  })
+
   it('carries the top fade as state rather than as an always-on decoration', async () => {
     const wrapper = mount(RunPanel, { props: { view: createEmptyRunView() } })
     const stream = wrapper.get('[data-transcript-scroll]').element as HTMLElement
