@@ -4,6 +4,7 @@ import type { RunView } from '@orchester/ereignis'
 import type { ModelCatalogDto, UiEventEnvelope } from '@orchester/protokoll'
 import { computed, nextTick, ref, watch } from 'vue'
 
+import { useI18n } from '../../i18n'
 import type { RunLifecycle } from '../../stores/run'
 import ConnectionBanner, { type ConnectionBannerStatus } from './ConnectionBanner.vue'
 import EmptyWorkspace from './EmptyWorkspace.vue'
@@ -12,7 +13,7 @@ import RunAnnouncer from './RunAnnouncer.vue'
 import RunComposer from './RunComposer.vue'
 import RunFooter from './RunFooter.vue'
 import RunTimeline from './RunTimeline.vue'
-import { fadeDecision, readScrollState, stickDecision, type ScrollState } from './scroll-state'
+import { fadeDecision, readScrollState, stickDecision, unreadAfter, type ScrollState } from './scroll-state'
 import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
 
 const props = withDefaults(
@@ -53,6 +54,8 @@ const emit = defineEmits<{
   cancel: []
 }>()
 
+const { t } = useI18n()
+
 /**
  * A run waiting on the user is the one case the plan strip has to escalate:
  * `awaiting_approval` means the next move is not the agent's to make.
@@ -64,6 +67,18 @@ const scrollState = ref<ScrollState>({ canScrollUp: false, canScrollDown: false,
 
 /** The fade under the header, drawn only when there is content above. */
 const topFade = computed(() => fadeDecision(scrollState.value))
+
+/**
+ * Output that arrived while the reader was reading back. It is cleared the
+ * moment they are at the bottom again, because then they have seen it.
+ */
+const unread = ref(0)
+
+const unreadLabel = computed(() =>
+  unread.value > 0
+    ? t('transcript.unreadCount', { count: String(unread.value) })
+    : t('transcript.unread'),
+)
 
 function measure(): void {
   const element = stream.value
@@ -79,6 +94,7 @@ function scrollToBottom(): void {
   const element = stream.value
   if (!element) return
   element.scrollTop = element.scrollHeight
+  unread.value = 0
   measure()
 }
 
@@ -92,7 +108,9 @@ watch(
   async () => {
     const position = scrollState.value.atBottom ? 'at-bottom' : 'reading-back'
     await nextTick()
-    if (stickDecision(position, 'appended') === 'stick') scrollToBottom()
+    const decision = stickDecision(position, 'appended')
+    unread.value = unreadAfter(unread.value, decision)
+    if (decision === 'stick') scrollToBottom()
     else measure()
   },
 )
@@ -134,9 +152,17 @@ watch(
       class="run-panel__to-bottom"
       type="button"
       data-scroll-to-bottom
+      :data-scroll-unread="String(unread > 0)"
       @click="scrollToBottom"
     >
-      Jump to the latest
+      <span
+        v-if="unread > 0"
+        class="run-panel__unread"
+        data-scroll-unread-dot
+        role="status"
+        aria-live="polite"
+      >{{ unreadLabel }}</span>
+      <span v-else>{{ t('transcript.jumpToLatest') }}</span>
     </button>
     <RunFooter :view="props.view" />
     <PlanStrip
@@ -182,6 +208,10 @@ watch(
 
 .run-panel__top-fade[data-transcript-fade='hidden'] {
   opacity: 0;
+}
+
+.run-panel__unread {
+  font-variant-numeric: tabular-nums;
 }
 
 .run-panel__to-bottom {

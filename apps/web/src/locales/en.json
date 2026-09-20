@@ -265,7 +265,10 @@
     "inputTokens": "Input",
     "outputTokens": "Output",
     "reasoningTokens": "Reasoning",
-    "cachedTokens": "Cached"
+    "cachedTokens": "Cached",
+    "jumpToLatest": "Jump to the latest",
+    "unread": "New output below",
+    "unreadCount": "{count} new events"
   },
   "inspector": {
     "label": "Workspace inspector",

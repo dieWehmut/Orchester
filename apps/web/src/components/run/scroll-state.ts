@@ -33,6 +33,15 @@ export function readScrollState(box: ScrollBox): ScrollState {
   }
 }
 
+/**
+ * The unread count after one new turn arrives. Output that arrives while the
+ * reader is at the bottom is already in front of them; output that arrives
+ * while they are reading back is what the indicator exists to count.
+ */
+export function unreadAfter(count: number, decision: ScrollDecision): number {
+  return decision === 'stick' ? 0 : count + 1
+}
+
 export type FadeState = 'visible' | 'hidden'
 
 /**

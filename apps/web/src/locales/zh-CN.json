@@ -265,7 +265,10 @@
     "inputTokens": "输入",
     "outputTokens": "输出",
     "reasoningTokens": "推理",
-    "cachedTokens": "缓存"
+    "cachedTokens": "缓存",
+    "jumpToLatest": "跳到最新",
+    "unread": "下方有新输出",
+    "unreadCount": "{count} 条新事件"
   },
   "inspector": {
     "label": "工作区检查器",
