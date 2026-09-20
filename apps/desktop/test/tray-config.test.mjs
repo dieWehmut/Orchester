@@ -64,4 +64,3 @@ test('the tray does not add permissions the webview could reach for', async () =
   assert.ok(!capability.permissions.some((permission) => permission.includes('tray')))
   assert.ok(!capability.permissions.some((permission) => permission.startsWith('shell:')))
 })
-
