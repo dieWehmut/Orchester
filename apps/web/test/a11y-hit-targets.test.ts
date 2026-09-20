@@ -98,18 +98,32 @@ describe('hit target contract in the workspace', () => {
       ['components/run/ReasoningDisclosure.vue', '.reasoning__toggle'],
       ['components/run/ToolCallCard.vue', '.tool-card__toggle'],
       ['components/run/RunPanel.vue', '.run-panel__to-bottom'],
-      ['views/SettingsView.vue', '.settings-view__link'],
-      ['components/settings/ShortcutEditor.vue', '.shortcut-editor__row'],
       ['components/sessions/SessionListItem.vue', '.session-list-item'],
       ['features/agent-presence/components/AgentFleetRow.vue', '.agent-fleet-row'],
       ['components/changes/ChangeInspector.vue', '.change-inspector__row'],
     ] as const) {
       const css = source(path)
       const body = new RegExp(`${selector.replace(/\./g, '\\.')}\\s*\\{[^}]*\\}`, 's').exec(css)?.[0] ?? ''
-      // A `max()` floor is still a floor, so the token may sit inside one.
+      const floored = /min-(?:block|inline)-size:[^;]*--hit-target-min/.test(body)
+      if (!floored) failures.push(`${path}: ${selector}`)
+    }
+    expect(failures).toEqual([])
+  })
+
+  it('lets the floor win over the density row height in the settings rows', () => {
+    // A dense row's visual height is the density row height, and compact drops
+    // that to 26 px - under the 40 px section 7 asks for at that density. The
+    // row has to be a `max()` of the two rather than either one alone, or the
+    // denser list is one the pointer has to aim at.
+    const failures: string[] = []
+    for (const [path, selector] of [
+      ['views/SettingsView.vue', '.settings-view__link'],
+      ['components/settings/ShortcutEditor.vue', '.shortcut-editor__row'],
+    ] as const) {
+      const css = source(path)
+      const body = new RegExp(`${selector.replace(/\./g, '\\.')}\\s*\\{[^}]*\\}`, 's').exec(css)?.[0] ?? ''
       const floored =
-        /min-(?:block|inline)-size:[^;]*--hit-target-min/.test(body) ||
-        /min-(?:block|inline)-size:[^;]*--density-row-height/.test(body)
+        /min-block-size:\s*max\([^;]*--density-row-height[^;]*--hit-target-min[^;]*\)/.test(body)
       if (!floored) failures.push(`${path}: ${selector}`)
     }
     expect(failures).toEqual([])
