@@ -6,11 +6,14 @@
 
 #![forbid(unsafe_code)]
 
+mod tray_lifecycle;
+
 use tauri::{
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
     App, AppHandle, Manager, WindowEvent,
 };
+use tray_lifecycle::ExitGate;
 
 const MAIN_WINDOW: &str = "main";
 
@@ -41,19 +44,20 @@ fn show_main_window(app: &AppHandle) {
 ///
 /// The icon is required rather than optional: a tray without an icon is a tray
 /// the user cannot see, and that would silently remove the only way to quit.
-/// Everything else around it stays fallible so the window still opens.
-fn setup_tray(app: &App) -> tauri::Result<()> {
+/// A tray failure aborts setup, rather than leaving a window that can hide forever.
+pub fn setup_tray(app: &App) -> Result<(), Box<dyn std::error::Error>> {
+    app.manage(ExitGate::default());
     let show = MenuItem::with_id(app, "show", "Open Orchester", true, None::<&str>)?;
     let settings = MenuItem::with_id(app, "settings", "Settings…", true, None::<&str>)?;
     let quit = MenuItem::with_id(app, "quit", "Quit Orchester", true, None::<&str>)?;
     let menu = Menu::with_items(app, &[&show, &settings, &quit])?;
 
-    let Some(icon) = app.default_window_icon().cloned() else {
-        eprintln!(
-            "orchester-desktop: the bundled window icon is missing; the tray cannot be shown"
-        );
-        return Ok(());
-    };
+    let icon = app.default_window_icon().cloned().ok_or_else(|| {
+        std::io::Error::new(
+            std::io::ErrorKind::NotFound,
+            "the bundled tray icon is missing",
+        )
+    })?;
 
     TrayIconBuilder::new()
         .icon(icon)
@@ -69,7 +73,10 @@ fn setup_tray(app: &App) -> tauri::Result<()> {
                     }
                 }
             }
-            "quit" => app.exit(0),
+            "quit" => {
+                app.state::<ExitGate>().request_tray_exit();
+                app.exit(0);
+            }
             _ => {}
         })
         .on_tray_icon_event(|tray, event| {
@@ -87,22 +94,32 @@ fn setup_tray(app: &App) -> tauri::Result<()> {
     Ok(())
 }
 
+pub fn handle_window_event(window: &tauri::Window, event: &WindowEvent) {
+    if let WindowEvent::CloseRequested { api, .. } = event {
+        api.prevent_close();
+        if let Err(error) = window.hide() {
+            eprintln!("orchester-desktop: could not hide the window: {error}");
+        }
+    }
+}
+
+/// The embedded runtime can call this before handling its own RunEvent::Exit cleanup.
+pub fn handle_run_event(app: &AppHandle, event: &tauri::RunEvent) {
+    if let tauri::RunEvent::ExitRequested { api, .. } = event {
+        app.state::<ExitGate>()
+            .on_exit_requested(|| api.prevent_exit());
+    }
+}
+
 pub fn run() -> tauri::Result<()> {
     tauri::Builder::default()
         .setup(|app| {
             setup_native_chrome(app)?;
-            if let Err(error) = setup_tray(app) {
-                eprintln!("orchester-desktop: the tray is unavailable: {error}");
-            }
+            setup_tray(app)?;
             Ok(())
         })
-        .on_window_event(|window, event| {
-            if let WindowEvent::CloseRequested { api, .. } = event {
-                api.prevent_close();
-                if let Err(error) = window.hide() {
-                    eprintln!("orchester-desktop: could not hide the window: {error}");
-                }
-            }
-        })
-        .run(tauri::generate_context!())
+        .on_window_event(handle_window_event)
+        .build(tauri::generate_context!())?
+        .run(|app, event| handle_run_event(app, &event));
+    Ok(())
 }
