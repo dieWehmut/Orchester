@@ -4,7 +4,7 @@ import ChangeInspector from '../components/changes/ChangeInspector.vue'
 import { summarizeFileChanges } from '../components/changes/change-summary'
 import InspectorDock from '../components/layout/InspectorDock.vue'
 import type { InspectorTab } from '../components/layout/inspector-tabs'
-import WorkspaceResponsive from '../components/layout/WorkspaceResponsive.vue'
+import AppShell from '../components/layout/AppShell.vue'
 import WorkspaceSidebar from '../components/layout/WorkspaceSidebar.vue'
 import ThreadBar from '../components/layout/ThreadBar.vue'
 import SessionTranscript from '../components/sessions/SessionTranscript.vue'
@@ -139,7 +139,7 @@ useShortcut(
 </script>
 
 <template>
-  <WorkspaceResponsive
+  <AppShell
     data-testid="workspace-view"
     :sessions-title="t('sessions.title')"
     :inspector-title="t('inspector.label')"
@@ -218,5 +218,5 @@ useShortcut(
         </template>
       </InspectorDock>
     </template>
-  </WorkspaceResponsive>
+  </AppShell>
 </template>

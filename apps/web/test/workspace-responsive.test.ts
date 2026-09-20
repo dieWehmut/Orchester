@@ -1,11 +1,11 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import WorkspaceResponsive from '../src/components/layout/WorkspaceResponsive.vue'
+import AppShell from '../src/components/layout/AppShell.vue'
 
-describe('WorkspaceResponsive', () => {
+describe('AppShell narrow-viewport drawers', () => {
   it('keeps both secondary surfaces reachable through labelled mobile controls', async () => {
-    const wrapper = mount(WorkspaceResponsive, {
+    const wrapper = mount(AppShell, {
       props: { sessionsTitle: 'Sessions', inspectorTitle: 'Inspector', controlsLabel: 'Panels' },
       slots: {
         sessions: '<button type="button">Session row</button>',

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 
 import NotFoundView from '../src/views/NotFoundView.vue'
 import WorkspaceHeader from '../src/components/layout/WorkspaceHeader.vue'
-import WorkspaceResponsive from '../src/components/layout/WorkspaceResponsive.vue'
+import AppShell from '../src/components/layout/AppShell.vue'
 
 /**
  * The landmark half of the accessibility contract.
@@ -34,7 +34,7 @@ function roleOf(element: Element): string {
 }
 
 function mountShell() {
-  return mount(WorkspaceResponsive, {
+  return mount(AppShell, {
     props: { sessionsTitle: 'Sessions', inspectorTitle: 'Inspector', controlsLabel: 'Panels' },
     slots: {
       sessions: '<button type="button">Session row</button>',
