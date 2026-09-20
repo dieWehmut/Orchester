@@ -67,7 +67,7 @@ wave, which lands with an updated snapshot.
 - [x] U5-02: Order the file tree identically to the diff list and add expand/collapse navigation.
 - [x] U5-03: Add the line-wrap toggle for diffs.
 - [ ] U5-04: Add the `Approvals` queue with risk summary, scoped choices and the superseded state.
-- [ ] U5-05: Add terminal placement preference (inspector vs bottom panel).
+- [x] U5-05: Add terminal placement preference (inspector vs bottom panel).
 
 ## Wave U6 — desktop chrome
 
