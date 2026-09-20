@@ -73,10 +73,10 @@ wave, which lands with an updated snapshot.
 
 ## Wave U6 — desktop chrome
 
-- [ ] U6-01: Add the macOS overlay titlebar path with correct traffic-light inset.
-- [ ] U6-02: Add Windows caption buttons at OS metrics with the Snap-Layouts hit region.
-- [ ] U6-03: Fall back to opaque surfaces where translucency is unavailable.
-- [ ] U6-04: Wire `⌘/Ctrl+W` to close the active tab and confirm before closing with an active run.
+- [x] U6-01: Add the macOS overlay titlebar path with correct traffic-light inset.
+- [x] U6-02: Add Windows caption buttons at OS metrics with the Snap-Layouts hit region.
+- [x] U6-03: Fall back to opaque surfaces where translucency is unavailable.
+- [x] U6-04: Wire `⌘/Ctrl+W` to close the active tab and confirm before closing with an active run.
 
 ## Wave U7 — settings, keyboard, a11y
 
