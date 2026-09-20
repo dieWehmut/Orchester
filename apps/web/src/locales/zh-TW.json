@@ -289,5 +289,14 @@
     "sequence": "序號 #",
     "noFileChanges": "尚無檔案變更",
     "noFileChangesDescription": "目前執行回報的檔案變更將顯示於此。"
+  },
+  "bottomPanel": {
+    "label": "底部面板",
+    "terminal": "終端機",
+    "output": "執行輸出",
+    "audit": "稽核日誌",
+    "terminalEmpty": "執行開始後，終端機會顯示在這裡。",
+    "outputEmpty": "目前執行的命令輸出會顯示在這裡。",
+    "auditEmpty": "核准與決策記錄會顯示在這裡。"
   }
 }

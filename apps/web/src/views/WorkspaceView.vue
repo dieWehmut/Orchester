@@ -5,6 +5,7 @@ import { summarizeFileChanges } from '../components/changes/change-summary'
 import InspectorDock from '../components/layout/InspectorDock.vue'
 import type { InspectorTab } from '../components/layout/inspector-tabs'
 import AppShell from '../components/layout/AppShell.vue'
+import BottomPanel from '../components/layout/BottomPanel.vue'
 import WorkspaceSidebar from '../components/layout/WorkspaceSidebar.vue'
 import ThreadBar from '../components/layout/ThreadBar.vue'
 import SessionTranscript from '../components/sessions/SessionTranscript.vue'
@@ -52,6 +53,13 @@ const {
 } = sessions
 
 const threadTitle = computed(() => selected.value?.title ?? t('transcript.newChatTitle'))
+
+/** The three surfaces region I holds, named through the locale. */
+const bottomPanelTabs = computed(() => [
+  { id: 'terminal', label: t('bottomPanel.terminal') },
+  { id: 'output', label: t('bottomPanel.output') },
+  { id: 'audit', label: t('bottomPanel.audit') },
+])
 
 /**
  * The identity above the transcript.
@@ -219,4 +227,28 @@ useShortcut(
       </InspectorDock>
     </template>
   </AppShell>
+  <BottomPanel
+    :label="t('bottomPanel.label')"
+    :tabs="bottomPanelTabs"
+    data-testid="workspace-bottom-panel"
+  >
+    <template #terminal>
+      <p class="workspace-view__panel-note">{{ t('bottomPanel.terminalEmpty') }}</p>
+    </template>
+    <template #output>
+      <p class="workspace-view__panel-note">{{ t('bottomPanel.outputEmpty') }}</p>
+    </template>
+    <template #audit>
+      <p class="workspace-view__panel-note">{{ t('bottomPanel.auditEmpty') }}</p>
+    </template>
+  </BottomPanel>
 </template>
+
+<style scoped>
+.workspace-view__panel-note {
+  margin: 0;
+  padding: var(--space-3);
+  color: var(--color-text-tertiary);
+  font-size: var(--text-sm);
+}
+</style>

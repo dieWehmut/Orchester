@@ -289,5 +289,14 @@
     "sequence": "序号 #",
     "noFileChanges": "暂无文件变更",
     "noFileChangesDescription": "活动运行报告的文件变更会显示在这里。"
+  },
+  "bottomPanel": {
+    "label": "底部面板",
+    "terminal": "终端",
+    "output": "执行输出",
+    "audit": "审计日志",
+    "terminalEmpty": "运行开始后，终端会显示在这里。",
+    "outputEmpty": "当前运行的命令输出会显示在这里。",
+    "auditEmpty": "审批与决策记录会显示在这里。"
   }
 }

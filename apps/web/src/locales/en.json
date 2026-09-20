@@ -289,5 +289,14 @@
     "sequence": "#",
     "noFileChanges": "No file changes",
     "noFileChangesDescription": "File changes reported by the active run will appear here."
+  },
+  "bottomPanel": {
+    "label": "Bottom panel",
+    "terminal": "Terminal",
+    "output": "Exec output",
+    "audit": "Audit log",
+    "terminalEmpty": "The terminal opens here once a run starts.",
+    "outputEmpty": "Command output from the active run appears here.",
+    "auditEmpty": "Approvals and decisions are recorded here."
   }
 }
