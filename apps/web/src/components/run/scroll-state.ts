@@ -33,6 +33,17 @@ export function readScrollState(box: ScrollBox): ScrollState {
   }
 }
 
+export type FadeState = 'visible' | 'hidden'
+
+/**
+ * The top fade is drawn only when there is something above the reader to fade
+ * towards; a fade over the first turn would be decoration claiming there is
+ * more to read.
+ */
+export function fadeDecision(state: ScrollState): FadeState {
+  return state.canScrollUp ? 'visible' : 'hidden'
+}
+
 export type ScrollPosition = 'at-bottom' | 'reading-back'
 export type ScrollTrigger = 'appended' | 'reached-bottom' | 'jump-requested'
 export type ScrollDecision = 'stick' | 'hold'

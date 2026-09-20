@@ -12,7 +12,7 @@ import RunAnnouncer from './RunAnnouncer.vue'
 import RunComposer from './RunComposer.vue'
 import RunFooter from './RunFooter.vue'
 import RunTimeline from './RunTimeline.vue'
-import { readScrollState, stickDecision, type ScrollState } from './scroll-state'
+import { fadeDecision, readScrollState, stickDecision, type ScrollState } from './scroll-state'
 import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
 
 const props = withDefaults(
@@ -61,6 +61,9 @@ const planBlocked = computed(() => props.view.status === 'awaiting_approval')
 
 const stream = ref<HTMLElement | null>(null)
 const scrollState = ref<ScrollState>({ canScrollUp: false, canScrollDown: false, atBottom: true })
+
+/** The fade under the header, drawn only when there is content above. */
+const topFade = computed(() => fadeDecision(scrollState.value))
 
 function measure(): void {
   const element = stream.value
@@ -121,6 +124,11 @@ watch(
         <span>{{ props.busy ? 'Starting run…' : 'Waiting for run events…' }}</span>
       </div>
     </div>
+    <div
+      class="run-panel__top-fade"
+      :data-transcript-fade="topFade"
+      aria-hidden="true"
+    />
     <button
       v-if="scrollState.canScrollDown"
       class="run-panel__to-bottom"
@@ -150,6 +158,7 @@ watch(
 
 <style scoped>
 .run-panel {
+  position: relative;
   display: flex;
   min-block-size: 100%;
   flex-direction: column;
@@ -160,6 +169,19 @@ watch(
   min-block-size: 0;
   flex: 1;
   overflow: auto;
+}
+
+.run-panel__top-fade {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: var(--space-6);
+  background: linear-gradient(to bottom, var(--color-bg-base), transparent);
+  pointer-events: none;
+}
+
+.run-panel__top-fade[data-transcript-fade='hidden'] {
+  opacity: 0;
 }
 
 .run-panel__to-bottom {
