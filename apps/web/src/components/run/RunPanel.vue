@@ -33,6 +33,8 @@ const props = withDefaults(
     workspaceName?: string | null
     modelCatalog?: ModelCatalogDto | null
     modelStatus?: ModelCatalogStoreStatus
+    /** The task whose run settings the composer reads and writes. */
+    settingsKey?: string | null
   }>(),
   {
     events: () => [],
@@ -47,6 +49,7 @@ const props = withDefaults(
     workspaceName: null,
     modelCatalog: null,
     modelStatus: 'idle',
+    settingsKey: null,
   },
 )
 
@@ -203,6 +206,7 @@ watch(
       :workspace-name="props.workspaceName"
       :model-catalog="props.modelCatalog"
       :model-status="props.modelStatus"
+      :settings-key="props.settingsKey"
       @submit="emit('submit', $event)"
       @cancel="emit('cancel')"
     />

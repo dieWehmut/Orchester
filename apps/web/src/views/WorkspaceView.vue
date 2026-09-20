@@ -180,6 +180,13 @@ const runBusy = computed(() =>
 )
 const runLifecycle = computed(() => run.lifecycle.value)
 
+/**
+ * The task the composer's settings belong to. Section 4.6 keeps the model, the
+ * effort and the approval preset on the task rather than on the user, so the
+ * key is the open task; an unstarted one has no identity yet and gets none.
+ */
+const runSettingsKey = computed(() => selectedId.value)
+
 async function handleRunSubmit(prompt: string): Promise<void> {
   await run.submit(prompt)
 }
@@ -296,9 +303,10 @@ useShortcut(
       :busy="runBusy"
       :lifecycle="runLifecycle"
       :conversation-started="conversationStarted"
-        :workspace-name="workspaceName"
+          :workspace-name="workspaceName"
       :model-catalog="modelCatalog"
       :model-status="modelStatus"
+      :settings-key="runSettingsKey"
       @submit="handleRunSubmit"
       @cancel="handleRunCancel"
     />

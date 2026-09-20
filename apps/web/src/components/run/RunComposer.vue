@@ -6,6 +6,7 @@ import { computed, ref, watch } from 'vue'
 
 import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
 import ApprovalPresetControl, { type ApprovalPreset } from './ApprovalPresetControl.vue'
+import { readRunSettings, writeRunSettings, type RunSettings } from './run-settings'
 import ComposerContextBar from './ComposerContextBar.vue'
 import CommandPalette, { type CommandEntry } from './CommandPalette.vue'
 import { COMPOSER_COMMANDS } from './composer-commands'
@@ -21,6 +22,12 @@ const props = withDefaults(
     dragActive?: boolean
     /** The approval scope for the next run. */
     approvalPreset?: ApprovalPreset
+    /**
+     * The task these settings belong to. When given, the composer remembers
+     * the preset under that task rather than only reporting it upward, which is
+     * what makes section 4.6's "persisted per task" true.
+     */
+    settingsKey?: string | null
     /** The `/` vocabulary available in this deployment. */
     commands?: readonly CommandEntry[]
     maxLength?: number
@@ -41,6 +48,7 @@ const props = withDefaults(
     lifecycle: null,
     dragActive: false,
     approvalPreset: 'ask',
+    settingsKey: null,
     commands: () => COMPOSER_COMMANDS,
     maxLength: 8000,
     placeholder: 'Describe the task',
@@ -63,6 +71,36 @@ const emit = defineEmits<{
   'update:approvalPreset': [value: ApprovalPreset]
   'run-command': [id: string]
 }>()
+
+/**
+ * The task's remembered settings. The composer reports every change upward and,
+ * when it knows the task, also writes it under that task's key - a resumed run
+ * has to keep the settings it was started with.
+ */
+const remembered = ref<RunSettings | null>(null)
+
+watch(
+  () => props.settingsKey,
+  (key) => {
+    remembered.value = key ? readRunSettings(key) : null
+  },
+  { immediate: true },
+)
+
+/**
+ * The run the caller handed the composer outranks what the task remembered: the
+ * caller is showing the settings of the run that is actually open, and a
+ * remembered value is only a starting point for the next one.
+ */
+const approvalPreset = computed(() => props.approvalPreset ?? remembered.value?.approvalPreset ?? 'ask')
+
+function updateApprovalPreset(value: ApprovalPreset): void {
+  if (remembered.value) {
+    remembered.value = { ...remembered.value, approvalPreset: value }
+    if (props.settingsKey) writeRunSettings(props.settingsKey, remembered.value)
+  }
+  emit('update:approvalPreset', value)
+}
 
 const draft = ref(props.modelValue)
 const dragActive = ref(false)
@@ -191,7 +229,7 @@ function handleKeydown(event: KeyboardEvent): void {
     data-run-composer
     :data-composer-state="composerState"
     :data-composer-drag-active="props.dragActive || dragActive"
-    :data-composer-danger="props.approvalPreset === 'full-access'"
+    :data-composer-danger="approvalPreset === 'full-access'"
     @dragenter.prevent="handleDragEnter"
     @dragover.prevent
     @dragleave="handleDragLeave"
@@ -227,8 +265,8 @@ function handleKeydown(event: KeyboardEvent): void {
         {{ draft.length }} / {{ props.maxLength }} {{ props.characterCountLabel }}
       </span>
       <ApprovalPresetControl
-        :model-value="props.approvalPreset"
-        @update:model-value="emit('update:approvalPreset', $event)"
+        :model-value="approvalPreset"
+        @update:model-value="updateApprovalPreset"
       />
       <div class="run-composer__actions">
         <Spinner
