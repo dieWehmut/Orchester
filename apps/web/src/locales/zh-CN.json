@@ -291,7 +291,18 @@
     "events": "个事件",
     "sequence": "序号 #",
     "noFileChanges": "暂无文件变更",
-    "noFileChangesDescription": "活动运行报告的文件变更会显示在这里。"
+    "noFileChangesDescription": "活动运行报告的文件变更会显示在这里。",
+    "reviewTitle": "审查",
+    "reviewDescription": "工作区改动集合，按每处改动所在的位置筛选。",
+    "filterLabel": "筛选改动",
+    "filter": {
+      "all": "全部",
+      "staged": "已暂存",
+      "unstaged": "未暂存",
+      "branch": "分支",
+      "lastTurn": "最近一轮"
+    },
+    "review": "审查"
   },
   "bottomPanel": {
     "label": "底部面板",

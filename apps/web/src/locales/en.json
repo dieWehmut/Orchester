@@ -291,7 +291,18 @@
     "events": "events",
     "sequence": "#",
     "noFileChanges": "No file changes",
-    "noFileChangesDescription": "File changes reported by the active run will appear here."
+    "noFileChangesDescription": "File changes reported by the active run will appear here.",
+    "reviewTitle": "Review",
+    "reviewDescription": "The working copy change set, filtered by where each change sits.",
+    "filterLabel": "Filter changes",
+    "filter": {
+      "all": "All",
+      "staged": "Staged",
+      "unstaged": "Unstaged",
+      "branch": "Branch",
+      "lastTurn": "Last turn"
+    },
+    "review": "Review"
   },
   "bottomPanel": {
     "label": "Bottom panel",

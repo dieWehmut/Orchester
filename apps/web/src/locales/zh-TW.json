@@ -291,7 +291,18 @@
     "events": "個事件",
     "sequence": "序號 #",
     "noFileChanges": "尚無檔案變更",
-    "noFileChangesDescription": "目前執行回報的檔案變更將顯示於此。"
+    "noFileChangesDescription": "目前執行回報的檔案變更將顯示於此。",
+    "reviewTitle": "審查",
+    "reviewDescription": "工作區改動集合，按每處改動所在的位置篩選。",
+    "filterLabel": "篩選改動",
+    "filter": {
+      "all": "全部",
+      "staged": "已暫存",
+      "unstaged": "未暫存",
+      "branch": "分支",
+      "lastTurn": "最近一輪"
+    },
+    "review": "審查"
   },
   "bottomPanel": {
     "label": "底部面板",

@@ -19,6 +19,8 @@ import type { AgentStatusStreamFactory } from './agent-fleet'
 import { createAgentsApi } from '../api/agents'
 import { createAgentStatusSocket } from '../transport/agent-status-socket'
 import { useModelCatalogStore } from './model-catalog'
+import { createWorkspaceReviewApi } from '../api/workspace-review'
+import { useWorkspaceReviewStore } from './workspace-review'
 
 export interface AppStores {
   http: HttpClient
@@ -28,6 +30,7 @@ export interface AppStores {
   run: RunStore
   agents: ReturnType<typeof useAgentFleetStore>
   models: ReturnType<typeof useModelCatalogStore>
+  review: ReturnType<typeof useWorkspaceReviewStore>
   pinia: Pinia
   getCsrfToken: () => string | null
   start: () => Promise<void>
@@ -67,12 +70,14 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
   const pinia = createAppPinia()
   const agents = useAgentFleetStore(pinia)
   const models = useModelCatalogStore(pinia)
+  const review = useWorkspaceReviewStore(pinia)
   const agentStatusStreamFactory =
     options.agentStatusStreamFactory === undefined
       ? createAgentStatusSocket
       : options.agentStatusStreamFactory
   agents.configure(createAgentsApi(http), agentStatusStreamFactory ?? undefined)
   models.configure(createModelsApi(http))
+  review.configure(createWorkspaceReviewApi(http))
 
   const stores: AppStores = {
     http,
@@ -82,12 +87,13 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
     run,
     agents,
     models,
+    review,
     pinia,
     getCsrfToken: () => csrfToken,
     async start(): Promise<void> {
       await bootstrap.load()
       if (bootstrap.status.value === 'ready' && bootstrap.context.value?.workspace.selected) {
-        await Promise.all([sessions.load(), agents.start(), models.load()])
+        await Promise.all([sessions.load(), agents.start(), models.load(), review.load()])
       }
     },
     stop(): void {

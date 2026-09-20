@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { AgentDetails, agentActivityMessageKey } from '../features/agent-presence'
 import ChangeInspector from '../components/changes/ChangeInspector.vue'
+import ReviewPanel from '../components/changes/ReviewPanel.vue'
+import { turnIndexByPath, withTurns } from '../components/changes/review-filters'
 import { summarizeFileChanges } from '../components/changes/change-summary'
 import InspectorDock from '../components/layout/InspectorDock.vue'
 import type { InspectorTab } from '../components/layout/inspector-tabs'
@@ -24,10 +26,25 @@ import { routerKey } from 'vue-router'
 
 const { t } = useI18n()
 const appRouter = inject(routerKey, null)
-const { sessions, run, agents, bootstrap, models } = useAppStores()
+const { sessions, run, agents, bootstrap, models, review } = useAppStores()
 const runView = computed(() => run.view.value)
 const runEvents = computed(() => run.events.value)
 const changeSummaries = computed(() => summarizeFileChanges(runView.value.fileChanges))
+/**
+ * The Review tab's change set, section 4.7.
+ *
+ * Two authorities answer one question: the runtime knows where a change sits
+ * in the working copy, and the run knows which turn produced it. The join is
+ * by path, and a path the run never reported belongs to no turn rather than
+ * to a guessed one.
+ */
+const reviewChanges = computed(() =>
+  withTurns(
+    review.changes,
+    turnIndexByPath(runView.value.turns, runView.value.fileChanges),
+  ),
+)
+const reviewLastTurn = computed(() => runView.value.turns.length || null)
 const selectedChangePath = ref<string | null>(null)
 const selectedAgentId = ref<string | null>(null)
 const activeInspectorTab = ref<InspectorTab>('context')
@@ -321,6 +338,11 @@ useShortcut(
           <AgentDetails :agent="selectedAgent" />
         </template>
         <template #changes>
+          <ReviewPanel
+            :changes="reviewChanges"
+            :branch-changes="review.branchChanges"
+            :last-turn="reviewLastTurn"
+          />
           <ChangeInspector
             :changes="changeSummaries"
             :selected-path="selectedChangePath"
