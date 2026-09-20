@@ -46,11 +46,11 @@ wave, which lands with an updated snapshot.
 
 - [x] U3-01: Add explicit scroll state (`data-can-scroll-up/down`) and the top fade.
 - [x] U3-02: Add the scroll-to-bottom button with its unread indicator.
-- [ ] U3-03: Virtualise turns.
-- [ ] U3-04: Add the floating message navigation rail with scrubbing.
-- [ ] U3-05: Restyle tool-invocation cards by `call_id`, with collapsed summary and expandable body.
-- [ ] U3-06: Add the reasoning disclosure.
-- [ ] U3-07: Add word-arrival streaming that does not reflow ancestors.
+- [x] U3-03: Virtualise turns.
+- [x] U3-04: Add the floating message navigation rail with scrubbing.
+- [x] U3-05: Restyle tool-invocation cards by `call_id`, with collapsed summary and expandable body.
+- [x] U3-06: Add the reasoning disclosure.
+- [x] U3-07: Add word-arrival streaming that does not reflow ancestors.
 
 ## Wave U4 — composer and plan strip
 
