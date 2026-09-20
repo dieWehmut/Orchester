@@ -298,5 +298,8 @@
     "terminalEmpty": "執行開始後，終端機會顯示在這裡。",
     "outputEmpty": "目前執行的命令輸出會顯示在這裡。",
     "auditEmpty": "核准與決策記錄會顯示在這裡。"
+  },
+  "tabStrip": {
+    "label": "已開啟的分頁"
   }
 }

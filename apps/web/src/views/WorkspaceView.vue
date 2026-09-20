@@ -6,6 +6,8 @@ import InspectorDock from '../components/layout/InspectorDock.vue'
 import type { InspectorTab } from '../components/layout/inspector-tabs'
 import AppShell from '../components/layout/AppShell.vue'
 import BottomPanel from '../components/layout/BottomPanel.vue'
+import TabStrip from '../components/layout/TabStrip.vue'
+import { reorderTab, type ShellTab } from '../components/layout/tab-strip'
 import WorkspaceSidebar from '../components/layout/WorkspaceSidebar.vue'
 import ThreadBar from '../components/layout/ThreadBar.vue'
 import SessionTranscript from '../components/sessions/SessionTranscript.vue'
@@ -53,6 +55,58 @@ const {
 } = sessions
 
 const threadTitle = computed(() => selected.value?.title ?? t('transcript.newChatTitle'))
+
+/**
+ * The strip's tabs, region B.
+ *
+ * The strip is unified, so a tab names what it opens rather than which pane
+ * drew it: the run is always the first tab because the transcript cannot be
+ * collapsed, and the inspector's tabs follow it as the surfaces the user has
+ * opened. Closing a tab therefore selects a neighbour instead of emptying the
+ * strip, which is the section 2 rule that the transcript stays.
+ */
+const shellTabs = computed<readonly ShellTab[]>(() => {
+  const tabs: ShellTab[] = [{ id: 'run', kind: 'run', label: threadTitle.value }]
+  tabs.push({ id: 'inspector', kind: 'agent', label: t('inspector.label') })
+  if (changeSummaries.value.length > 0) {
+    tabs.push({ id: 'changes', kind: 'diff', label: t('inspector.changes') })
+  }
+  return tabs
+})
+const activeTabId = ref('run')
+
+function handleTabSelect(id: string): void {
+  activeTabId.value = id
+  if (id === 'changes') activeInspectorTab.value = 'changes'
+  if (id === 'inspector') inspectorOpen.value = true
+}
+
+function handleTabClose(id: string): void {
+  // The transcript is the product and cannot be closed, so the run tab reports
+  // the close and stays; the others fold back into the inspector.
+  if (id === 'run') return
+  if (id === 'changes') activeInspectorTab.value = 'context'
+  activeTabId.value = 'run'
+}
+
+function handleTabReorder(move: { from: string; to: string }): void {
+  // The order lives in the strip's own list, so a reorder is applied by
+  // rebuilding it - the run stays first, and the rest follow the drag.
+  const order = reorderTab(shellTabs.value, move.from, move.to).map((tab) => tab.id)
+  shellTabOrder.value = order
+}
+
+/** The user's order once they have dragged one, in preference to the default. */
+const shellTabOrder = ref<readonly string[]>([])
+const orderedShellTabs = computed<readonly ShellTab[]>(() => {
+  if (shellTabOrder.value.length === 0) return shellTabs.value
+  const byId = new Map(shellTabs.value.map((tab) => [tab.id, tab]))
+  const ordered = shellTabOrder.value
+    .map((id) => byId.get(id))
+    .filter((tab): tab is ShellTab => tab !== undefined)
+  for (const tab of shellTabs.value) if (!ordered.includes(tab)) ordered.push(tab)
+  return ordered
+})
 
 /** The three surfaces region I holds, named through the locale. */
 const bottomPanelTabs = computed(() => [
@@ -147,6 +201,15 @@ useShortcut(
 </script>
 
 <template>
+  <TabStrip
+    data-testid="workspace-tab-strip"
+    :tabs="orderedShellTabs"
+    :active-id="activeTabId"
+    :label="t('tabStrip.label')"
+    @select="handleTabSelect"
+    @close="handleTabClose"
+    @reorder="handleTabReorder"
+  />
   <AppShell
     data-testid="workspace-view"
     :sessions-title="t('sessions.title')"

@@ -298,5 +298,8 @@
     "terminalEmpty": "运行开始后，终端会显示在这里。",
     "outputEmpty": "当前运行的命令输出会显示在这里。",
     "auditEmpty": "审批与决策记录会显示在这里。"
+  },
+  "tabStrip": {
+    "label": "已打开的标签页"
   }
 }
