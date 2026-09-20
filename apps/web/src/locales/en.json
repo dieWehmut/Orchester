@@ -302,7 +302,9 @@
       "branch": "Branch",
       "lastTurn": "Last turn"
     },
-    "review": "Review"
+    "review": "Review",
+    "expandAll": "Expand all folders",
+    "collapseAll": "Collapse all folders"
   },
   "bottomPanel": {
     "label": "Bottom panel",

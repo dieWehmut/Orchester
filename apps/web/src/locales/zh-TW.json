@@ -302,7 +302,9 @@
       "branch": "分支",
       "lastTurn": "最近一輪"
     },
-    "review": "審查"
+    "review": "審查",
+    "expandAll": "展開全部資料夾",
+    "collapseAll": "摺疊全部資料夾"
   },
   "bottomPanel": {
     "label": "底部面板",

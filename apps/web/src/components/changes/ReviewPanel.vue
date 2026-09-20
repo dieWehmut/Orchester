@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import { AppBadge, AppSegmentedControl, EmptyState, type AppSegmentOption } from '@orchester/design'
+import { ChevronDown, ChevronRight, ChevronsDownUp, ChevronsUpDown } from '@lucide/vue'
+import {
+  AppBadge,
+  AppSegmentedControl,
+  EmptyState,
+  IconButton,
+  type AppSegmentOption,
+} from '@orchester/design'
 import { computed, ref } from 'vue'
 
 import { useI18n } from '../../i18n'
 import { filterChanges, type ReviewChange, type ReviewFilter } from './review-filters'
+import { buildReviewTree, directoryPaths, visibleTreeRows } from './review-tree'
 
 /**
  * The Review tab, section 4.7 of the design spec.
@@ -40,6 +48,36 @@ const visibleChanges = computed(() =>
     lastTurn: props.lastTurn,
   }),
 )
+
+/**
+* The tree, section 4.7: ordered identically to the diff list.
+*
+* Built from the filtered changes rather than the whole set, so a filter that
+* admits nothing shows an empty tree instead of a tree of things it excluded.
+*/
+const tree = computed(() => buildReviewTree(visibleChanges.value))
+const collapsed = ref<ReadonlySet<string>>(new Set())
+const rows = computed(() => visibleTreeRows(tree.value, collapsed.value))
+const allCollapsed = computed(() =>
+  collapsed.value.size > 0 && collapsed.value.size >= directoryPaths(tree.value).length,
+)
+
+function toggleDirectory(path: string): void {
+  const next = new Set(collapsed.value)
+  if (next.has(path)) next.delete(path)
+  else next.add(path)
+  collapsed.value = next
+}
+
+/**
+* Collapse or expand every directory at once.
+*
+* Section 4.7 asks for expand/collapse navigation; one control for the whole
+* tree saves the reader from closing a deep tree one directory at a time.
+*/
+function toggleAll(): void {
+  collapsed.value = allCollapsed.value ? new Set() : new Set(directoryPaths(tree.value))
+}
 
 function kindLabel(kind: ReviewChange['kind']): string {
   switch (kind) {
@@ -85,6 +123,15 @@ function selectFilter(id: string): void {
       data-review-filters
       @update:model-value="selectFilter"
     />
+    <IconButton
+      v-if="visibleChanges.length > 0"
+      :label="allCollapsed ? t('inspector.expandAll') : t('inspector.collapseAll')"
+      data-review-toggle-all
+      @click="toggleAll"
+    >
+      <ChevronsDownUp v-if="allCollapsed" :size="16" :stroke-width="1.8" />
+      <ChevronsUpDown v-else :size="16" :stroke-width="1.8" />
+    </IconButton>
 
     <div v-if="visibleChanges.length === 0" data-review-empty>
       <EmptyState
@@ -93,24 +140,42 @@ function selectFilter(id: string): void {
       />
     </div>
 
-    <div v-else class="review-panel__list" role="list">
-      <button
-        v-for="change in visibleChanges"
-        :key="change.path"
-        class="review-panel__row"
-        type="button"
-        role="listitem"
-        :aria-label="`${change.path}, ${kindLabel(change.kind)}`"
-        :data-review-file="change.path"
-        :data-review-kind="change.kind"
-        :data-review-staged="change.staged"
-        :data-review-unstaged="change.unstaged"
-      >
-        <span class="review-panel__path">{{ change.path }}</span>
-        <span class="review-panel__meta">
-          <AppBadge :tone="badgeTone(change.kind)">{{ kindLabel(change.kind) }}</AppBadge>
-        </span>
-      </button>
+    <div v-else class="review-panel__list" role="tree" :aria-label="t('inspector.review')">
+      <template v-for="row in rows" :key="row.node.kind === 'file' ? row.node.path : row.node.path + '/'">
+        <button
+          v-if="row.node.kind === 'directory'"
+          class="review-panel__row review-panel__row--directory"
+          type="button"
+          role="treeitem"
+          :aria-expanded="!collapsed.has(row.node.path)"
+          :style="{ paddingInlineStart: `calc(var(--space-2) + ${row.depth} * var(--space-3))` }"
+          :data-review-directory="row.node.path"
+          @click="toggleDirectory(row.node.path)"
+        >
+          <span class="review-panel__chevron" aria-hidden="true">
+            <ChevronRight v-if="collapsed.has(row.node.path)" :size="14" :stroke-width="1.8" />
+            <ChevronDown v-else :size="14" :stroke-width="1.8" />
+          </span>
+          <span class="review-panel__path">{{ row.node.name }}</span>
+        </button>
+        <button
+          v-else
+          class="review-panel__row"
+          type="button"
+          role="treeitem"
+          :aria-label="`${row.node.path}, ${kindLabel(row.node.change.kind)}`"
+          :style="{ paddingInlineStart: `calc(var(--space-2) + ${row.depth} * var(--space-3))` }"
+          :data-review-file="row.node.path"
+          :data-review-kind="row.node.change.kind"
+          :data-review-staged="row.node.change.staged"
+          :data-review-unstaged="row.node.change.unstaged"
+        >
+          <span class="review-panel__path">{{ row.node.name }}</span>
+          <span class="review-panel__meta">
+            <AppBadge :tone="badgeTone(row.node.change.kind)">{{ kindLabel(row.node.change.kind) }}</AppBadge>
+          </span>
+        </button>
+      </template>
     </div>
   </section>
 </template>
@@ -136,6 +201,8 @@ function selectFilter(id: string): void {
   justify-content: space-between;
   gap: var(--space-2);
   padding: var(--space-2);
+  /* The tree sets the inline start from the row depth, so the base padding
+     stays symmetric and only the indent moves. */
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   background: transparent;
@@ -171,5 +238,18 @@ function selectFilter(id: string): void {
   flex: none;
   align-items: center;
   gap: var(--space-2);
+}
+
+.review-panel__row--directory {
+  justify-content: flex-start;
+  color: var(--color-text-secondary);
+  font-weight: var(--weight-medium);
+}
+
+.review-panel__chevron {
+  display: grid;
+  inline-size: 1rem;
+  place-items: center;
+  color: var(--color-text-tertiary);
 }
 </style>
