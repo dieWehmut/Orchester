@@ -88,10 +88,19 @@ wave, which lands with an updated snapshot.
 
 ## Wave U8 — migration and cleanup
 
-- [ ] U8-01: Re-point the legacy `--color-bg-*`, `--color-border-*`, `--color-text-*` tokens at L1 and update the snapshot.
-- [ ] U8-02: Remove the two obsolete `amber` snapshots.
-- [ ] U8-03: Sweep components for L0/L1 leakage and bare `px` spacing.
-- [ ] U8-04: Replace remaining hard-coded English strings with locale keys.
+- [x] U8-01: Re-point the legacy `--color-bg-*`, `--color-border-*`, `--color-text-*` tokens at L1 and update the snapshot.
+  - `packages/design/src/tokens.css` carries the legacy names as `var(--color-surface-*)`
+    and `var(--color-text-*)` aliases, and the theme snapshot holds the mapping.
+- [x] U8-02: Remove the two obsolete `amber` snapshots.
+  - The accent schemes are `codex`, `violet`, `teal` and `rose`; the snapshot's
+    `dark-amber` and `light-amber` entries are gone.
+- [x] U8-03: Sweep components for L0/L1 leakage and bare `px` spacing.
+  - `packages/design/test/component-migration.test.ts` holds the sweep as a
+    standing rule over both component layers.
+- [x] U8-04: Replace remaining hard-coded English strings with locale keys.
+  - `apps/web/test/locale-sweep.test.ts` holds the sweep as a standing rule, and
+    the shortcut registry and the composer's command list carry keys rather than
+    words so the surface resolves them.
 - [ ] U8-05: Re-run the full gate: `pnpm typecheck`, `pnpm test`, both builds.
 
 ## Verification
