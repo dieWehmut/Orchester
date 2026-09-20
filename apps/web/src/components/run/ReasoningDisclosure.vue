@@ -62,6 +62,7 @@ const characterCount = computed(() => props.text.trim().length)
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
+  min-block-size: var(--hit-target-min, 32px);
   border: 0;
   background: none;
   color: inherit;

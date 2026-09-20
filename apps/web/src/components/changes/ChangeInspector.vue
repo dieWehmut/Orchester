@@ -130,7 +130,7 @@ function badgeTone(kind: ChangeSummary['kind']): 'success' | 'info' | 'error' {
 .change-inspector__row {
   display: grid;
   grid-template-columns: 1.75rem minmax(0, 1fr);
-  min-block-size: 4rem;
+  min-block-size: max(4rem, var(--hit-target-min, 32px));
   align-items: center;
   inline-size: 100%;
   gap: var(--space-2);

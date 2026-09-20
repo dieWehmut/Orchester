@@ -100,7 +100,7 @@
       "search": "搜尋快速鍵",
       "change": "變更",
       "capture": "按下新的按鍵",
-      "reset": "全部重設",
+      "reset": "重設全部快速鍵",
       "empty": "沒有符合的快速鍵。"
     },
     "language": {
@@ -173,7 +173,7 @@
       "hint": "這些選擇保存在本機，並在首次繪製前還原。",
       "import": "匯入主題",
       "export": "匯出主題",
-      "reset": "重設",
+      "reset": "重設外觀",
       "invalid": "這個檔案不是 Orchester 的外觀設定。"
     },
     "notifications": {

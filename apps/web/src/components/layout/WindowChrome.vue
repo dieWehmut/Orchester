@@ -141,7 +141,7 @@ const { close, maximized, minimize, toggleMaximize } = useWindowChrome(controlle
 .window-chrome__control {
   position: relative;
   display: grid;
-  inline-size: 22px;
+  min-inline-size: var(--titlebar-hit-target, 32px);
   block-size: var(--desktop-titlebar-height, 36px);
   place-items: center;
   border: 0;
@@ -195,7 +195,7 @@ const { close, maximized, minimize, toggleMaximize } = useWindowChrome(controlle
   }
 
   .window-chrome__control {
-    inline-size: 22px;
+    min-inline-size: var(--titlebar-hit-target, 32px);
   }
 }
 </style>

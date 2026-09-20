@@ -100,7 +100,7 @@
       "search": "搜索快捷键",
       "change": "更改",
       "capture": "按下新的按键",
-      "reset": "全部重置",
+      "reset": "重置全部快捷键",
       "empty": "没有匹配的快捷键。"
     },
     "language": {
@@ -173,7 +173,7 @@
       "hint": "这些选择保存在本机，并在首次绘制前恢复。",
       "import": "导入主题",
       "export": "导出主题",
-      "reset": "重置",
+      "reset": "重置外观",
       "invalid": "这个文件不是 Orchester 的外观配置。"
     },
     "notifications": {

@@ -66,6 +66,7 @@ defineEmits<{
 <style scoped>
 .agent-fleet-row {
   display: grid;
+  min-block-size: var(--hit-target-min, 32px);
   grid-template-columns: 28px minmax(0, 1fr) auto;
   align-items: center;
   inline-size: 100%;

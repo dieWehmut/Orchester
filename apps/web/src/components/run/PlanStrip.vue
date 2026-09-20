@@ -189,6 +189,7 @@ function segmentState(index: number): SegmentState {
 
 .plan-strip__toggle {
   flex: none;
+  min-block-size: var(--hit-target-min, 32px);
   border: 0;
   background: none;
   color: inherit;

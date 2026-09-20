@@ -23,6 +23,8 @@ const props = withDefaults(
     confirmDescription?: string
     confirmAcceptLabel?: string
     confirmCancelLabel?: string
+    /** The name of the control that opens the preset menu. */
+    menuLabel?: string
   }>(),
   {
     modelValue: 'ask',
@@ -34,6 +36,7 @@ const props = withDefaults(
       'Full access lets the agent change files and reach the network without stopping to ask. It applies to the next run.',
     confirmAcceptLabel: 'Use full access',
     confirmCancelLabel: 'Keep the current preset',
+    menuLabel: 'Approval preset',
   },
 )
 
@@ -86,7 +89,7 @@ function cancel(): void {
     :data-approval-preset-state="props.modelValue"
     :data-approval-preset-danger="isDanger"
   >
-    <AppMenu :label="confirmTitle" :items="menuItems" align="end" @select="choose">
+    <AppMenu :label="`${menuLabel}: ${currentLabel}`" :items="menuItems" align="end" @select="choose">
       <template #trigger>
         <span class="approval-preset__trigger" data-approval-preset-trigger>
           <ShieldCheck :size="15" aria-hidden="true" />

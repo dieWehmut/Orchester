@@ -164,6 +164,7 @@ watch(
 
 .run-panel__to-bottom {
   align-self: center;
+  min-block-size: var(--hit-target-min, 32px);
   margin-block-start: calc(-1 * var(--space-6));
   padding: var(--space-1) var(--space-3);
   border: 1px solid var(--color-border-base);

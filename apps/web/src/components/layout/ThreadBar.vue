@@ -166,7 +166,10 @@ defineEmits<{
 
 .thread-bar__share {
   display: inline-flex;
+  min-inline-size: var(--hit-target-min, 32px);
+  min-block-size: var(--hit-target-min, 32px);
   align-items: center;
+  justify-content: center;
   gap: var(--space-2);
   padding: var(--space-1) var(--space-2);
   border: 0;

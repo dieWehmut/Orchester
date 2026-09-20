@@ -106,6 +106,10 @@ const stateLabel = computed(() => {
 
 .tool-card__toggle {
   display: inline-flex;
+  min-inline-size: var(--hit-target-min, 32px);
+  min-block-size: var(--hit-target-min, 32px);
+  align-items: center;
+  justify-content: center;
   border: 0;
   background: none;
   color: inherit;

@@ -100,7 +100,7 @@
       "search": "Search shortcuts",
       "change": "Change",
       "capture": "Press the new keys",
-      "reset": "Reset all",
+      "reset": "Reset all shortcuts",
       "empty": "No shortcut matches that."
     },
     "language": {
@@ -173,7 +173,7 @@
       "hint": "These choices are kept on this machine and restored before the first paint.",
       "import": "Import theme",
       "export": "Export theme",
-      "reset": "Reset",
+      "reset": "Reset appearance",
       "invalid": "That file is not an Orchester appearance profile."
     },
     "notifications": {
