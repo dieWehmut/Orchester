@@ -78,14 +78,27 @@ function controlsOf(wrapper: { findAll: (selector: string) => { element: Element
 }
 
 describe('hit target contract in the workspace', () => {
-  it('floors the caption buttons on the titlebar hit-target token', () => {
-    // Section 8 gives the caption buttons the OS metric, and their inline size
-    // was a hand-picked 22 px - under both that metric and the section 7 floor.
+  it('keeps Windows caption targets at the native 46 by 32 DIP metric', () => {
     const chrome = source('components/layout/WindowChrome.vue')
-    const control = /\.window-chrome__control\s*\{[^}]*\}/s.exec(chrome)?.[0] ?? ''
-
-    expect(control).toContain('var(--titlebar-hit-target')
-    expect(control).not.toMatch(/inline-size:\s*\d+px/)
+    const style = document.createElement('style')
+    style.textContent = /<style scoped>([\s\S]*?)<\/style>/.exec(chrome)?.[1] ?? ''
+    document.head.append(style)
+    const wrapper = mount(WindowChrome, {
+      attachTo: document.body,
+      props: { controller: { ...chromeController(), platform: 'windows' } },
+    })
+    try {
+      for (const control of wrapper.findAll('[data-window-action]')) {
+        const computed = getComputedStyle(control.element)
+        expect(computed.inlineSize).toBe('46px')
+        expect(computed.minInlineSize).toBe('46px')
+        expect(computed.blockSize).toBe('32px')
+        expect(computed.minBlockSize).toBe('32px')
+      }
+    } finally {
+      wrapper.unmount()
+      style.remove()
+    }
   })
 
   it('floors the toolbar and row controls the shell mounts', () => {
