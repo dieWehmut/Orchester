@@ -8,6 +8,10 @@ import AppShell from '../components/layout/AppShell.vue'
 import BottomPanel from '../components/layout/BottomPanel.vue'
 import TabStrip from '../components/layout/TabStrip.vue'
 import { reorderTab, type ShellTab } from '../components/layout/tab-strip'
+import {
+  readTabStripState,
+  writeTabStripState,
+} from '../components/layout/tab-strip-persistence'
 import WorkspaceSidebar from '../components/layout/WorkspaceSidebar.vue'
 import ThreadBar from '../components/layout/ThreadBar.vue'
 import SessionTranscript from '../components/sessions/SessionTranscript.vue'
@@ -15,7 +19,7 @@ import RunPanel from '../components/run/RunPanel.vue'
 import { useI18n } from '../i18n'
 import { useAppStores } from '../stores/app'
 import { useShortcut } from '../shortcuts'
-import { computed, inject, ref } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import { routerKey } from 'vue-router'
 
 const { t } = useI18n()
@@ -107,6 +111,34 @@ const orderedShellTabs = computed<readonly ShellTab[]>(() => {
   for (const tab of shellTabs.value) if (!ordered.includes(tab)) ordered.push(tab)
   return ordered
 })
+
+/**
+ * The shell's remembered tab state.
+ *
+ * Read once on mount rather than at setup so the first paint is the strip the
+ * runtime can always serve - the run alone - and the stored order lands on top
+ * of it. Written on every change so a window closed mid-session reopens on the
+ * surface the user was looking at.
+ */
+onMounted(() => {
+  const stored = readTabStripState()
+  if (stored.order.length > 0) shellTabOrder.value = stored.order
+  const ids = orderedShellTabs.value.map((tab) => tab.id)
+  if (stored.activeId !== null && ids.includes(stored.activeId)) {
+    activeTabId.value = stored.activeId
+    if (stored.activeId === 'changes') activeInspectorTab.value = 'changes'
+  }
+})
+
+function persistTabs(): void {
+  writeTabStripState({
+    order: orderedShellTabs.value.map((tab) => tab.id),
+    activeId: activeTabId.value,
+  })
+}
+
+watch([orderedShellTabs, activeTabId], persistTabs)
+
 
 /** The three surfaces region I holds, named through the locale. */
 const bottomPanelTabs = computed(() => [
