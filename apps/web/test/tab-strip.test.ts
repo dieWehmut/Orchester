@@ -103,14 +103,23 @@ describe('TabStrip', () => {
     expect(atFirst.emitted('select')?.at(-1)).toEqual(['diff:1'])
   })
 
-  it('closes a tab on a middle click and on the window close chord', async () => {
+  it('closes a tab on a middle click', async () => {
     const wrapper = mountStrip()
 
     await wrapper.get('[data-tabstrip-tab="terminal:1"]').trigger('auxclick', { button: 1 })
     expect(wrapper.emitted('close')?.at(-1)).toEqual(['terminal:1'])
+  })
+
+  it('leaves the window close chord to the shell, so one press closes one thing', async () => {
+    // The strip answers the chords that move between its own tabs. Mod+W is not
+    // one of them: the shell answers it, because once the last tab is in front
+    // that same chord means the window. A second owner here would close the tab
+    // and then the window for a single press.
+    const wrapper = mountStrip()
 
     await wrapper.get('[role="tablist"]').trigger('keydown', { key: 'w', ctrlKey: true })
-    expect(wrapper.emitted('close')?.at(-1)).toEqual(['run:1'])
+
+    expect(wrapper.emitted('close')).toBeUndefined()
   })
 
   it('reorders by dragging one tab onto another', async () => {
