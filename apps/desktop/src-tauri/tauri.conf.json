@@ -36,6 +36,8 @@
         "minWidth": 960,
         "minHeight": 640,
         "decorations": false,
+        "transparent": false,
+        "backgroundColor": "#101010",
         "shadow": true,
         "resizable": true,
         "devtools": false

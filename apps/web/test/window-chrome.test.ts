@@ -44,6 +44,13 @@ function fakeController(options: { rejectActions?: boolean } = {}): DesktopWindo
 }
 
 describe('WindowChrome', () => {
+  it('keeps an opaque surface when the native runtime offers no translucency', () => {
+    const controller = Object.assign(fakeController(), { platform: 'windows' as const })
+    const wrapper = mount(WindowChrome, { props: { controller } })
+    expect(wrapper.attributes('data-window-material')).toBe('opaque')
+    wrapper.unmount()
+  })
+
   it('leaves drag-region double clicks to Tauri so the window is not toggled twice', async () => {
     const controller = fakeController()
     const wrapper = mount(WindowChrome, { props: { controller } })

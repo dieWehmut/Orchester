@@ -35,6 +35,7 @@ const { close, maximized, minimize, toggleMaximize } = useWindowChrome(controlle
     v-if="controller.enabled"
     class="window-chrome"
     data-window-chrome
+    data-window-material="opaque"
     :data-window-platform="platform"
   >
     <div v-if="platform === 'macos'" class="window-chrome__traffic-lights" data-native-traffic-lights aria-hidden="true" />
@@ -94,6 +95,13 @@ const { close, maximized, minimize, toggleMaximize } = useWindowChrome(controlle
   background: var(--color-bg-surface);
   color: var(--color-text-secondary);
   user-select: none;
+}
+
+/* CSS blur support does not prove native compositor availability. The shell
+   currently supplies opaque windows on every supported OS. */
+.window-chrome[data-window-material='opaque'] {
+  background: var(--color-surface-base);
+  backdrop-filter: none;
 }
 
 .window-chrome[data-window-platform='macos'] {
