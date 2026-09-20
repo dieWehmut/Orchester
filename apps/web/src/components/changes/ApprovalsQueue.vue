@@ -42,11 +42,20 @@ const emit = defineEmits<{
   decide: [decision: { approvalId: string; rowVersion: number; decision: 'approved' | 'denied' }]
 }>()
 
-/** The three choices the spec names, in the order they are offered. */
+/**
+ * The three choices the spec names, in the order they are offered.
+ *
+ * "Allow for run" is present because section 4.7 names it, but the protocol
+ * sends only `approved` or `denied`: a grant that outlives one action needs
+ * a scope the runtime does not carry yet. It stays visibly unavailable
+ * rather than silently behaving like "Allow once", because a control that
+ * looks like it grants more than it does is worse than one that admits it
+ * cannot.
+ */
 const CHOICES = [
-  { id: 'allow-once', decision: 'approved' },
-  { id: 'allow-for-run', decision: 'approved' },
-  { id: 'deny', decision: 'denied' },
+  { id: 'allow-once', decision: 'approved', unavailable: null },
+  { id: 'allow-for-run', decision: 'approved', unavailable: 'run-scope' },
+  { id: 'deny', decision: 'denied', unavailable: null },
 ] as const
 
 function choiceLabel(id: (typeof CHOICES)[number]['id']): string {
@@ -142,7 +151,9 @@ const ordered = computed(() =>
             :key="choice.id"
             variant="ghost"
             size="sm"
+            :disabled="choice.unavailable !== null"
             :data-approval-choice="choice.id"
+            :data-approval-unavailable="choice.unavailable ?? undefined"
             @click="decide(approval, choice.decision)"
           >
             {{ choiceLabel(choice.id) }}

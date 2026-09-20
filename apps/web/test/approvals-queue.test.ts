@@ -53,6 +53,18 @@ describe('ApprovalsQueue', () => {
     ])
   })
 
+  it('marks a run-scoped grant unavailable while the runtime cannot persist one', () => {
+    // The protocol sends `approved` or `denied`; a grant that outlives one
+    // action needs a scope the runtime does not carry yet. Offering it as
+    // though it worked would promise a decision the runtime cannot keep, so
+    // it stays visibly unavailable rather than silently behaving like
+    // "Allow once".
+    const wrapper = mount(ApprovalsQueue, { props: { approvals: [approval()] } })
+
+    const forRun = wrapper.get('[data-approval-choice="allow-for-run"]')
+    expect(forRun.attributes('disabled')).toBeDefined()
+    expect(forRun.attributes('data-approval-unavailable')).toBe('run-scope')
+  })
   it('emits the decision with the row version it was made against', async () => {
     const wrapper = mount(ApprovalsQueue, { props: { approvals: [approval()] } })
 
