@@ -40,7 +40,7 @@ wave, which lands with an updated snapshot.
 - [x] U2-02: Replace the three ad-hoc width variables with the rail/inspector clamps; add drag-to-resize with keyboard support and persistence.
 - [x] U2-03: Add the collapsible bottom panel with its own tab mechanism.
 - [x] U2-04: Add the unified tab strip with open/close/reorder/keyboard cycling and overflow fades.
-- [ ] U2-05: Persist open tabs and panel widths through the existing settings/state path.
+- [x] U2-05: Persist open tabs and panel widths through the existing settings/state path.
 
 ## Wave U3 — transcript
 
