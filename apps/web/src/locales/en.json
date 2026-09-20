@@ -337,5 +337,11 @@
   },
   "tabStrip": {
     "label": "Open tabs"
+  },
+  "window": {
+    "closeTitle": "Close Orchester?",
+    "closeDescription": "A run is still working. Closing the window hides Orchester; the run keeps going until you quit from the tray.",
+    "closeCancel": "Keep working",
+    "closeAccept": "Close window"
   }
 }

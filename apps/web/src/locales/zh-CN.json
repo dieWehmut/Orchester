@@ -337,5 +337,11 @@
   },
   "tabStrip": {
     "label": "已打开的标签页"
+  },
+  "window": {
+    "closeTitle": "关闭 Orchester？",
+    "closeDescription": "仍有任务正在运行。关闭窗口只会隐藏 Orchester，任务会继续运行，直到你从托盘退出。",
+    "closeCancel": "继续工作",
+    "closeAccept": "关闭窗口"
   }
 }

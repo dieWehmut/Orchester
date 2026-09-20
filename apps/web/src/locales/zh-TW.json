@@ -337,5 +337,11 @@
   },
   "tabStrip": {
     "label": "已開啟的分頁"
+  },
+  "window": {
+    "closeTitle": "關閉 Orchester？",
+    "closeDescription": "仍有任務正在執行。關閉視窗只會隱藏 Orchester，任務會繼續執行，直到你從托盤結束。",
+    "closeCancel": "繼續工作",
+    "closeAccept": "關閉視窗"
   }
 }

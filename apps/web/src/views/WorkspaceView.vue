@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { AppButton, AppDialog } from '@orchester/design'
 import { AgentDetails, agentActivityMessageKey } from '../features/agent-presence'
 import ChangeInspector from '../components/changes/ChangeInspector.vue'
 import ApprovalsQueue from '../components/changes/ApprovalsQueue.vue'
@@ -26,6 +27,7 @@ import RunPanel from '../components/run/RunPanel.vue'
 import { useI18n } from '../i18n'
 import { useAppStores } from '../stores/app'
 import { useShortcut } from '../shortcuts'
+import { DESKTOP_WINDOW_KEY } from '../platform/desktop-window'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { routerKey } from 'vue-router'
 
@@ -101,13 +103,25 @@ const threadTitle = computed(() => selected.value?.title ?? t('transcript.newCha
  */
 const shellTabs = computed<readonly ShellTab[]>(() => {
   const tabs: ShellTab[] = [{ id: 'run', kind: 'run', label: threadTitle.value }]
-  tabs.push({ id: 'inspector', kind: 'agent', label: t('inspector.label') })
-  if (changeSummaries.value.length > 0) {
+  if (inspectorTabOpen.value) {
+    tabs.push({ id: 'inspector', kind: 'agent', label: t('inspector.label') })
+  }
+  if (inspectorTabOpen.value && changeSummaries.value.length > 0) {
     tabs.push({ id: 'changes', kind: 'diff', label: t('inspector.review') })
   }
   return tabs
 })
 const activeTabId = ref('run')
+
+/**
+ * Whether the inspector's own tab is open in the strip.
+ *
+ * The transcript is the product and cannot be closed, so it is the tab left
+ * when the others are gone. Closing the inspector's tab therefore folds the
+ * inspector away rather than emptying the strip, and the pane comes back - with
+ * its tab - when the reader asks for it again.
+ */
+const inspectorTabOpen = ref(true)
 
 function handleTabSelect(id: string): void {
   activeTabId.value = id
@@ -116,12 +130,21 @@ function handleTabSelect(id: string): void {
 }
 
 function handleTabClose(id: string): void {
-  // The transcript is the product and cannot be closed, so the run tab reports
-  // the close and stays; the others fold back into the inspector.
   if (id === 'run') return
+  // Closing the strip's inspector tab closes the surface it names. The tab
+  // that remains is the transcript, which is also what makes the next close
+  // chord a window close.
+  inspectorTabOpen.value = false
+  inspectorOpen.value = false
   if (id === 'changes') activeInspectorTab.value = 'context'
   activeTabId.value = 'run'
 }
+
+// Opening the inspector from anywhere else brings its tab back, so the strip
+// cannot disagree with the pane it names.
+watch([inspectorOpen, activeInspectorTab], ([open]) => {
+  if (open) inspectorTabOpen.value = true
+})
 
 function handleTabReorder(move: { from: string; to: string }): void {
   // The order lives in the strip's own list, so a reorder is applied by
@@ -295,6 +318,60 @@ useShortcut(
   handleOpenSettings,
 )
 
+/**
+ * The desktop window, when there is one.
+ *
+ * The shell provides it, so the browser runtime - and every page that is not
+ * the desktop app - injects nothing and keeps the chord for the browser's own
+ * tab handling instead.
+ */
+const desktopWindowController = inject(DESKTOP_WINDOW_KEY, null)
+const windowCloseConfirmOpen = ref(false)
+
+/**
+ * The close chord, section 8 of the design spec.
+ *
+ * Mod+W closes the active tab while there is one to close. Once the transcript
+ * is the only tab left, the chord means the window itself, and a run that is
+ * still working is confirmed first - closing the window must not silently
+ * discard work the reader cannot see again.
+ */
+function handleWindowCloseChord(): void {
+  if (activeTabId.value !== 'run') {
+    handleTabClose(activeTabId.value)
+    return
+  }
+  if (runBusy.value) {
+    windowCloseConfirmOpen.value = true
+    return
+  }
+  void desktopWindowController?.close()
+}
+
+async function confirmWindowClose(): Promise<void> {
+  windowCloseConfirmOpen.value = false
+  await desktopWindowController?.close()
+}
+
+function cancelWindowClose(): void {
+  windowCloseConfirmOpen.value = false
+}
+
+// The chord is bound only where the app can answer both halves of it. In a
+// browser the second half - hiding the window - is the browser's own tab, and
+// claiming the chord there would take that away to do nothing with it.
+if (desktopWindowController?.enabled) {
+  useShortcut(
+    {
+      id: 'window.close',
+      label: 'Close the active tab',
+      group: 'Layout',
+      keys: ['Mod', 'W'],
+    },
+    handleWindowCloseChord,
+  )
+}
+
 </script>
 
 <template>
@@ -419,6 +496,33 @@ useShortcut(
       <p class="workspace-view__panel-note">{{ t('bottomPanel.auditEmpty') }}</p>
     </template>
   </BottomPanel>
+  <AppDialog
+    :open="windowCloseConfirmOpen"
+    data-window-close-confirm
+    :title="t('window.closeTitle')"
+    :description="t('window.closeDescription')"
+    :close-label="t('window.closeCancel')"
+    @update:open="(open) => { if (!open) cancelWindowClose() }"
+  >
+    <template #footer>
+      <AppButton
+        variant="ghost"
+        size="sm"
+        data-window-close-confirm="cancel"
+        @click="cancelWindowClose"
+      >
+        {{ t('window.closeCancel') }}
+      </AppButton>
+      <AppButton
+        variant="danger"
+        size="sm"
+        data-window-close-confirm="accept"
+        @click="confirmWindowClose"
+      >
+        {{ t('window.closeAccept') }}
+      </AppButton>
+    </template>
+  </AppDialog>
 </template>
 
 <style scoped>

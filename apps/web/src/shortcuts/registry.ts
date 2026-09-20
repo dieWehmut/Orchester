@@ -36,6 +36,10 @@ export interface ShortcutEvent {
 /**
  * The bindings Orchester ships with.
  *
+ * `Mod+W` belongs to the shell rather than to the strip: it closes whatever
+ * tab the reader is looking at, and it is what hides the window once the
+ * transcript - the one tab the window exists for - is the one in front.
+ *
  * Every one of these has to be answered by a registered handler: the registry
  * test asserts there are no duplicate bindings, and the editor cannot show a
  * shortcut that no component claims.
@@ -70,6 +74,12 @@ export const DEFAULT_SHORTCUTS: readonly ShortcutDefinition[] = [
     label: 'Open settings',
     group: 'Layout',
     keys: ['Mod', ','],
+  },
+  {
+    id: 'window.close',
+    label: 'Close the active tab',
+    group: 'Layout',
+    keys: ['Mod', 'W'],
   },
 ]
 
