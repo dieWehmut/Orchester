@@ -81,8 +81,8 @@ wave, which lands with an updated snapshot.
 - [x] U7-01: Add settings search across all panels.
 - [x] U7-02: Add the keyboard-shortcut editor with keypress search and reset-all.
 - [x] U7-03: Add a shortcut registry that every component registers into, so the editor cannot drift from reality.
-- [ ] U7-04: Audit and fix the accessibility contract in §7 of the design spec.
-- [ ] U7-05: Add contrast assertions for every text/surface and border/surface pair.
+- [x] U7-04: Audit and fix the accessibility contract in §7 of the design spec.
+- [x] U7-05: Add contrast assertions for every text/surface and border/surface pair.
 
 ## Wave U8 — migration and cleanup
 
