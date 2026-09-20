@@ -217,6 +217,13 @@
       "title": "Font weight",
       "regular": "Regular",
       "medium": "Medium"
+    },
+    "terminalPlacement": {
+      "title": "Terminal",
+      "description": "Where terminal tabs open.",
+      "section": "Terminal",
+      "bottom": "Bottom panel",
+      "inspector": "Inspector"
     }
   },
   "notFound": {

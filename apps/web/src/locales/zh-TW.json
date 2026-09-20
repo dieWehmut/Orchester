@@ -217,6 +217,13 @@
       "title": "字重",
       "regular": "一般",
       "medium": "中等"
+    },
+    "terminalPlacement": {
+      "title": "終端",
+      "description": "終端分頁開啟的位置。",
+      "section": "終端",
+      "bottom": "底部面板",
+      "inspector": "審查面板"
     }
   },
   "notFound": {

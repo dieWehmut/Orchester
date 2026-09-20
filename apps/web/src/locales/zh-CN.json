@@ -217,6 +217,13 @@
       "title": "字重",
       "regular": "常规",
       "medium": "中等"
+    },
+    "terminalPlacement": {
+      "title": "终端",
+      "description": "终端标签页打开的位置。",
+      "section": "终端",
+      "bottom": "底部面板",
+      "inspector": "审查面板"
     }
   },
   "notFound": {
