@@ -263,7 +263,9 @@
     "loadMore": "加载更多",
     "resumable": "可恢复",
     "newChat": "新建对话",
-    "railTitle": "最近会话"
+    "railTitle": "最近会话",
+    "filterEmpty": "没有匹配的会话",
+    "searchPlaceholder": "搜索会话"
   },
   "run": {
     "announce": {

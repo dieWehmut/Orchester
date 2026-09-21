@@ -293,6 +293,18 @@ function handleInspectorTabChange(tab: InspectorTab): void {
 }
 
 /**
+ * The header bell opens the approvals the count is reporting.
+ *
+ * The bell is only drawn when something is waiting, so following it has to
+ * land on the queue those items are in: opening the inspector on some other
+ * tab would leave the reader looking at a count with nothing behind it.
+ */
+function handleOpenAttention(): void {
+  inspectorOpen.value = true
+  activeInspectorTab.value = 'approvals'
+}
+
+/**
  * A decision the reader took in the queue.
  *
  * The row version is what makes a stale entry detectable, so it is sent back
@@ -420,6 +432,9 @@ if (desktopWindowController?.enabled) {
         :product-name="t('app.name')"
         :workspace-name="workspaceName"
         :companion-label="companionLabel"
+        :search-label="t('sessions.searchPlaceholder')"
+        :attention-label="t('inspector.approvals')"
+        :attention-count="pendingApprovals"
         :session-status="status"
         :sessions="items"
         :selected-session-id="selectedId"
@@ -437,6 +452,7 @@ if (desktopWindowController?.enabled) {
         @select-agent="handleAgentSelect"
         @open-settings="handleOpenSettings"
         @toggle-companion="petVisibility.toggle()"
+        @open-attention="handleOpenAttention"
       />
     </template>
 

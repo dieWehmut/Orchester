@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { ChevronDown, ChevronRight, CircleUser, Settings, SquarePen } from '@lucide/vue'
+import {
+  Bell,
+  ChevronDown,
+  ChevronRight,
+  CircleUser,
+  Search,
+  Settings,
+  SquarePen,
+} from '@lucide/vue'
 import { computed, ref } from 'vue'
 
 import { AppButton, AppMenu, IconButton, type AppMenuItem } from '@orchester/design'
@@ -46,6 +54,12 @@ const props = withDefaults(
     accountHint?: string | null
     settingsLabel?: string
     companionLabel?: string
+    /** The accessible name the header's search action carries. */
+    searchLabel?: string
+    /** What the header's bell says is waiting, when anything is. */
+    attentionLabel?: string
+    /** How many items are waiting; the bell carries the count. */
+    attentionCount?: number
   }>(),
   {
     workspaceName: null,
@@ -53,6 +67,9 @@ const props = withDefaults(
     accountHint: null,
     settingsLabel: 'Settings',
     companionLabel: '',
+    searchLabel: 'Search',
+    attentionLabel: '',
+    attentionCount: 0,
   },
 )
 
@@ -60,7 +77,35 @@ const emit = defineEmits<{
   newSession: []
   openSettings: []
   toggleCompanion: []
+  search: [query: string]
+  openAttention: []
 }>()
+
+/**
+ * Whether the header's search field is open.
+ *
+ * The reference shows a search glyph rather than a permanent field, because the
+ * header row belongs to the product name and only lends its trailing space to
+ * the field while the reader is searching.
+ */
+const searching = ref(false)
+const query = ref('')
+
+function openSearch(): void {
+  searching.value = true
+  if (query.value.length > 0) emit('search', query.value)
+}
+
+function closeSearch(): void {
+  searching.value = false
+  query.value = ''
+  emit('search', '')
+}
+
+function handleQuery(value: string): void {
+  query.value = value
+  emit('search', value)
+}
 
 /**
  * The account menu, as the reference draws it.
@@ -106,36 +151,74 @@ function chooseAccountItem(id: string): void {
 
 <template>
   <div class="app-rail" data-app-rail>
-    <button
-      class="app-rail__section app-rail__product"
-      type="button"
-      data-rail-section="brand"
-      data-rail-product
-      :aria-expanded="!railFolded"
-      @click="railFolded = !railFolded"
-    >
-      <span class="app-rail__mark-slot" aria-hidden="true">
-        <img class="app-rail__mark" data-rail-mark :src="mark" alt="" draggable="false" />
-      </span>
-      <span class="app-rail__identity">
-        <strong>{{ productName }}</strong>
-        <span v-if="workspaceName">{{ workspaceName }}</span>
-      </span>
-      <ChevronDown
-        v-if="!railFolded"
-        class="app-rail__product-disclosure"
-        :size="16"
-        aria-hidden="true"
-        data-rail-product-disclosure
+    <div class="app-rail__section app-rail__header" data-rail-section="brand">
+      <button
+        class="app-rail__product"
+        type="button"
+        data-rail-product
+        :aria-expanded="!railFolded"
+        @click="railFolded = !railFolded"
+      >
+        <span class="app-rail__mark-slot" aria-hidden="true">
+          <img class="app-rail__mark" data-rail-mark :src="mark" alt="" draggable="false" />
+        </span>
+        <span class="app-rail__identity">
+          <strong>{{ productName }}</strong>
+          <span v-if="workspaceName">{{ workspaceName }}</span>
+        </span>
+        <ChevronDown
+          v-if="!railFolded"
+          class="app-rail__product-disclosure"
+          :size="16"
+          aria-hidden="true"
+          data-rail-product-disclosure
+        />
+        <ChevronRight
+          v-else
+          class="app-rail__product-disclosure"
+          :size="16"
+          aria-hidden="true"
+          data-rail-product-disclosure
+        />
+      </button>
+
+      <!--
+        The header's own actions. The reference keeps both glyphs on the
+        product's row rather than inside the lists, because they act on the
+        column the row names: search narrows what is underneath, and the bell
+        reports what is waiting there. They are siblings of the product button
+        rather than children of it, because a button inside a button is not a
+        control a browser will let the reader press.
+      -->
+      <IconButton
+        :label="searchLabel"
+        data-rail-action="search"
+        @click="openSearch"
+      >
+        <Search :size="15" aria-hidden="true" />
+      </IconButton>
+      <IconButton
+        v-if="attentionCount > 0"
+        :label="`${attentionLabel} (${attentionCount})`"
+        data-rail-action="attention"
+        @click="$emit('openAttention')"
+      >
+        <Bell :size="15" aria-hidden="true" />
+        <span class="app-rail__attention-count" aria-hidden="true">{{ attentionCount }}</span>
+      </IconButton>
+    </div>
+
+    <div v-if="searching" class="app-rail__search" data-rail-search>
+      <Search :size="15" aria-hidden="true" />
+      <input
+        :value="query"
+        type="search"
+        :placeholder="searchLabel"
+        :aria-label="searchLabel"
+        @input="handleQuery(($event.target as HTMLInputElement).value)"
+        @keydown.escape="closeSearch"
       />
-      <ChevronRight
-        v-else
-        class="app-rail__product-disclosure"
-        :size="16"
-        aria-hidden="true"
-        data-rail-product-disclosure
-      />
-    </button>
+    </div>
 
     <div class="app-rail__section" data-rail-section="primary">
       <AppButton
@@ -327,6 +410,70 @@ function chooseAccountItem(id: string): void {
   align-items: center;
   gap: var(--space-3);
   border-block-end: 1px solid var(--color-border-base);
+}
+
+/* The header's own row. The product button takes the space and the actions
+   keep their own, so a long workspace name truncates rather than pushing the
+   search glyph off the row. */
+.app-rail__header {
+  gap: var(--space-1);
+}
+
+.app-rail__header .app-rail__product {
+  flex: 1 1 auto;
+}
+
+.app-rail__header > .icon-button {
+  flex: 0 0 auto;
+}
+
+/* The count rides the bell's corner rather than sitting beside it: the
+   reference has one glyph whose meaning is the number on it, and a number in
+   the row would read as a label for the control next to it. */
+.app-rail__attention-count {
+  position: absolute;
+  inset-block-start: 2px;
+  inset-inline-end: 2px;
+  min-inline-size: 0.875rem;
+  padding-inline: 0.1875rem;
+  border-radius: var(--radius-full, 999px);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font-size: 0.625rem;
+  font-weight: var(--weight-semibold);
+  line-height: 0.875rem;
+  text-align: center;
+}
+
+.app-rail__header > .icon-button {
+  position: relative;
+}
+
+/* The filter field sits under the header row it belongs to and spans the
+   column, because it narrows the lists below rather than searching one. */
+.app-rail__search {
+  display: flex;
+  min-inline-size: 0;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-block-end: 1px solid var(--color-border-base);
+  color: var(--color-text-tertiary);
+}
+
+.app-rail__search input {
+  min-inline-size: 0;
+  flex: 1 1 auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-primary);
+  font: inherit;
+  font-size: var(--text-sm);
+}
+
+.app-rail__search input:focus-visible {
+  outline: none;
 }
 
 .app-rail__mark-slot {

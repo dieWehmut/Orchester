@@ -1,5 +1,6 @@
 ﻿<script setup lang="ts">
 import type { AgentFleetSnapshotDto, SessionSummaryDto } from '@orchester/protokoll'
+import { ref } from 'vue'
 
 import AppRail from './AppRail.vue'
 import { AgentFleetPanel } from '../../features/agent-presence'
@@ -16,6 +17,10 @@ const props = withDefaults(
   workspaceName: string | null
   /** Empty when the shell has no companion to hide. */
   companionLabel?: string
+  /** How many approvals are waiting, for the header's bell. */
+  attentionCount?: number
+  searchLabel?: string
+  attentionLabel?: string
   sessionStatus: SessionsStatus
   sessions: SessionSummaryDto[]
   selectedSessionId: string | null
@@ -27,7 +32,7 @@ const props = withDefaults(
   agentError: string | null
   selectedAgentId: string | null
   }>(),
-  { companionLabel: '' },
+  { companionLabel: '', attentionCount: 0, searchLabel: 'Search', attentionLabel: '' },
 )
 
 defineEmits<{
@@ -38,9 +43,18 @@ defineEmits<{
   selectAgent: [id: string]
   openSettings: []
   toggleCompanion: []
+  search: [query: string]
+  openAttention: []
 }>()
 
 const { t } = useI18n()
+
+/**
+ * The header search is the rail's own filter, so the query lives here rather
+ * than in either list: the field narrows what the column shows, and the header
+ * that opens it is the column's own.
+ */
+const sessionQuery = ref('')
 </script>
 
 <template>
@@ -56,9 +70,14 @@ const { t } = useI18n()
     :account-hint="t('account.localRuntime')"
     :settings-label="t('settings.title')"
     :companion-label="companionLabel"
+    :search-label="searchLabel"
+    :attention-label="attentionLabel"
+    :attention-count="attentionCount"
     @new-session="$emit('newSession')"
     @open-settings="$emit('openSettings')"
     @toggle-companion="$emit('toggleCompanion')"
+    @search="sessionQuery = $event"
+    @open-attention="$emit('openAttention')"
   >
     <template #projects>
       <ProjectList
@@ -74,6 +93,7 @@ const { t } = useI18n()
         :selected-id="props.selectedSessionId"
         :next-cursor="props.nextCursor"
         :error="props.sessionError"
+        :query="sessionQuery"
         @select="$emit('selectSession', $event)"
         @refresh="$emit('refreshSessions')"
         @load-more="$emit('loadMoreSessions')"

@@ -1,18 +1,32 @@
 <script setup lang="ts">
 import type { SessionSummaryDto } from '@orchester/protokoll'
 import { AppButton, EmptyState, InlineAlert, SkeletonBlock } from '@orchester/design'
+import { computed } from 'vue'
 
 import { useI18n } from '../../i18n'
 import type { SessionsStatus } from '../../stores/sessions'
 import SessionListItem from './SessionListItem.vue'
 
-defineProps<{
+const props = withDefaults(
+  defineProps<{
   status: SessionsStatus
   items: SessionSummaryDto[]
   selectedId: string | null
   nextCursor: string | null
   error: { message: string; retryable: boolean } | null
-}>()
+  /**
+   * The rail header's search text.
+   *
+   * The runtime's `/sessions` route pages by cursor and takes no query, so this
+   * narrows the page the rail already holds rather than pretending to search
+   * the whole history. That is why the empty state below distinguishes "no
+   * sessions" from "nothing matched": a filter that reached the runtime would
+   * have no need for the distinction.
+   */
+  query?: string
+  }>(),
+  { query: '' },
+)
 
 defineEmits<{
   select: [id: string]
@@ -22,6 +36,29 @@ defineEmits<{
 }>()
 
 const { t } = useI18n()
+
+/**
+ * The sessions the filter admits.
+ *
+ * Matching is case-insensitive and runs over the fields a reader can see in a
+ * row - the title, the agent and the model - because a filter that matched
+ * something invisible to the reader would return rows with no visible reason
+ * to be there.
+ */
+const matches = computed<SessionSummaryDto[]>(() => {
+  const needle = props.query.trim().toLowerCase()
+  if (needle.length === 0) return props.items
+  return props.items.filter((item) =>
+    [item.title, item.agent, item.model ?? ''].some((field) =>
+      field.toLowerCase().includes(needle),
+    ),
+  )
+})
+
+/** Whether the filter is hiding rows the runtime did send. */
+const filteredEmpty = computed(
+  () => props.query.trim().length > 0 && matches.value.length === 0 && props.items.length > 0,
+)
 </script>
 
 <template>
@@ -50,6 +87,15 @@ const { t } = useI18n()
       </AppButton>
     </InlineAlert>
 
+    <p
+      v-else-if="filteredEmpty"
+      class="session-rail__filter-empty"
+      data-session-filter-empty
+      role="status"
+    >
+      {{ t('sessions.filterEmpty') }}
+    </p>
+
     <EmptyState
       v-else-if="status !== 'idle' && items.length === 0"
       :title="t('sessions.empty')"
@@ -62,7 +108,7 @@ const { t } = useI18n()
       </InlineAlert>
       <nav class="session-rail__list" :aria-label="t('sessions.title')">
         <SessionListItem
-          v-for="session in items"
+          v-for="session in matches"
           :key="session.id"
           :session="session"
           :selected="selectedId === session.id"
@@ -120,6 +166,15 @@ const { t } = useI18n()
 
 .session-rail__more {
   margin-block-start: auto;
+}
+
+/* The filter's empty state is a sentence rather than the list's full empty
+   state: the runtime did send sessions, and the reader only has to widen the
+   filter, which the empty state's action button could not offer. */
+.session-rail__filter-empty {
+  margin: 0;
+  color: var(--color-text-tertiary);
+  font-size: var(--text-sm);
 }
 
 .session-rail :deep(.inline-alert p) {

@@ -263,7 +263,9 @@
     "loadMore": "Load more",
     "resumable": "Resumable",
     "newChat": "New chat",
-    "railTitle": "Recent sessions"
+    "railTitle": "Recent sessions",
+    "filterEmpty": "No sessions match your search",
+    "searchPlaceholder": "Search sessions"
   },
   "run": {
     "announce": {

@@ -263,7 +263,9 @@
     "loadMore": "載入更多",
     "resumable": "可恢復",
     "newChat": "新建對話",
-    "railTitle": "最近會話"
+    "railTitle": "最近會話",
+    "filterEmpty": "沒有符合的工作階段",
+    "searchPlaceholder": "搜尋工作階段"
   },
   "run": {
     "announce": {
