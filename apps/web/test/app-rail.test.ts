@@ -4,6 +4,35 @@ import { describe, expect, it } from 'vitest'
 import AppRail from '../src/components/layout/AppRail.vue'
 
 describe('AppRail', () => {
+  it('answers the reference sidebar with a titled product row and headed lists', () => {
+    const wrapper = mount(AppRail, {
+      props: {
+        productName: 'Orchester',
+        workspaceName: 'Orchester',
+        newSessionLabel: 'New chat',
+        projectsLabel: 'Pinned',
+        sessionsLabel: 'Projects',
+        fleetLabel: 'Agents',
+        accountName: 'dieWehmut',
+        accountHint: 'Local runtime',
+        settingsLabel: 'Settings',
+      },
+    })
+
+    // The reference names the product row and keeps a disclosure beside it, so
+    // the sidebar reads as a product switcher rather than a bare logo.
+    const product = wrapper.get('[data-rail-product]')
+    expect(product.text()).toContain('Orchester')
+    expect(product.get('[data-rail-product-disclosure]')).toBeTruthy()
+
+    // Every list is headed, so a reader can fold one without folding the rest,
+    // and the headings follow the reference's order.
+    const headings = wrapper
+      .findAll('[data-rail-heading]')
+      .map((node) => node.attributes('data-rail-heading'))
+    expect(headings).toEqual(['pinned', 'projects', 'agents'])
+  })
+
   it('renders the Codex-style rail order: brand, new chat, projects, sessions, fleet', () => {
     const wrapper = mount(AppRail, {
       props: {
