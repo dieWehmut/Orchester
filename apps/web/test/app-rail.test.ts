@@ -1,5 +1,6 @@
 ﻿import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
+import { nextTick } from 'vue'
 
 import AppRail from '../src/components/layout/AppRail.vue'
 import { shortcutRegistry } from '../src/shortcuts'
@@ -271,6 +272,31 @@ describe('AppRail', () => {
 
     await field.setValue('runtime')
     expect(wrapper.emitted('search')).toEqual([['runtime']])
+  })
+
+  it('focuses the field it just opened, so the reader can type into it', async () => {
+    const wrapper = mount(AppRail, {
+      props: {
+        productName: 'Orchester',
+        workspaceName: 'Orchester',
+        newSessionLabel: 'New chat',
+        projectsLabel: 'Projects',
+        sessionsLabel: 'Sessions',
+        fleetLabel: 'Agents',
+        accountName: 'Orchester',
+        settingsLabel: 'Settings',
+        searchLabel: 'Search sessions',
+      },
+      attachTo: document.body,
+    })
+
+    // A search glyph that opens a field the reader then has to find and click
+    // is not a search action, it is a field that appeared somewhere near one.
+    await wrapper.get('[data-rail-action="search"]').trigger('click')
+    await nextTick()
+
+    expect(document.activeElement).toBe(wrapper.get('[data-rail-search] input').element)
+    wrapper.unmount()
   })
 
   it('reports how much needs attention on the header bell', async () => {

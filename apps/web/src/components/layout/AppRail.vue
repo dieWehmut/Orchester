@@ -8,7 +8,7 @@ import {
   Settings,
   SquarePen,
 } from '@lucide/vue'
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 
 import { AppButton, AppMenu, IconButton, type AppMenuItem } from '@orchester/design'
 
@@ -90,9 +90,14 @@ const emit = defineEmits<{
  */
 const searching = ref(false)
 const query = ref('')
+const searchField = ref<HTMLInputElement | null>(null)
 
 function openSearch(): void {
   searching.value = true
+  // The field appears where the reader just clicked, so it takes the focus
+  // itself: an action that opens a text box the reader then has to find and
+  // click again is a box that appeared near a button, not a search action.
+  void nextTick(() => searchField.value?.focus())
   if (query.value.length > 0) emit('search', query.value)
 }
 
@@ -211,6 +216,7 @@ function chooseAccountItem(id: string): void {
     <div v-if="searching" class="app-rail__search" data-rail-search>
       <Search :size="15" aria-hidden="true" />
       <input
+        ref="searchField"
         :value="query"
         type="search"
         :placeholder="searchLabel"
