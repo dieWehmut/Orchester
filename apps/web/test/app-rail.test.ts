@@ -2,6 +2,7 @@
 import { describe, expect, it } from 'vitest'
 
 import AppRail from '../src/components/layout/AppRail.vue'
+import { shortcutRegistry } from '../src/shortcuts'
 
 describe('AppRail', () => {
   it('answers the reference sidebar with a titled product row and headed lists', () => {
@@ -172,5 +173,34 @@ describe('AppRail', () => {
 
     expect(wrapper.emitted('toggleCompanion')).toHaveLength(1)
     expect(wrapper.emitted('openSettings')).toHaveLength(1)
+  })
+
+  it('teaches the settings chord on the account menu row, from the live registry', async () => {
+    // The settings editor can rebind this chord, so the menu reads it off the
+    // registry the shell dispatches from rather than printing the default.
+    shortcutRegistry.register({
+      id: 'settings.open',
+      labelKey: 'shortcuts.labels.settingsOpen',
+      groupKey: 'shortcuts.groups.layout',
+      keys: ['Mod', ','],
+    })
+
+    const wrapper = mount(AppRail, {
+      props: {
+        productName: 'Orchester',
+        workspaceName: null,
+        newSessionLabel: 'New chat',
+        projectsLabel: 'Projects',
+        sessionsLabel: 'Sessions',
+        fleetLabel: 'Agents',
+        accountName: 'Orchester',
+        settingsLabel: 'Settings',
+      },
+    })
+
+    await wrapper.get('[data-rail-account-menu] [aria-haspopup="menu"]').trigger('click')
+
+    const settingsRow = wrapper.findAll('[role="menuitem"]')[0]!
+    expect(settingsRow.text()).toContain('Ctrl+,')
   })
 })

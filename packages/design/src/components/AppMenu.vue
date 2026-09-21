@@ -206,7 +206,8 @@ onBeforeUnmount(() => {
         :disabled="item.disabled === true"
         @click="selectItem(item)"
       >
-        {{ item.label }}
+        <span class="app-menu__label">{{ item.label }}</span>
+        <span v-if="item.hint" class="app-menu__hint" aria-hidden="true">{{ item.hint }}</span>
       </button>
     </div>
   </div>
@@ -266,10 +267,13 @@ onBeforeUnmount(() => {
 }
 
 .app-menu__item {
-  display: block;
+  display: flex;
   min-inline-size: var(--hit-target-min, 32px);
   inline-size: 100%;
   min-block-size: var(--hit-target-min, 32px);
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
   padding: 0.5rem 0.625rem;
   border: 0;
   border-radius: 4px;
@@ -277,6 +281,19 @@ onBeforeUnmount(() => {
   color: var(--color-text-primary);
   text-align: start;
   cursor: pointer;
+}
+
+.app-menu__label {
+  min-inline-size: 0;
+}
+
+/* The chord is a hint rather than part of the name, so it is drawn in the
+   quieter role and keeps the label's own alignment. */
+.app-menu__hint {
+  flex: 0 0 auto;
+  color: var(--color-text-tertiary);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
 }
 
 .app-menu__item:hover:not(:disabled),

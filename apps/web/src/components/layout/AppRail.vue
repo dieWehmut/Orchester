@@ -5,6 +5,8 @@ import { computed, ref } from 'vue'
 import { AppButton, AppMenu, IconButton, type AppMenuItem } from '@orchester/design'
 
 import mark from '../../assets/orchester-mark.png'
+import { formatShortcut, shortcutRegistry } from '../../shortcuts'
+import { readDocumentPlatform, readSystemPlatform } from '@orchester/design'
 
 /**
  * The rail answers the reference sidebar rather than a run of loose headings.
@@ -62,9 +64,28 @@ const emit = defineEmits<{
 const accountItems = computed<AppMenuItem[]>(() =>
   [
     props.companionLabel ? { id: 'companion', label: props.companionLabel } : null,
-    { id: 'settings', label: props.settingsLabel },
+    {
+      id: 'settings',
+      label: props.settingsLabel,
+      // The reference prints the chord on the row, and printing it from the
+      // registry is what keeps it true after a rebinding.
+      hint: settingsHint.value,
+    },
   ].filter((item): item is AppMenuItem => item !== null),
 )
+
+/**
+ * The chord that opens settings, as this platform spells it.
+ *
+ * Read off the live registry rather than written out: the settings editor lets
+ * the reader rebind it, and a menu that kept the default would be teaching a
+ * key that no longer does anything.
+ */
+const settingsHint = computed(() => {
+  const keys = shortcutRegistry.effectiveKeys('settings.open')
+  if (keys === undefined) return undefined
+  return formatShortcut(keys, readDocumentPlatform() ?? readSystemPlatform())
+})
 
 function chooseAccountItem(id: string): void {
   if (id === 'settings') emit('openSettings')
