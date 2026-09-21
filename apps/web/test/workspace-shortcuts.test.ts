@@ -109,4 +109,32 @@ describe('workspace shortcuts', () => {
     // A bare key is a character; the pane must not move under the reader.
     expect(pane().attributes('data-inspector-open')).toBe('true')
   })
+
+  it('toggles the companion from the keyboard, and says so in the account menu', async () => {
+    const { resetPetVisibilityForTests, usePetVisibility } = await import(
+      '../src/features/pet/use-pet-visibility'
+    )
+    resetPetVisibilityForTests()
+    const wrapper = await mountWorkspace(testRouter())
+    const pet = usePetVisibility()
+    expect(pet.visible.value).toBe(true)
+
+    // The reference prints the chord on the menu row that performs it, so the
+    // binding has to be one the registry really dispatches: a hint for a key
+    // nothing answers would be worse than no hint at all.
+    press('p', { ctrlKey: true, altKey: true })
+    await nextTick()
+    expect(pet.visible.value).toBe(false)
+
+    press('p', { ctrlKey: true, altKey: true })
+    await nextTick()
+    expect(pet.visible.value).toBe(true)
+
+    await wrapper.get('[data-rail-account-menu] [aria-haspopup="menu"]').trigger('click')
+    const companionRow = wrapper
+      .findAll('[role="menuitem"]')
+      .find((row) => row.text().includes('Hide companion'))
+    expect(companionRow?.text()).toContain('Ctrl+Alt+P')
+    wrapper.unmount()
+  })
 })
