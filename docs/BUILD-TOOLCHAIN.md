@@ -55,23 +55,40 @@ The ARM64 development machine used for the frontend work currently reports:
 ```text
 rustc 1.96.1 ... host: aarch64-pc-windows-msvc
 active toolchain: stable-aarch64-pc-windows-msvc
-target installed: aarch64-pc-windows-msvc
-link.exe: D:\software\msys\msys2\usr\bin\link.exe
-Visual Studio 2022: not installed
-Windows SDK libraries: installed
+target installed: aarch64-pc-windows-msvc, x86_64-pc-windows-msvc
+Visual Studio Build Tools 2022 at D:\software\vs_buildTools\BuildTools
+MSVC toolsets: 14.44.35207 and 14.50.35717, x64 and x86 host/target only
+Windows SDK libraries: installed, including arm64
 ```
 
-That `link.exe` is the MSYS GNU linker. It rejects rustc's MSVC arguments with
-`link: extra operand`, so `cargo test -p orchester-protokoll` cannot reach the
-test binaries on this host. `cargo fmt --all -- --check` and all TypeScript
-protocol typecheck/unit tests remain runnable and must still be used for local
-feedback.
+The default `PATH` still resolves `link.exe` to
+`D:\software\msys\msys2\usr\bin\link.exe`, which rejects rustc's MSVC
+arguments with `link: extra operand`. This host therefore builds the desktop
+shell through the x64 toolchain rather than natively:
+
+```powershell
+# From a Developer shell whose PATH has MSVC first:
+cmd /c \"call \"D:\software\vs_buildTools\BuildTools\VC\Auxiliary\Build\vcvars64.bat\" && rustup run stable-x86_64-pc-windows-msvc cargo check --locked --target x86_64-pc-windows-msvc\"
+```
+
+That command compiles the whole shell, including `orchester-desktop`,
+`orchester-native-chrome` and `orchester-netz`, and
+`werkzeug/desktop/build-installer.mjs --arch x64` then produces the NSIS
+installer. x64 binaries run on this ARM64 machine under emulation, which is how
+the local installation was refreshed.
+
+A native `aarch64-pc-windows-msvc` build is still unavailable locally: the
+installed MSVC toolsets ship only x64 and x86 host/target binaries, and
+`lib\arm64` carries the Clang runtimes without `msvcrt.lib`. Add the ARM64
+MSVC toolset (or use the `windows-11-arm` runner in the release workflow)
+before claiming a native ARM64 build.
 
 The doctor confirms this host as `win32/arm64`, reports Node.js and pnpm as
 usable for the WebUI, and reports `windows-linker-shadowed` plus
-`windows-msvc-compiler-missing` for the desktop profile. Do not mark a native
-Tauri build successful until those failures are gone and the actual Rust build
-command completes.
+`windows-msvc-compiler-missing` for the desktop profile whenever the MSVC
+Developer environment has not been entered. Do not mark a native Tauri build
+successful until those failures are gone and the actual Rust build command
+completes.
 
 ## GitHub Actions
 
