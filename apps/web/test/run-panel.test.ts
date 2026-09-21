@@ -56,6 +56,34 @@ describe('RunPanel', () => {
     expect(wrapper.get('[data-model-context-model]').text()).toContain('gpt-5.6')
   })
 
+  it('draws the ambient companion and mirrors the run state', async () => {
+    const wrapper = mount(RunPanel, {
+      props: {
+        view: createEmptyRunView(),
+        runStatus: 'running',
+        petLabel: 'Orchester companion',
+      },
+    })
+
+    const companion = wrapper.get('[data-run-companion] [data-pet-companion]')
+    expect(companion.attributes('data-pet-animation')).toBe('running')
+    expect(companion.attributes('aria-label')).toBe('Orchester companion')
+  })
+
+  it('hands the companion a notification label while a decision is pending', async () => {
+    const wrapper = mount(RunPanel, {
+      props: {
+        view: createEmptyRunView(),
+        pendingApprovals: 1,
+        petNotificationLabels: { waiting: 'Needs input' },
+      },
+    })
+
+    expect(wrapper.get('[data-run-companion] [data-pet-companion]').attributes('data-pet-animation')).toBe(
+      'waiting',
+    )
+  })
+
   it('animates a run activity indicator only while a run is busy', async () => {
     const wrapper = mount(RunPanel, {
       props: { view: createEmptyRunView(), busy: true },

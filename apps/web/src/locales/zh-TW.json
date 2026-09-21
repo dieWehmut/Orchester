@@ -81,6 +81,23 @@
     "projects": "專案",
     "projectFallback": "未選擇專案"
   },
+  "pet": {
+    "label": "Orchester 夥伴",
+    "show": "顯示夥伴",
+    "hide": "隱藏夥伴",
+    "title": "夥伴",
+    "description": "隨執行狀態變化的 xiaoxuan 環境夥伴。",
+    "visibility": {
+      "title": "顯示夥伴",
+      "description": "在輸入框上方顯示環境夥伴。"
+    },
+    "notification": {
+      "running": "執行中",
+      "waiting": "需要輸入",
+      "review": "已就緒",
+      "failed": "已阻塞"
+    }
+  },
   "settings": {
     "eyebrow": "設定",
     "title": "設定",

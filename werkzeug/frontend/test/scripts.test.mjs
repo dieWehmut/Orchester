@@ -18,6 +18,6 @@ test('root package exposes unambiguous surface and doctor commands', async () =>
   assert.equal(manifest.scripts['test:tooling'], 'node --test werkzeug/frontend/test/*.test.mjs')
   assert.equal(
     manifest.scripts.test,
-    'pnpm run test:tooling && pnpm -r test && pnpm --filter @orchester/desktop test:security',
+    'pnpm run test:tooling && pnpm -r test && pnpm --filter @orchester/desktop test:security && node --test werkzeug/desktop/*.test.mjs',
   )
 })

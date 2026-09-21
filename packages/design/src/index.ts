@@ -40,6 +40,7 @@ export type { ToastItem, ToastTone } from './components/toast-types'
 export { APPEARANCE_BOOTSTRAP_SCRIPT } from './appearance-script'
 
 export { TOKEN_GROUPS, tokenNames, type TokenGroup } from './tokens-map'
+export { clearStored, readStored, writeStored } from './storage'
 
 export {
   APPEARANCE_PROFILE_VERSION,

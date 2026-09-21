@@ -1,14 +1,13 @@
 import type {
-  ApprovalId,
   RunId,
   RunSnapshotDto,
   UiEventEnvelope,
 } from '@orchester/protokoll'
 
-import { eventKey, gapKey, timelineItemKey } from './event-key'
+import { eventKey, gapKey } from './event-key'
+import { approvalView, projectConversation } from './project-conversation'
 import {
   createEmptyRunView,
-  type FileChangeTimelineItem,
   type GapTimelineItem,
   type RunStatus,
   type RunView,
@@ -54,6 +53,14 @@ export function projectRunSnapshot(snapshot: RunSnapshotDto): RunView {
 
   return {
     ...view,
+    approvals: [
+      ...view.approvals.filter((approval) => approval.state !== 'pending'),
+      ...snapshot.pending_approvals.map((request) => {
+        if (request.run_id !== snapshot.run_id) throw new RangeError('approval belongs to another run')
+        const previous = view.approvals.find((approval) => approval.approvalId === request.approval_id)
+        return approvalView(request, previous?.requestedSequence ?? null)
+      }),
+    ],
     // The snapshot state is authoritative even when its bounded event window
     // does not include the corresponding lifecycle event.
     status: snapshotStateToStatus(snapshot.state),
@@ -130,10 +137,7 @@ function projectEventCollection(
     options.headSequence,
   )
   const empty = createEmptyRunView(runId)
-  const projected = projectApprovals(
-    projectLifecycle(empty, appliedEvents),
-    appliedEvents,
-  )
+  const projected = projectLifecycle(empty, appliedEvents)
   return withSequenceState(projected, latestSequence, bufferedSequences, gaps)
 }
 
@@ -145,7 +149,7 @@ function withSequenceState(
 ): RunView {
   return {
     ...view,
-    timeline: gaps.map(toGapTimelineItem),
+    timeline: [...view.timeline, ...gaps.map(toGapTimelineItem)],
     latestSequence,
     bufferedSequences: [...bufferedSequences],
     gaps: [...gaps],
@@ -159,7 +163,6 @@ function projectLifecycle(
   let title = view.title
   let status: RunStatus = view.status
   let stop = view.stop
-  const fileChanges: FileChangeTimelineItem[] = [...view.fileChanges]
 
   for (const event of events) {
     switch (event.kind.type) {
@@ -171,100 +174,12 @@ function projectLifecycle(
         status = event.kind.reason
         stop = toRunStop(event)
         break
-      case 'file_change':
-        fileChanges.push({
-          type: 'file_change',
-          key: timelineItemKey(event),
-          sequence: event.sequence,
-          occurredAt: event.occurred_at,
-          turnId: event.turn_id ?? null,
-          path: event.kind.path,
-          kind: event.kind.kind,
-        })
-        break
       default:
         break
     }
   }
 
-  return { ...view, title, status, stop, fileChanges }
-}
-
-/**
- * The approval queue's data, task E1-012.
- *
- * A request opens an entry and a resolution closes the same one, keyed by
- * approval id, so the queue shows one row per approval rather than a request
- * the reader has to correlate with a decision of their own. A resolution that
- * arrives without a request still projects: the runtime knows about an
- * approval this bounded event window never showed, and hiding it would leave
- * the queue claiming there is nothing to decide.
- */
-function projectApprovals(
-  view: RunView,
-  events: readonly UiEventEnvelope[],
-): RunView {
-  if (events.length === 0) return view
-
-  const approvals = [...view.approvals]
-  const indexByApproval = new Map<string, number>()
-
-  /** The entry's place in the queue, opening a pending one when it is new. */
-  const indexOf = (approvalId: ApprovalId): number => {
-    const existing = indexByApproval.get(approvalId)
-    if (existing !== undefined) return existing
-    const index = approvals.length
-    indexByApproval.set(approvalId, index)
-    approvals.push({
-      key: `approval:${approvalId}`,
-      approvalId,
-      runId: view.runId ?? events[0]!.run_id,
-      rowVersion: 0,
-      risk: '',
-      action: '',
-      reason: '',
-      expiresAt: null,
-      state: 'pending',
-      requestedSequence: null,
-      resolvedSequence: null,
-    })
-    return index
-  }
-
-  for (const event of events) {
-    switch (event.kind.type) {
-      case 'approval_requested': {
-        const request = event.kind.approval
-        const index = indexOf(request.approval_id)
-        approvals[index] = {
-          ...approvals[index]!,
-          runId: request.run_id,
-          rowVersion: request.row_version,
-          risk: request.risk,
-          action: request.action,
-          reason: request.reason,
-          expiresAt: request.expires_at ?? null,
-          state: 'pending',
-          requestedSequence: event.sequence,
-        }
-        break
-      }
-      case 'approval_resolved': {
-        const resolution = event.kind.resolution
-        const index = indexOf(resolution.approval_id)
-        approvals[index] = {
-          ...approvals[index]!,
-          rowVersion: resolution.row_version,
-          state: resolution.decision,
-          resolvedSequence: event.sequence,
-        }
-        break
-      }
-      default:
-        break
-    }
-  }
-  return { ...view, approvals }
+  return { ...view, ...projectConversation(events), runId: view.runId, title, status, stop }
 }
 
 function toRunStop(event: UiEventEnvelope): RunStopView {

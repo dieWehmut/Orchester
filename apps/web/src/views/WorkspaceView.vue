@@ -66,6 +66,18 @@ const runConnectionStatus = computed(() => run.connectionStatus.value)
 const runProjectionStatus = computed(() => run.projectionStatus.value)
 const runErrorMessage = computed(() => run.error.value?.message ?? null)
 const conversationStarted = computed(() => run.conversationStarted.value)
+const runStatus = computed(() => runView.value.status)
+const pendingApprovals = computed(
+  () => runView.value.approvals.filter((approval) => approval.state === 'pending').length,
+)
+const petNotificationLabels = computed<
+  Partial<Record<'running' | 'waiting' | 'review' | 'failed', string>>
+>(() => ({
+  running: t('pet.notification.running'),
+  waiting: t('pet.notification.waiting'),
+  review: t('pet.notification.review'),
+  failed: t('pet.notification.failed'),
+}))
 const agentStatus = computed(() => agents.status)
 const agentStreamStatus = computed(() => agents.streamStatus)
 const agentSnapshot = computed(() => agents.snapshot)
@@ -365,6 +377,10 @@ useShortcut(
       :model-catalog="modelCatalog"
       :model-status="modelStatus"
       :settings-key="runSettingsKey"
+      :run-status="runStatus"
+      :pending-approvals="pendingApprovals"
+      :pet-label="t('pet.label')"
+      :pet-notification-labels="petNotificationLabels"
       @submit="handleRunSubmit"
       @cancel="handleRunCancel"
     />

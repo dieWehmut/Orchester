@@ -1,6 +1,7 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
+import { resetPetVisibilityForTests } from '../src/features/pet'
 import SettingsView from '../src/views/SettingsView.vue'
 import { resetAppearanceForTests } from '@orchester/design'
 
@@ -53,6 +54,7 @@ describe('SettingsView', () => {
       'import',
       'profile',
       'keybindings',
+      'pet',
       'providers',
       'about',
     ])
@@ -258,5 +260,21 @@ describe('SettingsView', () => {
     await wrapper.get('[data-appearance-field="scheme"] select').setValue('teal')
 
     expect(wrapper.get('[data-code-preview]').text()).toContain('#4fbfad')
+  })
+
+  it('toggles the ambient companion from the pet section', async () => {
+    const wrapper = mount(SettingsView)
+
+    await wrapper.get('[data-settings-nav-link="pet"]').trigger('click')
+    const section = wrapper.get('[data-settings-section="pet"]')
+    expect(section.attributes('aria-selected')).toBe('true')
+
+    const toggle = section.get('[role="switch"]')
+    expect(toggle.attributes('aria-checked')).toBe('true')
+
+    await toggle.trigger('click')
+    expect(section.get('[role="switch"]').attributes('aria-checked')).toBe('false')
+    localStorage.clear()
+    resetPetVisibilityForTests()
   })
 })

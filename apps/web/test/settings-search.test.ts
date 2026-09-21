@@ -44,6 +44,7 @@ describe("settings search", () => {
       "import",
       "profile",
       "keybindings",
+      "pet",
       "providers",
       "about",
     ])

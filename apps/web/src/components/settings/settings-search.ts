@@ -13,6 +13,7 @@ export type SettingsSectionId =
   | 'import'
   | 'profile'
   | 'keybindings'
+  | 'pet'
   | 'providers'
   | 'about'
 
@@ -47,6 +48,7 @@ export const SETTINGS_SECTIONS: readonly SettingsSectionEntry<SettingsSectionId>
     label: 'Keybindings',
     keywords: ['shortcut', 'keyboard', 'hotkey', 'binding', 'keys'],
   },
+  { id: 'pet', label: 'Companion', keywords: ['pet', 'companion', 'visibility', '小萱', '伙伴', '夥伴'] },
   { id: 'providers', label: 'Providers', keywords: ['model', 'api key', 'endpoint'] },
   { id: 'about', label: 'About', keywords: ['version', 'licence', 'license', 'build'] },
 ]

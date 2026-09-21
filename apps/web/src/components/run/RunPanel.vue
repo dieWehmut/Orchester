@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { InlineAlert } from '@orchester/design'
+import { InlineAlert, useAppearance } from '@orchester/design'
 import type { RunView } from '@orchester/ereignis'
 import type { ModelCatalogDto, UiEventEnvelope } from '@orchester/protokoll'
 import { computed, nextTick, ref, watch } from 'vue'
@@ -15,6 +15,7 @@ import RunComposer from './RunComposer.vue'
 import RunFooter from './RunFooter.vue'
 import RunTimeline from './RunTimeline.vue'
 import { fadeDecision, readScrollState, stickDecision, unreadAfter, type ScrollState } from './scroll-state'
+import { PetCompanion, petStateFor, usePetVisibility } from '../../features/pet'
 import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
 
 const props = withDefaults(
@@ -35,6 +36,10 @@ const props = withDefaults(
     modelStatus?: ModelCatalogStoreStatus
     /** The task whose run settings the composer reads and writes. */
     settingsKey?: string | null
+    runStatus?: RunView['status']
+    pendingApprovals?: number
+    petLabel?: string
+    petNotificationLabels?: Partial<Record<'running' | 'waiting' | 'review' | 'failed', string>>
   }>(),
   {
     events: () => [],
@@ -50,6 +55,10 @@ const props = withDefaults(
     modelCatalog: null,
     modelStatus: 'idle',
     settingsKey: null,
+    runStatus: 'idle',
+    pendingApprovals: 0,
+    petLabel: '',
+    petNotificationLabels: () => ({}),
   },
 )
 
@@ -138,6 +147,20 @@ watch(
     else measure()
   },
 )
+const petVisibility = usePetVisibility()
+const { prefersReducedMotion } = useAppearance()
+const petState = computed(() =>
+  petStateFor({
+    runStatus: props.runStatus,
+    busy: props.busy,
+    pendingApprovals: props.pendingApprovals,
+    errorMessage: props.errorMessage,
+  }),
+)
+const petNotification = computed(() => {
+  const kind = petState.value.notification
+  return kind === null ? '' : (props.petNotificationLabels[kind] ?? '')
+})
 </script>
 
 <template>
@@ -200,6 +223,17 @@ watch(
       :validation="props.view.validation"
       :blocked="planBlocked"
     />
+    <div
+      v-if="petVisibility.visible.value"
+      class="run-panel__companion"
+      data-run-companion
+    >
+      <PetCompanion
+        :animation="petState.animation"
+        :label="petNotification || props.petLabel"
+        :reduced-motion="prefersReducedMotion"
+      />
+    </div>
     <RunComposer
       :busy="props.busy"
       :lifecycle="props.lifecycle"
@@ -262,6 +296,12 @@ watch(
 .run-panel :deep(.run-composer) {
   inline-size: calc(100% - var(--space-8));
   margin-block: var(--space-3) var(--space-4);
+}
+
+.run-panel__companion {
+  display: grid;
+  justify-items: center;
+  padding-block-start: var(--space-2);
 }
 
 .run-panel__awaiting {

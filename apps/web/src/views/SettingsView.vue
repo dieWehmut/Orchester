@@ -16,6 +16,7 @@ import {
   MonitorSmartphone,
   Moon,
   Palette,
+  PawPrint,
   Keyboard,
   Plug,
   RotateCcw,
@@ -46,6 +47,7 @@ import {
 } from '@orchester/design'
 import { computed, ref } from 'vue'
 
+import { usePetVisibility } from '../features/pet'
 import { useI18n } from '../i18n'
 import ShortcutEditor from '../components/settings/ShortcutEditor.vue'
 import { readDocumentPlatform, readSystemPlatform } from '@orchester/design'
@@ -68,6 +70,7 @@ type SettingsSection =
   | 'import'
   | 'profile'
   | 'appearance'
+  | 'pet'
   | 'keybindings'
   | 'providers'
   | 'about'
@@ -78,6 +81,12 @@ const importTrigger = ref<HTMLInputElement | null>(null)
 
 initAppearance()
 const appearance: AppearanceApi = useAppearance()
+const petVisibility = usePetVisibility()
+
+const petVisible = computed({
+  get: () => petVisibility.visible.value,
+  set: (value: boolean) => (value ? petVisibility.show() : petVisibility.hide()),
+})
 
 const activeSection = ref<SettingsSection>('appearance')
 
@@ -94,6 +103,7 @@ const navEntries: readonly SettingsNavEntry[] = [
   { id: 'import', labelKey: 'settings.sections.import', icon: Download, group: 'personal' },
   { id: 'profile', labelKey: 'settings.sections.profile', icon: UserRound, group: 'personal' },
   { id: 'appearance', labelKey: 'settings.sections.appearance', icon: Palette, group: 'personal' },
+  { id: 'pet', labelKey: 'pet.title', icon: PawPrint, group: 'personal' },
   {
     id: 'keybindings',
     labelKey: 'settings.sections.keybindings',
@@ -721,6 +731,23 @@ const previewAfter = computed(() => [
           :reset-label="t('settings.keybindings.reset')"
           :empty-label="t('settings.keybindings.empty')"
         />
+      </section>
+
+      <section
+        class="settings-view__panel"
+        data-settings-section="pet"
+        :aria-selected="activeSection === 'pet'"
+        :hidden="activeSection !== 'pet'"
+      >
+        <h2>{{ t('pet.title') }}</h2>
+        <div class="settings-view__row">
+          <div class="settings-view__row-copy">
+            <strong>{{ t('pet.visibility.title') }}</strong>
+            <span>{{ t('pet.visibility.description') }}</span>
+          </div>
+          <AppSwitch v-model="petVisible" :label="t('pet.visibility.title')" />
+        </div>
+        <p class="settings-view__note">{{ t('pet.description') }}</p>
       </section>
 
       <section
