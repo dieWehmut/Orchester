@@ -6,8 +6,8 @@ import { validateNativeHeader } from './binary.mjs';
 
 const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(moduleDirectory, '../..');
-const metaPackagePath = path.join(repositoryRoot, 'npm/cli/package.json');
-const targetManifestPath = path.join(repositoryRoot, 'npm/cli/targets.json');
+const metaPackagePath = path.join(repositoryRoot, 'apps/cli/package.json');
+const targetManifestPath = path.join(repositoryRoot, 'apps/cli/targets.json');
 const repository = 'https://github.com/dieWehmut/Orchester';
 const supportedIdentities = new Set([
   'linux/x64',

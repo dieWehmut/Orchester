@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
 import { createEmptyRunView } from '@orchester/ereignis'
@@ -38,7 +38,7 @@ describe('RunPanel', () => {
     expect(wrapper.emitted('submit')).toEqual([['Inspect the workspace']])
 
     await wrapper.setProps({ busy: true })
-    await wrapper.get('button').trigger('click')
+    await wrapper.get('[data-composer-action="cancel"]').trigger('click')
     expect(wrapper.emitted('cancel')).toHaveLength(1)
   })
 
@@ -54,5 +54,224 @@ describe('RunPanel', () => {
 
     expect(wrapper.get('[data-project-context]').text()).toContain('Orchester')
     expect(wrapper.get('[data-model-context-model]').text()).toContain('gpt-5.6')
+  })
+
+  it('draws the ambient companion and mirrors the run state', async () => {
+    const wrapper = mount(RunPanel, {
+      props: {
+        view: createEmptyRunView(),
+        runStatus: 'running',
+        petLabel: 'Orchester companion',
+      },
+    })
+
+    const companion = wrapper.get('[data-run-companion] [data-pet-companion]')
+    expect(companion.attributes('data-pet-animation')).toBe('running')
+    expect(companion.attributes('aria-label')).toBe('Orchester companion')
+  })
+
+  it('hands the companion a notification label while a decision is pending', async () => {
+    const wrapper = mount(RunPanel, {
+      props: {
+        view: createEmptyRunView(),
+        pendingApprovals: 1,
+        petNotificationLabels: { waiting: 'Needs input' },
+      },
+    })
+
+    expect(wrapper.get('[data-run-companion] [data-pet-companion]').attributes('data-pet-animation')).toBe(
+      'waiting',
+    )
+  })
+
+  it('animates a run activity indicator only while a run is busy', async () => {
+    const wrapper = mount(RunPanel, {
+      props: { view: createEmptyRunView(), busy: true },
+    })
+
+    const indicator = wrapper.get('[data-run-activity]')
+    expect(indicator.attributes('role')).toBe('status')
+    expect(indicator.attributes('aria-label')).toBe('Run in progress')
+
+    await wrapper.setProps({ busy: false })
+    expect(wrapper.find('[data-run-activity]').exists()).toBe(false)
+  })
+
+  it('names the composer state from the run lifecycle the panel is given', async () => {
+    const wrapper = mount(RunPanel, {
+      props: { view: createEmptyRunView(), lifecycle: 'submitting' },
+    })
+
+    expect(wrapper.get('[data-run-composer]').attributes('data-composer-state')).toBe('submitting')
+
+    await wrapper.setProps({ lifecycle: 'running' })
+    expect(wrapper.get('[data-run-composer]').attributes('data-composer-state')).toBe('running')
+  })
+
+  it('shows the plan strip above the composer once the run has a plan', () => {
+    const view = createEmptyRunView()
+    const withPlan = {
+      ...view,
+      todos: [
+        { text: 'Read the runtime', completed: true },
+        { text: 'Patch the boundary', completed: false },
+      ],
+    }
+    const wrapper = mount(RunPanel, { props: { view: withPlan } })
+
+    const strip = wrapper.get('[data-plan-strip]')
+    expect(strip.attributes('data-plan-state')).toBe('active')
+    expect(strip.get('[data-plan-current]').text()).toContain('Patch the boundary')
+
+    // The strip sits between the transcript and the composer: it describes the
+    // run, so it belongs above the input that continues it.
+    const stream = wrapper.get('[data-run-panel] .run-panel__stream').element
+    const composer = wrapper.get('[data-run-composer]').element
+    expect(
+      strip.element.compareDocumentPosition(stream) & Node.DOCUMENT_POSITION_PRECEDING,
+    ).toBeTruthy()
+    expect(
+      strip.element.compareDocumentPosition(composer) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+  })
+
+  it('hides the plan strip when the run has no plan', () => {
+    const wrapper = mount(RunPanel, { props: { view: createEmptyRunView() } })
+
+    expect(wrapper.find('[data-plan-strip]').exists()).toBe(false)
+  })
+
+  it('marks the plan blocked while the run is waiting for the user', () => {
+    const view = createEmptyRunView()
+    const wrapper = mount(RunPanel, {
+      props: {
+        view: {
+          ...view,
+          status: 'awaiting_approval',
+          todos: [{ text: 'Wait for the approval', completed: false }],
+        },
+      },
+    })
+
+    const strip = wrapper.get('[data-plan-strip]')
+    expect(strip.attributes('data-plan-state')).toBe('blocked')
+    expect(strip.attributes('data-plan-needs-input')).toBe('true')
+  })
+
+  it('reports the transcript scroll flags and hides the scroll-to-bottom control', () => {
+    const wrapper = mount(RunPanel, { props: { view: createEmptyRunView() } })
+    const stream = wrapper.get('[data-transcript-scroll]')
+
+    // jsdom reports a zero-height box; the reader starts where content that
+    // fits leaves them: at the bottom, with nothing to scroll to.
+    expect(stream.attributes('data-can-scroll-up')).toBe('false')
+    expect(stream.attributes('data-can-scroll-down')).toBe('false')
+    expect(wrapper.find('[data-scroll-to-bottom]').exists()).toBe(false)
+  })
+
+  it('announces output that arrives while the reader is reading back', async () => {
+    const view = createEmptyRunView()
+    const wrapper = mount(RunPanel, { props: { view } })
+    const stream = wrapper.get('[data-transcript-scroll]').element as HTMLElement
+
+    // Scroll the reader away from the bottom, then let a turn arrive. The jump
+    // writes scrollTop, so the stub has to accept the write.
+    Object.defineProperty(stream, 'scrollTop', { value: 100, writable: true, configurable: true })
+    Object.defineProperty(stream, 'scrollHeight', { value: 1200, writable: true, configurable: true })
+    Object.defineProperty(stream, 'clientHeight', { value: 400, writable: true, configurable: true })
+    await stream.dispatchEvent(new Event('scroll'))
+
+    await wrapper.setProps({
+      view: {
+        ...view,
+        timeline: [
+          {
+            type: 'message' as const,
+            key: 'message-1',
+            sequence: 1,
+            occurredAt: '2026-09-20T06:00:00Z',
+            turnId: null,
+            role: 'assistant' as const,
+            text: 'still working',
+            final: true,
+          },
+        ],
+      },
+    })
+    // The watcher defers a tick before deciding, so it measures the transcript
+    // the new turn actually produced.
+    await flushPromises()
+
+    // The run kept producing while they read, so the control says how much
+    // rather than pretending nothing happened.
+    expect(wrapper.get('[data-scroll-unread-dot]').text()).toContain('1')
+    expect(wrapper.get('[data-scroll-to-bottom]').attributes('data-scroll-unread')).toBe('true')
+
+    // Asking for the bottom is also how the reader marks it read; the count may
+    // not survive the jump or the control would nag forever. Landing at the
+    // bottom also retires the control itself, because there is nowhere to jump.
+    await wrapper.get('[data-scroll-to-bottom]').trigger('click')
+    expect(wrapper.find('[data-scroll-unread-dot]').exists()).toBe(false)
+    expect(wrapper.find('[data-scroll-to-bottom]').exists()).toBe(false)
+  })
+
+  it('mounts the message rail on the transcript and jumps to the turn chosen', async () => {
+    const view = {
+      ...createEmptyRunView(),
+      timeline: [
+        {
+          type: 'message' as const,
+          key: 'message-1',
+          sequence: 1,
+          occurredAt: '2026-09-20T06:00:00Z',
+          turnId: null,
+          role: 'user' as const,
+          text: 'first question',
+          final: true,
+        },
+        {
+          type: 'message' as const,
+          key: 'message-2',
+          sequence: 2,
+          occurredAt: '2026-09-20T06:01:00Z',
+          turnId: null,
+          role: 'user' as const,
+          text: 'second question',
+          final: true,
+        },
+      ],
+    }
+    const wrapper = mount(RunPanel, { props: { view } })
+
+    const rail = wrapper.get('[data-message-rail]')
+    expect(rail.findAll('[data-rail-mark]')).toHaveLength(2)
+
+    // jsdom has no layout, so scrollIntoView is recorded rather than performed.
+    const scrolled: number[] = []
+    for (const row of wrapper.findAll('[data-virtualized-turn]')) {
+      Object.defineProperty(row.element, 'scrollIntoView', {
+        value: () => scrolled.push(Number(row.attributes('data-virtualized-turn'))),
+      })
+    }
+    await rail.findAll('[data-rail-mark]')[1]!.trigger('click')
+    expect(scrolled).toEqual([1])
+  })
+
+  it('carries the top fade as state rather than as an always-on decoration', async () => {
+    const wrapper = mount(RunPanel, { props: { view: createEmptyRunView() } })
+    const stream = wrapper.get('[data-transcript-scroll]').element as HTMLElement
+    const fade = wrapper.get('[data-transcript-fade]')
+
+    // Nothing is above the reader on a transcript that fits, so the fade is
+    // hidden; the same element becomes visible once there is content above.
+    expect(fade.attributes('data-transcript-fade')).toBe('hidden')
+
+    // jsdom does not lay out, so the box the measurement reads is written by
+    // hand: the same element the reader scrolls, now scrolled away from its top.
+    Object.defineProperty(stream, 'scrollTop', { value: 200, configurable: true })
+    Object.defineProperty(stream, 'scrollHeight', { value: 1200, configurable: true })
+    Object.defineProperty(stream, 'clientHeight', { value: 400, configurable: true })
+    await stream.dispatchEvent(new Event('scroll'))
+    expect(fade.attributes('data-transcript-fade')).toBe('visible')
   })
 })

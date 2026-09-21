@@ -8,6 +8,9 @@
     "connectionError": "连接错误",
     "unknownWorkspace": "未选择工作区"
   },
+  "account": {
+    "localRuntime": "本地运行时"
+  },
   "agents": {
     "title": "智能体",
     "runtimeFleet": "运行时集群",
@@ -73,12 +76,176 @@
   "workspace": {
     "eyebrow": "本地工作区",
     "title": "工作区",
-    "description": "会话历史、运行记录和上下文工具将在这里显示。"
+    "description": "会话历史、运行记录和上下文工具将在这里显示。",
+    "greeting": "你想让我们在 {name} 中构建什么？",
+    "projects": "项目",
+    "projectFallback": "未选择项目"
+  },
+  "pet": {
+    "label": "Orchester 伙伴",
+    "show": "显示伙伴",
+    "hide": "隐藏伙伴",
+    "title": "伙伴",
+    "description": "随运行状态变化的 xiaoxuan 环境伙伴。",
+    "visibility": {
+      "title": "显示伙伴",
+      "description": "在输入框上方显示环境伙伴。"
+    },
+    "notification": {
+      "running": "运行中",
+      "waiting": "需要输入",
+      "review": "已就绪",
+      "failed": "已阻塞"
+    }
   },
   "settings": {
     "eyebrow": "配置",
     "title": "设置",
-    "description": "供应商凭据、模型选择和外观控制将在这里显示。"
+    "description": "供应商凭据、模型选择和外观控制将在这里显示。",
+    "sections": {
+      "general": "通用",
+      "appearance": "外观",
+      "providers": "提供商",
+      "about": "关于",
+      "notifications": "通知",
+      "import": "导入",
+      "profile": "个人资料",
+      "keybindings": "快捷键"
+    },
+    "keybindings": {
+      "description": "这里的每个快捷键都由应用中已挂载的某个部分响应；改动它就会改动应用的行为。",
+      "search": "搜索快捷键",
+      "change": "更改",
+      "capture": "按下新的按键",
+      "reset": "重置全部快捷键",
+      "empty": "没有匹配的快捷键。",
+      "conflict": "{keys} 已绑定到 {other}。"
+    },
+    "language": {
+      "title": "语言",
+      "description": "当前工作区的界面语言。"
+    },
+    "theme": {
+      "title": "主题",
+      "description": "整个外壳的浅色或深色表面。",
+      "toLight": "切换到浅色主题",
+      "toDark": "切换到深色主题"
+    },
+    "colorScheme": {
+      "title": "强调色",
+      "description": "应用中的主色调，用于按钮、链接等强调元素。",
+      "rose": "Orchester 粉",
+      "codex": "Codex 蓝",
+      "violet": "紫罗兰",
+      "teal": "青绿"
+    },
+    "appearance": {
+      "dark": "深色",
+      "light": "浅色",
+      "title": "主题",
+      "description": "自定义 Orchester 的外观，让它更符合你的喜好。",
+      "system": "系统",
+      "hint": "选择预设的浅色与深色界面。"
+    },
+    "locale": {
+      "en": "English",
+      "zhCN": "简体中文",
+      "zhTW": "繁體中文"
+    },
+    "providers": {
+      "description": "提供商凭证和模型默认值保留在本地运行时；浏览器不会存储它们。"
+    },
+    "about": {
+      "description": "Orchester 将本地 Rust 运行时与 Web 工作区、桌面外壳和命令行客户端结合在一起。"
+    },
+    "groups": {
+      "personal": "个人",
+      "integrations": "集成"
+    },
+    "search": {
+      "placeholder": "搜索设置",
+      "empty": "没有匹配的设置项。",
+      "shortcut": "搜索快捷键",
+      "change": "更改",
+      "capture": "按下新的按键"
+    },
+    "intensity": {
+      "title": "强调强度",
+      "description": "强调色在主操作上的使用力度。",
+      "vivid": "鲜明",
+      "calm": "克制"
+    },
+    "reducedMotion": {
+      "title": "减少动态效果",
+      "description": "将过渡和动画压缩到最低限度。",
+      "system": "跟随系统",
+      "explicit": "手动"
+    },
+    "surface": {
+      "title": "运行形态",
+      "description": "当前渲染的界面：本地 WebUI、项目站点或桌面窗口。"
+    },
+    "preview": {
+      "title": "代码预览",
+      "hint": "预览当前主题下的代码风格"
+    },
+    "table": {
+      "title": "外观设置",
+      "hint": "这些选择保存在本机，并在首次绘制前恢复。",
+      "import": "导入主题",
+      "export": "导出主题",
+      "reset": "重置外观",
+      "invalid": "这个文件不是 Orchester 的外观配置。"
+    },
+    "notifications": {
+      "title": "暂无通知规则",
+      "description": "运行与审批通知将在这里配置。"
+    },
+    "import": {
+      "title": "暂无可导入内容",
+      "description": "从另一台机器导入会话、凭据和工作区设置。"
+    },
+    "profile": {
+      "title": "本地资料",
+      "description": "身份信息保存在本机，由运行时管理，而不是账号。"
+    },
+    "uiFont": {
+      "title": "UI 字体",
+      "description": "界面中使用的字体。",
+      "system": "系统默认",
+      "sans": "无衬线",
+      "serif": "衬线"
+    },
+    "contentFont": {
+      "title": "内容字体",
+      "description": "编辑器等内容区域的字体。",
+      "ui": "与界面字体相同",
+      "mono": "等宽"
+    },
+    "translucentRail": {
+      "title": "半透明侧边栏",
+      "description": "让侧边栏呈现半透明效果，增强桌面沉浸感。"
+    },
+    "background": {
+      "title": "背景",
+      "description": "主题使用的界面背景颜色。"
+    },
+    "foreground": {
+      "title": "前景",
+      "description": "主题使用的主要文字颜色。"
+    },
+    "fontWeight": {
+      "title": "字重",
+      "regular": "常规",
+      "medium": "中等"
+    },
+    "terminalPlacement": {
+      "title": "终端",
+      "description": "终端标签页打开的位置。",
+      "section": "终端",
+      "bottom": "底部面板",
+      "inspector": "审查面板"
+    }
   },
   "notFound": {
     "eyebrow": "404",
@@ -93,12 +260,67 @@
     "loadError": "无法加载会话历史",
     "retry": "重试",
     "loadMore": "加载更多",
-    "resumable": "可恢复"
+    "resumable": "可恢复",
+    "newChat": "新建对话",
+    "railTitle": "最近会话"
+  },
+  "run": {
+    "announce": {
+      "started": "运行已开始",
+      "succeeded": "运行已完成",
+      "failed": "运行失败",
+      "cancelled": "运行已取消",
+      "budgetExceeded": "运行因超出预算而停止",
+      "interrupted": "运行已中断，结果未知",
+      "approval": "请求审批",
+      "turnComplete": "回合完成",
+      "validation": "验证通过：{summary}",
+      "validationFailed": "验证失败：{summary}"
+    },
+    "ask": "询问",
+    "governed": "受控",
+    "fullAccess": "完全访问",
+    "fullAccessTitle": "给该运行完全访问权？",
+    "fullAccessDescription": "完全访问允许智能体直接修改文件并访问网络，不再询问。它对下一次运行生效。",
+    "fullAccessAccept": "使用完全访问",
+    "fullAccessCancel": "保持当前预设",
+    "approvalPreset": "审批预设",
+    "connection": "连接",
+    "sequence": "序列",
+    "usage": "用量",
+    "runUsage": "运行用量",
+    "characters": "字符",
+    "chooseProject": "选择项目",
+    "starting": "正在启动运行…",
+    "awaiting": "等待运行事件…",
+    "newRun": "新建运行",
+    "newRunDescription": "启动一次运行后，事件会在这里显示。",
+    "describeTask": "描述任务",
+    "taskPrompt": "任务提示词",
+    "runInProgress": "运行进行中",
+    "modelUnavailable": "模型不可用",
+    "planComplete": "计划已完成",
+    "showPlan": "展开完整计划",
+    "hidePlan": "收起完整计划",
+    "reasoning": "推理",
+    "showReasoning": "展开推理",
+    "hideReasoning": "收起推理",
+    "showCallDetail": "展开调用详情",
+    "hideCallDetail": "收起调用详情",
+    "noCommandMatch": "没有匹配的命令。",
+    "loadingCommands": "正在加载命令…",
+    "submit": "运行",
+    "stop": "停止",
+    "settingsTitle": "设置"
   },
   "transcript": {
     "emptyTitle": "新运行",
     "emptyDescription": "选择历史会话或开始新的运行。",
     "loading": "正在加载会话",
+    "newChatTitle": "新对话",
+    "share": "分享",
+    "more": "更多选项",
+    "togglePanel": "切换检查器",
     "loadError": "无法加载会话详情",
     "prompt": "请求",
     "result": "结果",
@@ -106,7 +328,11 @@
     "inputTokens": "输入",
     "outputTokens": "输出",
     "reasoningTokens": "推理",
-    "cachedTokens": "缓存"
+    "cachedTokens": "缓存",
+    "jumpToLatest": "跳到最新",
+    "unread": "下方有新输出",
+    "unreadCount": "{count} 条新事件",
+    "messageNavigation": "消息导航"
   },
   "inspector": {
     "label": "工作区检查器",
@@ -116,7 +342,7 @@
     "contextTitle": "工作区上下文",
     "contextDescription": "文件、运行时元数据和所选会话上下文会显示在这里。",
     "approvalsTitle": "审批",
-    "approvalsDescription": "运行暂停时，待处理的治理决策会显示在这里。",
+    "approvalsDescription": "当运行暂停时，待处理的治理决定会显示在这里。",
     "changesTitle": "变更",
     "changesDescription": "检测到的文件变更和差异会显示在这里。",
     "file": "个文件",
@@ -129,6 +355,96 @@
     "events": "个事件",
     "sequence": "序号 #",
     "noFileChanges": "暂无文件变更",
-    "noFileChangesDescription": "活动运行报告的文件变更会显示在这里。"
+    "noFileChangesDescription": "活动运行报告的文件变更会显示在这里。",
+    "reviewTitle": "审查",
+    "reviewDescription": "工作区改动集合，按每处改动所在的位置筛选。",
+    "filterLabel": "筛选改动",
+    "filter": {
+      "all": "全部",
+      "staged": "已暂存",
+      "unstaged": "未暂存",
+      "branch": "分支",
+      "lastTurn": "最近一轮"
+    },
+    "review": "审查",
+    "expandAll": "展开全部文件夹",
+    "collapseAll": "折叠全部文件夹",
+    "wrapLines": "折行显示长行",
+    "risk": "风险",
+    "scope": "范围",
+    "allowOnce": "仅允许一次",
+    "allowForRun": "本次运行内允许",
+    "deny": "拒绝",
+    "superseded": "已失效",
+    "supersededDescription": "读取后该行已更新，决定应针对较新的版本。",
+    "decided": "已决定",
+    "expires": "过期时间",
+    "nothingToDecide": "没有待决定事项",
+    "nothingToDecideDescription": "当前运行请求的审批会显示在这里。",
+    "queueLabel": "待处理审批",
+    "diff": {
+      "preview": "差异预览",
+      "empty": "暂无差异预览",
+      "emptyDescription": "运行时提供内容后，这里会显示有限长度的文本预览。",
+      "refused": "无法预览",
+      "refusedDescription": "二进制或控制符密集的内容不在浏览器中渲染。",
+      "text": "文本预览",
+      "truncated": "已截断的文本预览",
+      "showing": "显示 {totalLines} 行中的 {lines} 行，以及 {totalBytes} 字节中的 {bytes} 字节。",
+      "bytes": "{count} 字节"
+    }
+  },
+  "bottomPanel": {
+    "label": "底部面板",
+    "terminal": "终端",
+    "output": "执行输出",
+    "audit": "审计日志",
+    "terminalEmpty": "运行开始后，终端会显示在这里。",
+    "outputEmpty": "当前运行的命令输出会显示在这里。",
+    "auditEmpty": "审批与决策记录会显示在这里。"
+  },
+  "tabStrip": {
+    "label": "已打开的标签页"
+  },
+  "window": {
+    "closeTitle": "关闭 Orchester？",
+    "closeDescription": "仍有任务正在运行。关闭窗口只会隐藏 Orchester，任务会继续运行，直到你从托盘退出。",
+    "closeCancel": "继续工作",
+    "closeAccept": "关闭窗口",
+    "controls": "窗口控件"
+  },
+  "layout": {
+    "workspacePanels": "工作区面板",
+    "sessions": "会话",
+    "transcript": "运行记录",
+    "inspector": "检查器",
+    "resizeRail": "调整任务栏宽度",
+    "resizeInspector": "调整检查器宽度"
+  },
+  "shortcuts": {
+    "groups": {
+      "composer": "输入区",
+      "sessions": "会话",
+      "layout": "布局"
+    },
+    "labels": {
+      "paletteOpen": "打开命令面板",
+      "composerFocus": "聚焦输入区",
+      "sessionNew": "开始新会话",
+      "inspectorToggle": "切换检查器",
+      "settingsOpen": "打开设置",
+      "windowClose": "关闭当前标签页"
+    }
+  },
+  "commands": {
+    "agent": "选择委派对象",
+    "model": "选择模型或提供商",
+    "theme": "预览工作区主题",
+    "config": "查看已解析的配置",
+    "resume": "恢复已记录的会话",
+    "permissions": "查看审批策略",
+    "status": "查看运行时状态",
+    "plugins": "管理已安装的插件",
+    "help": "显示此列表"
   }
 }

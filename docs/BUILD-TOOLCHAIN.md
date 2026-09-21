@@ -28,12 +28,12 @@ cargo test --workspace
 The frontend workspace exposes the same checks in a machine-readable doctor:
 
 ```powershell
-pnpm --dir apps doctor:desktop
+pnpm doctor:desktop
 node werkzeug/frontend/doctor.mjs desktop --json
 ```
 
-Required failures return a non-zero exit code and block `pnpm --dir apps
-dev:desktop`. The stable Windows failure IDs include:
+Required failures return a non-zero exit code and block `pnpm dev:desktop`.
+The stable Windows failure IDs include:
 
 | ID | Meaning | Repair |
 | --- | --- | --- |

@@ -51,6 +51,7 @@ const status = computed(() => {
 <style scoped>
 .session-list-item {
   display: grid;
+  min-block-size: var(--hit-target-min, 32px);
   inline-size: 100%;
   gap: var(--space-2);
   padding: var(--space-3);

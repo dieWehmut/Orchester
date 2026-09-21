@@ -1,5 +1,10 @@
-export type InspectorTab = 'context' | 'approvals' | 'changes'
+export type InspectorTab = 'context' | 'approvals' | 'changes' | 'terminal'
 
 export function isInspectorTab(value: string): value is InspectorTab {
-  return value === 'context' || value === 'approvals' || value === 'changes'
+  return (
+    value === 'context' ||
+    value === 'approvals' ||
+    value === 'changes' ||
+    value === 'terminal'
+  )
 }

@@ -1,5 +1,7 @@
 import { isTauri } from '@tauri-apps/api/core'
 import { getCurrentWindow } from '@tauri-apps/api/window'
+import { readSystemPlatform, type Platform } from '@orchester/design'
+import type { InjectionKey } from 'vue'
 
 export type DesktopWindowUnlisten = () => void
 
@@ -14,6 +16,7 @@ export interface DesktopWindowHandle {
 
 export interface DesktopWindowController {
   readonly enabled: boolean
+  readonly platform?: Platform
   minimize: () => Promise<void>
   toggleMaximize: () => Promise<void>
   close: () => Promise<void>
@@ -24,6 +27,7 @@ export interface DesktopWindowController {
 export interface DesktopWindowRuntime {
   enabled: boolean
   window: DesktopWindowHandle | null
+  platform?: Platform
 }
 
 const browserWindow: DesktopWindowController = {
@@ -113,6 +117,7 @@ export function createDesktopWindowController(
 
   return {
     enabled: true,
+    platform: runtime.platform ?? readSystemPlatform(),
     minimize: () => runWindowAction(() => runtime.window!.minimize()),
     toggleMaximize: () => runWindowAction(() => runtime.window!.toggleMaximize()),
     close: () => runWindowAction(() => runtime.window!.close()),
@@ -122,3 +127,14 @@ export function createDesktopWindowController(
 }
 
 export const desktopWindow = createDesktopWindowController()
+
+/**
+ * The window controller the shell hands to the routed views.
+ *
+ * The shell owns the window and a view owns what is inside it, so the view
+ * that closes a tab asks for the controller rather than reaching for the
+ * module singleton: a test, or a second window, can then mount the same view
+ * against its own window instead of the one the module happened to build.
+ */
+export const DESKTOP_WINDOW_KEY: InjectionKey<DesktopWindowController> =
+  Symbol('orchester-desktop-window')

@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted, provide } from 'vue'
 
 import WindowChrome from './components/layout/WindowChrome.vue'
 import WorkspaceHeader from './components/layout/WorkspaceHeader.vue'
 import type { RuntimeConnection } from './components/layout/WorkspaceHeader.vue'
 import {
+  DESKTOP_WINDOW_KEY,
   desktopWindow,
   type DesktopWindowController,
 } from './platform/desktop-window'
 import { useAppStores } from './stores/app'
+import { useShortcutListener } from './shortcuts'
 
 const props = defineProps<{
   desktopController?: DesktopWindowController
@@ -16,6 +18,11 @@ const props = defineProps<{
 
 const stores = useAppStores()
 const windowController = props.desktopController ?? desktopWindow
+
+// The routed views act on the window the shell owns - closing a tab can be a
+// window close in the desktop runtime - so the controller is handed down
+// rather than each view reaching for the module singleton.
+provide(DESKTOP_WINDOW_KEY, windowController)
 const connection = computed<RuntimeConnection>(() => {
   if (stores.bootstrap.status.value === 'ready') return 'ready'
   if (stores.bootstrap.status.value === 'error') return 'error'
@@ -31,6 +38,9 @@ onUnmounted(() => {
   stores.stop()
 })
 
+// One listener for the whole app: a shortcut works from wherever focus is,
+// which is what makes it a shortcut rather than a key binding on a pane.
+useShortcutListener()
 </script>
 
 <template>
@@ -38,8 +48,8 @@ onUnmounted(() => {
     <WindowChrome :controller="windowController" />
     <WorkspaceHeader :connection="connection" :workspace-name="workspaceName" />
 
-    <main aria-label="Agent workspace">
+    <div class="app-shell__outlet">
       <RouterView />
-    </main>
+    </div>
   </div>
 </template>

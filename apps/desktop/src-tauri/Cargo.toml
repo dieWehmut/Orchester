@@ -12,7 +12,16 @@ publish = false
 tauri-build = { version = "2.6.3", features = [] }
 
 [dependencies]
-tauri = { version = "2.11.1", features = [] }
+tauri = { version = "2.11.1", features = ["tray-icon"] }
+orchester-anwendung = { path = "../../../kisten/anwendung" }
+orchester-laufzeit = { path = "../../../kisten/laufzeit" }
+orchester-netz = { path = "../../../kisten/netz", features = ["static-files"] }
+
+[target.'cfg(windows)'.dependencies]
+orchester-native-chrome = { path = "../native-chrome" }
+
+[dev-dependencies]
+serde_json = "1"
 
 # Keep the desktop crate independent from the repository's Rust workspace.
 [workspace]

@@ -8,6 +8,9 @@
     "connectionError": "連線錯誤",
     "unknownWorkspace": "尚未選擇工作區"
   },
+  "account": {
+    "localRuntime": "本機執行環境"
+  },
   "agents": {
     "title": "代理",
     "runtimeFleet": "執行環境代理群",
@@ -73,12 +76,176 @@
   "workspace": {
     "eyebrow": "本機工作區",
     "title": "工作區",
-    "description": "工作階段歷史、執行記錄與內容工具將顯示於此。"
+    "description": "工作階段歷史、執行記錄與內容工具將顯示於此。",
+    "greeting": "你想讓我們在 {name} 中建構什麼？",
+    "projects": "專案",
+    "projectFallback": "未選擇專案"
+  },
+  "pet": {
+    "label": "Orchester 夥伴",
+    "show": "顯示夥伴",
+    "hide": "隱藏夥伴",
+    "title": "夥伴",
+    "description": "隨執行狀態變化的 xiaoxuan 環境夥伴。",
+    "visibility": {
+      "title": "顯示夥伴",
+      "description": "在輸入框上方顯示環境夥伴。"
+    },
+    "notification": {
+      "running": "執行中",
+      "waiting": "需要輸入",
+      "review": "已就緒",
+      "failed": "已阻塞"
+    }
   },
   "settings": {
     "eyebrow": "設定",
     "title": "設定",
-    "description": "供應商憑證、模型選擇與外觀控制將顯示於此。"
+    "description": "供應商憑證、模型選擇與外觀控制將顯示於此。",
+    "sections": {
+      "general": "一般",
+      "appearance": "外觀",
+      "providers": "供應商",
+      "about": "關於",
+      "notifications": "通知",
+      "import": "匯入",
+      "profile": "個人資料",
+      "keybindings": "快速鍵"
+    },
+    "keybindings": {
+      "description": "這裡的每個快速鍵都由應用程式中已掛載的某個部分回應；變更它就會變更應用程式的行為。",
+      "search": "搜尋快速鍵",
+      "change": "變更",
+      "capture": "按下新的按鍵",
+      "reset": "重設全部快捷鍵",
+      "empty": "沒有符合的快速鍵。",
+      "conflict": "{keys} 已綁定到 {other}。"
+    },
+    "language": {
+      "title": "語言",
+      "description": "目前工作區的介面語言。"
+    },
+    "theme": {
+      "title": "主題",
+      "description": "整個外殼的淺色或深色表面。",
+      "toLight": "切換到淺色主題",
+      "toDark": "切換到深色主題"
+    },
+    "colorScheme": {
+      "title": "強調色",
+      "description": "應用程式中的主色調，用於按鈕、連結等強調元素。",
+      "rose": "Orchester 粉",
+      "codex": "Codex 藍",
+      "violet": "紫羅蘭",
+      "teal": "青綠"
+    },
+    "appearance": {
+      "dark": "深色",
+      "light": "淺色",
+      "title": "主題",
+      "description": "自訂 Orchester 的外觀，讓它更符合你的偏好。",
+      "system": "系統",
+      "hint": "選擇預設的淺色與深色介面。"
+    },
+    "locale": {
+      "en": "English",
+      "zhCN": "简体中文",
+      "zhTW": "繁體中文"
+    },
+    "providers": {
+      "description": "提供者憑證和模型預設值保留在本地執行時；瀏覽器不會儲存它們。"
+    },
+    "about": {
+      "description": "Orchester 將本地 Rust 執行時與 Web 工作區、桌面外殼和命令列客戶端結合在一起。"
+    },
+    "groups": {
+      "personal": "個人",
+      "integrations": "整合"
+    },
+    "search": {
+      "placeholder": "搜尋設定",
+      "empty": "沒有符合的設定項目。",
+      "shortcut": "搜尋快捷鍵",
+      "change": "變更",
+      "capture": "按下新的按鍵"
+    },
+    "intensity": {
+      "title": "強調強度",
+      "description": "強調色在主操作上的使用力度。",
+      "vivid": "鮮明",
+      "calm": "克制"
+    },
+    "reducedMotion": {
+      "title": "減少動態效果",
+      "description": "將過場與動畫壓縮到最低限度。",
+      "system": "跟隨系統",
+      "explicit": "手動"
+    },
+    "surface": {
+      "title": "執行形態",
+      "description": "目前渲染的介面：本機 WebUI、專案網站或桌面視窗。"
+    },
+    "preview": {
+      "title": "程式碼預覽",
+      "hint": "預覽目前主題下的程式碼風格"
+    },
+    "table": {
+      "title": "外觀設定",
+      "hint": "這些選擇保存在本機，並在首次繪製前還原。",
+      "import": "匯入主題",
+      "export": "匯出主題",
+      "reset": "重設外觀",
+      "invalid": "這個檔案不是 Orchester 的外觀設定。"
+    },
+    "notifications": {
+      "title": "尚無通知規則",
+      "description": "執行與審批通知將在這裡設定。"
+    },
+    "import": {
+      "title": "尚無可匯入內容",
+      "description": "從另一台機器匯入工作階段、憑證與工作區設定。"
+    },
+    "profile": {
+      "title": "本機資料",
+      "description": "身分資訊保存在本機，由執行階段管理，而不是帳號。"
+    },
+    "uiFont": {
+      "title": "UI 字型",
+      "description": "介面中使用的字型。",
+      "system": "系統預設",
+      "sans": "無襯線",
+      "serif": "襯線"
+    },
+    "contentFont": {
+      "title": "內容字型",
+      "description": "編輯器等內容區域的字型。",
+      "ui": "與介面字型相同",
+      "mono": "等寬"
+    },
+    "translucentRail": {
+      "title": "半透明側邊欄",
+      "description": "讓側邊欄呈現半透明效果，增強桌面沉浸感。"
+    },
+    "background": {
+      "title": "背景",
+      "description": "主題使用的介面背景顏色。"
+    },
+    "foreground": {
+      "title": "前景",
+      "description": "主題使用的主要文字顏色。"
+    },
+    "fontWeight": {
+      "title": "字重",
+      "regular": "一般",
+      "medium": "中等"
+    },
+    "terminalPlacement": {
+      "title": "終端",
+      "description": "終端分頁開啟的位置。",
+      "section": "終端",
+      "bottom": "底部面板",
+      "inspector": "審查面板"
+    }
   },
   "notFound": {
     "eyebrow": "404",
@@ -93,12 +260,67 @@
     "loadError": "無法載入工作階段歷史",
     "retry": "重試",
     "loadMore": "載入更多",
-    "resumable": "可恢復"
+    "resumable": "可恢復",
+    "newChat": "新建對話",
+    "railTitle": "最近會話"
+  },
+  "run": {
+    "announce": {
+      "started": "執行已開始",
+      "succeeded": "執行已完成",
+      "failed": "執行失敗",
+      "cancelled": "執行已取消",
+      "budgetExceeded": "執行因超出預算而停止",
+      "interrupted": "執行已中斷，結果未知",
+      "approval": "請求審批",
+      "turnComplete": "回合完成",
+      "validation": "驗證通過：{summary}",
+      "validationFailed": "驗證失敗：{summary}"
+    },
+    "ask": "詢問",
+    "governed": "受控",
+    "fullAccess": "完全存取",
+    "fullAccessTitle": "給該執行完全存取權？",
+    "fullAccessDescription": "完全存取允許智能代理直接修改檔案並存取網路，不再詢問。它對下一次執行生效。",
+    "fullAccessAccept": "使用完全存取",
+    "fullAccessCancel": "保持目前預設",
+    "approvalPreset": "審批預設",
+    "connection": "連線",
+    "sequence": "序列",
+    "usage": "用量",
+    "runUsage": "執行用量",
+    "characters": "字元",
+    "chooseProject": "選擇專案",
+    "starting": "正在啟動執行…",
+    "awaiting": "等待執行事件…",
+    "newRun": "新建執行",
+    "newRunDescription": "啟動一次執行後，事件會在這裡顯示。",
+    "describeTask": "描述任務",
+    "taskPrompt": "任務提示詞",
+    "runInProgress": "執行進行中",
+    "modelUnavailable": "模型不可用",
+    "planComplete": "計畫已完成",
+    "showPlan": "展開完整計畫",
+    "hidePlan": "收起完整計畫",
+    "reasoning": "推理",
+    "showReasoning": "展開推理",
+    "hideReasoning": "收起推理",
+    "showCallDetail": "展開呼叫詳情",
+    "hideCallDetail": "收起呼叫詳情",
+    "noCommandMatch": "沒有相符的指令。",
+    "loadingCommands": "正在載入指令…",
+    "submit": "執行",
+    "stop": "停止",
+    "settingsTitle": "設定"
   },
   "transcript": {
     "emptyTitle": "新增執行",
     "emptyDescription": "選擇歷史工作階段或開始新的執行。",
     "loading": "正在載入工作階段",
+    "newChatTitle": "新對話",
+    "share": "分享",
+    "more": "更多選項",
+    "togglePanel": "切換檢查器",
     "loadError": "無法載入工作階段詳細資料",
     "prompt": "請求",
     "result": "結果",
@@ -106,7 +328,11 @@
     "inputTokens": "輸入",
     "outputTokens": "輸出",
     "reasoningTokens": "推理",
-    "cachedTokens": "快取"
+    "cachedTokens": "快取",
+    "jumpToLatest": "跳到最新",
+    "unread": "下方有新輸出",
+    "unreadCount": "{count} 則新事件",
+    "messageNavigation": "訊息導覽"
   },
   "inspector": {
     "label": "工作區檢查器",
@@ -116,7 +342,7 @@
     "contextTitle": "工作區內容",
     "contextDescription": "檔案、執行環境中繼資料與所選工作階段內容將顯示於此。",
     "approvalsTitle": "審批",
-    "approvalsDescription": "執行暫停時，待處理的治理決策將顯示於此。",
+    "approvalsDescription": "當執行暫停時，待處理的治理決定會顯示在這裡。",
     "changesTitle": "變更",
     "changesDescription": "偵測到的檔案變更與差異將顯示於此。",
     "file": "個檔案",
@@ -129,6 +355,96 @@
     "events": "個事件",
     "sequence": "序號 #",
     "noFileChanges": "尚無檔案變更",
-    "noFileChangesDescription": "目前執行回報的檔案變更將顯示於此。"
+    "noFileChangesDescription": "目前執行回報的檔案變更將顯示於此。",
+    "reviewTitle": "審查",
+    "reviewDescription": "工作區改動集合，按每處改動所在的位置篩選。",
+    "filterLabel": "篩選改動",
+    "filter": {
+      "all": "全部",
+      "staged": "已暫存",
+      "unstaged": "未暫存",
+      "branch": "分支",
+      "lastTurn": "最近一輪"
+    },
+    "review": "審查",
+    "expandAll": "展開全部資料夾",
+    "collapseAll": "摺疊全部資料夾",
+    "wrapLines": "折行顯示長行",
+    "risk": "風險",
+    "scope": "範圍",
+    "allowOnce": "僅允許一次",
+    "allowForRun": "本次執行內允許",
+    "deny": "拒絕",
+    "superseded": "已失效",
+    "supersededDescription": "讀取後該列已更新，決定應針對較新的版本。",
+    "decided": "已決定",
+    "expires": "過期時間",
+    "nothingToDecide": "沒有待決定事項",
+    "nothingToDecideDescription": "目前執行請求的審批會顯示在這裡。",
+    "queueLabel": "待處理審批",
+    "diff": {
+      "preview": "差異預覽",
+      "empty": "暫無差異預覽",
+      "emptyDescription": "執行時提供內容後，這裡會顯示限長的文字預覽。",
+      "refused": "無法預覽",
+      "refusedDescription": "二進位或控制碼密集的內容不會在瀏覽器中渲染。",
+      "text": "文字預覽",
+      "truncated": "已截斷的文字預覽",
+      "showing": "顯示 {totalLines} 行中的 {lines} 行，以及 {totalBytes} 位元組中的 {bytes} 位元組。",
+      "bytes": "{count} 位元組"
+    }
+  },
+  "bottomPanel": {
+    "label": "底部面板",
+    "terminal": "終端機",
+    "output": "執行輸出",
+    "audit": "稽核日誌",
+    "terminalEmpty": "執行開始後，終端機會顯示在這裡。",
+    "outputEmpty": "目前執行的命令輸出會顯示在這裡。",
+    "auditEmpty": "核准與決策記錄會顯示在這裡。"
+  },
+  "tabStrip": {
+    "label": "已開啟的分頁"
+  },
+  "window": {
+    "closeTitle": "關閉 Orchester？",
+    "closeDescription": "仍有任務正在執行。關閉視窗只會隱藏 Orchester，任務會繼續執行，直到你從托盤結束。",
+    "closeCancel": "繼續工作",
+    "closeAccept": "關閉視窗",
+    "controls": "視窗控件"
+  },
+  "layout": {
+    "workspacePanels": "工作區面板",
+    "sessions": "會話",
+    "transcript": "執行記錄",
+    "inspector": "檢查器",
+    "resizeRail": "調整任務欄寬度",
+    "resizeInspector": "調整檢查器寬度"
+  },
+  "shortcuts": {
+    "groups": {
+      "composer": "輸入區",
+      "sessions": "會話",
+      "layout": "布局"
+    },
+    "labels": {
+      "paletteOpen": "開啟指令面板",
+      "composerFocus": "聚焦輸入區",
+      "sessionNew": "開始新會話",
+      "inspectorToggle": "切換檢查器",
+      "settingsOpen": "開啟設定",
+      "windowClose": "關閉目前分頁"
+    }
+  },
+  "commands": {
+    "agent": "選擇委派對象",
+    "model": "選擇模型或提供者",
+    "theme": "預覽工作區主題",
+    "config": "檢視已解析的設定",
+    "resume": "恢復已記錄的會話",
+    "permissions": "檢視審批策略",
+    "status": "檢視執行時狀態",
+    "plugins": "管理已安裝的外掛",
+    "help": "顯示此清單"
   }
 }

@@ -80,6 +80,8 @@ describe('workspace components', () => {
     const wrapper = mount(InspectorDock, { props: { activeTab: 'changes' } })
 
     expect(wrapper.findAll('[role="tab"]')[2]?.attributes('aria-selected')).toBe('true')
-    expect(wrapper.get('[data-inspector-panel]').text()).toContain('Changes')
+    // Section 4.7 names this tab Review: it is the working copy change set,
+    // not only what this run reported.
+    expect(wrapper.get('[data-inspector-panel]').text()).toContain('Review')
   })
 })

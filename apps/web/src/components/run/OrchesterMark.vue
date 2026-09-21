@@ -1,31 +1,48 @@
 <script setup lang="ts">
-import { Orbit } from '@lucide/vue'
+import mark from '../../assets/orchester-mark.png'
 
 withDefaults(
   defineProps<{
     size?: number
   }>(),
-  { size: 72 },
+  { size: 104 },
 )
 </script>
 
 <template>
-  <span class="orchester-mark" data-orchester-mark aria-hidden="true">
-    <Orbit :size="size" :stroke-width="1.35" />
+  <span
+    class="orchester-mark"
+    data-orchester-mark
+    aria-hidden="true"
+    :style="{ inlineSize: `${size}px`, blockSize: `${size}px` }"
+  >
+    <img
+      class="orchester-mark__art"
+      :src="mark"
+      :width="size"
+      :height="size"
+      alt=""
+      draggable="false"
+    />
   </span>
 </template>
 
 <style scoped>
 .orchester-mark {
   display: grid;
-  inline-size: 104px;
-  block-size: 104px;
   place-items: center;
-  border: 1px solid var(--color-accent-border);
+  overflow: hidden;
+  border: 1px solid var(--color-border-base);
   border-radius: 28px;
   background: var(--color-bg-surface);
-  color: var(--color-accent);
   box-shadow: 0 18px 48px rgb(0 0 0 / 22%);
+}
+
+.orchester-mark__art {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  user-select: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {

@@ -11,13 +11,13 @@ test('frontend operations documents every stable launch and verification command
   const operations = await readFile(resolve(repositoryRoot, 'docs/FRONTENDS-OPERATIONS.md'), 'utf8')
 
   for (const command of [
-    'pnpm --dir apps doctor:web',
-    'pnpm --dir apps doctor:desktop',
-    'pnpm --dir apps dev:webui',
-    'pnpm --dir apps dev:website',
-    'pnpm --dir apps dev:desktop',
-    'pnpm --dir apps stack:verify',
-    'pnpm --dir apps test:tooling',
+    'pnpm doctor:web',
+    'pnpm doctor:desktop',
+    'pnpm dev:webui',
+    'pnpm dev:website',
+    'pnpm dev:desktop',
+    'pnpm stack:verify',
+    'pnpm test:tooling',
   ]) {
     assert.ok(operations.includes(command), `${command} is missing from frontend operations`)
   }
@@ -33,7 +33,7 @@ test('toolchain guide names the machine-readable linker failures and supported r
 
   assert.ok(guide.includes('windows-linker-shadowed'))
   assert.ok(guide.includes('windows-msvc-compiler-missing'))
-  assert.ok(guide.includes('pnpm --dir apps doctor:desktop'))
+  assert.ok(guide.includes('pnpm doctor:desktop'))
   assert.match(guide, /Desktop development with C\+\+/)
   assert.match(guide, /Developer PowerShell/)
 })
@@ -45,4 +45,20 @@ test('apps readme routes contributors through the stable surface commands', asyn
   assert.ok(readme.includes('pnpm run dev:webui'))
   assert.ok(readme.includes('pnpm run dev:website'))
   assert.ok(readme.includes('pnpm run dev:desktop'))
+})
+
+test('desktop download and install guidance ships in every readme', async () => {
+  const readmes = await Promise.all(
+    ['README.md', 'docs/README.en.md', 'docs/README.zh-TW.md'].map((name) =>
+      readFile(resolve(repositoryRoot, name), 'utf8'),
+    ),
+  )
+
+  for (const readme of readmes) {
+    assert.ok(readme.includes('desktop-v*'), 'the desktop release tag pattern is missing')
+    assert.ok(readme.includes('_x64-setup.exe'), 'the x64 installer name is missing')
+    assert.ok(readme.includes('_arm64-setup.exe'), 'the arm64 installer name is missing')
+    assert.ok(readme.includes('SHA256SUMS'), 'the checksum guidance is missing')
+    assert.ok(readme.includes('uninstall.exe'), 'the uninstall guidance is missing')
+  }
 })

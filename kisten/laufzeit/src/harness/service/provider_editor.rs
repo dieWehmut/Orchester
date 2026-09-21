@@ -281,11 +281,34 @@ mod tests {
             ));
             let _ = fs::remove_dir_all(&path);
             fs::create_dir_all(&path).expect("create scratch directory");
+            // See the editor fixture: the loader wants a user-only directory,
+            // which a fresh temp directory is not under the runner's umask.
+            #[cfg(unix)]
+            {
+                use std::os::unix::fs::PermissionsExt;
+                fs::set_permissions(&path, fs::Permissions::from_mode(0o700))
+                    .expect("private scratch directory");
+            }
             Self(path)
         }
 
         fn join(&self, name: &str) -> PathBuf {
             self.0.join(name)
+        }
+    }
+
+    /// Seed a configuration the loader will accept.
+    ///
+    /// The loader requires the file to be user-only, and a plain write is 0644
+    /// under the runner's umask: these tests passed on Windows, where the gate
+    /// reads ACLs, and failed on ubuntu-24.04 with `expected: "600"`.
+    fn seed_config(path: &std::path::Path, source: &str) {
+        fs::write(path, source).expect("seed a configuration");
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            fs::set_permissions(path, fs::Permissions::from_mode(0o600))
+                .expect("private configuration permissions");
         }
     }
 
@@ -385,7 +408,7 @@ mod tests {
                  \"relay\": { \"base_url\": \"https://old.test\" }\n  \
                }\n\
              }\n";
-        fs::write(&path, original).expect("seed a configuration");
+        seed_config(&path, original);
         let store = InMemoryCredentialStore::default();
 
         let edit =
@@ -416,7 +439,7 @@ mod tests {
             "model": "claude-opus-4-6",
             "model_providers": { "direct": { "base_url": "https://api.anthropic.com" } }
         }"#;
-        fs::write(&path, original).expect("seed a configuration");
+        seed_config(&path, original);
         let store = InMemoryCredentialStore::default();
         let mut draft = draft();
         draft.activate = false;

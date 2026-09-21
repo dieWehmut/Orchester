@@ -2,7 +2,7 @@
 
 Orchester exposes three developer surfaces from one pnpm workspace. Their
 packages, addresses, deployment metadata, and toolchain requirements are
-versioned in `apps/stack.manifest.json`; `pnpm --dir apps stack:verify` rejects
+versioned in `apps/stack.manifest.json`; `pnpm stack:verify` rejects
 drift between that manifest and the Vite, Tauri, package, Cargo, and Pages
 configuration.
 
@@ -11,8 +11,8 @@ configuration.
 From the repository root:
 
 ```powershell
-pnpm --dir apps install --frozen-lockfile
-pnpm --dir apps doctor:web
+pnpm install --frozen-lockfile
+pnpm doctor:web
 ```
 
 The WebUI and website require Node.js 22.12 or newer and pnpm 10.32.1. The
@@ -21,7 +21,7 @@ Pages workflow deliberately uses its separately pinned Node.js 24.8.0 runner.
 Before starting Tauri, run:
 
 ```powershell
-pnpm --dir apps doctor:desktop
+pnpm doctor:desktop
 ```
 
 The desktop profile also checks Rust/Cargo and native Windows tools. Any failed
@@ -38,7 +38,7 @@ node werkzeug/frontend/doctor.mjs desktop --json
 ## Local WebUI
 
 ```powershell
-pnpm --dir apps dev:webui
+pnpm dev:webui
 ```
 
 Open `http://127.0.0.1:4173/`. The launcher passes `--strictPort`, so it fails
@@ -48,15 +48,15 @@ is also the Tauri development frontend and must remain stable.
 Focused checks:
 
 ```powershell
-pnpm --dir apps --filter @orchester/web typecheck
-pnpm --dir apps --filter @orchester/web test
-pnpm --dir apps --filter @orchester/web build
+pnpm --filter @orchester/web typecheck
+pnpm --filter @orchester/web test
+pnpm --filter @orchester/web build
 ```
 
 ## GitHub Pages website
 
 ```powershell
-pnpm --dir apps dev:website
+pnpm dev:website
 ```
 
 Open `http://127.0.0.1:4174/`. This static site is independent of the local
@@ -66,12 +66,12 @@ For a production-shaped local build:
 
 ```powershell
 $env:BASE_PATH = '/Orchester/'
-pnpm --dir apps --filter @orchester/website build
+pnpm --filter @orchester/website build
 Remove-Item Env:BASE_PATH
 ```
 
 The deployment contract is `BASE_PATH=/Orchester/`, artifact directory
-`apps/website/dist`, and public URL
+`apps/web/site/dist`, and public URL
 `https://diewehmut.github.io/Orchester/`. GitHub Actions is the only supported
 deployment mechanism: `.github/workflows/pages.yml` runs frozen install,
 tooling tests, manifest verification, website typecheck/tests/build, artifact
@@ -86,7 +86,7 @@ available.
 ## Tauri desktop shell
 
 ```powershell
-pnpm --dir apps dev:desktop
+pnpm dev:desktop
 ```
 
 Tauri starts the WebUI on `http://127.0.0.1:4173/` through its checked-in
@@ -115,18 +115,18 @@ node werkzeug/frontend/launch.mjs desktop --dry-run
 Run the machine-level contract checks:
 
 ```powershell
-pnpm --dir apps test:tooling
-pnpm --dir apps stack:verify
+pnpm test:tooling
+pnpm stack:verify
 ```
 
 Run the complete frontend gates before merging:
 
 ```powershell
-pnpm --dir apps typecheck
-pnpm --dir apps test
-pnpm --dir apps --filter @orchester/web build
+pnpm typecheck
+pnpm test
+pnpm --filter @orchester/web build
 $env:BASE_PATH = '/Orchester/'
-pnpm --dir apps --filter @orchester/website build
+pnpm --filter @orchester/website build
 Remove-Item Env:BASE_PATH
 git diff --check
 ```

@@ -66,6 +66,7 @@ defineEmits<{
 <style scoped>
 .agent-fleet-row {
   display: grid;
+  min-block-size: var(--hit-target-min, 32px);
   grid-template-columns: 28px minmax(0, 1fr) auto;
   align-items: center;
   inline-size: 100%;
@@ -80,11 +81,19 @@ defineEmits<{
   cursor: pointer;
 }
 
-.agent-fleet-row:hover,
-.agent-fleet-row:focus-visible {
+.agent-fleet-row:hover {
   border-color: var(--color-border-base);
   background: var(--color-bg-element);
-  outline: none;
+}
+
+.agent-fleet-row:focus-visible {
+  /* Hover and focus used to collapse into one rule that removed the outline,
+     which left a keyboard user with a state they could not see. Focus keeps
+     the ring; hover keeps the background. */
+  border-color: var(--color-border-base);
+  background: var(--color-bg-element);
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: -2px;
 }
 
 .agent-fleet-row--selected {
@@ -124,7 +133,7 @@ defineEmits<{
 .agent-fleet-row__state {
   flex-direction: column;
   align-items: flex-end;
-  gap: 3px;
+  gap: var(--space-1);
 }
 
 .agent-fleet-row__activity {

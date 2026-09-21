@@ -32,14 +32,14 @@ describe('RunComposer', () => {
     const textarea = wrapper.get('textarea')
 
     await textarea.trigger('keydown', { key: 'Enter' })
-    await wrapper.get('button').trigger('click')
+    await wrapper.get('[data-composer-action="cancel"]').trigger('click')
 
     expect(wrapper.emitted('submit')).toBeUndefined()
     expect(wrapper.emitted('cancel')).toHaveLength(1)
     expect(wrapper.find('button[type="submit"]').exists()).toBe(false)
   })
 
-  it('renders the runtime project, approval, and model context above the prompt', () => {
+  it('renders the runtime project, approval, and model commands above the prompt', () => {
     const wrapper = mount(RunComposer, {
       props: {
         modelValue: '',

@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const workflowPath = path.join(repositoryRoot, '.github/workflows/npm-release.yml');
 const targets = JSON.parse(
-  fs.readFileSync(path.join(repositoryRoot, 'npm/cli/targets.json'), 'utf8'),
+  fs.readFileSync(path.join(repositoryRoot, 'apps/cli/targets.json'), 'utf8'),
 );
 
 function readWorkflow() {
@@ -94,7 +94,7 @@ test('release artifact contains the exact verified official plugin matrix', () =
   assert.ok(findPlugins > verifyPlugins);
   assert.ok(packPlugins > findPlugins);
   assert.match(stageJob, /\[\[ \$\{#plugin_dirs\[@\]\} -eq 3 \]\]/);
-  assert.match(stageJob, /npm pack --ignore-scripts --pack-destination release \.\/npm\/cli/);
+  assert.match(stageJob, /npm pack --ignore-scripts --pack-destination release \.\/apps\/cli/);
   assert.match(stageJob, /npm pack --ignore-scripts --pack-destination release "\.\/\$directory"/);
   assert.match(stageJob, /-name '\*\.tgz' \| wc -l\) -eq 10/);
 });

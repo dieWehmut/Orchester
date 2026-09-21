@@ -72,11 +72,11 @@ impl Theme {
     pub(crate) const fn palette(self) -> ThemePalette {
         match self {
             Self::Default | Self::Dark => ThemePalette {
-                accent: "\x1b[38;5;208m",
-                selection: "\x1b[38;5;222m",
-                warning: "\x1b[33m",
+                accent: "\x1b[38;2;137;180;250m",
+                selection: "\x1b[38;2;205;214;244m",
+                warning: "\x1b[38;2;243;139;168m",
                 dim: "\x1b[2m",
-                composer_background: "\x1b[48;5;236m",
+                composer_background: "\x1b[48;2;41;41;41m",
             },
             Self::Light => ThemePalette {
                 accent: "\x1b[38;2;0;95;135m",
@@ -180,6 +180,64 @@ mod tests {
                 "{} composer background",
                 theme.name()
             );
+        }
+    }
+
+    /// The Codex palette the operator asked the chat workspace to imitate: a
+    /// blue accent, bright selection, red warnings, and the neutral composer
+    /// band. Yellow is deliberately absent - the gold accent and the ANSI
+    /// yellow warning were what made the default theme read as "yellow".
+    #[test]
+    fn the_default_palette_uses_the_codex_colors() {
+        for theme in [Theme::Default, Theme::Dark] {
+            let palette = theme.palette();
+            assert_eq!(
+                palette.accent,
+                "\x1b[38;2;137;180;250m",
+                "{} accent",
+                theme.name()
+            );
+            assert_eq!(
+                palette.selection,
+                "\x1b[38;2;205;214;244m",
+                "{} selection",
+                theme.name()
+            );
+            assert_eq!(
+                palette.warning,
+                "\x1b[38;2;243;139;168m",
+                "{} warning",
+                theme.name()
+            );
+            assert_eq!(
+                palette.composer_background,
+                "\x1b[48;2;41;41;41m",
+                "{} composer band",
+                theme.name()
+            );
+        }
+    }
+
+    #[test]
+    fn the_default_palette_keeps_yellow_out() {
+        for theme in [Theme::Default, Theme::Dark] {
+            let palette = theme.palette();
+            for (name, value) in [
+                ("accent", palette.accent),
+                ("selection", palette.selection),
+                ("warning", palette.warning),
+            ] {
+                assert!(
+                    !value.contains(";5;208") && !value.contains(";5;222"),
+                    "{} {name} kept the yellow 256-colour code: {value}",
+                    theme.name()
+                );
+                assert!(
+                    value != "\x1b[33m",
+                    "{} {name} kept the ANSI yellow: {value}",
+                    theme.name()
+                );
+            }
         }
     }
 }

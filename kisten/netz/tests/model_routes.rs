@@ -102,6 +102,19 @@ async fn model_catalog_route_projects_a_configured_workspace_model() {
         }"#,
     )
     .expect("model config");
+    // The loader requires a user-only home and config, and a fresh temp
+    // directory is 0755 under the runner's umask: without this the route
+    // answered 503 on ubuntu-24.04 while passing on Windows.
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        fs::set_permissions(&home, fs::Permissions::from_mode(0o700)).expect("private home");
+        fs::set_permissions(
+            home.join("orchester.jsonc"),
+            fs::Permissions::from_mode(0o600),
+        )
+        .expect("private config");
+    }
     let response = app_router(ServerContext::new(
         Some(orchester_anwendung::OrchesterPaths::new(&home, &workspace)),
         ServerControl::new(),

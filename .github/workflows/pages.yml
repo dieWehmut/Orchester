@@ -8,15 +8,16 @@ on:
       - .github/workflows/pages.yml
       - Cargo.toml
       - apps/stack.manifest.json
-      - apps/website/**
-      - apps/design/**
+      - apps/web/site/**
+      - packages/design/**
       - apps/web/package.json
       - apps/web/vite.config.ts
       - apps/desktop/package.json
       - apps/desktop/src-tauri/tauri.conf.json
-      - apps/package.json
-      - apps/pnpm-lock.yaml
-      - apps/pnpm-workspace.yaml
+      - .npmrc
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
       - werkzeug/frontend/**
   workflow_dispatch:
 
@@ -68,32 +69,32 @@ jobs:
 
       - name: Install dependencies
         shell: bash
-        run: pnpm --dir apps install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Test frontend tooling
         shell: bash
-        run: pnpm --dir apps test:tooling
+        run: pnpm test:tooling
 
       - name: Verify stack manifest
         shell: bash
-        run: pnpm --dir apps stack:verify
+        run: pnpm stack:verify
 
       - name: Typecheck website
         shell: bash
-        run: pnpm --dir apps --filter @orchester/website typecheck
+        run: pnpm --filter @orchester/website typecheck
 
       - name: Test website
         shell: bash
-        run: pnpm --dir apps --filter @orchester/website test
+        run: pnpm --filter @orchester/website test
 
       - name: Build website
         shell: bash
-        run: pnpm --dir apps --filter @orchester/website build
+        run: pnpm --filter @orchester/website build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v4
         with:
-          path: apps/website/dist
+          path: apps/web/site/dist
 
   deploy:
     name: Deploy website

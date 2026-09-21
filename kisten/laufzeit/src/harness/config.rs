@@ -1126,53 +1126,20 @@ const INHERITED_MARKER: &str = "(inherited)";
 ///
 /// Explanatory only: the verdict above comes from the gate itself, so this
 /// cannot contradict it — at worst it stays empty and the human inspects the
-/// ACL by hand.  Identities are translated to SIDs before being compared,
-/// because the well-known account *names* are localized while the SIDs are not.
+/// ACL by hand. The DACL is read directly rather than through PowerShell: the
+/// script this replaces took 2.1-3.4 s per call, which is what made `/config`
+/// take seconds to open.
 #[cfg(windows)]
 fn untrusted_grants(path: &Path) -> String {
-    const SCRIPT: &str = "\
-$ErrorActionPreference = 'Stop'
-$trusted = @(
-  [Security.Principal.WindowsIdentity]::GetCurrent().User.Value,
-  'S-1-5-18',
-  'S-1-5-32-544'
-)
-$inheritOnly = [Security.AccessControl.PropagationFlags]::InheritOnly
-foreach ($ace in (Get-Acl -LiteralPath $env:ORCHESTER_DOCTOR_PATH).Access) {
-  if ($ace.AccessControlType -ne 'Allow') { continue }
-  if ($ace.PropagationFlags -band $inheritOnly) { continue }
-  $sid = $ace.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value
-  if ($trusted -contains $sid) { continue }
-  if ($ace.IsInherited) {
-    '{0} (inherited)' -f $ace.IdentityReference.Value
-  } else {
-    $ace.IdentityReference.Value
-  }
-}";
-
-    let Some(tool) = system_tool("WindowsPowerShell\\v1.0\\powershell") else {
-        return String::new();
-    };
-    let output = std::process::Command::new(tool)
-        .args([
-            "-NoLogo",
-            "-NoProfile",
-            "-NonInteractive",
-            "-Command",
-            SCRIPT,
-        ])
-        .env("ORCHESTER_DOCTOR_PATH", path)
-        .output();
-    let Ok(output) = output else {
-        return String::new();
-    };
-    if !output.status.success() {
-        return String::new();
-    }
-    String::from_utf8_lossy(&output.stdout)
-        .lines()
-        .map(str::trim)
-        .filter(|line| !line.is_empty())
+    crate::harness::private_fs::untrusted_grants(path)
+        .into_iter()
+        .map(|grant| {
+            if grant.inherited {
+                format!("{}{INHERITED_MARKER}", grant.principal)
+            } else {
+                grant.principal
+            }
+        })
         .collect::<Vec<_>>()
         .join(", ")
 }
@@ -1342,46 +1309,24 @@ fn check_windows_acl(path: PathBuf) -> Vec<PermissionDiagnostic> {
         broad_principal && write_grant
     });
 
-    let owner = system_tool("WindowsPowerShell\\v1.0\\powershell")
-        .map(|tool| {
-            Command::new(tool)
-                .args([
-                    "-NoLogo",
-                    "-NoProfile",
-                    "-NonInteractive",
-                    "-Command",
-                    "(Get-Acl -LiteralPath $env:ORCHESTER_DOCTOR_PATH).Owner",
-                ])
-                .env("ORCHESTER_DOCTOR_PATH", &path)
-                .output()
-        })
-        .transpose()
-        .ok()
-        .flatten()
-        .filter(|output| output.status.success())
-        .map(|output| String::from_utf8_lossy(&output.stdout).trim().to_owned())
-        .filter(|owner| !owner.is_empty());
-    let identity = system_tool("whoami")
-        .map(Command::new)
-        .map(|mut command| command.output())
-        .transpose()
-        .ok()
-        .flatten()
-        .filter(|output| output.status.success())
-        .map(|output| String::from_utf8_lossy(&output.stdout).trim().to_owned())
-        .filter(|identity| !identity.is_empty());
-    let owner_matches = match (&owner, &identity) {
-        (Some(owner), Some(identity)) => owner.eq_ignore_ascii_case(identity),
-        _ => false,
-    };
+    // Ownership is read from the file's security descriptor and compared as
+    // SIDs. The previous `Get-Acl`/`whoami` pair spawned two processes per
+    // inspected path, and this check runs for the config, the audit log, the
+    // memory database and the run store, so every menu that touched them paid
+    // for it.
+    let owner_matches =
+        crate::harness::private_fs::path_owner_is_current_user(&path).unwrap_or(false);
 
     // This is deliberately conservative: an ACL that cannot be confidently
     // recognized as user-only is reported as a doctor finding.
     let secure = acl_output.status.success() && owner_matches && !broad_write;
     let actual = format!(
-        "owner={}; identity={}; broad_write={broad_write}",
-        owner.as_deref().unwrap_or("unavailable"),
-        identity.as_deref().unwrap_or("unavailable")
+        "owner={}; broad_write={broad_write}",
+        if owner_matches {
+            "current user"
+        } else {
+            "not current user"
+        }
     );
     vec![PermissionDiagnostic {
         path,

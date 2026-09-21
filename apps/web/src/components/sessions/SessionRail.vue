@@ -25,7 +25,11 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="session-rail" :aria-busy="status === 'loading' || status === 'refreshing'">
+  <div
+    class="session-rail"
+    data-session-rail
+    :aria-busy="status === 'loading' || status === 'refreshing'"
+  >
     <header class="session-rail__header">
       <h2>{{ t('sessions.title') }}</h2>
       <AppButton size="sm" @click="$emit('newSession')">{{ t('sessions.new') }}</AppButton>

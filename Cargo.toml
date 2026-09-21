@@ -67,7 +67,7 @@ getrandom = "0.3"
 fs2 = "0.4"
 blake3 = "1"
 regex = "1"
-url = "=2.4.1"
+url = "=2.5.2"
 flate2 = "1"
 tar = "0.4"
 axum = { version = "0.8.9", default-features = false, features = ["http1", "json", "tokio", "tower-log", "tracing", "ws"] }

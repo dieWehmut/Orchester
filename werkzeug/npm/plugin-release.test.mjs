@@ -17,11 +17,11 @@ const repositoryRoot = path.resolve(moduleDirectory, '../..');
 function fixture(t) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'orchester-plugin-release-'));
   t.after(() => fs.rmSync(root, { force: true, recursive: true }));
-  fs.mkdirSync(path.join(root, 'npm/cli'), { recursive: true });
+  fs.mkdirSync(path.join(root, 'apps/cli'), { recursive: true });
   fs.mkdirSync(path.join(root, 'manifeste'), { recursive: true });
   fs.copyFileSync(
-    path.join(repositoryRoot, 'npm/cli/package.json'),
-    path.join(root, 'npm/cli/package.json'),
+    path.join(repositoryRoot, 'apps/cli/package.json'),
+    path.join(root, 'apps/cli/package.json'),
   );
   for (const name of OFFICIAL_AGENT_PLUGINS) {
     fs.cpSync(

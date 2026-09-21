@@ -7,6 +7,8 @@ use crossterm::terminal::{
     EndSynchronizedUpdate, EnterAlternateScreen, LeaveAlternateScreen,
 };
 
+use super::CaretPosition;
+
 pub(super) struct TerminalSession;
 
 impl TerminalSession {
@@ -35,6 +37,7 @@ impl Drop for TerminalSession {
     fn drop(&mut self) {
         let _ = execute!(
             io::stdout(),
+            cursor::SetCursorStyle::DefaultUserShape,
             cursor::Show,
             EnableLineWrap,
             LeaveAlternateScreen
@@ -46,6 +49,7 @@ impl Drop for TerminalSession {
 #[derive(Default)]
 pub(super) struct FramePresenter {
     rows: Vec<Vec<u8>>,
+    caret_visible: bool,
 }
 
 impl FramePresenter {
@@ -86,6 +90,36 @@ impl FramePresenter {
         self.rows = rows;
         Ok(())
     }
+
+    /// Parks the terminal cursor on the composer's insertion point. The frame
+    /// never draws a caret glyph: a real cursor is what blinks, moves with the
+    /// text, and lands after wide characters.
+    ///
+    /// The shape is set to a blinking bar while the composer owns the input, so
+    /// the composer reads as a text field rather than a block cursor sitting on
+    /// a menu. Terminals that do not implement `DECSCUSR` ignore it, and the
+    /// shape is only re-sent when it changes: this runs on every frame.
+    pub(super) fn place_caret<W: Write>(
+        &mut self,
+        out: &mut W,
+        caret: Option<CaretPosition>,
+    ) -> io::Result<()> {
+        match caret {
+            Some(caret) => {
+                execute!(out, cursor::MoveTo(caret.column, caret.row))?;
+                if !self.caret_visible {
+                    execute!(out, cursor::SetCursorStyle::BlinkingBar, cursor::Show)?;
+                    self.caret_visible = true;
+                }
+            }
+            None if self.caret_visible => {
+                execute!(out, cursor::SetCursorStyle::DefaultUserShape, cursor::Hide)?;
+                self.caret_visible = false;
+            }
+            None => {}
+        }
+        out.flush()
+    }
 }
 
 fn frame_rows(frame: &[u8]) -> Vec<Vec<u8>> {
@@ -119,6 +153,60 @@ mod tests {
         assert!(update.contains("gamma"));
         assert!(!update.contains("\x1b[J"));
         assert!(!update.contains("\x1b[2J"));
+    }
+
+    #[test]
+    fn the_caret_is_shown_on_the_composer_and_hidden_without_one() {
+        let mut presenter = FramePresenter::default();
+        let mut out = Vec::new();
+        presenter.present(&mut out, b"alpha\nbeta\n").unwrap();
+        out.clear();
+
+        presenter
+            .place_caret(&mut out, Some(CaretPosition { column: 7, row: 1 }))
+            .unwrap();
+
+        let update = String::from_utf8_lossy(&out).into_owned();
+        assert!(
+            update.contains("\x1b[2;8H"),
+            "the cursor must move to the insertion point: {update:?}"
+        );
+        assert!(
+            update.contains("\x1b[?25h"),
+            "the cursor must be visible while typing: {update:?}"
+        );
+        assert!(
+            update.contains("\x1b[5 q"),
+            "the composer caret must be an insertion bar: {update:?}"
+        );
+
+        // This runs on every frame, so the shape is only re-sent when it
+        // changes; the position still moves.
+        out.clear();
+        presenter
+            .place_caret(&mut out, Some(CaretPosition { column: 9, row: 1 }))
+            .unwrap();
+        let update = String::from_utf8_lossy(&out).into_owned();
+        assert!(
+            !update.contains("\x1b[5 q"),
+            "the caret shape is not re-sent per frame: {update:?}"
+        );
+        assert!(
+            update.contains("\x1b[2;10H"),
+            "the caret still follows the text: {update:?}"
+        );
+
+        out.clear();
+        presenter.place_caret(&mut out, None).unwrap();
+        let update = String::from_utf8_lossy(&out).into_owned();
+        assert!(
+            update.contains("\x1b[?25l"),
+            "an overlay or help view must hide the caret: {update:?}"
+        );
+        assert!(
+            update.contains("\x1b[0 q"),
+            "hiding the caret must restore the default shape: {update:?}"
+        );
     }
 
     #[test]

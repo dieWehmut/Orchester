@@ -21,10 +21,14 @@
 mod paths;
 mod self_agent;
 mod session_history;
+mod workspace_review;
 
 pub use paths::OrchesterPaths;
 pub use self_agent::{SelfAgentHost, SelfAgentHostError};
 pub use session_history::{
     SessionHistory, SessionHistoryDetail, SessionHistoryError, SessionHistoryPage,
     SessionHistorySummary,
+};
+pub use workspace_review::{
+    WorkspaceReview, WorkspaceReviewChange, WorkspaceReviewError, WorkspaceReviewKind,
 };

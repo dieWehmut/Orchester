@@ -7,13 +7,15 @@ import type { DesktopWindowController } from '../src/platform/desktop-window'
 import { createAppStores } from '../src/stores/app'
 
 describe('WebUI app shell', () => {
-  it('renders the product header and a single workspace main region', () => {
+  it('renders the product header and leaves the main landmark to the routed view', () => {
     const stores = createAppStores({ http: fakeHttp(), agentStatusStreamFactory: null })
-    const wrapper = mount(App, { global: { plugins: [stores, { install: (app) => app.component('RouterView', { template: '<div />' }) }] } })
+    const wrapper = mount(App, { global: { plugins: [stores, { install: (app) => app.component('RouterView', { template: '<div data-testid="routed" />' }) }] } })
 
     expect(wrapper.get('[data-testid="product-name"]').text()).toBe('Orchester')
-    expect(wrapper.findAll('main')).toHaveLength(1)
-    expect(wrapper.get('main').attributes('aria-label')).toBe('Agent workspace')
+    // The shell owns the chrome, not the transcript: the routed view declares
+    // the main landmark, so the shell must not wrap it in a second one.
+    expect(wrapper.findAll('main')).toHaveLength(0)
+    expect(wrapper.get('.app-shell__outlet [data-testid="routed"]')).toBeTruthy()
     expect(wrapper.find('[data-window-chrome]').exists()).toBe(false)
   })
 
@@ -22,7 +24,7 @@ describe('WebUI app shell', () => {
     const wrapper = mount(App, {
       props: { desktopController: fakeDesktopWindow() },
       global: {
-        plugins: [stores, { install: (app) => app.component('RouterView', { template: '<div />' }) }],
+        plugins: [stores, { install: (app) => app.component('RouterView', { template: '<div data-testid="routed" />' }) }],
       },
     })
 
@@ -32,7 +34,7 @@ describe('WebUI app shell', () => {
 
   it('starts the runtime bootstrap after mount and reflects a ready connection', async () => {
     const stores = createAppStores({ http: fakeHttp(), agentStatusStreamFactory: null })
-    const wrapper = mount(App, { global: { plugins: [stores, { install: (app) => app.component('RouterView', { template: '<div />' }) }] } })
+    const wrapper = mount(App, { global: { plugins: [stores, { install: (app) => app.component('RouterView', { template: '<div data-testid="routed" />' }) }] } })
 
     await stores.start()
     await wrapper.vm.$nextTick()
@@ -44,7 +46,7 @@ describe('WebUI app shell', () => {
   it('stops application transports when the root component unmounts', () => {
     const stores = createAppStores({ http: fakeHttp(), agentStatusStreamFactory: null })
     const stop = vi.spyOn(stores, 'stop')
-    const wrapper = mount(App, { global: { plugins: [stores, { install: (app) => app.component('RouterView', { template: '<div />' }) }] } })
+    const wrapper = mount(App, { global: { plugins: [stores, { install: (app) => app.component('RouterView', { template: '<div data-testid="routed" />' }) }] } })
 
     wrapper.unmount()
 

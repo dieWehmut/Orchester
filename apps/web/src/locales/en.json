@@ -8,6 +8,9 @@
     "connectionError": "Connection error",
     "unknownWorkspace": "No workspace selected"
   },
+  "account": {
+    "localRuntime": "Local runtime"
+  },
   "agents": {
     "title": "Agents",
     "runtimeFleet": "Runtime fleet",
@@ -73,12 +76,176 @@
   "workspace": {
     "eyebrow": "Local workspace",
     "title": "Workspace",
-    "description": "Session history, run transcript, and context tools will appear here."
+    "description": "Session history, run transcript, and context tools will appear here.",
+    "greeting": "What should we build in {name}?",
+    "projects": "Projects",
+    "projectFallback": "No project selected"
+  },
+  "pet": {
+    "label": "Orchester companion",
+    "show": "Show companion",
+    "hide": "Hide companion",
+    "title": "Companion",
+    "description": "The ambient xiaoxuan companion that mirrors the active run.",
+    "visibility": {
+      "title": "Show companion",
+      "description": "Draw the ambient companion above the composer."
+    },
+    "notification": {
+      "running": "Running",
+      "waiting": "Needs input",
+      "review": "Ready",
+      "failed": "Blocked"
+    }
   },
   "settings": {
     "eyebrow": "Configuration",
     "title": "Settings",
-    "description": "Provider credentials, model selection, and appearance controls will appear here."
+    "description": "Provider credentials, model selection, and appearance controls will appear here.",
+    "sections": {
+      "general": "General",
+      "appearance": "Appearance",
+      "providers": "Providers",
+      "about": "About",
+      "notifications": "Notifications",
+      "import": "Import",
+      "profile": "Profile",
+      "keybindings": "Keybindings"
+    },
+    "keybindings": {
+      "description": "Every shortcut here is one a mounted part of the app answers; changing one changes what the app does.",
+      "search": "Search shortcuts",
+      "change": "Change",
+      "capture": "Press the new keys",
+      "reset": "Reset all shortcuts",
+      "empty": "No shortcut matches that.",
+      "conflict": "{keys} is already bound to {other}."
+    },
+    "language": {
+      "title": "Language",
+      "description": "Interface language for this workspace."
+    },
+    "theme": {
+      "title": "Theme",
+      "description": "Light or dark surface for the whole shell.",
+      "toLight": "Switch to light theme",
+      "toDark": "Switch to dark theme"
+    },
+    "colorScheme": {
+      "title": "Accent colour",
+      "description": "The main colour for buttons, links, and other highlights.",
+      "rose": "Orchester pink",
+      "codex": "Codex blue",
+      "violet": "Violet",
+      "teal": "Teal"
+    },
+    "appearance": {
+      "dark": "Dark",
+      "light": "Light",
+      "title": "Theme",
+      "description": "Customise how Orchester looks and feels.",
+      "system": "System",
+      "hint": "Preset light and dark surfaces."
+    },
+    "locale": {
+      "en": "English",
+      "zhCN": "简体中文",
+      "zhTW": "繁體中文"
+    },
+    "providers": {
+      "description": "Provider credentials and model defaults stay on the local runtime; the browser never stores them."
+    },
+    "about": {
+      "description": "Orchester pairs a local Rust runtime with a web workspace, a desktop shell and a command-line client."
+    },
+    "groups": {
+      "personal": "Personal",
+      "integrations": "Integrations"
+    },
+    "search": {
+      "placeholder": "Search settings",
+      "empty": "No settings match that search.",
+      "shortcut": "Search shortcuts",
+      "change": "Change",
+      "capture": "Press the new keys"
+    },
+    "intensity": {
+      "title": "Accent intensity",
+      "description": "How loudly the accent speaks on primary actions.",
+      "vivid": "Vivid",
+      "calm": "Calm"
+    },
+    "reducedMotion": {
+      "title": "Reduced motion",
+      "description": "Collapse transitions and animations to a minimum.",
+      "system": "Follow system",
+      "explicit": "Manual"
+    },
+    "surface": {
+      "title": "Surface",
+      "description": "Which face is rendering: the WebUI, the site, or the desktop window."
+    },
+    "preview": {
+      "title": "Code preview",
+      "hint": "Preview code style under the current theme"
+    },
+    "table": {
+      "title": "Appearance settings",
+      "hint": "These choices are kept on this machine and restored before the first paint.",
+      "import": "Import theme",
+      "export": "Export theme",
+      "reset": "Reset appearance",
+      "invalid": "That file is not an Orchester appearance profile."
+    },
+    "notifications": {
+      "title": "No notification rules",
+      "description": "Run and approval notifications will be configurable here."
+    },
+    "import": {
+      "title": "Nothing to import",
+      "description": "Import sessions, credentials and workspace settings from another machine."
+    },
+    "profile": {
+      "title": "Local profile",
+      "description": "Identity stays on this machine; the runtime owns it, not an account."
+    },
+    "uiFont": {
+      "title": "UI font",
+      "description": "The face used across the interface.",
+      "system": "System default",
+      "sans": "Sans",
+      "serif": "Serif"
+    },
+    "contentFont": {
+      "title": "Content font",
+      "description": "The face used for code and transcripts.",
+      "ui": "Same as interface",
+      "mono": "Monospace"
+    },
+    "translucentRail": {
+      "title": "Translucent sidebar",
+      "description": "Show the sidebar as a translucent sheet for a more immersive desktop window."
+    },
+    "background": {
+      "title": "Background",
+      "description": "The colour the theme paints the page in."
+    },
+    "foreground": {
+      "title": "Foreground",
+      "description": "The colour the theme paints primary text in."
+    },
+    "fontWeight": {
+      "title": "Font weight",
+      "regular": "Regular",
+      "medium": "Medium"
+    },
+    "terminalPlacement": {
+      "title": "Terminal",
+      "description": "Where terminal tabs open.",
+      "section": "Terminal",
+      "bottom": "Bottom panel",
+      "inspector": "Inspector"
+    }
   },
   "notFound": {
     "eyebrow": "404",
@@ -93,11 +260,66 @@
     "loadError": "Session history unavailable",
     "retry": "Retry",
     "loadMore": "Load more",
-    "resumable": "Resumable"
+    "resumable": "Resumable",
+    "newChat": "New chat",
+    "railTitle": "Recent sessions"
+  },
+  "run": {
+    "announce": {
+      "started": "Run started",
+      "succeeded": "Run finished",
+      "failed": "Run failed",
+      "cancelled": "Run cancelled",
+      "budgetExceeded": "Run stopped: budget exceeded",
+      "interrupted": "Run interrupted; the outcome is unknown",
+      "approval": "Approval requested",
+      "turnComplete": "Turn complete",
+      "validation": "Validation passed: {summary}",
+      "validationFailed": "Validation failed: {summary}"
+    },
+    "ask": "Ask",
+    "governed": "Governed",
+    "fullAccess": "Full access",
+    "fullAccessTitle": "Give the run full access?",
+    "fullAccessDescription": "Full access lets the agent change files and reach the network without stopping to ask. It applies to the next run.",
+    "fullAccessAccept": "Use full access",
+    "fullAccessCancel": "Keep the current preset",
+    "approvalPreset": "Approval preset",
+    "connection": "Connection",
+    "sequence": "Sequence",
+    "usage": "Usage",
+    "runUsage": "Run usage",
+    "characters": "characters",
+    "chooseProject": "Choose project",
+    "starting": "Starting run…",
+    "awaiting": "Waiting for run events…",
+    "newRun": "New run",
+    "newRunDescription": "Start a run to see events here.",
+    "describeTask": "Describe the task",
+    "taskPrompt": "Task prompt",
+    "runInProgress": "Run in progress",
+    "modelUnavailable": "Model unavailable",
+    "planComplete": "Plan complete",
+    "showPlan": "Show the full plan",
+    "hidePlan": "Hide the full plan",
+    "reasoning": "Reasoning",
+    "showReasoning": "Show the reasoning",
+    "hideReasoning": "Hide the reasoning",
+    "showCallDetail": "Show the call detail",
+    "hideCallDetail": "Hide the call detail",
+    "noCommandMatch": "No command matches that.",
+    "loadingCommands": "Loading commands…",
+    "submit": "Run",
+    "stop": "Stop",
+    "settingsTitle": "Settings"
   },
   "transcript": {
     "emptyTitle": "New run",
     "emptyDescription": "Select a previous session or start a new run.",
+    "newChatTitle": "New chat",
+    "share": "Share",
+    "more": "More options",
+    "togglePanel": "Toggle inspector",
     "loading": "Loading session",
     "loadError": "Session details unavailable",
     "prompt": "Request",
@@ -106,7 +328,11 @@
     "inputTokens": "Input",
     "outputTokens": "Output",
     "reasoningTokens": "Reasoning",
-    "cachedTokens": "Cached"
+    "cachedTokens": "Cached",
+    "jumpToLatest": "Jump to the latest",
+    "unread": "New output below",
+    "unreadCount": "{count} new events",
+    "messageNavigation": "Message navigation"
   },
   "inspector": {
     "label": "Workspace inspector",
@@ -116,7 +342,7 @@
     "contextTitle": "Workspace context",
     "contextDescription": "Files, runtime metadata, and selected session context will appear here.",
     "approvalsTitle": "Approvals",
-    "approvalsDescription": "Pending governance decisions will appear here when a run pauses.",
+    "approvalsDescription": "Pending governance decisions appear here when a run pauses.",
     "changesTitle": "Changes",
     "changesDescription": "Observed file changes and diffs will appear here.",
     "file": "file",
@@ -129,6 +355,96 @@
     "events": "events",
     "sequence": "#",
     "noFileChanges": "No file changes",
-    "noFileChangesDescription": "File changes reported by the active run will appear here."
+    "noFileChangesDescription": "File changes reported by the active run will appear here.",
+    "reviewTitle": "Review",
+    "reviewDescription": "The working copy change set, filtered by where each change sits.",
+    "filterLabel": "Filter changes",
+    "filter": {
+      "all": "All",
+      "staged": "Staged",
+      "unstaged": "Unstaged",
+      "branch": "Branch",
+      "lastTurn": "Last turn"
+    },
+    "review": "Review",
+    "expandAll": "Expand all folders",
+    "collapseAll": "Collapse all folders",
+    "wrapLines": "Wrap long lines",
+    "risk": "Risk",
+    "scope": "Scope",
+    "allowOnce": "Allow once",
+    "allowForRun": "Allow for run",
+    "deny": "Deny",
+    "superseded": "Superseded",
+    "supersededDescription": "This row has moved on since it was read; the decision belongs to a newer version.",
+    "decided": "Decided",
+    "expires": "Expires",
+    "nothingToDecide": "Nothing to decide",
+    "nothingToDecideDescription": "Approvals requested by the active run will appear here.",
+    "queueLabel": "Pending approvals",
+    "diff": {
+      "preview": "Diff preview",
+      "empty": "No diff preview",
+      "emptyDescription": "A bounded text preview will appear when the runtime provides one.",
+      "refused": "Preview unavailable",
+      "refusedDescription": "Binary or control-heavy content is not rendered in the browser.",
+      "text": "Text preview",
+      "truncated": "Truncated text preview",
+      "showing": "Showing {lines} of {totalLines} lines and {bytes} of {totalBytes} bytes.",
+      "bytes": "{count} bytes"
+    }
+  },
+  "bottomPanel": {
+    "label": "Bottom panel",
+    "terminal": "Terminal",
+    "output": "Exec output",
+    "audit": "Audit log",
+    "terminalEmpty": "The terminal opens here once a run starts.",
+    "outputEmpty": "Command output from the active run appears here.",
+    "auditEmpty": "Approvals and decisions are recorded here."
+  },
+  "tabStrip": {
+    "label": "Open tabs"
+  },
+  "window": {
+    "closeTitle": "Close Orchester?",
+    "closeDescription": "A run is still working. Closing the window hides Orchester; the run keeps going until you quit from the tray.",
+    "closeCancel": "Keep working",
+    "closeAccept": "Close window",
+    "controls": "Window controls"
+  },
+  "layout": {
+    "workspacePanels": "Workspace panels",
+    "sessions": "Sessions",
+    "transcript": "Run transcript",
+    "inspector": "Inspector",
+    "resizeRail": "Resize the task rail",
+    "resizeInspector": "Resize the inspector"
+  },
+  "shortcuts": {
+    "groups": {
+      "composer": "Composer",
+      "sessions": "Sessions",
+      "layout": "Layout"
+    },
+    "labels": {
+      "paletteOpen": "Open the command palette",
+      "composerFocus": "Focus the composer",
+      "sessionNew": "Start a new session",
+      "inspectorToggle": "Toggle the inspector",
+      "settingsOpen": "Open settings",
+      "windowClose": "Close the active tab"
+    }
+  },
+  "commands": {
+    "agent": "choose a delegate",
+    "model": "choose a model or provider",
+    "theme": "preview the workspace theme",
+    "config": "inspect the resolved configuration",
+    "resume": "resume a recorded session",
+    "permissions": "inspect the approval policy",
+    "status": "inspect the runtime status",
+    "plugins": "manage the installed plugins",
+    "help": "show this list"
   }
 }

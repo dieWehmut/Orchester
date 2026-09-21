@@ -37,7 +37,7 @@ function readMessage(tree: MessageTree, key: MessageKey): string {
 
 export interface I18n {
   locale: Ref<Locale>
-  t: (key: MessageKey) => string
+  t: (key: MessageKey, params?: Record<string, string>) => string
   setLocale: (locale: string) => void
   install: (app: App) => void
 }
@@ -46,7 +46,14 @@ const I18N_KEY: InjectionKey<I18n> = Symbol('orchester-i18n')
 
 export function createI18n(initialLocale?: string): I18n {
   const locale = ref<Locale>(normalizeLocale(initialLocale ?? 'en'))
-  const t = (key: MessageKey): string => readMessage(messages[locale.value], key)
+  const t = (key: MessageKey, params?: Record<string, string>): string => {
+    const message = readMessage(messages[locale.value], key)
+    if (!params) return message
+    return message.replace(/\{(\w+)\}/g, (match, name: string) => {
+      const value = Object.prototype.hasOwnProperty.call(params, name) ? params[name] : undefined
+      return value ?? match
+    })
+  }
   const setLocale = (next: string): void => {
     locale.value = normalizeLocale(next)
   }

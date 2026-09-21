@@ -50,7 +50,7 @@ export function verifyOfficialAgentPlugins({
 } = {}) {
   const root = path.resolve(repositoryRoot);
   const cliManifest = readJson(
-    path.join(root, 'npm/cli/package.json'),
+    path.join(root, 'apps/cli/package.json'),
     'ORCHESTER_PLUGIN_RELEASE_VERSION',
   );
   if (cliManifest.name !== '@orchester/cli'

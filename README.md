@@ -99,7 +99,17 @@ bun add -g @orchester/cli
 
 这个包没有生命周期下载脚本。发布流程会先发六个平台原生包，等它们在公共 registry 上可见之后才提交 `@orchester/cli`。
 
-### 3. 从源码构建
+### 3. 桌面应用
+
+在 [GitHub Releases](https://github.com/dieWehmut/Orchester/releases) 下载 `desktop-v*` 发布中的
+`Orchester_<version>_x64-setup.exe` 或 `Orchester_<version>_arm64-setup.exe`。
+
+安装程序按当前用户安装，不需要管理员权限；它会创建桌面和开始菜单快捷方式，并在缺少
+WebView2 时静默安装运行时。卸载可以通过「设置 → 应用」或安装目录中的 `uninstall.exe` 完成。
+
+发布资产旁提供 `SHA256SUMS`，可用 `Get-FileHash -Algorithm SHA256 <installer>` 核对下载。
+
+### 4. 从源码构建
 
 不用安装脚本的话，需要 Rust 1.80 以上工具链：
 
@@ -109,7 +119,7 @@ cd Orchester
 cargo build --release
 ```
 
-### 4. 第一次运行
+### 5. 第一次运行
 
 内置的 `mock` 适配器不起子进程、不需要任何 API key，可以直接验证整条流水线：
 
@@ -127,7 +137,7 @@ cargo run -p orchester-konsole -- --agent mock "hello"
 cargo run -p orchester-konsole -- --agent mock --json "hello"
 ```
 
-### 5. 调用外部 Agent（可选）
+### 6. 调用外部 Agent（可选）
 
 本地装好并登录过对应的 Agent CLI 之后：
 
@@ -138,7 +148,7 @@ orchester --agent claude --resume <session-id> "再补上测试"
 
 `--json` 会把每个事件按 Orchester 自己的协议一行一条写到 **stdout**（人类可读的收尾信息走 stderr），所以 Orchester 可以被管道接给别的工具，也可以接给另一个 Orchester。
 
-### 6. 配置
+### 7. 配置
 
 Orchester 的家目录在所有平台上都是 `~/.orchester`，和它驱动的 agent 的 `~/.claude`、`~/.codex` 放在一起。`ORCHESTER_HOME` 会整体覆盖这个根目录，配置和状态始终跟着一起走。
 
@@ -196,7 +206,7 @@ Orchester 的家目录在所有平台上都是 `~/.orchester`，和它驱动的 
 | `/help` | 显示帮助 |
 | `/quit` | 退出，`/exit`、`/q` 同义 |
 
-输入 `/` 会弹出命令面板，方向键选择、回车确认。
+输入 `/` 会在输入行下方弹出命令面板（和 Codex 一样），方向键选择、回车确认。
 
 ## 命令行
 
@@ -273,7 +283,9 @@ kisten/            # Cargo workspace 成员
   konsole/         # orchester CLI 二进制
 manifeste/         # 声明式适配器定义
 werkzeug/          # 安装与开发辅助脚本
-npm/               # npm 分发包
+apps/              # 产品表面：cli / web / desktop
+packages/          # 共享 TypeScript 包
+npm/               # npm 发布附加产物（cli 平台包、插件）
 .github/           # CI 与发布工作流
 ```
 

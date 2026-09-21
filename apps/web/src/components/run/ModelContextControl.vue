@@ -3,6 +3,7 @@ import type { ModelCatalogDto } from '@orchester/protokoll'
 import { CircleAlert, Sparkles } from '@lucide/vue'
 import { computed } from 'vue'
 
+import { useI18n } from '../../i18n'
 import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
 
 const props = withDefaults(
@@ -12,6 +13,8 @@ const props = withDefaults(
   }>(),
   { status: 'idle' },
 )
+
+const { t } = useI18n()
 
 const configured = computed(() => props.catalog?.active.state === 'configured')
 const activeChoice = computed(() =>
@@ -49,7 +52,7 @@ const effortLabel = computed(() => activeChoice.value?.reasoning_effort ?? 'defa
       aria-disabled="true"
     >
       <span class="model-context__icon" aria-hidden="true"><CircleAlert :size="13" /></span>
-      <span>Model unavailable</span>
+      <span>{{ t('run.modelUnavailable') }}</span>
     </span>
     <span v-if="statusLabel" class="model-context__status" data-model-context-status>
       {{ statusLabel }}

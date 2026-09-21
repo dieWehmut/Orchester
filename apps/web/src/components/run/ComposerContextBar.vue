@@ -1,22 +1,23 @@
 <script setup lang="ts">
-import { FolderOpen, ShieldCheck } from '@lucide/vue'
+import { FolderOpen } from '@lucide/vue'
 import type { ModelCatalogDto } from '@orchester/protokoll'
 
+import { useI18n } from '../../i18n'
 import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
 import ModelContextControl from './ModelContextControl.vue'
+
+const { t } = useI18n()
 
 withDefaults(
   defineProps<{
     workspaceName?: string | null
     modelCatalog?: ModelCatalogDto | null
     modelStatus?: ModelCatalogStoreStatus
-    approvalLabel?: string
   }>(),
   {
     workspaceName: null,
     modelCatalog: null,
     modelStatus: 'idle',
-    approvalLabel: 'Ask for approval',
   },
 )
 </script>
@@ -25,11 +26,7 @@ withDefaults(
   <div class="composer-context" data-composer-context>
     <span class="composer-context__item" data-project-context>
       <FolderOpen :size="15" aria-hidden="true" />
-      <span>{{ workspaceName || 'Choose project' }}</span>
-    </span>
-    <span class="composer-context__item" data-approval-context>
-      <ShieldCheck :size="15" aria-hidden="true" />
-      <span>{{ approvalLabel }}</span>
+      <span>{{ workspaceName || t('run.chooseProject') }}</span>
     </span>
     <ModelContextControl :catalog="modelCatalog" :status="modelStatus" />
   </div>

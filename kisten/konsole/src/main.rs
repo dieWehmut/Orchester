@@ -718,9 +718,14 @@ impl ModelEventSink for TtyEventSink {
     }
 }
 
+/// Codex spins a braille frame while a turn runs, and the label keeps a
+/// constant width so the busy row never jumps as the frames cycle.
 fn busy_label(tick: usize) -> String {
-    const FRAMES: [&str; 4] = ["Creating  ", "Creating .", "Creating ..", "Creating ..."];
-    FRAMES[tick % FRAMES.len()].to_owned()
+    const FRAMES: [&str; 10] = [
+        "\u{280b}", "\u{2819}", "\u{2839}", "\u{2838}", "\u{283c}", "\u{2834}", "\u{2826}",
+        "\u{2827}", "\u{2807}", "\u{280f}",
+    ];
+    format!("{} Creating…", FRAMES[tick % FRAMES.len()])
 }
 
 fn queued_command_label(action: &interactive::HomeAction) -> String {
@@ -2081,10 +2086,11 @@ mod tests {
 
     #[test]
     fn busy_animation_cycles_without_growing_the_label() {
-        assert_eq!(busy_label(0), "Creating  ");
-        assert_eq!(busy_label(1), "Creating .");
-        assert_eq!(busy_label(4), "Creating  ");
-        assert!(busy_label(99).len() <= "Creating ...".len());
+        assert_eq!(busy_label(0), "⠋ Creating…");
+        assert_eq!(busy_label(1), "⠙ Creating…");
+        assert_eq!(busy_label(2), "⠹ Creating…");
+        assert_eq!(busy_label(10), busy_label(0));
+        assert!(busy_label(99).len() <= busy_label(0).len());
     }
 
     #[test]

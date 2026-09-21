@@ -5,14 +5,14 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <section class="route-placeholder" data-testid="not-found-view">
+  <main class="route-placeholder" data-testid="not-found-view" :aria-label="t('routes.notFound')">
     <p class="route-placeholder__eyebrow">{{ t('notFound.eyebrow') }}</p>
     <h1>{{ t('routes.notFound') }}</h1>
     <p>{{ t('notFound.description') }}</p>
     <RouterLink class="route-placeholder__link" to="/workspace">
       {{ t('notFound.return') }}
     </RouterLink>
-  </section>
+  </main>
 </template>
 
 <style scoped>

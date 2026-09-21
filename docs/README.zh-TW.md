@@ -99,7 +99,18 @@ bun add -g @orchester/cli
 
 這個套件沒有生命週期下載腳本。發佈流程會先發六個平台原生套件，等它們在公開 registry 上看得到之後才送出 `@orchester/cli`。
 
-### 3. 從原始碼建置
+### 3. 桌面應用程式
+
+在 [GitHub Releases](https://github.com/dieWehmut/Orchester/releases) 下載 `desktop-v*` 版本中的
+`Orchester_<version>_x64-setup.exe` 或 `Orchester_<version>_arm64-setup.exe`。
+
+安裝程式以目前使用者身分安裝，不需要系統管理員權限；它會建立桌面與開始功能表捷徑，
+並在缺少 WebView2 時靜默安裝執行階段。解除安裝可透過「設定 → 應用程式」或安裝目錄中的
+`uninstall.exe` 完成。
+
+每個版本都附帶 `SHA256SUMS`，可用 `Get-FileHash -Algorithm SHA256 <installer>` 核對下載。
+
+### 4. 從原始碼建置
 
 不用安裝腳本的話，需要 Rust 1.80 以上的工具鏈：
 
@@ -109,7 +120,7 @@ cd Orchester
 cargo build --release
 ```
 
-### 4. 第一次執行
+### 5. 第一次執行
 
 內建的 `mock` 轉接器不起子行程、不需要任何 API key，可以直接驗證整條流程：
 
@@ -127,7 +138,7 @@ cargo run -p orchester-konsole -- --agent mock "hello"
 cargo run -p orchester-konsole -- --agent mock --json "hello"
 ```
 
-### 5. 委派給外部 Agent（選用）
+### 6. 委派給外部 Agent（選用）
 
 本機裝好並登入過對應的 Agent CLI 之後：
 
@@ -138,7 +149,7 @@ orchester --agent claude --resume <session-id> "再補上測試"
 
 `--json` 會把每個事件依 Orchester 自己的協定一行一筆寫到 **stdout**（人類可讀的收尾資訊走 stderr），所以 Orchester 可以被管線接給別的工具，也可以接給另一個 Orchester。
 
-### 6. 設定
+### 7. 設定
 
 Orchester 的家目錄在所有平台上都是 `~/.orchester`，和它驅動的 agent 的 `~/.claude`、`~/.codex` 放在一起。`ORCHESTER_HOME` 會整體覆蓋這個根目錄，設定和狀態始終跟著一起走。
 
@@ -196,7 +207,7 @@ Orchester 的家目錄在所有平台上都是 `~/.orchester`，和它驅動的 
 | `/help` | 顯示說明 |
 | `/quit` | 離開，`/exit`、`/q` 同義 |
 
-輸入 `/` 會跳出指令面板，方向鍵選擇、Enter 確認。
+輸入 `/` 會在輸入行下方跳出指令面板（和 Codex 一樣），方向鍵選擇、Enter 確認。
 
 ## 命令列
 

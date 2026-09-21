@@ -8,15 +8,22 @@ mod agent_status;
 mod api_error;
 mod bootstrap;
 mod config;
+#[cfg(feature = "static-files")]
+mod embedded;
 mod fragment;
 mod health;
 mod lifecycle;
 mod listener;
 mod model_catalog;
 mod router;
+mod run;
+mod run_bridge;
+mod run_contract;
+mod run_registry;
 mod session;
 mod session_history;
 mod workspace;
+mod workspace_review;
 
 pub use agent_catalog::{
     agent_catalog_response, AgentAvailabilityDto, AgentCatalogDto, AgentSummaryDto,
@@ -32,6 +39,8 @@ pub use agent_status::{
 pub use api_error::{api_error_response, ApiErrorBody, ApiErrorCode, ApiErrorResponse};
 pub use bootstrap::{bootstrap_response, BootstrapDto, BootstrapWorkspaceDto, ServerContext};
 pub use config::{ServerConfig, ServerConfigError, StaticAssets};
+#[cfg(feature = "static-files")]
+pub use embedded::EmbeddedServer;
 pub use fragment::{FragmentTokenStore, FragmentTokenStoreError};
 pub use health::{health_handler, health_response, HealthDto};
 pub use lifecycle::{
@@ -43,6 +52,12 @@ pub use model_catalog::{
     ProviderChoiceDto, ProviderChoiceStateDto, MODEL_CATALOG_SCHEMA_VERSION,
 };
 pub use router::{app_router, app_router_with_static_assets};
+pub use run_contract::{
+    state_from_stop_reason, ResyncReason, RunReplayRequestDto, RunReplayResponseDto,
+    RunRequestValidationError, RunSnapshotDto, RunStateDto, RunStreamFrameDto, RunSummaryDto,
+    StartRunRequest, StartRunResponse, RUN_PROMPT_MAX_CHARS, RUN_REPLAY_DEFAULT_LIMIT,
+    RUN_REPLAY_MAX_LIMIT, RUN_RESUME_MAX_CHARS, RUN_SCHEMA_VERSION,
+};
 pub use session::{
     fragment_exchange_handler, session_bootstrap_handler, session_revoke_handler,
     FragmentTokenExchangeRequestDto, SessionBootstrap, SessionBootstrapDto, SessionStore,
@@ -54,3 +69,7 @@ pub use session_history::{
     SESSION_PROMPT_MAX_CHARS, SESSION_RESULT_MAX_CHARS,
 };
 pub use workspace::{select_workspace, WorkspaceSelectionError};
+pub use workspace_review::{
+    workspace_review_response, WorkspaceReviewChangeDto, WorkspaceReviewDto,
+    WorkspaceReviewKindDto, WORKSPACE_REVIEW_SCHEMA_VERSION,
+};

@@ -100,7 +100,7 @@ export function diagnoseEnvironment(environment, options = {}) {
   const minimums = options.minimums ?? { node: '22.12.0', pnpm: '10.32.1', rust: '1.80.0' }
   const checks = [
     toolCheck('node', 'Node.js', environment.commands.node, minimums.node, 'Install the Node.js version declared by apps/stack.manifest.json.'),
-    toolCheck('pnpm', 'pnpm', environment.commands.pnpm, minimums.pnpm, 'Install pnpm with Corepack or npm using the version declared by apps/package.json.'),
+    toolCheck('pnpm', 'pnpm', environment.commands.pnpm, minimums.pnpm, 'Install pnpm with Corepack or npm using the version declared by package.json.'),
   ]
 
   if (profile === 'desktop') {

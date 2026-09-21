@@ -1078,7 +1078,7 @@ fn render_chat_home<W: Write>(
 
 #[cfg(test)]
 fn render_chat_home_in_viewport<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::Result<()> {
-    render_chat_home_frame(out, view)
+    render_chat_home_frame(out, view).map(|_| ())
 }
 
 fn present_chat_home_in_viewport<W: Write>(
@@ -1087,11 +1087,31 @@ fn present_chat_home_in_viewport<W: Write>(
     view: ChatHomeView<'_>,
 ) -> io::Result<()> {
     let mut frame = Vec::new();
-    render_chat_home_frame(&mut frame, view)?;
-    presenter.present(out, &frame)
+    let caret = render_chat_home_frame(&mut frame, view)?;
+    presenter.present(out, &frame)?;
+    presenter.place_caret(out, caret)
 }
 
-fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::Result<()> {
+/// Where the terminal cursor belongs so the operator can see an insertion point
+/// while typing. Coordinates are frame cells; the presenter writes the frame
+/// from row 0, so a frame row is a terminal row.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) struct CaretPosition {
+    pub(crate) column: u16,
+    pub(crate) row: u16,
+}
+
+fn caret_position(composer_row: usize, column: u16, hidden: bool) -> Option<CaretPosition> {
+    (!hidden).then_some(CaretPosition {
+        column,
+        row: composer_row as u16,
+    })
+}
+
+fn render_chat_home_frame<W: Write>(
+    out: &mut W,
+    view: ChatHomeView<'_>,
+) -> io::Result<Option<CaretPosition>> {
     let ChatHomeView {
         width,
         height,
@@ -1107,7 +1127,7 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
         theme,
     } = view;
     if height == 0 {
-        return Ok(());
+        return Ok(None);
     }
 
     if !transcript.is_empty() || busy.is_some() || overlay.is_some() {
@@ -1138,31 +1158,25 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
     }
 
     let content_rows = layout.content_rows;
+    // Codex opens its slash-command popup underneath the input line, above the
+    // status row. The palette therefore claims its rows from the body and is
+    // written after the composer instead of covering the transcript area.
+    let command_palette = if !show_help && input.starts_with('/') {
+        command_palette_lines(
+            input,
+            choices,
+            command_selected,
+            width,
+            content_rows,
+            palette,
+        )?
+    } else {
+        Vec::new()
+    };
+    let body_rows = content_rows.saturating_sub(command_palette.len());
     let mut body = Vec::new();
     if show_help {
         render_home_help(&mut body, width, content_rows)?;
-    } else if input.starts_with('/') {
-        if width < 50 {
-            render_compact_command_palette(
-                &mut body,
-                input,
-                choices,
-                command_selected,
-                width,
-                content_rows.min(COMPACT_PALETTE_ROWS),
-                palette,
-            )?;
-        } else {
-            render_command_palette(
-                &mut body,
-                input,
-                choices,
-                command_selected,
-                content_rows.min(PALETTE_ROWS),
-                width,
-                palette,
-            )?;
-        }
     } else if content_rows > 0 {
         let hint = truncate(
             "Type a task or / for commands. Enter submits; Esc exits.",
@@ -1170,15 +1184,24 @@ fn render_chat_home_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::
         );
         writeln!(&mut body, "{}{hint}{RESET}", palette.dim)?;
     }
-    render_fixed_body(out, &body, content_rows)?;
-    render_composer(out, width, input, palette)?;
+    let body_height = render_fixed_body(out, &body, body_rows)?;
+    let caret_column = render_composer(out, width, input, palette)?;
+    let caret = caret_position(
+        layout.header.rows(width) + layout.separator_rows + body_height,
+        caret_column,
+        show_help,
+    );
+    render_command_palette_lines(out, &command_palette)?;
     if layout.status_rows > 0 {
-        render_status_line(out, width, model_status, palette)?;
+        render_status_line(out, width, model_status, busy, palette)?;
     }
-    Ok(())
+    Ok(caret)
 }
 
-fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -> io::Result<()> {
+fn render_transcript_chat_frame<W: Write>(
+    out: &mut W,
+    view: ChatHomeView<'_>,
+) -> io::Result<Option<CaretPosition>> {
     let ChatHomeView {
         width,
         height,
@@ -1203,6 +1226,7 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
     }
 
     let mut body = Vec::new();
+    let mut command_palette = Vec::new();
     if let Some(overlay) = overlay {
         render_command_overlay(&mut body, overlay, width, content_rows, palette)?;
     } else if show_help {
@@ -1222,7 +1246,7 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
         let palette_rows = content_rows
             .saturating_sub(reserve_history_row)
             .saturating_sub(busy_rows);
-        let command_palette = if input.starts_with('/') {
+        command_palette = if input.starts_with('/') {
             command_palette_lines(
                 input,
                 choices,
@@ -1251,26 +1275,47 @@ fn render_transcript_chat_frame<W: Write>(out: &mut W, view: ChatHomeView<'_>) -
                 sanitize_terminal_text(busy)
             )?;
         }
-        for line in command_palette {
-            writeln!(&mut body, "{line}")?;
-        }
     }
-    render_fixed_body(out, &body, content_rows)?;
-    render_composer(out, width, input, palette)?;
+    let body_height = render_fixed_body(
+        out,
+        &body,
+        content_rows.saturating_sub(command_palette.len()),
+    )?;
+    let caret_column = render_composer(out, width, input, palette)?;
+    let caret = caret_position(
+        layout.header.rows(width) + layout.separator_rows + body_height,
+        caret_column,
+        show_help || overlay.is_some(),
+    );
+    // The palette opens under the composer, the way Codex stacks its
+    // slash-command popup above the status row.
+    render_command_palette_lines(out, &command_palette)?;
 
     if layout.status_rows > 0 {
-        render_status_line(out, width, model_status, palette)?;
+        render_status_line(out, width, model_status, busy, palette)?;
+    }
+    Ok(caret)
+}
+
+fn render_command_palette_lines<W: Write>(out: &mut W, lines: &[String]) -> io::Result<()> {
+    for line in lines {
+        writeln!(out, "{line}")?;
     }
     Ok(())
 }
 
-fn render_fixed_body<W: Write>(out: &mut W, body: &[u8], rows: usize) -> io::Result<()> {
+fn render_fixed_body<W: Write>(out: &mut W, body: &[u8], rows: usize) -> io::Result<usize> {
     // `render_chat_home` uses a very large height as an unbounded rendering
     // sentinel in unit tests and line-mode helpers. Never allocate or loop a
     // terminal-sized buffer for that synthetic value.
     if rows > 10_000 {
         out.write_all(body)?;
-        return Ok(());
+        let body = body.strip_suffix(b"\n").unwrap_or(body);
+        return Ok(if body.is_empty() {
+            0
+        } else {
+            body.split(|byte| *byte == b'\n').count()
+        });
     }
     let body = body.strip_suffix(b"\n").unwrap_or(body);
     let body_rows = if body.is_empty() {
@@ -1281,19 +1326,25 @@ fn render_fixed_body<W: Write>(out: &mut W, body: &[u8], rows: usize) -> io::Res
     // `rows` is a ceiling, not a quota. Padding the body out to the full
     // viewport would push the composer to the last terminal row and leave a
     // gap between the hint and the input the operator is typing into.
+    let mut written = 0;
     for content in body_rows.iter().take(rows) {
         out.write_all(content)?;
         writeln!(out)?;
+        written += 1;
     }
-    Ok(())
+    Ok(written)
 }
 
+/// Writes the input row and reports where the insertion point sits, so the
+/// presenter can park the terminal cursor there. Codex keeps a real caret in
+/// the composer instead of a hand-drawn glyph, which is also what makes it
+/// blink at the terminal's own rate.
 fn render_composer<W: Write>(
     out: &mut W,
     width: usize,
     input: &str,
     palette: ThemePalette,
-) -> io::Result<()> {
+) -> io::Result<u16> {
     let prompt = if input.is_empty() {
         prompt_suggestion()
     } else {
@@ -1301,6 +1352,7 @@ fn render_composer<W: Write>(
     };
     let prompt_style = if input.is_empty() { palette.dim } else { "" };
     let prompt = truncate(&sanitize_terminal_text(prompt), width.saturating_sub(2));
+    let caret = display_width(&prompt).saturating_add(2);
     let prompt_pad = " ".repeat(width.saturating_sub(2 + display_width(&prompt)));
     writeln!(
         out,
@@ -1308,7 +1360,8 @@ fn render_composer<W: Write>(
         palette.composer_background,
         palette.composer_background,
         accent = palette.accent,
-    )
+    )?;
+    Ok(caret.min(width.saturating_sub(1)) as u16)
 }
 
 fn render_command_overlay<W: Write>(
@@ -1918,17 +1971,68 @@ fn vertical_center_offset(container: usize, content: usize) -> usize {
     container.saturating_sub(content) / 2
 }
 
+/// The Codex-style bottom bar: directory, model (with its reasoning effort),
+/// the effective access policy, and the live turn state as its own trailing
+/// segment. An idle session keeps the three standing segments only, so the row
+/// does not flicker while the operator types.
+fn status_segments(model_status: &str, progress: Option<&str>) -> Vec<String> {
+    let mut segments = vec![
+        current_directory_text(),
+        sanitize_terminal_text(model_status),
+        "governed workspace".to_string(),
+    ];
+    if let Some(progress) = progress.map(sanitize_terminal_text) {
+        if !progress.trim().is_empty() {
+            segments.push(progress);
+        }
+    }
+    segments
+}
+
+const STATUS_SEPARATOR: &str = "  |  ";
+
+fn joined_status_width(segments: &[String]) -> usize {
+    let text = segments
+        .iter()
+        .map(|segment| display_width(segment))
+        .sum::<usize>();
+    text + STATUS_SEPARATOR.len() * segments.len().saturating_sub(1)
+}
+
+/// Lays the Codex-style status segments into the available width. A deep
+/// checkout path must not crowd the row: the directory gives up its width
+/// first, and only its own segment is truncated, so the model, the access
+/// policy, and the live turn state stay readable. When the trailing segments
+/// alone exceed the row, the line falls back to a plain truncation.
+fn fit_status_segments(segments: &[String], width: usize) -> String {
+    if segments.is_empty() {
+        return String::new();
+    }
+    if joined_status_width(segments) <= width {
+        return segments.join(STATUS_SEPARATOR);
+    }
+    if segments.len() == 1 {
+        return truncate(&segments[0], width);
+    }
+
+    let tail = &segments[1..];
+    let directory_budget = width
+        .saturating_sub(joined_status_width(tail) + STATUS_SEPARATOR.len())
+        .max(1);
+    let mut laid_out = vec![truncate(&segments[0], directory_budget)];
+    laid_out.extend(tail.iter().cloned());
+
+    truncate(&laid_out.join(STATUS_SEPARATOR), width)
+}
+
 fn render_status_line<W: Write>(
     out: &mut W,
     width: usize,
     model_status: &str,
+    progress: Option<&str>,
     palette: ThemePalette,
 ) -> io::Result<()> {
-    let status = format!(
-        "{}  |  {}  |  governed workspace",
-        current_directory_text(),
-        sanitize_terminal_text(model_status)
-    );
+    let status = fit_status_segments(&status_segments(model_status, progress), width);
     write!(out, "{}{}{RESET}", palette.dim, truncate(&status, width))
 }
 
@@ -2859,6 +2963,172 @@ mod tests {
         );
     }
 
+    /// Codex opens its slash-command popup underneath the input line, above the
+    /// status row. The Orchester palette must follow the same order instead of
+    /// covering the transcript area above the composer.
+    #[test]
+    fn command_palette_opens_under_the_input_line_like_codex() {
+        let mut out = Vec::new();
+
+        render_chat_home_in_viewport(
+            &mut out,
+            ChatHomeView {
+                width: 100,
+                height: 24,
+                input: "/",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "gpt-test",
+                transcript: &[],
+                busy: None,
+                scroll_offset: 0,
+                overlay: None,
+                theme: Theme::default(),
+            },
+        )
+        .unwrap();
+
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        let lines = plain.lines().collect::<Vec<_>>();
+        let composer = composer_row(&lines, 100);
+        let first_command = lines
+            .iter()
+            .position(|line| line.trim_start().starts_with("> /agent"))
+            .expect("the palette must render its selected command");
+        let status = lines
+            .iter()
+            .rposition(|line| line.contains("gpt-test"))
+            .expect("the status row must stay visible");
+
+        assert!(
+            composer < first_command,
+            "the palette must open under the input line:\n{plain}"
+        );
+        assert_eq!(
+            status,
+            lines.len() - 1,
+            "the status row must remain the last row:\n{plain}"
+        );
+        assert!(
+            first_command < status,
+            "the palette must stay above the status row:\n{plain}"
+        );
+        assert!(lines.len() <= 24, "24-row frame overflowed:\n{plain}");
+        assert_eq!(
+            lines.iter().filter(|line| line.trim_end() == "> /").count(),
+            1,
+            "the input line must render exactly once:\n{plain}"
+        );
+    }
+
+    #[test]
+    fn transcript_command_palette_opens_under_the_input_line() {
+        let transcript = [TranscriptEntry::assistant("previous answer")];
+        let mut out = Vec::new();
+
+        render_chat_home_in_viewport(
+            &mut out,
+            ChatHomeView {
+                width: 80,
+                height: 24,
+                input: "/st",
+                choices: &[],
+                command_selected: 0,
+                show_help: false,
+                model_status: "gpt-test",
+                transcript: &transcript,
+                busy: None,
+                scroll_offset: 0,
+                overlay: None,
+                theme: Theme::default(),
+            },
+        )
+        .unwrap();
+
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        let lines = plain.lines().collect::<Vec<_>>();
+        let composer = composer_row(&lines, 80);
+        let palette = lines
+            .iter()
+            .position(|line| line.trim_start().starts_with("> /status"))
+            .unwrap_or_else(|| panic!("the palette must render the matching command:\n{plain}"));
+
+        assert!(
+            composer < palette,
+            "the palette must open under the input line:\n{plain}"
+        );
+        let history = lines
+            .iter()
+            .position(|line| line.contains("previous answer"))
+            .unwrap_or_else(|| panic!("the transcript must stay visible:\n{plain}"));
+        assert!(
+            history < composer,
+            "the transcript must stay above the composer:\n{plain}"
+        );
+        assert!(lines.len() <= 24, "24-row frame overflowed:\n{plain}");
+    }
+
+    #[test]
+    fn the_frame_reports_the_insertion_point_after_the_typed_text() {
+        let transcript = [TranscriptEntry::assistant("partial answer")];
+        let render = |input: &str,
+                      transcript: &[TranscriptEntry],
+                      show_help: bool,
+                      overlay: Option<&CommandOverlay>| {
+            let mut out = Vec::new();
+            let caret = render_chat_home_frame(
+                &mut out,
+                ChatHomeView {
+                    width: 80,
+                    height: 24,
+                    input,
+                    choices: &[],
+                    command_selected: 0,
+                    show_help,
+                    model_status: "gpt-test",
+                    transcript,
+                    busy: None,
+                    scroll_offset: 0,
+                    overlay,
+                    theme: Theme::default(),
+                },
+            )
+            .unwrap();
+            (caret, strip_ansi(&String::from_utf8(out).unwrap()))
+        };
+
+        for (label, input, transcript) in [
+            ("home", "hello", &[][..]),
+            ("transcript", "hi", &transcript[..]),
+            ("palette", "/", &[][..]),
+        ] {
+            let (caret, plain) = render(input, transcript, false, None);
+            let caret = caret.unwrap_or_else(|| panic!("{label} lost the caret:\n{plain}"));
+            let composer = plain
+                .lines()
+                .position(|line| line.trim_end() == format!("> {input}"))
+                .unwrap_or_else(|| panic!("{label} has no composer row:\n{plain}"));
+            assert_eq!(
+                usize::from(caret.row),
+                composer,
+                "{label} caret row:\n{plain}"
+            );
+            assert_eq!(
+                usize::from(caret.column),
+                input.len() + 2,
+                "{label} caret column:\n{plain}"
+            );
+        }
+
+        let overlay =
+            CommandOverlay::new("Status", "", vec![OverlayItem::new("Model", "configured")]);
+        let (caret, plain) = render("", &[], false, Some(&overlay));
+        assert!(caret.is_none(), "an overlay owns the input:\n{plain}");
+        let (caret, plain) = render("", &[], true, None);
+        assert!(caret.is_none(), "the help view owns the input:\n{plain}");
+    }
+
     #[test]
     fn command_palette_scrolls_to_keep_the_selection_visible() {
         let choices = (0..6)
@@ -3272,21 +3542,35 @@ mod tests {
                 );
                 // The frame is as tall as its content, never taller: the
                 // composer and status row trail the last content row instead of
-                // being pushed to the bottom of the terminal.
+                // being pushed to the bottom of the terminal. Opening the
+                // palette inserts it between the composer and the status row,
+                // the way Codex stacks its slash-command popup.
                 let status = lines.last().expect("status row");
-                let composer = lines[lines.len() - 2];
-                assert!(
-                    composer.trim_start().starts_with("> "),
-                    "{label} composer is not the row above the status line at {width}x24:\n{frame}"
-                );
                 assert!(
                     status.contains("gpt-test"),
                     "{label} status row lost the active model at {width}x24:\n{frame}"
                 );
+                let composer = composer_row(&lines, width);
                 assert!(
-                    !lines[lines.len() - 3].trim().is_empty(),
+                    !lines[composer - 1].trim().is_empty(),
                     "{label} left a padding row above the composer at {width}x24:\n{frame}"
                 );
+                if *label == "palette" {
+                    assert!(
+                        lines[composer + 1].trim_start().starts_with("> /agent"),
+                        "{label} palette must open under the composer at {width}x24:\n{frame}"
+                    );
+                    assert!(
+                        composer + 1 < lines.len() - 1,
+                        "{label} status row must stay under the palette at {width}x24:\n{frame}"
+                    );
+                } else {
+                    assert_eq!(
+                        composer,
+                        lines.len() - 2,
+                        "{label} composer is not the row above the status line at {width}x24:\n{frame}"
+                    );
+                }
             }
         }
     }
@@ -3414,19 +3698,27 @@ mod tests {
             ),
         ] {
             let lines = frame.lines().collect::<Vec<_>>();
-            let composer = lines
-                .iter()
-                .position(|line| line.trim_start().starts_with("> ") && display_width(line) >= 99)
-                .unwrap_or_else(|| panic!("{label} has no composer row:\n{frame}"));
-            assert_eq!(
-                composer,
-                lines.len() - 2,
-                "{label} composer is not directly above the status row:\n{frame}"
-            );
+            let composer = composer_row(&lines, 100);
             assert!(
                 !lines[composer - 1].trim().is_empty(),
                 "{label} padded the viewport above the composer:\n{frame}"
             );
+            if label == "palette" {
+                assert!(
+                    lines[composer + 1].trim_start().starts_with("> /agent"),
+                    "{label} palette must open under the composer:\n{frame}"
+                );
+                assert!(
+                    lines.last().expect("status row").contains("gpt-test"),
+                    "{label} status row must stay under the palette:\n{frame}"
+                );
+            } else {
+                assert_eq!(
+                    composer,
+                    lines.len() - 2,
+                    "{label} composer is not directly above the status row:\n{frame}"
+                );
+            }
         }
     }
 
@@ -3643,6 +3935,135 @@ mod tests {
         assert!(plain.contains("previous output"), "transcript:\n{plain}");
         assert!(plain.contains("/status"), "command palette:\n{plain}");
         assert!(plain.contains("Creating .."), "busy marker:\n{plain}");
+    }
+
+    #[test]
+    fn status_bar_segments_follow_the_codex_bar_order() {
+        let directory = current_directory_text();
+
+        assert_eq!(
+            status_segments("gpt-test high", None),
+            vec![
+                directory.clone(),
+                "gpt-test high".to_string(),
+                "governed workspace".to_string(),
+            ],
+            "an idle session keeps directory, model, and access"
+        );
+        assert_eq!(
+            status_segments("gpt-test high", Some("Creating...")),
+            vec![
+                directory,
+                "gpt-test high".to_string(),
+                "governed workspace".to_string(),
+                "Creating...".to_string(),
+            ],
+            "the live turn state trails the standing segments"
+        );
+        assert_eq!(
+            status_segments("gpt-test", Some("   ")).len(),
+            3,
+            "a blank turn state must not open an empty segment"
+        );
+    }
+
+    /// A deep checkout path must not crowd the Codex-style status row: the
+    /// model, the access policy, and the live turn state stay readable even
+    /// when the directory segment is long enough to fill the whole width.
+    /// The helper ships with its test because this assertion is what pins the
+    /// per-segment budget the renderer now relies on.
+    #[test]
+    fn status_bar_keeps_the_trailing_segments_when_the_directory_is_long() {
+        let mut out = Vec::new();
+        render_status_line(
+            &mut out,
+            100,
+            "gpt-test high",
+            Some("Creating..."),
+            Theme::default().palette(),
+        )
+        .unwrap();
+        let row = strip_ansi(&String::from_utf8(out).unwrap());
+        let segments = vec![
+            "x".repeat(400),
+            "gpt-test high".to_string(),
+            "governed workspace".to_string(),
+            "Creating...".to_string(),
+        ];
+
+        assert!(
+            display_width(&row) <= 100,
+            "status row exceeded its width:\n{row}"
+        );
+        let trimmed = fit_status_segments(&segments, 100);
+        assert!(
+            trimmed.contains("gpt-test high"),
+            "model segment survives a long directory:\n{trimmed}"
+        );
+        assert!(
+            trimmed.contains("governed workspace"),
+            "access segment survives a long directory:\n{trimmed}"
+        );
+        assert!(
+            trimmed.contains("Creating..."),
+            "turn state survives a long directory:\n{trimmed}"
+        );
+        assert!(
+            display_width(&trimmed) <= 100,
+            "trimmed segments exceeded their width:\n{trimmed}"
+        );
+    }
+
+    #[test]
+    fn status_bar_shows_the_live_turn_state_under_the_composer() {
+        let transcript = [TranscriptEntry::assistant("partial answer")];
+        let status_row = |busy: Option<&str>| {
+            let mut out = Vec::new();
+            render_chat_home_in_viewport(
+                &mut out,
+                ChatHomeView {
+                    width: 100,
+                    height: 24,
+                    input: "next task",
+                    choices: &[],
+                    command_selected: 0,
+                    show_help: false,
+                    model_status: "gpt-test high",
+                    transcript: &transcript,
+                    busy,
+                    scroll_offset: 0,
+                    overlay: None,
+                    theme: Theme::default(),
+                },
+            )
+            .unwrap();
+            let plain = strip_ansi(&String::from_utf8(out).unwrap());
+            plain.lines().last().unwrap_or_default().to_string()
+        };
+
+        let working = status_row(Some("Creating..."));
+        assert!(
+            working.contains("gpt-test high"),
+            "model segment with its effort:\n{working}"
+        );
+        assert!(
+            working.contains("governed workspace"),
+            "access segment:\n{working}"
+        );
+        assert!(
+            working.contains("Creating..."),
+            "progress segment:\n{working}"
+        );
+
+        let idle = status_row(None);
+        assert!(
+            idle.contains("governed workspace"),
+            "idle status bar:\n{idle}"
+        );
+        assert!(
+            !idle.contains("Creating..."),
+            "an idle bar must not claim progress:\n{idle}"
+        );
     }
 
     #[test]
@@ -4088,6 +4509,16 @@ mod tests {
             empty.contains('\u{2580}'),
             "30-row empty home should keep portrait"
         );
+    }
+
+    /// The composer is the only row the renderer pads out to the full frame
+    /// width, so this finds the input line without assuming how many palette
+    /// rows follow it.
+    fn composer_row(lines: &[&str], width: usize) -> usize {
+        lines
+            .iter()
+            .rposition(|line| line.starts_with("> ") && display_width(line) == width)
+            .unwrap_or_else(|| panic!("no composer row in:\n{}", lines.join("\n")))
     }
 
     fn strip_ansi(input: &str) -> String {

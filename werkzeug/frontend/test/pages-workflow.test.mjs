@@ -10,10 +10,10 @@ const repositoryRoot = resolve(testDirectory, '../../..')
 test('Pages validates the shared stack contract before building the website', async () => {
   const workflow = await readFile(resolve(repositoryRoot, '.github/workflows/pages.yml'), 'utf8')
 
-  const installIndex = workflow.indexOf('pnpm --dir apps install --frozen-lockfile')
-  const toolingIndex = workflow.indexOf('pnpm --dir apps test:tooling')
-  const manifestIndex = workflow.indexOf('pnpm --dir apps stack:verify')
-  const buildIndex = workflow.indexOf('pnpm --dir apps --filter @orchester/website build')
+  const installIndex = workflow.indexOf('pnpm install --frozen-lockfile')
+  const toolingIndex = workflow.indexOf('pnpm test:tooling')
+  const manifestIndex = workflow.indexOf('pnpm stack:verify')
+  const buildIndex = workflow.indexOf('pnpm --filter @orchester/website build')
 
   assert.ok(installIndex >= 0)
   assert.ok(toolingIndex > installIndex)
@@ -26,6 +26,10 @@ test('Pages path filters cover every checked-in input used by stack verification
 
   for (const path of [
     'Cargo.toml',
+    '.npmrc',
+    'package.json',
+    'pnpm-lock.yaml',
+    'pnpm-workspace.yaml',
     'apps/stack.manifest.json',
     'apps/web/package.json',
     'apps/web/vite.config.ts',

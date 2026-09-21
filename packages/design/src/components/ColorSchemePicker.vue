@@ -1,0 +1,134 @@
+<script setup lang="ts">
+/**
+ * The accent picker: one swatch per scheme, as a radio group.
+ *
+ * A radio group rather than a row of buttons because exactly one is chosen at a
+ * time, which gets arrow-key navigation and the "3 of 4" announcement for free.
+ * Labels come from the caller, keyed by `ColorSchemeOption.labelKey`, so a
+ * localised app and an unlocalised one can both use it.
+ */
+import { nextTick } from 'vue'
+
+import { COLOR_SCHEME_OPTIONS, type ColorScheme } from '../theme'
+import { useAppearance } from '../composables/useAppearance'
+
+const props = withDefaults(
+  defineProps<{
+    /** Resolve a `labelKey` to display text. Identity-ish by default. */
+    label?: (key: string, id: ColorScheme) => string
+    groupLabel?: string
+  }>(),
+  {
+    label: (_key: string, id: ColorScheme) => id,
+    groupLabel: 'Accent colour',
+  },
+)
+
+const { colorScheme, setColorScheme } = useAppearance()
+
+function onKeydown(event: KeyboardEvent, index: number): void {
+  const key = event.key
+  const lastIndex = COLOR_SCHEME_OPTIONS.length - 1
+  let nextIndex: number | null = null
+
+  if (key === 'ArrowRight' || key === 'ArrowDown') nextIndex = index === lastIndex ? 0 : index + 1
+  if (key === 'ArrowLeft' || key === 'ArrowUp') nextIndex = index === 0 ? lastIndex : index - 1
+  if (key === 'Home') nextIndex = 0
+  if (key === 'End') nextIndex = lastIndex
+  if (nextIndex === null) return
+
+  const nextOption = COLOR_SCHEME_OPTIONS[nextIndex]
+  if (!nextOption) return
+
+  event.preventDefault()
+  setColorScheme(nextOption.id)
+
+  const group = event.currentTarget instanceof HTMLElement
+    ? event.currentTarget.closest('[role="radiogroup"]')
+    : null
+  void nextTick(() => {
+    group?.querySelectorAll<HTMLButtonElement>('[role="radio"]')[nextIndex]?.focus()
+  })
+}
+</script>
+
+<template>
+  <div class="scheme-picker" role="radiogroup" :aria-label="groupLabel">
+    <button
+      v-for="(option, index) in COLOR_SCHEME_OPTIONS"
+      :key="option.id"
+      class="scheme-picker__swatch"
+      :class="[
+        `scheme-picker__swatch--${option.id}`,
+        { 'scheme-picker__swatch--active': colorScheme === option.id },
+      ]"
+      type="button"
+      role="radio"
+      :aria-checked="colorScheme === option.id"
+      :tabindex="colorScheme === option.id ? 0 : -1"
+      :title="props.label(option.labelKey, option.id)"
+      :aria-label="props.label(option.labelKey, option.id)"
+      @click="setColorScheme(option.id)"
+      @keydown="onKeydown($event, index)"
+    />
+  </div>
+</template>
+
+<style scoped>
+.scheme-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* The button carries the hit-target floor; the colour a reader compares across
+   schemes is painted on the pseudo-element inside it. Growing the button would
+   draw four 32 px dots, and an overlay hit area would overlap the neighbours. */
+.scheme-picker__swatch {
+  display: inline-grid;
+  min-inline-size: var(--hit-target-min, 32px);
+  min-block-size: var(--hit-target-min, 32px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  place-items: center;
+  cursor: pointer;
+}
+
+.scheme-picker__swatch::before {
+  content: '';
+  inline-size: 16px;
+  block-size: 16px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-full);
+  transition: transform var(--transition-fast) var(--ease-out);
+}
+
+.scheme-picker__swatch:hover::before {
+  transform: scale(1.16);
+}
+
+.scheme-picker__swatch--active::before {
+  border-color: var(--color-text-primary);
+}
+
+/* The swatches read the scheme faces, not --color-accent: the accent is the
+   scheme already active, and a swatch has to show the one you would switch to.
+   The faces are L2 tokens because they are this control's face, not a colour
+   any other component should reach for. */
+.scheme-picker__swatch--codex::before {
+  background: var(--scheme-codex-face);
+}
+
+.scheme-picker__swatch--violet::before {
+  background: var(--scheme-violet-face);
+}
+
+.scheme-picker__swatch--teal::before {
+  background: var(--scheme-teal-face);
+}
+
+.scheme-picker__swatch--rose::before {
+  background: var(--scheme-rose-face);
+}
+</style>

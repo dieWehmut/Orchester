@@ -28,11 +28,13 @@ sysinfo = { workspace = true }
 thiserror = { workspace = true }
 time = { workspace = true }
 tokio = { workspace = true }
+tokio-util = { workspace = true }
 tower = { workspace = true }
 tower-http = { workspace = true }
 tracing = { workspace = true }
 
 [dev-dependencies]
 futures = { workspace = true }
+reqwest = { workspace = true, features = ["json"] }
 tokio = { workspace = true, features = ["test-util"] }
 tokio-tungstenite = "0.29"
