@@ -68,6 +68,28 @@ describe('SettingsView', () => {
     expect(wrapper.get('[data-settings-section="appearance"]').attributes('aria-selected')).toBe('true')
   })
 
+  it('carries a return-to-app row above the navigation, as the reference does', () => {
+    const wrapper = mount(SettingsView)
+
+    // The reference puts the way back at the head of its own settings nav
+    // rather than leaving the reader to the browser's history.
+    const back = wrapper.get('[data-settings-back]')
+    expect(back.attributes('data-settings-back')).toBe('workspace')
+    expect(back.text().length).toBeGreaterThan(0)
+  })
+
+  it('prints the hex each colour readout resolves to, beside its swatch', () => {
+    const wrapper = mount(SettingsView)
+
+    // The reference shows #FFFFFF and #1A1C1F next to the swatches, so the
+    // value is readable rather than only visible.
+    const background = wrapper.get('[data-appearance-field="background"]')
+    const foreground = wrapper.get('[data-appearance-field="foreground"]')
+
+    expect(background.get('[data-color-hex]').text()).toMatch(/^#[0-9A-F]{6}$/)
+    expect(foreground.get('[data-color-hex]').text()).toMatch(/^#[0-9A-F]{6}$/)
+  })
+
   it('keeps every section reachable from the navigation list', async () => {
     const wrapper = mount(SettingsView)
 

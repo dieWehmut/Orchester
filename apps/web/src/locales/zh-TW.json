@@ -100,6 +100,7 @@
   },
   "settings": {
     "eyebrow": "設定",
+    "backToApp": "返回應用",
     "title": "設定",
     "description": "供應商憑證、模型選擇與外觀控制將顯示於此。",
     "sections": {

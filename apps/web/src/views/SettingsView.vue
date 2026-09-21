@@ -13,6 +13,7 @@ import {
   Compass,
   Download,
   Info,
+  ArrowLeft,
   MonitorSmartphone,
   Moon,
   Palette,
@@ -45,9 +46,11 @@ import {
   type ThemeMode,
   type ThemePreference,
 } from '@orchester/design'
-import { computed, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
+import { routerKey } from 'vue-router'
 
 import { usePetVisibility } from '../features/pet'
+import { themeColours } from '../components/settings/theme-colours'
 import { useI18n } from '../i18n'
 import ShortcutEditor from '../components/settings/ShortcutEditor.vue'
 import { readDocumentPlatform, readSystemPlatform } from '@orchester/design'
@@ -76,6 +79,21 @@ type SettingsSection =
   | 'about'
 
 const { t, locale, setLocale } = useI18n()
+
+/**
+ * The way back, section 4.8.
+ *
+ * Settings is a route rather than an overlay, so the reference's
+ * "return to app" row is the browser's own history when there is one and the
+ * workspace route when the reader landed here directly. Reading the router off
+ * the injection key rather than importing the singleton keeps the view
+ * mountable in a test that never installed one.
+ */
+const router = inject(routerKey, null)
+
+function returnToWorkspace(): void {
+  void router?.push({ name: 'workspace' })
+}
 
 const importTrigger = ref<HTMLInputElement | null>(null)
 
@@ -297,6 +315,14 @@ const schemeSwatch = computed(
     })[appearance.colorScheme.value],
 )
 
+/**
+ * What the two colour rows report, in the theme that is in force.
+ *
+ * The reference prints the hex beside each swatch, so the value is readable
+ * rather than only visible.
+ */
+const colours = computed(() => themeColours(appearance.theme.value))
+
 const previewBefore = computed(() => [
   'const themePreview: ThemeConfig = {',
   '  surface: "sidebar",',
@@ -359,6 +385,16 @@ const previewAfter = computed(() => [
 <template>
   <div class="settings-view" data-testid="settings-view">
     <nav class="settings-view__nav" data-settings-nav :aria-label="t('settings.title')">
+      <button
+        class="settings-view__back"
+        type="button"
+        data-settings-back="workspace"
+        @click="returnToWorkspace"
+      >
+        <ArrowLeft :size="15" aria-hidden="true" />
+        {{ t('settings.backToApp') }}
+      </button>
+
       <p class="settings-view__eyebrow">{{ t('settings.eyebrow') }}</p>
       <h1>{{ t('settings.title') }}</h1>
 
@@ -584,12 +620,15 @@ const previewAfter = computed(() => [
               <strong>{{ t('settings.background.title') }}</strong>
               <span>{{ t('settings.background.description') }}</span>
             </div>
-            <span
-              class="settings-view__readout"
-              data-color-readout
-              :style="{ background: 'var(--color-bg-base)' }"
-              aria-hidden="true"
-            />
+            <div class="settings-view__row-control">
+              <span
+                class="settings-view__readout"
+                data-color-readout
+                :style="{ background: 'var(--color-bg-base)' }"
+                aria-hidden="true"
+              />
+              <code class="settings-view__hex" data-color-hex>{{ colours.background }}</code>
+            </div>
           </div>
 
           <div class="settings-view__row" data-appearance-field="foreground">
@@ -597,12 +636,15 @@ const previewAfter = computed(() => [
               <strong>{{ t('settings.foreground.title') }}</strong>
               <span>{{ t('settings.foreground.description') }}</span>
             </div>
-            <span
-              class="settings-view__readout"
-              data-color-readout
-              :style="{ background: 'var(--color-text-primary)' }"
-              aria-hidden="true"
-            />
+            <div class="settings-view__row-control">
+              <span
+                class="settings-view__readout"
+                data-color-readout
+                :style="{ background: 'var(--color-text-primary)' }"
+                aria-hidden="true"
+              />
+              <code class="settings-view__hex" data-color-hex>{{ colours.foreground }}</code>
+            </div>
           </div>
 
           <div class="settings-view__row" data-appearance-field="ui-font">
@@ -800,6 +842,36 @@ const previewAfter = computed(() => [
   margin: 0 0 var(--space-4);
   padding-inline: var(--space-2);
   font-size: var(--text-lg);
+}
+
+/* The way back sits above the nav it belongs to, the way the reference heads
+   its settings column with it rather than leaving the reader to the browser. */
+.settings-view__back {
+  display: flex;
+  inline-size: 100%;
+  min-block-size: max(var(--density-row-height), var(--hit-target-min, 32px));
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  padding-inline: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font: inherit;
+  font-size: var(--text-sm);
+  text-align: start;
+  cursor: pointer;
+}
+
+.settings-view__back:hover {
+  background: var(--color-surface-base);
+  color: var(--color-text-primary);
+}
+
+.settings-view__back:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
 }
 
 .settings-view__group {
@@ -1037,6 +1109,14 @@ const previewAfter = computed(() => [
   flex: 0 0 auto;
   border: 1px solid var(--color-border-emphasis);
   border-radius: var(--radius-full);
+}
+
+/* The reference prints the value beside the swatch, so the row reports what
+   the theme resolved to rather than only hinting at it with a dot. */
+.settings-view__hex {
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
 }
 
 .settings-view__swatch {

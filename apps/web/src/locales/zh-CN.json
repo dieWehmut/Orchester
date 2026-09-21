@@ -100,6 +100,7 @@
   },
   "settings": {
     "eyebrow": "配置",
+    "backToApp": "返回应用",
     "title": "设置",
     "description": "供应商凭据、模型选择和外观控制将在这里显示。",
     "sections": {
