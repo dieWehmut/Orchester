@@ -101,7 +101,10 @@ wave, which lands with an updated snapshot.
   - `apps/web/test/locale-sweep.test.ts` holds the sweep as a standing rule, and
     the shortcut registry and the composer's command list carry keys rather than
     words so the surface resolves them.
-- [ ] U8-05: Re-run the full gate: `pnpm typecheck`, `pnpm test`, both builds.
+- [x] U8-05: Re-run the full gate: `pnpm typecheck`, `pnpm test`, both builds.
+  - `pnpm typecheck` is clean across all seven projects; `pnpm test` is green at
+    25 tooling + 89 protokoll + 264 design + 31 website + 20 ereignis + 476 web
+    + 1 desktop-security tests; the web and website builds both succeed.
 
 ## Verification
 
