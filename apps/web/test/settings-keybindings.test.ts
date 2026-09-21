@@ -31,8 +31,8 @@ describe("settings keybindings panel", () => {
     // The registry is the app's own: registering into it must appear here.
     shortcutRegistry.register({
       id: "test.appears",
-      label: "Appear in the editor",
-      group: "Tests",
+      labelKey: "shortcuts.labels.settingsOpen",
+      groupKey: "shortcuts.groups.layout",
       keys: ["Mod", "Shift", "Y"],
     })
     await nextTick()

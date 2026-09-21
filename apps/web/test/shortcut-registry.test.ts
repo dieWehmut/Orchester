@@ -11,8 +11,8 @@ import {
 
 const definition = (overrides: Partial<ShortcutDefinition> = {}): ShortcutDefinition => ({
   id: "palette.open",
-  label: "Open the command palette",
-  group: "Composer",
+  labelKey: "shortcuts.labels.paletteOpen",
+  groupKey: "shortcuts.groups.composer",
   keys: ["Mod", "K"],
   ...overrides,
 })

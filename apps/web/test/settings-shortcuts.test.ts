@@ -5,8 +5,8 @@ import ShortcutEditor from '../src/components/settings/ShortcutEditor.vue'
 import { createShortcutRegistry, type ShortcutDefinition } from '../src/shortcuts/registry'
 
 const shortcuts: ShortcutDefinition[] = [
-  { id: 'palette.open', label: 'Open the command palette', group: 'Composer', keys: ['Mod', 'K'] },
-  { id: 'inspector.toggle', label: 'Toggle the inspector', group: 'Layout', keys: ['Mod', 'B'] },
+  { id: 'palette.open', labelKey: 'shortcuts.labels.paletteOpen', groupKey: 'shortcuts.groups.composer', keys: ['Mod', 'K'] },
+  { id: 'inspector.toggle', labelKey: 'shortcuts.labels.inspectorToggle', groupKey: 'shortcuts.groups.layout', keys: ['Mod', 'B'] },
 ]
 
 function mountEditor(registry = createShortcutRegistry()) {

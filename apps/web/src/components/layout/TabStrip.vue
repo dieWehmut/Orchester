@@ -64,6 +64,11 @@ onUnmounted(() => {
  * because a chord that changes tabs should only do so while the strip is the
  * thing under the pointer or the focus, and because the shell's registry owns
  * the chords that belong to the whole window.
+ *
+ * Mod+W is one of the shell's: closing the active tab and closing the window
+ * are the same chord with the same answer, so the strip must not also claim it
+ * - answering it here as well would close the tab and then the window for one
+ * press.
  */
 function handleKey(event: KeyboardEvent): void {
   const mod = event.ctrlKey || event.metaKey
@@ -72,12 +77,6 @@ function handleKey(event: KeyboardEvent): void {
   if (event.key === 'Tab') {
     const next = cycleTab(props.tabs, props.activeId, event.shiftKey)
     if (next !== null) emit('select', next)
-    event.preventDefault()
-    return
-  }
-
-  if (event.key === 'w') {
-    emit('close', props.activeId)
     event.preventDefault()
     return
   }

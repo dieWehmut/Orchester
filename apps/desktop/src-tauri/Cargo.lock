@@ -2455,6 +2455,7 @@ version = "0.1.2"
 dependencies = [
  "orchester-anwendung",
  "orchester-laufzeit",
+ "orchester-native-chrome",
  "orchester-netz",
  "serde_json",
  "tauri",
@@ -2507,6 +2508,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "orchester-native-chrome"
+version = "0.1.2"
+dependencies = [
+ "windows-sys 0.61.2",
+]
+
+[[package]]
 name = "orchester-netz"
 version = "0.1.2"
 dependencies = [
@@ -2526,6 +2534,7 @@ dependencies = [
  "thiserror 2.0.20",
  "time",
  "tokio",
+ "tokio-util",
  "tower",
  "tower-http 0.7.1",
  "tracing",

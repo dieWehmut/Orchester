@@ -73,10 +73,10 @@ wave, which lands with an updated snapshot.
 
 ## Wave U6 — desktop chrome
 
-- [ ] U6-01: Add the macOS overlay titlebar path with correct traffic-light inset.
-- [ ] U6-02: Add Windows caption buttons at OS metrics with the Snap-Layouts hit region.
-- [ ] U6-03: Fall back to opaque surfaces where translucency is unavailable.
-- [ ] U6-04: Wire `⌘/Ctrl+W` to close the active tab and confirm before closing with an active run.
+- [x] U6-01: Add the macOS overlay titlebar path with correct traffic-light inset.
+- [x] U6-02: Add Windows caption buttons at OS metrics with the Snap-Layouts hit region.
+- [x] U6-03: Fall back to opaque surfaces where translucency is unavailable.
+- [x] U6-04: Wire `⌘/Ctrl+W` to close the active tab and confirm before closing with an active run.
 
 ## Wave U7 — settings, keyboard, a11y
 
@@ -88,11 +88,23 @@ wave, which lands with an updated snapshot.
 
 ## Wave U8 — migration and cleanup
 
-- [ ] U8-01: Re-point the legacy `--color-bg-*`, `--color-border-*`, `--color-text-*` tokens at L1 and update the snapshot.
-- [ ] U8-02: Remove the two obsolete `amber` snapshots.
-- [ ] U8-03: Sweep components for L0/L1 leakage and bare `px` spacing.
-- [ ] U8-04: Replace remaining hard-coded English strings with locale keys.
-- [ ] U8-05: Re-run the full gate: `pnpm typecheck`, `pnpm test`, both builds.
+- [x] U8-01: Re-point the legacy `--color-bg-*`, `--color-border-*`, `--color-text-*` tokens at L1 and update the snapshot.
+  - `packages/design/src/tokens.css` carries the legacy names as `var(--color-surface-*)`
+    and `var(--color-text-*)` aliases, and the theme snapshot holds the mapping.
+- [x] U8-02: Remove the two obsolete `amber` snapshots.
+  - The accent schemes are `codex`, `violet`, `teal` and `rose`; the snapshot's
+    `dark-amber` and `light-amber` entries are gone.
+- [x] U8-03: Sweep components for L0/L1 leakage and bare `px` spacing.
+  - `packages/design/test/component-migration.test.ts` holds the sweep as a
+    standing rule over both component layers.
+- [x] U8-04: Replace remaining hard-coded English strings with locale keys.
+  - `apps/web/test/locale-sweep.test.ts` holds the sweep as a standing rule, and
+    the shortcut registry and the composer's command list carry keys rather than
+    words so the surface resolves them.
+- [x] U8-05: Re-run the full gate: `pnpm typecheck`, `pnpm test`, both builds.
+  - `pnpm typecheck` is clean across all seven projects; `pnpm test` is green at
+    25 tooling + 89 protokoll + 264 design + 31 website + 20 ereignis + 476 web
+    + 1 desktop-security tests; the web and website builds both succeed.
 
 ## Verification
 

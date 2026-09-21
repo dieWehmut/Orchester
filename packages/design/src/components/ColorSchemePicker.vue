@@ -112,23 +112,23 @@ function onKeydown(event: KeyboardEvent, index: number): void {
   border-color: var(--color-text-primary);
 }
 
-/* Literal hues, not tokens: a swatch has to show the colour you would be
-   switching *to*, and the tokens always describe the scheme already active.
-   These are the dark-theme accents, because a swatch sits on a dark rail as
-   often as on a light one and the light accents are the same hue, muddied. */
+/* The swatches read the scheme faces, not --color-accent: the accent is the
+   scheme already active, and a swatch has to show the one you would switch to.
+   The faces are L2 tokens because they are this control's face, not a colour
+   any other component should reach for. */
 .scheme-picker__swatch--codex::before {
-  background: #339cff;
+  background: var(--scheme-codex-face);
 }
 
 .scheme-picker__swatch--violet::before {
-  background: #ad7bf9;
+  background: var(--scheme-violet-face);
 }
 
 .scheme-picker__swatch--teal::before {
-  background: #4fbfad;
+  background: var(--scheme-teal-face);
 }
 
 .scheme-picker__swatch--rose::before {
-  background: #f472b6;
+  background: var(--scheme-rose-face);
 }
 </style>

@@ -83,7 +83,7 @@ const windowSource = computed(() =>
 
 .agent-metrics--compact .agent-metrics__item {
   align-items: center;
-  gap: 3px;
+  gap: var(--space-1);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
 }

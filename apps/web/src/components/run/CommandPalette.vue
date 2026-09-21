@@ -9,9 +9,12 @@
  */
 import { computed, ref, watch } from 'vue'
 
+import { useI18n } from '../../i18n'
+
 export interface CommandEntry {
   id: string
   name: string
+  /** Already translated: the palette does not know which locale service wrote it. */
   description: string
 }
 
@@ -29,10 +32,10 @@ const props = withDefaults(
     commands: () => [],
     query: '',
     loading: false,
-    emptyLabel: 'No command matches that.',
-    loadingLabel: 'Loading commands…',
   },
 )
+
+const { t } = useI18n()
 
 const emit = defineEmits<{
   select: [id: string]
@@ -88,14 +91,14 @@ function onKeydown(event: KeyboardEvent): void {
     @keydown="onKeydown"
   >
     <p v-if="props.loading" class="command-palette__note" data-command-loading>
-      {{ loadingLabel }}
+      {{ props.loadingLabel ?? t('run.loadingCommands') }}
     </p>
     <p
       v-else-if="matches.length === 0"
       class="command-palette__note"
       data-command-empty
     >
-      {{ emptyLabel }}
+      {{ props.emptyLabel ?? t('run.noCommandMatch') }}
     </p>
     <ul v-else class="command-palette__list">
       <li

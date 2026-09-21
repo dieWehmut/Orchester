@@ -133,7 +133,7 @@ defineEmits<{
 .agent-fleet-row__state {
   flex-direction: column;
   align-items: flex-end;
-  gap: 3px;
+  gap: var(--space-1);
 }
 
 .agent-fleet-row__activity {

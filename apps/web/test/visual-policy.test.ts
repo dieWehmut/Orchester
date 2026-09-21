@@ -24,7 +24,7 @@ describe('workspace visual policy', () => {
     ]
 
     expect(app).toContain('--app-top-chrome-height')
-    expect(app).toContain('--desktop-titlebar-height: 36px')
+    expect(app).toContain('--desktop-titlebar-height: var(--window-chrome-height, 38px)')
     for (const contents of fullHeightSources) {
       expect(contents).toContain('var(--app-top-chrome-height')
       expect(contents).not.toContain('calc(100vh - var(--header-height))')

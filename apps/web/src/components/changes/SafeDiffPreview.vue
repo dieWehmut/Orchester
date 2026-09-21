@@ -38,21 +38,21 @@ function toggleWrap(): void {
 </script>
 
 <template>
-  <section class="safe-diff-preview" aria-label="Diff preview">
+  <section class="safe-diff-preview" :aria-label="t('inspector.diff.preview')">
     <div v-if="prepared.status === 'empty'" data-diff-empty>
       <EmptyState
-        title="No diff preview"
-        description="A bounded text preview will appear when the runtime provides one."
+        :title="t('inspector.diff.empty')"
+        :description="t('inspector.diff.emptyDescription')"
       />
     </div>
 
     <InlineAlert
       v-else-if="prepared.status === 'refused'"
       tone="warning"
-      title="Preview unavailable"
+      :title="t('inspector.diff.refused')"
       data-diff-refused
     >
-      Binary or control-heavy content is not rendered in the browser.
+      {{ t('inspector.diff.refusedDescription') }}
     </InlineAlert>
 
     <template v-else>
@@ -64,11 +64,11 @@ function toggleWrap(): void {
             aria-hidden="true"
           />
           <FileWarning v-else :size="15" aria-hidden="true" />
-          {{ prepared.status === 'truncated' ? 'Truncated text preview' : 'Text preview' }}
+          {{ prepared.status === 'truncated' ? t('inspector.diff.truncated') : t('inspector.diff.text') }}
         </span>
         <span class="safe-diff-preview__actions">
           <AppBadge :tone="prepared.status === 'truncated' ? 'warning' : 'neutral'" mono>
-            {{ prepared.byteCount }} bytes
+            {{ t('inspector.diff.bytes', { count: String(prepared.byteCount) }) }}
           </AppBadge>
           <IconButton
             :label="t('inspector.wrapLines')"
@@ -86,8 +86,14 @@ function toggleWrap(): void {
         class="safe-diff-preview__metadata"
         data-diff-metadata
       >
-        Showing {{ prepared.lineCount }} of {{ prepared.originalLineCount }} lines and
-        {{ prepared.byteCount }} of {{ prepared.originalByteCount }} bytes.
+        {{
+          t('inspector.diff.showing', {
+            lines: String(prepared.lineCount),
+            totalLines: String(prepared.originalLineCount),
+            bytes: String(prepared.byteCount),
+            totalBytes: String(prepared.originalByteCount),
+          })
+        }}
       </p>
 
       <pre

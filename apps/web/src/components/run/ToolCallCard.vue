@@ -12,6 +12,8 @@ import type { ToolTimelineItem } from '@orchester/ereignis'
 import { ChevronRight, Terminal } from '@lucide/vue'
 import { computed, ref } from 'vue'
 
+import { useI18n } from '../../i18n'
+
 const props = withDefaults(
   defineProps<{
     item: ToolTimelineItem
@@ -19,10 +21,10 @@ const props = withDefaults(
     collapseLabel?: string
   }>(),
   {
-    expandLabel: 'Show the call detail',
-    collapseLabel: 'Hide the call detail',
   },
 )
+
+const { t } = useI18n()
 
 const expanded = ref(false)
 const stateLabel = computed(() => {
@@ -56,7 +58,7 @@ const stateLabel = computed(() => {
       type="button"
       data-tool-toggle
       :aria-expanded="expanded"
-      :aria-label="expanded ? collapseLabel : expandLabel"
+      :aria-label="expanded ? props.collapseLabel ?? t('run.hideCallDetail') : props.expandLabel ?? t('run.showCallDetail')"
       @click="expanded = !expanded"
     >
       <ChevronRight class="tool-card__chevron" :size="14" aria-hidden="true" />

@@ -44,6 +44,44 @@ function fakeController(options: { rejectActions?: boolean } = {}): DesktopWindo
 }
 
 describe('WindowChrome', () => {
+  it('keeps an opaque surface when the native runtime offers no translucency', () => {
+    const controller = Object.assign(fakeController(), { platform: 'windows' as const })
+    const wrapper = mount(WindowChrome, { props: { controller } })
+    expect(wrapper.attributes('data-window-material')).toBe('opaque')
+    wrapper.unmount()
+  })
+
+  it('leaves drag-region double clicks to Tauri so the window is not toggled twice', async () => {
+    const controller = fakeController()
+    const wrapper = mount(WindowChrome, { props: { controller } })
+    await wrapper.get('[data-tauri-drag-region]').trigger('dblclick')
+    expect(controller.calls).toEqual([])
+    wrapper.unmount()
+  })
+
+  it('places Windows captions after the drag region in native button order', () => {
+    const controller = Object.assign(fakeController(), { platform: 'windows' as const })
+    const wrapper = mount(WindowChrome, { props: { controller } })
+
+    expect(wrapper.attributes('data-window-platform')).toBe('windows')
+    expect(wrapper.findAll('[data-window-action]').map((button) => button.attributes('data-window-action')))
+      .toEqual(['minimize', 'maximize', 'close'])
+    expect(wrapper.get('[data-window-action="maximize"]').attributes('data-native-snap-target')).toBe('true')
+    expect(wrapper.get('[data-window-action="maximize"]').element.closest('[data-tauri-drag-region]')).toBeNull()
+    wrapper.unmount()
+  })
+
+  it('reserves the macOS native traffic lights without drawing duplicate controls', () => {
+    const controller = Object.assign(fakeController(), { platform: 'macos' as const })
+    const wrapper = mount(WindowChrome, { props: { controller } })
+
+    expect(wrapper.attributes('data-window-platform')).toBe('macos')
+    expect(wrapper.findAll('[data-window-action]')).toHaveLength(0)
+    expect(wrapper.get('[data-native-traffic-lights]').attributes('aria-hidden')).toBe('true')
+    expect(wrapper.get('[data-tauri-drag-region]').find('[data-window-action]').exists()).toBe(false)
+    wrapper.unmount()
+  })
+
   it('does not render browser-only window controls', () => {
     const wrapper = mount(WindowChrome, {
       props: { controller: { enabled: false } as DesktopWindowController },
@@ -59,7 +97,7 @@ describe('WindowChrome', () => {
     expect(wrapper.get('[data-tauri-drag-region]').attributes('aria-label')).toBe('Orchester')
     expect(
       wrapper.findAll('[data-window-action]').map((control) => control.attributes('data-window-action')),
-    ).toEqual(['close', 'minimize', 'maximize'])
+    ).toEqual(['minimize', 'maximize', 'close'])
     expect(wrapper.get('[data-window-action="minimize"]').attributes('aria-label')).toBe(
       'Minimize window',
     )

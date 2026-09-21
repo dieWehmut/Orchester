@@ -2,8 +2,11 @@
 import { FolderOpen } from '@lucide/vue'
 import type { ModelCatalogDto } from '@orchester/protokoll'
 
+import { useI18n } from '../../i18n'
 import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
 import ModelContextControl from './ModelContextControl.vue'
+
+const { t } = useI18n()
 
 withDefaults(
   defineProps<{
@@ -23,7 +26,7 @@ withDefaults(
   <div class="composer-context" data-composer-context>
     <span class="composer-context__item" data-project-context>
       <FolderOpen :size="15" aria-hidden="true" />
-      <span>{{ workspaceName || 'Choose project' }}</span>
+      <span>{{ workspaceName || t('run.chooseProject') }}</span>
     </span>
     <ModelContextControl :catalog="modelCatalog" :status="modelStatus" />
   </div>
