@@ -203,4 +203,44 @@ describe('AppRail', () => {
     const settingsRow = wrapper.findAll('[role="menuitem"]')[0]!
     expect(settingsRow.text()).toContain('Ctrl+,')
   })
+
+  it('folds and restores every list from the product row', async () => {
+    const wrapper = mount(AppRail, {
+      props: {
+        productName: 'Orchester',
+        workspaceName: 'Orchester',
+        newSessionLabel: 'New chat',
+        projectsLabel: 'Pinned',
+        sessionsLabel: 'Projects',
+        fleetLabel: 'Agents',
+        accountName: 'Orchester',
+        settingsLabel: 'Settings',
+      },
+      slots: {
+        projects: '<p>Pinned list</p>',
+        sessions: '<p>Project list</p>',
+        fleet: '<p>Agent list</p>',
+      },
+    })
+
+    // The reference's product row is the parent of the lists under it, so its
+    // disclosure clears the column in one gesture; the account row stays put,
+    // because that is the row a folded rail is still for.
+    const product = wrapper.get('[data-rail-product]')
+    expect(product.attributes('aria-expanded')).toBe('true')
+
+    await product.trigger('click')
+
+    expect(product.attributes('aria-expanded')).toBe('false')
+    expect(wrapper.find('[data-rail-section="projects"]').exists()).toBe(false)
+    expect(wrapper.find('[data-rail-section="sessions"]').exists()).toBe(false)
+    expect(wrapper.find('[data-rail-section="fleet"]').exists()).toBe(false)
+    expect(wrapper.find('[data-rail-section="account"]').exists()).toBe(true)
+    expect(wrapper.get('[data-rail-account]').text()).toContain('Orchester')
+
+    await product.trigger('click')
+
+    expect(wrapper.find('[data-rail-section="projects"]').exists()).toBe(true)
+    expect(wrapper.get('[data-rail-section="projects"]').text()).toContain('Pinned list')
+  })
 })

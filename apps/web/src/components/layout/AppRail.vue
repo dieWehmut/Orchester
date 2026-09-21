@@ -23,6 +23,17 @@ function toggleSection(id: string): void {
   collapsed.value = { ...collapsed.value, [id]: !collapsed.value[id] }
 }
 
+/**
+ * Whether the product row has folded the lists it governs.
+ *
+ * The reference's product row is the parent of everything under it, so its
+ * disclosure is the one control that clears the whole column in a single
+ * gesture. The per-section headings below still fold one list at a time; this
+ * is the coarse version of the same intent, which is what a narrow rail wants
+ * when the reader is working in the transcript rather than browsing work.
+ */
+const railFolded = ref(false)
+
 const props = withDefaults(
   defineProps<{
     productName: string
@@ -95,7 +106,14 @@ function chooseAccountItem(id: string): void {
 
 <template>
   <div class="app-rail" data-app-rail>
-    <div class="app-rail__section app-rail__product" data-rail-section="brand" data-rail-product>
+    <button
+      class="app-rail__section app-rail__product"
+      type="button"
+      data-rail-section="brand"
+      data-rail-product
+      :aria-expanded="!railFolded"
+      @click="railFolded = !railFolded"
+    >
       <span class="app-rail__mark-slot" aria-hidden="true">
         <img class="app-rail__mark" data-rail-mark :src="mark" alt="" draggable="false" />
       </span>
@@ -104,12 +122,20 @@ function chooseAccountItem(id: string): void {
         <span v-if="workspaceName">{{ workspaceName }}</span>
       </span>
       <ChevronDown
+        v-if="!railFolded"
         class="app-rail__product-disclosure"
         :size="16"
         aria-hidden="true"
         data-rail-product-disclosure
       />
-    </div>
+      <ChevronRight
+        v-else
+        class="app-rail__product-disclosure"
+        :size="16"
+        aria-hidden="true"
+        data-rail-product-disclosure
+      />
+    </button>
 
     <div class="app-rail__section" data-rail-section="primary">
       <AppButton
@@ -124,6 +150,7 @@ function chooseAccountItem(id: string): void {
     </div>
 
     <div
+      v-if="!railFolded"
       class="app-rail__section app-rail__section--scroll"
       data-rail-section="projects"
       data-rail-heading="pinned"
@@ -145,6 +172,7 @@ function chooseAccountItem(id: string): void {
     </div>
 
     <div
+      v-if="!railFolded"
       class="app-rail__section app-rail__section--scroll"
       data-rail-section="sessions"
       data-rail-heading="projects"
@@ -166,6 +194,7 @@ function chooseAccountItem(id: string): void {
     </div>
 
     <div
+      v-if="!railFolded"
       class="app-rail__section app-rail__section--footer"
       data-rail-section="fleet"
       data-rail-heading="agents"
@@ -218,8 +247,11 @@ function chooseAccountItem(id: string): void {
 
 <style scoped>
 .app-rail {
-  display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr) minmax(0, 1fr) auto auto;
+  /* A column rather than a fixed row count: the product row can fold the lists
+     out of the tree, and a grid whose tracks were named per child would slide
+     the account row up into a list's track when that happened. */
+  display: flex;
+  flex-direction: column;
   block-size: 100%;
   min-block-size: 0;
   background: var(--rail-surface);
@@ -229,6 +261,13 @@ function chooseAccountItem(id: string): void {
 .app-rail__section {
   min-inline-size: 0;
   padding: var(--space-3);
+}
+
+/* The lists share whatever is left between the product row and the account
+   row, and each one scrolls on its own rather than the column scrolling. */
+.app-rail__section--scroll,
+.app-rail__section--footer {
+  flex: 1 1 0;
 }
 
 .app-rail__section--scroll {
@@ -244,6 +283,7 @@ function chooseAccountItem(id: string): void {
 .app-rail__account {
   display: flex;
   min-inline-size: 0;
+  margin-block-start: auto;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
@@ -368,7 +408,25 @@ function chooseAccountItem(id: string): void {
    the mark alone - is what a reader recognises, and the disclosure says the
    name can be changed from here rather than only displayed. */
 .app-rail__product {
+  inline-size: 100%;
+  min-block-size: var(--hit-target-min, 32px);
+  align-items: center;
   gap: var(--space-2);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.app-rail__product:hover {
+  background: var(--color-bg-element);
+}
+
+.app-rail__product:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: -2px;
 }
 
 .app-rail__product-disclosure {
