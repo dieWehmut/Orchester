@@ -243,4 +243,59 @@ describe('AppRail', () => {
     expect(wrapper.find('[data-rail-section="projects"]').exists()).toBe(true)
     expect(wrapper.get('[data-rail-section="projects"]').text()).toContain('Pinned list')
   })
+
+  it('puts a search action in the header, above the lists it narrows', async () => {
+    const wrapper = mount(AppRail, {
+      props: {
+        productName: 'Orchester',
+        workspaceName: 'Orchester',
+        newSessionLabel: 'New chat',
+        projectsLabel: 'Projects',
+        sessionsLabel: 'Sessions',
+        fleetLabel: 'Agents',
+        accountName: 'Orchester',
+        settingsLabel: 'Settings',
+        searchLabel: 'Search sessions',
+      },
+      slots: { sessions: '<p>Session list</p>' },
+    })
+
+    // The reference's header owns the column's search, so the field opens from
+    // the header row rather than living inside one of the lists under it.
+    const header = wrapper.get('[data-rail-section="brand"]')
+    await header.get('[data-rail-action="search"]').trigger('click')
+
+    const field = wrapper.get('[data-rail-search] input')
+    expect(field.attributes('type')).toBe('search')
+    expect(field.attributes('aria-label')).toBe('Search sessions')
+
+    await field.setValue('runtime')
+    expect(wrapper.emitted('search')).toEqual([['runtime']])
+  })
+
+  it('reports how much needs attention on the header bell', async () => {
+    const wrapper = mount(AppRail, {
+      props: {
+        productName: 'Orchester',
+        workspaceName: 'Orchester',
+        newSessionLabel: 'New chat',
+        projectsLabel: 'Projects',
+        sessionsLabel: 'Sessions',
+        fleetLabel: 'Agents',
+        accountName: 'Orchester',
+        settingsLabel: 'Settings',
+        attentionLabel: 'Approvals waiting',
+        attentionCount: 2,
+      },
+    })
+
+    // The reference's bell is where the shell says something is waiting, so it
+    // carries a count rather than only a glyph.
+    const bell = wrapper.get('[data-rail-action="attention"]')
+    expect(bell.text()).toContain('2')
+    expect(bell.attributes('aria-label')).toContain('Approvals waiting')
+
+    await bell.trigger('click')
+    expect(wrapper.emitted('openAttention')).toHaveLength(1)
+  })
 })
