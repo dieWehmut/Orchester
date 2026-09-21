@@ -354,6 +354,18 @@ useShortcut(
   handleOpenSettings,
 )
 
+// The companion's chord belongs to the view that owns the companion, so the
+// editor cannot list a binding nothing would answer while this route is open.
+useShortcut(
+  {
+    id: 'companion.toggle',
+    labelKey: 'shortcuts.labels.companionToggle',
+    groupKey: 'shortcuts.groups.layout',
+    keys: ['Mod', 'Alt', 'P'],
+  },
+  () => petVisibility.toggle(),
+)
+
 /**
  * The desktop window, when there is one.
  *

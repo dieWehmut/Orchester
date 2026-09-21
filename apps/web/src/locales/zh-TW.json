@@ -436,7 +436,8 @@
       "sessionNew": "開始新會話",
       "inspectorToggle": "切換檢查器",
       "settingsOpen": "開啟設定",
-      "windowClose": "關閉目前分頁"
+      "windowClose": "關閉目前分頁",
+      "companionToggle": "切換夥伴顯示"
     }
   },
   "commands": {

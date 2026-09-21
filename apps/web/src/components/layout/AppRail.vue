@@ -123,8 +123,10 @@ function handleQuery(value: string): void {
  * that can translate them.
  */
 const accountItems = computed<AppMenuItem[]>(() =>
-  [
-    props.companionLabel ? { id: 'companion', label: props.companionLabel } : null,
+  ([
+    props.companionLabel
+      ? { id: 'companion', label: props.companionLabel, hint: companionHint.value }
+      : null,
     {
       id: 'settings',
       label: props.settingsLabel,
@@ -132,7 +134,7 @@ const accountItems = computed<AppMenuItem[]>(() =>
       // registry is what keeps it true after a rebinding.
       hint: settingsHint.value,
     },
-  ].filter((item): item is AppMenuItem => item !== null),
+  ] as (AppMenuItem | null)[]).filter((item): item is AppMenuItem => item !== null),
 )
 
 /**
@@ -144,6 +146,19 @@ const accountItems = computed<AppMenuItem[]>(() =>
  */
 const settingsHint = computed(() => {
   const keys = shortcutRegistry.effectiveKeys('settings.open')
+  if (keys === undefined) return undefined
+  return formatShortcut(keys, readDocumentPlatform() ?? readSystemPlatform())
+})
+
+/**
+ * The chord that toggles the companion, read off the same registry.
+ *
+ * The reference teaches this chord on the row that performs it, so it has to
+ * come from the live binding: a hard-coded one would keep teaching the default
+ * after the reader rebound it.
+ */
+const companionHint = computed(() => {
+  const keys = shortcutRegistry.effectiveKeys('companion.toggle')
   if (keys === undefined) return undefined
   return formatShortcut(keys, readDocumentPlatform() ?? readSystemPlatform())
 })

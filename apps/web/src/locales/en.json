@@ -436,7 +436,8 @@
       "sessionNew": "Start a new session",
       "inspectorToggle": "Toggle the inspector",
       "settingsOpen": "Open settings",
-      "windowClose": "Close the active tab"
+      "windowClose": "Close the active tab",
+      "companionToggle": "Toggle the companion"
     }
   },
   "commands": {

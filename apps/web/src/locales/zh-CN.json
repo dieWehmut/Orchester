@@ -436,7 +436,8 @@
       "sessionNew": "开始新会话",
       "inspectorToggle": "切换检查器",
       "settingsOpen": "打开设置",
-      "windowClose": "关闭当前标签页"
+      "windowClose": "关闭当前标签页",
+      "companionToggle": "切换伙伴显示"
     }
   },
   "commands": {

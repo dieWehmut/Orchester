@@ -105,6 +105,16 @@ export const DEFAULT_SHORTCUTS: readonly ShortcutDefinition[] = [
     keys: ['Mod', ','],
   },
   {
+    id: 'companion.toggle',
+    labelKey: 'shortcuts.labels.companionToggle',
+    groupKey: 'shortcuts.groups.layout',
+    // The reference spells this Alt+Win+P. Win is not a key the app can claim:
+    // Windows keeps it as the OS chord (Win+P is projection mode), and the
+    // registry refuses the foreign modifier on purpose. Mod+Alt+P is the same
+    // gesture one key over, and it is a chord the shell can actually answer.
+    keys: ['Mod', 'Alt', 'P'],
+  },
+  {
     id: 'window.close',
     labelKey: 'shortcuts.labels.windowClose',
     groupKey: 'shortcuts.groups.layout',
