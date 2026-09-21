@@ -12,10 +12,13 @@ const props = withDefaults(
     open?: boolean
     id?: string
     align?: 'start' | 'end'
+    /** Which way the list opens. A menu at the foot of a column opens upward. */
+    placement?: 'top' | 'bottom'
   }>(),
   {
     open: false,
     align: 'start',
+    placement: 'bottom',
   },
 )
 
@@ -165,7 +168,11 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="root" class="app-menu" :class="'app-menu--' + align">
+  <div
+    ref="root"
+    class="app-menu"
+    :class="['app-menu--' + align, 'app-menu--' + placement]"
+  >
     <button
       ref="trigger"
       class="app-menu__trigger"
@@ -248,6 +255,14 @@ onBeforeUnmount(() => {
 
 .app-menu--end .app-menu__list {
   inset-inline-end: 0;
+}
+
+/* The list is a popover, so the side it opens on is the caller's decision.
+   The account row sits at the foot of the rail, and a list that opened
+   downward there would be clipped by the window rather than shown. */
+.app-menu--top .app-menu__list {
+  inset-block-start: auto;
+  inset-block-end: calc(100% + 0.25rem);
 }
 
 .app-menu__item {

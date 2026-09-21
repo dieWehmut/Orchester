@@ -107,4 +107,70 @@ describe('AppRail', () => {
 
     expect(wrapper.emitted('openSettings')).toHaveLength(1)
   })
+
+  it('folds each headed list from its own heading', async () => {
+    const wrapper = mount(AppRail, {
+      props: {
+        productName: 'Orchester',
+        workspaceName: 'Orchester',
+        newSessionLabel: 'New chat',
+        projectsLabel: 'Pinned',
+        sessionsLabel: 'Projects',
+        fleetLabel: 'Agents',
+        accountName: 'Orchester',
+        settingsLabel: 'Settings',
+      },
+      slots: {
+        projects: '<p>Pinned list</p>',
+        sessions: '<p>Project list</p>',
+        fleet: '<p>Agent list</p>',
+      },
+    })
+
+    // Folding one list must not fold its neighbours, which is the whole reason
+    // the heading is the control rather than a header beside a chevron.
+    const pinned = wrapper.get('[data-rail-disclosure="pinned"]')
+    expect(pinned.attributes('aria-expanded')).toBe('true')
+    expect(wrapper.get('[data-rail-section="projects"]').text()).toContain('Pinned list')
+
+    await pinned.trigger('click')
+
+    expect(pinned.attributes('aria-expanded')).toBe('false')
+    expect(wrapper.get('[data-rail-section="projects"]').text()).not.toContain('Pinned list')
+    expect(wrapper.get('[data-rail-section="sessions"]').text()).toContain('Project list')
+    expect(wrapper.get('[data-rail-section="fleet"]').text()).toContain('Agent list')
+  })
+
+  it('opens the account menu from the account row and emits its two intents', async () => {
+    const wrapper = mount(AppRail, {
+      props: {
+        productName: 'Orchester',
+        workspaceName: 'Orchester',
+        newSessionLabel: 'New chat',
+        projectsLabel: 'Projects',
+        sessionsLabel: 'Sessions',
+        fleetLabel: 'Agents',
+        accountName: 'dieWehmut',
+        accountHint: 'Local runtime',
+        settingsLabel: 'Settings',
+        companionLabel: 'Hide companion',
+      },
+    })
+
+    // The reference hangs the menu off the account row rather than leaving a
+    // lone gear beside it, so the row itself is the trigger.
+    const trigger = wrapper.get('[data-rail-account]').element.closest('button')
+    expect(trigger).not.toBeNull()
+    await wrapper.get('[data-rail-account-menu] [aria-haspopup="menu"]').trigger('click')
+
+    const items = wrapper.findAll('[role="menuitem"]')
+    expect(items.map((item) => item.text())).toEqual(['Hide companion', 'Settings'])
+
+    await items[0]!.trigger('click')
+    await wrapper.get('[data-rail-account-menu] [aria-haspopup="menu"]').trigger('click')
+    await wrapper.findAll('[role="menuitem"]')[1]!.trigger('click')
+
+    expect(wrapper.emitted('toggleCompanion')).toHaveLength(1)
+    expect(wrapper.emitted('openSettings')).toHaveLength(1)
+  })
 })

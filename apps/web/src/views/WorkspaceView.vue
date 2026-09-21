@@ -25,6 +25,7 @@ import ThreadBar from '../components/layout/ThreadBar.vue'
 import SessionTranscript from '../components/sessions/SessionTranscript.vue'
 import RunPanel from '../components/run/RunPanel.vue'
 import { useI18n } from '../i18n'
+import { usePetVisibility } from '../features/pet'
 import { useAppStores } from '../stores/app'
 import { useShortcut } from '../shortcuts'
 import { DESKTOP_WINDOW_KEY } from '../platform/desktop-window'
@@ -80,6 +81,17 @@ const petNotificationLabels = computed<
   review: t('pet.notification.review'),
   failed: t('pet.notification.failed'),
 }))
+/**
+ * The companion's visibility, as the account menu offers it.
+ *
+ * The menu names the action rather than the state - the reference's row reads
+ * "show pet" whether or not the pet is drawn - so the label swaps between the
+ * two words the catalogue already carries for the toggle.
+ */
+const petVisibility = usePetVisibility()
+const companionLabel = computed(() =>
+  petVisibility.visible.value ? t('pet.hide') : t('pet.show'),
+)
 const agentStatus = computed(() => agents.status)
 const agentStreamStatus = computed(() => agents.streamStatus)
 const agentSnapshot = computed(() => agents.snapshot)
@@ -407,6 +419,7 @@ if (desktopWindowController?.enabled) {
       <WorkspaceSidebar
         :product-name="t('app.name')"
         :workspace-name="workspaceName"
+        :companion-label="companionLabel"
         :session-status="status"
         :sessions="items"
         :selected-session-id="selectedId"
@@ -423,6 +436,7 @@ if (desktopWindowController?.enabled) {
         @new-session="sessions.select(null)"
         @select-agent="handleAgentSelect"
         @open-settings="handleOpenSettings"
+        @toggle-companion="petVisibility.toggle()"
       />
     </template>
 

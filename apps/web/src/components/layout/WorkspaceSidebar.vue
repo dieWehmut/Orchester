@@ -10,9 +10,12 @@ import type { AgentFleetStoreStatus } from '../../stores/agent-fleet'
 import type { AgentStatusSocketStatus } from '../../transport/agent-status-socket'
 import type { SessionsStatus } from '../../stores/sessions'
 
-const props = defineProps<{
+const props = withDefaults(
+  defineProps<{
   productName: string
   workspaceName: string | null
+  /** Empty when the shell has no companion to hide. */
+  companionLabel?: string
   sessionStatus: SessionsStatus
   sessions: SessionSummaryDto[]
   selectedSessionId: string | null
@@ -23,7 +26,9 @@ const props = defineProps<{
   agentSnapshot: AgentFleetSnapshotDto | null
   agentError: string | null
   selectedAgentId: string | null
-}>()
+  }>(),
+  { companionLabel: '' },
+)
 
 defineEmits<{
   selectSession: [id: string]
@@ -32,6 +37,7 @@ defineEmits<{
   newSession: []
   selectAgent: [id: string]
   openSettings: []
+  toggleCompanion: []
 }>()
 
 const { t } = useI18n()
@@ -49,8 +55,10 @@ const { t } = useI18n()
     :account-name="props.productName"
     :account-hint="t('account.localRuntime')"
     :settings-label="t('settings.title')"
+    :companion-label="companionLabel"
     @new-session="$emit('newSession')"
     @open-settings="$emit('openSettings')"
+    @toggle-companion="$emit('toggleCompanion')"
   >
     <template #projects>
       <ProjectList
