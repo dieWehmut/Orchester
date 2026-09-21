@@ -106,6 +106,45 @@ wave, which lands with an updated snapshot.
     25 tooling + 89 protokoll + 264 design + 31 website + 20 ereignis + 476 web
     + 1 desktop-security tests; the web and website builds both succeed.
 
+## Wave U9 - reference alignment against the Codex desktop app
+
+The three reference screenshots (the sidebar, its account menu, and the
+appearance screen) were compared against the shipped surfaces. What the
+reference has and Orchester did not is additive, so this wave follows the same
+rules as U0-U8 and leaves the token and DTO contracts alone.
+
+- [x] U9-01: Give the rail the reference's anatomy: a product row that owns its
+  disclosure, a heading that folds each list, and an account row that opens a
+  menu instead of sitting beside a gear.
+  - `apps/web/test/app-rail.test.ts` pins the row order, the disclosure, and the
+    account menu's intents.
+- [x] U9-02: Make the product row's disclosure fold the lists it governs, rather
+  than leaving a chevron that draws and does nothing.
+  - The fold is a column layout rather than fixed grid tracks, so removing the
+    lists cannot slide the account row into a list's track.
+- [x] U9-03: Head the settings screen with the way back and print each resolved
+  colour's hex beside its swatch.
+  - `apps/web/test/theme-colours.test.ts` checks the mirrored values against
+    `tokens.css`, so the readout cannot drift from the stylesheet.
+- [x] U9-04: Teach each account-menu row the chord that performs it, read from
+  the live shortcut registry rather than written out.
+  - The registry is what the settings editor rebinds, so a printed default would
+    keep teaching a key that no longer does anything.
+- [x] U9-05: Carry the reference's header actions: a search glyph that narrows
+  the column, and a bell that reports how much is waiting and opens it.
+  - `apps/web/test/session-rail-filter.test.ts` pins the filter, including the
+    difference between "no sessions" and "nothing matched".
+- [x] U9-06: Answer the companion chord the reference teaches on its menu row.
+  - The reference spells it `Alt+Win+P`; `Win` is the OS chord and the registry
+    refuses the foreign modifier, so the shell binds `Ctrl+Alt+P` - the same
+    gesture one key over - and the row prints it from the live registry.
+- [x] U9-07: Re-run the full gate: `pnpm typecheck`, `pnpm test`, both builds,
+  the stack manifest, and the desktop shell's `cargo check`.
+  - `pnpm typecheck` is clean; `pnpm test` is green at 543 web + 264 design
+    + 31 website + 27 ereignis + protokoll + tooling tests; the web and website
+    builds succeed; `pnpm stack:verify` matches; the shell checks clean on the
+    x64 toolchain this ARM64 host uses.
+
 ## Verification
 
 ```text
