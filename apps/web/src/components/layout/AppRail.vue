@@ -408,7 +408,6 @@ function chooseAccountItem(id: string): void {
   display: flex;
   min-inline-size: 0;
   align-items: center;
-  gap: var(--space-3);
   border-block-end: 1px solid var(--color-border-base);
 }
 
@@ -416,7 +415,7 @@ function chooseAccountItem(id: string): void {
    keep their own, so a long workspace name truncates rather than pushing the
    search glyph off the row. */
 .app-rail__header {
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 
 .app-rail__header .app-rail__product {
@@ -496,6 +495,10 @@ function chooseAccountItem(id: string): void {
 
 .app-rail__identity {
   display: grid;
+  /* The name's column shrinks but does not grow, which is what keeps the
+     disclosure beside the name - as the reference draws it - rather than out
+     at the row's trailing edge next to the header's own actions. */
+  flex: 0 1 auto;
   min-inline-size: 0;
   line-height: var(--leading-tight);
 }
@@ -555,6 +558,7 @@ function chooseAccountItem(id: string): void {
    the mark alone - is what a reader recognises, and the disclosure says the
    name can be changed from here rather than only displayed. */
 .app-rail__product {
+  display: flex;
   inline-size: 100%;
   min-block-size: var(--hit-target-min, 32px);
   align-items: center;
@@ -578,7 +582,6 @@ function chooseAccountItem(id: string): void {
 
 .app-rail__product-disclosure {
   flex: 0 0 auto;
-  margin-inline-start: auto;
   color: var(--color-text-tertiary);
 }
 
