@@ -354,6 +354,36 @@ as the text they were written as. Each of them is a rendering an answer can live
 without; none of them is worth a parser that can be talked into producing an
 element.
 
+## Wave U16 - the row of actions under a message
+
+The reference hangs more than copying off a message. Two of its actions cannot
+be answered here - the runtime cannot re-run a turn in place and keeps no
+feedback channel - and one can, because U13 gave the journal the reader's own
+turn: the next prompt. So the row grew a shape rather than a pile of disabled
+buttons.
+
+- [x] U16-01: Let a surface add its own actions to the row.
+  - `MessageActions` takes `{ id, label, icon }` entries and reports the id it
+    was asked for; copying stays first and unconditional, and a control cannot
+    join the row without words for what it does.
+  - `apps/web/test/message-actions.test.ts` pins the order, the naming and that
+    an extra action copies nothing.
+- [x] U16-02: Offer each side of the conversation the move that belongs to it.
+  - The answer can be **quoted into the composer** as markdown (which is the
+    language the field is read in), and the reader's own turn can be **put back
+    to run again**. Neither starts work on its own: both end with the caret in
+    the field, which is what makes the action a step rather than a decision -
+    and what the reference's own row does not promise.
+  - `apps/web/test/composer-quote.test.ts` drives both through `RunPanel` and
+    asserts the draft and where the caret went.
+- [x] U16-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**What the row still refuses.** Regeneration and feedback. The first is not a
+gesture this runtime has - a new answer is a new run - and the second has no
+channel to arrive on. Putting the prompt back is the honest half of the first:
+it leaves the decision to run with the reader.
+
 ## Verification
 
 ```text
