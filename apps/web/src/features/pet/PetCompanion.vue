@@ -14,6 +14,7 @@ import { frameOffset } from './pet-manifest'
 import { petLookFor, type PetLook } from './pet-look'
 import {
   PET_ROAM_FIRST_PAUSE_MS,
+  petNotices,
   petRoamAllowed,
   petRoamPositionAt,
   petWalkAnimation,
@@ -323,7 +324,15 @@ function handlePointerMove(event: PointerEvent): void {
   const bounds = element.getBoundingClientRect()
   const centreX = bounds.left + bounds.width / 2
   const centreY = bounds.top + bounds.height / 2
-  const next = petLookFor(pack.value.grid, event.clientX - centreX, event.clientY - centreY)
+  const dx = event.clientX - centreX
+  const dy = event.clientY - centreY
+  // The pointer is somewhere on the page almost constantly, so attending to it
+  // from any distance would leave the companion looking at a reader who is
+  // working in the transcript and never taking a step. Only a pointer that has
+  // come near is addressing the companion.
+  const next = petNotices(dx, dy)
+    ? petLookFor(pack.value.grid, dx, dy)
+    : { direction: null, frame: null }
   const changed = next.direction !== (look.value?.direction ?? null)
   look.value = next.direction === null ? null : next
   if (changed) schedule()

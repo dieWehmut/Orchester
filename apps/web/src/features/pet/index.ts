@@ -42,11 +42,13 @@ export {
   type PetStateInput,
 } from './pet-state'
 export {
+  PET_NOTICE_RADIUS_PX,
   PET_ROAM_FIRST_PAUSE_MS,
   PET_ROAM_MAX_CYCLES,
   PET_ROAM_PAUSE_MAX_MS,
   PET_ROAM_PAUSE_MIN_MS,
   PET_ROAM_STRIDE_PX,
+  petNotices,
   petRoamAllowed,
   petRoamPositionAt,
   petWalkAnimation,

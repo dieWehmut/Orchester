@@ -100,10 +100,26 @@ describe('PetCompanion', () => {
     })
     await flushPromises()
 
-    window.dispatchEvent(new MouseEvent('pointermove', { clientX: 500, clientY: 0 }))
+    // The pointer has to come near the companion to be addressing it: a
+    // pointer working elsewhere on the page is not a look it should hold.
+    window.dispatchEvent(new MouseEvent('pointermove', { clientX: 60, clientY: 0 }))
     await flushPromises()
 
     expect(wrapper.get('[data-pet-companion]').attributes('data-pet-look')).toBeDefined()
+    wrapper.unmount()
+  })
+
+  it('ignores a pointer that is only on the same screen', async () => {
+    const wrapper = mount(PetCompanion, {
+      props: { label: 'Companion', trackPointer: true },
+      attachTo: document.body,
+    })
+    await flushPromises()
+
+    window.dispatchEvent(new MouseEvent('pointermove', { clientX: 5000, clientY: 5000 }))
+    await flushPromises()
+
+    expect(wrapper.get('[data-pet-companion]').attributes('data-pet-look')).toBeUndefined()
     wrapper.unmount()
   })
 })
@@ -244,14 +260,14 @@ describe('PetCompanion roam', () => {
 
     // The pointer arrives: the companion attends to it and stops walking where
     // it stood, which is a look rather than a leg.
-    window.dispatchEvent(new MouseEvent('pointermove', { clientX: 5000, clientY: 5000 }))
+    window.dispatchEvent(new MouseEvent('pointermove', { clientX: 60, clientY: 0 }))
     await flushPromises()
     const companion = wrapper.get('[data-pet-companion]')
     expect(companion.attributes('data-pet-look')).toBeDefined()
     expect(companion.attributes('data-pet-roam')).toBe('resting')
 
     // The pointer leaves, so the companion goes back to its own habits.
-    window.dispatchEvent(new MouseEvent('pointermove', { clientX: 0, clientY: 0 }))
+    window.dispatchEvent(new MouseEvent('pointermove', { clientX: 5000, clientY: 5000 }))
     await flushPromises()
     vi.advanceTimersByTime(PET_ROAM_FIRST_PAUSE_MS)
     await flushPromises()

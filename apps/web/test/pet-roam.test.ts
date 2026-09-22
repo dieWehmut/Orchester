@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  PET_NOTICE_RADIUS_PX,
   PET_ROAM_MAX_CYCLES,
   PET_ROAM_PAUSE_MAX_MS,
   PET_ROAM_PAUSE_MIN_MS,
   PET_ROAM_STRIDE_PX,
+  petNotices,
   petRoamAllowed,
   petRoamPositionAt,
   petWalkAnimation,
@@ -148,5 +150,16 @@ describe('pet roam planning', () => {
   it('reads a random that wandered out of range as the nearest end', () => {
     expect(planPetRoamPause(sequence([-3]))).toBe(PET_ROAM_PAUSE_MIN_MS)
     expect(planPetRoamPause(sequence([11]))).toBe(PET_ROAM_PAUSE_MAX_MS)
+  })
+
+  it('attends to a pointer that came near and ignores one that did not', () => {
+    expect(petNotices(0, 0)).toBe(true)
+    expect(petNotices(PET_NOTICE_RADIUS_PX - 1, 0)).toBe(true)
+    expect(petNotices(PET_NOTICE_RADIUS_PX, 0)).toBe(true)
+    expect(petNotices(PET_NOTICE_RADIUS_PX + 1, 0)).toBe(false)
+    // A pointer that is simply somewhere else on the page is not a look: the
+    // radius is a circle, not an axis, so a diagonal has to clear it too.
+    expect(petNotices(5000, 5000)).toBe(false)
+    expect(petNotices(PET_NOTICE_RADIUS_PX, PET_NOTICE_RADIUS_PX)).toBe(false)
   })
 })

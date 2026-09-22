@@ -48,6 +48,23 @@ export const PET_ROAM_MAX_CYCLES = 2
 /** The beat after the companion appears, before it takes its first step. */
 export const PET_ROAM_FIRST_PAUSE_MS = 1800
 
+/**
+ * How close a pointer has to come before the companion attends to it.
+ *
+ * The pointer is somewhere on the page almost constantly, so a companion that
+ * stopped walking whenever it was anywhere at all would never take a step. The
+ * radius is the difference between a pointer that is addressing the companion
+ * and one that is merely on the same screen - a couple of sprite widths, so
+ * the companion notices a reader who is reaching for it and ignores one who is
+ * working in the transcript.
+ */
+export const PET_NOTICE_RADIUS_PX = 180
+
+/** Whether a pointer offset is near enough for the companion to attend to. */
+export function petNotices(dx: number, dy: number, radius = PET_NOTICE_RADIUS_PX): boolean {
+  return Math.hypot(dx, dy) <= radius
+}
+
 /** How long the companion rests between legs. */
 export const PET_ROAM_PAUSE_MIN_MS = 2600
 export const PET_ROAM_PAUSE_MAX_MS = 7600
