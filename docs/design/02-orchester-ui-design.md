@@ -298,14 +298,26 @@ Adopted from the Codex composer state machine, reduced to what Orchester needs:
 
 ```
 ┌───────────────────────────────────────────────────────────┐
-│ [top tray: attachments · @context chips]                  │
-│ ┌───────────────────────────────────────────────────────┐ │
+│ context row: [project ▾] [model · effort]                 │
+│ ┌ one field ────────────────────────────────────────────┐ │
 │ │ prompt textarea (auto-grow 1–12 rows)                 │ │
+│ │ footer: [approval preset ▾]      [count] [(↑) Run]    │ │
 │ └───────────────────────────────────────────────────────┘ │
-│ footer: [project ▾] [approval preset ▾] [model ] [effort]│
-│         …spacer…            [chars] [Stop | Run]          │
 └───────────────────────────────────────────────────────────┘
 ```
+
+- The **field owns the box**, as the reference draws it: one rounded surface
+  holding the prompt and the row of controls under it, rather than a card with a
+  second bordered box inside it. The context row stays outside and above, because
+  which workspace and model a run will use is a fact about the run rather than a
+  control in the field.
+- The field is **named by its placeholder**, not by a heading over it: the
+  accessible name moves onto the prompt itself. The reference prints no heading
+  and no tally there, and the tally appears only once the draft is within a
+  tenth of the limit.
+- The action is a **shape**: a round send that points the way the prompt goes,
+  and a square stop while a run is in flight. Its word stays as the accessible
+  name.
 
 - The composer is **docked to the bottom of the transcript column**, not to the
   window (this is what the operator asked for in an earlier round), so the

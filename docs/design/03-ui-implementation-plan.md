@@ -286,6 +286,37 @@ transcript restored after a reload shows what was asked as well as what was
 answered. The reference's remaining gap on this surface is the composer row
 (model and effort, the send control) rather than the conversation itself.
 
+## Wave U14 - the composer's field
+
+The reference's composer is one rounded field: a placeholder that names it, the
+controls it needs at the trailing edge, and a round action that points the way it
+sends. Orchester's was a card with a heading over it, a second bordered box
+inside it, and a wide labelled button - three rows of chrome the reader pays for
+on every prompt.
+
+- [x] U14-01: Let the field own the box.
+  - `apps/web/test/composer-field-anatomy.test.ts` pins that the prompt and its
+    control row sit in one `data-composer-field`, and that the context row stays
+    outside it: which workspace and model a run will use is a fact about the run,
+    not a control in the field.
+- [x] U14-02: Name the field with its placeholder, as the reference does, and
+  keep the visible label as the accessible name instead of losing it.
+- [x] U14-03: Make the action a shape - a round send that points the way the
+  prompt goes, a square stop while a run is in flight - with its word kept as the
+  accessible name.
+- [x] U14-04: Show the tally only within a tenth of the limit, because the
+  reference prints none and a number on every prompt is a row for information
+  that matters at the end.
+  - The prompt also gives up its resize grip: the field already grows, and the
+    grip sat where the send control is.
+- [x] U14-05: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**Not taken from the reference.** Its composer also carries a microphone and a
+model picker. Orchester has no voice input, and its model and effort are read
+from the runtime's catalog rather than chosen in the field, so the readout stays
+where it is instead of pretending to be a picker.
+
 ## Verification
 
 ```text
