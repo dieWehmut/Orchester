@@ -73,8 +73,21 @@ describe('AgentFleetPanel', () => {
       props: { status: 'ready', snapshot: AGENT_FLEET_FIXTURE },
     })
 
-    expect(wrapper.get('[data-agent-fleet-title]').text()).toBe('Agents')
     expect(wrapper.get('[data-agent-id="codex-main"] [data-agent-activity]').text()).toContain('Running')
+  })
+
+  it('lets the rail heading name the fleet instead of naming it again', () => {
+    const wrapper = mount(AgentFleetPanel, {
+      props: { status: 'ready', snapshot: AGENT_FLEET_FIXTURE },
+    })
+
+    // The rail heads this list with "Agents", as the reference heads its own
+    // lists once, so the panel carries the state of the fleet rather than a
+    // second copy of the word above it - while still naming itself for a
+    // screen reader, which reaches the list rather than the column.
+    expect(wrapper.find('h2').exists()).toBe(false)
+    expect(wrapper.get('[data-agent-fleet]').attributes('aria-label')).toBe('Agents')
+    expect(wrapper.get('[data-agent-stream-status]')).toBeTruthy()
   })
 
   it('marks the selected agent row and emits a selection intent', async () => {

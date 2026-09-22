@@ -38,12 +38,9 @@ function agentStreamStatusTone(status: AgentStatusSocketStatus): 'neutral' | 'su
 </script>
 
 <template>
-  <section class="agent-fleet" data-agent-fleet aria-labelledby="agent-fleet-title">
+  <section class="agent-fleet" data-agent-fleet :aria-label="t('agents.title')">
     <header class="agent-fleet__header">
-      <div>
-        <h2 id="agent-fleet-title" data-agent-fleet-title>{{ t('agents.title') }}</h2>
-        <p>{{ t('agents.runtimeFleet') }}</p>
-      </div>
+      <span class="agent-fleet__subtitle">{{ t('agents.runtimeFleet') }}</span>
       <div class="agent-fleet__header-meta">
         <AppBadge
           data-agent-stream-status
@@ -96,7 +93,6 @@ function agentStreamStatusTone(status: AgentStatusSocketStatus): 'neutral' | 'su
 .agent-fleet {
   display: grid;
   gap: var(--space-3);
-  padding: var(--space-3);
 }
 
 .agent-fleet__header {
@@ -113,19 +109,9 @@ function agentStreamStatusTone(status: AgentStatusSocketStatus): 'neutral' | 'su
   gap: var(--space-2);
 }
 
-.agent-fleet__header h2,
-.agent-fleet__header p {
-  margin: 0;
-}
-
-.agent-fleet__header h2 {
-  color: var(--color-text-primary);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
-}
-
-.agent-fleet__header p {
-  margin-block-start: 2px;
+/* The fleet's own state, under the heading the rail draws: the name belongs to
+   the column, the status and the count belong to the list. */
+.agent-fleet__subtitle {
   color: var(--color-text-tertiary);
   font-size: var(--text-xs);
 }
