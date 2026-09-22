@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import type { AgentFleetSnapshotDto, SessionSummaryDto } from '@orchester/protokoll'
 import { ref } from 'vue'
 
@@ -97,7 +97,6 @@ const sessionQuery = ref('')
         @select="$emit('selectSession', $event)"
         @refresh="$emit('refreshSessions')"
         @load-more="$emit('loadMoreSessions')"
-        @new-session="$emit('newSession')"
       />
     </template>
 

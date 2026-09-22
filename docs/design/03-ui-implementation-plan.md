@@ -145,6 +145,109 @@ rules as U0-U8 and leaves the token and DTO contracts alone.
     builds succeed; `pnpm stack:verify` matches; the shell checks clean on the
     x64 toolchain this ARM64 host uses.
 
+## Wave U10 - the appearance screen the reference draws
+
+The reference's appearance screen gives each theme its own card rather than one
+accent for the product, so this wave is the first that changes an appearance
+*model* rather than only a surface. It stays additive: `data-color-scheme` is
+still the attribute the stylesheet matches on and still carries one scheme.
+
+- [x] U10-01: Let each theme carry its own accent hue.
+  - `packages/design/test/appearance-scheme-per-mode.test.ts` pins the pair, the
+    attribute following the theme in force, the legacy single key still reading
+    as "both themes", and the bootstrap script painting the half belonging to
+    the theme it resolved.
+- [x] U10-02: Draw one card per theme, headed 浅色主题 / 深色主题, with the
+  reference's own actions (导入, 复制主题), the `Aa` swatch, the theme's choice,
+  and 强调色 / 背景 / 前景 reporting what *that* theme resolves to.
+  - `apps/web/test/appearance-theme-sections.test.ts` pins the cards, the
+    per-theme readouts, and the copy payload; `theme-colours.test.ts` walks
+    both halves of every scheme out of `tokens.css`, because one scheme is two
+    colours and the old single-row swatch had drifted from the stylesheet.
+- [x] U10-03: Mark the chosen theme card with the ring alone.
+  - The badge was a second answer to the question the ring had already asked,
+    and it covered the miniature it sat on. The ring is a box shadow rather than
+    an outline: `outline` belongs to the focus token.
+- [x] U10-04: Bare the code preview and give each pane the rail the reference
+  draws, in the colour of the change that pane carries.
+  - `CodePreview`'s head is now optional, so the settings screen shows the two
+    panes directly under the cards as the reference does.
+- [x] U10-05: Re-run the gate: `pnpm typecheck`, `pnpm test`, both builds, and
+  the stack manifest.
+  - `pnpm typecheck` is clean across all seven projects; `pnpm test` is green at
+    274 design + 549 web + the rest; the web build and `pnpm stack:verify` pass.
+
+**Not taken from the reference.** The reference's account menu carries usage,
+invites and sign-out, and its appearance screen offers a hex picker per colour.
+Orchester has no account to sign out of, no usage meter to report, and a hex
+picker beside a theme choice would be a second theme editor - so those rows are
+left out rather than faked.
+
+## Wave U11 - the rail, as the reference seats it
+
+The reference's sidebar is one column of destinations: the product row, one new
+chat row, then headed lists whose headings are the controls that fold them. It
+offers each action once and each list one name. This wave removes the places
+where Orchester offered two.
+
+- [x] U11-01: Seat new chat as a rail row rather than a boxed block.
+  - `apps/web/test/app-rail.test.ts` pins the row marker and that the primary
+    section carries no `AppButton`: the row above a list of rows is a row.
+- [x] U11-02: End the account row at the identity, with settings in the menu it
+  opens rather than a gear beside it.
+  - `app-rail.test.ts` and `workspace-rail.test.ts` now reach the settings route
+    through the account menu, which also carries the chord.
+- [x] U11-03: Let the rail heading name each list, once.
+  - `apps/web/test/session-rail-anatomy.test.ts` pins that the sessions list
+    drops its own uppercase title and its second new-session button while
+    keeping an accessible name; `agent-fleet-panel.test.ts` pins the same for
+    the fleet, which keeps its stream badge and count because those belong to
+    the list rather than to the column.
+- [x] U11-04: Re-run the gate: `pnpm typecheck`, `pnpm test`, both builds,
+  `pnpm stack:verify`.
+
+**Still not taken from the reference.** The reference's account menu also
+carries remaining usage, invites and sign-out. Orchester runs locally with no
+account, no meter and nothing to sign out of, so those rows stay out rather than
+being faked; the menu carries what it can answer - the companion and settings,
+both with the chord the live registry holds.
+
+## Wave U12 - the companion, let off its seat
+
+The companion arrived seated: one sprite cell above the composer, holding
+whatever pose the run asked of it. The reference's companion is ambient instead
+- it pads along the strip its corner opens for it and turns to face the way it
+is going - so this wave gives it somewhere to walk and a reason to.
+
+- [x] U12-01: Plan a walk rather than play one.
+  - `apps/web/test/pet-roam.test.ts` pins the leg: a whole number of walk
+    cycles, the direction with room rather than a coin flip into a wall, and a
+    rest drawn from an authored window.
+- [x] U12-02: Let the companion pace the stage it was given.
+  - `pet-companion.test.ts` pins the walk, the row each direction draws, the
+    glide timed to the leg, and that an interrupted leg leaves the companion
+    standing where it had got to rather than at either end.
+- [x] U12-03: Open a stage above the composer for it to walk on.
+  - The band was a seat; it is a stage now, and its own width is the travel it
+    reports. The span leaves the sprite its own width behind, because the
+    sprite moves by transform.
+- [x] U12-04: Notice the pointer that is addressing the companion, and only
+    that one.
+  - `pet-roam.test.ts` pins the radius as a circle. This is the correction a
+    real window forced: a companion that took a look from any distance spent
+    its life attending to a reader working in the transcript and never walked.
+- [x] U12-05: Re-run the gate: `pnpm typecheck`, `pnpm test`, both builds,
+  `pnpm stack:verify`.
+  - `pnpm typecheck` is clean across all seven projects; `pnpm test` is green at
+    579 web + 274 design + the rest; the web and website builds succeed;
+    `pnpm stack:verify` matches.
+
+**Deliberately not done.** The companion keeps no menu of its own and remembers
+nothing about where it likes to stand: the visibility switch is still the only
+preference, because a companion that had to be configured would not be ambient.
+The walk is also CSS rather than canvas - one transform and one looping sprite
+row - so there is no per-frame draw to spend on a decoration.
+
 ## Verification
 
 ```text

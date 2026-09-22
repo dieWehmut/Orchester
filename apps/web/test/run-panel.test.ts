@@ -70,6 +70,19 @@ describe('RunPanel', () => {
     expect(companion.attributes('aria-label')).toBe('Orchester companion')
   })
 
+  it('opens a stage for the companion instead of seating it in place', async () => {
+    // The band carries the travel as well as the sprite: the companion pads
+    // along it while the run rests, so wherever the sprite is centred, it is
+    // the band that decides how much room it has.
+    const wrapper = mount(RunPanel, { props: { view: createEmptyRunView() } })
+
+    const band = wrapper.get('[data-run-companion]')
+    expect(band.classes()).toContain('run-panel__companion')
+    const companion = band.get('[data-pet-companion]')
+    expect(companion.attributes('data-pet-roam')).toBe('resting')
+    expect(Number(companion.attributes('data-pet-position'))).toBe(0)
+  })
+
   it('hands the companion a notification label while a decision is pending', async () => {
     const wrapper = mount(RunPanel, {
       props: {

@@ -31,6 +31,7 @@ const CONTENT_FONT_WEIGHT_ATTRIBUTE = 'data-content-font-weight'
 const OS_ATTRIBUTE = 'data-orchester-os'
 const THEME_STORAGE_KEY = 'orchester:theme'
 const COLOR_SCHEME_STORAGE_KEY = 'orchester:color-scheme'
+const COLOR_SCHEMES_STORAGE_KEY = 'orchester:color-schemes'
 const INTENSITY_STORAGE_KEY = 'orchester:intensity'
 const REDUCED_MOTION_STORAGE_KEY = 'orchester:reduced-motion'
 const UI_FONT_STORAGE_KEY = 'orchester:ui-font'
@@ -68,6 +69,7 @@ export const APPEARANCE_BOOTSTRAP_SCRIPT = `(() => {
       stored = {
         theme: storage.getItem(${JSON.stringify(THEME_STORAGE_KEY)}),
         scheme: storage.getItem(${JSON.stringify(COLOR_SCHEME_STORAGE_KEY)}),
+        schemesByTheme: storage.getItem(${JSON.stringify(COLOR_SCHEMES_STORAGE_KEY)}),
         intensity: storage.getItem(${JSON.stringify(INTENSITY_STORAGE_KEY)}),
         reducedMotion: storage.getItem(${JSON.stringify(REDUCED_MOTION_STORAGE_KEY)}),
         uiFont: storage.getItem(${JSON.stringify(UI_FONT_STORAGE_KEY)}),
@@ -98,7 +100,16 @@ export const APPEARANCE_BOOTSTRAP_SCRIPT = `(() => {
     ? systemTheme
     : preference || pick(themes, root.getAttribute(${JSON.stringify(THEME_ATTRIBUTE)}), systemTheme)
       || ${JSON.stringify(DEFAULT_THEME)};
-  const scheme = pick(schemes, stored.scheme, root.getAttribute(${JSON.stringify(COLOR_SCHEME_ATTRIBUTE)}))
+  // The accent is chosen per theme, so the pair is consulted for the theme that
+  // was just resolved; the older single key speaks for a theme the reader never
+  // separated, and an attribute already on the element for whatever the host or
+  // an earlier build left there.
+  let schemePair = {};
+  try {
+    const parsed = stored.schemesByTheme ? JSON.parse(stored.schemesByTheme) : null;
+    if (parsed && typeof parsed === 'object') schemePair = parsed;
+  } catch {}
+  const scheme = pick(schemes, schemePair[theme], stored.scheme, root.getAttribute(${JSON.stringify(COLOR_SCHEME_ATTRIBUTE)}))
     || ${JSON.stringify(DEFAULT_COLOR_SCHEME)};
   const intensity = pick(intensities, stored.intensity, root.getAttribute(${JSON.stringify(INTENSITY_ATTRIBUTE)}))
     || ${JSON.stringify(DEFAULT_INTENSITY)};

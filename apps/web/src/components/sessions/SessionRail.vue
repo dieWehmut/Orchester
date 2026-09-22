@@ -32,7 +32,6 @@ defineEmits<{
   select: [id: string]
   refresh: []
   loadMore: []
-  newSession: []
 }>()
 
 const { t } = useI18n()
@@ -67,11 +66,6 @@ const filteredEmpty = computed(
     data-session-rail
     :aria-busy="status === 'loading' || status === 'refreshing'"
   >
-    <header class="session-rail__header">
-      <h2>{{ t('sessions.title') }}</h2>
-      <AppButton size="sm" @click="$emit('newSession')">{{ t('sessions.new') }}</AppButton>
-    </header>
-
     <div v-if="status === 'loading' && items.length === 0" class="session-rail__loading" role="status">
       <SkeletonBlock :lines="6" height="3.25rem" />
     </div>
@@ -136,23 +130,6 @@ const filteredEmpty = computed(
   min-block-size: 100%;
   flex-direction: column;
   gap: var(--space-3);
-  padding: var(--space-3);
-}
-
-.session-rail__header {
-  display: flex;
-  min-block-size: var(--control-height-lg);
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-}
-
-.session-rail__header h2 {
-  margin: 0;
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
 }
 
 .session-rail__loading {

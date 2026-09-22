@@ -4,6 +4,10 @@ export {
   animationFrameAt,
   animationFrameDelay,
   createPetAnimations,
+  createPetWalkTrack,
+  petPoseHoldMs,
+  petStateCycleMs,
+  petWalkCycleMs,
   resolveAnimation,
   type PetAnimation,
   type PetAnimationFrame,
@@ -37,6 +41,23 @@ export {
   type PetState,
   type PetStateInput,
 } from './pet-state'
+export {
+  PET_NOTICE_RADIUS_PX,
+  PET_ROAM_FIRST_PAUSE_MS,
+  PET_ROAM_MAX_CYCLES,
+  PET_ROAM_PAUSE_MAX_MS,
+  PET_ROAM_PAUSE_MIN_MS,
+  PET_ROAM_STRIDE_PX,
+  petNotices,
+  petRoamAllowed,
+  petRoamPositionAt,
+  petWalkAnimation,
+  planPetRoamLeg,
+  planPetRoamPause,
+  type PetRoamBounds,
+  type PetRoamDirection,
+  type PetRoamLeg,
+} from './pet-roam'
 export { PET_PACK_URL, loadPetPack, resetPetPackForTests, usePetPack, type PetPack } from './use-pet-pack'
 export {
   PET_VISIBILITY_STORAGE_KEY,

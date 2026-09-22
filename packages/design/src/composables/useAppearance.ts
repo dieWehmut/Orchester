@@ -3,6 +3,7 @@ import { computed, readonly, ref, type ComputedRef, type Ref } from 'vue'
 import { clearStored, readStored, writeStored } from '../storage'
 import {
   COLOR_SCHEME_STORAGE_KEY,
+  COLOR_SCHEMES_STORAGE_KEY,
   CONTENT_FONT_STORAGE_KEY,
   CONTENT_FONT_WEIGHT_STORAGE_KEY,
   DEFAULT_COLOR_SCHEME,
@@ -38,6 +39,7 @@ import {
   isThemeMode,
   isThemePreference,
   isUiFont,
+  parseColorSchemePair,
   readDocumentColorScheme,
   readDocumentContentFont,
   readDocumentContentFontWeight,
@@ -52,6 +54,7 @@ import {
   readSystemTheme,
   resolveThemePreference,
   type ColorScheme,
+  type ColorSchemePair,
   type ContentFont,
   type FontWeight,
   type Intensity,
@@ -73,7 +76,17 @@ import {
 const theme = ref<ThemeMode>(DEFAULT_THEME)
 /** `system` is a preference, not a palette; `theme` above is always resolved. */
 const themePreference = ref<ThemePreference>('system')
-const colorScheme = ref<ColorScheme>(DEFAULT_COLOR_SCHEME)
+/**
+ * The hue each theme is set in.
+ *
+ * The pair is the state and `colorScheme` below is the half in force, so a
+ * component that only knows about "the accent" keeps working while the two
+ * themes stop having to agree.
+ */
+const colorSchemes = ref<ColorSchemePair>({
+  light: DEFAULT_COLOR_SCHEME,
+  dark: DEFAULT_COLOR_SCHEME,
+})
 const intensity = ref<Intensity>(DEFAULT_INTENSITY)
 /** `null` means the operating system decides. */
 const reducedMotion = ref<ReducedMotionPreference>(null)
@@ -85,13 +98,21 @@ const uiFontWeight = ref<FontWeight>(DEFAULT_FONT_WEIGHT)
 const contentFontWeight = ref<FontWeight>(DEFAULT_FONT_WEIGHT)
 
 /** The version of the profile payload `exportAppearanceProfile` writes. */
-export const APPEARANCE_PROFILE_VERSION = 1
+export const APPEARANCE_PROFILE_VERSION = 2
 
 export interface AppearanceProfile {
   version: number
   /** Absent or `system` both mean "follow the operating system". */
   theme?: ThemeMode | undefined
+  /**
+   * The hue both themes share.
+   *
+   * Written when the two agree, so a reader of the older profile still gets the
+   * reader's colour; absent when they differ, because one hue cannot say two.
+   */
   colorScheme?: ColorScheme
+  /** The hue each theme is set in. */
+  colorSchemes?: ColorSchemePair
   intensity?: Intensity
   uiFont?: UiFont
   contentFont?: ContentFont
@@ -103,9 +124,16 @@ export interface AppearanceProfile {
 let initialized = false
 let stopWatchingSystem: (() => void) | null = null
 
+/** The hue the theme in force is set in. */
+const colorScheme = computed(() => colorSchemes.value[theme.value])
+
 function setTheme(next: ThemeMode): void {
   theme.value = next
   applyThemeToDocument(next)
+  // A theme change can be a hue change as well: the reader is allowed to set
+  // the two themes to different accents, so the attribute has to follow the
+  // theme rather than sit at whatever was chosen last.
+  applyColorSchemeToDocument(colorSchemes.value[next])
 }
 
 /** Re-resolve `system` against whatever the OS is asking for right now. */
@@ -113,9 +141,28 @@ function applyThemePreference(): void {
   setTheme(resolveThemePreference(themePreference.value, readSystemTheme()))
 }
 
+function persistColorSchemes(): void {
+  writeStored(COLOR_SCHEMES_STORAGE_KEY, JSON.stringify(colorSchemes.value))
+}
+
+/**
+ * Set the hue for both themes, which is what a single-axis choice means.
+ *
+ * Kept because it is the shape the public API and the profiles already had: a
+ * caller that knows about one accent is saying "use this one", not "use this
+ * one on the theme I happen to be in".
+ */
 function setColorScheme(next: ColorScheme): void {
-  colorScheme.value = next
-  applyColorSchemeToDocument(next)
+  colorSchemes.value = { light: next, dark: next }
+  persistColorSchemes()
+  applyColorSchemeToDocument(colorSchemes.value[theme.value])
+}
+
+/** Set the hue for one of the two themes. */
+function setColorSchemeFor(mode: ThemeMode, next: ColorScheme): void {
+  colorSchemes.value = { ...colorSchemes.value, [mode]: next }
+  persistColorSchemes()
+  if (mode === theme.value) applyColorSchemeToDocument(next)
 }
 
 /**
@@ -157,6 +204,7 @@ export function initAppearance(): {
 } {
   const storedTheme = readStored(THEME_STORAGE_KEY)
   const storedScheme = readStored(COLOR_SCHEME_STORAGE_KEY)
+  const storedSchemePair = parseColorSchemePair(readStored(COLOR_SCHEMES_STORAGE_KEY))
   const storedIntensity = readStored(INTENSITY_STORAGE_KEY)
   const storedReducedMotion = readStored(REDUCED_MOTION_STORAGE_KEY)
   const storedUiFont = readStored(UI_FONT_STORAGE_KEY)
@@ -178,11 +226,15 @@ export function initAppearance(): {
       ? (readDocumentTheme() ?? readSystemTheme() ?? DEFAULT_THEME)
       : themePreference.value,
   )
-  setColorScheme(
-    isColorScheme(storedScheme)
-      ? storedScheme
-      : (readDocumentColorScheme() ?? DEFAULT_COLOR_SCHEME),
-  )
+  // The pair is read per theme; the legacy single key and an attribute already
+  // on the element both speak for whichever theme the reader never separated.
+  const documentScheme = readDocumentColorScheme() ?? DEFAULT_COLOR_SCHEME
+  const sharedScheme = isColorScheme(storedScheme) ? storedScheme : documentScheme
+  colorSchemes.value = {
+    light: storedSchemePair.light ?? sharedScheme,
+    dark: storedSchemePair.dark ?? sharedScheme,
+  }
+  applyColorSchemeToDocument(colorSchemes.value[theme.value])
 
   intensity.value = isIntensity(storedIntensity)
     ? storedIntensity
@@ -253,7 +305,7 @@ export function resetAppearanceForTests(): void {
   stopWatchingSystem?.()
   stopWatchingSystem = null
   theme.value = DEFAULT_THEME
-  colorScheme.value = DEFAULT_COLOR_SCHEME
+  colorSchemes.value = { light: DEFAULT_COLOR_SCHEME, dark: DEFAULT_COLOR_SCHEME }
   intensity.value = DEFAULT_INTENSITY
   reducedMotion.value = null
   surface.value = DEFAULT_SURFACE
@@ -272,10 +324,12 @@ export function resetAppearanceForTests(): void {
  * else or keeps in a dotfile.
  */
 export function exportAppearanceProfile(): AppearanceProfile {
+  const pair = colorSchemes.value
   return {
     version: APPEARANCE_PROFILE_VERSION,
     theme: themePreference.value === 'system' ? undefined : themePreference.value,
-    colorScheme: colorScheme.value,
+    colorSchemes: { ...pair },
+    ...(pair.light === pair.dark ? { colorScheme: pair.dark } : {}),
     intensity: intensity.value,
     uiFont: uiFont.value,
     contentFont: contentFont.value,
@@ -296,9 +350,22 @@ export function importAppearanceProfile(candidate: unknown): boolean {
   if (!candidate || typeof candidate !== 'object') return false
   const profile = candidate as Record<string, unknown>
 
-  const theme = profile.theme === undefined ? 'system' : profile.theme
-  if (!isThemePreference(theme)) return false
+  const profileTheme = profile.theme === undefined ? 'system' : profile.theme
+  if (!isThemePreference(profileTheme)) return false
   if (profile.colorScheme !== undefined && !isColorScheme(profile.colorScheme)) return false
+  const pairCandidate =
+    profile.colorSchemes === undefined
+      ? null
+      : profile.colorSchemes && typeof profile.colorSchemes === 'object'
+        ? (profile.colorSchemes as Record<string, unknown>)
+        : 'not a pair'
+  if (pairCandidate === 'not a pair') return false
+  if (pairCandidate) {
+    for (const half of ['light', 'dark'] as const) {
+      const value = pairCandidate[half]
+      if (value !== undefined && !isColorScheme(value)) return false
+    }
+  }
   if (profile.intensity !== undefined && !isIntensity(profile.intensity)) return false
   if (profile.uiFont !== undefined && !isUiFont(profile.uiFont)) return false
   if (profile.contentFont !== undefined && !isContentFont(profile.contentFont)) return false
@@ -306,15 +373,25 @@ export function importAppearanceProfile(candidate: unknown): boolean {
   if (profile.uiFontWeight !== undefined && !isFontWeight(profile.uiFontWeight)) return false
   if (profile.contentFontWeight !== undefined && !isFontWeight(profile.contentFontWeight)) return false
 
-  if (theme !== 'system') {
-    themePreference.value = theme
-    setTheme(theme)
-    writeStored(THEME_STORAGE_KEY, theme)
+  if (profileTheme !== 'system') {
+    themePreference.value = profileTheme
+    setTheme(profileTheme)
+    writeStored(THEME_STORAGE_KEY, profileTheme)
   }
 
   if (isColorScheme(profile.colorScheme)) {
     setColorScheme(profile.colorScheme)
     writeStored(COLOR_SCHEME_STORAGE_KEY, profile.colorScheme)
+  }
+  if (pairCandidate) {
+    // A pair that names only one half leaves the other where it was, which is
+    // what a profile written by a build with one hue per theme should do.
+    const next: ColorSchemePair = { ...colorSchemes.value }
+    if (isColorScheme(pairCandidate.light)) next.light = pairCandidate.light
+    if (isColorScheme(pairCandidate.dark)) next.dark = pairCandidate.dark
+    colorSchemes.value = next
+    persistColorSchemes()
+    applyColorSchemeToDocument(next[theme.value])
   }
   if (isIntensity(profile.intensity)) {
     intensity.value = profile.intensity
@@ -355,6 +432,7 @@ export function resetAppearance(): void {
   for (const key of [
     THEME_STORAGE_KEY,
     COLOR_SCHEME_STORAGE_KEY,
+    COLOR_SCHEMES_STORAGE_KEY,
     INTENSITY_STORAGE_KEY,
     REDUCED_MOTION_STORAGE_KEY,
     UI_FONT_STORAGE_KEY,
@@ -367,8 +445,8 @@ export function resetAppearance(): void {
   }
 
   themePreference.value = 'system'
-  setColorScheme(DEFAULT_COLOR_SCHEME)
-  colorScheme.value = DEFAULT_COLOR_SCHEME
+  colorSchemes.value = { light: DEFAULT_COLOR_SCHEME, dark: DEFAULT_COLOR_SCHEME }
+  applyColorSchemeToDocument(DEFAULT_COLOR_SCHEME)
   intensity.value = DEFAULT_INTENSITY
   applyIntensityToDocument(DEFAULT_INTENSITY)
   reducedMotion.value = null
@@ -390,7 +468,10 @@ export interface AppearanceApi {
   theme: Readonly<Ref<ThemeMode>>
   /** What the user asked for: `system`, `light` or `dark`. */
   themePreference: Readonly<Ref<ThemePreference>>
+  /** The hue the theme in force is set in. */
   colorScheme: Readonly<Ref<ColorScheme>>
+  /** The hue each of the two themes is set in. */
+  colorSchemes: Readonly<Ref<ColorSchemePair>>
   intensity: Readonly<Ref<Intensity>>
   reducedMotion: Readonly<Ref<ReducedMotionPreference>>
   surface: Readonly<Ref<Surface>>
@@ -406,6 +487,8 @@ export interface AppearanceApi {
   setThemePreference: (next: ThemePreference) => void
   toggleTheme: () => void
   setColorScheme: (next: ColorScheme) => void
+  /** Set the hue for one of the two themes, leaving the other alone. */
+  setColorSchemeFor: (mode: ThemeMode, next: ColorScheme) => void
   setIntensity: (next: Intensity) => void
   setReducedMotion: (next: ReducedMotionPreference) => void
   setSurface: (next: Surface) => void
@@ -422,7 +505,8 @@ export function useAppearance(): AppearanceApi {
   return {
     theme: readonly(theme),
     themePreference: readonly(themePreference),
-    colorScheme: readonly(colorScheme),
+    colorScheme: computed(() => colorScheme.value),
+    colorSchemes: readonly(colorSchemes),
     intensity: readonly(intensity),
     reducedMotion: readonly(reducedMotion),
     surface: readonly(surface),
@@ -457,6 +541,9 @@ export function useAppearance(): AppearanceApi {
     setColorScheme: (next: ColorScheme) => {
       setColorScheme(next)
       writeStored(COLOR_SCHEME_STORAGE_KEY, next)
+    },
+    setColorSchemeFor: (mode: ThemeMode, next: ColorScheme) => {
+      setColorSchemeFor(mode, next)
     },
     setIntensity: (next: Intensity) => {
       intensity.value = next

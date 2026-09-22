@@ -82,12 +82,19 @@ describe('SettingsView', () => {
     const wrapper = mount(SettingsView)
 
     // The reference shows #FFFFFF and #1A1C1F next to the swatches, so the
-    // value is readable rather than only visible.
-    const background = wrapper.get('[data-appearance-field="background"]')
-    const foreground = wrapper.get('[data-appearance-field="foreground"]')
+    // value is readable rather than only visible. Each theme's card reports its
+    // own values, so the readouts are looked up inside the card that names one.
+    for (const mode of ['light', 'dark']) {
+      const background = wrapper.get(
+        `[data-appearance-theme="${mode}"] [data-appearance-field="background"]`,
+      )
+      const foreground = wrapper.get(
+        `[data-appearance-theme="${mode}"] [data-appearance-field="foreground"]`,
+      )
 
-    expect(background.get('[data-color-hex]').text()).toMatch(/^#[0-9A-F]{6}$/)
-    expect(foreground.get('[data-color-hex]').text()).toMatch(/^#[0-9A-F]{6}$/)
+      expect(background.get('[data-color-hex]').text()).toMatch(/^#[0-9A-F]{6}$/)
+      expect(foreground.get('[data-color-hex]').text()).toMatch(/^#[0-9A-F]{6}$/)
+    }
   })
 
   it('keeps every section reachable from the navigation list', async () => {
@@ -128,13 +135,20 @@ describe('SettingsView', () => {
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark')
   })
 
-  it('selects the accent scheme from the appearance table', async () => {
+  it('selects the accent scheme from the theme cards, one theme at a time', async () => {
     const wrapper = mount(SettingsView)
 
-    await wrapper.get('[data-appearance-field="scheme"] select').setValue('teal')
+    // The system asks for dark, so the dark card is the one whose hue the
+    // document carries; the light card is a choice for a theme not in force.
+    await wrapper
+      .get('[data-appearance-theme="dark"] [data-appearance-field="scheme"] select')
+      .setValue('teal')
 
     expect(document.documentElement.getAttribute('data-color-scheme')).toBe('teal')
-    expect(localStorage.getItem('orchester:color-scheme')).toBe('teal')
+    expect(localStorage.getItem('orchester:color-schemes')).toBe(
+      JSON.stringify({ light: 'rose', dark: 'teal' }),
+    )
+    expect(localStorage.getItem('orchester:color-scheme')).toBeNull()
   })
 
   it('selects the intensity axis from the appearance table', async () => {
@@ -210,18 +224,21 @@ describe('SettingsView', () => {
     expect(localStorage.getItem('orchester:rail-appearance')).toBeNull()
   })
 
-  it('reports the background and foreground the theme resolves to', () => {
+  it('reports the background and foreground each theme resolves to', () => {
     const wrapper = mount(SettingsView)
 
-    // Read-only readouts, not pickers: the two colours are what the chosen
-    // theme resolves to, and a hex box here would be a second theme editor.
-    const background = wrapper.get('[data-appearance-field="background"]')
-    const foreground = wrapper.get('[data-appearance-field="foreground"]')
+    // Read-only readouts, not pickers: the two colours are what a theme
+    // resolves to, and a hex box here would be a second theme editor.
+    for (const mode of ['light', 'dark']) {
+      for (const field of ['background', 'foreground']) {
+        const row = wrapper.get(
+          `[data-appearance-theme="${mode}"] [data-appearance-field="${field}"]`,
+        )
 
-    expect(background.find('[data-color-readout]').exists()).toBe(true)
-    expect(foreground.find('[data-color-readout]').exists()).toBe(true)
-    expect(background.find('select').exists()).toBe(false)
-    expect(foreground.find('select').exists()).toBe(false)
+        expect(row.find('[data-color-readout]').exists()).toBe(true)
+        expect(row.find('select').exists()).toBe(false)
+      }
+    }
   })
 
   it('offers import, export and reset above the appearance table', () => {
@@ -276,12 +293,23 @@ describe('SettingsView', () => {
     expect(preview.text()).toContain('accent')
   })
 
-  it('paints the preview accent from the active scheme', async () => {
+  it('paints the preview accent from the scheme the active theme is set in', async () => {
     const wrapper = mount(SettingsView)
 
-    await wrapper.get('[data-appearance-field="scheme"] select').setValue('teal')
+    // The system asks for dark, so the preview shows the dark half of teal.
+    await wrapper
+      .get('[data-appearance-theme="dark"] [data-appearance-field="scheme"] select')
+      .setValue('teal')
+    await wrapper
+      .get('[data-appearance-theme="light"] [data-appearance-field="scheme"] select')
+      .setValue('teal')
 
-    expect(wrapper.get('[data-code-preview]').text()).toContain('#4fbfad')
+    expect(wrapper.get('[data-code-preview]').text()).toContain('#4FBFAD')
+
+    // And switching the theme in force switches which half it shows.
+    await wrapper.get('[data-theme-option="light"]').trigger('click')
+
+    expect(wrapper.get('[data-code-preview]').text()).toContain('#1C7568')
   })
 
   it('toggles the ambient companion from the pet section', async () => {

@@ -1,4 +1,4 @@
-﻿import { AGENT_FLEET_FIXTURE, type BootstrapDto } from '@orchester/protokoll'
+import { AGENT_FLEET_FIXTURE, type BootstrapDto } from '@orchester/protokoll'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -34,7 +34,7 @@ describe('WorkspaceView Codex-style rail', () => {
     expect(wrapper.get('[data-rail-section="fleet"] [data-agent-fleet]')).toBeTruthy()
   })
 
-  it('shows the account footer identity and opens the settings route', async () => {
+  it('shows the account footer identity and opens the settings route from its menu', async () => {
     await import('../src/views/SettingsView.vue')
     const router = createAppRouter('memory')
     await router.push('/workspace')
@@ -46,7 +46,15 @@ describe('WorkspaceView Codex-style rail', () => {
     expect(wrapper.get('[data-rail-account]').text()).toContain('Orchester')
     expect(wrapper.get('[data-rail-account]').text()).toContain('Local runtime')
 
-    await wrapper.get('[data-rail-action="settings"]').trigger('click')
+    // The reference's account row ends at the identity, and its settings row
+    // lives in the menu the row opens.
+    await wrapper.get('[data-rail-account-menu] [aria-haspopup="menu"]').trigger('click')
+    const settingsRow = wrapper
+      .findAll('[role="menuitem"]')
+      .find((row) => row.text().includes('Settings'))
+    expect(settingsRow).toBeDefined()
+
+    await settingsRow!.trigger('click')
     await vi.waitFor(
       () => {
         expect(router.currentRoute.value.name).toBe('settings')

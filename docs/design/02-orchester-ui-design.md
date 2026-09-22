@@ -221,6 +221,14 @@ accent only for focus/links/active markers, `vivid` uses it for primary fills.
 `calm` is the default, because it is the Codex lesson; `vivid` preserves today's
 look for anyone who wants it.
 
+The scheme is chosen **per theme**, as the reference's appearance screen offers
+it: the light accent and the dark accent of the same scheme are two colours (see
+the table above), so a reader who likes `teal` in the dark often wants something
+else on a light page. The pair lives in the appearance state and the older
+single key is still read, meaning "both themes"; the stylesheet contract does
+not change at all — `data-color-scheme` still carries whichever half belongs to
+the theme in force.
+
 ## 4. Surfaces
 
 ### 4.1 Task rail (C)

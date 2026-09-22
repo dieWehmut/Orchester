@@ -5,12 +5,11 @@ import {
   ChevronRight,
   CircleUser,
   Search,
-  Settings,
   SquarePen,
 } from '@lucide/vue'
 import { computed, nextTick, ref } from 'vue'
 
-import { AppButton, AppMenu, IconButton, type AppMenuItem } from '@orchester/design'
+import { AppMenu, IconButton, type AppMenuItem } from '@orchester/design'
 
 import mark from '../../assets/orchester-mark.png'
 import { formatShortcut, shortcutRegistry } from '../../shortcuts'
@@ -242,15 +241,18 @@ function chooseAccountItem(id: string): void {
     </div>
 
     <div class="app-rail__section" data-rail-section="primary">
-      <AppButton
-        block
-        variant="secondary"
+      <!-- The reference lists new chat among the column's destinations rather
+           than boxing it: the row above a list of rows is a row. -->
+      <button
+        class="app-rail__row"
+        type="button"
+        data-rail-row="new-session"
         data-rail-action="new-session"
         @click="$emit('newSession')"
       >
         <SquarePen :size="16" aria-hidden="true" />
         {{ newSessionLabel }}
-      </AppButton>
+      </button>
     </div>
 
     <div
@@ -338,13 +340,6 @@ function chooseAccountItem(id: string): void {
           </span>
         </template>
       </AppMenu>
-      <IconButton
-        :label="settingsLabel"
-        data-rail-action="settings"
-        @click="$emit('openSettings')"
-      >
-        <Settings :size="16" aria-hidden="true" />
-      </IconButton>
     </div>
   </div>
 </template>
@@ -389,10 +384,40 @@ function chooseAccountItem(id: string): void {
   min-inline-size: 0;
   margin-block-start: auto;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-2);
   border-block-start: 1px solid var(--color-border-base);
   background: color-mix(in srgb, var(--color-bg-base) 10%, var(--rail-surface));
+}
+
+/* A destination in the column rather than a control beside it: the reference
+   seats new chat and the lists it precedes in the same row, so the column reads
+   as one list of places to go. */
+.app-rail__row {
+  display: flex;
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: var(--hit-target-min, 32px);
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-primary);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  text-align: start;
+  cursor: pointer;
+}
+
+.app-rail__row:hover {
+  background: var(--color-bg-element);
+}
+
+.app-rail__row:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
 }
 
 .app-rail__account-identity {

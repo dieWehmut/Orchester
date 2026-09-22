@@ -146,7 +146,11 @@
       "title": "主题",
       "description": "自定义 Orchester 的外观，让它更符合你的喜好。",
       "system": "系统",
-      "hint": "选择预设的浅色与深色界面。"
+      "hint": "选择预设的浅色与深色界面。",
+      "lightTheme": "浅色主题",
+      "darkTheme": "深色主题",
+      "copyTheme": "复制主题",
+      "sample": "Aa"
     },
     "locale": {
       "en": "English",

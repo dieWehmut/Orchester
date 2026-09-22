@@ -20,7 +20,7 @@ const props = withDefaults(
     title?: string
     hint?: string
   }>(),
-  { title: 'Code preview', hint: '' },
+  { title: '', hint: '' },
 )
 
 /** Longest common prefix, so unchanged head lines stay unmarked. */
@@ -60,13 +60,17 @@ const afterLines = computed(() => {
 </script>
 
 <template>
-  <section class="code-preview" data-code-preview :aria-label="title">
-    <header class="code-preview__head">
+  <section class="code-preview" data-code-preview :aria-label="title || 'Code preview'">
+    <header v-if="title || hint" class="code-preview__head" data-code-head>
       <span class="code-preview__title">{{ title }}</span>
       <span v-if="hint" class="code-preview__hint">{{ hint }}</span>
     </header>
     <div class="code-preview__columns">
-      <ol class="code-preview__column" data-code-column="before">
+      <ol
+        class="code-preview__column"
+        data-code-column="before"
+        data-code-gutter="removed"
+      >
         <li
           v-for="line in beforeLines"
           :key="line.number"
@@ -81,7 +85,11 @@ const afterLines = computed(() => {
           <code>{{ line.text }}</code>
         </li>
       </ol>
-      <ol class="code-preview__column" data-code-column="after">
+      <ol
+        class="code-preview__column"
+        data-code-column="after"
+        data-code-gutter="added"
+      >
         <li
           v-for="line in afterLines"
           :key="line.number"
@@ -137,6 +145,27 @@ const afterLines = computed(() => {
   margin: 0;
   padding: var(--space-2) 0;
   list-style: none;
+  position: relative;
+}
+
+/* The full-height rail down the edge of each pane, in the colour of the change
+   that pane carries: the reference draws one, so a reader knows which side they
+   are looking at before they read a line number. */
+.code-preview__column[data-code-gutter='removed']::before,
+.code-preview__column[data-code-gutter='added']::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: 3px;
+}
+
+.code-preview__column[data-code-gutter='removed']::before {
+  background: var(--color-intent-danger-border);
+}
+
+.code-preview__column[data-code-gutter='added']::before {
+  background: var(--color-intent-success-border);
 }
 
 .code-preview__column + .code-preview__column {
@@ -175,7 +204,6 @@ const afterLines = computed(() => {
 
 .code-preview__line[data-code-line='removed'] {
   background: var(--color-intent-danger-surface);
-  box-shadow: inset 2px 0 0 var(--color-intent-danger-border);
 }
 
 .code-preview__line[data-code-line='removed'] .code-preview__marker,
@@ -185,7 +213,6 @@ const afterLines = computed(() => {
 
 .code-preview__line[data-code-line='added'] {
   background: var(--color-intent-success-surface);
-  box-shadow: inset 2px 0 0 var(--color-intent-success-border);
 }
 
 .code-preview__line[data-code-line='added'] .code-preview__marker,

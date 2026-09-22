@@ -65,7 +65,49 @@ const STATE_TIMING: Record<
   review: { row: 8, columns: 6, frameMs: 150, finalMs: 280 },
 }
 
-const STATE_REPEATS = 3
+/**
+ * How many times a state cycle plays before the track hands back to idle.
+ */
+export const PET_STATE_REPEATS = 3
+
+/** One pass through a state row, in the pack's own milliseconds. */
+export function petStateCycleMs(name: Exclude<PetAnimationName, 'idle'>): number {
+  const timing = STATE_TIMING[name]
+  return (timing.columns - 1) * timing.frameMs + timing.finalMs
+}
+
+/** One walk cycle, shared by the two walk rows because the pack authors them alike. */
+export function petWalkCycleMs(): number {
+  return petStateCycleMs('running-right')
+}
+
+/**
+ * How long a pose holds before its track settles into idle.
+ *
+ * Idle is the resting state and holds nothing, so it reports no gesture at all:
+ * a caller waiting for the companion to finish saying something has nothing to
+ * wait for once it is resting.
+ */
+export function petPoseHoldMs(name: PetAnimationName): number {
+  if (name === 'idle') return 0
+  return PET_STATE_REPEATS * petStateCycleMs(name)
+}
+
+/**
+ * One walk row as a looping track, rather than a state track that hands off.
+ *
+ * A leg is shorter than the three cycles a state track carries, so the walk
+ * cannot use those frames: it needs the step to repeat for as long as the leg
+ * lasts and to stop the moment the direction clears.
+ */
+export function createPetWalkTrack(
+  grid: PetGrid,
+  name: Extract<PetAnimationName, 'running-left' | 'running-right'>,
+): PetAnimation | null {
+  const frames = stateFrames(grid, name)
+  if (frames.length === 0) return null
+  return { name, frames, loopStart: 0, fallback: 'idle' }
+}
 
 function idleFrames(grid: PetGrid): PetAnimationFrame[] {
   return IDLE_TIMING.flatMap(([column, durationMs]) => {
@@ -107,7 +149,7 @@ export function createPetAnimations(grid: PetGrid): Map<PetAnimationName, PetAni
       tracks.set(name, {
         name,
         frames,
-        loopStart: cycle.length * STATE_REPEATS,
+        loopStart: cycle.length * PET_STATE_REPEATS,
         fallback: 'idle',
       })
     }
