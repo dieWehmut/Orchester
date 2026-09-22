@@ -183,6 +183,35 @@ Orchester has no account to sign out of, no usage meter to report, and a hex
 picker beside a theme choice would be a second theme editor - so those rows are
 left out rather than faked.
 
+## Wave U11 - the rail, as the reference seats it
+
+The reference's sidebar is one column of destinations: the product row, one new
+chat row, then headed lists whose headings are the controls that fold them. It
+offers each action once and each list one name. This wave removes the places
+where Orchester offered two.
+
+- [x] U11-01: Seat new chat as a rail row rather than a boxed block.
+  - `apps/web/test/app-rail.test.ts` pins the row marker and that the primary
+    section carries no `AppButton`: the row above a list of rows is a row.
+- [x] U11-02: End the account row at the identity, with settings in the menu it
+  opens rather than a gear beside it.
+  - `app-rail.test.ts` and `workspace-rail.test.ts` now reach the settings route
+    through the account menu, which also carries the chord.
+- [x] U11-03: Let the rail heading name each list, once.
+  - `apps/web/test/session-rail-anatomy.test.ts` pins that the sessions list
+    drops its own uppercase title and its second new-session button while
+    keeping an accessible name; `agent-fleet-panel.test.ts` pins the same for
+    the fleet, which keeps its stream badge and count because those belong to
+    the list rather than to the column.
+- [x] U11-04: Re-run the gate: `pnpm typecheck`, `pnpm test`, both builds,
+  `pnpm stack:verify`.
+
+**Still not taken from the reference.** The reference's account menu also
+carries remaining usage, invites and sign-out. Orchester runs locally with no
+account, no meter and nothing to sign out of, so those rows stay out rather than
+being faked; the menu carries what it can answer - the companion and settings,
+both with the chord the live registry holds.
+
 ## Verification
 
 ```text
