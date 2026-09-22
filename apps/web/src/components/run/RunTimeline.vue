@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { RunView, TimelineItem } from '@orchester/ereignis'
+import { MarkdownText } from '@orchester/design'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 
 import { useI18n } from '../../i18n'
@@ -167,7 +168,18 @@ function assertNever(value: never): never {
       </template>
       <template v-else-if="item.type === 'message'">
         <div class="run-timeline__message" data-message-body>
-          <p class="run-timeline__text">{{ item.text }}</p>
+          <!--
+            The answer renders as the markdown it was written in, once it has
+            settled. While it is still arriving the text stays literal: a fence
+            that is half written is not a code block yet, and formatting it
+            line by line would flicker the paragraph apart under the reader.
+          -->
+          <MarkdownText
+            v-if="item.role === 'assistant' && rowArrival(item) !== 'streaming'"
+            :text="item.text"
+            :external-label="t('transcript.externalLink')"
+          />
+          <p v-else class="run-timeline__text" data-message-plain>{{ item.text }}</p>
           <!--
             Only the answer carries a copy: the reader already has their own
             words, and the reference hangs the actions off the answer too.

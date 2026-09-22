@@ -342,7 +342,8 @@
     "messageNavigation": "訊息導覽",
     "copyMessage": "複製訊息",
     "copied": "已複製",
-    "reasoningSummary": "{count} 字元"
+    "reasoningSummary": "{count} 字元",
+    "externalLink": "在新分頁開啟"
   },
   "inspector": {
     "label": "工作區檢查器",

@@ -342,7 +342,8 @@
     "messageNavigation": "Message navigation",
     "copyMessage": "Copy message",
     "copied": "Copied",
-    "reasoningSummary": "{count} characters"
+    "reasoningSummary": "{count} characters",
+    "externalLink": "Opens in a new tab"
   },
   "inspector": {
     "label": "Workspace inspector",

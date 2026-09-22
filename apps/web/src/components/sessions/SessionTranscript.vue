@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { SessionDetailDto } from '@orchester/protokoll'
-import { EmptyState, InlineAlert, SkeletonBlock } from '@orchester/design'
+import { EmptyState, InlineAlert, MarkdownText, SkeletonBlock } from '@orchester/design'
 
 import MessageActions from '../run/MessageActions.vue'
 import { useI18n } from '../../i18n'
@@ -50,7 +50,7 @@ const { t } = useI18n()
         data-message-role="assistant"
         data-message-shape="prose"
       >
-        <p>{{ session.final_text }}</p>
+        <MarkdownText :text="session.final_text" :external-label="t('transcript.externalLink')" />
         <MessageActions
           :text="session.final_text"
           :label="t('transcript.copyMessage')"

@@ -118,6 +118,38 @@ describe('transcript chat anatomy', () => {
     expect(row.get('[data-run-sequence]').text()).toBe('4')
     expect(row.get('[data-tool-card]')).toBeTruthy()
   })
+
+  it('renders the answer as the markdown it settled into', () => {
+    const wrapper = mountTimeline([
+      message({ text: 'Fixed it.\n\n```ts\nconst a = 1\n```\n\nSee [the PR](https://example.com/pr/1).' }),
+    ])
+
+    // The reference draws an answer's code, lists and links as themselves; a
+    // coding agent's answer is written in markdown and reads as raw text
+    // without this.
+    expect(wrapper.get('[data-markdown-code]').text()).toContain('const a = 1')
+    expect(wrapper.get('[data-markdown-link]').attributes('rel')).toBe('noopener noreferrer')
+  })
+
+  it('keeps the text literal while it is still arriving', () => {
+    const wrapper = mountTimeline([message({ text: '```ts\nconst a =', final: false })])
+
+    // A fence that is half written is not a code block yet: formatting arrives
+    // with the text, so the paragraph cannot flicker apart under the reader.
+    expect(wrapper.find('[data-markdown-code]').exists()).toBe(false)
+    expect(wrapper.get('[data-message-plain]').text()).toContain('const a =')
+  })
+
+  it("shows the reader's own words exactly as they typed them", () => {
+    const wrapper = mountTimeline([
+      message({ role: 'user', text: '**not bold** and `literal`' }),
+    ])
+
+    const body = wrapper.get('[data-message-plain]')
+
+    expect(body.text()).toBe('**not bold** and `literal`')
+    expect(wrapper.find('[data-markdown-inline-code]').exists()).toBe(false)
+  })
 })
 
 const detail: SessionDetailDto = {
