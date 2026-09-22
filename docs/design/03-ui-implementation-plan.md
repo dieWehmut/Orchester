@@ -145,6 +145,44 @@ rules as U0-U8 and leaves the token and DTO contracts alone.
     builds succeed; `pnpm stack:verify` matches; the shell checks clean on the
     x64 toolchain this ARM64 host uses.
 
+## Wave U10 - the appearance screen the reference draws
+
+The reference's appearance screen gives each theme its own card rather than one
+accent for the product, so this wave is the first that changes an appearance
+*model* rather than only a surface. It stays additive: `data-color-scheme` is
+still the attribute the stylesheet matches on and still carries one scheme.
+
+- [x] U10-01: Let each theme carry its own accent hue.
+  - `packages/design/test/appearance-scheme-per-mode.test.ts` pins the pair, the
+    attribute following the theme in force, the legacy single key still reading
+    as "both themes", and the bootstrap script painting the half belonging to
+    the theme it resolved.
+- [x] U10-02: Draw one card per theme, headed 浅色主题 / 深色主题, with the
+  reference's own actions (导入, 复制主题), the `Aa` swatch, the theme's choice,
+  and 强调色 / 背景 / 前景 reporting what *that* theme resolves to.
+  - `apps/web/test/appearance-theme-sections.test.ts` pins the cards, the
+    per-theme readouts, and the copy payload; `theme-colours.test.ts` walks
+    both halves of every scheme out of `tokens.css`, because one scheme is two
+    colours and the old single-row swatch had drifted from the stylesheet.
+- [x] U10-03: Mark the chosen theme card with the ring alone.
+  - The badge was a second answer to the question the ring had already asked,
+    and it covered the miniature it sat on. The ring is a box shadow rather than
+    an outline: `outline` belongs to the focus token.
+- [x] U10-04: Bare the code preview and give each pane the rail the reference
+  draws, in the colour of the change that pane carries.
+  - `CodePreview`'s head is now optional, so the settings screen shows the two
+    panes directly under the cards as the reference does.
+- [x] U10-05: Re-run the gate: `pnpm typecheck`, `pnpm test`, both builds, and
+  the stack manifest.
+  - `pnpm typecheck` is clean across all seven projects; `pnpm test` is green at
+    274 design + 549 web + the rest; the web build and `pnpm stack:verify` pass.
+
+**Not taken from the reference.** The reference's account menu carries usage,
+invites and sign-out, and its appearance screen offers a hex picker per colour.
+Orchester has no account to sign out of, no usage meter to report, and a hex
+picker beside a theme choice would be a second theme editor - so those rows are
+left out rather than faked.
+
 ## Verification
 
 ```text
