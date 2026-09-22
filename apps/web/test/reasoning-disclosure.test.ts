@@ -1,6 +1,7 @@
 import { mount } from "@vue/test-utils"
 import { describe, expect, it } from "vitest"
 
+import { createI18n } from "../src/i18n"
 import ReasoningDisclosure from "../src/components/run/ReasoningDisclosure.vue"
 
 /**
@@ -48,6 +49,20 @@ describe("ReasoningDisclosure", () => {
     const wrapper = mount(ReasoningDisclosure, { props: { text: "   " } })
 
     expect(wrapper.find("[data-reasoning-disclosure]").exists()).toBe(false)
+  })
+
+  it("counts the reasoning in the reader's own language", () => {
+    // The count is copy, not a number with a word glued to it: this row is the
+    // transcript's, so it goes through the catalogue like the rest of it.
+    const wrapper = mount(ReasoningDisclosure, {
+      props: { text: "x".repeat(12) },
+      global: { plugins: [createI18n("zh-CN")] },
+    })
+
+    const summary = wrapper.get("[data-reasoning-summary]").text()
+
+    expect(summary).toContain("12")
+    expect(summary).not.toContain("characters")
   })
 })
 
