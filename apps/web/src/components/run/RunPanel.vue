@@ -2,7 +2,7 @@
 import { InlineAlert, useAppearance } from '@orchester/design'
 import type { RunView } from '@orchester/ereignis'
 import type { ModelCatalogDto, UiEventEnvelope } from '@orchester/protokoll'
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, onUnmounted, ref, watch } from 'vue'
 
 import { useI18n } from '../../i18n'
 import type { RunLifecycle } from '../../stores/run'
@@ -160,6 +160,50 @@ const petNotification = computed(() => {
   const kind = petState.value.notification
   return kind === null ? '' : (props.petNotificationLabels[kind] ?? '')
 })
+
+/**
+ * The travel the companion's band offers it.
+ *
+ * The sprite travels along the band the panel draws above the composer, so the
+ * band's own width is the distance it may cover. It is measured rather than
+ * assumed because the band is as wide as the transcript column, which the
+ * window decides, and because the sprite moves by transform - the band does not
+ * grow to hold it, so the span has to leave the sprite its own width behind.
+ */
+const companionBand = ref<HTMLElement | null>(null)
+const companionSpan = ref(0)
+let companionObserver: ResizeObserver | null = null
+
+function measureCompanionSpan(): void {
+  const band = companionBand.value
+  if (!band) {
+    companionSpan.value = 0
+    return
+  }
+  const styles = typeof getComputedStyle === 'function' ? getComputedStyle(band) : null
+  const inlinePad =
+    (parseFloat(styles?.paddingInlineStart ?? '') || 0) +
+    (parseFloat(styles?.paddingInlineEnd ?? '') || 0)
+  const width = Math.max((band.clientWidth ?? 0) - inlinePad, 0)
+  const sprite = band.querySelector<HTMLElement>('[data-pet-companion]')
+  const spriteWidth = sprite?.offsetWidth ?? 0
+  companionSpan.value = Math.max(width - spriteWidth, 0)
+}
+
+watch(companionBand, (band) => {
+  companionObserver?.disconnect()
+  companionObserver = null
+  measureCompanionSpan()
+  if (band && typeof ResizeObserver === 'function') {
+    companionObserver = new ResizeObserver(measureCompanionSpan)
+    companionObserver.observe(band)
+  }
+})
+
+onUnmounted(() => {
+  companionObserver?.disconnect()
+  companionObserver = null
+})
 </script>
 
 <template>
@@ -224,6 +268,7 @@ const petNotification = computed(() => {
     />
     <div
       v-if="petVisibility.visible.value"
+      ref="companionBand"
       class="run-panel__companion"
       data-run-companion
     >
@@ -231,6 +276,8 @@ const petNotification = computed(() => {
         :animation="petState.animation"
         :label="petNotification || props.petLabel"
         :reduced-motion="prefersReducedMotion"
+        roam
+        :roam-span="companionSpan"
       />
     </div>
     <RunComposer
@@ -298,8 +345,16 @@ const petNotification = computed(() => {
 }
 
 .run-panel__companion {
-  display: grid;
-  justify-items: center;
+  /*
+   * The band is the companion's stage: the sprite paces its width rather than
+   * sitting centred in it, so the sprite starts at the band's leading edge and
+   * travels from there. It stays in flow rather than being positioned: the
+   * band's height is then the sprite's own height, which is what keeps the
+   * stage from inventing a height the companion has to fit into.
+   */
+  display: flex;
+  justify-content: flex-start;
+  padding-inline: var(--space-4);
   padding-block-start: var(--space-2);
 }
 
