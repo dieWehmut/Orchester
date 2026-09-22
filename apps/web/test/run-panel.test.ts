@@ -206,6 +206,10 @@ describe('RunPanel', () => {
     // rather than pretending nothing happened.
     expect(wrapper.get('[data-scroll-unread-dot]').text()).toContain('1')
     expect(wrapper.get('[data-scroll-to-bottom]').attributes('data-scroll-unread')).toBe('true')
+    // The reference draws a round control that points down, with the news riding
+    // its corner; the count is what the control says out loud, not its face.
+    expect(wrapper.get('[data-scroll-to-bottom]').attributes('data-scroll-shape')).toBe('jump')
+    expect(wrapper.get('[data-scroll-to-bottom]').attributes('aria-label')).toContain('1')
 
     // Asking for the bottom is also how the reader marks it read; the count may
     // not survive the jump or the control would nag forever. Landing at the
