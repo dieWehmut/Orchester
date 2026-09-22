@@ -70,15 +70,53 @@ describe("MessageRail", () => {
     expect(wrapper.emitted("select")?.[0]).toEqual([2])
   })
 
-  it("scrubs while dragged and reports where the drag began", async () => {
+  it("scrubs the transcript while the rail is dragged", async () => {
     const wrapper = mount(MessageRail, { props: { view } })
     const rail = wrapper.get("[data-message-rail]")
+    const marks = wrapper.findAll("[data-rail-mark]")
 
     await rail.trigger("pointerdown")
     expect(rail.attributes("data-scrubbing")).toBe("true")
 
+    // The pointer reports which mark it is over; the rail turns that into the
+    // jump, because a drag that only says it is scrubbing moves nothing.
+    await marks[1]!.trigger("pointermove")
+    await marks[0]!.trigger("pointermove")
+    // Re-reporting the mark already chosen would re-scroll the transcript on
+    // every pixel of the drag.
+    await marks[0]!.trigger("pointermove")
+
+    expect(wrapper.emitted("select")).toEqual([[2], [0]])
+
     await rail.trigger("pointerup")
     expect(rail.attributes("data-scrubbing")).toBe("false")
+  })
+
+  it("keeps the label of the mark it is dragging to on screen", async () => {
+    const wrapper = mount(MessageRail, { props: { view } })
+    const rail = wrapper.get("[data-message-rail]")
+    const marks = wrapper.findAll("[data-rail-mark]")
+
+    await rail.trigger("pointerdown")
+    await marks[1]!.trigger("pointermove")
+
+    // Aiming needs the words: a reader dragging the rail is choosing a turn by
+    // its question, which is not on screen anywhere else.
+    expect(marks[1]!.get("[data-rail-label]").text()).toBe("question 2")
+
+    await rail.trigger("pointercancel")
+
+    expect(marks[1]!.find("[data-rail-label]").exists()).toBe(false)
+    expect(rail.attributes("data-scrubbing")).toBe("false")
+  })
+
+  it("marks the turn the rail has jumped to", async () => {
+    const wrapper = mount(MessageRail, { props: { view } })
+
+    await wrapper.findAll("[data-rail-mark]")[1]!.trigger("click")
+
+    expect(wrapper.findAll("[data-rail-active]")).toHaveLength(1)
+    expect(wrapper.get("[data-rail-active]").attributes("data-rail-index")).toBe("2")
   })
 
   it("expands a label on hover rather than showing every label at once", async () => {
