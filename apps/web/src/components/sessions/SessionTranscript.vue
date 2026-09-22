@@ -2,6 +2,7 @@
 import type { SessionDetailDto } from '@orchester/protokoll'
 import { EmptyState, InlineAlert, SkeletonBlock } from '@orchester/design'
 
+import MessageActions from '../run/MessageActions.vue'
 import { useI18n } from '../../i18n'
 import type { DetailStatus } from '../../stores/sessions'
 
@@ -36,14 +37,25 @@ const { t } = useI18n()
         </span>
       </header>
 
-      <section class="session-transcript__turn session-transcript__turn--user">
-        <h2>{{ t('transcript.prompt') }}</h2>
+      <section
+        class="session-transcript__turn session-transcript__turn--user"
+        data-message-role="user"
+        data-message-shape="bubble"
+      >
         <p>{{ session.prompt }}</p>
       </section>
 
-      <section class="session-transcript__turn session-transcript__turn--assistant">
-        <h2>{{ t('transcript.result') }}</h2>
+      <section
+        class="session-transcript__turn session-transcript__turn--assistant"
+        data-message-role="assistant"
+        data-message-shape="prose"
+      >
         <p>{{ session.final_text }}</p>
+        <MessageActions
+          :text="session.final_text"
+          :label="t('transcript.copyMessage')"
+          :copied-label="t('transcript.copied')"
+        />
       </section>
 
       <footer class="session-transcript__usage" :aria-label="t('transcript.usage')">
@@ -97,7 +109,6 @@ const { t } = useI18n()
 
 .session-transcript__header p,
 .session-transcript__header h1,
-.session-transcript__turn h2,
 .session-transcript__turn p {
   margin: 0;
 }
@@ -135,28 +146,42 @@ const { t } = useI18n()
   color: var(--color-status-error);
 }
 
+/* The conversation, in the reference's two shapes: the reader's own turn is a
+   filled bubble at the end of the measure, and the answer is prose on the
+   surface. The role is the shape, so neither half needs a heading over it. */
 .session-transcript__turn {
   display: grid;
   gap: var(--space-2);
-  padding: var(--space-4);
-  border-inline-start: 2px solid var(--color-border-strong);
-  background: var(--color-bg-surface);
+  min-inline-size: 0;
 }
 
-.session-transcript__turn--assistant {
-  border-inline-start-color: var(--color-accent);
+.session-transcript__turn--user {
+  justify-items: end;
 }
 
-.session-transcript__turn h2 {
-  color: var(--color-text-tertiary);
-  font-size: var(--text-xs);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.session-transcript__turn--user p {
+  inline-size: fit-content;
+  max-inline-size: min(100%, 40rem);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-action-solid);
+  color: var(--color-action-contrast);
 }
 
 .session-transcript__turn p {
   overflow-wrap: anywhere;
   white-space: pre-wrap;
+}
+
+/* Offered on hover or focus, never removed from the tree. */
+.session-transcript__turn :deep(.message-actions) {
+  opacity: 0;
+  transition: opacity var(--transition-fast) var(--ease-out);
+}
+
+.session-transcript__turn:hover :deep(.message-actions),
+.session-transcript__turn:focus-within :deep(.message-actions) {
+  opacity: 1;
 }
 
 .session-transcript__usage {

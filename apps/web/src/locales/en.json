@@ -339,7 +339,10 @@
     "jumpToLatest": "Jump to the latest",
     "unread": "New output below",
     "unreadCount": "{count} new events",
-    "messageNavigation": "Message navigation"
+    "messageNavigation": "Message navigation",
+    "copyMessage": "Copy message",
+    "copied": "Copied",
+    "reasoningSummary": "{count} characters"
   },
   "inspector": {
     "label": "Workspace inspector",

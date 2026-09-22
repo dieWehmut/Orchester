@@ -339,7 +339,10 @@
     "jumpToLatest": "跳到最新",
     "unread": "下方有新输出",
     "unreadCount": "{count} 条新事件",
-    "messageNavigation": "消息导航"
+    "messageNavigation": "消息导航",
+    "copyMessage": "复制消息",
+    "copied": "已复制",
+    "reasoningSummary": "{count} 字符"
   },
   "inspector": {
     "label": "工作区检查器",

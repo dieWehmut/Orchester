@@ -2,10 +2,14 @@
 import type { RunView, TimelineItem } from '@orchester/ereignis'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 
+import { useI18n } from '../../i18n'
+import MessageActions from './MessageActions.vue'
 import ReasoningDisclosure from './ReasoningDisclosure.vue'
 import ToolCallCard from './ToolCallCard.vue'
 import { arrivalState, streamingContainment, type ArrivalState } from './streaming-text'
 import { virtualWindow } from './virtual-window'
+
+const { t } = useI18n()
 
 const props = withDefaults(
   defineProps<{
@@ -48,6 +52,20 @@ const mounted = computed(() =>
  */
 function rowArrival(item: TimelineItem): ArrivalState {
   return item.type === 'message' ? arrivalState(item) : 'settled'
+}
+
+/**
+ * The shape a row is drawn in.
+ *
+ * Two idioms share this list: the conversation, which is prose and a bubble,
+ * and the run's own record, which is cards and ledger numbers. A reader looking
+ * for the answer should not have to read past a sequence number to find it, and
+ * an auditor looking for the fourth event should still find it on the event.
+ */
+function rowShape(item: TimelineItem): 'prose' | 'bubble' | 'record' {
+  if (item.type === 'message') return item.role === 'user' ? 'bubble' : 'prose'
+  if (item.type === 'reasoning') return 'prose'
+  return 'record'
 }
 
 function rowStyle(item: TimelineItem): Record<string, string> {
@@ -134,20 +152,37 @@ function assertNever(value: never): never {
       class="run-timeline__item"
       :class="`run-timeline__item--${item.type}`"
       :data-item-type="item.type"
+      :data-item-role="item.type === 'message' ? item.role : undefined"
+      :data-message-shape="rowShape(item)"
       :data-virtualized-turn="windowRange.start + index"
       :data-arrival-state="rowArrival(item)"
       :style="rowStyle(item)"
     >
       <template v-if="item.type === 'tool'">
-        <span class="run-timeline__sequence">{{ item.sequence }}</span>
+        <span class="run-timeline__sequence" data-run-sequence>{{ item.sequence }}</span>
         <ToolCallCard :item="item" />
       </template>
       <template v-else-if="item.type === 'reasoning'">
-        <span class="run-timeline__sequence">{{ item.sequence }}</span>
         <ReasoningDisclosure :text="item.text" />
       </template>
+      <template v-else-if="item.type === 'message'">
+        <div class="run-timeline__message" data-message-body>
+          <p class="run-timeline__text">{{ item.text }}</p>
+          <!--
+            Only the answer carries a copy: the reader already has their own
+            words, and the reference hangs the actions off the answer too.
+          -->
+          <MessageActions
+            v-if="item.role === 'assistant'"
+            class="run-timeline__actions"
+            :text="item.text"
+            :label="t('transcript.copyMessage')"
+            :copied-label="t('transcript.copied')"
+          />
+        </div>
+      </template>
       <template v-else>
-        <span class="run-timeline__sequence">{{ item.sequence }}</span>
+        <span class="run-timeline__sequence" data-run-sequence>{{ item.sequence }}</span>
         <span class="run-timeline__body">{{ itemText(item) }}</span>
       </template>
     </li>
@@ -158,7 +193,11 @@ function assertNever(value: never): never {
 .run-timeline {
   display: grid;
   gap: var(--space-2);
-  margin: 0;
+  /* The conversation keeps a measure, as the reference keeps one: a governed
+     run can print a lot of record, and prose that spans the window is prose
+     nobody reads. */
+  inline-size: min(100%, 52rem);
+  margin-inline: auto;
   padding: var(--space-4);
   list-style: none;
 }
@@ -176,6 +215,62 @@ function assertNever(value: never): never {
   padding: var(--space-3);
   border-inline-start: 2px solid var(--color-border-strong);
   background: var(--color-bg-surface);
+}
+
+/* The conversation is not a card: it is what the reader came to read, and the
+   border, the surface and the ledger number are all chrome the answer does not
+   need. Everything the run *did* keeps them. */
+.run-timeline__item[data-message-shape='prose'] {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-1);
+  padding-inline: 0;
+  border-inline-start: 0;
+  background: transparent;
+}
+
+.run-timeline__item[data-message-shape='bubble'] {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: end;
+  padding-inline: 0;
+  border-inline-start: 0;
+  background: transparent;
+}
+
+.run-timeline__message {
+  display: grid;
+  gap: var(--space-1);
+  min-inline-size: 0;
+  inline-size: 100%;
+}
+
+.run-timeline__text {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* The reader's own turn, filled: the reference answers a question with a shape
+   rather than a label, and the solid pair is the one token set that promises
+   its own text stays readable on it. */
+.run-timeline__item[data-message-shape='bubble'] .run-timeline__message {
+  inline-size: fit-content;
+  max-inline-size: min(100%, 40rem);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-action-solid);
+  color: var(--color-action-contrast);
+}
+
+/* Offered on hover or focus, never removed from the tree: a control that exists
+   only under a pointer is a control a keyboard user cannot reach. */
+.run-timeline__actions {
+  opacity: 0;
+  transition: opacity var(--transition-fast) var(--ease-out);
+}
+
+.run-timeline__message:hover .run-timeline__actions,
+.run-timeline__message:focus-within .run-timeline__actions {
+  opacity: 1;
 }
 
 .run-timeline__item--gap {
