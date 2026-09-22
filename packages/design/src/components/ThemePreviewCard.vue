@@ -12,8 +12,6 @@
  * tick in the corner is a second, louder answer to the question the ring has
  * already asked, and it sits on the artwork it is describing.
  */
-import { computed } from 'vue'
-
 import type { ThemePreference } from '../theme'
 
 const props = defineProps<{
@@ -25,8 +23,6 @@ const props = defineProps<{
 }>()
 
 defineEmits<{ select: [value: ThemePreference] }>()
-
-const checkLabel = computed(() => `${props.label} selected`)
 </script>
 
 <template>
@@ -39,7 +35,6 @@ const checkLabel = computed(() => `${props.label} selected`)
     :tabindex="selected ? 0 : -1"
     :data-theme-option="value"
     :data-preview-theme="value"
-    :title="selected ? checkLabel : undefined"
     @click="$emit('select', value)"
   >
     <span
@@ -109,12 +104,13 @@ const checkLabel = computed(() => `${props.label} selected`)
   border-color: var(--color-border-emphasis);
 }
 
-/* The ring, which is the whole of the selected state: an offset outline rather
-   than a border, so choosing a card does not move the miniature inside it. */
+/* The ring, which is the whole of the selected state. A box shadow rather than
+   an outline, because the outline belongs to the focus ring and its token: a
+   card that spent it on "chosen" would leave a keyboard user with no way to
+   tell where they are. */
 .theme-card[aria-checked='true'] .theme-card__frame {
   border-color: var(--color-accent);
-  outline: 2px solid var(--color-accent);
-  outline-offset: 1px;
+  box-shadow: 0 0 0 2px var(--color-accent);
 }
 
 .theme-card:focus-visible {
