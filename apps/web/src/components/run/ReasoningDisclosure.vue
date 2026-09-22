@@ -44,7 +44,7 @@ const characterCount = computed(() => props.text.trim().length)
       <ChevronRight class="reasoning__chevron" :size="13" aria-hidden="true" />
       <span>{{ props.label ?? t('run.reasoning') }}</span>
       <span class="reasoning__summary" data-reasoning-summary>
-        {{ characterCount }} characters
+        {{ t('transcript.reasoningSummary', { count: String(characterCount) }) }}
       </span>
     </button>
     <p v-if="expanded" class="reasoning__body" data-reasoning-body>{{ props.text }}</p>

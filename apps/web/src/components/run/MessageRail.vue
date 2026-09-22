@@ -24,8 +24,45 @@ const hovered = ref<number | null>(null)
 /** True while the reader is dragging the rail to scrub the transcript. */
 const scrubbing = ref(false)
 
+/**
+ * Where the transcript was sent, and where a drag currently is.
+ *
+ * They differ for as long as a drag takes, and that is exactly when the reader
+ * needs the words: aiming at a mark means choosing a turn by its question.
+ */
+const active = ref<number | null>(null)
+const aiming = ref<number | null>(null)
+
+/** The mark showing its label: the one being aimed at, or the one hovered. */
+const labelled = computed(() => aiming.value ?? hovered.value)
+
 function choose(index: number): void {
+  active.value = index
   emit('select', index)
+}
+
+function startScrub(): void {
+  scrubbing.value = true
+}
+
+/**
+ * The pointer says which mark it is over; the rail turns that into the jump.
+ *
+ * A drag that only raised a flag would move nothing, so each mark the finger
+ * reaches is a destination. Re-reporting the mark already reached is ignored,
+ * because otherwise the transcript would re-scroll on every pixel of the drag.
+ */
+function scrubTo(index: number): void {
+  if (!scrubbing.value) return
+  aiming.value = index
+  if (active.value === index) return
+  active.value = index
+  emit('select', index)
+}
+
+function endScrub(): void {
+  scrubbing.value = false
+  aiming.value = null
 }
 </script>
 
@@ -37,9 +74,10 @@ function choose(index: number): void {
     :data-scrubbing="String(scrubbing)"
     role="navigation"
     :aria-label="t('transcript.messageNavigation')"
-    @pointerdown="scrubbing = true"
-    @pointerup="scrubbing = false"
-    @pointerleave="scrubbing = false"
+    @pointerdown="startScrub"
+    @pointerup="endScrub"
+    @pointerleave="endScrub"
+    @pointercancel="endScrub"
   >
     <button
       v-for="mark in marks"
@@ -48,15 +86,17 @@ function choose(index: number): void {
       type="button"
       data-rail-mark
       :data-rail-index="mark.index"
+      :data-rail-active="active === mark.index ? '' : undefined"
       :aria-label="mark.label"
       @click="choose(mark.index)"
+      @pointermove="scrubTo(mark.index)"
       @pointerenter="hovered = mark.index"
       @pointerleave="hovered = null"
       @focus="hovered = mark.index"
       @blur="hovered = null"
     >
       <span
-        v-if="hovered === mark.index"
+        v-if="labelled === mark.index"
         class="message-rail__label"
         data-rail-label
       >{{ mark.label }}</span>

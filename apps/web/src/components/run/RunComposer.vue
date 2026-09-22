@@ -2,6 +2,7 @@
 import { AppButton, AppTextarea, Spinner } from '@orchester/design'
 import type { RunLifecycle } from '../../stores/run'
 import type { ModelCatalogDto } from '@orchester/protokoll'
+import { ArrowUp, Square } from '@lucide/vue'
 import { computed, ref, watch } from 'vue'
 
 import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
@@ -209,6 +210,19 @@ const canSubmit = computed(
     !props.disabled,
 )
 
+/**
+ * The tally appears only once the limit is close.
+ *
+ * The reference's field carries no count at all, and a number that sits there
+ * on every prompt is a row the reader pays for to learn something they only
+ * need near the end. A tenth of the budget is the point where it starts to be
+ * worth the row.
+ */
+const COUNT_VISIBLE_FROM = 0.8
+const countVisible = computed(
+  () => draft.value.length >= Math.floor(props.maxLength * COUNT_VISIBLE_FROM),
+)
+
 function update(value: string): void {
   draft.value = value
   commandsClosed.value = false
@@ -230,10 +244,25 @@ function handleKeydown(event: KeyboardEvent): void {
   event.preventDefault()
   submit()
 }
+
+/**
+ * Put the caret in the field.
+ *
+ * The transcript's actions write into this composer, and an edit the reader has
+ * to find the field for is an edit they did not make.
+ */
+const form = ref<HTMLFormElement | null>(null)
+
+function focus(): void {
+  form.value?.querySelector('textarea')?.focus()
+}
+
+defineExpose({ focus })
 </script>
 
 <template>
   <form
+    ref="form"
     class="run-composer"
     data-run-composer
     :data-composer-state="composerState"
@@ -258,53 +287,61 @@ function handleKeydown(event: KeyboardEvent): void {
       @select="emit('run-command', $event)"
       @close="commandsClosed = true"
     />
-    <label class="run-composer__label" for="run-prompt">{{ props.inputLabel ?? t('run.taskPrompt') }}</label>
-    <AppTextarea
-      id="run-prompt"
-      :model-value="draft"
-      :placeholder="props.placeholder ?? t('run.describeTask')"
-      :max-length="props.maxLength"
-      :disabled="props.disabled || isBusy"
-      :rows="rowCount"
-      @update:model-value="update"
-      @keydown="handleKeydown"
-    />
-    <div class="run-composer__footer" data-composer-footer>
-      <span class="run-composer__count" aria-live="polite">
-        {{ draft.length }} / {{ props.maxLength }} {{ props.characterCountLabel ?? t('run.characters') }}
-      </span>
-      <ApprovalPresetControl
-        :model-value="approvalPreset"
-        @update:model-value="updateApprovalPreset"
+    <div class="run-composer__field" data-composer-field>
+      <!-- The reference names the field with its placeholder and draws no
+           heading over it; the accessible name is where that label went. -->
+      <AppTextarea
+        id="run-prompt"
+        :model-value="draft"
+        :aria-label="props.inputLabel ?? t('run.taskPrompt')"
+        :placeholder="props.placeholder ?? t('run.describeTask')"
+        :max-length="props.maxLength"
+        :disabled="props.disabled || isBusy"
+        :rows="rowCount"
+        @update:model-value="update"
+        @keydown="handleKeydown"
       />
-      <div class="run-composer__actions">
-        <Spinner
-          v-if="isBusy"
-          data-run-activity
-          class="run-composer__activity"
-          :size="14"
-          :label="props.activityLabel ?? t('run.runInProgress')"
+      <div class="run-composer__footer" data-composer-footer>
+        <span v-if="countVisible" class="run-composer__count" data-composer-count aria-live="polite">
+          {{ draft.length }} / {{ props.maxLength }} {{ props.characterCountLabel ?? t('run.characters') }}
+        </span>
+        <ApprovalPresetControl
+          :model-value="approvalPreset"
+          @update:model-value="updateApprovalPreset"
         />
-        <AppButton
-          v-if="isBusy"
-          type="button"
-          variant="danger"
-          data-composer-action="cancel"
-          :aria-label="props.cancelLabel ?? t('run.stop')"
-          @click="emit('cancel')"
-        >
-          {{ props.cancelLabel ?? t('run.stop') }}
-        </AppButton>
-        <AppButton
-          v-else
-          type="submit"
-          variant="primary"
-          data-composer-action="submit"
-          :disabled="!canSubmit"
-          :aria-label="props.submitLabel ?? t('run.submit')"
-        >
-          {{ props.submitLabel ?? t('run.submit') }}
-        </AppButton>
+        <div class="run-composer__actions">
+          <Spinner
+            v-if="isBusy"
+            data-run-activity
+            class="run-composer__activity"
+            :size="14"
+            :label="props.activityLabel ?? t('run.runInProgress')"
+          />
+          <AppButton
+            v-if="isBusy"
+            class="run-composer__send"
+            type="button"
+            variant="danger"
+            data-composer-action="cancel"
+            data-composer-action-shape="stop"
+            :aria-label="props.cancelLabel ?? t('run.stop')"
+            @click="emit('cancel')"
+          >
+            <Square :size="15" aria-hidden="true" />
+          </AppButton>
+          <AppButton
+            v-else
+            class="run-composer__send"
+            type="submit"
+            variant="primary"
+            data-composer-action="submit"
+            data-composer-action-shape="send"
+            :disabled="!canSubmit"
+            :aria-label="props.submitLabel ?? t('run.submit')"
+          >
+            <ArrowUp :size="16" aria-hidden="true" />
+          </AppButton>
+        </div>
       </div>
     </div>
   </form>
@@ -316,22 +353,33 @@ function handleKeydown(event: KeyboardEvent): void {
   gap: var(--space-2);
   max-inline-size: 54rem;
   margin-inline: auto;
-  padding: var(--space-4);
-  border: 1px solid var(--color-border-base);
+}
+
+/* The field is the box, as the reference draws it: one rounded surface that
+   holds the prompt and the controls under it, rather than a card with a second
+   box inside it. */
+.run-composer__field {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-3) var(--space-2);
+  border: 1px solid var(--color-border-control);
   border-radius: 1.25rem;
   background: var(--color-bg-surface);
-  box-shadow: 0 12px 34px rgb(0 0 0 / 14%);
+  box-shadow: 0 12px 34px rgb(0 0 0 / 12%);
+  transition: border-color var(--transition-fast) var(--ease-out);
 }
 
-.run-composer__label {
-  color: var(--color-text-secondary);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+.run-composer__field:focus-within {
+  /* The boundary is the field's, not the prompt's: a ring inside the rounded
+     frame would draw the second box this change removed. This is the
+     replacement for the outline the prompt gives up below. */
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent-border);
 }
 
-/* The drop target has to look like one: a drag that leaves the composer
+/* The drop target has to look like one: a drag that leaves the field
    unchanged reads as a drag the composer did not notice. */
-.run-composer[data-composer-drag-active='true'] {
+.run-composer[data-composer-drag-active='true'] .run-composer__field {
   border-color: var(--color-accent);
   border-style: dashed;
   background: color-mix(in oklab, var(--color-accent) 6%, var(--color-bg-surface));
@@ -350,15 +398,38 @@ function handleKeydown(event: KeyboardEvent): void {
   border-block-end: 1px solid var(--color-border-base);
 }
 
+/* The prompt sits in the field rather than in a box of its own: a second
+   border inside the first is the box the reference does not draw. */
 .run-composer :deep(.app-textarea) {
-  min-block-size: 5rem;
+  min-block-size: 4.5rem;
+  padding: var(--space-2) var(--space-2) 0;
   border-color: transparent;
-  background: var(--color-bg-element);
-  border-radius: 0.875rem;
+  background: transparent;
+  border-radius: 0.75rem;
+  box-shadow: none;
+  /* The field grows with the prompt, so a resize grip is a handle for a job
+     already done - and it sits where the send control is. */
+  resize: none;
 }
 
 .run-composer :deep(.app-textarea:focus-visible) {
-  border-color: var(--color-accent);
+  border-color: transparent;
+  outline: none;
+}
+
+/* The action is a shape, as the reference's is: a round control that points the
+   way the prompt goes, and a square one that stops the run. */
+.run-composer__send {
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  min-inline-size: 2.25rem;
+  padding: 0;
+  border-radius: var(--radius-full);
+}
+
+.run-composer__send :deep(.app-button__label) {
+  display: inline-grid;
+  place-items: center;
 }
 
 .run-composer__count {

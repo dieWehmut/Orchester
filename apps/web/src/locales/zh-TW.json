@@ -339,7 +339,13 @@
     "jumpToLatest": "跳到最新",
     "unread": "下方有新輸出",
     "unreadCount": "{count} 則新事件",
-    "messageNavigation": "訊息導覽"
+    "messageNavigation": "訊息導覽",
+    "copyMessage": "複製訊息",
+    "copied": "已複製",
+    "reasoningSummary": "{count} 字元",
+    "externalLink": "在新分頁開啟",
+    "quote": "引用至輸入框",
+    "reuse": "重新使用這則提示"
   },
   "inspector": {
     "label": "工作區檢查器",

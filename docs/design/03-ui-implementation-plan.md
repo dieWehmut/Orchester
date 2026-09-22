@@ -212,31 +212,203 @@ account, no meter and nothing to sign out of, so those rows stay out rather than
 being faked; the menu carries what it can answer - the companion and settings,
 both with the chord the live registry holds.
 
-## Wave U12 - the companion, let off its seat
+## Wave U12 - the transcript's two idioms
+
+A transcript is two things at once, and the reference only draws one of them.
+The conversation is a question and an answer, read as prose; the run's own
+record is tool calls, approvals and validations, which is a ledger with numbers
+on it. §4.4 asked for "role marker · content · actions" and the surface was
+drawing everything as an event card, so this wave separates the two.
+
+- [x] U12-01: Render messages and reasoning in the conversation's idiom and
+  everything else in the run's.
+  - `apps/web/test/chat-message-anatomy.test.ts` pins the shapes: an answer is
+    prose with no ledger number, the reader's own turn is a bubble at the end of
+    the measure, and a tool call keeps its card *and* its sequence - the number
+    belongs to the record, not to the sentence.
+- [x] U12-02: Offer the answer as a copy, and say when it has been taken.
+  - `MessageActions` is the whole action set, because it is the only one this
+    product can answer: the runtime cannot re-run a turn and keeps no feedback
+    channel, and a button that does nothing is worse than a button that is not
+    there. The row is drawn on hover or focus but never removed from the tree.
+- [x] U12-03: Read a stored session as the conversation it was.
+  - `SessionTranscript` drops the uppercase `Request`/`Result` headings: the
+    role is the shape, as it is in the reference. `workspace-view.test.ts` keeps
+    pinning that the stored answer reaches the pane.
+- [x] U12-04: Count the reasoning in the reader's own language.
+  - The disclosure had `{{ count }} characters` typed into its template, which
+    the locale sweep could not see through the interpolation.
+- [x] U12-05: Re-run the gate: `pnpm typecheck`, `pnpm test`, both builds,
+  `pnpm stack:verify`.
+
+**What the reference has and this wave cannot yet draw.** The reference opens a
+conversation with the reader's question, and a resumed Orchester transcript has
+no question in it: `projectConversation` only ever projects assistant output,
+because the runtime writes no user-message event when a run starts. The bubble
+shape therefore renders from the `role` the timeline item already carries - and
+`railMarks`, the message navigation rail, has nothing to list in production
+until the journal carries the user's turn. That is a runtime and protocol change
+rather than a surface one, and it is the next thing this objective needs.
+
+## Wave U13 - the journal carries the reader's own turn
+
+U12 could draw the reader's bubble but had nothing to draw it from: the runtime
+journalled the model's answers and never the prompt, because from its side the
+prompt is the request rather than an event. That made the transcript open with
+an answer to nothing and left the message rail with nothing to list - so this
+wave is the first in the objective that crosses into the runtime and the wire
+contract, and it keeps that contract's habits: a new kind in both mirrors, the
+same redaction as every other text, and a route test that proves the order.
+
+- [x] U13-01: Add `user_message` to the UI event vocabulary on both sides.
+  - `kisten/protokoll/src/ui.rs` and `packages/protokoll/src/ui.ts`; the Rust
+    kind is sanitised like the model's text, because a prompt can name a path
+    and the browser-facing stream is where that policy has to hold. The mirror
+    test's pinned count moved with it.
+- [x] U13-02: Journal the reader's turn when a run starts.
+  - `start_run_handler` appends it before the runtime is spawned, so sequence 1
+    is what was asked; `run_registry` treats it as the run having begun, which
+    is what the API already answered.
+  - `kisten/netz/tests/run_routes.rs` starts a run against a temporary workspace
+    and asserts the snapshot opens with `user_message` and the prompt's text.
+- [x] U13-03: Project it into the conversation.
+  - `projectConversation` maps it to a settled message with `role: 'user'`, and
+    `timelineKindKey` gives it a stable key. The surface needed no change: U12
+    already draws a message by its role, and `railMarks` already lists user
+    turns - it had simply never been given one.
+  - `packages/ereignis/test/model/conversation.test.ts` pins the replayed
+    conversation opening with the question.
+- [x] U13-04: Re-run the gate: `pnpm typecheck`, the frontend and Rust suites,
+  both builds, `pnpm stack:verify`.
+
+**What this unblocks.** The message navigation rail now has destinations, and a
+transcript restored after a reload shows what was asked as well as what was
+answered. The reference's remaining gap on this surface is the composer row
+(model and effort, the send control) rather than the conversation itself.
+
+## Wave U14 - the composer's field
+
+The reference's composer is one rounded field: a placeholder that names it, the
+controls it needs at the trailing edge, and a round action that points the way it
+sends. Orchester's was a card with a heading over it, a second bordered box
+inside it, and a wide labelled button - three rows of chrome the reader pays for
+on every prompt.
+
+- [x] U14-01: Let the field own the box.
+  - `apps/web/test/composer-field-anatomy.test.ts` pins that the prompt and its
+    control row sit in one `data-composer-field`, and that the context row stays
+    outside it: which workspace and model a run will use is a fact about the run,
+    not a control in the field.
+- [x] U14-02: Name the field with its placeholder, as the reference does, and
+  keep the visible label as the accessible name instead of losing it.
+- [x] U14-03: Make the action a shape - a round send that points the way the
+  prompt goes, a square stop while a run is in flight - with its word kept as the
+  accessible name.
+- [x] U14-04: Show the tally only within a tenth of the limit, because the
+  reference prints none and a number on every prompt is a row for information
+  that matters at the end.
+  - The prompt also gives up its resize grip: the field already grows, and the
+    grip sat where the send control is.
+- [x] U14-05: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**Not taken from the reference.** Its composer also carries a microphone and a
+model picker. Orchester has no voice input, and its model and effort are read
+from the runtime's catalog rather than chosen in the field, so the readout stays
+where it is instead of pretending to be a picker.
+
+## Wave U15 - the answer's own markup
+
+A coding agent writes in markdown, and the reference renders it: the answer in
+its screenshot has a linked heading, inline code chips and a mono hash. §4.4
+asked for markdown with `CodeBlock` and the surface had been drawing every
+answer as one pre-wrapped string, so a fenced block arrived as backticks and a
+list as hyphens.
+
+- [x] U15-01: Parse the subset an answer actually uses, into tokens.
+  - `packages/design/src/markdown.ts` produces a token tree rather than HTML:
+    paragraphs, headings, fenced code, both list kinds, inline code, bold and
+    links. `packages/design/test/markdown.test.ts` pins the reading, including
+    the two that matter for safety - raw markup stays text, and a link that is
+    not an address is refused rather than sanitised.
+- [x] U15-02: Render the tokens with elements and never with markup.
+  - `MarkdownText` and `MarkdownSpans` draw every block as a Vue element and
+    hold no string of markup to interpolate; the test asserts the source has no
+    `v-html`, which is what makes text an agent wrote safe to render. Links leave
+    the page with `rel="noopener noreferrer"` and say so out loud through the
+    caller's words. Every heading is drawn at one level, with the written level
+    kept on the element: an `h1` inside a transcript would outrank the page.
+- [x] U15-03: Show it on the two surfaces that carry an answer.
+  - The live transcript renders markdown **once the answer has settled** and
+    keeps the text literal while it arrives - a half-written fence is not a code
+    block yet, and formatting line by line would flicker the paragraph apart
+    under the reader. A stored session renders it directly.
+  - `apps/web/test/chat-message-anatomy.test.ts` pins both the settled reading
+    and the arriving one, and that the reader's own turn is still shown exactly
+    as they typed it: their words are not the agent's markup to interpret.
+- [x] U15-04: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**Kept out of the subset.** Tables, images, nested lists and raw HTML are left
+as the text they were written as. Each of them is a rendering an answer can live
+without; none of them is worth a parser that can be talked into producing an
+element.
+
+## Wave U16 - the row of actions under a message
+
+The reference hangs more than copying off a message. Two of its actions cannot
+be answered here - the runtime cannot re-run a turn in place and keeps no
+feedback channel - and one can, because U13 gave the journal the reader's own
+turn: the next prompt. So the row grew a shape rather than a pile of disabled
+buttons.
+
+- [x] U16-01: Let a surface add its own actions to the row.
+  - `MessageActions` takes `{ id, label, icon }` entries and reports the id it
+    was asked for; copying stays first and unconditional, and a control cannot
+    join the row without words for what it does.
+  - `apps/web/test/message-actions.test.ts` pins the order, the naming and that
+    an extra action copies nothing.
+- [x] U16-02: Offer each side of the conversation the move that belongs to it.
+  - The answer can be **quoted into the composer** as markdown (which is the
+    language the field is read in), and the reader's own turn can be **put back
+    to run again**. Neither starts work on its own: both end with the caret in
+    the field, which is what makes the action a step rather than a decision -
+    and what the reference's own row does not promise.
+  - `apps/web/test/composer-quote.test.ts` drives both through `RunPanel` and
+    asserts the draft and where the caret went.
+- [x] U16-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**What the row still refuses.** Regeneration and feedback. The first is not a
+gesture this runtime has - a new answer is a new run - and the second has no
+channel to arrive on. Putting the prompt back is the honest half of the first:
+it leaves the decision to run with the reader.
+
+## Wave U17 - the companion, let off its seat
 
 The companion arrived seated: one sprite cell above the composer, holding
 whatever pose the run asked of it. The reference's companion is ambient instead
 - it pads along the strip its corner opens for it and turns to face the way it
 is going - so this wave gives it somewhere to walk and a reason to.
 
-- [x] U12-01: Plan a walk rather than play one.
+- [x] U17-01: Plan a walk rather than play one.
   - `apps/web/test/pet-roam.test.ts` pins the leg: a whole number of walk
     cycles, the direction with room rather than a coin flip into a wall, and a
     rest drawn from an authored window.
-- [x] U12-02: Let the companion pace the stage it was given.
+- [x] U17-02: Let the companion pace the stage it was given.
   - `pet-companion.test.ts` pins the walk, the row each direction draws, the
     glide timed to the leg, and that an interrupted leg leaves the companion
     standing where it had got to rather than at either end.
-- [x] U12-03: Open a stage above the composer for it to walk on.
+- [x] U17-03: Open a stage above the composer for it to walk on.
   - The band was a seat; it is a stage now, and its own width is the travel it
     reports. The span leaves the sprite its own width behind, because the
     sprite moves by transform.
-- [x] U12-04: Notice the pointer that is addressing the companion, and only
+- [x] U17-04: Notice the pointer that is addressing the companion, and only
     that one.
   - `pet-roam.test.ts` pins the radius as a circle. This is the correction a
     real window forced: a companion that took a look from any distance spent
     its life attending to a reader working in the transcript and never walked.
-- [x] U12-05: Re-run the gate: `pnpm typecheck`, `pnpm test`, both builds,
+- [x] U17-05: Re-run the gate: `pnpm typecheck`, `pnpm test`, both builds,
   `pnpm stack:verify`.
   - `pnpm typecheck` is clean across all seven projects; `pnpm test` is green at
     579 web + 274 design + the rest; the web and website builds succeed;
@@ -247,6 +419,43 @@ nothing about where it likes to stand: the visibility switch is still the only
 preference, because a companion that had to be configured would not be ambient.
 The walk is also CSS rather than canvas - one transform and one looping sprite
 row - so there is no per-frame draw to spend on a decoration.
+
+## Wave U18 - the rail scrubs, and the jump is a shape
+
+§4.4 asked the rail to scrub while dragged, and the reference draws the jump to
+the latest as one round control. Neither was true of the surface: the rail listed
+the turns and jumped on a click, but a drag only raised `data-scrubbing` - a flag
+that says a drag is happening and moves nothing - and the jump control changed
+its whole face when output arrived, so the control a reader had learned vanished
+exactly when they had something to catch up on.
+
+- [x] U18-01: Let the drag be the jump, and keep the words up while aiming.
+  - The mark reports the turn the finger has reached, so the drag is a sequence
+    of jumps; re-reporting the mark already reached is ignored, because
+    otherwise the transcript would re-scroll on every pixel of the drag. A drag
+    has no hover, so the mark being aimed at keeps its label: aiming at a turn
+    means choosing it by its question, and the question is written nowhere else
+    on screen.
+  - `apps/web/test/message-rail.test.ts` pins the jumps, the dropped repeat, the
+    label that survives the drag, and the mark the rail last sent the transcript
+    to.
+- [x] U18-02: Draw the jump to the latest as the reference's round control.
+  - A down arrow in a round button with the count on its corner, and the count
+    in the accessible name the face no longer carries; the corner is
+    `aria-hidden` so the sentence is not spoken twice. The button keeps the
+    `--hit-target-min` box §7 floors it at rather than shrinking to the glyph.
+- [x] U18-03: Re-run the gate: `pnpm typecheck`, `pnpm test`, both builds,
+  `pnpm stack:verify`.
+  - `pnpm typecheck` is clean across all seven projects; `pnpm test` is green at
+    26 tooling + 89 protokoll + 292 design + 28 ereignis + 31 website + 575 web
+    + 1 desktop-security + 9 desktop tooling tests; the web and website builds
+    succeed; `pnpm stack:verify` matches.
+
+**Still refused.** The rail still lists the reader's turns and nothing else: an
+answer is not a destination, because the transcript already shows it under the
+question it belongs to. And the mark it marks as reached is the one it *sent*
+the transcript to rather than one read back from the scroll position - the rail
+reports choices, it does not observe them.
 
 ## Verification
 

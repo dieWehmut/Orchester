@@ -17,6 +17,8 @@ export { default as AppTextarea } from './components/AppTextarea.vue'
 export { default as AppTooltip } from './components/AppTooltip.vue'
 export { default as CodePreview } from './components/CodePreview.vue'
 export { default as ColorSchemePicker } from './components/ColorSchemePicker.vue'
+export { default as MarkdownSpans } from './components/MarkdownSpans.vue'
+export { default as MarkdownText } from './components/MarkdownText.vue'
 export { default as IconButton } from './components/IconButton.vue'
 export { default as InlineAlert } from './components/InlineAlert.vue'
 export { default as ProgressBar } from './components/ProgressBar.vue'
@@ -36,6 +38,14 @@ export type {
   AppTabOption,
 } from './components/form-types'
 export type { ToastItem, ToastTone } from './components/toast-types'
+
+export {
+  isSafeHref,
+  parseInline,
+  parseMarkdown,
+  type MarkdownBlock,
+  type MarkdownInline,
+} from './markdown'
 
 export { APPEARANCE_BOOTSTRAP_SCRIPT } from './appearance-script'
 

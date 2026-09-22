@@ -63,6 +63,12 @@ export function projectConversation(events: readonly UiEventEnvelope[]): RunView
     }
 
     switch (kind.type) {
+      // The runtime journals the reader's own turn when a run is started, so a
+      // replayed transcript opens with the question rather than with an answer
+      // to nothing. It is a settled message: the reader typed it once.
+      case 'user_message':
+        put({ ...base, type: 'message', role: 'user', text: kind.text, final: true })
+        break
       case 'message':
         put({ ...base, type: 'message', role: 'assistant', text: kind.text, final: true })
         streams.delete(turnKey)

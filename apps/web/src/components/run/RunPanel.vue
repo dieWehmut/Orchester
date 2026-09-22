@@ -2,6 +2,7 @@
 import { InlineAlert, useAppearance } from '@orchester/design'
 import type { RunView } from '@orchester/ereignis'
 import type { ModelCatalogDto, UiEventEnvelope } from '@orchester/protokoll'
+import { ArrowDown } from '@lucide/vue'
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue'
 
 import { useI18n } from '../../i18n'
@@ -67,6 +68,32 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+
+/**
+ * The draft the composer is editing.
+ *
+ * The panel owns it rather than the composer because the transcript's action row
+ * writes into it: quoting an answer and putting a prompt back are both edits to
+ * the next prompt, and the field is where they end.
+ */
+const composerDraft = ref('')
+const composer = ref<InstanceType<typeof RunComposer> | null>(null)
+
+/** Quote an answer into the field as markdown, which is how it will be read. */
+function quoteAnswer(text: string): void {
+  const quoted = text
+    .split('\n')
+    .map((line) => (line.trim().length > 0 ? `> ${line}` : '>'))
+    .join('\n')
+  composerDraft.value = `${quoted}\n\n`
+  void nextTick(() => composer.value?.focus())
+}
+
+/** Put the reader's own prompt back, so it can be run again or edited first. */
+function reusePrompt(text: string): void {
+  composerDraft.value = text
+  void nextTick(() => composer.value?.focus())
+}
 
 /**
  * A run waiting on the user is the one case the plan strip has to escalate:
@@ -226,6 +253,8 @@ onUnmounted(() => {
         :view="props.view"
         :scroll-top="scrollTop"
         :viewport-height="viewportHeight"
+        @quote="quoteAnswer"
+        @reuse="reusePrompt"
       />
       <EmptyWorkspace
         v-else-if="!props.conversationStarted"
@@ -247,17 +276,18 @@ onUnmounted(() => {
       class="run-panel__to-bottom"
       type="button"
       data-scroll-to-bottom
+      data-scroll-shape="jump"
       :data-scroll-unread="String(unread > 0)"
+      :aria-label="unread > 0 ? unreadLabel : t('transcript.jumpToLatest')"
       @click="scrollToBottom"
     >
+      <ArrowDown :size="16" aria-hidden="true" />
       <span
         v-if="unread > 0"
         class="run-panel__unread"
         data-scroll-unread-dot
-        role="status"
-        aria-live="polite"
-      >{{ unreadLabel }}</span>
-      <span v-else>{{ t('transcript.jumpToLatest') }}</span>
+        aria-hidden="true"
+      >{{ unread }}</span>
     </button>
     <MessageRail :view="props.view" @select="scrollToTurn" />
     <RunFooter :view="props.view" />
@@ -281,12 +311,15 @@ onUnmounted(() => {
       />
     </div>
     <RunComposer
+      ref="composer"
+      :model-value="composerDraft"
       :busy="props.busy"
       :lifecycle="props.lifecycle"
       :workspace-name="props.workspaceName"
       :model-catalog="props.modelCatalog"
       :model-status="props.modelStatus"
       :settings-key="props.settingsKey"
+      @update:model-value="composerDraft = $event"
       @submit="emit('submit', $event)"
       @cancel="emit('cancel')"
     />
@@ -322,21 +355,36 @@ onUnmounted(() => {
 }
 
 .run-panel__unread {
+  position: absolute;
+  inset-block-start: calc(-1 * var(--space-1));
+  inset-inline-end: calc(-1 * var(--space-1));
+  min-inline-size: var(--space-4);
+  padding-inline: var(--space-1);
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font-size: var(--text-xs);
   font-variant-numeric: tabular-nums;
+  line-height: var(--font-text-xs-line-height);
+  text-align: center;
 }
 
 .run-panel__to-bottom {
+  position: relative;
   align-self: center;
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--hit-target-min, 32px);
   min-block-size: var(--hit-target-min, 32px);
+  min-inline-size: var(--hit-target-min, 32px);
   margin-block-start: calc(-1 * var(--space-6));
-  padding: var(--space-1) var(--space-3);
+  padding: 0;
   border: 1px solid var(--color-border-base);
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: var(--color-bg-surface);
   box-shadow: var(--shadow-200);
   color: var(--color-text-secondary);
   cursor: pointer;
-  font-size: var(--text-xs);
 }
 
 .run-panel :deep(.run-composer) {
