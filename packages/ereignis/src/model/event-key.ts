@@ -31,6 +31,8 @@ function timelineKindKey(
       return `run:${runId}`
     case 'turn_started':
       return `turn:${turnId ?? eventId}`
+    case 'user_message':
+      return `user-message:${eventId}`
     case 'message':
       return `message:${eventId}`
     case 'message_delta':

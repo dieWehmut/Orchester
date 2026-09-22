@@ -77,6 +77,18 @@ export interface TurnStartedUiEvent {
   type: 'turn_started'
 }
 
+/**
+ * The reader's own turn, as the run was started with it.
+ *
+ * The journal is what a browser replays, and a conversation that opens with an
+ * answer has lost the question: the transcript draws the reader's turn as their
+ * own bubble and the message rail navigates by it.
+ */
+export interface UserMessageUiEvent {
+  type: 'user_message'
+  text: string
+}
+
 export interface MessageUiEvent {
   type: 'message'
   text: string
@@ -145,6 +157,7 @@ export interface ErrorUiEvent {
 export type UiEventKind =
   | RunStartedUiEvent
   | TurnStartedUiEvent
+  | UserMessageUiEvent
   | MessageUiEvent
   | MessageDeltaUiEvent
   | ReasoningUiEvent
@@ -163,6 +176,7 @@ export type UiEventType = UiEventKind['type']
 export const UI_EVENT_TYPES = [
   'run_started',
   'turn_started',
+  'user_message',
   'message',
   'message_delta',
   'reasoning',

@@ -17,6 +17,7 @@ import {
 const SAMPLES: Record<UiEventType, UiEventKind> = {
   run_started: { type: 'run_started', title: 'Protocol mirror' },
   turn_started: { type: 'turn_started' },
+  user_message: { type: 'user_message', text: 'Inspect the runtime' },
   message: { type: 'message', text: 'Ready' },
   message_delta: { type: 'message_delta', text: 'Streaming', final: false },
   reasoning: { type: 'reasoning', text: 'Inspecting the workspace' },
@@ -66,7 +67,9 @@ const SAMPLES: Record<UiEventType, UiEventKind> = {
 describe('the browser UI event mirror', () => {
   it('covers every Rust event kind exactly once', () => {
     expect([...UI_EVENT_TYPES].sort()).toEqual(Object.keys(SAMPLES).sort())
-    expect(UI_EVENT_TYPES).toHaveLength(14)
+    // The count is pinned so a kind cannot leave the mirror unnoticed; the Rust
+    // enum grew by `user_message`, the reader's own turn.
+    expect(UI_EVENT_TYPES).toHaveLength(15)
   })
 
   it('pins every tool lifecycle wire value', () => {

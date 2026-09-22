@@ -13,6 +13,7 @@ import { eventKey, gapKey, timelineItemKey } from '../../src/model/event-key'
 const kinds = {
   run_started: { type: 'run_started' },
   turn_started: { type: 'turn_started' },
+  user_message: { type: 'user_message', text: 'inspect the runtime' },
   message: { type: 'message', text: 'done' },
   message_delta: { type: 'message_delta', text: 'part', final: false },
   reasoning: { type: 'reasoning', text: 'digest' },

@@ -181,6 +181,7 @@ function parseEventKind(raw: unknown): UiEventKind | null {
     case 'turn_started':
       return hasOnlyKeys(raw, ['type']) ? { type: tag } : null
     case 'message':
+    case 'user_message':
     case 'reasoning': {
       if (!hasOnlyKeys(raw, ['type', 'text'])) return null
       const text = string(raw.text)

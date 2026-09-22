@@ -29,6 +29,21 @@ describe('conversation projection', () => {
     expect(view.turns).toMatchObject([{ id: 'turn-fixture', items: view.timeline }])
   })
 
+  it('opens a replayed conversation with the reader’s own turn', () => {
+    // The runtime journals the prompt when a run is started, so a transcript
+    // that a browser replays - or restores after a reload - begins with the
+    // question. The rail that navigates by turn lists exactly these items.
+    const view = projectRunEvents([
+      fixtureEnvelope(1, { type: 'user_message', text: 'Inspect the runtime' }),
+      fixtureEnvelope(2, { type: 'message', text: 'The boundary is isolated.' }),
+    ])
+
+    expect(view.timeline).toMatchObject([
+      { type: 'message', role: 'user', text: 'Inspect the runtime', final: true },
+      { type: 'message', role: 'assistant', text: 'The boundary is isolated.', final: true },
+    ])
+  })
+
   it('preserves visible text before a gap while withholding later text', () => {
     const view = projectRunEvents([
       fixtureEnvelope(1, { type: 'message', text: 'Already received' }),
