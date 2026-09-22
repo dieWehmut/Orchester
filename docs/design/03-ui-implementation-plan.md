@@ -250,6 +250,42 @@ shape therefore renders from the `role` the timeline item already carries - and
 until the journal carries the user's turn. That is a runtime and protocol change
 rather than a surface one, and it is the next thing this objective needs.
 
+## Wave U13 - the journal carries the reader's own turn
+
+U12 could draw the reader's bubble but had nothing to draw it from: the runtime
+journalled the model's answers and never the prompt, because from its side the
+prompt is the request rather than an event. That made the transcript open with
+an answer to nothing and left the message rail with nothing to list - so this
+wave is the first in the objective that crosses into the runtime and the wire
+contract, and it keeps that contract's habits: a new kind in both mirrors, the
+same redaction as every other text, and a route test that proves the order.
+
+- [x] U13-01: Add `user_message` to the UI event vocabulary on both sides.
+  - `kisten/protokoll/src/ui.rs` and `packages/protokoll/src/ui.ts`; the Rust
+    kind is sanitised like the model's text, because a prompt can name a path
+    and the browser-facing stream is where that policy has to hold. The mirror
+    test's pinned count moved with it.
+- [x] U13-02: Journal the reader's turn when a run starts.
+  - `start_run_handler` appends it before the runtime is spawned, so sequence 1
+    is what was asked; `run_registry` treats it as the run having begun, which
+    is what the API already answered.
+  - `kisten/netz/tests/run_routes.rs` starts a run against a temporary workspace
+    and asserts the snapshot opens with `user_message` and the prompt's text.
+- [x] U13-03: Project it into the conversation.
+  - `projectConversation` maps it to a settled message with `role: 'user'`, and
+    `timelineKindKey` gives it a stable key. The surface needed no change: U12
+    already draws a message by its role, and `railMarks` already lists user
+    turns - it had simply never been given one.
+  - `packages/ereignis/test/model/conversation.test.ts` pins the replayed
+    conversation opening with the question.
+- [x] U13-04: Re-run the gate: `pnpm typecheck`, the frontend and Rust suites,
+  both builds, `pnpm stack:verify`.
+
+**What this unblocks.** The message navigation rail now has destinations, and a
+transcript restored after a reload shows what was asked as well as what was
+answered. The reference's remaining gap on this surface is the composer row
+(model and effort, the send control) rather than the conversation itself.
+
 ## Verification
 
 ```text
