@@ -7,9 +7,12 @@
  * a dark desktop — which is exactly the card a user reaches for when the
  * contrast is what they came to fix. Each card therefore carries its own
  * scoped palette and paints itself, and the `system` card paints half of each.
+ *
+ * The selected card is the ringed one, which is how the reference marks it: a
+ * tick in the corner is a second, louder answer to the question the ring has
+ * already asked, and it sits on the artwork it is describing.
  */
 import { computed } from 'vue'
-import { Check } from '@lucide/vue'
 
 import type { ThemePreference } from '../theme'
 
@@ -36,9 +39,14 @@ const checkLabel = computed(() => `${props.label} selected`)
     :tabindex="selected ? 0 : -1"
     :data-theme-option="value"
     :data-preview-theme="value"
+    :title="selected ? checkLabel : undefined"
     @click="$emit('select', value)"
   >
-    <span class="theme-card__frame">
+    <span
+      class="theme-card__frame"
+      data-preview-frame
+      :data-preview-selected="selected ? 'true' : undefined"
+    >
       <span
         class="theme-card__pane theme-card__pane--rail"
         data-preview-pane="rail"
@@ -62,9 +70,6 @@ const checkLabel = computed(() => `${props.label} selected`)
           <span class="theme-card__line theme-card__line--mid" />
           <span class="theme-card__line theme-card__line--short" />
         </span>
-      </span>
-      <span v-if="selected" class="theme-card__check" data-preview-check :title="checkLabel">
-        <Check :size="13" :stroke-width="3" aria-hidden="true" />
       </span>
     </span>
     <span class="theme-card__label">{{ label }}</span>
@@ -104,9 +109,12 @@ const checkLabel = computed(() => `${props.label} selected`)
   border-color: var(--color-border-emphasis);
 }
 
+/* The ring, which is the whole of the selected state: an offset outline rather
+   than a border, so choosing a card does not move the miniature inside it. */
 .theme-card[aria-checked='true'] .theme-card__frame {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 1px var(--color-accent);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
 }
 
 .theme-card:focus-visible {
@@ -250,19 +258,6 @@ const checkLabel = computed(() => `${props.label} selected`)
 
 .theme-card[data-preview-theme='system'] .theme-card__header {
   background: linear-gradient(to right, #fdfdfd 50%, #1b1c1f 50%);
-}
-
-.theme-card__check {
-  position: absolute;
-  inset-block-start: 6px;
-  inset-inline-end: 6px;
-  display: grid;
-  inline-size: 1.15rem;
-  block-size: 1.15rem;
-  place-items: center;
-  border-radius: var(--radius-full);
-  background: var(--color-accent);
-  color: var(--color-accent-contrast);
 }
 
 .theme-card__label {

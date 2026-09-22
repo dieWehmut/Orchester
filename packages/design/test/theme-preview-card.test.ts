@@ -48,12 +48,20 @@ describe('ThemePreviewCard', () => {
     expect(wrapper.emitted('select')).toEqual([['dark']])
   })
 
-  it('draws a check on the selected card rather than only a border', () => {
-    const wrapper = mount(ThemePreviewCard, {
+  it('marks the selected card with the ring the reference draws, not a badge', () => {
+    const selected = mount(ThemePreviewCard, {
       props: { value: 'dark', label: 'Dark', selected: true },
     })
+    const unselected = mount(ThemePreviewCard, {
+      props: { value: 'light', label: 'Light', selected: false },
+    })
 
-    expect(wrapper.get('[data-preview-check]')).toBeTruthy()
+    // The reference's selected card is the one with the ring around the
+    // miniature; a tick in the corner is a second, louder way of saying what
+    // the ring already said, and it covers the artwork it sits on.
+    expect(selected.get('[data-preview-frame]').attributes('data-preview-selected')).toBe('true')
+    expect(selected.find('[data-preview-check]').exists()).toBe(false)
+    expect(unselected.get('[data-preview-frame]').attributes('data-preview-selected')).toBeUndefined()
   })
 
   it('paints each pane from the tokens of the theme it previews', () => {
