@@ -384,6 +384,43 @@ gesture this runtime has - a new answer is a new run - and the second has no
 channel to arrive on. Putting the prompt back is the honest half of the first:
 it leaves the decision to run with the reader.
 
+## Wave U18 - the rail scrubs, and the jump is a shape
+
+§4.4 asked the rail to scrub while dragged, and the reference draws the jump to
+the latest as one round control. Neither was true of the surface: the rail listed
+the turns and jumped on a click, but a drag only raised `data-scrubbing` - a flag
+that says a drag is happening and moves nothing - and the jump control changed
+its whole face when output arrived, so the control a reader had learned vanished
+exactly when they had something to catch up on.
+
+- [x] U18-01: Let the drag be the jump, and keep the words up while aiming.
+  - The mark reports the turn the finger has reached, so the drag is a sequence
+    of jumps; re-reporting the mark already reached is ignored, because
+    otherwise the transcript would re-scroll on every pixel of the drag. A drag
+    has no hover, so the mark being aimed at keeps its label: aiming at a turn
+    means choosing it by its question, and the question is written nowhere else
+    on screen.
+  - `apps/web/test/message-rail.test.ts` pins the jumps, the dropped repeat, the
+    label that survives the drag, and the mark the rail last sent the transcript
+    to.
+- [x] U18-02: Draw the jump to the latest as the reference's round control.
+  - A down arrow in a round button with the count on its corner, and the count
+    in the accessible name the face no longer carries; the corner is
+    `aria-hidden` so the sentence is not spoken twice. The button keeps the
+    `--hit-target-min` box §7 floors it at rather than shrinking to the glyph.
+- [x] U18-03: Re-run the gate: `pnpm typecheck`, `pnpm test`, both builds,
+  `pnpm stack:verify`.
+  - `pnpm typecheck` is clean across all seven projects; `pnpm test` is green at
+    26 tooling + 89 protokoll + 292 design + 28 ereignis + 31 website + 575 web
+    + 1 desktop-security + 9 desktop tooling tests; the web and website builds
+    succeed; `pnpm stack:verify` matches.
+
+**Still refused.** The rail still lists the reader's turns and nothing else: an
+answer is not a destination, because the transcript already shows it under the
+question it belongs to. And the mark it marks as reached is the one it *sent*
+the transcript to rather than one read back from the scroll position - the rail
+reports choices, it does not observe them.
+
 ## Verification
 
 ```text
