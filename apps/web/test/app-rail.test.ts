@@ -1,4 +1,4 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
 
@@ -80,7 +80,30 @@ describe('AppRail', () => {
     expect(wrapper.emitted('newSession')).toHaveLength(1)
   })
 
-  it('pins the account footer under the fleet and emits the settings intent', async () => {
+  it('seats new chat as a row, the way the reference seats its own', () => {
+    const wrapper = mount(AppRail, {
+      props: {
+        productName: 'Orchester',
+        workspaceName: 'Orchester',
+        newSessionLabel: 'New chat',
+        projectsLabel: 'Projects',
+        sessionsLabel: 'Sessions',
+        fleetLabel: 'Agents',
+        accountName: 'Orchester',
+        settingsLabel: 'Settings',
+      },
+    })
+
+    // The reference lists new chat among the column's destinations rather than
+    // boxing it: a bordered block reads as a form control parked beside the
+    // list, which is not what the row above a list of them is.
+    const control = wrapper.get('[data-rail-section="primary"] [data-rail-action="new-session"]')
+    expect(control.attributes('data-rail-row')).toBe('new-session')
+    expect(wrapper.get('[data-rail-section="primary"]').find('.app-button').exists()).toBe(false)
+    expect(control.text()).toContain('New chat')
+  })
+
+  it('keeps settings in the account menu rather than a gear beside the row', async () => {
     const wrapper = mount(AppRail, {
       props: {
         productName: 'Orchester',
@@ -93,19 +116,18 @@ describe('AppRail', () => {
         accountHint: 'Local runtime',
         settingsLabel: 'Settings',
       },
-      slots: {
-        projects: '<p>Projects</p>',
-        sessions: '<p>Sessions</p>',
-        fleet: '<p>Agents</p>',
-      },
     })
 
-    const account = wrapper.get('[data-rail-account]')
-    expect(account.text()).toContain('Orchester')
-    expect(account.text()).toContain('Local runtime')
-    expect(wrapper.get('[data-rail-action=settings]').attributes('aria-label')).toBe('Settings')
+    // The reference's account row ends at the identity: settings is a row in
+    // the menu it opens, and a gear beside the name is the same destination
+    // offered twice with different words.
+    expect(wrapper.find('[data-rail-action="settings"]').exists()).toBe(false)
 
-    await wrapper.get('[data-rail-action=settings]').trigger('click')
+    await wrapper.get('[data-rail-account-menu] [aria-haspopup="menu"]').trigger('click')
+    const rows = wrapper.findAll('[role="menuitem"]')
+    expect(rows.map((row) => row.text())).toEqual(['Settings'])
+
+    await rows[0]!.trigger('click')
 
     expect(wrapper.emitted('openSettings')).toHaveLength(1)
   })
