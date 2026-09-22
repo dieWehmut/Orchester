@@ -47,14 +47,16 @@ describe('integrated companion preferences', () => {
     })
     try {
       await flushPromises()
-      window.dispatchEvent(new MouseEvent('pointermove', { clientX: 500, clientY: 0 }))
+      // Within the companion's notice radius, so the pointer is addressing it
+      // rather than merely sharing the screen with it.
+      window.dispatchEvent(new MouseEvent('pointermove', { clientX: 60, clientY: 0 }))
       await flushPromises()
       const companion = wrapper.get('[data-pet-companion]')
       expect(companion.attributes('data-pet-look')).toBeUndefined()
       expect(companion.attributes('data-pet-frame')).toBe('56')
       appearance.setReducedMotion('false')
       await flushPromises()
-      window.dispatchEvent(new MouseEvent('pointermove', { clientX: 500, clientY: 0 }))
+      window.dispatchEvent(new MouseEvent('pointermove', { clientX: 60, clientY: 0 }))
       await flushPromises()
       expect(companion.attributes('data-pet-look')).toBeDefined()
     } finally {

@@ -212,6 +212,42 @@ account, no meter and nothing to sign out of, so those rows stay out rather than
 being faked; the menu carries what it can answer - the companion and settings,
 both with the chord the live registry holds.
 
+## Wave U12 - the companion, let off its seat
+
+The companion arrived seated: one sprite cell above the composer, holding
+whatever pose the run asked of it. The reference's companion is ambient instead
+- it pads along the strip its corner opens for it and turns to face the way it
+is going - so this wave gives it somewhere to walk and a reason to.
+
+- [x] U12-01: Plan a walk rather than play one.
+  - `apps/web/test/pet-roam.test.ts` pins the leg: a whole number of walk
+    cycles, the direction with room rather than a coin flip into a wall, and a
+    rest drawn from an authored window.
+- [x] U12-02: Let the companion pace the stage it was given.
+  - `pet-companion.test.ts` pins the walk, the row each direction draws, the
+    glide timed to the leg, and that an interrupted leg leaves the companion
+    standing where it had got to rather than at either end.
+- [x] U12-03: Open a stage above the composer for it to walk on.
+  - The band was a seat; it is a stage now, and its own width is the travel it
+    reports. The span leaves the sprite its own width behind, because the
+    sprite moves by transform.
+- [x] U12-04: Notice the pointer that is addressing the companion, and only
+    that one.
+  - `pet-roam.test.ts` pins the radius as a circle. This is the correction a
+    real window forced: a companion that took a look from any distance spent
+    its life attending to a reader working in the transcript and never walked.
+- [x] U12-05: Re-run the gate: `pnpm typecheck`, `pnpm test`, both builds,
+  `pnpm stack:verify`.
+  - `pnpm typecheck` is clean across all seven projects; `pnpm test` is green at
+    579 web + 274 design + the rest; the web and website builds succeed;
+    `pnpm stack:verify` matches.
+
+**Deliberately not done.** The companion keeps no menu of its own and remembers
+nothing about where it likes to stand: the visibility switch is still the only
+preference, because a companion that had to be configured would not be ambient.
+The walk is also CSS rather than canvas - one transform and one looping sprite
+row - so there is no per-frame draw to spend on a decoration.
+
 ## Verification
 
 ```text
