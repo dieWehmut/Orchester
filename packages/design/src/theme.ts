@@ -53,6 +53,46 @@ export const COLOR_SCHEME_ATTRIBUTE = 'data-color-scheme'
 export const THEME_STORAGE_KEY = 'orchester:theme'
 export const COLOR_SCHEME_STORAGE_KEY = 'orchester:color-scheme'
 
+/* ── One hue per theme ─────────────────────────────────────────────
+   The accent the reader picks for a light page is rarely the one they want on
+   a dark one, and the surface this design learned from offers the two side by
+   side. The pair is the state; the single `data-color-scheme` attribute is
+   still the only thing the stylesheet matches on, and it carries whichever
+   half belongs to the theme in force. The older single key is still read, and
+   still means "both themes", because a preference stored before this axis
+   existed was a choice about the product rather than about one of its themes. */
+
+export interface ColorSchemePair {
+  light: ColorScheme
+  dark: ColorScheme
+}
+
+export const COLOR_SCHEMES_STORAGE_KEY = 'orchester:color-schemes'
+
+/**
+ * Parse a stored pair, keeping only the halves that name a real scheme.
+ *
+ * Storage is not a trusted input: a build can be downgraded, a user can edit
+ * the entry by hand, and another tab can be halfway through writing it. The
+ * unreadable halves are dropped rather than the whole pair being discarded, so
+ * one bad value cannot cost the reader the other theme's hue.
+ */
+export function parseColorSchemePair(value: string | null): Partial<ColorSchemePair> {
+  if (value === null) return {}
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(value)
+  } catch {
+    return {}
+  }
+  if (!parsed || typeof parsed !== 'object') return {}
+  const record = parsed as Record<string, unknown>
+  const pair: Partial<ColorSchemePair> = {}
+  if (isColorScheme(record.light)) pair.light = record.light
+  if (isColorScheme(record.dark)) pair.dark = record.dark
+  return pair
+}
+
 export function isThemeMode(value: unknown): value is ThemeMode {
   return typeof value === 'string' && (THEME_MODES as readonly string[]).includes(value)
 }
