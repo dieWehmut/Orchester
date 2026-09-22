@@ -212,6 +212,44 @@ account, no meter and nothing to sign out of, so those rows stay out rather than
 being faked; the menu carries what it can answer - the companion and settings,
 both with the chord the live registry holds.
 
+## Wave U12 - the transcript's two idioms
+
+A transcript is two things at once, and the reference only draws one of them.
+The conversation is a question and an answer, read as prose; the run's own
+record is tool calls, approvals and validations, which is a ledger with numbers
+on it. §4.4 asked for "role marker · content · actions" and the surface was
+drawing everything as an event card, so this wave separates the two.
+
+- [x] U12-01: Render messages and reasoning in the conversation's idiom and
+  everything else in the run's.
+  - `apps/web/test/chat-message-anatomy.test.ts` pins the shapes: an answer is
+    prose with no ledger number, the reader's own turn is a bubble at the end of
+    the measure, and a tool call keeps its card *and* its sequence - the number
+    belongs to the record, not to the sentence.
+- [x] U12-02: Offer the answer as a copy, and say when it has been taken.
+  - `MessageActions` is the whole action set, because it is the only one this
+    product can answer: the runtime cannot re-run a turn and keeps no feedback
+    channel, and a button that does nothing is worse than a button that is not
+    there. The row is drawn on hover or focus but never removed from the tree.
+- [x] U12-03: Read a stored session as the conversation it was.
+  - `SessionTranscript` drops the uppercase `Request`/`Result` headings: the
+    role is the shape, as it is in the reference. `workspace-view.test.ts` keeps
+    pinning that the stored answer reaches the pane.
+- [x] U12-04: Count the reasoning in the reader's own language.
+  - The disclosure had `{{ count }} characters` typed into its template, which
+    the locale sweep could not see through the interpolation.
+- [x] U12-05: Re-run the gate: `pnpm typecheck`, `pnpm test`, both builds,
+  `pnpm stack:verify`.
+
+**What the reference has and this wave cannot yet draw.** The reference opens a
+conversation with the reader's question, and a resumed Orchester transcript has
+no question in it: `projectConversation` only ever projects assistant output,
+because the runtime writes no user-message event when a run starts. The bubble
+shape therefore renders from the `role` the timeline item already carries - and
+`railMarks`, the message navigation rail, has nothing to list in production
+until the journal carries the user's turn. That is a runtime and protocol change
+rather than a surface one, and it is the next thing this objective needs.
+
 ## Verification
 
 ```text
