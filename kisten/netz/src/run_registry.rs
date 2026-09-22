@@ -299,6 +299,10 @@ fn apply_kind(state: &mut RunMutable, kind: &UiEventKind) {
     match kind {
         UiEventKind::RunStarted { .. }
         | UiEventKind::TurnStarted {}
+        // The reader's own turn is journalled before the runtime has said
+        // anything, and the API has already accepted the run by then: a
+        // snapshot taken between the two must not claim the run has not begun.
+        | UiEventKind::UserMessage { .. }
         | UiEventKind::Message { .. }
         | UiEventKind::MessageDelta { .. }
         | UiEventKind::Reasoning { .. }

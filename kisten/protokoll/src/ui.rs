@@ -233,6 +233,16 @@ pub enum UiEventKind {
         title: Option<String>,
     },
     TurnStarted {},
+    /// The reader's own turn, as the run was started with it.
+    ///
+    /// The journal is what a browser replays, and a conversation that opens with
+    /// an answer has lost the question: the message rail navigates by the
+    /// reader's turns, and a resumed transcript has to show what was asked as
+    /// well as what was said. The text is whatever the run was started with,
+    /// already bounded by the request contract.
+    UserMessage {
+        text: String,
+    },
     Message {
         text: String,
     },
@@ -386,6 +396,12 @@ impl UiEventKind {
                 title: title.as_deref().map(redact_ui_text),
             },
             Self::TurnStarted {} => Self::TurnStarted {},
+            // The reader's own turn goes through the same redaction as the
+            // model's: a prompt can name a path, and the browser-facing stream
+            // is the one place that policy has to hold.
+            Self::UserMessage { text } => Self::UserMessage {
+                text: redact_ui_text(text),
+            },
             Self::Message { text } => Self::Message {
                 text: redact_ui_text(text),
             },
@@ -750,6 +766,9 @@ mod tests {
                 title: Some("Roundtrip".into()),
             },
             UiEventKind::TurnStarted {},
+            UiEventKind::UserMessage {
+                text: "inspect the workspace".into(),
+            },
             UiEventKind::Message {
                 text: "hello".into(),
             },

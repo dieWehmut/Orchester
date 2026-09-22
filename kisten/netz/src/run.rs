@@ -18,7 +18,7 @@ use axum::{
 };
 use orchester_anwendung::SelfAgentHost;
 use orchester_laufzeit::harness::service::RunEventSink;
-use orchester_protokoll::RunId;
+use orchester_protokoll::{RunId, UiEventKind};
 use serde::Deserialize;
 
 use crate::{
@@ -60,9 +60,22 @@ pub(crate) async fn start_run_handler(
     let cancel = run.cancellation_token();
     let events_url = run_events_url(&headers, &run_id);
 
+    let StartRunRequest { prompt, resume } = request;
+
+    // The journal opens with the reader's own turn, not with the runtime's
+    // answer. A snapshot a browser replays has to show what was asked - the
+    // transcript draws the question as the reader's bubble and the message rail
+    // navigates by it - and the runtime never reports it back, because from its
+    // side the prompt is the request rather than an event. The text is already
+    // bounded and control-character checked by `StartRunRequest::validate`.
+    run.append(UiEventKind::UserMessage {
+        text: prompt.clone(),
+    })
+    .await
+    .map_err(|error| run_error_response(error, request_id))?;
+
     let (sink, receiver) = RegistryRunSink::channel();
     let drain = drain_run_events(run.clone(), run_id.clone(), receiver);
-    let StartRunRequest { prompt, resume } = request;
     tokio::spawn(async move {
         let drain = drain;
         let run_task = async move {
