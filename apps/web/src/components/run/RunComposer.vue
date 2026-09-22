@@ -244,10 +244,25 @@ function handleKeydown(event: KeyboardEvent): void {
   event.preventDefault()
   submit()
 }
+
+/**
+ * Put the caret in the field.
+ *
+ * The transcript's actions write into this composer, and an edit the reader has
+ * to find the field for is an edit they did not make.
+ */
+const form = ref<HTMLFormElement | null>(null)
+
+function focus(): void {
+  form.value?.querySelector('textarea')?.focus()
+}
+
+defineExpose({ focus })
 </script>
 
 <template>
   <form
+    ref="form"
     class="run-composer"
     data-run-composer
     :data-composer-state="composerState"

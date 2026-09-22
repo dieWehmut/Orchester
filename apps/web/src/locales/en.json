@@ -343,7 +343,9 @@
     "copyMessage": "Copy message",
     "copied": "Copied",
     "reasoningSummary": "{count} characters",
-    "externalLink": "Opens in a new tab"
+    "externalLink": "Opens in a new tab",
+    "quote": "Quote in the composer",
+    "reuse": "Use this prompt again"
   },
   "inspector": {
     "label": "Workspace inspector",

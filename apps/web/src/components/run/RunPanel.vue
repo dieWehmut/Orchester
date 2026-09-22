@@ -69,6 +69,32 @@ const emit = defineEmits<{
 const { t } = useI18n()
 
 /**
+ * The draft the composer is editing.
+ *
+ * The panel owns it rather than the composer because the transcript's action row
+ * writes into it: quoting an answer and putting a prompt back are both edits to
+ * the next prompt, and the field is where they end.
+ */
+const composerDraft = ref('')
+const composer = ref<InstanceType<typeof RunComposer> | null>(null)
+
+/** Quote an answer into the field as markdown, which is how it will be read. */
+function quoteAnswer(text: string): void {
+  const quoted = text
+    .split('\n')
+    .map((line) => (line.trim().length > 0 ? `> ${line}` : '>'))
+    .join('\n')
+  composerDraft.value = `${quoted}\n\n`
+  void nextTick(() => composer.value?.focus())
+}
+
+/** Put the reader's own prompt back, so it can be run again or edited first. */
+function reusePrompt(text: string): void {
+  composerDraft.value = text
+  void nextTick(() => composer.value?.focus())
+}
+
+/**
  * A run waiting on the user is the one case the plan strip has to escalate:
  * `awaiting_approval` means the next move is not the agent's to make.
  */
@@ -182,6 +208,8 @@ const petNotification = computed(() => {
         :view="props.view"
         :scroll-top="scrollTop"
         :viewport-height="viewportHeight"
+        @quote="quoteAnswer"
+        @reuse="reusePrompt"
       />
       <EmptyWorkspace
         v-else-if="!props.conversationStarted"
@@ -234,12 +262,15 @@ const petNotification = computed(() => {
       />
     </div>
     <RunComposer
+      ref="composer"
+      :model-value="composerDraft"
       :busy="props.busy"
       :lifecycle="props.lifecycle"
       :workspace-name="props.workspaceName"
       :model-catalog="props.modelCatalog"
       :model-status="props.modelStatus"
       :settings-key="props.settingsKey"
+      @update:model-value="composerDraft = $event"
       @submit="emit('submit', $event)"
       @cancel="emit('cancel')"
     />

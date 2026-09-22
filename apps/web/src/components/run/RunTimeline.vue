@@ -23,6 +23,15 @@ const props = withDefaults(
   { scrollTop: 0, viewportHeight: 0 },
 )
 
+/**
+ * The reader's next move, reported upward rather than performed here: this list
+ * draws a timeline, and the composer is the surface that owns a draft.
+ */
+const emit = defineEmits<{
+  quote: [text: string]
+  reuse: [text: string]
+}>()
+
 const list = ref<HTMLElement | null>(null)
 const heights = ref<(number | undefined)[]>([])
 
@@ -181,8 +190,11 @@ function assertNever(value: never): never {
           />
           <p v-else class="run-timeline__text" data-message-plain>{{ item.text }}</p>
           <!--
-            Only the answer carries a copy: the reader already has their own
-            words, and the reference hangs the actions off the answer too.
+            Each side of the conversation offers the move that belongs to it:
+            the answer can be quoted into the composer as the start of the next
+            prompt, and the reader's own turn can be put back to run again.
+            Neither starts work on its own - both end with the caret in the
+            field - which is what the reference's own row does not promise.
           -->
           <MessageActions
             v-if="item.role === 'assistant'"
@@ -190,6 +202,21 @@ function assertNever(value: never): never {
             :text="item.text"
             :label="t('transcript.copyMessage')"
             :copied-label="t('transcript.copied')"
+            :actions="[
+              { id: 'quote', label: t('transcript.quote'), icon: 'quote' as const },
+            ]"
+            @action="emit('quote', item.text)"
+          />
+          <MessageActions
+            v-else
+            class="run-timeline__actions"
+            :text="item.text"
+            :label="t('transcript.copyMessage')"
+            :copied-label="t('transcript.copied')"
+            :actions="[
+              { id: 'reuse', label: t('transcript.reuse'), icon: 'reuse' as const },
+            ]"
+            @action="emit('reuse', item.text)"
           />
         </div>
       </template>

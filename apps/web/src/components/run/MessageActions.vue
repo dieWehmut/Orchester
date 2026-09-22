@@ -2,26 +2,44 @@
 /**
  * What a reader can do with a message they are looking at.
  *
- * One action, because it is the only one this product can answer: the text is
- * here, so it can be copied. The reference also offers regeneration and
- * feedback; Orchester's runtime has no way to re-run a turn and keeps no
- * feedback channel, and a button that does nothing is worse than a button that
- * is not there.
+ * Copying is always here, because the text is here. Everything else arrives from
+ * the surface, with its own words and its own glyph: the reference hangs a row
+ * of icons off a message, and the row is only worth its space if each control
+ * does something this product can answer. Regeneration and feedback are the
+ * reference's other two, and neither is offered - the runtime cannot re-run a
+ * turn in place and keeps no feedback channel - so what a surface can add here
+ * is the reader's next move rather than the agent's.
  *
  * The row is drawn on hover or focus, but it is never removed from the tree:
  * a control that only exists while a pointer is over it is a control a keyboard
  * user cannot reach.
  */
-import { Check, Copy } from '@lucide/vue'
+import { Check, Copy, Quote, RotateCcw } from '@lucide/vue'
 import { onScopeDispose, ref } from 'vue'
 
-const props = defineProps<{
-  text: string
-  /** The accessible name of the copy control, resolved by the surface. */
+/** An action the surface adds, named by the surface rather than here. */
+export interface MessageAction {
+  id: string
   label: string
-  /** What the control says it has done, announced and then retired. */
-  copiedLabel: string
-}>()
+  icon: 'quote' | 'reuse'
+}
+
+const props = withDefaults(
+  defineProps<{
+    text: string
+    /** The accessible name of the copy control, resolved by the surface. */
+    label: string
+    /** What the control says it has done, announced and then retired. */
+    copiedLabel: string
+    /** Extra actions, drawn after the copy in the order they are given. */
+    actions?: readonly MessageAction[]
+  }>(),
+  { actions: () => [] },
+)
+
+const emit = defineEmits<{ action: [id: string] }>()
+
+const GLYPHS = { quote: Quote, reuse: RotateCcw } as const
 
 /** How long the control admits it copied before going back to offering to. */
 const CONFIRMATION_MS = 2000
@@ -62,6 +80,18 @@ onScopeDispose(() => {
     >
       <Check v-if="copied" :size="14" aria-hidden="true" />
       <Copy v-else :size="14" aria-hidden="true" />
+    </button>
+    <button
+      v-for="action in actions"
+      :key="action.id"
+      class="message-actions__button"
+      type="button"
+      :data-message-action="action.id"
+      :aria-label="action.label"
+      :title="action.label"
+      @click="emit('action', action.id)"
+    >
+      <component :is="GLYPHS[action.icon]" :size="14" aria-hidden="true" />
     </button>
     <span class="message-actions__status" data-message-copy-status role="status" aria-live="polite">
       {{ copied ? copiedLabel : '' }}
