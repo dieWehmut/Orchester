@@ -3,7 +3,9 @@ import { resolve as resolvePath } from 'node:path'
 
 import { describe, expect, it } from 'vitest'
 
-import { THEME_COLOURS } from '../src/components/settings/theme-colours'
+import { COLOR_SCHEMES } from '@orchester/design'
+
+import { THEME_COLOURS, themeAccent, themeAccentContrast } from '../src/components/settings/theme-colours'
 
 /**
  * The theme colour pair the appearance table prints.
@@ -49,6 +51,17 @@ const themes = {
   light: block("[data-theme='light']"),
 } as const
 
+/**
+ * One theme's accent block, which is where the hue for a scheme is declared.
+ *
+ * A scheme is declared once per theme, because an accent that reads well on the
+ * dark base is unreadable on the light one; walking the stylesheet's own block
+ * is what keeps the cards from printing a hue the product never paints.
+ */
+function schemeBlock(theme: 'dark' | 'light', scheme: string): Record<string, string> {
+  return block(`[data-theme='${theme}'][data-color-scheme='${scheme}']`)
+}
+
 /** Follows `var()` one hop at a time, as the cascade would. */
 function resolveToken(name: string, theme: Record<string, string>): string {
   let current = name
@@ -89,6 +102,34 @@ describe('theme colour mirror', () => {
       expect(hexOf(THEME_COLOURS[theme].foreground)).toBe(
         hexOf(resolveToken('--color-text-primary', themes[theme])),
       )
+    }
+  })
+
+  /**
+   * The accent is the one role the mirror cannot key by theme alone: the same
+   * scheme is two colours, and the light variants are darkened until
+   * accent-on-base clears AA. Both halves are walked out of the stylesheet's
+   * own scheme blocks, so a card cannot print a hue the product never paints.
+   */
+  it('reports the accent each theme paints each scheme in', () => {
+    for (const theme of ['dark', 'light'] as const) {
+      for (const scheme of COLOR_SCHEMES) {
+        const block = schemeBlock(theme, scheme)
+
+        expect(hexOf(themeAccent(theme, scheme))).toBe(hexOf(resolveToken('--color-accent', block)))
+      }
+    }
+  })
+
+  it('reports the text colour that rides on that accent', () => {
+    for (const theme of ['dark', 'light'] as const) {
+      for (const scheme of COLOR_SCHEMES) {
+        const block = schemeBlock(theme, scheme)
+
+        expect(hexOf(themeAccentContrast(theme, scheme))).toBe(
+          hexOf(resolveToken('--color-accent-contrast', block)),
+        )
+      }
     }
   })
 })

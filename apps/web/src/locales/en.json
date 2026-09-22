@@ -146,7 +146,11 @@
       "title": "Theme",
       "description": "Customise how Orchester looks and feels.",
       "system": "System",
-      "hint": "Preset light and dark surfaces."
+      "hint": "Preset light and dark surfaces.",
+      "lightTheme": "Light theme",
+      "darkTheme": "Dark theme",
+      "copyTheme": "Copy theme",
+      "sample": "Aa"
     },
     "locale": {
       "en": "English",

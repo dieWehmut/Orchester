@@ -3,14 +3,14 @@
  * The settings surface.
  *
  * Laid out like the reference: a titled section list on the left, and on the
- * right the appearance screen — three theme cards, a live code preview, then a
- * table of the individual axes. The table is the part that matters: it names
- * every axis, shows the value it currently holds in the colour or sample it
- * produces, and lets each be changed without hunting through the shell.
+ * right the appearance screen — the theme cards, a live code preview, then one
+ * card per theme carrying the hue, background and foreground that theme
+ * resolves to, and finally a table of the axes that are not about a theme.
  */
 import {
   Bell,
   Compass,
+  Copy,
   Download,
   Info,
   ArrowLeft,
@@ -33,7 +33,6 @@ import {
   AppSelect,
   AppSwitch,
   CodePreview,
-  ColorSchemePicker,
   EmptyState,
   ThemePreviewCard,
   exportAppearanceProfile,
@@ -43,6 +42,7 @@ import {
   useAppearance,
   type AppearanceApi,
   type AppSegmentOption,
+  type ColorScheme,
   type ThemeMode,
   type ThemePreference,
 } from '@orchester/design'
@@ -50,7 +50,12 @@ import { computed, inject, ref } from 'vue'
 import { routerKey } from 'vue-router'
 
 import { usePetVisibility } from '../features/pet'
-import { themeColours } from '../components/settings/theme-colours'
+import {
+  themeAccent,
+  themeAccentContrast,
+  themeClipboardPayload,
+  themeColours,
+} from '../components/settings/theme-colours'
 import { useI18n } from '../i18n'
 import ShortcutEditor from '../components/settings/ShortcutEditor.vue'
 import { readDocumentPlatform, readSystemPlatform } from '@orchester/design'
@@ -186,10 +191,14 @@ const themeCards = computed<
   { value: 'dark', label: t('settings.appearance.dark'), icon: Moon },
 ])
 
-const themeValue = computed({
-  get: () => appearance.theme.value,
-  set: (value: string) => appearance.setTheme(value as ThemeMode),
-})
+/**
+ * The two themes, in the order the reference draws them.
+ *
+ * Not `THEME_PREFERENCES`: "system" is a preference rather than a palette, and
+ * it is the cards above that choose it. These two are the columns the reader
+ * sets a colour for.
+ */
+const themeModes = ['light', 'dark'] as const
 
 const schemeOptions = computed(() => [
   { value: 'rose', label: t('settings.colorScheme.rose') },
@@ -198,10 +207,45 @@ const schemeOptions = computed(() => [
   { value: 'teal', label: t('settings.colorScheme.teal') },
 ])
 
-const schemeValue = computed({
-  get: () => appearance.colorScheme.value,
-  set: (value: string) => appearance.setColorScheme(value as never),
-})
+function themeLabel(mode: ThemeMode): string {
+  return mode === 'light'
+    ? t('settings.appearance.lightTheme')
+    : t('settings.appearance.darkTheme')
+}
+
+/** The hue one theme is set in. */
+function schemeFor(mode: ThemeMode): ColorScheme {
+  return appearance.colorSchemes.value[mode]
+}
+
+/** What one theme's card reports, in that theme rather than the active one. */
+function coloursFor(mode: ThemeMode) {
+  return themeColours(mode)
+}
+
+function accentFor(mode: ThemeMode): string {
+  return themeAccent(mode, schemeFor(mode))
+}
+
+/** The text colour that rides on that accent, for the card's own theme. */
+function accentContrastFor(mode: ThemeMode): string {
+  return themeAccentContrast(mode, schemeFor(mode))
+}
+
+/**
+ * Copy one theme as text, the way the reference's "copy theme" does.
+ *
+ * The card is already printing these values, so what lands on the clipboard is
+ * the same four facts rather than a screenshot of them.
+ */
+async function copyTheme(mode: ThemeMode): Promise<void> {
+  const text = themeClipboardPayload(mode, schemeFor(mode))
+  try {
+    await navigator.clipboard?.writeText(text)
+  } catch {
+    /* A clipboard the browser refuses is not worth a broken screen. */
+  }
+}
 
 const uiFontOptions = computed(() => [
   { value: 'system', label: t('settings.uiFont.system') },
@@ -305,24 +349,11 @@ const reducedMotionSource = computed(() =>
     : t('settings.reducedMotion.explicit'),
 )
 
-const schemeSwatch = computed(
-  () =>
-    ({
-      rose: '#f472b6',
-      codex: '#339cff',
-      violet: '#ad7bf9',
-      teal: '#4fbfad',
-    })[appearance.colorScheme.value],
-)
-
 /**
- * What the two colour rows report, in the theme that is in force.
- *
- * The reference prints the hex beside each swatch, so the value is readable
- * rather than only visible.
+ * The preview shows the theme in force, so it prints that theme's accent for
+ * the scheme that theme is set in - the light and dark halves of one scheme are
+ * two colours, and the preview has to show the one the reader is looking at.
  */
-const colours = computed(() => themeColours(appearance.theme.value))
-
 const previewBefore = computed(() => [
   'const themePreview: ThemeConfig = {',
   '  surface: "sidebar",',
@@ -376,7 +407,7 @@ async function importProfile(event: Event): Promise<void> {
 const previewAfter = computed(() => [
   'const themePreview: ThemeConfig = {',
   '  surface: "sidebar-elevated",',
-  `  accent: "${schemeSwatch.value}",`,
+  `  accent: "${accentFor(appearance.theme.value)}",`,
   '  contrast: 68,',
   '};',
 ])
@@ -500,24 +531,133 @@ const previewAfter = computed(() => [
           <p>{{ t('settings.appearance.description') }}</p>
         </header>
 
-        <div class="settings-view__cards" role="radiogroup" :aria-label="t('settings.appearance.title')">
-          <ThemePreviewCard
-            v-for="card in themeCards"
-            :key="card.value"
-            :value="card.value"
-            :label="card.label"
-            :group-label="t('settings.appearance.title')"
-            :selected="appearance.themePreference.value === card.value"
-            @select="appearance.setThemePreference($event)"
-          />
+        <!-- The reference labels the cards rather than leaving three pictures
+             to be guessed at, and the label is the group's accessible name too. -->
+        <div class="settings-view__block" data-appearance-group="theme">
+          <h3 class="settings-view__block-label">{{ t('settings.appearance.title') }}</h3>
+          <div
+            class="settings-view__cards"
+            role="radiogroup"
+            :aria-label="t('settings.appearance.title')"
+          >
+            <ThemePreviewCard
+              v-for="card in themeCards"
+              :key="card.value"
+              :value="card.value"
+              :label="card.label"
+              :group-label="t('settings.appearance.title')"
+              :selected="appearance.themePreference.value === card.value"
+              @select="appearance.setThemePreference($event)"
+            />
+          </div>
         </div>
 
-        <CodePreview
-          :before="previewBefore"
-          :after="previewAfter"
-          :title="t('settings.preview.title')"
-          :hint="t('settings.preview.hint')"
-        />
+        <CodePreview :before="previewBefore" :after="previewAfter" />
+
+        <!--
+          One card per theme, as the reference draws them. Each reports the
+          colours *it* resolves to rather than the ones in force, because the
+          reader came here to set the theme they are not currently in as often
+          as the one they are.
+        -->
+        <section
+          v-for="mode in themeModes"
+          :key="mode"
+          class="settings-view__theme"
+          :data-appearance-theme="mode"
+        >
+          <header class="settings-view__theme-head">
+            <h3>{{ themeLabel(mode) }}</h3>
+            <div class="settings-view__theme-actions">
+              <AppButton
+                variant="ghost"
+                size="sm"
+                data-action="import-theme"
+                @click="importTrigger?.click()"
+              >
+                <Upload :size="14" aria-hidden="true" />
+                {{ t('settings.table.import') }}
+              </AppButton>
+              <AppButton
+                variant="ghost"
+                size="sm"
+                data-action="copy-theme"
+                @click="copyTheme(mode)"
+              >
+                <Copy :size="14" aria-hidden="true" />
+                {{ t('settings.appearance.copyTheme') }}
+              </AppButton>
+              <span
+                class="settings-view__theme-swatch"
+                data-theme-swatch
+                :style="{ background: accentFor(mode), color: accentContrastFor(mode) }"
+                aria-hidden="true"
+              >
+                {{ t('settings.appearance.sample') }}
+              </span>
+              <span class="settings-view__theme-choice" data-appearance-field="scheme">
+                <AppSelect
+                  :model-value="schemeFor(mode)"
+                  :options="schemeOptions"
+                  :aria-label="`${themeLabel(mode)}: ${t('settings.colorScheme.title')}`"
+                  @update:model-value="appearance.setColorSchemeFor(mode, $event as ColorScheme)"
+                />
+              </span>
+            </div>
+          </header>
+
+          <div class="settings-view__row" data-appearance-field="accent">
+            <div class="settings-view__row-copy">
+              <strong>{{ t('settings.colorScheme.title') }}</strong>
+              <span>{{ t('settings.colorScheme.description') }}</span>
+            </div>
+            <div class="settings-view__row-control">
+              <span
+                class="settings-view__readout"
+                data-color-readout
+                :style="{ background: accentFor(mode) }"
+                aria-hidden="true"
+              />
+              <code class="settings-view__hex" data-color-hex>{{ accentFor(mode) }}</code>
+            </div>
+          </div>
+
+          <div class="settings-view__row" data-appearance-field="background">
+            <div class="settings-view__row-copy">
+              <strong>{{ t('settings.background.title') }}</strong>
+              <span>{{ t('settings.background.description') }}</span>
+            </div>
+            <div class="settings-view__row-control">
+              <span
+                class="settings-view__readout"
+                data-color-readout
+                :style="{ background: coloursFor(mode).background }"
+                aria-hidden="true"
+              />
+              <code class="settings-view__hex" data-color-hex>{{
+                coloursFor(mode).background
+              }}</code>
+            </div>
+          </div>
+
+          <div class="settings-view__row" data-appearance-field="foreground">
+            <div class="settings-view__row-copy">
+              <strong>{{ t('settings.foreground.title') }}</strong>
+              <span>{{ t('settings.foreground.description') }}</span>
+            </div>
+            <div class="settings-view__row-control">
+              <span
+                class="settings-view__readout"
+                data-color-readout
+                :style="{ background: coloursFor(mode).foreground }"
+                aria-hidden="true"
+              />
+              <code class="settings-view__hex" data-color-hex>{{
+                coloursFor(mode).foreground
+              }}</code>
+            </div>
+          </div>
+        </section>
 
         <div class="settings-view__table">
           <header class="settings-view__table-head">
@@ -552,42 +692,6 @@ const previewAfter = computed(() => [
           </header>
           <p v-if="profileError" class="settings-view__note" role="alert">{{ profileError }}</p>
 
-          <div class="settings-view__row" data-appearance-field="theme">
-            <div class="settings-view__row-copy">
-              <strong>{{ t('settings.appearance.title') }}</strong>
-              <span>{{ t('settings.appearance.hint') }}</span>
-            </div>
-            <AppSegmentedControl
-              v-model="themeValue"
-              :options="[
-                { id: 'dark', label: t('settings.appearance.dark') },
-                { id: 'light', label: t('settings.appearance.light') },
-              ]"
-              :ariaLabel="t('settings.appearance.title')"
-            />
-          </div>
-
-          <div class="settings-view__row" data-appearance-field="scheme">
-            <div class="settings-view__row-copy">
-              <strong>{{ t('settings.colorScheme.title') }}</strong>
-              <span>{{ t('settings.colorScheme.description') }}</span>
-            </div>
-            <div class="settings-view__row-control">
-              <AppSelect
-                v-model="schemeValue"
-                class="settings-view__control"
-                :options="schemeOptions"
-                :aria-label="t('settings.colorScheme.title')"
-              />
-              <span
-                class="settings-view__swatch"
-                :style="{ background: schemeSwatch }"
-                aria-hidden="true"
-              />
-              <ColorSchemePicker />
-            </div>
-          </div>
-
           <div class="settings-view__row" data-appearance-field="intensity">
             <div class="settings-view__row-copy">
               <strong>{{ t('settings.intensity.title') }}</strong>
@@ -612,38 +716,6 @@ const previewAfter = computed(() => [
                 v-model="reducedMotionValue"
                 :label="t('settings.reducedMotion.title')"
               />
-            </div>
-          </div>
-
-          <div class="settings-view__row" data-appearance-field="background">
-            <div class="settings-view__row-copy">
-              <strong>{{ t('settings.background.title') }}</strong>
-              <span>{{ t('settings.background.description') }}</span>
-            </div>
-            <div class="settings-view__row-control">
-              <span
-                class="settings-view__readout"
-                data-color-readout
-                :style="{ background: 'var(--color-bg-base)' }"
-                aria-hidden="true"
-              />
-              <code class="settings-view__hex" data-color-hex>{{ colours.background }}</code>
-            </div>
-          </div>
-
-          <div class="settings-view__row" data-appearance-field="foreground">
-            <div class="settings-view__row-copy">
-              <strong>{{ t('settings.foreground.title') }}</strong>
-              <span>{{ t('settings.foreground.description') }}</span>
-            </div>
-            <div class="settings-view__row-control">
-              <span
-                class="settings-view__readout"
-                data-color-readout
-                :style="{ background: 'var(--color-text-primary)' }"
-                aria-hidden="true"
-              />
-              <code class="settings-view__hex" data-color-hex>{{ colours.foreground }}</code>
             </div>
           </div>
 
@@ -996,10 +1068,86 @@ const previewAfter = computed(() => [
   font-size: var(--text-sm);
 }
 
+/* The reference labels the cards above them rather than leaving three
+   pictures to be guessed at. */
+.settings-view__block {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.settings-view__block-label {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
 .settings-view__cards {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-4);
+}
+
+/* One theme's card: the head carries the theme's own actions and the choice,
+   the rows below report what that theme resolves to. */
+.settings-view__theme {
+  overflow: hidden;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-base);
+}
+
+.settings-view__theme-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-block-end: 1px solid var(--color-border-default);
+}
+
+.settings-view__theme-head h3 {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.settings-view__theme-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.settings-view__theme-actions :deep(.app-button__label) {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  white-space: nowrap;
+}
+
+/* The reference's swatch spells "Aa" in the theme's own accent, so the card
+   shows the face as well as the colour. */
+.settings-view__theme-swatch {
+  display: inline-grid;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--color-border-emphasis);
+  border-radius: var(--radius-sm);
+  color: var(--color-accent-contrast);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+}
+
+.settings-view__theme-choice {
+  display: inline-flex;
+  inline-size: 11rem;
+}
+
+.settings-view__theme .settings-view__row + .settings-view__row {
+  border-block-start: 1px solid var(--color-border-default);
 }
 
 .settings-view__table {
@@ -1117,15 +1265,6 @@ const previewAfter = computed(() => [
   color: var(--color-text-secondary);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-}
-
-.settings-view__swatch {
-  display: inline-block;
-  inline-size: 1.1rem;
-  block-size: 1.1rem;
-  flex: 0 0 auto;
-  border: 1px solid var(--color-border-emphasis);
-  border-radius: var(--radius-full);
 }
 
 @media (max-width: 900px) {
