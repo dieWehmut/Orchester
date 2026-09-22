@@ -317,6 +317,43 @@ model picker. Orchester has no voice input, and its model and effort are read
 from the runtime's catalog rather than chosen in the field, so the readout stays
 where it is instead of pretending to be a picker.
 
+## Wave U15 - the answer's own markup
+
+A coding agent writes in markdown, and the reference renders it: the answer in
+its screenshot has a linked heading, inline code chips and a mono hash. §4.4
+asked for markdown with `CodeBlock` and the surface had been drawing every
+answer as one pre-wrapped string, so a fenced block arrived as backticks and a
+list as hyphens.
+
+- [x] U15-01: Parse the subset an answer actually uses, into tokens.
+  - `packages/design/src/markdown.ts` produces a token tree rather than HTML:
+    paragraphs, headings, fenced code, both list kinds, inline code, bold and
+    links. `packages/design/test/markdown.test.ts` pins the reading, including
+    the two that matter for safety - raw markup stays text, and a link that is
+    not an address is refused rather than sanitised.
+- [x] U15-02: Render the tokens with elements and never with markup.
+  - `MarkdownText` and `MarkdownSpans` draw every block as a Vue element and
+    hold no string of markup to interpolate; the test asserts the source has no
+    `v-html`, which is what makes text an agent wrote safe to render. Links leave
+    the page with `rel="noopener noreferrer"` and say so out loud through the
+    caller's words. Every heading is drawn at one level, with the written level
+    kept on the element: an `h1` inside a transcript would outrank the page.
+- [x] U15-03: Show it on the two surfaces that carry an answer.
+  - The live transcript renders markdown **once the answer has settled** and
+    keeps the text literal while it arrives - a half-written fence is not a code
+    block yet, and formatting line by line would flicker the paragraph apart
+    under the reader. A stored session renders it directly.
+  - `apps/web/test/chat-message-anatomy.test.ts` pins both the settled reading
+    and the arriving one, and that the reader's own turn is still shown exactly
+    as they typed it: their words are not the agent's markup to interpret.
+- [x] U15-04: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**Kept out of the subset.** Tables, images, nested lists and raw HTML are left
+as the text they were written as. Each of them is a rendering an answer can live
+without; none of them is worth a parser that can be talked into producing an
+element.
+
 ## Verification
 
 ```text
