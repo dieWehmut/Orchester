@@ -1,34 +1,29 @@
 <script setup lang="ts">
 import { FolderOpen } from '@lucide/vue'
-import type { ModelCatalogDto } from '@orchester/protokoll'
 
 import { useI18n } from '../../i18n'
-import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
-import ModelContextControl from './ModelContextControl.vue'
 
 const { t } = useI18n()
 
 withDefaults(
   defineProps<{
     workspaceName?: string | null
-    modelCatalog?: ModelCatalogDto | null
-    modelStatus?: ModelCatalogStoreStatus
   }>(),
   {
     workspaceName: null,
-    modelCatalog: null,
-    modelStatus: 'idle',
   },
 )
 </script>
 
 <template>
   <div class="composer-context" data-composer-context>
+    <!-- The model is not here: which one the next run uses is a choice about the
+         run, and the reference draws that control at the trailing edge of the
+         field rather than as another fact about the workspace. -->
     <span class="composer-context__item" data-project-context>
       <FolderOpen :size="15" aria-hidden="true" />
       <span>{{ workspaceName || t('run.chooseProject') }}</span>
     </span>
-    <ModelContextControl :catalog="modelCatalog" :status="modelStatus" />
   </div>
 </template>
 

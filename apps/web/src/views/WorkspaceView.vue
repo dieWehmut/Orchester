@@ -502,6 +502,7 @@ if (desktopWindowController?.enabled) {
       :pet-notification-labels="petNotificationLabels"
       @submit="handleRunSubmit"
       @cancel="handleRunCancel"
+      @select-model="models.select($event)"
     />
     <SessionTranscript v-else :status="detailStatus" :session="selected" :error="detailError" />
 

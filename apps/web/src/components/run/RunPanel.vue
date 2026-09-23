@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { InlineAlert, useAppearance } from '@orchester/design'
 import type { RunView } from '@orchester/ereignis'
-import type { ModelCatalogDto, UiEventEnvelope } from '@orchester/protokoll'
+import type { ModelCatalogDto, ModelSelectionRequestDto, UiEventEnvelope } from '@orchester/protokoll'
 import { ArrowDown } from '@lucide/vue'
 import { computed, nextTick, ref, watch } from 'vue'
 
@@ -65,6 +65,8 @@ const props = withDefaults(
 const emit = defineEmits<{
   submit: [prompt: string]
   cancel: []
+  /** The model and effort the following runs should use. */
+  'select-model': [selection: ModelSelectionRequestDto]
 }>()
 
 const { t } = useI18n()
@@ -275,6 +277,7 @@ const petNotification = computed(() => {
       @update:model-value="composerDraft = $event"
       @submit="emit('submit', $event)"
       @cancel="emit('cancel')"
+      @select-model="emit('select-model', $event)"
     />
   </section>
 </template>

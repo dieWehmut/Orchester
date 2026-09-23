@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { AppButton, AppTextarea, Spinner } from '@orchester/design'
 import type { RunLifecycle } from '../../stores/run'
-import type { ModelCatalogDto } from '@orchester/protokoll'
+import type { ModelCatalogDto, ModelSelectionRequestDto } from '@orchester/protokoll'
 import { ArrowUp, Square } from '@lucide/vue'
 import { computed, ref, watch } from 'vue'
 
@@ -9,6 +9,7 @@ import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
 import ApprovalPresetControl, { type ApprovalPreset } from './ApprovalPresetControl.vue'
 import { readRunSettings, writeRunSettings, type RunSettings } from './run-settings'
 import ComposerContextBar from './ComposerContextBar.vue'
+import ModelContextControl from './ModelContextControl.vue'
 import CommandPalette, { type CommandEntry } from './CommandPalette.vue'
 import { COMPOSER_COMMANDS, type ComposerCommand } from './composer-commands'
 import { useI18n } from '../../i18n'
@@ -68,6 +69,8 @@ const emit = defineEmits<{
   'drop-files': [files: File[]]
   'update:approvalPreset': [value: ApprovalPreset]
   'run-command': [id: string]
+  /** The model and effort the following runs should use. */
+  'select-model': [selection: ModelSelectionRequestDto]
 }>()
 
 /**
@@ -274,12 +277,7 @@ defineExpose({ focus })
     @drop.prevent="handleDrop"
     @submit.prevent="submit"
   >
-    <ComposerContextBar
-      class="run-composer__commands"
-      :workspace-name="props.workspaceName"
-      :model-catalog="props.modelCatalog"
-      :model-status="props.modelStatus"
-    />
+    <ComposerContextBar class="run-composer__commands" :workspace-name="props.workspaceName" />
     <CommandPalette
       :open="paletteOpen"
       :commands="paletteCommands"
@@ -310,6 +308,12 @@ defineExpose({ focus })
           @update:model-value="updateApprovalPreset"
         />
         <div class="run-composer__actions">
+          <ModelContextControl
+            class="run-composer__model"
+            :catalog="props.modelCatalog"
+            :status="props.modelStatus"
+            @select="emit('select-model', $event)"
+          />
           <Spinner
             v-if="isBusy"
             data-run-activity
@@ -442,6 +446,12 @@ defineExpose({ focus })
   display: flex;
   align-items: center;
   gap: var(--space-2);
+}
+
+/* The model control sits with the action it belongs to, as the reference draws
+   it: what the next run uses, next to the control that starts it. */
+.run-composer__model {
+  margin-inline-end: var(--space-1);
 }
 
 .run-composer__activity {
