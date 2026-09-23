@@ -66,4 +66,35 @@ describe('AppMenu', () => {
     expect(wrapper.find('[role="menu"]').exists()).toBe(false)
     expect(wrapper.emitted('update:open')).toContainEqual([false])
   })
+
+  it('draws an optional header above the rows, outside the menu itself', async () => {
+    const wrapper = mount(AppMenu, {
+      attachTo: document.body,
+      props: { label: 'Account', items, open: true },
+      slots: { header: '<strong>dieWehmut</strong>' },
+    })
+    await nextTick()
+
+    const header = wrapper.get('[data-menu-header]')
+    const menu = wrapper.get('[role="menu"]')
+
+    // The identity belongs to the menu's surface rather than to the menu: a
+    // role="menu" may hold items and separators, and nothing else, so a heading
+    // inside it would be a list that says it is something it is not.
+    expect(
+      header.element.compareDocumentPosition(menu.element) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+    expect(menu.findAll('[role="menuitem"]')).toHaveLength(3)
+    expect(menu.get('[role="menuitem"]').attributes('role')).toBe('menuitem')
+  })
+
+  it('draws no header when the surface has none to give', async () => {
+    const wrapper = mount(AppMenu, {
+      attachTo: document.body,
+      props: { label: 'Session actions', items, open: true },
+    })
+    await nextTick()
+
+    expect(wrapper.find('[data-menu-header]').exists()).toBe(false)
+  })
 })

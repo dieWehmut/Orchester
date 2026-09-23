@@ -189,26 +189,46 @@ onBeforeUnmount(() => {
 
     <div
       v-if="openState"
-      :id="menuId"
-      ref="menu"
-      class="app-menu__list"
-      role="menu"
-      :aria-label="label"
-      @keydown="onMenuKeydown"
+      class="app-menu__surface"
+      data-menu-surface
     >
-      <button
-        v-for="item in items"
-        :key="item.id"
-        class="app-menu__item"
-        type="button"
-        role="menuitem"
-        tabindex="-1"
-        :disabled="item.disabled === true"
-        @click="selectItem(item)"
+      <!--
+        The identity a menu belongs to, when the surface has one to show. It
+        sits on the surface rather than inside the menu: `role="menu"` may hold
+        items and separators and nothing else, and the account a menu acts on is
+        already the trigger's accessible name, so the copy is drawn rather than
+        announced twice.
+      -->
+      <div
+        v-if="$slots.header"
+        class="app-menu__header"
+        data-menu-header
+        aria-hidden="true"
       >
-        <span class="app-menu__label">{{ item.label }}</span>
-        <span v-if="item.hint" class="app-menu__hint" aria-hidden="true">{{ item.hint }}</span>
-      </button>
+        <slot name="header" />
+      </div>
+      <div
+        :id="menuId"
+        ref="menu"
+        class="app-menu__list"
+        role="menu"
+        :aria-label="label"
+        @keydown="onMenuKeydown"
+      >
+        <button
+          v-for="item in items"
+          :key="item.id"
+          class="app-menu__item"
+          type="button"
+          role="menuitem"
+          tabindex="-1"
+          :disabled="item.disabled === true"
+          @click="selectItem(item)"
+        >
+          <span class="app-menu__label">{{ item.label }}</span>
+          <span v-if="item.hint" class="app-menu__hint" aria-hidden="true">{{ item.hint }}</span>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -242,7 +262,7 @@ onBeforeUnmount(() => {
   outline-offset: 2px;
 }
 
-.app-menu__list {
+.app-menu__surface {
   position: absolute;
   z-index: var(--z-popover, 30);
   inset-block-start: calc(100% + 0.25rem);
@@ -254,16 +274,27 @@ onBeforeUnmount(() => {
   box-shadow: 0 10px 24px rgb(0 0 0 / 22%);
 }
 
-.app-menu--end .app-menu__list {
+.app-menu--end .app-menu__surface {
   inset-inline-end: 0;
 }
 
-/* The list is a popover, so the side it opens on is the caller's decision.
+/* The surface is a popover, so the side it opens on is the caller's decision.
    The account row sits at the foot of the rail, and a list that opened
    downward there would be clipped by the window rather than shown. */
-.app-menu--top .app-menu__list {
+.app-menu--top .app-menu__surface {
   inset-block-start: auto;
   inset-block-end: calc(100% + 0.25rem);
+}
+
+/* The header is part of the surface, so it carries no frame of its own: the
+   rule under it is what separates the identity from the rows it acts on. */
+.app-menu__header {
+  display: grid;
+  gap: 2px;
+  margin-block-end: 0.25rem;
+  padding: 0.375rem 0.625rem 0.5rem;
+  border-block-end: 1px solid var(--color-border-base);
+  color: var(--color-text-secondary);
 }
 
 .app-menu__item {
