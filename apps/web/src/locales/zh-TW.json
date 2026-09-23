@@ -265,7 +265,8 @@
     "pinned": "置頂",
     "pinnedEmpty": "置頂的執行會留在這裡。",
     "pinAction": "置頂",
-    "unpinAction": "取消置頂",    "title": "工作階段",
+    "unpinAction": "取消置頂",
+    "title": "工作階段",
     "new": "新增工作階段",
     "empty": "尚無工作階段",
     "emptyDescription": "已完成的委派執行將顯示於此。",
@@ -434,12 +435,29 @@
   "tabStrip": {
     "label": "已開啟的分頁"
   },
+  "titleRow": {
+    "menusLabel": "應用程式選單",
+    "file": "檔案",
+    "edit": "編輯",
+    "view": "檢視",
+    "help": "說明",
+    "back": "後退",
+    "forward": "前進",
+    "hideRail": "隱藏任務欄",
+    "showRail": "顯示任務欄",
+    "clearPrompt": "清空輸入",
+    "unavailable": "此畫面沒有該面板"
+  },
   "window": {
     "closeTitle": "關閉 Orchester？",
     "closeDescription": "仍有任務正在執行。關閉視窗只會隱藏 Orchester，任務會繼續執行，直到你從托盤結束。",
     "closeCancel": "繼續工作",
     "closeAccept": "關閉視窗",
-    "controls": "視窗控件"
+    "controls": "視窗控件",
+    "minimize": "最小化視窗",
+    "maximize": "最大化視窗",
+    "restore": "還原視窗",
+    "close": "關閉視窗"
   },
   "layout": {
     "workspacePanels": "工作區面板",
@@ -462,7 +480,8 @@
       "inspectorToggle": "切換檢查器",
       "settingsOpen": "開啟設定",
       "windowClose": "關閉目前分頁",
-      "companionToggle": "切換夥伴顯示"
+      "companionToggle": "切換夥伴顯示",
+      "railToggle": "折疊工作列"
     }
   },
   "commands": {

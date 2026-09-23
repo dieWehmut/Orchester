@@ -24,7 +24,10 @@ describe('workspace visual policy', () => {
     ]
 
     expect(app).toContain('--app-top-chrome-height')
-    expect(app).toContain('--desktop-titlebar-height: var(--window-chrome-height, 38px)')
+    // One row now: the title bar and the product header were the same strip in
+    // the reference, so the offset is that strip's height rather than a sum.
+    expect(app).toContain('--app-chrome-height: var(--window-chrome-height, 38px)')
+    expect(app).not.toContain('--desktop-titlebar-height')
     for (const contents of fullHeightSources) {
       expect(contents).toContain('var(--app-top-chrome-height')
       expect(contents).not.toContain('calc(100vh - var(--header-height))')

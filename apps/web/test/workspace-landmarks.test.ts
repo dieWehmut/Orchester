@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
 import NotFoundView from '../src/views/NotFoundView.vue'
-import WorkspaceHeader from '../src/components/layout/WorkspaceHeader.vue'
+import TitleRow from '../src/components/layout/TitleRow.vue'
 import AppShell from '../src/components/layout/AppShell.vue'
 
 /**
@@ -87,13 +87,12 @@ describe('workspace landmarks', () => {
     expect(main.contains(wrapper.get('[data-pane="inspector"]').element)).toBe(false)
   })
 
-  it('gives the product header the banner landmark', () => {
-    const wrapper = mount(WorkspaceHeader, {
-      props: { connection: 'ready', workspaceName: 'Orchester' },
-    })
+  it('gives the title row the banner landmark', () => {
+    const wrapper = mount(TitleRow, { props: { connection: 'ready' } })
 
-    // The header is the shell's one banner: a second top-level header would
-    // split the reader's "jump to the top" between two competing regions.
+    // The row is the shell's one banner: the product header that used to be
+    // the second top-level header is gone, so the reader's "jump to the top"
+    // lands on the strip the reference opens with rather than on one of two.
     expect(roleOf(wrapper.get('header').element)).toBe('banner')
   })
 

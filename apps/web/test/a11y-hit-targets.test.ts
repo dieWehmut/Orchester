@@ -10,7 +10,7 @@ import RunPanel from '../src/components/run/RunPanel.vue'
 import SettingsView from '../src/views/SettingsView.vue'
 import ThreadBar from '../src/components/layout/ThreadBar.vue'
 import ToolCallCard from '../src/components/run/ToolCallCard.vue'
-import WindowChrome from '../src/components/layout/WindowChrome.vue'
+import TitleRow from '../src/components/layout/TitleRow.vue'
 import type { DesktopWindowController } from '../src/platform/desktop-window'
 
 /**
@@ -79,11 +79,11 @@ function controlsOf(wrapper: { findAll: (selector: string) => { element: Element
 
 describe('hit target contract in the workspace', () => {
   it('keeps Windows caption targets at the native 46 by 32 DIP metric', () => {
-    const chrome = source('components/layout/WindowChrome.vue')
+    const chrome = source('components/layout/TitleRow.vue')
     const style = document.createElement('style')
     style.textContent = /<style scoped>([\s\S]*?)<\/style>/.exec(chrome)?.[1] ?? ''
     document.head.append(style)
-    const wrapper = mount(WindowChrome, {
+    const wrapper = mount(TitleRow, {
       attachTo: document.body,
       props: { controller: { ...chromeController(), platform: 'windows' } },
     })
@@ -144,8 +144,8 @@ describe('hit target contract in the workspace', () => {
 })
 
 describe('accessible name contract in the workspace', () => {
-  it('names every control the window chrome renders, icon-only included', () => {
-    const wrapper = mount(WindowChrome, { props: { controller: chromeController() } })
+  it('names every control the title row renders, icon-only included', () => {
+    const wrapper = mount(TitleRow, { props: { controller: chromeController() } })
 
     const unnamed = controlsOf(wrapper)
       .map((control) => accessibleName(control.element))
