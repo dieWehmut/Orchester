@@ -126,7 +126,17 @@ const items = computed<AppMenuItem[]>(() => {
     })),
   ]
 
-  return [...providerItems, ...profileItems, ...effortItems]
+  // What the choice covers, said where the choice is made. The runtime keeps it
+  // for as long as it is running, and it is not written to the configuration
+  // file: a menu that stayed silent about that would read as a setting the
+  // reader had changed for good.
+  const scopeItem: AppMenuItem = {
+    id: 'scope:',
+    label: t('run.selectionScope'),
+    disabled: true,
+  }
+
+  return [...providerItems, ...profileItems, ...effortItems, scopeItem]
 })
 
 /**

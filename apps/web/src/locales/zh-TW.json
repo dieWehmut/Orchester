@@ -316,6 +316,7 @@
     "effortLow": "低",
     "effortMedium": "中",
     "effortHigh": "高",
+    "selectionScope": "對其後的執行生效",
     "modelUnavailable": "模型不可用",
     "planComplete": "計畫已完成",
     "showPlan": "展開完整計畫",

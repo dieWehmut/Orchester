@@ -316,6 +316,7 @@
     "effortLow": "low",
     "effortMedium": "medium",
     "effortHigh": "high",
+    "selectionScope": "Applies to the runs that follow",
     "modelUnavailable": "Model unavailable",
     "planComplete": "Plan complete",
     "showPlan": "Show the full plan",

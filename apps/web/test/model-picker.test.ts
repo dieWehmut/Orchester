@@ -181,6 +181,20 @@ describe('ModelContextControl picker', () => {
     wrapper.unmount()
   })
 
+  it('says how far the choice reaches, where the choice is made', async () => {
+    const wrapper = mountPicker()
+    await openPicker(wrapper)
+
+    const scope = items(wrapper).at(-1)!
+
+    // The runtime keeps this for as long as it runs and never writes it to the
+    // configuration file, so the menu says so rather than reading as a setting
+    // the reader has changed for good.
+    expect(scope.text()).toContain('Applies to the runs that follow')
+    expect(scope.attributes('disabled')).toBeDefined()
+    wrapper.unmount()
+  })
+
   it('keeps reporting a value it has no name for rather than hiding it', () => {
     const wrapper = mountPicker({
       ...MODEL_CATALOG_FIXTURE,
