@@ -262,7 +262,10 @@
     "return": "Return to workspace"
   },
   "sessions": {
-    "title": "Sessions",
+    "pinned": "Pinned",
+    "pinnedEmpty": "Runs you pin stay here.",
+    "pinAction": "Pin to the top",
+    "unpinAction": "Unpin",    "title": "Sessions",
     "new": "New session",
     "empty": "No sessions yet",
     "emptyDescription": "Completed delegate runs will appear here.",

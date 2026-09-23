@@ -262,7 +262,10 @@
     "return": "返回工作区"
   },
   "sessions": {
-    "title": "会话",
+    "pinned": "置顶",
+    "pinnedEmpty": "置顶的运行会留在这里。",
+    "pinAction": "置顶",
+    "unpinAction": "取消置顶",    "title": "会话",
     "new": "新建会话",
     "empty": "暂无会话",
     "emptyDescription": "已完成的委派运行会显示在这里。",

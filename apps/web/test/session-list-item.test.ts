@@ -28,9 +28,9 @@ const session: SessionSummaryDto = {
   resumable: true,
 }
 
-function mountRow(overrides: Partial<SessionSummaryDto> = {}) {
+function mountRow(overrides: Partial<SessionSummaryDto> = {}, pinned = false) {
   return mount(SessionListItem, {
-    props: { session: { ...session, ...overrides }, selected: false },
+    props: { session: { ...session, ...overrides }, selected: false, pinned },
   })
 }
 
@@ -85,5 +85,29 @@ describe('SessionListItem', () => {
     expect(details.text()).toContain('codex')
     expect(details.text()).not.toContain('gpt-5')
     expect(details.text()).not.toContain('Resumable')
+  })
+
+  it('offers the pin beside the row, never inside it', async () => {
+    const wrapper = mountRow()
+    const pin = wrapper.get('[data-session-pin]')
+
+    expect(pin.attributes('aria-label')).toBe('Pin to the top')
+    expect(pin.attributes('aria-pressed')).toBe('false')
+    // A button within a button is not something a browser will let a reader
+    // press, so the two are siblings.
+    expect(wrapper.find('button button').exists()).toBe(false)
+
+    await pin.trigger('click')
+
+    expect(wrapper.emitted('toggle-pin')).toEqual([[session.id]])
+  })
+
+  it('reports being pinned in the control rather than only by a colour', () => {
+    const wrapper = mountRow({}, true)
+    const pin = wrapper.get('[data-session-pin]')
+
+    expect(pin.attributes('aria-pressed')).toBe('true')
+    expect(pin.attributes('aria-label')).toBe('Unpin')
+    expect(wrapper.get('[data-session-row]').classes()).toContain('session-list-item--pinned')
   })
 })

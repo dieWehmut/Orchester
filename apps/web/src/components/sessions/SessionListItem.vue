@@ -1,16 +1,21 @@
 <script setup lang="ts">
 import type { SessionSummaryDto } from '@orchester/protokoll'
-import { StatusDot, VisuallyHidden } from '@orchester/design'
+import { IconButton, StatusDot, VisuallyHidden } from '@orchester/design'
+import { Pin } from '@lucide/vue'
 import { computed } from 'vue'
 
 import { useI18n } from '../../i18n'
 
-const props = defineProps<{
-  session: SessionSummaryDto
-  selected: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    session: SessionSummaryDto
+    selected: boolean
+    pinned?: boolean
+  }>(),
+  { pinned: false },
+)
 
-defineEmits<{ select: [id: string] }>()
+defineEmits<{ select: [id: string]; 'toggle-pin': [id: string] }>()
 
 const { t } = useI18n()
 const dateTime = computed(() => new Date(props.session.recorded_at_unix * 1000))
@@ -42,32 +47,68 @@ const details = computed(() =>
 </script>
 
 <template>
-  <button
+  <div
     class="session-list-item"
-    :class="{ 'session-list-item--selected': selected }"
-    type="button"
-    :aria-pressed="selected"
-    :data-session-id="session.id"
-    :title="`${session.title} · ${details}`"
-    @click="$emit('select', session.id)"
+    :class="{
+      'session-list-item--selected': selected,
+      'session-list-item--pinned': pinned,
+    }"
+    :data-session-row="session.id"
   >
-    <StatusDot :status="status" :label="session.outcome" :pulse="false" />
-    <strong class="session-list-item__title">{{ session.title }}</strong>
-    <time class="session-list-item__time" :datetime="dateTime.toISOString()">{{ displayTime }}</time>
-    <VisuallyHidden data-session-details>{{ details }}</VisuallyHidden>
-  </button>
+    <button
+      class="session-list-item__open"
+      type="button"
+      :aria-pressed="selected"
+      :data-session-id="session.id"
+      :title="`${session.title} · ${details}`"
+      @click="$emit('select', session.id)"
+    >
+      <StatusDot :status="status" :label="session.outcome" :pulse="false" />
+      <strong class="session-list-item__title">{{ session.title }}</strong>
+      <time class="session-list-item__time" :datetime="dateTime.toISOString()">{{
+        displayTime
+      }}</time>
+      <VisuallyHidden data-session-details>{{ details }}</VisuallyHidden>
+    </button>
+    <!-- A control beside the row rather than inside it: a button within a button
+         is not something a browser will let the reader press. It is drawn on
+         hover or focus and never removed from the tree, and once pinned it stays
+         visible, because that is the state it reports. -->
+    <IconButton
+      class="session-list-item__pin"
+      :label="pinned ? t('sessions.unpinAction') : t('sessions.pinAction')"
+      :active="pinned"
+      :data-session-pin="session.id"
+      @click="$emit('toggle-pin', session.id)"
+    >
+      <Pin :size="14" aria-hidden="true" />
+    </IconButton>
+  </div>
 </template>
 
 <style scoped>
+/* The row is the container and the open control fills it: the pin sits beside
+   the row rather than inside it, because the row is a button. */
 .session-list-item {
+  position: relative;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   min-block-size: var(--hit-target-min, 32px);
   inline-size: 100%;
   align-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+}
+
+.session-list-item__open {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  min-block-size: var(--hit-target-min, 32px);
+  min-inline-size: 0;
+  align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
-  border: 1px solid transparent;
+  border: 0;
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--color-text-primary);
@@ -84,6 +125,25 @@ const details = computed(() =>
 .session-list-item--selected {
   border-color: var(--color-accent-border);
   box-shadow: inset 2px 0 0 var(--color-accent);
+}
+
+/* Drawn on hover or focus, never removed from the tree; a pinned row shows it
+   because that is the state it reports. */
+.session-list-item__pin {
+  justify-self: end;
+  margin-inline-end: var(--space-1);
+  opacity: 0;
+  transition: opacity var(--transition-fast) var(--ease-out);
+}
+
+.session-list-item:hover .session-list-item__pin,
+.session-list-item:focus-within .session-list-item__pin,
+.session-list-item--pinned .session-list-item__pin {
+  opacity: 1;
+}
+
+.session-list-item--pinned .session-list-item__pin {
+  color: var(--color-accent);
 }
 
 .session-list-item__title {

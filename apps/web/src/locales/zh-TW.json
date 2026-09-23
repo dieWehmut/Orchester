@@ -262,7 +262,10 @@
     "return": "返回工作區"
   },
   "sessions": {
-    "title": "工作階段",
+    "pinned": "置頂",
+    "pinnedEmpty": "置頂的執行會留在這裡。",
+    "pinAction": "置頂",
+    "unpinAction": "取消置頂",    "title": "工作階段",
     "new": "新增工作階段",
     "empty": "尚無工作階段",
     "emptyDescription": "已完成的委派執行將顯示於此。",
