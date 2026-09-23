@@ -1,9 +1,16 @@
 <script setup lang="ts">
+/**
+ * The application shell.
+ *
+ * The shell owns three things the routed views do not: the window the product
+ * is drawn in, the title row above every route, and the one keydown listener
+ * that makes a shortcut a shortcut. What is inside the window belongs to the
+ * view the router resolved.
+ */
 import { computed, onMounted, onUnmounted, provide } from 'vue'
 
-import WindowChrome from './components/layout/WindowChrome.vue'
-import WorkspaceHeader from './components/layout/WorkspaceHeader.vue'
-import type { RuntimeConnection } from './components/layout/WorkspaceHeader.vue'
+import TitleRow from './components/layout/TitleRow.vue'
+import type { RuntimeConnection } from './components/layout/TitleRow.vue'
 import {
   DESKTOP_WINDOW_KEY,
   desktopWindow,
@@ -28,7 +35,6 @@ const connection = computed<RuntimeConnection>(() => {
   if (stores.bootstrap.status.value === 'error') return 'error'
   return 'pending'
 })
-const workspaceName = computed(() => stores.bootstrap.context.value?.workspace.name ?? null)
 
 onMounted(() => {
   void stores.start()
@@ -45,8 +51,7 @@ useShortcutListener()
 
 <template>
   <div class="app-shell" :class="{ 'app-shell--desktop': windowController.enabled }">
-    <WindowChrome :controller="windowController" />
-    <WorkspaceHeader :connection="connection" :workspace-name="workspaceName" />
+    <TitleRow :controller="windowController" :connection="connection" />
 
     <div class="app-shell__outlet">
       <RouterView />

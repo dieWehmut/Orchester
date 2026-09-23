@@ -681,6 +681,67 @@ to the row that names the product.
 - [x] U26-04: Re-run the gate: `pnpm typecheck`, the frontend suites, both
   builds, `pnpm stack:verify`.
 
+## Wave U27 - the title row the reference opens with
+
+The reference's top row is one strip: a rail toggle, back and forward, the four
+menus, and the caption buttons at the trailing edge. Orchester drew two - a
+32 px title bar that carried nothing but the window's name, and a 56 px product
+header under it that carried the mark, the workspace, the connection state and
+the theme switch. The product header was already a duplicate: the rail's own
+product row names the product and the workspace since U26. So the two rows
+became the one the reference draws, and what the header had honestly carried
+moved to where it can still be read.
+
+- [x] U27-01: Draw one title row for every face.
+  - `TitleRow.vue` is region A. It renders in the browser and in the desktop
+    window: the rail toggle, back and forward, the four menus, the connection
+    state while it is not `ready`, and - on the desktop only - the drag region
+    and the caption buttons, at the OS metric and in the native order.
+    `WindowChrome.vue` and `WorkspaceHeader.vue` are gone, and with them the
+    second row. The row is the shell's one `banner` landmark, which the header
+    used to be.
+  - The row is 38 px, or 32 px on Windows, and `--app-top-chrome-height` is now
+    that height rather than the sum of the two rows, so every full-height
+    surface under it reads one number.
+  - `title-row.test.ts` moves the chrome's own contract - the caption order, the
+    drag region, the macOS traffic lights, the opaque surface, the rejected
+    action - onto the row, and pins the new order: toggle, arrows, menus,
+    captions.
+- [x] U27-02: Fold the rail, and let the row read what it folded.
+  - `useRailCollapsed` keeps one boolean under `orchester:rail:collapsed`, read
+    on first use and written on every change, as the rail's width already is.
+    `AppShell` draws no rail column while it is set, and never draws the resize
+    handle for a column that is not there.
+  - `shell-actions.ts` is a small registry of the app-chrome actions the mounted
+    surface owns: the row asks whether one is available rather than assuming it,
+    so a row of a menu that this route cannot answer is drawn disabled with its
+    reason instead of doing nothing.
+  - The toggle is the reference's leftmost control, `aria-expanded` carries the
+    state, and it is disabled - with the reason - on a route that draws no rail.
+- [x] U27-03: Open the menus the reference draws, with the actions this product
+  can answer.
+  - **File**: a new chat, settings, and closing the active tab. **Edit**: focus
+    the prompt, and clear it. **View**: the rail, the inspector, the companion,
+    and the theme. **Help**: the keybindings and the about screen. Every chord
+    printed on a row is read from the live shortcut registry, so a rebinding
+    changes the menu with it; a row whose chord is not bound here prints none.
+  - The two settings rows deep-link with `?section=`, which the settings route
+    now honours, because a Help menu that lands on the top of the settings page
+    has not answered "where are the shortcuts".
+  - What is *not* taken: undo, redo, cut, copy, paste and select-all. Orchester
+    owns no editor; the webview already answers those keys inside a field, and a
+    row that called a deprecated clipboard API would be a menu claiming the
+    platform's own job. The bottom panel keeps its own toggle rather than
+    gaining a `Mod+` row: the panel owns its state, and a chord is a promise to
+    flip it from anywhere.
+- [x] U27-04: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**What the row does not carry.** The reference's title bar also holds the window
+title; Orchester's window is named by its rail and its tab strip, and a second
+name in the strip would be a third place to keep in step. The drag region
+carries the name as its tooltip instead.
+
 ## Verification
 
 ```text

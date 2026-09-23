@@ -189,6 +189,24 @@ const petNotification = computed(() => {
   const kind = petState.value.notification
   return kind === null ? '' : (props.petNotificationLabels[kind] ?? '')
 })
+
+/**
+ * Put the caret in the field, or empty it first.
+ *
+ * The chrome's Edit menu acts on the prompt, and the prompt's state lives
+ * here: a clear that reached into the textarea from outside would be a second
+ * writer racing the draft the panel already keeps.
+ */
+function focusPrompt(): void {
+  void nextTick(() => composer.value?.focus())
+}
+
+function clearPrompt(): void {
+  composerDraft.value = ''
+  void nextTick(() => composer.value?.focus())
+}
+
+defineExpose({ focusPrompt, clearPrompt })
 </script>
 
 <template>

@@ -265,7 +265,8 @@
     "pinned": "置顶",
     "pinnedEmpty": "置顶的运行会留在这里。",
     "pinAction": "置顶",
-    "unpinAction": "取消置顶",    "title": "会话",
+    "unpinAction": "取消置顶",
+    "title": "会话",
     "new": "新建会话",
     "empty": "暂无会话",
     "emptyDescription": "已完成的委派运行会显示在这里。",
@@ -434,12 +435,29 @@
   "tabStrip": {
     "label": "已打开的标签页"
   },
+  "titleRow": {
+    "menusLabel": "应用菜单",
+    "file": "文件",
+    "edit": "编辑",
+    "view": "视图",
+    "help": "帮助",
+    "back": "后退",
+    "forward": "前进",
+    "hideRail": "隐藏任务栏",
+    "showRail": "显示任务栏",
+    "clearPrompt": "清空输入",
+    "unavailable": "此屏幕没有该面板"
+  },
   "window": {
     "closeTitle": "关闭 Orchester？",
     "closeDescription": "仍有任务正在运行。关闭窗口只会隐藏 Orchester，任务会继续运行，直到你从托盘退出。",
     "closeCancel": "继续工作",
     "closeAccept": "关闭窗口",
-    "controls": "窗口控件"
+    "controls": "窗口控件",
+    "minimize": "最小化窗口",
+    "maximize": "最大化窗口",
+    "restore": "还原窗口",
+    "close": "关闭窗口"
   },
   "layout": {
     "workspacePanels": "工作区面板",
@@ -462,7 +480,8 @@
       "inspectorToggle": "切换检查器",
       "settingsOpen": "打开设置",
       "windowClose": "关闭当前标签页",
-      "companionToggle": "切换伙伴显示"
+      "companionToggle": "切换伙伴显示",
+      "railToggle": "折叠任务栏"
     }
   },
   "commands": {

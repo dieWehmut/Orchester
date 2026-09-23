@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { h } from 'vue'
 
 import InspectorDock from '../src/components/layout/InspectorDock.vue'
-import WorkspaceHeader from '../src/components/layout/WorkspaceHeader.vue'
+import TitleRow from '../src/components/layout/TitleRow.vue'
 import SessionRail from '../src/components/sessions/SessionRail.vue'
 import ChangeInspector from '../src/components/changes/ChangeInspector.vue'
 import type { ChangeSummary } from '../src/components/changes/change-summary'
@@ -21,14 +21,20 @@ const session: SessionSummaryDto = {
 }
 
 describe('workspace components', () => {
-  it('renders runtime identity in the workspace header', () => {
-    const wrapper = mount(WorkspaceHeader, {
-      props: { connection: 'ready', workspaceName: 'Orchester' },
-    })
+  it('says nothing about the connection while the runtime is ready', () => {
+    // The product and the workspace are named by the rail's product row since
+    // U26, so the row's remaining readout is trouble: a ready runtime is the
+    // state the reader assumes, and a permanent "Connected" is noise the
+    // reference's own top strip does not carry.
+    const wrapper = mount(TitleRow, { props: { connection: 'ready' } })
 
-    expect(wrapper.get('[data-testid="product-name"]').text()).toBe('Orchester')
-    expect(wrapper.get('[data-testid="workspace-name"]').text()).toBe('Orchester')
-    expect(wrapper.get('[data-testid="connection-label"]').text()).toBe('Connected')
+    expect(wrapper.find('[data-testid="connection-label"]').exists()).toBe(false)
+  })
+
+  it('reports the connection while it is not ready', () => {
+    const wrapper = mount(TitleRow, { props: { connection: 'pending' } })
+
+    expect(wrapper.get('[data-testid="connection-label"]').text()).toBe('Runtime pending')
   })
 
   it('renders session state and emits selection from a real button', async () => {

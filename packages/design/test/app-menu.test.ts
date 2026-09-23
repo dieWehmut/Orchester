@@ -53,6 +53,24 @@ describe('AppMenu', () => {
     expect(document.activeElement).toBe(wrapper.get('[aria-haspopup="menu"]').element)
   })
 
+  it('lets a selected action keep the focus it takes', async () => {
+    const field = document.createElement('input')
+    document.body.append(field)
+
+    const wrapper = mount(AppMenu, {
+      attachTo: document.body,
+      props: { label: 'Session actions', items, open: true },
+      slots: { trigger: '<span>More</span>' },
+      attrs: { onSelect: () => field.focus() },
+    })
+    await nextTick()
+
+    await wrapper.findAll('[role="menuitem"]')[0]?.trigger('click')
+    await nextTick()
+
+    expect(document.activeElement).toBe(field)
+  })
+
   it('closes when the pointer lands outside the menu root', async () => {
     const wrapper = mount(AppMenu, {
       attachTo: document.body,

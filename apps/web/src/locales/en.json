@@ -265,7 +265,8 @@
     "pinned": "Pinned",
     "pinnedEmpty": "Runs you pin stay here.",
     "pinAction": "Pin to the top",
-    "unpinAction": "Unpin",    "title": "Sessions",
+    "unpinAction": "Unpin",
+    "title": "Sessions",
     "new": "New session",
     "empty": "No sessions yet",
     "emptyDescription": "Completed delegate runs will appear here.",
@@ -434,12 +435,29 @@
   "tabStrip": {
     "label": "Open tabs"
   },
+  "titleRow": {
+    "menusLabel": "Application menus",
+    "file": "File",
+    "edit": "Edit",
+    "view": "View",
+    "help": "Help",
+    "back": "Go back",
+    "forward": "Go forward",
+    "hideRail": "Hide the task rail",
+    "showRail": "Show the task rail",
+    "clearPrompt": "Clear the input",
+    "unavailable": "Not on this screen"
+  },
   "window": {
     "closeTitle": "Close Orchester?",
     "closeDescription": "A run is still working. Closing the window hides Orchester; the run keeps going until you quit from the tray.",
     "closeCancel": "Keep working",
     "closeAccept": "Close window",
-    "controls": "Window controls"
+    "controls": "Window controls",
+    "minimize": "Minimize window",
+    "maximize": "Maximize window",
+    "restore": "Restore window",
+    "close": "Close window"
   },
   "layout": {
     "workspacePanels": "Workspace panels",
@@ -462,7 +480,8 @@
       "inspectorToggle": "Toggle the inspector",
       "settingsOpen": "Open settings",
       "windowClose": "Close the active tab",
-      "companionToggle": "Toggle the companion"
+      "companionToggle": "Toggle the companion",
+      "railToggle": "Toggle the task rail"
     }
   },
   "commands": {
