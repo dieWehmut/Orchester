@@ -448,6 +448,36 @@ sign-out: there is no account here to meter, invite to or sign out of. The heade
 is the honest half of that menu - the identity - and the two rows under it are
 the two destinations the product actually has.
 
+## Wave U20 - appearance is the theme, personalization is the rest
+
+The reference's settings list carries **Appearance** and **Personalization** as
+two destinations, and its appearance screen is the theme and nothing else: the
+cards, the preview, the colours each theme resolves to. Orchester had folded
+fonts, intensity, motion and the rail's translucency into appearance, so its
+appearance screen showed rows the reference does not - and a reader looking for
+a font had to know it was filed under the theme.
+
+- [x] U20-01: Add personalization as a section of its own.
+  - `settings-search.ts` gains the id and takes over the vocabulary that belongs
+    to it (font, type, motion, density, intensity, rail, reading), while
+    appearance keeps the words about the theme. The nav renders both under the
+    personal group, in that order.
+- [x] U20-02: Move the rows that are not about a theme into it.
+  - Intensity, reduced motion, both font axes, the rail's translucency and the
+    surface readout - and the import/export/reset of the whole appearance
+    profile, which covers every axis rather than only the theme.
+  - `apps/web/test/settings-view.test.ts` pins the split from both sides: the
+    appearance panel holds the three cards and no font or intensity row, the
+    personalization panel holds those rows and no card.
+  - `settings-search.test.ts` pins that the word which used to land on the theme
+    now lands where the fonts went, superseding the U7-01 note.
+- [x] U20-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**What is left in appearance.** The theme cards, the preview, the two theme
+editors and the profile actions - which is what the reference's appearance
+screen shows, and now nothing besides.
+
 ## Verification
 
 ```text
