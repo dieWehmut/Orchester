@@ -97,4 +97,26 @@ describe('AppMenu', () => {
 
     expect(wrapper.find('[data-menu-header]').exists()).toBe(false)
   })
+
+  it('announces a menu that chooses as one, and says which item is in force', async () => {
+    const choosing = [
+      { id: 'low', label: 'Low', checked: false },
+      { id: 'high', label: 'High', checked: true },
+    ]
+    const wrapper = mount(AppMenu, {
+      attachTo: document.body,
+      props: { label: 'Effort', items: choosing, open: true },
+    })
+    await nextTick()
+
+    const rows = wrapper.findAll('[role="menuitemradio"]')
+
+    // A menu of actions and a menu of choices announce themselves differently,
+    // and only the second says which one is the one in force.
+    expect(wrapper.findAll('[role="menuitem"]')).toHaveLength(0)
+    expect(rows).toHaveLength(2)
+    expect(rows[1]!.attributes('aria-checked')).toBe('true')
+    expect(rows[1]!.get('[data-menu-check]')).toBeTruthy()
+    expect(rows[0]!.find('[data-menu-check]').exists()).toBe(false)
+  })
 })

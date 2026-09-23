@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { Check } from '@lucide/vue'
 
 import type { AppMenuItem } from './form-types'
 
@@ -35,8 +36,27 @@ const generatedMenuId = 'app-menu-' + ++nextMenuId
 const menuId = computed(() => (props.id ? props.id + '-menu' : generatedMenuId))
 
 function enabledItems(): HTMLButtonElement[] {
-  return Array.from(menu.value?.querySelectorAll<HTMLButtonElement>('[role="menuitem"]') ?? [])
-    .filter((item) => !item.disabled)
+  return Array.from(
+    menu.value?.querySelectorAll<HTMLButtonElement>(
+      '[role="menuitem"], [role="menuitemradio"]',
+    ) ?? [],
+  ).filter((item) => !item.disabled)
+}
+
+/**
+ * How an item announces itself.
+ *
+ * A menu of actions and a menu of choices are different roles, and only the
+ * second carries the state: `aria-checked` is written as an attribute map
+ * rather than bound, because an item that does not choose has no such attribute
+ * at all rather than an undefined one.
+ */
+function itemAttributes(item: AppMenuItem): Record<string, string> {
+  const attributes: Record<string, string> = {
+    role: item.checked === undefined ? 'menuitem' : 'menuitemradio',
+  }
+  if (item.checked !== undefined) attributes['aria-checked'] = String(item.checked)
+  return attributes
 }
 
 function focusFirstItem() {
@@ -220,11 +240,22 @@ onBeforeUnmount(() => {
           :key="item.id"
           class="app-menu__item"
           type="button"
-          role="menuitem"
+          v-bind="itemAttributes(item)"
           tabindex="-1"
           :disabled="item.disabled === true"
           @click="selectItem(item)"
         >
+          <!-- A menu that chooses has to say which one is in force: the check is
+               the answer, and it is drawn rather than announced twice because
+               `aria-checked` already carries it. -->
+          <Check
+            v-if="item.checked === true"
+            class="app-menu__check"
+            data-menu-check
+            :size="13"
+            aria-hidden="true"
+          />
+          <span v-else-if="item.checked === false" class="app-menu__check-space" aria-hidden="true" />
           <span class="app-menu__label">{{ item.label }}</span>
           <span v-if="item.hint" class="app-menu__hint" aria-hidden="true">{{ item.hint }}</span>
         </button>
@@ -316,15 +347,38 @@ onBeforeUnmount(() => {
 
 .app-menu__label {
   min-inline-size: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The check keeps its column whether or not it is drawn, so the labels of a
+   choosing menu line up with each other rather than stepping in and out. */
+.app-menu__check,
+.app-menu__check-space {
+  flex: 0 0 auto;
+  inline-size: 13px;
+  color: var(--color-accent);
+}
+
+.app-menu__check-space {
+  display: inline-block;
 }
 
 /* The chord is a hint rather than part of the name, so it is drawn in the
-   quieter role and keeps the label's own alignment. */
+   quieter role and keeps the label's own alignment. It is also bounded: a hint
+   that can grow without limit - a provider's reason for being unreachable, for
+   one - would push the label it belongs to off the row. */
 .app-menu__hint {
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  max-inline-size: 14rem;
+  overflow: hidden;
   color: var(--color-text-tertiary);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .app-menu__item:hover:not(:disabled),
