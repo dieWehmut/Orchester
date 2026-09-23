@@ -17,9 +17,15 @@
  */
 import { AppButton, AppDrawer } from '@orchester/design'
 import type { RailAppearance } from '@orchester/design'
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
 
 import { useI18n } from '../../i18n'
+import { useRailCollapsed } from '../../composables/use-rail-collapsed'
+import { useShortcut } from '../../shortcuts'
+import {
+  registerShellAction,
+  registerShellActionExpanded,
+} from './shell-actions'
 
 import {
   INSPECTOR_MAX_WIDTH,
@@ -60,7 +66,67 @@ const props = withDefaults(
   },
 )
 
+const { collapsed: railCollapsed, toggle: toggleRail } = useRailCollapsed()
+
 const sessionsOpen = ref(false)
+
+/**
+ * Below this width the rail is a drawer rather than a column, section 2.1.
+ *
+ * The row's toggle has to answer both, so the shell tracks which of the two it
+ * is drawing: at a narrow viewport a fold that hid the column would hide
+ * nothing, and the drawer is what the reader would be looking at.
+ */
+const NARROW_VIEWPORT_PX = 1280
+const narrowViewport = ref(false)
+
+function readViewport(): void {
+  narrowViewport.value = typeof window !== 'undefined' && window.innerWidth < NARROW_VIEWPORT_PX
+}
+
+/**
+ * The rail's two entry points, registered for as long as the shell is mounted.
+ *
+ * The action reaches whichever rail is on screen, and the state tells the row
+ * which way the control goes: the drawer is closed by default and the column is
+ * open by default, so "collapsed" is a different question in each face.
+ */
+const unregisterToggle = registerShellAction('rail.toggle', () => {
+  if (narrowViewport.value) sessionsOpen.value = !sessionsOpen.value
+  else toggleRail()
+})
+const unregisterExpanded = registerShellActionExpanded('rail.toggle', () =>
+  narrowViewport.value ? sessionsOpen.value : !railCollapsed.value,
+)
+
+// The chord the design spec gives the collapse, bound where the rail is drawn.
+useShortcut(
+  {
+    id: 'rail.toggle',
+    labelKey: 'shortcuts.labels.railToggle',
+    groupKey: 'shortcuts.groups.layout',
+    keys: ['Mod', 'B'],
+  },
+  () => {
+    if (narrowViewport.value) sessionsOpen.value = !sessionsOpen.value
+    else toggleRail()
+  },
+)
+
+onUnmounted(() => {
+  unregisterToggle()
+  unregisterExpanded()
+})
+
+onMounted(readViewport)
+onBeforeUnmount(() => {
+  if (typeof window === 'undefined') return
+  window.removeEventListener('resize', readViewport)
+})
+
+if (typeof window !== 'undefined') {
+  onMounted(() => window.addEventListener('resize', readViewport))
+}
 const inspectorDrawerOpen = ref(false)
 
 /**
@@ -147,7 +213,14 @@ onBeforeUnmount(endDrag)
 </script>
 
 <template>
-  <div class="app-shell" :class="{ 'app-shell--inspector-closed': !props.inspectorOpen }">
+  <div
+    class="app-shell"
+    :class="{
+      'app-shell--inspector-closed': !props.inspectorOpen,
+      'app-shell--rail-closed': railCollapsed,
+    }"
+    :data-rail-collapsed="String(railCollapsed)"
+  >
     <nav
       class="app-shell__mobile-controls"
       data-mobile-controls
@@ -175,6 +248,7 @@ onBeforeUnmount(endDrag)
 
     <div class="app-shell__grid">
       <nav
+        v-if="!railCollapsed"
         class="app-shell__rail"
         data-pane="sessions"
         data-rail

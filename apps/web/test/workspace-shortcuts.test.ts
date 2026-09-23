@@ -65,13 +65,40 @@ describe('workspace shortcuts', () => {
 
     expect(pane().attributes('data-inspector-open')).toBe('true')
 
-    press('b', { ctrlKey: true })
+    press('b', { ctrlKey: true, altKey: true })
     await nextTick()
     expect(pane().attributes('data-inspector-open')).toBe('false')
 
-    press('b', { ctrlKey: true })
+    press('b', { ctrlKey: true, altKey: true })
     await nextTick()
     expect(pane().attributes('data-inspector-open')).toBe('true')
+  })
+
+  it('folds the rail with the chord section 2.1 gives the collapse', async () => {
+    // A column, not a drawer: below 1280 px the rail is the drawer the shell
+    // opens on demand, and "collapsed" is a question about the column.
+    const wide = window.innerWidth
+    window.innerWidth = 1400
+    try {
+      const wrapper = await mountWorkspace(testRouter())
+      const shell = () => wrapper.get('[data-rail-collapsed]')
+
+      expect(shell().attributes('data-rail-collapsed')).toBe('false')
+      expect(wrapper.find('[data-rail]').exists()).toBe(true)
+
+      press('b', { ctrlKey: true })
+      await nextTick()
+      expect(shell().attributes('data-rail-collapsed')).toBe('true')
+      expect(wrapper.find('[data-rail]').exists()).toBe(false)
+
+      press('b', { ctrlKey: true })
+      await nextTick()
+      expect(shell().attributes('data-rail-collapsed')).toBe('false')
+      expect(wrapper.find('[data-rail]').exists()).toBe(true)
+      wrapper.unmount()
+    } finally {
+      window.innerWidth = wide
+    }
   })
 
   it('opens the settings route from the keyboard', async () => {
@@ -93,7 +120,7 @@ describe('workspace shortcuts', () => {
 
     wrapper.unmount()
 
-    press('b', { ctrlKey: true })
+    press('b', { ctrlKey: true, altKey: true })
     await nextTick()
 
     expect(shortcutRegistry.effectiveKeys('inspector.toggle')).toBeUndefined()

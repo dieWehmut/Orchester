@@ -93,10 +93,19 @@ export const DEFAULT_SHORTCUTS: readonly ShortcutDefinition[] = [
     keys: ['Mod', 'N'],
   },
   {
+    // Section 2.1 gives the rail's collapse chord to `Mod+B`, and the
+    // inspector keeps a chord one modifier over: a product may not hand one
+    // gesture to two panes, and the reference's own View menu teaches both.
+    id: 'rail.toggle',
+    labelKey: 'shortcuts.labels.railToggle',
+    groupKey: 'shortcuts.groups.layout',
+    keys: ['Mod', 'B'],
+  },
+  {
     id: 'inspector.toggle',
     labelKey: 'shortcuts.labels.inspectorToggle',
     groupKey: 'shortcuts.groups.layout',
-    keys: ['Mod', 'B'],
+    keys: ['Mod', 'Alt', 'B'],
   },
   {
     id: 'settings.open',
