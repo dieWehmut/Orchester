@@ -46,6 +46,36 @@ const blocks = computed(() => parseMarkdown(props.text))
         data-markdown-code
         :data-code-language="block.language ?? ''"
       ><code>{{ block.text }}</code></pre>
+      <div
+        v-else-if="block.kind === 'table'"
+        class="markdown__table-scroll"
+        data-markdown-table-scroll
+      >
+        <table class="markdown__table" data-markdown-table>
+          <thead>
+            <tr>
+              <th
+                v-for="(cell, column) in block.headers"
+                :key="column"
+                :style="{ textAlign: block.align[column] ?? 'start' }"
+              >
+                <MarkdownSpans :spans="cell" :external-label="externalLabel" />
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, rowIndex) in block.rows" :key="rowIndex">
+              <td
+                v-for="(cell, column) in row"
+                :key="column"
+                :style="{ textAlign: block.align[column] ?? 'start' }"
+              >
+                <MarkdownSpans :spans="cell" :external-label="externalLabel" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <component
         :is="block.ordered ? 'ol' : 'ul'"
         v-else-if="block.kind === 'list'"
@@ -76,6 +106,33 @@ const blocks = computed(() => parseMarkdown(props.text))
 .markdown__list {
   margin: 0;
   overflow-wrap: anywhere;
+}
+
+/* A table is wider than the prose it sits in more often than not, and a
+   transcript that scrolled sideways as a whole would take the conversation with
+   it: the table scrolls, the transcript does not. */
+.markdown__table-scroll {
+  max-inline-size: 100%;
+  overflow-x: auto;
+}
+
+.markdown__table {
+  border-collapse: collapse;
+  inline-size: 100%;
+  font-size: var(--text-sm);
+}
+
+.markdown__table th,
+.markdown__table td {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border-base);
+  text-align: start;
+  vertical-align: top;
+}
+
+.markdown__table th {
+  background: var(--color-bg-element);
+  font-weight: var(--weight-medium);
 }
 
 .markdown__heading {
