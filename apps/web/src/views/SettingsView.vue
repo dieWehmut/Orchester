@@ -47,7 +47,7 @@ import {
   type ThemeMode,
   type ThemePreference,
 } from '@orchester/design'
-import { computed, inject, ref } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { routerKey } from 'vue-router'
 
 import { usePetVisibility } from '../features/pet'
@@ -113,7 +113,44 @@ const petVisible = computed({
   set: (value: boolean) => (value ? petVisibility.show() : petVisibility.hide()),
 })
 
-const activeSection = ref<SettingsSection>('appearance')
+/**
+ * The section in front, opened where the caller asked.
+ *
+ * The chrome's Help menu deep-links here - "Keybindings" and "About" are rows
+ * a reader picks to land on a screen, not to land on the top of a page that
+ * then has to be searched. The query is read as the screen mounts and again
+ * whenever it changes, so a second jump from the same open window still moves.
+ */
+const SECTIONS: readonly SettingsSection[] = [
+  'general',
+  'notifications',
+  'import',
+  'profile',
+  'appearance',
+  'personalization',
+  'pet',
+  'keybindings',
+  'providers',
+  'about',
+]
+
+function sectionFromQuery(value: unknown): SettingsSection | null {
+  return typeof value === 'string' && (SECTIONS as readonly string[]).includes(value)
+    ? (value as SettingsSection)
+    : null
+}
+
+const activeSection = ref<SettingsSection>(
+  sectionFromQuery(router?.currentRoute.value.query.section) ?? 'appearance',
+)
+
+watch(
+  () => router?.currentRoute.value.query.section,
+  (query) => {
+    const requested = sectionFromQuery(query)
+    if (requested !== null) activeSection.value = requested
+  },
+)
 
 interface SettingsNavEntry {
   id: SettingsSection

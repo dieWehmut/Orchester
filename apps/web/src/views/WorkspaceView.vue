@@ -28,8 +28,13 @@ import { useI18n } from '../i18n'
 import { usePetVisibility } from '../features/pet'
 import { useAppStores } from '../stores/app'
 import { useShortcut } from '../shortcuts'
+import {
+  registerShellAction,
+  useShellAction,
+  useShellActionState,
+} from '../components/layout/shell-actions'
 import { DESKTOP_WINDOW_KEY } from '../platform/desktop-window'
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue'
 import { routerKey } from 'vue-router'
 
 const { t } = useI18n()
@@ -136,6 +141,47 @@ const shellTabs = computed<readonly ShellTab[]>(() => {
   return tabs
 })
 const activeTabId = ref('run')
+
+/**
+ * The transcript's field, for the chrome's prompt actions.
+ *
+ * The chrome's Edit menu offers "focus the prompt" and "clear the input". Both
+ * are intents on a field this view owns, so the view registers them and the row
+ * draws them enabled only while the workspace - and therefore the composer - is
+ * the route underneath.
+ */
+const runPanel = ref<InstanceType<typeof RunPanel> | null>(null)
+
+useShellAction('prompt.focus', () => runPanel.value?.focusPrompt())
+useShellAction('prompt.clear', () => runPanel.value?.clearPrompt())
+useShellAction('companion.toggle', () => petVisibility.toggle())
+
+/**
+ * Whether the inspector is showing, as the chrome's toggle reports it.
+ *
+ * Registered beside the action so the row's control says what pressing it does
+ * rather than what a remembered boolean last said.
+ */
+useShellActionState('inspector.toggle', () => inspectorOpen.value)
+
+/**
+ * A tab the reader can close, which is never the transcript.
+ *
+ * The transcript is the product and the one tab that cannot be closed, so the
+ * chrome's File menu offers its row only while another tab is in front. The
+ * registration follows the strip instead of the menu guessing at it.
+ */
+let unregisterCloseTab: (() => void) | null = null
+
+watch(activeTabId, (id) => {
+  unregisterCloseTab?.()
+  unregisterCloseTab = id === 'run' ? null : registerShellAction('close-tab', () => handleTabClose(id))
+})
+
+onUnmounted(() => {
+  unregisterCloseTab?.()
+  unregisterCloseTab = null
+})
 
 /**
  * Whether the inspector's own tab is open in the strip.
@@ -334,10 +380,13 @@ function handleOpenSettings(): void {
  */
 useShortcut(
   {
+    // Section 2.1 gives `Mod+B` to the rail's collapse, so the inspector's
+    // toggle keeps a chord one modifier over. Two panes may not share a
+    // gesture: the editor would list one binding, and only one would answer.
     id: 'inspector.toggle',
     labelKey: 'shortcuts.labels.inspectorToggle',
     groupKey: 'shortcuts.groups.layout',
-    keys: ['Mod', 'B'],
+    keys: ['Mod', 'Alt', 'B'],
   },
   () => {
     inspectorOpen.value = !inspectorOpen.value

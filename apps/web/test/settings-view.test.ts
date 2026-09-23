@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { resetPetVisibilityForTests } from '../src/features/pet'
 import SettingsView from '../src/views/SettingsView.vue'
 import { resetAppearanceForTests } from '@orchester/design'
+import { createMemoryHistory, createRouter } from 'vue-router'
 
 const originalMatchMedia = window.matchMedia
 
@@ -37,6 +38,37 @@ beforeEach(() => {
 
 afterEach(() => {
   window.matchMedia = originalMatchMedia
+})
+
+describe('the settings section deep link', () => {
+  it('opens the section the chrome asked for rather than the top of the page', async () => {
+    // The Help menu's rows name a screen; landing on Appearance and leaving
+    // the reader to find Keybindings is a menu that did not answer.
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [{ path: '/settings', name: 'settings', component: SettingsView }],
+    })
+    await router.push({ name: 'settings', query: { section: 'keybindings' } })
+    await router.isReady()
+
+    const wrapper = mount(SettingsView, { global: { plugins: [router] } })
+
+    expect(wrapper.get('[data-settings-section="keybindings"]').attributes('aria-selected')).toBe('true')
+    expect(wrapper.get('[data-settings-section="appearance"]').attributes('aria-selected')).toBe('false')
+  })
+
+  it('falls back to the appearance screen for a query it does not know', async () => {
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [{ path: '/settings', name: 'settings', component: SettingsView }],
+    })
+    await router.push({ name: 'settings', query: { section: 'nonsense' } })
+    await router.isReady()
+
+    const wrapper = mount(SettingsView, { global: { plugins: [router] } })
+
+    expect(wrapper.get('[data-settings-section="appearance"]').attributes('aria-selected')).toBe('true')
+  })
 })
 
 describe('SettingsView', () => {
