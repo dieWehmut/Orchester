@@ -131,13 +131,27 @@ describe('transcript chat anatomy', () => {
     expect(wrapper.get('[data-markdown-link]').attributes('rel')).toBe('noopener noreferrer')
   })
 
-  it('keeps the text literal while it is still arriving', () => {
+  it('renders the markdown as it arrives, the way the reference does', () => {
     const wrapper = mountTimeline([message({ text: '```ts\nconst a =', final: false })])
 
-    // A fence that is half written is not a code block yet: formatting arrives
-    // with the text, so the paragraph cannot flicker apart under the reader.
-    expect(wrapper.find('[data-markdown-code]').exists()).toBe(false)
-    expect(wrapper.get('[data-message-plain]').text()).toContain('const a =')
+    // The reference formats an answer while it is still being written, and this
+    // parser reads an unclosed fence as the code it already is, so the block the
+    // reader watches appear is the block they end up with.
+    const row = wrapper.get('[data-item-type="message"]')
+
+    expect(row.attributes('data-arrival-state')).toBe('streaming')
+    expect(wrapper.get('[data-markdown-code]').text()).toContain('const a =')
+    expect(wrapper.find('[data-message-plain]').exists()).toBe(false)
+  })
+
+  it('contains an arriving row so its growth cannot move the transcript', () => {
+    const wrapper = mountTimeline([message({ text: 'still arriving', final: false })])
+    const row = wrapper.get('[data-item-type="message"]')
+
+    // Formatting during arrival is only affordable because the row's growth is
+    // contained: without it every token would be measured by the transcript's
+    // own layout, which is what the virtual window reads.
+    expect(row.attributes('style')).toContain('contain: layout paint')
   })
 
   it("shows the reader's own words exactly as they typed them", () => {

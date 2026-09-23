@@ -614,6 +614,40 @@ sitting on it.
 carry none, but a list of runs is a history, and a history without when is a
 list a reader has to open each entry to date.
 
+## Wave U25 - the answer formats while it arrives
+
+U12 rendered markdown only once an answer had settled, on the grounds that "a
+fence that is half written is not a code block yet". The reference does the
+opposite - it formats an answer while it is still being written - and this
+parser already reads an unclosed fence as the code it is, so the block the
+reader watches appear is the block they end up with.
+
+- [x] U25-01: Render the answer's markdown from its first token, and keep the
+  containment that makes that affordable.
+  - The row still carries `contain: layout paint` and `content-visibility: auto`
+    while it arrives, which is what keeps a growing row from being measured by
+    the transcript's own layout - the thing the virtual window reads. The
+    reader's own turn is still not parsed, because their words are not the
+    agent's markup.
+  - `apps/web/test/chat-message-anatomy.test.ts` now pins the arriving render
+    (a fence open mid-stream draws a code block) and the containment style.
+- [x] U25-02: Measure what re-reading on every delta actually costs, rather than
+  assuming.
+  - In headless Chromium on this machine, one parse of a whole 2 000-character
+    answer takes **0.86 ms** and one of a 20 000-character answer **2.58 ms**;
+    the same 2 000-character answer arriving in 2 000 deltas - re-parsing on each
+    - spends **323 ms in total**, spread across the whole stream. A frame is
+    16 ms and the last parses of a stream are the ~1 ms ones, so the choice is
+    affordable rather than merely convenient. The harness that measured this was
+    temporary; the numbers are what it reported.
+- [x] U25-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**What this does not fix.** A half-written `**bold**` still shows its asterisks
+until it closes, and a table is a paragraph until its delimiter row arrives - the
+same progressive reading the reference has. The alternative is holding
+formatting back until the end, which is what this wave stopped doing.
+
 ## Verification
 
 ```text
