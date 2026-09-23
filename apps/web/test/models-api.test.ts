@@ -65,4 +65,28 @@ describe('model catalog API client', () => {
       retryable: false,
     })
   })
+
+  it('sends a selection to the runtime and reads back the catalog it produces', async () => {
+    const put = vi.fn(async () => catalog)
+    const api = createModelsApi({ put } as unknown as HttpClient)
+
+    await expect(api.select({ provider: 'openai', effort: 'low' })).resolves.toEqual(catalog)
+    // The runtime answers with the catalog its choice produces, so the caller
+    // never has to guess what the selection did.
+    expect(put).toHaveBeenCalledWith('/models/selection', {
+      provider: 'openai',
+      effort: 'low',
+    })
+  })
+
+  it('refuses a selection response it cannot read', async () => {
+    const api = createModelsApi({
+      put: vi.fn(async () => ({ schema_version: 1 })),
+    } as unknown as HttpClient)
+
+    await expect(api.select({ profile: 'review' })).rejects.toMatchObject({
+      code: 'runtime_error',
+      retryable: false,
+    })
+  })
 })

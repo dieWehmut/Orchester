@@ -127,6 +127,20 @@ export interface ModelCatalogDto {
   profiles: ModelProfileDto[]
 }
 
+/**
+ * The model the following runs should use.
+ *
+ * Three independent pieces, as the runtime's own `/model` command expresses
+ * them: a provider can be switched while keeping the model, a profile names both,
+ * and the effort is an override on top of either. `effort: null` means the
+ * provider's own default, which is a choice rather than an omission.
+ */
+export interface ModelSelectionRequestDto {
+  provider?: string | null
+  profile?: string | null
+  effort?: string | null
+}
+
 export const SESSION_HISTORY_SCHEMA_VERSION = 1 as const
 
 export type SessionOutcomeDto = 'success' | 'failed' | 'cancelled'
