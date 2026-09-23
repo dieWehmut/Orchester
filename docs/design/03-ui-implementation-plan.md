@@ -520,6 +520,50 @@ row draws a readout today, and turning it into the reference's selector - the
 providers, the profiles and the effort levels, wired to `select` - is the half
 that makes this visible. The capability is landed and tested; the control is not.
 
+## Wave U22 - the selector the reference draws in the field
+
+U21 landed the capability; this is the control. The composer's trailing row now
+carries the model the next run will use, next to the control that starts it,
+which is where the reference draws its own selector.
+
+- [x] U22-01: Let a menu say which choice is in force.
+  - `AppMenuItem` gains `checked`, and a menu whose items carry it announces
+    itself as a set of radios with `aria-checked` and a check beside the current
+    one: a menu of actions and a menu of choices are different things, and the
+    difference is this field rather than a convention. A long hint is now bounded
+    and truncates, because a provider's reason for being unreachable had been
+    pushing the provider's own name off the row.
+  - `packages/design/test/app-menu.test.ts` pins the role, the state and the
+    check.
+- [x] U22-02: Make the readout a picker, in the field's trailing row.
+  - It offers what the runtime reports: every provider - an unreachable one drawn
+    disabled with its reason, because a menu that silently omits a provider
+    leaves the reader wondering where it went - the named profiles, and the
+    effort names this surface can say, plus the provider default that clears the
+    override. A value the catalog reports that has no name here stays visible in
+    the trigger rather than being forced into one of them.
+  - Each click reports the **whole intent**: picking a provider or a profile
+    keeps the effort in force and picking an effort keeps the axis, because the
+    runtime takes three axes and a request that omitted one would silently reset
+    it. The axis is read off the catalog rather than remembered, so it cannot
+    disagree with the runtime after a reload.
+- [x] U22-03: Reverse the earlier separation, deliberately.
+  - The model had been a *fact* in the context row; it is a *decision*, and the
+    reference draws it with the action. `composer-context-bar.test.ts` and
+    `run-composer-card.test.ts` are updated to the new anatomy and say why.
+- [x] U22-04: Wire the click through to the runtime.
+  - Picker → composer → panel → view → the catalog store's `select`, which asks
+    the runtime and keeps the catalog it answers with. `workspace-view.test.ts`
+    drives that whole chain and asserts the request that leaves the browser.
+- [x] U22-05: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**What the selector still does not do.** It offers the effort names this product
+knows rather than a free field, because the runtime passes any non-empty value
+through and a text box for a four-name axis would be a worse control than a
+list. A model the provider catalog does not name cannot be typed in either:
+choosing is what this surface offers, not configuring.
+
 ## Verification
 
 ```text
