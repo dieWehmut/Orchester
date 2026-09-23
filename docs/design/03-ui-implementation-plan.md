@@ -564,6 +564,33 @@ through and a text box for a four-name axis would be a worse control than a
 list. A model the provider catalog does not name cannot be typed in either:
 choosing is what this surface offers, not configuring.
 
+## Wave U23 - tables, and how far the model choice reaches
+
+Two loose ends, one in each half of the answer.
+
+- [x] U23-01: Read and draw pipe tables.
+  - U15 left tables out on the grounds that a table is not worth a parser that
+    can be talked into producing an element. That reasoning held for raw HTML and
+    still does; a table does not need it, because a cell is the same span list as
+    every other text in the answer - already escaped, already parsed for inline
+    code and links, and never markup. The delimiter row is what makes a table a
+    table: a line with pipes in it is prose a reader wrote with pipes in it.
+  - A row with the wrong number of cells is padded or trimmed rather than
+    rejected, and a table that is wider than the prose scrolls on its own so the
+    transcript never scrolls sideways to show one.
+  - `packages/design/test/markdown.test.ts` and `markdown-text.test.ts` pin the
+    reading, the alignment, the padding and the scroll wrapper.
+- [x] U23-02: Say how far the model choice reaches, where the choice is made.
+  - The selection lives on the runtime for as long as it runs and is **not**
+    written to the configuration file, so the picker says so in its own menu.
+    Silently session-scoped would read as a setting the reader had changed for
+    good. Persisting it is possible - `ConfigLoader::edit_user_config` exists for
+    exactly this, preserves comments and keeps a `.bak` - but rewriting the file
+    a human maintains is a decision to take deliberately rather than as a side
+    effect of a click, so it is recorded here as a candidate rather than done.
+- [x] U23-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
 ## Verification
 
 ```text
