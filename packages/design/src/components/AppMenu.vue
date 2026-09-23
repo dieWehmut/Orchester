@@ -66,7 +66,12 @@ function focusFirstItem() {
 }
 
 function focusTrigger() {
+  const surface = menu.value
   void nextTick(() => {
+    const active = document.activeElement
+    if (active && active !== document.body && active !== surface && !surface?.contains(active)) {
+      return
+    }
     trigger.value?.focus()
   })
 }
@@ -156,8 +161,8 @@ function selectItem(item: AppMenuItem) {
     return
   }
 
-  emit('select', item.id)
   setOpen(false)
+  emit('select', item.id)
 }
 
 watch(

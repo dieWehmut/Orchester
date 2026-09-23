@@ -81,19 +81,19 @@ describe('workspace shortcuts', () => {
     window.innerWidth = 1400
     try {
       const wrapper = await mountWorkspace(testRouter())
-      const shell = () => wrapper.get('[data-rail-collapsed]')
+      const shell = () => wrapper.get('[data-rail-folded]')
 
-      expect(shell().attributes('data-rail-collapsed')).toBe('false')
+      expect(shell().attributes('data-rail-folded')).toBe('false')
       expect(wrapper.find('[data-rail]').exists()).toBe(true)
 
       press('b', { ctrlKey: true })
       await nextTick()
-      expect(shell().attributes('data-rail-collapsed')).toBe('true')
+      expect(shell().attributes('data-rail-folded')).toBe('true')
       expect(wrapper.find('[data-rail]').exists()).toBe(false)
 
       press('b', { ctrlKey: true })
       await nextTick()
-      expect(shell().attributes('data-rail-collapsed')).toBe('false')
+      expect(shell().attributes('data-rail-folded')).toBe('false')
       expect(wrapper.find('[data-rail]').exists()).toBe(true)
       wrapper.unmount()
     } finally {

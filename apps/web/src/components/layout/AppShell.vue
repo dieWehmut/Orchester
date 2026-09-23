@@ -219,7 +219,7 @@ onBeforeUnmount(endDrag)
       'app-shell--inspector-closed': !props.inspectorOpen,
       'app-shell--rail-closed': railCollapsed,
     }"
-    :data-rail-collapsed="String(railCollapsed)"
+    :data-rail-folded="String(railCollapsed)"
   >
     <nav
       class="app-shell__mobile-controls"

@@ -329,7 +329,6 @@ function onHelpSelect(id: string): void {
     :data-window-chrome="controller.enabled ? '' : undefined"
     :data-window-material="controller.enabled ? 'opaque' : undefined"
     :data-window-platform="controller.enabled ? platform : undefined"
-    :data-rail-collapsed="String(!railExpanded)"
   >
     <span v-if="controller.enabled && platform === 'macos'" class="title-row__traffic-lights" data-native-traffic-lights aria-hidden="true" />
 

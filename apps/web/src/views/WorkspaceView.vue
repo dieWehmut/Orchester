@@ -531,6 +531,7 @@ if (desktopWindowController?.enabled) {
     />
 
     <RunPanel
+      ref="runPanel"
       v-if="!selected"
       :view="runView"
       :events="runEvents"
