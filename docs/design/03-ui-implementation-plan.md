@@ -648,6 +648,39 @@ until it closes, and a table is a paragraph until its delimiter row arrives - th
 same progressive reading the reference has. The alternative is holding
 formatting back until the end, which is what this wave stopped doing.
 
+## Wave U26 - the pinned list the reference opens with
+
+The reference's sidebar opens with a list the reader chose: what they kept at the
+top. Orchester's rail opened with a list of one - the workspace - which the
+product row already names, so the reference's structure could be adopted
+honestly: the first list became the reader's own, and the workspace's state moved
+to the row that names the product.
+
+- [x] U26-01: Keep the pins where the other preferences live.
+  - `usePinnedSessions` reads and writes `orchester:sessions:pinned`, hydrating on
+    first use like the appearance store, and keeps only identifiers it can believe
+    - the value is a key a reader can edit by hand, and a hand-edited key must
+    open the rail rather than break it. Newest pin first, because the rail is read
+    from the top.
+  - `apps/web/test/pinned-sessions.test.ts` pins the ordering, the unpin, the
+    stored round trip and the tolerance for what is not a list of ids.
+- [x] U26-02: Give the row the control, beside it rather than inside it.
+  - The row is now a container: the open control and the pin are siblings, because
+    a button within a button is not something a browser will let a reader press.
+    The pin is drawn on hover or focus and stays visible once it is pinned, since
+    that is the state it reports; `aria-pressed` and the label carry the state
+    rather than the colour alone.
+- [x] U26-03: Draw the pinned list from the loaded page, and once.
+  - `PinnedSessions` renders the pinned runs in the reader's order; a pinned id
+    whose run is not on the loaded page is not drawn, because the rail holds a
+    cursor rather than the whole history and a row it cannot name would be worse
+    than an absent one. `SessionRail` excludes pinned runs, so a run appears once
+    - and its "nothing matched" message is now asked of the whole page, so a
+    filter whose only match is pinned cannot contradict the row above it.
+  - `ProjectList` is gone: it was one row of state that the product row states.
+- [x] U26-04: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
 ## Verification
 
 ```text
