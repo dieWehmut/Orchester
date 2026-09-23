@@ -716,7 +716,7 @@ moved to where it can still be read.
     surface owns: the row asks whether one is available rather than assuming it,
     so a row of a menu that this route cannot answer is drawn disabled with its
     reason instead of doing nothing.
-  - The toggle is the reference's leftmost control, `aria-pressed` carries the
+  - The toggle is the reference's leftmost control, `aria-expanded` carries the
     state, and it is disabled - with the reason - on a route that draws no rail.
 - [x] U27-03: Open the menus the reference draws, with the actions this product
   can answer.
