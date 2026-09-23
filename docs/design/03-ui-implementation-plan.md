@@ -421,6 +421,33 @@ question it belongs to. And the mark it marks as reached is the one it *sent*
 the transcript to rather than one read back from the scroll position - the rail
 reports choices, it does not observe them.
 
+## Wave U19 - the menu's own identity
+
+The reference's account menu opens with the account it is about - avatar, name,
+and the line under it - and then a rule before the rows. Orchester's menu was a
+bare list, so the one thing the surface already knew about itself was the one
+thing missing from it.
+
+- [x] U19-01: Give the menu a surface that can carry a header.
+  - `AppMenu` renders an optional `header` slot on the popover surface, above the
+    `role="menu"` list rather than inside it: a menu may hold items and separators
+    and nothing else, and a heading placed inside one would be a list claiming to
+    be something it is not.
+  - `packages/design/test/app-menu.test.ts` pins the order, that the list still
+    holds only items, and that a surface with no header draws none.
+- [x] U19-02: Head the account menu with the identity it acts on.
+  - The copy is drawn rather than announced: the row that opens the menu already
+    carries the same words as its accessible name, so the header is marked
+    `aria-hidden` and a screen reader hears the account once, not twice.
+  - `apps/web/test/app-rail.test.ts` pins both halves of that.
+- [x] U19-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**Still not taken from the reference's menu.** Remaining usage, invites and
+sign-out: there is no account here to meter, invite to or sign out of. The header
+is the honest half of that menu - the identity - and the two rows under it are
+the two destinations the product actually has.
+
 ## Verification
 
 ```text
