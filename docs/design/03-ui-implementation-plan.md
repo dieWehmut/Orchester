@@ -591,6 +591,29 @@ Two loose ends, one in each half of the answer.
 - [x] U23-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
   builds, `pnpm stack:verify`.
 
+## Wave U24 - one line per run in the rail's lists
+
+The reference's sidebar lists are a title per entry and nothing else, and
+Orchester's rows had grown a second line of agent, model and a resumable badge.
+Those are details *of* a run rather than its name, and the pane that opens when
+the row is chosen states them in full - so they moved behind the row instead of
+sitting on it.
+
+- [x] U24-01: Draw the row as the title, when it ran, and the outcome's dot.
+  - The agent, the model and the resumable note are now a tooltip for the pointer
+    and hidden text for a screen reader, which is what keeps one line from
+    meaning less; the outcome stays where it already was, on the dot, which
+    carries it as its own accessible name and is not repeated in the hidden text.
+  - `apps/web/test/session-list-item.test.ts` pins the row's children, the
+    hidden details, the tooltip, the dot's state per outcome, and the run that
+    reported no model.
+- [x] U24-02: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**What the row deliberately keeps.** The time. The reference's list entries
+carry none, but a list of runs is a history, and a history without when is a
+list a reader has to open each entry to date.
+
 ## Verification
 
 ```text
