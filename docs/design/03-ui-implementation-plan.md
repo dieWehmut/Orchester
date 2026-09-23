@@ -478,6 +478,48 @@ a font had to know it was filed under the theme.
 editors and the profile actions - which is what the reference's appearance
 screen shows, and now nothing besides.
 
+## Wave U21 - choosing the model the next run uses
+
+The reference's composer carries a selector for the model and its effort, and
+Orchester could not offer one: the runtime's own selection is session state on a
+host, and this server builds **one host per run**, so a choice would be gone
+before the run that was meant to use it. The catalog was read-only, which is why
+U14 recorded the selector as "not answerable here" - this wave makes it
+answerable.
+
+- [x] U21-01: Hold the choice on the server and apply it to every run.
+  - `ModelSelection` names the three pieces the CLI's own `/model` command
+    names - provider, profile, session effort - and `apply` maps them to the
+    runtime's selection calls in one place, so a run and the catalog that
+    describes it cannot answer differently. `run.rs` applies it to the run's host
+    before the runtime starts, and a choice the configuration no longer supports
+    stops the run with an `error` event instead of quietly running on another
+    model.
+- [x] U21-02: `PUT /api/v1/models/selection`, answered with the catalog.
+  - Validated against this workspace's configuration before it is kept (a
+    choice that cannot be applied is refused with `validation_failed`, not stored
+    and not discovered later), bounded and control-character checked, and
+    `GET /models` now describes the model the *next* run will use rather than the
+    one the configuration file happens to name.
+  - `kisten/netz/tests/model_routes.rs` pins the round trip: a provider and an
+    effort are remembered and reported afterwards, a profile names model and
+    profile whole, an unusable choice is refused with the model unchanged, and a
+    request without a workspace is unavailable.
+- [x] U21-03: Carry it to the browser.
+  - `ModelSelectionRequestDto` in the protocol, `ModelsApi.select` in the client
+    (which reads back the catalog the runtime produced rather than assuming the
+    click took effect), and a `select` action on the catalog store that keeps the
+    last good catalog when the runtime refuses.
+  - `apps/web/test/models-api.test.ts` and `model-catalog-store.test.ts` pin the
+    request, the refusal and the state that survives it.
+- [x] U21-04: Re-run the gate: `pnpm typecheck`, the frontend and Rust suites,
+  both builds, `pnpm stack:verify`.
+
+**What is left for the next wave.** The picker itself: the composer's trailing
+row draws a readout today, and turning it into the reference's selector - the
+providers, the profiles and the effort levels, wired to `select` - is the half
+that makes this visible. The capability is landed and tested; the control is not.
+
 ## Verification
 
 ```text
