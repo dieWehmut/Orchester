@@ -50,6 +50,7 @@ describe('SettingsView', () => {
     expect(sections).toEqual([
       'general',
       'appearance',
+      'personalization',
       'notifications',
       'import',
       'profile',
@@ -60,6 +61,28 @@ describe('SettingsView', () => {
     ])
     expect(wrapper.get('[data-settings-nav]')).toBeTruthy()
     expect(wrapper.get('[data-settings-nav]').text()).toContain('Appearance')
+    expect(wrapper.get('[data-settings-nav]').text()).toContain('Personalization')
+  })
+
+  it('keeps the theme on the appearance screen and the reading choices on their own', () => {
+    const wrapper = mount(SettingsView)
+    const appearance = wrapper.get('[data-settings-section="appearance"]')
+    const personalization = wrapper.get('[data-settings-section="personalization"]')
+
+    // The reference's appearance page is the theme and nothing else - cards,
+    // preview, the colours each theme resolves to. Fonts, motion and intensity
+    // are a destination of their own in its settings list, and they are a
+    // destination of their own here.
+    expect(appearance.findAll('[data-theme-option]')).toHaveLength(3)
+    expect(appearance.find('[data-appearance-field="ui-font"]').exists()).toBe(false)
+    expect(appearance.find('[data-appearance-field="intensity"]').exists()).toBe(false)
+
+    expect(personalization.find('[data-appearance-field="ui-font"]').exists()).toBe(true)
+    expect(personalization.find('[data-appearance-field="content-font"]').exists()).toBe(true)
+    expect(personalization.find('[data-appearance-field="intensity"]').exists()).toBe(true)
+    expect(personalization.find('[data-appearance-field="reduced-motion"]').exists()).toBe(true)
+    expect(personalization.find('[data-appearance-field="rail-appearance"]').exists()).toBe(true)
+    expect(personalization.findAll('[data-theme-option]')).toHaveLength(0)
   })
 
   it('opens on appearance, the section the shell sends the user to', () => {

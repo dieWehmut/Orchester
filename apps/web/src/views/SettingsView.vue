@@ -23,6 +23,7 @@ import {
   RotateCcw,
   Search,
   Settings2,
+  SlidersHorizontal,
   Upload,
   UserRound,
 } from '@lucide/vue'
@@ -78,6 +79,7 @@ type SettingsSection =
   | 'import'
   | 'profile'
   | 'appearance'
+  | 'personalization'
   | 'pet'
   | 'keybindings'
   | 'providers'
@@ -126,6 +128,12 @@ const navEntries: readonly SettingsNavEntry[] = [
   { id: 'import', labelKey: 'settings.sections.import', icon: Download, group: 'personal' },
   { id: 'profile', labelKey: 'settings.sections.profile', icon: UserRound, group: 'personal' },
   { id: 'appearance', labelKey: 'settings.sections.appearance', icon: Palette, group: 'personal' },
+  {
+    id: 'personalization',
+    labelKey: 'settings.sections.personalization',
+    icon: SlidersHorizontal,
+    group: 'personal',
+  },
   { id: 'pet', labelKey: 'pet.title', icon: PawPrint, group: 'personal' },
   {
     id: 'keybindings',
@@ -658,6 +666,19 @@ const previewAfter = computed(() => [
             </div>
           </div>
         </section>
+
+        </section>
+
+      <section
+        class="settings-view__panel"
+        data-settings-section="personalization"
+        :aria-selected="activeSection === 'personalization'"
+        :hidden="activeSection !== 'personalization'"
+      >
+        <header class="settings-view__headline">
+          <h2>{{ t('settings.sections.personalization') }}</h2>
+          <p>{{ t('settings.personalization.description') }}</p>
+        </header>
 
         <div class="settings-view__table">
           <header class="settings-view__table-head">

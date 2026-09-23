@@ -106,6 +106,7 @@
     "sections": {
       "general": "一般",
       "appearance": "外觀",
+      "personalization": "個人化",
       "providers": "供應商",
       "about": "關於",
       "notifications": "通知",
@@ -151,6 +152,9 @@
       "darkTheme": "深色主題",
       "copyTheme": "複製主題",
       "sample": "Aa"
+    },
+    "personalization": {
+      "description": "字型、動效，以及介面的閱讀方式。"
     },
     "locale": {
       "en": "English",

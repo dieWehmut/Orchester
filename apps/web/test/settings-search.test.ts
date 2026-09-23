@@ -40,6 +40,7 @@ describe("settings search", () => {
     expect(ids).toEqual([
       "general",
       "appearance",
+      "personalization",
       "notifications",
       "import",
       "profile",
@@ -49,6 +50,19 @@ describe("settings search", () => {
       "about",
     ])
     expect(SETTINGS_SECTIONS.every((section) => section.keywords.length > 0)).toBe(true)
+  })
+
+  it("sends a reader looking for the reading choices to the screen that holds them", async () => {
+    const wrapper = mount(SettingsView)
+    const search = wrapper.find("[data-settings-search]")
+
+    // Fonts, motion and intensity moved out of appearance, so the word that
+    // used to land on the theme has to land where they are now.
+    await search.find("input").setValue("font")
+
+    expect(
+      wrapper.findAll("[data-settings-nav-link]").map((node) => node.attributes("data-settings-nav-link")),
+    ).toEqual(["personalization"])
   })
 
   it("filters the settings navigation from the search field", async () => {

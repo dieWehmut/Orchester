@@ -106,6 +106,7 @@
     "sections": {
       "general": "General",
       "appearance": "Appearance",
+      "personalization": "Personalization",
       "providers": "Providers",
       "about": "About",
       "notifications": "Notifications",
@@ -151,6 +152,9 @@
       "darkTheme": "Dark theme",
       "copyTheme": "Copy theme",
       "sample": "Aa"
+    },
+    "personalization": {
+      "description": "Fonts, motion and how the shell reads."
     },
     "locale": {
       "en": "English",
