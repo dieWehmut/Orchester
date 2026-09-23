@@ -106,6 +106,7 @@
     "sections": {
       "general": "一般",
       "appearance": "外觀",
+      "personalization": "個人化",
       "providers": "供應商",
       "about": "關於",
       "notifications": "通知",
@@ -151,6 +152,9 @@
       "darkTheme": "深色主題",
       "copyTheme": "複製主題",
       "sample": "Aa"
+    },
+    "personalization": {
+      "description": "字型、動效，以及介面的閱讀方式。"
     },
     "locale": {
       "en": "English",
@@ -258,6 +262,10 @@
     "return": "返回工作區"
   },
   "sessions": {
+    "pinned": "置頂",
+    "pinnedEmpty": "置頂的執行會留在這裡。",
+    "pinAction": "置頂",
+    "unpinAction": "取消置頂",
     "title": "工作階段",
     "new": "新增工作階段",
     "empty": "尚無工作階段",
@@ -305,6 +313,14 @@
     "describeTask": "描述任務",
     "taskPrompt": "任務提示詞",
     "runInProgress": "執行進行中",
+    "modelSelection": "模型與推理強度",
+    "effortOption": "強度：{name}",
+    "effortDefault": "供應商預設",
+    "effortMinimal": "最低",
+    "effortLow": "低",
+    "effortMedium": "中",
+    "effortHigh": "高",
+    "selectionScope": "對其後的執行生效",
     "modelUnavailable": "模型不可用",
     "planComplete": "計畫已完成",
     "showPlan": "展開完整計畫",
@@ -419,12 +435,29 @@
   "tabStrip": {
     "label": "已開啟的分頁"
   },
+  "titleRow": {
+    "menusLabel": "應用程式選單",
+    "file": "檔案",
+    "edit": "編輯",
+    "view": "檢視",
+    "help": "說明",
+    "back": "後退",
+    "forward": "前進",
+    "hideRail": "隱藏任務欄",
+    "showRail": "顯示任務欄",
+    "clearPrompt": "清空輸入",
+    "unavailable": "此畫面沒有該面板"
+  },
   "window": {
     "closeTitle": "關閉 Orchester？",
     "closeDescription": "仍有任務正在執行。關閉視窗只會隱藏 Orchester，任務會繼續執行，直到你從托盤結束。",
     "closeCancel": "繼續工作",
     "closeAccept": "關閉視窗",
-    "controls": "視窗控件"
+    "controls": "視窗控件",
+    "minimize": "最小化視窗",
+    "maximize": "最大化視窗",
+    "restore": "還原視窗",
+    "close": "關閉視窗"
   },
   "layout": {
     "workspacePanels": "工作區面板",
@@ -447,7 +480,8 @@
       "inspectorToggle": "切換檢查器",
       "settingsOpen": "開啟設定",
       "windowClose": "關閉目前分頁",
-      "companionToggle": "切換夥伴顯示"
+      "companionToggle": "切換夥伴顯示",
+      "railToggle": "折疊工作列"
     }
   },
   "commands": {

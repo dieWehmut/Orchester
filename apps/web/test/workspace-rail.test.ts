@@ -1,7 +1,9 @@
 import { AGENT_FLEET_FIXTURE, type BootstrapDto } from '@orchester/protokoll'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
+import { nextTick } from 'vue'
 
+import { resetPinnedSessionsForTests } from '../src/composables/use-pinned-sessions'
 import { createAppRouter } from '../src/router'
 import { createAppStores } from '../src/stores/app'
 import WorkspaceView from '../src/views/WorkspaceView.vue'
@@ -21,7 +23,7 @@ function readyStores() {
 }
 
 describe('WorkspaceView Codex-style rail', () => {
-  it('renders the rail sections with projects and sessions above the fleet', () => {
+  it('renders the rail sections with the pinned list and the sessions above the fleet', () => {
     const wrapper = mount(WorkspaceView, { global: { plugins: [readyStores()] } })
 
     const sections = wrapper
@@ -29,9 +31,51 @@ describe('WorkspaceView Codex-style rail', () => {
       .map((node) => node.attributes('data-rail-section'))
 
     expect(sections).toEqual(['brand', 'primary', 'projects', 'sessions', 'fleet', 'account'])
-    expect(wrapper.get('[data-rail-section="projects"]').text()).toContain('Orchester')
+    // The first list is the reader's own, as the reference's sidebar opens, and
+    // the workspace is named on the product row rather than in a list of one.
+    expect(wrapper.get('[data-rail-section="projects"] [data-pinned-empty]')).toBeTruthy()
+    expect(wrapper.get('[data-rail-section="brand"]').text()).toContain('Orchester')
     expect(wrapper.get('[data-rail-section="sessions"] [data-session-rail]')).toBeTruthy()
     expect(wrapper.get('[data-rail-section="fleet"] [data-agent-fleet]')).toBeTruthy()
+  })
+
+  it('pins a run from its row into the first list, and unpins it again', async () => {
+    localStorage.clear()
+    resetPinnedSessionsForTests()
+    const stores = readyStores()
+    stores.sessions.items.value = [
+      {
+        id: 's-11111111111111111111111111111111',
+        source: 'delegate',
+        recorded_at_unix: 1_700_000_000,
+        title: 'Inspect the runtime',
+        agent: 'codex',
+        model: 'gpt-5',
+        outcome: 'success',
+        resumable: true,
+      },
+    ]
+    stores.sessions.status.value = 'ready'
+
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+    await nextTick()
+
+    await wrapper.get('[data-session-pin]').trigger('click')
+    await nextTick()
+
+    // The reader's own list, above the recent ones: the reference opens with it,
+    // and it is the reader's ordering rather than a fact about the run.
+    const pinned = wrapper.get('[data-rail-section="projects"]')
+    expect(pinned.get('[data-pinned-sessions]').text()).toContain('Inspect the runtime')
+    // A run appears once: the recent list is not a second copy of what was kept.
+    expect(wrapper.find('[data-rail-section="sessions"] [data-session-id]').exists()).toBe(false)
+
+    await pinned.get('[data-session-pin]').trigger('click')
+    await nextTick()
+
+    expect(wrapper.get('[data-rail-section="projects"] [data-pinned-empty]')).toBeTruthy()
+    expect(wrapper.find('[data-rail-section="sessions"] [data-session-id]').exists()).toBe(true)
+    resetPinnedSessionsForTests()
   })
 
   it('shows the account footer identity and opens the settings route from its menu', async () => {

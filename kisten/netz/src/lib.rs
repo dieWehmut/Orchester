@@ -15,6 +15,7 @@ mod health;
 mod lifecycle;
 mod listener;
 mod model_catalog;
+mod model_selection;
 mod router;
 mod run;
 mod run_bridge;
@@ -49,7 +50,11 @@ pub use lifecycle::{
 pub use listener::{bind_listener, ServerBindError};
 pub use model_catalog::{
     model_catalog_response, ActiveModelDto, ModelCatalogDto, ModelChoiceDto, ModelProfileDto,
-    ProviderChoiceDto, ProviderChoiceStateDto, MODEL_CATALOG_SCHEMA_VERSION,
+    ModelSelectionRequestDto, ProviderChoiceDto, ProviderChoiceStateDto,
+    MODEL_CATALOG_SCHEMA_VERSION,
+};
+pub use model_selection::{
+    ModelSelection, ModelSelectionStore, MODEL_SELECTION_FIELD_MAX_CHARS,
 };
 pub use router::{app_router, app_router_with_static_assets};
 pub use run_contract::{

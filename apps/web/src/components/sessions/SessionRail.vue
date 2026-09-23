@@ -24,20 +24,35 @@ const props = withDefaults(
    * have no need for the distinction.
    */
   query?: string
+  /**
+   * The runs the reader pinned, which the pinned list above already shows.
+   *
+   * A run appears once: what is recent is not a second copy of what the reader
+   * chose to keep.
+   */
+  pinnedIds?: readonly string[]
   }>(),
-  { query: '' },
+  { query: '', pinnedIds: () => [] },
 )
 
 defineEmits<{
   select: [id: string]
   refresh: []
   loadMore: []
+  togglePin: [id: string]
 }>()
 
 const { t } = useI18n()
 
+/** Whether one session answers the filter, over the fields a row shows. */
+function admits(item: SessionSummaryDto, needle: string): boolean {
+  return [item.title, item.agent, item.model ?? ''].some((field) =>
+    field.toLowerCase().includes(needle),
+  )
+}
+
 /**
- * The sessions the filter admits.
+ * The sessions the filter admits, less the pinned ones.
  *
  * Matching is case-insensitive and runs over the fields a reader can see in a
  * row - the title, the agent and the model - because a filter that matched
@@ -46,18 +61,24 @@ const { t } = useI18n()
  */
 const matches = computed<SessionSummaryDto[]>(() => {
   const needle = props.query.trim().toLowerCase()
-  if (needle.length === 0) return props.items
-  return props.items.filter((item) =>
-    [item.title, item.agent, item.model ?? ''].some((field) =>
-      field.toLowerCase().includes(needle),
-    ),
-  )
+  const admitted =
+    needle.length === 0 ? props.items : props.items.filter((item) => admits(item, needle))
+  const pinned = new Set(props.pinnedIds)
+  return admitted.filter((item) => !pinned.has(item.id))
 })
 
-/** Whether the filter is hiding rows the runtime did send. */
-const filteredEmpty = computed(
-  () => props.query.trim().length > 0 && matches.value.length === 0 && props.items.length > 0,
-)
+/**
+ * Whether the filter admitted nothing at all.
+ *
+ * Asked of the whole page rather than of this list: when the only match is a
+ * pinned run, the pinned list above is showing it, and a "nothing matched"
+ * message here would contradict the row the reader can see.
+ */
+const filteredEmpty = computed(() => {
+  const needle = props.query.trim().toLowerCase()
+  if (needle.length === 0 || props.items.length === 0) return false
+  return !props.items.some((item) => admits(item, needle))
+})
 </script>
 
 <template>
@@ -107,6 +128,7 @@ const filteredEmpty = computed(
           :session="session"
           :selected="selectedId === session.id"
           @select="$emit('select', $event)"
+          @toggle-pin="$emit('togglePin', $event)"
         />
       </nav>
       <AppButton

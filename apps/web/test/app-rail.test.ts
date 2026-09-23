@@ -132,6 +132,33 @@ describe('AppRail', () => {
     expect(wrapper.emitted('openSettings')).toHaveLength(1)
   })
 
+  it('heads the account menu with the identity it acts on, as the reference does', async () => {
+    const wrapper = mount(AppRail, {
+      props: {
+        productName: 'Orchester',
+        workspaceName: 'Orchester',
+        newSessionLabel: 'New chat',
+        projectsLabel: 'Projects',
+        sessionsLabel: 'Sessions',
+        fleetLabel: 'Agents',
+        accountName: 'dieWehmut',
+        accountHint: 'Local runtime',
+        settingsLabel: 'Settings',
+      },
+    })
+
+    await wrapper.get('[data-rail-account-menu] [aria-haspopup="menu"]').trigger('click')
+
+    const header = wrapper.get('[data-menu-header]')
+
+    expect(header.text()).toContain('dieWehmut')
+    expect(header.text()).toContain('Local runtime')
+    // Which account the menu is about is the trigger's own accessible name, so
+    // the identity inside the surface is drawing rather than a second
+    // announcement when the menu opens.
+    expect(header.attributes('aria-hidden')).toBe('true')
+  })
+
   it('folds each headed list from its own heading', async () => {
     const wrapper = mount(AppRail, {
       props: {

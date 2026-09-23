@@ -1,6 +1,7 @@
 import type {
   ModelCatalogDto,
   ModelChoiceDto,
+  ModelSelectionRequestDto,
   ProviderChoiceDto,
 } from '@orchester/protokoll'
 import { computed, ref, shallowRef } from 'vue'
@@ -67,6 +68,38 @@ export const useModelCatalogStore = defineStore('modelCatalog', () => {
     error.value = null
   }
 
+  /**
+   * Choose the model the following runs use.
+   *
+   * The runtime answers with the catalog its choice produces, so what the picker
+   * draws comes from the runtime rather than from what the reader clicked: a
+   * selection this workspace cannot apply leaves both unchanged, and says why.
+   */
+  async function select(selection: ModelSelectionRequestDto): Promise<boolean> {
+    const currentApi = api
+    const currentGeneration = ++generation
+    if (!currentApi) {
+      error.value = normalizeApiError(new TypeError('model catalog API unavailable'))
+      status.value = catalog.value ? 'stale' : 'error'
+      return false
+    }
+
+    status.value = catalog.value ? 'refreshing' : 'loading'
+    error.value = null
+    try {
+      const next = await currentApi.select(selection)
+      if (currentGeneration !== generation) return false
+      catalog.value = next
+      status.value = 'ready'
+      return true
+    } catch (cause) {
+      if (currentGeneration !== generation) return false
+      error.value = normalizeApiError(cause)
+      status.value = catalog.value ? 'stale' : 'error'
+      return false
+    }
+  }
+
   return {
     status,
     catalog,
@@ -75,6 +108,7 @@ export const useModelCatalogStore = defineStore('modelCatalog', () => {
     activeProvider,
     configure,
     load,
+    select,
     reset,
   }
 })

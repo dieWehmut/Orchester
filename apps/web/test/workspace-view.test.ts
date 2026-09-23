@@ -168,6 +168,44 @@ describe('WorkspaceView', () => {
     expect(wrapper.get('[data-change-path="src/app.ts"]').text()).toContain('Modified')
     expect(wrapper.get('[data-change-path="src/app.ts"]').text()).toContain('2 events')
   })
+
+  it('sends the model chosen in the composer to the runtime', async () => {
+    const chosen = { ...MODEL_CATALOG_FIXTURE, selected_provider: 'openai' }
+    const http = {
+      get: vi.fn(async (path: string) =>
+        path === '/models' ? MODEL_CATALOG_FIXTURE : {},
+      ),
+      put: vi.fn(async () => chosen),
+    } as unknown as HttpClient
+    const stores = createAppStores({ http })
+    stores.bootstrap.context.value = {
+      schema_version: 1,
+      service_version: '0.1.2',
+      server_state: 'running',
+      workspace: { selected: true, name: 'Orchester' },
+    } satisfies BootstrapDto
+    stores.bootstrap.status.value = 'ready'
+    stores.models.catalog = MODEL_CATALOG_FIXTURE
+    stores.models.status = 'ready'
+
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+    await wrapper.get('[data-model-picker] [aria-haspopup="menu"]').trigger('click')
+    await nextTick()
+    const provider = wrapper
+      .findAll('[role="menuitemradio"]')
+      .find((item) => item.text().includes('OpenAI'))
+    await provider?.trigger('click')
+    await flushPromises()
+
+    // The chain the reader's click travels: the picker reports the intent, the
+    // panel and the view forward it, and the store asks the runtime - which is
+    // what makes the control a control rather than a readout.
+    expect(http.put).toHaveBeenCalledWith('/models/selection', {
+      provider: 'openai',
+      effort: 'high',
+    })
+    expect(stores.models.catalog?.selected_provider).toBe('openai')
+  })
 })
 
 function fileChangeEvent(

@@ -34,8 +34,7 @@ function blocks(css: string): Block[] {
 
 const STYLESHEETS = [
   'views/SettingsView.vue',
-  'components/layout/WorkspaceHeader.vue',
-  'components/layout/WindowChrome.vue',
+  'components/layout/TitleRow.vue',
   'components/run/RunComposer.vue',
   'components/run/PlanStrip.vue',
   'components/run/ToolCallCard.vue',

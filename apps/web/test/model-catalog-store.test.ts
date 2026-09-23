@@ -14,7 +14,7 @@ describe('model catalog Pinia store', () => {
     const store = useModelCatalogStore()
     const api = {
       catalog: vi.fn(async () => MODEL_CATALOG_FIXTURE),
-    } as ModelsApi
+    } as unknown as ModelsApi
 
     store.configure(api)
     await store.load()
@@ -33,7 +33,7 @@ describe('model catalog Pinia store', () => {
         .fn()
         .mockResolvedValueOnce(MODEL_CATALOG_FIXTURE)
         .mockRejectedValueOnce(new TypeError('offline')),
-    } as ModelsApi
+    } as unknown as ModelsApi
 
     store.configure(api)
     await store.load()
@@ -58,7 +58,7 @@ describe('model catalog Pinia store', () => {
     const store = useModelCatalogStore()
     const api = {
       catalog: vi.fn(async () => MODEL_CATALOG_FIXTURE),
-    } as ModelsApi
+    } as unknown as ModelsApi
 
     store.configure(api)
     await store.load()
@@ -71,5 +71,49 @@ describe('model catalog Pinia store', () => {
     await store.load()
     expect(api.catalog).toHaveBeenCalledTimes(2)
     expect(store.status).toBe('ready')
+  })
+
+  it('takes the catalog the selection produced rather than the one clicked', async () => {
+    const store = useModelCatalogStore()
+    const selected = {
+      ...MODEL_CATALOG_FIXTURE,
+      active: {
+        state: 'configured' as const,
+        choice: { ...MODEL_CATALOG_FIXTURE.providers[0]!, model: 'gpt-review' },
+      },
+    }
+    const api = {
+      catalog: vi.fn(async () => MODEL_CATALOG_FIXTURE),
+      select: vi.fn(async () => selected),
+    } as unknown as ModelsApi
+
+    store.configure(api)
+    const ok = await store.select({ profile: 'review' })
+
+    expect(ok).toBe(true)
+    expect(api.select).toHaveBeenCalledWith({ profile: 'review' })
+    expect(store.catalog).toEqual(selected)
+    expect(store.status).toBe('ready')
+  })
+
+  it('keeps the model it had when the runtime refuses the choice', async () => {
+    const store = useModelCatalogStore()
+    const api = {
+      catalog: vi.fn(async () => MODEL_CATALOG_FIXTURE),
+      select: vi.fn(async () => {
+        throw new TypeError('offline')
+      }),
+    } as unknown as ModelsApi
+
+    store.configure(api)
+    await store.load()
+    const ok = await store.select({ provider: 'nowhere' })
+
+    // A refused choice is not a state the picker may draw: the catalog stays as
+    // the runtime last reported it, and the failure is what the reader is told.
+    expect(ok).toBe(false)
+    expect(store.catalog).toEqual(MODEL_CATALOG_FIXTURE)
+    expect(store.status).toBe('stale')
+    expect(store.error?.message).toBe('Unable to reach the Orchester runtime')
   })
 })

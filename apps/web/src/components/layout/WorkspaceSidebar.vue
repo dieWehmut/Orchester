@@ -5,7 +5,8 @@ import { ref } from 'vue'
 import AppRail from './AppRail.vue'
 import { AgentFleetPanel } from '../../features/agent-presence'
 import SessionRail from '../sessions/SessionRail.vue'
-import ProjectList from '../sessions/ProjectList.vue'
+import PinnedSessions from '../sessions/PinnedSessions.vue'
+import { usePinnedSessions } from '../../composables/use-pinned-sessions'
 import { useI18n } from '../../i18n'
 import type { AgentFleetStoreStatus } from '../../stores/agent-fleet'
 import type { AgentStatusSocketStatus } from '../../transport/agent-status-socket'
@@ -55,15 +56,24 @@ const { t } = useI18n()
  * that opens it is the column's own.
  */
 const sessionQuery = ref('')
+
+/**
+ * The runs the reader keeps at the top, as the reference's sidebar opens.
+ *
+ * The pin is a reading preference and belongs to this column, so the state is
+ * read here rather than routed through the view: nothing about a run changes
+ * when it is pinned.
+ */
+const pinnedSessions = usePinnedSessions()
 </script>
 
 <template>
   <AppRail
     class="workspace-sidebar"
     :product-name="props.productName"
-    :workspace-name="props.workspaceName"
+    :workspace-name="props.workspaceName ?? t('workspace.projectFallback')"
     :new-session-label="t('sessions.newChat')"
-    :projects-label="t('workspace.projects')"
+    :projects-label="t('sessions.pinned')"
     :sessions-label="t('sessions.railTitle')"
     :fleet-label="t('agents.title')"
     :account-name="props.productName"
@@ -80,9 +90,12 @@ const sessionQuery = ref('')
     @open-attention="$emit('openAttention')"
   >
     <template #projects>
-      <ProjectList
-        :workspace-name="props.workspaceName"
-        :fallback-label="t('workspace.projectFallback')"
+      <PinnedSessions
+        :items="props.sessions"
+        :pinned-ids="pinnedSessions.pinned.value"
+        :selected-id="props.selectedSessionId"
+        @select="$emit('selectSession', $event)"
+        @toggle-pin="pinnedSessions.toggle($event)"
       />
     </template>
 
@@ -94,9 +107,11 @@ const sessionQuery = ref('')
         :next-cursor="props.nextCursor"
         :error="props.sessionError"
         :query="sessionQuery"
+        :pinned-ids="pinnedSessions.pinned.value"
         @select="$emit('selectSession', $event)"
         @refresh="$emit('refreshSessions')"
         @load-more="$emit('loadMoreSessions')"
+        @toggle-pin="pinnedSessions.toggle($event)"
       />
     </template>
 

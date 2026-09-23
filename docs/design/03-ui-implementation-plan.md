@@ -457,6 +457,327 @@ question it belongs to. And the mark it marks as reached is the one it *sent*
 the transcript to rather than one read back from the scroll position - the rail
 reports choices, it does not observe them.
 
+## Wave U19 - the menu's own identity
+
+The reference's account menu opens with the account it is about - avatar, name,
+and the line under it - and then a rule before the rows. Orchester's menu was a
+bare list, so the one thing the surface already knew about itself was the one
+thing missing from it.
+
+- [x] U19-01: Give the menu a surface that can carry a header.
+  - `AppMenu` renders an optional `header` slot on the popover surface, above the
+    `role="menu"` list rather than inside it: a menu may hold items and separators
+    and nothing else, and a heading placed inside one would be a list claiming to
+    be something it is not.
+  - `packages/design/test/app-menu.test.ts` pins the order, that the list still
+    holds only items, and that a surface with no header draws none.
+- [x] U19-02: Head the account menu with the identity it acts on.
+  - The copy is drawn rather than announced: the row that opens the menu already
+    carries the same words as its accessible name, so the header is marked
+    `aria-hidden` and a screen reader hears the account once, not twice.
+  - `apps/web/test/app-rail.test.ts` pins both halves of that.
+- [x] U19-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**Still not taken from the reference's menu.** Remaining usage, invites and
+sign-out: there is no account here to meter, invite to or sign out of. The header
+is the honest half of that menu - the identity - and the two rows under it are
+the two destinations the product actually has.
+
+## Wave U20 - appearance is the theme, personalization is the rest
+
+The reference's settings list carries **Appearance** and **Personalization** as
+two destinations, and its appearance screen is the theme and nothing else: the
+cards, the preview, the colours each theme resolves to. Orchester had folded
+fonts, intensity, motion and the rail's translucency into appearance, so its
+appearance screen showed rows the reference does not - and a reader looking for
+a font had to know it was filed under the theme.
+
+- [x] U20-01: Add personalization as a section of its own.
+  - `settings-search.ts` gains the id and takes over the vocabulary that belongs
+    to it (font, type, motion, density, intensity, rail, reading), while
+    appearance keeps the words about the theme. The nav renders both under the
+    personal group, in that order.
+- [x] U20-02: Move the rows that are not about a theme into it.
+  - Intensity, reduced motion, both font axes, the rail's translucency and the
+    surface readout - and the import/export/reset of the whole appearance
+    profile, which covers every axis rather than only the theme.
+  - `apps/web/test/settings-view.test.ts` pins the split from both sides: the
+    appearance panel holds the three cards and no font or intensity row, the
+    personalization panel holds those rows and no card.
+  - `settings-search.test.ts` pins that the word which used to land on the theme
+    now lands where the fonts went, superseding the U7-01 note.
+- [x] U20-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**What is left in appearance.** The theme cards, the preview, the two theme
+editors and the profile actions - which is what the reference's appearance
+screen shows, and now nothing besides.
+
+## Wave U21 - choosing the model the next run uses
+
+The reference's composer carries a selector for the model and its effort, and
+Orchester could not offer one: the runtime's own selection is session state on a
+host, and this server builds **one host per run**, so a choice would be gone
+before the run that was meant to use it. The catalog was read-only, which is why
+U14 recorded the selector as "not answerable here" - this wave makes it
+answerable.
+
+- [x] U21-01: Hold the choice on the server and apply it to every run.
+  - `ModelSelection` names the three pieces the CLI's own `/model` command
+    names - provider, profile, session effort - and `apply` maps them to the
+    runtime's selection calls in one place, so a run and the catalog that
+    describes it cannot answer differently. `run.rs` applies it to the run's host
+    before the runtime starts, and a choice the configuration no longer supports
+    stops the run with an `error` event instead of quietly running on another
+    model.
+- [x] U21-02: `PUT /api/v1/models/selection`, answered with the catalog.
+  - Validated against this workspace's configuration before it is kept (a
+    choice that cannot be applied is refused with `validation_failed`, not stored
+    and not discovered later), bounded and control-character checked, and
+    `GET /models` now describes the model the *next* run will use rather than the
+    one the configuration file happens to name.
+  - `kisten/netz/tests/model_routes.rs` pins the round trip: a provider and an
+    effort are remembered and reported afterwards, a profile names model and
+    profile whole, an unusable choice is refused with the model unchanged, and a
+    request without a workspace is unavailable.
+- [x] U21-03: Carry it to the browser.
+  - `ModelSelectionRequestDto` in the protocol, `ModelsApi.select` in the client
+    (which reads back the catalog the runtime produced rather than assuming the
+    click took effect), and a `select` action on the catalog store that keeps the
+    last good catalog when the runtime refuses.
+  - `apps/web/test/models-api.test.ts` and `model-catalog-store.test.ts` pin the
+    request, the refusal and the state that survives it.
+- [x] U21-04: Re-run the gate: `pnpm typecheck`, the frontend and Rust suites,
+  both builds, `pnpm stack:verify`.
+
+**What is left for the next wave.** The picker itself: the composer's trailing
+row draws a readout today, and turning it into the reference's selector - the
+providers, the profiles and the effort levels, wired to `select` - is the half
+that makes this visible. The capability is landed and tested; the control is not.
+
+## Wave U22 - the selector the reference draws in the field
+
+U21 landed the capability; this is the control. The composer's trailing row now
+carries the model the next run will use, next to the control that starts it,
+which is where the reference draws its own selector.
+
+- [x] U22-01: Let a menu say which choice is in force.
+  - `AppMenuItem` gains `checked`, and a menu whose items carry it announces
+    itself as a set of radios with `aria-checked` and a check beside the current
+    one: a menu of actions and a menu of choices are different things, and the
+    difference is this field rather than a convention. A long hint is now bounded
+    and truncates, because a provider's reason for being unreachable had been
+    pushing the provider's own name off the row.
+  - `packages/design/test/app-menu.test.ts` pins the role, the state and the
+    check.
+- [x] U22-02: Make the readout a picker, in the field's trailing row.
+  - It offers what the runtime reports: every provider - an unreachable one drawn
+    disabled with its reason, because a menu that silently omits a provider
+    leaves the reader wondering where it went - the named profiles, and the
+    effort names this surface can say, plus the provider default that clears the
+    override. A value the catalog reports that has no name here stays visible in
+    the trigger rather than being forced into one of them.
+  - Each click reports the **whole intent**: picking a provider or a profile
+    keeps the effort in force and picking an effort keeps the axis, because the
+    runtime takes three axes and a request that omitted one would silently reset
+    it. The axis is read off the catalog rather than remembered, so it cannot
+    disagree with the runtime after a reload.
+- [x] U22-03: Reverse the earlier separation, deliberately.
+  - The model had been a *fact* in the context row; it is a *decision*, and the
+    reference draws it with the action. `composer-context-bar.test.ts` and
+    `run-composer-card.test.ts` are updated to the new anatomy and say why.
+- [x] U22-04: Wire the click through to the runtime.
+  - Picker → composer → panel → view → the catalog store's `select`, which asks
+    the runtime and keeps the catalog it answers with. `workspace-view.test.ts`
+    drives that whole chain and asserts the request that leaves the browser.
+- [x] U22-05: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**What the selector still does not do.** It offers the effort names this product
+knows rather than a free field, because the runtime passes any non-empty value
+through and a text box for a four-name axis would be a worse control than a
+list. A model the provider catalog does not name cannot be typed in either:
+choosing is what this surface offers, not configuring.
+
+## Wave U23 - tables, and how far the model choice reaches
+
+Two loose ends, one in each half of the answer.
+
+- [x] U23-01: Read and draw pipe tables.
+  - U15 left tables out on the grounds that a table is not worth a parser that
+    can be talked into producing an element. That reasoning held for raw HTML and
+    still does; a table does not need it, because a cell is the same span list as
+    every other text in the answer - already escaped, already parsed for inline
+    code and links, and never markup. The delimiter row is what makes a table a
+    table: a line with pipes in it is prose a reader wrote with pipes in it.
+  - A row with the wrong number of cells is padded or trimmed rather than
+    rejected, and a table that is wider than the prose scrolls on its own so the
+    transcript never scrolls sideways to show one.
+  - `packages/design/test/markdown.test.ts` and `markdown-text.test.ts` pin the
+    reading, the alignment, the padding and the scroll wrapper.
+- [x] U23-02: Say how far the model choice reaches, where the choice is made.
+  - The selection lives on the runtime for as long as it runs and is **not**
+    written to the configuration file, so the picker says so in its own menu.
+    Silently session-scoped would read as a setting the reader had changed for
+    good. Persisting it is possible - `ConfigLoader::edit_user_config` exists for
+    exactly this, preserves comments and keeps a `.bak` - but rewriting the file
+    a human maintains is a decision to take deliberately rather than as a side
+    effect of a click, so it is recorded here as a candidate rather than done.
+- [x] U23-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+## Wave U24 - one line per run in the rail's lists
+
+The reference's sidebar lists are a title per entry and nothing else, and
+Orchester's rows had grown a second line of agent, model and a resumable badge.
+Those are details *of* a run rather than its name, and the pane that opens when
+the row is chosen states them in full - so they moved behind the row instead of
+sitting on it.
+
+- [x] U24-01: Draw the row as the title, when it ran, and the outcome's dot.
+  - The agent, the model and the resumable note are now a tooltip for the pointer
+    and hidden text for a screen reader, which is what keeps one line from
+    meaning less; the outcome stays where it already was, on the dot, which
+    carries it as its own accessible name and is not repeated in the hidden text.
+  - `apps/web/test/session-list-item.test.ts` pins the row's children, the
+    hidden details, the tooltip, the dot's state per outcome, and the run that
+    reported no model.
+- [x] U24-02: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**What the row deliberately keeps.** The time. The reference's list entries
+carry none, but a list of runs is a history, and a history without when is a
+list a reader has to open each entry to date.
+
+## Wave U25 - the answer formats while it arrives
+
+U12 rendered markdown only once an answer had settled, on the grounds that "a
+fence that is half written is not a code block yet". The reference does the
+opposite - it formats an answer while it is still being written - and this
+parser already reads an unclosed fence as the code it is, so the block the
+reader watches appear is the block they end up with.
+
+- [x] U25-01: Render the answer's markdown from its first token, and keep the
+  containment that makes that affordable.
+  - The row still carries `contain: layout paint` and `content-visibility: auto`
+    while it arrives, which is what keeps a growing row from being measured by
+    the transcript's own layout - the thing the virtual window reads. The
+    reader's own turn is still not parsed, because their words are not the
+    agent's markup.
+  - `apps/web/test/chat-message-anatomy.test.ts` now pins the arriving render
+    (a fence open mid-stream draws a code block) and the containment style.
+- [x] U25-02: Measure what re-reading on every delta actually costs, rather than
+  assuming.
+  - In headless Chromium on this machine, one parse of a whole 2 000-character
+    answer takes **0.86 ms** and one of a 20 000-character answer **2.58 ms**;
+    the same 2 000-character answer arriving in 2 000 deltas - re-parsing on each
+    - spends **323 ms in total**, spread across the whole stream. A frame is
+    16 ms and the last parses of a stream are the ~1 ms ones, so the choice is
+    affordable rather than merely convenient. The harness that measured this was
+    temporary; the numbers are what it reported.
+- [x] U25-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**What this does not fix.** A half-written `**bold**` still shows its asterisks
+until it closes, and a table is a paragraph until its delimiter row arrives - the
+same progressive reading the reference has. The alternative is holding
+formatting back until the end, which is what this wave stopped doing.
+
+## Wave U26 - the pinned list the reference opens with
+
+The reference's sidebar opens with a list the reader chose: what they kept at the
+top. Orchester's rail opened with a list of one - the workspace - which the
+product row already names, so the reference's structure could be adopted
+honestly: the first list became the reader's own, and the workspace's state moved
+to the row that names the product.
+
+- [x] U26-01: Keep the pins where the other preferences live.
+  - `usePinnedSessions` reads and writes `orchester:sessions:pinned`, hydrating on
+    first use like the appearance store, and keeps only identifiers it can believe
+    - the value is a key a reader can edit by hand, and a hand-edited key must
+    open the rail rather than break it. Newest pin first, because the rail is read
+    from the top.
+  - `apps/web/test/pinned-sessions.test.ts` pins the ordering, the unpin, the
+    stored round trip and the tolerance for what is not a list of ids.
+- [x] U26-02: Give the row the control, beside it rather than inside it.
+  - The row is now a container: the open control and the pin are siblings, because
+    a button within a button is not something a browser will let a reader press.
+    The pin is drawn on hover or focus and stays visible once it is pinned, since
+    that is the state it reports; `aria-pressed` and the label carry the state
+    rather than the colour alone.
+- [x] U26-03: Draw the pinned list from the loaded page, and once.
+  - `PinnedSessions` renders the pinned runs in the reader's order; a pinned id
+    whose run is not on the loaded page is not drawn, because the rail holds a
+    cursor rather than the whole history and a row it cannot name would be worse
+    than an absent one. `SessionRail` excludes pinned runs, so a run appears once
+    - and its "nothing matched" message is now asked of the whole page, so a
+    filter whose only match is pinned cannot contradict the row above it.
+  - `ProjectList` is gone: it was one row of state that the product row states.
+- [x] U26-04: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+## Wave U27 - the title row the reference opens with
+
+The reference's top row is one strip: a rail toggle, back and forward, the four
+menus, and the caption buttons at the trailing edge. Orchester drew two - a
+32 px title bar that carried nothing but the window's name, and a 56 px product
+header under it that carried the mark, the workspace, the connection state and
+the theme switch. The product header was already a duplicate: the rail's own
+product row names the product and the workspace since U26. So the two rows
+became the one the reference draws, and what the header had honestly carried
+moved to where it can still be read.
+
+- [x] U27-01: Draw one title row for every face.
+  - `TitleRow.vue` is region A. It renders in the browser and in the desktop
+    window: the rail toggle, back and forward, the four menus, the connection
+    state while it is not `ready`, and - on the desktop only - the drag region
+    and the caption buttons, at the OS metric and in the native order.
+    `WindowChrome.vue` and `WorkspaceHeader.vue` are gone, and with them the
+    second row. The row is the shell's one `banner` landmark, which the header
+    used to be.
+  - The row is 38 px, or 32 px on Windows, and `--app-top-chrome-height` is now
+    that height rather than the sum of the two rows, so every full-height
+    surface under it reads one number.
+  - `title-row.test.ts` moves the chrome's own contract - the caption order, the
+    drag region, the macOS traffic lights, the opaque surface, the rejected
+    action - onto the row, and pins the new order: toggle, arrows, menus,
+    captions.
+- [x] U27-02: Fold the rail, and let the row read what it folded.
+  - `useRailCollapsed` keeps one boolean under `orchester:rail:collapsed`, read
+    on first use and written on every change, as the rail's width already is.
+    `AppShell` draws no rail column while it is set, and never draws the resize
+    handle for a column that is not there.
+  - `shell-actions.ts` is a small registry of the app-chrome actions the mounted
+    surface owns: the row asks whether one is available rather than assuming it,
+    so a row of a menu that this route cannot answer is drawn disabled with its
+    reason instead of doing nothing.
+  - The toggle is the reference's leftmost control, `aria-expanded` carries the
+    state, and it is disabled - with the reason - on a route that draws no rail.
+- [x] U27-03: Open the menus the reference draws, with the actions this product
+  can answer.
+  - **File**: a new chat, settings, and closing the active tab. **Edit**: focus
+    the prompt, and clear it. **View**: the rail, the inspector, the companion,
+    and the theme. **Help**: the keybindings and the about screen. Every chord
+    printed on a row is read from the live shortcut registry, so a rebinding
+    changes the menu with it; a row whose chord is not bound here prints none.
+  - The two settings rows deep-link with `?section=`, which the settings route
+    now honours, because a Help menu that lands on the top of the settings page
+    has not answered "where are the shortcuts".
+  - What is *not* taken: undo, redo, cut, copy, paste and select-all. Orchester
+    owns no editor; the webview already answers those keys inside a field, and a
+    row that called a deprecated clipboard API would be a menu claiming the
+    platform's own job. The bottom panel keeps its own toggle rather than
+    gaining a `Mod+` row: the panel owns its state, and a chord is a promise to
+    flip it from anywhere.
+- [x] U27-04: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**What the row does not carry.** The reference's title bar also holds the window
+title; Orchester's window is named by its rail and its tab strip, and a second
+name in the strip would be a third place to keep in step. The drag region
+carries the name as its tooltip instead.
+
 ## Verification
 
 ```text

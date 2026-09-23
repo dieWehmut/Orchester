@@ -27,7 +27,7 @@ describe('RunComposer Codex-style card', () => {
     ).toBeTruthy()
   })
 
-  it('keeps the project, approval, and model commands out of the action row', () => {
+  it('separates the fact about the workspace from the decisions about the run', () => {
     const wrapper = mount(RunComposer, {
       props: {
         modelValue: 'Ship it',
@@ -39,13 +39,17 @@ describe('RunComposer Codex-style card', () => {
 
     const commands = wrapper.get('[data-composer-context]')
     expect(commands.get('[data-project-context]').text()).toContain('Orchester')
-    expect(commands.get('[data-model-context-model]').text()).toContain('gpt-5.6')
+    // The model is not a fact about the workspace: it is a choice about the next
+    // run, so it is drawn at the field's trailing edge with the action, which is
+    // where the reference draws it. This reverses the earlier separation, and
+    // the reference is what this surface is being built against.
+    expect(commands.find('[data-model-context]').exists()).toBe(false)
+    expect(commands.find('[data-approval-preset]').exists()).toBe(false)
 
     const action = wrapper.get('[data-composer-footer]')
     expect(action.find('[data-composer-context]').exists()).toBe(false)
-    // The approval scope lives in the footer with the run, not with the context
-    // chips: it is a decision about this run, not a fact about the workspace.
-    expect(commands.find('[data-approval-preset]').exists()).toBe(false)
+    expect(action.find('[data-model-picker]').exists()).toBe(true)
+    expect(action.get('[data-model-context-model]').text()).toContain('gpt-5.6')
     expect(action.find('[data-approval-preset]').exists()).toBe(true)
     expect(action.get('[data-composer-action="submit"]').attributes('aria-label')).toBe('Run')
   })

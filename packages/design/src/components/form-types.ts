@@ -36,4 +36,12 @@ export interface AppMenuItem {
    */
   hint?: string
   disabled?: boolean
+  /**
+   * Whether this item is the one currently in force, for a menu that chooses.
+   *
+   * `undefined` means the menu does not choose - its items are actions - which
+   * is why it is not simply `false`: a menu of actions and a menu of choices
+   * announce themselves differently, and the difference is this field.
+   */
+  checked?: boolean
 }

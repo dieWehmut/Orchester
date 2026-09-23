@@ -9,6 +9,7 @@
 export type SettingsSectionId =
   | 'general'
   | 'appearance'
+  | 'personalization'
   | 'notifications'
   | 'import'
   | 'profile'
@@ -38,7 +39,12 @@ export const SETTINGS_SECTIONS: readonly SettingsSectionEntry<SettingsSectionId>
   {
     id: 'appearance',
     label: 'Appearance',
-    keywords: ['theme', 'colour', 'color', 'font', 'radius', 'motion', 'density'],
+    keywords: ['theme', 'colour', 'color', 'accent', 'preview', 'light', 'dark', 'system'],
+  },
+  {
+    id: 'personalization',
+    label: 'Personalization',
+    keywords: ['font', 'type', 'motion', 'density', 'intensity', 'contrast', 'rail', 'reading'],
   },
   { id: 'notifications', label: 'Notifications', keywords: ['alerts', 'toast', 'sound'] },
   { id: 'import', label: 'Import', keywords: ['profile', 'file', 'restore'] },

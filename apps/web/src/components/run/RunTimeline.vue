@@ -178,13 +178,15 @@ function assertNever(value: never): never {
       <template v-else-if="item.type === 'message'">
         <div class="run-timeline__message" data-message-body>
           <!--
-            The answer renders as the markdown it was written in, once it has
-            settled. While it is still arriving the text stays literal: a fence
-            that is half written is not a code block yet, and formatting it
-            line by line would flicker the paragraph apart under the reader.
+            The answer renders as the markdown it was written in, from the first
+            token: the reference formats while it is still being written, and an
+            unclosed fence reads as the code it already is. The reader's own turn
+            is not parsed - their words are not the agent's markup - and the row
+            carries `contain: layout paint` while it arrives, which is what keeps
+            a growing row from being measured by the transcript's own layout.
           -->
           <MarkdownText
-            v-if="item.role === 'assistant' && rowArrival(item) !== 'streaming'"
+            v-if="item.role === 'assistant'"
             :text="item.text"
             :external-label="t('transcript.externalLink')"
           />

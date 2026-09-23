@@ -56,6 +56,43 @@ describe('markdown blocks', () => {
     expect(numbered).toMatchObject({ kind: 'list', ordered: true })
     expect(bullets?.kind === 'list' ? bullets.items : []).toHaveLength(2)
   })
+
+  it('reads a pipe table with its header, alignment and rows', () => {
+    const [table] = parseMarkdown(
+      ['| Option | Default | Meaning |', '| :--- | :---: | ---: |', '| `a` | 1 | first |'].join(
+        '\n',
+      ),
+    )
+
+    expect(table).toMatchObject({ kind: 'table', align: ['start', 'center', 'end'] })
+    if (table?.kind !== 'table') throw new Error('expected a table')
+    expect(table.headers.flat().map((span) => (span.kind === 'text' ? span.text : ''))).toEqual([
+      'Option',
+      'Default',
+      'Meaning',
+    ])
+    expect(table.rows).toHaveLength(1)
+    // Cells are spans like every other text in the answer: a table is another
+    // arrangement of prose, not a place where markup starts being trusted.
+    expect(table.rows[0]?.[0]).toEqual([{ kind: 'code', text: 'a' }])
+    expect(table.rows[0]?.[2]).toEqual([{ kind: 'text', text: 'first' }])
+  })
+
+  it('pads and trims a row whose cells do not match the header', () => {
+    const [table] = parseMarkdown(['| a | b | c |', '| --- | --- | --- |', '| 1 |'].join('\n'))
+
+    if (table?.kind !== 'table') throw new Error('expected a table')
+    expect(table.rows[0]).toHaveLength(3)
+    expect(table.rows[0]?.[1]).toEqual([])
+  })
+
+  it('leaves a pipe line without a delimiter row as the paragraph it was', () => {
+    const [alone] = parseMarkdown('| not | a table |')
+    const [two] = parseMarkdown('| not | a table |\n| either |')
+
+    expect(alone).toMatchObject({ kind: 'paragraph' })
+    expect(two).toMatchObject({ kind: 'paragraph' })
+  })
 })
 
 describe('markdown inline', () => {

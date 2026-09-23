@@ -53,6 +53,32 @@ describe('MarkdownText', () => {
     expect(bullets.findAll('li')).toHaveLength(2)
   })
 
+  it('draws a table with its header, its alignment and its cells', () => {
+    const wrapper = mount(MarkdownText, {
+      props: {
+        text: ['| Option | Default |', '| :--- | ---: |', '| `a` | 1 |'].join('\n'),
+      },
+    })
+
+    const table = wrapper.get('[data-markdown-table]')
+
+    expect(table.findAll('th')).toHaveLength(2)
+    expect(table.findAll('td')).toHaveLength(2)
+    expect(table.findAll('th')[1]!.attributes('style')).toContain('end')
+    // Cells hold the same spans as any other text, so an inline code chip in a
+    // table is the chip it is everywhere else.
+    expect(table.get('[data-markdown-inline-code]').text()).toBe('a')
+  })
+
+  it('lets a table wider than the prose scroll on its own', () => {
+    const wrapper = mount(MarkdownText, {
+      props: { text: ['| a | b |', '| --- | --- |', '| 1 | 2 |'].join('\n') },
+    })
+
+    // The transcript must not scroll sideways because one answer held a table.
+    expect(wrapper.get('[data-markdown-table-scroll]')).toBeTruthy()
+  })
+
   it('sends a link out of the page safely, and says that it does', () => {
     const wrapper = mount(MarkdownText, {
       props: { text: 'See [the pull request](https://example.com/pr/1).', externalLabel: 'Opens in a new tab' },

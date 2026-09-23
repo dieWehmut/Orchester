@@ -330,6 +330,18 @@ function chooseAccountItem(id: string): void {
         :items="accountItems"
         @select="chooseAccountItem"
       >
+        <template #header>
+          <!-- The reference heads the menu with the account it acts on. The row
+               below carries the same words as its accessible name, so this is
+               the drawing of an identity the reader has already been told. -->
+          <span class="app-rail__account-identity">
+            <CircleUser :size="18" aria-hidden="true" />
+            <span class="app-rail__account-copy">
+              <strong>{{ accountName || productName }}</strong>
+              <span v-if="accountHint">{{ accountHint }}</span>
+            </span>
+          </span>
+        </template>
         <template #trigger>
           <span class="app-rail__account-identity" data-rail-account>
             <CircleUser :size="18" aria-hidden="true" />

@@ -15,6 +15,7 @@ use serde::Serialize;
 use crate::{
     agent_process::{AgentProcessSource, SystemAgentProcessSource},
     agent_status::{agent_status_response, AgentRuntimeStatusStore},
+    model_selection::ModelSelectionStore,
     run_registry::RunRegistry,
     FragmentTokenStore, FragmentTokenStoreError, ServerControl, ServerState, SessionStore,
 };
@@ -28,6 +29,8 @@ pub struct ServerContext {
     agent_process_source: Arc<dyn AgentProcessSource>,
     agent_process_monitor_started: Arc<AtomicBool>,
     model_host: Option<Arc<SelfAgentHost>>,
+    /// The model the following runs use, chosen in the browser.
+    model_selection: ModelSelectionStore,
     session_history: Option<Arc<SessionHistory>>,
     runs: RunRegistry,
     sessions: Arc<SessionStore>,
@@ -59,6 +62,7 @@ impl ServerContext {
             agent_process_source,
             agent_process_monitor_started: Arc::new(AtomicBool::new(false)),
             model_host,
+            model_selection: ModelSelectionStore::new(),
             session_history,
             runs: RunRegistry::default(),
             sessions: Arc::new(SessionStore::new(Duration::from_secs(8 * 60 * 60))),
@@ -140,6 +144,11 @@ impl ServerContext {
 
     pub fn model_host(&self) -> Option<&SelfAgentHost> {
         self.model_host.as_deref()
+    }
+
+    /// The model the following runs use, as the browser chose it.
+    pub fn model_selection(&self) -> &ModelSelectionStore {
+        &self.model_selection
     }
 
     pub fn session_history(&self) -> Option<&SessionHistory> {
