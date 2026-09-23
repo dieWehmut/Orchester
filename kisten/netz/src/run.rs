@@ -76,12 +76,29 @@ pub(crate) async fn start_run_handler(
 
     let (sink, receiver) = RegistryRunSink::channel();
     let drain = drain_run_events(run.clone(), run_id.clone(), receiver);
+    // Read before the spawn, so the choice is the one in force when the request
+    // was made rather than whatever a later selection says.
+    let selection = context.model_selection().read().await;
     tokio::spawn(async move {
         let drain = drain;
         let run_task = async move {
             // One host per run: the host's run entry points take `&mut self`, and
             // sharing it would serialise runs the registry keeps independent.
             let mut host = SelfAgentHost::for_paths(&paths);
+            // The model is the one the reader chose in the browser, applied to
+            // this host exactly as the catalog route applies it to describe the
+            // next run. A choice the configuration no longer supports stops the
+            // run with an error event rather than quietly running on another
+            // model.
+            if let Err(error) = selection.apply(&mut host) {
+                let _ = run
+                    .append(UiEventKind::Error {
+                        code: "model_unavailable".to_owned(),
+                        message: error.to_string(),
+                    })
+                    .await;
+                return;
+            }
             let sink: Arc<dyn RunEventSink> = Arc::new(sink);
             let _ = match resume {
                 Some(handle) => {
