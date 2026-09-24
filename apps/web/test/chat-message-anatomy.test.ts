@@ -284,4 +284,51 @@ describe('stored session anatomy', () => {
     // not put it.
     expect(wrapper.find('[data-run-duration]').exists()).toBe(false)
   })
+
+  it('keeps the answer in front of the reader equipped and in the open', () => {
+    const wrapper = mountTimeline([
+      message({
+        key: 'q-1',
+        role: 'user',
+        text: 'first question',
+        occurredAt: '2026-09-16T10:00:00Z',
+      }),
+      message({ key: 'a-1', occurredAt: '2026-09-16T10:01:00Z' }),
+      message({
+        key: 'q-2',
+        role: 'user',
+        text: 'second question',
+        occurredAt: '2026-09-16T10:02:00Z',
+      }),
+      message({ key: 'a-2', occurredAt: '2026-09-16T10:03:00Z' }),
+    ])
+
+    const rows = wrapper.findAll('[data-item-type="message"]')
+
+    // The reference keeps the last answer's row of controls up rather than
+    // waiting for a pointer; the earlier answer still has them, on hover.
+    expect(rows[3]!.classes()).toContain('run-timeline__item--current')
+    expect(rows[1]!.classes()).not.toContain('run-timeline__item--current')
+
+    // Running a question again needs the question, and each answer has its own.
+    expect(rows[1]!.find('[data-message-rerun]').exists()).toBe(true)
+    expect(rows[3]!.find('[data-message-rerun]').exists()).toBe(true)
+
+    rows[1]!.get('[data-message-rerun]').trigger('click')
+    expect(wrapper.emitted('rerun')).toEqual([['first question']])
+  })
+
+  it("offers the reader's own turn no such move, and an answer with no question none either", () => {
+    const wrapper = mountTimeline([
+      message({ key: 'q-1', role: 'user', text: 'a question', occurredAt: '2026-09-16T10:00:00Z' }),
+    ])
+
+    // A question cannot be asked again on its own behalf.
+    expect(wrapper.find('[data-message-rerun]').exists()).toBe(false)
+
+    // And an answer a journal begins with has no question to put back, so the
+    // control is absent rather than dead.
+    const orphan = mountTimeline([message({ key: 'a-1' })])
+    expect(orphan.find('[data-message-rerun]').exists()).toBe(false)
+  })
 })

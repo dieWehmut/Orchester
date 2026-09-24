@@ -137,6 +137,18 @@ function reusePrompt(text: string): void {
 }
 
 /**
+ * Run the question an answer answered, again.
+ *
+ * The reference's own control regenerates the turn in place; this runtime starts
+ * a run for the prompt instead, so the label says what happens. Nothing is put
+ * in the field: the reader asked for another answer to a question they already
+ * asked, not for the question back.
+ */
+function rerunPrompt(text: string): void {
+  emit('submit', text)
+}
+
+/**
  * A run waiting on the user is the one case the plan strip has to escalate:
  * `awaiting_approval` means the next move is not the agent's to make.
  */
@@ -281,6 +293,7 @@ defineExpose({ focusPrompt, clearPrompt })
         :viewport-height="viewportHeight"
         @quote="quoteAnswer"
         @reuse="reusePrompt"
+        @rerun="rerunPrompt"
       />
       <EmptyWorkspace
         v-else-if="!props.conversationStarted"

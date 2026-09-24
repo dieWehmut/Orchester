@@ -1047,6 +1047,35 @@ prompt rather than a command, so a control that ran a code block would promise
 something the runtime does not do; the reference's own screenshot does not show
 one either, and none is drawn here.
 
+## Wave U36 - the row under a message, as the reference draws it
+
+The reference's row is a few controls in the open and a `…` for the rest. This
+product's row was copy plus one action, both inline, and it waited for a pointer
+even on the answer the reader was reading.
+
+- [x] U36-01: Copy, the answer's own move, and a menu for the rest.
+  - The row now draws `copy`, **run this question again** and a `…` holding
+    whatever else the surface can answer - which is where the reader's quote and
+    reuse live now. A question is not offered the second control, because a
+    question cannot be asked again on its own behalf, and an answer whose question
+    is not in the journal is not offered it either: the control is absent rather
+    than dead.
+  - "Run this again" is deliberately not the reference's word. The reference
+    regenerates the turn in place; this runtime starts a *new* run for the prompt,
+    and the label says what happens. It puts nothing in the field - the reader
+    asked for another answer, not for the question back - which is the one
+    difference from the two gestures beside it.
+  - Its thumbs are still absent: there is no feedback channel to carry a verdict.
+- [x] U36-02: The answer in front of the reader keeps its row up.
+  - The last answer's row is drawn rather than waiting for a hover, as the
+    reference's is. The browser check read it back: the last row reported
+    `opacity: 1` and `run-timeline__item--current`, the earlier ones `opacity: 0`.
+  - `AppMenu` draws its own trigger and puts the slot inside it, so the slot holds
+    the glyph: a button inside a button is not something a browser will let a
+    reader press.
+- [x] U36-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds.
+
 ## Verification
 
 ```text

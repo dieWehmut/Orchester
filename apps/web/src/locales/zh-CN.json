@@ -351,7 +351,7 @@
     "loading": "正在加载会话",
     "newChatTitle": "新对话",
     "share": "分享",
-    "more": "更多选项",
+    "more": "更多操作",
     "togglePanel": "切换检查器",
     "loadError": "无法加载会话详情",
     "prompt": "请求",
@@ -371,7 +371,8 @@
     "externalLink": "在新标签页打开",
     "quote": "引用到输入框",
     "reuse": "重新使用这条提示",
-    "took": "用时 {duration}"
+    "took": "用时 {duration}",
+    "runAgain": "再运行一次"
   },
   "inspector": {
     "label": "工作区检查器",

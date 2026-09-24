@@ -350,7 +350,7 @@
     "emptyDescription": "Select a previous session or start a new run.",
     "newChatTitle": "New chat",
     "share": "Share",
-    "more": "More options",
+    "more": "More actions",
     "togglePanel": "Toggle inspector",
     "loading": "Loading session",
     "loadError": "Session details unavailable",
@@ -371,7 +371,8 @@
     "externalLink": "Opens in a new tab",
     "quote": "Quote in the composer",
     "reuse": "Use this prompt again",
-    "took": "Took {duration}"
+    "took": "Took {duration}",
+    "runAgain": "Run this question again"
   },
   "inspector": {
     "label": "Workspace inspector",

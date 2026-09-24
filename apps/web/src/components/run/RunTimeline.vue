@@ -32,6 +32,7 @@ const props = withDefaults(
 const emit = defineEmits<{
   quote: [text: string]
   reuse: [text: string]
+  rerun: [text: string]
 }>()
 
 const list = ref<HTMLElement | null>(null)
@@ -75,8 +76,46 @@ const mountedRows = computed(() =>
     datetime: item.occurredAt ?? '',
     startsDay: startsDay(props.view.timeline, windowRange.value.start + index),
     took: answerElapsed(props.view.timeline, windowRange.value.start + index),
+    rerun: questionBefore(props.view.timeline, windowRange.value.start + index),
+    current: windowRange.value.start + index === lastAnswerIndex.value,
   })),
 )
+
+/**
+ * The last answer in the transcript, which is the one the reader is reading.
+ *
+ * Its action row stays up rather than waiting for a pointer: the reference keeps
+ * the row of the answer in front of the reader visible, and a row that only
+ * appears under a hovering pointer is one a reader has to find twice.
+ */
+const lastAnswerIndex = computed(() => {
+  const timeline = props.view.timeline
+  for (let index = timeline.length - 1; index >= 0; index -= 1) {
+    const item = timeline[index]
+    if (item?.type === 'message' && item.role === 'assistant') return index
+  }
+  return -1
+})
+
+/**
+ * The question an answer answered, when the journal has one before it.
+ *
+ * This is what "run this again" runs: the reader's own turn, as they wrote it.
+ * A tool card, a reasoning row or a gap is not a question, so the search walks
+ * past them, and the first answer of a transcript that begins mid-stream has
+ * none - and therefore offers no such control.
+ */
+function questionBefore(
+  timeline: readonly TimelineItem[],
+  index: number,
+): string | null {
+  for (let at = index - 1; at >= 0; at -= 1) {
+    const item = timeline[at]
+    if (item === undefined) continue
+    if (item.type === 'message' && item.role === 'user') return item.text
+  }
+  return null
+}
 
 /**
  * The arrival mark for a row. Only messages arrive word by word, so only they
@@ -182,7 +221,10 @@ function assertNever(value: never): never {
       v-for="(row, index) in mountedRows"
       :key="row.item.key"
       class="run-timeline__item"
-      :class="`run-timeline__item--${row.item.type}`"
+      :class="[
+        `run-timeline__item--${row.item.type}`,
+        { 'run-timeline__item--current': row.current },
+      ]"
       :data-item-type="row.item.type"
       :data-item-role="row.item.type === 'message' ? row.item.role : undefined"
       :data-message-shape="rowShape(row.item)"
@@ -246,10 +288,10 @@ function assertNever(value: never): never {
             :text="row.item.text"
             :label="t('transcript.copyMessage')"
             :copied-label="t('transcript.copied')"
-            :actions="[
-              { id: 'quote', label: t('transcript.quote'), icon: 'quote' as const },
-            ]"
-            @action="emit('quote', row.item.text)"
+            :more-label="t('transcript.more')"
+            :rerun-label="row.rerun ? t('transcript.runAgain') : undefined"
+            :actions="[{ id: 'quote', label: t('transcript.quote') }]"
+            @action="row.rerun && $event === 'rerun' ? emit('rerun', row.rerun) : emit('quote', row.item.text)"
           />
           <MessageActions
             v-else
@@ -257,9 +299,8 @@ function assertNever(value: never): never {
             :text="row.item.text"
             :label="t('transcript.copyMessage')"
             :copied-label="t('transcript.copied')"
-            :actions="[
-              { id: 'reuse', label: t('transcript.reuse'), icon: 'reuse' as const },
-            ]"
+            :more-label="t('transcript.more')"
+            :actions="[{ id: 'reuse', label: t('transcript.reuse') }]"
             @action="emit('reuse', row.item.text)"
           />
         </div>
@@ -377,6 +418,12 @@ function assertNever(value: never): never {
 
 .run-timeline__message:hover .run-timeline__actions,
 .run-timeline__message:focus-within .run-timeline__actions {
+  opacity: 1;
+}
+
+/* The answer in front of the reader keeps its row up: the reference does, and a
+   row that waits for a hovering pointer is one a reader has to find twice. */
+.run-timeline__item--current .run-timeline__actions {
   opacity: 1;
 }
 
