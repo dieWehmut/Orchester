@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
@@ -171,5 +173,44 @@ describe('ReviewPanel tree', () => {
 
     const row = wrapper.get('[data-review-file="src/components/ReviewPanel.vue"]')
     expect(row.text()).toContain('ReviewPanel.vue')
+  })
+
+  it('reads in the interface font at its normal weight, as the reference does', () => {
+    // The explorer used to be set in the monospace stack with a heavier weight
+    // on directories, which made a column of names look like a column of
+    // headings. The reference's explorer is the interface font at regular
+    // weight, and the tree is read rather than compared - the diff beside it is
+    // where the monospace belongs.
+    const css = readFileSync(
+      resolve(process.cwd(), 'src', 'components', 'changes', 'ReviewPanel.vue'),
+      'utf8',
+    )
+
+    const path = /\.review-panel__path\s*\{[^}]*\}/s.exec(css)?.[0] ?? ''
+    expect(path).toContain('font-family: var(--font-body)')
+    expect(path).toContain('font-weight: var(--weight-normal)')
+
+    // No row carries an emphasis of its own: the directory is told apart by its
+    // chevron, its colour and its indent.
+    const directory = /\.review-panel__row--directory\s*\{[^}]*\}/s.exec(css)?.[0] ?? ''
+    expect(directory).not.toContain('font-weight')
+
+    // And the same list the explorer draws beside the tree follows it.
+    const inspectorCss = readFileSync(
+      resolve(process.cwd(), 'src', 'components', 'changes', 'ChangeInspector.vue'),
+      'utf8',
+    )
+    const inspectorPath = /\.change-inspector__path\s*\{[^}]*\}/s.exec(inspectorCss)?.[0] ?? ''
+    expect(inspectorPath).toContain('font-family: var(--font-body)')
+    expect(inspectorPath).toContain('font-weight: var(--weight-normal)')
+
+    // The guard against over-correcting: the diff's own text stays monospace,
+    // because there the columns have to line up.
+    const diffCss = readFileSync(
+      resolve(process.cwd(), 'src', 'components', 'changes', 'SafeDiffPreview.vue'),
+      'utf8',
+    )
+    const diffText = /\.safe-diff-preview__text\s*\{[^}]*\}/s.exec(diffCss)?.[0] ?? ''
+    expect(diffText).toContain('font-family: var(--font-mono)')
   })
 })

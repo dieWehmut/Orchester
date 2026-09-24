@@ -114,7 +114,10 @@ function badgeTone(kind: ChangeSummary['kind']): 'success' | 'info' | 'error' {
 .change-inspector__header strong {
   color: var(--color-text-primary);
   font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
+  /* The section title, not a second emphasis: the rows below are what the
+     reader is looking for, and two heavy lines at the top of a list weigh more
+     than the list. */
+  font-weight: var(--weight-medium);
 }
 
 .change-inspector__header span {
@@ -186,8 +189,11 @@ function badgeTone(kind: ChangeSummary['kind']): 'success' | 'info' | 'error' {
 .change-inspector__path {
   overflow: hidden;
   color: var(--color-text-primary);
-  font-family: var(--font-mono);
+  /* The interface's font, not the monospace stack: this list and the review
+     tree are the same explorer, and a row of paths is read, not compared. */
+  font-family: var(--font-body);
   font-size: var(--text-sm);
+  font-weight: var(--weight-normal);
   text-overflow: ellipsis;
   white-space: nowrap;
 }

@@ -227,8 +227,12 @@ function selectFilter(id: string): void {
 .review-panel__path {
   overflow: hidden;
   color: var(--color-text-primary);
-  font-family: var(--font-mono);
+  /* The explorer reads in the interface's own font, as the reference's does.
+     A monospace stack is for the diff beside this tree, where the columns have
+     to line up; here it only made every row look heavier than it is. */
+  font-family: var(--font-body);
   font-size: var(--text-sm);
+  font-weight: var(--weight-normal);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -243,7 +247,6 @@ function selectFilter(id: string): void {
 .review-panel__row--directory {
   justify-content: flex-start;
   color: var(--color-text-secondary);
-  font-weight: var(--weight-medium);
 }
 
 .review-panel__chevron {

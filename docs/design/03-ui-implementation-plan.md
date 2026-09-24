@@ -781,6 +781,36 @@ that takes something away.
 updated to say so rather than leaving the spec describing a column the product
 no longer draws.
 
+## Wave U28 - the explorer reads, it does not shout
+
+The operator's note against a screenshot of a reference file explorer: "文件资源
+管理器的字太粗了 要像图中 vscode 中那样细". The explorer was set in the
+**monospace** stack, and directories carried `--weight-medium` on top of it.
+
+- [x] U28-01: The rows read in the interface font at its normal weight.
+  - Paths in `ReviewPanel` (the tree) and `ChangeInspector` (the flat list beside
+    it, the same explorer) now use `--font-body` and `--weight-normal`, and the
+    directory rule no longer adds a weight of its own: a folder is told apart by
+    its chevron, its colour and its indent, as the reference tells it apart.
+    `ChangeInspector`'s section title drops from semibold to medium, since two
+    heavy lines above a list weigh more than the list.
+  - The diff text keeps its monospace: there the columns have to line up. That
+    boundary is pinned rather than assumed - see the test below.
+- [x] U28-02: Pin it, and measure it rather than trusting the eye.
+  - `review-tree.test.ts` reads the three stylesheets and asserts the rows'
+    family and weight, the directory rule's silence about weight, and that the
+    diff's own text is still monospace.
+  - Measured in headless Chromium against a harness that mounts the tree: file
+    rows and directory rows both report `font-weight: 400`, `font-family: Inter`
+    (the first family of the body stack), 13 px.
+- [x] U28-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds.
+
+**What was deliberately not changed.** The rows' height and the hit-target floor.
+The reference's explorer rows are around 22 px; this product floors a row at
+`--hit-target-min` by its own accessibility clause, and a pointer that has to hit
+a 22 px row to open a file is the thing that clause exists to prevent.
+
 ## Verification
 
 ```text
