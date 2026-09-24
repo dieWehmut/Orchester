@@ -492,6 +492,16 @@
      list, and lists read better when one number controls them. */
   --density-row-height: 32px;
   --density-gap: var(--space-3);
+
+  /* ═ The reader's own turn ════════════════════════════════════════════
+     A message is not an action, so it does not borrow the action's colours: the
+     reference fills a question with its accent taken a step down, and every
+     scheme states that deeper pair below. This is what a document paints before
+     the bootstrap has chosen a hue, and what a document with no scheme at all
+     keeps - the accent, because the accent is what Orchester's own surfaces
+     show. */
+  --color-bubble: var(--color-accent);
+  --color-bubble-contrast: var(--color-accent-contrast);
 }
 
 /* ══ Neutrals: dark ══════════════════════════════════════════════════════ */
@@ -790,6 +800,8 @@
   --color-accent-border: var(--blue-a200);
   --color-accent-contrast: #0d1524;
   --color-glow: var(--blue-a75);
+  --color-bubble: var(--blue-500);
+  --color-bubble-contrast: #ffffff;
 }
 
 [data-theme='light'][data-color-scheme='codex'] {
@@ -799,6 +811,8 @@
   --color-accent-border: var(--blue-a200);
   --color-accent-contrast: #ffffff;
   --color-glow: var(--blue-a75);
+  --color-bubble: var(--blue-700);
+  --color-bubble-contrast: #ffffff;
 }
 
 [data-theme='dark'][data-color-scheme='violet'] {
@@ -808,6 +822,8 @@
   --color-accent-border: rgb(165 139 240 / 38%);
   --color-accent-contrast: #130f22;
   --color-glow: rgb(165 139 240 / 26%);
+  --color-bubble: #6244c4;
+  --color-bubble-contrast: #ffffff;
 }
 
 [data-theme='light'][data-color-scheme='violet'] {
@@ -817,6 +833,8 @@
   --color-accent-border: rgb(98 68 196 / 30%);
   --color-accent-contrast: #ffffff;
   --color-glow: rgb(98 68 196 / 16%);
+  --color-bubble: #5136a8;
+  --color-bubble-contrast: #ffffff;
 }
 
 [data-theme='dark'][data-color-scheme='teal'] {
@@ -826,6 +844,8 @@
   --color-accent-border: rgb(79 191 173 / 38%);
   --color-accent-contrast: #08201d;
   --color-glow: rgb(79 191 173 / 26%);
+  --color-bubble: #1c7568;
+  --color-bubble-contrast: #ffffff;
 }
 
 [data-theme='light'][data-color-scheme='teal'] {
@@ -835,6 +855,8 @@
   --color-accent-border: rgb(28 117 104 / 30%);
   --color-accent-contrast: #ffffff;
   --color-glow: rgb(28 117 104 / 16%);
+  --color-bubble: #145b51;
+  --color-bubble-contrast: #ffffff;
 }
 
 [data-theme='dark'][data-color-scheme='rose'] {
@@ -844,6 +866,8 @@
   --color-accent-border: var(--pink-a200);
   --color-accent-contrast: var(--pink-1000);
   --color-glow: var(--pink-a75);
+  --color-bubble: var(--pink-500);
+  --color-bubble-contrast: #ffffff;
 }
 
 [data-theme='light'][data-color-scheme='rose'] {
@@ -853,6 +877,8 @@
   --color-accent-border: var(--pink-a200);
   --color-accent-contrast: #ffffff;
   --color-glow: var(--pink-a75);
+  --color-bubble: var(--pink-700);
+  --color-bubble-contrast: #ffffff;
 }
 
 
@@ -869,10 +895,20 @@
   --color-action-contrast: var(--color-accent-contrast);
 }
 
-[data-intensity='calm'] {
+/* Scoped by theme as well as by volume: the deep bubble pair is written in the
+   scheme blocks, which are theme-scoped too, and a selector with one attribute
+   would lose to them. The action tokens need no such help - nothing else
+   declares them. */
+[data-theme='dark'][data-intensity='calm'],
+[data-theme='light'][data-intensity='calm'] {
   --color-action-solid: var(--color-text-emphasis);
   --color-action-solid-hover: var(--color-text-default);
   --color-action-contrast: var(--gray-0);
+  /* A message follows the hue rather than the volume, but the volume still gets
+     to quieten it - exactly as it quiets the action it no longer shares a colour
+     with. */
+  --color-bubble: var(--color-text-emphasis);
+  --color-bubble-contrast: var(--gray-0);
 }
 
 /* ─ Font axes. These re-point the public faces rather than adding parallel

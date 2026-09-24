@@ -172,8 +172,9 @@ const { t } = useI18n()
   max-inline-size: min(100%, 40rem);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-lg);
-  background: var(--color-action-solid);
-  color: var(--color-action-contrast);
+  /* The same pair the live transcript uses: a stored turn is the same turn. */
+  background: var(--color-bubble);
+  color: var(--color-bubble-contrast);
 }
 
 .session-transcript__turn p {

@@ -387,6 +387,21 @@ describe('accent and action contrast', () => {
       expect(failures).toEqual([])
     })
 
+    it(`pairs every ${theme} scheme bubble with the text it carries`, () => {
+      // The reader's own turn is a filled surface too, and it is deep enough to
+      // carry white text in either theme - which is the whole reason it stopped
+      // borrowing the action's pair.
+      const failures: string[] = []
+      for (const scheme of SCHEMES) {
+        const scope = scopeOf(theme, scheme)
+        const bubble = hexOf('--color-bubble', scope)
+        const onBubble = hexOf('--color-bubble-contrast', scope)
+        const ratio = contrast(bubble, onBubble)
+        if (ratio < 4.5) failures.push(`${scheme}: ${ratio.toFixed(2)}:1`)
+      }
+      expect(failures).toEqual([])
+    })
+
     it(`pairs the ${theme} inverted action with its own text`, () => {
       // Under `calm`, the primary action is an inverted neutral rather than the
       // accent, and it has to carry its label just as well.

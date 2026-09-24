@@ -398,15 +398,16 @@ function assertNever(value: never): never {
 }
 
 /* The reader's own turn, filled: the reference answers a question with a shape
-   rather than a label, and the solid pair is the one token set that promises
-   its own text stays readable on it. */
+   rather than a label, deep enough to carry white text in either theme. It is
+   not the action's colour: a message is not a button, and the intensity axis is
+   free to reply its own pair without the bubble following. */
 .run-timeline__item[data-message-shape='bubble'] .run-timeline__message {
   inline-size: fit-content;
   max-inline-size: min(100%, 40rem);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-lg);
-  background: var(--color-action-solid);
-  color: var(--color-action-contrast);
+  background: var(--color-bubble);
+  color: var(--color-bubble-contrast);
 }
 
 /* Offered on hover or focus, never removed from the tree: a control that exists

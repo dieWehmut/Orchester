@@ -1076,6 +1076,34 @@ even on the answer the reader was reading.
 - [x] U36-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
   builds.
 
+## Wave U37 - the reader's own turn is deep, and it is not an action
+
+The reference fills a question with a muted, deep version of its accent and white
+text. This product filled it with `--color-action-solid` - the *action* pair -
+which meant the reader's own words took their colour from the button that sends
+them, and changed with the intensity axis that repoints that button.
+
+- [x] U37-01: A pair of its own, per hue.
+  - `--color-bubble` and `--color-bubble-contrast` are now declared in every
+    scheme: the fill is the hue's **deep** step (`--pink-500`, `--blue-500`, and
+    the light schemes' accents for violet and teal, which are those hues' deep
+    steps in this palette) with white text. All eight blocks are checked by
+    `tokens-contrast.test.ts` at 4.5:1 or better, which is what the browser
+    measured back too: 5.50:1 for rose dark, 9.94:1 for rose light, 5.54:1 for
+    teal.
+  - Both the live transcript and the stored one use the pair, because a stored
+    turn is the same turn.
+- [x] U37-02: The volume still has its say.
+  - `calm` keeps quietening the bubble - a message follows the hue, not the
+    volume, but the axis that quiets the action also quiets the message, as it
+    did before. The overlay had to be scoped by theme as well as by volume: the
+    deep pairs live in the scheme blocks, which are theme-scoped too, and a
+    one-attribute selector loses to them. The first browser measurement caught
+    exactly that - `calm` was still painting the vivid rose - and the fix is in
+    the cascade rather than in the test.
+- [x] U37-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds.
+
 ## Verification
 
 ```text
