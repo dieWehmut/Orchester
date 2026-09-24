@@ -350,7 +350,6 @@
     "emptyDescription": "選擇歷史工作階段或開始新的執行。",
     "loading": "正在載入工作階段",
     "newChatTitle": "新對話",
-    "share": "分享",
     "more": "更多操作",
     "togglePanel": "切換檢查器",
     "loadError": "無法載入工作階段詳細資料",
@@ -372,7 +371,8 @@
     "quote": "引用至輸入框",
     "reuse": "重新使用這則提示",
     "took": "用時 {duration}",
-    "runAgain": "再執行一次"
+    "runAgain": "再執行一次",
+    "copyConversation": "複製對話"
   },
   "inspector": {
     "label": "工作區檢查器",

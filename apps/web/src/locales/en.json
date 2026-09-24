@@ -349,7 +349,6 @@
     "emptyTitle": "New run",
     "emptyDescription": "Select a previous session or start a new run.",
     "newChatTitle": "New chat",
-    "share": "Share",
     "more": "More actions",
     "togglePanel": "Toggle inspector",
     "loading": "Loading session",
@@ -372,7 +371,8 @@
     "quote": "Quote in the composer",
     "reuse": "Use this prompt again",
     "took": "Took {duration}",
-    "runAgain": "Run this question again"
+    "runAgain": "Run this question again",
+    "copyConversation": "Copy conversation"
   },
   "inspector": {
     "label": "Workspace inspector",

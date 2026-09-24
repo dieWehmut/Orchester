@@ -22,6 +22,7 @@ import WorkspaceSidebar from '../components/layout/WorkspaceSidebar.vue'
 import ThreadBar from '../components/layout/ThreadBar.vue'
 import SessionTranscript from '../components/sessions/SessionTranscript.vue'
 import RunPanel from '../components/run/RunPanel.vue'
+import { conversationMarkdown } from '../components/run/conversation-markdown'
 import { useI18n } from '../i18n'
 import { usePetVisibility } from '../features/pet'
 import { useAppStores } from '../stores/app'
@@ -123,6 +124,45 @@ const agentError = computed(() => agents.error?.message ?? null)
 const selectedAgent = computed(
   () => agentSnapshot.value?.agents.find((agent) => agent.agent_id === selectedAgentId.value) ?? null,
 )
+
+/**
+ * Copying the conversation, which is what this product's share control can
+ * honestly do.
+ *
+ * The reference's own share publishes the thread and hands back a link; there is
+ * no host here to publish to, so the control is named for what it does rather
+ * than for what the reference's does - and it was a control that emitted into
+ * nothing until this wave, which is worse than either. The text itself is
+ * `conversationMarkdown`, which is where the format is pinned.
+ */
+const shareCopied = ref(false)
+let shareTimer: ReturnType<typeof setTimeout> | null = null
+const shareText = computed(() =>
+  shareCopied.value ? t('transcript.copied') : t('transcript.copyConversation'),
+)
+
+async function copyConversation(): Promise<void> {
+  try {
+    await navigator.clipboard?.writeText(conversationMarkdown(runView.value))
+  } catch {
+    // A clipboard the browser refuses is not worth an error banner over; the
+    // reader can still select the text they can see.
+    return
+  }
+  shareCopied.value = true
+  if (shareTimer !== null) clearTimeout(shareTimer)
+  shareTimer = setTimeout(() => {
+    shareCopied.value = false
+    shareTimer = null
+  }, 2000)
+}
+
+// The confirmation's timer belongs to the view that set it: a view unmounted
+// while it is counting must not write to a ref nobody reads.
+onUnmounted(() => {
+  if (shareTimer !== null) clearTimeout(shareTimer)
+  shareTimer = null
+})
 const workspaceName = computed(() => bootstrap.context.value?.workspace.name ?? null)
 const modelCatalog = computed(() => models.catalog)
 const modelStatus = computed(() => models.status)
@@ -532,11 +572,12 @@ if (desktopWindowController?.enabled) {
       :agent-name="threadAgentName"
       :agent-status="threadAgentStatus"
       :agent-online="threadAgentOnline"
-      :share-label="t('transcript.share')"
-      :share-text="t('transcript.share')"
+      :share-label="t('transcript.copyConversation')"
+      :share-text="shareText"
       :more-label="t('transcript.more')"
       :panel-label="t('transcript.togglePanel')"
       :panel-open="bottomPanelOpen"
+      @share="copyConversation"
       @toggle-panel="setBottomPanelOpen(!bottomPanelOpen)"
     />
 

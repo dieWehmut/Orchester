@@ -1126,6 +1126,30 @@ reports: a Chinese interface printed `high`.
 - [x] U38-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
   builds.
 
+## Wave U39 - the share control does what it says
+
+Looking for what else in the reference the runtime could answer turned up
+something worse than a missing feature: the thread bar's `分享` **emitted into
+nothing**. It had been drawn from the beginning and no surface had ever handled
+it, which is the one kind of control this work has refused throughout.
+
+- [x] U39-01: Name it for what it does, and do it.
+  - The reference's share *publishes* the thread and hands back a link. There is
+    no host here to publish to, so the control is a **copy** and is named that
+    way: `复制对话` / `Copy conversation`. It writes the conversation as markdown
+    - the title, the reader's words as a quotation, the answer as prose, which is
+    the convention the composer's own quote gesture uses - and says `Copied` for a
+    moment afterwards.
+  - The dead key `transcript.share` is gone from all three catalogues rather than
+    left behind; the confirmation's timer is cleared when the view goes away.
+- [x] U39-02: Pin it.
+  - `workspace-thread-bar.test.ts` clicks the control and asserts the exact
+    markdown that reached the clipboard and the label that followed it. A browser
+    cannot be the witness here: a headless page is refused the clipboard, which
+    is a path this control handles by leaving the screen alone.
+- [x] U39-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
 ## Verification
 
 ```text
