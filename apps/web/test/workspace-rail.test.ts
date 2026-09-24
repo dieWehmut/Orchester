@@ -31,9 +31,17 @@ describe('WorkspaceView Codex-style rail', () => {
       .map((node) => node.attributes('data-rail-section'))
 
     expect(sections).toEqual(['brand', 'primary', 'projects', 'sessions', 'fleet', 'account'])
-    // The first list is the reader's own, as the reference's sidebar opens, and
-    // the workspace is named on the product row rather than in a list of one.
-    expect(wrapper.get('[data-rail-section="projects"] [data-pinned-empty]')).toBeTruthy()
+    // The first list is the reader's own, as the reference's sidebar opens. With
+    // nothing pinned it is a heading and nothing else: the control that adds one
+    // says so on every row it sits beside, and the reference leaves that space
+    // empty too.
+    expect(wrapper.find('[data-rail-section="projects"] [data-pinned-empty]').exists()).toBe(false)
+    expect(wrapper.find('[data-rail-section="projects"] [data-pinned-sessions]').exists()).toBe(
+      false,
+    )
+    // The product row names the product; the workspace's own state moved to the
+    // field's project control and the projects list, which are where a reader
+    // changes it.
     expect(wrapper.get('[data-rail-section="brand"]').text()).toContain('Orchester')
     expect(wrapper.get('[data-rail-section="sessions"] [data-session-rail]')).toBeTruthy()
     expect(wrapper.get('[data-rail-section="fleet"] [data-agent-fleet]')).toBeTruthy()
@@ -73,7 +81,11 @@ describe('WorkspaceView Codex-style rail', () => {
     await pinned.get('[data-session-pin]').trigger('click')
     await nextTick()
 
-    expect(wrapper.get('[data-rail-section="projects"] [data-pinned-empty]')).toBeTruthy()
+    // Unpinning empties the reader's list, and the run goes back to the projects
+    // list it came from.
+    expect(
+      wrapper.find('[data-rail-section="projects"] [data-pinned-sessions]').exists(),
+    ).toBe(false)
     expect(wrapper.find('[data-rail-section="sessions"] [data-session-id]').exists()).toBe(true)
     resetPinnedSessionsForTests()
   })

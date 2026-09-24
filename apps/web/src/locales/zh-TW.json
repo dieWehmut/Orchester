@@ -78,8 +78,7 @@
     "title": "工作區",
     "description": "工作階段歷史、執行記錄與內容工具將顯示於此。",
     "greeting": "你想讓我們在 {name} 中建構什麼？",
-    "projects": "專案",
-    "projectFallback": "未選擇專案"
+    "projects": "專案"
   },
   "pet": {
     "label": "Orchester 夥伴",
@@ -263,7 +262,6 @@
   },
   "sessions": {
     "pinned": "置頂",
-    "pinnedEmpty": "置頂的執行會留在這裡。",
     "pinAction": "置頂",
     "unpinAction": "取消置頂",
     "title": "工作階段",

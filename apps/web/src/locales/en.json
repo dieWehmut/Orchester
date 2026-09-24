@@ -78,8 +78,7 @@
     "title": "Workspace",
     "description": "Session history, run transcript, and context tools will appear here.",
     "greeting": "What should we build in {name}?",
-    "projects": "Projects",
-    "projectFallback": "No project selected"
+    "projects": "Projects"
   },
   "pet": {
     "label": "Orchester companion",
@@ -263,7 +262,6 @@
   },
   "sessions": {
     "pinned": "Pinned",
-    "pinnedEmpty": "Runs you pin stay here.",
     "pinAction": "Pin to the top",
     "unpinAction": "Unpin",
     "title": "Sessions",

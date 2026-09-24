@@ -107,3 +107,25 @@ command that would close the gap.
 Wave **U17** does not exist: the numbering skipped from U16 to U18 in the rail
 work. It is a slip in this plan's numbering rather than a lost wave — every wave
 between U9 and U26 is recorded above.
+
+## 8. Since this page was written
+
+The tables above are the alignment as of wave U26. The waves after it are in
+[`03-ui-implementation-plan.md`](./03-ui-implementation-plan.md), and they answer
+to the *second* reference set (the home page and a working conversation):
+
+- **U27** — there is no right column at all; the run's surfaces moved into the
+  bottom panel, which the view now controls.
+- **U28** — the file explorer reads in the interface font at its normal weight.
+- **U29/U32** — a transcript marks where it crossed midnight, and each answer
+  states the interval it took, at the answer.
+- **U30** — a run in flight is stated above the field, with its title and a live
+  clock; the footer is a ledger again.
+- **U31** — an empty page is the greeting and the field as one group, and the
+  companion waits for a run to react to.
+- **U33** — the rail files each run under the project it ran in, which is the
+  name of the directory the runtime recorded for it.
+- **U34** — the rail says less: a pinned list with nothing pinned is a heading,
+  and the product row is one line again.
+
+The CLI has its own record in [`05-cli-transcript.md`](./05-cli-transcript.md).

@@ -983,6 +983,34 @@ conversations yet (`暂无项目聊天`). This runtime knows the projects that h
 rail can name - listing the workspace roots a user might have would be inventing
 them.
 
+## Wave U34 - the rail says less
+
+A round spent looking at the real page beside the reference, element by element,
+rather than at a harness. Two things this rail said that the reference does not,
+and neither of them was carrying information a reader could not get elsewhere.
+
+- [x] U34-01: A pinned list with nothing pinned is a heading and nothing else.
+  - `PinnedSessions` draws nothing when the reader has pinned nothing. The
+    sentence that stood there explained a feature whose control - "pin to the top"
+    - is on every session row it sits beside, and the reference leaves that space
+    empty. The copy is gone from all three catalogues rather than left as dead
+    strings.
+- [x] U34-02: The product row states the product.
+  - It had grown a second line for the workspace's state (`未选择项目`, "no project
+    selected"). That state has two better homes now: the projects list, which is
+    where a reader looks for what ran where, and the field's own project control,
+    which is where a reader changes it. The reference's identity row is one line,
+    and this one is again too. `workspace.projectFallback` goes with it.
+- [x] U34-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**What the element-by-element pass found and left.** The reference's rail has four
+destination rows this product has no destinations for (`图像`, `定时任务`,
+`插件`, `探索` - image generation, scheduled tasks, plugins, explore), a bell that
+is always visible where this one appears when something is waiting, and a usage
+badge on the account row with no account to meter. Each is recorded here as absent
+with its reason rather than filled with a control that opens nothing.
+
 ## Verification
 
 ```text

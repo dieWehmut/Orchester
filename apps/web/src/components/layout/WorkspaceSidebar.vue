@@ -71,7 +71,7 @@ const pinnedSessions = usePinnedSessions()
   <AppRail
     class="workspace-sidebar"
     :product-name="props.productName"
-    :workspace-name="props.workspaceName ?? t('workspace.projectFallback')"
+    :workspace-name="props.workspaceName"
     :new-session-label="t('sessions.newChat')"
     :projects-label="t('sessions.pinned')"
     :sessions-label="t('workspace.projects')"

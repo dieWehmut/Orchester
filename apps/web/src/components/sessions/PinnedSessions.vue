@@ -34,10 +34,18 @@ const rows = computed(() =>
 </script>
 
 <template>
-  <p v-if="rows.length === 0" class="pinned-sessions__empty" data-pinned-empty>
-    {{ t('sessions.pinnedEmpty') }}
-  </p>
-  <nav v-else class="pinned-sessions" data-pinned-sessions :aria-label="t('sessions.pinned')">
+  <!--
+    Nothing to say when nothing is pinned: the reference's own pinned list is a
+    heading and its rows, and the control that adds one says "pin to the top" on
+    every session row it sits beside. A sentence here would be a second
+    explanation of the same thing, in the place the reference leaves empty.
+  -->
+  <nav
+    v-if="rows.length > 0"
+    class="pinned-sessions"
+    data-pinned-sessions
+    :aria-label="t('sessions.pinned')"
+  >
     <SessionListItem
       v-for="row in rows"
       :key="row.id"
@@ -54,12 +62,5 @@ const rows = computed(() =>
 .pinned-sessions {
   display: grid;
   gap: var(--space-1);
-}
-
-.pinned-sessions__empty {
-  margin: 0;
-  padding: 0 var(--space-2);
-  color: var(--color-text-tertiary);
-  font-size: var(--text-xs);
 }
 </style>
