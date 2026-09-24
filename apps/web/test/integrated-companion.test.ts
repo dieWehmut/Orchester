@@ -42,7 +42,9 @@ describe('integrated companion preferences', () => {
     const appearance = useAppearance()
     appearance.setReducedMotion('true')
     const wrapper = mount(RunPanel, {
-      props: { view: createEmptyRunView(), runStatus: 'running' },
+      // A page with a run on it: the companion is drawn where a run is, not on
+      // the home page before the first one.
+      props: { view: createEmptyRunView(), conversationStarted: true, runStatus: 'running' },
       attachTo: document.body,
     })
     try {

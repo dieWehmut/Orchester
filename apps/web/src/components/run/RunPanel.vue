@@ -253,11 +253,22 @@ function clearPrompt(): void {
   void nextTick(() => composer.value?.focus())
 }
 
+/**
+ * Whether this is the page before there is anything on it.
+ *
+ * The reference greets a new chat with its greeting and its field as one group
+ * in the middle, and docks the field to the bottom only once there is something
+ * to scroll: a field pinned to the bottom under an empty page leaves the reader
+ * looking at the space between them. So the two move together, and the run's
+ * ledger under the transcript has nothing to report yet either.
+ */
+const hero = computed(() => !props.conversationStarted && props.view.timeline.length === 0)
+
 defineExpose({ focusPrompt, clearPrompt })
 </script>
 
 <template>
-  <section class="run-panel" data-run-panel>
+  <section class="run-panel" data-run-panel :data-run-hero="hero ? 'true' : 'false'">
     <RunAnnouncer :events="props.events" />
     <ConnectionBanner :status="props.connectionStatus" />
     <InlineAlert v-if="props.errorMessage" tone="error" data-run-error>
@@ -314,6 +325,7 @@ defineExpose({ focusPrompt, clearPrompt })
     </button>
     <MessageRail :view="props.view" @select="scrollToTurn" />
     <RunFooter
+      v-if="!hero"
       :view="props.view"
       :sequence-label="t('run.sequence')"
       :usage-label="t('run.usage')"
@@ -324,8 +336,14 @@ defineExpose({ focusPrompt, clearPrompt })
       :validation="props.view.validation"
       :blocked="planBlocked"
     />
+    <!--
+      The companion reacts to a run - it has an animation for each state - so it
+      belongs where a run is, not on the page before the first one. Drawn there it
+      would also sit between the greeting and the field, which the reference
+      draws as one group.
+    -->
     <div
-      v-if="petVisibility.visible.value"
+      v-if="petVisibility.visible.value && !hero"
       class="run-panel__companion"
       data-run-companion
     >
@@ -415,6 +433,19 @@ defineExpose({ focusPrompt, clearPrompt })
   min-block-size: 0;
   flex: 1;
   overflow: auto;
+}
+
+/* The greeting and the field are one group in the middle of an empty page, as
+   the reference draws them; there is nothing to scroll and nothing to dock
+   under. */
+.run-panel[data-run-hero='true'] {
+  justify-content: center;
+  gap: var(--space-4);
+}
+
+.run-panel[data-run-hero='true'] .run-panel__stream {
+  flex: 0 1 auto;
+  overflow: visible;
 }
 
 .run-panel__top-fade {

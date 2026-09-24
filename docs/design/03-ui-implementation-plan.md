@@ -880,6 +880,39 @@ and the panel's own toggle is already in the thread bar above, so the strip
 states rather than acts: the stop is where it was, on the field's button, which
 changes shape while a run is in flight.
 
+## Wave U31 - the home page is the greeting and the field, together
+
+The reference's home is a centred greeting with the field directly under it, and
+its conversation view pins the field to the bottom once there is something to
+scroll. This product did the second half everywhere: the greeting lived in the
+scroll region and the field stayed docked, so an empty page was a greeting at the
+top and a field at the bottom with a ledger and a companion in between.
+
+- [x] U31-01: Move the two together while the page is empty.
+  - `RunPanel` marks itself `data-run-hero="true"` while there is no conversation
+    and no transcript, and the flex layout centres its content group. The run's
+    ledger is not drawn there: `Sequence 0 · Usage in 0 out 0` under an empty page
+    reports a run that has not happened.
+  - The docked layout is unchanged for a conversation, which is what the reference
+    does with its own field.
+- [x] U31-02: Keep the companion where a run is.
+  - The companion has an animation per run state, so it is drawn where a run is
+    rather than on the page before the first one. Drawn there it also sat between
+    the greeting and the field - the browser look at this wave showed it - which
+    is the group the reference draws as one.
+  - Three suites had mounted an *empty* panel to look at the companion; they now
+    mount a page with a run on it, which is what they were ever about.
+- [x] U31-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds.
+
+**What the reference's home has that this does not.** The `聊天 / 工作` segmented
+control across the top. This runtime has no two modes to switch between: the
+composer already carries the real one (the approval preset - `Ask`, `Governed`,
+`Full access`), the reference draws that in its composer too, and a switch that
+changed nothing would be furniture. The attachment and voice buttons are absent
+for the same kind of reason, recorded in U22: there is no attachment path to
+send and no voice input to take.
+
 ## Verification
 
 ```text

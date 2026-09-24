@@ -6,14 +6,17 @@ import RunPanel from '../src/components/run/RunPanel.vue'
 import { MODEL_CATALOG_FIXTURE } from './fixtures/model-catalog'
 
 describe('RunPanel', () => {
-  it('renders an actionable empty run with composer and footer', () => {
+  it('renders an actionable empty run with composer and greeting, and no ledger yet', () => {
     const wrapper = mount(RunPanel, { props: { view: createEmptyRunView() } })
 
     expect(wrapper.get('[data-run-panel]')).toBeTruthy()
     expect(wrapper.get('[data-run-composer]')).toBeTruthy()
-    expect(wrapper.get('[data-run-footer]')).toBeTruthy()
     expect(wrapper.get('[data-empty-workspace]')).toBeTruthy()
     expect(wrapper.get('[data-orchester-mark]')).toBeTruthy()
+    // A ledger under an empty page reports a run that has not happened; the
+    // reference's home is the greeting and the field and nothing else. The
+    // ledger appears with the first event - see the hero test below.
+    expect(wrapper.find('[data-run-footer]').exists()).toBe(false)
   })
 
   it('removes the large mark immediately after a conversation starts', async () => {
@@ -60,6 +63,9 @@ describe('RunPanel', () => {
     const wrapper = mount(RunPanel, {
       props: {
         view: createEmptyRunView(),
+        // A page with a run on it: the companion reacts to run state, and the
+        // home page before the first run has none to react to.
+        conversationStarted: true,
         runStatus: 'running',
         petLabel: 'Orchester companion',
       },
@@ -74,6 +80,7 @@ describe('RunPanel', () => {
     const wrapper = mount(RunPanel, {
       props: {
         view: createEmptyRunView(),
+        conversationStarted: true,
         pendingApprovals: 1,
         petNotificationLabels: { waiting: 'Needs input' },
       },
@@ -160,6 +167,72 @@ describe('RunPanel', () => {
     expect(strip.get('[data-run-state-label]').text()).toBe('Waiting for approval')
     // No clock yet: the run has taken no measurable moment in this fixture.
     expect(strip.find('[data-run-state-elapsed]').exists()).toBe(false)
+  })
+
+  it('keeps the companion off the page that has no run to react to', async () => {
+    const { resetPetVisibilityForTests, usePetVisibility } = await import(
+      '../src/features/pet/use-pet-visibility'
+    )
+    resetPetVisibilityForTests()
+    const pet = usePetVisibility()
+    pet.show()
+
+    // The companion has an animation per run state; on the page before the
+    // first run it would also sit between the greeting and the field, which the
+    // reference draws as one group.
+    const empty = mount(RunPanel, { props: { view: createEmptyRunView() } })
+    expect(empty.find('[data-run-companion]').exists()).toBe(false)
+
+    const started = mount(RunPanel, {
+      props: { view: createEmptyRunView(), conversationStarted: true },
+    })
+    expect(started.find('[data-run-companion]').exists()).toBe(true)
+    resetPetVisibilityForTests()
+  })
+
+  it('greets a new page with the field under the greeting, and docks it once there is a transcript', () => {
+    // The reference greets a new chat with its greeting and its field as one
+    // group in the middle, and pins the field to the bottom only once there is
+    // something to scroll.
+    const empty = mount(RunPanel, { props: { view: createEmptyRunView() } })
+
+    expect(empty.get('[data-run-panel]').attributes('data-run-hero')).toBe('true')
+    expect(empty.find('[data-empty-workspace]').exists()).toBe(true)
+    // Nothing to report yet, so the run's ledger is not drawn under the greeting
+    // where it would read as a fact about this page.
+    expect(empty.find('[data-run-footer]').exists()).toBe(false)
+    expect(empty.find('[data-composer-field]').exists()).toBe(true)
+
+    const started = mount(RunPanel, {
+      props: {
+        view: createEmptyRunView(),
+        conversationStarted: true,
+      },
+    })
+    expect(started.get('[data-run-panel]').attributes('data-run-hero')).toBe('false')
+    expect(started.find('[data-run-footer]').exists()).toBe(true)
+
+    // A transcript is a conversation too, whatever the flag says.
+    const withTimeline = mount(RunPanel, {
+      props: {
+        view: {
+          ...createEmptyRunView(),
+          timeline: [
+            {
+              key: 'm-1',
+              sequence: 1,
+              turnId: null,
+              occurredAt: '2026-09-16T10:00:00Z',
+              type: 'message' as const,
+              role: 'user' as const,
+              text: 'hello',
+              final: true,
+            },
+          ],
+        },
+      },
+    })
+    expect(withTimeline.get('[data-run-panel]').attributes('data-run-hero')).toBe('false')
   })
 
   it('names the composer state from the run lifecycle the panel is given', async () => {
