@@ -334,7 +334,18 @@
     "loadingCommands": "正在加载命令…",
     "submit": "运行",
     "stop": "停止",
-    "settingsTitle": "设置"
+    "settingsTitle": "设置",
+    "status": {
+      "idle": "空闲",
+      "running": "运行中",
+      "succeeded": "已完成",
+      "failed": "失败",
+      "cancelled": "已取消",
+      "awaiting_approval": "等待审批",
+      "budget_exceeded": "超出预算",
+      "repeated_failure": "反复失败",
+      "interrupted_unknown_outcome": "已中断，结果未知"
+    }
   },
   "transcript": {
     "emptyTitle": "新运行",

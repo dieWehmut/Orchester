@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { InlineAlert, useAppearance } from '@orchester/design'
+import { InlineAlert, StatusDot, useAppearance } from '@orchester/design'
 import type { RunView } from '@orchester/ereignis'
 import type { ModelCatalogDto, ModelSelectionRequestDto, UiEventEnvelope } from '@orchester/protokoll'
 import { ArrowDown } from '@lucide/vue'
@@ -15,6 +15,7 @@ import RunAnnouncer from './RunAnnouncer.vue'
 import RunComposer from './RunComposer.vue'
 import RunFooter from './RunFooter.vue'
 import { runElapsed } from './run-duration'
+import { runStatusMessageKey } from './run-status-label'
 import RunTimeline from './RunTimeline.vue'
 import { fadeDecision, readScrollState, stickDecision, unreadAfter, type ScrollState } from './scroll-state'
 import { PetCompanion, petStateFor, usePetVisibility } from '../../features/pet'
@@ -73,14 +74,46 @@ const emit = defineEmits<{
 const { t } = useI18n()
 
 /**
- * How long the run has taken, said the way the reference says it.
+ * The strip the reference draws directly above the field.
+ *
+ * It is the run as it *is*, rather than the run as it was: the state, the title
+ * the runtime gave the run, and a live clock. Only while it is in flight or
+ * waiting on a human - once it has settled, the footer under the transcript is
+ * the record, and a strip that stayed would be the same fact stated twice.
+ *
+ * The reference's strip carries delete, pause and expand controls. None of the
+ * three is offered here: this runtime has no pause and no delete for a run in
+ * flight, and the panel's own toggle is already in the thread bar above. The
+ * stop stays where it is - on the field's own button, which changes shape while
+ * a run is in flight - so the strip states and does not duplicate.
+ */
+const runState = computed(() => {
+  const status = props.view.status
+  const live = status === 'running' || status === 'awaiting_approval'
+  if (!live) return null
+  return {
+    status,
+    label: t(runStatusMessageKey(status)),
+    title: props.view.title,
+    elapsed: runElapsed(props.view),
+    dot: status === 'running' ? ('running' as const) : ('waiting' as const),
+  }
+})
+
+/**
+ * The run's own elapsed time, said the way the reference says it.
  *
  * The reference puts a turn's elapsed time above its answer; this product has
  * one turn per run, so the footer states the run's own elapsed time - computed
  * from the journalled events rather than from when this window opened - and the
  * sentence around it comes from the locale catalogues.
+ *
+ * Only once the run has settled: while it is in flight the strip above the field
+ * is already counting, and the same clock in two places is the same fact stated
+ * twice. One gates the other rather than both deciding for themselves.
  */
 const durationLabel = computed(() => {
+  if (runState.value !== null) return undefined
   const elapsed = runElapsed(props.view)
   return elapsed === null ? undefined : t('transcript.took', { duration: elapsed })
 })
@@ -302,6 +335,29 @@ defineExpose({ focusPrompt, clearPrompt })
         :reduced-motion="prefersReducedMotion"
       />
     </div>
+    <!--
+      The run as it is, directly above the field where the reader is looking:
+      the reference's own strip. It states; the field's button is what acts.
+    -->
+    <div
+      v-if="runState !== null"
+      class="run-panel__state"
+      data-run-state
+      :data-run-state-status="runState.status"
+    >
+      <StatusDot
+        :status="runState.dot"
+        :label="runState.label"
+        :pulse="runState.status === 'running'"
+      />
+      <span class="run-panel__state-label" data-run-state-label>{{ runState.label }}</span>
+      <span v-if="runState.title" class="run-panel__state-title" data-run-state-title>
+        {{ runState.title }}
+      </span>
+      <span v-if="runState.elapsed" class="run-panel__state-elapsed" data-run-state-elapsed>
+        {{ t('transcript.took', { duration: runState.elapsed }) }}
+      </span>
+    </div>
     <RunComposer
       ref="composer"
       :model-value="composerDraft"
@@ -320,6 +376,33 @@ defineExpose({ focusPrompt, clearPrompt })
 </template>
 
 <style scoped>
+.run-panel__state {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+}
+
+.run-panel__state-label {
+  color: var(--color-text-primary);
+  font-weight: var(--weight-medium);
+}
+
+.run-panel__state-title {
+  overflow: hidden;
+  min-inline-size: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The clock sits at the far end, as the reference seats it. */
+.run-panel__state-elapsed {
+  margin-inline-start: auto;
+  white-space: nowrap;
+}
+
 .run-panel {
   position: relative;
   display: flex;

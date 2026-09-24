@@ -848,6 +848,38 @@ one turn per run - `turn_id` is null throughout - so the run's own elapsed time
 is what can be stated honestly, and it is stated once in the footer rather than
 per answer.
 
+## Wave U30 - the run as it is, above the field
+
+The reference draws a strip directly above the input: a state glyph, the goal it
+is working on, the elapsed time at the far end, and its own controls. This
+product had every fact in it and stated none of them above the field - the state
+was only announced, and the clock only appeared after the run had settled.
+
+- [x] U30-01: State the run where the reader is looking.
+  - `RunPanel` draws `data-run-state` between the plan strip and the field,
+    while the run is `running` or `awaiting_approval`: the state's dot, the state
+    in words, the title the runtime gave the run, and the clock at the far end.
+  - The words come from the model's own status vocabulary. `RUN_STATUS_LABEL_KEYS`
+    has been in `ereignis` since the beginning, and **the catalogues never had the
+    keys**: a state rendered through it would have shown the reader
+    `run.status.running`. The nine labels are added to all three catalogues, and
+    `run-status-label.ts` is the host's half of the contract - typed as the
+    catalogue's keys, asserted against the model's map, and asserted to resolve
+    in every catalogue.
+- [x] U30-02: One clock, not two.
+  - The footer states the elapsed time **only once the run has settled**; while
+    it is in flight the strip is the one counting. The first browser look at this
+    wave showed the same `34m 0s` in both places - the same fact stated twice -
+    so one computed gates the other rather than each deciding for itself.
+- [x] U30-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds.
+
+**What the reference's strip has that this does not.** Its delete, pause and
+expand controls. This runtime offers no pause and no delete for a run in flight,
+and the panel's own toggle is already in the thread bar above, so the strip
+states rather than acts: the stop is where it was, on the field's button, which
+changes shape while a run is in flight.
+
 ## Verification
 
 ```text

@@ -334,7 +334,18 @@
     "loadingCommands": "正在載入指令…",
     "submit": "執行",
     "stop": "停止",
-    "settingsTitle": "設定"
+    "settingsTitle": "設定",
+    "status": {
+      "idle": "閒置",
+      "running": "執行中",
+      "succeeded": "已完成",
+      "failed": "失敗",
+      "cancelled": "已取消",
+      "awaiting_approval": "等待審批",
+      "budget_exceeded": "超出預算",
+      "repeated_failure": "反覆失敗",
+      "interrupted_unknown_outcome": "已中斷，結果未知"
+    }
   },
   "transcript": {
     "emptyTitle": "新增執行",

@@ -97,6 +97,71 @@ describe('RunPanel', () => {
     expect(wrapper.find('[data-run-activity]').exists()).toBe(false)
   })
 
+  it('states the run above the field while it is in flight, and stops when it settles', () => {
+    // The reference draws this strip directly above the input: the state, the
+    // title the runtime gave the run, and a live clock at the far end.
+    const running = {
+      ...createEmptyRunView(),
+      status: 'running' as const,
+      title: '优化 VerifierLab 可视化 UI',
+      timeline: [
+        {
+          key: 'm-1',
+          sequence: 1,
+          turnId: null,
+          occurredAt: '2026-09-16T10:00:00Z',
+          type: 'message' as const,
+          role: 'assistant' as const,
+          text: 'working',
+          final: false,
+        },
+        {
+          key: 'm-2',
+          sequence: 2,
+          turnId: null,
+          occurredAt: '2026-09-16T10:03:20Z',
+          type: 'message' as const,
+          role: 'assistant' as const,
+          text: 'working',
+          final: false,
+        },
+      ],
+    }
+
+    const wrapper = mount(RunPanel, { props: { view: running } })
+    const strip = wrapper.get('[data-run-state]')
+
+    expect(strip.attributes('data-run-state-status')).toBe('running')
+    expect(strip.get('[data-run-state-label]').text()).toBe('Running')
+    expect(strip.get('[data-run-state-title]').text()).toBe('优化 VerifierLab 可视化 UI')
+    expect(strip.get('[data-run-state-elapsed]').text()).toBe('Took 3m 20s')
+    // The same clock in the footer would be the same fact stated twice: while a
+    // run is in flight the strip is the one counting.
+    expect(wrapper.find('[data-run-duration]').exists()).toBe(false)
+
+    // Once it has settled the footer is the record, and a strip that stayed
+    // would be the same fact stated twice.
+    const settled = mount(RunPanel, {
+      props: { view: { ...running, status: 'succeeded' as const } },
+    })
+    expect(settled.find('[data-run-state]').exists()).toBe(false)
+    expect(settled.get('[data-run-duration]').text()).toBe('Took 3m 20s')
+  })
+
+  it('names a run waiting on a human as waiting, not as working', () => {
+    const wrapper = mount(RunPanel, {
+      props: {
+        view: { ...createEmptyRunView(), status: 'awaiting_approval' as const },
+      },
+    })
+
+    const strip = wrapper.get('[data-run-state]')
+    expect(strip.attributes('data-run-state-status')).toBe('awaiting_approval')
+    expect(strip.get('[data-run-state-label]').text()).toBe('Waiting for approval')
+    // No clock yet: the run has taken no measurable moment in this fixture.
+    expect(strip.find('[data-run-state-elapsed]').exists()).toBe(false)
+  })
+
   it('names the composer state from the run lifecycle the panel is given', async () => {
     const wrapper = mount(RunPanel, {
       props: { view: createEmptyRunView(), lifecycle: 'submitting' },

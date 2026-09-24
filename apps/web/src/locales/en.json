@@ -334,7 +334,18 @@
     "loadingCommands": "Loading commands…",
     "submit": "Run",
     "stop": "Stop",
-    "settingsTitle": "Settings"
+    "settingsTitle": "Settings",
+    "status": {
+      "idle": "Idle",
+      "running": "Running",
+      "succeeded": "Succeeded",
+      "failed": "Failed",
+      "cancelled": "Cancelled",
+      "awaiting_approval": "Waiting for approval",
+      "budget_exceeded": "Budget exceeded",
+      "repeated_failure": "Repeated failure",
+      "interrupted_unknown_outcome": "Interrupted, outcome unknown"
+    }
   },
   "transcript": {
     "emptyTitle": "New run",
