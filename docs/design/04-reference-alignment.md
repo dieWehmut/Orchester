@@ -129,3 +129,41 @@ to the *second* reference set (the home page and a working conversation):
   and the product row is one line again.
 
 The CLI has its own record in [`05-cli-transcript.md`](./05-cli-transcript.md).
+
+## 9. The main page, against the third reference
+
+The operator's last reference was the conversation page as a whole, with the note
+"主页面应该长这样". Its waves are U35–U39; this is what they took and what they
+left, in the same shape as the tables above.
+
+| the reference draws | Orchester | evidence |
+| --- | --- | --- |
+| A code block as a card: `</> <language>` and wrap/copy in its head | Taken: `MarkdownCodeCard`, wrapping per block, copy with a confirmation | `MarkdownCodeCard.vue`, `markdown-code-card.test.ts` |
+| A fence with no language says `纯文本` | Taken: the catalogue's own words for it | `markdown-text.test.ts` |
+| A row of controls under a message, with `…` for the rest | Taken: copy, run-this-again, and a menu holding quote/reuse | `MessageActions.vue`, `message-actions.test.ts` |
+| The row stays up on the answer in front of the reader | Taken: `run-timeline__item--current`; the browser read back `opacity: 1` against `0` for the earlier rows | `chat-message-anatomy.test.ts` |
+| Regenerate (`↻`) | **Taken as a different thing**: this runtime starts a run for the question instead of replacing the turn, so it is labelled "run this question again" | `composer-quote.test.ts` |
+| Thumbs up and down | **Not taken**: there is no feedback channel to carry a verdict | U36 |
+| A deep, muted bubble for the reader's own turn | Taken: a pair per hue with white text, checked at 4.5:1 or better in all eight scheme blocks | `tokens.css`, `tokens-contrast.test.ts` |
+| `GPT-5.6 Sol 中 ⌄` at the field's trailing edge | Taken: the model, the provider, and the effort in the interface's own words | `ModelContextControl.vue`, `model-picker.test.ts` |
+| A share control in the header | Taken **as a copy**, which is what it can honestly do here - and it had been emitting into nothing until U39 | `conversation-markdown.ts`, `workspace-thread-bar.test.ts` |
+| `+`, the microphone and the voice button | **Not taken**: no attachment path to send, no voice input to take | U22 |
+| A title in the header | **Left alone**: the reference shows a title in one screenshot and none in the next, and guessing which state hides it is not a change worth making blind | - |
+| Projects with no conversations yet (`暂无项目聊天`) | **Not taken**: this runtime knows the projects that have run, not the ones that exist | U33 |
+| A usage badge on the account row | **Not taken**: there is no account to meter | U11 |
+
+### How the third reference was verified
+
+- `pnpm typecheck` clean; the frontend suites (the last full pass read 115 files
+  and 650 tests, and an earlier run under heavy load reported fewer, which is why
+  it was repeated); both builds; `pnpm stack:verify`; and the Rust suites for the
+  crates the session payload passes through.
+- Every visual change was looked at in a browser against a fixture, and the
+  numbers that mattered were read back rather than eyeballed: the code card's
+  `pre`/`pre-wrap` per block, the action row's `opacity` per row, the bubble's
+  fill and its measured contrast in four theme/hue/volume combinations, and the
+  composer's readout in two languages.
+- Two of these waves found something other than a missing feature: the bubble was
+  borrowing the *action* pair, so the intensity axis could repoint it, and the
+  share control was dead. Both are recorded in the plan with what found them,
+  because the browser measurement is what did.

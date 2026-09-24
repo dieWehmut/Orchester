@@ -1150,6 +1150,24 @@ it, which is the one kind of control this work has refused throughout.
 - [x] U39-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
   builds, `pnpm stack:verify`.
 
+## Housekeeping, measured at the end of U39
+
+Removing the keys this work orphaned (`sessions.pinnedEmpty`,
+`workspace.projectFallback`, `transcript.share`) raised the question of how many
+others nothing reads. An audit of the English catalogue against every source in
+`apps/web` - the app, its tests and the site - found **40 of 392 keys referenced
+nowhere**: the terminal-placement setting removed in U27, the inspector's
+empty-state titles and its layout labels from the column removed in the same
+wave, the superseded session-list words, and a handful from earlier shells.
+
+The list is recorded rather than acted on here: deleting them is housekeeping of
+its own kind, and a few are plausibly reserved rather than dead (`agents.groups.*`
+are the headings the fleet panel could adopt, `settings.search.*` the shortcut
+hints a search field would show). None of them is drawn, so none of them is
+harmful - but the sweeping test in this repo enforces parity and refuses literal
+text, and does not notice a key that no longer has a reader. That is the gap a
+future wave would close, starting from this number.
+
 ## Verification
 
 ```text
