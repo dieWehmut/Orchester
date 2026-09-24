@@ -32,16 +32,29 @@ describe('MarkdownText', () => {
     expect(wrapper.get('[data-markdown-strong]').text()).toBe('this')
   })
 
-  it('draws a fenced block as code, with the language it was written in', () => {
+  it('draws a fenced block as a card, with the language it was written in', () => {
     const wrapper = mount(MarkdownText, {
-      props: { text: '```ts\nconst a = 1\n```' },
+      props: { text: '```ts\nconst a = 1\n```', codePlainLabel: 'Plain text' },
     })
 
-    const block = wrapper.get('[data-markdown-code]')
+    const card = wrapper.get('[data-markdown-code]')
 
-    expect(block.element.tagName).toBe('PRE')
-    expect(block.attributes('data-code-language')).toBe('ts')
-    expect(block.text()).toContain('const a = 1')
+    // The card's head names the language and holds the block's actions; the code
+    // itself is the body under them.
+    expect(card.attributes('data-code-language')).toBe('ts')
+    expect(card.get('[data-code-head]').text()).toContain('ts')
+    expect(card.get('[data-code-body]').element.tagName).toBe('PRE')
+    expect(card.get('[data-code-body]').text()).toBe('const a = 1')
+  })
+
+  it('names a fence that named no language rather than leaving the head blank', () => {
+    const wrapper = mount(MarkdownText, {
+      props: { text: '```\nplain\n```', codePlainLabel: 'Plain text' },
+    })
+
+    const head = wrapper.get('[data-markdown-code] [data-code-head]')
+
+    expect(head.text()).toContain('Plain text')
   })
 
   it('draws a list as the list it was written as', () => {

@@ -504,5 +504,12 @@
     "status": "inspect the runtime status",
     "plugins": "manage the installed plugins",
     "help": "show this list"
+  },
+  "markdown": {
+    "codePlain": "Plain text",
+    "codeWrap": "Wrap lines",
+    "codeUnwrap": "Stop wrapping",
+    "codeCopy": "Copy code",
+    "codeCopied": "Copied"
   }
 }

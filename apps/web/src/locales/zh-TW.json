@@ -504,5 +504,12 @@
     "status": "檢視執行時狀態",
     "plugins": "管理已安裝的外掛",
     "help": "顯示此清單"
+  },
+  "markdown": {
+    "codePlain": "純文字",
+    "codeWrap": "自動換行",
+    "codeUnwrap": "取消換行",
+    "codeCopy": "複製程式碼",
+    "codeCopied": "已複製"
   }
 }

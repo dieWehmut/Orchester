@@ -504,5 +504,12 @@
     "status": "查看运行时状态",
     "plugins": "管理已安装的插件",
     "help": "显示此列表"
+  },
+  "markdown": {
+    "codePlain": "纯文本",
+    "codeWrap": "自动换行",
+    "codeUnwrap": "取消换行",
+    "codeCopy": "复制代码",
+    "codeCopied": "已复制"
   }
 }

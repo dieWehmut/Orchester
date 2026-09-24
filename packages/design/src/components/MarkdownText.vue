@@ -15,6 +15,7 @@
 import { computed } from 'vue'
 
 import { parseMarkdown } from '../markdown'
+import MarkdownCodeCard from './MarkdownCodeCard.vue'
 import MarkdownSpans from './MarkdownSpans.vue'
 
 const props = withDefaults(
@@ -22,8 +23,21 @@ const props = withDefaults(
     text: string
     /** Announced inside every link; the surface owns the words. */
     externalLabel?: string
+    /** The code card's own words, from the surface's catalogues. */
+    codePlainLabel?: string
+    codeWrapLabel?: string
+    codeUnwrapLabel?: string
+    codeCopyLabel?: string
+    codeCopiedLabel?: string
   }>(),
-  { externalLabel: '' },
+  {
+    externalLabel: '',
+    codePlainLabel: '',
+    codeWrapLabel: '',
+    codeUnwrapLabel: '',
+    codeCopyLabel: '',
+    codeCopiedLabel: '',
+  },
 )
 
 const blocks = computed(() => parseMarkdown(props.text))
@@ -40,12 +54,16 @@ const blocks = computed(() => parseMarkdown(props.text))
       >
         <MarkdownSpans :spans="block.spans" :external-label="externalLabel" />
       </h3>
-      <pre
+      <MarkdownCodeCard
         v-else-if="block.kind === 'code'"
-        class="markdown__code"
-        data-markdown-code
-        :data-code-language="block.language ?? ''"
-      ><code>{{ block.text }}</code></pre>
+        :text="block.text"
+        :language="block.language"
+        :plain-label="codePlainLabel"
+        :wrap-label="codeWrapLabel"
+        :unwrap-label="codeUnwrapLabel"
+        :copy-label="codeCopyLabel"
+        :copied-label="codeCopiedLabel"
+      />
       <div
         v-else-if="block.kind === 'table'"
         class="markdown__table-scroll"
@@ -163,18 +181,6 @@ const blocks = computed(() => parseMarkdown(props.text))
   display: grid;
   gap: var(--space-1);
   padding-inline-start: var(--space-5);
-}
-
-.markdown__code {
-  margin: 0;
-  padding: var(--space-3);
-  overflow: auto;
-  border: 1px solid var(--color-border-base);
-  border-radius: var(--radius-sm);
-  background: var(--color-bg-element);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  line-height: 1.6;
 }
 
 .markdown__code code {

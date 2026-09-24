@@ -226,6 +226,11 @@ function assertNever(value: never): never {
             v-if="row.item.role === 'assistant'"
             :text="row.item.text"
             :external-label="t('transcript.externalLink')"
+            :code-plain-label="t('markdown.codePlain')"
+            :code-wrap-label="t('markdown.codeWrap')"
+            :code-unwrap-label="t('markdown.codeUnwrap')"
+            :code-copy-label="t('markdown.codeCopy')"
+            :code-copied-label="t('markdown.codeCopied')"
           />
           <p v-else class="run-timeline__text" data-message-plain>{{ row.item.text }}</p>
           <!--

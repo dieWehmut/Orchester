@@ -1011,6 +1011,42 @@ is always visible where this one appears when something is waiting, and a usage
 badge on the account row with no account to meter. Each is recorded here as absent
 with its reason rather than filled with a control that opens nothing.
 
+## Wave U35 - a code block is a card with a head
+
+The operator's note against a screenshot of the reference's main page: "主页面
+应该长这样". The block of code in that page is a **card**: its head names the
+language it was written in and holds two actions; the code sits in a body under
+them. This product drew the block as a bare `<pre>` with the language on a
+`data-` attribute - the fact was there and only the machine could read it.
+
+- [x] U35-01: The card, with the language and the two things a reader does.
+  - `MarkdownCodeCard` (new, in the design package) draws `</> <language>` on the
+    left and **wrap** and **copy** on the right, and a fence that named no
+    language says `Plain text` rather than leaving the head blank - which is the
+    reference's own `纯文本`.
+  - Wrapping belongs to **this** block rather than to the transcript: the block a
+    reader wants wrapped is the one whose line is running off the edge, not every
+    block in the answer. The browser check confirmed it: wrapping the first card
+    turned its body to `pre-wrap` and left the second at `pre`.
+  - Copy writes the block's own text to the clipboard and says "Copied" for a
+    moment, then goes back to saying what pressing it does. A clipboard the page
+    cannot reach changes nothing on screen: the reader can still select the text.
+  - `MarkdownText` keeps `data-markdown-code` and `data-code-language` on the
+    card, so what already read the block still reads it.
+- [x] U35-02: The words come from the surfaces.
+  - The card takes its labels as props, as this package's other components do;
+    both callers (`RunTimeline`, `SessionTranscript`) pass them from the
+    catalogues. Five keys in three catalogues: plain text, wrap, unwrap, copy,
+    copied.
+- [x] U35-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds.
+
+**What the reference's code card may have that this does not.** A "run this"
+affordance in the head of a work session. This product's run surface takes a
+prompt rather than a command, so a control that ran a code block would promise
+something the runtime does not do; the reference's own screenshot does not show
+one either, and none is drawn here.
+
 ## Verification
 
 ```text

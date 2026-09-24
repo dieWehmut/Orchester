@@ -50,7 +50,15 @@ const { t } = useI18n()
         data-message-role="assistant"
         data-message-shape="prose"
       >
-        <MarkdownText :text="session.final_text" :external-label="t('transcript.externalLink')" />
+        <MarkdownText
+          :text="session.final_text"
+          :external-label="t('transcript.externalLink')"
+          :code-plain-label="t('markdown.codePlain')"
+          :code-wrap-label="t('markdown.codeWrap')"
+          :code-unwrap-label="t('markdown.codeUnwrap')"
+          :code-copy-label="t('markdown.codeCopy')"
+          :code-copied-label="t('markdown.codeCopied')"
+        />
         <MessageActions
           :text="session.final_text"
           :label="t('transcript.copyMessage')"
