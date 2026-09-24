@@ -8,6 +8,26 @@ use serde_json::Value;
 const DIM: &str = "\x1b[2m";
 const RESET: &str = "\x1b[0m";
 
+/// The transcript's vocabulary, as the reference draws it.
+///
+/// A line of prose opens with a bullet and hangs its continuation under it; a
+/// tool step opens with the bullet too, carries its body on a rail, and closes
+/// the rail with a corner that says what the step produced and how much of it
+/// was left out. The glyphs are part of the text rather than the styling,
+/// because the transcript stores plain text and the frame renderer colours it.
+const BULLET: &str = "•";
+const RAIL: &str = "│";
+const CORNER: &str = "└";
+const INDENT: &str = "  ";
+
+/// How many body lines a step shows before the corner counts the rest.
+///
+/// The reference puts the whole body behind a transcript view; this product has
+/// no such view, so the count stands alone rather than promising a key that
+/// does nothing. The block is bounded because one long read would otherwise
+/// bury the answer that follows it.
+const BODY_LINES: usize = 8;
+
 pub fn render_outcome(out: &mut impl Write, outcome: &SelfAgentRunOutcome) -> io::Result<()> {
     let usage = outcome.usage();
     render_parts(
@@ -63,12 +83,15 @@ fn render_tool_outcome(out: &mut impl Write, outcome: &GovernedToolOutcome) -> i
     match outcome {
         GovernedToolOutcome::Completed(observation) => render_observation(out, observation),
         GovernedToolOutcome::Failed(feedback) => {
-            writeln!(out, "tool failed")?;
-            writeln!(out, "{}", safe_terminal_text(&feedback.summary))?;
-            writeln!(
-                out,
-                "{DIM}retryable: {}{RESET}",
+            let closing = format!(
+                "tool failed · retryable: {}",
                 if feedback.retryable { "yes" } else { "no" }
+            );
+            render_block(
+                out,
+                "Failed",
+                &lines_of(&feedback.summary),
+                &closing,
             )
         }
     }
@@ -76,95 +99,171 @@ fn render_tool_outcome(out: &mut impl Write, outcome: &GovernedToolOutcome) -> i
 
 fn render_model_turn(out: &mut impl Write, turn: &SelfAgentTurn) -> io::Result<()> {
     match turn {
-        SelfAgentTurn::Text { text, .. } => writeln!(out, "{}", safe_terminal_text(text)),
+        SelfAgentTurn::Text { text, .. } => render_prose(out, text),
         SelfAgentTurn::Action { action, policy, .. } => {
-            writeln!(
-                out,
-                "action: {}",
-                safe_terminal_text(&action.action_summary())
-            )?;
-            writeln!(
-                out,
-                "policy: {} | rule {} | risk {:?}",
-                policy_name(policy.decision),
-                safe_terminal_text(&policy.rule_id),
-                policy.risk
-            )?;
             let state = match policy.decision {
                 PolicyDecision::Allow => "ready for governed execution",
                 PolicyDecision::Ask => "human approval required",
                 PolicyDecision::Deny => "blocked by policy",
             };
-            writeln!(out, "{DIM}{state}{RESET}")
+            let header = format!(
+                "Action {}",
+                safe_terminal_text(&action.action_summary())
+            );
+            render_block(
+                out,
+                &header,
+                &lines_of(&format!(
+                    "policy: {} | rule {} | risk {:?}",
+                    policy_name(policy.decision),
+                    safe_terminal_text(&policy.rule_id),
+                    policy.risk
+                )),
+                state,
+            )
         }
     }
 }
 
+/// A line of prose: the bullet on the first line, the rest hung under it.
+fn render_prose(out: &mut impl Write, text: &str) -> io::Result<()> {
+    let lines = lines_of(text);
+    if lines.is_empty() {
+        return writeln!(out, "{BULLET}");
+    }
+    for (index, line) in lines.iter().enumerate() {
+        if index == 0 {
+            writeln!(out, "{BULLET} {line}")?;
+        } else {
+            writeln!(out, "{INDENT}{line}")?;
+        }
+    }
+    Ok(())
+}
+
+/// A step: the bullet and its verb, the body on a rail, and the corner.
+///
+/// The corner carries the step's own summary, so the last line of a block says
+/// what the step did, and `… +N lines` when the body was bounded.
+fn render_block(
+    out: &mut impl Write,
+    header: &str,
+    body: &[String],
+    closing: &str,
+) -> io::Result<()> {
+    writeln!(out, "{BULLET} {header}")?;
+    let shown = body.len().min(BODY_LINES);
+    for line in &body[..shown] {
+        writeln!(out, "{INDENT}{RAIL} {line}")?;
+    }
+    let hidden = body.len().saturating_sub(shown);
+    let closing = if hidden > 0 {
+        format!("… +{hidden} lines · {closing}")
+    } else {
+        closing.to_owned()
+    };
+    writeln!(out, "{INDENT}{CORNER} {closing}")?;
+    Ok(())
+}
+
+/// The text as body lines: control characters escaped, tabs and spaces kept.
+fn lines_of(text: &str) -> Vec<String> {
+    let escaped = safe_terminal_text(text);
+    let lines: Vec<String> = escaped
+        .lines()
+        .map(|line| line.trim_end().to_owned())
+        .collect();
+    if lines.iter().all(|line| line.is_empty()) {
+        Vec::new()
+    } else {
+        lines
+    }
+}
+
+/// What ran, in the reference's "Ran" position: the verb of the step.
+fn step_verb(kind: &str) -> &str {
+    match kind {
+        "read_file" => "Read",
+        "list_files" => "List",
+        "search_text" => "Search",
+        other => other,
+    }
+}
+
 fn render_observation(out: &mut impl Write, observation: &Observation) -> io::Result<()> {
-    writeln!(out, "tool: {}", safe_terminal_text(&observation.kind))?;
-    writeln!(
+    let body = observation_body(observation);
+    render_block(
         out,
-        "{DIM}{}{RESET}",
-        safe_terminal_text(&observation.summary)
-    )?;
+        step_verb(&observation.kind),
+        &body,
+        &safe_terminal_text(&observation.summary),
+    )
+}
 
+/// The lines a step produced, as plain text rather than as a JSON dump.
+fn observation_body(observation: &Observation) -> Vec<String> {
     match observation.kind.as_str() {
-        "read_file" => render_content_lines(out, &observation.data),
-        "list_files" => render_file_entries(out, &observation.data),
-        "search_text" => render_search_matches(out, &observation.data),
-        _ => render_json(out, &observation.data),
+        "read_file" => content_lines(&observation.data),
+        "list_files" => file_entries(&observation.data),
+        "search_text" => search_matches(&observation.data),
+        _ => json_lines(&observation.data),
     }
 }
 
-fn render_content_lines(out: &mut impl Write, data: &Value) -> io::Result<()> {
+fn content_lines(data: &Value) -> Vec<String> {
     let Some(lines) = data.get("content_lines").and_then(Value::as_array) else {
-        return render_json(out, data);
+        return json_lines(data);
     };
-    for line in lines.iter().filter_map(Value::as_str) {
-        writeln!(out, "{}", safe_terminal_text(line))?;
-    }
-    Ok(())
+    lines
+        .iter()
+        .filter_map(Value::as_str)
+        .map(|line| safe_terminal_text(line).trim_end().to_owned())
+        .collect()
 }
 
-fn render_file_entries(out: &mut impl Write, data: &Value) -> io::Result<()> {
+fn file_entries(data: &Value) -> Vec<String> {
     let Some(entries) = data.get("entries").and_then(Value::as_array) else {
-        return render_json(out, data);
+        return json_lines(data);
     };
-    for entry in entries {
-        let kind = entry.get("kind").and_then(Value::as_str).unwrap_or("entry");
-        let path = entry.get("path").and_then(Value::as_str).unwrap_or("?");
-        writeln!(
-            out,
-            "{:<9} {}",
-            safe_terminal_text(kind),
-            safe_terminal_text(path)
-        )?;
-    }
-    Ok(())
+    entries
+        .iter()
+        .map(|entry| {
+            let kind = entry.get("kind").and_then(Value::as_str).unwrap_or("entry");
+            let path = entry.get("path").and_then(Value::as_str).unwrap_or("?");
+            format!(
+                "{:<9} {}",
+                safe_terminal_text(kind),
+                safe_terminal_text(path)
+            )
+        })
+        .collect()
 }
 
-fn render_search_matches(out: &mut impl Write, data: &Value) -> io::Result<()> {
+fn search_matches(data: &Value) -> Vec<String> {
     let Some(matches) = data.get("matches").and_then(Value::as_array) else {
-        return render_json(out, data);
+        return json_lines(data);
     };
-    for found in matches {
-        let path = found.get("path").and_then(Value::as_str).unwrap_or("?");
-        let line = found.get("line").and_then(Value::as_u64).unwrap_or(0);
-        let text = found.get("text").and_then(Value::as_str).unwrap_or("");
-        writeln!(
-            out,
-            "{}:{} {}",
-            safe_terminal_text(path),
-            line,
-            safe_terminal_text(text)
-        )?;
-    }
-    Ok(())
+    matches
+        .iter()
+        .map(|found| {
+            let path = found.get("path").and_then(Value::as_str).unwrap_or("?");
+            let line = found.get("line").and_then(Value::as_u64).unwrap_or(0);
+            let text = found.get("text").and_then(Value::as_str).unwrap_or("");
+            format!(
+                "{}:{} {}",
+                safe_terminal_text(path),
+                line,
+                safe_terminal_text(text)
+            )
+        })
+        .collect()
 }
 
-fn render_json(out: &mut impl Write, data: &Value) -> io::Result<()> {
-    let encoded = serde_json::to_string_pretty(data).map_err(io::Error::other)?;
-    writeln!(out, "{}", safe_terminal_text(&encoded))
+fn json_lines(data: &Value) -> Vec<String> {
+    match serde_json::to_string_pretty(data) {
+        Ok(encoded) => lines_of(&encoded),
+        Err(_) => Vec::new(),
+    }
 }
 
 pub(super) fn policy_name(decision: PolicyDecision) -> &'static str {
@@ -251,9 +350,76 @@ mod tests {
         };
         let rendered = render_model(turn);
 
-        assert!(rendered.contains("first\n\\u{1b}[31msecond"));
+        // The bullet opens the prose and the continuation hangs under it, which
+        // is the shape the reference draws a paragraph in.
+        assert!(rendered.contains("• first\n  \\u{1b}[31msecond"), "{rendered}");
         assert!(!rendered.contains("\x1b[31msecond"));
         assert!(rendered.contains("model calls 1 | tokens in 0 / out 0"));
+    }
+
+    #[test]
+    fn a_step_draws_a_verb_a_rail_and_a_corner_with_its_summary() {
+        let outcome = GovernedToolOutcome::Completed(Observation {
+            observation_id: ObservationId::from("observation-1"),
+            call_id: CallId::from("call-1"),
+            kind: "read_file".into(),
+            summary: "read bytes=12 lines=2".into(),
+            data: serde_json::json!({"content_lines": ["first", "second"]}),
+        });
+        let rendered = render_tool(outcome);
+
+        assert!(rendered.contains("• Read\n"), "{rendered}");
+        assert!(rendered.contains("  │ first\n"), "{rendered}");
+        assert!(rendered.contains("  │ second\n"), "{rendered}");
+        // The corner closes the rail and says what the step produced, rather
+        // than repeating "tool: read_file" and the summary above the body.
+        assert!(rendered.contains("  └ read bytes=12 lines=2"), "{rendered}");
+        assert!(!rendered.contains("tool: read_file"), "{rendered}");
+        assert!(!rendered.contains("└ … +"), "{rendered}");
+    }
+
+    #[test]
+    fn a_long_body_is_bounded_and_its_corner_counts_the_rest() {
+        let lines = (0..20).map(|i| format!("line {i}")).collect::<Vec<_>>();
+        let outcome = GovernedToolOutcome::Completed(Observation {
+            observation_id: ObservationId::from("observation-1"),
+            call_id: CallId::from("call-1"),
+            kind: "read_file".into(),
+            summary: "read bytes=99 lines=20".into(),
+            data: serde_json::json!({"content_lines": lines}),
+        });
+        let rendered = render_tool(outcome);
+
+        assert!(rendered.contains("  │ line 0\n"), "{rendered}");
+        assert!(rendered.contains("  │ line 7\n"), "{rendered}");
+        assert!(!rendered.contains("line 8"), "{rendered}");
+        assert!(
+            rendered.contains("  └ … +12 lines · read bytes=99 lines=20"),
+            "{rendered}"
+        );
+        // No key is promised: this product has no transcript view to open, and
+        // a hint that opens nothing is worse than the count alone.
+        assert!(!rendered.contains("ctrl+"), "{rendered}");
+    }
+
+    #[test]
+    fn a_list_body_keeps_its_columns_and_its_verb_names_the_step() {
+        let outcome = GovernedToolOutcome::Completed(Observation {
+            observation_id: ObservationId::from("observation-1"),
+            call_id: CallId::from("call-1"),
+            kind: "list_files".into(),
+            summary: "listed entries=2".into(),
+            data: serde_json::json!({"entries": [
+                {"kind": "directory", "path": "src"},
+                {"kind": "file", "path": "README.md"},
+            ]}),
+        });
+        let rendered = render_tool(outcome);
+
+        assert!(rendered.contains("• List\n"), "{rendered}");
+        assert!(rendered.contains("  │ directory src\n"), "{rendered}");
+        assert!(rendered.contains("  │ file      README.md\n"), "{rendered}");
+        assert!(rendered.contains("  └ listed entries=2"), "{rendered}");
     }
 
     #[test]
@@ -271,9 +437,12 @@ mod tests {
         });
         let rendered = render_model(turn);
 
-        assert!(rendered.contains("action: read_file path_bytes=10 start_line=None end_line=None"));
-        assert!(rendered.contains("policy: allow | rule workspace.read | risk Low"));
-        assert!(rendered.contains("ready for governed execution"));
+        assert!(
+            rendered.contains("• Action read_file path_bytes=10 start_line=None end_line=None"),
+            "{rendered}"
+        );
+        assert!(rendered.contains("  │ policy: allow | rule workspace.read | risk Low"), "{rendered}");
+        assert!(rendered.contains("  └ ready for governed execution"), "{rendered}");
     }
 
     #[test]
@@ -313,8 +482,8 @@ mod tests {
         });
         let rendered = render_tool(outcome);
 
-        assert!(rendered.contains("tool: read_file"));
-        assert!(rendered.contains("first\nsecond"));
+        assert!(rendered.contains("• Read"));
+        assert!(rendered.contains("  │ first\n  │ second"), "{rendered}");
         assert!(rendered.contains("done"));
         assert!(rendered.contains("model calls 2 | tokens in 0 / out 0"));
     }
@@ -334,8 +503,13 @@ mod tests {
         });
         let rendered = render_tool(outcome);
 
-        assert!(rendered.contains("tool failed"));
-        assert!(rendered.contains("workspace filesystem operation failed"));
+        assert!(rendered.contains("• Failed"), "{rendered}");
+        assert!(rendered.contains("  │ workspace filesystem operation failed"), "{rendered}");
+        // The corner is where the block says whether asking again could work.
+        assert!(
+            rendered.contains("  └ tool failed · retryable: yes"),
+            "{rendered}"
+        );
         assert!(!rendered.contains("fingerprint"));
     }
 }

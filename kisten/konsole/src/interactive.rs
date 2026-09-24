@@ -1235,7 +1235,7 @@ fn render_transcript_chat_frame<W: Write>(
         if let Some(busy) = busy {
             writeln!(
                 &mut body,
-                "{}* {RESET}{}",
+                "{}{NOTE_GLYPH} {RESET}{}",
                 palette.accent,
                 sanitize_terminal_text(busy)
             )?;
@@ -1270,7 +1270,7 @@ fn render_transcript_chat_frame<W: Write>(
         if let Some(busy) = busy {
             writeln!(
                 &mut body,
-                "{}* {RESET}{}",
+                "{}{NOTE_GLYPH} {RESET}{}",
                 palette.accent,
                 sanitize_terminal_text(busy)
             )?;
@@ -1356,7 +1356,7 @@ fn render_composer<W: Write>(
     let prompt_pad = " ".repeat(width.saturating_sub(2 + display_width(&prompt)));
     writeln!(
         out,
-        "{}{accent}> {RESET}{}{prompt_style}{prompt}{prompt_pad}{RESET}",
+        "{}{accent}{PROMPT_GLYPH} {RESET}{}{prompt_style}{prompt}{prompt_pad}{RESET}",
         palette.composer_background,
         palette.composer_background,
         accent = palette.accent,
@@ -1480,7 +1480,7 @@ fn transcript_lines(
         .iter()
         .flat_map(|entry| {
             let (prefix, style) = match entry.role {
-                TranscriptRole::User => ("> ", palette.accent),
+                TranscriptRole::User => ("› ", palette.accent),
                 TranscriptRole::Assistant => ("", palette.accent),
                 TranscriptRole::Status => ("", palette.dim),
                 TranscriptRole::Error => ("error: ", palette.warning),
@@ -1989,7 +1989,28 @@ fn status_segments(model_status: &str, progress: Option<&str>) -> Vec<String> {
     segments
 }
 
-const STATUS_SEPARATOR: &str = "  |  ";
+/// The reference's glyphs, in the three places it uses them.
+///
+/// The chevron opens the line the reader types on - and the line their own turn
+/// is echoed with, which is the same line coming back - and the bullet opens a
+/// line the program is saying. The status bar joins its segments with the same
+/// dot the reference joins its own with.
+const PROMPT_GLYPH: &str = "›";
+const NOTE_GLYPH: &str = "•";
+const STATUS_SEPARATOR: &str = " · ";
+
+/// How long a turn has been running, in the reference's own three shapes.
+pub(crate) fn format_elapsed(elapsed: std::time::Duration) -> String {
+    let seconds = elapsed.as_secs();
+    let (hours, minutes, seconds) = (seconds / 3600, (seconds % 3600) / 60, seconds % 60);
+    if hours > 0 {
+        format!("{hours}h {minutes:02}m {seconds:02}s")
+    } else if minutes > 0 {
+        format!("{minutes}m {seconds}s")
+    } else {
+        format!("{seconds}s")
+    }
+}
 
 fn joined_status_width(segments: &[String]) -> usize {
     let text = segments
@@ -2906,7 +2927,7 @@ mod tests {
         let plain = strip_ansi(&rendered);
         let prompt_line = plain
             .lines()
-            .find(|line| line.trim_start().starts_with("> "))
+            .find(|line| line.trim_start().starts_with("› "))
             .expect("startup should render an input line");
         assert_ne!(
             prompt_line.trim(),
@@ -2936,8 +2957,21 @@ mod tests {
 
         let rendered = String::from_utf8(out).unwrap();
         let plain = strip_ansi(&rendered);
-        let prompt_lines = plain.lines().filter(|line| line.trim() == "> /").count();
+        let prompt_lines = plain.lines().filter(|line| line.trim() == "› /").count();
         assert_eq!(prompt_lines, 1, "command palette output:\n{rendered}");
+    }
+
+    #[test]
+    fn the_working_line_clocks_in_the_references_three_shapes() {
+        use std::time::Duration;
+
+        // Seconds while it is quick, minutes and seconds while it is not, and
+        // hours with the smaller units zero-padded - the shapes the reference's
+        // own working line uses.
+        assert_eq!(format_elapsed(Duration::from_secs(0)), "0s");
+        assert_eq!(format_elapsed(Duration::from_secs(12)), "12s");
+        assert_eq!(format_elapsed(Duration::from_secs(200)), "3m 20s");
+        assert_eq!(format_elapsed(Duration::from_secs(3663)), "1h 01m 03s");
     }
 
     #[test]
@@ -2950,15 +2984,23 @@ mod tests {
         let plain = strip_ansi(&rendered);
         let prompt = plain
             .lines()
-            .find(|line| line.trim_end() == "> /")
+            .find(|line| line.trim_end() == "› /")
             .expect("startup should render the slash input");
         let candidate = plain
             .lines()
             .find(|line| line.trim_start().starts_with("> /agent"))
             .expect("palette should render the first slash command");
+        let column_of = |line: &str| -> usize {
+            // Columns, not byte offsets: the prompt's chevron is three bytes
+            // wide and one column wide, and it is the column the reader sees
+            // the slash commands line up under.
+            line.find('/')
+                .map(|at| display_width(&line[..at]))
+                .expect("a slash command line")
+        };
         assert_eq!(
-            prompt.find('/'),
-            candidate.find('/'),
+            column_of(prompt),
+            column_of(candidate),
             "input and command columns must align:\n{plain}"
         );
     }
@@ -3016,7 +3058,7 @@ mod tests {
         );
         assert!(lines.len() <= 24, "24-row frame overflowed:\n{plain}");
         assert_eq!(
-            lines.iter().filter(|line| line.trim_end() == "> /").count(),
+            lines.iter().filter(|line| line.trim_end() == "› /").count(),
             1,
             "the input line must render exactly once:\n{plain}"
         );
@@ -3107,7 +3149,7 @@ mod tests {
             let caret = caret.unwrap_or_else(|| panic!("{label} lost the caret:\n{plain}"));
             let composer = plain
                 .lines()
-                .position(|line| line.trim_end() == format!("> {input}"))
+                .position(|line| line.trim_end() == format!("› {input}"))
                 .unwrap_or_else(|| panic!("{label} has no composer row:\n{plain}"));
             assert_eq!(
                 usize::from(caret.row),
@@ -3300,7 +3342,7 @@ mod tests {
         let plain = strip_ansi(&String::from_utf8(out).unwrap());
         assert!(plain.contains("newest answer"), "transcript:\n{plain}");
         assert!(plain.contains("Creating..."), "busy state:\n{plain}");
-        assert!(plain.contains("> next task"), "composer:\n{plain}");
+        assert!(plain.contains("› next task"), "composer:\n{plain}");
         assert!(
             plain.lines().count() <= 12,
             "transcript frame overflowed:\n{plain}"
@@ -3344,7 +3386,7 @@ mod tests {
             "the full startup panel borders must remain visible:\n{plain}"
         );
         assert!(plain.contains("The answer stays in this session."));
-        assert!(plain.contains("> follow-up"));
+        assert!(plain.contains("› follow-up"));
         assert!(plain.lines().count() <= 44, "frame overflowed:\n{plain}");
     }
 
@@ -3607,7 +3649,7 @@ mod tests {
             "streamed answer:\n{plain}"
         );
         assert!(plain.contains("Creating..."), "busy marker:\n{plain}");
-        assert!(plain.contains("> next task"), "composer:\n{plain}");
+        assert!(plain.contains("› next task"), "composer:\n{plain}");
         assert!(plain.lines().count() <= 24, "frame overflowed:\n{plain}");
     }
 
@@ -4176,7 +4218,7 @@ mod tests {
         assert!(newest.contains("line 19"), "newest transcript:\n{newest}");
         assert!(oldest.contains("line 00"), "oldest transcript:\n{oldest}");
         assert!(
-            oldest.contains("> draft"),
+            oldest.contains("› draft"),
             "composer disappeared:\n{oldest}"
         );
     }
@@ -4356,7 +4398,7 @@ mod tests {
         assert!(
             plain
                 .lines()
-                .any(|line| line.trim_start().starts_with("> ")),
+                .any(|line| line.trim_start().starts_with("› ")),
             "80x24 startup should keep the prompt:\n{plain}"
         );
         assert!(
@@ -4441,7 +4483,7 @@ mod tests {
                 assert!(
                     plain
                         .lines()
-                        .any(|line| line.trim_start().starts_with("> ")),
+                        .any(|line| line.trim_start().starts_with("› ")),
                     "{label} input row disappeared at height {height}:\n{plain}"
                 );
                 assert!(
@@ -4517,7 +4559,7 @@ mod tests {
     fn composer_row(lines: &[&str], width: usize) -> usize {
         lines
             .iter()
-            .rposition(|line| line.starts_with("> ") && display_width(line) == width)
+            .rposition(|line| line.starts_with("› ") && display_width(line) == width)
             .unwrap_or_else(|| panic!("no composer row in:\n{}", lines.join("\n")))
     }
 

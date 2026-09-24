@@ -22,7 +22,7 @@ use std::path::PathBuf;
 use std::process::ExitCode;
 use std::process::{Command as ProcessCommand, Stdio};
 use std::sync::{Arc, Mutex};
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use clap::Parser;
 
@@ -720,12 +720,22 @@ impl ModelEventSink for TtyEventSink {
 
 /// Codex spins a braille frame while a turn runs, and the label keeps a
 /// constant width so the busy row never jumps as the frames cycle.
-fn busy_label(tick: usize) -> String {
+/// The line that says a turn is in flight.
+///
+/// The reference draws it as `• Working (1h 01m 03s • esc to interrupt)`, and
+/// all three parts of that are true here: the run is working, the clock is real
+/// - the loop counts the same interval it sleeps on - and Esc cancels the turn
+/// rather than quitting the program, which is what the hint promises.
+fn busy_label(tick: usize, elapsed: Duration) -> String {
     const FRAMES: [&str; 10] = [
         "\u{280b}", "\u{2819}", "\u{2839}", "\u{2838}", "\u{283c}", "\u{2834}", "\u{2826}",
         "\u{2827}", "\u{2807}", "\u{280f}",
     ];
-    format!("{} Creating…", FRAMES[tick % FRAMES.len()])
+    format!(
+        "{} Working ({} · esc to interrupt)",
+        FRAMES[tick % FRAMES.len()],
+        interactive::format_elapsed(elapsed)
+    )
 }
 
 fn queued_command_label(action: &interactive::HomeAction) -> String {
@@ -816,6 +826,7 @@ async fn await_model_turn(
     };
     tokio::pin!(request);
     let mut tick = 0usize;
+    let started = Instant::now();
     let mut cancel_requested = false;
 
     loop {
@@ -837,7 +848,7 @@ async fn await_model_turn(
             }
             _ = tokio::time::sleep(Duration::from_millis(120)) => {
                 tick = tick.wrapping_add(1);
-                state.busy = Some(busy_label(tick));
+                state.busy = Some(busy_label(tick, started.elapsed()));
                 if !cancel_requested {
                     while let Some(key) = chat.try_read_key()? {
                         let Some(action) = interactive::handle_chat_key_with_scroll(
@@ -1059,7 +1070,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
             match queued {
                 QueuedChatAction::Turn(request) => {
                     let assistant_index = state.begin_assistant_transcript();
-                    state.busy = Some(busy_label(0));
+                    state.busy = Some(busy_label(0, Duration::ZERO));
                     chat.present_view(state.view(&choices, &model_status))?;
                     match await_model_turn(
                         &mut chat,
@@ -2085,12 +2096,24 @@ mod tests {
     }
 
     #[test]
-    fn busy_animation_cycles_without_growing_the_label() {
-        assert_eq!(busy_label(0), "⠋ Creating…");
-        assert_eq!(busy_label(1), "⠙ Creating…");
-        assert_eq!(busy_label(2), "⠹ Creating…");
-        assert_eq!(busy_label(10), busy_label(0));
-        assert!(busy_label(99).len() <= busy_label(0).len());
+    fn busy_animation_cycles_and_carries_the_clock_and_the_way_out() {
+        // The reference's working line, in this product's words: the frame
+        // cycles, the elapsed time is real, and the way out is the key that
+        // actually cancels the turn.
+        assert_eq!(busy_label(0, Duration::ZERO), "⠋ Working (0s · esc to interrupt)");
+        assert_eq!(busy_label(1, Duration::from_secs(12)), "⠙ Working (12s · esc to interrupt)");
+        assert_eq!(
+            busy_label(2, Duration::from_secs(200)),
+            "⠹ Working (3m 20s · esc to interrupt)"
+        );
+        assert_eq!(
+            busy_label(3, Duration::from_secs(3663)),
+            "⠸ Working (1h 01m 03s · esc to interrupt)"
+        );
+        assert_eq!(busy_label(10, Duration::ZERO), busy_label(0, Duration::ZERO));
+        // The frame is one column wide whatever it holds, so the line never
+        // grows as the spinner turns.
+        assert!(busy_label(99, Duration::ZERO).len() <= busy_label(0, Duration::ZERO).len());
     }
 
     #[test]
