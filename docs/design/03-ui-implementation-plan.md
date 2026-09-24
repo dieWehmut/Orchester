@@ -811,6 +811,43 @@ The reference's explorer rows are around 22 px; this product floors a row at
 `--hit-target-min` by its own accessibility clause, and a pointer that has to hit
 a 22 px row to open a file is the thing that clause exists to prevent.
 
+## Wave U29 - the day marks, and how long the run took
+
+Two things the new reference states that this product had the data for and never
+said: where a transcript crossed midnight, and how long the run has been going.
+
+- [x] U29-01: Mark the first row of each day.
+  - `transcript-days.ts` reads the local calendar day of a row's `occurredAt` and
+    asks the *whole* timeline whether a row opens a day - the list is
+    virtualised, and a mark computed from the mounted window would appear again
+    every time the window moved.
+  - The mark is drawn **inside** the row rather than between rows, because the
+    list measures rows by their position in `data-virtualized-turn` and a mark
+    that were its own child would move every measurement below it. It spans both
+    of the row's columns and centres itself, since the bubble row aligns its
+    items to the end.
+  - The label is formatted by the platform (`9月16日周三 21:53`), not by a
+    pattern in the file, and carries the weekday the reference's own mark does.
+- [x] U29-02: State the run's elapsed time.
+  - `run-duration.ts` measures from the first to the last journalled event, taking
+    the stop into account when it is later, and stays silent until the run has
+    taken a measurable moment: "0s" beside a run in flight is a claim the stream
+    does not support. The shapes are the reference's (`12s`, `3m 20s`,
+    `1h 01m 03s`).
+  - The footer states it, and the sentence around it comes from the catalogues
+    (`用时 {duration}` / `Took {duration}`). The footer's other labels are passed
+    from the panel now too, which is what they were always meant to be: they had
+    English fallbacks nothing overrode, so the Chinese interface was reading
+    "Sequence" and "Usage".
+- [x] U29-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds.
+
+**What the reference does that this does not.** The reference puts the elapsed
+time on the *turn* (`用时 33m 20s` above the answer). This product's journal has
+one turn per run - `turn_id` is null throughout - so the run's own elapsed time
+is what can be stated honestly, and it is stated once in the footer rather than
+per answer.
+
 ## Verification
 
 ```text

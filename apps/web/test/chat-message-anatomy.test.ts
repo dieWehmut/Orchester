@@ -5,6 +5,7 @@ import { createEmptyRunView, type MessageTimelineItem } from '@orchester/ereigni
 import type { SessionDetailDto } from '@orchester/protokoll'
 
 import RunTimeline from '../src/components/run/RunTimeline.vue'
+import RunFooter from '../src/components/run/RunFooter.vue'
 import SessionTranscript from '../src/components/sessions/SessionTranscript.vue'
 
 /**
@@ -154,6 +155,25 @@ describe('transcript chat anatomy', () => {
     expect(row.attributes('style')).toContain('contain: layout paint')
   })
 
+  it('marks where the stream crossed midnight, once per day', () => {
+    const wrapper = mountTimeline([
+      message({ key: 'm-1', occurredAt: new Date(2026, 8, 16, 21, 53).toISOString() }),
+      message({ key: 'm-2', occurredAt: new Date(2026, 8, 16, 23, 58).toISOString() }),
+      message({ key: 'm-3', occurredAt: new Date(2026, 8, 17, 0, 4).toISOString() }),
+    ])
+
+    const rows = wrapper.findAll('[data-item-type="message"]')
+    const marks = wrapper.findAll('[data-day-separator]')
+
+    expect(marks).toHaveLength(2)
+    // The mark belongs to the first row of the day, so it is drawn inside that
+    // row rather than between rows: the list measures rows by their position.
+    expect(rows[0]!.find('[data-day-separator]').exists()).toBe(true)
+    expect(rows[1]!.find('[data-day-separator]').exists()).toBe(false)
+    expect(rows[2]!.find('[data-day-separator]').exists()).toBe(true)
+    expect(rows[2]!.get('[data-day-separator] time').attributes('datetime')).toContain('2026')
+  })
+
   it("shows the reader's own words exactly as they typed them", () => {
     const wrapper = mountTimeline([
       message({ role: 'user', text: '**not bold** and `literal`' }),
@@ -213,5 +233,23 @@ describe('stored session anatomy', () => {
     await wrapper.get('[data-message-role="assistant"] [data-message-copy]').trigger('click')
 
     expect(writes).toEqual([detail.final_text])
+  })
+
+  it('states how long the run took, in the sentence the catalogue gives it', () => {
+    const view = {
+      ...createEmptyRunView(),
+      timeline: [
+        message({ key: 'm-1', occurredAt: '2026-09-16T10:00:00Z' }),
+        message({ key: 'm-2', occurredAt: '2026-09-16T10:33:20Z' }),
+      ],
+    }
+
+    const stated = mount(RunFooter, { props: { view, durationLabel: 'Took 33m 20s' } })
+    expect(stated.get('[data-run-duration]').text()).toBe('Took 33m 20s')
+
+    // No label, no sentence: the footer never invents its own words, and a run
+    // that has not taken a moment says nothing.
+    const unlabelled = mount(RunFooter, { props: { view } })
+    expect(unlabelled.find('[data-run-duration]').exists()).toBe(false)
   })
 })

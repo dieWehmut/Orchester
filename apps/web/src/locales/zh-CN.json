@@ -361,7 +361,8 @@
     "reasoningSummary": "{count} 字符",
     "externalLink": "在新标签页打开",
     "quote": "引用到输入框",
-    "reuse": "重新使用这条提示"
+    "reuse": "重新使用这条提示",
+    "took": "用时 {duration}"
   },
   "inspector": {
     "label": "工作区检查器",

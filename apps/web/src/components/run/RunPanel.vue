@@ -14,6 +14,7 @@ import PlanStrip from './PlanStrip.vue'
 import RunAnnouncer from './RunAnnouncer.vue'
 import RunComposer from './RunComposer.vue'
 import RunFooter from './RunFooter.vue'
+import { runElapsed } from './run-duration'
 import RunTimeline from './RunTimeline.vue'
 import { fadeDecision, readScrollState, stickDecision, unreadAfter, type ScrollState } from './scroll-state'
 import { PetCompanion, petStateFor, usePetVisibility } from '../../features/pet'
@@ -70,6 +71,19 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+
+/**
+ * How long the run has taken, said the way the reference says it.
+ *
+ * The reference puts a turn's elapsed time above its answer; this product has
+ * one turn per run, so the footer states the run's own elapsed time - computed
+ * from the journalled events rather than from when this window opened - and the
+ * sentence around it comes from the locale catalogues.
+ */
+const durationLabel = computed(() => {
+  const elapsed = runElapsed(props.view)
+  return elapsed === null ? undefined : t('transcript.took', { duration: elapsed })
+})
 
 /**
  * The draft the composer is editing.
@@ -266,7 +280,12 @@ defineExpose({ focusPrompt, clearPrompt })
       >{{ unread }}</span>
     </button>
     <MessageRail :view="props.view" @select="scrollToTurn" />
-    <RunFooter :view="props.view" />
+    <RunFooter
+      :view="props.view"
+      :sequence-label="t('run.sequence')"
+      :usage-label="t('run.usage')"
+      :duration-label="durationLabel"
+    />
     <PlanStrip
       :todos="props.view.todos"
       :validation="props.view.validation"

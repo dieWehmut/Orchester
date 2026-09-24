@@ -8,6 +8,7 @@ import MessageActions from './MessageActions.vue'
 import ReasoningDisclosure from './ReasoningDisclosure.vue'
 import ToolCallCard from './ToolCallCard.vue'
 import { arrivalState, streamingContainment, type ArrivalState } from './streaming-text'
+import { dayLabel, startsDay } from './transcript-days'
 import { virtualWindow } from './virtual-window'
 
 const { t } = useI18n()
@@ -54,6 +55,25 @@ const windowRange = computed(() =>
 
 const mounted = computed(() =>
   props.view.timeline.slice(windowRange.value.start, windowRange.value.end),
+)
+
+/**
+ * The rows on screen, each knowing whether it opens a day.
+ *
+ * The mark is drawn inside the row rather than between rows: the list measures
+ * its rows by their position, and a mark that were its own child would move
+ * every measurement below it. Asked of the whole timeline, so scrolling the
+ * window does not invent a mark in the middle of a day.
+ */
+const mountedRows = computed(() =>
+  mounted.value.map((item, index) => ({
+    item,
+    // The label and the instant are worked out here rather than in the template
+    // because a row the journal left without a time has neither.
+    day: dayLabel(item.occurredAt),
+    datetime: item.occurredAt ?? '',
+    startsDay: startsDay(props.view.timeline, windowRange.value.start + index),
+  })),
 )
 
 /**
@@ -157,25 +177,32 @@ function assertNever(value: never): never {
       :style="{ blockSize: windowRange.offsetTop + 'px' }"
     />
     <li
-      v-for="(item, index) in mounted"
-      :key="item.key"
+      v-for="(row, index) in mountedRows"
+      :key="row.item.key"
       class="run-timeline__item"
-      :class="`run-timeline__item--${item.type}`"
-      :data-item-type="item.type"
-      :data-item-role="item.type === 'message' ? item.role : undefined"
-      :data-message-shape="rowShape(item)"
+      :class="`run-timeline__item--${row.item.type}`"
+      :data-item-type="row.item.type"
+      :data-item-role="row.item.type === 'message' ? row.item.role : undefined"
+      :data-message-shape="rowShape(row.item)"
       :data-virtualized-turn="windowRange.start + index"
-      :data-arrival-state="rowArrival(item)"
-      :style="rowStyle(item)"
+      :data-arrival-state="rowArrival(row.item)"
+      :style="rowStyle(row.item)"
     >
-      <template v-if="item.type === 'tool'">
-        <span class="run-timeline__sequence" data-run-sequence>{{ item.sequence }}</span>
-        <ToolCallCard :item="item" />
+      <!--
+        Where the stream crossed midnight, in the reference's own mark: the day
+        and the time of the first row that belongs to it.
+      -->
+      <div v-if="row.startsDay" class="run-timeline__day" data-day-separator>
+        <time :datetime="row.datetime">{{ row.day }}</time>
+      </div>
+      <template v-if="row.item.type === 'tool'">
+        <span class="run-timeline__sequence" data-run-sequence>{{ row.item.sequence }}</span>
+        <ToolCallCard :item="row.item" />
       </template>
-      <template v-else-if="item.type === 'reasoning'">
-        <ReasoningDisclosure :text="item.text" />
+      <template v-else-if="row.item.type === 'reasoning'">
+        <ReasoningDisclosure :text="row.item.text" />
       </template>
-      <template v-else-if="item.type === 'message'">
+      <template v-else-if="row.item.type === 'message'">
         <div class="run-timeline__message" data-message-body>
           <!--
             The answer renders as the markdown it was written in, from the first
@@ -186,11 +213,11 @@ function assertNever(value: never): never {
             a growing row from being measured by the transcript's own layout.
           -->
           <MarkdownText
-            v-if="item.role === 'assistant'"
-            :text="item.text"
+            v-if="row.item.role === 'assistant'"
+            :text="row.item.text"
             :external-label="t('transcript.externalLink')"
           />
-          <p v-else class="run-timeline__text" data-message-plain>{{ item.text }}</p>
+          <p v-else class="run-timeline__text" data-message-plain>{{ row.item.text }}</p>
           <!--
             Each side of the conversation offers the move that belongs to it:
             the answer can be quoted into the composer as the start of the next
@@ -199,32 +226,32 @@ function assertNever(value: never): never {
             field - which is what the reference's own row does not promise.
           -->
           <MessageActions
-            v-if="item.role === 'assistant'"
+            v-if="row.item.role === 'assistant'"
             class="run-timeline__actions"
-            :text="item.text"
+            :text="row.item.text"
             :label="t('transcript.copyMessage')"
             :copied-label="t('transcript.copied')"
             :actions="[
               { id: 'quote', label: t('transcript.quote'), icon: 'quote' as const },
             ]"
-            @action="emit('quote', item.text)"
+            @action="emit('quote', row.item.text)"
           />
           <MessageActions
             v-else
             class="run-timeline__actions"
-            :text="item.text"
+            :text="row.item.text"
             :label="t('transcript.copyMessage')"
             :copied-label="t('transcript.copied')"
             :actions="[
               { id: 'reuse', label: t('transcript.reuse'), icon: 'reuse' as const },
             ]"
-            @action="emit('reuse', item.text)"
+            @action="emit('reuse', row.item.text)"
           />
         </div>
       </template>
       <template v-else>
-        <span class="run-timeline__sequence" data-run-sequence>{{ item.sequence }}</span>
-        <span class="run-timeline__body">{{ itemText(item) }}</span>
+        <span class="run-timeline__sequence" data-run-sequence>{{ row.item.sequence }}</span>
+        <span class="run-timeline__body">{{ itemText(row.item) }}</span>
       </template>
     </li>
   </ol>
@@ -256,6 +283,22 @@ function assertNever(value: never): never {
   padding: var(--space-3);
   border-inline-start: 2px solid var(--color-border-strong);
   background: var(--color-bg-surface);
+}
+
+/* Where the stream crossed midnight, in the reference's own mark: centred over
+   both columns, because it belongs to the column rather than to the row's
+   sequence number. */
+.run-timeline__day {
+  display: flex;
+  grid-column: 1 / -1;
+  /* The bubble row aligns its items to the end; the mark belongs to the column
+     rather than to either side of the conversation, so it stretches across the
+     row and centres itself in it. */
+  justify-self: stretch;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-tertiary);
+  font-size: var(--text-xs);
 }
 
 /* The conversation is not a card: it is what the reader came to read, and the
