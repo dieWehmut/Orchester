@@ -49,4 +49,35 @@ describe('workspace components', () => {
     expect(wrapper.emitted('select')).toEqual([[session.id]])
     expect(wrapper.get('[data-session-id]').attributes('aria-pressed')).toBe('false')
   })
+
+  it('files the runs under the project they ran in, as the reference does', () => {
+    const wrapper = mount(SessionRail, {
+      props: {
+        status: 'ready',
+        items: [
+          { ...session, id: 's-nexus-1', project: 'Nexus' },
+          { ...session, id: 's-orchester-1', project: 'Orchester' },
+          { ...session, id: 's-nexus-2', project: 'Nexus' },
+          { ...session, id: 's-unfiled-1', project: null },
+        ],
+        selectedId: null,
+        nextCursor: null,
+        error: null,
+      },
+    })
+
+    const groups = wrapper.findAll('[data-session-project]')
+    expect(groups.map((group) => group.attributes('data-session-project'))).toEqual([
+      'Nexus',
+      'Orchester',
+      '',
+    ])
+    // The project's own row names it, and its runs sit inside that group.
+    expect(groups[0]!.get('[data-session-project-name]').text()).toContain('Nexus')
+    expect(groups[0]!.findAll('[data-session-id]')).toHaveLength(2)
+    // The runs that named no project are drawn without a name of their own: the
+    // rail does not invent a project a session never ran in.
+    expect(groups[2]!.find('[data-session-project-name]').exists()).toBe(false)
+    expect(groups[2]!.findAll('[data-session-id]')).toHaveLength(1)
+  })
 })

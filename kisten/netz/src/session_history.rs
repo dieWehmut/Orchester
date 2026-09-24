@@ -23,6 +23,7 @@ pub const SESSION_RESULT_MAX_CHARS: usize = 262_144;
 const SESSION_TITLE_MAX_CHARS: usize = 120;
 const SESSION_AGENT_MAX_CHARS: usize = 80;
 const SESSION_MODEL_MAX_CHARS: usize = 120;
+const SESSION_PROJECT_MAX_CHARS: usize = 120;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -42,6 +43,10 @@ pub struct SessionSummaryDto {
     pub model: Option<String>,
     pub outcome: SessionOutcomeDto,
     pub resumable: bool,
+    /// The project the run happened in - the name of the directory it ran in,
+    /// never the path - or none when the record does not name one. Additive: a
+    /// client that does not know the field reads the summary it always read.
+    pub project: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -62,6 +67,7 @@ pub struct SessionDetailDto {
     pub model: Option<String>,
     pub outcome: SessionOutcomeDto,
     pub resumable: bool,
+    pub project: Option<String>,
     pub prompt: String,
     pub final_text: String,
     pub usage: Usage,
@@ -113,6 +119,7 @@ pub fn session_detail_response(detail: &SessionHistoryDetail) -> SessionDetailDt
         model: summary.model,
         outcome: summary.outcome,
         resumable: summary.resumable,
+        project: summary.project,
         prompt: bounded_text(&detail.prompt, SESSION_PROMPT_MAX_CHARS),
         final_text: bounded_text(&detail.final_text, SESSION_RESULT_MAX_CHARS),
         usage: detail.usage,
@@ -190,6 +197,10 @@ fn session_summary_response(summary: &SessionHistorySummary) -> SessionSummaryDt
             Outcome::Cancelled => SessionOutcomeDto::Cancelled,
         },
         resumable: summary.resumable,
+        project: summary
+            .project
+            .as_deref()
+            .map(|project| bounded_text(project, SESSION_PROJECT_MAX_CHARS)),
     }
 }
 

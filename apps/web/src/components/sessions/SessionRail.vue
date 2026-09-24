@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { SessionSummaryDto } from '@orchester/protokoll'
 import { AppButton, EmptyState, InlineAlert, SkeletonBlock } from '@orchester/design'
+import { FolderGit2 } from '@lucide/vue'
 import { computed } from 'vue'
 
 import { useI18n } from '../../i18n'
 import type { SessionsStatus } from '../../stores/sessions'
 import SessionListItem from './SessionListItem.vue'
+import { groupByProject } from './session-projects'
 
 const props = withDefaults(
   defineProps<{
@@ -68,6 +70,14 @@ const matches = computed<SessionSummaryDto[]>(() => {
 })
 
 /**
+ * The matched sessions, grouped by the project they ran in.
+ *
+ * Grouped after the filter rather than before it: a filter that hid a project's
+ * every session should not leave its heading behind with nothing under it.
+ */
+const projectGroups = computed(() => groupByProject(matches.value))
+
+/**
  * Whether the filter admitted nothing at all.
  *
  * Asked of the whole page rather than of this list: when the only match is a
@@ -122,14 +132,31 @@ const filteredEmpty = computed(() => {
         {{ error?.message }}
       </InlineAlert>
       <nav class="session-rail__list" :aria-label="t('sessions.title')">
-        <SessionListItem
-          v-for="session in matches"
-          :key="session.id"
+        <!--
+          The reference's rail is a list of projects with their conversations
+          nested under them, which is how a reader looks for one they remember:
+          the project first, then the thing inside it.
+        -->
+        <div
+          v-for="group in projectGroups"
+          :key="group.project ?? ''"
+          class="session-rail__group"
+          :class="{ 'session-rail__group--project': group.project !== null }"
+          :data-session-project="group.project ?? ''"
+        >
+          <p v-if="group.project" class="session-rail__project" data-session-project-name>
+            <FolderGit2 :size="14" aria-hidden="true" />
+            <span>{{ group.project }}</span>
+          </p>
+          <SessionListItem
+            v-for="session in group.items"
+            :key="session.id"
           :session="session"
           :selected="selectedId === session.id"
           @select="$emit('select', $event)"
-          @toggle-pin="$emit('togglePin', $event)"
-        />
+            @toggle-pin="$emit('togglePin', $event)"
+          />
+        </div>
       </nav>
       <AppButton
         v-if="nextCursor"
@@ -161,6 +188,34 @@ const filteredEmpty = computed(() => {
 .session-rail__list {
   display: grid;
   gap: var(--space-1);
+}
+
+.session-rail__group {
+  display: grid;
+  gap: var(--space-1);
+}
+
+/* A run sits under the project it ran in, as the reference nests it. */
+.session-rail__group--project .session-list-item {
+  padding-inline-start: var(--space-4);
+}
+
+/* The project's own row: a name and a folder, above the runs that happened in
+   it, which are indented under it. */
+.session-rail__project {
+  display: flex;
+  margin: 0;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3) 0;
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+.session-rail__project span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .session-rail__more {

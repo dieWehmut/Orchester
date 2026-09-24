@@ -110,6 +110,9 @@ fn history_detail_is_path_free_and_keeps_native_ids_private() {
     let detail = history.detail(&item.id).expect("detail");
     assert_eq!(detail.prompt, "inspect this project");
     assert_eq!(detail.final_text, "result 1");
+    // The project is the directory's name, not its path, so the debug dump the
+    // line below reads stays free of the fixture's `private` segment.
+    assert_eq!(item.project.as_deref(), Some("workspace"));
     assert!(!format!("{detail:?}").contains("native-secret"));
     assert!(!format!("{detail:?}").contains("private"));
     assert!(matches!(

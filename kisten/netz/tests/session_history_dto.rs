@@ -14,6 +14,7 @@ fn summary() -> SessionHistorySummary {
         model: Some("gpt-5.6".to_owned()),
         outcome: Outcome::Success,
         resumable: false,
+        project: Some("Orchester".to_owned()),
     }
 }
 
@@ -33,6 +34,11 @@ fn session_page_projection_matches_the_versioned_browser_contract() {
     let value = serde_json::to_value(dto).expect("serialize page");
     assert_eq!(value["schema_version"], 1);
     assert_eq!(value["items"][0]["outcome"], "success");
+    // The project travels with the summary - it is what the rail groups by - and
+    // it is the directory's name: no path belongs on this wire, which is the same
+    // contract the detail keeps below.
+    assert_eq!(value["items"][0]["project"], "Orchester");
+    assert!(value["items"][0].get("cwd").is_none());
     assert_eq!(value["next_cursor"], "s-fedcba9876543210fedcba9876543210");
 }
 

@@ -155,6 +155,15 @@ export interface SessionSummaryDto {
   model: string | null
   outcome: SessionOutcomeDto
   resumable: boolean
+  /**
+   * The project the run happened in, or null when the record names none.
+   *
+   * The **name** of the directory it ran in, never the path: the rail groups by
+   * it, which is what a reader means by "which project was this?". Additive and
+   * optional: a summary a runtime writes without it reads as a session whose
+   * project is unknown, and a client that ignores it reads what it always read.
+   */
+  project?: string | null
 }
 
 export interface SessionPageDto {

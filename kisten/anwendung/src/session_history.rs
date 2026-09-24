@@ -31,6 +31,11 @@ pub struct SessionHistorySummary {
     /// Reserved for a future explicit delegate-resume contract. This history
     /// endpoint never treats a native vendor session ID as a resume handle.
     pub resumable: bool,
+    /// The project the run happened in, when the record names one.
+    ///
+    /// The directory's name rather than its path: the rail groups by it and no
+    /// path belongs on this wire.
+    pub project: Option<String>,
 }
 
 #[derive(Clone, PartialEq, Eq)]
@@ -142,7 +147,25 @@ fn summary(index: usize, record: &SessionRecord) -> SessionHistorySummary {
             .map(|value| bounded_text(value, 120)),
         outcome: record.outcome,
         resumable: false,
+        project: project_of(&record.cwd),
     }
+}
+
+/// The project a run happened in, or none when the record does not name one.
+///
+/// The record has carried the working directory since the beginning; the list
+/// never showed it. What a reader means by "which project was this?" - and what
+/// the rail groups by - is the directory's **name**, so that is what travels:
+/// the path itself stays where it was, off the wire and out of a debug dump,
+/// which is the contract this history already keeps.
+fn project_of(cwd: &std::path::Path) -> Option<String> {
+    let name = cwd.file_name()?.to_string_lossy();
+    let trimmed = name.trim();
+    // A run recorded from a relative directory has not said which one it was in.
+    if trimmed.is_empty() || trimmed == "." || trimmed == ".." {
+        return None;
+    }
+    Some(bounded_text(trimmed, 120))
 }
 
 fn opaque_id(index: usize, record: &SessionRecord) -> String {

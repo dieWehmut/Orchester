@@ -943,6 +943,46 @@ a disclosure with a chevron, and what it discloses is timing detail per turn.
 This product's journal carries usage per run, not per answer, so a chevron here
 would open nothing - the number stands as the statement it is.
 
+## Wave U33 - the rail files runs under the project they ran in
+
+The reference's sidebar is a list of projects with their conversations nested
+under them; this rail was one flat list of recent runs. Filing them needs a
+project per session, and the runtime has recorded one since the beginning without
+ever showing it: every session record carries the working directory it ran in.
+
+- [x] U33-01: Send the project, not the path.
+  - The session summary now carries `project`, and it is the **name** of the
+    directory the run happened in (`D:\project\Orchester` → `Orchester`), never
+    the path. That is both what the reference's rail shows and what this history
+    already promised: the module's own tests assert that no path reaches the wire
+    or a debug dump, and the field is exactly the segment a reader calls the
+    project.
+  - Additive and optional, so the version stays where it is: a runtime that does
+    not send it, or a client that ignores it, reads the summary it always read. A
+    record written from a relative directory names no project, and neither does
+    an empty one.
+  - Rust: `SessionHistorySummary.project` (from `SessionRecord.cwd`), both wire
+    DTOs, and `project` in the browser's own `SessionSummaryDto`. Tests assert the
+    name travels, the path does not, and the fixture's `private` segment stays out
+    of the debug dump.
+- [x] U33-02: Group the rail by it.
+  - `groupByProject` files the runs in the order they arrived - newest project
+    first, which is the order the reference's rail has - and keeps the runs that
+    named no project in a group of their own, **drawn last and without a name**:
+    inventing a project for a session that never ran in one would be worse than
+    showing it unfiled.
+  - Grouping happens after the filter, so a filter that hid a project's every
+    session does not leave its heading behind with nothing under it. The rail's
+    section is named `Projects` now, and a run is indented under its project.
+- [x] U33-03: Re-run the gates: `pnpm typecheck`, the frontend suites, both
+  builds, and the Rust suites for the two crates the payload passes through.
+
+**What this does not do.** The reference also lists projects that have no
+conversations yet (`暂无项目聊天`). This runtime knows the projects that have
+*run*, not the ones that exist, so a project with no runs is not a project this
+rail can name - listing the workspace roots a user might have would be inventing
+them.
+
 ## Verification
 
 ```text
