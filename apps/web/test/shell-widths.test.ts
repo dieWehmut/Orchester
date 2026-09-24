@@ -3,31 +3,31 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import AppShell from '../src/components/layout/AppShell.vue'
 import {
-  INSPECTOR_WIDTH_STORAGE_KEY,
   RAIL_WIDTH_STORAGE_KEY,
-  clampInspectorWidth,
   clampRailWidth,
   readShellWidths,
   writeShellWidths,
 } from '../src/components/layout/shell-widths'
 
 /**
- * The shell's two resizable clamps, section 2.1 of the design spec.
+ * The shell's resizable clamp, section 2.1 of the design spec.
  *
- * The rail and the inspector are the two surfaces a user tunes once and then
- * expects to stay tuned, so each one carries a clamp rather than a fixed width
- * and each remembers what it was set to. The clamps are the rule the spec
- * states: the rail must leave the transcript its 360 px, and the inspector sits
- * between its own minimum and maximum regardless of how far the pointer travels.
+ * The rail is the surface a user tunes once and then expects to stay tuned, so
+ * it carries a clamp rather than a fixed width and remembers what it was set to.
+ * The clamp is the rule the spec states: the rail must leave the transcript its
+ * 360 px, whatever the pointer asks for.
+ *
+ * The inspector's own clamp is gone with the column: the shell draws two
+ * regions, and the run's surfaces are drawn in the bottom panel inside the
+ * transcript's.
  */
 
 function mountShell() {
   return mount(AppShell, {
-    props: { sessionsTitle: 'Sessions', inspectorTitle: 'Inspector' },
+    props: { sessionsTitle: 'Sessions' },
     slots: {
       sessions: '<p>Sessions</p>',
       default: '<p>Transcript</p>',
-      inspector: '<p>Inspector</p>',
     },
   })
 }
@@ -39,7 +39,11 @@ async function mountSettled() {
   return wrapper
 }
 
-function widthOf(wrapper: { get: (selector: string) => { attributes: (name: string) => string | undefined } }, selector: string, attribute: string) {
+function widthOf(
+  wrapper: { get: (selector: string) => { attributes: (name: string) => string | undefined } },
+  selector: string,
+  attribute: string,
+): number {
   return Number(wrapper.get(selector).attributes(attribute))
 }
 
@@ -47,7 +51,7 @@ beforeEach(() => {
   localStorage.clear()
 })
 
-describe('shell width clamps', () => {
+describe('shell width clamp', () => {
   it('keeps the rail inside the clamp the spec states', () => {
     expect(clampRailWidth(10, 1600)).toBe(240)
     expect(clampRailWidth(288, 1600)).toBe(288)
@@ -56,36 +60,27 @@ describe('shell width clamps', () => {
     expect(clampRailWidth(900, 700)).toBe(340)
   })
 
-  it('keeps the inspector inside its own clamp', () => {
-    expect(clampInspectorWidth(10)).toBe(280)
-    expect(clampInspectorWidth(340)).toBe(340)
-    expect(clampInspectorWidth(900)).toBe(460)
-  })
+  it('round-trips the width through storage and tolerates a bad value', () => {
+    expect(readShellWidths()).toEqual({ rail: null })
 
-  it('round-trips the widths through storage and tolerates a bad value', () => {
-    expect(readShellWidths()).toEqual({ rail: null, inspector: null })
-
-    writeShellWidths({ rail: 312, inspector: 360 })
-    expect(readShellWidths()).toEqual({ rail: 312, inspector: 360 })
+    writeShellWidths({ rail: 312 })
+    expect(readShellWidths()).toEqual({ rail: 312 })
 
     localStorage.setItem(RAIL_WIDTH_STORAGE_KEY, 'wide')
-    localStorage.setItem(INSPECTOR_WIDTH_STORAGE_KEY, '-4')
-    expect(readShellWidths()).toEqual({ rail: null, inspector: null })
+    expect(readShellWidths()).toEqual({ rail: null })
   })
 
-  it('opens the shell at the widths it stored', async () => {
-    writeShellWidths({ rail: 300, inspector: 380 })
+  it('opens the shell at the width it stored', async () => {
+    writeShellWidths({ rail: 300 })
     const wrapper = await mountSettled()
 
     expect(widthOf(wrapper, '[data-rail]', 'data-rail-width')).toBe(300)
-    expect(widthOf(wrapper, '[data-inspector]', 'data-inspector-width')).toBe(380)
   })
 
-  it('opens at the defaults when nothing is stored', async () => {
+  it('opens at the default when nothing is stored', async () => {
     const wrapper = await mountSettled()
 
     expect(widthOf(wrapper, '[data-rail]', 'data-rail-width')).toBe(288)
-    expect(widthOf(wrapper, '[data-inspector]', 'data-inspector-width')).toBe(340)
   })
 
   it('moves the rail with the keyboard and remembers where it landed', async () => {
@@ -104,45 +99,23 @@ describe('shell width clamps', () => {
     expect(widthOf(wrapper, '[data-rail]', 'data-rail-width')).toBe(420)
   })
 
-  it('moves the inspector boundary the way the handle points', async () => {
-    const wrapper = await mountSettled()
-    const handle = wrapper.get('[data-inspector-resize]')
-
-    // The handle is the inspector's left boundary, so dragging it left gives
-    // the inspector more room and dragging it right gives it less.
-    await handle.trigger('keydown', { key: 'ArrowLeft' })
-    expect(widthOf(wrapper, '[data-inspector]', 'data-inspector-width')).toBe(356)
-    expect(localStorage.getItem(INSPECTOR_WIDTH_STORAGE_KEY)).toBe('356')
-
-    await handle.trigger('keydown', { key: 'ArrowRight' })
-    expect(widthOf(wrapper, '[data-inspector]', 'data-inspector-width')).toBe(340)
-
-    await handle.trigger('keydown', { key: 'End' })
-    expect(widthOf(wrapper, '[data-inspector]', 'data-inspector-width')).toBe(460)
-  })
-
-  it('carries the clamps into the styles so the pointer path cannot leave them', async () => {
+  it('carries the clamp into the styles so the pointer path cannot leave it', async () => {
     const wrapper = await mountSettled()
 
     const rail = wrapper.get('[data-rail]').attributes('style') ?? ''
     expect(rail).toContain('--rail-width: 288px')
-
-    const inspector = wrapper.get('[data-inspector]').attributes('style') ?? ''
-    expect(inspector).toContain('--inspector-width: 340px')
   })
 
-  it('exposes the handles as separators a reader can name and operate', async () => {
+  it('exposes the handle as a separator a reader can name and operate', async () => {
     const wrapper = await mountSettled()
+    const handle = wrapper.get('[data-rail-resize]')
 
-    for (const selector of ['[data-rail-resize]', '[data-inspector-resize]']) {
-      const handle = wrapper.get(selector)
-      expect(handle.attributes('role'), selector).toBe('separator')
-      expect(handle.attributes('aria-orientation'), selector).toBe('vertical')
-      expect(handle.attributes('aria-valuenow'), selector).toBeTruthy()
-      expect(handle.attributes('aria-valuemin'), selector).toBeTruthy()
-      expect(handle.attributes('aria-valuemax'), selector).toBeTruthy()
-      expect((handle.attributes('aria-label') ?? '').length, selector).toBeGreaterThan(0)
-      expect(handle.attributes('tabindex'), selector).toBe('0')
-    }
+    expect(handle.attributes('role')).toBe('separator')
+    expect(handle.attributes('aria-orientation')).toBe('vertical')
+    expect(handle.attributes('aria-valuenow')).toBeTruthy()
+    expect(handle.attributes('aria-valuemin')).toBeTruthy()
+    expect(handle.attributes('aria-valuemax')).toBeTruthy()
+    expect((handle.attributes('aria-label') ?? '').length).toBeGreaterThan(0)
+    expect(handle.attributes('tabindex')).toBe('0')
   })
 })

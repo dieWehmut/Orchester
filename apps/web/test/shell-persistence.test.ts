@@ -81,8 +81,8 @@ describe('shell persistence', () => {
     expect(wrapper.get('[data-tabstrip-tab="inspector"]').attributes('aria-selected')).toBe('true')
   })
 
-  it('keeps the widths and the tabs in one place, so a restart restores both', async () => {
-    writeShellWidths({ rail: 320, inspector: 400 })
+  it('keeps the width and the tabs in one place, so a restart restores both', async () => {
+    writeShellWidths({ rail: 320 })
     writeTabStripState({ order: ['run'], activeId: 'run' })
 
     const wrapper = mountWorkspace()
@@ -90,6 +90,9 @@ describe('shell persistence', () => {
 
     expect(localStorage.getItem(RAIL_WIDTH_STORAGE_KEY)).toBe('320')
     expect(wrapper.get('[data-rail]').attributes('data-rail-width')).toBe('320')
-    expect(wrapper.get('[data-inspector]').attributes('data-inspector-width')).toBe('400')
+    // The shell draws no right column, so there is no second width to restore;
+    // the run's surfaces are the bottom panel's state, which it restores too.
+    expect(wrapper.find('[data-inspector]').exists()).toBe(false)
+    expect(wrapper.get('[data-bottom-panel]').attributes('data-bottom-panel-state')).toBeTruthy()
   })
 })

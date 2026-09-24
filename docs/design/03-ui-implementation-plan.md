@@ -742,6 +742,45 @@ title; Orchester's window is named by its rail and its tab strip, and a second
 name in the strip would be a third place to keep in step. The drag region
 carries the name as its tooltip instead.
 
+## Wave U27 - there is no right column
+
+The new reference draws a conversation that runs to the window's edge, and the
+operator said so in as many words: "不要右侧栏". The shell had three columns, so
+this is a **removal** rather than an addition - the first wave of this objective
+that takes something away.
+
+- [x] U27-01: The shell draws two regions.
+  - `AppShell` keeps the rail and the transcript, the rail's clamp and its
+    drawer. The inspector `<aside>`, its resize handle, its right-hand drawer and
+    its props are gone, and `shell-widths` keeps one width instead of two.
+  - `apps/web/test/app-shell-regions.test.ts` now asserts the absence: no
+    `[data-pane="inspector"]`, and the panes are exactly `sessions` and
+    `transcript`. `workspace-landmarks` asserts there is no `complementary`
+    landmark, and `shell-widths`/`shell-persistence` the single width.
+- [x] U27-02: The run's surfaces move into the bottom panel.
+  - `Context`, `Approvals` and `Review` are the panel's first tabs, followed by
+    the terminal, exec output and audit log it already had. `InspectorDock` and
+    `inspector-tabs` are deleted: the panel's tab mechanism is the one that
+    exists.
+  - The panel is now **controlled** - `expanded` and `activeTab` are props with
+    `update:` events - because the view is what opens it on a surface: the header
+    bell on approvals, the strip's inspector tab on review. A panel that kept its
+    own copy of "which surface" would fight the view.
+  - `bottom-panel.test.ts` pins the controlled contract with a host that owns the
+    state; `workspace-thread-bar`, `workspace-shortcuts` and `window-close-chord`
+    pin the panel where they pinned the pane.
+- [x] U27-03: Two preferences go with the column.
+  - The terminal-placement choice (`terminal-placement.ts` and its settings row)
+    described a choice between two homes for the terminal; there is one home now.
+    The inspector width is gone from `shell-widths` for the same reason.
+- [x] U27-04: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds, `pnpm stack:verify`.
+
+**What this cost.** Region E of the design spec and its attribute contract
+(`data-inspector*`), one component, one preference and two widths. `02` was
+updated to say so rather than leaving the spec describing a column the product
+no longer draws.
+
 ## Verification
 
 ```text

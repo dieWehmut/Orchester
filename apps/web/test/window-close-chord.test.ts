@@ -101,7 +101,8 @@ describe('the window close chord', () => {
     // The run is the product and stays; the closed tab's surface folds away.
     expect(wrapper.get('[data-tabstrip-tab="run"]').attributes('aria-selected')).toBe('true')
     expect(wrapper.find('[data-tabstrip-tab="inspector"]').exists()).toBe(false)
-    expect(wrapper.get('[data-pane="inspector"]').attributes('data-inspector-open')).toBe('false')
+    // The surface that tab names is the panel's, and closing the tab closes it.
+    expect(wrapper.get('[data-bottom-panel]').attributes('data-bottom-panel-state')).toBe('collapsed')
   })
 
   it('answers the chord while the composer has focus', async () => {

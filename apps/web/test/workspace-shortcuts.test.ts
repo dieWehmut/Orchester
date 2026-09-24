@@ -59,19 +59,21 @@ function testRouter(): Router {
 }
 
 describe('workspace shortcuts', () => {
-  it('toggles the inspector from the keyboard', async () => {
+  it('toggles the run surfaces from the keyboard', async () => {
     const wrapper = await mountWorkspace(testRouter())
-    const pane = () => wrapper.get('[data-pane="inspector"]')
+    // The chord used to fold a right column; with no right column it opens and
+    // closes the panel those surfaces live in.
+    const panel = () => wrapper.get('[data-bottom-panel]')
 
-    expect(pane().attributes('data-inspector-open')).toBe('true')
-
-    press('b', { ctrlKey: true, altKey: true })
-    await nextTick()
-    expect(pane().attributes('data-inspector-open')).toBe('false')
+    expect(panel().attributes('data-bottom-panel-state')).toBe('collapsed')
 
     press('b', { ctrlKey: true, altKey: true })
     await nextTick()
-    expect(pane().attributes('data-inspector-open')).toBe('true')
+    expect(panel().attributes('data-bottom-panel-state')).toBe('expanded')
+
+    press('b', { ctrlKey: true, altKey: true })
+    await nextTick()
+    expect(panel().attributes('data-bottom-panel-state')).toBe('collapsed')
   })
 
   it('folds the rail with the chord section 2.1 gives the collapse', async () => {
@@ -115,8 +117,7 @@ describe('workspace shortcuts', () => {
 
   it('stops answering the shortcut once the view is unmounted', async () => {
     const wrapper = await mountWorkspace(testRouter())
-    const pane = () => wrapper.get('[data-pane="inspector"]')
-    expect(pane().attributes('data-inspector-open')).toBe('true')
+    expect(wrapper.get('[data-bottom-panel]').attributes('data-bottom-panel-state')).toBe('collapsed')
 
     wrapper.unmount()
 
@@ -126,15 +127,13 @@ describe('workspace shortcuts', () => {
     expect(shortcutRegistry.effectiveKeys('inspector.toggle')).toBeUndefined()
   })
 
-  it('keeps the inspector toggle out of the way while the reader is typing', async () => {
+  it('keeps the panel toggle out of the way while the reader is typing', async () => {
     const wrapper = await mountWorkspace(testRouter())
     const textarea = wrapper.get('textarea')
-    const pane = () => wrapper.get('[data-pane="inspector"]')
-
     await textarea.trigger('keydown', { key: 'b' })
 
-    // A bare key is a character; the pane must not move under the reader.
-    expect(pane().attributes('data-inspector-open')).toBe('true')
+    // A bare key is a character; the panel must not move under the reader.
+    expect(wrapper.get('[data-bottom-panel]').attributes('data-bottom-panel-state')).toBe('collapsed')
   })
 
   it('toggles the companion from the keyboard, and says so in the account menu', async () => {

@@ -6,16 +6,14 @@ import ApprovalsQueue from '../components/changes/ApprovalsQueue.vue'
 import ReviewPanel from '../components/changes/ReviewPanel.vue'
 import { turnIndexByPath, withTurns } from '../components/changes/review-filters'
 import { summarizeFileChanges } from '../components/changes/change-summary'
-import InspectorDock from '../components/layout/InspectorDock.vue'
-import type { InspectorTab } from '../components/layout/inspector-tabs'
 import AppShell from '../components/layout/AppShell.vue'
 import BottomPanel from '../components/layout/BottomPanel.vue'
+import {
+  readBottomPanelState,
+  writeBottomPanelState,
+} from '../components/layout/bottom-panel-state'
 import TabStrip from '../components/layout/TabStrip.vue'
 import { reorderTab, type ShellTab } from '../components/layout/tab-strip'
-import {
-  readTerminalPlacement,
-  type TerminalPlacement,
-} from '../components/layout/terminal-placement'
 import {
   readTabStripState,
   writeTabStripState,
@@ -60,7 +58,29 @@ const reviewChanges = computed(() =>
 const reviewLastTurn = computed(() => runView.value.turns.length || null)
 const selectedChangePath = ref<string | null>(null)
 const selectedAgentId = ref<string | null>(null)
-const activeInspectorTab = ref<InspectorTab>('context')
+/**
+ * The bottom panel's state, which the view owns because the view is what opens
+ * the panel on a surface: an approval arriving opens it on approvals, and the
+ * shell's Review tab opens it on the working copy's changes. It is a preference
+ * as well, so it is read from and written to the same storage the panel used to
+ * keep for itself.
+ */
+const panelState = ref(readBottomPanelState())
+const bottomPanelOpen = computed(() => panelState.value.expanded)
+
+function persistPanel(): void {
+  writeBottomPanelState({ expanded: panelState.value.expanded, tab: panelState.value.tab })
+}
+
+function setBottomPanelOpen(open: boolean): void {
+  panelState.value = { ...panelState.value, expanded: open }
+  persistPanel()
+}
+
+function setBottomPanelTab(tab: string): void {
+  panelState.value = { expanded: true, tab }
+  persistPanel()
+}
 /**
  * Where the terminal lives, section 4.7.
  *
@@ -68,8 +88,7 @@ const activeInspectorTab = ref<InspectorTab>('context')
  * setting, so the two surfaces below can be composed from it rather than each
  * deciding for itself where the terminal goes.
  */
-const terminalPlacement = ref<TerminalPlacement>(readTerminalPlacement())
-const inspectorOpen = ref(true)
+const inspectorTabOpen = ref(true)
 const runConnectionStatus = computed(() => run.connectionStatus.value)
 const runProjectionStatus = computed(() => run.projectionStatus.value)
 const runErrorMessage = computed(() => run.error.value?.message ?? null)
@@ -162,7 +181,7 @@ useShellAction('companion.toggle', () => petVisibility.toggle())
  * Registered beside the action so the row's control says what pressing it does
  * rather than what a remembered boolean last said.
  */
-useShellActionState('inspector.toggle', () => inspectorOpen.value)
+useShellActionState('inspector.toggle', () => bottomPanelOpen.value)
 
 /**
  * A tab the reader can close, which is never the transcript.
@@ -191,12 +210,11 @@ onUnmounted(() => {
  * inspector away rather than emptying the strip, and the pane comes back - with
  * its tab - when the reader asks for it again.
  */
-const inspectorTabOpen = ref(true)
-
 function handleTabSelect(id: string): void {
   activeTabId.value = id
-  if (id === 'changes') activeInspectorTab.value = 'changes'
-  if (id === 'inspector') inspectorOpen.value = true
+  // The strip's inspector tab opens the panel on the working copy's changes:
+  // the shell has no right column, and that tab is what names that surface.
+  if (id === 'inspector' || id === 'changes') setBottomPanelTab('changes')
 }
 
 function handleTabClose(id: string): void {
@@ -205,14 +223,13 @@ function handleTabClose(id: string): void {
   // that remains is the transcript, which is also what makes the next close
   // chord a window close.
   inspectorTabOpen.value = false
-  inspectorOpen.value = false
-  if (id === 'changes') activeInspectorTab.value = 'context'
+  setBottomPanelOpen(false)
   activeTabId.value = 'run'
 }
 
 // Opening the inspector from anywhere else brings its tab back, so the strip
 // cannot disagree with the pane it names.
-watch([inspectorOpen, activeInspectorTab], ([open]) => {
+watch(bottomPanelOpen, (open) => {
   if (open) inspectorTabOpen.value = true
 })
 
@@ -249,7 +266,7 @@ onMounted(() => {
   const ids = orderedShellTabs.value.map((tab) => tab.id)
   if (stored.activeId !== null && ids.includes(stored.activeId)) {
     activeTabId.value = stored.activeId
-    if (stored.activeId === 'changes') activeInspectorTab.value = 'changes'
+    if (stored.activeId === 'changes') setBottomPanelTab('changes')
   }
 })
 
@@ -266,20 +283,20 @@ watch([orderedShellTabs, activeTabId], persistTabs)
 /**
  * The surfaces region I holds, named through the locale, section 2.
  *
- * The terminal is only one of them while the preference puts it there: a
- * preference that moves the terminal to the inspector has to take it off the
- * panel, or the reader gets two terminals and a panel whose first tab opens
- * nothing they asked for.
+ * The run's own surfaces come first now that the shell has no right column: the
+ * context of the run, its approvals and the working copy's review are what a
+ * reader consults while a run is in flight, and the panel is the only region
+ * left that can hold them. The terminal, exec output and audit log follow, in
+ * the order the spec gives them.
  */
-const bottomPanelTabs = computed(() =>
-  [
-    { id: 'terminal', label: t('bottomPanel.terminal'), placement: 'bottom' as const },
-    { id: 'output', label: t('bottomPanel.output'), placement: null },
-    { id: 'audit', label: t('bottomPanel.audit'), placement: null },
-  ]
-    .filter((tab) => tab.placement === null || tab.placement === terminalPlacement.value)
-    .map(({ id, label }) => ({ id, label })),
-)
+const bottomPanelTabs = computed(() => [
+  { id: 'context', label: t('inspector.context') },
+  { id: 'approvals', label: t('inspector.approvals') },
+  { id: 'changes', label: t('inspector.review') },
+  { id: 'terminal', label: t('bottomPanel.terminal') },
+  { id: 'output', label: t('bottomPanel.output') },
+  { id: 'audit', label: t('bottomPanel.audit') },
+])
 
 /**
  * The identity above the transcript.
@@ -331,11 +348,7 @@ async function handleRunCancel(): Promise<void> {
 
 function handleAgentSelect(agentId: string): void {
   selectedAgentId.value = agentId
-  activeInspectorTab.value = 'context'
-}
-
-function handleInspectorTabChange(tab: InspectorTab): void {
-  activeInspectorTab.value = tab
+  setBottomPanelTab('context')
 }
 
 /**
@@ -346,8 +359,7 @@ function handleInspectorTabChange(tab: InspectorTab): void {
  * tab would leave the reader looking at a count with nothing behind it.
  */
 function handleOpenAttention(): void {
-  inspectorOpen.value = true
-  activeInspectorTab.value = 'approvals'
+  setBottomPanelTab('approvals')
 }
 
 /**
@@ -389,7 +401,7 @@ useShortcut(
     keys: ['Mod', 'Alt', 'B'],
   },
   () => {
-    inspectorOpen.value = !inspectorOpen.value
+    setBottomPanelOpen(!bottomPanelOpen.value)
   },
 )
 
@@ -484,9 +496,7 @@ if (desktopWindowController?.enabled) {
   <AppShell
     data-testid="workspace-view"
     :sessions-title="t('sessions.title')"
-    :inspector-title="t('inspector.label')"
     :controls-label="t('inspector.label')"
-    :inspector-open="inspectorOpen"
   >
     <template #sessions>
       <WorkspaceSidebar
@@ -526,8 +536,8 @@ if (desktopWindowController?.enabled) {
       :share-text="t('transcript.share')"
       :more-label="t('transcript.more')"
       :panel-label="t('transcript.togglePanel')"
-      :panel-open="inspectorOpen"
-      @toggle-panel="inspectorOpen = !inspectorOpen"
+      :panel-open="bottomPanelOpen"
+      @toggle-panel="setBottomPanelOpen(!bottomPanelOpen)"
     />
 
     <RunPanel
@@ -555,46 +565,38 @@ if (desktopWindowController?.enabled) {
       @select-model="models.select($event)"
     />
     <SessionTranscript v-else :status="detailStatus" :session="selected" :error="detailError" />
-
-    <template #inspector>
-      <InspectorDock
-        :active-tab="activeInspectorTab"
-        :terminal="terminalPlacement === 'inspector'"
-        @update:active-tab="handleInspectorTabChange"
-      >
-        <template #context>
-          <AgentDetails :agent="selectedAgent" />
-        </template>
-        <template #approvals>
-          <ApprovalsQueue
-            :approvals="runView.approvals"
-            :superseded="approvals.superseded"
-            @decide="handleApprovalDecision"
-          />
-        </template>
-        <template #changes>
-          <ReviewPanel
-            :changes="reviewChanges"
-            :branch-changes="review.branchChanges"
-            :last-turn="reviewLastTurn"
-          />
-          <ChangeInspector
-            :changes="changeSummaries"
-            :selected-path="selectedChangePath"
-            @select="selectedChangePath = $event"
-          />
-        </template>
-        <template #terminal>
-          <p class="workspace-view__panel-note">{{ t('bottomPanel.terminalEmpty') }}</p>
-        </template>
-      </InspectorDock>
-    </template>
   </AppShell>
   <BottomPanel
     :label="t('bottomPanel.label')"
     :tabs="bottomPanelTabs"
+    :expanded="bottomPanelOpen"
+    :active-tab="panelState.tab"
+    @update:expanded="setBottomPanelOpen($event)"
+    @update:active-tab="setBottomPanelTab($event)"
     data-testid="workspace-bottom-panel"
   >
+    <template #context>
+      <AgentDetails :agent="selectedAgent" />
+    </template>
+    <template #approvals>
+      <ApprovalsQueue
+        :approvals="runView.approvals"
+        :superseded="approvals.superseded"
+        @decide="handleApprovalDecision"
+      />
+    </template>
+    <template #changes>
+      <ReviewPanel
+        :changes="reviewChanges"
+        :branch-changes="review.branchChanges"
+        :last-turn="reviewLastTurn"
+      />
+      <ChangeInspector
+        :changes="changeSummaries"
+        :selected-path="selectedChangePath"
+        @select="selectedChangePath = $event"
+      />
+    </template>
     <template #terminal>
       <p class="workspace-view__panel-note">{{ t('bottomPanel.terminalEmpty') }}</p>
     </template>

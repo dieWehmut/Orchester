@@ -73,7 +73,7 @@ Region state attributes (mirroring Codex's shell contract, §4 of the research):
 | B | `data-tabstrip`, `data-tabstrip-overflow` |
 | C | `data-rail`, `data-rail-appearance="solid\|translucent"`, `data-rail-responsive` |
 | D | `data-thread-header`, `data-header-edge-scroll` |
-| E | `data-inspector`, `data-inspector-full-width`, `data-inspector-tab` |
+| E | *(removed)* - the right column is gone; region I carries its surfaces |
 | F | `data-transcript`, `data-can-scroll-up`, `data-can-scroll-down`, `data-virtualized-turn` |
 | G | `data-plan-strip`, `data-plan-state="idle\|active\|blocked\|done"` |
 | H | `data-composer`, `data-composer-state`, `data-composer-drag-active` |
@@ -90,15 +90,14 @@ Adopted from the Codex sidebar rule and restated as Orchester tokens:
 |---|---|
 | rail | `clamp(240px, 288px, min(420px, 100vw − 360px))` — the max is derived so the transcript always keeps 360 px |
 | transcript | `minmax(0, 1fr)`, `--content-max: 1180px` measure cap for prose |
-| inspector | `clamp(280px, 340px, 460px)`; may go full-width via `data-inspector-full-width` |
-| bottom panel | `--bottom-panel-height: 240px`, drag-resizable `160px`–`70vh` |
+| bottom panel | `--bottom-panel-height: 240px`, drag-resizable `160px`–`70vh`; it carries the run's surfaces as well as the terminal, exec output and audit log |
 | tab strip | `--tabstrip-height: 36px` |
 
 Collapse policy:
 
-- `≥ 1280px` — all three columns and the tab strip.
-- `900–1279px` — rail and inspector become overlay drawers; the tab strip stays.
-- `< 900px` — single column; the rail and inspector are full-height drawers; the
+- `≥ 1280px` — the rail and the transcript, plus the tab strip.
+- `900–1279px` — the rail becomes an overlay drawer; the tab strip stays.
+- `< 900px` — single column; the rail is a full-height drawer; the
   composer is sticky to the visual viewport bottom.
 - The bottom panel is a drawer under 900 px.
 
@@ -334,9 +333,23 @@ Adopted from the Codex composer state machine, reduced to what Orchester needs:
 - `/` opens the command palette above the composer with **empty and loading
   states** (cmdk-style), not a bare list. `@` opens context mentions.
 
-### 4.7 Inspector (E)
+### 4.7 The run's surfaces (formerly the inspector, region E)
 
-Tabs: `Context`, `Review`, `Approvals`, `Agents`, `Terminal`.
+**There is no right column.** The reference this surface is now built against
+draws a conversation that runs to the window's edge, and the operator asked for
+exactly that ("不要右侧栏"), so the shell draws two regions - the rail and the
+transcript - and the surfaces that used to be the inspector's are drawn in the
+**bottom panel** (region I), which was already the shell's remaining collapsible
+region with a tab mechanism of its own.
+
+Tabs, in the panel: `Context`, `Approvals`, `Review`, `Terminal`, `Exec output`,
+`Audit log` - the run's own surfaces first, because they are what a reader
+consults while a run is in flight.
+
+The panel's open state and chosen surface are **controlled** by the view: the
+header bell opens the panel on approvals, the tab strip's inspector tab opens it
+on review, and the panel reports what the reader asked for rather than keeping a
+second copy of "which surface".
 
 - **Review** — file tree ordered identically to the diff list, filters for
   `All / Staged / Unstaged / Branch / Last turn`, per-file diff with the added /
@@ -345,13 +358,13 @@ Tabs: `Context`, `Review`, `Approvals`, `Agents`, `Terminal`.
   scope, and `Allow once` / `Allow for run` / `Deny`. Stale entries (row-version
   mismatch) render as a distinct "superseded" state, never as an error.
 - **Agents** — the fleet, per-agent metrics, and delegation controls.
-- **Terminal** — `xterm`-style surface; a preference chooses whether terminal tabs
-  open in the inspector or the bottom panel.
+- **Terminal** — `xterm`-style surface, with the terminal tabs in the panel
+  itself: with no right column there is nowhere else for them to be.
 
 ### 4.8 Bottom panel (I)
 
-Collapsible strip for raw `exec` output and the audit log, with the same tab
-mechanism as the inspector. Toggled with `` ⌘/Ctrl+` ``.
+Collapsible strip for the run's own surfaces, raw `exec` output and the audit log,
+with a tab mechanism of its own. The tab strip's panel control toggles it.
 
 ## 5. States
 

@@ -1,13 +1,9 @@
 import type { SessionSummaryDto } from '@orchester/protokoll'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import { h } from 'vue'
 
-import InspectorDock from '../src/components/layout/InspectorDock.vue'
 import TitleRow from '../src/components/layout/TitleRow.vue'
 import SessionRail from '../src/components/sessions/SessionRail.vue'
-import ChangeInspector from '../src/components/changes/ChangeInspector.vue'
-import type { ChangeSummary } from '../src/components/changes/change-summary'
 
 const session: SessionSummaryDto = {
   id: 's-11111111111111111111111111111111',
@@ -52,42 +48,5 @@ describe('workspace components', () => {
 
     expect(wrapper.emitted('select')).toEqual([[session.id]])
     expect(wrapper.get('[data-session-id]').attributes('aria-pressed')).toBe('false')
-  })
-
-  it('keeps inspector sections reachable as tabs', async () => {
-    const wrapper = mount(InspectorDock)
-
-    await wrapper.findAll('[role="tab"]')[1]?.trigger('click')
-
-    expect(wrapper.get('[data-inspector-panel]').text()).toContain('Approvals')
-  })
-
-  it('renders a named changes slot when the changes tab is selected', async () => {
-    const changes: ChangeSummary[] = [
-      {
-        path: 'src/app.ts',
-        kind: 'update',
-        latestSequence: 3,
-        latestOccurredAt: '2026-08-21T00:00:03Z',
-        eventCount: 2,
-        history: [],
-      },
-    ]
-    const wrapper = mount(InspectorDock, {
-      slots: { changes: () => h(ChangeInspector, { changes }) },
-    })
-
-    await wrapper.findAll('[role="tab"]')[2]?.trigger('click')
-
-    expect(wrapper.get('[data-change-path="src/app.ts"]').text()).toContain('src/app.ts')
-  })
-
-  it('accepts a controlled active inspector tab', () => {
-    const wrapper = mount(InspectorDock, { props: { activeTab: 'changes' } })
-
-    expect(wrapper.findAll('[role="tab"]')[2]?.attributes('aria-selected')).toBe('true')
-    // Section 4.7 names this tab Review: it is the working copy change set,
-    // not only what this run reported.
-    expect(wrapper.get('[data-inspector-panel]').text()).toContain('Review')
   })
 })

@@ -4,25 +4,23 @@
  *
  * Section 2 gives the panel three surfaces - a terminal, exec output and an
  * audit log - and makes it collapsible with its own tab mechanism, because a
- * tab that belongs to the panel is not a tab the window's tab strip owns. The
- * state and the chosen surface are the user's, so they are stored rather than
- * reset on every mount, and the height is clamped between the floor the spec
- * states and the share of the viewport it allows.
+ * tab that belongs to the panel is not a tab the window's tab strip owns.
  *
- * The panel is a drawer under 900 px, which is the same breakpoint the columns
- * collapse at: a panel that needs 240 px of a phone's height is a panel that
- * would leave the transcript nothing.
+ * It also holds the run's own surfaces now that the shell has no right column:
+ * the context of the run, its approvals and the working copy's review. That is
+ * why the open state and the chosen surface are **controlled** rather than
+ * owned here - the view opens the panel on the approvals tab when an approval
+ * arrives, and on the review tab when the reader asks for the changes, and a
+ * panel that kept its own copy of "which surface" would fight it.
+ *
+ * The height stays internal: nothing outside the panel has an opinion about it,
+ * and it is clamped between the floor the spec states and the share of the
+ * viewport it allows.
  */
 import { AppButton } from '@orchester/design'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 
-import {
-  BOTTOM_PANEL_DEFAULT_HEIGHT,
-  BOTTOM_PANEL_MIN_HEIGHT,
-  clampBottomPanelHeight,
-  readBottomPanelState,
-  writeBottomPanelState,
-} from './bottom-panel-state'
+import { BOTTOM_PANEL_DEFAULT_HEIGHT, BOTTOM_PANEL_MIN_HEIGHT, clampBottomPanelHeight } from './bottom-panel-state'
 
 const props = withDefaults(
   defineProps<{
@@ -30,38 +28,30 @@ const props = withDefaults(
     label: string
     /** The surfaces the panel can show, in the order they appear. */
     tabs: readonly { id: string; label: string }[]
+    expanded: boolean
+    activeTab: string
     resizeLabel?: string
   }>(),
   { resizeLabel: 'Resize the bottom panel' },
 )
 
-const expanded = ref(false)
-const activeTab = ref(props.tabs[0]?.id ?? 'terminal')
+const emit = defineEmits<{
+  'update:expanded': [value: boolean]
+  'update:activeTab': [value: string]
+}>()
+
 const height = ref(BOTTOM_PANEL_DEFAULT_HEIGHT)
 
 function viewportHeight(): number {
   return typeof window === 'undefined' ? BOTTOM_PANEL_DEFAULT_HEIGHT : window.innerHeight
 }
 
-onMounted(() => {
-  const stored = readBottomPanelState()
-  expanded.value = stored.expanded
-  // A stored surface the panel no longer offers is not a surface.
-  if (props.tabs.some((tab) => tab.id === stored.tab)) activeTab.value = stored.tab
-})
-
-function persist(): void {
-  writeBottomPanelState({ expanded: expanded.value, tab: activeTab.value })
-}
-
 function setExpanded(next: boolean): void {
-  expanded.value = next
-  persist()
+  emit('update:expanded', next)
 }
 
 function selectTab(id: string): void {
-  activeTab.value = id
-  persist()
+  emit('update:activeTab', id)
 }
 
 function setHeight(next: number): void {
@@ -102,7 +92,7 @@ function endDrag(): void {
   <section
     class="bottom-panel"
     data-bottom-panel
-    :data-bottom-panel-state="expanded ? 'expanded' : 'collapsed'"
+    :data-bottom-panel-state="props.expanded ? 'expanded' : 'collapsed'"
     :data-bottom-panel-height="height"
     :aria-label="props.label"
   >
@@ -112,13 +102,13 @@ function endDrag(): void {
         size="sm"
         data-bottom-panel-toggle
         :aria-label="props.label"
-        :aria-expanded="expanded ? 'true' : 'false'"
-        @click="setExpanded(!expanded)"
+        :aria-expanded="props.expanded ? 'true' : 'false'"
+        @click="setExpanded(!props.expanded)"
       >
         {{ props.label }}
       </AppButton>
       <div
-        v-if="expanded"
+        v-if="props.expanded"
         class="bottom-panel__tabs"
         role="tablist"
         data-bottom-panel-tabs
@@ -130,7 +120,7 @@ function endDrag(): void {
           type="button"
           role="tab"
           :data-bottom-panel-tab="tab.id"
-          :aria-selected="tab.id === activeTab ? 'true' : 'false'"
+          :aria-selected="tab.id === props.activeTab ? 'true' : 'false'"
           @click="selectTab(tab.id)"
         >
           {{ tab.label }}
@@ -139,7 +129,7 @@ function endDrag(): void {
     </header>
 
     <span
-      v-if="expanded"
+      v-if="props.expanded"
       class="bottom-panel__resize"
       data-bottom-panel-resize
       role="separator"
@@ -157,13 +147,13 @@ function endDrag(): void {
     />
 
     <div
-      v-if="expanded"
+      v-if="props.expanded"
       class="bottom-panel__body"
       data-bottom-panel-body
       :style="{ '--bottom-panel-height': height + 'px' }"
     >
-      <div role="tabpanel" :data-bottom-panel-surface="activeTab">
-        <slot :name="activeTab" />
+      <div role="tabpanel" :data-bottom-panel-surface="props.activeTab">
+        <slot :name="props.activeTab" />
       </div>
     </div>
   </section>

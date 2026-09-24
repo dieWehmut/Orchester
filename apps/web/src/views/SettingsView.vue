@@ -30,7 +30,6 @@ import {
 import {
   AppBadge,
   AppButton,
-  AppSegmentedControl,
   AppSelect,
   AppSwitch,
   CodePreview,
@@ -42,7 +41,6 @@ import {
   resetAppearance,
   useAppearance,
   type AppearanceApi,
-  type AppSegmentOption,
   type ColorScheme,
   type ThemeMode,
   type ThemePreference,
@@ -61,11 +59,6 @@ import { useI18n } from '../i18n'
 import ShortcutEditor from '../components/settings/ShortcutEditor.vue'
 import { readDocumentPlatform, readSystemPlatform } from '@orchester/design'
 import { shortcutRegistry } from '../shortcuts'
-import {
-  readTerminalPlacement,
-  writeTerminalPlacement,
-  type TerminalPlacement,
-} from '../components/layout/terminal-placement'
 import {
   filterSettingsSections,
   SETTINGS_SECTIONS,
@@ -354,20 +347,6 @@ const railAppearanceValue = computed({
  * belongs in settings with the rest of the shell's preferences, so the reader
  * finds it where they find the widths and the panel.
  */
-const terminalPlacement = ref<TerminalPlacement>(readTerminalPlacement())
-const terminalPlacementValue = computed({
-  get: () => terminalPlacement.value,
-  set: (value: string) => {
-    if (value !== 'bottom' && value !== 'inspector') return
-    terminalPlacement.value = value
-    writeTerminalPlacement(value)
-  },
-})
-const terminalPlacementOptions = computed<readonly AppSegmentOption[]>(() => [
-  { id: 'bottom', label: t('settings.terminalPlacement.bottom') },
-  { id: 'inspector', label: t('settings.terminalPlacement.inspector') },
-])
-
 const intensityOptions = computed(() => [
   { value: 'vivid', label: t('settings.intensity.vivid') },
   { value: 'calm', label: t('settings.intensity.calm') },
@@ -552,18 +531,7 @@ const previewAfter = computed(() => [
             :aria-label="t('settings.language.title')"
           />
         </div>
-        <div class="settings-view__row" data-settings-field="terminal-placement">
-          <div class="settings-view__row-copy">
-            <strong>{{ t('settings.terminalPlacement.title') }}</strong>
-            <span>{{ t('settings.terminalPlacement.description') }}</span>
-          </div>
-          <AppSegmentedControl
-            v-model="terminalPlacementValue"
-            :options="terminalPlacementOptions"
-            :ariaLabel="t('settings.terminalPlacement.title')"
-          />
-        </div>
-      </section>
+        </section>
 
       <section
         class="settings-view__panel settings-view__panel--appearance"

@@ -10,15 +10,15 @@ import AppShell from '../src/components/layout/AppShell.vue'
  *
  * The spec letters the shell's regions and gives each one the attribute that
  * names it, because those attributes are how the styles and the tests reach a
- * region without reaching into a class name. The shell owns the three columns
- * it lays out, so the rail, the transcript and the inspector each carry the
- * attribute the spec gives them in addition to the landmark they already are.
+ * region without reaching into a class name. The shell lays out **two** columns
+ * - the rail and the transcript - because the reference it is built against has
+ * no right sidebar: the run's own surfaces are drawn in the bottom panel, which
+ * is a region of the transcript column rather than a column of its own.
  */
 
 const IMPLICIT_ROLES: Record<string, string> = {
   NAV: 'navigation',
   MAIN: 'main',
-  ASIDE: 'complementary',
 }
 
 function roleOf(element: Element): string {
@@ -27,50 +27,52 @@ function roleOf(element: Element): string {
 
 function mountShell() {
   return mount(AppShell, {
-    props: { sessionsTitle: 'Sessions', inspectorTitle: 'Inspector' },
+    props: { sessionsTitle: 'Sessions' },
     slots: {
       sessions: '<p>Sessions</p>',
       default: '<p>Transcript</p>',
-      inspector: '<p>Inspector</p>',
     },
   })
 }
 
 describe('AppShell region contract', () => {
-  it('names the rail, the transcript and the inspector with the spec attributes', () => {
+  it('names the rail and the transcript with the spec attributes', () => {
     const wrapper = mountShell()
 
     // `get` already fails when the element is missing, so reaching it is the
     // assertion; the names are here so a rename shows up as a named failure.
     expect(wrapper.get('[data-rail]').attributes('data-rail-appearance')).toBeTruthy()
     expect(wrapper.get('[data-transcript]').isVisible()).toBe(true)
-    expect(wrapper.get('[data-inspector]').attributes('data-inspector-tab')).toBe('context')
   })
 
-  it('keeps the three regions the landmarks they already were', () => {
+  it('draws no right column: the transcript is the last region', () => {
+    const wrapper = mountShell()
+
+    // The reference's conversation runs to the window's edge. A third column
+    // coming back would be a regression against what this shell was changed to
+    // match, so its absence is the assertion.
+    expect(wrapper.find('[data-inspector]').exists()).toBe(false)
+    expect(wrapper.find('[data-pane="inspector"]').exists()).toBe(false)
+    expect(wrapper.findAll('[data-pane]').map((node) => node.attributes('data-pane'))).toEqual([
+      'sessions',
+      'transcript',
+    ])
+  })
+
+  it('keeps the two regions the landmarks they already were', () => {
     const wrapper = mountShell()
 
     expect(roleOf(wrapper.get('[data-rail]').element)).toBe('navigation')
     expect(roleOf(wrapper.get('[data-transcript]').element)).toBe('main')
-    expect(roleOf(wrapper.get('[data-inspector]').element)).toBe('complementary')
   })
 
-  it('carries the rail appearance and the inspector state as attributes', () => {
+  it('carries the rail appearance as an attribute', () => {
     const wrapper = mount(AppShell, {
-      props: {
-        sessionsTitle: 'Sessions',
-        inspectorTitle: 'Inspector',
-        railAppearance: 'translucent',
-        inspectorOpen: true,
-        inspectorFullWidth: true,
-        inspectorTab: 'changes',
-      },
+      props: { sessionsTitle: 'Sessions', railAppearance: 'translucent' },
       slots: { default: '<p>Transcript</p>' },
     })
 
     expect(wrapper.get('[data-rail]').attributes('data-rail-appearance')).toBe('translucent')
-    expect(wrapper.get('[data-inspector]').attributes('data-inspector-full-width')).toBe('true')
-    expect(wrapper.get('[data-inspector]').attributes('data-inspector-tab')).toBe('changes')
   })
 
   it('is the shell the workspace view mounts, not a second copy of it', () => {
@@ -86,11 +88,10 @@ describe('AppShell region contract', () => {
     expect(view).not.toContain('WorkspaceResponsive')
   })
 
-  it('keeps the inspector out of the transcript region', () => {
+  it('keeps the rail out of the transcript region', () => {
     const wrapper = mountShell()
 
     const transcript = wrapper.get('[data-transcript]').element
-    expect(transcript.contains(wrapper.get('[data-inspector]').element)).toBe(false)
     expect(transcript.contains(wrapper.get('[data-rail]').element)).toBe(false)
   })
 })

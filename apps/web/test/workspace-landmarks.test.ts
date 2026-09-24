@@ -61,12 +61,15 @@ describe('workspace landmarks', () => {
     expect(transcript.attributes('aria-label')).toBe('Run transcript')
   })
 
-  it('gives the inspector the complementary landmark', () => {
+  it('gives the reader no complementary region, because there is no right column', () => {
     const wrapper = mountShell()
 
-    const inspector = wrapper.get('[data-pane="inspector"]')
-    expect(roleOf(inspector.element)).toBe('complementary')
-    expect(inspector.attributes('aria-label')).toBe('Inspector')
+    // The reference's conversation runs to the window's edge. A
+    // `complementary` landmark is what a right column is, so its absence is
+    // what this shell promises now; the run's surfaces are drawn in the bottom
+    // panel, inside the transcript column.
+    expect(wrapper.find('[data-pane="inspector"]').exists()).toBe(false)
+    expect(wrapper.element.querySelector('aside')).toBeNull()
   })
 
   it('keeps the mobile controls inside a navigation landmark too', () => {
@@ -77,14 +80,13 @@ describe('workspace landmarks', () => {
     expect(roleOf(wrapper.get('[data-mobile-controls]').element)).toBe('navigation')
   })
 
-  it('keeps the rail and the inspector outside the main landmark', () => {
-    // The three columns are siblings: a rail or an inspector nested inside
-    // `main` is content the reader never leaves the transcript to find.
+  it('keeps the rail outside the main landmark', () => {
+    // The remaining columns are siblings: a rail nested inside `main` is
+    // content the reader never leaves the transcript to find.
     const wrapper = mountShell()
 
     const main = wrapper.get('[data-pane="transcript"]').element
     expect(main.contains(wrapper.get('[data-pane="sessions"]').element)).toBe(false)
-    expect(main.contains(wrapper.get('[data-pane="inspector"]').element)).toBe(false)
   })
 
   it('gives the title row the banner landmark', () => {

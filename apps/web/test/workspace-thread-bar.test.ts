@@ -1,4 +1,4 @@
-﻿import { AGENT_FLEET_FIXTURE } from '@orchester/protokoll'
+import { AGENT_FLEET_FIXTURE } from '@orchester/protokoll'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
@@ -47,15 +47,20 @@ describe('WorkspaceView thread bar', () => {
     expect(share.text().length).toBeGreaterThan(0)
   })
 
-  it('collapses the inspector pane from the thread bar panel control', async () => {
+  it('opens and closes the bottom panel from the thread bar panel control', async () => {
     const stores = createAppStores()
     const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
 
-    expect(wrapper.get('[data-pane="inspector"]').attributes('data-inspector-open')).toBe('true')
+    expect(wrapper.get('[data-bottom-panel]').attributes('data-bottom-panel-state')).toBe('collapsed')
 
     await wrapper.get('[data-thread-action="panel"]').trigger('click')
 
-    expect(wrapper.get('[data-pane="inspector"]').attributes('data-inspector-open')).toBe('false')
+    expect(wrapper.get('[data-bottom-panel]').attributes('data-bottom-panel-state')).toBe('expanded')
+    expect(wrapper.get('[data-thread-action="panel"]').attributes('aria-pressed')).toBe('true')
+
+    await wrapper.get('[data-thread-action="panel"]').trigger('click')
+
+    expect(wrapper.get('[data-bottom-panel]').attributes('data-bottom-panel-state')).toBe('collapsed')
     expect(wrapper.get('[data-thread-action="panel"]').attributes('aria-pressed')).toBe('false')
   })
 })

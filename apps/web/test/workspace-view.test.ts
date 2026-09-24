@@ -127,7 +127,7 @@ describe('WorkspaceView', () => {
     expect(wrapper.get('[data-model-context-model]').text()).toContain('gpt-5.6')
   })
 
-  it('connects the session rail, selected transcript, and inspector to application stores', async () => {
+  it('connects the session rail, selected transcript, and the run surfaces to application stores', async () => {
     const http = {
       get: vi.fn(async (path: string) => {
         if (path.startsWith('/sessions/')) return detail
@@ -151,22 +151,32 @@ describe('WorkspaceView', () => {
 
     expect(wrapper.get('[data-pane="sessions"]').text()).toContain(summary.title)
     expect(wrapper.get('[data-session-transcript]').text()).toContain(detail.final_text)
-    expect(wrapper.find('[data-pane="inspector"]').exists()).toBe(true)
+    // The run's surfaces are the panel's now: the shell draws no right column,
+    // so what has to be true is that the panel carries the tabs.
+    expect(
+      wrapper
+        .findAll('[data-bottom-panel-tab]')
+        .map((tab) => tab.attributes('data-bottom-panel-tab')),
+    ).toEqual(['context', 'approvals', 'changes', 'terminal', 'output', 'audit'])
   })
 
-  it('projects active run file changes into the inspector changes tab', async () => {
+  it('opens the review surface from the strip tab that names it', async () => {
     const stores = createAppStores()
     const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
-    const first = fileChangeEvent(1, 'src/app.ts', 'add')
-    const latest = fileChangeEvent(2, 'src/app.ts', 'update')
-
-    stores.run.applyEvent(first)
-    stores.run.applyEvent(latest)
+    stores.run.applyEvent(fileChangeEvent(1, 'src/app.ts', 'add'))
+    stores.run.applyEvent(fileChangeEvent(2, 'src/app.ts', 'update'))
     await nextTick()
-    await wrapper.findAll('[role="tab"]')[2]?.trigger('click')
 
-    expect(wrapper.get('[data-change-path="src/app.ts"]').text()).toContain('Modified')
-    expect(wrapper.get('[data-change-path="src/app.ts"]').text()).toContain('2 events')
+    // The strip's inspector tab is what names this surface now that there is no
+    // right column; choosing it opens the panel on the working copy's changes.
+    // The rows themselves are `ChangeInspector`'s own contract.
+    await wrapper.get('[data-tabstrip-tab="inspector"]').trigger('click')
+    await flushPromises()
+
+    expect(wrapper.get('[data-bottom-panel]').attributes('data-bottom-panel-state')).toBe('expanded')
+    expect(wrapper.get('[data-bottom-panel-surface]').attributes('data-bottom-panel-surface')).toBe(
+      'changes',
+    )
   })
 
   it('sends the model chosen in the composer to the runtime', async () => {
