@@ -3,6 +3,7 @@ import { nextTick } from 'vue'
 import { afterEach, describe, expect, it } from 'vitest'
 
 import ModelContextControl from '../src/components/run/ModelContextControl.vue'
+import { appI18n } from '../src/i18n'
 import type { ModelCatalogStoreStatus } from '../src/stores/model-catalog'
 import { MODEL_CATALOG_FIXTURE } from './fixtures/model-catalog'
 
@@ -46,15 +47,25 @@ afterEach(() => {
 })
 
 describe('ModelContextControl readout', () => {
-  it('renders the active model, provider, and effort from the runtime catalog', () => {
+  it('says the effort in the words this interface uses, not the provider’s', () => {
+    // The runtime reports `high`; the reader reads the catalogue's word for that
+    // effort. In English the word happens to be the same one, so the assertion
+    // that means something is in a language where it is not - the leak this
+    // fixes was visible only there.
     const wrapper = mountPicker()
 
-    expect(wrapper.find('[data-model-context]').exists()).toBe(true)
-    expect(wrapper.get('[data-model-context-model]').text()).toContain('gpt-5.6')
-    expect(wrapper.get('[data-model-context-provider]').text()).toContain('OpenAI')
-    expect(wrapper.get('[data-model-context-effort]').text()).toContain('high')
-    expect(wrapper.find('[data-model-context-status]').exists()).toBe(false)
+    // `High` is the same word the menu offers that effort under.
+    expect(wrapper.get('[data-model-context-effort]').text()).toBe('high')
     wrapper.unmount()
+
+    appI18n.setLocale('zh-CN')
+    try {
+      const translated = mountPicker()
+      expect(translated.get('[data-model-context-effort]').text()).toBe('高')
+      translated.unmount()
+    } finally {
+      appI18n.setLocale('en')
+    }
   })
 
   it('keeps the last active context visible while the catalog is stale', () => {
@@ -193,6 +204,32 @@ describe('ModelContextControl picker', () => {
     expect(scope.text()).toContain('Applies to the runs that follow')
     expect(scope.attributes('disabled')).toBeDefined()
     wrapper.unmount()
+  })
+
+  it('sends the runtime its own vocabulary even when the interface speaks another', async () => {
+    // The readout shows the catalogue's word for the effort; the request must
+    // carry the provider's. A test that only read the English readout would not
+    // have caught the difference, because there the two words are the same.
+    appI18n.setLocale('zh-CN')
+    try {
+      const catalog = {
+        ...MODEL_CATALOG_FIXTURE,
+        providers: MODEL_CATALOG_FIXTURE.providers.map((provider) => ({
+          ...provider,
+          name: 'Anthropic',
+        })),
+      }
+      const wrapper = mountPicker(catalog)
+      await openPicker(wrapper)
+      await itemByText(wrapper, 'Anthropic').trigger('click')
+
+      expect(wrapper.emitted('select')).toEqual([
+        [{ provider: 'openai', effort: 'high' }],
+      ])
+      wrapper.unmount()
+    } finally {
+      appI18n.setLocale('en')
+    }
   })
 
   it('keeps reporting a value it has no name for rather than hiding it', () => {

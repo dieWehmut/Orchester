@@ -1104,6 +1104,28 @@ them, and changed with the intensity axis that repoints that button.
 - [x] U37-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
   builds.
 
+## Wave U38 - the readout says the effort in words the reader has
+
+The reference's composer ends with `GPT-5.6 Sol 中 ⌄` - model, effort, disclosure.
+This product's readout did show the effort, but in the vocabulary the runtime
+reports: a Chinese interface printed `high`.
+
+- [x] U38-01: The readout goes through the catalogue.
+  - The effort is now said in the words this interface uses (`高`, `High`) - the
+    same words the menu offers it under - and a value there is no word for is
+    still shown as the runtime spells it, which is what the menu does with it too.
+    The browser read it back in both languages: `gpt-5.6 OpenAI 高 ⌄`, and
+    `gpt-5.6 OpenAI high ⌄` in English, where the two words happen to agree.
+- [x] U38-02: And the request keeps the runtime's own vocabulary.
+  - Fixing the readout the obvious way broke the other half: the same computed
+    fed the request, so choosing a provider would have sent `高` where the runtime
+    takes `high`. The value and the label are now separate - one travels, one is
+    read - and a test pins it in a language where the two differ, because in
+    English the bug is invisible. That test is the point of this wave: the leak
+    was only ever visible in a language the suite does not default to.
+- [x] U38-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds.
+
 ## Verification
 
 ```text

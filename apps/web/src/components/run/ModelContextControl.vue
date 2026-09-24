@@ -52,6 +52,11 @@ const EFFORT_KEYS = {
   high: 'run.effortHigh',
 } as const
 
+/** Whether an effort the runtime reported is one this interface has a word for. */
+function isEffortName(value: string): value is (typeof EFFORT_NAMES)[number] {
+  return (EFFORT_NAMES as readonly string[]).includes(value)
+}
+
 const configured = computed(() => props.catalog?.active.state === 'configured')
 const activeChoice = computed(() =>
   configured.value && props.catalog?.active.state === 'configured'
@@ -72,7 +77,23 @@ const modelLabel = computed(
 const providerLabel = computed(
   () => activeChoice.value?.provider_name ?? activeProvider.value?.name ?? '',
 )
-const effortLabel = computed(() => activeChoice.value?.reasoning_effort ?? '')
+/**
+ * The effort the runtime reported, in the vocabulary it was reported in.
+ *
+ * This is what travels back: the wire takes `medium`, and a request carrying the
+ * word this interface *displays* would be asking the runtime to accept a
+ * vocabulary it does not speak.
+ */
+const effortValue = computed(() => activeChoice.value?.reasoning_effort ?? null)
+
+const effortLabel = computed(() => {
+  const effort = effortValue.value
+  if (effort === null || effort.length === 0) return ''
+  // The runtime reports the vocabulary its providers speak (`medium`); the
+  // reader reads the word this interface calls it. A value there is no word for
+  // is shown as the runtime spells it, which is what the menu does with it too.
+  return isEffortName(effort) ? t(EFFORT_KEYS[effort]) : effort
+})
 
 /**
  * Which axis the reader last chose, read off the catalog rather than remembered
@@ -152,11 +173,11 @@ function choose(id: string): void {
   const value = at < 0 ? '' : id.slice(at + 1)
 
   if (axis === 'provider') {
-    emit('select', { provider: value, effort: effortLabel.value || null })
+    emit('select', { provider: value, effort: effortValue.value })
     return
   }
   if (axis === 'profile') {
-    emit('select', { profile: value, effort: effortLabel.value || null })
+    emit('select', { profile: value, effort: effortValue.value })
     return
   }
   if (axis === 'effort') {
