@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { formatElapsed, runElapsed } from '../src/components/run/run-duration'
+import { answerElapsed, formatElapsed, runElapsed } from '../src/components/run/run-duration'
 import type { RunView } from '@orchester/ereignis'
 
 /**
@@ -76,5 +76,44 @@ describe('runElapsed', () => {
     const elapsed = runElapsed(view(['not-a-date', '2026-09-16T10:00:00Z', '2026-09-16T10:00:05Z']))
 
     expect(elapsed).toBe('5s')
+  })
+})
+
+describe('answerElapsed', () => {
+  const question = {
+    occurredAt: '2026-09-16T10:00:00Z',
+    type: 'message',
+    role: 'user',
+    final: true,
+  }
+  const answer = {
+    occurredAt: '2026-09-16T10:33:20Z',
+    type: 'message',
+    role: 'assistant',
+    final: true,
+  }
+
+  it('measures an answer from the entry before it, as the reference states it', () => {
+    // A question at 10:00 answered at 10:33 took the model 33 minutes, and that
+    // is the number the reference puts at the turn.
+    expect(answerElapsed([question, answer], 1)).toBe('33m 20s')
+  })
+
+  it('states nothing for a row that is not a settled answer', () => {
+    expect(answerElapsed([question, answer], 0)).toBeNull()
+    expect(answerElapsed([question, { ...answer, final: false }], 1)).toBeNull()
+    expect(answerElapsed([question, { ...answer, role: 'user' }], 1)).toBeNull()
+    expect(answerElapsed([question, { ...answer, type: 'tool' }], 1)).toBeNull()
+  })
+
+  it('states nothing it could not measure', () => {
+    // The first row has nothing before it, and an unreadable instant is not a
+    // duration.
+    expect(answerElapsed([answer], 0)).toBeNull()
+    expect(answerElapsed([question, { ...answer, occurredAt: 'not-a-date' }], 1)).toBeNull()
+    expect(answerElapsed([question, { ...answer, occurredAt: null }], 1)).toBeNull()
+    // An answer that arrived in the same second as the question took no
+    // measurable moment.
+    expect(answerElapsed([question, { ...answer, occurredAt: question.occurredAt }], 1)).toBeNull()
   })
 })

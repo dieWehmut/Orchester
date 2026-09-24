@@ -913,6 +913,36 @@ changed nothing would be furniture. The attachment and voice buttons are absent
 for the same kind of reason, recorded in U22: there is no attachment path to
 send and no voice input to take.
 
+## Wave U32 - the clock moves to the answer
+
+U29 put the elapsed time in the footer and U30 kept it out of the footer while a
+run was in flight. Both were half of the reference: the reference does not state
+a run's time at all - it states a **turn's** time at the turn (`用时 33m 20s`
+above the answer), and a **live** clock in the strip over the field. This wave
+puts the first half where the reference puts it.
+
+- [x] U32-01: Measure each answer.
+  - `answerElapsed` reads the interval from the entry before an answer to the
+    answer's own last event - the journal's timestamps, so nothing is estimated:
+    a question at 21:53 answered at 22:26 took the model 33 minutes. Only settled
+    answers: a row still arriving has not finished taking anything, and a
+    question did not take the model any time.
+  - The clock is drawn at the top of the answer's row, before the words, in the
+    reference's own words from the catalogue.
+- [x] U32-02: Make the ledger a ledger again.
+  - The footer states the run's sequence and its tokens and **no clock**: the
+    answer states what each turn took, and the strip states what the run in
+    flight has taken. A third copy under the transcript was a number in a place
+    the reference does not put it. `RunFooter` no longer takes a label it does not
+    print.
+- [x] U32-03: Re-run the gate: `pnpm typecheck`, the frontend suites, both
+  builds.
+
+**What the reference's own clock has that this does not.** Its `用时 33m 20s` is
+a disclosure with a chevron, and what it discloses is timing detail per turn.
+This product's journal carries usage per run, not per answer, so a chevron here
+would open nothing - the number stands as the statement it is.
+
 ## Verification
 
 ```text

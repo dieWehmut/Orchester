@@ -1,26 +1,17 @@
 <script setup lang="ts">
 import type { RunView } from '@orchester/ereignis'
-import { computed } from 'vue'
 
-import { runElapsed } from './run-duration'
-
-const props = defineProps<{
+/**
+ * The run's ledger: which sequence it reached and what it spent.
+ *
+ * The clock belongs to the answer it measured and to the strip while a run is in
+ * flight, so it is not repeated here.
+ */
+defineProps<{
   view: RunView
   sequenceLabel?: string
   usageLabel?: string
-  /**
-   * What to call the run's elapsed time, with the time already in it.
-   *
-   * The label is passed in rather than composed here: it is a sentence, and
-   * every sentence in this product comes from the locale catalogues. It is
-   * optional *and* nullable, because a run that has not taken a measurable
-   * moment has no sentence to pass.
-   */
-  durationLabel?: string | undefined
 }>()
-
-/** Only worth stating once the run has taken a measurable moment. */
-const elapsed = computed(() => runElapsed(props.view))
 </script>
 
 <template>
@@ -29,7 +20,6 @@ const elapsed = computed(() => runElapsed(props.view))
     <span>{{ usageLabel ?? 'Usage' }}</span>
     <span>in {{ view.usage.input_tokens }}</span>
     <span>out {{ view.usage.output_tokens }}</span>
-    <span v-if="elapsed !== null && durationLabel" data-run-duration>{{ durationLabel }}</span>
   </footer>
 </template>
 

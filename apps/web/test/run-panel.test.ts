@@ -118,9 +118,9 @@ describe('RunPanel', () => {
           turnId: null,
           occurredAt: '2026-09-16T10:00:00Z',
           type: 'message' as const,
-          role: 'assistant' as const,
-          text: 'working',
-          final: false,
+          role: 'user' as const,
+          text: '优化 VerifierLab 可视化 UI',
+          final: true,
         },
         {
           key: 'm-2',
@@ -130,7 +130,7 @@ describe('RunPanel', () => {
           type: 'message' as const,
           role: 'assistant' as const,
           text: 'working',
-          final: false,
+          final: true,
         },
       ],
     }
@@ -142,17 +142,16 @@ describe('RunPanel', () => {
     expect(strip.get('[data-run-state-label]').text()).toBe('Running')
     expect(strip.get('[data-run-state-title]').text()).toBe('优化 VerifierLab 可视化 UI')
     expect(strip.get('[data-run-state-elapsed]').text()).toBe('Took 3m 20s')
-    // The same clock in the footer would be the same fact stated twice: while a
-    // run is in flight the strip is the one counting.
+    // The footer is the ledger, not a second clock: the strip counts while a run
+    // is in flight and each answer states what it took.
     expect(wrapper.find('[data-run-duration]').exists()).toBe(false)
 
-    // Once it has settled the footer is the record, and a strip that stayed
-    // would be the same fact stated twice.
+    // Once it has settled the strip goes, and the answer carries the interval.
     const settled = mount(RunPanel, {
       props: { view: { ...running, status: 'succeeded' as const } },
     })
     expect(settled.find('[data-run-state]').exists()).toBe(false)
-    expect(settled.get('[data-run-duration]').text()).toBe('Took 3m 20s')
+    expect(settled.get('[data-message-duration]').text()).toBe('Took 3m 20s')
   })
 
   it('names a run waiting on a human as waiting, not as working', () => {

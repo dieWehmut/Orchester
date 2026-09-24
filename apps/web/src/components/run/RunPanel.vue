@@ -101,22 +101,14 @@ const runState = computed(() => {
 })
 
 /**
- * The run's own elapsed time, said the way the reference says it.
+ * The run's ledger states the run's own facts: its sequence and its tokens.
  *
- * The reference puts a turn's elapsed time above its answer; this product has
- * one turn per run, so the footer states the run's own elapsed time - computed
- * from the journalled events rather than from when this window opened - and the
- * sentence around it comes from the locale catalogues.
- *
- * Only once the run has settled: while it is in flight the strip above the field
- * is already counting, and the same clock in two places is the same fact stated
- * twice. One gates the other rather than both deciding for themselves.
+ * The clock is not among them any more. The reference states a turn's elapsed
+ * time at the turn - and each answer now carries its own, measured from the
+ * entry before it - while a run still in flight is the strip's business. A third
+ * copy under the transcript would be the same number in a place the reference
+ * does not put it.
  */
-const durationLabel = computed(() => {
-  if (runState.value !== null) return undefined
-  const elapsed = runElapsed(props.view)
-  return elapsed === null ? undefined : t('transcript.took', { duration: elapsed })
-})
 
 /**
  * The draft the composer is editing.
@@ -329,7 +321,6 @@ defineExpose({ focusPrompt, clearPrompt })
       :view="props.view"
       :sequence-label="t('run.sequence')"
       :usage-label="t('run.usage')"
-      :duration-label="durationLabel"
     />
     <PlanStrip
       :todos="props.view.todos"

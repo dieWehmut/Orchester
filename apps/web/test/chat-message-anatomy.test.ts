@@ -235,7 +235,39 @@ describe('stored session anatomy', () => {
     expect(writes).toEqual([detail.final_text])
   })
 
-  it('states how long the run took, in the sentence the catalogue gives it', () => {
+  it('states how long the answer took, at the answer, as the reference does', () => {
+    const wrapper = mountTimeline([
+      message({
+        key: 'm-1',
+        role: 'user',
+        text: 'what is in this repository',
+        occurredAt: '2026-09-16T10:00:00Z',
+      }),
+      message({ key: 'm-2', occurredAt: '2026-09-16T10:33:20Z' }),
+      // A second answer, measured from the one before it.
+      message({ key: 'm-3', occurredAt: '2026-09-16T10:34:20Z' }),
+    ])
+
+    const rows = wrapper.findAll('[data-item-type="message"]')
+
+    // The question carries no clock - it did not take the model any time - and
+    // the answer carries the interval the journal measured.
+    expect(rows[0]!.find('[data-message-duration]').exists()).toBe(false)
+    expect(rows[1]!.get('[data-message-duration]').text()).toBe('Took 33m 20s')
+    expect(rows[2]!.get('[data-message-duration]').text()).toBe('Took 1m 0s')
+  })
+
+  it('leaves the clock off an answer that is still arriving', () => {
+    const wrapper = mountTimeline([
+      message({ key: 'm-1', role: 'user', occurredAt: '2026-09-16T10:00:00Z' }),
+      message({ key: 'm-2', final: false, occurredAt: '2026-09-16T10:01:00Z' }),
+    ])
+
+    // A row still being written has not finished taking anything.
+    expect(wrapper.find('[data-message-duration]').exists()).toBe(false)
+  })
+
+  it('keeps the ledger a ledger: the footer states no clock', () => {
     const view = {
       ...createEmptyRunView(),
       timeline: [
@@ -244,12 +276,12 @@ describe('stored session anatomy', () => {
       ],
     }
 
-    const stated = mount(RunFooter, { props: { view, durationLabel: 'Took 33m 20s' } })
-    expect(stated.get('[data-run-duration]').text()).toBe('Took 33m 20s')
+    const wrapper = mount(RunFooter, { props: { view, sequenceLabel: 'Sequence' } })
 
-    // No label, no sentence: the footer never invents its own words, and a run
-    // that has not taken a moment says nothing.
-    const unlabelled = mount(RunFooter, { props: { view } })
-    expect(unlabelled.find('[data-run-duration]').exists()).toBe(false)
+    expect(wrapper.get('[data-run-footer]').text()).toContain('Sequence')
+    // The answer states it, and the strip states it while a run is in flight; a
+    // third copy under the transcript is a number in a place the reference does
+    // not put it.
+    expect(wrapper.find('[data-run-duration]').exists()).toBe(false)
   })
 })

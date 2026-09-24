@@ -9,6 +9,7 @@ import ReasoningDisclosure from './ReasoningDisclosure.vue'
 import ToolCallCard from './ToolCallCard.vue'
 import { arrivalState, streamingContainment, type ArrivalState } from './streaming-text'
 import { dayLabel, startsDay } from './transcript-days'
+import { answerElapsed } from './run-duration'
 import { virtualWindow } from './virtual-window'
 
 const { t } = useI18n()
@@ -73,6 +74,7 @@ const mountedRows = computed(() =>
     day: dayLabel(item.occurredAt),
     datetime: item.occurredAt ?? '',
     startsDay: startsDay(props.view.timeline, windowRange.value.start + index),
+    took: answerElapsed(props.view.timeline, windowRange.value.start + index),
   })),
 )
 
@@ -195,6 +197,14 @@ function assertNever(value: never): never {
       <div v-if="row.startsDay" class="run-timeline__day" data-day-separator>
         <time :datetime="row.datetime">{{ row.day }}</time>
       </div>
+      <!--
+        How long this answer took, where the reference states it: at the turn,
+        before the words. The journal's own timestamps measure it - from the
+        entry before this answer to the answer itself.
+      -->
+      <p v-if="row.took" class="run-timeline__took" data-message-duration>
+        {{ t('transcript.took', { duration: row.took }) }}
+      </p>
       <template v-if="row.item.type === 'tool'">
         <span class="run-timeline__sequence" data-run-sequence>{{ row.item.sequence }}</span>
         <ToolCallCard :item="row.item" />
@@ -297,6 +307,14 @@ function assertNever(value: never): never {
   justify-self: stretch;
   align-items: center;
   justify-content: center;
+  color: var(--color-text-tertiary);
+  font-size: var(--text-xs);
+}
+
+/* The turn's own clock, where the reference states it: before the words. */
+.run-timeline__took {
+  grid-column: 1 / -1;
+  margin: 0;
   color: var(--color-text-tertiary);
   font-size: var(--text-xs);
 }
