@@ -69,6 +69,9 @@ docs/local
 # in explicitly — the directory first, then the files inside it.
 !/docs/design/
 !/docs/design/*.md
+# The release procedure is the same kind of thing: it describes how this
+# repository publishes, and it is worthless if it only exists on one machine.
+!/docs/RELEASE-PROCEDURE.md
 .playwright-mcp/
 .superpowers/
 .worktrees/

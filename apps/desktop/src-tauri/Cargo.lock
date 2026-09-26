@@ -2427,7 +2427,7 @@ checksum = "04744f49eae99ab78e0d5c0b603ab218f515ea8cfe5a456d7629ad883a3b6e7d"
 
 [[package]]
 name = "orchester-adapter"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "async-trait",
  "futures",
@@ -2437,7 +2437,7 @@ dependencies = [
 
 [[package]]
 name = "orchester-anwendung"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "orchester-laufzeit",
  "orchester-modell",
@@ -2451,7 +2451,7 @@ dependencies = [
 
 [[package]]
 name = "orchester-desktop"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "orchester-anwendung",
  "orchester-laufzeit",
@@ -2464,7 +2464,7 @@ dependencies = [
 
 [[package]]
 name = "orchester-laufzeit"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "async-trait",
  "blake3",
@@ -2497,7 +2497,7 @@ dependencies = [
 
 [[package]]
 name = "orchester-modell"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "async-trait",
  "orchester-protokoll",
@@ -2509,14 +2509,14 @@ dependencies = [
 
 [[package]]
 name = "orchester-native-chrome"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "windows-sys 0.61.2",
 ]
 
 [[package]]
 name = "orchester-netz"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "axum",
  "cookie",
@@ -2542,7 +2542,7 @@ dependencies = [
 
 [[package]]
 name = "orchester-protokoll"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "serde",
  "serde_json",
@@ -2551,7 +2551,7 @@ dependencies = [
 
 [[package]]
 name = "orchester-vertrag"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "async-trait",
  "futures",
@@ -2567,7 +2567,7 @@ dependencies = [
 
 [[package]]
 name = "orchester-verzeichnis"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "cap-fs-ext",
  "cap-std",

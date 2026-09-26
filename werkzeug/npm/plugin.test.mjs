@@ -16,7 +16,7 @@ function repositoryPackage(name) {
   return verifyAgentPluginPackage({
     canonicalManifest: path.join(repositoryRoot, `manifeste/${name}.toml`),
     expectedName: `@orchester/${name}`,
-    expectedVersion: '0.1.2',
+    expectedVersion: '0.2.0',
     packageRoot: path.join(repositoryRoot, `npm/plugins/${name}`),
   });
 }
@@ -52,7 +52,7 @@ test('repository Claude package satisfies the locked pure-data contract', () => 
   const verified = verifyAgentPluginPackage({
     canonicalManifest,
     expectedName: '@orchester/claude',
-    expectedVersion: '0.1.2',
+    expectedVersion: '0.2.0',
     packageRoot,
   });
 
@@ -61,7 +61,7 @@ test('repository Claude package satisfies the locked pure-data contract', () => 
     command: 'claude',
     name: 'claude',
     packageName: '@orchester/claude',
-    version: '0.1.2',
+    version: '0.2.0',
   });
 });
 
@@ -71,7 +71,7 @@ test('repository Codex package satisfies the locked pure-data contract', () => {
     command: 'codex',
     name: 'codex',
     packageName: '@orchester/codex',
-    version: '0.1.2',
+    version: '0.2.0',
   });
 });
 
@@ -81,7 +81,7 @@ test('repository OpenCode package satisfies the locked pure-data contract', () =
     command: 'opencode',
     name: 'opencode',
     packageName: '@orchester/opencode',
-    version: '0.1.2',
+    version: '0.2.0',
   });
 });
 
@@ -102,7 +102,7 @@ test('lifecycle scripts, executable bins, and dependency graphs are rejected', (
         verifyAgentPluginPackage({
           canonicalManifest,
           expectedName: '@orchester/claude',
-          expectedVersion: '0.1.2',
+          expectedVersion: '0.2.0',
           packageRoot: candidate,
         });
       }),
@@ -125,7 +125,7 @@ test('descriptor identity, schema, and adapter path fail closed', () => {
         verifyAgentPluginPackage({
           canonicalManifest,
           expectedName: '@orchester/claude',
-          expectedVersion: '0.1.2',
+          expectedVersion: '0.2.0',
           packageRoot: candidate,
         });
       }),
@@ -140,7 +140,7 @@ test('manifest drift and undeclared package members are rejected', () => {
       verifyAgentPluginPackage({
         canonicalManifest,
         expectedName: '@orchester/claude',
-        expectedVersion: '0.1.2',
+        expectedVersion: '0.2.0',
         packageRoot: candidate,
       });
     }),
@@ -152,7 +152,7 @@ test('manifest drift and undeclared package members are rejected', () => {
       verifyAgentPluginPackage({
         canonicalManifest,
         expectedName: '@orchester/claude',
-        expectedVersion: '0.1.2',
+        expectedVersion: '0.2.0',
         packageRoot: candidate,
       });
     }),
@@ -181,7 +181,7 @@ test('linked package members are rejected when the host permits links', (context
       verifyAgentPluginPackage({
         canonicalManifest,
         expectedName: '@orchester/claude',
-        expectedVersion: '0.1.2',
+        expectedVersion: '0.2.0',
         packageRoot: candidate,
       });
     });

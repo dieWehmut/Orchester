@@ -1,6 +1,6 @@
 {
   "name": "@orchester/ereignis",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "Pure deterministic run projections and shared Vue run views",
