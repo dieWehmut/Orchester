@@ -73,6 +73,22 @@ cannot reach the registry, so it could not be reproduced.
 
 ## Before dispatching
 
+One command asks every question the two workflows ask, plus two they only ask
+later, and prints the order below:
+
+```text
+node werkzeug/desktop/release-preflight.mjs
+```
+
+It checks the version in the three desktop manifests, the CLI manifest and its
+six platform pins, every plugin's package **and** manifest, every package each of
+the three `cargo metadata --locked` calls reports, and whether a tag for this
+version already names a different commit. It touches neither the network nor
+`pnpm-lock.yaml`, because the latter can only be refreshed after publication -
+a preflight that demanded it would refuse every release forever.
+
+The longer form, if something needs looking at by hand:
+
 ```text
 node --test werkzeug/desktop/*.test.mjs
 node --test werkzeug/npm/*.test.mjs apps/cli/test/*.test.cjs
