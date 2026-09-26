@@ -3,20 +3,22 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
 
 import {
   cliPlatformPins,
   collectProblems,
   manifestVersion,
   parseArguments,
-  pluginVersions,
+  pluginProblem,
   SEMVER,
 } from './release-preflight.mjs';
 
 /**
  * The preflight asks the questions the two release workflows ask, before either
  * is dispatched. What it judges arrives as arguments, so the judgement is tested
- * without a repository, a toolchain, or a network.
+ * without a repository, a toolchain, or a network - and the plugin half is judged
+ * by the verifier the release itself runs.
  */
 
 const clean = {
@@ -28,7 +30,7 @@ const clean = {
   },
   cliVersion: '9.9.9',
   platformPins: { '@orchester/cli-win32-x64': '9.9.9' },
-  plugins: [{ directory: 'codex', package: '9.9.9', manifest: '9.9.9' }],
+  pluginError: null,
   cargo: { 'Cargo.toml': { packages: { 'orchester-netz': '9.9.9' } } },
   tags: {},
 };
@@ -43,18 +45,14 @@ test('every place the workflows validate is named when it disagrees', () => {
     desktopVersions: { ...clean.desktopVersions, 'apps/desktop/src-tauri/tauri.conf.json': '9.9.8' },
     cliVersion: '9.9.8',
     platformPins: { '@orchester/cli-win32-x64': '9.9.8' },
-    plugins: [
-      { directory: 'codex', package: '9.9.9', manifest: '9.9.8' },
-      { directory: 'claude', package: '9.9.8', manifest: '9.9.9' },
-    ],
+    pluginError: 'official plugins must match the CLI release version',
   });
 
-  assert.equal(problems.length, 5);
+  assert.equal(problems.length, 4);
   assert.ok(problems.some((problem) => problem.includes('tauri.conf.json is 9.9.8')));
   assert.ok(problems.some((problem) => problem.includes('apps/cli/package.json is 9.9.8')));
   assert.ok(problems.some((problem) => problem.includes('@orchester/cli-win32-x64 is pinned to 9.9.8')));
-  assert.ok(problems.some((problem) => problem.includes('codex/orchester-plugin.json is 9.9.8')));
-  assert.ok(problems.some((problem) => problem.includes('claude/package.json is 9.9.8')));
+  assert.ok(problems.some((problem) => problem.includes('official plugins must match')));
 });
 
 test('a workspace package that did not move with the cut is a problem', () => {
@@ -98,6 +96,23 @@ test('argument parsing rejects a flag with no value', () => {
   assert.throws(() => parseArguments(['nope']), /unexpected argument nope/);
 });
 
+test('the plugin half is judged by the verifier the release itself runs', () => {
+  const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+  // The version comes from the repository rather than from a literal, so this
+  // test survives a cut instead of pinning the one it was written at.
+  const version = manifestVersion(repositoryRoot, 'apps/cli/package.json');
+  assert.equal(pluginProblem(repositoryRoot, version), null);
+
+  // A root that cannot satisfy the verifier is reported, not thrown: the whole
+  // point of the preflight is to list what is wrong.
+  const empty = fs.mkdtempSync(path.join(os.tmpdir(), 'orchester-preflight-plugins-'));
+  try {
+    assert.equal(typeof pluginProblem(empty, version), 'string');
+  } finally {
+    fs.rmSync(empty, { recursive: true, force: true });
+  }
+});
+
 test('the manifests are read as they are written', () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'orchester-preflight-'));
   try {
@@ -118,15 +133,6 @@ test('the manifests are read as they are written', () => {
       'utf8',
     );
     assert.equal(manifestVersion(root, 'apps/desktop/src-tauri/Cargo.toml'), '4.5.6');
-
-    fs.mkdirSync(path.join(root, 'npm/plugins/codex'), { recursive: true });
-    fs.writeFileSync(path.join(root, 'npm/plugins/codex/package.json'), JSON.stringify({ version: '7.8.9' }), 'utf8');
-    fs.writeFileSync(
-      path.join(root, 'npm/plugins/codex/orchester-plugin.json'),
-      JSON.stringify({ version: '7.8.9' }),
-      'utf8',
-    );
-    assert.deepEqual(pluginVersions(root), [{ directory: 'codex', package: '7.8.9', manifest: '7.8.9' }]);
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }

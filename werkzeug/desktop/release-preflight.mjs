@@ -19,6 +19,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { verifyOfficialAgentPlugins } from '../npm/plugin-release.mjs';
+
 const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
 
 export function fail(message) {
@@ -74,21 +76,21 @@ export function cliPlatformPins(root) {
   return manifest.optionalDependencies ?? {};
 }
 
-/** Every plugin's package version and its own manifest's version. */
-export function pluginVersions(root) {
-  const pluginsRoot = path.join(root, 'npm/plugins');
-  return fs
-    .readdirSync(pluginsRoot)
-    .sort()
-    .map((directory) => ({
-      directory,
-      package: JSON.parse(
-        fs.readFileSync(path.join(pluginsRoot, directory, 'package.json'), 'utf8'),
-      ).version,
-      manifest: JSON.parse(
-        fs.readFileSync(path.join(pluginsRoot, directory, 'orchester-plugin.json'), 'utf8'),
-      ).version,
-    }));
+/**
+ * The plugin half, judged by the verifier the release itself runs.
+ *
+ * `npm-release`'s staging job calls `plugin-release.mjs`, which checks each
+ * plugin package against its canonical adapter manifest, the package matrix and
+ * the CLI's version. Asking the same function here means the preflight asserts
+ * what CI asserts rather than a second opinion that could drift from it.
+ */
+export function pluginProblem(root, version) {
+  try {
+    verifyOfficialAgentPlugins({ expectedVersion: version, repositoryRoot: root });
+    return null;
+  } catch (error) {
+    return error instanceof Error ? error.message : 'official plugin verification failed';
+  }
 }
 
 /** The version each package of a Cargo workspace reports, with `--locked`. */
@@ -130,7 +132,7 @@ export function cargoPackageVersions(root, relative, toolchain) {
  * Pure: the facts it judges arrive as arguments, so the judgement can be tested
  * without a repository, a toolchain, or a network.
  */
-export function collectProblems({ version, desktopVersions, cliVersion, platformPins, plugins, cargo, tags }) {
+export function collectProblems({ version, desktopVersions, cliVersion, platformPins, pluginError, cargo, tags }) {
   const problems = [];
   if (!SEMVER.test(version)) {
     // The workflows stop at their own regex, so this does too: a malformed
@@ -145,16 +147,7 @@ export function collectProblems({ version, desktopVersions, cliVersion, platform
   for (const [name, pinned] of Object.entries(platformPins)) {
     if (pinned !== version) problems.push(`${name} is pinned to ${pinned}, not ${version}`);
   }
-  for (const plugin of plugins) {
-    if (plugin.package !== version) {
-      problems.push(`npm/plugins/${plugin.directory}/package.json is ${plugin.package}, not ${version}`);
-    }
-    if (plugin.manifest !== version) {
-      problems.push(
-        `npm/plugins/${plugin.directory}/orchester-plugin.json is ${plugin.manifest}, not ${version}`,
-      );
-    }
-  }
+  if (pluginError) problems.push(pluginError);
   for (const [relative, outcome] of Object.entries(cargo)) {
     if (outcome.error) {
       problems.push(outcome.error);
@@ -223,7 +216,7 @@ function main() {
     desktopVersions,
     cliVersion,
     platformPins: cliPlatformPins(root),
-    plugins: pluginVersions(root),
+    pluginError: pluginProblem(root, version),
     cargo,
     tags: tagCommits(root, version),
   });

@@ -81,11 +81,14 @@ node werkzeug/desktop/release-preflight.mjs
 ```
 
 It checks the version in the three desktop manifests, the CLI manifest and its
-six platform pins, every plugin's package **and** manifest, every package each of
-the three `cargo metadata --locked` calls reports, and whether a tag for this
-version already names a different commit. It touches neither the network nor
-`pnpm-lock.yaml`, because the latter can only be refreshed after publication -
-a preflight that demanded it would refuse every release forever.
+six platform pins, every package each of the three `cargo metadata --locked`
+calls reports, and whether a tag for this version already names a different
+commit. The plugin half is not a second opinion: the preflight calls
+`verifyOfficialAgentPlugins` - the verifier `npm-release`'s staging job runs -
+which checks each plugin package against its canonical adapter manifest as well
+as its version. It touches neither the network nor `pnpm-lock.yaml`, because the
+latter can only be refreshed after publication - a preflight that demanded it
+would refuse every release forever.
 
 The longer form, if something needs looking at by hand:
 
