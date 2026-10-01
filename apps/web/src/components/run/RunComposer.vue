@@ -356,6 +356,7 @@ defineExpose({ focus })
   display: grid;
   gap: var(--space-2);
   min-inline-size: 0;
+  flex-shrink: 0;
   max-inline-size: var(--composer-max-width, 54rem);
   margin-inline: auto;
 }
@@ -408,6 +409,8 @@ defineExpose({ focus })
    border inside the first is the box the reference does not draw. */
 .run-composer :deep(.app-textarea) {
   min-block-size: 4.5rem;
+  max-block-size: min(18rem, 30dvh);
+  overflow-y: auto;
   padding: var(--space-2) var(--space-2) 0;
   border-color: transparent;
   background: transparent;
