@@ -1,4 +1,4 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { resetPetVisibilityForTests } from '../src/features/pet'
@@ -7,6 +7,7 @@ import { resetAppearanceForTests } from '@orchester/design'
 import { createMemoryHistory, createRouter } from 'vue-router'
 
 const originalMatchMedia = window.matchMedia
+enableAutoUnmount(afterEach)
 
 /** jsdom answers every media query false and never emits a change. */
 function stubSystemPreference(options: { dark?: boolean; reducedMotion?: boolean }): void {
@@ -153,7 +154,7 @@ describe('SettingsView', () => {
   })
 
   it('keeps every section reachable from the navigation list', async () => {
-    const wrapper = mount(SettingsView)
+    const wrapper = mount(SettingsView, { global: { stubs: { ProviderSettings: true } } })
 
     await wrapper.get('[data-settings-nav-link="providers"]').trigger('click')
 

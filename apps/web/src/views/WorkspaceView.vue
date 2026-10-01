@@ -557,6 +557,8 @@ if (desktopWindowController?.enabled) {
       @submit="handleRunSubmit"
       @cancel="handleRunCancel"
       @select-model="models.select($event)"
+      @configure-model="appRouter?.push({ name: 'settings', query: { section: 'providers' } })"
+      @retry-models="models.load()"
     />
     <SessionTranscript v-else :status="detailStatus" :session="selected" :error="detailError" />
 

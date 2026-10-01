@@ -67,6 +67,8 @@ const emit = defineEmits<{
   cancel: []
   /** The model and effort the following runs should use. */
   'select-model': [selection: ModelSelectionRequestDto]
+  'configure-model': []
+  'retry-models': []
 }>()
 
 const { t } = useI18n()
@@ -337,6 +339,8 @@ defineExpose({ focusPrompt, clearPrompt })
       @submit="emit('submit', $event)"
       @cancel="emit('cancel')"
       @select-model="emit('select-model', $event)"
+      @configure-model="emit('configure-model')"
+      @retry-models="emit('retry-models')"
     />
   </section>
 </template>

@@ -13,7 +13,7 @@
  * knows but cannot reach is drawn disabled with its reason, because a menu that
  * silently omits a provider leaves the reader wondering where it went.
  */
-import { AppMenu, type AppMenuItem } from '@orchester/design'
+import { AppButton, AppMenu, Spinner, type AppMenuItem } from '@orchester/design'
 import type { ModelCatalogDto, ModelSelectionRequestDto } from '@orchester/protokoll'
 import { ChevronDown, CircleAlert, Sparkles } from '@lucide/vue'
 import { computed } from 'vue'
@@ -32,6 +32,8 @@ const props = withDefaults(
 const emit = defineEmits<{
   /** The whole intent rather than a delta: the three axes the runtime takes. */
   select: [selection: ModelSelectionRequestDto]
+  configure: []
+  retry: []
 }>()
 
 const { t } = useI18n()
@@ -62,12 +64,12 @@ const activeProvider = computed(
   () => props.catalog?.providers.find((provider) => provider.active) ?? null,
 )
 const statusLabel = computed(() => {
-  if (props.status === 'stale') return 'stale'
-  if (props.status === 'loading' || props.status === 'refreshing') return 'loading'
+  if (props.status === 'stale') return t('run.modelStale')
+  if (props.status === 'loading' || props.status === 'refreshing') return t('run.modelLoading')
   return ''
 })
 const modelLabel = computed(
-  () => activeChoice.value?.model ?? activeProvider.value?.model ?? '',
+  () => activeChoice.value?.model ?? activeProvider.value?.model ?? t('run.selectModel'),
 )
 const providerLabel = computed(
   () => activeChoice.value?.provider_name ?? activeProvider.value?.name ?? '',
@@ -93,6 +95,8 @@ const selectable = computed(() => {
     configured.value || catalog.providers.length > 0 || catalog.profiles.length > 0
   )
 })
+const pending = computed(() => ['loading', 'refreshing'].includes(props.status))
+const needsSetup = computed(() => props.status === 'ready' && props.catalog !== null && !selectable.value)
 
 const items = computed<AppMenuItem[]>(() => {
   const catalog = props.catalog
@@ -136,7 +140,10 @@ const items = computed<AppMenuItem[]>(() => {
     disabled: true,
   }
 
-  return [...providerItems, ...profileItems, ...effortItems, scopeItem]
+  return [...providerItems, ...profileItems, ...effortItems,
+    { id: 'configure:', label: t('run.modelSettings') },
+    ...(props.status === 'stale' ? [{ id: 'retry:', label: t('run.retryModels') }] : []),
+    scopeItem]
 })
 
 /**
@@ -147,6 +154,8 @@ const items = computed<AppMenuItem[]>(() => {
  * request that omitted the other axis would silently reset it.
  */
 function choose(id: string): void {
+  if (id === 'configure:') { emit('configure'); return }
+  if (id === 'retry:') { emit('retry'); return }
   const at = id.indexOf(':')
   const axis = at < 0 ? '' : id.slice(0, at)
   const value = at < 0 ? '' : id.slice(at + 1)
@@ -195,14 +204,16 @@ function choose(id: string): void {
       </template>
     </AppMenu>
 
+    <span v-else-if="pending" class="model-context__unavailable" data-model-context-loading role="status">
+      <Spinner :size="13" :label="t('run.modelLoading')" />
+      {{ t('run.modelLoading') }}
+    </span>
     <template v-else>
-      <span class="model-context__unavailable" data-model-context-unavailable aria-disabled="true">
+      <AppButton class="model-context__setup" size="sm" variant="ghost" data-model-context-unavailable
+        @click="needsSetup ? emit('configure') : emit('retry')">
         <span class="model-context__icon" aria-hidden="true"><CircleAlert :size="13" /></span>
-        <span>{{ t('run.modelUnavailable') }}</span>
-      </span>
-      <span v-if="statusLabel" class="model-context__status" data-model-context-status>
-        {{ statusLabel }}
-      </span>
+        <span>{{ needsSetup ? t('run.setupModel') : t('run.retryModels') }}</span>
+      </AppButton>
     </template>
   </div>
 </template>
@@ -287,5 +298,11 @@ function choose(id: string): void {
   align-items: center;
   gap: var(--space-2);
   color: var(--color-text-tertiary);
+}
+
+.model-context__setup {
+  min-inline-size: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
 }
 </style>

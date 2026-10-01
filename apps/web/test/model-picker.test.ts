@@ -80,7 +80,7 @@ describe('ModelContextControl readout', () => {
     wrapper.unmount()
   })
 
-  it('shows an unavailable state when there is nothing to choose', () => {
+  it('opens setup when no model service is configured', async () => {
     const wrapper = mountPicker({
       ...MODEL_CATALOG_FIXTURE,
       active: { state: 'not_configured' },
@@ -89,13 +89,38 @@ describe('ModelContextControl readout', () => {
       profiles: [],
     })
 
-    expect(wrapper.get('[data-model-context-unavailable]').text()).toContain('Model unavailable')
-    expect(wrapper.get('[data-model-context-unavailable]').attributes('aria-disabled')).toBe('true')
+    const button = wrapper.get('[data-model-context-unavailable]')
+    expect(button.text()).toContain('Set up model')
+    await button.trigger('click')
+    expect(wrapper.emitted('configure')).toEqual([[]])
+    expect(wrapper.emitted('retry')).toBeUndefined()
+    wrapper.unmount()
+  })
+
+  it('shows loading before offering setup, and retries failed catalog loads', async () => {
+    const wrapper = mount(ModelContextControl, { props: { catalog: null, status: 'loading' } })
+    expect(wrapper.text()).toContain('Loading models')
+    expect(wrapper.find('[data-model-context-unavailable]').exists()).toBe(false)
+    await wrapper.setProps({ status: 'error' })
+    await wrapper.get('[data-model-context-unavailable]').trigger('click')
+    expect(wrapper.emitted('retry')).toEqual([[]])
+    expect(wrapper.emitted('configure')).toBeUndefined()
     wrapper.unmount()
   })
 })
 
 describe('ModelContextControl picker', () => {
+  it('offers settings and retry while preserving the last known model', async () => {
+    const wrapper = mountPicker(MODEL_CATALOG_FIXTURE, 'stale')
+    await openPicker(wrapper)
+    await itemByText(wrapper, 'Retry models').trigger('click')
+    expect(wrapper.emitted('retry')).toEqual([[]])
+    await openPicker(wrapper)
+    await itemByText(wrapper, 'Model settings').trigger('click')
+    expect(wrapper.emitted('configure')).toEqual([[]])
+    expect(wrapper.get('[data-model-context-model]').text()).toContain('gpt-5.6')
+    wrapper.unmount()
+  })
   it('lists the providers, the profiles and the efforts, and marks what is in force', async () => {
     const wrapper = mountPicker()
     await openPicker(wrapper)

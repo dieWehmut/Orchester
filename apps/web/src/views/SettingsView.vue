@@ -59,6 +59,7 @@ import {
 } from '../components/settings/theme-colours'
 import { useI18n } from '../i18n'
 import ShortcutEditor from '../components/settings/ShortcutEditor.vue'
+import ProviderSettings from '../components/settings/ProviderSettings.vue'
 import { readDocumentPlatform, readSystemPlatform } from '@orchester/design'
 import { shortcutRegistry } from '../shortcuts'
 import {
@@ -930,6 +931,7 @@ const previewAfter = computed(() => [
       >
         <h2>{{ t('settings.sections.providers') }}</h2>
         <p class="settings-view__note">{{ t('settings.providers.description') }}</p>
+        <ProviderSettings v-if="activeSection === 'providers'" />
       </section>
 
       <section

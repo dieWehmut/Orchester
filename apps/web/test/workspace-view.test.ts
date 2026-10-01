@@ -15,6 +15,7 @@ import { nextTick } from 'vue'
 import type { HttpClient } from '../src/api/http'
 import { createAppStores } from '../src/stores/app'
 import WorkspaceView from '../src/views/WorkspaceView.vue'
+import { createAppRouter } from '../src/router'
 import { MODEL_CATALOG_FIXTURE } from './fixtures/model-catalog'
 
 const summary: SessionSummaryDto = {
@@ -42,6 +43,34 @@ const detail: SessionDetailDto = {
 }
 
 describe('WorkspaceView', () => {
+  it('takes model setup from the composer to provider settings', async () => {
+    const stores = createAppStores({ agentStatusStreamFactory: null })
+    stores.models.catalog = { schema_version: 1, active: { state: 'not_configured' }, selected_provider: null, providers: [], profiles: [] }
+    stores.models.status = 'ready'
+    const router = createAppRouter('memory')
+    await router.push({ name: 'workspace' })
+    await router.isReady()
+    const push = vi.spyOn(router, 'push')
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores, router] } })
+    await wrapper.get('[data-model-context-unavailable]').trigger('click')
+    expect(push).toHaveBeenCalledWith({ name: 'settings', query: { section: 'providers' } })
+    await push.mock.results[0]!.value
+    expect(router.currentRoute.value.name).toBe('settings')
+    expect(router.currentRoute.value.query.section).toBe('providers')
+    wrapper.unmount()
+  })
+
+  it('retries an unavailable catalog from the composer', async () => {
+    const get = vi.fn(async () => MODEL_CATALOG_FIXTURE)
+    const stores = createAppStores({ http: { get } as unknown as HttpClient, agentStatusStreamFactory: null })
+    stores.models.status = 'error'
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+    await wrapper.get('[data-model-context-unavailable]').trigger('click')
+    await flushPromises()
+    expect(get).toHaveBeenCalledWith('/models')
+    expect(stores.models.status).toBe('ready')
+    wrapper.unmount()
+  })
   it('hides the centered mark as soon as the active run starts', async () => {
     const stores = createAppStores()
     const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })

@@ -71,6 +71,8 @@ const emit = defineEmits<{
   'run-command': [id: string]
   /** The model and effort the following runs should use. */
   'select-model': [selection: ModelSelectionRequestDto]
+  'configure-model': []
+  'retry-models': []
 }>()
 
 /**
@@ -313,6 +315,8 @@ defineExpose({ focus })
             :catalog="props.modelCatalog"
             :status="props.modelStatus"
             @select="emit('select-model', $event)"
+            @configure="emit('configure-model')"
+            @retry="emit('retry-models')"
           />
           <Spinner
             v-if="isBusy"
