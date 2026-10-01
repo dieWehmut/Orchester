@@ -63,19 +63,19 @@ describe('workspace shortcuts', () => {
     const wrapper = await mountWorkspace(testRouter())
     const pane = () => wrapper.get('[data-pane="inspector"]')
 
-    expect(pane().attributes('data-inspector-open')).toBe('true')
-
-    press('b', { ctrlKey: true, altKey: true })
-    await nextTick()
     expect(pane().attributes('data-inspector-open')).toBe('false')
 
     press('b', { ctrlKey: true, altKey: true })
     await nextTick()
     expect(pane().attributes('data-inspector-open')).toBe('true')
+
+    press('b', { ctrlKey: true, altKey: true })
+    await nextTick()
+    expect(pane().attributes('data-inspector-open')).toBe('false')
   })
 
   it('folds the rail with the chord section 2.1 gives the collapse', async () => {
-    // A column, not a drawer: below 1280 px the rail is the drawer the shell
+    // A column, not a drawer: below 800 px the rail is the drawer the shell
     // opens on demand, and "collapsed" is a question about the column.
     const wide = window.innerWidth
     window.innerWidth = 1400
@@ -116,7 +116,7 @@ describe('workspace shortcuts', () => {
   it('stops answering the shortcut once the view is unmounted', async () => {
     const wrapper = await mountWorkspace(testRouter())
     const pane = () => wrapper.get('[data-pane="inspector"]')
-    expect(pane().attributes('data-inspector-open')).toBe('true')
+    expect(pane().attributes('data-inspector-open')).toBe('false')
 
     wrapper.unmount()
 
@@ -134,7 +134,7 @@ describe('workspace shortcuts', () => {
     await textarea.trigger('keydown', { key: 'b' })
 
     // A bare key is a character; the pane must not move under the reader.
-    expect(pane().attributes('data-inspector-open')).toBe('true')
+    expect(pane().attributes('data-inspector-open')).toBe('false')
   })
 
   it('toggles the companion from the keyboard, and says so in the account menu', async () => {

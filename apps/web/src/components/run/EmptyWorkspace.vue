@@ -24,7 +24,8 @@ withDefaults(
 <style scoped>
 .empty-workspace {
   display: grid;
-  min-block-size: 100%;
+  min-block-size: 0;
+  flex: 1;
   align-content: center;
   justify-items: center;
   gap: var(--space-4);

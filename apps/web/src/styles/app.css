@@ -6,7 +6,8 @@
 }
 
 #app {
-  min-block-size: 100vh;
+  block-size: 100dvh;
+  overflow: hidden;
 }
 
 .app-shell {
@@ -16,8 +17,19 @@
   --app-chrome-height: var(--window-chrome-height, 38px);
   --app-top-chrome-height: var(--app-chrome-height);
 
-  min-block-size: 100vh;
   background: var(--color-bg-base);
+}
+
+#app > .app-shell {
+  display: flex;
+  block-size: 100%;
+  min-block-size: 0;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#app > .app-shell > :first-child {
+  flex-shrink: 0;
 }
 
 :root[data-orchester-os='windows'] .app-shell--desktop {
@@ -27,8 +39,9 @@
 /* The routed view declares the main landmark, so the outlet that holds it
    only has to claim the vertical space under the chrome. */
 .app-shell__outlet {
-  min-block-size: calc(100vh - var(--app-top-chrome-height));
-}
-
-@media (max-width: 640px) {
+  display: flex;
+  min-block-size: 0;
+  flex: 1;
+  flex-direction: column;
+  overflow: auto;
 }

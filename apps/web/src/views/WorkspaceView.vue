@@ -69,7 +69,7 @@ const activeInspectorTab = ref<InspectorTab>('context')
  * deciding for itself where the terminal goes.
  */
 const terminalPlacement = ref<TerminalPlacement>(readTerminalPlacement())
-const inspectorOpen = ref(true)
+const inspectorOpen = ref(false)
 const runConnectionStatus = computed(() => run.connectionStatus.value)
 const runProjectionStatus = computed(() => run.projectionStatus.value)
 const runErrorMessage = computed(() => run.error.value?.message ?? null)
@@ -191,7 +191,7 @@ onUnmounted(() => {
  * inspector away rather than emptying the strip, and the pane comes back - with
  * its tab - when the reader asks for it again.
  */
-const inspectorTabOpen = ref(true)
+const inspectorTabOpen = ref(false)
 
 function handleTabSelect(id: string): void {
   activeTabId.value = id
@@ -245,10 +245,12 @@ const orderedShellTabs = computed<readonly ShellTab[]>(() => {
  */
 onMounted(() => {
   const stored = readTabStripState()
+  inspectorTabOpen.value = stored.order.includes('inspector')
   if (stored.order.length > 0) shellTabOrder.value = stored.order
   const ids = orderedShellTabs.value.map((tab) => tab.id)
   if (stored.activeId !== null && ids.includes(stored.activeId)) {
     activeTabId.value = stored.activeId
+    if (stored.activeId === 'inspector' || stored.activeId === 'changes') inspectorOpen.value = true
     if (stored.activeId === 'changes') activeInspectorTab.value = 'changes'
   }
 })
@@ -472,7 +474,9 @@ if (desktopWindowController?.enabled) {
 </script>
 
 <template>
+  <div class="workspace-view">
   <TabStrip
+    v-show="orderedShellTabs.length > 1"
     data-testid="workspace-tab-strip"
     :tabs="orderedShellTabs"
     :active-id="activeTabId"
@@ -486,7 +490,7 @@ if (desktopWindowController?.enabled) {
     :sessions-title="t('sessions.title')"
     :inspector-title="t('inspector.label')"
     :controls-label="t('inspector.label')"
-    :inspector-open="inspectorOpen"
+    v-model:inspector-open="inspectorOpen"
   >
     <template #sessions>
       <WorkspaceSidebar
@@ -542,7 +546,7 @@ if (desktopWindowController?.enabled) {
       :busy="runBusy"
       :lifecycle="runLifecycle"
       :conversation-started="conversationStarted"
-          :workspace-name="workspaceName"
+      :workspace-name="workspaceName"
       :model-catalog="modelCatalog"
       :model-status="modelStatus"
       :settings-key="runSettingsKey"
@@ -632,9 +636,23 @@ if (desktopWindowController?.enabled) {
       </AppButton>
     </template>
   </AppDialog>
+  </div>
 </template>
 
 <style scoped>
+.workspace-view {
+  display: flex;
+  min-block-size: 0;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.workspace-view > :deep(.tab-strip),
+.workspace-view > :deep(.bottom-panel) {
+  flex-shrink: 0;
+}
+
 .workspace-view__panel-note {
   margin: 0;
   padding: var(--space-3);

@@ -60,6 +60,7 @@ describe('shell persistence', () => {
   it('writes the order back when the user reorders a tab', async () => {
     const wrapper = mountWorkspace()
     await flushPromises()
+    await wrapper.get('[data-thread-action="panel"]').trigger('click')
 
     const from = wrapper.get('[data-tabstrip-tab="inspector"]')
     const onto = wrapper.get('[data-tabstrip-tab="run"]')
@@ -73,6 +74,7 @@ describe('shell persistence', () => {
   it('writes the selection back when the user picks another tab', async () => {
     const wrapper = mountWorkspace()
     await flushPromises()
+    await wrapper.get('[data-thread-action="panel"]').trigger('click')
 
     await wrapper.get('[data-tabstrip-tab="inspector"]').trigger('click')
     await flushPromises()

@@ -303,7 +303,7 @@ defineExpose({ focusPrompt, clearPrompt })
       >{{ unread }}</span>
     </button>
     <MessageRail :view="props.view" @select="scrollToTurn" />
-    <RunFooter :view="props.view" />
+    <RunFooter v-if="props.conversationStarted || props.view.timeline.length > 0" :view="props.view" />
     <PlanStrip
       :todos="props.view.todos"
       :validation="props.view.validation"
@@ -344,14 +344,18 @@ defineExpose({ focusPrompt, clearPrompt })
 .run-panel {
   position: relative;
   display: flex;
-  min-block-size: 100%;
+  min-block-size: 0;
+  flex: 1;
   flex-direction: column;
+  overflow: hidden;
   background: var(--color-bg-base);
 }
 
 .run-panel__stream {
+  display: flex;
   min-block-size: 0;
   flex: 1;
+  flex-direction: column;
   overflow: auto;
 }
 
@@ -422,7 +426,8 @@ defineExpose({ focusPrompt, clearPrompt })
 
 .run-panel__awaiting {
   display: grid;
-  min-block-size: 100%;
+  min-block-size: 0;
+  flex: 1;
   place-items: center;
   color: var(--color-text-tertiary);
   font-size: var(--text-sm);

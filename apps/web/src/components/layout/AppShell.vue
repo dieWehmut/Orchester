@@ -17,7 +17,7 @@
  */
 import { AppButton, AppDrawer } from '@orchester/design'
 import type { RailAppearance } from '@orchester/design'
-import { onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'vue'
 
 import { useI18n } from '../../i18n'
 import { useRailCollapsed } from '../../composables/use-rail-collapsed'
@@ -34,6 +34,7 @@ import {
   RAIL_MAX_WIDTH,
   RAIL_MIN_WIDTH,
   RAIL_PREFERRED_WIDTH,
+  TRANSCRIPT_MIN_WIDTH,
   RESIZE_STEP,
   clampInspectorWidth,
   clampRailWidth,
@@ -67,6 +68,7 @@ const props = withDefaults(
 )
 
 const { collapsed: railCollapsed, toggle: toggleRail } = useRailCollapsed()
+const emit = defineEmits<{ 'update:inspectorOpen': [open: boolean] }>()
 
 const sessionsOpen = ref(false)
 
@@ -77,11 +79,43 @@ const sessionsOpen = ref(false)
  * is drawing: at a narrow viewport a fold that hid the column would hide
  * nothing, and the drawer is what the reader would be looking at.
  */
-const NARROW_VIEWPORT_PX = 1280
+const NARROW_VIEWPORT_PX = 800
+const INSPECTOR_DRAWER_PX = 1120
 const narrowViewport = ref(false)
+const inspectorDocked = ref(true)
+const availableWidth = ref(typeof window === 'undefined' ? 1280 : window.innerWidth)
+const inspectorDrawerOpen = ref(false)
 
 function readViewport(): void {
-  narrowViewport.value = typeof window !== 'undefined' && window.innerWidth < NARROW_VIEWPORT_PX
+  if (typeof window === 'undefined') return
+  availableWidth.value = window.innerWidth
+  narrowViewport.value = availableWidth.value < NARROW_VIEWPORT_PX
+  inspectorDocked.value = availableWidth.value >= INSPECTOR_DRAWER_PX
+  if (!narrowViewport.value) sessionsOpen.value = false
+  inspectorDrawerOpen.value = !inspectorDocked.value && props.inspectorOpen
+}
+
+watch(() => props.inspectorOpen, (open) => {
+  inspectorDrawerOpen.value = !inspectorDocked.value && open
+  if (open) sessionsOpen.value = false
+})
+
+function openSessions(): void {
+  emit('update:inspectorOpen', false)
+  inspectorDrawerOpen.value = false
+  sessionsOpen.value = true
+}
+
+function updateInspectorDrawer(open: boolean): void {
+  inspectorDrawerOpen.value = open
+  emit('update:inspectorOpen', open)
+  if (open) sessionsOpen.value = false
+}
+
+function toggleSessions(): void {
+  if (!narrowViewport.value) toggleRail()
+  else if (sessionsOpen.value) sessionsOpen.value = false
+  else openSessions()
 }
 
 /**
@@ -92,8 +126,7 @@ function readViewport(): void {
  * open by default, so "collapsed" is a different question in each face.
  */
 const unregisterToggle = registerShellAction('rail.toggle', () => {
-  if (narrowViewport.value) sessionsOpen.value = !sessionsOpen.value
-  else toggleRail()
+  toggleSessions()
 })
 const unregisterExpanded = registerShellActionExpanded('rail.toggle', () =>
   narrowViewport.value ? sessionsOpen.value : !railCollapsed.value,
@@ -108,8 +141,7 @@ useShortcut(
     keys: ['Mod', 'B'],
   },
   () => {
-    if (narrowViewport.value) sessionsOpen.value = !sessionsOpen.value
-    else toggleRail()
+    toggleSessions()
   },
 )
 
@@ -127,7 +159,6 @@ onBeforeUnmount(() => {
 if (typeof window !== 'undefined') {
   onMounted(() => window.addEventListener('resize', readViewport))
 }
-const inspectorDrawerOpen = ref(false)
 
 /**
  * The two widths the user set, if any.
@@ -138,6 +169,18 @@ const inspectorDrawerOpen = ref(false)
  */
 const railWidth = ref(RAIL_PREFERRED_WIDTH)
 const inspectorWidth = ref(INSPECTOR_PREFERRED_WIDTH)
+// Keep stored widths as preferences, but reserve room for the conversation
+// when both panels are visible in a smaller desktop window.
+const displayedInspectorWidth = computed(() => !inspectorDocked.value ? inspectorWidth.value : Math.min(
+  inspectorWidth.value,
+  Math.max(INSPECTOR_MIN_WIDTH, availableWidth.value -
+    (railCollapsed.value || narrowViewport.value ? 0 : RAIL_MIN_WIDTH) - TRANSCRIPT_MIN_WIDTH),
+))
+const displayedRailWidth = computed(() => clampRailWidth(
+  railWidth.value,
+  availableWidth.value -
+    (inspectorDocked.value && props.inspectorOpen ? displayedInspectorWidth.value : 0),
+))
 
 onMounted(() => {
   const stored = readShellWidths()
@@ -220,6 +263,7 @@ onBeforeUnmount(endDrag)
       'app-shell--rail-closed': railCollapsed,
     }"
     :data-rail-folded="String(railCollapsed)"
+    :style="{ '--rail-width': displayedRailWidth + 'px', '--inspector-width': displayedInspectorWidth + 'px' }"
   >
     <nav
       class="app-shell__mobile-controls"
@@ -231,7 +275,7 @@ onBeforeUnmount(endDrag)
         size="sm"
         data-mobile-sessions
         :aria-label="props.sessionsTitle"
-        @click="sessionsOpen = true"
+        @click="openSessions"
       >
         {{ props.sessionsTitle }}
       </AppButton>
@@ -240,7 +284,7 @@ onBeforeUnmount(endDrag)
         size="sm"
         data-mobile-inspector
         :aria-label="props.inspectorTitle"
-        @click="inspectorDrawerOpen = true"
+        @click="updateInspectorDrawer(true)"
       >
         {{ props.inspectorTitle }}
       </AppButton>
@@ -253,8 +297,7 @@ onBeforeUnmount(endDrag)
         data-pane="sessions"
         data-rail
         :data-rail-appearance="props.railAppearance"
-        :data-rail-width="railWidth"
-        :style="{ '--rail-width': railWidth + 'px' }"
+        :data-rail-width="displayedRailWidth"
         :aria-label="t('layout.sessions')"
       >
         <slot name="sessions" />
@@ -265,7 +308,7 @@ onBeforeUnmount(endDrag)
           tabindex="0"
           aria-orientation="vertical"
           :aria-label="props.railResizeLabel ?? t('layout.resizeRail')"
-          :aria-valuenow="railWidth"
+          :aria-valuenow="displayedRailWidth"
           :aria-valuemin="RAIL_MIN_WIDTH"
           :aria-valuemax="RAIL_MAX_WIDTH"
           @keydown="handleRailKey"
@@ -290,8 +333,7 @@ onBeforeUnmount(endDrag)
         :data-inspector-open="String(props.inspectorOpen)"
         :data-inspector-full-width="String(props.inspectorFullWidth)"
         :data-inspector-tab="props.inspectorTab"
-        :data-inspector-width="inspectorWidth"
-        :style="{ '--inspector-width': inspectorWidth + 'px' }"
+        :data-inspector-width="displayedInspectorWidth"
         :hidden="!props.inspectorOpen"
         :aria-label="t('layout.inspector')"
       >
@@ -302,7 +344,7 @@ onBeforeUnmount(endDrag)
           tabindex="0"
           aria-orientation="vertical"
           :aria-label="props.inspectorResizeLabel ?? t('layout.resizeInspector')"
-          :aria-valuenow="inspectorWidth"
+          :aria-valuenow="displayedInspectorWidth"
           :aria-valuemin="INSPECTOR_MIN_WIDTH"
           :aria-valuemax="INSPECTOR_MAX_WIDTH"
           @keydown="handleInspectorKey"
@@ -318,7 +360,7 @@ onBeforeUnmount(endDrag)
     <AppDrawer v-model:open="sessionsOpen" :title="props.sessionsTitle" side="left">
       <slot name="sessions" />
     </AppDrawer>
-    <AppDrawer v-model:open="inspectorDrawerOpen" :title="props.inspectorTitle" side="right">
+    <AppDrawer :open="inspectorDrawerOpen" :title="props.inspectorTitle" side="right" @update:open="updateInspectorDrawer">
       <slot name="inspector" />
     </AppDrawer>
   </div>
@@ -326,7 +368,11 @@ onBeforeUnmount(endDrag)
 
 <style scoped>
 .app-shell {
-  min-block-size: calc(100vh - var(--app-top-chrome-height, var(--header-height)));
+  display: flex;
+  min-block-size: 0;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .app-shell__mobile-controls {
@@ -338,8 +384,9 @@ onBeforeUnmount(endDrag)
   grid-template-columns:
     var(--rail-width, var(--rail-preferred-width, var(--sidebar-width)))
     minmax(0, 1fr)
-    var(--inspector-width, var(--inspector-width-dynamic, var(--inspector-width)));
-  min-block-size: calc(100vh - var(--app-top-chrome-height, var(--header-height)));
+    var(--inspector-width, 340px);
+  min-block-size: 0;
+  flex: 1;
   overflow: hidden;
 }
 
@@ -347,6 +394,14 @@ onBeforeUnmount(endDrag)
   grid-template-columns:
     var(--rail-width, var(--rail-preferred-width, var(--sidebar-width)))
     minmax(0, 1fr);
+}
+
+.app-shell--rail-closed .app-shell__grid {
+  grid-template-columns: minmax(0, 1fr) var(--inspector-width, 340px);
+}
+
+.app-shell--rail-closed.app-shell--inspector-closed .app-shell__grid {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .app-shell__rail,
@@ -364,6 +419,7 @@ onBeforeUnmount(endDrag)
 
 .app-shell__rail,
 .app-shell__inspector {
+  overflow-x: hidden;
   background: var(--color-bg-surface);
 }
 
@@ -376,7 +432,13 @@ onBeforeUnmount(endDrag)
 }
 
 .app-shell__transcript {
+  display: flex;
+  flex-direction: column;
   background: var(--color-bg-base);
+}
+
+.app-shell__transcript > :deep(.thread-bar) {
+  flex-shrink: 0;
 }
 
 /* The handle is the seam itself: a hairline the pointer can still find. */
@@ -389,11 +451,11 @@ onBeforeUnmount(endDrag)
 }
 
 .app-shell__rail .app-shell__resize {
-  inset-inline-end: -3px;
+  inset-inline-end: 0;
 }
 
 .app-shell__inspector .app-shell__resize {
-  inset-inline-start: -3px;
+  inset-inline-start: 0;
 }
 
 .app-shell__resize:focus-visible {
@@ -401,7 +463,21 @@ onBeforeUnmount(endDrag)
   outline-offset: 2px;
 }
 
-@media (max-width: 1279px) {
+@media (max-width: 1119px) {
+  .app-shell .app-shell__grid {
+    grid-template-columns: var(--rail-width, 288px) minmax(0, 1fr);
+  }
+
+  .app-shell--rail-closed .app-shell__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .app-shell__inspector {
+    display: none;
+  }
+}
+
+@media (max-width: 799px) {
   .app-shell__mobile-controls {
     display: flex;
     min-block-size: var(--control-height-lg);
@@ -413,11 +489,9 @@ onBeforeUnmount(endDrag)
     background: var(--color-bg-surface);
   }
 
-  .app-shell__grid {
+  .app-shell .app-shell__grid {
     grid-template-columns: minmax(0, 1fr);
-    min-block-size: calc(
-      100vh - var(--app-top-chrome-height, var(--header-height)) - var(--control-height-lg)
-    );
+    min-block-size: 0;
   }
 
   .app-shell__rail,

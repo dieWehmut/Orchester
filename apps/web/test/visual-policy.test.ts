@@ -18,7 +18,6 @@ describe('workspace visual policy', () => {
   it('routes full-height layouts through the shared application chrome offset', () => {
     const app = source('styles/app.css')
     const fullHeightSources = [
-      source('components/layout/AppShell.vue'),
       source('views/SettingsView.vue'),
       source('views/NotFoundView.vue'),
     ]

@@ -6,14 +6,16 @@ import RunPanel from '../src/components/run/RunPanel.vue'
 import { MODEL_CATALOG_FIXTURE } from './fixtures/model-catalog'
 
 describe('RunPanel', () => {
-  it('renders an actionable empty run with composer and footer', () => {
+  it('renders an actionable empty run without unused run statistics', async () => {
     const wrapper = mount(RunPanel, { props: { view: createEmptyRunView() } })
 
     expect(wrapper.get('[data-run-panel]')).toBeTruthy()
     expect(wrapper.get('[data-run-composer]')).toBeTruthy()
-    expect(wrapper.get('[data-run-footer]')).toBeTruthy()
+    expect(wrapper.find('[data-run-footer]').exists()).toBe(false)
     expect(wrapper.get('[data-empty-workspace]')).toBeTruthy()
     expect(wrapper.get('[data-orchester-mark]')).toBeTruthy()
+    await wrapper.setProps({ conversationStarted: true })
+    expect(wrapper.get('[data-run-footer]')).toBeTruthy()
   })
 
   it('removes the large mark immediately after a conversation starts', async () => {

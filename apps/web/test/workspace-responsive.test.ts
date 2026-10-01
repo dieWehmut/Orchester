@@ -22,6 +22,35 @@ describe('AppShell narrow-viewport drawers', () => {
     expect(wrapper.get('[role="dialog"][aria-labelledby]').text()).toContain('Session row')
 
     await wrapper.get('[data-mobile-inspector]').trigger('click')
-    expect(wrapper.findAll('[role="dialog"]')).toHaveLength(2)
+    expect(wrapper.findAll('[role="dialog"]')).toHaveLength(1)
+    expect(wrapper.get('[role="dialog"]').text()).toContain('Approval row')
+    expect(wrapper.emitted('update:inspectorOpen')?.at(-1)).toEqual([true])
+  })
+
+  it('opens a controlled inspector as a drawer and follows it back to the desktop dock', async () => {
+    const originalWidth = window.innerWidth
+    window.innerWidth = 960
+    const wrapper = mount(AppShell, {
+      props: { sessionsTitle: 'Sessions', inspectorTitle: 'Inspector', inspectorOpen: false },
+      slots: { inspector: '<p>Review changes</p>' },
+    })
+    try {
+      expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
+      await wrapper.setProps({ inspectorOpen: true })
+      expect(wrapper.get('[role="dialog"]').text()).toContain('Review changes')
+
+      await wrapper.get('[data-drawer-close]').trigger('click')
+      expect(wrapper.emitted('update:inspectorOpen')?.at(-1)).toEqual([false])
+      await wrapper.setProps({ inspectorOpen: false })
+      await wrapper.setProps({ inspectorOpen: true })
+      window.innerWidth = 1280
+      window.dispatchEvent(new Event('resize'))
+      await wrapper.vm.$nextTick()
+      expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
+      expect(wrapper.get('[data-inspector]').attributes('data-inspector-open')).toBe('true')
+    } finally {
+      wrapper.unmount()
+      window.innerWidth = originalWidth
+    }
   })
 })

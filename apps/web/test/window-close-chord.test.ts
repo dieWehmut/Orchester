@@ -91,6 +91,7 @@ describe('the window close chord', () => {
   it('closes the active tab from anywhere, not only from the strip', async () => {
     const { wrapper } = await mountWorkspace(fakeDesktopWindow())
 
+    await wrapper.get('[data-thread-action="panel"]').trigger('click')
     await wrapper.get('[data-tabstrip-tab="inspector"]').trigger('click')
     await nextTick()
     expect(wrapper.get('[data-tabstrip-tab="inspector"]').attributes('aria-selected')).toBe('true')
@@ -175,6 +176,6 @@ describe('the window close chord', () => {
     await nextTick()
 
     expect(event.defaultPrevented).toBe(false)
-    expect(wrapper.find('[data-tabstrip-tab="inspector"]').exists()).toBe(true)
+    expect(wrapper.find('[data-tabstrip-tab="inspector"]').exists()).toBe(false)
   })
 })

@@ -47,11 +47,15 @@ describe('WorkspaceView thread bar', () => {
     expect(share.text().length).toBeGreaterThan(0)
   })
 
-  it('collapses the inspector pane from the thread bar panel control', async () => {
+  it('opens and closes the inspector on demand from the thread bar', async () => {
     const stores = createAppStores()
     const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
 
+    expect(wrapper.get('[data-pane="inspector"]').attributes('data-inspector-open')).toBe('false')
+
+    await wrapper.get('[data-thread-action="panel"]').trigger('click')
     expect(wrapper.get('[data-pane="inspector"]').attributes('data-inspector-open')).toBe('true')
+    expect(wrapper.get('[role="dialog"]').text()).toContain('No agent selected')
 
     await wrapper.get('[data-thread-action="panel"]').trigger('click')
 

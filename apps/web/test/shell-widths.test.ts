@@ -124,11 +124,11 @@ describe('shell width clamps', () => {
   it('carries the clamps into the styles so the pointer path cannot leave them', async () => {
     const wrapper = await mountSettled()
 
-    const rail = wrapper.get('[data-rail]').attributes('style') ?? ''
-    expect(rail).toContain('--rail-width: 288px')
-
-    const inspector = wrapper.get('[data-inspector]').attributes('style') ?? ''
-    expect(inspector).toContain('--inspector-width: 340px')
+    // The grid consumes these widths; setting them on its children cannot
+    // affect the grid tracks, even when the stored numbers are correct.
+    const shell = wrapper.attributes('style') ?? ''
+    expect(shell).toContain('--rail-width: 288px')
+    expect(shell).toContain('--inspector-width: 340px')
   })
 
   it('exposes the handles as separators a reader can name and operate', async () => {
@@ -143,6 +143,26 @@ describe('shell width clamps', () => {
       expect(handle.attributes('aria-valuemax'), selector).toBeTruthy()
       expect((handle.attributes('aria-label') ?? '').length, selector).toBeGreaterThan(0)
       expect(handle.attributes('tabindex'), selector).toBe('0')
+    }
+  })
+
+  it('reserves conversation space at the desktop breakpoint without overwriting preferred widths', async () => {
+    const originalWidth = window.innerWidth
+    window.innerWidth = 1120
+    writeShellWidths({ rail: 420, inspector: 460 })
+    const wrapper = await mountSettled()
+    try {
+      expect(widthOf(wrapper, '[data-rail]', 'data-rail-width')).toBe(300)
+      expect(widthOf(wrapper, '[data-inspector]', 'data-inspector-width')).toBe(460)
+      expect(readShellWidths()).toEqual({ rail: 420, inspector: 460 })
+
+      window.innerWidth = 1600
+      window.dispatchEvent(new Event('resize'))
+      await flushPromises()
+      expect(widthOf(wrapper, '[data-rail]', 'data-rail-width')).toBe(420)
+    } finally {
+      wrapper.unmount()
+      window.innerWidth = originalWidth
     }
   })
 })
