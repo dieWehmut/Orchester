@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 
-import { installerName, assertInputs } from './build-installer.mjs';
+import { installerName, assertInputs, builtInstaller } from './build-installer.mjs';
 import { expectedAssets, parseArguments as parseStageArguments, sha256 } from './stage-release.mjs';
 import { expectedAssets as expectedReleaseAssets, parseChecksums, parseArguments as parseVerifyArguments } from './verify-release.mjs';
 
@@ -14,6 +14,24 @@ const repositoryRoot = path.resolve(path.dirname(new URL(import.meta.url).pathna
 test('installer naming follows the tauri product architecture convention', () => {
   assert.equal(installerName('0.1.2', 'x64'), 'Orchester_0.1.2_x64-setup.exe');
   assert.equal(installerName('1.0.0', 'arm64'), 'Orchester_1.0.0_arm64-setup.exe');
+});
+
+test('local upgrades select the requested installer while preserving older builds', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'orchester-local-build-'));
+  try {
+    const previous = path.join(directory, installerName('0.1.3', 'x64'));
+    const current = path.join(directory, installerName('0.1.4', 'x64'));
+    fs.writeFileSync(previous, 'previous installer');
+    assert.throws(() => builtInstaller(directory, '0.1.4', 'x64'), /non-empty NSIS installer/);
+    fs.writeFileSync(current, 'current installer');
+    assert.equal(builtInstaller(directory, '0.1.4', 'x64'), current);
+    assert.equal(fs.readFileSync(previous, 'utf8'), 'previous installer');
+    assert.throws(() => builtInstaller(directory, '0.1.4', 'arm64'), /non-empty NSIS installer/);
+    fs.writeFileSync(current, '');
+    assert.throws(() => builtInstaller(directory, '0.1.4', 'x64'), /non-empty NSIS installer/);
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
 });
 
 test('release staging and publishing agree on the same asset names', () => {

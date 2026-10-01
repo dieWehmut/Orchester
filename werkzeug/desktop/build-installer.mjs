@@ -38,14 +38,11 @@ function main() {
   run('pnpm', ['--filter', '@orchester/desktop', 'exec', 'tauri', 'build', '--target', rustTarget, '--bundles', 'nsis']);
 
   const bundleDirectory = path.join(desktopRoot, 'src-tauri/target', rustTarget, 'release/bundle/nsis');
-  const produced = fs.existsSync(bundleDirectory)
-    ? fs.readdirSync(bundleDirectory).filter((name) => name.endsWith('.exe'))
-    : [];
-  if (produced.length !== 1) fail(`expected one NSIS installer in ${bundleDirectory}, found ${produced.length}`);
+  const produced = builtInstaller(bundleDirectory, version, arch);
 
   fs.mkdirSync(outputDirectory, { recursive: true });
   const destination = path.join(outputDirectory, installerName(version, arch));
-  fs.copyFileSync(path.join(bundleDirectory, produced[0]), destination);
+  fs.copyFileSync(produced, destination);
   const size = fs.statSync(destination).size;
   if (size <= 0) fail('produced installer is empty');
   process.stdout.write(`build-installer: wrote ${path.relative(repositoryRoot, destination)} (${size} bytes)\n`);
@@ -110,4 +107,15 @@ if (invokedDirectly) {
     process.stderr.write(`${error.message}\n`);
     process.exit(1);
   }
+}
+
+export function builtInstaller(directory, version, arch) {
+  // A local build keeps older installers in the target directory. Select the
+  // requested version and architecture explicitly so an upgrade can be built
+  // without deleting earlier output or accidentally copying it as the new one.
+  const candidate = path.join(directory, installerName(version, arch));
+  if (!fs.existsSync(candidate) || !fs.statSync(candidate).isFile() || fs.statSync(candidate).size === 0) {
+    fail(`expected a non-empty NSIS installer at ${candidate}`);
+  }
+  return candidate;
 }
