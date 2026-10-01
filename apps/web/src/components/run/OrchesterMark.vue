@@ -33,9 +33,9 @@ withDefaults(
   place-items: center;
   overflow: hidden;
   border: 1px solid var(--color-border-base);
-  border-radius: 28px;
+  border-radius: 25%;
   background: var(--color-bg-surface);
-  box-shadow: 0 18px 48px rgb(0 0 0 / 22%);
+  box-shadow: var(--shadow-200);
 }
 
 .orchester-mark__art {

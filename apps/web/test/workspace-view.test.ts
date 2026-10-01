@@ -163,7 +163,10 @@ describe('WorkspaceView', () => {
     stores.run.applyEvent(first)
     stores.run.applyEvent(latest)
     await nextTick()
-    await wrapper.findAll('[role="tab"]')[2]?.trigger('click')
+    await wrapper.get('[data-thread-action="panel"]').trigger('click')
+    const reviewTab = wrapper.findAll('[role="tab"]').find((tab) => tab.text() === 'Review')
+    expect(reviewTab).toBeDefined()
+    await reviewTab!.trigger('click')
 
     expect(wrapper.get('[data-change-path="src/app.ts"]').text()).toContain('Modified')
     expect(wrapper.get('[data-change-path="src/app.ts"]').text()).toContain('2 events')

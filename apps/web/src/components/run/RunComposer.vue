@@ -355,7 +355,8 @@ defineExpose({ focus })
 .run-composer {
   display: grid;
   gap: var(--space-2);
-  max-inline-size: 54rem;
+  min-inline-size: 0;
+  max-inline-size: var(--composer-max-width, 54rem);
   margin-inline: auto;
 }
 
@@ -367,9 +368,9 @@ defineExpose({ focus })
   gap: var(--space-2);
   padding: var(--space-3) var(--space-3) var(--space-2);
   border: 1px solid var(--color-border-control);
-  border-radius: 1.25rem;
+  border-radius: var(--composer-radius, 1.25rem);
   background: var(--color-bg-surface);
-  box-shadow: 0 12px 34px rgb(0 0 0 / 12%);
+  box-shadow: var(--elevation-composer);
   transition: border-color var(--transition-fast) var(--ease-out);
 }
 
@@ -394,6 +395,7 @@ defineExpose({ focus })
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
+  flex-wrap: wrap;
 }
 
 .run-composer__commands {
@@ -446,11 +448,14 @@ defineExpose({ focus })
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  min-inline-size: 0;
+  margin-inline-start: auto;
 }
 
 /* The model control sits with the action it belongs to, as the reference draws
    it: what the next run uses, next to the control that starts it. */
 .run-composer__model {
+  min-inline-size: 0;
   margin-inline-end: var(--space-1);
 }
 
@@ -460,18 +465,29 @@ defineExpose({ focus })
 
 @media (max-width: 640px) {
   .run-composer {
-    padding: var(--space-3);
-    border-radius: 1rem;
+    padding: 0;
+  }
+
+  .run-composer__field {
+    padding-inline: var(--space-2);
   }
 
   .run-composer__footer {
-    align-items: stretch;
-    flex-direction: column;
+    gap: var(--space-2);
   }
 
-  .run-composer__actions,
-  .run-composer__actions :deep(button) {
-    width: 100%;
+  .run-composer__actions {
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  .run-composer__model {
+    flex: 0 1 auto;
+    overflow: hidden;
+  }
+
+  .run-composer__send {
+    flex: 0 0 2.25rem;
   }
 }
 </style>

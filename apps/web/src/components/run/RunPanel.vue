@@ -316,6 +316,7 @@ defineExpose({ focusPrompt, clearPrompt })
       data-run-companion
     >
       <PetCompanion
+        :size="64"
         :animation="petState.animation"
         :label="petNotification || props.petLabel"
         :reduced-motion="prefersReducedMotion"
@@ -348,7 +349,7 @@ defineExpose({ focusPrompt, clearPrompt })
   flex: 1;
   flex-direction: column;
   overflow: hidden;
-  background: var(--color-bg-base);
+  background: var(--transcript-surface, var(--color-bg-base));
 }
 
 .run-panel__stream {
@@ -364,7 +365,7 @@ defineExpose({ focusPrompt, clearPrompt })
   inset-block-start: 0;
   inset-inline: 0;
   block-size: var(--space-6);
-  background: linear-gradient(to bottom, var(--color-bg-base), transparent);
+  background: linear-gradient(to bottom, var(--transcript-surface, var(--color-bg-base)), transparent);
   pointer-events: none;
 }
 
@@ -410,6 +411,14 @@ defineExpose({ focusPrompt, clearPrompt })
   margin-block: var(--space-3) var(--space-4);
 }
 
+.run-panel :deep(.run-footer),
+.run-panel :deep(.plan-strip),
+.run-panel__companion {
+  box-sizing: border-box;
+  inline-size: min(calc(100% - var(--space-8)), var(--composer-max-width, 54rem));
+  margin-inline: auto;
+}
+
 .run-panel__companion {
   /*
    * The band is the companion's stage: the sprite paces its width rather than
@@ -420,7 +429,7 @@ defineExpose({ focusPrompt, clearPrompt })
    */
   display: flex;
   justify-content: flex-start;
-  padding-inline: var(--space-4);
+  padding-inline: 0;
   padding-block-start: var(--space-2);
 }
 

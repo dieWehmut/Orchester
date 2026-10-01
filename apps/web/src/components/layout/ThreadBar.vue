@@ -94,7 +94,7 @@ defineEmits<{
   gap: var(--space-2);
   padding-inline: var(--space-4);
   border-block-end: 1px solid var(--color-border-base);
-  background: var(--color-bg-base);
+  background: var(--transcript-surface, var(--color-bg-base));
 }
 
 .thread-bar__icon {

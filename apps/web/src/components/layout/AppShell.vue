@@ -434,7 +434,7 @@ onBeforeUnmount(endDrag)
 .app-shell__transcript {
   display: flex;
   flex-direction: column;
-  background: var(--color-bg-base);
+  background: var(--transcript-surface, var(--color-bg-base));
 }
 
 .app-shell__transcript > :deep(.thread-bar) {

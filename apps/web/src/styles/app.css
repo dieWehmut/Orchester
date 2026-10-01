@@ -16,8 +16,14 @@
      the OS metric: 32 px where the caption buttons live, 38 px elsewhere. */
   --app-chrome-height: var(--window-chrome-height, 38px);
   --app-top-chrome-height: var(--app-chrome-height);
+  --transcript-surface: var(--color-bg-base);
 
   background: var(--color-bg-base);
+}
+
+:root[data-theme='light'] .app-shell {
+  --transcript-surface: var(--color-bg-surface);
+  --rail-surface: var(--color-bg-base);
 }
 
 #app > .app-shell {

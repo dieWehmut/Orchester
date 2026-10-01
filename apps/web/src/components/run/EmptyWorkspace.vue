@@ -15,7 +15,7 @@ withDefaults(
 
 <template>
   <section class="empty-workspace" data-empty-workspace aria-labelledby="empty-workspace-title">
-    <OrchesterMark />
+    <OrchesterMark :size="64" />
     <h1 id="empty-workspace-title">{{ title }}</h1>
     <p>{{ description }}</p>
   </section>
@@ -28,8 +28,8 @@ withDefaults(
   flex: 1;
   align-content: center;
   justify-items: center;
-  gap: var(--space-4);
-  padding: var(--space-10) var(--space-6);
+  gap: var(--space-3);
+  padding: var(--space-6);
   color: var(--color-text-secondary);
   text-align: center;
 }
@@ -41,7 +41,8 @@ withDefaults(
 
 .empty-workspace h1 {
   color: var(--color-text-primary);
-  font-size: clamp(var(--text-xl), 2.2vw, var(--text-2xl));
+  max-inline-size: 32rem;
+  font-size: var(--text-xl);
   font-weight: var(--weight-medium);
   letter-spacing: -0.02em;
 }
@@ -49,5 +50,6 @@ withDefaults(
 .empty-workspace p {
   max-inline-size: 34rem;
   font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
 }
 </style>
