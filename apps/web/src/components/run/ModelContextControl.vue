@@ -305,4 +305,11 @@ function choose(id: string): void {
   color: var(--color-text-secondary);
   font-size: var(--text-xs);
 }
+
+.model-context__setup :deep(.app-button__label) {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  white-space: nowrap;
+}
 </style>
