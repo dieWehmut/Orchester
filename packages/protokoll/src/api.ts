@@ -141,6 +141,16 @@ export interface ModelSelectionRequestDto {
   effort?: string | null
 }
 
+/** A new provider saved as the default. The key is input-only. */
+export interface ModelProviderRequestDto {
+  provider: string
+  name: string
+  base_url: string
+  wire_api: 'responses' | 'anthropic'
+  model: string
+  api_key?: string
+}
+
 export const SESSION_HISTORY_SCHEMA_VERSION = 1 as const
 
 export type SessionOutcomeDto = 'success' | 'failed' | 'cancelled'

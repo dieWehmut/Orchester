@@ -3,6 +3,7 @@ import type {
   ModelChoiceDto,
   ModelSelectionRequestDto,
   ProviderChoiceDto,
+  ModelProviderRequestDto,
 } from '@orchester/protokoll'
 import { computed, ref, shallowRef } from 'vue'
 import { defineStore } from 'pinia'
@@ -100,6 +101,30 @@ export const useModelCatalogStore = defineStore('modelCatalog', () => {
     }
   }
 
+  async function saveProvider(provider: ModelProviderRequestDto): Promise<boolean> {
+    const currentApi = api
+    const currentGeneration = ++generation
+    if (!currentApi) {
+      error.value = normalizeApiError(new TypeError('model catalog API unavailable'))
+      status.value = catalog.value ? 'stale' : 'error'
+      return false
+    }
+    status.value = catalog.value ? 'refreshing' : 'loading'
+    error.value = null
+    try {
+      const next = await currentApi.saveProvider(provider)
+      if (currentGeneration !== generation) return false
+      catalog.value = next
+      status.value = 'ready'
+      return true
+    } catch (cause) {
+      if (currentGeneration !== generation) return false
+      error.value = normalizeApiError(cause)
+      status.value = catalog.value ? 'stale' : 'error'
+      return false
+    }
+  }
+
   return {
     status,
     catalog,
@@ -109,6 +134,7 @@ export const useModelCatalogStore = defineStore('modelCatalog', () => {
     configure,
     load,
     select,
+    saveProvider,
     reset,
   }
 })

@@ -1,19 +1,25 @@
 use axum::{
     extract::{rejection::JsonRejection, State},
-    http::HeaderMap,
+    http::{header, HeaderMap},
     Json,
 };
-use orchester_anwendung::SelfAgentHost;
+use cookie::Cookie;
+use orchester_anwendung::{SelfAgentHost, SelfAgentHostError};
+use orchester_laufzeit::harness::config::ConfigError;
 use orchester_laufzeit::harness::service::{
-    SelfAgentActiveModel, SelfAgentModelCatalog, SelfAgentModelChoice, SelfAgentProviderState,
+    ProviderDraft, ProviderEditError, SelfAgentActiveModel, SelfAgentModelCatalog,
+    SelfAgentModelChoice, SelfAgentProviderState,
 };
+use secrecy::{ExposeSecret, SecretString};
 use serde::{Deserialize, Serialize};
+use std::net::SocketAddr;
 
 use crate::{
     api_error::{api_error_response, request_id_from_headers, ApiErrorCode, ApiErrorResponse},
     bootstrap::ServerContext,
     health::no_store_headers,
     model_selection::{ModelSelection, MODEL_SELECTION_FIELD_MAX_CHARS},
+    session::SESSION_COOKIE_NAME,
 };
 
 pub const MODEL_CATALOG_SCHEMA_VERSION: u8 = 1;
@@ -181,7 +187,10 @@ impl ModelSelectionRequestDto {
 /// A fresh host with the reader's selection applied, which is the host the run
 /// route builds: without this the screen would report the configuration file's
 /// model while the next run used something else.
-fn catalog_for(context: &ServerContext, selection: &ModelSelection) -> Option<SelfAgentModelCatalog> {
+fn catalog_for(
+    context: &ServerContext,
+    selection: &ModelSelection,
+) -> Option<SelfAgentModelCatalog> {
     let paths = context.paths()?;
     let mut host = SelfAgentHost::for_paths(paths);
     if !selection.is_empty() && selection.apply(&mut host).is_err() {
@@ -191,6 +200,153 @@ fn catalog_for(context: &ServerContext, selection: &ModelSelection) -> Option<Se
         return None;
     }
     host.model_catalog().ok()
+}
+
+/// A new provider. Credentials are accepted only as protected input and are
+/// never part of the catalog response or of a request's Debug representation.
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct ModelProviderRequestDto {
+    provider: String,
+    #[serde(default)]
+    name: String,
+    base_url: String,
+    wire_api: String,
+    model: String,
+    #[serde(default)]
+    api_key: Option<SecretString>,
+}
+
+impl ModelProviderRequestDto {
+    fn valid(&self) -> bool {
+        let provider = self.provider.trim();
+        !provider.is_empty()
+            && provider.len() <= 120
+            && provider
+                .chars()
+                .all(|c| c.is_ascii_alphanumeric() || matches!(c, '.' | '_' | '-'))
+            && [&self.name, &self.base_url, &self.model]
+                .iter()
+                .all(|value| value.len() <= 256 && !value.chars().any(char::is_control))
+            && !self.base_url.trim().is_empty()
+            && !self.model.trim().is_empty()
+            && matches!(self.wire_api.as_str(), "responses" | "anthropic")
+            && self.api_key.as_ref().map_or(true, |key| {
+                let key = key.expose_secret();
+                !key.trim().is_empty() && key.len() <= 4096 && !key.chars().any(char::is_control)
+            })
+    }
+}
+
+pub(crate) async fn model_provider_handler(
+    State(context): State<ServerContext>,
+    headers: HeaderMap,
+    request: Result<Json<ModelProviderRequestDto>, JsonRejection>,
+) -> Result<(HeaderMap, Json<ModelCatalogDto>), ApiErrorResponse> {
+    let request_id = request_id_from_headers(&headers);
+    require_provider_setup_session(&context, &headers)
+        .map_err(|code| api_error_response(code, request_id))?;
+    let Json(request) =
+        request.map_err(|_| api_error_response(ApiErrorCode::BadRequest, request_id))?;
+    if !request.valid() {
+        return Err(api_error_response(
+            ApiErrorCode::ValidationFailed,
+            request_id,
+        ));
+    }
+    let paths = context
+        .paths()
+        .cloned()
+        .ok_or_else(|| api_error_response(ApiErrorCode::Unavailable, request_id))?;
+    let mut selection = context.model_selection().edit().await;
+    // Keyring and configuration IO must not block the runtime's event loop.
+    let catalog = tokio::task::spawn_blocking(move || {
+        let mut host = SelfAgentHost::for_paths(&paths);
+        let existing = host
+            .provider_draft(request.provider.trim())
+            .map_err(|_| ApiErrorCode::Unavailable)?;
+        // This route adds a provider. Refusing replacement also preserves any
+        // credential reference or private literal a hand-written entry uses.
+        if existing.is_some() {
+            return Err(ApiErrorCode::Conflict);
+        }
+        let draft = ProviderDraft {
+            provider: request.provider,
+            name: request.name,
+            base_url: request.base_url,
+            wire_api: request.wire_api,
+            model: request.model,
+            activate: true,
+        };
+        host.write_provider(&draft, request.api_key)
+            .map_err(|cause| match cause {
+                SelfAgentHostError::ProviderEdit(ProviderEditError::Config(
+                    ConfigError::Validation { .. } | ConfigError::InvalidSecretReference { .. },
+                )) => ApiErrorCode::ValidationFailed,
+                _ => ApiErrorCode::Unavailable,
+            })?;
+        SelfAgentHost::for_paths(&paths)
+            .model_catalog()
+            .map_err(|_| ApiErrorCode::Unavailable)
+    })
+    .await
+    .map_err(|_| api_error_response(ApiErrorCode::Internal, request_id))?
+    .map_err(|code| api_error_response(code, request_id))?;
+    // A previous session override must not mask the newly saved default.
+    *selection = ModelSelection::default();
+    Ok((no_store_headers(), Json(model_catalog_response(&catalog))))
+}
+
+// Provider setup persists configuration and a credential. Keep this boundary
+// even when app_router is served outside the desktop's outer middleware.
+fn require_provider_setup_session(
+    context: &ServerContext,
+    headers: &HeaderMap,
+) -> Result<(), ApiErrorCode> {
+    let host = headers
+        .get(header::HOST)
+        .and_then(|value| value.to_str().ok())
+        .ok_or(ApiErrorCode::Forbidden)?;
+    let loopback = host
+        .parse::<SocketAddr>()
+        .map(|address| address.ip().is_loopback() && address.port() != 0)
+        .unwrap_or_else(|_| {
+            host == "localhost"
+                || host
+                    .strip_prefix("localhost:")
+                    .is_some_and(|port| port.parse::<u16>().is_ok_and(|port| port != 0))
+        });
+    let origin = headers
+        .get(header::ORIGIN)
+        .and_then(|value| value.to_str().ok());
+    if !loopback
+        || origin != Some(format!("http://{host}").as_str())
+        || headers
+            .get("sec-fetch-site")
+            .is_some_and(|value| value == "cross-site" || value == "same-site")
+    {
+        return Err(ApiErrorCode::Forbidden);
+    }
+    let cookie = headers
+        .get(header::COOKIE)
+        .and_then(|value| value.to_str().ok())
+        .and_then(|value| {
+            Cookie::split_parse(value)
+                .filter_map(Result::ok)
+                .find(|cookie| cookie.name() == SESSION_COOKIE_NAME)
+        })
+        .ok_or(ApiErrorCode::Unauthorized)?;
+    if !context.sessions().validate_cookie(cookie.value()) {
+        return Err(ApiErrorCode::Unauthorized);
+    }
+    let csrf = headers
+        .get("x-csrf-token")
+        .and_then(|value| value.to_str().ok())
+        .ok_or(ApiErrorCode::Forbidden)?;
+    if !context.sessions().validate(cookie.value(), csrf) {
+        return Err(ApiErrorCode::Forbidden);
+    }
+    Ok(())
 }
 
 pub(crate) async fn model_catalog_handler(

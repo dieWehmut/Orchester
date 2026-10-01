@@ -70,6 +70,57 @@ async fn authenticate(client: &Client, server: &EmbeddedServer) -> (String, Stri
 }
 
 #[tokio::test]
+async fn provider_setup_requires_session_origin_and_csrf_before_writing() {
+    let assets = Assets::new();
+    let mut server = start(&assets).await;
+    let client = Client::new();
+    let endpoint = format!("{}/api/v1/models/providers", server.origin());
+    let body = json!({"provider":"test", "name":"Test", "base_url":"https://example.com/v1", "wire_api":"responses", "model":"test-model"});
+    let response = client
+        .post(&endpoint)
+        .header("origin", server.origin())
+        .json(&body)
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+    let (cookie, csrf) = authenticate(&client, &server).await;
+    for (origin, token) in [
+        (server.origin().to_owned(), "".to_owned()),
+        (server.origin().to_owned(), "incorrect".to_owned()),
+        ("https://attacker.example".to_owned(), csrf.clone()),
+        ("null".to_owned(), csrf.clone()),
+    ] {
+        let response = client
+            .post(&endpoint)
+            .header("cookie", &cookie)
+            .header("origin", origin)
+            .header("x-csrf-token", token)
+            .json(&body)
+            .send()
+            .await
+            .unwrap();
+        assert_eq!(response.status(), StatusCode::FORBIDDEN);
+        assert!(!assets.0.join("home/orchester.jsonc").exists());
+    }
+    // An authenticated validation failure reaches the route, but cannot save.
+    let mut invalid = body;
+    invalid["wire_api"] = json!("invalid");
+    let response = client
+        .post(&endpoint)
+        .header("cookie", cookie)
+        .header("origin", server.origin())
+        .header("x-csrf-token", csrf)
+        .json(&invalid)
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(response.status(), StatusCode::UNPROCESSABLE_ENTITY);
+    assert!(!assets.0.join("home/orchester.jsonc").exists());
+    server.shutdown().await.unwrap();
+}
+
+#[tokio::test]
 async fn embedded_runtime_serves_assets_authenticated_api_and_websocket_then_releases_port() {
     let assets = Assets::new();
     let mut server = start(&assets).await;

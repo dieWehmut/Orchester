@@ -38,6 +38,15 @@ const catalog: ModelCatalogDto = {
 }
 
 describe('model catalog API client', () => {
+  it('posts a provider as input and validates the returned catalog', async () => {
+    const provider = { provider: 'relay', name: 'Relay', base_url: 'https://example.com/v1', wire_api: 'responses' as const, model: 'test-model', api_key: 'fake-test-key' }
+    const post = vi.fn(async (): Promise<unknown> => catalog)
+    const api = createModelsApi({ post } as unknown as HttpClient)
+    await expect(api.saveProvider(provider)).resolves.toEqual(catalog)
+    expect(post).toHaveBeenCalledWith('/models/providers', provider)
+    post.mockResolvedValueOnce({ ...catalog, schema_version: 99 })
+    await expect(api.saveProvider(provider)).rejects.toMatchObject({ code: 'runtime_error' })
+  })
   it('loads and validates the scoped model catalog', async () => {
     const get = vi.fn(async () => catalog)
     const api = createModelsApi({ get } as unknown as HttpClient)

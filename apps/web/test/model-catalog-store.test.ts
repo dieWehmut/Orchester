@@ -10,6 +10,39 @@ describe('model catalog Pinia store', () => {
     setActivePinia(createPinia())
   })
 
+  const provider = { provider: 'relay', name: 'Relay', base_url: 'https://example.com/v1', wire_api: 'responses' as const, model: 'test-model', api_key: 'fake-test-key' }
+
+  it('adopts a saved provider only after the runtime confirms it, without retaining the key', async () => {
+    const store = useModelCatalogStore()
+    const saveProvider = vi.fn(async () => MODEL_CATALOG_FIXTURE)
+    store.configure({ saveProvider } as unknown as ModelsApi)
+    expect(await store.saveProvider(provider)).toBe(true)
+    expect(store.catalog).toEqual(MODEL_CATALOG_FIXTURE)
+    expect(store.status).toBe('ready')
+    expect(JSON.stringify(store.$state)).not.toContain(provider.api_key)
+  })
+
+  it('preserves the previous catalog after a save failure', async () => {
+    const store = useModelCatalogStore()
+    store.configure({ catalog: async () => MODEL_CATALOG_FIXTURE, saveProvider: async () => { throw new TypeError('offline') } } as unknown as ModelsApi)
+    await store.load()
+    expect(await store.saveProvider(provider)).toBe(false)
+    expect(store.catalog).toEqual(MODEL_CATALOG_FIXTURE)
+    expect(store.status).toBe('stale')
+  })
+
+  it('does not restore a save response after the workspace has been reset', async () => {
+    const store = useModelCatalogStore()
+    let resolve!: (value: typeof MODEL_CATALOG_FIXTURE) => void
+    store.configure({ saveProvider: () => new Promise((done) => { resolve = done }) } as unknown as ModelsApi)
+    const saving = store.saveProvider(provider)
+    store.reset()
+    resolve(MODEL_CATALOG_FIXTURE)
+    expect(await saving).toBe(false)
+    expect(store.status).toBe('idle')
+    expect(store.catalog).toBeNull()
+  })
+
   it('loads the catalog and derives the active model context', async () => {
     const store = useModelCatalogStore()
     const api = {

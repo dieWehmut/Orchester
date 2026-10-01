@@ -1,5 +1,5 @@
 use axum::{
-    extract::State,
+    extract::{DefaultBodyLimit, State},
     http::HeaderMap,
     routing::{get, post, put},
     Json, Router,
@@ -33,7 +33,7 @@ use crate::{
     bootstrap::{bootstrap_response, BootstrapDto},
     config::StaticAssets,
     health::{health_handler, no_store_headers},
-    model_catalog::{model_catalog_handler, model_selection_handler},
+    model_catalog::{model_catalog_handler, model_provider_handler, model_selection_handler},
     run::{
         cancel_run_handler, replay_run_handler, run_events_socket_handler, snapshot_run_handler,
         start_run_handler,
@@ -81,6 +81,10 @@ fn api_router() -> Router<ServerContext> {
         .route("/agents/status/ws", get(agent_status_socket_handler))
         .route("/models", get(model_catalog_handler))
         .route("/models/selection", put(model_selection_handler))
+        .route(
+            "/models/providers",
+            post(model_provider_handler).layer(DefaultBodyLimit::max(32 * 1024)),
+        )
         .route("/runs", post(start_run_handler))
         .route("/runs/{id}", get(snapshot_run_handler))
         .route("/runs/{id}/replay", post(replay_run_handler))

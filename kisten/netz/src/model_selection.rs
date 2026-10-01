@@ -83,4 +83,8 @@ impl ModelSelectionStore {
     pub async fn write(&self, selection: ModelSelection) {
         *self.inner.lock().await = selection;
     }
+
+    pub(crate) async fn edit(&self) -> tokio::sync::MutexGuard<'_, ModelSelection> {
+        self.inner.lock().await
+    }
 }

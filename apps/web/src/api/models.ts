@@ -2,6 +2,7 @@ import {
   parseModelCatalog,
   type ModelCatalogDto,
   type ModelSelectionRequestDto,
+  type ModelProviderRequestDto,
 } from '@orchester/protokoll'
 
 import { ApiError } from './errors'
@@ -12,6 +13,7 @@ export interface ModelCatalogOptions {
 }
 
 export interface ModelsApi {
+  saveProvider: (provider: ModelProviderRequestDto) => Promise<ModelCatalogDto>
   catalog: (options?: ModelCatalogOptions) => Promise<ModelCatalogDto>
   /**
    * Choose the model the following runs use.
@@ -40,6 +42,9 @@ export function createModelsApi(http: HttpClient): ModelsApi {
   }
 
   return {
+    async saveProvider(provider): Promise<ModelCatalogDto> {
+      return readCatalog(await http.post<unknown>('/models/providers', provider))
+    },
     async catalog({ signal } = {}): Promise<ModelCatalogDto> {
       const raw = signal
         ? await http.get<unknown>('/models', { signal })

@@ -7,6 +7,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use tower::ServiceExt;
 
 use orchester_anwendung::OrchesterPaths;
+use orchester_laufzeit::harness::config::{ConfigLoader, ConfigValue};
 use orchester_netz::{app_router, ServerContext, ServerControl};
 
 /// A workspace whose configuration names one provider and one profile.
@@ -14,6 +15,19 @@ use orchester_netz::{app_router, ServerContext, ServerControl};
 /// The selection route validates against this configuration, so a test needs a
 /// workspace that really has something to select.
 struct ConfiguredWorkspace(PathBuf);
+
+fn write_model_config(home: &std::path::Path, contents: &str) {
+    let path = home.join("orchester.jsonc");
+    // Use the same private file creation as the application on both Windows
+    // and Unix, then overwrite the test-only contents without changing its ACL.
+    ConfigLoader::for_user_path(&path)
+        .edit_user_config(&[(
+            vec!["model".to_owned()],
+            ConfigValue::String("test-model".to_owned()),
+        )])
+        .expect("private configuration");
+    fs::write(path, contents).expect("model config");
+}
 
 impl ConfiguredWorkspace {
     fn new(label: &str) -> Self {
@@ -28,8 +42,8 @@ impl ConfiguredWorkspace {
         let workspace = root.join("workspace");
         fs::create_dir_all(&workspace).expect("workspace");
         fs::create_dir_all(&home).expect("home");
-        fs::write(
-            home.join("orchester.jsonc"),
+        write_model_config(
+            &home,
             r#"{
                 "model_provider": "OpenAI",
                 "model": "gpt-default",
@@ -47,21 +61,7 @@ impl ConfiguredWorkspace {
                     }
                 }
             }"#,
-        )
-        .expect("model config");
-        // The loader requires a user-only home and config, and a fresh temp
-        // directory is 0755 under the runner's umask: without this the route
-        // answered 503 on ubuntu-24.04 while passing on Windows.
-        #[cfg(unix)]
-        {
-            use std::os::unix::fs::PermissionsExt;
-            fs::set_permissions(&home, fs::Permissions::from_mode(0o700)).expect("private home");
-            fs::set_permissions(
-                home.join("orchester.jsonc"),
-                fs::Permissions::from_mode(0o600),
-            )
-            .expect("private config");
-        }
+        );
         Self(root)
     }
 
@@ -183,8 +183,8 @@ async fn model_catalog_route_projects_a_configured_workspace_model() {
     let workspace = root.join("workspace");
     fs::create_dir_all(&workspace).expect("workspace");
     fs::create_dir_all(&home).expect("home");
-    fs::write(
-        home.join("orchester.jsonc"),
+    write_model_config(
+        &home,
         r#"{
             "model_provider": "OpenAI",
             "model": "gpt-default",
@@ -202,21 +202,7 @@ async fn model_catalog_route_projects_a_configured_workspace_model() {
                 }
             }
         }"#,
-    )
-    .expect("model config");
-    // The loader requires a user-only home and config, and a fresh temp
-    // directory is 0755 under the runner's umask: without this the route
-    // answered 503 on ubuntu-24.04 while passing on Windows.
-    #[cfg(unix)]
-    {
-        use std::os::unix::fs::PermissionsExt;
-        fs::set_permissions(&home, fs::Permissions::from_mode(0o700)).expect("private home");
-        fs::set_permissions(
-            home.join("orchester.jsonc"),
-            fs::Permissions::from_mode(0o600),
-        )
-        .expect("private config");
-    }
+    );
     let response = app_router(ServerContext::new(
         Some(orchester_anwendung::OrchesterPaths::new(&home, &workspace)),
         ServerControl::new(),
