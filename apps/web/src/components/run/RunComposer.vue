@@ -372,19 +372,19 @@ defineExpose({ focus })
   display: grid;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-3) var(--space-2);
-  border: 1px solid var(--color-border-control);
+  border: 1px solid var(--workspace-seam, var(--color-border-subtle));
   border-radius: var(--composer-radius, 1.25rem);
   background: var(--color-bg-surface);
-  box-shadow: var(--elevation-composer);
-  transition: border-color var(--transition-fast) var(--ease-out);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 3%), 0 8px 28px rgb(0 0 0 / 4%);
+  transition: border-color var(--transition-fast) var(--ease-out), box-shadow var(--transition-fast) var(--ease-out);
 }
 
 .run-composer__field:focus-within {
   /* The boundary is the field's, not the prompt's: a ring inside the rounded
      frame would draw the second box this change removed. This is the
      replacement for the outline the prompt gives up below. */
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 2px var(--color-accent-border);
+  border-color: var(--color-border-control);
+  box-shadow: 0 0 0 2px var(--color-accent-border), 0 8px 28px rgb(0 0 0 / 4%);
 }
 
 /* The drop target has to look like one: a drag that leaves the field
@@ -405,14 +405,13 @@ defineExpose({ focus })
 
 .run-composer__commands {
   min-inline-size: 0;
-  padding: 0 0 var(--space-2);
-  border-block-end: 1px solid var(--color-border-base);
+  padding: 0 var(--space-4) var(--space-1);
 }
 
 /* The prompt sits in the field rather than in a box of its own: a second
    border inside the first is the box the reference does not draw. */
 .run-composer :deep(.app-textarea) {
-  min-block-size: 4.5rem;
+  min-block-size: 3rem;
   max-block-size: min(18rem, 30dvh);
   overflow-y: auto;
   padding: var(--space-2) var(--space-2) 0;
@@ -423,6 +422,8 @@ defineExpose({ focus })
   /* The field grows with the prompt, so a resize grip is a handle for a job
      already done - and it sits where the send control is. */
   resize: none;
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 .run-composer :deep(.app-textarea:focus-visible) {
@@ -438,6 +439,7 @@ defineExpose({ focus })
   min-inline-size: 2.25rem;
   padding: 0;
   border-radius: var(--radius-full);
+  transition: background var(--transition-fast) var(--ease-out), opacity var(--transition-fast) var(--ease-out);
 }
 
 .run-composer__send :deep(.app-button__label) {

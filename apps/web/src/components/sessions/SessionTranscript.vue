@@ -27,11 +27,8 @@ const { t } = useI18n()
     </InlineAlert>
 
     <article v-else-if="session" class="session-transcript__content" data-session-transcript>
-      <header class="session-transcript__header">
-        <div>
-          <p>{{ session.agent }}<template v-if="session.model"> / {{ session.model }}</template></p>
-          <h1>{{ session.title }}</h1>
-        </div>
+      <header class="session-transcript__header" :aria-label="session.title">
+        <p>{{ session.agent }}<template v-if="session.model"> / {{ session.model }}</template></p>
         <span class="session-transcript__outcome" :data-outcome="session.outcome">
           {{ session.outcome }}
         </span>
@@ -76,13 +73,15 @@ const { t } = useI18n()
 
 <style scoped>
 .session-transcript {
-  min-block-size: 100%;
+  min-block-size: 0;
+  flex: 1;
+  overflow: auto;
   padding: var(--space-6);
 }
 
 .session-transcript__loading,
 .session-transcript__content {
-  inline-size: min(100%, 52rem);
+  inline-size: min(100%, var(--composer-max-width, 48rem));
   margin-inline: auto;
 }
 
@@ -103,12 +102,10 @@ const { t } = useI18n()
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-4);
-  padding-block-end: var(--space-4);
-  border-block-end: 1px solid var(--color-border-base);
+  padding-block-end: var(--space-2);
 }
 
 .session-transcript__header p,
-.session-transcript__header h1,
 .session-transcript__turn p {
   margin: 0;
 }
@@ -119,17 +116,11 @@ const { t } = useI18n()
   font-size: var(--text-xs);
 }
 
-.session-transcript__header h1 {
-  margin-block-start: var(--space-1);
-  font-size: var(--text-lg);
-  letter-spacing: 0;
-}
-
 .session-transcript__outcome {
   flex: 0 0 auto;
   padding: var(--space-1) var(--space-2);
-  border: 1px solid var(--color-border-base);
-  border-radius: var(--radius-xs);
+  border: 0;
+  border-radius: 8px;
   color: var(--color-text-secondary);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
@@ -163,9 +154,9 @@ const { t } = useI18n()
   inline-size: fit-content;
   max-inline-size: min(100%, 40rem);
   padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-lg);
-  background: var(--color-action-solid);
-  color: var(--color-action-contrast);
+  border-radius: 20px;
+  background: var(--color-bg-element);
+  color: var(--color-text-primary);
 }
 
 .session-transcript__turn p {

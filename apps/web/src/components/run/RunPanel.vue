@@ -318,7 +318,7 @@ defineExpose({ focusPrompt, clearPrompt })
       data-run-companion
     >
       <PetCompanion
-        :size="64"
+        :size="48"
         :animation="petState.animation"
         :label="petNotification || props.petLabel"
         :reduced-motion="prefersReducedMotion"
@@ -362,6 +362,8 @@ defineExpose({ focusPrompt, clearPrompt })
   flex: 1;
   flex-direction: column;
   overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--workspace-seam, var(--color-border-subtle)) transparent;
 }
 
 .run-panel__top-fade {
@@ -411,15 +413,15 @@ defineExpose({ focusPrompt, clearPrompt })
 }
 
 .run-panel :deep(.run-composer) {
-  inline-size: calc(100% - var(--space-8));
-  margin-block: var(--space-3) var(--space-4);
+  inline-size: calc(100% - var(--space-12));
+  margin-block: var(--space-2) var(--space-5);
 }
 
 .run-panel :deep(.run-footer),
 .run-panel :deep(.plan-strip),
 .run-panel__companion {
   box-sizing: border-box;
-  inline-size: min(calc(100% - var(--space-8)), var(--composer-max-width, 54rem));
+  inline-size: min(calc(100% - var(--space-12)), var(--composer-max-width, 54rem));
   margin-inline: auto;
 }
 
@@ -434,7 +436,7 @@ defineExpose({ focusPrompt, clearPrompt })
   display: flex;
   justify-content: flex-start;
   padding-inline: 0;
-  padding-block-start: var(--space-2);
+  padding-block-start: 0;
 }
 
 .run-panel__awaiting {

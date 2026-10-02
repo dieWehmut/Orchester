@@ -257,9 +257,7 @@ function choose(id: string): void {
   block-size: 1.25rem;
   flex: 0 0 1.25rem;
   place-items: center;
-  border: 1px solid var(--color-accent-border);
-  border-radius: 50%;
-  color: var(--color-accent);
+  color: var(--color-text-secondary);
 }
 
 .model-context__model,
@@ -282,9 +280,7 @@ function choose(id: string): void {
 
 .model-context__effort,
 .model-context__status {
-  padding: 0.125rem 0.375rem;
-  border: 1px solid var(--color-border-base);
-  border-radius: 999px;
+  padding-inline: 2px;
   white-space: nowrap;
 }
 
@@ -303,7 +299,7 @@ function choose(id: string): void {
 .model-context__setup {
   min-inline-size: 0;
   color: var(--color-text-secondary);
-  font-size: var(--text-xs);
+  font-size: var(--text-sm);
 }
 
 .model-context__setup :deep(.app-button__label) {

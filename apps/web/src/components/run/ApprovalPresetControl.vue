@@ -137,6 +137,18 @@ function cancel(): void {
   gap: var(--space-2);
 }
 
+.approval-preset :deep(.app-menu__trigger) {
+  padding-inline: var(--space-2);
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  font-size: var(--text-sm);
+}
+
+.approval-preset :deep(.app-menu__trigger:hover) {
+  background: var(--workspace-hover, var(--color-bg-element));
+}
+
 .approval-preset[data-approval-preset-danger='true'] .approval-preset__trigger {
   color: var(--color-intent-danger-text);
 }
@@ -147,7 +159,7 @@ function cancel(): void {
   inset-block-end: calc(100% + var(--space-2));
   inset-inline-end: 0;
   display: grid;
-  inline-size: 22rem;
+  inline-size: min(22rem, calc(100vw - 48px));
   gap: var(--space-2);
   padding: var(--space-3);
   border: 1px solid var(--color-intent-danger-border);

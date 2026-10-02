@@ -233,13 +233,13 @@ function assertNever(value: never): never {
 <style scoped>
 .run-timeline {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--space-4);
   /* The conversation keeps a measure, as the reference keeps one: a governed
      run can print a lot of record, and prose that spans the window is prose
      nobody reads. */
   inline-size: min(100%, var(--composer-max-width, 54rem));
   margin-inline: auto;
-  padding: var(--space-4);
+  padding: var(--space-6) var(--space-4);
   list-style: none;
 }
 
@@ -296,7 +296,7 @@ function assertNever(value: never): never {
   inline-size: fit-content;
   max-inline-size: min(100%, 40rem);
   padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-2xl);
+  border-radius: 20px;
   background: var(--color-bg-element);
   color: var(--color-text-primary);
 }
