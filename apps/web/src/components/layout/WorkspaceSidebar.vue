@@ -129,6 +129,28 @@ const pinnedSessions = usePinnedSessions()
 </template>
 
 <style scoped>
+.workspace-sidebar :deep(.app-rail__mark-slot) {
+  display: none;
+}
+
+.workspace-sidebar :deep(.empty-state) {
+  align-items: flex-start;
+  padding: var(--space-2);
+  text-align: start;
+}
+
+.workspace-sidebar :deep(.empty-state__title) {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-normal);
+}
+
+.workspace-sidebar :deep(.empty-state__description) {
+  font-size: var(--text-xs);
+}
+</style>
+
+<style scoped>
 .workspace-sidebar {
   block-size: 100%;
 }

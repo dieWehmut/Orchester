@@ -21,10 +21,11 @@ import {
  * between its own minimum and maximum regardless of how far the pointer travels.
  */
 
-function mountShell() {
+function mountShell(withNavigation = false) {
   return mount(AppShell, {
     props: { sessionsTitle: 'Sessions', inspectorTitle: 'Inspector' },
     slots: {
+      ...(withNavigation ? { navigation: '<p>Navigation</p>' } : {}),
       sessions: '<p>Sessions</p>',
       default: '<p>Transcript</p>',
       inspector: '<p>Inspector</p>',
@@ -33,8 +34,8 @@ function mountShell() {
 }
 
 /** The shell reads storage on mount, so the first paint has to be awaited. */
-async function mountSettled() {
-  const wrapper = mountShell()
+async function mountSettled(withNavigation = false) {
+  const wrapper = mountShell(withNavigation)
   await flushPromises()
   return wrapper
 }
@@ -146,13 +147,16 @@ describe('shell width clamps', () => {
     }
   })
 
-  it('reserves conversation space at the desktop breakpoint without overwriting preferred widths', async () => {
+  it.each([
+    { withNavigation: false, expectedRail: 292 },
+    { withNavigation: true, expectedRail: 240 },
+  ])('reserves conversation space at the desktop breakpoint with navigation=$withNavigation without overwriting preferred widths', async ({ withNavigation, expectedRail }) => {
     const originalWidth = window.innerWidth
     window.innerWidth = 1120
     writeShellWidths({ rail: 420, inspector: 460 })
-    const wrapper = await mountSettled()
+    const wrapper = await mountSettled(withNavigation)
     try {
-      expect(widthOf(wrapper, '[data-rail]', 'data-rail-width')).toBe(300)
+      expect(widthOf(wrapper, '[data-rail]', 'data-rail-width')).toBe(expectedRail)
       expect(widthOf(wrapper, '[data-inspector]', 'data-inspector-width')).toBe(460)
       expect(readShellWidths()).toEqual({ rail: 420, inspector: 460 })
 

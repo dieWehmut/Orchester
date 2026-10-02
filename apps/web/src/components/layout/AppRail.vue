@@ -255,6 +255,7 @@ function chooseAccountItem(id: string): void {
       </button>
     </div>
 
+    <div class="app-rail__scroll" data-rail-scroll>
     <div
       v-if="!railFolded"
       class="app-rail__section app-rail__section--scroll"
@@ -321,6 +322,8 @@ function chooseAccountItem(id: string): void {
       </div>
     </div>
 
+    </div>
+
     <div class="app-rail__section app-rail__account" data-rail-section="account">
       <AppMenu
         class="app-rail__account-menu"
@@ -371,24 +374,23 @@ function chooseAccountItem(id: string): void {
 
 .app-rail__section {
   min-inline-size: 0;
-  padding: var(--space-3);
+  padding: var(--space-2) var(--space-3);
 }
 
-/* The lists share whatever is left between the product row and the account
-   row, and each one scrolls on its own rather than the column scrolling. */
-.app-rail__section--scroll,
-.app-rail__section--footer {
-  flex: 1 1 0;
-}
-
-.app-rail__section--scroll {
+/* Sections follow their content in one scroll area. A short pinned list no
+   longer reserves the same height as the entire session history. */
+.app-rail__scroll {
   min-block-size: 0;
-  overflow: auto;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--workspace-seam, var(--color-border-subtle)) transparent;
+  padding-block: var(--space-2);
 }
 
 .app-rail__section--footer {
-  border-block-start: 1px solid var(--color-border-base);
-  background: color-mix(in srgb, var(--color-bg-base) 6%, var(--rail-surface));
+  padding-block-start: var(--space-4);
 }
 
 .app-rail__account {
@@ -397,8 +399,7 @@ function chooseAccountItem(id: string): void {
   margin-block-start: auto;
   align-items: center;
   gap: var(--space-2);
-  border-block-start: 1px solid var(--color-border-base);
-  background: color-mix(in srgb, var(--color-bg-base) 10%, var(--rail-surface));
+  padding-block: var(--space-3);
 }
 
 /* A destination in the column rather than a control beside it: the reference
@@ -413,18 +414,18 @@ function chooseAccountItem(id: string): void {
   gap: var(--space-3);
   padding: 0 var(--space-2);
   border: 0;
-  border-radius: var(--radius-sm);
+  border-radius: 10px;
   background: transparent;
   color: var(--color-text-primary);
   font: inherit;
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-size: var(--text-base);
+  font-weight: var(--weight-normal);
   text-align: start;
   cursor: pointer;
 }
 
 .app-rail__row:hover {
-  background: var(--color-bg-element);
+  background: var(--workspace-hover, var(--color-bg-element));
 }
 
 .app-rail__row:focus-visible {
@@ -466,7 +467,7 @@ function chooseAccountItem(id: string): void {
   display: flex;
   min-inline-size: 0;
   align-items: center;
-  border-block-end: 1px solid var(--color-border-base);
+  min-block-size: 64px;
 }
 
 /* The header's own row. The product button takes the space and the actions
@@ -474,6 +475,7 @@ function chooseAccountItem(id: string): void {
    search glyph off the row. */
 .app-rail__header {
   gap: var(--space-2);
+  padding-inline: var(--space-4);
 }
 
 .app-rail__header .app-rail__product {
@@ -514,7 +516,9 @@ function chooseAccountItem(id: string): void {
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
-  border-block-end: 1px solid var(--color-border-base);
+  margin-inline: var(--space-3);
+  border: 1px solid var(--workspace-seam, var(--color-border-subtle));
+  border-radius: 10px;
   color: var(--color-text-tertiary);
 }
 
@@ -562,7 +566,8 @@ function chooseAccountItem(id: string): void {
 }
 
 .app-rail__identity strong {
-  font-size: var(--text-sm);
+  font-size: 18px;
+  font-weight: var(--weight-medium);
 }
 
 .app-rail__identity span {
@@ -590,16 +595,14 @@ function chooseAccountItem(id: string): void {
   background: transparent;
   color: var(--color-text-tertiary);
   font: inherit;
-  font-size: var(--text-xs);
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0.04em;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-normal);
   text-align: start;
-  text-transform: uppercase;
   cursor: pointer;
 }
 
 .app-rail__heading:hover {
-  background: var(--color-bg-element);
+  background: var(--workspace-hover, var(--color-bg-element));
   color: var(--color-text-secondary);
 }
 
@@ -627,6 +630,8 @@ function chooseAccountItem(id: string): void {
   font: inherit;
   text-align: start;
   cursor: pointer;
+  border-radius: 10px;
+  padding: var(--space-1) 0;
 }
 
 .app-rail__product:hover {
@@ -651,9 +656,9 @@ function chooseAccountItem(id: string): void {
 .app-rail__account-menu :deep(.app-menu__trigger) {
   inline-size: 100%;
   justify-content: flex-start;
-  padding: 0;
+  padding: var(--space-2);
   border: 0;
-  border-radius: var(--radius-sm);
+  border-radius: 10px;
   background: transparent;
 }
 

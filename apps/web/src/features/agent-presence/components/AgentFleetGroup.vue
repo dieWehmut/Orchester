@@ -73,7 +73,6 @@ const agentCountLabel = computed(
 
 .agent-fleet-group + .agent-fleet-group {
   padding-block-start: var(--space-2);
-  border-block-start: 1px solid var(--color-border-subtle);
 }
 
 .agent-fleet-group__header,
@@ -94,8 +93,6 @@ const agentCountLabel = computed(
   color: var(--color-text-tertiary);
   font-size: var(--text-xs);
   font-weight: var(--weight-medium);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
 }
 
 .agent-fleet-group__meta {

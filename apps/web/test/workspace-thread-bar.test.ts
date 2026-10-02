@@ -37,14 +37,19 @@ describe('WorkspaceView thread bar', () => {
     expect(bar.find('[data-thread-status]').exists()).toBe(true)
   })
 
-  it('carries a labelled share action, not a bare icon', () => {
+  it('offers a working chat menu and omits sharing until the runtime supports it', async () => {
     const stores = createAppStores()
     stores.agents.snapshot = AGENT_FLEET_FIXTURE
     stores.agents.status = 'ready'
     const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
 
-    const share = wrapper.get('[data-pane="transcript"] [data-thread-action="share"]')
-    expect(share.text().length).toBeGreaterThan(0)
+    expect(wrapper.find('[data-thread-action="share"]').exists()).toBe(false)
+    stores.sessions.selectedId.value = 'previous-session'
+    await wrapper.get('[data-thread-action="more"] [aria-haspopup="menu"]').trigger('click')
+    const newChat = wrapper.findAll('[role="menuitem"]').find(row => row.text() === 'New chat')
+    expect(newChat).toBeDefined()
+    await newChat!.trigger('click')
+    expect(stores.sessions.selectedId.value).toBeNull()
   })
 
   it('opens and closes the inspector on demand from the thread bar', async () => {

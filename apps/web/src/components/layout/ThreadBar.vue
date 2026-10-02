@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ChevronDown, Ellipsis, PanelRightClose, PanelRightOpen, Share, Sparkles } from '@lucide/vue'
+import { Ellipsis, PanelRightClose, PanelRightOpen, Share } from '@lucide/vue'
 
-import { IconButton } from '@orchester/design'
+import { AppMenu, IconButton, type AppMenuItem } from '@orchester/design'
 
 withDefaults(
   defineProps<{
@@ -19,6 +19,8 @@ withDefaults(
     agentOnline?: boolean
     /** The label on the share action; hidden when the surface passes none. */
     shareText?: string | null
+    shareEnabled?: boolean
+    menuItems?: AppMenuItem[]
   }>(),
   {
     panelOpen: true,
@@ -27,6 +29,8 @@ withDefaults(
     agentStatus: null,
     agentOnline: false,
     shareText: null,
+    shareEnabled: true,
+    menuItems: () => [],
   },
 )
 
@@ -34,6 +38,7 @@ defineEmits<{
   share: []
   more: []
   togglePanel: []
+  selectMenu: [id: string]
 }>()
 </script>
 
@@ -61,6 +66,7 @@ defineEmits<{
 
     <div class="thread-bar__actions">
       <button
+        v-if="shareEnabled"
         class="thread-bar__share"
         type="button"
         :aria-label="shareLabel"
@@ -70,7 +76,11 @@ defineEmits<{
         <Share :size="15" aria-hidden="true" />
         <span v-if="shareText">{{ shareText }}</span>
       </button>
-      <IconButton :label="moreLabel" data-thread-action="more" @click="$emit('more')">
+      <AppMenu v-if="menuItems.length" class="thread-bar__menu" :label="moreLabel" :items="menuItems"
+        align="end" data-thread-action="more" @select="$emit('selectMenu', $event)">
+        <template #trigger><Ellipsis :size="16" aria-hidden="true" /></template>
+      </AppMenu>
+      <IconButton v-else :label="moreLabel" data-thread-action="more" @click="$emit('more')">
         <Ellipsis :size="16" aria-hidden="true" />
       </IconButton>
       <IconButton
@@ -92,8 +102,7 @@ defineEmits<{
   min-block-size: var(--header-height);
   align-items: center;
   gap: var(--space-2);
-  padding-inline: var(--space-4);
-  border-block-end: 1px solid var(--color-border-base);
+  padding-inline: var(--space-5);
   background: var(--transcript-surface, var(--color-bg-base));
 }
 
@@ -107,7 +116,7 @@ defineEmits<{
   display: grid;
   min-inline-size: 0;
   flex: 1;
-  gap: 1px;
+  gap: var(--space-1);
   line-height: var(--leading-tight);
 }
 
@@ -123,7 +132,7 @@ defineEmits<{
   overflow: hidden;
   margin: 0;
   color: var(--color-text-primary);
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   font-weight: var(--weight-medium);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -132,6 +141,11 @@ defineEmits<{
 .thread-bar__chevron {
   flex: 0 0 auto;
   color: var(--color-text-tertiary);
+}
+
+.thread-bar__icon,
+.thread-bar__chevron {
+  display: none;
 }
 
 /* The identity line is what the reference puts above the transcript: who is
@@ -190,5 +204,17 @@ defineEmits<{
   display: flex;
   align-items: center;
   gap: var(--space-1);
+}
+
+.thread-bar__menu :deep(.app-menu__trigger) {
+  inline-size: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+}
+
+.thread-bar__menu :deep(.app-menu__trigger:hover) {
+  background: var(--workspace-hover, var(--color-bg-element));
 }
 </style>

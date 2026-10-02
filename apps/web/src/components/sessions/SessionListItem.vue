@@ -97,7 +97,8 @@ const details = computed(() =>
   inline-size: 100%;
   align-items: center;
   border: 1px solid transparent;
-  border-radius: var(--radius-sm);
+  border-radius: 10px;
+  transition: background var(--transition-fast) var(--ease-out);
 }
 
 .session-list-item__open {
@@ -107,9 +108,9 @@ const details = computed(() =>
   min-inline-size: 0;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-2);
   border: 0;
-  border-radius: var(--radius-sm);
+  border-radius: 10px;
   background: transparent;
   color: var(--color-text-primary);
   font: inherit;
@@ -119,12 +120,11 @@ const details = computed(() =>
 
 .session-list-item:hover,
 .session-list-item--selected {
-  background: var(--color-bg-element);
+  background: var(--workspace-hover, var(--color-bg-element));
 }
 
 .session-list-item--selected {
-  border-color: var(--color-accent-border);
-  box-shadow: inset 2px 0 0 var(--color-accent);
+  background: var(--color-bg-element);
 }
 
 /* Drawn on hover or focus, never removed from the tree; a pinned row shows it
@@ -148,15 +148,24 @@ const details = computed(() =>
 
 .session-list-item__title {
   overflow: hidden;
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-size: var(--text-base);
+  font-weight: var(--weight-normal);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .session-list-item__time {
+  inline-size: 0;
+  overflow: hidden;
+  opacity: 0;
   color: var(--color-text-tertiary);
   font-size: var(--text-xs);
   white-space: nowrap;
+}
+
+.session-list-item:hover .session-list-item__time,
+.session-list-item:focus-within .session-list-item__time {
+  inline-size: auto;
+  opacity: 1;
 }
 </style>

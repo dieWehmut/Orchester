@@ -21,6 +21,7 @@ import {
   writeTabStripState,
 } from '../components/layout/tab-strip-persistence'
 import WorkspaceSidebar from '../components/layout/WorkspaceSidebar.vue'
+import WorkspaceNavigation from '../components/layout/WorkspaceNavigation.vue'
 import ThreadBar from '../components/layout/ThreadBar.vue'
 import SessionTranscript from '../components/sessions/SessionTranscript.vue'
 import RunPanel from '../components/run/RunPanel.vue'
@@ -32,12 +33,19 @@ import {
   registerShellAction,
   useShellAction,
   useShellActionState,
+  runShellAction,
+  shellActionExpanded,
+  shellActionsVersion,
 } from '../components/layout/shell-actions'
 import { DESKTOP_WINDOW_KEY } from '../platform/desktop-window'
 import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue'
 import { routerKey } from 'vue-router'
 
 const { t } = useI18n()
+const bottomPanelExpanded = computed(() => {
+  shellActionsVersion().value
+  return shellActionExpanded('bottom-panel.toggle') ?? false
+})
 const appRouter = inject(routerKey, null)
 const { sessions, run, agents, bootstrap, models, review, approvals } = useAppStores()
 const runView = computed(() => run.view.value)
@@ -492,6 +500,25 @@ if (desktopWindowController?.enabled) {
     :controls-label="t('inspector.label')"
     v-model:inspector-open="inspectorOpen"
   >
+    <template #navigation="{ toggleSessions, sessionsExpanded }">
+      <WorkspaceNavigation
+        :label="t('layout.workspacePanels')"
+        :new-session-label="t('sessions.newChat')"
+        :sessions-label="t('layout.sessions')"
+        :settings-label="t('settings.title')"
+        :companion-label="companionLabel"
+        :bottom-panel-label="t('bottomPanel.label')"
+        :bottom-panel-expanded="bottomPanelExpanded"
+        :sessions-expanded="sessionsExpanded"
+        :home-active="selectedId === null"
+        :companion-visible="petVisibility.visible.value"
+        @new-session="sessions.select(null)"
+        @toggle-sessions="toggleSessions"
+        @open-settings="handleOpenSettings"
+        @toggle-companion="petVisibility.toggle()"
+        @toggle-bottom-panel="runShellAction('bottom-panel.toggle')"
+      />
+    </template>
     <template #sessions>
       <WorkspaceSidebar
         :product-name="t('app.name')"
@@ -531,6 +558,12 @@ if (desktopWindowController?.enabled) {
       :more-label="t('transcript.more')"
       :panel-label="t('transcript.togglePanel')"
       :panel-open="inspectorOpen"
+      :share-enabled="false"
+      :menu-items="[
+        { id: 'new', label: t('sessions.newChat') },
+        { id: 'settings', label: t('settings.title') },
+      ]"
+      @select-menu="($event === 'new' ? sessions.select(null) : handleOpenSettings())"
       @toggle-panel="inspectorOpen = !inspectorOpen"
     />
 
@@ -597,6 +630,7 @@ if (desktopWindowController?.enabled) {
     </template>
   </AppShell>
   <BottomPanel
+    hide-collapsed-bar
     :label="t('bottomPanel.label')"
     :tabs="bottomPanelTabs"
     data-testid="workspace-bottom-panel"

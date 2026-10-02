@@ -73,17 +73,17 @@ defineEmits<{
   gap: var(--space-2);
   padding: var(--space-2);
   border: 1px solid transparent;
-  border-radius: var(--radius-sm);
+  border-radius: 10px;
   background: transparent;
   color: inherit;
   font: inherit;
   text-align: start;
   cursor: pointer;
+  transition: background var(--transition-fast) var(--ease-out);
 }
 
 .agent-fleet-row:hover {
-  border-color: var(--color-border-base);
-  background: var(--color-bg-element);
+  background: var(--workspace-hover, var(--color-bg-element));
 }
 
 .agent-fleet-row:focus-visible {
@@ -97,8 +97,7 @@ defineEmits<{
 }
 
 .agent-fleet-row--selected {
-  border-color: var(--color-accent-border);
-  background: var(--color-accent-muted);
+  background: var(--color-bg-element);
 }
 
 .agent-fleet-row__identity,

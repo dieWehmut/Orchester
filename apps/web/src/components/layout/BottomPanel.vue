@@ -15,6 +15,7 @@
  */
 import { AppButton } from '@orchester/design'
 import { computed, onMounted, ref } from 'vue'
+import { useShellAction, useShellActionState } from './shell-actions'
 
 import {
   BOTTOM_PANEL_DEFAULT_HEIGHT,
@@ -31,8 +32,9 @@ const props = withDefaults(
     /** The surfaces the panel can show, in the order they appear. */
     tabs: readonly { id: string; label: string }[]
     resizeLabel?: string
+    hideCollapsedBar?: boolean
   }>(),
-  { resizeLabel: 'Resize the bottom panel' },
+  { resizeLabel: 'Resize the bottom panel', hideCollapsedBar: false },
 )
 
 const expanded = ref(false)
@@ -58,6 +60,9 @@ function setExpanded(next: boolean): void {
   expanded.value = next
   persist()
 }
+
+useShellAction('bottom-panel.toggle', () => setExpanded(!expanded.value))
+useShellActionState('bottom-panel.toggle', () => expanded.value)
 
 function selectTab(id: string): void {
   activeTab.value = id
@@ -100,6 +105,7 @@ function endDrag(): void {
 
 <template>
   <section
+    v-show="expanded || !props.hideCollapsedBar"
     class="bottom-panel"
     data-bottom-panel
     :data-bottom-panel-state="expanded ? 'expanded' : 'collapsed'"

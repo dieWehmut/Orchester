@@ -4,6 +4,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import BottomPanel from '../src/components/layout/BottomPanel.vue'
+import { runShellAction } from '../src/components/layout/shell-actions'
 import {
   BOTTOM_PANEL_STATE_STORAGE_KEY,
   readBottomPanelState,
@@ -43,6 +44,18 @@ beforeEach(() => {
 })
 
 describe('BottomPanel', () => {
+  it('opens from workspace navigation while its collapsed bar is hidden', async () => {
+    const wrapper = mountPanel()
+    await wrapper.setProps({ hideCollapsedBar: true })
+    expect(wrapper.get('[data-bottom-panel]').attributes('data-bottom-panel-state')).toBe('collapsed')
+    expect(wrapper.find('[data-bottom-panel-body]').exists()).toBe(false)
+    expect(runShellAction('bottom-panel.toggle')).toBe(true)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.get('[data-bottom-panel]').attributes('data-bottom-panel-state')).toBe('expanded')
+    expect(wrapper.get('[data-bottom-panel-body]').text()).toContain('pnpm test')
+    wrapper.unmount()
+    expect(runShellAction('bottom-panel.toggle')).toBe(false)
+  })
   it('is the panel the workspace mounts, not a second copy of it', () => {
     // Region I only exists for the product if the product is drawn inside it.
     const view = readFileSync(resolve(process.cwd(), 'src', 'views', 'WorkspaceView.vue'), 'utf8')

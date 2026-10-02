@@ -16,7 +16,11 @@
      the OS metric: 32 px where the caption buttons live, 38 px elsewhere. */
   --app-chrome-height: var(--window-chrome-height, 38px);
   --app-top-chrome-height: var(--app-chrome-height);
-  --transcript-surface: var(--color-bg-base);
+  --transcript-surface: var(--color-bg-surface);
+  --workspace-seam: color-mix(in srgb, var(--color-border-base) 45%, transparent);
+  --workspace-hover: color-mix(in srgb, var(--color-bg-element) 70%, transparent);
+  --composer-max-width: 48rem;
+  --composer-radius: 24px;
 
   background: var(--color-bg-base);
 }
@@ -50,4 +54,12 @@
   flex: 1;
   flex-direction: column;
   overflow: auto;
+}
+
+/* Keep transient surfaces in the same quiet visual family as the workspace. */
+.app-shell .app-menu__surface,
+.app-shell .app-popover__panel {
+  border-color: var(--workspace-seam);
+  border-radius: 14px;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 4%), 0 12px 32px rgb(0 0 0 / 10%);
 }

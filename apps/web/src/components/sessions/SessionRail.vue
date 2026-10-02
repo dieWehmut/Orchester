@@ -149,7 +149,6 @@ const filteredEmpty = computed(() => {
 <style scoped>
 .session-rail {
   display: flex;
-  min-block-size: 100%;
   flex-direction: column;
   gap: var(--space-3);
 }
@@ -160,7 +159,7 @@ const filteredEmpty = computed(() => {
 
 .session-rail__list {
   display: grid;
-  gap: var(--space-1);
+  gap: 2px;
 }
 
 .session-rail__more {

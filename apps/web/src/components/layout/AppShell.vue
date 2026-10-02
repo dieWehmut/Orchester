@@ -17,7 +17,7 @@
  */
 import { AppButton, AppDrawer } from '@orchester/design'
 import type { RailAppearance } from '@orchester/design'
-import { computed, onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, onUnmounted, ref, useSlots, watch } from 'vue'
 
 import { useI18n } from '../../i18n'
 import { useRailCollapsed } from '../../composables/use-rail-collapsed'
@@ -43,6 +43,7 @@ import {
 } from './shell-widths'
 
 const { t } = useI18n()
+const slots = useSlots()
 
 const props = withDefaults(
   defineProps<{
@@ -84,6 +85,8 @@ const INSPECTOR_DRAWER_PX = 1120
 const narrowViewport = ref(false)
 const inspectorDocked = ref(true)
 const availableWidth = ref(typeof window === 'undefined' ? 1280 : window.innerWidth)
+const navigationWidth = computed(() => slots.navigation && !narrowViewport.value ? 52 : 0)
+const contentWidth = computed(() => availableWidth.value - navigationWidth.value - 8)
 const inspectorDrawerOpen = ref(false)
 
 function readViewport(): void {
@@ -173,12 +176,12 @@ const inspectorWidth = ref(INSPECTOR_PREFERRED_WIDTH)
 // when both panels are visible in a smaller desktop window.
 const displayedInspectorWidth = computed(() => !inspectorDocked.value ? inspectorWidth.value : Math.min(
   inspectorWidth.value,
-  Math.max(INSPECTOR_MIN_WIDTH, availableWidth.value -
+  Math.max(INSPECTOR_MIN_WIDTH, contentWidth.value -
     (railCollapsed.value || narrowViewport.value ? 0 : RAIL_MIN_WIDTH) - TRANSCRIPT_MIN_WIDTH),
 ))
 const displayedRailWidth = computed(() => clampRailWidth(
   railWidth.value,
-  availableWidth.value -
+  contentWidth.value -
     (inspectorDocked.value && props.inspectorOpen ? displayedInspectorWidth.value : 0),
 ))
 
@@ -190,7 +193,7 @@ onMounted(() => {
 })
 
 function viewportWidth(): number {
-  return typeof window === 'undefined' ? RAIL_MAX_WIDTH + 360 : window.innerWidth
+  return typeof window === 'undefined' ? RAIL_MAX_WIDTH + 360 : contentWidth.value
 }
 
 function persist(): void {
@@ -239,13 +242,13 @@ function startDrag(which: 'rail' | 'inspector', event: PointerEvent): void {
   dragging = which
   const target = event.currentTarget as HTMLElement | null
   target?.setPointerCapture?.(event.pointerId)
-  if (which === 'rail') setRailWidth(event.clientX)
-  else setInspectorWidth(viewportWidth() - event.clientX)
+  if (which === 'rail') setRailWidth(event.clientX - navigationWidth.value)
+  else setInspectorWidth(availableWidth.value - 8 - event.clientX)
 }
 
 function moveDrag(event: PointerEvent): void {
-  if (dragging === 'rail') setRailWidth(event.clientX)
-  else if (dragging === 'inspector') setInspectorWidth(viewportWidth() - event.clientX)
+  if (dragging === 'rail') setRailWidth(event.clientX - navigationWidth.value)
+  else if (dragging === 'inspector') setInspectorWidth(availableWidth.value - 8 - event.clientX)
 }
 
 function endDrag(): void {
@@ -290,7 +293,11 @@ onBeforeUnmount(endDrag)
       </AppButton>
     </nav>
 
-    <div class="app-shell__grid">
+    <div class="app-shell__body">
+      <div v-if="slots.navigation" class="app-shell__navigation">
+        <slot name="navigation" :toggle-sessions="toggleSessions" :sessions-expanded="!railCollapsed" />
+      </div>
+      <div class="app-shell__grid">
       <nav
         v-if="!railCollapsed"
         class="app-shell__rail"
@@ -355,6 +362,7 @@ onBeforeUnmount(endDrag)
         />
         <slot name="inspector" />
       </aside>
+      </div>
     </div>
 
     <AppDrawer v-model:open="sessionsOpen" :title="props.sessionsTitle" side="left">
@@ -379,8 +387,22 @@ onBeforeUnmount(endDrag)
   display: none;
 }
 
+.app-shell__body {
+  display: flex;
+  min-inline-size: 0;
+  min-block-size: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.app-shell__navigation {
+  inline-size: 52px;
+  flex: 0 0 52px;
+}
+
 .app-shell__grid {
   display: grid;
+  min-inline-size: 0;
   grid-template-columns:
     var(--rail-width, var(--rail-preferred-width, var(--sidebar-width)))
     minmax(0, 1fr)
@@ -388,6 +410,11 @@ onBeforeUnmount(endDrag)
   min-block-size: 0;
   flex: 1;
   overflow: hidden;
+  margin-inline-end: var(--space-2);
+  margin-block-end: var(--space-2);
+  border-radius: 16px;
+  background: var(--transcript-surface, var(--color-bg-surface));
+  box-shadow: 0 1px 5px rgb(0 0 0 / 3%);
 }
 
 .app-shell--inspector-closed .app-shell__grid {
@@ -424,11 +451,12 @@ onBeforeUnmount(endDrag)
 }
 
 .app-shell__rail {
-  border-inline-end: 1px solid var(--color-border-base);
+  border-inline-end: 1px solid var(--workspace-seam, var(--color-border-subtle));
+  overflow: hidden;
 }
 
 .app-shell__inspector {
-  border-inline-start: 1px solid var(--color-border-base);
+  border-inline-start: 1px solid var(--workspace-seam, var(--color-border-subtle));
 }
 
 .app-shell__transcript {
@@ -448,6 +476,11 @@ onBeforeUnmount(endDrag)
   inline-size: 6px;
   cursor: col-resize;
   touch-action: none;
+  z-index: 1;
+}
+
+.app-shell__resize:hover {
+  background: var(--color-accent-border);
 }
 
 .app-shell__rail .app-shell__resize {
@@ -478,6 +511,10 @@ onBeforeUnmount(endDrag)
 }
 
 @media (max-width: 799px) {
+  .app-shell__navigation {
+    display: none;
+  }
+
   .app-shell__mobile-controls {
     display: flex;
     min-block-size: var(--control-height-lg);
@@ -485,13 +522,15 @@ onBeforeUnmount(endDrag)
     justify-content: space-between;
     gap: var(--space-2);
     padding: var(--space-2) var(--space-3);
-    border-block-end: 1px solid var(--color-border-base);
-    background: var(--color-bg-surface);
+    background: transparent;
   }
 
   .app-shell .app-shell__grid {
     grid-template-columns: minmax(0, 1fr);
     min-block-size: 0;
+    margin-inline: calc(var(--space-3) / 2);
+    margin-block-end: calc(var(--space-3) / 2);
+    border-radius: 12px;
   }
 
   .app-shell__rail,
