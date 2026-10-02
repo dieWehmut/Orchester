@@ -164,6 +164,12 @@ useShellAction('prompt.focus', () => runPanel.value?.focusPrompt())
 useShellAction('prompt.clear', () => runPanel.value?.clearPrompt())
 useShellAction('companion.toggle', () => petVisibility.toggle())
 
+function toggleInspector(): void {
+  inspectorOpen.value = !inspectorOpen.value
+}
+
+useShellAction('inspector.toggle', toggleInspector)
+
 /**
  * Whether the inspector is showing, as the chrome's toggle reports it.
  *
@@ -398,9 +404,7 @@ useShortcut(
     groupKey: 'shortcuts.groups.layout',
     keys: ['Mod', 'Alt', 'B'],
   },
-  () => {
-    inspectorOpen.value = !inspectorOpen.value
-  },
+  toggleInspector,
 )
 
 useShortcut(
@@ -564,7 +568,7 @@ if (desktopWindowController?.enabled) {
         { id: 'settings', label: t('settings.title') },
       ]"
       @select-menu="($event === 'new' ? sessions.select(null) : handleOpenSettings())"
-      @toggle-panel="inspectorOpen = !inspectorOpen"
+      @toggle-panel="toggleInspector"
     />
 
     <RunPanel
