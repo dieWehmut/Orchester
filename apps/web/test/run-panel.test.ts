@@ -1,8 +1,11 @@
 import { flushPromises, mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+import { defineComponent, h } from 'vue'
 
 import { createEmptyRunView } from '@orchester/ereignis'
+import type { RunsApi } from '../src/api/runs'
 import RunPanel from '../src/components/run/RunPanel.vue'
+import { createRunStore } from '../src/stores/run'
 import { MODEL_CATALOG_FIXTURE } from './fixtures/model-catalog'
 
 describe('RunPanel', () => {
@@ -42,6 +45,47 @@ describe('RunPanel', () => {
     await wrapper.setProps({ busy: true })
     await wrapper.get('[data-composer-action="cancel"]').trigger('click')
     expect(wrapper.emitted('cancel')).toHaveLength(1)
+  })
+
+  it('keeps the full draft after a lost submission response and lets Enter retry it', async () => {
+    const start = vi.fn()
+      .mockRejectedValueOnce(new Error('Response lost'))
+      .mockResolvedValueOnce({ run_id: 'run-retry-draft', events_url: '/events/retry-draft' })
+    const makeKey = vi.fn(() => 'draft-retry-key')
+    const store = createRunStore({ start } as unknown as RunsApi, { idempotencyKey: makeKey })
+    const wrapper = mount(defineComponent({
+      setup() {
+        return () => h(RunPanel, {
+          view: store.view.value,
+          lifecycle: store.lifecycle.value,
+          conversationStarted: store.conversationStarted.value,
+          errorMessage: store.error.value?.message ?? null,
+          onSubmit: (prompt: string) => { void store.submit(prompt) },
+        })
+      },
+    }))
+    const textarea = wrapper.get('textarea')
+    const draft = '  Inspect the workspace\nand preserve every detail  '
+
+    await textarea.setValue(draft)
+    await textarea.trigger('keydown', { key: 'Enter' })
+    await flushPromises()
+
+    expect(store.lifecycle.value).toBe('failed')
+    expect((textarea.element as HTMLTextAreaElement).value).toBe(draft)
+    expect(textarea.attributes('disabled')).toBeUndefined()
+    expect(wrapper.get('[data-composer-action="submit"]').attributes('disabled')).toBeUndefined()
+    await textarea.trigger('keydown', { key: 'Enter' })
+    await flushPromises()
+
+    expect(store.runId.value).toBe('run-retry-draft')
+    expect(start).toHaveBeenCalledTimes(2)
+    expect(start.mock.calls.map((call) => call[1]?.idempotencyKey)).toEqual([
+      'draft-retry-key', 'draft-retry-key',
+    ])
+    expect(start.mock.calls.map((call) => call[0]?.prompt)).toEqual([draft.trim(), draft.trim()])
+    expect(makeKey).toHaveBeenCalledOnce()
+    wrapper.unmount()
   })
 
   it('forwards workspace and model state into the composer context', () => {
