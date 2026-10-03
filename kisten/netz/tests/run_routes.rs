@@ -140,6 +140,112 @@ async fn start_route_journals_the_readers_own_turn_first() {
 }
 
 #[tokio::test]
+async fn start_route_reuses_the_run_for_an_identical_idempotency_key() {
+    let workspace = TempWorkspace::new();
+    let context = ServerContext::new(Some(workspace.paths()), ServerControl::new());
+    let request = || {
+        Request::post("/api/v1/runs")
+            .header("content-type", "application/json")
+            .header("idempotency-key", "submission-1")
+            .body(Body::from(r#"{"prompt":"inspect once"}"#))
+            .expect("start request")
+    };
+
+    let first = app_router(context.clone())
+        .oneshot(request())
+        .await
+        .expect("first start response");
+    assert_eq!(first.status(), StatusCode::OK);
+    let first_run_id = json_body(first).await["run_id"]
+        .as_str()
+        .expect("first run id")
+        .to_owned();
+
+    let repeated = app_router(context.clone())
+        .oneshot(request())
+        .await
+        .expect("repeated start response");
+    assert_eq!(repeated.status(), StatusCode::OK);
+    let repeated_run_id = json_body(repeated).await["run_id"]
+        .as_str()
+        .expect("repeated run id")
+        .to_owned();
+
+    assert_eq!(repeated_run_id, first_run_id);
+    let snapshot = app_router(context)
+        .oneshot(
+            Request::get(format!("/api/v1/runs/{first_run_id}"))
+                .body(Body::empty())
+                .expect("snapshot request"),
+        )
+        .await
+        .expect("snapshot response");
+    let snapshot = json_body(snapshot).await;
+    let events = snapshot["events"]
+        .as_array()
+        .expect("event list");
+    assert_eq!(
+        events
+            .iter()
+            .filter(|event| event["kind"]["type"] == "user_message")
+            .count(),
+        1
+    );
+}
+
+#[tokio::test]
+async fn start_route_rejects_a_reused_key_with_a_different_request() {
+    let workspace = TempWorkspace::new();
+    let context = ServerContext::new(Some(workspace.paths()), ServerControl::new());
+
+    let first = app_router(context.clone())
+        .oneshot(
+            Request::post("/api/v1/runs")
+                .header("content-type", "application/json")
+                .header("idempotency-key", "submission-2")
+                .body(Body::from(r#"{"prompt":"first request"}"#))
+                .expect("first start request"),
+        )
+        .await
+        .expect("first start response");
+    assert_eq!(first.status(), StatusCode::OK);
+
+    let conflict = app_router(context)
+        .oneshot(
+            Request::post("/api/v1/runs")
+                .header("content-type", "application/json")
+                .header("idempotency-key", "submission-2")
+                .body(Body::from(r#"{"prompt":"different request"}"#))
+                .expect("conflicting start request"),
+        )
+        .await
+        .expect("conflict response");
+    assert_eq!(conflict.status(), StatusCode::CONFLICT);
+    assert_eq!(error_code(conflict).await, "conflict");
+}
+
+#[tokio::test]
+async fn start_route_rejects_an_invalid_idempotency_key() {
+    let workspace = TempWorkspace::new();
+    let response = app_router(ServerContext::new(
+        Some(workspace.paths()),
+        ServerControl::new(),
+    ))
+    .oneshot(
+        Request::post("/api/v1/runs")
+            .header("content-type", "application/json")
+            .header("idempotency-key", " ")
+            .body(Body::from(r#"{"prompt":"inspect workspace"}"#))
+            .expect("invalid-key request"),
+    )
+    .await
+    .expect("invalid-key response");
+
+    assert_eq!(response.status(), StatusCode::UNPROCESSABLE_ENTITY);
+    assert_eq!(error_code(response).await, "validation_failed");
+}
+
+#[tokio::test]
 async fn cancel_route_reports_not_found_without_a_bound_run() {
     let response = app_router(test_context())
         .oneshot(

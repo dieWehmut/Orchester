@@ -50,6 +50,33 @@ describe('run store', () => {
     expect(store.conversationStarted.value).toBe(true)
   })
 
+  it('reuses the idempotency key when a failed submission is retried', async () => {
+    const start = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('network lost'))
+      .mockResolvedValueOnce({ run_id: 'run-retry', events_url: '/events/run-retry' })
+    const makeKey = vi.fn(() => 'request-retry')
+    const api = { start } as unknown as RunsApi
+    const store = createRunStore(api, { idempotencyKey: makeKey })
+
+    await expect(store.submit('Retry the same submission')).resolves.toBeNull()
+    await expect(store.submit('Retry the same submission')).resolves.toMatchObject({
+      run_id: 'run-retry',
+    })
+
+    expect(makeKey).toHaveBeenCalledOnce()
+    expect(start).toHaveBeenNthCalledWith(
+      1,
+      { prompt: 'Retry the same submission' },
+      { idempotencyKey: 'request-retry' },
+    )
+    expect(start).toHaveBeenNthCalledWith(
+      2,
+      { prompt: 'Retry the same submission' },
+      { idempotencyKey: 'request-retry' },
+    )
+  })
+
   it('hydrates the snapshot and opens the server-issued event stream after submit', async () => {
     const run = runId('run-live')
     const snapshot: RunSnapshotDto = {
