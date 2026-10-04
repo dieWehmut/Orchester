@@ -29,6 +29,7 @@ export type RunLifecycle =
   | 'cancelling'
   | 'completed'
   | 'cancelled'
+  | 'paused'
   | 'failed'
 export type RunConnectionStatus =
   | 'idle'
@@ -87,7 +88,7 @@ function requestOptions(idempotencyKey: string): StartRunOptions {
 
 function lifecycleFromState(state: RunStateDto): RunLifecycle {
   if (state === 'succeeded') return 'completed'
-  if (state === 'failed' || state === 'cancelled') return state
+  if (state === 'failed' || state === 'cancelled' || state === 'paused') return state
   return 'running'
 }
 
@@ -98,7 +99,7 @@ function lifecycleFromStopReason(reason: StopReason): RunLifecycle {
 }
 
 function isTerminal(lifecycle: RunLifecycle): boolean {
-  return lifecycle === 'completed' || lifecycle === 'failed' || lifecycle === 'cancelled'
+  return lifecycle === 'completed' || lifecycle === 'failed' || lifecycle === 'cancelled' || lifecycle === 'paused'
 }
 
 export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): RunStore {

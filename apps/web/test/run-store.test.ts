@@ -196,6 +196,7 @@ describe('run store', () => {
     ['succeeded', 'completed'],
     ['failed', 'failed'],
     ['cancelled', 'cancelled'],
+    ['paused', 'paused'],
   ] as const)('restores a reused %s run without opening a new event stream', async (state, expectedLifecycle) => {
     const api = {
       start: vi.fn(async () => ({ run_id: 'run-reused', events_url: '/events/reused' })),
@@ -207,7 +208,7 @@ describe('run store', () => {
     await store.submit('Recover a completed request')
     await vi.waitFor(() => expect(store.lifecycle.value).toBe(expectedLifecycle))
 
-    expect(store.view.value.status).toBe(state)
+    expect(store.view.value.status).toBe(state === 'paused' ? 'interrupted_unknown_outcome' : state)
     expect(store.connectionStatus.value).toBe('closed')
     expect(sockets.sockets).toHaveLength(0)
   })
