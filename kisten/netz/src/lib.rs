@@ -53,9 +53,7 @@ pub use model_catalog::{
     ModelSelectionRequestDto, ProviderChoiceDto, ProviderChoiceStateDto,
     MODEL_CATALOG_SCHEMA_VERSION,
 };
-pub use model_selection::{
-    ModelSelection, ModelSelectionStore, MODEL_SELECTION_FIELD_MAX_CHARS,
-};
+pub use model_selection::{ModelSelection, ModelSelectionStore, MODEL_SELECTION_FIELD_MAX_CHARS};
 pub use router::{app_router, app_router_with_static_assets};
 pub use run_contract::{
     state_from_stop_reason, ResyncReason, RunReplayRequestDto, RunReplayResponseDto,
