@@ -27,6 +27,7 @@ reqwest = { workspace = true }
 thiserror = { workspace = true }
 crossterm = { workspace = true }
 unicode-width = { workspace = true }
+unicode-segmentation = { workspace = true }
 flate2 = { workspace = true }
 tar = { workspace = true }
 sha2 = { workspace = true }

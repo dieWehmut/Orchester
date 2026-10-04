@@ -41,7 +41,6 @@ const PALETTE_ROWS: usize = 8;
 const SCROLL_PAGE_ROWS: usize = 8;
 const PICKER_PANEL_ROWS: usize = 7;
 const MINIMUM_CHAT_CONTENT_ROWS: usize = 6;
-const COMPACT_WORKSPACE_PANEL_ROWS: usize = 6;
 
 const PROMPT_SUGGESTIONS: [&str; 6] = [
     "Summarize recent commits",
@@ -1352,7 +1351,11 @@ fn render_composer<W: Write>(
     };
     let prompt_style = if input.is_empty() { palette.dim } else { "" };
     let prompt = truncate(&sanitize_terminal_text(prompt), width.saturating_sub(2));
-    let caret = display_width(&prompt).saturating_add(2);
+    let caret = if input.is_empty() {
+        2
+    } else {
+        display_width(&prompt).saturating_add(2)
+    };
     let prompt_pad = " ".repeat(width.saturating_sub(2 + display_width(&prompt)));
     writeln!(
         out,
@@ -1476,31 +1479,39 @@ fn transcript_lines(
     transcript: &[TranscriptEntry],
     palette: ThemePalette,
 ) -> Vec<String> {
-    transcript
-        .iter()
-        .flat_map(|entry| {
-            let (prefix, style) = match entry.role {
-                TranscriptRole::User => ("> ", palette.accent),
-                TranscriptRole::Assistant => ("", palette.accent),
-                TranscriptRole::Status => ("", palette.dim),
-                TranscriptRole::Error => ("error: ", palette.warning),
-            };
-            let mut lines = entry
-                .text
-                .lines()
-                .map(sanitize_terminal_text)
-                .collect::<Vec<_>>();
-            if lines.is_empty() {
-                lines.push(String::new());
+    let mut rows = Vec::new();
+    for (index, entry) in transcript.iter().enumerate() {
+        if index > 0
+            && matches!(entry.role, TranscriptRole::User | TranscriptRole::Assistant)
+            && transcript[index - 1].role != entry.role
+        {
+            rows.push(String::new());
+        }
+        let (prefix, style) = match entry.role {
+            TranscriptRole::User => ("> ", palette.accent),
+            TranscriptRole::Assistant => ("", ""),
+            TranscriptRole::Status => ("", palette.dim),
+            TranscriptRole::Error => ("error: ", palette.warning),
+        };
+        let prefix = truncate(prefix, width.saturating_sub(1));
+        let continuation = " ".repeat(display_width(&prefix));
+        let text_width = width.saturating_sub(display_width(&prefix)).max(1);
+        for (line_index, line) in entry.text.split('\n').enumerate() {
+            let line = sanitize_terminal_text(&line.trim_end_matches('\r').replace('\t', "    "));
+            for (wrapped_index, line) in crate::text::wrap_line(&line, text_width)
+                .into_iter()
+                .enumerate()
+            {
+                let marker = if line_index == 0 && wrapped_index == 0 {
+                    &prefix
+                } else {
+                    &continuation
+                };
+                rows.push(format!("{style}{marker}{line}{RESET}"));
             }
-            lines.into_iter().map(move |line| {
-                format!(
-                    "{style}{}{RESET}",
-                    truncate(&format!("{prefix}{line}"), width)
-                )
-            })
-        })
-        .collect()
+        }
+    }
+    rows
 }
 
 fn render_scrolled_transcript<W: Write>(
@@ -1557,18 +1568,12 @@ fn command_palette_lines(
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum ChatHeaderLayout {
-    Panel { portrait_width: Option<usize> },
-    CompactPanel,
     Compact { rows: usize },
 }
 
 impl ChatHeaderLayout {
-    fn rows(self, width: usize) -> usize {
+    fn rows(self, _width: usize) -> usize {
         match self {
-            Self::Panel { portrait_width } => {
-                chat_panel_line_count_with_portrait(width, portrait_width)
-            }
-            Self::CompactPanel => COMPACT_WORKSPACE_PANEL_ROWS,
             Self::Compact { rows } => rows,
         }
     }
@@ -1598,31 +1603,8 @@ fn chat_frame_layout(width: usize, height: usize) -> ChatFrameLayout {
         .saturating_sub(status_rows)
         .saturating_sub(minimum_content_rows);
 
-    let panel = if width >= 50 {
-        let preferred_portrait = (width >= 60).then(|| portrait_size(width).0);
-        let compact_portrait = (width >= 60).then_some(24.min(avatar::WIDTH));
-        [preferred_portrait, compact_portrait]
-            .into_iter()
-            .find(|portrait_width| {
-                chat_panel_line_count_with_portrait(width, *portrait_width) <= maximum_header_rows
-            })
-    } else {
-        None
-    };
-
-    let header = if let Some(portrait_width) = panel {
-        ChatHeaderLayout::Panel { portrait_width }
-    } else if width >= 50 && chat_panel_line_count_with_portrait(width, None) <= maximum_header_rows
-    {
-        ChatHeaderLayout::Panel {
-            portrait_width: None,
-        }
-    } else if width >= 50 && COMPACT_WORKSPACE_PANEL_ROWS <= maximum_header_rows {
-        ChatHeaderLayout::CompactPanel
-    } else {
-        ChatHeaderLayout::Compact {
-            rows: maximum_header_rows.min(2),
-        }
+    let header = ChatHeaderLayout::Compact {
+        rows: maximum_header_rows.min(if width >= 50 { 3 } else { 2 }),
     };
     let header_rows = header.rows(width);
     let separator_rows = usize::from(
@@ -1654,52 +1636,47 @@ fn render_chat_header<W: Write>(
     palette: ThemePalette,
 ) -> io::Result<()> {
     match header {
-        ChatHeaderLayout::Panel { portrait_width } => {
-            render_chat_panel_with_portrait(out, width, model_status, portrait_width, palette)
+        ChatHeaderLayout::Compact { rows } => {
+            render_workspace_header(out, width, rows, model_status, palette)
         }
-        ChatHeaderLayout::CompactPanel => {
-            render_compact_workspace_panel(out, width, model_status, palette)
-        }
-        ChatHeaderLayout::Compact { rows } => render_compact_home_header(out, width, rows, palette),
     }
 }
 
-fn render_compact_workspace_panel<W: Write>(
-    out: &mut W,
-    width: usize,
-    model_status: &str,
-    palette: ThemePalette,
-) -> io::Result<()> {
-    let rows = vec![
-        format!(">_ Orchester (v{})", env!("CARGO_PKG_VERSION")),
-        "Self-owned coding agent workspace".to_string(),
-        format!("directory: {}", current_directory_text()),
-        format!("model: {}", sanitize_terminal_text(model_status)),
-    ];
-    render_info_box(out, width, &rows, palette)
-}
-
-fn render_compact_home_header<W: Write>(
+fn render_workspace_header<W: Write>(
     out: &mut W,
     width: usize,
     rows: usize,
+    model_status: &str,
     palette: ThemePalette,
 ) -> io::Result<()> {
     if rows > 0 {
         writeln!(
             out,
-            "{}{BOLD}Orchester{RESET} {}v{}{RESET}",
+            "{}{BOLD}{}{RESET}",
             palette.accent,
-            palette.dim,
-            env!("CARGO_PKG_VERSION")
+            truncate(
+                &format!(">_ Orchester  v{}", env!("CARGO_PKG_VERSION")),
+                width
+            )
         )?;
     }
     if rows > 1 {
         writeln!(
             out,
-            "{}{} {RESET}",
+            "{}{}{RESET}",
             palette.dim,
-            truncate("coding agent workspace", width)
+            truncate(&format!("directory: {}", current_directory_text()), width)
+        )?;
+    }
+    if rows > 2 {
+        writeln!(
+            out,
+            "{}{}{RESET}",
+            palette.dim,
+            truncate(
+                &format!("model: {}", sanitize_terminal_text(model_status)),
+                width
+            )
         )?;
     }
     Ok(())
@@ -1775,7 +1752,7 @@ pub fn render_line_startup_home<W: Write>(out: &mut W, model_status: &str) -> io
     let (cols, _) = terminal::size().unwrap_or((100, 30));
     let width = (cols as usize).clamp(50, 132);
 
-    render_chat_panel(out, width, model_status)?;
+    render_workspace_header(out, width, 3, model_status, Theme::default().palette())?;
     writeln!(out)?;
     writeln!(
         out,
@@ -1792,67 +1769,6 @@ pub fn render_line_startup_home<W: Write>(out: &mut W, model_status: &str) -> io
 pub fn render_line_continue_prompt<W: Write>(out: &mut W) -> io::Result<()> {
     write!(out, "{CYAN}orchester>{RESET} ")?;
     out.flush()
-}
-
-fn render_chat_panel<W: Write>(out: &mut W, width: usize, model_status: &str) -> io::Result<()> {
-    let portrait_width = (width >= 60).then(|| portrait_size(width).0);
-    render_chat_panel_with_portrait(
-        out,
-        width,
-        model_status,
-        portrait_width,
-        Theme::default().palette(),
-    )
-}
-
-fn render_chat_panel_with_portrait<W: Write>(
-    out: &mut W,
-    width: usize,
-    model_status: &str,
-    portrait_width: Option<usize>,
-    palette: ThemePalette,
-) -> io::Result<()> {
-    let rows = startup_panel_rows(model_status);
-    if let Some(portrait_width) = portrait_width {
-        render_portrait_info_box(out, width, &rows, portrait_width, palette)
-    } else {
-        render_info_box(out, width, &rows, palette)
-    }
-}
-
-fn startup_panel_rows(model_status: &str) -> Vec<String> {
-    let cwd = current_directory_text();
-    vec![
-        format!(">_ Orchester (v{})", env!("CARGO_PKG_VERSION")),
-        "Self-owned coding agent workspace".to_string(),
-        String::new(),
-        "Getting started".to_string(),
-        prompt_suggestion().to_string(),
-        String::new(),
-        "Workspace".to_string(),
-        format!("directory: {cwd}"),
-        format!("model: {}", sanitize_terminal_text(model_status)),
-        "safety: governed".to_string(),
-        String::new(),
-        "Delegate agents".to_string(),
-        "/agent choose or switch agent".to_string(),
-        "/codex launch native Codex".to_string(),
-        "/claude launch native Claude".to_string(),
-        "/opencode launch native OpenCode".to_string(),
-        String::new(),
-        "Recent activity".to_string(),
-        "No recent activity".to_string(),
-    ]
-}
-
-fn chat_panel_line_count_with_portrait(width: usize, portrait_width: Option<usize>) -> usize {
-    let info_rows = startup_panel_rows("model not configured").len();
-    if width >= 60 && portrait_width.is_some() {
-        let portrait_height = avatar::height_for_width(portrait_width.unwrap_or_default());
-        portrait_height.max(info_rows).saturating_add(2)
-    } else {
-        info_rows.saturating_add(2)
-    }
 }
 
 fn render_delegate_panel<W: Write>(
@@ -1902,73 +1818,6 @@ fn render_info_box<W: Write>(
         palette.dim,
         "-".repeat(panel_width - 2)
     )
-}
-
-fn render_portrait_info_box<W: Write>(
-    out: &mut W,
-    width: usize,
-    rows: &[String],
-    portrait_width: usize,
-    palette: ThemePalette,
-) -> io::Result<()> {
-    let panel_width = width.clamp(60, 120);
-    let portrait_width = portrait_width.min(avatar::WIDTH);
-    let portrait_height = avatar::height_for_width(portrait_width);
-    let right_width = panel_width.saturating_sub(portrait_width + 7);
-    let height = portrait_height.max(rows.len());
-    let portrait_offset = vertical_center_offset(height, portrait_height);
-    let text_offset = vertical_center_offset(height, rows.len());
-
-    writeln!(
-        out,
-        "{}+{}+{RESET}",
-        palette.dim,
-        "-".repeat(panel_width - 2)
-    )?;
-    for row in 0..height {
-        write!(out, "{}|{RESET} ", palette.dim)?;
-        if row >= portrait_offset && row < portrait_offset.saturating_add(portrait_height) {
-            let portrait_row = row - portrait_offset;
-            if portrait_width == avatar::WIDTH && portrait_height == avatar::HEIGHT {
-                avatar::render_row(out, portrait_row)?;
-            } else {
-                avatar::render_row_width(out, portrait_row, portrait_width)?;
-            }
-        } else {
-            write!(out, "{}", " ".repeat(portrait_width))?;
-        }
-        write!(out, " {}|{RESET} ", palette.dim)?;
-
-        let text = row
-            .checked_sub(text_offset)
-            .and_then(|index| rows.get(index))
-            .map(String::as_str)
-            .unwrap_or("");
-        let text = truncate(&sanitize_terminal_text(text), right_width);
-        let pad = " ".repeat(right_width.saturating_sub(display_width(&text)));
-        write!(out, "{text}{pad} ")?;
-        writeln!(out, "{}|{RESET}", palette.dim)?;
-    }
-    writeln!(
-        out,
-        "{}+{}+{RESET}",
-        palette.dim,
-        "-".repeat(panel_width - 2)
-    )
-}
-
-fn portrait_size(width: usize) -> (usize, usize) {
-    let panel_width = width.clamp(60, 120);
-    let portrait_width = if panel_width >= 96 {
-        avatar::WIDTH
-    } else {
-        24.min(avatar::WIDTH)
-    };
-    (portrait_width, avatar::height_for_width(portrait_width))
-}
-
-fn vertical_center_offset(container: usize, content: usize) -> usize {
-    container.saturating_sub(content) / 2
 }
 
 /// The Codex-style bottom bar: directory, model (with its reasoning effort),
@@ -2863,68 +2712,30 @@ mod tests {
     #[test]
     fn startup_home_is_distinct_from_the_delegate_picker() {
         let mut out = Vec::new();
-
         render_chat_home(&mut out, 100, "", &[], 0, false).unwrap();
-
-        let rendered = String::from_utf8_lossy(&out);
-        let plain = strip_ansi(&rendered);
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        assert!(plain.contains(">_ Orchester"));
+        assert!(plain.contains("model:") && plain.contains("directory:"));
+        assert!(plain.contains("Type a task or / for commands"));
+        assert!(!plain.contains("Selected: codex") && !plain.contains("Choose agent"));
         assert!(
-            plain.contains(">_ Orchester"),
-            "startup output:\n{rendered}"
-        );
-        assert!(plain.contains("model:"), "startup output:\n{rendered}");
-        assert!(plain.contains("directory:"), "startup output:\n{rendered}");
-        assert!(
-            plain.contains("Type a task or / for commands"),
-            "startup output:\n{rendered}"
-        );
-        assert!(
-            !plain.contains("Selected: codex") && !plain.contains("Choose agent"),
-            "startup must not look like a Codex session or delegate picker:\n{rendered}"
-        );
-        assert!(
-            rendered.contains("\x1b[38;2;"),
-            "wide startup should render the true-colour logo portrait:\n{rendered}"
-        );
-        assert!(
-            plain.chars().filter(|ch| *ch == '\u{2580}').count() > 40,
-            "startup portrait should be recognisable as dense ANSI art:\n{rendered}"
-        );
-        assert!(
-            !plain.contains("\u{923b}\u{20ac}"),
-            "startup portrait must not expose the source file's mojibake:\n{rendered}"
+            plain.lines().count() <= 8,
+            "the home must leave room for the task: {plain}"
         );
     }
 
     #[test]
     fn startup_home_offers_a_prompt_and_workspace_context() {
         let mut out = Vec::new();
-
         render_chat_home(&mut out, 100, "", &[], 0, false).unwrap();
-
-        let rendered = String::from_utf8(out).unwrap();
-        let plain = strip_ansi(&rendered);
-        let prompt_line = plain
-            .lines()
-            .find(|line| line.trim_start().starts_with("> "))
-            .expect("startup should render an input line");
-        assert_ne!(
-            prompt_line.trim(),
-            ">",
-            "empty input should show a task suggestion:\n{rendered}"
-        );
+        let plain = strip_ansi(&String::from_utf8(out).unwrap());
+        let prompt = plain.lines().find(|line| line.starts_with("> ")).unwrap();
+        assert_ne!(prompt.trim(), ">");
+        assert!(plain.contains(&current_directory_text()));
+        assert!(plain.contains("model not configured"));
         assert!(
-            plain.contains("Getting started"),
-            "startup output:\n{rendered}"
-        );
-        assert!(plain.contains("Workspace"), "startup output:\n{rendered}");
-        assert!(
-            plain.contains("Delegate agents"),
-            "startup output:\n{rendered}"
-        );
-        assert!(
-            plain.contains("Recent activity"),
-            "startup output:\n{rendered}"
+            !plain.contains("No recent activity"),
+            "history must not be invented"
         );
     }
 
@@ -3340,8 +3151,8 @@ mod tests {
         );
         assert_eq!(
             plain.lines().filter(|line| line.starts_with('+')).count(),
-            2,
-            "the full startup panel borders must remain visible:\n{plain}"
+            0,
+            "the workspace header must stay light:\n{plain}"
         );
         assert!(plain.contains("The answer stays in this session."));
         assert!(plain.contains("> follow-up"));
@@ -3397,8 +3208,8 @@ mod tests {
 
         let before = strip_ansi(&String::from_utf8(before).unwrap());
         let after = strip_ansi(&String::from_utf8(after).unwrap());
-        let before_header = before.lines().take(23).collect::<Vec<_>>();
-        let after_header = after.lines().take(23).collect::<Vec<_>>();
+        let before_header = before.lines().take(3).collect::<Vec<_>>();
+        let after_header = after.lines().take(3).collect::<Vec<_>>();
         assert_eq!(
             before_header, after_header,
             "top panel changed:\n{before}\n---\n{after}"
@@ -3449,7 +3260,7 @@ mod tests {
     }
 
     #[test]
-    fn constrained_chat_states_keep_the_same_bordered_workspace_header() {
+    fn constrained_chat_states_keep_the_same_compact_workspace_header() {
         let transcript = [TranscriptEntry::assistant("partial answer")];
         let overlay = CommandOverlay::new(
             "Status",
@@ -3459,9 +3270,9 @@ mod tests {
 
         for width in [79, 80, 99, 100] {
             let layout = chat_frame_layout(width, 24);
-            assert_eq!(layout.header.rows(width), 6, "{width}x24 header rows");
+            assert_eq!(layout.header.rows(width), 3, "{width}x24 header rows");
             assert_eq!(layout.separator_rows, 1, "{width}x24 separator rows");
-            assert_eq!(layout.content_rows, 15, "{width}x24 body rows");
+            assert_eq!(layout.content_rows, 18, "{width}x24 body rows");
             assert_eq!(layout.status_rows, 1, "{width}x24 status rows");
 
             let render = |input: &str,
@@ -3501,17 +3312,12 @@ mod tests {
             let expected_header = frames[0]
                 .1
                 .lines()
-                .take(6)
+                .take(3)
                 .map(str::to_owned)
                 .collect::<Vec<_>>();
 
-            assert_eq!(expected_header.len(), 6);
-            assert!(expected_header[0].starts_with('+'));
-            assert!(
-                expected_header[5].starts_with('+'),
-                "{width}x24 compact workspace panel has no lower border:\n{}",
-                frames[0].1
-            );
+            assert_eq!(expected_header.len(), 3);
+            assert!(expected_header[0].starts_with(">_ Orchester"));
             assert!(expected_header
                 .iter()
                 .any(|line| line.contains(">_ Orchester")));
@@ -3523,7 +3329,7 @@ mod tests {
                 .any(|line| line.contains("model: gpt-test")));
 
             for (label, frame) in &frames[1..] {
-                let header = frame.lines().take(6).collect::<Vec<_>>();
+                let header = frame.lines().take(3).collect::<Vec<_>>();
                 assert_eq!(
                     header,
                     expected_header
@@ -3888,10 +3694,10 @@ mod tests {
         .unwrap();
 
         let rendered = String::from_utf8(out).unwrap();
-        let first = rendered.lines().next().expect("panel border");
+        let first = rendered.lines().next().expect("workspace title");
         let status = rendered.lines().last().expect("status row");
         assert!(
-            first.contains(palette.dim),
+            first.contains(palette.accent),
             "panel ignored theme:\n{rendered}"
         );
         assert!(
@@ -4143,6 +3949,32 @@ mod tests {
     }
 
     #[test]
+    fn long_multilingual_responses_remain_readable_when_scrolled() {
+        let answer = "检查工作区中的所有修改 👩‍💻 e\u{301} and preserve the entire final sentence.";
+        let transcript = [TranscriptEntry::assistant(answer)];
+        let rows = transcript_lines(19, &transcript, Theme::default().palette());
+        let plain = rows.iter().map(|row| strip_ansi(row)).collect::<Vec<_>>();
+        assert_eq!(plain.concat(), answer);
+        assert!(plain.iter().all(|row| display_width(row) <= 19));
+        let mut newest = Vec::new();
+        render_scrolled_transcript(&mut newest, &rows, 2, 0).unwrap();
+        assert!(strip_ansi(&String::from_utf8(newest).unwrap()).contains("sentence."));
+        let mut oldest = Vec::new();
+        render_scrolled_transcript(&mut oldest, &rows, 2, usize::MAX).unwrap();
+        assert!(strip_ansi(&String::from_utf8(oldest).unwrap()).contains("检查工作区"));
+    }
+
+    #[test]
+    fn empty_composer_caret_starts_before_the_suggestion() {
+        let mut out = Vec::new();
+        assert_eq!(
+            render_composer(&mut out, 80, "", Theme::default().palette()).unwrap(),
+            2
+        );
+        assert!(strip_ansi(&String::from_utf8(out).unwrap()).starts_with("> "));
+    }
+
+    #[test]
     fn transcript_scroll_offsets_reach_both_ends_and_keep_composer() {
         let transcript = (0..20)
             .map(|index| TranscriptEntry::status(format!("line {index:02}")))
@@ -4299,23 +4131,14 @@ mod tests {
     }
 
     #[test]
-    fn portrait_home_respects_wide_and_medium_terminal_bounds() {
-        let mut wide = Vec::new();
-        render_chat_home(&mut wide, 100, "", &[], 0, false).unwrap();
-        let wide = strip_ansi(&String::from_utf8(wide).unwrap());
-        assert!(wide.lines().all(|line| display_width(line) <= 100));
-        assert!(wide.contains('\u{2580}'));
-
-        let mut medium = Vec::new();
-        render_chat_home(&mut medium, 80, "", &[], 0, false).unwrap();
-        let medium = strip_ansi(&String::from_utf8(medium).unwrap());
-        assert!(medium.lines().all(|line| display_width(line) <= 80));
-        assert!(medium.chars().filter(|ch| *ch == '\u{2580}').count() > 10);
-
-        let mut narrow = Vec::new();
-        render_chat_home(&mut narrow, 55, "", &[], 0, false).unwrap();
-        let narrow = strip_ansi(&String::from_utf8(narrow).unwrap());
-        assert!(!narrow.contains('\u{2580}'));
+    fn compact_home_leaves_room_in_wide_and_medium_terminals() {
+        for width in [55, 80, 100] {
+            let mut out = Vec::new();
+            render_chat_home(&mut out, width, "", &[], 0, false).unwrap();
+            let plain = strip_ansi(&String::from_utf8(out).unwrap());
+            assert!(plain.lines().all(|line| display_width(line) <= width));
+            assert!(plain.lines().count() <= 8);
+        }
     }
 
     #[test]
@@ -4348,8 +4171,8 @@ mod tests {
             .collect::<Vec<_>>();
         assert_eq!(
             borders,
-            vec![0, 5],
-            "80x24 startup should use the compact bordered workspace panel:\n{plain}"
+            Vec::<usize>::new(),
+            "80x24 startup should use an unboxed workspace header:\n{plain}"
         );
         assert!(plain.contains(">_ Orchester"), "80x24 brand:\n{plain}");
         assert!(plain.contains("directory:"), "80x24 workspace:\n{plain}");
@@ -4370,12 +4193,18 @@ mod tests {
     }
 
     #[test]
-    fn portrait_geometry_scales_and_centres_with_the_panel() {
-        assert_eq!(portrait_size(80), (24, 11));
-        assert_eq!(portrait_size(100), (avatar::WIDTH, avatar::HEIGHT));
-        assert_eq!(portrait_size(usize::MAX), (avatar::WIDTH, avatar::HEIGHT));
-        assert_eq!(vertical_center_offset(19, 11), 4);
-        assert_eq!(vertical_center_offset(11, 19), 0);
+    fn compact_header_preserves_the_input_in_tiny_viewports() {
+        for height in 1..=12 {
+            let layout = chat_frame_layout(40, height);
+            assert!(
+                layout.header.rows(40)
+                    + layout.separator_rows
+                    + layout.content_rows
+                    + layout.status_rows
+                    + 1
+                    <= height
+            );
+        }
     }
 
     #[test]
@@ -4497,17 +4326,17 @@ mod tests {
         assert!(empty.lines().count() <= 30);
         assert_eq!(
             empty.lines().filter(|line| line.starts_with('+')).count(),
-            2,
-            "30-row empty home should keep both panel borders:\n{empty}"
+            0,
+            "30-row empty home should keep its unboxed header:\n{empty}"
         );
         assert_eq!(
             empty.lines().filter(|line| line.starts_with('|')).count(),
-            avatar::HEIGHT,
-            "30-row empty home should keep every portrait row:\n{empty}"
+            0,
+            "30-row empty home should leave room for conversation:\n{empty}"
         );
         assert!(
-            empty.contains('\u{2580}'),
-            "30-row empty home should keep portrait"
+            !empty.contains('\u{2580}'),
+            "30-row empty home should keep the workspace header compact"
         );
     }
 

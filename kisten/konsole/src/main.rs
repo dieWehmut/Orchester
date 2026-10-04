@@ -12,6 +12,7 @@ mod plugin;
 mod process;
 mod render;
 mod self_agent;
+mod text;
 mod theme;
 mod update;
 mod workspace_overlay;
