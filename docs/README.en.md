@@ -209,7 +209,21 @@ Available in interactive mode (run `orchester` with no arguments):
 | `/help` | Show help |
 | `/quit` | Exit; `/exit` and `/q` are synonyms |
 
-Typing `/` opens the command palette under the input line, the way Codex does — arrow keys to select, Enter to confirm.
+Typing `/` opens the command palette under the input line: arrow keys select, `Tab` completes, and Enter executes.
+
+The composer supports Unicode text, emoji, multiline drafts, and wrapping. Long responses remain scrollable.
+
+| Keys | Purpose |
+|---|---|
+| `Enter` | Submit the draft or execute a command |
+| `Alt+Enter` / `Ctrl+J` | Insert a newline; `Shift+Enter` also works in terminals that support it |
+| `←` / `→`, `Home` / `End` | Move the caret and edit existing text |
+| `Ctrl+←` / `Ctrl+→`, `Ctrl+Backspace` / `Ctrl+Delete` | Move or delete by word |
+| `↑` / `↓` | Move through draft rows; at the first row, recall this session's inputs, then use `↓` to restore the unsent draft |
+| `Ctrl+U` | Clear the draft |
+| `PageUp` / `PageDown`, `Ctrl+Home` / `Ctrl+End` | Scroll the conversation or jump to its beginning/end |
+
+Multiline paste stays editable until Enter submits it. A pasted first line such as `/quit` is treated as task text. Input recall is held only in the current process's memory.
 
 ## Command line
 
