@@ -74,7 +74,9 @@ fn doctor_reports_mock_adapter_available() {
 
 #[test]
 fn default_run_can_emit_event_jsonl() {
+    let home = temp_home("default-run-jsonl");
     let output = orchester()
+        .env("ORCHESTER_HOME", &home)
         .args(["--agent", "mock", "--json", "hello default"])
         .output()
         .expect("run mock agent");
@@ -86,11 +88,15 @@ fn default_run_can_emit_event_jsonl() {
         && event["text"].as_str().unwrap().contains("hello default")));
     assert!(events.iter().any(|event| event["type"] == "result"
         && event["text"].as_str().unwrap().contains("hello default")));
+    assert!(home.is_absolute() && home.starts_with(std::env::temp_dir()));
+    std::fs::remove_dir_all(home).expect("remove isolated default-run home");
 }
 
 #[test]
 fn run_subcommand_can_emit_event_jsonl() {
+    let home = temp_home("run-subcommand-jsonl");
     let output = orchester()
+        .env("ORCHESTER_HOME", &home)
         .args(["run", "--agent", "mock", "--json", "hello run"])
         .output()
         .expect("run mock agent through run subcommand");
@@ -102,11 +108,15 @@ fn run_subcommand_can_emit_event_jsonl() {
         .iter()
         .any(|event| event["type"] == "result"
             && event["text"].as_str().unwrap().contains("hello run")));
+    assert!(home.is_absolute() && home.starts_with(std::env::temp_dir()));
+    std::fs::remove_dir_all(home).expect("remove isolated run-subcommand home");
 }
 
 #[test]
 fn run_subcommand_reads_prompt_from_stdin() {
+    let home = temp_home("run-subcommand-stdin");
     let mut child = orchester()
+        .env("ORCHESTER_HOME", &home)
         .args(["run", "--agent", "mock", "--json", "-"])
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
@@ -126,6 +136,8 @@ fn run_subcommand_reads_prompt_from_stdin() {
     let events = json_events(&output);
     assert!(events.iter().any(|event| event["type"] == "message"
         && event["text"].as_str().unwrap().contains("hello stdin")));
+    assert!(home.is_absolute() && home.starts_with(std::env::temp_dir()));
+    std::fs::remove_dir_all(home).expect("remove isolated stdin-run home");
 }
 
 #[test]
