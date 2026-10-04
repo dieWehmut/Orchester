@@ -557,6 +557,8 @@ mod tests {
 
     #[test]
     fn for_paths_binds_model_configuration_to_the_explicit_home() {
+        use orchester_laufzeit::harness::config::ConfigValue;
+
         let _lock = ENV_LOCK.get_or_init(|| Mutex::new(())).lock().unwrap();
         let root = std::env::temp_dir().join(format!(
             "orchester-host-paths-{}",
@@ -572,6 +574,14 @@ mod tests {
         fs::create_dir_all(&unrelated_home).expect("unrelated home");
         fs::create_dir_all(&workspace).expect("workspace");
         let config = explicit_home.join("orchester.jsonc");
+        // Seed the fixture through the application writer so Windows ACLs and
+        // Unix file permissions satisfy the same loader as production.
+        ConfigLoader::for_user_path(&config)
+            .edit_user_config(&[(
+                vec!["model".to_owned()],
+                ConfigValue::String("gpt-explicit".to_owned()),
+            )])
+            .expect("private model configuration");
         fs::write(
             &config,
             r#"{

@@ -159,6 +159,10 @@ if ($untrusted.Count -gt 0) {
 }
 "#;
     let output = std::process::Command::new(powershell)
+        // A PowerShell 7 parent can pass its incompatible system modules
+        // through an intermediate Rust process to Windows PowerShell 5.1.
+        // Let the child rebuild its own module path before loading Get-Acl.
+        .env_remove("PSModulePath")
         .args([
             "-NoLogo",
             "-NoProfile",
