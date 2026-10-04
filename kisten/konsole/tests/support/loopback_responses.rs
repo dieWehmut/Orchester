@@ -42,9 +42,36 @@ impl LoopbackResponses {
                     }
                 };
                 let request = read_request(&mut stream);
+                let body_start = request
+                    .windows(4)
+                    .position(|part| part == b"\r\n\r\n")
+                    .map(|i| i + 4);
+                let streaming = body_start
+                    .and_then(|start| {
+                        serde_json::from_slice::<serde_json::Value>(&request[start..]).ok()
+                    })
+                    .is_some_and(|body| body["stream"] == true);
+                let (response, content_type) = if streaming {
+                    let body: serde_json::Value =
+                        serde_json::from_slice(&response).expect("response fixture");
+                    let text = body["output"]
+                        .as_array()
+                        .into_iter()
+                        .flatten()
+                        .flat_map(|item| item["content"].as_array().into_iter().flatten())
+                        .filter_map(|item| item["text"].as_str())
+                        .collect::<String>();
+                    let delta =
+                        serde_json::json!({"type": "response.output_text.delta", "delta": text});
+                    let completed =
+                        serde_json::json!({"type": "response.completed", "response": body});
+                    (format!("event: response.output_text.delta\ndata: {delta}\n\nevent: response.completed\ndata: {completed}\n\n").into_bytes(), "text/event-stream")
+                } else {
+                    (response, "application/json")
+                };
                 captured.lock().expect("request capture lock").push(request);
                 let header = format!(
-                    "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                    "HTTP/1.1 200 OK\r\nContent-Type: {content_type}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
                     response.len()
                 );
                 if stream.write_all(header.as_bytes()).is_err()

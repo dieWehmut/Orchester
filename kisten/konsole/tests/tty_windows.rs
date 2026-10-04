@@ -2,6 +2,10 @@
 
 #[path = "support/conpty.rs"]
 mod conpty;
+#[path = "support/loopback_responses.rs"]
+mod loopback_responses;
+#[path = "support/secure_config.rs"]
+mod secure_config;
 
 use std::ffi::OsString;
 use std::path::{Path, PathBuf};
@@ -10,6 +14,8 @@ use std::time::Duration;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use conpty::ConPty;
+use loopback_responses::LoopbackResponses;
+use secure_config::write_user_config;
 
 const READY_TIMEOUT: Duration = Duration::from_secs(10);
 const COMMAND_TIMEOUT: Duration = Duration::from_secs(30);
@@ -20,7 +26,7 @@ fn conpty_test_guard() -> std::sync::MutexGuard<'static, ()> {
     CONPTY_TEST_LOCK
         .get_or_init(|| Mutex::new(()))
         .lock()
-        .expect("ConPTY test lock")
+        .unwrap_or_else(std::sync::PoisonError::into_inner)
 }
 
 #[test]
@@ -178,6 +184,174 @@ fn command_pickers_share_one_stable_full_screen_session() {
 
     let _ = std::fs::remove_dir_all(home);
     let _ = std::fs::remove_dir_all(workspace);
+}
+
+#[test]
+fn composer_edits_commands_and_keeps_multiline_paste_as_a_draft() {
+    let _guard = conpty_test_guard();
+    let home = temp_home("conpty-editor-home");
+    let workspace = temp_home("conpty-editor-workspace");
+    std::fs::create_dir_all(&workspace).unwrap();
+    let mut session = ConPty::spawn(
+        Path::new(env!("CARGO_BIN_EXE_orchester")),
+        &workspace,
+        &[(
+            OsString::from("ORCHESTER_HOME"),
+            home.as_os_str().to_os_string(),
+        )],
+        80,
+        24,
+    )
+    .unwrap();
+    let mut cursor = session.read_until(b">_ Orchester", READY_TIMEOUT).unwrap();
+    session.write(b"/sttus\x1b[D\x1b[D\x1b[Da\r").unwrap();
+    cursor = session
+        .read_until_since(cursor, b"Self-agent status", READY_TIMEOUT)
+        .unwrap();
+    session.write(b"\x1b").unwrap();
+    cursor = session
+        .read_until_since(cursor, b"Queued: /status", READY_TIMEOUT)
+        .unwrap();
+    session
+        .write(b"\x1b[200~/quit\r\nsecond-line-draft\x1b[201~")
+        .unwrap();
+    session
+        .read_until_since(cursor, b"second-line-draft", READY_TIMEOUT)
+        .expect("bracketed multiline paste must remain in the draft, without executing /quit");
+    session.write(b"\x15/quit\r").unwrap();
+    let (code, output) = session.wait_for_exit(READY_TIMEOUT).unwrap();
+    assert_eq!(code, 0);
+    assert_eq!(count(&output, b"\x1b[?1049h"), 1);
+    assert_eq!(count(&output, b"\x1b[?1049l"), 1);
+    assert!(
+        !home.join("state/runs.db").exists(),
+        "editing or pasting must not create a run"
+    );
+    let _ = std::fs::remove_dir_all(home);
+    let _ = std::fs::remove_dir_all(workspace);
+}
+
+#[test]
+fn resized_terminal_submits_one_multiline_prompt_then_recalls_it_for_another_turn() {
+    let _guard = conpty_test_guard();
+    let home = temp_home("conpty-conversation-home");
+    let workspace = temp_home("conpty-conversation-workspace");
+    std::fs::create_dir_all(&workspace).unwrap();
+    let answer = format!(
+        "{}\nFIRST_OK",
+        "检查完成：中文、emoji 👩‍💻 和长回复会保留全部内容。 ".repeat(8)
+    );
+    let server = LoopbackResponses::start(vec![
+        serde_json::json!({ "status": "completed", "output": [{ "type": "message", "role": "assistant",
+            "content": [{ "type": "output_text", "text": answer }] }] }),
+        serde_json::json!({ "status": "completed", "output": [{ "type": "message", "role": "assistant",
+            "content": [{ "type": "output_text", "text": "SECOND_OK" }] }] }),
+    ]);
+    write_user_config(&home, &serde_json::json!({
+        "model_provider": "Loopback", "model": "gpt-loopback", "disable_response_storage": true,
+        "model_providers": { "Loopback": { "base_url": server.base_url(),
+            "api_key": "conpty-model-secret-canary", "wire_api": "responses", "requires_openai_auth": true } }
+    }).to_string());
+    let mut session = ConPty::spawn(
+        Path::new(env!("CARGO_BIN_EXE_orchester")),
+        &workspace,
+        &[
+            (
+                OsString::from("ORCHESTER_HOME"),
+                home.as_os_str().to_os_string(),
+            ),
+            (
+                OsString::from("NO_PROXY"),
+                OsString::from("127.0.0.1,localhost"),
+            ),
+            (
+                OsString::from("no_proxy"),
+                OsString::from("127.0.0.1,localhost"),
+            ),
+        ],
+        80,
+        24,
+    )
+    .unwrap();
+    let mut cursor = session.read_until(b">_ Orchester", READY_TIMEOUT).unwrap();
+    capture_terminal(&mut session, "home-80x24.ansi");
+    let prompt = "检查工作区 👩‍💻\n请保留完整回答";
+    session
+        .write(format!("\x1b[200~{}\x1b[201~", prompt.replace('\n', "\r\n")).as_bytes())
+        .unwrap();
+    cursor = session
+        .read_until_since(cursor, "请保留完整回答".as_bytes(), READY_TIMEOUT)
+        .unwrap();
+    capture_terminal(&mut session, "multiline-draft-80x24.ansi");
+    session.write(b"\r").unwrap();
+    cursor = session
+        .read_until_since(cursor, b"FIRST_OK", COMMAND_TIMEOUT)
+        .unwrap();
+    capture_terminal(&mut session, "conversation-80x24.ansi");
+    if let Some(directory) = std::env::var_os("ORCHESTER_CLI_CAPTURE_DIR") {
+        let offset = session.snapshot().unwrap().len();
+        std::fs::write(
+            PathBuf::from(directory).join("terminal-resize.json"),
+            serde_json::json!({"offset": offset, "columns": 40, "rows": 12}).to_string(),
+        )
+        .unwrap();
+    }
+    session.resize(40, 12).unwrap();
+    session.write(b"\x1b[5~\x1b[6~").unwrap();
+    cursor = session
+        .read_until_since(cursor, b"\x1b[?2026h", READY_TIMEOUT)
+        .unwrap();
+    // Up recalls at the top of the empty composer; Ctrl+U then replaces that
+    // draft. Neither navigation nor resizing may create an extra model turn.
+    session.write(b"\x1b[A\x15second prompt\r").unwrap();
+    session
+        .read_until_since(cursor, b"SECOND_OK", COMMAND_TIMEOUT)
+        .unwrap();
+    capture_terminal(&mut session, "conversation-40x12.ansi");
+    session.write(b"/quit\r").unwrap();
+    let (code, output) = session.wait_for_exit(READY_TIMEOUT).unwrap();
+    assert_eq!(code, 0);
+    assert_eq!(count(&output, b"\x1b[?1049h"), 1);
+    assert_eq!(count(&output, b"\x1b[?1049l"), 1);
+    assert!(!contains(&output, b"conpty-model-secret-canary"));
+    let requests = server.finish();
+    assert_eq!(
+        requests.len(),
+        2,
+        "paste, resize and recall must not submit extra requests"
+    );
+    let request = &requests[0];
+    let body_start = request
+        .windows(4)
+        .position(|bytes| bytes == b"\r\n\r\n")
+        .unwrap()
+        + 4;
+    let body: serde_json::Value = serde_json::from_slice(&request[body_start..]).unwrap();
+    let sent_prompt = body["input"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|message| message["role"] == "user")
+        .and_then(|message| message["content"][0]["text"].as_str())
+        .unwrap();
+    assert_eq!(
+        sent_prompt, prompt,
+        "the exact multiline prompt must reach the provider"
+    );
+    let _ = std::fs::remove_dir_all(home);
+    let _ = std::fs::remove_dir_all(workspace);
+}
+
+fn capture_terminal(session: &mut ConPty, name: &str) {
+    if let Some(directory) = std::env::var_os("ORCHESTER_CLI_CAPTURE_DIR") {
+        let directory = PathBuf::from(directory);
+        assert!(
+            directory.is_absolute(),
+            "capture directory must be absolute"
+        );
+        std::fs::create_dir_all(&directory).unwrap();
+        std::fs::write(directory.join(name), session.snapshot().unwrap()).unwrap();
+    }
 }
 
 fn contains(haystack: &[u8], needle: &[u8]) -> bool {

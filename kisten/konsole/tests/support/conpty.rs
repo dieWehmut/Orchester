@@ -7,7 +7,9 @@ use std::time::{Duration, Instant};
 
 use windows_sys::Win32::Foundation::{CloseHandle, HANDLE, WAIT_OBJECT_0, WAIT_TIMEOUT};
 use windows_sys::Win32::Storage::FileSystem::{ReadFile, WriteFile};
-use windows_sys::Win32::System::Console::{ClosePseudoConsole, CreatePseudoConsole, COORD, HPCON};
+use windows_sys::Win32::System::Console::{
+    ClosePseudoConsole, CreatePseudoConsole, ResizePseudoConsole, COORD, HPCON,
+};
 use windows_sys::Win32::System::Pipes::{CreatePipe, PeekNamedPipe};
 use windows_sys::Win32::System::Threading::{
     CreateProcessW, DeleteProcThreadAttributeList, GetExitCodeProcess,
@@ -217,6 +219,29 @@ impl ConPty {
             offset += written as usize;
         }
         Ok(())
+    }
+
+    pub fn resize(&self, columns: i16, rows: i16) -> io::Result<()> {
+        let result = unsafe {
+            ResizePseudoConsole(
+                self.pseudo_console,
+                COORD {
+                    X: columns,
+                    Y: rows,
+                },
+            )
+        };
+        if result < 0 {
+            return Err(io::Error::other(format!(
+                "ResizePseudoConsole failed: {result:#x}"
+            )));
+        }
+        Ok(())
+    }
+
+    pub fn snapshot(&mut self) -> io::Result<Vec<u8>> {
+        self.read_available()?;
+        Ok(self.captured.clone())
     }
 
     pub fn read_until(&mut self, marker: &[u8], timeout: Duration) -> io::Result<usize> {

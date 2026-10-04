@@ -6,7 +6,6 @@
 //! exit code reflects the run outcome so scripts can branch on success/failure.
 
 mod args;
-mod avatar;
 mod interactive;
 mod plugin;
 mod process;
@@ -560,7 +559,7 @@ fn load_model_effort_overlay(
 
 #[derive(Default)]
 struct TerminalChatState {
-    input: String,
+    input: interactive::Composer,
     command_selected: usize,
     show_help: bool,
     transcript: Vec<TranscriptEntry>,
@@ -575,7 +574,7 @@ struct TerminalChatState {
 impl TerminalChatState {
     fn view<'a>(&'a self, choices: &'a [AgentChoice], model_status: &'a str) -> ChatHomeView<'a> {
         ChatHomeView::new(
-            &self.input,
+            self.input.text(),
             choices,
             self.command_selected,
             self.show_help,
@@ -583,12 +582,14 @@ impl TerminalChatState {
             &self.transcript,
             self.busy.as_deref(),
         )
+        .with_cursor(self.input.cursor())
         .with_scroll(self.scroll_offset)
         .with_overlay(self.overlay.as_ref().map(|overlay| &overlay.view))
         .with_theme(self.active_theme)
     }
 
     fn clear_input(&mut self) {
+        self.input.remember_submission();
         self.input.clear();
         self.command_selected = 0;
         self.show_help = false;
@@ -840,14 +841,15 @@ async fn await_model_turn(
                 tick = tick.wrapping_add(1);
                 state.busy = Some(busy_label(tick));
                 if !cancel_requested {
-                    while let Some(key) = chat.try_read_key()? {
-                        let Some(action) = interactive::handle_chat_key_with_scroll(
-                            key,
+                    while let Some(input_event) = chat.try_read_input()? {
+                        let Some(action) = interactive::handle_chat_input(
+                            input_event,
                             &mut state.input,
                             &mut state.command_selected,
                             &mut state.show_help,
                             &mut state.scroll_offset,
                             choices,
+                            chat.viewport().0,
                         ) else {
                             continue;
                         };
@@ -1357,16 +1359,15 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
 
         state.busy = None;
         chat.present_view(state.view(&choices, &model_status))?;
-        let Some(key) = chat.read_key()? else {
-            continue;
-        };
-        if let Some(action) = interactive::handle_chat_key_with_scroll(
-            key,
+        let input_event = chat.read_input()?;
+        if let Some(action) = interactive::handle_chat_input(
+            input_event,
             &mut state.input,
             &mut state.command_selected,
             &mut state.show_help,
             &mut state.scroll_offset,
             &choices,
+            chat.viewport().0,
         ) {
             if matches!(action, interactive::HomeAction::Quit) {
                 return Ok(ExitCode::SUCCESS);

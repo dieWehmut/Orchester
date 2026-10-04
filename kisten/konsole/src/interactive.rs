@@ -4,11 +4,12 @@ use std::sync::OnceLock;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 mod commands;
+mod composer;
+mod input;
 mod provider_form;
 mod screen;
 mod secret;
 
-use crate::avatar;
 use crate::theme::{Theme, ThemePalette};
 use commands::{
     command_action, matching_commands, matching_delegate_commands, parse_home_action_selected,
@@ -17,6 +18,8 @@ pub use commands::{
     parse_home_action, parse_prompt_action, CredentialCommand, HomeAction, ModelCommand,
     PluginAction, PromptAction, ThemeCommand, WorkspaceCommand,
 };
+pub(crate) use composer::Composer;
+use composer::{prompt_prefix, ComposerFrame};
 use crossterm::event::{
     self, Event as TerminalEvent, KeyCode, KeyEvent, KeyEventKind, KeyModifiers,
 };
@@ -83,6 +86,7 @@ pub(crate) struct ChatHomeView<'a> {
     pub(crate) width: usize,
     pub(crate) height: usize,
     pub(crate) input: &'a str,
+    pub(crate) input_cursor: Option<usize>,
     pub(crate) choices: &'a [AgentChoice],
     pub(crate) command_selected: usize,
     pub(crate) show_help: bool,
@@ -108,6 +112,7 @@ impl<'a> ChatHomeView<'a> {
             width: 0,
             height: 0,
             input,
+            input_cursor: None,
             choices,
             command_selected,
             show_help,
@@ -132,6 +137,11 @@ impl<'a> ChatHomeView<'a> {
 
     pub(crate) fn with_theme(mut self, theme: Theme) -> Self {
         self.theme = theme;
+        self
+    }
+
+    pub(crate) fn with_cursor(mut self, cursor: usize) -> Self {
+        self.input_cursor = Some(cursor);
         self
     }
 }
@@ -232,6 +242,7 @@ impl TranscriptEntry {
 pub(crate) struct ChatSession {
     _terminal: TerminalSession,
     presenter: FramePresenter,
+    input_reader: input::InputReader,
 }
 
 impl ChatSession {
@@ -239,6 +250,7 @@ impl ChatSession {
         Ok(Self {
             _terminal: TerminalSession::enter()?,
             presenter: FramePresenter::default(),
+            input_reader: input::InputReader::default(),
         })
     }
 
@@ -256,23 +268,105 @@ impl ChatSession {
         })
     }
 
-    pub(crate) fn read_key(&self) -> io::Result<Option<KeyEvent>> {
-        match event::read()? {
+    pub(crate) fn read_key(&mut self) -> io::Result<Option<KeyEvent>> {
+        match self.read_input()? {
             TerminalEvent::Key(key) => Ok(Some(key)),
             _ => Ok(None),
         }
     }
 
-    pub(crate) fn try_read_key(&self) -> io::Result<Option<KeyEvent>> {
-        if !event::poll(std::time::Duration::ZERO)? {
-            return Ok(None);
+    pub(crate) fn read_input(&mut self) -> io::Result<TerminalEvent> {
+        loop {
+            if let Some(event) = self.input_reader.pop_pending() {
+                return self.coalesce_text(event);
+            }
+            if event::poll(std::time::Duration::ZERO)? {
+                if let Some(event) = self.input_reader.feed(event::read()?) {
+                    return self.coalesce_text(event);
+                }
+                continue;
+            }
+            self.input_reader.flush_escape();
+            if let Some(event) = self.input_reader.pop_pending() {
+                return self.coalesce_text(event);
+            }
+            if let Some(timeout) = self.input_reader.escape_timeout() {
+                if !event::poll(timeout)? {
+                    continue;
+                }
+            }
+            if let Some(event) = self.input_reader.feed(event::read()?) {
+                return self.coalesce_text(event);
+            }
         }
-        self.read_key()
+    }
+
+    pub(crate) fn try_read_input(&mut self) -> io::Result<Option<TerminalEvent>> {
+        loop {
+            if let Some(event) = self.input_reader.pop_pending() {
+                return self.coalesce_text(event).map(Some);
+            }
+            if !event::poll(std::time::Duration::ZERO)? {
+                self.input_reader.flush_escape();
+                if let Some(event) = self.input_reader.pop_pending() {
+                    return self.coalesce_text(event).map(Some);
+                }
+                return Ok(None);
+            }
+            if let Some(event) = self.input_reader.feed(event::read()?) {
+                return self.coalesce_text(event).map(Some);
+            }
+        }
     }
 
     pub(crate) fn viewport(&self) -> (usize, usize) {
         let (cols, rows) = terminal::size().unwrap_or((100, 30));
         (viewport_content_width(cols), usize::from(rows).max(1))
+    }
+
+    fn coalesce_text(&mut self, event: TerminalEvent) -> io::Result<TerminalEvent> {
+        let Some(first) = printable_key_text(&event) else {
+            return Ok(event);
+        };
+        let mut text = first.to_string();
+        loop {
+            let next = if let Some(event) = self.input_reader.pop_pending() {
+                Some(event)
+            } else if event::poll(std::time::Duration::ZERO)? {
+                self.input_reader.feed(event::read()?)
+            } else {
+                break;
+            };
+            let Some(next) = next else {
+                continue;
+            };
+            if let Some(ch) = printable_key_text(&next) {
+                text.push(ch);
+            } else {
+                self.input_reader.put_back(next);
+                break;
+            }
+        }
+        Ok(TerminalEvent::Paste(text))
+    }
+}
+
+fn printable_key_text(event: &TerminalEvent) -> Option<char> {
+    match event {
+        TerminalEvent::Key(key) if is_press(key) => match key.code {
+            KeyCode::Char(ch)
+                if !key
+                    .modifiers
+                    .intersects(KeyModifiers::CONTROL | KeyModifiers::ALT)
+                    || key
+                        .modifiers
+                        .contains(KeyModifiers::CONTROL | KeyModifiers::ALT) =>
+            {
+                Some(ch)
+            }
+            _ => None,
+        },
+        _ => None,
     }
 }
 
@@ -295,7 +389,8 @@ pub(crate) fn handle_chat_key(
     )
 }
 
-pub(crate) fn handle_chat_key_with_scroll(
+#[cfg(test)]
+fn handle_chat_key_with_scroll(
     key: KeyEvent,
     input: &mut String,
     command_selected: &mut usize,
@@ -303,89 +398,115 @@ pub(crate) fn handle_chat_key_with_scroll(
     scroll_offset: &mut usize,
     choices: &[AgentChoice],
 ) -> Option<HomeAction> {
-    if !is_press(&key) {
-        return None;
-    }
-    if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('c') {
+    let mut composer = Composer::from(input.clone());
+    let action = handle_chat_input(
+        TerminalEvent::Key(key),
+        &mut composer,
+        command_selected,
+        show_help,
+        scroll_offset,
+        choices,
+        100,
+    );
+    *input = composer.text().to_owned();
+    action
+}
+
+pub(crate) fn handle_chat_input(
+    event: TerminalEvent,
+    input: &mut Composer,
+    command_selected: &mut usize,
+    show_help: &mut bool,
+    scroll_offset: &mut usize,
+    choices: &[AgentChoice],
+    width: usize,
+) -> Option<HomeAction> {
+    let key = match event {
+        TerminalEvent::Paste(text) => {
+            input.insert(&text);
+            *command_selected = 0;
+            *show_help = false;
+            return None;
+        }
+        TerminalEvent::Key(key) if is_press(&key) => key,
+        _ => return None,
+    };
+    let control =
+        key.modifiers.contains(KeyModifiers::CONTROL) && !key.modifiers.contains(KeyModifiers::ALT);
+    if control && key.code == KeyCode::Char('c') {
         return Some(HomeAction::Quit);
     }
-
     match key.code {
-        KeyCode::PageUp => {
-            *scroll_offset = scroll_offset.saturating_add(SCROLL_PAGE_ROWS);
-            None
-        }
+        KeyCode::PageUp => *scroll_offset = scroll_offset.saturating_add(SCROLL_PAGE_ROWS),
         KeyCode::PageDown => {
             *scroll_offset = if *scroll_offset == usize::MAX {
                 0
             } else {
                 scroll_offset.saturating_sub(SCROLL_PAGE_ROWS)
+            }
+        }
+        KeyCode::Home if control => *scroll_offset = usize::MAX,
+        KeyCode::End if control => *scroll_offset = 0,
+        KeyCode::Enter
+            if !key
+                .modifiers
+                .intersects(KeyModifiers::ALT | KeyModifiers::SHIFT) =>
+        {
+            let action = if input.text().contains('\n') {
+                if input.text().trim().is_empty() {
+                    HomeAction::Empty
+                } else {
+                    HomeAction::Submit(input.text().trim().to_owned())
+                }
+            } else {
+                parse_home_action_selected(input.text(), choices, *command_selected)
             };
-            None
-        }
-        KeyCode::Home => {
-            *scroll_offset = usize::MAX;
-            None
-        }
-        KeyCode::End => {
-            *scroll_offset = 0;
-            None
-        }
-        KeyCode::Enter => {
-            let action = parse_home_action_selected(input, choices, *command_selected);
             if matches!(action, HomeAction::Help) {
+                input.remember_submission();
                 input.clear();
                 *command_selected = 0;
                 *show_help = true;
-                return None;
-            }
-            if matches!(action, HomeAction::Empty) {
-                None
-            } else {
-                Some(action)
+            } else if !matches!(action, HomeAction::Empty) {
+                return Some(action);
             }
         }
         KeyCode::Esc => {
             if *show_help {
                 *show_help = false;
-                return None;
-            }
-            if input.is_empty() {
+            } else if input.is_empty() {
                 return Some(HomeAction::Quit);
+            } else {
+                input.clear();
+                *command_selected = 0;
             }
-            input.clear();
-            *command_selected = 0;
-            None
         }
-        KeyCode::Backspace => {
-            input.pop();
-            *command_selected = 0;
-            *show_help = false;
-            None
-        }
-        KeyCode::Up if input.starts_with('/') => {
-            let matches = matching_commands(input, choices);
+        KeyCode::Up | KeyCode::Down if input.is_command_query() => {
+            let matches = matching_commands(input.text(), choices);
             *command_selected = wrapped_selection(
                 *command_selected,
                 matches.len(),
-                SelectionDirection::Previous,
+                if key.code == KeyCode::Up {
+                    SelectionDirection::Previous
+                } else {
+                    SelectionDirection::Next
+                },
             );
-            None
         }
-        KeyCode::Down if input.starts_with('/') => {
-            let matches = matching_commands(input, choices);
-            *command_selected =
-                wrapped_selection(*command_selected, matches.len(), SelectionDirection::Next);
-            None
+        KeyCode::Tab if input.is_command_query() => {
+            if let Some(item) = matching_commands(input.text(), choices).get(*command_selected) {
+                input.clear();
+                input.insert(&item.name);
+                *command_selected = 0;
+            }
         }
-        KeyCode::Char(ch) => {
-            input.push(ch);
-            *command_selected = 0;
-            *show_help = false;
-            None
+        _ => {
+            if input.edit_key(key, width) {
+                *command_selected = 0;
+                *show_help = false;
+            }
         }
-        _ => None,
     }
+    None
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1062,6 +1183,7 @@ fn render_chat_home<W: Write>(
             width,
             height: usize::MAX,
             input,
+            input_cursor: None,
             choices,
             command_selected,
             show_help,
@@ -1115,6 +1237,7 @@ fn render_chat_home_frame<W: Write>(
         width,
         height,
         input,
+        input_cursor,
         choices,
         command_selected,
         show_help,
@@ -1136,6 +1259,7 @@ fn render_chat_home_frame<W: Write>(
                 width,
                 height,
                 input,
+                input_cursor,
                 choices,
                 command_selected,
                 show_help,
@@ -1149,7 +1273,8 @@ fn render_chat_home_frame<W: Write>(
         );
     }
 
-    let layout = chat_frame_layout(width, height);
+    let composer = composer_frame(width, height, input, input_cursor);
+    let layout = chat_frame_layout_with_composer(width, height, composer.rows.len());
     let palette = theme.palette();
     render_chat_header(out, width, model_status, layout.header, palette)?;
     if layout.separator_rows > 0 {
@@ -1160,7 +1285,7 @@ fn render_chat_home_frame<W: Write>(
     // Codex opens its slash-command popup underneath the input line, above the
     // status row. The palette therefore claims its rows from the body and is
     // written after the composer instead of covering the transcript area.
-    let command_palette = if !show_help && input.starts_with('/') {
+    let command_palette = if !show_help && input.starts_with('/') && !input.contains('\n') {
         command_palette_lines(
             input,
             choices,
@@ -1182,12 +1307,20 @@ fn render_chat_home_frame<W: Write>(
             width,
         );
         writeln!(&mut body, "{}{hint}{RESET}", palette.dim)?;
+        if body_rows > 1 {
+            writeln!(
+                &mut body,
+                "{}{}{RESET}",
+                palette.dim,
+                truncate("Alt+Enter new line  ·  ↑ history  ·  Tab complete", width)
+            )?;
+        }
     }
     let body_height = render_fixed_body(out, &body, body_rows)?;
-    let caret_column = render_composer(out, width, input, palette)?;
+    render_composer_frame(out, width, input, &composer, palette)?;
     let caret = caret_position(
-        layout.header.rows(width) + layout.separator_rows + body_height,
-        caret_column,
+        layout.header.rows(width) + layout.separator_rows + body_height + composer.caret.row,
+        composer.caret.column as u16,
         show_help,
     );
     render_command_palette_lines(out, &command_palette)?;
@@ -1205,6 +1338,7 @@ fn render_transcript_chat_frame<W: Write>(
         width,
         height,
         input,
+        input_cursor,
         choices,
         command_selected,
         show_help,
@@ -1216,7 +1350,8 @@ fn render_transcript_chat_frame<W: Write>(
         theme,
     } = view;
     let palette = theme.palette();
-    let layout = chat_frame_layout(width, height);
+    let composer = composer_frame(width, height, input, input_cursor);
+    let layout = chat_frame_layout_with_composer(width, height, composer.rows.len());
     let content_rows = layout.content_rows;
 
     render_chat_header(out, width, model_status, layout.header, palette)?;
@@ -1236,7 +1371,7 @@ fn render_transcript_chat_frame<W: Write>(
                 &mut body,
                 "{}* {RESET}{}",
                 palette.accent,
-                sanitize_terminal_text(busy)
+                truncate(&sanitize_terminal_text(busy), width.saturating_sub(2))
             )?;
         }
     } else {
@@ -1245,7 +1380,7 @@ fn render_transcript_chat_frame<W: Write>(
         let palette_rows = content_rows
             .saturating_sub(reserve_history_row)
             .saturating_sub(busy_rows);
-        command_palette = if input.starts_with('/') {
+        command_palette = if input.starts_with('/') && !input.contains('\n') {
             command_palette_lines(
                 input,
                 choices,
@@ -1271,7 +1406,7 @@ fn render_transcript_chat_frame<W: Write>(
                 &mut body,
                 "{}* {RESET}{}",
                 palette.accent,
-                sanitize_terminal_text(busy)
+                truncate(&sanitize_terminal_text(busy), width.saturating_sub(2))
             )?;
         }
     }
@@ -1280,10 +1415,10 @@ fn render_transcript_chat_frame<W: Write>(
         &body,
         content_rows.saturating_sub(command_palette.len()),
     )?;
-    let caret_column = render_composer(out, width, input, palette)?;
+    render_composer_frame(out, width, input, &composer, palette)?;
     let caret = caret_position(
-        layout.header.rows(width) + layout.separator_rows + body_height,
-        caret_column,
+        layout.header.rows(width) + layout.separator_rows + body_height + composer.caret.row,
+        composer.caret.column as u16,
         show_help || overlay.is_some(),
     );
     // The palette opens under the composer, the way Codex stacks its
@@ -1338,33 +1473,64 @@ fn render_fixed_body<W: Write>(out: &mut W, body: &[u8], rows: usize) -> io::Res
 /// presenter can park the terminal cursor there. Codex keeps a real caret in
 /// the composer instead of a hand-drawn glyph, which is also what makes it
 /// blink at the terminal's own rate.
+fn composer_frame(
+    width: usize,
+    height: usize,
+    input: &str,
+    cursor: Option<usize>,
+) -> ComposerFrame {
+    ComposerFrame::new(input, cursor.unwrap_or(input.len()), width)
+        .visible(height.saturating_sub(4).clamp(1, 4))
+}
+
+#[cfg(test)]
 fn render_composer<W: Write>(
     out: &mut W,
     width: usize,
     input: &str,
     palette: ThemePalette,
 ) -> io::Result<u16> {
-    let prompt = if input.is_empty() {
-        prompt_suggestion()
-    } else {
-        input
-    };
-    let prompt_style = if input.is_empty() { palette.dim } else { "" };
-    let prompt = truncate(&sanitize_terminal_text(prompt), width.saturating_sub(2));
-    let caret = if input.is_empty() {
-        2
-    } else {
-        display_width(&prompt).saturating_add(2)
-    };
-    let prompt_pad = " ".repeat(width.saturating_sub(2 + display_width(&prompt)));
-    writeln!(
-        out,
-        "{}{accent}> {RESET}{}{prompt_style}{prompt}{prompt_pad}{RESET}",
-        palette.composer_background,
-        palette.composer_background,
-        accent = palette.accent,
-    )?;
-    Ok(caret.min(width.saturating_sub(1)) as u16)
+    let composer = composer_frame(width, 24, input, None);
+    render_composer_frame(out, width, input, &composer, palette)?;
+    Ok(composer.caret.column as u16)
+}
+
+fn render_composer_frame<W: Write>(
+    out: &mut W,
+    width: usize,
+    input: &str,
+    composer: &ComposerFrame,
+    palette: ThemePalette,
+) -> io::Result<()> {
+    let prefix = prompt_prefix(width);
+    for (index, row) in composer.rows.iter().enumerate() {
+        let marker = if prefix.len() == 2 && index == 0 && composer.clipped_above {
+            "↑ "
+        } else if prefix.len() == 2 && index + 1 == composer.rows.len() && composer.clipped_below {
+            "↓ "
+        } else if index == 0 {
+            prefix
+        } else {
+            &"  "[..prefix.len()]
+        };
+        let placeholder;
+        let row = if input.is_empty() {
+            placeholder = truncate(prompt_suggestion(), width.saturating_sub(prefix.len()));
+            &placeholder
+        } else {
+            row
+        };
+        let style = if input.is_empty() { palette.dim } else { "" };
+        let pad = " ".repeat(width.saturating_sub(prefix.len() + display_width(row)));
+        writeln!(
+            out,
+            "{}{accent}{marker}{RESET}{}{style}{row}{pad}{RESET}",
+            palette.composer_background,
+            palette.composer_background,
+            accent = palette.accent
+        )?;
+    }
+    Ok(())
 }
 
 fn render_command_overlay<W: Write>(
@@ -1587,8 +1753,16 @@ struct ChatFrameLayout {
     status_rows: usize,
 }
 
+#[cfg(test)]
 fn chat_frame_layout(width: usize, height: usize) -> ChatFrameLayout {
-    let composer_rows = usize::from(height > 0);
+    chat_frame_layout_with_composer(width, height, usize::from(height > 0))
+}
+
+fn chat_frame_layout_with_composer(
+    width: usize,
+    height: usize,
+    composer_rows: usize,
+) -> ChatFrameLayout {
     let status_rows = usize::from(height >= 2);
     let available_content_rows = height
         .saturating_sub(composer_rows)
@@ -2252,7 +2426,7 @@ mod tests {
         assert!(scroll_offset > 0);
 
         handle_chat_key_with_scroll(
-            KeyEvent::new(KeyCode::Home, KeyModifiers::NONE),
+            KeyEvent::new(KeyCode::Home, KeyModifiers::CONTROL),
             &mut input,
             &mut selected,
             &mut show_help,
@@ -2272,7 +2446,7 @@ mod tests {
         assert_eq!(scroll_offset, 0);
 
         handle_chat_key_with_scroll(
-            KeyEvent::new(KeyCode::End, KeyModifiers::NONE),
+            KeyEvent::new(KeyCode::End, KeyModifiers::CONTROL),
             &mut input,
             &mut selected,
             &mut show_help,
@@ -2787,6 +2961,7 @@ mod tests {
                 width: 100,
                 height: 24,
                 input: "/",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: false,
@@ -2844,6 +3019,7 @@ mod tests {
                 width: 80,
                 height: 24,
                 input: "/st",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: false,
@@ -2894,6 +3070,7 @@ mod tests {
                     width: 80,
                     height: 24,
                     input,
+                    input_cursor: None,
                     choices: &[],
                     command_selected: 0,
                     show_help,
@@ -3022,6 +3199,7 @@ mod tests {
                 width: 80,
                 height: usize::MAX,
                 input: "/",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: false,
@@ -3062,6 +3240,7 @@ mod tests {
                 width: 80,
                 height: 1,
                 input: "/",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: false,
@@ -3095,6 +3274,7 @@ mod tests {
                 width: 80,
                 height: 12,
                 input: "next task",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: false,
@@ -3131,6 +3311,7 @@ mod tests {
                 width: 100,
                 height: 44,
                 input: "follow-up",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: false,
@@ -3168,6 +3349,7 @@ mod tests {
                 width: 100,
                 height: 44,
                 input: "/",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: false,
@@ -3193,6 +3375,7 @@ mod tests {
                 width: 100,
                 height: 44,
                 input: "",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: false,
@@ -3227,6 +3410,7 @@ mod tests {
                     width: 100,
                     height: 24,
                     input,
+                    input_cursor: None,
                     choices: &[],
                     command_selected: 0,
                     show_help: false,
@@ -3286,6 +3470,7 @@ mod tests {
                         width,
                         height: 24,
                         input,
+                        input_cursor: None,
                         choices: &[],
                         command_selected: 0,
                         show_help: false,
@@ -3394,6 +3579,7 @@ mod tests {
                 width: 80,
                 height: 24,
                 input: "next task",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: false,
@@ -3436,6 +3622,7 @@ mod tests {
                 width: 80,
                 height: 24,
                 input: "",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: false,
@@ -3480,6 +3667,7 @@ mod tests {
                     width: 100,
                     height: 44,
                     input,
+                    input_cursor: None,
                     choices: &[],
                     command_selected: 0,
                     show_help: false,
@@ -3542,6 +3730,7 @@ mod tests {
                 width: 100,
                 height: 24,
                 input: "",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: false,
@@ -3580,6 +3769,7 @@ mod tests {
                 width: 100,
                 height: 44,
                 input: "",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: false,
@@ -3650,6 +3840,7 @@ mod tests {
                 width: 80,
                 height: 18,
                 input: "",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: false,
@@ -3680,6 +3871,7 @@ mod tests {
                 width: 100,
                 height: 44,
                 input: "/",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: false,
@@ -3724,6 +3916,7 @@ mod tests {
                 width: 80,
                 height: 12,
                 input: "/status",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: false,
@@ -3831,6 +4024,7 @@ mod tests {
                     width: 100,
                     height: 24,
                     input: "next task",
+                    input_cursor: None,
                     choices: &[],
                     command_selected: 0,
                     show_help: false,
@@ -3882,6 +4076,7 @@ mod tests {
                 width: 80,
                 height: 12,
                 input: "",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: true,
@@ -3913,6 +4108,7 @@ mod tests {
                 width: 80,
                 height: 12,
                 input: "",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: true,
@@ -3975,6 +4171,86 @@ mod tests {
     }
 
     #[test]
+    fn pasted_commands_are_literal_until_an_explicit_submit_and_tab_only_completes() {
+        let mut input = Composer::from("/mod");
+        let mut selected = 0;
+        let mut help = false;
+        let mut scroll = 0;
+        assert_eq!(
+            handle_chat_input(
+                TerminalEvent::Key(KeyEvent::new(KeyCode::Tab, KeyModifiers::NONE)),
+                &mut input,
+                &mut selected,
+                &mut help,
+                &mut scroll,
+                &[],
+                80
+            ),
+            None
+        );
+        assert_eq!(input.text(), "/model");
+        input.clear();
+        assert_eq!(
+            handle_chat_input(
+                TerminalEvent::Paste("/quit\n第二行".into()),
+                &mut input,
+                &mut selected,
+                &mut help,
+                &mut scroll,
+                &[],
+                80
+            ),
+            None
+        );
+        assert_eq!(
+            handle_chat_input(
+                TerminalEvent::Key(KeyEvent::new(KeyCode::Enter, KeyModifiers::NONE)),
+                &mut input,
+                &mut selected,
+                &mut help,
+                &mut scroll,
+                &[],
+                80
+            ),
+            Some(HomeAction::Submit("/quit\n第二行".into()))
+        );
+    }
+
+    #[test]
+    fn multiline_frames_keep_text_cursor_and_live_state_inside_the_viewport() {
+        let input =
+            "检查工作区 👩‍💻\n第二行说明 e\u{301}\nfinal draft line which wraps at small widths";
+        let transcript = [TranscriptEntry::assistant("previous answer")];
+        for width in [2, 9, 40, 80, 132] {
+            for height in [1, 2, 5, 12, 24] {
+                for cursor in [0, input.len()] {
+                    let mut view = ChatHomeView::new(
+                        input,
+                        &[],
+                        0,
+                        false,
+                        "gpt-test",
+                        &transcript,
+                        Some("Creating..."),
+                    )
+                    .with_cursor(cursor);
+                    view.width = width;
+                    view.height = height;
+                    let mut out = Vec::new();
+                    let caret = render_chat_home_frame(&mut out, view).unwrap().unwrap();
+                    let plain = strip_ansi(&String::from_utf8(out).unwrap());
+                    assert!(plain.lines().count() <= height, "{width}x{height}: {plain}");
+                    assert!(
+                        plain.lines().all(|line| display_width(line) <= width),
+                        "{width}x{height}: {plain}"
+                    );
+                    assert!(usize::from(caret.row) < height && usize::from(caret.column) < width);
+                }
+            }
+        }
+    }
+
+    #[test]
     fn transcript_scroll_offsets_reach_both_ends_and_keep_composer() {
         let transcript = (0..20)
             .map(|index| TranscriptEntry::status(format!("line {index:02}")))
@@ -3988,6 +4264,7 @@ mod tests {
                     width: 80,
                     height: 8,
                     input: "draft",
+                    input_cursor: None,
                     choices: &[],
                     command_selected: 0,
                     show_help: false,
@@ -4150,6 +4427,7 @@ mod tests {
                 width: 80,
                 height: 24,
                 input: "",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: false,
@@ -4201,8 +4479,7 @@ mod tests {
                     + layout.separator_rows
                     + layout.content_rows
                     + layout.status_rows
-                    + 1
-                    <= height
+                    < height
             );
         }
     }
@@ -4241,6 +4518,7 @@ mod tests {
                         width: 100,
                         height,
                         input,
+                        input_cursor: None,
                         choices: &choices,
                         command_selected: selected,
                         show_help,
@@ -4310,6 +4588,7 @@ mod tests {
                 width: 100,
                 height: 30,
                 input: "",
+                input_cursor: None,
                 choices: &[],
                 command_selected: 0,
                 show_help: false,

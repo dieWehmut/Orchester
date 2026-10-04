@@ -1,6 +1,7 @@
 use std::io::{self, Write};
 
 use crossterm::cursor;
+use crossterm::event::{DisableBracketedPaste, EnableBracketedPaste};
 use crossterm::execute;
 use crossterm::terminal::{
     self, BeginSynchronizedUpdate, ClearType, DisableLineWrap, EnableLineWrap,
@@ -17,12 +18,14 @@ impl TerminalSession {
         if let Err(error) = execute!(
             io::stdout(),
             EnterAlternateScreen,
+            EnableBracketedPaste,
             DisableLineWrap,
             cursor::Hide
         ) {
             let _ = execute!(
                 io::stdout(),
                 cursor::Show,
+                DisableBracketedPaste,
                 EnableLineWrap,
                 LeaveAlternateScreen
             );
@@ -39,6 +42,7 @@ impl Drop for TerminalSession {
             io::stdout(),
             cursor::SetCursorStyle::DefaultUserShape,
             cursor::Show,
+            DisableBracketedPaste,
             EnableLineWrap,
             LeaveAlternateScreen
         );
