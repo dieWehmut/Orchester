@@ -6,12 +6,14 @@
 
 use orchester_protokoll::{RunId, StopReason, UiApprovalRequest, UiEventEnvelope, Usage};
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 
 pub const RUN_SCHEMA_VERSION: u8 = 1;
 pub const RUN_PROMPT_MAX_CHARS: usize = 32_000;
 pub const RUN_RESUME_MAX_CHARS: usize = 512;
 pub const RUN_REPLAY_DEFAULT_LIMIT: u32 = 200;
 pub const RUN_REPLAY_MAX_LIMIT: u32 = 1_000;
+pub const RUN_IDEMPOTENCY_KEY_MAX_BYTES: usize = 128;
 
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -48,6 +50,24 @@ impl StartRunRequest {
             }
         }
         Ok(())
+    }
+
+    pub(crate) fn fingerprint(&self) -> [u8; 32] {
+        let mut hasher = Sha256::new();
+        hasher.update(b"orchester-run-submit-v1\0");
+        // Compare decoded strings exactly, independently of JSON whitespace,
+        // escaping or field order. Lengths keep adjacent fields unambiguous.
+        hasher.update((self.prompt.len() as u64).to_be_bytes());
+        hasher.update(self.prompt.as_bytes());
+        match &self.resume {
+            Some(resume) => {
+                hasher.update([1]);
+                hasher.update((resume.len() as u64).to_be_bytes());
+                hasher.update(resume.as_bytes());
+            }
+            None => hasher.update([0]),
+        }
+        hasher.finalize().into()
     }
 }
 

@@ -1,6 +1,6 @@
 use std::{
     collections::{HashMap, VecDeque},
-    sync::{Arc, RwLock},
+    sync::{Arc, Mutex as StdMutex},
 };
 
 use getrandom::fill as fill_random;
@@ -33,7 +33,17 @@ impl Default for RunRegistry {
 
 struct RegistryInner {
     retention: usize,
-    runs: RwLock<HashMap<RunId, Arc<RunEntry>>>,
+    state: StdMutex<RegistryState>,
+}
+
+struct RegistryState {
+    runs: HashMap<RunId, Arc<RunEntry>>,
+    idempotency: HashMap<String, IdempotencyEntry>,
+}
+
+struct IdempotencyEntry {
+    fingerprint: [u8; 32],
+    run_id: RunId,
 }
 
 struct RunEntry {
@@ -76,11 +86,18 @@ pub(crate) enum RunRegistryError {
     InvalidEvent(String),
     #[error("run registry lock is poisoned")]
     LockPoisoned,
+    #[error("idempotency key was already used for a different request")]
+    IdempotencyConflict,
 }
 
 #[derive(Clone)]
 pub(crate) struct RunHandle {
     entry: Arc<RunEntry>,
+}
+
+pub(crate) enum RunCreation {
+    Created(RunHandle),
+    Reused(RunHandle),
 }
 
 impl RunRegistry {
@@ -93,46 +110,117 @@ impl RunRegistry {
         Self {
             inner: Arc::new(RegistryInner {
                 retention,
-                runs: RwLock::new(HashMap::new()),
+                state: StdMutex::new(RegistryState {
+                    runs: HashMap::new(),
+                    idempotency: HashMap::new(),
+                }),
             }),
         }
     }
 
+    #[cfg(test)]
     pub(crate) fn create(&self) -> Result<RunHandle, RunRegistryError> {
-        for _ in 0..8 {
-            let id = RunId::from(random_id("run")?);
-            let (frames, _) = broadcast::channel(self.inner.retention.max(32));
-            let entry = Arc::new(RunEntry {
-                id: id.clone(),
-                retention: self.inner.retention,
-                state: Mutex::new(RunMutable::new()),
-                frames,
-                cancellation: CancellationToken::new(),
-            });
-            let mut runs = self
-                .inner
-                .runs
-                .write()
-                .map_err(|_| RunRegistryError::LockPoisoned)?;
-            if runs.contains_key(&id) {
-                continue;
+        self.create_inner(None)
+    }
+
+    /// Publish a run and its first event together with its submission key.
+    ///
+    /// Both maps have the same lifetime: a retry keeps referring to the retained
+    /// run, including after termination. No lock is held across an await, and
+    /// a failure to build the first event publishes neither a run nor a key.
+    pub(crate) fn create_or_reuse(
+        &self,
+        idempotency_key: Option<&str>,
+        fingerprint: [u8; 32],
+        initial_kind: UiEventKind,
+    ) -> Result<RunCreation, RunRegistryError> {
+        let Some(idempotency_key) = idempotency_key else {
+            return self
+                .create_inner(Some(initial_kind))
+                .map(RunCreation::Created);
+        };
+
+        let mut state = self
+            .inner
+            .state
+            .lock()
+            .map_err(|_| RunRegistryError::LockPoisoned)?;
+
+        if let Some(entry) = state.idempotency.get(idempotency_key) {
+            if entry.fingerprint != fingerprint {
+                return Err(RunRegistryError::IdempotencyConflict);
             }
-            runs.insert(id, Arc::clone(&entry));
-            return Ok(RunHandle { entry });
+            let run = state
+                .runs
+                .get(&entry.run_id)
+                .cloned()
+                .map(|entry| RunHandle { entry })
+                .ok_or(RunRegistryError::NotFound)?;
+            return Ok(RunCreation::Reused(run));
         }
-        Err(RunRegistryError::Entropy)
+
+        let run = create_entry_locked(&self.inner, &mut state, Some(initial_kind))?;
+        state.idempotency.insert(
+            idempotency_key.to_owned(),
+            IdempotencyEntry {
+                fingerprint,
+                run_id: run.id().clone(),
+            },
+        );
+        Ok(RunCreation::Created(run))
+    }
+
+    fn create_inner(
+        &self,
+        initial_kind: Option<UiEventKind>,
+    ) -> Result<RunHandle, RunRegistryError> {
+        let mut state = self
+            .inner
+            .state
+            .lock()
+            .map_err(|_| RunRegistryError::LockPoisoned)?;
+        create_entry_locked(&self.inner, &mut state, initial_kind)
     }
 
     pub(crate) fn get(&self, run_id: &RunId) -> Result<RunHandle, RunRegistryError> {
         self.inner
-            .runs
-            .read()
+            .state
+            .lock()
             .map_err(|_| RunRegistryError::LockPoisoned)?
+            .runs
             .get(run_id)
             .cloned()
             .map(|entry| RunHandle { entry })
             .ok_or(RunRegistryError::NotFound)
     }
+}
+
+fn create_entry_locked(
+    inner: &RegistryInner,
+    state: &mut RegistryState,
+    initial_kind: Option<UiEventKind>,
+) -> Result<RunHandle, RunRegistryError> {
+    for _ in 0..8 {
+        let id = RunId::from(random_id("run")?);
+        if state.runs.contains_key(&id) {
+            continue;
+        }
+        let mut mutable = RunMutable::new();
+        if let Some(kind) = initial_kind.clone() {
+            append_to_state(&id, inner.retention, &mut mutable, kind)?;
+        }
+        let (frames, _) = broadcast::channel(inner.retention.max(32));
+        let entry = Arc::new(RunEntry {
+            id: id.clone(),
+            retention: inner.retention,
+            state: Mutex::new(mutable),
+            frames,
+            cancellation: CancellationToken::new(),
+        });
+        state.runs.insert(id, Arc::clone(&entry));
+        return Ok(RunHandle { entry });
+    }
+    Err(RunRegistryError::Entropy)
 }
 
 impl RunHandle {
@@ -153,47 +241,15 @@ impl RunHandle {
         kind: UiEventKind,
     ) -> Result<UiEventEnvelope, RunRegistryError> {
         let mut state = self.entry.state.lock().await;
-        if state.stopped {
-            return Err(RunRegistryError::Terminal);
-        }
-
-        let sequence = state.next_sequence;
-        let occurred_at = now_rfc3339();
-        let call_id = match &kind {
-            UiEventKind::ToolCall { call_id, .. } => Some(call_id.clone()),
-            _ => None,
-        };
-        let event = UiEventEnvelope {
-            schema_version: UI_SCHEMA_VERSION,
-            event_id: EventId::from(random_id("evt")?),
-            run_id: self.entry.id.clone(),
-            turn_id: None,
-            call_id,
-            sequence,
-            occurred_at: occurred_at.clone(),
-            kind,
-        };
-        event
-            .validate()
-            .map_err(|error| RunRegistryError::InvalidEvent(error.to_string()))?;
-        apply_kind(&mut state, &event.kind);
-        state.events.push_back(event.clone());
-        state.latest_sequence = sequence;
-        state.next_sequence = sequence.saturating_add(1);
-        state.updated_at = occurred_at;
-        while state.events.len() > self.retention() {
-            state.events.pop_front();
-        }
-        state.oldest_sequence = state
-            .events
-            .front()
-            .map(|event| event.sequence)
-            .unwrap_or(state.next_sequence);
+        let event = append_to_state(self.id(), self.retention(), &mut state, kind)?;
         let frame = RunStreamFrameDto::Event {
             event: event.clone(),
         };
-        drop(state);
+        // Broadcasting is synchronous and non-blocking. Keep it under the
+        // sequence lock so cancellation and runtime narration cannot publish
+        // sequence N+1 before N, which would make streaming clients skip N.
         let _ = self.entry.frames.send(frame);
+        drop(state);
         Ok(event)
     }
 
@@ -282,6 +338,51 @@ impl RunMutable {
     }
 }
 
+/// Also used before publication, when there are no async locks or subscribers.
+fn append_to_state(
+    run_id: &RunId,
+    retention: usize,
+    state: &mut RunMutable,
+    kind: UiEventKind,
+) -> Result<UiEventEnvelope, RunRegistryError> {
+    if state.stopped {
+        return Err(RunRegistryError::Terminal);
+    }
+    let sequence = state.next_sequence;
+    let occurred_at = now_rfc3339();
+    let call_id = match &kind {
+        UiEventKind::ToolCall { call_id, .. } => Some(call_id.clone()),
+        _ => None,
+    };
+    let event = UiEventEnvelope {
+        schema_version: UI_SCHEMA_VERSION,
+        event_id: EventId::from(random_id("evt")?),
+        run_id: run_id.clone(),
+        turn_id: None,
+        call_id,
+        sequence,
+        occurred_at: occurred_at.clone(),
+        kind,
+    };
+    event
+        .validate()
+        .map_err(|error| RunRegistryError::InvalidEvent(error.to_string()))?;
+    apply_kind(state, &event.kind);
+    state.events.push_back(event.clone());
+    state.latest_sequence = sequence;
+    state.next_sequence = sequence.saturating_add(1);
+    state.updated_at = occurred_at;
+    while state.events.len() > retention {
+        state.events.pop_front();
+    }
+    state.oldest_sequence = state
+        .events
+        .front()
+        .map(|event| event.sequence)
+        .unwrap_or(state.next_sequence);
+    Ok(event)
+}
+
 fn snapshot_from_state(run_id: RunId, state: &RunMutable) -> RunSnapshotDto {
     RunSnapshotDto {
         run_id,
@@ -331,11 +432,10 @@ fn apply_kind(state: &mut RunMutable, kind: &UiEventKind) {
             state.state = state_from_stop_reason(reason);
             state.stopped = true;
         }
-        UiEventKind::Error { .. } => {
-            if state.state == RunStateDto::Created {
-                state.state = RunStateDto::Failed;
-            }
-        }
+        // An error is retained before its stop reason. Only RunStopped may
+        // advertise a terminal snapshot, otherwise a reconnecting client can
+        // close its socket before the final journal event has been published.
+        UiEventKind::Error { .. } => {}
     }
     if let UiEventKind::Usage {
         input_tokens,
@@ -377,6 +477,149 @@ fn now_rfc3339() -> String {
 mod tests {
     use super::*;
     use crate::run_contract::RunStateDto;
+
+    #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+    async fn concurrent_appends_broadcast_in_journal_sequence_order() {
+        let registry = RunRegistry::new(256);
+        let run = registry.create().unwrap();
+        let mut frames = run.subscribe();
+        let barrier = Arc::new(tokio::sync::Barrier::new(256));
+        let mut tasks = Vec::new();
+        for index in 0..256 {
+            let run = run.clone();
+            let barrier = barrier.clone();
+            tasks.push(tokio::spawn(async move {
+                barrier.wait().await;
+                run.append(UiEventKind::Message {
+                    text: index.to_string(),
+                })
+                .await
+                .unwrap();
+            }));
+        }
+        for task in tasks {
+            task.await.unwrap();
+        }
+        for sequence in 1..=256 {
+            let RunStreamFrameDto::Event { event } = frames.try_recv().unwrap() else {
+                panic!("expected the append's event frame");
+            };
+            assert_eq!(event.sequence, sequence);
+        }
+    }
+
+    #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+    async fn concurrent_retries_publish_one_initialized_run_and_one_execution_owner() {
+        let registry = RunRegistry::new(4);
+        let barrier = Arc::new(tokio::sync::Barrier::new(32));
+        let mut tasks = Vec::new();
+        for _ in 0..32 {
+            let registry = registry.clone();
+            let barrier = barrier.clone();
+            tasks.push(tokio::spawn(async move {
+                barrier.wait().await;
+                let creation = registry
+                    .create_or_reuse(
+                        Some("one-submission"),
+                        [1; 32],
+                        UiEventKind::UserMessage {
+                            text: "asked once".into(),
+                        },
+                    )
+                    .expect("accepted retry");
+                let (run, owner) = match creation {
+                    RunCreation::Created(run) => (run, true),
+                    RunCreation::Reused(run) => (run, false),
+                };
+                // Every response, including those which lost the race, can
+                // already replay the reader's turn without waiting for its owner.
+                let snapshot = run.snapshot().await.expect("published snapshot");
+                assert_eq!(snapshot.events.len(), 1);
+                assert_eq!(snapshot.events[0].sequence, 1);
+                assert_eq!(
+                    snapshot.events[0].kind,
+                    UiEventKind::UserMessage {
+                        text: "asked once".into(),
+                    }
+                );
+                assert_eq!(snapshot.state, RunStateDto::Running);
+                (run.id().clone(), owner)
+            }));
+        }
+        let mut ids = std::collections::HashSet::new();
+        let mut owners = 0;
+        for task in tasks {
+            let (id, owner) = task.await.expect("retry task");
+            ids.insert(id);
+            owners += usize::from(owner);
+        }
+        assert_eq!(ids.len(), 1);
+        assert_eq!(owners, 1);
+    }
+
+    #[tokio::test]
+    async fn a_failed_initial_event_publishes_neither_run_nor_key() {
+        let registry = RunRegistry::new(4);
+        let invalid = registry.create_or_reuse(
+            Some("reusable-after-failure"),
+            [1; 32],
+            UiEventKind::ToolCall {
+                call_id: "".into(),
+                name: "invalid-call".into(),
+                state: orchester_protokoll::UiToolState::Running,
+                detail: None,
+            },
+        );
+        assert!(matches!(invalid, Err(RunRegistryError::InvalidEvent(_))));
+        {
+            let state = registry.inner.state.lock().unwrap();
+            assert!(state.runs.is_empty());
+            assert!(state.idempotency.is_empty());
+        }
+        assert!(matches!(
+            registry.create_or_reuse(
+                Some("reusable-after-failure"),
+                [2; 32],
+                UiEventKind::UserMessage {
+                    text: "accepted".into(),
+                },
+            ),
+            Ok(RunCreation::Created(_))
+        ));
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn keys_survive_the_retry_window_event_eviction_and_termination() {
+        let registry = RunRegistry::new(2);
+        let initial_kind = UiEventKind::UserMessage {
+            text: "retained identity".into(),
+        };
+        let RunCreation::Created(run) = registry
+            .create_or_reuse(Some("long-lived-key"), [3; 32], initial_kind.clone())
+            .unwrap()
+        else {
+            panic!("first submission owns execution");
+        };
+        run.append(UiEventKind::Message { text: "one".into() })
+            .await
+            .unwrap();
+        run.cancel().await.unwrap();
+        tokio::time::advance(std::time::Duration::from_secs(16 * 60)).await;
+        let before = run.snapshot().await.unwrap();
+        assert!(before.oldest_sequence > 1);
+        let RunCreation::Reused(retried) = registry
+            .create_or_reuse(Some("long-lived-key"), [3; 32], initial_kind.clone())
+            .unwrap()
+        else {
+            panic!("a retained run must never execute again");
+        };
+        assert_eq!(retried.id(), run.id());
+        assert_eq!(retried.snapshot().await.unwrap(), before);
+        assert!(matches!(
+            registry.create_or_reuse(Some("long-lived-key"), [4; 32], initial_kind),
+            Err(RunRegistryError::IdempotencyConflict)
+        ));
+    }
 
     #[tokio::test]
     async fn a_registry_assigns_monotonic_sequences_and_replays_events() {
@@ -423,6 +666,40 @@ mod tests {
         let snapshot = run.snapshot().await.expect("snapshot");
         assert_eq!(snapshot.oldest_sequence, 2);
         assert_eq!(snapshot.latest_sequence, 3);
+    }
+
+    #[tokio::test]
+    async fn an_error_does_not_advertise_a_terminal_snapshot_before_its_stop_frame() {
+        for reason in [StopReason::Failed, StopReason::Succeeded] {
+            let registry = RunRegistry::new(8);
+            let run = registry.create().expect("run");
+            run.append(UiEventKind::UserMessage {
+                text: "asked".into(),
+            })
+            .await
+            .unwrap();
+            run.append(UiEventKind::Error {
+                code: "runtime".into(),
+                message: "a retained error".into(),
+            })
+            .await
+            .unwrap();
+            assert_eq!(run.snapshot().await.unwrap().state, RunStateDto::Running);
+            assert!(!run.summary().await.unwrap().stopped);
+
+            run.append(UiEventKind::RunStopped {
+                reason: reason.clone(),
+            })
+            .await
+            .unwrap();
+            let snapshot = run.snapshot().await.unwrap();
+            assert_eq!(snapshot.state, state_from_stop_reason(&reason));
+            assert!(run.summary().await.unwrap().stopped);
+            assert!(matches!(
+                snapshot.events.last().unwrap().kind,
+                UiEventKind::RunStopped { .. }
+            ));
+        }
     }
 
     #[tokio::test]

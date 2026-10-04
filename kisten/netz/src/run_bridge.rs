@@ -173,10 +173,9 @@ pub(crate) async fn drain_run_events(
         let Some(kind) = translator.translate(event) else {
             continue;
         };
-        let terminal = matches!(
-            kind,
-            UiEventKind::RunStopped { .. } | UiEventKind::Error { .. }
-        );
+        // A runtime error can precede its stop reason. Retain both so the
+        // journal and subscribers agree on the final state, then stop once.
+        let terminal = matches!(kind, UiEventKind::RunStopped { .. });
         match run.append(kind).await {
             Ok(_) => {}
             // Terminal means the run was cancelled or already stopped; either
@@ -195,6 +194,69 @@ mod tests {
     use orchester_protokoll::{ApprovalId, ChangeKind, TodoItem};
 
     use super::*;
+
+    #[tokio::test]
+    async fn narration_is_broadcast_before_the_producer_finishes() {
+        let registry = crate::run_registry::RunRegistry::new(8);
+        let run = registry.create().unwrap();
+        let mut frames = run.subscribe();
+        let (sink, receiver) = RegistryRunSink::channel();
+        let drain = tokio::spawn(drain_run_events(run.clone(), run.id().clone(), receiver));
+        sink.emit(Event::TurnStarted);
+        let frame = tokio::time::timeout(std::time::Duration::from_secs(2), frames.recv())
+            .await
+            .expect("live frame while producer is still open")
+            .unwrap();
+        assert!(matches!(
+            frame,
+            crate::run_contract::RunStreamFrameDto::Event {
+                event: orchester_protokoll::UiEventEnvelope {
+                    kind: UiEventKind::TurnStarted {},
+                    ..
+                }
+            }
+        ));
+        assert!(!drain.is_finished());
+        sink.emit(Event::Stopped {
+            reason: orchester_protokoll::StopReason::Succeeded,
+        });
+        drop(sink);
+        drain.await.unwrap();
+        assert!(run.summary().await.unwrap().stopped);
+    }
+
+    #[tokio::test]
+    async fn an_error_keeps_its_following_stop_reason_without_duplicate_terminal_events() {
+        let registry = crate::run_registry::RunRegistry::new(8);
+        let run = registry.create().unwrap();
+        run.append(UiEventKind::UserMessage {
+            text: "asked".into(),
+        })
+        .await
+        .unwrap();
+        let (sink, receiver) = RegistryRunSink::channel();
+        sink.emit(Event::Error {
+            message: "failed".into(),
+        });
+        sink.emit(Event::Stopped {
+            reason: orchester_protokoll::StopReason::Failed,
+        });
+        sink.emit(Event::Stopped {
+            reason: orchester_protokoll::StopReason::Succeeded,
+        });
+        drop(sink);
+        drain_run_events(run.clone(), run.id().clone(), receiver).await;
+        let snapshot = run.snapshot().await.unwrap();
+        assert_eq!(snapshot.state, crate::run_contract::RunStateDto::Failed);
+        assert!(run.summary().await.unwrap().stopped);
+        assert_eq!(snapshot.events.len(), 3);
+        assert_eq!(
+            snapshot.events[2].kind,
+            UiEventKind::RunStopped {
+                reason: orchester_protokoll::StopReason::Failed,
+            }
+        );
+    }
 
     fn translator() -> UiEventTranslator {
         UiEventTranslator::new(RunId::from("run-1".to_owned()))

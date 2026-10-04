@@ -18,7 +18,7 @@ use axum::{
 };
 use orchester_anwendung::SelfAgentHost;
 use orchester_laufzeit::harness::service::RunEventSink;
-use orchester_protokoll::{RunId, UiEventKind};
+use orchester_protokoll::{RunId, StopReason, UiEventKind};
 use serde::Deserialize;
 
 use crate::{
@@ -27,9 +27,9 @@ use crate::{
     run_bridge::{drain_run_events, RegistryRunSink},
     run_contract::{
         RunReplayRequestDto, RunReplayResponseDto, RunSnapshotDto, RunStreamFrameDto,
-        RunSummaryDto, StartRunRequest, StartRunResponse,
+        RunSummaryDto, StartRunRequest, StartRunResponse, RUN_IDEMPOTENCY_KEY_MAX_BYTES,
     },
-    run_registry::{RunHandle, RunRegistryError},
+    run_registry::{RunCreation, RunHandle, RunRegistryError},
     ServerContext,
 };
 
@@ -44,6 +44,8 @@ pub(crate) async fn start_run_handler(
     request
         .validate()
         .map_err(|_| api_error_response(ApiErrorCode::ValidationFailed, request_id))?;
+    let idempotency_key = parse_idempotency_key(&headers)
+        .map_err(|_| api_error_response(ApiErrorCode::ValidationFailed, request_id))?;
 
     // Without paths there is no configuration to run: the same availability
     // answer this route gave before a runtime existed.
@@ -52,35 +54,40 @@ pub(crate) async fn start_run_handler(
         .cloned()
         .ok_or_else(|| api_error_response(ApiErrorCode::Unavailable, request_id))?;
 
-    let run = context
+    // Snapshot the selected model before publishing a run. After publication
+    // there must be no await before the detached task owns execution, otherwise
+    // dropping an HTTP request could leave a permanently unstarted keyed run.
+    let selection = context.model_selection().read().await;
+    let creation = context
         .runs()
-        .create()
+        .create_or_reuse(
+            idempotency_key.as_deref(),
+            request.fingerprint(),
+            UiEventKind::UserMessage {
+                text: request.prompt.clone(),
+            },
+        )
         .map_err(|error| run_error_response(error, request_id))?;
+    let (run, reused) = match creation {
+        RunCreation::Created(run) => (run, false),
+        RunCreation::Reused(run) => (run, true),
+    };
     let run_id = run.id().clone();
     let cancel = run.cancellation_token();
     let events_url = run_events_url(&headers, &run_id);
 
     let StartRunRequest { prompt, resume } = request;
 
-    // The journal opens with the reader's own turn, not with the runtime's
-    // answer. A snapshot a browser replays has to show what was asked - the
-    // transcript draws the question as the reader's bubble and the message rail
-    // navigates by it - and the runtime never reports it back, because from its
-    // side the prompt is the request rather than an event. The text is already
-    // bounded and control-character checked by `StartRunRequest::validate`.
-    run.append(UiEventKind::UserMessage {
-        text: prompt.clone(),
-    })
-    .await
-    .map_err(|error| run_error_response(error, request_id))?;
+    if reused {
+        return Ok((
+            no_store_headers(),
+            Json(StartRunResponse { run_id, events_url }),
+        ));
+    }
 
     let (sink, receiver) = RegistryRunSink::channel();
     let drain = drain_run_events(run.clone(), run_id.clone(), receiver);
-    // Read before the spawn, so the choice is the one in force when the request
-    // was made rather than whatever a later selection says.
-    let selection = context.model_selection().read().await;
     tokio::spawn(async move {
-        let drain = drain;
         let run_task = async move {
             // One host per run: the host's run entry points take `&mut self`, and
             // sharing it would serialise runs the registry keeps independent.
@@ -90,17 +97,11 @@ pub(crate) async fn start_run_handler(
             // next run. A choice the configuration no longer supports stops the
             // run with an error event rather than quietly running on another
             // model.
-            if let Err(error) = selection.apply(&mut host) {
-                let _ = run
-                    .append(UiEventKind::Error {
-                        code: "model_unavailable".to_owned(),
-                        message: error.to_string(),
-                    })
-                    .await;
-                return;
+            if selection.apply(&mut host).is_err() {
+                return Some("model_unavailable");
             }
             let sink: Arc<dyn RunEventSink> = Arc::new(sink);
-            let _ = match resume {
+            let result = match resume {
                 Some(handle) => {
                     host.resume_narrated(&handle, cancel, None, Some(sink))
                         .await
@@ -109,15 +110,56 @@ pub(crate) async fn start_run_handler(
             };
             // `sink` is dropped here, which closes the channel and lets the
             // drain task finish; `run_task` owns it so this is the only copy.
+            result.err().map(|_| "runtime")
         };
-        run_task.await;
-        drain.await;
+        // Consume narration while execution is in progress, not after it has
+        // finished. Once all retained events have drained, a startup failure or
+        // a missing terminal event must not leave the browser waiting forever.
+        let (failure_code, ()) = tokio::join!(run_task, drain);
+        complete_unfinished_run(&run, failure_code).await;
     });
 
     Ok((
         no_store_headers(),
         Json(StartRunResponse { run_id, events_url }),
     ))
+}
+
+async fn complete_unfinished_run(run: &RunHandle, failure_code: Option<&str>) {
+    let Ok(summary) = run.summary().await else {
+        return;
+    };
+    if summary.stopped {
+        return;
+    }
+    let Ok(snapshot) = run.snapshot().await else {
+        return;
+    };
+    if !snapshot
+        .events
+        .iter()
+        .any(|event| matches!(event.kind, UiEventKind::Error { .. }))
+    {
+        // Configuration and runtime errors can contain paths, provider details
+        // or credentials. The public fallback never formats the source error.
+        let code = failure_code.unwrap_or("runtime");
+        let message = if code == "model_unavailable" {
+            "The selected model is unavailable."
+        } else {
+            "The run could not be completed."
+        };
+        let _ = run
+            .append(UiEventKind::Error {
+                code: code.to_owned(),
+                message: message.to_owned(),
+            })
+            .await;
+    }
+    let _ = run
+        .append(UiEventKind::RunStopped {
+            reason: StopReason::Failed,
+        })
+        .await;
 }
 
 /// The absolute socket URL for a run, built from the request the client made so
@@ -129,7 +171,25 @@ fn run_events_url(headers: &HeaderMap, run_id: &RunId) -> String {
         .map(str::trim)
         .filter(|host| !host.is_empty())
         .unwrap_or("127.0.0.1");
-    format!("ws://{host}/runs/{}/events", run_id.0)
+    format!("ws://{host}/api/v1/runs/{}/events", run_id.0)
+}
+
+fn parse_idempotency_key(headers: &HeaderMap) -> Result<Option<String>, ()> {
+    let mut values = headers.get_all("idempotency-key").iter();
+    let Some(value) = values.next() else {
+        return Ok(None);
+    };
+    if values.next().is_some() {
+        return Err(());
+    }
+    let value = value.to_str().map_err(|_| ())?;
+    if value.is_empty()
+        || value.len() > RUN_IDEMPOTENCY_KEY_MAX_BYTES
+        || !value.bytes().all(|byte| byte.is_ascii_graphic())
+    {
+        return Err(());
+    }
+    Ok(Some(value.to_owned()))
 }
 
 pub(crate) async fn snapshot_run_handler(
@@ -320,6 +380,7 @@ fn run_error_response(error: RunRegistryError, request_id: Option<&str>) -> ApiE
         RunRegistryError::RetentionExceeded { .. } => ApiErrorCode::ResyncRequired,
         RunRegistryError::InvalidLimit => ApiErrorCode::ValidationFailed,
         RunRegistryError::Terminal => ApiErrorCode::Conflict,
+        RunRegistryError::IdempotencyConflict => ApiErrorCode::Conflict,
         RunRegistryError::Entropy
         | RunRegistryError::InvalidEvent(_)
         | RunRegistryError::LockPoisoned => ApiErrorCode::Internal,
@@ -346,6 +407,100 @@ mod tests {
 
     use super::*;
     use crate::{app_router, ServerControl};
+
+    #[tokio::test]
+    async fn dropping_a_request_waiting_for_model_selection_does_not_reserve_its_key() {
+        let base = std::env::temp_dir().join("orchester-unpublished-run-test");
+        let context = ServerContext::new(
+            Some(orchester_anwendung::OrchesterPaths::new(
+                base.join("home"),
+                &base,
+            )),
+            ServerControl::new(),
+        );
+        let guard = context.model_selection().edit().await;
+        let mut headers = HeaderMap::new();
+        headers.insert(
+            "idempotency-key",
+            "aborted-before-publication".parse().unwrap(),
+        );
+        {
+            let pending = start_run_handler(
+                State(context.clone()),
+                headers.clone(),
+                Ok(Json(StartRunRequest {
+                    prompt: "first".into(),
+                    resume: None,
+                })),
+            );
+            tokio::pin!(pending);
+            assert!(
+                tokio::time::timeout(std::time::Duration::from_millis(20), pending)
+                    .await
+                    .is_err()
+            );
+        }
+        drop(guard);
+        // A changed request is accepted under the same key: the dropped first
+        // HTTP future never exposed a run or took ownership of the submission.
+        let (_, Json(response)) = start_run_handler(
+            State(context),
+            headers,
+            Ok(Json(StartRunRequest {
+                prompt: "second".into(),
+                resume: None,
+            })),
+        )
+        .await
+        .expect("new request after the original future was dropped");
+        assert!(!response.run_id.0.is_empty());
+    }
+
+    #[tokio::test]
+    async fn unfinished_failure_keeps_one_error_and_broadcasts_one_terminal_frame() {
+        let registry = crate::run_registry::RunRegistry::new(8);
+        let run = registry.create().unwrap();
+        run.append(UiEventKind::UserMessage {
+            text: "asked".into(),
+        })
+        .await
+        .unwrap();
+        run.append(UiEventKind::Error {
+            code: "runtime".into(),
+            message: "failed".into(),
+        })
+        .await
+        .unwrap();
+        let mut frames = run.subscribe();
+        complete_unfinished_run(&run, Some("runtime")).await;
+        complete_unfinished_run(&run, Some("runtime")).await;
+        let snapshot = run.snapshot().await.unwrap();
+        assert_eq!(snapshot.state, crate::run_contract::RunStateDto::Failed);
+        assert_eq!(snapshot.events.len(), 3);
+        assert!(run.summary().await.unwrap().stopped);
+        assert!(matches!(
+            frames.try_recv(),
+            Ok(RunStreamFrameDto::Event {
+                event: orchester_protokoll::UiEventEnvelope {
+                    kind: UiEventKind::RunStopped {
+                        reason: StopReason::Failed
+                    },
+                    ..
+                }
+            })
+        ));
+        assert!(frames.try_recv().is_err());
+    }
+
+    #[tokio::test]
+    async fn the_failure_fallback_preserves_a_cancelled_run() {
+        let registry = crate::run_registry::RunRegistry::new(8);
+        let run = registry.create().unwrap();
+        run.cancel().await.unwrap();
+        let before = run.snapshot().await.unwrap();
+        complete_unfinished_run(&run, Some("model_unavailable")).await;
+        assert_eq!(run.snapshot().await.unwrap(), before);
+    }
 
     #[tokio::test]
     async fn snapshot_returns_the_registered_run_state() {

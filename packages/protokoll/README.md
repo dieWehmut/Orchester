@@ -63,6 +63,28 @@ durably applied sequence. A gap, truncated retention window, or explicit
 `ResyncRequiredDto` requires replacing local projection state with a
 `RunSnapshotDto`; clients must not guess missing events.
 
+## Run Submission Retries
+
+`POST /api/v1/runs` accepts an optional `Idempotency-Key` header containing a
+single value of 1–128 visible ASCII bytes, with no whitespace. Keep that key
+when retrying a submission whose response was lost. Within the same server
+context, an identical `prompt` and `resume` reuse the original run and never
+append a second user message or start another execution. Missing and `null`
+resume values both mean a new run; prompt text is compared exactly after JSON
+decoding. The WebUI trims the prompt before sending it.
+
+Reusing a key with different request content returns `409 conflict`. Empty,
+non-ASCII, whitespace-containing, repeated, or oversized header values return
+`422 validation_failed`. Both errors are non-retryable and omit submitted
+content and keys. Omitting the header creates a new run on every request.
+
+Keys are retained for the same lifetime as the server's in-memory run registry;
+this is not durable deduplication across server restarts. A changed model
+selection does not alter a retried submission: its accepted run remains the
+same. New intentional submissions use new keys. Clients consume the returned
+`events_url` and snapshot, including an already completed result, rather than
+starting another run to recover a missing response.
+
 ## Fixtures
 
 The package exports four deterministic scenarios:
