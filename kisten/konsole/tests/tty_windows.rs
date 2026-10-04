@@ -284,22 +284,22 @@ fn resized_terminal_submits_one_multiline_prompt_then_recalls_it_for_another_tur
         .unwrap();
     capture_terminal(&mut session, "multiline-draft-80x24.ansi");
     session.write(b"\r").unwrap();
-    cursor = session
+    session
         .read_until_since(cursor, b"FIRST_OK", COMMAND_TIMEOUT)
         .unwrap();
     capture_terminal(&mut session, "conversation-80x24.ansi");
+    let resize_offset = session.snapshot().unwrap().len();
     if let Some(directory) = std::env::var_os("ORCHESTER_CLI_CAPTURE_DIR") {
-        let offset = session.snapshot().unwrap().len();
         std::fs::write(
             PathBuf::from(directory).join("terminal-resize.json"),
-            serde_json::json!({"offset": offset, "columns": 40, "rows": 12}).to_string(),
+            serde_json::json!({"offset": resize_offset, "columns": 40, "rows": 12}).to_string(),
         )
         .unwrap();
     }
     session.resize(40, 12).unwrap();
     session.write(b"\x1b[5~\x1b[6~").unwrap();
     cursor = session
-        .read_until_since(cursor, b"\x1b[?2026h", READY_TIMEOUT)
+        .read_until_since(resize_offset, b">_ Orchester", READY_TIMEOUT)
         .unwrap();
     // Up recalls at the top of the empty composer; Ctrl+U then replaces that
     // draft. Neither navigation nor resizing may create an extra model turn.

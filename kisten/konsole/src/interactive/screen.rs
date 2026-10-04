@@ -54,9 +54,24 @@ impl Drop for TerminalSession {
 pub(super) struct FramePresenter {
     rows: Vec<Vec<u8>>,
     caret_visible: bool,
+    viewport: Option<(usize, usize)>,
 }
 
 impl FramePresenter {
+    pub(super) fn invalidate(&mut self) {
+        self.rows.clear();
+    }
+
+    pub(super) fn set_viewport(&mut self, width: usize, height: usize) {
+        if self.viewport != Some((width, height)) {
+            // ConHost reflows and scrolls existing rows during a resize. Old
+            // row positions cannot be reused; clearing old rows beyond the
+            // new height would also erase the last visible row repeatedly.
+            self.invalidate();
+            self.viewport = Some((width, height));
+        }
+    }
+
     pub(super) fn present<W: Write>(&mut self, out: &mut W, frame: &[u8]) -> io::Result<()> {
         let rows = frame_rows(frame);
         let row_count = self.rows.len().max(rows.len());
@@ -229,5 +244,27 @@ mod tests {
         assert!(!update.contains("stable"));
         assert!(!update.contains("stale-one"));
         assert!(!update.contains("stale-two"));
+    }
+
+    #[test]
+    fn resized_viewports_repaint_the_header_without_touching_rows_below_the_screen() {
+        let mut presenter = FramePresenter::default();
+        let mut out = Vec::new();
+        presenter.set_viewport(79, 24);
+        presenter
+            .present(&mut out, b"header\none\ntwo\nthree\nfour\nfive\n")
+            .unwrap();
+        out.clear();
+
+        presenter.set_viewport(39, 3);
+        presenter
+            .present(&mut out, b"header\nbody\nstatus\n")
+            .unwrap();
+        let update = String::from_utf8(out).unwrap();
+        assert!(update.contains("header"));
+        assert!(update.contains("status"));
+        assert_eq!(update.matches("\x1b[2K").count(), 3);
+        assert!(!update.contains("\x1b[4;1H"));
+        assert!(!update.contains("\x1b[2J"));
     }
 }

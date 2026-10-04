@@ -243,6 +243,7 @@ pub(crate) struct ChatSession {
     _terminal: TerminalSession,
     presenter: FramePresenter,
     input_reader: input::InputReader,
+    physical_viewport: (u16, u16),
 }
 
 impl ChatSession {
@@ -251,6 +252,7 @@ impl ChatSession {
             _terminal: TerminalSession::enter()?,
             presenter: FramePresenter::default(),
             input_reader: input::InputReader::default(),
+            physical_viewport: terminal::size().unwrap_or((100, 30)),
         })
     }
 
@@ -260,6 +262,7 @@ impl ChatSession {
     }
 
     pub(crate) fn present_view(&mut self, view: ChatHomeView<'_>) -> io::Result<()> {
+        self.observe_viewport(terminal::size().unwrap_or((100, 30)));
         let (width, height) = self.viewport();
         self.present(ChatHomeView {
             width,
@@ -325,6 +328,9 @@ impl ChatSession {
     }
 
     fn coalesce_text(&mut self, event: TerminalEvent) -> io::Result<TerminalEvent> {
+        if let TerminalEvent::Resize(columns, rows) = event {
+            self.observe_viewport((columns, rows));
+        }
         let Some(first) = printable_key_text(&event) else {
             return Ok(event);
         };
@@ -348,6 +354,13 @@ impl ChatSession {
             }
         }
         Ok(TerminalEvent::Paste(text))
+    }
+
+    fn observe_viewport(&mut self, dimensions: (u16, u16)) {
+        if dimensions != self.physical_viewport {
+            self.presenter.invalidate();
+            self.physical_viewport = dimensions;
+        }
     }
 }
 
@@ -1009,6 +1022,7 @@ fn present_home<W: Write>(
     out: &mut W,
     view: PickerView<'_>,
 ) -> io::Result<()> {
+    presenter.set_viewport(view.width, view.height);
     let mut frame = Vec::new();
     render_home_frame(&mut frame, view)?;
     presenter.present(out, &frame)
