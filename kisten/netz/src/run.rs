@@ -73,10 +73,8 @@ pub(crate) async fn start_run_handler(
         RunCreation::Reused(run) => (run, true),
     };
     let run_id = run.id().clone();
-    let cancel = run.cancellation_token();
-    let events_url = run_events_url(&headers, &run_id);
 
-    let StartRunRequest { prompt, resume } = request;
+    let events_url = run_events_url(&headers, &run_id);
 
     if reused {
         return Ok((
@@ -85,44 +83,56 @@ pub(crate) async fn start_run_handler(
         ));
     }
 
-    let (sink, receiver) = RegistryRunSink::channel();
-    let drain = drain_run_events(run.clone(), run_id.clone(), receiver);
-    tokio::spawn(async move {
-        let run_task = async move {
-            // One host per run: the host's run entry points take `&mut self`, and
-            // sharing it would serialise runs the registry keeps independent.
-            let mut host = SelfAgentHost::for_paths(&paths);
-            // The model is the one the reader chose in the browser, applied to
-            // this host exactly as the catalog route applies it to describe the
-            // next run. A choice the configuration no longer supports stops the
-            // run with an error event rather than quietly running on another
-            // model.
-            if selection.apply(&mut host).is_err() {
-                return Some("model_unavailable");
-            }
-            let sink: Arc<dyn RunEventSink> = Arc::new(sink);
-            let result = match resume {
-                Some(handle) => {
-                    host.resume_narrated(&handle, cancel, None, Some(sink))
-                        .await
-                }
-                None => host.submit_narrated(prompt, cancel, None, Some(sink)).await,
-            };
-            // `sink` is dropped here, which closes the channel and lets the
-            // drain task finish; `run_task` owns it so this is the only copy.
-            result.err().map(|_| "runtime")
-        };
-        // Consume narration while execution is in progress, not after it has
-        // finished. Once all retained events have drained, a startup failure or
-        // a missing terminal event must not leave the browser waiting forever.
-        let (failure_code, ()) = tokio::join!(run_task, drain);
-        complete_unfinished_run(&run, failure_code).await;
-    });
+    tokio::spawn(execute_run(paths, selection, run, request));
 
     Ok((
         no_store_headers(),
         Json(StartRunResponse { run_id, events_url }),
     ))
+}
+
+/// Execute a claimed run for either an HTTP submission or the local scheduler.
+pub(crate) async fn execute_run(
+    paths: orchester_anwendung::OrchesterPaths,
+    selection: crate::model_selection::ModelSelection,
+    run: RunHandle,
+    request: StartRunRequest,
+) {
+    let run_id = run.id().clone();
+    let cancel = run.cancellation_token();
+    let StartRunRequest { prompt, resume } = request;
+    let (sink, receiver) = RegistryRunSink::channel();
+    let drain = drain_run_events(run.clone(), run_id.clone(), receiver);
+
+    let run_task = async move {
+        // One host per run: the host's run entry points take `&mut self`, and
+        // sharing it would serialise runs the registry keeps independent.
+        let mut host = SelfAgentHost::for_paths(&paths);
+        // The model is the one the reader chose in the browser, applied to
+        // this host exactly as the catalog route applies it to describe the
+        // next run. A choice the configuration no longer supports stops the
+        // run with an error event rather than quietly running on another
+        // model.
+        if selection.apply(&mut host).is_err() {
+            return Some("model_unavailable");
+        }
+        let sink: Arc<dyn RunEventSink> = Arc::new(sink);
+        let result = match resume {
+            Some(handle) => {
+                host.resume_narrated(&handle, cancel, None, Some(sink))
+                    .await
+            }
+            None => host.submit_narrated(prompt, cancel, None, Some(sink)).await,
+        };
+        // `sink` is dropped here, which closes the channel and lets the
+        // drain task finish; `run_task` owns it so this is the only copy.
+        result.err().map(|_| "runtime")
+    };
+    // Consume narration while execution is in progress, not after it has
+    // finished. Once all retained events have drained, a startup failure or
+    // a missing terminal event must not leave the browser waiting forever.
+    let (failure_code, ()) = tokio::join!(run_task, drain);
+    complete_unfinished_run(&run, failure_code).await;
 }
 
 async fn complete_unfinished_run(run: &RunHandle, failure_code: Option<&str>) {

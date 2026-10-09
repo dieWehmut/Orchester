@@ -80,6 +80,29 @@ fn api_router() -> Router<ServerContext> {
         .route("/agents/status", get(agent_status_handler))
         .route("/agents/status/ws", get(agent_status_socket_handler))
         .route("/models", get(model_catalog_handler))
+        .route(
+            "/plugins",
+            get(crate::plugins::list)
+                .post(crate::plugins::install)
+                .layer(DefaultBodyLimit::max(1024)),
+        )
+        .route(
+            "/plugins/{name}",
+            axum::routing::delete(crate::plugins::remove),
+        )
+        .route(
+            "/schedules",
+            get(crate::schedules::list)
+                .post(crate::schedules::create)
+                .layer(DefaultBodyLimit::max(64 * 1024)),
+        )
+        .route(
+            "/schedules/{id}",
+            put(crate::schedules::update)
+                .delete(crate::schedules::remove)
+                .layer(DefaultBodyLimit::max(64 * 1024)),
+        )
+        .route("/schedules/{id}/runs", post(crate::schedules::run_now))
         .route("/models/selection", put(model_selection_handler))
         .route(
             "/models/providers",

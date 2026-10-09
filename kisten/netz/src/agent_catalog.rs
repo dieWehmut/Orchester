@@ -67,7 +67,7 @@ pub(crate) async fn agent_catalog_handler(
 ) -> (HeaderMap, Json<AgentCatalogDto>) {
     (
         no_store_headers(),
-        Json(agent_catalog_response(context.registry())),
+        Json(agent_catalog_response(&context.registry())),
     )
 }
 

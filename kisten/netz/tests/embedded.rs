@@ -70,6 +70,55 @@ async fn authenticate(client: &Client, server: &EmbeddedServer) -> (String, Stri
 }
 
 #[tokio::test]
+async fn management_mutations_share_the_desktop_session_and_csrf_boundary() {
+    let assets = Assets::new();
+    let mut server = start(&assets).await;
+    let client = Client::new();
+    for resource in ["schedules", "plugins"] {
+        let response = client
+            .post(format!("{}/api/v1/{resource}", server.origin()))
+            .header("origin", server.origin())
+            .json(&json!({}))
+            .send()
+            .await
+            .unwrap();
+        assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+    }
+    let (cookie, csrf) = authenticate(&client, &server).await;
+    let body = json!({"name":"Private schedule","prompt":"Local check","enabled":false,"first_run_at":1800000000,"interval_seconds":null});
+    let endpoint = format!("{}/api/v1/schedules", server.origin());
+    let response = client
+        .post(&endpoint)
+        .header("origin", server.origin())
+        .header("cookie", &cookie)
+        .json(&body)
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(response.status(), StatusCode::FORBIDDEN);
+    let response = client
+        .post(&endpoint)
+        .header("origin", server.origin())
+        .header("cookie", &cookie)
+        .header("x-csrf-token", &csrf)
+        .json(&body)
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(response.status(), StatusCode::CREATED);
+    let response = client
+        .get(&endpoint)
+        .header("cookie", &cookie)
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(response.status(), StatusCode::OK);
+    let data: Value = response.json().await.unwrap();
+    assert_eq!(data["schedules"][0]["name"], "Private schedule");
+    server.shutdown().await.unwrap();
+}
+
+#[tokio::test]
 async fn provider_setup_requires_session_origin_and_csrf_before_writing() {
     let assets = Assets::new();
     let mut server = start(&assets).await;

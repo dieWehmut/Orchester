@@ -3,7 +3,7 @@ use std::{
     path::Path,
     sync::{
         atomic::{AtomicBool, Ordering},
-        Arc,
+        Arc, RwLock,
     },
     time::Duration,
 };
@@ -24,7 +24,10 @@ use crate::{
 pub struct ServerContext {
     paths: Option<OrchesterPaths>,
     control: ServerControl,
-    registry: Arc<Registry>,
+    registry: Arc<RwLock<Registry>>,
+    plugin_mutation: Arc<tokio::sync::Mutex<()>>,
+    pub(crate) scheduler_started: Arc<AtomicBool>,
+    pub(crate) scheduler_owner: Arc<String>,
     agent_status: Arc<AgentRuntimeStatusStore>,
     agent_process_source: Arc<dyn AgentProcessSource>,
     agent_process_monitor_started: Arc<AtomicBool>,
@@ -57,7 +60,12 @@ impl ServerContext {
         Self {
             paths,
             control,
-            registry,
+            registry: Arc::new(RwLock::new((*registry).clone())),
+            plugin_mutation: Arc::new(tokio::sync::Mutex::new(())),
+            scheduler_started: Arc::new(AtomicBool::new(false)),
+            scheduler_owner: Arc::new(
+                crate::schedule_store::identifier().expect("local scheduler identifier"),
+            ),
             agent_status,
             agent_process_source,
             agent_process_monitor_started: Arc::new(AtomicBool::new(false)),
@@ -78,8 +86,23 @@ impl ServerContext {
         &self.control
     }
 
-    pub fn registry(&self) -> &Registry {
-        &self.registry
+    pub fn registry(&self) -> Registry {
+        self.registry
+            .read()
+            .unwrap_or_else(|e| e.into_inner())
+            .clone()
+    }
+
+    pub(crate) fn plugin_mutation(&self) -> Arc<tokio::sync::Mutex<()>> {
+        self.plugin_mutation.clone()
+    }
+
+    pub(crate) fn refresh_registry(&self) {
+        let registry = discover_registry(self.paths());
+        let _ = self
+            .agent_status
+            .refresh_catalog(agent_status_response(&registry));
+        *self.registry.write().unwrap_or_else(|e| e.into_inner()) = registry;
     }
 
     pub fn agent_status_store(&self) -> &AgentRuntimeStatusStore {
@@ -178,7 +201,7 @@ impl fmt::Debug for ServerContext {
             .debug_struct("ServerContext")
             .field("workspace_selected", &self.paths.is_some())
             .field("server_state", &self.control.state())
-            .field("agent_count", &self.registry.len())
+            .field("agent_count", &self.registry().len())
             .finish_non_exhaustive()
     }
 }

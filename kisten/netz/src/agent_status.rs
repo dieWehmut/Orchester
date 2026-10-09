@@ -99,6 +99,39 @@ impl AgentRuntimeStatusStore {
             .map_err(|_| AgentRuntimeStatusError::LockPoisoned)
     }
 
+    pub(crate) fn refresh_catalog(
+        &self,
+        mut next: AgentFleetSnapshotDto,
+    ) -> Result<(), AgentRuntimeStatusError> {
+        let mut guard = self
+            .snapshot
+            .write()
+            .map_err(|_| AgentRuntimeStatusError::LockPoisoned)?;
+        for agent in &mut next.agents {
+            if let Some(previous) = guard
+                .agents
+                .iter()
+                .find(|old| old.agent_id == agent.agent_id)
+            {
+                let availability = agent.availability.clone();
+                *agent = previous.clone();
+                agent.availability = availability;
+            }
+        }
+        next.sequence = guard
+            .sequence
+            .checked_add(1)
+            .ok_or(AgentRuntimeStatusError::SequenceExhausted)?;
+        next.validate()
+            .map_err(AgentRuntimeStatusError::InvalidSnapshot)?;
+        *guard = next.clone();
+        drop(guard);
+        let _ = self
+            .frames
+            .send(AgentFleetStreamFrameDto::Snapshot { snapshot: next });
+        Ok(())
+    }
+
     pub fn update(&self, update: AgentRuntimeStatusUpdate) -> Result<u64, AgentRuntimeStatusError> {
         validate_update(&update)?;
         let mut guard = self
@@ -280,7 +313,7 @@ pub(crate) async fn agent_status_handler(
             context
                 .agent_status_store()
                 .snapshot()
-                .unwrap_or_else(|_| agent_status_response(context.registry())),
+                .unwrap_or_else(|_| agent_status_response(&context.registry())),
         ),
     )
 }

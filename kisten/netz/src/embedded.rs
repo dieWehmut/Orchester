@@ -80,6 +80,7 @@ impl EmbeddedServer {
             io::Error::other(format!("Failed to start desktop server: {error:?}"))
         })?;
         context.start_agent_process_monitor();
+        context.start_scheduler();
         let shutdown = control.subscribe_shutdown();
         let task_control = control.clone();
         let task = tokio::spawn(async move {

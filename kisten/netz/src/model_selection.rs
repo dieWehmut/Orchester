@@ -24,7 +24,7 @@ pub const MODEL_SELECTION_FIELD_MAX_CHARS: usize = 120;
 /// Three optional pieces rather than one enum, because they are independent:
 /// a provider can be switched while keeping the model, a profile names both, and
 /// the effort is a session-only override on top of either.
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct ModelSelection {
     pub provider: Option<String>,
     pub profile: Option<String>,
