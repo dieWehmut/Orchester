@@ -14,7 +14,9 @@ use orchester_adapter::{builtin, MockAdapter, BUILTIN_MANIFESTS};
 use orchester_protokoll::Capability;
 use orchester_vertrag::{AdapterAvailability, AdapterError, AgentAdapter, ManifestAdapter};
 
+pub mod management;
 mod plugin;
+pub mod process;
 
 pub use plugin::{
     load_agent_plugin, standard_plugin_roots, LoadedAgentPlugin, PluginError, PluginInfo,

@@ -3,7 +3,7 @@ use std::fs;
 use std::io::{Read, Write};
 use std::path::Path;
 
-use orchester_verzeichnis::PluginInfo;
+use crate::PluginInfo;
 use sha2::{Digest, Sha256};
 use thiserror::Error;
 

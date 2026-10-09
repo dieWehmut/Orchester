@@ -1,0 +1,174 @@
+openapi: 3.1.0
+info:
+  title: Orchester local management
+  version: 1.0.0
+  description: Per-workspace schedules and receipt-owned plugins. Desktop session, exact origin and CSRF validation apply. See design/10-navigation-schedules-plugins-composer.md for scheduling semantics.
+servers:
+  - url: http://127.0.0.1:{port}/api/v1
+    variables:
+      port: {default: '43123'}
+security:
+  - localSession: []
+paths:
+  /schedules:
+    get:
+      operationId: listSchedules
+      responses:
+        '200':
+          description: Saved tasks for the current workspace
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [schema_version, schedules]
+                properties:
+                  schema_version: {const: 1}
+                  schedules: {type: array, items: {$ref: '#/components/schemas/Schedule'}}
+        default: {$ref: '#/components/responses/Error'}
+    post:
+      operationId: createSchedule
+      security: [{localSession: [], csrf: []}]
+      requestBody: {$ref: '#/components/requestBodies/Schedule'}
+      responses:
+        '201': {$ref: '#/components/responses/Schedule'}
+        default: {$ref: '#/components/responses/Error'}
+  /schedules/{id}:
+    parameters: [{$ref: '#/components/parameters/Id'}]
+    put:
+      operationId: replaceSchedule
+      security: [{localSession: [], csrf: []}]
+      requestBody: {$ref: '#/components/requestBodies/Schedule'}
+      responses:
+        '200': {$ref: '#/components/responses/Schedule'}
+        default: {$ref: '#/components/responses/Error'}
+    delete:
+      operationId: deleteSchedule
+      security: [{localSession: [], csrf: []}]
+      responses:
+        '204': {description: Deleted task and its execution history}
+        default: {$ref: '#/components/responses/Error'}
+  /schedules/{id}/runs:
+    parameters: [{$ref: '#/components/parameters/Id'}]
+    post:
+      operationId: runScheduleNow
+      security: [{localSession: [], csrf: []}]
+      responses:
+        '202':
+          description: Claimed execution, even for a paused task
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ScheduleRun'}
+        default: {$ref: '#/components/responses/Error'}
+  /plugins:
+    get:
+      operationId: listPlugins
+      responses:
+        '200': {$ref: '#/components/responses/Plugins'}
+        default: {$ref: '#/components/responses/Error'}
+    post:
+      operationId: installPlugin
+      security: [{localSession: [], csrf: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [name]
+              properties:
+                name: {type: string, enum: [claude, codex, opencode]}
+      responses:
+        '201': {$ref: '#/components/responses/Plugins'}
+        default: {$ref: '#/components/responses/Error'}
+  /plugins/{name}:
+    parameters:
+      - {in: path, name: name, required: true, schema: {type: string, pattern: '^[a-z0-9][a-z0-9-]{0,63}$'}}
+    delete:
+      operationId: removePlugin
+      security: [{localSession: [], csrf: []}]
+      responses:
+        '200': {$ref: '#/components/responses/Plugins'}
+        default: {$ref: '#/components/responses/Error'}
+components:
+  securitySchemes:
+    localSession: {type: apiKey, in: cookie, name: orchester_session}
+    csrf: {type: apiKey, in: header, name: x-csrf-token}
+  parameters:
+    Id: {in: path, name: id, required: true, schema: {type: string}}
+  requestBodies:
+    Schedule:
+      required: true
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/ScheduleInput'}
+  responses:
+    Schedule:
+      description: Saved task
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Schedule'}
+    Plugins:
+      description: Refreshed plugin catalog
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [schema_version, plugins]
+            properties:
+              schema_version: {const: 1}
+              plugins: {type: array, items: {$ref: '#/components/schemas/Plugin'}}
+    Error:
+      description: 400 malformed JSON, 401 unauthenticated, 403 forbidden, 404 missing, 409 conflict, 422 validation, 500 operation failure or 503 unavailable. All JSON responses are no-store.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error, code, request_id, retryable]
+            properties:
+              error: {type: string}
+              code: {type: string}
+              request_id: {type: [string, 'null']}
+              retryable: {type: boolean}
+  schemas:
+    ScheduleInput:
+      type: object
+      required: [name, prompt, enabled, first_run_at, interval_seconds]
+      properties:
+        name: {type: string, minLength: 1, maxLength: 80}
+        prompt: {type: string, minLength: 1, maxLength: 8000}
+        enabled: {type: boolean}
+        first_run_at: {type: integer, minimum: 1, maximum: 253402300799, description: Unix seconds}
+        interval_seconds: {type: [integer, 'null'], minimum: 60, maximum: 31536000}
+    Schedule:
+      allOf:
+        - {$ref: '#/components/schemas/ScheduleInput'}
+        - type: object
+          required: [id, next_run_at, created_at, updated_at, history]
+          properties:
+            id: {type: string}
+            next_run_at: {type: integer}
+            created_at: {type: integer}
+            updated_at: {type: integer}
+            history: {type: array, maxItems: 20, items: {$ref: '#/components/schemas/ScheduleRun'}}
+    ScheduleRun:
+      type: object
+      required: [id, run_id, started_at, finished_at, status, error_code]
+      properties:
+        id: {type: string}
+        run_id: {type: [string, 'null']}
+        started_at: {type: integer}
+        finished_at: {type: [integer, 'null']}
+        status: {type: string, enum: [running, succeeded, failed, cancelled, interrupted]}
+        error_code: {type: [string, 'null']}
+    Plugin:
+      type: object
+      required: [name, display_name, package_name, version, installed, origin, removable]
+      properties:
+        name: {type: string}
+        display_name: {type: string}
+        package_name: {type: string}
+        version: {type: string}
+        installed: {type: boolean}
+        origin: {enum: [managed, project, null]}
+        removable: {type: boolean}
