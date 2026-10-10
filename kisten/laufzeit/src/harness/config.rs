@@ -1281,9 +1281,9 @@ pub fn require_user_permissions(path: impl AsRef<Path>) -> Result<(), ConfigErro
 
 #[cfg(windows)]
 fn check_windows_acl(path: PathBuf) -> Vec<PermissionDiagnostic> {
-    use std::process::Command;
+    use orchester_verzeichnis::process::background_command;
     let acl_output = system_tool("icacls")
-        .map(|tool| Command::new(tool).arg(&path).output())
+        .map(|tool| background_command(tool).arg(&path).output())
         .transpose()
         .ok()
         .flatten();

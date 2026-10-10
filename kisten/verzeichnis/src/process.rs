@@ -2,9 +2,23 @@
 mod windows;
 
 use std::env;
-use std::ffi::OsString;
+use std::ffi::{OsStr, OsString};
 use std::path::{Path, PathBuf};
 use std::process::ExitStatus;
+
+/// Build a non-interactive helper without allocating a Windows console.
+/// Captured stdout/stderr and exit statuses are preserved. Interactive CLI
+/// launches deliberately use their own command builder instead.
+pub fn background_command(program: impl AsRef<OsStr>) -> std::process::Command {
+    let mut command = std::process::Command::new(program);
+    #[cfg(windows)]
+    {
+        use std::os::windows::process::CommandExt;
+        command.creation_flags(0x0800_0000); // CREATE_NO_WINDOW
+    }
+    command.stdin(std::process::Stdio::null());
+    command
+}
 
 #[cfg(windows)]
 pub use windows::command_invocation;
@@ -72,5 +86,38 @@ pub fn is_cancelled_status(status: &ExitStatus) -> bool {
     #[cfg(not(windows))]
     {
         status.code() == Some(130)
+    }
+}
+
+#[cfg(all(test, windows))]
+mod tests {
+    use super::background_command;
+
+    #[link(name = "kernel32")]
+    extern "system" {
+        fn GetConsoleWindow() -> *mut std::ffi::c_void;
+    }
+
+    #[test]
+    fn background_child_has_no_console_and_keeps_output() {
+        const PROBE: &str = "ORCHESTER_BACKGROUND_CONSOLE_PROBE";
+        if std::env::var_os(PROBE).is_some() {
+            assert!(unsafe { GetConsoleWindow() }.is_null());
+            println!("background-child-output");
+            eprintln!("background-child-error");
+            return;
+        }
+        let output = background_command(std::env::current_exe().unwrap())
+            .args([
+                "--exact",
+                "process::tests::background_child_has_no_console_and_keeps_output",
+                "--nocapture",
+            ])
+            .env(PROBE, "1")
+            .output()
+            .unwrap();
+        assert!(output.status.success(), "{output:?}");
+        assert!(String::from_utf8_lossy(&output.stdout).contains("background-child-output"));
+        assert!(String::from_utf8_lossy(&output.stderr).contains("background-child-error"));
     }
 }

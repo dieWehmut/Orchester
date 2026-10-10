@@ -21,8 +21,9 @@
 //! and this crate reads no events. The frontend joins the two.
 
 use std::path::Path;
-use std::process::{Command, Output, Stdio};
+use std::process::{Output, Stdio};
 
+use orchester_verzeichnis::process::background_command;
 use thiserror::Error;
 
 /// What a path's change is, in the vocabulary the diff decorations use.
@@ -245,7 +246,7 @@ fn non_empty_line(stdout: &[u8]) -> Option<String> {
 /// The child gets no stdin and no terminal prompt, so a missing credential or a
 /// paused hook can never turn a status read into a hung frontend.
 fn git(workspace: &Path, args: &[&str]) -> std::io::Result<Output> {
-    Command::new("git")
+    background_command("git")
         .current_dir(workspace)
         .args(args)
         .env("GIT_TERMINAL_PROMPT", "0")

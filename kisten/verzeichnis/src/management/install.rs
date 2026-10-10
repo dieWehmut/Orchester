@@ -5,14 +5,14 @@ pub(super) mod store;
 use std::ffi::OsString;
 use std::fs;
 use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
+use std::process::Stdio;
 use std::thread;
 use std::time::{Duration, Instant};
 
 use crate::{load_agent_plugin, PluginInfo};
 use thiserror::Error;
 
-use crate::process::{command_invocation, resolve_command};
+use crate::process::{background_command, command_invocation, resolve_command};
 
 const NPM_TIMEOUT: Duration = Duration::from_secs(120);
 const POLL_INTERVAL: Duration = Duration::from_millis(25);
@@ -83,7 +83,7 @@ fn run_npm_pack(destination: &Path, name: &str) -> Result<(), InstallError> {
         return Err(InstallError::UnsafeNpmLauncher);
     }
 
-    let mut command = Command::new(&invocation.program);
+    let mut command = background_command(&invocation.program);
     command
         .args(&invocation.args)
         .current_dir(destination)
@@ -92,11 +92,6 @@ fn run_npm_pack(destination: &Path, name: &str) -> Result<(), InstallError> {
         .stderr(Stdio::null());
     for (key, value) in &invocation.envs {
         command.env(key, value);
-    }
-    #[cfg(windows)]
-    {
-        use std::os::windows::process::CommandExt;
-        command.creation_flags(0x0800_0000); // CREATE_NO_WINDOW for desktop callers.
     }
     let mut child = command.spawn().map_err(|_| InstallError::NpmFailed)?;
     let deadline = Instant::now() + NPM_TIMEOUT;

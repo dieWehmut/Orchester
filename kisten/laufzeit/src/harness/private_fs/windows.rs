@@ -5,6 +5,7 @@ use std::os::windows::fs::OpenOptionsExt;
 use std::os::windows::io::AsRawHandle;
 use std::ptr::{null, null_mut};
 
+use orchester_verzeichnis::process::background_command;
 use windows_sys::Win32::Foundation::{ERROR_SUCCESS, HANDLE};
 use windows_sys::Win32::Security::Authorization::{GetSecurityInfo, SE_FILE_OBJECT};
 use windows_sys::Win32::Security::{
@@ -104,7 +105,7 @@ fn restrict_to_current_user(path: &std::path::Path, propagate: bool) -> std::io:
         })?;
     let sid = current_user_sid_string()?;
     let grant = if propagate { "(OI)(CI)(F)" } else { "(F)" };
-    let output = std::process::Command::new(tool)
+    let output = background_command(tool)
         .arg(path)
         .args(["/inheritance:r", "/grant:r"])
         .args([
@@ -158,7 +159,7 @@ if ($untrusted.Count -gt 0) {
   if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 }
 "#;
-    let output = std::process::Command::new(powershell)
+    let output = background_command(powershell)
         // A PowerShell 7 parent can pass its incompatible system modules
         // through an intermediate Rust process to Windows PowerShell 5.1.
         // Let the child rebuild its own module path before loading Get-Acl.

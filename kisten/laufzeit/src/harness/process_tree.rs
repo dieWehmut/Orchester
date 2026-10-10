@@ -55,7 +55,13 @@ impl ProcessTree {
         {
             command.process_group(0);
         }
-        #[cfg(not(unix))]
+        #[cfg(windows)]
+        {
+            // This runtime captures all output; a GUI parent must not create a
+            // separate console for each tool invocation.
+            command.creation_flags(0x0800_0000); // CREATE_NO_WINDOW
+        }
+        #[cfg(not(any(unix, windows)))]
         {
             let _ = command;
         }

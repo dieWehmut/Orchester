@@ -142,13 +142,15 @@ impl AgentAdapter for ManifestAdapter {
 
 #[cfg(windows)]
 fn native_process_command(program: &Path) -> Command {
-    if is_windows_shell_script(program) {
+    let mut command = if is_windows_shell_script(program) {
         let mut command = Command::new("cmd.exe");
         command.arg("/d").arg("/c").arg(program);
         command
     } else {
         Command::new(program)
-    }
+    };
+    command.creation_flags(0x0800_0000); // CREATE_NO_WINDOW for captured adapter output.
+    command
 }
 
 #[cfg(not(windows))]
