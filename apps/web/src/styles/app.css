@@ -20,12 +20,18 @@
   --workspace-seam: color-mix(in srgb, var(--color-border-base) 45%, transparent);
   --workspace-hover: color-mix(in srgb, var(--color-bg-element) 70%, transparent);
   --composer-max-width: 48rem;
-  --composer-radius: 24px;
+  --composer-radius: 28px;
+  --composer-surface: #343434;
+  --composer-access: #ff812d;
+  --composer-send: #ed70ad;
+  --composer-send-text: #fff;
 
   background: var(--color-bg-base);
 }
 
 :root[data-theme='light'] .app-shell {
+  --composer-surface: var(--color-bg-surface);
+  --composer-access: #b64300;
   --transcript-surface: var(--color-bg-surface);
   --rail-surface: var(--color-bg-base);
 }
@@ -51,9 +57,18 @@
 .app-shell__outlet {
   display: flex;
   min-block-size: 0;
+  min-inline-size: 0;
   flex: 1;
   flex-direction: column;
   overflow: auto;
+}
+
+.app-shell__body {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  min-block-size: 0;
+  flex: 1;
+  overflow: hidden;
 }
 
 /* Keep transient surfaces in the same quiet visual family as the workspace. */

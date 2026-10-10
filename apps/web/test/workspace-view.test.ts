@@ -152,7 +152,7 @@ describe('WorkspaceView', () => {
 
     const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
 
-    expect(wrapper.get('[data-project-context]').text()).toContain('Orchester')
+    expect(wrapper.get('[data-pane="sessions"]').text()).toContain('Orchester')
     expect(wrapper.get('[data-model-context-model]').text()).toContain('gpt-5.6')
   })
 

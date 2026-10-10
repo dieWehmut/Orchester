@@ -6,10 +6,9 @@ import WorkspaceNavigation from '../src/components/layout/WorkspaceNavigation.vu
 function mountNavigation() {
   return mount(WorkspaceNavigation, {
     props: {
-      label: 'Workspace panels', newSessionLabel: 'New chat', sessionsLabel: 'Sessions',
+      label: 'Navigation', homeLabel: 'Home', schedulesLabel: 'Schedules', pluginsLabel: 'Plugins', themeLabel: 'Theme',
       settingsLabel: 'Settings', companionLabel: 'Hide companion',
-      bottomPanelLabel: 'Bottom panel', bottomPanelExpanded: false,
-      sessionsExpanded: true, homeActive: true, companionVisible: true,
+      activePage: 'workspace', dark: true, companionVisible: true,
     },
   })
 }
@@ -17,23 +16,26 @@ function mountNavigation() {
 describe('workspace navigation', () => {
   it('starts a chat and opens settings from the compact navigation', async () => {
     const wrapper = mountNavigation()
-    await wrapper.get('[aria-label="New chat"]').trigger('click')
+    await wrapper.get('[aria-label="Home"]').trigger('click')
     await wrapper.get('[aria-label="Settings"]').trigger('click')
-    expect(wrapper.emitted('newSession')).toHaveLength(1)
+    expect(wrapper.emitted('home')).toHaveLength(1)
     expect(wrapper.emitted('openSettings')).toHaveLength(1)
   })
 
-  it('reports sidebar and companion states while their buttons remain available', async () => {
+  it('keeps the requested order and exposes every navigation action', async () => {
     const wrapper = mountNavigation()
-    await wrapper.get('[aria-label="Sessions"]').trigger('click')
+    expect(wrapper.findAll('button').map(button => button.attributes('aria-label'))).toEqual(['Home', 'Schedules', 'Plugins', 'Hide companion', 'Theme', 'Settings'])
+    await wrapper.get('[aria-label="Schedules"]').trigger('click')
+    await wrapper.get('[aria-label="Plugins"]').trigger('click')
     await wrapper.get('[aria-label="Hide companion"]').trigger('click')
-    await wrapper.get('[aria-label="Bottom panel"]').trigger('click')
-    expect(wrapper.emitted('toggleSessions')).toHaveLength(1)
+    await wrapper.get('[aria-label="Theme"]').trigger('click')
+    expect(wrapper.emitted('openSchedules')).toHaveLength(1)
+    expect(wrapper.emitted('openPlugins')).toHaveLength(1)
     expect(wrapper.emitted('toggleCompanion')).toHaveLength(1)
-    expect(wrapper.emitted('toggleBottomPanel')).toHaveLength(1)
-    await wrapper.setProps({ sessionsExpanded: false, companionVisible: false, homeActive: false })
-    expect(wrapper.get('[aria-label="Sessions"]').attributes('aria-expanded')).toBe('false')
+    expect(wrapper.emitted('toggleTheme')).toHaveLength(1)
+    await wrapper.setProps({ activePage: 'plugins', companionVisible: false, dark: false })
+    expect(wrapper.get('[aria-label="Plugins"]').attributes('aria-current')).toBe('page')
     expect(wrapper.get('[aria-label="Hide companion"]').attributes('aria-pressed')).toBe('false')
-    expect(wrapper.get('[aria-label="New chat"]').attributes('aria-pressed')).toBe('false')
+    expect(wrapper.get('[aria-label="Theme"]').attributes('aria-pressed')).toBe('false')
   })
 })

@@ -86,7 +86,6 @@ function available(id: Parameters<typeof hasShellAction>[0]): boolean {
 const canFoldRail = computed(() => available('rail.toggle'))
 
 const canToggleInspector = computed(() => available('inspector.toggle'))
-const canToggleBottomPanel = computed(() => available('bottom-panel.toggle'))
 const canFocusPrompt = computed(() => available('prompt.focus'))
 const canClearPrompt = computed(() => available('prompt.clear'))
 const canToggleCompanion = computed(() => available('companion.toggle'))
@@ -282,12 +281,6 @@ const viewItems = computed<AppMenuItem[]>(() => [
     !canToggleInspector.value,
   ),
   menuItem(
-    'toggle-bottom-panel',
-    t('bottomPanel.label'),
-    canToggleBottomPanel.value ? undefined : unavailable.value,
-    !canToggleBottomPanel.value,
-  ),
-  menuItem(
     'toggle-companion',
     t('shortcuts.labels.companionToggle'),
     canToggleCompanion.value ? chord('companion.toggle') : unavailable.value,
@@ -318,7 +311,6 @@ function onEditSelect(id: string): void {
 function onViewSelect(id: string): void {
   if (id === 'toggle-rail') foldRail()
   else if (id === 'toggle-inspector') runShellAction('inspector.toggle')
-  else if (id === 'toggle-bottom-panel') runShellAction('bottom-panel.toggle')
   else if (id === 'toggle-companion') runShellAction('companion.toggle')
   else if (id === 'toggle-theme') appearance.toggleTheme()
 }

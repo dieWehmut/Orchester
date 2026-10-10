@@ -270,13 +270,6 @@
       "title": "Font weight",
       "regular": "Regular",
       "medium": "Medium"
-    },
-    "terminalPlacement": {
-      "title": "Terminal",
-      "description": "Where terminal tabs open.",
-      "section": "Terminal",
-      "bottom": "Bottom panel",
-      "inspector": "Inspector"
     }
   },
   "notFound": {
@@ -523,5 +516,89 @@
     "status": "inspect the runtime status",
     "plugins": "manage the installed plugins",
     "help": "show this list"
+  },
+  "navigation": {
+    "label": "Navigation",
+    "home": "Home",
+    "schedules": "Schedules",
+    "plugins": "Plugins",
+    "theme": "Theme"
+  },
+  "management": {
+    "loading": "Loading…",
+    "error": "Could not reach local management. Keep the desktop app running and try again.",
+    "conflict": "This task is running or another operation is in progress. Try again after it finishes.",
+    "retry": "Try again",
+    "refresh": "Refresh",
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving…"
+  },
+  "schedules": {
+    "subtitle": "Make room for the work that repeats.",
+    "availability": "Runs while this app is open, including in the system tray. Times use this computer’s local time.",
+    "modelNote": "Configure a model before your first run.",
+    "create": "New schedule",
+    "empty": "A little less to remember",
+    "emptyDescription": "Schedule a workspace check, a review, or your next recurring task.",
+    "enabled": "Active",
+    "paused": "Paused",
+    "pause": "Pause schedule",
+    "enable": "Enable schedule",
+    "next": "Next run",
+    "scheduledFor": "Scheduled time",
+    "every": "Every {minutes} min",
+    "once": "Once",
+    "history": "Run history",
+    "runNow": "Run now",
+    "running": "Running",
+    "succeeded": "Completed",
+    "failed": "Failed",
+    "cancelled": "Cancelled",
+    "interrupted": "Interrupted",
+    "noHistory": "No runs yet.",
+    "savedLocally": "Saved on this computer · This workspace",
+    "edit": "Edit schedule",
+    "name": "Name",
+    "prompt": "Instructions",
+    "promptPlaceholder": "What should Orchester do when this task runs?",
+    "firstRun": "First run",
+    "repeat": "Repeat",
+    "hourly": "Every hour",
+    "daily": "Every 24 hours",
+    "weekly": "Every 7 days",
+    "enableAfterSave": "Enable after saving",
+    "selectionNote": "Uses the current workspace and the model selected when you save.",
+    "deleteTitle": "Delete schedule?",
+    "deleteDescription": "This removes the schedule and its run history."
+  },
+  "plugins": {
+    "subtitle": "Connect your workspace to the agents you use.",
+    "note": "These adapters use the matching agent CLI installed on your computer. Installation needs npm and a network connection.",
+    "installed": "Installed",
+    "adapterDescription": "Use {name} through Orchester’s shared agent adapter.",
+    "project": "From this project",
+    "managed": "Managed locally",
+    "available": "Available",
+    "readOnly": "Project managed",
+    "install": "Install",
+    "installing": "Installing…",
+    "remove": "Remove",
+    "removing": "Removing…",
+    "removeTitle": "Remove plugin?",
+    "removeDescription": "Removes this managed adapter. Your agent CLI, accounts and settings remain available.",
+    "error": "Plugin operation failed. Check npm, your network and whether another installation is running, then try again."
+  },
+  "composer": {
+    "placeholder": "Use Orchester",
+    "attach": "Add text files",
+    "voice": "Voice input",
+    "stopVoice": "Stop voice input",
+    "voiceUnavailable": "Voice input is unavailable in this browser",
+    "attachmentError": "Use text files under 64 KB and keep the combined draft within 8,000 characters.",
+    "voiceError": "Voice input could not start. Check microphone access and try again."
   }
 }

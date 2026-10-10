@@ -22,6 +22,18 @@ export function createAppRouter(mode: 'web' | 'memory' = 'web'): Router {
         meta: { titleKey: 'routes.workspace' },
       },
       {
+        path: '/schedules',
+        name: 'schedules',
+        component: () => import('./views/SchedulesView.vue'),
+        meta: { titleKey: 'navigation.schedules' },
+      },
+      {
+        path: '/plugins',
+        name: 'plugins',
+        component: () => import('./views/PluginsView.vue'),
+        meta: { titleKey: 'navigation.plugins' },
+      },
+      {
         path: '/settings',
         name: 'settings',
         component: () => import('./views/SettingsView.vue'),

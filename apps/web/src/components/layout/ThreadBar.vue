@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Ellipsis, PanelRightClose, PanelRightOpen, Share } from '@lucide/vue'
+import { ChevronDown, Ellipsis, PanelRightClose, PanelRightOpen, Share, Sparkles } from '@lucide/vue'
 
 import { AppMenu, IconButton, type AppMenuItem } from '@orchester/design'
 

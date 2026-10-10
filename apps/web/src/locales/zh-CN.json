@@ -270,13 +270,6 @@
       "title": "字重",
       "regular": "常规",
       "medium": "中等"
-    },
-    "terminalPlacement": {
-      "title": "终端",
-      "description": "终端标签页打开的位置。",
-      "section": "终端",
-      "bottom": "底部面板",
-      "inspector": "审查面板"
     }
   },
   "notFound": {
@@ -523,5 +516,89 @@
     "status": "查看运行时状态",
     "plugins": "管理已安装的插件",
     "help": "显示此列表"
+  },
+  "navigation": {
+    "label": "导航",
+    "home": "Home",
+    "schedules": "定时任务",
+    "plugins": "插件",
+    "theme": "主题"
+  },
+  "management": {
+    "loading": "正在加载…",
+    "error": "暂时无法连接本机管理服务，请保持桌面应用运行后重试。",
+    "conflict": "任务正在执行，或另一项操作尚未完成，请稍后重试。",
+    "retry": "重试",
+    "refresh": "刷新",
+    "edit": "编辑",
+    "delete": "删除",
+    "close": "关闭",
+    "cancel": "取消",
+    "save": "保存",
+    "saving": "正在保存…"
+  },
+  "schedules": {
+    "subtitle": "把重复的工作安排好。",
+    "availability": "应用打开或在系统托盘运行时执行。时间按本机时区显示。",
+    "modelNote": "首次执行前请先配置模型。",
+    "create": "新建任务",
+    "empty": "少一件需要惦记的事",
+    "emptyDescription": "安排一次项目检查、代码审阅，或你的日常任务。",
+    "enabled": "已启用",
+    "paused": "已暂停",
+    "pause": "暂停任务",
+    "enable": "启用任务",
+    "next": "下次执行",
+    "scheduledFor": "计划时间",
+    "every": "每 {minutes} 分钟",
+    "once": "仅一次",
+    "history": "执行记录",
+    "runNow": "立即执行",
+    "running": "执行中",
+    "succeeded": "已完成",
+    "failed": "执行失败",
+    "cancelled": "已取消",
+    "interrupted": "已中断",
+    "noHistory": "暂无执行记录。",
+    "savedLocally": "保存在本机 · 当前项目",
+    "edit": "编辑任务",
+    "name": "任务名称",
+    "prompt": "任务内容",
+    "promptPlaceholder": "到时间后，希望 Orchester 做什么？",
+    "firstRun": "首次执行",
+    "repeat": "重复",
+    "hourly": "每小时",
+    "daily": "每 24 小时",
+    "weekly": "每 7 天",
+    "enableAfterSave": "保存后启用",
+    "selectionNote": "使用当前项目，以及保存时选择的模型。",
+    "deleteTitle": "删除定时任务？",
+    "deleteDescription": "将删除这项任务及其执行记录。"
+  },
+  "plugins": {
+    "subtitle": "连接你在项目中使用的智能体。",
+    "note": "插件通过本机已安装的对应智能体 CLI 工作。安装插件需要 npm 和网络连接。",
+    "installed": "已安装",
+    "adapterDescription": "通过 Orchester 的统一适配器使用 {name}。",
+    "project": "来自当前项目",
+    "managed": "本机管理",
+    "available": "可安装",
+    "readOnly": "由项目管理",
+    "install": "安装",
+    "installing": "正在安装…",
+    "remove": "移除",
+    "removing": "正在移除…",
+    "removeTitle": "移除插件？",
+    "removeDescription": "将移除这个本机管理的适配器。智能体 CLI、账号和配置会保留。",
+    "error": "插件操作未完成，请检查 npm、网络连接及是否有其他安装正在进行，然后重试。"
+  },
+  "composer": {
+    "placeholder": "使用 Orchester",
+    "attach": "添加文本文件",
+    "voice": "语音输入",
+    "stopVoice": "停止语音输入",
+    "voiceUnavailable": "当前浏览器不支持语音输入",
+    "attachmentError": "请使用小于 64 KB 的文本文件，并将合并后的草稿控制在 8,000 字以内。",
+    "voiceError": "无法启动语音输入，请检查麦克风权限后重试。"
   }
 }

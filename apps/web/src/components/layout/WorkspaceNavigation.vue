@@ -1,52 +1,57 @@
 <script setup lang="ts">
-import { PanelBottom, PanelLeft, PawPrint, Settings2 } from '@lucide/vue'
+import { House, Clock3, Puzzle, PawPrint, Settings2, Sun, Moon } from '@lucide/vue'
 
-import mark from '../../assets/orchester-mark.png'
 
 defineProps<{
   label: string
-  newSessionLabel: string
-  sessionsLabel: string
+  homeLabel: string
+  schedulesLabel: string
+  pluginsLabel: string
+  themeLabel: string
   settingsLabel: string
   companionLabel: string
-  bottomPanelLabel: string
-  bottomPanelExpanded: boolean
-  sessionsExpanded: boolean
-  homeActive: boolean
+  activePage: string
+  dark: boolean
   companionVisible: boolean
 }>()
 
 defineEmits<{
-  newSession: []
-  toggleSessions: []
+  home: []
+  openSchedules: []
+  openPlugins: []
+  toggleTheme: []
   openSettings: []
   toggleCompanion: []
-  toggleBottomPanel: []
 }>()
 </script>
 
 <template>
   <nav class="workspace-navigation" data-workspace-navigation :aria-label="label">
     <button class="workspace-navigation__button workspace-navigation__home" type="button"
-      :aria-label="newSessionLabel" :title="newSessionLabel" :aria-pressed="homeActive"
-      @click="$emit('newSession')">
-      <img :src="mark" alt="" draggable="false" />
+      :aria-label="homeLabel" :title="homeLabel" :aria-current="activePage === 'workspace' ? 'page' : false"
+      @click="$emit('home')">
+      <House :size="20" aria-hidden="true" />
     </button>
-    <button class="workspace-navigation__button" type="button" :aria-label="sessionsLabel"
-      :title="sessionsLabel" :aria-expanded="sessionsExpanded" @click="$emit('toggleSessions')">
-      <PanelLeft :size="19" aria-hidden="true" />
+    <button class="workspace-navigation__button" type="button" :aria-label="schedulesLabel"
+      :title="schedulesLabel" :aria-current="activePage === 'schedules' ? 'page' : false" @click="$emit('openSchedules')">
+      <Clock3 :size="20" aria-hidden="true" />
+    </button>
+    <button class="workspace-navigation__button" type="button" :aria-label="pluginsLabel"
+      :title="pluginsLabel" :aria-current="activePage === 'plugins' ? 'page' : false" @click="$emit('openPlugins')">
+      <Puzzle :size="20" aria-hidden="true" />
     </button>
     <div class="workspace-navigation__footer">
-      <button class="workspace-navigation__button" type="button" :aria-label="bottomPanelLabel"
-        :title="bottomPanelLabel" :aria-expanded="bottomPanelExpanded" @click="$emit('toggleBottomPanel')">
-        <PanelBottom :size="19" aria-hidden="true" />
-      </button>
       <button class="workspace-navigation__button" type="button" :aria-label="companionLabel"
         :title="companionLabel" :aria-pressed="companionVisible" @click="$emit('toggleCompanion')">
         <PawPrint :size="19" aria-hidden="true" />
       </button>
+      <button class="workspace-navigation__button" type="button" :aria-label="themeLabel"
+        :title="themeLabel" :aria-pressed="dark" @click="$emit('toggleTheme')">
+        <Moon v-if="dark" :size="19" aria-hidden="true" />
+        <Sun v-else :size="19" aria-hidden="true" />
+      </button>
       <button class="workspace-navigation__button" type="button" :aria-label="settingsLabel"
-        :title="settingsLabel" @click="$emit('openSettings')">
+        :title="settingsLabel" :aria-current="activePage === 'settings' ? 'page' : false" @click="$emit('openSettings')">
         <Settings2 :size="19" aria-hidden="true" />
       </button>
     </div>
@@ -79,7 +84,7 @@ defineEmits<{
 }
 
 .workspace-navigation__button:hover,
-.workspace-navigation__home[aria-pressed='true'] {
+.workspace-navigation__button[aria-current='page'] {
   background: var(--color-bg-element);
   color: var(--color-text-primary);
 }

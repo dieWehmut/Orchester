@@ -34,7 +34,7 @@ export const SETTINGS_SECTIONS: readonly SettingsSectionEntry<SettingsSectionId>
   {
     id: 'general',
     label: 'General',
-    keywords: ['language', 'locale', 'startup', 'terminal', 'bottom panel', 'inspector'],
+    keywords: ['language', 'locale', 'startup'],
   },
   {
     id: 'appearance',

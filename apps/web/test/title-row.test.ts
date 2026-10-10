@@ -211,19 +211,11 @@ describe('the menus the row opens', () => {
     wrapper.unmount()
   })
 
-  it('opens the bottom panel from View and disables the entry after its surface unmounts', async () => {
+  it('does not offer the retired bottom panel in View', async () => {
     clearShellActionsForTests()
-    const toggle = vi.fn()
-    const unregister = registerShellAction('bottom-panel.toggle', toggle)
     const wrapper = row({ enabled: false } as DesktopWindowController)
     await openMenu(wrapper, 'view')
-    const panel = rowNamed(wrapper, 'Bottom panel', 'view')
-    expect(panel?.attributes('disabled')).toBeUndefined()
-    await panel?.trigger('click')
-    expect(toggle).toHaveBeenCalledOnce()
-    unregister()
-    await openMenu(wrapper, 'view')
-    expect(rowNamed(wrapper, 'Bottom panel', 'view')?.attributes('disabled')).toBeDefined()
+    expect(rowNamed(wrapper, 'Bottom panel', 'view')).toBeUndefined()
     wrapper.unmount()
     clearShellActionsForTests()
   })

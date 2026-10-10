@@ -22,7 +22,6 @@ export type ShellActionId =
   | 'prompt.focus'
   | 'prompt.clear'
   | 'companion.toggle'
-  | 'bottom-panel.toggle'
   | 'close-tab'
 
 export type ShellAction = () => void

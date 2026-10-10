@@ -270,13 +270,6 @@
       "title": "字重",
       "regular": "一般",
       "medium": "中等"
-    },
-    "terminalPlacement": {
-      "title": "終端",
-      "description": "終端分頁開啟的位置。",
-      "section": "終端",
-      "bottom": "底部面板",
-      "inspector": "審查面板"
     }
   },
   "notFound": {
@@ -523,5 +516,89 @@
     "status": "檢視執行時狀態",
     "plugins": "管理已安裝的外掛",
     "help": "顯示此清單"
+  },
+  "navigation": {
+    "label": "導覽",
+    "home": "Home",
+    "schedules": "定時任務",
+    "plugins": "外掛",
+    "theme": "主題"
+  },
+  "management": {
+    "loading": "正在載入…",
+    "error": "暫時無法連線到本機管理服務，請保持桌面應用程式執行後重試。",
+    "conflict": "任務正在執行，或另一項操作尚未完成，請稍後重試。",
+    "retry": "重試",
+    "refresh": "重新整理",
+    "edit": "編輯",
+    "delete": "刪除",
+    "close": "關閉",
+    "cancel": "取消",
+    "save": "儲存",
+    "saving": "正在儲存…"
+  },
+  "schedules": {
+    "subtitle": "把重複的工作安排好。",
+    "availability": "應用程式開啟或在系統匣執行時進行。時間依本機時區顯示。",
+    "modelNote": "首次執行前請先設定模型。",
+    "create": "新增任務",
+    "empty": "少一件需要惦記的事",
+    "emptyDescription": "安排一次專案檢查、程式碼審閱，或你的日常任務。",
+    "enabled": "已啟用",
+    "paused": "已暫停",
+    "pause": "暫停任務",
+    "enable": "啟用任務",
+    "next": "下次執行",
+    "scheduledFor": "排程時間",
+    "every": "每 {minutes} 分鐘",
+    "once": "僅一次",
+    "history": "執行記錄",
+    "runNow": "立即執行",
+    "running": "執行中",
+    "succeeded": "已完成",
+    "failed": "執行失敗",
+    "cancelled": "已取消",
+    "interrupted": "已中斷",
+    "noHistory": "尚無執行記錄。",
+    "savedLocally": "儲存在本機 · 目前專案",
+    "edit": "編輯任務",
+    "name": "任務名稱",
+    "prompt": "任務內容",
+    "promptPlaceholder": "時間到時，希望 Orchester 做什麼？",
+    "firstRun": "首次執行",
+    "repeat": "重複",
+    "hourly": "每小時",
+    "daily": "每 24 小時",
+    "weekly": "每 7 天",
+    "enableAfterSave": "儲存後啟用",
+    "selectionNote": "使用目前專案，以及儲存時選擇的模型。",
+    "deleteTitle": "刪除定時任務？",
+    "deleteDescription": "將刪除此任務及其執行記錄。"
+  },
+  "plugins": {
+    "subtitle": "連接你在專案中使用的智慧代理。",
+    "note": "外掛透過本機已安裝的對應智慧代理 CLI 運作。安裝外掛需要 npm 和網路連線。",
+    "installed": "已安裝",
+    "adapterDescription": "透過 Orchester 的統一介接器使用 {name}。",
+    "project": "來自目前專案",
+    "managed": "本機管理",
+    "available": "可安裝",
+    "readOnly": "由專案管理",
+    "install": "安裝",
+    "installing": "正在安裝…",
+    "remove": "移除",
+    "removing": "正在移除…",
+    "removeTitle": "移除外掛？",
+    "removeDescription": "將移除此本機管理的介接器。智慧代理 CLI、帳號和設定會保留。",
+    "error": "外掛操作未完成，請檢查 npm、網路連線及是否有其他安裝正在進行，然後重試。"
+  },
+  "composer": {
+    "placeholder": "使用 Orchester",
+    "attach": "新增文字檔案",
+    "voice": "語音輸入",
+    "stopVoice": "停止語音輸入",
+    "voiceUnavailable": "目前瀏覽器不支援語音輸入",
+    "attachmentError": "請使用小於 64 KB 的文字檔案，並將合併後的草稿控制在 8,000 字以內。",
+    "voiceError": "無法啟動語音輸入，請檢查麥克風權限後重試。"
   }
 }

@@ -9,19 +9,13 @@ import { summarizeFileChanges } from '../components/changes/change-summary'
 import InspectorDock from '../components/layout/InspectorDock.vue'
 import type { InspectorTab } from '../components/layout/inspector-tabs'
 import AppShell from '../components/layout/AppShell.vue'
-import BottomPanel from '../components/layout/BottomPanel.vue'
 import TabStrip from '../components/layout/TabStrip.vue'
 import { reorderTab, type ShellTab } from '../components/layout/tab-strip'
-import {
-  readTerminalPlacement,
-  type TerminalPlacement,
-} from '../components/layout/terminal-placement'
 import {
   readTabStripState,
   writeTabStripState,
 } from '../components/layout/tab-strip-persistence'
 import WorkspaceSidebar from '../components/layout/WorkspaceSidebar.vue'
-import WorkspaceNavigation from '../components/layout/WorkspaceNavigation.vue'
 import ThreadBar from '../components/layout/ThreadBar.vue'
 import SessionTranscript from '../components/sessions/SessionTranscript.vue'
 import RunPanel from '../components/run/RunPanel.vue'
@@ -33,19 +27,12 @@ import {
   registerShellAction,
   useShellAction,
   useShellActionState,
-  runShellAction,
-  shellActionExpanded,
-  shellActionsVersion,
 } from '../components/layout/shell-actions'
 import { DESKTOP_WINDOW_KEY } from '../platform/desktop-window'
 import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue'
 import { routerKey } from 'vue-router'
 
 const { t } = useI18n()
-const bottomPanelExpanded = computed(() => {
-  shellActionsVersion().value
-  return shellActionExpanded('bottom-panel.toggle') ?? false
-})
 const appRouter = inject(routerKey, null)
 const { sessions, run, agents, bootstrap, models, review, approvals } = useAppStores()
 const runView = computed(() => run.view.value)
@@ -69,14 +56,6 @@ const reviewLastTurn = computed(() => runView.value.turns.length || null)
 const selectedChangePath = ref<string | null>(null)
 const selectedAgentId = ref<string | null>(null)
 const activeInspectorTab = ref<InspectorTab>('context')
-/**
- * Where the terminal lives, section 4.7.
- *
- * The preference is read once on mount and written when the reader changes the
- * setting, so the two surfaces below can be composed from it rather than each
- * deciding for itself where the terminal goes.
- */
-const terminalPlacement = ref<TerminalPlacement>(readTerminalPlacement())
 const inspectorOpen = ref(false)
 const runConnectionStatus = computed(() => run.connectionStatus.value)
 const runProjectionStatus = computed(() => run.projectionStatus.value)
@@ -279,23 +258,6 @@ function persistTabs(): void {
 watch([orderedShellTabs, activeTabId], persistTabs)
 
 
-/**
- * The surfaces region I holds, named through the locale, section 2.
- *
- * The terminal is only one of them while the preference puts it there: a
- * preference that moves the terminal to the inspector has to take it off the
- * panel, or the reader gets two terminals and a panel whose first tab opens
- * nothing they asked for.
- */
-const bottomPanelTabs = computed(() =>
-  [
-    { id: 'terminal', label: t('bottomPanel.terminal'), placement: 'bottom' as const },
-    { id: 'output', label: t('bottomPanel.output'), placement: null },
-    { id: 'audit', label: t('bottomPanel.audit'), placement: null },
-  ]
-    .filter((tab) => tab.placement === null || tab.placement === terminalPlacement.value)
-    .map(({ id, label }) => ({ id, label })),
-)
 
 /**
  * The identity above the transcript.
@@ -504,25 +466,6 @@ if (desktopWindowController?.enabled) {
     :controls-label="t('inspector.label')"
     v-model:inspector-open="inspectorOpen"
   >
-    <template #navigation="{ toggleSessions, sessionsExpanded }">
-      <WorkspaceNavigation
-        :label="t('layout.workspacePanels')"
-        :new-session-label="t('sessions.newChat')"
-        :sessions-label="t('layout.sessions')"
-        :settings-label="t('settings.title')"
-        :companion-label="companionLabel"
-        :bottom-panel-label="t('bottomPanel.label')"
-        :bottom-panel-expanded="bottomPanelExpanded"
-        :sessions-expanded="sessionsExpanded"
-        :home-active="selectedId === null"
-        :companion-visible="petVisibility.visible.value"
-        @new-session="sessions.select(null)"
-        @toggle-sessions="toggleSessions"
-        @open-settings="handleOpenSettings"
-        @toggle-companion="petVisibility.toggle()"
-        @toggle-bottom-panel="runShellAction('bottom-panel.toggle')"
-      />
-    </template>
     <template #sessions>
       <WorkspaceSidebar
         :product-name="t('app.name')"
@@ -602,7 +545,7 @@ if (desktopWindowController?.enabled) {
     <template #inspector>
       <InspectorDock
         :active-tab="activeInspectorTab"
-        :terminal="terminalPlacement === 'inspector'"
+        :terminal="true"
         @update:active-tab="handleInspectorTabChange"
       >
         <template #context>
@@ -633,22 +576,6 @@ if (desktopWindowController?.enabled) {
       </InspectorDock>
     </template>
   </AppShell>
-  <BottomPanel
-    hide-collapsed-bar
-    :label="t('bottomPanel.label')"
-    :tabs="bottomPanelTabs"
-    data-testid="workspace-bottom-panel"
-  >
-    <template #terminal>
-      <p class="workspace-view__panel-note">{{ t('bottomPanel.terminalEmpty') }}</p>
-    </template>
-    <template #output>
-      <p class="workspace-view__panel-note">{{ t('bottomPanel.outputEmpty') }}</p>
-    </template>
-    <template #audit>
-      <p class="workspace-view__panel-note">{{ t('bottomPanel.auditEmpty') }}</p>
-    </template>
-  </BottomPanel>
   <AppDialog
     :open="windowCloseConfirmOpen"
     data-window-close-confirm
@@ -688,8 +615,7 @@ if (desktopWindowController?.enabled) {
   overflow: hidden;
 }
 
-.workspace-view > :deep(.tab-strip),
-.workspace-view > :deep(.bottom-panel) {
+.workspace-view > :deep(.tab-strip) {
   flex-shrink: 0;
 }
 
