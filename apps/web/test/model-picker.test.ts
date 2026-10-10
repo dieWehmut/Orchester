@@ -51,7 +51,7 @@ describe('ModelContextControl readout', () => {
 
     expect(wrapper.find('[data-model-context]').exists()).toBe(true)
     expect(wrapper.get('[data-model-context-model]').text()).toContain('gpt-5.6')
-    expect(wrapper.get('[data-model-context-provider]').text()).toContain('OpenAI')
+    expect(wrapper.get('.model-context__readout').attributes('title')).toContain('OpenAI')
     expect(wrapper.get('[data-model-context-effort]').text()).toContain('high')
     expect(wrapper.find('[data-model-context-status]').exists()).toBe(false)
     wrapper.unmount()

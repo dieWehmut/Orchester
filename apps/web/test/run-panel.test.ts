@@ -98,7 +98,7 @@ describe('RunPanel', () => {
       },
     })
 
-    expect(wrapper.get('[data-project-context]').text()).toContain('Orchester')
+    expect(wrapper.find('[data-project-context]').exists()).toBe(false)
     expect(wrapper.get('[data-model-context-model]').text()).toContain('gpt-5.6')
   })
 

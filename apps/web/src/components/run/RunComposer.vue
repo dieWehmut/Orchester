@@ -2,13 +2,13 @@
 import { AppButton, AppTextarea, Spinner } from '@orchester/design'
 import type { RunLifecycle } from '../../stores/run'
 import type { ModelCatalogDto, ModelSelectionRequestDto } from '@orchester/protokoll'
-import { ArrowUp, Square } from '@lucide/vue'
+import { ArrowUp, Square, Plus, Mic, MicOff } from '@lucide/vue'
 import { computed, ref, watch } from 'vue'
 
 import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
 import ApprovalPresetControl, { type ApprovalPreset } from './ApprovalPresetControl.vue'
 import { readRunSettings, writeRunSettings, type RunSettings } from './run-settings'
-import ComposerContextBar from './ComposerContextBar.vue'
+import { useVoiceInput } from '../../composables/useVoiceInput'
 import ModelContextControl from './ModelContextControl.vue'
 import CommandPalette, { type CommandEntry } from './CommandPalette.vue'
 import { COMPOSER_COMMANDS, type ComposerCommand } from './composer-commands'
@@ -60,7 +60,7 @@ const props = withDefaults(
   },
 )
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]
@@ -106,6 +106,29 @@ function updateApprovalPreset(value: ApprovalPreset): void {
 }
 
 const draft = ref(props.modelValue)
+const fileInput = ref<HTMLInputElement | null>(null)
+const attachmentError = ref(false)
+const readingFiles = ref(false)
+const voice = useVoiceInput(text => update(`${draft.value}${draft.value ? ' ' : ''}${text}`.slice(0, props.maxLength)), () => locale.value)
+async function attachFiles(files: File[]): Promise<void> {
+  if (props.disabled || isBusy.value || readingFiles.value || files.length === 0) return
+  emit('drop-files', files)
+  attachmentError.value = false
+  readingFiles.value = true
+  try {
+    let next = draft.value
+    for (const file of files) {
+      if (file.size > 64 * 1024 || !/\.(txt|md|markdown|json|csv|log|yaml|yml|toml|js|ts|tsx|jsx|py|rs|css|html|vue)$/i.test(file.name)) throw new Error('unsupported attachment')
+      const text = await file.text()
+      if (text.includes('\0')) throw new Error('binary attachment')
+      next += `\n\n${file.name}\n\`\`\`\n${text}\n\`\`\``
+      if (next.length > props.maxLength) throw new Error('attachment too large')
+    }
+    update(next.trimStart())
+  } catch { attachmentError.value = true }
+  finally { readingFiles.value = false; if (fileInput.value) fileInput.value.value = '' }
+}
+function chooseFiles(event: Event): void { void attachFiles(Array.from((event.target as HTMLInputElement).files ?? [])) }
 const dragActive = ref(false)
 /**
  * The palette reads descriptions as text, so the keys become words here,
@@ -160,7 +183,7 @@ function handleDragLeave(event: DragEvent): void {
 
 function handleDrop(event: DragEvent): void {
   dragActive.value = false
-  emit('drop-files', Array.from(event.dataTransfer?.files ?? []))
+  void attachFiles(Array.from(event.dataTransfer?.files ?? []))
 }
 
 /**
@@ -189,6 +212,7 @@ const isBusy = computed(
     props.lifecycle === 'running' ||
     props.lifecycle === 'cancelling',
 )
+watch(isBusy, busy => { if (busy) voice.stop() })
 
 /**
  * Auto-grow between one and twelve rows, counting wrapped lines as well as
@@ -212,7 +236,7 @@ const canSubmit = computed(
     draft.value.trim().length > 0 &&
     draft.value.length <= props.maxLength &&
     !isBusy.value &&
-    !props.disabled,
+    !props.disabled && !readingFiles.value,
 )
 
 /**
@@ -279,7 +303,6 @@ defineExpose({ focus })
     @drop.prevent="handleDrop"
     @submit.prevent="submit"
   >
-    <ComposerContextBar class="run-composer__commands" :workspace-name="props.workspaceName" />
     <CommandPalette
       :open="paletteOpen"
       :commands="paletteCommands"
@@ -294,9 +317,9 @@ defineExpose({ focus })
         id="run-prompt"
         :model-value="draft"
         :aria-label="props.inputLabel ?? t('run.taskPrompt')"
-        :placeholder="props.placeholder ?? t('run.describeTask')"
+        :placeholder="props.placeholder ?? t('composer.placeholder')"
         :max-length="props.maxLength"
-        :disabled="props.disabled || isBusy"
+        :disabled="props.disabled || isBusy || readingFiles"
         :rows="rowCount"
         @update:model-value="update"
         @keydown="handleKeydown"
@@ -305,11 +328,18 @@ defineExpose({ focus })
         <span v-if="countVisible" class="run-composer__count" data-composer-count aria-live="polite">
           {{ draft.length }} / {{ props.maxLength }} {{ props.characterCountLabel ?? t('run.characters') }}
         </span>
-        <ApprovalPresetControl
-          :model-value="approvalPreset"
-          @update:model-value="updateApprovalPreset"
-        />
+        <div class="run-composer__leading">
+          <input ref="fileInput" class="run-composer__file-input" type="file" multiple :aria-label="t('composer.attach')"
+            accept=".txt,.md,.markdown,.json,.csv,.log,.yaml,.yml,.toml,.js,.ts,.tsx,.jsx,.py,.rs,.css,.html,.vue" @change="chooseFiles" />
+          <button type="button" class="run-composer__icon" data-composer-attach
+            :aria-label="t('composer.attach')" :title="t('composer.attach')" :disabled="props.disabled || isBusy || readingFiles" @click="fileInput?.click()">
+            <Plus :size="22" aria-hidden="true" />
+          </button>
+          <ApprovalPresetControl :model-value="approvalPreset" @update:model-value="updateApprovalPreset" />
+        </div>
         <div class="run-composer__actions">
+          <Spinner v-if="isBusy" data-run-activity class="run-composer__activity"
+            :size="16" :label="props.activityLabel ?? t('run.runInProgress')" />
           <ModelContextControl
             class="run-composer__model"
             :catalog="props.modelCatalog"
@@ -318,24 +348,23 @@ defineExpose({ focus })
             @configure="emit('configure-model')"
             @retry="emit('retry-models')"
           />
-          <Spinner
-            v-if="isBusy"
-            data-run-activity
-            class="run-composer__activity"
-            :size="14"
-            :label="props.activityLabel ?? t('run.runInProgress')"
-          />
+          <button type="button" class="run-composer__icon" data-composer-mic :aria-pressed="voice.listening.value"
+            :aria-label="t(voice.listening.value ? 'composer.stopVoice' : 'composer.voice')"
+            :title="t(voice.supported ? 'composer.voice' : 'composer.voiceUnavailable')"
+            :disabled="!voice.supported || props.disabled || isBusy || readingFiles" @click="voice.toggle()">
+            <MicOff v-if="voice.listening.value" :size="21" aria-hidden="true" /><Mic v-else :size="21" aria-hidden="true" />
+          </button>
           <AppButton
             v-if="isBusy"
             class="run-composer__send"
             type="button"
-            variant="danger"
+            variant="primary"
             data-composer-action="cancel"
             data-composer-action-shape="stop"
             :aria-label="props.cancelLabel ?? t('run.stop')"
             @click="emit('cancel')"
           >
-            <Square :size="15" aria-hidden="true" />
+            <Square :size="13" fill="currentColor" aria-hidden="true" />
           </AppButton>
           <AppButton
             v-else
@@ -351,6 +380,7 @@ defineExpose({ focus })
           </AppButton>
         </div>
       </div>
+      <p v-if="attachmentError || voice.failed.value" class="run-composer__notice" role="status">{{ t(attachmentError ? 'composer.attachmentError' : 'composer.voiceError') }}</p>
     </div>
   </form>
 </template>
@@ -371,11 +401,11 @@ defineExpose({ focus })
 .run-composer__field {
   display: grid;
   gap: var(--space-2);
-  padding: var(--space-3) var(--space-3) var(--space-2);
+  padding: calc(var(--space-4) - 2px) var(--space-3) calc(var(--space-2) + 2px);
   border: 1px solid var(--workspace-seam, var(--color-border-subtle));
   border-radius: var(--composer-radius, 1.25rem);
-  background: var(--color-bg-surface);
-  box-shadow: 0 2px 6px rgb(0 0 0 / 3%), 0 8px 28px rgb(0 0 0 / 4%);
+  background: var(--composer-surface, var(--color-bg-surface));
+  box-shadow: none;
   transition: border-color var(--transition-fast) var(--ease-out), box-shadow var(--transition-fast) var(--ease-out);
 }
 
@@ -384,7 +414,7 @@ defineExpose({ focus })
      frame would draw the second box this change removed. This is the
      replacement for the outline the prompt gives up below. */
   border-color: var(--color-border-control);
-  box-shadow: 0 0 0 2px var(--color-accent-border), 0 8px 28px rgb(0 0 0 / 4%);
+  box-shadow: 0 0 0 1px var(--color-border-control);
 }
 
 /* The drop target has to look like one: a drag that leaves the field
@@ -411,7 +441,7 @@ defineExpose({ focus })
 /* The prompt sits in the field rather than in a box of its own: a second
    border inside the first is the box the reference does not draw. */
 .run-composer :deep(.app-textarea) {
-  min-block-size: 3rem;
+  min-block-size: 4rem;
   max-block-size: min(18rem, 30dvh);
   overflow-y: auto;
   padding: var(--space-2) var(--space-2) 0;
@@ -422,7 +452,7 @@ defineExpose({ focus })
   /* The field grows with the prompt, so a resize grip is a handle for a job
      already done - and it sits where the send control is. */
   resize: none;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6;
 }
 
@@ -439,8 +469,20 @@ defineExpose({ focus })
   min-inline-size: 2.25rem;
   padding: 0;
   border-radius: var(--radius-full);
+  background: var(--composer-send);
+  color: var(--composer-send-text);
+  border: 0;
   transition: background var(--transition-fast) var(--ease-out), opacity var(--transition-fast) var(--ease-out);
 }
+
+.run-composer__leading { display: flex; align-items: center; gap: var(--space-2); min-inline-size: 0; }
+.run-composer__file-input { display: none; }
+.run-composer__icon { display: grid; place-items: center; width: 32px; height: 36px; flex: 0 0 32px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--color-text-primary); cursor: pointer; }
+.run-composer__icon:hover { background: var(--workspace-hover); }
+.run-composer__icon:disabled { opacity: .4; cursor: default; }
+.run-composer__icon[aria-pressed='true'] { color: var(--composer-send); }
+.run-composer__icon:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.run-composer__notice { margin: 0 var(--space-2); font-size: 12px; color: var(--color-intent-warning-text); }
 
 .run-composer__send :deep(.app-button__label) {
   display: inline-grid;

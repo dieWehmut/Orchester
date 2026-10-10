@@ -15,7 +15,7 @@
  */
 import { AppButton, AppMenu, Spinner, type AppMenuItem } from '@orchester/design'
 import type { ModelCatalogDto, ModelSelectionRequestDto } from '@orchester/protokoll'
-import { ChevronDown, CircleAlert, Sparkles } from '@lucide/vue'
+import { ChevronDown, CircleAlert } from '@lucide/vue'
 import { computed } from 'vue'
 
 import { useI18n } from '../../i18n'
@@ -187,12 +187,8 @@ function choose(id: string): void {
       @select="choose"
     >
       <template #trigger>
-        <span class="model-context__readout">
-          <span class="model-context__icon" aria-hidden="true">
-            <Sparkles :size="13" />
-          </span>
+        <span class="model-context__readout" :title="providerLabel">
           <span class="model-context__model" data-model-context-model>{{ modelLabel }}</span>
-          <span class="model-context__provider" data-model-context-provider>{{ providerLabel }}</span>
           <span v-if="effortLabel" class="model-context__effort" data-model-context-effort>{{
             effortLabel
           }}</span>
@@ -225,7 +221,7 @@ function choose(id: string): void {
   align-items: center;
   gap: var(--space-2);
   color: var(--color-text-secondary);
-  font-size: var(--text-xs);
+  font-size: var(--text-sm);
 }
 
 /* The readout is the trigger: the reference's selector shows what is chosen and
@@ -245,6 +241,7 @@ function choose(id: string): void {
   padding: 0;
   border: 0;
   background: transparent;
+  font-size: 15px;
 }
 
 .model-context__readout:hover {
@@ -268,6 +265,7 @@ function choose(id: string): void {
 }
 
 .model-context__model {
+  max-inline-size: 20ch;
   color: var(--color-text-primary);
   font-weight: var(--weight-medium);
 }

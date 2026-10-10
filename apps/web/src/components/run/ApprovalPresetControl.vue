@@ -8,7 +8,7 @@
  * danger intent without every caller re-deriving which preset is risky.
  */
 import { AppButton, AppMenu, type AppMenuItem } from '@orchester/design'
-import { ShieldCheck } from '@lucide/vue'
+import { ShieldCheck, ShieldAlert } from '@lucide/vue'
 import { computed, ref } from 'vue'
 
 import { useI18n } from '../../i18n'
@@ -84,10 +84,10 @@ function cancel(): void {
     :data-approval-preset-state="props.modelValue"
     :data-approval-preset-danger="isDanger"
   >
-    <AppMenu :label="`${props.menuLabel ?? t('run.approvalPreset')}: ${currentLabel}`" :items="menuItems" align="end" @select="choose">
+    <AppMenu :label="`${props.menuLabel ?? t('run.approvalPreset')}: ${currentLabel}`" :items="menuItems" align="start" placement="top" @select="choose">
       <template #trigger>
         <span class="approval-preset__trigger" data-approval-preset-trigger>
-          <ShieldCheck :size="15" aria-hidden="true" />
+          <ShieldAlert v-if="isDanger" :size="19" aria-hidden="true" /><ShieldCheck v-else :size="19" aria-hidden="true" />
           <span data-approval-preset-label>{{ currentLabel }}</span>
         </span>
       </template>
@@ -150,14 +150,14 @@ function cancel(): void {
 }
 
 .approval-preset[data-approval-preset-danger='true'] .approval-preset__trigger {
-  color: var(--color-intent-danger-text);
+  color: var(--composer-access, var(--color-intent-warning-text));
 }
 
 .approval-preset__confirm {
   position: absolute;
   z-index: var(--z-popover, 30);
   inset-block-end: calc(100% + var(--space-2));
-  inset-inline-end: 0;
+  inset-inline-start: 0;
   display: grid;
   inline-size: min(22rem, calc(100vw - 48px));
   gap: var(--space-2);
