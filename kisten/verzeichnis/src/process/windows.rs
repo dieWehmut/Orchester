@@ -139,6 +139,18 @@ fn opencode_invocation(
 }
 
 fn find_node_script_entry(content: &str, dir: &Path) -> Option<PathBuf> {
+    // Modern Node distributions assign NPM_CLI_JS before invoking it. Resolve
+    // only the literal, adjacent npm entry point; never evaluate the shim's
+    // FOR/CALL prefix discovery or an arbitrary environment-variable path.
+    let npm_entry = dir.join("node_modules/npm/bin/npm-cli.js");
+    if let Some(script) = content.lines().find_map(|line| {
+        let value = parse_cmd_set(line, "NPM_CLI_JS")?;
+        let path = expand_cmd_path(&value, dir);
+        (path.is_file() && fs::canonicalize(&path).ok() == fs::canonicalize(&npm_entry).ok())
+            .then_some(path)
+    }) {
+        return Some(script);
+    }
     content.lines().find_map(|line| {
         if !line.to_ascii_lowercase().contains(".js") {
             return None;
@@ -251,6 +263,44 @@ node "%dp0%\node_modules\pkg\bin\cli.js" %*
         assert_eq!(invocation.args[1], OsString::from("--version"));
         assert!(!invocation.uses_shell());
         fs::remove_dir_all(dir).ok();
+    }
+
+    #[test]
+    fn official_npm_variable_shim_selects_cli_without_running_prefix_discovery() {
+        let dir = temp_dir("npm-variable-shim");
+        fs::create_dir_all(dir.join("node_modules/npm/bin")).unwrap();
+        let script = dir.join("node_modules/npm/bin/npm-cli.js");
+        fs::write(&script, "").unwrap();
+        fs::write(dir.join("node_modules/npm/bin/npm-prefix.js"), "").unwrap();
+        let shim = dir.join("npm.cmd");
+        fs::write(
+            &shim,
+            r#"@ECHO OFF
+SET "NPM_PREFIX_JS=%~dp0\node_modules\npm\bin\npm-prefix.js"
+SET "NPM_CLI_JS=%~dp0\node_modules\npm\bin\npm-cli.js"
+FOR /F "delims=" %%F IN ('CALL "%NODE_EXE%" "%NPM_PREFIX_JS%"') DO (
+  SET "NPM_PREFIX_NPM_CLI_JS=%%F\node_modules\npm\bin\npm-cli.js"
+)
+IF EXIST "%NPM_PREFIX_NPM_CLI_JS%" (SET "NPM_CLI_JS=%NPM_PREFIX_NPM_CLI_JS%")
+"%NODE_EXE%" "%NPM_CLI_JS%" %*
+"#,
+        )
+        .unwrap();
+        let invocation =
+            command_invocation(&shim, vec!["pack".into(), "package with spaces".into()]);
+        assert!(!invocation.uses_shell());
+        assert_eq!(
+            fs::canonicalize(&invocation.args[0]).unwrap(),
+            fs::canonicalize(script).unwrap()
+        );
+        assert_eq!(
+            invocation.args[1..],
+            [
+                OsString::from("pack"),
+                OsString::from("package with spaces")
+            ]
+        );
+        fs::remove_dir_all(dir).unwrap();
     }
 
     #[test]

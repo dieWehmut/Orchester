@@ -1,1 +1,1 @@
-pub use orchester_verzeichnis::management::{install, InstallError};
+pub use orchester_verzeichnis::management::install;
