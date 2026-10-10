@@ -46,6 +46,7 @@ use database::{
     stop_reason_name, update_approval_state,
 };
 pub use resume::{ResumeNext, ResumePoint, ResumeStage};
+pub use storage::open_private_database;
 pub use transcript::{
     StoredTranscriptRecord, TranscriptAppendRange, TranscriptBinding, TranscriptBindingPhase,
 };
@@ -89,16 +90,9 @@ impl SqliteRunStore {
         path: &Path,
         terminal_sanitizer: Option<FeedbackEngine>,
     ) -> Result<Self, StoreError> {
-        if let Some(parent) = path.parent() {
-            let created = !parent.exists();
-            std::fs::create_dir_all(parent).map_err(StoreError::Io)?;
-            storage::ensure_private_state_dir(parent, created)?;
-        }
-        let file_existed = path.exists();
         let wal_existed = storage::state_sidecar(path, "-wal").exists();
         let shm_existed = storage::state_sidecar(path, "-shm").exists();
-        let connection = Connection::open(path)?;
-        storage::ensure_private_state_file(path, !file_existed)?;
+        let connection = open_private_database(path)?;
         let store = Self::initialize(connection, true, terminal_sanitizer)?;
         storage::ensure_private_state_sidecars(path, wal_existed, shm_existed)?;
         Ok(store)

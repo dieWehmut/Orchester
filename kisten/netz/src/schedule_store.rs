@@ -5,7 +5,9 @@ use crate::{
 use orchester_anwendung::OrchesterPaths;
 use rusqlite::{params, Connection, OptionalExtension, TransactionBehavior};
 use serde::{Deserialize, Serialize};
-use std::{path::Path, time::Duration};
+#[cfg(test)]
+use std::path::Path;
+use std::time::Duration;
 
 pub(crate) type Result<T> = std::result::Result<T, ApiErrorCode>;
 const LEASE_SECONDS: i64 = 60;
@@ -87,15 +89,20 @@ pub(crate) struct ScheduleStore {
 
 impl ScheduleStore {
     pub fn open(paths: &OrchesterPaths) -> Result<Self> {
-        std::fs::create_dir_all(paths.state_root()).map_err(|_| ApiErrorCode::Unavailable)?;
-        Self::at(
+        let db = orchester_laufzeit::harness::run_store::open_private_database(
             &paths.state_root().join("schedules.db"),
-            &paths.workspace().to_string_lossy(),
         )
+        .map_err(|_| ApiErrorCode::Unavailable)?;
+        Self::with_connection(db, &paths.workspace().to_string_lossy())
     }
 
+    #[cfg(test)]
     fn at(path: &Path, workspace: &str) -> Result<Self> {
         let db = Connection::open(path).map_err(|_| ApiErrorCode::Unavailable)?;
+        Self::with_connection(db, workspace)
+    }
+
+    fn with_connection(db: Connection, workspace: &str) -> Result<Self> {
         db.busy_timeout(Duration::from_secs(5))
             .map_err(|_| ApiErrorCode::Unavailable)?;
         db.execute_batch("PRAGMA foreign_keys=ON;
@@ -386,6 +393,25 @@ fn read_schedule(row: &rusqlite::Row<'_>) -> rusqlite::Result<Schedule> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn opening_schedules_first_preserves_the_runtime_private_storage_boundary() {
+        let root =
+            std::env::temp_dir().join(format!("schedule-permissions-{}", identifier().unwrap()));
+        let paths = OrchesterPaths::new(root.join("home"), root.join("workspace"));
+        let schedules = ScheduleStore::open(&paths).unwrap();
+        let runs = orchester_laufzeit::harness::run_store::SqliteRunStore::open(
+            paths.state_root().join("runs.db"),
+        )
+        .expect("a scheduled task must be able to open the runtime store");
+        assert!(orchester_laufzeit::harness::config::check_permissions(
+            &paths.state_root().join("schedules.db"),
+        )
+        .iter()
+        .all(|finding| finding.secure));
+        drop((schedules, runs));
+        std::fs::remove_dir_all(root).unwrap();
+    }
     fn input() -> ScheduleInput {
         ScheduleInput {
             name: "Daily check".into(),

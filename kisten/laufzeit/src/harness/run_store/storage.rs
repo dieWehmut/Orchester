@@ -5,6 +5,25 @@ use rusqlite::Connection;
 
 use super::StoreError;
 
+/// Open a local state database with the same private directory/file boundary
+/// as the runtime. Only newly created paths receive new permissions.
+pub fn open_private_database(path: &Path) -> Result<Connection, StoreError> {
+    if let Some(parent) = path.parent().filter(|p| !p.as_os_str().is_empty()) {
+        crate::harness::private_fs::create_private_dir_all(parent).map_err(StoreError::Io)?;
+        ensure_private_state_dir(parent, false)?;
+    }
+    if !path.exists() {
+        match crate::harness::private_fs::write_private_file(path, "") {
+            Ok(()) => {}
+            Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => {}
+            Err(error) => return Err(StoreError::Io(error)),
+        }
+    }
+    // Check before SQLite can write any application data into an existing file.
+    ensure_private_state_file(path, false)?;
+    Connection::open(path).map_err(StoreError::Database)
+}
+
 pub(super) fn enable_wal_mode(connection: &Connection) -> Result<(), StoreError> {
     let mut last_busy = None;
     for _ in 0..100 {
