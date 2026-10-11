@@ -38,7 +38,8 @@ paths:
                         status: {enum: [available, not_found, unavailable, partial]}
                   sessions: {type: array, maxItems: 96, items: {$ref: '#/components/schemas/Summary'}}
         '401': {description: Missing or invalid local session}
-        '422': {description: Unsupported provider or invalid query}
+        '400': {description: Malformed query parameters}
+        '422': {description: Unsupported provider}
         '503': {description: Local reader unavailable}
   /agents/activity/{id}:
     get:
