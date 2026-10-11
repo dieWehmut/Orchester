@@ -193,6 +193,20 @@ impl RunRegistry {
             .map(|entry| RunHandle { entry })
             .ok_or(RunRegistryError::NotFound)
     }
+
+    pub(crate) fn all(&self) -> Result<Vec<RunHandle>, RunRegistryError> {
+        Ok(self
+            .inner
+            .state
+            .lock()
+            .map_err(|_| RunRegistryError::LockPoisoned)?
+            .runs
+            .values()
+            .map(|entry| RunHandle {
+                entry: Arc::clone(entry),
+            })
+            .collect())
+    }
 }
 
 fn create_entry_locked(

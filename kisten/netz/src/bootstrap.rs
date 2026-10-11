@@ -22,6 +22,7 @@ use crate::{
 
 #[derive(Clone)]
 pub struct ServerContext {
+    agent_activity: crate::agent_activity::AgentActivityStore,
     paths: Option<OrchesterPaths>,
     control: ServerControl,
     registry: Arc<RwLock<Registry>>,
@@ -58,6 +59,9 @@ impl ServerContext {
         let model_host = paths.as_ref().map(SelfAgentHost::for_paths).map(Arc::new);
         let session_history = paths.as_ref().map(SessionHistory::for_paths).map(Arc::new);
         Self {
+            agent_activity: crate::agent_activity::AgentActivityStore::new(
+                crate::AgentActivityRoots::from_environment(),
+            ),
             paths,
             control,
             registry: Arc::new(RwLock::new((*registry).clone())),
@@ -80,6 +84,16 @@ impl ServerContext {
 
     pub fn paths(&self) -> Option<&OrchesterPaths> {
         self.paths.as_ref()
+    }
+
+    /// Override provider locations for an embedded deployment or isolated checks.
+    pub fn with_agent_activity_roots(mut self, roots: crate::AgentActivityRoots) -> Self {
+        self.agent_activity = crate::agent_activity::AgentActivityStore::new(roots);
+        self
+    }
+
+    pub(crate) fn agent_activity(&self) -> &crate::agent_activity::AgentActivityStore {
+        &self.agent_activity
     }
 
     pub fn control(&self) -> &ServerControl {

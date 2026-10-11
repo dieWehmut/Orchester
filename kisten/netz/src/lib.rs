@@ -2,6 +2,7 @@
 
 //! Loopback HTTP and WebSocket service for Orchester frontends.
 
+mod agent_activity;
 mod agent_catalog;
 mod agent_process;
 mod agent_status;
@@ -29,6 +30,7 @@ mod session_history;
 mod workspace;
 mod workspace_review;
 
+pub use agent_activity::AgentActivityRoots;
 pub use agent_catalog::{
     agent_catalog_response, AgentAvailabilityDto, AgentCatalogDto, AgentSummaryDto,
     AGENT_CATALOG_SCHEMA_VERSION,

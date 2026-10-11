@@ -1,0 +1,95 @@
+openapi: 3.1.0
+info:
+  title: Orchester local agent activity
+  version: 1.0.0
+  description: Read-only local provider transcripts and managed runtime events. Requires the existing local session. No file path is accepted. See design/12-agent-live-content.md for limits and lifecycle semantics.
+servers:
+  - url: http://127.0.0.1:{port}/api/v1
+    variables:
+      port: {default: '43123'}
+security: [{localSession: []}]
+paths:
+  /agents/activity:
+    get:
+      operationId: listAgentActivity
+      parameters:
+        - name: provider
+          in: query
+          schema: {$ref: '#/components/schemas/Provider'}
+      responses:
+        '200':
+          description: Up to 24 recent summaries per provider, ordered by update time. Empty or inaccessible roots are distinguished by source status.
+          headers: {Cache-Control: {schema: {const: no-store}}}
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [schema_version, observed_at, sources, sessions]
+                properties:
+                  schema_version: {const: 1}
+                  observed_at: {type: integer, description: Unix milliseconds}
+                  sources:
+                    type: array
+                    items:
+                      type: object
+                      required: [provider, status]
+                      properties:
+                        provider: {$ref: '#/components/schemas/Provider'}
+                        status: {enum: [available, not_found, unavailable, partial]}
+                  sessions: {type: array, maxItems: 96, items: {$ref: '#/components/schemas/Summary'}}
+        '401': {description: Missing or invalid local session}
+        '422': {description: Unsupported provider or invalid query}
+        '503': {description: Local reader unavailable}
+  /agents/activity/{id}:
+    get:
+      operationId: readAgentActivity
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: string, pattern: '^[a-f0-9]{64}$'}
+      responses:
+        '200':
+          description: Bounded visible transcript; truncation is explicit. Stable entry IDs allow expanded tools and reading position to survive refresh.
+          headers: {Cache-Control: {schema: {const: no-store}}}
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - {$ref: '#/components/schemas/Summary'}
+                  - type: object
+                    required: [schema_version, entries]
+                    properties:
+                      schema_version: {const: 1}
+                      entries:
+                        type: array
+                        maxItems: 100
+                        items:
+                          type: object
+                          required: [id, kind, text, tool]
+                          properties:
+                            id: {type: string}
+                            kind: {enum: [user, assistant, tool, result, status]}
+                            text: {type: string, maxLength: 8000}
+                            tool: {type: [string, 'null'], maxLength: 120}
+        '401': {description: Missing or invalid local session}
+        '404': {description: Unknown, malformed or no longer discoverable task ID}
+        '503': {description: Local reader unavailable}
+components:
+  securitySchemes:
+    localSession: {type: apiKey, in: cookie, name: orchester_session}
+  schemas:
+    Provider: {enum: [codex, claude, opencode, orchester]}
+    Summary:
+      type: object
+      required: [id, provider, source, title, project, updated_at, state, preview, truncated]
+      properties:
+        id: {type: string, pattern: '^[a-f0-9]{64}$'}
+        provider: {$ref: '#/components/schemas/Provider'}
+        source: {enum: [external, managed]}
+        title: {type: string, maxLength: 120}
+        project: {type: string, maxLength: 120, description: Project directory basename only}
+        updated_at: {type: integer, description: Unix milliseconds}
+        state: {enum: [active, completed, interrupted, unknown]}
+        preview: {type: string, maxLength: 200}
+        truncated: {type: boolean}

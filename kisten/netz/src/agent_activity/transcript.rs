@@ -1,0 +1,218 @@
+use super::{clip, empty_detail, finish, push_entry, ActivityDetail};
+use serde_json::Value;
+
+pub(super) fn text(value: &Value) -> String {
+    if let Some(text) = value.as_str() {
+        return text.into();
+    }
+    if let Some(parts) = value.as_array() {
+        return parts
+            .iter()
+            .filter(|part| {
+                matches!(
+                    part["type"].as_str(),
+                    Some("text" | "input_text" | "output_text")
+                )
+            })
+            .filter_map(|part| part["text"].as_str())
+            .collect::<Vec<_>>()
+            .join("\n");
+    }
+    String::new()
+}
+
+pub(super) fn arguments(value: &Value) -> String {
+    if value.is_null() {
+        String::new()
+    } else if let Some(text) = value.as_str() {
+        text.into()
+    } else {
+        serde_json::to_string_pretty(value).unwrap_or_default()
+    }
+}
+
+pub(super) fn project(value: &str) -> String {
+    clip(
+        value
+            .trim_end_matches(['/', '\\'])
+            .rsplit(['/', '\\'])
+            .next()
+            .unwrap_or_default(),
+        120,
+    )
+}
+
+pub(super) fn parse(
+    provider: &str,
+    source_id: &str,
+    updated_at: i64,
+    records: &[(u64, Value)],
+) -> ActivityDetail {
+    let mut row = empty_detail(provider, source_id, updated_at);
+    for (offset, record) in records {
+        if provider == "codex" {
+            codex(&mut row, *offset, record);
+        } else {
+            claude(&mut row, *offset, record);
+        }
+    }
+    finish(&mut row);
+    row
+}
+
+fn title(row: &mut ActivityDetail, value: &str) {
+    let value = value.trim();
+    if !value.is_empty()
+        && !value.starts_with('<')
+        && !value.starts_with("# AGENTS.md")
+        && !value.starts_with("# Environment")
+    {
+        row.summary.title = clip(value.lines().next().unwrap_or(value), 120);
+    }
+}
+
+fn codex(row: &mut ActivityDetail, offset: u64, record: &Value) {
+    let payload = &record["payload"];
+    let id = format!("line-{offset}");
+    match record["type"].as_str() {
+        Some("session_meta" | "turn_context") => {
+            if let Some(cwd) = payload["cwd"].as_str() {
+                row.summary.project = project(cwd);
+            }
+        }
+        Some("event_msg") => match payload["type"].as_str() {
+            Some("task_started" | "turn_started") => row.summary.state = "active",
+            Some("task_complete" | "task_completed" | "turn_complete") => {
+                row.summary.state = "completed"
+            }
+            Some("turn_aborted" | "task_interrupted") => row.summary.state = "interrupted",
+            // response_item is the single content authority: event_msg often
+            // repeats the same user/assistant text and is lifecycle-only here.
+            _ => (),
+        },
+        Some("response_item") => match payload["type"].as_str() {
+            Some("message") => {
+                let kind = match payload["role"].as_str() {
+                    Some("user") => "user",
+                    Some("assistant") => "assistant",
+                    _ => return,
+                };
+                let content = text(&payload["content"]);
+                if kind == "user" {
+                    if content.trim_start().starts_with('<') || content.starts_with("# AGENTS.md") {
+                        return;
+                    }
+                    title(row, &content);
+                    row.summary.state = "active";
+                } else if payload["phase"].as_str() == Some("final_answer") {
+                    row.summary.state = "completed";
+                }
+                push_entry(row, &id, kind, &content, None);
+            }
+            Some("function_call" | "custom_tool_call") => {
+                row.summary.state = "active";
+                let args = if payload["arguments"].is_null() {
+                    &payload["input"]
+                } else {
+                    &payload["arguments"]
+                };
+                push_entry(row, &id, "tool", &arguments(args), payload["name"].as_str());
+            }
+            Some("function_call_output" | "custom_tool_call_output") => {
+                let output = &payload["output"];
+                // Structured multimodal payloads contribute only text blocks.
+                let content = output
+                    .as_str()
+                    .and_then(|raw| serde_json::from_str::<Value>(raw).ok())
+                    .filter(Value::is_array)
+                    .map(|value| text(&value))
+                    .unwrap_or_else(|| text(output));
+                push_entry(row, &id, "result", &content, None);
+            }
+            _ => (),
+        },
+        _ => (),
+    }
+}
+
+fn claude(row: &mut ActivityDetail, offset: u64, record: &Value) {
+    if let Some(cwd) = record["cwd"].as_str() {
+        row.summary.project = project(cwd);
+    }
+    match record["type"].as_str() {
+        Some("last-prompt") => {
+            if let Some(prompt) = record["lastPrompt"].as_str() {
+                title(row, prompt);
+            }
+        }
+        Some("system") => match record["subtype"].as_str() {
+            Some("turn_duration") => row.summary.state = "completed",
+            Some("api_error") => {
+                row.summary.state = "interrupted";
+            }
+            _ => (),
+        },
+        Some("user" | "assistant") => {
+            if record["isMeta"].as_bool() == Some(true) {
+                return;
+            }
+            let kind = if record["type"] == "user" {
+                "user"
+            } else {
+                "assistant"
+            };
+            let content = &record["message"]["content"];
+            let message_id = record["uuid"]
+                .as_str()
+                .map(str::to_owned)
+                .unwrap_or_else(|| format!("line-{offset}"));
+            if let Some(content) = content.as_str() {
+                push_entry(row, &message_id, kind, content, None);
+                if kind == "user" {
+                    title(row, content);
+                    row.summary.state = "active";
+                }
+            } else if let Some(parts) = content.as_array() {
+                for (index, part) in parts.iter().enumerate() {
+                    let id = format!("{message_id}-{index}");
+                    match part["type"].as_str() {
+                        Some("text") => {
+                            let content = part["text"].as_str().unwrap_or_default();
+                            push_entry(row, &id, kind, content, None);
+                            if kind == "user" {
+                                title(row, content);
+                                row.summary.state = "active";
+                            }
+                        }
+                        Some("tool_use") => {
+                            row.summary.state = "active";
+                            push_entry(
+                                row,
+                                &id,
+                                "tool",
+                                &arguments(&part["input"]),
+                                part["name"].as_str(),
+                            );
+                        }
+                        Some("tool_result") => {
+                            push_entry(row, &id, "result", &text(&part["content"]), None)
+                        }
+                        _ => (),
+                    }
+                }
+            }
+            if kind == "assistant"
+                && matches!(
+                    record["message"]["stop_reason"].as_str(),
+                    Some("end_turn" | "stop_sequence")
+                )
+            {
+                row.summary.state = "completed";
+            }
+            if record["isApiErrorMessage"].as_bool() == Some(true) {
+                row.summary.state = "interrupted";
+            }
+        }
+        _ => (),
+    }
+}

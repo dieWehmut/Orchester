@@ -79,6 +79,8 @@ fn api_router() -> Router<ServerContext> {
         .route("/agents", get(agent_catalog_handler))
         .route("/agents/status", get(agent_status_handler))
         .route("/agents/status/ws", get(agent_status_socket_handler))
+        .route("/agents/activity", get(crate::agent_activity::list))
+        .route("/agents/activity/{id}", get(crate::agent_activity::detail))
         .route("/models", get(model_catalog_handler))
         .route(
             "/plugins",
