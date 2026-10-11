@@ -9,6 +9,7 @@ import type { AgentStatusSocketStatus } from '../../../transport/agent-status-so
 import { agentStreamStatusMessageKey } from '../agent-presenter'
 import { groupAgentFleet } from '../fleet-groups'
 import AgentFleetGroup from './AgentFleetGroup.vue'
+import AgentFleetRow from './AgentFleetRow.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -17,6 +18,7 @@ const props = withDefaults(
     snapshot: AgentFleetSnapshotDto | null
     error?: string | null
     selectedAgentId?: string | null
+    compact?: boolean
   }>(),
   { error: null, streamStatus: 'idle', selectedAgentId: null },
 )
@@ -39,7 +41,7 @@ function agentStreamStatusTone(status: AgentStatusSocketStatus): 'neutral' | 'su
 
 <template>
   <section class="agent-fleet" data-agent-fleet :aria-label="t('agents.title')">
-    <header class="agent-fleet__header">
+    <header v-if="!props.compact" class="agent-fleet__header">
       <span class="agent-fleet__subtitle">{{ t('agents.runtimeFleet') }}</span>
       <div class="agent-fleet__header-meta">
         <AppBadge
@@ -76,7 +78,10 @@ function agentStreamStatusTone(status: AgentStatusSocketStatus): 'neutral' | 'su
         {{ props.error }}
       </InlineAlert>
 
-      <div class="agent-fleet__groups">
+      <div v-if="props.compact" class="agent-fleet__rows">
+        <div v-for="agent in props.snapshot?.agents ?? []" :key="agent.agent_id" :data-agent-id="agent.agent_id"><AgentFleetRow :agent="agent" compact :selected="agent.agent_id === props.selectedAgentId" @select="$emit('select', $event)" /></div>
+      </div>
+      <div v-else class="agent-fleet__groups">
         <AgentFleetGroup
           v-for="group in groups"
           :key="group.key"

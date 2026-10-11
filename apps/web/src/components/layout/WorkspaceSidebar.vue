@@ -117,6 +117,7 @@ const pinnedSessions = usePinnedSessions()
 
     <template #fleet>
       <AgentFleetPanel
+        compact
         :status="props.agentStatus"
         :stream-status="props.agentStreamStatus"
         :snapshot="props.agentSnapshot"

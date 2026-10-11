@@ -600,5 +600,38 @@
     "voiceUnavailable": "当前浏览器不支持语音输入",
     "attachmentError": "请使用小于 64 KB 的文本文件，并将合并后的草稿控制在 8,000 字以内。",
     "voiceError": "无法启动语音输入，请检查麦克风权限后重试。"
+  },
+  "activity": {
+    "title": "智能体动态",
+    "view": "查看当前内容",
+    "back": "返回聊天",
+    "stale": "更新已暂停",
+    "live": "自动更新",
+    "error": "暂时无法刷新，保留上次读取的内容。",
+    "storageUnavailable": "部分本地记录暂时无法读取，下面显示可用的内容。",
+    "emptyTitle": "暂无近期任务",
+    "emptyDescription": "在本机打开 {name} 并开始任务，保存的对话会显示在这里。",
+    "sessions": "近期任务",
+    "content": "任务内容",
+    "untitled": "未命名任务",
+    "external": "外部任务",
+    "managed": "Orchester 内任务",
+    "recentOnly": "当前展示这段对话的部分近期内容。",
+    "waitingContent": "等待可见的对话内容。",
+    "latest": "最新输出",
+    "note": "只读查看 · 每 2 秒更新。请在原应用中继续或停止外部任务。",
+    "states": {
+      "active": "进行中",
+      "completed": "已完成",
+      "interrupted": "已中断",
+      "unknown": "暂无近期动态"
+    },
+    "kinds": {
+      "user": "你",
+      "assistant": "助手",
+      "tool": "工具调用",
+      "result": "执行结果",
+      "status": "状态"
+    }
   }
 }

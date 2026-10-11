@@ -137,7 +137,7 @@ describe('workspace shortcuts', () => {
     expect(pane().attributes('data-inspector-open')).toBe('false')
   })
 
-  it('toggles the companion from the keyboard, and says so in the account menu', async () => {
+  it('keeps the companion shortcut working without the removed account menu', async () => {
     const { resetPetVisibilityForTests, usePetVisibility } = await import(
       '../src/features/pet/use-pet-visibility'
     )
@@ -157,11 +157,8 @@ describe('workspace shortcuts', () => {
     await nextTick()
     expect(pet.visible.value).toBe(true)
 
-    await wrapper.get('[data-rail-account-menu] [aria-haspopup="menu"]').trigger('click')
-    const companionRow = wrapper
-      .findAll('[role="menuitem"]')
-      .find((row) => row.text().includes('Hide companion'))
-    expect(companionRow?.text()).toContain('Ctrl+Alt+P')
+    expect(wrapper.find('[data-rail-account-menu]').exists()).toBe(false)
+    expect(shortcutRegistry.effectiveKeys('companion.toggle')).toEqual(['Mod', 'Alt', 'P'])
     wrapper.unmount()
   })
 })

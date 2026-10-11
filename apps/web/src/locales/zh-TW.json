@@ -600,5 +600,38 @@
     "voiceUnavailable": "目前瀏覽器不支援語音輸入",
     "attachmentError": "請使用小於 64 KB 的文字檔案，並將合併後的草稿控制在 8,000 字以內。",
     "voiceError": "無法啟動語音輸入，請檢查麥克風權限後重試。"
+  },
+  "activity": {
+    "title": "智慧體動態",
+    "view": "查看目前內容",
+    "back": "返回聊天",
+    "stale": "更新已暫停",
+    "live": "自動更新",
+    "error": "暫時無法重新整理，保留上次讀取的內容。",
+    "storageUnavailable": "部分本機紀錄暫時無法讀取，下面顯示可用的內容。",
+    "emptyTitle": "暫無近期任務",
+    "emptyDescription": "在本機開啟 {name} 並開始任務，儲存的對話會顯示在這裡。",
+    "sessions": "近期任務",
+    "content": "任務內容",
+    "untitled": "未命名任務",
+    "external": "外部任務",
+    "managed": "Orchester 內任務",
+    "recentOnly": "目前展示這段對話的部分近期內容。",
+    "waitingContent": "等待可見的對話內容。",
+    "latest": "最新輸出",
+    "note": "唯讀查看 · 每 2 秒更新。請在原應用程式中繼續或停止外部任務。",
+    "states": {
+      "active": "進行中",
+      "completed": "已完成",
+      "interrupted": "已中斷",
+      "unknown": "暫無近期動態"
+    },
+    "kinds": {
+      "user": "你",
+      "assistant": "助手",
+      "tool": "工具呼叫",
+      "result": "執行結果",
+      "status": "狀態"
+    }
   }
 }

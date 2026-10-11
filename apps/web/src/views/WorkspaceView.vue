@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { AppButton, AppDialog } from '@orchester/design'
 import { AgentDetails, agentActivityMessageKey } from '../features/agent-presence'
+import AgentActivityView from '../features/agent-presence/components/AgentActivityView.vue'
+import { agentProviderPresentation } from '../features/agent-presence/provider-presentation'
+import { activityProviders, type ActivityProvider } from '../api/agent-activity'
 import ChangeInspector from '../components/changes/ChangeInspector.vue'
 import ApprovalsQueue from '../components/changes/ApprovalsQueue.vue'
 import ReviewPanel from '../components/changes/ReviewPanel.vue'
@@ -55,6 +58,7 @@ const reviewChanges = computed(() =>
 const reviewLastTurn = computed(() => runView.value.turns.length || null)
 const selectedChangePath = ref<string | null>(null)
 const selectedAgentId = ref<string | null>(null)
+const activityProvider = ref<ActivityProvider | null>(null)
 const activeInspectorTab = ref<InspectorTab>('context')
 const inspectorOpen = ref(false)
 const runConnectionStatus = computed(() => run.connectionStatus.value)
@@ -310,7 +314,32 @@ async function handleRunCancel(): Promise<void> {
 function handleAgentSelect(agentId: string): void {
   selectedAgentId.value = agentId
   activeInspectorTab.value = 'context'
+  const agent = agentSnapshot.value?.agents.find(agent => agent.agent_id === agentId)
+  const provider = agent ? agentProviderPresentation(agent).key : 'generic'
+  openActivity(provider === 'codex' || provider === 'claude' || provider === 'opencode' ? provider : 'orchester')
 }
+
+function openActivity(provider: ActivityProvider): void {
+  activityProvider.value = provider
+  selectedAgentId.value = agentSnapshot.value?.agents.find(agent => agentProviderPresentation(agent).key === provider)?.agent_id ?? null
+  void appRouter?.replace({ query: { ...appRouter.currentRoute.value.query, agent: provider } })
+}
+
+function closeActivity(): void {
+  activityProvider.value = null
+  selectedAgentId.value = null
+  if (appRouter) {
+    const query = { ...appRouter.currentRoute.value.query }
+    delete query.agent
+    void appRouter.replace({ query })
+  }
+}
+
+function selectSession(id: string | null): void { closeActivity(); void sessions.select(id) }
+
+watch(() => appRouter?.currentRoute.value.query.agent, value => {
+  activityProvider.value = activityProviders.includes(value as ActivityProvider) ? value as ActivityProvider : null
+}, { immediate: true })
 
 function handleInspectorTabChange(tab: InspectorTab): void {
   activeInspectorTab.value = tab
@@ -484,10 +513,10 @@ if (desktopWindowController?.enabled) {
         :agent-snapshot="agentSnapshot"
         :agent-error="agentError"
         :selected-agent-id="selectedAgentId"
-        @select-session="sessions.select"
+        @select-session="selectSession"
         @refresh-sessions="sessions.load"
         @load-more-sessions="sessions.loadMore"
-        @new-session="sessions.select(null)"
+        @new-session="selectSession(null)"
         @select-agent="handleAgentSelect"
         @open-settings="handleOpenSettings"
         @toggle-companion="petVisibility.toggle()"
@@ -496,6 +525,7 @@ if (desktopWindowController?.enabled) {
     </template>
 
     <ThreadBar
+      v-if="!activityProvider"
       :title="threadTitle"
       :agent-name="threadAgentName"
       :agent-status="threadAgentStatus"
@@ -510,13 +540,14 @@ if (desktopWindowController?.enabled) {
         { id: 'new', label: t('sessions.newChat') },
         { id: 'settings', label: t('settings.title') },
       ]"
-      @select-menu="($event === 'new' ? sessions.select(null) : handleOpenSettings())"
+      @select-menu="($event === 'new' ? selectSession(null) : handleOpenSettings())"
       @toggle-panel="toggleInspector"
     />
 
+    <AgentActivityView v-if="activityProvider" :provider="activityProvider" @close="closeActivity" @provider="openActivity" />
     <RunPanel
       ref="runPanel"
-      v-if="!selected"
+      v-else-if="!selected"
       :view="runView"
       :events="runEvents"
       :empty-title="greeting"

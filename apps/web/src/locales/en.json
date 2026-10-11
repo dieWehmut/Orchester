@@ -600,5 +600,38 @@
     "voiceUnavailable": "Voice input is unavailable in this browser",
     "attachmentError": "Use text files under 64 KB and keep the combined draft within 8,000 characters.",
     "voiceError": "Voice input could not start. Check microphone access and try again."
+  },
+  "activity": {
+    "title": "Agent activity",
+    "view": "View current work",
+    "back": "Back to chat",
+    "stale": "Updates paused",
+    "live": "Auto refresh",
+    "error": "Could not refresh. Showing the last available content.",
+    "storageUnavailable": "Some local records could not be read. Available content is shown below.",
+    "emptyTitle": "No recent tasks",
+    "emptyDescription": "Start a task in {name} on this computer. Its saved conversation will appear here.",
+    "sessions": "Recent tasks",
+    "content": "Task content",
+    "untitled": "Untitled task",
+    "external": "External task",
+    "managed": "Orchester task",
+    "recentOnly": "Showing a limited recent excerpt of this conversation.",
+    "waitingContent": "Waiting for visible conversation content.",
+    "latest": "Latest output",
+    "note": "Read-only · Refreshes every 2 seconds. Continue or stop external tasks in their original app.",
+    "states": {
+      "active": "Active",
+      "completed": "Completed",
+      "interrupted": "Interrupted",
+      "unknown": "No recent activity"
+    },
+    "kinds": {
+      "user": "You",
+      "assistant": "Assistant",
+      "tool": "Tool call",
+      "result": "Tool result",
+      "status": "Status"
+    }
   }
 }

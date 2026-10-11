@@ -18,6 +18,7 @@ const props = withDefaults(
   defineProps<{
     agent: AgentRuntimeSummaryDto
     selected?: boolean
+    compact?: boolean
   }>(),
   { selected: false },
 )
@@ -38,7 +39,7 @@ defineEmits<{
 <template>
   <button
     class="agent-fleet-row"
-    :class="{ 'agent-fleet-row--selected': props.selected }"
+    :class="{ 'agent-fleet-row--selected': props.selected, 'agent-fleet-row--compact': props.compact }"
     type="button"
     :aria-pressed="props.selected"
     :aria-label="`${props.agent.display_name}, ${provider.label}, ${activityLabel}, ${metricSummary}`"
@@ -47,7 +48,7 @@ defineEmits<{
     <AgentProviderMark :agent="props.agent" />
     <span class="agent-fleet-row__identity">
       <strong>{{ props.agent.display_name }}</strong>
-      <span data-agent-provider-label>{{ provider.label }}</span>
+      <span v-if="!props.compact" data-agent-provider-label>{{ provider.label }}</span>
     </span>
     <span class="agent-fleet-row__state">
       <span class="agent-fleet-row__activity">
@@ -58,7 +59,7 @@ defineEmits<{
         />
         <span data-agent-activity>{{ activityLabel }}</span>
       </span>
-      <AgentMetrics :agent="props.agent" variant="compact" />
+      <AgentMetrics v-if="!props.compact" :agent="props.agent" variant="compact" />
     </span>
   </button>
 </template>
@@ -99,6 +100,10 @@ defineEmits<{
 .agent-fleet-row--selected {
   background: var(--color-bg-element);
 }
+
+.agent-fleet-row--compact { min-block-size: 40px; padding-block: var(--space-1); }
+.agent-fleet-row--compact :deep(.agent-icon) { border-color: transparent; background: transparent; }
+.agent-fleet-row--compact .agent-fleet-row__identity strong { font-weight: var(--weight-normal); }
 
 .agent-fleet-row__identity,
 .agent-fleet-row__state,

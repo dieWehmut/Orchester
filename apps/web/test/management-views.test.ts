@@ -59,7 +59,7 @@ describe('local management views', () => {
     const wrapper = mount(PluginsView, { global: { plugins: [stores] } }); wrappers.push(wrapper)
     await flushPromises()
     expect(wrapper.get('[data-plugin-name="claude"]').text()).toContain('Project managed')
-    expect(wrapper.get('[data-plugin-name="claude"]').find('button').exists()).toBe(false)
+    expect(wrapper.get('[data-plugin-name="claude"]').findAll('button').map(button => button.text())).toEqual(['View current work'])
     await wrapper.get('[data-plugin-name="codex"] button').trigger('click'); await flushPromises()
     expect(installed).toEqual([{ name: 'codex' }])
     expect(wrapper.get('[data-plugin-name="codex"]').text()).toContain('Installed')

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onUnmounted, ref, watch } from 'vue'
+import { inject, onUnmounted, ref, watch } from 'vue'
+import { routerKey } from 'vue-router'
 import { AppButton, AppDialog, Spinner } from '@orchester/design'
 import { Puzzle, Download, Trash2, RefreshCw, Check } from '@lucide/vue'
 import { createManagementApi, type Plugin } from '../api/management'
@@ -8,6 +9,7 @@ import { useI18n } from '../i18n'
 import '../styles/management.css'
 
 const { t } = useI18n()
+const router = inject(routerKey, null)
 const stores = useAppStores()
 const api = createManagementApi(stores.http)
 const plugins = ref<Plugin[]>([])
@@ -50,7 +52,7 @@ async function mutate(plugin: Plugin, remove = false): Promise<void> {
     <div v-if="error" class="management-error" role="alert">{{ t('plugins.error') }}<AppButton size="sm" variant="ghost" :disabled="!!busy" @click="load()">{{ t('management.retry') }}</AppButton></div>
     <div v-if="loading" class="management-empty"><Spinner :label="t('management.loading')" /></div>
     <section v-else class="plugin-grid" :aria-label="t('navigation.plugins')">
-      <article v-for="plugin in plugins" :key="plugin.name" class="management-card plugin-card" :data-plugin-name="plugin.name"><div class="plugin-card__icon"><Puzzle :size="24" /></div><h2>{{ plugin.display_name }}<span v-if="plugin.installed" class="management-badge" data-active="true"><Check :size="12" />{{ t('plugins.installed') }}</span></h2><p class="management-meta">{{ plugin.package_name }} · {{ plugin.version }}</p><p>{{ t('plugins.adapterDescription', { name: plugin.display_name }) }}</p><div class="management-card__bottom"><span class="management-meta">{{ t(plugin.origin === 'project' ? 'plugins.project' : plugin.installed ? 'plugins.managed' : 'plugins.available') }}</span><AppButton v-if="!plugin.installed" size="sm" :disabled="!!busy" @click="mutate(plugin)"><Spinner v-if="busy === plugin.name" :size="14" :label="t('plugins.installing')" /><Download v-else :size="14" />{{ t(busy === plugin.name ? 'plugins.installing' : 'plugins.install') }}</AppButton><AppButton v-else-if="plugin.removable" size="sm" variant="ghost" :disabled="!!busy" @click="removing = plugin"><Trash2 :size="14" />{{ t('plugins.remove') }}</AppButton><span v-else class="management-meta">{{ t('plugins.readOnly') }}</span></div></article>
+      <article v-for="plugin in plugins" :key="plugin.name" class="management-card plugin-card" :data-plugin-name="plugin.name"><div class="plugin-card__icon"><Puzzle :size="24" /></div><h2>{{ plugin.display_name }}<span v-if="plugin.installed" class="management-badge" data-active="true"><Check :size="12" />{{ t('plugins.installed') }}</span></h2><p class="management-meta">{{ plugin.package_name }} · {{ plugin.version }}</p><p>{{ t('plugins.adapterDescription', { name: plugin.display_name }) }}</p><div class="management-card__bottom"><span class="management-meta">{{ t(plugin.origin === 'project' ? 'plugins.project' : plugin.installed ? 'plugins.managed' : 'plugins.available') }}</span><AppButton v-if="!plugin.installed" size="sm" :disabled="!!busy" @click="mutate(plugin)"><Spinner v-if="busy === plugin.name" :size="14" :label="t('plugins.installing')" /><Download v-else :size="14" />{{ t(busy === plugin.name ? 'plugins.installing' : 'plugins.install') }}</AppButton><AppButton v-else-if="plugin.removable" size="sm" variant="ghost" :disabled="!!busy" @click="removing = plugin"><Trash2 :size="14" />{{ t('plugins.remove') }}</AppButton><span v-else class="management-meta">{{ t('plugins.readOnly') }}</span></div><AppButton size="sm" variant="ghost" data-plugin-activity @click="router?.push({ name: 'workspace', query: { agent: plugin.name } })">{{ t('activity.view') }}</AppButton></article>
     </section>
     <AppDialog :open="!!removing" :title="t('plugins.removeTitle')" :description="removing?.display_name ?? ''" :close-label="t('management.close')" @close="removing = null"><p>{{ t('plugins.removeDescription') }}</p><p v-if="error" class="management-error" role="alert">{{ t('plugins.error') }}</p><div class="management-form__actions"><AppButton variant="ghost" :disabled="!!busy" @click="removing = null">{{ t('management.cancel') }}</AppButton><AppButton variant="danger" :disabled="!!busy" @click="removing && mutate(removing, true)">{{ t(busy ? 'plugins.removing' : 'plugins.remove') }}</AppButton></div></AppDialog>
   </main>

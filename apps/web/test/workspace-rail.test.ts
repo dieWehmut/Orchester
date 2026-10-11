@@ -1,10 +1,9 @@
 import { AGENT_FLEET_FIXTURE, type BootstrapDto } from '@orchester/protokoll'
 import { mount } from '@vue/test-utils'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
 
 import { resetPinnedSessionsForTests } from '../src/composables/use-pinned-sessions'
-import { createAppRouter } from '../src/router'
 import { createAppStores } from '../src/stores/app'
 import WorkspaceView from '../src/views/WorkspaceView.vue'
 
@@ -30,11 +29,11 @@ describe('WorkspaceView Codex-style rail', () => {
       .findAll('[data-pane="sessions"] [data-rail-section]')
       .map((node) => node.attributes('data-rail-section'))
 
-    expect(sections).toEqual(['brand', 'primary', 'projects', 'sessions', 'fleet', 'account'])
+    expect(sections).toEqual(['primary', 'projects', 'fleet', 'sessions'])
     // The first list is the reader's own, as the reference's sidebar opens, and
     // the workspace is named on the product row rather than in a list of one.
     expect(wrapper.get('[data-rail-section="projects"] [data-pinned-empty]')).toBeTruthy()
-    expect(wrapper.get('[data-rail-section="brand"]').text()).toContain('Orchester')
+    expect(wrapper.find('[data-rail-section="brand"]').exists()).toBe(false)
     expect(wrapper.get('[data-rail-section="sessions"] [data-session-rail]')).toBeTruthy()
     expect(wrapper.get('[data-rail-section="fleet"] [data-agent-fleet]')).toBeTruthy()
   })
@@ -76,35 +75,6 @@ describe('WorkspaceView Codex-style rail', () => {
     expect(wrapper.get('[data-rail-section="projects"] [data-pinned-empty]')).toBeTruthy()
     expect(wrapper.find('[data-rail-section="sessions"] [data-session-id]').exists()).toBe(true)
     resetPinnedSessionsForTests()
-  })
-
-  it('shows the account footer identity and opens the settings route from its menu', async () => {
-    await import('../src/views/SettingsView.vue')
-    const router = createAppRouter('memory')
-    await router.push('/workspace')
-    await router.isReady()
-    const wrapper = mount(WorkspaceView, {
-      global: { plugins: [readyStores(), router] },
-    })
-
-    expect(wrapper.get('[data-rail-account]').text()).toContain('Orchester')
-    expect(wrapper.get('[data-rail-account]').text()).toContain('Local runtime')
-
-    // The reference's account row ends at the identity, and its settings row
-    // lives in the menu the row opens.
-    await wrapper.get('[data-rail-account-menu] [aria-haspopup="menu"]').trigger('click')
-    const settingsRow = wrapper
-      .findAll('[role="menuitem"]')
-      .find((row) => row.text().includes('Settings'))
-    expect(settingsRow).toBeDefined()
-
-    await settingsRow!.trigger('click')
-    await vi.waitFor(
-      () => {
-        expect(router.currentRoute.value.name).toBe('settings')
-      },
-      { timeout: 10_000 },
-    )
   })
 
   it('starts a new chat from the rail action', async () => {
