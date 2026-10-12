@@ -602,6 +602,9 @@
     "voiceError": "无法启动语音输入，请检查麦克风权限后重试。"
   },
   "activity": {
+    "work": "工作过程",
+    "working": "正在处理",
+    "workedFor": "用时 {duration}",
     "title": "智能体动态",
     "view": "查看当前内容",
     "back": "返回聊天",

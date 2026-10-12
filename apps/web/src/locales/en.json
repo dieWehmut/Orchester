@@ -602,6 +602,9 @@
     "voiceError": "Voice input could not start. Check microphone access and try again."
   },
   "activity": {
+    "work": "Work details",
+    "working": "Working",
+    "workedFor": "Worked for {duration}",
     "title": "Agent activity",
     "view": "View current work",
     "back": "Back to chat",

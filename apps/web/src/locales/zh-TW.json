@@ -602,6 +602,9 @@
     "voiceError": "無法啟動語音輸入，請檢查麥克風權限後重試。"
   },
   "activity": {
+    "work": "工作過程",
+    "working": "正在處理",
+    "workedFor": "用時 {duration}",
     "title": "智慧體動態",
     "view": "查看目前內容",
     "back": "返回聊天",
