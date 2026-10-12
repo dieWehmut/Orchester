@@ -53,11 +53,7 @@ pub(super) fn parse(
     let mut row = empty_detail(provider, source_id, updated_at);
     let mut current_turn: Option<String> = None;
     for (offset, record) in records {
-        let previous_ids = row
-            .entries
-            .iter()
-            .map(|entry| entry.id.clone())
-            .collect::<HashSet<_>>();
+        let entry_ids = record_entry_ids(provider, &row.summary.id, *offset, record);
         let timestamp = record["timestamp"]
             .as_str()
             .and_then(|value| OffsetDateTime::parse(value, &Rfc3339).ok())
@@ -82,7 +78,7 @@ pub(super) fn parse(
             }
         };
         for entry in &mut row.entries {
-            if !previous_ids.contains(&entry.id) {
+            if entry_ids.contains(&entry.id) {
                 entry.timestamp = timestamp;
                 entry.phase = (entry.kind == "assistant").then_some(phase).flatten();
                 entry.turn_id = current_turn.clone();
@@ -91,6 +87,35 @@ pub(super) fn parse(
     }
     finish(&mut row);
     row
+}
+
+fn record_entry_ids(
+    provider: &str,
+    session_id: &str,
+    offset: u64,
+    record: &Value,
+) -> HashSet<String> {
+    if provider == "codex" {
+        return if record["type"] == "response_item" {
+            HashSet::from([opaque_id(session_id, &format!("line-{offset}"))])
+        } else {
+            HashSet::new()
+        };
+    }
+    if !matches!(record["type"].as_str(), Some("user" | "assistant"))
+        || record["isMeta"].as_bool() == Some(true)
+    {
+        return HashSet::new();
+    }
+    let fallback = format!("line-{offset}");
+    let message_id = record["uuid"].as_str().unwrap_or(&fallback);
+    if let Some(parts) = record["message"]["content"].as_array() {
+        (0..parts.len())
+            .map(|index| opaque_id(session_id, &format!("{message_id}-{index}")))
+            .collect()
+    } else {
+        HashSet::from([opaque_id(session_id, message_id)])
+    }
 }
 
 fn codex_turn(

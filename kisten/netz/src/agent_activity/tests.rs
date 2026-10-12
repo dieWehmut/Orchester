@@ -101,6 +101,32 @@ fn truncated_or_invalid_turn_times_do_not_invent_elapsed_time() {
 }
 
 #[test]
+fn rewritten_claude_message_keeps_latest_timestamp_and_phase() {
+    let values = [
+        json!({"type":"assistant","uuid":"same","timestamp":"2026-10-12T01:00:01Z","message":{"content":[{"type":"text","text":"Checking"}],"stop_reason":"tool_use"}}),
+        json!({"type":"assistant","uuid":"same","timestamp":"2026-10-12T01:00:02Z","message":{"content":[{"type":"text","text":"Done"}],"stop_reason":"end_turn"}}),
+    ];
+    let records = values
+        .into_iter()
+        .enumerate()
+        .map(|(i, v)| (i as u64, v))
+        .collect::<Vec<_>>();
+    let row = transcript::parse("claude", "session", now_ms(), &records);
+    assert_eq!(row.entries.len(), 1);
+    assert_eq!(row.entries[0].text, "Done");
+    assert_eq!(row.entries[0].phase, Some("final"));
+    let expected = OffsetDateTime::parse(
+        "2026-10-12T01:00:02Z",
+        &time::format_description::well_known::Rfc3339,
+    )
+    .unwrap();
+    assert_eq!(
+        row.entries[0].timestamp,
+        Some((expected.unix_timestamp_nanos() / 1_000_000) as i64)
+    );
+}
+
+#[test]
 fn codex_reads_visible_messages_tools_and_lifecycle_without_private_payloads() {
     let records = vec![
         json!({"type":"session_meta","payload":{"cwd":"D:\\work\\demo","base_instructions":"DO_NOT_EXPOSE"}}),
