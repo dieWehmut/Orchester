@@ -1,5 +1,7 @@
-use super::{clip, empty_detail, finish, push_entry, ActivityDetail};
+use super::{clip, empty_detail, finish, opaque_id, push_entry, ActivityDetail, ActivityTurn};
 use serde_json::Value;
+use std::collections::HashSet;
+use time::{format_description::well_known::Rfc3339, OffsetDateTime};
 
 pub(super) fn text(value: &Value) -> String {
     if let Some(text) = value.as_str() {
@@ -49,15 +51,107 @@ pub(super) fn parse(
     records: &[(u64, Value)],
 ) -> ActivityDetail {
     let mut row = empty_detail(provider, source_id, updated_at);
+    let mut current_turn: Option<String> = None;
     for (offset, record) in records {
+        let previous_ids = row
+            .entries
+            .iter()
+            .map(|entry| entry.id.clone())
+            .collect::<HashSet<_>>();
+        let timestamp = record["timestamp"]
+            .as_str()
+            .and_then(|value| OffsetDateTime::parse(value, &Rfc3339).ok())
+            .map(|value| (value.unix_timestamp_nanos() / 1_000_000) as i64);
         if provider == "codex" {
+            codex_turn(&mut row, &mut current_turn, *offset, record, timestamp);
             codex(&mut row, *offset, record);
         } else {
             claude(&mut row, *offset, record);
         }
+        let phase = if provider == "codex" {
+            match record["payload"]["phase"].as_str() {
+                Some("commentary") => Some("commentary"),
+                Some("final" | "final_answer") => Some("final"),
+                _ => None,
+            }
+        } else {
+            match record["message"]["stop_reason"].as_str() {
+                Some("end_turn" | "stop_sequence") => Some("final"),
+                Some("tool_use") => Some("commentary"),
+                _ => None,
+            }
+        };
+        for entry in &mut row.entries {
+            if !previous_ids.contains(&entry.id) {
+                entry.timestamp = timestamp;
+                entry.phase = (entry.kind == "assistant").then_some(phase).flatten();
+                entry.turn_id = current_turn.clone();
+            }
+        }
     }
     finish(&mut row);
     row
+}
+
+fn codex_turn(
+    row: &mut ActivityDetail,
+    current: &mut Option<String>,
+    offset: u64,
+    record: &Value,
+    timestamp: Option<i64>,
+) {
+    let payload = &record["payload"];
+    let event = payload["type"].as_str();
+    let started =
+        record["type"] == "event_msg" && matches!(event, Some("task_started" | "turn_started"));
+    let completed = record["type"] == "event_msg"
+        && matches!(
+            event,
+            Some(
+                "task_complete"
+                    | "task_completed"
+                    | "turn_complete"
+                    | "turn_aborted"
+                    | "task_interrupted"
+            )
+        );
+    if started || record["type"] == "turn_context" {
+        let fallback = format!("turn-{offset}");
+        let source = payload["turn_id"]
+            .as_str()
+            .or(if started { Some(&fallback) } else { None });
+        if let Some(source) = source {
+            let id = opaque_id(&row.summary.id, source);
+            if let Some(turn) = row.turns.iter_mut().find(|turn| turn.id == id) {
+                if started {
+                    turn.started_at = timestamp;
+                }
+            } else {
+                row.turns.push(ActivityTurn {
+                    id: id.clone(),
+                    started_at: if started { timestamp } else { None },
+                    completed_at: None,
+                });
+            }
+            *current = Some(id);
+        }
+    }
+    if completed {
+        let target = payload["turn_id"]
+            .as_str()
+            .map(|id| opaque_id(&row.summary.id, id))
+            .or_else(|| current.clone());
+        if let Some(turn) = row
+            .turns
+            .iter_mut()
+            .find(|turn| Some(&turn.id) == target.as_ref())
+        {
+            // Invalid or reversed source times must not produce a fabricated duration.
+            turn.completed_at =
+                timestamp.filter(|end| turn.started_at.map_or(true, |start| *end >= start));
+        }
+        *current = None;
+    }
 }
 
 fn title(row: &mut ActivityDetail, value: &str) {
@@ -104,7 +198,7 @@ fn codex(row: &mut ActivityDetail, offset: u64, record: &Value) {
                     }
                     title(row, &content);
                     row.summary.state = "active";
-                } else if payload["phase"].as_str() == Some("final_answer") {
+                } else if matches!(payload["phase"].as_str(), Some("final" | "final_answer")) {
                     row.summary.state = "completed";
                 }
                 push_entry(row, &id, kind, &content, None);

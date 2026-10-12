@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Orchester local agent activity
-  version: 1.0.0
+  version: 1.1.0
   description: Read-only local provider transcripts and managed runtime events. Requires the existing local session. No file path is accepted. See design/12-agent-live-content.md for limits and lifecycle semantics.
 servers:
   - url: http://127.0.0.1:{port}/api/v1
@@ -62,6 +62,17 @@ paths:
                     required: [schema_version, entries]
                     properties:
                       schema_version: {const: 1}
+                      turns:
+                        type: array
+                        maxItems: 100
+                        description: Optional source turn timing. Only turns referenced by retained entries are included. Unknown times are omitted.
+                        items:
+                          type: object
+                          required: [id]
+                          properties:
+                            id: {type: string}
+                            started_at: {type: integer, description: Unix milliseconds}
+                            completed_at: {type: integer, description: Unix milliseconds}
                       entries:
                         type: array
                         maxItems: 100
@@ -73,6 +84,9 @@ paths:
                             kind: {enum: [user, assistant, tool, result, status]}
                             text: {type: string, maxLength: 8000}
                             tool: {type: [string, 'null'], maxLength: 120}
+                            timestamp: {type: integer, description: Source message time in Unix milliseconds; omitted when unknown}
+                            phase: {enum: [commentary, final], description: Explicit source message phase; omitted when unknown}
+                            turn_id: {type: string, description: Opaque source turn identity when available}
         '401': {description: Missing or invalid local session}
         '404': {description: Unknown, malformed or no longer discoverable task ID}
         '503': {description: Local reader unavailable}

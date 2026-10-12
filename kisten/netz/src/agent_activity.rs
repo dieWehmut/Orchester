@@ -68,6 +68,21 @@ pub struct ActivityEntry {
     pub kind: &'static str,
     pub text: String,
     pub tool: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub timestamp: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub phase: Option<&'static str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub turn_id: Option<String>,
+}
+
+#[derive(Clone, Serialize)]
+pub struct ActivityTurn {
+    pub id: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub started_at: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub completed_at: Option<i64>,
 }
 
 #[derive(Clone, Serialize)]
@@ -89,6 +104,8 @@ pub struct ActivityDetail {
     #[serde(flatten)]
     pub summary: ActivitySummary,
     pub entries: Vec<ActivityEntry>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub turns: Vec<ActivityTurn>,
 }
 
 #[derive(Clone, Serialize)]
@@ -320,6 +337,7 @@ fn empty_detail(provider: &str, source_id: &str, updated_at: i64) -> ActivityDet
             truncated: false,
         },
         entries: Vec::new(),
+        turns: Vec::new(),
     }
 }
 
@@ -342,6 +360,9 @@ fn push_entry(
         kind,
         text,
         tool: tool.map(|value| clip(value, 120)),
+        timestamp: None,
+        phase: None,
+        turn_id: None,
     };
     if let Some(old) = row.entries.iter_mut().find(|old| old.id == entry.id) {
         *old = entry;
@@ -355,6 +376,11 @@ fn push_entry(
 }
 
 fn finish(row: &mut ActivityDetail) {
+    row.turns.retain(|turn| {
+        row.entries
+            .iter()
+            .any(|entry| entry.turn_id.as_deref() == Some(&turn.id))
+    });
     if row.summary.title.is_empty() {
         row.summary.title = row
             .entries

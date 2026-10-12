@@ -58,7 +58,7 @@ fn read_database(path: &Path) -> rusqlite::Result<Vec<ActivityDetail>> {
                 };
             }
         }
-        let mut query = db.prepare("SELECT p.id, substr(p.data, 1, 524289), substr(m.data, 1, 65537), p.time_updated FROM part p JOIN message m ON p.message_id = m.id WHERE p.session_id = ?1 ORDER BY p.time_created DESC, p.id DESC LIMIT ?2")?;
+        let mut query = db.prepare("SELECT p.id, substr(p.data, 1, 524289), substr(m.data, 1, 65537), p.time_updated, p.time_created FROM part p JOIN message m ON p.message_id = m.id WHERE p.session_id = ?1 ORDER BY p.time_created DESC, p.id DESC LIMIT ?2")?;
         let parts = query
             .query_map(rusqlite::params![id, (ENTRY_LIMIT + 1) as i64], |r| {
                 Ok((
@@ -66,11 +66,12 @@ fn read_database(path: &Path) -> rusqlite::Result<Vec<ActivityDetail>> {
                     r.get::<_, String>(1)?,
                     r.get::<_, String>(2)?,
                     r.get::<_, i64>(3)?,
+                    r.get::<_, i64>(4)?,
                 ))
             })?
             .collect::<rusqlite::Result<Vec<_>>>()?;
         row.summary.truncated = parts.len() > ENTRY_LIMIT;
-        for (part_id, part, message, changed) in parts.into_iter().rev() {
+        for (part_id, part, message, changed, created) in parts.into_iter().rev() {
             row.summary.updated_at = row.summary.updated_at.max(changed);
             // Skip oversized individual records before parsing them into a tree.
             if part.len() > 512 * 1024 || message.len() > 64 * 1024 {
@@ -119,6 +120,19 @@ fn read_database(path: &Path) -> rusqlite::Result<Vec<ActivityDetail>> {
                     );
                 }
                 _ => (),
+            }
+            for id in [&part_id, &format!("{part_id}-result")] {
+                let id = super::opaque_id(&row.summary.id, id);
+                if let Some(entry) = row.entries.iter_mut().find(|entry| entry.id == id) {
+                    entry.timestamp = Some(created);
+                    if entry.kind == "assistant" {
+                        entry.phase = match message["finish"].as_str() {
+                            Some("stop" | "end_turn" | "length") => Some("final"),
+                            Some("tool-calls" | "tool_use") => Some("commentary"),
+                            _ => None,
+                        };
+                    }
+                }
             }
         }
         finish(&mut row);

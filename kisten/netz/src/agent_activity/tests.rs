@@ -50,6 +50,57 @@ fn codex_message(role: &str, text: &str) -> serde_json::Value {
 }
 
 #[test]
+fn codex_preserves_source_turn_timing_and_visible_message_phases() {
+    let values = [
+        json!({"type":"event_msg","timestamp":"2026-10-12T01:00:00Z","payload":{"type":"task_started","turn_id":"source-turn"}}),
+        json!({"type":"turn_context","payload":{"turn_id":"source-turn"}}),
+        codex_message("user", "Continue"),
+        json!({"type":"response_item","timestamp":"2026-10-12T01:00:01Z","payload":{"type":"message","role":"assistant","phase":"commentary","content":[{"type":"output_text","text":"Checking"}]}}),
+        json!({"type":"response_item","timestamp":"2026-10-12T01:21:58Z","payload":{"type":"message","role":"assistant","phase":"final","content":[{"type":"output_text","text":"**Done**"}]}}),
+        json!({"type":"event_msg","timestamp":"2026-10-12T01:21:59Z","payload":{"type":"task_complete","turn_id":"source-turn"}}),
+        codex_message("user", "Next prompt without lifecycle"),
+    ];
+    let records = values
+        .into_iter()
+        .enumerate()
+        .map(|(i, v)| (i as u64, v))
+        .collect::<Vec<_>>();
+    let row = transcript::parse("codex", "session", now_ms(), &records);
+    assert_eq!(row.turns.len(), 1);
+    let turn = &row.turns[0];
+    assert_eq!(
+        turn.completed_at.unwrap() - turn.started_at.unwrap(),
+        1_319_000
+    );
+    assert_eq!(row.entries[1].phase, Some("commentary"));
+    assert_eq!(row.entries[2].phase, Some("final"));
+    assert_eq!(row.entries[0].turn_id.as_ref(), Some(&turn.id));
+    assert!(row.entries[3].turn_id.is_none());
+    assert!(row.entries[1].timestamp.is_some());
+    assert!(!serde_json::to_string(&row).unwrap().contains("source-turn"));
+}
+
+#[test]
+fn truncated_or_invalid_turn_times_do_not_invent_elapsed_time() {
+    let values = [
+        json!({"type":"turn_context","payload":{"turn_id":"tail-turn"}}),
+        codex_message("assistant", "Only the tail is available"),
+        json!({"type":"event_msg","timestamp":"not a date","payload":{"type":"task_complete","turn_id":"tail-turn"}}),
+    ];
+    let records = values
+        .into_iter()
+        .enumerate()
+        .map(|(i, v)| (i as u64, v))
+        .collect::<Vec<_>>();
+    let row = transcript::parse("codex", "session", now_ms(), &records);
+    assert_eq!(row.turns.len(), 1);
+    assert!(row.turns[0].started_at.is_none());
+    assert!(row.turns[0].completed_at.is_none());
+    let json = serde_json::to_value(row).unwrap();
+    assert!(json["entries"][0].get("timestamp").is_none());
+}
+
+#[test]
 fn codex_reads_visible_messages_tools_and_lifecycle_without_private_payloads() {
     let records = vec![
         json!({"type":"session_meta","payload":{"cwd":"D:\\work\\demo","base_instructions":"DO_NOT_EXPOSE"}}),
@@ -97,6 +148,7 @@ fn claude_keeps_tool_results_separate_from_prompts_and_skips_thinking() {
     let row = transcript::parse("claude", "session", now_ms(), &records);
     assert_eq!(row.summary.state, "completed");
     assert_eq!(row.summary.title, "Build a search view");
+    assert_eq!(row.entries.last().unwrap().phase, Some("final"));
     assert_eq!(
         row.entries.iter().map(|e| e.kind).collect::<Vec<_>>(),
         vec!["user", "tool", "result", "assistant"]
@@ -186,6 +238,8 @@ fn opencode_reads_sqlite_without_modifying_source() {
     assert_eq!(status, "available");
     assert_eq!(rows[0].summary.state, "completed");
     assert_eq!(rows[0].entries.len(), 3);
+    assert_eq!(rows[0].entries[0].timestamp, Some(0));
+    assert_eq!(rows[0].entries[0].phase, Some("final"));
     assert!(!serde_json::to_string(&rows).unwrap().contains("PRIVATE"));
     assert_eq!(fs::read(&path).unwrap(), before);
 }
