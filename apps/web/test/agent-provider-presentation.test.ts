@@ -33,7 +33,7 @@ describe('agent provider presentation', () => {
     })
   })
 
-  it('keeps a generic icon when a known provider reports an unknown icon key', () => {
+  it('uses the official provider identity even when its runtime reports an unknown icon key', () => {
     const customIcon: AgentRuntimeSummaryDto = {
       ...AGENT_FLEET_FIXTURE.agents[0]!,
       icon_key: 'custom-provider',
@@ -42,7 +42,7 @@ describe('agent provider presentation', () => {
     expect(agentProviderPresentation(customIcon)).toEqual({
       key: 'codex',
       label: 'OpenAI',
-      iconKey: 'generic',
+      iconKey: 'codex',
       tone: 'success',
     })
   })

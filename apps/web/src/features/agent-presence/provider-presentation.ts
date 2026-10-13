@@ -33,19 +33,12 @@ function humanizeProvider(provider: string): string {
   return text.length === 0 ? 'Custom provider' : text.charAt(0).toUpperCase() + text.slice(1)
 }
 
-function iconKeyForAgent(agent: AgentRuntimeSummaryDto): AgentProviderKey {
-  const iconKey = agent.icon_key.trim().toLowerCase()
-  return iconKey === 'codex' || iconKey === 'claude' || iconKey === 'deepseek' || iconKey === 'opencode'
-    ? iconKey
-    : 'generic'
-}
-
 export function agentProviderPresentation(
   agent: AgentRuntimeSummaryDto,
 ): AgentProviderPresentation {
   const key = knownProvider(agent)
   return key
-    ? { ...PROVIDERS[key], iconKey: iconKeyForAgent(agent) }
+    ? { ...PROVIDERS[key] }
     : {
         key: 'generic',
         label: humanizeProvider(agent.provider),

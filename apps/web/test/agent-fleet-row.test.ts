@@ -8,13 +8,13 @@ import { describe, expect, it } from 'vitest'
 import { AgentFleetRow } from '../src/features/agent-presence'
 
 describe('AgentFleetRow', () => {
-  it('renders a fallback icon for an unknown provider key and emits the agent id', async () => {
+  it('renders the official mark for a known provider with an unknown icon key and emits the agent id', async () => {
     const source = AGENT_FLEET_FIXTURE.agents[0]
     if (!source) throw new Error('fixture must contain Codex')
     const agent: AgentRuntimeSummaryDto = { ...source, icon_key: 'custom-provider' }
     const wrapper = mount(AgentFleetRow, { props: { agent } })
 
-    expect(wrapper.get('[data-agent-icon="generic"]')).toBeTruthy()
+    expect(wrapper.get('[data-agent-icon="codex"] img').attributes('src')).toBe('/agents/codex.png')
     expect(wrapper.get('[data-agent-provider="codex"]')).toBeTruthy()
     expect(wrapper.get('[data-agent-provider-label]').text()).toBe('OpenAI')
     await wrapper.get('button').trigger('click')
