@@ -82,6 +82,11 @@ fn api_router() -> Router<ServerContext> {
         .route("/agents/activity", get(crate::agent_activity::list))
         .route("/agents/activity/{id}", get(crate::agent_activity::detail))
         .route("/models", get(model_catalog_handler))
+        .route("/composer/context", get(crate::composer::get).put(crate::composer::put).layer(DefaultBodyLimit::max(32 * 1024)))
+        .route("/mcp/servers", get(crate::mcp::list).post(crate::mcp::create).layer(DefaultBodyLimit::max(64 * 1024)))
+        .route("/mcp/servers/{id}", put(crate::mcp::update).delete(crate::mcp::remove).layer(DefaultBodyLimit::max(64 * 1024)))
+        .route("/mcp/servers/{id}/catalog", post(crate::mcp::catalog))
+        .route("/mcp/servers/{id}/invoke", post(crate::mcp::invoke).layer(DefaultBodyLimit::max(64 * 1024)))
         .route(
             "/plugins",
             get(crate::plugins::list)

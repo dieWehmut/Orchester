@@ -12,6 +12,7 @@ default = []
 static-files = ["tower-http/fs"]
 
 [dependencies]
+reqwest = { workspace = true, features = ["json"] }
 rusqlite = { workspace = true }
 axum = { workspace = true, features = ["query"] }
 cookie = "0.18.2"

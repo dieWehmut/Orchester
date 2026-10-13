@@ -1,0 +1,162 @@
+openapi: 3.1.0
+info:
+  title: Orchester composer context and MCP
+  version: 1.0.0
+  description: |
+    Authenticated local API. All mutations require the existing session and CSRF token.
+    Context and server definitions are private, durable and scoped to the workspace.
+    Active goals accompany subsequent interactive runs until paused or completed.
+    Plan mode permits reading and planning, and denies changes and command execution.
+    MCP operations are explicitly invoked by the user; results can be attached to a prompt.
+    MCP 2025-06-18 / 2025-11-25 use initialize + initialized, stdio or Streamable HTTP.
+    No automatic retry of tool calls; a timeout can have an unknown remote outcome.
+servers:
+  - url: /api/v1
+security:
+  - session: []
+paths:
+  /composer/context:
+    get:
+      operationId: getComposerContext
+      responses:
+        '200':
+          description: Current context, revision zero when absent
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Context' }
+    put:
+      operationId: saveComposerContext
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Context' }
+      responses:
+        '200':
+          description: Saved context with incremented revision
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Context' }
+        '409': { description: Stale revision; reload before editing }
+        '422': { description: Invalid goal or revision }
+  /mcp/servers:
+    get:
+      operationId: listMcpServers
+      responses:
+        '200':
+          description: Saved servers, with secret references only
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Server' }
+    post:
+      operationId: createMcpServer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ServerInput' }
+      responses:
+        '200':
+          description: Saved server, not yet connected
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Server' }
+        '422': { description: Invalid definition or maximum of 32 servers reached }
+  /mcp/servers/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+    put:
+      operationId: updateMcpServer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ServerInput' }
+      responses:
+        '200': { description: Updated server }
+        '404': { description: Unknown server in this workspace }
+    delete:
+      operationId: deleteMcpServer
+      responses:
+        '200': { description: Deleted server, object with deleted true }
+        '404': { description: Unknown server in this workspace }
+  /mcp/servers/{id}/catalog:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+    post:
+      operationId: connectMcpServer
+      responses:
+        '200':
+          description: Negotiated capabilities and complete bounded tools, resources, prompts lists
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [serverInfo, tools, resources, prompts]
+                properties:
+                  serverInfo: { type: object }
+                  tools: { type: array, items: { type: object } }
+                  resources: { type: array, items: { type: object } }
+                  prompts: { type: array, items: { type: object } }
+        '503': { description: Connection, negotiation, timeout or size failure; no secrets echoed }
+  /mcp/servers/{id}/invoke:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+    post:
+      operationId: invokeMcpOperation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [method, params]
+              properties:
+                method: { enum: [tools/call, resources/read, prompts/get] }
+                params: { type: object }
+      responses:
+        '200': { description: Raw MCP result including isError when a tool reports failure }
+        '422': { description: Invalid operation or arguments }
+        '503': { description: Invocation failed; execution outcome may be unknown; never retry automatically }
+components:
+  securitySchemes:
+    session: { type: apiKey, in: cookie, name: orchester_session }
+  schemas:
+    Context:
+      type: object
+      additionalProperties: false
+      required: [revision, goal, plan_mode]
+      properties:
+        revision: { type: integer, minimum: 0 }
+        plan_mode: { type: boolean }
+        goal:
+          oneOf:
+            - type: 'null'
+            - type: object
+              additionalProperties: false
+              required: [text, status]
+              properties:
+                text: { type: string, minLength: 1, maxLength: 4000 }
+                status: { enum: [active, paused, completed] }
+    ServerInput:
+      type: object
+      additionalProperties: false
+      required: [name, transport]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 80 }
+        transport: { enum: [stdio, http] }
+        url: { type: string, maxLength: 2048, description: HTTPS, or HTTP on loopback only; no embedded credentials or fragments }
+        token_env: { type: string, description: Environment variable name for a bearer token, never a literal token }
+        command: { type: string, maxLength: 2048, description: Direct executable, no shell or batch wrapper }
+        args: { type: array, maxItems: 64, items: { type: string, maxLength: 4096 } }
+        env: { type: object, maxProperties: 32, additionalProperties: { type: string }, description: Child variable names mapped to host environment variable names }
+    Server:
+      allOf:
+        - $ref: '#/components/schemas/ServerInput'
+        - type: object
+          required: [id]
+          properties:
+            id: { type: string }

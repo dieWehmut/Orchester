@@ -9,6 +9,8 @@ mod agent_status;
 mod api_error;
 mod bootstrap;
 mod config;
+mod composer;
+mod mcp;
 #[cfg(feature = "static-files")]
 mod embedded;
 mod fragment;

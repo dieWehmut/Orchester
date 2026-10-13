@@ -58,6 +58,8 @@ pub(crate) async fn start_run_handler(
     // there must be no await before the detached task owns execution, otherwise
     // dropping an HTTP request could leave a permanently unstarted keyed run.
     let selection = context.model_selection().read().await;
+    let composer = crate::composer::storage(&context, |s| s.context()).await
+        .map_err(|code| api_error_response(code, request_id))?;
     let creation = context
         .runs()
         .create_or_reuse(
@@ -83,6 +85,8 @@ pub(crate) async fn start_run_handler(
         ));
     }
 
+    let mut request = request;
+    if request.resume.is_none() { request.prompt = composer.prompt(&request.prompt); }
     tokio::spawn(execute_run(paths, selection, run, request));
 
     Ok((
