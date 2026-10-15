@@ -12,4 +12,7 @@ import { createAppStores } from './stores/app'
 const app = createApp(App)
 const stores = createAppStores()
 
-app.use(appI18n).use(appRouter).use(stores).mount('#app')
+app.use(appI18n).use(appRouter).use(stores)
+// Finish the initial navigation before bootstrap removes its one-time token.
+// Otherwise the router can put the original fragment back after exchange.
+void appRouter.isReady().then(() => app.mount('#app'))
