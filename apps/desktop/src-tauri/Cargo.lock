@@ -2537,6 +2537,7 @@ dependencies = [
  "orchester-protokoll",
  "orchester-vertrag",
  "orchester-verzeichnis",
+ "reqwest 0.12.28",
  "rusqlite",
  "secrecy",
  "serde",
