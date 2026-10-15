@@ -120,3 +120,5 @@ export function useAppStores(): AppStores {
   if (!stores) throw new Error('Orchester app stores are not installed')
   return stores
 }
+
+export function useOptionalAppStores(): AppStores | null { return inject(APP_STORES_KEY, null) }

@@ -2,7 +2,7 @@
 import { AppButton, AppTextarea, Spinner } from '@orchester/design'
 import type { RunLifecycle } from '../../stores/run'
 import type { ModelCatalogDto, ModelSelectionRequestDto } from '@orchester/protokoll'
-import { ArrowUp, Square, Plus, Mic, MicOff } from '@lucide/vue'
+import { ArrowUp, Square, X, FileText, Mic, MicOff } from '@lucide/vue'
 import { computed, ref, watch } from 'vue'
 
 import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
@@ -13,6 +13,8 @@ import ModelContextControl from './ModelContextControl.vue'
 import CommandPalette, { type CommandEntry } from './CommandPalette.vue'
 import { COMPOSER_COMMANDS, type ComposerCommand } from './composer-commands'
 import { useI18n } from '../../i18n'
+import ComposerTools from './ComposerTools.vue'
+import type { ComposerAttachment } from './sketch'
 
 const props = withDefaults(
   defineProps<{
@@ -81,10 +83,12 @@ const emit = defineEmits<{
  * has to keep the settings it was started with.
  */
 const remembered = ref<RunSettings | null>(null)
+const selectedApproval = ref<ApprovalPreset | null>(null)
 
 watch(
   () => props.settingsKey,
   (key) => {
+    selectedApproval.value = null
     remembered.value = key ? readRunSettings(key) : null
   },
   { immediate: true },
@@ -95,9 +99,11 @@ watch(
  * caller is showing the settings of the run that is actually open, and a
  * remembered value is only a starting point for the next one.
  */
-const approvalPreset = computed(() => props.approvalPreset ?? remembered.value?.approvalPreset ?? 'ask')
+const approvalPreset = computed(() => selectedApproval.value ?? props.approvalPreset ?? remembered.value?.approvalPreset ?? 'ask')
+watch(() => props.approvalPreset, () => { selectedApproval.value = null })
 
 function updateApprovalPreset(value: ApprovalPreset): void {
+  selectedApproval.value = value
   if (remembered.value) {
     remembered.value = { ...remembered.value, approvalPreset: value }
     if (props.settingsKey) writeRunSettings(props.settingsKey, remembered.value)
@@ -107,6 +113,9 @@ function updateApprovalPreset(value: ApprovalPreset): void {
 
 const draft = ref(props.modelValue)
 const fileInput = ref<HTMLInputElement | null>(null)
+const folderInput = ref<HTMLInputElement | null>(null)
+const attachments = ref<ComposerAttachment[]>([])
+const toolsBusy = ref(false)
 const attachmentError = ref(false)
 const readingFiles = ref(false)
 const voice = useVoiceInput(text => update(`${draft.value}${draft.value ? ' ' : ''}${text}`.slice(0, props.maxLength)), () => locale.value)
@@ -116,19 +125,30 @@ async function attachFiles(files: File[]): Promise<void> {
   attachmentError.value = false
   readingFiles.value = true
   try {
-    let next = draft.value
+    const next: ComposerAttachment[] = []
+    if (files.length + attachments.value.length > 20) throw new Error('too many attachments')
     for (const file of files) {
-      if (file.size > 64 * 1024 || !/\.(txt|md|markdown|json|csv|log|yaml|yml|toml|js|ts|tsx|jsx|py|rs|css|html|vue)$/i.test(file.name)) throw new Error('unsupported attachment')
+      if (file.size > 64 * 1024 || !/\.(txt|md|markdown|json|csv|log|yaml|yml|toml|js|ts|tsx|jsx|py|rs|css|html|vue|svg)$/i.test(file.name)) throw new Error('unsupported attachment')
       const text = await file.text()
       if (text.includes('\0')) throw new Error('binary attachment')
-      next += `\n\n${file.name}\n\`\`\`\n${text}\n\`\`\``
-      if (next.length > props.maxLength) throw new Error('attachment too large')
+      const name = file.webkitRelativePath || file.name
+      next.push({ id: crypto.randomUUID(), name, content: `${name}\n\`\`\`\n${text}\n\`\`\`` })
     }
-    update(next.trimStart())
+    if ([...attachments.value, ...next].reduce((n, a) => n + a.content.length + 2, draft.value.length) > 28000) throw new Error('attachment too large')
+    attachments.value.push(...next)
   } catch { attachmentError.value = true }
-  finally { readingFiles.value = false; if (fileInput.value) fileInput.value.value = '' }
+  finally { readingFiles.value = false; if (fileInput.value) fileInput.value.value = ''; if (folderInput.value) folderInput.value.value = '' }
 }
 function chooseFiles(event: Event): void { void attachFiles(Array.from((event.target as HTMLInputElement).files ?? [])) }
+function attach(value: ComposerAttachment): boolean {
+  if (props.disabled || isBusy.value) return false
+  if (attachments.value.length >= 20 || promptWithAttachments.value.length + value.content.length + 2 > 28000) { attachmentError.value = true; return false }
+  attachmentError.value = false; attachments.value.push(value); return true
+}
+const promptWithAttachments = computed(() => [draft.value, ...attachments.value.map(a => a.content)].filter(Boolean).join('\n\n'))
+watch(() => props.lifecycle, (value, previous) => {
+  if (previous === 'submitting' && value === 'running') attachments.value = []
+})
 const dragActive = ref(false)
 /**
  * The palette reads descriptions as text, so the keys become words here,
@@ -233,10 +253,11 @@ const rowCount = computed(() => {
 
 const canSubmit = computed(
   () =>
-    draft.value.trim().length > 0 &&
+    (draft.value.trim().length > 0 || attachments.value.length > 0) &&
     draft.value.length <= props.maxLength &&
+    promptWithAttachments.value.length <= 28000 &&
     !isBusy.value &&
-    !props.disabled && !readingFiles.value,
+    !props.disabled && !readingFiles.value && !toolsBusy.value,
 )
 
 /**
@@ -260,7 +281,7 @@ function update(value: string): void {
 
 function submit(): void {
   if (!canSubmit.value) return
-  emit('submit', draft.value)
+  emit('submit', promptWithAttachments.value)
 }
 
 function handleKeydown(event: KeyboardEvent): void {
@@ -311,6 +332,13 @@ defineExpose({ focus })
       @close="commandsClosed = true"
     />
     <div class="run-composer__field" data-composer-field>
+      <div v-if="attachments.length" class="run-composer__attachments" data-composer-attachments>
+        <div v-for="attachment in attachments" :key="attachment.id" class="run-composer__attachment" :data-has-preview="!!attachment.preview">
+          <img v-if="attachment.preview" :src="attachment.preview" :alt="attachment.name" />
+          <FileText v-else :size="18" aria-hidden="true" /><span :title="attachment.name">{{ attachment.name }}</span>
+          <button type="button" :aria-label="`${t('add.remove')} ${attachment.name}`" :disabled="isBusy" @click="attachments = attachments.filter(a => a.id !== attachment.id)"><X :size="14" /></button>
+        </div>
+      </div>
       <!-- The reference names the field with its placeholder and draws no
            heading over it; the accessible name is where that label went. -->
       <AppTextarea
@@ -330,11 +358,10 @@ defineExpose({ focus })
         </span>
         <div class="run-composer__leading">
           <input ref="fileInput" class="run-composer__file-input" type="file" multiple :aria-label="t('composer.attach')"
-            accept=".txt,.md,.markdown,.json,.csv,.log,.yaml,.yml,.toml,.js,.ts,.tsx,.jsx,.py,.rs,.css,.html,.vue" @change="chooseFiles" />
-          <button type="button" class="run-composer__icon" data-composer-attach
-            :aria-label="t('composer.attach')" :title="t('composer.attach')" :disabled="props.disabled || isBusy || readingFiles" @click="fileInput?.click()">
-            <Plus :size="22" aria-hidden="true" />
-          </button>
+            accept=".txt,.md,.markdown,.json,.csv,.log,.yaml,.yml,.toml,.js,.ts,.tsx,.jsx,.py,.rs,.css,.html,.vue,.svg" @change="chooseFiles" />
+          <input ref="folderInput" class="run-composer__file-input" type="file" multiple webkitdirectory :aria-label="t('add.chooseFolder')" @change="chooseFiles" />
+          <ComposerTools :anchor="form" :workspace-name="props.workspaceName" :disabled="props.disabled || isBusy || readingFiles" :attach-to-composer="attach"
+            @files="folder => folder ? folderInput?.click() : fileInput?.click()" @busy="toolsBusy = $event" />
           <ApprovalPresetControl :model-value="approvalPreset" @update:model-value="updateApprovalPreset" />
         </div>
         <div class="run-composer__actions">
@@ -394,6 +421,15 @@ defineExpose({ focus })
   max-inline-size: var(--composer-max-width, 54rem);
   margin-inline: auto;
 }
+.run-composer__attachments { display: flex; flex-wrap: wrap; gap: 8px; padding: 3px 4px 8px; }
+.run-composer__attachment { display: flex; gap: 8px; align-items: center; max-width: 230px; padding: 8px 10px; border: 1px solid var(--color-border-base); border-radius: 12px; color: var(--color-text-secondary); background: var(--color-bg-element); font-size: 12px; position: relative; }
+.run-composer__attachment > span { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.run-composer__attachment > svg { flex-shrink: 0; }
+.run-composer__attachment button { display: grid; place-items: center; flex-shrink: 0; padding: 3px; border: 0; border-radius: 50%; background: var(--color-bg-element); color: var(--color-text-primary); cursor: pointer; }
+.run-composer__attachment[data-has-preview='true'] { display: block; padding: 0; width: 160px; overflow: hidden; }
+.run-composer__attachment img { display: block; width: 160px; height: 96px; object-fit: contain; background: white; }
+.run-composer__attachment[data-has-preview='true'] > span { display: block; padding: 6px 10px; }
+.run-composer__attachment[data-has-preview='true'] button { position: absolute; top: 5px; right: 5px; background: #303030; color: white; }
 
 /* The field is the box, as the reference draws it: one rounded surface that
    holds the prompt and the controls under it, rather than a card with a second

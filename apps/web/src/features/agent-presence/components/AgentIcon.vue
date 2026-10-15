@@ -37,6 +37,6 @@ const icon = computed(() => icons[props.iconKey])
 }
 .agent-icon img { inline-size: 21px; block-size: 21px; object-fit: contain; }
 .agent-icon .agent-icon__light { display: none; }
-:global([data-theme='light']) .agent-icon__dark { display: none; }
-:global([data-theme='light']) .agent-icon__light { display: block; }
+:global([data-theme='light'] .agent-icon .agent-icon__dark) { display: none; }
+:global([data-theme='light'] .agent-icon .agent-icon__light) { display: block; }
 </style>

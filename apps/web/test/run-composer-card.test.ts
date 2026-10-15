@@ -50,7 +50,7 @@ describe('RunComposer Codex-style card', () => {
     expect(preset.attributes('data-approval-preset-state')).toBe('ask')
 
     await preset.get('[aria-haspopup="menu"]').trigger('click')
-    const governed = wrapper.findAll('[role="menuitem"]').find((item) => item.text() === 'Governed')
+    const governed = wrapper.findAll('[role="menuitemradio"]').find((item) => item.get('strong').text() === 'Governed')
     await governed?.trigger('click')
 
     expect(wrapper.emitted('update:approvalPreset')).toEqual([['governed']])

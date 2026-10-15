@@ -253,7 +253,7 @@ onBeforeUnmount(() => {
           <!-- A menu that chooses has to say which one is in force: the check is
                the answer, and it is drawn rather than announced twice because
                `aria-checked` already carries it. -->
-          <Check
+          <slot name="item" :item="item"><Check
             v-if="item.checked === true"
             class="app-menu__check"
             data-menu-check
@@ -263,6 +263,7 @@ onBeforeUnmount(() => {
           <span v-else-if="item.checked === false" class="app-menu__check-space" aria-hidden="true" />
           <span class="app-menu__label">{{ item.label }}</span>
           <span v-if="item.hint" class="app-menu__hint" aria-hidden="true">{{ item.hint }}</span>
+          </slot>
         </button>
       </div>
     </div>

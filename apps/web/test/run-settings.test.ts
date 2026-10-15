@@ -102,7 +102,7 @@ describe('RunComposer run-scoped settings', () => {
     })
 
     await wrapper.get('[data-approval-preset-trigger]').trigger('click')
-    await wrapper.findAll('[role="menuitem"]')[1]!.trigger('click')
+    await wrapper.findAll('[role="menuitemradio"]')[1]!.trigger('click')
 
     // The change is reported to the caller, which owns the task, and written
     // under that task's key rather than globally.

@@ -8,7 +8,7 @@
  * danger intent without every caller re-deriving which preset is risky.
  */
 import { AppButton, AppMenu, type AppMenuItem } from '@orchester/design'
-import { ShieldCheck, ShieldAlert } from '@lucide/vue'
+import { Check, Hand, ShieldCheck, ShieldAlert } from '@lucide/vue'
 import { computed, ref } from 'vue'
 
 import { useI18n } from '../../i18n'
@@ -50,6 +50,7 @@ const menuItems = computed<AppMenuItem[]>(() =>
     id: preset.id,
     label: preset.label(),
     disabled: preset.id === props.modelValue,
+    checked: preset.id === props.modelValue,
   })),
 )
 const currentLabel = computed(
@@ -57,6 +58,7 @@ const currentLabel = computed(
 )
 const confirming = ref(false)
 const isDanger = computed(() => props.modelValue === 'full-access')
+const descriptions = computed<Record<string, string>>(() => ({ ask: t('add.askHelp'), governed: t('add.governedHelp'), 'full-access': t('add.fullHelp') }))
 
 function choose(id: string): void {
   const preset = id as ApprovalPreset
@@ -85,6 +87,14 @@ function cancel(): void {
     :data-approval-preset-danger="isDanger"
   >
     <AppMenu :label="`${props.menuLabel ?? t('run.approvalPreset')}: ${currentLabel}`" :items="menuItems" align="start" placement="top" @select="choose">
+      <template #header>{{ t('add.approvalHeading') }}</template>
+      <template #item="{ item }">
+        <span class="approval-preset__option" :data-preset="item.id">
+          <Hand v-if="item.id === 'ask'" :size="20" /><ShieldCheck v-else-if="item.id === 'governed'" :size="20" /><ShieldAlert v-else :size="20" />
+          <span class="approval-preset__option-copy"><strong>{{ item.label }}</strong><small>{{ descriptions[item.id] }}</small></span>
+          <Check v-if="item.checked" :size="17" aria-hidden="true" />
+        </span>
+      </template>
       <template #trigger>
         <span class="approval-preset__trigger" data-approval-preset-trigger>
           <ShieldAlert v-if="isDanger" :size="19" aria-hidden="true" /><ShieldCheck v-else :size="19" aria-hidden="true" />
@@ -136,6 +146,15 @@ function cancel(): void {
   align-items: center;
   gap: var(--space-2);
 }
+.approval-preset__option { display: flex; width: 100%; gap: 10px; align-items: center; }
+.approval-preset__option > svg { flex-shrink: 0; }
+.approval-preset__option[data-preset='full-access'] { color: var(--composer-access, var(--color-intent-warning-text)); }
+.approval-preset__option-copy { display: grid; flex: 1; gap: 2px; white-space: normal; }
+.approval-preset__option-copy strong { font-size: 13px; font-weight: 500; }
+.approval-preset__option-copy small { font-size: 12px; opacity: .7; }
+.approval-preset :deep(.app-menu__surface) { inline-size: min(370px, calc(100vw - 40px)); border-radius: 16px; padding: 6px; }
+.approval-preset :deep(.app-menu__item) { padding: 10px; border-radius: 12px; }
+.approval-preset :deep(.app-menu__item:disabled) { opacity: 1; }
 
 .approval-preset :deep(.app-menu__trigger) {
   padding-inline: var(--space-2);

@@ -25,15 +25,18 @@ describe("ApprovalPresetControl", () => {
 
     await wrapper.get("[data-approval-preset-trigger]").trigger("click")
 
-    const items = wrapper.findAll('[role="menuitem"]').map((item) => item.text())
+    const choices = wrapper.findAll('[role="menuitemradio"]')
+    const items = choices.map((item) => item.get('strong').text())
     expect(items).toEqual(["Ask", "Governed", "Full access"])
+    expect(choices[0]!.attributes('aria-checked')).toBe('true')
+    expect(choices[1]!.get('small').text()).toContain('approval policy')
   })
 
   it("switches straight to Governed without a confirmation", async () => {
     const wrapper = mount(ApprovalPresetControl, { props: { modelValue: "ask" } })
 
     await wrapper.get("[data-approval-preset-trigger]").trigger("click")
-    await wrapper.findAll('[role="menuitem"]')[1]!.trigger("click")
+    await wrapper.findAll('[role="menuitemradio"]')[1]!.trigger("click")
 
     expect(wrapper.emitted("update:modelValue")).toEqual([["governed"]])
     expect(wrapper.find("[data-approval-preset-confirm]").exists()).toBe(false)
@@ -43,7 +46,7 @@ describe("ApprovalPresetControl", () => {
     const wrapper = mount(ApprovalPresetControl, { props: { modelValue: "ask" } })
 
     await wrapper.get("[data-approval-preset-trigger]").trigger("click")
-    await wrapper.findAll('[role="menuitem"]')[2]!.trigger("click")
+    await wrapper.findAll('[role="menuitemradio"]')[2]!.trigger("click")
 
     // The risky combination is not applied by picking it.
     expect(wrapper.emitted("update:modelValue")).toBeUndefined()
@@ -57,7 +60,7 @@ describe("ApprovalPresetControl", () => {
     const wrapper = mount(ApprovalPresetControl, { props: { modelValue: "ask" } })
 
     await wrapper.get("[data-approval-preset-trigger]").trigger("click")
-    await wrapper.findAll('[role="menuitem"]')[2]!.trigger("click")
+    await wrapper.findAll('[role="menuitemradio"]')[2]!.trigger("click")
     await wrapper.get('[data-approval-preset-confirm="cancel"]').trigger("click")
 
     expect(wrapper.emitted("update:modelValue")).toBeUndefined()
