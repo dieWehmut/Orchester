@@ -11,6 +11,7 @@ import { useI18n } from '../../i18n'
 import ComposerAddMenu from './ComposerAddMenu.vue'
 import type { ComposerAddGroup } from './composer-add-menu'
 import type { ComposerAttachment } from './sketch'
+import { workspaceAttachmentContent } from './workspace-attachment'
 import SketchDialog from './SketchDialog.vue'
 import McpDialog from './McpDialog.vue'
 import '../../styles/management.css'
@@ -83,8 +84,7 @@ async function select(id: string): Promise<void> {
     busy.value = true; error.value = ''
     try {
       const review = await stores.http.get<unknown>('/workspace/review', { signal: controller.signal })
-      const content = `Workspace: ${props.workspaceName ?? 'Orchester'}\n${JSON.stringify(review, null, 2)}`
-      if (content.length > 18000) { error.value = t('add.attachmentLimit'); return }
+      const content = workspaceAttachmentContent(review, props.workspaceName ?? 'Orchester')
       attach({ id: crypto.randomUUID(), name: props.workspaceName ?? 'Orchester', content })
     } catch { error.value = t('add.loadError') }
     finally { busy.value = false }

@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import RunComposer from '../src/components/run/RunComposer.vue'
 import McpDialog from '../src/components/run/McpDialog.vue'
 import SketchDialog from '../src/components/run/SketchDialog.vue'
+import { workspaceAttachmentContent } from '../src/components/run/workspace-attachment'
 import { makeSketchAttachment, sketchSvg, type SketchStroke } from '../src/components/run/sketch'
 import { createAppStores } from '../src/stores/app'
 import { createHttpClient } from '../src/api/http'
@@ -14,6 +15,16 @@ const response = (value: unknown) => new Response(JSON.stringify(value), { heade
 async function click(selector: string): Promise<void> { (document.querySelector(selector) as HTMLButtonElement).click(); await flushPromises() }
 
 describe('composer additions', () => {
+  it('attaches bounded workspace status with whole filenames and explicit omissions', () => {
+    const changes = Array.from({ length: 500 }, (_, i) => ({ path: `folder-${i}/${'long-name-'.repeat(10)}.ts`, kind: 'untracked', staged: false, unstaged: true }))
+    changes.push({ path: 'important.ts', kind: 'modified', staged: true, unstaged: true })
+    const content = workspaceAttachmentContent({ schema_version: 1, branch: 'main', changes, branch_changes: ['review.ts'] }, 'Project')
+    expect(content.length).toBeLessThanOrEqual(16000)
+    expect(content).toContain('Working changes: 501; branch changes: 1')
+    expect(content).toContain('Working modified: "important.ts" [staged] [unstaged]')
+    expect(content).toMatch(/Omitted \d+ additional paths/)
+    expect(() => workspaceAttachmentContent({ changes: [] }, 'Project')).toThrow('Invalid workspace review')
+  })
   it('opens above the whole composer, skips disabled items, and restores focus without changing the draft', async () => {
     const wrapper = mount(RunComposer, { attachTo: document.body, props: { modelValue: 'Keep my draft' } }); mounted.push(wrapper)
     const form = wrapper.get('form').element
