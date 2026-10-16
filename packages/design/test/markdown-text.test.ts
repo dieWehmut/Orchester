@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import MarkdownText from '../src/components/MarkdownText.vue'
 
@@ -107,6 +107,22 @@ describe('MarkdownText', () => {
 
     expect(wrapper.find('[data-markdown-link]').exists()).toBe(false)
     expect(wrapper.text()).toContain('click')
+  })
+
+  it('copies a local reference path and keeps it readable if the clipboard is unavailable', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    vi.stubGlobal('navigator', { clipboard: { writeText } })
+    const wrapper = mount(MarkdownText, { props: { text: '[Report](D:/work/report.md:3)', fileLabel: 'Copy path' } })
+    try {
+      const file = wrapper.get('[data-markdown-file]')
+      expect(file.text()).toBe('Report')
+      expect(file.attributes('href')).toBeUndefined()
+      await file.trigger('click')
+      expect(writeText).toHaveBeenCalledWith('D:/work/report.md:3')
+      writeText.mockRejectedValueOnce(new Error('blocked'))
+      await file.trigger('click'); await Promise.resolve()
+      expect(wrapper.get('[role="status"]').text()).toBe('D:/work/report.md:3')
+    } finally { wrapper.unmount(); vi.unstubAllGlobals() }
   })
 
   it('never interpolates markup, which is what makes the text safe to render', () => {

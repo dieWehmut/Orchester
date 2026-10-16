@@ -18,6 +18,7 @@ export type MarkdownInline =
   | { kind: 'code'; text: string }
   | { kind: 'strong'; text: string }
   | { kind: 'link'; text: string; href: string }
+  | { kind: 'file'; text: string; path: string }
 
 export type MarkdownBlock =
   | { kind: 'paragraph'; spans: MarkdownInline[] }
@@ -56,7 +57,7 @@ function continuesTable(line: string): boolean {
   return value.startsWith('|') ? value.length > 1 : TABLE_ROW.test(line)
 }
 const INLINE_CODE = /`([^`\n]+)`/
-const MARKDOWN_LINK = /\[([^\]\n]*)\]\(([^()\s]*)\)/
+const MARKDOWN_LINK = /\[([^\]\n]*)\]\((<[^>\n]+>|(?:[^()\s]|\([^()\n]*\))*)\)/
 const BARE_LINK = /https?:\/\/[^\s<>()]+/
 const BOLD = /\*\*([^*\n]+)\*\*/
 const TRAILING_PUNCTUATION = /[.,;:!?]+$/
@@ -72,6 +73,11 @@ export function isSafeHref(href: string): boolean {
   if (!/^https?:\/\//i.test(href)) return false
   if (/[\s<>"'`]/.test(href)) return false
   return href.length > 'https://'.length
+}
+
+/** File references are copyable paths, never navigable URLs or executable links. */
+export function isLocalFileReference(path: string): boolean {
+  return /^(?:[a-z]:[/\\]|\/(?!\/))/i.test(path) && !/[\u0000-\u001f<>]/.test(path)
 }
 
 /** A trailing sentence mark belongs to the sentence, not to the address. */
@@ -120,8 +126,10 @@ export function parseInline(source: string): MarkdownInline[] {
     if (next.kind === 'code') {
       spans.push({ kind: 'code', text: next.match[1] ?? '' })
     } else if (next.kind === 'link') {
-      const href = next.match[2] ?? ''
+      const raw = next.match[2] ?? ''
+      const href = raw.startsWith('<') && raw.endsWith('>') ? raw.slice(1, -1) : raw
       if (isSafeHref(href)) spans.push({ kind: 'link', text: next.match[1] ?? '', href })
+      else if (isLocalFileReference(href)) spans.push({ kind: 'file', text: next.match[1] ?? '', path: href })
       else spans.push({ kind: 'text', text: matched })
     } else if (next.kind === 'bare') {
       const [address, punctuation] = splitTrailingPunctuation(matched)

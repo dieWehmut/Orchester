@@ -127,6 +127,12 @@ describe('markdown inline', () => {
     ])
   })
 
+  it('recognizes labelled absolute files without turning them into navigable URLs', () => {
+    expect(spans('[验收记录](D:/project/Orchester/docs/acceptance.md:12)')).toEqual([{kind:'file',text:'验收记录',path:'D:/project/Orchester/docs/acceptance.md:12'}])
+    expect(spans('[My Report](</work/My Project/report.md>)')).toEqual([{kind:'file',text:'My Report',path:'/work/My Project/report.md'}])
+    expect(spans('[source](https://example.com/a_(b))')).toEqual([{kind:'link',text:'source',href:'https://example.com/a_(b)'}])
+  })
+
   it('refuses a link that is not an address', () => {
     // The reading is "this is text", not "this is a link we sanitised": a
     // caller that renders the tokens cannot turn it into one.

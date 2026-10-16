@@ -22,8 +22,9 @@ const props = withDefaults(
     text: string
     /** Announced inside every link; the surface owns the words. */
     externalLabel?: string
+    fileLabel?: string
   }>(),
-  { externalLabel: '' },
+  { externalLabel: '', fileLabel: 'Copy file path' },
 )
 
 const blocks = computed(() => parseMarkdown(props.text))
@@ -38,7 +39,7 @@ const blocks = computed(() => parseMarkdown(props.text))
         data-markdown-heading
         :data-heading-level="block.level"
       >
-        <MarkdownSpans :spans="block.spans" :external-label="externalLabel" />
+        <MarkdownSpans :spans="block.spans" :external-label="externalLabel" :file-label="fileLabel" />
       </h3>
       <pre
         v-else-if="block.kind === 'code'"
@@ -59,7 +60,7 @@ const blocks = computed(() => parseMarkdown(props.text))
                 :key="column"
                 :style="{ textAlign: block.align[column] ?? 'start' }"
               >
-                <MarkdownSpans :spans="cell" :external-label="externalLabel" />
+                <MarkdownSpans :spans="cell" :external-label="externalLabel" :file-label="fileLabel" />
               </th>
             </tr>
           </thead>
@@ -70,7 +71,7 @@ const blocks = computed(() => parseMarkdown(props.text))
                 :key="column"
                 :style="{ textAlign: block.align[column] ?? 'start' }"
               >
-                <MarkdownSpans :spans="cell" :external-label="externalLabel" />
+                <MarkdownSpans :spans="cell" :external-label="externalLabel" :file-label="fileLabel" />
               </td>
             </tr>
           </tbody>
@@ -84,11 +85,11 @@ const blocks = computed(() => parseMarkdown(props.text))
         :data-list-ordered="String(block.ordered)"
       >
         <li v-for="(item, itemIndex) in block.items" :key="itemIndex">
-          <MarkdownSpans :spans="item" :external-label="externalLabel" />
+          <MarkdownSpans :spans="item" :external-label="externalLabel" :file-label="fileLabel" />
         </li>
       </component>
       <p v-else class="markdown__paragraph" data-markdown-paragraph>
-        <MarkdownSpans :spans="block.spans" :external-label="externalLabel" />
+        <MarkdownSpans :spans="block.spans" :external-label="externalLabel" :file-label="fileLabel" />
       </p>
     </template>
   </div>
