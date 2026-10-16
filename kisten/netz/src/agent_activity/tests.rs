@@ -65,6 +65,23 @@ fn title_is_not_replaced_by_followup_and_tools_share_opaque_call_ids() {
 }
 
 #[test]
+fn claude_rewritten_tool_keeps_its_result_relationship() {
+    let records = [
+        json!({"type":"assistant","uuid":"tool-a","message":{"content":[{"type":"tool_use","id":"call-a","name":"Bash","input":{"command":"echo old"}}]}}),
+        json!({"type":"assistant","uuid":"tool-b","message":{"content":[{"type":"tool_use","id":"call-b","name":"Read","input":{"path":"example"}}]}}),
+        json!({"type":"assistant","uuid":"tool-a","message":{"content":[{"type":"tool_use","id":"call-a","name":"Bash","input":{"command":"echo updated"}}]}}),
+        json!({"type":"user","uuid":"result-a","message":{"content":[{"type":"tool_result","tool_use_id":"call-a","content":"updated"}]}}),
+        json!({"type":"user","uuid":"result-b","message":{"content":[{"type":"tool_result","tool_use_id":"call-b","content":"example"}]}}),
+    ].into_iter().enumerate().map(|(i,v)| (i as u64,v)).collect::<Vec<_>>();
+    let row = transcript::parse("claude", "task", now_ms(), &records);
+    assert_eq!(row.entries.len(), 4);
+    assert!(row.entries[0].text.contains("updated"));
+    assert_eq!(row.entries[0].call_id, row.entries[2].call_id);
+    assert_eq!(row.entries[1].call_id, row.entries[3].call_id);
+    assert_ne!(row.entries[0].call_id, row.entries[1].call_id);
+}
+
+#[test]
 fn codex_index_uses_source_titles_and_projects_without_following_outside_paths() {
     use rusqlite::{params, Connection};
     let fixture = Fixture::new();

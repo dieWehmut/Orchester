@@ -323,17 +323,21 @@ fn claude(row: &mut ActivityDetail, offset: u64, record: &Value) {
                                 &arguments(&part["input"]),
                                 part["name"].as_str(),
                             );
-                            if let (Some(entry), Some(call)) =
-                                (row.entries.last_mut(), part["id"].as_str())
-                            {
+                            let entry_id = opaque_id(&row.summary.id, &id);
+                            if let (Some(entry), Some(call)) = (
+                                row.entries.iter_mut().find(|entry| entry.id == entry_id),
+                                part["id"].as_str(),
+                            ) {
                                 entry.call_id = Some(opaque_id(&row.summary.id, call));
                             }
                         }
                         Some("tool_result") => {
                             push_entry(row, &id, "result", &text(&part["content"]), None);
-                            if let (Some(entry), Some(call)) =
-                                (row.entries.last_mut(), part["tool_use_id"].as_str())
-                            {
+                            let entry_id = opaque_id(&row.summary.id, &id);
+                            if let (Some(entry), Some(call)) = (
+                                row.entries.iter_mut().find(|entry| entry.id == entry_id),
+                                part["tool_use_id"].as_str(),
+                            ) {
                                 entry.call_id = Some(opaque_id(&row.summary.id, call));
                             }
                         }
