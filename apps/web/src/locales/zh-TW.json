@@ -291,7 +291,7 @@
     "loadMore": "載入更多",
     "resumable": "可恢復",
     "newChat": "新建對話",
-    "railTitle": "最近會話",
+    "railTitle": "最近",
     "filterEmpty": "沒有符合的工作階段",
     "searchPlaceholder": "搜尋工作階段"
   },
@@ -383,7 +383,8 @@
     "reasoningSummary": "{count} 字元",
     "externalLink": "在新分頁開啟",
     "quote": "引用至輸入框",
-    "reuse": "重新使用這則提示"
+    "reuse": "重新使用這則提示",
+    "copyFilePath": "複製檔案路徑"
   },
   "inspector": {
     "label": "工作區檢查器",
@@ -635,6 +636,20 @@
       "tool": "工具呼叫",
       "result": "執行結果",
       "status": "狀態"
+    },
+    "recent": "最近",
+    "projects": "專案",
+    "noPinned": "釘選的聊天會顯示在這裡。",
+    "unread": "有未讀更新",
+    "closeSearch": "關閉搜尋",
+    "actions": {
+      "command": "執行了命令",
+      "edit": "編輯了檔案",
+      "read": "讀取了檔案",
+      "search": "進行了搜尋",
+      "image": "查看了圖像",
+      "integration": "使用了整合",
+      "tool": "使用了工具"
     }
   },
   "add": {

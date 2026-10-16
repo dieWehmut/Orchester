@@ -291,7 +291,7 @@
     "loadMore": "Load more",
     "resumable": "Resumable",
     "newChat": "New chat",
-    "railTitle": "Recent sessions",
+    "railTitle": "Recent",
     "filterEmpty": "No sessions match your search",
     "searchPlaceholder": "Search sessions"
   },
@@ -383,7 +383,8 @@
     "reasoningSummary": "{count} characters",
     "externalLink": "Opens in a new tab",
     "quote": "Quote in the composer",
-    "reuse": "Use this prompt again"
+    "reuse": "Use this prompt again",
+    "copyFilePath": "Copy file path"
   },
   "inspector": {
     "label": "Workspace inspector",
@@ -635,6 +636,20 @@
       "tool": "Tool call",
       "result": "Tool result",
       "status": "Status"
+    },
+    "recent": "Recent",
+    "projects": "Projects",
+    "noPinned": "Pin chats to keep them here.",
+    "unread": "Unread updates",
+    "closeSearch": "Close search",
+    "actions": {
+      "command": "Ran a command",
+      "edit": "Edited files",
+      "read": "Read files",
+      "search": "Searched",
+      "image": "Viewed images",
+      "integration": "Used an integration",
+      "tool": "Used a tool"
     }
   },
   "add": {

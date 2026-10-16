@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SessionSummaryDto } from '@orchester/protokoll'
-import { IconButton, StatusDot, VisuallyHidden } from '@orchester/design'
-import { Pin } from '@lucide/vue'
+import { IconButton, VisuallyHidden } from '@orchester/design'
+import { CircleAlert, MessageCircle, Pin } from '@lucide/vue'
 import { computed } from 'vue'
 
 import { useI18n } from '../../i18n'
@@ -24,20 +24,14 @@ const displayTime = computed(() =>
     dateTime.value,
   ),
 )
-const status = computed(() => {
-  if (props.session.outcome === 'success') return 'success' as const
-  if (props.session.outcome === 'failed') return 'error' as const
-  return 'idle' as const
-})
 
 /**
  * What the row is about, rather than what it is called.
  *
  * The reference's list is one line per entry, and a run's agent and model are
  * the pane's business - the pane states them in full. They stay one hover, or
- * one swipe in a screen reader, away rather than on the row. The outcome is not
- * in this list because the dot beside the title already carries it as its own
- * accessible name.
+ * one swipe in a screen reader, away rather than on the row. Dates and completed
+ * outcomes stay in accessible detail; only failures need a visible indicator.
  */
 const details = computed(() =>
   [props.session.agent, props.session.model ?? '', props.session.resumable ? t('sessions.resumable') : '']
@@ -60,20 +54,18 @@ const details = computed(() =>
       type="button"
       :aria-pressed="selected"
       :data-session-id="session.id"
-      :title="`${session.title} · ${details}`"
+      :title="`${session.title} · ${details} · ${displayTime}`"
       @click="$emit('select', session.id)"
     >
-      <StatusDot :status="status" :label="session.outcome" :pulse="false" />
+      <MessageCircle v-if="pinned" :size="18" aria-hidden="true" />
       <strong class="session-list-item__title">{{ session.title }}</strong>
-      <time class="session-list-item__time" :datetime="dateTime.toISOString()">{{
-        displayTime
-      }}</time>
+      <CircleAlert v-if="session.outcome === 'failed'" :size="14" class="session-list-item__error" :aria-label="session.outcome" />
+      <VisuallyHidden><time :datetime="dateTime.toISOString()">{{ displayTime }}</time><span>{{ session.outcome }}</span></VisuallyHidden>
       <VisuallyHidden data-session-details>{{ details }}</VisuallyHidden>
     </button>
     <!-- A control beside the row rather than inside it: a button within a button
          is not something a browser will let the reader press. It is drawn on
-         hover or focus and never removed from the tree, and once pinned it stays
-         visible, because that is the state it reports. -->
+         hover or focus and never removed from the tree. -->
     <IconButton
       class="session-list-item__pin"
       :label="pinned ? t('sessions.unpinAction') : t('sessions.pinAction')"
@@ -92,7 +84,7 @@ const details = computed(() =>
 .session-list-item {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   min-block-size: var(--hit-target-min, 32px);
   inline-size: 100%;
   align-items: center;
@@ -102,9 +94,8 @@ const details = computed(() =>
 }
 
 .session-list-item__open {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  min-block-size: var(--hit-target-min, 32px);
+  display: flex;
+  min-block-size: 36px;
   min-inline-size: 0;
   align-items: center;
   gap: var(--space-2);
@@ -130,6 +121,8 @@ const details = computed(() =>
 /* Drawn on hover or focus, never removed from the tree; a pinned row shows it
    because that is the state it reports. */
 .session-list-item__pin {
+  position: absolute;
+  inset-inline-end: 0;
   justify-self: end;
   margin-inline-end: var(--space-1);
   opacity: 0;
@@ -137,8 +130,7 @@ const details = computed(() =>
 }
 
 .session-list-item:hover .session-list-item__pin,
-.session-list-item:focus-within .session-list-item__pin,
-.session-list-item--pinned .session-list-item__pin {
+.session-list-item:focus-within .session-list-item__pin {
   opacity: 1;
 }
 
@@ -147,25 +139,16 @@ const details = computed(() =>
 }
 
 .session-list-item__title {
+  flex: 1;
+  min-inline-size: 0;
   overflow: hidden;
-  font-size: var(--text-base);
+  font-size: 14px;
   font-weight: var(--weight-normal);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.session-list-item__time {
-  inline-size: 0;
-  overflow: hidden;
-  opacity: 0;
-  color: var(--color-text-tertiary);
-  font-size: var(--text-xs);
-  white-space: nowrap;
-}
-
-.session-list-item:hover .session-list-item__time,
-.session-list-item:focus-within .session-list-item__time {
-  inline-size: auto;
-  opacity: 1;
-}
+.session-list-item__open > svg { flex-shrink: 0; }
+.session-list-item__error { color: var(--color-status-warning); }
+.session-list-item:hover .session-list-item__open, .session-list-item:focus-within .session-list-item__open { padding-inline-end: 34px; }
 </style>

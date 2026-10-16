@@ -4,11 +4,15 @@ import { createHttpClient } from '../src/api/http'
 import { createAppStores } from '../src/stores/app'
 import { createAppRouter } from '../src/router'
 import AgentActivityView from '../src/features/agent-presence/components/AgentActivityView.vue'
+import AgentActivitySidebar from '../src/features/agent-presence/components/AgentActivitySidebar.vue'
+import { defineComponent, h, toRef, type PropType } from 'vue'
+import { useAgentActivity } from '../src/features/agent-presence/use-agent-activity'
+import type { ExternalActivityProvider } from '../src/api/agent-activity'
 import WorkspaceView from '../src/views/WorkspaceView.vue'
 import type { ActivitySummary, ActivityEntry } from '../src/api/agent-activity'
 
 const wrappers: ReturnType<typeof mount>[] = []
-afterEach(() => { wrappers.splice(0).forEach(wrapper => wrapper.unmount()); vi.useRealTimers() })
+afterEach(() => { wrappers.splice(0).forEach(wrapper => wrapper.unmount()); localStorage.clear(); vi.useRealTimers() })
 const session = (id: string, provider: ActivitySummary['provider'] = 'codex'): ActivitySummary => ({ id, provider, source: 'external', title: `Task ${id}`, project: 'Demo', updated_at: Date.now(), state: 'active', preview: 'Working', truncated: false })
 const entry = (id: string, text: string, kind: ActivityEntry['kind'] = 'assistant'): ActivityEntry => ({ id, text, kind, tool: kind === 'tool' ? 'shell' : null })
 const response = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } })
@@ -17,7 +21,14 @@ const detail = (row: ActivitySummary, entries = [entry('1', 'Visible reply')]) =
 function setup(fetch: typeof globalThis.fetch) {
   const stores = createAppStores({ http: createHttpClient({ fetch }), agentStatusStreamFactory: null })
   stores.bootstrap.status.value = 'ready'
-  const wrapper = mount(AgentActivityView, { props: { provider: 'codex' }, global: { plugins: [stores] } }); wrappers.push(wrapper)
+  const Host = defineComponent({
+    props: { provider: { type: String as PropType<ExternalActivityProvider>, required: true } },
+    setup(props) {
+      const activity = useAgentActivity(toRef(props, 'provider'))
+      return () => h('div', [h(AgentActivitySidebar, { provider: props.provider, activity, onSelect: activity.select }), h(AgentActivityView, { provider: props.provider, activity })])
+    },
+  })
+  const wrapper = mount(Host, { props: { provider: 'codex' }, global: { plugins: [stores] } }); wrappers.push(wrapper)
   return wrapper
 }
 
@@ -106,5 +117,27 @@ describe('live agent content', () => {
     expect(wrapper.find('[data-agent-activity-view]').exists()).toBe(false)
     expect(wrapper.find('[data-run-composer]').exists()).toBe(true)
     expect(router.currentRoute.value.query.agent).toBeUndefined()
+  })
+
+  it('persists pins, groups projects and clears unread updates on selection', async () => {
+    vi.useFakeTimers()
+    const rows = [session('first'), { ...session('second'), updated_at: 1000, state: 'completed' as const }]
+    const wrapper = setup(async url => response(String(url).includes('?provider=') ? list(rows) : detail(rows.find(row => String(url).endsWith(row.id))!)))
+    await flushPromises()
+    await wrapper.get('[data-activity-pin="second"]').trigger('click')
+    expect(wrapper.get('[data-activity-section="pinned"]').find('[data-activity-session="second"]').exists()).toBe(true)
+    expect(wrapper.get('[data-activity-section="recent"]').find('[data-activity-session="second"]').exists()).toBe(false)
+    expect(JSON.parse(localStorage.getItem('orchester:activity:codex')!).pins.second).toBe(true)
+    rows[1]!.updated_at = 2000
+    await vi.advanceTimersByTimeAsync(2100); await flushPromises()
+    expect(wrapper.get('[data-activity-row="second"]').find('.activity-row__unread').exists()).toBe(true)
+    await wrapper.get('[data-activity-session="second"]').trigger('click'); await flushPromises()
+    expect(wrapper.get('[data-activity-row="second"]').find('.activity-row__unread').exists()).toBe(false)
+    await wrapper.get('[data-activity-section="projects"] > button').trigger('click')
+    await wrapper.get('[data-activity-project]').trigger('click')
+    expect(wrapper.get('[data-activity-section="projects"]').findAll('[data-activity-session]')).toHaveLength(2)
+    await wrapper.get('.app-menu__trigger').trigger('click')
+    expect(wrapper.findAll('[data-activity-provider]').map(item => item.attributes('data-activity-provider'))).toEqual(['codex', 'claude', 'opencode'])
+    expect(wrapper.find('[data-activity-provider="orchester"]').exists()).toBe(false)
   })
 })

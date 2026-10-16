@@ -112,7 +112,7 @@ describe('WorkspaceView', () => {
     expect(wrapper.get('[data-pane="sessions"] [data-agent-id="codex-main"]')).toBeTruthy()
   })
 
-  it('keeps the selected agent visible in the shared left rail', async () => {
+  it('replaces the fleet rail with the selected provider conversation navigation', async () => {
     const stores = createAppStores()
     stores.agents.snapshot = AGENT_FLEET_FIXTURE
     stores.agents.status = 'ready'
@@ -120,10 +120,10 @@ describe('WorkspaceView', () => {
 
     await wrapper.get('[data-agent-id="codex-main"] button').trigger('click')
 
-    expect(wrapper.get('[data-agent-id="codex-main"] button').classes()).toContain(
-      'agent-fleet-row--selected',
-    )
-    expect(wrapper.get('[data-agent-id="codex-main"] button').attributes('aria-pressed')).toBe('true')
+    expect(wrapper.get('[data-activity-sidebar]').text()).toContain('Codex')
+    expect(wrapper.get('[data-reader-provider]').attributes('data-reader-provider')).toBe('codex')
+    expect(wrapper.find('[data-agent-fleet]').exists()).toBe(false)
+    wrapper.unmount()
   })
 
   it('opens the agent context inspector after selecting an agent', async () => {

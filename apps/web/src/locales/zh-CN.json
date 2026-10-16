@@ -291,7 +291,7 @@
     "loadMore": "加载更多",
     "resumable": "可恢复",
     "newChat": "新建对话",
-    "railTitle": "最近会话",
+    "railTitle": "最近",
     "filterEmpty": "没有匹配的会话",
     "searchPlaceholder": "搜索会话"
   },
@@ -383,7 +383,8 @@
     "reasoningSummary": "{count} 字符",
     "externalLink": "在新标签页打开",
     "quote": "引用到输入框",
-    "reuse": "重新使用这条提示"
+    "reuse": "重新使用这条提示",
+    "copyFilePath": "复制文件路径"
   },
   "inspector": {
     "label": "工作区检查器",
@@ -635,6 +636,20 @@
       "tool": "工具调用",
       "result": "执行结果",
       "status": "状态"
+    },
+    "recent": "最近",
+    "projects": "项目",
+    "noPinned": "置顶的聊天会显示在这里。",
+    "unread": "有未读更新",
+    "closeSearch": "关闭搜索",
+    "actions": {
+      "command": "运行了命令",
+      "edit": "编辑了文件",
+      "read": "读取了文件",
+      "search": "进行了搜索",
+      "image": "查看了图像",
+      "integration": "使用了集成",
+      "tool": "使用了工具"
     }
   },
   "add": {

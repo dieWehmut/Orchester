@@ -5,7 +5,7 @@ import { AppButton, AppDialog } from '@orchester/design'
 import { Check, Lightbulb, Pause, Play, Target, X } from '@lucide/vue'
 import { createComposerApi, type ComposerContext, type McpServer } from '../../api/composer'
 import { createManagementApi, type Plugin } from '../../api/management'
-import { createAgentActivityApi, activityProviders, type ActivityProvider, type ActivitySummary } from '../../api/agent-activity'
+import { createAgentActivityApi, activityProviders, type ExternalActivityProvider, type ActivityProvider, type ActivitySummary } from '../../api/agent-activity'
 import { useOptionalAppStores } from '../../stores/app'
 import { useI18n } from '../../i18n'
 import ComposerAddMenu from './ComposerAddMenu.vue'
@@ -43,7 +43,7 @@ const groups = computed<ComposerAddGroup[]>(() => [
     { id: 'mcp', label: t('add.manageServers'), icon: 'server', disabled: !available.value },
   ] },
   { id: 'plugins', label: t('add.plugins'), items: [
-    ...plugins.value.filter(p => p.installed && activityProviders.includes(p.name as ActivityProvider)).map(p => ({ id: `plugin:${p.name}`, label: p.display_name, description: t('add.attachTask'), icon: 'plugin' as const, provider: p.name })),
+    ...plugins.value.filter(p => p.installed && activityProviders.includes(p.name as ExternalActivityProvider)).map(p => ({ id: `plugin:${p.name}`, label: p.display_name, description: t('add.attachTask'), icon: 'plugin' as const, provider: p.name })),
     { id: 'plugins', label: t('add.managePlugins'), icon: 'plugin', disabled: !router },
   ] },
 ])

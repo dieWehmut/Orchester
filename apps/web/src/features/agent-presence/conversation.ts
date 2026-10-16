@@ -23,7 +23,10 @@ export function conversationItems(entries: ActivityEntry[], turns: ActivityTurn[
       continue
     }
     const previous = items.at(-1)
-    if (previous?.kind === 'work' && previous.turnId === entry.turn_id) previous.entries.push(entry)
+    if (previous?.kind === 'work') {
+      previous.entries.push(entry)
+      if (previous.turnId !== entry.turn_id) { previous.turnId = undefined; previous.duration = undefined }
+    }
     else {
       const turn = turns.find(turn => turn.id === entry.turn_id)
       const duration = turn?.started_at !== undefined && turn.completed_at !== undefined && turn.completed_at >= turn.started_at
@@ -32,6 +35,33 @@ export function conversationItems(entries: ActivityEntry[], turns: ActivityTurn[
     }
   }
   return items
+}
+
+export type WorkStep = { id: string; entry: ActivityEntry; results: ActivityEntry[] }
+/** Pair by source call identity, including interleaved concurrent tools. */
+export function workSteps(entries: ActivityEntry[]): WorkStep[] {
+  const steps: WorkStep[] = []
+  for (const entry of entries) {
+    const previous = steps.at(-1)
+    const invocation = entry.kind === 'result' ? entry.call_id
+      ? steps.find(step => step.entry.kind === 'tool' && step.entry.call_id === entry.call_id)
+      : previous?.entry.kind === 'tool' && !previous.entry.call_id ? previous : undefined
+      : undefined
+    if (invocation) invocation.results.push(entry)
+    else steps.push({ id: entry.id, entry, results: [] })
+  }
+  return steps
+}
+
+export function toolPresentation(entry: ActivityEntry): 'command' | 'edit' | 'read' | 'search' | 'image' | 'integration' | 'tool' {
+  const name = entry.tool?.toLowerCase() ?? ''
+  if (/apply_patch|write|edit/.test(name) || /apply_patch/.test(entry.text)) return 'edit'
+  if (/view_image|screenshot/.test(name)) return 'image'
+  if (/search|browse|web/.test(name)) return 'search'
+  if (/read|open_file/.test(name)) return 'read'
+  if (/mcp__/.test(name)) return 'integration'
+  if (/exec|shell|bash|terminal|command/.test(name)) return 'command'
+  return 'tool'
 }
 
 /** Codex's citation bookkeeping is not part of the visible answer. Keep code literal. */

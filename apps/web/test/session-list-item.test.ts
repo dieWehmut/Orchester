@@ -40,12 +40,12 @@ describe('SessionListItem', () => {
     const button = wrapper.get('[data-session-id]')
 
     expect(button.get('.session-list-item__title').text()).toBe('Inspect the runtime')
-    expect(button.findAll('.session-list-item__time')).toHaveLength(1)
+    expect(button.get('time').text()).not.toBe('')
 
     // The row is the dot, the title, the time and the text a reader hears: the
     // agent, the model and the resumable note are not elements on it, because
     // they are what the row is about rather than what it is called.
-    expect(button.element.children).toHaveLength(4)
+    expect(button.find('.status-dot').exists()).toBe(false)
   })
 
   it('still says the details to a reader who cannot hover', () => {
@@ -59,13 +59,12 @@ describe('SessionListItem', () => {
     expect(details.classes()).toContain('visually-hidden')
   })
 
-  it('keeps the outcome on the dot, which carries it as its own name', () => {
+  it('keeps completed rows quiet and exposes a failed outcome', () => {
     const ok = mountRow()
     const failed = mountRow({ outcome: 'failed' })
 
-    expect(ok.get('.status-dot').attributes('aria-label')).toBe('success')
-    expect(ok.get('.status-dot').classes()).toContain('status-dot--success')
-    expect(failed.get('.status-dot').classes()).toContain('status-dot--error')
+    expect(ok.find('.session-list-item__error').exists()).toBe(false)
+    expect(failed.get('.session-list-item__error').attributes('aria-label')).toBe('failed')
     // The dot already says it, so the hidden details do not say it twice.
     expect(ok.get('[data-session-details]').text()).not.toContain('success')
   })

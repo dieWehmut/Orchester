@@ -72,6 +72,7 @@ const { collapsed: railCollapsed, toggle: toggleRail } = useRailCollapsed()
 const emit = defineEmits<{ 'update:inspectorOpen': [open: boolean] }>()
 
 const sessionsOpen = ref(false)
+defineExpose({ closeSessions: () => { sessionsOpen.value = false } })
 
 /**
  * Below this width the rail is a drawer rather than a column, section 2.1.

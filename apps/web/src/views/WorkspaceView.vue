@@ -2,8 +2,10 @@
 import { AppButton, AppDialog } from '@orchester/design'
 import { AgentDetails, agentActivityMessageKey } from '../features/agent-presence'
 import AgentActivityView from '../features/agent-presence/components/AgentActivityView.vue'
+import AgentActivitySidebar from '../features/agent-presence/components/AgentActivitySidebar.vue'
+import { useAgentActivity } from '../features/agent-presence/use-agent-activity'
 import { agentProviderPresentation } from '../features/agent-presence/provider-presentation'
-import { activityProviders, type ActivityProvider } from '../api/agent-activity'
+import { activityProviders, type ExternalActivityProvider } from '../api/agent-activity'
 import ChangeInspector from '../components/changes/ChangeInspector.vue'
 import ApprovalsQueue from '../components/changes/ApprovalsQueue.vue'
 import ReviewPanel from '../components/changes/ReviewPanel.vue'
@@ -58,7 +60,9 @@ const reviewChanges = computed(() =>
 const reviewLastTurn = computed(() => runView.value.turns.length || null)
 const selectedChangePath = ref<string | null>(null)
 const selectedAgentId = ref<string | null>(null)
-const activityProvider = ref<ActivityProvider | null>(null)
+const activityProvider = ref<ExternalActivityProvider | null>(null)
+const agentActivity = useAgentActivity(activityProvider)
+const shell = ref<InstanceType<typeof AppShell> | null>(null)
 const activeInspectorTab = ref<InspectorTab>('context')
 const inspectorOpen = ref(false)
 const runConnectionStatus = computed(() => run.connectionStatus.value)
@@ -316,11 +320,13 @@ function handleAgentSelect(agentId: string): void {
   activeInspectorTab.value = 'context'
   const agent = agentSnapshot.value?.agents.find(agent => agent.agent_id === agentId)
   const provider = agent ? agentProviderPresentation(agent).key : 'generic'
-  openActivity(provider === 'codex' || provider === 'claude' || provider === 'opencode' ? provider : 'orchester')
+  if (provider === 'codex' || provider === 'claude' || provider === 'opencode') openActivity(provider)
+  else { closeActivity(); inspectorOpen.value = true }
 }
 
-function openActivity(provider: ActivityProvider): void {
+function openActivity(provider: ExternalActivityProvider): void {
   activityProvider.value = provider
+  inspectorOpen.value = false
   selectedAgentId.value = agentSnapshot.value?.agents.find(agent => agentProviderPresentation(agent).key === provider)?.agent_id ?? null
   void appRouter?.replace({ query: { ...appRouter.currentRoute.value.query, agent: provider } })
 }
@@ -338,7 +344,7 @@ function closeActivity(): void {
 function selectSession(id: string | null): void { closeActivity(); void sessions.select(id) }
 
 watch(() => appRouter?.currentRoute.value.query.agent, value => {
-  activityProvider.value = activityProviders.includes(value as ActivityProvider) ? value as ActivityProvider : null
+  activityProvider.value = activityProviders.includes(value as ExternalActivityProvider) ? value as ExternalActivityProvider : null
 }, { immediate: true })
 
 function handleInspectorTabChange(tab: InspectorTab): void {
@@ -489,6 +495,7 @@ if (desktopWindowController?.enabled) {
     @reorder="handleTabReorder"
   />
   <AppShell
+    ref="shell"
     data-testid="workspace-view"
     :sessions-title="t('sessions.title')"
     :inspector-title="t('inspector.label')"
@@ -496,7 +503,9 @@ if (desktopWindowController?.enabled) {
     v-model:inspector-open="inspectorOpen"
   >
     <template #sessions>
+      <AgentActivitySidebar v-if="activityProvider" :provider="activityProvider" :activity="agentActivity" @provider="openActivity" @close="closeActivity" @new-chat="selectSession(null)" @select="agentActivity.select($event); shell?.closeSessions()" />
       <WorkspaceSidebar
+        v-else
         :product-name="t('app.name')"
         :workspace-name="workspaceName"
         :companion-label="companionLabel"
@@ -544,7 +553,7 @@ if (desktopWindowController?.enabled) {
       @toggle-panel="toggleInspector"
     />
 
-    <AgentActivityView v-if="activityProvider" :provider="activityProvider" @close="closeActivity" @provider="openActivity" />
+    <AgentActivityView v-if="activityProvider" :provider="activityProvider" :activity="agentActivity" />
     <RunPanel
       ref="runPanel"
       v-else-if="!selected"

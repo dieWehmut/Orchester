@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import AgentConversation from '../src/features/agent-presence/components/AgentConversation.vue'
-import { conversationItems, visibleAnswer } from '../src/features/agent-presence/conversation'
+import { conversationItems, visibleAnswer, workSteps } from '../src/features/agent-presence/conversation'
 import { createAgentActivityApi, type ActivityDetail, type ActivityEntry } from '../src/api/agent-activity'
 import { createHttpClient } from '../src/api/http'
 
@@ -41,7 +41,8 @@ describe('source conversation rendering', () => {
     const disclosure = wrapper.get('[data-work-disclosure]').element as HTMLDetailsElement
     const tool = wrapper.get('[data-tool-disclosure]').element as HTMLDetailsElement
     disclosure.open = true; tool.open = true
-    expect(wrapper.get('[data-work-preview]').text()).toContain('正在检查')
+    expect(disclosure.open).toBe(true)
+    expect(wrapper.get('[data-work-disclosure]').text()).toContain('正在检查')
     await wrapper.setProps({ detail: detail() })
     expect(wrapper.get('[data-work-disclosure]').element).toBe(disclosure)
     expect(wrapper.get('[data-tool-disclosure]').element).toBe(tool)
@@ -76,6 +77,21 @@ describe('source conversation rendering', () => {
     expect(visibleAnswer(`Answer\n\n${citation}`)).toBe('Answer')
     expect(visibleAnswer(`\`\`\`xml\n${citation}`)).toBe(`\`\`\`xml\n${citation}`)
     expect(visibleAnswer(`${citation}\nOther prose`)).toBe(`${citation}\nOther prose`)
+  })
+
+  it('pairs interleaved tool results and leaves orphan results readable', () => {
+    const steps = workSteps([entry('a','tool','first',{ call_id:'a' }),entry('b','tool','second',{ call_id:'b' }),entry('br','result','second result',{ call_id:'b' }),entry('ar','result','first result',{ call_id:'a' }),entry('orphan','result','unpaired',{ call_id:'missing' })])
+    expect(steps.map(step => [step.id, step.results.map(result => result.id)])).toEqual([['a',['ar']],['b',['br']],['orphan',[]]])
+  })
+
+  it('renders known user timestamps and copies only visible final text', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    vi.stubGlobal('navigator', { clipboard: { writeText } })
+    const wrapper = mount(AgentConversation, { props: { detail: detail({ entries: [entry('u','user','Continue',{timestamp: 1792112400000}), entry('a','assistant','Done\n\n<oai-mem-citation>\nmetadata\n</oai-mem-citation>',{ phase:'final' })] }) } })
+    expect(wrapper.find('[data-conversation-date]').exists()).toBe(true)
+    await wrapper.get('[data-message-copy]').trigger('click')
+    expect(writeText).toHaveBeenCalledWith('Done')
+    wrapper.unmount(); vi.unstubAllGlobals()
   })
 
   it('accepts old metadata-free servers and rejects malformed optional timestamps', async () => {
