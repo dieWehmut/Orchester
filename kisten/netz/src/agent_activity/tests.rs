@@ -50,6 +50,71 @@ fn codex_message(role: &str, text: &str) -> serde_json::Value {
 }
 
 #[test]
+fn title_is_not_replaced_by_followup_and_tools_share_opaque_call_ids() {
+    let records = [codex_message("user", "Build the sidebar"), codex_message("user", "Continue"),
+        json!({"type":"response_item","payload":{"type":"function_call","name":"shell","call_id":"private-call","arguments":"echo done"}}),
+        json!({"type":"response_item","payload":{"type":"function_call_output","call_id":"private-call","output":"done"}}),
+    ].into_iter().enumerate().map(|(i,v)| (i as u64,v)).collect::<Vec<_>>();
+    let row = transcript::parse("codex", "task", now_ms(), &records);
+    assert_eq!(row.summary.title, "Build the sidebar");
+    assert!(row.entries[2].call_id.is_some());
+    assert_eq!(row.entries[2].call_id, row.entries[3].call_id);
+    assert!(!serde_json::to_string(&row)
+        .unwrap()
+        .contains("private-call"));
+}
+
+#[test]
+fn codex_index_uses_source_titles_and_projects_without_following_outside_paths() {
+    use rusqlite::{params, Connection};
+    let fixture = Fixture::new();
+    let outside = Fixture::new();
+    let source = fixture.file(
+        "sessions/2026/one.jsonl",
+        &[codex_message("user", "Initial prompt")],
+    );
+    let other = outside.file("outside.jsonl", &[codex_message("user", "OUTSIDE")]);
+    let db = Connection::open(fixture.0.join("state_5.sqlite")).unwrap();
+    db.execute_batch("CREATE TABLE threads (id TEXT, rollout_path TEXT, title TEXT, cwd TEXT, updated_at INTEGER, archived INTEGER, is_pinned INTEGER, project_id TEXT); CREATE TABLE projects (id TEXT, name TEXT);").unwrap();
+    db.execute("INSERT INTO projects VALUES ('project', 'Research')", [])
+        .unwrap();
+    for (id, path) in [("one", source), ("other", other)] {
+        db.execute(
+            "INSERT INTO threads VALUES (?1, ?2, 'Saved title', '/work/demo', 10, 0, 1, 'project')",
+            params![id, path.to_string_lossy()],
+        )
+        .unwrap();
+    }
+    let mut cache = HashMap::new();
+    let (_, rows) = files::read_provider("codex", Some(&fixture.0.join("sessions")), &mut cache);
+    assert_eq!(rows.len(), 1);
+    assert_eq!(rows[0].summary.title, "Saved title");
+    assert_eq!(rows[0].summary.project, "Research");
+    assert_eq!(rows[0].summary.pinned, Some(true));
+    assert!(rows[0].summary.project_id.is_some());
+    db.execute("UPDATE threads SET title='Renamed task' WHERE id='one'", [])
+        .unwrap();
+    let (_, rows) = files::read_provider("codex", Some(&fixture.0.join("sessions")), &mut cache);
+    assert_eq!(rows[0].summary.title, "Renamed task");
+    assert!(!serde_json::to_string(&rows[0]).unwrap().contains("OUTSIDE"));
+    db.execute("ALTER TABLE threads ADD COLUMN name TEXT", [])
+        .unwrap();
+    db.execute(
+        "UPDATE threads SET name='Sidebar name', is_pinned=0 WHERE id='one'",
+        [],
+    )
+    .unwrap();
+    fs::write(
+        fixture.0.join(".codex-global-state.json"),
+        r#"{"pinned-thread-ids":["one"]}"#,
+    )
+    .unwrap();
+    let (_, rows) = files::read_provider("codex", Some(&fixture.0.join("sessions")), &mut cache);
+    assert_eq!(rows[0].summary.title, "Sidebar name");
+    assert_eq!(rows[0].summary.pinned, Some(true));
+}
+
+#[test]
 fn codex_preserves_source_turn_timing_and_visible_message_phases() {
     let values = [
         json!({"type":"event_msg","timestamp":"2026-10-12T01:00:00Z","payload":{"type":"task_started","turn_id":"source-turn"}}),

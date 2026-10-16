@@ -16,7 +16,7 @@ pub(super) struct CachedFile {
     row: ActivityDetail,
 }
 
-fn linked(metadata: &fs::Metadata) -> bool {
+pub(super) fn linked(metadata: &fs::Metadata) -> bool {
     #[cfg(windows)]
     {
         use std::os::windows::fs::MetadataExt;
@@ -41,13 +41,39 @@ pub(super) fn read_provider(
     let Ok(root) = root.canonicalize() else {
         return ("unavailable", Vec::new());
     };
-    let mut files = Vec::new();
+    let hints = (provider == "codex")
+        .then(|| super::metadata::codex(&root))
+        .flatten();
+    let mut files = hints
+        .as_ref()
+        .map(|hints| {
+            hints
+                .keys()
+                .filter_map(|path| {
+                    let metadata = fs::metadata(path).ok()?;
+                    Some((path.clone(), metadata.len(), metadata.modified().ok()?))
+                })
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
     let mut budget = 12_000;
-    let incomplete = visit(&root, 0, &mut budget, &mut files).is_err() || budget == 0;
+    let incomplete =
+        files.is_empty() && (visit(&root, 0, &mut budget, &mut files).is_err() || budget == 0);
     if incomplete && files.is_empty() {
         return ("unavailable", Vec::new());
     }
-    files.sort_by(|a, b| b.2.cmp(&a.2).then(a.0.cmp(&b.0)));
+    let pinned = |path: &PathBuf| {
+        hints
+            .as_ref()
+            .and_then(|hints| hints.get(path))
+            .is_some_and(|hint| hint.pinned())
+    };
+    files.sort_by(|a, b| {
+        pinned(&b.0)
+            .cmp(&pinned(&a.0))
+            .then(b.2.cmp(&a.2))
+            .then(a.0.cmp(&b.0))
+    });
     files.truncate(SESSION_LIMIT);
     let mut rows = Vec::new();
     let mut failures = incomplete;
@@ -56,7 +82,11 @@ pub(super) fn read_provider(
             .get(&path)
             .filter(|entry| entry.length == length && entry.modified == modified)
         {
-            rows.push(cached.row.clone());
+            let mut row = cached.row.clone();
+            if let Some(hint) = hints.as_ref().and_then(|hints| hints.get(&path)) {
+                hint.apply(&mut row);
+            }
+            rows.push(row);
             continue;
         }
         let result = read_file(&root, &path, length).map(|records| {
@@ -75,7 +105,8 @@ pub(super) fn read_provider(
             row
         });
         match result {
-            Ok(row) => {
+            Ok(mut row) => {
+                let hint = hints.as_ref().and_then(|hints| hints.get(&path));
                 cache.insert(
                     path,
                     CachedFile {
@@ -84,6 +115,9 @@ pub(super) fn read_provider(
                         row: row.clone(),
                     },
                 );
+                if let Some(hint) = hint {
+                    hint.apply(&mut row);
+                }
                 rows.push(row);
             }
             Err(_) => failures = true,
@@ -101,12 +135,17 @@ fn visit(
     if depth > 6 || *budget == 0 {
         return Ok(());
     }
-    for entry in fs::read_dir(root)? {
+    let mut entries = fs::read_dir(root)?
+        .take(*budget)
+        .collect::<Result<Vec<_>, _>>()?;
+    // Codex uses year/month/day folders. Search newest folders before spending
+    // the bounded traversal budget on historical or nested agent records.
+    entries.sort_by_key(|entry| std::cmp::Reverse(entry.file_name()));
+    for entry in entries {
         if *budget == 0 {
             break;
         }
         *budget -= 1;
-        let entry = entry?;
         let metadata = fs::symlink_metadata(entry.path())?;
         if linked(&metadata) {
             continue;

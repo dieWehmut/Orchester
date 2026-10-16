@@ -87,6 +87,7 @@ paths:
                             timestamp: {type: integer, description: Source message time in Unix milliseconds; omitted when unknown}
                             phase: {enum: [commentary, final], description: Explicit source message phase; omitted when unknown}
                             turn_id: {type: string, description: Opaque source turn identity when available}
+                            call_id: {type: string, description: Optional opaque tool-call identity shared by its invocation and result}
         '401': {description: Missing or invalid local session}
         '404': {description: Unknown, malformed or no longer discoverable task ID}
         '503': {description: Local reader unavailable}
@@ -103,7 +104,9 @@ components:
         provider: {$ref: '#/components/schemas/Provider'}
         source: {enum: [external, managed]}
         title: {type: string, maxLength: 120}
-        project: {type: string, maxLength: 120, description: Project directory basename only}
+        project: {type: string, maxLength: 120, description: Source project name when available; otherwise the directory basename. No absolute root path is exposed.}
+        project_id: {type: string, description: Optional opaque project identity; distinguishes equal folder names}
+        pinned: {type: boolean, description: Optional source pin hint. Client preferences do not modify provider data.}
         updated_at: {type: integer, description: Unix milliseconds}
         state: {enum: [active, completed, interrupted, unknown]}
         preview: {type: string, maxLength: 200}

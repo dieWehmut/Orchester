@@ -82,6 +82,14 @@ pub(super) fn parse(
                 entry.timestamp = timestamp;
                 entry.phase = (entry.kind == "assistant").then_some(phase).flatten();
                 entry.turn_id = current_turn.clone();
+                let call = if provider == "codex" {
+                    record["payload"]["call_id"].as_str()
+                } else {
+                    None
+                };
+                if let Some(call) = call {
+                    entry.call_id = Some(opaque_id(&row.summary.id, call));
+                }
             }
         }
     }
@@ -181,7 +189,8 @@ fn codex_turn(
 
 fn title(row: &mut ActivityDetail, value: &str) {
     let value = value.trim();
-    if !value.is_empty()
+    if row.summary.title.is_empty()
+        && !value.is_empty()
         && !value.starts_with('<')
         && !value.starts_with("# AGENTS.md")
         && !value.starts_with("# Environment")
@@ -197,6 +206,7 @@ fn codex(row: &mut ActivityDetail, offset: u64, record: &Value) {
         Some("session_meta" | "turn_context") => {
             if let Some(cwd) = payload["cwd"].as_str() {
                 row.summary.project = project(cwd);
+                row.summary.project_id = Some(opaque_id("codex-project", cwd));
             }
         }
         Some("event_msg") => match payload["type"].as_str() {
@@ -257,6 +267,7 @@ fn codex(row: &mut ActivityDetail, offset: u64, record: &Value) {
 fn claude(row: &mut ActivityDetail, offset: u64, record: &Value) {
     if let Some(cwd) = record["cwd"].as_str() {
         row.summary.project = project(cwd);
+        row.summary.project_id = Some(opaque_id("claude-project", cwd));
     }
     match record["type"].as_str() {
         Some("last-prompt") => {
@@ -312,9 +323,19 @@ fn claude(row: &mut ActivityDetail, offset: u64, record: &Value) {
                                 &arguments(&part["input"]),
                                 part["name"].as_str(),
                             );
+                            if let (Some(entry), Some(call)) =
+                                (row.entries.last_mut(), part["id"].as_str())
+                            {
+                                entry.call_id = Some(opaque_id(&row.summary.id, call));
+                            }
                         }
                         Some("tool_result") => {
-                            push_entry(row, &id, "result", &text(&part["content"]), None)
+                            push_entry(row, &id, "result", &text(&part["content"]), None);
+                            if let (Some(entry), Some(call)) =
+                                (row.entries.last_mut(), part["tool_use_id"].as_str())
+                            {
+                                entry.call_id = Some(opaque_id(&row.summary.id, call));
+                            }
                         }
                         _ => (),
                     }

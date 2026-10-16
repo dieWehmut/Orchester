@@ -1,6 +1,7 @@
 //! Read-only, bounded views of local provider transcripts and managed runs.
 mod files;
 mod managed;
+mod metadata;
 mod opencode;
 mod transcript;
 
@@ -74,6 +75,8 @@ pub struct ActivityEntry {
     pub phase: Option<&'static str>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub turn_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub call_id: Option<String>,
 }
 
 #[derive(Clone, Serialize)]
@@ -92,6 +95,10 @@ pub struct ActivitySummary {
     pub source: &'static str,
     pub title: String,
     pub project: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub project_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pinned: Option<bool>,
     pub updated_at: i64,
     pub state: &'static str,
     pub preview: String,
@@ -331,6 +338,8 @@ fn empty_detail(provider: &str, source_id: &str, updated_at: i64) -> ActivityDet
             source: "external",
             title: String::new(),
             project: String::new(),
+            project_id: None,
+            pinned: None,
             updated_at,
             state: "unknown",
             preview: String::new(),
@@ -363,6 +372,7 @@ fn push_entry(
         timestamp: None,
         phase: None,
         turn_id: None,
+        call_id: None,
     };
     if let Some(old) = row.entries.iter_mut().find(|old| old.id == entry.id) {
         *old = entry;

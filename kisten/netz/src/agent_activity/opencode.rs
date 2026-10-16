@@ -43,6 +43,7 @@ fn read_database(path: &Path) -> rusqlite::Result<Vec<ActivityDetail>> {
         let mut row = empty_detail("opencode", &id, updated);
         row.summary.title = super::clip(&title, 120);
         row.summary.project = project(&directory);
+        row.summary.project_id = Some(super::opaque_id("opencode-project", &directory));
         let mut messages = db.prepare("SELECT substr(data, 1, 65537) FROM message WHERE session_id = ?1 ORDER BY time_created DESC, id DESC LIMIT 1")?;
         if let Some(value) = messages.query_map([&id], |r| r.get::<_, String>(0))?.next() {
             if let Ok(value) = serde_json::from_str::<Value>(&value?) {
@@ -125,6 +126,9 @@ fn read_database(path: &Path) -> rusqlite::Result<Vec<ActivityDetail>> {
                 let id = super::opaque_id(&row.summary.id, id);
                 if let Some(entry) = row.entries.iter_mut().find(|entry| entry.id == id) {
                     entry.timestamp = Some(created);
+                    if matches!(entry.kind, "tool" | "result") {
+                        entry.call_id = Some(super::opaque_id(&row.summary.id, &part_id));
+                    }
                     if entry.kind == "assistant" {
                         entry.phase = match message["finish"].as_str() {
                             Some("stop" | "end_turn" | "length") => Some("final"),
