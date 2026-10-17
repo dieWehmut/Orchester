@@ -194,6 +194,11 @@ impl CommandOverlay {
         }
     }
 
+    pub(crate) fn focus_current(mut self) -> Self {
+        self.selected = self.items.iter().position(|item| item.current).unwrap_or(0);
+        self
+    }
+
     pub(crate) fn with_footer(mut self, footer: impl Into<String>) -> Self {
         self.footer = footer.into();
         self

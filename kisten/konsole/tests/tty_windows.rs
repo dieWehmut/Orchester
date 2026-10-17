@@ -130,7 +130,7 @@ fn command_pickers_share_one_stable_full_screen_session() {
     let mut cursor = initial_end;
     for (command, title, footer) in [
         ("/permissions", "Self-agent permissions", "Enter inspect"),
-        ("/model", "Select model", "Enter choose effort"),
+        ("/model", "Model options", "Enter open"),
         (
             "/resume",
             "Resumable self-agent runs",
@@ -165,7 +165,7 @@ fn command_pickers_share_one_stable_full_screen_session() {
     assert_eq!(count(&output, b">_ Orchester"), 1, "stable top panel");
     for title in [
         "Self-agent permissions",
-        "Select model",
+        "Model options",
         "Resumable self-agent runs",
         "Self-agent status",
         "Self-agent configuration",
@@ -182,6 +182,133 @@ fn command_pickers_share_one_stable_full_screen_session() {
         "command picker transitions must not clear the full screen"
     );
 
+    let _ = std::fs::remove_dir_all(home);
+    let _ = std::fs::remove_dir_all(workspace);
+}
+
+#[test]
+fn model_and_reasoning_menus_apply_independently_to_the_next_turn() {
+    let _guard = conpty_test_guard();
+    let home = temp_home("conpty-model-menu-home");
+    let workspace = temp_home("conpty-model-menu-workspace");
+    std::fs::create_dir_all(&workspace).unwrap();
+    let server = LoopbackResponses::start(vec![serde_json::json!({
+        "status": "completed", "output": [{ "type": "message", "role": "assistant",
+        "content": [{ "type": "output_text", "text": "MODEL_MENU_OK" }] }]
+    })]);
+    let config = serde_json::json!({
+        "model_provider": "Loopback", "model": "base-model", "model_reasoning_effort": "high",
+        "disable_response_storage": true,
+        "model_providers": { "Loopback": { "name": "Loopback", "base_url": server.base_url(),
+            "api_key": "model-menu-test-canary", "wire_api": "responses", "requires_openai_auth": true } },
+        "model_profiles": { "review": { "model_provider": "Loopback", "model": "review-model", "model_reasoning_effort": "low" } }
+    }).to_string();
+    let config_path = write_user_config(&home, &config);
+    let mut session = ConPty::spawn(
+        Path::new(env!("CARGO_BIN_EXE_orchester")),
+        &workspace,
+        &[
+            (
+                OsString::from("ORCHESTER_HOME"),
+                home.as_os_str().to_os_string(),
+            ),
+            (
+                OsString::from("NO_PROXY"),
+                OsString::from("127.0.0.1,localhost"),
+            ),
+            (
+                OsString::from("no_proxy"),
+                OsString::from("127.0.0.1,localhost"),
+            ),
+        ],
+        100,
+        30,
+    )
+    .unwrap();
+    let mut cursor = session.read_until(b">_ Orchester", READY_TIMEOUT).unwrap();
+    session.write(b"/model\r").unwrap();
+    cursor = session
+        .read_until_since(cursor, b"Model options", READY_TIMEOUT)
+        .unwrap();
+    capture_terminal(&mut session, "model-options-100x30.ansi");
+    session.write(b"\r").unwrap();
+    cursor = session
+        .read_until_since(cursor, b"Select model", READY_TIMEOUT)
+        .unwrap();
+    session.write(b"\x1b[B\r").unwrap(); // review profile, preserving high rather than its stored low
+    cursor = session
+        .read_until_since(cursor, b"Model selected", READY_TIMEOUT)
+        .unwrap();
+    session.write(b"\x1b").unwrap();
+    cursor = session
+        .read_until_since(cursor, b"Queued: /model", READY_TIMEOUT)
+        .unwrap();
+    session.write(b"/model\r").unwrap();
+    cursor = session
+        .read_until_since(cursor, b"Model options", READY_TIMEOUT)
+        .unwrap();
+    session.write(b"\x1b[B\r").unwrap();
+    cursor = session
+        .read_until_since(cursor, b"Select reasoning effort", READY_TIMEOUT)
+        .unwrap();
+    capture_terminal(&mut session, "reasoning-current-high-100x30.ansi");
+    session.write(b"\x1b[B\x1b[B\r").unwrap(); // high -> xhigh -> max
+    cursor = session
+        .read_until_since(cursor, b"Model selected", READY_TIMEOUT)
+        .unwrap();
+    session.write(b"\x1b").unwrap();
+    cursor = session
+        .read_until_since(cursor, b"Queued: /model", READY_TIMEOUT)
+        .unwrap();
+    session.write(b"/model\r").unwrap();
+    cursor = session
+        .read_until_since(cursor, b"Model options", READY_TIMEOUT)
+        .unwrap();
+    session.write(b"\x1b[B\r").unwrap();
+    cursor = session
+        .read_until_since(cursor, b"Select reasoning effort", READY_TIMEOUT)
+        .unwrap();
+    session.resize(44, 14).unwrap();
+    cursor = session
+        .read_until_since(cursor, b"max", READY_TIMEOUT)
+        .unwrap();
+    capture_terminal(&mut session, "reasoning-max-44x14.ansi");
+    session.write(b"\x1b").unwrap(); // Back to the parent, then close
+    cursor = session
+        .read_until_since(cursor, b"Model options", READY_TIMEOUT)
+        .unwrap();
+    session.write(b"\x1b").unwrap();
+    cursor = session
+        .read_until_since(cursor, b"Queued: /model", READY_TIMEOUT)
+        .unwrap();
+    session.write(b"Check the selected model\r").unwrap();
+    session
+        .read_until_since(cursor, b"MODEL_MENU_OK", COMMAND_TIMEOUT)
+        .unwrap();
+    session.write(b"/quit\r").unwrap();
+    let (code, output) = session.wait_for_exit(READY_TIMEOUT).unwrap();
+    assert_eq!(code, 0);
+    assert_eq!(
+        count(&output, b"\x1b[?1049h"),
+        1,
+        "one stable terminal session"
+    );
+    assert!(!contains(&output, b"model-menu-test-canary"));
+    let requests = server.finish();
+    assert_eq!(requests.len(), 1, "menus must not submit a turn");
+    let start = requests[0]
+        .windows(4)
+        .position(|bytes| bytes == b"\r\n\r\n")
+        .unwrap()
+        + 4;
+    let body: serde_json::Value = serde_json::from_slice(&requests[0][start..]).unwrap();
+    assert_eq!(body["model"], "review-model");
+    assert_eq!(body["reasoning"]["effort"], "max");
+    assert_eq!(
+        std::fs::read_to_string(config_path).unwrap(),
+        config,
+        "session choices preserve configuration"
+    );
     let _ = std::fs::remove_dir_all(home);
     let _ = std::fs::remove_dir_all(workspace);
 }
