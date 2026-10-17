@@ -223,10 +223,10 @@ describe('WorkspaceView', () => {
     const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
     await wrapper.get('[data-model-picker] [aria-haspopup="menu"]').trigger('click')
     await nextTick()
-    const provider = wrapper
-      .findAll('[role="menuitemradio"]')
-      .find((item) => item.text().includes('OpenAI'))
-    await provider?.trigger('click')
+    const modelSection = document.querySelector<HTMLButtonElement>('[data-model-section="models"]')!
+    modelSection.click()
+    await nextTick()
+    document.querySelector<HTMLButtonElement>('[data-model-choice="provider:openai"]')!.click()
     await flushPromises()
 
     // The chain the reader's click travels: the picker reports the intent, the

@@ -1,6 +1,6 @@
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import ModelContextControl from '../src/components/run/ModelContextControl.vue'
 import type { ModelCatalogStoreStatus } from '../src/stores/model-catalog'
@@ -23,12 +23,14 @@ function mountPicker(
   return mount(ModelContextControl, {
     props: { catalog, status },
     attachTo: document.body,
+    global: { stubs: { teleport: true } },
   })
 }
 
 async function openPicker(wrapper: ReturnType<typeof mountPicker>) {
   await wrapper.get('[data-model-picker] [aria-haspopup="menu"]').trigger('click')
   await nextTick()
+  await flushPromises()
 }
 
 function items(wrapper: ReturnType<typeof mountPicker>) {
@@ -43,6 +45,7 @@ function itemByText(wrapper: ReturnType<typeof mountPicker>, text: string) {
 
 afterEach(() => {
   document.body.replaceChildren()
+  vi.restoreAllMocks()
 })
 
 describe('ModelContextControl readout', () => {
@@ -52,7 +55,7 @@ describe('ModelContextControl readout', () => {
     expect(wrapper.find('[data-model-context]').exists()).toBe(true)
     expect(wrapper.get('[data-model-context-model]').text()).toContain('gpt-5.6')
     expect(wrapper.get('.model-context__readout').attributes('title')).toContain('OpenAI')
-    expect(wrapper.get('[data-model-context-effort]').text()).toContain('high')
+    expect(wrapper.get('[data-model-context-effort]').text()).toContain('High')
     expect(wrapper.find('[data-model-context-status]').exists()).toBe(false)
     wrapper.unmount()
   })
@@ -109,138 +112,144 @@ describe('ModelContextControl readout', () => {
   })
 })
 
+async function openSection(wrapper: ReturnType<typeof mountPicker>, section = 'models') {
+  await openPicker(wrapper)
+  await wrapper.get(`[data-model-section="${section}"]`).trigger('click')
+  await nextTick()
+  await flushPromises()
+}
+
+function choice(wrapper: ReturnType<typeof mountPicker>, id: string) {
+  return wrapper.get(`[data-model-choice="${id}"]`)
+}
+
 describe('ModelContextControl picker', () => {
-  it('offers settings and retry while preserving the last known model', async () => {
-    const wrapper = mountPicker(MODEL_CATALOG_FIXTURE, 'stale')
+  it('opens only Model and Reasoning level before showing grouped choices', async () => {
+    const wrapper = mountPicker()
     await openPicker(wrapper)
+    expect(items(wrapper).map(item => item.text())).toEqual(['Modelgpt-5.6', 'Reasoning levelHigh'])
+    expect(wrapper.find('[data-model-submenu]').exists()).toBe(false)
+    await wrapper.get('[data-model-section="models"]').trigger('click')
+    expect(wrapper.findAll('.model-selection__heading').map(item => item.text())).toEqual(['OpenAI', 'Relay'])
+    expect(choice(wrapper, 'profile:review').text()).toContain('gpt-5.6review')
+    expect(choice(wrapper, 'provider:openai').attributes('aria-checked')).toBe('true')
+    expect(wrapper.findAll('[role="menuitemradio"][aria-checked="true"]')).toHaveLength(1)
+    wrapper.unmount()
+  })
+
+  it('offers settings and retry inside the model submenu', async () => {
+    const wrapper = mountPicker(MODEL_CATALOG_FIXTURE, 'stale')
+    await openSection(wrapper)
     await itemByText(wrapper, 'Retry models').trigger('click')
     expect(wrapper.emitted('retry')).toEqual([[]])
-    await openPicker(wrapper)
+    await openSection(wrapper)
     await itemByText(wrapper, 'Model settings').trigger('click')
     expect(wrapper.emitted('configure')).toEqual([[]])
     expect(wrapper.get('[data-model-context-model]').text()).toContain('gpt-5.6')
     wrapper.unmount()
   })
-  it('lists the providers, the profiles and the efforts, and marks what is in force', async () => {
+
+  it('shows an unavailable provider with a reason and prevents selecting it', async () => {
     const wrapper = mountPicker()
-    await openPicker(wrapper)
-
-    const rows = items(wrapper).map((item) => item.text())
-
-    expect(rows[0]).toContain('OpenAI')
-    expect(rows[0]).toContain('gpt-5.6')
-    expect(rows.some((row) => row.includes('review'))).toBe(true)
-    expect(rows.some((row) => row.includes('Effort: high'))).toBe(true)
-
-    // A menu that chooses has to say which one is in force.
-    expect(wrapper.get('[data-model-picker] [role="menuitemradio"][aria-checked="true"]').text()).toContain(
-      'OpenAI',
-    )
-    wrapper.unmount()
-  })
-
-  it('draws a provider the workspace cannot reach, with the reason it cannot', async () => {
-    const wrapper = mountPicker()
-    await openPicker(wrapper)
-
-    const relay = itemByText(wrapper, 'Relay')
-
+    await openSection(wrapper)
+    const relay = choice(wrapper, 'provider:relay')
     expect(relay.attributes('disabled')).toBeDefined()
     expect(relay.text()).toContain('Provider endpoint is not configured')
+    await relay.trigger('click')
+    expect(wrapper.emitted('select')).toBeUndefined()
     wrapper.unmount()
   })
 
-  it('reports the whole intent when a provider is chosen, keeping the effort', async () => {
+  it.each([
+    ['provider:openai', { provider: 'openai', effort: 'high' }],
+    ['profile:review', { profile: 'review', effort: 'high' }],
+  ])('selects %s while preserving the effort and returns focus', async (id, selection) => {
+    const wrapper = mountPicker()
+    await openSection(wrapper)
+    await choice(wrapper, id).trigger('click')
+    expect(wrapper.emitted('select')).toEqual([[selection]])
+    expect(wrapper.find('[data-model-root]').exists()).toBe(false)
+    expect(document.activeElement).toBe(wrapper.get('[data-model-picker] > button').element)
+    wrapper.unmount()
+  })
+
+  it('changes effort independently for configured, provider, and profile selections', async () => {
+    for (const [catalog, axis] of [
+      [MODEL_CATALOG_FIXTURE, {}],
+      [{ ...MODEL_CATALOG_FIXTURE, selected_provider: 'openai' }, { provider: 'openai' }],
+      [{ ...MODEL_CATALOG_FIXTURE, active: { state: 'configured', choice: MODEL_CATALOG_FIXTURE.profiles[0]! } }, { profile: 'review' }],
+    ] as const) {
+      const wrapper = mountPicker(catalog)
+      await openSection(wrapper, 'efforts')
+      await choice(wrapper, 'effort:max').trigger('click')
+      expect(wrapper.emitted('select')).toEqual([[{ ...axis, effort: 'max' }]])
+      await openSection(wrapper, 'efforts')
+      await choice(wrapper, 'effort:').trigger('click')
+      expect(wrapper.emitted('select')?.[1]).toEqual([{ ...axis, effort: null }])
+      wrapper.unmount()
+    }
+  })
+
+  it('checks the profile without also checking its provider', async () => {
+    const wrapper = mountPicker({ ...MODEL_CATALOG_FIXTURE, active: { state: 'configured', choice: MODEL_CATALOG_FIXTURE.profiles[0]! } })
+    await openSection(wrapper)
+    const checked = wrapper.findAll('[aria-checked="true"]')
+    expect(checked).toHaveLength(1)
+    expect(checked[0]?.attributes('data-model-choice')).toBe('profile:review')
+    wrapper.unmount()
+  })
+
+  it('preserves an unknown effort as a checked, selectable option', async () => {
+    const wrapper = mountPicker({ ...MODEL_CATALOG_FIXTURE, active: { state: 'configured', choice: { ...MODEL_CATALOG_FIXTURE.profiles[0]!, reasoning_effort: 'custom-budget' } } })
+    expect(wrapper.get('[data-model-context-effort]').text()).toBe('custom-budget')
+    await openSection(wrapper, 'efforts')
+    expect(choice(wrapper, 'effort:custom-budget').attributes('aria-checked')).toBe('true')
+    await choice(wrapper, 'effort:custom-budget').trigger('click')
+    expect(wrapper.emitted('select')).toEqual([[{ profile: 'review', effort: 'custom-budget' }]])
+    wrapper.unmount()
+  })
+
+  it('keeps keyboard navigation, submenu Back, Escape, and outside focus independent', async () => {
     const wrapper = mountPicker()
     await openPicker(wrapper)
-
-    await itemByText(wrapper, 'OpenAI').trigger('click')
-
-    // Picking a provider changes one axis: the effort in force comes with it,
-    // because a request without it would reset the override to the default.
-    expect(wrapper.emitted('select')).toEqual([
-      [{ provider: 'openai', effort: 'high' }],
-    ])
+    const modelRow = wrapper.get('[data-model-section="models"]')
+    expect(document.activeElement).toBe(modelRow.element)
+    await modelRow.trigger('keydown', { key: 'ArrowRight' })
+    expect(document.activeElement).toBe(choice(wrapper, 'provider:openai').element)
+    await choice(wrapper, 'provider:openai').trigger('keydown', { key: 'End' })
+    expect(document.activeElement?.textContent).toContain('Model settings')
+    await wrapper.get('[data-model-submenu]').trigger('keydown', { key: 'Escape' })
+    expect(wrapper.find('[data-model-submenu]').exists()).toBe(false)
+    expect(document.activeElement).toBe(wrapper.get('[data-model-section="models"]').element)
+    await wrapper.get('[data-model-section="models"]').trigger('keydown', { key: 'ArrowDown' })
+    expect(document.activeElement).toBe(wrapper.get('[data-model-section="efforts"]').element)
+    await wrapper.get('[data-model-root]').trigger('keydown', { key: 'Escape' })
+    expect(document.activeElement).toBe(wrapper.get('[data-model-picker] > button').element)
+    await openPicker(wrapper)
+    const outside = document.createElement('button')
+    document.body.append(outside)
+    outside.focus()
+    outside.dispatchEvent(new Event('pointerdown', { bubbles: true }))
+    await nextTick()
+    expect(wrapper.find('[data-model-root]').exists()).toBe(false)
+    expect(document.activeElement).toBe(outside)
     wrapper.unmount()
   })
 
-  it('names a profile without letting go of the axis', async () => {
+  it('replaces the root on narrow screens and keeps both panels within the viewport', async () => {
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({ left: 150, right: 355, top: 700, bottom: 734, width: 205, height: 34, x: 150, y: 700, toJSON() {} })
+    vi.stubGlobal('innerWidth', 375)
     const wrapper = mountPicker()
-    await openPicker(wrapper)
-
-    await itemByText(wrapper, 'review').trigger('click')
-
-    expect(wrapper.emitted('select')).toEqual([[{ profile: 'review', effort: 'high' }]])
+    await openSection(wrapper)
+    expect(wrapper.get('[data-model-submenu]').attributes('data-compact')).toBe('true')
+    expect(wrapper.get('[data-model-root]').isVisible()).toBe(false)
+    const menu = wrapper.get('[data-model-submenu]').element as HTMLElement
+    expect(parseFloat(menu.style.left)).toBeGreaterThanOrEqual(8)
+    expect(parseFloat(menu.style.left) + parseFloat(menu.style.width)).toBeLessThanOrEqual(367)
+    await wrapper.get('[data-model-back]').trigger('click')
+    expect(wrapper.get('[data-model-root]').isVisible()).toBe(true)
+    expect(document.activeElement).toBe(wrapper.get('[data-model-section="models"]').element)
     wrapper.unmount()
-  })
-
-  it('sends an effort for the axis the runtime reports', async () => {
-    const plain = mountPicker()
-    await openPicker(plain)
-
-    await itemByText(plain, 'Effort: low').trigger('click')
-
-    // This catalog reports no chosen provider: the active model is the
-    // configuration's, so the request carries the effort and nothing else.
-    expect(plain.emitted('select')).toEqual([[{ effort: 'low' }]])
-    plain.unmount()
-
-    const chosen = mountPicker({ ...MODEL_CATALOG_FIXTURE, selected_provider: 'openai' })
-    await openPicker(chosen)
-
-    await itemByText(chosen, 'Effort: low').trigger('click')
-
-    // With a provider in force, the same click has to say so: a request that
-    // only named the effort would drop the provider the reader chose.
-    expect(chosen.emitted('select')).toEqual([[{ provider: 'openai', effort: 'low' }]])
-    chosen.unmount()
-  })
-
-  it('clears the override when the provider default is chosen', async () => {
-    const wrapper = mountPicker({ ...MODEL_CATALOG_FIXTURE, selected_provider: 'openai' })
-    await openPicker(wrapper)
-
-    await itemByText(wrapper, 'Effort: provider default').trigger('click')
-
-    expect(wrapper.emitted('select')).toEqual([[{ provider: 'openai', effort: null }]])
-    wrapper.unmount()
-  })
-
-  it('says how far the choice reaches, where the choice is made', async () => {
-    const wrapper = mountPicker()
-    await openPicker(wrapper)
-
-    const scope = items(wrapper).at(-1)!
-
-    // The runtime keeps this for as long as it runs and never writes it to the
-    // configuration file, so the menu says so rather than reading as a setting
-    // the reader has changed for good.
-    expect(scope.text()).toContain('Applies to the runs that follow')
-    expect(scope.attributes('disabled')).toBeDefined()
-    wrapper.unmount()
-  })
-
-  it('keeps reporting a value it has no name for rather than hiding it', () => {
-    const wrapper = mountPicker({
-      ...MODEL_CATALOG_FIXTURE,
-      active: {
-        state: 'configured',
-        choice: {
-          profile: null,
-          provider: 'openai',
-          provider_name: 'OpenAI',
-          model: 'gpt-5.6',
-          reasoning_effort: 'xhigh',
-          plan_reasoning_effort: null,
-          service_tier: null,
-        },
-      },
-    })
-
-    // The runtime passes any effort through, so a value this surface cannot name
-    // stays visible: forcing it into one of the offered names would report a
-    // model setting the run is not using.
-    expect(wrapper.get('[data-model-context-effort]').text()).toBe('xhigh')
-    wrapper.unmount()
+    vi.unstubAllGlobals()
   })
 })

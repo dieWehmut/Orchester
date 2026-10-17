@@ -13,13 +13,15 @@
  * knows but cannot reach is drawn disabled with its reason, because a menu that
  * silently omits a provider leaves the reader wondering where it went.
  */
-import { AppButton, AppMenu, Spinner, type AppMenuItem } from '@orchester/design'
+import { AppButton, Spinner } from '@orchester/design'
 import type { ModelCatalogDto, ModelSelectionRequestDto } from '@orchester/protokoll'
 import { ChevronDown, CircleAlert } from '@lucide/vue'
 import { computed } from 'vue'
 
 import { useI18n } from '../../i18n'
 import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
+import ModelSelectionMenu from './ModelSelectionMenu.vue'
+import { effortName, modelMenuGroups, REASONING_EFFORTS } from './model-menu'
 
 const props = withDefaults(
   defineProps<{
@@ -37,22 +39,6 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
-
-/**
- * The effort names this product offers, in the vocabulary the provider APIs use.
- *
- * The runtime passes any non-empty value through rather than holding a list, so
- * these are the names this surface knows how to say. A value the catalog reports
- * that is not among them stays visible in the trigger instead of being forced
- * into one of these.
- */
-const EFFORT_NAMES = ['minimal', 'low', 'medium', 'high'] as const
-const EFFORT_KEYS = {
-  minimal: 'run.effortMinimal',
-  low: 'run.effortLow',
-  medium: 'run.effortMedium',
-  high: 'run.effortHigh',
-} as const
 
 const configured = computed(() => props.catalog?.active.state === 'configured')
 const activeChoice = computed(() =>
@@ -82,9 +68,9 @@ const effortLabel = computed(() => activeChoice.value?.reasoning_effort ?? '')
  * could disagree with it after a reload.
  */
 const chosenAxis = computed<ModelSelectionRequestDto>(() => {
-  if (activeChoice.value?.profile) return { profile: activeChoice.value.profile }
   const provider = props.catalog?.selected_provider
-  return provider ? { provider } : {}
+  if (provider) return { provider }
+  return activeChoice.value?.profile ? { profile: activeChoice.value.profile } : {}
 })
 
 /** Whether there is anything to choose between. */
@@ -98,52 +84,14 @@ const selectable = computed(() => {
 const pending = computed(() => ['loading', 'refreshing'].includes(props.status))
 const needsSetup = computed(() => props.status === 'ready' && props.catalog !== null && !selectable.value)
 
-const items = computed<AppMenuItem[]>(() => {
-  const catalog = props.catalog
-  if (!catalog) return []
-
-  const providerItems: AppMenuItem[] = catalog.providers.map((provider) => ({
-    id: `provider:${provider.id}`,
-    label: provider.name,
-    hint: provider.state === 'selectable' ? (provider.model ?? '') : (provider.reason ?? ''),
-    disabled: provider.state !== 'selectable',
-    checked: provider.active || catalog.selected_provider === provider.id,
-  }))
-
-  const profileItems: AppMenuItem[] = catalog.profiles.map((profile) => ({
-    id: `profile:${profile.profile}`,
-    label: profile.profile,
-    hint: profile.model,
-    checked: activeChoice.value?.profile === profile.profile,
-  }))
-
-  const effortItems: AppMenuItem[] = [
-    {
-      id: 'effort:',
-      label: t('run.effortOption', { name: t('run.effortDefault') }),
-      checked: (activeChoice.value?.reasoning_effort ?? null) === null,
-    },
-    ...EFFORT_NAMES.map((name) => ({
-      id: `effort:${name}`,
-      label: t('run.effortOption', { name: t(EFFORT_KEYS[name]) }),
-      checked: activeChoice.value?.reasoning_effort === name,
-    })),
+const groups = computed(() => modelMenuGroups(props.catalog))
+const efforts = computed(() => {
+  const names: string[] = [...REASONING_EFFORTS]
+  if (effortLabel.value && !names.includes(effortLabel.value)) names.push(effortLabel.value)
+  return [
+    { id: 'effort:', label: t('run.effortDefault'), checked: !effortLabel.value },
+    ...names.map(name => ({ id: `effort:${name}`, label: effortName(name), checked: effortLabel.value === name })),
   ]
-
-  // What the choice covers, said where the choice is made. The runtime keeps it
-  // for as long as it is running, and it is not written to the configuration
-  // file: a menu that stayed silent about that would read as a setting the
-  // reader had changed for good.
-  const scopeItem: AppMenuItem = {
-    id: 'scope:',
-    label: t('run.selectionScope'),
-    disabled: true,
-  }
-
-  return [...providerItems, ...profileItems, ...effortItems,
-    { id: 'configure:', label: t('run.modelSettings') },
-    ...(props.status === 'stale' ? [{ id: 'retry:', label: t('run.retryModels') }] : []),
-    scopeItem]
 })
 
 /**
@@ -168,6 +116,10 @@ function choose(id: string): void {
     emit('select', { profile: value, effort: effortLabel.value || null })
     return
   }
+  if (axis === 'configured') {
+    emit('select', { effort: effortLabel.value || null })
+    return
+  }
   if (axis === 'effort') {
     emit('select', { ...chosenAxis.value, effort: value.length > 0 ? value : null })
   }
@@ -176,29 +128,30 @@ function choose(id: string): void {
 
 <template>
   <div class="model-context" data-model-context>
-    <AppMenu
+    <ModelSelectionMenu
       v-if="selectable"
       class="model-context__menu"
-      data-model-picker
-      placement="top"
-      align="end"
       :label="t('run.modelSelection')"
-      :items="items"
+      :model="modelLabel"
+      :effort="effortName(effortLabel) || t('run.effortDefault')"
+      :groups="groups"
+      :efforts="efforts"
+      :stale="props.status === 'stale'"
       @select="choose"
     >
-      <template #trigger>
+      <template #default="{ open }">
         <span class="model-context__readout" :title="providerLabel">
           <span class="model-context__model" data-model-context-model>{{ modelLabel }}</span>
           <span v-if="effortLabel" class="model-context__effort" data-model-context-effort>{{
-            effortLabel
+            effortName(effortLabel)
           }}</span>
           <span v-if="statusLabel" class="model-context__status" data-model-context-status>{{
             statusLabel
           }}</span>
-          <ChevronDown class="model-context__disclosure" :size="13" aria-hidden="true" />
+          <ChevronDown class="model-context__disclosure" :class="{ 'is-open': open }" :size="13" aria-hidden="true" />
         </span>
       </template>
-    </AppMenu>
+    </ModelSelectionMenu>
 
     <span v-else-if="pending" class="model-context__unavailable" data-model-context-loading role="status">
       <Spinner :size="13" :label="t('run.modelLoading')" />
@@ -228,25 +181,16 @@ function choose(id: string): void {
    opens the list, rather than being a field that only says "model". */
 .model-context__readout {
   display: inline-flex;
+  font-size: 15px;
   min-inline-size: 0;
   align-items: center;
   gap: var(--space-2);
   min-block-size: var(--hit-target-min, 32px);
   padding: 0 var(--space-2);
-  border-radius: var(--radius-sm);
+  border-radius: 16px;
 }
 
-.model-context__menu :deep(.app-menu__trigger) {
-  min-block-size: var(--hit-target-min, 32px);
-  padding: 0;
-  border: 0;
-  background: transparent;
-  font-size: 15px;
-}
-
-.model-context__readout:hover {
-  background: var(--color-bg-element);
-}
+.model-context__disclosure.is-open { transform: rotate(180deg); }
 
 .model-context__icon {
   display: grid;
