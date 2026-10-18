@@ -608,6 +608,8 @@
   "activity": {
     "work": "工作過程",
     "working": "正在處理",
+    "workingFor": "正在處理 · {duration}",
+    "integrationUsed": "已使用 {name} 整合",
     "workedFor": "用時 {duration}",
     "title": "智慧體動態",
     "view": "查看目前內容",

@@ -608,6 +608,8 @@
   "activity": {
     "work": "Work details",
     "working": "Working",
+    "workingFor": "Working · {duration}",
+    "integrationUsed": "Used {name} integration",
     "workedFor": "Worked for {duration}",
     "title": "Agent activity",
     "view": "View current work",

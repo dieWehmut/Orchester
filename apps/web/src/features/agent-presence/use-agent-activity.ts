@@ -32,6 +32,7 @@ export function useAgentActivity(provider: Ref<ExternalActivityProvider | null>)
   let timer: ReturnType<typeof setTimeout> | null = null
   let disposed = false
   let baseline = Object.keys(prefs.value.seen).length === 0
+  let detailSnapshot = ''
 
   function persist(): void { if (provider.value) writeStored(`orchester:activity:${provider.value}`, JSON.stringify(prefs.value)) }
   function isPinned(row: ActivitySummary): boolean { return prefs.value.pins[row.id] ?? row.pinned ?? false }
@@ -69,11 +70,15 @@ export function useAgentActivity(provider: Ref<ExternalActivityProvider | null>)
       if (!sessions.value.some(row => row.id === selectedId.value)) {
         selectedId.value = sessions.value.find(row => row.state === 'active')?.id ?? sessions.value[0]?.id ?? null
         detail.value = null
+        detailSnapshot = ''
       }
       if (selectedId.value) {
         const next = await api.detail(selectedId.value, signal)
         if (current !== generation || signal.aborted) return
-        detail.value = next
+        // A poll is not new output. Avoid rebuilding Markdown and disturbing
+        // selections/scroll position until the source content actually changes.
+        const snapshot = JSON.stringify(next)
+        if (snapshot !== detailSnapshot) { detail.value = next; detailSnapshot = snapshot }
         prefs.value.seen[next.id] = next.updated_at
       }
       persist()
@@ -84,11 +89,12 @@ export function useAgentActivity(provider: Ref<ExternalActivityProvider | null>)
   function refresh(): void { clearRequest(); refreshing.value = false; void load() }
   function select(id: string): void {
     if (id === selectedId.value) return
-    clearRequest(); refreshing.value = false; selectedId.value = id; detail.value = null; loading.value = true; void load()
+    clearRequest(); refreshing.value = false; selectedId.value = id; detail.value = null; detailSnapshot = ''; loading.value = true; void load()
   }
   function visibilityChanged(): void { if (document.visibilityState === 'visible') refresh() }
   watch(() => [provider.value, stores.bootstrap.status.value], () => {
     clearRequest(); sessions.value = []; sources.value = []; detail.value = null; selectedId.value = null
+    detailSnapshot = ''
     loading.value = true; refreshing.value = false; error.value = false
     prefs.value = preferences(provider.value ?? 'codex')
     baseline = Object.keys(prefs.value.seen).length === 0

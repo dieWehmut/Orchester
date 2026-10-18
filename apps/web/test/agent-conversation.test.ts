@@ -16,13 +16,13 @@ const entries = [
 const detail = (extra: Partial<ActivityDetail> = {}): ActivityDetail => ({ schema_version: 1, id: 'session', provider: 'codex', source: 'external', title: '同步仓库', project: 'Orchester', updated_at: 2000, state: 'completed', preview: '', truncated: false, entries, turns: [{ id: 'turn', started_at: 1000, completed_at: 1320000 }], ...extra })
 
 describe('source conversation rendering', () => {
-  it('renders the reference as a prompt, collapsed work, Markdown answer and working copy action', async () => {
+  it('renders the reference as a prompt, expanded latest work, Markdown answer and working copy action', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     vi.stubGlobal('navigator', { clipboard: { writeText } })
     const wrapper = mount(AgentConversation, { props: { detail: detail() } })
     try {
       expect(wrapper.get('[data-activity-entry="user"]').text()).toBe('继续')
-      expect((wrapper.get('[data-work-disclosure]').element as HTMLDetailsElement).open).toBe(false)
+      expect((wrapper.get('[data-work-disclosure]').element as HTMLDetailsElement).open).toBe(true)
       expect(wrapper.get('[data-work-disclosure] > summary').text()).toBe('Worked for 21m 59s')
       const answer = wrapper.get('.agent-conversation__answer')
       expect(answer.findAll('li')).toHaveLength(2)
@@ -89,7 +89,8 @@ describe('source conversation rendering', () => {
     vi.stubGlobal('navigator', { clipboard: { writeText } })
     const wrapper = mount(AgentConversation, { props: { detail: detail({ entries: [entry('u','user','Continue',{timestamp: 1792112400000}), entry('a','assistant','Done\n\n<oai-mem-citation>\nmetadata\n</oai-mem-citation>',{ phase:'final' })] }) } })
     expect(wrapper.find('[data-conversation-date]').exists()).toBe(true)
-    await wrapper.get('[data-message-copy]').trigger('click')
+    expect(wrapper.get('[data-message-time]').text()).toMatch(/\d{2}:\d{2}/)
+    await wrapper.get('.agent-conversation__answer [data-message-copy]').trigger('click')
     expect(writeText).toHaveBeenCalledWith('Done')
     wrapper.unmount(); vi.unstubAllGlobals()
   })
@@ -101,5 +102,54 @@ describe('source conversation rendering', () => {
     await expect(api.detail('session', new AbortController().signal)).resolves.toMatchObject({ id: 'session' })
     body = detail({ entries: [entry('bad', 'assistant', 'text', { timestamp: 1e20 })] })
     await expect(api.detail('session', new AbortController().signal)).rejects.toThrow('Invalid activity detail')
+  })
+
+  it.each(['codex', 'claude', 'opencode'] as const)('updates prose, pending tools and elapsed time in place for %s', async provider => {
+    vi.useFakeTimers(); vi.setSystemTime(5000)
+    const initial = detail({ provider, state: 'active', entries: entries.slice(0, 3), turns: [{ id: 'turn', started_at: 1000 }] })
+    const wrapper = mount(AgentConversation, { props: { detail: initial } })
+    try {
+      const work = wrapper.get('[data-work-disclosure]').element as HTMLDetailsElement
+      const tool = wrapper.get('[data-tool-disclosure]').element as HTMLDetailsElement
+      expect(work.open).toBe(true)
+      expect(wrapper.get('[data-work-disclosure] > summary').text()).toBe('Working · 4s')
+      expect(wrapper.find('[data-tool-pending="true"]').exists()).toBe(true)
+      await vi.advanceTimersByTimeAsync(2000)
+      expect(wrapper.get('[data-work-disclosure] > summary').text()).toBe('Working · 6s')
+      tool.open = true
+      await wrapper.setProps({ detail: { ...initial, entries: [...entries.slice(0, 4), entry('more', 'assistant', '下一步 **安装**', { phase: 'commentary', turn_id: 'turn' })] } })
+      expect(wrapper.get('[data-tool-disclosure]').element).toBe(tool)
+      expect(tool.open).toBe(true)
+      expect(wrapper.find('[data-tool-pending="true"]').exists()).toBe(false)
+      expect(wrapper.get('[data-tool-result]').text()).toBe('verified')
+      expect(wrapper.get('[data-work-disclosure]').text()).toContain('下一步 安装')
+      work.open = false; await wrapper.get('[data-work-disclosure]').trigger('toggle')
+      await wrapper.setProps({ detail: detail({ provider }) })
+      expect(wrapper.get('[data-work-disclosure]').element).toBe(work)
+      expect(work.open).toBe(false)
+      expect(wrapper.find('[data-conversation-running]').exists()).toBe(false)
+      await vi.advanceTimersByTimeAsync(2000)
+      expect(wrapper.get('[data-work-disclosure] > summary').text()).toBe('Worked for 21m 59s')
+    } finally { wrapper.unmount(); vi.useRealTimers() }
+  })
+
+  it('separates distinct source turns and expands only the latest round on arrival', () => {
+    const next = entries.map(item => ({ ...item, id: `next-${item.id}`, turn_id: 'next-turn' }))
+    const wrapper = mount(AgentConversation, { props: { detail: detail({ entries: [...entries, ...next] }) } })
+    expect(wrapper.findAll('[data-work-disclosure]').map(item => (item.element as HTMLDetailsElement).open)).toEqual([false, true])
+    wrapper.unmount()
+    const work = conversationItems([entry('a', 'tool', 'first', { turn_id: 'first' }), entry('b', 'tool', 'second', { turn_id: 'second' })])
+    expect(work).toHaveLength(2)
+  })
+
+  it('identifies integrations, shows waiting activity and pauses it when updates are unavailable', async () => {
+    const wrapper = mount(AgentConversation, { props: { detail: detail({ state: 'active', entries: [entry('u', 'user', '继续')] }) } })
+    expect(wrapper.find('[data-conversation-running]').exists()).toBe(true)
+    await wrapper.setProps({ detail: detail({ state: 'active', entries: [entry('t', 'tool', '{}', { tool: 'mcp__playwright__browser_navigate' })] }) })
+    expect(wrapper.get('[data-integration="Playwright"] summary').text()).toContain('Playwright')
+    await wrapper.setProps({ stale: true })
+    expect(wrapper.find('[data-conversation-running]').exists()).toBe(false)
+    expect(wrapper.find('[data-tool-pending="true"]').exists()).toBe(false)
+    wrapper.unmount()
   })
 })

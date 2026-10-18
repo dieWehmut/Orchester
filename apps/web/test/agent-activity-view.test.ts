@@ -5,6 +5,7 @@ import { createAppStores } from '../src/stores/app'
 import { createAppRouter } from '../src/router'
 import AgentActivityView from '../src/features/agent-presence/components/AgentActivityView.vue'
 import AgentActivitySidebar from '../src/features/agent-presence/components/AgentActivitySidebar.vue'
+import AgentConversation from '../src/features/agent-presence/components/AgentConversation.vue'
 import { defineComponent, h, toRef, type PropType } from 'vue'
 import { useAgentActivity } from '../src/features/agent-presence/use-agent-activity'
 import type { ExternalActivityProvider } from '../src/api/agent-activity'
@@ -33,6 +34,33 @@ function setup(fetch: typeof globalThis.fetch) {
 }
 
 describe('live agent content', () => {
+  it('keeps unchanged polls inert and follows a growing message until the reader scrolls back', async () => {
+    vi.useFakeTimers()
+    const row = session('growing')
+    let text = 'First words'
+    const wrapper = setup(async url => response(String(url).includes('?provider=') ? list([row]) : detail(row, [entry('reply', text)])))
+    await flushPromises()
+    const initial = wrapper.getComponent(AgentConversation).props('detail')
+    await vi.advanceTimersByTimeAsync(2100); await flushPromises()
+    expect(wrapper.getComponent(AgentConversation).props('detail')).toBe(initial)
+    const transcript = wrapper.get('[data-activity-transcript]')
+    const el = transcript.element as HTMLElement
+    let height = 1000
+    Object.defineProperties(el, { scrollHeight: { get: () => height }, clientHeight: { value: 200 } })
+    text += '\n\nMore words with **Markdown**'
+    await vi.advanceTimersByTimeAsync(2100); await flushPromises()
+    expect(el.scrollTop).toBe(1000)
+    expect(wrapper.get('.agent-conversation__answer strong').text()).toBe('Markdown')
+    el.scrollTop = 120; await transcript.trigger('scroll')
+    height = 1500; text += '\n\nA further update'
+    await vi.advanceTimersByTimeAsync(2100); await flushPromises()
+    expect(el.scrollTop).toBe(120)
+    expect(wrapper.get('.agent-activity__latest').attributes('data-unread')).toBe('true')
+    await wrapper.get('.agent-activity__latest').trigger('click')
+    expect(el.scrollTop).toBe(1500)
+    expect(wrapper.find('.agent-activity__latest').exists()).toBe(false)
+  })
+
   it('refreshes output while preserving the chosen task and expanded tools', async () => {
     vi.useFakeTimers()
     const rows = [session('first'), session('second')]

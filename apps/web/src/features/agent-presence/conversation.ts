@@ -2,7 +2,7 @@ import type { ActivityEntry, ActivityTurn } from '../../api/agent-activity'
 
 export type ConversationItem =
   | { id: string; kind: 'user' | 'assistant' | 'status'; entry: ActivityEntry }
-  | { id: string; kind: 'work'; entries: ActivityEntry[]; turnId: string | undefined; duration: number | undefined }
+  | { id: string; kind: 'work'; entries: ActivityEntry[]; turnId: string | undefined; startedAt: number | undefined; duration: number | undefined }
 
 /** Keep source order and stable keys, including legacy and truncated transcripts. */
 export function conversationItems(entries: ActivityEntry[], turns: ActivityTurn[] = []): ConversationItem[] {
@@ -23,15 +23,14 @@ export function conversationItems(entries: ActivityEntry[], turns: ActivityTurn[
       continue
     }
     const previous = items.at(-1)
-    if (previous?.kind === 'work') {
+    if (previous?.kind === 'work' && previous.turnId === entry.turn_id) {
       previous.entries.push(entry)
-      if (previous.turnId !== entry.turn_id) { previous.turnId = undefined; previous.duration = undefined }
     }
     else {
       const turn = turns.find(turn => turn.id === entry.turn_id)
       const duration = turn?.started_at !== undefined && turn.completed_at !== undefined && turn.completed_at >= turn.started_at
         ? turn.completed_at - turn.started_at : undefined
-      items.push({ id: `work-${entry.id}`, kind: 'work', entries: [entry], turnId: entry.turn_id, duration })
+      items.push({ id: `work-${entry.id}`, kind: 'work', entries: [entry], turnId: entry.turn_id, startedAt: turn?.started_at, duration })
     }
   }
   return items
@@ -62,6 +61,14 @@ export function toolPresentation(entry: ActivityEntry): 'command' | 'edit' | 're
   if (/mcp__/.test(name)) return 'integration'
   if (/exec|shell|bash|terminal|command/.test(name)) return 'command'
   return 'tool'
+}
+
+/** Keep the integration's identity visible without exposing its transport prefix. */
+export function toolIntegration(entry: ActivityEntry): string | null {
+  const source = /(?:^|\.)mcp__([^_]+(?:_(?!_)[^_]+)*)__/i.exec(entry.tool ?? '')?.[1]
+  if (!source) return null
+  const names: Record<string, string> = { playwright: 'Playwright', github: 'GitHub', node_repl: 'Node', codex_app: 'Codex' }
+  return names[source] ?? source.replaceAll('_', ' ')
 }
 
 /** Codex's citation bookkeeping is not part of the visible answer. Keep code literal. */
