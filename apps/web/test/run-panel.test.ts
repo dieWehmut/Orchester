@@ -228,6 +228,30 @@ describe('RunPanel', () => {
     expect(wrapper.find('[data-scroll-to-bottom]').exists()).toBe(false)
   })
 
+  it('follows deltas in the same message and holds reading position without counting every token', async () => {
+    const message = { type: 'message' as const, key: 'stream', sequence: 1, occurredAt: '2026-10-18T00:00:00Z', turnId: null, role: 'assistant' as const, text: 'Start', final: false }
+    const view = { ...createEmptyRunView(), timeline: [message] }
+    const wrapper = mount(RunPanel, { props: { view } })
+    const transcript = wrapper.get('[data-transcript-scroll]')
+    const el = transcript.element as HTMLElement
+    let height = 1000
+    Object.defineProperties(el, { scrollHeight: { get: () => height }, clientHeight: { value: 200 } })
+    await wrapper.setProps({ view: { ...view, timeline: [{ ...message, text: 'Start of a longer reply' }] } })
+    await flushPromises()
+    expect(el.scrollTop).toBe(1000)
+    el.scrollTop = 100; await transcript.trigger('scroll')
+    for (const text of ['More words', 'More words again']) {
+      height += 100
+      await wrapper.setProps({ view: { ...view, timeline: [{ ...message, text }] } })
+      await flushPromises()
+      expect(el.scrollTop).toBe(100)
+      expect(wrapper.get('[data-scroll-unread-dot]').text()).toBe('1')
+    }
+    await wrapper.get('[data-scroll-to-bottom]').trigger('click')
+    expect(el.scrollTop).toBe(1200)
+    wrapper.unmount()
+  })
+
   it('announces output that arrives while the reader is reading back', async () => {
     const view = createEmptyRunView()
     const wrapper = mount(RunPanel, { props: { view } })

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { RunView, TimelineItem } from '@orchester/ereignis'
 import { MarkdownText } from '@orchester/design'
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 
 import { useI18n } from '../../i18n'
 import MessageActions from './MessageActions.vue'
@@ -30,10 +30,12 @@ const props = withDefaults(
 const emit = defineEmits<{
   quote: [text: string]
   reuse: [text: string]
+  resize: []
 }>()
 
 const list = ref<HTMLElement | null>(null)
-const heights = ref<(number | undefined)[]>([])
+const heights = ref(new Map<string, number>())
+let observer: ResizeObserver | undefined
 
 /** Rows mounted beyond the viewport, so a flick of the wheel lands on real rows. */
 const OVERSCAN = 2
@@ -45,7 +47,7 @@ const OVERSCAN = 2
  */
 const windowRange = computed(() =>
   virtualWindow({
-    heights: props.view.timeline.map((_, index) => heights.value[index]),
+    heights: props.view.timeline.map(item => heights.value.get(item.key)),
     scrollTop: props.scrollTop,
     viewportHeight: props.viewportHeight,
     overscan: OVERSCAN,
@@ -55,6 +57,8 @@ const windowRange = computed(() =>
 const mounted = computed(() =>
   props.view.timeline.slice(windowRange.value.start, windowRange.value.end),
 )
+const bottomSpace = computed(() => Math.max(0, windowRange.value.totalHeight - windowRange.value.offsetTop
+  - mounted.value.reduce((sum, item) => sum + (heights.value.get(item.key) ?? 0), 0)))
 
 /**
  * The arrival mark for a row. Only messages arrive word by word, so only they
@@ -86,30 +90,45 @@ function measure(): void {
   const element = list.value
   if (!element) return
   const rows = Array.from(element.querySelectorAll<HTMLElement>('[data-virtualized-turn]'))
-  const measured = [...heights.value]
+  const measured = new Map(heights.value)
+  let changed = false
   for (const row of rows) {
     const index = Number(row.dataset.virtualizedTurn)
-    const box = row.getBoundingClientRect().height || row.offsetHeight
+    const item = props.view.timeline[index]
+    const size = row.getBoundingClientRect().height || row.offsetHeight
+    const box = size > 0 ? size + (parseFloat(getComputedStyle(row).marginBlockEnd) || 0) : 0
     // A zero box is a row that has not been laid out, not a row of no height;
     // recording it as zero would virtualise the transcript away on the next
     // scroll.
-    measured[index] = box > 0 ? box : undefined
+    if (item && box > 0 && measured.get(item.key) !== box) { measured.set(item.key, box); changed = true }
   }
-  heights.value = measured
+  if (changed) { heights.value = measured; emit('resize') }
 }
 
-onMounted(async () => {
+async function observeRows(): Promise<void> {
   await nextTick()
+  observer?.disconnect()
+  if (list.value) {
+    observer?.observe(list.value)
+    for (const row of list.value.querySelectorAll<HTMLElement>('[data-virtualized-turn]')) observer?.observe(row)
+  }
   measure()
+}
+onMounted(() => {
+  if (typeof ResizeObserver === 'function') observer = new ResizeObserver(measure)
+  void observeRows()
 })
 
 watch(
-  () => props.view.timeline.length,
+  () => props.view.timeline,
   async () => {
-    await nextTick()
-    measure()
+    const keys = new Set(props.view.timeline.map(item => item.key))
+    for (const key of heights.value.keys()) if (!keys.has(key)) heights.value.delete(key)
+    await observeRows()
   },
 )
+watch(mounted, () => { void observeRows() })
+onUnmounted(() => observer?.disconnect())
 
 function itemText(item: TimelineItem): string {
   switch (item.type) {
@@ -227,13 +246,14 @@ function assertNever(value: never): never {
         <span class="run-timeline__body">{{ itemText(item) }}</span>
       </template>
     </li>
+    <li v-if="bottomSpace > 0" class="run-timeline__spacer" data-virtual-spacer="bottom" aria-hidden="true" :style="{ blockSize: bottomSpace + 'px' }" />
   </ol>
 </template>
 
 <style scoped>
 .run-timeline {
   display: grid;
-  gap: var(--space-4);
+  gap: 0;
   /* The conversation keeps a measure, as the reference keeps one: a governed
      run can print a lot of record, and prose that spans the window is prose
      nobody reads. */
@@ -249,6 +269,7 @@ function assertNever(value: never): never {
 }
 
 .run-timeline__item {
+  margin-block-end: var(--space-4);
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: var(--space-3);

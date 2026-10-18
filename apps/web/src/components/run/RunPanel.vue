@@ -167,17 +167,25 @@ function scrollToBottom(): void {
  * dragging the page away from them.
  */
 watch(
-  () => props.view.timeline.length,
-  async () => {
+  () => props.view.timeline,
+  async (next, previous) => {
     const position = scrollState.value.atBottom ? 'at-bottom' : 'reading-back'
     await nextTick()
     const decision = stickDecision(position, 'appended')
-    unread.value = unreadAfter(unread.value, decision)
+    // Count new rows, not every token in a growing reply.
+    unread.value = next.length > previous.length ? unreadAfter(unread.value, decision)
+      : decision === 'stick' ? 0 : Math.max(1, unread.value)
     if (decision === 'stick') scrollToBottom()
     else measure()
   },
 )
 const petVisibility = usePetVisibility()
+async function transcriptResized(): Promise<void> {
+  const follow = scrollState.value.atBottom
+  await nextTick()
+  if (follow) scrollToBottom()
+  else measure()
+}
 const { prefersReducedMotion } = useAppearance()
 const petState = computed(() =>
   petStateFor({
@@ -270,6 +278,7 @@ defineExpose({ focusPrompt, clearPrompt })
         :viewport-height="viewportHeight"
         @quote="quoteAnswer"
         @reuse="reusePrompt"
+        @resize="transcriptResized"
       />
       <EmptyWorkspace
         v-else-if="!props.conversationStarted"
