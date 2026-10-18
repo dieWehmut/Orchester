@@ -353,6 +353,66 @@ fn opencode_reads_sqlite_without_modifying_source() {
 }
 
 #[test]
+fn opencode_emits_results_only_when_tools_finish() {
+    let fixture = Fixture::new();
+    let path = fixture.0.join("opencode.db");
+    opencode_fixture(&path);
+    let db = rusqlite::Connection::open(&path).unwrap();
+    db.execute(
+        "UPDATE message SET data = ?1",
+        [json!({"role":"assistant"}).to_string()],
+    )
+    .unwrap();
+    let states = [
+        (json!({"status":"pending"}), None),
+        (json!({"status":"running"}), None),
+        (json!({"status":"running","output":"Partial output"}), None),
+        (
+            json!({"status":"completed","output":"Passed"}),
+            Some("Passed"),
+        ),
+        (json!({"status":"completed","output":""}), Some("")),
+        (json!({"status":"completed"}), Some("")),
+        (json!({"status":"error","error":"Failed"}), Some("Failed")),
+        (json!({"output":"Legacy output"}), Some("Legacy output")),
+        (json!({}), None),
+    ];
+    let mut tool_id = None;
+    for (mut state, expected) in states {
+        state["input"] = json!({"command":"test"});
+        db.execute(
+            "UPDATE part SET data = ?1 WHERE id = '2'",
+            [json!({"type":"tool","tool":"shell","state":state}).to_string()],
+        )
+        .unwrap();
+        let (status, rows) = opencode::read_provider(Some(&path));
+        assert_eq!(status, "available");
+        let row = &rows[0];
+        assert_eq!(row.summary.state, "active");
+        let tool = row
+            .entries
+            .iter()
+            .find(|entry| entry.kind == "tool")
+            .unwrap();
+        assert_eq!(tool_id.get_or_insert(tool.id.clone()), &tool.id);
+        let results: Vec<_> = row
+            .entries
+            .iter()
+            .filter(|entry| entry.kind == "result")
+            .collect();
+        assert_eq!(
+            results.len(),
+            usize::from(expected.is_some()),
+            "state: {state}"
+        );
+        if let Some(expected) = expected {
+            assert_eq!(results[0].text, expected);
+            assert_eq!(results[0].call_id, tool.call_id);
+        }
+    }
+}
+
+#[test]
 fn unavailable_database_and_missing_roots_are_distinct() {
     let fixture = Fixture::new();
     let path = fixture.0.join("opencode.db");

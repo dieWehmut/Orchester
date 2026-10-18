@@ -110,15 +110,22 @@ fn read_database(path: &Path) -> rusqlite::Result<Vec<ActivityDetail>> {
                     );
                     let result = part["state"]["output"]
                         .as_str()
-                        .or_else(|| part["state"]["error"].as_str())
-                        .unwrap_or_default();
-                    push_entry(
-                        &mut row,
-                        &format!("{part_id}-result"),
-                        "result",
-                        result,
-                        part["tool"].as_str(),
-                    );
+                        .or_else(|| part["state"]["error"].as_str());
+                    let completed = match part["state"]["status"].as_str() {
+                        Some("pending" | "running") => false,
+                        Some("completed" | "error") => true,
+                        // Older records may omit status, but still include a result.
+                        _ => result.is_some(),
+                    };
+                    if completed {
+                        push_entry(
+                            &mut row,
+                            &format!("{part_id}-result"),
+                            "result",
+                            result.unwrap_or_default(),
+                            part["tool"].as_str(),
+                        );
+                    }
                 }
                 _ => (),
             }
