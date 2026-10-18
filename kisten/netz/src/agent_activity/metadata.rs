@@ -1,5 +1,5 @@
 //! Optional, read-only Codex title/index hints. Transcript roots remain authoritative.
-use super::{clip, opaque_id, ActivityDetail, SESSION_LIMIT};
+use super::{ActivityDetail, clip, opaque_id};
 use rusqlite::{Connection, OpenFlags};
 use std::{
     collections::{HashMap, HashSet},
@@ -14,6 +14,8 @@ pub(super) struct Hint {
     project: String,
     project_id: String,
     pinned: Option<bool>,
+    updated_at: i64,
+    preview: String,
 }
 
 impl Hint {
@@ -29,6 +31,10 @@ impl Hint {
         }
         row.summary.project_id = Some(self.project_id.clone());
         row.summary.pinned = self.pinned;
+        row.summary.updated_at = self.updated_at;
+        if row.summary.preview.is_empty() {
+            row.summary.preview = self.preview.clone();
+        }
     }
 }
 
@@ -90,28 +96,22 @@ fn read(path: &Path, root: &Path) -> rusqlite::Result<HashMap<PathBuf, Hint>> {
         "title"
     };
     let legacy_pins = read_legacy_pins(root);
-    let legacy_order = if legacy_pins.is_empty() {
-        "0 + 0".to_owned()
+    let updated = if columns.contains("updated_at_ms") {
+        "COALESCE(updated_at_ms, updated_at * 1000)"
     } else {
-        format!(
-            "CASE WHEN id IN ({}) THEN 1 ELSE 0 END",
-            (2..legacy_pins.len() + 2)
-                .map(|i| format!("?{i}"))
-                .collect::<Vec<_>>()
-                .join(",")
-        )
+        "updated_at * 1000"
     };
-    let mut params = vec![rusqlite::types::Value::Integer((SESSION_LIMIT * 8) as i64)];
-    params.extend(
-        legacy_pins
-            .iter()
-            .cloned()
-            .map(rusqlite::types::Value::Text),
-    );
+    let preview = if columns.contains("preview") {
+        "COALESCE(preview, '')"
+    } else {
+        "''"
+    };
     // All interpolated identifiers are constants selected above, never source values.
-    let sql = format!("SELECT rollout_path, {title}, cwd, {project_id}, {pinned}, id FROM threads WHERE archived = 0 {source_filter} ORDER BY {pinned} DESC, {legacy_order} DESC, updated_at DESC, id DESC LIMIT ?1");
+    let sql = format!(
+        "SELECT rollout_path, {title}, cwd, {project_id}, {pinned}, id, {updated}, {preview} FROM threads WHERE archived = 0 {source_filter} ORDER BY updated_at DESC, id DESC"
+    );
     let mut query = db.prepare(&sql)?;
-    let rows = query.query_map(rusqlite::params_from_iter(params), |r| {
+    let rows = query.query_map([], |r| {
         Ok((
             r.get::<_, String>(0)?,
             r.get::<_, String>(1)?,
@@ -119,17 +119,22 @@ fn read(path: &Path, root: &Path) -> rusqlite::Result<HashMap<PathBuf, Hint>> {
             r.get::<_, Option<String>>(3)?,
             r.get::<_, Option<bool>>(4)?,
             r.get::<_, String>(5)?,
+            r.get::<_, i64>(6)?,
+            r.get::<_, String>(7)?,
         ))
     })?;
     let mut hints = HashMap::new();
     for item in rows {
-        let (path, title, cwd, project_id, pinned, id) = item?;
+        let (path, title, cwd, project_id, pinned, id, updated_at, preview) = item?;
         let pinned = if legacy_pins.contains(&id) {
             Some(true)
         } else {
             pinned
         };
-        let path = PathBuf::from(path);
+        let mut path = PathBuf::from(path);
+        if !path.exists() && path.extension().is_some_and(|ext| ext == "jsonl") {
+            path = path.with_extension("jsonl.zst");
+        }
         let Ok(metadata) = fs::symlink_metadata(&path) else {
             continue;
         };
@@ -139,7 +144,7 @@ fn read(path: &Path, root: &Path) -> rusqlite::Result<HashMap<PathBuf, Hint>> {
         let Ok(path) = path.canonicalize() else {
             continue;
         };
-        if !path.starts_with(root) || path.extension().is_none_or(|ext| ext != "jsonl") {
+        if !path.starts_with(root) || !super::files::is_transcript(&path) {
             continue;
         }
         let project_name = project_id.as_ref().and_then(|id| {
@@ -157,6 +162,8 @@ fn read(path: &Path, root: &Path) -> rusqlite::Result<HashMap<PathBuf, Hint>> {
                     .unwrap_or_else(|| super::transcript::project(&cwd)),
                 project_id: opaque_id("codex-project", project_id.as_deref().unwrap_or(&cwd)),
                 pinned,
+                updated_at,
+                preview: clip(&preview, 200),
             },
         );
     }
@@ -190,7 +197,6 @@ fn read_legacy_pins(root: &Path) -> HashSet<String> {
         .flatten()
         .filter_map(|v| v.as_str())
         .filter(|s| s.len() <= 100)
-        .take(SESSION_LIMIT)
         .map(str::to_owned)
         .collect()
 }

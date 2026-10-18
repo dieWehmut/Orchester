@@ -6,9 +6,9 @@ mod opencode;
 mod transcript;
 
 use axum::{
+    Json,
     extract::{Path, Query, State},
     http::HeaderMap,
-    Json,
 };
 use cookie::Cookie;
 use serde::{Deserialize, Serialize};
@@ -22,14 +22,14 @@ use std::{
 use time::OffsetDateTime;
 
 use crate::{
-    api_error::{api_error_response, request_id_from_headers, ApiErrorCode, ApiErrorResponse},
+    SESSION_COOKIE_NAME, ServerContext,
+    api_error::{ApiErrorCode, ApiErrorResponse, api_error_response, request_id_from_headers},
     health::no_store_headers,
-    ServerContext, SESSION_COOKIE_NAME,
 };
 
 const SESSION_LIMIT: usize = 24;
 const ENTRY_LIMIT: usize = 100;
-const TEXT_LIMIT: usize = 8_000;
+const TEXT_LIMIT: usize = 256 * 1024;
 
 /// Provider-owned data locations. These are never accepted from an HTTP request.
 #[derive(Clone, Default)]
@@ -113,6 +113,11 @@ pub struct ActivityDetail {
     pub entries: Vec<ActivityEntry>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub turns: Vec<ActivityTurn>,
+    /// Exclusive decoded-record offset for the preceding page of Codex history.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub next_before: Option<u64>,
+    #[serde(skip)]
+    content_limited: bool,
 }
 
 #[derive(Clone, Serialize)]
@@ -135,6 +140,7 @@ struct Cache {
     sources: Vec<ActivitySource>,
     sessions: Vec<ActivityDetail>,
     files: HashMap<PathBuf, files::CachedFile>,
+    pages: HashMap<(PathBuf, Option<u64>), files::CachedFile>,
 }
 
 #[derive(Clone)]
@@ -144,6 +150,11 @@ pub(crate) struct AgentActivityStore {
 }
 
 impl AgentActivityStore {
+    fn codex_detail(&self, id: &str, before: Option<u64>) -> Result<Option<ActivityDetail>, ()> {
+        let mut cache = self.cache.lock().map_err(|_| ())?;
+        files::codex_detail(self.roots.codex.as_deref(), id, before, &mut cache.pages)
+            .map_err(|_| ())
+    }
     pub fn new(roots: AgentActivityRoots) -> Self {
         Self {
             roots,
@@ -190,6 +201,12 @@ impl AgentActivityStore {
 #[serde(deny_unknown_fields)]
 pub(crate) struct ActivityQuery {
     provider: Option<String>,
+}
+
+#[derive(Default, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct ActivityDetailQuery {
+    before: Option<u64>,
 }
 
 fn authorize(context: &ServerContext, headers: &HeaderMap) -> Result<(), ApiErrorResponse> {
@@ -295,8 +312,15 @@ pub(crate) async fn detail(
     State(context): State<ServerContext>,
     headers: HeaderMap,
     Path(id): Path<String>,
+    Query(query): Query<ActivityDetailQuery>,
 ) -> Result<(HeaderMap, Json<ActivityDetail>), ApiErrorResponse> {
     authorize(&context, &headers)?;
+    if query.before == Some(0) {
+        return Err(api_error_response(
+            ApiErrorCode::ValidationFailed,
+            request_id_from_headers(&headers),
+        ));
+    }
     if id.len() != 64 || !id.bytes().all(|b| b.is_ascii_hexdigit()) {
         return Err(api_error_response(
             ApiErrorCode::NotFound,
@@ -304,12 +328,34 @@ pub(crate) async fn detail(
         ));
     }
     let (_, sessions) = snapshot(&context, &headers).await?;
-    let row = sessions
+    let mut row = sessions
         .into_iter()
         .find(|row| row.summary.id == id)
         .ok_or_else(|| {
             api_error_response(ApiErrorCode::NotFound, request_id_from_headers(&headers))
         })?;
+    if row.summary.provider == "codex" && row.summary.source == "external" {
+        let store = context.agent_activity().clone();
+        row = tokio::task::spawn_blocking(move || store.codex_detail(&id, query.before))
+            .await
+            .ok()
+            .and_then(Result::ok)
+            .flatten()
+            .ok_or_else(|| {
+                api_error_response(ApiErrorCode::Unavailable, request_id_from_headers(&headers))
+            })?;
+    } else if query.before.is_some() {
+        return Err(api_error_response(
+            ApiErrorCode::ValidationFailed,
+            request_id_from_headers(&headers),
+        ));
+    }
+    if row.summary.source == "external"
+        && row.summary.state == "active"
+        && now_ms().saturating_sub(row.summary.updated_at) > 120_000
+    {
+        row.summary.state = "unknown";
+    }
     Ok((no_store_headers(), Json(row)))
 }
 
@@ -347,6 +393,8 @@ fn empty_detail(provider: &str, source_id: &str, updated_at: i64) -> ActivityDet
         },
         entries: Vec::new(),
         turns: Vec::new(),
+        next_before: None,
+        content_limited: false,
     }
 }
 
@@ -362,6 +410,7 @@ fn push_entry(
     }
     if text.chars().count() > TEXT_LIMIT {
         row.summary.truncated = true;
+        row.content_limited = true;
     }
     let text = clip(text, TEXT_LIMIT);
     let entry = ActivityEntry {

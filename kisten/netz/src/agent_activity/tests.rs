@@ -1,6 +1,6 @@
 use super::*;
 use axum::{
-    body::{to_bytes, Body},
+    body::{Body, to_bytes},
     http::{Request, StatusCode},
 };
 use serde_json::json;
@@ -59,9 +59,11 @@ fn title_is_not_replaced_by_followup_and_tools_share_opaque_call_ids() {
     assert_eq!(row.summary.title, "Build the sidebar");
     assert!(row.entries[2].call_id.is_some());
     assert_eq!(row.entries[2].call_id, row.entries[3].call_id);
-    assert!(!serde_json::to_string(&row)
-        .unwrap()
-        .contains("private-call"));
+    assert!(
+        !serde_json::to_string(&row)
+            .unwrap()
+            .contains("private-call")
+    );
 }
 
 #[test]
@@ -83,7 +85,7 @@ fn claude_rewritten_tool_keeps_its_result_relationship() {
 
 #[test]
 fn codex_index_uses_source_titles_and_projects_without_following_outside_paths() {
-    use rusqlite::{params, Connection};
+    use rusqlite::{Connection, params};
     let fixture = Fixture::new();
     let outside = Fixture::new();
     let source = fixture.file(
@@ -231,13 +233,16 @@ fn codex_reads_visible_messages_tools_and_lifecycle_without_private_payloads() {
     assert_eq!(row.summary.project, "demo");
     assert_eq!(row.summary.state, "completed");
     assert_eq!(row.entries.len(), 4);
-    assert!(row
-        .entries
-        .iter()
-        .any(|e| e.kind == "result" && e.text.contains('\n')));
-    assert!(!serde_json::to_string(&row)
-        .unwrap()
-        .contains("DO_NOT_EXPOSE"));
+    assert!(
+        row.entries
+            .iter()
+            .any(|e| e.kind == "result" && e.text.contains('\n'))
+    );
+    assert!(
+        !serde_json::to_string(&row)
+            .unwrap()
+            .contains("DO_NOT_EXPOSE")
+    );
 }
 
 #[test]
@@ -287,18 +292,148 @@ fn appended_and_partially_written_records_are_refreshed_without_duplicates() {
 }
 
 #[test]
-fn large_transcripts_use_bounded_tail_and_ignore_malformed_rows() {
+fn long_messages_are_read_past_the_old_tail_window_and_clipped_only_at_the_text_bound() {
     let fixture = Fixture::new();
     let path = fixture.file("session.jsonl", &[codex_message("user", "Task")]);
     let mut file = fs::OpenOptions::new().append(true).open(path).unwrap();
     writeln!(file, "{}", "x".repeat(900_000)).unwrap();
-    writeln!(file, "{}", codex_message("assistant", &"尾".repeat(20_000))).unwrap();
+    writeln!(
+        file,
+        "{}",
+        codex_message("assistant", &"尾".repeat(TEXT_LIMIT + 7))
+    )
+    .unwrap();
     drop(file);
     let (_, rows) = files::read_provider("codex", Some(&fixture.0), &mut HashMap::new());
     assert!(rows[0].summary.truncated);
     assert_eq!(
         rows[0].entries.last().unwrap().text.chars().count(),
         TEXT_LIMIT
+    );
+}
+
+#[test]
+fn compressed_index_includes_every_top_level_session_and_resolves_oldest_detail() {
+    let fixture = Fixture::new();
+    let db_path = fixture.0.join("state_5.sqlite");
+    let db = rusqlite::Connection::open(&db_path).unwrap();
+    db.execute_batch("CREATE TABLE threads (id TEXT, rollout_path TEXT, title TEXT, cwd TEXT, updated_at INTEGER, archived INTEGER, agent_role TEXT);").unwrap();
+    let root = fixture.0.join("sessions");
+    fs::create_dir_all(&root).unwrap();
+    for index in 0..240 {
+        let path = root.join(format!("task-{index:03}.jsonl"));
+        let bytes = format!("{}\n", codex_message("user", &format!("Task {index}")));
+        fs::write(
+            path.with_extension("jsonl.zst"),
+            zstd::encode_all(bytes.as_bytes(), 1).unwrap(),
+        )
+        .unwrap();
+        db.execute(
+            "INSERT INTO threads VALUES (?1, ?2, ?3, '/work/example', ?4, 0, NULL)",
+            rusqlite::params![
+                index.to_string(),
+                path.to_string_lossy(),
+                format!("Saved {index}"),
+                index
+            ],
+        )
+        .unwrap();
+    }
+    db.execute("UPDATE threads SET archived=1 WHERE id='239'", [])
+        .unwrap();
+    db.execute("UPDATE threads SET agent_role='worker' WHERE id='238'", [])
+        .unwrap();
+    drop(db);
+    let database_before = fs::read(&db_path).unwrap();
+    let compressed_before = fs::read(root.join("task-000.jsonl.zst")).unwrap();
+    let (status, rows) = files::read_provider("codex", Some(&root), &mut HashMap::new());
+    assert_eq!(status, "available");
+    assert_eq!(rows.len(), 238);
+    let oldest = rows
+        .iter()
+        .find(|row| row.summary.title == "Saved 0")
+        .unwrap();
+    let detail = files::codex_detail(Some(&root), &oldest.summary.id, None, &mut HashMap::new())
+        .unwrap()
+        .unwrap();
+    assert_eq!(detail.entries[0].text, "Task 0");
+    assert_eq!(detail.summary.id, opaque_id("codex", "task-000.jsonl"));
+    assert_eq!(fs::read(&db_path).unwrap(), database_before);
+    assert_eq!(
+        fs::read(root.join("task-000.jsonl.zst")).unwrap(),
+        compressed_before
+    );
+    assert!(!root.join("task-000.jsonl").exists());
+}
+
+#[test]
+fn every_compressed_history_page_is_contiguous_and_keeps_source_timing() {
+    let fixture = Fixture::new();
+    let mut records = vec![
+        json!({"type":"event_msg","timestamp":"2026-10-18T01:00:00Z","payload":{"type":"task_started","turn_id":"long-turn"}}),
+    ];
+    for index in 0..253 {
+        let mut message = codex_message(
+            if index % 2 == 0 { "user" } else { "assistant" },
+            &format!("Message {index}"),
+        );
+        message["timestamp"] = json!("2026-10-18T01:00:01Z");
+        records.push(message);
+    }
+    records.push(json!({"type":"event_msg","timestamp":"2026-10-18T01:06:08Z","payload":{"type":"task_complete","turn_id":"long-turn"}}));
+    let plain = fixture.file("long.jsonl", &records);
+    let id = opaque_id("codex", "long.jsonl");
+    let initial = files::codex_detail(Some(&fixture.0), &id, None, &mut HashMap::new())
+        .unwrap()
+        .unwrap();
+    let bytes = fs::read(&plain).unwrap();
+    fs::write(
+        plain.with_extension("jsonl.zst"),
+        zstd::encode_all(bytes.as_slice(), 1).unwrap(),
+    )
+    .unwrap();
+    fs::remove_file(&plain).unwrap();
+    let mut cache = HashMap::new();
+    let mut before = None;
+    let mut entries = Vec::new();
+    let mut pages = Vec::new();
+    loop {
+        let page = files::codex_detail(Some(&fixture.0), &id, before, &mut cache)
+            .unwrap()
+            .unwrap();
+        if before.is_none() {
+            assert_eq!(page.entries[0].id, initial.entries[0].id);
+        }
+        assert_eq!(page.turns.len(), 1);
+        assert_eq!(
+            page.turns[0].completed_at.unwrap() - page.turns[0].started_at.unwrap(),
+            368_000
+        );
+        assert!(page.entries.iter().all(|entry| entry.timestamp.is_some()));
+        pages.push(page.entries.len());
+        before = page.next_before;
+        entries.splice(0..0, page.entries);
+        if before.is_none() {
+            break;
+        }
+    }
+    assert_eq!(pages, vec![100, 100, 53]);
+    assert_eq!(
+        entries
+            .iter()
+            .map(|entry| entry.text.clone())
+            .collect::<Vec<_>>(),
+        (0..253)
+            .map(|index| format!("Message {index}"))
+            .collect::<Vec<_>>()
+    );
+    assert_eq!(
+        entries
+            .iter()
+            .map(|entry| &entry.id)
+            .collect::<std::collections::HashSet<_>>()
+            .len(),
+        253
     );
 }
 
@@ -475,6 +610,16 @@ async fn routes_require_a_session_reject_paths_and_return_no_store_content() {
         .await
         .unwrap();
     assert_eq!(response.status(), StatusCode::OK);
+    for (query, status) in [
+        ("?before=0", StatusCode::UNPROCESSABLE_ENTITY),
+        ("?before=-1", StatusCode::BAD_REQUEST),
+        ("?before=not-a-number", StatusCode::BAD_REQUEST),
+        ("?path=outside.jsonl", StatusCode::BAD_REQUEST),
+    ] {
+        let response = router.clone().oneshot(Request::get(format!("/api/v1/agents/activity/{id}{query}"))
+            .header("cookie", &cookie).body(Body::empty()).unwrap()).await.unwrap();
+        assert_eq!(response.status(), status, "{query}");
+    }
     for (url, status) in [
         (
             "/api/v1/agents/activity?provider=arbitrary",

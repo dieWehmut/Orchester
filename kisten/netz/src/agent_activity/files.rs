@@ -1,8 +1,8 @@
-use super::{transcript, ActivityDetail, SESSION_LIMIT};
+use super::{ActivityDetail, SESSION_LIMIT, transcript};
 use std::{
     collections::HashMap,
     fs::{self, File},
-    io::{Read, Seek, SeekFrom},
+    io::{BufRead, BufReader, Read, Seek, SeekFrom},
     path::{Path, PathBuf},
     time::SystemTime,
 };
@@ -14,6 +14,128 @@ pub(super) struct CachedFile {
     length: u64,
     modified: SystemTime,
     row: ActivityDetail,
+}
+
+pub(super) fn is_transcript(path: &Path) -> bool {
+    path.extension().is_some_and(|ext| ext == "jsonl")
+        || path.to_string_lossy().ends_with(".jsonl.zst")
+}
+
+fn source_id(root: &Path, path: &Path) -> String {
+    let relative = path.strip_prefix(root).unwrap_or(path).to_string_lossy();
+    relative
+        .strip_suffix(".zst")
+        .unwrap_or(&relative)
+        .to_owned()
+}
+
+fn updated(modified: SystemTime) -> i64 {
+    modified
+        .duration_since(SystemTime::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis()
+        .min(i64::MAX as u128) as i64
+}
+
+pub(super) fn codex_detail(
+    root: Option<&Path>,
+    id: &str,
+    before: Option<u64>,
+    cache: &mut HashMap<(PathBuf, Option<u64>), CachedFile>,
+) -> std::io::Result<Option<ActivityDetail>> {
+    let Some(root) = root else {
+        return Ok(None);
+    };
+    let root = root.canonicalize()?;
+    let hints = super::metadata::codex(&root);
+    let mut paths = hints
+        .as_ref()
+        .map(|hints| hints.keys().cloned().collect::<Vec<_>>())
+        .unwrap_or_default();
+    if hints.is_none() {
+        let mut files = Vec::new();
+        visit(&root, 0, &mut 12_000, &mut files)?;
+        paths.extend(files.into_iter().map(|(path, _, _)| path));
+    }
+    let Some(path) = paths
+        .into_iter()
+        .find(|path| super::opaque_id("codex", &source_id(&root, path)) == id)
+    else {
+        return Ok(None);
+    };
+    let metadata = fs::symlink_metadata(&path)?;
+    let modified = metadata.modified()?;
+    let key = (path.clone(), before);
+    let mut row = if let Some(cached) = cache
+        .get(&key)
+        .filter(|entry| entry.length == metadata.len() && entry.modified == modified)
+    {
+        cached.row.clone()
+    } else {
+        let row = read_codex(&root, &path, modified, before)?;
+        // Keep only a few decoded pages; browsing never expands an unbounded cache.
+        if cache.len() >= 16 {
+            cache.clear();
+        }
+        cache.insert(
+            key,
+            CachedFile {
+                length: metadata.len(),
+                modified,
+                row: row.clone(),
+            },
+        );
+        row
+    };
+    if let Some(hint) = hints.as_ref().and_then(|hints| hints.get(&path)) {
+        hint.apply(&mut row);
+    }
+    Ok(Some(row))
+}
+
+fn read_codex(
+    root: &Path,
+    path: &Path,
+    modified: SystemTime,
+    before: Option<u64>,
+) -> std::io::Result<ActivityDetail> {
+    if linked(&fs::symlink_metadata(path)?) || !path.canonicalize()?.starts_with(root) {
+        return Err(std::io::ErrorKind::PermissionDenied.into());
+    }
+    let file = File::open(path)?;
+    let reader: Box<dyn Read> = if path.extension().is_some_and(|ext| ext == "zst") {
+        let mut decoder = zstd::stream::read::Decoder::new(file)?;
+        decoder.window_log_max(27)?;
+        Box::new(decoder)
+    } else {
+        Box::new(file)
+    };
+    let mut reader = BufReader::new(reader);
+    let mut history =
+        transcript::CodexHistory::new(&source_id(root, path), updated(modified), before);
+    let mut line = Vec::new();
+    let mut offset = 0_u64;
+    loop {
+        line.clear();
+        // Bound a single source record, never discard the middle of a conversation.
+        let size = reader
+            .by_ref()
+            .take(16 * 1024 * 1024 + 1)
+            .read_until(b'\n', &mut line)?;
+        if size == 0 {
+            break;
+        }
+        if size > 16 * 1024 * 1024 {
+            return Err(std::io::ErrorKind::InvalidData.into());
+        }
+        if line.ends_with(b"\n") {
+            if let Ok(record) = serde_json::from_slice(&line) {
+                history.record(offset, &record);
+            }
+        }
+        offset += size as u64;
+    }
+    Ok(history.finish())
 }
 
 pub(super) fn linked(metadata: &fs::Metadata) -> bool {
@@ -58,7 +180,7 @@ pub(super) fn read_provider(
         .unwrap_or_default();
     let mut budget = 12_000;
     let incomplete =
-        files.is_empty() && (visit(&root, 0, &mut budget, &mut files).is_err() || budget == 0);
+        hints.is_none() && (visit(&root, 0, &mut budget, &mut files).is_err() || budget == 0);
     if incomplete && files.is_empty() {
         return ("unavailable", Vec::new());
     }
@@ -74,10 +196,22 @@ pub(super) fn read_provider(
             .then(b.2.cmp(&a.2))
             .then(a.0.cmp(&b.0))
     });
-    files.truncate(SESSION_LIMIT);
+    if provider != "codex" || hints.is_none() {
+        files.truncate(SESSION_LIMIT);
+    }
     let mut rows = Vec::new();
     let mut failures = incomplete;
     for (path, length, modified) in files {
+        if provider == "codex" && path.extension().is_some_and(|ext| ext == "zst") {
+            // The index supplies historical sidebar rows without decoding every archive on every poll.
+            let mut row =
+                super::empty_detail(provider, &source_id(&root, &path), updated(modified));
+            if let Some(hint) = hints.as_ref().and_then(|hints| hints.get(&path)) {
+                hint.apply(&mut row);
+            }
+            rows.push(row);
+            continue;
+        }
         if let Some(cached) = cache
             .get(&path)
             .filter(|entry| entry.length == length && entry.modified == modified)
@@ -89,21 +223,25 @@ pub(super) fn read_provider(
             rows.push(row);
             continue;
         }
-        let result = read_file(&root, &path, length).map(|records| {
-            let updated = modified
-                .duration_since(SystemTime::UNIX_EPOCH)
-                .unwrap_or_default()
-                .as_millis()
-                .min(i64::MAX as u128) as i64;
-            let mut row = transcript::parse(
-                provider,
-                &path.strip_prefix(&root).unwrap_or(&path).to_string_lossy(),
-                updated,
-                &records,
-            );
-            row.summary.truncated |= length > HEAD_BYTES + TAIL_BYTES;
-            row
-        });
+        let result = if provider == "codex" {
+            read_codex(&root, &path, modified, None)
+        } else {
+            read_file(&root, &path, length).map(|records| {
+                let updated = modified
+                    .duration_since(SystemTime::UNIX_EPOCH)
+                    .unwrap_or_default()
+                    .as_millis()
+                    .min(i64::MAX as u128) as i64;
+                let mut row = transcript::parse(
+                    provider,
+                    &path.strip_prefix(&root).unwrap_or(&path).to_string_lossy(),
+                    updated,
+                    &records,
+                );
+                row.summary.truncated |= length > HEAD_BYTES + TAIL_BYTES;
+                row
+            })
+        };
         match result {
             Ok(mut row) => {
                 let hint = hints.as_ref().and_then(|hints| hints.get(&path));
@@ -152,7 +290,7 @@ fn visit(
         }
         if metadata.is_dir() {
             visit(&entry.path(), depth + 1, budget, files)?;
-        } else if metadata.is_file() && entry.path().extension().is_some_and(|ext| ext == "jsonl") {
+        } else if metadata.is_file() && is_transcript(&entry.path()) {
             files.push((entry.path(), metadata.len(), metadata.modified()?));
         }
     }
