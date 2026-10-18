@@ -5,6 +5,7 @@ import { defineComponent, h } from 'vue'
 import { createEmptyRunView } from '@orchester/ereignis'
 import type { RunsApi } from '../src/api/runs'
 import RunPanel from '../src/components/run/RunPanel.vue'
+import RunTimeline from '../src/components/run/RunTimeline.vue'
 import { createRunStore } from '../src/stores/run'
 import { MODEL_CATALOG_FIXTURE } from './fixtures/model-catalog'
 
@@ -249,6 +250,23 @@ describe('RunPanel', () => {
     }
     await wrapper.get('[data-scroll-to-bottom]').trigger('click')
     expect(el.scrollTop).toBe(1200)
+    wrapper.unmount()
+  })
+
+  it('keeps the reader at an expanded tool instead of jumping past its output', async () => {
+    const view = { ...createEmptyRunView(), timeline: [{ type: 'tool' as const, key: 'tool', sequence: 1, occurredAt: '2026-10-18T00:00:00Z', turnId: null, callId: 'call' as never, name: 'shell', state: 'succeeded' as const, detail: 'Detailed output' }] }
+    const wrapper = mount(RunPanel, { props: { view } })
+    const transcript = wrapper.get('[data-transcript-scroll]')
+    const el = transcript.element as HTMLElement
+    let height = 1000
+    Object.defineProperties(el, { scrollHeight: { get: () => height }, clientHeight: { value: 200 } })
+    el.scrollTop = 800; await transcript.trigger('scroll')
+    await wrapper.get('[data-tool-toggle]').trigger('click')
+    height = 1500
+    wrapper.getComponent(RunTimeline).vm.$emit('resize')
+    await flushPromises()
+    expect(el.scrollTop).toBe(800)
+    expect(wrapper.find('[data-scroll-to-bottom]').exists()).toBe(true)
     wrapper.unmount()
   })
 

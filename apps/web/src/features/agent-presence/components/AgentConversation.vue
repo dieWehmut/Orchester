@@ -12,11 +12,11 @@ import { useActivityClock } from '../use-activity-clock'
 const props = defineProps<{ detail: ActivityDetail; stale?: boolean }>()
 const { t, locale } = useI18n()
 const items = computed(() => conversationItems(props.detail.entries, props.detail.turns))
-const activeWork = computed(() => props.detail.state === 'active' && items.value.at(-1)?.kind === 'work' ? items.value.at(-1)?.id : null)
 const latestWork = computed(() => {
   const latestPrompt = items.value.reduce((last, item, index) => item.kind === 'user' ? index : last, -1)
   return new Set(items.value.slice(latestPrompt + 1).filter(item => item.kind === 'work').map(item => item.id))
 })
+const activeWork = computed(() => [...items.value].reverse().find(item => item.kind === 'work' && latestWork.value.has(item.id) && item.duration === undefined)?.id)
 const active = computed(() => props.detail.state === 'active' && !props.stale)
 const now = useActivityClock(active)
 function messageTime(timestamp: number): string { return new Intl.DateTimeFormat(locale.value, { hour: '2-digit', minute: '2-digit' }).format(timestamp) }

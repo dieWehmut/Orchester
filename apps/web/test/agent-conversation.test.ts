@@ -145,8 +145,9 @@ describe('source conversation rendering', () => {
   it('identifies integrations, shows waiting activity and pauses it when updates are unavailable', async () => {
     const wrapper = mount(AgentConversation, { props: { detail: detail({ state: 'active', entries: [entry('u', 'user', '继续')] }) } })
     expect(wrapper.find('[data-conversation-running]').exists()).toBe(true)
-    await wrapper.setProps({ detail: detail({ state: 'active', entries: [entry('t', 'tool', '{}', { tool: 'mcp__playwright__browser_navigate' })] }) })
+    await wrapper.setProps({ detail: detail({ state: 'active', entries: [entry('t', 'tool', '{}', { tool: 'mcp__playwright__browser_navigate' }), entry('tail', 'assistant', 'Still checking')] }) })
     expect(wrapper.get('[data-integration="Playwright"] summary').text()).toContain('Playwright')
+    expect(wrapper.find('[data-tool-pending="true"]').exists()).toBe(true)
     await wrapper.setProps({ stale: true })
     expect(wrapper.find('[data-conversation-running]').exists()).toBe(false)
     expect(wrapper.find('[data-tool-pending="true"]').exists()).toBe(false)

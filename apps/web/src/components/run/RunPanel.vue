@@ -186,6 +186,11 @@ async function transcriptResized(): Promise<void> {
   if (follow) scrollToBottom()
   else measure()
 }
+function inspectTranscript(event: MouseEvent): void {
+  if ((event.target as Element).closest('button[aria-expanded], summary')) {
+    scrollState.value = { ...scrollState.value, atBottom: false }
+  }
+}
 const { prefersReducedMotion } = useAppearance()
 const petState = computed(() =>
   petStateFor({
@@ -270,6 +275,7 @@ defineExpose({ focusPrompt, clearPrompt })
       :data-can-scroll-up="scrollState.canScrollUp"
       :data-can-scroll-down="scrollState.canScrollDown"
       @scroll.passive="measure"
+      @click.capture="inspectTranscript"
     >
       <RunTimeline
         v-if="props.view.timeline.length > 0"
