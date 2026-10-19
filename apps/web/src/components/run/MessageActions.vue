@@ -14,14 +14,14 @@
  * a control that only exists while a pointer is over it is a control a keyboard
  * user cannot reach.
  */
-import { Check, Copy, Quote, RotateCcw } from '@lucide/vue'
+import { Check, Copy, Pencil, Quote, RotateCcw } from '@lucide/vue'
 import { onScopeDispose, ref } from 'vue'
 
 /** An action the surface adds, named by the surface rather than here. */
 export interface MessageAction {
   id: string
   label: string
-  icon: 'quote' | 'reuse'
+  icon: 'quote' | 'reuse' | 'edit'
 }
 
 const props = withDefaults(
@@ -39,7 +39,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{ action: [id: string] }>()
 
-const GLYPHS = { quote: Quote, reuse: RotateCcw } as const
+const GLYPHS = { quote: Quote, reuse: RotateCcw, edit: Pencil } as const
 
 /** How long the control admits it copied before going back to offering to. */
 const CONFIRMATION_MS = 2000
@@ -49,7 +49,8 @@ let timer: ReturnType<typeof setTimeout> | null = null
 
 async function copy(): Promise<void> {
   try {
-    await navigator.clipboard?.writeText(props.text)
+    if (!navigator.clipboard) return
+    await navigator.clipboard.writeText(props.text)
   } catch {
     // A clipboard the browser refuses is not worth an error banner over.
     return

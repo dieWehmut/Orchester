@@ -5,6 +5,7 @@ import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 
 import { useI18n } from '../../i18n'
 import MessageActions from './MessageActions.vue'
+import UserMessage from './UserMessage.vue'
 import ReasoningDisclosure from './ReasoningDisclosure.vue'
 import ToolCallCard from './ToolCallCard.vue'
 import { arrivalState, streamingContainment, type ArrivalState } from './streaming-text'
@@ -195,7 +196,8 @@ function assertNever(value: never): never {
         <ReasoningDisclosure :text="item.text" />
       </template>
       <template v-else-if="item.type === 'message'">
-        <div class="run-timeline__message" data-message-body>
+        <UserMessage v-if="item.role === 'user'" :text="item.text" :timestamp="item.occurredAt" @edit="emit('reuse', $event)" />
+        <div v-else class="run-timeline__message" data-message-body>
           <!--
             The answer renders as the markdown it was written in, from the first
             token: the reference formats while it is still being written, and an
@@ -228,17 +230,6 @@ function assertNever(value: never): never {
             ]"
             @action="emit('quote', item.text)"
           />
-          <MessageActions
-            v-else
-            class="run-timeline__actions"
-            :text="item.text"
-            :label="t('transcript.copyMessage')"
-            :copied-label="t('transcript.copied')"
-            :actions="[
-              { id: 'reuse', label: t('transcript.reuse'), icon: 'reuse' as const },
-            ]"
-            @action="emit('reuse', item.text)"
-          />
         </div>
       </template>
       <template v-else>
@@ -253,6 +244,8 @@ function assertNever(value: never): never {
 <style scoped>
 .run-timeline {
   display: grid;
+  font-size: 16px;
+  line-height: 1.75;
   gap: 0;
   /* The conversation keeps a measure, as the reference keeps one: a governed
      run can print a lot of record, and prose that spans the window is prose

@@ -34,6 +34,83 @@ function setup(fetch: typeof globalThis.fetch) {
 }
 
 describe('live agent content', () => {
+  it('fills missed tail windows after resuming a long-hidden conversation', async () => {
+    vi.useFakeTimers()
+    const row = session('catch-up')
+    let resumed = false
+    const pages: string[] = []
+    const wrapper = setup(async url => {
+      const path = String(url)
+      if (path.includes('?provider=')) return response(list([row]))
+      pages.push(path)
+      if (path.endsWith('?before=100')) return response(detail(row, [entry('oldest', 'Oldest message')]))
+      if (path.endsWith('?before=300')) return response({ ...detail(row, [entry('middle', 'Missed middle reply')]), next_before: 200 })
+      if (path.endsWith('?before=200')) return response({ ...detail(row, [entry('initial', 'Updated initial reply')]), next_before: 100 })
+      return response(resumed
+        ? { ...detail(row, [entry('newest', 'Latest after resuming')]), next_before: 300 }
+        : { ...detail(row, [entry('initial', 'Initial reply')]), next_before: 100 })
+    })
+    await flushPromises()
+    await wrapper.get('[data-activity-load-older]').trigger('click'); await flushPromises()
+    resumed = true
+    await vi.advanceTimersByTimeAsync(2100); await flushPromises()
+    expect(wrapper.getComponent(AgentConversation).props('detail').entries.map((entry: ActivityEntry) => entry.id)).toEqual(['oldest', 'initial', 'middle', 'newest'])
+    expect(wrapper.text()).toContain('Updated initial reply')
+    expect(pages.some(path => path.endsWith('?before=300'))).toBe(true)
+    expect(wrapper.find('[data-activity-load-older]').exists()).toBe(false)
+  })
+
+  it('loads older pages, keeps their messages during live refresh, and preserves the reading position', async () => {
+    vi.useFakeTimers()
+    const row = session('paged')
+    let latest = 'Latest answer'
+    let olderFailed = true
+    let height = 1000
+    const wrapper = setup(async url => {
+      const path = String(url)
+      if (path.includes('?provider=')) return response(list([row]))
+      if (path.endsWith('?before=400')) {
+        if (olderFailed) return response({}, 503)
+        height = 1800
+        return response({ ...detail(row, [entry('old', 'Earlier answer'), entry('overlap', 'Previous answer')]) })
+      }
+      return response({ ...detail(row, [entry('overlap', 'Previous answer'), entry('latest', latest)]), next_before: 400 })
+    })
+    await flushPromises()
+    const transcript = wrapper.get('[data-activity-transcript]')
+    const el = transcript.element as HTMLElement
+    Object.defineProperties(el, { scrollHeight: { get: () => height }, clientHeight: { value: 200 } })
+    el.scrollTop = 80; await transcript.trigger('scroll')
+    await wrapper.get('[data-activity-load-older]').trigger('click'); await flushPromises()
+    expect(wrapper.get('[data-activity-load-older]').text()).toContain('Retry')
+    expect(wrapper.text()).toContain('Latest answer')
+    olderFailed = false
+    await wrapper.get('[data-activity-load-older]').trigger('click'); await flushPromises()
+    expect(el.scrollTop).toBe(880)
+    expect(wrapper.find('[data-activity-load-older]').exists()).toBe(false)
+    latest = 'Updated answer'
+    await vi.advanceTimersByTimeAsync(2100); await flushPromises()
+    expect(wrapper.getComponent(AgentConversation).props('detail').entries.map((entry: ActivityEntry) => entry.id)).toEqual(['old', 'overlap', 'latest'])
+    expect(wrapper.text()).toContain('Earlier answer'); expect(wrapper.text()).toContain('Updated answer')
+    expect(el.scrollTop).toBe(880)
+    expect(wrapper.find('[data-activity-load-older]').exists()).toBe(false)
+  })
+
+  it('exposes every session through more rows and search, including those beyond the initial page', async () => {
+    const rows = Array.from({ length: 125 }, (_, index) => ({ ...session(`task-${String(index).padStart(3, '0')}`), updated_at: 125 - index }))
+    const wrapper = setup(async url => response(String(url).includes('?provider=') ? list(rows) : detail(rows.find(row => String(url).endsWith(row.id))!)))
+    await flushPromises()
+    expect(wrapper.get('[data-activity-section="recent"]').findAll('[data-activity-session]')).toHaveLength(50)
+    await wrapper.get('[data-activity-more]').trigger('click')
+    await wrapper.get('[data-activity-more]').trigger('click')
+    await wrapper.get('[data-activity-session="task-124"]').trigger('click'); await flushPromises()
+    expect(wrapper.get('[data-activity-title]').text()).toBe('Task task-124')
+    await wrapper.get('.activity-sidebar__primary .activity-sidebar__icon').trigger('click')
+    await wrapper.get('input[type="search"]').setValue('task-120')
+    expect(wrapper.get('[data-activity-section="recent"]').findAll('[data-activity-session]')).toHaveLength(1)
+    expect(wrapper.get('[data-activity-section="recent"]').text()).toContain('task-120')
+  })
+
   it('keeps unchanged polls inert and follows a growing message until the reader scrolls back', async () => {
     vi.useFakeTimers()
     const row = session('growing')

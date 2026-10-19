@@ -7,13 +7,14 @@ import { computed, nextTick, onUnmounted, ref, watch } from 'vue'
 
 import { useI18n } from '../../i18n'
 import type { RunLifecycle } from '../../stores/run'
+import type { QueuedPrompt } from '../../stores/run-queue'
+import QueuedPrompts from './QueuedPrompts.vue'
 import ConnectionBanner, { type ConnectionBannerStatus } from './ConnectionBanner.vue'
 import EmptyWorkspace from './EmptyWorkspace.vue'
 import MessageRail from './MessageRail.vue'
 import PlanStrip from './PlanStrip.vue'
 import RunAnnouncer from './RunAnnouncer.vue'
 import RunComposer from './RunComposer.vue'
-import RunFooter from './RunFooter.vue'
 import RunTimeline from './RunTimeline.vue'
 import { fadeDecision, readScrollState, stickDecision, unreadAfter, type ScrollState } from './scroll-state'
 import { PetCompanion, petStateFor, usePetVisibility } from '../../features/pet'
@@ -27,6 +28,8 @@ const props = withDefaults(
     connectionStatus?: ConnectionBannerStatus
     projectionStatus?: 'idle' | 'ready' | 'gap' | 'error'
     busy?: boolean
+    queued?: readonly QueuedPrompt[]
+    queuePaused?: boolean
     lifecycle?: RunLifecycle | null
     conversationStarted?: boolean
     errorMessage?: string | null
@@ -48,6 +51,8 @@ const props = withDefaults(
     connectionStatus: 'idle',
     projectionStatus: 'idle',
     busy: false,
+    queued: () => [],
+    queuePaused: false,
     lifecycle: null,
     conversationStarted: false,
     errorMessage: null,
@@ -65,6 +70,9 @@ const props = withDefaults(
 const emit = defineEmits<{
   submit: [prompt: string]
   cancel: []
+  'queue-remove': [id: string]
+  'queue-edit': [id: string]
+  'queue-resume': []
   /** The model and effort the following runs should use. */
   'select-model': [selection: ModelSelectionRequestDto]
   'configure-model': []
@@ -258,13 +266,13 @@ function clearPrompt(): void {
   void nextTick(() => composer.value?.focus())
 }
 
-defineExpose({ focusPrompt, clearPrompt })
+defineExpose({ focusPrompt, clearPrompt, editPrompt: reusePrompt })
 </script>
 
 <template>
   <section class="run-panel" data-run-panel>
     <RunAnnouncer :events="props.events" />
-    <ConnectionBanner :status="props.connectionStatus" />
+    <ConnectionBanner v-if="['reconnecting', 'offline', 'error'].includes(props.connectionStatus)" :status="props.connectionStatus" />
     <InlineAlert v-if="props.errorMessage" tone="error" data-run-error>
       {{ props.errorMessage }}
     </InlineAlert>
@@ -320,7 +328,6 @@ defineExpose({ focusPrompt, clearPrompt })
       >{{ unread }}</span>
     </button>
     <MessageRail :view="props.view" @select="scrollToTurn" />
-    <RunFooter v-if="props.conversationStarted || props.view.timeline.length > 0" :view="props.view" />
     <PlanStrip
       :todos="props.view.todos"
       :validation="props.view.validation"
@@ -341,6 +348,7 @@ defineExpose({ focusPrompt, clearPrompt })
         :roam-span="companionSpan"
       />
     </div>
+    <QueuedPrompts :items="queued" :paused="queuePaused" @remove="emit('queue-remove', $event)" @edit="emit('queue-edit', $event)" @resume="emit('queue-resume')" />
     <RunComposer
       ref="composer"
       :model-value="composerDraft"
@@ -432,7 +440,6 @@ defineExpose({ focusPrompt, clearPrompt })
   margin-block: var(--space-2) var(--space-5);
 }
 
-.run-panel :deep(.run-footer),
 .run-panel :deep(.plan-strip),
 .run-panel__companion {
   box-sizing: border-box;

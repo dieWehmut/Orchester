@@ -9,8 +9,9 @@ import { useI18n } from '../../../i18n'
 import { runShellAction } from '../../../components/layout/shell-actions'
 
 const props = defineProps<{ provider: ExternalActivityProvider; activity: AgentActivity }>()
+const emit = defineEmits<{ edit: [text: string] }>()
 const { t } = useI18n()
-const { detail, sessions, selectedId, loading, refreshing, error, sourceStatus, refresh, isPinned, togglePin } = props.activity
+const { detail, sessions, selectedId, loading, refreshing, error, loadingOlder, olderError, loadOlder, sourceStatus, refresh, isPinned, togglePin } = props.activity
 const transcript = ref<HTMLElement | null>(null)
 const content = ref<HTMLElement | null>(null)
 const title = ref<HTMLElement | null>(null)
@@ -32,6 +33,18 @@ function onScroll(): void {
 }
 function inspectDetails(event: MouseEvent): void {
   if ((event.target as Element).closest('summary')) follow.value = false
+}
+async function earlier(): Promise<void> {
+  const element = transcript.value
+  if (!element) return
+  follow.value = false
+  const height = element.scrollHeight
+  const hadUnread = unread.value
+  await loadOlder()
+  await nextTick()
+  element.scrollTop += element.scrollHeight - height
+  lastScrollTop = element.scrollTop
+  unread.value = hadUnread
 }
 watch(content, element => {
   observer?.disconnect()
@@ -67,8 +80,9 @@ watch(detail, async (next, previous) => {
       <div v-if="loading && !detail" class="agent-activity__empty"><Spinner :label="t('management.loading')" /></div>
       <div v-else-if="!sessions.length" class="agent-activity__empty" data-activity-empty><MessageCircle :size="28" /><h2>{{ t('activity.emptyTitle') }}</h2><p>{{ t('activity.emptyDescription', { name: activityNames[provider] }) }}</p></div>
       <div v-else-if="detail" ref="content" @click.capture="inspectDetails">
-        <p v-if="detail.truncated" class="agent-activity__hint">{{ t('activity.recentOnly') }}</p>
-        <AgentConversation :key="detail.id" :detail="detail" :stale="error || sourceStatus === 'unavailable'" />
+        <button v-if="detail.next_before" type="button" class="agent-activity__earlier" data-activity-load-older :disabled="loadingOlder" @click="earlier">{{ t(loadingOlder ? 'activity.loadingOlder' : olderError ? 'activity.retryOlder' : 'activity.loadOlder') }}</button>
+        <p v-if="detail.truncated && !detail.next_before" class="agent-activity__hint">{{ t('activity.contentLimited') }}</p>
+        <AgentConversation :key="detail.id" :detail="detail" :stale="error || sourceStatus === 'unavailable'" @edit="emit('edit', $event)" />
         <p v-if="!detail.entries.length" class="agent-activity__hint">{{ t('activity.waitingContent') }}</p>
       </div>
     </div>
@@ -94,6 +108,8 @@ watch(detail, async (next, previous) => {
 .agent-activity__notice { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 4px 20px; color: var(--color-status-warning); font-size: 12px; }
 .agent-activity__notice button { display: flex; gap: 4px; align-items: center; color: inherit; border: 0; background: none; font: inherit; cursor: pointer; }
 .agent-activity__hint { margin: 0; color: var(--color-text-tertiary); font-size: 11px; text-align: center; }
+.agent-activity__earlier { display: block; inline-size: min(100%, 48rem); padding: 12px 0; margin: 0 auto 16px; border: 0; border-block-end: 1px solid var(--color-border-subtle); background: transparent; color: var(--color-text-tertiary); text-align: start; font: inherit; font-size: 14px; cursor: pointer; }
+.agent-activity__earlier:disabled { cursor: progress; opacity: .6; }
 footer.agent-activity__hint { padding: 8px 16px; }
 .agent-activity__latest { position: absolute; inset-block-end: 44px; inset-inline-start: calc(50% - 17px); display: grid; place-items: center; inline-size: 34px; block-size: 34px; border: 1px solid var(--color-border-base); border-radius: 50%; background: var(--color-bg-element); color: var(--color-text-primary); cursor: pointer; }
 .agent-activity__unread { position: absolute; inset-block-start: 1px; inset-inline-end: 1px; inline-size: 7px; block-size: 7px; border-radius: 50%; background: var(--color-accent); }

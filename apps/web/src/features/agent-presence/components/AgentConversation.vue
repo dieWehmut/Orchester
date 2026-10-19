@@ -5,11 +5,13 @@ import { CircleAlert, LoaderCircle } from '@lucide/vue'
 import type { ActivityDetail } from '../../../api/agent-activity'
 import { useI18n } from '../../../i18n'
 import MessageActions from '../../../components/run/MessageActions.vue'
+import UserMessage from '../../../components/run/UserMessage.vue'
 import { conversationItems, visibleAnswer } from '../conversation'
 import AgentWorkBlock from './AgentWorkBlock.vue'
 import { useActivityClock } from '../use-activity-clock'
 
 const props = defineProps<{ detail: ActivityDetail; stale?: boolean }>()
+const emit = defineEmits<{ edit: [text: string] }>()
 const { t, locale } = useI18n()
 const items = computed(() => conversationItems(props.detail.entries, props.detail.turns))
 const latestWork = computed(() => {
@@ -19,7 +21,6 @@ const latestWork = computed(() => {
 const activeWork = computed(() => [...items.value].reverse().find(item => item.kind === 'work' && latestWork.value.has(item.id) && item.duration === undefined)?.id)
 const active = computed(() => props.detail.state === 'active' && !props.stale)
 const now = useActivityClock(active)
-function messageTime(timestamp: number): string { return new Intl.DateTimeFormat(locale.value, { hour: '2-digit', minute: '2-digit' }).format(timestamp) }
 const dateLabels = computed(() => {
   const labels = new Map<string, string>()
   let previous = 0
@@ -38,11 +39,7 @@ const dateLabels = computed(() => {
     <template v-for="item in items" :key="item.id">
       <time v-if="dateLabels.has(item.id)" class="agent-conversation__date" data-conversation-date>{{ dateLabels.get(item.id) }}</time>
       <article v-if="item.kind === 'user'" class="agent-conversation__user" data-activity-entry="user" :aria-label="t('activity.kinds.user')">
-        <p>{{ item.entry.text }}</p>
-        <div class="agent-conversation__user-meta">
-          <time v-if="item.entry.timestamp !== undefined" :datetime="new Date(item.entry.timestamp).toISOString()" data-message-time>{{ messageTime(item.entry.timestamp) }}</time>
-          <MessageActions :text="item.entry.text" :label="t('transcript.copyMessage')" :copied-label="t('transcript.copied')" />
-        </div>
+        <UserMessage :text="item.entry.text" :timestamp="item.entry.timestamp" @edit="emit('edit', $event)" />
       </article>
       <AgentWorkBlock v-else-if="item.kind === 'work'" :item="item" :active="active && activeWork === item.id" :latest="latestWork.has(item.id)" :now="now" />
       <article v-else-if="item.kind === 'assistant'" class="agent-conversation__answer" data-activity-entry="assistant" :aria-label="t('activity.kinds.assistant')">

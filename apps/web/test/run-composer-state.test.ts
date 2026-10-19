@@ -31,8 +31,8 @@ describe("RunComposer state", () => {
   it("derives busy from the lifecycle so a run in flight cannot look idle", async () => {
     const wrapper = mount(RunComposer, { props: { modelValue: "go", lifecycle: "running" } })
 
-    expect(wrapper.get("textarea").attributes("disabled")).toBeDefined()
-    expect(wrapper.find('button[type="submit"]').exists()).toBe(false)
+    expect(wrapper.get("textarea").attributes("disabled")).toBeUndefined()
+    expect(wrapper.get('button[type="submit"]').attributes('aria-label')).toBe('Queue message')
     expect(wrapper.get('[data-composer-action="cancel"]')).toBeTruthy()
 
     // A settled lifecycle frees the input again even while `busy` stays unset.

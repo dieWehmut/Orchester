@@ -27,14 +27,16 @@ describe('RunComposer', () => {
     expect(wrapper.get('button[type="submit"]').attributes('disabled')).toBeDefined()
   })
 
-  it('shows a stop action while busy and suppresses submit', async () => {
+  it('queues while busy, clears the draft immediately and keeps stop available', async () => {
     const wrapper = mount(RunComposer, { props: { modelValue: 'Run', busy: true } })
     const textarea = wrapper.get('textarea')
 
     await textarea.trigger('keydown', { key: 'Enter' })
     await wrapper.get('[data-composer-action="cancel"]').trigger('click')
 
-    expect(wrapper.emitted('submit')).toBeUndefined()
+    expect(wrapper.emitted('submit')).toEqual([['Run']])
+    expect(wrapper.get('textarea').element.value).toBe('')
+    expect(wrapper.emitted('update:modelValue')).toContainEqual([''])
     expect(wrapper.emitted('cancel')).toHaveLength(1)
     expect(wrapper.find('button[type="submit"]').exists()).toBe(false)
   })
@@ -69,10 +71,13 @@ describe('RunComposer', () => {
     expect(wrapper.get('[data-composer-attachments]').text()).toContain('notes.md')
     await wrapper.get('form').trigger('submit')
     expect(wrapper.emitted('submit')?.[0]?.[0]).toBe('Read this\n\nnotes.md\n```\nhello\n```')
+    expect(wrapper.get('textarea').element.value).toBe('')
+    expect(wrapper.find('[data-composer-attachments]').exists()).toBe(false)
+    await wrapper.get('textarea').setValue('Next draft')
     Object.defineProperty(input.element, 'files', { configurable: true, value: [new File(['binary'], 'photo.png')] })
     await input.trigger('change'); await flushPromises()
     expect(wrapper.get('[role="status"]').text()).toContain('text files')
-    expect(wrapper.get('textarea').element.value).toBe('Read this')
-    expect(wrapper.get('[data-composer-attachments]').text()).toContain('notes.md')
+    expect(wrapper.get('textarea').element.value).toBe('Next draft')
+    expect(wrapper.find('[data-composer-attachments]').exists()).toBe(false)
   })
 })

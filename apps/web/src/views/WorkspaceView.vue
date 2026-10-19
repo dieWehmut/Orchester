@@ -34,13 +34,13 @@ import {
   useShellActionState,
 } from '../components/layout/shell-actions'
 import { DESKTOP_WINDOW_KEY } from '../platform/desktop-window'
-import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { routerKey } from 'vue-router'
 
 const { t } = useI18n()
 const appRouter = inject(routerKey, null)
-const { sessions, run, agents, bootstrap, models, review, approvals } = useAppStores()
-const runView = computed(() => run.view.value)
+const { sessions, run, queue, agents, bootstrap, models, review, approvals } = useAppStores()
+const runView = computed(() => queue.view.value)
 const runEvents = computed(() => run.events.value)
 const changeSummaries = computed(() => summarizeFileChanges(runView.value.fileChanges))
 /**
@@ -308,11 +308,23 @@ const runLifecycle = computed(() => run.lifecycle.value)
 const runSettingsKey = computed(() => selectedId.value)
 
 async function handleRunSubmit(prompt: string): Promise<void> {
-  await run.submit(prompt)
+  queue.enqueue(prompt)
 }
 
 async function handleRunCancel(): Promise<void> {
   await run.cancel()
+}
+
+async function editMessage(text: string): Promise<void> {
+  closeActivity()
+  await sessions.select(null)
+  await nextTick()
+  runPanel.value?.editPrompt(text)
+}
+
+function editQueued(id: string): void {
+  const text = queue.remove(id)
+  if (text !== null) runPanel.value?.editPrompt(text)
 }
 
 function handleAgentSelect(agentId: string): void {
@@ -553,7 +565,7 @@ if (desktopWindowController?.enabled) {
       @toggle-panel="toggleInspector"
     />
 
-    <AgentActivityView v-if="activityProvider" :provider="activityProvider" :activity="agentActivity" />
+    <AgentActivityView v-if="activityProvider" :provider="activityProvider" :activity="agentActivity" @edit="editMessage" />
     <RunPanel
       ref="runPanel"
       v-else-if="!selected"
@@ -564,6 +576,8 @@ if (desktopWindowController?.enabled) {
       :projection-status="runProjectionStatus"
       :error-message="runErrorMessage"
       :busy="runBusy"
+      :queued="queue.items.value"
+      :queue-paused="queue.paused.value"
       :lifecycle="runLifecycle"
       :conversation-started="conversationStarted"
       :workspace-name="workspaceName"
@@ -576,11 +590,14 @@ if (desktopWindowController?.enabled) {
       :pet-notification-labels="petNotificationLabels"
       @submit="handleRunSubmit"
       @cancel="handleRunCancel"
+      @queue-remove="queue.remove($event)"
+      @queue-edit="editQueued"
+      @queue-resume="queue.resume()"
       @select-model="models.select($event)"
       @configure-model="appRouter?.push({ name: 'settings', query: { section: 'providers' } })"
       @retry-models="models.load()"
     />
-    <SessionTranscript v-else :status="detailStatus" :session="selected" :error="detailError" />
+    <SessionTranscript v-else :status="detailStatus" :session="selected" :error="detailError" @edit="editMessage" />
 
     <template #inspector>
       <InspectorDock

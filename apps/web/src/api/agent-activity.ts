@@ -29,7 +29,7 @@ export interface ActivityEntry {
   call_id?: string
 }
 export interface ActivityTurn { id: string; started_at?: number; completed_at?: number }
-export interface ActivityDetail extends ActivitySummary { schema_version: 1; entries: ActivityEntry[]; turns?: ActivityTurn[] }
+export interface ActivityDetail extends ActivitySummary { schema_version: 1; entries: ActivityEntry[]; turns?: ActivityTurn[]; next_before?: number | undefined }
 export interface ActivitySource { provider: ActivityProvider; status: 'available' | 'not_found' | 'unavailable' | 'partial' }
 export interface ActivityList { schema_version: 1; observed_at: number; sources: ActivitySource[]; sessions: ActivitySummary[] }
 
@@ -51,9 +51,10 @@ export function createAgentActivityApi(http: HttpClient) {
         || !Array.isArray(data.sources) || !data.sources.every(source => record(source) && supportedProviders.includes(String(source.provider)) && ['available', 'not_found', 'unavailable', 'partial'].includes(String(source.status)))) throw new Error('Invalid activity response')
       return data as unknown as ActivityList
     },
-    async detail(id: string, signal: AbortSignal): Promise<ActivityDetail> {
-      const data = await http.get<unknown>(`/agents/activity/${encodeURIComponent(id)}`, { signal })
-      if (!summary(data) || !record(data) || data.schema_version !== 1 || !Array.isArray(data.entries)
+    async detail(id: string, signal: AbortSignal, before?: number): Promise<ActivityDetail> {
+      const data = await http.get<unknown>(`/agents/activity/${encodeURIComponent(id)}${before === undefined ? '' : `?before=${before}`}`, { signal })
+      if (!summary(data) || !record(data) || data.id !== id || data.schema_version !== 1 || !Array.isArray(data.entries)
+        || (data.next_before !== undefined && (typeof data.next_before !== 'number' || !Number.isSafeInteger(data.next_before) || data.next_before <= 0))
         || !data.entries.every(entry => record(entry) && typeof entry.id === 'string' && typeof entry.text === 'string' && ['user', 'assistant', 'tool', 'result', 'status'].includes(String(entry.kind)) && (entry.tool === null || typeof entry.tool === 'string')
           && optionalTime(entry.timestamp) && (entry.phase === undefined || entry.phase === 'commentary' || entry.phase === 'final') && (entry.turn_id === undefined || typeof entry.turn_id === 'string') && (entry.call_id === undefined || typeof entry.call_id === 'string'))
         || (data.turns !== undefined && (!Array.isArray(data.turns) || data.turns.length > 100 || !data.turns.every(turn => record(turn) && typeof turn.id === 'string' && optionalTime(turn.started_at) && optionalTime(turn.completed_at))))) throw new Error('Invalid activity detail')

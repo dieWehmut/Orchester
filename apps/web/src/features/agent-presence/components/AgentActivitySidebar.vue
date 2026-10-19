@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { AppMenu, Spinner } from '@orchester/design'
 import { ArrowLeft, Check, ChevronDown, ChevronRight, Folder, FolderOpen, Search, SquarePen, X } from '@lucide/vue'
 import { activityNames, activityProviders, type ExternalActivityProvider } from '../../../api/agent-activity'
@@ -18,6 +18,8 @@ const expanded = ref({ pinned: true, projects: false, recent: true })
 const matches = computed(() => sessions.value.filter(row => `${row.title} ${row.project}`.toLocaleLowerCase().includes(query.value.trim().toLocaleLowerCase())))
 const pinned = computed(() => matches.value.filter(isPinned))
 const recent = computed(() => matches.value.filter(row => !isPinned(row)))
+const recentLimit = ref(50)
+watch(() => [props.provider, query.value], () => { recentLimit.value = 50 })
 const projects = computed(() => {
   const groups = new Map<string, typeof sessions.value>()
   for (const row of matches.value) if (row.project) {
@@ -62,7 +64,7 @@ function closeSearch(): void { searching.value = false; query.value = '' }
         </section>
         <section class="activity-sidebar__section" data-activity-section="recent">
           <button type="button" class="activity-sidebar__heading" :aria-expanded="expanded.recent" @click="expanded.recent = !expanded.recent">{{ t('activity.recent') }}<ChevronRight :size="13" :data-expanded="expanded.recent" /></button>
-          <div v-if="expanded.recent"><ActivitySessionRow v-for="row in recent" :key="row.id" :session="row" :selected="selectedId === row.id" :pinned="false" :unread="isUnread(row)" @select="emit('select', $event)" @pin="togglePin(row)" /></div>
+          <div v-if="expanded.recent"><ActivitySessionRow v-for="row in recent.slice(0, recentLimit)" :key="row.id" :session="row" :selected="selectedId === row.id" :pinned="false" :unread="isUnread(row)" @select="emit('select', $event)" @pin="togglePin(row)" /><button v-if="recent.length > recentLimit" type="button" class="activity-sidebar__heading" data-activity-more @click="recentLimit += 50">{{ t('activity.showMore', { count: String(recent.length - recentLimit) }) }}</button></div>
         </section>
         <p v-if="query && !matches.length" class="activity-sidebar__empty" role="status">{{ t('sessions.filterEmpty') }}</p>
       </template>

@@ -66,7 +66,7 @@ describe('composer gestures', () => {
   it("puts the reader's own prompt back, so it can be run again", async () => {
     const wrapper = mounted(viewWithAssistant('An answer.'))
 
-    await wrapper.get('[data-message-action="reuse"]').trigger('click')
+    await wrapper.get('[data-message-action="edit"]').trigger('click')
     await wrapper.vm.$nextTick()
 
     const field = wrapper.get('textarea').element as HTMLTextAreaElement

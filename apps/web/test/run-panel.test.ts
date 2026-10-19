@@ -7,6 +7,7 @@ import type { RunsApi } from '../src/api/runs'
 import RunPanel from '../src/components/run/RunPanel.vue'
 import RunTimeline from '../src/components/run/RunTimeline.vue'
 import { createRunStore } from '../src/stores/run'
+import { createRunQueue } from '../src/stores/run-queue'
 import { MODEL_CATALOG_FIXTURE } from './fixtures/model-catalog'
 
 describe('RunPanel', () => {
@@ -19,7 +20,7 @@ describe('RunPanel', () => {
     expect(wrapper.get('[data-empty-workspace]')).toBeTruthy()
     expect(wrapper.get('[data-orchester-mark]')).toBeTruthy()
     await wrapper.setProps({ conversationStarted: true })
-    expect(wrapper.get('[data-run-footer]')).toBeTruthy()
+    expect(wrapper.find('[data-run-footer]').exists()).toBe(false)
   })
 
   it('removes the large mark immediately after a conversation starts', async () => {
@@ -48,12 +49,13 @@ describe('RunPanel', () => {
     expect(wrapper.emitted('cancel')).toHaveLength(1)
   })
 
-  it('keeps the full draft after a lost submission response and lets Enter retry it', async () => {
+  it('clears the composer but retains a failed submission in the queue for explicit retry', async () => {
     const start = vi.fn()
       .mockRejectedValueOnce(new Error('Response lost'))
       .mockResolvedValueOnce({ run_id: 'run-retry-draft', events_url: '/events/retry-draft' })
     const makeKey = vi.fn(() => 'draft-retry-key')
     const store = createRunStore({ start } as unknown as RunsApi, { idempotencyKey: makeKey })
+    const queue = createRunQueue(store)
     const wrapper = mount(defineComponent({
       setup() {
         return () => h(RunPanel, {
@@ -61,7 +63,10 @@ describe('RunPanel', () => {
           lifecycle: store.lifecycle.value,
           conversationStarted: store.conversationStarted.value,
           errorMessage: store.error.value?.message ?? null,
-          onSubmit: (prompt: string) => { void store.submit(prompt) },
+          queued: queue.items.value,
+          queuePaused: queue.paused.value,
+          onSubmit: (prompt: string) => { queue.enqueue(prompt) },
+          onQueueResume: queue.resume,
         })
       },
     }))
@@ -73,10 +78,11 @@ describe('RunPanel', () => {
     await flushPromises()
 
     expect(store.lifecycle.value).toBe('failed')
-    expect((textarea.element as HTMLTextAreaElement).value).toBe(draft)
+    expect((textarea.element as HTMLTextAreaElement).value).toBe('')
+    expect(queue.items.value[0]?.prompt).toBe(draft)
     expect(textarea.attributes('disabled')).toBeUndefined()
-    expect(wrapper.get('[data-composer-action="submit"]').attributes('disabled')).toBeUndefined()
-    await textarea.trigger('keydown', { key: 'Enter' })
+    expect(wrapper.get('[data-composer-action="submit"]').attributes('disabled')).toBeDefined()
+    await wrapper.get('[data-queue-resume]').trigger('click')
     await flushPromises()
 
     expect(store.runId.value).toBe('run-retry-draft')
@@ -86,6 +92,7 @@ describe('RunPanel', () => {
     ])
     expect(start.mock.calls.map((call) => call[0]?.prompt)).toEqual([draft.trim(), draft.trim()])
     expect(makeKey).toHaveBeenCalledOnce()
+    queue.dispose()
     wrapper.unmount()
   })
 

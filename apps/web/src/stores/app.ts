@@ -12,6 +12,7 @@ import {
 } from './bootstrap'
 import { createSessionsStore, type SessionsStore } from './sessions'
 import { createRunStore, type RunStore } from './run'
+import { createRunQueue } from './run-queue'
 import { createRunSocket } from '../transport/run-socket'
 import { createAppPinia } from './pinia'
 import { useAgentFleetStore } from './agent-fleet'
@@ -30,6 +31,7 @@ export interface AppStores {
   bootstrap: BootstrapStore
   sessions: SessionsStore
   run: RunStore
+  queue: ReturnType<typeof createRunQueue>
   agents: ReturnType<typeof useAgentFleetStore>
   models: ReturnType<typeof useModelCatalogStore>
   review: ReturnType<typeof useWorkspaceReviewStore>
@@ -70,6 +72,7 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
   const sessions = createSessionsStore(createSessionsApi(http))
   const runs = createRunsApi(http)
   const run = createRunStore(runs, { runSocketFactory: createRunSocket })
+  const queue = createRunQueue(run)
   const pinia = createAppPinia()
   const agents = useAgentFleetStore(pinia)
   const models = useModelCatalogStore(pinia)
@@ -90,6 +93,7 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
     bootstrap,
     sessions,
     run,
+    queue,
     agents,
     models,
     review,
@@ -103,6 +107,7 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
       }
     },
     stop(): void {
+      queue.dispose()
       run.stop()
       agents.stop()
     },

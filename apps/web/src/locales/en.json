@@ -387,7 +387,8 @@
     "externalLink": "Opens in a new tab",
     "quote": "Quote in the composer",
     "reuse": "Use this prompt again",
-    "copyFilePath": "Copy file path"
+    "copyFilePath": "Copy file path",
+    "edit": "Edit message"
   },
   "inspector": {
     "label": "Workspace inspector",
@@ -655,7 +656,12 @@
       "image": "Viewed images",
       "integration": "Used an integration",
       "tool": "Used a tool"
-    }
+    },
+    "loadOlder": "Earlier messages ›",
+    "loadingOlder": "Loading earlier messages…",
+    "retryOlder": "Could not load earlier messages · Retry",
+    "showMore": "Show more ({count})",
+    "contentLimited": "Some unusually long content is shortened."
   },
   "add": {
     "title": "Add",
@@ -743,5 +749,14 @@
     "urlExample": "https://example.com/mcp",
     "tokenExample": "MCP_API_TOKEN",
     "commandExample": "node.exe"
+  },
+  "queue": {
+    "send": "Queue message",
+    "title": "Queued messages",
+    "count": "Queued ({count})",
+    "paused": "Queue paused ({count})",
+    "resume": "Continue queue",
+    "edit": "Edit queued message",
+    "remove": "Remove queued message"
   }
 }

@@ -3,6 +3,7 @@ import type { SessionDetailDto } from '@orchester/protokoll'
 import { EmptyState, InlineAlert, MarkdownText, SkeletonBlock } from '@orchester/design'
 
 import MessageActions from '../run/MessageActions.vue'
+import UserMessage from '../run/UserMessage.vue'
 import { useI18n } from '../../i18n'
 import type { DetailStatus } from '../../stores/sessions'
 
@@ -13,6 +14,7 @@ defineProps<{
 }>()
 
 const { t } = useI18n()
+const emit = defineEmits<{ edit: [text: string] }>()
 </script>
 
 <template>
@@ -39,7 +41,7 @@ const { t } = useI18n()
         data-message-role="user"
         data-message-shape="bubble"
       >
-        <p>{{ session.prompt }}</p>
+        <UserMessage :text="session.prompt" :timestamp="session.recorded_at_unix * 1000" @edit="emit('edit', $event)" />
       </section>
 
       <section
@@ -94,6 +96,8 @@ const { t } = useI18n()
 
 .session-transcript__content {
   display: grid;
+  font-size: 16px;
+  line-height: 1.75;
   gap: var(--space-5);
 }
 
@@ -165,7 +169,7 @@ const { t } = useI18n()
 }
 
 /* Offered on hover or focus, never removed from the tree. */
-.session-transcript__turn :deep(.message-actions) {
+.session-transcript__turn--assistant :deep(.message-actions) {
   opacity: 0;
   transition: opacity var(--transition-fast) var(--ease-out);
 }

@@ -120,7 +120,7 @@ const attachmentError = ref(false)
 const readingFiles = ref(false)
 const voice = useVoiceInput(text => update(`${draft.value}${draft.value ? ' ' : ''}${text}`.slice(0, props.maxLength)), () => locale.value)
 async function attachFiles(files: File[]): Promise<void> {
-  if (props.disabled || isBusy.value || readingFiles.value || files.length === 0) return
+  if (props.disabled || readingFiles.value || files.length === 0) return
   emit('drop-files', files)
   attachmentError.value = false
   readingFiles.value = true
@@ -141,14 +141,11 @@ async function attachFiles(files: File[]): Promise<void> {
 }
 function chooseFiles(event: Event): void { void attachFiles(Array.from((event.target as HTMLInputElement).files ?? [])) }
 function attach(value: ComposerAttachment): boolean {
-  if (props.disabled || isBusy.value) return false
+  if (props.disabled) return false
   if (attachments.value.length >= 20 || promptWithAttachments.value.length + value.content.length + 2 > 28000) { attachmentError.value = true; return false }
   attachmentError.value = false; attachments.value.push(value); return true
 }
 const promptWithAttachments = computed(() => [draft.value, ...attachments.value.map(a => a.content)].filter(Boolean).join('\n\n'))
-watch(() => props.lifecycle, (value, previous) => {
-  if (previous === 'submitting' && value === 'running') attachments.value = []
-})
 const dragActive = ref(false)
 /**
  * The palette reads descriptions as text, so the keys become words here,
@@ -220,10 +217,8 @@ const composerState = computed(() => {
 })
 
 /**
- * `busy` is the control-level truth (an input that must not accept a second
- * prompt); the lifecycle names why. Deriving it here keeps the two from
- * drifting: a caller that knows the lifecycle does not also have to remember
- * to set `busy`.
+ * While busy, the input accepts the next draft and offers both queue and stop.
+ * The lifecycle also covers a start request that has not been acknowledged yet.
  */
 const isBusy = computed(
   () =>
@@ -256,7 +251,6 @@ const canSubmit = computed(
     (draft.value.trim().length > 0 || attachments.value.length > 0) &&
     draft.value.length <= props.maxLength &&
     promptWithAttachments.value.length <= 28000 &&
-    !isBusy.value &&
     !props.disabled && !readingFiles.value && !toolsBusy.value,
 )
 
@@ -281,7 +275,11 @@ function update(value: string): void {
 
 function submit(): void {
   if (!canSubmit.value) return
-  emit('submit', promptWithAttachments.value)
+  const prompt = promptWithAttachments.value
+  update('')
+  attachments.value = []
+  voice.stop()
+  emit('submit', prompt)
 }
 
 function handleKeydown(event: KeyboardEvent): void {
@@ -336,7 +334,7 @@ defineExpose({ focus })
         <div v-for="attachment in attachments" :key="attachment.id" class="run-composer__attachment" :data-has-preview="!!attachment.preview">
           <img v-if="attachment.preview" :src="attachment.preview" :alt="attachment.name" />
           <FileText v-else :size="18" aria-hidden="true" /><span :title="attachment.name">{{ attachment.name }}</span>
-          <button type="button" :aria-label="`${t('add.remove')} ${attachment.name}`" :disabled="isBusy" @click="attachments = attachments.filter(a => a.id !== attachment.id)"><X :size="14" /></button>
+          <button type="button" :aria-label="`${t('add.remove')} ${attachment.name}`" @click="attachments = attachments.filter(a => a.id !== attachment.id)"><X :size="14" /></button>
         </div>
       </div>
       <!-- The reference names the field with its placeholder and draws no
@@ -347,7 +345,7 @@ defineExpose({ focus })
         :aria-label="props.inputLabel ?? t('run.taskPrompt')"
         :placeholder="props.placeholder ?? t('composer.placeholder')"
         :max-length="props.maxLength"
-        :disabled="props.disabled || isBusy || readingFiles"
+        :disabled="props.disabled || readingFiles"
         :rows="rowCount"
         @update:model-value="update"
         @keydown="handleKeydown"
@@ -360,7 +358,7 @@ defineExpose({ focus })
           <input ref="fileInput" class="run-composer__file-input" type="file" multiple :aria-label="t('composer.attach')"
             accept=".txt,.md,.markdown,.json,.csv,.log,.yaml,.yml,.toml,.js,.ts,.tsx,.jsx,.py,.rs,.css,.html,.vue,.svg" @change="chooseFiles" />
           <input ref="folderInput" class="run-composer__file-input" type="file" multiple webkitdirectory :aria-label="t('add.chooseFolder')" @change="chooseFiles" />
-          <ComposerTools :anchor="form" :workspace-name="props.workspaceName" :disabled="props.disabled || isBusy || readingFiles" :attach-to-composer="attach"
+          <ComposerTools :anchor="form" :workspace-name="props.workspaceName" :disabled="props.disabled || readingFiles" :attach-to-composer="attach"
             @files="folder => folder ? folderInput?.click() : fileInput?.click()" @busy="toolsBusy = $event" />
           <ApprovalPresetControl :model-value="approvalPreset" @update:model-value="updateApprovalPreset" />
         </div>
@@ -394,14 +392,14 @@ defineExpose({ focus })
             <Square :size="13" fill="currentColor" aria-hidden="true" />
           </AppButton>
           <AppButton
-            v-else
+            v-if="!isBusy || draft.trim() || attachments.length"
             class="run-composer__send"
             type="submit"
             variant="primary"
             data-composer-action="submit"
             data-composer-action-shape="send"
             :disabled="!canSubmit"
-            :aria-label="props.submitLabel ?? t('run.submit')"
+            :aria-label="isBusy ? t('queue.send') : props.submitLabel ?? t('run.submit')"
           >
             <ArrowUp :size="16" aria-hidden="true" />
           </AppButton>

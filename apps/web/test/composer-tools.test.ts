@@ -73,16 +73,18 @@ describe('composer additions', () => {
     expect(wrapper.emitted('submit')).toBeUndefined()
   })
 
-  it('keeps attachments after failed submission and clears them after acceptance', async () => {
+  it('clears only attachments transferred into the queue and keeps the next draft during run changes', async () => {
     const wrapper = mount(RunComposer, { props: { modelValue: 'Explain', lifecycle: 'idle' } }); mounted.push(wrapper)
     const input = wrapper.get('input[type="file"]')
     const file = new File(['Hello'], 'folder/note.txt'); Object.defineProperty(file, 'text', { value: async () => 'Hello' })
     Object.defineProperty(input.element, 'files', { value: [file] })
     await input.trigger('change'); await flushPromises()
-    await wrapper.setProps({ lifecycle: 'submitting' }); await wrapper.setProps({ lifecycle: 'failed' })
-    expect(wrapper.find('[data-composer-attachments]').exists()).toBe(true)
-    await wrapper.setProps({ lifecycle: 'submitting' }); await wrapper.setProps({ lifecycle: 'running' })
+    await wrapper.get('form').trigger('submit')
+    expect(wrapper.emitted('submit')?.[0]?.[0]).toContain('Hello')
     expect(wrapper.find('[data-composer-attachments]').exists()).toBe(false)
+    await input.trigger('change'); await flushPromises()
+    await wrapper.setProps({ lifecycle: 'submitting' }); await wrapper.setProps({ lifecycle: 'running' })
+    expect(wrapper.find('[data-composer-attachments]').exists()).toBe(true)
   })
 
   it('keeps the drawing editor open when the combined attachment limit is exceeded', async () => {

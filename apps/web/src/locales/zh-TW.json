@@ -387,7 +387,8 @@
     "externalLink": "在新分頁開啟",
     "quote": "引用至輸入框",
     "reuse": "重新使用這則提示",
-    "copyFilePath": "複製檔案路徑"
+    "copyFilePath": "複製檔案路徑",
+    "edit": "編輯訊息"
   },
   "inspector": {
     "label": "工作區檢查器",
@@ -655,7 +656,12 @@
       "image": "查看了圖像",
       "integration": "使用了整合",
       "tool": "使用了工具"
-    }
+    },
+    "loadOlder": "較早訊息 ›",
+    "loadingOlder": "正在載入較早訊息…",
+    "retryOlder": "較早訊息載入失敗 · 重試",
+    "showMore": "展開顯示（還有 {count} 則）",
+    "contentLimited": "部分超長內容已縮短顯示。"
   },
   "add": {
     "title": "新增",
@@ -743,5 +749,14 @@
     "urlExample": "https://example.com/mcp",
     "tokenExample": "MCP_API_TOKEN",
     "commandExample": "node.exe"
+  },
+  "queue": {
+    "send": "排隊傳送",
+    "title": "待傳送訊息",
+    "count": "排隊中（{count}）",
+    "paused": "佇列已暫停（{count}）",
+    "resume": "繼續傳送",
+    "edit": "編輯待傳送訊息",
+    "remove": "移除待傳送訊息"
   }
 }
