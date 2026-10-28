@@ -59,24 +59,29 @@ defineEmits<{
 </template>
 
 <style scoped>
+/* The rail and the list beside it are one column in the reference, not two.
+   The icon rail therefore shares the sidebar's surface and gives up its own
+   background, so the seam between them is a spacing change rather than a
+   colour change. */
 .workspace-navigation {
   display: flex;
   block-size: 100%;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-3);
-  padding-block: var(--space-3);
+  gap: var(--space-1);
+  padding: var(--space-2) 0 var(--space-3);
+  background: transparent;
 }
 
 .workspace-navigation__button {
   display: grid;
-  inline-size: 36px;
-  block-size: 36px;
-  flex: 0 0 36px;
+  inline-size: 34px;
+  block-size: 34px;
+  flex: 0 0 34px;
   place-items: center;
   padding: 0;
   border: 0;
-  border-radius: 11px;
+  border-radius: 9px;
   background: transparent;
   color: var(--color-text-secondary);
   cursor: pointer;
@@ -85,7 +90,7 @@ defineEmits<{
 
 .workspace-navigation__button:hover,
 .workspace-navigation__button[aria-current='page'] {
-  background: var(--color-bg-element);
+  background: var(--workspace-hover, var(--color-bg-element));
   color: var(--color-text-primary);
 }
 
@@ -103,7 +108,7 @@ defineEmits<{
 
 .workspace-navigation__footer {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--space-1);
   margin-block-start: auto;
 }
 </style>

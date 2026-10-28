@@ -5,6 +5,7 @@ import { CircleAlert, MessageCircle, Pin } from '@lucide/vue'
 import { computed } from 'vue'
 
 import { useI18n } from '../../i18n'
+import { compactAge, spelledAge } from '../../lib/relative-time'
 
 const props = withDefaults(
   defineProps<{
@@ -17,13 +18,17 @@ const props = withDefaults(
 
 defineEmits<{ select: [id: string]; 'toggle-pin': [id: string] }>()
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const dateTime = computed(() => new Date(props.session.recorded_at_unix * 1000))
-const displayTime = computed(() =>
-  new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(
-    dateTime.value,
-  ),
-)
+
+/**
+ * The row's trailing time, in the reference's own width: `4h`, `25 分`.
+ *
+ * The spelled-out age stays in the tooltip and in the row's hidden detail, so
+ * the compact form never costs a reader the full sentence.
+ */
+const age = computed(() => compactAge(props.session.recorded_at_unix, locale.value))
+const spelled = computed(() => spelledAge(props.session.recorded_at_unix, locale.value))
 
 /**
  * What the row is about, rather than what it is called.
@@ -54,13 +59,14 @@ const details = computed(() =>
       type="button"
       :aria-pressed="selected"
       :data-session-id="session.id"
-      :title="`${session.title} · ${details} · ${displayTime}`"
+      :title="`${session.title} · ${details} · ${spelled}`"
       @click="$emit('select', session.id)"
     >
       <MessageCircle v-if="pinned" :size="18" aria-hidden="true" />
       <strong class="session-list-item__title">{{ session.title }}</strong>
       <CircleAlert v-if="session.outcome === 'failed'" :size="14" class="session-list-item__error" :aria-label="session.outcome" />
-      <VisuallyHidden><time :datetime="dateTime.toISOString()">{{ displayTime }}</time><span>{{ session.outcome }}</span></VisuallyHidden>
+      <span class="session-list-item__age" aria-hidden="true">{{ age }}</span>
+      <VisuallyHidden><time :datetime="dateTime.toISOString()">{{ spelled }}</time><span>{{ session.outcome }}</span></VisuallyHidden>
       <VisuallyHidden data-session-details>{{ details }}</VisuallyHidden>
     </button>
     <!-- A control beside the row rather than inside it: a button within a button
@@ -146,6 +152,22 @@ const details = computed(() =>
   font-weight: var(--weight-normal);
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* The trailing age, in the reference's own width. It yields to the pin on
+   hover and focus, so the row states one trailing fact at a time and the
+   column's numbers never sit beside two different things. */
+.session-list-item__age {
+  flex: 0 0 auto;
+  color: var(--color-text-tertiary);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  transition: opacity var(--transition-fast) var(--ease-out);
+}
+
+.session-list-item:hover .session-list-item__age,
+.session-list-item:focus-within .session-list-item__age {
+  opacity: 0;
 }
 
 .session-list-item__open > svg { flex-shrink: 0; }

@@ -20,18 +20,21 @@
   --workspace-seam: color-mix(in srgb, var(--color-border-base) 45%, transparent);
   --workspace-hover: color-mix(in srgb, var(--color-bg-element) 70%, transparent);
   --composer-max-width: 48rem;
-  --composer-radius: 28px;
-  --composer-surface: #343434;
-  --composer-access: #ff812d;
-  --composer-send: #ed70ad;
-  --composer-send-text: #fff;
+  --composer-radius: 26px;
+  --composer-surface: var(--color-bg-element);
+  --composer-access: var(--color-intent-warning-text);
+  /* The send control is the surface's primary action, so it follows the accent
+     the reader chose rather than a pink the stylesheet picked. A hard-coded
+     colour here would ignore the accent scheme the appearance axis offers. */
+  --composer-send: var(--color-action-solid);
+  --composer-send-hover: var(--color-action-solid-hover);
+  --composer-send-text: var(--color-action-contrast);
 
   background: var(--color-bg-base);
 }
 
 :root[data-theme='light'] .app-shell {
   --composer-surface: var(--color-bg-surface);
-  --composer-access: #b64300;
   --transcript-surface: var(--color-bg-surface);
   --rail-surface: var(--color-bg-base);
 }
@@ -63,12 +66,26 @@
   overflow: auto;
 }
 
+/* The strip of destinations is a column only while the shell is drawing one.
+   A view that has moved those destinations into its own rail leaves the outlet
+   as the body's only child, and then a reserved 52px track would squeeze the
+   view into the remainder. A flex row gives both of those shapes what they
+   need without a rule that has to know which one it is looking at. */
 .app-shell__body {
-  display: grid;
-  grid-template-columns: 52px minmax(0, 1fr);
+  display: flex;
   min-block-size: 0;
   flex: 1;
   overflow: hidden;
+}
+
+.app-shell__body > .app-shell__navigation {
+  inline-size: 52px;
+  flex: 0 0 52px;
+}
+
+.app-shell__body > .app-shell__outlet {
+  min-inline-size: 0;
+  flex: 1;
 }
 
 /* Keep transient surfaces in the same quiet visual family as the workspace. */

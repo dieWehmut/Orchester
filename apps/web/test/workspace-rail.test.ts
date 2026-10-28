@@ -29,7 +29,7 @@ describe('WorkspaceView Codex-style rail', () => {
       .findAll('[data-pane="sessions"] [data-rail-section]')
       .map((node) => node.attributes('data-rail-section'))
 
-    expect(sections).toEqual(['primary', 'projects', 'fleet', 'sessions'])
+    expect(sections).toEqual(['primary', 'projects', 'fleet', 'sessions', 'footer'])
     // The first list is the reader's own, as the reference's sidebar opens, and
     // the workspace is named on the product row rather than in a list of one.
     expect(wrapper.get('[data-rail-section="projects"] [data-pinned-empty]')).toBeTruthy()

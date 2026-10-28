@@ -53,13 +53,19 @@ const rows = computed(() =>
 <style scoped>
 .pinned-sessions {
   display: grid;
-  gap: var(--space-1);
+  gap: 1px;
 }
 
+/* The reference's rail states a group heading and then its rows, with no
+   sentence explaining what an empty group would hold. The note stays, because
+   a reader who pinned something and then cannot find it needs to know where it
+   went, but it drops to the quietest type in the column and loses its
+   paragraph padding so the column keeps its rhythm. */
 .pinned-sessions__empty {
   margin: 0;
-  padding: 0 var(--space-2);
+  padding: var(--space-1) var(--space-2);
   color: var(--color-text-tertiary);
   font-size: var(--text-xs);
+  line-height: var(--leading-snug);
 }
 </style>

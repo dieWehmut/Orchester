@@ -40,6 +40,9 @@ describe('SessionListItem', () => {
     const button = wrapper.get('[data-session-id]')
 
     expect(button.get('.session-list-item__title').text()).toBe('Inspect the runtime')
+    // The trailing age is the reference's own width: one compact unit, with the
+    // full sentence kept for the tooltip and the hidden detail.
+    expect(button.get('.session-list-item__age').text()).not.toBe('')
     expect(button.get('time').text()).not.toBe('')
 
     // The row is the dot, the title, the time and the text a reader hears: the

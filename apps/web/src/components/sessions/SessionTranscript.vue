@@ -32,6 +32,7 @@ const emit = defineEmits<{ edit: [text: string] }>()
       <header class="session-transcript__header" :aria-label="session.title">
         <p>{{ session.agent }}<template v-if="session.model"> / {{ session.model }}</template></p>
         <span class="session-transcript__outcome" :data-outcome="session.outcome">
+          <span class="session-transcript__outcome-dot" aria-hidden="true" />
           {{ session.outcome }}
         </span>
       </header>
@@ -120,24 +121,36 @@ const emit = defineEmits<{ edit: [text: string] }>()
   font-size: var(--text-xs);
 }
 
+/* The outcome is a reading of the run, not a call to action: it states the
+   result in the transcript's quietest type, and only raises its voice when the
+   result is one the reader has to answer for. A successful run therefore reads
+   as a dot and a word, where a failure is still allowed to be red. */
 .session-transcript__outcome {
+  display: inline-flex;
   flex: 0 0 auto;
-  padding: var(--space-1) var(--space-2);
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0;
   border: 0;
-  border-radius: 8px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-tertiary);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  text-transform: uppercase;
+  text-transform: lowercase;
+}
+
+.session-transcript__outcome-dot {
+  inline-size: 0.4rem;
+  block-size: 0.4rem;
+  flex: 0 0 auto;
+  border-radius: var(--radius-full);
+  background: currentColor;
 }
 
 .session-transcript__outcome[data-outcome='success'] {
-  border-color: var(--color-status-success);
-  color: var(--color-status-success);
+  color: var(--color-text-tertiary);
 }
 
 .session-transcript__outcome[data-outcome='failed'] {
-  border-color: var(--color-status-error);
   color: var(--color-status-error);
 }
 

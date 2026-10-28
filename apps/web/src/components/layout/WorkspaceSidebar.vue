@@ -32,8 +32,24 @@ const props = withDefaults(
   agentSnapshot: AgentFleetSnapshotDto | null
   agentError: string | null
   selectedAgentId: string | null
+  /** The other destinations, kept in this column as the reference keeps them. */
+  schedulesLabel?: string
+  pluginsLabel?: string
+  themeLabel?: string
+  dark?: boolean
+  companionVisible?: boolean
   }>(),
-  { companionLabel: '', attentionCount: 0, searchLabel: 'Search', attentionLabel: '' },
+  {
+    companionLabel: '',
+    attentionCount: 0,
+    searchLabel: 'Search',
+    attentionLabel: '',
+    schedulesLabel: '',
+    pluginsLabel: '',
+    themeLabel: '',
+    dark: true,
+    companionVisible: false,
+  },
 )
 
 defineEmits<{
@@ -46,6 +62,9 @@ defineEmits<{
   toggleCompanion: []
   search: [query: string]
   openAttention: []
+  openSchedules: []
+  openPlugins: []
+  toggleTheme: []
 }>()
 
 const { t } = useI18n()
@@ -83,11 +102,19 @@ const pinnedSessions = usePinnedSessions()
     :search-label="searchLabel"
     :attention-label="attentionLabel"
     :attention-count="attentionCount"
+    :schedules-label="props.schedulesLabel"
+    :plugins-label="props.pluginsLabel"
+    :theme-label="props.themeLabel"
+    :dark="props.dark"
+    :companion-visible="props.companionVisible"
     @new-session="$emit('newSession')"
     @open-settings="$emit('openSettings')"
     @toggle-companion="$emit('toggleCompanion')"
     @search="sessionQuery = $event"
     @open-attention="$emit('openAttention')"
+    @open-schedules="$emit('openSchedules')"
+    @open-plugins="$emit('openPlugins')"
+    @toggle-theme="$emit('toggleTheme')"
   >
     <template #projects>
       <PinnedSessions
@@ -134,20 +161,27 @@ const pinnedSessions = usePinnedSessions()
   display: none;
 }
 
+/* A group's empty note is a line in the column, not a panel in it: the
+   reference's rail states "Threads" and leaves the space beneath it quiet, so
+   the note loses the block padding that would make it read as a card. */
 .workspace-sidebar :deep(.empty-state) {
   align-items: flex-start;
-  padding: var(--space-2);
+  justify-items: start;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
   text-align: start;
 }
 
 .workspace-sidebar :deep(.empty-state__title) {
-  color: var(--color-text-secondary);
-  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+  font-size: var(--text-xs);
   font-weight: var(--weight-normal);
 }
 
 .workspace-sidebar :deep(.empty-state__description) {
+  color: var(--color-text-tertiary);
   font-size: var(--text-xs);
+  line-height: var(--leading-snug);
 }
 </style>
 

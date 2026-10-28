@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AppButton, AppDialog } from '@orchester/design'
+import { AppButton, AppDialog, useAppearance } from '@orchester/design'
 import { AgentDetails, agentActivityMessageKey } from '../features/agent-presence'
 import AgentActivityView from '../features/agent-presence/components/AgentActivityView.vue'
 import AgentActivitySidebar from '../features/agent-presence/components/AgentActivitySidebar.vue'
@@ -89,6 +89,15 @@ const petNotificationLabels = computed<
  * two words the catalogue already carries for the toggle.
  */
 const petVisibility = usePetVisibility()
+/**
+ * The appearance switch the sidebar carries.
+ *
+ * The reference keeps its settings and its two appearance switches at the foot
+ * of the same column as the threads, so the workspace owns those rows rather
+ * than leaving them to a strip beside it. The state is the shell's; this view
+ * only offers the switch.
+ */
+const appearance = useAppearance()
 const companionLabel = computed(() =>
   petVisibility.visible.value ? t('pet.hide') : t('pet.show'),
 )
@@ -396,6 +405,14 @@ function handleOpenSettings(): void {
   void appRouter?.push({ name: 'settings' })
 }
 
+function handleOpenSchedules(): void {
+  void appRouter?.push({ name: 'schedules' })
+}
+
+function handleOpenPlugins(): void {
+  void appRouter?.push({ name: 'plugins' })
+}
+
 /**
  * The shortcuts the workspace owns.
  *
@@ -512,6 +529,7 @@ if (desktopWindowController?.enabled) {
     :sessions-title="t('sessions.title')"
     :inspector-title="t('inspector.label')"
     :controls-label="t('inspector.label')"
+    navigation-in-rail
     v-model:inspector-open="inspectorOpen"
   >
     <template #sessions>
@@ -534,6 +552,11 @@ if (desktopWindowController?.enabled) {
         :agent-snapshot="agentSnapshot"
         :agent-error="agentError"
         :selected-agent-id="selectedAgentId"
+        :schedules-label="t('navigation.schedules')"
+        :plugins-label="t('navigation.plugins')"
+        :theme-label="t('navigation.theme')"
+        :dark="appearance.isDark.value"
+        :companion-visible="petVisibility.visible.value"
         @select-session="selectSession"
         @refresh-sessions="sessions.load"
         @load-more-sessions="sessions.loadMore"
@@ -542,6 +565,9 @@ if (desktopWindowController?.enabled) {
         @open-settings="handleOpenSettings"
         @toggle-companion="petVisibility.toggle()"
         @open-attention="handleOpenAttention"
+        @open-schedules="handleOpenSchedules"
+        @open-plugins="handleOpenPlugins"
+        @toggle-theme="appearance.toggleTheme()"
       />
     </template>
 

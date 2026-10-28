@@ -59,12 +59,15 @@ const props = withDefaults(
     inspectorTab?: string
     railResizeLabel?: string
     inspectorResizeLabel?: string
+    /** True when the routed view has moved the destinations into its own rail. */
+    navigationInRail?: boolean
   }>(),
   {
     inspectorOpen: true,
     railAppearance: 'solid',
     inspectorFullWidth: false,
     inspectorTab: 'context',
+    navigationInRail: false,
   },
 )
 
@@ -86,7 +89,9 @@ const INSPECTOR_DRAWER_PX = 1120
 const narrowViewport = ref(false)
 const inspectorDocked = ref(true)
 const availableWidth = ref(typeof window === 'undefined' ? 1280 : window.innerWidth)
-const navigationWidth = computed(() => slots.navigation && !narrowViewport.value ? 52 : 0)
+const navigationWidth = computed(() =>
+  slots.navigation && !narrowViewport.value && !props.navigationInRail ? 52 : 0,
+)
 const contentWidth = computed(() => availableWidth.value - navigationWidth.value - 8)
 const inspectorDrawerOpen = ref(false)
 
@@ -267,6 +272,7 @@ onBeforeUnmount(endDrag)
       'app-shell--rail-closed': railCollapsed,
     }"
     :data-rail-folded="String(railCollapsed)"
+    :data-navigation-in-rail="String(props.navigationInRail)"
     :style="{ '--rail-width': displayedRailWidth + 'px', '--inspector-width': displayedInspectorWidth + 'px' }"
   >
     <nav
@@ -399,6 +405,16 @@ onBeforeUnmount(endDrag)
 .app-shell__navigation {
   inline-size: 52px;
   flex: 0 0 52px;
+}
+
+/* The reference draws one sidebar, not a strip of icons beside a list. A view
+   that has moved its destinations into the list itself sets this attribute and
+   the strip stops taking a column, so the shell's own vocabulary for "where the
+   navigation lives" stays in one place. */
+.app-shell[data-navigation-in-rail='true'] .app-shell__navigation {
+  inline-size: 0;
+  flex-basis: 0;
+  overflow: hidden;
 }
 
 .app-shell__grid {

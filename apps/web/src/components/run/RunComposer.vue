@@ -509,6 +509,10 @@ defineExpose({ focus })
   transition: background var(--transition-fast) var(--ease-out), opacity var(--transition-fast) var(--ease-out);
 }
 
+.run-composer__send:hover:not(:disabled) {
+  background: var(--composer-send-hover, var(--composer-send));
+}
+
 .run-composer__leading { display: flex; align-items: center; gap: var(--space-2); min-inline-size: 0; }
 .run-composer__file-input { display: none; }
 .run-composer__icon { display: grid; place-items: center; width: 32px; height: 36px; flex: 0 0 32px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--color-text-primary); cursor: pointer; }

@@ -25,8 +25,13 @@ const time = computed(() => date.value ? new Intl.DateTimeFormat(locale.value, {
 </template>
 
 <style scoped>
+/* The reader's turn is a bubble on the transcript's own surface, the way the
+   reference draws it: a soft neutral that sets the turn apart from the answer
+   without claiming the accent. The accent belongs to actions the product is
+   asking the reader to take, and reading back what they already said is not
+   one of them. */
 .user-message { display: flex; flex-direction: column; align-items: flex-end; inline-size: 100%; min-inline-size: 0; }
-.user-message__bubble { max-inline-size: min(85%, 40rem); margin: 0; padding: 12px 18px; border-radius: 22px; background: #843d63; color: #fff; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.65; }
+.user-message__bubble { max-inline-size: min(85%, 40rem); margin: 0; padding: 12px 18px; border-radius: 22px; background: var(--color-bg-element); color: var(--color-text-primary); white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.65; }
 .user-message__meta { display: flex; align-items: center; gap: 12px; margin-block-start: 7px; color: var(--color-text-tertiary); font-size: 12px; font-variant-numeric: tabular-nums; }
 @media (max-width: 640px) { .user-message__bubble { max-inline-size: 92%; } }
 </style>

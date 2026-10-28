@@ -113,6 +113,19 @@ function reusePrompt(text: string): void {
  */
 const planBlocked = computed(() => props.view.status === 'awaiting_approval')
 
+/**
+ * Whether the panel is drawing a conversation or opening one.
+ *
+ * The reference centres a new conversation's greeting and its composer on one
+ * axis, as a single block: the greeting sits directly above the field rather
+ * than at the top of a scroller with the field pinned to the bottom. The two
+ * are only one block while there is nothing to read, so the styles ask this
+ * rather than guessing from the transcript's height.
+ */
+const emptyConversation = computed(
+  () => props.view.timeline.length === 0 && !props.conversationStarted,
+)
+
 const stream = ref<HTMLElement | null>(null)
 const scrollState = ref<ScrollState>({ canScrollUp: false, canScrollDown: false, atBottom: true })
 
@@ -270,7 +283,7 @@ defineExpose({ focusPrompt, clearPrompt, editPrompt: reusePrompt })
 </script>
 
 <template>
-  <section class="run-panel" data-run-panel>
+  <section class="run-panel" data-run-panel :data-run-empty-conversation="String(emptyConversation)">
     <RunAnnouncer :events="props.events" />
     <ConnectionBanner v-if="['reconnecting', 'offline', 'error'].includes(props.connectionStatus)" :status="props.connectionStatus" />
     <InlineAlert v-if="props.errorMessage" tone="error" data-run-error>
@@ -389,6 +402,20 @@ defineExpose({ focusPrompt, clearPrompt, editPrompt: reusePrompt })
   scrollbar-color: var(--workspace-seam, var(--color-border-subtle)) transparent;
 }
 
+/* A new conversation is one block: the greeting and the field share the
+   panel's centre instead of being pushed to opposite ends of it. The scroller
+   stops claiming the free space, so the panel's own centring places the pair
+   as a unit rather than pinning the field to the foot. */
+.run-panel[data-run-empty-conversation='true'] {
+  justify-content: center;
+}
+
+.run-panel[data-run-empty-conversation='true'] .run-panel__stream {
+  flex: 0 0 auto;
+  min-block-size: min-content;
+  overflow: visible;
+}
+
 .run-panel__top-fade {
   position: absolute;
   inset-block-start: 0;
@@ -438,6 +465,13 @@ defineExpose({ focusPrompt, clearPrompt, editPrompt: reusePrompt })
 .run-panel :deep(.run-composer) {
   inline-size: calc(100% - var(--space-12));
   margin-block: var(--space-2) var(--space-5);
+}
+
+/* While the panel is opening a conversation the field sits just under the
+   greeting rather than at the foot of the panel, so the pair reads as one
+   block centred in the space the reader is looking at. */
+.run-panel[data-run-empty-conversation='true'] :deep(.run-composer) {
+  margin-block: var(--space-3) 0;
 }
 
 .run-panel :deep(.plan-strip),
