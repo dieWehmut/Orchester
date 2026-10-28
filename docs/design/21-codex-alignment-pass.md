@@ -170,6 +170,19 @@ rather than an empty surface, and it showed two things the reference does not do
   stay visible, so the fix was proportion rather than removal: a status dot and a
   lowercase word in tertiary type, with `failed` still allowed to be red.
 
+### 3.9 The inspector (`k-inspector.png`)
+
+The reference's right pane is a review surface with a changed-file summary and
+tinted diff rows. Orchester's inspector already carries the same four
+destinations the reference's pane implies — 上下文 / 审批 / 审查 / 终端 — and
+opens as a docked column with the transcript reflowing beside it. This was
+captured to confirm the shell's third column still behaves after §3.3 removed
+the first one; it does, with zero console errors.
+
+**Not done:** the row-level diff tinting inside 审查. The change set and its
+`+N −M` counts are already there; the per-line green/red fills are separate
+work and were not attempted in this pass.
+
 ## 4. How this was verified
 
 - `pnpm exec vitest run` in `apps/web`: **722 passed / 120 files**, up from 712
@@ -188,8 +201,8 @@ rather than an empty surface, and it showed two things the reference does not do
   (`e-workspace.png`), light 1440×900 (`c-light.png`), dark 1024×720
   (`c-narrow.png`), a populated rail (`d-rail-rows.png`, `f-light-rows.png`), a
   row's hover state (`f-hover.png`), a stored conversation
-  (`h-session-open.png`), and `/settings`, `/plugins`, `/schedules`
-  (`e-*.png`).
+  (`h-session-open.png`), the inspector (`k-inspector.png`), and `/settings`,
+  `/plugins`, `/schedules` (`e-*.png`).
 - **The installed application was verified, not just built.** The installer was
   rebuilt (`Orchester_0.1.8_x64-setup.exe`, SHA-256
   `C3BB168553D5E6B108A490512EDEEB892F093B2B2E66DC0DFECE7CB1F8BA2EB7`), installed
