@@ -17,6 +17,14 @@ use orchester_netz::{app_router, ServerContext, ServerControl};
 struct ConfiguredWorkspace(PathBuf);
 
 fn write_model_config(home: &std::path::Path, contents: &str) {
+    // The fixture pre-creates its home; the config editor preserves an existing
+    // directory's permissions, so establish the same private boundary as a real home.
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        fs::set_permissions(home, fs::Permissions::from_mode(0o700))
+            .expect("private configuration directory");
+    }
     let path = home.join("orchester.jsonc");
     // Use the same private file creation as the application on both Windows
     // and Unix, then overwrite the test-only contents without changing its ACL.
