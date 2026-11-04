@@ -195,7 +195,7 @@ Orchester 的家目錄在所有平台上都是 `~/.orchester`，和它驅動的 
 | 指令 | 作用 |
 |---|---|
 | `/agent` | 選擇或切換要委派的 Agent |
-| `/model` | 檢視 Orchester 的模型目錄、切換設定檔 |
+| `/model` | 分別選擇 Provider、模型與推理強度；也支援 `\model` |
 | `/config` | 檢視解析後的設定：兩層來源、去識別化內容、權限體檢；設定讀不進去時也照樣報路徑和原因 |
 | `/permissions` | 檢視目前生效的權限 |
 | `/resume` | 檢視可續跑的執行記錄 |
@@ -214,6 +214,7 @@ Orchester 的家目錄在所有平台上都是 `~/.orchester`，和它驅動的 
 | 按鍵 | 作用 |
 |---|---|
 | `Enter` | 送出目前草稿或執行指令 |
+| 空草稿時 `←` / `?` | 開啟 Agent command center / 快捷鍵說明 |
 | `Alt+Enter` / `Ctrl+J` | 插入換行；支援的終端也可用 `Shift+Enter` |
 | `←` / `→`、`Home` / `End` | 移動游標，編輯已有內容 |
 | `Ctrl+←` / `Ctrl+→`、`Ctrl+Backspace` / `Ctrl+Delete` | 按詞移動或刪除 |
@@ -222,6 +223,8 @@ Orchester 的家目錄在所有平台上都是 `~/.orchester`，和它驅動的 
 | `PageUp` / `PageDown`、`Ctrl+Home` / `Ctrl+End` | 捲動對話，跳到開頭或末尾 |
 
 貼上多行內容後可繼續編輯，再按 Enter 送出；第一行即使是 `/quit` 也按一般任務文字處理。輸入回看只保存在目前程序的記憶體中。
+
+Agent command center 依專案顯示本機任務，`Tab` / `Shift+Tab` 切換 All、Needs you、Working、Ready、Inactive 篩選，方向鍵選擇，`Enter` 檢視記錄，`r` 恢復支援續跑的 Orchester 任務，`n` 返回輸入區，`Esc` 返回。外部 Agent 工作階段以唯讀方式檢視；任務狀態來自實際記錄。`/agent` 用於選擇要委派的 Agent。
 
 ## 命令列
 

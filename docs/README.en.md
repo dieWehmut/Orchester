@@ -197,7 +197,7 @@ Available in interactive mode (run `orchester` with no arguments):
 | Command | Purpose |
 |---|---|
 | `/agent` | Choose or switch the delegate agent |
-| `/model` | Inspect Orchester's model catalog, switch profile |
+| `/model` | Choose Provider, model, and reasoning effort independently; `\model` also works |
 | `/config` | Show the resolved configuration: both layers, redacted body, permission findings — and still report the path and the reason when the config cannot be read |
 | `/permissions` | Show the effective permissions |
 | `/resume` | List resumable runs |
@@ -216,6 +216,7 @@ The composer supports Unicode text, emoji, multiline drafts, and wrapping. Long 
 | Keys | Purpose |
 |---|---|
 | `Enter` | Submit the draft or execute a command |
+| `←` / `?` with an empty draft | Open Agent command center / keyboard help |
 | `Alt+Enter` / `Ctrl+J` | Insert a newline; `Shift+Enter` also works in terminals that support it |
 | `←` / `→`, `Home` / `End` | Move the caret and edit existing text |
 | `Ctrl+←` / `Ctrl+→`, `Ctrl+Backspace` / `Ctrl+Delete` | Move or delete by word |
@@ -224,6 +225,8 @@ The composer supports Unicode text, emoji, multiline drafts, and wrapping. Long 
 | `PageUp` / `PageDown`, `Ctrl+Home` / `Ctrl+End` | Scroll the conversation or jump to its beginning/end |
 
 Multiline paste stays editable until Enter submits it. A pasted first line such as `/quit` is treated as task text. Input recall is held only in the current process's memory.
+
+Agent command center groups local tasks by project. Use `Tab` / `Shift+Tab` to filter All, Needs you, Working, Ready, or Inactive; arrows to select; `Enter` to read the record; `r` to resume a supported Orchester task; `n` to return to the composer; and `Esc` to go back. External agent sessions open read-only, with status derived from recorded activity. Use `/agent` to choose the delegate agent.
 
 ## Command line
 

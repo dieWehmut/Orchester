@@ -194,7 +194,7 @@ Orchester 的家目录在所有平台上都是 `~/.orchester`，和它驱动的 
 | 命令 | 作用 |
 |---|---|
 | `/agent` | 选择或切换要委派的 Agent |
-| `/model` | 查看 Orchester 的模型目录、切换配置档 |
+| `/model` | 分别选择 Provider、模型和推理强度；也支持 `\model` |
 | `/config` | 查看解析后的配置：两层来源、去敏内容、权限体检；配置读不进去时也照样报路径和原因 |
 | `/permissions` | 查看当前生效的权限 |
 | `/resume` | 查看可续跑的运行记录 |
@@ -213,6 +213,7 @@ Orchester 的家目录在所有平台上都是 `~/.orchester`，和它驱动的 
 | 按键 | 作用 |
 |---|---|
 | `Enter` | 发送当前草稿或执行命令 |
+| 空草稿时 `←` / `?` | 打开 Agent command center / 快捷键帮助 |
 | `Alt+Enter` / `Ctrl+J` | 插入换行；支持的终端也可用 `Shift+Enter` |
 | `←` / `→`、`Home` / `End` | 移动光标，编辑已有内容 |
 | `Ctrl+←` / `Ctrl+→`、`Ctrl+Backspace` / `Ctrl+Delete` | 按词移动或删除 |
@@ -221,6 +222,8 @@ Orchester 的家目录在所有平台上都是 `~/.orchester`，和它驱动的 
 | `PageUp` / `PageDown`、`Ctrl+Home` / `Ctrl+End` | 滚动对话，跳到开头或末尾 |
 
 粘贴多行内容后可继续编辑，再按回车发送；第一行即使是 `/quit` 也按普通任务文本处理。输入回看只保存在当前进程内存中。
+
+Agent command center 按项目展示本地任务，`Tab` / `Shift+Tab` 切换 All、Needs you、Working、Ready、Inactive 筛选，方向键选择，`Enter` 查看记录，`r` 恢复支持续跑的 Orchester 任务，`n` 返回输入区，`Esc` 返回。外部 Agent 会话以只读方式查看；任务状态来自实际记录。`/agent` 用于选择要委派的 Agent。
 
 ## 命令行
 
