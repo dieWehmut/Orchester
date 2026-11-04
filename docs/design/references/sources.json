@@ -1,0 +1,37 @@
+[
+  {
+    "page": "https://developers.openai.com/codex/app/",
+    "image": "https://developers.openai.com/images/codex/video-posters/data-analysis-cleaning-csv.webp",
+    "file": "data-analysis-cleaning-csv.webp",
+    "bytes": 19166,
+    "sha256": "328e034750158aaccdef7b58de6b54a6d783dd670df3cdcf1929e576505fc1ce"
+  },
+  {
+    "page": "https://developers.openai.com/codex/app/",
+    "image": "https://developers.openai.com/images/codex/video-posters/data-analysis-fraud-spike.webp",
+    "file": "data-analysis-fraud-spike.webp",
+    "bytes": 21184,
+    "sha256": "f20e3d6ea27b57b69feba7c5561e8c3b27434b032e19b63b6b8ec64e47764374"
+  },
+  {
+    "page": "https://developers.openai.com/codex/app/",
+    "image": "https://developers.openai.com/images/codex/video-posters/draft-prds-from-slack-linear-docs.webp",
+    "file": "draft-prds-from-slack-linear-docs.webp",
+    "bytes": 34274,
+    "sha256": "1502d76ef33ccc79119dad9e14c4878f9df69afc3a1cea41bc846a4c346c6659"
+  },
+  {
+    "page": "https://developers.openai.com/codex/app/",
+    "image": "https://developers.openai.com/images/codex/video-posters/feedback-synthesis-into-gsheets.webp",
+    "file": "feedback-synthesis-into-gsheets.webp",
+    "bytes": 19098,
+    "sha256": "eb2c1d2f0177fb304a8bdde9bf5afec37fb360058986c7c2ae18d977c8bf57ad"
+  },
+  {
+    "page": "https://developers.openai.com/codex/app/",
+    "image": "https://developers.openai.com/images/codex/video-posters/proactive-teammate-v2.webp",
+    "file": "proactive-teammate-v2.webp",
+    "bytes": 15252,
+    "sha256": "ff414e4c6d745080ac0bfd83ac118308e9a99372460bff928c7499820c1a98c0"
+  }
+]
