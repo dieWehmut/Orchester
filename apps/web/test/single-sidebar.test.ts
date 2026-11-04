@@ -1,20 +1,11 @@
-/**
- * The shell draws one sidebar, not a strip beside a list.
- *
- * The reference keeps "New thread", the lists and the destinations in a single
- * column. The workspace therefore renders those destinations itself and the
- * shell's own strip stands down there; every other route still gets the strip,
- * because those screens are a page with a list beside it. These tests pin both
- * halves of that arrangement, since the failure mode is silent: a strip left in
- * place squeezes the workspace into the remainder of a two-column body, and
- * nothing about the markup looks wrong.
- */
+/** Navigation remains available independently of the session sidebar. */
 import { AGENT_FLEET_FIXTURE } from '@orchester/protokoll'
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import { createMemoryHistory, createRouter } from 'vue-router'
 
 import App from '../src/App.vue'
+import { resetRailCollapsedForTests, useRailCollapsed } from '../src/composables/use-rail-collapsed'
 import WorkspaceView from '../src/views/WorkspaceView.vue'
 import { createAppStores } from '../src/stores/app'
 
@@ -37,7 +28,9 @@ function routerFor() {
   })
 }
 
-describe('one sidebar column', () => {
+afterEach(() => { localStorage.clear(); resetRailCollapsedForTests() })
+
+describe('persistent workspace navigation', () => {
   it('renders the destinations as rows inside the rail, and no strip', () => {
     const wrapper = mount(WorkspaceView, { global: { plugins: [stores()] } })
 
@@ -64,7 +57,8 @@ describe('one sidebar column', () => {
     expect(wrapper.find('.app-shell__navigation').exists()).toBe(true)
   })
 
-  it('drops the strip on the workspace route, where the rail carries it', async () => {
+  it.each([false, true])('keeps destinations reachable on workspace with collapsed=%s', async (collapsed) => {
+    useRailCollapsed().set(collapsed)
     const router = routerFor()
     await router.push('/')
     await router.isReady()
@@ -73,7 +67,13 @@ describe('one sidebar column', () => {
       global: { plugins: [stores(), router] },
     })
 
-    expect(wrapper.find('[data-workspace-navigation]').exists()).toBe(false)
-    expect(wrapper.find('.app-shell__navigation').exists()).toBe(false)
+    expect(wrapper.find('[data-workspace-navigation]').exists()).toBe(true)
+    expect(wrapper.find('.app-shell__navigation').exists()).toBe(true)
+    await wrapper.get('[data-workspace-navigation] button[title="Settings"]').trigger('click')
+    await router.isReady()
+    await new Promise(resolve => setTimeout(resolve, 0))
+    expect(router.currentRoute.value.name).toBe('settings')
+    expect(useRailCollapsed().collapsed.value).toBe(collapsed)
+    wrapper.unmount()
   })
 })

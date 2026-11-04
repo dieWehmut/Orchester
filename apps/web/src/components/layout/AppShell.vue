@@ -86,6 +86,8 @@ defineExpose({ closeSessions: () => { sessionsOpen.value = false } })
  */
 const NARROW_VIEWPORT_PX = 800
 const INSPECTOR_DRAWER_PX = 1120
+const shellElement = ref<HTMLElement | null>(null)
+let shellObserver: ResizeObserver | undefined
 const narrowViewport = ref(false)
 const inspectorDocked = ref(true)
 const availableWidth = ref(typeof window === 'undefined' ? 1280 : window.innerWidth)
@@ -97,9 +99,10 @@ const inspectorDrawerOpen = ref(false)
 
 function readViewport(): void {
   if (typeof window === 'undefined') return
-  availableWidth.value = window.innerWidth
-  narrowViewport.value = availableWidth.value < NARROW_VIEWPORT_PX
-  inspectorDocked.value = availableWidth.value >= INSPECTOR_DRAWER_PX
+  availableWidth.value = shellElement.value?.getBoundingClientRect().width || window.innerWidth
+  // CSS media queries use the viewport; panel widths use the actual outlet.
+  narrowViewport.value = window.innerWidth < NARROW_VIEWPORT_PX
+  inspectorDocked.value = window.innerWidth >= INSPECTOR_DRAWER_PX
   if (!narrowViewport.value) sessionsOpen.value = false
   inspectorDrawerOpen.value = !inspectorDocked.value && props.inspectorOpen
 }
@@ -159,8 +162,15 @@ onUnmounted(() => {
   unregisterExpanded()
 })
 
-onMounted(readViewport)
+onMounted(() => {
+  readViewport()
+  if (typeof ResizeObserver !== 'undefined' && shellElement.value) {
+    shellObserver = new ResizeObserver(readViewport)
+    shellObserver.observe(shellElement.value)
+  }
+})
 onBeforeUnmount(() => {
+  shellObserver?.disconnect()
   if (typeof window === 'undefined') return
   window.removeEventListener('resize', readViewport)
 })
@@ -266,6 +276,7 @@ onBeforeUnmount(endDrag)
 
 <template>
   <div
+    ref="shellElement"
     class="app-shell"
     :class="{
       'app-shell--inspector-closed': !props.inspectorOpen,

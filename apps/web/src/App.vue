@@ -49,16 +49,8 @@ const connection = computed<RuntimeConnection>(() => {
   return 'pending'
 })
 
-/**
- * Whether the resolved view has taken the destinations into its own rail.
- *
- * The reference draws one sidebar, with "New thread" and the destinations as
- * rows inside it. The workspace does that by rendering those rows itself, so
- * this strip stands down there; every other route still needs it, because those
- * screens are a page with a list beside them rather than a list that is the
- * screen.
- */
-const navigationInRail = computed(() => router?.currentRoute.value.name === 'workspace')
+// Global destinations remain reachable even when the session sidebar is folded
+// or replaced by a narrow-window drawer.
 
 onMounted(() => {
   void stores.start()
@@ -78,7 +70,7 @@ useShortcutListener()
     <TitleRow :controller="windowController" :connection="connection" />
 
     <div class="app-shell__body">
-      <div v-if="!navigationInRail" class="app-shell__navigation">
+      <div class="app-shell__navigation">
         <WorkspaceNavigation :label="t('navigation.label')" :home-label="t('navigation.home')"
           :schedules-label="t('navigation.schedules')" :plugins-label="t('navigation.plugins')"
           :settings-label="t('settings.title')" :theme-label="t('navigation.theme')"
