@@ -5,7 +5,7 @@ const PIXELS: &[u8; 64 * 64 * 3] = include_bytes!("assets/orchester.rgb");
 
 pub(super) fn render(out: &mut impl Write, width: usize, rows: usize) -> io::Result<()> {
     // Keep the portrait quiet and centered; tiny viewports prioritize controls.
-    if width < 30 || rows < 8 || rows > 10_000 {
+    if width < 30 || !(8..=10_000).contains(&rows) {
         return Ok(());
     }
     let size = 32.min(width / 6).min(rows * 3 / 5).max(8) & !1;

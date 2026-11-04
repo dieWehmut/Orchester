@@ -30,6 +30,8 @@ pub enum TaskStatus {
 #[derive(Debug, Clone)]
 pub struct Task {
     pub id: String,
+    /// Source identity, kept separate from the possibly abbreviated display label.
+    pub project_key: String,
     pub project: String,
     pub title: String,
     pub status: TaskStatus,
@@ -144,6 +146,7 @@ fn history_task(index: usize, record: &SessionRecord, now: i64) -> Task {
         id: record.session_id.as_ref().map(|id| {
             format!("history:{:x}", Sha256::digest(format!("{}\0{id}", record.agent)))
         }).unwrap_or_else(|| format!("history:{index}:{}", record.recorded_at_unix)),
+        project_key: format!("local:{}", record.cwd.display()),
         project,
         title: title(&prompt),
         status: if record.outcome == Outcome::Success {
@@ -212,6 +215,11 @@ fn external_task(row: &ActivityDetail, now: i64) -> Task {
     }
     Task {
         id: format!("external:{}", summary.id),
+        project_key: summary
+            .project_id
+            .as_ref()
+            .map(|id| format!("external:{id}"))
+            .unwrap_or_else(|| format!("external-session:{}", summary.id)),
         project: if summary.project.trim().is_empty() {
             "Unknown project".into()
         } else {
@@ -247,6 +255,7 @@ fn resume_task(entry: &SelfAgentResumeEntry, project: &str) -> Task {
     );
     Task {
         id: format!("managed:{}", entry.handle),
+        project_key: format!("local:{project}"),
         project: project_label(project),
         title: title.clone(),
         status,
@@ -279,21 +288,12 @@ fn external_status(state: &str) -> TaskStatus {
 }
 
 fn project_label(path: &str) -> String {
-    // Preserve relative history literally; it cannot safely be tied to today's cwd.
-    let absolute = path.starts_with(['/', '\\']) || path.as_bytes().get(1) == Some(&b':');
-    if !absolute && !path.is_empty() {
-        return safe_text(path, 256);
-    }
-    let value = path.trim_end_matches(['/', '\\']);
-    let label = value
-        .rsplit(['/', '\\'])
-        .next()
-        .filter(|s| !s.is_empty())
-        .unwrap_or(path);
-    if label.is_empty() {
+    // Keep full stored paths so same-named workspaces remain distinguishable.
+    // Relative history cannot safely be resolved against today's directory.
+    if path.is_empty() {
         "Unknown project".into()
     } else {
-        safe_text(label, 256)
+        safe_text(path, 256)
     }
 }
 

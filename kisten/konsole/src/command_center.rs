@@ -52,7 +52,11 @@ fn padded(text: &str, width: usize) -> String {
 fn filtered(tasks: &[Task], filter: usize) -> Vec<&Task> {
     {
         let mut rows: Vec<_> = tasks.iter().filter(|t| matches(t, filter)).collect();
-        rows.sort_by(|a, b| a.project.cmp(&b.project));
+        rows.sort_by(|a, b| {
+            a.project
+                .cmp(&b.project)
+                .then(a.project_key.cmp(&b.project_key))
+        });
         rows
     }
 }
@@ -234,6 +238,10 @@ fn render(
     } else {
         let rows = filtered(tasks, filter);
         let chosen = rows.get(selected).copied();
+        let mut project_counts = std::collections::HashMap::new();
+        for task in &rows {
+            *project_counts.entry(task.project_key.as_str()).or_insert(0usize) += 1;
+        }
         let right = if width >= 110 { width / 3 } else { 0 };
         let left = width.saturating_sub(right + usize::from(right > 0));
         let mut list = vec![(
@@ -250,15 +258,16 @@ fn render(
             },
         )];
         let mut selected_line = 0;
-        let mut project = "";
+        let mut project_key = "";
         for (i, task) in rows.iter().enumerate() {
-            if task.project != project {
-                project = &task.project;
+            if task.project_key != project_key {
+                project_key = &task.project_key;
                 list.push((
                     false,
                     format!(
-                        "{project}  {}",
-                        rows.iter().filter(|t| t.project == project).count()
+                        "{}  {}",
+                        task.project,
+                        project_counts[project_key]
                     ),
                 ));
             }
@@ -389,6 +398,7 @@ mod tests {
     fn task(id: &str, project: &str, state: TaskStatus) -> Task {
         Task {
             id: id.into(),
+            project_key: project.into(),
             project: project.into(),
             title: format!("Task {id}"),
             status: state,
@@ -418,6 +428,28 @@ mod tests {
         assert_eq!(filtered(&tasks, 2)[0].id, "a");
         assert_eq!(filtered(&tasks, 3)[0].id, "c");
         assert!(filtered(&tasks, 4).is_empty());
+    }
+    #[test]
+    fn same_named_projects_keep_separate_groups_and_counts() {
+        let mut tasks = vec![
+            task("a1", "app", TaskStatus::Ready),
+            task("b1", "app", TaskStatus::Working),
+            task("a2", "app", TaskStatus::Ready),
+        ];
+        tasks[0].project_key = "/work/a/app".into();
+        tasks[1].project_key = "/work/b/app".into();
+        tasks[2].project_key = "/work/a/app".into();
+        assert_eq!(
+            filtered(&tasks, 0)
+                .iter()
+                .map(|t| t.id.as_str())
+                .collect::<Vec<_>>(),
+            ["a1", "a2", "b1"]
+        );
+        let frame = render(&tasks, 0, 0, (80, 24), None, 0, "");
+        assert!(frame.contains("app  2"));
+        assert!(frame.contains("app  1"));
+        assert!(!frame.contains("app  3"));
     }
     #[test]
     fn wide_details_and_narrow_transcript_use_real_selected_task() {
@@ -461,17 +493,9 @@ mod tests {
             .join("\n");
         let end = detail_scroll_limit(&text, (80, 24));
         assert_eq!(end, 80);
-        let clamped = usize::MAX.min(end);
-        assert_eq!(clamped.saturating_sub(1), 79);
-        assert!(render(
-            &[],
-            0,
-            0,
-            (80, 24),
-            Some(&text),
-            clamped.saturating_sub(1),
-            ""
-        )
-        .contains("Line 79"));
+        assert!(render(&[], 0, 0, (80, 24), Some(&text), usize::MAX, "").contains("Line 80"));
+        assert!(
+            render(&[], 0, 0, (80, 24), Some(&text), end.saturating_sub(1), "").contains("Line 79")
+        );
     }
 }
