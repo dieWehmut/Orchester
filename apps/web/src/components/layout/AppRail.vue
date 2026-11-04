@@ -23,6 +23,7 @@ withDefaults(defineProps<{
   themeLabel?: string
   dark?: boolean
   companionVisible?: boolean
+  navigationInShell?: boolean
 }>(), {
   searchLabel: 'Search',
   attentionLabel: '',
@@ -32,6 +33,7 @@ withDefaults(defineProps<{
   themeLabel: '',
   dark: true,
   companionVisible: false,
+  navigationInShell: false,
 })
 const emit = defineEmits<{
   newSession: []
@@ -63,21 +65,24 @@ function handleQuery(value: string): void { query.value = value; emit('search', 
 
 <template>
   <div class="app-rail" data-app-rail>
+    <header class="app-rail__header">
+      <span class="app-rail__product" data-rail-product>{{ productName }}</span>
+      <button ref="searchButton" class="app-rail__row app-rail__icon" type="button" :aria-label="searchLabel" :title="searchLabel" :aria-expanded="searching" data-rail-action="search" @click="openSearch">
+        <Search :size="17" aria-hidden="true" />
+      </button>
+    </header>
     <div class="app-rail__primary" data-rail-section="primary">
       <button class="app-rail__row" type="button" data-rail-row="new-session" data-rail-action="new-session" @click="emit('newSession')">
         <SquarePen :size="17" aria-hidden="true" /><span>{{ newSessionLabel }}</span>
-      </button>
-      <button ref="searchButton" class="app-rail__row" type="button" :aria-label="searchLabel" :aria-expanded="searching" data-rail-action="search" @click="openSearch">
-        <Search :size="17" aria-hidden="true" /><span>{{ searchLabel }}</span>
       </button>
       <button v-if="attentionCount > 0" class="app-rail__row" type="button" :aria-label="attentionLabel + ' (' + attentionCount + ')'" data-rail-action="attention" @click="emit('openAttention')">
         <Bell :size="17" aria-hidden="true" /><span>{{ attentionLabel }}</span>
         <span class="app-rail__attention-count" aria-hidden="true">{{ attentionCount }}</span>
       </button>
-      <button v-if="schedulesLabel" class="app-rail__row" type="button" data-rail-action="schedules" @click="emit('openSchedules')">
+      <button v-if="schedulesLabel && !navigationInShell" class="app-rail__row" type="button" data-rail-action="schedules" @click="emit('openSchedules')">
         <Clock3 :size="17" aria-hidden="true" /><span>{{ schedulesLabel }}</span>
       </button>
-      <button v-if="pluginsLabel" class="app-rail__row" type="button" data-rail-action="plugins" @click="emit('openPlugins')">
+      <button v-if="pluginsLabel && !navigationInShell" class="app-rail__row" type="button" data-rail-action="plugins" @click="emit('openPlugins')">
         <Puzzle :size="17" aria-hidden="true" /><span>{{ pluginsLabel }}</span>
       </button>
     </div>
@@ -105,7 +110,7 @@ function handleQuery(value: string): void { query.value = value; emit('search', 
         <div v-if="!collapsed.projects" class="app-rail__entries"><slot name="sessions" /></div>
       </div>
     </div>
-    <div class="app-rail__footer" data-rail-section="footer">
+    <div v-if="!navigationInShell" class="app-rail__footer" data-rail-section="footer">
       <button class="app-rail__row" type="button" :aria-pressed="companionVisible" data-rail-action="companion" @click="emit('toggleCompanion')">
         <PawPrint :size="17" aria-hidden="true" /><span>{{ companionLabel }}</span>
       </button>
@@ -125,6 +130,9 @@ function handleQuery(value: string): void { query.value = value; emit('search', 
    hover and the selected state - so the column reads as a list of things to do
    rather than as a toolbar with one prominent button. */
 .app-rail { display: flex; flex-direction: column; block-size: 100%; min-block-size: 0; background: var(--rail-surface); backdrop-filter: var(--rail-blur); }
+.app-rail__header { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-4) 0; }
+.app-rail__product { flex: 1; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--text-md); font-weight: var(--weight-semibold); }
+.app-rail__header .app-rail__icon { justify-content: center; padding: var(--space-2); }
 .app-rail__primary { display: flex; flex-direction: column; gap: 1px; padding: var(--space-2) var(--space-2) var(--space-3); }
 .app-rail__row { display: flex; align-items: center; gap: var(--space-3); min-inline-size: 0; min-block-size: 34px; padding: var(--space-1) var(--space-2); border: 0; border-radius: 8px; background: transparent; color: var(--color-text-primary); font: inherit; font-size: var(--text-sm); cursor: pointer; text-align: start; }
 .app-rail__row > svg { flex: 0 0 auto; color: var(--color-text-secondary); }
@@ -138,7 +146,7 @@ function handleQuery(value: string): void { query.value = value; emit('search', 
 .app-rail__heading > svg { opacity: 0; transition: opacity var(--transition-fast) var(--ease-out); }
 .app-rail__entries { min-inline-size: 0; }
 .app-rail__heading:hover { color: var(--color-text-secondary); }
-.app-rail__heading:hover > svg { opacity: 1; }
+.app-rail__heading:hover > svg, .app-rail__heading:focus-visible > svg, .app-rail__heading[aria-expanded='false'] > svg { opacity: 1; }
 .app-rail__row:hover, .app-rail__heading:hover { background: var(--workspace-hover, var(--color-bg-element)); }
 .app-rail__row:hover { color: var(--color-text-primary); }
 .app-rail__heading:focus-visible, .app-rail__row:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: -2px; }

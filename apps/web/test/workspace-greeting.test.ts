@@ -25,4 +25,10 @@ describe('WorkspaceView greeting', () => {
     expect(empty.text()).toContain('What should we build in Orchester?')
     expect(empty.get('[data-orchester-mark]')).toBeTruthy()
   })
+  it('names the selected workspace rather than always naming the app', () => {
+    const stores = readyStores()
+    stores.bootstrap.context.value!.workspace.name = 'Reference project'
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+    expect(wrapper.get('[data-run-empty]').text()).toContain('What should we build in Reference project?')
+  })
 })

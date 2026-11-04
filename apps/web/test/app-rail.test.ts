@@ -5,15 +5,14 @@ import AppRail from '../src/components/layout/AppRail.vue'
 const props = { productName: 'Orchester', workspaceName: 'default', accountName: 'Orchester', accountHint: 'Local runtime', newSessionLabel: 'New chat', projectsLabel: 'Pinned', sessionsLabel: 'Recent chats', fleetLabel: 'Agents', searchLabel: 'Search chats', attentionLabel: 'Approvals' }
 const slots = { projects: '<p>Pinned list</p>', sessions: '<p>Recent list</p>', fleet: '<p>Agent list</p>' }
 describe('AppRail', () => {
-  it('starts with new chat and removes both branding areas', () => {
+  it('identifies the product above the conversation actions', () => {
     const wrapper = mount(AppRail, { props, slots })
     // The reference's column ends with the destinations, below the lists, so
     // the footer is a section like the others rather than a floating strip.
     expect(wrapper.findAll('[data-rail-section]').map(node => node.attributes('data-rail-section'))).toEqual(['primary', 'projects', 'fleet', 'sessions', 'footer'])
-    expect(wrapper.text()).not.toContain('Orchester')
+    expect(wrapper.get('[data-rail-product]').text()).toBe('Orchester')
     expect(wrapper.text()).not.toContain('Local runtime')
     expect(wrapper.find('[data-rail-account-menu]').exists()).toBe(false)
-    expect(wrapper.find('[data-rail-product]').exists()).toBe(false)
     wrapper.unmount()
   })
   it('keeps the destinations in the column, not in a strip beside it', async () => {
@@ -21,7 +20,7 @@ describe('AppRail', () => {
       props: { ...props, schedulesLabel: 'Schedules', pluginsLabel: 'Plugins', themeLabel: 'Theme', settingsLabel: 'Settings' },
     })
     const rows = wrapper.findAll('[data-rail-action]').map(node => node.attributes('data-rail-action'))
-    expect(rows).toEqual(['new-session', 'search', 'schedules', 'plugins', 'companion', 'theme', 'settings'])
+    expect(rows).toEqual(['search', 'new-session', 'schedules', 'plugins', 'companion', 'theme', 'settings'])
     await wrapper.get('[data-rail-action="schedules"]').trigger('click')
     await wrapper.get('[data-rail-action="plugins"]').trigger('click')
     await wrapper.get('[data-rail-action="theme"]').trigger('click')
@@ -31,6 +30,15 @@ describe('AppRail', () => {
     expect(wrapper.emitted('toggleTheme')).toHaveLength(1)
     expect(wrapper.emitted('openSettings')).toHaveLength(1)
     wrapper.unmount()
+  })
+  it('leaves destinations to the persistent shell without losing search or new chat', async () => {
+    const wrapper = mount(AppRail, { props: { ...props, navigationInShell: true, schedulesLabel: 'Schedules', pluginsLabel: 'Plugins' } })
+    expect(wrapper.find('[data-rail-action="schedules"]').exists()).toBe(false)
+    expect(wrapper.find('[data-rail-section="footer"]').exists()).toBe(false)
+    await wrapper.get('[data-rail-action="search"]').trigger('click')
+    expect(wrapper.find('input[type="search"]').exists()).toBe(true)
+    await wrapper.get('[data-rail-action="new-session"]').trigger('click')
+    expect(wrapper.emitted('newSession')).toHaveLength(1)
   })
   it('starts a new chat', async () => {
     const wrapper = mount(AppRail, { props })

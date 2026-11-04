@@ -16,12 +16,12 @@
      the OS metric: 32 px where the caption buttons live, 38 px elsewhere. */
   --app-chrome-height: var(--window-chrome-height, 38px);
   --app-top-chrome-height: var(--app-chrome-height);
-  --transcript-surface: var(--color-bg-surface);
+  --transcript-surface: var(--color-bg-element);
   --workspace-seam: color-mix(in srgb, var(--color-border-base) 45%, transparent);
   --workspace-hover: color-mix(in srgb, var(--color-bg-element) 70%, transparent);
   --composer-max-width: 48rem;
   --composer-radius: 26px;
-  --composer-surface: var(--color-bg-element);
+  --composer-surface: var(--color-bg-elevated);
   --composer-access: var(--color-intent-warning-text);
   /* The send control is the surface's primary action, so it follows the accent
      the reader chose rather than a pink the stylesheet picked. A hard-coded
@@ -30,13 +30,19 @@
   --composer-send-hover: var(--color-action-solid-hover);
   --composer-send-text: var(--color-action-contrast);
 
-  background: var(--color-bg-base);
+  background: var(--color-bg-surface);
 }
 
 :root[data-theme='light'] .app-shell {
   --composer-surface: var(--color-bg-surface);
   --transcript-surface: var(--color-bg-surface);
   --rail-surface: var(--color-bg-base);
+}
+
+/* The sidebar is a quiet secondary plane, while the input is raised above the
+   transcript. These roles apply to both nested workspace and window shells. */
+.app-shell {
+  --rail-surface: color-mix(in srgb, var(--color-bg-surface) 55%, var(--color-bg-element));
 }
 
 #app > .app-shell {

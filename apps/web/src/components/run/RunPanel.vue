@@ -402,19 +402,8 @@ defineExpose({ focusPrompt, clearPrompt, editPrompt: reusePrompt })
   scrollbar-color: var(--workspace-seam, var(--color-border-subtle)) transparent;
 }
 
-/* A new conversation is one block: the greeting and the field share the
-   panel's centre instead of being pushed to opposite ends of it. The scroller
-   stops claiming the free space, so the panel's own centring places the pair
-   as a unit rather than pinning the field to the foot. */
-.run-panel[data-run-empty-conversation='true'] {
-  justify-content: center;
-}
-
-.run-panel[data-run-empty-conversation='true'] .run-panel__stream {
-  flex: 0 0 auto;
-  min-block-size: min-content;
-  overflow: visible;
-}
+/* Keep the input anchored in the same place before and after the first turn.
+   The empty greeting centers in the available transcript above it. */
 
 .run-panel__top-fade {
   position: absolute;
@@ -465,13 +454,6 @@ defineExpose({ focusPrompt, clearPrompt, editPrompt: reusePrompt })
 .run-panel :deep(.run-composer) {
   inline-size: calc(100% - var(--space-12));
   margin-block: var(--space-2) var(--space-5);
-}
-
-/* While the panel is opening a conversation the field sits just under the
-   greeting rather than at the foot of the panel, so the pair reads as one
-   block centred in the space the reader is looking at. */
-.run-panel[data-run-empty-conversation='true'] :deep(.run-composer) {
-  margin-block: var(--space-3) 0;
 }
 
 .run-panel :deep(.plan-strip),

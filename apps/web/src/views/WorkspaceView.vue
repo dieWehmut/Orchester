@@ -111,7 +111,7 @@ const selectedAgent = computed(
 const workspaceName = computed(() => bootstrap.context.value?.workspace.name ?? null)
 const modelCatalog = computed(() => models.catalog)
 const modelStatus = computed(() => models.status)
-const greeting = computed(() => t('workspace.greeting', { name: t('app.name') }))
+const greeting = computed(() => t('workspace.greeting', { name: workspaceName.value ?? t('app.name') }))
 const {
   status,
   detailStatus,

@@ -31,14 +31,14 @@ function routerFor() {
 afterEach(() => { localStorage.clear(); resetRailCollapsedForTests() })
 
 describe('persistent workspace navigation', () => {
-  it('renders the destinations as rows inside the rail, and no strip', () => {
+  it('keeps the session sidebar focused on conversations when the shell owns navigation', () => {
     const wrapper = mount(WorkspaceView, { global: { plugins: [stores()] } })
 
-    // The rows the reference draws under "New thread" live in the rail now.
-    expect(wrapper.find('[data-rail-action="schedules"]').exists()).toBe(true)
-    expect(wrapper.find('[data-rail-action="plugins"]').exists()).toBe(true)
-    expect(wrapper.find('[data-rail-action="settings"]').exists()).toBe(true)
-    expect(wrapper.find('[data-rail-section="footer"]').exists()).toBe(true)
+    expect(wrapper.get('[data-rail-product]').text()).toBe('Orchester')
+    expect(wrapper.find('[data-rail-action="new-session"]').exists()).toBe(true)
+    expect(wrapper.find('[data-rail-action="search"]').exists()).toBe(true)
+    expect(wrapper.find('[data-rail-action="schedules"]').exists()).toBe(false)
+    expect(wrapper.find('[data-rail-section="footer"]').exists()).toBe(false)
 
     // The shell was told not to reserve a column for a strip it will not draw.
     expect(wrapper.get('.app-shell').attributes('data-navigation-in-rail')).toBe('true')
