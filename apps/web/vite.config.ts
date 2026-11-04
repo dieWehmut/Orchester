@@ -1,6 +1,6 @@
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
-import { APPEARANCE_BOOTSTRAP_SCRIPT } from '@orchester/design/appearance-script'
+import { appearanceBootstrap } from './appearance-bootstrap'
 import { defineConfig } from 'vite'
 import { fileURLToPath } from 'node:url'
 
@@ -18,21 +18,7 @@ export default defineConfig({
   plugins: [
     vue(),
     tailwindcss(),
-    {
-      name: 'orchester-appearance-bootstrap',
-      transformIndexHtml: {
-        order: 'pre',
-        handler() {
-          return [
-            {
-              tag: 'script',
-              children: APPEARANCE_BOOTSTRAP_SCRIPT,
-              injectTo: 'head-prepend',
-            },
-          ]
-        },
-      },
-    },
+    appearanceBootstrap(),
   ],
   server: {
     host: '127.0.0.1',
