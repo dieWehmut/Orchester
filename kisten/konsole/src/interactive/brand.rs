@@ -8,7 +8,7 @@ pub(super) fn render(out: &mut impl Write, width: usize, rows: usize) -> io::Res
     if width < 30 || rows < 8 || rows > 10_000 {
         return Ok(());
     }
-    let size = 48.min(width / 3).min(rows.saturating_sub(4) * 2).max(8) & !1;
+    let size = 32.min(width / 6).min(rows * 3 / 5).max(8) & !1;
     let top = (rows - size / 2) / 2;
     let left = " ".repeat((width - size) / 2);
     for _ in 0..top {

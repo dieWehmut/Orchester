@@ -442,10 +442,6 @@ pub(crate) fn handle_chat_input(
 ) -> Option<HomeAction> {
     let key = match event {
         TerminalEvent::Paste(text) => {
-            if text == "?" && input.is_empty() {
-                *show_help = !*show_help;
-                return None;
-            }
             input.insert(&text);
             *command_selected = 0;
             *show_help = false;
@@ -2420,7 +2416,7 @@ mod tests {
         let mut help = false;
         let mut scroll = 0;
         handle_chat_input(
-            TerminalEvent::Paste("?".into()),
+            TerminalEvent::Key(KeyEvent::new(KeyCode::Char('?'), KeyModifiers::NONE)),
             &mut input,
             &mut selected,
             &mut help,
@@ -2431,7 +2427,7 @@ mod tests {
         assert!(help);
         assert!(input.is_empty());
         handle_chat_input(
-            TerminalEvent::Paste("?".into()),
+            TerminalEvent::Key(KeyEvent::new(KeyCode::Char('?'), KeyModifiers::NONE)),
             &mut input,
             &mut selected,
             &mut help,
@@ -2467,6 +2463,17 @@ mod tests {
     }
 
     #[test]
+    fn pasted_question_mark_remains_literal_in_empty_prompt() {
+        let mut input = Composer::default();
+        let mut selected = 0;
+        let mut help = false;
+        let mut scroll = 0;
+        handle_chat_input(TerminalEvent::Paste("?".into()), &mut input, &mut selected, &mut help, &mut scroll, &[], 120);
+        assert_eq!(input.text(), "?");
+        assert!(!help);
+    }
+
+    #[test]
     fn portrait_is_centered_and_bounded_at_terminal_sizes() {
         for (width, height) in [(80, 17), (199, 48), (39, 12)] {
             let mut out = Vec::new();
@@ -2476,6 +2483,8 @@ mod tests {
             let left = first.chars().take_while(|c| *c == ' ').count();
             let portrait = first.trim_start().chars().count();
             assert!((width - portrait).abs_diff(left * 2) <= 1);
+            assert!(portrait <= 32);
+            assert!(portrait / 2 <= (height * 3 / 10).max(4));
             assert!(plain.lines().count() <= height);
             assert!(plain.lines().all(|line| display_width(line) <= width));
         }
