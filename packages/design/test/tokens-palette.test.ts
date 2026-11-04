@@ -260,9 +260,9 @@ describe('elevation', () => {
 
 describe('motion', () => {
   it('declares the enter, exit and move curves', () => {
-    expect(root).toMatch(/--cubic-enter:\s*cubic-bezier\(\.19, 1, \.22, 1\)/)
+    expect(root).toMatch(/--cubic-enter:\s*cubic-bezier\(0.22, 0.61, 0.36, 1\)/)
     expect(root).toMatch(/--cubic-exit:\s*cubic-bezier\(\.8, 0, \.4, 1\)/)
-    expect(root).toMatch(/--cubic-move:\s*cubic-bezier\(\.65, 0, \.35, 1\)/)
+    expect(root).toMatch(/--cubic-move:\s*cubic-bezier\(0.22, 0.61, 0.36, 1\)/)
   })
 
   it('collapses every duration when reduced motion is requested or forced', () => {
