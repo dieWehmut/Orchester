@@ -33,5 +33,29 @@
     "file": "proactive-teammate-v2.webp",
     "bytes": 15252,
     "sha256": "ff414e4c6d745080ac0bfd83ac118308e9a99372460bff928c7499820c1a98c0"
+  },
+  {
+    "page": "https://developers.openai.com/codex/app/",
+    "image": "https://cdn.openai.com/devhub/videos-learn/proactive-teammate-v2-720p-v1.mp4",
+    "file": "proactive-teammate-v2-20s.webp",
+    "timestamp_seconds": 20,
+    "bytes": 40972,
+    "sha256": "81770207787f3171306ff71eaab1abaa2c318e2232cb0dd7408aafaad5eac124"
+  },
+  {
+    "page": "https://developers.openai.com/codex/app/",
+    "image": "https://cdn.openai.com/devhub/videos-learn/draft-prds-from-slack-linear-docs-720p-v1.mp4",
+    "file": "draft-prds-from-slack-linear-docs-20s.webp",
+    "timestamp_seconds": 20,
+    "bytes": 48474,
+    "sha256": "49991fea0205a86a108f3ded01e275308353d87e3d94bf291c8a40d0504be30b"
+  },
+  {
+    "page": "https://developers.openai.com/codex/app/",
+    "image": "https://cdn.openai.com/devhub/videos-learn/feedback-synthesis-into-gsheets-720p-v1.mp4",
+    "file": "feedback-synthesis-into-gsheets-20s.webp",
+    "timestamp_seconds": 20,
+    "bytes": 64172,
+    "sha256": "e40d431a032fb0e044ecbe538344ae072aa33551f2aeace5af840e0f799767e0"
   }
 ]

@@ -6,9 +6,9 @@ Primary layout target: the user-supplied `image-1.png` at `/home/han/.codex/atta
 
 This library supplements documents 01 and 21; their historical claims are not a substitute for current screenshot evidence. In particular, document 21's “one sidebar” target does not match the newly supplied two-column left navigation. Restore the persistent icon rail and keep sidebar expansion separately controllable.
 
-Official source retrieved: [Codex app documentation](https://developers.openai.com/codex/app/). Five actual official demonstration poster images are retained below, with source URLs, byte counts and SHA-256 in [sources.json](references/sources.json). These are reference-only OpenAI images, not Orchester branding or distributable application assets. They are cropped demonstration frames, not evidence of every full desktop window state.
+Official source retrieved: [Codex app documentation](https://developers.openai.com/codex/app/). Five actual official demonstration poster images and three later video frames are retained below, with source URLs, byte counts and SHA-256 in [sources.json](references/sources.json). These are reference-only OpenAI images, not Orchester branding or distributable application assets. They are cropped demonstration frames, not evidence of every full desktop window state.
 
-The search service returned HTTP 404. OpenAI marketing, ChatGPT desktop landing page and Windows/macOS help pages returned HTTP 403; the developer documentation was accessible. No claim is made to have collected every screenshot or version. Settings, open model dropdown, mobile layouts and light full-window chrome still lack captured visual evidence.
+The search service returned HTTP 404. OpenAI marketing, ChatGPT desktop landing page and Windows/macOS help pages returned HTTP 403; the developer documentation was accessible. No claim is made to have collected every screenshot or version. Settings, open model dropdown and mobile layouts still lack captured visual evidence. Later frames below establish light macOS-style full-window chrome.
 
 ## Screenshot inventory
 
@@ -66,3 +66,29 @@ The search service returned HTTP 404. OpenAI marketing, ChatGPT desktop landing 
 Approximate image-space measurements from the displayed 2048 × 1099 reference (not CSS pixel requirements; OS scaling is unknown): icon rail 39 px, sidebar from x≈39 to 216, title chrome 33 px high, conversation/composer x≈857–1406 (549 px wide), right context card x≈1815–2040. Main conversation area is visibly darker than the composer; sidebar labels are muted, and accent is limited to permissions/send/status. These proportions support a fixed-width left rail and sidebar with a flexible center and optional inspector, not proportional shrinking of the sidebar to zero.
 
 Implementation inference: keep existing product font/icon assets, readable CSS text sizes and design tokens rather than blindly copying screenshot raster dimensions. Animate only short intentional transitions, disable motion for reduced-motion preference, and avoid forced smooth scrolling while a reader browses older messages. Test populated and empty history, collapsed/reopened navigation, narrow windows, inspector opening, refresh persistence and keyboard access. This paragraph is a proposed acceptance policy, not a claim that official app internals were inspected.
+
+## Expanded full-window and output references
+
+The official demo video sources are embedded in the same app documentation. Frames below were extracted at 20 seconds from the 720p rendition using FFmpeg, without layout reconstruction. The timestamp and source CDN URL are recorded in the manifest. Video names describe source URLs, not independently verified product/version labels.
+
+| Frame | Observed visual coverage |
+| --- | --- |
+| proactive-teammate-v2, 20 s | Complete light desktop window: traffic-light controls, pinned threads, history, search/plugins/automations, settings footer, transcript, composer. |
+| draft-prds-from-slack-linear-docs, 20 s | Desktop conversation with generated document attachment and document open in an external app. |
+| feedback-synthesis-into-gsheets, 20 s | Narrow floating conversation alongside browser spreadsheet; working state, tool activity and stop control. |
+
+[Official video](https://cdn.openai.com/devhub/videos-learn/proactive-teammate-v2-720p-v1.mp4) — 00:20
+
+![Desktop video frame](references/proactive-teammate-v2-20s.webp)
+
+[Official video](https://cdn.openai.com/devhub/videos-learn/draft-prds-from-slack-linear-docs-720p-v1.mp4) — 00:20
+
+![Desktop video frame](references/draft-prds-from-slack-linear-docs-20s.webp)
+
+[Official video](https://cdn.openai.com/devhub/videos-learn/feedback-synthesis-into-gsheets-720p-v1.mp4) — 00:20
+
+![Desktop video frame](references/feedback-synthesis-into-gsheets-20s.webp)
+
+### Additional retrieval audit
+
+Repeated browser-user-agent requests to [Codex launch](https://openai.com/index/introducing-the-codex-app/), [ChatGPT Windows](https://help.openai.com/en/articles/9982051-using-the-chatgpt-windows-app), [ChatGPT macOS](https://help.openai.com/en/articles/9275200-using-the-chatgpt-macos-app), and [ChatGPT desktop](https://chatgpt.com/features/desktop/) returned HTTP 403. These are discovery links, not inspected visual evidence. The accessible features/review/settings pages expose decorative wallpaper and icons but no full-screen reference images; those decorative assets were intentionally excluded. The official `openai/codex` GitHub tree contains a CLI splash and skill icons, not desktop screenshots, so it cannot fill these gaps. Windows dark full-window evidence remains the user-supplied screenshot; separate current ChatGPT macOS/Windows help screenshots and full review/settings screens remain to collect when accessible.
