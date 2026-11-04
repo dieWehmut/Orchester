@@ -436,10 +436,10 @@ defineExpose({ focus })
   display: grid;
   gap: var(--space-2);
   padding: calc(var(--space-4) - 2px) var(--space-3) calc(var(--space-2) + 2px);
-  border: 1px solid var(--workspace-seam, var(--color-border-subtle));
+  border: 1px solid var(--composer-border, var(--workspace-seam, var(--color-border-subtle)));
   border-radius: var(--composer-radius, 1.25rem);
   background: var(--composer-surface, var(--color-bg-surface));
-  box-shadow: none;
+  box-shadow: var(--composer-shadow, none);
   transition: border-color var(--transition-fast) var(--ease-out), box-shadow var(--transition-fast) var(--ease-out);
 }
 

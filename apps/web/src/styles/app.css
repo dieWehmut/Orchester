@@ -35,6 +35,8 @@
 
 :root[data-theme='light'] .app-shell {
   --composer-surface: var(--color-bg-surface);
+  --composer-border: var(--color-border-subtle);
+  --composer-shadow: var(--shadow-md);
   --transcript-surface: var(--color-bg-surface);
   --rail-surface: var(--color-bg-base);
 }
