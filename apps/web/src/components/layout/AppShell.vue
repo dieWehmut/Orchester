@@ -429,7 +429,7 @@ onBeforeUnmount(endDrag)
 
 .app-shell__grid {
   display: grid;
-  transition: grid-template-columns 180ms var(--ease-out);
+  transition: grid-template-columns var(--transition-slow, 340ms) var(--ease-out);
   min-inline-size: 0;
   grid-template-columns:
     var(--rail-width, var(--rail-preferred-width, var(--sidebar-width)))
@@ -529,7 +529,8 @@ onBeforeUnmount(endDrag)
 .app-shell--rail-closed .app-shell__rail {
   visibility: hidden;
   pointer-events: none;
-  transition: visibility 0s 180ms;
+  border-inline-end: 0;
+  transition: visibility 0s var(--transition-slow, 340ms);
 }
 .app-shell--resizing .app-shell__grid { transition: none; }
 .app-shell__transcript { grid-column: 2; }
@@ -567,13 +568,16 @@ onBeforeUnmount(endDrag)
     background: transparent;
   }
 
-  .app-shell .app-shell__grid {
-    grid-template-columns: 0px minmax(0, 1fr);
+  .app-shell .app-shell__grid,
+  .app-shell.app-shell--rail-closed .app-shell__grid {
+    grid-template-columns: minmax(0, 1fr);
     min-block-size: 0;
     margin-inline: calc(var(--space-3) / 2);
     margin-block-end: calc(var(--space-3) / 2);
     border-radius: 12px;
   }
+
+  .app-shell__transcript { grid-column: 1; }
 
   .app-shell__rail,
   .app-shell__inspector {
