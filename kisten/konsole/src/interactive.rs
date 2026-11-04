@@ -359,7 +359,9 @@ impl ChatSession {
                 break;
             }
         }
-        Ok(TerminalEvent::Paste(text))
+        // A single keyboard event is still a key: turning it into Paste loses
+        // shortcut semantics. Real bracketed paste bypasses this path above.
+        Ok(finish_text_burst(event, text))
     }
 
     fn observe_viewport(&mut self, dimensions: (u16, u16)) {
@@ -580,6 +582,10 @@ pub(crate) fn handle_overlay_key(
         }
         _ => None,
     }
+}
+
+fn finish_text_burst(first: TerminalEvent, text: String) -> TerminalEvent {
+    if text.chars().count() == 1 { first } else { TerminalEvent::Paste(text) }
 }
 
 fn is_press(key: &KeyEvent) -> bool {
@@ -2460,6 +2466,14 @@ mod tests {
         );
         assert_eq!(input.text(), "why?");
         assert!(!help);
+    }
+
+    #[test]
+    fn keyboard_burst_preserves_single_key_and_batches_text() {
+        let question = TerminalEvent::Key(KeyEvent::new(KeyCode::Char('?'), KeyModifiers::NONE));
+        assert_eq!(finish_text_burst(question.clone(), "?".into()), question);
+        assert_eq!(finish_text_burst(question, "?why".into()), TerminalEvent::Paste("?why".into()));
+        assert_eq!(printable_key_text(&TerminalEvent::Paste("?".into())), None);
     }
 
     #[test]
