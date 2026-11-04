@@ -157,7 +157,8 @@ impl LocalAgentActivity {
         }
     }
 
-    /// Return bounded transcripts using the same parser and cache as the WebUI.
+    /// Return sessions with bounded transcript excerpts using the WebUI parser and cache.
+    /// Indexed Codex catalogs may include all matching sessions.
     pub fn snapshot(&self) -> Result<LocalAgentActivitySnapshot, LocalAgentActivityError> {
         let (sources, mut sessions) = self.store.snapshot().map_err(|_| LocalAgentActivityError)?;
         let now = now_ms();

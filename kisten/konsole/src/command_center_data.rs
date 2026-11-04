@@ -41,7 +41,13 @@ pub struct Task {
     pub resume_handle: Option<String>,
 }
 
-pub fn load() -> Result<Vec<Task>, String> {
+#[derive(Debug)]
+pub struct LoadResult {
+    pub tasks: Vec<Task>,
+    pub warnings: Vec<String>,
+}
+
+pub fn load() -> Result<LoadResult, String> {
     static ACTIVITY: OnceLock<LocalAgentActivity> = OnceLock::new();
     let paths =
         OrchesterPaths::discover().map_err(|_| "Workspace could not be read.".to_owned())?;
@@ -50,7 +56,7 @@ pub fn load() -> Result<Vec<Task>, String> {
     load_from(&paths, activity)
 }
 
-fn load_from(paths: &OrchesterPaths, activity: &LocalAgentActivity) -> Result<Vec<Task>, String> {
+fn load_from(paths: &OrchesterPaths, activity: &LocalAgentActivity) -> Result<LoadResult, String> {
     let now = now_ms();
     let mut tasks = Vec::new();
     let mut errors = Vec::new();
@@ -75,8 +81,15 @@ fn load_from(paths: &OrchesterPaths, activity: &LocalAgentActivity) -> Result<Ve
     match activity.snapshot() {
         Ok(snapshot) => {
             for source in snapshot.sources {
-                if source.status == "unavailable" {
-                    errors.push(format!("{} activity could not be read.", source.provider));
+                match source.status {
+                    "unavailable" => {
+                        errors.push(format!("{} activity could not be read.", source.provider))
+                    }
+                    "partial" => errors.push(format!(
+                        "Some {} activity could not be read.",
+                        source.provider
+                    )),
+                    _ => (),
                 }
             }
             tasks.extend(
@@ -109,7 +122,10 @@ fn load_from(paths: &OrchesterPaths, activity: &LocalAgentActivity) -> Result<Ve
     }
     // Keep the resume catalog's known newest-first ordering when timestamps are absent.
     tasks.sort_by(|(left_at, _), (right_at, _)| right_at.cmp(left_at));
-    Ok(tasks.into_iter().map(|(_, task)| task).collect())
+    Ok(LoadResult {
+        tasks: tasks.into_iter().map(|(_, task)| task).collect(),
+        warnings: errors,
+    })
 }
 
 pub fn detail(task: &Task) -> Result<String, String> {
@@ -335,6 +351,45 @@ mod tests {
     use std::path::PathBuf;
 
     #[test]
+    fn partial_provider_failure_keeps_readable_tasks_and_reports_the_missing_source() {
+        let root = std::env::temp_dir().join(format!(
+            "orchester-command-partial-{}-{}",
+            std::process::id(),
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        std::fs::create_dir_all(root.join("codex")).unwrap();
+        std::fs::write(root.join("codex/task.jsonl"),
+            "{\"type\":\"response_item\",\"payload\":{\"type\":\"message\",\"role\":\"user\",\"content\":[{\"type\":\"input_text\",\"text\":\"Readable task\"}]}}\n"
+        ).unwrap();
+        std::fs::write(root.join("broken.db"), "invalid sqlite data").unwrap();
+        // The parser rejects oversized records while retaining readable sibling transcripts.
+        std::fs::File::create(root.join("codex/oversized.jsonl"))
+            .unwrap()
+            .set_len(16 * 1024 * 1024 + 1)
+            .unwrap();
+        let paths = OrchesterPaths::new(root.join("home"), root.join("workspace"));
+        let activity = LocalAgentActivity::new(AgentActivityRoots {
+            codex: Some(root.join("codex")),
+            opencode: Some(root.join("broken.db")),
+            ..AgentActivityRoots::default()
+        });
+        let result = load_from(&paths, &activity).unwrap();
+        assert_eq!(result.tasks.len(), 1);
+        assert_eq!(result.tasks[0].title, "Readable task");
+        assert_eq!(
+            result.warnings,
+            [
+                "Some codex activity could not be read.",
+                "opencode activity could not be read.",
+            ]
+        );
+        std::fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
     fn loads_local_history_and_external_activity_without_merging_resume_capabilities() {
         let root = std::env::temp_dir().join(format!(
             "orchester-command-data-{}-{}",
@@ -370,7 +425,9 @@ mod tests {
             codex: Some(root.join("codex")),
             ..AgentActivityRoots::default()
         });
-        let tasks = load_from(&paths, &activity).unwrap();
+        let result = load_from(&paths, &activity).unwrap();
+        assert!(result.warnings.is_empty());
+        let tasks = result.tasks;
         assert_eq!(tasks.len(), 2);
         assert_eq!(tasks[0].title, "Live provider task");
         assert_eq!(tasks[0].project, "external-project");
