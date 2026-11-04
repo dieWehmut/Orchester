@@ -3,6 +3,7 @@ use std::io::{self, BufRead, Write};
 use std::sync::OnceLock;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+mod brand;
 mod commands;
 mod composer;
 mod input;
@@ -441,6 +442,10 @@ pub(crate) fn handle_chat_input(
 ) -> Option<HomeAction> {
     let key = match event {
         TerminalEvent::Paste(text) => {
+            if text == "?" && input.is_empty() {
+                *show_help = !*show_help;
+                return None;
+            }
             input.insert(&text);
             *command_selected = 0;
             *show_help = false;
@@ -455,6 +460,10 @@ pub(crate) fn handle_chat_input(
         return Some(HomeAction::Quit);
     }
     match key.code {
+        KeyCode::Left if input.is_empty() && !*show_help => return Some(HomeAction::PickAgent),
+        KeyCode::Char('?') if input.is_empty() => {
+            *show_help = !*show_help;
+        }
         KeyCode::PageUp => *scroll_offset = scroll_offset.saturating_add(SCROLL_PAGE_ROWS),
         KeyCode::PageDown => {
             *scroll_offset = if *scroll_offset == usize::MAX {
@@ -1049,7 +1058,7 @@ fn render_home_frame<W: Write>(out: &mut W, view: PickerView<'_>) -> io::Result<
     let selectable = selectable_agents(choices);
     let selected = selected.min(selectable.len().saturating_sub(1));
     let selected_agent = selectable.get(selected);
-    let width = width.clamp(2, 132);
+    let width = width.max(1);
 
     if command.starts_with('/') {
         return render_picker_command_frame(out, width, height, command, choices, command_selected);
@@ -1080,6 +1089,12 @@ fn render_home_frame<W: Write>(out: &mut W, view: PickerView<'_>) -> io::Result<
     let start = selection_window_start(selected, selectable.len(), list_rows);
     for (index, choice) in selectable.iter().enumerate().skip(start).take(list_rows) {
         render_picker_agent_row(out, width, index == selected, choice)?;
+    }
+    let rendered_rows = selectable.len().saturating_sub(start).min(list_rows);
+    if height <= 10_000 {
+        for _ in rendered_rows..list_rows {
+            writeln!(out)?;
+        }
     }
     if footer_rows > 0 {
         render_picker_footer(out, width, selected_agent, choices, message)?;
@@ -1320,20 +1335,8 @@ fn render_chat_home_frame<W: Write>(
     let mut body = Vec::new();
     if show_help {
         render_home_help(&mut body, width, content_rows)?;
-    } else if content_rows > 0 {
-        let hint = truncate(
-            "Type a task or / for commands. Enter submits; Esc exits.",
-            width,
-        );
-        writeln!(&mut body, "{}{hint}{RESET}", palette.dim)?;
-        if body_rows > 1 {
-            writeln!(
-                &mut body,
-                "{}{}{RESET}",
-                palette.dim,
-                truncate("Alt+Enter new line  ·  ↑ history  ·  Tab complete", width)
-            )?;
-        }
+    } else if command_palette.is_empty() {
+        brand::render(&mut body, width, body_rows)?;
     }
     let body_height = render_fixed_body(out, &body, body_rows)?;
     render_composer_frame(out, width, input, &composer, palette)?;
@@ -1345,6 +1348,22 @@ fn render_chat_home_frame<W: Write>(
     render_command_palette_lines(out, &command_palette)?;
     if layout.status_rows > 0 {
         render_status_line(out, width, model_status, busy, palette)?;
+        if layout.status_rows > 1 {
+            writeln!(out)?;
+            write!(
+                out,
+                "{}{}{RESET}",
+                palette.dim,
+                truncate(
+                    if show_help {
+                        "? / Esc close shortcuts"
+                    } else {
+                        "← for agents · ? for shortcuts"
+                    },
+                    width
+                )
+            )?;
+        }
     }
     Ok(caret)
 }
@@ -1446,6 +1465,22 @@ fn render_transcript_chat_frame<W: Write>(
 
     if layout.status_rows > 0 {
         render_status_line(out, width, model_status, busy, palette)?;
+        if layout.status_rows > 1 {
+            writeln!(out)?;
+            write!(
+                out,
+                "{}{}{RESET}",
+                palette.dim,
+                truncate(
+                    if show_help {
+                        "? / Esc close shortcuts"
+                    } else {
+                        "← for agents · ? for shortcuts"
+                    },
+                    width
+                )
+            )?;
+        }
     }
     Ok(caret)
 }
@@ -1476,16 +1511,20 @@ fn render_fixed_body<W: Write>(out: &mut W, body: &[u8], rows: usize) -> io::Res
     } else {
         body.split(|byte| *byte == b'\n').collect::<Vec<_>>()
     };
-    // `rows` is a ceiling, not a quota. Padding the body out to the full
-    // viewport would push the composer to the last terminal row and leave a
-    // gap between the hint and the input the operator is typing into.
+    // Reserve the full body so the composer stays at the terminal bottom.
     let mut written = 0;
     for content in body_rows.iter().take(rows) {
         out.write_all(content)?;
         writeln!(out)?;
         written += 1;
     }
-    Ok(written)
+    if rows > 10_000 {
+        return Ok(written);
+    }
+    for _ in written..rows {
+        writeln!(out)?;
+    }
+    Ok(rows)
 }
 
 /// Writes the input row and reports where the insertion point sits, so the
@@ -1782,7 +1821,11 @@ fn chat_frame_layout_with_composer(
     height: usize,
     composer_rows: usize,
 ) -> ChatFrameLayout {
-    let status_rows = usize::from(height >= 2);
+    let status_rows = if height >= 12 {
+        2
+    } else {
+        usize::from(height >= 2)
+    };
     let available_content_rows = height
         .saturating_sub(composer_rows)
         .saturating_sub(status_rows);
@@ -1876,7 +1919,7 @@ fn render_workspace_header<W: Write>(
 }
 
 fn render_home_help<W: Write>(out: &mut W, width: usize, max_rows: usize) -> io::Result<()> {
-    for line in [
+    let commands = [
         "/agent      choose a delegate",
         "/model      choose a model or provider",
         "/theme      preview terminal colors",
@@ -1892,10 +1935,30 @@ fn render_home_help<W: Write>(out: &mut W, width: usize, max_rows: usize) -> io:
         "/opencode   launch OpenCode",
         "/quit       exit Orchester",
         "Esc         close help",
-    ]
-    .into_iter()
-    .take(max_rows)
-    {
+    ];
+    let shortcuts = [
+        "Keyboard shortcuts",
+        "",
+        "Compose                         Session                         Transcript",
+        "/        Commands               ←       Agents (empty prompt)  PgUp/PgDn  Scroll",
+        "Alt+Enter New line               ?       Toggle shortcuts       Ctrl+Home  Oldest",
+        "Tab      Complete command       Enter   Send message           Ctrl+End   Latest",
+        "↑ / ↓    Input history          Ctrl+C  Quit                    Esc        Close",
+        "",
+        "Model: /model   Providers: /model add   Themes: /theme   History: /resume",
+    ];
+    let lines = if width >= 100 {
+        &shortcuts[..]
+    } else {
+        &commands[..]
+    };
+    let count = lines.len().min(max_rows);
+    if max_rows <= 10_000 {
+        for _ in count..max_rows {
+            writeln!(out)?;
+        }
+    }
+    for line in lines.iter().take(max_rows) {
         writeln!(out, "{}", truncate(line, width))?;
     }
     Ok(())
@@ -2079,7 +2142,7 @@ fn render_status_line<W: Write>(
 }
 
 fn viewport_content_width(cols: u16) -> usize {
-    usize::from(cols).saturating_sub(1).clamp(2, 132)
+    usize::from(cols).saturating_sub(1).max(1)
 }
 
 fn current_directory_text() -> String {
@@ -2349,6 +2412,81 @@ fn is_quit(input: &str) -> bool {
 mod tests {
     use super::*;
     use std::io::Cursor;
+
+    #[test]
+    fn reference_shortcuts_work_with_empty_input_and_preserve_drafts() {
+        let mut input = Composer::default();
+        let mut selected = 0;
+        let mut help = false;
+        let mut scroll = 0;
+        handle_chat_input(
+            TerminalEvent::Paste("?".into()),
+            &mut input,
+            &mut selected,
+            &mut help,
+            &mut scroll,
+            &[],
+            120,
+        );
+        assert!(help);
+        assert!(input.is_empty());
+        handle_chat_input(
+            TerminalEvent::Paste("?".into()),
+            &mut input,
+            &mut selected,
+            &mut help,
+            &mut scroll,
+            &[],
+            120,
+        );
+        assert!(!help);
+        assert_eq!(
+            handle_chat_input(
+                TerminalEvent::Key(KeyEvent::new(KeyCode::Left, KeyModifiers::NONE)),
+                &mut input,
+                &mut selected,
+                &mut help,
+                &mut scroll,
+                &[],
+                120
+            ),
+            Some(HomeAction::PickAgent)
+        );
+        input.insert("why");
+        handle_chat_input(
+            TerminalEvent::Paste("?".into()),
+            &mut input,
+            &mut selected,
+            &mut help,
+            &mut scroll,
+            &[],
+            120,
+        );
+        assert_eq!(input.text(), "why?");
+        assert!(!help);
+    }
+
+    #[test]
+    fn portrait_is_centered_and_bounded_at_terminal_sizes() {
+        for (width, height) in [(80, 17), (199, 48), (39, 12)] {
+            let mut out = Vec::new();
+            brand::render(&mut out, width, height).unwrap();
+            let plain = strip_ansi(&String::from_utf8(out).unwrap());
+            let first = plain.lines().find(|line| line.contains('▀')).unwrap();
+            let left = first.chars().take_while(|c| *c == ' ').count();
+            let portrait = first.trim_start().chars().count();
+            assert!((width - portrait).abs_diff(left * 2) <= 1);
+            assert!(plain.lines().count() <= height);
+            assert!(plain.lines().all(|line| display_width(line) <= width));
+        }
+    }
+
+    #[test]
+    fn fixed_body_reserves_terminal_height_for_bottom_composer() {
+        let mut out = Vec::new();
+        assert_eq!(render_fixed_body(&mut out, b"answer\n", 18).unwrap(), 18);
+        assert_eq!(String::from_utf8(out).unwrap().lines().count(), 18);
+    }
 
     #[test]
     fn chat_key_reducer_submits_and_preserves_quit_semantics() {
@@ -2909,7 +3047,7 @@ mod tests {
         let plain = strip_ansi(&String::from_utf8(out).unwrap());
         assert!(plain.contains(">_ Orchester"));
         assert!(plain.contains("model:") && plain.contains("directory:"));
-        assert!(plain.contains("Type a task or / for commands"));
+        assert!(plain.contains("← for agents · ? for shortcuts"));
         assert!(!plain.contains("Selected: codex") && !plain.contains("Choose agent"));
         assert!(
             plain.lines().count() <= 8,
@@ -3012,8 +3150,8 @@ mod tests {
         );
         assert_eq!(
             status,
-            lines.len() - 1,
-            "the status row must remain the last row:\n{plain}"
+            lines.len() - 2,
+            "the status row must remain above shortcuts:\n{plain}"
         );
         assert!(
             first_command < status,
@@ -3203,7 +3341,7 @@ mod tests {
     fn interactive_layout_reserves_the_terminal_last_column() {
         assert_eq!(viewport_content_width(80), 79);
         assert_eq!(viewport_content_width(133), 132);
-        assert_eq!(viewport_content_width(200), 132);
+        assert_eq!(viewport_content_width(200), 199);
     }
 
     #[test]
@@ -3475,8 +3613,8 @@ mod tests {
             let layout = chat_frame_layout(width, 24);
             assert_eq!(layout.header.rows(width), 3, "{width}x24 header rows");
             assert_eq!(layout.separator_rows, 1, "{width}x24 separator rows");
-            assert_eq!(layout.content_rows, 18, "{width}x24 body rows");
-            assert_eq!(layout.status_rows, 1, "{width}x24 status rows");
+            assert_eq!(layout.content_rows, 17, "{width}x24 body rows");
+            assert_eq!(layout.status_rows, 2, "{width}x24 status rows");
 
             let render = |input: &str,
                           transcript: &[TranscriptEntry],
@@ -3550,21 +3688,14 @@ mod tests {
                     lines.len() <= 24,
                     "{label} overflowed the {width}x24 viewport:\n{frame}"
                 );
-                // The frame is as tall as its content, never taller: the
-                // composer and status row trail the last content row instead of
-                // being pushed to the bottom of the terminal. Opening the
-                // palette inserts it between the composer and the status row,
-                // the way Codex stacks its slash-command popup.
-                let status = lines.last().expect("status row");
+                // All states fill the same terminal, with shortcuts below status.
+                let status = lines[lines.len() - 2];
                 assert!(
                     status.contains("gpt-test"),
                     "{label} status row lost the active model at {width}x24:\n{frame}"
                 );
                 let composer = composer_row(&lines, width);
-                assert!(
-                    !lines[composer - 1].trim().is_empty(),
-                    "{label} left a padding row above the composer at {width}x24:\n{frame}"
-                );
+                assert_eq!(lines.len(), 24, "{label} must fill the viewport");
                 if *label == "palette" {
                     assert!(
                         lines[composer + 1].trim_start().starts_with("> /agent"),
@@ -3577,7 +3708,7 @@ mod tests {
                 } else {
                     assert_eq!(
                         composer,
-                        lines.len() - 2,
+                        lines.len() - 3,
                         "{label} composer is not the row above the status line at {width}x24:\n{frame}"
                     );
                 }
@@ -3664,11 +3795,9 @@ mod tests {
         assert!(plain.lines().count() <= 24, "frame overflowed:\n{plain}");
     }
 
-    /// The composer is anchored to the content, not to the bottom of the
-    /// terminal: a tall terminal must not open a gap between the last rendered
-    /// row and the line the operator is typing into.
+    /// All surfaces reserve the viewport before drawing bottom controls.
     #[test]
-    fn composer_trails_the_last_content_row_in_every_state() {
+    fn composer_stays_at_the_terminal_bottom_in_every_state() {
         let overlay = CommandOverlay::new(
             "Status",
             "Select a section to inspect.",
@@ -3712,23 +3841,20 @@ mod tests {
         ] {
             let lines = frame.lines().collect::<Vec<_>>();
             let composer = composer_row(&lines, 100);
-            assert!(
-                !lines[composer - 1].trim().is_empty(),
-                "{label} padded the viewport above the composer:\n{frame}"
-            );
+            assert_eq!(lines.len(), 44, "{label} must fill terminal height");
             if label == "palette" {
                 assert!(
                     lines[composer + 1].trim_start().starts_with("> /agent"),
                     "{label} palette must open under the composer:\n{frame}"
                 );
                 assert!(
-                    lines.last().expect("status row").contains("gpt-test"),
+                    lines[lines.len() - 2].contains("gpt-test"),
                     "{label} status row must stay under the palette:\n{frame}"
                 );
             } else {
                 assert_eq!(
                     composer,
-                    lines.len() - 2,
+                    lines.len() - 3,
                     "{label} composer is not directly above the status row:\n{frame}"
                 );
             }
@@ -4057,7 +4183,7 @@ mod tests {
             )
             .unwrap();
             let plain = strip_ansi(&String::from_utf8(out).unwrap());
-            plain.lines().last().unwrap_or_default().to_string()
+            plain.lines().rev().nth(1).unwrap_or_default().to_string()
         };
 
         let working = status_row(Some("Creating..."));
@@ -4582,7 +4708,7 @@ mod tests {
                 }
                 if label == "help" {
                     assert!(
-                        plain.contains("/agent      choose a delegate"),
+                        plain.contains("Keyboard shortcuts"),
                         "help content disappeared at height {height}:\n{plain}"
                     );
                 }
@@ -4633,8 +4759,8 @@ mod tests {
             "30-row empty home should leave room for conversation:\n{empty}"
         );
         assert!(
-            !empty.contains('\u{2580}'),
-            "30-row empty home should keep the workspace header compact"
+            empty.contains('\u{2580}'),
+            "30-row empty home should show the supplied portrait"
         );
     }
 

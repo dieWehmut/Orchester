@@ -1,0 +1,1 @@
+`orchester.rgb`: 64 × 64 row-major RGB thumbnail of user-supplied `C:\Users\han\picture\Orchester.png`, resized with Lanczos without cropping. Rendered as ANSI half-block pixels; no external image protocol or runtime path required.
