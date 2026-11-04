@@ -32,7 +32,10 @@ mod session_history;
 mod workspace;
 mod workspace_review;
 
-pub use agent_activity::AgentActivityRoots;
+pub use agent_activity::{
+    ActivityDetail, ActivityEntry, ActivitySource, ActivitySummary, ActivityTurn, AgentActivityRoots,
+    LocalAgentActivity, LocalAgentActivityError, LocalAgentActivitySnapshot,
+};
 pub use agent_catalog::{
     agent_catalog_response, AgentAvailabilityDto, AgentCatalogDto, AgentSummaryDto,
     AGENT_CATALOG_SCHEMA_VERSION,

@@ -134,6 +134,46 @@ pub struct ActivityList {
     pub sessions: Vec<ActivitySummary>,
 }
 
+/// Read-only provider activity for local frontends without an HTTP listener.
+/// Provider files remain owned by the provider; this reader never resumes them.
+#[derive(Clone)]
+pub struct LocalAgentActivity {
+    store: AgentActivityStore,
+}
+
+pub struct LocalAgentActivitySnapshot {
+    pub sources: Vec<ActivitySource>,
+    pub sessions: Vec<ActivityDetail>,
+}
+
+#[derive(Debug, thiserror::Error)]
+#[error("local agent activity could not be read")]
+pub struct LocalAgentActivityError;
+
+impl LocalAgentActivity {
+    pub fn new(roots: AgentActivityRoots) -> Self {
+        Self {
+            store: AgentActivityStore::new(roots),
+        }
+    }
+
+    /// Return bounded transcripts using the same parser and cache as the WebUI.
+    pub fn snapshot(&self) -> Result<LocalAgentActivitySnapshot, LocalAgentActivityError> {
+        let (sources, mut sessions) = self.store.snapshot().map_err(|_| LocalAgentActivityError)?;
+        let now = now_ms();
+        for row in &mut sessions {
+            normalize_external_activity(row, now);
+        }
+        sessions.sort_by(|a, b| {
+            b.summary
+                .updated_at
+                .cmp(&a.summary.updated_at)
+                .then(a.summary.id.cmp(&b.summary.id))
+        });
+        Ok(LocalAgentActivitySnapshot { sources, sessions })
+    }
+}
+
 #[derive(Default)]
 struct Cache {
     refreshed: Option<Instant>,
@@ -248,12 +288,7 @@ async fn snapshot(
     sessions.extend(managed::snapshot(context).await);
     let now = now_ms();
     for session in &mut sessions {
-        if session.summary.source == "external"
-            && session.summary.state == "active"
-            && now.saturating_sub(session.summary.updated_at) > 120_000
-        {
-            session.summary.state = "unknown";
-        }
+        normalize_external_activity(session, now);
     }
     sessions.sort_by(|a, b| {
         b.summary
@@ -350,17 +385,21 @@ pub(crate) async fn detail(
             request_id_from_headers(&headers),
         ));
     }
-    if row.summary.source == "external"
-        && row.summary.state == "active"
-        && now_ms().saturating_sub(row.summary.updated_at) > 120_000
-    {
-        row.summary.state = "unknown";
-    }
+    normalize_external_activity(&mut row, now_ms());
     Ok((no_store_headers(), Json(row)))
 }
 
 fn now_ms() -> i64 {
     (OffsetDateTime::now_utc().unix_timestamp_nanos() / 1_000_000) as i64
+}
+
+fn normalize_external_activity(row: &mut ActivityDetail, now: i64) {
+    if row.summary.source == "external"
+        && row.summary.state == "active"
+        && now.saturating_sub(row.summary.updated_at) > 120_000
+    {
+        row.summary.state = "unknown";
+    }
 }
 fn opaque_id(provider: &str, source: &str) -> String {
     format!(

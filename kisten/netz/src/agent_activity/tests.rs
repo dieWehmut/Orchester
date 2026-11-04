@@ -50,6 +50,54 @@ fn codex_message(role: &str, text: &str) -> serde_json::Value {
 }
 
 #[test]
+fn local_reader_uses_transcripts_without_starting_a_server() {
+    let fixture = Fixture::new();
+    fixture.file(
+        "sessions/task.jsonl",
+        &[
+            json!({"type":"session_meta","payload":{"cwd":"/work/real-project"}}),
+            codex_message("user", "Review the migration"),
+            json!({"type":"event_msg","payload":{"type":"task_completed"}}),
+        ],
+    );
+    let reader = LocalAgentActivity::new(AgentActivityRoots {
+        codex: Some(fixture.0.join("sessions")),
+        ..AgentActivityRoots::default()
+    });
+    let snapshot = reader.snapshot().unwrap();
+    assert_eq!(snapshot.sessions.len(), 1);
+    let session = &snapshot.sessions[0];
+    assert_eq!(session.summary.title, "Review the migration");
+    assert_eq!(session.summary.project, "real-project");
+    assert_eq!(session.summary.state, "completed");
+    assert_eq!(session.summary.source, "external");
+    assert_eq!(session.entries[0].text, "Review the migration");
+}
+
+#[test]
+fn local_reader_does_not_infer_live_activity_from_stale_transcripts() {
+    let mut row = empty_detail("codex", "source", 1_000);
+    row.summary.state = "active";
+    normalize_external_activity(&mut row, 121_001);
+    assert_eq!(row.summary.state, "unknown");
+    row.summary.state = "completed";
+    normalize_external_activity(&mut row, 121_001);
+    assert_eq!(row.summary.state, "completed");
+}
+
+#[test]
+fn local_reader_does_not_create_missing_provider_directories() {
+    let fixture = Fixture::new();
+    let missing = fixture.0.join("absent");
+    let reader = LocalAgentActivity::new(AgentActivityRoots {
+        codex: Some(missing.clone()),
+        ..AgentActivityRoots::default()
+    });
+    assert!(reader.snapshot().unwrap().sessions.is_empty());
+    assert!(!missing.exists());
+}
+
+#[test]
 fn title_is_not_replaced_by_followup_and_tools_share_opaque_call_ids() {
     let records = [codex_message("user", "Build the sidebar"), codex_message("user", "Continue"),
         json!({"type":"response_item","payload":{"type":"function_call","name":"shell","call_id":"private-call","arguments":"echo done"}}),
