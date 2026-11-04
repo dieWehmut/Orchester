@@ -218,6 +218,7 @@ enum OverlayAction {
     Resume(String),
     ModelOptionsModels,
     ModelOptionsEffort,
+    ModelOptionsProviders,
     ModelConfigured,
     ModelProfile(String),
     ModelProvider(String),
@@ -340,13 +341,55 @@ impl TerminalOverlay {
                 vec![
                     OverlayItem::new("Model", model),
                     OverlayItem::new("Reasoning level", effort),
+                    OverlayItem::new(
+                        "Provider",
+                        choice
+                            .map(|item| item.provider_name.as_str())
+                            .unwrap_or("Choose a configured provider"),
+                    ),
                 ],
             )
             .with_footer("Up/Down select  |  Enter open  |  Esc close"),
             actions: vec![
                 OverlayAction::ModelOptionsModels,
                 OverlayAction::ModelOptionsEffort,
+                OverlayAction::ModelOptionsProviders,
             ],
+            parent: None,
+        }
+    }
+
+    fn providers(catalog: &SelfAgentModelCatalog) -> Self {
+        // Reuse the model catalog's validated provider actions, including repair
+        // explanations for unavailable entries; never infer IDs from labels.
+        let models = Self::models(catalog);
+        let skip = 1 + catalog.profiles.len();
+        let mut items: Vec<_> = models.view.items.into_iter().skip(skip).collect();
+        let mut actions: Vec<_> = models.actions.into_iter().skip(skip).collect();
+        for (item, provider) in items.iter_mut().zip(&catalog.providers) {
+            item.current = catalog
+                .active
+                .choice()
+                .is_some_and(|choice| choice.provider == provider.provider);
+        }
+        if items.is_empty() {
+            items.push(OverlayItem::new(
+                "No providers configured",
+                "Use /model add to configure a provider",
+            ));
+            actions.push(OverlayAction::Inspect(vec![
+                "Use /model add to configure a provider.".into(),
+            ]));
+        }
+        Self {
+            view: CommandOverlay::new(
+                "Select provider",
+                "Choose a configured provider for future turns in this session.",
+                items,
+            )
+            .with_footer("Up/Down select  |  Enter apply  |  Esc back")
+            .focus_current(),
+            actions,
             parent: None,
         }
     }
@@ -1003,12 +1046,17 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                             }
                         }
                         OverlayAction::Resume(handle) => state.queue_resume(handle),
-                        OverlayAction::ModelOptionsModels | OverlayAction::ModelOptionsEffort => {
+                        OverlayAction::ModelOptionsModels
+                        | OverlayAction::ModelOptionsEffort
+                        | OverlayAction::ModelOptionsProviders => {
                             let parent = state.overlay.take();
                             let child = match self_agent.model_catalog() {
                                 Ok(catalog) => match action {
                                     OverlayAction::ModelOptionsModels => {
                                         TerminalOverlay::models(&catalog)
+                                    }
+                                    OverlayAction::ModelOptionsProviders => {
+                                        TerminalOverlay::providers(&catalog)
                                     }
                                     _ => match (
                                         model_selection_current(&catalog),
@@ -2381,7 +2429,12 @@ mod tests {
             vec![choice.clone()],
         );
         let root = TerminalOverlay::model_options(&catalog);
-        assert_eq!(root.view.items.len(), 2);
+        assert_eq!(root.view.items.len(), 3);
+        assert_eq!(root.view.items[2].label, "Provider");
+        assert!(matches!(
+            root.actions[2],
+            OverlayAction::ModelOptionsProviders
+        ));
         assert_eq!(root.view.items[0].label, "Model");
         assert!(root.view.items[0].detail.contains("review-model"));
         assert_eq!(root.view.items[1].detail, "custom-budget");
@@ -2472,6 +2525,10 @@ mod tests {
                 .collect::<Vec<_>>(),
             vec!["provider relay"]
         );
+        let providers = TerminalOverlay::providers(&catalog);
+        assert_eq!(providers.view.items.len(), 2);
+        assert_eq!(providers.view.items[providers.view.selected].label, "provider relay");
+        assert!(matches!(&providers.actions[0], OverlayAction::ModelProvider(id) if id == "openai"));
         // A provider switch keeps the configured model, so the configured row
         // must not also read as current.
         assert!(!overlay.view.items[0].current);
@@ -2480,6 +2537,17 @@ mod tests {
             overlay.actions.last(),
             Some(OverlayAction::ModelProvider(provider)) if provider == "relay"
         ));
+    }
+
+    #[test]
+    fn provider_menu_has_empty_guidance_and_returns_to_options() {
+        let catalog = model_catalog(SelfAgentActiveModel::NotConfigured, Vec::new());
+        let overlay = TerminalOverlay::providers(&catalog)
+            .with_parent(TerminalOverlay::model_options(&catalog));
+        assert_eq!(overlay.view.title, "Select provider");
+        assert!(overlay.view.items[0].detail.contains("/model add"));
+        assert!(matches!(overlay.actions[0], OverlayAction::Inspect(_)));
+        assert_eq!(overlay.parent.unwrap().view.title, "Model options");
     }
 
     #[test]

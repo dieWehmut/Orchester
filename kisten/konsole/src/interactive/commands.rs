@@ -102,7 +102,7 @@ pub fn parse_prompt_action(input: &str, choices: &[AgentChoice]) -> PromptAction
     if input == "?" {
         return PromptAction::Help;
     }
-    if !input.starts_with('/') {
+    if !input.starts_with('/') && input.split_whitespace().next() != Some(r"\model") {
         return PromptAction::Run(input.to_string());
     }
 
@@ -125,7 +125,7 @@ pub(super) fn parse_home_action_selected(
     if input.is_empty() {
         return HomeAction::Empty;
     }
-    if !input.starts_with('/') {
+    if !input.starts_with('/') && input.split_whitespace().next() != Some(r"\model") {
         return HomeAction::Submit(input.to_owned());
     }
     if matches!(input, "/delegate" | "/agents") {
@@ -227,7 +227,7 @@ pub(super) fn command_action(input: &str, selected: Option<&CommandItem>) -> Pro
                 PromptAction::Help
             };
         }
-        "/model" => {
+        "/model" | "\\model" => {
             return parse_model_command(input)
                 .map(|command| PromptAction::Workspace(WorkspaceCommand::Model(command)))
                 .unwrap_or(PromptAction::Help);
@@ -492,6 +492,12 @@ fn parse_plugin_action(input: &str) -> Option<PluginAction> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn backslash_model_opens_provider_controls_in_both_prompt_states() {
+        assert_eq!(parse_prompt_action(r"\model", &[]), PromptAction::Workspace(WorkspaceCommand::Model(ModelCommand::Show)));
+        assert_eq!(parse_home_action(r"\model provider relay", &[]), HomeAction::Workspace(WorkspaceCommand::Model(ModelCommand::SelectProvider("relay".into()))));
+    }
 
     #[test]
     fn theme_command_opens_picker_or_selects_named_theme() {
