@@ -13,6 +13,7 @@ pub enum Action {
     Compose,
     Resume(String),
 }
+const HELP: &str = "Task command center\n\nTab / Shift+Tab   Filter by status\nUp / Down         Select a task\nEnter             Read transcript and details\nr                 Resume a resumable managed task\nn                 Compose a new prompt\nEsc               Back\n\nExternal sessions open read-only. Status comes from recorded activity, not process guesses.";
 const FILTERS: [&str; 5] = ["All", "Needs you", "Working", "Ready", "Inactive"];
 fn matches(task: &Task, filter: usize) -> bool {
     match filter {
@@ -73,6 +74,7 @@ pub fn run(chat: &mut ChatSession) -> io::Result<Action> {
     let mut loading = false;
     let mut dimensions = (0, 0);
     let mut dirty = true;
+    let palette = crate::theme::load_user_theme().palette();
     loop {
         if refresh.elapsed() >= Duration::from_secs(5) && detail.is_none() && !loading {
             loading = true;
@@ -127,7 +129,22 @@ pub fn run(chat: &mut ChatSession) -> io::Result<Action> {
             } else {
                 frame
             };
-            chat.present_raw(frame.as_bytes())?;
+            let mut colored_lines: Vec<_> = frame.lines().map(str::to_owned).collect();
+            if detail.as_deref() == Some(HELP) {
+                for line in &mut colored_lines {
+                    *line = crate::theme::color_commands(line, palette);
+                }
+            } else {
+                if let Some(filters) = colored_lines.get_mut(1) {
+                    *filters = crate::theme::color_commands(filters, palette);
+                }
+                if dimensions.1 >= 4 {
+                    if let Some(footer) = colored_lines.last_mut() {
+                        *footer = crate::theme::color_commands(footer, palette);
+                    }
+                }
+            }
+            chat.present_raw(colored_lines.join("\n").as_bytes())?;
             dirty = false;
         }
         let Some(event) = chat.try_read_input()? else {
@@ -177,7 +194,7 @@ pub fn run(chat: &mut ChatSession) -> io::Result<Action> {
             KeyCode::Enter => {
                 if let Some(task) = rows.get(selected) { detail = Some(command_center_data::detail(task).unwrap_or_else(|e| e)); scroll = 0; }
             }
-            KeyCode::Char('?') => detail = Some("Task command center\n\nTab / Shift+Tab   Filter by status\nUp / Down         Select a task\nEnter             Read transcript and details\nr                 Resume a resumable managed task\nn                 Compose a new prompt\nEsc               Back\n\nExternal sessions open read-only. Status comes from recorded activity, not process guesses.".into()),
+            KeyCode::Char('?') => detail = Some(HELP.into()),
             _ => {}
         }
     }

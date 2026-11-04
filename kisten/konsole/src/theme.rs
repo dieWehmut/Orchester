@@ -140,6 +140,46 @@ fn theme_path() -> Option<PathBuf> {
     orchester_laufzeit::harness::orchester_home().map(|home| home.join(THEME_FILE))
 }
 
+/// Color only command and keyboard tokens after callers have measured plain text.
+pub(crate) fn color_commands(text: &str, palette: ThemePalette) -> String {
+    let mut output = String::new();
+    for part in text.split_inclusive(char::is_whitespace) {
+        let token = part.trim_end_matches(char::is_whitespace);
+        let shortcut = matches!(
+            token,
+            "?" | "←"
+                | "→"
+                | "↑"
+                | "↓"
+                | "↑/↓"
+                | "Up"
+                | "Down"
+                | "Up/Down"
+                | "Esc"
+                | "Enter"
+                | "Tab"
+                | "Shift+Tab"
+                | "Home"
+                | "End"
+                | "PgUp/PgDn"
+                | "PgUp"
+                | "PgDn"
+                | "r"
+                | "n"
+        ) || token.starts_with("Ctrl+")
+            || token.starts_with("Alt+");
+        if token.starts_with('/') || token.starts_with('\\') || shortcut {
+            output.push_str(palette.accent);
+            output.push_str(token);
+            output.push_str("\x1b[0m");
+            output.push_str(&part[token.len()..]);
+        } else {
+            output.push_str(part);
+        }
+    }
+    output
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

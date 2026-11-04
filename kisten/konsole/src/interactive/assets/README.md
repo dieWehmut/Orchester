@@ -1,1 +1,3 @@
-`orchester.rgb`: 64 × 64 row-major RGB thumbnail of user-supplied `C:\Users\han\picture\Orchester.png`, resized with Lanczos without cropping. Rendered as ANSI half-block pixels; no external image protocol or runtime path required.
+`orchester.gray`: 128 × 128 row-major, 8-bit grayscale thumbnail of user-supplied `C:\Users\han\picture\Orchester.png`. The identical source is checked in at `apps/web/src/assets/orchester-mark.png` (SHA-256 `73a86d4d31c1a41216a1467e9710691dc5f548dddf66067a9e3dabe25f565e6b`).
+
+Generated with Pillow: `ImageOps.grayscale(Image.open(source)).resize((128, 128), Image.Resampling.LANCZOS).tobytes()`. The entire image is retained without cropping, thresholding or a color tint. The renderer averages source regions when scaling down and displays neutral grayscale ANSI half-block pixels. No external image protocol or runtime file path is required.

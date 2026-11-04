@@ -960,11 +960,18 @@ pub fn render_agent_table<W: Write>(
     writeln!(out)?;
     writeln!(
         out,
-        "{DIM}Commands: /agent switch, /model choose, /theme colors, /config inspect, /resume list, /permissions inspect, /status inspect, /login key, /plugins manage, /help help, /quit exit.{RESET}"
+        "{}",
+        crate::theme::color_commands("Commands: /agent switch, /model choose, /theme colors, /config inspect, /resume list, /permissions inspect, /status inspect, /login key, /plugins manage, /help help, /quit exit.", crate::theme::load_user_theme().palette())
     )
 }
 
 pub fn render_help<W: Write>(out: &mut W) -> io::Result<()> {
+    let mut plain = Vec::new();
+    render_help_plain(&mut plain)?;
+    write!(out, "{}", crate::theme::color_commands(&String::from_utf8_lossy(&plain), crate::theme::load_user_theme().palette()))
+}
+
+fn render_help_plain<W: Write>(out: &mut W) -> io::Result<()> {
     writeln!(out)?;
     writeln!(out, "{BOLD}Interactive commands{RESET}")?;
     writeln!(out, "  /agent   choose another installed agent")?;
@@ -1137,8 +1144,8 @@ fn render_picker_command_frame<W: Write>(
     if status_rows > 0 {
         write!(
             out,
-            "{DIM}{}{RESET}",
-            truncate("Up/Down selects; Enter opens; Esc returns", width)
+            "{}",
+            crate::theme::color_commands(&truncate("Up/Down selects; Enter opens; Esc returns", width), crate::theme::load_user_theme().palette())
         )?;
     }
     Ok(())
@@ -1210,7 +1217,7 @@ fn render_picker_footer<W: Write>(
     } else {
         (YELLOW, sanitize_terminal_text(message))
     };
-    write!(out, "{style}{}{RESET}", truncate(&footer, width))
+    write!(out, "{style}{}{RESET}", crate::theme::color_commands(&truncate(&footer, width), crate::theme::load_user_theme().palette()))
 }
 
 #[cfg(test)]
@@ -1345,7 +1352,7 @@ fn render_chat_home_frame<W: Write>(
     let body_rows = content_rows.saturating_sub(command_palette.len());
     let mut body = Vec::new();
     if show_help {
-        render_home_help(&mut body, width, content_rows)?;
+        render_home_help(&mut body, width, content_rows, palette)?;
     } else if command_palette.is_empty() {
         brand::render(&mut body, width, body_rows)?;
     }
@@ -1364,7 +1371,7 @@ fn render_chat_home_frame<W: Write>(
             write!(
                 out,
                 "{}{}{RESET}",
-                palette.dim,
+                palette.accent,
                 truncate(
                     if show_help {
                         "? / Esc close shortcuts"
@@ -1414,7 +1421,7 @@ fn render_transcript_chat_frame<W: Write>(
         render_command_overlay(&mut body, overlay, width, content_rows, palette)?;
     } else if show_help {
         let busy_rows = usize::from(busy.is_some() && content_rows > 0);
-        render_home_help(&mut body, width, content_rows.saturating_sub(busy_rows))?;
+        render_home_help(&mut body, width, content_rows.saturating_sub(busy_rows), palette)?;
         if let Some(busy) = busy {
             writeln!(
                 &mut body,
@@ -1481,7 +1488,7 @@ fn render_transcript_chat_frame<W: Write>(
             write!(
                 out,
                 "{}{}{RESET}",
-                palette.dim,
+                palette.accent,
                 truncate(
                     if show_help {
                         "? / Esc close shortcuts"
@@ -1634,7 +1641,7 @@ fn render_command_overlay<W: Write>(
             writeln!(
                 out,
                 "{}{}{RESET}",
-                palette.dim,
+                palette.accent,
                 truncate(&sanitize_terminal_text(&overlay.footer), width)
             )?;
         }
@@ -1698,7 +1705,7 @@ fn render_command_overlay<W: Write>(
     if footer_rows > 0 {
         rows.push(format!(
             "{}{}{RESET}",
-            palette.dim,
+            palette.accent,
             truncate(&sanitize_terminal_text(&overlay.footer), width)
         ));
     }
@@ -1929,7 +1936,7 @@ fn render_workspace_header<W: Write>(
     Ok(())
 }
 
-fn render_home_help<W: Write>(out: &mut W, width: usize, max_rows: usize) -> io::Result<()> {
+fn render_home_help<W: Write>(out: &mut W, width: usize, max_rows: usize, palette: ThemePalette) -> io::Result<()> {
     let commands = [
         "/agent      choose a delegate",
         "/model      choose a model or provider",
@@ -1970,7 +1977,7 @@ fn render_home_help<W: Write>(out: &mut W, width: usize, max_rows: usize) -> io:
         }
     }
     for line in lines.iter().take(max_rows) {
-        writeln!(out, "{}", truncate(line, width))?;
+        writeln!(out, "{}", crate::theme::color_commands(&truncate(line, width), palette))?;
     }
     Ok(())
 }
@@ -1988,13 +1995,12 @@ fn render_compact_command_palette<W: Write>(
     let start = selection_window_start(selected, matches.len(), max_rows);
     for (index, item) in matches.iter().enumerate().skip(start).take(max_rows) {
         let marker = if index == selected { ">" } else { " " };
-        let line = sanitize_terminal_text(&format!("{marker} {} {}", item.name, item.description));
-        let style = if index == selected {
-            palette.selection
-        } else {
-            ""
-        };
-        writeln!(out, "{style}{}{RESET}", truncate(&line, width))?;
+        let name = sanitize_terminal_text(&item.name);
+        let description = sanitize_terminal_text(&item.description);
+        let style = if index == selected { palette.selection } else { palette.accent };
+        let line = truncate(&format!("{marker} {name}"), width);
+        let remaining = width.saturating_sub(display_width(&line));
+        writeln!(out, "{style}{line}{RESET}{}", truncate(&format!(" {description}"), remaining))?;
     }
     Ok(())
 }
@@ -2023,7 +2029,8 @@ pub fn render_line_startup_home<W: Write>(out: &mut W, model_status: &str) -> io
     writeln!(out)?;
     writeln!(
         out,
-        "{DIM}Type a task for Orchester, or /model, /theme, /resume, /permissions, /status, /agent, /codex, /claude, /opencode.{RESET}"
+        "{}",
+        crate::theme::color_commands("Type a task for Orchester, or /model, /theme, /resume, /permissions, /status, /agent, /codex, /claude, /opencode.", crate::theme::load_user_theme().palette())
     )?;
     writeln!(
         out,
@@ -2229,13 +2236,14 @@ fn render_command_items<W: Write>(
     let start = selection_window_start(selected, matches.len(), max_rows);
     for (i, item) in matches.iter().enumerate().skip(start).take(max_rows) {
         let marker = if i == selected { ">" } else { " " };
-        let color = if i == selected { palette.selection } else { "" };
+        let color = if i == selected { palette.selection } else { palette.accent };
         let reset = RESET;
         let name = truncate(&sanitize_terminal_text(&item.name), 16);
         let name_pad = " ".repeat(16usize.saturating_sub(display_width(&name)));
         let description = sanitize_terminal_text(&item.description);
-        let line = truncate(&format!("{marker} {name}{name_pad} {description}"), width);
-        writeln!(out, "{color}{line}{reset}")?;
+        let line = truncate(&format!("{marker} {name}{name_pad}"), width);
+        let remaining = width.saturating_sub(display_width(&line));
+        writeln!(out, "{color}{line}{reset}{}", truncate(&format!(" {description}"), remaining))?;
     }
     Ok(())
 }
@@ -2506,8 +2514,9 @@ mod tests {
             let left = first.chars().take_while(|c| *c == ' ').count();
             let portrait = first.trim_start().chars().count();
             assert!((width - portrait).abs_diff(left * 2) <= 1);
-            assert!(portrait <= 32);
-            assert!(portrait / 2 <= (height * 3 / 10).max(4));
+            assert!(portrait <= 64);
+            assert!(portrait / 2 <= height / 2);
+            assert!(portrait / 2 >= height / 3);
             assert!(plain.lines().count() <= height);
             assert!(plain.lines().all(|line| display_width(line) <= width));
         }
@@ -4078,7 +4087,7 @@ mod tests {
             "composer ignored theme:\n{rendered}"
         );
         assert!(
-            status.contains(palette.dim),
+            status.contains(palette.accent),
             "status ignored theme:\n{rendered}"
         );
     }
