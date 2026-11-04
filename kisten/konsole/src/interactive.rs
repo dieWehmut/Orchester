@@ -267,6 +267,15 @@ impl ChatSession {
         present_chat_home_in_viewport(&mut self.presenter, &mut out, view)
     }
 
+    pub(crate) fn present_raw(&mut self, frame: &[u8]) -> io::Result<()> {
+        self.observe_viewport(terminal::size().unwrap_or((100, 30)));
+        let (width, height) = self.viewport();
+        self.presenter.set_viewport(width, height);
+        let mut out = io::stdout();
+        self.presenter.present(&mut out, frame)?;
+        self.presenter.place_caret(&mut out, None)
+    }
+
     pub(crate) fn present_view(&mut self, view: ChatHomeView<'_>) -> io::Result<()> {
         self.observe_viewport(terminal::size().unwrap_or((100, 30)));
         let (width, height) = self.viewport();
@@ -458,7 +467,7 @@ pub(crate) fn handle_chat_input(
         return Some(HomeAction::Quit);
     }
     match key.code {
-        KeyCode::Left if input.is_empty() && !*show_help => return Some(HomeAction::PickAgent),
+        KeyCode::Left if input.is_empty() && !*show_help => return Some(HomeAction::AgentCenter),
         KeyCode::Char('?') if input.is_empty() => {
             *show_help = !*show_help;
         }
@@ -2452,7 +2461,7 @@ mod tests {
                 &[],
                 120
             ),
-            Some(HomeAction::PickAgent)
+            Some(HomeAction::AgentCenter)
         );
         input.insert("why");
         handle_chat_input(

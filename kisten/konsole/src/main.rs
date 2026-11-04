@@ -7,6 +7,8 @@
 
 mod args;
 mod interactive;
+mod command_center;
+mod command_center_data;
 mod plugin;
 mod process;
 mod render;
@@ -725,6 +727,9 @@ impl TerminalChatState {
                     .push_back(QueuedChatAction::Turn(ModelTurnRequest::Prompt(prompt)));
             }
             interactive::HomeAction::Empty => {}
+            interactive::HomeAction::AgentCenter => {
+                self.pending.push_back(QueuedChatAction::Command(interactive::HomeAction::AgentCenter));
+            }
             other => {
                 self.clear_input();
                 self.append_transcript(TranscriptEntry::status(queued_command_label(&other)));
@@ -827,6 +832,7 @@ fn queued_command_label(action: &interactive::HomeAction) -> String {
         interactive::HomeAction::Plugins(PluginAction::Remove(name)) => {
             format!("/plugins remove {name}")
         }
+        interactive::HomeAction::AgentCenter => "Agent command center".into(),
         interactive::HomeAction::PickAgent => "/agent".into(),
         interactive::HomeAction::LaunchAgent(name) => format!("/{name}"),
         interactive::HomeAction::Update => "/update".into(),
@@ -1376,6 +1382,15 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                         }
                     }
                     interactive::HomeAction::Empty => {}
+                    interactive::HomeAction::AgentCenter => {
+                        match command_center::run(&mut chat)? {
+                            command_center::Action::Back => {}
+                            command_center::Action::Compose => {
+                                state.clear_input();
+                            }
+                            command_center::Action::Resume(handle) => state.queue_resume(handle),
+                        }
+                    }
                     interactive::HomeAction::PickAgent => {
                         drop(chat);
                         let selected = interactive::select_agent_tui(&choices, None)?;
@@ -1534,6 +1549,9 @@ async fn run_line_interactive_with_host(
         };
         received_input = true;
         match interactive::parse_home_action(&line, &choices) {
+            interactive::HomeAction::AgentCenter => {
+                writeln!(io::stdout(), "Agent command center requires an interactive terminal.")?;
+            }
             interactive::HomeAction::PickAgent => {
                 let mut out = io::stdout().lock();
                 break interactive::select_agent_line(&mut input, &mut out, &choices, None)?;
@@ -2793,6 +2811,14 @@ mod tests {
                 .map(|parent| parent.view.title.as_str()),
             Some("Select model")
         );
+    }
+
+    #[test]
+    fn command_center_navigation_does_not_pollute_conversation() {
+        let mut state = TerminalChatState::default();
+        state.queue_action(interactive::HomeAction::AgentCenter);
+        assert!(state.transcript.is_empty());
+        assert!(matches!(state.pending.front(), Some(QueuedChatAction::Command(interactive::HomeAction::AgentCenter))));
     }
 
     #[test]

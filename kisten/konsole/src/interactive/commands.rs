@@ -20,6 +20,7 @@ pub enum PromptAction {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum HomeAction {
     Submit(String),
+    AgentCenter,
     PickAgent,
     LaunchAgent(String),
     Workspace(WorkspaceCommand),
