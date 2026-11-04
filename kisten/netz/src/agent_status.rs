@@ -113,7 +113,7 @@ impl AgentRuntimeStatusStore {
                 .iter()
                 .find(|old| old.agent_id == agent.agent_id)
             {
-                let availability = agent.availability.clone();
+                let availability = agent.availability;
                 *agent = previous.clone();
                 agent.availability = availability;
             }

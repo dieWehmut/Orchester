@@ -62,7 +62,7 @@ pub(super) async fn snapshot(context: &ServerContext) -> Vec<ActivityDetail> {
         finish(&mut row);
         rows.push(row);
     }
-    rows.sort_by(|a, b| b.summary.updated_at.cmp(&a.summary.updated_at));
+    rows.sort_by_key(|row| std::cmp::Reverse(row.summary.updated_at));
     rows.truncate(SESSION_LIMIT);
     rows
 }

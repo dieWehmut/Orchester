@@ -321,7 +321,7 @@ pub(crate) async fn list(
         query
             .provider
             .as_ref()
-            .is_none_or(|provider| provider == &source.provider)
+            .map_or(true, |provider| provider == &source.provider)
     });
     let sessions = sessions
         .into_iter()
@@ -330,7 +330,7 @@ pub(crate) async fn list(
             query
                 .provider
                 .as_ref()
-                .is_none_or(|provider| provider == &row.provider)
+                .map_or(true, |provider| provider == &row.provider)
         })
         .collect();
     Ok((
