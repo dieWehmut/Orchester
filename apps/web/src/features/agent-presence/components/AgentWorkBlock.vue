@@ -41,24 +41,24 @@ const icons = { command: Terminal, edit: FilePenLine, read: FileText, search: Se
 </template>
 
 <style scoped>
-.agent-work { margin-block: 0 28px; }
-.agent-work__disclosure > summary { display: flex; align-items: center; gap: 6px; min-block-size: 32px; padding-block-end: 8px; border-block-end: 1px solid var(--color-border-subtle); color: var(--color-text-tertiary); font-size: 14px; cursor: pointer; list-style: none; }
+.agent-work { margin-block: 0 calc(var(--space-1) * 7); }
+.agent-work__disclosure > summary { display: flex; align-items: center; gap: calc(var(--space-1) * 1.5); min-block-size: 32px; padding-block-end: var(--space-2); border-block-end: 1px solid var(--color-border-subtle); color: var(--color-text-tertiary); font-size: 14px; cursor: pointer; list-style: none; }
 summary::-webkit-details-marker { display: none; }
 summary > svg:last-child { flex-shrink: 0; transition: transform var(--transition-fast); }
 details[open] > summary > svg:last-child { transform: rotate(90deg); }
-.agent-work__steps { display: grid; gap: 24px; padding: 20px 0 0; font-size: inherit; line-height: inherit; }
+.agent-work__steps { display: grid; gap: var(--space-6); padding: var(--space-5) 0 0; font-size: inherit; line-height: inherit; }
 .agent-work__steps > article { min-inline-size: 0; }
-.agent-work__tool summary { display: flex; align-items: center; gap: 8px; min-block-size: 28px; color: var(--color-text-tertiary); cursor: pointer; list-style: none; font-size: 14px; }
+.agent-work__tool summary { display: flex; align-items: center; gap: var(--space-2); min-block-size: 28px; color: var(--color-text-tertiary); cursor: pointer; list-style: none; font-size: 14px; }
 .agent-work__tool summary > svg { flex-shrink: 0; }
-.agent-work__tool[data-integration] summary > svg:first-child { color: #17a994; }
+.agent-work__tool[data-integration] summary > svg:first-child { color: var(--color-intent-success-text); }
 .agent-work__spinner { animation: activity-spin 1.2s linear infinite; }
 @keyframes activity-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .agent-work__spinner { animation: none; } }
 .agent-work__tool summary svg:last-child { opacity: 0; }
 .agent-work__tool summary:hover svg:last-child, .agent-work__tool[open] summary svg:last-child { opacity: 1; }
-.agent-work__output { padding-inline-start: 20px; }
-.agent-work__output pre { max-block-size: 24rem; overflow: auto; margin: 8px 0; padding: 12px; border-radius: 8px; background: var(--color-bg-element); font: 12px/1.6 var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
-.agent-work__name { margin: 6px 0; color: var(--color-text-tertiary); font-size: 11px; }
-.agent-work__preview { margin: 4px 0 12px; color: var(--color-text-secondary); font-size: 13px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.agent-work__output { padding-inline-start: var(--space-5); }
+.agent-work__output pre { max-block-size: 24rem; overflow: auto; margin: var(--space-2) 0; padding: var(--space-3); border-radius: 8px; background: var(--color-bg-element); font: 12px/1.6 var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+.agent-work__name { margin: calc(var(--space-1) * 1.5) 0; color: var(--color-text-tertiary); font-size: 11px; }
+.agent-work__preview { margin: var(--space-1) 0 var(--space-3); color: var(--color-text-secondary); font-size: 13px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 summary:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; border-radius: 4px; }
 </style>

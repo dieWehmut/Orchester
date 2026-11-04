@@ -69,12 +69,12 @@ function cancel(): void { pending.value = null; pointer = null }
   </AppDialog>
 </template>
 <style scoped>
-.sketch-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; margin-block-end: 12px; }
-.sketch-toolbar button { display: grid; place-items: center; width: 34px; height: 34px; padding: 5px; border: 0; border-radius: 8px; color: var(--color-text-primary); background: transparent; cursor: pointer; }
+.sketch-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: calc(var(--space-1) * 1.25); margin-block-end: var(--space-3); }
+.sketch-toolbar button { display: grid; place-items: center; width: 34px; height: 34px; padding: calc(var(--space-1) * 1.25); border: 0; border-radius: 8px; color: var(--color-text-primary); background: transparent; cursor: pointer; }
 .sketch-toolbar button:hover, .sketch-toolbar button[aria-pressed='true'] { background: var(--color-bg-element); }
 .sketch-toolbar button:disabled { opacity: .3; cursor: default; }
 .sketch-toolbar input { width: 32px; height: 30px; padding: 0; border: 0; background: transparent; }
 .sketch-surface { display: block; width: 100%; background: white; border: 1px solid var(--color-border-base); border-radius: 10px; cursor: crosshair; touch-action: none; }
-.sketch-label { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 12px; margin-block-end: 12px; }
-.sketch-label input { padding: 6px; border: 1px solid var(--color-border-control); border-radius: 6px; background: var(--color-bg-base); color: var(--color-text-primary); }
+.sketch-label { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; font-size: 12px; margin-block-end: var(--space-3); }
+.sketch-label input { padding: calc(var(--space-1) * 1.5); border: 1px solid var(--color-border-control); border-radius: 6px; background: var(--color-bg-base); color: var(--color-text-primary); }
 </style>

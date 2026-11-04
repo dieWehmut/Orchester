@@ -142,24 +142,24 @@ onBeforeUnmount(() => controller.abort())
   </AppDialog>
 </template>
 <style scoped>
-.mcp-heading { display: flex; gap: 12px; justify-content: space-between; align-items: center; margin-block-end: 12px; }
+.mcp-heading { display: flex; gap: var(--space-3); justify-content: space-between; align-items: center; margin-block-end: var(--space-3); }
 .mcp-heading p { font-size: 12px; line-height: 1.6; color: var(--color-text-secondary); margin: 0; }
 .mcp-heading .app-button { flex-shrink: 0; }
-.mcp-servers { margin-block: 16px; }
-.mcp-server { display: flex; flex-wrap: wrap; align-items: center; border-radius: 10px; padding: 4px; }
+.mcp-servers { margin-block: var(--space-4); }
+.mcp-server { display: flex; flex-wrap: wrap; align-items: center; border-radius: 10px; padding: var(--space-1); }
 .mcp-server[data-selected='true'] { background: var(--color-bg-element); }
-.mcp-server__name { display: flex; flex: 1; min-width: 0; gap: 8px; text-align: left; align-items: center; }
+.mcp-server__name { display: flex; flex: 1; min-width: 0; gap: var(--space-2); text-align: left; align-items: center; }
 .mcp-server__name small { color: var(--color-text-tertiary); margin-inline-start: auto; }
-.mcp-icon, .mcp-server__name, .mcp-tabs button, .mcp-entries button { padding: 8px; border: 0; border-radius: 8px; background: transparent; color: var(--color-text-primary); font: inherit; font-size: 13px; cursor: pointer; }
+.mcp-icon, .mcp-server__name, .mcp-tabs button, .mcp-entries button { padding: var(--space-2); border: 0; border-radius: 8px; background: transparent; color: var(--color-text-primary); font: inherit; font-size: 13px; cursor: pointer; }
 .mcp-icon:hover, .mcp-server__name:hover, .mcp-tabs button:hover, .mcp-entries button:hover, button[aria-pressed='true'] { background: var(--workspace-hover, var(--color-bg-element)); }
 button:disabled { opacity: .45; cursor: default; }
-.mcp-tabs { display: flex; gap: 6px; margin-block: 12px; }
-.mcp-entries { display: flex; gap: 5px; flex-wrap: wrap; max-height: 160px; overflow: auto; }
+.mcp-tabs { display: flex; gap: calc(var(--space-1) * 1.5); margin-block: var(--space-3); }
+.mcp-entries { display: flex; gap: calc(var(--space-1) * 1.25); flex-wrap: wrap; max-height: 160px; overflow: auto; }
 .mcp-entries p, .mcp-servers > p { color: var(--color-text-tertiary); font-size: 12px; }
-.mcp-catalog { border-top: 1px solid var(--color-border-base); padding-top: 12px; }
-.mcp-catalog pre { max-height: 230px; overflow: auto; font-size: 11px; white-space: pre-wrap; overflow-wrap: anywhere; padding: 12px; background: var(--color-bg-base); border-radius: 8px; }
+.mcp-catalog { border-top: 1px solid var(--color-border-base); padding-top: var(--space-3); }
+.mcp-catalog pre { max-height: 230px; overflow: auto; font-size: 11px; white-space: pre-wrap; overflow-wrap: anywhere; padding: var(--space-3); background: var(--color-bg-base); border-radius: 8px; }
 .mcp-catalog p { font-size: 12px; line-height: 1.6; }
-.mcp-result { margin-block-start: 16px; }
-.mcp-delete { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 10px; padding: 8px; font-size: 12px; }
-.mcp-busy { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--color-text-secondary); }
+.mcp-result { margin-block-start: var(--space-4); }
+.mcp-delete { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: calc(var(--space-1) * 2.5); padding: var(--space-2); font-size: 12px; }
+.mcp-busy { display: flex; align-items: center; gap: var(--space-2); font-size: 12px; color: var(--color-text-secondary); }
 </style>

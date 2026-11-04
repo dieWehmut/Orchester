@@ -145,17 +145,17 @@ onBeforeUnmount(() => { ++loadSequence; controller.abort() })
   </Teleport>
 </template>
 <style scoped>
-.composer-tools-state { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; order: -1; min-width: 0; }
+.composer-tools-state { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-2); order: -1; min-width: 0; }
 .composer-tools-state p { flex-basis: 100%; margin: 0; color: var(--color-text-tertiary); font-size: 12px; }
-.composer-tools-state button { display: inline-flex; align-items: center; gap: 6px; padding: 5px; border: 0; border-radius: 8px; background: transparent; color: var(--color-text-secondary); font: inherit; font-size: 12px; cursor: pointer; }
+.composer-tools-state button { display: inline-flex; align-items: center; gap: calc(var(--space-1) * 1.5); padding: calc(var(--space-1) * 1.25); border: 0; border-radius: 8px; background: transparent; color: var(--color-text-secondary); font: inherit; font-size: 12px; cursor: pointer; }
 .composer-tools-state button:disabled { opacity: .5; cursor: default; }
 .composer-tools-state button:hover { background: var(--workspace-hover, var(--color-bg-element)); }
-.composer-goal { display: flex; align-items: center; max-width: 100%; min-width: 0; border: 1px solid var(--color-border-base); border-radius: 12px; padding: 2px 5px; }
+.composer-goal { display: flex; align-items: center; max-width: 100%; min-width: 0; border: 1px solid var(--color-border-base); border-radius: 12px; padding: 2px calc(var(--space-1) * 1.25); }
 .composer-goal__label { min-width: 0; }.composer-goal__label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 28rem; }
 .composer-goal__label small { color: var(--color-text-tertiary); white-space: nowrap; }
 .composer-goal svg { flex-shrink: 0; }.composer-goal[data-goal-status='completed'] .composer-goal__label { color: var(--color-intent-success-text); }
-.composer-file-options { display: flex; gap: 12px; flex-wrap: wrap; }
-.composer-task-list { display: grid; gap: 8px; }
-.composer-task-list button { display: grid; text-align: left; gap: 5px; padding: 12px; border: 1px solid var(--color-border-base); border-radius: 10px; background: transparent; color: var(--color-text-primary); cursor: pointer; }
+.composer-file-options { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+.composer-task-list { display: grid; gap: var(--space-2); }
+.composer-task-list button { display: grid; text-align: left; gap: calc(var(--space-1) * 1.25); padding: var(--space-3); border: 1px solid var(--color-border-base); border-radius: 10px; background: transparent; color: var(--color-text-primary); cursor: pointer; }
 .composer-task-list span, .composer-task-list small { color: var(--color-text-tertiary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 </style>

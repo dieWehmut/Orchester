@@ -194,23 +194,23 @@ onBeforeUnmount(() => {
 .model-selection__trigger { min-inline-size: 0; padding: 0; border: 0; border-radius: 16px; background: transparent; color: inherit; font: inherit; cursor: pointer; }
 .model-selection__trigger:hover, .model-selection__trigger[aria-expanded='true'] { background: color-mix(in srgb, var(--color-text-primary) 8%, transparent); }
 .model-selection__trigger:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
-.model-selection__surface { position: fixed; z-index: var(--z-popover, 30); box-sizing: border-box; overflow: auto; overscroll-behavior: contain; padding: 6px; border: 1px solid var(--color-border-base); border-radius: 12px; background: var(--model-menu-bg, var(--color-bg-elevated)); color: var(--color-text-primary); box-shadow: 0 8px 28px #0003; font: 15px/1.4 var(--font-body); scrollbar-width: thin; scrollbar-color: var(--color-border-base) transparent; }
+.model-selection__surface { position: fixed; z-index: var(--z-popover, 30); box-sizing: border-box; overflow: auto; overscroll-behavior: contain; padding: calc(var(--space-1) * 1.5); border: 1px solid var(--color-border-base); border-radius: 12px; background: var(--model-menu-bg, var(--color-bg-elevated)); color: var(--color-text-primary); box-shadow: 0 8px 28px #0003; font: 15px/1.4 var(--font-body); scrollbar-width: thin; scrollbar-color: var(--color-border-base) transparent; }
 :global([data-theme='dark']) .model-selection__surface { --model-menu-bg: #2c2c2e; }
-.model-selection__row, .model-selection__choice { display: flex; align-items: center; gap: 12px; inline-size: 100%; min-block-size: 44px; padding: 10px; border: 0; border-radius: 9px; background: transparent; color: inherit; text-align: start; font: inherit; cursor: pointer; }
+.model-selection__row, .model-selection__choice { display: flex; align-items: center; gap: var(--space-3); inline-size: 100%; min-block-size: 44px; padding: calc(var(--space-1) * 2.5); border: 0; border-radius: 9px; background: transparent; color: inherit; text-align: start; font: inherit; cursor: pointer; }
 .model-selection__row:hover, .model-selection__row:focus-visible, .model-selection__row.is-open, .model-selection__choice:hover, .model-selection__choice:focus-visible { background: color-mix(in srgb, var(--color-text-primary) 8%, transparent); outline: none; }
 .model-selection__row:focus-visible, .model-selection__choice:focus-visible { box-shadow: inset 0 0 0 1px var(--color-border-focus); }
 .model-selection__row > svg, .model-selection__choice > svg { flex-shrink: 0; }
 .model-selection__row > svg { color: var(--color-text-tertiary); }
 .model-selection__value { flex: 1; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: end; color: var(--color-text-secondary); }
-.model-selection__group + .model-selection__group { margin-block-start: 14px; }
-.model-selection__heading { margin: 6px 10px; font-size: 13px; font-weight: 600; color: var(--color-text-secondary); }
+.model-selection__group + .model-selection__group { margin-block-start: calc(var(--space-1) * 3.5); }
+.model-selection__heading { margin: calc(var(--space-1) * 1.5) calc(var(--space-1) * 2.5); font-size: 13px; font-weight: 600; color: var(--color-text-secondary); }
 .model-selection__copy { flex: 1; min-inline-size: 0; }
 .model-selection__name, .model-selection__description { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .model-selection__name { font-weight: 600; }
-.model-selection__description { margin-block-start: 3px; font-size: 13px; color: var(--color-text-secondary); }
+.model-selection__description { margin-block-start: calc(var(--space-1) * 0.75); font-size: 13px; color: var(--color-text-secondary); }
 .model-selection__choice:disabled { cursor: default; opacity: .5; background: transparent; }
-.model-selection__actions { margin-block-start: 8px; padding-block-start: 4px; border-block-start: 1px solid var(--color-border-base); font-size: 13px; color: var(--color-text-secondary); }
-.model-selection__actions .model-selection__row { min-block-size: 32px; padding-block: 6px; }
-.model-selection__scope { margin: 6px 10px 3px; color: var(--color-text-tertiary); font-size: 11px; }
-.model-selection__back { margin-block-end: 4px; color: var(--color-text-secondary); }
+.model-selection__actions { margin-block-start: var(--space-2); padding-block-start: var(--space-1); border-block-start: 1px solid var(--color-border-base); font-size: 13px; color: var(--color-text-secondary); }
+.model-selection__actions .model-selection__row { min-block-size: 32px; padding-block: calc(var(--space-1) * 1.5); }
+.model-selection__scope { margin: calc(var(--space-1) * 1.5) calc(var(--space-1) * 2.5) calc(var(--space-1) * 0.75); color: var(--color-text-tertiary); font-size: 11px; }
+.model-selection__back { margin-block-end: var(--space-1); color: var(--color-text-secondary); }
 </style>

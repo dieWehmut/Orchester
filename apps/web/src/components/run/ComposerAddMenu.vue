@@ -140,19 +140,19 @@ defineExpose({ close })
 .composer-add-trigger:hover, .composer-add-trigger[aria-expanded='true'] { background: var(--workspace-hover, var(--color-bg-element)); }
 .composer-add-trigger:disabled { opacity: .4; cursor: default; }
 .composer-add-trigger:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
-.composer-add-menu { position: fixed; z-index: var(--z-popover, 30); overflow: auto; overscroll-behavior: contain; box-sizing: border-box; padding: 6px; border: 1px solid var(--color-border-control); border-radius: 18px; background: var(--color-bg-elevated, #2c2c2c); color: var(--color-text-primary); box-shadow: 0 8px 28px #0003; scrollbar-width: thin; scrollbar-color: var(--color-border-base) transparent; font: 14px/1.4 var(--font-body); }
-.composer-add-menu__group + .composer-add-menu__group { margin-block-start: 8px; }
-.composer-add-menu__heading { margin: 4px 8px 6px; font-size: 12px; font-weight: 400; color: var(--color-text-tertiary); }
-.composer-add-menu__item { display: flex; align-items: center; gap: 9px; inline-size: 100%; min-block-size: 36px; padding: 7px 10px; border: 0; border-radius: 18px; background: transparent; color: var(--color-text-secondary); text-align: start; font: inherit; cursor: pointer; }
+.composer-add-menu { position: fixed; z-index: var(--z-popover, 30); overflow: auto; overscroll-behavior: contain; box-sizing: border-box; padding: calc(var(--space-1) * 1.5); border: 1px solid var(--color-border-control); border-radius: 18px; background: var(--color-bg-elevated, #2c2c2c); color: var(--color-text-primary); box-shadow: 0 8px 28px #0003; scrollbar-width: thin; scrollbar-color: var(--color-border-base) transparent; font: 14px/1.4 var(--font-body); }
+.composer-add-menu__group + .composer-add-menu__group { margin-block-start: var(--space-2); }
+.composer-add-menu__heading { margin: var(--space-1) var(--space-2) calc(var(--space-1) * 1.5); font-size: 12px; font-weight: 400; color: var(--color-text-tertiary); }
+.composer-add-menu__item { display: flex; align-items: center; gap: calc(var(--space-1) * 2.25); inline-size: 100%; min-block-size: 36px; padding: calc(var(--space-1) * 1.75) calc(var(--space-1) * 2.5); border: 0; border-radius: 18px; background: transparent; color: var(--color-text-secondary); text-align: start; font: inherit; cursor: pointer; }
 .composer-add-menu__item:hover, .composer-add-menu__item:focus-visible { outline: none; background: var(--workspace-hover, var(--color-bg-element)); color: var(--color-text-primary); }
 .composer-add-menu__item:focus-visible { box-shadow: inset 0 0 0 1px var(--color-border-focus); }
 .composer-add-menu__item:disabled { opacity: .45; cursor: default; }
 .composer-add-menu__item > svg { flex: 0 0 20px; }
-.composer-add-menu__item[data-add-icon='draw'] > svg { color: #00a990; }
+.composer-add-menu__item[data-add-icon='draw'] > svg { color: var(--color-intent-success-text); }
 .composer-add-menu__item :deep(.agent-icon) { inline-size: 20px; block-size: 20px; background: transparent; border: 0; }
 .composer-add-menu__label { flex-shrink: 0; }
 .composer-add-menu__description { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--color-text-tertiary); }
 .composer-add-menu__item > .composer-add-menu__check { margin-inline-start: auto; }
-.composer-add-menu__empty { margin: 6px 10px 10px; color: var(--color-text-tertiary); font-size: 12px; }
-@media (max-width: 480px) { .composer-add-menu__item { flex-wrap: wrap; gap: 5px 8px; } .composer-add-menu__description { flex-basis: 100%; padding-inline-start: 28px; } }
+.composer-add-menu__empty { margin: calc(var(--space-1) * 1.5) calc(var(--space-1) * 2.5) calc(var(--space-1) * 2.5); color: var(--color-text-tertiary); font-size: 12px; }
+@media (max-width: 480px) { .composer-add-menu__item { flex-wrap: wrap; gap: calc(var(--space-1) * 1.25) var(--space-2); } .composer-add-menu__description { flex-basis: 100%; padding-inline-start: calc(var(--space-1) * 7); } }
 </style>

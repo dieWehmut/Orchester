@@ -53,30 +53,30 @@ const dateLabels = computed(() => {
 </template>
 
 <style scoped>
-.agent-conversation { --conversation-code-surface: #303030; inline-size: min(100%, 48rem); margin-inline: auto; padding-block: 12px 32px; color: var(--color-text-primary); font-size: 16px; line-height: 1.75; }
+.agent-conversation { --conversation-code-surface: var(--color-bg-elevated); inline-size: min(100%, 48rem); margin-inline: auto; padding-block: var(--space-3) var(--space-8); color: var(--color-text-primary); font-size: 16px; line-height: 1.75; }
 :global([data-theme='light'] .agent-conversation) { --conversation-code-surface: var(--color-bg-element); }
-.agent-conversation__date { display: block; margin: 16px 0 28px; text-align: center; font-size: 12px; color: var(--color-text-tertiary); }
-.agent-conversation__user { display: flex; flex-direction: column; align-items: flex-end; margin-block: 0 36px; }
-.agent-conversation__user-meta { display: flex; align-items: center; gap: 10px; margin-block-start: 6px; color: var(--color-text-tertiary); font-size: 12px; }
+.agent-conversation__date { display: block; margin: var(--space-4) 0 calc(var(--space-1) * 7); text-align: center; font-size: 12px; color: var(--color-text-tertiary); }
+.agent-conversation__user { display: flex; flex-direction: column; align-items: flex-end; margin-block: 0 calc(var(--space-1) * 9); }
+.agent-conversation__user-meta { display: flex; align-items: center; gap: calc(var(--space-1) * 2.5); margin-block-start: calc(var(--space-1) * 1.5); color: var(--color-text-tertiary); font-size: 12px; }
 .agent-conversation__user-meta :deep(.message-actions) { opacity: 0; }
 .agent-conversation__user:hover :deep(.message-actions), .agent-conversation__user:focus-within :deep(.message-actions) { opacity: 1; }
-.agent-conversation__user:not(:first-child) { margin-block-start: 36px; }
+.agent-conversation__user:not(:first-child) { margin-block-start: calc(var(--space-1) * 9); }
 .agent-conversation__date + .agent-conversation__user { margin-block-start: 0; }
-.agent-conversation__user p { max-inline-size: min(85%, 38rem); margin: 0; padding: 10px 18px; border-radius: 20px; background: #843d63; color: #fff; white-space: pre-wrap; overflow-wrap: anywhere; }
-.agent-conversation__answer { min-inline-size: 0; margin-block-end: 32px; }
-.agent-conversation :deep(.markdown) { gap: 16px; }
-.agent-conversation :deep(.markdown__list) { gap: 5px; padding-inline-start: 28px; }
+.agent-conversation__user p { max-inline-size: min(85%, 38rem); margin: 0; padding: calc(var(--space-1) * 2.5) calc(var(--space-1) * 4.5); border-radius: 20px; background: var(--color-bg-element); color: var(--color-text-primary); white-space: pre-wrap; overflow-wrap: anywhere; }
+.agent-conversation__answer { min-inline-size: 0; margin-block-end: var(--space-8); }
+.agent-conversation :deep(.markdown) { gap: var(--space-4); }
+.agent-conversation :deep(.markdown__list) { gap: calc(var(--space-1) * 1.25); padding-inline-start: calc(var(--space-1) * 7); }
 .agent-conversation :deep(.markdown__list[data-list-ordered='false']) { list-style-type: disc; }
 .agent-conversation :deep(.markdown__list[data-list-ordered='true']) { list-style-type: decimal; }
-.agent-conversation :deep(.markdown-spans__code) { border: 0; border-radius: 6px; padding: 2px 6px; background: var(--conversation-code-surface); font-size: .88em; font-weight: 600; }
-.agent-conversation :deep(.markdown__code) { border: 0; border-radius: 10px; padding: 16px; background: var(--conversation-code-surface); font-size: 13px; }
+.agent-conversation :deep(.markdown-spans__code) { border: 0; border-radius: 6px; padding: 2px calc(var(--space-1) * 1.5); background: var(--conversation-code-surface); font-size: .88em; font-weight: 600; }
+.agent-conversation :deep(.markdown__code) { border: 0; border-radius: 10px; padding: var(--space-4); background: var(--conversation-code-surface); font-size: 13px; }
 .agent-conversation :deep(.markdown__table) { font-size: 14px; }
-.agent-conversation :deep(.markdown__table th), .agent-conversation :deep(.markdown__table td) { border: 0; border-block-end: 1px solid var(--color-border-subtle); padding: 12px 16px; }
+.agent-conversation :deep(.markdown__table th), .agent-conversation :deep(.markdown__table td) { border: 0; border-block-end: 1px solid var(--color-border-subtle); padding: var(--space-3) var(--space-4); }
 .agent-conversation :deep(.markdown__table th) { background: transparent; }
-.agent-conversation__answer :deep(.message-actions) { margin-block-start: 12px; }
-.agent-conversation__status { display: flex; align-items: center; justify-content: center; gap: 8px; padding-block: 14px; color: var(--color-text-secondary); font-size: 12px; border-block: 1px solid var(--color-border-subtle); }
+.agent-conversation__answer :deep(.message-actions) { margin-block-start: var(--space-3); }
+.agent-conversation__status { display: flex; align-items: center; justify-content: center; gap: var(--space-2); padding-block: calc(var(--space-1) * 3.5); color: var(--color-text-secondary); font-size: 12px; border-block: 1px solid var(--color-border-subtle); }
 .agent-conversation__status svg { flex-shrink: 0; }
-.agent-conversation__running { display: flex; align-items: center; gap: 8px; color: var(--color-text-tertiary); font-size: 14px; min-block-size: 28px; }
+.agent-conversation__running { display: flex; align-items: center; gap: var(--space-2); color: var(--color-text-tertiary); font-size: 14px; min-block-size: 28px; }
 .agent-conversation__running svg { animation: conversation-spin 1.2s linear infinite; }
 @keyframes conversation-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .agent-conversation__running svg { animation: none; } }

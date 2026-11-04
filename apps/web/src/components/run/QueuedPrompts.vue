@@ -22,10 +22,10 @@ const { t } = useI18n()
 </template>
 
 <style scoped>
-.queued-prompts { box-sizing: border-box; inline-size: min(calc(100% - var(--space-12)), var(--composer-max-width, 54rem)); margin-inline: auto; padding: 10px 14px; border: 1px solid var(--color-border-subtle); border-radius: 16px; background: var(--color-bg-surface); font-size: 13px; }
+.queued-prompts { box-sizing: border-box; inline-size: min(calc(100% - var(--space-12)), var(--composer-max-width, 54rem)); margin-inline: auto; padding: calc(var(--space-1) * 2.5) calc(var(--space-1) * 3.5); border: 1px solid var(--color-border-subtle); border-radius: 16px; background: var(--color-bg-surface); font-size: 13px; }
 header { display: flex; align-items: center; justify-content: space-between; color: var(--color-text-tertiary); font-size: 12px; }
-ol { list-style: none; padding: 0; margin: 4px 0 0; max-block-size: 144px; overflow-y: auto; }
-li { display: flex; align-items: center; gap: 8px; min-block-size: 30px; }
+ol { list-style: none; padding: 0; margin: var(--space-1) 0 0; max-block-size: 144px; overflow-y: auto; }
+li { display: flex; align-items: center; gap: var(--space-2); min-block-size: 30px; }
 .queued-prompts__text { flex: 1; min-inline-size: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 button { display: inline-flex; align-items: center; justify-content: center; min-inline-size: 30px; min-block-size: 30px; border: 0; border-radius: 6px; background: transparent; color: var(--color-text-secondary); cursor: pointer; font: inherit; }
 button:hover { background: var(--color-bg-element); }

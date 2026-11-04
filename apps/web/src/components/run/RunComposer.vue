@@ -419,15 +419,15 @@ defineExpose({ focus })
   max-inline-size: var(--composer-max-width, 54rem);
   margin-inline: auto;
 }
-.run-composer__attachments { display: flex; flex-wrap: wrap; gap: 8px; padding: 3px 4px 8px; }
-.run-composer__attachment { display: flex; gap: 8px; align-items: center; max-width: 230px; padding: 8px 10px; border: 1px solid var(--color-border-base); border-radius: 12px; color: var(--color-text-secondary); background: var(--color-bg-element); font-size: 12px; position: relative; }
+.run-composer__attachments { display: flex; flex-wrap: wrap; gap: var(--space-2); padding: calc(var(--space-1) * 0.75) var(--space-1) var(--space-2); }
+.run-composer__attachment { display: flex; gap: var(--space-2); align-items: center; max-width: 230px; padding: var(--space-2) calc(var(--space-1) * 2.5); border: 1px solid var(--color-border-base); border-radius: 12px; color: var(--color-text-secondary); background: var(--color-bg-element); font-size: 12px; position: relative; }
 .run-composer__attachment > span { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 .run-composer__attachment > svg { flex-shrink: 0; }
-.run-composer__attachment button { display: grid; place-items: center; flex-shrink: 0; padding: 3px; border: 0; border-radius: 50%; background: var(--color-bg-element); color: var(--color-text-primary); cursor: pointer; }
+.run-composer__attachment button { display: grid; place-items: center; flex-shrink: 0; padding: calc(var(--space-1) * 0.75); border: 0; border-radius: 50%; background: var(--color-bg-element); color: var(--color-text-primary); cursor: pointer; }
 .run-composer__attachment[data-has-preview='true'] { display: block; padding: 0; width: 160px; overflow: hidden; }
 .run-composer__attachment img { display: block; width: 160px; height: 96px; object-fit: contain; background: white; }
-.run-composer__attachment[data-has-preview='true'] > span { display: block; padding: 6px 10px; }
-.run-composer__attachment[data-has-preview='true'] button { position: absolute; top: 5px; right: 5px; background: #303030; color: white; }
+.run-composer__attachment[data-has-preview='true'] > span { display: block; padding: calc(var(--space-1) * 1.5) calc(var(--space-1) * 2.5); }
+.run-composer__attachment[data-has-preview='true'] button { position: absolute; top: calc(var(--space-1) * 1.25); right: calc(var(--space-1) * 1.25); background: var(--color-bg-elevated); color: var(--color-text-primary); }
 
 /* The field is the box, as the reference draws it: one rounded surface that
    holds the prompt and the controls under it, rather than a card with a second

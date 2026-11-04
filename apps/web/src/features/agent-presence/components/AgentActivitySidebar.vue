@@ -73,33 +73,33 @@ function closeSearch(): void { searching.value = false; query.value = '' }
 </template>
 
 <style scoped>
-.activity-sidebar { --activity-selection: #2b2d2a; display: flex; flex-direction: column; block-size: 100%; min-block-size: 0; color: var(--color-text-primary); background: #1b1c19; }
+.activity-sidebar { --activity-selection: var(--color-bg-element); display: flex; flex-direction: column; block-size: 100%; min-block-size: 0; color: var(--color-text-primary); background: var(--rail-surface, var(--color-bg-surface)); }
 :global([data-theme='light'] .activity-sidebar) { --activity-selection: var(--color-bg-element); background: var(--rail-surface); }
-.activity-sidebar__provider { display: flex; align-items: center; gap: 4px; padding: 8px; min-block-size: 48px; }
+.activity-sidebar__provider { display: flex; align-items: center; gap: var(--space-1); padding: var(--space-2); min-block-size: 48px; }
 .activity-sidebar__provider :deep(.app-menu) { flex: 1; min-inline-size: 0; }
-.activity-sidebar__provider :deep(.app-menu__trigger) { display: flex; align-items: center; gap: 8px; inline-size: 100%; border: 0; background: transparent; font-size: 14px; }
+.activity-sidebar__provider :deep(.app-menu__trigger) { display: flex; align-items: center; gap: var(--space-2); inline-size: 100%; border: 0; background: transparent; font-size: 14px; }
 .activity-sidebar__provider :deep(.agent-icon) { border: 0; background: transparent; inline-size: 22px; block-size: 22px; }
-.activity-sidebar__provider :deep(.app-menu__item) { gap: 8px; }
+.activity-sidebar__provider :deep(.app-menu__item) { gap: var(--space-2); }
 .activity-sidebar__provider :deep(.app-menu__surface) { min-inline-size: 190px; max-inline-size: 100%; }
 .activity-sidebar__choice { flex: 1; white-space: nowrap; }
 .activity-sidebar__provider strong { flex: 1; text-align: start; font-weight: 500; }
-.activity-sidebar__primary { display: flex; gap: 2px; padding: 0 8px 12px; }
-.activity-sidebar__new { display: flex; flex: 1; align-items: center; gap: 10px; min-block-size: 36px; border: 0; border-radius: 10px; padding: 7px 10px; background: var(--activity-selection); color: inherit; font: inherit; font-size: 14px; cursor: pointer; text-align: start; }
+.activity-sidebar__primary { display: flex; gap: 2px; padding: 0 var(--space-2) var(--space-3); }
+.activity-sidebar__new { display: flex; flex: 1; align-items: center; gap: calc(var(--space-1) * 2.5); min-block-size: 36px; border: 0; border-radius: 10px; padding: calc(var(--space-1) * 1.75) calc(var(--space-1) * 2.5); background: var(--activity-selection); color: inherit; font: inherit; font-size: 14px; cursor: pointer; text-align: start; }
 .activity-sidebar__icon { display: grid; place-items: center; inline-size: 30px; block-size: 32px; border: 0; border-radius: 7px; background: transparent; color: var(--color-text-secondary); cursor: pointer; }
 .activity-sidebar__icon:hover { background: var(--activity-selection); }
-.activity-sidebar__scroll { flex: 1; min-block-size: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; scrollbar-color: var(--color-border-base) transparent; padding: 0 8px 16px; }
-.activity-sidebar__section + .activity-sidebar__section { margin-block-start: 20px; }
-.activity-sidebar__heading { display: flex; align-items: center; gap: 6px; padding: 8px 10px; margin-block-end: 4px; background: none; border: 0; color: var(--color-text-tertiary); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+.activity-sidebar__scroll { flex: 1; min-block-size: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; scrollbar-color: var(--color-border-base) transparent; padding: 0 var(--space-2) var(--space-4); }
+.activity-sidebar__section + .activity-sidebar__section { margin-block-start: var(--space-5); }
+.activity-sidebar__heading { display: flex; align-items: center; gap: calc(var(--space-1) * 1.5); padding: var(--space-2) calc(var(--space-1) * 2.5); margin-block-end: var(--space-1); background: none; border: 0; color: var(--color-text-tertiary); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
 .activity-sidebar__heading svg { opacity: 0; }
 .activity-sidebar__heading:hover svg, .activity-sidebar__heading:focus-visible svg, .activity-sidebar__heading[aria-expanded='false'] svg { opacity: 1; }
 .activity-sidebar__heading svg[data-expanded='true'] { transform: rotate(90deg); }
-.activity-sidebar__folder { display: flex; align-items: center; gap: 10px; inline-size: 100%; min-block-size: 36px; padding: 7px 10px; border: 0; border-radius: 8px; background: none; color: inherit; font: inherit; font-size: 14px; cursor: pointer; text-align: start; }
+.activity-sidebar__folder { display: flex; align-items: center; gap: calc(var(--space-1) * 2.5); inline-size: 100%; min-block-size: 36px; padding: calc(var(--space-1) * 1.75) calc(var(--space-1) * 2.5); border: 0; border-radius: 8px; background: none; color: inherit; font: inherit; font-size: 14px; cursor: pointer; text-align: start; }
 .activity-sidebar__folder span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .activity-sidebar__folder svg { flex-shrink: 0; }
 .activity-sidebar__folder:hover { background: var(--activity-selection); }
-.activity-sidebar__empty { margin: 0; padding: 4px 10px; font-size: 12px; color: var(--color-text-tertiary); }
-.activity-sidebar__search { display: flex; align-items: center; margin: 0 10px 10px; border: 1px solid var(--color-border-base); border-radius: 8px; }
-.activity-sidebar__search input { inline-size: 100%; min-inline-size: 0; padding: 8px; color: inherit; background: none; border: 0; font: inherit; font-size: 13px; }
-.activity-sidebar__search button { display: grid; place-items: center; padding: 5px; border: 0; color: inherit; background: none; cursor: pointer; }
+.activity-sidebar__empty { margin: 0; padding: var(--space-1) calc(var(--space-1) * 2.5); font-size: 12px; color: var(--color-text-tertiary); }
+.activity-sidebar__search { display: flex; align-items: center; margin: 0 calc(var(--space-1) * 2.5) calc(var(--space-1) * 2.5); border: 1px solid var(--color-border-base); border-radius: 8px; }
+.activity-sidebar__search input { inline-size: 100%; min-inline-size: 0; padding: var(--space-2); color: inherit; background: none; border: 0; font: inherit; font-size: 13px; }
+.activity-sidebar__search button { display: grid; place-items: center; padding: calc(var(--space-1) * 1.25); border: 0; color: inherit; background: none; cursor: pointer; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: -2px; }
 </style>

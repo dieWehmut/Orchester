@@ -146,14 +146,14 @@ function cancel(): void {
   align-items: center;
   gap: var(--space-2);
 }
-.approval-preset__option { display: flex; width: 100%; gap: 10px; align-items: center; }
+.approval-preset__option { display: flex; width: 100%; gap: calc(var(--space-1) * 2.5); align-items: center; }
 .approval-preset__option > svg { flex-shrink: 0; }
 .approval-preset__option[data-preset='full-access'] { color: var(--composer-access, var(--color-intent-warning-text)); }
 .approval-preset__option-copy { display: grid; flex: 1; gap: 2px; white-space: normal; }
 .approval-preset__option-copy strong { font-size: 13px; font-weight: 500; }
 .approval-preset__option-copy small { font-size: 12px; opacity: .7; }
-.approval-preset :deep(.app-menu__surface) { inline-size: min(370px, calc(100vw - 40px)); border-radius: 16px; padding: 6px; }
-.approval-preset :deep(.app-menu__item) { padding: 10px; border-radius: 12px; }
+.approval-preset :deep(.app-menu__surface) { inline-size: min(370px, calc(100vw - 40px)); border-radius: 16px; padding: calc(var(--space-1) * 1.5); }
+.approval-preset :deep(.app-menu__item) { padding: calc(var(--space-1) * 2.5); border-radius: 12px; }
 .approval-preset :deep(.app-menu__item:disabled) { opacity: 1; }
 
 .approval-preset :deep(.app-menu__trigger) {
