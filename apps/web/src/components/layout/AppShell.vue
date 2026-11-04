@@ -244,31 +244,28 @@ function handleInspectorKey(event: KeyboardEvent): void {
   event.preventDefault()
 }
 
-/**
- * Pointer drag, measured from the edge the handle sits on.
- *
- * The handle is the boundary rather than a grip inside a pane, so the rail
- * reads its width from the pointer's x and the inspector reads it from the
- * distance to the right edge. Both then go through the same clamp the keyboard
- * uses, because a pointer can travel past what the clamp allows.
- */
-let dragging: 'rail' | 'inspector' | null = null
+// Deltas preserve the grabbed position, including the separator's hit area and
+// any navigation column outside this shell. Use rendered widths after clamping.
+let dragging: { pane: 'rail' | 'inspector'; x: number; width: number } | null = null
+const resizing = ref(false)
 
 function startDrag(which: 'rail' | 'inspector', event: PointerEvent): void {
-  dragging = which
+  dragging = { pane: which, x: event.clientX, width: which === 'rail' ? displayedRailWidth.value : displayedInspectorWidth.value }
+  resizing.value = true
   const target = event.currentTarget as HTMLElement | null
   target?.setPointerCapture?.(event.pointerId)
-  if (which === 'rail') setRailWidth(event.clientX - navigationWidth.value)
-  else setInspectorWidth(availableWidth.value - 8 - event.clientX)
 }
 
 function moveDrag(event: PointerEvent): void {
-  if (dragging === 'rail') setRailWidth(event.clientX - navigationWidth.value)
-  else if (dragging === 'inspector') setInspectorWidth(availableWidth.value - 8 - event.clientX)
+  if (!dragging) return
+  const delta = event.clientX - dragging.x
+  if (dragging.pane === 'rail') setRailWidth(dragging.width + delta)
+  else setInspectorWidth(dragging.width - delta)
 }
 
 function endDrag(): void {
   dragging = null
+  resizing.value = false
 }
 
 onBeforeUnmount(endDrag)
@@ -281,6 +278,7 @@ onBeforeUnmount(endDrag)
     :class="{
       'app-shell--inspector-closed': !props.inspectorOpen,
       'app-shell--rail-closed': railCollapsed,
+      'app-shell--resizing': resizing,
     }"
     :data-rail-folded="String(railCollapsed)"
     :data-navigation-in-rail="String(props.navigationInRail)"
@@ -317,7 +315,8 @@ onBeforeUnmount(endDrag)
       </div>
       <div class="app-shell__grid">
       <nav
-        v-if="!railCollapsed"
+        :inert="railCollapsed || narrowViewport"
+        :aria-hidden="railCollapsed || narrowViewport"
         class="app-shell__rail"
         data-pane="sessions"
         data-rail
@@ -430,6 +429,7 @@ onBeforeUnmount(endDrag)
 
 .app-shell__grid {
   display: grid;
+  transition: grid-template-columns 180ms var(--ease-out);
   min-inline-size: 0;
   grid-template-columns:
     var(--rail-width, var(--rail-preferred-width, var(--sidebar-width)))
@@ -452,11 +452,11 @@ onBeforeUnmount(endDrag)
 }
 
 .app-shell--rail-closed .app-shell__grid {
-  grid-template-columns: minmax(0, 1fr) var(--inspector-width, 340px);
+  grid-template-columns: 0px minmax(0, 1fr) var(--inspector-width, 340px);
 }
 
 .app-shell--rail-closed.app-shell--inspector-closed .app-shell__grid {
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: 0px minmax(0, 1fr);
 }
 
 .app-shell__rail,
@@ -524,13 +524,27 @@ onBeforeUnmount(endDrag)
   outline-offset: 2px;
 }
 
+
+.app-shell__rail { overflow: hidden; }
+.app-shell--rail-closed .app-shell__rail {
+  visibility: hidden;
+  pointer-events: none;
+  transition: visibility 0s 180ms;
+}
+.app-shell--resizing .app-shell__grid { transition: none; }
+.app-shell__transcript { grid-column: 2; }
+.app-shell__inspector { grid-column: 3; }
+@media (prefers-reduced-motion: reduce) {
+  .app-shell__grid, .app-shell--rail-closed .app-shell__rail { transition: none; }
+}
+
 @media (max-width: 1119px) {
   .app-shell .app-shell__grid {
     grid-template-columns: var(--rail-width, 288px) minmax(0, 1fr);
   }
 
   .app-shell--rail-closed .app-shell__grid {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: 0px minmax(0, 1fr);
   }
 
   .app-shell__inspector {
@@ -554,7 +568,7 @@ onBeforeUnmount(endDrag)
   }
 
   .app-shell .app-shell__grid {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: 0px minmax(0, 1fr);
     min-block-size: 0;
     margin-inline: calc(var(--space-3) / 2);
     margin-block-end: calc(var(--space-3) / 2);

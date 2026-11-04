@@ -89,7 +89,8 @@ describe('workspace shortcuts', () => {
       press('b', { ctrlKey: true })
       await nextTick()
       expect(shell().attributes('data-rail-folded')).toBe('true')
-      expect(wrapper.find('[data-rail]').exists()).toBe(false)
+      expect(wrapper.get('[data-rail]').attributes('inert')).toBeDefined()
+      expect(wrapper.get('[data-rail]').attributes('aria-hidden')).toBe('true')
 
       press('b', { ctrlKey: true })
       await nextTick()

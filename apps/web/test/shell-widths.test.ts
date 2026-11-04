@@ -122,6 +122,28 @@ describe('shell width clamps', () => {
     expect(widthOf(wrapper, '[data-inspector]', 'data-inspector-width')).toBe(460)
   })
 
+  it('drags from the grabbed position without jumping in an offset shell', async () => {
+    const wrapper = await mountSettled()
+    Object.defineProperty(wrapper.element, 'getBoundingClientRect', { value: () => ({ left: 52, width: 1388, right: 1440 }) })
+    window.dispatchEvent(new Event('resize'))
+    await flushPromises()
+    for (const [selector, pane, attr, x, expected] of [
+      ['[data-rail-resize]', '[data-rail]', 'data-rail-width', 338, 308],
+      ['[data-inspector-resize]', '[data-inspector]', 'data-inspector-width', 1094, 320],
+    ] as const) {
+      const handle = wrapper.get(selector)
+      const before = widthOf(wrapper, pane, attr)
+      handle.element.dispatchEvent(new MouseEvent('pointerdown', { clientX: x, bubbles: true }))
+      await flushPromises()
+      expect(widthOf(wrapper, pane, attr)).toBe(before)
+      handle.element.dispatchEvent(new MouseEvent('pointermove', { clientX: x + 20, bubbles: true }))
+      await flushPromises()
+      expect(widthOf(wrapper, pane, attr)).toBe(expected)
+      await handle.trigger('pointerup')
+    }
+    wrapper.unmount()
+  })
+
   it('carries the clamps into the styles so the pointer path cannot leave them', async () => {
     const wrapper = await mountSettled()
 
