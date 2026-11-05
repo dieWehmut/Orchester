@@ -21,6 +21,8 @@ pub struct StartRunRequest {
     pub prompt: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub resume: Option<String>,
+    #[serde(default)]
+    pub conversation_id: Option<String>,
 }
 
 impl StartRunRequest {
@@ -49,6 +51,17 @@ impl StartRunRequest {
                 return Err(RunRequestValidationError::InvalidResume);
             }
         }
+        if let Some(id) = &self.conversation_id {
+            if self.resume.is_some()
+                || id.len() != 34
+                || !id.starts_with("s-")
+                || !id.as_bytes()[2..]
+                    .iter()
+                    .all(|b| b.is_ascii_digit() || matches!(b, b'a'..=b'f'))
+            {
+                return Err(RunRequestValidationError::InvalidConversation);
+            }
+        }
         Ok(())
     }
 
@@ -67,6 +80,9 @@ impl StartRunRequest {
             }
             None => hasher.update([0]),
         }
+        if let Some(id) = &self.conversation_id {
+            hasher.update(id.as_bytes());
+        }
         hasher.finalize().into()
     }
 }
@@ -75,6 +91,7 @@ impl StartRunRequest {
 pub struct StartRunResponse {
     pub run_id: RunId,
     pub events_url: String,
+    pub conversation_id: String,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -177,6 +194,7 @@ pub enum RunRequestValidationError {
     ResumeTooLong,
     InvalidResume,
     InvalidReplayLimit,
+    InvalidConversation,
 }
 
 impl std::fmt::Display for RunRequestValidationError {
@@ -188,6 +206,7 @@ impl std::fmt::Display for RunRequestValidationError {
             Self::EmptyResume => "resume handle must not be empty",
             Self::ResumeTooLong => "resume handle exceeds the maximum length",
             Self::InvalidResume => "resume handle contains an invalid control character",
+            Self::InvalidConversation => "conversation identifier is invalid",
             Self::InvalidReplayLimit => "replay limit is outside the allowed range",
         };
         formatter.write_str(message)
@@ -233,6 +252,7 @@ mod tests {
             StartRunRequest {
                 prompt: "  ".into(),
                 resume: None,
+                conversation_id: None,
             }
             .validate(),
             Err(RunRequestValidationError::EmptyPrompt)
@@ -245,6 +265,7 @@ mod tests {
             StartRunRequest {
                 prompt: "inspect the workspace\nthen\tfix the issue".into(),
                 resume: None,
+                conversation_id: None,
             }
             .validate(),
             Ok(())
@@ -257,6 +278,7 @@ mod tests {
             StartRunRequest {
                 prompt: "inspect\0workspace".into(),
                 resume: None,
+                conversation_id: None,
             }
             .validate(),
             Err(RunRequestValidationError::InvalidPrompt)
@@ -265,6 +287,7 @@ mod tests {
             StartRunRequest {
                 prompt: "inspect workspace".into(),
                 resume: Some("run\0handle".into()),
+                conversation_id: None,
             }
             .validate(),
             Err(RunRequestValidationError::InvalidResume)

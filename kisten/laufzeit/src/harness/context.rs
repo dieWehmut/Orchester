@@ -210,6 +210,21 @@ impl ContextAssembler {
             start += 1;
         }
 
+        // Entry and byte limits can cut between a tool call and its result.
+        // Omit that result with its call so the provider receives a valid tail.
+        while start > 0
+            && matches!(
+                history.get(start),
+                Some(TranscriptEntry::ToolResult { .. } | TranscriptEntry::ToolResultJson { .. })
+            )
+        {
+            if required_tail_entries > 0 && start >= required_tail_start {
+                return Err(ContextError::BudgetExceeded);
+            }
+            history_bytes = history_bytes.saturating_sub(history[start].byte_len());
+            start += 1;
+        }
+
         let omitted = &history[..start];
         let retained = &history[start..];
         let mut messages = Vec::with_capacity(retained.len() + 2);

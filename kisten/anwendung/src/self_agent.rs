@@ -178,13 +178,33 @@ impl SelfAgentHost {
         events: Option<Arc<dyn ModelEventSink>>,
         run_events: Option<Arc<dyn RunEventSink>>,
     ) -> Result<SelfAgentRunOutcome, SelfAgentHostError> {
+        self.submit_conversation_narrated(prompt, Vec::new(), None, cancel, events, run_events)
+            .await
+    }
+
+    pub async fn submit_conversation_narrated(
+        &mut self,
+        prompt: String,
+        history: Vec<orchester_laufzeit::harness::transcript::TranscriptRecord>,
+        assigned_run_id: Option<orchester_protokoll::RunId>,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+        run_events: Option<Arc<dyn RunEventSink>>,
+    ) -> Result<SelfAgentRunOutcome, SelfAgentHostError> {
         self.ensure_runtime()?;
         let runtime = self
             .runtime
             .as_ref()
             .ok_or(SelfAgentHostError::Initialization)?;
         runtime
-            .run_streaming(prompt, cancel, events, run_events)
+            .run_streaming_with_history(
+                prompt,
+                history,
+                assigned_run_id,
+                cancel,
+                events,
+                run_events,
+            )
             .await
             .map_err(Into::into)
     }

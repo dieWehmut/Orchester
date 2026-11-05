@@ -12,9 +12,11 @@
  * outrank the page's own title or skip levels in the outline; the written level
  * is kept on the element for the reader and the styling, not for the outline.
  */
-import { computed } from 'vue'
+import { computed, onScopeDispose, ref } from 'vue'
+import { Copy, Check } from '@lucide/vue'
 
 import { parseMarkdown } from '../markdown'
+import { codeTokens } from '../code-tokens'
 import MarkdownSpans from './MarkdownSpans.vue'
 
 const props = withDefaults(
@@ -23,10 +25,23 @@ const props = withDefaults(
     /** Announced inside every link; the surface owns the words. */
     externalLabel?: string
     fileLabel?: string
+    copyLabel?: string
+    copiedLabel?: string
   }>(),
-  { externalLabel: '', fileLabel: 'Copy file path' },
+  { externalLabel: '', fileLabel: 'Copy file path', copyLabel: 'Copy code', copiedLabel: 'Copied' },
 )
 
+const copied = ref<number | null>(null)
+let copyTimer: ReturnType<typeof setTimeout> | undefined
+async function copyCode(text: string, index: number) {
+  try {
+    await navigator.clipboard.writeText(text)
+    copied.value = index
+    clearTimeout(copyTimer)
+    copyTimer = setTimeout(() => { copied.value = null }, 2000)
+  } catch { /* Keep the selectable code visible when clipboard access is unavailable. */ }
+}
+onScopeDispose(() => clearTimeout(copyTimer))
 const blocks = computed(() => parseMarkdown(props.text))
 </script>
 
@@ -41,12 +56,17 @@ const blocks = computed(() => parseMarkdown(props.text))
       >
         <MarkdownSpans :spans="block.spans" :external-label="externalLabel" :file-label="fileLabel" />
       </h3>
-      <pre
-        v-else-if="block.kind === 'code'"
-        class="markdown__code"
-        data-markdown-code
-        :data-code-language="block.language ?? ''"
-      ><code>{{ block.text }}</code></pre>
+      <section v-else-if="block.kind === 'code'" class="markdown__code-block">
+        <header class="markdown__code-header">
+          <span>{{ block.language || 'text' }}</span>
+          <button type="button" data-markdown-code-copy :aria-label="copied === index ? copiedLabel : copyLabel" :title="copyLabel" @click="copyCode(block.text, index)">
+            <Check v-if="copied === index" :size="15" aria-hidden="true" /><Copy v-else :size="15" aria-hidden="true" />
+            <span>{{ copied === index ? copiedLabel : copyLabel }}</span>
+          </button>
+        </header>
+        <pre class="markdown__code" data-markdown-code :data-code-language="block.language ?? ''"><code><span v-for="(token, tokenIndex) in codeTokens(block.text, block.language)" :key="tokenIndex" :class="`code-token--${token.kind}`">{{ token.text }}</span></code></pre>
+      </section>
+      <blockquote v-else-if="block.kind === 'quote'" class="markdown__quote"><MarkdownSpans :spans="block.spans" :external-label="externalLabel" :file-label="fileLabel" /></blockquote>
       <div
         v-else-if="block.kind === 'table'"
         class="markdown__table-scroll"
@@ -100,6 +120,7 @@ const blocks = computed(() => parseMarkdown(props.text))
   display: grid;
   gap: var(--space-3);
   min-inline-size: 0;
+  font-synthesis: weight style;
 }
 
 .markdown__paragraph,
@@ -145,18 +166,21 @@ const blocks = computed(() => parseMarkdown(props.text))
 /* The written level still reads as a level, even though the outline does not
    carry it: this is a difference in type, not in structure. */
 .markdown__heading[data-heading-level='1'] {
-  font-size: var(--text-lg);
+  font-size: 1.65em;
 }
 
 .markdown__heading[data-heading-level='2'] {
-  font-size: var(--text-base);
+  font-size: 1.4em;
 }
 
-.markdown__heading[data-heading-level='3'],
+.markdown__heading[data-heading-level='3'] {
+  font-size: 1.2em;
+}
+
 .markdown__heading[data-heading-level='4'],
 .markdown__heading[data-heading-level='5'],
 .markdown__heading[data-heading-level='6'] {
-  font-size: var(--text-sm);
+  font-size: 1em;
   color: var(--color-text-secondary);
 }
 
@@ -164,17 +188,23 @@ const blocks = computed(() => parseMarkdown(props.text))
   display: grid;
   gap: var(--space-1);
   padding-inline-start: var(--space-5);
+  list-style: disc outside;
 }
 
+.markdown__list[data-list-ordered='true'] { list-style-type: decimal; }
+
+.markdown__code-block { min-inline-size: 0; overflow: hidden; border: 1px solid var(--color-border-base); border-radius: var(--radius-2xl); background: var(--color-bg-element); }
+.markdown__code-header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-2) var(--space-4); border-bottom: 1px solid var(--color-border-base); font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-secondary); }
+.markdown__code-header button { display: flex; align-items: center; gap: var(--space-2); border: 0; border-radius: var(--radius-sm); background: transparent; color: inherit; padding: calc(var(--space-1) * 1.5); cursor: pointer; font: inherit; }
+.markdown__code-header button:hover { background: var(--color-bg-surface); color: var(--color-text-primary); }
+.markdown__code-header button:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.markdown__quote { margin: 0; padding-inline-start: var(--space-4); border-inline-start: 3px solid var(--color-border-strong); color: var(--color-text-secondary); overflow-wrap: anywhere; white-space: pre-line; }
 .markdown__code {
   margin: 0;
-  padding: var(--space-3);
+  padding: var(--space-4);
   overflow: auto;
-  border: 1px solid var(--color-border-base);
-  border-radius: var(--radius-sm);
-  background: var(--color-bg-element);
   font-family: var(--font-mono);
-  font-size: var(--text-xs);
+  font-size: var(--text-base);
   line-height: 1.6;
 }
 
@@ -182,4 +212,9 @@ const blocks = computed(() => parseMarkdown(props.text))
   font-family: inherit;
   white-space: pre;
 }
+.code-token--keyword { color: var(--color-code-keyword); }
+.code-token--string { color: var(--color-code-string); }
+.code-token--number { color: var(--color-code-number); }
+.code-token--comment { color: var(--color-text-tertiary); font-style: italic; }
+:global([data-theme='dark'] .markdown__code-block) { background: var(--color-bg-surface); }
 </style>

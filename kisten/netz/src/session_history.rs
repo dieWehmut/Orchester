@@ -51,7 +51,7 @@ pub struct SessionPageDto {
     pub next_cursor: Option<String>,
 }
 
-#[derive(Clone, PartialEq, Eq, Serialize)]
+#[derive(Clone, PartialEq, Serialize)]
 pub struct SessionDetailDto {
     pub schema_version: u8,
     pub id: String,
@@ -65,6 +65,11 @@ pub struct SessionDetailDto {
     pub prompt: String,
     pub final_text: String,
     pub usage: Usage,
+    pub conversation_id: Option<String>,
+    pub run_ids: Vec<orchester_protokoll::RunId>,
+    pub events: Vec<orchester_protokoll::UiEventEnvelope>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub active_run: Option<crate::run_contract::StartRunResponse>,
 }
 
 #[derive(Debug, Default, Deserialize)]
@@ -116,6 +121,10 @@ pub fn session_detail_response(detail: &SessionHistoryDetail) -> SessionDetailDt
         prompt: bounded_text(&detail.prompt, SESSION_PROMPT_MAX_CHARS),
         final_text: bounded_text(&detail.final_text, SESSION_RESULT_MAX_CHARS),
         usage: detail.usage,
+        conversation_id: detail.conversation_id.clone(),
+        run_ids: detail.run_ids.clone(),
+        events: detail.events.clone(),
+        active_run: None,
     }
 }
 
@@ -170,13 +179,35 @@ pub(crate) async fn session_detail_handler(
         };
         api_error_response(code, request_id)
     })?;
-    Ok((no_store_headers(), Json(session_detail_response(&detail))))
+    let mut response = session_detail_response(&detail);
+    if let (Some(conversation_id), Some(run_id)) =
+        (&response.conversation_id, response.run_ids.last())
+    {
+        if let Ok(run) = context.runs().get(run_id) {
+            if run.summary().await.is_ok_and(|summary| !summary.stopped) {
+                response.active_run = Some(crate::run_contract::StartRunResponse {
+                    run_id: run_id.clone(),
+                    conversation_id: conversation_id.clone(),
+                    events_url: crate::run::run_events_url(&headers, run_id),
+                });
+            } else {
+                // Completion can race the first read. Its durable final text
+                // precedes the stop event, so reread before returning no socket.
+                response = session_detail_response(
+                    &history
+                        .detail(&id)
+                        .map_err(|_| api_error_response(ApiErrorCode::Unavailable, request_id))?,
+                );
+            }
+        }
+    }
+    Ok((no_store_headers(), Json(response)))
 }
 
 fn session_summary_response(summary: &SessionHistorySummary) -> SessionSummaryDto {
     SessionSummaryDto {
         id: summary.id.clone(),
-        source: "delegate",
+        source: summary.source,
         recorded_at_unix: summary.recorded_at_unix,
         title: bounded_text(&summary.title, SESSION_TITLE_MAX_CHARS),
         agent: bounded_text(&summary.agent, SESSION_AGENT_MAX_CHARS),

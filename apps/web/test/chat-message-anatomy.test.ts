@@ -55,6 +55,33 @@ afterEach(() => {
 })
 
 describe('transcript chat anatomy', () => {
+  it('regenerates the prompt belonging to the chosen answer without rewriting its history', async () => {
+    const first = message({ key: 'user-1', role: 'user', text: 'First prompt' })
+    const second = message({ key: 'user-2', role: 'user', text: 'Second prompt' })
+    const wrapper = mountTimeline([
+      first,
+      message({ key: 'answer-1', text: 'First answer' }),
+      second,
+      message({ key: 'answer-2', text: 'Second answer' }),
+    ])
+    await wrapper.findAll('[data-message-action="retry"]')[0]!.trigger('click')
+    expect(wrapper.emitted('retry')).toEqual([['First prompt']])
+    expect(wrapper.text()).toContain('First answer')
+    expect(wrapper.text()).toContain('Second answer')
+  })
+
+  it('collapses a long user turn while keeping the entire original available to copy', async () => {
+    const text = Array.from({ length: 20 }, (_, index) => `Original line ${index + 1}`).join('\n')
+    const wrapper = mountTimeline([message({ role: 'user', text })])
+    expect(wrapper.get('[data-message-plain]').classes()).toContain('collapsed')
+    const expand = wrapper.get('button[aria-expanded]')
+    await expand.trigger('click')
+    expect(expand.attributes('aria-expanded')).toBe('true')
+    expect(wrapper.get('[data-message-plain]').classes()).not.toContain('collapsed')
+    await wrapper.get('[data-message-copy]').trigger('click')
+    expect(writes).toEqual([text])
+  })
+
   it('renders an answer as prose rather than as an event card', () => {
     const wrapper = mountTimeline([message()])
 

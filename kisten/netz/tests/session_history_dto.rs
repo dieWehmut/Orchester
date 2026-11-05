@@ -8,6 +8,7 @@ use orchester_protokoll::{Outcome, Usage};
 fn summary() -> SessionHistorySummary {
     SessionHistorySummary {
         id: "s-0123456789abcdef0123456789abcdef".to_owned(),
+        source: "delegate",
         recorded_at_unix: 1_800_000_000,
         title: "inspect the workspace".to_owned(),
         agent: "codex".to_owned(),
@@ -45,6 +46,9 @@ fn session_detail_projection_is_flat_path_free_and_bounded() {
     let final_text = "r".repeat(SESSION_RESULT_MAX_CHARS + 10);
     let dto = session_detail_response(&SessionHistoryDetail {
         summary: summary(),
+        conversation_id: None,
+        events: Vec::new(),
+        run_ids: Vec::new(),
         prompt,
         final_text,
         usage: Usage {

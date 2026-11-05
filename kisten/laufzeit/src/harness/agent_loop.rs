@@ -321,6 +321,15 @@ impl<M: LanguageModel> SelfAgentLoop<M> {
         prompt: impl Into<String>,
         cancel: &CancellationToken,
     ) -> Result<PreparedModelStep, AgentLoopError> {
+        self.prepare_start_with_history(prompt, Vec::new(), cancel)
+    }
+
+    pub(crate) fn prepare_start_with_history(
+        &self,
+        prompt: impl Into<String>,
+        mut history: Vec<TranscriptEntry>,
+        cancel: &CancellationToken,
+    ) -> Result<PreparedModelStep, AgentLoopError> {
         if cancel.is_cancelled() {
             return Err(ModelError::Cancelled.into());
         }
@@ -328,13 +337,14 @@ impl<M: LanguageModel> SelfAgentLoop<M> {
         let assembled = self.context.assemble(ContextInput {
             model: self.config.model.clone(),
             prompt: prompt.clone(),
-            history: Vec::new(),
+            history: history.clone(),
             store: self.config.store,
         })?;
+        history.push(TranscriptEntry::user(prompt));
         Ok(PreparedModelStep {
             request: assembled.request,
             state: LoopState {
-                history: vec![TranscriptEntry::user(prompt)],
+                history,
                 model_calls: 0,
                 usage: ModelUsage::default(),
             },

@@ -27,6 +27,7 @@ use crate::harness::feedback::{FeedbackEngine, SecretSetId, StreamingRedactor};
 use crate::harness::transcript::TranscriptRecord;
 
 mod database;
+mod history;
 mod model;
 mod observation;
 mod policy;
@@ -45,6 +46,7 @@ use database::{
     load_snapshot, map_constraint, persist_event, policy_decision_name, status_for_stop,
     stop_reason_name, update_approval_state,
 };
+pub use history::RunHistoryEntry;
 pub use resume::{ResumeNext, ResumePoint, ResumeStage};
 pub use storage::open_private_database;
 pub use transcript::{

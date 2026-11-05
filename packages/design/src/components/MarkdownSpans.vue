@@ -37,6 +37,7 @@ async function copyPath(path: string): Promise<void> {
     <strong v-else-if="span.kind === 'strong'" class="markdown-spans__strong" data-markdown-strong>{{
       span.text
     }}</strong>
+    <em v-else-if="span.kind === 'emphasis'">{{ span.text }}</em>
     <template v-else-if="span.kind === 'file'">
       <button type="button" class="markdown-spans__file" data-markdown-file :title="`${fileLabel}: ${span.path}`" :aria-label="`${span.text} — ${fileLabel}`" @click="copyPath(span.path)"><Check v-if="copied === span.path" :size="15" aria-hidden="true" /><FileText v-else :size="15" aria-hidden="true" />{{ span.text }}</button>
       <code v-if="failed === span.path" class="markdown-spans__path" role="status">{{ span.path }}</code>

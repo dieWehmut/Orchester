@@ -58,17 +58,17 @@ function reasoning(enabled: boolean): void {
   </details>
 </template>
 <style scoped>
-.model-editor { border: 1px solid var(--color-border-base); border-radius: 20px; padding: 12px; }
-summary { display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none; min-height: 40px; }
+.model-editor { border: 1px solid var(--color-border-base); border-radius: 20px; padding: var(--space-3); }
+summary { display: flex; align-items: center; gap: var(--space-2); cursor: pointer; list-style: none; min-height: 40px; }
 summary::-webkit-details-marker { display: none; } summary span { flex: 1; overflow-wrap: anywhere; }
 .opened, details[open] .closed { display: none; } details[open] .opened { display: block; }
 button { display: inline-flex; align-items: center; justify-content: center; border: 0; background: transparent; color: var(--color-text-secondary); min-width: 36px; min-height: 36px; cursor: pointer; }
-.model-editor__body { display: grid; gap: 18px; padding: 12px 4px 4px; }
-.model-editor__pair, .model-editor__level-head { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
-.model-editor__pair label { display: grid; gap: 8px; min-width: 0; }
-.model-editor__level { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr) 36px; gap: 10px; }
-.model-editor__level-head { color: var(--color-text-secondary); padding-right: 46px; }
-fieldset { display: flex; gap: 20px; border: 0; padding: 0; margin: 0; } legend { margin-bottom: 10px; color: var(--color-text-secondary); } fieldset label { display: inline-flex; align-items: center; gap: 8px; }
+.model-editor__body { display: grid; gap: var(--space-4); padding: var(--space-3) var(--space-1) var(--space-1); }
+.model-editor__pair, .model-editor__level-head { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--space-3); }
+.model-editor__pair label { display: grid; gap: var(--space-2); min-width: 0; }
+.model-editor__level { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr) 36px; gap: var(--space-3); }
+.model-editor__level-head { color: var(--color-text-secondary); padding-right: calc(var(--space-1) * 11.5); }
+fieldset { display: flex; gap: var(--space-5); border: 0; padding: 0; margin: 0; } legend { margin-bottom: var(--space-3); color: var(--color-text-secondary); } fieldset label { display: inline-flex; align-items: center; gap: var(--space-2); }
 .model-editor__toggle { display: flex; align-items: center; justify-content: space-between; }
 .model-editor__reasoning { display: flex; flex-direction: row-reverse; justify-content: space-between; width: 100%; }
 .model-editor__capacity { display: block; min-height: var(--control-height-md); padding: 0 var(--space-3); border: 1px solid var(--color-border-control); border-radius: var(--radius-sm); background: var(--color-bg-input); color: var(--color-text-primary); font: inherit; line-height: var(--leading-normal); }

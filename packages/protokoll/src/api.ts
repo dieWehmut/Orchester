@@ -163,7 +163,7 @@ export type SessionOutcomeDto = 'success' | 'failed' | 'cancelled'
 export interface SessionSummaryDto {
   /** Opaque history identifier; never the external agent's native session ID. */
   id: string
-  source: 'delegate'
+  source: 'delegate' | 'self'
   recorded_at_unix: number
   title: string
   agent: string
@@ -184,6 +184,12 @@ export interface SessionDetailDto extends SessionSummaryDto {
   prompt: string
   final_text: string
   usage: Usage
+  /** Durable self-agent thread. Delegated sessions retain the legacy shape. */
+  conversation_id?: string | null
+  run_ids?: string[]
+  events?: UiEventEnvelope[]
+  /** Present only while this server still owns a live run in the thread. */
+  active_run?: StartRunResponse | null
 }
 
 export interface ConfigViewDto {
@@ -204,12 +210,15 @@ export interface StatusDto {
 
 export interface StartRunRequest {
   prompt: string
+  conversation_id?: string
   /** A durable self-agent resume handle from the dedicated resume catalog. */
   resume?: string
 }
 
 export interface StartRunResponse {
   run_id: string
+  /** Optional while interoperating with older local runtimes. */
+  conversation_id?: string
   /**
    * Where to open the WebSocket for this run. The server decides, so the client
    * never has to reconstruct a URL from a port it guessed.

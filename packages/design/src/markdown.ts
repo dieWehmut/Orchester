@@ -8,20 +8,21 @@
  * rules below are therefore structural rather than a sanitiser applied
  * afterwards.
  *
- * The subset is the one an answer actually uses. Anything outside it - tables,
- * nested lists, images, raw HTML - is left as the text it was written as, which
- * is a worse rendering but never a wrong one.
+ * The subset includes prose, headings, tables, quotes, lists and fenced code.
+ * Unsupported images and raw HTML stay text instead of becoming page markup.
  */
 
 export type MarkdownInline =
   | { kind: 'text'; text: string }
   | { kind: 'code'; text: string }
   | { kind: 'strong'; text: string }
+  | { kind: 'emphasis'; text: string }
   | { kind: 'link'; text: string; href: string }
   | { kind: 'file'; text: string; path: string }
 
 export type MarkdownBlock =
   | { kind: 'paragraph'; spans: MarkdownInline[] }
+  | { kind: 'quote'; spans: MarkdownInline[] }
   | { kind: 'heading'; level: number; spans: MarkdownInline[] }
   | { kind: 'code'; language: string | null; text: string }
   | { kind: 'list'; ordered: boolean; items: MarkdownInline[][] }
@@ -60,6 +61,7 @@ const INLINE_CODE = /`([^`\n]+)`/
 const MARKDOWN_LINK = /\[([^\]\n]*)\]\((<[^>\n]+>|(?:[^()\s]|\([^()\n]*\))*)\)/
 const BARE_LINK = /https?:\/\/[^\s<>()]+/
 const BOLD = /\*\*([^*\n]+)\*\*/
+const EMPHASIS = /(?<![\w*])\*([^*\n]+)\*(?!\*)|(?<!\w)_([^_\n]+)_(?!\w)/
 const TRAILING_PUNCTUATION = /[.,;:!?]+$/
 
 /**
@@ -103,12 +105,14 @@ export function parseInline(source: string): MarkdownInline[] {
     const link = MARKDOWN_LINK.exec(rest)
     const bare = BARE_LINK.exec(rest)
     const bold = BOLD.exec(rest)
+    const emphasis = EMPHASIS.exec(rest)
 
     const candidates = [
       code === null ? null : { at: code.index, kind: 'code' as const, match: code },
       link === null ? null : { at: link.index, kind: 'link' as const, match: link },
       bare === null ? null : { at: bare.index, kind: 'bare' as const, match: bare },
       bold === null ? null : { at: bold.index, kind: 'strong' as const, match: bold },
+      emphasis === null ? null : { at: emphasis.index, kind: 'emphasis' as const, match: emphasis },
     ].filter((candidate): candidate is NonNullable<typeof candidate> => candidate !== null)
 
     if (candidates.length === 0) {
@@ -135,6 +139,8 @@ export function parseInline(source: string): MarkdownInline[] {
       const [address, punctuation] = splitTrailingPunctuation(matched)
       spans.push({ kind: 'link', text: address, href: address })
       if (punctuation.length > 0) spans.push({ kind: 'text', text: punctuation })
+    } else if (next.kind === 'emphasis') {
+      spans.push({ kind: 'emphasis', text: next.match[1] ?? next.match[2] ?? '' })
     } else {
       spans.push({ kind: 'strong', text: next.match[1] ?? '' })
     }
@@ -242,6 +248,18 @@ export function parseMarkdown(source: string): MarkdownBlock[] {
       flushParagraph(paragraph)
       paragraph = []
       index += 1
+      continue
+    }
+
+    if (/^\s*>/.test(line)) {
+      flushParagraph(paragraph)
+      paragraph = []
+      const quoted: string[] = []
+      while (index < lines.length && /^\s*>/.test(lines[index] ?? '')) {
+        quoted.push((lines[index] ?? '').replace(/^\s*> ?/, ''))
+        index += 1
+      }
+      blocks.push({ kind: 'quote', spans: parseInline(quoted.join('\n')) })
       continue
     }
 

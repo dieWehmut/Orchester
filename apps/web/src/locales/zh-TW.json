@@ -431,7 +431,14 @@
     "quote": "引用至輸入框",
     "reuse": "重新使用這則提示",
     "copyFilePath": "複製檔案路徑",
-    "edit": "編輯訊息"
+    "edit": "編輯訊息",
+    "showMore": "顯示更多",
+    "showLess": "收起",
+    "readAloud": "朗讀",
+    "stopReading": "停止朗讀",
+    "downloadMarkdown": "下載 Markdown",
+    "copyCode": "複製程式碼",
+    "regenerate": "重新產生"
   },
   "inspector": {
     "label": "工作區檢查器",

@@ -189,15 +189,42 @@ where
         cancel: CancellationToken,
         events: Option<Arc<dyn orchester_modell::ModelEventSink>>,
     ) -> Result<SelfAgentTurn, SelfAgentServiceError> {
-        let (input, run_id) = self.identity.coordinator_input(
+        self.start_with_history(prompt, Vec::new(), cancel, events)
+            .await
+    }
+
+    pub async fn start_with_history(
+        &self,
+        prompt: impl Into<String>,
+        history: Vec<super::transcript::TranscriptRecord>,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn orchester_modell::ModelEventSink>>,
+    ) -> Result<SelfAgentTurn, SelfAgentServiceError> {
+        self.start_with_history_and_run_id(prompt, history, None, cancel, events)
+            .await
+    }
+
+    pub async fn start_with_history_and_run_id(
+        &self,
+        prompt: impl Into<String>,
+        history: Vec<super::transcript::TranscriptRecord>,
+        assigned_run_id: Option<RunId>,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn orchester_modell::ModelEventSink>>,
+    ) -> Result<SelfAgentTurn, SelfAgentServiceError> {
+        let (mut input, mut run_id) = self.identity.coordinator_input(
             prompt.into(),
             self.config_snapshot_hash.clone(),
             self.max_steps,
             self.coordinator.policy_snapshot_hash(),
         )?;
+        if let Some(assigned) = assigned_run_id {
+            input.run.run_id = assigned.clone();
+            run_id = assigned;
+        }
         let outcome = self
             .coordinator
-            .start_new_run_with_events(input, cancel, events)
+            .start_new_run_with_history(input, history, cancel, events)
             .await?;
         Ok(SelfAgentTurn::from_coordinator(run_id, outcome))
     }

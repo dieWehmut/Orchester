@@ -42,6 +42,7 @@ export type RunConnectionStatus =
 
 export interface RunStore {
   runId: Ref<string | null>
+  conversationId: Ref<string | null>
   /** True once the user submitted a prompt or the server delivered a run event. */
   conversationStarted: Ref<boolean>
   lifecycle: Ref<RunLifecycle>
@@ -51,6 +52,7 @@ export interface RunStore {
   connectionStatus: Ref<RunConnectionStatus>
   error: Readonly<Ref<Error | null>>
   submit: (prompt: string) => Promise<StartRunResponse | null>
+  reconnect: (response: StartRunResponse) => Promise<void>
   cancel: () => Promise<RunSummaryDto | null>
   stop: () => void
   applySnapshot: (snapshot: RunSnapshotDto) => void
@@ -104,6 +106,7 @@ function isTerminal(lifecycle: RunLifecycle): boolean {
 
 export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): RunStore {
   const runId = ref<string | null>(null)
+  const conversationId = ref<string | null>(null)
   const conversationStarted = ref(false)
   const lifecycle = ref<RunLifecycle>('idle')
   const view = shallowRef<RunView>(projectRunEvents([]))
@@ -268,6 +271,17 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
     }
   }
 
+  async function reconnect(response: StartRunResponse): Promise<void> {
+    stop()
+    clearProjection()
+    runId.value = response.run_id
+    conversationId.value = response.conversation_id ?? conversationId.value
+    conversationStarted.value = true
+    lifecycle.value = 'running'
+    connectionStatus.value = 'connecting'
+    await attachRunStream(response, streamEpoch)
+  }
+
   async function submit(prompt: string): Promise<StartRunResponse | null> {
     const normalizedPrompt = prompt.trim()
     if (!normalizedPrompt || lifecycle.value === 'submitting' || lifecycle.value === 'running' || lifecycle.value === 'cancelling') {
@@ -293,13 +307,14 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
     const streamEpochForRun = streamEpoch
     try {
       const response = await api.start(
-        { prompt: normalizedPrompt },
+        { prompt: normalizedPrompt, ...(conversationId.value ? { conversation_id: conversationId.value } : {}) },
         requestOptions(submission.idempotencyKey),
       )
       if (operationEpoch !== epoch) return null
       pendingSubmission = null
       clearProjection()
       runId.value = response.run_id
+      conversationId.value = response.conversation_id ?? conversationId.value
       lifecycle.value = 'running'
       connectionStatus.value = 'connecting'
       void attachRunStream(response, streamEpochForRun)
@@ -355,6 +370,7 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
   function reset(): void {
     stop()
     runId.value = null
+    conversationId.value = null
     conversationStarted.value = false
     lifecycle.value = 'idle'
     pendingSubmission = null
@@ -365,6 +381,7 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
 
   return {
     runId,
+    conversationId,
     conversationStarted,
     lifecycle,
     view,
@@ -373,6 +390,7 @@ export function createRunStore(api?: RunsApi, options: RunStoreOptions = {}): Ru
     connectionStatus,
     error,
     submit,
+    reconnect,
     cancel,
     stop,
     applySnapshot,

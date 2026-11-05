@@ -75,8 +75,8 @@ impl ServerContext {
             agent_process_monitor_started: Arc::new(AtomicBool::new(false)),
             model_host,
             model_selection: ModelSelectionStore::new(),
+            runs: RunRegistry::with_history(256, session_history.clone()),
             session_history,
-            runs: RunRegistry::default(),
             sessions: Arc::new(SessionStore::new(Duration::from_secs(8 * 60 * 60))),
             fragments: Arc::new(FragmentTokenStore::new(Duration::from_secs(5 * 60))),
         }

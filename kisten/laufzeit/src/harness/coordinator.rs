@@ -511,14 +511,27 @@ where
         cancel: CancellationToken,
         events: Option<Arc<dyn ModelEventSink>>,
     ) -> Result<CoordinatorOutcome, CoordinatorError> {
+        self.start_new_run_with_history(input, Vec::new(), cancel, events)
+            .await
+    }
+
+    pub async fn start_new_run_with_history(
+        &self,
+        input: CoordinatorInput,
+        mut history: Vec<TranscriptRecord>,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+    ) -> Result<CoordinatorOutcome, CoordinatorError> {
         self.validate_input(&input)?;
         self.validate_dependencies(&input)?;
 
         // Assemble and validate context before mutating durable state.  A
         // rejected prompt therefore cannot leave an empty run behind.
-        let prepared = self
-            .loop_engine
-            .prepare_start(input.prompt.clone(), &cancel)?;
+        let prepared = self.loop_engine.prepare_start_with_history(
+            input.prompt.clone(),
+            history.clone(),
+            &cancel,
+        )?;
         let mut run = input.run.clone();
         run.occurred_at = self.durable_timestamp()?;
         let run_id = run.run_id.clone();
@@ -535,6 +548,7 @@ where
             },
         )?;
         let model_started_at = self.durable_timestamp()?;
+        history.push(TranscriptRecord::user(input.prompt));
         self.store.append_model_started_with_transcript(
             &owner,
             &run_id,
@@ -545,7 +559,7 @@ where
                 occurred_at: model_started_at,
                 kind: HarnessEventKind::ModelStarted,
             },
-            vec![TranscriptRecord::user(input.prompt)],
+            history,
         )?;
         self.complete_model_step(
             prepared,

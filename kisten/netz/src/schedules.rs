@@ -142,6 +142,7 @@ fn launch(context: ServerContext, claim: Claim) -> schedule_store::Result<Schedu
     let request = StartRunRequest {
         prompt: claim.task.input.prompt,
         resume: None,
+        conversation_id: None,
     };
     let creation = context
         .runs()

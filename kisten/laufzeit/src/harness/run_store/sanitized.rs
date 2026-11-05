@@ -1,7 +1,6 @@
 use orchester_protokoll::{
     normalize_action_summary, AgentAction, ApprovalRequest, HarnessEventKind,
 };
-use serde_json::Value;
 
 use super::{EventAppend, StoreError};
 use crate::harness::feedback::{FeedbackClass, FeedbackEngine, FeedbackInput};
@@ -173,30 +172,10 @@ pub(super) fn durable_action_json(
 ) -> Result<String, StoreError> {
     let canonical_json = serde_json::to_string(action)?;
     let value = serde_json::to_value(action)?;
-    let sanitized = sanitize_value(value.clone(), sanitizer);
-    if sanitized != value {
+    if !crate::harness::transcript::valid_argument_value(&value, sanitizer) {
         return Err(StoreError::Invariant(
             "action contains data that is not eligible for durable persistence".into(),
         ));
     }
     Ok(canonical_json)
-}
-
-fn sanitize_value(value: Value, sanitizer: &FeedbackEngine) -> Value {
-    match value {
-        Value::String(text) => Value::String(sanitizer.sanitize_text(&text)),
-        Value::Array(values) => Value::Array(
-            values
-                .into_iter()
-                .map(|value| sanitize_value(value, sanitizer))
-                .collect(),
-        ),
-        Value::Object(fields) => Value::Object(
-            fields
-                .into_iter()
-                .map(|(key, value)| (key, sanitize_value(value, sanitizer)))
-                .collect(),
-        ),
-        other => other,
-    }
 }

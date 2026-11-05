@@ -6,12 +6,15 @@ use orchester_protokoll::{Outcome, Usage};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
 
+mod conversations;
+
 const MAX_PAGE_SIZE: usize = 100;
 const ID_PREFIX: &str = "s-";
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SessionHistory {
     path: PathBuf,
+    paths: Option<crate::OrchesterPaths>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -23,6 +26,7 @@ pub struct SessionHistoryPage {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SessionHistorySummary {
     pub id: String,
+    pub source: &'static str,
     pub recorded_at_unix: u64,
     pub title: String,
     pub agent: String,
@@ -33,12 +37,15 @@ pub struct SessionHistorySummary {
     pub resumable: bool,
 }
 
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq)]
 pub struct SessionHistoryDetail {
     pub summary: SessionHistorySummary,
     pub prompt: String,
     pub final_text: String,
     pub usage: Usage,
+    pub conversation_id: Option<String>,
+    pub run_ids: Vec<orchester_protokoll::RunId>,
+    pub events: Vec<orchester_protokoll::UiEventEnvelope>,
 }
 
 impl fmt::Debug for SessionHistoryDetail {
@@ -65,11 +72,17 @@ pub enum SessionHistoryError {
 
 impl SessionHistory {
     pub fn for_paths(paths: &crate::OrchesterPaths) -> Self {
-        Self::new(paths.session_log())
+        Self {
+            path: paths.session_log(),
+            paths: Some(paths.clone()),
+        }
     }
 
     pub fn new(path: impl Into<PathBuf>) -> Self {
-        Self { path: path.into() }
+        Self {
+            path: path.into(),
+            paths: None,
+        }
     }
 
     pub fn page(
@@ -78,7 +91,14 @@ impl SessionHistory {
         limit: usize,
     ) -> Result<SessionHistoryPage, SessionHistoryError> {
         let records = self.load_records()?;
-        let summaries = summaries(&records);
+        let mut summaries = summaries(&records);
+        summaries.extend(self.conversation_summaries()?);
+        summaries.sort_by(|a, b| {
+            b.recorded_at_unix
+                .cmp(&a.recorded_at_unix)
+                .then_with(|| b.id.cmp(&a.id))
+        });
+        let total = summaries.len();
         let start = match cursor {
             None => 0,
             Some(cursor) => summaries
@@ -93,7 +113,7 @@ impl SessionHistory {
             .skip(start)
             .take(page_size)
             .collect::<Vec<_>>();
-        let next_cursor = (start + items.len() < records.len())
+        let next_cursor = (start + items.len() < total)
             .then(|| items.last().map(|item| item.id.clone()))
             .flatten();
         Ok(SessionHistoryPage { items, next_cursor })
@@ -108,10 +128,13 @@ impl SessionHistory {
                     prompt: record.prompt.clone(),
                     final_text: record.final_text.clone(),
                     usage: record.usage,
+                    conversation_id: None,
+                    run_ids: Vec::new(),
+                    events: Vec::new(),
                 });
             }
         }
-        Err(SessionHistoryError::NotFound)
+        self.conversation_detail(id)
     }
 
     fn load_records(&self) -> Result<Vec<SessionRecord>, SessionHistoryError> {
@@ -133,6 +156,7 @@ fn summaries(records: &[SessionRecord]) -> Vec<SessionHistorySummary> {
 fn summary(index: usize, record: &SessionRecord) -> SessionHistorySummary {
     SessionHistorySummary {
         id: opaque_id(index, record),
+        source: "delegate",
         recorded_at_unix: record.recorded_at_unix,
         title: compact_title(&record.prompt),
         agent: bounded_text(&record.agent, 80),

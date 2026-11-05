@@ -305,6 +305,7 @@ defineExpose({ focusPrompt, clearPrompt, editPrompt: reusePrompt })
         :viewport-height="viewportHeight"
         @quote="quoteAnswer"
         @reuse="reusePrompt"
+        @retry="emit('submit', $event)"
         @resize="transcriptResized"
       />
       <EmptyWorkspace

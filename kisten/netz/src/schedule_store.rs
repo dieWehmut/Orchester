@@ -49,6 +49,7 @@ impl ScheduleInput {
         StartRunRequest {
             prompt: self.prompt.clone(),
             resume: None,
+            conversation_id: None,
         }
         .validate()
         .map_err(|_| ApiErrorCode::ValidationFailed)

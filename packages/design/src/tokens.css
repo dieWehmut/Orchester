@@ -506,6 +506,9 @@
 
 [data-theme='dark'] {
   color-scheme: dark;
+  --color-code-keyword: #c792ea;
+  --color-code-string: #b3d98a;
+  --color-code-number: #f3bd80;
 
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
   --shadow-md: 0 4px 14px rgb(0 0 0 / 38%);
@@ -657,6 +660,9 @@
 
 [data-theme='light'] {
   color-scheme: light;
+  --color-code-keyword: #8043aa;
+  --color-code-string: #297746;
+  --color-code-number: #a45b10;
 
   --shadow-sm: 0 1px 2px rgb(35 32 29 / 6%);
   --shadow-md: 0 4px 16px rgb(35 32 29 / 8%);

@@ -326,7 +326,10 @@ async function handleRunCancel(): Promise<void> {
 
 async function editMessage(text: string): Promise<void> {
   closeActivity()
-  await sessions.select(null)
+  if (selected.value?.source !== 'self') {
+    queue.openConversation(null)
+    await sessions.select(null)
+  }
   await nextTick()
   runPanel.value?.editPrompt(text)
 }
@@ -362,7 +365,11 @@ function closeActivity(): void {
   }
 }
 
-function selectSession(id: string | null): void { closeActivity(); void sessions.select(id) }
+function selectSession(id: string | null): void {
+  closeActivity()
+  if (id === null) queue.openConversation(null)
+  void sessions.select(id)
+}
 
 watch(() => appRouter?.currentRoute.value.query.agent, value => {
   activityProvider.value = activityProviders.includes(value as ExternalActivityProvider) ? value as ExternalActivityProvider : null
@@ -594,7 +601,7 @@ if (desktopWindowController?.enabled) {
     <AgentActivityView v-if="activityProvider" :provider="activityProvider" :activity="agentActivity" @edit="editMessage" />
     <RunPanel
       ref="runPanel"
-      v-else-if="!selected"
+      v-else-if="!selectedId || selected?.source === 'self' || selectedId === run.conversationId.value"
       :view="runView"
       :events="runEvents"
       :empty-title="greeting"

@@ -1,4 +1,4 @@
-import { inject, type App, type InjectionKey } from 'vue'
+import { inject, watch, type App, type InjectionKey } from 'vue'
 import type { Pinia } from 'pinia'
 
 import { createHttpClient, type HttpClient } from '../api/http'
@@ -73,6 +73,24 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
   const runs = createRunsApi(http)
   const run = createRunStore(runs, { runSocketFactory: createRunSocket })
   const queue = createRunQueue(run)
+  const stopHistorySelection = watch(sessions.selected, detail => {
+    if (detail?.source === 'self' && detail.conversation_id && detail.conversation_id !== run.conversationId.value) {
+      queue.openConversation(detail.conversation_id, detail.events ?? [])
+      if (detail.active_run) void run.reconnect(detail.active_run)
+    }
+  })
+  const stopHistoryIdentity = watch(run.conversationId, id => {
+    if (id && sessions.selectedId.value !== id) {
+      void sessions.select(id)
+      void sessions.load()
+    }
+  })
+  const stopHistoryRefresh = watch(run.lifecycle, state => {
+    if (['completed', 'cancelled', 'failed', 'paused'].includes(state) && run.conversationId.value) {
+      void sessions.load()
+      if (sessions.selectedId.value === run.conversationId.value) void sessions.select(run.conversationId.value)
+    }
+  })
   const pinia = createAppPinia()
   const agents = useAgentFleetStore(pinia)
   const models = useModelCatalogStore(pinia)
@@ -104,10 +122,14 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
       await bootstrap.load()
       if (bootstrap.status.value === 'ready' && bootstrap.context.value?.workspace.selected) {
         await Promise.all([sessions.load(), agents.start(), models.load(), review.load()])
+        await sessions.restoreSelection(bootstrap.context.value.workspace.name ?? 'workspace')
       }
     },
     stop(): void {
       queue.dispose()
+      stopHistorySelection()
+      stopHistoryIdentity()
+      stopHistoryRefresh()
       run.stop()
       agents.stop()
     },

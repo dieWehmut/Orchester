@@ -170,6 +170,11 @@ pub(crate) async fn drain_run_events(
 ) {
     let mut translator = UiEventTranslator::new(run_id);
     while let Some(event) = receiver.recv().await {
+        if let Event::SessionStarted { session_id } = &event {
+            if run.bind_durable_run(session_id).is_err() {
+                break;
+            }
+        }
         let Some(kind) = translator.translate(event) else {
             continue;
         };
@@ -194,6 +199,41 @@ mod tests {
     use orchester_protokoll::{ApprovalId, ChangeKind, TodoItem};
 
     use super::*;
+
+    #[tokio::test]
+    async fn narrated_markdown_survives_bridge_snapshot_and_repeated_wire_roundtrips() {
+        let markdown = "# 冒泡排序\r\n\r\n1. 比较。\n2. 交换。\n\n```cpp\n\tstd::cout << \"42\\n\";\n```\n\n[参考](https://example.org/cpp)\n";
+        let mut redactor =
+            orchester_laufzeit::harness::feedback::StreamingRedactor::new(Vec::new());
+        for character in markdown.chars() {
+            redactor.push(&character.to_string());
+        }
+        let safe = redactor.finish().to_owned();
+        let registry = crate::run_registry::RunRegistry::new(16);
+        let run = registry.create().unwrap();
+        let (sink, receiver) = RegistryRunSink::channel();
+        sink.emit(Event::Message { text: safe.clone() });
+        sink.emit(Event::Reasoning { text: safe.clone() });
+        sink.emit(Event::Result { text: safe });
+        sink.emit(Event::Stopped {
+            reason: orchester_protokoll::StopReason::Succeeded,
+        });
+        drop(sink);
+        drain_run_events(run.clone(), run.id().clone(), receiver).await;
+
+        // Terminal model text normalizes CRLF to LF while keeping all Markdown
+        // line boundaries, tab indentation, quotes and literal backslashes.
+        let expected = markdown.replace("\r\n", "\n");
+        let mut snapshot = run.snapshot().await.unwrap();
+        for _ in 0..4 {
+            let wire = serde_json::to_string(&snapshot).unwrap();
+            let value: serde_json::Value = serde_json::from_str(&wire).unwrap();
+            for index in 0..3 {
+                assert_eq!(value["events"][index]["kind"]["text"], expected);
+            }
+            snapshot.events = serde_json::from_value(value["events"].clone()).unwrap();
+        }
+    }
 
     #[tokio::test]
     async fn narration_is_broadcast_before_the_producer_finishes() {

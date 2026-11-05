@@ -32,6 +32,7 @@ impl Default for RunRegistry {
 }
 
 struct RegistryInner {
+    history: Option<Arc<orchester_anwendung::SessionHistory>>,
     retention: usize,
     state: StdMutex<RegistryState>,
 }
@@ -47,6 +48,7 @@ struct IdempotencyEntry {
 }
 
 struct RunEntry {
+    history: Option<Arc<orchester_anwendung::SessionHistory>>,
     id: RunId,
     retention: usize,
     state: Mutex<RunMutable>,
@@ -54,6 +56,7 @@ struct RunEntry {
     cancellation: CancellationToken,
 }
 
+#[derive(Clone)]
 struct RunMutable {
     events: VecDeque<UiEventEnvelope>,
     pending_approvals: Vec<UiApprovalRequest>,
@@ -88,6 +91,8 @@ pub(crate) enum RunRegistryError {
     LockPoisoned,
     #[error("idempotency key was already used for a different request")]
     IdempotencyConflict,
+    #[error("conversation history could not be written")]
+    HistoryUnavailable,
 }
 
 #[derive(Clone)]
@@ -101,7 +106,20 @@ pub(crate) enum RunCreation {
 }
 
 impl RunRegistry {
+    pub(crate) fn discard_unstarted(&self, run_id: &RunId) {
+        if let Ok(mut state) = self.inner.state.lock() {
+            state.runs.remove(run_id);
+            state.idempotency.retain(|_, entry| entry.run_id != *run_id);
+        }
+    }
     pub(crate) fn new(retention: usize) -> Self {
+        Self::with_history(retention, None)
+    }
+
+    pub(crate) fn with_history(
+        retention: usize,
+        history: Option<Arc<orchester_anwendung::SessionHistory>>,
+    ) -> Self {
         let retention = if retention == 0 {
             DEFAULT_RETENTION
         } else {
@@ -110,6 +128,7 @@ impl RunRegistry {
         Self {
             inner: Arc::new(RegistryInner {
                 retention,
+                history,
                 state: StdMutex::new(RegistryState {
                     runs: HashMap::new(),
                     idempotency: HashMap::new(),
@@ -225,6 +244,7 @@ fn create_entry_locked(
         }
         let (frames, _) = broadcast::channel(inner.retention.max(32));
         let entry = Arc::new(RunEntry {
+            history: inner.history.clone(),
             id: id.clone(),
             retention: inner.retention,
             state: Mutex::new(mutable),
@@ -242,6 +262,15 @@ impl RunHandle {
         &self.entry.id
     }
 
+    pub(crate) fn bind_durable_run(&self, durable_id: &str) -> Result<(), RunRegistryError> {
+        if let Some(history) = &self.entry.history {
+            history
+                .bind_conversation_run(self.id(), durable_id)
+                .map_err(|_| RunRegistryError::HistoryUnavailable)?;
+        }
+        Ok(())
+    }
+
     pub(crate) fn cancellation_token(&self) -> CancellationToken {
         self.entry.cancellation.clone()
     }
@@ -255,7 +284,14 @@ impl RunHandle {
         kind: UiEventKind,
     ) -> Result<UiEventEnvelope, RunRegistryError> {
         let mut state = self.entry.state.lock().await;
-        let event = append_to_state(self.id(), self.retention(), &mut state, kind)?;
+        let mut candidate = state.clone();
+        let event = append_to_state(self.id(), self.retention(), &mut candidate, kind)?;
+        if let Some(history) = &self.entry.history {
+            history
+                .record_conversation_envelope(&event)
+                .map_err(|_| RunRegistryError::HistoryUnavailable)?;
+        }
+        *state = candidate;
         let frame = RunStreamFrameDto::Event {
             event: event.clone(),
         };
@@ -269,7 +305,45 @@ impl RunHandle {
 
     pub(crate) async fn snapshot(&self) -> Result<RunSnapshotDto, RunRegistryError> {
         let state = self.entry.state.lock().await;
-        Ok(snapshot_from_state(self.id().clone(), &state))
+        let mut snapshot = snapshot_from_state(self.id().clone(), &state);
+        if let Some(history) = &self.entry.history {
+            let events = history
+                .conversation_run_events(self.id())
+                .map_err(|_| RunRegistryError::HistoryUnavailable)?;
+            if let Some(first) = events.first() {
+                snapshot.oldest_sequence = first.sequence;
+                snapshot.events = events;
+            }
+        }
+        Ok(snapshot)
+    }
+
+    pub(crate) fn initial_event(&self) -> Result<UiEventEnvelope, RunRegistryError> {
+        self.entry
+            .state
+            .try_lock()
+            .map_err(|_| RunRegistryError::LockPoisoned)?
+            .events
+            .front()
+            .cloned()
+            .ok_or(RunRegistryError::NotFound)
+    }
+
+    #[cfg(test)]
+    pub(crate) fn persist_initial_history(&self) -> Result<(), RunRegistryError> {
+        if let Some(history) = &self.entry.history {
+            let state = self
+                .entry
+                .state
+                .try_lock()
+                .map_err(|_| RunRegistryError::LockPoisoned)?;
+            for event in &state.events {
+                history
+                    .record_conversation_envelope(event)
+                    .map_err(|_| RunRegistryError::HistoryUnavailable)?;
+            }
+        }
+        Ok(())
     }
 
     pub(crate) async fn replay(

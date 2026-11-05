@@ -19,6 +19,7 @@ export interface SessionsStore {
   load: () => Promise<void>
   loadMore: () => Promise<void>
   select: (id: string | null) => Promise<void>
+  restoreSelection: (workspace: string) => Promise<void>
   reset: () => void
 }
 
@@ -42,6 +43,24 @@ export function createSessionsStore(api: SessionsApi): SessionsStore {
   const detailError = shallowRef<ApiError | null>(null)
   let listGeneration = 0
   let detailGeneration = 0
+  let selectionKey: string | null = null
+
+  function rememberSelection(id: string | null): void {
+    if (!selectionKey) return
+    try { localStorage.setItem(selectionKey, id ?? '') } catch { /* History itself lives on the server. */ }
+  }
+
+  async function restoreSelection(workspace: string): Promise<void> {
+    selectionKey = `orchester:conversation:v1:${workspace}`
+    let remembered: string | null = null
+    try { remembered = localStorage.getItem(selectionKey) } catch { /* Storage may be disabled. */ }
+    if (remembered === '') return
+    const latest = items.value.find(item => item.source === 'self')?.id ?? null
+    await select(remembered ?? latest)
+    // A different server/workspace may share a browser origin. Resolve IDs only
+    // through the authenticated history API and fall back to its own list.
+    if (detailError.value?.status === 404 && remembered) await select(latest)
+  }
 
   async function load(): Promise<void> {
     const generation = ++listGeneration
@@ -81,7 +100,9 @@ export function createSessionsStore(api: SessionsApi): SessionsStore {
 
   async function select(id: string | null): Promise<void> {
     const generation = ++detailGeneration
+    if (selectedId.value !== id) selected.value = null
     selectedId.value = id
+    rememberSelection(id)
     detailError.value = null
     if (!id) {
       selected.value = null
@@ -126,6 +147,7 @@ export function createSessionsStore(api: SessionsApi): SessionsStore {
     load,
     loadMore,
     select,
+    restoreSelection,
     reset,
   }
 }

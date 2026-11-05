@@ -222,10 +222,29 @@ where
         events: Option<Arc<dyn ModelEventSink>>,
         run_events: Option<Arc<dyn RunEventSink>>,
     ) -> Result<SelfAgentRunOutcome, SelfAgentRuntimeError> {
+        self.run_streaming_with_history(prompt, Vec::new(), None, cancel, events, run_events)
+            .await
+    }
+
+    pub async fn run_streaming_with_history(
+        &self,
+        prompt: impl Into<String>,
+        history: Vec<crate::harness::transcript::TranscriptRecord>,
+        assigned_run_id: Option<RunId>,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+        run_events: Option<Arc<dyn RunEventSink>>,
+    ) -> Result<SelfAgentRunOutcome, SelfAgentRuntimeError> {
         let narrator = self.narrator(run_events);
         let turn = self
             .service
-            .start_with_events(prompt, cancel.clone(), events.clone())
+            .start_with_history_and_run_id(
+                prompt,
+                history,
+                assigned_run_id,
+                cancel.clone(),
+                events.clone(),
+            )
             .await
             .inspect_err(|error| narrator.failed(&error.to_string()))?;
         self.drive_turn(turn, cancel, events, &narrator).await

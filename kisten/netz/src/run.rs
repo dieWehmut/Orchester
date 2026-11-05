@@ -58,8 +58,23 @@ pub(crate) async fn start_run_handler(
     // there must be no await before the detached task owns execution, otherwise
     // dropping an HTTP request could leave a permanently unstarted keyed run.
     let selection = context.model_selection().read().await;
-    let composer = crate::composer::storage(&context, |s| s.context()).await
+    let composer = crate::composer::storage(&context, |s| s.context())
+        .await
         .map_err(|code| api_error_response(code, request_id))?;
+    let history = context
+        .session_history()
+        .ok_or_else(|| api_error_response(ApiErrorCode::Unavailable, request_id))?;
+    let prior_context = match request.conversation_id.as_deref() {
+        Some(id) => history.conversation_context(id).map_err(|error| {
+            let code = if matches!(error, orchester_anwendung::SessionHistoryError::NotFound) {
+                ApiErrorCode::NotFound
+            } else {
+                ApiErrorCode::Unavailable
+            };
+            api_error_response(code, request_id)
+        })?,
+        None => Vec::new(),
+    };
     let creation = context
         .runs()
         .create_or_reuse(
@@ -79,19 +94,52 @@ pub(crate) async fn start_run_handler(
     let events_url = run_events_url(&headers, &run_id);
 
     if reused {
+        let conversation_id = history
+            .conversation_for_run(&run_id)
+            .map_err(|_| api_error_response(ApiErrorCode::Unavailable, request_id))?;
         return Ok((
             no_store_headers(),
-            Json(StartRunResponse { run_id, events_url }),
+            Json(StartRunResponse {
+                run_id,
+                events_url,
+                conversation_id,
+            }),
         ));
     }
 
+    let initial = run
+        .initial_event()
+        .map_err(|error| run_error_response(error, request_id))?;
+    let conversation_id = history
+        .begin_conversation_with_event(
+            &initial,
+            request.conversation_id.as_deref(),
+            prior_context.len(),
+        )
+        .map_err(|_| {
+            context.runs().discard_unstarted(&run_id);
+            api_error_response(ApiErrorCode::Unavailable, request_id)
+        })?;
+
     let mut request = request;
-    if request.resume.is_none() { request.prompt = composer.prompt(&request.prompt); }
-    tokio::spawn(execute_run(paths, selection, run, request));
+    if request.resume.is_none() {
+        request.prompt = composer.prompt(&request.prompt);
+    }
+    tokio::spawn(execute_run_with_history(
+        paths,
+        selection,
+        run,
+        request,
+        prior_context,
+    ));
 
     Ok((
         no_store_headers(),
-        Json(StartRunResponse { run_id, events_url }),
+        Json(StartRunResponse {
+            run_id,
+            events_url,
+            conversation_id,
+        }),
     ))
 }
 
@@ -102,9 +150,48 @@ pub(crate) async fn execute_run(
     run: RunHandle,
     request: StartRunRequest,
 ) {
+    let history = orchester_anwendung::SessionHistory::for_paths(&paths);
+    let prior_context = match request.conversation_id.as_deref() {
+        Some(id) => match history.conversation_context(id) {
+            Ok(records) => records,
+            Err(_) => {
+                complete_unfinished_run(&run, Some("history_unavailable")).await;
+                return;
+            }
+        },
+        None => Vec::new(),
+    };
+    let initial = match run.initial_event() {
+        Ok(event) => event,
+        Err(_) => {
+            complete_unfinished_run(&run, Some("history_unavailable")).await;
+            return;
+        }
+    };
+    if history
+        .begin_conversation_with_event(
+            &initial,
+            request.conversation_id.as_deref(),
+            prior_context.len(),
+        )
+        .is_err()
+    {
+        complete_unfinished_run(&run, Some("history_unavailable")).await;
+        return;
+    }
+    execute_run_with_history(paths, selection, run, request, prior_context).await;
+}
+
+async fn execute_run_with_history(
+    paths: orchester_anwendung::OrchesterPaths,
+    selection: crate::model_selection::ModelSelection,
+    run: RunHandle,
+    request: StartRunRequest,
+    prior_context: Vec<orchester_laufzeit::harness::transcript::TranscriptRecord>,
+) {
     let run_id = run.id().clone();
     let cancel = run.cancellation_token();
-    let StartRunRequest { prompt, resume } = request;
+    let StartRunRequest { prompt, resume, .. } = request;
     let (sink, receiver) = RegistryRunSink::channel();
     let drain = drain_run_events(run.clone(), run_id.clone(), receiver);
 
@@ -120,13 +207,24 @@ pub(crate) async fn execute_run(
         if selection.apply(&mut host).is_err() {
             return Some("model_unavailable");
         }
+        let assigned_run_id = orchester_anwendung::SessionHistory::planned_runtime_run_id(&run_id);
         let sink: Arc<dyn RunEventSink> = Arc::new(sink);
         let result = match resume {
             Some(handle) => {
                 host.resume_narrated(&handle, cancel, None, Some(sink))
                     .await
             }
-            None => host.submit_narrated(prompt, cancel, None, Some(sink)).await,
+            None => {
+                host.submit_conversation_narrated(
+                    prompt,
+                    prior_context,
+                    Some(assigned_run_id),
+                    cancel,
+                    None,
+                    Some(sink),
+                )
+                .await
+            }
         };
         // `sink` is dropped here, which closes the channel and lets the
         // drain task finish; `run_task` owns it so this is the only copy.
@@ -178,7 +276,7 @@ async fn complete_unfinished_run(run: &RunHandle, failure_code: Option<&str>) {
 
 /// The absolute socket URL for a run, built from the request the client made so
 /// it never has to reconstruct a URL from a port it guessed.
-fn run_events_url(headers: &HeaderMap, run_id: &RunId) -> String {
+pub(crate) fn run_events_url(headers: &HeaderMap, run_id: &RunId) -> String {
     let host = headers
         .get(axum::http::header::HOST)
         .and_then(|value| value.to_str().ok())
@@ -395,6 +493,7 @@ fn run_error_response(error: RunRegistryError, request_id: Option<&str>) -> ApiE
         RunRegistryError::InvalidLimit => ApiErrorCode::ValidationFailed,
         RunRegistryError::Terminal => ApiErrorCode::Conflict,
         RunRegistryError::IdempotencyConflict => ApiErrorCode::Conflict,
+        RunRegistryError::HistoryUnavailable => ApiErrorCode::Unavailable,
         RunRegistryError::Entropy
         | RunRegistryError::InvalidEvent(_)
         | RunRegistryError::LockPoisoned => ApiErrorCode::Internal,
@@ -423,6 +522,275 @@ mod tests {
     use crate::{app_router, ServerControl};
 
     #[tokio::test]
+    async fn failed_journal_write_does_not_advance_sequence_or_make_a_stop_unretryable() {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let base = std::env::temp_dir().join(format!("orchester-journal-rollback-{nonce}"));
+        std::fs::create_dir_all(base.join("workspace")).unwrap();
+        let paths =
+            orchester_anwendung::OrchesterPaths::new(base.join("home"), base.join("workspace"));
+        let context = ServerContext::new(Some(paths.clone()), ServerControl::new());
+        let RunCreation::Created(run) = context
+            .runs()
+            .create_or_reuse(
+                None,
+                [0; 32],
+                UiEventKind::UserMessage {
+                    text: "saved question".into(),
+                },
+            )
+            .unwrap()
+        else {
+            panic!("new run")
+        };
+        let history = context.session_history().unwrap();
+        let id = history
+            .begin_conversation_turn(run.id(), None, "saved question", None, 0)
+            .unwrap();
+        run.persist_initial_history().unwrap();
+        let mut subscriber = run.subscribe();
+        let before = run.snapshot().await.unwrap();
+        let connection = rusqlite::Connection::open(
+            paths
+                .run_database()
+                .with_file_name("conversation-history.db"),
+        )
+        .unwrap();
+        connection.execute_batch("CREATE TRIGGER reject_history BEFORE INSERT ON conversation_ui_events BEGIN SELECT RAISE(ABORT, 'injected storage failure'); END;").unwrap();
+        let RunCreation::Created(unpublished) = context
+            .runs()
+            .create_or_reuse(
+                None,
+                [1; 32],
+                UiEventKind::UserMessage {
+                    text: "must roll back together".into(),
+                },
+            )
+            .unwrap()
+        else {
+            panic!("new run")
+        };
+        assert!(history
+            .begin_conversation_with_event(&unpublished.initial_event().unwrap(), None, 0)
+            .is_err());
+        assert_eq!(
+            history.page(None, 20).unwrap().items.len(),
+            1,
+            "a failed initial envelope must not leave a second conversation"
+        );
+        assert!(history.conversation_for_run(unpublished.id()).is_err());
+        assert_eq!(
+            run.append(UiEventKind::RunStopped {
+                reason: StopReason::Failed
+            })
+            .await
+            .unwrap_err(),
+            RunRegistryError::HistoryUnavailable
+        );
+        assert_eq!(run.snapshot().await.unwrap(), before);
+        assert!(!run.summary().await.unwrap().stopped);
+        assert!(subscriber.try_recv().is_err());
+        assert_eq!(
+            history.detail(&id).unwrap().events.len(),
+            1,
+            "terminal metadata must roll back with the envelope"
+        );
+        connection
+            .execute_batch("DROP TRIGGER reject_history;")
+            .unwrap();
+        let event = run
+            .append(UiEventKind::RunStopped {
+                reason: StopReason::Failed,
+            })
+            .await
+            .unwrap();
+        assert_eq!(event.sequence, 2);
+        assert!(run.summary().await.unwrap().stopped);
+        assert_eq!(history.detail(&id).unwrap().events.len(), 2);
+        drop(connection);
+        drop(run);
+        drop(context);
+        std::fs::remove_dir_all(base).unwrap();
+    }
+
+    #[tokio::test]
+    async fn long_conversation_keeps_all_events_on_reload_and_server_restart() {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let base = std::env::temp_dir().join(format!("orchester-durable-ui-{nonce}"));
+        std::fs::create_dir_all(base.join("workspace")).unwrap();
+        let paths =
+            orchester_anwendung::OrchesterPaths::new(base.join("home"), base.join("workspace"));
+        let context = ServerContext::new(Some(paths.clone()), ServerControl::new());
+        let RunCreation::Created(run) = context
+            .runs()
+            .create_or_reuse(
+                None,
+                [0; 32],
+                UiEventKind::UserMessage {
+                    text: "keep the entire conversation".into(),
+                },
+            )
+            .unwrap()
+        else {
+            panic!("new run")
+        };
+        let history = context.session_history().unwrap();
+        let conversation_id = history
+            .begin_conversation_turn(run.id(), None, "keep the entire conversation", None, 0)
+            .unwrap();
+        run.persist_initial_history().unwrap();
+        for index in 0..300 {
+            run.append(UiEventKind::Reasoning {
+                text: format!("reasoning {index}"),
+            })
+            .await
+            .unwrap();
+        }
+        let snapshot = run.snapshot().await.unwrap();
+        assert_eq!(
+            snapshot.events.len(),
+            301,
+            "reload snapshot must include events evicted from the socket ring"
+        );
+        assert_eq!(snapshot.oldest_sequence, 1);
+        assert!(matches!(
+            snapshot.events[0].kind,
+            UiEventKind::UserMessage { .. }
+        ));
+        let response = app_router(context.clone())
+            .oneshot(
+                Request::get(format!("/api/v1/sessions/{conversation_id}"))
+                    .header(header::HOST, "127.0.0.1:9090")
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        let detail = json_body(response).await;
+        assert_eq!(detail["active_run"]["run_id"], run.id().0);
+        assert_eq!(detail["active_run"]["conversation_id"], conversation_id);
+        assert!(detail["active_run"]["events_url"]
+            .as_str()
+            .unwrap()
+            .starts_with("ws://127.0.0.1:9090/"));
+        run.append(UiEventKind::Message {
+            text: "The complete answer".into(),
+        })
+        .await
+        .unwrap();
+        run.append(UiEventKind::RunStopped {
+            reason: StopReason::Succeeded,
+        })
+        .await
+        .unwrap();
+        let live_ids = run
+            .snapshot()
+            .await
+            .unwrap()
+            .events
+            .into_iter()
+            .map(|event| event.event_id)
+            .collect::<Vec<_>>();
+        drop(run);
+        drop(context);
+        let restarted = ServerContext::new(Some(paths), ServerControl::new());
+        let detail = restarted
+            .session_history()
+            .unwrap()
+            .detail(&conversation_id)
+            .unwrap();
+        assert_eq!(detail.events.len(), 303);
+        assert_eq!(
+            detail
+                .events
+                .iter()
+                .map(|event| event.event_id.clone())
+                .collect::<Vec<_>>(),
+            live_ids
+        );
+        let response = app_router(restarted)
+            .oneshot(
+                Request::get(format!("/api/v1/sessions/{conversation_id}"))
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert!(json_body(response).await.get("active_run").is_none());
+        std::fs::remove_dir_all(base).unwrap();
+    }
+
+    #[tokio::test]
+    async fn failed_http_submission_is_saved_and_can_continue_after_server_restart() {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let base = std::env::temp_dir().join(format!("orchester-failed-ui-{nonce}"));
+        std::fs::create_dir_all(base.join("workspace")).unwrap();
+        let paths =
+            orchester_anwendung::OrchesterPaths::new(base.join("home"), base.join("workspace"));
+        let context = ServerContext::new(Some(paths.clone()), ServerControl::new());
+        let (_, Json(started)) = start_run_handler(
+            State(context.clone()),
+            HeaderMap::new(),
+            Ok(Json(StartRunRequest {
+                prompt: "keep my failed request".into(),
+                resume: None,
+                conversation_id: None,
+            })),
+        )
+        .await
+        .unwrap();
+        let run = context.runs().get(&started.run_id).unwrap();
+        tokio::time::timeout(std::time::Duration::from_secs(5), async {
+            while !run.summary().await.unwrap().stopped {
+                tokio::task::yield_now().await;
+            }
+        })
+        .await
+        .unwrap();
+        let restarted = ServerContext::new(Some(paths), ServerControl::new());
+        let detail = restarted
+            .session_history()
+            .unwrap()
+            .detail(&started.conversation_id)
+            .unwrap();
+        assert_eq!(detail.prompt, "keep my failed request");
+        assert!(detail
+            .events
+            .iter()
+            .any(|event| matches!(event.kind, UiEventKind::Error { .. })));
+        assert!(detail.events.iter().any(|event| matches!(
+            event.kind,
+            UiEventKind::RunStopped {
+                reason: StopReason::Failed
+            }
+        )));
+        assert_eq!(
+            restarted
+                .session_history()
+                .unwrap()
+                .conversation_context(&started.conversation_id)
+                .unwrap(),
+            vec![
+                orchester_laufzeit::harness::transcript::TranscriptRecord::user(
+                    "keep my failed request"
+                )
+            ]
+        );
+        drop(run);
+        drop(context);
+        drop(restarted);
+        std::fs::remove_dir_all(base).unwrap();
+    }
+
+    #[tokio::test]
     async fn dropping_a_request_waiting_for_model_selection_does_not_reserve_its_key() {
         let base = std::env::temp_dir().join("orchester-unpublished-run-test");
         let context = ServerContext::new(
@@ -445,6 +813,7 @@ mod tests {
                 Ok(Json(StartRunRequest {
                     prompt: "first".into(),
                     resume: None,
+                    conversation_id: None,
                 })),
             );
             tokio::pin!(pending);
@@ -463,6 +832,7 @@ mod tests {
             Ok(Json(StartRunRequest {
                 prompt: "second".into(),
                 resume: None,
+                conversation_id: None,
             })),
         )
         .await

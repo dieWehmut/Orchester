@@ -411,8 +411,7 @@ impl TranscriptCodec {
     fn arguments(&self, value: &str) -> Result<String, TranscriptError> {
         let parsed =
             serde_json::from_str::<Value>(value).map_err(|_| TranscriptError::InvalidWire)?;
-        let sanitized = sanitize_json_value(parsed.clone(), &self.sanitizer);
-        if sanitized != parsed {
+        if !valid_argument_value(&parsed, &self.sanitizer) {
             return Err(TranscriptError::InvalidWire);
         }
         serde_json::to_string(&parsed).map_err(|_| TranscriptError::InvalidWire)
@@ -428,6 +427,27 @@ impl TranscriptCodec {
         } else {
             Ok(())
         }
+    }
+}
+
+// Tool arguments can contain source code: preserve its whitespace exactly while
+// rejecting secrets and display controls. Diagnostic text normalization would
+// change the action being audited and executed.
+pub(crate) fn valid_argument_value(value: &Value, sanitizer: &FeedbackEngine) -> bool {
+    match value {
+        Value::String(text) => {
+            !text.chars().any(|ch| {
+                (ch.is_control() && !matches!(ch, '\r' | '\n' | '\t'))
+                    || crate::harness::secret_scan::is_format_character(ch)
+            }) && !sanitizer.contains_sensitive_material(text)
+        }
+        Value::Array(values) => values
+            .iter()
+            .all(|value| valid_argument_value(value, sanitizer)),
+        Value::Object(fields) => fields.iter().all(|(key, value)| {
+            sanitizer.sanitize_text(key) == *key && valid_argument_value(value, sanitizer)
+        }),
+        _ => true,
     }
 }
 
@@ -562,4 +582,45 @@ fn json_len(value: &Value) -> usize {
 
 fn hex(bytes: &[u8]) -> String {
     bytes.iter().map(|byte| format!("{byte:02x}")).collect()
+}
+
+#[cfg(test)]
+mod argument_whitespace_tests {
+    use super::*;
+
+    #[test]
+    fn source_whitespace_roundtrips_but_cannot_hide_secrets_or_terminal_controls() {
+        let codec = TranscriptCodec::new(
+            TranscriptLimits::default(),
+            vec![SecretString::from("configured-sensitive-value")],
+        );
+        let content = "first\r\n\tsecond\n中文代码";
+        let record = TranscriptRecord::tool_call(
+            "safe-call",
+            "write_file",
+            json!({"path":"a.cpp","content":content}).to_string(),
+        );
+        assert_eq!(
+            codec.decode(&codec.encode(&record).unwrap()).unwrap(),
+            record
+        );
+        for invalid in [
+            "configured-sensitive-value",
+            "configured-\nsensitive-value",
+            "configured-\r\n\tsensitive-value",
+            "bad\u{001b}[31mtext",
+            "bad\0text",
+            "bad\u{202e}text",
+        ] {
+            let record = TranscriptRecord::tool_call(
+                "unsafe-call",
+                "write_file",
+                json!({"path":"a.cpp","nested":[{"content":invalid}]}).to_string(),
+            );
+            assert!(
+                codec.encode(&record).is_err(),
+                "unsafe argument must remain rejected"
+            );
+        }
+    }
 }

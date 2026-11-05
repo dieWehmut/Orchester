@@ -979,3 +979,41 @@ async fn continuation_refuses_an_unobserved_action_before_calling_the_model() {
     drop(coordinator);
     remove_temp_db(&path);
 }
+
+#[tokio::test]
+async fn multiline_source_tool_call_is_durable_without_changing_whitespace() {
+    let path = temp_db("multiline-source");
+    let content = "#include <iostream>\r\nint main() {\n\tstd::cout << 42;\n}\n";
+    let arguments = serde_json::json!({"path":"bubble.cpp","content":content}).to_string();
+    let runtime = coordinator(
+        agent([Ok(ModelResponse::tool(
+            "multiline-code-call",
+            "write_file",
+            arguments,
+        ))]),
+        SqliteRunStore::open(&path).unwrap(),
+    );
+    let outcome = runtime
+        .start_new_run(input("run-multiline-code"), CancellationToken::new())
+        .await;
+    assert!(
+        matches!(outcome, Ok(CoordinatorOutcome::Action { .. })),
+        "multiline code must survive the durable action boundary: {outcome:?}"
+    );
+    drop(runtime);
+    let reopened = SqliteRunStore::open(&path).unwrap();
+    let records = reopened
+        .transcript_owned(&RunId::from("run-multiline-code"), "owner-coordinator")
+        .unwrap();
+    let arguments = records
+        .iter()
+        .find_map(|record| match &record.record {
+            TranscriptRecord::ToolCall { arguments_json, .. } => Some(arguments_json),
+            _ => None,
+        })
+        .expect("durable tool call must survive reopening");
+    let decoded: serde_json::Value = serde_json::from_str(arguments).unwrap();
+    assert_eq!(decoded["content"].as_str(), Some(content));
+    drop(reopened);
+    remove_temp_db(&path);
+}

@@ -1155,9 +1155,12 @@ dependencies = [
  "orchester-modell",
  "orchester-protokoll",
  "orchester-verzeichnis",
+ "rusqlite",
  "secrecy",
+ "serde_json",
  "sha2",
  "thiserror",
+ "time",
  "tokio",
  "tokio-util",
 ]
@@ -1272,6 +1275,7 @@ dependencies = [
 name = "orchester-protokoll"
 version = "0.1.2"
 dependencies = [
+ "regex",
  "serde",
  "serde_json",
  "sha2",

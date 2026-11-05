@@ -32,8 +32,22 @@ const emit = defineEmits<{
   quote: [text: string]
   reuse: [text: string]
   resize: []
+  retry: [prompt: string]
 }>()
 
+function retryPrompt(item: TimelineItem): string | null {
+  const index = props.view.timeline.findIndex(row => row.key === item.key)
+  for (let i = index - 1; i >= 0; i -= 1) {
+    const row = props.view.timeline[i]
+    if (row?.type === 'message' && row.role === 'user') return row.text
+  }
+  return null
+}
+function messageAction(action: string, item: TimelineItem) {
+  if (item.type !== 'message') return
+  if (action === 'retry') { const prompt = retryPrompt(item); if (prompt) emit('retry', prompt) }
+  else emit('quote', item.text)
+}
 const list = ref<HTMLElement | null>(null)
 const heights = ref(new Map<string, number>())
 let observer: ResizeObserver | undefined
@@ -210,25 +224,24 @@ function assertNever(value: never): never {
             v-if="item.role === 'assistant'"
             :text="item.text"
             :external-label="t('transcript.externalLink')"
+            :file-label="t('transcript.copyFilePath')"
+            :copy-label="t('transcript.copyCode')"
+            :copied-label="t('transcript.copied')"
           />
           <p v-else class="run-timeline__text" data-message-plain>{{ item.text }}</p>
-          <!--
-            Each side of the conversation offers the move that belongs to it:
-            the answer can be quoted into the composer as the start of the next
-            prompt, and the reader's own turn can be put back to run again.
-            Neither starts work on its own - both end with the caret in the
-            field - which is what the reference's own row does not promise.
-          -->
+          <!-- The workspace owns quotation drafts and starts a new run for retry. -->
           <MessageActions
             v-if="item.role === 'assistant'"
             class="run-timeline__actions"
+            extended
             :text="item.text"
             :label="t('transcript.copyMessage')"
             :copied-label="t('transcript.copied')"
             :actions="[
               { id: 'quote', label: t('transcript.quote'), icon: 'quote' as const },
+              ...(item.final && retryPrompt(item) ? [{ id: 'retry', label: t('transcript.regenerate'), icon: 'reuse' as const }] : []),
             ]"
-            @action="emit('quote', item.text)"
+            @action="messageAction($event, item)"
           />
         </div>
       </template>
@@ -264,17 +277,15 @@ function assertNever(value: never): never {
 .run-timeline__item {
   margin-block-end: var(--space-4);
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-3);
   min-inline-size: 0;
-  padding: var(--space-3);
-  border-inline-start: 2px solid var(--color-border-strong);
-  background: var(--color-bg-surface);
+  padding: var(--space-2) 0;
+  border-inline-start: 0;
+  background: transparent;
 }
 
-/* The conversation is not a card: it is what the reader came to read, and the
-   border, the surface and the ledger number are all chrome the answer does not
-   need. Everything the run *did* keeps them. */
+/* Prose and tool disclosures share one reading column. */
 .run-timeline__item[data-message-shape='prose'] {
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-1);
@@ -315,16 +326,9 @@ function assertNever(value: never): never {
   color: var(--color-text-primary);
 }
 
-/* Offered on hover or focus, never removed from the tree: a control that exists
-   only under a pointer is a control a keyboard user cannot reach. */
 .run-timeline__actions {
-  opacity: 0;
-  transition: opacity var(--transition-fast) var(--ease-out);
-}
-
-.run-timeline__message:hover .run-timeline__actions,
-.run-timeline__message:focus-within .run-timeline__actions {
   opacity: 1;
+  margin-block-start: var(--space-2);
 }
 
 .run-timeline__item--gap {
@@ -332,7 +336,10 @@ function assertNever(value: never): never {
   color: var(--color-status-warning);
 }
 
+.run-timeline__item--error { color: var(--color-intent-danger-text); font-size: var(--text-sm); }
+
 .run-timeline__sequence {
+  display: none;
   color: var(--color-text-tertiary);
   font-family: var(--font-mono);
   font-size: var(--text-xs);

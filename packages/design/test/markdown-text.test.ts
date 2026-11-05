@@ -53,6 +53,25 @@ describe('MarkdownText', () => {
     expect(bullets.findAll('li')).toHaveLength(2)
   })
 
+  it('copies only the original code while rendering syntax and quote formatting', async () => {
+    const code = 'int main() {\n  // <script> stays code\n  return 42;\n}'
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    vi.stubGlobal('navigator', { clipboard: { writeText } })
+    const wrapper = mount(MarkdownText, {
+      props: { text: '> **Tip:** keep it *simple*.\n\n```cpp\n' + code + '\n```', copyLabel: '复制代码', copiedLabel: '已复制' },
+    })
+    try {
+      expect(wrapper.get('blockquote strong').text()).toBe('Tip:')
+      expect(wrapper.get('blockquote em').text()).toBe('simple')
+      expect(wrapper.get('.code-token--keyword').text()).toBe('int')
+      expect(wrapper.find('script').exists()).toBe(false)
+      expect(wrapper.get('[data-markdown-code]').element.textContent).toBe(code)
+      await wrapper.get('[data-markdown-code-copy]').trigger('click')
+      expect(writeText).toHaveBeenCalledWith(code)
+      expect(wrapper.get('[data-markdown-code-copy]').attributes('aria-label')).toBe('已复制')
+    } finally { wrapper.unmount(); vi.unstubAllGlobals() }
+  })
+
   it('draws a table with its header, its alignment and its cells', () => {
     const wrapper = mount(MarkdownText, {
       props: {

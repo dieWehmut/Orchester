@@ -2,20 +2,12 @@
 /**
  * What a reader can do with a message they are looking at.
  *
- * Copying is always here, because the text is here. Everything else arrives from
- * the surface, with its own words and its own glyph: the reference hangs a row
- * of icons off a message, and the row is only worth its space if each control
- * does something this product can answer. Regeneration and feedback are the
- * reference's other two, and neither is offered - the runtime cannot re-run a
- * turn in place and keeps no feedback channel - so what a surface can add here
- * is the reader's next move rather than the agent's.
- *
- * The row is drawn on hover or focus, but it is never removed from the tree:
- * a control that only exists while a pointer is over it is a control a keyboard
- * user cannot reach.
+ * Copy, speech and Markdown export operate on the displayed text. Actions that
+ * change the conversation are emitted to the surface that owns the run.
  */
-import { Check, Copy, Pencil, Quote, RotateCcw } from '@lucide/vue'
+import { Check, Copy, Pencil, Quote, RotateCcw, Volume2, Square, Download } from '@lucide/vue'
 import { onScopeDispose, ref } from 'vue'
+import { useI18n } from '../../i18n'
 
 /** An action the surface adds, named by the surface rather than here. */
 export interface MessageAction {
@@ -27,6 +19,7 @@ export interface MessageAction {
 const props = withDefaults(
   defineProps<{
     text: string
+    extended?: boolean
     /** The accessible name of the copy control, resolved by the surface. */
     label: string
     /** What the control says it has done, announced and then retired. */
@@ -38,12 +31,28 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{ action: [id: string] }>()
+const { t, locale } = useI18n()
 
 const GLYPHS = { quote: Quote, reuse: RotateCcw, edit: Pencil } as const
 
 /** How long the control admits it copied before going back to offering to. */
 const CONFIRMATION_MS = 2000
 
+const speaking = ref(false)
+const speechAvailable = typeof window !== 'undefined' && 'speechSynthesis' in window
+function speak() {
+  if (!speechAvailable) return
+  if (speaking.value) { window.speechSynthesis.cancel(); speaking.value = false; return }
+  const utterance = new SpeechSynthesisUtterance(props.text)
+  utterance.lang = locale.value
+  utterance.onend = utterance.onerror = () => { speaking.value = false }
+  window.speechSynthesis.cancel(); window.speechSynthesis.speak(utterance); speaking.value = true
+}
+function download() {
+  const url = URL.createObjectURL(new Blob([props.text], { type: 'text/markdown;charset=utf-8' }))
+  const link = document.createElement('a'); link.href = url; link.download = 'orchester-message.md'; link.click()
+  setTimeout(() => URL.revokeObjectURL(url), 1000)
+}
 const copied = ref(false)
 let timer: ReturnType<typeof setTimeout> | null = null
 
@@ -65,6 +74,7 @@ async function copy(): Promise<void> {
 
 onScopeDispose(() => {
   if (timer !== null) clearTimeout(timer)
+  if (speaking.value && speechAvailable) window.speechSynthesis.cancel()
 })
 </script>
 
@@ -79,8 +89,8 @@ onScopeDispose(() => {
       :title="label"
       @click="copy"
     >
-      <Check v-if="copied" :size="14" aria-hidden="true" />
-      <Copy v-else :size="14" aria-hidden="true" />
+      <Check v-if="copied" :size="16" aria-hidden="true" />
+      <Copy v-else :size="16" aria-hidden="true" />
     </button>
     <button
       v-for="action in actions"
@@ -92,8 +102,10 @@ onScopeDispose(() => {
       :title="action.label"
       @click="emit('action', action.id)"
     >
-      <component :is="GLYPHS[action.icon]" :size="14" aria-hidden="true" />
+      <component :is="GLYPHS[action.icon]" :size="16" aria-hidden="true" />
     </button>
+    <button v-if="extended && speechAvailable" class="message-actions__button" type="button" data-message-speech :aria-label="speaking ? t('transcript.stopReading') : t('transcript.readAloud')" :title="speaking ? t('transcript.stopReading') : t('transcript.readAloud')" :aria-pressed="speaking" @click="speak"><Square v-if="speaking" :size="16" aria-hidden="true" /><Volume2 v-else :size="16" aria-hidden="true" /></button>
+    <button v-if="extended" class="message-actions__button" type="button" data-message-download :aria-label="t('transcript.downloadMarkdown')" :title="t('transcript.downloadMarkdown')" @click="download"><Download :size="16" aria-hidden="true" /></button>
     <span class="message-actions__status" data-message-copy-status role="status" aria-live="polite">
       {{ copied ? copiedLabel : '' }}
     </span>

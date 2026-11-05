@@ -16,6 +16,8 @@ use crate::harness::{
 };
 use crate::{ChangeKind, TodoItem};
 
+mod text;
+
 /// The first version of the browser envelope.
 pub const UI_SCHEMA_VERSION: u16 = 1;
 
@@ -400,17 +402,17 @@ impl UiEventKind {
             // model's: a prompt can name a path, and the browser-facing stream
             // is the one place that policy has to hold.
             Self::UserMessage { text } => Self::UserMessage {
-                text: redact_ui_text(text),
+                text: self::text::redact_message(text),
             },
             Self::Message { text } => Self::Message {
-                text: redact_ui_text(text),
+                text: self::text::redact_message(text),
             },
             Self::MessageDelta { text, final_chunk } => Self::MessageDelta {
-                text: redact_ui_text(text),
+                text: self::text::redact_message(text),
                 final_chunk: *final_chunk,
             },
             Self::Reasoning { text } => Self::Reasoning {
-                text: redact_ui_text(text),
+                text: self::text::redact_message(text),
             },
             Self::ToolCall {
                 call_id,
@@ -1020,6 +1022,37 @@ mod tests {
         })
         .unwrap();
         assert!(!direct_json.contains("sk-provider-secret"));
+    }
+
+    #[test]
+    fn message_serialization_preserves_markdown_across_repeated_roundtrips() {
+        let markdown = format!(
+            "# 冒泡排序\r\n\r\n1. 比较相邻元素。\n2. 交换。\n\n```cpp\n\tstd::cout << \"hello\\n\";\n```\n\n[参考](https://en.cppreference.com/w/cpp/language)\n\n`C:\\code\\bubble.cpp`\n\n{}",
+            "正文不能受审批摘要的长度限制。".repeat(80),
+        );
+        for kind in [
+            UiEventKind::UserMessage {
+                text: markdown.clone(),
+            },
+            UiEventKind::Message {
+                text: markdown.clone(),
+            },
+            UiEventKind::MessageDelta {
+                text: markdown.clone(),
+                final_chunk: false,
+            },
+            UiEventKind::Reasoning {
+                text: markdown.clone(),
+            },
+        ] {
+            let mut event = envelope(kind);
+            for _ in 0..4 {
+                let wire = serde_json::to_string(&event).unwrap();
+                let value: serde_json::Value = serde_json::from_str(&wire).unwrap();
+                assert_eq!(value["kind"]["text"].as_str(), Some(markdown.as_str()));
+                event = serde_json::from_str(&wire).unwrap();
+            }
+        }
     }
 
     #[test]

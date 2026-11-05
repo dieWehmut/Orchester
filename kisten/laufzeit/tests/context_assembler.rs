@@ -82,6 +82,50 @@ fn bounded_view_keeps_recent_history_without_mutating_canonical_entries() {
 }
 
 #[test]
+fn bounded_history_does_not_send_a_tool_result_after_omitting_its_call() {
+    let fixed_bytes = ContextAssembler::new(ContextLimits::default(), Vec::new())
+        .assemble(input(Vec::new()))
+        .unwrap()
+        .estimated_bytes;
+    let result_and_answer_bytes = "prior-call".len() + "prior result".len() + "prior answer".len();
+    for limits in [
+        ContextLimits {
+            max_bytes: 20_000,
+            max_history_entries: 2,
+        },
+        ContextLimits {
+            max_bytes: fixed_bytes + result_and_answer_bytes,
+            max_history_entries: 64,
+        },
+    ] {
+        let assembled = ContextAssembler::new(limits, Vec::new())
+            .assemble(input(vec![
+                TranscriptEntry::user("prior request"),
+                TranscriptEntry::tool_call("prior-call", "read_file", r#"{"path":"a.cpp"}"#),
+                TranscriptEntry::tool_result("prior-call", "prior result"),
+                TranscriptEntry::assistant("prior answer"),
+            ]))
+            .unwrap();
+
+        assert_eq!(
+            assembled
+                .request
+                .messages
+                .iter()
+                .map(|message| message.role)
+                .collect::<Vec<_>>(),
+            [ModelRole::System, ModelRole::Assistant, ModelRole::User],
+            "a truncated conversation must not send an orphan tool result to the provider",
+        );
+        assert_eq!(assembled.omitted_entries, 3);
+        assert_eq!(
+            assembled.estimated_bytes,
+            fixed_bytes + "prior answer".len()
+        );
+    }
+}
+
+#[test]
 fn configured_and_key_shaped_secrets_are_rejected_without_echo() {
     let secret = SecretString::new("provider-secret-value".to_owned().into_boxed_str());
     let assembler = ContextAssembler::new(ContextLimits::default(), vec![secret]);
