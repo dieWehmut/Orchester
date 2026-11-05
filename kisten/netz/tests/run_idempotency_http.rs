@@ -132,6 +132,21 @@ async fn concurrent_http_retries_publish_one_initial_turn_and_a_working_replay_s
         // Every successful retry can immediately hydrate the first turn; this
         // catches a reservation published before its initial journal append.
         let run_id = started["run_id"].as_str().expect("run id");
+        let conversation_id = started["conversation_id"]
+            .as_str()
+            .expect("durable conversation id");
+        let conversation = accepted(
+            fixture
+                .client
+                .get(fixture.url(&format!("/sessions/{conversation_id}")))
+                .send()
+                .await
+                .expect("immediate conversation history"),
+        )
+        .await;
+        assert_eq!(conversation["conversation_id"], conversation_id);
+        assert_eq!(conversation["prompt"], "inspect the isolated HTTP fixture");
+        assert_eq!(conversation["run_ids"].as_array().unwrap().len(), 1);
         let snapshot = accepted(
             fixture
                 .client

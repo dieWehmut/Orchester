@@ -106,12 +106,6 @@ pub(crate) enum RunCreation {
 }
 
 impl RunRegistry {
-    pub(crate) fn discard_unstarted(&self, run_id: &RunId) {
-        if let Ok(mut state) = self.inner.state.lock() {
-            state.runs.remove(run_id);
-            state.idempotency.retain(|_, entry| entry.run_id != *run_id);
-        }
-    }
     pub(crate) fn new(retention: usize) -> Self {
         Self::with_history(retention, None)
     }
@@ -143,29 +137,32 @@ impl RunRegistry {
     }
 
     /// Publish a run and its first event together with its submission key.
-    ///
-    /// Both maps have the same lifetime: a retry keeps referring to the retained
-    /// run, including after termination. No lock is held across an await, and
-    /// a failure to build the first event publishes neither a run nor a key.
     pub(crate) fn create_or_reuse(
         &self,
         idempotency_key: Option<&str>,
         fingerprint: [u8; 32],
         initial_kind: UiEventKind,
     ) -> Result<RunCreation, RunRegistryError> {
-        let Some(idempotency_key) = idempotency_key else {
-            return self
-                .create_inner(Some(initial_kind))
-                .map(RunCreation::Created);
-        };
+        self.create_or_reuse_initialized(idempotency_key, fingerprint, initial_kind, |_| Ok(()))
+    }
 
+    /// Complete durable initialization before another thread can observe the
+    /// run or reuse its key. The initializer is synchronous and must not call
+    /// back into this registry. Failed initialization publishes neither map.
+    pub(crate) fn create_or_reuse_initialized(
+        &self,
+        idempotency_key: Option<&str>,
+        fingerprint: [u8; 32],
+        initial_kind: UiEventKind,
+        initialize: impl FnOnce(&RunHandle) -> Result<(), RunRegistryError>,
+    ) -> Result<RunCreation, RunRegistryError> {
         let mut state = self
             .inner
             .state
             .lock()
             .map_err(|_| RunRegistryError::LockPoisoned)?;
 
-        if let Some(entry) = state.idempotency.get(idempotency_key) {
+        if let Some(entry) = idempotency_key.and_then(|key| state.idempotency.get(key)) {
             if entry.fingerprint != fingerprint {
                 return Err(RunRegistryError::IdempotencyConflict);
             }
@@ -179,16 +176,23 @@ impl RunRegistry {
         }
 
         let run = create_entry_locked(&self.inner, &mut state, Some(initial_kind))?;
-        state.idempotency.insert(
-            idempotency_key.to_owned(),
-            IdempotencyEntry {
-                fingerprint,
-                run_id: run.id().clone(),
-            },
-        );
+        if let Err(error) = initialize(&run) {
+            state.runs.remove(run.id());
+            return Err(error);
+        }
+        if let Some(key) = idempotency_key {
+            state.idempotency.insert(
+                key.to_owned(),
+                IdempotencyEntry {
+                    fingerprint,
+                    run_id: run.id().clone(),
+                },
+            );
+        }
         Ok(RunCreation::Created(run))
     }
 
+    #[cfg(test)]
     fn create_inner(
         &self,
         initial_kind: Option<UiEventKind>,
@@ -674,6 +678,49 @@ mod tests {
             ),
             Ok(RunCreation::Created(_))
         ));
+    }
+
+    #[test]
+    fn durable_initialization_failure_leaves_the_key_retryable() {
+        let registry = RunRegistry::new(4);
+        let initial = UiEventKind::UserMessage {
+            text: "publish after persistence".into(),
+        };
+        let failed = registry.create_or_reuse_initialized(
+            Some("initial-transaction"),
+            [1; 32],
+            initial.clone(),
+            |_| Err(RunRegistryError::HistoryUnavailable),
+        );
+        assert!(matches!(failed, Err(RunRegistryError::HistoryUnavailable)));
+        {
+            let state = registry.inner.state.lock().unwrap();
+            assert!(state.runs.is_empty());
+            assert!(state.idempotency.is_empty());
+        }
+        let RunCreation::Created(created) = registry
+            .create_or_reuse_initialized(
+                Some("initial-transaction"),
+                [2; 32],
+                initial.clone(),
+                |run| {
+                    assert_eq!(run.initial_event()?.sequence, 1);
+                    Ok(())
+                },
+            )
+            .unwrap()
+        else {
+            panic!("retry must own the unpublished run")
+        };
+        let RunCreation::Reused(retried) = registry
+            .create_or_reuse_initialized(Some("initial-transaction"), [2; 32], initial, |_| {
+                panic!("a reused run must not repeat initialization")
+            })
+            .unwrap()
+        else {
+            panic!("initialized run must be reused")
+        };
+        assert_eq!(created.id(), retried.id());
     }
 
     #[tokio::test(start_paused = true)]

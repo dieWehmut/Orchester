@@ -75,13 +75,24 @@ pub(crate) async fn start_run_handler(
         })?,
         None => Vec::new(),
     };
+    let mut conversation_id = String::new();
     let creation = context
         .runs()
-        .create_or_reuse(
+        .create_or_reuse_initialized(
             idempotency_key.as_deref(),
             request.fingerprint(),
             UiEventKind::UserMessage {
                 text: request.prompt.clone(),
+            },
+            |run| {
+                conversation_id = history
+                    .begin_conversation_with_event(
+                        &run.initial_event()?,
+                        request.conversation_id.as_deref(),
+                        prior_context.len(),
+                    )
+                    .map_err(|_| RunRegistryError::HistoryUnavailable)?;
+                Ok(())
             },
         )
         .map_err(|error| run_error_response(error, request_id))?;
@@ -106,20 +117,6 @@ pub(crate) async fn start_run_handler(
             }),
         ));
     }
-
-    let initial = run
-        .initial_event()
-        .map_err(|error| run_error_response(error, request_id))?;
-    let conversation_id = history
-        .begin_conversation_with_event(
-            &initial,
-            request.conversation_id.as_deref(),
-            prior_context.len(),
-        )
-        .map_err(|_| {
-            context.runs().discard_unstarted(&run_id);
-            api_error_response(ApiErrorCode::Unavailable, request_id)
-        })?;
 
     let mut request = request;
     if request.resume.is_none() {
