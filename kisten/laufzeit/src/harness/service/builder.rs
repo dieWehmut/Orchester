@@ -167,9 +167,22 @@ where
     let policy_root = workspace_root.as_ref().to_path_buf();
     let identity = WorkspaceIdentity::for_workspace(workspace_root, owner_actor_id)?;
     let profile = model.profile().clone();
+    let mut context_limits = ContextLimits::default();
+    if let Some(metadata) = &profile.metadata {
+        if let Some(window) = metadata.context_window {
+            // Byte-based conservative budget; keep the harness's independent
+            // maximum and reserve room for configured model output.
+            context_limits.max_bytes = context_limits.max_bytes.min(
+                window
+                    .saturating_sub(metadata.max_output_tokens.unwrap_or(0))
+                    .max(1) as usize,
+            );
+        }
+    }
+
     let loop_engine = SelfAgentLoop::new(
         model,
-        ContextAssembler::new(ContextLimits::default(), secrets.values.clone()),
+        ContextAssembler::new(context_limits, secrets.values.clone()),
         AgentLoopConfig {
             model: profile.model,
             max_steps: config.limits.max_steps,

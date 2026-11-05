@@ -411,20 +411,6 @@ defineExpose({ focus })
 </template>
 
 <style scoped>
-/* An empty prompt is one compact row; drafts retain the multiline editor. */
-@media (min-width: 700px) {
-  .run-composer__field:has(textarea:placeholder-shown):not(:has(.run-composer__attachments)) {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 6px;
-    padding: 9px 12px;
-  }
-  .run-composer__field:has(textarea:placeholder-shown):not(:has(.run-composer__attachments)) .run-composer__footer { display: contents; }
-  .run-composer__field:has(textarea:placeholder-shown):not(:has(.run-composer__attachments)) .run-composer__leading { grid-column: 1; grid-row: 1; }
-  .run-composer__field:has(textarea:placeholder-shown):not(:has(.run-composer__attachments)) :deep(.app-textarea) { grid-column: 2; grid-row: 1; min-block-size: 36px; block-size: 36px; padding: 5px 0; }
-  .run-composer__field:has(textarea:placeholder-shown):not(:has(.run-composer__attachments)) .run-composer__actions { grid-column: 3; grid-row: 1; }
-}
-
 .run-composer {
   display: grid;
   gap: var(--space-2);
@@ -489,13 +475,15 @@ defineExpose({ focus })
 /* The prompt sits in the field rather than in a box of its own: a second
    border inside the first is the box the reference does not draw. */
 .run-composer :deep(.app-textarea) {
-  min-block-size: 2rem;
+  min-block-size: 3rem;
   max-block-size: min(18rem, 30dvh);
   overflow-y: auto;
   padding: var(--space-2) var(--space-2) 0;
-  border-color: transparent;
+  border: 0;
+  outline: none;
+  appearance: none;
   background: transparent;
-  border-radius: 0.75rem;
+  border-radius: 0;
   box-shadow: none;
   /* The field grows with the prompt, so a resize grip is a handle for a job
      already done - and it sits where the send control is. */
@@ -504,9 +492,12 @@ defineExpose({ focus })
   line-height: 1.6;
 }
 
+.run-composer :deep(.app-textarea:hover:not(:disabled)),
+.run-composer :deep(.app-textarea:focus),
 .run-composer :deep(.app-textarea:focus-visible) {
-  border-color: transparent;
+  border: 0;
   outline: none;
+  box-shadow: none;
 }
 
 /* The action is a shape, as the reference's is: a round control that points the

@@ -6,6 +6,7 @@ mod credentials;
 mod events;
 mod identity;
 mod model_catalog;
+mod model_discovery;
 mod permissions;
 mod provider_editor;
 mod resume_catalog;
@@ -50,6 +51,7 @@ pub use model_catalog::{
     SelfAgentModelCatalogError, SelfAgentModelChoice, SelfAgentModelSession,
     SelfAgentProviderChoice, SelfAgentProviderState,
 };
+pub use model_discovery::{discover_provider_models, DiscoveredProviderModel, ModelDiscoveryError};
 pub use permissions::{
     load_self_agent_permissions, SelfAgentApprovalStatus, SelfAgentAuditStatus,
     SelfAgentPermissionGovernance, SelfAgentPermissionRule, SelfAgentPermissionSnapshot,

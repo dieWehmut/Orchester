@@ -4,6 +4,7 @@ import type {
   ModelSelectionRequestDto,
   ProviderChoiceDto,
   ModelProviderRequestDto,
+  ProviderUpdateDto,
 } from '@orchester/protokoll'
 import { computed, ref, shallowRef } from 'vue'
 import { defineStore } from 'pinia'
@@ -61,6 +62,32 @@ export const useModelCatalogStore = defineStore('modelCatalog', () => {
       status.value = catalog.value ? 'stale' : 'error'
     }
   }
+
+  async function discoverProvider(id: string) {
+    if (!api) throw new Error('Model API unavailable')
+    return api.discoverProvider(id)
+  }
+  async function providerDetails(id: string) {
+    if (!api) throw new Error("Model API unavailable")
+    return api.providerDetails(id)
+  }
+  async function editCatalog(action: (current: ModelsApi) => Promise<ModelCatalogDto>): Promise<boolean> {
+    const current = api
+    const requestGeneration = ++generation
+    if (!current) return false
+    status.value = catalog.value ? 'refreshing' : 'loading'
+    error.value = null
+    try {
+      const next = await action(current)
+      if (generation !== requestGeneration) return false
+      catalog.value = next; status.value = 'ready'; return true
+    } catch (cause) {
+      if (generation !== requestGeneration) return false
+      error.value = normalizeApiError(cause); status.value = catalog.value ? 'stale' : 'error'; return false
+    }
+  }
+  function updateProvider(provider: ProviderUpdateDto) { return editCatalog(current => current.updateProvider(provider)) }
+  function deleteProvider(id: string) { return editCatalog(current => current.deleteProvider(id)) }
 
   function reset(): void {
     generation += 1
@@ -135,6 +162,10 @@ export const useModelCatalogStore = defineStore('modelCatalog', () => {
     load,
     select,
     saveProvider,
+    providerDetails,
+    discoverProvider,
+    updateProvider,
+    deleteProvider,
     reset,
   }
 })

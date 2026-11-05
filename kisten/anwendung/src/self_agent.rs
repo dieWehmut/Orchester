@@ -474,6 +474,250 @@ impl SelfAgentHost {
         Ok(edit)
     }
 
+    pub async fn discover_provider_models(
+        &self,
+        provider: &str,
+        cancel: CancellationToken,
+    ) -> Result<
+        Vec<orchester_laufzeit::harness::service::DiscoveredProviderModel>,
+        SelfAgentHostError,
+    > {
+        let config = self.load_config()?;
+        let credentials = KeyringCredentialStore::new();
+        let transport = orchester_laufzeit::harness::provider::ReqwestHttpTransport::new()
+            .map_err(|_| ConfigError::Validation {
+                path: "provider".into(),
+                message: "Model discovery transport unavailable".into(),
+            })?;
+        orchester_laufzeit::harness::service::discover_provider_models(
+            &config,
+            &credentials,
+            provider,
+            &transport,
+            cancel,
+        )
+        .await
+        .map_err(|_| {
+            ConfigError::Validation {
+                path: "provider".into(),
+                message: "Could not retrieve provider model catalog".into(),
+            }
+            .into()
+        })
+    }
+
+    pub fn provider_profiles(
+        &self,
+        provider: &str,
+    ) -> Result<
+        Vec<(
+            String,
+            orchester_laufzeit::harness::config::ModelProfileConfig,
+        )>,
+        SelfAgentHostError,
+    > {
+        Ok(self
+            .load_config()?
+            .model_profiles()
+            .iter()
+            .filter(|(_, p)| p.model_provider == provider)
+            .map(|(n, p)| (n.clone(), p.clone()))
+            .collect())
+    }
+
+    pub fn save_provider_catalog(
+        &mut self,
+        draft: &ProviderDraft,
+        mut profiles: Vec<(
+            String,
+            orchester_laufzeit::harness::config::ModelProfileConfig,
+        )>,
+        secret: Option<SecretString>,
+    ) -> Result<(), SelfAgentHostError> {
+        use orchester_laufzeit::harness::config::{ConfigValue, ProviderConfig};
+        let loader = self.config_loader()?;
+        let config = loader.load_effective(&self.workspace)?;
+        if profiles.is_empty() || profiles.len() > 128 {
+            return Err(ConfigError::Validation {
+                path: "models".into(),
+                message: "Configure between 1 and 128 models".into(),
+            }
+            .into());
+        }
+        let mut entry = config
+            .model_providers()
+            .get(&draft.provider)
+            .cloned()
+            .unwrap_or(ProviderConfig {
+                name: None,
+                base_url: None,
+                api_key: None,
+                wire_api: None,
+                requires_openai_auth: None,
+            });
+        entry.name = Some(draft.name.clone());
+        entry.base_url = Some(draft.base_url.clone());
+        entry.wire_api = Some(draft.wire_api.clone());
+        config.resolve_provider_entry(
+            &draft.provider,
+            entry.clone(),
+            Some(&profiles[0].1.model),
+        )?;
+        let mut candidate =
+            config.with_provider_for_edit(&draft.provider, entry, &profiles[0].1.model)?;
+        for (name, profile) in &mut profiles {
+            *name = name.trim().to_owned();
+            profile.model = profile.model.trim().to_owned();
+            profile.display_name = profile
+                .display_name
+                .take()
+                .map(|s| s.trim().to_owned())
+                .filter(|s| !s.is_empty());
+
+            if let Some(old) = config
+                .model_profiles()
+                .get(name)
+                .filter(|old| old.model_provider == draft.provider)
+            {
+                if profile.model_reasoning_effort.is_none() {
+                    profile.model_reasoning_effort = old.model_reasoning_effort.clone();
+                }
+                if profile.plan_mode_reasoning_effort.is_none() {
+                    profile.plan_mode_reasoning_effort = old.plan_mode_reasoning_effort.clone();
+                }
+                if profile.service_tier.is_none() {
+                    profile.service_tier = old.service_tier.clone();
+                }
+            }
+            if let Some(levels) = &profile.reasoning_levels {
+                if !levels
+                    .iter()
+                    .any(|l| Some(l.level.as_str()) == profile.model_reasoning_effort.as_deref())
+                {
+                    profile.model_reasoning_effort = levels.first().map(|l| l.level.clone());
+                }
+                if !levels.iter().any(|l| {
+                    Some(l.level.as_str()) == profile.plan_mode_reasoning_effort.as_deref()
+                }) {
+                    profile.plan_mode_reasoning_effort = profile.model_reasoning_effort.clone();
+                }
+            }
+        }
+        let mut names = std::collections::BTreeSet::new();
+        for (name, profile) in &profiles {
+            if profile.model_provider != draft.provider
+                || !names.insert(name.clone())
+                || config
+                    .model_profiles()
+                    .get(name)
+                    .is_some_and(|p| p.model_provider != draft.provider)
+            {
+                return Err(ConfigError::Validation {
+                    path: "models".into(),
+                    message: "Model profile ownership or identifier is invalid".into(),
+                }
+                .into());
+            }
+            candidate = candidate.with_model_profile_entry(name, Some(profile.clone()))?;
+        }
+        let mut edits = Vec::new();
+        if !config.model_providers().contains_key(&draft.provider) && secret.is_none() {
+            return Err(ConfigError::Validation {
+                path: "api_key".into(),
+                message: "New providers require an API key".into(),
+            }
+            .into());
+        }
+        if config.model_provider.is_none()
+            || (config.model_provider.as_deref() == Some(&draft.provider)
+                && !profiles
+                    .iter()
+                    .any(|(_, p)| Some(p.model.as_str()) == config.model.as_deref()))
+        {
+            edits.push((
+                vec!["model_provider".into()],
+                ConfigValue::String(draft.provider.clone()),
+            ));
+            edits.push((
+                vec!["model".into()],
+                ConfigValue::String(profiles[0].1.model.clone()),
+            ));
+        }
+
+        for (field, value) in [
+            ("name", &draft.name),
+            ("base_url", &draft.base_url),
+            ("wire_api", &draft.wire_api),
+        ] {
+            edits.push((
+                vec![
+                    "model_providers".into(),
+                    draft.provider.clone(),
+                    field.into(),
+                ],
+                ConfigValue::String(value.clone()),
+            ));
+        }
+        for (name, profile) in config.model_profiles() {
+            if profile.model_provider == draft.provider && !names.contains(name) {
+                edits.push((
+                    vec!["model_profiles".into(), name.clone()],
+                    ConfigValue::Remove,
+                ));
+            }
+        }
+        for (name, profile) in profiles {
+            edits.push((
+                vec!["model_profiles".into(), name],
+                ConfigValue::from_serializable(&profile).expect("model profile serializes"),
+            ));
+        }
+        if let Some(secret) = secret {
+            with_staged_credential(&KeyringCredentialStore::new(), secret, |reference| {
+                edits.push((
+                    vec![
+                        "model_providers".into(),
+                        draft.provider.clone(),
+                        "api_key".into(),
+                    ],
+                    ConfigValue::String(reference.into()),
+                ));
+                loader.edit_user_config(&edits)
+            })?;
+        } else {
+            loader.edit_user_config(&edits)?;
+        }
+        self.runtime = None;
+        self.model_session = Default::default();
+        Ok(())
+    }
+
+    pub fn delete_provider(&mut self, provider: &str) -> Result<(), SelfAgentHostError> {
+        use orchester_laufzeit::harness::config::ConfigValue;
+        let loader = self.config_loader()?;
+        let config = loader.load_effective(&self.workspace)?;
+        let mut edits = vec![(
+            vec!["model_providers".into(), provider.into()],
+            ConfigValue::Remove,
+        )];
+        for (name, profile) in config.model_profiles() {
+            if profile.model_provider == provider {
+                edits.push((
+                    vec!["model_profiles".into(), name.clone()],
+                    ConfigValue::Remove,
+                ));
+            }
+        }
+        if config.model_provider.as_deref() == Some(provider) {
+            edits.push((vec!["model_provider".into()], ConfigValue::Remove));
+            edits.push((vec!["model".into()], ConfigValue::Remove));
+        }
+        loader.edit_user_config(&edits)?;
+        self.runtime = None;
+        self.model_session = Default::default();
+        Ok(())
+    }
+
     pub fn edit_model_profile(
         &mut self,
         provider: &str,
@@ -503,6 +747,11 @@ impl SelfAgentHost {
                     .unwrap_or(ModelProfileConfig {
                         model_provider: provider.to_owned(),
                         model: model.to_owned(),
+                        display_name: None,
+                        context_window: None,
+                        max_output_tokens: None,
+                        input_types: None,
+                        reasoning_levels: None,
                         model_reasoning_effort: None,
                         plan_mode_reasoning_effort: None,
                         service_tier: None,
@@ -515,23 +764,10 @@ impl SelfAgentHost {
             .model_profiles()
             .iter()
             .map(|(name, p)| {
-                let mut fields = vec![
-                    (
-                        "model_provider".into(),
-                        ConfigValue::String(p.model_provider.clone()),
-                    ),
-                    ("model".into(), ConfigValue::String(p.model.clone())),
-                ];
-                for (key, value) in [
-                    ("model_reasoning_effort", &p.model_reasoning_effort),
-                    ("plan_mode_reasoning_effort", &p.plan_mode_reasoning_effort),
-                    ("service_tier", &p.service_tier),
-                ] {
-                    if let Some(value) = value {
-                        fields.push((key.into(), ConfigValue::String(value.clone())));
-                    }
-                }
-                (name.clone(), ConfigValue::Object(fields))
+                (
+                    name.clone(),
+                    ConfigValue::from_serializable(p).expect("model profile serializes"),
+                )
             })
             .collect();
         loader
@@ -590,7 +826,53 @@ impl SelfAgentHost {
         if let Some(effort) = self.reasoning_effort_override.as_ref() {
             choice.reasoning_effort = effort.clone();
         }
+        if let Some(metadata) = &choice.metadata {
+            if let Some(levels) = &metadata.reasoning_levels {
+                if !choice
+                    .reasoning_effort
+                    .as_ref()
+                    .is_some_and(|e| levels.iter().any(|l| &l.level == e))
+                {
+                    choice.reasoning_effort = metadata
+                        .model_reasoning_effort
+                        .clone()
+                        .filter(|e| levels.iter().any(|l| &l.level == e));
+                }
+            }
+        }
         choice
+    }
+}
+
+fn with_staged_credential<
+    S: orchester_laufzeit::harness::credentials::CredentialStore + ?Sized,
+    T,
+>(
+    store: &S,
+    secret: SecretString,
+    apply: impl FnOnce(&str) -> Result<T, ConfigError>,
+) -> Result<T, SelfAgentHostError> {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    let stamp = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_err(|_| SelfAgentHostError::Initialization)?
+        .as_nanos();
+    let slot = format!(
+        "provider-edit-{}-{stamp}-{}",
+        std::process::id(),
+        NEXT.fetch_add(1, Ordering::Relaxed)
+    );
+    if store.present(&slot).map_err(CredentialEntryError::from)? {
+        return Err(SelfAgentHostError::Initialization);
+    }
+    let update = store_provider_credential(store, &slot, secret)?;
+    match apply(&update.reference) {
+        Ok(value) => Ok(value),
+        Err(error) => {
+            let _ = store.clear(&slot);
+            Err(error.into())
+        }
     }
 }
 
@@ -663,6 +945,117 @@ mod tests {
         events: Option<Arc<dyn ModelEventSink>>,
     ) -> ResumeFuture<'a> {
         Box::pin(host.resume_with_events(handle, cancel, events))
+    }
+
+    #[test]
+    fn staged_credential_failure_keeps_existing_key_and_removes_unused_stage() {
+        use orchester_laufzeit::harness::credentials::{CredentialStore, InMemoryCredentialStore};
+        use secrecy::ExposeSecret;
+        let store = InMemoryCredentialStore::with("relay", "working-key");
+        let mut slot = String::new();
+        let result: Result<(), SelfAgentHostError> =
+            with_staged_credential(&store, SecretString::from("replacement-key"), |reference| {
+                slot = reference
+                    .strip_prefix("${secret:")
+                    .unwrap()
+                    .strip_suffix('}')
+                    .unwrap()
+                    .to_owned();
+                assert_eq!(
+                    store.get(&slot).unwrap().unwrap().expose_secret(),
+                    "replacement-key"
+                );
+                Err(ConfigError::Validation {
+                    path: "test".into(),
+                    message: "simulated write failure".into(),
+                })
+            });
+        assert!(result.is_err());
+        assert!(!store.present(&slot).unwrap());
+        assert_eq!(
+            store.get("relay").unwrap().unwrap().expose_secret(),
+            "working-key"
+        );
+    }
+
+    #[test]
+    fn provider_catalog_edit_preserves_credentials_and_other_provider_then_deletes_owned_models() {
+        use orchester_laufzeit::harness::config::{ConfigValue, ModelProfileConfig};
+        let root = std::env::temp_dir().join(format!(
+            "orchester-rich-provider-{}-{}",
+            std::process::id(),
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let home = root.join("home");
+        let workspace = root.join("workspace");
+        fs::create_dir_all(&workspace).unwrap();
+        let path = home.join(USER_CONFIG);
+        let loader = ConfigLoader::for_user_path(&path);
+        for provider in ["alpha", "beta"] {
+            loader
+                .edit_user_config(&[(
+                    vec!["model_providers".into(), provider.into()],
+                    ConfigValue::Object(vec![
+                        (
+                            "base_url".into(),
+                            ConfigValue::String("https://example.com/v1".into()),
+                        ),
+                        (
+                            "api_key".into(),
+                            ConfigValue::String("existing-private-test-key".into()),
+                        ),
+                        ("wire_api".into(), ConfigValue::String("responses".into())),
+                    ]),
+                )])
+                .unwrap();
+        }
+        loader
+            .edit_user_config(&[
+                (
+                    vec!["model_provider".into()],
+                    ConfigValue::String("alpha".into()),
+                ),
+                (vec!["model".into()], ConfigValue::String("old".into())),
+            ])
+            .unwrap();
+        let paths = OrchesterPaths::new(&home, &workspace);
+        let mut host = SelfAgentHost::for_paths(&paths);
+        let profile = ModelProfileConfig {
+            model_provider: "alpha".into(),
+            model: "new-model".into(),
+            display_name: Some("Friendly".into()),
+            context_window: Some(1000000),
+            max_output_tokens: Some(256000),
+            input_types: Some(vec!["text".into(), "image".into()]),
+            reasoning_levels: Some(vec![]),
+            model_reasoning_effort: None,
+            plan_mode_reasoning_effort: None,
+            service_tier: None,
+        };
+        let draft = ProviderDraft {
+            provider: "alpha".into(),
+            name: "Alpha edited".into(),
+            base_url: "https://example.com/v1".into(),
+            wire_api: "responses".into(),
+            model: "new-model".into(),
+            activate: false,
+        };
+        host.save_provider_catalog(&draft, vec![("alpha.new".into(), profile.clone())], None)
+            .unwrap();
+        let reopened = SelfAgentHost::for_paths(&paths);
+        assert_eq!(reopened.provider_profiles("alpha").unwrap()[0].1, profile);
+        let text = fs::read_to_string(&path).unwrap();
+        assert_eq!(text.matches("existing-private-test-key").count(), 2);
+        assert!(!text.contains("__orchester"));
+        host.delete_provider("alpha").unwrap();
+        let loaded = loader.load_effective(&workspace).unwrap();
+        assert!(loaded.model_providers().contains_key("beta"));
+        assert!(!loaded.model_providers().contains_key("alpha"));
+        assert!(loaded.model_profiles().is_empty());
+        fs::remove_dir_all(root).unwrap();
     }
 
     #[test]

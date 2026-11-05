@@ -82,11 +82,29 @@ fn api_router() -> Router<ServerContext> {
         .route("/agents/activity", get(crate::agent_activity::list))
         .route("/agents/activity/{id}", get(crate::agent_activity::detail))
         .route("/models", get(model_catalog_handler))
-        .route("/composer/context", get(crate::composer::get).put(crate::composer::put).layer(DefaultBodyLimit::max(32 * 1024)))
-        .route("/mcp/servers", get(crate::mcp::list).post(crate::mcp::create).layer(DefaultBodyLimit::max(64 * 1024)))
-        .route("/mcp/servers/{id}", put(crate::mcp::update).delete(crate::mcp::remove).layer(DefaultBodyLimit::max(64 * 1024)))
+        .route(
+            "/composer/context",
+            get(crate::composer::get)
+                .put(crate::composer::put)
+                .layer(DefaultBodyLimit::max(32 * 1024)),
+        )
+        .route(
+            "/mcp/servers",
+            get(crate::mcp::list)
+                .post(crate::mcp::create)
+                .layer(DefaultBodyLimit::max(64 * 1024)),
+        )
+        .route(
+            "/mcp/servers/{id}",
+            put(crate::mcp::update)
+                .delete(crate::mcp::remove)
+                .layer(DefaultBodyLimit::max(64 * 1024)),
+        )
         .route("/mcp/servers/{id}/catalog", post(crate::mcp::catalog))
-        .route("/mcp/servers/{id}/invoke", post(crate::mcp::invoke).layer(DefaultBodyLimit::max(64 * 1024)))
+        .route(
+            "/mcp/servers/{id}/invoke",
+            post(crate::mcp::invoke).layer(DefaultBodyLimit::max(64 * 1024)),
+        )
         .route(
             "/plugins",
             get(crate::plugins::list)
@@ -114,6 +132,17 @@ fn api_router() -> Router<ServerContext> {
         .route(
             "/models/providers",
             post(model_provider_handler).layer(DefaultBodyLimit::max(32 * 1024)),
+        )
+        .route(
+            "/models/providers/{provider}",
+            get(crate::model_catalog::provider_details_handler)
+                .put(crate::model_catalog::provider_update_handler)
+                .delete(crate::model_catalog::provider_delete_handler)
+                .layer(DefaultBodyLimit::max(256 * 1024)),
+        )
+        .route(
+            "/models/providers/{provider}/discover",
+            post(crate::model_catalog::provider_discover_handler),
         )
         .route("/runs", post(start_run_handler))
         .route("/runs/{id}", get(snapshot_run_handler))

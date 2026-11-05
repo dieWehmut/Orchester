@@ -18,7 +18,7 @@ use std::path::{Path, PathBuf};
 
 use zeroize::Zeroizing;
 
-use super::document::{quote, upsert_member, DocumentEditError};
+use super::document::{quote, remove_member, upsert_member, DocumentEditError};
 use super::{
     path_entry_exists, protected_file, require_user_permissions, ConfigError, ConfigLoader,
 };
@@ -45,15 +45,23 @@ const STAGING_SUFFIX: &str = "new";
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ConfigValue {
     String(String),
+    Json(serde_json::Value),
+    Remove,
     Object(Vec<(String, ConfigValue)>),
 }
 
 impl ConfigValue {
+    pub fn from_serializable(value: &impl serde::Serialize) -> Result<Self, serde_json::Error> {
+        serde_json::to_value(value).map(Self::Json)
+    }
+
     /// Render as JSON text whose inner lines start from `indent`, so a spliced
     /// block lines up with the block it lands in.
     fn render(&self, indent: &str) -> String {
         match self {
             Self::String(value) => quote(value),
+            Self::Json(value) => value.to_string(),
+            Self::Remove => "null".into(),
             Self::Object(members) if members.is_empty() => "{}".into(),
             Self::Object(members) => {
                 let inner = format!("{indent}  ");
@@ -117,8 +125,12 @@ fn edit_config_file(
     for (member, value) in members {
         let member: Vec<&str> = member.iter().map(String::as_str).collect();
         edited = Zeroizing::new(
-            upsert_member(&edited, &member, |indent| value.render(indent))
-                .map_err(document_error)?,
+            if matches!(value, ConfigValue::Remove) {
+                remove_member(&edited, &member)
+            } else {
+                upsert_member(&edited, &member, |indent| value.render(indent))
+            }
+            .map_err(document_error)?,
         );
     }
 

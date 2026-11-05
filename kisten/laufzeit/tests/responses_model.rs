@@ -170,6 +170,7 @@ fn authenticated_model(
         transport,
         Some(secret),
         ResponsesRequestOptions {
+            max_output_tokens: None,
             reasoning_effort: Some("ultra".into()),
             service_tier: Some("default".into()),
         },

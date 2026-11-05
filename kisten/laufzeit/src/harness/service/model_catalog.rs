@@ -49,6 +49,7 @@ impl SelfAgentActiveModel {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SelfAgentModelChoice {
+    pub metadata: Option<Box<crate::harness::config::ModelProfileConfig>>,
     pub profile: Option<String>,
     pub provider: String,
     pub provider_name: String,
@@ -351,6 +352,7 @@ fn choice_from_resolved(
     resolved: ResolvedModelProfile,
 ) -> Result<SelfAgentModelChoice, ConfigError> {
     let ResolvedModelProfile {
+        metadata,
         provider,
         provider_name,
         model,
@@ -378,6 +380,7 @@ fn choice_from_resolved(
         }
     }
     Ok(SelfAgentModelChoice {
+        metadata: metadata.map(Box::new),
         profile,
         provider,
         provider_name,

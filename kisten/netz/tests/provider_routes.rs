@@ -385,3 +385,210 @@ async fn provider_setup_refuses_untrusted_host_origin_and_missing_session_or_csr
         assert!(!workspace.config().exists());
     }
 }
+
+fn rich_draft() -> Value {
+    json!({"provider":"relay","name":"Renamed relay","base_url":"https://example.com/v1","wire_api":"responses","api_key":"","models":[{"profile":"relay.custom","model":"custom-model","display_name":"Custom model","context_window":1000000,"max_output_tokens":64000,"input_types":["text","image"],"reasoning_levels":[{"level":"max","api_value":"high"}]}]})
+}
+fn rich_request(body: Value) -> Request<Body> {
+    Request::put("/api/v1/models/providers/relay")
+        .header(header::CONTENT_TYPE, "application/json")
+        .body(Body::from(body.to_string()))
+        .unwrap()
+}
+fn existing_provider_fixture(workspace: &Workspace) {
+    workspace.write(r#"{
+      // private existing config
+      "model_provider":"relay","model":"old-model",
+      "model_providers":{
+        "relay":{"name":"Relay","base_url":"https://example.com/v1","wire_api":"responses","api_key":"private-existing-credential"},
+        "other":{"base_url":"https://other.example/v1","wire_api":"responses"}
+      },
+      "model_profiles":{"other.stable":{"model_provider":"other","model":"other-model"}}
+    }"#);
+}
+
+#[tokio::test]
+async fn rich_provider_routes_edit_reload_and_delete_preserve_other_provider_and_private_key() {
+    let workspace = Workspace::new();
+    existing_provider_fixture(&workspace);
+    let client = workspace.router().await;
+    let details = client
+        .clone()
+        .oneshot(
+            Request::get("/api/v1/models/providers/relay")
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(details.status(), StatusCode::OK);
+    let details = json_body(details).await;
+    assert_eq!(details["models"][0]["model"], "old-model");
+    assert!(!details.to_string().contains("private-existing-credential"));
+    let response = client
+        .clone()
+        .oneshot(rich_request(rich_draft()))
+        .await
+        .unwrap();
+    assert_eq!(response.status(), StatusCode::OK);
+    let catalog = json_body(response).await;
+    assert_eq!(catalog["active"]["choice"]["model"], "custom-model");
+    let text = fs::read_to_string(workspace.config()).unwrap();
+    assert!(text.contains("private-existing-credential"));
+    assert!(text.contains("// private existing config"));
+    let details = json_body(
+        client
+            .clone()
+            .oneshot(
+                Request::get("/api/v1/models/providers/relay")
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap(),
+    )
+    .await;
+    assert_eq!(details["models"][0]["max_output_tokens"], 64000);
+    assert_eq!(
+        details["models"][0]["reasoning_levels"][0]["api_value"],
+        "high"
+    );
+    let removed = client
+        .oneshot(
+            Request::delete("/api/v1/models/providers/relay")
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(removed.status(), StatusCode::OK);
+    let config = ConfigLoader::for_user_path(workspace.config())
+        .load_effective(workspace.0.join("workspace"))
+        .unwrap();
+    assert!(config.model_providers().contains_key("other"));
+    assert!(!config.model_providers().contains_key("relay"));
+    assert!(config.model_profiles().contains_key("other.stable"));
+    assert!(!config.model_profiles().contains_key("relay.custom"));
+}
+
+#[tokio::test]
+async fn rich_provider_invalid_update_is_atomic_and_cannot_overwrite_another_provider_profile() {
+    let workspace = Workspace::new();
+    existing_provider_fixture(&workspace);
+    let before = fs::read(workspace.config()).unwrap();
+    let client = workspace.router().await;
+    for field in ["context_window", "profile"] {
+        let mut value = rich_draft();
+        value["models"][0][field] = if field == "profile" {
+            json!("other.stable")
+        } else {
+            json!(0)
+        };
+        let response = client.clone().oneshot(rich_request(value)).await.unwrap();
+        assert_eq!(response.status(), StatusCode::UNPROCESSABLE_ENTITY);
+        assert_eq!(fs::read(workspace.config()).unwrap(), before);
+    }
+}
+
+#[tokio::test]
+async fn rich_provider_mutations_require_session_and_csrf_and_details_require_session() {
+    let workspace = Workspace::new();
+    existing_provider_fixture(&workspace);
+    let before = fs::read(workspace.config()).unwrap();
+    let client = workspace.router().await;
+    for method in ["PUT", "DELETE"] {
+        for missing in ["cookie", "x-csrf-token"] {
+            let mut request = Request::builder()
+                .method(method)
+                .uri("/api/v1/models/providers/relay")
+                .header(header::CONTENT_TYPE, "application/json")
+                .body(Body::from(rich_draft().to_string()))
+                .unwrap();
+            request.headers_mut().extend(client.headers.clone());
+            request.headers_mut().remove(missing);
+            let response = client.router.clone().oneshot(request).await.unwrap();
+            assert_eq!(
+                response.status(),
+                if missing == "cookie" {
+                    StatusCode::UNAUTHORIZED
+                } else {
+                    StatusCode::FORBIDDEN
+                }
+            );
+            assert_eq!(fs::read(workspace.config()).unwrap(), before);
+        }
+    }
+    let response = client
+        .router
+        .oneshot(
+            Request::get("/api/v1/models/providers/relay")
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+}
+
+#[tokio::test]
+async fn rich_provider_optional_blank_display_name_is_normalized() {
+    let workspace = Workspace::new();
+    existing_provider_fixture(&workspace);
+    let client = workspace.router().await;
+    let mut value = rich_draft();
+    value["models"][0]["display_name"] = json!("  ");
+    let response = client.clone().oneshot(rich_request(value)).await.unwrap();
+    assert_eq!(response.status(), StatusCode::OK);
+    let details = json_body(
+        client
+            .oneshot(
+                Request::get("/api/v1/models/providers/relay")
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap(),
+    )
+    .await;
+    assert!(details["models"][0]["display_name"].is_null());
+}
+
+#[tokio::test]
+async fn editing_and_deleting_an_unrelated_provider_preserves_session_model() {
+    let workspace = Workspace::new();
+    existing_provider_fixture(&workspace);
+    let client = workspace.router().await;
+    let selected = client
+        .clone()
+        .oneshot(
+            Request::put("/api/v1/models/selection")
+                .header(header::CONTENT_TYPE, "application/json")
+                .body(Body::from(r#"{"profile":"other.stable","effort":"high"}"#))
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(selected.status(), StatusCode::OK);
+    let edited = client
+        .clone()
+        .oneshot(rich_request(rich_draft()))
+        .await
+        .unwrap();
+    assert_eq!(edited.status(), StatusCode::OK);
+    let catalog = json_body(edited).await;
+    assert_eq!(catalog["active"]["choice"]["profile"], "other.stable");
+    assert_eq!(catalog["active"]["choice"]["reasoning_effort"], "high");
+    let deleted = client
+        .oneshot(
+            Request::delete("/api/v1/models/providers/relay")
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(deleted.status(), StatusCode::OK);
+    assert_eq!(
+        json_body(deleted).await["active"]["choice"]["profile"],
+        "other.stable"
+    );
+}

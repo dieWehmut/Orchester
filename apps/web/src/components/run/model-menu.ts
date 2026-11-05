@@ -45,18 +45,28 @@ export function modelMenuGroups(catalog: ModelCatalogDto | null): ModelMenuGroup
   for (const profile of catalog.profiles) {
     group(profile.provider, profile.provider_name).choices.push({
       id: `profile:${profile.profile}`,
-      label: profile.model,
-      description: profile.profile !== profile.model ? profile.profile : undefined,
+      label: profile.display_name || profile.model,
+      description: [profile.display_name ? profile.model : profile.profile !== profile.model ? profile.profile : '', profile.context_window ? `${profile.context_window.toLocaleString()} context` : '', profile.max_output_tokens ? `${profile.max_output_tokens.toLocaleString()} output` : ''].filter(Boolean).join(' · ') || undefined,
       checked: !catalog.selected_provider && active?.profile === profile.profile,
     })
   }
   if (active && !Array.from(groups.values()).some(item => item.choices.some(choice => choice.checked))) {
     group(active.provider, active.provider_name).choices.unshift({
       id: active.profile ? `profile:${active.profile}` : 'configured:',
-      label: active.model,
+      label: active.display_name || active.model,
       description: active.profile || undefined,
       checked: true,
     })
   }
   return Array.from(groups.values())
+}
+
+/** Undefined/null inherits legacy defaults; an explicit empty catalog disables reasoning. */
+export function modelReasoningNames(catalog: ModelCatalogDto | null): string[] {
+  const active = catalog?.active.state === 'configured' ? catalog.active.choice : null
+  const configured = active?.reasoning_levels ?? catalog?.profiles.find(profile => profile.profile === active?.profile)?.reasoning_levels
+  if (configured !== undefined && configured !== null) return configured.map(entry => entry.level)
+  const names: string[] = [...REASONING_EFFORTS]
+  if (active?.reasoning_effort && !names.includes(active.reasoning_effort)) names.push(active.reasoning_effort)
+  return names
 }

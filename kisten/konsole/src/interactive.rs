@@ -2621,9 +2621,14 @@ mod tests {
             let mut out = Vec::new();
             brand::render(&mut out, width, height).unwrap();
             let plain = strip_ansi(&String::from_utf8(out).unwrap());
-            let first = plain.lines().find(|line| line.contains('▀')).unwrap();
-            let left = first.chars().take_while(|c| *c == ' ').count();
-            let portrait = first.trim_start().chars().count();
+            let first = plain
+                .lines()
+                .find(|line| line.contains(['▀', '▄']))
+                .unwrap();
+            let portrait = 128.min(width * 2 / 3).min((height - 2) * 2).max(8) & !1;
+            let left = (width - portrait) / 2;
+            assert!(first.starts_with(&" ".repeat(left)));
+            assert_eq!(first.chars().count(), left + portrait);
             assert!((width - portrait).abs_diff(left * 2) <= 1);
             assert!(portrait <= 128);
             assert!(portrait / 2 <= height.saturating_sub(2));

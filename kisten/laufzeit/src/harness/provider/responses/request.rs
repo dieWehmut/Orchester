@@ -19,6 +19,7 @@ const MAX_OPTION_BYTES: usize = 64;
 /// Optional Responses fields supplied by the effective provider configuration.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct ResponsesRequestOptions {
+    pub max_output_tokens: Option<u64>,
     pub reasoning_effort: Option<String>,
     pub service_tier: Option<String>,
 }
@@ -87,6 +88,7 @@ fn encode_responses_request_with_stream(
     }
 
     let wire = WireRequest {
+        max_output_tokens: options.max_output_tokens,
         model: &request.model,
         instructions: (!instructions.is_empty()).then_some(instructions.as_str()),
         input,
@@ -357,6 +359,8 @@ fn validate_token(value: &str, max_bytes: usize) -> bool {
 
 #[derive(Serialize)]
 struct WireRequest<'a> {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    max_output_tokens: Option<u64>,
     model: &'a str,
     #[serde(skip_serializing_if = "Option::is_none")]
     instructions: Option<&'a str>,

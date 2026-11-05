@@ -27,6 +27,7 @@ fn text(role: ModelRole, value: &str) -> ModelMessage {
 
 fn options() -> ResponsesRequestOptions {
     ResponsesRequestOptions {
+        max_output_tokens: None,
         reasoning_effort: Some("ultra".into()),
         service_tier: Some("default".into()),
     }

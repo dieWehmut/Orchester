@@ -159,7 +159,19 @@ fn build_wire<T: HttpTransport>(
             transport,
             authorization,
             ResponsesRequestOptions {
-                reasoning_effort: profile.reasoning_effort.clone(),
+                reasoning_effort: match profile
+                    .metadata
+                    .as_ref()
+                    .and_then(|m| m.reasoning_levels.as_ref())
+                {
+                    None => profile.reasoning_effort.clone(),
+                    Some(levels) => profile
+                        .reasoning_effort
+                        .as_ref()
+                        .and_then(|effort| levels.iter().find(|l| &l.level == effort))
+                        .and_then(|l| l.api_value.clone()),
+                },
+                max_output_tokens: profile.metadata.as_ref().and_then(|m| m.max_output_tokens),
                 service_tier: profile.service_tier.clone(),
             },
         )?)),
@@ -171,7 +183,12 @@ fn build_wire<T: HttpTransport>(
             transport,
             authorization,
             AnthropicRequestOptions {
-                max_output_tokens: DEFAULT_MAX_OUTPUT_TOKENS,
+                max_output_tokens: profile
+                    .metadata
+                    .as_ref()
+                    .and_then(|m| m.max_output_tokens)
+                    .map(|n| n as u32)
+                    .unwrap_or(DEFAULT_MAX_OUTPUT_TOKENS),
                 service_tier: profile.service_tier.clone(),
             },
         )?)),

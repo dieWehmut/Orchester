@@ -405,7 +405,7 @@ mod tests {
         )
         .expect("a scheduled task must be able to open the runtime store");
         assert!(orchester_laufzeit::harness::config::check_permissions(
-            &paths.state_root().join("schedules.db"),
+            paths.state_root().join("schedules.db"),
         )
         .iter()
         .all(|finding| finding.secure));

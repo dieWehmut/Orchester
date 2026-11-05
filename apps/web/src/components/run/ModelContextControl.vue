@@ -21,7 +21,7 @@ import { computed } from 'vue'
 import { useI18n } from '../../i18n'
 import type { ModelCatalogStoreStatus } from '../../stores/model-catalog'
 import ModelSelectionMenu from './ModelSelectionMenu.vue'
-import { effortName, modelMenuGroups, REASONING_EFFORTS } from './model-menu'
+import { effortName, modelMenuGroups, modelReasoningNames } from './model-menu'
 
 const props = withDefaults(
   defineProps<{
@@ -55,7 +55,7 @@ const statusLabel = computed(() => {
   return ''
 })
 const modelLabel = computed(
-  () => activeChoice.value?.model ?? activeProvider.value?.model ?? t('run.selectModel'),
+  () => activeChoice.value?.display_name || activeChoice.value?.model || activeProvider.value?.model || t('run.selectModel'),
 )
 const providerLabel = computed(
   () => activeChoice.value?.provider_name ?? activeProvider.value?.name ?? '',
@@ -86,8 +86,8 @@ const needsSetup = computed(() => props.status === 'ready' && props.catalog !== 
 
 const groups = computed(() => modelMenuGroups(props.catalog))
 const efforts = computed(() => {
-  const names: string[] = [...REASONING_EFFORTS]
-  if (effortLabel.value && !names.includes(effortLabel.value)) names.push(effortLabel.value)
+  const names = modelReasoningNames(props.catalog)
+  if (!names.length) return []
   return [
     { id: 'effort:', label: t('run.effortDefault'), checked: !effortLabel.value },
     ...names.map(name => ({ id: `effort:${name}`, label: effortName(name), checked: effortLabel.value === name })),
@@ -113,7 +113,9 @@ function choose(id: string): void {
     return
   }
   if (axis === 'profile') {
-    emit('select', { profile: value, effort: effortLabel.value || null })
+    const levels = props.catalog?.profiles.find(profile => profile.profile === value)?.reasoning_levels
+    const effort = levels == null || levels.some(level => level.level === effortLabel.value) ? effortLabel.value || null : null
+    emit('select', { profile: value, effort })
     return
   }
   if (axis === 'configured') {

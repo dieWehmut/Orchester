@@ -18,6 +18,7 @@ pub const ANTHROPIC_WIRE_API: &str = "anthropic";
 /// separately and only at the request boundary.
 #[derive(Clone, PartialEq, Eq)]
 pub struct ResolvedModelProfile {
+    pub metadata: Option<super::ModelProfileConfig>,
     pub provider: String,
     pub provider_name: String,
     pub model: String,
@@ -100,16 +101,48 @@ impl UserConfig {
             .filter(|name| !name.is_empty())
             .unwrap_or(provider);
 
+        let metadata = self
+            .selected_model_metadata
+            .as_ref()
+            .filter(|p| p.model_provider == provider && p.model == model)
+            .or_else(|| {
+                self.model_profiles()
+                    .values()
+                    .find(|p| p.model_provider == provider && p.model == model)
+            })
+            .cloned();
+        let effective_effort = |effort: Option<&str>, plan: bool| {
+            let effort = normalized_optional(effort);
+            match metadata.as_ref().and_then(|m| m.reasoning_levels.as_ref()) {
+                None => effort,
+                Some(levels) => effort
+                    .filter(|e| levels.iter().any(|l| &l.level == e))
+                    .or_else(|| {
+                        metadata
+                            .as_ref()
+                            .and_then(|m| {
+                                if plan {
+                                    m.plan_mode_reasoning_effort.clone()
+                                } else {
+                                    m.model_reasoning_effort.clone()
+                                }
+                            })
+                            .filter(|e| levels.iter().any(|l| &l.level == e))
+                    }),
+            }
+        };
         Ok(ResolvedModelProfile {
+            reasoning_effort: effective_effort(self.model_reasoning_effort.as_deref(), false),
+            plan_mode_reasoning_effort: effective_effort(
+                self.plan_mode_reasoning_effort.as_deref(),
+                true,
+            ),
+            metadata,
             provider: provider.to_owned(),
             provider_name: provider_name.to_owned(),
             model: model.to_owned(),
             base_url: base_url.to_owned(),
             wire_api: wire_api.to_owned(),
-            reasoning_effort: normalized_optional(self.model_reasoning_effort.as_deref()),
-            plan_mode_reasoning_effort: normalized_optional(
-                self.plan_mode_reasoning_effort.as_deref(),
-            ),
             store: !self.disable_response_storage,
             service_tier: normalized_optional(self.service_tier.as_deref()),
             requires_auth: provider_config
@@ -129,6 +162,7 @@ impl UserConfig {
             .get(name)
             .ok_or_else(|| validation("model_profile", "named model profile is not configured"))?;
         let mut selected = self.clone();
+        selected.selected_model_metadata = Some(profile.clone());
         selected.model_provider = Some(profile.model_provider.clone());
         selected.model = Some(profile.model.clone());
         selected.model_reasoning_effort = profile.model_reasoning_effort.clone();
@@ -165,6 +199,11 @@ impl UserConfig {
                 .unwrap_or(super::ModelProfileConfig {
                     model_provider: provider.to_owned(),
                     model: model.to_owned(),
+                    display_name: None,
+                    context_window: None,
+                    max_output_tokens: None,
+                    input_types: None,
+                    reasoning_levels: None,
                     model_reasoning_effort: None,
                     plan_mode_reasoning_effort: None,
                     service_tier: None,
@@ -173,6 +212,18 @@ impl UserConfig {
         candidate
             .with_model_profile_entry(name, Some(profile))
             .map(|_| ())
+    }
+
+    pub fn with_provider_for_edit(
+        &self,
+        provider: &str,
+        entry: super::ProviderConfig,
+        model: &str,
+    ) -> Result<Self, ConfigError> {
+        self.resolve_provider_entry(provider, entry.clone(), Some(model))?;
+        let mut candidate = self.clone();
+        candidate.model_providers.insert(provider.to_owned(), entry);
+        Ok(candidate)
     }
 
     pub fn with_model_profile_entry(

@@ -180,6 +180,8 @@ pub struct UserConfig {
     model_providers: BTreeMap<String, ProviderConfig>,
     #[serde(default)]
     model_profiles: BTreeMap<String, ModelProfileConfig>,
+    #[serde(skip)]
+    selected_model_metadata: Option<ModelProfileConfig>,
     #[serde(default)]
     pub projects: BTreeMap<String, ProjectTrustConfig>,
     #[serde(default)]
@@ -266,6 +268,7 @@ impl Default for UserConfig {
             service_tier: None,
             model_providers: BTreeMap::new(),
             model_profiles: BTreeMap::new(),
+            selected_model_metadata: None,
             projects: BTreeMap::new(),
             governance: GovernanceConfig::default(),
             limits: LimitsConfig::default(),
@@ -350,6 +353,59 @@ impl UserConfig {
         }
         for (name, profile) in &self.model_profiles {
             validate_model_profile_name(name, "model_profiles")?;
+            let invalid = profile
+                .context_window
+                .is_some_and(|v| v == 0 || v > 1_000_000_000)
+                || profile
+                    .max_output_tokens
+                    .is_some_and(|v| v == 0 || v > 1_000_000_000)
+                || matches!((profile.context_window, profile.max_output_tokens), (Some(c),Some(o)) if o > c)
+                || profile.input_types.as_ref().is_some_and(|v| {
+                    v.is_empty()
+                        || v.len() > 2
+                        || v.iter().any(|s| !matches!(s.as_str(), "text" | "image"))
+                        || v.iter().collect::<std::collections::BTreeSet<_>>().len() != v.len()
+                })
+                || profile.reasoning_levels.as_ref().is_some_and(|v| {
+                    v.len() > 16
+                        || v.iter()
+                            .map(|r| &r.level)
+                            .collect::<std::collections::BTreeSet<_>>()
+                            .len()
+                            != v.len()
+                });
+            if invalid {
+                return Err(ConfigError::Validation {
+                    path: format!("model_profiles.{name}"),
+                    message: "Invalid model capacity, input types or reasoning levels".into(),
+                });
+            }
+            if let Some(value) = &profile.display_name {
+                if value.trim().is_empty()
+                    || value.chars().count() > 256
+                    || value.chars().any(char::is_control)
+                {
+                    return Err(ConfigError::Validation {
+                        path: format!("model_profiles.{name}.display_name"),
+                        message: "Model display name is invalid".into(),
+                    });
+                }
+            }
+            if let Some(levels) = &profile.reasoning_levels {
+                for level in levels {
+                    validate_model_profile_value(
+                        &level.level,
+                        &format!("model_profiles.{name}.reasoning_levels"),
+                    )?;
+                    if let Some(value) = &level.api_value {
+                        validate_model_profile_value(
+                            value,
+                            &format!("model_profiles.{name}.reasoning_levels"),
+                        )?;
+                    }
+                }
+            }
+
             validate_model_profile_value(
                 &profile.model_provider,
                 &format!("model_profiles.{name}.model_provider"),
@@ -585,14 +641,32 @@ pub struct ProviderConfig {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub struct ModelProfileConfig {
+    #[serde(default)]
     pub model_provider: String,
     pub model: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub display_name: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub context_window: Option<u64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub max_output_tokens: Option<u64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub input_types: Option<Vec<String>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reasoning_levels: Option<Vec<ModelReasoningLevel>>,
     #[serde(default)]
     pub model_reasoning_effort: Option<String>,
     #[serde(default)]
     pub plan_mode_reasoning_effort: Option<String>,
     #[serde(default)]
     pub service_tier: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct ModelReasoningLevel {
+    pub level: String,
+    pub api_value: Option<String>,
 }
 
 impl fmt::Debug for ProviderConfig {

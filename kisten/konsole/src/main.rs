@@ -2779,6 +2779,7 @@ mod tests {
     #[test]
     fn model_options_separates_model_and_reasoning_and_preserves_unknown_efforts() {
         let choice = SelfAgentModelChoice {
+            metadata: None,
             profile: Some("review".into()),
             provider: "relay".into(),
             provider_name: "Relay".into(),
@@ -2827,6 +2828,7 @@ mod tests {
         let catalog = model_catalog(
             SelfAgentActiveModel::Configured(
                 orchester_laufzeit::harness::service::SelfAgentModelChoice {
+                    metadata: None,
                     profile: None,
                     provider: "openai".into(),
                     provider_name: "OpenAI".into(),
@@ -2848,6 +2850,7 @@ mod tests {
     fn model_overlay_lists_providers_and_marks_the_selected_one() {
         let mut catalog = model_catalog(
             SelfAgentActiveModel::Configured(SelfAgentModelChoice {
+                metadata: None,
                 profile: None,
                 provider: "relay".into(),
                 provider_name: "relay API".into(),
@@ -2945,6 +2948,7 @@ mod tests {
     #[test]
     fn a_provider_row_is_not_matched_by_a_profile_of_the_same_name() {
         let named = SelfAgentModelChoice {
+            metadata: None,
             profile: Some("relay".into()),
             provider: "openai".into(),
             provider_name: "OpenAI".into(),
@@ -2975,6 +2979,7 @@ mod tests {
     #[test]
     fn model_effort_overlay_marks_the_catalogued_effort_and_keeps_target() {
         let choice = SelfAgentModelChoice {
+            metadata: None,
             profile: Some("balanced".into()),
             provider: "openai".into(),
             provider_name: "OpenAI".into(),
@@ -3013,6 +3018,7 @@ mod tests {
     #[test]
     fn model_effort_overlay_uses_provider_default_when_no_effort_is_configured() {
         let choice = SelfAgentModelChoice {
+            metadata: None,
             profile: None,
             provider: "openai".into(),
             provider_name: "OpenAI".into(),
@@ -3037,6 +3043,7 @@ mod tests {
     #[test]
     fn configured_effort_picker_does_not_reuse_the_active_named_profile() {
         let configured = SelfAgentModelChoice {
+            metadata: None,
             profile: None,
             provider: "openai".into(),
             provider_name: "OpenAI".into(),
@@ -3046,6 +3053,7 @@ mod tests {
             service_tier: None,
         };
         let active_profile = SelfAgentModelChoice {
+            metadata: None,
             profile: Some("fast".into()),
             model: "gpt-fast".into(),
             reasoning_effort: Some("low".into()),
@@ -3071,6 +3079,7 @@ mod tests {
     #[test]
     fn active_profile_effort_picker_uses_the_session_override() {
         let stored = SelfAgentModelChoice {
+            metadata: None,
             profile: Some("fast".into()),
             provider: "openai".into(),
             provider_name: "OpenAI".into(),
@@ -3097,6 +3106,7 @@ mod tests {
     #[test]
     fn provider_effort_picker_uses_the_resolved_switch_not_the_catalog() {
         let active = SelfAgentModelChoice {
+            metadata: None,
             profile: None,
             provider: "openai".into(),
             provider_name: "OpenAI".into(),
@@ -3106,6 +3116,7 @@ mod tests {
             service_tier: None,
         };
         let switched = SelfAgentModelChoice {
+            metadata: None,
             provider: "relay".into(),
             provider_name: "relay API".into(),
             reasoning_effort: Some("high".into()),
@@ -3136,6 +3147,7 @@ mod tests {
     #[test]
     fn model_effort_overlay_keeps_a_parent_for_escape_back_navigation() {
         let choice = SelfAgentModelChoice {
+            metadata: None,
             profile: Some("balanced".into()),
             provider: "openai".into(),
             provider_name: "OpenAI".into(),

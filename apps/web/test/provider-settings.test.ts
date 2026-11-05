@@ -13,17 +13,18 @@ const wrappers: ReturnType<typeof mount>[] = []
 
 function setup(post = vi.fn(async () => MODEL_CATALOG_FIXTURE)) {
   const get = vi.fn(async () => empty)
-  const stores = createAppStores({ http: { get, post } as unknown as HttpClient, agentStatusStreamFactory: null })
+  const remove = vi.fn(async () => empty)
+  const stores = createAppStores({ http: { get, post, put: post, delete: remove } as unknown as HttpClient, agentStatusStreamFactory: null })
   const wrapper = mount(ProviderSettings, { global: { plugins: [stores] } })
   wrappers.push(wrapper)
-  return { wrapper, stores, get, post }
+  return { wrapper, stores, get, post, remove }
 }
 
 async function fillForm(wrapper: ReturnType<typeof setup>['wrapper']) {
   await wrapper.findAll('button')[0]!.trigger('click')
   await wrapper.get('#provider-name').setValue('Test relay')
   await wrapper.get('#provider-endpoint').setValue('https://example.com/v1')
-  await wrapper.get('#provider-model').setValue('test-model')
+  await wrapper.get('.model-editor input').setValue('test-model')
   await wrapper.get('#provider-key').setValue('fake-test-key')
 }
 
@@ -45,7 +46,7 @@ describe('model service settings', () => {
     await flushPromises()
     await fillForm(wrapper)
     await wrapper.get('[data-provider-form]').trigger('submit')
-    expect(post).toHaveBeenCalledWith('/models/providers', expect.objectContaining({ name: 'Test relay', api_key: 'fake-test-key', wire_api: 'responses' }))
+    expect(post).toHaveBeenCalledWith(expect.stringMatching(/^\/models\/providers\/provider-/), expect.objectContaining({ name: 'Test relay', api_key: 'fake-test-key', wire_api: 'responses' }))
     expect((wrapper.get('#provider-key').element as HTMLInputElement).value).toBe('')
     expect(wrapper.get('button[type="submit"]').attributes('disabled')).toBeDefined()
     expect(stores.models.catalog).toEqual(empty)
@@ -99,4 +100,83 @@ describe('model service settings', () => {
     expect(wrapper.find('[role="alert"]').exists()).toBe(false)
     expect(get).toHaveBeenCalledTimes(3)
   })
+  it('edits an existing model catalog without resending a saved credential', async () => {
+    const { wrapper, stores, get, post } = setup()
+    await flushPromises()
+    stores.models.catalog = MODEL_CATALOG_FIXTURE
+    await flushPromises()
+    const provider = MODEL_CATALOG_FIXTURE.providers[0]!
+    get.mockResolvedValueOnce({ provider: provider.id, name: provider.name, base_url: 'https://example.com/v1', wire_api: 'responses', models: [{ profile: 'one', model: 'original', input_types: ['text'] }] } as never)
+    await wrapper.findAll('button').find(button => button.text() === 'Edit')!.trigger('click')
+    await flushPromises()
+    expect((wrapper.get('#provider-key').element as HTMLInputElement).value).toBe('')
+    await wrapper.get('.model-editor input').setValue('edited-model')
+    await wrapper.get('[data-provider-form]').trigger('submit')
+    await flushPromises()
+    const request = (post.mock.calls as unknown as Array<[string, Record<string, unknown>]>)[0]![1]
+    expect(request).not.toHaveProperty('api_key')
+    expect(request.models).toEqual([expect.objectContaining({ model: 'edited-model', profile: 'one' })])
+  })
+
+  it('requires confirmation before deleting an existing service', async () => {
+    const { wrapper, stores, remove } = setup()
+    await flushPromises()
+    stores.models.catalog = MODEL_CATALOG_FIXTURE
+    await flushPromises()
+    await wrapper.findAll('button').find(button => button.text() === 'Delete')!.trigger('click')
+    expect(remove).not.toHaveBeenCalled()
+    await wrapper.get('[role="alertdialog"]').findAll('button').find(button => button.text() === 'Confirm delete')!.trigger('click')
+    await flushPromises()
+    expect(remove).toHaveBeenCalledWith(`/models/providers/${MODEL_CATALOG_FIXTURE.providers[0]!.id}`)
+    expect(stores.models.catalog).toEqual(empty)
+  })
+
+  it('opens a newly added model and reports its missing ID by index', async () => {
+    const { wrapper, post } = setup()
+    await flushPromises()
+    await fillForm(wrapper)
+    await wrapper.findAll('button').find(button => button.text() === 'Add model')!.trigger('click')
+    expect(wrapper.findAll('.model-editor')[1]!.attributes('open')).toBeDefined()
+    await wrapper.get('[data-provider-form]').trigger('submit')
+    await flushPromises()
+    expect(wrapper.get('[role="alert"]').text()).toBe('Model 2: model ID is required.')
+    expect(post).not.toHaveBeenCalled()
+  })
+
+  it('shows inherited reasoning as enabled and requires a key for a new service', async () => {
+    const { wrapper, post } = setup()
+    await flushPromises()
+    await fillForm(wrapper)
+    expect(wrapper.get('[role="switch"]').attributes('aria-checked')).toBe('true')
+    expect(wrapper.text()).toContain('Using default reasoning levels')
+    await wrapper.get('[role="switch"]').trigger('click')
+    expect(wrapper.text()).not.toContain('Using default reasoning levels')
+    await wrapper.get('#provider-key').setValue('')
+    expect(wrapper.get('#provider-key').attributes('required')).toBeDefined()
+    await wrapper.get('[data-provider-form]').trigger('submit')
+    expect(wrapper.get('[role="alert"]').text()).toContain('API key is required')
+    expect(post).not.toHaveBeenCalled()
+  })
+
+  it('preserves distinct aliases pointing to the same model ID', async () => {
+    const { wrapper, stores, get, post } = setup()
+    await flushPromises()
+    stores.models.catalog = MODEL_CATALOG_FIXTURE
+    await flushPromises()
+    const provider = MODEL_CATALOG_FIXTURE.providers[0]!
+    get.mockResolvedValueOnce({ provider: provider.id, name: provider.name, base_url: 'https://example.com/v1', wire_api: 'responses', models: [
+      { profile: 'one', model: 'shared-id', display_name: 'Fast', input_types: ['text'] },
+      { profile: 'two', model: 'shared-id', display_name: 'Careful', input_types: ['text'] },
+    ] } as never)
+    await wrapper.findAll('button').find(button => button.text() === 'Edit')!.trigger('click')
+    await flushPromises()
+    await wrapper.get('[data-provider-form]').trigger('submit')
+    await flushPromises()
+    expect(post).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({ models: [
+      expect.objectContaining({ profile: 'one', model: 'shared-id', display_name: 'Fast' }),
+      expect.objectContaining({ profile: 'two', model: 'shared-id', display_name: 'Careful' }),
+    ] }))
+    expect(wrapper.find('[data-provider-form]').exists()).toBe(false)
+  })
+
 })

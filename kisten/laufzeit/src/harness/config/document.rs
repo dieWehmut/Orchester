@@ -41,6 +41,25 @@ pub(crate) fn upsert_member(
     upsert_at(source, root, path, 0, &render)
 }
 
+pub(crate) fn remove_member(source: &str, path: &[&str]) -> Result<String, DocumentEditError> {
+    let mut open = root_object(source)?;
+    for (depth, key) in path.iter().enumerate() {
+        let (members, _) = object_members(source, open).ok_or(DocumentEditError::Unreadable)?;
+        let Some(member) = members.iter().find(|member| member.key == *key) else {
+            return Ok(source.to_owned());
+        };
+        if depth + 1 == path.len() {
+            return Ok(splice(source, member.key_start..member.end, ""));
+        }
+        open = object_start(source, member.value.clone()).ok_or_else(|| {
+            DocumentEditError::NotAnObject {
+                path: path[..=depth].join("."),
+            }
+        })?;
+    }
+    Err(DocumentEditError::Unreadable)
+}
+
 fn upsert_at(
     source: &str,
     open: usize,

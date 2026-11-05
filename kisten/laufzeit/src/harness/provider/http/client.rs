@@ -107,9 +107,12 @@ impl ReqwestHttpTransport {
     }
 
     fn request_builder(&self, request: &HttpRequest) -> reqwest::RequestBuilder {
-        let mut builder = self
-            .client
-            .post(request.endpoint.clone())
+        let builder = if request.method() == "GET" {
+            self.client.get(request.endpoint.clone())
+        } else {
+            self.client.post(request.endpoint.clone())
+        };
+        let mut builder = builder
             .timeout(request.timeout)
             .header(CONTENT_TYPE, "application/json")
             .body(request.body.clone());
@@ -199,6 +202,27 @@ fn map_reqwest_error(error: reqwest::Error) -> HttpTransportError {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn model_discovery_uses_get_and_keeps_protocol_credentials_on_the_request() {
+        let request = HttpRequest::get(
+            Url::parse("https://provider.test/v1/models").unwrap(),
+            Some(crate::harness::credentials::ProviderSecret::new(
+                "test-secret".into(),
+            )),
+        )
+        .unwrap()
+        .with_credential_header(CredentialHeader::ApiKey)
+        .with_protocol_headers(vec![("anthropic-version", "2023-06-01")])
+        .unwrap();
+        let client = ReqwestHttpTransport::new().unwrap();
+        let built = client.request_builder(&request).build().unwrap();
+        assert_eq!(built.method(), reqwest::Method::GET);
+        assert_eq!(built.headers()["x-api-key"], "test-secret");
+        assert_eq!(built.headers()["anthropic-version"], "2023-06-01");
+        assert!(request.body().is_empty());
+        assert!(!format!("{request:?}").contains("test-secret"));
+    }
 
     #[test]
     fn compatibility_user_agent_is_limited_to_agentrouter() {

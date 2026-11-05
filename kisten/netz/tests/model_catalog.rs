@@ -6,6 +6,7 @@ use orchester_netz::{model_catalog_response, ActiveModelDto, ProviderChoiceState
 
 fn choice(profile: Option<&str>, provider: &str, model: &str) -> SelfAgentModelChoice {
     SelfAgentModelChoice {
+        metadata: None,
         profile: profile.map(str::to_owned),
         provider: provider.to_owned(),
         provider_name: format!("{provider} display"),

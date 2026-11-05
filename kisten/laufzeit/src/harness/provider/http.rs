@@ -66,6 +66,7 @@ pub enum HttpTransportError {
 
 #[derive(Clone)]
 pub struct HttpRequest {
+    method: &'static str,
     endpoint: Url,
     body: Vec<u8>,
     authorization: Option<Arc<ProviderSecret>>,
@@ -85,6 +86,7 @@ impl HttpRequest {
             return Err(HttpTransportError::InvalidRequest);
         }
         Ok(Self {
+            method: "POST",
             endpoint,
             body,
             authorization: authorization.map(Arc::new),
@@ -93,6 +95,21 @@ impl HttpRequest {
             timeout: DEFAULT_HTTP_TIMEOUT,
             response_limit: DEFAULT_HTTP_RESPONSE_BYTES,
         })
+    }
+
+    /// A bounded read using the same endpoint, credential and redirect policy
+    /// as model inference; used for the configured provider's model directory.
+    pub fn get(
+        endpoint: Url,
+        authorization: Option<ProviderSecret>,
+    ) -> Result<Self, HttpTransportError> {
+        let mut request = Self::new(endpoint, Vec::new(), authorization)?;
+        request.method = "GET";
+        Ok(request)
+    }
+
+    pub fn method(&self) -> &'static str {
+        self.method
     }
 
     pub fn with_credential_header(mut self, header: CredentialHeader) -> Self {
@@ -180,6 +197,7 @@ impl fmt::Debug for HttpRequest {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
             .debug_struct("HttpRequest")
+            .field("method", &self.method)
             .field("endpoint", &"[REDACTED]")
             .field("body_bytes", &self.body.len())
             .field("authorization_present", &self.authorization.is_some())

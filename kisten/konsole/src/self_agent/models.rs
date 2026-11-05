@@ -399,6 +399,7 @@ mod tests {
 
     fn choice(profile: Option<&str>, model: &str) -> SelfAgentModelChoice {
         SelfAgentModelChoice {
+            metadata: None,
             profile: profile.map(str::to_owned),
             provider: "OpenAI".into(),
             provider_name: "OpenAI API".into(),

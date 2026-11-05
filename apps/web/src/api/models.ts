@@ -3,6 +3,8 @@ import {
   type ModelCatalogDto,
   type ModelSelectionRequestDto,
   type ModelProviderRequestDto,
+  type ProviderDetailsDto,
+  type ProviderUpdateDto,
 } from '@orchester/protokoll'
 
 import { ApiError } from './errors'
@@ -13,6 +15,10 @@ export interface ModelCatalogOptions {
 }
 
 export interface ModelsApi {
+  discoverProvider: (id: string) => Promise<{ models: Array<{ model: string; display_name?: string }> }>
+  providerDetails: (id: string) => Promise<ProviderDetailsDto>
+  updateProvider: (provider: ProviderUpdateDto) => Promise<ModelCatalogDto>
+  deleteProvider: (id: string) => Promise<ModelCatalogDto>
   saveProvider: (provider: ModelProviderRequestDto) => Promise<ModelCatalogDto>
   catalog: (options?: ModelCatalogOptions) => Promise<ModelCatalogDto>
   /**
@@ -42,6 +48,18 @@ export function createModelsApi(http: HttpClient): ModelsApi {
   }
 
   return {
+    discoverProvider: id => http.post(`/models/providers/${encodeURIComponent(id)}/discover`, {}),
+    async providerDetails(id) {
+      const raw = await http.get<unknown>(`/models/providers/${encodeURIComponent(id)}`)
+      if (!raw || typeof raw !== 'object') throw new ApiError('Invalid provider details', { code: 'runtime_error', retryable: false })
+      const detail = raw as ProviderDetailsDto
+      if (detail.provider !== id || !['name', 'base_url', 'wire_api'].every(key => typeof (raw as Record<string, unknown>)[key] === 'string') || !Array.isArray(detail.models) || !detail.models.every(entry => entry && typeof entry.profile === 'string' && typeof entry.model === 'string')) {
+        throw new ApiError('Invalid provider details', { code: 'runtime_error', retryable: false })
+      }
+      return detail
+    },
+    async updateProvider(provider) { return readCatalog(await http.put<unknown>(`/models/providers/${encodeURIComponent(provider.provider)}`, provider)) },
+    async deleteProvider(id) { return readCatalog(await http.delete<unknown>(`/models/providers/${encodeURIComponent(id)}`)) },
     async saveProvider(provider): Promise<ModelCatalogDto> {
       return readCatalog(await http.post<unknown>('/models/providers', provider))
     },

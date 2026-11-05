@@ -272,3 +272,79 @@ async fn only_the_selected_provider_secret_is_resolved() {
 
     assert_eq!(transport.first_request().2.as_deref(), Some(SECRET_CANARY));
 }
+
+#[tokio::test]
+async fn model_catalog_controls_wire_reasoning_and_output_cap() {
+    for (levels, effort, expected) in [
+        (
+            json!([{"level":"max","api_value":"high"}]),
+            "max",
+            Some("high"),
+        ),
+        (json!([{"level":"off","api_value":null}]), "off", None),
+        (json!([]), "high", None),
+    ] {
+        let mut profile:orchester_laufzeit::harness::config::ModelProfileConfig=serde_json::from_value(json!({"model_provider":"OpenAI","model":"gpt-configured","max_output_tokens":8192,"reasoning_levels":levels})).unwrap();
+        profile.model_reasoning_effort = Some(effort.into());
+        let config = configured_user()
+            .with_model_profile_entry("OpenAI.custom", Some(profile))
+            .unwrap()
+            .with_model_profile("OpenAI.custom")
+            .unwrap();
+        let transport = CaptureTransport::default();
+        let credentials = InMemoryCredentialStore::with("OpenAI", SECRET_CANARY);
+        let model =
+            build_wire_model_with_transport(&config, &credentials, transport.clone()).unwrap();
+        assert_eq!(
+            model.profile().reasoning_effort.as_deref(),
+            if effort == "high" { None } else { Some(effort) }
+        );
+        model
+            .complete(request("gpt-configured", false), CancellationToken::new())
+            .await
+            .unwrap();
+        let (_, body, _) = transport.first_request();
+        assert_eq!(body["max_output_tokens"], 8192);
+        assert_eq!(
+            body.get("reasoning").and_then(|r| r["effort"].as_str()),
+            expected
+        );
+    }
+}
+
+#[test]
+fn explicit_alias_controls_metadata_for_duplicate_model_ids() {
+    let mut config = configured_user();
+    for (name, cap) in [("OpenAI.first", 1000), ("OpenAI.second", 2000)] {
+        let profile = serde_json::from_value(
+            json!({"model_provider":"OpenAI","model":"gpt-configured","max_output_tokens":cap}),
+        )
+        .unwrap();
+        config = config
+            .with_model_profile_entry(name, Some(profile))
+            .unwrap();
+    }
+    let selected = config
+        .with_model_profile("OpenAI.second")
+        .unwrap()
+        .resolve_model_profile()
+        .unwrap();
+    assert_eq!(selected.metadata.unwrap().max_output_tokens, Some(2000));
+}
+
+#[tokio::test]
+async fn raw_default_effort_uses_valid_named_profile_default_after_catalog_edit() {
+    let profile=serde_json::from_value(json!({"model_provider":"OpenAI","model":"gpt-configured","model_reasoning_effort":"careful","reasoning_levels":[{"level":"careful","api_value":"high"}]})).unwrap();
+    let config = configured_user()
+        .with_model_profile_entry("OpenAI.custom", Some(profile))
+        .unwrap();
+    let transport = CaptureTransport::default();
+    let credentials = InMemoryCredentialStore::with("OpenAI", SECRET_CANARY);
+    let model = build_wire_model_with_transport(&config, &credentials, transport.clone()).unwrap();
+    assert_eq!(model.profile().reasoning_effort.as_deref(), Some("careful"));
+    model
+        .complete(request("gpt-configured", false), CancellationToken::new())
+        .await
+        .unwrap();
+    assert_eq!(transport.first_request().1["reasoning"]["effort"], "high");
+}

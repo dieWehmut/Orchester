@@ -146,7 +146,7 @@ onBeforeUnmount(() => {
     <Teleport to="body">
       <div v-if="open" v-show="!compact || !panel" :id="id" ref="root" class="model-selection__surface model-selection__root"
         data-model-root role="menu" :aria-label="props.label" :style="rootStyle" @keydown="onKeydown($event, false)">
-        <button v-for="section in (['models', 'efforts'] as const)" :key="section" type="button" role="menuitem" tabindex="-1"
+        <button v-for="section in (props.efforts.length ? ['models', 'efforts'] as const : ['models'] as const)" :key="section" type="button" role="menuitem" tabindex="-1"
           class="model-selection__row" :class="{ 'is-open': panel === section }" :data-model-section="section"
           aria-haspopup="menu" :aria-expanded="panel === section" :aria-controls="`${id}-${section}`"
           @click="showPanel(section)" @pointerenter="!compact && showPanel(section, false)">

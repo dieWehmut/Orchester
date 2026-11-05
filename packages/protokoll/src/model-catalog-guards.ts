@@ -60,7 +60,7 @@ function parseChoice(
       'model',
       'reasoning_effort',
       'plan_reasoning_effort',
-      'service_tier',
+      'service_tier', 'display_name', 'context_window', 'max_output_tokens', 'input_types', 'reasoning_levels',
     ])
   ) {
     return null
@@ -86,7 +86,28 @@ function parseChoice(
     return null
   }
 
+  const metadata: Pick<ModelChoiceDto, 'display_name' | 'context_window' | 'max_output_tokens' | 'input_types' | 'reasoning_levels'> = {}
+  if ('display_name' in raw) {
+    const value = nullableText(raw.display_name)
+    if (value === undefined) return null
+    metadata.display_name = value
+  }
+  for (const key of ['context_window', 'max_output_tokens'] as const) {
+    if (!(key in raw)) continue
+    const value = raw[key]
+    if (value !== null && (typeof value !== 'number' || !Number.isSafeInteger(value) || value <= 0)) return null
+    metadata[key] = value as number | null
+  }
+  if ('input_types' in raw) {
+    if (raw.input_types !== null && (!Array.isArray(raw.input_types) || !raw.input_types.every(value => value === 'text' || value === 'image'))) return null
+    metadata.input_types = raw.input_types as Array<'text' | 'image'> | null
+  }
+  if ('reasoning_levels' in raw) {
+    if (raw.reasoning_levels !== null && (!Array.isArray(raw.reasoning_levels) || !raw.reasoning_levels.every(value => isRecord(value) && text(value.level) !== null && nullableText(value.api_value) !== undefined))) return null
+    metadata.reasoning_levels = raw.reasoning_levels as Array<{ level: string; api_value: string | null }> | null
+  }
   return {
+    ...metadata,
     profile,
     provider,
     provider_name: providerName,

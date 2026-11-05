@@ -80,6 +80,11 @@ export interface AgentCatalogDto {
 export const MODEL_CATALOG_SCHEMA_VERSION = 1 as const
 
 export interface ModelChoiceDto {
+  display_name?: string | null
+  context_window?: number | null
+  max_output_tokens?: number | null
+  input_types?: Array<'text' | 'image'> | null
+  reasoning_levels?: Array<{ level: string; api_value: string | null }> | null
   profile: string | null
   provider: string
   provider_name: string
@@ -337,3 +342,21 @@ export interface ApiErrorDto {
   /** False for validation/auth/conflict errors that should not be retried. */
   retryable?: boolean
 }
+
+export interface ProviderEditorModelDto {
+  profile: string
+  model: string
+  display_name?: string | null
+  context_window?: number | null
+  max_output_tokens?: number | null
+  input_types?: Array<'text' | 'image'> | null
+  reasoning_levels?: Array<{ level: string; api_value: string | null }> | null
+}
+export interface ProviderDetailsDto {
+  provider: string
+  name: string
+  base_url: string
+  wire_api: string
+  models: ProviderEditorModelDto[]
+}
+export interface ProviderUpdateDto extends ProviderDetailsDto { api_key?: string }

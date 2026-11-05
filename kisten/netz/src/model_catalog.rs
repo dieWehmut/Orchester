@@ -26,6 +26,17 @@ pub const MODEL_CATALOG_SCHEMA_VERSION: u8 = 1;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct ModelChoiceDto {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub display_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub context_window: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_output_tokens: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub input_types: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reasoning_levels: Option<Vec<orchester_laufzeit::harness::config::ModelReasoningLevel>>,
+
     pub profile: Option<String>,
     pub provider: String,
     pub provider_name: String,
@@ -38,7 +49,7 @@ pub struct ModelChoiceDto {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 #[serde(tag = "state", rename_all = "snake_case")]
 pub enum ActiveModelDto {
-    Configured { choice: ModelChoiceDto },
+    Configured { choice: Box<ModelChoiceDto> },
     Unresolved { field: String, reason: String },
     NotConfigured,
 }
@@ -64,6 +75,17 @@ pub struct ProviderChoiceDto {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct ModelProfileDto {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub display_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub context_window: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_output_tokens: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub input_types: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reasoning_levels: Option<Vec<orchester_laufzeit::harness::config::ModelReasoningLevel>>,
+
     pub profile: String,
     pub provider: String,
     pub provider_name: String,
@@ -91,7 +113,7 @@ pub fn model_catalog_response(catalog: &SelfAgentModelCatalog) -> ModelCatalogDt
     });
     let active = match &catalog.active {
         SelfAgentActiveModel::Configured(choice) => ActiveModelDto::Configured {
-            choice: model_choice(choice),
+            choice: Box::new(model_choice(choice)),
         },
         SelfAgentActiveModel::Unresolved { path, message } => ActiveModelDto::Unresolved {
             field: path.clone(),
@@ -399,6 +421,17 @@ pub(crate) async fn model_selection_handler(
 
 fn model_choice(choice: &SelfAgentModelChoice) -> ModelChoiceDto {
     ModelChoiceDto {
+        display_name: choice
+            .metadata
+            .as_ref()
+            .and_then(|m| m.display_name.clone()),
+        context_window: choice.metadata.as_ref().and_then(|m| m.context_window),
+        max_output_tokens: choice.metadata.as_ref().and_then(|m| m.max_output_tokens),
+        input_types: choice.metadata.as_ref().and_then(|m| m.input_types.clone()),
+        reasoning_levels: choice
+            .metadata
+            .as_ref()
+            .and_then(|m| m.reasoning_levels.clone()),
         profile: choice.profile.clone(),
         provider: choice.provider.clone(),
         provider_name: choice.provider_name.clone(),
@@ -411,6 +444,17 @@ fn model_choice(choice: &SelfAgentModelChoice) -> ModelChoiceDto {
 
 fn model_profile(choice: &SelfAgentModelChoice) -> Option<ModelProfileDto> {
     Some(ModelProfileDto {
+        display_name: choice
+            .metadata
+            .as_ref()
+            .and_then(|m| m.display_name.clone()),
+        context_window: choice.metadata.as_ref().and_then(|m| m.context_window),
+        max_output_tokens: choice.metadata.as_ref().and_then(|m| m.max_output_tokens),
+        input_types: choice.metadata.as_ref().and_then(|m| m.input_types.clone()),
+        reasoning_levels: choice
+            .metadata
+            .as_ref()
+            .and_then(|m| m.reasoning_levels.clone()),
         profile: choice.profile.clone()?,
         provider: choice.provider.clone(),
         provider_name: choice.provider_name.clone(),
@@ -419,4 +463,228 @@ fn model_profile(choice: &SelfAgentModelChoice) -> Option<ModelProfileDto> {
         plan_reasoning_effort: choice.plan_reasoning_effort.clone(),
         service_tier: choice.service_tier.clone(),
     })
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct EditableModelDto {
+    profile: String,
+    #[serde(flatten)]
+    model: orchester_laufzeit::harness::config::ModelProfileConfig,
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct ProviderCatalogEditDto {
+    provider: String,
+    name: String,
+    base_url: String,
+    wire_api: String,
+    models: Vec<EditableModelDto>,
+    #[serde(default)]
+    api_key: Option<SecretString>,
+}
+
+pub(crate) async fn provider_details_handler(
+    State(context): State<ServerContext>,
+    axum::extract::Path(provider): axum::extract::Path<String>,
+    headers: HeaderMap,
+) -> Result<(HeaderMap, Json<serde_json::Value>), ApiErrorResponse> {
+    let request_id = request_id_from_headers(&headers);
+    let cookie = headers
+        .get(header::COOKIE)
+        .and_then(|v| v.to_str().ok())
+        .and_then(|v| {
+            Cookie::split_parse(v)
+                .filter_map(Result::ok)
+                .find(|c| c.name() == SESSION_COOKIE_NAME)
+        });
+    if !cookie.is_some_and(|c| context.sessions().validate_cookie(c.value())) {
+        return Err(api_error_response(ApiErrorCode::Unauthorized, request_id));
+    }
+    let paths = context
+        .paths()
+        .ok_or_else(|| api_error_response(ApiErrorCode::Unavailable, request_id))?;
+    let host = SelfAgentHost::for_paths(paths);
+    let draft = host
+        .provider_draft(&provider)
+        .ok()
+        .flatten()
+        .ok_or_else(|| api_error_response(ApiErrorCode::NotFound, request_id))?;
+    let profiles = host
+        .provider_profiles(&provider)
+        .map_err(|_| api_error_response(ApiErrorCode::Unavailable, request_id))?;
+    let mut models: Vec<_> = profiles
+        .into_iter()
+        .map(|(profile, model)| EditableModelDto { profile, model })
+        .collect();
+    if models.is_empty() && !draft.model.trim().is_empty() {
+        let profile = format!("{}.default", provider);
+        let model = orchester_laufzeit::harness::config::ModelProfileConfig {
+            model_provider: provider.clone(),
+            model: draft.model.clone(),
+            display_name: None,
+            context_window: None,
+            max_output_tokens: None,
+            input_types: None,
+            reasoning_levels: None,
+            model_reasoning_effort: None,
+            plan_mode_reasoning_effort: None,
+            service_tier: None,
+        };
+        models.push(EditableModelDto { profile, model });
+    }
+    Ok((
+        no_store_headers(),
+        Json(
+            serde_json::json!({"provider":provider,"name":draft.name,"base_url":draft.base_url,"wire_api":draft.wire_api,"models":models}),
+        ),
+    ))
+}
+
+pub(crate) async fn provider_update_handler(
+    State(context): State<ServerContext>,
+    axum::extract::Path(provider): axum::extract::Path<String>,
+    headers: HeaderMap,
+    request: Result<Json<ProviderCatalogEditDto>, JsonRejection>,
+) -> Result<(HeaderMap, Json<ModelCatalogDto>), ApiErrorResponse> {
+    let request_id = request_id_from_headers(&headers);
+    require_provider_setup_session(&context, &headers)
+        .map_err(|code| api_error_response(code, request_id))?;
+    let Json(request) =
+        request.map_err(|_| api_error_response(ApiErrorCode::BadRequest, request_id))?;
+    if [&request.name, &request.base_url, &request.wire_api]
+        .iter()
+        .any(|s| s.len() > 256 || s.chars().any(char::is_control))
+        || request.api_key.as_ref().is_some_and(|s| {
+            s.expose_secret().len() > 4096 || s.expose_secret().chars().any(char::is_control)
+        })
+    {
+        return Err(api_error_response(
+            ApiErrorCode::ValidationFailed,
+            request_id,
+        ));
+    }
+    if request.provider != provider {
+        return Err(api_error_response(
+            ApiErrorCode::ValidationFailed,
+            request_id,
+        ));
+    }
+    let paths = context
+        .paths()
+        .cloned()
+        .ok_or_else(|| api_error_response(ApiErrorCode::Unavailable, request_id))?;
+    let mut selection = context.model_selection().edit().await;
+    let result = tokio::task::spawn_blocking(move || {
+        let mut host = SelfAgentHost::for_paths(&paths);
+        let draft = ProviderDraft {
+            provider,
+            name: request.name,
+            base_url: request.base_url,
+            wire_api: request.wire_api,
+            model: String::new(),
+            activate: false,
+        };
+        let secret = request
+            .api_key
+            .filter(|s| !s.expose_secret().trim().is_empty());
+        host.save_provider_catalog(
+            &draft,
+            request
+                .models
+                .into_iter()
+                .map(|mut m| {
+                    m.model.model_provider = draft.provider.clone();
+                    (m.profile, m.model)
+                })
+                .collect(),
+            secret,
+        )?;
+        host.model_catalog()
+    })
+    .await
+    .map_err(|_| api_error_response(ApiErrorCode::Internal, request_id))?
+    .map_err(|cause| {
+        let code = match cause {
+            SelfAgentHostError::Config(
+                ConfigError::Validation { .. } | ConfigError::InvalidSecretReference { .. },
+            ) => ApiErrorCode::ValidationFailed,
+            _ => ApiErrorCode::Unavailable,
+        };
+        api_error_response(code, request_id)
+    })?;
+    let result = match catalog_for(&context, &selection) {
+        Some(catalog) => catalog,
+        None => {
+            *selection = ModelSelection::default();
+            result
+        }
+    };
+    Ok((no_store_headers(), Json(model_catalog_response(&result))))
+}
+
+pub(crate) async fn provider_delete_handler(
+    State(context): State<ServerContext>,
+    axum::extract::Path(provider): axum::extract::Path<String>,
+    headers: HeaderMap,
+) -> Result<(HeaderMap, Json<ModelCatalogDto>), ApiErrorResponse> {
+    let request_id = request_id_from_headers(&headers);
+    require_provider_setup_session(&context, &headers)
+        .map_err(|code| api_error_response(code, request_id))?;
+    let paths = context
+        .paths()
+        .cloned()
+        .ok_or_else(|| api_error_response(ApiErrorCode::Unavailable, request_id))?;
+    let mut selection = context.model_selection().edit().await;
+    let catalog = tokio::task::spawn_blocking(move || {
+        let mut host = SelfAgentHost::for_paths(&paths);
+        host.delete_provider(&provider)?;
+        host.model_catalog()
+    })
+    .await
+    .map_err(|_| api_error_response(ApiErrorCode::Internal, request_id))?
+    .map_err(|_| api_error_response(ApiErrorCode::Unavailable, request_id))?;
+    let catalog = match catalog_for(&context, &selection) {
+        Some(catalog) => catalog,
+        None => {
+            *selection = ModelSelection::default();
+            catalog
+        }
+    };
+    Ok((no_store_headers(), Json(model_catalog_response(&catalog))))
+}
+
+pub(crate) async fn provider_discover_handler(
+    State(context): State<ServerContext>,
+    axum::extract::Path(provider): axum::extract::Path<String>,
+    headers: HeaderMap,
+) -> Result<(HeaderMap, Json<serde_json::Value>), ApiErrorResponse> {
+    let request_id = request_id_from_headers(&headers);
+    require_provider_setup_session(&context, &headers)
+        .map_err(|code| api_error_response(code, request_id))?;
+    let paths = context
+        .paths()
+        .ok_or_else(|| api_error_response(ApiErrorCode::Unavailable, request_id))?;
+    let host = SelfAgentHost::for_paths(paths);
+    let models = host
+        .discover_provider_models(&provider, tokio_util::sync::CancellationToken::new())
+        .await
+        .map_err(|_| api_error_response(ApiErrorCode::Unavailable, request_id))?;
+    Ok((
+        no_store_headers(),
+        Json(serde_json::json!({"models":models})),
+    ))
+}
+
+#[cfg(test)]
+mod provider_editor_contract_tests {
+    use super::*;
+    #[test]
+    fn rich_editor_accepts_provider_scoped_models_without_redundant_provider_field() {
+        let value = serde_json::json!({"provider":"relay","name":"Relay","base_url":"https://example.com/v1","wire_api":"responses","models":[{"profile":"relay.fast","model":"fast","display_name":"Fast","context_window":1000000,"max_output_tokens":256000,"input_types":["text","image"],"reasoning_levels":[{"level":"off","api_value":null},{"level":"max","api_value":"high"}]}]});
+        let parsed: ProviderCatalogEditDto = serde_json::from_value(value).unwrap();
+        assert_eq!(parsed.models[0].model.max_output_tokens, Some(256000));
+        assert!(parsed.models[0].model.model_provider.is_empty());
+    }
 }
