@@ -44,6 +44,8 @@ pub enum GovernedExecutionError {
     InvalidOwner,
     #[error("recorded action is not ready for execution")]
     NotReady,
+    #[error("tool execution was cancelled before authorization")]
+    Cancelled,
     #[error(transparent)]
     Store(#[from] StoreError),
     #[error(transparent)]
@@ -153,6 +155,169 @@ where
         )?;
 
         let terminal = match self.executor.execute(started) {
+            Ok(execution) => {
+                match observation::from_execution(run_id, action_id, call_id, execution) {
+                    Ok(observation) => HarnessEventKind::ToolCompleted { observation },
+                    Err(()) => HarnessEventKind::ToolFailed {
+                        feedback: observation::output_failure(),
+                    },
+                }
+            }
+            Err(error) => HarnessEventKind::ToolFailed {
+                feedback: observation::tool_failure(error),
+            },
+        };
+        let event = self.store.append_event(
+            &self.owner_actor_id,
+            run_id,
+            EventAppend {
+                turn_id: Some(turn_id),
+                step_id: Some(step_id),
+                call_id: Some(call_id.clone()),
+                occurred_at: self.clock.now(),
+                kind: terminal,
+            },
+        )?;
+        match event.kind {
+            HarnessEventKind::ToolCompleted { observation } => {
+                Ok(GovernedToolOutcome::Completed(observation))
+            }
+            HarnessEventKind::ToolFailed { feedback } => Ok(GovernedToolOutcome::Failed(feedback)),
+            _ => Err(StoreError::Invariant(
+                "tool terminal persistence returned an unexpected event".into(),
+            )
+            .into()),
+        }
+    }
+    pub async fn execute_async(
+        &self,
+        run_id: &RunId,
+        action_id: &ActionId,
+        call_id: &CallId,
+        cancel: tokio_util::sync::CancellationToken,
+    ) -> Result<GovernedToolOutcome, GovernedExecutionError> {
+        if cancel.is_cancelled() { return Err(GovernedExecutionError::Cancelled); }
+        let run = self.store.load_run_owned(run_id, &self.owner_actor_id)?;
+        let resume = self
+            .store
+            .resume_point_owned(run_id, &self.owner_actor_id, &run.project_id)?
+            .ok_or(GovernedExecutionError::NotReady)?;
+        let ResumeNext::PrepareExecution {
+            action_id: ready_action,
+            call_id: ready_call,
+        } = resume.next
+        else {
+            return Err(GovernedExecutionError::NotReady);
+        };
+        if ready_action != *action_id || ready_call != *call_id {
+            return Err(GovernedExecutionError::NotReady);
+        }
+        let turn_id = resume.turn_id.ok_or(GovernedExecutionError::NotReady)?;
+        let step_id = resume.step_id.ok_or(GovernedExecutionError::NotReady)?;
+
+        let permit = self.barrier.prepare(
+            &self.owner_actor_id,
+            run_id,
+            action_id,
+            ExecutionAuthorization::Allow,
+            self.clock.now(),
+        )?;
+        let started = self.barrier.start_tool(
+            &self.owner_actor_id,
+            run_id,
+            permit,
+            EventAppend {
+                turn_id: Some(turn_id.clone()),
+                step_id: Some(step_id.clone()),
+                call_id: Some(call_id.clone()),
+                occurred_at: self.clock.now(),
+                kind: HarnessEventKind::ToolStarted {
+                    action_id: action_id.clone(),
+                },
+            },
+        )?;
+
+        let terminal = match self.executor.execute_async(started, cancel).await {
+            Ok(execution) => {
+                match observation::from_execution(run_id, action_id, call_id, execution) {
+                    Ok(observation) => HarnessEventKind::ToolCompleted { observation },
+                    Err(()) => HarnessEventKind::ToolFailed {
+                        feedback: observation::output_failure(),
+                    },
+                }
+            }
+            Err(error) => HarnessEventKind::ToolFailed {
+                feedback: observation::tool_failure(error),
+            },
+        };
+        let event = self.store.append_event(
+            &self.owner_actor_id,
+            run_id,
+            EventAppend {
+                turn_id: Some(turn_id),
+                step_id: Some(step_id),
+                call_id: Some(call_id.clone()),
+                occurred_at: self.clock.now(),
+                kind: terminal,
+            },
+        )?;
+        match event.kind {
+            HarnessEventKind::ToolCompleted { observation } => {
+                Ok(GovernedToolOutcome::Completed(observation))
+            }
+            HarnessEventKind::ToolFailed { feedback } => Ok(GovernedToolOutcome::Failed(feedback)),
+            _ => Err(StoreError::Invariant(
+                "tool terminal persistence returned an unexpected event".into(),
+            )
+            .into()),
+        }
+    }
+    pub async fn execute_approved_async(
+        &self,
+        run_id: &RunId,
+        action_id: &ActionId,
+        call_id: &CallId,
+        capability: super::approval::CapabilityToken,
+        cancel: tokio_util::sync::CancellationToken,
+    ) -> Result<GovernedToolOutcome, GovernedExecutionError> {
+        if cancel.is_cancelled() { return Err(GovernedExecutionError::Cancelled); }
+        let run = self.store.load_run_owned(run_id, &self.owner_actor_id)?;
+        let resume = self
+            .store
+            .resume_point_owned(run_id, &self.owner_actor_id, &run.project_id)?
+            .ok_or(GovernedExecutionError::NotReady)?;
+        if capability.binding().run_id != *run_id || capability.binding().action_id != *action_id {
+            return Err(GovernedExecutionError::NotReady);
+        }
+        let turn_id = resume.turn_id.ok_or(GovernedExecutionError::NotReady)?;
+        let step_id = resume.step_id.ok_or(GovernedExecutionError::NotReady)?;
+
+        let permit = self.barrier.prepare(
+            &self.owner_actor_id,
+            run_id,
+            action_id,
+            ExecutionAuthorization::Approval {
+                binding: capability.binding(),
+                capability: &capability,
+            },
+            self.clock.now(),
+        )?;
+        let started = self.barrier.start_tool(
+            &self.owner_actor_id,
+            run_id,
+            permit,
+            EventAppend {
+                turn_id: Some(turn_id.clone()),
+                step_id: Some(step_id.clone()),
+                call_id: Some(call_id.clone()),
+                occurred_at: self.clock.now(),
+                kind: HarnessEventKind::ToolStarted {
+                    action_id: action_id.clone(),
+                },
+            },
+        )?;
+
+        let terminal = match self.executor.execute_approved_async(started, cancel).await {
             Ok(execution) => {
                 match observation::from_execution(run_id, action_id, call_id, execution) {
                     Ok(observation) => HarnessEventKind::ToolCompleted { observation },

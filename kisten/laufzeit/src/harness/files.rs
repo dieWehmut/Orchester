@@ -112,6 +112,7 @@ pub struct SearchResult {
 pub struct FileTools {
     workspace: WorkspaceGuard,
     limits: FileToolLimits,
+    explicit_outside_access: bool,
 }
 
 impl fmt::Debug for FileTools {
@@ -138,9 +139,36 @@ impl FileTools {
             return Err(FileToolError::InvalidInput);
         }
         let workspace = WorkspaceGuard::new(root.as_ref()).map_err(map_guard)?;
-        Ok(Self { workspace, limits })
+        Ok(Self {
+            workspace,
+            limits,
+            explicit_outside_access: false,
+        })
     }
 
+    pub fn with_explicit_outside_access(mut self, enabled: bool) -> Self {
+        self.explicit_outside_access = enabled;
+        self
+    }
+    fn outside_scope(&self, path: &Path) -> Result<Option<(Self, PathBuf)>, FileToolError> {
+        if !self.explicit_outside_access {
+            return Ok(None);
+        }
+        Ok(self
+            .workspace
+            .scope_for_explicit_path(path)
+            .map_err(map_guard)?
+            .map(|(workspace, path)| {
+                (
+                    Self {
+                        workspace,
+                        limits: self.limits,
+                        explicit_outside_access: false,
+                    },
+                    path,
+                )
+            }))
+    }
     pub fn workspace(&self) -> &WorkspaceGuard {
         &self.workspace
     }
@@ -151,6 +179,9 @@ impl FileTools {
         start_line: Option<u32>,
         end_line: Option<u32>,
     ) -> Result<ReadResult, FileToolError> {
+        if let Some((scope, path)) = self.outside_scope(requested)? {
+            return scope.read_file(&path, start_line, end_line);
+        }
         if matches!((start_line, end_line), (Some(0), _) | (_, Some(0)))
             || matches!((start_line, end_line), (Some(start), Some(end)) if start > end)
         {
@@ -184,6 +215,13 @@ impl FileTools {
     }
 
     pub fn list_files(&self, requested: &Path, depth: u16) -> Result<ListResult, FileToolError> {
+        if let Some((scope, path)) = self.outside_scope(requested)? {
+            let mut result = scope.list_files(&path, depth)?;
+            for entry in &mut result.entries {
+                entry.path = scope.workspace.root().join(&entry.path);
+            }
+            return Ok(result);
+        }
         if depth == 0 || depth > MAX_LIST_DEPTH {
             return Err(FileToolError::InvalidInput);
         }
@@ -203,6 +241,13 @@ impl FileTools {
         requested: &Path,
         query: &str,
     ) -> Result<SearchResult, FileToolError> {
+        if let Some((scope, path)) = self.outside_scope(requested)? {
+            let mut result = scope.search_text(&path, query)?;
+            for entry in &mut result.matches {
+                entry.path = scope.workspace.root().join(&entry.path);
+            }
+            return Ok(result);
+        }
         if query.is_empty() || query.len() > MAX_QUERY_BYTES || query.chars().any(char::is_control)
         {
             return Err(FileToolError::InvalidInput);

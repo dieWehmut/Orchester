@@ -73,42 +73,42 @@ impl Theme {
         match self {
             Self::Default | Self::Dark => ThemePalette {
                 accent: "\x1b[38;2;137;180;250m",
-                selection: "\x1b[38;2;205;214;244m",
+                selection: "\x1b[48;2;96;165;250m\x1b[30m",
                 warning: "\x1b[38;2;243;139;168m",
                 dim: "\x1b[2m",
                 composer_background: "\x1b[48;2;41;41;41m",
             },
             Self::Light => ThemePalette {
                 accent: "\x1b[38;2;0;95;135m",
-                selection: "\x1b[38;2;0;75;115m",
+                selection: "\x1b[48;2;96;165;250m\x1b[30m",
                 warning: "\x1b[38;2;145;75;0m",
                 dim: "\x1b[38;2;95;95;95m",
                 composer_background: "\x1b[48;2;245;245;245m",
             },
             Self::DarkColorblind => ThemePalette {
                 accent: "\x1b[38;2;86;180;233m",
-                selection: "\x1b[38;2;230;159;0m",
+                selection: "\x1b[48;2;96;165;250m\x1b[30m",
                 warning: "\x1b[38;2;240;228;66m",
                 dim: "\x1b[38;2;158;158;158m",
                 composer_background: "\x1b[48;2;20;24;28m",
             },
             Self::LightColorblind => ThemePalette {
                 accent: "\x1b[38;2;0;114;178m",
-                selection: "\x1b[38;2;213;94;0m",
+                selection: "\x1b[48;2;96;165;250m\x1b[30m",
                 warning: "\x1b[38;2;160;110;0m",
                 dim: "\x1b[38;2;90;90;90m",
                 composer_background: "\x1b[48;2;250;250;250m",
             },
             Self::DarkAnsi => ThemePalette {
                 accent: "\x1b[36m",
-                selection: "\x1b[96m",
+                selection: "\x1b[106m\x1b[30m",
                 warning: "\x1b[33m",
                 dim: "\x1b[90m",
                 composer_background: "\x1b[40m",
             },
             Self::LightAnsi => ThemePalette {
                 accent: "\x1b[34m",
-                selection: "\x1b[94m",
+                selection: "\x1b[104m\x1b[30m",
                 warning: "\x1b[31m",
                 dim: "\x1b[90m",
                 composer_background: "\x1b[47m",
@@ -239,7 +239,7 @@ mod tests {
             );
             assert_eq!(
                 palette.selection,
-                "\x1b[38;2;205;214;244m",
+                "\x1b[48;2;96;165;250m\x1b[30m",
                 "{} selection",
                 theme.name()
             );

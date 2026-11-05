@@ -1,7 +1,6 @@
 use orchester_laufzeit::harness::service::{
-    ConfigResolution, SelfAgentConfigView, SelfAgentModelReport, SelfAgentPermissionSnapshot,
-    SelfAgentResumeAvailability, SelfAgentResumeCatalog, SelfAgentResumeStage, SelfAgentResumeStep,
-    SelfAgentStatus,
+    ConfigResolution, SelfAgentConfigView, SelfAgentModelReport, SelfAgentResumeAvailability,
+    SelfAgentResumeCatalog, SelfAgentResumeStage, SelfAgentResumeStep, SelfAgentStatus,
 };
 use orchester_protokoll::PolicyDecision;
 use orchester_verzeichnis::{PluginOrigin, RegisteredPlugin};
@@ -219,73 +218,6 @@ pub(crate) fn config(view: &SelfAgentConfigView) -> WorkspaceInspection {
     )
 }
 
-pub(crate) fn permissions(permissions: &SelfAgentPermissionSnapshot) -> WorkspaceInspection {
-    let mut entries = permissions
-        .rules
-        .iter()
-        .map(|rule| {
-            let configured = rule.configured.map(policy_label).unwrap_or("built in");
-            WorkspaceInspectionEntry::new(
-                &rule.label,
-                format!("effective {}", policy_label(rule.effective)),
-                vec![
-                    format!("configured: {configured}"),
-                    format!("effective: {}", policy_label(rule.effective)),
-                    format!("policy rule: {}", rule.policy_rule_id),
-                    format!("risk: {:?} | effect: {:?}", rule.risk, rule.effect),
-                    rule.reason.clone(),
-                ],
-            )
-        })
-        .collect::<Vec<_>>();
-    entries.push(WorkspaceInspectionEntry::new(
-        "Approvals",
-        if permissions.approvals.cli_resolution_available {
-            "CLI resolution available"
-        } else {
-            "CLI resolution unavailable"
-        },
-        vec![
-            format!("reviewer: {}", permissions.governance.approval_reviewer),
-            format!("ttl: {}s", permissions.governance.approval_ttl_seconds),
-            format!(
-                "state machine: {}",
-                if permissions.approvals.state_machine_present {
-                    "present"
-                } else {
-                    "not present"
-                }
-            ),
-        ],
-    ));
-    entries.push(WorkspaceInspectionEntry::new(
-        "Audit",
-        if permissions.audit.append_only_hash_chain && permissions.audit.redacts_before_persistence
-        {
-            "append-only redacted hash chain"
-        } else {
-            "guarantees unavailable"
-        },
-        vec![
-            format!(
-                "append-only: {}",
-                yes_no(permissions.audit.append_only_hash_chain)
-            ),
-            format!(
-                "redacted before persistence: {}",
-                yes_no(permissions.audit.redacts_before_persistence)
-            ),
-            "This projection does not inspect an existing audit log.".into(),
-        ],
-    ));
-
-    inspection(
-        "Self-agent permissions",
-        "Select a governed action to inspect its effective policy.",
-        entries,
-    )
-}
-
 pub(crate) fn resume(catalog: &SelfAgentResumeCatalog) -> WorkspaceInspection {
     let entries = catalog
         .entries
@@ -364,14 +296,6 @@ fn optional_label(value: Option<&str>) -> &str {
     value.unwrap_or("default")
 }
 
-fn yes_no(value: bool) -> &'static str {
-    if value {
-        "yes"
-    } else {
-        "no"
-    }
-}
-
 fn policy_label(value: PolicyDecision) -> &'static str {
     match value {
         PolicyDecision::Allow => "allow",
@@ -424,11 +348,9 @@ mod tests {
     use super::*;
     use std::path::PathBuf;
 
-    use orchester_laufzeit::harness::config::ConfigLoader;
     use orchester_laufzeit::harness::service::{
-        load_self_agent_permissions, SelfAgentDurableStatus, SelfAgentGovernanceStatus,
-        SelfAgentLimitStatus, SelfAgentModelStatus, SelfAgentResumeEntry,
-        WorkspaceIdentitySnapshot,
+        SelfAgentDurableStatus, SelfAgentGovernanceStatus, SelfAgentLimitStatus,
+        SelfAgentModelStatus, SelfAgentResumeEntry, WorkspaceIdentitySnapshot,
     };
 
     #[test]
@@ -499,7 +421,7 @@ mod tests {
     }
 
     #[test]
-    fn config_and_permissions_are_typed_inspection_lists() {
+    fn config_and_plugins_are_typed_inspection_lists() {
         let config_view = SelfAgentConfigView {
             user_path: PathBuf::from("D:\\home\\orchester.jsonc"),
             user_present: true,
@@ -514,17 +436,6 @@ mod tests {
         assert_eq!(config.entries[0].label, "User configuration");
         assert_eq!(config.entries[2].label, "Resolved configuration");
         assert_eq!(config.entries[2].detail, "rejected");
-
-        let user_config = ConfigLoader::test().load_user("{}").expect("config");
-        let permissions = permissions(&load_self_agent_permissions(&user_config));
-        assert!(permissions
-            .entries
-            .iter()
-            .any(|entry| entry.label == "external network"));
-        assert!(permissions
-            .entries
-            .iter()
-            .any(|entry| entry.label == "Approvals"));
 
         let plugins = plugins(&[]);
         assert_eq!(plugins.title, "Installed agent plugins");

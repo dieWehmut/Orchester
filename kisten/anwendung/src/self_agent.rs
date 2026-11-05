@@ -119,6 +119,35 @@ impl SelfAgentHost {
             .map_err(Into::into)
     }
 
+    pub fn pending_approval(
+        &self,
+        outcome: &SelfAgentRunOutcome,
+    ) -> Result<
+        Option<orchester_laufzeit::harness::service::SelfAgentPendingApproval>,
+        SelfAgentHostError,
+    > {
+        self.runtime
+            .as_ref()
+            .ok_or(SelfAgentHostError::Initialization)?
+            .pending_approval(outcome)
+            .map_err(Into::into)
+    }
+    pub async fn resolve_approval(
+        &mut self,
+        pending: &orchester_laufzeit::harness::service::SelfAgentPendingApproval,
+        approve: bool,
+        cancel: CancellationToken,
+        events: Option<Arc<dyn ModelEventSink>>,
+    ) -> Result<Option<SelfAgentRunOutcome>, SelfAgentHostError> {
+        self.ensure_runtime()?;
+        self.runtime
+            .as_ref()
+            .ok_or(SelfAgentHostError::Initialization)?
+            .resolve_approval(pending, approve, cancel, events)
+            .await
+            .map_err(Into::into)
+    }
+
     pub async fn resume_with_events(
         &mut self,
         handle: &str,
@@ -333,8 +362,25 @@ impl SelfAgentHost {
     }
 
     pub fn permissions(&self) -> Result<SelfAgentPermissionSnapshot, SelfAgentHostError> {
-        let config = self.selected_config()?;
+        let config = self.load_config()?;
         Ok(load_self_agent_permissions(&config))
+    }
+
+    /// Persist the user's explicit mode and rebuild execution before the next
+    /// turn. A permission change never alters provider or reasoning choices.
+    pub fn select_permission_mode(
+        &mut self,
+        mode: orchester_laufzeit::harness::config::PermissionMode,
+    ) -> Result<SelfAgentPermissionSnapshot, SelfAgentHostError> {
+        use orchester_laufzeit::harness::config::ConfigValue;
+        let loader = self.config_loader()?;
+        loader.load_effective(&self.workspace)?;
+        loader.edit_user_config(&[(
+            vec!["governance".into(), "permission_mode".into()],
+            ConfigValue::String(mode.name().into()),
+        )])?;
+        self.runtime = None;
+        self.permissions()
     }
 
     pub fn resume_catalog(&self) -> Result<SelfAgentResumeCatalog, SelfAgentHostError> {
@@ -426,6 +472,75 @@ impl SelfAgentHost {
             self.reasoning_effort_override = None;
         }
         Ok(edit)
+    }
+
+    pub fn edit_model_profile(
+        &mut self,
+        provider: &str,
+        name: &str,
+        model: Option<&str>,
+    ) -> Result<(), SelfAgentHostError> {
+        use orchester_laufzeit::harness::config::{ConfigError, ConfigValue, ModelProfileConfig};
+        let loader = self.config_loader()?;
+        let config = loader.load_effective(&self.workspace)?;
+        if config
+            .model_profiles()
+            .get(name)
+            .is_some_and(|p| p.model_provider != provider)
+        {
+            return Err(ConfigError::Validation {
+                path: "model_profiles".into(),
+                message: "This profile belongs to another provider".into(),
+            }
+            .into());
+        }
+        let profile = model.map(|model| {
+            let mut profile =
+                config
+                    .model_profiles()
+                    .get(name)
+                    .cloned()
+                    .unwrap_or(ModelProfileConfig {
+                        model_provider: provider.to_owned(),
+                        model: model.to_owned(),
+                        model_reasoning_effort: None,
+                        plan_mode_reasoning_effort: None,
+                        service_tier: None,
+                    });
+            profile.model = model.to_owned();
+            profile
+        });
+        let candidate = config.with_model_profile_entry(name, profile)?;
+        let members = candidate
+            .model_profiles()
+            .iter()
+            .map(|(name, p)| {
+                let mut fields = vec![
+                    (
+                        "model_provider".into(),
+                        ConfigValue::String(p.model_provider.clone()),
+                    ),
+                    ("model".into(), ConfigValue::String(p.model.clone())),
+                ];
+                for (key, value) in [
+                    ("model_reasoning_effort", &p.model_reasoning_effort),
+                    ("plan_mode_reasoning_effort", &p.plan_mode_reasoning_effort),
+                    ("service_tier", &p.service_tier),
+                ] {
+                    if let Some(value) = value {
+                        fields.push((key.into(), ConfigValue::String(value.clone())));
+                    }
+                }
+                (name.clone(), ConfigValue::Object(fields))
+            })
+            .collect();
+        loader
+            .edit_user_config(&[(vec!["model_profiles".into()], ConfigValue::Object(members))])?;
+        self.runtime = None;
+        if model.is_none() && self.model_session.selected_profile() == Some(name) {
+            self.model_session = Default::default();
+        }
+        Ok(())
     }
 
     fn ensure_runtime(&mut self) -> Result<(), SelfAgentHostError> {
@@ -556,6 +671,74 @@ mod tests {
     }
 
     #[test]
+    fn permission_selection_persists_without_touching_models_or_other_settings() {
+        use orchester_laufzeit::harness::config::{ConfigValue, PermissionMode};
+        use orchester_protokoll::PolicyDecision;
+
+        let root = std::env::temp_dir().join(format!(
+            "orchester-host-permissions-{}-{}",
+            std::process::id(),
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let home = root.join("home");
+        let workspace = root.join("workspace");
+        fs::create_dir_all(&workspace).unwrap();
+        let path = home.join(USER_CONFIG);
+        ConfigLoader::for_user_path(&path)
+            .edit_user_config(&[
+                (vec!["model".into()], ConfigValue::String("my-model".into())),
+                (
+                    vec!["governance".into(), "approval_reviewer".into()],
+                    ConfigValue::String("local-reviewer".into()),
+                ),
+            ])
+            .unwrap();
+        let paths = OrchesterPaths::new(&home, &workspace);
+        let mut host = SelfAgentHost::for_paths(&paths);
+        assert_eq!(host.permissions().unwrap().mode, None);
+        let changed = host
+            .select_permission_mode(PermissionMode::FullAccess)
+            .unwrap();
+        assert_eq!(changed.mode, Some(PermissionMode::FullAccess));
+
+        let mut reopened = SelfAgentHost::for_paths(&paths);
+        assert_eq!(
+            reopened.permissions().unwrap().mode,
+            Some(PermissionMode::FullAccess)
+        );
+        let readonly = reopened
+            .select_permission_mode(PermissionMode::ReadOnly)
+            .unwrap();
+        assert_eq!(
+            readonly
+                .rules
+                .iter()
+                .find(|rule| rule.id == "workspace.write")
+                .unwrap()
+                .effective,
+            PolicyDecision::Ask
+        );
+        assert_eq!(
+            readonly
+                .rules
+                .iter()
+                .find(|rule| rule.id == "workspace.read")
+                .unwrap()
+                .effective,
+            PolicyDecision::Allow
+        );
+        let loaded = ConfigLoader::for_user_path(&path)
+            .load_user_file(&path)
+            .unwrap();
+        assert_eq!(loaded.model.as_deref(), Some("my-model"));
+        assert_eq!(loaded.governance.approval_reviewer, "local-reviewer");
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
     fn for_paths_binds_model_configuration_to_the_explicit_home() {
         use orchester_laufzeit::harness::config::ConfigValue;
 
@@ -610,13 +793,32 @@ mod tests {
         let _restore = EnvironmentRestore { previous };
 
         let paths = OrchesterPaths::new(&explicit_home, &workspace);
-        let host = SelfAgentHost::for_paths(&paths);
+        let mut host = SelfAgentHost::for_paths(&paths);
         let catalog = host.model_catalog().expect("model catalog");
 
         assert!(matches!(
             catalog.active,
             SelfAgentActiveModel::Configured(ref choice) if choice.model == "gpt-explicit"
         ));
+        host.edit_model_profile("OpenAI", "first", Some("first-model"))
+            .unwrap();
+        host.edit_model_profile("OpenAI", "second", Some("second-model"))
+            .unwrap();
+        let reloaded = SelfAgentHost::for_paths(&paths).model_catalog().unwrap();
+        assert_eq!(reloaded.profiles.len(), 2);
+        assert!(host
+            .edit_model_profile("Other", "first", Some("stolen-model"))
+            .is_err());
+        host.edit_model_profile("OpenAI", "first", Some("edited-model"))
+            .unwrap();
+        assert_eq!(
+            host.model_catalog().unwrap().profiles[0].model,
+            "edited-model"
+        );
+        host.edit_model_profile("OpenAI", "first", None).unwrap();
+        let remaining = SelfAgentHost::for_paths(&paths).model_catalog().unwrap();
+        assert_eq!(remaining.profiles.len(), 1);
+        assert_eq!(remaining.profiles[0].model, "second-model");
         let _ = fs::remove_dir_all(root);
     }
 }

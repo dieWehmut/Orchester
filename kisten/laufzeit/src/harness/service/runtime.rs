@@ -1,4 +1,6 @@
+mod approval;
 mod outcome;
+pub use approval::SelfAgentPendingApproval;
 
 use std::fmt;
 use std::path::Path;
@@ -80,6 +82,8 @@ impl fmt::Debug for SelfAgentOutcome {
 #[derive(Debug, Error)]
 pub enum SelfAgentRuntimeError {
     #[error(transparent)]
+    Approval(#[from] crate::harness::approval::ApprovalError),
+    #[error(transparent)]
     Service(#[from] SelfAgentServiceError),
     #[error(transparent)]
     Execution(#[from] GovernedExecutionError),
@@ -92,6 +96,7 @@ pub enum SelfAgentRuntimeError {
 pub struct SelfAgentRuntime<M, A> {
     service: SelfAgentService<M, Arc<SqliteRunStore>, SystemCoordinatorClock>,
     execution: GovernedExecution<A, SystemCoordinatorClock>,
+    explicit_permissions: bool,
 }
 
 impl<M, A> SelfAgentRuntime<M, A>
@@ -103,7 +108,11 @@ where
         service: SelfAgentService<M, Arc<SqliteRunStore>, SystemCoordinatorClock>,
         execution: GovernedExecution<A, SystemCoordinatorClock>,
     ) -> Self {
-        Self { service, execution }
+        Self {
+            service,
+            execution,
+            explicit_permissions: false,
+        }
     }
 
     pub fn new(
@@ -123,6 +132,11 @@ where
         )?;
         let execution = GovernedExecution::new(store, audit, executor, owner_actor_id)?;
         Ok(Self::from_parts(service, execution))
+    }
+
+    pub fn with_explicit_permissions(mut self, enabled: bool) -> Self {
+        self.explicit_permissions = enabled;
+        self
     }
 
     pub fn model(&self) -> &M {
@@ -274,7 +288,9 @@ where
         narrator.started(turn.run_id());
 
         loop {
-            let Some((run_id, action_id, call_id)) = executable_file_action(&turn) else {
+            let Some((run_id, action_id, call_id)) =
+                executable_action(&turn, self.explicit_permissions)
+            else {
                 narrator.finished(&turn);
                 return Ok(SelfAgentRunOutcome::new(turn, tool_steps));
             };
@@ -289,7 +305,8 @@ where
             narrator.tool_started(action);
             let outcome = self
                 .execution
-                .execute(&run_id, &action_id, &call_id)
+                .execute_async(&run_id, &action_id, &call_id, cancel.clone())
+                .await
                 .inspect_err(|error| narrator.failed(&error.to_string()))?;
             narrator.tool_finished(action, &outcome);
 
@@ -303,19 +320,29 @@ where
     }
 }
 
-fn executable_file_action(turn: &SelfAgentTurn) -> Option<(RunId, ActionId, CallId)> {
+fn executable_action(turn: &SelfAgentTurn, explicit: bool) -> Option<(RunId, ActionId, CallId)> {
     match turn {
         SelfAgentTurn::Action {
             run_id,
             action_id,
             call_id,
-            action:
-                AgentAction::ListFiles { .. }
-                | AgentAction::SearchText { .. }
-                | AgentAction::ReadFile { .. },
+            action,
             policy,
             ..
-        } if policy.decision == PolicyDecision::Allow => {
+        } if policy.decision == PolicyDecision::Allow
+            && (matches!(
+                action,
+                AgentAction::ListFiles { .. }
+                    | AgentAction::SearchText { .. }
+                    | AgentAction::ReadFile { .. }
+            ) || explicit
+                && matches!(
+                    action,
+                    AgentAction::WriteFile { .. }
+                        | AgentAction::ApplyPatch { .. }
+                        | AgentAction::RunCommand { .. }
+                )) =>
+        {
             Some((run_id.clone(), action_id.clone(), call_id.clone()))
         }
         SelfAgentTurn::Text { .. } | SelfAgentTurn::Action { .. } => None,

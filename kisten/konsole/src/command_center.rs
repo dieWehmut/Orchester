@@ -136,6 +136,17 @@ pub fn run(chat: &mut ChatSession) -> io::Result<Action> {
                 }
             } else {
                 if let Some(filters) = colored_lines.get_mut(1) {
+                    if let Some(end) = filters.find(']') {
+                        if let Some(start) = filters[..end].find('[') {
+                            *filters = format!(
+                                "{}{}{}\x1b[0m{}",
+                                &filters[..start],
+                                palette.selection,
+                                &filters[start..=end],
+                                &filters[end + 1..]
+                            );
+                        }
+                    }
                     *filters = crate::theme::color_commands(filters, palette);
                 }
                 if dimensions.1 >= 4 {
@@ -180,19 +191,31 @@ pub fn run(chat: &mut ChatSession) -> io::Result<Action> {
             KeyCode::Esc => return Ok(Action::Back),
             KeyCode::Char('n') => return Ok(Action::Compose),
             KeyCode::Tab => {
-                filter = if key.modifiers.contains(KeyModifiers::SHIFT) { (filter + 4) % 5 } else { (filter + 1) % 5 };
+                filter = if key.modifiers.contains(KeyModifiers::SHIFT) {
+                    (filter + 4) % 5
+                } else {
+                    (filter + 1) % 5
+                };
                 selected = 0;
             }
-            KeyCode::BackTab => { filter = (filter + 4) % 5; selected = 0; }
+            KeyCode::BackTab => {
+                filter = (filter + 4) % 5;
+                selected = 0;
+            }
             KeyCode::Down => selected = (selected + 1).min(rows.len().saturating_sub(1)),
             KeyCode::Up => selected = selected.saturating_sub(1),
             KeyCode::Home => selected = 0,
             KeyCode::End => selected = rows.len().saturating_sub(1),
             KeyCode::Char('r') => {
-                if let Some(handle) = rows.get(selected).and_then(|t| t.resume_handle.clone()) { return Ok(Action::Resume(handle)); }
+                if let Some(handle) = rows.get(selected).and_then(|t| t.resume_handle.clone()) {
+                    return Ok(Action::Resume(handle));
+                }
             }
             KeyCode::Enter => {
-                if let Some(task) = rows.get(selected) { detail = Some(command_center_data::detail(task).unwrap_or_else(|e| e)); scroll = 0; }
+                if let Some(task) = rows.get(selected) {
+                    detail = Some(command_center_data::detail(task).unwrap_or_else(|e| e));
+                    scroll = 0;
+                }
             }
             KeyCode::Char('?') => detail = Some(HELP.into()),
             _ => {}
@@ -213,7 +236,10 @@ fn render(
         return String::new();
     }
     let mut lines = vec![if error.is_empty() {
-        format!("\x1b[1m{}\x1b[0m", fit("Agent command center", width))
+        format!(
+            "\x1b[1m{}\x1b[0m",
+            fit("Agent command center    Group: Project", width)
+        )
     } else {
         fit(&format!("Agent command center · {error}"), width)
     }];
@@ -257,7 +283,9 @@ fn render(
         let chosen = rows.get(selected).copied();
         let mut project_counts = std::collections::HashMap::new();
         for task in &rows {
-            *project_counts.entry(task.project_key.as_str()).or_insert(0usize) += 1;
+            *project_counts
+                .entry(task.project_key.as_str())
+                .or_insert(0usize) += 1;
         }
         let right = if width >= 110 { width / 3 } else { 0 };
         let left = width.saturating_sub(right + usize::from(right > 0));
@@ -274,6 +302,8 @@ fn render(
                 "Tasks".into()
             },
         )];
+        let palette = crate::theme::load_user_theme().palette();
+        let mut task_lines = std::collections::HashMap::new();
         let mut selected_line = 0;
         let mut project_key = "";
         for (i, task) in rows.iter().enumerate() {
@@ -281,17 +311,22 @@ fn render(
                 project_key = &task.project_key;
                 list.push((
                     false,
-                    format!(
-                        "{}  {}",
-                        task.project,
-                        project_counts[project_key]
-                    ),
+                    format!("{}  {}", task.project, project_counts[project_key]),
                 ));
             }
             if i == selected {
                 selected_line = list.len();
             }
-            let label = format!("{} {}", if i == selected { ">" } else { " " }, task.title);
+            let label = format!(
+                "{} {} {}",
+                if i == selected { ">" } else { " " },
+                if task.status == TaskStatus::Working {
+                    "●"
+                } else {
+                    "○"
+                },
+                task.title
+            );
             let row = if left >= 62 {
                 format!(
                     "{} {} {}",
@@ -302,6 +337,7 @@ fn render(
             } else {
                 format!("{label} · {}", status(task))
             };
+            task_lines.insert(list.len(), *task);
             list.push((i == selected, row));
         }
         if rows.is_empty() {
@@ -350,14 +386,39 @@ fn render(
             let (active, text) = list.get(start + n).cloned().unwrap_or_default();
             let text = padded(&text, left);
             let main = if active {
-                format!("\x1b[7m{text}\x1b[0m")
+                format!("{}{text}\x1b[0m", palette.selection)
+            } else if let Some(task) = task_lines.get(&(start + n)) {
+                let title_width = if left >= 62 { left - 29 } else { left };
+                let title = fit(&text, title_width);
+                let rest = &text[title.len()..];
+                let marker_color = match task.status {
+                    TaskStatus::Working => "\x1b[32m",
+                    TaskStatus::Ready => "\x1b[36m",
+                    TaskStatus::NeedsYou => "\x1b[35m",
+                    TaskStatus::Inactive => palette.dim,
+                };
+                let marker = fit(&title, 4);
+                format!(
+                    "{marker_color}{marker}{}{}\x1b[0m{}{rest}\x1b[0m",
+                    task_color(&task.id),
+                    &title[marker.len()..],
+                    palette.dim
+                )
             } else {
-                text
+                format!("{}{text}\x1b[0m", palette.dim)
             };
             lines.push(if right > 0 {
                 format!(
                     "{main}│ {}",
-                    details.get(n).map(String::as_str).unwrap_or("")
+                    if n == 1 {
+                        format!(
+                            "{}{}\x1b[0m",
+                            chosen.map(|task| task_color(&task.id)).unwrap_or(""),
+                            details.get(n).map(String::as_str).unwrap_or("")
+                        )
+                    } else {
+                        details.get(n).cloned().unwrap_or_default()
+                    }
                 )
             } else {
                 main
@@ -379,6 +440,32 @@ fn render(
     }
     lines.truncate(height);
     lines.join("\n")
+}
+fn task_color(id: &str) -> &'static str {
+    let index = id.bytes().fold(0usize, |hash, byte| {
+        hash.wrapping_mul(31).wrapping_add(byte as usize)
+    }) % 5;
+    let theme = crate::theme::load_user_theme();
+    if theme == crate::theme::Theme::DarkAnsi {
+        return ["\x1b[95m", "\x1b[91m", "\x1b[92m", "\x1b[96m", "\x1b[94m"][index];
+    }
+    let light = matches!(
+        theme,
+        crate::theme::Theme::Light
+            | crate::theme::Theme::LightColorblind
+            | crate::theme::Theme::LightAnsi
+    );
+    if light {
+        ["\x1b[35m", "\x1b[31m", "\x1b[32m", "\x1b[36m", "\x1b[34m"][index]
+    } else {
+        [
+            "\x1b[38;2;198;160;246m",
+            "\x1b[38;2;237;135;150m",
+            "\x1b[38;2;166;218;149m",
+            "\x1b[38;2;139;213;202m",
+            "\x1b[38;2;138;173;244m",
+        ][index]
+    }
 }
 fn detail_scroll_limit(text: &str, size: (usize, usize)) -> usize {
     text.lines()

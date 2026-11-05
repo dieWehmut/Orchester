@@ -13,6 +13,7 @@ use super::super::governance::{EffectClass, PolicyConstraints, PolicyEngine, Pol
 /// A read-only description of the effective self-agent governance surface.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SelfAgentPermissionSnapshot {
+    pub mode: Option<crate::harness::config::PermissionMode>,
     pub policy_snapshot_hash: String,
     pub side_effect_free: bool,
     pub governance: SelfAgentPermissionGovernance,
@@ -74,7 +75,8 @@ pub fn load_self_agent_permissions(config: &UserConfig) -> SelfAgentPermissionSn
         network: config.governance.tool_network,
         out_of_workspace: config.governance.out_of_workspace,
         shell_interpreters: config.governance.shell_interpreters,
-    });
+    })
+    .with_permission_mode(config.governance.permission_mode);
 
     let rules = vec![
         action_rule(
@@ -188,14 +190,19 @@ pub fn load_self_agent_permissions(config: &UserConfig) -> SelfAgentPermissionSn
             "path.out_of_workspace",
             "out-of-workspace path",
             Some(config.governance.out_of_workspace),
-            PolicyDecision::Deny,
+            match config.governance.permission_mode {
+                Some(crate::harness::config::PermissionMode::FullAccess) => PolicyDecision::Allow,
+                Some(_) => PolicyDecision::Ask,
+                None => PolicyDecision::Deny,
+            },
             Risk::High,
             EffectClass::WorkspaceMutation,
-            "workspace boundary is always enforced by the path barrier",
+            "outside access uses a separately authorized path capability",
         ),
     ];
 
     SelfAgentPermissionSnapshot {
+        mode: config.governance.permission_mode,
         policy_snapshot_hash: policy.snapshot_hash_value(),
         side_effect_free: true,
         governance: SelfAgentPermissionGovernance {
@@ -210,7 +217,7 @@ pub fn load_self_agent_permissions(config: &UserConfig) -> SelfAgentPermissionSn
             state_machine_present: true,
             reviewer_configured: !config.governance.approval_reviewer.trim().is_empty(),
             ttl_configured: config.governance.approval_ttl_seconds > 0,
-            cli_resolution_available: false,
+            cli_resolution_available: true,
         },
         audit: SelfAgentAuditStatus {
             append_only_hash_chain: true,

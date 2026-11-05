@@ -164,6 +164,7 @@ where
 {
     let secrets =
         config.resolve_configured_secrets_for_provider(&model.profile().provider, credentials)?;
+    let policy_root = workspace_root.as_ref().to_path_buf();
     let identity = WorkspaceIdentity::for_workspace(workspace_root, owner_actor_id)?;
     let profile = model.profile().clone();
     let loop_engine = SelfAgentLoop::new(
@@ -184,7 +185,9 @@ where
         network: config.governance.tool_network,
         out_of_workspace: config.governance.out_of_workspace,
         shell_interpreters: config.governance.shell_interpreters,
-    });
+    })
+    .with_permission_mode(config.governance.permission_mode)
+    .with_workspace_root(policy_root);
     Ok(SelfAgentService::from_identity_with_policy(
         loop_engine,
         store,
@@ -209,7 +212,9 @@ where
     let mut file_limits = FileToolLimits::default();
     let observation_limit = u64::try_from(config.limits.max_observation_bytes).unwrap_or(u64::MAX);
     file_limits.max_read_bytes = file_limits.max_read_bytes.min(observation_limit);
-    let executor = ToolExecutor::new(workspace_root, file_limits)?;
+    let executor = ToolExecutor::new(workspace_root, file_limits)?
+        .with_permission_mode(config.governance.permission_mode);
     let execution = GovernedExecution::new(store, audit, executor, owner_actor_id)?;
-    Ok(SelfAgentRuntime::from_parts(service, execution))
+    Ok(SelfAgentRuntime::from_parts(service, execution)
+        .with_explicit_permissions(config.governance.permission_mode.is_some()))
 }

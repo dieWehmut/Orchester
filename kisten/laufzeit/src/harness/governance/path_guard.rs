@@ -228,6 +228,7 @@ pub struct WorkspaceGuard {
     root_dir: Dir,
     identity: WorkspaceIdentity,
     protected: Vec<PathBuf>,
+    protect_nested: bool,
 }
 
 impl std::fmt::Debug for WorkspaceGuard {
@@ -260,7 +261,41 @@ impl WorkspaceGuard {
             root_dir,
             identity,
             protected: vec![PathBuf::from(".git"), PathBuf::from(".orchester")],
+            protect_nested: false,
         })
+    }
+
+    /// Construct a separate, capability-backed scope for an explicitly approved
+    /// outside path. This does not relax the original workspace capability.
+    pub fn scope_for_explicit_path(
+        &self,
+        requested: &Path,
+    ) -> Result<Option<(Self, PathBuf)>, GuardError> {
+        if requested.as_os_str().is_empty() || contains_nul(requested) {
+            return Err(GuardError::InvalidPath {
+                path: requested.to_path_buf(),
+            });
+        }
+        let absolute = absolute_lexical_path(&self.root.join(requested))?;
+        if absolute.starts_with(&self.root) {
+            return Ok(None);
+        }
+        for component in absolute.components() {
+            if let Component::Normal(name) = component {
+                if name == OsStr::new(".git") || name == OsStr::new(".orchester") {
+                    return Err(GuardError::Protected {
+                        path: requested.to_path_buf(),
+                    });
+                }
+            }
+        }
+        let (anchor, relative) = match (absolute.parent(), absolute.file_name()) {
+            (Some(parent), Some(name)) => (parent, PathBuf::from(name)),
+            _ => (absolute.as_path(), PathBuf::from(".")),
+        };
+        let mut scope = Self::new(anchor)?;
+        scope.protect_nested = true;
+        Ok(Some((scope, relative)))
     }
 
     pub fn root(&self) -> &Path {
@@ -665,6 +700,7 @@ impl WorkspaceGuard {
             .protected
             .iter()
             .any(|protected| path_starts_with(relative, protected))
+            || (self.protect_nested && relative.components().any(|component| matches!(component, Component::Normal(name) if name == OsStr::new(".git") || name == OsStr::new(".orchester"))))
         {
             Err(GuardError::Protected {
                 path: requested.to_path_buf(),
@@ -946,7 +982,7 @@ fn open_root_capability(root: &Path) -> Result<Dir, GuardError> {
     Ok(directory)
 }
 
-fn absolute_lexical_path(requested: &Path) -> Result<PathBuf, GuardError> {
+pub(super) fn absolute_lexical_path(requested: &Path) -> Result<PathBuf, GuardError> {
     let absolute = if requested.is_absolute() {
         requested.to_path_buf()
     } else {

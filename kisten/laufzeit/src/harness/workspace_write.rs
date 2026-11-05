@@ -49,6 +49,7 @@ pub struct GovernedWorkspaceWriter {
     workspace: WorkspaceGuard,
     limits: WorkspaceWriteLimits,
     locks: WorkspaceLocks,
+    explicit_outside_access: bool,
 }
 
 impl fmt::Debug for GovernedWorkspaceWriter {
@@ -76,7 +77,13 @@ impl GovernedWorkspaceWriter {
             workspace,
             limits,
             locks,
+            explicit_outside_access: false,
         })
+    }
+
+    pub fn with_explicit_outside_access(mut self, enabled: bool) -> Self {
+        self.explicit_outside_access = enabled;
+        self
     }
 
     pub async fn execute(
@@ -95,13 +102,23 @@ impl GovernedWorkspaceWriter {
             return Err(WorkspaceWriteError::LimitExceeded);
         }
 
+        let outside = if self.explicit_outside_access {
+            self.workspace
+                .scope_for_explicit_path(Path::new(&path))
+                .map_err(map_guard)?
+        } else {
+            None
+        };
+        let (workspace, requested) = outside
+            .as_ref()
+            .map(|(guard, path)| (guard, path.as_path()))
+            .unwrap_or((&self.workspace, Path::new(&path)));
         let lease = self
             .locks
-            .resolve_mutation(&self.workspace, Path::new(&path))
+            .resolve_mutation(workspace, requested)
             .await
             .map_err(map_guard)?;
-        let mut target = self
-            .workspace
+        let mut target = workspace
             .atomic_write_target(lease.resolved())
             .map_err(map_guard)?;
         target

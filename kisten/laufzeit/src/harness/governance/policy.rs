@@ -7,6 +7,7 @@ use sha2::{Digest, Sha256};
 use thiserror::Error;
 
 use super::command::{classify_command, CommandCategory, CommandIntent};
+use crate::harness::config::PermissionMode;
 use crate::harness::run_store::EffectClass;
 
 /// Short name retained for policy APIs and matrix tests.
@@ -90,6 +91,8 @@ pub enum PolicyError {
 #[derive(Debug, Clone, Default)]
 pub struct PolicyEngine {
     constraints: PolicyConstraints,
+    permission_mode: Option<PermissionMode>,
+    workspace_root: Option<std::path::PathBuf>,
 }
 
 impl PolicyEngine {
@@ -102,6 +105,9 @@ impl PolicyEngine {
     pub fn snapshot_hash_value(&self) -> String {
         let mut hasher = Sha256::new();
         hasher.update(b"orchester-policy-v1\0");
+        if let Some(mode) = self.permission_mode {
+            hasher.update(mode.name().as_bytes());
+        }
         if self.constraints != PolicyConstraints::default() {
             hasher.update(b"constraints\0");
             hash_decision(&mut hasher, self.constraints.network);
@@ -120,9 +126,62 @@ impl PolicyEngine {
     }
 
     pub fn with_constraints(constraints: PolicyConstraints) -> Self {
-        Self { constraints }
+        Self {
+            constraints,
+            permission_mode: None,
+            workspace_root: None,
+        }
     }
 
+    pub fn with_permission_mode(mut self, mode: Option<PermissionMode>) -> Self {
+        self.permission_mode = mode;
+        self
+    }
+    pub fn with_workspace_root(mut self, root: impl AsRef<std::path::Path>) -> Self {
+        self.workspace_root = Some(
+            super::path_guard::absolute_lexical_path(root.as_ref())
+                .unwrap_or_else(|_| root.as_ref().to_path_buf()),
+        );
+        self
+    }
+    pub fn permission_mode(&self) -> Option<PermissionMode> {
+        self.permission_mode
+    }
+    fn apply_mode(&self, mut result: PolicyResult) -> PolicyResult {
+        let Some(mode) = self.permission_mode else {
+            return result;
+        };
+        if result.rule_id == "command.parse"
+            || result.rule_id == "approval.explicit_checkpoint"
+            || result.rule_id == "run.finish"
+        {
+            return result;
+        }
+        result.decision = match mode {
+            PermissionMode::FullAccess => Decision::Allow,
+            PermissionMode::ReadOnly if result.effect != EffectClass::ReadOnlyIdempotent => {
+                Decision::Ask
+            }
+            PermissionMode::ReadOnly => result.decision,
+            PermissionMode::ApproveForMe if result.risk < Risk::High => Decision::Allow,
+            PermissionMode::AskForApproval
+                if matches!(
+                    result.rule_id.as_str(),
+                    "workspace.read"
+                        | "workspace.write"
+                        | "memory.write"
+                        | "command.may_mutate"
+                        | "git.write"
+                        | "validator.unconfigured"
+                ) =>
+            {
+                Decision::Allow
+            }
+            _ => Decision::Ask,
+        };
+        result.reason = format!("{}: {}", mode.label(), result.reason);
+        result
+    }
     pub fn constraints(&self) -> PolicyConstraints {
         self.constraints
     }
@@ -174,6 +233,59 @@ impl PolicyEngine {
                 EffectClass::ReadOnlyIdempotent,
             ),
         };
+        let mut result = if matches!(action, AgentAction::RunCommand { .. }) {
+            result
+        } else {
+            self.apply_mode(result)
+        };
+        if let (Some(mode), Some(root)) = (self.permission_mode, &self.workspace_root) {
+            let paths = match action {
+                AgentAction::ReadFile { path, .. }
+                | AgentAction::WriteFile { path, .. }
+                | AgentAction::ListFiles { path, .. }
+                | AgentAction::SearchText { path, .. } => vec![std::path::PathBuf::from(path)],
+                AgentAction::RunCommand { program, args, cwd } => {
+                    let args = args.iter().map(OsString::from).collect::<Vec<_>>();
+                    let intent = match classify_command(program, &args) {
+                        Ok(intent) => intent,
+                        Err(_) => return Ok(deny_parse()),
+                    };
+                    let base = cwd
+                        .as_ref()
+                        .map(|cwd| root.join(cwd))
+                        .unwrap_or_else(|| root.clone());
+                    let mut paths = intent
+                        .potential_path_operands()
+                        .into_iter()
+                        .map(|path| base.join(path))
+                        .collect::<Vec<_>>();
+                    if let Some(cwd) = cwd {
+                        paths.push(root.join(cwd));
+                    }
+                    paths
+                }
+                AgentAction::ApplyPatch { patch } => {
+                    match crate::harness::workspace_patch::patch_paths(patch) {
+                        Ok(paths) => paths,
+                        Err(_) => return Ok(deny_parse()),
+                    }
+                }
+                _ => Vec::new(),
+            };
+            for path in paths {
+                match super::path_guard::absolute_lexical_path(&root.join(path)) {
+                    Err(_) => return Ok(deny_parse()),
+                    Ok(absolute)
+                        if !absolute.starts_with(root) && mode != PermissionMode::FullAccess =>
+                    {
+                        result.decision = Decision::Ask;
+                        result.rule_id = "filesystem.outside_approval".into();
+                        result.reason = "Access outside the workspace requires approval".into();
+                    }
+                    _ => {}
+                }
+            }
+        }
         Ok(result)
     }
 
@@ -285,7 +397,7 @@ impl PolicyEngine {
                 EffectClass::ExternalEffect,
             )
         };
-        self.apply_constraints(categories, result)
+        self.apply_mode(self.apply_constraints(categories, result))
     }
 
     fn apply_constraints(
@@ -353,4 +465,121 @@ fn deny_parse() -> PolicyResult {
         "command could not be parsed safely",
         EffectClass::ExternalEffect,
     )
+}
+
+#[cfg(test)]
+mod permission_mode_tests {
+    use super::*;
+    #[test]
+    fn explicit_modes_change_command_decisions_and_policy_identity() {
+        let legacy = PolicyEngine::new();
+        let command =
+            |engine: &PolicyEngine, program: &str| engine.evaluate_command(program, &[]).decision;
+        assert_eq!(command(&legacy, "unknown-local-tool"), Decision::Deny);
+        let full = legacy
+            .clone()
+            .with_permission_mode(Some(PermissionMode::FullAccess));
+        let approve = legacy
+            .clone()
+            .with_permission_mode(Some(PermissionMode::ApproveForMe));
+        let ask = legacy
+            .clone()
+            .with_permission_mode(Some(PermissionMode::AskForApproval));
+        let read = legacy
+            .clone()
+            .with_permission_mode(Some(PermissionMode::ReadOnly));
+        assert_eq!(command(&full, "unknown-local-tool"), Decision::Allow);
+        assert_eq!(command(&approve, "unknown-local-tool"), Decision::Ask);
+        assert_eq!(command(&ask, "curl"), Decision::Ask);
+        assert_eq!(command(&read, "curl"), Decision::Ask);
+        assert_eq!(command(&read, "pwd"), Decision::Allow);
+        assert_eq!(command(&full, ""), Decision::Deny);
+        let write = AgentAction::WriteFile {
+            path: "src/generated.rs".into(),
+            content: "updated".into(),
+        };
+        assert_eq!(read.evaluate(&write).unwrap().decision, Decision::Ask);
+        assert_eq!(ask.evaluate(&write).unwrap().decision, Decision::Allow);
+        assert_eq!(full.evaluate(&write).unwrap().decision, Decision::Allow);
+        let root = std::env::temp_dir().join("permission-test-workspace");
+        let outside = AgentAction::WriteFile {
+            path: "../outside.txt".into(),
+            content: "outside".into(),
+        };
+        assert_eq!(
+            ask.clone()
+                .with_workspace_root(&root)
+                .evaluate(&outside)
+                .unwrap()
+                .decision,
+            Decision::Ask
+        );
+        assert_eq!(
+            full.clone()
+                .with_workspace_root(&root)
+                .evaluate(&outside)
+                .unwrap()
+                .decision,
+            Decision::Allow
+        );
+        let outside_command = AgentAction::RunCommand {
+            program: "cat".into(),
+            args: vec!["../outside.txt".into()],
+            cwd: None,
+        };
+        assert_eq!(
+            ask.clone()
+                .with_workspace_root(&root)
+                .evaluate(&outside_command)
+                .unwrap()
+                .decision,
+            Decision::Ask
+        );
+        let outside_patch = AgentAction::ApplyPatch {
+            patch: "*** Begin Patch\n*** Add File: ../outside.txt\n+new\n*** End Patch\n".into(),
+        };
+        assert_eq!(
+            ask.clone()
+                .with_workspace_root(&root)
+                .evaluate(&outside_patch)
+                .unwrap()
+                .decision,
+            Decision::Ask
+        );
+        assert_eq!(
+            full.clone()
+                .with_workspace_root(&root)
+                .evaluate(&outside_patch)
+                .unwrap()
+                .decision,
+            Decision::Allow
+        );
+        assert_eq!(
+            full.evaluate(&AgentAction::RequestApproval {
+                reason: "explicit checkpoint".into()
+            })
+            .unwrap()
+            .decision,
+            Decision::Ask
+        );
+        let malformed_patch = AgentAction::ApplyPatch {
+            patch: "not a patch".into(),
+        };
+        assert_eq!(
+            full.clone()
+                .with_workspace_root(&root)
+                .evaluate(&malformed_patch)
+                .unwrap()
+                .decision,
+            Decision::Deny
+        );
+        let hashes = [legacy, full, approve, ask, read].map(|policy| policy.snapshot_hash_value());
+        assert_eq!(
+            hashes
+                .iter()
+                .collect::<std::collections::HashSet<_>>()
+                .len(),
+            5
+        );
+    }
 }

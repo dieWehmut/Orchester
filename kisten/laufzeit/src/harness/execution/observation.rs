@@ -15,6 +15,27 @@ pub(super) fn from_execution(
 ) -> Result<Observation, ()> {
     let observation_id = observation_id(run_id, action_id, call_id);
     match execution {
+        ToolExecution::Written(bytes) => Ok(Observation {
+            observation_id,
+            call_id: call_id.clone(),
+            kind: "write_file".into(),
+            summary: format!("wrote bytes={bytes}"),
+            data: json!({"bytes_written": bytes}),
+        }),
+        ToolExecution::Patched(files, bytes) => Ok(Observation {
+            observation_id,
+            call_id: call_id.clone(),
+            kind: "apply_patch".into(),
+            summary: format!("patched files={files} bytes={bytes}"),
+            data: json!({"files_changed": files, "bytes_written": bytes}),
+        }),
+        ToolExecution::Command(result) => Ok(Observation {
+            observation_id,
+            call_id: call_id.clone(),
+            kind: "run_command".into(),
+            summary: format!("command {:?}", result.termination),
+            data: json!({"termination": format!("{:?}", result.termination), "stdout": result.stdout.text_lossy(), "stderr": result.stderr.text_lossy(), "stdout_truncated": result.stdout.truncated(), "stderr_truncated": result.stderr.truncated()}),
+        }),
         ToolExecution::Read(result) => {
             let content_lines = result.content.lines().collect::<Vec<_>>();
             Ok(Observation {
@@ -79,6 +100,11 @@ pub(super) fn from_execution(
 }
 
 pub(super) fn tool_failure(error: ToolExecutorError) -> FeedbackReport {
+    if error == ToolExecutorError::Cancelled {
+        let mut report = feedback(error.to_string(), false);
+        report.classification = "cancelled".into();
+        return report;
+    }
     let retryable = matches!(error, ToolExecutorError::File(FileToolError::Io));
     feedback(error.to_string(), retryable)
 }

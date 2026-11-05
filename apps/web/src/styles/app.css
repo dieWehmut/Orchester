@@ -19,7 +19,7 @@
   --transcript-surface: var(--color-bg-element);
   --workspace-seam: color-mix(in srgb, var(--color-border-base) 45%, transparent);
   --workspace-hover: color-mix(in srgb, var(--color-bg-element) 70%, transparent);
-  --composer-max-width: 48rem;
+  --composer-max-width: 52rem;
   --composer-radius: 26px;
   --composer-surface: var(--color-bg-elevated);
   --composer-access: var(--color-intent-warning-text);
@@ -36,9 +36,9 @@
 :root[data-theme='light'] .app-shell {
   --composer-surface: var(--color-bg-surface);
   --composer-border: var(--color-border-subtle);
-  --composer-shadow: var(--shadow-md);
-  --transcript-surface: var(--color-bg-surface);
-  --rail-surface: var(--color-bg-base);
+  --composer-shadow: 0 2px 12px rgb(0 0 0 / 4%);
+  --transcript-surface: #fff;
+  --rail-surface: #f7f8fa;
 }
 
 /* The sidebar is a quiet secondary plane, while the input is raised above the
@@ -103,3 +103,14 @@
   border-radius: 14px;
   box-shadow: 0 2px 6px rgb(0 0 0 / 4%), 0 12px 32px rgb(0 0 0 / 10%);
 }
+
+/* The reading surface shares one plane; only the sidebar and composer separate. */
+.app-shell .app-shell__grid { box-shadow: none; }
+.app-shell .app-shell__rail { border-inline-end-color: transparent; }
+.app-shell .app-rail__header { min-block-size: 58px; padding-block-start: 0; }
+.app-shell .app-rail__product { font-size: 19px; }
+.app-shell .app-rail__section { padding-block-end: 20px; }
+.app-shell .app-rail__heading { min-block-size: 34px; font-size: 13px; }
+.app-shell .app-rail__row { min-block-size: 38px; }
+.app-shell .thread-bar { min-block-size: 58px; }
+.app-shell .session-transcript__content { max-inline-size: 52rem; margin-inline: auto; }

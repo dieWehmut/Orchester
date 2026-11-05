@@ -1283,3 +1283,19 @@ fn unix_user_config_requires_directory_0700_and_file_0600() {
     loader.load_user_file(&path).unwrap();
     std::fs::remove_dir_all(root).unwrap();
 }
+
+#[test]
+fn permission_mode_is_user_owned_and_absence_preserves_legacy_policy() {
+    use orchester_laufzeit::harness::config::PermissionMode;
+    assert_eq!(UserConfig::default().governance.permission_mode, None);
+    let config = ConfigLoader::test()
+        .load_user(r#"{"governance":{"permission_mode":"full-access"}}"#)
+        .unwrap();
+    assert_eq!(
+        config.governance.permission_mode,
+        Some(PermissionMode::FullAccess)
+    );
+    assert!(ConfigLoader::test()
+        .load_project(r#"{"governance":{"permission_mode":"full-access"}}"#)
+        .is_err());
+}

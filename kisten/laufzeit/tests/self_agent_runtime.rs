@@ -670,3 +670,36 @@ async fn run_continues_after_a_governed_tool_failure() {
     drop(audit);
     let _ = std::fs::remove_dir_all(root);
 }
+
+#[tokio::test]
+async fn explicit_permissions_execute_bound_write_and_read_before_continuing() {
+    let root = temp_root("explicit-write-read");
+    std::fs::create_dir_all(root.join("workspace/src")).unwrap();
+    let (runtime, _) = runtime(
+        &root,
+        [
+            Ok(ModelResponse::tool(
+                "write-explicit",
+                "write_file",
+                r#"{"path":"src/generated.txt","content":"written through audited tool"}"#,
+            )),
+            Ok(ModelResponse::tool(
+                "read-explicit",
+                "read_file",
+                r#"{"path":"src/generated.txt","start_line":null,"end_line":null}"#,
+            )),
+            Ok(text_response("done", 1, 1)),
+        ],
+    );
+    let outcome = runtime
+        .with_explicit_permissions(true)
+        .run("write and verify", CancellationToken::new())
+        .await
+        .unwrap();
+    assert_eq!(
+        std::fs::read_to_string(root.join("workspace/src/generated.txt")).unwrap(),
+        "written through audited tool"
+    );
+    assert_eq!(outcome.tool_steps().len(), 2);
+    std::fs::remove_dir_all(root).unwrap();
+}

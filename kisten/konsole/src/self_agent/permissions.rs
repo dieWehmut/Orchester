@@ -146,7 +146,7 @@ mod tests {
         assert!(rendered.contains("network: configured deny | effective deny"));
         assert!(rendered.contains("outside: configured allow | effective deny"));
         assert!(rendered.contains("shell: configured allow | effective deny"));
-        assert!(rendered.contains("CLI resolution: not available yet"));
+        assert!(rendered.contains("CLI resolution: available"));
         assert!(rendered.contains("append-only redacted hash chain"));
         assert!(rendered.contains("user\\u{1b}[31m"));
         assert!(!rendered.contains("user\x1b[31m"));

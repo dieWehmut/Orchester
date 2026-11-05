@@ -141,6 +141,7 @@ impl fmt::Debug for ProcessRunResult {
 }
 
 struct ProcessRunner {
+    mode: Option<super::config::PermissionMode>,
     workspace: WorkspaceGuard,
     limits: ProcessLimits,
 }
@@ -157,22 +158,41 @@ impl ProcessRunner {
             return Err(ProcessError::InvalidSpec);
         }
         let workspace = WorkspaceGuard::new(root.as_ref()).map_err(|_| ProcessError::InvalidCwd)?;
-        Ok(Self { workspace, limits })
+        Ok(Self {
+            workspace,
+            limits,
+            mode: None,
+        })
     }
 
     async fn run(
         &self,
-        spec: ProcessSpec,
+        mut spec: ProcessSpec,
         cancellation: CancellationToken,
     ) -> Result<ProcessRunResult, ProcessError> {
         if cancellation.is_cancelled() {
             return Err(ProcessError::CancelledBeforeStart);
         }
         validate_spec(&spec)?;
-        self.workspace
+        let scoped = if self.mode == Some(super::config::PermissionMode::FullAccess) {
+            self.workspace
+                .scope_for_explicit_path(&spec.cwd)
+                .map_err(|_| ProcessError::InvalidCwd)?
+        } else {
+            None
+        };
+        let workspace = if let Some((guard, relative)) = scoped.as_ref() {
+            spec.cwd = relative.clone();
+            guard
+        } else {
+            &self.workspace
+        };
+        workspace
             .directory_entries(&spec.cwd)
             .map_err(|_| ProcessError::InvalidCwd)?;
-        let policy = PolicyEngine::new().evaluate_command(&spec.program, &spec.args);
+        let policy = PolicyEngine::new()
+            .with_permission_mode(self.mode)
+            .evaluate_command(&spec.program, &spec.args);
         if policy.decision == PolicyDecision::Deny {
             return Err(ProcessError::PolicyDenied);
         }
@@ -182,7 +202,7 @@ impl ProcessRunner {
         process_tree.configure_command(&mut command);
         command
             .args(&spec.args)
-            .current_dir(self.workspace.root().join(&spec.cwd))
+            .current_dir(workspace.root().join(&spec.cwd))
             .env_clear()
             .envs(&spec.environment)
             .stdin(Stdio::null())
@@ -254,6 +274,11 @@ impl GovernedProcessRunner {
         Ok(Self {
             runner: ProcessRunner::new(root, limits)?,
         })
+    }
+
+    pub fn with_permission_mode(mut self, mode: Option<super::config::PermissionMode>) -> Self {
+        self.runner.mode = mode;
+        self
     }
 
     pub async fn execute(

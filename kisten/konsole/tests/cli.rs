@@ -379,7 +379,7 @@ fn permissions_command_projects_effective_policy_without_provider_or_state_acces
         "permissions output:\n{out}"
     );
     assert!(
-        out.contains("CLI resolution: not available yet"),
+        out.contains("CLI resolution: available"),
         "permissions output:\n{out}"
     );
     assert!(out.contains("append-only redacted hash chain"));

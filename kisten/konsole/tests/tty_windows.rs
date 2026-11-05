@@ -129,7 +129,7 @@ fn command_pickers_share_one_stable_full_screen_session() {
         .expect("initial workspace panel");
     let mut cursor = initial_end;
     for (command, title, footer) in [
-        ("/permissions", "Self-agent permissions", "Enter inspect"),
+        ("/permissions", "Permissions", "Enter apply"),
         ("/model", "Model options", "Enter open"),
         (
             "/resume",
@@ -164,7 +164,7 @@ fn command_pickers_share_one_stable_full_screen_session() {
     assert_eq!(count(&output, b"\x1b[?1049l"), 1, "alternate screen leave");
     assert_eq!(count(&output, b">_ Orchester"), 1, "stable top panel");
     for title in [
-        "Self-agent permissions",
+        "Read Only",
         "Model options",
         "Resumable self-agent runs",
         "Self-agent status",

@@ -79,6 +79,34 @@ impl fmt::Debug for CommandIntent {
 }
 
 impl CommandIntent {
+    /// Conservatively treat positional arguments and option values as possible
+    /// paths. Classifying an ambiguous pattern as a path may request approval;
+    /// it must never silently authorize an explicit outside operand.
+    pub fn potential_path_operands(&self) -> Vec<PathBuf> {
+        let mut paths = Vec::new();
+        let mut positional = false;
+        for arg in &self.args {
+            let Some(value) = arg.to_str() else {
+                continue;
+            };
+            if value == "--" && !positional {
+                positional = true;
+                continue;
+            }
+            if positional || !value.starts_with('-') {
+                paths.push(PathBuf::from(value));
+            } else if let Some((_, value)) = value.split_once('=') {
+                paths.push(PathBuf::from(value));
+            } else if let Some(value) = ["-C", "-t", "-o", "-f"]
+                .iter()
+                .find_map(|prefix| value.strip_prefix(prefix).filter(|value| !value.is_empty()))
+            {
+                paths.push(PathBuf::from(value));
+            }
+        }
+        paths
+    }
+
     /// Return the UTF-8 basename used for deterministic matching.
     pub fn executable_basename(&self) -> Option<&str> {
         self.program

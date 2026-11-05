@@ -206,3 +206,40 @@ async fn cancellation_terminates_a_process_after_spawn() {
     drop(runner);
     fs::remove_dir_all(root).unwrap();
 }
+
+#[cfg(unix)]
+#[tokio::test]
+async fn explicit_full_access_runs_shell_in_scoped_outside_directory() {
+    let root = root("full-outside");
+    let workspace = root.join("work");
+    let outside = root.join("outside");
+    fs::create_dir(&outside).unwrap();
+    let action = || {
+        started(command(
+            "/bin/sh",
+            &["-c", "printf verified > result.txt; printf done"],
+            "../outside",
+        ))
+    };
+    let strict = GovernedProcessRunner::new(&workspace, ProcessLimits::default()).unwrap();
+    assert!(strict
+        .execute(action(), CancellationToken::new())
+        .await
+        .is_err());
+    assert!(!outside.join("result.txt").exists());
+    let full = GovernedProcessRunner::new(&workspace, ProcessLimits::default())
+        .unwrap()
+        .with_permission_mode(Some(crate::harness::config::PermissionMode::FullAccess));
+    let result = full
+        .execute(action(), CancellationToken::new())
+        .await
+        .unwrap();
+    assert!(matches!(result.termination, CommandTermination::Exited(0)));
+    assert_eq!(result.stdout.text_lossy(), "done");
+    assert_eq!(
+        fs::read_to_string(outside.join("result.txt")).unwrap(),
+        "verified"
+    );
+    drop((strict, full));
+    fs::remove_dir_all(root).unwrap();
+}

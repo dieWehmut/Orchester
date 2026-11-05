@@ -151,3 +151,35 @@ fn read_and_search_redact_common_provider_credentials() {
     drop(tools);
     fs::remove_dir_all(root).unwrap();
 }
+
+#[test]
+fn explicitly_enabled_outside_scope_keeps_default_confinement_and_protected_paths() {
+    let root = workspace("outside-enabled");
+    let outside = workspace("outside-target");
+    let target = outside.join("src/lib.rs");
+    let strict = FileTools::new(&root, FileToolLimits::default()).unwrap();
+    assert!(strict.read_file(&target, None, None).is_err());
+    let enabled = FileTools::new(&root, FileToolLimits::default())
+        .unwrap()
+        .with_explicit_outside_access(true);
+    assert!(enabled
+        .read_file(&target, None, None)
+        .unwrap()
+        .content
+        .contains("hello"));
+    let entries = enabled.list_files(&outside.join("src"), 2).unwrap();
+    assert!(entries.entries.iter().any(|entry| entry.path == target));
+    assert!(enabled
+        .read_file(&outside.join(".orchester/secret"), None, None)
+        .is_err());
+    assert!(enabled.list_files(&outside, 3).is_err());
+    #[cfg(unix)]
+    {
+        std::os::unix::fs::symlink(outside.join("src"), outside.join("linked")).unwrap();
+        assert!(enabled
+            .read_file(&outside.join("linked/lib.rs"), None, None)
+            .is_err());
+    }
+    fs::remove_dir_all(root).unwrap();
+    fs::remove_dir_all(outside).unwrap();
+}

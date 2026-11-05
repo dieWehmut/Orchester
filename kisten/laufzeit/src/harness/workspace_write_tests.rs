@@ -197,3 +197,45 @@ async fn shared_workspace_locks_block_a_second_writer_until_release() {
     );
     fs::remove_dir_all(root).unwrap();
 }
+
+#[tokio::test]
+async fn explicit_outside_write_is_atomic_and_default_writer_stays_confined() {
+    let root = workspace("explicit-outside");
+    let outside = workspace("explicit-target");
+    let path = outside.join("src/result.txt");
+    fs::write(&path, "before").unwrap();
+    let strict = GovernedWorkspaceWriter::new(
+        &root,
+        WorkspaceWriteLimits::default(),
+        WorkspaceLocks::default(),
+    )
+    .unwrap();
+    assert!(strict
+        .execute(write(path.to_str().unwrap(), "blocked"))
+        .await
+        .is_err());
+    assert_eq!(fs::read_to_string(&path).unwrap(), "before");
+    let enabled = GovernedWorkspaceWriter::new(
+        &root,
+        WorkspaceWriteLimits::default(),
+        WorkspaceLocks::default(),
+    )
+    .unwrap()
+    .with_explicit_outside_access(true);
+    enabled
+        .execute(write(path.to_str().unwrap(), "after"))
+        .await
+        .unwrap();
+    assert_eq!(fs::read_to_string(&path).unwrap(), "after");
+    assert!(enabled
+        .execute(write(
+            outside.join(".orchester/private").to_str().unwrap(),
+            "blocked"
+        ))
+        .await
+        .is_err());
+    drop(enabled);
+    drop(strict);
+    fs::remove_dir_all(root).unwrap();
+    fs::remove_dir_all(outside).unwrap();
+}

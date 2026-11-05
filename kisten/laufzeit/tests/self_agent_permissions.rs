@@ -84,7 +84,7 @@ fn permission_snapshot_reports_unambiguous_approval_and_audit_boundaries() {
     assert!(snapshot.approvals.state_machine_present);
     assert!(snapshot.approvals.reviewer_configured);
     assert!(snapshot.approvals.ttl_configured);
-    assert!(!snapshot.approvals.cli_resolution_available);
+    assert!(snapshot.approvals.cli_resolution_available);
     assert!(snapshot.audit.append_only_hash_chain);
     assert!(snapshot.audit.redacts_before_persistence);
     assert!(!snapshot.audit.inspected_existing_log);

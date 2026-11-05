@@ -568,3 +568,19 @@ fn model_session_returns_to_configured_choice_atomically() {
     ));
     assert_eq!(session.selected_profile(), Some("fast"));
 }
+
+#[test]
+fn provider_switch_uses_its_own_catalog_and_preserves_reasoning() {
+    let config = configured(
+        r#"{
+        "model_provider":"Alpha","model":"alpha-model","model_reasoning_effort":"high",
+        "model_providers":{"Alpha":{"base_url":"https://alpha.example/v1"},"Beta":{"base_url":"https://beta.example/v1"}},
+        "model_profiles":{"beta-main":{"model_provider":"Beta","model":"beta-model","model_reasoning_effort":"low"}}
+    }"#,
+    );
+    let selected = config.with_model_provider("Beta").unwrap();
+    assert_eq!(selected.model.as_deref(), Some("beta-model"));
+    assert_eq!(selected.model_reasoning_effort.as_deref(), Some("high"));
+    let draft = orchester_laufzeit::harness::service::provider_draft(&config, "Beta").unwrap();
+    assert_eq!(draft.model, "beta-model");
+}

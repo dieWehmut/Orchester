@@ -71,6 +71,7 @@ pub struct PatchResult {
 
 pub struct GovernedWorkspacePatcher {
     workspace: WorkspaceGuard,
+    outside: bool,
     limits: PatchLimits,
     locks: WorkspaceLocks,
 }
@@ -105,9 +106,15 @@ impl GovernedWorkspacePatcher {
         let workspace = WorkspaceGuard::new(root.as_ref()).map_err(map_guard)?;
         Ok(Self {
             workspace,
+            outside: false,
             limits,
             locks,
         })
+    }
+
+    pub fn with_explicit_outside_access(mut self, enabled: bool) -> Self {
+        self.outside = enabled;
+        self
     }
 
     /// Validates every operation and stages every temporary file before the
@@ -122,13 +129,22 @@ impl GovernedWorkspacePatcher {
         let mut plans = Vec::with_capacity(operations.len());
 
         for operation in operations {
+            let scoped = if self.outside {
+                self.workspace
+                    .scope_for_explicit_path(&operation.path)
+                    .map_err(map_guard)?
+            } else {
+                None
+            };
+            let (guard, path) = if let Some((guard, relative)) = scoped.as_ref() {
+                (guard, relative.as_path())
+            } else {
+                (&self.workspace, operation.path.as_path())
+            };
             match operation.operation {
                 FileOperation::Delete => return Err(PatchError::UnsupportedOperation),
                 FileOperation::Add(lines) => {
-                    let resolved = self
-                        .workspace
-                        .resolve_write(&operation.path)
-                        .map_err(map_guard)?;
+                    let resolved = guard.resolve_write(path).map_err(map_guard)?;
                     if resolved.target_exists() {
                         return Err(PatchError::CasMismatch);
                     }
@@ -139,26 +155,24 @@ impl GovernedWorkspacePatcher {
                         return Err(PatchError::Parse);
                     }
                     plans.push(PlannedChange {
+                        scope: scoped.map(|(guard, _)| guard),
                         resolved,
                         expected_content: None,
                         content: lines_to_file(&lines),
                     });
                 }
                 FileOperation::Update(hunks) => {
-                    let resolved =
-                        self.workspace
-                            .resolve_write(&operation.path)
-                            .map_err(|error| {
-                                if error.kind() == GuardErrorKind::NotFound {
-                                    PatchError::CasMismatch
-                                } else {
-                                    map_guard(error)
-                                }
-                            })?;
+                    let resolved = guard.resolve_write(path).map_err(|error| {
+                        if error.kind() == GuardErrorKind::NotFound {
+                            PatchError::CasMismatch
+                        } else {
+                            map_guard(error)
+                        }
+                    })?;
                     if !resolved.target_exists() {
                         return Err(PatchError::CasMismatch);
                     }
-                    let mut source = self.workspace.open_existing(&resolved).map_err(map_guard)?;
+                    let mut source = guard.open_existing(&resolved).map_err(map_guard)?;
                     let mut bytes = Vec::with_capacity(4096);
                     Read::by_ref(&mut source)
                         .take((MAX_CONTENT_BYTES as u64).saturating_add(1))
@@ -180,6 +194,7 @@ impl GovernedWorkspacePatcher {
                         return Err(PatchError::Parse);
                     }
                     plans.push(PlannedChange {
+                        scope: scoped.map(|(guard, _)| guard),
                         resolved,
                         expected_content: Some(expected_content),
                         content,
@@ -190,8 +205,10 @@ impl GovernedWorkspacePatcher {
 
         let mut staged = Vec::with_capacity(plans.len());
         for plan in plans {
-            let mut target = self
-                .workspace
+            let mut target = plan
+                .scope
+                .as_ref()
+                .unwrap_or(&self.workspace)
                 .atomic_write_target(&plan.resolved)
                 .map_err(map_guard)?;
             target
@@ -225,6 +242,7 @@ impl GovernedWorkspacePatcher {
 }
 
 struct PlannedChange {
+    scope: Option<WorkspaceGuard>,
     resolved: ResolvedPath,
     expected_content: Option<ContentFingerprint>,
     content: Vec<u8>,
@@ -373,6 +391,15 @@ fn parse_patch(patch: &str, limits: PatchLimits) -> Result<Vec<FilePatch>, Patch
         return Err(PatchError::Parse);
     }
     Ok(operations)
+}
+
+pub(crate) fn patch_paths(patch: &str) -> Result<Vec<PathBuf>, PatchError> {
+    parse_patch(patch, PatchLimits::default()).map(|operations| {
+        operations
+            .into_iter()
+            .map(|operation| operation.path)
+            .collect()
+    })
 }
 
 fn is_file_header(line: &str) -> bool {

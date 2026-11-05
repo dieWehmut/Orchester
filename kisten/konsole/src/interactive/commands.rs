@@ -388,7 +388,7 @@ fn command_items(choices: &[AgentChoice]) -> Vec<CommandItem> {
         },
         CommandItem {
             name: "/permissions".into(),
-            description: "show effective self-agent permissions".into(),
+            description: "choose a permission mode".into(),
             action: CommandAction::Workspace(WorkspaceCommand::Permissions),
             agent: None,
         },
@@ -496,8 +496,16 @@ mod tests {
 
     #[test]
     fn backslash_model_opens_provider_controls_in_both_prompt_states() {
-        assert_eq!(parse_prompt_action(r"\model", &[]), PromptAction::Workspace(WorkspaceCommand::Model(ModelCommand::Show)));
-        assert_eq!(parse_home_action(r"\model provider relay", &[]), HomeAction::Workspace(WorkspaceCommand::Model(ModelCommand::SelectProvider("relay".into()))));
+        assert_eq!(
+            parse_prompt_action(r"\model", &[]),
+            PromptAction::Workspace(WorkspaceCommand::Model(ModelCommand::Show))
+        );
+        assert_eq!(
+            parse_home_action(r"\model provider relay", &[]),
+            HomeAction::Workspace(WorkspaceCommand::Model(ModelCommand::SelectProvider(
+                "relay".into()
+            )))
+        );
     }
 
     #[test]

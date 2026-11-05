@@ -601,11 +601,49 @@ impl fmt::Debug for ProviderConfig {
     }
 }
 
-/// Security policy knobs.  The enum's ordering is intentional: a larger
-/// value is more restrictive and therefore wins a layer merge.
+/// Explicit user-owned permission modes. Absence retains the legacy policy.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "kebab-case")]
+pub enum PermissionMode {
+    AskForApproval,
+    ApproveForMe,
+    FullAccess,
+    ReadOnly,
+}
+impl PermissionMode {
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::AskForApproval => "ask-for-approval",
+            Self::ApproveForMe => "approve-for-me",
+            Self::FullAccess => "full-access",
+            Self::ReadOnly => "read-only",
+        }
+    }
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::AskForApproval => "Ask for approval",
+            Self::ApproveForMe => "Approve for me",
+            Self::FullAccess => "Full Access",
+            Self::ReadOnly => "Read Only",
+        }
+    }
+    pub fn description(self) -> &'static str {
+        match self {
+            Self::AskForApproval => {
+                "Work in the workspace; ask before network access or outside edits"
+            }
+            Self::ApproveForMe => "Only ask for potentially unsafe or unknown actions",
+            Self::FullAccess => "Allow commands, network access and files outside the workspace",
+            Self::ReadOnly => "Read files; ask before edits, commands or network access",
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub struct GovernanceConfig {
+    #[serde(default)]
+    pub permission_mode: Option<PermissionMode>,
     #[serde(default = "default_approval_reviewer", alias = "approvals_reviewer")]
     pub approval_reviewer: String,
     #[serde(default = "default_ask")]
@@ -639,6 +677,7 @@ pub struct GovernanceOverrides {
 impl Default for GovernanceConfig {
     fn default() -> Self {
         Self {
+            permission_mode: None,
             approval_reviewer: default_approval_reviewer(),
             tool_network: default_ask(),
             out_of_workspace: default_deny(),

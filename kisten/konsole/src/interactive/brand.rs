@@ -1,15 +1,19 @@
 //! Portable terminal rendering of the user's supplied Orchester portrait.
 use std::io::{self, Write};
 
-const SOURCE_SIZE: usize = 128;
+const SOURCE_SIZE: usize = 256;
 const PIXELS: &[u8; SOURCE_SIZE * SOURCE_SIZE] = include_bytes!("assets/orchester.gray");
 
 pub(super) fn render(out: &mut impl Write, width: usize, rows: usize) -> io::Result<()> {
-    // Use about half the body height while leaving room around the full image.
+    // Fill most of the body with the original image, leaving a small margin.
     if width < 30 || !(8..=10_000).contains(&rows) {
         return Ok(());
     }
-    let size = 64.min(width / 3).min(rows).max(8) & !1;
+    let size = 128
+        .min(width * 2 / 3)
+        .min(rows.saturating_sub(2) * 2)
+        .max(8)
+        & !1;
     let top = (rows - size / 2) / 2;
     let left = " ".repeat((width - size) / 2);
     for _ in 0..top {
@@ -38,5 +42,5 @@ fn pixel(x: usize, y: usize, size: usize) -> u8 {
             total += u32::from(PIXELS[row * SOURCE_SIZE + col]);
         }
     }
-    (total / ((right - left) * (bottom - top)) as u32) as u8
+    (24 + (total / ((right - left) * (bottom - top)) as u32) * 120 / 255) as u8
 }

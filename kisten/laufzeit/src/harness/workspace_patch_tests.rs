@@ -226,3 +226,27 @@ async fn malformed_outside_protected_and_wrong_actions_fail_closed() {
     );
     fs::remove_dir_all(root).unwrap();
 }
+
+#[tokio::test]
+async fn explicit_outside_patch_preserves_preflight_and_updates_scoped_file() {
+    let root = workspace("outside-explicit", &[("outside/value.txt", "old\n")]);
+    let inside = root.join("src");
+    let text =
+        "*** Begin Patch\n*** Update File: ../outside/value.txt\n@@\n-old\n+new\n*** End Patch\n";
+    assert!(writer(&inside).execute(patch(text)).await.is_err());
+    assert_eq!(
+        fs::read_to_string(root.join("outside/value.txt")).unwrap(),
+        "old\n"
+    );
+    let result = writer(&inside)
+        .with_explicit_outside_access(true)
+        .execute(patch(text))
+        .await
+        .unwrap();
+    assert_eq!(result.files_changed, 1);
+    assert_eq!(
+        fs::read_to_string(root.join("outside/value.txt")).unwrap(),
+        "new\n"
+    );
+    fs::remove_dir_all(root).unwrap();
+}

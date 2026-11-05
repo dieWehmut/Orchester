@@ -6,9 +6,10 @@
 //! exit code reflects the run outcome so scripts can branch on success/failure.
 
 mod args;
-mod interactive;
 mod command_center;
 mod command_center_data;
+mod interactive;
+mod model_manager;
 mod plugin;
 mod process;
 mod render;
@@ -204,6 +205,7 @@ async fn run_interactive(registry: Registry) -> Result<ExitCode, CliError> {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 enum ModelTurnRequest {
+    Approve(Box<orchester_laufzeit::harness::service::SelfAgentPendingApproval>),
     Prompt(String),
     Resume(String),
 }
@@ -215,9 +217,19 @@ enum QueuedChatAction {
 
 #[derive(Debug, Clone)]
 enum OverlayAction {
+    ApprovePending(orchester_laufzeit::harness::service::SelfAgentPendingApproval),
+    DenyPending(orchester_laufzeit::harness::service::SelfAgentPendingApproval),
     Close,
     Inspect(Vec<String>),
     Resume(String),
+    PermissionMode(orchester_laufzeit::harness::config::PermissionMode),
+    ManageProviders,
+    ManageProvider(String),
+    ManageModel(String, String, String),
+    EditProvider(Option<String>),
+    EditModel(String, String, String),
+    DeleteModel(String, String),
+    ConfirmDeleteModel(String, String),
     ModelOptionsModels,
     ModelOptionsEffort,
     ModelOptionsProviders,
@@ -339,7 +351,7 @@ impl TerminalOverlay {
         Self {
             view: CommandOverlay::new(
                 "Model options",
-                "Applies to future turns in this session.",
+                "Applies to future turns.",
                 vec![
                     OverlayItem::new("Model", model),
                     OverlayItem::new("Reasoning level", effort),
@@ -349,6 +361,7 @@ impl TerminalOverlay {
                             .map(|item| item.provider_name.as_str())
                             .unwrap_or("Choose a configured provider"),
                     ),
+                    OverlayItem::new("Provider settings", "Add providers and manage their models"),
                 ],
             )
             .with_footer("Up/Down select  |  Enter open  |  Esc close"),
@@ -356,7 +369,117 @@ impl TerminalOverlay {
                 OverlayAction::ModelOptionsModels,
                 OverlayAction::ModelOptionsEffort,
                 OverlayAction::ModelOptionsProviders,
+                OverlayAction::ManageProviders,
             ],
+            parent: None,
+        }
+    }
+
+    fn approval(pending: orchester_laufzeit::harness::service::SelfAgentPendingApproval) -> Self {
+        let mut view = CommandOverlay::new(
+            "Approval required",
+            &pending.summary,
+            vec![
+                OverlayItem::new("Deny", "Do not run this action"),
+                OverlayItem::new("Approve once", &pending.risk),
+            ],
+        )
+        .with_footer("Enter confirm  |  Esc deny");
+        view.details = pending.details.clone();
+        Self {
+            view,
+            actions: vec![
+                OverlayAction::DenyPending(pending.clone()),
+                OverlayAction::ApprovePending(pending),
+            ],
+            parent: None,
+        }
+    }
+
+    fn permissions(
+        snapshot: &orchester_laufzeit::harness::service::SelfAgentPermissionSnapshot,
+    ) -> Self {
+        use orchester_laufzeit::harness::config::PermissionMode;
+        let modes = [
+            PermissionMode::AskForApproval,
+            PermissionMode::ApproveForMe,
+            PermissionMode::FullAccess,
+            PermissionMode::ReadOnly,
+        ];
+        let items = modes
+            .iter()
+            .enumerate()
+            .map(|(i, mode)| {
+                OverlayItem::new(format!("{}. {}", i + 1, mode.label()), mode.description())
+                    .current(snapshot.mode == Some(*mode))
+            })
+            .collect();
+        Self {
+            view: CommandOverlay::new("Permissions", "Applies to future turns.", items)
+                .with_footer("Up/Down select  |  Enter apply  |  Esc close")
+                .focus_current(),
+            actions: modes
+                .into_iter()
+                .map(OverlayAction::PermissionMode)
+                .collect(),
+            parent: None,
+        }
+    }
+
+    fn manage_providers(catalog: &SelfAgentModelCatalog, provider: Option<&str>) -> Self {
+        let mut items = Vec::new();
+        let mut actions = Vec::new();
+        if let Some(provider) = provider {
+            items.push(OverlayItem::new("Use provider", provider));
+            actions.push(OverlayAction::ModelProvider(provider.into()));
+            items.push(OverlayItem::new(
+                "Edit provider",
+                "Endpoint, credentials and default model",
+            ));
+            actions.push(OverlayAction::EditProvider(Some(provider.into())));
+            items.push(OverlayItem::new(
+                "Add model",
+                "Add a model to this provider",
+            ));
+            actions.push(OverlayAction::EditModel(
+                provider.into(),
+                String::new(),
+                String::new(),
+            ));
+            for model in catalog.profiles.iter().filter(|m| m.provider == provider) {
+                let name = model.profile.as_deref().unwrap_or_default();
+                items.push(OverlayItem::new(
+                    &model.model,
+                    name.strip_prefix(&format!("{provider}.")).unwrap_or(name),
+                ));
+                actions.push(OverlayAction::ManageModel(
+                    provider.into(),
+                    name.into(),
+                    model.model.clone(),
+                ));
+            }
+        } else {
+            for provider in &catalog.providers {
+                items.push(OverlayItem::new(
+                    &provider.provider_name,
+                    &provider.provider,
+                ));
+                actions.push(OverlayAction::ManageProvider(provider.provider.clone()));
+            }
+            items.push(OverlayItem::new(
+                "Add provider",
+                "Configure a new model provider",
+            ));
+            actions.push(OverlayAction::EditProvider(None));
+        }
+        Self {
+            view: CommandOverlay::new(
+                provider.unwrap_or("Provider settings"),
+                "Manage provider models",
+                items,
+            )
+            .with_footer("Enter open  |  Esc back"),
+            actions,
             parent: None,
         }
     }
@@ -728,7 +851,9 @@ impl TerminalChatState {
             }
             interactive::HomeAction::Empty => {}
             interactive::HomeAction::AgentCenter => {
-                self.pending.push_back(QueuedChatAction::Command(interactive::HomeAction::AgentCenter));
+                self.pending.push_back(QueuedChatAction::Command(
+                    interactive::HomeAction::AgentCenter,
+                ));
             }
             other => {
                 self.clear_input();
@@ -894,6 +1019,10 @@ async fn await_model_turn(
     });
     let request = async {
         match turn {
+            ModelTurnRequest::Approve(pending) => self_agent
+                .resolve_approval(&pending, true, cancel.clone(), Some(sink))
+                .await?
+                .ok_or(self_agent::SelfAgentHostError::Initialization),
             ModelTurnRequest::Prompt(prompt) => {
                 self_agent
                     .submit_with_events(prompt, cancel.clone(), Some(sink))
@@ -1024,6 +1153,22 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
             };
             match overlay_input {
                 OverlayInput::Cancel => {
+                    let pending = state.overlay.as_ref().and_then(|overlay| {
+                        overlay.actions.iter().find_map(|action| match action {
+                            OverlayAction::DenyPending(pending) => Some(pending.clone()),
+                            _ => None,
+                        })
+                    });
+                    if let Some(pending) = pending {
+                        state.overlay = match self_agent
+                            .resolve_approval(&pending, false, CancellationToken::new(), None)
+                            .await
+                        {
+                            Ok(_) => None,
+                            Err(e) => Some(TerminalOverlay::error("Approval", &e)),
+                        };
+                        continue;
+                    }
                     let parent = state
                         .overlay
                         .as_mut()
@@ -1059,7 +1204,26 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                             let child = match self_agent.model_catalog() {
                                 Ok(catalog) => match action {
                                     OverlayAction::ModelOptionsModels => {
-                                        TerminalOverlay::models(&catalog)
+                                        let mut scoped = catalog.clone();
+                                        if let Some(active) = catalog.active.choice() {
+                                            scoped
+                                                .profiles
+                                                .retain(|m| m.provider == active.provider);
+                                        }
+                                        let count = 1 + scoped.profiles.len();
+                                        let mut overlay = TerminalOverlay::models(&scoped);
+                                        overlay.view.items.truncate(count);
+                                        overlay.actions.truncate(count);
+                                        if let Some(active) = catalog.active.choice() {
+                                            overlay.view.items.push(OverlayItem::new(
+                                                "Manage models",
+                                                &active.provider_name,
+                                            ));
+                                            overlay.actions.push(OverlayAction::ManageProvider(
+                                                active.provider.clone(),
+                                            ));
+                                        }
+                                        overlay
                                     }
                                     OverlayAction::ModelOptionsProviders => {
                                         TerminalOverlay::providers(&catalog)
@@ -1083,6 +1247,159 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                                 Some(parent) => child.with_parent(parent),
                                 None => child,
                             });
+                        }
+                        OverlayAction::ApprovePending(pending) => {
+                            state.overlay = None;
+                            state.pending.push_front(QueuedChatAction::Turn(
+                                ModelTurnRequest::Approve(Box::new(pending)),
+                            ));
+                        }
+                        OverlayAction::DenyPending(pending) => {
+                            state.overlay = Some(
+                                match self_agent
+                                    .resolve_approval(
+                                        &pending,
+                                        false,
+                                        CancellationToken::new(),
+                                        None,
+                                    )
+                                    .await
+                                {
+                                    Ok(_) => TerminalOverlay::report(
+                                        "Action denied",
+                                        "The action was not executed.",
+                                    ),
+                                    Err(e) => TerminalOverlay::error("Approval", &e),
+                                },
+                            );
+                        }
+                        OverlayAction::PermissionMode(mode) => {
+                            state.overlay = Some(match self_agent.select_permission_mode(mode) {
+                                Ok(snapshot) => TerminalOverlay::permissions(&snapshot),
+                                Err(e) => TerminalOverlay::error("Permissions", &e),
+                            });
+                        }
+                        OverlayAction::ManageProviders | OverlayAction::ManageProvider(_) => {
+                            let provider = match &action {
+                                OverlayAction::ManageProvider(p) => Some(p.as_str()),
+                                _ => None,
+                            };
+                            let parent = state.overlay.take();
+                            let child = match self_agent.model_catalog() {
+                                Ok(c) => TerminalOverlay::manage_providers(&c, provider),
+                                Err(e) => TerminalOverlay::error("/model", &e),
+                            };
+                            state.overlay = Some(if let Some(parent) = parent {
+                                child.with_parent(parent)
+                            } else {
+                                child
+                            });
+                        }
+                        OverlayAction::ManageModel(provider, name, model) => {
+                            state.overlay = Some(TerminalOverlay {
+                                view: CommandOverlay::new(
+                                    &model,
+                                    "Model settings",
+                                    vec![
+                                        OverlayItem::new("Use model", "Select for future turns"),
+                                        OverlayItem::new("Edit model", "Change model ID"),
+                                        OverlayItem::new(
+                                            "Delete model",
+                                            "Remove from this provider",
+                                        ),
+                                    ],
+                                )
+                                .with_footer("Enter open  |  Esc back"),
+                                actions: vec![
+                                    OverlayAction::ModelProfile(name.clone()),
+                                    OverlayAction::EditModel(provider.clone(), name.clone(), model),
+                                    OverlayAction::DeleteModel(provider, name),
+                                ],
+                                parent: state.overlay.take().map(Box::new),
+                            });
+                        }
+                        OverlayAction::DeleteModel(provider, name) => {
+                            state.overlay = Some(TerminalOverlay {
+                                view: CommandOverlay::new(
+                                    "Delete model?",
+                                    &name,
+                                    vec![
+                                        OverlayItem::new("Cancel", "Keep this model"),
+                                        OverlayItem::new("Delete", "Remove the model profile"),
+                                    ],
+                                ),
+                                actions: vec![
+                                    OverlayAction::Close,
+                                    OverlayAction::ConfirmDeleteModel(provider, name),
+                                ],
+                                parent: state.overlay.take().map(Box::new),
+                            });
+                        }
+                        OverlayAction::ConfirmDeleteModel(provider, name) => {
+                            state.overlay = Some(
+                                match self_agent.edit_model_profile(&provider, &name, None) {
+                                    Ok(()) => TerminalOverlay::report("Model deleted", &name),
+                                    Err(e) => TerminalOverlay::error("Delete model", &e),
+                                },
+                            );
+                            model_stale = true;
+                        }
+                        OverlayAction::EditModel(provider, name, model) => {
+                            drop(chat);
+                            let result = (|| -> Result<String, CliError> {
+                                let Some((new_name, model)) =
+                                    model_manager::edit_model(&name, &model)?
+                                else {
+                                    return Ok("Cancelled".into());
+                                };
+                                let new_name = if name.is_empty() {
+                                    format!("{provider}.{new_name}")
+                                } else {
+                                    new_name
+                                };
+                                if !name.is_empty() && new_name != name {
+                                    return Ok("Profile name cannot be changed while editing; add a new model instead.".into());
+                                }
+                                if name.is_empty()
+                                    && self_agent
+                                        .model_catalog()?
+                                        .profiles
+                                        .iter()
+                                        .any(|p| p.profile.as_deref() == Some(new_name.as_str()))
+                                {
+                                    return Ok("Profile name already exists; choose Edit model to change it.".into());
+                                }
+                                self_agent.edit_model_profile(
+                                    &provider,
+                                    &new_name,
+                                    Some(&model),
+                                )?;
+                                Ok(format!("Saved {model} for {provider}"))
+                            })();
+                            chat = interactive::ChatSession::enter()?;
+                            state.overlay = Some(match result {
+                                Ok(text) => TerminalOverlay::report("Model settings", &text),
+                                Err(e) => TerminalOverlay::error("Model settings", &e),
+                            });
+                            model_stale = true;
+                        }
+                        OverlayAction::EditProvider(provider) => {
+                            drop(chat);
+                            let mut rendered = Vec::new();
+                            let result = render_workspace_command_to(
+                                &mut self_agent,
+                                WorkspaceCommand::Model(ModelCommand::EditProvider(provider)),
+                                &mut rendered,
+                            );
+                            chat = interactive::ChatSession::enter()?;
+                            state.overlay = Some(match result {
+                                Ok(()) => TerminalOverlay::report(
+                                    "Provider settings",
+                                    &String::from_utf8_lossy(&rendered),
+                                ),
+                                Err(e) => TerminalOverlay::error("Provider settings", &e),
+                            });
+                            model_stale = true;
                         }
                         OverlayAction::ModelConfigured
                         | OverlayAction::ModelProfile(_)
@@ -1203,6 +1520,16 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                         ModelTurnResult::Quit => return Ok(ExitCode::SUCCESS),
                         ModelTurnResult::Completed(result) => match *result {
                             Ok(outcome) => {
+                                match self_agent.pending_approval(&outcome) {
+                                    Ok(Some(pending)) => {
+                                        state.overlay = Some(TerminalOverlay::approval(pending))
+                                    }
+                                    Ok(None) => {}
+                                    Err(error) => {
+                                        state.overlay =
+                                            Some(TerminalOverlay::error("Approval", &error))
+                                    }
+                                }
                                 let rendered = self_agent::render_outcome_transcript(&outcome)?;
                                 if rendered.is_empty() {
                                     state.replace_transcript(
@@ -1250,9 +1577,7 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                             }
                             WorkspaceCommand::Permissions => {
                                 state.overlay = Some(match self_agent.permissions() {
-                                    Ok(permissions) => TerminalOverlay::inspection(
-                                        workspace_overlay::permissions(&permissions),
-                                    ),
+                                    Ok(permissions) => TerminalOverlay::permissions(&permissions),
                                     Err(error) => TerminalOverlay::error(&label, &error),
                                 });
                             }
@@ -1382,15 +1707,13 @@ async fn run_terminal_interactive(mut registry: Registry) -> Result<ExitCode, Cl
                         }
                     }
                     interactive::HomeAction::Empty => {}
-                    interactive::HomeAction::AgentCenter => {
-                        match command_center::run(&mut chat)? {
-                            command_center::Action::Back => {}
-                            command_center::Action::Compose => {
-                                state.clear_input();
-                            }
-                            command_center::Action::Resume(handle) => state.queue_resume(handle),
+                    interactive::HomeAction::AgentCenter => match command_center::run(&mut chat)? {
+                        command_center::Action::Back => {}
+                        command_center::Action::Compose => {
+                            state.clear_input();
                         }
-                    }
+                        command_center::Action::Resume(handle) => state.queue_resume(handle),
+                    },
                     interactive::HomeAction::PickAgent => {
                         drop(chat);
                         let selected = interactive::select_agent_tui(&choices, None)?;
@@ -1550,7 +1873,10 @@ async fn run_line_interactive_with_host(
         received_input = true;
         match interactive::parse_home_action(&line, &choices) {
             interactive::HomeAction::AgentCenter => {
-                writeln!(io::stdout(), "Agent command center requires an interactive terminal.")?;
+                writeln!(
+                    io::stdout(),
+                    "Agent command center requires an interactive terminal."
+                )?;
             }
             interactive::HomeAction::PickAgent => {
                 let mut out = io::stdout().lock();
@@ -2432,6 +2758,25 @@ mod tests {
     }
 
     #[test]
+    fn permission_picker_offers_four_real_modes_and_marks_only_effective_mode() {
+        use orchester_laufzeit::harness::config::{PermissionMode, UserConfig};
+        let mut snapshot = orchester_laufzeit::harness::service::load_self_agent_permissions(
+            &UserConfig::default(),
+        );
+        snapshot.mode = None;
+        let picker = TerminalOverlay::permissions(&snapshot);
+        assert_eq!(picker.view.items.len(), 4);
+        assert!(picker.view.items.iter().all(|i| !i.current));
+        snapshot.mode = Some(PermissionMode::ReadOnly);
+        let picker = TerminalOverlay::permissions(&snapshot);
+        assert!(picker.view.items[3].current);
+        assert!(matches!(
+            picker.actions[3],
+            OverlayAction::PermissionMode(PermissionMode::ReadOnly)
+        ));
+    }
+
+    #[test]
     fn model_options_separates_model_and_reasoning_and_preserves_unknown_efforts() {
         let choice = SelfAgentModelChoice {
             profile: Some("review".into()),
@@ -2447,7 +2792,7 @@ mod tests {
             vec![choice.clone()],
         );
         let root = TerminalOverlay::model_options(&catalog);
-        assert_eq!(root.view.items.len(), 3);
+        assert_eq!(root.view.items.len(), 4);
         assert_eq!(root.view.items[2].label, "Provider");
         assert!(matches!(
             root.actions[2],
@@ -2545,8 +2890,13 @@ mod tests {
         );
         let providers = TerminalOverlay::providers(&catalog);
         assert_eq!(providers.view.items.len(), 2);
-        assert_eq!(providers.view.items[providers.view.selected].label, "provider relay");
-        assert!(matches!(&providers.actions[0], OverlayAction::ModelProvider(id) if id == "openai"));
+        assert_eq!(
+            providers.view.items[providers.view.selected].label,
+            "provider relay"
+        );
+        assert!(
+            matches!(&providers.actions[0], OverlayAction::ModelProvider(id) if id == "openai")
+        );
         // A provider switch keeps the configured model, so the configured row
         // must not also read as current.
         assert!(!overlay.view.items[0].current);
@@ -2818,7 +3168,12 @@ mod tests {
         let mut state = TerminalChatState::default();
         state.queue_action(interactive::HomeAction::AgentCenter);
         assert!(state.transcript.is_empty());
-        assert!(matches!(state.pending.front(), Some(QueuedChatAction::Command(interactive::HomeAction::AgentCenter))));
+        assert!(matches!(
+            state.pending.front(),
+            Some(QueuedChatAction::Command(
+                interactive::HomeAction::AgentCenter
+            ))
+        ));
     }
 
     #[test]

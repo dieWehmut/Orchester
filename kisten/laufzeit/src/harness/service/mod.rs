@@ -64,8 +64,8 @@ pub use resume_catalog::{
     SelfAgentResumeStage, SelfAgentResumeStep, SelfAgentResumeTargetError,
 };
 pub use runtime::{
-    SelfAgentOutcome, SelfAgentRunOutcome, SelfAgentRuntime, SelfAgentRuntimeError,
-    SelfAgentToolStep,
+    SelfAgentOutcome, SelfAgentPendingApproval, SelfAgentRunOutcome, SelfAgentRuntime,
+    SelfAgentRuntimeError, SelfAgentToolStep,
 };
 pub use status::{
     load_self_agent_status, SelfAgentDurableStatus, SelfAgentGovernanceStatus,

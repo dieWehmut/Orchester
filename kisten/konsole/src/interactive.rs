@@ -594,7 +594,11 @@ pub(crate) fn handle_overlay_key(
 }
 
 fn finish_text_burst(first: TerminalEvent, text: String) -> TerminalEvent {
-    if text.chars().count() == 1 { first } else { TerminalEvent::Paste(text) }
+    if text.chars().count() == 1 {
+        first
+    } else {
+        TerminalEvent::Paste(text)
+    }
 }
 
 fn is_press(key: &KeyEvent) -> bool {
@@ -968,7 +972,14 @@ pub fn render_agent_table<W: Write>(
 pub fn render_help<W: Write>(out: &mut W) -> io::Result<()> {
     let mut plain = Vec::new();
     render_help_plain(&mut plain)?;
-    write!(out, "{}", crate::theme::color_commands(&String::from_utf8_lossy(&plain), crate::theme::load_user_theme().palette()))
+    write!(
+        out,
+        "{}",
+        crate::theme::color_commands(
+            &String::from_utf8_lossy(&plain),
+            crate::theme::load_user_theme().palette()
+        )
+    )
 }
 
 fn render_help_plain<W: Write>(out: &mut W) -> io::Result<()> {
@@ -979,7 +990,7 @@ fn render_help_plain<W: Write>(out: &mut W) -> io::Result<()> {
     writeln!(out, "  /model   choose a self-agent model or provider")?;
     writeln!(out, "  /theme   preview and choose the terminal theme")?;
     writeln!(out, "  /config  show resolved self-agent configuration")?;
-    writeln!(out, "  /permissions show effective self-agent permissions")?;
+    writeln!(out, "  /permissions choose a permission mode")?;
     writeln!(out, "  /resume  show resumable self-agent runs")?;
     writeln!(out, "  /status  show self-agent workspace status")?;
     writeln!(out, "  /login   store a provider API key in the OS keyring")?;
@@ -1145,7 +1156,10 @@ fn render_picker_command_frame<W: Write>(
         write!(
             out,
             "{}",
-            crate::theme::color_commands(&truncate("Up/Down selects; Enter opens; Esc returns", width), crate::theme::load_user_theme().palette())
+            crate::theme::color_commands(
+                &truncate("Up/Down selects; Enter opens; Esc returns", width),
+                crate::theme::load_user_theme().palette()
+            )
         )?;
     }
     Ok(())
@@ -1217,7 +1231,14 @@ fn render_picker_footer<W: Write>(
     } else {
         (YELLOW, sanitize_terminal_text(message))
     };
-    write!(out, "{style}{}{RESET}", crate::theme::color_commands(&truncate(&footer, width), crate::theme::load_user_theme().palette()))
+    write!(
+        out,
+        "{style}{}{RESET}",
+        crate::theme::color_commands(
+            &truncate(&footer, width),
+            crate::theme::load_user_theme().palette()
+        )
+    )
 }
 
 #[cfg(test)]
@@ -1357,13 +1378,17 @@ fn render_chat_home_frame<W: Write>(
         brand::render(&mut body, width, body_rows)?;
     }
     let body_height = render_fixed_body(out, &body, body_rows)?;
+    render_command_palette_lines(out, &command_palette)?;
     render_composer_frame(out, width, input, &composer, palette)?;
     let caret = caret_position(
-        layout.header.rows(width) + layout.separator_rows + body_height + composer.caret.row,
+        layout.header.rows(width)
+            + layout.separator_rows
+            + body_height
+            + command_palette.len()
+            + composer.caret.row,
         composer.caret.column as u16,
         show_help,
     );
-    render_command_palette_lines(out, &command_palette)?;
     if layout.status_rows > 0 {
         render_status_line(out, width, model_status, busy, palette)?;
         if layout.status_rows > 1 {
@@ -1421,7 +1446,12 @@ fn render_transcript_chat_frame<W: Write>(
         render_command_overlay(&mut body, overlay, width, content_rows, palette)?;
     } else if show_help {
         let busy_rows = usize::from(busy.is_some() && content_rows > 0);
-        render_home_help(&mut body, width, content_rows.saturating_sub(busy_rows), palette)?;
+        render_home_help(
+            &mut body,
+            width,
+            content_rows.saturating_sub(busy_rows),
+            palette,
+        )?;
         if let Some(busy) = busy {
             writeln!(
                 &mut body,
@@ -1471,15 +1501,17 @@ fn render_transcript_chat_frame<W: Write>(
         &body,
         content_rows.saturating_sub(command_palette.len()),
     )?;
+    render_command_palette_lines(out, &command_palette)?;
     render_composer_frame(out, width, input, &composer, palette)?;
     let caret = caret_position(
-        layout.header.rows(width) + layout.separator_rows + body_height + composer.caret.row,
+        layout.header.rows(width)
+            + layout.separator_rows
+            + body_height
+            + command_palette.len()
+            + composer.caret.row,
         composer.caret.column as u16,
         show_help || overlay.is_some(),
     );
-    // The palette opens under the composer, the way Codex stacks its
-    // slash-command popup above the status row.
-    render_command_palette_lines(out, &command_palette)?;
 
     if layout.status_rows > 0 {
         render_status_line(out, width, model_status, busy, palette)?;
@@ -1636,7 +1668,13 @@ fn render_command_overlay<W: Write>(
             &format!("> {}{current}{detail}", sanitize_terminal_text(&item.label)),
             width,
         );
-        writeln!(out, "{}{line}{RESET}", palette.selection)?;
+        writeln!(
+            out,
+            "{}{}{}{RESET}",
+            palette.selection,
+            line,
+            " ".repeat(width.saturating_sub(display_width(&line)))
+        )?;
         if max_rows == 2 && !overlay.footer.is_empty() {
             writeln!(
                 out,
@@ -1674,23 +1712,42 @@ fn render_command_overlay<W: Write>(
         body_rows.div_ceil(2).min(overlay.items.len())
     };
     let start = selection_window_start(overlay.selected, overlay.items.len(), item_rows);
+    let label_width = overlay
+        .items
+        .iter()
+        .map(|item| {
+            display_width(&sanitize_terminal_text(&item.label))
+                + if item.current { " [current]".len() } else { 0 }
+        })
+        .max()
+        .unwrap_or(0)
+        .min(width.saturating_sub(4) / 2);
     for (index, item) in overlay.items.iter().enumerate().skip(start).take(item_rows) {
         let marker = if index == overlay.selected { ">" } else { " " };
         let current = if item.current { " [current]" } else { "" };
+        let label = format!("{}{current}", sanitize_terminal_text(&item.label));
+        let label = if width >= 40 && !item.detail.is_empty() {
+            let label = truncate(&label, label_width);
+            format!(
+                "{label}{}",
+                " ".repeat(label_width.saturating_sub(display_width(&label)))
+            )
+        } else {
+            label
+        };
         let detail = if item.detail.is_empty() {
             String::new()
         } else {
             format!("  {}", sanitize_terminal_text(&item.detail))
         };
-        let line = truncate(
-            &format!(
-                "{marker} {}{current}{detail}",
-                sanitize_terminal_text(&item.label)
-            ),
-            width,
-        );
+        let line = truncate(&format!("{marker} {label}{detail}"), width);
         if index == overlay.selected {
-            rows.push(format!("{}{line}{RESET}", palette.selection));
+            rows.push(format!(
+                "{}{}{}{RESET}",
+                palette.selection,
+                line,
+                " ".repeat(width.saturating_sub(display_width(&line)))
+            ));
         } else {
             rows.push(line);
         }
@@ -1936,13 +1993,18 @@ fn render_workspace_header<W: Write>(
     Ok(())
 }
 
-fn render_home_help<W: Write>(out: &mut W, width: usize, max_rows: usize, palette: ThemePalette) -> io::Result<()> {
+fn render_home_help<W: Write>(
+    out: &mut W,
+    width: usize,
+    max_rows: usize,
+    palette: ThemePalette,
+) -> io::Result<()> {
     let commands = [
         "/agent      choose a delegate",
         "/model      choose a model or provider",
         "/theme      preview terminal colors",
         "/config     inspect resolved configuration",
-        "/permissions inspect effective permissions",
+        "/permissions choose a permission mode",
         "/resume     inspect resumable runs",
         "/status     inspect self-agent state",
         "/login      store a provider API key",
@@ -1977,7 +2039,11 @@ fn render_home_help<W: Write>(out: &mut W, width: usize, max_rows: usize, palett
         }
     }
     for line in lines.iter().take(max_rows) {
-        writeln!(out, "{}", crate::theme::color_commands(&truncate(line, width), palette))?;
+        writeln!(
+            out,
+            "{}",
+            crate::theme::color_commands(&truncate(line, width), palette)
+        )?;
     }
     Ok(())
 }
@@ -1997,10 +2063,27 @@ fn render_compact_command_palette<W: Write>(
         let marker = if index == selected { ">" } else { " " };
         let name = sanitize_terminal_text(&item.name);
         let description = sanitize_terminal_text(&item.description);
-        let style = if index == selected { palette.selection } else { palette.accent };
+        let style = if index == selected {
+            palette.selection
+        } else {
+            palette.accent
+        };
         let line = truncate(&format!("{marker} {name}"), width);
         let remaining = width.saturating_sub(display_width(&line));
-        writeln!(out, "{style}{line}{RESET}{}", truncate(&format!(" {description}"), remaining))?;
+        let description = truncate(&format!(" {description}"), remaining);
+        if index == selected {
+            writeln!(
+                out,
+                "{style}{line}{description}{}{RESET}",
+                " ".repeat(remaining.saturating_sub(display_width(&description)))
+            )?;
+        } else {
+            writeln!(
+                out,
+                "{style}{line}{RESET}{}{description}{RESET}",
+                palette.dim
+            )?;
+        }
     }
     Ok(())
 }
@@ -2236,14 +2319,31 @@ fn render_command_items<W: Write>(
     let start = selection_window_start(selected, matches.len(), max_rows);
     for (i, item) in matches.iter().enumerate().skip(start).take(max_rows) {
         let marker = if i == selected { ">" } else { " " };
-        let color = if i == selected { palette.selection } else { palette.accent };
+        let color = if i == selected {
+            palette.selection
+        } else {
+            palette.accent
+        };
         let reset = RESET;
         let name = truncate(&sanitize_terminal_text(&item.name), 16);
         let name_pad = " ".repeat(16usize.saturating_sub(display_width(&name)));
         let description = sanitize_terminal_text(&item.description);
         let line = truncate(&format!("{marker} {name}{name_pad}"), width);
         let remaining = width.saturating_sub(display_width(&line));
-        writeln!(out, "{color}{line}{reset}{}", truncate(&format!(" {description}"), remaining))?;
+        let description = truncate(&format!(" {description}"), remaining);
+        if i == selected {
+            writeln!(
+                out,
+                "{color}{line}{description}{}{reset}",
+                " ".repeat(remaining.saturating_sub(display_width(&description)))
+            )?;
+        } else {
+            writeln!(
+                out,
+                "{color}{line}{reset}{}{description}{reset}",
+                palette.dim
+            )?;
+        }
     }
     Ok(())
 }
@@ -2489,7 +2589,10 @@ mod tests {
     fn keyboard_burst_preserves_single_key_and_batches_text() {
         let question = TerminalEvent::Key(KeyEvent::new(KeyCode::Char('?'), KeyModifiers::NONE));
         assert_eq!(finish_text_burst(question.clone(), "?".into()), question);
-        assert_eq!(finish_text_burst(question, "?why".into()), TerminalEvent::Paste("?why".into()));
+        assert_eq!(
+            finish_text_burst(question, "?why".into()),
+            TerminalEvent::Paste("?why".into())
+        );
         assert_eq!(printable_key_text(&TerminalEvent::Paste("?".into())), None);
     }
 
@@ -2499,7 +2602,15 @@ mod tests {
         let mut selected = 0;
         let mut help = false;
         let mut scroll = 0;
-        handle_chat_input(TerminalEvent::Paste("?".into()), &mut input, &mut selected, &mut help, &mut scroll, &[], 120);
+        handle_chat_input(
+            TerminalEvent::Paste("?".into()),
+            &mut input,
+            &mut selected,
+            &mut help,
+            &mut scroll,
+            &[],
+            120,
+        );
         assert_eq!(input.text(), "?");
         assert!(!help);
     }
@@ -2514,8 +2625,8 @@ mod tests {
             let left = first.chars().take_while(|c| *c == ' ').count();
             let portrait = first.trim_start().chars().count();
             assert!((width - portrait).abs_diff(left * 2) <= 1);
-            assert!(portrait <= 64);
-            assert!(portrait / 2 <= height / 2);
+            assert!(portrait <= 128);
+            assert!(portrait / 2 <= height.saturating_sub(2));
             assert!(portrait / 2 >= height / 3);
             assert!(plain.lines().count() <= height);
             assert!(plain.lines().all(|line| display_width(line) <= width));
@@ -3150,7 +3261,7 @@ mod tests {
     /// status row. The Orchester palette must follow the same order instead of
     /// covering the transcript area above the composer.
     #[test]
-    fn command_palette_opens_under_the_input_line_like_codex() {
+    fn command_palette_opens_above_the_input_line_like_codex() {
         let mut out = Vec::new();
 
         render_chat_home_in_viewport(
@@ -3186,8 +3297,8 @@ mod tests {
             .expect("the status row must stay visible");
 
         assert!(
-            composer < first_command,
-            "the palette must open under the input line:\n{plain}"
+            first_command < composer,
+            "the palette must open above the input line:\n{plain}"
         );
         assert_eq!(
             status,
@@ -3207,7 +3318,7 @@ mod tests {
     }
 
     #[test]
-    fn transcript_command_palette_opens_under_the_input_line() {
+    fn transcript_command_palette_opens_above_the_input_line() {
         let transcript = [TranscriptEntry::assistant("previous answer")];
         let mut out = Vec::new();
 
@@ -3240,8 +3351,8 @@ mod tests {
             .unwrap_or_else(|| panic!("the palette must render the matching command:\n{plain}"));
 
         assert!(
-            composer < palette,
-            "the palette must open under the input line:\n{plain}"
+            palette < composer,
+            "the palette must open above the input line:\n{plain}"
         );
         let history = lines
             .iter()
@@ -3739,8 +3850,10 @@ mod tests {
                 assert_eq!(lines.len(), 24, "{label} must fill the viewport");
                 if *label == "palette" {
                     assert!(
-                        lines[composer + 1].trim_start().starts_with("> /agent"),
-                        "{label} palette must open under the composer at {width}x24:\n{frame}"
+                        lines[..composer]
+                            .iter()
+                            .any(|line| line.trim_start().starts_with("> /agent")),
+                        "{label} palette must open above the composer at {width}x24:\n{frame}"
                     );
                     assert!(
                         composer + 1 < lines.len() - 1,
@@ -3885,8 +3998,10 @@ mod tests {
             assert_eq!(lines.len(), 44, "{label} must fill terminal height");
             if label == "palette" {
                 assert!(
-                    lines[composer + 1].trim_start().starts_with("> /agent"),
-                    "{label} palette must open under the composer:\n{frame}"
+                    lines[..composer]
+                        .iter()
+                        .any(|line| line.trim_start().starts_with("> /agent")),
+                    "{label} palette must open above the composer:\n{frame}"
                 );
                 assert!(
                     lines[lines.len() - 2].contains("gpt-test"),

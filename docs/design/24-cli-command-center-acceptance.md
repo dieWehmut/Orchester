@@ -1,5 +1,7 @@
 # CLI 全屏布局与任务中心验收
 
+后续菜单、灰度图、彩色任务中心、提供商模型管理与四档权限调整见 [参考图验收](25-cli-gui-reference-acceptance.md)。
+
 本轮对应用户提供的 `907ebe8c…/image-1.png` 至 `image-4.png`。实现沿用 Rust CLI，不改变产品版本。
 
 ## 布局与操作

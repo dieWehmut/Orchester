@@ -119,10 +119,36 @@ pub fn write_self_agent_provider<S: CredentialStore + ?Sized>(
     // later load applies, and it names the field that failed.
     let resolved = config.resolve_provider_entry(
         &draft.provider,
-        entry,
+        entry.clone(),
         (!draft.model.is_empty()).then_some(draft.model.as_str()),
     )?;
 
+    // Keep the provider's own default in its model catalog, including when it
+    // is saved without activating it globally.
+    let profile_name = format!(
+        "{}.default",
+        draft.provider.chars().take(120).collect::<String>()
+    );
+    if !draft.model.is_empty()
+        && config
+            .model_profiles()
+            .get(&profile_name)
+            .is_some_and(|p| p.model_provider != draft.provider)
+    {
+        return Err(ConfigError::Validation {
+            path: "model_profiles".into(),
+            message: "The default model profile name belongs to another provider".into(),
+        }
+        .into());
+    }
+    if !draft.model.is_empty() {
+        config.validate_provider_model_entry(
+            &draft.provider,
+            entry,
+            &profile_name,
+            &draft.model,
+        )?;
+    }
     let credential_stored = match secret {
         Some(secret) => {
             store_provider_credential(store, &draft.provider, secret)?;
@@ -135,6 +161,27 @@ pub fn write_self_agent_provider<S: CredentialStore + ?Sized>(
         vec!["model_providers".to_owned(), draft.provider.clone()],
         ConfigValue::Object(entry_members(&draft, &reference)),
     )];
+    if !draft.model.is_empty() {
+        members.push((
+            vec![
+                "model_profiles".into(),
+                profile_name,
+                "model_provider".into(),
+            ],
+            ConfigValue::String(draft.provider.clone()),
+        ));
+        members.push((
+            vec![
+                "model_profiles".into(),
+                format!(
+                    "{}.default",
+                    draft.provider.chars().take(120).collect::<String>()
+                ),
+                "model".into(),
+            ],
+            ConfigValue::String(draft.model.clone()),
+        ));
+    }
     if draft.activate {
         members.push((
             vec!["model_provider".to_owned()],
@@ -187,7 +234,11 @@ pub fn provider_draft(config: &UserConfig, provider: &str) -> Option<ProviderDra
             .wire_api
             .clone()
             .unwrap_or_else(|| RESPONSES_WIRE_API.to_owned()),
-        model: config.model.clone().unwrap_or_default(),
+        model: config
+            .with_model_provider(provider)
+            .ok()
+            .and_then(|selected| selected.model)
+            .unwrap_or_default(),
         activate: config.model_provider.as_deref() == Some(provider),
     })
 }
@@ -481,6 +532,25 @@ mod tests {
         assert_eq!(field, "model_providers.relay.base_url");
         assert!(!path.exists());
         assert!(!store.present("relay").expect("no key was stored"));
+    }
+
+    #[test]
+    fn an_invalid_catalog_model_is_refused_before_storing_credentials() {
+        let root = TempDir::new();
+        let path = root.join("orchester.jsonc");
+        let store = InMemoryCredentialStore::default();
+        let mut draft = draft();
+        draft.model = "model with spaces".into();
+        assert!(write_self_agent_provider(
+            &loader(&path),
+            &config("{}"),
+            &store,
+            &draft,
+            Some(secret("sk-relay-abcd9f2c"))
+        )
+        .is_err());
+        assert!(!path.exists());
+        assert!(!store.present("relay").unwrap());
     }
 
     #[test]

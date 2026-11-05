@@ -58,6 +58,11 @@ impl SelfAgentRunOutcome {
         }
     }
 
+    pub(super) fn with_first_tool_step(mut self, step: SelfAgentToolStep) -> Self {
+        self.tool_steps.insert(0, step);
+        self
+    }
+
     pub fn run_id(&self) -> &RunId {
         self.final_turn.run_id()
     }

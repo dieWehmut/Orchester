@@ -148,6 +148,53 @@ impl UserConfig {
     /// mirror another provider's model names, and switching between them is
     /// exactly what this supports. Changing the model belongs to a named
     /// profile or to editing configuration.
+    pub fn validate_provider_model_entry(
+        &self,
+        provider: &str,
+        entry: super::ProviderConfig,
+        name: &str,
+        model: &str,
+    ) -> Result<(), ConfigError> {
+        let mut candidate = self.clone();
+        candidate.model_providers.insert(provider.to_owned(), entry);
+        let mut profile =
+            candidate
+                .model_profiles
+                .get(name)
+                .cloned()
+                .unwrap_or(super::ModelProfileConfig {
+                    model_provider: provider.to_owned(),
+                    model: model.to_owned(),
+                    model_reasoning_effort: None,
+                    plan_mode_reasoning_effort: None,
+                    service_tier: None,
+                });
+        profile.model = model.to_owned();
+        candidate
+            .with_model_profile_entry(name, Some(profile))
+            .map(|_| ())
+    }
+
+    pub fn with_model_profile_entry(
+        &self,
+        name: &str,
+        profile: Option<super::ModelProfileConfig>,
+    ) -> Result<Self, ConfigError> {
+        let mut candidate = self.clone();
+        if let Some(profile) = profile {
+            candidate.model_profiles.insert(name.to_owned(), profile);
+        } else {
+            candidate.model_profiles.remove(name);
+        }
+        candidate.validate()?;
+        if candidate.model_profiles.contains_key(name) {
+            candidate
+                .with_model_profile(name)?
+                .resolve_model_profile()?;
+        }
+        Ok(candidate)
+    }
+
     pub fn with_model_provider(&self, provider: &str) -> Result<Self, ConfigError> {
         validate_provider_identifier(provider, "model_provider")?;
         self.validate()?;
@@ -159,6 +206,19 @@ impl UserConfig {
         }
         let mut selected = self.clone();
         selected.model_provider = Some(provider.to_owned());
+        let models = self
+            .model_profiles()
+            .values()
+            .filter(|profile| profile.model_provider == provider)
+            .collect::<Vec<_>>();
+        if let Some(first) = models.first() {
+            if !models
+                .iter()
+                .any(|profile| Some(profile.model.as_str()) == self.model.as_deref())
+            {
+                selected.model = Some(first.model.clone());
+            }
+        }
         selected.resolve_model_profile()?;
         Ok(selected)
     }
