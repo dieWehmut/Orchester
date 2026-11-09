@@ -35,6 +35,8 @@ Claude Code、Codex CLI、OpenCode 等外部 Agent 只是可选委派能力。Or
 
 ## 示例
 
+手机远程控制：参见 [架构与本地部署](docs/design/26-remote-control.md)、[手机端使用说明](apps/mobile/README.md)、[Android 构建](werkzeug/mobile/README.md) 与 [安装版验收记录](docs/design/27-remote-acceptance.md)。电脑通过 `orchester remote --workspace <目录> --bind 0.0.0.0` 启动服务，手机填写电脑 IP 和一次性配对码。`werkzeug/remote` 提供源码启动、Windows 便携打包、局域网防火墙辅助和真实 Agent 验收脚本。
+
 - 仓库地址：<https://github.com/dieWehmut/Orchester>
 - npm 包：<https://www.npmjs.com/package/@orchester/cli>
 
@@ -45,7 +47,7 @@ Claude Code、Codex CLI、OpenCode 等外部 Agent 只是可选委派能力。Or
 - 持久化运行、项目记忆、一次性审批与 `--resume` 恢复
 - 交互式终端：`/status`、`/permissions`、`/resume`、`/model`、`/plugins` 等命令
 - 统一事件协议：`Task` 进，`Event` 流出，`RunResult` 收尾
-- 可选外部 Agent 委派：清单驱动的 `claude`、`codex`、`opencode`、`mock` 适配器
+- 可选外部 Agent 委派：清单驱动的 `claude`、`codex`、`opencode` 适配器
 - `--json` 直接输出 Orchester 自己的 JSONL，可以接给其他工具
 - `doctor` 检查本地运行环境与可选外部 Agent
 - 插件管理
@@ -121,20 +123,19 @@ cargo build --release
 
 ### 5. 第一次运行
 
-内置的 `mock` 适配器不起子进程、不需要任何 API key，可以直接验证整条流水线：
+安装并登录电脑上的 Codex、OpenCode 或 Claude Code 后运行：
 
 ```bash
 orchester --version
 orchester doctor
-orchester --agent mock "hello"
+orchester --agent codex "列出当前项目文件"
 ```
 
-从源码运行则是：
+从源码运行：
 
 ```bash
 cargo run -p orchester-konsole -- list
-cargo run -p orchester-konsole -- --agent mock "hello"
-cargo run -p orchester-konsole -- --agent mock --json "hello"
+cargo run -p orchester-konsole -- --agent codex "列出当前项目文件"
 ```
 
 ### 6. 调用外部 Agent（可选）
@@ -280,7 +281,7 @@ Developer ──▶ orchester CLI ──▶ Application Service
                                       │
                                       └─▶ Optional Delegation
                                             Registry → Adapter
-                                            → claude / codex / opencode / mock
+                                            → claude / codex / opencode
 ```
 
 Orchester 的独立主循环始终拥有执行权和停止决定。外部 Agent 委派是另一条可选路径：适配器负责启动子进程、解析 JSONL 和保留会话元数据，并把结果转换成统一 `Event` 流。
@@ -294,7 +295,7 @@ kisten/            # Cargo workspace 成员
   protokoll/       # 核心：Task、Event、RunResult、Capability、SessionState
   modell/          # 供应商无关的单次调用语言模型边界
   vertrag/         # 适配器契约：AgentAdapter trait + ManifestAdapter 引擎
-  adapter/         # 内置适配器：mock + 编译期内嵌的 claude/codex/opencode
+  adapter/         # 真实 CLI 适配器：编译期内嵌的 claude/codex/opencode
   verzeichnis/     # 注册表：发现内置 + 加载 manifeste/*.toml
   laufzeit/        # 运行时：独立 Agent 主循环、Conductor、Session 与治理子系统
   konsole/         # orchester CLI 二进制
