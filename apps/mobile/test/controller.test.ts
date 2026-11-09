@@ -58,6 +58,13 @@ it("drains terminal pages to an empty page before stopping", async () => {
   expect(request).toHaveBeenCalledWith("/runs/one/events?after=2");
   expect(vi.getTimerCount()).toBe(0);
 });
+it("marks the device as needing pairing when a terminal request rejects authentication", async () => {
+  request.mockRejectedValueOnce(new RemoteError(401, "expired"));
+  await expect(control.remoteRequest("/terminals")).rejects.toMatchObject({
+    status: 401,
+  });
+  expect(control.connectionStatus.value).toBe("needs_pairing");
+});
 it("retries an interrupted read without skipping its cursor", async () => {
   request
     .mockRejectedValueOnce(new Error("offline"))
