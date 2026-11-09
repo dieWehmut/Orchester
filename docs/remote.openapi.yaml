@@ -3,7 +3,8 @@ info:
   title: Orchester Remote Control
   version: "2"
   description: |
-    控制服务器所属电脑的项目。默认工作区和 --allow-root 指定的目录树允许手机浏览、选择。除配对外均需 Bearer 令牌。
+    控制服务器所属电脑的项目。默认工作区和 --allow-root 指定的目录树允许手机浏览、选择。
+    除配对与使用一次性票据的终端 WebSocket 外均需 Bearer 令牌。
     配对码一次性使用，10 分钟有效，最多 10 次尝试；令牌有效 30 天。
     最多 64 个未过期设备。错误可能为空正文，客户端不得假定错误响应为 JSON。
     长度限制按 UTF-8 字节计算。JSON 请求拒绝未知字段。
@@ -196,6 +197,140 @@ paths:
                         supports_resume: { type: boolean }
         "401": { $ref: "#/components/responses/Unauthorized" }
         default: { $ref: "#/components/responses/Error" }
+  /terminals:
+    get:
+      operationId: listTerminals
+      description: 列出当前配对设备拥有的终端，按创建时间倒序；会话和输出仅在内存保留，服务重启后清空。
+      parameters:
+        - { $ref: "#/components/parameters/ProjectId" }
+      responses:
+        "200":
+          description: 终端列表
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [terminals]
+                properties:
+                  terminals: { type: array, items: { $ref: "#/components/schemas/Terminal" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        default: { $ref: "#/components/responses/Error" }
+    post:
+      operationId: createTerminal
+      description: |
+        在已选择、重新校验的项目目录创建真实交互 PTY。省略 project_id 使用默认项目。
+        Unix 使用无启动脚本的 bash（缺少时 sh）；Windows 使用关闭 AutoRun 的 cmd 与 ConPTY，UNC 项目使用无 Profile 的 PowerShell。
+        shell 使用服务器用户权限，允许根目录约束初始目录选择，不构成 shell 沙箱。
+        不接受 command、cwd 或环境变量。最多同时 4 个终端，保留最多 64 个会话快照，容量满时淘汰最旧终态。
+        新会话未连接或断线 5 分钟、最后输入后 30 分钟、设备撤销或服务停止时结束整棵进程树。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                project_id: { type: [string, "null"] }
+                cols: { type: integer, minimum: 2, maximum: 500, default: 80 }
+                rows: { type: integer, minimum: 2, maximum: 300, default: 24 }
+      responses:
+        "200": { $ref: "#/components/responses/Terminal" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/Missing" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/Invalid" }
+        "429": { $ref: "#/components/responses/Limited" }
+        "503": { description: 服务正在停止 }
+        default: { $ref: "#/components/responses/Error" }
+  /terminals/{id}:
+    parameters:
+      - { $ref: "#/components/parameters/TerminalId" }
+    get:
+      operationId: getTerminal
+      responses:
+        "200": { $ref: "#/components/responses/Terminal" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/Missing" }
+        default: { $ref: "#/components/responses/Error" }
+    delete:
+      operationId: closeTerminal
+      description: 请求关闭 PTY 及前台、后台子进程，幂等返回即时快照；快照可能短暂仍为 running，最终为 closed。
+      responses:
+        "200": { $ref: "#/components/responses/Terminal" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/Missing" }
+        default: { $ref: "#/components/responses/Error" }
+  /terminals/{id}/ticket:
+    parameters:
+      - { $ref: "#/components/parameters/TerminalId" }
+    post:
+      operationId: createTerminalTicket
+      description: |
+        用 Bearer 认证换取 60 秒有效、一次性的随机 WebSocket 票据。
+        票据绑定当前设备、终端及 after，内存仅保存散列，不持久化。
+        新票据替换同终端旧票据；通过 WebSocket 请求解析及升级头检查的握手会消费票据，失败重连须申请新票据。
+        设备撤销或令牌过期后票据无效。after 为最后收到的 output.seq，初始 0。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                after: { type: integer, minimum: 0, default: 0 }
+      responses:
+        "200":
+          description: 将 ws_path 拼接服务器 ws/wss origin；不在 WebSocket URL 放置设备 Bearer 令牌
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ticket, expires_at, ws_path]
+                properties:
+                  ticket: { type: string }
+                  expires_at: { type: integer, description: Unix 秒 }
+                  ws_path: { type: string }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/Missing" }
+        "409": { description: after 超过当前输出序号 }
+        "429": { $ref: "#/components/responses/Limited" }
+        default: { $ref: "#/components/responses/Error" }
+  /terminals/{id}/ws:
+    parameters:
+      - { $ref: "#/components/parameters/TerminalId" }
+    get:
+      operationId: connectTerminal
+      security: []
+      description: |
+        真正的双向 WebSocket PTY，JSON 文本帧，无需 welcome ACK。一个终端最多一个连接。
+        客户端发送 {type: input, data: string}（每次最多 8192 UTF-8 字节），或 {type: resize, cols: 2..500, rows: 2..300}。
+        服务端先发 {type: ready, terminal: Terminal}，再发 {type: output, seq: integer, data: string}。
+        跨 PTY 读取正确拼接 UTF-8，非法字节用 U+FFFD 替代，ANSI 控制序列保留。
+        保留最后 256 KiB 且最多 512 块输出；after 早于缓存时先发 {type: gap, first_seq: integer}，再回放保留内容。
+        客户端按 seq 去重，并在 gap 时显示丢失提示。重连原终端应使用最新 seq 申请新票据。
+        会话结束并排空输出后发送 {type: exit, terminal: Terminal} 并关闭连接。
+        无效消息或输入队列已满时发 {type: error, code: invalid_message|input_busy|terminal_closed}。
+        客户端 WebSocket 消息及帧最大 16 KiB，输入队列最多 16 项，输出慢客户端单次发送超过 5 秒会断线。
+        每秒、每次输入及每块回放前重新验证设备授权；断线不立即结束 shell，允许 5 分钟内重新连接。
+      parameters:
+        - name: ticket
+          in: query
+          required: true
+          schema: { type: string }
+        - name: after
+          in: query
+          schema: { type: integer, minimum: 0, default: 0 }
+      responses:
+        "101": { description: WebSocket 已升级 }
+        "400": { description: 查询参数解析失败、缺少 ticket 或 WebSocket 升级头不合法；票据未消费 }
+        "401": { description: 票据过期、已使用、绑定不匹配或设备授权无效 }
+        "404": { description: 终端不存在或不属于设备 }
+        "409": { description: 终端已有连接，等待旧连接关闭后申请新票据 }
+        "426": { description: 连接不支持 WebSocket 升级；票据未消费 }
+        default: { $ref: "#/components/responses/Error" }
   /runs:
     get:
       operationId: listRuns
@@ -333,7 +468,25 @@ components:
       in: path
       required: true
       schema: { type: string }
+    TerminalId:
+      name: id
+      in: path
+      required: true
+      schema: { type: string }
   schemas:
+    Terminal:
+      type: object
+      required: [id, project_id, workspace, shell, cols, rows, state, created_at, exit_code]
+      properties:
+        id: { type: string }
+        project_id: { type: string }
+        workspace: { type: string }
+        shell: { type: string }
+        cols: { type: integer }
+        rows: { type: integer }
+        state: { type: string, enum: [running, exited, closed, failed] }
+        created_at: { type: integer, description: Unix 秒 }
+        exit_code: { type: [integer, "null"], minimum: 0 }
     Project:
       type: object
       required: [id, name, path]
@@ -366,6 +519,11 @@ components:
             description: 失败原因代码，如 agent_start_failed、storage_failed 或 output_limit_exceeded,
           }
   responses:
+    Terminal:
+      description: 终端快照
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Terminal" }
     Run:
       description: 任务快照
       content:
@@ -373,10 +531,10 @@ components:
           schema: { $ref: "#/components/schemas/Run" }
     Unauthorized: { description: 配对码错误，或 Bearer 缺失、过期、被撤销 }
     Forbidden: { description: 不在允许目录树内或没有目录读取权限 }
-    Missing: { description: 项目、目录、Agent 或任务不存在 }
+    Missing: { description: 项目、目录、Agent、任务或终端不存在 }
     Conflict:
       { description: 幂等键内容冲突、游标越界、任务仍运行或项目目录已被替换 }
     Invalid: { description: 字段不合法、超出字节长度限制或 Agent 不支持续接 }
-    Limited: { description: 配对码过期或已用、尝试次数或设备或任务容量达到限制 }
+    Limited: { description: 配对码过期或已用、尝试次数或设备、任务、终端或票据容量达到限制 }
     Error:
       { description: 请求解析错误、正文过大或内部服务错误；可能无 JSON 正文 }

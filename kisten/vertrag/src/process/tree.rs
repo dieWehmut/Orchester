@@ -22,6 +22,66 @@ pub struct ProcessTree {
 }
 
 impl ProcessTree {
+    /// Attach a PTY child, whose handle is owned by a portable PTY backend.
+    /// On Unix the PTY backend has already made the child a session leader.
+    pub fn attach_pid(&self, pid: u32) -> io::Result<()> {
+        #[cfg(windows)]
+        {
+            use windows_sys::Win32::System::Threading::{
+                OpenProcess, PROCESS_SET_QUOTA, PROCESS_TERMINATE,
+            };
+            let handle = unsafe { OpenProcess(PROCESS_SET_QUOTA | PROCESS_TERMINATE, 0, pid) };
+            if handle.is_null() {
+                return Err(io::Error::last_os_error());
+            }
+            let process = unsafe { OwnedHandle::from_raw_handle(handle as _) };
+            if unsafe {
+                AssignProcessToJobObject(
+                    self.job.as_raw_handle() as HANDLE,
+                    process.as_raw_handle() as HANDLE,
+                )
+            } == 0
+            {
+                return Err(io::Error::last_os_error());
+            }
+        }
+        #[cfg(not(windows))]
+        let _ = pid;
+        Ok(())
+    }
+
+    /// Interactive job control puts foreground/background jobs in separate
+    /// process groups. Terminate all processes in the PTY session, including
+    /// disowned jobs, rather than only the shell's process group.
+    pub fn terminate_pty(&self, leader: u32, candidates: &[u32]) {
+        #[cfg(windows)]
+        {
+            let _ = (leader, candidates);
+            let _ = unsafe { TerminateJobObject(self.job.as_raw_handle() as HANDLE, 1) };
+        }
+        #[cfg(unix)]
+        if let Ok(leader) = i32::try_from(leader) {
+            if leader <= 1 || leader == std::process::id() as i32 {
+                return;
+            }
+            let members: Vec<_> = candidates
+                .iter()
+                .filter_map(|pid| i32::try_from(*pid).ok())
+                .filter(|pid| *pid > 1 && *pid != leader && unsafe { libc::getsid(*pid) } == leader)
+                .collect();
+            for pid in members {
+                unsafe {
+                    libc::kill(pid, libc::SIGKILL);
+                }
+            }
+            unsafe {
+                libc::kill(-leader, libc::SIGKILL);
+            }
+        }
+        #[cfg(not(any(unix, windows)))]
+        let _ = (leader, candidates);
+    }
+
     pub fn new() -> io::Result<Self> {
         #[cfg(windows)]
         {
