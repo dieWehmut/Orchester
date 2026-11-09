@@ -73,6 +73,8 @@ docs/local
 # in explicitly — the directory first, then the files inside it.
 !/docs/design/
 !/docs/design/*.md
+!/docs/design/acceptance/mobile-native-ui-qa.md
+!/docs/design/acceptance/mobile-native-themes/README.md
 .playwright-mcp/
 .superpowers/
 .worktrees/
