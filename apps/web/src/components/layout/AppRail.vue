@@ -97,6 +97,7 @@ function handleQuery(value: string): void { query.value = value; emit('search', 
         </button>
         <div v-if="!collapsed.pinned" class="app-rail__entries"><slot name="projects" /></div>
       </div>
+      <div v-if="$slots.library" class="app-rail__section" data-rail-section="library"><slot name="library" /></div>
       <div class="app-rail__section" data-rail-section="fleet" data-rail-heading="agents">
         <button class="app-rail__heading" type="button" data-rail-disclosure="agents" :aria-expanded="!collapsed.agents" @click="collapsed.agents = !collapsed.agents">
           <ChevronRight v-if="collapsed.agents" :size="13" aria-hidden="true" /><ChevronDown v-else :size="13" aria-hidden="true" />{{ fleetLabel }}

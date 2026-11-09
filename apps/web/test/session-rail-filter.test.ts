@@ -81,4 +81,13 @@ describe('SessionRail filter', () => {
     expect(wrapper.findAll('[data-session-id]')).toHaveLength(2)
     expect(wrapper.find('[data-session-filter-empty]').exists()).toBe(false)
   })
+
+  it('keeps pagination available when no loaded session matches the filter', async () => {
+    const wrapper = mountRail([session()], 'older conversation')
+    await wrapper.setProps({ nextCursor: 'older-page' })
+    expect(wrapper.get('[data-session-filter-empty]').text()).toContain('No sessions match')
+    await wrapper.get('.session-rail__more').trigger('click')
+    expect(wrapper.emitted('loadMore')).toEqual([[]])
+    wrapper.unmount()
+  })
 })

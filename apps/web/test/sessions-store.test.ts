@@ -62,3 +62,91 @@ describe('sessions store', () => {
     expect(store.error.value).toMatchObject({ code: 'network', retryable: true })
   })
 })
+
+function deferred<T>() {
+  let resolve!: (value: T) => void
+  const promise = new Promise<T>(done => { resolve = done })
+  return { promise, resolve }
+}
+const hydratedDetail = { ...second, schema_version: 1, prompt: 'Fix', final_text: 'Done', usage: {} } as SessionDetailDto
+const initialPage: SessionPageDto = { schema_version: 1, items: [first], next_cursor: first.id }
+
+describe('session metadata hydration races', () => {
+  it('retains missing-page details when pagination finishes before hydration', async () => {
+    const detail = deferred<SessionDetailDto>()
+    const api: SessionsApi = {
+      list: vi.fn().mockResolvedValueOnce(initialPage).mockResolvedValueOnce({ ...initialPage, next_cursor: null }),
+      detail: vi.fn(() => detail.promise),
+    }
+    const store = createSessionsStore(api)
+    await store.load()
+    const hydration = store.ensureItems([second.id])
+    await store.loadMore()
+    detail.resolve(hydratedDetail)
+    await hydration
+    expect(store.items.value.map(row => row.id)).toEqual([first.id, second.id])
+  })
+
+  it.each(['detail-first', 'refresh-first'])('retains hydrated rows during refresh (%s)', async order => {
+    const detail = deferred<SessionDetailDto>()
+    const page = deferred<SessionPageDto>()
+    const api: SessionsApi = {
+      list: vi.fn().mockResolvedValueOnce(initialPage).mockImplementationOnce(() => page.promise).mockResolvedValue(initialPage),
+      detail: vi.fn(() => detail.promise),
+    }
+    const store = createSessionsStore(api)
+    await store.load()
+    const hydration = store.ensureItems([second.id])
+    const refresh = store.load()
+    if (order === 'detail-first') { detail.resolve(hydratedDetail); await hydration }
+    page.resolve(initialPage)
+    await refresh
+    if (order === 'refresh-first') {
+      await store.ensureItems([second.id])
+      detail.resolve(hydratedDetail)
+      await hydration
+    }
+    expect(store.items.value.map(row => row.id)).toEqual([first.id, second.id])
+    await store.load()
+    expect(store.items.value.map(row => row.id)).toEqual([first.id, second.id])
+    expect(api.detail).toHaveBeenCalledTimes(1)
+  })
+
+  it('invalidates old hydration on reset and permits a fresh request for the same ID', async () => {
+    const stale = deferred<SessionDetailDto>()
+    const fresh = deferred<SessionDetailDto>()
+    const api: SessionsApi = {
+      list: vi.fn().mockResolvedValue(initialPage),
+      detail: vi.fn().mockImplementationOnce(() => stale.promise).mockImplementationOnce(() => fresh.promise),
+    }
+    const store = createSessionsStore(api)
+    await store.load()
+    const oldHydration = store.ensureItems([second.id])
+    store.reset()
+    await store.load()
+    const newHydration = store.ensureItems([second.id])
+    stale.resolve(hydratedDetail)
+    await oldHydration
+    expect(store.items.value).toEqual([first])
+    await store.ensureItems([second.id])
+    expect(api.detail).toHaveBeenCalledTimes(2)
+    fresh.resolve({ ...hydratedDetail, title: 'Fresh authorized detail' })
+    await newHydration
+    expect(store.items.value[1]?.title).toBe('Fresh authorized detail')
+    store.reset()
+    await store.load()
+    expect(store.items.value).toEqual([first])
+  })
+
+  it('does not internally retry missing history records', async () => {
+    const api: SessionsApi = {
+      list: vi.fn().mockResolvedValue(initialPage),
+      detail: vi.fn().mockRejectedValue({ status: 404 }),
+    }
+    const store = createSessionsStore(api)
+    await store.load()
+    await store.ensureItems([second.id])
+    expect(api.detail).toHaveBeenCalledTimes(1)
+    expect(store.items.value).toEqual([first])
+  })
+})

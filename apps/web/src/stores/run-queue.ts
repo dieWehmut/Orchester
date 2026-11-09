@@ -1,5 +1,5 @@
 import { computed, ref, shallowRef, watch } from 'vue'
-import type { RunView } from '@orchester/ereignis'
+import type { MessageTimelineItem, RunView } from '@orchester/ereignis'
 import { projectRunEvents } from '@orchester/ereignis'
 import type { UiEventEnvelope } from '@orchester/protokoll'
 import type { RunStore } from './run'
@@ -17,10 +17,18 @@ export function createRunQueue(run: RunStore) {
   const items = ref<QueuedPrompt[]>([])
   const paused = ref(false)
   const history = shallowRef<readonly RunView[]>([])
-  const view = computed<RunView>(() => ({ ...run.view.value, timeline: [
-    ...history.value.filter(part => part.runId !== run.view.value.runId || !run.view.value.timeline.length).flatMap(conversationRows),
-    ...conversationRows(run.view.value),
-  ] }))
+  const pendingMessage = shallowRef<{ item: MessageTimelineItem; runId: string | null } | null>(null)
+  const view = computed<RunView>(() => {
+    const current = run.view.value
+    const pending = pendingMessage.value
+    const acknowledged = pending?.runId === current.runId && current.timeline.some(item => item.type === 'message' && item.role === 'user')
+    const timeline = [
+      ...history.value.filter(part => part.runId !== current.runId || !current.timeline.length).flatMap(conversationRows),
+      ...conversationRows(current),
+    ]
+    if (pending && !acknowledged) timeline.push(pending.item)
+    return { ...current, timeline }
+  })
   let sending = false
   let disposed = false
   let serial = 0
@@ -34,13 +42,19 @@ export function createRunQueue(run: RunStore) {
     const submissionEpoch = epoch
     sending = true
     item.status = 'sending'
+    pendingMessage.value = { runId: null, item: {
+      key: `pending:${item.id}`, type: 'message', role: 'user', text: item.prompt,
+      final: true, sequence: 0, occurredAt: new Date().toISOString(), turnId: null,
+    } }
     try {
       const response = await run.submit(item.prompt)
       if (disposed || epoch !== submissionEpoch) return
       if (response) {
+        if (pendingMessage.value) pendingMessage.value = { ...pendingMessage.value, runId: response.run_id }
         if (previous.runId && previous.timeline.length && !history.value.some(part => part.runId === previous.runId)) history.value = [...history.value, previous]
         items.value = items.value.filter(value => value.id !== item.id)
       } else {
+        pendingMessage.value = null
         item.status = 'failed'
         paused.value = true
       }
@@ -55,6 +69,11 @@ export function createRunQueue(run: RunStore) {
     if (['failed', 'cancelled', 'paused', 'cancelling'].includes(value)) paused.value = true
     else if (value === 'completed') void drain()
   }, { flush: 'post' })
+
+  const unwatchPending = watch([run.view, pendingMessage], () => {
+    const pending = pendingMessage.value
+    if (pending?.runId && pending.runId === run.view.value.runId && run.view.value.timeline.some(item => item.type === 'message' && item.role === 'user')) pendingMessage.value = null
+  }, { flush: 'sync' })
 
   function enqueue(prompt: string): boolean {
     if (disposed || !prompt.trim()) return false
@@ -75,6 +94,7 @@ export function createRunQueue(run: RunStore) {
     epoch += 1
     sending = false
     items.value = []
+    pendingMessage.value = null
     paused.value = false
     run.reset()
     run.conversationId.value = id
@@ -89,6 +109,6 @@ export function createRunQueue(run: RunStore) {
     }))
     run.conversationStarted.value = events.length > 0
   }
-  function dispose(): void { disposed = true; unwatch() }
+  function dispose(): void { disposed = true; unwatch(); unwatchPending() }
   return { items, paused, view, enqueue, remove, resume, openConversation, dispose }
 }

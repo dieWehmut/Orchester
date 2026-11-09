@@ -39,7 +39,7 @@ import { routerKey } from 'vue-router'
 
 const { t } = useI18n()
 const appRouter = inject(routerKey, null)
-const { sessions, run, queue, agents, bootstrap, models, review, approvals } = useAppStores()
+const { sessions, library, run, queue, agents, bootstrap, models, review, approvals } = useAppStores()
 const runView = computed(() => queue.view.value)
 const runEvents = computed(() => run.events.value)
 const changeSummaries = computed(() => summarizeFileChanges(runView.value.fileChanges))
@@ -123,7 +123,7 @@ const {
   detailError,
 } = sessions
 
-const threadTitle = computed(() => selected.value?.title ?? t('transcript.newChatTitle'))
+const threadTitle = computed(() => (selectedId.value ? library.metadata.value[selectedId.value]?.title : null) ?? selected.value?.title ?? t('transcript.newChatTitle'))
 
 /**
  * The strip's tabs, region B.
@@ -370,6 +370,10 @@ function selectSession(id: string | null): void {
   if (id === null) queue.openConversation(null)
   void sessions.select(id)
 }
+
+watch(() => appRouter?.currentRoute.value.query.session, value => {
+  if (typeof value === 'string' && /^s-[a-f0-9]{32}$/.test(value) && bootstrap.status.value === 'ready' && value !== sessions.selectedId.value) selectSession(value)
+})
 
 watch(() => appRouter?.currentRoute.value.query.agent, value => {
   activityProvider.value = activityProviders.includes(value as ExternalActivityProvider) ? value as ExternalActivityProvider : null

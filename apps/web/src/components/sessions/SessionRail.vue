@@ -5,12 +5,16 @@ import { computed } from 'vue'
 
 import { useI18n } from '../../i18n'
 import type { SessionsStatus } from '../../stores/sessions'
+import type { SessionAction, SessionMetadata, SessionDestination } from './session-actions'
 import SessionListItem from './SessionListItem.vue'
 
 const props = withDefaults(
   defineProps<{
   status: SessionsStatus
   items: SessionSummaryDto[]
+  metadata?: Record<string, SessionMetadata>
+  projects?: readonly SessionDestination[]
+  sections?: readonly SessionDestination[]
   selectedId: string | null
   nextCursor: string | null
   error: { message: string; retryable: boolean } | null
@@ -24,6 +28,8 @@ const props = withDefaults(
    * have no need for the distinction.
    */
   query?: string
+  /** All loaded rows searched by the sidebar, including its other groups. */
+  filterSource?: readonly SessionSummaryDto[]
   /**
    * The runs the reader pinned, which the pinned list above already shows.
    *
@@ -37,6 +43,7 @@ const props = withDefaults(
 
 defineEmits<{
   select: [id: string]
+  action: [action: SessionAction]
   refresh: []
   loadMore: []
   togglePin: [id: string]
@@ -76,8 +83,9 @@ const matches = computed<SessionSummaryDto[]>(() => {
  */
 const filteredEmpty = computed(() => {
   const needle = props.query.trim().toLowerCase()
-  if (needle.length === 0 || props.items.length === 0) return false
-  return !props.items.some((item) => admits(item, needle))
+  const source = props.filterSource ?? props.items
+  if (needle.length === 0 || source.length === 0) return false
+  return !source.some((item) => admits(item, needle))
 })
 </script>
 
@@ -126,23 +134,30 @@ const filteredEmpty = computed(() => {
           v-for="session in matches"
           :key="session.id"
           :session="session"
+          :pinned="metadata?.[session.id]?.pinned"
+          :unread="metadata?.[session.id]?.unread"
+          :archived="metadata?.[session.id]?.archived"
+          :project-id="metadata?.[session.id]?.project_id"
+          :section-id="metadata?.[session.id]?.section_id"
+          :projects="projects" :sections="sections"
+          @action="$emit('action', $event)"
           :selected="selectedId === session.id"
           @select="$emit('select', $event)"
           @toggle-pin="$emit('togglePin', $event)"
         />
       </nav>
-      <AppButton
-        v-if="nextCursor"
-        class="session-rail__more"
-        variant="ghost"
-        size="sm"
-        block
-        :busy="status === 'loading_more'"
-        @click="$emit('loadMore')"
-      >
-        {{ t('sessions.loadMore') }}
-      </AppButton>
     </template>
+    <AppButton
+      v-if="nextCursor"
+      class="session-rail__more"
+      variant="ghost"
+      size="sm"
+      block
+      :busy="status === 'loading_more' || status === 'loading' || status === 'refreshing'"
+      @click="$emit('loadMore')"
+    >
+      {{ t('sessions.loadMore') }}
+    </AppButton>
   </div>
 </template>
 
