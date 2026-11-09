@@ -71,6 +71,7 @@ watch(detail, async (next, previous) => {
       <button type="button" class="agent-activity__icon" :aria-label="t('activity.sessions')" @click="runShellAction('rail.toggle')"><PanelLeft :size="18" /></button>
       <Folder v-if="detail?.project" class="agent-activity__folder" :size="18" aria-hidden="true" />
       <h1 ref="title" tabindex="-1" :title="detail?.title || ''" data-activity-title>{{ detail?.title || t('activity.title') }}</h1>
+      <span v-if="detail?.environment" class="agent-activity__environment" data-activity-environment :title="detail.environment">{{ detail.environment }}</span>
       <span class="agent-activity__live" :data-stale="error" :title="t(error ? 'activity.stale' : 'activity.live')" :aria-label="t(error ? 'activity.stale' : 'activity.live')" />
       <AppMenu :label="t('transcript.more')" :items="[...(detail ? [{ id: 'pin', label: t(isPinned(detail) ? 'sessions.unpinAction' : 'sessions.pinAction') }] : []), { id: 'refresh', label: t('management.refresh'), disabled: refreshing }]" align="end" @select="action"><template #trigger><Ellipsis :size="20" /></template></AppMenu>
     </header>
@@ -97,6 +98,7 @@ watch(detail, async (next, previous) => {
 .agent-activity__header { display: flex; align-items: center; gap: var(--space-3); min-block-size: 52px; padding: var(--space-2) var(--space-5); }
 .agent-activity__header h1 { flex: 1; min-inline-size: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 600; outline: none; }
 .agent-activity__folder { flex-shrink: 0; color: var(--color-text-secondary); }
+.agent-activity__environment { flex-shrink: 1; max-inline-size: 35%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border: 1px solid var(--color-border-subtle); border-radius: 6px; padding: 3px 6px; color: var(--color-text-tertiary); font-size: 11px; }
 .agent-activity__icon { display: grid; place-items: center; inline-size: 28px; block-size: 28px; border: 0; border-radius: 6px; background: transparent; color: var(--color-text-secondary); cursor: pointer; }
 .agent-activity__header :deep(.app-menu__trigger) { border: 0; padding: var(--space-1); background: transparent; }
 .agent-activity__live { inline-size: 5px; block-size: 5px; border-radius: 50%; background: var(--color-text-tertiary); }

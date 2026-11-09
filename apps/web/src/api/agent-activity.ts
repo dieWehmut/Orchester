@@ -9,6 +9,8 @@ export interface ActivitySummary {
   id: string
   provider: ActivityProvider
   source: 'external' | 'managed'
+  environment?: string
+  cwd?: string
   title: string
   project: string
   project_id?: string
@@ -30,14 +32,17 @@ export interface ActivityEntry {
 }
 export interface ActivityTurn { id: string; started_at?: number; completed_at?: number }
 export interface ActivityDetail extends ActivitySummary { schema_version: 1; entries: ActivityEntry[]; turns?: ActivityTurn[]; next_before?: number | undefined }
-export interface ActivitySource { provider: ActivityProvider; status: 'available' | 'not_found' | 'unavailable' | 'partial' }
+export interface ActivitySource { provider: ActivityProvider; status: 'available' | 'not_found' | 'unavailable' | 'partial'; environment?: string }
 export interface ActivityList { schema_version: 1; observed_at: number; sources: ActivitySource[]; sessions: ActivitySummary[] }
 
 function record(value: unknown): value is Record<string, unknown> { return !!value && typeof value === 'object' && !Array.isArray(value) }
 function optionalTime(value: unknown): boolean { return value === undefined || (typeof value === 'number' && Number.isSafeInteger(value) && Math.abs(value) <= 8.64e15) }
+function optionalEnvironment(value: unknown): boolean { return value === undefined || (typeof value === 'string' && value.trim().length > 0 && value.length <= 256) }
 function summary(value: unknown): value is ActivitySummary {
   return record(value) && ['id', 'title', 'project', 'preview'].every(key => typeof value[key] === 'string')
     && supportedProviders.includes(String(value.provider)) && ['external', 'managed'].includes(String(value.source))
+    && optionalEnvironment(value.environment)
+    && (value.cwd === undefined || typeof value.cwd === 'string')
     && (value.project_id === undefined || typeof value.project_id === 'string') && (value.pinned === undefined || typeof value.pinned === 'boolean')
     && ['active', 'completed', 'interrupted', 'unknown'].includes(String(value.state))
     && typeof value.updated_at === 'number' && Number.isSafeInteger(value.updated_at) && Math.abs(value.updated_at) <= 8.64e15 && typeof value.truncated === 'boolean'
@@ -48,7 +53,7 @@ export function createAgentActivityApi(http: HttpClient) {
     async list(provider: ActivityProvider, signal: AbortSignal): Promise<ActivityList> {
       const data = await http.get<unknown>(`/agents/activity?provider=${provider}`, { signal })
       if (!record(data) || data.schema_version !== 1 || typeof data.observed_at !== 'number' || !Number.isFinite(data.observed_at) || !Array.isArray(data.sessions) || !data.sessions.every(summary)
-        || !Array.isArray(data.sources) || !data.sources.every(source => record(source) && supportedProviders.includes(String(source.provider)) && ['available', 'not_found', 'unavailable', 'partial'].includes(String(source.status)))) throw new Error('Invalid activity response')
+        || !Array.isArray(data.sources) || !data.sources.every(source => record(source) && supportedProviders.includes(String(source.provider)) && optionalEnvironment(source.environment) && ['available', 'not_found', 'unavailable', 'partial'].includes(String(source.status)))) throw new Error('Invalid activity response')
       return data as unknown as ActivityList
     },
     async detail(id: string, signal: AbortSignal, before?: number): Promise<ActivityDetail> {

@@ -657,6 +657,11 @@
     "voiceError": "無法啟動語音輸入，請檢查麥克風權限後重試。"
   },
   "activity": {
+    "ungrouped": "其他對話",
+    "inactive": "未執行",
+    "sessionCount": "{count} 個對話",
+    "environment": "執行環境",
+    "allEnvironments": "全部環境",
     "work": "工作過程",
     "working": "正在處理",
     "workingFor": "正在處理 · {duration}",

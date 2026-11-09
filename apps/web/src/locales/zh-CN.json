@@ -657,6 +657,11 @@
     "voiceError": "无法启动语音输入，请检查麦克风权限后重试。"
   },
   "activity": {
+    "ungrouped": "其他会话",
+    "inactive": "未运行",
+    "sessionCount": "{count} 个会话",
+    "environment": "运行环境",
+    "allEnvironments": "全部环境",
     "work": "工作过程",
     "working": "正在处理",
     "workingFor": "正在处理 · {duration}",

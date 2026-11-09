@@ -41,11 +41,11 @@ tokio-util = { workspace = true }
 tower = { workspace = true }
 tower-http = { workspace = true }
 tracing = { workspace = true }
+tempfile = "3"
 zstd = { version = "0.13", default-features = false }
 
 [dev-dependencies]
 orchester-adapter = { workspace = true, features = ["test-support"] }
-tempfile = "3"
 futures = { workspace = true }
 reqwest = { workspace = true, features = ["json"] }
 tokio = { workspace = true, features = ["test-util"] }

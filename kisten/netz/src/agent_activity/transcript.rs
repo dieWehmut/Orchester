@@ -1,7 +1,7 @@
-use super::{ActivityDetail, ActivityTurn, clip, empty_detail, finish, opaque_id, push_entry};
+use super::{clip, empty_detail, finish, opaque_id, push_entry, ActivityDetail, ActivityTurn};
 use serde_json::Value;
 use std::collections::HashSet;
-use time::{OffsetDateTime, format_description::well_known::Rfc3339};
+use time::{format_description::well_known::Rfc3339, OffsetDateTime};
 
 pub(super) fn text(value: &Value) -> String {
     if let Some(text) = value.as_str() {
@@ -293,7 +293,11 @@ fn codex(row: &mut ActivityDetail, offset: u64, record: &Value) {
     let id = format!("line-{offset}");
     match record["type"].as_str() {
         Some("session_meta" | "turn_context") => {
+            if record["type"] == "session_meta" && is_subagent_source(&payload["source"]) {
+                row.internal_subagent = true;
+            }
             if let Some(cwd) = payload["cwd"].as_str() {
+                row.summary.cwd = Some(cwd.into());
                 row.summary.project = project(cwd);
                 row.summary.project_id = Some(opaque_id("codex-project", cwd));
             }
@@ -355,6 +359,7 @@ fn codex(row: &mut ActivityDetail, offset: u64, record: &Value) {
 
 fn claude(row: &mut ActivityDetail, offset: u64, record: &Value) {
     if let Some(cwd) = record["cwd"].as_str() {
+        row.summary.cwd = Some(cwd.into());
         row.summary.project = project(cwd);
         row.summary.project_id = Some(opaque_id("claude-project", cwd));
     }
@@ -448,4 +453,22 @@ fn claude(row: &mut ActivityDetail, offset: u64, record: &Value) {
         }
         _ => (),
     }
+}
+
+pub(super) fn is_subagent_source(value: &Value) -> bool {
+    if value.get("subagent").is_some() {
+        return true;
+    }
+    if let Some(text) = value.as_str() {
+        if text.eq_ignore_ascii_case("subagent") {
+            return true;
+        }
+        if let Ok(parsed) = serde_json::from_str::<Value>(text) {
+            return parsed.get("subagent").is_some()
+                || parsed
+                    .as_str()
+                    .is_some_and(|s| s.eq_ignore_ascii_case("subagent"));
+        }
+    }
+    false
 }

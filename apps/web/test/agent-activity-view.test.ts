@@ -34,6 +34,34 @@ function setup(fetch: typeof globalThis.fetch) {
 }
 
 describe('live agent content', () => {
+  it('keeps Windows and WSL sources distinct, filters them, and refreshes the selected WSL conversation', async () => {
+    vi.useFakeTimers()
+    const rows = [
+      { ...session('windows'), environment: 'Windows', project: 'same-project' },
+      { ...session('wsl'), environment: 'WSL · Ubuntu-22.04', project: 'same-project' },
+    ]
+    let answer = 'Initial WSL answer'
+    const wrapper = setup(async url => {
+      if (String(url).includes('?provider=')) return response({ ...list(rows), sources: rows.map(row => ({ provider: 'codex', environment: row.environment, status: 'available' })) })
+      const row = rows.find(row => String(url).endsWith(row.id))!
+      return response(detail(row, [entry('answer', row.id === 'wsl' ? answer : 'Windows answer')]))
+    })
+    await flushPromises()
+    const source = wrapper.get('[data-activity-environment-filter]')
+    expect(source.text()).toContain('Windows (1)')
+    expect(source.text()).toContain('WSL · Ubuntu-22.04 (1)')
+    await source.setValue('WSL · Ubuntu-22.04'); await flushPromises()
+    expect(wrapper.find('[data-activity-session="windows"]').exists()).toBe(false)
+    expect(wrapper.get('[data-activity-environment]').text()).toBe('WSL · Ubuntu-22.04')
+    expect(wrapper.text()).toContain('Initial WSL answer')
+    answer = 'Live WSL update'
+    await vi.advanceTimersByTimeAsync(2100); await flushPromises()
+    expect(wrapper.text()).toContain('Live WSL update')
+    expect(source.element).toHaveProperty('value', 'WSL · Ubuntu-22.04')
+    await source.setValue(''); await flushPromises()
+    expect(wrapper.find('[data-activity-session="windows"]').exists()).toBe(true)
+  })
+
   it('fills missed tail windows after resuming a long-hidden conversation', async () => {
     vi.useFakeTimers()
     const row = session('catch-up')
@@ -96,19 +124,38 @@ describe('live agent content', () => {
     expect(wrapper.find('[data-activity-load-older]').exists()).toBe(false)
   })
 
+  it('groups by real working directory and environment with counts and no duplicate recent rows', async () => {
+    const rows = [
+      { ...session('linux'), cwd: '/home/han/project/Demo', environment: 'WSL · Ubuntu' },
+      { ...session('windows'), cwd: '/home/han/project/Demo', environment: 'Windows', state: 'completed' as const },
+      { ...session('other'), cwd: '/home/han/other/Demo', environment: 'WSL · Ubuntu' },
+      { ...session('legacy'), project: '' },
+    ]
+    const wrapper = setup(async url => response(String(url).includes('?provider=') ? list(rows) : detail(rows[0]!)))
+    await flushPromises()
+    expect(wrapper.findAll('[data-activity-project]')).toHaveLength(4)
+    expect(wrapper.findAll('[data-activity-session]')).toHaveLength(4)
+    expect(wrapper.find('[data-activity-section="recent"]').exists()).toBe(false)
+    expect(wrapper.get('[data-activity-row="linux"]').text()).toContain('Working')
+    expect(wrapper.get('[data-activity-row="windows"]').text()).toContain('Inactive')
+    expect(wrapper.get('[data-activity-row="linux"] time').attributes('datetime')).toBeTruthy()
+    expect(wrapper.findAll('.activity-sidebar__count').map(node => node.text())).toEqual(['1', '1', '1', '1'])
+    expect(wrapper.findAll('.activity-sidebar__path').map(node => node.text())).toContain('/home/han/other/Demo')
+  })
+
   it('exposes every session through more rows and search, including those beyond the initial page', async () => {
     const rows = Array.from({ length: 125 }, (_, index) => ({ ...session(`task-${String(index).padStart(3, '0')}`), updated_at: 125 - index }))
     const wrapper = setup(async url => response(String(url).includes('?provider=') ? list(rows) : detail(rows.find(row => String(url).endsWith(row.id))!)))
     await flushPromises()
-    expect(wrapper.get('[data-activity-section="recent"]').findAll('[data-activity-session]')).toHaveLength(50)
+    expect(wrapper.get('[data-activity-section="projects"]').findAll('[data-activity-session]')).toHaveLength(50)
     await wrapper.get('[data-activity-more]').trigger('click')
     await wrapper.get('[data-activity-more]').trigger('click')
     await wrapper.get('[data-activity-session="task-124"]').trigger('click'); await flushPromises()
     expect(wrapper.get('[data-activity-title]').text()).toBe('Task task-124')
     await wrapper.get('.activity-sidebar__primary .activity-sidebar__icon').trigger('click')
     await wrapper.get('input[type="search"]').setValue('task-120')
-    expect(wrapper.get('[data-activity-section="recent"]').findAll('[data-activity-session]')).toHaveLength(1)
-    expect(wrapper.get('[data-activity-section="recent"]').text()).toContain('task-120')
+    expect(wrapper.get('[data-activity-section="projects"]').findAll('[data-activity-session]')).toHaveLength(1)
+    expect(wrapper.get('[data-activity-section="projects"]').text()).toContain('task-120')
   })
 
   it('keeps unchanged polls inert and follows a growing message until the reader scrolls back', async () => {
@@ -231,16 +278,17 @@ describe('live agent content', () => {
     await flushPromises()
     await wrapper.get('[data-activity-pin="second"]').trigger('click')
     expect(wrapper.get('[data-activity-section="pinned"]').find('[data-activity-session="second"]').exists()).toBe(true)
-    expect(wrapper.get('[data-activity-section="recent"]').find('[data-activity-session="second"]').exists()).toBe(false)
+    expect(wrapper.get('[data-activity-section="projects"]').find('[data-activity-session="second"]').exists()).toBe(false)
     expect(JSON.parse(localStorage.getItem('orchester:activity:codex')!).pins.second).toBe(true)
     rows[1]!.updated_at = 2000
     await vi.advanceTimersByTimeAsync(2100); await flushPromises()
     expect(wrapper.get('[data-activity-row="second"]').find('.activity-row__unread').exists()).toBe(true)
     await wrapper.get('[data-activity-session="second"]').trigger('click'); await flushPromises()
     expect(wrapper.get('[data-activity-row="second"]').find('.activity-row__unread').exists()).toBe(false)
-    await wrapper.get('[data-activity-section="projects"] > button').trigger('click')
+    expect(wrapper.get('[data-activity-section="projects"]').findAll('[data-activity-session]')).toHaveLength(1)
     await wrapper.get('[data-activity-project]').trigger('click')
-    expect(wrapper.get('[data-activity-section="projects"]').findAll('[data-activity-session]')).toHaveLength(2)
+    expect(wrapper.get('[data-activity-section="projects"]').findAll('[data-activity-session]')).toHaveLength(0)
+    await wrapper.get('[data-activity-project]').trigger('click')
     await wrapper.get('.app-menu__trigger').trigger('click')
     expect(wrapper.findAll('[data-activity-provider]').map(item => item.attributes('data-activity-provider'))).toEqual(['codex', 'claude', 'opencode'])
     expect(wrapper.find('[data-activity-provider="orchester"]').exists()).toBe(false)

@@ -1,5 +1,5 @@
 //! Optional, read-only Codex title/index hints. Transcript roots remain authoritative.
-use super::{ActivityDetail, clip, opaque_id};
+use super::{clip, opaque_id, ActivityDetail};
 use rusqlite::{Connection, OpenFlags};
 use std::{
     collections::{HashMap, HashSet},
@@ -12,6 +12,7 @@ use std::{
 pub(super) struct Hint {
     title: String,
     project: String,
+    cwd: String,
     project_id: String,
     pinned: Option<bool>,
     updated_at: i64,
@@ -29,6 +30,7 @@ impl Hint {
         if !self.project.is_empty() {
             row.summary.project = self.project.clone();
         }
+        row.summary.cwd = Some(self.cwd.clone());
         row.summary.project_id = Some(self.project_id.clone());
         row.summary.pinned = self.pinned;
         row.summary.updated_at = self.updated_at;
@@ -65,6 +67,10 @@ pub(super) fn codex(root: &Path) -> Option<HashMap<PathBuf, Hint>> {
 }
 
 fn read(path: &Path, root: &Path) -> rusqlite::Result<HashMap<PathBuf, Hint>> {
+    #[cfg(windows)]
+    let snapshot = super::wsl::database_snapshot(path);
+    #[cfg(windows)]
+    let path = snapshot.as_ref().map_or(path, |file| file.path());
     let db = Connection::open_with_flags(
         path,
         OpenFlags::SQLITE_OPEN_READ_ONLY | OpenFlags::SQLITE_OPEN_NO_MUTEX,
@@ -90,6 +96,11 @@ fn read(path: &Path, root: &Path) -> rusqlite::Result<HashMap<PathBuf, Hint>> {
     } else {
         ""
     };
+    let source = if columns.contains("source") {
+        "source"
+    } else {
+        "NULL"
+    };
     let title = if columns.contains("name") {
         "COALESCE(NULLIF(name, ''), title)"
     } else {
@@ -108,7 +119,7 @@ fn read(path: &Path, root: &Path) -> rusqlite::Result<HashMap<PathBuf, Hint>> {
     };
     // All interpolated identifiers are constants selected above, never source values.
     let sql = format!(
-        "SELECT rollout_path, {title}, cwd, {project_id}, {pinned}, id, {updated}, {preview} FROM threads WHERE archived = 0 {source_filter} ORDER BY updated_at DESC, id DESC"
+        "SELECT rollout_path, {title}, cwd, {project_id}, {pinned}, id, {updated}, {preview}, {source} FROM threads WHERE archived = 0 {source_filter} ORDER BY updated_at DESC, id DESC"
     );
     let mut query = db.prepare(&sql)?;
     let rows = query.query_map([], |r| {
@@ -121,17 +132,25 @@ fn read(path: &Path, root: &Path) -> rusqlite::Result<HashMap<PathBuf, Hint>> {
             r.get::<_, String>(5)?,
             r.get::<_, i64>(6)?,
             r.get::<_, String>(7)?,
+            r.get::<_, Option<String>>(8)?,
         ))
     })?;
     let mut hints = HashMap::new();
     for item in rows {
-        let (path, title, cwd, project_id, pinned, id, updated_at, preview) = item?;
+        let (path, title, cwd, project_id, pinned, id, updated_at, preview, source) = item?;
+        if source.as_deref().is_some_and(|s| {
+            super::transcript::is_subagent_source(&serde_json::Value::String(s.into()))
+        }) {
+            continue;
+        }
         let pinned = if legacy_pins.contains(&id) {
             Some(true)
         } else {
             pinned
         };
-        let mut path = PathBuf::from(path);
+        let Some(mut path) = rollout_path(root, &path) else {
+            continue;
+        };
         if !path.exists() && path.extension().is_some_and(|ext| ext == "jsonl") {
             path = path.with_extension("jsonl.zst");
         }
@@ -161,6 +180,7 @@ fn read(path: &Path, root: &Path) -> rusqlite::Result<HashMap<PathBuf, Hint>> {
                     .map(|name| clip(&name, 120))
                     .unwrap_or_else(|| super::transcript::project(&cwd)),
                 project_id: opaque_id("codex-project", project_id.as_deref().unwrap_or(&cwd)),
+                cwd,
                 pinned,
                 updated_at,
                 preview: clip(&preview, 200),
@@ -199,4 +219,62 @@ fn read_legacy_pins(root: &Path) -> HashSet<String> {
         .filter(|s| s.len() <= 100)
         .map(str::to_owned)
         .collect()
+}
+// Map Linux index paths only within the exact WSL sessions root being scanned.
+fn rollout_path(root: &Path, indexed: &str) -> Option<PathBuf> {
+    let root_text = root.to_string_lossy();
+    let normalized = root_text.replace('\\', "/");
+    let unc = normalized
+        .strip_prefix("//?/UNC/")
+        .or_else(|| normalized.strip_prefix("//"));
+    let Some(unc) = unc else {
+        return Some(PathBuf::from(indexed));
+    };
+    let (host, rest) = unc.split_once('/')?;
+    if !host.eq_ignore_ascii_case("wsl.localhost") && !host.eq_ignore_ascii_case("wsl$") {
+        return Some(PathBuf::from(indexed));
+    }
+    let (_, linux_root) = rest.split_once('/')?;
+    let expected = format!("/{}/", linux_root.trim_end_matches('/'));
+    let suffix = indexed.strip_prefix(&expected)?;
+    if suffix.is_empty()
+        || suffix.contains('\\')
+        || suffix
+            .split('/')
+            .any(|part| part.is_empty() || part == "." || part == ".." || part.contains(':'))
+    {
+        return None;
+    }
+    let mut path = root.to_path_buf();
+    for component in suffix.split('/') {
+        path.push(component);
+    }
+    Some(path)
+}
+
+#[cfg(test)]
+mod wsl_paths {
+    use super::*;
+    #[test]
+    fn maps_only_index_paths_within_the_same_wsl_sessions_root() {
+        for root in [
+            r"\\wsl.localhost\Ubuntu\home\han\.codex\sessions",
+            r"\\?\UNC\wsl.localhost\Ubuntu\home\han\.codex\sessions",
+            r"\\wsl$\Ubuntu\home\han\.codex\sessions",
+        ] {
+            let root = Path::new(root);
+            assert_eq!(
+                rollout_path(root, "/home/han/.codex/sessions/2026/11/session.jsonl"),
+                Some(root.join("2026").join("11").join("session.jsonl"))
+            );
+            for invalid in [
+                "/home/other/.codex/sessions/session.jsonl",
+                "/home/han/.codex/sessions-other/session.jsonl",
+                "/home/han/.codex/sessions/../secrets.jsonl",
+                "/home/han/.codex/sessions/2026\\..\\secret.jsonl",
+            ] {
+                assert!(rollout_path(root, invalid).is_none());
+            }
+        }
+    }
 }
