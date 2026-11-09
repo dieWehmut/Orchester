@@ -30,7 +30,7 @@ export const installSteps: readonly InstallStep[] = Object.freeze([
   {
     index: '03',
     title: 'Start a surface',
-    description: 'Open the local WebUI first, then use the Pages demo or desktop shell when you need them.',
+    description: 'Open the local WebUI first, then use the project site or desktop shell when you need them.',
     command: 'pnpm --filter @orchester/web dev',
     note: 'The default WebUI address is http://127.0.0.1:4173/.',
   },

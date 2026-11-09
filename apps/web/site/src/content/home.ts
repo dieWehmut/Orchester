@@ -51,7 +51,7 @@ export const homeAdapters: readonly HomeContentItem[] = Object.freeze([
     id: 'surfaces',
     icon: 'adapter',
     title: 'Multiple surfaces',
-    summary: 'Use the local WebUI, static demo, or Tauri shell without changing the core.',
+    summary: 'Use the local WebUI, project site, or Tauri shell without changing the core.',
     detail: 'The same interaction language scales from a browser tab to a desktop window.',
   },
 ])
