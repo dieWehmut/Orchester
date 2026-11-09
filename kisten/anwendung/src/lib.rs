@@ -32,3 +32,5 @@ pub use session_history::{
 pub use workspace_review::{
     WorkspaceReview, WorkspaceReviewChange, WorkspaceReviewError, WorkspaceReviewKind,
 };
+
+pub mod library;

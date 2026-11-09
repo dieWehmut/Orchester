@@ -149,6 +149,13 @@ fn api_router() -> Router<ServerContext> {
         .route("/runs/{id}/replay", post(replay_run_handler))
         .route("/runs/{id}/cancel", post(cancel_run_handler))
         .route("/runs/{id}/events", get(run_events_socket_handler))
+        .route(
+            "/library",
+            get(crate::library::get)
+                .put(crate::library::put)
+                .layer(DefaultBodyLimit::max(1024 * 1024)),
+        )
+        .route("/library/workspace", get(crate::library::workspace))
         .route("/sessions", get(session_list_handler))
         .route("/sessions/{id}", get(session_detail_handler))
         .route("/workspace/review", get(workspace_review_handler))

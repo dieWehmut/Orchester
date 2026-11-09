@@ -87,5 +87,7 @@ pub use workspace_review::{
     WorkspaceReviewKindDto, WORKSPACE_REVIEW_SCHEMA_VERSION,
 };
 
+mod library;
+
 mod remote;
 pub use remote::{RemoteControl, RemoteDevice};
