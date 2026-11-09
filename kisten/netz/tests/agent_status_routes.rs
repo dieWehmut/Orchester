@@ -23,13 +23,16 @@ impl AgentProcessSource for FixedProcessSource {
 }
 
 fn context_with_processes(names: impl IntoIterator<Item = &'static str>) -> ServerContext {
-    ServerContext::with_agent_process_source(
+    let context = ServerContext::with_agent_process_source(
         None,
         ServerControl::new(),
         Arc::new(FixedProcessSource(
             AgentProcessSnapshot::from_process_names(names),
         )),
-    )
+    );
+    let mut registry = context.registry();
+    registry.register(Arc::new(orchester_adapter::MockAdapter::new()));
+    context.with_registry(registry)
 }
 
 #[tokio::test]
@@ -59,7 +62,7 @@ async fn agent_status_route_returns_a_redaction_safe_runtime_snapshot() {
         .expect("agent status body");
     let json: Value = serde_json::from_slice(&body).expect("agent status JSON");
     assert_eq!(json["schema_version"], AGENT_STATUS_SCHEMA_VERSION);
-    assert_eq!(json["sequence"], 1);
+    assert_eq!(json["sequence"], 2);
     assert!(json["generated_at"].as_str().unwrap().ends_with('Z'));
 
     let agents = json["agents"].as_array().expect("agent array");
@@ -77,7 +80,7 @@ async fn agent_status_route_returns_a_redaction_safe_runtime_snapshot() {
     assert_eq!(mock["activity"], "idle");
     assert_eq!(mock["installed"], true);
     assert_eq!(mock["configured"], true);
-    assert_eq!(mock["authenticated"], true);
+    assert_eq!(mock["authenticated"], false);
     assert_eq!(mock["active_windows"], 0);
     assert_eq!(mock["active_sessions"], 0);
     assert_eq!(mock["active_runs"], 0);
@@ -111,7 +114,7 @@ async fn agent_status_route_refreshes_external_process_counts_before_responding(
         .await
         .expect("agent status body");
     let json: Value = serde_json::from_slice(&body).expect("agent status JSON");
-    assert_eq!(json["sequence"], 2);
+    assert_eq!(json["sequence"], 3);
     let codex = json["agents"]
         .as_array()
         .unwrap()
@@ -126,7 +129,7 @@ async fn agent_status_route_refreshes_external_process_counts_before_responding(
         .refresh_agent_processes()
         .await
         .expect("repeat process refresh");
-    assert_eq!(context.agent_status_store().snapshot().unwrap().sequence, 2);
+    assert_eq!(context.agent_status_store().snapshot().unwrap().sequence, 3);
 }
 
 #[tokio::test]
@@ -162,7 +165,7 @@ async fn agent_status_route_reflects_runtime_updates_from_the_shared_context() {
         .await
         .expect("agent status body");
     let json: Value = serde_json::from_slice(&body).expect("agent status JSON");
-    assert_eq!(json["sequence"], 2);
+    assert_eq!(json["sequence"], 3);
     let codex = json["agents"]
         .as_array()
         .unwrap()
