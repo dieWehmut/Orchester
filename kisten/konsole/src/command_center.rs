@@ -71,11 +71,35 @@ pub fn run(chat: &mut ChatSession) -> io::Result<Action> {
     let mut scroll = 0;
     let mut refresh = Instant::now() - Duration::from_secs(6);
     let (sender, receiver) = std::sync::mpsc::channel();
+    let (detail_sender, detail_receiver) =
+        std::sync::mpsc::channel::<(u64, Result<String, String>)>();
+    let mut detail_generation = 0_u64;
+    let mut detail_request: Option<(u64, Task)> = None;
+    let mut detail_loading = false;
     let mut loading = false;
     let mut dimensions = (0, 0);
     let mut dirty = true;
     let palette = crate::theme::load_user_theme().palette();
     loop {
+        if let Ok((generation, result)) = detail_receiver.try_recv() {
+            detail_loading = false;
+            if generation == detail_generation && detail.is_some() {
+                detail = Some(result.unwrap_or_else(|error| error));
+                scroll = 0;
+                dirty = true;
+            }
+        }
+        if !detail_loading {
+            if let Some((generation, task)) = detail_request.take() {
+                detail_loading = true;
+                let sender = detail_sender.clone();
+                // Keep one read in flight. A newer selection replaces only the
+                // queued request, and closing detail invalidates its generation.
+                std::thread::spawn(move || {
+                    let _ = sender.send((generation, command_center_data::detail(&task)));
+                });
+            }
+        }
         if refresh.elapsed() >= Duration::from_secs(5) && detail.is_none() && !loading {
             loading = true;
             refresh = Instant::now();
@@ -176,6 +200,8 @@ pub fn run(chat: &mut ChatSession) -> io::Result<Action> {
         if detail.is_some() {
             match key.code {
                 KeyCode::Esc => {
+                    detail_generation = detail_generation.wrapping_add(1);
+                    detail_request = None;
                     detail = None;
                     scroll = 0;
                 }
@@ -213,11 +239,17 @@ pub fn run(chat: &mut ChatSession) -> io::Result<Action> {
             }
             KeyCode::Enter => {
                 if let Some(task) = rows.get(selected) {
-                    detail = Some(command_center_data::detail(task).unwrap_or_else(|e| e));
+                    detail_generation = detail_generation.wrapping_add(1);
+                    detail_request = Some((detail_generation, (**task).clone()));
+                    detail = Some("Loading provider transcript…\n\nEsc: back".into());
                     scroll = 0;
                 }
             }
-            KeyCode::Char('?') => detail = Some(HELP.into()),
+            KeyCode::Char('?') => {
+                detail_generation = detail_generation.wrapping_add(1);
+                detail_request = None;
+                detail = Some(HELP.into());
+            }
             _ => {}
         }
     }

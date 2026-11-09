@@ -10,23 +10,25 @@ import ActivitySessionRow from './ActivitySessionRow.vue'
 const props = defineProps<{ provider: ExternalActivityProvider; activity: AgentActivity }>()
 const emit = defineEmits<{ provider: [value: ExternalActivityProvider]; close: []; newChat: []; select: [id: string] }>()
 const { t } = useI18n()
-const { sessions, selectedId, loading, prefs, isPinned, isUnread, projectKey, togglePin, toggleProject } = props.activity
+const { sessions, environments, environment, selectEnvironment, selectedId, loading, isPinned, isUnread, projectKey, togglePin } = props.activity
 const query = ref('')
 const searching = ref(false)
 const searchInput = ref<HTMLInputElement | null>(null)
-const expanded = ref({ pinned: true, projects: false, recent: true })
-const matches = computed(() => sessions.value.filter(row => `${row.title} ${row.project}`.toLocaleLowerCase().includes(query.value.trim().toLocaleLowerCase())))
+const expanded = ref({ pinned: true, projects: true })
+const matches = computed(() => sessions.value.filter(row => `${row.title} ${row.cwd ?? ''} ${row.project} ${row.environment ?? ''}`.toLocaleLowerCase().includes(query.value.trim().toLocaleLowerCase())))
 const pinned = computed(() => matches.value.filter(isPinned))
-const recent = computed(() => matches.value.filter(row => !isPinned(row)))
-const recentLimit = ref(50)
-watch(() => [props.provider, query.value], () => { recentLimit.value = 50 })
+const collapsed = ref(new Set<string>())
+const groupLimits = ref<Record<string, number>>({})
+const isOpen = (key: string) => !!query.value || !collapsed.value.has(key)
+function toggleGroup(key: string): void { if (collapsed.value.has(key)) collapsed.value.delete(key); else collapsed.value.add(key) }
+watch(() => [props.provider, query.value, environment.value], () => { groupLimits.value = {} })
 const projects = computed(() => {
   const groups = new Map<string, typeof sessions.value>()
-  for (const row of matches.value) if (row.project) {
+  for (const row of matches.value) if (!isPinned(row)) {
     const key = projectKey(row)
     groups.set(key, [...(groups.get(key) ?? []), row])
   }
-  return [...groups].map(([key, rows]) => ({ key, title: rows[0]!.project, rows }))
+  return [...groups].map(([key, rows]) => ({ key, title: rows[0]!.cwd || rows[0]!.project || t('activity.ungrouped'), environment: rows[0]!.environment, rows }))
 })
 function search(): void { searching.value = true; void nextTick(() => searchInput.value?.focus()) }
 function closeSearch(): void { searching.value = false; query.value = '' }
@@ -46,6 +48,13 @@ function closeSearch(): void { searching.value = false; query.value = '' }
       <button type="button" class="activity-sidebar__icon" :aria-label="t('sessions.searchPlaceholder')" :aria-expanded="searching" @click="search"><Search :size="17" /></button>
     </div>
     <div v-if="searching" class="activity-sidebar__search"><input ref="searchInput" v-model="query" type="search" :aria-label="t('sessions.searchPlaceholder')" :placeholder="t('sessions.searchPlaceholder')" @keydown.escape="closeSearch" /><button type="button" :aria-label="t('activity.closeSearch')" @click="closeSearch"><X :size="15" /></button></div>
+    <label v-if="environments.length > 1 || environment" class="activity-sidebar__environment">
+      <span>{{ t('activity.environment') }}</span>
+      <select :value="environment" data-activity-environment-filter @change="selectEnvironment(($event.target as HTMLSelectElement).value)">
+        <option value="">{{ t('activity.allEnvironments') }}</option>
+        <option v-for="source in environments" :key="source.label" :value="source.label">{{ source.label }} ({{ source.count }})</option>
+      </select>
+    </label>
     <div class="activity-sidebar__scroll">
       <div v-if="loading && !sessions.length" class="activity-sidebar__empty"><Spinner :label="t('management.loading')" /></div>
       <template v-else>
@@ -57,14 +66,10 @@ function closeSearch(): void { searching.value = false; query.value = '' }
           <button type="button" class="activity-sidebar__heading" :aria-expanded="expanded.projects" @click="expanded.projects = !expanded.projects">{{ t('activity.projects') }}<ChevronRight :size="13" :data-expanded="expanded.projects" /></button>
           <div v-if="expanded.projects || query">
             <div v-for="group in projects" :key="group.key" class="activity-sidebar__project">
-              <button type="button" class="activity-sidebar__folder" :aria-expanded="prefs.projects.includes(group.key) || !!query" :data-activity-project="group.key" @click="toggleProject(group.key)"><FolderOpen v-if="prefs.projects.includes(group.key) || query" :size="18" /><Folder v-else :size="18" /><span>{{ group.title }}</span></button>
-              <div v-if="prefs.projects.includes(group.key) || query"><ActivitySessionRow v-for="row in group.rows" :key="row.id" :session="row" :selected="selectedId === row.id" :pinned="isPinned(row)" :unread="isUnread(row)" nested @select="emit('select', $event)" @pin="togglePin(row)" /></div>
+              <button type="button" class="activity-sidebar__folder" :title="[group.title, group.environment].filter(Boolean).join(' · ')" :aria-expanded="isOpen(group.key)" :data-activity-project="group.key" @click="toggleGroup(group.key)"><FolderOpen v-if="isOpen(group.key)" :size="18" /><Folder v-else :size="18" /><span class="activity-sidebar__path">{{ group.title }}</span><span class="activity-sidebar__count" :aria-label="t('activity.sessionCount', { count: String(group.rows.length) })">{{ group.rows.length }}</span></button><p v-if="group.environment" class="activity-sidebar__group-environment">{{ group.environment }}</p>
+              <div v-if="isOpen(group.key)"><ActivitySessionRow v-for="row in group.rows.slice(0, groupLimits[group.key] ?? 50)" :key="row.id" :session="row" :selected="selectedId === row.id" :pinned="isPinned(row)" :unread="isUnread(row)" nested @select="emit('select', $event)" @pin="togglePin(row)" /><button v-if="group.rows.length > (groupLimits[group.key] ?? 50)" type="button" class="activity-sidebar__heading" data-activity-more @click="groupLimits[group.key] = (groupLimits[group.key] ?? 50) + 50">{{ t('activity.showMore', { count: String(group.rows.length - (groupLimits[group.key] ?? 50)) }) }}</button></div>
             </div>
           </div>
-        </section>
-        <section class="activity-sidebar__section" data-activity-section="recent">
-          <button type="button" class="activity-sidebar__heading" :aria-expanded="expanded.recent" @click="expanded.recent = !expanded.recent">{{ t('activity.recent') }}<ChevronRight :size="13" :data-expanded="expanded.recent" /></button>
-          <div v-if="expanded.recent"><ActivitySessionRow v-for="row in recent.slice(0, recentLimit)" :key="row.id" :session="row" :selected="selectedId === row.id" :pinned="false" :unread="isUnread(row)" @select="emit('select', $event)" @pin="togglePin(row)" /><button v-if="recent.length > recentLimit" type="button" class="activity-sidebar__heading" data-activity-more @click="recentLimit += 50">{{ t('activity.showMore', { count: String(recent.length - recentLimit) }) }}</button></div>
         </section>
         <p v-if="query && !matches.length" class="activity-sidebar__empty" role="status">{{ t('sessions.filterEmpty') }}</p>
       </template>
@@ -82,6 +87,8 @@ function closeSearch(): void { searching.value = false; query.value = '' }
 .activity-sidebar__provider :deep(.app-menu__item) { gap: var(--space-2); }
 .activity-sidebar__provider :deep(.app-menu__surface) { min-inline-size: 190px; max-inline-size: 100%; }
 .activity-sidebar__choice { flex: 1; white-space: nowrap; }
+.activity-sidebar__environment { display: grid; gap: var(--space-1); padding: 0 var(--space-3) var(--space-3); color: var(--color-text-tertiary); font-size: 12px; }
+.activity-sidebar__environment select { inline-size: 100%; min-inline-size: 0; padding: var(--space-2); border: 1px solid var(--color-border-base); border-radius: 8px; background: var(--color-bg-surface); color: var(--color-text-secondary); font: inherit; }
 .activity-sidebar__provider strong { flex: 1; text-align: start; font-weight: 500; }
 .activity-sidebar__primary { display: flex; gap: 2px; padding: 0 var(--space-2) var(--space-3); }
 .activity-sidebar__new { display: flex; flex: 1; align-items: center; gap: calc(var(--space-1) * 2.5); min-block-size: 36px; border: 0; border-radius: 10px; padding: calc(var(--space-1) * 1.75) calc(var(--space-1) * 2.5); background: var(--activity-selection); color: inherit; font: inherit; font-size: 14px; cursor: pointer; text-align: start; }
@@ -102,4 +109,8 @@ function closeSearch(): void { searching.value = false; query.value = '' }
 .activity-sidebar__search input { inline-size: 100%; min-inline-size: 0; padding: var(--space-2); color: inherit; background: none; border: 0; font: inherit; font-size: 13px; }
 .activity-sidebar__search button { display: grid; place-items: center; padding: calc(var(--space-1) * 1.25); border: 0; color: inherit; background: none; cursor: pointer; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: -2px; }
+.activity-sidebar__path { flex: 1; min-inline-size: 0; font-family: var(--font-mono, monospace); font-size: 12px; }
+.activity-sidebar__count { flex-shrink: 0; color: var(--color-text-tertiary); font-variant-numeric: tabular-nums; }
+.activity-sidebar__group-environment { margin: 0 10px 4px 38px; font-size: 11px; color: var(--color-text-tertiary); overflow-wrap: anywhere; }
+.activity-sidebar__project + .activity-sidebar__project { margin-top: 14px; }
 </style>

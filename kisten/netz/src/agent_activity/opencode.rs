@@ -21,6 +21,10 @@ pub(super) fn read_provider(path: Option<&Path>) -> (&'static str, Vec<ActivityD
 }
 
 fn read_database(path: &Path) -> rusqlite::Result<Vec<ActivityDetail>> {
+    #[cfg(windows)]
+    let snapshot = super::wsl::database_snapshot(path);
+    #[cfg(windows)]
+    let path = snapshot.as_ref().map_or(path, |file| file.path());
     let db = Connection::open_with_flags(
         path,
         OpenFlags::SQLITE_OPEN_READ_ONLY | OpenFlags::SQLITE_OPEN_NO_MUTEX,
@@ -42,6 +46,7 @@ fn read_database(path: &Path) -> rusqlite::Result<Vec<ActivityDetail>> {
     for (id, title, directory, updated) in metadata {
         let mut row = empty_detail("opencode", &id, updated);
         row.summary.title = super::clip(&title, 120);
+        row.summary.cwd = Some(directory.clone());
         row.summary.project = project(&directory);
         row.summary.project_id = Some(super::opaque_id("opencode-project", &directory));
         let mut messages = db.prepare("SELECT substr(data, 1, 65537) FROM message WHERE session_id = ?1 ORDER BY time_created DESC, id DESC LIMIT 1")?;

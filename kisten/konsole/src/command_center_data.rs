@@ -18,6 +18,11 @@ use sha2::{Digest, Sha256};
 const TEXT_LIMIT: usize = 48 * 1024;
 const HISTORY_LIMIT: usize = 100;
 const UNKNOWN: &str = "—";
+static ACTIVITY: OnceLock<LocalAgentActivity> = OnceLock::new();
+
+fn local_activity() -> &'static LocalAgentActivity {
+    ACTIVITY.get_or_init(|| LocalAgentActivity::new(AgentActivityRoots::from_environment()))
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TaskStatus {
@@ -50,12 +55,9 @@ pub struct LoadResult {
 }
 
 pub fn load() -> Result<LoadResult, String> {
-    static ACTIVITY: OnceLock<LocalAgentActivity> = OnceLock::new();
     let paths =
         OrchesterPaths::discover().map_err(|_| "Workspace could not be read.".to_owned())?;
-    let activity =
-        ACTIVITY.get_or_init(|| LocalAgentActivity::new(AgentActivityRoots::from_environment()));
-    load_from(&paths, activity)
+    load_from(&paths, local_activity())
 }
 
 fn load_from(paths: &OrchesterPaths, activity: &LocalAgentActivity) -> Result<LoadResult, String> {
@@ -131,7 +133,21 @@ fn load_from(paths: &OrchesterPaths, activity: &LocalAgentActivity) -> Result<Lo
 }
 
 pub fn detail(task: &Task) -> Result<String, String> {
+    if task.id.starts_with("external:") {
+        return detail_from(task, local_activity());
+    }
     Ok(task.details.clone())
+}
+
+fn detail_from(task: &Task, activity: &LocalAgentActivity) -> Result<String, String> {
+    let Some(id) = task.id.strip_prefix("external:") else {
+        return Ok(task.details.clone());
+    };
+    let row = activity
+        .detail(id)
+        .map_err(|_| "Local provider conversation could not be read.".to_owned())?
+        .ok_or_else(|| "Local provider conversation is no longer available.".to_owned())?;
+    Ok(external_task(&row, now_ms()).details)
 }
 
 fn history_task(index: usize, record: &SessionRecord, now: i64) -> Task {
@@ -439,6 +455,57 @@ mod tests {
         assert_eq!(tasks[1].model, "historic-model");
         assert!(tasks[1].resume_handle.is_none());
         assert!(!paths.run_database().exists());
+        std::fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn opens_historical_summary_transcripts_on_demand_without_resume_handles() {
+        use std::time::Duration;
+        let root = std::env::temp_dir().join(format!(
+            "orchester-command-history-{}-{}",
+            std::process::id(),
+            now_ms()
+        ));
+        let sessions = root.join("codex");
+        std::fs::create_dir_all(&sessions).unwrap();
+        let prompt = format!("Historical 000 {}", "preserved user context ".repeat(20));
+        for index in 0..140 {
+            let path = sessions.join(format!("task-{index:03}.jsonl"));
+            let text = if index == 0 {
+                prompt.clone()
+            } else {
+                format!("Historical {index:03}")
+            };
+            let user = serde_json::json!({"type":"response_item", "payload":{"type":"message", "role":"user", "content":[{"type":"input_text", "text":text}]}});
+            let assistant = serde_json::json!({"type":"response_item", "payload":{"type":"message", "role":"assistant", "content":[{"type":"output_text", "text":"Historical assistant body"}]}});
+            std::fs::write(&path, format!("{user}\n{assistant}\n")).unwrap();
+            std::fs::OpenOptions::new()
+                .write(true)
+                .open(&path)
+                .unwrap()
+                .set_modified(UNIX_EPOCH + Duration::from_secs(1_000 + index))
+                .unwrap();
+        }
+        let paths = OrchesterPaths::new(root.join("home"), root.join("workspace"));
+        let activity = LocalAgentActivity::new(AgentActivityRoots {
+            codex: Some(sessions.clone()),
+            ..AgentActivityRoots::default()
+        });
+        let result = load_from(&paths, &activity).unwrap();
+        assert_eq!(result.tasks.len(), 140);
+        let task = result
+            .tasks
+            .iter()
+            .find(|task| task.title.starts_with("Historical 000"))
+            .unwrap();
+        assert!(!task.details.contains("Historical assistant body"));
+        let details = detail_from(task, &activity).unwrap();
+        assert!(details.contains(&prompt));
+        assert!(details.contains("Historical assistant body"));
+        assert!(task.resume_handle.is_none());
+        assert!(!paths.run_database().exists());
+        std::fs::remove_file(sessions.join("task-000.jsonl")).unwrap();
+        assert!(detail_from(task, &activity).is_err());
         std::fs::remove_dir_all(root).unwrap();
     }
 

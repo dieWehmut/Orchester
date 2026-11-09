@@ -4,6 +4,7 @@ mod managed;
 mod metadata;
 mod opencode;
 mod transcript;
+pub(crate) mod wsl;
 
 use axum::{
     extract::{Path, Query, State},
@@ -35,6 +36,7 @@ const TEXT_LIMIT: usize = 256 * 1024;
 #[derive(Clone, Default)]
 pub struct AgentActivityRoots {
     pub codex: Option<PathBuf>,
+    pub discover_wsl: bool,
     pub claude: Option<PathBuf>,
     pub opencode: Option<PathBuf>,
 }
@@ -54,6 +56,7 @@ impl AgentActivityRoots {
             .map(PathBuf::from)
             .or_else(|| home.as_ref().map(|p| p.join(".local/share")));
         Self {
+            discover_wsl: cfg!(windows),
             codex: codex.map(|p| p.join("sessions")),
             claude: claude.map(|p| p.join("projects")),
             opencode: std::env::var_os("OPENCODE_DB")
@@ -93,8 +96,12 @@ pub struct ActivitySummary {
     pub id: String,
     pub provider: String,
     pub source: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub environment: Option<String>,
     pub title: String,
     pub project: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cwd: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub project_id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -118,10 +125,14 @@ pub struct ActivityDetail {
     pub next_before: Option<u64>,
     #[serde(skip)]
     content_limited: bool,
+    #[serde(skip)]
+    internal_subagent: bool,
 }
 
 #[derive(Clone, Serialize)]
 pub struct ActivitySource {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub environment: Option<String>,
     pub provider: String,
     pub status: &'static str,
 }
@@ -173,7 +184,36 @@ impl LocalAgentActivity {
         });
         Ok(LocalAgentActivitySnapshot { sources, sessions })
     }
+
+    /// Read a selected session's transcript excerpt without starting a provider.
+    /// Historical Codex catalog rows omit excerpts to bound the shared cache;
+    /// local frontends should call this when opening their conversation detail.
+    pub fn detail(&self, id: &str) -> Result<Option<ActivityDetail>, LocalAgentActivityError> {
+        if id.len() != 64 || !id.bytes().all(|byte| byte.is_ascii_hexdigit()) {
+            return Ok(None);
+        }
+        let (_, sessions) = self.store.snapshot().map_err(|_| LocalAgentActivityError)?;
+        let Some(mut row) = sessions.into_iter().find(|row| row.summary.id == id) else {
+            return Ok(None);
+        };
+        if row.summary.provider == "codex" && row.summary.source == "external" {
+            let Some(detail) = self
+                .store
+                .codex_detail(id, None)
+                .map_err(|_| LocalAgentActivityError)?
+            else {
+                return Ok(None);
+            };
+            row = detail;
+        }
+        normalize_external_activity(&mut row, now_ms());
+        Ok(Some(row))
+    }
 }
+
+type SourcePageCaches = HashMap<PathBuf, Arc<Mutex<PageCache>>>;
+
+type PageCache = HashMap<(PathBuf, Option<u64>), files::CachedFile>;
 
 #[derive(Default)]
 struct Cache {
@@ -181,23 +221,55 @@ struct Cache {
     sources: Vec<ActivitySource>,
     sessions: Vec<ActivityDetail>,
     files: HashMap<PathBuf, files::CachedFile>,
-    pages: HashMap<(PathBuf, Option<u64>), files::CachedFile>,
+    pages: PageCache,
 }
 
 #[derive(Clone)]
 pub(crate) struct AgentActivityStore {
     roots: AgentActivityRoots,
     cache: Arc<Mutex<Cache>>,
+    wsl: wsl::Discovery,
+    wsl_pages: Arc<Mutex<SourcePageCaches>>,
 }
 
 impl AgentActivityStore {
+    fn wsl_page_cache(&self, root: &std::path::Path) -> Result<Arc<Mutex<PageCache>>, ()> {
+        let mut sources = self.wsl_pages.lock().map_err(|_| ())?;
+        Ok(sources.entry(root.to_path_buf()).or_default().clone())
+    }
+    fn wsl_codex_detail(
+        &self,
+        root: &std::path::Path,
+        id: &str,
+        before: Option<u64>,
+    ) -> Result<Option<ActivityDetail>, ()> {
+        let source = self.wsl_page_cache(root)?;
+        let mut pages = source.try_lock().map_err(|_| ())?;
+        files::codex_detail(Some(root), id, before, &mut pages).map_err(|_| ())
+    }
+
     fn codex_detail(&self, id: &str, before: Option<u64>) -> Result<Option<ActivityDetail>, ()> {
+        if let Some((root, original, environment)) = self.wsl.resolve(id) {
+            let mut row = self.wsl_codex_detail(&root, &original, before)?;
+            if let Some(row) = &mut row {
+                row.summary.id = id.into();
+                apply_environment(row, &environment);
+            }
+            return Ok(row);
+        }
         let mut cache = self.cache.lock().map_err(|_| ())?;
-        files::codex_detail(self.roots.codex.as_deref(), id, before, &mut cache.pages)
-            .map_err(|_| ())
+        let mut row =
+            files::codex_detail(self.roots.codex.as_deref(), id, before, &mut cache.pages)
+                .map_err(|_| ())?;
+        if let Some(row) = &mut row {
+            apply_environment(row, &local_environment());
+        }
+        Ok(row)
     }
     pub fn new(roots: AgentActivityRoots) -> Self {
         Self {
+            wsl: wsl::Discovery::new(roots.discover_wsl),
+            wsl_pages: Arc::default(),
             roots,
             cache: Arc::new(Mutex::new(Cache::default())),
         }
@@ -217,6 +289,7 @@ impl AgentActivityStore {
             let (status, mut rows) =
                 files::read_provider(provider, root.as_deref(), &mut cache.files);
             sources.push(ActivitySource {
+                environment: Some(local_environment()),
                 provider: provider.into(),
                 status,
             });
@@ -224,13 +297,17 @@ impl AgentActivityStore {
         }
         let (status, mut rows) = opencode::read_provider(self.roots.opencode.as_deref());
         sources.push(ActivitySource {
+            environment: Some(local_environment()),
             provider: "opencode".into(),
             status,
         });
         sessions.append(&mut rows);
-        if cache.files.len() > 128 {
-            cache.files.clear();
+        for row in &mut sessions {
+            apply_environment(row, &local_environment());
         }
+        let (wsl_sources, wsl_sessions) = self.wsl.snapshot();
+        sources.extend(wsl_sources);
+        sessions.extend(wsl_sessions);
         cache.sources = sources.clone();
         cache.sessions = sessions.clone();
         cache.refreshed = Some(Instant::now());
@@ -283,6 +360,7 @@ async fn snapshot(
             api_error_response(ApiErrorCode::Unavailable, request_id_from_headers(headers))
         })?;
     sources.push(ActivitySource {
+        environment: Some(local_environment()),
         provider: "orchester".into(),
         status: "available",
     });
@@ -372,14 +450,18 @@ pub(crate) async fn detail(
         })?;
     if row.summary.provider == "codex" && row.summary.source == "external" {
         let store = context.agent_activity().clone();
-        row = tokio::task::spawn_blocking(move || store.codex_detail(&id, query.before))
-            .await
-            .ok()
-            .and_then(Result::ok)
-            .flatten()
-            .ok_or_else(|| {
-                api_error_response(ApiErrorCode::Unavailable, request_id_from_headers(&headers))
-            })?;
+        row = tokio::time::timeout(
+            Duration::from_secs(4),
+            tokio::task::spawn_blocking(move || store.codex_detail(&id, query.before)),
+        )
+        .await
+        .ok()
+        .and_then(Result::ok)
+        .and_then(Result::ok)
+        .flatten()
+        .ok_or_else(|| {
+            api_error_response(ApiErrorCode::Unavailable, request_id_from_headers(&headers))
+        })?;
     } else if query.before.is_some() {
         return Err(api_error_response(
             ApiErrorCode::ValidationFailed,
@@ -422,8 +504,10 @@ fn empty_detail(provider: &str, source_id: &str, updated_at: i64) -> ActivityDet
             id: opaque_id(provider, source_id),
             provider: provider.into(),
             source: "external",
+            environment: None,
             title: String::new(),
             project: String::new(),
+            cwd: None,
             project_id: None,
             pinned: None,
             updated_at,
@@ -435,6 +519,7 @@ fn empty_detail(provider: &str, source_id: &str, updated_at: i64) -> ActivityDet
         turns: Vec::new(),
         next_before: None,
         content_limited: false,
+        internal_subagent: false,
     }
 }
 
@@ -499,3 +584,20 @@ fn finish(row: &mut ActivityDetail) {
 
 #[cfg(test)]
 mod tests;
+
+fn local_environment() -> String {
+    if cfg!(windows) {
+        "Windows".into()
+    } else if let Ok(distro) = std::env::var("WSL_DISTRO_NAME") {
+        format!("WSL · {distro}")
+    } else {
+        std::env::consts::OS.into()
+    }
+}
+
+fn apply_environment(row: &mut ActivityDetail, environment: &str) {
+    row.summary.environment = Some(environment.into());
+    if let Some(id) = &row.summary.project_id {
+        row.summary.project_id = Some(opaque_id(environment, id));
+    }
+}

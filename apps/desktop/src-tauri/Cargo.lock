@@ -2545,6 +2545,8 @@ version = "0.1.2"
 dependencies = [
  "axum",
  "cookie",
+ "fs2",
+ "futures",
  "getrandom 0.3.4",
  "mime_guess",
  "orchester-anwendung",
@@ -2559,6 +2561,7 @@ dependencies = [
  "serde_json",
  "sha2",
  "sysinfo",
+ "tempfile",
  "thiserror 2.0.20",
  "time",
  "tokio",
@@ -2585,6 +2588,7 @@ version = "0.1.2"
 dependencies = [
  "async-trait",
  "futures",
+ "libc",
  "orchester-protokoll",
  "serde",
  "serde_json",
@@ -2593,6 +2597,7 @@ dependencies = [
  "tokio-stream",
  "toml 0.8.2",
  "tracing",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -4157,6 +4162,19 @@ dependencies = [
  "dunce",
  "embed-resource",
  "toml 1.1.6+spec-1.1.0",
+]
+
+[[package]]
+name = "tempfile"
+version = "3.27.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "32497e9a4c7b38532efcdebeef879707aa9f794296a4f0244f6f69e9bc8574bd"
+dependencies = [
+ "fastrand",
+ "getrandom 0.4.3",
+ "once_cell",
+ "rustix",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]

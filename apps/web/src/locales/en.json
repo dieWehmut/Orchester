@@ -657,6 +657,11 @@
     "voiceError": "Voice input could not start. Check microphone access and try again."
   },
   "activity": {
+    "ungrouped": "Other conversations",
+    "inactive": "Inactive",
+    "sessionCount": "{count} conversations",
+    "environment": "Environment",
+    "allEnvironments": "All environments",
     "work": "Work details",
     "working": "Working",
     "workingFor": "Working · {duration}",

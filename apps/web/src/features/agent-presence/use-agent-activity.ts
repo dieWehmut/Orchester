@@ -18,8 +18,16 @@ function preferences(provider: string): Preferences {
 export function useAgentActivity(provider: Ref<ExternalActivityProvider | null>) {
   const stores = useAppStores()
   const api = createAgentActivityApi(stores.http)
-  const sessions = ref<ActivitySummary[]>([])
+  const allSessions = ref<ActivitySummary[]>([])
+  const environment = ref('')
+  const sessions = computed(() => allSessions.value.filter(row => !environment.value || row.environment === environment.value))
   const sources = ref<ActivitySource[]>([])
+  const environments = computed(() => [...new Set([
+    ...sources.value.filter(source => source.provider === provider.value).map(source => source.environment),
+    ...allSessions.value.map(row => row.environment),
+  ].filter((value): value is string => !!value))].sort().map(label => ({
+    label, count: allSessions.value.filter(row => row.environment === label).length,
+  })))
   const selectedId = ref<string | null>(null)
   const detail = ref<ActivityDetail | null>(null)
   const loading = ref(true)
@@ -30,7 +38,13 @@ export function useAgentActivity(provider: Ref<ExternalActivityProvider | null>)
   let olderController: AbortController | null = null
   let historyLoaded = false
   const prefs = ref<Preferences>(preferences(provider.value ?? 'codex'))
-  const sourceStatus = computed(() => sources.value.find(source => source.provider === provider.value)?.status)
+  const sourceStatus = computed(() => {
+    const relevant = sources.value.filter(source => source.provider === provider.value && (!environment.value || source.environment === environment.value))
+    if (relevant.some(source => source.status === 'partial')) return 'partial'
+    const unreadable = relevant.some(source => source.status === 'unavailable')
+    const available = relevant.some(source => source.status === 'available')
+    return unreadable ? available ? 'partial' : 'unavailable' : available ? 'available' : 'not_found'
+  })
   let generation = 0
   let controller: AbortController | null = null
   let timer: ReturnType<typeof setTimeout> | null = null
@@ -44,7 +58,7 @@ export function useAgentActivity(provider: Ref<ExternalActivityProvider | null>)
   function isUnread(row: ActivitySummary): boolean {
     return selectedId.value !== row.id && prefs.value.seen[row.id] !== undefined && row.updated_at > prefs.value.seen[row.id]!
   }
-  function projectKey(row: ActivitySummary): string { return row.project_id ?? `${row.provider}:${row.project}` }
+  function projectKey(row: ActivitySummary): string { return `${row.provider}:${row.environment ?? ''}:${row.cwd || row.project_id || row.project}` }
   function toggleProject(key: string): void {
     prefs.value.projects = prefs.value.projects.includes(key) ? prefs.value.projects.filter(value => value !== key) : [...prefs.value.projects, key]
     persist()
@@ -66,10 +80,10 @@ export function useAgentActivity(provider: Ref<ExternalActivityProvider | null>)
     try {
       const list = await api.list(provider.value, signal)
       if (current !== generation || signal.aborted) return
-      sessions.value = list.sessions.filter(row => row.provider === provider.value && row.source === 'external')
+      allSessions.value = list.sessions.filter(row => row.provider === provider.value && row.source === 'external')
         .sort((a, b) => b.updated_at - a.updated_at || a.id.localeCompare(b.id))
       sources.value = list.sources
-      for (const row of sessions.value) if (prefs.value.seen[row.id] === undefined) prefs.value.seen[row.id] = baseline ? row.updated_at : 0
+      for (const row of allSessions.value) if (prefs.value.seen[row.id] === undefined) prefs.value.seen[row.id] = baseline ? row.updated_at : 0
       baseline = false
       if (!sessions.value.some(row => row.id === selectedId.value)) {
         selectedId.value = sessions.value.find(row => row.state === 'active')?.id ?? sessions.value[0]?.id ?? null
@@ -117,6 +131,12 @@ export function useAgentActivity(provider: Ref<ExternalActivityProvider | null>)
     finally { if (current === generation) { loading.value = false; refreshing.value = false; queue() } }
   }
   function refresh(): void { clearRequest(); refreshing.value = false; void load() }
+  function selectEnvironment(value: string): void {
+    if (value === environment.value) return
+    environment.value = value
+    selectedId.value = null; detail.value = null; detailSnapshot = ''; historyLoaded = false; olderError.value = false; loading.value = true
+    refresh()
+  }
   async function loadOlder(): Promise<void> {
     const currentDetail = detail.value
     if (!currentDetail?.next_before || loadingOlder.value) return
@@ -144,7 +164,7 @@ export function useAgentActivity(provider: Ref<ExternalActivityProvider | null>)
   }
   function visibilityChanged(): void { if (document.visibilityState === 'visible') refresh() }
   watch(() => [provider.value, stores.bootstrap.status.value], () => {
-    clearRequest(); sessions.value = []; sources.value = []; detail.value = null; selectedId.value = null
+    clearRequest(); allSessions.value = []; sources.value = []; detail.value = null; selectedId.value = null; environment.value = ''
     detailSnapshot = ''
     historyLoaded = false; olderError.value = false
     loading.value = true; refreshing.value = false; error.value = false
@@ -155,6 +175,6 @@ export function useAgentActivity(provider: Ref<ExternalActivityProvider | null>)
   }, { immediate: true })
   onMounted(() => document.addEventListener('visibilitychange', visibilityChanged))
   onUnmounted(() => { disposed = true; clearRequest(); document.removeEventListener('visibilitychange', visibilityChanged) })
-  return { sessions, sources, selectedId, detail, loading, refreshing, error, loadingOlder, olderError, loadOlder, sourceStatus, prefs, isPinned, togglePin, isUnread, projectKey, toggleProject, refresh, select }
+  return { sessions, sources, environments, environment, selectEnvironment, selectedId, detail, loading, refreshing, error, loadingOlder, olderError, loadOlder, sourceStatus, prefs, isPinned, togglePin, isUnread, projectKey, toggleProject, refresh, select }
 }
 export type AgentActivity = ReturnType<typeof useAgentActivity>

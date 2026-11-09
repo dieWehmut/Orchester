@@ -723,3 +723,193 @@ async fn managed_runs_expose_current_content_without_reasoning() {
     assert_eq!(rows[0].entries[1].text, "Hello world");
     assert_eq!(rows[0].summary.source, "managed");
 }
+
+#[test]
+fn unavailable_wsl_detail_gate_does_not_lock_local_snapshot() {
+    let store = AgentActivityStore::new(AgentActivityRoots::default());
+    let remote = store
+        .wsl_page_cache(std::path::Path::new("source-a"))
+        .unwrap();
+    let _remote = remote.lock().unwrap();
+    assert!(store.snapshot().is_ok());
+}
+
+#[test]
+fn working_directory_survives_environment_project_isolation() {
+    let mut row = transcript::parse(
+        "codex",
+        "session",
+        1,
+        &[(
+            0,
+            serde_json::json!({"type":"session_meta","payload":{"cwd":"/home/user/project"}}),
+        )],
+    );
+    assert_eq!(row.summary.cwd.as_deref(), Some("/home/user/project"));
+    let mut other = row.clone();
+    apply_environment(&mut row, "Windows");
+    apply_environment(&mut other, "WSL · Ubuntu");
+    assert_ne!(row.summary.project_id, other.summary.project_id);
+    assert_eq!(row.summary.cwd, other.summary.cwd);
+}
+
+#[test]
+fn stalled_wsl_source_does_not_block_another_sources_detail() {
+    let fixture = Fixture::new();
+    fixture.file(
+        "session.jsonl",
+        &[codex_message("user", "Second environment")],
+    );
+    let store = AgentActivityStore::new(AgentActivityRoots::default());
+    let a = store
+        .wsl_page_cache(std::path::Path::new("source-a"))
+        .unwrap();
+    let _stalled = a.lock().unwrap();
+    assert!(store
+        .wsl_codex_detail(std::path::Path::new("source-a"), "unused", None)
+        .is_err());
+    let id = opaque_id("codex", "session.jsonl");
+    let row = store
+        .wsl_codex_detail(&fixture.0, &id, None)
+        .unwrap()
+        .unwrap();
+    assert_eq!(row.entries[0].text, "Second environment");
+}
+
+#[test]
+fn codex_without_an_index_keeps_older_project_sessions() {
+    let fixture = Fixture::new();
+    for n in 0..30 {
+        fixture.file(&format!("session-{n}.jsonl"), &[
+            serde_json::json!({"type":"session_meta","payload":{"cwd":format!("/projects/{n}")}}),
+            codex_message("user", "project history"),
+        ]);
+    }
+    let mut cache = HashMap::new();
+    let (status, rows) = files::read_provider("codex", Some(&fixture.0), &mut cache);
+    assert_eq!(status, "available");
+    assert_eq!(rows.len(), 30);
+    assert!(rows.iter().all(|row| row.summary.cwd.is_some()));
+}
+
+#[test]
+fn catalog_over_128_sessions_reuses_summaries_and_prunes_deleted_files() {
+    use std::time::{Duration, SystemTime};
+    let fixture = Fixture::new();
+    let mut paths = Vec::new();
+    for n in 0..160 {
+        let path = fixture.file(
+            &format!("session-{n:03}.jsonl"),
+            &[codex_message("user", &format!("Task {n:03}"))],
+        );
+        fs::OpenOptions::new()
+            .write(true)
+            .open(&path)
+            .unwrap()
+            .set_modified(SystemTime::UNIX_EPOCH + Duration::from_secs(1_000 + n))
+            .unwrap();
+        paths.push(path);
+    }
+    let reader = LocalAgentActivity::new(AgentActivityRoots {
+        codex: Some(fixture.0.clone()),
+        ..AgentActivityRoots::default()
+    });
+    let store = &reader.store;
+    let (_, rows) = store.snapshot().unwrap();
+    assert_eq!(rows.len(), 160);
+    assert_eq!(store.cache.lock().unwrap().files.len(), 160);
+    assert_eq!(
+        rows.iter().filter(|row| !row.entries.is_empty()).count(),
+        128
+    );
+    let oldest = rows
+        .iter()
+        .find(|row| row.summary.title == "Task 000")
+        .unwrap();
+    assert!(oldest.entries.is_empty());
+    assert_eq!(
+        reader.detail(&oldest.summary.id).unwrap().unwrap().entries[0].text,
+        "Task 000"
+    );
+    assert!(reader.detail("missing").unwrap().is_none());
+
+    // An unchanged file fingerprint must use the cached summary. Replace only
+    // this isolated fixture's bytes and restore its exact length and mtime.
+    let metadata = fs::metadata(&paths[0]).unwrap();
+    fs::write(&paths[0], vec![b'x'; metadata.len() as usize]).unwrap();
+    fs::OpenOptions::new()
+        .write(true)
+        .open(&paths[0])
+        .unwrap()
+        .set_modified(metadata.modified().unwrap())
+        .unwrap();
+    store.cache.lock().unwrap().refreshed = None;
+    let (_, cached) = store.snapshot().unwrap();
+    assert!(cached.iter().any(|row| row.summary.title == "Task 000"));
+    fs::remove_file(&paths[0]).unwrap();
+    store.cache.lock().unwrap().refreshed = None;
+    let (_, remaining) = store.snapshot().unwrap();
+    assert_eq!(remaining.len(), 159);
+    assert_eq!(store.cache.lock().unwrap().files.len(), 159);
+    assert!(!remaining.iter().any(|row| row.summary.title == "Task 000"));
+
+    let mut resumed = fs::OpenOptions::new().append(true).open(&paths[1]).unwrap();
+    writeln!(
+        resumed,
+        "{}",
+        codex_message("assistant", "Fresh fixture output")
+    )
+    .unwrap();
+    resumed
+        .set_modified(SystemTime::UNIX_EPOCH + Duration::from_secs(2_000))
+        .unwrap();
+    drop(resumed);
+    store.cache.lock().unwrap().refreshed = None;
+    let (_, refreshed) = store.snapshot().unwrap();
+    let updated = refreshed
+        .iter()
+        .find(|row| row.summary.title == "Task 001")
+        .unwrap();
+    assert_eq!(updated.entries.len(), 2);
+    assert_eq!(updated.entries[1].text, "Fresh fixture output");
+}
+
+#[test]
+fn catalog_excludes_explicit_subagent_sources_even_without_agent_role() {
+    let fixture = Fixture::new();
+    let sessions = fixture.0.join("sessions");
+    std::fs::create_dir_all(&sessions).unwrap();
+    let db = rusqlite::Connection::open(fixture.0.join("state_5.sqlite")).unwrap();
+    db.execute_batch("CREATE TABLE threads (id TEXT, rollout_path TEXT, title TEXT, cwd TEXT, updated_at INTEGER, archived INTEGER, agent_role TEXT, source TEXT);").unwrap();
+    for (id, source) in [
+        ("main", "cli"),
+        (
+            "child",
+            r#"{"subagent":{"thread_spawn":{"parent_thread_id":"main"}}}"#,
+        ),
+    ] {
+        let path = sessions.join(format!("{id}.jsonl"));
+        let records = [
+            serde_json::json!({"type":"session_meta","payload":{"source":serde_json::from_str::<serde_json::Value>(source).unwrap_or(serde_json::Value::String(source.into()))}}),
+            codex_message("user", "Task"),
+        ];
+        std::fs::write(
+            &path,
+            records.iter().map(|r| format!("{r}\n")).collect::<String>(),
+        )
+        .unwrap();
+        db.execute(
+            "INSERT INTO threads VALUES (?1,?2,'','/project',1,0,NULL,?3)",
+            rusqlite::params![id, path.to_string_lossy(), source],
+        )
+        .unwrap();
+    }
+    let mut cache = HashMap::new();
+    let (_, indexed) = files::read_provider("codex", Some(&sessions), &mut cache);
+    assert_eq!(indexed.len(), 1);
+    drop(db);
+    std::fs::remove_file(fixture.0.join("state_5.sqlite")).unwrap();
+    let (_, fallback) = files::read_provider("codex", Some(&sessions), &mut cache);
+    assert_eq!(fallback.len(), 1);
+    assert_eq!(indexed[0].summary.id, fallback[0].summary.id);
+}
