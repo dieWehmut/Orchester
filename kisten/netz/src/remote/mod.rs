@@ -48,6 +48,7 @@ struct Inner {
     _lease: std::fs::File,
     auth: Mutex<Auth>,
     runs: Mutex<HashMap<String, Run>>,
+    terminals: terminal::Terminals,
 }
 #[derive(Clone, Serialize, Deserialize, Default)]
 struct Auth {
@@ -210,6 +211,7 @@ impl RemoteControl {
             _lease: lease,
             auth: Mutex::new(auth),
             runs: Mutex::new(runs),
+            terminals: terminal::Terminals::default(),
         })))
     }
     fn save_run(&self, id: &str, run: &Run) -> std::io::Result<()> {
@@ -252,12 +254,23 @@ impl RemoteControl {
         let mut a = self.0.auth.lock().unwrap();
         let previous = a.clone();
         let old = a.tokens.len();
+        let revoked: Vec<_> = a
+            .tokens
+            .iter()
+            .filter(|(_, d)| d.info.device_id == id)
+            .map(|(key, _)| key.clone())
+            .collect();
         a.tokens.retain(|_, d| d.info.device_id != id);
         if let Err(error) = self.save("auth", &*a) {
             *a = previous;
             return Err(error);
         }
-        Ok(old != a.tokens.len())
+        let removed = old != a.tokens.len();
+        drop(a);
+        for key in revoked {
+            self.0.terminals.revoke(&key);
+        }
+        Ok(removed)
     }
     fn save<T: Serialize>(&self, kind: &str, value: &T) -> std::io::Result<()> {
         write_value(
@@ -266,11 +279,12 @@ impl RemoteControl {
             value,
         )
     }
-    /// Request cancellation of every active delegate before listener shutdown.
+    /// Stop delegates and drain terminal IO before listener shutdown.
     pub async fn shutdown(&self) {
+        self.0.stopping.store(true, Ordering::SeqCst);
+        self.0.terminals.shutdown();
         {
             let runs = self.0.runs.lock().unwrap();
-            self.0.stopping.store(true, Ordering::SeqCst);
             for run in runs.values() {
                 run.cancel.cancel();
             }
@@ -283,6 +297,7 @@ impl RemoteControl {
                 .unwrap()
                 .values()
                 .any(|r| r.summary["state"] == "running")
+                && !self.0.terminals.running()
             {
                 return;
             }
@@ -301,6 +316,16 @@ impl RemoteControl {
             .route("/remote/v1/runs/{id}/events", get(events))
             .route("/remote/v1/runs/{id}/cancel", post(cancel))
             .route("/remote/v1/device", axum::routing::delete(revoke))
+            .route(
+                "/remote/v1/terminals",
+                get(terminal::list).post(terminal::create),
+            )
+            .route(
+                "/remote/v1/terminals/{id}",
+                get(terminal::get).delete(terminal::close),
+            )
+            .route("/remote/v1/terminals/{id}/ticket", post(terminal::ticket))
+            .route("/remote/v1/terminals/{id}/ws", get(terminal::socket))
             .layer(DefaultBodyLimit::max(65536))
             .layer(axum::middleware::map_response(
                 |mut response: axum::response::Response| async move {
@@ -314,20 +339,29 @@ impl RemoteControl {
             .with_state(self.clone())
     }
     fn authorize(&self, h: &HeaderMap) -> Result<(), StatusCode> {
+        self.authorize_key(h).map(|_| ())
+    }
+    fn authorize_key(&self, h: &HeaderMap) -> Result<String, StatusCode> {
         let t = h
             .get("authorization")
             .and_then(|v| v.to_str().ok())
             .and_then(|v| v.strip_prefix("Bearer "))
             .ok_or(StatusCode::UNAUTHORIZED)?;
-        let a = self.0.auth.lock().unwrap();
-        if a.tokens
-            .get(&hash(t))
-            .is_some_and(|d| d.info.expires_at > now())
-        {
-            Ok(())
+        let key = hash(t);
+        if self.key_authorized(&key) {
+            Ok(key)
         } else {
             Err(StatusCode::UNAUTHORIZED)
         }
+    }
+    fn key_authorized(&self, key: &str) -> bool {
+        self.0
+            .auth
+            .lock()
+            .unwrap()
+            .tokens
+            .get(key)
+            .is_some_and(|d| d.info.expires_at > now())
     }
 }
 async fn info(State(s): State<RemoteControl>, h: HeaderMap) -> Result<Json<Value>, StatusCode> {
@@ -383,6 +417,7 @@ mod projects;
 use projects::{add_project, folders, list_projects, Project, ProjectQuery};
 mod auth;
 mod runs;
+mod terminal;
 use auth::{pair, revoke};
 use runs::{cancel, events, list, remove, snapshot, start};
 

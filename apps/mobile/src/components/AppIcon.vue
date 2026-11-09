@@ -9,6 +9,7 @@ const paths: Record<string, string> = {
   history: "M3 11a9 9 0 1 1 2 7 M3 4v7h7 M12 7v5l3 2",
   more: "M4 12h.01 M12 12h.01 M20 12h.01",
   computer: "M3 4h18v12H3z M8 21h8 M12 16v5",
+  terminal: "M3 4h18v16H3z M7 8l3 3-3 3 M13 15h4",
   palette:
     "M12 3a9 9 0 1 0 0 18h1a2 2 0 0 0 1-4 2 2 0 0 1 1-4h3a3 3 0 0 0 3-3c0-4-4-7-9-7 M7 9h.01 M10 6h.01 M15 6h.01 M18 9h.01",
   info: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18 M12 11v6 M12 7h.01",

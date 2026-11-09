@@ -63,5 +63,7 @@ pub(super) async fn revoke(
         *a = previous;
         return Err(StatusCode::INTERNAL_SERVER_ERROR);
     }
+    drop(a);
+    s.0.terminals.revoke(&hash(token));
     Ok(StatusCode::NO_CONTENT)
 }

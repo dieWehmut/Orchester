@@ -428,6 +428,20 @@ export function useRemoteControl() {
     await refreshProjects();
     return added;
   }
+  async function remoteRequest<T>(
+    path: string,
+    method = "GET",
+    data?: unknown,
+  ): Promise<T> {
+    if (!client) throw new Error("请先连接电脑");
+    try {
+      return await client.request<T>(path, method, data);
+    } catch (error) {
+      if (error instanceof RemoteError && error.status === 401)
+        connectionStatus.value = "needs_pairing";
+      throw error;
+    }
+  }
   onScopeDispose(() => {
     reset();
     operation++;
@@ -441,6 +455,7 @@ export function useRemoteControl() {
     listAgents,
     browseFolders,
     addProject,
+    remoteRequest,
     devices,
     address,
     code,

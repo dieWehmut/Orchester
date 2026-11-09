@@ -40,6 +40,11 @@ export class RemoteClient {
         ? '暂时无法配对，请在电脑生成新配对码；仍失败时检查已配对设备数量'
         : '任务数量达到上限，请停止运行中的任务或删除已结束的记录后重试'
       if (status === 404 && path.startsWith('/runs/')) message = '任务不存在或已被其他设备删除，请刷新任务记录'
+      if (path.startsWith('/terminals')) {
+        if (status === 404) message = '终端已过期或被关闭，请新建一个终端'
+        if (status === 409) message = '终端正在被其他连接使用，请稍后重连'
+        if (status === 429) message = '已达到终端数量上限，请关闭不需要的终端'
+      }
       throw new RemoteError(status, message)
     }
     if (status !== 204 && typeof body === 'string') throw new Error('电脑返回了无法识别的响应，请检查地址和服务端口')

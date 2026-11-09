@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, shallowRef, watch } from "vue";
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  shallowRef,
+  watch,
+} from "vue";
 import { Capacitor } from "@capacitor/core";
 import {
   useRemoteFleet,
@@ -16,12 +24,20 @@ import AgentWorkbench from "./components/AgentWorkbench.vue";
 import RunList from "./components/RunList.vue";
 import RunOutput from "./components/RunOutput.vue";
 import DevicePage from "./views/DevicePage.vue";
+import TerminalPage from "./components/TerminalPage.vue";
 const fleet = useRemoteFleet();
 const { hosts, panels, error } = fleet;
 const { theme, themes, setTheme } = useAppearance();
 type Tab = "dashboard" | "tasks" | "projects" | "settings";
 type Screen =
-  Tab | "devices" | "appearance" | "about" | "folders" | "agents" | "output";
+  | Tab
+  | "devices"
+  | "appearance"
+  | "about"
+  | "folders"
+  | "agents"
+  | "output"
+  | "terminal";
 const tab = ref<Tab>("dashboard"),
   screen = ref<Screen>("dashboard"),
   heading = ref<HTMLElement>();
@@ -42,6 +58,7 @@ const titles: Record<Screen, string> = {
   folders: "选择电脑目录",
   agents: "选择 Agent",
   output: "任务详情",
+  terminal: "终端",
 };
 const status: Record<string, string> = {
   disconnected: "未连接",
@@ -85,6 +102,35 @@ const shownHosts = computed(() =>
 );
 const selectedHost = shallowRef<RemoteHost | null>(null),
   selectedProject = ref<Project | null>(null);
+const recentTerminals = new Map<string, string>();
+const terminalKey = computed(
+  () => `${selectedHost.value?.address}\0${selectedProject.value?.id}`,
+);
+function openTerminal(host: RemoteHost, project: Project) {
+  selectedHost.value = host;
+  selectedProject.value = project;
+  window.history.pushState(
+    { ...window.history.state, orchesterTerminal: terminalKey.value },
+    "",
+  );
+  screen.value = "terminal";
+}
+function leaveTerminalHistory() {
+  if (
+    screen.value === "terminal" &&
+    window.history.state?.orchesterTerminal === terminalKey.value
+  )
+    window.history.back();
+}
+function onHistoryBack() {
+  if (
+    screen.value === "terminal" &&
+    window.history.state?.orchesterTerminal !== terminalKey.value
+  )
+    back();
+}
+onMounted(() => window.addEventListener("popstate", onHistoryBack));
+onBeforeUnmount(() => window.removeEventListener("popstate", onHistoryBack));
 const outputControl = shallowRef<RemoteHost["control"] | null>(null);
 const folder = ref<FolderPage | null>(null),
   folderPath = ref(""),
@@ -112,10 +158,12 @@ function setColumns(value: 1 | 2) {
   } catch {}
 }
 function navigate(next: Tab) {
+  leaveTerminalHistory();
   tab.value = next;
   screen.value = next;
 }
 function back() {
+  leaveTerminalHistory();
   folderRevision++;
   agentRevision++;
   screen.value = tab.value;
@@ -262,7 +310,10 @@ watch(screen, async () => {
 <template>
   <div
     class="app-shell"
-    :class="{ 'wide-shell': screen === 'tasks' || screen === 'projects' }"
+    :class="{
+      'wide-shell': screen === 'tasks' || screen === 'projects',
+      'terminal-shell': screen === 'terminal',
+    }"
   >
     <main class="page-content">
       <header class="page-header">
@@ -499,6 +550,13 @@ watch(screen, async () => {
               >
                 打开 Agent 栏
               </button>
+              <button
+                class="tonal-button full-button project-terminal"
+                :disabled="!usable(host)"
+                @click="openTerminal(host, project)"
+              >
+                <AppIcon name="terminal" />进入终端
+              </button>
             </article>
           </div>
           <p v-if="!host.control.projects.value.length" class="panel hint">
@@ -543,6 +601,19 @@ watch(screen, async () => {
           </button>
         </div>
       </template>
+      <TerminalPage
+        v-else-if="screen === 'terminal' && selectedHost && selectedProject"
+        :key="terminalKey"
+        :host="selectedHost"
+        :project="selectedProject"
+        :theme="themes.find((item) => item.id === theme)!"
+        v-bind="
+          recentTerminals.has(terminalKey)
+            ? { previousId: recentTerminals.get(terminalKey)! }
+            : {}
+        "
+        @selected="recentTerminals.set(terminalKey, $event)"
+      />
       <DevicePage
         v-else-if="screen === 'devices'"
         v-model:address="address"
