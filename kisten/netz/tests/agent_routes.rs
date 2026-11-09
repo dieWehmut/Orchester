@@ -32,15 +32,28 @@ async fn agent_catalog_route_returns_sorted_path_free_registry_data() {
         .expect("agent catalog body");
     let json: Value = serde_json::from_slice(&body).expect("agent catalog JSON");
     assert_eq!(json["schema_version"], 1);
-    let ids: Vec<_> = json["agents"]
-        .as_array()
-        .expect("agent array")
+    let agents = json["agents"].as_array().expect("agent array");
+    let ids: Vec<_> = agents
         .iter()
         .map(|agent| agent["id"].as_str().expect("agent id"))
         .collect();
-    assert_eq!(ids, vec!["claude", "codex", "mock", "opencode"]);
-    assert_eq!(json["agents"][2]["task_kinds"], serde_json::json!(["chat"]));
-    assert_eq!(json["agents"][2]["availability"], "available");
+    assert_eq!(ids, vec!["claude", "codex", "opencode"]);
+    assert!(!ids.contains(&"mock"));
+
+    let codex = agents
+        .iter()
+        .find(|agent| agent["id"] == "codex")
+        .expect("real codex agent");
+    assert_eq!(
+        codex["task_kinds"],
+        serde_json::json!(["code", "review", "chat"])
+    );
+    assert_eq!(codex["supports_resume"], true);
+    assert_eq!(codex["streaming"], true);
+    assert!(matches!(
+        codex["availability"].as_str(),
+        Some("available" | "missing" | "unknown")
+    ));
 
     let wire = String::from_utf8(body.to_vec()).expect("UTF-8 response");
     assert!(!wire.contains("command"));
