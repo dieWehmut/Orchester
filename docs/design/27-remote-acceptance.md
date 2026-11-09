@@ -114,6 +114,14 @@ Linux 后端监听 `0.0.0.0:7337`，工作区 `/home/han/project/Orchester`，�
 
 OpenCode 1.19.3 已在 Linux 隔离工具目录 `/home/han/.local/share/orchester-tools` 安装并确认可执行，部署进程 PATH 优先指向该目录，避免调用 Windows npm shim。`opencode auth list` 显示没有配置账户；真实任务使用默认 `opencode/big-pickle`，供应商返回 `Free usage limit reached`。CLI 没有及时结束，验收脚本在 150 秒超时后取消任务，后端确认 cancelled、CLI 进程退出，测试设备已撤销。**真实 OpenCode 成功返回与续接尚未通过**，需要可用模型服务配置；未重复尝试其他免费模型规避额度。
 
+### 2026-11-10：Linux OpenCode 首轮与续接通过
+
+使用最终 Rust 源码 `8466d4f` 构建的 Linux 后端，在独立工作区、状态目录及临时 loopback 端口运行 `smoke.py --agent opencode`。OpenCode 1.19.3 使用本机 Linux API-key provider 的 `orchester-codex/gpt-6.1-sol` Responses 配置；凭据只进入子进程环境，没有修改全局登录、启动任何 Codex 客户端或使用 Windows Codex 账户。原先的免费模型额度失败已由这次实际成功验证解决，未切换或重试其他免费模型。
+
+首轮 `8d9212c6129ae614885dcbe8daeaa708a96e20ec706c3ba2fb009900bcc472d3` 与续接 `f80073b9d647a29232971af1bdf29e36a8a28b91e05c8ff24f850e479df74894` 均为 `completed`，同一会话 `ses_e3dfaa290ffeINidYgPAbJLADW` 准确返回验证词，续接提示未包含该词。幂等重试没有产生第二条任务，两轮均无模型工具调用，工作区没有文件变化。测试设备删除后 `/info` 返回 401，服务正常退出，监听和测试进程已清理。
+
+脱敏结果已保存为 [真实 OpenCode 验收 JSON](acceptance/opencode-real-20261110.json)。辅助数据库设备数量查询未记录，撤销证据来自实际 DELETE 与后续 401 检查。这是 Linux 真实 HTTP 首轮与上下文续接证据，不代表当前 APK 的真实模型操作或物理手机 Wi-Fi 验收。
+
 Windows 原生后端也实际启动 Codex，成功拿到 session ID 并收到供应商错误事件，但 Windows 账户返回 `You’ve hit your usage limit`，任务正确标记 failed / agent_reported_error。这证明 Windows 原生启动和事件链路可工作，不证明 Windows 账户当前能成功完成模型任务。Windows 与 WSL 使用各自的 CLI 账户。
 
 后端回归证据：Linux remote_routes 9、remote_cli 2、vertrag 15、adapter 5、原 harness 进程运行 8 和插件包 5 项通过；Windows vertrag 22 项通过，包含 npm shim、无控制台启动、Job Object 取消父子进程。Windows MSVC 后端构建通过。原有 Web 界面 131 个文件 / 780 项测试通过，`cargo fmt --all -- --check`、`git diff --check` 通过。
@@ -141,7 +149,7 @@ Windows 便携包位于 `C:\Users\han\Downloads\OrchesterRemote`：包含约 28 
 
 本轮没有将整体目标标记完成。以下仍需外部条件或目标设备参与：
 
-1. 为 OpenCode 配置有可用额度的模型服务，再运行真实首轮与续接验收。Windows Codex 受后续用户禁令约束，不再测试或消耗额度；Linux Codex 历史成功也不证明其他账户可用。
+1. Linux OpenCode 真实首轮与续接已于 2026-11-10 通过，证据见上节。目标电脑仍需自行安装、配置相应 CLI；Windows Codex 受后续用户禁令约束，不再测试或消耗额度。Linux 的成功不证明其他目标电脑账户可用。
 2. Windows 防火墙放行后，从物理手机输入 Windows 局域网地址并完成配对、发送、断线恢复及停止。当前 WLAN IP 为 `10.52.50.173`，运行端口 7338；IP 改变后应更新参数。下列命令需在 **Windows 管理员 PowerShell** 执行，仅针对当前运行的便携 EXE：
 
    ```powershell

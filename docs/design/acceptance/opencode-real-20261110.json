@@ -1,0 +1,95 @@
+{
+  "date_utc": "2026-11-09T20:34:49.225699+00:00",
+  "source_commit": "8466d4f10613edb5fd345beb6e97bb2e697d6623",
+  "backend_sha256": "c1d7d1a303ebd319217d541d0586f01f7578bb8fba1de0c65b204318a8661c90",
+  "platform": "linux-x86_64",
+  "agent": "opencode",
+  "opencode_version": "1.19.3",
+  "opencode_executable": "/home/han/.local/share/orchester-tools/node_modules/opencode-ai/bin/opencode.exe",
+  "provider": {
+    "model": "orchester-codex/gpt-6.1-sol",
+    "wire_api": "responses",
+    "sdk": "@ai-sdk/openai"
+  },
+  "isolated_root": "/tmp/orchester-opencode-acceptance-20261110-yzizzn7o",
+  "events": [
+    {
+      "event": "submitted",
+      "agent": "opencode",
+      "run_id": "8d9212c6129ae614885dcbe8daeaa708a96e20ec706c3ba2fb009900bcc472d3"
+    },
+    {
+      "event": "submitted",
+      "agent": "opencode",
+      "run_id": "f80073b9d647a29232971af1bdf29e36a8a28b91e05c8ff24f850e479df74894"
+    },
+    {
+      "event": "verified",
+      "agent": "opencode",
+      "session_id": "ses_e3dfaa290ffeINidYgPAbJLADW",
+      "run_ids": [
+        "8d9212c6129ae614885dcbe8daeaa708a96e20ec706c3ba2fb009900bcc472d3",
+        "f80073b9d647a29232971af1bdf29e36a8a28b91e05c8ff24f850e479df74894"
+      ],
+      "checks": [
+        "pairing",
+        "idempotency",
+        "output",
+        "resume_memory"
+      ]
+    },
+    {
+      "event": "test_device_revoked"
+    }
+  ],
+  "address": "http://127.0.0.1:45433",
+  "smoke_exit_code": 0,
+  "server_exit_code": 0,
+  "observed_owned_executables": [
+    "/home/han/.local/share/orchester-tools/node_modules/opencode-ai/bin/opencode.exe",
+    "/home/han/miniconda3/bin/python3.14",
+    "/home/han/project/Orchester/.worktrees/main-integration/target/debug/orchester",
+    "/usr/bin/git"
+  ],
+  "codex_client_launched": false,
+  "runs": [
+    {
+      "id": "8d9212c6129ae614885dcbe8daeaa708a96e20ec706c3ba2fb009900bcc472d3",
+      "state": "completed",
+      "session_id": "ses_e3dfaa290ffeINidYgPAbJLADW",
+      "error_code": null,
+      "event_types": {
+        "session_started": 1,
+        "turn_started": 1,
+        "message": 1,
+        "turn_completed": 1
+      },
+      "exact_verification_output": true,
+      "prompt_has_marker": true,
+      "tool_calls": 0
+    },
+    {
+      "id": "f80073b9d647a29232971af1bdf29e36a8a28b91e05c8ff24f850e479df74894",
+      "state": "completed",
+      "session_id": "ses_e3dfaa290ffeINidYgPAbJLADW",
+      "error_code": null,
+      "event_types": {
+        "session_started": 1,
+        "turn_started": 1,
+        "message": 1,
+        "turn_completed": 1
+      },
+      "exact_verification_output": true,
+      "prompt_has_marker": false,
+      "tool_calls": 0
+    }
+  ],
+  "remaining_owned_processes": [],
+  "workspace_files": [],
+  "passed": true,
+  "isolated_files_removed": true,
+  "device_revocation_verified_by": "smoke.py: DELETE /device followed by GET /info requiring 401",
+  "revoked_request_status": 401,
+  "listener_closed": true,
+  "auxiliary_db_device_count": "not recorded; authoritative revoke+401 check passed"
+}
