@@ -1215,6 +1215,7 @@ dependencies = [
  "json5",
  "keyring",
  "libc",
+ "orchester-adapter",
  "orchester-modell",
  "orchester-protokoll",
  "orchester-vertrag",
