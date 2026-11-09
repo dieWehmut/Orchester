@@ -14,8 +14,10 @@
 //! The embedded copies here guarantee the three headline agents work even if the
 //! `manifeste/` directory is missing (e.g. running the binary from elsewhere).
 
+#[cfg(any(test, feature = "test-support"))]
 mod mock;
 
+#[cfg(any(test, feature = "test-support"))]
 pub use mock::MockAdapter;
 
 use orchester_vertrag::{AdapterError, ManifestAdapter};
@@ -37,7 +39,7 @@ pub const BUILTIN_MANIFESTS: [(&str, &str); 3] = [
 /// Build a [`ManifestAdapter`] from one of the embedded built-in manifests.
 ///
 /// Returns `Ok(None)` for an unknown name so callers can fall through to disk
-/// manifests or the mock adapter without treating "not built in" as an error.
+/// manifests without treating "not built in" as an error.
 pub fn builtin(name: &str) -> Result<Option<ManifestAdapter>, AdapterError> {
     let Some((_, toml)) = BUILTIN_MANIFESTS.iter().find(|(n, _)| *n == name) else {
         return Ok(None);
@@ -74,6 +76,9 @@ mod tests {
         let resume = manifest.resume_args.expect("codex declares resume_args");
         assert_eq!(resume[0], "exec");
         assert_eq!(resume[1], "resume");
-        assert_eq!(resume[2], "{session_id}");
+        assert_eq!(
+            resume[resume.len() - 3..],
+            ["--", "{session_id}", "{prompt}"]
+        );
     }
 }

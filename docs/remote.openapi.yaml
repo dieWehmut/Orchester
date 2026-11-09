@@ -1,0 +1,382 @@
+openapi: 3.1.0
+info:
+  title: Orchester Remote Control
+  version: "2"
+  description: |
+    控制服务器所属电脑的项目。默认工作区和 --allow-root 指定的目录树允许手机浏览、选择。除配对外均需 Bearer 令牌。
+    配对码一次性使用，10 分钟有效，最多 10 次尝试；令牌有效 30 天。
+    最多 64 个未过期设备。错误可能为空正文，客户端不得假定错误响应为 JSON。
+    长度限制按 UTF-8 字节计算。JSON 请求拒绝未知字段。
+servers:
+  - url: http://localhost:7337/remote/v1
+security:
+  - bearerAuth: []
+paths:
+  /pair:
+    post:
+      operationId: pairDevice
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [code, device_name]
+              properties:
+                code:
+                  {
+                    type: string,
+                    description: 首尾空白会移除，字母不区分大小写,
+                  }
+                device_name: { type: string, minLength: 1, maxLength: 100 }
+      responses:
+        "200":
+          description: 配对成功；原始 token 仅返回本次，请安全保存
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [token, device_id, expires_at, host_id]
+                properties:
+                  token: { type: string }
+                  device_id: { type: string }
+                  expires_at: { type: integer, description: Unix 秒时间戳 }
+                  host_id: { type: string }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { $ref: "#/components/responses/Invalid" }
+        "429": { $ref: "#/components/responses/Limited" }
+        default: { $ref: "#/components/responses/Error" }
+  /device:
+    delete:
+      operationId: revokeCurrentDevice
+      description: 撤销当前 Bearer 令牌，不删除其他设备。
+      responses:
+        "204": { description: 已撤销，无响应正文 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        default: { $ref: "#/components/responses/Error" }
+  /info:
+    get:
+      operationId: getHostInfo
+      responses:
+        "200":
+          description: 当前电脑身份、默认项目及允许浏览的目录树
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  [
+                    schema_version,
+                    name,
+                    host_id,
+                    workspace,
+                    default_project_id,
+                    allowed_roots,
+                  ]
+                properties:
+                  schema_version: { type: integer, const: 2 }
+                  name: { type: string }
+                  host_id: { type: string }
+                  workspace: { type: string }
+                  default_project_id: { type: string }
+                  allowed_roots: { type: array, items: { type: string } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        default: { $ref: "#/components/responses/Error" }
+  /projects:
+    get:
+      operationId: listProjects
+      responses:
+        "200":
+          description: 已选择的真实目录项目，按路径排序
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [projects]
+                properties:
+                  projects:
+                    {
+                      type: array,
+                      items: { $ref: "#/components/schemas/Project" },
+                    }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        default: { $ref: "#/components/responses/Error" }
+    post:
+      operationId: addProject
+      description: 选择允许目录树内的实际目录；规范路径去重并持久保存，最多 128 个项目。导入该目录旧版本的任务记录。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [path]
+              properties:
+                path: { type: string, description: 电脑上的绝对目录路径 }
+                name: { type: [string, "null"], minLength: 1, maxLength: 128 }
+      responses:
+        "200":
+          description: 已选择或已存在的项目
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Project" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/Missing" }
+        "422": { $ref: "#/components/responses/Invalid" }
+        "429": { $ref: "#/components/responses/Limited" }
+        default: { $ref: "#/components/responses/Error" }
+  /folders:
+    get:
+      operationId: browseFolders
+      description: 读取真实目录；目录在前、名称排序。跳过符号链接、特殊文件与不能以 UTF-8 表达的名称。单目录最多扫描 10000 项。
+      parameters:
+        - name: path
+          in: query
+          schema: { type: string, description: 电脑绝对目录；省略为默认工作区 }
+        - name: offset
+          in: query
+          schema: { type: integer, minimum: 0, maximum: 10000, default: 0 }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 200, default: 200 }
+      responses:
+        "200":
+          description: 当前目录的一页文件及目录
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [path, parent_path, roots, entries, next_offset]
+                properties:
+                  path: { type: string }
+                  parent_path: { type: [string, "null"] }
+                  roots: { type: array, items: { type: string } }
+                  next_offset: { type: [integer, "null"] }
+                  entries:
+                    type: array
+                    items:
+                      type: object
+                      required: [name, path, type]
+                      properties:
+                        name: { type: string }
+                        path: { type: string }
+                        type: { type: string, enum: [directory, file] }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/Missing" }
+        "413": { description: 目录超过 10000 项，请选择较小目录 }
+        "422": { $ref: "#/components/responses/Invalid" }
+        default: { $ref: "#/components/responses/Error" }
+  /agents:
+    get:
+      operationId: listAgents
+      parameters:
+        - { $ref: "#/components/parameters/ProjectId" }
+      responses:
+        "200":
+          description: Agent 可用性和续接能力
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [agents]
+                properties:
+                  agents:
+                    type: array
+                    items:
+                      type: object
+                      required: [name, available, supports_resume]
+                      properties:
+                        name: { type: string }
+                        available: { type: boolean }
+                        supports_resume: { type: boolean }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        default: { $ref: "#/components/responses/Error" }
+  /runs:
+    get:
+      operationId: listRuns
+      parameters:
+        - { $ref: "#/components/parameters/ProjectId" }
+      responses:
+        "200":
+          description: 当前电脑已选择项目保留的任务；可按项目筛选，按创建时间倒序（旧记录无时间，排后）
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [runs]
+                properties:
+                  runs:
+                    type: array
+                    items: { $ref: "#/components/schemas/Run" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        default: { $ref: "#/components/responses/Error" }
+    post:
+      operationId: startRun
+      description: |
+        同一项目内相同幂等键及相同请求内容返回已有任务；内容不同返回 409。
+        幂等记录与任务共同持久保存，删除任务结束保留窗口。
+        最多保留 128 个任务、同时运行 4 个任务，达到限制返回 429。
+        resume 仅允许用于同一项目同一 Agent 的已结束任务，值来自此前任务 session_id。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [agent, prompt]
+              properties:
+                agent: { type: string }
+                project_id:
+                  { type: [string, "null"], description: 省略时使用默认项目 }
+                prompt: { type: string, minLength: 1, maxLength: 32000 }
+                resume: { type: [string, "null"], minLength: 1, maxLength: 256 }
+                idempotency_key:
+                  { type: [string, "null"], minLength: 1, maxLength: 128 }
+      responses:
+        "200": { $ref: "#/components/responses/Run" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/Missing" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/Invalid" }
+        "429": { $ref: "#/components/responses/Limited" }
+        default: { $ref: "#/components/responses/Error" }
+  /runs/{id}:
+    parameters:
+      - { $ref: "#/components/parameters/RunId" }
+    get:
+      operationId: getRun
+      responses:
+        "200": { $ref: "#/components/responses/Run" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/Missing" }
+        default: { $ref: "#/components/responses/Error" }
+    delete:
+      operationId: deleteRun
+      description: 删除终态任务与输出，并结束其幂等键保留窗口。运行中任务不能删除。
+      responses:
+        "204": { description: 已删除，无响应正文 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/Missing" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        default: { $ref: "#/components/responses/Error" }
+  /runs/{id}/events:
+    parameters:
+      - { $ref: "#/components/parameters/RunId" }
+    get:
+      operationId: getRunEvents
+      description: |
+        每页最多 200 条，after 是已经读取的事件数量，初始为 0。
+        使用 next_cursor 请求下一页；即使返回终态也必须读到空页。
+        running 的空页应稍后重试。超过当前事件数量的游标返回 409。
+        每任务最多 10000 条事件、总输出 16 MiB、单事件 1 MiB，超限终止任务并记录错误。
+      parameters:
+        - name: after
+          in: query
+          schema: { type: integer, minimum: 0, default: 0 }
+      responses:
+        "200":
+          description: 一页事件和当前任务状态
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [events, next_cursor, state]
+                properties:
+                  next_cursor: { type: integer, minimum: 0 }
+                  state: { $ref: "#/components/schemas/State" }
+                  events:
+                    type: array
+                    maxItems: 200
+                    items:
+                      type: object
+                      required: [seq, event]
+                      properties:
+                        seq: { type: integer, minimum: 1 }
+                        event:
+                          {
+                            type: object,
+                            description: orchester_protokoll Event 的 JSON 表示，客户端须容忍未知事件类型,
+                          }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/Missing" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        default: { $ref: "#/components/responses/Error" }
+  /runs/{id}/cancel:
+    parameters:
+      - { $ref: "#/components/parameters/RunId" }
+    post:
+      operationId: cancelRun
+      description: 请求取消，返回即时快照；状态可能仍为 running，须继续轮询至终态。
+      responses:
+        "200": { $ref: "#/components/responses/Run" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/Missing" }
+        default: { $ref: "#/components/responses/Error" }
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer }
+  parameters:
+    ProjectId:
+      name: project_id
+      in: query
+      schema: { type: string }
+      description: 已选择项目 ID；agents 省略用默认项目，runs 省略列出所有项目
+    RunId:
+      name: id
+      in: path
+      required: true
+      schema: { type: string }
+  schemas:
+    Project:
+      type: object
+      required: [id, name, path]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        path: { type: string }
+    State:
+      type: string
+      enum: [running, completed, failed, cancelled, interrupted]
+    Run:
+      type: object
+      required: [id, agent, project_id, workspace, prompt, state]
+      properties:
+        id: { type: string }
+        agent: { type: string }
+        prompt: { type: string }
+        project_id: { type: string }
+        workspace: { type: string }
+        created_at: { type: integer, description: Unix 秒；旧版本记录可能缺省 }
+        state: { $ref: "#/components/schemas/State" }
+        session_id:
+          {
+            type: [string, "null"],
+            description: Agent 提供的会话 ID；仅 supports_resume 时可续接,
+          }
+        error_code:
+          {
+            type: string,
+            description: 失败原因代码，如 agent_start_failed、storage_failed 或 output_limit_exceeded,
+          }
+  responses:
+    Run:
+      description: 任务快照
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Run" }
+    Unauthorized: { description: 配对码错误，或 Bearer 缺失、过期、被撤销 }
+    Forbidden: { description: 不在允许目录树内或没有目录读取权限 }
+    Missing: { description: 项目、目录、Agent 或任务不存在 }
+    Conflict:
+      { description: 幂等键内容冲突、游标越界、任务仍运行或项目目录已被替换 }
+    Invalid: { description: 字段不合法、超出字节长度限制或 Agent 不支持续接 }
+    Limited: { description: 配对码过期或已用、尝试次数或设备或任务容量达到限制 }
+    Error:
+      { description: 请求解析错误、正文过大或内部服务错误；可能无 JSON 正文 }

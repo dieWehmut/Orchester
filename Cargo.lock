@@ -542,6 +542,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7360491ce676a36bf9bb3c56c1aa791658183a54d2744120f27285738d90465a"
 
 [[package]]
+name = "fastrand"
+version = "2.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "da7c62ceae207dd37ea5b845da6a0696c799f85e97da1ab5b7910be3c1c80223"
+
+[[package]]
 name = "filetime"
 version = "0.2.29"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1169,6 +1175,7 @@ dependencies = [
 name = "orchester-konsole"
 version = "0.1.2"
 dependencies = [
+ "axum",
  "clap",
  "crossterm",
  "flate2",
@@ -1188,6 +1195,7 @@ dependencies = [
  "thiserror",
  "tokio",
  "tokio-util",
+ "tower-http 0.7.0",
  "unicode-segmentation",
  "unicode-width",
  "windows-sys 0.61.2",
@@ -1245,9 +1253,11 @@ version = "0.1.2"
 dependencies = [
  "axum",
  "cookie",
+ "fs2",
  "futures",
  "getrandom 0.3.4",
  "mime_guess",
+ "orchester-adapter",
  "orchester-anwendung",
  "orchester-laufzeit",
  "orchester-protokoll",
@@ -1260,6 +1270,7 @@ dependencies = [
  "serde_json",
  "sha2",
  "sysinfo",
+ "tempfile",
  "thiserror",
  "time",
  "tokio",
@@ -1287,6 +1298,7 @@ version = "0.1.2"
 dependencies = [
  "async-trait",
  "futures",
+ "libc",
  "orchester-protokoll",
  "serde",
  "serde_json",
@@ -1295,6 +1307,7 @@ dependencies = [
  "tokio-stream",
  "toml",
  "tracing",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -2022,6 +2035,19 @@ dependencies = [
  "filetime",
  "libc",
  "xattr",
+]
+
+[[package]]
+name = "tempfile"
+version = "3.27.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "32497e9a4c7b38532efcdebeef879707aa9f794296a4f0244f6f69e9bc8574bd"
+dependencies = [
+ "fastrand",
+ "getrandom 0.4.3",
+ "once_cell",
+ "rustix",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]

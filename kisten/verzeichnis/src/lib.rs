@@ -1,7 +1,7 @@
 //! Adapter discovery and lookup.
 //!
 //! The [`Registry`] is Orchester's index of runnable agents. It registers the
-//! built-ins (the scripted `mock` plus the three embedded manifest agents), then
+//! three embedded manifest agents, then
 //! overlays any `*.toml` manifests found on disk under a manifest directory.
 //! Disk manifests win on a name collision, so a user can override a built-in
 //! (e.g. tweak claude's flags) without recompiling.
@@ -10,7 +10,7 @@ use std::collections::BTreeMap;
 use std::path::Path;
 use std::sync::Arc;
 
-use orchester_adapter::{builtin, MockAdapter, BUILTIN_MANIFESTS};
+use orchester_adapter::{builtin, BUILTIN_MANIFESTS};
 use orchester_protokoll::Capability;
 use orchester_vertrag::{AdapterAvailability, AdapterError, AgentAdapter, ManifestAdapter};
 
@@ -64,10 +64,9 @@ impl Registry {
         registry
     }
 
-    /// Register only the compiled-in adapters (mock + embedded manifests).
+    /// Register only the compiled-in real CLI manifest adapters.
     /// Useful when no on-disk manifest directory is available.
     pub fn register_builtins(&mut self) {
-        self.insert(Arc::new(MockAdapter::new()));
         for (name, _) in BUILTIN_MANIFESTS {
             match builtin(name) {
                 Ok(Some(adapter)) => self.insert(Arc::new(adapter)),
@@ -98,6 +97,10 @@ impl Registry {
                 }
             }
         }
+    }
+
+    pub fn register(&mut self, adapter: Arc<dyn AgentAdapter>) {
+        self.insert(adapter);
     }
 
     fn insert(&mut self, adapter: Arc<dyn AgentAdapter>) {
@@ -172,9 +175,9 @@ mod tests {
     fn builtins_are_registered() {
         let mut registry = Registry::new();
         registry.register_builtins();
-        // mock + claude + codex + opencode
-        assert_eq!(registry.len(), 4);
-        assert!(registry.get("mock").is_some());
+        // Real CLI agents only.
+        assert_eq!(registry.len(), 3);
+        assert!(registry.get("mock").is_none());
         assert!(registry.get("claude").is_some());
         assert!(registry.get("codex").is_some());
         assert!(registry.get("opencode").is_some());
@@ -186,24 +189,23 @@ mod tests {
         let mut registry = Registry::new();
         registry.register_builtins();
         let names: Vec<_> = registry.list().into_iter().map(|c| c.name).collect();
-        assert_eq!(names, vec!["claude", "codex", "mock", "opencode"]);
+        assert_eq!(names, vec!["claude", "codex", "opencode"]);
     }
 
     #[test]
     fn missing_dir_falls_back_to_builtins() {
         let registry = Registry::discover("this/dir/does/not/exist");
-        assert_eq!(registry.len(), 4);
+        assert_eq!(registry.len(), 3);
     }
 
     #[test]
-    fn availability_is_alphabetical_and_includes_mock() {
+    fn availability_lists_only_real_agents() {
         let mut registry = Registry::new();
         registry.register_builtins();
 
         let checks = registry.availability();
         let names: Vec<_> = checks.iter().map(|c| c.name.as_str()).collect();
-        assert_eq!(names, vec!["claude", "codex", "mock", "opencode"]);
-        let mock = checks.iter().find(|c| c.name == "mock").unwrap();
-        assert!(!mock.is_missing());
+        assert_eq!(names, vec!["claude", "codex", "opencode"]);
+        assert!(checks.iter().all(|c| c.name != "mock"));
     }
 }

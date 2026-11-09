@@ -94,14 +94,36 @@ fn cmd_shim_invocation(executable: &Path, extra_args: &[OsString]) -> Option<Com
         return Some(invocation);
     }
 
-    let script = find_node_script_entry(&content, dir)?;
-    let program = local_node_or_path_node(dir);
-    let mut args = vec![script.into_os_string()];
-    args.extend(extra_args.iter().cloned());
+    if let Some(script) = find_node_script_entry(&content, dir) {
+        let program = local_node_or_path_node(dir);
+        let mut args = vec![script.into_os_string()];
+        args.extend(extra_args.iter().cloned());
+        return Some(CommandInvocation {
+            program,
+            args,
+            envs: node_path_env(&content),
+            shell_backed: false,
+        });
+    }
+
+    // Native npm packages (including current OpenCode) directly invoke their
+    // bundled .exe. Do not route prompts or UNC working directories through cmd.
+    let program = content.lines().find_map(|line| {
+        if !line.trim_end().ends_with("%*") {
+            return None;
+        }
+        quoted_tokens(line).into_iter().find_map(|token| {
+            if !token.to_ascii_lowercase().ends_with(".exe") {
+                return None;
+            }
+            let path = expand_cmd_path(&token, dir);
+            path.is_file().then_some(path)
+        })
+    })?;
     Some(CommandInvocation {
         program,
-        args,
-        envs: node_path_env(&content),
+        args: extra_args.to_vec(),
+        envs: Vec::new(),
         shell_backed: false,
     })
 }
@@ -332,6 +354,36 @@ SET "opencode_exe=%dp0%\node_modules\opencode-ai\bin\opencode.exe"
             ]
         );
         fs::remove_dir_all(dir).ok();
+    }
+
+    #[test]
+    fn native_opencode_npm_shim_preserves_literal_prompt_without_cmd() {
+        let dir = temp_dir("opencode native shim with spaces");
+        fs::create_dir_all(dir.join("node_modules/opencode-ai/bin")).unwrap();
+        let exe = dir.join("node_modules/opencode-ai/bin/opencode.exe");
+        fs::write(&exe, "").unwrap();
+        let shim = dir.join("opencode.cmd");
+        fs::write(
+            &shim,
+            r#"@ECHO off
+CALL :find_dp0
+"%dp0%\node_modules\opencode-ai\bin\opencode.exe" %*
+"#,
+        )
+        .unwrap();
+        let args = vec![
+            "run".into(),
+            "--".into(),
+            OsString::from("explain \"a & b\" | %PATH%"),
+        ];
+        let invocation = command_invocation(&shim, args.clone());
+        assert_eq!(
+            fs::canonicalize(&invocation.program).unwrap(),
+            fs::canonicalize(exe).unwrap()
+        );
+        assert_eq!(invocation.args, args);
+        assert!(!invocation.uses_shell());
+        fs::remove_dir_all(dir).unwrap();
     }
 
     fn temp_dir(name: &str) -> PathBuf {

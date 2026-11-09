@@ -6,6 +6,8 @@ mod loopback_responses;
 mod secure_config;
 
 use std::io::Write;
+use std::path::PathBuf;
+use std::process::Command;
 use std::process::Stdio;
 
 use loopback_responses::LoopbackResponses;
@@ -14,6 +16,98 @@ use orchester_laufzeit::harness::run_store::{NewRun, RunStore, SqliteRunStore};
 use orchester_laufzeit::harness::service::WorkspaceIdentitySnapshot;
 use secure_config::write_user_config;
 use support::{orchester, stderr, stdout, temp_home};
+
+// A real subprocess fixture exercises CLI transport and session recording.
+// Its deterministic JSONL is test data, not evidence of model behavior.
+struct AgentFixture {
+    root: PathBuf,
+}
+
+impl AgentFixture {
+    fn new(name: &str) -> Self {
+        let root = temp_home(name);
+        std::fs::create_dir_all(root.join("manifeste")).expect("fixture manifest directory");
+        #[cfg(unix)]
+        let (command, args) = {
+            let script = root.join("fixture.sh");
+            std::fs::write(
+                &script,
+                r#"printf '%s\n' '{"type":"session","session_id":"fixture-session"}'
+printf '{"type":"message","text":"fixture received: %s"}\n' "$1"
+printf '{"type":"result","text":"fixture done: %s"}\n' "$1"
+"#,
+            )
+            .expect("write shell fixture");
+            (
+                "sh".to_owned(),
+                vec![script.to_string_lossy().into_owned(), "{prompt}".into()],
+            )
+        };
+        #[cfg(windows)]
+        let (command, args) = {
+            let script = root.join("fixture.ps1");
+            std::fs::write(
+                &script,
+                r#"param([string]$Prompt)
+@{ type = 'session'; session_id = 'fixture-session' } | ConvertTo-Json -Compress
+@{ type = 'message'; text = "fixture received: $Prompt" } | ConvertTo-Json -Compress
+@{ type = 'result'; text = "fixture done: $Prompt" } | ConvertTo-Json -Compress
+"#,
+            )
+            .expect("write PowerShell fixture");
+            (
+                "powershell.exe".to_owned(),
+                vec![
+                    "-NoProfile".into(),
+                    "-NonInteractive".into(),
+                    "-File".into(),
+                    script.to_string_lossy().into_owned(),
+                    "{prompt}".into(),
+                ],
+            )
+        };
+        std::fs::write(
+            root.join("manifeste/fixture.toml"),
+            format!(
+                r#"name = "fixture"
+command = {}
+args = {}
+kinds = ["chat"]
+supports_resume = false
+streaming = true
+[parse]
+discriminator = "type"
+session_id = "session_id"
+[parse.map]
+message = {{ event = "message", text = "text" }}
+result = {{ event = "result", text = "text" }}
+"#,
+                serde_json::to_string(&command).expect("command JSON"),
+                serde_json::to_string(&args).expect("argument JSON"),
+            ),
+        )
+        .expect("write fixture manifest");
+        Self { root }
+    }
+
+    fn home(&self) -> PathBuf {
+        self.root.join("home")
+    }
+
+    fn command(&self) -> Command {
+        let mut command = orchester();
+        command
+            .env("ORCHESTER_HOME", self.home())
+            .current_dir(&self.root);
+        command
+    }
+}
+
+impl Drop for AgentFixture {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_dir_all(&self.root);
+    }
+}
 
 fn json_events(output: &std::process::Output) -> Vec<serde_json::Value> {
     stdout(output)
@@ -31,9 +125,13 @@ fn list_shows_builtin_adapters() {
 
     assert!(output.status.success(), "stderr:\n{}", stderr(&output));
     let out = stdout(&output);
-    for name in ["claude", "codex", "mock", "opencode"] {
+    for name in ["claude", "codex", "opencode"] {
         assert!(out.contains(name), "missing adapter {name} in:\n{out}");
     }
+    assert!(
+        !out.contains("mock"),
+        "test adapter leaked into list:\n{out}"
+    );
 }
 
 #[test]
@@ -49,37 +147,43 @@ fn list_can_emit_capability_jsonl() {
         .map(|line| serde_json::from_str(line).expect("valid capability JSONL"))
         .collect();
 
-    assert!(values.iter().any(|value| value["name"] == "mock"));
-    assert!(values
-        .iter()
-        .any(|value| value["name"] == "mock" && value["streaming"] == true));
+    assert!(!values.iter().any(|value| value["name"] == "mock"));
+    assert!(values.iter().any(|value| value["name"] == "codex"
+        && value["streaming"] == true
+        && value["supports_resume"] == true));
 }
 
 #[test]
-fn doctor_reports_mock_adapter_available() {
-    let output = orchester()
+fn doctor_reports_manifest_subprocess_available() {
+    let fixture = AgentFixture::new("doctor-fixture");
+    let output = fixture
+        .command()
         .arg("doctor")
         .output()
         .expect("run orchester doctor");
 
     assert!(output.status.success(), "stderr:\n{}", stderr(&output));
     let out = stdout(&output);
-    assert!(out.contains("mock"), "doctor output:\n{out}");
-    assert!(out.contains("ok"), "doctor output:\n{out}");
+    let check = out
+        .lines()
+        .find(|line| line.contains("\tfixture\t"))
+        .expect("doctor should discover the fixture manifest");
+    assert!(check.contains("ok"), "fixture check:\n{check}");
+    assert!(check.contains("found "), "fixture check:\n{check}");
     assert!(
-        out.contains("built-in mock adapter"),
-        "doctor output:\n{out}"
+        !out.contains("mock"),
+        "test adapter leaked into doctor:\n{out}"
     );
 }
 
 #[test]
 fn default_run_can_emit_event_jsonl() {
-    let home = temp_home("default-run-jsonl");
-    let output = orchester()
-        .env("ORCHESTER_HOME", &home)
-        .args(["--agent", "mock", "--json", "hello default"])
+    let fixture = AgentFixture::new("default-run-jsonl");
+    let output = fixture
+        .command()
+        .args(["--agent", "fixture", "--json", "hello default"])
         .output()
-        .expect("run mock agent");
+        .expect("run manifest subprocess fixture");
 
     assert!(output.status.success(), "stderr:\n{}", stderr(&output));
     let events = json_events(&output);
@@ -88,18 +192,17 @@ fn default_run_can_emit_event_jsonl() {
         && event["text"].as_str().unwrap().contains("hello default")));
     assert!(events.iter().any(|event| event["type"] == "result"
         && event["text"].as_str().unwrap().contains("hello default")));
-    assert!(home.is_absolute() && home.starts_with(std::env::temp_dir()));
-    std::fs::remove_dir_all(home).expect("remove isolated default-run home");
+    assert!(fixture.home().is_absolute() && fixture.home().starts_with(std::env::temp_dir()));
 }
 
 #[test]
 fn run_subcommand_can_emit_event_jsonl() {
-    let home = temp_home("run-subcommand-jsonl");
-    let output = orchester()
-        .env("ORCHESTER_HOME", &home)
-        .args(["run", "--agent", "mock", "--json", "hello run"])
+    let fixture = AgentFixture::new("run-subcommand-jsonl");
+    let output = fixture
+        .command()
+        .args(["run", "--agent", "fixture", "--json", "hello run"])
         .output()
-        .expect("run mock agent through run subcommand");
+        .expect("run manifest subprocess through run subcommand");
 
     assert!(output.status.success(), "stderr:\n{}", stderr(&output));
     let events = json_events(&output);
@@ -108,16 +211,15 @@ fn run_subcommand_can_emit_event_jsonl() {
         .iter()
         .any(|event| event["type"] == "result"
             && event["text"].as_str().unwrap().contains("hello run")));
-    assert!(home.is_absolute() && home.starts_with(std::env::temp_dir()));
-    std::fs::remove_dir_all(home).expect("remove isolated run-subcommand home");
+    assert!(fixture.home().is_absolute() && fixture.home().starts_with(std::env::temp_dir()));
 }
 
 #[test]
 fn run_subcommand_reads_prompt_from_stdin() {
-    let home = temp_home("run-subcommand-stdin");
-    let mut child = orchester()
-        .env("ORCHESTER_HOME", &home)
-        .args(["run", "--agent", "mock", "--json", "-"])
+    let fixture = AgentFixture::new("run-subcommand-stdin");
+    let mut child = fixture
+        .command()
+        .args(["run", "--agent", "fixture", "--json", "-"])
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -136,15 +238,14 @@ fn run_subcommand_reads_prompt_from_stdin() {
     let events = json_events(&output);
     assert!(events.iter().any(|event| event["type"] == "message"
         && event["text"].as_str().unwrap().contains("hello stdin")));
-    assert!(home.is_absolute() && home.starts_with(std::env::temp_dir()));
-    std::fs::remove_dir_all(home).expect("remove isolated stdin-run home");
+    assert!(fixture.home().is_absolute() && fixture.home().starts_with(std::env::temp_dir()));
 }
 
 #[test]
-fn no_args_can_run_interactive_mock_session() {
-    let home = temp_home("interactive");
-    let mut child = orchester()
-        .env("ORCHESTER_HOME", &home)
+fn no_args_can_run_interactive_manifest_session() {
+    let fixture = AgentFixture::new("interactive");
+    let mut child = fixture
+        .command()
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -155,7 +256,7 @@ fn no_args_can_run_interactive_mock_session() {
         .stdin
         .as_mut()
         .expect("stdin handle")
-        .write_all(b"/agent\nmock\nhello interactive\n/quit\n")
+        .write_all(b"/agent\nfixture\nhello interactive\n/quit\n")
         .expect("write interactive input");
     drop(child.stdin.take());
 
@@ -173,15 +274,13 @@ fn no_args_can_run_interactive_mock_session() {
         "interactive output:\n{out}"
     );
     assert!(
-        out.contains("mock received: hello interactive"),
+        out.contains("fixture received: hello interactive"),
         "interactive output:\n{out}"
     );
     assert!(
-        out.contains("mock done: hello interactive"),
+        out.contains("fixture done: hello interactive"),
         "interactive output:\n{out}"
     );
-
-    let _ = std::fs::remove_dir_all(home);
 }
 
 #[test]
@@ -1054,27 +1153,27 @@ fn home_prompt_keeps_the_session_open_after_a_model_error() {
 
 #[test]
 fn run_records_session_metadata() {
-    let home = temp_home("sessions");
-    let run = orchester()
-        .env("ORCHESTER_HOME", &home)
-        .args(["--agent", "mock", "--json", "remember this"])
+    let fixture = AgentFixture::new("sessions");
+    let run = fixture
+        .command()
+        .args(["--agent", "fixture", "--json", "remember this"])
         .output()
-        .expect("run mock agent");
+        .expect("run manifest subprocess fixture");
     assert!(run.status.success(), "stderr:\n{}", stderr(&run));
 
-    let sessions = orchester()
-        .env("ORCHESTER_HOME", &home)
+    let sessions = fixture
+        .command()
         .arg("sessions")
         .output()
         .expect("list sessions");
     assert!(sessions.status.success(), "stderr:\n{}", stderr(&sessions));
     let out = stdout(&sessions);
-    assert!(out.contains("mock"), "sessions output:\n{out}");
-    assert!(out.contains("mock-session"), "sessions output:\n{out}");
+    assert!(out.contains("fixture"), "sessions output:\n{out}");
+    assert!(out.contains("fixture-session"), "sessions output:\n{out}");
     assert!(out.contains("remember this"), "sessions output:\n{out}");
 
-    let sessions_json = orchester()
-        .env("ORCHESTER_HOME", &home)
+    let sessions_json = fixture
+        .command()
         .args(["sessions", "--json"])
         .output()
         .expect("list sessions as json");
@@ -1084,9 +1183,7 @@ fn run_records_session_metadata() {
         stderr(&sessions_json)
     );
     let value: serde_json::Value = serde_json::from_str(stdout(&sessions_json).trim()).unwrap();
-    assert_eq!(value["agent"], "mock");
-    assert_eq!(value["session_id"], "mock-session");
+    assert_eq!(value["agent"], "fixture");
+    assert_eq!(value["session_id"], "fixture-session");
     assert_eq!(value["prompt"], "remember this");
-
-    let _ = std::fs::remove_dir_all(home);
 }

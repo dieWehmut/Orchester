@@ -1,7 +1,7 @@
 name = "codex"
 command = "codex"
-args = ["exec", "--json", "--skip-git-repo-check", "{prompt}"]
-resume_args = ["exec", "resume", "{session_id}", "--json", "--skip-git-repo-check", "{prompt}"]
+args = ["exec", "--json", "--skip-git-repo-check", "--", "{prompt}"]
+resume_args = ["exec", "resume", "--json", "--skip-git-repo-check", "--", "{session_id}", "{prompt}"]
 kinds = ["code", "review", "chat"]
 supports_resume = true
 streaming = true

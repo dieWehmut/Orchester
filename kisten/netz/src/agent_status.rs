@@ -420,7 +420,7 @@ fn runtime_summary(
                 AgentActivityState::Idle,
                 true,
                 true,
-                capability.name == "mock",
+                false,
                 None,
             ),
             Some(AvailabilityStatus::Missing) => (
@@ -510,7 +510,6 @@ fn display_name(provider: &str) -> String {
         "claude" => "Claude Code".to_owned(),
         "codex" => "Codex".to_owned(),
         "deepseek" => "DeepSeek".to_owned(),
-        "mock" => "Mock".to_owned(),
         "opencode" => "OpenCode".to_owned(),
         other => other
             .split(['-', '_'])

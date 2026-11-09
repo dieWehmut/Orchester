@@ -86,3 +86,6 @@ pub use workspace_review::{
     workspace_review_response, WorkspaceReviewChangeDto, WorkspaceReviewDto,
     WorkspaceReviewKindDto, WORKSPACE_REVIEW_SCHEMA_VERSION,
 };
+
+mod remote;
+pub use remote::{RemoteControl, RemoteDevice};

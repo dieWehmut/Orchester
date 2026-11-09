@@ -9,8 +9,8 @@
 # `part.tool` + `part.state.status`. `sessionID` is present on every line.
 name = "opencode"
 command = "opencode"
-args = ["run", "--format", "json", "{prompt}"]
-resume_args = ["run", "--format", "json", "--session", "{session_id}", "{prompt}"]
+args = ["run", "--format", "json", "--", "{prompt}"]
+resume_args = ["run", "--format", "json", "--session", "{session_id}", "--", "{prompt}"]
 kinds = ["code", "chat"]
 supports_resume = true
 streaming = true

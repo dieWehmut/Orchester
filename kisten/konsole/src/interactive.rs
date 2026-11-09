@@ -2448,7 +2448,6 @@ fn agent_rank(name: &str) -> u8 {
         "codex" => 0,
         "claude" => 1,
         "opencode" => 2,
-        "mock" => 200,
         _ => 100,
     }
 }

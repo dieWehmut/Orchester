@@ -15,6 +15,10 @@ pub enum AdapterError {
     #[error("i/o error reading agent output: {0}")]
     Io(#[from] std::io::Error),
 
+    /// A native JSONL record exceeded the bounded reader's limit.
+    #[error("agent output record exceeded the size limit")]
+    OutputLimit,
+
     /// A manifest referenced a template placeholder or path we can't satisfy.
     #[error("manifest error: {0}")]
     Manifest(String),

@@ -1,13 +1,11 @@
 use async_trait::async_trait;
 use futures::StreamExt;
 use serde_json::Value;
-use std::env;
 use std::ffi::OsString;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process::Stdio;
-use tokio::io::{AsyncBufReadExt, BufReader};
-use tokio::process::Command;
-use tokio_stream::wrappers::LinesStream;
+use tokio::io::{AsyncBufRead, AsyncBufReadExt, AsyncReadExt, BufReader};
+use tokio::process::{Child, Command};
 
 use orchester_protokoll::{Capability, ChangeKind, Event, TaskKind, TodoItem, ToolStatus, Usage};
 
@@ -15,6 +13,7 @@ use crate::adapter::{AdapterAvailability, AgentAdapter, EventStream};
 use crate::error::AdapterError;
 use crate::extract;
 use crate::manifest::{AdapterManifest, EventMapping};
+use crate::process::{command_invocation, resolve_command, ProcessTree};
 
 /// The generic engine: interprets any [`AdapterManifest`] as a working adapter.
 pub struct ManifestAdapter {
@@ -41,11 +40,7 @@ impl ManifestAdapter {
         };
         template
             .iter()
-            .map(|arg| {
-                arg.replace("{prompt}", prompt)
-                    .replace("{model}", model.unwrap_or(""))
-                    .replace("{session_id}", resume.unwrap_or(""))
-            })
+            .map(|arg| expand_argument(arg, prompt, model.unwrap_or(""), resume.unwrap_or("")))
             .collect()
     }
 
@@ -58,6 +53,33 @@ impl ManifestAdapter {
     ) -> Vec<String> {
         self.build_args(prompt, model, resume)
     }
+}
+
+/// Expand only placeholders in the manifest, never text introduced by a value.
+/// Prompts commonly contain code such as `{model}` which must reach the agent intact.
+fn expand_argument(template: &str, prompt: &str, model: &str, session_id: &str) -> String {
+    let mut result = String::new();
+    let mut remaining = template;
+    while let Some(index) = remaining.find('{') {
+        result.push_str(&remaining[..index]);
+        remaining = &remaining[index..];
+        if let Some((placeholder, value)) = [
+            ("{prompt}", prompt),
+            ("{model}", model),
+            ("{session_id}", session_id),
+        ]
+        .into_iter()
+        .find(|(placeholder, _)| remaining.starts_with(placeholder))
+        {
+            result.push_str(value);
+            remaining = &remaining[placeholder.len()..];
+        } else {
+            result.push('{');
+            remaining = &remaining[1..];
+        }
+    }
+    result.push_str(remaining);
+    result
 }
 
 #[async_trait]
@@ -76,7 +98,7 @@ impl AgentAdapter for ManifestAdapter {
     }
 
     fn availability(&self) -> AdapterAvailability {
-        match find_executable(&self.manifest.command) {
+        match resolve_command(&self.manifest.command) {
             Some(path) => {
                 AdapterAvailability::available(self.name(), format!("found {}", path.display()))
             }
@@ -93,10 +115,14 @@ impl AgentAdapter for ManifestAdapter {
 
     async fn run(&self, task: orchester_protokoll::Task) -> Result<EventStream, AdapterError> {
         let args = self.build_args(&task.prompt, task.model.as_deref(), task.resume.as_deref());
-        let program = find_executable(&self.manifest.command)
+        let program = resolve_command(&self.manifest.command)
             .unwrap_or_else(|| PathBuf::from(&self.manifest.command));
-        let mut cmd = native_process_command(&program);
-        cmd.args(&args)
+        let invocation =
+            command_invocation(&program, args.into_iter().map(OsString::from).collect());
+        let tree = ProcessTree::new()?;
+        let mut cmd = Command::new(invocation.program);
+        cmd.args(invocation.args)
+            .envs(invocation.envs)
             .current_dir(&task.cwd)
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
@@ -105,10 +131,16 @@ impl AgentAdapter for ManifestAdapter {
             // dropped before EOF — this is how cancellation propagates to the agent.
             .kill_on_drop(true);
 
+        tree.configure_command(&mut cmd);
+
         let mut child = cmd.spawn().map_err(|source| AdapterError::Spawn {
             command: self.manifest.command.clone(),
             source,
         })?;
+        if let Err(error) = tree.attach(&child) {
+            tree.terminate(&mut child);
+            return Err(error.into());
+        }
 
         let stdout = child
             .stdout
@@ -116,7 +148,10 @@ impl AgentAdapter for ManifestAdapter {
             .ok_or_else(|| AdapterError::Manifest("child stdout unavailable".into()))?;
 
         let manifest = self.manifest.clone();
-        let lines = LinesStream::new(BufReader::new(stdout).lines());
+        let lines = futures::stream::try_unfold(BufReader::new(stdout), |mut reader| async move {
+            let line = read_native_line(&mut reader).await?;
+            Ok::<_, AdapterError>(line.map(|line| (line, reader)))
+        });
 
         // Per-run mutable state: emit SessionStarted only once.
         let mut session_seen = false;
@@ -124,38 +159,85 @@ impl AgentAdapter for ManifestAdapter {
         let stream = lines.flat_map(move |line_res| {
             let events = match line_res {
                 Ok(line) => map_line(&manifest, &line, &mut session_seen),
-                Err(e) => vec![Err(AdapterError::Io(e))],
+                Err(e) => vec![Err(e)],
             };
             futures::stream::iter(events)
         });
 
-        // Keep the child alive for the duration of the stream by moving it into a
-        // reaper task; on stream drop the child is killed via its kill-on-drop-less
-        // handle, so we explicitly wait here in a detached task.
-        tokio::spawn(async move {
-            let _ = child.wait().await;
+        // Drain diagnostics without retaining or exposing potentially sensitive stderr.
+        let mut stderr = child
+            .stderr
+            .take()
+            .ok_or_else(|| AdapterError::Manifest("child stderr unavailable".into()))?;
+        let drain = tokio::spawn(async move {
+            let _ = tokio::io::copy(&mut stderr, &mut tokio::io::sink()).await;
         });
-
+        let owner = ProcessOwner { tree, child, drain };
+        // The returned stream owns the process. Dropping it cancels execution,
+        // including when stdout reached EOF but the process is still running.
+        let mapped: EventStream = Box::pin(stream);
+        let stream = futures::stream::unfold(Some((mapped, owner)), |state| async move {
+            let (mut mapped, mut owner) = state?;
+            if let Some(event) = mapped.next().await {
+                return Some((event, Some((mapped, owner))));
+            }
+            let status = owner.child.wait().await;
+            match status {
+                Ok(status) if status.success() => None,
+                Ok(status) => Some((
+                    Err(AdapterError::Io(std::io::Error::other(format!(
+                        "agent exited with {status}"
+                    )))),
+                    None,
+                )),
+                Err(error) => Some((Err(AdapterError::Io(error)), None)),
+            }
+        });
         Ok(Box::pin(stream))
     }
 }
 
-#[cfg(windows)]
-fn native_process_command(program: &Path) -> Command {
-    let mut command = if is_windows_shell_script(program) {
-        let mut command = Command::new("cmd.exe");
-        command.arg("/d").arg("/c").arg(program);
-        command
-    } else {
-        Command::new(program)
-    };
-    command.creation_flags(0x0800_0000); // CREATE_NO_WINDOW for captured adapter output.
-    command
+// Bound buffering before JSON parsing, including a process that never emits a
+// newline. Normalized per-event and total-output limits still apply downstream.
+const MAX_NATIVE_LINE_BYTES: usize = 16 * 1024 * 1024;
+
+async fn read_native_line<R: AsyncBufRead + Unpin>(
+    reader: &mut R,
+) -> Result<Option<String>, AdapterError> {
+    let mut bytes = Vec::new();
+    let count = reader
+        .take((MAX_NATIVE_LINE_BYTES + 1) as u64)
+        .read_until(b'\n', &mut bytes)
+        .await?;
+    if count > MAX_NATIVE_LINE_BYTES {
+        return Err(AdapterError::OutputLimit);
+    }
+    if count == 0 {
+        return Ok(None);
+    }
+    if bytes.last() == Some(&b'\n') {
+        bytes.pop();
+        if bytes.last() == Some(&b'\r') {
+            bytes.pop();
+        }
+    }
+    String::from_utf8(bytes)
+        .map(Some)
+        .map_err(|error| std::io::Error::new(std::io::ErrorKind::InvalidData, error).into())
 }
 
-#[cfg(not(windows))]
-fn native_process_command(program: &Path) -> Command {
-    Command::new(program)
+/// Child and stderr task share exactly the event stream's lifetime.
+struct ProcessOwner {
+    child: Child,
+    drain: tokio::task::JoinHandle<()>,
+    tree: ProcessTree,
+}
+
+impl Drop for ProcessOwner {
+    fn drop(&mut self) {
+        self.tree.terminate(&mut self.child);
+        self.drain.abort();
+    }
 }
 
 /// Map a `kinds` string to a [`TaskKind`].
@@ -167,56 +249,6 @@ fn parse_kind(k: &str) -> TaskKind {
         "browser" => TaskKind::Browser,
         other => TaskKind::Custom(other.to_string()),
     }
-}
-
-fn find_executable(command: &str) -> Option<PathBuf> {
-    let command_path = Path::new(command);
-    if command_path.components().count() > 1 || command_path.is_absolute() {
-        return command_path.is_file().then(|| command_path.to_path_buf());
-    }
-
-    let path = env::var_os("PATH")?;
-    let names = executable_names(command);
-    for dir in env::split_paths(&path) {
-        for name in &names {
-            let candidate = dir.join(name);
-            if candidate.is_file() {
-                return Some(candidate);
-            }
-        }
-    }
-    None
-}
-
-#[cfg(windows)]
-fn executable_names(command: &str) -> Vec<OsString> {
-    if Path::new(command).extension().is_some() {
-        return vec![OsString::from(command)];
-    }
-
-    let mut names = Vec::new();
-    if let Some(pathext) = env::var_os("PATHEXT") {
-        for ext in env::split_paths(&pathext) {
-            if let Some(ext) = ext.to_str() {
-                names.push(OsString::from(format!("{command}{ext}")));
-            }
-        }
-    }
-    names.push(OsString::from(command));
-    names
-}
-
-#[cfg(not(windows))]
-fn executable_names(command: &str) -> Vec<OsString> {
-    vec![OsString::from(command)]
-}
-
-#[cfg(windows)]
-fn is_windows_shell_script(path: &Path) -> bool {
-    path.extension()
-        .and_then(|ext| ext.to_str())
-        .map(|ext| ext.eq_ignore_ascii_case("cmd") || ext.eq_ignore_ascii_case("bat"))
-        .unwrap_or(false)
 }
 
 /// Turn a single stdout line into zero or more normalized events.
@@ -269,7 +301,21 @@ pub(crate) fn map_line(
         return out;
     };
 
-    if let Some(event) = build_event(mapping, &value) {
+    if mapping.event == "file_change" && mapping.each.is_some() {
+        if let Some(changes) = mapping
+            .each
+            .as_ref()
+            .and_then(|path| extract::get(&value, path))
+            .and_then(Value::as_array)
+        {
+            out.extend(
+                changes
+                    .iter()
+                    .filter_map(|change| build_file_change(mapping, change))
+                    .map(Ok),
+            );
+        }
+    } else if let Some(event) = build_event(mapping, &value) {
         out.push(Ok(event));
     }
     out
@@ -343,34 +389,16 @@ fn build_event(m: &EventMapping, v: &Value) -> Option<Event> {
     }
 }
 
-/// FileChange mapping emits the *first* change; multi-file lines are represented by
-/// the first element (the runtime already receives a stream, and most agents emit one
-/// patch item per line). `each` addresses the array; `path`/`kind` are relative to it.
+/// Build a single change. `map_line` applies this to every `each` array element.
 fn build_file_change(m: &EventMapping, v: &Value) -> Option<Event> {
-    if let Some(each_path) = &m.each {
-        let arr = extract::get(v, each_path)?.as_array()?;
-        let first = arr.first()?;
-        let path = m
-            .path
+    let path = m.path.as_ref().and_then(|p| extract::resolve_field(v, p))?;
+    let kind = parse_change_kind(
+        m.kind
             .as_ref()
-            .and_then(|p| extract::resolve_field(first, p))?;
-        let kind = parse_change_kind(
-            m.kind
-                .as_ref()
-                .and_then(|p| extract::resolve_field(first, p))
-                .as_deref(),
-        );
-        Some(Event::FileChange { path, kind })
-    } else {
-        let path = m.path.as_ref().and_then(|p| extract::resolve_field(v, p))?;
-        let kind = parse_change_kind(
-            m.kind
-                .as_ref()
-                .and_then(|p| extract::resolve_field(v, p))
-                .as_deref(),
-        );
-        Some(Event::FileChange { path, kind })
-    }
+            .and_then(|p| extract::resolve_field(v, p))
+            .as_deref(),
+    );
+    Some(Event::FileChange { path, kind })
 }
 
 fn build_todo_list(m: &EventMapping, v: &Value) -> Option<Event> {
@@ -547,5 +575,32 @@ result    = { event = "result",  text = "result" }
         assert!(map_line(&a.manifest, r#"{"type":"mystery"}"#, &mut seen).is_empty());
         assert!(map_line(&a.manifest, "not json at all", &mut seen).is_empty());
         assert!(map_line(&a.manifest, "", &mut seen).is_empty());
+    }
+
+    #[test]
+    fn codex_reports_every_file_in_a_completed_patch() {
+        let a = ManifestAdapter::from_toml(include_str!("../../../manifeste/codex.toml"))
+            .expect("valid built-in manifest");
+        let mut seen = true;
+        let events = map_line(
+            &a.manifest,
+            r#"{"type":"item.completed","item":{"type":"file_change","changes":[{"path":"new.txt","kind":"add"},{"path":"edited.txt","kind":"update"},{"path":"old.txt","kind":"delete"}]}}"#,
+            &mut seen,
+        );
+        let changes = events
+            .into_iter()
+            .map(|event| match event.unwrap() {
+                Event::FileChange { path, kind } => (path, kind),
+                event => panic!("unexpected event: {event:?}"),
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(
+            changes,
+            vec![
+                ("new.txt".into(), ChangeKind::Add),
+                ("edited.txt".into(), ChangeKind::Update),
+                ("old.txt".into(), ChangeKind::Delete),
+            ]
+        );
     }
 }

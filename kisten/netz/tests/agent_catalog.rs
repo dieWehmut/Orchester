@@ -14,22 +14,38 @@ fn agent_catalog_projects_registry_without_commands_or_paths() {
         .iter()
         .map(|agent| agent.id.as_str())
         .collect();
-    assert_eq!(names, vec!["claude", "codex", "mock", "opencode"]);
+    assert_eq!(names, vec!["claude", "codex", "opencode"]);
+    assert!(!names.contains(&"mock"));
+    assert!(registry.get("mock").is_none());
 
-    let mock = catalog
+    let codex = catalog
         .agents
         .iter()
-        .find(|agent| agent.id == "mock")
-        .expect("mock agent");
-    assert_eq!(mock.task_kinds, vec!["chat"]);
-    assert!(!mock.supports_resume);
-    assert!(mock.streaming);
-    assert_eq!(mock.availability, AgentAvailabilityDto::Available);
+        .find(|agent| agent.id == "codex")
+        .expect("real codex agent");
+    assert_eq!(codex.task_kinds, vec!["code", "review", "chat"]);
+    assert!(codex.supports_resume);
+    assert!(codex.streaming);
 
     let json = serde_json::to_string(&catalog).expect("catalog JSON");
     assert!(!json.contains("command"));
     assert!(!json.contains("PATH"));
 
     let value: serde_json::Value = serde_json::from_str(&json).expect("catalog JSON value");
-    assert_eq!(value["agents"][2]["availability"], "available");
+    let serialized_codex = &value["agents"][1];
+    assert_eq!(serialized_codex["id"], "codex");
+    assert_eq!(
+        serialized_codex["task_kinds"],
+        serde_json::json!(["code", "review", "chat"])
+    );
+    assert_eq!(serialized_codex["supports_resume"], true);
+    assert_eq!(serialized_codex["streaming"], true);
+    // Installation differs across developer machines and CI; verify the DTO's
+    // serialization without assuming that any CLI is present on PATH.
+    let availability = match codex.availability {
+        AgentAvailabilityDto::Available => "available",
+        AgentAvailabilityDto::Missing => "missing",
+        AgentAvailabilityDto::Unknown => "unknown",
+    };
+    assert_eq!(serialized_codex["availability"], availability);
 }

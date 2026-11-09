@@ -15,6 +15,7 @@ mod error;
 pub mod extract;
 mod manifest;
 mod manifest_adapter;
+pub mod process;
 
 pub use adapter::{AdapterAvailability, AgentAdapter, AvailabilityStatus, EventStream};
 pub use error::AdapterError;

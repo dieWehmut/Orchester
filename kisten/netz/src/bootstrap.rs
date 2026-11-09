@@ -100,6 +100,15 @@ impl ServerContext {
         &self.control
     }
 
+    /// Supply an embedded adapter catalog, including isolated test fixtures.
+    pub fn with_registry(self, registry: Registry) -> Self {
+        let _ = self
+            .agent_status
+            .refresh_catalog(agent_status_response(&registry));
+        *self.registry.write().unwrap_or_else(|e| e.into_inner()) = registry;
+        self
+    }
+
     pub fn registry(&self) -> Registry {
         self.registry
             .read()

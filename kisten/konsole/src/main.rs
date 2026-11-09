@@ -12,6 +12,7 @@ mod interactive;
 mod model_manager;
 mod plugin;
 mod process;
+mod remote;
 mod render;
 mod self_agent;
 mod text;
@@ -159,6 +160,10 @@ async fn run(cli: Cli) -> Result<ExitCode, CliError> {
             return Ok(ExitCode::SUCCESS);
         }
         Some(Command::Run(run)) => run.prompt,
+        Some(Command::Remote(args)) => {
+            remote::serve(args, json).await?;
+            return Ok(ExitCode::SUCCESS);
+        }
         None => prompt,
     };
 

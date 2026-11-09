@@ -15,7 +15,7 @@ pub struct Cli {
     #[command(subcommand)]
     pub command: Option<Command>,
 
-    /// Agent to run (e.g. `mock`, `claude`, `codex`, `opencode`).
+    /// Agent to run (e.g. `claude`, `codex`, `opencode`).
     #[arg(long, short = 'a', global = true)]
     pub agent: Option<String>,
 
@@ -71,6 +71,33 @@ pub enum Command {
 
     /// Forget a provider API key held in the OS keyring.
     Logout(CredentialArgs),
+
+    /// Serve computer projects and agents for paired phones and computers.
+    Remote(RemoteArgs),
+}
+
+#[derive(Debug, Args)]
+pub struct RemoteArgs {
+    /// Interface to listen on. Use the computer's LAN IP or 0.0.0.0 for phones.
+    #[arg(long, default_value = "127.0.0.1")]
+    pub bind: std::net::IpAddr,
+    #[arg(long, default_value_t = 7337)]
+    pub port: u16,
+    /// Default project for remote agents.
+    #[arg(long)]
+    pub workspace: std::path::PathBuf,
+    /// Additional absolute directory trees phones may browse and select projects from.
+    #[arg(long)]
+    pub allow_root: Vec<std::path::PathBuf>,
+    /// Optional built mobile web UI directory (apps/mobile/dist).
+    #[arg(long)]
+    pub assets: Option<std::path::PathBuf>,
+    /// Exact browser development origin to permit. Native apps do not need CORS.
+    #[arg(long)]
+    pub allow_origin: Vec<String>,
+    /// Start with pairing closed (existing device credentials still work).
+    #[arg(long)]
+    pub no_pairing: bool,
 }
 
 #[derive(Debug, Args)]
