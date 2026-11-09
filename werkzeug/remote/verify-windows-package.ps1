@@ -8,7 +8,8 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2.0
 
 function Get-FileInventory([string]$Directory) {
-    $root = (Resolve-Path -LiteralPath $Directory).ProviderPath.TrimEnd('\', '/')
+    # PowerShell 5.1 preserves .. in UNC ProviderPath; FileInfo.FullName does not.
+    $root = [System.IO.Path]::GetFullPath((Resolve-Path -LiteralPath $Directory).ProviderPath).TrimEnd('\', '/')
     $files = New-Object 'System.Collections.Generic.Dictionary[string,string]' ([StringComparer]::Ordinal)
     foreach ($file in Get-ChildItem -LiteralPath $root -Recurse -File -Force) {
         $relative = $file.FullName.Substring($root.Length + 1).Replace('\', '/')

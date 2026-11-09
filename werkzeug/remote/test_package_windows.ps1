@@ -1,12 +1,12 @@
 [CmdletBinding()]
-param()
+param([string]$FixtureRoot = [System.IO.Path]::GetTempPath())
 
 # Isolated file/ZIP fixtures only. No backend, Agent CLI or network is started.
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2.0
 Add-Type -AssemblyName System.IO.Compression, System.IO.Compression.FileSystem
 $powerShell = (Get-Process -Id $PID).Path
-$tempRoot = Join-Path ([System.IO.Path]::GetTempPath()) ('orchester-package-test-' + [Guid]::NewGuid().ToString('N'))
+$tempRoot = Join-Path $FixtureRoot ('orchester-package-test-' + [Guid]::NewGuid().ToString('N'))
 $utf8 = New-Object System.Text.UTF8Encoding($false)
 $passed = 0
 
@@ -137,6 +137,15 @@ try {
     Assert-True ([Convert]::ToBase64String([System.IO.File]::ReadAllBytes((Join-Path $valid.Output 'orchester.exe'))) -ceq [Convert]::ToBase64String([System.IO.File]::ReadAllBytes($valid.Binary))) 'binary changed during packaging'
     $result = Invoke-Script (Join-Path $valid.Output 'verify.ps1')
     Assert-True ($result.ExitCode -eq 0 -and $result.Output.Contains('14 SHA256 entries and 4 APK/Web files')) "delivered verifier failed: $($result.Output)"
+    $passed++
+
+    # Exercise parent segments in the public verifier arguments. Running this
+    # suite with an UNC FixtureRoot also verifies the packager's inferred root.
+    $result = Invoke-Script $valid.Verifier @('-AssetDirectory', (Join-Path $valid.Assets 'assets/..'), '-Apk', $valid.Apk)
+    Assert-True ($result.ExitCode -eq 0 -and $result.Output.Contains('4 files')) "artifact parent-segment path failed: $($result.Output)"
+    $passed++
+    $result = Invoke-Script (Join-Path $valid.Output 'verify.ps1') @('-PackageDirectory', (Join-Path $valid.Output 'web/..'))
+    Assert-True ($result.ExitCode -eq 0 -and $result.Output.Contains('14 SHA256 entries and 4 APK/Web files')) "package parent-segment path failed: $($result.Output)"
     $passed++
 
     Test-InputRejection -Name 'stale-byte' -Changes @{'assets/main.js' = $utf8.GetBytes('abd')} -Expected 'SHA256 mismatch'
