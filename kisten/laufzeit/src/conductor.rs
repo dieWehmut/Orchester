@@ -78,12 +78,15 @@ impl Conductor {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use orchester_adapter::MockAdapter;
     use orchester_protokoll::{Event, Outcome};
     use std::path::PathBuf;
+    use std::sync::Arc;
 
     fn conductor() -> Conductor {
         let mut registry = Registry::new();
         registry.register_builtins();
+        registry.register(Arc::new(MockAdapter::new()));
         Conductor::new(registry)
     }
 

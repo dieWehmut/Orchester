@@ -45,3 +45,6 @@ keyring = { workspace = true, features = ["apple-native"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 keyring = { workspace = true, features = ["linux-native"] }
+
+[dev-dependencies]
+orchester-adapter = { workspace = true, features = ["test-support"] }
