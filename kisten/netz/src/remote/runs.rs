@@ -18,7 +18,7 @@ pub(super) async fn list(
             .filter(|run| {
                 q.project_id
                     .as_deref()
-                    .is_none_or(|id| run.summary["project_id"] == id)
+                    .map_or(true, |id| run.summary["project_id"] == id)
             })
             .map(|run| run.summary.clone())
             .collect();
