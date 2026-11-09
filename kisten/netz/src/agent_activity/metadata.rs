@@ -1,5 +1,5 @@
 //! Optional, read-only Codex title/index hints. Transcript roots remain authoritative.
-use super::{ActivityDetail, clip, opaque_id};
+use super::{clip, opaque_id, ActivityDetail};
 use rusqlite::{Connection, OpenFlags};
 use std::{
     collections::{HashMap, HashSet},

@@ -6,9 +6,9 @@ mod opencode;
 mod transcript;
 
 use axum::{
-    Json,
     extract::{Path, Query, State},
     http::HeaderMap,
+    Json,
 };
 use cookie::Cookie;
 use serde::{Deserialize, Serialize};
@@ -22,9 +22,9 @@ use std::{
 use time::OffsetDateTime;
 
 use crate::{
-    SESSION_COOKIE_NAME, ServerContext,
-    api_error::{ApiErrorCode, ApiErrorResponse, api_error_response, request_id_from_headers},
+    api_error::{api_error_response, request_id_from_headers, ApiErrorCode, ApiErrorResponse},
     health::no_store_headers,
+    ServerContext, SESSION_COOKIE_NAME,
 };
 
 const SESSION_LIMIT: usize = 24;

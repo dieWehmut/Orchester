@@ -108,9 +108,18 @@ impl ToolExecutor {
         scoped.execute_async(started, cancel).await
     }
 
-    pub async fn execute_async(&self, started: StartedTool, cancel: CancellationToken) -> Result<ToolExecution, ToolExecutorError> {
-        if cancel.is_cancelled() { return Err(ToolExecutorError::Cancelled); }
-        if matches!(started.action(), AgentAction::WriteFile { .. } | AgentAction::ApplyPatch { .. }) {
+    pub async fn execute_async(
+        &self,
+        started: StartedTool,
+        cancel: CancellationToken,
+    ) -> Result<ToolExecution, ToolExecutorError> {
+        if cancel.is_cancelled() {
+            return Err(ToolExecutorError::Cancelled);
+        }
+        if matches!(
+            started.action(),
+            AgentAction::WriteFile { .. } | AgentAction::ApplyPatch { .. }
+        ) {
             tokio::select! {
                 biased;
                 _ = cancel.cancelled() => Err(ToolExecutorError::Cancelled),

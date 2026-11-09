@@ -8,15 +8,15 @@ mod agent_process;
 mod agent_status;
 mod api_error;
 mod bootstrap;
-mod config;
 mod composer;
-mod mcp;
+mod config;
 #[cfg(feature = "static-files")]
 mod embedded;
 mod fragment;
 mod health;
 mod lifecycle;
 mod listener;
+mod mcp;
 mod model_catalog;
 mod model_selection;
 mod plugins;
@@ -33,8 +33,8 @@ mod workspace;
 mod workspace_review;
 
 pub use agent_activity::{
-    ActivityDetail, ActivityEntry, ActivitySource, ActivitySummary, ActivityTurn, AgentActivityRoots,
-    LocalAgentActivity, LocalAgentActivityError, LocalAgentActivitySnapshot,
+    ActivityDetail, ActivityEntry, ActivitySource, ActivitySummary, ActivityTurn,
+    AgentActivityRoots, LocalAgentActivity, LocalAgentActivityError, LocalAgentActivitySnapshot,
 };
 pub use agent_catalog::{
     agent_catalog_response, AgentAvailabilityDto, AgentCatalogDto, AgentSummaryDto,

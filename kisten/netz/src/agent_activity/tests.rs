@@ -1,6 +1,6 @@
 use super::*;
 use axum::{
-    body::{Body, to_bytes},
+    body::{to_bytes, Body},
     http::{Request, StatusCode},
 };
 use serde_json::json;
@@ -107,11 +107,9 @@ fn title_is_not_replaced_by_followup_and_tools_share_opaque_call_ids() {
     assert_eq!(row.summary.title, "Build the sidebar");
     assert!(row.entries[2].call_id.is_some());
     assert_eq!(row.entries[2].call_id, row.entries[3].call_id);
-    assert!(
-        !serde_json::to_string(&row)
-            .unwrap()
-            .contains("private-call")
-    );
+    assert!(!serde_json::to_string(&row)
+        .unwrap()
+        .contains("private-call"));
 }
 
 #[test]
@@ -133,7 +131,7 @@ fn claude_rewritten_tool_keeps_its_result_relationship() {
 
 #[test]
 fn codex_index_uses_source_titles_and_projects_without_following_outside_paths() {
-    use rusqlite::{Connection, params};
+    use rusqlite::{params, Connection};
     let fixture = Fixture::new();
     let outside = Fixture::new();
     let source = fixture.file(
@@ -281,16 +279,13 @@ fn codex_reads_visible_messages_tools_and_lifecycle_without_private_payloads() {
     assert_eq!(row.summary.project, "demo");
     assert_eq!(row.summary.state, "completed");
     assert_eq!(row.entries.len(), 4);
-    assert!(
-        row.entries
-            .iter()
-            .any(|e| e.kind == "result" && e.text.contains('\n'))
-    );
-    assert!(
-        !serde_json::to_string(&row)
-            .unwrap()
-            .contains("DO_NOT_EXPOSE")
-    );
+    assert!(row
+        .entries
+        .iter()
+        .any(|e| e.kind == "result" && e.text.contains('\n')));
+    assert!(!serde_json::to_string(&row)
+        .unwrap()
+        .contains("DO_NOT_EXPOSE"));
 }
 
 #[test]
@@ -664,8 +659,16 @@ async fn routes_require_a_session_reject_paths_and_return_no_store_content() {
         ("?before=not-a-number", StatusCode::BAD_REQUEST),
         ("?path=outside.jsonl", StatusCode::BAD_REQUEST),
     ] {
-        let response = router.clone().oneshot(Request::get(format!("/api/v1/agents/activity/{id}{query}"))
-            .header("cookie", &cookie).body(Body::empty()).unwrap()).await.unwrap();
+        let response = router
+            .clone()
+            .oneshot(
+                Request::get(format!("/api/v1/agents/activity/{id}{query}"))
+                    .header("cookie", &cookie)
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
         assert_eq!(response.status(), status, "{query}");
     }
     for (url, status) in [

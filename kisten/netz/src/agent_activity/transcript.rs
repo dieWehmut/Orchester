@@ -1,7 +1,7 @@
-use super::{ActivityDetail, ActivityTurn, clip, empty_detail, finish, opaque_id, push_entry};
+use super::{clip, empty_detail, finish, opaque_id, push_entry, ActivityDetail, ActivityTurn};
 use serde_json::Value;
 use std::collections::HashSet;
-use time::{OffsetDateTime, format_description::well_known::Rfc3339};
+use time::{format_description::well_known::Rfc3339, OffsetDateTime};
 
 pub(super) fn text(value: &Value) -> String {
     if let Some(text) = value.as_str() {

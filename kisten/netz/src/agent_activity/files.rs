@@ -1,4 +1,4 @@
-use super::{ActivityDetail, SESSION_LIMIT, transcript};
+use super::{transcript, ActivityDetail, SESSION_LIMIT};
 use std::{
     collections::HashMap,
     fs::{self, File},
