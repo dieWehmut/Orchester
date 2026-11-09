@@ -52,8 +52,10 @@ discriminator = "type"
 
     let context = ServerContext::new(Some(workspace.paths()), ServerControl::new());
 
-    assert!(context.registry().get("custom").is_some());
-    assert_eq!(context.registry().len(), 5);
+    let registry = context.registry();
+    assert!(registry.get("custom").is_some());
+    assert!(registry.get("mock").is_none());
+    assert_eq!(registry.len(), 4);
 }
 
 #[test]
