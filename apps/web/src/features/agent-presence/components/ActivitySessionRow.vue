@@ -31,7 +31,7 @@ const fullAge = computed(() => spelledAge(props.session.updated_at / 1000, local
 .activity-row[data-nested='true'] .activity-row__open { padding-inline-start: calc(var(--space-1) * 8.5); }
 .activity-row__content { flex: 1; display: grid; gap: 2px; min-inline-size: 0; }
 .activity-row__title, .activity-row__environment { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.activity-row__environment { display: flex; align-items: center; gap: 8px; color: var(--color-text-tertiary); font-size: 11px; }
+.activity-row__environment { display: flex; align-items: center; gap: var(--space-2); color: var(--color-text-tertiary); font-size: 11px; }
 .activity-row__origin { min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; }
 .activity-row__state, .activity-row__age { flex-shrink: 0; }
 .activity-row__icon, .activity-row__running, .activity-row__interrupted, .activity-row__unread { flex-shrink: 0; }

@@ -98,7 +98,7 @@ watch(detail, async (next, previous) => {
 .agent-activity__header { display: flex; align-items: center; gap: var(--space-3); min-block-size: 52px; padding: var(--space-2) var(--space-5); }
 .agent-activity__header h1 { flex: 1; min-inline-size: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 600; outline: none; }
 .agent-activity__folder { flex-shrink: 0; color: var(--color-text-secondary); }
-.agent-activity__environment { flex-shrink: 1; max-inline-size: 35%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border: 1px solid var(--color-border-subtle); border-radius: 6px; padding: 3px 6px; color: var(--color-text-tertiary); font-size: 11px; }
+.agent-activity__environment { flex-shrink: 1; max-inline-size: 35%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border: 1px solid var(--color-border-subtle); border-radius: 6px; padding: calc(var(--space-1) * 0.75) calc(var(--space-1) * 1.5); color: var(--color-text-tertiary); font-size: 11px; }
 .agent-activity__icon { display: grid; place-items: center; inline-size: 28px; block-size: 28px; border: 0; border-radius: 6px; background: transparent; color: var(--color-text-secondary); cursor: pointer; }
 .agent-activity__header :deep(.app-menu__trigger) { border: 0; padding: var(--space-1); background: transparent; }
 .agent-activity__live { inline-size: 5px; block-size: 5px; border-radius: 50%; background: var(--color-text-tertiary); }
