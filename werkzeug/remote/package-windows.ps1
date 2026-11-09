@@ -3,7 +3,7 @@ param(
     [Parameter(Mandatory = $true)][string]$OutputDirectory
 )
 $ErrorActionPreference = 'Stop'
-$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).ProviderPath
+$repoRoot = [System.IO.Path]::GetFullPath((Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '../..')).ProviderPath)
 $binaryPath = (Resolve-Path -LiteralPath $Binary).ProviderPath
 if (-not (Test-Path -LiteralPath $binaryPath -PathType Leaf)) {
     throw 'Binary must be an existing Windows Orchester executable.'
