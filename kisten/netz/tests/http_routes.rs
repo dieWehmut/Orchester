@@ -169,6 +169,59 @@ async fn session_bootstrap_sets_an_http_only_cookie_and_returns_only_csrf_json()
 }
 
 #[tokio::test]
+async fn another_window_bootstrap_preserves_the_main_windows_mutation_authority() {
+    let router = app_router(test_context());
+    let first = router
+        .clone()
+        .oneshot(Request::get("/api/v1/session").body(Body::empty()).unwrap())
+        .await
+        .unwrap();
+    let first_cookie = first.headers()[header::SET_COOKIE]
+        .to_str()
+        .unwrap()
+        .split(';')
+        .next()
+        .unwrap()
+        .to_owned();
+    let first_json: Value =
+        serde_json::from_slice(&to_bytes(first.into_body(), 4096).await.unwrap()).unwrap();
+    let second = router
+        .clone()
+        .oneshot(
+            Request::get("/api/v1/session")
+                .header(header::COOKIE, &first_cookie)
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    // Browsers and WebView windows share a cookie jar, but each view keeps its
+    // original CSRF token in memory. Apply the second window's Set-Cookie first.
+    let shared_cookie = second.headers()[header::SET_COOKIE]
+        .to_str()
+        .unwrap()
+        .split(';')
+        .next()
+        .unwrap()
+        .to_owned();
+    let second_json: Value =
+        serde_json::from_slice(&to_bytes(second.into_body(), 4096).await.unwrap()).unwrap();
+    let main_mutation = router
+        .oneshot(
+            Request::post("/api/v1/session/revoke")
+                .header(header::COOKIE, &shared_cookie)
+                .header("x-csrf-token", first_json["csrf_token"].as_str().unwrap())
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(main_mutation.status(), StatusCode::NO_CONTENT);
+    assert_eq!(shared_cookie, first_cookie);
+    assert_eq!(second_json, first_json);
+}
+
+#[tokio::test]
 async fn revoke_requires_csrf_and_accepts_the_issued_cookie_once() {
     let router = app_router(test_context());
     let denied = router

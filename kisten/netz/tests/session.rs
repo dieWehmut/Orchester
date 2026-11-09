@@ -13,8 +13,11 @@ fn session_store_issues_distinct_tokens_and_validates_csrf() {
 
     assert_ne!(first.session_cookie, second.session_cookie);
     assert_ne!(first.csrf_token, second.csrf_token);
+    assert_ne!(first.csrf_token, first.session_cookie);
     assert!(store.validate(&first.session_cookie, &first.csrf_token));
     assert!(!store.validate(&first.session_cookie, &second.csrf_token));
+    assert_eq!(store.bootstrap_existing(&first.session_cookie), Some(first));
+    assert!(store.bootstrap_existing("unknown").is_none());
 }
 
 #[test]
@@ -23,10 +26,12 @@ fn session_store_rejects_expired_and_revoked_sessions() {
     let issued = store.issue().expect("expired session");
 
     assert!(!store.validate(&issued.session_cookie, &issued.csrf_token));
+    assert!(store.bootstrap_existing(&issued.session_cookie).is_none());
 
     let store = SessionStore::new(Duration::from_secs(300));
     let issued = store.issue().expect("revocable session");
     assert!(store.revoke(&issued.session_cookie));
+    assert!(store.bootstrap_existing(&issued.session_cookie).is_none());
     assert!(!store.revoke(&issued.session_cookie));
     assert_eq!(
         store.validate_result(&issued.session_cookie, &issued.csrf_token),
@@ -43,6 +48,9 @@ fn session_bootstrap_debug_output_redacts_raw_tokens() {
     assert!(!debug.contains(&issued.session_cookie));
     assert!(!debug.contains(&issued.csrf_token));
     assert!(debug.contains("REDACTED"));
+    let stored = format!("{store:?}");
+    assert!(!stored.contains(&issued.session_cookie));
+    assert!(!stored.contains(&issued.csrf_token));
 }
 
 #[test]
