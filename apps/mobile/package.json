@@ -1,0 +1,30 @@
+{
+  "name": "@orchester/mobile",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 4175",
+    "build": "vue-tsc --noEmit && vite build",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run",
+    "sync": "cap sync",
+    "android": "cap open android",
+    "ios": "cap open ios"
+  },
+  "dependencies": {
+    "vue": "3.5.18",
+    "@capacitor/core": "8.6.0",
+    "@capacitor/android": "8.6.0",
+    "@capacitor/ios": "8.6.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.6.0",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "vite": "^7.1.2",
+    "vue-tsc": "^3.2.5",
+    "typescript": "5.9.3",
+    "vitest": "^4.1.10",
+    "jsdom": "^30.0.1"
+  }
+}
