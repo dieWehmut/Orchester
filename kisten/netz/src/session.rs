@@ -93,7 +93,7 @@ impl SessionStore {
 
     pub fn issue(&self) -> Result<SessionBootstrap, SessionStoreError> {
         let session_cookie = random_token()?;
-        let csrf_token = random_token()?;
+        let csrf_token = csrf_for_cookie(&session_cookie);
         let expires_at = SystemTime::now() + self.ttl;
         let session_hash = digest(&session_cookie);
         let csrf_hash = digest(&csrf_token);
@@ -109,6 +109,23 @@ impl SessionStore {
             session_cookie,
             csrf_token,
             expires_at: unix_seconds(expires_at),
+        })
+    }
+
+    /// Reuse a live browser session without rotating its shared cookie or
+    /// extending its lifetime. Only hashes remain in the store.
+    pub fn bootstrap_existing(&self, session_cookie: &str) -> Option<SessionBootstrap> {
+        let hash = digest(session_cookie);
+        let mut sessions = self.sessions.lock().expect("session store lock");
+        let stored = *sessions.get(&hash)?;
+        if SystemTime::now() >= stored.expires_at {
+            sessions.remove(&hash);
+            return None;
+        }
+        Some(SessionBootstrap {
+            session_cookie: session_cookie.to_owned(),
+            csrf_token: csrf_for_cookie(session_cookie),
+            expires_at: unix_seconds(stored.expires_at),
         })
     }
 
@@ -164,7 +181,7 @@ pub async fn session_bootstrap_handler(
     State(context): State<ServerContext>,
     headers: HeaderMap,
 ) -> Result<(HeaderMap, Json<SessionBootstrapDto>), ApiErrorResponse> {
-    issue_session_response(&context, request_id_from_headers(&headers))
+    issue_session_response(&context, &headers, request_id_from_headers(&headers))
 }
 
 pub async fn fragment_exchange_handler(
@@ -181,17 +198,30 @@ pub async fn fragment_exchange_handler(
     if !context.fragments().consume(&request.fragment_token) {
         return Err(api_error_response(ApiErrorCode::Unauthorized, request_id));
     }
-    issue_session_response(&context, request_id)
+    issue_session_response(&context, &headers, request_id)
 }
 
 fn issue_session_response(
     context: &ServerContext,
+    request_headers: &HeaderMap,
     request_id: Option<&str>,
 ) -> Result<(HeaderMap, Json<SessionBootstrapDto>), ApiErrorResponse> {
-    let issued = context
-        .sessions()
-        .issue()
-        .map_err(|_| api_error_response(ApiErrorCode::Unavailable, request_id))?;
+    let existing = request_headers
+        .get(header::COOKIE)
+        .and_then(|value| value.to_str().ok())
+        .and_then(|value| {
+            Cookie::split_parse(value)
+                .filter_map(Result::ok)
+                .find(|cookie| cookie.name() == SESSION_COOKIE_NAME)
+        })
+        .and_then(|cookie| context.sessions().bootstrap_existing(cookie.value()));
+    let issued = match existing {
+        Some(issued) => issued,
+        None => context
+            .sessions()
+            .issue()
+            .map_err(|_| api_error_response(ApiErrorCode::Unavailable, request_id))?,
+    };
     let cookie = Cookie::build((SESSION_COOKIE_NAME, issued.session_cookie))
         .http_only(true)
         .same_site(SameSite::Lax)
@@ -259,6 +289,17 @@ fn random_token() -> Result<String, SessionStoreError> {
 
 fn digest(value: &str) -> [u8; 32] {
     Sha256::digest(value.as_bytes()).into()
+}
+
+fn csrf_for_cookie(session_cookie: &str) -> String {
+    // A domain-separated one-way derivation from the random HttpOnly cookie
+    // lets another authenticated view recover the same CSRF token without
+    // storing either raw token. It differs from the session lookup hash.
+    let bytes = Sha256::new()
+        .chain_update(b"orchester-csrf-v1\0")
+        .chain_update(session_cookie.as_bytes())
+        .finalize();
+    bytes.iter().map(|byte| format!("{byte:02x}")).collect()
 }
 
 fn unix_seconds(value: SystemTime) -> u64 {
