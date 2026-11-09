@@ -89,7 +89,7 @@ const iconMap: Record<HomeIcon, typeof Eye> = {
         <div class="site-section__heading">
           <p class="site-eyebrow">One contract, several surfaces</p>
           <h2 id="adapters-title">Keep the core steady as the surface changes.</h2>
-          <p>Typed boundaries make the local WebUI, static demo, and desktop shell feel related without sharing secrets.</p>
+          <p>Typed boundaries make the local WebUI, project site, and desktop shell feel related without sharing secrets.</p>
         </div>
         <div class="site-card-grid site-card-grid--compact" data-adapter-grid>
           <article v-for="item in homeAdapters" :key="item.id" class="site-card site-card--compact">
