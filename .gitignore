@@ -3,7 +3,8 @@
 **/target/
 **/*.rs.bk
 *.pdb
-sample
+# Local mobile UI reference images.
+/sample/
 # Keep Cargo.lock tracked (Orchester ships binaries).
 .cargo
 # ── Forschung: cloned reference repos ───────────────────────────────
@@ -28,6 +29,7 @@ apps/web/site/dist/
 apps/web/site/dist-*/
 .vite/
 *.tsbuildinfo
+__pycache__/
 # apps/web builds straight into the server crate that serves it.
 /kisten/netz/static/
 # Tauri generates these next to src-tauri; the config beside them is tracked.
@@ -64,6 +66,8 @@ docs/local
 !/npm/cli/README.md
 !/docs/PLAN-FRONTENDS.md
 !/apps/README.md
+!/apps/mobile/README.md
+!/werkzeug/mobile/README.md
 # The Codex-informed UI design record is a tracked deliverable. The blanket
 # *.md rule above exists to keep session notes out, so these need to opt back
 # in explicitly — the directory first, then the files inside it.
