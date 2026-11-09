@@ -119,6 +119,15 @@ impl SessionHistory {
         Ok(SessionHistoryPage { items, next_cursor })
     }
 
+    /// Authorized IDs loaded once for bulk reading-preference updates.
+    pub fn authorized_ids(&self) -> Result<std::collections::HashSet<String>, SessionHistoryError> {
+        let records = self.load_records()?;
+        let mut ids: std::collections::HashSet<String> =
+            summaries(&records).into_iter().map(|s| s.id).collect();
+        ids.extend(self.conversation_summaries()?.into_iter().map(|s| s.id));
+        Ok(ids)
+    }
+
     pub fn detail(&self, id: &str) -> Result<SessionHistoryDetail, SessionHistoryError> {
         let records = self.load_records()?;
         for (index, record) in records.iter().enumerate() {
