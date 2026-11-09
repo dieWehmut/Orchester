@@ -2,7 +2,7 @@
 import { InlineAlert, useAppearance } from '@orchester/design'
 import type { RunView } from '@orchester/ereignis'
 import type { ModelCatalogDto, ModelSelectionRequestDto, UiEventEnvelope } from '@orchester/protokoll'
-import { ArrowDown } from '@lucide/vue'
+import { ArrowDown, LoaderCircle } from '@lucide/vue'
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue'
 
 import { useI18n } from '../../i18n'
@@ -317,6 +317,9 @@ defineExpose({ focusPrompt, clearPrompt, editPrompt: reusePrompt })
       <div v-else class="run-panel__awaiting" data-run-awaiting-events role="status" aria-live="polite">
         <span>{{ props.busy ? t('run.starting') : t('run.awaiting') }}</span>
       </div>
+      <div v-if="props.busy && props.view.timeline.length > 0 && props.view.timeline.at(-1)?.type === 'message' && (props.view.timeline.at(-1) as { role?: string })?.role === 'user'" class="run-panel__waiting-reply" data-run-waiting-reply role="status" aria-live="polite">
+        <LoaderCircle :size="16" aria-hidden="true" /><span>{{ t('run.waitingReply') }}</span>
+      </div>
     </div>
     <div
       class="run-panel__top-fade"
@@ -362,7 +365,7 @@ defineExpose({ focusPrompt, clearPrompt, editPrompt: reusePrompt })
         :roam-span="companionSpan"
       />
     </div>
-    <QueuedPrompts :items="queued" :paused="queuePaused" @remove="emit('queue-remove', $event)" @edit="emit('queue-edit', $event)" @resume="emit('queue-resume')" />
+    <QueuedPrompts :items="queued.filter(item => item.status !== 'sending')" :paused="queuePaused" @remove="emit('queue-remove', $event)" @edit="emit('queue-edit', $event)" @resume="emit('queue-resume')" />
     <RunComposer
       ref="composer"
       :model-value="composerDraft"
@@ -477,6 +480,11 @@ defineExpose({ focusPrompt, clearPrompt, editPrompt: reusePrompt })
   padding-inline: 0;
   padding-block-start: 0;
 }
+
+.run-panel__waiting-reply { display: flex; flex: none; align-items: center; gap: var(--space-2); inline-size: min(100%, var(--composer-max-width, 54rem)); margin-inline: auto; padding: var(--space-3) var(--space-4); color: var(--color-text-tertiary); font-size: var(--text-sm); }
+.run-panel__waiting-reply svg { animation: reply-spin 1.4s linear infinite; }
+@keyframes reply-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .run-panel__waiting-reply svg { animation: none; } }
 
 .run-panel__awaiting {
   display: grid;

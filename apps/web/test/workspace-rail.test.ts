@@ -1,14 +1,22 @@
 import { AGENT_FLEET_FIXTURE, type BootstrapDto } from '@orchester/protokoll'
-import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { mount, flushPromises } from '@vue/test-utils'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
+import type { HttpClient } from '../src/api/http'
+import { emptyLibrary } from '../src/stores/library'
+
+const cleanups: (() => void)[] = []
+afterEach(() => { cleanups.splice(0).forEach(clean => clean()) })
 
 import { resetPinnedSessionsForTests } from '../src/composables/use-pinned-sessions'
 import { createAppStores } from '../src/stores/app'
 import WorkspaceView from '../src/views/WorkspaceView.vue'
 
 function readyStores() {
-  const stores = createAppStores()
+  const http = { get: vi.fn(async () => emptyLibrary()), put: vi.fn(async (_path, state) => ({ ...state, revision: state.revision + 1 })) } as unknown as HttpClient
+  const stores = createAppStores({ http, agentStatusStreamFactory: null })
+  stores.library.ready.value = true
+  cleanups.push(() => stores.stop())
   stores.bootstrap.context.value = {
     schema_version: 1,
     service_version: '0.1.2',
@@ -25,11 +33,12 @@ describe('WorkspaceView Codex-style rail', () => {
   it('renders the rail sections with the pinned list and the sessions above the fleet', () => {
     const wrapper = mount(WorkspaceView, { global: { plugins: [readyStores()] } })
 
+    cleanups.push(() => wrapper.unmount())
     const sections = wrapper
       .findAll('[data-pane="sessions"] [data-rail-section]')
       .map((node) => node.attributes('data-rail-section'))
 
-    expect(sections).toEqual(['primary', 'projects', 'fleet', 'sessions'])
+    expect(sections).toEqual(['primary', 'projects', 'library', 'fleet', 'sessions'])
     // The first list is the reader's own, as the reference's sidebar opens, and
     // the workspace is named on the product row rather than in a list of one.
     expect(wrapper.get('[data-rail-section="projects"] [data-pinned-empty]')).toBeTruthy()
@@ -57,10 +66,11 @@ describe('WorkspaceView Codex-style rail', () => {
     stores.sessions.status.value = 'ready'
 
     const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+    cleanups.push(() => wrapper.unmount())
     await nextTick()
 
     await wrapper.get('[data-session-pin]').trigger('click')
-    await nextTick()
+    await flushPromises()
 
     // The reader's own list, above the recent ones: the reference opens with it,
     // and it is the reader's ordering rather than a fact about the run.
@@ -70,7 +80,7 @@ describe('WorkspaceView Codex-style rail', () => {
     expect(wrapper.find('[data-rail-section="sessions"] [data-session-id]').exists()).toBe(false)
 
     await pinned.get('[data-session-pin]').trigger('click')
-    await nextTick()
+    await flushPromises()
 
     expect(wrapper.get('[data-rail-section="projects"] [data-pinned-empty]')).toBeTruthy()
     expect(wrapper.find('[data-rail-section="sessions"] [data-session-id]').exists()).toBe(true)
@@ -81,6 +91,7 @@ describe('WorkspaceView Codex-style rail', () => {
     const stores = readyStores()
     const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
 
+    cleanups.push(() => wrapper.unmount())
     await wrapper.get('[data-rail-action="new-session"]').trigger('click')
 
     expect(stores.sessions.selectedId.value).toBeNull()

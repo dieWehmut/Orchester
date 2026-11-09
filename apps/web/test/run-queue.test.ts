@@ -1,3 +1,4 @@
+import { fixtureEnvelope, runId } from '@orchester/protokoll'
 import { flushPromises, mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { createRunStore } from '../src/stores/run'
@@ -12,6 +13,55 @@ function setup(start = vi.fn(async () => ({ run_id: 'run-1', events_url: '/event
 }
 
 describe('queued messages', () => {
+  it('shows the sent prompt before acknowledgement and retains it until reset', async () => {
+    let resolve!: (value: { run_id: string; events_url: string }) => void
+    const { queue } = setup(vi.fn(() => new Promise(done => { resolve = done })))
+    queue.enqueue('Immediate message')
+    expect(queue.view.value.timeline.at(-1)).toMatchObject({ role: 'user', text: 'Immediate message' })
+    expect(queue.view.value.timeline.at(-1)?.occurredAt).toBeTruthy()
+    resolve({ run_id: 'run-1', events_url: '/events' })
+    await flushPromises()
+    expect(queue.view.value.timeline.filter(item => item.type === 'message')).toHaveLength(1)
+    queue.openConversation(null)
+    expect(queue.view.value.timeline).toEqual([])
+    queue.dispose()
+  })
+
+  it('replaces the pending bubble with durable events and streams consecutive replies', async () => {
+    let serial = 0
+    const { run, queue } = setup(vi.fn(async () => ({ run_id: `run-${++serial}`, events_url: '/events' })))
+    const deliver = (id: string, sequence: number, kind: Parameters<typeof fixtureEnvelope>[1]) => run.applyEvent({ ...fixtureEnvelope(sequence, kind), run_id: runId(id) })
+    queue.enqueue('First')
+    await flushPromises()
+    deliver('run-1', 1, { type: 'user_message', text: 'First' })
+    expect(queue.view.value.timeline.filter(item => item.type === 'message' && item.role === 'user')).toHaveLength(1)
+    deliver('run-1', 2, { type: 'message_delta', text: 'Hel', final: false })
+    expect(queue.view.value.timeline.at(-1)).toMatchObject({ text: 'Hel', final: false })
+    deliver('run-1', 3, { type: 'message_delta', text: 'lo', final: true })
+    expect(queue.view.value.timeline.at(-1)).toMatchObject({ text: 'Hello', final: true })
+    run.lifecycle.value = 'completed'
+    queue.enqueue('Second')
+    await flushPromises()
+    deliver('run-2', 1, { type: 'user_message', text: 'Second' })
+    const messages = queue.view.value.timeline.filter(item => item.type === 'message')
+    expect(messages.map(item => item.text)).toEqual(['First', 'Hello', 'Second'])
+    run.reset()
+    expect(queue.view.value.timeline.some(item => item.key.startsWith('pending:'))).toBe(false)
+    queue.dispose()
+  })
+
+  it('discards an old pending request when switching conversations', async () => {
+    let resolve!: (value: { run_id: string; events_url: string }) => void
+    const { queue } = setup(vi.fn(() => new Promise(done => { resolve = done })))
+    queue.enqueue('Old conversation')
+    queue.openConversation('new-conversation')
+    resolve({ run_id: 'old', events_url: '/events' })
+    await flushPromises()
+    expect(queue.view.value.timeline).toEqual([])
+    expect(queue.items.value).toEqual([])
+    queue.dispose()
+  })
+
   it('accepts rapid drafts once, starts them in order only after completion', async () => {
     const { run, queue, start } = setup()
     queue.enqueue('First'); queue.enqueue('Second'); queue.enqueue('Third')

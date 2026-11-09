@@ -4,6 +4,8 @@ import type { Pinia } from 'pinia'
 import { createHttpClient, type HttpClient } from '../api/http'
 import { createRunsApi, type RunsApi } from '../api/runs'
 import { createSessionsApi } from '../api/sessions'
+import { createLibraryApi } from '../api/library'
+import { createLibraryStore } from './library'
 import { createModelsApi } from '../api/models'
 import {
   createBootstrapStore,
@@ -30,6 +32,7 @@ export interface AppStores {
   runs: RunsApi
   bootstrap: BootstrapStore
   sessions: SessionsStore
+  library: ReturnType<typeof createLibraryStore>
   run: RunStore
   queue: ReturnType<typeof createRunQueue>
   agents: ReturnType<typeof useAgentFleetStore>
@@ -70,6 +73,7 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
 
   const bootstrap = createBootstrapStore(bootstrapOptions)
   const sessions = createSessionsStore(createSessionsApi(http))
+  const library = createLibraryStore(createLibraryApi(http))
   const runs = createRunsApi(http)
   const run = createRunStore(runs, { runSocketFactory: createRunSocket })
   const queue = createRunQueue(run)
@@ -110,6 +114,7 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
     runs,
     bootstrap,
     sessions,
+    library,
     run,
     queue,
     agents,
@@ -121,8 +126,10 @@ export function createAppStores(options: AppStoresOptions = {}): AppStores {
     async start(): Promise<void> {
       await bootstrap.load()
       if (bootstrap.status.value === 'ready' && bootstrap.context.value?.workspace.selected) {
-        await Promise.all([sessions.load(), agents.start(), models.load(), review.load()])
+        await Promise.all([sessions.load(), library.load(), agents.start(), models.load(), review.load()])
         await sessions.restoreSelection(bootstrap.context.value.workspace.name ?? 'workspace')
+        const linked = new URLSearchParams(options.location?.search ?? globalThis.location?.search ?? '').get('session')
+        if (linked && /^s-[a-f0-9]{32}$/.test(linked)) await sessions.select(linked)
       }
     },
     stop(): void {

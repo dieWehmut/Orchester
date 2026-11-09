@@ -20,6 +20,7 @@ export interface SessionsStore {
   loadMore: () => Promise<void>
   select: (id: string | null) => Promise<void>
   restoreSelection: (workspace: string) => Promise<void>
+  ensureItems: (ids: readonly string[]) => Promise<void>
   reset: () => void
 }
 
@@ -44,6 +45,25 @@ export function createSessionsStore(api: SessionsApi): SessionsStore {
   let listGeneration = 0
   let detailGeneration = 0
   let selectionKey: string | null = null
+  // Pagination and refresh retain authorized detail rows; reset changes their scope.
+  let hydrationEpoch = 0
+  let fetching = new Set<string>()
+  const hydrated = new Map<string, SessionSummaryDto>()
+
+  async function ensureItems(ids: readonly string[]): Promise<void> {
+    const generation = hydrationEpoch
+    const inFlight = fetching
+    const missing = [...new Set(ids)].filter(id => !items.value.some(item => item.id === id) && !inFlight.has(id))
+    missing.forEach(id => inFlight.add(id))
+    for (let offset = 0; offset < missing.length; offset += 4) {
+      const results = await Promise.allSettled(missing.slice(offset, offset + 4).map(id => api.detail(id)))
+      if (generation !== hydrationEpoch) break
+      const found = results.flatMap(result => result.status === 'fulfilled' ? [result.value] : [])
+      found.forEach(item => hydrated.set(item.id, item))
+      items.value = mergeUnique(items.value, found)
+    }
+    missing.forEach(id => inFlight.delete(id))
+  }
 
   function rememberSelection(id: string | null): void {
     if (!selectionKey) return
@@ -69,7 +89,7 @@ export function createSessionsStore(api: SessionsApi): SessionsStore {
     try {
       const page = await api.list()
       if (generation !== listGeneration) return
-      items.value = mergeUnique([], page.items)
+      items.value = mergeUnique(page.items, [...hydrated.values()].filter(item => !page.items.some(row => row.id === item.id)))
       nextCursor.value = page.next_cursor
       status.value = 'ready'
     } catch (cause) {
@@ -123,6 +143,9 @@ export function createSessionsStore(api: SessionsApi): SessionsStore {
   }
 
   function reset(): void {
+    hydrationEpoch += 1
+    fetching = new Set<string>()
+    hydrated.clear()
     listGeneration += 1
     detailGeneration += 1
     status.value = 'idle'
@@ -148,6 +171,7 @@ export function createSessionsStore(api: SessionsApi): SessionsStore {
     loadMore,
     select,
     restoreSelection,
+    ensureItems,
     reset,
   }
 }

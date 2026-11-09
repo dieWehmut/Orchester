@@ -49,6 +49,22 @@ describe('RunPanel', () => {
     expect(wrapper.emitted('cancel')).toHaveLength(1)
   })
 
+  it('shows waiting and failed drafts while the sending draft is already in the transcript', () => {
+    const store = createRunStore()
+    const wrapper = mount(RunPanel, { props: {
+      view: store.view.value,
+      queued: [
+        { id: 'sending', prompt: 'Sent', status: 'sending' },
+        { id: 'waiting', prompt: 'Next', status: 'waiting' },
+        { id: 'failed', prompt: 'Retry', status: 'failed' },
+      ],
+    } })
+    expect(wrapper.find('[data-queued-id="sending"]').exists()).toBe(false)
+    expect(wrapper.find('[data-queued-id="waiting"]').exists()).toBe(true)
+    expect(wrapper.find('[data-queued-id="failed"]').exists()).toBe(true)
+    wrapper.unmount()
+  })
+
   it('clears the composer but retains a failed submission in the queue for explicit retry', async () => {
     const start = vi.fn()
       .mockRejectedValueOnce(new Error('Response lost'))

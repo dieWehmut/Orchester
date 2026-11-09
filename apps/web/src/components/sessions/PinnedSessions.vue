@@ -12,15 +12,19 @@ import type { SessionSummaryDto } from '@orchester/protokoll'
 import { computed } from 'vue'
 
 import { useI18n } from '../../i18n'
+import type { SessionAction, SessionMetadata, SessionDestination } from './session-actions'
 import SessionListItem from './SessionListItem.vue'
 
 const props = defineProps<{
   items: readonly SessionSummaryDto[]
   pinnedIds: readonly string[]
+  metadata?: Record<string, SessionMetadata>
+  projects?: readonly SessionDestination[]
+  sections?: readonly SessionDestination[]
   selectedId: string | null
 }>()
 
-defineEmits<{ select: [id: string]; 'toggle-pin': [id: string] }>()
+defineEmits<{ select: [id: string]; 'toggle-pin': [id: string]; action: [action: SessionAction] }>()
 
 const { t } = useI18n()
 
@@ -42,6 +46,12 @@ const rows = computed(() =>
       v-for="row in rows"
       :key="row.id"
       :session="row"
+          :unread="metadata?.[row.id]?.unread"
+          :archived="metadata?.[row.id]?.archived"
+          :project-id="metadata?.[row.id]?.project_id"
+          :section-id="metadata?.[row.id]?.section_id"
+          :projects="projects" :sections="sections"
+          @action="$emit('action', $event)"
       :selected="selectedId === row.id"
       pinned
       @select="$emit('select', $event)"

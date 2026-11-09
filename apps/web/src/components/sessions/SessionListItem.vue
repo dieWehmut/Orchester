@@ -2,7 +2,10 @@
 import type { SessionSummaryDto } from '@orchester/protokoll'
 import { IconButton, VisuallyHidden } from '@orchester/design'
 import { CircleAlert, MessageCircle, Pin } from '@lucide/vue'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+
+import SessionContextMenu from './SessionContextMenu.vue'
+import type { SessionAction, SessionDestination } from './session-actions'
 
 import { useI18n } from '../../i18n'
 import { compactAge, spelledAge } from '../../lib/relative-time'
@@ -11,13 +14,20 @@ const props = withDefaults(
   defineProps<{
     session: SessionSummaryDto
     selected: boolean
-    pinned?: boolean
+    pinned?: boolean | undefined
+    unread?: boolean | undefined
+    archived?: boolean | undefined
+    projectId?: string | null | undefined
+    sectionId?: string | null | undefined
+    projects?: readonly SessionDestination[] | undefined
+    sections?: readonly SessionDestination[] | undefined
   }>(),
   { pinned: false },
 )
 
-defineEmits<{ select: [id: string]; 'toggle-pin': [id: string] }>()
+defineEmits<{ select: [id: string]; 'toggle-pin': [id: string]; action: [action: SessionAction] }>()
 
+const menuOpen = ref(false)
 const { t, locale } = useI18n()
 const dateTime = computed(() => new Date(props.session.recorded_at_unix * 1000))
 
@@ -51,6 +61,8 @@ const details = computed(() =>
     :class="{
       'session-list-item--selected': selected,
       'session-list-item--pinned': pinned,
+      'session-list-item--menu-open': menuOpen,
+      'session-list-item--unread': unread,
     }"
     :data-session-row="session.id"
   >
@@ -72,6 +84,8 @@ const details = computed(() =>
     <!-- A control beside the row rather than inside it: a button within a button
          is not something a browser will let the reader press. It is drawn on
          hover or focus and never removed from the tree. -->
+    <div class="session-list-item__actions">
+    <SessionContextMenu :id="session.id" :pinned="pinned" :unread="unread" :archived="archived" :projects="projects" :sections="sections" :project-id="projectId" :section-id="sectionId" @update:open="menuOpen = $event" @action="$emit('action', $event)" />
     <IconButton
       class="session-list-item__pin"
       :label="pinned ? t('sessions.unpinAction') : t('sessions.pinAction')"
@@ -79,8 +93,9 @@ const details = computed(() =>
       :data-session-pin="session.id"
       @click="$emit('toggle-pin', session.id)"
     >
-      <Pin :size="14" aria-hidden="true" />
+      <Pin :size="17" class="session-list-item__pin-glyph" aria-hidden="true" />
     </IconButton>
+    </div>
   </div>
 </template>
 
@@ -117,11 +132,11 @@ const details = computed(() =>
 
 .session-list-item:hover,
 .session-list-item--selected {
-  background: var(--workspace-hover, var(--color-bg-element));
+  background: color-mix(in srgb, var(--color-text-primary) 6%, transparent);
 }
 
 .session-list-item--selected {
-  background: var(--color-bg-element);
+  background: color-mix(in srgb, var(--color-text-primary) 6%, transparent);
 }
 
 /* Drawn on hover or focus, never removed from the tree; a pinned row shows it
@@ -172,5 +187,13 @@ const details = computed(() =>
 
 .session-list-item__open > svg { flex-shrink: 0; }
 .session-list-item__error { color: var(--color-status-warning); }
-.session-list-item:hover .session-list-item__open, .session-list-item:focus-within .session-list-item__open { padding-inline-end: 34px; }
+.session-list-item__actions { position: absolute; inset-inline-end: calc(var(--space-1) * 1.25); display: flex; align-items: center; opacity: 0; pointer-events: none; }
+.session-list-item__actions .session-list-item__pin { position: static; opacity: 1; margin: 0; color: var(--color-text-secondary); }
+.session-list-item:hover .session-list-item__actions, .session-list-item:focus-within .session-list-item__actions, .session-list-item--menu-open .session-list-item__actions { opacity: 1; pointer-events: auto; }
+.session-list-item:hover .session-list-item__open, .session-list-item:focus-within .session-list-item__open, .session-list-item--menu-open .session-list-item__open { padding-inline-end: calc(var(--space-1) * 17.5); }
+.session-list-item--menu-open, .session-list-item:focus-within { background: color-mix(in srgb, var(--color-text-primary) 6%, transparent); }
+.session-list-item--menu-open .session-list-item__age { opacity: 0; }
+.session-list-item--unread .session-list-item__title { font-weight: 600; }
+@media (hover: none) { .session-list-item__actions { opacity: 1; pointer-events: auto; } .session-list-item .session-list-item__open { padding-inline-end: calc(var(--space-1) * 17.5); } .session-list-item__age { display: none; } }
+.session-list-item__pin-glyph { transform: rotate(30deg); }
 </style>
