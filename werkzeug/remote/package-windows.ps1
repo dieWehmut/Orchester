@@ -19,6 +19,9 @@ $outputPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromP
 if (Test-Path -LiteralPath $outputPath) {
     throw "OutputDirectory already exists; choose a new directory. Nothing was overwritten: $outputPath"
 }
+$verifier = Join-Path $PSScriptRoot 'verify-windows-package.ps1'
+# Verify inputs before creating even the output parent or staging directory.
+& $verifier -AssetDirectory $assets -Apk $apk | Out-Null
 $parent = Split-Path -Parent $outputPath
 New-Item -ItemType Directory -Path $parent -Force | Out-Null
 $stage = Join-Path $parent ('.orchester-package-' + [Guid]::NewGuid().ToString('N'))
@@ -26,11 +29,12 @@ New-Item -ItemType Directory -Path $stage | Out-Null
 $utf8 = New-Object System.Text.UTF8Encoding($false)
 try {
     Copy-Item -LiteralPath $binaryPath -Destination (Join-Path $stage 'orchester.exe')
-    Copy-Item -LiteralPath $assets -Destination (Join-Path $stage 'web') -Recurse
+    Copy-Item -LiteralPath $assets -Destination (Join-Path $stage 'web') -Recurse -Force
     Copy-Item -LiteralPath $apk -Destination (Join-Path $stage 'orchester-mobile-debug.apk')
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'portable-start.ps1') -Destination (Join-Path $stage 'start.ps1')
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'allow-lan.ps1') -Destination $stage
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'codex-provider.py') -Destination $stage
+    Copy-Item -LiteralPath $verifier -Destination (Join-Path $stage 'verify.ps1')
     foreach ($license in @('LICENSE-APACHE', 'LICENSE-MIT')) {
         Copy-Item -LiteralPath (Join-Path $repoRoot $license) -Destination $stage
     }
@@ -92,9 +96,12 @@ Prerequisite: install the Microsoft Visual C++ x64 Redistributable on the target
 computer if it is not already installed: https://aka.ms/vc14/vc_redist.x64.exe
 This package does not include or install the Visual C++ runtime.
 
-SHA256SUMS.txt lists hashes of all delivered files except itself. For example:
+SHA256SUMS.txt lists hashes of all delivered files except itself. Verify every
+file and ensure the APK embeds the same browser UI before starting:
 
-    Get-FileHash .\orchester.exe -Algorithm SHA256
+    powershell -NoProfile -ExecutionPolicy Bypass -File .\verify.ps1
+
+The verifier reads files only and requires no Python or Agent CLI.
 
 This is a test distribution, not a signed Windows release or Android store
 release. Android uses its debug signing key. iOS is not included in this folder.
@@ -109,12 +116,14 @@ release. Android uses its debug signing key. iOS is not included in this folder.
         app_local_vcruntime = $false
     } | ConvertTo-Json
     [System.IO.File]::WriteAllText((Join-Path $stage 'package-info.json'), $metadata + "`n", $utf8)
-    $hashes = @(Get-ChildItem -LiteralPath $stage -Recurse -File | Sort-Object FullName | ForEach-Object {
+    $hashes = @(Get-ChildItem -LiteralPath $stage -Recurse -File -Force | Sort-Object FullName | ForEach-Object {
         $relative = $_.FullName.Substring($stage.Length + 1).Replace('\', '/')
         $hash = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
         "$hash  $relative"
     })
     [System.IO.File]::WriteAllText((Join-Path $stage 'SHA256SUMS.txt'), ($hashes -join "`n") + "`n", $utf8)
+    # Catch source changes while copying, and check the actual delivered inventory.
+    & $verifier -PackageDirectory $stage | Out-Null
     # Directory.Move fails atomically if another caller created the destination.
     [System.IO.Directory]::Move($stage, $outputPath)
     Write-Output $outputPath
