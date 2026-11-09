@@ -11,6 +11,10 @@ rust-version.workspace = true
 default = []
 static-files = ["tower-http/fs"]
 
+[[example]]
+name = "management_preview"
+required-features = ["static-files"]
+
 [dependencies]
 fs2 = { workspace = true }
 futures = { workspace = true }
