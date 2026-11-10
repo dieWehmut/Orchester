@@ -82,5 +82,8 @@ pub trait AgentAdapter: Send + Sync {
     }
 
     /// Spawn the agent for `task` and return a stream of normalized events.
+    // async-trait adds #[must_use] to this declaration; newer Rust also marks
+    // its generated boxed Future return type as must-use.
+    #[allow(clippy::double_must_use)]
     async fn run(&self, task: Task) -> Result<EventStream, AdapterError>;
 }

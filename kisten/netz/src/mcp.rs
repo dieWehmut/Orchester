@@ -304,7 +304,7 @@ enum Transport {
         session: Option<String>,
     },
     Stdio {
-        child: Child,
+        child: Box<Child>,
         input: ChildStdin,
         output: BufReader<ChildStdout>,
     },
@@ -372,7 +372,7 @@ impl Session {
             let input = child.stdin.take().ok_or(ApiErrorCode::Unavailable)?;
             let output = BufReader::new(child.stdout.take().ok_or(ApiErrorCode::Unavailable)?);
             Transport::Stdio {
-                child,
+                child: Box::new(child),
                 input,
                 output,
             }
