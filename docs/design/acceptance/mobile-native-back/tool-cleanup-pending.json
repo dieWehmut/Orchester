@@ -1,0 +1,17 @@
+{
+  "observedAtUtc": "2026-11-10T04:48:09.864949+00:00",
+  "helperPidLastConfirmed": 31824,
+  "helperStopRequested": true,
+  "helperExited": "unverified",
+  "runtimeParentAndDescendants": "unverified; no native inspection result",
+  "defaultDeploymentReplacedViaFilesystem": true,
+  "userDeploymentsMustRemain": [
+    7337,
+    7338
+  ],
+  "windowsCodexInvocations": 0,
+  "nextAction": "obtain native process inspection before cleaning only owned helper/runtime or starting new proxy",
+  "isolatedLinuxListener17377": "gracefully quit; TCP refused",
+  "testAndroidDevice17377": "record retained; remove only this record after real UI acceptance",
+  "themeRestore": "indigo restoration pending native UI"
+}

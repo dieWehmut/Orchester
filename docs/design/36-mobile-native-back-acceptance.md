@@ -24,4 +24,6 @@ Windows 新命名包 `OrchesterRemote-20261110-native-back-final` 由实际 Wind
 
 本次 Windows 命名包的重复 runtime 复验进入工具等待后超时，未把它记为通过。代理曾在 5554 成功 get-state 和截图，但运行复验的父/后代输出等待没有完成；Windows 工具互操作又出现 `UtilAcceptVsock accept4 110`。后端自身的上次 14 项实际便携运行基线与本次 EXE 字节相同，记录仍保留在 [历史运行证据](acceptance/remote-final-portable-runtime.json)；这不替代新版原生终端 UI 的收尾。
 
-终端明确关闭、六主题终端截图及临时工具进程的退出确认仍在收尾。物理 Android Wi-Fi 与 iOS 原生编译/安装仍待此前缺少的目标环境。
+临时 Linux 测试 listener 17377 已通过 stdin quit 正常退出，TCP 确认释放；手机临时 17377 设备记录保留待原生收尾后单独移除。Windows helper 已请求停止，退出及其可能后代仍需原生进程检查，未把请求停止计为退出通过；[清理状态](acceptance/mobile-native-back/tool-cleanup-pending.json)。
+
+终端明确关闭、六主题终端截图、靛蓝主题恢复及临时工具进程的退出确认仍在收尾。物理 Android Wi-Fi 与 iOS 原生编译/安装仍待此前缺少的目标环境。
