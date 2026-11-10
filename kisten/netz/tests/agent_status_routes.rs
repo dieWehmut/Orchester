@@ -71,9 +71,24 @@ async fn agent_status_route_returns_a_redaction_safe_runtime_snapshot() {
         .iter()
         .map(|agent| agent["agent_id"].as_str().expect("agent id"))
         .collect();
-    assert_eq!(ids, vec!["claude", "codex", "mock", "opencode"]);
+    assert_eq!(
+        ids,
+        vec![
+            "antigravity",
+            "claude",
+            "codex",
+            "cursor",
+            "deepseek",
+            "gemini",
+            "mock",
+            "opencode"
+        ]
+    );
 
-    let mock = &agents[2];
+    let mock = agents
+        .iter()
+        .find(|agent| agent["provider"] == "mock")
+        .unwrap();
     assert_eq!(mock["provider"], "mock");
     assert_eq!(mock["display_name"], "Mock");
     assert_eq!(mock["icon_key"], "mock");

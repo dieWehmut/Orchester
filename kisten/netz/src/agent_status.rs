@@ -114,8 +114,10 @@ impl AgentRuntimeStatusStore {
                 .find(|old| old.agent_id == agent.agent_id)
             {
                 let availability = agent.availability;
+                let capabilities = agent.capabilities.clone();
                 *agent = previous.clone();
                 agent.availability = availability;
+                agent.capabilities = capabilities;
             }
         }
         next.sequence = guard
@@ -303,7 +305,7 @@ pub fn agent_status_response(registry: &Registry) -> AgentFleetSnapshotDto {
     let now = now_rfc3339();
     let capabilities = registry.list();
     let availability = registry.availability();
-    let agents = capabilities
+    let mut agents: Vec<_> = capabilities
         .into_iter()
         .map(|capability| {
             let check = availability
@@ -312,12 +314,47 @@ pub fn agent_status_response(registry: &Registry) -> AgentFleetSnapshotDto {
             runtime_summary(capability, check, &now)
         })
         .collect();
+    for provider in ["gemini", "antigravity", "cursor", "deepseek"] {
+        if let Some(agent) = agents.iter_mut().find(|agent| agent.provider == provider) {
+            agent.capabilities.push("process_presence".to_owned());
+        } else {
+            agents.push(monitor_only_summary(provider, &now));
+        }
+    }
+    agents.sort_by(|left, right| left.agent_id.cmp(&right.agent_id));
 
     AgentFleetSnapshotDto {
         schema_version: AGENT_STATUS_ROUTE_SCHEMA_VERSION,
         sequence: 1,
         generated_at: now.clone(),
         agents,
+    }
+}
+
+fn monitor_only_summary(provider: &str, now: &str) -> AgentRuntimeSummaryDto {
+    AgentRuntimeSummaryDto {
+        agent_id: provider.to_owned(),
+        provider: provider.to_owned(),
+        display_name: display_name(provider),
+        icon_key: icon_key(provider),
+        // These booleans are schema placeholders. Process presence cannot
+        // establish installation, credentials, or adapter availability; clients
+        // hide those fields for monitor_only rows.
+        availability: AgentAvailabilityState::Unavailable,
+        activity: AgentActivityState::Unknown,
+        installed: false,
+        configured: false,
+        authenticated: false,
+        active_windows: 0,
+        active_sessions: 0,
+        active_runs: 0,
+        active_subagents: 0,
+        window_count_source: AgentWindowCountSource::ExternalProcesses,
+        process_sources: None,
+        last_heartbeat_at: None,
+        last_error: None,
+        capabilities: vec!["monitor_only".to_owned(), "process_presence".to_owned()],
+        updated_at: now.to_owned(),
     }
 }
 
@@ -529,6 +566,9 @@ fn display_name(provider: &str) -> String {
         "claude" => "Claude Code".to_owned(),
         "codex" => "Codex".to_owned(),
         "deepseek" => "DeepSeek".to_owned(),
+        "gemini" => "Gemini".to_owned(),
+        "antigravity" => "Antigravity".to_owned(),
+        "cursor" => "Cursor".to_owned(),
         "opencode" => "OpenCode".to_owned(),
         other => other
             .split(['-', '_'])

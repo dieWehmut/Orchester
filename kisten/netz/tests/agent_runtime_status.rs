@@ -348,3 +348,80 @@ fn process_monitor_start_is_safe_without_a_tokio_runtime() {
     let context = orchester_netz::ServerContext::new(None, orchester_netz::ServerControl::new());
     assert!(!context.start_agent_process_monitor());
 }
+
+#[test]
+fn additional_providers_have_monitor_only_rows_without_runnable_adapters() {
+    let registry = registry();
+    let snapshot = agent_status_response(&registry);
+    for provider in ["gemini", "antigravity", "cursor", "deepseek"] {
+        assert!(!registry
+            .list()
+            .iter()
+            .any(|capability| capability.name == provider));
+        let rows = snapshot
+            .agents
+            .iter()
+            .filter(|agent| agent.provider == provider)
+            .collect::<Vec<_>>();
+        assert_eq!(rows.len(), 1, "one always-visible row for {provider}");
+        let agent = rows[0];
+        assert!(agent
+            .capabilities
+            .iter()
+            .any(|label| label == "monitor_only"));
+        assert!(agent
+            .capabilities
+            .iter()
+            .any(|label| label == "process_presence"));
+        assert_eq!(agent.activity, AgentActivityState::Unknown);
+        assert!(!agent.installed && !agent.configured && !agent.authenticated);
+        assert!(agent.last_error.is_none());
+    }
+}
+
+#[test]
+fn monitor_only_rows_observe_presence_absence_and_unknown_sources() {
+    let store = AgentRuntimeStatusStore::new(agent_status_response(&registry())).unwrap();
+    store
+        .reconcile_external_processes(
+            &AgentProcessSnapshot::from_process_names(["deepseek"]),
+            "2026-11-10T05:00:01Z",
+        )
+        .unwrap();
+    let snapshot = store.snapshot().unwrap();
+    for agent in snapshot.agents.iter().filter(|agent| {
+        agent
+            .capabilities
+            .iter()
+            .any(|label| label == "monitor_only")
+    }) {
+        assert_eq!(
+            agent.activity,
+            if agent.provider == "deepseek" {
+                AgentActivityState::Running
+            } else {
+                AgentActivityState::Offline
+            }
+        );
+        assert_eq!(
+            agent.active_windows,
+            u64::from(agent.provider == "deepseek")
+        );
+        assert_eq!(agent.active_runs, 0);
+    }
+    store
+        .reconcile_external_processes(
+            &AgentProcessSnapshot::unavailable(AgentProcessEnvironment::Local),
+            "2026-11-10T05:00:02Z",
+        )
+        .unwrap();
+    for agent in store.snapshot().unwrap().agents.iter().filter(|agent| {
+        agent
+            .capabilities
+            .iter()
+            .any(|label| label == "monitor_only")
+    }) {
+        assert_eq!(agent.activity, AgentActivityState::Unknown);
+        assert_eq!(agent.process_sources.as_ref().unwrap()[0].count, None);
+    }
+}
