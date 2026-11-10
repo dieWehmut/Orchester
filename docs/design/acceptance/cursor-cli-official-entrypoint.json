@@ -1,0 +1,45 @@
+{
+  "provider": "cursor",
+  "checked_on": "2026-11-10",
+  "method": "Read official installers and archive launchers without executing an installer, CLI, model, or downloaded binary.",
+  "release": "2026.11.05-86047df",
+  "documentation": "https://cursor.com/docs/cli/installation",
+  "linux_x64": {
+    "installer": "https://cursor.com/install",
+    "installer_sha256": "f32ab18113f616745c119cd9fa0ffd0d743bc4ea4ee4aeaa98ac907934d0b568",
+    "artifact": "https://downloads.cursor.com/lab/2026.11.05-86047df/linux/x64/agent-cli-package.tar.gz",
+    "launcher_member": "dist-package/cursor-agent",
+    "launcher_sha256": "2ccc9a8e167797641448b5e5c936f006ba137a2555f117f38c5eb76a5238a233",
+    "runtime": "~/.local/share/cursor-agent/versions/<release>/node",
+    "entrypoint": "~/.local/share/cursor-agent/versions/<release>/index.js",
+    "runtime_switch": "--use-system-ca",
+    "argv0": "The launcher uses exec -a with the invoked agent or cursor-agent alias.",
+    "entrypoint_member": "dist-package/index.js",
+    "entrypoint_sha256": "e31b14bafcee9142507a5de52d636b8532112fe404d04f23fd8784d0d2078055"
+  },
+  "windows_x64": {
+    "installer": "https://cursor.com/install?win32=true",
+    "installer_sha256": "a6596b553ecb6078d471e1b901ec0e0faf8262abe486a553ee6f84905d4139a8",
+    "artifact": "https://downloads.cursor.com/lab/2026.11.05-86047df/windows/x64/agent-cli-package.zip",
+    "archive_inspection": "HEAD returned 403; HTTP Range GET succeeded. Read only the central directory and launcher/package metadata members.",
+    "cmd_member": "dist-package/cursor-agent.cmd",
+    "cmd_sha256": "299eaddf3327768e7fcd64f29ad01747c740f7e316931575fb3cee617c92ccfc",
+    "powershell_member": "dist-package/cursor-agent.ps1",
+    "powershell_sha256": "11169ef90694ac10c60e685761b25be5848f92d44cfe5ee6a89010ed5735eff7",
+    "runtime": "%LOCALAPPDATA%/cursor-agent/versions/<release>/node.exe",
+    "entrypoint": "%LOCALAPPDATA%/cursor-agent/versions/<release>/index.js"
+  },
+  "github_search": {
+    "queries": [
+      "https://api.github.com/search/repositories?q=cursor+cli+org:cursor",
+      "https://api.github.com/search/repositories?q=cursor+agent+org:cursor"
+    ],
+    "results": "Both official organization repository searches returned zero results. Classification evidence comes from official release artifacts."
+  },
+  "classification": "Recognize index.js only as the immediate file inside cursor-agent/versions/<nonempty release>/, after parsing a known runtime's real entrypoint. Shared runtime switches must include --use-system-ca. An agent or cursor-agent basename alone does not establish identity.",
+  "limitations": [
+    "Process metadata is inferred from inspected startup code; no real Cursor process was launched or sampled.",
+    "macOS, arm64, relocated installations, and future launcher changes were not inspected.",
+    "Helper scripts and bundled binaries other than the verified index.js entrypoint do not gain additional signatures."
+  ]
+}
