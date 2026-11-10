@@ -205,6 +205,10 @@ it("reports replay gaps and keeps terminal exits read-only without reconnecting"
   socket.receive({ type: "ready", terminal: first });
   socket.receive({ type: "gap", first_seq: 5 });
   socket.receive({ type: "output", seq: 5, data: "tail" });
+  await flush();
+  socket.receive({ type: "error", code: "terminal_closed" });
+  await flush();
+  expect(f.remote.error.value).toContain("正在读取最后输出");
   socket.receive({
     type: "exit",
     terminal: { ...first, state: "exited", exit_code: 0 },
@@ -212,6 +216,7 @@ it("reports replay gaps and keeps terminal exits read-only without reconnecting"
   await flush();
   expect(f.write.mock.calls[0]?.[0]).toContain("历史输出已过期");
   expect(f.remote.connection.value).toBe("finished");
+  expect(f.remote.error.value).toBe("");
   expect(f.remote.canInput.value).toBe(false);
   f.remote.input("ignored");
   await vi.advanceTimersByTimeAsync(20_000);

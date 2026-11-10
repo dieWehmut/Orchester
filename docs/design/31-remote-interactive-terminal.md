@@ -92,3 +92,5 @@ Browser 插件未提供，使用已安装的 Playwright Chromium；首次启动�
 已通过 `pnpm install --frozen-lockfile --offline`、CommonJS/AMD/浏览器全局导出检查与补丁重建一致性检查。使用修正后的移动页面重新运行真实 PTY 浏览器交互，中文 read、emoji、控制键、重连/回放、关闭与六套主题均通过。
 
 设备分析使用同一台 5554 WebView 的临时终端 fixture 加载补丁 ESM，实际受信任快速 `pwd` 得到 `onData = [p, w, d]`；默认模式下 `ppp` 和辅助阅读模式下 `aaabbbccc` 均逐字保留。日志仅包含终端输入事件，未记录网络认证信息，fixture 不请求后端。该验证证明补丁在真实 Android 事件链路中的行为；安装的旧 APK 并未被替换，最终应用验证必须在 main 合并后重新构建、安装新 APK，不能以旧 APK 的慢速 Gboard 通过结果替代。
+
+终端结束时清除遗留的“正在读取最后输出”提示。WS exit 和关闭轮询确认终态后均清除此提示；已有终态回归补充 terminal_closed → exit 顺序，验证结束、输入禁用与不再重连。
