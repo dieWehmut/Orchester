@@ -42,5 +42,7 @@
     "workflowRun": 42741437315,
     "conclusion": "success",
     "url": "https://github.com/dieWehmut/Orchester/actions/runs/42741437315"
-  }
+  },
+  "androidSubpageSystemBack": "appearance exits to Launcher; fix and new APK pending",
+  "androidExplicitClose": "pending post-navigation-fix APK"
 }

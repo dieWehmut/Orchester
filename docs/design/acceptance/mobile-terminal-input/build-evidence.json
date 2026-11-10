@@ -1,0 +1,9 @@
+{
+  "source_commit": "48cae93",
+  "apk": "/home/han/project/Orchester/.worktrees/main-integration/apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk",
+  "sha256": "7cd8ab5d8b6236b15938d8d3a91aa5e83a04aa2f1aeaa1a722d9c66e69d70aef",
+  "installed_sha256": "7cd8ab5d8b6236b15938d8d3a91aa5e83a04aa2f1aeaa1a722d9c66e69d70aef",
+  "bytes": 5654877,
+  "serial": "emulator-5554",
+  "sdk": "37"
+}
