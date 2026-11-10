@@ -33,5 +33,14 @@
   "modelCallsInThisContinuation": 0,
   "installedAndroidApkSha256": "7cd8ab5d8b6236b15938d8d3a91aa5e83a04aa2f1aeaa1a722d9c66e69d70aef",
   "androidNativeBridgeTests": 3,
-  "androidNativeBridgeSeconds": 5.304
+  "androidNativeBridgeSeconds": 5.304,
+  "iosAssetSync": "passed",
+  "iosAssetParityFiles": 5,
+  "iosLaunchStoryboardXml": "parsed",
+  "githubPages": {
+    "sourceCommit": "48cae93565524c5deb706df57abc617ee4ca7576",
+    "workflowRun": 42741437315,
+    "conclusion": "success",
+    "url": "https://github.com/dieWehmut/Orchester/actions/runs/42741437315"
+  }
 }
