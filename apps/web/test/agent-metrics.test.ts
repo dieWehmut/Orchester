@@ -33,6 +33,6 @@ describe('AgentMetrics', () => {
     })
 
     expect(wrapper.get('[data-agent-window-source]').text()).toContain('External processes')
-    expect(wrapper.get('[data-agent-metrics]').attributes('aria-label')).toContain('3 windows')
+    expect(wrapper.get('[data-agent-metrics]').attributes('aria-label')).toContain('3 processes')
   })
 })

@@ -43,7 +43,7 @@ describe('process source presentation', () => {
     })
     const wrapper = mount(AgentMetrics, { props: { agent: partial, variant: 'detail' } })
     expect(wrapper.get('[data-active-windows]').text()).toBe('At least 3')
-    expect(wrapper.get('[data-agent-metrics]').attributes('aria-label')).toContain('At least 3 windows')
+    expect(wrapper.get('[data-agent-metrics]').attributes('aria-label')).toContain('At least 3 processes')
     expect(wrapper.get('[data-agent-process-sources]').text()).toContain('Last observed: 7')
     const panel = mount(AgentFleetPanel, { props: { snapshot: { ...AGENT_FLEET_FIXTURE, agents: [partial] }, status: 'ready' } })
     expect(panel.get('[data-agent-group-windows]').text()).toContain('At least 3')
@@ -103,7 +103,7 @@ describe('process source presentation', () => {
         window_count_source: 'external_processes', process_sources: activity === 'running' ? [{ environment: 'wsl', status: 'available', count: 3, observed_at: observedAt }] : [unavailable],
       })
       const row = mount(AgentFleetRow, { props: { agent: runtime, compact: true } })
-      expect(row.get('[data-agent-activity]').text()).toBe(activity === 'running' ? 'Running' : 'Status unknown')
+      expect(row.get('[data-agent-activity]').text()).toBe(activity === 'running' ? 'Service running' : 'Status unknown')
       expect(row.get('[data-agent-availability]').text()).toBe('Unavailable')
       expect(row.get('button').attributes('aria-label')).toContain('Unavailable')
     }

@@ -104,7 +104,7 @@ describe('agent process monitors', () => {
 
     expect(wrapper.get('[data-agent-activity]').text()).toBe('Status unknown')
     expect(wrapper.get('[data-active-windows]').text()).toBe('—')
-    expect(wrapper.get('button').attributes('aria-label')).toContain('Status unknown windows')
+    expect(wrapper.get('button').attributes('aria-label')).toContain('Status unknown processes')
   })
 
   it('explains monitoring in details without unprobed installation or authentication assertions', () => {

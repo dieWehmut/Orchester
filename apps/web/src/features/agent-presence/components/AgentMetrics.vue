@@ -40,12 +40,14 @@ const windowSource = computed(() =>
       :key="entry.key"
       class="agent-metrics__item"
       data-agent-count
+      :data-agent-count-unit="entry.key"
       :data-agent-detail="props.variant === 'detail' ? entry.key : undefined"
     >
       <dt>{{ t(agentCountMessageKey(entry.key, entry.count ?? 2)) }}</dt>
       <dd
         data-agent-detail-value
-        :data-active-windows="entry.key === 'windows' ? '' : undefined"
+        :data-active-windows="entry.key === 'windows' || entry.key === 'processes' ? '' : undefined"
+        :data-active-processes="entry.key === 'processes' ? '' : undefined"
         :data-active-runs="entry.key === 'runs' ? '' : undefined"
         :data-active-subagents="entry.key === 'subagents' ? '' : undefined"
       >
