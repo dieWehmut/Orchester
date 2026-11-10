@@ -1,0 +1,4 @@
+
+> @orchester/mobile@0.1.0 typecheck <isolated-worktree>/apps/mobile
+> vue-tsc --noEmit
+

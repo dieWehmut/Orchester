@@ -1,0 +1,14 @@
+
+> @orchester/mobile@0.1.0 build <isolated-worktree>/apps/mobile
+> vue-tsc --noEmit && vite build
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 52 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                        0.48 kB │ gzip:   0.32 kB
+dist/assets/brand-icon-Zjdxen9M.png  377.39 kB
+dist/assets/index-CMOzN1Ft.css        31.50 kB │ gzip:   6.74 kB
+dist/assets/index-JznSphVe.js        477.72 kB │ gzip: 138.55 kB
+✓ built in 1.30s

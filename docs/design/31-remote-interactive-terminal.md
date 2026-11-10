@@ -94,3 +94,13 @@ Browser 插件未提供，使用已安装的 Playwright Chromium；首次启动�
 设备分析使用同一台 5554 WebView 的临时终端 fixture 加载补丁 ESM，实际受信任快速 `pwd` 得到 `onData = [p, w, d]`；默认模式下 `ppp` 和辅助阅读模式下 `aaabbbccc` 均逐字保留。日志仅包含终端输入事件，未记录网络认证信息，fixture 不请求后端。该验证证明补丁在真实 Android 事件链路中的行为；安装的旧 APK 并未被替换，最终应用验证必须在 main 合并后重新构建、安装新 APK，不能以旧 APK 的慢速 Gboard 通过结果替代。
 
 终端结束时清除遗留的“正在读取最后输出”提示。WS exit 和关闭轮询确认终态后均清除此提示；已有终态回归补充 terminal_closed → exit 顺序，验证结束、输入禁用与不再重连。
+
+## HTTP 关闭与最后输出回放
+
+2026-11-10，从 main `7ba9065` 审查结束会话回放时，隔离测试确认了关闭请求与 WebSocket 输出之间的竞态。HTTP DELETE 或后续 GET 已返回 `closed`，并不代表最后输出已发送；旧客户端此时直接设置 `receivedExit` 并关闭 WebSocket，丢弃随后到达的最后输出，也不再在断线后补读。另一个竞态是 WebSocket 已发送 `exit`，较晚返回的 HTTP `running` 快照仍覆盖终态。
+
+关闭请求或轮询现在只更新进程状态、禁用输入并停止关闭轮询。客户端保留 WebSocket，断线时继续按渲染序号请求回放；收到输出排空后的 `exit` 才标记会话结束并释放连接。已收到 `exit` 后，迟到的 HTTP 响应或错误不再覆盖终态。
+
+新增 6 项终端测试，其中 DELETE/GET 先确认关闭、关闭后断线补读、迟到 HTTP 快照覆盖退出状态 4 项在修复前失败；修复后 23 项终端测试通过。另两项验证重新打开 `closed`/`exited` 会话时，`ready → output → exit → close` 连续到达仍完整回放；这两项在修改前也通过，不能据此把原生设备在高系统负载时的连接超时归因于该关闭竞态。该轮没有启动浏览器、监听器、PTY、Android 工具或模型。
+
+使用最多 2 个 Vitest worker 执行移动端全部 8 个文件、119 项测试，类型检查、生产构建及 `git diff --check` 均通过。验证命令与红绿日志见 [最后输出回放验证](acceptance/terminal-final-replay/README.md)。
