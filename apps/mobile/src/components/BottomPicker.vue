@@ -7,24 +7,12 @@ export type PickerOption = {
   tone?: "primary" | "secondary" | "tertiary";
 };
 
-// A history traversal is asynchronous. Wait for it before opening another sheet.
-let returningToPage = false;
-function returnToPage() {
-  returningToPage = true;
-  window.addEventListener(
-    "popstate",
-    () => {
-      returningToPage = false;
-    },
-    { once: true },
-  );
-  window.history.back();
-}
 </script>
 
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from "vue";
 import AppIcon from "./AppIcon.vue";
+import { isHistoryReturning, returnThroughHistory } from "../history";
 
 const props = withDefaults(
   defineProps<{
@@ -55,7 +43,7 @@ const backdropPressed = ref(false);
 async function open() {
   if (
     opened.value ||
-    returningToPage ||
+    isHistoryReturning() ||
     props.disabled ||
     !props.options.length ||
     !dialog.value
@@ -86,7 +74,7 @@ function close(fromHistory = false) {
   window.removeEventListener("popstate", onBack);
   trigger.value?.focus({ preventScroll: true });
   if (!fromHistory && window.history.state?.orchesterPicker === id)
-    returnToPage();
+    void returnThroughHistory();
 }
 
 function onBack() {

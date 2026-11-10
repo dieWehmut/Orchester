@@ -3,7 +3,6 @@ import {
   computed,
   nextTick,
   onBeforeUnmount,
-  onMounted,
   ref,
   shallowRef,
   watch,
@@ -15,6 +14,7 @@ import {
   type SavedDevice,
 } from "./composables/use-remote-fleet";
 import { useAppearance } from "./composables/use-appearance";
+import { usePageNavigation, type Tab, type Screen } from "./composables/use-page-navigation";
 import type { FolderPage, Project, Run } from "./client";
 import AppIcon from "./components/AppIcon.vue";
 import AppearancePage from "./components/AppearancePage.vue";
@@ -28,19 +28,8 @@ import TerminalPage from "./components/TerminalPage.vue";
 const fleet = useRemoteFleet();
 const { hosts, panels, error } = fleet;
 const { theme, themes, setTheme } = useAppearance();
-type Tab = "dashboard" | "tasks" | "projects" | "settings";
-type Screen =
-  | Tab
-  | "devices"
-  | "appearance"
-  | "about"
-  | "folders"
-  | "agents"
-  | "output"
-  | "terminal";
-const tab = ref<Tab>("dashboard"),
-  screen = ref<Screen>("dashboard"),
-  heading = ref<HTMLElement>();
+const { tab, screen, navigate, openPage, back } = usePageNavigation();
+const heading = ref<HTMLElement>();
 const navigation: { id: Tab; name: string; icon: string }[] = [
   { id: "dashboard", name: "控制台", icon: "dashboard" },
   { id: "tasks", name: "任务", icon: "agent" },
@@ -109,28 +98,8 @@ const terminalKey = computed(
 function openTerminal(host: RemoteHost, project: Project) {
   selectedHost.value = host;
   selectedProject.value = project;
-  window.history.pushState(
-    { ...window.history.state, orchesterTerminal: terminalKey.value },
-    "",
-  );
-  screen.value = "terminal";
+  openPage("terminal");
 }
-function leaveTerminalHistory() {
-  if (
-    screen.value === "terminal" &&
-    window.history.state?.orchesterTerminal === terminalKey.value
-  )
-    window.history.back();
-}
-function onHistoryBack() {
-  if (
-    screen.value === "terminal" &&
-    window.history.state?.orchesterTerminal !== terminalKey.value
-  )
-    back();
-}
-onMounted(() => window.addEventListener("popstate", onHistoryBack));
-onBeforeUnmount(() => window.removeEventListener("popstate", onHistoryBack));
 const outputControl = shallowRef<RemoteHost["control"] | null>(null);
 const folder = ref<FolderPage | null>(null),
   folderPath = ref(""),
@@ -157,17 +126,17 @@ function setColumns(value: 1 | 2) {
     localStorage.setItem("orchester.panel-columns", String(value));
   } catch {}
 }
-function navigate(next: Tab) {
-  leaveTerminalHistory();
-  tab.value = next;
-  screen.value = next;
-}
-function back() {
-  leaveTerminalHistory();
+let navigationRevision = 0;
+watch(screen, () => {
+  navigationRevision++;
   folderRevision++;
   agentRevision++;
-  screen.value = tab.value;
-}
+}, { flush: "sync" });
+onBeforeUnmount(() => {
+  navigationRevision++;
+  folderRevision++;
+  agentRevision++;
+});
 function usable(host: RemoteHost) {
   return host.control.connectionStatus.value === "connected";
 }
@@ -180,13 +149,14 @@ async function connect(device?: SavedDevice) {
     return;
   }
   pairing.value = true;
+  const revision = navigationRevision;
   try {
     const host = await fleet.pairDevice({
       address: address.value,
       code: code.value,
       name: name.value,
     });
-    if (host) {
+    if (host && revision === navigationRevision) {
       code.value = "";
       navigate("dashboard");
     }
@@ -227,27 +197,29 @@ function chooseDirectory(host: RemoteHost) {
   selectedHost.value = host;
   folder.value = null;
   folderPath.value = "";
-  screen.value = "folders";
+  openPage("folders");
   void browse();
 }
 async function addProject(path: string) {
-  const host = selectedHost.value;
+  const host = selectedHost.value, revision = navigationRevision;
   if (!host) return;
   folderBusy.value = true;
   folderError.value = "";
   try {
     const project = await host.control.addProject(path);
+    if (revision !== navigationRevision) return;
     await chooseAgent(host, project);
   } catch (error) {
-    folderError.value = error instanceof Error ? error.message : String(error);
+    if (revision === navigationRevision)
+      folderError.value = error instanceof Error ? error.message : String(error);
   } finally {
-    folderBusy.value = false;
+    if (revision === navigationRevision) folderBusy.value = false;
   }
 }
 async function chooseAgent(host: RemoteHost, project: Project) {
   selectedHost.value = host;
   selectedProject.value = project;
-  screen.value = "agents";
+  openPage("agents");
   availableAgents.value = [];
   agentsError.value = "";
   agentsBusy.value = true;
@@ -265,28 +237,32 @@ async function chooseAgent(host: RemoteHost, project: Project) {
 }
 async function openPanel(agent: string) {
   const host = selectedHost.value,
-    project = selectedProject.value;
+    project = selectedProject.value,
+    revision = navigationRevision;
   if (!host || !project) return;
   const panel = await fleet.openPanel(host, project, agent);
-  if (panel) navigate("tasks");
+  if (panel && revision === navigationRevision) navigate("tasks");
 }
 async function openRun(host: RemoteHost, run: Run) {
   selectedHost.value = host;
   outputControl.value = null;
-  screen.value = "output";
+  openPage("output");
+  const revision = navigationRevision;
   const project = host.control.projects.value.find(
     (project) => project.id === run.project_id,
   );
   const panel = project
     ? await fleet.openPanel(host, project, run.agent)
     : null;
+  if (revision !== navigationRevision) return;
   const control = panel?.control ?? host.control;
   outputControl.value = control;
   await control.action(() => control.open(run));
 }
 async function continueRun() {
   const host = selectedHost.value,
-    run = outputControl.value?.selected.value;
+    run = outputControl.value?.selected.value,
+    revision = navigationRevision;
   if (!host || !run) return;
   const project = host.control.projects.value.find(
     (project) => project.id === run.project_id,
@@ -296,8 +272,9 @@ async function continueRun() {
     return;
   }
   const panel = await fleet.openPanel(host, project, run.agent);
-  if (!panel) return;
+  if (!panel || revision !== navigationRevision) return;
   await panel.control.action(() => panel.control.open(run));
+  if (revision !== navigationRevision) return;
   panel.control.continueRun();
   navigate("tasks");
 }
@@ -413,7 +390,7 @@ watch(screen, async () => {
               class="tonal-button"
               @click="
                 host.control.connectionStatus.value === 'needs_pairing'
-                  ? ((address = host.address), (screen = 'devices'))
+                  ? ((address = host.address), openPage('devices'))
                   : fleet.connectSaved(host)
               "
             >
@@ -425,7 +402,7 @@ watch(screen, async () => {
             </button>
           </div>
         </article>
-        <button class="primary-button full-button" @click="screen = 'devices'">
+        <button class="primary-button full-button" @click="openPage('devices')">
           <AppIcon name="computer" />连接电脑
         </button>
       </template>
@@ -511,7 +488,7 @@ watch(screen, async () => {
         <div v-if="!hosts.length" class="panel empty-state">
           <AppIcon name="folder" />
           <p>先连接一台电脑，再选择项目。</p>
-          <button class="primary-button" @click="screen = 'devices'">
+          <button class="primary-button" @click="openPage('devices')">
             连接电脑
           </button>
         </div>
@@ -567,13 +544,13 @@ watch(screen, async () => {
       <template v-else-if="screen === 'settings'">
         <p class="page-intro">按你的方式使用 Orchester</p>
         <div class="list-panel">
-          <button class="list-row" @click="screen = 'devices'">
+          <button class="list-row" @click="openPage('devices')">
             <span class="icon-disc secondary"><AppIcon name="computer" /></span
             ><span class="row-copy"
               ><strong>电脑设备</strong
               ><small>连接、配对与管理电脑</small></span
             ><AppIcon name="chevron" /></button
-          ><button class="list-row" @click="screen = 'appearance'">
+          ><button class="list-row" @click="openPage('appearance')">
             <span class="icon-disc"><AppIcon name="palette" /></span
             ><span class="row-copy"
               ><strong>主题</strong><small>选择你的配色</small></span
@@ -592,7 +569,7 @@ watch(screen, async () => {
           </div>
         </section>
         <div class="list-panel">
-          <button class="list-row" @click="screen = 'about'">
+          <button class="list-row" @click="openPage('about')">
             <span class="icon-disc"><AppIcon name="info" /></span
             ><span class="row-copy"
               ><strong>关于 Orchester</strong

@@ -30,6 +30,41 @@ public class NativeBridgeTest {
     private static final String TOKEN = "native-qa-only-token-not-a-real-credential";
 
     @Test
+    public void systemBackReturnsFromChildPagesAndSerializesRapidTabChanges() throws Exception {
+        try (ActivityScenario<MainActivity> app = ActivityScenario.launch(MainActivity.class)) {
+            awaitBridge(app);
+            evaluate(app, "document.querySelectorAll('nav button')[3].click()");
+            awaitHeading(app, "设置");
+            for (String page : new String[] {"选择你的配色", "电脑设备", "关于 Orchester"}) {
+                evaluate(app, "Array.from(document.querySelectorAll('.list-row')).find(button => button.textContent.includes("
+                    + JSONObject.quote(page) + "))?.click()");
+                awaitHeading(app, page.equals("选择你的配色") ? "主题" : page.equals("电脑设备") ? page : "关于");
+                app.onActivity(activity -> activity.getOnBackPressedDispatcher().onBackPressed());
+                awaitHeading(app, "设置");
+            }
+            evaluate(app, "Array.from(document.querySelectorAll('.list-row')).find(button => button.textContent.includes('选择你的配色'))?.click()");
+            awaitHeading(app, "主题");
+            app.onActivity(activity -> {
+                activity.getOnBackPressedDispatcher().onBackPressed();
+                activity.getBridge().getWebView().evaluateJavascript(
+                    "document.querySelectorAll('nav button')[1].click(); document.querySelectorAll('nav button')[2].click()", null);
+            });
+            awaitHeading(app, "项目");
+            SystemClock.sleep(250);
+            assertEquals("\"项目\"", evaluate(app, "document.querySelector('h1').textContent"));
+        }
+    }
+
+    private void awaitHeading(ActivityScenario<MainActivity> app, String expected) throws Exception {
+        long deadline = SystemClock.elapsedRealtime() + 10000;
+        while (SystemClock.elapsedRealtime() < deadline) {
+            if (evaluate(app, "document.querySelector('h1')?.textContent").equals(JSONObject.quote(expected))) return;
+            SystemClock.sleep(50);
+        }
+        fail("Child navigation did not reach " + expected);
+    }
+
+    @Test
     public void themeChangesAllSurfacesAndSurvivesActivityRecreation() throws Exception {
         try (ActivityScenario<MainActivity> app = ActivityScenario.launch(MainActivity.class)) {
             awaitBridge(app);
