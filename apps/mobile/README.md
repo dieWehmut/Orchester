@@ -14,6 +14,8 @@ Vue + Capacitor 客户端。手机输入电脑 IP（省略端口时默认 7337�
 
 底部导航为“控制台 / 任务 / 项目 / 设置”：控制台按设备显示连接状态、项目数、运行中数量和任务数；任务页同时展示工作栏与按设备分组的任务记录；项目页浏览与选择真实目录；设置页管理设备、单栏/双栏和主题。六套暗色主题为珊瑚、玫瑰、海盐、森林、靛蓝和琥珀，选择后立即应用并保存偏好。
 
+界面复用桌面设计包的字体：默认中英文使用随安装包附带的霞鹜文楷，代码与终端使用同一等宽字体栈。字体偏好和常规/中等字重沿用桌面的 `orchester:ui-font`、`orchester:content-font`、`orchester:ui-font-weight`、`orchester:content-font-weight`；偏好分别保存在当前客户端。终端在字体加载完成后初始化网格，加载失败仍可使用系统回退字体。等宽栈中的系统字体由各平台提供，因此不同系统的终端字形可能不同。
+
 Android 凭据插件通过 Android Keystore 密钥加密保存令牌；iOS 工程包含 Keychain 实现。浏览器预览仅在页面会话内存中保存令牌，刷新页面后需重新配对。设备地址和名称存于 `orchester.devices`；工作栏仅保存 `{hostAddress, projectId, agent}` 到 `orchester.panels`，单栏/双栏保存到 `orchester.panel-columns`，主题保存到 `orchester.theme`。这些偏好不保存令牌、任务草稿、附件列表、会话 ID 或输出；恢复工作栏时重新读取电脑项目和任务。“忘记”删除该设备本机凭据及工作栏偏好；服务端令牌撤销由电脑设备管理或 `DELETE /remote/v1/device` 完成。
 
 HTTP 用于可信局域网或 VPN。不要直接把 HTTP 服务暴露到公网。手机只控制电脑，模型登录与 CLI 安装在电脑完成。
