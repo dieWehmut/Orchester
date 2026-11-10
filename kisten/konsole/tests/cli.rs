@@ -60,6 +60,8 @@ printf '{"type":"result","text":"fixture done: %s"}\n' "$1"
                 vec![
                     "-NoProfile".into(),
                     "-NonInteractive".into(),
+                    "-ExecutionPolicy".into(),
+                    "Bypass".into(),
                     "-File".into(),
                     script.to_string_lossy().into_owned(),
                     "{prompt}".into(),

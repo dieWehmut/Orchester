@@ -75,6 +75,7 @@ docs/local
 !/docs/design/*.md
 !/docs/design/acceptance/mobile-native-ui-qa.md
 !/docs/design/acceptance/mobile-native-themes/README.md
+!/docs/design/acceptance/mobile-terminal-first/README.md
 .playwright-mcp/
 .superpowers/
 .worktrees/

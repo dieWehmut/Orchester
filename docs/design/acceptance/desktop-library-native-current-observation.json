@@ -1,0 +1,10 @@
+{
+  "observedAt": "2026-11-10T02:01:21.552Z",
+  "isolatedDebugPort": 19322,
+  "origin": "http://127.0.0.1:56366",
+  "webviews": 1,
+  "health": 200,
+  "savedFixtures": 1,
+  "savedTitle": "Native main saved after close",
+  "modelCallsRequested": false
+}
