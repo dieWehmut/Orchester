@@ -23,28 +23,89 @@ pub struct SystemAgentProcessSource;
 
 impl AgentProcessSource for SystemAgentProcessSource {
     fn snapshot(&self) -> AgentProcessSnapshot {
+        use std::sync::OnceLock;
+        static READER: OnceLock<ProcessReadGate> = OnceLock::new();
         let deadline = std::time::Instant::now() + std::time::Duration::from_secs(3);
-        let mut system = System::new();
-        system.refresh_processes_specifics(
-            ProcessesToUpdate::All,
-            true,
-            ProcessRefreshKind::nothing(),
-        );
-        let environment = if cfg!(windows) {
-            AgentProcessEnvironment::Windows
-        } else {
-            AgentProcessEnvironment::Local
-        };
-        // A running scanner must itself be observable in a successful OS
-        // enumeration. An empty OS table is not evidence of zero providers.
-        let mut snapshot = if system.processes().is_empty() {
-            AgentProcessSnapshot::unavailable(environment)
-        } else {
-            read_system_identities(&mut system, environment, deadline)
-        };
-        snapshot.include_wsl(deadline);
-        snapshot
+        READER
+            .get_or_init(ProcessReadGate::default)
+            .read(deadline, move || read_system_processes(deadline))
     }
+}
+
+#[derive(Default)]
+struct ProcessReadGate {
+    busy: std::sync::Arc<std::sync::atomic::AtomicBool>,
+}
+
+impl ProcessReadGate {
+    fn read(
+        &self,
+        deadline: std::time::Instant,
+        read: impl FnOnce() -> AgentProcessSnapshot + Send + 'static,
+    ) -> AgentProcessSnapshot {
+        use std::{
+            sync::{atomic::Ordering, mpsc},
+            time::Instant,
+        };
+        if Instant::now() >= deadline
+            || self
+                .busy
+                .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+                .is_err()
+        {
+            return AgentProcessSnapshot::unavailable_system();
+        }
+        let guard = ProcessReadGuard(std::sync::Arc::clone(&self.busy));
+        let (sender, receiver) = mpsc::sync_channel(1);
+        if std::thread::Builder::new()
+            .name("agent-process-reader".to_owned())
+            .spawn(move || {
+                let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(read));
+                // Hold the gate until the synchronous OS read really exits. A
+                // timed-out caller cannot start another lingering OS worker.
+                drop(guard);
+                let _ = sender.send(result);
+            })
+            .is_err()
+        {
+            return AgentProcessSnapshot::unavailable_system();
+        }
+        let Some(remaining) = deadline.checked_duration_since(Instant::now()) else {
+            return AgentProcessSnapshot::unavailable_system();
+        };
+        match receiver.recv_timeout(remaining) {
+            Ok(Ok(snapshot)) if Instant::now() < deadline => snapshot,
+            // Dropping the receiver discards late safe results. No worker can
+            // overwrite the fleet after this caller has reported unavailable.
+            _ => AgentProcessSnapshot::unavailable_system(),
+        }
+    }
+}
+
+struct ProcessReadGuard(std::sync::Arc<std::sync::atomic::AtomicBool>);
+impl Drop for ProcessReadGuard {
+    fn drop(&mut self) {
+        self.0.store(false, std::sync::atomic::Ordering::Release);
+    }
+}
+
+fn read_system_processes(deadline: std::time::Instant) -> AgentProcessSnapshot {
+    let mut system = System::new();
+    system.refresh_processes_specifics(ProcessesToUpdate::All, true, ProcessRefreshKind::nothing());
+    let environment = if cfg!(windows) {
+        AgentProcessEnvironment::Windows
+    } else {
+        AgentProcessEnvironment::Local
+    };
+    // A running scanner must itself be observable in a successful OS
+    // enumeration. An empty OS table is not evidence of zero providers.
+    let mut snapshot = if system.processes().is_empty() {
+        AgentProcessSnapshot::unavailable(environment)
+    } else {
+        read_system_identities(&mut system, environment, deadline)
+    };
+    snapshot.include_wsl(deadline);
+    snapshot
 }
 
 fn read_system_identities(
@@ -765,5 +826,66 @@ mod tests {
             parse_identity_counts(br#"{"counts":{},"complete":true}"#),
             Ok(BTreeMap::new())
         );
+    }
+    #[test]
+    fn production_reader_discards_late_results_at_the_source_deadline() {
+        let gate = ProcessReadGate::default();
+        let snapshot = gate.read(Instant::now() + Duration::from_millis(20), || {
+            std::thread::sleep(Duration::from_millis(80));
+            AgentProcessSnapshot::from_process_names(["codex"])
+        });
+        assert!(!snapshot.is_complete());
+        assert_eq!(snapshot.count("codex"), 0);
+        assert_eq!(snapshot.source_statuses("codex")[0].count, None);
+    }
+    #[test]
+    fn production_reader_keeps_one_worker_after_timeout_and_accepts_fresh_recovery() {
+        use std::sync::{atomic::Ordering, mpsc, Arc};
+        let gate = ProcessReadGate::default();
+        let calls = Arc::new(AtomicUsize::new(0));
+        let worker_calls = Arc::clone(&calls);
+        let (release, blocked) = mpsc::sync_channel(1);
+        let timed_out = gate.read(Instant::now() + Duration::from_millis(20), move || {
+            worker_calls.fetch_add(1, Ordering::SeqCst);
+            let _ = blocked.recv();
+            AgentProcessSnapshot::from_process_names(["codex", "codex"])
+        });
+        assert!(!timed_out.is_complete());
+        let extra_calls = Arc::clone(&calls);
+        let busy = gate.read(Instant::now() + Duration::from_millis(20), move || {
+            extra_calls.fetch_add(1, Ordering::SeqCst);
+            AgentProcessSnapshot::default()
+        });
+        assert!(!busy.is_complete());
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
+        release.send(()).unwrap();
+        let wait_until = Instant::now() + Duration::from_secs(1);
+        while gate.busy.load(Ordering::Acquire) && Instant::now() < wait_until {
+            std::thread::yield_now();
+        }
+        assert!(!gate.busy.load(Ordering::Acquire));
+        let recovered = gate.read(Instant::now() + Duration::from_secs(1), || {
+            AgentProcessSnapshot::from_process_names(["claude"])
+        });
+        assert!(recovered.is_complete());
+        assert_eq!(
+            recovered.count("codex"),
+            0,
+            "late result cannot replace the new observation"
+        );
+        assert_eq!(recovered.count("claude"), 1);
+    }
+    #[test]
+    fn production_reader_releases_its_gate_after_a_synthetic_panic() {
+        let gate = ProcessReadGate::default();
+        let failed = gate.read(Instant::now() + Duration::from_secs(1), || {
+            panic!("synthetic reader panic")
+        });
+        assert!(!failed.is_complete());
+        let recovered = gate.read(
+            Instant::now() + Duration::from_secs(1),
+            AgentProcessSnapshot::default,
+        );
+        assert!(recovered.is_complete());
     }
 }
