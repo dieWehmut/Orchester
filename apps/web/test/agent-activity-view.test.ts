@@ -11,6 +11,7 @@ import { useAgentActivity } from '../src/features/agent-presence/use-agent-activ
 import type { ExternalActivityProvider } from '../src/api/agent-activity'
 import WorkspaceView from '../src/views/WorkspaceView.vue'
 import type { ActivitySummary, ActivityEntry } from '../src/api/agent-activity'
+import { createI18n, type Locale } from '../src/i18n'
 
 const wrappers: ReturnType<typeof mount>[] = []
 afterEach(() => { wrappers.splice(0).forEach(wrapper => wrapper.unmount()); localStorage.clear(); vi.useRealTimers() })
@@ -19,7 +20,7 @@ const entry = (id: string, text: string, kind: ActivityEntry['kind'] = 'assistan
 const response = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } })
 const list = (sessions: ActivitySummary[]) => ({ schema_version: 1, observed_at: Date.now(), sources: [{ provider: 'codex', status: 'available' }], sessions })
 const detail = (row: ActivitySummary, entries = [entry('1', 'Visible reply')]) => ({ schema_version: 1, ...row, entries })
-function setup(fetch: typeof globalThis.fetch) {
+function setup(fetch: typeof globalThis.fetch, locale?: Locale) {
   const stores = createAppStores({ http: createHttpClient({ fetch }), agentStatusStreamFactory: null })
   stores.bootstrap.status.value = 'ready'
   const Host = defineComponent({
@@ -29,11 +30,41 @@ function setup(fetch: typeof globalThis.fetch) {
       return () => h('div', [h(AgentActivitySidebar, { provider: props.provider, activity, onSelect: activity.select }), h(AgentActivityView, { provider: props.provider, activity })])
     },
   })
-  const wrapper = mount(Host, { props: { provider: 'codex' }, global: { plugins: [stores] } }); wrappers.push(wrapper)
+  const wrapper = mount(Host, { props: { provider: 'codex' }, global: { plugins: [stores, ...(locale ? [createI18n(locale)] : [])] } }); wrappers.push(wrapper)
   return wrapper
 }
 
 describe('live agent content', () => {
+  it.each([
+    ['en', ['Working', 'Completed', 'Interrupted', 'Unknown status']],
+    ['zh-CN', ['正在处理', '已完成', '已中断', '状态未知']],
+    ['zh-TW', ['正在處理', '已完成', '已中斷', '狀態未知']],
+  ] as const)('shows distinct session states in %s without claiming unknown records are inactive', async (locale, labels) => {
+    vi.useFakeTimers()
+    const rows: ActivitySummary[] = ['active', 'completed', 'interrupted', 'unknown'].map((state, index) => ({
+      ...session(state),
+      state: state as ActivitySummary['state'],
+      environment: index < 2 ? 'Windows' : 'WSL · Ubuntu-22.04',
+      updated_at: Date.now() - (state === 'unknown' ? 121_000 : 0),
+    }))
+    const wrapper = setup(async url => response(String(url).includes('?provider=') ? list(rows) : detail(rows.find(row => String(url).endsWith(row.id))!)), locale)
+    await flushPromises()
+    expect(wrapper.get('[data-activity-row="unknown"] .activity-row__state').text()).toBe(labels[3])
+    rows.forEach((row, index) => {
+      const label = wrapper.get(`[data-activity-row="${row.id}"] .activity-row__state`)
+      expect(label.text()).toBe(labels[index])
+      expect(label.attributes('data-state')).toBe(row.state)
+    })
+    expect(wrapper.get('[data-activity-session="unknown"]').attributes('title')).toContain(labels[3])
+    expect(wrapper.get('[data-activity-row="active"]').find('.activity-row__running').exists()).toBe(true)
+    expect(wrapper.get('[data-activity-row="unknown"]').find('.activity-row__running').exists()).toBe(false)
+    rows[3]!.state = 'active'
+    rows[3]!.updated_at = Date.now()
+    await vi.advanceTimersByTimeAsync(2100); await flushPromises()
+    expect(wrapper.get('[data-activity-row="unknown"] .activity-row__state').text()).toBe(labels[0])
+    expect(wrapper.get('[data-activity-row="unknown"]').find('.activity-row__running').exists()).toBe(true)
+  })
+
   it('keeps Windows and WSL sources distinct, filters them, and refreshes the selected WSL conversation', async () => {
     vi.useFakeTimers()
     const rows = [
@@ -137,7 +168,7 @@ describe('live agent content', () => {
     expect(wrapper.findAll('[data-activity-session]')).toHaveLength(4)
     expect(wrapper.find('[data-activity-section="recent"]').exists()).toBe(false)
     expect(wrapper.get('[data-activity-row="linux"]').text()).toContain('Working')
-    expect(wrapper.get('[data-activity-row="windows"]').text()).toContain('Inactive')
+    expect(wrapper.get('[data-activity-row="windows"]').text()).toContain('Completed')
     expect(wrapper.get('[data-activity-row="linux"] time').attributes('datetime')).toBeTruthy()
     expect(wrapper.findAll('.activity-sidebar__count').map(node => node.text())).toEqual(['1', '1', '1', '1'])
     expect(wrapper.findAll('.activity-sidebar__path').map(node => node.text())).toContain('/home/han/other/Demo')
