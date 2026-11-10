@@ -1,5 +1,5 @@
 import type { AgentRuntimeSummaryDto } from '@orchester/protokoll'
-import { agentFleetWindowCount, agentPresentedActivity, type AgentCountQuality } from './agent-presenter'
+import { agentFleetWindowCount, agentIsMonitorOnly, agentPresentedActivity, type AgentCountQuality } from './agent-presenter'
 
 export type AgentPresenceGroupKey = 'active' | 'ready' | 'attention'
 
@@ -14,7 +14,7 @@ const GROUP_ORDER: readonly AgentPresenceGroupKey[] = ['active', 'ready', 'atten
 
 export function agentPresenceGroupKey(agent: AgentRuntimeSummaryDto): AgentPresenceGroupKey {
   const activity = agentPresentedActivity(agent)
-  if (agent.availability !== 'available' || activity === 'offline' || activity === 'error' || activity === 'unknown') {
+  if ((!agentIsMonitorOnly(agent) && agent.availability !== 'available') || activity === 'offline' || activity === 'error' || activity === 'unknown') {
     return 'attention'
   }
   if (activity === 'idle') return 'ready'

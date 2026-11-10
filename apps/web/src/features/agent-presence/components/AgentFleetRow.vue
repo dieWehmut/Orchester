@@ -11,7 +11,7 @@ import {
   agentAvailabilityMessageKey,
   agentCountsSummary,
   agentDotStatus,
-  agentPresentedActivity,
+  agentIsMonitorOnly,
 } from '../agent-presenter'
 import { agentProviderPresentation } from '../provider-presentation'
 
@@ -27,7 +27,7 @@ const { t } = useI18n()
 const provider = computed(() => agentProviderPresentation(props.agent))
 const activityLabel = computed(() => t(agentActivityMessageKey(props.agent)))
 const availabilityLabel = computed(() => t(agentAvailabilityMessageKey(props.agent)))
-const showAvailability = computed(() => props.agent.availability !== 'available' && availabilityLabel.value !== activityLabel.value)
+const showAvailability = computed(() => !agentIsMonitorOnly(props.agent) && props.agent.availability !== 'available' && availabilityLabel.value !== activityLabel.value)
 const metricSummary = computed(() => agentCountsSummary(props.agent, t))
 
 defineEmits<{
@@ -54,7 +54,7 @@ defineEmits<{
         <StatusDot
           :status="agentDotStatus(props.agent)"
           :label="activityLabel"
-          :pulse="agentPresentedActivity(props.agent) === 'running'"
+          :pulse="agentActivityMessageKey(props.agent) === 'agents.activity.running'"
         />
         <span data-agent-activity>{{ activityLabel }}</span>
       </span>

@@ -10,6 +10,7 @@ import {
   agentActivityMessageKey,
   agentAvailabilityMessageKey,
   agentDotStatus,
+  agentIsMonitorOnly,
 } from '../agent-presenter'
 import { agentProviderPresentation } from '../provider-presentation'
 
@@ -23,6 +24,7 @@ const availabilityLabel = computed(() =>
   props.agent ? t(agentAvailabilityMessageKey(props.agent)) : '',
 )
 const provider = computed(() => (props.agent ? agentProviderPresentation(props.agent) : null))
+const monitorOnly = computed(() => props.agent ? agentIsMonitorOnly(props.agent) : false)
 </script>
 
 <template>
@@ -38,14 +40,14 @@ const provider = computed(() => (props.agent ? agentProviderPresentation(props.a
       <StatusDot
         :status="agentDotStatus(props.agent)"
         :label="activityLabel"
-        :pulse="props.agent.activity === 'running'"
+        :pulse="agentActivityMessageKey(props.agent) === 'agents.activity.running'"
       />
       <AppBadge data-agent-details-activity :tone="agentDotStatus(props.agent) === 'error' ? 'error' : 'neutral'">
         {{ activityLabel }}
       </AppBadge>
     </header>
 
-    <div class="agent-details__availability" data-agent-details-availability>
+    <div v-if="!monitorOnly" class="agent-details__availability" data-agent-details-availability>
       <span>{{ t('agents.availabilityLabel') }}</span>
       <strong>{{ availabilityLabel }}</strong>
     </div>
@@ -54,7 +56,8 @@ const provider = computed(() => (props.agent ? agentProviderPresentation(props.a
 
     <section class="agent-details__capabilities" aria-labelledby="agent-capabilities-title">
       <h3 id="agent-capabilities-title">{{ t('agents.capabilities') }}</h3>
-      <div data-agent-capabilities>
+      <p v-if="monitorOnly" class="agent-details__muted" data-agent-monitor-only>{{ t('agents.monitorOnly') }}</p>
+      <div v-else data-agent-capabilities>
         <AppBadge v-for="capability in props.agent.capabilities" :key="capability" tone="neutral" mono>
           {{ capability }}
         </AppBadge>
@@ -131,6 +134,10 @@ const provider = computed(() => (props.agent ? agentProviderPresentation(props.a
   color: var(--color-text-secondary);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
+}
+
+.agent-details__capabilities p {
+  margin: 0;
 }
 
 .agent-details__capabilities > div {

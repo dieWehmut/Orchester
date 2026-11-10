@@ -8,6 +8,8 @@ export type AgentActivityMessageKey =
   | 'agents.activity.unavailable'
   | 'agents.activity.error'
   | 'agents.activity.running'
+  | 'agents.activity.serviceRunning'
+  | 'agents.activity.noRunningProcesses'
   | 'agents.activity.waitingApproval'
   | 'agents.activity.starting'
   | 'agents.activity.stopping'
@@ -56,10 +58,17 @@ export function agentProcessSourcesComplete(agent: AgentRuntimeSummaryDto): bool
     agent.process_sources.every((source) => source.status === 'available')
 }
 
-export function agentPresentedActivity(agent: AgentRuntimeSummaryDto): AgentRuntimeSummaryDto['activity'] {
-  const managedActive = agent.active_sessions > 0 || agent.active_runs > 0 || agent.active_subagents > 0 ||
+export function agentIsMonitorOnly(agent: AgentRuntimeSummaryDto): boolean {
+  return agent.capabilities.includes('monitor_only')
+}
+
+function agentHasManagedActivity(agent: AgentRuntimeSummaryDto): boolean {
+  return agent.active_sessions > 0 || agent.active_runs > 0 || agent.active_subagents > 0 ||
     (agent.window_count_source !== 'external_processes' && agent.active_windows > 0)
-  if ((agent.activity === 'idle' || agent.activity === 'offline') && !managedActive && !agentProcessSourcesComplete(agent)) return 'unknown'
+}
+
+export function agentPresentedActivity(agent: AgentRuntimeSummaryDto): AgentRuntimeSummaryDto['activity'] {
+  if ((agent.activity === 'idle' || agent.activity === 'offline') && !agentHasManagedActivity(agent) && !agentProcessSourcesComplete(agent)) return 'unknown'
   return agent.activity
 }
 
@@ -110,6 +119,10 @@ export function agentWindowSourceMessageKey(
 
 export function agentActivityMessageKey(agent: AgentRuntimeSummaryDto): AgentActivityMessageKey {
   const activity = agentPresentedActivity(agent)
+  if (agent.capabilities.includes('process_presence') && !agentHasManagedActivity(agent)) {
+    if (activity === 'running') return 'agents.activity.serviceRunning'
+    if (activity === 'idle' || activity === 'offline') return 'agents.activity.noRunningProcesses'
+  }
   if (activity === 'idle' || activity === 'offline') {
     if (agent.availability === 'auth_required') return 'agents.activity.signInRequired'
     if (agent.availability === 'unavailable') return 'agents.activity.unavailable'
