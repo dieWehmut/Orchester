@@ -9,6 +9,9 @@ const icons: Record<string, { dark: string; light: string }> = {
   claude: { dark: 'claude.svg', light: 'claude.svg' },
   deepseek: { dark: 'deepseek.ico', light: 'deepseek.ico' },
   opencode: { dark: 'opencode-dark.svg', light: 'opencode-light.svg' },
+  gemini: { dark: 'gemini.png', light: 'gemini.png' },
+  antigravity: { dark: 'antigravity.svg', light: 'antigravity.svg' },
+  cursor: { dark: 'cursor-dark.svg', light: 'cursor-light.svg' },
 }
 const renderedKey = computed(() => (icons[props.iconKey] ? props.iconKey : 'generic'))
 const icon = computed(() => icons[props.iconKey])

@@ -1,6 +1,6 @@
 import type { AgentRuntimeSummaryDto } from '@orchester/protokoll'
 
-export type AgentProviderKey = 'codex' | 'claude' | 'deepseek' | 'opencode' | 'generic'
+export type AgentProviderKey = 'codex' | 'claude' | 'deepseek' | 'opencode' | 'gemini' | 'antigravity' | 'cursor' | 'generic'
 export type AgentProviderTone = 'success' | 'warning' | 'info' | 'accent' | 'neutral'
 
 export interface AgentProviderPresentation {
@@ -15,6 +15,9 @@ const PROVIDERS: Record<Exclude<AgentProviderKey, 'generic'>, AgentProviderPrese
   claude: { key: 'claude', label: 'Anthropic', iconKey: 'claude', tone: 'warning' },
   deepseek: { key: 'deepseek', label: 'DeepSeek', iconKey: 'deepseek', tone: 'info' },
   opencode: { key: 'opencode', label: 'OpenCode', iconKey: 'opencode', tone: 'accent' },
+  gemini: { key: 'gemini', label: 'Google', iconKey: 'gemini', tone: 'info' },
+  antigravity: { key: 'antigravity', label: 'Google', iconKey: 'antigravity', tone: 'accent' },
+  cursor: { key: 'cursor', label: 'Cursor', iconKey: 'cursor', tone: 'neutral' },
 }
 
 function knownProvider(
@@ -25,6 +28,9 @@ function knownProvider(
   if (candidates.some((value) => value === 'claude' || value === 'anthropic')) return 'claude'
   if (candidates.includes('deepseek')) return 'deepseek'
   if (candidates.includes('opencode')) return 'opencode'
+  if (candidates.includes('gemini')) return 'gemini'
+  if (candidates.includes('antigravity')) return 'antigravity'
+  if (candidates.includes('cursor')) return 'cursor'
   return null
 }
 

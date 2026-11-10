@@ -1,4 +1,6 @@
 import { AGENT_FLEET_FIXTURE, type AgentRuntimeSummaryDto } from '@orchester/protokoll'
+import { existsSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
@@ -29,6 +31,28 @@ function monitor(overrides: Partial<AgentRuntimeSummaryDto> = {}): AgentRuntimeS
 }
 
 describe('agent process monitors', () => {
+  it.each([
+    { provider: 'gemini', display_name: 'Gemini CLI', label: 'Google', dark: 'gemini.png', light: 'gemini.png' },
+    { provider: 'antigravity', display_name: 'Antigravity', label: 'Google', dark: 'antigravity.svg', light: 'antigravity.svg' },
+    { provider: 'cursor', display_name: 'Cursor', label: 'Cursor', dark: 'cursor-dark.svg', light: 'cursor-light.svg' },
+    { provider: 'deepseek', display_name: 'DeepSeek Harness', label: 'DeepSeek', dark: 'deepseek.ico', light: 'deepseek.ico' },
+  ])('renders the $display_name identity and local official marks in row and details', ({ provider, display_name, label, dark, light }) => {
+    const agent = monitor({ provider, display_name, icon_key: 'custom-provider' })
+    const row = mount(AgentFleetRow, { props: { agent } })
+    const details = mount(AgentDetails, { props: { agent } })
+
+    for (const wrapper of [row, details]) {
+      expect(wrapper.get('[data-agent-provider-label]').text()).toBe(label)
+      expect(wrapper.get(`[data-agent-provider="${provider}"]`)).toBeTruthy()
+      expect(wrapper.get(`[data-agent-icon="${provider}"] .agent-icon__dark`).attributes('src')).toBe(`/agents/${dark}`)
+      expect(wrapper.get(`[data-agent-icon="${provider}"] .agent-icon__light`).attributes('src')).toBe(`/agents/${light}`)
+    }
+    expect(row.get('button').attributes('aria-label')).toContain(display_name)
+    expect(details.get('[data-agent-details-name]').text()).toBe(display_name)
+    expect(existsSync(resolve('public/agents', dark))).toBe(true)
+    expect(existsSync(resolve('public/agents', light))).toBe(true)
+  })
+
   it('renders complete zero observations as no running process and hides adapter availability', () => {
     const agent = monitor()
     const wrapper = mount(AgentFleetRow, { props: { agent } })

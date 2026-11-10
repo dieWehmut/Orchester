@@ -4,6 +4,16 @@ import { describe, expect, it } from 'vitest'
 import { agentProviderPresentation } from '../src/features/agent-presence'
 
 describe('agent provider presentation', () => {
+  it.each([
+    { key: 'gemini', label: 'Google', tone: 'info' },
+    { key: 'antigravity', label: 'Google', tone: 'accent' },
+    { key: 'cursor', label: 'Cursor', tone: 'neutral' },
+  ])('identifies $key independently of an unknown runtime icon', ({ key, label, tone }) => {
+    const agent: AgentRuntimeSummaryDto = { ...AGENT_FLEET_FIXTURE.agents[0]!, provider: key, icon_key: 'custom-provider' }
+
+    expect(agentProviderPresentation(agent)).toEqual({ key, label, iconKey: key, tone })
+  })
+
   it('maps known runtimes to stable provider identities', () => {
     expect(agentProviderPresentation(AGENT_FLEET_FIXTURE.agents[0]!)).toEqual({
       key: 'codex',
