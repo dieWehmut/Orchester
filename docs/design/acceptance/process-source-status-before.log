@@ -1,0 +1,42 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.79s
+     Running tests/agent_runtime_status.rs (/home/han/project/Orchester/target/debug/deps/agent_runtime_status-84cb734b56a57e11)
+
+running 9 tests
+test runtime_store_redacts_failure_paths_before_the_snapshot_leaves_the_server ... ok
+test runtime_store_rejects_unknown_agents_without_mutating_the_snapshot ... ok
+test runtime_store_updates_one_agent_and_advances_the_snapshot_sequence ... ok
+test runtime_store_broadcasts_snapshots_and_heartbeats_to_subscribers ... ok
+test process_monitor_start_is_safe_without_a_tokio_runtime ... ok
+test runtime_store_reconciles_external_processes_without_losing_managed_counts ... ok
+test incomplete_first_observation_is_unknown_and_partial_counts_remain_running ... FAILED
+test unavailable_external_sources_preserve_managed_approval_and_counts ... FAILED
+test source_quality_changes_publish_atomically_and_recovery_confirms_zero ... FAILED
+
+failures:
+
+---- incomplete_first_observation_is_unknown_and_partial_counts_remain_running stdout ----
+
+thread 'incomplete_first_observation_is_unknown_and_partial_counts_remain_running' (2677542) panicked at kisten/netz/tests/agent_runtime_status.rs:39:5:
+assertion failed: store.reconcile_external_processes(&partial, "2026-11-10T05:00:01Z").unwrap()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- unavailable_external_sources_preserve_managed_approval_and_counts stdout ----
+
+thread 'unavailable_external_sources_preserve_managed_approval_and_counts' (2677550) panicked at kisten/netz/tests/agent_runtime_status.rs:87:47:
+called `Option::unwrap()` on a `None` value
+
+---- source_quality_changes_publish_atomically_and_recovery_confirms_zero stdout ----
+
+thread 'source_quality_changes_publish_atomically_and_recovery_confirms_zero' (2677549) panicked at kisten/netz/tests/agent_runtime_status.rs:63:5:
+assertion failed: store.reconcile_external_processes(&AgentProcessSnapshot::unavailable(AgentProcessEnvironment::Wsl),
+        "2026-11-10T05:00:02Z").unwrap()
+
+
+failures:
+    incomplete_first_observation_is_unknown_and_partial_counts_remain_running
+    source_quality_changes_publish_atomically_and_recovery_confirms_zero
+    unavailable_external_sources_preserve_managed_approval_and_counts
+
+test result: FAILED. 6 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p orchester-netz --test agent_runtime_status`

@@ -1,0 +1,20 @@
+{
+  "role": "Independent Windows native-entry attempt; no successful diagnostic acceptance",
+  "command_kind": "Direct Windows PowerShell, NoProfile/NonInteractive, owned diagnose-activity-source-audit.ps1",
+  "linux_interop_endpoint": "/run/WSL/1_interop",
+  "attempt_count": 1,
+  "linux_launch_wrapper_pid": 2698600,
+  "linux_exit_code": 1,
+  "error": "WSL UtilAcceptVsock accept4 failed 110",
+  "native_launcher_pid": null,
+  "native_launcher_execution": "unconfirmed; native invocation not accepted as a passed diagnostic",
+  "diagnostic_script": "C:/Users/han/AppData/Local/Orchester-build/continue-20261110/diagnose-activity-source-audit.ps1",
+  "diagnostic_sources": [
+    "activity-source-audit-20261110/wsl-diagnostics.rs",
+    "activity-source-audit-20261110/wsl-diagnostics.cmd"
+  ],
+  "scope": "Only existing process names and running-distribution queries; no model, Agent, service, emulator or installed-user files changed",
+  "next_step": "Root native inspection before any subsequent launch; do not duplicate an unconfirmed native start",
+  "collected_at_utc": "2026-11-10T07:04:55Z",
+  "diagnostic_artifacts_found": []
+}

@@ -22,6 +22,7 @@ const baseAgent = {
   active_runs: 2,
   active_subagents: 1,
   window_count_source: 'managed_sessions' as const,
+  process_sources: null,
   last_heartbeat_at: '2026-08-20T08:00:00.000Z',
   last_error: null,
   capabilities: ['streaming', 'resume'],
@@ -53,7 +54,7 @@ describe('agent fleet status DTO', () => {
   it('accepts aggregated external agent process instances', () => {
     const parsed = parseAgentFleetSnapshot({
       ...snapshot,
-      schema_version: 2,
+      schema_version: AGENT_STATUS_SCHEMA_VERSION,
       agents: [
         {
           ...baseAgent,

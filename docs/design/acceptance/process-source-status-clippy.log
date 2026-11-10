@@ -1,0 +1,59 @@
+    Checking libc v0.2.186
+    Checking orchester-protokoll v0.1.2 (/tmp/orchester-activity-state-audit/kisten/protokoll)
+    Checking errno v0.3.14
+    Checking signal-hook-registry v1.4.8
+    Checking socket2 v0.6.5
+    Checking mio v1.2.1
+    Checking tokio v1.52.3
+    Checking getrandom v0.3.4
+    Checking getrandom v0.2.17
+    Checking ring v0.17.14
+    Checking rustls-webpki v0.103.13
+    Checking rustls v0.23.42
+    Checking hyper v1.10.1
+    Checking hyper-util v0.1.20
+    Checking tower v0.5.3
+    Checking tokio-stream v0.1.18
+    Checking rand_core v0.9.5
+    Checking rand_chacha v0.9.0
+    Checking orchester-vertrag v0.1.2 (/tmp/orchester-activity-state-audit/kisten/vertrag)
+    Checking tokio-rustls v0.26.4
+    Checking tokio-util v0.7.18
+    Checking filetime v0.2.29
+    Checking tower-http v0.6.8
+    Checking tar v0.4.46
+    Checking hyper-rustls v0.27.9
+    Checking libsqlite3-sys v0.30.1
+    Checking orchester-adapter v0.1.2 (/tmp/orchester-activity-state-audit/kisten/adapter)
+    Checking rand v0.9.5
+    Checking getrandom v0.4.3
+    Checking linux-keyutils v0.2.5
+    Checking blake3 v1.8.5
+    Checking tungstenite v0.29.0
+    Checking rusqlite v0.32.1
+    Checking thiserror v1.0.69
+    Checking keyring v3.6.3
+    Checking reqwest v0.12.28
+    Checking orchester-verzeichnis v0.1.2 (/tmp/orchester-activity-state-audit/kisten/verzeichnis)
+    Checking orchester-modell v0.1.2 (/tmp/orchester-activity-state-audit/kisten/modell)
+    Checking zstd-sys v2.1.2+zstd.1.5.7
+    Checking fs2 v0.4.3
+    Checking zstd-safe v7.3.0
+    Checking nix v0.28.0
+    Checking orchester-laufzeit v0.1.2 (/tmp/orchester-activity-state-audit/kisten/laufzeit)
+    Checking filedescriptor v0.8.3
+    Checking tokio-tungstenite v0.29.0
+    Checking anyhow v1.0.104
+    Checking uuid v1.24.1
+    Checking serial2 v0.2.39
+    Checking downcast-rs v1.2.1
+    Checking shell-words v1.1.1
+    Checking portable-pty v0.9.0
+    Checking axum v0.8.9
+    Checking tempfile v3.27.0
+    Checking tower-http v0.7.0
+    Checking zstd v0.13.3
+    Checking sysinfo v0.33.1
+    Checking orchester-anwendung v0.1.2 (/tmp/orchester-activity-state-audit/kisten/anwendung)
+    Checking orchester-netz v0.1.2 (/tmp/orchester-activity-state-audit/kisten/netz)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 17.08s

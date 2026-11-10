@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "head": "ff5fc4dafa23f3407629ff95e13e6e6a8534af52",
+  "tree": "9d93b14dda067f22ac82463421d8ce216dbf750c",
+  "completed_at": "2026-11-10T11:46:11.854995+00:00",
+  "result": "passed",
+  "readonly_review": {
+    "findings": [],
+    "scope": [
+      "Cargo.toml",
+      "Cargo.lock",
+      "kisten/netz/src/agent_process.rs",
+      "kisten/netz/src/agent_process/identity.rs",
+      "kisten/netz/src/agent_process/rules.json",
+      "kisten/netz/src/agent_process/wsl_query.py",
+      "kisten/netz/src/agent_status.rs",
+      "kisten/netz/src/bootstrap.rs",
+      "kisten/netz/src/agent_activity/wsl.rs",
+      "kisten/protokoll/src/agent_status.rs"
+    ],
+    "checks": [
+      {
+        "behavior": "Production OS reads use one globally gated worker and a three-second deadline; busy, panic, timeout and late results yield unavailable",
+        "evidence": [
+          "kisten/netz/src/agent_process.rs:24",
+          "kisten/netz/src/agent_process.rs:37",
+          "kisten/netz/src/agent_process.rs:88"
+        ]
+      },
+      {
+        "behavior": "Partial reads retain confirmed positive counts, add an unavailable source marker and do not confirm provider absence",
+        "evidence": [
+          "kisten/netz/src/agent_process.rs:548",
+          "kisten/netz/src/agent_status.rs:183"
+        ]
+      },
+      {
+        "behavior": "Current available counts alone contribute to active_windows; stale last-successful WSL counts remain source-labelled and are excluded from sums",
+        "evidence": [
+          "kisten/netz/src/agent_process.rs:416",
+          "kisten/netz/src/agent_process.rs:613",
+          "kisten/protokoll/src/agent_status.rs:383"
+        ]
+      },
+      {
+        "behavior": "Gemini, Antigravity, Cursor and DeepSeek add fleet monitor rows without creating runnable adapters; generic names and helper metadata do not alone identify a monitor",
+        "evidence": [
+          "kisten/netz/src/agent_status.rs:320",
+          "kisten/netz/src/agent_process/identity.rs:104",
+          "kisten/netz/tests/agent_runtime_status.rs:353"
+        ]
+      },
+      {
+        "behavior": "Runtime entry matching shares exact rules between Rust and Python; metadata prefix has fixed 64-argument and 16KiB limits, with safe counts-only wire output",
+        "evidence": [
+          "kisten/netz/src/agent_process/identity.rs:6",
+          "kisten/netz/src/agent_process/identity.rs:195",
+          "kisten/netz/src/agent_process/wsl_query.py:12"
+        ]
+      }
+    ]
+  },
+  "validation": {
+    "rust_test": {
+      "metadata": "/tmp/orchester-monitor-final-rust-ff5fc4d.json",
+      "safe_log": "/tmp/orchester-monitor-final-rust-ff5fc4d.log",
+      "safe_log_sha256": "37ac95fca279d26806e47553137f41002860c4a478bc1e2d36ad0cca7b728111",
+      "harness_count": 109,
+      "totals": {
+        "passed": 1287,
+        "failed": 0,
+        "ignored": 1,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "elapsed_seconds": 278.667,
+      "agent_process_unit_tests_passed": 19,
+      "doctests_passed": 2,
+      "ignored_test": {
+        "name": "stdio_mcp_handshake_and_call_use_a_direct_background_process",
+        "reason": "requires Node.js; included in desktop acceptance"
+      }
+    },
+    "rust_fmt": {
+      "metadata": "/tmp/orchester-monitor-final-rust-fmt-ff5fc4d.json",
+      "safe_log": "/tmp/orchester-monitor-final-rust-fmt-ff5fc4d.log",
+      "status": "passed",
+      "exit_code": 0
+    },
+    "same_head": true,
+    "clean_before": true,
+    "clean_after": true,
+    "log_counts_and_sha256_cross_checked": true
+  },
+  "file_sha256": {
+    "Cargo.toml": "8ac78e8ff2a4d8ae670fe8aa868bcdb8ff501fbc806314de4102b27eefffce43",
+    "Cargo.lock": "f5432fa1754a162afd80d130f6271c9e86a9936b4b1d474b82557a677c7aecb2",
+    "kisten/netz/src/agent_process.rs": "c1b381c157f64d20b85cecd4064ce0a2bb2642fd7c7ab96bc65e56d31d8a98d6",
+    "kisten/netz/src/agent_process/identity.rs": "2c095551b5c6c76bdc48d417a2deff7cafde033b8659bfcbf8dd7f8d0f7a607b",
+    "kisten/netz/src/agent_process/rules.json": "46362e5b8030554625ebc54fb2a7b90adebae374d1c71f021a07da2576d26ec2",
+    "kisten/netz/src/agent_process/wsl_query.py": "c4f2bbfb8eb57b2065a933c651a7c762afec198a2ee354c3b7c7f914877fe2ff",
+    "kisten/netz/src/agent_status.rs": "982b43b1d57b51a955329f4f3da4126d6f24acd89705fb4386482fe2478ac90f",
+    "kisten/netz/src/bootstrap.rs": "7fe264e838ee6a8f04b1d77560215a9bbe551c0ea1435eb8a5ac5fbcda0ac710",
+    "kisten/netz/src/agent_activity/wsl.rs": "d5d6dba4d558aa79593bf00cf4e221f04fb7e37b66984df4dcef057a0b71546d",
+    "kisten/protokoll/src/agent_status.rs": "432bab67697350082c4f15ae1bcd2cad03b2dc45013e64d977d456639fc14e76"
+  },
+  "limits": [
+    "Default native cargo test workspace targets plus doctests; release CI --all-targets and Windows runtime are not claimed",
+    "Web gates not rerun because parent already holds complete current Web proof",
+    "Any subsequent Cursor CLI code change requires its own relevant validation at the new HEAD"
+  ],
+  "safety": {
+    "repository_edits": false,
+    "commits": false,
+    "real_model_cli_started": false,
+    "windows_cli_started": false,
+    "adb_used": false,
+    "other_projects_touched": false,
+    "raw_process_arguments_saved": false,
+    "conversations_saved": false,
+    "secrets_saved": false
+  }
+}

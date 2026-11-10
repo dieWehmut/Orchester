@@ -62,7 +62,8 @@ async fn agent_status_route_returns_a_redaction_safe_runtime_snapshot() {
         .expect("agent status body");
     let json: Value = serde_json::from_slice(&body).expect("agent status JSON");
     assert_eq!(json["schema_version"], AGENT_STATUS_SCHEMA_VERSION);
-    assert_eq!(json["sequence"], 2);
+    // The first source observation is a published metadata change.
+    assert_eq!(json["sequence"], 3);
     assert!(json["generated_at"].as_str().unwrap().ends_with('Z'));
 
     let agents = json["agents"].as_array().expect("agent array");
@@ -70,9 +71,24 @@ async fn agent_status_route_returns_a_redaction_safe_runtime_snapshot() {
         .iter()
         .map(|agent| agent["agent_id"].as_str().expect("agent id"))
         .collect();
-    assert_eq!(ids, vec!["claude", "codex", "mock", "opencode"]);
+    assert_eq!(
+        ids,
+        vec![
+            "antigravity",
+            "claude",
+            "codex",
+            "cursor",
+            "deepseek",
+            "gemini",
+            "mock",
+            "opencode"
+        ]
+    );
 
-    let mock = &agents[2];
+    let mock = agents
+        .iter()
+        .find(|agent| agent["provider"] == "mock")
+        .unwrap();
     assert_eq!(mock["provider"], "mock");
     assert_eq!(mock["display_name"], "Mock");
     assert_eq!(mock["icon_key"], "mock");
@@ -86,6 +102,13 @@ async fn agent_status_route_returns_a_redaction_safe_runtime_snapshot() {
     assert_eq!(mock["active_runs"], 0);
     assert_eq!(mock["active_subagents"], 0);
     assert_eq!(mock["window_count_source"], "managed_sessions");
+    assert_eq!(mock["process_sources"][0]["environment"], "local");
+    assert_eq!(mock["process_sources"][0]["status"], "available");
+    assert_eq!(mock["process_sources"][0]["count"], 0);
+    assert!(mock["process_sources"][0]["observed_at"]
+        .as_str()
+        .unwrap()
+        .ends_with('Z'));
     assert!(mock["capabilities"]
         .as_array()
         .unwrap()
@@ -124,6 +147,7 @@ async fn agent_status_route_refreshes_external_process_counts_before_responding(
     assert_eq!(codex["activity"], "running");
     assert_eq!(codex["active_windows"], 3);
     assert_eq!(codex["window_count_source"], "external_processes");
+    assert_eq!(codex["process_sources"][0]["count"], 3);
 
     context
         .refresh_agent_processes()
@@ -165,7 +189,7 @@ async fn agent_status_route_reflects_runtime_updates_from_the_shared_context() {
         .await
         .expect("agent status body");
     let json: Value = serde_json::from_slice(&body).expect("agent status JSON");
-    assert_eq!(json["sequence"], 3);
+    assert_eq!(json["sequence"], 4);
     let codex = json["agents"]
         .as_array()
         .unwrap()

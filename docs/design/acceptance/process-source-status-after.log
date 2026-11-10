@@ -1,0 +1,17 @@
+   Compiling orchester-netz v0.1.2 (/tmp/orchester-activity-state-audit/kisten/netz)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.60s
+     Running tests/agent_runtime_status.rs (/home/han/project/Orchester/target/debug/deps/agent_runtime_status-84cb734b56a57e11)
+
+running 9 tests
+test runtime_store_rejects_unknown_agents_without_mutating_the_snapshot ... ok
+test incomplete_first_observation_is_unknown_and_partial_counts_remain_running ... ok
+test unavailable_external_sources_preserve_managed_approval_and_counts ... ok
+test source_quality_changes_publish_atomically_and_recovery_confirms_zero ... ok
+test runtime_store_broadcasts_snapshots_and_heartbeats_to_subscribers ... ok
+test process_monitor_start_is_safe_without_a_tokio_runtime ... ok
+test runtime_store_updates_one_agent_and_advances_the_snapshot_sequence ... ok
+test runtime_store_redacts_failure_paths_before_the_snapshot_leaves_the_server ... ok
+test runtime_store_reconciles_external_processes_without_losing_managed_counts ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+

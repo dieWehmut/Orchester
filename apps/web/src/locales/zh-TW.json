@@ -44,6 +44,7 @@
     "availabilityLabel": "可用性",
     "capabilities": "能力",
     "noCapabilities": "未宣告能力",
+    "monitorOnly": "僅監控程序；服務存在不代表正在執行任務。",
     "noSelection": "尚未選擇代理",
     "statusUnavailable": "代理狀態無法取得",
     "runtimeSnapshotMissing": "執行環境沒有回傳代理快照。",
@@ -67,11 +68,14 @@
       "unavailable": "無法使用",
       "error": "錯誤",
       "running": "執行中",
+      "serviceRunning": "服務執行",
+      "noRunningProcesses": "未發現執行中的程序",
       "waitingApproval": "等待審批",
       "starting": "啟動中",
       "stopping": "停止中",
       "idle": "閒置",
-      "offline": "離線"
+      "offline": "離線",
+      "unknown": "狀態未知"
     },
     "availability": {
       "available": "可用",
@@ -85,7 +89,18 @@
       "run": "執行",
       "runs": "執行",
       "subagent": "子代理",
-      "subagents": "子代理"
+      "subagents": "子代理",
+      "atLeast": "至少 {count}"
+    },
+    "processSources": {
+      "available": "程序監控可用",
+      "incomplete": "程序監控不完整",
+      "windows": "Windows",
+      "wsl": "WSL",
+      "local": "本機",
+      "current": "目前：{count}",
+      "lastObserved": "上次觀察：{count}",
+      "unavailable": "來源無法使用"
     }
   },
   "routes": {

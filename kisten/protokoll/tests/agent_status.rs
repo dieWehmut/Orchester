@@ -2,6 +2,9 @@ use orchester_protokoll::{
     AgentActivityState, AgentAvailabilityState, AgentFleetSnapshotDto, AgentFleetStreamFrameDto,
     AgentRuntimeSummaryDto, AgentWindowCountSource, AGENT_STATUS_SCHEMA_VERSION,
 };
+use orchester_protokoll::{
+    AgentProcessEnvironment, AgentProcessSourceState, AgentProcessSourceStatusDto,
+};
 
 fn agent(id: &str) -> AgentRuntimeSummaryDto {
     AgentRuntimeSummaryDto {
@@ -19,6 +22,7 @@ fn agent(id: &str) -> AgentRuntimeSummaryDto {
         active_runs: 2,
         active_subagents: 1,
         window_count_source: AgentWindowCountSource::ManagedSessions,
+        process_sources: None,
         last_heartbeat_at: Some("2026-08-20T08:00:00Z".into()),
         last_error: None,
         capabilities: vec!["streaming".into(), "resume".into()],
@@ -88,7 +92,7 @@ fn fleet_status_roundtrips_with_the_browser_field_names() {
 #[test]
 fn fleet_status_accepts_external_process_instance_counts() {
     let snapshot = AgentFleetSnapshotDto {
-        schema_version: 2,
+        schema_version: AGENT_STATUS_SCHEMA_VERSION,
         sequence: 8,
         generated_at: "2026-08-22T08:00:02Z".into(),
         agents: vec![AgentRuntimeSummaryDto {
@@ -99,7 +103,7 @@ fn fleet_status_accepts_external_process_instance_counts() {
     };
 
     let value = serde_json::to_value(&snapshot).expect("serialize external process snapshot");
-    assert_eq!(value["schema_version"], 2);
+    assert_eq!(value["schema_version"], AGENT_STATUS_SCHEMA_VERSION);
     assert_eq!(
         value["agents"][0]["window_count_source"],
         "external_processes"
@@ -155,4 +159,106 @@ fn fleet_status_redacts_absolute_error_paths_before_serializing() {
 
     assert!(!json.contains("C:\\\\Users"));
     assert!(json.contains("[ROOT]"));
+}
+
+#[test]
+fn process_sources_require_v3_shape_and_distinguish_no_observation_from_zero() {
+    let mut value = agent("codex");
+    let mut wire = serde_json::to_value(&value).unwrap();
+    assert!(wire
+        .get("process_sources")
+        .is_some_and(serde_json::Value::is_null));
+    wire.as_object_mut().unwrap().remove("process_sources");
+    assert!(serde_json::from_value::<AgentRuntimeSummaryDto>(wire).is_err());
+
+    value.activity = AgentActivityState::Unknown;
+    value.process_sources = Some(vec![AgentProcessSourceStatusDto {
+        environment: AgentProcessEnvironment::Wsl,
+        status: AgentProcessSourceState::Unavailable,
+        count: None,
+        observed_at: None,
+    }]);
+    let wire = serde_json::to_value(&value).unwrap();
+    assert_eq!(wire["activity"], "unknown");
+    assert!(wire["process_sources"][0]["count"].is_null());
+    assert_eq!(
+        serde_json::from_value::<AgentRuntimeSummaryDto>(wire.clone()).unwrap(),
+        value
+    );
+    let mut invalid = wire.clone();
+    invalid["process_sources"][0]["count"] = 0.into();
+    assert!(serde_json::from_value::<AgentRuntimeSummaryDto>(invalid).is_err());
+    let mut invalid = wire.clone();
+    invalid["process_sources"][0]["argv"] = "hidden".into();
+    assert!(serde_json::from_value::<AgentRuntimeSummaryDto>(invalid).is_err());
+    value.process_sources = Some(vec![]);
+    assert!(serde_json::to_value(&value).is_err());
+
+    value.process_sources = Some(vec![AgentProcessSourceStatusDto {
+        environment: AgentProcessEnvironment::Windows,
+        status: AgentProcessSourceState::Available,
+        count: Some(0),
+        observed_at: Some("2026-11-10T05:00:00Z".into()),
+    }]);
+    assert!(serde_json::to_value(&value).is_ok());
+    value.process_sources.as_mut().unwrap()[0].observed_at = None;
+    assert!(serde_json::to_value(&value).is_err());
+}
+
+#[test]
+fn source_nullable_keys_are_required_even_when_unavailable() {
+    let mut value = agent("codex");
+    value.process_sources = Some(vec![AgentProcessSourceStatusDto {
+        environment: AgentProcessEnvironment::Wsl,
+        status: AgentProcessSourceState::Unavailable,
+        count: None,
+        observed_at: None,
+    }]);
+    for field in ["count", "observed_at"] {
+        let mut wire = serde_json::to_value(&value).unwrap();
+        wire["process_sources"][0]
+            .as_object_mut()
+            .unwrap()
+            .remove(field);
+        assert!(
+            serde_json::from_value::<AgentRuntimeSummaryDto>(wire).is_err(),
+            "missing {field} was accepted"
+        );
+    }
+}
+
+#[test]
+fn source_observation_must_be_a_valid_rfc3339_time() {
+    let mut value = agent("codex");
+    value.process_sources = Some(vec![AgentProcessSourceStatusDto {
+        environment: AgentProcessEnvironment::Wsl,
+        status: AgentProcessSourceState::Available,
+        count: Some(0),
+        observed_at: Some("not-a-date".into()),
+    }]);
+    assert!(serde_json::to_value(&value).is_err());
+}
+
+#[test]
+fn external_current_count_must_equal_successful_sources_only() {
+    let mut value = agent("codex");
+    value.active_windows = 3;
+    value.window_count_source = AgentWindowCountSource::ExternalProcesses;
+    value.process_sources = Some(vec![
+        AgentProcessSourceStatusDto {
+            environment: AgentProcessEnvironment::Windows,
+            status: AgentProcessSourceState::Available,
+            count: Some(2),
+            observed_at: Some("2026-11-10T05:00:00Z".into()),
+        },
+        AgentProcessSourceStatusDto {
+            environment: AgentProcessEnvironment::Wsl,
+            status: AgentProcessSourceState::Stale,
+            count: Some(1),
+            observed_at: Some("2026-11-10T04:00:00Z".into()),
+        },
+    ]);
+    assert!(serde_json::to_value(&value).is_err());
+    value.active_windows = 2;
+    assert!(serde_json::to_value(&value).is_ok());
 }

@@ -1,0 +1,27 @@
+   Compiling orchester-netz v0.1.2 (/home/han/project/Orchester/.worktrees/additional-agent-monitors-backend/kisten/netz)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.40s
+     Running unittests src/lib.rs (/home/han/project/Orchester/target/debug/deps/orchester_netz-efb51257438bf4bb)
+
+running 19 tests
+test agent_process::identity::tests::helpers_generic_names_and_prompt_strings_are_never_agent_identities ... ok
+test agent_process::identity::tests::branded_agent_entries_are_recognized_across_runtime_wrappers ... ok
+test agent_process::tests::bounded_identity_query_failure_never_confirms_zero_or_accepts_metadata ... ok
+test agent_process::identity::tests::supervisor_child_pairs_count_once_and_independent_instances_remain_separate ... ok
+test agent_process::tests::failed_distro_does_not_discard_other_current_counts ... ok
+test agent_process::identity::tests::relative_source_entries_flags_and_maintenance_follow_the_real_entrypoint ... ok
+test agent_process::tests::incomplete_identity_read_without_positives_never_confirms_zero ... ok
+test agent_process::tests::wsl_cache_busy_or_expired_marks_old_counts_stale_instead_of_live_or_zero_complete ... ok
+test agent_process::tests::wsl_cache_refreshes_only_on_snapshot_calls ... ok
+test agent_process::tests::partial_wsl_refresh_keeps_current_counts_separate_from_cached_stale_counts ... ok
+test agent_process::identity::tests::metadata_prefix_has_fixed_argument_and_byte_limits ... ok
+test agent_process::tests::wsl_failure_preserves_last_success_and_recovery_empty_confirms_zero ... ok
+test agent_process::tests::production_reader_releases_its_gate_after_a_synthetic_panic ... ok
+test agent_process::tests::production_reader_discards_late_results_at_the_source_deadline ... ok
+test agent_process::tests::production_reader_keeps_one_worker_after_timeout_and_accepts_fresh_recovery ... ok
+test agent_process::identity::tests::relative_dot_segments_do_not_turn_parent_entries_into_branded_services ... ok
+test agent_process::identity::tests::partial_wsl_query_preserves_positives_but_skips_dead_and_truncated_candidates ... ok
+test agent_process::identity::tests::wsl_and_local_rules_agree_and_wsl_stdout_contains_only_safe_counts ... ok
+test agent_process::tests::partial_identity_read_preserves_current_positive_counts_with_an_unknown_marker ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 78 filtered out; finished in 0.13s
+

@@ -1,20 +1,23 @@
 import type { AgentRuntimeSummaryDto } from '@orchester/protokoll'
+import { agentFleetWindowCount, agentIsMonitorOnly, agentPresentedActivity, type AgentCountQuality } from './agent-presenter'
 
 export type AgentPresenceGroupKey = 'active' | 'ready' | 'attention'
 
 export interface AgentFleetGroup {
   readonly key: AgentPresenceGroupKey
   readonly agents: readonly AgentRuntimeSummaryDto[]
-  readonly activeWindows: number
+  readonly activeWindows: number | null
+  readonly activeWindowQuality: AgentCountQuality
 }
 
 const GROUP_ORDER: readonly AgentPresenceGroupKey[] = ['active', 'ready', 'attention']
 
 export function agentPresenceGroupKey(agent: AgentRuntimeSummaryDto): AgentPresenceGroupKey {
-  if (agent.availability !== 'available' || agent.activity === 'offline' || agent.activity === 'error') {
+  const activity = agentPresentedActivity(agent)
+  if ((!agentIsMonitorOnly(agent) && agent.availability !== 'available') || activity === 'offline' || activity === 'error' || activity === 'unknown') {
     return 'attention'
   }
-  if (agent.activity === 'idle') return 'ready'
+  if (activity === 'idle') return 'ready'
   return 'active'
 }
 
@@ -23,13 +26,15 @@ export function groupAgentFleet(
 ): AgentFleetGroup[] {
   return GROUP_ORDER.flatMap((key) => {
     const grouped = agents.filter((agent) => agentPresenceGroupKey(agent) === key)
+    const windows = agentFleetWindowCount(grouped)
     return grouped.length === 0
       ? []
       : [
           {
             key,
             agents: grouped,
-            activeWindows: grouped.reduce((sum, agent) => sum + agent.active_windows, 0),
+            activeWindows: windows.count,
+            activeWindowQuality: windows.quality,
           },
         ]
   })

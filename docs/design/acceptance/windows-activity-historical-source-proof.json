@@ -1,0 +1,30 @@
+{
+  "record_role": "Historical Windows installed EmbeddedServer read-only runtime and activity observation, 2026-11-06; does not claim current main freshly sampled",
+  "recorded_source_revision": "12e6068fa7c1c25d731a854a7239508d67736678 + working tree e0f4e14e3cbd793023fda8a0b36d1c254177f0928e31fa7ff3706a56caec8445",
+  "installed_executable_sha256": "9688bae1a669a4c38004af88ae78ac1397d59abac1f8e82cddb6ff888ba5e3e5",
+  "status_endpoint_http_status": 200,
+  "codex_active_windows": 5,
+  "count_origin": "verify-activity.mjs reads /api/v1/agents/status active_windows; not session_counts",
+  "historical_sessions_by_environment": {
+    "WSL · Ubuntu-22.04": 44,
+    "Windows": 30
+  },
+  "sources": [
+    {
+      "environment": "Windows",
+      "provider": "codex",
+      "status": "available"
+    },
+    {
+      "environment": "WSL · Ubuntu-22.04",
+      "provider": "codex",
+      "status": "available"
+    }
+  ],
+  "activity_api_updated": true,
+  "activity_dom_updated": true,
+  "source_status_and_running_process_counts_are_separate": true,
+  "providers_launched_for_this_audit": 0,
+  "raw_evidence_directory": "/mnt/c/Users/han/AppData/Local/Orchester-build/live-wsl-20261106",
+  "collected_at_utc": "2026-11-10T05:15:03.774293+00:00"
+}

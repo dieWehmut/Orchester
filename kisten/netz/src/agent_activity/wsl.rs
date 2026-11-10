@@ -161,75 +161,128 @@ pub(crate) fn output(args: &[&str]) -> Option<Vec<u8>> {
 
 #[cfg(windows)]
 pub(crate) fn output_until(args: &[&str], deadline: Instant) -> Option<Vec<u8>> {
+    output_result_until(args, deadline).ok()
+}
+
+#[cfg(any(windows, test))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum WslReadFailure {
+    Timeout,
+    CommandFailed,
+    Unavailable,
+    ReadFailed,
+    OutputLimit,
+}
+
+#[cfg(windows)]
+impl WslReadFailure {
+    pub(crate) fn as_str(self) -> &'static str {
+        match self {
+            Self::Timeout => "timeout",
+            Self::CommandFailed => "command_failed",
+            Self::Unavailable => "unavailable",
+            Self::ReadFailed => "read_failed",
+            Self::OutputLimit => "output_limit",
+        }
+    }
+}
+
+#[cfg(windows)]
+pub(crate) fn output_result_until(
+    args: &[&str],
+    deadline: Instant,
+) -> Result<Vec<u8>, WslReadFailure> {
     use std::{os::windows::process::CommandExt, process::Command};
-    command_output(
+    command_output_result(
         Command::new("wsl.exe")
             .args(args)
             .creation_flags(0x08000000),
-        deadline.checked_duration_since(Instant::now())?,
+        deadline
+            .checked_duration_since(Instant::now())
+            .ok_or(WslReadFailure::Timeout)?,
         64 * 1024 * 1024,
     )
 }
 
-#[cfg(any(windows, test))]
+#[cfg(all(test, unix))]
 fn command_output(
     command: &mut std::process::Command,
     timeout: Duration,
     limit: u64,
 ) -> Option<Vec<u8>> {
+    command_output_result(command, timeout, limit).ok()
+}
+
+#[cfg(any(windows, test))]
+fn command_output_result(
+    command: &mut std::process::Command,
+    timeout: Duration,
+    limit: u64,
+) -> Result<Vec<u8>, WslReadFailure> {
     use std::{io::Read, process::Stdio};
     let start = Instant::now();
-    // A pipe reader cannot time out after the direct child exits if a descendant
-    // still holds stdout. A private file has no EOF dependency on those handles,
-    // and reopening it gives the writer an independent file position.
-    let mut capture = tempfile::NamedTempFile::new().ok()?;
+    // A private capture file avoids EOF waits on inherited descendant handles.
+    let mut capture = tempfile::NamedTempFile::new().map_err(|_| WslReadFailure::ReadFailed)?;
     if start.elapsed() >= timeout {
-        return None;
+        return Err(WslReadFailure::Timeout);
     }
     let mut child = command
-        .stdout(Stdio::from(capture.reopen().ok()?))
+        .stdout(Stdio::from(
+            capture.reopen().map_err(|_| WslReadFailure::ReadFailed)?,
+        ))
         .stderr(Stdio::null())
         .stdin(Stdio::null())
         .spawn()
-        .ok()?;
+        .map_err(|_| WslReadFailure::Unavailable)?;
     loop {
         match child.try_wait() {
             Ok(Some(status)) if status.success() => {
                 if start.elapsed() >= timeout {
-                    return None;
+                    return Err(WslReadFailure::Timeout);
                 }
-                let size = capture.as_file().metadata().ok()?.len();
+                let size = capture
+                    .as_file()
+                    .metadata()
+                    .map_err(|_| WslReadFailure::ReadFailed)?
+                    .len();
                 if size > limit {
-                    return None;
+                    return Err(WslReadFailure::OutputLimit);
                 }
                 let mut data = Vec::new();
-                // Read the completed child's observed output length only. A
-                // descendant appending afterwards cannot extend this operation.
                 let mut reader = capture.as_file_mut().take(size);
                 let mut buffer = [0_u8; 16 * 1024];
                 loop {
                     if start.elapsed() >= timeout {
-                        return None;
+                        return Err(WslReadFailure::Timeout);
                     }
-                    let read = reader.read(&mut buffer).ok()?;
+                    let read = reader
+                        .read(&mut buffer)
+                        .map_err(|_| WslReadFailure::ReadFailed)?;
                     if read == 0 {
                         break;
                     }
                     data.extend_from_slice(&buffer[..read]);
                 }
-                return Some(data);
+                return Ok(data);
             }
-            Ok(Some(_)) => return None,
-            Ok(None)
-                if capture
-                    .as_file()
-                    .metadata()
-                    .is_ok_and(|meta| meta.len() <= limit)
-                    && start.elapsed() < timeout => {}
-            Ok(None) | Err(_) => {
+            Ok(Some(_)) => return Err(WslReadFailure::CommandFailed),
+            Ok(None) => {
+                let failure = match capture.as_file().metadata() {
+                    Ok(meta) if meta.len() > limit => Some(WslReadFailure::OutputLimit),
+                    Err(_) => Some(WslReadFailure::ReadFailed),
+                    _ if start.elapsed() >= timeout => Some(WslReadFailure::Timeout),
+                    _ => None,
+                };
+                if let Some(failure) = failure {
+                    let _ = child.kill();
+                    let _ = child.wait();
+                    return Err(failure);
+                }
+            }
+            Err(_) => {
                 let _ = child.kill();
                 let _ = child.wait();
-                return None;
+                return Err(WslReadFailure::ReadFailed);
             }
         }
         std::thread::sleep(Duration::from_millis(20));
@@ -259,9 +312,11 @@ pub(crate) fn running() -> Vec<String> {
 }
 #[cfg(windows)]
 pub(crate) fn running_until(deadline: Instant) -> Vec<String> {
-    output_until(&["--list", "--running", "--quiet"], deadline)
-        .map(|raw| names(&raw))
-        .unwrap_or_default()
+    running_result_until(deadline).unwrap_or_default()
+}
+#[cfg(windows)]
+pub(crate) fn running_result_until(deadline: Instant) -> Result<Vec<String>, WslReadFailure> {
+    output_result_until(&["--list", "--running", "--quiet"], deadline).map(|raw| names(&raw))
 }
 #[cfg(windows)]
 fn roots() -> Vec<(String, String, PathBuf)> {
@@ -360,6 +415,43 @@ mod tests {
             4,
         )
         .is_none());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn bounded_command_failures_keep_distinct_safe_diagnostics() {
+        assert_eq!(
+            command_output_result(
+                std::process::Command::new("sh").args(["-c", "sleep 1"]),
+                Duration::from_millis(40),
+                1024,
+            ),
+            Err(WslReadFailure::Timeout)
+        );
+        assert_eq!(
+            command_output_result(
+                std::process::Command::new("sh").args(["-c", "printf observed; exit 1"]),
+                Duration::from_secs(1),
+                1024,
+            ),
+            Err(WslReadFailure::CommandFailed)
+        );
+        assert_eq!(
+            command_output_result(
+                std::process::Command::new("sh").args(["-c", "printf oversized"]),
+                Duration::from_secs(1),
+                4,
+            ),
+            Err(WslReadFailure::OutputLimit)
+        );
+        assert_eq!(
+            command_output_result(
+                &mut std::process::Command::new("/orchester-nonexistent-process-query"),
+                Duration::from_secs(1),
+                1024,
+            ),
+            Err(WslReadFailure::Unavailable)
+        );
     }
 
     #[test]

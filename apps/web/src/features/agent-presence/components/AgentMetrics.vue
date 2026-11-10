@@ -6,6 +6,9 @@ import { useI18n } from '../../../i18n'
 import {
   activeAgentCounts,
   agentCountMessageKey,
+  agentCountValue,
+  agentCountsSummary,
+  agentProcessSourcesComplete,
   agentWindowSourceMessageKey,
 } from '../agent-presenter'
 
@@ -19,11 +22,7 @@ const props = withDefaults(
 
 const { t } = useI18n()
 const entries = computed(() => activeAgentCounts(props.agent))
-const summary = computed(() =>
-  entries.value
-    .map((entry) => `${entry.count} ${t(agentCountMessageKey(entry.key, entry.count))}`)
-    .join(', '),
-)
+const summary = computed(() => agentCountsSummary(props.agent, t))
 const windowSource = computed(() =>
   t(agentWindowSourceMessageKey(props.agent.window_count_source)),
 )
@@ -43,14 +42,14 @@ const windowSource = computed(() =>
       data-agent-count
       :data-agent-detail="props.variant === 'detail' ? entry.key : undefined"
     >
-      <dt>{{ t(agentCountMessageKey(entry.key, entry.count)) }}</dt>
+      <dt>{{ t(agentCountMessageKey(entry.key, entry.count ?? 2)) }}</dt>
       <dd
         data-agent-detail-value
         :data-active-windows="entry.key === 'windows' ? '' : undefined"
         :data-active-runs="entry.key === 'runs' ? '' : undefined"
         :data-active-subagents="entry.key === 'subagents' ? '' : undefined"
       >
-        {{ entry.count }}
+        {{ agentCountValue(entry, t) }}
       </dd>
     </div>
   </dl>
@@ -62,6 +61,18 @@ const windowSource = computed(() =>
   >
     {{ t('agents.windowSourceLabel') }}: {{ windowSource }}
   </p>
+
+  <div v-if="props.variant === 'detail'" class="agent-metrics__sources" data-agent-process-sources>
+    <p>{{ t(agentProcessSourcesComplete(props.agent) ? 'agents.processSources.available' : 'agents.processSources.incomplete') }}</p>
+    <p v-if="props.agent.process_sources === null">{{ t('agents.activity.unknown') }}</p>
+    <ul v-else>
+      <li v-for="(source, index) in props.agent.process_sources" :key="index" :data-process-source-status="source.status">
+        {{ t(`agents.processSources.${source.environment}`) }}:
+        {{ source.status === 'stale' ? t('agents.processSources.lastObserved', { count: String(source.count) }) : source.status === 'available' ? t('agents.processSources.current', { count: String(source.count) }) : t('agents.processSources.unavailable') }}
+        <time v-if="source.observed_at" :datetime="source.observed_at">{{ source.observed_at }}</time>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <style scoped>
@@ -132,4 +143,9 @@ const windowSource = computed(() =>
   color: var(--color-text-tertiary);
   font-size: var(--text-xs);
 }
+
+.agent-metrics__sources { color: var(--color-text-tertiary); font-size: var(--text-xs); }
+.agent-metrics__sources p { margin: 0 0 var(--space-1); }
+.agent-metrics__sources ul { margin: 0; padding-inline-start: var(--space-4); }
+.agent-metrics__sources time { display: block; }
 </style>

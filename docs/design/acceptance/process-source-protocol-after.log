@@ -1,0 +1,17 @@
+   Compiling orchester-protokoll v0.1.2 (/tmp/orchester-activity-state-audit/kisten/protokoll)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.01s
+     Running tests/agent_status.rs (/home/han/project/Orchester/target/debug/deps/agent_status-01b589d83d3b5af7)
+
+running 9 tests
+test external_current_count_must_equal_successful_sources_only ... ok
+test fleet_status_accepts_external_process_instance_counts ... ok
+test source_observation_must_be_a_valid_rfc3339_time ... ok
+test process_sources_require_v3_shape_and_distinguish_no_observation_from_zero ... ok
+test fleet_stream_frames_have_strict_snapshot_and_heartbeat_shapes ... ok
+test source_nullable_keys_are_required_even_when_unavailable ... ok
+test fleet_status_roundtrips_with_the_browser_field_names ... ok
+test fleet_status_rejects_unknown_fields_duplicate_ids_and_invalid_sequence ... ok
+test fleet_status_redacts_absolute_error_paths_before_serializing ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

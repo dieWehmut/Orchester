@@ -1,0 +1,42 @@
+   Compiling orchester-protokoll v0.1.2 (/tmp/orchester-activity-state-audit/kisten/protokoll)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.06s
+     Running tests/agent_status.rs (/home/han/project/Orchester/target/debug/deps/agent_status-cab526280ca20914)
+
+running 9 tests
+test external_current_count_must_equal_successful_sources_only ... FAILED
+test fleet_status_redacts_absolute_error_paths_before_serializing ... ok
+test fleet_status_accepts_external_process_instance_counts ... ok
+test fleet_stream_frames_have_strict_snapshot_and_heartbeat_shapes ... ok
+test fleet_status_rejects_unknown_fields_duplicate_ids_and_invalid_sequence ... ok
+test source_nullable_keys_are_required_even_when_unavailable ... FAILED
+test process_sources_require_v3_shape_and_distinguish_no_observation_from_zero ... ok
+test fleet_status_roundtrips_with_the_browser_field_names ... ok
+test source_observation_must_be_a_valid_rfc3339_time ... FAILED
+
+failures:
+
+---- external_current_count_must_equal_successful_sources_only stdout ----
+
+thread 'external_current_count_must_equal_successful_sources_only' (2687479) panicked at kisten/protokoll/tests/agent_status.rs:261:5:
+assertion failed: serde_json::to_value(&value).is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- source_nullable_keys_are_required_even_when_unavailable stdout ----
+
+thread 'source_nullable_keys_are_required_even_when_unavailable' (2687486) panicked at kisten/protokoll/tests/agent_status.rs:223:9:
+missing count was accepted
+
+---- source_observation_must_be_a_valid_rfc3339_time stdout ----
+
+thread 'source_observation_must_be_a_valid_rfc3339_time' (2687487) panicked at kisten/protokoll/tests/agent_status.rs:239:5:
+assertion failed: serde_json::to_value(&value).is_err()
+
+
+failures:
+    external_current_count_must_equal_successful_sources_only
+    source_nullable_keys_are_required_even_when_unavailable
+    source_observation_must_be_a_valid_rfc3339_time
+
+test result: FAILED. 6 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p orchester-protokoll --test agent_status`

@@ -44,6 +44,7 @@
     "availabilityLabel": "Availability",
     "capabilities": "Capabilities",
     "noCapabilities": "No declared capabilities",
+    "monitorOnly": "Process monitoring only; service presence does not indicate task activity.",
     "noSelection": "No agent selected",
     "statusUnavailable": "Agent status unavailable",
     "runtimeSnapshotMissing": "The runtime did not return an agent snapshot.",
@@ -67,11 +68,14 @@
       "unavailable": "Unavailable",
       "error": "Error",
       "running": "Running",
+      "serviceRunning": "Service running",
+      "noRunningProcesses": "No running process found",
       "waitingApproval": "Waiting approval",
       "starting": "Starting",
       "stopping": "Stopping",
       "idle": "Idle",
-      "offline": "Offline"
+      "offline": "Offline",
+      "unknown": "Status unknown"
     },
     "availability": {
       "available": "Available",
@@ -85,7 +89,18 @@
       "run": "run",
       "runs": "runs",
       "subagent": "subagent",
-      "subagents": "subagents"
+      "subagents": "subagents",
+      "atLeast": "At least {count}"
+    },
+    "processSources": {
+      "available": "Process monitoring available",
+      "incomplete": "Process monitoring incomplete",
+      "windows": "Windows",
+      "wsl": "WSL",
+      "local": "Local",
+      "current": "Current: {count}",
+      "lastObserved": "Last observed: {count}",
+      "unavailable": "Unavailable"
     }
   },
   "routes": {

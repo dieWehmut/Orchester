@@ -1,0 +1,36 @@
+   Compiling orchester-netz v0.1.2 (/home/han/project/Orchester/.worktrees/additional-agent-monitors-backend/kisten/netz)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 19.02s
+     Running tests/agent_runtime_status.rs (/home/han/project/Orchester/target/debug/deps/agent_runtime_status-3227ff3407dbfa22)
+
+running 12 tests
+test additional_providers_have_monitor_only_rows_without_runnable_adapters ... ok
+test runtime_store_rejects_unknown_agents_without_mutating_the_snapshot ... ok
+test process_monitor_start_is_safe_without_a_tokio_runtime ... ok
+test incomplete_first_observation_is_unknown_and_partial_counts_remain_running ... ok
+test runtime_store_broadcasts_snapshots_and_heartbeats_to_subscribers ... ok
+test runtime_store_updates_one_agent_and_advances_the_snapshot_sequence ... ok
+test monitor_only_rows_observe_presence_absence_and_unknown_sources ... ok
+test runtime_store_reconciles_external_processes_without_losing_managed_counts ... ok
+test runtime_store_redacts_failure_paths_before_the_snapshot_leaves_the_server ... ok
+test failed_process_task_publishes_unavailable_instead_of_retaining_a_confirmed_zero ... ok
+test source_quality_changes_publish_atomically_and_recovery_confirms_zero ... ok
+test unavailable_external_sources_preserve_managed_approval_and_counts ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/agent_status_routes.rs (/home/han/project/Orchester/target/debug/deps/agent_status_routes-9dcc2288071fb443)
+
+running 3 tests
+test agent_status_route_returns_a_redaction_safe_runtime_snapshot ... ok
+test agent_status_route_reflects_runtime_updates_from_the_shared_context ... ok
+test agent_status_route_refreshes_external_process_counts_before_responding ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+
+     Running tests/agent_status_socket.rs (/home/han/project/Orchester/target/debug/deps/agent_status_socket-ff2846a7b397e468)
+
+running 1 test
+test agent_status_socket_streams_snapshot_updates_and_heartbeats ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+

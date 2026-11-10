@@ -1,0 +1,276 @@
+{
+  "schema_version": 1,
+  "completed_at_utc": "2026-11-10T11:15:38.574197+00:00",
+  "worktree": "/home/han/project/Orchester/.worktrees/additional-agent-monitors",
+  "git_head": "ff5fc4dafa23f3407629ff95e13e6e6a8534af52",
+  "git_branch": "feat/additional-agent-monitors",
+  "git_tracked_status": "",
+  "git_status": "",
+  "checks": {
+    "install": {
+      "command": "pnpm install --frozen-lockfile --offline --ignore-scripts",
+      "exit_code": 0,
+      "log": "/tmp/orchester-monitor-integrated-install.log",
+      "log_sha256": "381558f6c756a71422aebcb0357463d6d39c09a87b0697dfd7ee90961a7255be"
+    },
+    "web-test": {
+      "command": "pnpm --filter @orchester/web exec vitest run --maxWorkers=2",
+      "exit_code": 0,
+      "log": "/tmp/orchester-monitor-integrated-web-test.log",
+      "log_sha256": "f9cb79dfc7cff0cb3a6d87b38515c3ce74f40306b7a1e91ddf6532bb4db667be",
+      "files": {
+        "passed": 133,
+        "total": 133,
+        "failed": 0,
+        "skipped": 0
+      },
+      "tests": {
+        "passed": 814,
+        "total": 814,
+        "failed": 0,
+        "skipped": 0
+      },
+      "duration_seconds": 72.25
+    },
+    "protokoll-test": {
+      "command": "pnpm --filter @orchester/protokoll exec vitest run --maxWorkers=2",
+      "exit_code": 0,
+      "log": "/tmp/orchester-monitor-integrated-protokoll-test.log",
+      "log_sha256": "2423c587516aa5b9fbb1454ef3f7a336c621fd1fac745e246e0ee0d756849db9",
+      "files": {
+        "passed": 28,
+        "total": 28,
+        "failed": 0,
+        "skipped": 0
+      },
+      "tests": {
+        "passed": 94,
+        "total": 94,
+        "failed": 0,
+        "skipped": 0
+      },
+      "duration_seconds": 1.94
+    },
+    "protokoll-typecheck": {
+      "command": "pnpm --filter @orchester/protokoll typecheck",
+      "exit_code": 0,
+      "log": "/tmp/orchester-monitor-integrated-protokoll-typecheck.log",
+      "log_sha256": "98ec565508d86761e5f78cb2be760626054f9a841c8542a72e544ee2b51d99c7"
+    },
+    "web-build": {
+      "command": "pnpm --filter @orchester/web build",
+      "exit_code": 0,
+      "log": "/tmp/orchester-monitor-integrated-web-build.log",
+      "log_sha256": "778afafafc76df00aa321ab87fa2cc004fbeeea089ac3aa7bc07f71028d0e102",
+      "includes_web_typecheck": true,
+      "vite_version": "7.3.6",
+      "transformed_modules": 2823
+    }
+  },
+  "test_totals": {
+    "files_passed": 161,
+    "tests_passed": 908,
+    "failed": 0
+  },
+  "pnpm_lock_sha256": "33b4a0d3385fbb6a1b2250535a6a08d211fa663588c32920879b631570a07e28",
+  "dist": {
+    "path": "/home/han/project/Orchester/.worktrees/additional-agent-monitors/apps/web/dist",
+    "files_count": 38,
+    "size_bytes": 13596474,
+    "manifest_sha256": "4c26e1edd3afedbb4d9f7dbf7994ec55323aea57d9fa10e44f6af8e9fec90842",
+    "manifest_hash_algorithm": "SHA-256 of sorted relative path + NUL + file SHA-256 + LF for every file",
+    "files": [
+      {
+        "path": "agents/README.md",
+        "size_bytes": 1137,
+        "sha256": "0f957a0d6e146183bba44f0cf3d9cfa2f7cd4563502f79f0b8aad25e39cb1fb3"
+      },
+      {
+        "path": "agents/SOURCES.md",
+        "size_bytes": 1121,
+        "sha256": "6a36358fc1b175d004b5f3b540ed0c38f0a28ef753a3f1a5716cffb5ff3e926a"
+      },
+      {
+        "path": "agents/antigravity.svg",
+        "size_bytes": 5037,
+        "sha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e"
+      },
+      {
+        "path": "agents/claude.svg",
+        "size_bytes": 1696,
+        "sha256": "a3101f3047a119aa11825ad9369510f0c472428c8c52d420e31bc62db44a8364"
+      },
+      {
+        "path": "agents/codex-light.png",
+        "size_bytes": 8932,
+        "sha256": "b45359d98553406d60c45e699cbe80de6fe733d51661a317ca37b41632b58823"
+      },
+      {
+        "path": "agents/codex.png",
+        "size_bytes": 9264,
+        "sha256": "2b001fb1f4e7d76e4d459c2ad8f9739e963ffc1c2137abcfffe8da3ee7775f7c"
+      },
+      {
+        "path": "agents/cursor-dark.svg",
+        "size_bytes": 4373,
+        "sha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260"
+      },
+      {
+        "path": "agents/cursor-light.svg",
+        "size_bytes": 4388,
+        "sha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0"
+      },
+      {
+        "path": "agents/deepseek.ico",
+        "size_bytes": 209762,
+        "sha256": "30a4420e6e4dcb17fd7de560c5004346c2bc8cd971d2d5f5ee15326603e51321"
+      },
+      {
+        "path": "agents/gemini.png",
+        "size_bytes": 2246,
+        "sha256": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee"
+      },
+      {
+        "path": "agents/opencode-dark.svg",
+        "size_bytes": 593,
+        "sha256": "5dd4abb4de60204510edf140bbe74b3580d07ebdda79fdb0081cd45acb53d44b"
+      },
+      {
+        "path": "agents/opencode-light.svg",
+        "size_bytes": 593,
+        "sha256": "b47a4fecc77599382e238868e74064bbe92307b0e253a32f0b1a026517a2d2a6"
+      },
+      {
+        "path": "appearance-bootstrap.js",
+        "size_bytes": 4819,
+        "sha256": "9e4ecb165d34acebf4729fc2145b1d9897038d6e0dae538675f064e42209ba29"
+      },
+      {
+        "path": "apple-touch-icon.png",
+        "size_bytes": 54526,
+        "sha256": "9846969f6bac3fa79ef3a196c5bd18e440eb16e7639476db22930919def007da"
+      },
+      {
+        "path": "assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+        "size_bytes": 8059324,
+        "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b"
+      },
+      {
+        "path": "assets/NotFoundView-Bn9J4SyH.css",
+        "size_bytes": 713,
+        "sha256": "efe049d1379c46410a90537130dad072f5be0e115eccee31a0bd0c188dd38b65"
+      },
+      {
+        "path": "assets/NotFoundView-CI7hw5u8.js",
+        "size_bytes": 691,
+        "sha256": "68c27084d6c89454f232c6d65680185449b53c3e815d71bcd48a8b8edf446baf"
+      },
+      {
+        "path": "assets/PluginsView-mv_SNqDg.js",
+        "size_bytes": 4489,
+        "sha256": "d3b7d523299e9eb967a064022acc5e9929793c3900630edc43379988b0b57b96"
+      },
+      {
+        "path": "assets/SchedulesView-BBxiQEpZ.js",
+        "size_bytes": 10312,
+        "sha256": "db0cbc28c9c0da121705991e3703dacb3ee9b0b86271960e38a4d0ff42d67940"
+      },
+      {
+        "path": "assets/SettingsView-BbCm-uLA.js",
+        "size_bytes": 48362,
+        "sha256": "a70055cab13355fb697f75eb231c1ca513c4e970015dfb98bb4ba627997ea217"
+      },
+      {
+        "path": "assets/SettingsView-DY7Zn8Mz.css",
+        "size_bytes": 13940,
+        "sha256": "c2efcde99222fec97d601e6fc9e552f31a12d2438bbc6f4114bb863ce6fb0792"
+      },
+      {
+        "path": "assets/Spinner-8tN3WpZq.js",
+        "size_bytes": 1465,
+        "sha256": "78951f8ffe5ac502779625f222e30d0dfe3cd2a819b5c783cf709e9ba80bd6a0"
+      },
+      {
+        "path": "assets/WorkspaceView-CPjmnlCU.css",
+        "size_bytes": 94720,
+        "sha256": "efe9a8c2477dc0f87212f87881aa10a6b2664482fb7bfc2ad9bae163f14585e9"
+      },
+      {
+        "path": "assets/WorkspaceView-tuOPHo5S.js",
+        "size_bytes": 319648,
+        "sha256": "b80d014b5b79181a270264cb76fe6d78c18b14b7bd97a10c7696269d6e4d4ddb"
+      },
+      {
+        "path": "assets/download-B9cwjGdn.js",
+        "size_bytes": 233,
+        "sha256": "58bd86c7100138df18a46caf785e60508c8b62814310e5183ab74ebc9765914a"
+      },
+      {
+        "path": "assets/index-BVXB52cV.css",
+        "size_bytes": 79737,
+        "sha256": "a63f61f05892c0127d0c8b980b25c9af21f0509f8a1c31f7faf67beb7ac67051"
+      },
+      {
+        "path": "assets/index-CdFz8Skx.js",
+        "size_bytes": 301785,
+        "sha256": "b48f77726d6ad4ea2d6bf032787eb00f18bb30ea11fb6e7597d0639d09768af8"
+      },
+      {
+        "path": "assets/management-D14BCiP7.js",
+        "size_bytes": 3703,
+        "sha256": "1186357eba0b112ce706484463360411a5eaa6a4afc98fb57fca1446610cedd9"
+      },
+      {
+        "path": "assets/management-DrC3akjz.css",
+        "size_bytes": 5310,
+        "sha256": "d275f30dc6555b593ece72d623991cfa22b14aeaa10ec775637051079e877f5e"
+      },
+      {
+        "path": "assets/orchester-mark-DnE_3Uv-.png",
+        "size_bytes": 1690394,
+        "sha256": "73a86d4d31c1a41216a1467e9710691dc5f548dddf66067a9e3dabe25f565e6b"
+      },
+      {
+        "path": "assets/play-C6FsYyzv.js",
+        "size_bytes": 582,
+        "sha256": "ea127668cf6321b931299a703e07b2ea385e01f083e59717f3157cdc67d29574"
+      },
+      {
+        "path": "assets/plus-CNZR_PDo.js",
+        "size_bytes": 154,
+        "sha256": "263a3774454b927b8a6463ac72726dd916626df1b55c2183b9e0e3be022ec303"
+      },
+      {
+        "path": "assets/search-DcOnJc-f.js",
+        "size_bytes": 3366,
+        "sha256": "dca1699710b69bc4d9ff62b0e7ab6b38908b25383470ca7796c3c6b0c89f9543"
+      },
+      {
+        "path": "favicon.png",
+        "size_bytes": 8227,
+        "sha256": "a5d074c0581064520630e1ef7ae1e45eabc94e32e366b8448fcd94473af9f0c7"
+      },
+      {
+        "path": "icon-512.png",
+        "size_bytes": 377394,
+        "sha256": "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06"
+      },
+      {
+        "path": "index.html",
+        "size_bytes": 723,
+        "sha256": "4e8ea09b03fa0413d49467fcb6299019bad4ef6b65254f8c30ca01a78cabd556"
+      },
+      {
+        "path": "pets/xiaoxuan/pet.json",
+        "size_bytes": 263,
+        "sha256": "bcf9cceb7118979c34650d678bd0a6788ec4539ef64b9b121f1ac137cfc0ce6b"
+      },
+      {
+        "path": "pets/xiaoxuan/spritesheet.webp",
+        "size_bytes": 2262452,
+        "sha256": "8d6686dd1a1f338ae4b210e468533f3652dfbfc0ddc29bf79ac6594cbcf16d5d"
+      }
+    ]
+  },
+  "scope": "One integrated Web/protokoll acceptance run; no source edits, agent/model or desktop/service launches, Windows tools, ADB, site/mobile suites, deployment, commits or pushes."
+}

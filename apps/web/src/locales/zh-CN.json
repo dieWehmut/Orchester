@@ -44,6 +44,7 @@
     "availabilityLabel": "可用性",
     "capabilities": "能力",
     "noCapabilities": "未声明能力",
+    "monitorOnly": "仅监控进程；服务存在不代表正在执行任务。",
     "noSelection": "未选择智能体",
     "statusUnavailable": "智能体状态不可用",
     "runtimeSnapshotMissing": "运行时没有返回智能体快照。",
@@ -67,11 +68,14 @@
       "unavailable": "不可用",
       "error": "错误",
       "running": "运行中",
+      "serviceRunning": "服务运行",
+      "noRunningProcesses": "未发现运行进程",
       "waitingApproval": "等待审批",
       "starting": "启动中",
       "stopping": "停止中",
       "idle": "空闲",
-      "offline": "离线"
+      "offline": "离线",
+      "unknown": "状态未知"
     },
     "availability": {
       "available": "可用",
@@ -85,7 +89,18 @@
       "run": "运行",
       "runs": "运行",
       "subagent": "子智能体",
-      "subagents": "子智能体"
+      "subagents": "子智能体",
+      "atLeast": "至少 {count}"
+    },
+    "processSources": {
+      "available": "进程监控可用",
+      "incomplete": "进程监控不完整",
+      "windows": "Windows",
+      "wsl": "WSL",
+      "local": "本机",
+      "current": "当前：{count}",
+      "lastObserved": "上次观察：{count}",
+      "unavailable": "来源不可用"
     }
   },
   "routes": {

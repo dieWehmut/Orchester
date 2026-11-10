@@ -4,6 +4,7 @@ import { computed } from 'vue'
 
 import { useI18n, type MessageKey } from '../../../i18n'
 import type { AgentFleetGroup } from '../fleet-groups'
+import { agentCountValue } from '../agent-presenter'
 import AgentFleetRow from './AgentFleetRow.vue'
 
 const props = withDefaults(
@@ -24,6 +25,8 @@ const titleKey = computed<MessageKey>(() => `agents.groups.${props.group.key}`)
 const agentCountLabel = computed(
   () => `${props.group.agents.length} ${t('agents.groupCountLabel')}`,
 )
+const windowValue = computed(() => agentCountValue({ count: props.group.activeWindows, quality: props.group.activeWindowQuality }, t))
+const windowLabel = computed(() => `${props.group.activeWindows === null ? t('agents.activity.unknown') : windowValue.value} ${t('agents.counts.windows')}`)
 </script>
 
 <template>
@@ -39,12 +42,13 @@ const agentCountLabel = computed(
           {{ props.group.agents.length }}
         </AppBadge>
         <AppBadge
-          v-if="props.group.activeWindows > 0"
+          v-if="props.group.activeWindows === null || props.group.activeWindows > 0"
           data-agent-group-windows
           tone="neutral"
           mono
+          :aria-label="windowLabel"
         >
-          {{ props.group.activeWindows }} {{ t('agents.counts.windows') }}
+          {{ windowValue }} {{ t('agents.counts.windows') }}
         </AppBadge>
       </span>
     </header>
