@@ -400,6 +400,107 @@ it("explicitly closes the process and verifies a pending close with GET", async 
   expect(f.remote.closing.value).toBe(false);
 });
 
+it.each(["DELETE", "poll"])(
+  "drains the final output after %s confirms that the process has closed",
+  async (confirmation) => {
+    const f = fixture();
+    f.remote.attach(first);
+    await flush();
+    const socket = f.sockets[0]!;
+    socket.receive({ type: "ready", terminal: first });
+    await flush();
+    const ended: TerminalSession = { ...first, state: "closed" };
+    if (confirmation === "DELETE") f.setCurrent(ended);
+    await f.remote.closeProcess();
+    if (confirmation === "poll") {
+      f.setCurrent(ended);
+      await vi.advanceTimersByTimeAsync(300);
+    }
+    expect(f.remote.terminal.value?.state).toBe("closed");
+    expect(f.remote.closing.value).toBe(false);
+    expect(f.remote.canInput.value).toBe(false);
+    expect(socket.close).not.toHaveBeenCalled();
+    socket.receive({ type: "output", seq: 1, data: "final output" });
+    socket.receive({ type: "exit", terminal: ended });
+    socket.disconnect();
+    await flush();
+    expect(f.write).toHaveBeenCalledWith("final output");
+    expect(f.remote.connection.value).toBe("finished");
+    await vi.advanceTimersByTimeAsync(30_000);
+    expect(f.sockets).toHaveLength(1);
+  },
+);
+
+it("reconnects to drain the final output when transport drops after HTTP close confirmation", async () => {
+  const f = fixture();
+  f.remote.attach(first);
+  await flush();
+  const socket = f.sockets[0]!;
+  socket.receive({ type: "ready", terminal: first });
+  await flush();
+  const ended: TerminalSession = { ...first, state: "closed" };
+  f.setCurrent(ended);
+  await f.remote.closeProcess();
+  socket.disconnect();
+  await flush();
+  await vi.advanceTimersByTimeAsync(1000);
+  const next = f.sockets[1]!;
+  expect(next).toBeDefined();
+  next.receive({ type: "ready", terminal: ended });
+  next.receive({ type: "output", seq: 1, data: "replayed final output" });
+  next.receive({ type: "exit", terminal: ended });
+  next.disconnect();
+  await flush();
+  expect(f.write).toHaveBeenCalledWith("replayed final output");
+  expect(f.remote.connection.value).toBe("finished");
+  await vi.advanceTimersByTimeAsync(30_000);
+  expect(f.sockets).toHaveLength(2);
+});
+
+it("keeps a websocket exit when an in-flight HTTP close returns an older running snapshot", async () => {
+  const f = fixture();
+  f.remote.attach(first);
+  await flush();
+  const socket = f.sockets[0]!;
+  socket.receive({ type: "ready", terminal: first });
+  await flush();
+  let complete!: (value: unknown) => void;
+  f.requests.mockImplementationOnce(
+    () => new Promise((resolve) => { complete = resolve; }),
+  );
+  const closing = f.remote.closeProcess();
+  const ended: TerminalSession = { ...first, state: "exited", exit_code: 0 };
+  socket.receive({ type: "exit", terminal: ended });
+  await flush();
+  complete(first);
+  await closing;
+  await vi.advanceTimersByTimeAsync(1000);
+  expect(f.remote.terminal.value).toEqual(ended);
+  expect(f.remote.connection.value).toBe("finished");
+  expect(f.requests).toHaveBeenCalledTimes(2);
+});
+
+it.each(["closed", "exited"] as const)(
+  "replays a previously %s session when the server immediately closes the socket",
+  async (state) => {
+    const f = fixture();
+    const ended: TerminalSession = { ...first, state, exit_code: 0 };
+    f.remote.attach(ended);
+    await flush();
+    const socket = f.sockets[0]!;
+    socket.receive({ type: "ready", terminal: ended });
+    socket.receive({ type: "output", seq: 1, data: "retained output" });
+    socket.receive({ type: "exit", terminal: ended });
+    socket.disconnect();
+    await flush();
+    expect(f.write).toHaveBeenCalledWith("retained output");
+    expect(f.remote.connection.value).toBe("finished");
+    expect(f.remote.canInput.value).toBe(false);
+    await vi.advanceTimersByTimeAsync(30_000);
+    expect(f.sockets).toHaveLength(1);
+  },
+);
+
 it("ignores a late ticket from a previously selected session", async () => {
   const f = fixture();
   let complete!: (value: unknown) => void;

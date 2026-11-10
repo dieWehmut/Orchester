@@ -294,7 +294,7 @@ export function useRemoteTerminal(options: TerminalOptions) {
         `/terminals/${encodeURIComponent(current.id)}`,
         "DELETE",
       );
-      if (disposed || session !== generation) return;
+      if (disposed || session !== generation || receivedExit) return;
       terminal.value = row;
       const poll = async () => {
         if (disposed || session !== generation || !closing.value) return;
@@ -306,21 +306,20 @@ export function useRemoteTerminal(options: TerminalOptions) {
         const updated = await options.request<TerminalSession>(
           `/terminals/${encodeURIComponent(current.id)}`,
         );
-        if (disposed || session !== generation) return;
+        if (disposed || session !== generation || receivedExit) return;
         terminal.value = updated;
         if (updated.state !== "running") {
+          // HTTP confirms the process stopped, but only the websocket exit
+          // confirms its final output drained. Keep receiving or replaying it.
           closing.value = false;
-          receivedExit = true;
-          connection.value = "finished";
           error.value = "";
-          releaseSocket();
         } else
           closeTimer = setTimeout(() => {
             void poll().catch(failed);
           }, 500);
       };
       const failed = (reason: unknown) => {
-        if (!disposed && session === generation) {
+        if (!disposed && session === generation && !receivedExit) {
           closing.value = false;
           report(reason);
         }
@@ -331,13 +330,10 @@ export function useRemoteTerminal(options: TerminalOptions) {
         }, 300);
       else {
         closing.value = false;
-        receivedExit = true;
-        connection.value = "finished";
         error.value = "";
-        releaseSocket();
       }
     } catch (reason) {
-      if (!disposed && session === generation) {
+      if (!disposed && session === generation && !receivedExit) {
         closing.value = false;
         report(reason);
       }

@@ -1,0 +1,9 @@
+
+ RUN  v4.1.10 <isolated-worktree>/apps/mobile
+
+
+ Test Files  1 passed (1)
+      Tests  23 passed (23)
+   Start at  14:02:12
+   Duration  202ms (transform 61ms, setup 0ms, import 105ms, tests 15ms, environment 0ms)
+

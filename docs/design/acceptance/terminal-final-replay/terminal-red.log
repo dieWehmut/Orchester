@@ -1,0 +1,82 @@
+
+ RUN  v4.1.10 <isolated-worktree>/apps/mobile
+
+ ❯ test/terminal.test.ts (23 tests | 4 failed) 20ms
+   × drains the final output after DELETE confirms that the process has closed 3ms
+   × drains the final output after poll confirms that the process has closed 1ms
+   × reconnects to drain the final output when transport drops after HTTP close confirmation 1ms
+   × keeps a websocket exit when an in-flight HTTP close returns an older running snapshot 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/terminal.test.ts > drains the final output after DELETE confirms that the process has closed
+ FAIL  test/terminal.test.ts > drains the final output after poll confirms that the process has closed
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ test/terminal.test.ts:422:30
+    420|     expect(f.remote.closing.value).toBe(false);
+    421|     expect(f.remote.canInput.value).toBe(false);
+    422|     expect(socket.close).not.toHaveBeenCalled();
+       |                              ^
+    423|     socket.receive({ type: "output", seq: 1, data: "final output" });
+    424|     socket.receive({ type: "exit", terminal: ended });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  test/terminal.test.ts > reconnects to drain the final output when transport drops after HTTP close confirmation
+AssertionError: expected undefined to be defined
+ ❯ test/terminal.test.ts:448:16
+    446|   await vi.advanceTimersByTimeAsync(1000);
+    447|   const next = f.sockets[1]!;
+    448|   expect(next).toBeDefined();
+       |                ^
+    449|   next.receive({ type: "ready", terminal: ended });
+    450|   next.receive({ type: "output", seq: 1, data: "replayed final output"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  test/terminal.test.ts > keeps a websocket exit when an in-flight HTTP close returns an older running snapshot
+AssertionError: expected { id: 'one', …(8) } to deeply equal { id: 'one', …(8) }
+
+- Expected
++ Received
+
+  {
+    "cols": 80,
+    "created_at": 100,
+-   "exit_code": 0,
++   "exit_code": null,
+    "id": "one",
+    "project_id": "project",
+    "rows": 24,
+    "shell": "/bin/sh",
+-   "state": "exited",
++   "state": "running",
+    "workspace": "/work/project",
+  }
+
+ ❯ test/terminal.test.ts:478:35
+    476|   await closing;
+    477|   await vi.advanceTimersByTimeAsync(1000);
+    478|   expect(f.remote.terminal.value).toEqual(ended);
+       |                                   ^
+    479|   expect(f.remote.connection.value).toBe("finished");
+    480|   expect(f.requests).toHaveBeenCalledTimes(2);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 19 passed (23)
+   Start at  14:01:47
+   Duration  220ms (transform 50ms, setup 0ms, import 84ms, tests 20ms, environment 0ms)
+
