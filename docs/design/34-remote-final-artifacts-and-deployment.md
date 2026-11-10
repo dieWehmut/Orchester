@@ -1,6 +1,8 @@
-# 最终远程产物与本地部署
+# 输入修复版产物与本地部署（历史基线）
 
-2026-11-10（Asia/Shanghai）。最终功能源码为 `48cae93`，包含手机项目/多设备、交互 PTY、Android 快速与混合输入修复，以及桌面项目库和原生独立会话窗口。输入、Gboard、SIGINT 和补读已在同一 Android Studio API 37 / `emulator-5554` 上通过，但主题页系统 Back 实测退出 Launcher，已转入修复；[原生输入及缺口记录](35-android-input-acceptance-and-back-navigation.md)。此处产物是输入修复版，尚不计为全部原生验收完成；物理 Android 手机暂不可连接，iOS 缺少 macOS/Xcode 和目标设备，二者保留待办。
+新版 `7313c29` 的 APK、完整前端门禁及两侧部署见 [返回修复验收](36-mobile-native-back-acceptance.md)。下文保留输入修复版的完整验收基线。
+
+2026-11-10（Asia/Shanghai）。本基线功能源码为 `48cae93`，包含手机项目/多设备、交互 PTY、Android 快速与混合输入修复，以及桌面项目库和原生独立会话窗口。输入、Gboard、SIGINT 和补读已在同一 Android Studio API 37 / `emulator-5554` 上通过，但主题页系统 Back 实测退出 Launcher，已转入修复；[原生输入及缺口记录](35-android-input-acceptance-and-back-navigation.md)。此处产物是输入修复版，尚不计为全部原生验收完成；物理 Android 手机暂不可连接，iOS 缺少 macOS/Xcode 和目标设备，二者保留待办。
 
 ## 集成检查
 

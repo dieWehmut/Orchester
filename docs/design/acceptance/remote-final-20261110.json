@@ -43,6 +43,30 @@
     "conclusion": "success",
     "url": "https://github.com/dieWehmut/Orchester/actions/runs/42741437315"
   },
-  "androidSubpageSystemBack": "appearance exits to Launcher; fix and new APK pending",
-  "androidExplicitClose": "pending post-navigation-fix APK"
+  "androidSubpageSystemBack": "historical appearance failure fixed and verified by mobileNavigation",
+  "androidExplicitClose": "pending post-navigation-fix APK",
+  "recordRole": "Historical input-fix baseline; newest artifacts and deployment are in mobileNavigation",
+  "mobileNavigation": {
+    "sourceCommit": "7313c29513d5b9e36e82fd1d75b8de2e6508146a",
+    "fixCommit": "5d8518f308cab654de201bf2c633b6450ab14ebb",
+    "apkSha256": "cac1edd8fed9c4b9c43fac5da8b9a9722147103c18e6fdcb334718182247ce67",
+    "apkBytes": 5655509,
+    "installedSerial": "emulator-5554",
+    "installedBaseApkHashEqual": true,
+    "apkWebFiles": 5,
+    "mobileTests": 113,
+    "navigationRegressionTests": 23,
+    "vitestTotal": 1354,
+    "androidNativeBridgeTests": 4,
+    "androidNativeBridgeSeconds": 8.003,
+    "defaultPackageUpdated": true,
+    "userBackendRestarted": false,
+    "windowsHttpFilesExact": 5,
+    "windowsRuntimeRepeat": "tool wait incomplete; same backend hash as historical 14-check pass",
+    "androidExplicitClose": "pending real UI",
+    "androidTerminalSixThemes": "pending real UI",
+    "toolCleanup": "pending authoritative exit confirmation",
+    "physicalAndroidWifi": "pending target device",
+    "iosNativeBuildAndInstall": "pending target environment"
+  }
 }

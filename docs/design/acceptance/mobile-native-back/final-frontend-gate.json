@@ -1,0 +1,19 @@
+{
+  "sourceCommit": "7313c29513d5b9e36e82fd1d75b8de2e6508146a",
+  "observedAtUtc": "2026-11-10T04:32:54.946435+00:00",
+  "command": "pnpm run test:tooling && pnpm --workspace-concurrency=1 -r test && pnpm --filter @orchester/desktop test:security && node --test werkzeug/desktop/*.test.mjs",
+  "exitCode": 0,
+  "vitest": {
+    "mobile": 113,
+    "design": 306,
+    "protokoll": 89,
+    "website": 31,
+    "ereignis": 28,
+    "web": 787,
+    "total": 1354
+  },
+  "tooling": 26,
+  "desktopSecurity": 1,
+  "desktopPackaging": 10,
+  "assertionsAndTimeoutsChanged": false
+}
