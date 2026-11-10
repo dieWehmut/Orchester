@@ -28,15 +28,22 @@ public class MainActivity extends BridgeActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override public void handleOnBackPressed() {
                 WebView webView = getBridge() == null ? null : getBridge().getWebView();
-                if (webView != null && webView.canGoBack()) {
-                    // Bottom sheets add a history entry; Back closes that sheet
-                    // through popstate before the Activity can leave the app.
-                    webView.goBack();
-                } else {
-                    setEnabled(false);
-                    getOnBackPressedDispatcher().onBackPressed();
-                    setEnabled(true);
+                if (webView == null) {
+                    leaveActivity();
+                    return;
                 }
+                // Let Vue serialize this with pending header/picker traversals.
+                // Calling goBack directly could queue a second traversal past root.
+                webView.evaluateJavascript("window.orchesterHandleBack?.() ?? null", handled -> {
+                    if (isFinishing() || isDestroyed() || "true".equals(handled)) return;
+                    if ("null".equals(handled) && webView.canGoBack()) webView.goBack();
+                    else leaveActivity();
+                });
+            }
+            private void leaveActivity() {
+                setEnabled(false);
+                getOnBackPressedDispatcher().onBackPressed();
+                setEnabled(true);
             }
         });
         splash.setOnExitAnimationListener(provider -> provider.getView().animate()
