@@ -320,12 +320,18 @@ impl fmt::Debug for HttpResponse {
 
 #[async_trait]
 pub trait HttpTransport: Send + Sync {
+    // async-trait adds #[must_use] to this declaration; newer Rust also marks
+    // its generated boxed Future return type as must-use.
+    #[allow(clippy::double_must_use)]
     async fn send(
         &self,
         request: HttpRequest,
         cancel: CancellationToken,
     ) -> Result<HttpResponse, HttpTransportError>;
 
+    // async-trait adds #[must_use] to this declaration; newer Rust also marks
+    // its generated boxed Future return type as must-use.
+    #[allow(clippy::double_must_use)]
     async fn send_stream(
         &self,
         request: HttpRequest,

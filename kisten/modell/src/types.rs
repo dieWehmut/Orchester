@@ -303,6 +303,9 @@ pub trait ModelEventSink: Send + Sync {
 /// Provider-neutral, loop-free single-call model interface.
 #[async_trait]
 pub trait LanguageModel: Send + Sync {
+    // async-trait adds #[must_use] to this declaration; newer Rust also marks
+    // its generated boxed Future return type as must-use.
+    #[allow(clippy::double_must_use)]
     async fn complete(
         &self,
         request: ModelRequest,
@@ -314,6 +317,9 @@ pub trait LanguageModel: Send + Sync {
     /// Legacy providers only implement [`Self::complete`]. Their completed
     /// assistant text is emitted once here so callers can use one event-aware
     /// path without changing provider behavior.
+    // async-trait adds #[must_use] to this declaration; newer Rust also marks
+    // its generated boxed Future return type as must-use.
+    #[allow(clippy::double_must_use)]
     async fn complete_with_events(
         &self,
         request: ModelRequest,
