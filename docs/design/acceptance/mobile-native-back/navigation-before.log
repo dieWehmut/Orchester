@@ -1,0 +1,223 @@
+
+ RUN  v4.1.10 /tmp/orchester-navigation-before/apps/mobile
+
+ ❯ test/navigation.test.ts (23 tests | 14 failed) 994ms
+   × native Back returns from settings 主题 to its parent tab 392ms
+   × native Back returns from settings 电脑设备 to its parent tab 12ms
+   × native Back returns from settings 关于 Orchester to its parent tab 10ms
+   × device navigation remembers its 控制台 parent 9ms
+   × device navigation remembers its 项目 parent 9ms
+   × folders and agents each return to projects; adding a folder replaces the child history entry 20ms
+   × task output returns to tasks and keeps the controller and task available 14ms
+   × rapid tab changes during header Back keep the latest tab and repeated header clicks traverse once 14ms
+   × opening a new child while a previous child returns cannot be overwritten by its old popstate 14ms
+   × late folder submission and agent loading cannot restore a page after Back and a tab switch 22ms
+   × late panel and output requests cannot navigate to tasks or restore output after leaving 25ms
+   × native Back and a rapid tab switch share the pending traversal instead of exiting the Activity 12ms
+   × a new App waits for an old child and picker to finish unmounting before owning its root history 38ms
+   × opening a child in the microtask that completes tab navigation still creates its Back entry 6ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/navigation.test.ts > native Back returns from settings 主题 to its parent tab
+ FAIL  test/navigation.test.ts > native Back returns from settings 电脑设备 to its parent tab
+ FAIL  test/navigation.test.ts > native Back returns from settings 关于 Orchester to its parent tab
+AssertionError: WebView canGoBack must be true on a child page: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ test/navigation.test.ts:152:67
+    150|   await click(page, ".list-row");
+    151|   expect(title()).not.toBe("设置");
+    152|   expect(index, "WebView canGoBack must be true on a child page").toBe…
+       |                                                                   ^
+    153|   await nativeBack();
+    154|   expect(title()).toBe("设置");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/14]⎯
+
+ FAIL  test/navigation.test.ts > device navigation remembers its 控制台 parent
+ FAIL  test/navigation.test.ts > device navigation remembers its 项目 parent
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ test/navigation.test.ts:179:17
+    177|   await click("连接电脑");
+    178|   expect(title()).toBe("电脑设备");
+    179|   expect(index).toBe(1);
+       |                 ^
+    180|   await nativeBack();
+    181|   expect(title()).toBe(parent);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/14]⎯
+
+ FAIL  test/navigation.test.ts > folders and agents each return to projects; adding a folder replaces the child history entry
+AssertionError: expected '选择电脑目录' to be '项目' // Object.is equality
+
+Expected: "项目"
+Received: "选择电脑目录"
+
+ ❯ test/navigation.test.ts:191:19
+    189|   expect(title()).toBe("选择电脑目录");
+    190|   await nativeBack();
+    191|   expect(title()).toBe("项目");
+       |                   ^
+    192|   await click("打开 Agent 栏");
+    193|   expect(title()).toBe("选择 Agent");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/14]⎯
+
+ FAIL  test/navigation.test.ts > task output returns to tasks and keeps the controller and task available
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ test/navigation.test.ts:211:17
+    209|   expect(title()).toBe("任务详情");
+    210|   expect(root.textContent).toContain(run.prompt);
+    211|   expect(index).toBe(1);
+       |                 ^
+    212|   await nativeBack();
+    213|   expect(title()).toBe("任务");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/14]⎯
+
+ FAIL  test/navigation.test.ts > rapid tab changes during header Back keep the latest tab and repeated header clicks traverse once
+AssertionError: expected "back" to be called 1 times, but got 0 times
+ ❯ test/navigation.test.ts:246:31
+    244|   await flushHistory();
+    245|   expect(title()).toBe("项目");
+    246|   expect(window.history.back).toHaveBeenCalledTimes(1);
+       |                               ^
+    247|   expect(index).toBe(0);
+    248|   expect(exits).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/14]⎯
+
+ FAIL  test/navigation.test.ts > opening a new child while a previous child returns cannot be overwritten by its old popstate
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ test/navigation.test.ts:263:17
+    261|   await flushHistory();
+    262|   expect(title()).toBe("关于");
+    263|   expect(index).toBe(1);
+       |                 ^
+    264|   await nativeBack();
+    265|   expect(title()).toBe("设置");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/14]⎯
+
+ FAIL  test/navigation.test.ts > late folder submission and agent loading cannot restore a page after Back and a tab switch
+AssertionError: expected '选择 Agent' to be '设置' // Object.is equality
+
+Expected: "设置"
+Received: "选择 Agent"
+
+ ❯ test/navigation.test.ts:292:19
+    290|   await click("设置", ".bottom-navigation button");
+    291|   await releaseFolder();
+    292|   expect(title()).toBe("设置");
+       |                   ^
+    293|   expect(index).toBe(0);
+    294|   await click("项目", ".bottom-navigation button");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/14]⎯
+
+ FAIL  test/navigation.test.ts > late panel and output requests cannot navigate to tasks or restore output after leaving
+AssertionError: expected '任务' to be '设置' // Object.is equality
+
+Expected: "设置"
+Received: "任务"
+
+ ❯ test/navigation.test.ts:313:19
+    311|   await click("设置", ".bottom-navigation button");
+    312|   await releasePanel();
+    313|   expect(title()).toBe("设置");
+       |                   ^
+    314|   expect(index).toBe(0);
+    315|   await click("任务", ".bottom-navigation button");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/14]⎯
+
+ FAIL  test/navigation.test.ts > native Back and a rapid tab switch share the pending traversal instead of exiting the Activity
+AssertionError: expected 2 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 2
+
+ ❯ test/navigation.test.ts:415:17
+    413|   expect(title()).toBe("项目");
+    414|   expect(index).toBe(0);
+    415|   expect(exits).toBe(0);
+       |                 ^
+    416|   expect(window.history.back).toHaveBeenCalledTimes(1);
+    417| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/14]⎯
+
+ FAIL  test/navigation.test.ts > a new App waits for an old child and picker to finish unmounting before owning its root history
+AssertionError: expected '关于' to be '设置' // Object.is equality
+
+Expected: "设置"
+Received: "关于"
+
+ ❯ test/navigation.test.ts:430:19
+    428|   await click("关于 Orchester", ".list-row");
+    429|   await nativeBack();
+    430|   expect(title()).toBe("设置");
+       |                   ^
+    431|   expect(index).toBe(0);
+    432|   expect(exits).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/14]⎯
+
+ FAIL  test/navigation.test.ts > opening a child in the microtask that completes tab navigation still creates its Back entry
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ test/navigation.test.ts:456:17
+    454|   await settle();
+    455|   expect(title()).toBe("主题");
+    456|   expect(index).toBe(1);
+       |                 ^
+    457|   await nativeBack();
+    458|   expect(title()).toBe("设置");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/14]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  14 failed | 9 passed (23)
+   Start at  12:09:08
+   Duration  1.59s (transform 358ms, setup 0ms, import 76ms, tests 994ms, environment 441ms)
+
+undefined
+/tmp/orchester-navigation-before/apps/mobile:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run test/navigation.test.ts

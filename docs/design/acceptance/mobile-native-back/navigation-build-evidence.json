@@ -1,0 +1,13 @@
+{
+  "apkSha256": "cac1edd8fed9c4b9c43fac5da8b9a9722147103c18e6fdcb334718182247ce67",
+  "bytes": 5655509,
+  "installedSerial": "emulator-5554",
+  "distApkFilesEqual": 5,
+  "navigationSource": "5d8518f308cab654de201bf2c633b6450ab14ebb",
+  "mobileTests": 113,
+  "navigationTests": 23,
+  "nativeBridgeTests": 4,
+  "nativeBridgeSeconds": 8.003,
+  "iosSynchronizedFiles": 5,
+  "mainMerge": "7313c29513d5b9e36e82fd1d75b8de2e6508146a"
+}

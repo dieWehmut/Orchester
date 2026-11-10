@@ -1,0 +1,15 @@
+{
+  "observedAtUtc": "2026-11-10T04:42:03.865737+00:00",
+  "sourceCommit": "7313c29513d5b9e36e82fd1d75b8de2e6508146a",
+  "defaultPackage": "/mnt/c/Users/han/Downloads/OrchesterRemote",
+  "preservedPreviousPackage": "/mnt/c/Users/han/Downloads/OrchesterRemote-backup-20261110-before-native-back-7313c29",
+  "namedVerifiedSource": "/mnt/c/Users/han/Downloads/OrchesterRemote-20261110-native-back-final",
+  "promotionMode": "atomic file replacement after complete hash-verified backup; executable byte-identical and not rewritten",
+  "deliveredFiles": 16,
+  "hashInventoryEntries": 15,
+  "apkWebParityFiles": 5,
+  "apkSha256": "cac1edd8fed9c4b9c43fac5da8b9a9722147103c18e6fdcb334718182247ce67",
+  "binarySha256": "4569036d09a2279153f9e5fd3a362403212cd39b0ec68481b09fca7afe303cee",
+  "serviceRestarted": false,
+  "modelCalls": 0
+}

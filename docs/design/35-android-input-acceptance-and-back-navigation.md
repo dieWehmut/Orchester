@@ -1,4 +1,6 @@
-# Android 输入修复版验收与子页返回缺口
+# Android 输入修复版验收与子页返回缺口（历史记录）
+
+子页返回缺口已在新版 `7313c29` 修复并通过原生 4 项复验；[修复与新版记录](36-mobile-native-back-acceptance.md)。以下保留旧安装版的输入证据及当时失败。
 
 2026-11-10，Windows Android Studio API 37 / Android 17，指定 `emulator-5554`，未操作 5556。输入修复源码 `48cae93` 的 APK SHA-256 为 `7cd8ab5d8b6236b15938d8d3a91aa5e83a04aa2f1aeaa1a722d9c66e69d70aef`。实际安装 base.apk hash 一致，[构建/安装记录](acceptance/mobile-terminal-input/build-evidence.json)。同一安装版 [NativeBridgeTest](acceptance/mobile-terminal-input/native-bridge.log) 为 `OK (3 tests)`，5.304 秒，测试专用 Credentials/主题在 finally 恢复。
 
