@@ -57,17 +57,10 @@ pub(super) fn is_candidate(name: &str) -> bool {
 fn suffix(value: &str, suffix: &str) -> bool {
     value == suffix || value.ends_with(&format!("/{suffix}"))
 }
-fn cursor_cli(value: &str) -> bool {
-    let Some((_, versioned)) = value.rsplit_once("/cursor-agent/versions/") else {
-        return false;
-    };
-    let segments = versioned.split('/').collect::<Vec<_>>();
-    segments.len() == 2
-        && !segments[0].is_empty()
-        && matches!(
-            segments[1],
-            "cursor-agent" | "cursor-agent.exe" | "agent" | "agent.exe"
-        )
+fn cursor_cli_file(value: &str) -> Option<&str> {
+    let (_, versioned) = value.rsplit_once("/cursor-agent/versions/")?;
+    let (version, file) = versioned.split_once('/')?;
+    (!version.is_empty() && !file.contains('/')).then_some(file)
 }
 fn entry_index(args: &[String]) -> Option<usize> {
     let mut index = if args.first().is_some_and(|arg| basename(arg) == "bun")
@@ -107,7 +100,12 @@ pub(super) fn classify(name: &str, exe: &str, args: &[String]) -> Option<String>
         return Some(provider.clone());
     }
     let executable = basename(&exe);
-    if cursor_cli(&exe) {
+    if cursor_cli_file(&exe).is_some_and(|file| {
+        matches!(
+            file,
+            "cursor-agent" | "cursor-agent.exe" | "agent" | "agent.exe"
+        )
+    }) {
         return Some("cursor".to_owned());
     }
     if name.starts_with("language_server") || executable.starts_with("language_server") {
@@ -140,6 +138,11 @@ pub(super) fn classify(name: &str, exe: &str, args: &[String]) -> Option<String>
         if !suffix(&entry, "@deepseek-ai/dsh/lib/bin.js") {
             return None;
         }
+    }
+    // Official launchers exec the bundled Node runtime with this script;
+    // Linux preserves the invoked alias in argv[0] and may use system CAs.
+    if cursor_cli_file(&entry) == Some("index.js") {
+        return Some("cursor".to_owned());
     }
     let provider = rules()
         .entries
@@ -452,6 +455,81 @@ mod tests {
             Some("antigravity"),
         );
     }
+
+    #[test]
+    fn official_cursor_cli_entrypoints_agree_locally_and_in_wsl() {
+        let version = "/home/test/.local/share/cursor-agent/versions/2026.11.05-86047df";
+        let node = format!("{version}/node");
+        let entry = format!("{version}/index.js");
+        let fixtures = serde_json::json!([
+            {"case":"linux exec-a cursor-agent with system CAs", "name":"cursor-agent", "exe":node, "args":["/home/test/.local/bin/cursor-agent", "--use-system-ca", entry, "--prompt", "cursor-sensitive-fixture"], "cursor":true},
+            {"case":"linux exec-a agent without system CAs", "name":"agent", "exe":node, "args":["/home/test/.local/bin/agent", entry], "cursor":true},
+            {"case":"linux runtime process name", "name":"node", "exe":node, "args":["/home/test/.local/bin/agent", "--use-system-ca", entry], "cursor":true},
+            {"case":"windows official runtime and entry", "name":"node.exe", "exe":"C:\\Users\\test\\AppData\\Local\\cursor-agent\\versions\\2026.11.05-86047df\\node.exe", "args":["node.exe", "C:\\Users\\test\\AppData\\Local\\cursor-agent\\versions\\2026.11.05-86047df\\index.js"], "cursor":true},
+            {"case":"versioned relative entry", "name":"node", "exe":node, "cwd":version, "args":["node", "--use-system-ca", "./index.js"], "cursor":true},
+            {"case":"timestamped release", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/cursor-agent/versions/2026.11.05-12-34-56-86047df/index.js"], "cursor":true},
+            {"case":"runtime separator", "name":"node", "exe":node, "args":["node", "--use-system-ca", "--", entry], "cursor":true},
+            {"case":"existing versioned executable", "name":"agent", "exe":format!("{version}/cursor-agent"), "args":["agent"], "cursor":true},
+            {"case":"alias basename alone", "name":"cursor-agent", "exe":"/usr/bin/cursor-agent", "args":["cursor-agent"], "cursor":false},
+            {"case":"branded runtime without entry", "name":"node", "exe":node, "args":["node"], "cursor":false},
+            {"case":"ordinary project directory", "name":"node", "exe":"/usr/bin/node", "args":["node", "/repo/cursor-agent/index.js"], "cursor":false},
+            {"case":"unversioned relative entry", "name":"node", "exe":"/usr/bin/node", "cwd":"/repo/cursor-agent", "args":["node", "index.js"], "cursor":false},
+            {"case":"missing version", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/cursor-agent/versions/index.js"], "cursor":false},
+            {"case":"empty version", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/cursor-agent/versions//index.js"], "cursor":false},
+            {"case":"version traversal", "name":"node", "exe":"/usr/bin/node", "args":["node", format!("{version}/../index.js")], "cursor":false},
+            {"case":"nested helper index", "name":"node", "exe":node, "args":["node", format!("{version}/workers/index.js")], "cursor":false},
+            {"case":"named helper script", "name":"node", "exe":node, "args":["node", format!("{version}/connect-pool-worker.js")], "cursor":false},
+            {"case":"helper binary", "name":"cursor-agent-worker-sea", "exe":format!("{version}/cursor-agent-worker-sea"), "args":["cursor-agent-worker-sea"], "cursor":false},
+            {"case":"cursor desktop", "name":"Cursor.exe", "exe":"C:/Apps/Cursor/Cursor.exe", "args":["Cursor.exe", entry], "cursor":false},
+            {"case":"shell interpreting script", "name":"bash", "exe":"/bin/bash", "args":["bash", entry], "cursor":false},
+            {"case":"prompt contains entry", "name":"node", "exe":"/usr/bin/node", "args":["node", "/repo/index.js", "--prompt", entry], "cursor":false},
+            {"case":"runtime import contains entry", "name":"node", "exe":"/usr/bin/node", "args":["node", "--import", entry, "/repo/index.js"], "cursor":false},
+            {"case":"runtime eval contains entry", "name":"node", "exe":node, "args":["node", "--eval", entry], "cursor":false},
+            {"case":"unknown runtime option", "name":"node", "exe":node, "args":["node", "--unknown-option", entry], "cursor":false}
+        ]);
+        for row in fixtures.as_array().unwrap() {
+            let mut args = row["args"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|arg| arg.as_str().unwrap().to_owned())
+                .collect::<Vec<_>>();
+            resolve_relative_entry(&mut args, row["cwd"].as_str().unwrap_or_default());
+            let expected = row["cursor"].as_bool().unwrap().then_some("cursor");
+            assert_eq!(
+                classify(
+                    row["name"].as_str().unwrap(),
+                    row["exe"].as_str().unwrap(),
+                    &args,
+                )
+                .as_deref(),
+                expected,
+                "{}",
+                row["case"],
+            );
+            if expected.is_some() {
+                assert!(
+                    is_candidate(row["name"].as_str().unwrap()),
+                    "{}",
+                    row["case"]
+                );
+            }
+            #[cfg(unix)]
+            {
+                let mut fixture = row.clone();
+                fixture["pid"] = serde_json::json!(1);
+                let result = wsl_fixture(&serde_json::json!([fixture]));
+                assert!(result.complete, "{}", row["case"]);
+                let counts = if expected.is_some() {
+                    BTreeMap::from([("cursor".to_owned(), 1)])
+                } else {
+                    BTreeMap::new()
+                };
+                assert_eq!(result.counts, counts, "{}", row["case"]);
+            }
+        }
+    }
+
     #[test]
     fn helpers_generic_names_and_prompt_strings_are_never_agent_identities() {
         for (name, exe) in [

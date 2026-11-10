@@ -37,6 +37,15 @@
     "results": "Both official organization repository searches returned zero results. Classification evidence comes from official release artifacts."
   },
   "classification": "Recognize index.js only as the immediate file inside cursor-agent/versions/<nonempty release>/, after parsing a known runtime's real entrypoint. Shared runtime switches must include --use-system-ca. An agent or cursor-agent basename alone does not establish identity.",
+  "validation": {
+    "regression_before_fix": "The official Linux alias + --use-system-ca + index.js fixture returned no Cursor count with complete=true.",
+    "command": "CARGO_TARGET_DIR=/home/han/project/Orchester/target cargo test -p orchester-netz --lib agent_process -j1 -- --test-threads=1",
+    "passed": 20,
+    "failed": 0,
+    "cursor_fixture_cases": 24,
+    "parity": "Each Cursor fixture is asserted independently against both the Rust classifier and the Python fixture reader, including safe stdout checks.",
+    "additional_checks": ["cargo fmt --all -- --check", "git diff --check", "Python source syntax and shared rules JSON"]
+  },
   "limitations": [
     "Process metadata is inferred from inspected startup code; no real Cursor process was launched or sampled.",
     "macOS, arm64, relocated installations, and future launcher changes were not inspected.",

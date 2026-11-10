@@ -39,12 +39,11 @@ def candidate(name):
             or name in rules["candidates"]
             or name.startswith(("python3.", "pypy3.")))
 
-def cursor_cli(value):
+def cursor_cli_file(value):
     if "/cursor-agent/versions/" not in value:
-        return False
+        return None
     parts = value.rsplit("/cursor-agent/versions/", 1)[1].split("/")
-    return (len(parts) == 2 and bool(parts[0])
-            and parts[1] in ("cursor-agent", "cursor-agent.exe", "agent", "agent.exe"))
+    return parts[1] if len(parts) == 2 and parts[0] else None
 
 def entry_index(args):
     index = 2 if args and basename(args[0]) == "bun" and args[1:2] == ["run"] else 1
@@ -70,7 +69,7 @@ def classify(name, exe, args):
     if name in rules["primary"]:
         return rules["primary"][name]
     executable = basename(exe)
-    if cursor_cli(exe):
+    if cursor_cli_file(exe) in ("cursor-agent", "cursor-agent.exe", "agent", "agent.exe"):
         return "cursor"
     if name.startswith("language_server") or executable.startswith("language_server"):
         branded = any(suffix(exe, "antigravity/resources/bin/" + filename)
@@ -96,6 +95,8 @@ def classify(name, exe, args):
         entry = path(args[index])
         if not suffix(entry, "@deepseek-ai/dsh/lib/bin.js"):
             return None
+    if cursor_cli_file(entry) == "index.js":
+        return "cursor"
     provider = next((provider for expected, provider in rules["entries"].items()
                      if suffix(entry, expected)), None)
     if provider == "deepseek" and dsh_maintenance(args[index + 1:]):
