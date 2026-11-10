@@ -1,0 +1,363 @@
+{
+  "status": "authorized terminal QA completed; server credential revocation unsupported by current app",
+  "recordedAt": 1794315679.3269796,
+  "environment": {
+    "kind": "native Android Emulator",
+    "serial": "emulator-5554",
+    "api": 37,
+    "android": "17",
+    "physicalDeviceTested": false,
+    "iosTested": false
+  },
+  "app": {
+    "apkSha256": "dba3137147b9fb4bdad4ecbd43d1145f7436b73fddf7f633d36b3d3ba2e13b98",
+    "apkBytes": 5655501,
+    "sourceContainsRevision": "4730e9d",
+    "reinstalledDuringThisQa": false
+  },
+  "scope": {
+    "repoEdits": 0,
+    "modelCalls": 0,
+    "otherEmulatorsUsed": false,
+    "otherAppsUsed": false
+  },
+  "replay": {
+    "bashPid": 2765586,
+    "cwd": "/tmp/orchester-native-terminal-host-c6y8iyfs/native-terminal-project",
+    "startedAt": 1794312388.485078,
+    "outputAt": 1794312734.7394917,
+    "leftAt": 1794312734.661207,
+    "triggerMethod": "QA fixture marker after visual Projects confirmation",
+    "liveWhileAway": true,
+    "beforeReconnectAt": 1794312734.7618606,
+    "reconnectedAt": 1794312785.397412,
+    "sameBashPidLiveAfterReconnect": true,
+    "outputVisuallyConfirmed": true,
+    "result": "pass"
+  },
+  "themes": [
+    {
+      "id": "coral",
+      "label": "珊瑚",
+      "screenshot": "native-final-theme-coral.png",
+      "sha256": "d003d538ebb151b12dc73ac62745bc872142111a77b20253f47216231fc52093",
+      "connectedVisuallyConfirmed": true,
+      "bashPromptVisuallyConfirmed": true,
+      "screenshotAliasOf": "native-final-replay-reconnected.png"
+    },
+    {
+      "id": "rose",
+      "label": "玫瑰",
+      "screenshot": "native-final-theme-rose.png",
+      "sha256": "60d19bc3af9f026d031f2d195f3c5976f0ea5b0663d23d78d0de4dc2ad3e3baf",
+      "connectedVisuallyConfirmed": true,
+      "bashPromptVisuallyConfirmed": true,
+      "screenshotAliasOf": null
+    },
+    {
+      "id": "sea",
+      "label": "海盐",
+      "screenshot": "native-final-theme-sea.png",
+      "sha256": "10e48f2ed5d4559d4f6aac78d214a844d08841e8db05282af49c6782a580a035",
+      "connectedVisuallyConfirmed": true,
+      "bashPromptVisuallyConfirmed": true,
+      "screenshotAliasOf": null
+    },
+    {
+      "id": "forest",
+      "label": "森林",
+      "screenshot": "native-final-theme-forest.png",
+      "sha256": "9c477d699f4fe45673c745dd50638f2afa4e560ad14c65f66335eefcac622033",
+      "connectedVisuallyConfirmed": true,
+      "bashPromptVisuallyConfirmed": true,
+      "screenshotAliasOf": null
+    },
+    {
+      "id": "indigo",
+      "label": "靛蓝",
+      "screenshot": "native-final-theme-indigo.png",
+      "sha256": "2916ac032fbd1c07a9b9859510b2e5e4fcde28d0c7894352bb50cc226eac835d",
+      "connectedVisuallyConfirmed": true,
+      "bashPromptVisuallyConfirmed": true,
+      "screenshotAliasOf": null
+    },
+    {
+      "id": "amber",
+      "label": "琥珀",
+      "screenshot": "native-final-theme-amber.png",
+      "sha256": "455ed6d090c963de6939baf37d87013dd7c6845e4fe4a229c8a44679d28a7f80",
+      "connectedVisuallyConfirmed": true,
+      "bashPromptVisuallyConfirmed": true,
+      "screenshotAliasOf": null
+    }
+  ],
+  "themeSessions": [
+    {
+      "theme": "rose",
+      "previousReplayBashAlive": false,
+      "createdSessionAfterExpiry": true,
+      "at": 1794313343.8075416
+    },
+    {
+      "theme": "sea",
+      "label": "海盐",
+      "beforeBashPids": [
+        2797559
+      ],
+      "connectedBashPids": [
+        2797559
+      ],
+      "sameBashPids": true,
+      "createdSessionAfterExpiry": false,
+      "leftAt": 1794313386.0533457,
+      "reconnectAt": 1794313403.8050067
+    },
+    {
+      "theme": "forest",
+      "label": "森林",
+      "beforeBashPids": [
+        2797559
+      ],
+      "connectedBashPids": [
+        2797559
+      ],
+      "sameBashPids": true,
+      "createdSessionAfterExpiry": false,
+      "leftAt": 1794313574.1827207,
+      "reconnectAt": 1794313588.543035
+    },
+    {
+      "theme": "indigo",
+      "label": "靛蓝",
+      "beforeBashPids": [
+        2797559
+      ],
+      "connectedBashPids": [
+        2797559
+      ],
+      "sameBashPids": true,
+      "createdSessionAfterExpiry": false,
+      "leftAt": 1794313643.0761807,
+      "reconnectAt": 1794313657.9401863
+    },
+    {
+      "theme": "amber",
+      "label": "琥珀",
+      "beforeBashPids": [
+        2797559
+      ],
+      "connectedBashPids": [
+        2797559
+      ],
+      "sameBashPids": true,
+      "createdSessionAfterExpiry": false,
+      "leftAt": 1794313798.3264651,
+      "reconnectAt": 1794313814.3762138
+    },
+    {
+      "theme": "restored-indigo",
+      "label": "靛蓝",
+      "beforeBashPids": [
+        2797559
+      ],
+      "connectedBashPids": [
+        2797559
+      ],
+      "sameBashPids": true,
+      "createdSessionAfterExpiry": false,
+      "leftAt": 1794313852.5810459,
+      "reconnectAt": 1794313867.1588185
+    }
+  ],
+  "restoredTheme": "indigo",
+  "closeProcess": {
+    "bashPid": 2797559,
+    "liveBeforeOpenConfirm": true,
+    "beforeOpenConfirmAt": 1794313955.5071144,
+    "confirmVisuallyConfirmed": true,
+    "liveImmediatelyBeforeConfirm": true,
+    "confirmedAt": 1794314136.2372434,
+    "processAbsentAt": 1794314136.755186,
+    "processAbsentAfterConfirm": true,
+    "closedViaUiConfirmation": true,
+    "result": "pass",
+    "finishedUiVisuallyConfirmed": true,
+    "shortcutsDisabled": true
+  },
+  "forgetTemporaryDevice": {
+    "temporaryAddress": "http://10.0.2.2:17377",
+    "listenerPid": 2646618,
+    "listenerLiveAfterForget": true,
+    "beforeTokenCount": 1,
+    "afterTokenCount": 1,
+    "localDeviceRemovalResult": "pass",
+    "temporaryDeviceAbsent": true,
+    "retainedDeviceCount": 5,
+    "retainedAddresses": [
+      "http://10.52.50.173:7338",
+      "http://192.168.144.157:7337",
+      "http://10.0.2.2:17347",
+      "http://10.0.2.2:17348",
+      "http://10.0.2.2:17367"
+    ],
+    "allFiveVisuallyConfirmed": true,
+    "serverTokenRevocationResult": "not implemented",
+    "serverTokenRevocationObserved": false,
+    "sourceReason": "use-remote-control.ts forget awaits credentials.remove then filters/persists devices; no server DELETE is sent",
+    "nativeCredentialStoreIndependentlyRead": false,
+    "recordedAt": 1794315679.312864
+  },
+  "screenshots": [
+    {
+      "sequence": 1,
+      "file": "native-final-replay-enter.png",
+      "sha256": "d0d404a3d920586a0121256e9a32e0a364cf8f36c9634ac9cb82e8fd2fdc2bca",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "Prior session ended; not a replay pass"
+    },
+    {
+      "sequence": 2,
+      "file": "native-final-replay-new-session.png",
+      "sha256": "9bd0fc61fd80c13dbf1708ce71dd16a99092a8c6dbeb52bba4e99b41c048d7be",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "New Bash connected"
+    },
+    {
+      "sequence": 3,
+      "file": "native-final-replay-keyboard-command.png",
+      "sha256": "78191c51dffbc4a81e3a5300ca3dee4c9ca4494fc06fbb72b9a66efc77829412",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "Focused input and real Gboard command"
+    },
+    {
+      "sequence": 4,
+      "file": "native-final-enter-recovery-state-redacted.png",
+      "sha256": "71d5a3ba3c2ac10a660364e12486eb75d0476172f01d844eac7c5d657b52926f",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "First submit attempt not completed; keyboard suggestion area redacted"
+    },
+    {
+      "sequence": 5,
+      "file": "native-final-replay-enter-submitted.png",
+      "sha256": "5af8455cab74aa6da2e61fc85b1b0a8d9ae0ef2d9b531f1ee20790891ce64db8",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "Actual Gboard Enter submitted command"
+    },
+    {
+      "sequence": 6,
+      "file": "native-final-replay-away-projects.png",
+      "sha256": "4c996734bb055f16c18dc1bc86a6f2c2f9aab5277ce560bb0ac55079424647b8",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "Projects visually confirmed before QA trigger"
+    },
+    {
+      "sequence": 7,
+      "file": "native-final-replay-reconnected.png",
+      "sha256": "d003d538ebb151b12dc73ac62745bc872142111a77b20253f47216231fc52093",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "Same Bash reconnected with output generated while away"
+    },
+    {
+      "sequence": 8,
+      "file": "native-final-theme-rose.png",
+      "sha256": "60d19bc3af9f026d031f2d195f3c5976f0ea5b0663d23d78d0de4dc2ad3e3baf",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "Rose actual terminal"
+    },
+    {
+      "sequence": 9,
+      "file": "native-final-theme-sea.png",
+      "sha256": "10e48f2ed5d4559d4f6aac78d214a844d08841e8db05282af49c6782a580a035",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "Sea actual terminal"
+    },
+    {
+      "sequence": 10,
+      "file": "native-final-theme-forest.png",
+      "sha256": "9c477d699f4fe45673c745dd50638f2afa4e560ad14c65f66335eefcac622033",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "Forest actual terminal"
+    },
+    {
+      "sequence": 11,
+      "file": "native-final-theme-indigo.png",
+      "sha256": "2916ac032fbd1c07a9b9859510b2e5e4fcde28d0c7894352bb50cc226eac835d",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "Indigo actual terminal"
+    },
+    {
+      "sequence": 12,
+      "file": "native-final-theme-amber.png",
+      "sha256": "455ed6d090c963de6939baf37d87013dd7c6845e4fe4a229c8a44679d28a7f80",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "Amber actual terminal"
+    },
+    {
+      "sequence": 13,
+      "file": "native-final-theme-restored-indigo.png",
+      "sha256": "3d04a874051caaa8f57e3870095a919ad1fe03212ee15caacc118830b1bb7b9c",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "Restored Indigo actual terminal"
+    },
+    {
+      "sequence": 14,
+      "file": "native-final-close-confirm.png",
+      "sha256": "720fe822d185e4f5836cb1eb031ae08c0c5c3aac793eb66330aa0b1e21449c21",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "Close confirmation visually checked"
+    },
+    {
+      "sequence": 15,
+      "file": "native-final-close-finished.png",
+      "sha256": "7afb213fb19104a1f92ed698d1f1ca3869235b7a6bfffd34d40e48bb3b4408be",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "Finished terminal and disabled shortcuts"
+    },
+    {
+      "sequence": 16,
+      "file": "native-final-device-before-forget.png",
+      "sha256": "909e9516cd0758fd207bb7da88c4489c396e82ddf5bffcf7b67efcd5738a695e",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "Devices before local removal"
+    },
+    {
+      "sequence": 17,
+      "file": "native-final-device-bottom-before-forget.png",
+      "sha256": "2ff985a87fa6057443b5a97651289d6c36732651140ab0bfeb790d2d8e180b2a",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "Temporary device visible with exact removal target"
+    },
+    {
+      "sequence": 18,
+      "file": "native-final-device-after-forget-observed.png",
+      "sha256": "1a1d25926be605851982456e71469ac4cf9bdabce2a0479f58fb42045a8415d2",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "Temporary device removed"
+    },
+    {
+      "sequence": 19,
+      "file": "native-final-devices-top-five.png",
+      "sha256": "d8ca20c2d921678265eccb32f74fcad3049d6abdb9e095278f701b4764c43442",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "Retained devices top"
+    },
+    {
+      "sequence": 20,
+      "file": "native-final-devices-retained-five.png",
+      "sha256": "10f54b389da514b63b157151e514082f4f778635715080360bf860648f998ae5",
+      "visuallyViewedBeforeNextOperation": true,
+      "note": "All five retained addresses visible in single screenshot"
+    }
+  ],
+  "exclusions": [
+    "private-listener.json",
+    "native-final-enter-recovery-state.png",
+    "native-final-enter-recovery-state.xml"
+  ],
+  "privacy": "No pairing codes, tokens, hashed token keys or process command lines are included. Original keyboard suggestion screenshot is excluded; a visibly reviewed redacted PNG is available.",
+  "pendingRootCleanup": {
+    "listenerPid": 2646618,
+    "rootToolSession": 31237,
+    "method": "send quit to the owned listener only after review; leave default Linux7337, Windows7338 and V2 helper running"
+  }
+}

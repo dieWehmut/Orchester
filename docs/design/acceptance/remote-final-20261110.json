@@ -68,5 +68,34 @@
     "toolCleanup": "pending authoritative exit confirmation",
     "physicalAndroidWifi": "pending target device",
     "iosNativeBuildAndInstall": "pending target environment"
+  },
+  "mobileTerminalFinal": {
+    "sourceCommit": "8de9efeae9dd77947df7dd6732f756e957b003d8",
+    "fixCommit": "45739e2",
+    "apkSha256": "dba3137147b9fb4bdad4ecbd43d1145f7436b73fddf7f633d36b3d3ba2e13b98",
+    "apkBytes": 5655501,
+    "installedSerial": "emulator-5554",
+    "mobileTests": 119,
+    "terminalTests": 23,
+    "androidNativeBridgeTests": 4,
+    "androidNativeBridgeSeconds": 14.303,
+    "outputWhileAwayReplay": "passed on real Bash after controlled QA trigger",
+    "explicitClose": "passed with live-before-confirm and process absent immediately after UI confirmation",
+    "terminalThemes": [
+      "coral",
+      "rose",
+      "sea",
+      "forest",
+      "indigo",
+      "amber"
+    ],
+    "restoredTheme": "indigo",
+    "temporaryDeviceLocalRemoval": "passed; five other records retained",
+    "temporaryServerAdminRevoke": "verified tokens zero, separate from local removal",
+    "temporaryListenerExit": "normal quit; parent/process/port released",
+    "evidence": "mobile-terminal-final/manifest.json",
+    "windowsLatestPackageAndDesktop": "pending new native gates",
+    "physicalAndroidWifi": "pending target device",
+    "iosNativeBuildAndInstall": "pending macOS/Xcode and target device"
   }
 }

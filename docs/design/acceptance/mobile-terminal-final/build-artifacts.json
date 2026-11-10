@@ -1,0 +1,114 @@
+{
+  "resources": [
+    {
+      "path": "assets/brand-icon-Zjdxen9M.png",
+      "sha256": "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06",
+      "bytes": 377394,
+      "android_copied_matches": true,
+      "ios_copied_matches": true,
+      "apk_embedded_matches": true
+    },
+    {
+      "path": "assets/index-CMOzN1Ft.css",
+      "sha256": "94d453921eec2a77ee2ad4666a64d6cff256da8dab73bbd455411d2a1d6dd62b",
+      "bytes": 31495,
+      "android_copied_matches": true,
+      "ios_copied_matches": true,
+      "apk_embedded_matches": true
+    },
+    {
+      "path": "assets/index-JznSphVe.js",
+      "sha256": "7ff874635c6589ff3252757bc3ae8035b7ff43c1182b34b774722872fce0d5f3",
+      "bytes": 477719,
+      "android_copied_matches": true,
+      "ios_copied_matches": true,
+      "apk_embedded_matches": true
+    },
+    {
+      "path": "favicon.png",
+      "sha256": "bd2b0e95dade84d5371027cc9616610813b3e7f878b434d54a3a1459111c7db2",
+      "bytes": 8268,
+      "android_copied_matches": true,
+      "ios_copied_matches": true,
+      "apk_embedded_matches": true
+    },
+    {
+      "path": "index.html",
+      "sha256": "bca0bd0b082a664928b2681c26f79223505bdde3237adecf50c3ad82a0278f92",
+      "bytes": 477,
+      "android_copied_matches": true,
+      "ios_copied_matches": true,
+      "apk_embedded_matches": true
+    }
+  ],
+  "ios": {
+    "resource_count": 5,
+    "all_resources_match": true,
+    "storyboards": [
+      {
+        "path": "App/App/Base.lproj/LaunchScreen.storyboard",
+        "sha256": "4eb46b2c2e239f561b202d8156f9c8c806a3042e20c84c9e4d0f139078e54075",
+        "xml_valid": true
+      },
+      {
+        "path": "App/App/Base.lproj/Main.storyboard",
+        "sha256": "ded86b9377c62183e8a6257b2aaaf0e95979eacb31bb682f8321ea2c809b27e3",
+        "xml_valid": true
+      }
+    ],
+    "native_build_performed": false
+  },
+  "android_public_assets_total": 7,
+  "built_at_utc": "2026-11-10T06:17:23.405873+00:00",
+  "source_commit": "4730e9d22af98a7bdf4b4efd5096a31a95ae539a",
+  "accepted_main_commit": "8de9efeae9dd77947df7dd6732f756e957b003d8",
+  "mobile_source_matches_main": true,
+  "worktree": "/home/han/project/Orchester/.worktrees/mobile-terminal-final-replay",
+  "worktree_clean": true,
+  "apks": [
+    {
+      "kind": "app-debug",
+      "path": "/tmp/orchester-terminal-final-replay-artifacts/app-debug-main-8de9efe.apk",
+      "build_output": "/home/han/project/Orchester/.worktrees/mobile-terminal-final-replay/apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk",
+      "sha256": "dba3137147b9fb4bdad4ecbd43d1145f7436b73fddf7f633d36b3d3ba2e13b98",
+      "bytes": 5655501,
+      "package_id": "dev.orchester.mobile",
+      "signature_verified": true,
+      "signing_log": "/tmp/orchester-terminal-final-replay-artifacts/app-debug-signing.log",
+      "badging_log": "/tmp/orchester-terminal-final-replay-artifacts/app-debug-badging.log"
+    },
+    {
+      "kind": "app-debug-androidTest",
+      "path": "/tmp/orchester-terminal-final-replay-artifacts/app-debug-androidTest-main-8de9efe.apk",
+      "build_output": "/home/han/project/Orchester/.worktrees/mobile-terminal-final-replay/apps/mobile/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "sha256": "42f5225768bfde9d1628fd19840aa69b6d46ad1058a389dcca7bb7047721848b",
+      "bytes": 569717,
+      "package_id": "dev.orchester.mobile.test",
+      "signature_verified": true,
+      "signing_log": "/tmp/orchester-terminal-final-replay-artifacts/app-debug-androidTest-signing.log",
+      "badging_log": "/tmp/orchester-terminal-final-replay-artifacts/app-debug-androidTest-badging.log"
+    }
+  ],
+  "android": {
+    "sdk": "/home/han/Android/Sdk",
+    "compile_sdk": 36,
+    "target_sdk": 36,
+    "jdk": "Temurin 21.0.13+9",
+    "gradle": "8.14.3",
+    "offline": true,
+    "no_daemon": true,
+    "max_workers": 1,
+    "heap_mb": 768,
+    "metaspace_mb": 256,
+    "build_successful": true,
+    "build_log": "/tmp/orchester-terminal-final-replay-artifacts/android-build.log",
+    "tasks": [
+      ":app:assembleDebug",
+      ":app:assembleDebugAndroidTest"
+    ]
+  },
+  "installation_performed": false,
+  "adb_or_emulator_or_windows_transport_used": false,
+  "default_remote_package_modified": false,
+  "ios_native_build_performed": false
+}

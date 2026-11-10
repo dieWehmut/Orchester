@@ -1,0 +1,8 @@
+{
+  "temporary_listener_parent_exited": true,
+  "temporary_listener_exited": true,
+  "temporary_port_17377_closed": true,
+  "default_linux_listener_still_running": true,
+  "temporary_server_admin_revoke": "separate proof tokens=0",
+  "scope": "only owned temporary listener stopped via normal stdin quit; no emulator/ADB/other-project processes stopped"
+}

@@ -1,0 +1,7 @@
+{
+  "temporary_listener_pid": 2646618,
+  "temporary_server_tokens_after_admin_revoke": 0,
+  "mechanism": "normal CLI revoke through exact owned listener stdin pipe after PID/start/executable/pipe checks",
+  "local_forget": "removed only temporary host; server revoke performed separately by cleanup",
+  "model_calls": 0
+}

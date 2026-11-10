@@ -1,0 +1,105 @@
+{
+  "format": "orchester-mobile-terminal-final-evidence-v1",
+  "apk_sha256": "dba3137147b9fb4bdad4ecbd43d1145f7436b73fddf7f633d36b3d3ba2e13b98",
+  "source_mobile_commit": "4730e9d",
+  "merged_main_commit": "8de9efe",
+  "files": [
+    {
+      "path": "native-final-replay-away-projects.png",
+      "bytes": 136235,
+      "sha256": "4c996734bb055f16c18dc1bc86a6f2c2f9aab5277ce560bb0ac55079424647b8"
+    },
+    {
+      "path": "native-final-replay-reconnected.png",
+      "bytes": 156549,
+      "sha256": "d003d538ebb151b12dc73ac62745bc872142111a77b20253f47216231fc52093"
+    },
+    {
+      "path": "native-final-theme-coral.png",
+      "bytes": 156549,
+      "sha256": "d003d538ebb151b12dc73ac62745bc872142111a77b20253f47216231fc52093"
+    },
+    {
+      "path": "native-final-theme-rose.png",
+      "bytes": 128849,
+      "sha256": "60d19bc3af9f026d031f2d195f3c5976f0ea5b0663d23d78d0de4dc2ad3e3baf"
+    },
+    {
+      "path": "native-final-theme-sea.png",
+      "bytes": 129883,
+      "sha256": "10e48f2ed5d4559d4f6aac78d214a844d08841e8db05282af49c6782a580a035"
+    },
+    {
+      "path": "native-final-theme-forest.png",
+      "bytes": 129309,
+      "sha256": "9c477d699f4fe45673c745dd50638f2afa4e560ad14c65f66335eefcac622033"
+    },
+    {
+      "path": "native-final-theme-indigo.png",
+      "bytes": 129483,
+      "sha256": "2916ac032fbd1c07a9b9859510b2e5e4fcde28d0c7894352bb50cc226eac835d"
+    },
+    {
+      "path": "native-final-theme-amber.png",
+      "bytes": 130080,
+      "sha256": "455ed6d090c963de6939baf37d87013dd7c6845e4fe4a229c8a44679d28a7f80"
+    },
+    {
+      "path": "native-final-theme-restored-indigo.png",
+      "bytes": 129758,
+      "sha256": "3d04a874051caaa8f57e3870095a919ad1fe03212ee15caacc118830b1bb7b9c"
+    },
+    {
+      "path": "native-final-close-confirm.png",
+      "bytes": 163433,
+      "sha256": "720fe822d185e4f5836cb1eb031ae08c0c5c3aac793eb66330aa0b1e21449c21"
+    },
+    {
+      "path": "native-final-close-finished.png",
+      "bytes": 126100,
+      "sha256": "7afb213fb19104a1f92ed698d1f1ca3869235b7a6bfffd34d40e48bb3b4408be"
+    },
+    {
+      "path": "native-final-devices-retained-five.png",
+      "bytes": 167504,
+      "sha256": "10f54b389da514b63b157151e514082f4f778635715080360bf860648f998ae5"
+    },
+    {
+      "path": "native-qa.json",
+      "bytes": 12205,
+      "sha256": "df43b4ec48ca2b1ac62862114e7ebabe70ed310df54cd11599d431764c77ec9a"
+    },
+    {
+      "path": "temporary-server-revoke.json",
+      "bytes": 322,
+      "sha256": "41c024931fecdff83baf2dc35cdae3cd3cfae0a0bbadc5de80dfbdc54384bc26"
+    },
+    {
+      "path": "temporary-listener-cleanup.json",
+      "bytes": 356,
+      "sha256": "e5e9b934563f4d9521528ae149d139a17e66d753f0ac3a5bdf81a622ec0fbb11"
+    },
+    {
+      "path": "native-bridge.json",
+      "bytes": 1723,
+      "sha256": "7e140ab6221491493b07c8ce9c9d118a84d8d6ad8f1ab74cbc2e28e09ef81d1e"
+    },
+    {
+      "path": "build-artifacts.json",
+      "bytes": 4274,
+      "sha256": "cb0890663ff28710990915a5064a19f5acc57645caf6e9a090641d9fbf975c71"
+    }
+  ],
+  "root_verified": {
+    "replay_connected_and_output_visible": true,
+    "explicit_close_finished_and_shortcuts_disabled": true,
+    "five_retained_devices_same_screen": true,
+    "temporary_server_admin_revoke_verified": true,
+    "temporary_listener_normal_exit_and_port_release": true
+  },
+  "limitations": [
+    "Android emulator-5554 only; physical Android/Wi-Fi and iOS native target still unavailable",
+    "Desktop/default remote updates are separate pending new Windows build",
+    "From this device removal is local; temporary server auth revoked separately by admin cleanup"
+  ]
+}

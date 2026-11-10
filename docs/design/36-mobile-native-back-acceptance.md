@@ -27,3 +27,17 @@ Windows 新命名包 `OrchesterRemote-20261110-native-back-final` 由实际 Wind
 临时 Linux 测试 listener 17377 已通过 stdin quit 正常退出，TCP 确认释放；手机临时 17377 设备记录保留待原生收尾后单独移除。Windows helper 已请求停止，退出及其可能后代仍需原生进程检查，未把请求停止计为退出通过；[清理状态](acceptance/mobile-native-back/tool-cleanup-pending.json)。
 
 终端明确关闭、六主题终端截图、靛蓝主题恢复及临时工具进程的退出确认仍在收尾。物理 Android Wi-Fi 与 iOS 原生编译/安装仍待此前缺少的目标环境。
+
+## 最新 APK 的终端收尾
+
+终端最终输出修复 `45739e2` 与测试、说明已合并并推送 main `8de9efe`。HTTP 关闭响应先禁用输入，WebSocket 继续接收最终输出与 exit；晚到 HTTP 响应不能覆盖已经完成的退出。手机完整套件现在为 119 项，终端相关 23 项通过；[修复与门禁](31-remote-interactive-terminal.md)。
+
+实际 `emulator-5554` 安装升级 APK SHA-256 `dba3137147b9fb4bdad4ecbd43d1145f7436b73fddf7f633d36b3d3ba2e13b98`，5,655,501 字节，保留原应用数据；[构建产物](acceptance/mobile-terminal-final/build-artifacts.json)。新版原生桥 4 项通过，14.303 秒；[原生输出](acceptance/mobile-terminal-final/native-bridge.json)。
+
+真实 Bash `2765586` 通过原生 Gboard 启动测试脚本。手机返回项目页且截图目视确认后，电脑侧 QA 标记才触发输出；重连同一仍存活的 Bash 时，终端显示离开期间产生的 `NATIVE_CURRENT_OUTPUT_WHILE_AWAY` 和返回的 shell prompt。这是受控触发的真实进程和 WebSocket 回放，不是定时器或模拟终端。前一次离开过久退出的会话不计为通过。
+
+珊瑚、玫瑰、海盐、森林、靛蓝、琥珀六种主题的实际已连接终端截图均已目视确认。珊瑚使用上述回放会话；其余五种及靛蓝恢复使用新 Bash `2797559`，主题切换期间该 PID 保持存活。关闭确认框目视核对后点击确认，约 0.52 秒内实际进程消失；页面显示“会话已结束”，输入快捷键禁用。最终恢复靛蓝。
+
+临时 17377 设备通过产品的“从本机移除”删除，本机保留另外五条设备记录，并在同一截图确认全部地址。该按钮负责本机记录和凭据移除；临时服务的唯一授权另由正常 admin `revoke` 撤销至零。随后 listener `2646618` 经 stdin `quit` 正常退出，父进程、listener 和 TCP 17377 均确认释放，默认 Linux 7337 保持运行。[安全截图与完整验收](acceptance/mobile-terminal-final/manifest.json)、[服务撤销](acceptance/mobile-terminal-final/temporary-server-revoke.json)、[正常退出](acceptance/mobile-terminal-final/temporary-listener-cleanup.json)。
+
+Windows V2 工具仍供新版桌面和后端构建验收使用；停止和退出证明在该验收结束后补齐。默认 Windows 便携包与桌面 EXE 的本次更新尚待新原生门禁，不把旧版部署当作新版交付。物理 Android Wi-Fi 与 iOS 原生目标仍待环境。
