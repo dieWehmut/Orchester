@@ -1,0 +1,38 @@
+﻿{
+    "windows":  {
+                    "status":  "available",
+                    "provider_counts":  {
+                                            "opencode":  0,
+                                            "claude":  0,
+                                            "deepseek":  0,
+                                            "codex":  0
+                                        },
+                    "source":  "Windows CIM executable names"
+                },
+    "wsl_enumeration_status":  "available",
+    "wsl_enumeration_diagnostics":  {
+                                        "exit_code":  0,
+                                        "exception_type":  null,
+                                        "stderr_codes":  [
+
+                                                         ],
+                                        "elapsed_ms":  54
+                                    },
+    "wsl_query_deadline_ms":  3000,
+    "scope":  "Only existing executable names; no argv, prompts, credentials, agents or model calls",
+    "role":  "Supplementary source attribution; production scanner separately records aggregated provider counts",
+    "observed_at_utc":  "2026-11-10T05:36:56.4110816Z",
+    "wsl_sources":  [
+                        {
+                            "exit_code":  -1,
+                            "elapsed_ms":  50,
+                            "source":  "WSL Ubuntu-22.04",
+                            "exception_type":  null,
+                            "stderr_codes":  [
+
+                                             ],
+                            "provider_counts":  null,
+                            "status":  "unavailable"
+                        }
+                    ]
+}

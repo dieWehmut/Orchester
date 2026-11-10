@@ -38,3 +38,11 @@
 只读审计发现：外部会话超过两分钟没有更新后，后端会把未结束记录标为 `unknown`，而侧栏原先把所有非 `active` 状态都显示为“未运行”。现在进行中仍显示“正在处理”，完成、中断和未知分别显示“已完成 / 已中断 / 状态未知”；英文与繁体中文同步，行标题也使用明确的未知状态文案。此修复保留后端状态与进程发现规则，不据进程数量推断某个历史会话仍在运行。
 
 现有活动界面套件新增三种语言的真实组件 DOM 回归，覆盖 Windows/WSL 来源、四种状态和 `unknown` 经轮询恢复为 `active` 后的文字与运行指示。[修复前记录](acceptance/activity-state-labels-before.log)为三项失败，明确复现未知显示“未运行”；[修复后记录](acceptance/activity-state-labels-after.log)中活动界面和语言套件共 19 项通过。Web 类型检查与生产构建通过，未启动 Windows Codex 或调用模型。此前原生探针的会话数量只证明历史发现，不替代实际正在运行进程的取样。
+
+## 2026-11-10：运行进程来源审计
+
+历史验收中实际存在一次 Windows 已安装运行时 `/api/v1/agents/status` 的 `codexInstances=5` 取样；它来自 `active_windows`，与上述历史会话数量不同。[历史来源证明](acceptance/windows-activity-historical-source-proof.json)保留时间、安装文件哈希与证据关联，不能视为当前版本的新取样。
+
+本轮只读原生探针直接调用生产 `SystemAgentProcessSource`。两次返回均在约 3.03 秒后给出空聚合，却没有提供来源可用性。相同运行中 WSL 的独立 `/proc/*/comm` 样本发现 Codex 3；Windows CIM 名称取样为零。[生产及补充取样](acceptance/windows-process-source-before/manifest.json)保留原记录与检测脚本。补充 PowerShell 脚本纠正进程句柄与退出码读取后，WSL 枚举成功，单发行版查询仍在 3 秒和 15 秒期限下立即失败；复杂 shell 参数或脱离终端的句柄行为尚未排除，因此不把该补充失败当作完整来源计数。这里没有启动任何 Agent、模型或用户服务。
+
+源码确认的独立缺陷是：WSL 枚举失败被转换成空列表，单发行版读取失败被略过，过期缓存退成空聚合；随后运行状态把这些空聚合当成真实零。来源失败不能证明未运行。后续修复与新桌面文件验收需同时覆盖来源状态、计数和界面，旧安装目录与隔离桌面包不能自动替代新版本交付。[安装文件与候选集合](acceptance/desktop-installed-candidate-audit.json)仅为只读文件清单，尚未更新用户安装目录。

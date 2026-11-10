@@ -1,0 +1,24 @@
+{
+  "role": "Read-only production-source evidence before source availability fix",
+  "production_probe_source": "kisten/netz/examples/agent_process_probe.rs",
+  "production_probe_source_sha256": "9b512dc63377ece81aa03106db4070911301712157b7a8116e92d85539069577",
+  "launches": [
+    {
+      "owned_launcher_pid": 42664,
+      "observed_at_utc": "2026-11-10T05:19:10.6182891Z"
+    },
+    {
+      "owned_launcher_pid": 37112,
+      "observed_at_utc": "2026-11-10T05:36:52.2986006Z"
+    }
+  ],
+  "commands": "Only existing executable-name process reads; no service, agent or model launched",
+  "native_launcher_exit": "pending root native inspection; output files alone are not proof of process exit",
+  "interpretation": [
+    "Both original production snapshots returned empty aggregate after a 3 second WSL deadline.",
+    "Original supplementary PowerShell enumeration failed; resample corrected handle retention and ExitCode handling and enumeration succeeded.",
+    "Supplementary distro reads failed immediately at both 3 second and 15 second deadlines. Shell argument quoting or detached handles remain unexcluded for that supplementary script; do not interpret it as an authoritative complete source count.",
+    "Same existing WSL local /proc executable-name sample independently observed codex 3. Production snapshot API exposed no source availability, degradation or sampling time per source.",
+    "Historical Nov6 actual installed runtime status codexInstances 5 is a real running-process count, not a historical-session count; it is not a fresh current-version acceptance."
+  ]
+}

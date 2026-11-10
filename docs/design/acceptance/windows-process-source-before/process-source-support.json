@@ -1,0 +1,20 @@
+﻿{
+    "observed_at_utc":  "2026-11-10T05:21:08.8207147Z",
+    "scope":  "Only existing executable names; no argv, prompts, credentials, agents or model calls",
+    "query_deadline_ms":  3000,
+    "wsl_sources":  [
+
+                    ],
+    "role":  "Supplementary source attribution; production scanner separately records aggregated provider counts",
+    "windows":  {
+                    "status":  "available",
+                    "provider_counts":  {
+                                            "opencode":  0,
+                                            "claude":  0,
+                                            "deepseek":  0,
+                                            "codex":  0
+                                        },
+                    "source":  "Windows CIM executable names"
+                },
+    "wsl_enumeration_status":  "unavailable"
+}

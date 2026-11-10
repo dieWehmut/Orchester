@@ -1,0 +1,1 @@
+{"counts_are_aggregated_across_sources":true,"elapsed_ms":3032,"observed_at_utc":"2026-11-10T05:36:52.5507329Z","operating_system":"windows","production_source":"SystemAgentProcessSource","provider_counts":{},"scope":"only existing process executable names; no agent or model started","source_availability_and_degradation":"not exposed by the production snapshot API"}

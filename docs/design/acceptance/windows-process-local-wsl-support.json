@@ -1,0 +1,8 @@
+{
+  "observed_at_utc": "2026-11-10T05:24:53.778525+00:00",
+  "source": "local WSL /proc/*/comm",
+  "provider_counts": {
+    "codex": 3
+  },
+  "scope": "Read-only executable names; no agent or model starts"
+}
