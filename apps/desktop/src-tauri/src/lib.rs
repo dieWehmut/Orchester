@@ -2,10 +2,11 @@
 //!
 //! Closing the window must not end a run: a turn in flight is work the user
 //! asked for, and the window is only the view onto it. So the close request
-//! hides the window instead of destroying it, and the tray owns the only exit.
+//! hides the main window; secondary views close normally. The tray owns exit.
 
 #![forbid(unsafe_code)]
 
+mod conversation_window;
 mod runtime;
 mod tray_lifecycle;
 
@@ -99,6 +100,9 @@ pub fn setup_tray(app: &App) -> Result<(), Box<dyn std::error::Error>> {
 }
 
 pub fn handle_window_event(window: &tauri::Window, event: &WindowEvent) {
+    if !tray_lifecycle::hide_on_close(window.label()) {
+        return;
+    }
     if let WindowEvent::CloseRequested { api, .. } = event {
         api.prevent_close();
         if let Err(error) = window.hide() {
@@ -117,6 +121,9 @@ pub fn handle_run_event(app: &AppHandle, event: &tauri::RunEvent) {
 
 pub fn run() -> tauri::Result<()> {
     let app = tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![
+            conversation_window::open_conversation_window
+        ])
         .setup(|app| {
             let paths = runtime::desktop_paths()?;
             let assets = runtime::web_assets(app.path().resource_dir()?)?;

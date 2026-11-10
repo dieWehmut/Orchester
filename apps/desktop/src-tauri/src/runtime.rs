@@ -42,7 +42,9 @@ pub(crate) fn window_capability(origin: &Url) -> CapabilityBuilder {
     CapabilityBuilder::new("embedded-runtime-window")
         .local(false)
         .window("main")
+        .window("conversation-*")
         .remote(format!("{}/*", origin.origin().ascii_serialization()))
+        .permission("allow-open-conversation-window")
         .permission("core:window:allow-close")
         .permission("core:window:allow-minimize")
         .permission("core:window:allow-toggle-maximize")
@@ -90,17 +92,21 @@ mod tests {
         };
         assert_eq!(capability.identifier, "embedded-runtime-window");
         assert!(!capability.local);
-        assert_eq!(capability.windows, ["main"]);
+        assert_eq!(capability.windows, ["main", "conversation-*"]);
         assert_eq!(
-            capability.remote.as_ref().map(|remote| remote.urls.as_slice()),
+            capability
+                .remote
+                .as_ref()
+                .map(|remote| remote.urls.as_slice()),
             Some(["http://127.0.0.1:49152/*".to_owned()].as_slice())
         );
         let rendered = serde_json::to_value(&capability).unwrap();
-        assert_eq!(rendered["permissions"].as_array().unwrap().len(), 7);
+        assert_eq!(rendered["permissions"].as_array().unwrap().len(), 8);
         for permission in rendered["permissions"].as_array().unwrap() {
             let permission = permission.as_str().unwrap();
             assert!(
-                permission.starts_with("core:window:")
+                permission == "allow-open-conversation-window"
+                    || permission.starts_with("core:window:")
                     || permission == "core:event:allow-listen"
                     || permission == "core:event:allow-unlisten"
             );
