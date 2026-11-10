@@ -8,6 +8,8 @@
     ".": "./src/index.ts",
     "./appearance-script": "./src/appearance-script.ts",
     "./index.css": "./src/index.css",
+    "./fonts.css": "./src/fonts.css",
+    "./fonts": "./src/fonts.ts",
     "./tokens.css": "./src/tokens.css",
     "./storage": "./src/storage.ts"
   },

@@ -5,16 +5,16 @@ import { resolve } from 'node:path'
 const tokens = readFileSync(resolve(process.cwd(), 'src/tokens.css'), 'utf8')
 
 /** The declarations made by one selector block, so theme blocks can be compared. */
-function block(selector: string): string {
-  const start = tokens.indexOf(selector)
+function block(selector: string, css = tokens): string {
+  const start = css.indexOf(selector)
   if (start < 0) throw new Error(`missing selector block: ${selector}`)
-  const open = tokens.indexOf('{', start)
+  const open = css.indexOf('{', start)
   let depth = 0
-  for (let i = open; i < tokens.length; i += 1) {
-    if (tokens[i] === '{') depth += 1
-    else if (tokens[i] === '}') {
+  for (let i = open; i < css.length; i += 1) {
+    if (css[i] === '{') depth += 1
+    else if (css[i] === '}') {
       depth -= 1
-      if (depth === 0) return tokens.slice(open + 1, i)
+      if (depth === 0) return css.slice(open + 1, i)
     }
   }
   throw new Error(`unterminated block: ${selector}`)
@@ -22,7 +22,7 @@ function block(selector: string): string {
 
 const dark = block("[data-theme='dark']")
 const light = block("[data-theme='light']")
-const root = block(':root')
+const root = block(':root') + block(':root', readFileSync(resolve(process.cwd(), 'src/fonts.css'), 'utf8'))
 
 const NEUTRAL_STEPS = [
   '0', '25', '50', '75', '100', '150', '200', '250', '300', '350', '400', '450',

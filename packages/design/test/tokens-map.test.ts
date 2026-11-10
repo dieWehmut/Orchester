@@ -4,7 +4,8 @@ import { describe, expect, it } from 'vitest'
 
 import { TOKEN_GROUPS, tokenNames } from '../src/tokens-map'
 
-const tokens = readFileSync(resolve(process.cwd(), 'src/tokens.css'), 'utf8')
+const tokens = ['src/tokens.css', 'src/fonts.css']
+  .map((file) => readFileSync(resolve(process.cwd(), file), 'utf8')).join('\n')
 
 /**
  * The typed token index, task U0-11 of the implementation plan.

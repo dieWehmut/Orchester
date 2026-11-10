@@ -1,6 +1,7 @@
 import { computed, readonly, ref, type ComputedRef, type Ref } from 'vue'
 
 import { clearStored, readStored, writeStored } from '../storage'
+import { initFontAppearance } from '../fonts'
 import {
   COLOR_SCHEME_STORAGE_KEY,
   COLOR_SCHEMES_STORAGE_KEY,
@@ -41,14 +42,10 @@ import {
   isUiFont,
   parseColorSchemePair,
   readDocumentColorScheme,
-  readDocumentContentFont,
-  readDocumentContentFontWeight,
-  readDocumentFontWeight,
   readDocumentIntensity,
   readDocumentRailAppearance,
   readDocumentReducedMotion,
   readDocumentSurface,
-  readDocumentUiFont,
   readDocumentTheme,
   readSystemPlatform,
   readSystemTheme,
@@ -207,11 +204,7 @@ export function initAppearance(): {
   const storedSchemePair = parseColorSchemePair(readStored(COLOR_SCHEMES_STORAGE_KEY))
   const storedIntensity = readStored(INTENSITY_STORAGE_KEY)
   const storedReducedMotion = readStored(REDUCED_MOTION_STORAGE_KEY)
-  const storedUiFont = readStored(UI_FONT_STORAGE_KEY)
-  const storedContentFont = readStored(CONTENT_FONT_STORAGE_KEY)
   const storedRailAppearance = readStored(RAIL_APPEARANCE_STORAGE_KEY)
-  const storedUiFontWeight = readStored(UI_FONT_WEIGHT_STORAGE_KEY)
-  const storedContentFontWeight = readStored(CONTENT_FONT_WEIGHT_STORAGE_KEY)
 
   // A stored `light`/`dark` from before this axis existed is still an explicit
   // choice, so it is read as one rather than coerced to `system`.
@@ -257,30 +250,16 @@ export function initAppearance(): {
   // Fonts and the rail's opacity are tastes rather than environment facts, so
   // an attribute already on the element (written by the bootstrap script from
   // the same storage) is as good an input as the storage itself.
-  uiFont.value = isUiFont(storedUiFont)
-    ? storedUiFont
-    : (readDocumentUiFont() ?? DEFAULT_UI_FONT)
-  applyUiFontToDocument(uiFont.value)
-
-  contentFont.value = isContentFont(storedContentFont)
-    ? storedContentFont
-    : (readDocumentContentFont() ?? DEFAULT_CONTENT_FONT)
-  applyContentFontToDocument(contentFont.value)
+  const fonts = initFontAppearance()
+  uiFont.value = fonts.uiFont
+  contentFont.value = fonts.contentFont
+  uiFontWeight.value = fonts.uiFontWeight
+  contentFontWeight.value = fonts.contentFontWeight
 
   railAppearance.value = isRailAppearance(storedRailAppearance)
     ? storedRailAppearance
     : (readDocumentRailAppearance() ?? DEFAULT_RAIL_APPEARANCE)
   applyRailAppearanceToDocument(railAppearance.value)
-
-  uiFontWeight.value = isFontWeight(storedUiFontWeight)
-    ? storedUiFontWeight
-    : (readDocumentFontWeight() ?? DEFAULT_FONT_WEIGHT)
-  applyFontWeightToDocument(uiFontWeight.value)
-
-  contentFontWeight.value = isFontWeight(storedContentFontWeight)
-    ? storedContentFontWeight
-    : (readDocumentContentFontWeight() ?? DEFAULT_FONT_WEIGHT)
-  applyContentFontWeightToDocument(contentFontWeight.value)
 
   if (!stopWatchingSystem) watchSystemTheme()
   initialized = true
