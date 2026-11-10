@@ -13,7 +13,18 @@ MAX_BYTES = 16 * 1024
 MAX_ARGS = 64
 
 def path(value):
-    return value.replace("\\", "/").lower()
+    value = value.replace("\\", "/").lower()
+    rooted, parts = value.startswith("/"), []
+    for part in value.split("/"):
+        if part in ("", "."):
+            continue
+        if part == ".." and parts and parts[-1] != ".." and not parts[-1].endswith(":"):
+            parts.pop()
+        elif part == ".." and (rooted or (parts and parts[-1].endswith(":"))):
+            continue
+        else:
+            parts.append(part)
+    return ("/" if rooted else "") + "/".join(parts)
 
 def basename(value):
     name = path(value).rsplit("/", 1)[-1]
@@ -118,10 +129,7 @@ def relative_entry(args):
 def resolve_relative_entry(args, cwd):
     if cwd and relative_entry(args):
         index = entry_index(args)
-        entry = args[index]
-        while entry.startswith("./"):
-            entry = entry[2:]
-        args[index] = cwd.rstrip("/\\") + "/" + entry
+        args[index] = cwd.rstrip("/\\") + "/" + args[index]
 
 def bounded_args(args):
     result, size = [], 0
@@ -179,12 +187,18 @@ def observe():
                 name = handle.read(128).decode("utf-8", "replace").strip()
             if not candidate(name):
                 continue
+            with open(item.path + "/stat", "rb") as handle:
+                stat = handle.read(4096).decode("utf-8", "replace")
+            stat_fields = stat.rsplit(") ", 1)[1].split()
+            if stat_fields[0] in ("Z", "X", "x"):
+                continue
             candidates += 1
             if candidates > 512:
                 complete = False
                 break
-            # Read only selected candidates. No environment, cwd, open files,
-            # history, or provider credentials are inspected.
+            parent = int(stat_fields[1])
+            # Read only selected candidates, including cwd only to resolve a
+            # relative entry. No environment, history or credentials are read.
             provider = classify(name, "", [])
             exe = "" if provider else os.readlink(item.path + "/exe")
             provider = provider or classify(name, exe, [])
@@ -192,26 +206,27 @@ def observe():
             if provider is None:
                 with open(item.path + "/cmdline", "rb") as handle:
                     raw = handle.read(MAX_BYTES + 1)
+                candidate_complete = True
                 if len(raw) > MAX_BYTES:
-                    complete = False
+                    candidate_complete = False
                     raw = raw[:MAX_BYTES]
                 fields = raw.split(b"\0")
                 if raw and raw[-1:] != b"\0":
                     fields.pop()  # Never classify a truncated argument.
-                    complete = False
+                    candidate_complete = False
                 if fields and not fields[-1]:
                     fields.pop()
                 args, intact = bounded_args([value.decode("utf-8", "replace") for value in fields])
-                complete = complete and intact
+                candidate_complete = candidate_complete and intact and bool(args)
+                if not candidate_complete:
+                    complete = False
+                    continue
                 if relative_entry(args):
                     resolve_relative_entry(args, os.readlink(item.path + "/cwd"))
                 provider = classify(name, exe, args)
                 if not args:
                     complete = False
             if provider:
-                with open(item.path + "/stat", "rb") as handle:
-                    stat = handle.read(4096).decode("utf-8", "replace")
-                parent = int(stat.rsplit(") ", 1)[1].split()[1])
                 rows.append({"pid": int(item.name), "parent": parent, "provider": provider,
                              "key": instance_key(name, exe, args)})
         except (OSError, ValueError, IndexError):
@@ -225,8 +240,15 @@ if len(sys.argv) > 2 and sys.argv[2] == "--fixture":
     fixtures = json.load(sys.stdin)
     rows, complete = [], True
     for row in fixtures:
+        if row.get("state", "R") in ("Z", "X", "x"):
+            continue
+        if row.get("unavailable", False):
+            complete = False
+            continue
         args, intact = bounded_args(row["args"])
-        complete = complete and intact
+        if not intact:
+            complete = False
+            continue
         resolve_relative_entry(args, row.get("cwd", ""))
         provider = classify(row["name"], row["exe"], args)
         if provider:

@@ -117,7 +117,10 @@ fn read_system_identities(
     let candidates: Vec<_> = system
         .processes()
         .iter()
-        .filter(|(_, process)| identity::is_candidate(&process.name().to_string_lossy()))
+        .filter(|(_, process)| {
+            process_is_live(process.status())
+                && identity::is_candidate(&process.name().to_string_lossy())
+        })
         .map(|(pid, _)| *pid)
         .take(513)
         .collect();
@@ -177,7 +180,7 @@ fn read_system_identities(
         .filter(|pid| {
             command_arguments
                 .get(pid)
-                .is_some_and(|arguments| identity::relative_entry(&arguments.0))
+                .is_some_and(|(args, intact)| *intact && identity::relative_entry(args))
         })
         .collect();
     if std::time::Instant::now() >= deadline {
@@ -202,7 +205,13 @@ fn read_system_identities(
         let (mut args, intact) = command_arguments
             .remove(&pid)
             .unwrap_or_else(|| (Vec::new(), true));
-        complete &= intact;
+        if !process_is_live(process.status()) {
+            continue;
+        }
+        if !intact {
+            complete = false;
+            continue;
+        }
         if identity::relative_entry(&args) {
             let cwd = process
                 .cwd()
@@ -210,6 +219,7 @@ fn read_system_identities(
                 .unwrap_or_default();
             if cwd.is_empty() {
                 complete = false;
+                continue;
             }
             identity::resolve_relative_entry(&mut args, &cwd);
         }
@@ -224,17 +234,15 @@ fn read_system_identities(
             None => {}
         }
     }
-    if !complete || std::time::Instant::now() >= deadline {
-        return AgentProcessSnapshot::from_observations(vec![ProcessObservation::unavailable(
-            environment,
-            "metadata_unavailable",
-        )]);
-    }
-    AgentProcessSnapshot::from_observations(vec![ProcessObservation::available(
+    complete &= std::time::Instant::now() < deadline;
+    AgentProcessSnapshot::from_observations(identity_observations(
         environment,
-        identity::count_instances(&rows),
+        IdentityCounts {
+            counts: identity::count_instances(&rows),
+            complete,
+        },
         observed_now(),
-    )])
+    ))
 }
 
 #[cfg(target_os = "linux")]
@@ -488,7 +496,7 @@ fn observed_now() -> String {
 #[cfg(any(windows, test))]
 struct WslProcessRead {
     enumeration: Result<Vec<String>, &'static str>,
-    distributions: BTreeMap<String, Result<BTreeMap<String, u64>, &'static str>>,
+    distributions: BTreeMap<String, Result<IdentityCounts, &'static str>>,
     observed_at: String,
 }
 
@@ -523,39 +531,70 @@ fn read_wsl_processes(deadline: std::time::Instant) -> WslProcessRead {
     }
 }
 
-#[cfg(any(windows, test))]
-fn parse_identity_counts(raw: &[u8]) -> Result<BTreeMap<String, u64>, &'static str> {
-    #[derive(serde::Deserialize)]
-    #[serde(deny_unknown_fields)]
-    struct SafeCounts {
-        counts: BTreeMap<String, u64>,
-        complete: bool,
+#[derive(Debug, Clone, serde::Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+struct IdentityCounts {
+    counts: BTreeMap<String, u64>,
+    complete: bool,
+}
+
+fn process_is_live(status: sysinfo::ProcessStatus) -> bool {
+    !matches!(
+        status,
+        sysinfo::ProcessStatus::Zombie | sysinfo::ProcessStatus::Dead
+    )
+}
+
+fn identity_observations(
+    environment: AgentProcessEnvironment,
+    result: IdentityCounts,
+    observed_at: String,
+) -> Vec<ProcessObservation> {
+    let mut sources = Vec::new();
+    let counts: BTreeMap<_, _> = result
+        .counts
+        .into_iter()
+        .filter(|(_, count)| result.complete || *count > 0)
+        .collect();
+    if result.complete || !counts.is_empty() {
+        sources.push(ProcessObservation::available(
+            environment,
+            counts,
+            observed_at,
+        ));
     }
+    if !result.complete {
+        sources.push(ProcessObservation::unavailable(
+            environment,
+            "metadata_unavailable",
+        ));
+    }
+    sources
+}
+
+#[cfg(any(windows, test))]
+fn parse_identity_counts(raw: &[u8]) -> Result<IdentityCounts, &'static str> {
     if raw.len() > 4096 {
         return Err("output_limit");
     }
-    let result: SafeCounts = serde_json::from_slice(raw).map_err(|_| "read_failed")?;
-    if !result.complete {
-        return Err("metadata_unavailable");
-    }
+    let result: IdentityCounts = serde_json::from_slice(raw).map_err(|_| "read_failed")?;
     if result.counts.keys().any(|provider| {
         !matches!(
             provider.as_str(),
             "claude" | "codex" | "opencode" | "deepseek" | "gemini" | "antigravity" | "cursor"
         )
-    }) {
+    }) || result.counts.values().any(|count| *count > 512)
+    {
         return Err("read_failed");
     }
-    if result.counts.values().any(|count| *count > 512) {
-        return Err("read_failed");
-    }
-    Ok(result.counts)
+    Ok(result)
 }
 
 #[cfg(any(windows, test))]
 struct WslProcessRows {
     enumeration: ProcessObservation,
-    distributions: BTreeMap<String, ProcessObservation>,
+    distributions: BTreeMap<String, Vec<ProcessObservation>>,
+    last_successful: BTreeMap<String, ProcessObservation>,
 }
 
 #[cfg(any(windows, test))]
@@ -567,6 +606,7 @@ impl Default for WslProcessRows {
                 "not_observed",
             ),
             distributions: BTreeMap::new(),
+            last_successful: BTreeMap::new(),
         }
     }
 }
@@ -575,34 +615,51 @@ impl Default for WslProcessRows {
 impl WslProcessRows {
     fn reconcile(&self, read: WslProcessRead) -> Self {
         let mut distributions = BTreeMap::new();
+        let mut last_successful = BTreeMap::new();
         let enumeration = match read.enumeration {
             Ok(names) => {
                 for name in names {
-                    let source = match read.distributions.get(&name) {
-                        Some(Ok(counts)) => ProcessObservation::available(
-                            AgentProcessEnvironment::Wsl,
-                            counts.clone(),
-                            read.observed_at.clone(),
-                        ),
+                    let previous = self.last_successful.get(&name);
+                    let sources = match read.distributions.get(&name) {
+                        Some(Ok(result)) => {
+                            let mut sources = identity_observations(
+                                AgentProcessEnvironment::Wsl,
+                                result.clone(),
+                                read.observed_at.clone(),
+                            );
+                            if result.complete {
+                                last_successful.insert(name.clone(), sources[0].clone());
+                            } else if let Some(previous) = previous {
+                                last_successful.insert(name.clone(), previous.clone());
+                                sources.push(previous.stale("metadata_unavailable"));
+                            }
+                            sources
+                        }
                         result => {
                             let failure = result
                                 .and_then(|result| result.as_ref().err().copied())
                                 .unwrap_or("unavailable");
+                            if let Some(previous) = previous {
+                                last_successful.insert(name.clone(), previous.clone());
+                            }
                             self.distributions
                                 .get(&name)
-                                .map(|previous| previous.stale(failure))
+                                .map(|previous| {
+                                    previous
+                                        .iter()
+                                        .map(|source| source.stale(failure))
+                                        .collect()
+                                })
                                 .unwrap_or_else(|| {
-                                    ProcessObservation::unavailable(
+                                    vec![ProcessObservation::unavailable(
                                         AgentProcessEnvironment::Wsl,
                                         failure,
-                                    )
+                                    )]
                                 })
                         }
                     };
-                    distributions.insert(name, source);
+                    distributions.insert(name, sources);
                 }
-                // Explicit successful enumeration distinguishes no running WSL
-                // distributions from an enumeration failure.
                 ProcessObservation::available(
                     AgentProcessEnvironment::Wsl,
                     BTreeMap::new(),
@@ -610,17 +667,23 @@ impl WslProcessRows {
                 )
             }
             Err(failure) => {
-                distributions.extend(
-                    self.distributions
-                        .iter()
-                        .map(|(name, previous)| (name.clone(), previous.stale(failure))),
-                );
+                distributions.extend(self.distributions.iter().map(|(name, previous)| {
+                    (
+                        name.clone(),
+                        previous
+                            .iter()
+                            .map(|source| source.stale(failure))
+                            .collect(),
+                    )
+                }));
+                last_successful.clone_from(&self.last_successful);
                 ProcessObservation::unavailable(AgentProcessEnvironment::Wsl, failure)
             }
         };
         Self {
             enumeration,
             distributions,
+            last_successful,
         }
     }
 
@@ -632,7 +695,7 @@ impl WslProcessRows {
             .then_some(&self.enumeration);
         let observations = marker
             .into_iter()
-            .chain(self.distributions.values())
+            .chain(self.distributions.values().flatten())
             .map(|source| {
                 if stale {
                     source.stale("refresh_in_progress")
@@ -722,7 +785,15 @@ mod tests {
                 .collect()),
             distributions: distributions
                 .iter()
-                .map(|(name, result)| ((*name).to_owned(), result.map(count_names)))
+                .map(|(name, result)| {
+                    (
+                        (*name).to_owned(),
+                        result.map(|names| IdentityCounts {
+                            counts: count_names(names),
+                            complete: true,
+                        }),
+                    )
+                })
                 .collect(),
             observed_at: "2026-11-10T05:00:00Z".to_owned(),
         }
@@ -808,7 +879,10 @@ mod tests {
     fn bounded_identity_query_failure_never_confirms_zero_or_accepts_metadata() {
         assert_eq!(
             parse_identity_counts(br#"{"counts":{},"complete":false}"#),
-            Err("metadata_unavailable")
+            Ok(IdentityCounts {
+                counts: BTreeMap::new(),
+                complete: false
+            })
         );
         assert_eq!(
             parse_identity_counts(br#"{"counts":{"gemini":1},"complete":true,"pid":123}"#),
@@ -824,7 +898,10 @@ mod tests {
         );
         assert_eq!(
             parse_identity_counts(br#"{"counts":{},"complete":true}"#),
-            Ok(BTreeMap::new())
+            Ok(IdentityCounts {
+                counts: BTreeMap::new(),
+                complete: true
+            })
         );
     }
     #[test]
@@ -887,5 +964,131 @@ mod tests {
             AgentProcessSnapshot::default,
         );
         assert!(recovered.is_complete());
+    }
+    #[test]
+    fn partial_identity_read_preserves_current_positive_counts_with_an_unknown_marker() {
+        use orchester_protokoll::AgentActivityState;
+        for environment in [
+            AgentProcessEnvironment::Local,
+            AgentProcessEnvironment::Windows,
+            AgentProcessEnvironment::Wsl,
+        ] {
+            let result =
+                parse_identity_counts(br#"{"counts":{"codex":3,"gemini":0},"complete":false}"#)
+                    .expect("bounded partial output is usable");
+            let snapshot = AgentProcessSnapshot::from_observations(identity_observations(
+                environment,
+                result,
+                observed_now(),
+            ));
+            assert_eq!(snapshot.count("codex"), 3);
+            assert!(!snapshot.is_complete());
+            let sources = snapshot.source_statuses("codex");
+            assert_eq!(sources.len(), 2);
+            assert!(sources
+                .iter()
+                .all(|source| source.environment == environment));
+            assert_eq!(sources[0].status, AgentProcessSourceState::Available);
+            assert_eq!(sources[0].count, Some(3));
+            assert_eq!(sources[1].status, AgentProcessSourceState::Unavailable);
+            assert_eq!(sources[1].count, None);
+            assert_eq!(snapshot.count("gemini"), 0);
+
+            let mut registry = orchester_verzeichnis::Registry::new();
+            registry.register_builtins();
+            let store =
+                crate::AgentRuntimeStatusStore::new(crate::agent_status_response(&registry))
+                    .unwrap();
+            store
+                .reconcile_external_processes(&snapshot, "2026-11-10T05:00:01Z")
+                .unwrap();
+            let fleet = store.snapshot().unwrap();
+            for (provider, activity, count) in [
+                ("codex", AgentActivityState::Running, 3),
+                ("gemini", AgentActivityState::Unknown, 0),
+            ] {
+                let row = fleet
+                    .agents
+                    .iter()
+                    .find(|agent| agent.provider == provider)
+                    .unwrap();
+                assert_eq!(row.activity, activity);
+                assert_eq!(row.active_windows, count);
+            }
+        }
+    }
+
+    #[test]
+    fn incomplete_identity_read_without_positives_never_confirms_zero() {
+        for raw in [
+            br#"{"counts":{},"complete":false}"#.as_slice(),
+            br#"{"counts":{"codex":0},"complete":false}"#.as_slice(),
+        ] {
+            let snapshot = AgentProcessSnapshot::from_observations(identity_observations(
+                AgentProcessEnvironment::Local,
+                parse_identity_counts(raw).unwrap(),
+                observed_now(),
+            ));
+            assert_eq!(snapshot.count("codex"), 0);
+            assert!(!snapshot.is_complete());
+            let sources = snapshot.source_statuses("codex");
+            assert_eq!(sources.len(), 1);
+            assert_eq!(sources[0].status, AgentProcessSourceState::Unavailable);
+            assert_eq!(sources[0].count, None);
+        }
+    }
+
+    #[test]
+    fn partial_wsl_refresh_keeps_current_counts_separate_from_cached_stale_counts() {
+        let cache = WslProcessCache::default();
+        cache.snapshot(|| read(&[("A", Ok(&["codex", "codex"]))]));
+        expire(&cache, 4);
+        let partial_read = || WslProcessRead {
+            enumeration: Ok(vec!["A".to_owned()]),
+            distributions: BTreeMap::from([(
+                "A".to_owned(),
+                Ok(IdentityCounts {
+                    counts: BTreeMap::from([("codex".to_owned(), 1)]),
+                    complete: false,
+                }),
+            )]),
+            observed_at: "2026-11-10T05:00:02Z".to_owned(),
+        };
+        for _ in 0..2 {
+            let partial = cache.snapshot(partial_read);
+            assert_eq!(partial.count("codex"), 1);
+            assert!(!partial.is_complete());
+            let sources = partial.source_statuses("codex");
+            assert_eq!(sources.len(), 3);
+            assert_eq!(sources[0].status, AgentProcessSourceState::Available);
+            assert_eq!(sources[0].count, Some(1));
+            assert_eq!(sources[1].status, AgentProcessSourceState::Unavailable);
+            assert_eq!(sources[1].count, None);
+            assert_eq!(sources[2].status, AgentProcessSourceState::Stale);
+            assert_eq!(sources[2].count, Some(2));
+            assert_eq!(
+                sources[2].observed_at.as_deref(),
+                Some("2026-11-10T05:00:00Z")
+            );
+            expire(&cache, 4);
+        }
+        {
+            let _busy = cache.refreshing.lock().unwrap();
+            let stale = cache.snapshot(|| panic!("refresh is already running"));
+            assert_eq!(stale.count("codex"), 0);
+            assert!(!stale.is_complete());
+            assert!(stale
+                .source_statuses("codex")
+                .iter()
+                .all(|source| source.status != AgentProcessSourceState::Available));
+        }
+        let failed = cache.snapshot(|| read(&[("A", Err("command_failed"))]));
+        assert_eq!(failed.count("codex"), 0);
+        assert!(!failed.is_complete());
+        expire(&cache, 4);
+        let recovered = cache.snapshot(|| read(&[("A", Ok(&[]))]));
+        assert_eq!(recovered.count("codex"), 0);
+        assert!(recovered.is_complete());
+        assert_eq!(recovered.source_statuses("codex").len(), 1);
     }
 }
