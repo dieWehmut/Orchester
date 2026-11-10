@@ -34,12 +34,14 @@ Web 全套测试通过：131 个测试文件、787 项测试；类型检查、pr
 
 Windows x64 MSVC debug 包使用独立状态目录、WebView2 profile 和空工具 PATH，未请求模型调用。原生实测完成 16 项检查：实际创建第二和第三个 HWND、独立窗口原生标题栏、会话刷新恢复、拒绝其他 loopback origin 与浏览器弹出窗口、允许最小窗口控制并拒绝未授权 hide、关闭子窗口销毁 HWND/WebView、关闭主窗口隐藏而继续服务。七次主／子窗口写入均返回 200，旧版本冲突由界面重读恢复；共享 HttpOnly Cookie、CSRF 和到期时间保持不变。初版相同流程的主窗口保存为 403，修复后为 200。
 
-验收记录保留 [16 项原生结果](acceptance/desktop-library-native-windows-result.json)、[源文件及二进制 SHA-256](acceptance/desktop-library-native-validation-source.json)。实测的原生 executable SHA-256 为 `372365d3241ce79b67a937d9f9f9c45a1007442466756d3f74ae61c11491b6d5`。2026-11-10 再次核对记录中全部八项源文件 hash 与当前工作树一致，32 项 Web dist 文件与隔离目录逐字节一致。随后重新运行当前源码的 Windows `cargo test --locked --manifest-path apps/desktop/src-tauri/Cargo.toml --target x86_64-pc-windows-msvc`，5 项通过；同一 package 严格 Clippy 和格式检查通过。使用 rustc/cargo 1.99.1 与 Visual Studio 18 Build Tools。
+验收记录保留 [16 项原生结果](acceptance/desktop-library-native-windows-result.json)、[源文件及二进制 SHA-256](acceptance/desktop-library-native-validation-source.json)。实测的原生 executable SHA-256 为 `372365d3241ce79b67a937d9f9f9c45a1007442466756d3f74ae61c11491b6d5`。2026-11-10 再次核对记录中全部八项源文件 hash 与当前工作树一致，当前 Web dist 的 33 项文件在隔离目录中均逐字节一致；隔离目录还保留 13 项旧构建的带 hash 文件，当前 index.html 不引用它们。随后重新运行当前源码的 Windows `cargo test --locked --manifest-path apps/desktop/src-tauri/Cargo.toml --target x86_64-pc-windows-msvc`，5 项通过；同一 package 严格 Clippy 和格式检查通过。使用 rustc/cargo 1.99.1 与 Visual Studio 18 Build Tools。
 
 当前观察记录证明隔离主窗口关闭后，唯一保留 WebView 的健康接口仍为 200，保存的最终测试会话可读。[观察记录](acceptance/desktop-library-native-current-observation.json)。截图来自上述原生实测，未当作重新安装后的新截图：
 
 ![原生独立会话窗口](acceptance/desktop-secondary-history.png)
 
 ![子窗口关闭后的主窗口](acceptance/desktop-main-after-secondary-close.png)
+
+隔离验收进程已按 executable 路径核对归属后结束，原生调试端口与嵌入服务端口均已释放。[清理记录](acceptance/desktop-library-native-cleanup.json)。
 
 此记录覆盖 Windows 原生 debug 包与实际 HWND 生命周期；macOS/Linux 桌面原生安装包尚未在本轮验证。

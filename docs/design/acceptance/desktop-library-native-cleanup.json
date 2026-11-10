@@ -1,0 +1,9 @@
+{
+  "cleanupVerified": true,
+  "processId": 11184,
+  "expectedExecutable": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\native-review-20261110\\smoke\\orchester-desktop.exe",
+  "portsReleased": [
+    19322,
+    56366
+  ]
+}
