@@ -710,7 +710,7 @@
       "active": "Active",
       "completed": "Completed",
       "interrupted": "Interrupted",
-      "unknown": "No recent activity"
+      "unknown": "Unknown status"
     },
     "kinds": {
       "user": "You",

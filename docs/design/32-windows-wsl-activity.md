@@ -32,3 +32,9 @@
 | WSL · Ubuntu-22.04 | OpenCode | 3 | available |
 
 这些数字是验收时的快照，不是固定目录容量。Claude 在这两个环境中未找到记录。探针只输出来源和数量，不输出会话正文、配对凭据或模型密钥；未调用任何模型。临时日志为 `/tmp/orchester-windows-monitor-live.log`，测试日志为 `/tmp/orchester-windows-monitor-tests.log` 与 `/tmp/orchester-windows-command-center-tests.log`。
+
+## 2026-11-10：未知会话状态显示修复
+
+只读审计发现：外部会话超过两分钟没有更新后，后端会把未结束记录标为 `unknown`，而侧栏原先把所有非 `active` 状态都显示为“未运行”。现在进行中仍显示“正在处理”，完成、中断和未知分别显示“已完成 / 已中断 / 状态未知”；英文与繁体中文同步，行标题也使用明确的未知状态文案。此修复保留后端状态与进程发现规则，不据进程数量推断某个历史会话仍在运行。
+
+现有活动界面套件新增三种语言的真实组件 DOM 回归，覆盖 Windows/WSL 来源、四种状态和 `unknown` 经轮询恢复为 `active` 后的文字与运行指示。[修复前记录](acceptance/activity-state-labels-before.log)为三项失败，明确复现未知显示“未运行”；[修复后记录](acceptance/activity-state-labels-after.log)中活动界面和语言套件共 19 项通过。Web 类型检查与生产构建通过，未启动 Windows Codex 或调用模型。此前原生探针的会话数量只证明历史发现，不替代实际正在运行进程的取样。

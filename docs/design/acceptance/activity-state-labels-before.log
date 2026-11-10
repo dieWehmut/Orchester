@@ -1,0 +1,67 @@
+
+ RUN  v4.1.10 /tmp/orchester-activity-state-audit/apps/web
+
+ ❯ test/agent-activity-view.test.ts (16 tests | 3 failed | 13 skipped) 99ms
+     × shows distinct session states in en without claiming unknown records are inactive 57ms
+     × shows distinct session states in zh-CN without claiming unknown records are inactive 19ms
+     × shows distinct session states in zh-TW without claiming unknown records are inactive 22ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/agent-activity-view.test.ts > live agent content > shows distinct session states in en without claiming unknown records are inactive
+AssertionError: expected 'Inactive' to be 'Unknown status' // Object.is equality
+
+Expected: "Unknown status"
+Received: "Inactive"
+
+ ❯ test/agent-activity-view.test.ts:52:86
+     50|     const wrapper = setup(async url => response(String(url).includes('…
+     51|     await flushPromises()
+     52|     expect(wrapper.get('[data-activity-row="unknown"] .activity-row__s…
+       |                                                                                      ^
+     53|     rows.forEach((row, index) => {
+     54|       const label = wrapper.get(`[data-activity-row="${row.id}"] .acti…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  test/agent-activity-view.test.ts > live agent content > shows distinct session states in zh-CN without claiming unknown records are inactive
+AssertionError: expected '未运行' to be '状态未知' // Object.is equality
+
+Expected: "状态未知"
+Received: "未运行"
+
+ ❯ test/agent-activity-view.test.ts:52:86
+     50|     const wrapper = setup(async url => response(String(url).includes('…
+     51|     await flushPromises()
+     52|     expect(wrapper.get('[data-activity-row="unknown"] .activity-row__s…
+       |                                                                                      ^
+     53|     rows.forEach((row, index) => {
+     54|       const label = wrapper.get(`[data-activity-row="${row.id}"] .acti…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  test/agent-activity-view.test.ts > live agent content > shows distinct session states in zh-TW without claiming unknown records are inactive
+AssertionError: expected '未執行' to be '狀態未知' // Object.is equality
+
+Expected: "狀態未知"
+Received: "未執行"
+
+ ❯ test/agent-activity-view.test.ts:52:86
+     50|     const wrapper = setup(async url => response(String(url).includes('…
+     51|     await flushPromises()
+     52|     expect(wrapper.get('[data-activity-row="unknown"] .activity-row__s…
+       |                                                                                      ^
+     53|     rows.forEach((row, index) => {
+     54|       const label = wrapper.get(`[data-activity-row="${row.id}"] .acti…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 13 skipped (16)
+   Start at  12:59:18
+   Duration  2.43s (transform 1.48s, setup 0ms, import 1.95s, tests 99ms, environment 300ms)
+
+undefined
+/tmp/orchester-activity-state-audit/apps/web:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run test/agent-activity-view.test.ts -t shows distinct session states

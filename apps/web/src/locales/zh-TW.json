@@ -710,7 +710,7 @@
       "active": "進行中",
       "completed": "已完成",
       "interrupted": "已中斷",
-      "unknown": "暫無近期動態"
+      "unknown": "狀態未知"
     },
     "kinds": {
       "user": "你",
