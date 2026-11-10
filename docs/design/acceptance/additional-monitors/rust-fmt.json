@@ -1,0 +1,23 @@
+{
+  "head": "ff5fc4dafa23f3407629ff95e13e6e6a8534af52",
+  "command": [
+    "cargo",
+    "fmt",
+    "--all",
+    "--",
+    "--check"
+  ],
+  "exit_code": 0,
+  "status": "passed",
+  "elapsed_seconds": 0.786,
+  "finished_at": "2026-11-10T11:43:40.377507+00:00",
+  "differing_files": [],
+  "output_lines_redacted": 0,
+  "head_after": "ff5fc4dafa23f3407629ff95e13e6e6a8534af52",
+  "clean_after": true,
+  "safety": {
+    "raw_process_arguments_saved": false,
+    "conversation_saved": false,
+    "secrets_saved": false
+  }
+}

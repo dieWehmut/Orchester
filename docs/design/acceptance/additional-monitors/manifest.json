@@ -1,0 +1,68 @@
+{
+  "format": "orchester-additional-agent-monitors-evidence-v1",
+  "baseline_revision": "ff5fc4dafa23f3407629ff95e13e6e6a8534af52",
+  "scope": "read-only research, synthetic/native Linux tests, counts-only production snapshot; no new real model/agent started; Windows delivery pending",
+  "files": [
+    {
+      "path": "official-research.json",
+      "bytes": 23986,
+      "sha256": "ca8ccfd853766786346e1dd2f3b28fd5896c563c5b03684a2097d1e765285e72"
+    },
+    {
+      "path": "frontend-validation.json",
+      "bytes": 9729,
+      "sha256": "27d7f793c2bf96a434465e0698498d89e3304cd2a23e73d1b39745c24d7972c5"
+    },
+    {
+      "path": "rust-review.json",
+      "bytes": 5318,
+      "sha256": "f8cbe89cc80036e2c80ab897fefd4f5b8eff9e07f9a86745ba5b1b1906419d1f"
+    },
+    {
+      "path": "rust-validation.json",
+      "bytes": 36105,
+      "sha256": "76857377e19fb17b5d0de0fbf0553c0c91eed7bd14fff0453571e280a351bc1f"
+    },
+    {
+      "path": "rust-tests.log",
+      "bytes": 127024,
+      "sha256": "37ac95fca279d26806e47553137f41002860c4a478bc1e2d36ad0cca7b728111"
+    },
+    {
+      "path": "rust-fmt.json",
+      "bytes": 518,
+      "sha256": "38b944b4ccf8425b4b57e942ec23b63ffaf7c837151a4f3708dd4d73bc515bf7"
+    },
+    {
+      "path": "linux-production-snapshot.json",
+      "bytes": 1763,
+      "sha256": "172c4ff5a80841bc6fcd213ced0938d482d5c1e242bafb85239ba8d6846e49d9"
+    },
+    {
+      "path": "partial-process-tests.log",
+      "bytes": 2429,
+      "sha256": "ae1f49395fdc0cf2497736e6e3ee7f53e8d0b32f528355ac545107edc49c3db4"
+    },
+    {
+      "path": "partial-integration-tests.log",
+      "bytes": 2194,
+      "sha256": "c249be428975034533920eb79f6956c46c12fd0600c1604a579b5142601684a5"
+    },
+    {
+      "path": "partial-clippy.log",
+      "bytes": 194,
+      "sha256": "9cc56ccdd28d15938a7c7363d0baac18195b762ca41b6a0bdf6c5ec680bf7edb"
+    },
+    {
+      "path": "cursor-integrated-validation.json",
+      "bytes": 476,
+      "sha256": "d4e26b716fc1a3bae5f638d57956e6282a08609dc2dc2c0a00aca4a728a3374c"
+    },
+    {
+      "path": "cursor-integrated-tests.log",
+      "bytes": 2522,
+      "sha256": "ac26b407138260ebb72cb60692e1589a06a20211966b7845f5b002c1329574c4"
+    }
+  ],
+  "cursor_revision": "bee8ebd0a24c8b06add1a323377a86905e65ac60"
+}

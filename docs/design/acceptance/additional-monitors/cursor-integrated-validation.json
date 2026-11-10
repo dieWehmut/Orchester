@@ -1,0 +1,19 @@
+{
+  "head": "bee8ebd0a24c8b06add1a323377a86905e65ac60",
+  "command": [
+    "cargo",
+    "test",
+    "--locked",
+    "--offline",
+    "-p",
+    "orchester-netz",
+    "--lib",
+    "agent_process",
+    "--",
+    "--test-threads=1"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 17.533,
+  "log_sha256": "ac26b407138260ebb72cb60692e1589a06a20211966b7845f5b002c1329574c4",
+  "scope": "integrated Cursor entrypoint and all agent_process unit regressions; no real agent/model started"
+}

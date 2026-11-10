@@ -1,0 +1,311 @@
+{
+  "schema_version": 1,
+  "researched_on": "2026-11-10",
+  "scope": "Read-only process identity and installation research for Gemini CLI, Antigravity, Cursor and official DeepSeek Harness/dsh. No agent, model, API-credit, desktop, service, ADB or Codex launch was performed.",
+  "method": {
+    "official_sources": "Official documentation pages and official GitHub contents API, accessed read-only with urllib. web__run search returned HTTP 404 and Context7 was unavailable to this task.",
+    "local_sources": "Read-only installed package metadata and application code; ASAR contents parsed as data without executing installed JavaScript; Windows installed-product registry and one bounded process/command inventory; SQLite schema and COUNT only using mode=ro URI and query_only.",
+    "privacy": "No raw live argv, prompts, transcript bodies, credentials, tokens, API keys or credential values are retained in this artifact. Paths are installation examples, not session content. Process IDs need not leave the internal collector."
+  },
+  "common_rules": {
+    "execution_evidence": "A service/runtime process proves process presence, not that a conversation is busy or that model work is currently happening. Historical session files and installed binaries do not prove running presence.",
+    "entrypoint_parsing": "Tokenize argv according to the platform and extract the real Node/Bun entrypoint after recognized runtime flags and their values. Never substring-search all argv: a prompt can mention an agent executable or package path. Ignore -e/--eval, -p/--print runtime expressions, test/code snippets, and arbitrary brand strings in trailing prompt/config arguments.",
+    "branding": "Normalize slash direction and ASCII case on Windows. Match whole package/path components and exact script suffixes; do not match arbitrary prefixes, string suffixes without component boundaries, or provider names in a parent directory. Generic node, bun, agent, language_server and Electron executable names are insufficient alone.",
+    "deduplication": "Count one classified primary runtime per PID in one OS namespace. Exclude launch-shell/npm/npx/pnpm parents, Electron main/window/renderer/GPU/utility/extensionHost processes without a proven agent entrypoint, worker/PDF/diff/MCP/tool executors, and updater/plugin-management children. A daemon can serve several conversations or subagents, so process count must not be described as agent-task count. WSL/native PIDs live in different namespaces; do not deduplicate them by numeric PID alone.",
+    "source_quality": "Failure or partial access to process metadata must remain unknown/partial rather than an observed zero. Merely finding a stale daemon metadata file or socket path is not sufficient for running presence.",
+    "live_validation": "No selected provider was observed running in the bounded Windows inventory. No provider CLI was found through the Linux PATH check. This is a point-in-time observation, not an installation absence claim or a live acceptance test."
+  },
+  "providers": {
+    "gemini": {
+      "display_name": "Gemini CLI",
+      "verified": {
+        "official_package": "@google/gemini-cli",
+        "official_bin": {
+          "gemini": "dist/index.js"
+        },
+        "official_source_entry": "packages/cli/index.ts",
+        "runtime": "Node.js; source entry shebang is /usr/bin/env node",
+        "official_main_observed_version": "0.69.0-nightly.20261104.g89e9d25d6",
+        "local_installation": "No Gemini CLI shim/package was found in the checked Windows Roaming/npm directory or Linux PATH. Windows ~/.gemini exists but currently contains Antigravity/config directories; that directory is not proof of Gemini CLI installation.",
+        "supervisor_process_shape": "Official packages/cli/index.ts defaults to a lightweight parent when GEMINI_CLI_NO_RELAUNCH and SANDBOX are absent. It spawns process.execPath with the same CLI script and waits/restarts the heavy child; the heavy child loads the actual agent main. Thus one CLI commonly has two matching Node entries."
+      },
+      "process_identity": {
+        "positive": [
+          "Node/Bun with actual entrypoint whose whole package components and suffix are @google/gemini-cli/dist/index.js, including normal global npm, npx-cache and pnpm installation paths. Node is officially verified; Bun execution is an optional compatible shape, not locally verified.",
+          "A resolved executable symlink/shim that verifiably leads to the same official package entry may be treated as the same runtime."
+        ],
+        "negative": [
+          "Generic node.exe/bun/node processes.",
+          "gemini-code-assist extensions, Gemini browser/app windows, generic gemini text in prompts or config, and ~/.gemini existence.",
+          "node -e or runtime expression containing a path to @google/gemini-cli."
+        ],
+        "pending": [
+          "Bare gemini/gemini.exe process-name-only acceptance has no local execution evidence. Official npm CLI is a Node script, so a name-only rule can miss real processes and cannot establish package identity.",
+          "Source checkout execution needs verified package/repository identity before accepting packages/cli/index.ts or a generic dist/index.js; that suffix alone is too broad.",
+          "Internal subagents are not separately proven OS processes; do not infer subagent count from the CLI process tree.",
+          "Direct-parent relaunch deduplication is supported by official source, but has not been live-verified locally. Exact Node execArgv differences and user-configured relaunch/sandbox variants need appropriate tests."
+        ],
+        "deduplication": "Do not count both official Gemini supervisor and its heavy child. Internally compare PID/parent PID, normalized canonical Gemini entrypoint, and preferably equality of trailing script arguments without storing or emitting those arguments. A direct same-entry parent/child relaunch pair contributes the heavy child only. This must not collapse unrelated same-provider processes or independent nested sessions through shell/tool children."
+      },
+      "session_observation": {
+        "documented_store": "~/.gemini/tmp/<project_hash>/chats/",
+        "documented_safe_metadata": [
+          "sessionId",
+          "projectHash",
+          "startTime",
+          "lastUpdated"
+        ],
+        "lifecycle_hooks": [
+          "SessionStart",
+          "SessionEnd",
+          "BeforeAgent",
+          "AfterAgent",
+          "BeforeTool",
+          "AfterTool",
+          "Notification"
+        ],
+        "notes": "The official recording type also contains messages/summary; do not emit or read those bodies for this monitor. lastUpdated only proves recorded activity. Lifecycle hook payloads contain prompt/transcript fields, so a future integration must whitelist metadata and requires separately authorized hook setup."
+      },
+      "sources": [
+        "https://geminicli.com/docs/get-started/installation/",
+        "https://github.com/google-gemini/gemini-cli/blob/main/packages/cli/package.json",
+        "https://github.com/google-gemini/gemini-cli/blob/main/packages/cli/index.ts",
+        "https://geminicli.com/docs/cli/session-management/",
+        "https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/services/chatRecordingTypes.ts",
+        "https://geminicli.com/docs/hooks/reference/",
+        "https://github.com/google-gemini/gemini-cli/blob/main/packages/cli/src/utils/relaunch.ts"
+      ]
+    },
+    "antigravity": {
+      "display_name": "Antigravity",
+      "verified": {
+        "local_version": "2.30.0",
+        "local_product": "Antigravity - Agentic Desktop Application",
+        "local_installation": "C:/Users/han/AppData/Local/Programs/antigravity",
+        "local_package_evidence": "resources/app.asar/package.json: name=antigravity, main=dist/main.js, version=2.30.0",
+        "service_binary": "resources/bin/language_server.exe on Windows; language_server on other platforms",
+        "service_source": "resources/app.asar/dist/languageServer.js derives LS_BINARY from process.resourcesPath/bin and starts/monitors it. dist/main.js launches the service and points the desktop window at its local HTTPS endpoint.",
+        "brand_flags": [
+          "--override_user_agent_name",
+          "antigravity",
+          "--app_data_dir"
+        ],
+        "cli_name": "agy; current official docs describe separate App, CLI, IDE extension and SDK surfaces"
+      },
+      "process_identity": {
+        "positive": [
+          "language_server[.exe] with branded whole installation path components antigravity/resources/bin/language_server[.exe], including the verified Windows installation.",
+          "language_server[.exe] with explicitly parsed --override_user_agent_name antigravity or --override_user_agent_name=antigravity. app_data_dir identifying antigravity is useful extra evidence but need not be required with the explicit brand flag."
+        ],
+        "negative": [
+          "All Antigravity.exe Electron parent/window/renderer/GPU/utility processes without a separately proven service role.",
+          "Generic language_server[.exe], including unrelated Codeium/Windsurf language-server names.",
+          "resources/bin/language_server.exe suffix without a branded installation path or explicit brand marker.",
+          "webm_encoder.exe, browser, MCP, terminal/tool processes and ~/.gemini/antigravity daemon metadata files alone."
+        ],
+        "deduplication": "One language_server runtime can serve the desktop UI and multiple conversations/subagents. Do not count its Electron parent or renderer. The service may restart internally; classify the currently observed runtime once.",
+        "pending": [
+          "agy CLI actual executable/runtime package identity has not been read or locally observed; do not invent a generic Node/agy.js path.",
+          "WSL service install path and older pre-2.0 IDE language-server layouts require a separate verified path rule or explicit brand flag.",
+          "A service being present does not prove a busy conversation; safe per-conversation status mapping remains pending."
+        ]
+      },
+      "session_observation": {
+        "local_index": "C:/Users/han/.gemini/antigravity/conversation_summaries.db",
+        "table": "conversation_summaries",
+        "read_only_count": 0,
+        "schema_safe_fields": [
+          "conversation_id",
+          "step_count",
+          "last_modified_time",
+          "status",
+          "source",
+          "agent_name",
+          "parent_conversation_id",
+          "nesting_depth",
+          "not_fully_idle",
+          "killed",
+          "last_user_input_time"
+        ],
+        "schema_body_fields_to_exclude": [
+          "title",
+          "preview",
+          "workspace_uris",
+          "raw_summary",
+          "conversations_fts user_body/agent_body"
+        ],
+        "daemon_metadata_keys_only": [
+          "pid",
+          "httpsPort",
+          "httpPort",
+          "lsVersion",
+          "csrfToken"
+        ],
+        "daemon_notes": "A hub_<port>.json file exists. Only keys were inspected; no token value was read into output. A stale file is not liveness evidence; do not connect using tokens in this task.",
+        "documented_app_data_dirs": [
+          "~/.gemini/antigravity",
+          "~/.gemini/antigravity-cli",
+          "~/.gemini/antigravity-ide"
+        ],
+        "documented_hooks": [
+          "SessionStart",
+          "PreInvocation",
+          "PostInvocation",
+          "PreToolUse",
+          "PostToolUse",
+          "Stop"
+        ],
+        "notes": "Hooks and brain/<conversation>/system_generated/logs/transcript.jsonl are documented; no hook installation or transcript-body reading was performed. The empty index gives no empirical status-enum mapping."
+      },
+      "sources": [
+        "https://antigravity.google/docs/overview",
+        "https://antigravity.google/docs/cli/reference/",
+        "https://antigravity.google/docs/hooks/"
+      ]
+    },
+    "cursor": {
+      "display_name": "Cursor",
+      "verified": {
+        "local_version": "3.29.15",
+        "local_installation": "C:/Users/han/software/cursor/cursor",
+        "local_package_evidence": "resources/app/package.json name=Cursor, version=3.29.15, main=./out/main.js; product.json applicationName=cursor and serverApplicationName=cursor-server",
+        "local_agent_host_entry": "resources/app/extensions/cursor-agent-host/dist/agent-host-daemon/dist/bin/daemon.cjs",
+        "local_entry_exists": true,
+        "local_entry_size_bytes": 21324614,
+        "local_agent_host_evidence": "resources/app/out/main.js resolves the daemon.cjs path. Its built daemon prints Usage: agent-host-daemon and supports socket/storage/project options. cursor-agent-host extension can connect to this daemon; installed code also has an in-process fallback.",
+        "cli_current_name": "agent",
+        "cli_legacy_name": "cursor-agent",
+        "official_unix_cli_install_version_observed": "2026.11.05-86047df",
+        "official_unix_cli_path": "~/.local/share/cursor-agent/versions/<version>/cursor-agent",
+        "official_unix_aliases": "~/.local/bin/agent and ~/.local/bin/cursor-agent are symlinks to that branded versioned entry",
+        "official_windows_cli_root": "%LOCALAPPDATA%/cursor-agent with versions/<version>; installer maintains cursor-agent.ps1 and copies it to agent.ps1",
+        "daemon_default_state": "~/.cursor-agents/daemon.sock and ~/.cursor-agents data.sqlite/sessions/; --blobs-dir/--agents-dir may override",
+        "local_host_native_pending": "No Cursor CLI installation or selected Cursor service was observed in the bounded local checks."
+      },
+      "process_identity": {
+        "positive": [
+          "Node/Bun actual entrypoint ending in the whole package components cursor-agent-host/dist/agent-host-daemon/dist/bin/daemon.cjs. Node/installed bundle is verified; Bun execution is not locally verified.",
+          "A cursor-agent or agent entry/executable whose resolved path is the verified branded cursor-agent/versions/<version>/cursor-agent installation. agent basename by itself is too broad."
+        ],
+        "negative": [
+          "All Cursor.exe Electron parents/windows/renderers/GPU/utility/extensionHost instances based only on executable name or product installation.",
+          "Generic agent[.exe], arbitrary Node scripts, cursor-server/remote VSCode server, cursor-agent-worker, cursor-agent-exec, PDF/diff workers and cursorsandbox helpers.",
+          "Any prompt mentioning cursor-agent-host/daemon.cjs or cursor-agent."
+        ],
+        "deduplication": "One persistent daemon can serve several editor windows and conversations. Count the daemon once, exclude the windows and helper workers. CLI and IDE may connect to shared engines; do not add an assumed CLI process to its observed daemon count. Confirm ownership if both a separate CLI runtime and daemon are present.",
+        "pending": [
+          "CLI downloaded artifact entry shape and actual Node script basename have not been inspected. Do not assume index.js or cli.js merely from product naming.",
+          "Native cursor-agent binary shape/signature was not inspected; branded official installer paths are verified but runtime behavior is pending.",
+          "Hot-updated daemon bundle paths and Grok agent-host migration paths appear in installed code but need exact branded ownership verification before accepting them.",
+          "The installed in-process host fallback cannot be identified from a plain Cursor.exe process name. Source quality should remain partial for this case until a safe provider event/session source exists."
+        ]
+      },
+      "session_observation": {
+        "official_session_commands": [
+          "agent ls",
+          "agent resume",
+          "agent --continue",
+          "agent --resume=<chat-id>"
+        ],
+        "official_agent_hooks": [
+          "sessionStart",
+          "sessionEnd",
+          "beforeSubmitPrompt",
+          "preToolUse",
+          "postToolUse",
+          "subagentStart",
+          "subagentStop",
+          "stop"
+        ],
+        "hook_notes": "Official docs distinguish agent hooks from inline Tab and app-lifecycle workspaceOpen hooks. sessionEnd is tied to IDE lifetime rather than a cloud chat; cloud agents do not provide every hook. No hooks were installed or run.",
+        "local_store": "C:/Users/han/AppData/Local/Cursor/AgentStores/cursor_agent_stores",
+        "local_index_schema": "A .sync/index.sqlite contains files/meta/pending_deletes/pending_rmdirs for store synchronization. This is not evidence of currently running conversation tasks.",
+        "pending": "Cursor local conversation-active status source and precise safe metadata adapter remain unverified. Cloud agents execute remotely and cannot be discovered from this host's process list."
+      },
+      "sources": [
+        "https://cursor.com/docs/cli/overview",
+        "https://cursor.com/docs/cli/installation",
+        "https://cursor.com/install",
+        "https://cursor.com/install?win32=true",
+        "https://cursor.com/docs/hooks"
+      ]
+    },
+    "deepseek": {
+      "display_name": "DeepSeek Harness",
+      "aliases": [
+        "dsh"
+      ],
+      "verified": {
+        "official_repository": "https://github.com/deepseek-ai/deepseek-harness",
+        "official_package": "@deepseek-ai/dsh",
+        "official_bin": {
+          "dsh": "lib/bin.js"
+        },
+        "official_main_observed_version": "0.2.2-rc.1",
+        "official_source_entry": "apps/cli/src/bin.ts",
+        "official_runtime": "Node.js; source entry begins #!/usr/bin/env node and runCli selects a profile runner. Bun/native dsh binary is not evidenced by the read sources.",
+        "official_run": "npx @deepseek-ai/dsh web; from source pnpm dsh web after a separate build",
+        "profiles": [
+          "web",
+          "headless",
+          "acp",
+          "sdk",
+          "sdk-minimal",
+          "custom profile names"
+        ],
+        "local_desktop_version": "0.13.0",
+        "local_desktop_product": "dsh-desktop; A cross-platform desktop shell for DeepSeek Harness",
+        "local_desktop_repository": "https://github.com/dataelement/dsh-desktop",
+        "local_desktop_installation": "C:/Program Files/DSH Desktop",
+        "local_desktop_package": "resources/app.asar/package.json main=./out/main/index.js",
+        "local_bundled_harness_version": "0.2.1-rc.3",
+        "local_bundled_harness_bin": "resources/app.asar/node_modules/@deepseek-ai/dsh/lib/bin.js",
+        "local_desktop_true_node_entry": "resources/harness-node-entry.mjs",
+        "local_desktop_launch_shape": "DSH Desktop.exe --expose-internals <resources>/harness-node-entry.mjs <resources>/app.asar/node_modules/@deepseek-ai/dsh/lib/bin.js web ...",
+        "local_desktop_evidence": "Installed out/main/index.js: buildNodeArguments() returns --expose-internals, nodeEntryPath, dshEntryPath, then profile arguments; buildHarnessSpawnOptions sets ELECTRON_RUN_AS_NODE=1 on Windows/Linux; dshEntryPath resolves the official bundled bin. resources/harness-node-entry.mjs takes the immediately following DSH entry path, imports it, rewrites process.argv and calls runCli in the same process. No extra primary agent child is implied.",
+        "local_desktop_home": "C:/Users/han/AppData/Roaming/dsh-desktop/harness",
+        "official_default_home": "~/.dsh; DSH_HOME can override",
+        "version_difference": "The local dataelement desktop wrapper is distinct from the official repository's newer apps/desktop. Do not substitute its entry path with an unverified official-new-desktop entry.",
+        "official_source_runner": "node --import tsx/esm apps/cli/src/bin.ts",
+        "official_start_web_runner": "node --import tsx/esm apps/cli/src/bin.ts web"
+      },
+      "process_identity": {
+        "positive": [
+          "Node/Bun actual entrypoint whose whole package components and suffix are @deepseek-ai/dsh/lib/bin.js. Node is officially verified; Bun compatibility is not locally verified.",
+          "Branded DSH Desktop.exe in Node mode with real entrypoint <DSH Desktop>/resources/harness-node-entry.mjs and the immediately following argument <same installation>/resources/app.asar/node_modules/@deepseek-ai/dsh/lib/bin.js. Verify both paths and positional adjacency; arbitrary trailing mentions of the official bin are insufficient.",
+          "Source checkout apps/cli/src/bin.ts under a repository verified as deepseek-ai/deepseek-harness, launched by the repo's source runner. A generic apps/cli/src/bin.ts suffix without repo/package ownership is insufficient."
+        ],
+        "negative": [
+          "All DSH Desktop.exe Electron main/renderer/GPU/window instances without the trusted Harness entry shape.",
+          "Generic dsh/deepseek process names without an installation/script proof; arbitrary scripts calling a DeepSeek API model.",
+          "Plugin maintenance: dsh plugin, --version, launcher --help, --dump-config*, config-schema dumps, and bundled pnpm installer/runtime helper processes.",
+          "Node eval/print expression or agent prompt mentioning @deepseek-ai/dsh/lib/bin.js; arbitrary harness-node-entry.mjs in an unrelated directory."
+        ],
+        "deduplication": "The installed desktop wrapper imports runCli into the same trusted Harness Node process. Count that service once; do not count its DSH Desktop parent, renderers, pnpm children, web UI/browser, worker/tool processes or the secondary bin argument as another process. Several sessions/subagents can share a service.",
+        "pending": [
+          "Official-new-desktop private Host entry path is not yet inspected. The official docs confirm an Electron Node child and shared profile runner, but this does not establish a universal path matcher.",
+          "Generic dsh.exe/bun native binary identity has no local execution or packaging evidence.",
+          "Profile-specific help versus actual workload discrimination requires implementation-level validation. The source runner is verified as node --import tsx/esm apps/cli/src/bin.ts; consume --import and its value when extracting the entrypoint.",
+          "Safe per-session busy/idle metadata store and status mapping were not investigated beyond official architecture and installation homes."
+        ]
+      },
+      "session_observation": {
+        "official_architecture": "ctx.sessions owns an append-only SessionEvent log and in-memory store; separate packages provide session query, persistence, projections and session activity. A model adapter/provider is a plugin, so DeepSeek model use inside another harness is not the same process provider identity.",
+        "desktop_notes": "Official Desktop documentation says the Host can continue working when the window is hidden, and active tasks include subagents, approval waits, queued messages and background jobs. The OS process only establishes Host presence.",
+        "privacy": "No local Harness configuration, credentials, prompts, event logs or session bodies were read."
+      },
+      "sources": [
+        "https://api-docs.deepseek.com/",
+        "https://deepseek-harness.github.io/deepseek-harness/en/guide/quickstart",
+        "https://github.com/deepseek-ai/deepseek-harness/blob/master/README.md",
+        "https://github.com/deepseek-ai/deepseek-harness/blob/master/apps/cli/package.json",
+        "https://github.com/deepseek-ai/deepseek-harness/blob/master/apps/cli/src/bin.ts",
+        "https://github.com/deepseek-ai/deepseek-harness/blob/master/apps/cli/README.md",
+        "https://github.com/deepseek-ai/deepseek-harness/blob/master/apps/desktop/README.md",
+        "https://deepseek-harness.github.io/deepseek-harness/en/reference/",
+        "https://github.com/dataelement/dsh-desktop",
+        "https://github.com/deepseek-ai/deepseek-harness/blob/master/package.json"
+      ]
+    }
+  }
+}

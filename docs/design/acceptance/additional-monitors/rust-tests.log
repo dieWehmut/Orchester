@@ -1,0 +1,1979 @@
+HEAD ff5fc4dafa23f3407629ff95e13e6e6a8534af52
+COMMAND cargo test --workspace --locked --offline -- --test-threads=1
+RESOURCE_LIMITS {"CARGO_BUILD_JOBS": "1", "RAYON_NUM_THREADS": "1", "RUST_TEST_THREADS": "1", "TOKIO_WORKER_THREADS": "1"}
+START 2026-11-10T11:36:53.174353+00:00
+   Compiling mio v1.2.1
+   Compiling tokio v1.52.3
+   Compiling tokio-stream v0.1.18
+   Compiling orchester-vertrag v0.1.2 (/home/han/project/Orchester/.worktrees/additional-agent-monitors/kisten/vertrag)
+   Compiling orchester-adapter v0.1.2 (/home/han/project/Orchester/.worktrees/additional-agent-monitors/kisten/adapter)
+   Compiling tokio-util v0.7.18
+   Compiling tar v0.4.46
+   Compiling hyper v1.10.1
+   Compiling hyper-util v0.1.20
+   Compiling tower v0.5.3
+   Compiling orchester-verzeichnis v0.1.2 (/home/han/project/Orchester/.worktrees/additional-agent-monitors/kisten/verzeichnis)
+   Compiling tokio-rustls v0.26.4
+   Compiling orchester-modell v0.1.2 (/home/han/project/Orchester/.worktrees/additional-agent-monitors/kisten/modell)
+   Compiling tower-http v0.6.8
+   Compiling hyper-rustls v0.27.9
+   Compiling reqwest v0.12.28
+   Compiling orchester-laufzeit v0.1.2 (/home/han/project/Orchester/.worktrees/additional-agent-monitors/kisten/laufzeit)
+   Compiling orchester-anwendung v0.1.2 (/home/han/project/Orchester/.worktrees/additional-agent-monitors/kisten/anwendung)
+   Compiling tokio-tungstenite v0.29.0
+   Compiling axum v0.8.9
+   Compiling tempfile v3.27.0
+   Compiling tower-http v0.7.0
+   Compiling orchester-netz v0.1.2 (/home/han/project/Orchester/.worktrees/additional-agent-monitors/kisten/netz)
+   Compiling parking_lot_core v0.9.12
+   Compiling signal-hook v0.3.18
+   Compiling signal-hook-mio v0.2.5
+   Compiling parking_lot v0.12.5
+   Compiling crossterm v0.29.0
+   Compiling orchester-konsole v0.1.2 (/home/han/project/Orchester/.worktrees/additional-agent-monitors/kisten/konsole)
+   Compiling orchester-protokoll v0.1.2 (/home/han/project/Orchester/.worktrees/additional-agent-monitors/kisten/protokoll)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3m 38s
+     Running unittests src/lib.rs (/home/han/project/Orchester/target/debug/deps/orchester_adapter-dc8c9acaa4093c2d)
+
+running 5 tests
+test mock::tests::emits_scripted_sequence ... ok
+test mock::tests::mock_is_always_available ... ok
+test tests::all_builtin_manifests_parse ... ok
+test tests::codex_resume_uses_subcommand ... ok
+test tests::unknown_builtin_is_none ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/home/han/project/Orchester/target/debug/deps/orchester_anwendung-bc238ad19c783fa9)
+
+running 9 tests
+test paths::tests::another_project_keeps_the_same_home ... ok
+test paths::tests::manifests_are_per_project_not_per_user ... ok
+test paths::tests::state_files_share_one_root ... ok
+test paths::tests::the_session_log_stays_beside_the_config ... ok
+test self_agent::tests::for_paths_binds_model_configuration_to_the_explicit_home ... ok
+test self_agent::tests::host_exposes_eventful_resume_entrypoint ... ok
+test self_agent::tests::permission_selection_persists_without_touching_models_or_other_settings ... ok
+test self_agent::tests::provider_catalog_edit_preserves_credentials_and_other_provider_then_deletes_owned_models ... ok
+test self_agent::tests::staged_credential_failure_keeps_existing_key_and_removes_unused_stage ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.36s
+
+     Running tests/library.rs (/home/han/project/Orchester/target/debug/deps/library-721d9a7ddf8749ad)
+
+running 3 tests
+test archive_preserves_history_and_invalid_references_are_rejected ... ok
+test missing_existing_folder_does_not_block_preferences ... ok
+test reopen_and_compare_and_swap_and_scope ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests/session_history.rs (/home/han/project/Orchester/target/debug/deps/session_history-34b031968b443b53)
+
+running 6 tests
+test conversation_survives_two_restarts_and_continues_with_native_roles ... ok
+test existing_self_agent_transcript_is_visible_after_reopening_history ... ok
+test failed_start_keeps_original_prompt_and_terminal_error_after_restart ... ok
+test history_bounds_page_size_and_rejects_unknown_cursors ... ok
+test history_detail_is_path_free_and_keeps_native_ids_private ... ok
+test history_pages_newest_first_with_stable_opaque_cursors ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.43s
+
+     Running tests/workspace_review.rs (/home/han/project/Orchester/target/debug/deps/workspace_review-3e8f396db45769ae)
+
+running 11 tests
+test does_not_read_a_rename_source_as_a_separate_entry ... ok
+test keeps_a_path_that_contains_a_space_in_one_piece ... ok
+test keeps_paths_relative_to_the_workspace ... ok
+test lists_deleted_paths_without_treating_them_as_untracked ... ok
+test lists_the_paths_this_branch_added_over_its_upstream ... ok
+test reads_a_workspace_that_is_a_subdirectory_of_the_repository ... ok
+test reports_a_directory_that_is_not_a_repository_rather_than_failing ... ok
+test reports_a_path_that_is_staged_and_then_changed_again_as_both ... ok
+test reports_an_empty_branch_set_for_a_branch_with_no_upstream ... ok
+test reports_the_branch_and_an_empty_working_copy ... ok
+test separates_what_is_staged_from_what_is_not ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+     Running unittests src/main.rs (/home/han/project/Orchester/target/debug/deps/orchester-ba46f4a8ce830a59)
+
+running 228 tests
+test args::tests::a_named_provider_is_carried_through ... ok
+test args::tests::a_second_positional_is_rejected_rather_than_silently_dropped ... ok
+test args::tests::credential_commands_default_to_the_active_provider ... ok
+test args::tests::the_command_surface_stays_valid ... ok
+test command_center::tests::empty_error_and_unicode_never_overflow_viewport ... ok
+test command_center::tests::empty_filter_and_detail_scroll_limits_stay_explicit ... ok
+test command_center::tests::filters_real_states_and_groups_projects_without_losing_tasks ... ok
+test command_center::tests::same_named_projects_keep_separate_groups_and_counts ... ok
+test command_center::tests::wide_details_and_narrow_transcript_use_real_selected_task ... ok
+test command_center_data::tests::approval_and_reconciliation_runs_require_attention_without_executable_handles ... ok
+test command_center_data::tests::completed_adapter_history_preserves_relative_project_and_never_resumes_vendor_ids ... ok
+test command_center_data::tests::loads_local_history_and_external_activity_without_merging_resume_capabilities ... ok
+test command_center_data::tests::opens_historical_summary_transcripts_on_demand_without_resume_handles ... ok
+test command_center_data::tests::partial_provider_failure_keeps_readable_tasks_and_reports_the_missing_source ... ok
+test command_center_data::tests::ready_runs_keep_the_opaque_resume_handle ... ok
+test command_center_data::tests::unobserved_external_state_is_inactive_and_terminal_controls_are_removed ... ok
+test interactive::brand::tests::matte_keeps_the_face_and_removes_the_backdrop_at_every_size ... ok
+test interactive::commands::tests::a_provider_selection_needs_its_keyword_and_exactly_one_name ... ok
+test interactive::commands::tests::backslash_model_opens_provider_controls_in_both_prompt_states ... ok
+test interactive::commands::tests::command_name_prefixes_rank_before_description_matches ... ok
+test interactive::commands::tests::command_palette_contains_theme_picker ... ok
+test interactive::commands::tests::exact_commands_with_invalid_arguments_still_show_help ... ok
+test interactive::commands::tests::partial_command_selection_confirms_the_highlighted_item ... ok
+test interactive::commands::tests::the_command_palette_offers_the_provider_form ... ok
+test interactive::commands::tests::the_provider_form_can_be_opened_empty_or_on_a_named_entry ... ok
+test interactive::commands::tests::the_update_check_is_reachable_by_name_and_from_the_palette ... ok
+test interactive::commands::tests::theme_command_opens_picker_or_selects_named_theme ... ok
+test interactive::composer::tests::combining_insertions_and_word_edits_leave_a_valid_grapheme_boundary ... ok
+test interactive::composer::tests::editing_in_the_middle_preserves_chinese_emoji_and_combining_marks ... ok
+test interactive::composer::tests::history_returns_to_the_unsent_draft_and_is_only_in_memory ... ok
+test interactive::composer::tests::multiline_pastes_keep_their_text_and_control_sequences_are_literal ... ok
+test interactive::composer::tests::wrapped_drafts_follow_the_caret_at_both_ends_in_small_viewports ... ok
+test interactive::input::tests::an_unrelated_alt_key_or_split_escape_sequence_is_not_lost ... ok
+test interactive::input::tests::windows_paste_delimiters_produce_one_literal_multiline_event ... ok
+test interactive::provider_form::tests::a_default_carrying_terminal_controls_is_escaped_before_it_is_offered ... ok
+test interactive::provider_form::tests::a_wire_can_be_chosen_by_name_as_well_as_by_number ... ok
+test interactive::provider_form::tests::an_empty_provider_key_cancels_instead_of_writing_a_nameless_entry ... ok
+test interactive::provider_form::tests::an_optional_field_can_be_cleared_but_an_empty_line_cannot_clear_it ... ok
+test interactive::provider_form::tests::an_unknown_wire_is_asked_again_rather_than_guessed ... ok
+test interactive::provider_form::tests::an_unreadable_yes_or_no_is_asked_again ... ok
+test interactive::provider_form::tests::closed_input_cancels_from_any_field ... ok
+test interactive::provider_form::tests::every_field_can_be_replaced ... ok
+test interactive::provider_form::tests::pressing_enter_past_every_field_keeps_the_entry_as_it_is ... ok
+test interactive::screen::tests::resized_viewports_repaint_the_header_without_touching_rows_below_the_screen ... ok
+test interactive::screen::tests::shorter_frames_clear_each_stale_row ... ok
+test interactive::screen::tests::the_caret_is_shown_on_the_composer_and_hidden_without_one ... ok
+test interactive::screen::tests::unchanged_rows_are_not_repainted ... ok
+test interactive::secret::tests::a_piped_key_is_read_without_its_line_ending ... ok
+test interactive::secret::tests::an_empty_line_cancels_rather_than_storing_an_empty_key ... ok
+test interactive::secret::tests::closed_input_cancels ... ok
+test interactive::secret::tests::surrounding_whitespace_from_a_paste_is_discarded ... ok
+test interactive::tests::boundary_overlay_keeps_the_selected_row_visible ... ok
+test interactive::tests::busy_marker_remains_visible_while_help_is_open ... ok
+test interactive::tests::busy_palette_and_transcript_are_visible_together ... ok
+test interactive::tests::chat_home_renders_transcript_busy_state_and_fixed_composer ... ok
+test interactive::tests::chat_home_respects_terminal_height_without_hiding_the_selection ... ok
+test interactive::tests::chat_key_reducer_scrolls_without_displacing_slash_palette_selection ... ok
+test interactive::tests::chat_key_reducer_submits_and_preserves_quit_semantics ... ok
+test interactive::tests::chat_key_reducer_toggles_help_without_submitting ... ok
+test interactive::tests::clean_transcript_delta_preserves_stream_spacing ... ok
+test interactive::tests::clean_transcript_text_removes_styles_without_losing_lines ... ok
+test interactive::tests::command_overlay_is_visible_below_the_stable_workspace_panel ... ok
+test interactive::tests::command_overlay_navigation_wraps_and_confirms_the_visible_selection ... ok
+test interactive::tests::command_overlay_uses_the_active_theme_palette ... ok
+test interactive::tests::command_palette_and_open_overlay_keep_the_same_top_geometry ... ok
+test interactive::tests::command_palette_does_not_repeat_the_input_line ... ok
+test interactive::tests::command_palette_opens_above_the_input_line_like_codex ... ok
+test interactive::tests::command_palette_sanitizes_untrusted_agent_labels ... ok
+test interactive::tests::command_palette_scrolls_to_keep_the_selection_visible ... ok
+test interactive::tests::command_palette_slashes_align_with_the_input ... ok
+test interactive::tests::compact_header_preserves_the_input_in_tiny_viewports ... ok
+test interactive::tests::compact_home_and_help_fit_their_modes ... ok
+test interactive::tests::compact_home_leaves_room_in_wide_and_medium_terminals ... ok
+test interactive::tests::composer_stays_at_the_terminal_bottom_in_every_state ... ok
+test interactive::tests::config_command_is_typed_in_home_and_delegate_prompts ... ok
+test interactive::tests::constrained_chat_states_keep_the_same_compact_workspace_header ... ok
+test interactive::tests::delegate_home_renders_explicit_selection_without_brand_art ... ok
+test interactive::tests::delegate_picker_command_palette_stays_bounded_and_visible ... ok
+test interactive::tests::delegate_picker_respects_the_viewport_and_keeps_selection_visible ... ok
+test interactive::tests::eighty_by_twenty_four_overlay_shows_selection_and_inspection_detail ... ok
+test interactive::tests::eighty_by_twenty_four_streaming_shows_partial_answer_and_busy_marker ... ok
+test interactive::tests::empty_composer_caret_starts_before_the_suggestion ... ok
+test interactive::tests::empty_eighty_by_twenty_four_home_keeps_workspace_prompt_and_status ... ok
+test interactive::tests::every_help_surface_documents_credential_entry ... ok
+test interactive::tests::every_help_surface_documents_theme_selection ... ok
+test interactive::tests::fixed_body_reserves_terminal_height_for_bottom_composer ... ok
+test interactive::tests::full_chat_surface_uses_the_active_theme_palette ... ok
+test interactive::tests::help_view_preserves_busy_marker_while_transcript_exists ... ok
+test interactive::tests::home_input_prefers_self_prompt_and_slash_commands ... ok
+test interactive::tests::interactive_frames_use_synchronized_partial_redraw ... ok
+test interactive::tests::interactive_layout_reserves_the_terminal_last_column ... ok
+test interactive::tests::key_events_require_a_press_kind ... ok
+test interactive::tests::keyboard_burst_preserves_single_key_and_batches_text ... ok
+test interactive::tests::leaving_delegate_commands_replaces_the_palette_without_global_clear ... ok
+test interactive::tests::login_and_logout_are_typed_in_home_and_delegate_prompts ... ok
+test interactive::tests::long_multilingual_responses_remain_readable_when_scrolled ... ok
+test interactive::tests::model_query_is_typed_in_home_and_delegate_prompts ... ok
+test interactive::tests::multiline_frames_keep_text_cursor_and_live_state_inside_the_viewport ... ok
+test interactive::tests::pasted_commands_are_literal_until_an_explicit_submit_and_tab_only_completes ... ok
+test interactive::tests::pasted_question_mark_remains_literal_in_empty_prompt ... ok
+test interactive::tests::permissions_command_is_typed_in_home_and_delegate_prompts ... ok
+test interactive::tests::plugin_commands_preserve_typed_subcommands ... ok
+test interactive::tests::portrait_is_centered_and_bounded_at_terminal_sizes ... ok
+test interactive::tests::prompt_action_parses_agent_switch_with_argument ... ok
+test interactive::tests::prompt_action_parses_command_aliases ... ok
+test interactive::tests::prompt_action_parses_dynamic_agent_command ... ok
+test interactive::tests::prompt_action_runs_plain_text ... ok
+test interactive::tests::reference_shortcuts_work_with_empty_input_and_preserve_drafts ... ok
+test interactive::tests::resume_command_is_typed_in_home_and_delegate_prompts ... ok
+test interactive::tests::select_agent_accepts_name ... ok
+test interactive::tests::select_agent_skips_missing_numbering ... ok
+test interactive::tests::selection_wraps_across_both_edges ... ok
+test interactive::tests::startup_home_is_distinct_from_the_delegate_picker ... ok
+test interactive::tests::startup_home_offers_a_prompt_and_workspace_context ... ok
+test interactive::tests::startup_panel_does_not_collapse_when_command_palette_opens_at_boundary ... ok
+test interactive::tests::status_bar_keeps_the_trailing_segments_when_the_directory_is_long ... ok
+test interactive::tests::status_bar_segments_follow_the_codex_bar_order ... ok
+test interactive::tests::status_bar_shows_the_live_turn_state_under_the_composer ... ok
+test interactive::tests::status_command_is_typed_in_home_and_delegate_prompts ... ok
+test interactive::tests::terminal_text_escapes_controls_and_counts_cjk_columns ... ok
+test interactive::tests::the_frame_reports_the_insertion_point_after_the_typed_text ... ok
+test interactive::tests::transcript_command_palette_opens_above_the_input_line ... ok
+test interactive::tests::transcript_lines_render_each_logical_line_as_a_visible_row ... ok
+test interactive::tests::transcript_scroll_offsets_reach_both_ends_and_keep_composer ... ok
+test interactive::tests::wide_chat_keeps_the_startup_panel_after_transcript_activity ... ok
+test plugin::tests::run_to_captures_plugin_output_for_interactive_rendering ... ok
+test render::tests::approval_shows_action_reason_and_id ... ok
+test render::tests::doctor_shows_adapter_status ... ok
+test render::tests::error_is_marked ... ok
+test render::tests::json_mode_is_valid_jsonl ... ok
+test render::tests::json_roundtrips_usage ... ok
+test render::tests::list_json_is_valid_jsonl ... ok
+test render::tests::list_shows_names_and_kinds ... ok
+test render::tests::message_is_plain_text ... ok
+test render::tests::sessions_json_is_valid_jsonl ... ok
+test render::tests::sessions_show_newest_first ... ok
+test render::tests::stopped_names_the_reason ... ok
+test render::tests::turn_events_render_nothing ... ok
+test self_agent::config::tests::a_loaded_configuration_reports_both_layers_and_the_redacted_body ... ok
+test self_agent::config::tests::a_rejected_configuration_still_names_the_file_and_the_reason ... ok
+test self_agent::config::tests::configuration_text_cannot_forge_terminal_control_sequences ... ok
+test self_agent::config::tests::permission_findings_report_what_was_expected_and_what_was_found ... ok
+test self_agent::credentials::tests::a_created_config_is_reported_at_the_path_it_was_written_to ... ok
+test self_agent::credentials::tests::a_home_holding_control_characters_cannot_forge_confirmation_lines ... ok
+test self_agent::credentials::tests::a_stored_key_reports_the_keyring_service_and_only_a_masked_tail ... ok
+test self_agent::credentials::tests::an_existing_key_is_announced_as_unverified_so_a_replacement_is_a_choice ... ok
+test self_agent::credentials::tests::an_unwired_config_is_told_exactly_what_to_add ... ok
+test self_agent::credentials::tests::clearing_distinguishes_a_removed_key_from_one_that_was_never_there ... ok
+test self_agent::credentials::tests::rendering_escapes_terminal_controls_carried_by_config_metadata ... ok
+test self_agent::credentials::tests::the_prompt_header_names_the_provider_and_its_endpoint ... ok
+test self_agent::models::tests::a_created_file_is_not_reported_as_an_update_and_has_no_previous_text ... ok
+test self_agent::models::tests::a_path_carrying_terminal_controls_cannot_forge_a_confirmation_line ... ok
+test self_agent::models::tests::a_written_provider_names_the_file_the_backup_and_the_reference ... ok
+test self_agent::models::tests::an_empty_provider_block_reads_as_absent_rather_than_broken ... ok
+test self_agent::models::tests::an_entry_written_without_a_key_says_what_is_still_missing ... ok
+test self_agent::models::tests::an_unresolved_active_model_still_lists_selectable_profiles ... ok
+test self_agent::models::tests::rendering_sanitizes_catalog_metadata ... ok
+test self_agent::models::tests::selection_rendering_identifies_session_scope ... ok
+test self_agent::models::tests::the_provider_listing_names_the_wire_and_the_field_to_repair ... ok
+test self_agent::permissions::tests::rendering_separates_configured_choices_from_core_effective_guards ... ok
+test self_agent::render::tests::action_turn_rendering_uses_the_bounded_summary ... ok
+test self_agent::render::tests::ask_policy_rendering_requests_human_approval ... ok
+test self_agent::render::tests::completed_read_rendering_shows_the_sanitized_content_lines ... ok
+test self_agent::render::tests::deny_policy_rendering_reports_the_policy_block ... ok
+test self_agent::render::tests::failed_tool_rendering_uses_only_the_sanitized_feedback_summary ... ok
+test self_agent::render::tests::text_turn_rendering_preserves_lines_and_escapes_terminal_controls ... ok
+test self_agent::render::tests::transcript_style_stripping_removes_renderer_codes_only ... ok
+test self_agent::resume::tests::rendering_empty_catalog_is_explicit ... ok
+test self_agent::resume::tests::rendering_is_bounded_and_does_not_echo_internal_identifiers ... ok
+test self_agent::status::tests::an_unresolved_model_names_the_offending_field_and_still_reports_the_workspace ... ok
+test self_agent::status::tests::rendering_exposes_safe_operational_status_without_internal_ids ... ok
+test self_agent::status::tests::rendering_reports_unconfigured_model_and_absent_database ... ok
+test tests::a_provider_row_is_not_matched_by_a_profile_of_the_same_name ... ok
+test tests::active_profile_effort_picker_uses_the_session_override ... ok
+test tests::an_unavailable_provider_explains_itself_instead_of_being_selected ... ok
+test tests::busy_animation_cycles_without_growing_the_label ... ok
+test tests::command_center_navigation_does_not_pollute_conversation ... ok
+test tests::command_report_overlay_is_bounded_to_selectable_sanitized_rows ... ok
+test tests::configured_effort_picker_does_not_reuse_the_active_named_profile ... ok
+test tests::model_effort_overlay_keeps_a_parent_for_escape_back_navigation ... ok
+test tests::model_effort_overlay_marks_the_catalogued_effort_and_keeps_target ... ok
+test tests::model_effort_overlay_uses_provider_default_when_no_effort_is_configured ... ok
+test tests::model_options_separates_model_and_reasoning_and_preserves_unknown_efforts ... ok
+test tests::model_overlay_applies_a_model_independently_of_effort ... ok
+test tests::model_overlay_lists_providers_and_marks_the_selected_one ... ok
+test tests::only_a_behind_release_offers_an_install ... ok
+test tests::permission_picker_offers_four_real_modes_and_marks_only_effective_mode ... ok
+test tests::plugin_command_output_is_captured_for_the_chat_transcript ... ok
+test tests::provider_effort_picker_uses_the_resolved_switch_not_the_catalog ... ok
+test tests::provider_menu_has_empty_guidance_and_returns_to_options ... ok
+test tests::queued_prompt_is_recorded_before_a_busy_turn_starts ... ok
+test tests::queued_resume_closes_the_overlay_without_adding_a_user_prompt ... ok
+test tests::queued_workspace_command_is_recorded_with_a_sanitized_marker ... ok
+test tests::resume_overlay_assigns_resume_actions_only_to_ready_rows ... ok
+test tests::streamed_snapshots_replace_one_assistant_transcript_entry ... ok
+test tests::streaming_redactor_initialization_error_stays_inside_the_chat_turn ... ok
+test tests::theme_overlay_contains_a_preview_for_the_selected_palette ... ok
+test tests::theme_overlay_marks_exactly_the_persisted_theme_as_current ... ok
+test tests::theme_preview_refreshes_without_rebuilding_the_option_list ... ok
+test tests::tty_event_sink_keeps_only_the_latest_stream_snapshot ... ok
+test tests::tty_event_sink_never_publishes_an_older_concurrent_snapshot_last ... ok
+test tests::tty_event_sink_redacts_a_secret_split_across_provider_deltas ... ok
+test tests::tty_event_sink_starts_each_model_response_with_fresh_state ... ok
+test text::tests::a_one_column_viewport_and_empty_text_are_bounded ... ok
+test text::tests::wrapped_responses_preserve_text_and_wide_graphemes ... ok
+test theme::tests::built_in_theme_names_are_stable ... ok
+test theme::tests::each_theme_has_a_complete_palette ... ok
+test theme::tests::stored_theme_name_is_canonicalized_and_unknown_values_fall_back ... ok
+test theme::tests::the_default_palette_keeps_yellow_out ... ok
+test theme::tests::the_default_palette_uses_the_codex_colors ... ok
+test update::tests::a_failed_install_hands_back_the_command ... ok
+test update::tests::a_registry_manifest_is_read_for_its_version_alone ... ok
+test update::tests::a_release_outranks_its_own_pre_releases ... ok
+test update::tests::a_successful_install_shows_npm_output_and_asks_for_a_restart ... ok
+test update::tests::a_version_that_could_carry_an_escape_or_a_path_is_refused ... ok
+test update::tests::anything_but_the_install_answer_skips ... ok
+test update::tests::being_behind_is_reported_with_the_two_versions_and_the_notes ... ok
+test update::tests::being_current_or_ahead_offers_nothing ... ok
+test update::tests::npm_output_keeps_its_lines_and_loses_its_control_bytes ... ok
+test update::tests::oversized_npm_output_is_cut_and_says_so ... ok
+test update::tests::release_notes_point_at_the_tag_of_the_published_version ... ok
+test update::tests::the_offer_names_both_choices_and_the_command_it_would_run ... ok
+test update::tests::the_running_version_parses ... ok
+test update::tests::the_update_command_pins_the_published_version ... ok
+test update::tests::versions_order_by_number_and_not_by_text ... ok
+test workspace_overlay::tests::config_and_plugins_are_typed_inspection_lists ... ok
+test workspace_overlay::tests::resume_rows_explain_ready_and_disabled_states ... ok
+test workspace_overlay::tests::status_groups_operational_sections_without_internal_identity_fields ... ok
+
+test result: ok. 228 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.12s
+
+     Running tests/cli.rs (/home/han/project/Orchester/target/debug/deps/cli-c40df98d9502d22e)
+
+running 22 tests
+test configured_model_restores_the_file_default_before_the_next_turn ... ok
+test default_run_can_emit_event_jsonl ... ok
+test doctor_reports_manifest_subprocess_available ... ok
+test home_prompt_enters_the_self_agent_configuration_path ... ok
+test home_prompt_keeps_the_self_agent_session_open_for_multiple_turns ... ok
+test home_prompt_keeps_the_session_open_after_a_model_error ... ok
+test home_prompt_runs_governed_tools_until_the_model_returns_text ... ok
+test list_can_emit_capability_jsonl ... ok
+test list_shows_builtin_adapters ... ok
+test model_command_projects_safe_configured_and_named_choices ... ok
+test model_selection_applies_to_the_next_turn_without_editing_config ... ok
+test no_args_can_run_interactive_manifest_session ... ok
+test no_args_non_tty_requires_explicit_delegate_entrypoint ... ok
+test no_args_show_home_before_launching_any_agent ... ok
+test permissions_command_projects_effective_policy_without_provider_or_state_access ... ok
+test plugins_command_lists_installed_plugins_and_keeps_the_session_open ... ok
+test resume_command_lists_an_opaque_durable_run_without_continuing_it ... ok
+test resume_command_reports_missing_state_without_creating_it ... ok
+test run_records_session_metadata ... ok
+test run_subcommand_can_emit_event_jsonl ... ok
+test run_subcommand_reads_prompt_from_stdin ... ok
+test status_command_reads_defaults_without_creating_run_state ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.52s
+
+     Running tests/plugin_cli.rs (/home/han/project/Orchester/target/debug/deps/plugin_cli-28f31f84bb394a5e)
+
+running 8 tests
+test empty_plugin_json_list_is_empty_jsonl ... ok
+test interactive_plugins_command_lists_validated_packages ... ok
+test list_discovers_managed_npm_plugins ... ok
+test list_discovers_project_npm_plugins ... ok
+test missing_plugin_status_is_redacted_and_fails ... ok
+test plugin_list_reports_validated_package_metadata ... ok
+test plugin_status_can_emit_validated_json ... ok
+test relative_orchester_home_fails_without_echoing_the_value ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
+     Running tests/plugin_mutation_cli.rs (/home/han/project/Orchester/target/debug/deps/plugin_mutation_cli-324f326b45eaa2c0)
+
+running 6 tests
+test interactive_plugins_install_uses_the_validated_backend ... ok
+test interactive_plugins_mutation_preserves_backend_failure_status ... ok
+test plugin_install_materializes_a_validated_package_without_scripts ... ok
+test plugin_install_rejects_existing_targets_before_starting_npm ... ok
+test plugin_install_rejects_extra_archive_members_before_activation ... ok
+test plugin_install_rejects_invalid_names_before_starting_npm ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+
+     Running tests/plugin_remove_cli.rs (/home/han/project/Orchester/target/debug/deps/plugin_remove_cli-1b939f680d78bbc5)
+
+running 7 tests
+test interactive_plugins_remove_uses_the_owned_backend ... ok
+test plugin_remove_cleans_a_stale_receipt_after_interrupted_deletion ... ok
+test plugin_remove_deletes_only_receipted_managed_packages_and_is_idempotent ... ok
+test plugin_remove_does_not_touch_project_packages ... ok
+test plugin_remove_refuses_content_drift ... ok
+test plugin_remove_refuses_receipt_drift ... ok
+test plugin_remove_refuses_unreceipted_managed_packages ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+
+     Running tests/remote_cli.rs (/home/han/project/Orchester/target/debug/deps/remote_cli-99390a6a68c92dd3)
+
+running 2 tests
+test rejects_wildcard_origin_before_opening_a_listener ... ok
+test serves_only_remote_api_and_assets_with_local_pairing_controls ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests/tty_windows.rs (/home/han/project/Orchester/target/debug/deps/tty_windows-1a3b0c4f3deedcc4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/home/han/project/Orchester/target/debug/deps/orchester_laufzeit-dc0a5bb99ac29195)
+
+running 144 tests
+test conductor::tests::runs_mock_to_success ... ok
+test conductor::tests::unknown_agent_errors ... ok
+test harness::agent_loop::tests::prepared_step_does_not_call_model_before_boundary_is_persisted ... ok
+test harness::config::config_loader_tests::a_missing_user_home_without_an_override_fails_closed ... ok
+test harness::config::config_loader_tests::an_empty_override_is_ignored_rather_than_trusted ... ok
+test harness::config::config_loader_tests::an_explicit_home_overrides_the_user_home ... ok
+test harness::config::config_loader_tests::embedded_frontends_can_bind_an_explicit_user_config_path ... ok
+test harness::config::config_loader_tests::home_directory_resolution_builds_the_user_path ... ok
+test harness::config::config_loader_tests::home_directory_resolution_fails_closed ... ok
+test harness::config::config_loader_tests::the_default_home_sits_beside_the_other_agent_homes ... ok
+test harness::config::document::tests::a_comment_between_the_entry_and_its_comma_does_not_shift_the_splice ... ok
+test harness::config::document::tests::a_missing_block_is_created_around_the_entry_that_needed_it ... ok
+test harness::config::document::tests::a_new_entry_joins_the_existing_block_with_the_separator_it_needs ... ok
+test harness::config::document::tests::a_one_line_object_is_not_reflowed_into_a_block ... ok
+test harness::config::document::tests::a_path_through_a_non_object_is_refused_rather_than_overwritten ... ok
+test harness::config::document::tests::a_source_that_is_not_an_object_is_refused ... ok
+test harness::config::document::tests::a_top_level_scalar_is_replaced_in_place ... ok
+test harness::config::document::tests::a_trailing_comma_is_not_doubled_into_a_syntax_error ... ok
+test harness::config::document::tests::an_empty_document_gains_the_whole_path ... ok
+test harness::config::document::tests::an_escaped_key_still_matches_the_plain_name_instead_of_being_duplicated ... ok
+test harness::config::document::tests::replacing_an_entry_leaves_every_other_comment_and_neighbour_alone ... ok
+test harness::config::editor::tests::a_configuration_that_cannot_be_spliced_is_left_untouched ... ok
+test harness::config::editor::tests::a_missing_configuration_is_created_and_loads_back_through_our_own_gates ... ok
+test harness::config::editor::tests::a_rendered_block_carries_the_indentation_of_the_block_it_lands_in ... ok
+test harness::config::editor::tests::an_edit_that_names_no_member_is_refused ... ok
+test harness::config::editor::tests::an_existing_configuration_keeps_its_comments_and_every_other_member ... ok
+test harness::config::editor::tests::several_members_are_written_in_one_pass ... ok
+test harness::config::editor::tests::the_previous_text_is_kept_beside_the_file_before_it_is_replaced ... ok
+test harness::config::protected_file::tests::bounded_reader_accepts_exactly_one_mibibyte ... ok
+test harness::config::protected_file::tests::bounded_reader_rejects_invalid_utf8_without_echoing_source ... ok
+test harness::config::protected_file::tests::bounded_reader_rejects_more_than_one_mibibyte ... ok
+test harness::config::protected_file::unix::tests::fifo_is_rejected_without_blocking ... ok
+test harness::config::protected_file::unix::tests::read_uses_open_file_after_path_is_replaced ... ok
+test harness::config::protected_file::unix::tests::validated_open_accepts_owned_regular_file_with_mode_0600 ... ok
+test harness::config::protected_file::unix::tests::validated_open_rejects_directory_and_final_symlink ... ok
+test harness::config::protected_file::unix::tests::validated_open_rejects_group_or_world_permissions ... ok
+test harness::config::protected_file::unix::tests::validated_open_rejects_special_permission_bits ... ok
+test harness::executor::cancellation_tests::cancellation_while_waiting_for_mutation_lock_never_writes_or_patches ... ok
+test harness::executor_tests::permit_bound_executor_rejects_non_file_actions_without_side_effects ... ok
+test harness::executor_tests::permit_bound_executor_runs_read_list_and_search_actions ... ok
+test harness::governance::path_guard::content_cas_tests::checked_commit_rejects_an_in_place_content_change ... ok
+test harness::governance::policy::permission_mode_tests::explicit_modes_change_command_decisions_and_policy_identity ... ok
+test harness::model_events::tests::emits_legacy_final_text_once_when_no_delta_arrives ... ok
+test harness::model_events::tests::supplements_missing_lifecycle_and_avoids_duplicate_final_text ... ok
+test harness::model_events::tests::suppresses_completion_when_provider_returns_error ... ok
+test harness::mutation::tests::structural_snapshot_admission_fails_closed_at_each_hard_limit ... ok
+test harness::private_fs::unix::tests::exact_owned_file_and_directory_modes_are_required ... ok
+test harness::process::tests::captures_an_empty_stream_without_truncation ... ok
+test harness::process::tests::captures_multiple_reads_and_tracks_the_total ... ok
+test harness::process::tests::converts_invalid_utf8_lossily_without_debug_exposing_content ... ok
+test harness::process::tests::retains_only_the_limit_while_counting_the_complete_stream ... ok
+test harness::process_runtime::tests::cancellation_before_spawn_is_fail_closed ... ok
+test harness::process_runtime::tests::cancellation_terminates_a_process_after_spawn ... ok
+test harness::process_runtime::tests::cwd_must_be_inside_the_capability_workspace ... ok
+test harness::process_runtime::tests::explicit_full_access_runs_shell_in_scoped_outside_directory ... ok
+test harness::process_runtime::tests::process_tree_attaches_and_terminates_a_running_child ... ok
+test harness::process_runtime::tests::runs_a_permit_bound_command_and_bounds_both_streams ... ok
+test harness::process_runtime::tests::shell_secret_environment_and_wrong_actions_never_spawn ... ok
+test harness::process_runtime::tests::timeout_terminates_a_running_process ... ok
+test harness::provider::http::client::tests::compatibility_user_agent_is_limited_to_agentrouter ... ok
+test harness::provider::http::client::tests::model_discovery_uses_get_and_keeps_protocol_credentials_on_the_request ... ok
+test harness::run_store::schema::tests::normalization_ignores_formatting_but_preserves_literal_semantics ... ok
+test harness::secret_scan::tests::authorization_detection_preserves_raw_whitespace_semantics ... ok
+test harness::secret_scan::tests::configured_secret_bounds_fail_without_retaining_input ... ok
+test harness::secret_scan::tests::configured_secret_matching_removes_ansi_controls_and_all_format_characters ... ok
+test harness::secret_scan::tests::finding_offsets_map_back_to_the_original_obfuscated_bytes ... ok
+test harness::secret_scan::tests::malformed_terminal_sequences_fail_closed ... ok
+test harness::secret_scan::tests::obfuscated_secrets_inside_terminal_payloads_fail_closed ... ok
+test harness::secret_scan::tests::public_secret_categories_remain_exhaustively_matchable ... ok
+test harness::secret_scan::tests::raw_scan_rejects_secrets_inside_terminal_control_payloads ... ok
+test harness::service::config_view::tests::a_configuration_that_cannot_be_read_is_carried_as_data_not_propagated ... ok
+test harness::service::config_view::tests::a_readable_configuration_resolves_to_a_redacted_view ... ok
+test harness::service::config_view::tests::a_rejection_is_accompanied_by_permission_findings_for_the_file_and_its_directory ... ok
+test harness::service::config_view::tests::a_resolved_provider_key_is_reported_as_present_without_revealing_it ... ok
+test harness::service::config_view::tests::an_absent_configuration_loads_defaults_and_is_reported_as_absent ... ok
+test harness::service::config_view::tests::the_project_layer_is_reported_at_the_path_the_loader_consulted ... ok
+test harness::service::credentials::tests::a_config_without_an_active_provider_needs_an_explicit_name ... ok
+test harness::service::credentials::tests::a_created_config_is_private_enough_for_the_loader_that_must_read_it_back ... ok
+test harness::service::credentials::tests::a_created_config_keeps_the_provider_endpoint_it_was_given ... ok
+test harness::service::credentials::tests::a_missing_config_is_created_already_referencing_the_stored_secret ... ok
+test harness::service::credentials::tests::a_named_provider_overrides_the_active_one_and_may_be_unconfigured ... ok
+test harness::service::credentials::tests::a_provider_without_an_api_key_is_configured_but_unreferenced ... ok
+test harness::service::credentials::tests::a_short_secret_is_masked_completely ... ok
+test harness::service::credentials::tests::an_already_referenced_config_is_left_exactly_as_the_human_wrote_it ... ok
+test harness::service::credentials::tests::an_empty_secret_is_rejected_before_it_reaches_the_store ... ok
+test harness::service::credentials::tests::an_environment_indirection_counts_as_a_reference ... ok
+test harness::service::credentials::tests::an_unreferenced_config_is_never_rewritten_and_yields_a_pasteable_snippet ... ok
+test harness::service::credentials::tests::clearing_reports_whether_a_secret_was_actually_removed ... ok
+test harness::service::credentials::tests::storing_a_secret_reaches_the_store_and_reports_a_masked_tail ... ok
+test harness::service::credentials::tests::the_target_defaults_to_the_active_provider_and_reports_its_wiring ... ok
+test harness::service::events::tests::a_denied_action_stops_the_run ... ok
+test harness::service::events::tests::a_failed_tool_reports_the_feedback_summary ... ok
+test harness::service::events::tests::a_failure_and_a_cancellation_both_stop_the_run ... ok
+test harness::service::events::tests::a_pending_action_stays_in_progress_and_names_what_it_waits_on ... ok
+test harness::service::events::tests::a_run_opens_with_its_resume_handle ... ok
+test harness::service::events::tests::a_secret_never_reaches_the_wire ... ok
+test harness::service::events::tests::a_silent_narrator_costs_nothing ... ok
+test harness::service::events::tests::a_text_turn_closes_the_run_with_a_result ... ok
+test harness::service::events::tests::a_tool_reports_both_of_its_edges ... ok
+test harness::service::model_discovery::tests::directory_deduplicates_ids_and_rejects_unbounded_or_malformed_data ... ok
+test harness::service::model_discovery::tests::discovery_stays_on_the_configured_origin_and_inference_prefix ... ok
+test harness::service::provider_editor::tests::a_draft_that_is_not_activated_leaves_the_active_choice_alone ... ok
+test harness::service::provider_editor::tests::a_provider_key_that_could_forge_structure_is_refused ... ok
+test harness::service::provider_editor::tests::a_rejected_draft_writes_neither_a_file_nor_a_key ... ok
+test harness::service::provider_editor::tests::a_written_provider_loads_back_and_resolves_through_our_own_gates ... ok
+test harness::service::provider_editor::tests::an_entry_without_a_wire_is_projected_as_the_wire_it_would_resolve_to ... ok
+test harness::service::provider_editor::tests::an_existing_entry_is_projected_for_editing_without_its_key ... ok
+test harness::service::provider_editor::tests::an_invalid_catalog_model_is_refused_before_storing_credentials ... ok
+test harness::service::provider_editor::tests::an_unsupported_wire_is_refused_before_anything_is_touched ... ok
+test harness::service::provider_editor::tests::no_secret_ever_reaches_the_configuration_file ... ok
+test harness::service::provider_editor::tests::replacing_an_entry_keeps_the_rest_of_the_file_and_backs_it_up ... ok
+test harness::service::provider_editor::tests::the_offered_wires_are_exactly_the_ones_resolution_accepts ... ok
+test harness::service::resume_catalog::tests::bounds_the_public_catalog_and_marks_only_the_newest_entry ... ok
+test harness::service::resume_catalog::tests::classifies_every_durable_continuation_without_exposing_identifiers ... ok
+test harness::service::runtime::approval::tests::approved_outside_write_is_single_use_and_does_not_change_policy ... ok
+test harness::service::runtime::approval::tests::denying_review_leaves_files_unchanged_and_prevents_later_execution ... ok
+test harness::service::runtime::approval::tests::review_approval_executes_exact_action_once_and_rejects_changed_binding ... ok
+test harness::service::status::tests::resume_summary_separates_ready_approval_and_reconciliation_states ... ok
+test harness::service::unresolved::tests::metadata_is_stripped_of_control_characters_and_bounded ... ok
+test harness::service::unresolved::tests::validation_failures_keep_their_field_path_and_reason ... ok
+test harness::transcript::argument_whitespace_tests::source_whitespace_roundtrips_but_cannot_hide_secrets_or_terminal_controls ... ok
+test harness::workspace_patch_tests::applies_a_hunk_with_an_explicit_source_location ... ok
+test harness::workspace_patch_tests::applies_update_and_add_hunks_after_one_full_preflight ... ok
+test harness::workspace_patch_tests::defines_trailing_newline_behavior_for_empty_and_last_line_updates ... ok
+test harness::workspace_patch_tests::explicit_outside_patch_preserves_preflight_and_updates_scoped_file ... ok
+test harness::workspace_patch_tests::malformed_outside_protected_and_wrong_actions_fail_closed ... ok
+test harness::workspace_patch_tests::rejects_ambiguous_hunks_and_unsupported_delete_operations ... ok
+test harness::workspace_patch_tests::rejects_duplicate_paths_after_lexical_normalization ... ok
+test harness::workspace_patch_tests::validates_every_file_before_mutating_any_file ... ok
+test harness::workspace_write_tests::explicit_outside_write_is_atomic_and_default_writer_stays_confined ... ok
+test harness::workspace_write_tests::rejects_oversized_protected_and_outside_writes_without_mutation ... ok
+test harness::workspace_write_tests::replaces_a_regular_file_atomically_without_temp_artifacts ... ok
+test harness::workspace_write_tests::shared_workspace_locks_block_a_second_writer_until_release ... ok
+test harness::workspace_write_tests::writes_a_new_file_from_the_durable_started_action ... ok
+test harness::workspace_write_tests::wrong_actions_and_invalid_limits_fail_before_writing ... ok
+test session::tests::a_stop_never_hides_an_earlier_error ... ok
+test session::tests::clean_eof_without_result_is_success ... ok
+test session::tests::error_makes_failed_and_is_sticky ... ok
+test session::tests::error_without_result_surfaces_message ... ok
+test session::tests::happy_path_completes ... ok
+test session::tests::stop_reason_decides_the_outcome ... ok
+test session::tests::usage_accumulates ... ok
+test store::tests::append_and_load_roundtrip ... ok
+test store::tests::missing_store_loads_empty ... ok
+
+test result: ok. 144 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.91s
+
+     Running tests/agent_loop.rs (/home/han/project/Orchester/target/debug/deps/agent_loop-db7d0c0303813775)
+
+running 8 tests
+test assistant_text_finishes_one_model_step ... ok
+test cancellation_does_not_consume_the_scripted_model ... ok
+test finish_tool_completes_without_leaking_an_action_to_an_executor ... ok
+test loop_configuration_rejects_unbounded_or_empty_limits ... ok
+test malformed_model_actions_fail_closed_without_echoing_arguments ... ok
+test oversized_tool_result_is_rejected_before_a_follow_up_model_call ... ok
+test pending_action_resumes_with_one_paired_tool_result ... ok
+test step_budget_stops_before_a_second_model_call ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/anthropic_model.rs (/home/han/project/Orchester/target/debug/deps/anthropic_model-4ce4c300060b284f)
+
+running 8 tests
+test caps_the_retry_delay_a_rate_limit_asks_for ... ok
+test classifies_http_and_transport_failures_without_provider_bodies ... ok
+test derives_one_messages_endpoint_from_every_configured_base_path ... ok
+test forwards_streamed_text_deltas_and_assembles_a_streamed_tool_call ... ok
+test rejects_a_stream_that_ends_before_the_message_does ... ok
+test rejects_unsafe_endpoints_and_redacts_model_debug_output ... ok
+test retries_a_transient_failure_once_before_succeeding ... ok
+test sends_the_credential_as_an_api_key_beside_the_pinned_protocol_version ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
+     Running tests/anthropic_request.rs (/home/han/project/Orchester/target/debug/deps/anthropic_request-03ff8c089e350b5f)
+
+running 6 tests
+test a_stream_request_only_differs_by_the_stream_flag ... ok
+test carries_a_configured_service_tier_and_output_budget ... ok
+test declares_tools_with_a_tool_choice_and_disables_parallel_calls ... ok
+test folds_system_turns_into_the_system_field_and_keeps_roles_alternating ... ok
+test rejects_an_empty_output_budget ... ok
+test rejects_invalid_requests_without_echoing_the_prompt ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/anthropic_response.rs (/home/han/project/Orchester/target/debug/deps/anthropic_response-3b15b61b72b87d72)
+
+running 3 tests
+test decodes_text_a_tool_call_and_forward_compatible_blocks ... ok
+test defaults_missing_usage_to_zero ... ok
+test rejects_malformed_bodies_without_echoing_provider_text ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/audit_approval.rs (/home/han/project/Orchester/target/debug/deps/audit_approval-5fa41f69e4196d1f)
+
+running 13 tests
+test approval_drift_and_expiry_fail_closed_without_tool_authorization ... ok
+test approval_requires_exact_binding_and_is_single_use ... ok
+test audit_chain_is_contiguous_fsyncable_and_detects_tampering ... ok
+test audit_open_never_chmods_an_existing_insecure_parent ... ok
+test audit_reads_v1_prefix_but_writes_only_v2_bindings ... ok
+test audit_records_action_projection_and_rejects_same_event_drift ... ok
+test audit_rejects_identifiers_that_would_normalize_or_truncate ... ok
+test audit_rejects_noncanonical_action_projection ... ok
+test audit_rejects_self_consistent_v2_records_with_invalid_action_projection ... ok
+test audit_rejects_self_consistent_v2_records_with_invalid_event_semantics ... ok
+test audit_rejects_v1_after_v2_even_when_the_downgrade_record_is_self_consistent ... ok
+test capability_debug_does_not_expose_nonce ... ok
+test independent_audit_sinks_share_one_locked_head_and_reject_unknown_fields ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/config_security.rs (/home/han/project/Orchester/target/debug/deps/config_security-ab43b5f4c46dba78)
+
+running 45 tests
+test codex_style_user_config_aliases_remain_typed_and_safe ... ok
+test credential_aware_redacted_view_reports_only_source_and_presence ... ok
+test credential_view_keeps_sensitive_provider_names_structural ... ok
+test dangling_config_links_are_not_treated_as_missing ... ok
+test existing_invalid_user_config_is_not_treated_as_missing ... ok
+test in_memory_credential_store_supports_set_get_and_clear_without_debug_leak ... ok
+test independent_protected_loads_with_same_slot_are_not_equal ... ok
+test insecure_user_file_cannot_enable_plaintext_credentials ... ok
+test load_effective_keeps_non_model_settings_without_a_model_profile ... ok
+test load_effective_merges_workspace_project_before_resolving_profile ... ok
+test load_effective_propagates_project_path_probe_errors ... ok
+test load_effective_treats_missing_project_config_as_empty ... ok
+test load_project_path_propagates_probe_errors ... ok
+test load_user_path_propagates_probe_errors ... ok
+test malformed_json_error_does_not_echo_nearby_secret_text ... ok
+test malformed_secret_reference_is_not_treated_as_a_literal ... ok
+test missing_user_and_project_load_effective_defaults ... ok
+test missing_user_config_loads_governed_empty_defaults ... ok
+test model_profile_accepts_https_paths_ports_and_loopback_http ... ok
+test model_profile_rejects_malformed_provider_hosts_and_ports_without_echoing ... ok
+test model_profile_rejects_provider_url_credentials_query_and_fragment_without_echoing ... ok
+test model_profile_rejects_unknown_provider_and_empty_model ... ok
+test model_profile_rejects_unsupported_wire_api_and_unsafe_url_schemes ... ok
+test permission_mode_is_user_owned_and_absence_preserves_legacy_policy ... ok
+test plaintext_secret_is_rejected_at_user_config_boundary ... ok
+test project_cannot_self_declare_trust_or_approval_authority ... ok
+test project_config_cannot_override_credentials_or_relax_policy ... ok
+test project_merge_preserves_unspecified_user_security_and_selects_known_validators ... ok
+test project_merge_rejects_policy_relaxation_and_unknown_validator_selection ... ok
+test project_sensitive_fields_are_rejected_recursively_without_echoing_values ... ok
+test protected_user_file_provenance_survives_project_merge ... ok
+test protected_user_file_rejects_invalid_utf8_without_echoing_bytes ... ok
+test protected_user_file_rejects_sources_larger_than_one_mibibyte ... ok
+test protected_user_file_resolves_direct_credentials_and_redacts_every_view ... ok
+test protected_user_file_still_rejects_malformed_secret_references ... ok
+test protected_user_file_supports_dotted_credential_names ... ok
+test provider_api_key_may_chain_through_env_reference_without_exposure ... ok
+test resolved_model_profile_contains_transport_settings_but_no_secret ... ok
+test security_merge_never_allows_project_to_relax_user_ceiling ... ok
+test serde_deserialized_config_has_no_protected_credential_vault ... ok
+test serialized_input_cannot_forge_protected_credential_provenance ... ok
+test unix_user_config_requires_directory_0700_and_file_0600 ... ok
+test unsupported_config_version_is_rejected_before_harness_use ... ok
+test user_config_type_errors_do_not_echo_rejected_values ... ok
+test user_secret_reference_resolves_without_entering_redacted_view ... ok
+
+test result: ok. 45 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+
+     Running tests/config_template.rs (/home/han/project/Orchester/target/debug/deps/config_template-7a00356c77fcbdc5)
+
+running 10 tests
+test the_template_arrives_with_a_feedback_sensor ... ok
+test the_template_does_not_duplicate_provider_keys_through_env ... ok
+test the_template_does_not_relax_the_built_in_governance_defaults ... ok
+test the_template_does_not_require_the_legacy_authentication_flag ... ok
+test the_template_keeps_bounded_budgets ... ok
+test the_template_mentions_every_top_level_field ... ok
+test the_template_parses_into_a_valid_user_config ... ok
+test the_template_ships_no_literal_credential ... ok
+test the_template_shows_how_to_reach_a_provider ... ok
+test the_template_survives_redaction ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/configured_secret_set.rs (/home/han/project/Orchester/target/debug/deps/configured_secret_set-7906c8481a8d73ea)
+
+running 3 tests
+test missing_referenced_credentials_fail_closed_without_echoing_values ... ok
+test rejects_unbounded_secret_values_and_secret_counts ... ok
+test resolves_and_deduplicates_reference_chains_without_exposure ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/context_assembler.rs (/home/han/project/Orchester/target/debug/deps/context_assembler-0f9b9be3c3030ccd)
+
+running 15 tests
+test assembles_provider_neutral_request_with_all_strict_tools_and_store_false ... ok
+test bounded_history_does_not_send_a_tool_result_after_omitting_its_call ... ok
+test bounded_transcript_codec_round_trips_redacted_records_and_opaque_references ... ok
+test bounded_view_keeps_recent_history_without_mutating_canonical_entries ... ok
+test configured_and_key_shaped_secrets_are_rejected_without_echo ... ok
+test continuation_accepts_a_structured_tool_result_tail ... ok
+test continuation_budget_never_splits_the_required_call_pair ... ok
+test continuation_keeps_the_call_pair_without_repeating_the_user_prompt ... ok
+test continuation_rejects_unpaired_or_mismatched_tool_results ... ok
+test control_bytes_cannot_split_a_configured_secret_before_model_assembly ... ok
+test opaque_byte_length_changes_context_prefix_hash ... ok
+test oversized_prompt_fails_before_a_model_request_exists ... ok
+test structured_tool_results_preserve_json_shape_after_recursive_redaction ... ok
+test transcript_codec_rejects_noncanonical_wire_and_escaped_tool_arguments ... ok
+test transcript_codec_rejects_oversized_records_and_unpaired_tool_results ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/coordinator.rs (/home/han/project/Orchester/target/debug/deps/coordinator-6885188b28d43a2c)
+
+running 19 tests
+test completed_tool_observation_continues_the_same_durable_run ... ok
+test continuation_refuses_an_unobserved_action_before_calling_the_model ... ok
+test coordinator_accepts_a_shared_store_for_governed_execution ... ok
+test coordinator_input_debug_redacts_prompt_and_run_metadata ... ok
+test dependency_snapshot_mismatch_fails_before_store_or_model ... ok
+test failed_tool_observation_continues_the_same_durable_run ... ok
+test finish_tool_is_persisted_for_governance_instead_of_completing_the_run ... ok
+test mismatched_context_and_store_secret_sets_fail_before_model ... ok
+test model_and_store_ports_are_provider_free_and_ordered ... ok
+test model_call_is_not_started_when_model_started_cannot_be_persisted ... ok
+test multiline_source_tool_call_is_durable_without_changing_whitespace ... ok
+test oversized_model_text_stays_at_manual_model_reconciliation ... ok
+test oversized_model_usage_rolls_back_the_completion_transaction ... ok
+test oversized_prompt_fails_before_store_or_model ... ok
+test oversized_tool_call_stays_at_manual_model_reconciliation ... ok
+test run_metadata_is_rejected_before_any_durable_write ... ok
+test text_outcome_uses_the_store_sanitized_completion ... ok
+test text_step_is_durable_before_the_next_resume_boundary ... ok
+test tool_step_persists_the_store_owned_policy_decision ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.66s
+
+     Running tests/durable_approval_barrier.rs (/home/han/project/Orchester/target/debug/deps/durable_approval_barrier-c5a9951d1ffa17b8)
+
+running 26 tests
+test approval_barrier_transitions_to_consumed_only_after_tool_start ... ok
+test approval_metadata_with_provider_token_is_rejected_atomically ... ok
+test approval_summary_is_sanitized_consistently_in_row_and_event ... ok
+test barrier_fails_closed_without_audit_and_recovers_idempotently_after_append ... ok
+test checkpoint_rejects_receipt_for_a_different_action_projection ... ok
+test checkpoint_revalidates_canonical_action_after_the_audit_receipt_is_written ... ok
+test checkpoint_revalidates_the_bound_event_after_the_audit_receipt_is_written ... ok
+test concurrent_durable_consumption_has_one_winner ... ok
+test concurrent_tool_completion_has_one_durable_winner ... ok
+test consumed_approval_keeps_the_original_audit_binding_for_resume ... ok
+test crash_after_approval_consume_can_recover_but_tool_start_is_still_once ... ok
+test crash_after_audit_sync_reconciles_the_checkpoint_on_reopen ... ok
+test durable_approval_expires_or_invalidates_on_binding_drift ... ok
+test durable_approval_rechecks_the_current_database_binding ... ok
+test durable_approval_survives_reopen_and_is_owner_scoped ... ok
+test execution_candidate_rejects_noncanonical_action_json ... ok
+test insecure_existing_state_directory_is_rejected_without_chmod ... ok
+test lost_capability_can_be_reissued_only_to_the_approval_owner ... ok
+test permit_cannot_start_after_durable_approval_expiry ... ok
+test reopened_store_rejects_persisted_attempt_with_wrong_provider_call ... ok
+test tool_completion_cannot_finish_another_runs_attempt ... ok
+test tool_failure_is_single_use_and_persists_all_terminal_states ... ok
+test tool_start_rejects_provider_call_mismatch_before_approval_consumption ... ok
+test tool_start_requires_checkpoint_and_schema_permissions_are_checked ... ok
+test tool_start_returns_the_durable_action_and_rejects_post_permit_replacement ... ok
+test wrong_observation_is_atomic_and_matching_completion_can_retry ... ok
+
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.99s
+
+     Running tests/durable_observations.rs (/home/han/project/Orchester/target/debug/deps/durable_observations-fe3b5aee58b1d032)
+
+running 7 tests
+test completed_observation_is_sanitized_linked_and_recoverable ... ok
+test concurrent_different_observations_leave_no_loser_orphan ... ok
+test failed_observation_rebuilds_sanitized_feedback_and_fingerprint ... ok
+test observation_id_with_configured_secret_is_rejected_before_persistence ... ok
+test oversized_observation_completes_with_a_bounded_truncation_sentinel ... ok
+test terminal_write_requires_explicit_secret_aware_store_configuration ... ok
+test validator_feedback_is_sanitized_at_the_event_boundary ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.74s
+
+     Running tests/evolution_identity.rs (/home/han/project/Orchester/target/debug/deps/evolution_identity-43f0f536e32a75b3)
+
+running 9 tests
+test candidate_evaluation_and_revision_domains_are_separate ... ok
+test equal_inputs_have_stable_lowercase_hex_ids ... ok
+test equivalent_fractional_timestamps_have_one_candidate_identity ... ok
+test evaluation_snapshots_preserve_names_end_to_end ... ok
+test every_candidate_identity_field_changes_the_candidate_id ... ok
+test every_evaluation_snapshot_changes_the_evaluation_id ... ok
+test identity_encoding_matches_known_sha256_vectors ... ok
+test length_prefixes_prevent_adjacent_field_ambiguity ... ok
+test revision_id_binds_candidate_evaluation_and_parent_independently ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/evolution_validation.rs (/home/han/project/Orchester/target/debug/deps/evolution_validation-6c8de28360403c88)
+
+running 8 tests
+test candidate_kind_has_exactly_three_wire_variants ... ok
+test candidate_state_has_exactly_five_variants_and_a_locked_transition_matrix ... ok
+test debug_views_redact_identity_and_user_controlled_text ... ok
+test identifiers_reject_ambiguous_whitespace_and_line_separators ... ok
+test malformed_values_fail_without_echoing_input ... ok
+test missing_evaluation_snapshots_are_rejected_individually ... ok
+test text_and_artifact_limits_are_enforced_in_utf8_bytes ... ok
+test timestamp_and_expiry_bounds_fail_closed ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/evolution_wire.rs (/home/han/project/Orchester/target/debug/deps/evolution_wire-cd5f7f0ed31b3b06)
+
+running 4 tests
+test candidate_wire_round_trip_recomputes_id_and_rejects_tampering ... ok
+test evaluation_wire_rejects_a_forged_but_self_consistent_candidate_id ... ok
+test evaluation_wire_round_trip_recomputes_id_and_rejects_tampering ... ok
+test wire_decode_errors_never_echo_attacker_controlled_names_or_variants ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/feedback_loop.rs (/home/han/project/Orchester/target/debug/deps/feedback_loop-c2d04af1baae725c)
+
+running 38 tests
+test configured_secret_replacement_cannot_mask_private_key_detection ... ok
+test configured_secrets_are_normalized_before_exact_value_matching ... ok
+test control_bytes_cannot_split_a_configured_secret_to_evade_redaction ... ok
+test excluded_build_tree_does_not_advance_source_snapshot ... ok
+test feedback_identifiers_are_redacted_before_hashing_and_serialization ... ok
+test feedback_is_redacted_before_bounding_and_contains_no_terminal_controls ... ok
+test indirect_source_change_advances_generation_and_stales_validator_passes ... ok
+test invalid_validator_spec_is_classified_without_consuming_a_process_result ... ok
+test longer_configured_secrets_are_redacted_before_their_prefixes ... ok
+test provider_token_prefix_is_redacted_without_a_leading_word_boundary ... ok
+test repeated_failure_and_no_progress_action_guards_are_independent ... ok
+test required_validator_must_pass_without_truncation_at_current_generation ... ok
+test response_boundary_does_not_hide_safe_text_around_a_current_response_token ... ok
+test snapshot_limit_is_typed_and_invalidates_prior_validation ... ok
+test snapshot_limit_reports_only_the_bounded_detection_size ... ok
+test snapshot_lock_identity_is_derived_from_the_workspace_guard ... ok
+test snapshot_rejects_source_link_traversal_when_platform_allows_link_creation ... ok
+test snapshot_stops_before_unbounded_directory_depth ... ok
+test streaming_redactor_blocks_detector_prefixes_split_across_responses ... ok
+test streaming_redactor_bounds_full_snapshot_refreshes_as_output_grows ... ok
+test streaming_redactor_does_not_leak_a_secret_split_across_responses ... ok
+test streaming_redactor_does_not_treat_embedded_prefix_text_as_a_token ... ok
+test streaming_redactor_fails_closed_for_an_unterminated_private_key ... ok
+test streaming_redactor_fails_closed_for_incomplete_provider_token_prefixes ... ok
+test streaming_redactor_fails_closed_for_typed_private_key_headers ... ok
+test streaming_redactor_hides_a_token_body_after_a_prior_response_prefix ... ok
+test streaming_redactor_hides_authorization_after_a_prior_response_prefix ... ok
+test streaming_redactor_hides_private_key_body_after_a_prior_response_header ... ok
+test streaming_redactor_holds_and_redacts_a_configured_secret_split_across_chunks ... ok
+test streaming_redactor_never_exposes_a_split_provider_token ... ok
+test streaming_redactor_preserves_multiline_model_text ... ok
+test streaming_redactor_removes_format_characters_before_secret_matching ... ok
+test streaming_redactor_starts_a_new_response_after_finish ... ok
+test streaming_redactor_stays_closed_after_an_earlier_token_was_redacted ... ok
+test validator_state_must_match_the_validated_spec ... ok
+test validator_termination_is_typed_and_specs_never_request_a_shell ... ok
+test validator_that_mutates_sources_fails_even_with_exit_zero ... ok
+test volatile_diagnostic_fragments_share_one_stable_fingerprint ... ok
+
+test result: ok. 38 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+
+     Running tests/file_tools.rs (/home/han/project/Orchester/target/debug/deps/file_tools-ddf46cf7c0616d04)
+
+running 6 tests
+test configured_limits_have_absolute_safety_bounds ... ok
+test explicitly_enabled_outside_scope_keeps_default_confinement_and_protected_paths ... ok
+test read_and_list_limits_fail_closed_before_unbounded_output ... ok
+test read_and_search_redact_common_provider_credentials ... ok
+test reads_bounded_line_ranges_and_lists_capability_relative_entries ... ok
+test search_is_bounded_and_protected_paths_are_rejected ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/governed_execution.rs (/home/han/project/Orchester/target/debug/deps/governed_execution-c38b790e67a68527)
+
+running 5 tests
+test allowed_read_is_audited_executed_and_persisted_once ... ok
+test ask_and_deny_actions_never_cross_the_execution_barrier ... ok
+test deterministic_file_rejections_are_not_marked_retryable ... ok
+test failed_read_is_audited_and_persisted_as_bounded_feedback ... ok
+test runtime_debug_does_not_delegate_to_dependency_debug_output ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.57s
+
+     Running tests/memory_store.rs (/home/han/project/Orchester/target/debug/deps/memory_store-5bbdb75e5a2a284a)
+
+running 15 tests
+test approve_reject_and_forget_are_scoped_compare_and_set_transitions ... ok
+test concurrent_first_open_applies_each_memory_migration_once ... ok
+test control_format_and_metadata_secrets_never_enter_memory ... ok
+test every_unicode_format_character_is_removed_before_configured_secret_scanning ... ok
+test forgetting_removes_plaintext_from_database_and_wal_files ... ok
+test invalid_metadata_and_oversized_content_fail_closed ... ok
+test memory_database_reopens_without_cross_database_state ... ok
+test memory_database_requires_user_only_file_permissions ... ok
+test nonempty_legacy_memory_requires_explicit_review_before_owner_migration ... ok
+test recall_is_deterministic_capped_and_treats_query_as_text ... ok
+test recall_returns_only_accepted_items_for_the_same_project ... ok
+test run_bound_agent_can_only_propose_and_owner_approval_is_hash_bound ... ok
+test secret_candidates_are_rejected_before_any_database_write ... ok
+test tampered_content_hash_is_rejected_on_reopen ... ok
+test unrelated_state_schema_is_rejected_without_memory_migration ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s
+
+     Running tests/model_http_boundary.rs (/home/han/project/Orchester/target/debug/deps/model_http_boundary-035831635c604b04)
+
+running 4 tests
+test custom_transport_receives_the_bounded_request_contract ... ok
+test request_and_response_debug_views_redact_sensitive_material ... ok
+test request_validation_rejects_unsafe_urls_and_unbounded_inputs ... ok
+test typed_errors_never_include_request_material ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/model_http_reqwest.rs (/home/han/project/Orchester/target/debug/deps/model_http_reqwest-faa2d7bee3cef894)
+
+running 6 tests
+test anthropic_credentials_travel_in_x_api_key_with_the_protocol_version ... ok
+test cancellation_wins_before_network_and_timeout_errors_are_redacted ... ok
+test posts_json_with_bearer_auth_and_returns_bounded_response ... ok
+test protocol_headers_are_bounded_and_reject_unsendable_values ... ok
+test redirects_are_returned_without_forwarding_authorization ... ok
+test rejects_declared_and_streamed_responses_over_the_request_limit ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests/model_profiles.rs (/home/han/project/Orchester/target/debug/deps/model_profiles-5eefa9d5f74c40fc)
+
+running 7 tests
+test direct_deserialization_cannot_bypass_profile_value_validation ... ok
+test named_profile_selection_changes_only_the_returned_effective_config ... ok
+test named_profiles_are_stably_ordered_and_transport_free ... ok
+test profile_count_is_bounded_before_catalog_enumeration ... ok
+test profile_omissions_use_provider_defaults_without_weakening_storage ... ok
+test profile_schema_rejects_transport_and_storage_fields ... ok
+test profile_selection_rejects_unknown_names_and_providers_without_echoing_model_text ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/path_guard.rs (/home/han/project/Orchester/target/debug/deps/path_guard-03fe996383cacca4)
+
+running 20 tests
+test accepts_an_absolute_path_that_is_inside_the_workspace ... ok
+test atomic_commit_rejects_a_replaced_destination_object ... ok
+test atomic_write_target_is_a_new_regular_file_in_the_verified_parent ... ok
+test existing_directory_reports_its_parent_not_itself ... ok
+test fifo_read_is_rejected_without_blocking ... ok
+test filesystem_resolver_rejects_a_link_in_the_existing_parent_chain ... ok
+test guarded_read_does_not_follow_a_parent_swap_race ... ok
+test guarded_rename_uses_verified_parent_handles ... ok
+test guarded_write_does_not_create_files_through_a_parent_swap_race ... ok
+test mutation_resolution_waits_for_the_workspace_lock ... ok
+test permits_existing_reads_and_new_files_below_real_workspace_parents ... ok
+test rejects_link_or_reparse_components_for_existing_and_future_targets ... ok
+test rejects_missing_reads_non_directory_components_and_protected_state ... ok
+test rejects_non_regular_file_types_without_opening_them ... ok
+test rejects_parent_escape_absolute_outside_empty_and_nul_paths ... ok
+test revalidation_detects_parent_replacement_before_write ... ok
+test revalidation_rejects_link_inserted_after_initial_resolution ... ok
+test workspace_lock_allows_reads_and_keeps_identities_independent ... ok
+test workspace_lock_serializes_mutations_for_the_same_workspace ... ok
+test workspace_root_open_rejects_link_or_reparse_components ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running tests/policy_matrix.rs (/home/han/project/Orchester/target/debug/deps/policy_matrix-8eddab172f46650d)
+
+running 17 tests
+test bounded_sleep_is_a_shell_free_read_only_command ... ok
+test command_categories_cover_network_delete_privilege_git_and_package ... ok
+test command_debug_does_not_echo_program_or_arguments ... ok
+test configured_allow_cannot_relax_core_network_or_shell_rules ... ok
+test configured_network_deny_tightens_network_and_dependency_actions ... ok
+test deterministic_policy_matrix ... ok
+test executable_argument_hooks_fail_closed ... ok
+test explicit_approval_action_always_pauses_for_the_owner ... ok
+test network_and_dependency_effects_require_approval ... ok
+test network_probe_commands_require_approval ... ok
+test ordinary_recursive_delete_is_ask_but_root_delete_is_denied ... ok
+test platform_root_aliases_and_wildcards_are_denied ... ok
+test policy_explanations_do_not_echo_model_controlled_arguments ... ok
+test policy_snapshot_binds_effective_governance_constraints ... ok
+test safe_command_is_allow_and_preserves_original_arguments ... ok
+test shell_wrappers_and_control_tokens_fail_closed ... ok
+test unknown_commands_and_parse_failures_never_allow ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/responses_model.rs (/home/han/project/Orchester/target/debug/deps/responses_model-4725ae2dd1fcc3eb)
+
+running 14 tests
+test cancellation_during_retry_backoff_prevents_second_send ... ok
+test classifies_http_and_transport_failures_without_provider_bodies ... ok
+test forbidden_model_errors_point_to_permissions_and_balance ... ok
+test forwards_bounded_responses_text_deltas_and_requires_completion ... ok
+test maps_invalid_success_payloads_to_protocol_errors ... ok
+test maps_rate_limits_to_capped_retry_metadata ... ok
+test performs_reusable_authenticated_responses_calls ... ok
+test rejects_streams_without_a_completed_event ... ok
+test rejects_unsafe_endpoints_and_redacts_model_debug_output ... ok
+test retries_a_transient_http_failure_once ... ok
+test retries_a_transient_stream_status_before_emitting_deltas ... ok
+test retries_a_transient_timeout_once ... ok
+test retries_a_transient_transport_failure_once ... ok
+test transient_retries_are_bounded_after_two_failures ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.72s
+
+     Running tests/responses_request.rs (/home/han/project/Orchester/target/debug/deps/responses_request-06ac2d7292e785fa)
+
+running 5 tests
+test encodes_assistant_text_and_rejects_an_oversized_wire_body ... ok
+test encodes_function_tools_and_sequential_call_history ... ok
+test encodes_instructions_messages_and_safe_request_defaults ... ok
+test encoding_errors_do_not_render_prompt_or_tool_content ... ok
+test rejects_opaque_items_invalid_tool_schemas_and_invalid_history_roles ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/responses_response.rs (/home/han/project/Orchester/target/debug/deps/responses_response-3c1acdc9e1be2584)
+
+running 5 tests
+test decodes_mixed_text_tool_usage_and_forward_compatible_items ... ok
+test decodes_refusal_text_and_defaults_missing_usage ... ok
+test preserves_bounded_unknown_message_content_without_rendering_it ... ok
+test rejects_incomplete_ambiguous_and_invalid_tool_responses ... ok
+test response_errors_are_bounded_and_do_not_echo_provider_content ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/run_store.rs (/home/han/project/Orchester/target/debug/deps/run_store-1fed8a731fa1fc2c)
+
+running 36 tests
+test a_step_cannot_record_two_actions_and_failed_insert_adds_no_event ... ok
+test action_accepts_completed_origin_with_distinct_provider_call_id ... ok
+test action_before_model_completion_is_rejected_atomically ... ok
+test action_provider_call_id_with_configured_secret_is_rejected_atomically ... ok
+test action_rejects_a_different_origin_model_call_id ... ok
+test action_with_configured_secret_is_rejected_before_durable_persistence ... ok
+test combined_empty_model_response_binds_zero_records_before_the_action ... ok
+test concurrent_model_completion_has_one_winner ... ok
+test every_write_requires_the_run_owner_and_approval_pause_blocks_new_steps ... ok
+test invalid_combined_model_action_rolls_back_model_completion_and_transcript ... ok
+test legacy_action_without_completed_origin_cannot_reenter_policy_or_execution ... ok
+test model_completion_and_transcript_preserve_safe_multiline_text ... ok
+test model_completion_fails_closed_for_a_secret_split_across_lines ... ok
+test model_completion_is_call_bound_atomic_and_single_shot ... ok
+test model_completion_redacts_configured_secrets_at_the_persistence_boundary ... ok
+test model_completion_with_action_commits_response_and_tool_call_as_one_boundary ... ok
+test model_completion_writes_assistant_transcript_in_the_same_transaction ... ok
+test model_start_persists_running_phase_and_call_id ... ok
+test model_start_rejects_an_unclosed_request_transcript_atomically ... ok
+test model_start_writes_new_request_records_in_the_same_transaction ... ok
+test on_disk_store_recovers_terminal_state_and_exact_events ... ok
+test oversized_action_arguments_roll_back_action_and_tool_call_transcript ... ok
+test oversized_model_completion_rolls_back_event_and_transcript_together ... ok
+test oversized_model_start_input_rolls_back_event_phase_and_transcript ... ok
+test owner_scoped_lookup_does_not_reveal_foreign_run ... ok
+test policy_rule_with_configured_secret_is_rejected_atomically ... ok
+test project_identity_is_stable_and_owner_bound_across_runs ... ok
+test provider_call_id_with_configured_secret_is_rejected_atomically ... ok
+test run_completion_redacts_configured_secrets_at_the_persistence_boundary ... ok
+test state_transition_and_event_are_atomic_and_sequences_are_contiguous ... ok
+test transcript_append_classifies_existing_noncanonical_wire_as_corrupt ... ok
+test transcript_append_rejects_unpaired_result_without_partial_write ... ok
+test transcript_batch_append_is_atomic_and_returns_one_contiguous_range ... ok
+test transcript_reader_rejects_a_cross_record_call_id_mismatch ... ok
+test transcript_records_are_owner_scoped_canonical_and_recover_after_reopen ... ok
+test transcript_text_is_sanitized_and_tool_arguments_reject_escaped_secrets ... ok
+
+test result: ok. 36 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.72s
+
+     Running tests/run_store_action_events.rs (/home/han/project/Orchester/target/debug/deps/run_store_action_events-5d1d5a5ec2b1d079)
+
+running 4 tests
+test action_binding_rejects_event_step_drift ... ok
+test durable_action_event_keeps_full_action_out_of_event_payload ... ok
+test durable_action_event_rejects_tampered_summary_or_hash ... ok
+test legacy_full_action_event_is_verified_and_projected_without_raw_action ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s
+
+     Running tests/run_store_bindings.rs (/home/han/project/Orchester/target/debug/deps/run_store_bindings-a6e7c8bdd2f88c7e)
+
+running 3 tests
+test binding_read_rejects_a_forged_range_even_when_the_row_shape_is_valid ... ok
+test binding_rows_enforce_shape_foreign_keys_and_append_only_updates ... ok
+test failed_lifecycle_boundary_rolls_back_event_transcript_and_binding ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.33s
+
+     Running tests/run_store_migrations.rs (/home/han/project/Orchester/target/debug/deps/run_store_migrations-4576f4b7888e6978)
+
+running 27 tests
+test claimed_v1_with_weakened_table_constraints_is_rejected_without_advancing ... ok
+test claimed_v2_with_weakened_partial_index_is_rejected_without_advancing ... ok
+test claimed_v4_shape_is_rejected_before_v5_can_mutate_it ... ok
+test concurrent_v1_openers_converge_on_latest_migration ... ok
+test concurrent_v2_openers_converge_on_latest_migrations ... ok
+test database_claiming_v2_without_v2_shape_is_rejected ... ok
+test database_claiming_v3_with_weak_model_phase_is_rejected ... ok
+test database_claiming_v3_without_model_phase_is_rejected ... ok
+test database_claiming_v4_without_action_origin_is_rejected ... ok
+test database_claiming_v5_with_weak_observation_links_is_rejected ... ok
+test database_claiming_v5_without_observation_shape_is_rejected ... ok
+test disagreeing_version_markers_are_rejected_without_advancing ... ok
+test every_exact_historical_prefix_converges_on_latest_once ... ok
+test gapped_version_ledger_is_rejected_without_advancing ... ok
+test later_failure_rolls_the_entire_v1_to_latest_upgrade_back ... ok
+test latest_schema_contains_bounded_append_only_transcript_records ... ok
+test marker_without_a_ledger_is_rejected_without_bootstrap ... ok
+test newer_schema_is_rejected_without_bootstrapping_v1_objects ... ok
+test sqlite_with_user_objects_but_no_ledger_is_not_claimed ... ok
+test unexpected_v2_trigger_is_rejected_and_upgrade_can_retry_after_removal ... ok
+test unexpected_v3_trigger_is_rejected_and_upgrade_can_retry_after_removal ... ok
+test unexpected_v4_trigger_is_rejected_and_upgrade_can_retry_after_removal ... ok
+test v1_state_database_is_upgraded_to_latest_before_use ... ok
+test v2_state_database_backfills_model_phase_and_action_origin ... ok
+test v4_terminal_attempts_receive_typed_absence_while_started_stays_unlinked ... ok
+test v5_migration_rejects_legacy_attempt_action_call_mismatch_atomically ... ok
+test v6_upgrade_does_not_guess_lifecycle_bindings_for_legacy_transcripts ... ok
+
+test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.66s
+
+     Running tests/run_store_policy.rs (/home/han/project/Orchester/target/debug/deps/run_store_policy-b7a1670eb3e1183c)
+
+running 6 tests
+test failed_policy_event_insert_rolls_back_action_step_and_run ... ok
+test forged_allow_is_rejected_and_does_not_append_an_event ... ok
+test snapshot_drift_and_tampered_action_state_fail_without_new_events ... ok
+test store_computes_allow_and_reopen_prepares_the_recorded_action ... ok
+test store_computes_ask_for_network_action_and_persists_the_decision ... ok
+test store_computes_deny_for_root_destructive_action ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.99s
+
+     Running tests/run_store_resume.rs (/home/han/project/Orchester/target/debug/deps/run_store_resume-ae020a2ce430f885)
+
+running 19 tests
+test action_resume_rejects_broken_model_and_hash_bindings ... ok
+test approval_resume_points_distinguish_request_wait_and_capability_recovery ... ok
+test combined_empty_model_response_resumes_from_its_bound_action ... ok
+test completed_model_requires_durable_completion_transcript ... ok
+test durable_model_start_context_is_accepted_by_resume_projection ... ok
+test interrupted_unknown_model_requires_manual_reconciliation ... ok
+test interrupted_unknown_tool_requires_manual_reconciliation ... ok
+test policy_denial_is_valid_terminal_evidence_for_the_next_step ... ok
+test recorded_action_rejects_an_unbound_audit_sequence ... ok
+test recorded_action_returns_policy_evaluation_resume_point ... ok
+test resume_projection_is_owner_scoped_and_omits_terminal_runs ... ok
+test resume_projection_reconciles_running_model_without_replay ... ok
+test resume_rejects_a_model_call_without_request_binding ... ok
+test resume_rejects_an_observed_step_without_terminal_evidence ... ok
+test resume_rejects_audit_checkpoint_field_drift ... ok
+test resume_rejects_ready_allow_action_without_its_policy_event ... ok
+test resume_rejects_tool_running_without_its_started_event ... ok
+test started_tool_returns_reconcile_resume_point_without_replay ... ok
+test tool_terminal_resume_requires_exact_event_observation_and_result_binding ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.62s
+
+     Running tests/self_agent_builder.rs (/home/han/project/Orchester/target/debug/deps/self_agent_builder-df89c508ba41a4b4)
+
+running 6 tests
+test build_failures_do_not_create_durable_state ... ok
+test builds_and_runs_a_configured_durable_service_offline ... ok
+test configured_runtime_executes_a_read_action_offline ... ok
+test production_builder_binds_effective_network_denial_to_the_durable_run ... ok
+test production_builder_constructs_without_connecting ... ok
+test unselected_provider_credentials_do_not_block_service_construction ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.44s
+
+     Running tests/self_agent_models.rs (/home/han/project/Orchester/target/debug/deps/self_agent_models-762d3a3cf1584a2e)
+
+running 14 tests
+test a_provider_and_a_named_profile_replace_one_another ... ok
+test an_unusable_provider_is_listed_but_never_becomes_the_selection ... ok
+test catalog_lists_every_configured_provider_with_the_wire_it_speaks ... ok
+test catalog_lists_named_choices_when_the_configured_default_is_absent ... ok
+test catalog_projects_configured_and_named_choices_without_transport_details ... ok
+test catalog_reports_controlled_active_metadata_without_ever_projecting_it ... ok
+test failed_model_session_selection_preserves_the_previous_choice ... ok
+test invalid_named_choices_fail_without_echoing_model_text ... ok
+test model_session_changes_only_future_effective_configuration ... ok
+test model_session_returns_to_configured_choice_atomically ... ok
+test provider_switch_uses_its_own_catalog_and_preserves_reasoning ... ok
+test returning_to_an_unresolvable_active_model_is_refused_with_its_reason ... ok
+test selecting_a_catalog_profile_returns_a_matching_effective_config ... ok
+test selecting_a_provider_switches_the_transport_and_keeps_the_model ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/self_agent_permissions.rs (/home/han/project/Orchester/target/debug/deps/self_agent_permissions-5928b91af001dd68)
+
+running 3 tests
+test permission_snapshot_never_contains_provider_or_credential_values ... ok
+test permission_snapshot_reports_unambiguous_approval_and_audit_boundaries ... ok
+test permission_snapshot_uses_real_policy_and_keeps_core_boundaries_strict ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/self_agent_resume_catalog.rs (/home/han/project/Orchester/target/debug/deps/self_agent_resume_catalog-1962527c31fc2dde)
+
+running 4 tests
+test missing_state_returns_an_empty_catalog_without_creating_a_database ... ok
+test opaque_resume_handles_are_owner_and_workspace_scoped ... ok
+test reports_current_workspace_runs_newest_first_through_opaque_handles ... ok
+test terminal_runs_do_not_hide_older_resumable_runs_from_the_bounded_query ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.29s
+
+     Running tests/self_agent_runtime.rs (/home/han/project/Orchester/target/debug/deps/self_agent_runtime-a3978dfd084b7cd2)
+
+running 10 tests
+test allowed_read_runs_through_the_durable_execution_boundary ... ok
+test explicit_permissions_execute_bound_write_and_read_before_continuing ... ok
+test model_error_does_not_complete_the_event_stream ... ok
+test non_file_actions_remain_visible_without_crossing_the_audit_barrier ... ok
+test resume_with_events_continues_the_selected_opaque_handle ... ok
+test run_continues_after_a_governed_tool_failure ... ok
+test run_executes_multiple_allowed_tools_then_returns_the_final_text ... ok
+test run_stops_for_approval_after_returning_the_tool_observation_to_the_model ... ok
+test run_with_events_forwards_ordered_text_without_changing_tool_sequence ... ok
+test runtime_streaming_redactor_uses_the_durable_secret_snapshot ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.09s
+
+     Running tests/self_agent_service.rs (/home/han/project/Orchester/target/debug/deps/self_agent_service-7460cb86c94379d8)
+
+running 7 tests
+test continues_an_observed_tool_step_without_creating_a_second_run ... ok
+test exposes_a_policy_ask_for_external_network_commands ... ok
+test exposes_a_policy_deny_for_root_destructive_commands ... ok
+test gives_each_new_turn_a_unique_run_identity ... ok
+test rejects_missing_workspaces_and_invalid_owner_identifiers ... ok
+test returns_a_policy_classified_action_with_durable_identity ... ok
+test starts_a_durable_text_turn_and_exposes_bounded_metadata ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.53s
+
+     Running tests/self_agent_status.rs (/home/han/project/Orchester/target/debug/deps/self_agent_status-26271bb2719af578)
+
+running 5 tests
+test a_partially_configured_model_is_reported_rather_than_hiding_the_workspace ... ok
+test an_empty_configuration_is_reported_as_unconfigured_not_unresolved ... ok
+test invalid_active_model_configuration_is_not_reported_as_unconfigured ... ok
+test reports_effective_model_governance_and_limits_without_creating_state ... ok
+test summarizes_real_resumable_runs_for_the_current_workspace ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
+     Running tests/tool_registry.rs (/home/han/project/Orchester/target/debug/deps/tool_registry-1800de874c2149e1)
+
+running 4 tests
+test bound_call_debug_does_not_echo_arguments ... ok
+test registry_catalog_and_binding_share_a_stable_generation ... ok
+test registry_rejects_duplicate_or_malformed_definitions_and_bounds_arguments ... ok
+test stale_or_unknown_calls_never_bind ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/wire_factory.rs (/home/han/project/Orchester/target/debug/deps/wire_factory-70a7ce3cd944324b)
+
+running 9 tests
+test an_explicit_false_keeps_a_keyed_provider_unauthenticated ... ok
+test builds_a_profile_bound_model_with_resolved_authentication ... ok
+test explicit_alias_controls_metadata_for_duplicate_model_ids ... ok
+test model_catalog_controls_wire_reasoning_and_output_cap ... ok
+test only_the_selected_provider_secret_is_resolved ... ok
+test raw_default_effort_uses_valid_named_profile_default_after_catalog_edit ... ok
+test rejects_model_or_storage_drift_before_transport ... ok
+test required_credentials_fail_before_model_construction_without_leaking ... ok
+test unauthenticated_profiles_build_without_a_credential ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (/home/han/project/Orchester/target/debug/deps/orchester_modell-9febff06d6b44047)
+
+running 1 test
+test types::tests::legacy_models_emit_final_text_once_through_event_api ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/scripted_loop_parts.rs (/home/han/project/Orchester/target/debug/deps/scripted_loop_parts-7d815a73057356c0)
+
+running 19 tests
+test bounded_depth_and_limit_reject_zero_and_oversized_values ... ok
+test call_ids_remain_typed_across_model_and_decoder_boundaries ... ok
+test cancellation_before_pop_returns_cancelled_without_consuming_script ... ok
+test command_arguments_and_check_ids_have_item_and_element_bounds ... ok
+test each_tool_args_struct_rejects_an_unknown_field ... ok
+test empty_command_program_is_rejected ... ok
+test every_durable_string_field_is_bounded ... ok
+test every_protocol_action_has_a_strict_decoder_mapping ... ok
+test invalid_call_ids_are_rejected_without_retaining_unbounded_provider_text ... ok
+test json_strings_are_never_coerced_into_numbers_or_arrays ... ok
+test line_ranges_must_be_positive_and_ordered ... ok
+test malformed_and_unknown_tools_are_distinguished_without_echoing_arguments ... ok
+test model_errors_expose_bounded_retry_metadata_without_provider_text ... ok
+test raw_argument_json_is_bounded_before_deserialization ... ok
+test read_file_rejects_unknown_argument_fields ... ok
+test request_summary_contains_only_counts_names_and_flags ... ok
+test retained_and_rendered_diagnostics_drop_arbitrary_model_strings ... ok
+test script_exhaustion_is_reported_after_counting_the_attempt ... ok
+test scripted_llm_returns_one_queued_tool_response_and_counts_one_call ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running unittests src/lib.rs (/home/han/project/Orchester/target/debug/deps/orchester_netz-4648dcc58e0cfe49)
+
+running 97 tests
+test agent_activity::files::tests::catalog_excerpt_cache_has_a_total_byte_budget_without_limiting_detail ... ok
+test agent_activity::metadata::wsl_paths::maps_only_index_paths_within_the_same_wsl_sessions_root ... ok
+test agent_activity::tests::appended_and_partially_written_records_are_refreshed_without_duplicates ... ok
+test agent_activity::tests::catalog_excludes_explicit_subagent_sources_even_without_agent_role ... ok
+test agent_activity::tests::catalog_over_128_sessions_reuses_summaries_and_prunes_deleted_files ... ok
+test agent_activity::tests::claude_keeps_tool_results_separate_from_prompts_and_skips_thinking ... ok
+test agent_activity::tests::claude_rewritten_tool_keeps_its_result_relationship ... ok
+test agent_activity::tests::codex_index_uses_source_titles_and_projects_without_following_outside_paths ... ok
+test agent_activity::tests::codex_preserves_source_turn_timing_and_visible_message_phases ... ok
+test agent_activity::tests::codex_reads_visible_messages_tools_and_lifecycle_without_private_payloads ... ok
+test agent_activity::tests::codex_without_an_index_keeps_older_project_sessions ... ok
+test agent_activity::tests::compressed_index_includes_every_top_level_session_and_resolves_oldest_detail ... ok
+test agent_activity::tests::every_compressed_history_page_is_contiguous_and_keeps_source_timing ... ok
+test agent_activity::tests::file_discovery_does_not_follow_external_symlinks ... ok
+test agent_activity::tests::local_reader_does_not_create_missing_provider_directories ... ok
+test agent_activity::tests::local_reader_does_not_infer_live_activity_from_stale_transcripts ... ok
+test agent_activity::tests::local_reader_uses_transcripts_without_starting_a_server ... ok
+test agent_activity::tests::long_messages_are_read_past_the_old_tail_window_and_clipped_only_at_the_text_bound ... ok
+test agent_activity::tests::managed_runs_expose_current_content_without_reasoning ... ok
+test agent_activity::tests::opencode_emits_results_only_when_tools_finish ... ok
+test agent_activity::tests::opencode_reads_sqlite_without_modifying_source ... ok
+test agent_activity::tests::rewritten_claude_message_keeps_latest_timestamp_and_phase ... ok
+test agent_activity::tests::routes_require_a_session_reject_paths_and_return_no_store_content ... ok
+test agent_activity::tests::stalled_wsl_source_does_not_block_another_sources_detail ... ok
+test agent_activity::tests::title_is_not_replaced_by_followup_and_tools_share_opaque_call_ids ... ok
+test agent_activity::tests::truncated_or_invalid_turn_times_do_not_invent_elapsed_time ... ok
+test agent_activity::tests::unavailable_database_and_missing_roots_are_distinct ... ok
+test agent_activity::tests::unavailable_wsl_detail_gate_does_not_lock_local_snapshot ... ok
+test agent_activity::tests::working_directory_survives_environment_project_isolation ... ok
+test agent_activity::wsl::tests::bounded_command_failures_keep_distinct_safe_diagnostics ... ok
+test agent_activity::wsl::tests::command_capture_rejects_timeouts_failures_and_excess_output ... ok
+test agent_activity::wsl::tests::completed_command_does_not_wait_for_a_descendant_holding_stdout ... ok
+test agent_activity::wsl::tests::decodes_windows_distribution_names ... ok
+test agent_activity::wsl::tests::isolates_duplicate_sessions_and_retains_unavailable_history ... ok
+test agent_process::identity::tests::branded_agent_entries_are_recognized_across_runtime_wrappers ... ok
+test agent_process::identity::tests::helpers_generic_names_and_prompt_strings_are_never_agent_identities ... ok
+test agent_process::identity::tests::metadata_prefix_has_fixed_argument_and_byte_limits ... ok
+test agent_process::identity::tests::partial_wsl_query_preserves_positives_but_skips_dead_and_truncated_candidates ... ok
+test agent_process::identity::tests::relative_dot_segments_do_not_turn_parent_entries_into_branded_services ... ok
+test agent_process::identity::tests::relative_source_entries_flags_and_maintenance_follow_the_real_entrypoint ... ok
+test agent_process::identity::tests::supervisor_child_pairs_count_once_and_independent_instances_remain_separate ... ok
+test agent_process::identity::tests::wsl_and_local_rules_agree_and_wsl_stdout_contains_only_safe_counts ... ok
+test agent_process::tests::bounded_identity_query_failure_never_confirms_zero_or_accepts_metadata ... ok
+test agent_process::tests::failed_distro_does_not_discard_other_current_counts ... ok
+test agent_process::tests::incomplete_identity_read_without_positives_never_confirms_zero ... ok
+test agent_process::tests::partial_identity_read_preserves_current_positive_counts_with_an_unknown_marker ... ok
+test agent_process::tests::partial_wsl_refresh_keeps_current_counts_separate_from_cached_stale_counts ... ok
+test agent_process::tests::production_reader_discards_late_results_at_the_source_deadline ... ok
+test agent_process::tests::production_reader_keeps_one_worker_after_timeout_and_accepts_fresh_recovery ... ok
+test agent_process::tests::production_reader_releases_its_gate_after_a_synthetic_panic ... ok
+test agent_process::tests::wsl_cache_busy_or_expired_marks_old_counts_stale_instead_of_live_or_zero_complete ... ok
+test agent_process::tests::wsl_cache_refreshes_only_on_snapshot_calls ... ok
+test agent_process::tests::wsl_failure_preserves_last_success_and_recovery_empty_confirms_zero ... ok
+test bootstrap::tests::cloned_contexts_share_the_run_registry ... ok
+test composer::tests::goals_persist_with_revision_and_paused_goals_do_not_affect_prompts ... ok
+test mcp::tests::definitions_reject_secrets_in_urls_and_shell_wrappers ... ok
+test mcp::tests::stream_handles_notifications_split_utf8_and_multiline_data ... ok
+test model_catalog::provider_editor_contract_tests::rich_editor_accepts_provider_scoped_models_without_redundant_provider_field ... ok
+test remote::terminal::runtime::tests::expiry_and_manager_drop_release_shell_and_io_workers ... ok
+test remote::terminal::runtime::tests::replay_memory_and_chunk_count_are_bounded ... ok
+test remote::terminal::runtime::tests::utf8_preserves_cjk_across_every_byte_boundary_and_invalid_bytes ... ok
+test run::tests::cancel_is_idempotent_and_emits_one_terminal_event ... ok
+test run::tests::dropping_a_request_waiting_for_model_selection_does_not_reserve_its_key ... ok
+test run::tests::event_socket_replays_from_the_cursor_then_streams_live_events ... ok
+test run::tests::event_socket_reports_an_unknown_run_as_not_found ... ok
+test run::tests::event_socket_requests_resync_for_an_evicted_cursor ... ok
+test run::tests::failed_http_submission_is_saved_and_can_continue_after_server_restart ... ok
+test run::tests::failed_journal_write_does_not_advance_sequence_or_make_a_stop_unretryable ... ok
+test run::tests::long_conversation_keeps_all_events_on_reload_and_server_restart ... ok
+test run::tests::replay_requires_resync_when_the_requested_sequence_was_evicted ... ok
+test run::tests::replay_returns_a_bounded_page_after_the_requested_sequence ... ok
+test run::tests::snapshot_returns_the_registered_run_state ... ok
+test run::tests::the_failure_fallback_preserves_a_cancelled_run ... ok
+test run::tests::unfinished_failure_keeps_one_error_and_broadcasts_one_terminal_frame ... ok
+test run_bridge::tests::an_error_keeps_its_following_stop_reason_without_duplicate_terminal_events ... ok
+test run_bridge::tests::file_change_paths_are_redacted_before_they_leave_the_process ... ok
+test run_bridge::tests::narrated_markdown_survives_bridge_snapshot_and_repeated_wire_roundtrips ... ok
+test run_bridge::tests::narration_is_broadcast_before_the_producer_finishes ... ok
+test run_bridge::tests::the_runtime_vocabulary_maps_onto_the_ui_vocabulary ... ok
+test run_bridge::tests::tool_calls_pair_by_name_and_arrival_order ... ok
+test run_contract::tests::replay_limit_defaults_and_has_a_hard_cap ... ok
+test run_contract::tests::start_request_accepts_multiline_prompt ... ok
+test run_contract::tests::start_request_rejects_blank_prompt ... ok
+test run_contract::tests::start_request_reports_invalid_control_characters_by_field ... ok
+test run_contract::tests::stream_frame_uses_the_written_discriminator ... ok
+test run_registry::tests::a_failed_initial_event_publishes_neither_run_nor_key ... ok
+test run_registry::tests::a_registry_assigns_monotonic_sequences_and_replays_events ... ok
+test run_registry::tests::an_error_does_not_advertise_a_terminal_snapshot_before_its_stop_frame ... ok
+test run_registry::tests::cancellation_is_idempotent_and_marks_the_run_terminal ... ok
+test run_registry::tests::concurrent_appends_broadcast_in_journal_sequence_order ... ok
+test run_registry::tests::concurrent_retries_publish_one_initialized_run_and_one_execution_owner ... ok
+test run_registry::tests::durable_initialization_failure_leaves_the_key_retryable ... ok
+test run_registry::tests::keys_survive_the_retry_window_event_eviction_and_termination ... ok
+test run_registry::tests::retention_reports_a_resync_boundary_instead_of_silent_loss ... ok
+test schedule_store::tests::claims_persist_prevent_overlap_recover_and_isolate_workspaces ... ok
+test schedule_store::tests::one_shot_disables_and_manual_run_keeps_future_due_time ... ok
+test schedule_store::tests::opening_schedules_first_preserves_the_runtime_private_storage_boundary ... ok
+
+test result: ok. 97 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 9.97s
+
+     Running tests/agent_catalog.rs (/home/han/project/Orchester/target/debug/deps/agent_catalog-bef5cb8386b32091)
+
+running 1 test
+test agent_catalog_projects_registry_without_commands_or_paths ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/agent_process.rs (/home/han/project/Orchester/target/debug/deps/agent_process-35c18af7f1aaa499)
+
+running 3 tests
+test process_sources_are_injectable_without_exposing_raw_metadata ... ok
+test provider_matching_is_exact_and_case_insensitive ... ok
+test snapshot_keeps_only_provider_instance_counts ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/agent_process_monitor.rs (/home/han/project/Orchester/target/debug/deps/agent_process_monitor-228098fed064dcc5)
+
+running 1 test
+test process_monitor_publishes_changes_once_and_stops_with_the_server ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/agent_routes.rs (/home/han/project/Orchester/target/debug/deps/agent_routes-0349a71c68a1c6b3)
+
+running 1 test
+test agent_catalog_route_returns_sorted_path_free_registry_data ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running tests/agent_runtime_status.rs (/home/han/project/Orchester/target/debug/deps/agent_runtime_status-212b4b9d50657106)
+
+running 12 tests
+test additional_providers_have_monitor_only_rows_without_runnable_adapters ... ok
+test failed_process_task_publishes_unavailable_instead_of_retaining_a_confirmed_zero ... ok
+test incomplete_first_observation_is_unknown_and_partial_counts_remain_running ... ok
+test monitor_only_rows_observe_presence_absence_and_unknown_sources ... ok
+test process_monitor_start_is_safe_without_a_tokio_runtime ... ok
+test runtime_store_broadcasts_snapshots_and_heartbeats_to_subscribers ... ok
+test runtime_store_reconciles_external_processes_without_losing_managed_counts ... ok
+test runtime_store_redacts_failure_paths_before_the_snapshot_leaves_the_server ... ok
+test runtime_store_rejects_unknown_agents_without_mutating_the_snapshot ... ok
+test runtime_store_updates_one_agent_and_advances_the_snapshot_sequence ... ok
+test source_quality_changes_publish_atomically_and_recovery_confirms_zero ... ok
+test unavailable_external_sources_preserve_managed_approval_and_counts ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.47s
+
+     Running tests/agent_status_routes.rs (/home/han/project/Orchester/target/debug/deps/agent_status_routes-dc9b294ac5281ac0)
+
+running 3 tests
+test agent_status_route_reflects_runtime_updates_from_the_shared_context ... ok
+test agent_status_route_refreshes_external_process_counts_before_responding ... ok
+test agent_status_route_returns_a_redaction_safe_runtime_snapshot ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+
+     Running tests/agent_status_socket.rs (/home/han/project/Orchester/target/debug/deps/agent_status_socket-657c5aac652ff67e)
+
+running 1 test
+test agent_status_socket_streams_snapshot_updates_and_heartbeats ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/api_error.rs (/home/han/project/Orchester/target/debug/deps/api_error-bc8700d24b30c72d)
+
+running 2 tests
+test api_error_mapping_returns_stable_status_and_safe_json ... ok
+test internal_error_mapping_does_not_echo_internal_details ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bootstrap.rs (/home/han/project/Orchester/target/debug/deps/bootstrap-d4854d2fa0a97afd)
+
+running 2 tests
+test bootstrap_projects_running_state_and_workspace_basename_without_paths ... ok
+test bootstrap_supports_an_unselected_workspace ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running tests/composer_routes.rs (/home/han/project/Orchester/target/debug/deps/composer_routes-28d66e73162946bb)
+
+running 3 tests
+test context_and_servers_survive_restart_and_do_not_cross_workspaces ... ok
+test http_mcp_negotiates_sessions_pagination_and_streamed_results ... ok
+test stdio_mcp_handshake_and_call_use_a_direct_background_process ... ignored, requires Node.js; included in desktop acceptance
+
+test result: ok. 2 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.23s
+
+     Running tests/context_registry.rs (/home/han/project/Orchester/target/debug/deps/context_registry-170a15521565f104)
+
+running 3 tests
+test server_context_binds_a_model_host_only_for_a_selected_workspace ... ok
+test server_context_binds_delegate_history_to_the_selected_paths ... ok
+test server_context_discovers_project_manifests_into_its_registry ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+
+     Running tests/embedded.rs (/home/han/project/Orchester/target/debug/deps/embedded-b7dd35cd55c6d1be)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/health.rs (/home/han/project/Orchester/target/debug/deps/health-dd7ea07818a066e3)
+
+running 1 test
+test health_response_contains_only_stable_service_metadata ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/http_routes.rs (/home/han/project/Orchester/target/debug/deps/http_routes-e437a7f9645a940e)
+
+running 12 tests
+test another_window_bootstrap_preserves_the_main_windows_mutation_authority ... ok
+test bootstrap_route_returns_the_safe_context_snapshot ... ok
+test fragment_exchange_consumes_a_registered_token_once ... ok
+test fragment_exchange_rejects_schema_mismatch_without_consuming_token ... ok
+test health_route_returns_uncached_json_with_the_typed_payload ... ok
+test malformed_json_returns_a_redacted_bad_request ... ok
+test revoke_requires_csrf_and_accepts_the_issued_cookie_once ... ok
+test routes_generate_a_request_id_when_the_client_does_not_send_one ... ok
+test routes_propagate_a_client_request_id ... ok
+test session_bootstrap_sets_an_http_only_cookie_and_returns_only_csrf_json ... ok
+test unknown_api_route_returns_not_found ... ok
+test unknown_api_routes_return_typed_json_errors ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.47s
+
+     Running tests/library_routes.rs (/home/han/project/Orchester/target/debug/deps/library_routes-e7d311f9f252b73d)
+
+running 1 test
+test library_routes_enforce_csrf_and_return_canonical_workspace ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/lifecycle.rs (/home/han/project/Orchester/target/debug/deps/lifecycle-d0c10d6211515909)
+
+running 5 tests
+test concurrent_shutdown_requests_are_idempotent ... ok
+test control_broadcasts_one_shutdown_signal_and_completes_without_a_socket ... ok
+test control_cannot_shutdown_before_starting ... ok
+test lifecycle_rejects_skipping_a_state_or_restarting_after_stop ... ok
+test lifecycle_starts_in_starting_state_and_accepts_ordered_transitions ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/listener.rs (/home/han/project/Orchester/target/debug/deps/listener-c159ca031a63be23)
+
+running 2 tests
+test binding_ephemeral_port_exposes_an_allocated_loopback_address ... ok
+test binding_rejects_non_loopback_before_opening_a_socket ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/model_catalog.rs (/home/han/project/Orchester/target/debug/deps/model_catalog-e219a77dd798d232)
+
+running 2 tests
+test model_catalog_projects_choices_without_provider_endpoints ... ok
+test unresolved_active_models_preserve_only_validation_metadata ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/model_routes.rs (/home/han/project/Orchester/target/debug/deps/model_routes-70b46d8edb9d0d35)
+
+running 8 tests
+test model_catalog_route_does_not_echo_configuration_failures ... ok
+test model_catalog_route_projects_a_configured_workspace_model ... ok
+test model_catalog_without_workspace_returns_a_typed_unavailable_error ... ok
+test selection_route_names_a_profile_whole ... ok
+test selection_route_refuses_a_choice_this_workspace_cannot_apply ... ok
+test selection_route_refuses_a_field_it_cannot_believe ... ok
+test selection_route_remembers_the_model_the_next_run_will_use ... ok
+test selection_route_requires_a_selected_workspace ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.48s
+
+     Running tests/plugin_routes.rs (/home/han/project/Orchester/target/debug/deps/plugin_routes-8edac51a7a844cdc)
+
+running 2 tests
+test catalog_and_mutation_validation_do_not_execute_arbitrary_packages ... ok
+test plugin_catalog_is_explicitly_unavailable_without_workspace ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+     Running tests/provider_routes.rs (/home/han/project/Orchester/target/debug/deps/provider_routes-9e27d945395d7f93)
+
+running 13 tests
+test adding_a_provider_persists_only_a_reference_and_matches_the_next_catalog ... ok
+test duplicate_provider_is_refused_without_replacing_configuration_or_echoing_a_key ... ok
+test editing_and_deleting_an_unrelated_provider_preserves_session_model ... ok
+test invalid_drafts_leave_both_configuration_and_credentials_untouched ... ok
+test malformed_unknown_and_oversized_bodies_are_rejected_without_echoing_input ... ok
+test missing_workspace_and_uneditable_configuration_return_retryable_unavailable_errors ... ok
+test provider_setup_refuses_untrusted_host_origin_and_missing_session_or_csrf_without_outer_middleware ... ok
+test rich_provider_invalid_update_is_atomic_and_cannot_overwrite_another_provider_profile ... ok
+test rich_provider_mutations_require_session_and_csrf_and_details_require_session ... ok
+test rich_provider_optional_blank_display_name_is_normalized ... ok
+test rich_provider_routes_edit_reload_and_delete_preserve_other_provider_and_private_key ... ok
+test saving_a_provider_keeps_comments_and_clears_the_previous_session_override ... ok
+test simultaneous_duplicate_additions_are_serialized ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.35s
+
+     Running tests/remote_routes.rs (/home/han/project/Orchester/target/debug/deps/remote_routes-72d25a5f16a0c858)
+
+running 18 tests
+test cancel_before_dispatch_and_reject_unsupported_resume ... ok
+test cancel_native_run_stops_child_and_descendant ... ok
+test failed_final_persistence_is_not_reported_as_completed ... ok
+test failed_revocation_keeps_authority_consistent_with_disk ... ok
+test folders_require_pairing_and_enforce_real_allowed_roots ... ok
+test folders_skip_unaddressable_non_utf8_entries_instead_of_panicking ... ok
+test mock_stream_retry_and_restart_history ... ok
+test native_manifests_resume_with_stdin_eof ... ok
+test oversized_unterminated_native_stdout_is_stopped_before_eof ... ok
+test paired_authority_is_computer_bound_and_attempts_are_bounded ... ok
+test pairing_is_one_time_persists_and_can_be_revoked ... ok
+test persisted_events_page_without_gaps ... ok
+test project_catalog_deduplicates_and_survives_restart_without_demo_agents ... ok
+test replacing_a_selected_project_with_another_project_symlink_is_rejected ... ok
+test selected_projects_use_their_own_cli_directory_sessions_and_idempotency_scope ... ok
+test selecting_a_legacy_workspace_imports_its_history_without_restart ... ok
+test unfinished_persisted_runs_become_interrupted ... ok
+test v1_idempotency_retries_keep_the_original_run_after_project_upgrade ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.11s
+
+     Running tests/remote_terminals.rs (/home/han/project/Orchester/target/debug/deps/remote_terminals-ce1d73df2bdd74a6)
+
+running 5 tests
+test authorization_ticket_binding_limits_and_shutdown ... ok
+test closing_terminal_kills_background_descendant_jobs ... ok
+test project_cwd_revalidation_resume_cursor_and_invalid_messages ... ok
+test replay_overflow_reports_gap_then_replays_retained_output ... ok
+test shell_input_unicode_resize_replay_and_exit_are_real ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.32s
+
+     Running tests/run_idempotency_http.rs (/home/han/project/Orchester/target/debug/deps/run_idempotency_http-6777160b5c9bb605)
+
+running 3 tests
+test a_lost_http_response_reuses_a_failed_run_instead_of_leaving_it_running ... ok
+test concurrent_http_retries_publish_one_initial_turn_and_a_working_replay_socket ... ok
+test http_conflicts_and_validation_errors_do_not_echo_submission_secrets ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s
+
+     Running tests/run_routes.rs (/home/han/project/Orchester/target/debug/deps/run_routes-a1b71586843893dd)
+
+running 15 tests
+test a_retry_after_cancellation_keeps_the_terminal_run ... ok
+test an_unconfigured_model_finishes_once_with_a_static_public_error ... ok
+test cancel_route_reports_not_found_without_a_bound_run ... ok
+test equivalent_json_and_null_resume_share_a_run_and_the_routed_events_url ... ok
+test rejected_payloads_do_not_reserve_the_key ... ok
+test replay_route_reports_not_found_without_a_bound_run ... ok
+test snapshot_route_reports_not_found_without_a_bound_run ... ok
+test start_route_compares_the_exact_prompt_and_resume ... ok
+test start_route_journals_the_readers_own_turn_first ... ok
+test start_route_rejects_a_reused_key_with_a_different_request ... ok
+test start_route_rejects_an_invalid_idempotency_key ... ok
+test start_route_reports_unavailable_without_a_selected_workspace ... ok
+test start_route_reuses_the_run_for_an_identical_idempotency_key ... ok
+test start_route_validates_key_boundaries_and_duplicate_headers ... ok
+test unkeyed_and_differently_keyed_submissions_remain_independent ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.28s
+
+     Running tests/schedule_routes.rs (/home/han/project/Orchester/target/debug/deps/schedule_routes-a1b1f5df84d1cf83)
+
+running 2 tests
+test a_due_once_task_is_dispatched_without_an_http_submission ... ok
+test schedule_crud_persists_and_runs_through_the_real_runtime ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.44s
+
+     Running tests/server_config.rs (/home/han/project/Orchester/target/debug/deps/server_config-0869ed386a333040)
+
+running 4 tests
+test server_config_accepts_both_loopback_address_families ... ok
+test server_config_defaults_to_ephemeral_ipv4_loopback ... ok
+test server_config_preserves_explicit_network_and_static_asset_settings ... ok
+test server_config_rejects_non_loopback_bind_addresses ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/session.rs (/home/han/project/Orchester/target/debug/deps/session-4e396c54f0205ce9)
+
+running 6 tests
+test fragment_exchange_debug_output_redacts_the_raw_token ... ok
+test fragment_store_rejects_empty_tokens_and_expired_entries ... ok
+test fragment_tokens_are_consumed_once_and_only_hashes_are_retained ... ok
+test session_bootstrap_debug_output_redacts_raw_tokens ... ok
+test session_store_issues_distinct_tokens_and_validates_csrf ... ok
+test session_store_rejects_expired_and_revoked_sessions ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/session_history_dto.rs (/home/han/project/Orchester/target/debug/deps/session_history_dto-80ae813f517cc23a)
+
+running 2 tests
+test session_detail_projection_is_flat_path_free_and_bounded ... ok
+test session_page_projection_matches_the_versioned_browser_contract ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/session_history_routes.rs (/home/han/project/Orchester/target/debug/deps/session_history_routes-2ec55a607b5ab3b3)
+
+running 5 tests
+test session_detail_route_hides_lookup_and_workspace_failures ... ok
+test session_detail_route_returns_the_flat_opaque_history_record ... ok
+test session_list_route_pages_newest_first_with_opaque_cursors ... ok
+test session_list_route_redacts_corrupt_history_storage_errors ... ok
+test session_list_route_returns_typed_errors_for_unavailable_or_invalid_queries ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.53s
+
+     Running tests/static_routes.rs (/home/han/project/Orchester/target/debug/deps/static_routes-64ea27859b1418a9)
+
+running 1 test
+test disabled_static_assets_keep_non_api_routes_as_typed_json_404 ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/workspace.rs (/home/han/project/Orchester/target/debug/deps/workspace-14e97f9aef6a33b6)
+
+running 4 tests
+test selection_canonicalizes_directory_and_keeps_the_same_home ... ok
+test selection_rejects_a_missing_workspace_without_echoing_the_path ... ok
+test selection_rejects_a_regular_file_as_workspace ... ok
+test selection_rejects_an_empty_workspace_path ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/workspace_review_routes.rs (/home/han/project/Orchester/target/debug/deps/workspace_review_routes-dd6d7e59c63e10ae)
+
+running 6 tests
+test review_route_answers_a_plain_directory_with_an_empty_review ... ok
+test review_route_is_unavailable_when_no_workspace_is_selected ... ok
+test review_route_is_uncached_json_and_read_only ... ok
+test review_route_never_sends_an_absolute_path_to_the_browser ... ok
+test review_route_rejects_a_state_changing_method ... ok
+test review_route_reports_the_branch_and_each_paths_placement ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+
+     Running unittests src/lib.rs (/home/han/project/Orchester/target/debug/deps/orchester_protokoll-e38537c0cb37c261)
+
+running 18 tests
+test ui::tests::all_tool_states_have_explicit_wire_names ... ok
+test ui::tests::approval_request_and_resolution_require_row_versions ... ok
+test ui::tests::approval_requests_are_bound_to_the_envelope_run ... ok
+test ui::tests::duplicate_envelope_and_kind_fields_are_rejected ... ok
+test ui::tests::empty_run_and_event_ids_are_rejected ... ok
+test ui::tests::envelope_keeps_metadata_and_nested_discriminator ... ok
+test ui::tests::every_ui_event_variant_roundtrips ... ok
+test ui::tests::invalid_sequence_and_schema_are_rejected ... ok
+test ui::tests::message_serialization_preserves_markdown_across_repeated_roundtrips ... ok
+test ui::tests::provider_payloads_are_not_part_of_the_ui_schema ... ok
+test ui::tests::redacts_absolute_paths_and_credential_tokens ... ok
+test ui::tests::same_named_tools_keep_distinct_call_ids ... ok
+test ui::tests::serialization_sanitizes_messages_tools_and_approvals ... ok
+test ui::tests::tool_frames_reject_missing_or_mismatched_envelope_call_ids ... ok
+test ui::tests::tool_state_and_call_id_are_stable_wire_values ... ok
+test ui::tests::unknown_envelope_fields_are_rejected ... ok
+test ui::tests::unknown_kind_fields_are_rejected ... ok
+test ui::text::tests::credentials_and_controls_are_removed_without_rewriting_prose ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/agent_status.rs (/home/han/project/Orchester/target/debug/deps/agent_status-56e2f4bc17245587)
+
+running 9 tests
+test external_current_count_must_equal_successful_sources_only ... ok
+test fleet_status_accepts_external_process_instance_counts ... ok
+test fleet_status_redacts_absolute_error_paths_before_serializing ... ok
+test fleet_status_rejects_unknown_fields_duplicate_ids_and_invalid_sequence ... ok
+test fleet_status_roundtrips_with_the_browser_field_names ... ok
+test fleet_stream_frames_have_strict_snapshot_and_heartbeat_shapes ... ok
+test process_sources_require_v3_shape_and_distinguish_no_observation_from_zero ... ok
+test source_nullable_keys_are_required_even_when_unavailable ... ok
+test source_observation_must_be_a_valid_rfc3339_time ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_roundtrip.rs (/home/han/project/Orchester/target/debug/deps/harness_roundtrip-fe381f2e37df4263)
+
+running 14 tests
+test action_recorded_legacy_fixture_without_origin_still_decodes ... ok
+test action_recorded_rejects_noncanonical_summary_and_hash ... ok
+test action_recorded_uses_the_exact_top_level_fixture ... ok
+test action_rejects_unknown_fields_before_execution ... ok
+test approval_request_round_trips_with_run_binding ... ok
+test approval_requested_must_bind_to_the_outer_run ... ok
+test approval_summary_is_normalized_and_redacted_before_it_is_serialized ... ok
+test empty_approval_summary_is_rejected ... ok
+test event_kind_alone_uses_the_same_dotted_contract_without_double_nesting ... ok
+test generated_action_summary_does_not_copy_model_controlled_strings ... ok
+test invalid_schema_and_sequence_are_rejected_at_the_wire_boundary ... ok
+test stop_reasons_are_not_stringly_typed ... ok
+test tool_completed_fixture_has_dotted_kind_and_flattened_payload ... ok
+test typed_ids_are_transparent_and_distinct_in_the_api ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/roundtrip.rs (/home/han/project/Orchester/target/debug/deps/roundtrip-545be1153d53402f)
+
+running 9 tests
+test all_event_variants_roundtrip ... ok
+test capability_and_session_state_roundtrip ... ok
+test event_tag_is_snake_case_type_field ... ok
+test run_result_roundtrip ... ok
+test stop_and_approval_have_a_flat_frontend_shape ... ok
+test task_omits_none_fields ... ok
+test task_roundtrip_and_builders ... ok
+test usage_accumulates ... ok
+test usage_event_flattens_fields_alongside_tag ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/schema_compatibility.rs (/home/han/project/Orchester/target/debug/deps/schema_compatibility-d0bef2efeaad7e30)
+
+running 3 tests
+test browser_ui_accepts_only_its_v1_envelope ... ok
+test current_harness_writers_emit_v2 ... ok
+test durable_harness_keeps_legacy_v1_readable ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/ui_public_api.rs (/home/han/project/Orchester/target/debug/deps/ui_public_api-aebd0d121fa5b884)
+
+running 1 test
+test ui_protocol_is_exported_from_the_crate_root ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/home/han/project/Orchester/target/debug/deps/orchester_vertrag-686ddc8582352286)
+
+running 15 tests
+test extract::tests::literal_vs_path ... ok
+test extract::tests::missing_path_is_none ... ok
+test extract::tests::nested_key_and_array_index ... ok
+test extract::tests::numbers_and_bools_stringify ... ok
+test extract::tests::plain_key ... ok
+test extract::tests::top_level_index ... ok
+test manifest_adapter::tests::assistant_line_maps_to_message ... ok
+test manifest_adapter::tests::availability_reports_existing_command ... ok
+test manifest_adapter::tests::availability_reports_missing_command ... ok
+test manifest_adapter::tests::build_args_substitutes_prompt ... ok
+test manifest_adapter::tests::build_args_uses_resume_template_when_resuming ... ok
+test manifest_adapter::tests::codex_reports_every_file_in_a_completed_patch ... ok
+test manifest_adapter::tests::result_line_maps_to_result ... ok
+test manifest_adapter::tests::session_id_emitted_once ... ok
+test manifest_adapter::tests::unknown_type_and_non_json_are_ignored ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests src/lib.rs (/home/han/project/Orchester/target/debug/deps/orchester_verzeichnis-db708357ef7494a9)
+
+running 5 tests
+test management::install::tests::plugin_names_are_bounded_package_segments ... ok
+test tests::availability_lists_only_real_agents ... ok
+test tests::builtins_are_registered ... ok
+test tests::list_is_alphabetical ... ok
+test tests::missing_dir_falls_back_to_builtins ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/plugin_discovery.rs (/home/han/project/Orchester/target/debug/deps/plugin_discovery-2867ee136945ee98)
+
+running 7 tests
+test invalid_packages_are_skipped_without_removing_builtin_fallbacks ... ok
+test later_project_root_overrides_managed_plugin_metadata ... ok
+test linked_plugin_scope_is_not_traversed ... ok
+test oversized_scope_fails_closed_before_loading_a_valid_entry ... ok
+test standard_layout_discovers_managed_then_project_plugins ... ok
+test standard_layout_rejects_relative_bases_without_echoing_them ... ok
+test validated_project_plugin_is_registered_with_redacted_source_metadata ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/plugin_package.rs (/home/han/project/Orchester/target/debug/deps/plugin_package-5f25b57bfaa3aa30)
+
+running 5 tests
+test bounded_reads_reject_oversize_and_invalid_utf8 ... ok
+test executable_package_fields_and_unknown_descriptor_fields_fail_closed ... ok
+test extra_members_and_adapter_identity_drift_are_rejected ... ok
+test package_and_manifest_links_are_rejected ... ok
+test repository_claude_package_loads_as_a_validated_adapter ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Doc-tests orchester_adapter
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests orchester_anwendung
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests orchester_laufzeit
+
+running 2 tests
+test kisten/laufzeit/src/harness/evolution/identity.rs - harness::evolution::identity::CandidateId (line 81) - compile fail ... ok
+test kisten/laufzeit/src/harness/evolution/identity.rs - harness::evolution::identity::EvaluationId (line 123) - compile fail ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+   Doc-tests orchester_modell
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests orchester_netz
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests orchester_protokoll
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests orchester_vertrag
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests orchester_verzeichnis
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+FINISH 2026-11-10T11:41:52.315596+00:00
+SUMMARY {"clean_after": true, "exit_code": 0, "same_head": true, "status": "passed", "totals": {"failed": 0, "filtered_out": 0, "ignored": 1, "measured": 0, "passed": 1287}}
