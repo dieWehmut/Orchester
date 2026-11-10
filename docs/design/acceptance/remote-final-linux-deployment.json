@@ -1,0 +1,17 @@
+{
+  "platform": "linux",
+  "port": 7337,
+  "homepageMatchesFinalAssets": true,
+  "unauthenticated401": true,
+  "pairedInfo200": true,
+  "agentNames": [
+    "claude",
+    "codex",
+    "opencode"
+  ],
+  "projectsCount": 1,
+  "modelCalls": 0,
+  "providerChecked": "Linux API-key OpenCode Responses configuration ready",
+  "testDeviceRevoked401": true,
+  "listenerPid": 2547091
+}

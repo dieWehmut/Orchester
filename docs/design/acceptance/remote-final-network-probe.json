@@ -1,0 +1,31 @@
+[
+  {
+    "from": "WSL",
+    "host": "192.168.144.1",
+    "port": 7338,
+    "tcpConnected": false,
+    "errorType": "TimeoutError"
+  },
+  {
+    "from": "WSL",
+    "host": "10.52.50.173",
+    "port": 7338,
+    "tcpConnected": true
+  },
+  {
+    "from": "WSL",
+    "host": "10.49.6.45",
+    "port": 7338,
+    "tcpConnected": false,
+    "errorType": "TimeoutError"
+  },
+  {
+    "from": "WSL",
+    "host": "10.52.50.173",
+    "port": 7338,
+    "httpHomepage200": true,
+    "homepageMatchesVerifiedPackage": true,
+    "unauthenticatedInfo401": true,
+    "physicalPhoneWifi": false
+  }
+]

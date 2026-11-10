@@ -1,0 +1,15 @@
+{
+  "platform": "windows-x64",
+  "port": 7338,
+  "homepageMatchesFinalAssets": true,
+  "unauthenticated401": true,
+  "pairedProbeProcessId": 5304,
+  "pairedInfo200": true,
+  "agentCatalogEntries": 3,
+  "projectsCount": 1,
+  "testDeviceRevoked401": true,
+  "currentListenerPid": 6908,
+  "executable": "C:\\Users\\han\\Downloads\\OrchesterRemote\\orchester.exe",
+  "interactiveAdminConsole": true,
+  "modelCalls": 0
+}

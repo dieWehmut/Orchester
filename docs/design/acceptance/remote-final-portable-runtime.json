@@ -1,0 +1,25 @@
+{
+  "event": "portable_runtime_verified",
+  "package": "C:\\Users\\han\\Downloads\\OrchesterRemote-20261110-main48cae93-input-final",
+  "port": 54123,
+  "launcher_pid": 18572,
+  "backend_pid": 14148,
+  "backend_exit": 0,
+  "checks": [
+    "packaged_launcher",
+    "html_matches_package",
+    "unauthenticated_401",
+    "one_time_pairing",
+    "project_add_list",
+    "selected_unicode_space_cwd",
+    "windows_conpty_launch",
+    "set_p_interactive_input",
+    "ordered_websocket_output",
+    "resize_96x31",
+    "delete_drained_exit",
+    "shutdown_unconnected_terminal",
+    "backend_exited",
+    "port_released"
+  ],
+  "output_chunks": 9
+}
