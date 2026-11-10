@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@xterm/xterm@6.0.0':
+    hash: 91eb2a61dcb1e85a2a5102481ce89244536e3eface4c3bf51bf87234329f3676
+    path: patches/@xterm__xterm@6.0.0.patch
+
 importers:
 
   .:
@@ -61,7 +66,7 @@ importers:
         version: 0.11.0
       '@xterm/xterm':
         specifier: 6.0.0
-        version: 6.0.0
+        version: 6.0.0(patch_hash=91eb2a61dcb1e85a2a5102481ce89244536e3eface4c3bf51bf87234329f3676)
       vue:
         specifier: 3.5.18
         version: 3.5.18(typescript@5.9.3)
@@ -3023,7 +3028,7 @@ snapshots:
 
   '@xterm/addon-fit@0.11.0': {}
 
-  '@xterm/xterm@6.0.0': {}
+  '@xterm/xterm@6.0.0(patch_hash=91eb2a61dcb1e85a2a5102481ce89244536e3eface4c3bf51bf87234329f3676)': {}
 
   abbrev@2.0.0: {}
 

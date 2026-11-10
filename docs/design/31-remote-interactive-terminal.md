@@ -22,7 +22,7 @@ PTY 读取按 UTF-8 拼接跨块字符，保留 ANSI，非法字节替换为 U+F
 
 使用 `@xterm/xterm` 6.0.0 和 FitAddon 0.11.0 显示 ANSI，输入通过 `onData` 直接传给 PTY。Tab、Ctrl+C、Esc、方向键和 Enter 有手机按钮；视口和软键盘高度改变时重新调整字符行列，短视口仍保留提示符和快捷键。六套主题同时应用到终端背景、文字、选区、光标与 ANSI 颜色。
 
-默认使用正常键盘输入模式。“辅助阅读”按需启用 xterm 的屏幕阅读输出；始终启用该模式会拦截部分手机键盘的非 composition `insertText`，因此不能作为默认值。真实浏览器验证了中文和 emoji 输入。粘贴在发送前检查 8192 UTF-8 字节与 16 KiB JSON 帧限制，超过时提示分段粘贴并保留连接。
+默认使用正常键盘输入模式。“辅助阅读”按需启用 xterm 的屏幕阅读输出。原版 6.0.0 在该模式下会拦截部分非 composition `insertText`；下述输入补丁同时修正这一事件路径，并验证两种模式下的快速输入。真实浏览器验证了中文和 emoji 输入。粘贴在发送前检查 8192 UTF-8 字节与 16 KiB JSON 帧限制，超过时提示分段粘贴并保留连接。
 
 输出按序等待 xterm 的 write 回调后更新 `seq`。重连按已渲染游标请求一次性票据，忽略重复块；切换会话先排空已接受的写入，再清屏连接另一会话。旧连接的延迟断开不能触发新连接重试。401 或 404 会停止自动重试并显示重新配对或新建会话提示，HTTP 401 同时更新电脑设备状态。
 
@@ -78,3 +78,19 @@ Browser 插件未提供，使用已安装的 Playwright Chromium；首次启动�
 另一组浏览器 fixture 验证两台电脑、各两个项目、多个终端，以及不同电脑返回相同终端 ID 时的会话隔离、选择器切换和返回键顺序。两组均无控制台警告或异常，无框架错误覆盖层，页面标题与非空内容正确。
 
 视口覆盖 390×844、320×568、1000×900；模拟 `visualViewport.height = 350` 时，提示符、快捷键和底部导航均保持在可见范围。截图与临时脚本保留在 `/tmp/orchester-terminal-verified-*`，未加入源码树。此处软键盘验证是 Chromium 视口模拟，实际 Android 软键盘、原生返回与打包结果待最终 main 集成后验证。
+
+## Android 快速输入修复
+
+2026-11-10，在 Android Studio 的 `emulator-5554`、Android 17 / WebView Chrome 145 中，旧 APK 的实际受信任硬件事件复现 `adb shell input text pwd` 变为 `pwdwdd`。按键顺序为 `keydown(keyCode=229)`、`beforeinput`、`input` 和 `keyup`；约 6 ms 内完成全部输入。xterm 的 `_handleAnyTextareaChanges` 分别捕获空文本、`p`、`pw`，延迟回调均读取最终 `pwd`，因此 `onData` 发出 `pwd`、`wd`、`d`。这与上游 [6045](https://github.com/xtermjs/xterm.js/issues/6045) 描述的延迟快照和输入事件重叠问题相符；上游 [5438](https://github.com/xtermjs/xterm.js/issues/5438) 也记录了 Android 物理键盘重复输入。
+
+通过 pnpm `patchedDependencies` 固定 `@xterm/xterm` 6.0.0 输入补丁。非 composition 的 229 按键不再安排延迟文本差异回调，由实际 `input` 事件同步提交文本；以 composition、待提交 composition 和已处理的硬件 keydown/keypress 状态明确区分输入来源。辅助阅读沿用同一输入路径。没有字符去重、时间防抖或按字符内容猜测的逻辑，因此重复字符仍逐次保留。Android 的后向删除由对应输入事件发送 DEL，正常控制键和 bracketed paste 沿用终端处理。硬件键松开同时清除已处理标记，避免辅助阅读模式吞掉下一次独立 input 事件。
+
+补丁保留可读 TypeScript、生成的 ESM 与 UMD 运行时及对应 source map。`werkzeug/mobile/rebuild-xterm-input-patch.mjs` 使用工作区已有 esbuild 0.28.2，从 pnpm patch 编辑目录中的源文件重建，保持原有 CommonJS、AMD 和浏览器全局导出。源码和生成物都由补丁散列写入 lockfile；不是只修改 `node_modules` 的临时修正。补丁约 8.1 MiB，主要来自两份生成运行时与 source map；重新生成后的四个文件逐字节一致。
+
+新增 18 项回归直接创建实际 xterm，并回放 Android DOM 事件，覆盖两种阅读模式下的快速输入、连续重复字符、中文与 emoji、input-before-keydown 的重叠与跨计时器按键、composition 提交后紧邻字符、后向删除、Ctrl+C、Enter、方向键、硬件 keypress/input 去重、硬件键松开后的 input-only / input-before-keydown emoji 及 bracketed paste。未修改依赖时 `pwd` 两种模式都稳定复现为 `pwdwdd`；修正后工作区移动端 7 个测试文件共 90 项通过，类型检查和生产构建通过。
+
+已通过 `pnpm install --frozen-lockfile --offline`、CommonJS/AMD/浏览器全局导出检查与补丁重建一致性检查。使用修正后的移动页面重新运行真实 PTY 浏览器交互，中文 read、emoji、控制键、重连/回放、关闭与六套主题均通过。
+
+设备分析使用同一台 5554 WebView 的临时终端 fixture 加载补丁 ESM，实际受信任快速 `pwd` 得到 `onData = [p, w, d]`；默认模式下 `ppp` 和辅助阅读模式下 `aaabbbccc` 均逐字保留。日志仅包含终端输入事件，未记录网络认证信息，fixture 不请求后端。该验证证明补丁在真实 Android 事件链路中的行为；安装的旧 APK 并未被替换，最终应用验证必须在 main 合并后重新构建、安装新 APK，不能以旧 APK 的慢速 Gboard 通过结果替代。
+
+终端结束时清除遗留的“正在读取最后输出”提示。WS exit 和关闭轮询确认终态后均清除此提示；已有终态回归补充 terminal_closed → exit 顺序，验证结束、输入禁用与不再重连。

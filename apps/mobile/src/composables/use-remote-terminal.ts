@@ -177,6 +177,7 @@ export function useRemoteTerminal(options: TerminalOptions) {
               terminal.value = row;
               receivedExit = true;
               connection.value = "finished";
+              error.value = "";
               closing.value = false;
               clearTimeout(closeTimer);
               releaseSocket();
@@ -311,6 +312,7 @@ export function useRemoteTerminal(options: TerminalOptions) {
           closing.value = false;
           receivedExit = true;
           connection.value = "finished";
+          error.value = "";
           releaseSocket();
         } else
           closeTimer = setTimeout(() => {
@@ -331,6 +333,7 @@ export function useRemoteTerminal(options: TerminalOptions) {
         closing.value = false;
         receivedExit = true;
         connection.value = "finished";
+        error.value = "";
         releaseSocket();
       }
     } catch (reason) {
