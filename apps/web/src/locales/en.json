@@ -35,7 +35,7 @@
     "title": "Agents",
     "runtimeFleet": "Runtime fleet",
     "activeMetrics": "Active agent metrics",
-    "windowSourceLabel": "Window count source",
+    "windowSourceLabel": "Count source",
     "windowSource": {
       "managedSessions": "Managed sessions",
       "desktopWindows": "Desktop windows",
@@ -86,6 +86,10 @@
     "counts": {
       "window": "window",
       "windows": "windows",
+      "process": "process",
+      "processes": "processes",
+      "instance": "instance",
+      "instances": "instances",
       "run": "run",
       "runs": "runs",
       "subagent": "subagent",
