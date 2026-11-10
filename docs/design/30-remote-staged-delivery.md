@@ -45,11 +45,11 @@ Rust 共 98 个测试程序，1,229 项通过、1 项忽略；前端 Vitest 共 
 
 ## 第三阶段：部署
 
-源码启动、Windows 便携打包和防火墙辅助脚本已实现，需独立提交并核对最终产物。2026-11-10 当前默认便携目录仍含旧 APK/Web，且两项文件与哈希清单不符；应从最终已验证源码重新打包并逐项验证后替换。Android APK 和 iOS 源码已同步；终端加入后必须重建手机产物。iOS 原生编译需要 macOS/Xcode。
+源码启动、Windows 便携打包、完整文件清单和 APK/Web 一致性检查已提交到 main。2026-11-10 从最终功能提交 `48cae93` 生成 APK 与 Windows x64 后端，默认 `C:\Users\han\Downloads\OrchesterRemote` 已更新，原目录完整保留为 `OrchesterRemote-backup-20261110-before-main48cae93`。15 项哈希、精确文件集合、5 项 APK/Web 内容和真实便携启动器 ConPTY 流程均通过。两端常驻部署已恢复并实际核对；见 [最终交付记录](34-remote-final-artifacts-and-deployment.md)。iOS 原生编译和安装仍需要 macOS/Xcode 与目标设备。
 
 ## 后续独立任务与验收边界
 
 - Windows 与 WSL 的既有 Agent 活动监控：`fc53429` 已通过专项测试并合入远程 `main`。Windows 原生只读探针已发现 Windows Codex 31、OpenCode 2 与 WSL Codex 73、OpenCode 3 个会话；本地会话读取与进程发现不得启动、提交或续接 Windows Codex，不消耗其额度。
-- 交互终端入口：在独立 `feat/remote-interactive-terminal` 工作区实现手机 PTY 终端，仍待本轮复验、提交、集成和最终 Android 安装版验证。桌面终端页签仍为占位，不能将任务输出流算作交互终端。
-- 保留工作区中桌面项目库、会话操作与窗口相关改动，按实际依赖另行验证提交。
+- 交互终端入口：`fe4a59d` 后端与 `61fb9e3` 手机入口已合入 main；`7751366` 修复快速 Android 输入，`d186c47` 清除终态遗留提示，最终功能合并为 `48cae93`。最终 APK 的 bridge/hash/快速输入已通过，原生组合输入与收尾场景继续补验。功能与验收边界见 [终端记录](31-remote-interactive-terminal.md)。终端范围按此前确认的手机远程进入电脑推进；桌面终端页签仍为占位，不将任务输出流算作交互终端。
+- 桌面项目库、会话操作、共享认证与原生独立窗口已分步提交并合入 main，浏览器与 Windows 原生 HWND 生命周期验收见 [桌面最终记录](33-desktop-library-and-windows-acceptance.md)。
 - 每个独立任务验证后提交并推送功能分支，及时合入和推送 `main`；手机产物必须在最终 UI 源码完成后重新生成。
