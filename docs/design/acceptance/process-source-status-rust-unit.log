@@ -1,0 +1,46 @@
+   Compiling orchester-netz v0.1.2 (/tmp/orchester-activity-state-audit/kisten/netz)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.79s
+     Running unittests src/lib.rs (/home/han/project/Orchester/target/debug/deps/orchester_netz-33a0319224827f31)
+
+running 38 tests
+test agent_activity::metadata::wsl_paths::maps_only_index_paths_within_the_same_wsl_sessions_root ... ok
+test agent_activity::tests::claude_rewritten_tool_keeps_its_result_relationship ... ok
+test agent_activity::tests::claude_keeps_tool_results_separate_from_prompts_and_skips_thinking ... ok
+test agent_activity::tests::codex_reads_visible_messages_tools_and_lifecycle_without_private_payloads ... ok
+test agent_activity::tests::codex_preserves_source_turn_timing_and_visible_message_phases ... ok
+test agent_activity::tests::local_reader_does_not_infer_live_activity_from_stale_transcripts ... ok
+test agent_activity::tests::rewritten_claude_message_keeps_latest_timestamp_and_phase ... ok
+test agent_activity::tests::truncated_or_invalid_turn_times_do_not_invent_elapsed_time ... ok
+test agent_activity::tests::title_is_not_replaced_by_followup_and_tools_share_opaque_call_ids ... ok
+test agent_activity::tests::unavailable_wsl_detail_gate_does_not_lock_local_snapshot ... ok
+test agent_activity::tests::working_directory_survives_environment_project_isolation ... ok
+test agent_activity::tests::local_reader_does_not_create_missing_provider_directories ... ok
+test agent_activity::tests::local_reader_uses_transcripts_without_starting_a_server ... ok
+test agent_activity::wsl::tests::decodes_windows_distribution_names ... ok
+test agent_activity::wsl::tests::isolates_duplicate_sessions_and_retains_unavailable_history ... ok
+test agent_process::tests::failed_distro_does_not_discard_other_current_counts ... ok
+test agent_process::tests::wsl_cache_busy_or_expired_marks_old_counts_stale_instead_of_live_or_zero_complete ... ok
+test agent_process::tests::wsl_cache_refreshes_only_on_snapshot_calls ... ok
+test agent_process::tests::wsl_failure_preserves_last_success_and_recovery_empty_confirms_zero ... ok
+test agent_activity::tests::unavailable_database_and_missing_roots_are_distinct ... ok
+test agent_activity::tests::stalled_wsl_source_does_not_block_another_sources_detail ... ok
+test agent_activity::wsl::tests::completed_command_does_not_wait_for_a_descendant_holding_stdout ... ok
+test agent_activity::tests::file_discovery_does_not_follow_external_symlinks ... ok
+test agent_activity::tests::appended_and_partially_written_records_are_refreshed_without_duplicates ... ok
+test agent_activity::tests::managed_runs_expose_current_content_without_reasoning ... ok
+test agent_activity::tests::routes_require_a_session_reject_paths_and_return_no_store_content ... ok
+test agent_activity::tests::codex_without_an_index_keeps_older_project_sessions ... ok
+test agent_activity::tests::long_messages_are_read_past_the_old_tail_window_and_clipped_only_at_the_text_bound ... ok
+test agent_activity::tests::catalog_over_128_sessions_reuses_summaries_and_prunes_deleted_files ... ok
+test agent_activity::tests::every_compressed_history_page_is_contiguous_and_keeps_source_timing ... ok
+test agent_activity::wsl::tests::command_capture_rejects_timeouts_failures_and_excess_output ... ok
+test agent_activity::wsl::tests::bounded_command_failures_keep_distinct_safe_diagnostics ... ok
+test agent_activity::tests::catalog_excludes_explicit_subagent_sources_even_without_agent_role ... ok
+test agent_activity::tests::codex_index_uses_source_titles_and_projects_without_following_outside_paths ... ok
+test agent_activity::tests::opencode_reads_sqlite_without_modifying_source ... ok
+test agent_activity::tests::opencode_emits_results_only_when_tools_finish ... ok
+test agent_activity::files::tests::catalog_excerpt_cache_has_a_total_byte_budget_without_limiting_detail ... ok
+test agent_activity::tests::compressed_index_includes_every_top_level_session_and_resolves_oldest_detail ... ok
+
+test result: ok. 38 passed; 0 failed; 0 ignored; 0 measured; 44 filtered out; finished in 2.28s
+

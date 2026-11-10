@@ -14,7 +14,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::redact_ui_text;
 
-pub const AGENT_STATUS_SCHEMA_VERSION: u8 = 2;
+pub const AGENT_STATUS_SCHEMA_VERSION: u8 = 3;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -28,6 +28,7 @@ pub enum AgentAvailabilityState {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum AgentActivityState {
+    Unknown,
     Offline,
     Idle,
     Starting,
@@ -43,6 +44,34 @@ pub enum AgentWindowCountSource {
     ManagedSessions,
     TauriWindows,
     ExternalProcesses,
+}
+
+/// Environment only; process metadata and distribution names remain private.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum AgentProcessEnvironment {
+    Windows,
+    Wsl,
+    Local,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum AgentProcessSourceState {
+    Available,
+    Stale,
+    Unavailable,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct AgentProcessSourceStatusDto {
+    pub environment: AgentProcessEnvironment,
+    pub status: AgentProcessSourceState,
+    #[serde(deserialize_with = "deserialize_required_nullable")]
+    pub count: Option<u64>,
+    #[serde(deserialize_with = "deserialize_required_nullable")]
+    pub observed_at: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -61,6 +90,8 @@ pub struct AgentRuntimeSummaryDto {
     pub active_runs: u64,
     pub active_subagents: u64,
     pub window_count_source: AgentWindowCountSource,
+    /// None means no external process observation, never a confirmed zero.
+    pub process_sources: Option<Vec<AgentProcessSourceStatusDto>>,
     pub last_heartbeat_at: Option<String>,
     pub last_error: Option<String>,
     pub capabilities: Vec<String>,
@@ -125,10 +156,21 @@ struct AgentRuntimeSummaryWire {
     active_runs: u64,
     active_subagents: u64,
     window_count_source: AgentWindowCountSource,
+    // Unlike serde's default Option decoding, v3 requires this key even for null.
+    #[serde(deserialize_with = "deserialize_required_nullable")]
+    process_sources: Option<Vec<AgentProcessSourceStatusDto>>,
     last_heartbeat_at: Option<String>,
     last_error: Option<String>,
     capabilities: Vec<String>,
     updated_at: String,
+}
+
+fn deserialize_required_nullable<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -191,6 +233,7 @@ impl TryFrom<AgentRuntimeSummaryWire> for AgentRuntimeSummaryDto {
             active_runs: value.active_runs,
             active_subagents: value.active_subagents,
             window_count_source: value.window_count_source,
+            process_sources: value.process_sources,
             last_heartbeat_at: value.last_heartbeat_at,
             last_error,
             capabilities,
@@ -218,6 +261,7 @@ impl From<&AgentRuntimeSummaryDto> for AgentRuntimeSummaryWire {
             active_runs: value.active_runs,
             active_subagents: value.active_subagents,
             window_count_source: value.window_count_source,
+            process_sources: value.process_sources.clone(),
             last_heartbeat_at: value.last_heartbeat_at.clone(),
             last_error: value.last_error.as_deref().map(redact_ui_text),
             capabilities: value
@@ -304,6 +348,49 @@ impl AgentRuntimeSummaryDto {
         validate_text(&self.updated_at, "updated_at")?;
         if let Some(heartbeat) = &self.last_heartbeat_at {
             validate_text(heartbeat, "last_heartbeat_at")?;
+        }
+        if let Some(sources) = &self.process_sources {
+            if sources.is_empty() {
+                return Err(AgentStatusValidationError::InvalidField("process_sources"));
+            }
+            for source in sources {
+                match source.status {
+                    AgentProcessSourceState::Available | AgentProcessSourceState::Stale => {
+                        if source.count.is_none() || source.observed_at.is_none() {
+                            return Err(AgentStatusValidationError::InvalidField(
+                                "process_sources",
+                            ));
+                        }
+                        let observed_at = source.observed_at.as_deref().unwrap();
+                        if time::OffsetDateTime::parse(
+                            observed_at,
+                            &time::format_description::well_known::Rfc3339,
+                        )
+                        .is_err()
+                        {
+                            return Err(AgentStatusValidationError::InvalidField("observed_at"));
+                        }
+                    }
+                    AgentProcessSourceState::Unavailable => {
+                        if source.count.is_some() || source.observed_at.is_some() {
+                            return Err(AgentStatusValidationError::InvalidField(
+                                "process_sources",
+                            ));
+                        }
+                    }
+                }
+            }
+            if self.window_count_source == AgentWindowCountSource::ExternalProcesses {
+                let total = sources
+                    .iter()
+                    .filter(|source| source.status == AgentProcessSourceState::Available)
+                    .try_fold(0_u64, |sum, source| {
+                        sum.checked_add(source.count.unwrap_or_default())
+                    });
+                if total != Some(self.active_windows) {
+                    return Err(AgentStatusValidationError::InvalidField("active_windows"));
+                }
+            }
         }
         for capability in &self.capabilities {
             validate_text(capability, "capabilities")?;

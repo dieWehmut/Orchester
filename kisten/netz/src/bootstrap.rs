@@ -134,9 +134,16 @@ impl ServerContext {
 
     pub async fn refresh_agent_processes(&self) -> Result<bool, crate::AgentRuntimeStatusError> {
         let source = Arc::clone(&self.agent_process_source);
-        let snapshot = tokio::task::spawn_blocking(move || source.snapshot())
-            .await
-            .map_err(|_| crate::AgentRuntimeStatusError::ProcessRefreshFailed)?;
+        let snapshot = match tokio::task::spawn_blocking(move || source.snapshot()).await {
+            Ok(snapshot) => snapshot,
+            Err(_) => {
+                self.agent_status.reconcile_external_processes(
+                    &crate::AgentProcessSnapshot::unavailable_system(),
+                    now_rfc3339(),
+                )?;
+                return Err(crate::AgentRuntimeStatusError::ProcessRefreshFailed);
+            }
+        };
         self.agent_status
             .reconcile_external_processes(&snapshot, now_rfc3339())
     }

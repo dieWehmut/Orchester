@@ -28,7 +28,7 @@ describe('agent fleet groups', () => {
     }
 
     expect(groupAgentFleet([ready])).toEqual([
-      { key: 'ready', agents: [ready], activeWindows: 0 },
+      { key: 'ready', agents: [ready], activeWindows: 0, activeWindowQuality: 'exact' },
     ])
   })
 })

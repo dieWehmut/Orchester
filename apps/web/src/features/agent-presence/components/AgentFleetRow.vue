@@ -7,10 +7,11 @@ import { useI18n } from '../../../i18n'
 import AgentProviderMark from './AgentProviderMark.vue'
 import AgentMetrics from './AgentMetrics.vue'
 import {
-  activeAgentCounts,
   agentActivityMessageKey,
-  agentCountMessageKey,
+  agentAvailabilityMessageKey,
+  agentCountsSummary,
   agentDotStatus,
+  agentPresentedActivity,
 } from '../agent-presenter'
 import { agentProviderPresentation } from '../provider-presentation'
 
@@ -25,11 +26,9 @@ const props = withDefaults(
 const { t } = useI18n()
 const provider = computed(() => agentProviderPresentation(props.agent))
 const activityLabel = computed(() => t(agentActivityMessageKey(props.agent)))
-const metricSummary = computed(() =>
-  activeAgentCounts(props.agent)
-    .map((entry) => `${entry.count} ${t(agentCountMessageKey(entry.key, entry.count))}`)
-    .join(', '),
-)
+const availabilityLabel = computed(() => t(agentAvailabilityMessageKey(props.agent)))
+const showAvailability = computed(() => props.agent.availability !== 'available' && availabilityLabel.value !== activityLabel.value)
+const metricSummary = computed(() => agentCountsSummary(props.agent, t))
 
 defineEmits<{
   select: [agentId: string]
@@ -42,7 +41,7 @@ defineEmits<{
     :class="{ 'agent-fleet-row--selected': props.selected, 'agent-fleet-row--compact': props.compact }"
     type="button"
     :aria-pressed="props.selected"
-    :aria-label="`${props.agent.display_name}, ${provider.label}, ${activityLabel}, ${metricSummary}`"
+    :aria-label="`${props.agent.display_name}, ${provider.label}, ${activityLabel}${showAvailability ? `, ${availabilityLabel}` : ''}, ${metricSummary}`"
     @click="$emit('select', props.agent.agent_id)"
   >
     <AgentProviderMark :agent="props.agent" />
@@ -55,10 +54,11 @@ defineEmits<{
         <StatusDot
           :status="agentDotStatus(props.agent)"
           :label="activityLabel"
-          :pulse="props.agent.activity === 'running'"
+          :pulse="agentPresentedActivity(props.agent) === 'running'"
         />
         <span data-agent-activity>{{ activityLabel }}</span>
       </span>
+      <span v-if="showAvailability" data-agent-availability>{{ availabilityLabel }}</span>
       <AgentMetrics v-if="!props.compact" :agent="props.agent" variant="compact" />
     </span>
   </button>

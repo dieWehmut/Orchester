@@ -4,6 +4,7 @@ import { defineStore } from 'pinia'
 
 import { normalizeApiError, type ApiError } from '../api/errors'
 import type { AgentsApi } from '../api/agents'
+import { agentFleetWindowCount, agentPresentedActivity } from '../features/agent-presence/agent-presenter'
 import type {
   AgentStatusHeartbeat,
   AgentStatusSocket,
@@ -30,14 +31,14 @@ export const useAgentFleetStore = defineStore('agentFleet', () => {
   const streamStatus = ref<AgentStatusSocketStatus>('idle')
   const lastHeartbeatAt = ref<string | null>(null)
   const runningCount = computed(
-    () => snapshot.value?.agents.filter((agent) => agent.activity === 'running').length ?? 0,
+    () => snapshot.value?.agents.filter((agent) => agentPresentedActivity(agent) === 'running').length ?? 0,
   )
   const activeSubagentCount = computed(
     () => snapshot.value?.agents.reduce((total, agent) => total + agent.active_subagents, 0) ?? 0,
   )
-  const activeWindowCount = computed(
-    () => snapshot.value?.agents.reduce((total, agent) => total + agent.active_windows, 0) ?? 0,
-  )
+  const windowTotal = computed(() => agentFleetWindowCount(snapshot.value?.agents ?? []))
+  const activeWindowCount = computed(() => windowTotal.value.count)
+  const activeWindowCountQuality = computed(() => windowTotal.value.quality)
 
   let api: AgentsApi | null = null
   let streamFactory: AgentStatusStreamFactory | null = null
@@ -160,6 +161,7 @@ export const useAgentFleetStore = defineStore('agentFleet', () => {
     runningCount,
     activeSubagentCount,
     activeWindowCount,
+    activeWindowCountQuality,
     configure,
     applySnapshot,
     load,

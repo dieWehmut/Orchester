@@ -1,4 +1,5 @@
 import type { AgentRuntimeSummaryDto } from '@orchester/protokoll'
+import type { I18n } from '../../i18n'
 
 import type { AgentStatusSocketStatus } from '../../transport/agent-status-socket'
 
@@ -12,6 +13,7 @@ export type AgentActivityMessageKey =
   | 'agents.activity.stopping'
   | 'agents.activity.idle'
   | 'agents.activity.offline'
+  | 'agents.activity.unknown'
 
 export type AgentStreamStatusMessageKey =
   | 'agents.stream.live'
@@ -43,7 +45,50 @@ export type AgentWindowSourceMessageKey =
 
 export interface AgentCountEntry {
   readonly key: AgentCountKey
-  readonly count: number
+  readonly count: number | null
+  readonly quality?: AgentCountQuality
+}
+
+export type AgentCountQuality = 'exact' | 'lower_bound' | 'unknown'
+
+export function agentProcessSourcesComplete(agent: AgentRuntimeSummaryDto): boolean {
+  return agent.process_sources !== null && agent.process_sources.length > 0 &&
+    agent.process_sources.every((source) => source.status === 'available')
+}
+
+export function agentPresentedActivity(agent: AgentRuntimeSummaryDto): AgentRuntimeSummaryDto['activity'] {
+  const managedActive = agent.active_sessions > 0 || agent.active_runs > 0 || agent.active_subagents > 0 ||
+    (agent.window_count_source !== 'external_processes' && agent.active_windows > 0)
+  if ((agent.activity === 'idle' || agent.activity === 'offline') && !managedActive && !agentProcessSourcesComplete(agent)) return 'unknown'
+  return agent.activity
+}
+
+export function agentWindowCount(agent: AgentRuntimeSummaryDto): { count: number | null; quality: AgentCountQuality } {
+  if (agentProcessSourcesComplete(agent) ||
+      (agent.window_count_source !== 'external_processes' && agent.active_windows > 0)) {
+    return { count: agent.active_windows, quality: 'exact' }
+  }
+  return agent.active_windows > 0
+    ? { count: agent.active_windows, quality: 'lower_bound' }
+    : { count: null, quality: 'unknown' }
+}
+
+export function agentFleetWindowCount(agents: readonly AgentRuntimeSummaryDto[]): { count: number | null; quality: AgentCountQuality } {
+  const count = agents.reduce((total, agent) => total + (agentWindowCount(agent).count ?? 0), 0)
+  if (agents.length > 0 && agents.every(agentProcessSourcesComplete)) return { count, quality: 'exact' }
+  return count > 0 ? { count, quality: 'lower_bound' } : { count: null, quality: 'unknown' }
+}
+
+export function agentCountValue(entry: Pick<AgentCountEntry, 'count' | 'quality'>, t: I18n['t']): string {
+  if (entry.count === null) return '—'
+  return entry.quality === 'lower_bound' ? t('agents.counts.atLeast', { count: String(entry.count) }) : String(entry.count)
+}
+
+export function agentCountsSummary(agent: AgentRuntimeSummaryDto, t: I18n['t']): string {
+  return activeAgentCounts(agent).map((entry) => {
+    const value = entry.count === null ? t('agents.activity.unknown') : agentCountValue(entry, t)
+    return `${value} ${t(agentCountMessageKey(entry.key, entry.count ?? 2))}`
+  }).join(', ')
 }
 
 export function agentCountMessageKey(key: AgentCountKey, count = 2): AgentCountMessageKey {
@@ -64,10 +109,13 @@ export function agentWindowSourceMessageKey(
 }
 
 export function agentActivityMessageKey(agent: AgentRuntimeSummaryDto): AgentActivityMessageKey {
-  if (agent.availability === 'auth_required') return 'agents.activity.signInRequired'
-  if (agent.availability === 'unavailable') return 'agents.activity.unavailable'
-  if (agent.availability === 'error') return 'agents.activity.error'
-  switch (agent.activity) {
+  const activity = agentPresentedActivity(agent)
+  if (activity === 'idle' || activity === 'offline') {
+    if (agent.availability === 'auth_required') return 'agents.activity.signInRequired'
+    if (agent.availability === 'unavailable') return 'agents.activity.unavailable'
+    if (agent.availability === 'error') return 'agents.activity.error'
+  }
+  switch (activity) {
     case 'running':
       return 'agents.activity.running'
     case 'waiting_approval':
@@ -82,6 +130,8 @@ export function agentActivityMessageKey(agent: AgentRuntimeSummaryDto): AgentAct
       return 'agents.activity.offline'
     case 'error':
       return 'agents.activity.error'
+    case 'unknown':
+      return 'agents.activity.unknown'
   }
 }
 
@@ -122,15 +172,20 @@ export function agentAvailabilityMessageKey(
 export function agentDotStatus(
   agent: AgentRuntimeSummaryDto,
 ): 'idle' | 'running' | 'waiting' | 'success' | 'error' {
-  if (agent.availability === 'auth_required' || agent.activity === 'waiting_approval') return 'waiting'
-  if (agent.availability === 'unavailable' || agent.activity === 'offline') return 'idle'
-  if (agent.availability === 'error' || agent.activity === 'error') return 'error'
-  if (agent.activity === 'running' || agent.activity === 'starting' || agent.activity === 'stopping') return 'running'
+  const activity = agentPresentedActivity(agent)
+  if (activity === 'running' || activity === 'starting' || activity === 'stopping') return 'running'
+  if (activity === 'waiting_approval') return 'waiting'
+  if (activity === 'unknown') return 'idle'
+  if (activity === 'error') return 'error'
+  if (agent.availability === 'error') return 'error'
+  if (agent.availability === 'auth_required') return 'waiting'
+  if (agent.availability === 'unavailable' || activity === 'offline') return 'idle'
   return 'success'
 }
 
 export function activeAgentCounts(agent: AgentRuntimeSummaryDto): AgentCountEntry[] {
-  const entries: AgentCountEntry[] = [{ key: 'windows', count: agent.active_windows }]
+  const windows = agentWindowCount(agent)
+  const entries: AgentCountEntry[] = [{ key: 'windows', count: windows.count, ...(windows.quality === 'exact' ? {} : { quality: windows.quality }) }]
   if (agent.active_runs > 0) entries.push({ key: 'runs', count: agent.active_runs })
   if (agent.active_subagents > 0) entries.push({ key: 'subagents', count: agent.active_subagents })
   return entries

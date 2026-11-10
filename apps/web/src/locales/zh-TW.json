@@ -71,7 +71,8 @@
       "starting": "啟動中",
       "stopping": "停止中",
       "idle": "閒置",
-      "offline": "離線"
+      "offline": "離線",
+      "unknown": "狀態未知"
     },
     "availability": {
       "available": "可用",
@@ -85,7 +86,18 @@
       "run": "執行",
       "runs": "執行",
       "subagent": "子代理",
-      "subagents": "子代理"
+      "subagents": "子代理",
+      "atLeast": "至少 {count}"
+    },
+    "processSources": {
+      "available": "程序監控可用",
+      "incomplete": "程序監控不完整",
+      "windows": "Windows",
+      "wsl": "WSL",
+      "local": "本機",
+      "current": "目前：{count}",
+      "lastObserved": "上次觀察：{count}",
+      "unavailable": "來源無法使用"
     }
   },
   "routes": {

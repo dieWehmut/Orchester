@@ -1,0 +1,12 @@
+   Compiling orchester-netz v0.1.2 (/tmp/orchester-activity-state-audit/kisten/netz)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 53.59s
+     Running unittests src/lib.rs (/home/han/project/Orchester/target/debug/deps/orchester_netz-efb51257438bf4bb)
+
+running 4 tests
+test agent_process::tests::wsl_cache_refreshes_only_on_snapshot_calls ... ok
+test agent_process::tests::wsl_cache_busy_or_expired_marks_old_counts_stale_instead_of_live_or_zero_complete ... ok
+test agent_process::tests::wsl_failure_preserves_last_success_and_recovery_empty_confirms_zero ... ok
+test agent_process::tests::failed_distro_does_not_discard_other_current_counts ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 78 filtered out; finished in 0.00s
+

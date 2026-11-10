@@ -20,5 +20,6 @@
     "Supplementary distro reads failed immediately at both 3 second and 15 second deadlines. Shell argument quoting or detached handles remain unexcluded for that supplementary script; do not interpret it as an authoritative complete source count.",
     "Same existing WSL local /proc executable-name sample independently observed codex 3. Production snapshot API exposed no source availability, degradation or sampling time per source.",
     "Historical Nov6 actual installed runtime status codexInstances 5 is a real running-process count, not a historical-session count; it is not a fresh current-version acceptance."
-  ]
+  ],
+  "production_probe_source_commit": "62777f4"
 }

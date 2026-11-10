@@ -71,7 +71,8 @@
       "starting": "启动中",
       "stopping": "停止中",
       "idle": "空闲",
-      "offline": "离线"
+      "offline": "离线",
+      "unknown": "状态未知"
     },
     "availability": {
       "available": "可用",
@@ -85,7 +86,18 @@
       "run": "运行",
       "runs": "运行",
       "subagent": "子智能体",
-      "subagents": "子智能体"
+      "subagents": "子智能体",
+      "atLeast": "至少 {count}"
+    },
+    "processSources": {
+      "available": "进程监控可用",
+      "incomplete": "进程监控不完整",
+      "windows": "Windows",
+      "wsl": "WSL",
+      "local": "本机",
+      "current": "当前：{count}",
+      "lastObserved": "上次观察：{count}",
+      "unavailable": "来源不可用"
     }
   },
   "routes": {

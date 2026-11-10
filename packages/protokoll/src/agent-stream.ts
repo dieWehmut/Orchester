@@ -1,5 +1,4 @@
 import {
-  AGENT_STATUS_SCHEMA_VERSION,
   parseAgentFleetSnapshot,
   type AgentFleetSnapshotDto,
 } from './agent-status'
@@ -32,9 +31,7 @@ export function parseAgentFleetStreamFrame(raw: unknown): AgentFleetStreamFrameD
   if (raw.type === 'snapshot') {
     if (!onlyKeys(raw, ['type', 'snapshot'])) return null
     const snapshot = parseAgentFleetSnapshot(raw.snapshot)
-    return snapshot === null || snapshot.schema_version !== AGENT_STATUS_SCHEMA_VERSION
-      ? null
-      : { type: 'snapshot', snapshot }
+    return snapshot === null ? null : { type: 'snapshot', snapshot }
   }
 
   if (

@@ -1,0 +1,790 @@
+{
+  "kind": "captured_tool_output_summary",
+  "note": "Recorded from actual exec tool results. Summaries and selected stdout excerpts, not complete process logs. No Windows, Agent, model, AVD or service invocations.",
+  "worktree": "/tmp/orchester-activity-state-audit",
+  "final_source_sha256": {
+    "packages/protokoll/src/agent-status.ts": "7832b20235f5e0916869d43f46aea29e321faa21ac873c8cb5168e97f98528e0",
+    "packages/protokoll/src/fixtures/agents.ts": "79ade7a038e04e961d9e1f70e7f93a3926c6c6f363bfdca037ff472bdcb741be",
+    "packages/protokoll/test/agent-status.test.ts": "7558c49397eb5f31258e90d95f3c3eb259c69b7bed13b06567068ddc82f86ff4",
+    "packages/protokoll/test/agent-process-sources.test.ts": "78e09631c27d2c22f6e7647dfb317e280374eacf20aa3630f90e713fb9b79b08",
+    "apps/web/src/features/agent-presence/agent-presenter.ts": "6a4ea9013006e683f9a82a313a5718eb1a8fb4a7163b75a82cce5a5754aa7e0d",
+    "apps/web/src/features/agent-presence/fleet-groups.ts": "13def6891f7ecc4bf9bbb4705a789432670d118b67b6ca3bbc4a46edb507de23",
+    "apps/web/src/features/agent-presence/components/AgentFleetGroup.vue": "275a92010205820c82a11f7049b7a3f2ff0f66b392a06f38a6925f9472ed38d3",
+    "apps/web/src/features/agent-presence/components/AgentFleetRow.vue": "e1cedec0a7499873be17a3925401581d5422d1f3a6aae9b90f4aafcb83a95818",
+    "apps/web/src/features/agent-presence/components/AgentMetrics.vue": "fc85f0f7f8e9d8651448d76475646fd95549714cd056f9c1b56de6a3a8f4de0d",
+    "apps/web/src/stores/agent-fleet.ts": "f0d61d0f5f33102c969511b9fb0bb26d24f35b5a925d0e665e3a45fbcfa78bd4",
+    "apps/web/src/locales/en.json": "6ff5ce1e82172d59b4bb13dd692c41ce932f8c5607f18577f17ac0b907872de6",
+    "apps/web/src/locales/zh-CN.json": "6039115a2c28d2e0571b7d84d849e242f60370a6e432816115eb1d752d283e0e",
+    "apps/web/src/locales/zh-TW.json": "904679c80930db65e768fc09ae813405bdca390a0850e529ef11e640a87ae05b",
+    "apps/web/test/agent-fleet-groups.test.ts": "f660685d82bfc2a48668a3f5c469fff81b0be401a1bc723178e2f5e3be18cc9a",
+    "apps/web/test/agent-process-sources.test.ts": "ada588a56558b5670c68a5ab7719d5f8d89e4eb63c083ab3bca80515b80cd9cc",
+    "packages/protokoll/src/agent-stream.ts": "7572d6d6c7e90ff14d87442a31531db65c84a7edee4a19464f2c460eaf43de4f"
+  },
+  "results": [
+    {
+      "command": "pnpm --filter @orchester/protokoll exec vitest run test/agent-process-sources.test.ts",
+      "phase": "initial_red",
+      "start_local": "2026-11-10T13:43:03+08:00",
+      "exit_code": 1,
+      "tests_passed": 1,
+      "tests_failed": 2
+    },
+    {
+      "command": "pnpm --filter @orchester/web exec vitest run test/agent-process-sources.test.ts",
+      "phase": "initial_red",
+      "start_local": "2026-11-10T13:43:04+08:00",
+      "exit_code": 1,
+      "tests_passed": 0,
+      "tests_failed": 4
+    },
+    {
+      "command": "pnpm --filter @orchester/protokoll exec vitest run test/agent-process-sources.test.ts",
+      "phase": "external_count_invariant_red",
+      "start_local": "2026-11-10T13:59:39+08:00",
+      "exit_code": 1,
+      "tests_passed": 3,
+      "tests_failed": 1,
+      "failure": "external current count10 accepted despite available3+stale7"
+    },
+    {
+      "command": "pnpm --filter @orchester/web exec vitest run test/agent-process-sources.test.ts",
+      "phase": "runtime_availability_independence_red",
+      "start_local": "2026-11-10T13:59:42+08:00",
+      "exit_code": 1,
+      "tests_passed": 5,
+      "tests_failed": 2,
+      "failure": "runtime unknown hidden by provider error; WSL running hidden by unavailable CLI"
+    },
+    {
+      "command": "pnpm --filter @orchester/protokoll exec vitest run test/agent-process-sources.test.ts test/agent-status.test.ts test/agent-stream.test.ts test/fixtures/agents.test.ts",
+      "phase": "final_green",
+      "start_local": "2026-11-10T14:01:04+08:00",
+      "exit_code": 0,
+      "test_files_passed": 4,
+      "tests_passed": 14,
+      "duration_seconds": 0.366,
+      "stdout_excerpt": "Test Files  4 passed (4)\nTests  14 passed (14)"
+    },
+    {
+      "command": "pnpm --filter @orchester/web exec vitest run test/agent-process-sources.test.ts test/agent-presenter.test.ts test/agent-metrics.test.ts test/agent-fleet-groups.test.ts test/agent-fleet-row.test.ts test/agent-details.test.ts test/agent-fleet-store.test.ts test/agents-api.test.ts test/agent-status-socket.test.ts test/agent-fleet-panel.test.ts",
+      "phase": "final_green",
+      "start_local": "2026-11-10T14:01:04+08:00",
+      "exit_code": 0,
+      "test_files_passed": 10,
+      "tests_passed": 42,
+      "duration_seconds": 6.04,
+      "stdout_excerpt": "Test Files  10 passed (10)\nTests  42 passed (42)"
+    },
+    {
+      "command": "pnpm --filter @orchester/protokoll test",
+      "phase": "earlier_full_suite_before_final_invariant",
+      "start_local": "2026-11-10T13:47:01+08:00",
+      "exit_code": 0,
+      "test_files_passed": 28,
+      "tests_passed": 92,
+      "final_tree_gate": false
+    },
+    {
+      "command": "pnpm --filter @orchester/web test",
+      "phase": "mixed_tree_run_not_gate",
+      "start_local": "2026-11-10T13:47:02+08:00",
+      "exit_code": 1,
+      "test_files_passed": 131,
+      "test_files_failed": 1,
+      "tests_passed": 795,
+      "tests_failed": 1,
+      "final_tree_gate": false,
+      "note": "Source module changed during runner execution; loaded old presenter failed newly added error-priority test. Final focused suite then passed."
+    }
+  ],
+  "pending": [
+    "Root final main full suite"
+  ],
+  "no_commit": true,
+  "build_output": [
+    {
+      "key": "frontend_protocol_typecheck",
+      "observed_at_utc": "2026-11-10 06:15:13 UTC",
+      "command": "pnpm --filter @orchester/protokoll typecheck",
+      "result": {
+        "chunk_id": "2e86b7",
+        "wall_time_seconds": 1.0601576129999999,
+        "original_token_count": 30,
+        "output": "\n> @orchester/protokoll@0.1.2 typecheck /tmp/orchester-activity-state-audit/packages/protokoll\n> tsc -p tsconfig.json\n\n",
+        "exit_code": 0
+      }
+    },
+    {
+      "key": "frontend_web_build",
+      "observed_at_utc": "2026-11-10 06:16:29 UTC",
+      "command": "pnpm --filter @orchester/web build",
+      "result": {
+        "chunk_id": "658e11",
+        "wall_time_seconds": 1.001658615,
+        "original_token_count": 32,
+        "output": "\n> @orchester/web@0.1.2 build /tmp/orchester-activity-state-audit/apps/web\n> vue-tsc --noEmit -p tsconfig.json && vite build\n\nvite v7.3.6 building client environment for production...\ntransforming...\n✓ 2823 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                                    0.72 kB │ gzip:   0.38 kB\ndist/appearance-bootstrap.js                       4.82 kB\ndist/assets/orchester-mark-DnE_3Uv-.png        1,690.39 kB\ndist/assets/LXGWWenKai-Regular-CB2zwLK-.woff2  8,059.32 kB\ndist/assets/NotFoundView-Bn9J4SyH.css              0.71 kB │ gzip:   0.31 kB\ndist/assets/management-DrC3akjz.css                5.31 kB │ gzip:   1.41 kB\ndist/assets/SettingsView-DY7Zn8Mz.css             13.94 kB │ gzip:   2.34 kB\ndist/assets/index-BVXB52cV.css                    79.74 kB │ gzip:  14.49 kB\ndist/assets/WorkspaceView-DWfmBiNJ.css            94.66 kB │ gzip:  13.77 kB\ndist/assets/plus-D4sFzjmx.js                       0.15 kB │ gzip:   0.15 kB\ndist/assets/download-BrlVTSnm.js                   0.23 kB │ gzip:   0.19 kB\ndist/assets/play-CY-32Ti5.js                       0.58 kB │ gzip:   0.36 kB\ndist/assets/NotFoundView-W-8w71ph.js               0.69 kB │ gzip:   0.41 kB\ndist/assets/Spinner-DdErnjhI.js                    1.47 kB │ gzip:   0.77 kB\ndist/assets/search-CvJGpjze.js                     3.37 kB │ gzip:   1.57 kB\ndist/assets/management-C9ul1tD7.js                 3.70 kB │ gzip:   1.71 kB\ndist/assets/PluginsView-HhBfxXH5.js                4.49 kB │ gzip:   1.68 kB\ndist/assets/SchedulesView-D7AWix7U.js             10.31 kB │ gzip:   3.45 kB\ndist/assets/SettingsView-C3xUeMi2.js              48.36 kB │ gzip:  12.33 kB\ndist/assets/index-Dr5OrbuC.js                    301.05 kB │ gzip: 102.66 kB\ndist/assets/WorkspaceView-DKtOGC2F.js            318.91 kB │ gzip:  95.86 kB\n✓ built in 4.50s\n",
+        "exit_code": 0
+      }
+    },
+    {
+      "key": "frontend_website_build",
+      "observed_at_utc": "2026-11-10 06:17:49 UTC",
+      "command": "pnpm --filter @orchester/website build",
+      "result": {
+        "chunk_id": "02b482",
+        "wall_time_seconds": 1.001678057,
+        "original_token_count": 34,
+        "output": "\n> @orchester/website@0.1.0 build /tmp/orchester-activity-state-audit/apps/web/site\n> vue-tsc --noEmit -p tsconfig.json && vite build\n\nvite v7.3.6 building client environment for production...\ntransforming...\n✓ 1934 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                                                            5.41 kB │ gzip:  1.80 kB\ndist/assets/orchester-workspace-D9U4oCdz.png                              33.75 kB\ndist/assets/LXGWWenKai-Regular-CB2zwLK-.woff2                          8,059.32 kB\ndist/assets/SiteShell-C_dg2j_l.css                                         2.92 kB │ gzip:  0.89 kB\ndist/assets/index-1jBBJEcY.css                                            48.68 kB │ gzip:  8.75 kB\ndist/assets/circle-check-IjbIR19x.js                                       0.21 kB │ gzip:  0.19 kB\ndist/assets/NotFoundView-DV-sfqSg.js                                       0.27 kB │ gzip:  0.22 kB\ndist/assets/shield-check-C8kvR-bt.js                                       0.65 kB │ gzip:  0.40 kB\ndist/assets/InstallView-C82lCJ3S.js                                        4.64 kB │ gzip:  2.14 kB\ndist/assets/ArchitectureView-KKXTrVj8.js                                   6.01 kB │ gzip:  2.61 kB\ndist/assets/HomeView-DkCgxTYH.js                                           7.79 kB │ gzip:  3.01 kB\ndist/assets/SiteShell.vue_vue_type_script_setup_true_lang-Bn3gJcV6.js     15.84 kB │ gzip:  6.13 kB\ndist/assets/index-B9roJekZ.js                                             88.62 kB │ gzip: 34.81 kB\n✓ built in 1.04s\n",
+        "exit_code": 0
+      }
+    },
+    {
+      "key": "frontend_website_build_missing_dependencies",
+      "observed_at_utc": "2026-11-10 06:17:21 UTC",
+      "command": "pnpm --filter @orchester/website build",
+      "result": {
+        "chunk_id": "88e4df",
+        "wall_time_seconds": 0.09492599,
+        "exit_code": 1,
+        "original_token_count": 110,
+        "output": "\n> @orchester/website@0.1.0 build /tmp/orchester-activity-state-audit/apps/web/site\n> vue-tsc --noEmit -p tsconfig.json && vite build\n\nsh: 1: vue-tsc: not found\n/tmp/orchester-activity-state-audit/apps/web/site:\n ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @orchester/website@0.1.0 build: `vue-tsc --noEmit -p tsconfig.json && vite build`\nspawn ENOENT\n WARN   Local package.json exists, but node_modules missing, did you mean to install?\n"
+      }
+    }
+  ],
+  "artifacts": {
+    "web": {
+      "directory": "/tmp/orchester-activity-state-audit/apps/web/dist",
+      "file_count": 33,
+      "sorted_path_sha256_digest": "e7d31d953df04233236cbc319deb2eecc2a26f97c4c8d760259131f376b7eead",
+      "index_html": {
+        "sha256": "9b21390199c7cb5b3f3e92bcf5a798cf0386fbd8aac16ffa9d852afe525637bf",
+        "bytes": 723
+      },
+      "html_script_entries": [
+        "/appearance-bootstrap.js",
+        "/assets/index-Bh89kfpe.js"
+      ],
+      "html_stylesheet_entries": [
+        "/assets/index-BVXB52cV.css"
+      ],
+      "file_manifest": {
+        "agents/README.md": {
+          "sha256": "0f957a0d6e146183bba44f0cf3d9cfa2f7cd4563502f79f0b8aad25e39cb1fb3",
+          "bytes": 1137
+        },
+        "agents/claude.svg": {
+          "sha256": "a3101f3047a119aa11825ad9369510f0c472428c8c52d420e31bc62db44a8364",
+          "bytes": 1696
+        },
+        "agents/codex-light.png": {
+          "sha256": "b45359d98553406d60c45e699cbe80de6fe733d51661a317ca37b41632b58823",
+          "bytes": 8932
+        },
+        "agents/codex.png": {
+          "sha256": "2b001fb1f4e7d76e4d459c2ad8f9739e963ffc1c2137abcfffe8da3ee7775f7c",
+          "bytes": 9264
+        },
+        "agents/deepseek.ico": {
+          "sha256": "30a4420e6e4dcb17fd7de560c5004346c2bc8cd971d2d5f5ee15326603e51321",
+          "bytes": 209762
+        },
+        "agents/opencode-dark.svg": {
+          "sha256": "5dd4abb4de60204510edf140bbe74b3580d07ebdda79fdb0081cd45acb53d44b",
+          "bytes": 593
+        },
+        "agents/opencode-light.svg": {
+          "sha256": "b47a4fecc77599382e238868e74064bbe92307b0e253a32f0b1a026517a2d2a6",
+          "bytes": 593
+        },
+        "appearance-bootstrap.js": {
+          "sha256": "9e4ecb165d34acebf4729fc2145b1d9897038d6e0dae538675f064e42209ba29",
+          "bytes": 4819
+        },
+        "apple-touch-icon.png": {
+          "sha256": "9846969f6bac3fa79ef3a196c5bd18e440eb16e7639476db22930919def007da",
+          "bytes": 54526
+        },
+        "assets/LXGWWenKai-Regular-CB2zwLK-.woff2": {
+          "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b",
+          "bytes": 8059324
+        },
+        "assets/NotFoundView-Bn9J4SyH.css": {
+          "sha256": "efe049d1379c46410a90537130dad072f5be0e115eccee31a0bd0c188dd38b65",
+          "bytes": 713
+        },
+        "assets/NotFoundView-Cgl4tQ8_.js": {
+          "sha256": "cef1c187c208da7388ae8f91f3b80e7361aa6e30680611595a5eba2ca1aac35b",
+          "bytes": 691
+        },
+        "assets/PluginsView-16vdv1OW.js": {
+          "sha256": "7e5d1ddc5250e404e45dbe2b0766851f5ff1eb876aee0bdf0e7f7bf9020000aa",
+          "bytes": 4489
+        },
+        "assets/SchedulesView-skT2nM2e.js": {
+          "sha256": "9fbcf37fbceff5b70e2cadf44a0218c2062dd01be2588aa58fe1658b0be56461",
+          "bytes": 10312
+        },
+        "assets/SettingsView-DY7Zn8Mz.css": {
+          "sha256": "c2efcde99222fec97d601e6fc9e552f31a12d2438bbc6f4114bb863ce6fb0792",
+          "bytes": 13940
+        },
+        "assets/SettingsView-DmCicJ3N.js": {
+          "sha256": "b76e5ced503c80ab87b9420fc72c01ce60b298e900e22ec5b2e79ec9c433cc28",
+          "bytes": 48362
+        },
+        "assets/Spinner-Bau40Y8C.js": {
+          "sha256": "71b2e18eb6807a34ae556b47445db324f7c4c4c395aa425e85c1f3b906389349",
+          "bytes": 1465
+        },
+        "assets/WorkspaceView-DVgjeZ5c.js": {
+          "sha256": "2a92a3e7ec405bb7c5c1bba315fb2b0b54558496d1ed78c4e7046889c5e01fef",
+          "bytes": 318908
+        },
+        "assets/WorkspaceView-DWfmBiNJ.css": {
+          "sha256": "349abe321953bf6aebada06209355c9814d338cc235a2f94afe216c88e5e636c",
+          "bytes": 94663
+        },
+        "assets/download-ByBtP1jl.js": {
+          "sha256": "5b2a5fbc96de271cac3a22b104ebc20c25f5d04d9874f0d975ecfc52581bd4e2",
+          "bytes": 233
+        },
+        "assets/index-BVXB52cV.css": {
+          "sha256": "a63f61f05892c0127d0c8b980b25c9af21f0509f8a1c31f7faf67beb7ac67051",
+          "bytes": 79737
+        },
+        "assets/index-Bh89kfpe.js": {
+          "sha256": "58bb3ff44115c86b1716421f87d6ea66417e26d09a6feef87beaf9db28d27ea0",
+          "bytes": 301042
+        },
+        "assets/management-BJoLhRGy.js": {
+          "sha256": "cc238b3f460b192f2e8e665d8ae244f966a1e6ca88d50e4705b5d6c073fd8bee",
+          "bytes": 3703
+        },
+        "assets/management-DrC3akjz.css": {
+          "sha256": "d275f30dc6555b593ece72d623991cfa22b14aeaa10ec775637051079e877f5e",
+          "bytes": 5310
+        },
+        "assets/orchester-mark-DnE_3Uv-.png": {
+          "sha256": "73a86d4d31c1a41216a1467e9710691dc5f548dddf66067a9e3dabe25f565e6b",
+          "bytes": 1690394
+        },
+        "assets/play-JfV6fi00.js": {
+          "sha256": "2fa7761afabfe0f09b81594f25e3b65182fade25cf4f965ea65ba79af0a02b8d",
+          "bytes": 582
+        },
+        "assets/plus-BgmDX238.js": {
+          "sha256": "8756d4024bf9731f150e6dc57dd015b97ea7d5d9907d36edc2cb6dcda282f7c0",
+          "bytes": 154
+        },
+        "assets/search-1smL4E24.js": {
+          "sha256": "4d78391d0d247ca42b6a88ef58aef1077acf1bebd3bff50191077fa91a22a6b7",
+          "bytes": 3366
+        },
+        "favicon.png": {
+          "sha256": "a5d074c0581064520630e1ef7ae1e45eabc94e32e366b8448fcd94473af9f0c7",
+          "bytes": 8227
+        },
+        "icon-512.png": {
+          "sha256": "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06",
+          "bytes": 377394
+        },
+        "index.html": {
+          "sha256": "9b21390199c7cb5b3f3e92bcf5a798cf0386fbd8aac16ffa9d852afe525637bf",
+          "bytes": 723
+        },
+        "pets/xiaoxuan/pet.json": {
+          "sha256": "bcf9cceb7118979c34650d678bd0a6788ec4539ef64b9b121f1ac137cfc0ce6b",
+          "bytes": 263
+        },
+        "pets/xiaoxuan/spritesheet.webp": {
+          "sha256": "8d6686dd1a1f338ae4b210e468533f3652dfbfc0ddc29bf79ac6594cbcf16d5d",
+          "bytes": 2262452
+        }
+      }
+    },
+    "website": {
+      "directory": "/tmp/orchester-activity-state-audit/apps/web/site/dist",
+      "file_count": 14,
+      "sorted_path_sha256_digest": "a313463919f991ad8bc9dc9a2e9a7b5b010596c9f7d8c3e7670b18ad5da3320f",
+      "index_html": {
+        "sha256": "bd90d4ad246554308ddb1eb5843d9c14ea07d8580efe059f90bd9fe113cf69ee",
+        "bytes": 5407
+      },
+      "html_script_entries": [
+        "/assets/index-B9roJekZ.js"
+      ],
+      "html_stylesheet_entries": [
+        "/assets/index-1jBBJEcY.css"
+      ],
+      "file_manifest": {
+        "404.html": {
+          "sha256": "bd90d4ad246554308ddb1eb5843d9c14ea07d8580efe059f90bd9fe113cf69ee",
+          "bytes": 5407
+        },
+        "assets/ArchitectureView-KKXTrVj8.js": {
+          "sha256": "ca53135ea1b6416c0c2269be7ac99502966f115ce415d6d47323bc93559f5b01",
+          "bytes": 6009
+        },
+        "assets/HomeView-DkCgxTYH.js": {
+          "sha256": "8fb6134c4251c38a6883298cec9ba33234cb3006634b418792a773bad6a472dc",
+          "bytes": 7794
+        },
+        "assets/InstallView-C82lCJ3S.js": {
+          "sha256": "14a9f7b3e14f3d1a4217fd852db3d0e8ff2257821095ec204004068974e21c70",
+          "bytes": 4640
+        },
+        "assets/LXGWWenKai-Regular-CB2zwLK-.woff2": {
+          "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b",
+          "bytes": 8059324
+        },
+        "assets/NotFoundView-DV-sfqSg.js": {
+          "sha256": "1ab20ed405bcb4d5f1cd5c8e165e33067d9ae04cfea4322b0dee12221de8bcf6",
+          "bytes": 274
+        },
+        "assets/SiteShell-C_dg2j_l.css": {
+          "sha256": "b5d9af69649c0d87605b40c08aeedb7bb2c01a1f46597b249b0b2cac6e605594",
+          "bytes": 2920
+        },
+        "assets/SiteShell.vue_vue_type_script_setup_true_lang-Bn3gJcV6.js": {
+          "sha256": "23f8ec66c29dba438dd4dd21d8dca1de1c639574262ead0968fa1af90dc92597",
+          "bytes": 15836
+        },
+        "assets/circle-check-IjbIR19x.js": {
+          "sha256": "bcf3e53bd44945e3bbfc19d205ae87f57e42dcc1e4e008fb8dbb10a23c775cc5",
+          "bytes": 214
+        },
+        "assets/index-1jBBJEcY.css": {
+          "sha256": "60ea8f0d9f6a6d166ccbfc5ab4ae577d4f0f52b2deccdfe25a122fd4ed91a758",
+          "bytes": 48676
+        },
+        "assets/index-B9roJekZ.js": {
+          "sha256": "113b30db64626372880b49e4df98bf6610555a64671164cc6f1a54fda592d3ed",
+          "bytes": 88621
+        },
+        "assets/orchester-workspace-D9U4oCdz.png": {
+          "sha256": "0a2949125eb65124f0bc442db9e8155aec352f12545c9849079111dca6122610",
+          "bytes": 33754
+        },
+        "assets/shield-check-C8kvR-bt.js": {
+          "sha256": "54565741f8c825c64d3486cd49a183f3c6010b1d9770ed8c67d39f4dd8f43167",
+          "bytes": 651
+        },
+        "index.html": {
+          "sha256": "bd90d4ad246554308ddb1eb5843d9c14ea07d8580efe059f90bd9fe113cf69ee",
+          "bytes": 5407
+        }
+      }
+    }
+  },
+  "validation_status": "Final Web10 files43 tests, Web rebuild+typecheck passed after managed-zero red2. Protocol15 tests/typecheck passed after legacy WS red1 and unchanged afterward. Website build recorded; root final main full suite pending.",
+  "legacy_websocket_followup": {
+    "problem": "Redundant strict v3 check in agent-stream rejected valid legacy v2 snapshots after the shared HTTP parser accepted and normalized them.",
+    "fix": "Trust the shared strict snapshot parser for v2/v3; invalid v2 unknown activity or process_sources field still rejected.",
+    "results": [
+      {
+        "key": "frontend_legacy_ws_red",
+        "observed_at_utc": "2026-11-10 06:30:03 UTC",
+        "command": "pnpm --filter @orchester/protokoll exec vitest run test/agent-process-sources.test.ts",
+        "result": {
+          "chunk_id": "dff833",
+          "wall_time_seconds": 4.252284242,
+          "exit_code": 1,
+          "original_token_count": 586,
+          "output": "\n RUN  v4.1.10 /tmp/orchester-activity-state-audit/packages/protokoll\n\n ❯ test/agent-process-sources.test.ts (5 tests | 1 failed) 16ms\n     × normalizes strict legacy v2 WebSocket frames with the same rules as HTTP 11ms\n\n⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯\n\n FAIL  test/agent-process-sources.test.ts > agent process source protocol > normalizes strict legacy v2 WebSocket frames with the same rules as HTTP\nAssertionError: expected null to deeply equal { Object (type, snapshot) }\n\n- Expected:\n{\n  \"snapshot\": {\n    \"agents\": [\n      {\n        \"active_runs\": 2,\n        \"active_sessions\": 3,\n        \"active_subagents\": 1,\n        \"active_windows\": 0,\n        \"activity\": \"idle\",\n        \"agent_id\": \"codex-main\",\n        \"authenticated\": true,\n        \"availability\": \"available\",\n        \"capabilities\": [\n          \"streaming\",\n          \"resume\",\n          \"subagents\",\n        ],\n        \"configured\": true,\n        \"display_name\": \"Codex\",\n        \"icon_key\": \"codex\",\n        \"installed\": true,\n        \"last_error\": null,\n        \"last_heartbeat_at\": \"2026-08-20T08:09:59.000Z\",\n        \"process_sources\": null,\n        \"provider\": \"codex\",\n        \"updated_at\": \"2026-08-20T08:10:00.000Z\",\n        \"window_count_source\": \"managed_sessions\",\n      },\n    ],\n    \"generated_at\": \"2026-08-20T08:10:00.000Z\",\n    \"schema_version\": 2,\n    \"sequence\": 12,\n  },\n  \"type\": \"snapshot\",\n}\n\n+ Received:\nnull\n\n ❯ test/agent-process-sources.test.ts:33:80\n     31|     const { process_sources: _sources, ...agent } = v3Agent\n     32|     const legacy = { ...fleet({ ...agent, activity: 'idle', active_win…\n     33|     expect(parseAgentFleetStreamFrame({ type: 'snapshot', snapshot: le…\n       |                                                                                ^\n     34|       type: 'snapshot', snapshot: parseAgentFleetSnapshot(legacy),\n     35|     })\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\n\n\n Test Files  1 failed (1)\n      Tests  1 failed | 4 passed (5)\n   Start at  14:30:06\n   Duration  1.19s (transform 770ms, setup 0ms, import 878ms, tests 16ms, environment 0ms)\n\nundefined\n/tmp/orchester-activity-state-audit/packages/protokoll:\n ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run test/agent-process-sources.test.ts\n"
+        }
+      },
+      {
+        "key": "frontend_legacy_ws_protocol_green",
+        "observed_at_utc": "2026-11-10 06:30:31 UTC",
+        "command": "pnpm --filter @orchester/protokoll exec vitest run test/agent-process-sources.test.ts test/agent-status.test.ts test/agent-stream.test.ts test/fixtures/agents.test.ts",
+        "result": {
+          "chunk_id": "6371f8",
+          "wall_time_seconds": 0.956085599,
+          "exit_code": 0,
+          "original_token_count": 60,
+          "output": "\n RUN  v4.1.10 /tmp/orchester-activity-state-audit/packages/protokoll\n\n\n Test Files  4 passed (4)\n      Tests  15 passed (15)\n   Start at  14:30:31\n   Duration  712ms (transform 1.32s, setup 0ms, import 1.76s, tests 28ms, environment 0ms)\n\n"
+        }
+      },
+      {
+        "key": "frontend_legacy_ws_web_green",
+        "observed_at_utc": "2026-11-10 06:30:32 UTC",
+        "command": "pnpm --filter @orchester/web exec vitest run test/agent-process-sources.test.ts test/agent-status-socket.test.ts test/agents-api.test.ts test/agent-fleet-store.test.ts",
+        "result": {
+          "chunk_id": "eaac16",
+          "wall_time_seconds": 1.001865384,
+          "original_token_count": 16,
+          "output": "\n RUN  v4.1.10 /tmp/orchester-activity-state-audit/apps/web\n\n\n Test Files  4 passed (4)\n      Tests  20 passed (20)\n   Start at  14:30:33\n   Duration  8.63s (transform 2.14s, setup 0ms, import 2.74s, tests 76ms, environment 4.43s)\n\n",
+          "exit_code": 0
+        }
+      },
+      {
+        "key": "frontend_legacy_ws_typecheck",
+        "observed_at_utc": "2026-11-10 06:31:20 UTC",
+        "command": "pnpm --filter @orchester/protokoll typecheck",
+        "result": {
+          "chunk_id": "7fccb0",
+          "wall_time_seconds": 0.893991889,
+          "exit_code": 0,
+          "original_token_count": 30,
+          "output": "\n> @orchester/protokoll@0.1.2 typecheck /tmp/orchester-activity-state-audit/packages/protokoll\n> tsc -p tsconfig.json\n\n"
+        }
+      },
+      {
+        "key": "frontend_legacy_ws_build",
+        "observed_at_utc": "2026-11-10 06:31:55 UTC",
+        "command": "pnpm --filter @orchester/web build",
+        "result": {
+          "chunk_id": "01e712",
+          "wall_time_seconds": 1.000370185,
+          "original_token_count": 32,
+          "output": "\n> @orchester/web@0.1.2 build /tmp/orchester-activity-state-audit/apps/web\n> vue-tsc --noEmit -p tsconfig.json && vite build\n\nvite v7.3.6 building client environment for production...\ntransforming...\n✓ 2823 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                                    0.72 kB │ gzip:   0.38 kB\ndist/appearance-bootstrap.js                       4.82 kB\ndist/assets/orchester-mark-DnE_3Uv-.png        1,690.39 kB\ndist/assets/LXGWWenKai-Regular-CB2zwLK-.woff2  8,059.32 kB\ndist/assets/NotFoundView-Bn9J4SyH.css              0.71 kB │ gzip:   0.31 kB\ndist/assets/management-DrC3akjz.css                5.31 kB │ gzip:   1.41 kB\ndist/assets/SettingsView-DY7Zn8Mz.css             13.94 kB │ gzip:   2.34 kB\ndist/assets/index-BVXB52cV.css                    79.74 kB │ gzip:  14.49 kB\ndist/assets/WorkspaceView-DWfmBiNJ.css            94.66 kB │ gzip:  13.77 kB\ndist/assets/plus-B8veVf31.js                       0.15 kB │ gzip:   0.15 kB\ndist/assets/download-lNtpNUZ1.js                   0.23 kB │ gzip:   0.19 kB\ndist/assets/play-CBotDF2P.js                       0.58 kB │ gzip:   0.36 kB\ndist/assets/NotFoundView-CpY7P9w7.js               0.69 kB │ gzip:   0.41 kB\ndist/assets/Spinner-BAc6ew3_.js                    1.47 kB │ gzip:   0.76 kB\ndist/assets/search-DdOs29D2.js                     3.37 kB │ gzip:   1.57 kB\ndist/assets/management-BHmMljju.js                 3.70 kB │ gzip:   1.71 kB\ndist/assets/PluginsView-BNGkLe8L.js                4.49 kB │ gzip:   1.68 kB\ndist/assets/SchedulesView-Cw5Sm9PV.js             10.31 kB │ gzip:   3.45 kB\ndist/assets/SettingsView-B8byP2AV.js              48.36 kB │ gzip:  12.33 kB\ndist/assets/index-D9vthVLl.js                    301.02 kB │ gzip: 102.66 kB\ndist/assets/WorkspaceView-PXksjApZ.js            318.91 kB │ gzip:  95.86 kB\n✓ built in 5.00s\n",
+          "exit_code": 0
+        }
+      }
+    ]
+  },
+  "superseded_web_artifacts": [
+    {
+      "directory": "/tmp/orchester-activity-state-audit/apps/web/dist",
+      "file_count": 33,
+      "sorted_path_sha256_digest": "4129c72d80daec3b8167e276d64d15d4e2c62014d8adfdc51b95142a29ba0ac7",
+      "index_html": {
+        "sha256": "a9d0c5b001067ca9ab40ddd7c7f41f56e9d972782732d0b5777a8d6925fab4d3",
+        "bytes": 723
+      },
+      "html_script_entries": [
+        "/appearance-bootstrap.js",
+        "/assets/index-Dr5OrbuC.js"
+      ],
+      "html_stylesheet_entries": [
+        "/assets/index-BVXB52cV.css"
+      ],
+      "file_manifest": {
+        "agents/README.md": {
+          "sha256": "0f957a0d6e146183bba44f0cf3d9cfa2f7cd4563502f79f0b8aad25e39cb1fb3",
+          "bytes": 1137
+        },
+        "agents/claude.svg": {
+          "sha256": "a3101f3047a119aa11825ad9369510f0c472428c8c52d420e31bc62db44a8364",
+          "bytes": 1696
+        },
+        "agents/codex-light.png": {
+          "sha256": "b45359d98553406d60c45e699cbe80de6fe733d51661a317ca37b41632b58823",
+          "bytes": 8932
+        },
+        "agents/codex.png": {
+          "sha256": "2b001fb1f4e7d76e4d459c2ad8f9739e963ffc1c2137abcfffe8da3ee7775f7c",
+          "bytes": 9264
+        },
+        "agents/deepseek.ico": {
+          "sha256": "30a4420e6e4dcb17fd7de560c5004346c2bc8cd971d2d5f5ee15326603e51321",
+          "bytes": 209762
+        },
+        "agents/opencode-dark.svg": {
+          "sha256": "5dd4abb4de60204510edf140bbe74b3580d07ebdda79fdb0081cd45acb53d44b",
+          "bytes": 593
+        },
+        "agents/opencode-light.svg": {
+          "sha256": "b47a4fecc77599382e238868e74064bbe92307b0e253a32f0b1a026517a2d2a6",
+          "bytes": 593
+        },
+        "appearance-bootstrap.js": {
+          "sha256": "9e4ecb165d34acebf4729fc2145b1d9897038d6e0dae538675f064e42209ba29",
+          "bytes": 4819
+        },
+        "apple-touch-icon.png": {
+          "sha256": "9846969f6bac3fa79ef3a196c5bd18e440eb16e7639476db22930919def007da",
+          "bytes": 54526
+        },
+        "assets/LXGWWenKai-Regular-CB2zwLK-.woff2": {
+          "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b",
+          "bytes": 8059324
+        },
+        "assets/NotFoundView-Bn9J4SyH.css": {
+          "sha256": "efe049d1379c46410a90537130dad072f5be0e115eccee31a0bd0c188dd38b65",
+          "bytes": 713
+        },
+        "assets/NotFoundView-W-8w71ph.js": {
+          "sha256": "4ef3ac6be55da848e744f59014253988ea17ea5131a1860bfb146f56a90b9aed",
+          "bytes": 691
+        },
+        "assets/PluginsView-HhBfxXH5.js": {
+          "sha256": "86bbf5aadb690fac9f7310830f5f79fb701afa67e37a9f326949a9554b4ed47e",
+          "bytes": 4489
+        },
+        "assets/SchedulesView-D7AWix7U.js": {
+          "sha256": "0e1c5f4a3e62ae96189765b6c0eac4210cefd40aee6cb31fcd582b9c2396fa29",
+          "bytes": 10312
+        },
+        "assets/SettingsView-C3xUeMi2.js": {
+          "sha256": "414bfef7ebb0bbb86faa75ba68f12aa0b4bbed6db2b423a1d62e1ed06635df29",
+          "bytes": 48362
+        },
+        "assets/SettingsView-DY7Zn8Mz.css": {
+          "sha256": "c2efcde99222fec97d601e6fc9e552f31a12d2438bbc6f4114bb863ce6fb0792",
+          "bytes": 13940
+        },
+        "assets/Spinner-DdErnjhI.js": {
+          "sha256": "0ee86064c841cee5560e7210d176572fe622134ffd65b9465446425f54da3f60",
+          "bytes": 1465
+        },
+        "assets/WorkspaceView-DKtOGC2F.js": {
+          "sha256": "4cdf34058ea919d6df1f69938f541bc9a8932f6dd4251a0a0f121a10dcf312cd",
+          "bytes": 318908
+        },
+        "assets/WorkspaceView-DWfmBiNJ.css": {
+          "sha256": "349abe321953bf6aebada06209355c9814d338cc235a2f94afe216c88e5e636c",
+          "bytes": 94663
+        },
+        "assets/download-BrlVTSnm.js": {
+          "sha256": "bde44df9d87d866600f67ca7b5d0e0931bace26ad637e6037b9e4386ac66cb2a",
+          "bytes": 233
+        },
+        "assets/index-BVXB52cV.css": {
+          "sha256": "a63f61f05892c0127d0c8b980b25c9af21f0509f8a1c31f7faf67beb7ac67051",
+          "bytes": 79737
+        },
+        "assets/index-Dr5OrbuC.js": {
+          "sha256": "c2e7ee009d09c200692c088276235878644c515f37e792970ce18086048163d7",
+          "bytes": 301045
+        },
+        "assets/management-C9ul1tD7.js": {
+          "sha256": "9943e2b0e04ec46a172ec86cf45fe6608a24ee04dbbd34e945718fb36ae8c99f",
+          "bytes": 3703
+        },
+        "assets/management-DrC3akjz.css": {
+          "sha256": "d275f30dc6555b593ece72d623991cfa22b14aeaa10ec775637051079e877f5e",
+          "bytes": 5310
+        },
+        "assets/orchester-mark-DnE_3Uv-.png": {
+          "sha256": "73a86d4d31c1a41216a1467e9710691dc5f548dddf66067a9e3dabe25f565e6b",
+          "bytes": 1690394
+        },
+        "assets/play-CY-32Ti5.js": {
+          "sha256": "38421ca6fac37cca5fce3ccbedfa723eddff8cd4b657fcf3f29148b74c49c2e8",
+          "bytes": 582
+        },
+        "assets/plus-D4sFzjmx.js": {
+          "sha256": "86117c4b39e748cf4cbb5218e1020b51682ec316bcf88e6e1dbf65cf14a13afb",
+          "bytes": 154
+        },
+        "assets/search-CvJGpjze.js": {
+          "sha256": "29e56c82c36382122b6e6868b373a64654a972447da92970f008a98bb661ed23",
+          "bytes": 3366
+        },
+        "favicon.png": {
+          "sha256": "a5d074c0581064520630e1ef7ae1e45eabc94e32e366b8448fcd94473af9f0c7",
+          "bytes": 8227
+        },
+        "icon-512.png": {
+          "sha256": "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06",
+          "bytes": 377394
+        },
+        "index.html": {
+          "sha256": "a9d0c5b001067ca9ab40ddd7c7f41f56e9d972782732d0b5777a8d6925fab4d3",
+          "bytes": 723
+        },
+        "pets/xiaoxuan/pet.json": {
+          "sha256": "bcf9cceb7118979c34650d678bd0a6788ec4539ef64b9b121f1ac137cfc0ce6b",
+          "bytes": 263
+        },
+        "pets/xiaoxuan/spritesheet.webp": {
+          "sha256": "8d6686dd1a1f338ae4b210e468533f3652dfbfc0ddc29bf79ac6594cbcf16d5d",
+          "bytes": 2262452
+        }
+      }
+    },
+    {
+      "directory": "/tmp/orchester-activity-state-audit/apps/web/dist",
+      "file_count": 33,
+      "sorted_path_sha256_digest": "131644c25cfbc95b2dd8187af9fb1065095e65b01802e2eb3dcb8e3d38f05614",
+      "index_html": {
+        "sha256": "d03e46392f105c73ec111fc100467bab3149769ac5243f57dd956d341d2f02f8",
+        "bytes": 723
+      },
+      "html_script_entries": [
+        "/appearance-bootstrap.js",
+        "/assets/index-D9vthVLl.js"
+      ],
+      "html_stylesheet_entries": [
+        "/assets/index-BVXB52cV.css"
+      ],
+      "file_manifest": {
+        "agents/README.md": {
+          "sha256": "0f957a0d6e146183bba44f0cf3d9cfa2f7cd4563502f79f0b8aad25e39cb1fb3",
+          "bytes": 1137
+        },
+        "agents/claude.svg": {
+          "sha256": "a3101f3047a119aa11825ad9369510f0c472428c8c52d420e31bc62db44a8364",
+          "bytes": 1696
+        },
+        "agents/codex-light.png": {
+          "sha256": "b45359d98553406d60c45e699cbe80de6fe733d51661a317ca37b41632b58823",
+          "bytes": 8932
+        },
+        "agents/codex.png": {
+          "sha256": "2b001fb1f4e7d76e4d459c2ad8f9739e963ffc1c2137abcfffe8da3ee7775f7c",
+          "bytes": 9264
+        },
+        "agents/deepseek.ico": {
+          "sha256": "30a4420e6e4dcb17fd7de560c5004346c2bc8cd971d2d5f5ee15326603e51321",
+          "bytes": 209762
+        },
+        "agents/opencode-dark.svg": {
+          "sha256": "5dd4abb4de60204510edf140bbe74b3580d07ebdda79fdb0081cd45acb53d44b",
+          "bytes": 593
+        },
+        "agents/opencode-light.svg": {
+          "sha256": "b47a4fecc77599382e238868e74064bbe92307b0e253a32f0b1a026517a2d2a6",
+          "bytes": 593
+        },
+        "appearance-bootstrap.js": {
+          "sha256": "9e4ecb165d34acebf4729fc2145b1d9897038d6e0dae538675f064e42209ba29",
+          "bytes": 4819
+        },
+        "apple-touch-icon.png": {
+          "sha256": "9846969f6bac3fa79ef3a196c5bd18e440eb16e7639476db22930919def007da",
+          "bytes": 54526
+        },
+        "assets/LXGWWenKai-Regular-CB2zwLK-.woff2": {
+          "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b",
+          "bytes": 8059324
+        },
+        "assets/NotFoundView-Bn9J4SyH.css": {
+          "sha256": "efe049d1379c46410a90537130dad072f5be0e115eccee31a0bd0c188dd38b65",
+          "bytes": 713
+        },
+        "assets/NotFoundView-CpY7P9w7.js": {
+          "sha256": "3f0c9ce1b7df95b1f0be50ffa6596e35a15b99d0022c06fde6dab75adb7e7ab9",
+          "bytes": 691
+        },
+        "assets/PluginsView-BNGkLe8L.js": {
+          "sha256": "540acd0e5db34bdbe8abe6e3f09e45dff7c44a7632c83618bac7f0cabf5ae571",
+          "bytes": 4489
+        },
+        "assets/SchedulesView-Cw5Sm9PV.js": {
+          "sha256": "f365b3b731b1c1e01c9c036549abb73e8baab3104cbbc8534617706fb8ffe784",
+          "bytes": 10312
+        },
+        "assets/SettingsView-B8byP2AV.js": {
+          "sha256": "8b8e85fe59876159654c1d44b0a77665d96c0edf7030118729b8fe234dc06802",
+          "bytes": 48362
+        },
+        "assets/SettingsView-DY7Zn8Mz.css": {
+          "sha256": "c2efcde99222fec97d601e6fc9e552f31a12d2438bbc6f4114bb863ce6fb0792",
+          "bytes": 13940
+        },
+        "assets/Spinner-BAc6ew3_.js": {
+          "sha256": "4ececafca5f541e355a43712ec51394fbfa239489c72ac92ec22543842f3e7de",
+          "bytes": 1465
+        },
+        "assets/WorkspaceView-DWfmBiNJ.css": {
+          "sha256": "349abe321953bf6aebada06209355c9814d338cc235a2f94afe216c88e5e636c",
+          "bytes": 94663
+        },
+        "assets/WorkspaceView-PXksjApZ.js": {
+          "sha256": "4b0f4998da2aa773036028d12d83acaca9167ca17b078c3d42f6c6aff338e9d7",
+          "bytes": 318908
+        },
+        "assets/download-lNtpNUZ1.js": {
+          "sha256": "36214747a082a6186cc9c405e4a6e5fc3236ec8c0f36cbfe518e66ebcf0d69a1",
+          "bytes": 233
+        },
+        "assets/index-BVXB52cV.css": {
+          "sha256": "a63f61f05892c0127d0c8b980b25c9af21f0509f8a1c31f7faf67beb7ac67051",
+          "bytes": 79737
+        },
+        "assets/index-D9vthVLl.js": {
+          "sha256": "7bdfdc83ca1234cb4f618142de1fb466dd74a92fa756d4f88f3d72dc95b5c9fb",
+          "bytes": 301022
+        },
+        "assets/management-BHmMljju.js": {
+          "sha256": "b712979d7dde7d92a3c359a1c5b3c2f05b54496103e9dfc974176156bdd20a5d",
+          "bytes": 3703
+        },
+        "assets/management-DrC3akjz.css": {
+          "sha256": "d275f30dc6555b593ece72d623991cfa22b14aeaa10ec775637051079e877f5e",
+          "bytes": 5310
+        },
+        "assets/orchester-mark-DnE_3Uv-.png": {
+          "sha256": "73a86d4d31c1a41216a1467e9710691dc5f548dddf66067a9e3dabe25f565e6b",
+          "bytes": 1690394
+        },
+        "assets/play-CBotDF2P.js": {
+          "sha256": "9687329525fc66649b7ff9021c089f5a3162aabe4352103407795c5a2b559e46",
+          "bytes": 582
+        },
+        "assets/plus-B8veVf31.js": {
+          "sha256": "99d76a0038eaf742f0d08fe5b80fe1540078b883de16c78e8c177eded2bf153a",
+          "bytes": 154
+        },
+        "assets/search-DdOs29D2.js": {
+          "sha256": "1dea71b5a5ebc6f72b31128e3d85c580a8c0b7347af1bb5a1aa7bdebdbf4da00",
+          "bytes": 3366
+        },
+        "favicon.png": {
+          "sha256": "a5d074c0581064520630e1ef7ae1e45eabc94e32e366b8448fcd94473af9f0c7",
+          "bytes": 8227
+        },
+        "icon-512.png": {
+          "sha256": "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06",
+          "bytes": 377394
+        },
+        "index.html": {
+          "sha256": "d03e46392f105c73ec111fc100467bab3149769ac5243f57dd956d341d2f02f8",
+          "bytes": 723
+        },
+        "pets/xiaoxuan/pet.json": {
+          "sha256": "bcf9cceb7118979c34650d678bd0a6788ec4539ef64b9b121f1ac137cfc0ce6b",
+          "bytes": 263
+        },
+        "pets/xiaoxuan/spritesheet.webp": {
+          "sha256": "8d6686dd1a1f338ae4b210e468533f3652dfbfc0ddc29bf79ac6594cbcf16d5d",
+          "bytes": 2262452
+        }
+      }
+    }
+  ],
+  "managed_zero_followup": {
+    "problem": "Initial managed0 generic window metrics/ARIA falsely resembled complete total0 when v2 had no observations or v3 process sources failed.",
+    "fix": "Complete sources permit exact0; known positive managed/Tauri counts remain exact; incomplete or unobserved zero becomes unknown/null, shown as em dash.",
+    "results": [
+      {
+        "key": "frontend_managed_zero_red",
+        "observed_at_utc": "2026-11-10 06:34:32 UTC",
+        "command": "pnpm --filter @orchester/web exec vitest run test/agent-process-sources.test.ts",
+        "result": {
+          "chunk_id": "7abd1f",
+          "wall_time_seconds": 1.964108177,
+          "exit_code": 1,
+          "original_token_count": 580,
+          "output": "\n RUN  v4.1.10 /tmp/orchester-activity-state-audit/apps/web\n\n ❯ test/agent-process-sources.test.ts (8 tests | 2 failed) 43ms\n     × does not mistake initial legacy managed zero for a complete idle scan 24ms\n     × does not present initial v3 managed zero as a total when sources fail 2ms\n\n⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯\n\n FAIL  test/agent-process-sources.test.ts > process source presentation > does not mistake initial legacy managed zero for a complete idle scan\nAssertionError: expected '0' to be '—' // Object.is equality\n\nExpected: \"—\"\nReceived: \"0\"\n\n ❯ test/agent-process-sources.test.ts:28:53\n     26|     expect(row.get('[data-agent-activity]').text()).toBe('Status unkno…\n     27|     expect(row.get('button').attributes('aria-label')).toContain('Stat…\n     28|     expect(row.get('[data-active-windows]').text()).toBe('—')\n       |                                                     ^\n     29|     expect(row.get('button').attributes('aria-label')).not.toContain('…\n     30|   })\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯\n\n FAIL  test/agent-process-sources.test.ts > process source presentation > does not present initial v3 managed zero as a total when sources fail\nAssertionError: expected '0' to be '—' // Object.is equality\n\nExpected: \"—\"\nReceived: \"0\"\n\n ❯ test/agent-process-sources.test.ts:35:57\n     33|     const runtime = agent({ process_sources: [{ ...unavailable, enviro…\n     34|     const metrics = mount(AgentMetrics, { props: { agent: runtime, var…\n     35|     expect(metrics.get('[data-active-windows]').text()).toBe('—')\n       |                                                         ^\n     36|     expect(metrics.get('[data-agent-metrics]').attributes('aria-label'…\n     37|     expect(metrics.get('[data-agent-metrics]').attributes('aria-label'…\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯\n\n\n Test Files  1 failed (1)\n      Tests  2 failed | 6 passed (8)\n   Start at  14:34:33\n   Duration  1.58s (transform 871ms, setup 0ms, import 1.04s, tests 43ms, environment 375ms)\n\nundefined\n/tmp/orchester-activity-state-audit/apps/web:\n ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run test/agent-process-sources.test.ts\n"
+        }
+      },
+      {
+        "key": "frontend_managed_zero_green",
+        "observed_at_utc": "2026-11-10 06:34:56 UTC",
+        "command": "pnpm --filter @orchester/web exec vitest run test/agent-process-sources.test.ts test/agent-presenter.test.ts test/agent-metrics.test.ts test/agent-fleet-groups.test.ts test/agent-fleet-row.test.ts test/agent-details.test.ts test/agent-fleet-store.test.ts test/agents-api.test.ts test/agent-status-socket.test.ts test/agent-fleet-panel.test.ts",
+        "result": {
+          "chunk_id": "38fd53",
+          "wall_time_seconds": 1.001715361,
+          "original_token_count": 16,
+          "output": "\n RUN  v4.1.10 /tmp/orchester-activity-state-audit/apps/web\n\n\n Test Files  10 passed (10)\n      Tests  43 passed (43)\n   Start at  14:34:56\n   Duration  5.21s (transform 750ms, setup 0ms, import 1.70s, tests 216ms, environment 2.65s)\n\n",
+          "exit_code": 0
+        }
+      },
+      {
+        "key": "frontend_managed_zero_build",
+        "observed_at_utc": "2026-11-10 06:35:46 UTC",
+        "command": "pnpm --filter @orchester/web build",
+        "result": {
+          "chunk_id": "6c0f69",
+          "wall_time_seconds": 1.001253521,
+          "original_token_count": 32,
+          "output": "\n> @orchester/web@0.1.2 build /tmp/orchester-activity-state-audit/apps/web\n> vue-tsc --noEmit -p tsconfig.json && vite build\n\nvite v7.3.6 building client environment for production...\ntransforming...\n✓ 2823 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                                    0.72 kB │ gzip:   0.38 kB\ndist/appearance-bootstrap.js                       4.82 kB\ndist/assets/orchester-mark-DnE_3Uv-.png        1,690.39 kB\ndist/assets/LXGWWenKai-Regular-CB2zwLK-.woff2  8,059.32 kB\ndist/assets/NotFoundView-Bn9J4SyH.css              0.71 kB │ gzip:   0.31 kB\ndist/assets/management-DrC3akjz.css                5.31 kB │ gzip:   1.41 kB\ndist/assets/SettingsView-DY7Zn8Mz.css             13.94 kB │ gzip:   2.34 kB\ndist/assets/index-BVXB52cV.css                    79.74 kB │ gzip:  14.49 kB\ndist/assets/WorkspaceView-DWfmBiNJ.css            94.66 kB │ gzip:  13.77 kB\ndist/assets/plus-BgmDX238.js                       0.15 kB │ gzip:   0.15 kB\ndist/assets/download-ByBtP1jl.js                   0.23 kB │ gzip:   0.19 kB\ndist/assets/play-JfV6fi00.js                       0.58 kB │ gzip:   0.35 kB\ndist/assets/NotFoundView-Cgl4tQ8_.js               0.69 kB │ gzip:   0.41 kB\ndist/assets/Spinner-Bau40Y8C.js                    1.47 kB │ gzip:   0.76 kB\ndist/assets/search-1smL4E24.js                     3.37 kB │ gzip:   1.57 kB\ndist/assets/management-BJoLhRGy.js                 3.70 kB │ gzip:   1.71 kB\ndist/assets/PluginsView-16vdv1OW.js                4.49 kB │ gzip:   1.69 kB\ndist/assets/SchedulesView-skT2nM2e.js             10.31 kB │ gzip:   3.45 kB\ndist/assets/SettingsView-DmCicJ3N.js              48.36 kB │ gzip:  12.33 kB\ndist/assets/index-Bh89kfpe.js                    301.04 kB │ gzip: 102.66 kB\ndist/assets/WorkspaceView-DVgjeZ5c.js            318.91 kB │ gzip:  95.86 kB\n✓ built in 3.08s\n",
+          "exit_code": 0
+        }
+      }
+    ]
+  }
+}

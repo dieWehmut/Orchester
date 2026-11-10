@@ -1,0 +1,145 @@
+{
+  "role": "Coherent protocol/backend/Web source-quality change; native Windows delivery still pending",
+  "source_parent_commit": "62777f4",
+  "files": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "f5432fa1754a162afd80d130f6271c9e86a9936b4b1d474b82557a677c7aecb2"
+    },
+    {
+      "path": "apps/desktop/src-tauri/Cargo.lock",
+      "sha256": "5c6c6e24e8e9f4a906ca28bbc03e2f60aa88182778c958ecf725d815803f0a20"
+    },
+    {
+      "path": "apps/web/src/features/agent-presence/agent-presenter.ts",
+      "sha256": "6a4ea9013006e683f9a82a313a5718eb1a8fb4a7163b75a82cce5a5754aa7e0d"
+    },
+    {
+      "path": "apps/web/src/features/agent-presence/components/AgentFleetGroup.vue",
+      "sha256": "275a92010205820c82a11f7049b7a3f2ff0f66b392a06f38a6925f9472ed38d3"
+    },
+    {
+      "path": "apps/web/src/features/agent-presence/components/AgentFleetRow.vue",
+      "sha256": "e1cedec0a7499873be17a3925401581d5422d1f3a6aae9b90f4aafcb83a95818"
+    },
+    {
+      "path": "apps/web/src/features/agent-presence/components/AgentMetrics.vue",
+      "sha256": "fc85f0f7f8e9d8651448d76475646fd95549714cd056f9c1b56de6a3a8f4de0d"
+    },
+    {
+      "path": "apps/web/src/features/agent-presence/fleet-groups.ts",
+      "sha256": "13def6891f7ecc4bf9bbb4705a789432670d118b67b6ca3bbc4a46edb507de23"
+    },
+    {
+      "path": "apps/web/src/locales/en.json",
+      "sha256": "6ff5ce1e82172d59b4bb13dd692c41ce932f8c5607f18577f17ac0b907872de6"
+    },
+    {
+      "path": "apps/web/src/locales/zh-CN.json",
+      "sha256": "6039115a2c28d2e0571b7d84d849e242f60370a6e432816115eb1d752d283e0e"
+    },
+    {
+      "path": "apps/web/src/locales/zh-TW.json",
+      "sha256": "904679c80930db65e768fc09ae813405bdca390a0850e529ef11e640a87ae05b"
+    },
+    {
+      "path": "apps/web/src/stores/agent-fleet.ts",
+      "sha256": "f0d61d0f5f33102c969511b9fb0bb26d24f35b5a925d0e665e3a45fbcfa78bd4"
+    },
+    {
+      "path": "apps/web/test/agent-fleet-groups.test.ts",
+      "sha256": "f660685d82bfc2a48668a3f5c469fff81b0be401a1bc723178e2f5e3be18cc9a"
+    },
+    {
+      "path": "apps/web/test/agent-process-sources.test.ts",
+      "sha256": "ada588a56558b5670c68a5ab7719d5f8d89e4eb63c083ab3bca80515b80cd9cc"
+    },
+    {
+      "path": "kisten/netz/examples/agent_process_probe.rs",
+      "sha256": "3fe626701f60c2a7b451decf037f6c14620a8771485cb58e3bf5b861e3227b02"
+    },
+    {
+      "path": "kisten/netz/src/agent_activity/wsl.rs",
+      "sha256": "d5d6dba4d558aa79593bf00cf4e221f04fb7e37b66984df4dcef057a0b71546d"
+    },
+    {
+      "path": "kisten/netz/src/agent_process.rs",
+      "sha256": "7d5c448950b04e2d3366ad517de3b6a7a3dead83035317d842df4dc7e14dc4e1"
+    },
+    {
+      "path": "kisten/netz/src/agent_status.rs",
+      "sha256": "febf94b91aa37edee6a816aa74406510da034cdbebcb0f060ce8ce4dd42c9399"
+    },
+    {
+      "path": "kisten/netz/src/bootstrap.rs",
+      "sha256": "7fe264e838ee6a8f04b1d77560215a9bbe551c0ea1435eb8a5ac5fbcda0ac710"
+    },
+    {
+      "path": "kisten/netz/tests/agent_runtime_status.rs",
+      "sha256": "eeee70a633240572128cd462f7525168c9c74b22b0ee84393edbfe9055309a99"
+    },
+    {
+      "path": "kisten/netz/tests/agent_status_routes.rs",
+      "sha256": "e6d6ab6990c14413fce73003ecaebefa5c2c128cadfd762eb9d6f4b136d0fb59"
+    },
+    {
+      "path": "kisten/netz/tests/agent_status_socket.rs",
+      "sha256": "bce21234db76a8fa7ffe09a02f6b685fc5ffbfea08467f3931d2446df7571cb9"
+    },
+    {
+      "path": "kisten/protokoll/Cargo.toml",
+      "sha256": "b9d5853ab6ef5d39308ea9c59ff6304409f6c44b0038c8274a85aad43956a099"
+    },
+    {
+      "path": "kisten/protokoll/src/agent_status.rs",
+      "sha256": "432bab67697350082c4f15ae1bcd2cad03b2dc45013e64d977d456639fc14e76"
+    },
+    {
+      "path": "kisten/protokoll/tests/agent_status.rs",
+      "sha256": "6d9c7513e29c16db275bec37327635dd8e5fb4e44036330b2ec3628b0a8e0187"
+    },
+    {
+      "path": "packages/protokoll/src/agent-status.ts",
+      "sha256": "7832b20235f5e0916869d43f46aea29e321faa21ac873c8cb5168e97f98528e0"
+    },
+    {
+      "path": "packages/protokoll/src/agent-stream.ts",
+      "sha256": "7572d6d6c7e90ff14d87442a31531db65c84a7edee4a19464f2c460eaf43de4f"
+    },
+    {
+      "path": "packages/protokoll/src/fixtures/agents.ts",
+      "sha256": "79ade7a038e04e961d9e1f70e7f93a3926c6c6f363bfdca037ff472bdcb741be"
+    },
+    {
+      "path": "packages/protokoll/test/agent-process-sources.test.ts",
+      "sha256": "78e09631c27d2c22f6e7647dfb317e280374eacf20aa3630f90e713fb9b79b08"
+    },
+    {
+      "path": "packages/protokoll/test/agent-status.test.ts",
+      "sha256": "7558c49397eb5f31258e90d95f3c3eb259c69b7bed13b06567068ddc82f86ff4"
+    }
+  ],
+  "gates": {
+    "rust_protocol": 9,
+    "rust_integration": 18,
+    "latest_wsl_cache": 4,
+    "related_agent_lib_before_final_cache_adjustment": 38,
+    "typescript_protocol": 15,
+    "web_related": 43,
+    "clippy": "netz/protokoll all targets -D warnings, jobs=2 passed",
+    "formatter": "10 changed Rust files passed",
+    "desktop_lock": "cargo metadata --locked --offline --no-deps passed",
+    "builds": [
+      "protocol typecheck",
+      "Web build/vue-tsc",
+      "website build/vue-tsc"
+    ]
+  },
+  "pending": [
+    "Full current-main low-concurrency regression",
+    "Native Windows SystemAgentProcessSource after rebuilt EXE; independent handle diagnostic prepared but not launched by audit agent",
+    "New desktop EXE and final Web installation plus remote backend binaries/deployment",
+    "Native owned launcher exit inspection for audit42664/resample37112"
+  ],
+  "scope": "Only already-existing process executable names read; no Agent, model, user service, emulator or installed desktop files started or modified by audit agent"
+}

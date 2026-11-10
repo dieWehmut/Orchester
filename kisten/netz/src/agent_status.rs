@@ -191,23 +191,41 @@ impl AgentRuntimeStatusStore {
         let mut next = guard.clone();
         let mut changed = false;
         for agent in &mut next.agents {
+            let before = agent.clone();
             let observed = processes.count(&agent.provider);
+            let managed_active = agent.active_sessions > 0
+                || agent.active_runs > 0
+                || agent.active_subagents > 0
+                || (agent.window_count_source != AgentWindowCountSource::ExternalProcesses
+                    && agent.active_windows > 0);
+            let managed_transition = matches!(
+                agent.activity,
+                AgentActivityState::Starting
+                    | AgentActivityState::WaitingApproval
+                    | AgentActivityState::Stopping
+            );
+            agent.process_sources = Some(processes.source_statuses(&agent.provider));
             if observed > 0 {
-                if agent.active_windows != observed
-                    || agent.window_count_source != AgentWindowCountSource::ExternalProcesses
-                    || agent.activity != AgentActivityState::Running
-                {
-                    agent.active_windows = observed;
+                agent.active_windows = observed;
+                agent.window_count_source = AgentWindowCountSource::ExternalProcesses;
+                if !managed_transition {
                     agent.activity = AgentActivityState::Running;
-                    agent.window_count_source = AgentWindowCountSource::ExternalProcesses;
-                    agent.updated_at = updated_at.clone();
-                    changed = true;
                 }
-            } else if agent.window_count_source == AgentWindowCountSource::ExternalProcesses
-                && agent.active_windows != 0
-            {
-                agent.active_windows = 0;
-                agent.activity = activity_without_external_processes(agent);
+            } else {
+                if agent.window_count_source == AgentWindowCountSource::ExternalProcesses {
+                    agent.active_windows = 0;
+                }
+                if !managed_active && !managed_transition {
+                    agent.activity = if processes.is_complete() {
+                        activity_without_external_processes(agent)
+                    } else {
+                        AgentActivityState::Unknown
+                    };
+                } else if !managed_transition {
+                    agent.activity = AgentActivityState::Running;
+                }
+            }
+            if *agent != before {
                 agent.updated_at = updated_at.clone();
                 changed = true;
             }
@@ -417,7 +435,7 @@ fn runtime_summary(
         match status {
             Some(AvailabilityStatus::Available) => (
                 AgentAvailabilityState::Available,
-                AgentActivityState::Idle,
+                AgentActivityState::Unknown,
                 true,
                 true,
                 false,
@@ -456,6 +474,7 @@ fn runtime_summary(
         active_runs: 0,
         active_subagents: 0,
         window_count_source: AgentWindowCountSource::ManagedSessions,
+        process_sources: None,
         last_heartbeat_at: None,
         last_error,
         capabilities: capability_labels(&capability),

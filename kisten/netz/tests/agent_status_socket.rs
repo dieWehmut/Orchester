@@ -10,7 +10,7 @@ use orchester_netz::{
     app_router, AgentProcessSnapshot, AgentProcessSource, AgentRuntimeStatusUpdate, ServerContext,
     ServerControl,
 };
-use orchester_protokoll::{AgentActivityState, AgentWindowCountSource};
+use orchester_protokoll::{AgentActivityState, AgentProcessEnvironment, AgentWindowCountSource};
 
 async fn read_json<S>(stream: &mut tokio_tungstenite::WebSocketStream<S>) -> Value
 where
@@ -48,7 +48,15 @@ async fn agent_status_socket_streams_snapshot_updates_and_heartbeats() {
         .expect("connect agent status socket");
     let initial = read_json(&mut socket).await;
     assert_eq!(initial["type"], "snapshot");
-    assert_eq!(initial["snapshot"]["sequence"], 1);
+    assert_eq!(initial["snapshot"]["sequence"], 2);
+    let initial_codex = initial["snapshot"]["agents"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|agent| agent["agent_id"] == "codex")
+        .unwrap();
+    assert_eq!(initial_codex["process_sources"][0]["status"], "available");
+    assert_eq!(initial_codex["process_sources"][0]["count"], 0);
 
     updates
         .agent_status_store()
@@ -56,7 +64,7 @@ async fn agent_status_socket_streams_snapshot_updates_and_heartbeats() {
         .expect("update codex");
     let update = read_json(&mut socket).await;
     assert_eq!(update["type"], "snapshot");
-    assert_eq!(update["snapshot"]["sequence"], 2);
+    assert_eq!(update["snapshot"]["sequence"], 3);
     let codex = update["snapshot"]["agents"]
         .as_array()
         .unwrap()
@@ -65,6 +73,7 @@ async fn agent_status_socket_streams_snapshot_updates_and_heartbeats() {
         .expect("codex status");
     assert_eq!(codex["active_windows"], 2);
     assert_eq!(codex["active_subagents"], 1);
+    assert_eq!(codex["process_sources"], initial_codex["process_sources"]);
 
     updates
         .agent_status_store()
@@ -72,7 +81,7 @@ async fn agent_status_socket_streams_snapshot_updates_and_heartbeats() {
         .expect("broadcast heartbeat");
     let heartbeat = read_json(&mut socket).await;
     assert_eq!(heartbeat["type"], "heartbeat");
-    assert_eq!(heartbeat["sequence"], 2);
+    assert_eq!(heartbeat["sequence"], 3);
 
     socket.close(None).await.expect("close socket");
     server.abort();
@@ -83,7 +92,11 @@ struct FixedProcessSource;
 
 impl AgentProcessSource for FixedProcessSource {
     fn snapshot(&self) -> AgentProcessSnapshot {
-        AgentProcessSnapshot::default()
+        AgentProcessSnapshot::from_source(
+            AgentProcessEnvironment::Local,
+            [] as [&str; 0],
+            "2026-11-10T05:00:00Z",
+        )
     }
 }
 

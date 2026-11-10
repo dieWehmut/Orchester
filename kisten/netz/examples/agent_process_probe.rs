@@ -8,6 +8,10 @@ fn main() {
         .expect("UTC timestamp");
     let started = Instant::now();
     let snapshot = SystemAgentProcessSource.snapshot();
+    let sources = ["codex", "claude", "opencode", "deepseek"]
+        .into_iter()
+        .map(|provider| (provider, snapshot.source_statuses(provider)))
+        .collect::<std::collections::BTreeMap<_, _>>();
     println!(
         "{}",
         serde_json::json!({
@@ -17,7 +21,9 @@ fn main() {
             "elapsed_ms": started.elapsed().as_millis(),
             "provider_counts": snapshot.provider_counts(),
             "counts_are_aggregated_across_sources": true,
-            "source_availability_and_degradation": "not exposed by the production snapshot API",
+            "sources_complete": snapshot.is_complete(),
+            "source_statuses_by_provider": sources,
+            "source_failure_categories": snapshot.source_failures(),
             "scope": "only existing process executable names; no agent or model started"
         })
     );
