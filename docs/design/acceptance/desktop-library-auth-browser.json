@@ -1,0 +1,40 @@
+{
+  "url": "http://127.0.0.1:37317",
+  "sameCookieAfterPopup": true,
+  "mainMutationAfterPopup": 200,
+  "writes": [
+    200,
+    200,
+    409,
+    200,
+    409,
+    200,
+    200,
+    200
+  ],
+  "pageErrors": [],
+  "checks": [
+    "real EmbeddedServer browser cookie retained after popup",
+    "main writes after popup bootstrap",
+    "secondary window rename rebases stale revision",
+    "main unread change preserves secondary rename and pin",
+    "project create and assignment survive reload using SQLite",
+    "remove project leaves source file and history unchanged"
+  ],
+  "finalState": {
+    "revision": 8,
+    "projects": [],
+    "sections": [],
+    "sessions": [
+      {
+        "id": "s-2e6e815972ea9bf756fc8202e6495e9f",
+        "title": "Renamed in secondary window",
+        "pinned": true,
+        "unread": true,
+        "archived": false,
+        "project_id": null,
+        "section_id": null
+      }
+    ]
+  }
+}

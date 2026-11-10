@@ -1,0 +1,168 @@
+{
+  "passed": true,
+  "checks": [
+    "saved fixture transcript and main UI save succeeded",
+    "main HWND shown with native maximize hit testing",
+    "invalid conversation identifier rejected without creating window",
+    "secondary bootstrap retains shared HttpOnly Cookie, CSRF token and expiry",
+    "actual secondary HWND shown with native chrome, renamed title and authenticated saved transcript",
+    "original main-window CSRF now permits PUT 200 after secondary bootstrap (previously 403)",
+    "main and secondary UI saves both succeed with revision conflict recovery",
+    "secondary original CSRF still permits PUT 200 after main changes",
+    "secondary receives allowed window controls and ungranted hide remains denied",
+    "secondary caller opens another authorized native window and original main CSRF stays valid",
+    "native navigation rejects a different loopback origin",
+    "native popup policy denies browser-created windows",
+    "secondary reload preserves authentication and restores final saved title and answer",
+    "closing secondary windows destroys their HWNDs and WebViews",
+    "main UI remains writable after both secondary windows close",
+    "main close hides its HWND while WebView and embedded server remain healthy"
+  ],
+  "writes": [
+    {
+      "label": "main UI before child",
+      "status": 200,
+      "revision": 2
+    },
+    {
+      "label": "main original CSRF after child bootstrap",
+      "status": 200,
+      "revision": 3
+    },
+    {
+      "label": "child UI after main API save",
+      "status": 200,
+      "revision": 4
+    },
+    {
+      "label": "main UI after child UI save",
+      "status": 200,
+      "revision": 5
+    },
+    {
+      "label": "child original CSRF after main UI save",
+      "status": 200,
+      "revision": 6
+    },
+    {
+      "label": "main original CSRF after third window bootstrap",
+      "status": 200,
+      "revision": 7
+    },
+    {
+      "label": "main UI after secondary windows close",
+      "status": 200,
+      "revision": 8
+    }
+  ],
+  "authentication": {
+    "cookieStable": true,
+    "csrfStable": true,
+    "expiryStable": true,
+    "httpOnly": true,
+    "sameSite": "Lax",
+    "beforeFixMainPutAfterSecondary": 403,
+    "afterFixMainPutAfterSecondary": 200
+  },
+  "windows": {
+    "main": [
+      {
+        "Handle": 724340,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 1920,
+        "Height": 1200,
+        "Dpi": 144,
+        "MaximizeHit": 9
+      }
+    ],
+    "secondary": [
+      {
+        "Handle": 2360646,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 1920,
+        "Height": 1200,
+        "Dpi": 144,
+        "MaximizeHit": 9
+      },
+      {
+        "Handle": 724340,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 1920,
+        "Height": 1200,
+        "Dpi": 144,
+        "MaximizeHit": 9
+      }
+    ],
+    "nested": [
+      {
+        "Handle": 7341500,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 1920,
+        "Height": 1200,
+        "Dpi": 144,
+        "MaximizeHit": 9
+      },
+      {
+        "Handle": 2360646,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 1920,
+        "Height": 1200,
+        "Dpi": 144,
+        "MaximizeHit": 9
+      },
+      {
+        "Handle": 724340,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 1920,
+        "Height": 1200,
+        "Dpi": 144,
+        "MaximizeHit": 9
+      }
+    ],
+    "afterSecondaryClose": [
+      {
+        "Handle": 724340,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 1920,
+        "Height": 1200,
+        "Dpi": 144,
+        "MaximizeHit": 9
+      }
+    ],
+    "mainHidden": [
+      {
+        "Handle": 724340,
+        "Title": "Orchester",
+        "Visible": false,
+        "Width": 1920,
+        "Height": 1200,
+        "Dpi": 144,
+        "MaximizeHit": 9
+      }
+    ]
+  },
+  "health": {
+    "afterSecondaryClose": 200,
+    "afterMainHide": 200
+  },
+  "pageErrors": [],
+  "scope": {
+    "isolatedExecutable": true,
+    "isolatedOrchesterHome": true,
+    "isolatedWebViewProfile": true,
+    "savedDelegateFixture": true,
+    "installedUserApplicationTouched": false,
+    "modelRunsRequested": false
+  },
+  "screenshots": [
+    "desktop-secondary-history.png",
+    "desktop-main-after-secondary-close.png"
+  ]
+}

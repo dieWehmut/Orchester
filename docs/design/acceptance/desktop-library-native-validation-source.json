@@ -1,0 +1,25 @@
+{
+  "rootCommit": "0c52d5ed1ae792c09180b27caa1139e49ac15db9",
+  "sourceSha256": {
+    "apps/desktop/src-tauri/src/conversation_window.rs": "03ca3d690fba3db23dc088049e9dd4d42a66c97b800c059cbedf0dca25c89f59",
+    "apps/desktop/src-tauri/src/lib.rs": "ae658ba911367de1eb33089a0f52e1aa60521be79d2acbe1e61ddb261dfae3b7",
+    "apps/desktop/src-tauri/src/runtime.rs": "0bc33351af67268f38aa56bc2861419a395166623715d66eba70894a6feb120d",
+    "apps/desktop/src-tauri/src/tray_lifecycle.rs": "a9d4f7664b3cea70b4982805e99bc98127edf1b1ddd05589c59a5de9680405ce",
+    "apps/desktop/src-tauri/build.rs": "b33331d5194c7edd5ad4058bb6dec73e018158ab19bb8a45590bed61674b226d",
+    "apps/desktop/src-tauri/Cargo.lock": "af950aa61c0bee77b8beb42c884e4042983c55e8d603b129d965fe8ee33aaf91",
+    "kisten/netz/src/session.rs": "0f71e631fb0d4e95142d42b8fa35eebcc9a654a834ceff4a6ec0b4598d59cbbc",
+    "kisten/konsole/tests/cli.rs": "6ab0505f40371e14401947624ebbcba355d1077b0f1a75554c864c73ef10fe1b"
+  },
+  "isolatedExecutableSha256": "372365d3241ce79b67a937d9f9f9c45a1007442466756d3f74ae61c11491b6d5",
+  "webIndexSha256": "5cba558ccff7ceff7d8906fa2e56afb50614b2709c2ba76777c299a9e12145af",
+  "toolchain": [
+    "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "binary: rustc",
+    "commit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67",
+    "commit-date: 2026-10-13",
+    "host: x86_64-pc-windows-msvc",
+    "release: 1.99.1",
+    "LLVM version: 23.1.1",
+    "cargo 1.99.1 (5f94df478 2026-08-27)"
+  ]
+}
