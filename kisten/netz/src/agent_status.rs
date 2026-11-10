@@ -115,9 +115,13 @@ impl AgentRuntimeStatusStore {
             {
                 let availability = agent.availability;
                 let capabilities = agent.capabilities.clone();
+                let installed = agent.installed;
+                let configured = agent.configured;
                 *agent = previous.clone();
                 agent.availability = availability;
                 agent.capabilities = capabilities;
+                agent.installed = installed;
+                agent.configured = configured;
             }
         }
         next.sequence = guard
@@ -335,7 +339,11 @@ fn monitor_only_summary(provider: &str, now: &str) -> AgentRuntimeSummaryDto {
     AgentRuntimeSummaryDto {
         agent_id: provider.to_owned(),
         provider: provider.to_owned(),
-        display_name: display_name(provider),
+        display_name: match provider {
+            "gemini" => "Gemini CLI".to_owned(),
+            "deepseek" => "DeepSeek Harness".to_owned(),
+            _ => display_name(provider),
+        },
         icon_key: icon_key(provider),
         // These booleans are schema placeholders. Process presence cannot
         // establish installation, credentials, or adapter availability; clients

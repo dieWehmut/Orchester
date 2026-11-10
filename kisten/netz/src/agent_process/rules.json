@@ -1,0 +1,72 @@
+{
+  "primary": {
+    "claude": "claude",
+    "codex": "codex",
+    "deepseek": "deepseek",
+    "opencode": "opencode"
+  },
+  "runtimes": [
+    "node",
+    "nodejs",
+    "bun",
+    "python",
+    "python3",
+    "pypy",
+    "pypy3"
+  ],
+  "candidates": [
+    "gemini",
+    "dsh",
+    "agent",
+    "cursor-agent",
+    "language_server",
+    "language_server_linux_x64",
+    "language_server_linux_arm",
+    "dsh desktop",
+    "mainthread"
+  ],
+  "entries": {
+    "@google/gemini-cli/dist/index.js": "gemini",
+    "@deepseek-ai/dsh/lib/bin.js": "deepseek",
+    "deepseek-harness/apps/cli/src/bin.ts": "deepseek",
+    "cursor-agent-host/dist/agent-host-daemon/dist/bin/daemon.cjs": "cursor",
+    "@openai/codex/bin/codex.js": "codex",
+    "@anthropic-ai/claude-code/cli.js": "claude",
+    "opencode-ai/bin/opencode": "opencode"
+  },
+  "runtime_value_flags": [
+    "--import",
+    "--require",
+    "-r",
+    "--loader",
+    "--experimental-loader",
+    "--inspect-port",
+    "--max-old-space-size",
+    "--max_old_space_size"
+  ],
+  "runtime_switch_flags": [
+    "--expose-internals",
+    "--expose-gc",
+    "--inspect",
+    "--inspect-brk",
+    "--enable-source-maps",
+    "--no-warnings",
+    "--trace-warnings"
+  ],
+  "maintenance": [
+    "--help",
+    "-h",
+    "--version",
+    "-V"
+  ],
+  "dsh_value_flags": [
+    "--profile",
+    "--patch",
+    "--host",
+    "--port",
+    "--cwd",
+    "--model",
+    "--config",
+    "--from-default-profile"
+  ]
+}

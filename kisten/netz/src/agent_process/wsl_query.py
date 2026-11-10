@@ -1,0 +1,238 @@
+"""Bounded, read-only /proc identity query. stdout contains counts/quality only.
+No raw arguments, executable paths, PIDs or distro names are returned or saved.
+Branding rules are supplied by the Rust caller, shared with local sysinfo.
+"""
+import hashlib
+import json
+import os
+import sys
+import time
+
+rules = json.loads(sys.argv[1])
+MAX_BYTES = 16 * 1024
+MAX_ARGS = 64
+
+def path(value):
+    return value.replace("\\", "/").lower()
+
+def basename(value):
+    name = path(value).rsplit("/", 1)[-1]
+    return name[:-4] if name.endswith(".exe") else name
+
+def suffix(value, expected):
+    return value == expected or value.endswith("/" + expected)
+
+def candidate(name):
+    name = basename(name)
+    return (name in rules["primary"] or name in rules["runtimes"]
+            or name in rules["candidates"]
+            or name.startswith(("python3.", "pypy3.")))
+
+def cursor_cli(value):
+    if "/cursor-agent/versions/" not in value:
+        return False
+    parts = value.rsplit("/cursor-agent/versions/", 1)[1].split("/")
+    return (len(parts) == 2 and bool(parts[0])
+            and parts[1] in ("cursor-agent", "cursor-agent.exe", "agent", "agent.exe"))
+
+def entry_index(args):
+    index = 2 if args and basename(args[0]) == "bun" and args[1:2] == ["run"] else 1
+    while index < len(args):
+        arg = args[index]
+        if arg in ("-e", "--eval", "-p", "--print", "-c"):
+            return None
+        if arg == "--":
+            return index + 1 if index + 1 < len(args) else None
+        key = arg.split("=", 1)[0]
+        if key in rules["runtime_value_flags"]:
+            index += 1 if "=" in arg else 2
+        elif key in rules["runtime_switch_flags"]:
+            index += 1
+        elif arg.startswith("-"):
+            return None
+        else:
+            return index
+    return None
+
+def classify(name, exe, args):
+    name, exe = basename(name), path(exe)
+    if name in rules["primary"]:
+        return rules["primary"][name]
+    executable = basename(exe)
+    if cursor_cli(exe):
+        return "cursor"
+    if name.startswith("language_server") or executable.startswith("language_server"):
+        branded = any(suffix(exe, "antigravity/resources/bin/" + filename)
+                      for filename in ("language_server", "language_server.exe", "language_server_linux_x64", "language_server_linux_arm"))
+        explicit = any(arg.startswith("--override_user_agent_name=") and arg.split("=", 1)[1].lower() == "antigravity"
+                       or (arg == "--override_user_agent_name" and index + 1 < len(args)
+                           and args[index + 1].lower() == "antigravity")
+                       for index, arg in enumerate(args))
+        return "antigravity" if branded or explicit else None
+    runtime = (executable in rules["runtimes"]
+               or executable.startswith(("python3.", "pypy3."))
+               or (executable == "dsh desktop" and "/dsh desktop/" in exe))
+    if not runtime:
+        return None
+    index = entry_index(args)
+    if index is None:
+        return None
+    entry = path(args[index])
+    if suffix(entry, "dsh desktop/resources/harness-node-entry.mjs"):
+        index += 1
+        if index >= len(args):
+            return None
+        entry = path(args[index])
+        if not suffix(entry, "@deepseek-ai/dsh/lib/bin.js"):
+            return None
+    provider = next((provider for expected, provider in rules["entries"].items()
+                     if suffix(entry, expected)), None)
+    if provider == "deepseek" and dsh_maintenance(args[index + 1:]):
+        return None
+    return provider
+
+def dsh_maintenance(args):
+    if args and args[0] == "plugin":
+        return True
+    index = 0
+    while index < len(args):
+        arg = args[index]
+        if arg in ("--prompt", "-p", "--"):
+            break
+        key = arg.split("=", 1)[0]
+        if key in rules["dsh_value_flags"]:
+            index += 1 if "=" in arg else 2
+            continue
+        if key.startswith("--dump-config") or key == "--dump-default-config" or (arg.startswith("-") and arg in rules["maintenance"]):
+            return True
+        index += 1
+    return False
+
+def relative_entry(args):
+    index = entry_index(args)
+    if index is None:
+        return False
+    entry = path(args[index])
+    return not entry.startswith("/") and entry[1:2] != ":"
+
+def resolve_relative_entry(args, cwd):
+    if cwd and relative_entry(args):
+        index = entry_index(args)
+        entry = args[index]
+        while entry.startswith("./"):
+            entry = entry[2:]
+        args[index] = cwd.rstrip("/\\") + "/" + entry
+
+def bounded_args(args):
+    result, size = [], 0
+    for value in args[:MAX_ARGS + 1]:
+        size += len(value.encode("utf-8")) + 1
+        if len(result) >= MAX_ARGS or size > MAX_BYTES:
+            return result, False
+        result.append(value)
+    return result, True
+
+def instance_key(name, exe, args):
+    if basename(name) in rules["primary"]:
+        return "native:" + basename(name)
+    index = entry_index(args)
+    if index is not None:
+        if suffix(path(args[index]), "dsh desktop/resources/harness-node-entry.mjs"):
+            index += 1
+        if index < len(args):
+            digest = hashlib.sha256()
+            for arg in args[index + 1:]:
+                digest.update(arg.encode("utf-8"))
+                digest.update(b"\0")
+            return path(args[index]) + ":" + digest.hexdigest()
+    return path(exe)
+
+def native_launcher_pair(provider, parent_key, key):
+    launcher = {"codex": "/@openai/codex/bin/codex.js:",
+                "claude": "/@anthropic-ai/claude-code/cli.js:",
+                "opencode": "/opencode-ai/bin/opencode:"}.get(provider)
+    return bool(launcher and key == "native:" + provider and launcher in parent_key)
+
+def counts(rows):
+    identities = {row["pid"]: row for row in rows}
+    result = {}
+    for row in rows:
+        parent = identities.get(row.get("parent"))
+        if (parent and parent["provider"] == row["provider"]
+                and ((parent["key"] == row["key"] and not row["key"].startswith("native:"))
+                     or native_launcher_pair(row["provider"], parent["key"], row["key"]))):
+            continue
+        result[row["provider"]] = result.get(row["provider"], 0) + 1
+    return result
+
+def observe():
+    deadline = time.monotonic() + 2.8
+    rows, complete, candidates = [], True, 0
+    for item in os.scandir("/proc"):
+        if not item.name.isdigit():
+            continue
+        if time.monotonic() >= deadline:
+            complete = False
+            break
+        try:
+            with open(item.path + "/comm", "rb") as handle:
+                name = handle.read(128).decode("utf-8", "replace").strip()
+            if not candidate(name):
+                continue
+            candidates += 1
+            if candidates > 512:
+                complete = False
+                break
+            # Read only selected candidates. No environment, cwd, open files,
+            # history, or provider credentials are inspected.
+            provider = classify(name, "", [])
+            exe = "" if provider else os.readlink(item.path + "/exe")
+            provider = provider or classify(name, exe, [])
+            args = []
+            if provider is None:
+                with open(item.path + "/cmdline", "rb") as handle:
+                    raw = handle.read(MAX_BYTES + 1)
+                if len(raw) > MAX_BYTES:
+                    complete = False
+                    raw = raw[:MAX_BYTES]
+                fields = raw.split(b"\0")
+                if raw and raw[-1:] != b"\0":
+                    fields.pop()  # Never classify a truncated argument.
+                    complete = False
+                if fields and not fields[-1]:
+                    fields.pop()
+                args, intact = bounded_args([value.decode("utf-8", "replace") for value in fields])
+                complete = complete and intact
+                if relative_entry(args):
+                    resolve_relative_entry(args, os.readlink(item.path + "/cwd"))
+                provider = classify(name, exe, args)
+                if not args:
+                    complete = False
+            if provider:
+                with open(item.path + "/stat", "rb") as handle:
+                    stat = handle.read(4096).decode("utf-8", "replace")
+                parent = int(stat.rsplit(") ", 1)[1].split()[1])
+                rows.append({"pid": int(item.name), "parent": parent, "provider": provider,
+                             "key": instance_key(name, exe, args)})
+        except (OSError, ValueError, IndexError):
+            # A vanished process is a normal enumeration race. A live but
+            # inaccessible candidate is unknown, never a confirmed zero.
+            if os.path.exists(item.path):
+                complete = False
+    return {"counts": counts(rows), "complete": complete}
+
+if len(sys.argv) > 2 and sys.argv[2] == "--fixture":
+    fixtures = json.load(sys.stdin)
+    rows, complete = [], True
+    for row in fixtures:
+        args, intact = bounded_args(row["args"])
+        complete = complete and intact
+        resolve_relative_entry(args, row.get("cwd", ""))
+        provider = classify(row["name"], row["exe"], args)
+        if provider:
+            rows.append({"pid": row["pid"], "parent": row.get("parent"), "provider": provider,
+                         "key": instance_key(row["name"], row["exe"], args)})
+    result = {"counts": counts(rows), "complete": complete}
+else:
+    result = observe()
+print(json.dumps(result, separators=(",", ":")))

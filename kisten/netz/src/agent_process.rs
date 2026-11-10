@@ -1,6 +1,6 @@
 //! Redaction-safe external agent process aggregation.
 //!
-//! Only known executable names, counts and observation quality leave this
+//! Only provider identifiers, counts and observation quality leave this
 //! module. PIDs, arguments, paths and WSL distribution names remain private.
 
 use std::collections::BTreeMap;
@@ -11,6 +11,9 @@ use orchester_protokoll::{
 use sysinfo::{ProcessRefreshKind, ProcessesToUpdate, System};
 use time::{format_description::well_known::Rfc3339, OffsetDateTime};
 
+#[path = "agent_process/identity.rs"]
+mod identity;
+
 pub trait AgentProcessSource: Send + Sync {
     fn snapshot(&self) -> AgentProcessSnapshot;
 }
@@ -20,6 +23,7 @@ pub struct SystemAgentProcessSource;
 
 impl AgentProcessSource for SystemAgentProcessSource {
     fn snapshot(&self) -> AgentProcessSnapshot {
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(3);
         let mut system = System::new();
         system.refresh_processes_specifics(
             ProcessesToUpdate::All,
@@ -36,18 +40,169 @@ impl AgentProcessSource for SystemAgentProcessSource {
         let mut snapshot = if system.processes().is_empty() {
             AgentProcessSnapshot::unavailable(environment)
         } else {
-            AgentProcessSnapshot::from_source(
-                environment,
-                system
-                    .processes()
-                    .values()
-                    .map(|process| process.name().to_string_lossy()),
-                observed_now(),
-            )
+            read_system_identities(&mut system, environment, deadline)
         };
-        snapshot.include_wsl();
+        snapshot.include_wsl(deadline);
         snapshot
     }
+}
+
+fn read_system_identities(
+    system: &mut System,
+    environment: AgentProcessEnvironment,
+    deadline: std::time::Instant,
+) -> AgentProcessSnapshot {
+    use sysinfo::UpdateKind;
+    let candidates: Vec<_> = system
+        .processes()
+        .iter()
+        .filter(|(_, process)| identity::is_candidate(&process.name().to_string_lossy()))
+        .map(|(pid, _)| *pid)
+        .take(513)
+        .collect();
+    if candidates.len() > 512 || std::time::Instant::now() >= deadline {
+        return AgentProcessSnapshot::unavailable(environment);
+    }
+    // Enumerate names first; expensive executable/command reads are restricted
+    // to possible runtimes and branded main services.
+    system.refresh_processes_specifics(
+        ProcessesToUpdate::Some(&candidates),
+        true,
+        ProcessRefreshKind::nothing().with_exe(UpdateKind::Always),
+    );
+    let command_candidates: Vec<_> = candidates
+        .iter()
+        .copied()
+        .filter(|pid| {
+            system.process(*pid).is_some_and(|process| {
+                identity::classify(
+                    &process.name().to_string_lossy(),
+                    &process
+                        .exe()
+                        .map(|value| value.to_string_lossy())
+                        .unwrap_or_default(),
+                    &[],
+                )
+                .is_none()
+            })
+        })
+        .collect();
+    if std::time::Instant::now() >= deadline {
+        return AgentProcessSnapshot::unavailable(environment);
+    }
+    #[cfg(not(target_os = "linux"))]
+    system.refresh_processes_specifics(
+        ProcessesToUpdate::Some(&command_candidates),
+        true,
+        ProcessRefreshKind::nothing().with_cmd(UpdateKind::Always),
+    );
+    let mut command_arguments = BTreeMap::new();
+    for pid in &command_candidates {
+        if std::time::Instant::now() >= deadline {
+            return AgentProcessSnapshot::unavailable(environment);
+        }
+        #[cfg(target_os = "linux")]
+        let arguments = read_linux_args(pid.as_u32());
+        #[cfg(not(target_os = "linux"))]
+        let arguments = system
+            .process(*pid)
+            .map(|process| identity::bounded_args(process.cmd()))
+            .unwrap_or_else(|| (Vec::new(), false));
+        command_arguments.insert(*pid, arguments);
+    }
+    let relative_candidates: Vec<_> = command_candidates
+        .iter()
+        .copied()
+        .filter(|pid| {
+            command_arguments
+                .get(pid)
+                .is_some_and(|arguments| identity::relative_entry(&arguments.0))
+        })
+        .collect();
+    if std::time::Instant::now() >= deadline {
+        return AgentProcessSnapshot::unavailable(environment);
+    }
+    system.refresh_processes_specifics(
+        ProcessesToUpdate::Some(&relative_candidates),
+        true,
+        ProcessRefreshKind::nothing().with_cwd(UpdateKind::Always),
+    );
+    let mut rows = Vec::new();
+    let mut complete = true;
+    for pid in candidates {
+        let Some(process) = system.process(pid) else {
+            continue;
+        };
+        let name = process.name().to_string_lossy();
+        let exe = process
+            .exe()
+            .map(|value| value.to_string_lossy())
+            .unwrap_or_default();
+        let (mut args, intact) = command_arguments
+            .remove(&pid)
+            .unwrap_or_else(|| (Vec::new(), true));
+        complete &= intact;
+        if identity::relative_entry(&args) {
+            let cwd = process
+                .cwd()
+                .map(|value| value.to_string_lossy())
+                .unwrap_or_default();
+            if cwd.is_empty() {
+                complete = false;
+            }
+            identity::resolve_relative_entry(&mut args, &cwd);
+        }
+        match identity::classify(&name, &exe, &args) {
+            Some(provider) => rows.push((
+                pid.as_u32(),
+                process.parent().map(|pid| pid.as_u32()),
+                provider,
+                identity::instance_key(&name, &exe, &args),
+            )),
+            None if exe.is_empty() || args.is_empty() => complete = false,
+            None => {}
+        }
+    }
+    if !complete || std::time::Instant::now() >= deadline {
+        return AgentProcessSnapshot::from_observations(vec![ProcessObservation::unavailable(
+            environment,
+            "metadata_unavailable",
+        )]);
+    }
+    AgentProcessSnapshot::from_observations(vec![ProcessObservation::available(
+        environment,
+        identity::count_instances(&rows),
+        observed_now(),
+    )])
+}
+
+#[cfg(target_os = "linux")]
+fn read_linux_args(pid: u32) -> (Vec<String>, bool) {
+    use std::io::Read;
+    let Ok(file) = std::fs::File::open(format!("/proc/{pid}/cmdline")) else {
+        return (Vec::new(), false);
+    };
+    let mut bytes = Vec::new();
+    if file
+        .take(identity::MAX_METADATA_BYTES as u64 + 1)
+        .read_to_end(&mut bytes)
+        .is_err()
+    {
+        return (Vec::new(), false);
+    }
+    let mut intact = bytes.len() <= identity::MAX_METADATA_BYTES && bytes.last() == Some(&0);
+    bytes.truncate(identity::MAX_METADATA_BYTES);
+    let mut fields: Vec<_> = bytes.split(|byte| *byte == 0).collect();
+    if bytes.last() != Some(&0) {
+        intact = false;
+    }
+    fields.pop(); // trailing NUL or truncated final argument
+    let args: Vec<_> = fields
+        .into_iter()
+        .map(|field| std::ffi::OsString::from(String::from_utf8_lossy(field).into_owned()))
+        .collect();
+    let (args, bounded) = identity::bounded_args(&args);
+    (args, intact && bounded)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -112,7 +267,7 @@ impl Default for AgentProcessSnapshot {
 }
 
 impl AgentProcessSnapshot {
-    fn include_wsl(&mut self) {
+    fn include_wsl(&mut self, deadline: std::time::Instant) {
         #[cfg(windows)]
         {
             use std::sync::OnceLock;
@@ -120,9 +275,11 @@ impl AgentProcessSnapshot {
             self.extend(
                 CACHE
                     .get_or_init(WslProcessCache::default)
-                    .snapshot(read_wsl_processes),
+                    .snapshot(|| read_wsl_processes(deadline)),
             );
         }
+        #[cfg(not(windows))]
+        let _ = deadline;
     }
 
     /// Aggregate a successful, already-filtered source. The source is captured
@@ -275,16 +432,26 @@ struct WslProcessRead {
 }
 
 #[cfg(windows)]
-fn read_wsl_processes() -> WslProcessRead {
+fn read_wsl_processes(deadline: std::time::Instant) -> WslProcessRead {
     use crate::agent_activity::wsl::{output_result_until, running_result_until};
-    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(3);
     let enumeration = running_result_until(deadline).map_err(|error| error.as_str());
     let mut distributions = BTreeMap::new();
     if let Ok(names) = &enumeration {
         for distro in names {
-            let result = output_result_until(&["--distribution", distro, "--exec", "sh", "-c", r#"for p in /proc/[0-9]*/comm; do IFS= read -r n < "$p" 2>/dev/null || continue; case "$n" in codex|claude|opencode|deepseek) printf '%s\n' "$n";; esac; done"#], deadline)
-                .map(|raw| count_names(String::from_utf8_lossy(&raw).lines()))
-                .map_err(|error| error.as_str());
+            let result = output_result_until(
+                &[
+                    "--distribution",
+                    distro,
+                    "--exec",
+                    "python3",
+                    "-c",
+                    include_str!("agent_process/wsl_query.py"),
+                    identity::RULES_JSON,
+                ],
+                deadline,
+            )
+            .map_err(|error| error.as_str())
+            .and_then(|raw| parse_identity_counts(&raw));
             distributions.insert(distro.clone(), result);
         }
     }
@@ -293,6 +460,35 @@ fn read_wsl_processes() -> WslProcessRead {
         distributions,
         observed_at: observed_now(),
     }
+}
+
+#[cfg(any(windows, test))]
+fn parse_identity_counts(raw: &[u8]) -> Result<BTreeMap<String, u64>, &'static str> {
+    #[derive(serde::Deserialize)]
+    #[serde(deny_unknown_fields)]
+    struct SafeCounts {
+        counts: BTreeMap<String, u64>,
+        complete: bool,
+    }
+    if raw.len() > 4096 {
+        return Err("output_limit");
+    }
+    let result: SafeCounts = serde_json::from_slice(raw).map_err(|_| "read_failed")?;
+    if !result.complete {
+        return Err("metadata_unavailable");
+    }
+    if result.counts.keys().any(|provider| {
+        !matches!(
+            provider.as_str(),
+            "claude" | "codex" | "opencode" | "deepseek" | "gemini" | "antigravity" | "cursor"
+        )
+    }) {
+        return Err("read_failed");
+    }
+    if result.counts.values().any(|count| *count > 512) {
+        return Err("read_failed");
+    }
+    Ok(result.counts)
 }
 
 #[cfg(any(windows, test))]
@@ -546,5 +742,28 @@ mod tests {
             AgentProcessSourceState::Unavailable
         );
         assert_eq!(snapshot.source_statuses("codex")[1].count, None);
+    }
+    #[test]
+    fn bounded_identity_query_failure_never_confirms_zero_or_accepts_metadata() {
+        assert_eq!(
+            parse_identity_counts(br#"{"counts":{},"complete":false}"#),
+            Err("metadata_unavailable")
+        );
+        assert_eq!(
+            parse_identity_counts(br#"{"counts":{"gemini":1},"complete":true,"pid":123}"#),
+            Err("read_failed")
+        );
+        assert_eq!(
+            parse_identity_counts(br#"{"counts":{"node":1},"complete":true}"#),
+            Err("read_failed")
+        );
+        assert_eq!(
+            parse_identity_counts(br#"{"counts":{"gemini":513},"complete":true}"#),
+            Err("read_failed")
+        );
+        assert_eq!(
+            parse_identity_counts(br#"{"counts":{},"complete":true}"#),
+            Ok(BTreeMap::new())
+        );
     }
 }
