@@ -196,7 +196,9 @@ where
         call_id: &CallId,
         cancel: tokio_util::sync::CancellationToken,
     ) -> Result<GovernedToolOutcome, GovernedExecutionError> {
-        if cancel.is_cancelled() { return Err(GovernedExecutionError::Cancelled); }
+        if cancel.is_cancelled() {
+            return Err(GovernedExecutionError::Cancelled);
+        }
         let run = self.store.load_run_owned(run_id, &self.owner_actor_id)?;
         let resume = self
             .store
@@ -280,7 +282,9 @@ where
         capability: super::approval::CapabilityToken,
         cancel: tokio_util::sync::CancellationToken,
     ) -> Result<GovernedToolOutcome, GovernedExecutionError> {
-        if cancel.is_cancelled() { return Err(GovernedExecutionError::Cancelled); }
+        if cancel.is_cancelled() {
+            return Err(GovernedExecutionError::Cancelled);
+        }
         let run = self.store.load_run_owned(run_id, &self.owner_actor_id)?;
         let resume = self
             .store
