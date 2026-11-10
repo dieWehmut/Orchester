@@ -1,7 +1,10 @@
 import { createApp } from 'vue'
+import { initFontAppearance } from '@orchester/design/fonts'
+import '@orchester/design/fonts.css'
 import App from './App.vue'
 import LaunchScreen from './components/LaunchScreen.vue'
 import './style.css'
+initFontAppearance()
 createApp(App).mount('#app')
 
 // The real app starts loading independently while this one-shot presentation

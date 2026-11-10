@@ -31,6 +31,7 @@ function blocks(css: string): { selector: string; body: string }[] {
   // stripped or the first selector reads as `<style scoped> .icon-button`.
   const stripped = css
     .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/@import[^;]+;/g, '')
     .replace(/<style[^>]*>/g, '')
   for (const match of stripped.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
     found.push({ selector: match[1]!.trim(), body: match[2]! })

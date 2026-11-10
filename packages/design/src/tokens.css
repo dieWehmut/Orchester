@@ -15,14 +15,7 @@
  * Dark is the default: this is a tool that sits next to a terminal.
  */
 
-/* Local classic-mode face; provenance and OFL are in ./fonts/. */
-@font-face {
-  font-family: 'LXGW WenKai';
-  src: url('./fonts/LXGWWenKai-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
+@import './fonts.css';
 
 :root {
   /* ── Spacing: a 4px step, named by step count rather than by t-shirt size,
@@ -40,17 +33,6 @@
   --space-20: 80px;
 
   /* ── Typography */
-  /* The weight running text is set in. `regular` is what the stacks above
-     render at; the settings surface offers one step up per face. `regular` needs
-   no rule of its own because the stacks above are already that weight. */
-  --weight-ui: var(--weight-normal);
-  --weight-content: var(--weight-normal);
-  --font-body: 'LXGW WenKai', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC',
-    system-ui, sans-serif;
-  --font-mono: ui-monospace, 'Cascadia Code', 'JetBrains Mono', 'SFMono-Regular',
-    Consolas, 'Liberation Mono', monospace;
-  --font-display: var(--font-body);
-
   --text-xs: 11px;
   --text-sm: 13px;
   --text-base: 14px;
@@ -64,10 +46,6 @@
   --leading-tight: 1.25;
   --leading-normal: 1.55;
   --leading-relaxed: 1.75;
-
-  --weight-normal: 400;
-  --weight-medium: 500;
-  --weight-semibold: 600;
 
   /* ── Shape */
   --radius-xs: 4px;
@@ -310,24 +288,11 @@
   /* ══ Typography: the scales ═════════════════════════════════════════════
      Size, line-height, tracking and weight are bound together in one token
      name each, because a heading step is a single decision, not four. */
-  --font-display: var(--font-body);
-  --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-  /* The two alternative interface faces the settings page offers. The system
-     face is the existing `--font-body` stack, so choosing it means writing no
-     override at all. */
-  --font-ui-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', 'Noto Sans SC', sans-serif;
-  --font-ui-serif: ui-serif, Georgia, Cambria, 'Times New Roman', 'Noto Serif SC',
-    Times, serif;
-
   --tracking-tight: -0.025em;
   --tracking-normal: 0em;
   --tracking-wide: 0.025em;
 
   --weight-light: 300;
-  --weight-normal: 400;
-  --weight-medium: 500;
-  --weight-semibold: 600;
   --weight-bold: 700;
 
   --font-heading-xs-size: 1rem;
@@ -887,36 +852,6 @@
   --color-action-solid: var(--color-text-emphasis);
   --color-action-solid-hover: var(--color-text-default);
   --color-action-contrast: var(--gray-0);
-}
-
-/* ─ Font axes. These re-point the public faces rather than adding parallel
-   ones, so a component that already asks for `--font-body` or `--font-mono`
-   follows the setting without being edited. `system` and `mono` are the
-   defaults and therefore write no override: the literal stack above is what
-   they resolve to. */
-[data-ui-font='sans'] {
-  --font-body: var(--font-ui-sans);
-}
-
-[data-ui-font='serif'] {
-  --font-body: var(--font-ui-serif);
-}
-
-/* "Same as the interface" is a reference, not a second family: pointing the
-   content face at `--font-body` keeps them in step when the UI face moves. */
-[data-content-font='ui'] {
-  --font-mono: var(--font-body);
-}
-
-/* One step, applied to running text only. Headings and buttons carry their own
-   weights, so a set of rules that reached every element would flatten the
-   hierarchy the type scale exists to create. */
-[data-ui-font-weight='medium'] {
-  --weight-ui: var(--weight-medium);
-}
-
-[data-content-font-weight='medium'] {
-  --weight-content: var(--weight-medium);
 }
 
 /* ─ Rail appearance. Translucency is a desktop-window effect: there has to be

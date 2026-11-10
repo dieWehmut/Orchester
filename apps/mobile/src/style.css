@@ -1,8 +1,8 @@
 :root {
-  font-family:
-    "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  font-family: var(--font-body);
+  font-weight: var(--weight-ui);
   color-scheme: dark;
-  font-synthesis: none;
+  font-synthesis: weight style;
   --bg: #1b110e;
   --surface: #2b1c17;
   --raised: #39261e;
@@ -24,6 +24,7 @@ body {
 }
 button,
 input,
+select,
 textarea {
   font: inherit;
   color: inherit;
@@ -485,12 +486,18 @@ textarea {
 .event-error .event-label {
   color: var(--primary);
 }
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-content);
+}
 pre {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  font:
-    12px/1.7 ui-monospace,
-    monospace;
+  font-size: 12px;
+  line-height: 1.7;
   margin: 10px 0 0;
 }
 .message-text {

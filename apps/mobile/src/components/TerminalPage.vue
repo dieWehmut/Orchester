@@ -14,6 +14,7 @@ import type { RemoteHost } from "../composables/use-remote-fleet";
 import type { AppearanceTheme } from "../composables/use-appearance";
 import type { Project } from "../client";
 import { useRemoteTerminal } from "../composables/use-remote-terminal";
+import { terminalFonts } from "../terminal-fonts";
 import {
   TERMINAL_KEYS,
   terminalState,
@@ -185,10 +186,11 @@ watch(
   },
 );
 onMounted(async () => {
+  const fonts = await terminalFonts(surface.value!);
+  if (disposed) return;
   xterm = new Terminal({
     theme: terminalTheme(props.theme),
-    fontFamily: '"SFMono-Regular", Consolas, "Liberation Mono", monospace',
-    fontSize: 13,
+    ...fonts,
     cursorBlink: true,
     cursorStyle: "bar",
     scrollback: 3000,
