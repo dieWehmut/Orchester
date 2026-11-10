@@ -6,11 +6,13 @@
 
 在 main worktree 运行 Rust 全工作区、全目标测试：1,257 项通过、1 项 ignored；格式、严格 Clippy 和 TypeScript 全套通过。生产 Web/mobile/website 构建通过。前端按工作区串行执行全部原有 test script：Vitest 1,331 项通过，前端工具 26 项、桌面安全配置 1 项和桌面打包工具 10 项通过。
 
-首轮 `pnpm test` 与 Gradle/MSVC 同时运行时，新增输入回归第一项超过 5 秒，其他手机 89 项通过。保留失败日志后，以 `pnpm --workspace-concurrency=1 -r test` 重跑完整前端，未改测试断言或超时设置，全部通过。Windows 额外执行当前源码的 CLI 22 项和实际 ConPTY 4 项测试，全部通过。
+首轮 `pnpm test` 与 Gradle/MSVC 同时运行时，新增输入回归第一项超过 5 秒，其他手机 89 项通过。保留失败日志后，以 `pnpm --workspace-concurrency=1 -r test` 重跑完整前端，未改测试断言或超时设置，全部通过。Windows 额外执行当前源码的 CLI 22 项和实际 ConPTY 4 项测试，全部通过。功能源码 `48cae93` 的 [GitHub Pages 工作流](https://github.com/dieWehmut/Orchester/actions/runs/42741437315) 已完成且 conclusion 为 success；后续 main 的验收文档提交未改变站点输入。
 
 [产物及门禁 JSON](acceptance/remote-final-20261110.json)记录了 339 项 Rust 输入的整体散列、root/main 内容相同、实际二进制和 APK hash；后续只更新验收文档时不重新宣称不同源码的二进制已验证。Rust 测试与模型验收分开，本轮没有发起模型任务，也没有启动 Windows Codex。此前 Linux OpenCode 真实首轮和续接的证据保留在[真实模型记录](27-remote-acceptance.md)。
 
 ## APK 与便携包
+
+最终页面也已 `cap sync ios`，5 项 iOS public 文件与同一次 dist 完全一致，LaunchScreen Storyboard XML 可解析；未把同步成功计为 Xcode 编译或 iPhone 安装通过。
 
 最终 APK SHA-256：`7cd8ab5d8b6236b15938d8d3a91aa5e83a04aa2f1aeaa1a722d9c66e69d70aef`，5,654,877 字节，debug 签名。5 项 dist 文件与 APK 内 `assets/public` 逐字节相同；APK 另外含 Capacitor 生成的 `cordova.js` / `cordova_plugins.js`。5554 实际安装 base.apk hash 完全一致，`NativeBridgeTest` 3 项通过、5.304 秒，覆盖 Credentials/Keystore、重建恢复、原生无 CORS 请求和主题恢复。
 
