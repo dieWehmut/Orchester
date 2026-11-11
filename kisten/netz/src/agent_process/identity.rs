@@ -17,6 +17,13 @@ struct Rules {
     runtime_switch_flags: Vec<String>,
     maintenance: Vec<String>,
     dsh_value_flags: Vec<String>,
+    desktop_services: BTreeMap<String, String>,
+    qwen_value_flags: Vec<String>,
+    qwen_maintenance_commands: Vec<String>,
+    openclaw_root_value_flags: Vec<String>,
+    openclaw_root_switch_flags: Vec<String>,
+    openclaw_gateway_value_flags: Vec<String>,
+    openclaw_gateway_switch_flags: Vec<String>,
 }
 fn rules() -> &'static Rules {
     static RULES: OnceLock<Rules> = OnceLock::new();
@@ -49,6 +56,7 @@ fn basename(value: &str) -> String {
 pub(super) fn is_candidate(name: &str) -> bool {
     let name = basename(name);
     rules().primary.contains_key(&name)
+        || rules().desktop_services.contains_key(&name)
         || rules().runtimes.contains(&name)
         || rules().candidates.contains(&name)
         || name.starts_with("python3.")
@@ -100,6 +108,21 @@ pub(super) fn classify(name: &str, exe: &str, args: &[String]) -> Option<String>
         return Some(provider.clone());
     }
     let executable = basename(&exe);
+    if let Some(provider) = rules().desktop_services.get(&executable) {
+        // Electron's main app is service evidence, not an active conversation.
+        // Renderer/utility/GPU and dedicated Node helpers are never counted.
+        return (!args.is_empty()
+            && !args.iter().any(|arg| {
+                matches!(arg.split('=').next(), Some("--type" | "--crashpad-handler"))
+            })
+            && entry_index(args).map_or(true, |index| {
+                let entry = path(&args[index]);
+                ![".js", ".mjs", ".cjs", ".ts"]
+                    .iter()
+                    .any(|ext| entry.ends_with(ext))
+            }))
+        .then(|| provider.clone());
+    }
     if cursor_cli_file(&exe).is_some_and(|file| {
         matches!(
             file,
@@ -130,6 +153,15 @@ pub(super) fn classify(name: &str, exe: &str, args: &[String]) -> Option<String>
     if !runtime {
         return None;
     }
+    // OpenClaw sets this Gateway title on Unix, replacing the original argv.
+    // /proc/comm truncates it to 15 bytes; only the exact argv title and an
+    // actual Node/Bun runtime establish this service identity.
+    if args
+        .first()
+        .is_some_and(|arg| basename(arg) == "openclaw-gateway")
+    {
+        return Some("openclaw".to_owned());
+    }
     let mut index = entry_index(args)?;
     let mut entry = path(args.get(index)?);
     if suffix(&entry, "dsh desktop/resources/harness-node-entry.mjs") {
@@ -151,7 +183,87 @@ pub(super) fn classify(name: &str, exe: &str, args: &[String]) -> Option<String>
     if provider == "deepseek" && dsh_maintenance(&args[index + 1..]) {
         return None;
     }
+    if provider == "qwen" && qwen_maintenance(&args[index + 1..]) {
+        return None;
+    }
+    if provider == "openclaw" && !openclaw_gateway(&args[index + 1..]) {
+        return None;
+    }
     Some(provider.clone())
+}
+
+fn qwen_maintenance(args: &[String]) -> bool {
+    let mut index = 0;
+    while let Some(arg) = args.get(index) {
+        let key = arg.split('=').next().unwrap_or_default();
+        if matches!(key, "--prompt" | "-p" | "--") {
+            return false;
+        }
+        if rules().qwen_value_flags.iter().any(|flag| flag == key) {
+            index += if arg.contains('=') { 1 } else { 2 };
+            continue;
+        }
+        if rules().maintenance.contains(arg) || arg == "-v" {
+            return true;
+        }
+        if !arg.starts_with('-') {
+            return rules().qwen_maintenance_commands.contains(arg);
+        }
+        index += 1;
+    }
+    false
+}
+
+fn openclaw_gateway(args: &[String]) -> bool {
+    let mut index = 0;
+    let mut command = false;
+    let mut run = false;
+    while let Some(arg) = args.get(index) {
+        let key = arg.split('=').next().unwrap_or_default();
+        let value_flag = rules()
+            .openclaw_root_value_flags
+            .iter()
+            .any(|flag| flag == key)
+            || (command
+                && rules()
+                    .openclaw_gateway_value_flags
+                    .iter()
+                    .any(|flag| flag == key));
+        if value_flag {
+            if !arg.contains('=') {
+                if !args
+                    .get(index + 1)
+                    .is_some_and(|value| !value.is_empty() && !value.starts_with('-'))
+                {
+                    return false;
+                }
+                index += 1;
+            } else if arg.ends_with('=') {
+                return false;
+            }
+        } else if rules()
+            .openclaw_root_switch_flags
+            .iter()
+            .any(|flag| flag == key)
+            || (command
+                && rules()
+                    .openclaw_gateway_switch_flags
+                    .iter()
+                    .any(|flag| flag == key))
+        {
+            if arg.contains('=') {
+                return false;
+            }
+        } else if !command && arg == "gateway" {
+            command = true;
+        } else if command && !run && arg == "run" {
+            run = true;
+        } else {
+            return false;
+        }
+        index += 1;
+    }
+    command
 }
 
 fn dsh_maintenance(args: &[String]) -> bool {
@@ -216,6 +328,15 @@ pub(super) fn instance_key(name: &str, exe: &str, args: &[String]) -> String {
     if rules().primary.contains_key(&basename(name)) {
         return format!("native:{}", basename(name));
     }
+    if rules().desktop_services.contains_key(&basename(exe)) {
+        return format!("desktop:{}", path(exe));
+    }
+    if args
+        .first()
+        .is_some_and(|arg| basename(arg) == "openclaw-gateway")
+    {
+        return "openclaw:gateway-title".to_owned();
+    }
     if let Some(mut index) = entry_index(args) {
         if suffix(
             &path(&args[index]),
@@ -230,10 +351,28 @@ pub(super) fn instance_key(name: &str, exe: &str, args: &[String]) -> String {
                 digest.update(arg.as_bytes());
                 digest.update([0]);
             }
-            return format!("{}:{:x}", path(entry), digest.finalize());
+            return format!("{}:{:x}", canonical_entry(&path(entry)), digest.finalize());
         }
     }
     path(exe)
+}
+
+fn canonical_entry(entry: &str) -> String {
+    // Official wrappers can respawn a different script in the same package.
+    // Preserve the package root and CLI arguments to collapse only that pair.
+    for (expected, provider) in &rules().entries {
+        if matches!(provider.as_str(), "qwen" | "openclaw") && suffix(entry, expected) {
+            let package = if expected.starts_with("@qwen-code/") {
+                "@qwen-code/qwen-code"
+            } else if provider == "qwen" {
+                "qwen-code"
+            } else {
+                "openclaw"
+            };
+            return format!("{}{package}", entry.strip_suffix(expected).unwrap());
+        }
+    }
+    entry.to_owned()
 }
 
 pub(super) fn count_instances(
@@ -246,7 +385,8 @@ pub(super) fn count_instances(
                 *pid == parent
                     && candidate == provider
                     && ((parent_key == key && !key.starts_with("native:"))
-                        || native_launcher_pair(provider, parent_key, key))
+                        || native_launcher_pair(provider, parent_key, key)
+                        || (provider == "openclaw" && key == "openclaw:gateway-title"))
             })
         }) {
             continue;
@@ -454,6 +594,170 @@ mod tests {
             ],
             Some("antigravity"),
         );
+    }
+
+    #[test]
+    fn qwen_and_openclaw_entrypoints_agree_locally_and_in_wsl() {
+        let fixtures = serde_json::json!([
+            {"case":"published Qwen wrapper", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/node_modules/@qwen-code/qwen-code/cli-entry.js"], "provider":"qwen"},
+            {"case":"published Qwen child", "name":"node.exe", "exe":"C:/node/node.exe", "args":["node", "--expose-gc", "C:/npm/node_modules/@qwen-code/qwen-code/cli.js", "--prompt", "private-fixture"], "provider":"qwen"},
+            {"case":"older Qwen CLI", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/node_modules/@qwen-code/qwen-code/dist/index.js"], "provider":"qwen"},
+            {"case":"Qwen source wrapper", "name":"node", "exe":"/usr/bin/node", "args":["node", "/repo/qwen-code/scripts/cli-entry.js"], "provider":"qwen"},
+            {"case":"Qwen standalone Bun", "name":"bun", "exe":"/opt/qwen-code/bun/bin/bun", "args":["bun", "/opt/qwen-code/lib/cli-entry.js", "--acp"], "provider":"qwen"},
+            {"case":"Qwen relative standalone child", "name":"node", "exe":"/usr/bin/node", "cwd":"/opt/qwen-code/lib", "args":["node", "./cli.js"], "provider":"qwen"},
+            {"case":"Qwen version", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/@qwen-code/qwen-code/cli-entry.js", "--version"], "provider":null},
+            {"case":"Qwen management", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/@qwen-code/qwen-code/cli.js", "mcp", "list"], "provider":null},
+            {"case":"Qwen prompt is not a help invocation", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/@qwen-code/qwen-code/cli.js", "--prompt", "--help"], "provider":"qwen"},
+            {"case":"Qwen worker", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/@qwen-code/qwen-code/execution-worker.js"], "provider":null},
+            {"case":"unrelated Qwen project", "name":"node", "exe":"/usr/bin/node", "args":["node", "/repo/qwen/cli-entry.js"], "provider":null},
+            {"case":"Qwen path in prompt", "name":"node", "exe":"/usr/bin/node", "args":["node", "/repo/app.js", "--prompt", "/opt/@qwen-code/qwen-code/cli.js"], "provider":null},
+            {"case":"OpenClaw foreground gateway", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/node_modules/openclaw/openclaw.mjs", "gateway"], "provider":"openclaw"},
+            {"case":"OpenClaw Windows gateway run", "name":"node.exe", "exe":"C:/node/node.exe", "args":["node", "C:/npm/node_modules/openclaw/dist/entry.js", "--profile", "work", "gateway", "run", "--port", "1234"], "provider":"openclaw"},
+            {"case":"OpenClaw alternate compiled entry", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/openclaw/dist/entry.mjs", "gateway", "--bind=loopback"], "provider":"openclaw"},
+            {"case":"OpenClaw Unix gateway title", "name":"openclaw-gatewa", "exe":"/usr/bin/node", "args":["openclaw-gateway"], "provider":"openclaw"},
+            {"case":"OpenClaw gateway status is not a gateway", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/openclaw/openclaw.mjs", "gateway", "status"], "provider":null},
+            {"case":"OpenClaw gateway start is management", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/openclaw/openclaw.mjs", "gateway", "start"], "provider":null},
+            {"case":"OpenClaw gateway help", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/openclaw/openclaw.mjs", "gateway", "run", "--help"], "provider":null},
+            {"case":"OpenClaw agent client", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/openclaw/openclaw.mjs", "agent", "--message", "private-fixture"], "provider":null},
+            {"case":"OpenClaw TUI client", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/openclaw/openclaw.mjs", "tui"], "provider":null},
+            {"case":"OpenClaw titled maintenance parent", "name":"openclaw", "exe":"/usr/bin/node", "args":["openclaw"], "provider":null},
+            {"case":"OpenClaw gateway worker", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/openclaw/dist/gateway-worker.js", "gateway"], "provider":null},
+            {"case":"OpenClaw prompt path", "name":"node", "exe":"/usr/bin/node", "args":["node", "/repo/app.js", "/opt/openclaw/openclaw.mjs", "gateway"], "provider":null},
+            {"case":"OpenClaw bare executable is unconfirmed", "name":"openclaw", "exe":"/usr/bin/openclaw", "args":["openclaw", "gateway"], "provider":null},
+            {"case":"OpenClaw missing profile value", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/openclaw/openclaw.mjs", "--profile", "--help", "gateway"], "provider":null}
+        ]);
+        for row in fixtures.as_array().unwrap() {
+            let mut args = row["args"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|arg| arg.as_str().unwrap().to_owned())
+                .collect::<Vec<_>>();
+            resolve_relative_entry(&mut args, row["cwd"].as_str().unwrap_or_default());
+            let expected = row["provider"].as_str();
+            assert_eq!(
+                classify(
+                    row["name"].as_str().unwrap(),
+                    row["exe"].as_str().unwrap(),
+                    &args
+                )
+                .as_deref(),
+                expected,
+                "{}",
+                row["case"]
+            );
+            if expected.is_some() {
+                assert!(
+                    is_candidate(row["name"].as_str().unwrap()),
+                    "{}",
+                    row["case"]
+                );
+            }
+            #[cfg(unix)]
+            {
+                let mut fixture = row.clone();
+                fixture["pid"] = serde_json::json!(1);
+                let result = wsl_fixture(&serde_json::json!([fixture]));
+                assert!(result.complete, "{}", row["case"]);
+                let counts = expected
+                    .map(|provider| BTreeMap::from([(provider.to_owned(), 1)]))
+                    .unwrap_or_default();
+                assert_eq!(result.counts, counts, "{}", row["case"]);
+            }
+        }
+    }
+
+    #[test]
+    fn workbuddy_desktop_service_excludes_electron_and_node_helpers() {
+        let fixtures = serde_json::json!([
+            {"name":"WorkBuddy.exe", "exe":"C:/Apps/WorkBuddy/WorkBuddy.exe", "args":["C:/Apps/WorkBuddy/WorkBuddy.exe"], "service":true},
+            {"name":"MainThread", "exe":"/Applications/WorkBuddy.app/Contents/MacOS/WorkBuddy", "args":["/Applications/WorkBuddy.app/Contents/MacOS/WorkBuddy"], "service":true},
+            {"name":"WorkBuddy.exe", "exe":"C:/Apps/WorkBuddy/WorkBuddy.exe", "args":["WorkBuddy.exe", "--type=renderer"], "service":false},
+            {"name":"WorkBuddy.exe", "exe":"C:/Apps/WorkBuddy/WorkBuddy.exe", "args":["WorkBuddy.exe", "--type", "utility"], "service":false},
+            {"name":"WorkBuddy.exe", "exe":"C:/Apps/WorkBuddy/WorkBuddy.exe", "args":["WorkBuddy.exe", "--type=gpu-process"], "service":false},
+            {"name":"WorkBuddy.exe", "exe":"C:/Apps/WorkBuddy/WorkBuddy.exe", "args":["WorkBuddy.exe", "--expose-gc", "C:/Apps/WorkBuddy/resources/worker.js"], "service":false},
+            {"name":"WorkBuddy.exe", "exe":"C:/Apps/WorkBuddy/WorkBuddy.exe", "args":[], "service":false},
+            {"name":"node", "exe":"/usr/bin/node", "args":["node", "/repo/app.js", "--prompt", "C:/Apps/WorkBuddy/WorkBuddy.exe"], "service":false}
+        ]);
+        for row in fixtures.as_array().unwrap() {
+            let args = row["args"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|arg| arg.as_str().unwrap().to_owned())
+                .collect::<Vec<_>>();
+            let expected = row["service"].as_bool().unwrap().then_some("workbuddy");
+            assert_eq!(
+                classify(
+                    row["name"].as_str().unwrap(),
+                    row["exe"].as_str().unwrap(),
+                    &args
+                )
+                .as_deref(),
+                expected
+            );
+            if expected.is_some() {
+                assert!(is_candidate(row["name"].as_str().unwrap()));
+            }
+            #[cfg(unix)]
+            {
+                let mut fixture = row.clone();
+                fixture["pid"] = serde_json::json!(1);
+                let result = wsl_fixture(&serde_json::json!([fixture]));
+                let counts = expected
+                    .map(|provider| BTreeMap::from([(provider.to_owned(), 1)]))
+                    .unwrap_or_default();
+                assert_eq!(result.counts, counts);
+            }
+        }
+    }
+
+    #[test]
+    fn qwen_wrappers_and_openclaw_gateway_titles_do_not_inflate_counts() {
+        let fixtures = serde_json::json!([
+            {"pid":1, "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/@qwen-code/qwen-code/cli-entry.js", "--prompt", "one-fixture"]},
+            {"pid":2, "parent":1, "name":"node", "exe":"/usr/bin/node", "args":["node", "--expose-gc", "/opt/@qwen-code/qwen-code/cli.js", "--prompt", "one-fixture"]},
+            {"pid":3, "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/@qwen-code/qwen-code/cli.js", "--prompt", "two-fixture"]},
+            {"pid":4, "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/openclaw/openclaw.mjs", "gateway", "run"]},
+            {"pid":5, "parent":4, "name":"openclaw-gatewa", "exe":"/usr/bin/node", "args":["openclaw-gateway"]},
+            {"pid":6, "name":"openclaw-gatewa", "exe":"/usr/bin/node", "args":["openclaw-gateway"]},
+            {"pid":7, "name":"WorkBuddy.exe", "exe":"C:/Apps/WorkBuddy/WorkBuddy.exe", "args":["WorkBuddy.exe"]},
+            {"pid":8, "parent":7, "name":"WorkBuddy.exe", "exe":"C:/Apps/WorkBuddy/WorkBuddy.exe", "args":["WorkBuddy.exe", "--type=utility"]}
+        ]);
+        let rows = fixtures
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter_map(|row| {
+                let args = row["args"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|arg| arg.as_str().unwrap().to_owned())
+                    .collect::<Vec<_>>();
+                let name = row["name"].as_str().unwrap();
+                let exe = row["exe"].as_str().unwrap();
+                let provider = classify(name, exe, &args)?;
+                Some((
+                    row["pid"].as_u64().unwrap() as u32,
+                    row["parent"].as_u64().map(|id| id as u32),
+                    provider,
+                    instance_key(name, exe, &args),
+                ))
+            })
+            .collect::<Vec<_>>();
+        let expected = BTreeMap::from([
+            ("qwen".to_owned(), 2),
+            ("openclaw".to_owned(), 2),
+            ("workbuddy".to_owned(), 1),
+        ]);
+        assert_eq!(count_instances(&rows), expected);
+        #[cfg(unix)]
+        {
+            let result = wsl_fixture(&fixtures);
+            assert!(result.complete);
+            assert_eq!(result.counts, expected);
+        }
     }
 
     #[test]

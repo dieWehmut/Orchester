@@ -81,7 +81,10 @@ async fn agent_status_route_returns_a_redaction_safe_runtime_snapshot() {
             "deepseek",
             "gemini",
             "mock",
-            "opencode"
+            "openclaw",
+            "opencode",
+            "qwen",
+            "workbuddy"
         ]
     );
 

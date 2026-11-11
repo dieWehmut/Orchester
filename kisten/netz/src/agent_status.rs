@@ -318,9 +318,20 @@ pub fn agent_status_response(registry: &Registry) -> AgentFleetSnapshotDto {
             runtime_summary(capability, check, &now)
         })
         .collect();
-    for provider in ["gemini", "antigravity", "cursor", "deepseek"] {
+    for provider in [
+        "gemini",
+        "antigravity",
+        "cursor",
+        "deepseek",
+        "qwen",
+        "openclaw",
+        "workbuddy",
+    ] {
         if let Some(agent) = agents.iter_mut().find(|agent| agent.provider == provider) {
             agent.capabilities.push("process_presence".to_owned());
+            if matches!(provider, "workbuddy" | "openclaw") {
+                agent.capabilities.push("service_presence".to_owned());
+            }
         } else {
             agents.push(monitor_only_summary(provider, &now));
         }
@@ -336,6 +347,10 @@ pub fn agent_status_response(registry: &Registry) -> AgentFleetSnapshotDto {
 }
 
 fn monitor_only_summary(provider: &str, now: &str) -> AgentRuntimeSummaryDto {
+    let mut capabilities = vec!["monitor_only".to_owned(), "process_presence".to_owned()];
+    if matches!(provider, "workbuddy" | "openclaw") {
+        capabilities.push("service_presence".to_owned());
+    }
     AgentRuntimeSummaryDto {
         agent_id: provider.to_owned(),
         provider: provider.to_owned(),
@@ -361,7 +376,7 @@ fn monitor_only_summary(provider: &str, now: &str) -> AgentRuntimeSummaryDto {
         process_sources: None,
         last_heartbeat_at: None,
         last_error: None,
-        capabilities: vec!["monitor_only".to_owned(), "process_presence".to_owned()],
+        capabilities,
         updated_at: now.to_owned(),
     }
 }
@@ -578,6 +593,9 @@ fn display_name(provider: &str) -> String {
         "antigravity" => "Antigravity".to_owned(),
         "cursor" => "Cursor".to_owned(),
         "opencode" => "OpenCode".to_owned(),
+        "qwen" => "Qwen Code".to_owned(),
+        "openclaw" => "OpenClaw".to_owned(),
+        "workbuddy" => "WorkBuddy".to_owned(),
         other => other
             .split(['-', '_'])
             .filter(|part| !part.is_empty())
