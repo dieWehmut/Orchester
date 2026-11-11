@@ -583,7 +583,79 @@ fn concurrent_first_open_applies_each_memory_migration_once() {
     for handle in handles {
         handle.join().unwrap().unwrap();
     }
+    assert_memory_schema_versions(&path);
     remove_database(&path);
+}
+
+#[test]
+fn opening_memory_waits_for_reserved_journal_mode_lock() {
+    use std::sync::mpsc::{self, RecvTimeoutError};
+    use std::time::Duration;
+
+    let path = database_path("journal-mode-contention");
+    remove_database(&path);
+    // Let the store establish its private paths and valid schema first. A
+    // rollback-journal writer then reproduces the lock promotion that SQLite
+    // reports as BUSY without invoking the configured busy handler.
+    drop(MemoryStore::open(&path).unwrap());
+    let mut blocker = rusqlite::Connection::open(&path).unwrap();
+    let mode: String = blocker
+        .query_row("PRAGMA journal_mode = DELETE", [], |row| row.get(0))
+        .unwrap();
+    assert_eq!(mode, "delete");
+    let transaction = blocker
+        .transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)
+        .unwrap();
+    let (started_tx, started_rx) = mpsc::channel();
+    let (finished_tx, finished_rx) = mpsc::channel();
+    let opening_path = path.clone();
+    let opener = std::thread::spawn(move || {
+        started_tx.send(()).unwrap();
+        let result = MemoryStore::open(opening_path).map(|_| ());
+        finished_tx.send(result).unwrap();
+    });
+    let started = started_rx.recv_timeout(Duration::from_secs(5));
+    let early_result = finished_rx.recv_timeout(Duration::from_millis(500));
+    // Release the original lock and join the owned opener before asserting,
+    // so the failing regression also cleans up its connection and files.
+    transaction.rollback().unwrap();
+    drop(blocker);
+    let waited = matches!(early_result, Err(RecvTimeoutError::Timeout));
+    let result = match early_result {
+        Ok(result) => result,
+        Err(_) => finished_rx.recv_timeout(Duration::from_secs(35)).unwrap(),
+    };
+    opener.join().unwrap();
+    let reopened = result.is_ok();
+    let connection = rusqlite::Connection::open(&path).unwrap();
+    let mode: String = connection
+        .query_row("PRAGMA journal_mode", [], |row| row.get(0))
+        .unwrap();
+    drop(connection);
+    assert_memory_schema_versions(&path);
+    remove_database(&path);
+    assert!(started.is_ok(), "owned opener did not start");
+    assert!(
+        waited,
+        "memory open returned before its journal lock was released: {result:?}"
+    );
+    assert!(
+        reopened,
+        "memory open failed after journal lock release: {result:?}"
+    );
+    assert_eq!(mode, "wal");
+}
+
+fn assert_memory_schema_versions(path: &Path) {
+    let connection = rusqlite::Connection::open(path).unwrap();
+    let versions = connection
+        .prepare("SELECT version FROM memory_schema_versions ORDER BY version")
+        .unwrap()
+        .query_map([], |row| row.get::<_, i64>(0))
+        .unwrap()
+        .collect::<Result<Vec<_>, _>>()
+        .unwrap();
+    assert_eq!(versions, [1, 2, 3, 4]);
 }
 
 #[test]
