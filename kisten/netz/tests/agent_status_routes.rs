@@ -76,15 +76,25 @@ async fn agent_status_route_returns_a_redaction_safe_runtime_snapshot() {
         vec![
             "antigravity",
             "claude",
+            "claude_app",
+            "cline",
             "codex",
+            "craft",
+            "crush",
             "cursor",
             "deepseek",
             "gemini",
+            "hermes",
+            "kilo",
             "mock",
             "openclaw",
             "opencode",
+            "pi",
             "qwen",
-            "workbuddy"
+            "roo",
+            "trae",
+            "workbuddy",
+            "zcode",
         ]
     );
 

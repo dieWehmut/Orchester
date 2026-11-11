@@ -24,6 +24,10 @@ struct Rules {
     openclaw_root_switch_flags: Vec<String>,
     openclaw_gateway_value_flags: Vec<String>,
     openclaw_gateway_switch_flags: Vec<String>,
+    native_cli: BTreeMap<String, String>,
+    python_modules: BTreeMap<String, String>,
+    cli_maintenance_commands: BTreeMap<String, Vec<String>>,
+    desktop_brands: BTreeMap<String, String>,
 }
 fn rules() -> &'static Rules {
     static RULES: OnceLock<Rules> = OnceLock::new();
@@ -57,6 +61,7 @@ pub(super) fn is_candidate(name: &str) -> bool {
     let name = basename(name);
     rules().primary.contains_key(&name)
         || rules().desktop_services.contains_key(&name)
+        || rules().native_cli.contains_key(&name)
         || rules().runtimes.contains(&name)
         || rules().candidates.contains(&name)
         || name.starts_with("python3.")
@@ -104,24 +109,22 @@ fn entry_index(args: &[String]) -> Option<usize> {
 pub(super) fn classify(name: &str, exe: &str, args: &[String]) -> Option<String> {
     let name = basename(name);
     let exe = path(exe);
+    let executable = basename(&exe);
+    let desktop = desktop_provider(&exe);
+    // The desktop and native CLI both use Claude.exe. Resolve the actual
+    // executable before considering the primary CLI name.
+    if name == "claude" && exe.is_empty() {
+        return None;
+    }
+    if let Some(provider) = desktop {
+        return desktop_main(args).then(|| provider.to_owned());
+    }
     if let Some(provider) = rules().primary.get(&name) {
         return Some(provider.clone());
     }
-    let executable = basename(&exe);
-    if let Some(provider) = rules().desktop_services.get(&executable) {
-        // Electron's main app is service evidence, not an active conversation.
-        // Renderer/utility/GPU and dedicated Node helpers are never counted.
-        return (!args.is_empty()
-            && !args.iter().any(|arg| {
-                matches!(arg.split('=').next(), Some("--type" | "--crashpad-handler"))
-            })
-            && entry_index(args).map_or(true, |index| {
-                let entry = path(&args[index]);
-                ![".js", ".mjs", ".cjs", ".ts"]
-                    .iter()
-                    .any(|ext| entry.ends_with(ext))
-            }))
-        .then(|| provider.clone());
+    if let Some(provider) = rules().native_cli.get(&executable) {
+        return (!args.is_empty() && !cli_maintenance(provider, &args[1..]))
+            .then(|| provider.clone());
     }
     if cursor_cli_file(&exe).is_some_and(|file| {
         matches!(
@@ -152,6 +155,24 @@ pub(super) fn classify(name: &str, exe: &str, args: &[String]) -> Option<String>
         || (executable == "dsh desktop" && exe.contains("/dsh desktop/"));
     if !runtime {
         return None;
+    }
+    let python = executable.starts_with("python") || executable.starts_with("pypy");
+    if python && name == "hermes" && args.first().is_some_and(|arg| basename(arg) == "hermes") {
+        return Some("hermes".to_owned());
+    }
+    if python {
+        let mut module_index = 1;
+        while args
+            .get(module_index)
+            .is_some_and(|arg| matches!(arg.as_str(), "-u" | "-I" | "-B" | "-E" | "-s" | "-S"))
+        {
+            module_index += 1;
+        }
+        if args.get(module_index).is_some_and(|arg| arg == "-m") {
+            let provider = rules().python_modules.get(args.get(module_index + 1)?)?;
+            return (!cli_maintenance(provider, &args[module_index + 2..]))
+                .then(|| provider.clone());
+        }
     }
     // OpenClaw sets this Gateway title on Unix, replacing the original argv.
     // /proc/comm truncates it to 15 bytes; only the exact argv title and an
@@ -189,7 +210,75 @@ pub(super) fn classify(name: &str, exe: &str, args: &[String]) -> Option<String>
     if provider == "openclaw" && !openclaw_gateway(&args[index + 1..]) {
         return None;
     }
+    if rules().cli_maintenance_commands.contains_key(provider)
+        && cli_maintenance(provider, &args[index + 1..])
+    {
+        return None;
+    }
     Some(provider.clone())
+}
+
+fn desktop_provider(exe: &str) -> Option<&str> {
+    if let Some(provider) = rules().desktop_services.get(&basename(exe)) {
+        return Some(provider);
+    }
+    if let Some(provider) = rules()
+        .desktop_brands
+        .iter()
+        .find_map(|(brand, provider)| suffix(exe, brand).then_some(provider))
+    {
+        return Some(provider);
+    }
+    if basename(exe) == "claude"
+        && (exe.contains("/anthropicclaude/")
+            || exe.split('/').any(|component| {
+                component.starts_with("claude_") && component.ends_with("__pzs8sxrjxfjjc")
+            }))
+    {
+        return Some("claude_app");
+    }
+    None
+}
+
+fn desktop_main(args: &[String]) -> bool {
+    !args.is_empty()
+        && !args.iter().any(|arg| {
+            matches!(
+                arg.split('=').next(),
+                Some("--type" | "--crashpad-handler" | "--ms-enable-electron-run-as-node")
+            )
+        })
+        && entry_index(args).map_or(true, |index| {
+            ![".js", ".mjs", ".cjs", ".ts"]
+                .iter()
+                .any(|ext| path(&args[index]).ends_with(ext))
+        })
+}
+
+fn cli_maintenance(provider: &str, args: &[String]) -> bool {
+    let commands = rules().cli_maintenance_commands.get(provider);
+    let mut index = 0;
+    while let Some(arg) = args.get(index) {
+        let key = arg.split('=').next().unwrap_or_default();
+        if matches!(
+            key,
+            "--prompt" | "-p" | "--message" | "--query" | "-q" | "--"
+        ) {
+            return false;
+        }
+        if rules().qwen_value_flags.iter().any(|flag| flag == key) {
+            index += if arg.contains('=') { 1 } else { 2 };
+            continue;
+        }
+        if rules().maintenance.contains(arg) || matches!(arg.as_str(), "-v" | "version") {
+            return true;
+        }
+        if !arg.starts_with('-') {
+            return commands.is_some_and(|commands| commands.contains(arg));
+        }
+        index += 1;
+    }
+    false
 }
 
 fn qwen_maintenance(args: &[String]) -> bool {
@@ -292,6 +381,14 @@ fn dsh_maintenance(args: &[String]) -> bool {
 }
 
 pub(super) fn relative_entry(args: &[String]) -> bool {
+    if args.first().is_some_and(|arg| {
+        let name = basename(arg);
+        rules().native_cli.contains_key(&name)
+            || rules().desktop_services.contains_key(&name)
+            || rules().primary.contains_key(&name)
+    }) {
+        return false;
+    }
     entry_index(args)
         .and_then(|index| args.get(index))
         .is_some_and(|arg| {
@@ -325,11 +422,14 @@ pub(super) fn bounded_args<'a>(
 /// The canonical entry stays in memory. Matching entries prevent unrelated
 /// services of the same provider from being collapsed as supervisors.
 pub(super) fn instance_key(name: &str, exe: &str, args: &[String]) -> String {
+    if desktop_provider(&path(exe)).is_some() {
+        return format!("desktop:{}", path(exe));
+    }
     if rules().primary.contains_key(&basename(name)) {
         return format!("native:{}", basename(name));
     }
-    if rules().desktop_services.contains_key(&basename(exe)) {
-        return format!("desktop:{}", path(exe));
+    if let Some(provider) = rules().native_cli.get(&basename(exe)) {
+        return cli_instance_key(provider, args.get(1..).unwrap_or_default(), true);
     }
     if args
         .first()
@@ -345,6 +445,15 @@ pub(super) fn instance_key(name: &str, exe: &str, args: &[String]) -> String {
             index += 1;
         }
         if let Some(entry) = args.get(index) {
+            if let Some(provider) = rules()
+                .entries
+                .iter()
+                .find_map(|(expected, provider)| suffix(&path(entry), expected).then_some(provider))
+            {
+                if matches!(provider.as_str(), "cline" | "kilo" | "crush" | "hermes") {
+                    return cli_instance_key(provider, &args[index + 1..], false);
+                }
+            }
             use sha2::{Digest, Sha256};
             let mut digest = Sha256::new();
             for arg in &args[index + 1..] {
@@ -355,6 +464,20 @@ pub(super) fn instance_key(name: &str, exe: &str, args: &[String]) -> String {
         }
     }
     path(exe)
+}
+
+fn cli_instance_key(provider: &str, args: &[String], native: bool) -> String {
+    use sha2::{Digest, Sha256};
+    let mut digest = Sha256::new();
+    for arg in args {
+        digest.update(arg.as_bytes());
+        digest.update([0]);
+    }
+    format!(
+        "{}:{provider}:{:x}",
+        if native { "native" } else { "launcher" },
+        digest.finalize()
+    )
 }
 
 fn canonical_entry(entry: &str) -> String {
@@ -397,6 +520,21 @@ pub(super) fn count_instances(
 }
 
 fn native_launcher_pair(provider: &str, parent_key: &str, key: &str) -> bool {
+    if rules()
+        .native_cli
+        .values()
+        .any(|candidate| candidate == provider)
+    {
+        if let Some(digest) = parent_key.strip_prefix(&format!("launcher:{provider}:")) {
+            return key == format!("native:{provider}:{digest}");
+        }
+        // Python's Windows console entry is itself a small native launcher.
+        if provider == "hermes" {
+            if let Some(digest) = parent_key.strip_prefix("native:hermes:") {
+                return key == format!("launcher:hermes:{digest}");
+            }
+        }
+    }
     let launcher = match provider {
         "codex" => "/@openai/codex/bin/codex.js:",
         "claude" => "/@anthropic-ai/claude-code/cli.js:",
@@ -708,6 +846,202 @@ mod tests {
                     .map(|provider| BTreeMap::from([(provider.to_owned(), 1)]))
                     .unwrap_or_default();
                 assert_eq!(result.counts, counts);
+            }
+        }
+    }
+
+    #[test]
+    fn agentrouter_cli_entrypoints_agree_locally_and_in_wsl() {
+        let fixtures = serde_json::json!([
+            {"name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/@mariozechner/pi-coding-agent/dist/cli.js"], "provider":"pi"},
+            {"name":"Craft Agents.exe", "exe":"C:/Apps/Craft Agents/Craft Agents.exe", "args":["Craft Agents.exe"], "provider":"craft"},
+            {"name":"Craft Agents.exe", "exe":"C:/Apps/Craft Agents/Craft Agents.exe", "args":["Craft Agents.exe", "--type=utility"], "provider":null},
+            {"name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/node_modules/cline/bin/cline"], "provider":"cline"},
+            {"name":"cline.exe", "exe":"C:/npm/@cline/cli-windows-x64/bin/cline.exe", "args":["cline.exe", "private-fixture"], "provider":"cline"},
+            {"name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/@kilocode/cli/bin/kilo"], "provider":"kilo"},
+            {"name":"kilo", "exe":"/opt/@kilocode/cli-linux-x64/bin/kilo", "args":["kilo", "run", "private-fixture"], "provider":"kilo"},
+            {"name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/@charmland/crush/run-crush.js"], "provider":"crush"},
+            {"name":"crush.exe", "exe":"C:/Tools/crush.exe", "args":["crush.exe"], "provider":"crush"},
+            {"name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/@earendil-works/pi-coding-agent/dist/bundle/cli.js"], "provider":"pi"},
+            {"name":"python3", "exe":"/usr/bin/python3", "args":["python3", "-m", "hermes_cli.main", "chat"], "provider":"hermes"},
+            {"name":"python3", "exe":"/usr/bin/python3", "args":["python3", "-u", "-m", "hermes_cli", "chat"], "provider":"hermes"},
+            {"name":"python.exe", "exe":"C:/Python/python.exe", "args":["python.exe", "C:/Tools/hermes-agent/.venv/Scripts/hermes.exe", "chat"], "provider":"hermes"},
+            {"name":"hermes", "exe":"/usr/bin/python3", "args":["hermes"], "provider":"hermes"},
+            {"name":"hermes.exe", "exe":"C:/Tools/hermes-agent/.venv/Scripts/hermes.exe", "args":["hermes.exe", "chat"], "provider":"hermes"},
+            {"name":"cline", "exe":"/usr/bin/cline", "args":["cline", "--help"], "provider":null},
+            {"name":"kilo", "exe":"/usr/bin/kilo", "args":["kilo", "auth", "login"], "provider":null},
+            {"name":"crush", "exe":"/usr/bin/crush", "args":["crush", "--version"], "provider":null},
+            {"name":"python3", "exe":"/usr/bin/python3", "args":["python3", "-m", "hermes_cli.main", "status"], "provider":null},
+            {"name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/@earendil-works/pi-coding-agent/dist/bundle/extension-worker.js"], "provider":null},
+            {"name":"node", "exe":"/usr/bin/node", "args":["node", "/repo/app.js", "--prompt", "/opt/cline/bin/cline"], "provider":null},
+            {"name":"python3", "exe":"/usr/bin/python3", "args":["python3", "-c", "import hermes_cli.main"], "provider":null},
+            {"name":"Code.exe", "exe":"C:/Apps/VSCode/Code.exe", "args":["Code.exe", "--type=utility", "--extensionDevelopmentPath", "/opt/cline"], "provider":null}
+        ]);
+        for row in fixtures.as_array().unwrap() {
+            let args = row["args"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|arg| arg.as_str().unwrap().to_owned())
+                .collect::<Vec<_>>();
+            let expected = row["provider"].as_str();
+            assert_eq!(
+                classify(
+                    row["name"].as_str().unwrap(),
+                    row["exe"].as_str().unwrap(),
+                    &args
+                )
+                .as_deref(),
+                expected
+            );
+            if expected.is_some() {
+                assert!(is_candidate(row["name"].as_str().unwrap()));
+            }
+            #[cfg(unix)]
+            {
+                let mut fixture = row.clone();
+                fixture["pid"] = serde_json::json!(1);
+                let result = wsl_fixture(&serde_json::json!([fixture]));
+                assert!(result.complete);
+                assert_eq!(
+                    result.counts,
+                    expected
+                        .map(|provider| BTreeMap::from([(provider.to_owned(), 1)]))
+                        .unwrap_or_default()
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn native_cli_arguments_are_not_resolved_as_relative_runtime_scripts() {
+        for (name, exe, raw, expected) in [
+            ("kilo", "/usr/bin/kilo", vec!["kilo", "auth", "login"], None),
+            (
+                "cline",
+                "/usr/bin/cline",
+                vec!["cline", "private-fixture"],
+                Some("cline"),
+            ),
+            ("crush", "/usr/bin/crush", vec!["crush", "version"], None),
+        ] {
+            let mut args = raw.iter().map(|arg| (*arg).to_owned()).collect::<Vec<_>>();
+            assert!(!relative_entry(&args));
+            resolve_relative_entry(&mut args, "/repo");
+            assert_eq!(args, raw);
+            assert_eq!(classify(name, exe, &args).as_deref(), expected);
+            #[cfg(unix)]
+            {
+                let result = wsl_fixture(
+                    &serde_json::json!([{"pid":1,"name":name,"exe":exe,"cwd":"/repo","args":raw}]),
+                );
+                assert_eq!(
+                    result.counts,
+                    expected
+                        .map(|provider| BTreeMap::from([(provider.to_owned(), 1)]))
+                        .unwrap_or_default()
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn agentrouter_native_launcher_pairs_keep_independent_native_children() {
+        let fixtures = serde_json::json!([
+            {"pid":1,"name":"node","exe":"/usr/bin/node","args":["node","/opt/cline/bin/cline","private-fixture"]},
+            {"pid":2,"parent":1,"name":"cline","exe":"/opt/@cline/cli-linux-x64/bin/cline","args":["cline","private-fixture"]},
+            {"pid":3,"name":"cline","exe":"/usr/bin/cline","args":["cline","private-fixture"]},
+            {"pid":4,"parent":3,"name":"cline","exe":"/usr/bin/cline","args":["cline","private-fixture"]},
+            {"pid":5,"name":"node","exe":"/usr/bin/node","args":["node","/opt/@kilocode/cli/bin/kilo","run","private-fixture"]},
+            {"pid":6,"parent":5,"name":"kilo","exe":"/usr/bin/kilo","args":["kilo","run","private-fixture"]},
+            {"pid":7,"name":"node","exe":"/usr/bin/node","args":["node","/opt/@charmland/crush/run-crush.js"]},
+            {"pid":8,"parent":7,"name":"crush","exe":"/usr/bin/crush","args":["crush"]},
+            {"pid":9,"parent":8,"name":"crush","exe":"/usr/bin/crush","args":["crush"]}
+        ]);
+        let rows = fixtures
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|row| {
+                let args = row["args"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|arg| arg.as_str().unwrap().to_owned())
+                    .collect::<Vec<_>>();
+                let name = row["name"].as_str().unwrap();
+                let exe = row["exe"].as_str().unwrap();
+                (
+                    row["pid"].as_u64().unwrap() as u32,
+                    row["parent"].as_u64().map(|id| id as u32),
+                    classify(name, exe, &args).unwrap(),
+                    instance_key(name, exe, &args),
+                )
+            })
+            .collect::<Vec<_>>();
+        let expected = BTreeMap::from([
+            ("cline".to_owned(), 3),
+            ("kilo".to_owned(), 1),
+            ("crush".to_owned(), 2),
+        ]);
+        assert_eq!(count_instances(&rows), expected);
+        #[cfg(unix)]
+        {
+            let result = wsl_fixture(&fixtures);
+            assert!(result.complete);
+            assert_eq!(result.counts, expected);
+        }
+    }
+
+    #[test]
+    fn agentrouter_desktops_are_services_and_claude_cli_remains_separate() {
+        let fixtures = serde_json::json!([
+            {"name":"ZCode.exe", "exe":"C:/Apps/ZCode/ZCode.exe", "args":["ZCode.exe"], "provider":"zcode"},
+            {"name":"ZCode.exe", "exe":"C:/Apps/ZCode/ZCode.exe", "args":["ZCode.exe", "--type=renderer"], "provider":null},
+            {"name":"Claude.exe", "exe":"C:/Users/test/AppData/Local/AnthropicClaude/app-3.0/Claude.exe", "args":["Claude.exe"], "provider":"claude_app"},
+            {"name":"Claude.exe", "exe":"C:/Program Files/WindowsApps/Claude_3.6556.2.0_x64__pzs8sxrjxfjjc/app/Claude.exe", "args":["Claude.exe"], "provider":"claude_app"},
+            {"name":"MainThread", "exe":"/Applications/Claude.app/Contents/MacOS/Claude", "args":["/Applications/Claude.app/Contents/MacOS/Claude"], "provider":"claude_app"},
+            {"name":"claude.exe", "exe":"C:/Tools/claude/claude.exe", "args":["claude.exe"], "provider":"claude"},
+            {"name":"Claude.exe", "exe":"C:/Users/test/AppData/Local/AnthropicClaude/app-3.0/Claude.exe", "args":["Claude.exe", "--type=renderer"], "provider":null},
+            {"name":"Trae.exe", "exe":"C:/Apps/Trae/Trae.exe", "args":["Trae.exe"], "provider":"trae"},
+            {"name":"Trae CN.exe", "exe":"C:/Apps/Trae CN/Trae CN.exe", "args":["Trae CN.exe"], "provider":"trae"},
+            {"name":"Trae.exe", "exe":"C:/Apps/Trae/Trae.exe", "args":["Trae.exe", "--ms-enable-electron-run-as-node", "C:/Apps/Trae/resources/app/out/cli.js"], "provider":null},
+            {"name":"Trae.exe", "exe":"C:/Apps/Trae/Trae.exe", "args":["Trae.exe", "--type=utility"], "provider":null},
+            {"name":"Craft Agents.exe", "exe":"C:/Apps/Craft Agents/Craft Agents.exe", "args":["Craft Agents.exe"], "provider":"craft"},
+            {"name":"Craft Agents.exe", "exe":"C:/Apps/Craft Agents/Craft Agents.exe", "args":["Craft Agents.exe", "--type=gpu-process"], "provider":null}
+        ]);
+        for row in fixtures.as_array().unwrap() {
+            let args = row["args"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|arg| arg.as_str().unwrap().to_owned())
+                .collect::<Vec<_>>();
+            let expected = row["provider"].as_str();
+            assert_eq!(
+                classify(
+                    row["name"].as_str().unwrap(),
+                    row["exe"].as_str().unwrap(),
+                    &args
+                )
+                .as_deref(),
+                expected
+            );
+            if expected.is_some() {
+                assert!(is_candidate(row["name"].as_str().unwrap()));
+            }
+            #[cfg(unix)]
+            {
+                let mut fixture = row.clone();
+                fixture["pid"] = serde_json::json!(1);
+                let result = wsl_fixture(&serde_json::json!([fixture]));
+                assert!(result.complete);
+                assert_eq!(
+                    result.counts,
+                    expected
+                        .map(|provider| BTreeMap::from([(provider.to_owned(), 1)]))
+                        .unwrap_or_default()
+                );
             }
         }
     }
