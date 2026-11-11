@@ -1,0 +1,252 @@
+{
+  "format": 1,
+  "event": "independent_read_only_final_windows_deployment_review",
+  "reviewedAt": "2026-11-11T06:05:04.128017+00:00",
+  "reviewer": "deployment_review",
+  "status": "remote_deployed_verified_desktop_blocked_by_locked_disconnected_session",
+  "runDirectory": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf",
+  "frozenSuiteDirectory": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-final16-crlf",
+  "buildSourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "reviewedMainRevision": "831bde8eb4cc23109fc57592ab914f6bcd88103a",
+  "mainChangesFromBuildSource": "README and docs only; no code or build-input difference",
+  "planSha256": "bf74addb6794ee13234d6ff344af542c7ebf4b742caa103a310fc80e29a5a391",
+  "finalResultSha256": "bdd23c9c0a87f27bc13f65656058ac92b43c061b76f56fdf6ad79f066ae6f30c",
+  "previousIndependentBuildPortableReview": {
+    "file": "/tmp/orchester-windows-final16-actual-independent-review.json",
+    "sha256": "18d66f5d88352ef2ccf933699df31a6167131d59d089158ab80dcfdde5e790c8",
+    "exactOrderedRealNativeGates": 16,
+    "allNativeExitsZero": true,
+    "timeoutsOrForcedTermination": 0,
+    "trackedSourceInputsCompared": 400,
+    "generatedBoundInputs": 46,
+    "desktopCandidateFiles": 39,
+    "remoteCandidateFiles": 17,
+    "portableExactChecks": 14,
+    "portableNaturalExitAndPortsReleased": true,
+    "portableCleanupFallbackCount": 0,
+    "testsRerunDuringThisFinalReview": false
+  },
+  "remoteInstallation": {
+    "promoted": true,
+    "newExeSha256": "ef633cc43b2e767f222fe861fd2dfeca718fc677c0761d03f4c20f08d6a7bd66",
+    "installedFileCount": 17,
+    "allInstalledFilesByteEqualFrozenCandidate": true,
+    "originalFullSiblingBackupRetained": true,
+    "actualOldBackupFiles": 16,
+    "backupOldExeSha256": "4569036d09a2279153f9e5fd3a362403212cd39b0ec68481b09fca7afe303cee",
+    "wholeOldInventoryComparedBeforeMoveAndAfterBackupByUnmodifiedPromoter": true,
+    "privateStateBackupFiles": 2,
+    "privateStateBackupByteHashesIndependentlyEqualOriginal": true,
+    "packageWorkspaceBeforeAndBackupAbsent": true,
+    "packageWorkspaceUserFiles": 0,
+    "actualProjectWorkspaceOutsideReplacementDirectoryRetained": true
+  },
+  "deploymentGuards": {
+    "pinnedPromoterUnmodifiedSha256": "9a8a636bedde78a873b87eb1f465834571e72330bc460b837a3d891d33374e9e",
+    "pinnedRestorerUnmodifiedSha256": "83c922685a9095235d588335e4bf1d8569164ffd91d9da449255b96de528ee3f",
+    "nativeProviderOnlyOverridesExactTwoProcessNameQueries": true,
+    "originalProcessHandlesPidCreationImageVerified": true,
+    "unknownAccessOrWaitFailuresFailClosed": true,
+    "fullOldDirectorySiblingBackupAndStateChecksRemain": true,
+    "rollbackOnlyCurrentOwnedStageAndNeverOverwriteExistingDestination": true,
+    "remotePortableSourcePlanFinalExeExactChecksAndNaturalCleanupRequired": true,
+    "desktopRequiresSamePinsAndAdjacentActualTrayNaturalProofWithNoForcedCleanup": true
+  },
+  "retainedDefaultService": {
+    "backendPid": 193764,
+    "backendCreatedAt": "2026-11-11T05:24:58.7952756Z",
+    "backendExeSha256": "ef633cc43b2e767f222fe861fd2dfeca718fc677c0761d03f4c20f08d6a7bd66",
+    "managerPid": 252404,
+    "managerCreatedAt": "2026-11-11T05:24:56.5004683Z",
+    "managerImageSha256": "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+    "originalIdentitiesPreservedAfterQaStop": true,
+    "listenerPort": 7338,
+    "listenerOwningProcess": 193764,
+    "listenerAddress": "0.0.0.0",
+    "pairingClosedByDefault": true,
+    "providerOverride": false,
+    "nativeConsoleNoTranscriptOrRedirection": true,
+    "modelsCalled": 0
+  },
+  "actualHttpAcceptance": {
+    "publicAssetsExactCount": 6,
+    "allAssetStatuses200AndHashesEqualFrozenPackage": true,
+    "unauthenticatedStatuses": [
+      401,
+      429,
+      401
+    ],
+    "authorizedInfoAgentsProjectsStatuses": [
+      200,
+      200,
+      200
+    ],
+    "infoSchemaVersion": 2,
+    "originalHostWorkspaceDefaultProjectAndTwoAllowedRootsVerified": true,
+    "agentsTypedBooleanSchemaVerified": true,
+    "projectsFullOriginalArrayComparedReadOnly": true,
+    "originalDeviceCount": 1,
+    "allOriginalDeviceExpiryBeyond300SecondsAndCapacityCheckedBeforePair": true,
+    "temporaryPairingPassed": true,
+    "temporaryDeviceDeleteStatus": 204,
+    "oldTemporaryTokenStatusAfterRevoke": 401,
+    "closedPairingStatus": 429,
+    "fallbackRevokeUsed": false,
+    "pairingCodeTokenAndResponsePersistedToDisk": false
+  },
+  "originalStateRetention": {
+    "savedTasks": 4,
+    "states": {
+      "failed": 2,
+      "completed": 2
+    },
+    "activeTasks": 0,
+    "allFourCanonicalHashesEqualBeforeStartupAfterAuthAndAfterQa": true,
+    "canonicalSha256": {
+      "runsCanonicalSha256": "a69175304d23b42a649305ace11b5cc9154474f04ca512db5431dc523d7f9a64",
+      "persistentStateCanonicalSha256": "a1d02ee5f1f763c18a7f0fc7b45175d848f15feb953c50e07fe41302cc74764b",
+      "authCanonicalSha256": "8460e9a5e653595e8a25e7466b7ab6aaed504d2157bdbf21e0b201ba74a72983",
+      "projectsCanonicalSha256": "958287f73fbeb6f70dd05bb8541377d338aa2e179de2b5f8fb5aa36e911a3cd5"
+    },
+    "postQaObservedAt": "2026-11-11T06:01:19.470395+00:00",
+    "observerOpenedSqliteReadOnly": true,
+    "privateStateValuesOrTokensInReview": false
+  },
+  "desktopPreservationAndLimit": {
+    "defaultPromoted": false,
+    "defaultExeSha256": "9688bae1a669a4c38004af88ae78ac1397d59abac1f8e82cddb6ff888ba5e3e5",
+    "uninstallerSha256": "91ba311f3ea629dbc75bd718038c84ca31be4c394a4995f9fcc5d514982764f1",
+    "desktopExternalStateFiles": 9,
+    "desktopExternalStateByteHashesEqualBaseline": true,
+    "registryUninstallKeys": 1,
+    "registryValueCount": 10,
+    "registryCanonicalSha256": "682b249fd74a022a2bb3a0d8c366c24fa39db04500c71c1ff144c8485e370b0b",
+    "registryAndTwoShortcutsEqualBeforeAndAfterQa": true,
+    "shortcutsSha256": [
+      "0b85f38c051769805b1e35510eb791534c1216d93abe17ed1928d070abf37b11",
+      "25289ec74e1d72705dca9277a83b094b3eb748655b3a0cc8d9301cb023ce791e"
+    ],
+    "desktopUiSubchecksPassedButNativeTrayNaturalQuitNotAccepted": true,
+    "previousOwnedGuiForcedCleanupCount": 8,
+    "environment": {
+      "sessionId": 1,
+      "connectState": 4,
+      "sessionFlags": 0,
+      "lockedAndDisconnected": true,
+      "cursorPositionReadFailedInTrayPath": true
+    },
+    "remainingAcceptance": "After user unlocks and keeps the same session connected, fresh exact-owned GUI natural tray Quit, all-owned passive exit, zero forced cleanup and port-release proof are still required before Desktop promotion."
+  },
+  "actualQaCleanup": {
+    "proxyOriginalPid": 3348,
+    "proxyOriginalCreationFileTimeUtc": 134387604386729007,
+    "originalProvenanceManifestSha256": "4c210be7598ac2695269685b486525b990fed46ef2aa200b48163b16247d27c2",
+    "currentControlScriptSha256": "6e48aca455be5c8237ad657c8dfc306dc04aa1395fdbc615f2e90ec70ee6f852",
+    "originalStartupControlScriptShaKnown": false,
+    "producerLaunchCurrentSha256": "5050ef40cf63a79299a962d4626c30fd7c7a06b52fed6677850036fcab6b8751",
+    "nativeRunnerSha256": "b0315e60ff1713d5f31519644340a61b30966719dde144d0b225a75ac045177d",
+    "idleAndCurrentSourceRecheckedBeforeCreateNewStop": true,
+    "naturalExitCode": 0,
+    "allOriginalOwnedHandlesExited": true,
+    "originalOwnedHandleCount": 2,
+    "originalOwnedConsoleHostPid": 29716,
+    "unknownDescendants": 0,
+    "forcedTerminations": 0,
+    "win32ProcessSignals": 0,
+    "oldRecordedQaPidsAbsent": [
+      31824,
+      235036
+    ],
+    "readyRequestInflightMarkersAbsent": true,
+    "globalWslOrAdbAction": false,
+    "retainedDefaultProcessPids": [
+      193764,
+      252404
+    ]
+  },
+  "observerFailuresPreserved": {
+    "authFirstAndSecondFailedBeforePair": true,
+    "authThirdDidNotLeaveTemporaryDeviceAndPairingClosed": true,
+    "originalAllFourCanonicalHashesStayedExactAfterFailures": true,
+    "authLatestActualPassIsSeparateFromThreeFailedRuns": true,
+    "earlierCimAndNativeProviderScopeFailuresBeforeStaging": true,
+    "oldLfCmdGateRunNotCountedAsThisCrLfResult": true
+  },
+  "helperCurrentPins": [
+    {
+      "name": "NativeProcessReadGuard.cs",
+      "sha256": "eee0bf308eb8e4303f945b6d5d68e9a73477c2b0830b178c3046a57d520c7332"
+    },
+    {
+      "name": "deployment-native-process-provider.ps1",
+      "sha256": "2e68ac6562e312a92bc43ddebc16238653280da88e8169446e66ab79d5f58b3f"
+    },
+    {
+      "name": "promote-default-remote-native-guard.ps1",
+      "sha256": "a6d59e5b65594b239f6c778faade8da3749ca048d75f6b088c1a85e25d02ddfd"
+    },
+    {
+      "name": "restore-default-remote-native-guard.ps1",
+      "sha256": "0d372d15f78636a3fcb07925f4a94faa39e5fbbce6ec11a373fe890b6a70b4e3"
+    },
+    {
+      "name": "OwnedManagementConsole.cs",
+      "sha256": "27c141da7f860af9a2eaf758962966994119af231552d8e1bd42d818b6adb621"
+    },
+    {
+      "name": "verify-default-remote-authorized.ps1",
+      "sha256": "f2116bf2ba474ea085151833a5d7a2372effa60a55a63695a031e421d07929da"
+    },
+    {
+      "name": "compare-authorized-projects.py",
+      "sha256": "75d16e8400056cc1934c9e9a63223b90a20e5eb65ed7044f4cd65f5e6e41c159"
+    },
+    {
+      "name": "stop-owned-qa-proxy-final.ps1",
+      "sha256": "7f0d9506d3751732d8ee3272242efd858d56dabfb3bb669df22ed393ebe1cfde"
+    },
+    {
+      "name": "verify-default-remote-native-after-qa.ps1",
+      "sha256": "4165ecc9f5e50da4420c1c2319db9daa32ba41a8789c19185dff49ed74b1ebdf"
+    }
+  ],
+  "proofSha256": {
+    "default-pre-promotion-native-baseline.json": "f63312ba206356a88ea5f401059847f192379cfddaf102b9f3c93b3da83ceef1",
+    "default-remote-state-before-safe.json": "ad7f23f2e3176751f31cfdd5e5392933354bd3254a9e9fbb44e44e9968f3cce1",
+    "default-remote-state-backup.json": "b9c434e4d904d43173f4eb1de8c3ee2be1034a8c07f0cda74cbe35f56dfd022d",
+    "default-remote-workspace-preservation-safe.json": "69d122a8633457bb3474f81f7e9d99f92f3ec12063a54a70b61453518295f9a0",
+    "promotion-remote.json": "69237992556c602ae1984e3d2e8e55b23785225e6a0a0d7f6e25dee2b28adcee",
+    "promotion-remote-native-guard.json": "f842bb1e7468fe9329df7593d7a4670d68c44c1150910ae5bd42d9e0f9f04cbf",
+    "restoration-remote-native-guard.json": "f714415743888f4d8adf796fbc60ae62fe2eadb6009f67943f49896c0c30edc0",
+    "default-remote-native-verification.json": "6262e0b4f1c97898b35307c9155236771bb85198739e323cb1a0b8cf07967159",
+    "default-remote-state-after-safe.json": "0161ee3ad0ae87a524f656ee8c2cd7698cdfa5206f661e2e2630c70b80cf3e3c",
+    "default-remote-authorized-verification.json": "d07306feabd6b1e8233a203b6a72dada6cc555d459ea5d24adcf366993dda0e5",
+    "default-remote-state-after-auth-safe.json": "45b95450027651bf51424497dce3e4b5e77c323f744c0fef3ef75186742cf9b9",
+    "qa-owned-helper-cleanup-final.json": "5f22523ae9a48fa5a759f03d9c17192dd46dbfc208835708a659193bdcc11762",
+    "default-remote-native-after-qa-verification.json": "6262e0b4f1c97898b35307c9155236771bb85198739e323cb1a0b8cf07967159",
+    "default-remote-state-after-qa-safe.json": "3ea2f33f8c8d86ccfbc5dfa1a8e2f54f521c565e0ca942018dbbd929189425fc",
+    "default-remote-authorized-first-failure.json": "940a9bcad0909ec5e122ba92a3abe54ccdd2f79dd3d937ecf040f8be31718dc4",
+    "default-remote-authorized-second-failure.json": "df099823c49b906473eddad42f562b19f8cdb75852599c993d6ea7ef71a57196",
+    "default-remote-authorized-third-failure.json": "e6b9e68ce54d0efa58c1de540f74a84a3cebdfd3701e02322bbc4b5f30d351d2"
+  },
+  "safePacket": {
+    "directory": "/tmp/orchester-windows-default-remote35c75-final",
+    "manifestSha256": "07769b56e8cd36a4a022dda919f3673077664b86cb0f05e4fe4f49c09b84e102",
+    "files": 26,
+    "allPacketFileHashesVerified": true,
+    "privateDatabasesRawLogsScreensOrSecretsCopied": false
+  },
+  "reviewActions": {
+    "windowsCommandsExecuted": 0,
+    "proxyOrAdbActions": 0,
+    "processSignals": 0,
+    "modelCalls": 0,
+    "productOrWindowsFilesystemMutations": 0,
+    "privateDatabaseParsed": false,
+    "stateFilesOnlyHashedWithoutDisplayingContent": true,
+    "onlySafeReviewJsonWrittenToTmp": true
+  },
+  "remainingBlockers": [
+    "Desktop natural tray quit and default upgrade require an unlocked connected Windows session."
+  ]
+}

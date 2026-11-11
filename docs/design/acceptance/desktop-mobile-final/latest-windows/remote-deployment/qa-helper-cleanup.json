@@ -1,0 +1,59 @@
+{
+    "event":  "owned_qa_helpers_cleanup_verified",
+    "observedAt":  "2026-11-11T05:58:29.9252660Z",
+    "proxyOriginalManifestSha256":  "4c210be7598ac2695269685b486525b990fed46ef2aa200b48163b16247d27c2",
+    "proxyCurrentScriptSha256":  "6e48aca455be5c8237ad657c8dfc306dc04aa1395fdbc615f2e90ec70ee6f852",
+    "proxyProducerLaunchSha256":  "5050ef40cf63a79299a962d4626c30fd7c7a06b52fed6677850036fcab6b8751",
+    "proxyNativeFileRunnerSha256":  "b0315e60ff1713d5f31519644340a61b30966719dde144d0b225a75ac045177d",
+    "proxyOriginalHandles":  [
+                                 {
+                                     "pid":  3348,
+                                     "parentPid":  0,
+                                     "creationFileTimeUtc":  134387604386729007,
+                                     "executable":  "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                                     "sha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+                                     "depth":  0
+                                 },
+                                 {
+                                     "pid":  29716,
+                                     "parentPid":  3348,
+                                     "creationFileTimeUtc":  134387604386796725,
+                                     "executable":  "C:\\Windows\\System32\\conhost.exe",
+                                     "sha256":  "c86146188b78e484f32cc29e2331689659943b47689a85570342044f499938ac",
+                                     "depth":  1
+                                 }
+                             ],
+    "proxyIdleBeforeStop":  true,
+    "normalStopMarkerUsed":  true,
+    "proxyExitCode":  0,
+    "allOriginalOwnedHandlesExited":  true,
+    "unknownDescendants":  0,
+    "forcedTerminations":  0,
+    "win32ProcessSignals":  0,
+    "oldRecordedHelpers":  [
+                               {
+                                   "recordedPid":  31824,
+                                   "nativePidAbsent":  true,
+                                   "recordedIdentityGone":  true,
+                                   "processesSignalled":  0
+                               },
+                               {
+                                   "recordedPid":  235036,
+                                   "nativePidAbsent":  true,
+                                   "recordedIdentityGone":  true,
+                                   "processesSignalled":  0
+                               }
+                           ],
+    "defaultBackendPid":  193764,
+    "defaultBackendCreatedAt":  "2026-11-11T05:24:58.7952756Z",
+    "defaultBackendSha256":  "ef633cc43b2e767f222fe861fd2dfeca718fc677c0761d03f4c20f08d6a7bd66",
+    "defaultBackendOriginalIdentityPreserved":  true,
+    "defaultManagerPid":  252404,
+    "defaultManagerCreatedAt":  "2026-11-11T05:24:56.5004683Z",
+    "defaultManagerSha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+    "defaultManagerOriginalHandleLive":  true,
+    "listenerPort":  7338,
+    "listenerOwningProcess":  193764,
+    "globalWslOrAdbAction":  false,
+    "modelCalls":  0
+}

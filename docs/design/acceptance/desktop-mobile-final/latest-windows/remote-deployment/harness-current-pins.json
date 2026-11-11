@@ -1,0 +1,42 @@
+{
+  "sourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "currentReviewedHelperScriptPins": [
+    {
+      "name": "NativeProcessReadGuard.cs",
+      "sha256": "eee0bf308eb8e4303f945b6d5d68e9a73477c2b0830b178c3046a57d520c7332"
+    },
+    {
+      "name": "deployment-native-process-provider.ps1",
+      "sha256": "2e68ac6562e312a92bc43ddebc16238653280da88e8169446e66ab79d5f58b3f"
+    },
+    {
+      "name": "promote-default-remote-native-guard.ps1",
+      "sha256": "a6d59e5b65594b239f6c778faade8da3749ca048d75f6b088c1a85e25d02ddfd"
+    },
+    {
+      "name": "restore-default-remote-native-guard.ps1",
+      "sha256": "0d372d15f78636a3fcb07925f4a94faa39e5fbbce6ec11a373fe890b6a70b4e3"
+    },
+    {
+      "name": "OwnedManagementConsole.cs",
+      "sha256": "27c141da7f860af9a2eaf758962966994119af231552d8e1bd42d818b6adb621"
+    },
+    {
+      "name": "verify-default-remote-authorized.ps1",
+      "sha256": "f2116bf2ba474ea085151833a5d7a2372effa60a55a63695a031e421d07929da"
+    },
+    {
+      "name": "compare-authorized-projects.py",
+      "sha256": "75d16e8400056cc1934c9e9a63223b90a20e5eb65ed7044f4cd65f5e6e41c159"
+    },
+    {
+      "name": "stop-owned-qa-proxy-final.ps1",
+      "sha256": "7f0d9506d3751732d8ee3272242efd858d56dabfb3bb669df22ed393ebe1cfde"
+    },
+    {
+      "name": "verify-default-remote-native-after-qa.ps1",
+      "sha256": "4165ecc9f5e50da4420c1c2319db9daa32ba41a8789c19185dff49ed74b1ebdf"
+    }
+  ],
+  "modelCalls": 0
+}

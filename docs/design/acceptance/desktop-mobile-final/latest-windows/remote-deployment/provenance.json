@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "scope": "KindRemote actual promotion,7338 startup/static/authorized HTTP,temporary pair/revoke/close,original4tasks/auth/projects retention and QA helper natural cleanup; Desktop current natural/menu quit and promotion remain blocked by locked/disconnected session",
+  "sourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "selectedFiles": [
+    {
+      "path": "before-state.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/default-remote-state-before-safe.json",
+      "sourceSha256": "ad7f23f2e3176751f31cfdd5e5392933354bd3254a9e9fbb44e44e9968f3cce1",
+      "archivedSha256": "ad7f23f2e3176751f31cfdd5e5392933354bd3254a9e9fbb44e44e9968f3cce1",
+      "byteExact": true,
+      "bytes": 604
+    },
+    {
+      "path": "private-backup-metadata.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/default-remote-state-backup.json",
+      "sourceSha256": "b9c434e4d904d43173f4eb1de8c3ee2be1034a8c07f0cda74cbe35f56dfd022d",
+      "archivedSha256": "b9c434e4d904d43173f4eb1de8c3ee2be1034a8c07f0cda74cbe35f56dfd022d",
+      "byteExact": true,
+      "bytes": 891
+    },
+    {
+      "path": "promotion-result.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/promotion-remote.json",
+      "sourceSha256": "69237992556c602ae1984e3d2e8e55b23785225e6a0a0d7f6e25dee2b28adcee",
+      "archivedSha256": "69237992556c602ae1984e3d2e8e55b23785225e6a0a0d7f6e25dee2b28adcee",
+      "byteExact": true,
+      "bytes": 981
+    },
+    {
+      "path": "promotion-native-guard.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/promotion-remote-native-guard.json",
+      "sourceSha256": "f842bb1e7468fe9329df7593d7a4670d68c44c1150910ae5bd42d9e0f9f04cbf",
+      "archivedSha256": "f842bb1e7468fe9329df7593d7a4670d68c44c1150910ae5bd42d9e0f9f04cbf",
+      "byteExact": true,
+      "bytes": 537
+    },
+    {
+      "path": "after-startup-state.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/default-remote-state-after-safe.json",
+      "sourceSha256": "0161ee3ad0ae87a524f656ee8c2cd7698cdfa5206f661e2e2630c70b80cf3e3c",
+      "archivedSha256": "0161ee3ad0ae87a524f656ee8c2cd7698cdfa5206f661e2e2630c70b80cf3e3c",
+      "byteExact": true,
+      "bytes": 994
+    },
+    {
+      "path": "native-service-verification.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/default-remote-native-verification.json",
+      "sourceSha256": "6262e0b4f1c97898b35307c9155236771bb85198739e323cb1a0b8cf07967159",
+      "archivedSha256": "6262e0b4f1c97898b35307c9155236771bb85198739e323cb1a0b8cf07967159",
+      "byteExact": true,
+      "bytes": 6979
+    },
+    {
+      "path": "workspace-preservation.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/default-remote-workspace-preservation-safe.json",
+      "sourceSha256": "69d122a8633457bb3474f81f7e9d99f92f3ec12063a54a70b61453518295f9a0",
+      "archivedSha256": "69d122a8633457bb3474f81f7e9d99f92f3ec12063a54a70b61453518295f9a0",
+      "byteExact": true,
+      "bytes": 213
+    },
+    {
+      "path": "restoration-native-guard.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/restoration-remote-native-guard.json",
+      "sourceSha256": "f714415743888f4d8adf796fbc60ae62fe2eadb6009f67943f49896c0c30edc0",
+      "archivedSha256": "f714415743888f4d8adf796fbc60ae62fe2eadb6009f67943f49896c0c30edc0",
+      "byteExact": true,
+      "bytes": 948
+    },
+    {
+      "path": "authorization-precondition.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/default-remote-auth-test-precondition-safe.json",
+      "sourceSha256": "c7a81101f5749ccc9c1c8d34c53fec3127c1b00b85f4f68f570a0f283e504844",
+      "archivedSha256": "c7a81101f5749ccc9c1c8d34c53fec3127c1b00b85f4f68f570a0f283e504844",
+      "byteExact": true,
+      "bytes": 263
+    },
+    {
+      "path": "authorized-verification.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/default-remote-authorized-verification.json",
+      "sourceSha256": "d07306feabd6b1e8233a203b6a72dada6cc555d459ea5d24adcf366993dda0e5",
+      "archivedSha256": "d07306feabd6b1e8233a203b6a72dada6cc555d459ea5d24adcf366993dda0e5",
+      "byteExact": true,
+      "bytes": 1526
+    },
+    {
+      "path": "after-auth-state.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/default-remote-state-after-auth-safe.json",
+      "sourceSha256": "45b95450027651bf51424497dce3e4b5e77c323f744c0fef3ef75186742cf9b9",
+      "archivedSha256": "45b95450027651bf51424497dce3e4b5e77c323f744c0fef3ef75186742cf9b9",
+      "byteExact": true,
+      "bytes": 1154
+    },
+    {
+      "path": "before-native-baseline.json",
+      "sourcePath": "/tmp/orchester-windows-default-remote35c75-final/default-pre-promotion-native-baseline.json",
+      "sourceSha256": "f63312ba206356a88ea5f401059847f192379cfddaf102b9f3c93b3da83ceef1",
+      "archivedSha256": "f63312ba206356a88ea5f401059847f192379cfddaf102b9f3c93b3da83ceef1",
+      "byteExact": true,
+      "bytes": 7582
+    },
+    {
+      "path": "management-console-launch.json",
+      "sourcePath": "/tmp/orchester-windows-default-remote35c75-final/management-console-launch.json",
+      "sourceSha256": "f4f4f0976889e4269ac3a1f2c41b77ef7d305f203731ce4a99bdc9c2b9684a4c",
+      "archivedSha256": "f4f4f0976889e4269ac3a1f2c41b77ef7d305f203731ce4a99bdc9c2b9684a4c",
+      "byteExact": true,
+      "bytes": 1761
+    },
+    {
+      "path": "qa-helper-cleanup.json",
+      "sourcePath": "/tmp/orchester-windows-default-remote35c75-final/qa-owned-helper-cleanup-final.json",
+      "sourceSha256": "5f22523ae9a48fa5a759f03d9c17192dd46dbfc208835708a659193bdcc11762",
+      "archivedSha256": "5f22523ae9a48fa5a759f03d9c17192dd46dbfc208835708a659193bdcc11762",
+      "byteExact": true,
+      "bytes": 3218
+    },
+    {
+      "path": "after-qa-state.json",
+      "sourcePath": "/tmp/orchester-windows-default-remote35c75-final/default-remote-state-after-qa-safe.json",
+      "sourceSha256": "3ea2f33f8c8d86ccfbc5dfa1a8e2f54f521c565e0ca942018dbbd929189425fc",
+      "archivedSha256": "3ea2f33f8c8d86ccfbc5dfa1a8e2f54f521c565e0ca942018dbbd929189425fc",
+      "byteExact": true,
+      "bytes": 1442
+    },
+    {
+      "path": "source-main-closure.json",
+      "sourcePath": "/tmp/orchester-windows-default-remote35c75-final/source-main-closure-safe.json",
+      "sourceSha256": "7dab55105ca619079375c8a0739aaa730fdfb44949e296ae4972fc3504689f11",
+      "archivedSha256": "7dab55105ca619079375c8a0739aaa730fdfb44949e296ae4972fc3504689f11",
+      "byteExact": true,
+      "bytes": 460
+    },
+    {
+      "path": "harness-current-pins.json",
+      "sourcePath": "/tmp/orchester-windows-default-remote35c75-final/harness-current-pins-safe.json",
+      "sourceSha256": "6c1174dcd0a25199bd25a6d63eb16961d0f458ca2e7227291cd844ed312ef419",
+      "archivedSha256": "6c1174dcd0a25199bd25a6d63eb16961d0f458ca2e7227291cd844ed312ef419",
+      "byteExact": true,
+      "bytes": 1457
+    },
+    {
+      "path": "harness-attempts/authorized-first-failure.json",
+      "sourcePath": "/tmp/orchester-windows-default-remote35c75-final/default-remote-authorized-first-failure.json",
+      "sourceSha256": "940a9bcad0909ec5e122ba92a3abe54ccdd2f79dd3d937ecf040f8be31718dc4",
+      "archivedSha256": "940a9bcad0909ec5e122ba92a3abe54ccdd2f79dd3d937ecf040f8be31718dc4",
+      "byteExact": true,
+      "bytes": 1385
+    },
+    {
+      "path": "harness-attempts/authorized-second-failure.json",
+      "sourcePath": "/tmp/orchester-windows-default-remote35c75-final/default-remote-authorized-second-failure.json",
+      "sourceSha256": "df099823c49b906473eddad42f562b19f8cdb75852599c993d6ea7ef71a57196",
+      "archivedSha256": "df099823c49b906473eddad42f562b19f8cdb75852599c993d6ea7ef71a57196",
+      "byteExact": true,
+      "bytes": 1385
+    },
+    {
+      "path": "harness-attempts/authorized-third-failure.json",
+      "sourcePath": "/tmp/orchester-windows-default-remote35c75-final/default-remote-authorized-third-failure.json",
+      "sourceSha256": "e6b9e68ce54d0efa58c1de540f74a84a3cebdfd3701e02322bbc4b5f30d351d2",
+      "archivedSha256": "e6b9e68ce54d0efa58c1de540f74a84a3cebdfd3701e02322bbc4b5f30d351d2",
+      "byteExact": true,
+      "bytes": 1377
+    },
+    {
+      "path": "qa-provenance-review.json",
+      "sourcePath": "/tmp/orchester-native-adb-transport-provenance-review-20261111.json",
+      "sourceSha256": "460af3147b69a64a640228cb9023280727030674f6a771d18c7cee579855391f",
+      "archivedSha256": "460af3147b69a64a640228cb9023280727030674f6a771d18c7cee579855391f",
+      "byteExact": true,
+      "bytes": 5845
+    },
+    {
+      "path": "independent-final-review.json",
+      "sourcePath": "/tmp/orchester-windows-remote-deployment-final-independent-review-20261111.json",
+      "sourceSha256": "6886b9ad1c7c5462182a2fd791272696b95e20e832570a68f4ae397166ce04f8",
+      "archivedSha256": "6886b9ad1c7c5462182a2fd791272696b95e20e832570a68f4ae397166ce04f8",
+      "byteExact": true,
+      "bytes": 12156
+    }
+  ],
+  "rawStateOrTokensIncluded": false,
+  "afterStateAnd7338Verification": "passed after actual temporary authorization lifecycle and own QA helper exit,all four canonical state hashes equal before",
+  "privateBackupDatabasesCopied": false,
+  "rootActualPromotionControllerExitCode": 0,
+  "kindRemoteDoesNotPromoteDesktop": true,
+  "historicalPromotionRuntimeAndTaskRetentionPendingRootSupersededOnlyBySeparateVerifiedRecords": true,
+  "rootActualAuthorizedControllerExitCode": 0,
+  "qaFinalCleanup": "passed own3348 plus conhost original handles natural0/unknown0/forced0;prod193764-manager252404-originallive-and7338retained",
+  "sourcePacketAllowlistManifestPath": "/tmp/orchester-windows-default-remote35c75-final/manifest.json",
+  "sourcePacketAllowlistManifestSha256": "07769b56e8cd36a4a022dda919f3673077664b86cb0f05e4fe4f49c09b84e102",
+  "sourcePacketAllowlistCount": 26,
+  "selectedSubsetWithoutCopyingAllSourcePacketFiles": true,
+  "rootActualQaCleanupControllerExitCode": 0,
+  "postQaNativeVerificationBytesEqualArchivedStartupVerification": {
+    "sourcePath": "/tmp/orchester-windows-default-remote35c75-final/default-remote-native-after-qa-verification.json",
+    "sourceSha256": "6262e0b4f1c97898b35307c9155236771bb85198739e323cb1a0b8cf07967159",
+    "archivedPath": "native-service-verification.json",
+    "byteExact": true,
+    "actualPostQaObservationTimestampAndBindingFile": "after-qa-state.json"
+  },
+  "harnessAttemptsBoundary": "Three failed authorization observer attempts retained only as harness diagnostics; no product pass/fail added to final16build,Portable14,DesktopUI or final authorized runtime counters.",
+  "independentFinalReview": "passed Remote deployment andQA; Desktop locked/disconnected natural-menu exit anddefault promotion remain pending",
+  "independentFinalReviewSha256": "6886b9ad1c7c5462182a2fd791272696b95e20e832570a68f4ae397166ce04f8"
+}

@@ -1,0 +1,11 @@
+{
+  "buildSourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "currentMainRevision": "831bde8eb4cc23109fc57592ab914f6bcd88103a",
+  "planSha256": "bf74addb6794ee13234d6ff344af542c7ebf4b742caa103a310fc80e29a5a391",
+  "trackedBuildInputsCompared": 400,
+  "allBuildInputBlobsByteEqualToMain": true,
+  "allTrackedBlobsMatchFrozenPlanHashes": true,
+  "acceptedNonGitInputCount": 46,
+  "nonGitInputsStillBoundByPassingFinalPlan": true,
+  "modelCalls": 0
+}

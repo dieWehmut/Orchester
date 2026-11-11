@@ -1,0 +1,294 @@
+{
+  "schemaVersion": 1,
+  "archivedAt": "2026-11-11T05:00:00.338205+00:00",
+  "sourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "currentMainAtArchive": "831bde8eb4cc23109fc57592ab914f6bcd88103a",
+  "laterMainChangesOnlyDocumentation": true,
+  "scope": "Windows16 original native build-and-file gates and actual Portable14 runtime. Desktop product natural quit, default installation promotion, Windows7338 and QA tool final cleanup remain separate pending evidence.",
+  "runDirectory": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf",
+  "planSha256": "bf74addb6794ee13234d6ff344af542c7ebf4b742caa103a310fc80e29a5a391",
+  "finalResultSha256": "bdd23c9c0a87f27bc13f65656058ac92b43c061b76f56fdf6ad79f066ae6f30c",
+  "gates": [
+    {
+      "phase": "toolchain",
+      "nativeAuditSha256": "8f83252a70f78bc2f9a79986c9af13fd29f39d9109135799cdf9e55a624dd016",
+      "resultSha256": "4fafaff70049d97b819c343d7481f925791419fc61aae4d6229bc6892f362f26",
+      "originalChildPid": 254192,
+      "originalCreatedAt": "2026-11-11T04:38:50.9748450Z",
+      "actualExitCode": 0,
+      "actualProcessExited": true,
+      "timedOut": false
+    },
+    {
+      "phase": "helper-contract",
+      "nativeAuditSha256": "082389598aa46b191338265011f5efdda704ba65887bf743323c2b85be5dbbd7",
+      "resultSha256": "28133c0c30c0f411515c63ad8240fb7381f6eef7f9790eb052344b3cae450a00",
+      "originalChildPid": 219116,
+      "originalCreatedAt": "2026-11-11T04:38:52.4651766Z",
+      "actualExitCode": 0,
+      "actualProcessExited": true,
+      "timedOut": false
+    },
+    {
+      "phase": "helper-wsl",
+      "nativeAuditSha256": "c815b7e17123e5769616e86cc28dd22f948cd0443050115722bb89ddec012ff4",
+      "resultSha256": "7417c5ae135450d232cd37d8d332edfd645e09243f26306da3c1a279d7394e33",
+      "originalChildPid": 239988,
+      "originalCreatedAt": "2026-11-11T04:38:54.1930655Z",
+      "actualExitCode": 0,
+      "actualProcessExited": true,
+      "timedOut": false
+    },
+    {
+      "phase": "memory-initialization",
+      "nativeAuditSha256": "f27e91d921eab0d52d7b80b5a98c110ed59e061c247c2edb49caf9ec528ef79b",
+      "resultSha256": "5b7c1985985daf6447a7e5f823c9535e09a1f3ba5cb5491e0f26e835bf1a17f5",
+      "originalChildPid": 195340,
+      "originalCreatedAt": "2026-11-11T04:39:01.5731063Z",
+      "actualExitCode": 0,
+      "actualProcessExited": true,
+      "timedOut": false
+    },
+    {
+      "phase": "monitor-process",
+      "nativeAuditSha256": "8f0e8df70b5047c346cf9fac6db0b60e07a82cd4a641be90178c3c64169e2d45",
+      "resultSha256": "518aea28c71a39644053014b793bfc8ab7928f4c64f30a91d888c8d4c215eddd",
+      "originalChildPid": 247268,
+      "originalCreatedAt": "2026-11-11T04:39:11.0365133Z",
+      "actualExitCode": 0,
+      "actualProcessExited": true,
+      "timedOut": false
+    },
+    {
+      "phase": "monitor-activity",
+      "nativeAuditSha256": "889184d81ced0386252f805e5fd013a9e06e0ac2a4aee431becf3a73efa1e714",
+      "resultSha256": "f19995681681e57af407b3af3014a2ff4eb25d472bad4750bd24903e7e81e8ad",
+      "originalChildPid": 211444,
+      "originalCreatedAt": "2026-11-11T04:39:12.8013099Z",
+      "actualExitCode": 0,
+      "actualProcessExited": true,
+      "timedOut": false
+    },
+    {
+      "phase": "monitor-http",
+      "nativeAuditSha256": "2aca9b257220e37cf6fd63f1901454513b0bf7c85c5752a1685036f14f47fef3",
+      "resultSha256": "3951054dbb8268d2fcdc38146c94eaabf1a26420e0ba77803da06397897a4c6d",
+      "originalChildPid": 194212,
+      "originalCreatedAt": "2026-11-11T04:39:23.2266816Z",
+      "actualExitCode": 0,
+      "actualProcessExited": true,
+      "timedOut": false
+    },
+    {
+      "phase": "remote-cli",
+      "nativeAuditSha256": "f84d67bf180cb32bafcf47a70b02013455db21abc86f7036667386146cf60056",
+      "resultSha256": "bcf3aafc6edd7bed063749d37b4eba03dca2b0ba2e20bd08f6144743ead84582",
+      "originalChildPid": 192492,
+      "originalCreatedAt": "2026-11-11T04:40:14.1312940Z",
+      "actualExitCode": 0,
+      "actualProcessExited": true,
+      "timedOut": false
+    },
+    {
+      "phase": "root-clippy",
+      "nativeAuditSha256": "4168754fdb0fcb4ccca012aac5ac5cc913a20654924db7c3b56846811bd1f37c",
+      "resultSha256": "5c2ab3d1b3ff1efef063b7a064cda7a3f39d64861fd002648622f74cb02f4588",
+      "originalChildPid": 222324,
+      "originalCreatedAt": "2026-11-11T04:41:09.7002012Z",
+      "actualExitCode": 0,
+      "actualProcessExited": true,
+      "timedOut": false
+    },
+    {
+      "phase": "root-fmt",
+      "nativeAuditSha256": "a6c8089cdce776e26ecfb243425985af954a1dbb4de893bbf6307dca1bf6f931",
+      "resultSha256": "8e9e4e42fa930d4fe0f9132d8e3b2aed2a5fa5fb3fe768b37ae20fb74bcf2232",
+      "originalChildPid": 224260,
+      "originalCreatedAt": "2026-11-11T04:41:39.8806991Z",
+      "actualExitCode": 0,
+      "actualProcessExited": true,
+      "timedOut": false
+    },
+    {
+      "phase": "cli-build",
+      "nativeAuditSha256": "25ecf67130ee263ddea2d536a09b644383f716019d7ac11b998d1898f4ca3aca",
+      "resultSha256": "eecbe3c4877f725fa36f53866075f261532140583798ffd72b55f86c7d1151b2",
+      "originalChildPid": 206136,
+      "originalCreatedAt": "2026-11-11T04:41:42.3265740Z",
+      "actualExitCode": 0,
+      "actualProcessExited": true,
+      "timedOut": false
+    },
+    {
+      "phase": "chrome-test",
+      "nativeAuditSha256": "4113fcf7021b15ce1f5ab815ca4bfe138a4ce0ffb082db65c5052b0c034d565e",
+      "resultSha256": "448418e1c69c2cc4a45c40b60360b43777e2212f2dd2d5fdc3ed41216935dd7f",
+      "originalChildPid": 189436,
+      "originalCreatedAt": "2026-11-11T04:41:49.3190629Z",
+      "actualExitCode": 0,
+      "actualProcessExited": true,
+      "timedOut": false
+    },
+    {
+      "phase": "desktop-test",
+      "nativeAuditSha256": "dd6de6f84a7ae7d8eb234eddeb4a8a5efbf59fc14d66f2d7d883282080b36be9",
+      "resultSha256": "5629776a0a536970a10bea89c3254dcd2446f707b0b8bb6fbc5cdeb9e8545ed9",
+      "originalChildPid": 253128,
+      "originalCreatedAt": "2026-11-11T04:41:51.6034835Z",
+      "actualExitCode": 0,
+      "actualProcessExited": true,
+      "timedOut": false
+    },
+    {
+      "phase": "desktop-clippy",
+      "nativeAuditSha256": "bc0ed6b3da4dfe23e5b0f2d834b39dbf5f4ff115a2e53edf042a4d4b51a75d0f",
+      "resultSha256": "5b9d93cf7ab23cb8fd0077fac0e02009830b773fbdd74a9fed20c00229c81dea",
+      "originalChildPid": 142184,
+      "originalCreatedAt": "2026-11-11T04:43:05.8469400Z",
+      "actualExitCode": 0,
+      "actualProcessExited": true,
+      "timedOut": false
+    },
+    {
+      "phase": "desktop-fmt",
+      "nativeAuditSha256": "a8491c3b65dc2e41132b4f22ea094583c9399c7f99d4c45b26a951c832517b61",
+      "resultSha256": "bb246b9565369bb749d2d67301f1c3e1cc25fadbd5be21af9e2fde9a5627b763",
+      "originalChildPid": 221764,
+      "originalCreatedAt": "2026-11-11T04:43:20.7241088Z",
+      "actualExitCode": 0,
+      "actualProcessExited": true,
+      "timedOut": false
+    },
+    {
+      "phase": "desktop-build",
+      "nativeAuditSha256": "9be4af92a38ebe14c476fdc3e7c66f3d5ee2498dcebab94f4303c89f4e4da77f",
+      "resultSha256": "3218faf8d74d0172eceff97b0ce498c2f40e2b8486f62f8aabf4a8b0072ba911",
+      "originalChildPid": 248044,
+      "originalCreatedAt": "2026-11-11T04:43:23.3771309Z",
+      "actualExitCode": 0,
+      "actualProcessExited": true,
+      "timedOut": false
+    }
+  ],
+  "all16NativeGatesExited0WithoutTimeout": true,
+  "frozenInputs": {
+    "count": 446,
+    "allOriginalHashesEqual": true,
+    "gitBoundInputCount": 400,
+    "generatedInputCount": 46,
+    "canonicalSha256": "a092268c30acee9ae324d251b91420a5cfe9dfe3fc52b02ea42c3cc82fc3667b"
+  },
+  "scriptPins": [
+    {
+      "path": "monitor-final-cargo.cmd",
+      "sha256": "ccf35c4e4c0a1474219804a6fe5767488dda2c81ae10172f31cd39b3d4874fe1"
+    },
+    {
+      "path": "monitor-final-common.ps1",
+      "sha256": "392f88c11b24c07653857910e01fa731a76a126d98c717b8bd48a730f0a2bd81"
+    },
+    {
+      "path": "monitor-final-freeze.ps1",
+      "sha256": "5962d503adb4d73a012f9f7d98b3ca8871eb1034779f7de709b43a2eaf7f04da"
+    },
+    {
+      "path": "monitor-final-launch.ps1",
+      "sha256": "e74434b62befd74086440dbf95e9a5f5beea5835c57c241ff12a71183d652a4d"
+    },
+    {
+      "path": "monitor-final-promote.ps1",
+      "sha256": "9a8a636bedde78a873b87eb1f465834571e72330bc460b837a3d891d33374e9e"
+    },
+    {
+      "path": "monitor-final-selfcheck.ps1",
+      "sha256": "bde0241552070b1f06ebc73e6fd5e235cb5380d111246c0f8f999d309f755830"
+    },
+    {
+      "path": "monitor-final-worker.ps1",
+      "sha256": "4355ea21983b6c20d12fd9c88ea387ab54dad04ca554eec508883046c6211d38"
+    }
+  ],
+  "dispatchCmdCRLFOnly": true,
+  "candidateInventoryCounts": {
+    "desktop": 39,
+    "remote": 17
+  },
+  "candidates": [
+    {
+      "kind": "desktop",
+      "bytes": 40667136,
+      "sha256": "e42f0161eb2d0a402ad69f1951f7a5655b47ceb95151387a85b76a8b817c541f",
+      "format": "PE-x86_64",
+      "profile": "debug"
+    },
+    {
+      "kind": "remote",
+      "bytes": 30777344,
+      "sha256": "ef633cc43b2e767f222fe861fd2dfeca718fc677c0761d03f4c20f08d6a7bd66",
+      "format": "PE-x86_64",
+      "profile": "debug"
+    }
+  ],
+  "toolchain": {
+    "rustCargoVersion": "1.99.1",
+    "target": "x86_64-pc-windows-msvc",
+    "profile": "debug",
+    "windowsSdk": "native Windows MSVC SDK environment; version not inferred here"
+  },
+  "nativeMemoryTestSummary": {
+    "nativeLibraryPassed": 148,
+    "nativeMemoryStorePassed": 15,
+    "failed": 0,
+    "requiredTestsPresent": true,
+    "sourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+    "modelCalls": 0
+  },
+  "nativeHelperTestSummary": {
+    "passed": 6,
+    "failed": 0,
+    "allRequiredTestsPresent": true,
+    "sourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+    "modelCalls": 0
+  },
+  "portable": {
+    "runtimeSha256": "05313e9ccef5a25268dbb5779191f756817965f30c2381d299aedcd2dd3e99b6",
+    "cleanupSha256": "672b0aed1dbcf64a0e544f87fdc48a5667684a23a32245629240d9acd2230cfb",
+    "checks": [
+      "packaged_launcher",
+      "html_matches_package",
+      "unauthenticated_401",
+      "one_time_pairing",
+      "project_add_list",
+      "selected_unicode_space_cwd",
+      "windows_conpty_launch",
+      "set_p_interactive_input",
+      "ordered_websocket_output",
+      "resize_96x31",
+      "delete_drained_exit",
+      "shutdown_unconnected_terminal",
+      "backend_exited",
+      "port_released"
+    ],
+    "productQuitExit0": true,
+    "passiveObservationSeconds": 5,
+    "ownedSurvivors": 0,
+    "unexpectedDescendants": 0,
+    "fallbackCount": 0,
+    "portsReleased": true,
+    "stderrBytes": 0
+  },
+  "buildWorkerOriginalPid": 230188,
+  "buildWorkerAbsence": "root confirmed original230188 native process absent; this archive did not invoke native Windows process queries",
+  "portableWorkerOriginalPid": 259824,
+  "portableWorkerAbsence": "root confirmed original259824 native process absent",
+  "modelCalls": 0,
+  "defaultInstallationAcceptance": "Remote actual promotion passed; Desktop prior default retained, current-session-locked natural-menu exit pending",
+  "windows7338Acceptance": "passed actual same-source EXE/static6/authorized3/temporary pair-revoke-close/original4tasks/auth/projects preserved",
+  "desktopNaturalQuitAcceptance": "blocked-current-session1-disconnected-and-locked; UI subset16/7/2 passed but natural product menu not invoked;8 forced cleanup outcomes excluded",
+  "qaFinalCleanup": "passed-exact3348-plus-conhost-original-handles-natural0-unknown0-forced0-prod193764-manager252404-originallive-7338retained",
+  "privacy": "Only selected sanitized JSON and original native audits. No source directory, database, raw stdout/stderr, runtime session, profile, argv, environment, registry values or user-state values copied.",
+  "excludedRuns": "Older LF dispatcher and8c24 tray harness failures are not product passes or part of this16-gate invocation.",
+  "remoteDeploymentEvidence": "remote-deployment/provenance.json",
+  "currentLocalWindowsDelivery": "Remote deployed andfullyverified; Desktop original9688 installation retained while locked/disconnected session blocks current-candidate native menu quit and promotion",
+  "independentFinalRemoteReviewSha256": "6886b9ad1c7c5462182a2fd791272696b95e20e832570a68f4ae397166ce04f8"
+}

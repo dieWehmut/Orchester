@@ -1,0 +1,23 @@
+{
+  "files": [
+    {
+      "path": "cleanup-result.json",
+      "sha256": "43e3214d8bc5bd0d793c9b63b9876e2f5b85ebb9938cb8fd8f79c946aa3c70e4"
+    },
+    {
+      "path": "desktop-worker-failure.json",
+      "sha256": "66885cdf901688915aaf100f0cb7bab0db37296f16e110a4189cf89da7e5d3f9"
+    },
+    {
+      "path": "native-windows-result.json",
+      "sha256": "b6ef3ff1952e543b8e896baf12e6789271c8a7163e010a71c34ee5810ef37385"
+    },
+    {
+      "path": "tray-safe-diagnostics.json",
+      "sha256": "8ebe52aa1f676de705fc4ecd0c72e4870e43fecfb40d67239196c6cfde99f34b"
+    }
+  ],
+  "rawSessionOrTokenLogsIncluded": false,
+  "rawProcessArgumentsIncluded": false,
+  "defaultUserStateIncluded": false
+}

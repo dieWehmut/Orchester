@@ -1,0 +1,16 @@
+{
+    "event":  "native_restoration_guard_verified",
+    "nativeProcessGuardQueries":  1,
+    "originalLauncherHandleUsed":  true,
+    "launcherPid":  252404,
+    "launcherCreatedAt":  "2026-11-11T05:24:56.5004683Z",
+    "launcherExecutable":  "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "launcherExecutableSha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+    "managementRecordFile":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\windows-management-launch-a9e4cfaeba5c4d1aa934003701fac63d.json",
+    "managementRecordSha256":  "f4f4f0976889e4269ac3a1f2c41b77ef7d305f203731ce4a99bdc9c2b9684a4c",
+    "pinnedRestorerUnmodified":  true,
+    "processesSignalled":  0,
+    "promotionResultSha256":  "69237992556c602ae1984e3d2e8e55b23785225e6a0a0d7f6e25dee2b28adcee",
+    "startupPairingDisabled":  true,
+    "modelCalls":  0
+}

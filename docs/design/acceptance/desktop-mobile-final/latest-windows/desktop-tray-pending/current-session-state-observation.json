@@ -1,0 +1,17 @@
+{
+    "observedAt":  "2026-11-11T05:01:05.7412540Z",
+    "windowsBuild":  26200,
+    "native":  {
+                   "QuerySucceeded":  true,
+                   "Error":  0,
+                   "SessionId":  1,
+                   "ConnectState":  4,
+                   "SessionFlags":  0,
+                   "IdentityMatchesCurrentSession":  true,
+                   "NameOrDomainFieldsRead":  false
+               },
+    "readOnly":  true,
+    "sessionSwitches":  0,
+    "inputActions":  0,
+    "modelCalls":  0
+}

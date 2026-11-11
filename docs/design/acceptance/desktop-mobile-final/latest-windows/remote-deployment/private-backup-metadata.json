@@ -1,0 +1,20 @@
+{
+    "stateRoot":  "C:\\Users\\han\\AppData\\Local\\OrchesterRemote\\state-home",
+    "backupDirectory":  "C:\\Users\\han\\AppData\\Local\\OrchesterRemote\\state-home.before-35c75e6-20261111",
+    "files":  2,
+    "exactInventory":  [
+                           {
+                               "path":  "state/remote.db",
+                               "sha256":  "e366bebb65c99c560c82395eebff95704dd6ce71909761b49d43f57f5501b4ba"
+                           },
+                           {
+                               "path":  "state/remote.lock.db",
+                               "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                           }
+                       ],
+    "complete":  true,
+    "originalUnchanged":  true,
+    "privateAclApplied":  true,
+    "modelCalls":  0,
+    "defaultInstallationChanged":  false
+}

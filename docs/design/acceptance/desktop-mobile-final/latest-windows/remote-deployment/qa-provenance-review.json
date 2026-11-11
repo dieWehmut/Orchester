@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-11T05:51:51.975971+00:00",
+  "scope": "read-only historical helper3348 identity/source association and graceful-stop implementation; no Windows query, proxy command, signal or filesystem control marker performed",
+  "historicalStartupIdentity": {
+    "originalRecordPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-adb-transport/proxy-process.json",
+    "originalRecordSha256": "4c210be7598ac2695269685b486525b990fed46ef2aa200b48163b16247d27c2",
+    "ownerPid": 32728,
+    "childPid": 3348,
+    "image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "createdAt": "2026-11-10T05:00:38.6729007Z",
+    "phase": "detached",
+    "observedAt": "2026-11-10T05:00:38.6791501Z"
+  },
+  "independentHistoricalV2Snapshot": {
+    "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-adb-transport/v2-readonly-evidence-20261110.json",
+    "sha256": "93549bc1b8bddaed1c503c93c85edcffb7955606922c5904d645f0a2cc6d6d8d",
+    "helperPid": 3348,
+    "helperCreatedAt": "2026-11-10T05:00:38.6729007Z",
+    "protocolVersion": 2,
+    "capture": "native-files"
+  },
+  "startupProxyScriptSha256EvidenceFound": false,
+  "startupSourceHashBoundary": "The original3348 process andV2 snapshot do not contain a proxy.ps1 or launch.ps1 SHA. No matching prior proxy/launch SHA found in reviewed JSON/Markdown/script manifests outside private/output/compiled directories. Existing exact PID/creation/image plus fixed producer/ready association can corroborate the originally authorized helper; fresh original handle and internally compared exact script-argument shape are still required by the stopping guard.",
+  "currentSourcePins": [
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-adb-transport/proxy.ps1",
+      "sha256": "6e48aca455be5c8237ad657c8dfc306dc04aa1395fdbc615f2e90ec70ee6f852",
+      "bytes": 8621
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-adb-transport/launch.ps1",
+      "sha256": "5050ef40cf63a79299a962d4626c30fd7c7a06b52fed6677850036fcab6b8751",
+      "bytes": 1724
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-adb-transport/NativeFileRunner.cs",
+      "sha256": "b0315e60ff1713d5f31519644340a61b30966719dde144d0b225a75ac045177d",
+      "bytes": 14937
+    }
+  ],
+  "producerAssociation": {
+    "launchScriptCalls": "NativeFileRunner.StartDetached",
+    "scriptBasename": "proxy.ps1",
+    "fixedBase": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-adb-transport",
+    "outputRecordBasename": "proxy-process.json",
+    "sourceMayOnlyCorroborateNotProveUnchangedSinceStartup": true
+  },
+  "existingRunnerPins": [
+    {
+      "planPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/main-25630ff/plan.json",
+      "planSha256": "a70a26bbfcffab49cb6c7374084307dbd5352f630792f70c530f5cdfe556b2f2",
+      "createdAt": "2026-11-10T12:37:17.8958522Z",
+      "runnerSha256": "b0315e60ff1713d5f31519644340a61b30966719dde144d0b225a75ac045177d"
+    },
+    {
+      "planPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/fonts-6278e3b/plan.json",
+      "planSha256": "34c1c3f30bf4017ae05d78ea4a08c3d650ef04c589b5ef545999e5751f3257be",
+      "createdAt": "2026-11-10T14:51:06.1923188Z",
+      "runnerSha256": "b0315e60ff1713d5f31519644340a61b30966719dde144d0b225a75ac045177d"
+    },
+    {
+      "planPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/plan.json",
+      "planSha256": "bf74addb6794ee13234d6ff344af542c7ebf4b742caa103a310fc80e29a5a391",
+      "createdAt": "2026-11-11T04:38:49.2220119Z",
+      "runnerSha256": "b0315e60ff1713d5f31519644340a61b30966719dde144d0b225a75ac045177d"
+    }
+  ],
+  "ordinaryGracefulChannel": {
+    "markerBasename": "stop",
+    "fixedBase": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-adb-transport",
+    "loopPollMilliseconds": 100,
+    "requiresNoActiveOrQueuedRequest": true,
+    "normalFinallyActions": [
+      "write stopped.json containing owned PID and UTC time",
+      "remove ready.json"
+    ],
+    "normalFinallyDoesNotSignalChildren": true,
+    "confirmation": "same captured3348 original process handle must signal; stop marker alone is insufficient"
+  },
+  "jobObjectSourceReview": {
+    "currentProxyLaunchAndRunnerCreateOrAssignJobObjects": false,
+    "currentProxyNormalFinallyClosesJobObjects": false,
+    "childHandleInheritance": "PROC_THREAD_ATTRIBUTE_HANDLE_LIST contains only NUL stdin plus stdout/stderr file handles",
+    "StartDetachedFinally": "CloseHandle on newly created child thread/process only",
+    "RunTimeout": "TerminateProcess on the exact directly-created child process handle only; guarded graceful stop must occur with no queued/inflight work",
+    "sourceDoesNotProveRuntimeExternalJobMembership": true,
+    "requiredPostStopProof": "retain exact production193764 backend and252404 console handles; after graceful3348 exit re-confirm both live and7338 original ownership/static/auth read, without stopping or recreating those processes"
+  },
+  "legacyGuardBoundary": {
+    "guardPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261110/stop-native-adb-transport-3348-guard.ps1",
+    "hardcodedUnknownLauncher42664Check": "existing42664 is never signalled and blocks stopping; the authoritative startup owner in proxy-process.json is32728, not42664",
+    "guardDoesNotPersistActualCommandLine": true,
+    "defaultMode": "inspect only; no control marker",
+    "executedByThisReview": false
+  },
+  "protectedProductionIdentities": {
+    "remoteBackendPid": 193764,
+    "remoteManagerPid": 252404,
+    "listenerPort": 7338
+  },
+  "modelsCalled": 0,
+  "mutationPerformed": false,
+  "rawArgumentsTokensUsernamesOrPrivateLogBodiesPrintedOrCopied": false
+}

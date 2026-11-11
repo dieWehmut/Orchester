@@ -1,0 +1,30 @@
+{
+    "status":  "failed",
+    "diagnostic":  "owned-console-command-response-timeout",
+    "sourceRevision":  "35c75e656d2c04cc6221d1dfb56c916aac706033",
+    "expectedPlanSha256":  "bf74addb6794ee13234d6ff344af542c7ebf4b742caa103a310fc80e29a5a391",
+    "expectedFinalResultSha256":  "bdd23c9c0a87f27bc13f65656058ac92b43c061b76f56fdf6ad79f066ae6f30c",
+    "nativeVerificationSha256":  "6262e0b4f1c97898b35307c9155236771bb85198739e323cb1a0b8cf07967159",
+    "backendPid":  193764,
+    "backendCreatedAt":  "2026-11-11T05:24:58.7952756Z",
+    "backendExecutableSha256":  "ef633cc43b2e767f222fe861fd2dfeca718fc677c0761d03f4c20f08d6a7bd66",
+    "managerPid":  252404,
+    "originalConsoleHandlesAndThreeParticipantsVerified":  true,
+    "originalDeviceCount":  0,
+    "preconditionAllDevicesValidBeyond300AndCapacityChecked":  false,
+    "temporaryPairingAttempted":  false,
+    "authorizedReadsVerified":  false,
+    "infoSchema2AndWorkspaceVerified":  false,
+    "agentsTypedSchemaVerified":  false,
+    "projectsFullOriginalArrayVerified":  false,
+    "authorizedReadStatus":  {
+
+                             },
+    "temporaryRevoke204":  false,
+    "oldTokenRejected401":  false,
+    "pairingClosed":  false,
+    "closedPair429":  false,
+    "cleanupFallbackRevoked":  false,
+    "pairingCodeOrTokenOrResponseWrittenToDisk":  false,
+    "modelCalls":  0
+}

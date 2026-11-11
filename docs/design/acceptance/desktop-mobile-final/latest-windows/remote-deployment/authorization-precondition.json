@@ -1,0 +1,10 @@
+{
+  "existingDeviceCount": 1,
+  "capacityBelow64": true,
+  "allOriginalDeviceExpiryBeyondNowPlus300": true,
+  "minimumRemainingSeconds": 2420604,
+  "rawValuesIncluded": false,
+  "sqliteOpenedReadOnly": true,
+  "authenticationModified": false,
+  "modelCalls": 0
+}

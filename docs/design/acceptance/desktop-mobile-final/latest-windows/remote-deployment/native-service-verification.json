@@ -1,0 +1,122 @@
+{
+    "event":  "default_remote_native_verified",
+    "sourceRevision":  "35c75e656d2c04cc6221d1dfb56c916aac706033",
+    "expectedPlanSha256":  "bf74addb6794ee13234d6ff344af542c7ebf4b742caa103a310fc80e29a5a391",
+    "expectedFinalResultSha256":  "bdd23c9c0a87f27bc13f65656058ac92b43c061b76f56fdf6ad79f066ae6f30c",
+    "promotionResultSha256":  "69237992556c602ae1984e3d2e8e55b23785225e6a0a0d7f6e25dee2b28adcee",
+    "restorationGuardSha256":  "f714415743888f4d8adf796fbc60ae62fe2eadb6009f67943f49896c0c30edc0",
+    "backendPid":  193764,
+    "backendCreatedAt":  "2026-11-11T05:24:58.7952756Z",
+    "backendExecutable":  "C:\\Users\\han\\Downloads\\OrchesterRemote\\orchester.exe",
+    "backendExecutableSha256":  "ef633cc43b2e767f222fe861fd2dfeca718fc677c0761d03f4c20f08d6a7bd66",
+    "originalProcessHandlesUsed":  true,
+    "listenerPort":  7338,
+    "listenerOwningProcess":  193764,
+    "listenerAddress":  "0.0.0.0",
+    "staticAssets":  [
+                         {
+                             "Path":  "/assets/brand-icon-Zjdxen9M.png",
+                             "Method":  "GET",
+                             "Status":  200,
+                             "Bytes":  377394,
+                             "Sha256":  "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06",
+                             "CacheControl":  null
+                         },
+                         {
+                             "Path":  "/assets/index-BpSqRAdp.js",
+                             "Method":  "GET",
+                             "Status":  200,
+                             "Bytes":  479507,
+                             "Sha256":  "6d98e97e9bd5f167cfefb2516044597403c789fd700992f376b55d2532e8f008",
+                             "CacheControl":  null
+                         },
+                         {
+                             "Path":  "/assets/index-DUL45N1m.css",
+                             "Method":  "GET",
+                             "Status":  200,
+                             "Bytes":  32694,
+                             "Sha256":  "da41e4d0cff358cf4526670a8b7b8e482d7993934318674a99389ccd51e420c0",
+                             "CacheControl":  null
+                         },
+                         {
+                             "Path":  "/assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+                             "Method":  "GET",
+                             "Status":  200,
+                             "Bytes":  8059324,
+                             "Sha256":  "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b",
+                             "CacheControl":  null
+                         },
+                         {
+                             "Path":  "/favicon.png",
+                             "Method":  "GET",
+                             "Status":  200,
+                             "Bytes":  8268,
+                             "Sha256":  "bd2b0e95dade84d5371027cc9616610813b3e7f878b434d54a3a1459111c7db2",
+                             "CacheControl":  null
+                         },
+                         {
+                             "Path":  "/",
+                             "Method":  "GET",
+                             "Status":  200,
+                             "Bytes":  477,
+                             "Sha256":  "ce89e38c05c2ebc02b57ee06dacb9a2181202135f5d667c4ce98f5dc8268b409",
+                             "CacheControl":  null
+                         }
+                     ],
+    "httpContract":  [
+                         {
+                             "Path":  "/remote/v1/info",
+                             "Method":  "GET",
+                             "Status":  401,
+                             "Bytes":  0,
+                             "Sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                             "CacheControl":  "no-store"
+                         },
+                         {
+                             "Path":  "/remote/v1/pair",
+                             "Method":  "POST",
+                             "Status":  429,
+                             "Bytes":  0,
+                             "Sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                             "CacheControl":  "no-store"
+                         },
+                         {
+                             "Path":  "/remote/v1/device",
+                             "Method":  "DELETE",
+                             "Status":  401,
+                             "Bytes":  0,
+                             "Sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                             "CacheControl":  "no-store"
+                         }
+                     ],
+    "startupPairingDisabled":  true,
+    "existingAuthenticatedDeviceTestPerformed":  false,
+    "desktopInstalledSha256":  "9688bae1a669a4c38004af88ae78ac1397d59abac1f8e82cddb6ff888ba5e3e5",
+    "desktopUnchanged":  true,
+    "desktopRegistrationUnchanged":  true,
+    "shortcutsUnchanged":  true,
+    "desktopRegistrationAfter":  {
+                                     "uninstallRegistry":  [
+                                                               {
+                                                                   "key":  "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Orchester",
+                                                                   "valueCount":  10,
+                                                                   "sha256":  "682b249fd74a022a2bb3a0d8c366c24fa39db04500c71c1ff144c8485e370b0b"
+                                                               }
+                                                           ],
+                                     "shortcuts":  [
+                                                       {
+                                                           "path":  "C:\\Users\\han\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Orchester.lnk",
+                                                           "sha256":  "0b85f38c051769805b1e35510eb791534c1216d93abe17ed1928d070abf37b11"
+                                                       },
+                                                       {
+                                                           "path":  "C:\\Users\\han\\Desktop\\Orchester.lnk",
+                                                           "sha256":  "25289ec74e1d72705dca9277a83b094b3eb748655b3a0cc8d9301cb023ce791e"
+                                                       }
+                                                   ],
+                                     "readOnly":  true,
+                                     "modelCalls":  0
+                                 },
+    "rawArgumentsRead":  false,
+    "rawStateOrTokenIncluded":  false,
+    "modelCalls":  0
+}

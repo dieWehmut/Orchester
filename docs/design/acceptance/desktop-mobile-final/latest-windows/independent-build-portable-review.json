@@ -1,0 +1,379 @@
+{
+  "format": "orchester-windows-final16-actual-independent-review-v1",
+  "reviewedAtUtc": "2026-11-11T04:53:37.318224+00:00",
+  "reviewer": "deployment_review",
+  "scope": "Read-only mntC file hashes, safe result JSON and frozen source comparison; no Windows native commands, proxy/adb, tests/model execution or Windows mutation. Only this safe /tmp artifact written.",
+  "status": "actual_build_and_portable_passed_desktop_natural_exit_and_default_promotion_restore_pending",
+  "suite": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-final16-crlf",
+  "run": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf",
+  "sourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "currentHead": "831bde8eb4cc23109fc57592ab914f6bcd88103a",
+  "currentHeadBuildAndCodeEqualToSourceRevision": true,
+  "planSha256": "bf74addb6794ee13234d6ff344af542c7ebf4b742caa103a310fc80e29a5a391",
+  "finalResultSha256": "bdd23c9c0a87f27bc13f65656058ac92b43c061b76f56fdf6ad79f066ae6f30c",
+  "desktopExeSha256": "e42f0161eb2d0a402ad69f1951f7a5655b47ceb95151387a85b76a8b817c541f",
+  "remoteExeSha256": "ef633cc43b2e767f222fe861fd2dfeca718fc677c0761d03f4c20f08d6a7bd66",
+  "apkSha256": "55530cbab620d6d5a7301650b300a8af90de3f936f6388584e4edeedc409b0ca",
+  "exactNativeGateSequence": [
+    "toolchain",
+    "helper-contract",
+    "helper-wsl",
+    "memory-initialization",
+    "monitor-process",
+    "monitor-activity",
+    "monitor-http",
+    "remote-cli",
+    "root-clippy",
+    "root-fmt",
+    "cli-build",
+    "chrome-test",
+    "desktop-test",
+    "desktop-clippy",
+    "desktop-fmt",
+    "desktop-build"
+  ],
+  "gateAuditVerification": [
+    {
+      "phase": "toolchain",
+      "resultSha256": "4fafaff70049d97b819c343d7481f925791419fc61aae4d6229bc6892f362f26",
+      "nativeAuditSha256": "8f83252a70f78bc2f9a79986c9af13fd29f39d9109135799cdf9e55a624dd016",
+      "originalPid": 254192,
+      "originalCreatedAt": "2026-11-11T04:38:50.9748450Z",
+      "matchedOriginalAuditAndPassed": true
+    },
+    {
+      "phase": "helper-contract",
+      "resultSha256": "28133c0c30c0f411515c63ad8240fb7381f6eef7f9790eb052344b3cae450a00",
+      "nativeAuditSha256": "082389598aa46b191338265011f5efdda704ba65887bf743323c2b85be5dbbd7",
+      "originalPid": 219116,
+      "originalCreatedAt": "2026-11-11T04:38:52.4651766Z",
+      "matchedOriginalAuditAndPassed": true
+    },
+    {
+      "phase": "helper-wsl",
+      "resultSha256": "7417c5ae135450d232cd37d8d332edfd645e09243f26306da3c1a279d7394e33",
+      "nativeAuditSha256": "c815b7e17123e5769616e86cc28dd22f948cd0443050115722bb89ddec012ff4",
+      "originalPid": 239988,
+      "originalCreatedAt": "2026-11-11T04:38:54.1930655Z",
+      "matchedOriginalAuditAndPassed": true
+    },
+    {
+      "phase": "memory-initialization",
+      "resultSha256": "5b7c1985985daf6447a7e5f823c9535e09a1f3ba5cb5491e0f26e835bf1a17f5",
+      "nativeAuditSha256": "f27e91d921eab0d52d7b80b5a98c110ed59e061c247c2edb49caf9ec528ef79b",
+      "originalPid": 195340,
+      "originalCreatedAt": "2026-11-11T04:39:01.5731063Z",
+      "matchedOriginalAuditAndPassed": true
+    },
+    {
+      "phase": "monitor-process",
+      "resultSha256": "518aea28c71a39644053014b793bfc8ab7928f4c64f30a91d888c8d4c215eddd",
+      "nativeAuditSha256": "8f0e8df70b5047c346cf9fac6db0b60e07a82cd4a641be90178c3c64169e2d45",
+      "originalPid": 247268,
+      "originalCreatedAt": "2026-11-11T04:39:11.0365133Z",
+      "matchedOriginalAuditAndPassed": true
+    },
+    {
+      "phase": "monitor-activity",
+      "resultSha256": "f19995681681e57af407b3af3014a2ff4eb25d472bad4750bd24903e7e81e8ad",
+      "nativeAuditSha256": "889184d81ced0386252f805e5fd013a9e06e0ac2a4aee431becf3a73efa1e714",
+      "originalPid": 211444,
+      "originalCreatedAt": "2026-11-11T04:39:12.8013099Z",
+      "matchedOriginalAuditAndPassed": true
+    },
+    {
+      "phase": "monitor-http",
+      "resultSha256": "3951054dbb8268d2fcdc38146c94eaabf1a26420e0ba77803da06397897a4c6d",
+      "nativeAuditSha256": "2aca9b257220e37cf6fd63f1901454513b0bf7c85c5752a1685036f14f47fef3",
+      "originalPid": 194212,
+      "originalCreatedAt": "2026-11-11T04:39:23.2266816Z",
+      "matchedOriginalAuditAndPassed": true
+    },
+    {
+      "phase": "remote-cli",
+      "resultSha256": "bcf3aafc6edd7bed063749d37b4eba03dca2b0ba2e20bd08f6144743ead84582",
+      "nativeAuditSha256": "f84d67bf180cb32bafcf47a70b02013455db21abc86f7036667386146cf60056",
+      "originalPid": 192492,
+      "originalCreatedAt": "2026-11-11T04:40:14.1312940Z",
+      "matchedOriginalAuditAndPassed": true
+    },
+    {
+      "phase": "root-clippy",
+      "resultSha256": "5c2ab3d1b3ff1efef063b7a064cda7a3f39d64861fd002648622f74cb02f4588",
+      "nativeAuditSha256": "4168754fdb0fcb4ccca012aac5ac5cc913a20654924db7c3b56846811bd1f37c",
+      "originalPid": 222324,
+      "originalCreatedAt": "2026-11-11T04:41:09.7002012Z",
+      "matchedOriginalAuditAndPassed": true
+    },
+    {
+      "phase": "root-fmt",
+      "resultSha256": "8e9e4e42fa930d4fe0f9132d8e3b2aed2a5fa5fb3fe768b37ae20fb74bcf2232",
+      "nativeAuditSha256": "a6c8089cdce776e26ecfb243425985af954a1dbb4de893bbf6307dca1bf6f931",
+      "originalPid": 224260,
+      "originalCreatedAt": "2026-11-11T04:41:39.8806991Z",
+      "matchedOriginalAuditAndPassed": true
+    },
+    {
+      "phase": "cli-build",
+      "resultSha256": "eecbe3c4877f725fa36f53866075f261532140583798ffd72b55f86c7d1151b2",
+      "nativeAuditSha256": "25ecf67130ee263ddea2d536a09b644383f716019d7ac11b998d1898f4ca3aca",
+      "originalPid": 206136,
+      "originalCreatedAt": "2026-11-11T04:41:42.3265740Z",
+      "matchedOriginalAuditAndPassed": true
+    },
+    {
+      "phase": "chrome-test",
+      "resultSha256": "448418e1c69c2cc4a45c40b60360b43777e2212f2dd2d5fdc3ed41216935dd7f",
+      "nativeAuditSha256": "4113fcf7021b15ce1f5ab815ca4bfe138a4ce0ffb082db65c5052b0c034d565e",
+      "originalPid": 189436,
+      "originalCreatedAt": "2026-11-11T04:41:49.3190629Z",
+      "matchedOriginalAuditAndPassed": true
+    },
+    {
+      "phase": "desktop-test",
+      "resultSha256": "5629776a0a536970a10bea89c3254dcd2446f707b0b8bb6fbc5cdeb9e8545ed9",
+      "nativeAuditSha256": "dd6de6f84a7ae7d8eb234eddeb4a8a5efbf59fc14d66f2d7d883282080b36be9",
+      "originalPid": 253128,
+      "originalCreatedAt": "2026-11-11T04:41:51.6034835Z",
+      "matchedOriginalAuditAndPassed": true
+    },
+    {
+      "phase": "desktop-clippy",
+      "resultSha256": "5b9d93cf7ab23cb8fd0077fac0e02009830b773fbdd74a9fed20c00229c81dea",
+      "nativeAuditSha256": "bc0ed6b3da4dfe23e5b0f2d834b39dbf5f4ff115a2e53edf042a4d4b51a75d0f",
+      "originalPid": 142184,
+      "originalCreatedAt": "2026-11-11T04:43:05.8469400Z",
+      "matchedOriginalAuditAndPassed": true
+    },
+    {
+      "phase": "desktop-fmt",
+      "resultSha256": "bb246b9565369bb749d2d67301f1c3e1cc25fadbd5be21af9e2fde9a5627b763",
+      "nativeAuditSha256": "a8491c3b65dc2e41132b4f22ea094583c9399c7f99d4c45b26a951c832517b61",
+      "originalPid": 221764,
+      "originalCreatedAt": "2026-11-11T04:43:20.7241088Z",
+      "matchedOriginalAuditAndPassed": true
+    },
+    {
+      "phase": "desktop-build",
+      "resultSha256": "3218faf8d74d0172eceff97b0ce498c2f40e2b8486f62f8aabf4a8b0072ba911",
+      "nativeAuditSha256": "9be4af92a38ebe14c476fdc3e7c66f3d5ee2498dcebab94f4303c89f4e4da77f",
+      "originalPid": 248044,
+      "originalCreatedAt": "2026-11-11T04:43:23.3771309Z",
+      "matchedOriginalAuditAndPassed": true
+    }
+  ],
+  "all16NativeGatesPassed": true,
+  "frozenSource": {
+    "inputCount": 446,
+    "allPlanInputHashesMatched": true,
+    "trackedGitArchive35c75InputsCompared": 400,
+    "trackedGitArchiveHashMismatches": [],
+    "sourceRevisionMarkerMatched": true,
+    "gitDirectoryAbsent": true,
+    "nativeRunnerSha256Matched": true
+  },
+  "buildScriptPins": [
+    {
+      "path": "monitor-final-cargo.cmd",
+      "sha256": "ccf35c4e4c0a1474219804a6fe5767488dda2c81ae10172f31cd39b3d4874fe1",
+      "planPinMatches": true
+    },
+    {
+      "path": "monitor-final-common.ps1",
+      "sha256": "392f88c11b24c07653857910e01fa731a76a126d98c717b8bd48a730f0a2bd81",
+      "planPinMatches": true
+    },
+    {
+      "path": "monitor-final-freeze.ps1",
+      "sha256": "5962d503adb4d73a012f9f7d98b3ca8871eb1034779f7de709b43a2eaf7f04da",
+      "planPinMatches": true
+    },
+    {
+      "path": "monitor-final-launch.ps1",
+      "sha256": "e74434b62befd74086440dbf95e9a5f5beea5835c57c241ff12a71183d652a4d",
+      "planPinMatches": true
+    },
+    {
+      "path": "monitor-final-promote.ps1",
+      "sha256": "9a8a636bedde78a873b87eb1f465834571e72330bc460b837a3d891d33374e9e",
+      "planPinMatches": true
+    },
+    {
+      "path": "monitor-final-selfcheck.ps1",
+      "sha256": "bde0241552070b1f06ebc73e6fd5e235cb5380d111246c0f8f999d309f755830",
+      "planPinMatches": true
+    },
+    {
+      "path": "monitor-final-worker.ps1",
+      "sha256": "4355ea21983b6c20d12fd9c88ea387ab54dad04ca554eec508883046c6211d38",
+      "planPinMatches": true
+    }
+  ],
+  "cargoCommandEncoding": {
+    "CRLFLineCount": 88,
+    "bareLFCount": 0
+  },
+  "memoryGate": {
+    "nativeLibraryPassed": 148,
+    "nativeMemoryStorePassed": 15,
+    "failed": 0,
+    "requiredTestsPresent": true,
+    "sourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+    "modelCalls": 0
+  },
+  "helperWslGate": {
+    "passed": 6,
+    "failed": 0,
+    "allRequiredTestsPresent": true,
+    "sourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+    "modelCalls": 0
+  },
+  "candidateInventories": {
+    "desktopFiles": 39,
+    "remoteFiles": 17,
+    "missingOrExtraFiles": [],
+    "fileHashMismatches": [],
+    "symlinkReparseCandidates": []
+  },
+  "portableRuntime": {
+    "directory": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/portable-runtime-final",
+    "runtimeResultSha256": "05313e9ccef5a25268dbb5779191f756817965f30c2381d299aedcd2dd3e99b6",
+    "cleanupResultSha256": "672b0aed1dbcf64a0e544f87fdc48a5667684a23a32245629240d9acd2230cfb",
+    "sameSourcePlanFinalExeApkMatched": true,
+    "checkSequenceExactlyFourteen": [
+      "packaged_launcher",
+      "html_matches_package",
+      "unauthenticated_401",
+      "one_time_pairing",
+      "project_add_list",
+      "selected_unicode_space_cwd",
+      "windows_conpty_launch",
+      "set_p_interactive_input",
+      "ordered_websocket_output",
+      "resize_96x31",
+      "delete_drained_exit",
+      "shutdown_unconnected_terminal",
+      "backend_exited",
+      "port_released"
+    ],
+    "backendExit": 0,
+    "allExactOwnedHandlesExited": true,
+    "portsReleased": true,
+    "unexpectedDescendants": 0,
+    "fallbackOutcomes": [],
+    "modelCalls": 0
+  },
+  "desktopRuntimeScriptPins": {
+    "manifestSha256": "a168608df7770e2fa5bf1cfb306703d8e70f634f5f575f71436b4971cb27838f",
+    "manifestFiles": [
+      {
+        "path": "NativeDesktopWindows.cs",
+        "sha256": "858fdf6e41f257b8923bed98c4ba15177c8538ef2240d51f8122519df9b5af58"
+      },
+      {
+        "path": "OwnedRuntimeProcesses.cs",
+        "sha256": "ca811c1294281e53adf5fc80093020648a38b6822aea16831541ecb28744eb3c"
+      },
+      {
+        "path": "launch-smoke.ps1",
+        "sha256": "0ff292413e6d9018239d8cb625d2a7eee14098b26e184ac221b03847ef1a4606"
+      },
+      {
+        "path": "resize-isolated-window.ps1",
+        "sha256": "0f573d3ea44247a442157369e26c35c1bde7e39d3f43c011a13de87a23581489"
+      },
+      {
+        "path": "verify-final-native.mjs",
+        "sha256": "360812232d528c9c9313a78b290cf53b70f498e579fcaf7c5b27e9b6ca6b09b2"
+      },
+      {
+        "path": "window-snapshot.ps1",
+        "sha256": "de6406bd7241bf983ce82c1ee17f712cdc5293bfb054b35c4987849d2ffabfda"
+      },
+      {
+        "path": "NativeTrayQuit.cs",
+        "sha256": "bcaafea8a300f153a08657a657d650eb82282f97057d46533e05b290f4b9ce75"
+      },
+      {
+        "path": "invoke-owned-tray-quit.ps1",
+        "sha256": "610b484568af1f8b85fa0291ad7aa1a117ed69d7526b189d0f9b3a1ea50550fd"
+      }
+    ],
+    "manifestFileHashMismatches": [],
+    "launcherSha256": "7352afb563d133067af38c88b3c61d7c814fc98a4c66e4c712b5066e9609aebd",
+    "smokeSha256": "0ff292413e6d9018239d8cb625d2a7eee14098b26e184ac221b03847ef1a4606",
+    "trayPsSha256": "610b484568af1f8b85fa0291ad7aa1a117ed69d7526b189d0f9b3a1ea50550fd",
+    "trayCsSha256": "bcaafea8a300f153a08657a657d650eb82282f97057d46533e05b290f4b9ce75"
+  },
+  "desktopNaturalExitGuards": [
+    "Original GUI HANDLE/PID/creation/image/SHA qualifies only unique owned tray HWND and popup.",
+    "Read-only diagnostics retain owner checks. Native callback invokes actual menu; fresh UIAutomation popup/item retrieval requires exact three menu labels and enabled exact-owner Quit.",
+    "Successful GUI exit0 followed by passive5s full original GUI/node HANDLE exit and both port release required.",
+    "Any forced gui/node TerminateRemaining outcomes rejects cleanup and runtime.",
+    "Pinned promoter requires both natural flags, zero fallback outcomes and adjacent tray JSON SHA/source/plan/final/EXE/guiExit0/allOwned/ports/forced0/unknown0/passive5."
+  ],
+  "defaultBaseline": {
+    "file": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/default-pre-promotion-native-baseline.json",
+    "sha256": "f63312ba206356a88ea5f401059847f192379cfddaf102b9f3c93b3da83ceef1",
+    "nativeObservedAt": "2026-11-11T04:48:52.8977461Z",
+    "originalDefaultProcessesAbsentInBaseline": true,
+    "port7338AbsentInBaseline": true,
+    "oldInstallExePins": [
+      {
+        "kind": "Desktop",
+        "executable": "C:\\Users\\han\\AppData\\Local\\Orchester\\orchester-desktop.exe",
+        "sha256": "9688bae1a669a4c38004af88ae78ac1397d59abac1f8e82cddb6ff888ba5e3e5",
+        "currentFileHashMatched": true
+      },
+      {
+        "kind": "Remote",
+        "executable": "C:\\Users\\han\\Downloads\\OrchesterRemote\\orchester.exe",
+        "sha256": "4569036d09a2279153f9e5fd3a362403212cd39b0ec68481b09fca7afe303cee",
+        "currentFileHashMatched": true
+      }
+    ],
+    "desktopUninstallerSha256": "91ba311f3ea629dbc75bd718038c84ca31be4c394a4995f9fcc5d514982764f1",
+    "registryBaseline": [
+      {
+        "key": "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Orchester",
+        "valueCount": 10,
+        "sha256": "682b249fd74a022a2bb3a0d8c366c24fa39db04500c71c1ff144c8485e370b0b"
+      }
+    ],
+    "shortcutsBaseline": [
+      {
+        "path": "C:\\Users\\han\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Orchester.lnk",
+        "sha256": "0b85f38c051769805b1e35510eb791534c1216d93abe17ed1928d070abf37b11"
+      },
+      {
+        "path": "C:\\Users\\han\\Desktop\\Orchester.lnk",
+        "sha256": "25289ec74e1d72705dca9277a83b094b3eb748655b3a0cc8d9301cb023ce791e"
+      }
+    ],
+    "bothShortcutFileHashesStillMatch": true,
+    "externalStateFiles": {
+      "Desktop": 9,
+      "Remote": 2
+    },
+    "externalStateAllBaselineFileHashesStillMatch": true,
+    "rawStateOrTokensRead": false
+  },
+  "promotionRestoreGuards": [
+    "Complete original directory moved to unused same-parent sibling backup and exact old inventory rechecked; desktop copies complete prior installation and only replaces EXE/web while preserving uninstaller and all other files.",
+    "External state file inventory hash-equal before/after; no registry/shortcut writes.",
+    "Rollback moves invocation-owned directories only; does not overwrite existing destination or mutate external state.",
+    "Service restore pins final/runtime/cleanup/promotion/manager SHA and exact native gate sequence/candidate inventory, restores fixed existing workspace/state and NoPairing native console with no transcript or redirection.",
+    "Launch and promotion records explicitly leave true service/runtime/task-retention verification pending-root."
+  ],
+  "restoreScriptSha256": "83c922685a9095235d588335e4bf1d8569164ffd91d9da449255b96de528ee3f",
+  "managerScriptSha256": "78c918211906972f8812de0c3a08aa38c12d0856a825eb72571d13147d36b0a3",
+  "pendingEvidence": [
+    "Passing desktop16/7write/2reviewed screenshot native runtime + adjacent tray-natural-exit and cleanup for this exact plan/final/EXE.",
+    "Actual final promotion records and full sibling backup/current package inventories.",
+    "Native desktop uninstall registration and shortcuts after promotion equal before baseline.",
+    "Restored Windows7338 original live image/hash/listener + actual HTTP/auth/project responses and original4tasks exact retention; no raw token/secret archive."
+  ],
+  "priorRuns": "Old LF236200 and other old runs/audits remain excluded; this review uses only memory-final-35c75e6-crlf actual16 phase results.",
+  "workerAbsenceProvenance": "Parent reported original worker230188 absent at04:43:59 UTC; reviewer has read original launch PID/creation but did not execute native observation.",
+  "modelCalls": 0
+}

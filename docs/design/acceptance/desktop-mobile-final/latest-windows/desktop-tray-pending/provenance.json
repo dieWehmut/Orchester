@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "sourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "expectedPlanSha256": "bf74addb6794ee13234d6ff344af542c7ebf4b742caa103a310fc80e29a5a391",
+  "expectedFinalResultSha256": "bdd23c9c0a87f27bc13f65656058ac92b43c061b76f56fdf6ad79f066ae6f30c",
+  "binarySha256": "e42f0161eb2d0a402ad69f1951f7a5655b47ceb95151387a85b76a8b817c541f",
+  "sourceManifestSha256": "5dad689e59f1dd06871b51191ec152b1bffa4a2542729240a97b8ede5b21fe53",
+  "selectedFiles": [
+    {
+      "path": "cleanup-result.json",
+      "sourcePath": "/tmp/orchester-windows-desktop35c75-tray-pending/cleanup-result.json",
+      "sourceSha256": "43e3214d8bc5bd0d793c9b63b9876e2f5b85ebb9938cb8fd8f79c946aa3c70e4",
+      "archivedSha256": "43e3214d8bc5bd0d793c9b63b9876e2f5b85ebb9938cb8fd8f79c946aa3c70e4",
+      "byteExact": true,
+      "bytes": 1061
+    },
+    {
+      "path": "desktop-worker-failure.json",
+      "sourcePath": "/tmp/orchester-windows-desktop35c75-tray-pending/desktop-worker-failure.json",
+      "sourceSha256": "66885cdf901688915aaf100f0cb7bab0db37296f16e110a4189cf89da7e5d3f9",
+      "archivedSha256": "66885cdf901688915aaf100f0cb7bab0db37296f16e110a4189cf89da7e5d3f9",
+      "byteExact": true,
+      "bytes": 364
+    },
+    {
+      "path": "native-windows-result.json",
+      "sourcePath": "/tmp/orchester-windows-desktop35c75-tray-pending/native-windows-result.json",
+      "sourceSha256": "b6ef3ff1952e543b8e896baf12e6789271c8a7163e010a71c34ee5810ef37385",
+      "archivedSha256": "b6ef3ff1952e543b8e896baf12e6789271c8a7163e010a71c34ee5810ef37385",
+      "byteExact": true,
+      "bytes": 5977
+    },
+    {
+      "path": "tray-safe-diagnostics.json",
+      "sourcePath": "/tmp/orchester-windows-desktop35c75-tray-pending/tray-safe-diagnostics.json",
+      "sourceSha256": "8ebe52aa1f676de705fc4ecd0c72e4870e43fecfb40d67239196c6cfde99f34b",
+      "archivedSha256": "8ebe52aa1f676de705fc4ecd0c72e4870e43fecfb40d67239196c6cfde99f34b",
+      "byteExact": true,
+      "bytes": 3557
+    },
+    {
+      "path": "input-desktop-observation.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/input-desktop-observation.json",
+      "sourceSha256": "77b04eae101dd21f613894e0eda1bdb8984b45f9ad684db21e2be457f30124c3",
+      "archivedSha256": "77b04eae101dd21f613894e0eda1bdb8984b45f9ad684db21e2be457f30124c3",
+      "byteExact": true,
+      "bytes": 662
+    },
+    {
+      "path": "current-session-state-observation.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/current-session-state-observation.json",
+      "sourceSha256": "a1f36d690123ea146697c0df7c4bcb91f9a2cda5b64056ce3eefefb1c60edbaa",
+      "archivedSha256": "a1f36d690123ea146697c0df7c4bcb91f9a2cda5b64056ce3eefefb1c60edbaa",
+      "byteExact": true,
+      "bytes": 530
+    }
+  ],
+  "uiSubsetChecks": 16,
+  "uiSubsetWrites": 7,
+  "uiSubsetScreenshotAcknowledgements": 2,
+  "naturalTrayQuitPassed": false,
+  "productMenuInvoked": false,
+  "ownedGuiAndNodeExitedAfterCleanup": true,
+  "forcedGuiCleanupOutcomes": 8,
+  "notCountedAsDesktopRuntimeGreen": true,
+  "privateProfilesStateRawArgumentsAndLogsExcluded": true,
+  "environmentDiagnosticScope": "GetCursorPos and OpenInputDesktop returned error5; no desktop switch or input action. This does not infer a lock-screen or specific security cause.",
+  "windowsSessionObservation": {
+    "windowsBuild": 26200,
+    "sessionId": 1,
+    "connectState": 4,
+    "sessionFlags": 0,
+    "currentSessionIdentityVerified": true,
+    "nameOrDomainFieldsRead": false,
+    "interpretationConfirmedByRoot": "disconnected and locked",
+    "inputActions": 0,
+    "desktopOrSessionSwitches": 0
+  }
+}

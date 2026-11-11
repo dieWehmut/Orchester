@@ -204,6 +204,306 @@
       "bytes": 3886
     },
     {
+      "path": "latest-windows/archive-secret-scan-first-pass.json",
+      "sha256": "8f9eb584f8e63d94f578731099d4f01020ba6c5bbd1db5a20b174d2e3c34b842",
+      "bytes": 5650
+    },
+    {
+      "path": "latest-windows/archive-secret-scan-review.json",
+      "sha256": "118cc80ebcbaaf643f4e24430636779f1ad36738c04eafa4a16e84b3ac6402dd",
+      "bytes": 11168
+    },
+    {
+      "path": "latest-windows/archive-secret-scan.json",
+      "sha256": "e65693cce2eeb382a192c84a7b8ba6250358e57c153db8610d0bbb401b33be83",
+      "bytes": 2042
+    },
+    {
+      "path": "latest-windows/build-portable-summary.json",
+      "sha256": "047e5dcc8ccd49dc23b8f92bcf5f6ad30b4eb080aa49d3dcf81b291571d615d6",
+      "bytes": 12245
+    },
+    {
+      "path": "latest-windows/chrome-test/native-audit.json",
+      "sha256": "4113fcf7021b15ce1f5ab815ca4bfe138a4ce0ffb082db65c5052b0c034d565e",
+      "bytes": 330
+    },
+    {
+      "path": "latest-windows/cli-build/native-audit.json",
+      "sha256": "25ecf67130ee263ddea2d536a09b644383f716019d7ac11b998d1898f4ca3aca",
+      "bytes": 330
+    },
+    {
+      "path": "latest-windows/desktop-build/native-audit.json",
+      "sha256": "9be4af92a38ebe14c476fdc3e7c66f3d5ee2498dcebab94f4303c89f4e4da77f",
+      "bytes": 330
+    },
+    {
+      "path": "latest-windows/desktop-clippy/native-audit.json",
+      "sha256": "bc0ed6b3da4dfe23e5b0f2d834b39dbf5f4ff115a2e53edf042a4d4b51a75d0f",
+      "bytes": 330
+    },
+    {
+      "path": "latest-windows/desktop-fmt/native-audit.json",
+      "sha256": "a8491c3b65dc2e41132b4f22ea094583c9399c7f99d4c45b26a951c832517b61",
+      "bytes": 330
+    },
+    {
+      "path": "latest-windows/desktop-test/native-audit.json",
+      "sha256": "dd6de6f84a7ae7d8eb234eddeb4a8a5efbf59fc14d66f2d7d883282080b36be9",
+      "bytes": 330
+    },
+    {
+      "path": "latest-windows/desktop-tray-pending/cleanup-result.json",
+      "sha256": "43e3214d8bc5bd0d793c9b63b9876e2f5b85ebb9938cb8fd8f79c946aa3c70e4",
+      "bytes": 1061
+    },
+    {
+      "path": "latest-windows/desktop-tray-pending/current-session-state-observation.json",
+      "sha256": "a1f36d690123ea146697c0df7c4bcb91f9a2cda5b64056ce3eefefb1c60edbaa",
+      "bytes": 530
+    },
+    {
+      "path": "latest-windows/desktop-tray-pending/desktop-worker-failure.json",
+      "sha256": "66885cdf901688915aaf100f0cb7bab0db37296f16e110a4189cf89da7e5d3f9",
+      "bytes": 364
+    },
+    {
+      "path": "latest-windows/desktop-tray-pending/input-desktop-observation.json",
+      "sha256": "77b04eae101dd21f613894e0eda1bdb8984b45f9ad684db21e2be457f30124c3",
+      "bytes": 662
+    },
+    {
+      "path": "latest-windows/desktop-tray-pending/manifest.json",
+      "sha256": "5dad689e59f1dd06871b51191ec152b1bffa4a2542729240a97b8ede5b21fe53",
+      "bytes": 693
+    },
+    {
+      "path": "latest-windows/desktop-tray-pending/native-windows-result.json",
+      "sha256": "b6ef3ff1952e543b8e896baf12e6789271c8a7163e010a71c34ee5810ef37385",
+      "bytes": 5977
+    },
+    {
+      "path": "latest-windows/desktop-tray-pending/provenance.json",
+      "sha256": "6af1f559b35912f2e30bce9069fb7b79027025d1f6de5b640fbe296ef5ed55d5",
+      "bytes": 3745
+    },
+    {
+      "path": "latest-windows/desktop-tray-pending/tray-safe-diagnostics.json",
+      "sha256": "8ebe52aa1f676de705fc4ecd0c72e4870e43fecfb40d67239196c6cfde99f34b",
+      "bytes": 3557
+    },
+    {
+      "path": "latest-windows/final-result.json",
+      "sha256": "bdd23c9c0a87f27bc13f65656058ac92b43c061b76f56fdf6ad79f066ae6f30c",
+      "bytes": 26328
+    },
+    {
+      "path": "latest-windows/helper-contract/native-audit.json",
+      "sha256": "082389598aa46b191338265011f5efdda704ba65887bf743323c2b85be5dbbd7",
+      "bytes": 330
+    },
+    {
+      "path": "latest-windows/helper-wsl/native-audit.json",
+      "sha256": "c815b7e17123e5769616e86cc28dd22f948cd0443050115722bb89ddec012ff4",
+      "bytes": 330
+    },
+    {
+      "path": "latest-windows/helper-wsl/test-summary.json",
+      "sha256": "1a87a52ecef99cba917a8cd7ffc1f6a870ffe8ba094f2db5788a4426e8aea821",
+      "bytes": 172
+    },
+    {
+      "path": "latest-windows/independent-build-portable-review.json",
+      "sha256": "18d66f5d88352ef2ccf933699df31a6167131d59d089158ab80dcfdde5e790c8",
+      "bytes": 16897
+    },
+    {
+      "path": "latest-windows/memory-initialization/native-audit.json",
+      "sha256": "f27e91d921eab0d52d7b80b5a98c110ed59e061c247c2edb49caf9ec528ef79b",
+      "bytes": 330
+    },
+    {
+      "path": "latest-windows/memory-initialization/test-summary.json",
+      "sha256": "4c43697a80a7c248102412ee1f8e25d89f2aefa44da8a76f01f25e606b936cd5",
+      "bytes": 221
+    },
+    {
+      "path": "latest-windows/monitor-activity/native-audit.json",
+      "sha256": "889184d81ced0386252f805e5fd013a9e06e0ac2a4aee431becf3a73efa1e714",
+      "bytes": 330
+    },
+    {
+      "path": "latest-windows/monitor-http/native-audit.json",
+      "sha256": "2aca9b257220e37cf6fd63f1901454513b0bf7c85c5752a1685036f14f47fef3",
+      "bytes": 330
+    },
+    {
+      "path": "latest-windows/monitor-process/native-audit.json",
+      "sha256": "8f0e8df70b5047c346cf9fac6db0b60e07a82cd4a641be90178c3c64169e2d45",
+      "bytes": 330
+    },
+    {
+      "path": "latest-windows/portable/cleanup-result.json",
+      "sha256": "672b0aed1dbcf64a0e544f87fdc48a5667684a23a32245629240d9acd2230cfb",
+      "bytes": 5158
+    },
+    {
+      "path": "latest-windows/portable/launcher-stderr-diagnostic.json",
+      "sha256": "d793938699d96cbebe87a26c1f5c68f6ffb58cae024663a368efa4a56f0ec62c",
+      "bytes": 202
+    },
+    {
+      "path": "latest-windows/portable/normal-shutdown-observation.json",
+      "sha256": "0a347ace00d353d894a929c1bf48b5603e563d621e106c5299f34551ab09cdfd",
+      "bytes": 182
+    },
+    {
+      "path": "latest-windows/portable/runtime-result.json",
+      "sha256": "05313e9ccef5a25268dbb5779191f756817965f30c2381d299aedcd2dd3e99b6",
+      "bytes": 1707
+    },
+    {
+      "path": "latest-windows/provenance.json",
+      "sha256": "fba522b970c621d580e02eebdbee783f1c4833f7e05cb3057e7e53c0cca87060",
+      "bytes": 11483
+    },
+    {
+      "path": "latest-windows/remote-cli/native-audit.json",
+      "sha256": "f84d67bf180cb32bafcf47a70b02013455db21abc86f7036667386146cf60056",
+      "bytes": 330
+    },
+    {
+      "path": "latest-windows/remote-deployment/after-auth-state.json",
+      "sha256": "45b95450027651bf51424497dce3e4b5e77c323f744c0fef3ef75186742cf9b9",
+      "bytes": 1154
+    },
+    {
+      "path": "latest-windows/remote-deployment/after-qa-state.json",
+      "sha256": "3ea2f33f8c8d86ccfbc5dfa1a8e2f54f521c565e0ca942018dbbd929189425fc",
+      "bytes": 1442
+    },
+    {
+      "path": "latest-windows/remote-deployment/after-startup-state.json",
+      "sha256": "0161ee3ad0ae87a524f656ee8c2cd7698cdfa5206f661e2e2630c70b80cf3e3c",
+      "bytes": 994
+    },
+    {
+      "path": "latest-windows/remote-deployment/authorization-precondition.json",
+      "sha256": "c7a81101f5749ccc9c1c8d34c53fec3127c1b00b85f4f68f570a0f283e504844",
+      "bytes": 263
+    },
+    {
+      "path": "latest-windows/remote-deployment/authorized-verification.json",
+      "sha256": "d07306feabd6b1e8233a203b6a72dada6cc555d459ea5d24adcf366993dda0e5",
+      "bytes": 1526
+    },
+    {
+      "path": "latest-windows/remote-deployment/before-native-baseline.json",
+      "sha256": "f63312ba206356a88ea5f401059847f192379cfddaf102b9f3c93b3da83ceef1",
+      "bytes": 7582
+    },
+    {
+      "path": "latest-windows/remote-deployment/before-state.json",
+      "sha256": "ad7f23f2e3176751f31cfdd5e5392933354bd3254a9e9fbb44e44e9968f3cce1",
+      "bytes": 604
+    },
+    {
+      "path": "latest-windows/remote-deployment/harness-attempts/authorized-first-failure.json",
+      "sha256": "940a9bcad0909ec5e122ba92a3abe54ccdd2f79dd3d937ecf040f8be31718dc4",
+      "bytes": 1385
+    },
+    {
+      "path": "latest-windows/remote-deployment/harness-attempts/authorized-second-failure.json",
+      "sha256": "df099823c49b906473eddad42f562b19f8cdb75852599c993d6ea7ef71a57196",
+      "bytes": 1385
+    },
+    {
+      "path": "latest-windows/remote-deployment/harness-attempts/authorized-third-failure.json",
+      "sha256": "e6b9e68ce54d0efa58c1de540f74a84a3cebdfd3701e02322bbc4b5f30d351d2",
+      "bytes": 1377
+    },
+    {
+      "path": "latest-windows/remote-deployment/harness-current-pins.json",
+      "sha256": "6c1174dcd0a25199bd25a6d63eb16961d0f458ca2e7227291cd844ed312ef419",
+      "bytes": 1457
+    },
+    {
+      "path": "latest-windows/remote-deployment/independent-final-review.json",
+      "sha256": "6886b9ad1c7c5462182a2fd791272696b95e20e832570a68f4ae397166ce04f8",
+      "bytes": 12156
+    },
+    {
+      "path": "latest-windows/remote-deployment/management-console-launch.json",
+      "sha256": "f4f4f0976889e4269ac3a1f2c41b77ef7d305f203731ce4a99bdc9c2b9684a4c",
+      "bytes": 1761
+    },
+    {
+      "path": "latest-windows/remote-deployment/native-service-verification.json",
+      "sha256": "6262e0b4f1c97898b35307c9155236771bb85198739e323cb1a0b8cf07967159",
+      "bytes": 6979
+    },
+    {
+      "path": "latest-windows/remote-deployment/private-backup-metadata.json",
+      "sha256": "b9c434e4d904d43173f4eb1de8c3ee2be1034a8c07f0cda74cbe35f56dfd022d",
+      "bytes": 891
+    },
+    {
+      "path": "latest-windows/remote-deployment/promotion-native-guard.json",
+      "sha256": "f842bb1e7468fe9329df7593d7a4670d68c44c1150910ae5bd42d9e0f9f04cbf",
+      "bytes": 537
+    },
+    {
+      "path": "latest-windows/remote-deployment/promotion-result.json",
+      "sha256": "69237992556c602ae1984e3d2e8e55b23785225e6a0a0d7f6e25dee2b28adcee",
+      "bytes": 981
+    },
+    {
+      "path": "latest-windows/remote-deployment/provenance.json",
+      "sha256": "9f47e0d88ea247764cffea24f24e0e8815fff1489e1eb4e60cbfabcc05583f47",
+      "bytes": 11480
+    },
+    {
+      "path": "latest-windows/remote-deployment/qa-helper-cleanup.json",
+      "sha256": "5f22523ae9a48fa5a759f03d9c17192dd46dbfc208835708a659193bdcc11762",
+      "bytes": 3218
+    },
+    {
+      "path": "latest-windows/remote-deployment/qa-provenance-review.json",
+      "sha256": "460af3147b69a64a640228cb9023280727030674f6a771d18c7cee579855391f",
+      "bytes": 5845
+    },
+    {
+      "path": "latest-windows/remote-deployment/restoration-native-guard.json",
+      "sha256": "f714415743888f4d8adf796fbc60ae62fe2eadb6009f67943f49896c0c30edc0",
+      "bytes": 948
+    },
+    {
+      "path": "latest-windows/remote-deployment/source-main-closure.json",
+      "sha256": "7dab55105ca619079375c8a0739aaa730fdfb44949e296ae4972fc3504689f11",
+      "bytes": 460
+    },
+    {
+      "path": "latest-windows/remote-deployment/workspace-preservation.json",
+      "sha256": "69d122a8633457bb3474f81f7e9d99f92f3ec12063a54a70b61453518295f9a0",
+      "bytes": 213
+    },
+    {
+      "path": "latest-windows/root-clippy/native-audit.json",
+      "sha256": "4168754fdb0fcb4ccca012aac5ac5cc913a20654924db7c3b56846811bd1f37c",
+      "bytes": 330
+    },
+    {
+      "path": "latest-windows/root-fmt/native-audit.json",
+      "sha256": "a6c8089cdce776e26ecfb243425985af954a1dbb4de893bbf6307dca1bf6f931",
+      "bytes": 330
+    },
+    {
+      "path": "latest-windows/toolchain/native-audit.json",
+      "sha256": "8f83252a70f78bc2f9a79986c9af13fd29f39d9109135799cdf9e55a624dd016",
+      "bytes": 330
+    },
+    {
       "path": "linux-deployment.json",
       "sha256": "cfee0b36566360bc77aaa34aa30741ebaa7b85e12b59c4f5655f466b3021f076",
       "bytes": 2115
@@ -532,18 +832,17 @@
     "memory WAL deterministic reserved-lock red and629-test green bound to test231df95/fixd692ffa/main35c75e6",
     "historical Windows8c24 exact15 native build gates and portable14 checks with product normalquit/passive5s zero own survivors",
     "current35c75e6 full Rust1288passed1ignored102programs and fmt/strictClippy/nativeELFbuild",
-    "current35c75e6 Linux7337 actual mapped ELF deployment/auth/assets/temporary revoke/original state and5runs preservation"
+    "current35c75e6 Linux7337 actual mapped ELF deployment/auth/assets/temporary revoke/original state and5runs preservation",
+    "current35c75e6 Windows exact16 original native build gates and400Git46generated/39desktop17portable candidates",
+    "current35c75e6 Portable14 native productquit0/passive5s allownedexited/zero fallback/portsfree",
+    "current35c75e6 Windows defaultRemote actual promotion/exactoldbackup/7338mappedEXE/static6/authorized3/temporaryrevoke204-token401-pairclosed/original4tasks-and-auth-projects-preservation",
+    "temporaryWindowsQA3348-plus-ownconhost originalhandles natural0/unknown0/forced0, oldQAidentitiesabsent, originalDefaultRemote193764-manager252404-and7338-retained"
   ],
   "requiredSeparateEvidence": [
-    "current35c75e6 Windows16-gate build-and-file result",
     "current35c75e6 Windows Desktop native runtime and natural GUI quit",
-    "current35c75e6 Windows Portable runtime and normal helper exit",
-    "default installation promotion for current source",
-    "Windows7338 deployment with current-gate manager",
-    "temporary native proxy cleanup",
-    "physical Android and iOS target environment"
+    "Desktop default installation promotion after current-source natural GUI quit"
   ],
-  "updatedAt": "2026-11-11T04:41:27.734391+00:00",
+  "updatedAt": "2026-11-11T05:18:47.346004+00:00",
   "functionalBaselineRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
   "acceptedLifecycleFixMainRevision": "8c24d0c73309e45738285cee4d0297ef4158810d",
   "currentMainIntegration": {
@@ -590,5 +889,44 @@
     "pagesInputChanges": 0,
     "sourceSha256": "1be95a97977e2390b60f8e5e7947a02e0c7c5e51b4b0325cca7f0bded341f6c9",
     "path": "main-ci-audit.json"
-  }
+  },
+  "currentWindowsBuildPortable": {
+    "sourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+    "buildStatus": "all16-native-gates-passed",
+    "planSha256": "bf74addb6794ee13234d6ff344af542c7ebf4b742caa103a310fc80e29a5a391",
+    "finalResultSha256": "bdd23c9c0a87f27bc13f65656058ac92b43c061b76f56fdf6ad79f066ae6f30c",
+    "desktopExeSha256": "e42f0161eb2d0a402ad69f1951f7a5655b47ceb95151387a85b76a8b817c541f",
+    "remoteExeSha256": "ef633cc43b2e767f222fe861fd2dfeca718fc677c0761d03f4c20f08d6a7bd66",
+    "profile": "debug",
+    "portableRuntimeStatus": "14checks-product-normalquit0-passive5s-zero-survivors-zero-fallback",
+    "portableRuntimeSha256": "05313e9ccef5a25268dbb5779191f756817965f30c2381d299aedcd2dd3e99b6",
+    "portableCleanupSha256": "672b0aed1dbcf64a0e544f87fdc48a5667684a23a32245629240d9acd2230cfb",
+    "desktopUiSubset": "16checks7writes2acks-passed",
+    "desktopNaturalQuitStatus": "blocked-current-session-disconnected-and-locked; natural menu exit not verified",
+    "desktopForcedCleanupCount": 8,
+    "defaultPromotion": "Remote-passed; Desktop-pending-current-session-locked",
+    "windows7338": "actual-current-exe/static-assets/three-authorized-reads/temporary-revoke-and-close/original4tasks-and-auth-projects-passed",
+    "qaFinalCleanup": "passed-exact3348-plus-conhost-original-handles-natural0-unknown0-forced0-prod193764-manager252404-originallive-7338retained",
+    "desktopDefaultInstallation": "prior install retained",
+    "remotePromotionSha256": "69237992556c602ae1984e3d2e8e55b23785225e6a0a0d7f6e25dee2b28adcee",
+    "remoteAuthorizationSha256": "d07306feabd6b1e8233a203b6a72dada6cc555d459ea5d24adcf366993dda0e5",
+    "remoteAfterAuthStateSha256": "45b95450027651bf51424497dce3e4b5e77c323f744c0fef3ef75186742cf9b9",
+    "originalRemoteTasks": {
+      "count": 4,
+      "failed": 2,
+      "completed": 2,
+      "active": 0,
+      "fourCanonicalStateHashesUnchanged": true
+    },
+    "remoteBackendPid": 193764,
+    "remoteManagerPid": 252404,
+    "qaFinalCleanupSha256": "5f22523ae9a48fa5a759f03d9c17192dd46dbfc208835708a659193bdcc11762",
+    "remoteAfterQaStateSha256": "3ea2f33f8c8d86ccfbc5dfa1a8e2f54f521c565e0ca942018dbbd929189425fc",
+    "independentFinalRemoteReviewSha256": "6886b9ad1c7c5462182a2fd791272696b95e20e832570a68f4ae397166ce04f8",
+    "allWindowsDeliveryComplete": false
+  },
+  "separateTargetEnvironmentEvidenceOutsideCurrentLocalDelivery": [
+    "physical Android and iOS target environment"
+  ],
+  "currentLocalWindowsDelivery": "Remote deployed andfullyverified; Desktop original9688 installation retained while locked/disconnected session blocks current-candidate native menu quit and promotion"
 }

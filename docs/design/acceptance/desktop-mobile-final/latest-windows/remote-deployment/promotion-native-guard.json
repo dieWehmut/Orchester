@@ -1,0 +1,12 @@
+{
+    "kind":  "Remote",
+    "nativeProcessGuardQueries":  2,
+    "originalProcessHandlesUsed":  true,
+    "unknownIdentitiesFailClosed":  true,
+    "processesSignalled":  0,
+    "pinnedPromoterUnmodified":  true,
+    "guardSourceSha256":  "eee0bf308eb8e4303f945b6d5d68e9a73477c2b0830b178c3046a57d520c7332",
+    "providerSourceSha256":  "2e68ac6562e312a92bc43ddebc16238653280da88e8169446e66ab79d5f58b3f",
+    "promotionResultSha256":  "69237992556c602ae1984e3d2e8e55b23785225e6a0a0d7f6e25dee2b28adcee",
+    "modelCalls":  0
+}

@@ -1,0 +1,12 @@
+{
+    "status":  "failed",
+    "stage":  "desktop-native-tray-quit",
+    "type":  "System.InvalidOperationException",
+    "baseExceptionType":  "System.InvalidOperationException",
+    "staticCode":  "tray-popup-not-unique",
+    "safeUnexpectedImages":  [
+
+                             ],
+    "modelCalls":  0,
+    "defaultInstallationChanged":  false
+}

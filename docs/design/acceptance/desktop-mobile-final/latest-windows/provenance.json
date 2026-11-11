@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "selectedFiles": [
+    {
+      "path": "final-result.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/final-result.json",
+      "sourceSha256": "bdd23c9c0a87f27bc13f65656058ac92b43c061b76f56fdf6ad79f066ae6f30c",
+      "archivedSha256": "bdd23c9c0a87f27bc13f65656058ac92b43c061b76f56fdf6ad79f066ae6f30c",
+      "bytes": 26328,
+      "byteExact": true
+    },
+    {
+      "path": "independent-build-portable-review.json",
+      "sourcePath": "/tmp/orchester-windows-final16-actual-independent-review.json",
+      "sourceSha256": "18d66f5d88352ef2ccf933699df31a6167131d59d089158ab80dcfdde5e790c8",
+      "archivedSha256": "18d66f5d88352ef2ccf933699df31a6167131d59d089158ab80dcfdde5e790c8",
+      "bytes": 16897,
+      "byteExact": true
+    },
+    {
+      "path": "helper-wsl/test-summary.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/helper-wsl/test-summary.json",
+      "sourceSha256": "1a87a52ecef99cba917a8cd7ffc1f6a870ffe8ba094f2db5788a4426e8aea821",
+      "archivedSha256": "1a87a52ecef99cba917a8cd7ffc1f6a870ffe8ba094f2db5788a4426e8aea821",
+      "bytes": 172,
+      "byteExact": true
+    },
+    {
+      "path": "memory-initialization/test-summary.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/memory-initialization/test-summary.json",
+      "sourceSha256": "4c43697a80a7c248102412ee1f8e25d89f2aefa44da8a76f01f25e606b936cd5",
+      "archivedSha256": "4c43697a80a7c248102412ee1f8e25d89f2aefa44da8a76f01f25e606b936cd5",
+      "bytes": 221,
+      "byteExact": true
+    },
+    {
+      "path": "toolchain/native-audit.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/toolchain/native-audit.json",
+      "sourceSha256": "8f83252a70f78bc2f9a79986c9af13fd29f39d9109135799cdf9e55a624dd016",
+      "archivedSha256": "8f83252a70f78bc2f9a79986c9af13fd29f39d9109135799cdf9e55a624dd016",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "helper-contract/native-audit.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/helper-contract/native-audit.json",
+      "sourceSha256": "082389598aa46b191338265011f5efdda704ba65887bf743323c2b85be5dbbd7",
+      "archivedSha256": "082389598aa46b191338265011f5efdda704ba65887bf743323c2b85be5dbbd7",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "helper-wsl/native-audit.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/helper-wsl/native-audit.json",
+      "sourceSha256": "c815b7e17123e5769616e86cc28dd22f948cd0443050115722bb89ddec012ff4",
+      "archivedSha256": "c815b7e17123e5769616e86cc28dd22f948cd0443050115722bb89ddec012ff4",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "memory-initialization/native-audit.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/memory-initialization/native-audit.json",
+      "sourceSha256": "f27e91d921eab0d52d7b80b5a98c110ed59e061c247c2edb49caf9ec528ef79b",
+      "archivedSha256": "f27e91d921eab0d52d7b80b5a98c110ed59e061c247c2edb49caf9ec528ef79b",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "monitor-process/native-audit.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/monitor-process/native-audit.json",
+      "sourceSha256": "8f0e8df70b5047c346cf9fac6db0b60e07a82cd4a641be90178c3c64169e2d45",
+      "archivedSha256": "8f0e8df70b5047c346cf9fac6db0b60e07a82cd4a641be90178c3c64169e2d45",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "monitor-activity/native-audit.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/monitor-activity/native-audit.json",
+      "sourceSha256": "889184d81ced0386252f805e5fd013a9e06e0ac2a4aee431becf3a73efa1e714",
+      "archivedSha256": "889184d81ced0386252f805e5fd013a9e06e0ac2a4aee431becf3a73efa1e714",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "monitor-http/native-audit.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/monitor-http/native-audit.json",
+      "sourceSha256": "2aca9b257220e37cf6fd63f1901454513b0bf7c85c5752a1685036f14f47fef3",
+      "archivedSha256": "2aca9b257220e37cf6fd63f1901454513b0bf7c85c5752a1685036f14f47fef3",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "remote-cli/native-audit.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/remote-cli/native-audit.json",
+      "sourceSha256": "f84d67bf180cb32bafcf47a70b02013455db21abc86f7036667386146cf60056",
+      "archivedSha256": "f84d67bf180cb32bafcf47a70b02013455db21abc86f7036667386146cf60056",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "root-clippy/native-audit.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/root-clippy/native-audit.json",
+      "sourceSha256": "4168754fdb0fcb4ccca012aac5ac5cc913a20654924db7c3b56846811bd1f37c",
+      "archivedSha256": "4168754fdb0fcb4ccca012aac5ac5cc913a20654924db7c3b56846811bd1f37c",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "root-fmt/native-audit.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/root-fmt/native-audit.json",
+      "sourceSha256": "a6c8089cdce776e26ecfb243425985af954a1dbb4de893bbf6307dca1bf6f931",
+      "archivedSha256": "a6c8089cdce776e26ecfb243425985af954a1dbb4de893bbf6307dca1bf6f931",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "cli-build/native-audit.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/cli-build/native-audit.json",
+      "sourceSha256": "25ecf67130ee263ddea2d536a09b644383f716019d7ac11b998d1898f4ca3aca",
+      "archivedSha256": "25ecf67130ee263ddea2d536a09b644383f716019d7ac11b998d1898f4ca3aca",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "chrome-test/native-audit.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/chrome-test/native-audit.json",
+      "sourceSha256": "4113fcf7021b15ce1f5ab815ca4bfe138a4ce0ffb082db65c5052b0c034d565e",
+      "archivedSha256": "4113fcf7021b15ce1f5ab815ca4bfe138a4ce0ffb082db65c5052b0c034d565e",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "desktop-test/native-audit.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/desktop-test/native-audit.json",
+      "sourceSha256": "dd6de6f84a7ae7d8eb234eddeb4a8a5efbf59fc14d66f2d7d883282080b36be9",
+      "archivedSha256": "dd6de6f84a7ae7d8eb234eddeb4a8a5efbf59fc14d66f2d7d883282080b36be9",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "desktop-clippy/native-audit.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/desktop-clippy/native-audit.json",
+      "sourceSha256": "bc0ed6b3da4dfe23e5b0f2d834b39dbf5f4ff115a2e53edf042a4d4b51a75d0f",
+      "archivedSha256": "bc0ed6b3da4dfe23e5b0f2d834b39dbf5f4ff115a2e53edf042a4d4b51a75d0f",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "desktop-fmt/native-audit.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/desktop-fmt/native-audit.json",
+      "sourceSha256": "a8491c3b65dc2e41132b4f22ea094583c9399c7f99d4c45b26a951c832517b61",
+      "archivedSha256": "a8491c3b65dc2e41132b4f22ea094583c9399c7f99d4c45b26a951c832517b61",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "desktop-build/native-audit.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/desktop-build/native-audit.json",
+      "sourceSha256": "9be4af92a38ebe14c476fdc3e7c66f3d5ee2498dcebab94f4303c89f4e4da77f",
+      "archivedSha256": "9be4af92a38ebe14c476fdc3e7c66f3d5ee2498dcebab94f4303c89f4e4da77f",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "portable/runtime-result.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/portable-runtime-final/runtime-result.json",
+      "sourceSha256": "05313e9ccef5a25268dbb5779191f756817965f30c2381d299aedcd2dd3e99b6",
+      "archivedSha256": "05313e9ccef5a25268dbb5779191f756817965f30c2381d299aedcd2dd3e99b6",
+      "bytes": 1707,
+      "byteExact": true
+    },
+    {
+      "path": "portable/normal-shutdown-observation.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/portable-runtime-final/normal-shutdown-observation.json",
+      "sourceSha256": "0a347ace00d353d894a929c1bf48b5603e563d621e106c5299f34551ab09cdfd",
+      "archivedSha256": "0a347ace00d353d894a929c1bf48b5603e563d621e106c5299f34551ab09cdfd",
+      "bytes": 182,
+      "byteExact": true
+    },
+    {
+      "path": "portable/cleanup-result.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/portable-runtime-final/cleanup-result.json",
+      "sourceSha256": "672b0aed1dbcf64a0e544f87fdc48a5667684a23a32245629240d9acd2230cfb",
+      "archivedSha256": "672b0aed1dbcf64a0e544f87fdc48a5667684a23a32245629240d9acd2230cfb",
+      "bytes": 5158,
+      "byteExact": true
+    },
+    {
+      "path": "portable/launcher-stderr-diagnostic.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/memory-final-35c75e6-crlf/portable-runtime-final/launcher-stderr-diagnostic.json",
+      "sourceSha256": "d793938699d96cbebe87a26c1f5c68f6ffb58cae024663a368efa4a56f0ec62c",
+      "archivedSha256": "d793938699d96cbebe87a26c1f5c68f6ffb58cae024663a368efa4a56f0ec62c",
+      "bytes": 202,
+      "byteExact": true
+    },
+    {
+      "path": "archive-secret-scan-first-pass.json",
+      "sourcePath": "/tmp/orchester-final-windows-safe-scan-findings-20261111.json",
+      "sourceSha256": "8f9eb584f8e63d94f578731099d4f01020ba6c5bbd1db5a20b174d2e3c34b842",
+      "archivedSha256": "8f9eb584f8e63d94f578731099d4f01020ba6c5bbd1db5a20b174d2e3c34b842",
+      "bytes": 5650,
+      "byteExact": true
+    }
+  ],
+  "rootPinnedPlanSha256": "bf74addb6794ee13234d6ff344af542c7ebf4b742caa103a310fc80e29a5a391",
+  "rootPinnedFinalResultSha256": "bdd23c9c0a87f27bc13f65656058ac92b43c061b76f56fdf6ad79f066ae6f30c",
+  "rootPinnedPortableRuntimeSha256": "05313e9ccef5a25268dbb5779191f756817965f30c2381d299aedcd2dd3e99b6",
+  "rootPinnedPortableCleanupSha256": "672b0aed1dbcf64a0e544f87fdc48a5667684a23a32245629240d9acd2230cfb",
+  "currentSourceCommit": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "privateLogsProfilesDatabasesAndStateExcluded": true
+}
