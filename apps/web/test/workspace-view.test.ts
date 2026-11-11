@@ -138,6 +138,31 @@ describe('WorkspaceView', () => {
     expect(wrapper.findAll('[role="tab"]')[0]?.attributes('aria-selected')).toBe('true')
   })
 
+  it('keeps the selected monitor details when clearing provider activity', async () => {
+    const stores = createAppStores({ agentStatusStreamFactory: null })
+    const base = AGENT_FLEET_FIXTURE.agents[0]!
+    const monitors = [
+      { ...base, agent_id: 'qwen-monitor', provider: 'qwen', display_name: 'Qwen Code', icon_key: 'qwen' },
+      { ...base, agent_id: 'workbuddy-monitor', provider: 'workbuddy', display_name: 'WorkBuddy', icon_key: 'workbuddy' },
+    ].map(agent => ({
+      ...agent, installed: false, configured: false, authenticated: false,
+      availability: 'unavailable' as const, activity: 'unknown' as const,
+      active_windows: 0, active_sessions: 0, active_runs: 0, active_subagents: 0,
+      window_count_source: 'external_processes' as const, process_sources: null,
+      capabilities: ['monitor_only', 'process_presence'],
+    }))
+    stores.agents.snapshot = { ...AGENT_FLEET_FIXTURE, agents: [...AGENT_FLEET_FIXTURE.agents, ...monitors] }
+    stores.agents.status = 'ready'
+    const wrapper = mount(WorkspaceView, { global: { plugins: [stores] } })
+
+    await wrapper.get('[data-agent-id="qwen-monitor"] button').trigger('click')
+    expect(wrapper.get('[data-agent-details-name]').text()).toBe('Qwen Code')
+    await wrapper.get('[data-agent-id="workbuddy-monitor"] button').trigger('click')
+    expect(wrapper.get('[data-agent-details-name]').text()).toBe('WorkBuddy')
+    expect(wrapper.find('[data-reader-provider]').exists()).toBe(false)
+    wrapper.unmount()
+  })
+
   it('passes bootstrap workspace and model catalog state to the empty composer', () => {
     const stores = createAppStores()
     stores.bootstrap.context.value = {

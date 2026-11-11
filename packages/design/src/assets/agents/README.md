@@ -17,3 +17,9 @@ The Qwen Code repository's Apache 2.0 license is preserved in
 [`qwen-LICENSE.txt`](qwen-LICENSE.txt). OpenClaw's MIT license is preserved in
 [`openclaw-LICENSE.txt`](openclaw-LICENSE.txt). WorkBuddy's mark identifies Tencent's
 WorkBuddy product; the CDN name does not make it the CodeBuddy product.
+
+The domestic and international editions have separate provider identities,
+`workbuddy` and `workbuddy_global`. The international [WorkBuddy AI site](https://www.workbuddy.ai/)
+links its [official logo](https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/logo.svg).
+Both official logos have the same 4,142 bytes and SHA-256 shown above, so the two
+editions share the original mark while keeping their names and process counts separate.

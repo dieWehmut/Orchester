@@ -3,7 +3,7 @@ import { AGENT_IDENTITIES, agentIdentity } from '../src/agent-identities'
 
 const expected = [
   'codex', 'claude', 'deepseek', 'opencode', 'gemini', 'antigravity', 'cursor',
-  'workbuddy', 'qwen', 'openclaw', 'cline', 'roo', 'kilo', 'hermes', 'pi', 'crush',
+  'workbuddy', 'workbuddy_global', 'qwen', 'openclaw', 'cline', 'roo', 'kilo', 'hermes', 'pi', 'crush',
   'claude_app', 'trae', 'zcode', 'craft',
 ]
 describe('canonical official agent identities', () => {
@@ -19,6 +19,11 @@ describe('canonical official agent identities', () => {
   })
   it('shares the verified Claude mark across its CLI and desktop identities', () => {
     expect(agentIdentity('claude_app')?.marks).toEqual(agentIdentity('claude')?.marks)
+  })
+  it('names the two WorkBuddy editions separately with their shared official brand mark', () => {
+    expect(agentIdentity('workbuddy')?.displayName).toBe('WorkBuddy 国内版')
+    expect(agentIdentity('workbuddy_global')?.displayName).toBe('WorkBuddy AI 国际版')
+    expect(agentIdentity('workbuddy_global')?.marks).toEqual(agentIdentity('workbuddy')?.marks)
   })
   it('keeps aliases stable without accepting object prototype names as identities', () => {
     expect(agentIdentity(' OPENAI ')?.key).toBe('codex')

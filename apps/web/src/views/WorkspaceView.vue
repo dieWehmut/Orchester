@@ -345,7 +345,11 @@ function handleAgentSelect(agentId: string): void {
   const agent = agentSnapshot.value?.agents.find(agent => agent.agent_id === agentId)
   const provider = agent ? agentProviderPresentation(agent).key : 'generic'
   if (provider === 'codex' || provider === 'claude' || provider === 'opencode') openActivity(provider)
-  else { closeActivity(); inspectorOpen.value = true }
+  else {
+    closeActivity()
+    selectedAgentId.value = agentId
+    inspectorOpen.value = true
+  }
 }
 
 function openActivity(provider: ExternalActivityProvider): void {

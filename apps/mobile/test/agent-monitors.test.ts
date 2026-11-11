@@ -78,7 +78,7 @@ it('loads the authorized typed status endpoint and renders official identities w
 })
 
 it('keeps the full server monitor roster and preserves unknown shared editor sources on mobile', async () => {
-  const services = new Set(['workbuddy', 'openclaw', 'claude_app', 'trae', 'zcode', 'craft'])
+  const services = new Set(['workbuddy', 'workbuddy_global', 'openclaw', 'claude_app', 'trae', 'zcode', 'craft'])
   const sharedEditors = new Set(['cline', 'roo', 'kilo'])
   const incoming: AgentFleetSnapshotDto = {
     schema_version: 3, sequence: 1, generated_at: observedAt,
@@ -95,7 +95,7 @@ it('keeps the full server monitor roster and preserves unknown shared editor sou
   request.mockResolvedValueOnce(incoming)
   await control.refreshAgentStatus()
   const wrapper = mountMonitor({ snapshot: control.agentSnapshot.value, status: 'ready', error: '' })
-  expect(wrapper.querySelectorAll('[data-mobile-agent-id]')).toHaveLength(20)
+  expect(wrapper.querySelectorAll('[data-mobile-agent-id]')).toHaveLength(21)
   for (const identity of Object.values(AGENT_IDENTITIES)) {
     const row = node(wrapper, `[data-mobile-agent-id="${identity.key}"]`)
     const unknown = sharedEditors.has(identity.key)
