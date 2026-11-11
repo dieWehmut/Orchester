@@ -1,0 +1,212 @@
+{
+  "passed": true,
+  "sourceRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+  "expectedPlanSha256": "34c1c3f30bf4017ae05d78ea4a08c3d650ef04c589b5ef545999e5751f3257be",
+  "expectedFinalResultSha256": "92f63202107394df408aea38b52c8e3679cdd845edbcb0fc682d8a297d941306",
+  "binarySha256": "4fc62550edfcee272b412ae2e4908173038e076bb1b2e6b6c58cea699748be13",
+  "checks": [
+    "saved fixture transcript and main UI save succeeded",
+    "main HWND shown with native maximize hit testing",
+    "invalid conversation identifier rejected without creating window",
+    "secondary bootstrap retains shared HttpOnly Cookie, CSRF token and expiry",
+    "actual secondary HWND shown with native chrome, renamed title and authenticated saved transcript",
+    "original main-window CSRF permits PUT 200 after secondary bootstrap",
+    "main and secondary UI saves both succeed with revision conflict recovery",
+    "secondary original CSRF permits PUT 200 after main changes",
+    "secondary receives allowed window controls and ungranted hide remains denied",
+    "secondary caller opens another authorized native window and original main CSRF stays valid",
+    "native navigation rejects a different loopback origin",
+    "native popup policy denies browser-created windows",
+    "secondary reload preserves authentication and restores final saved title and answer",
+    "closing secondary windows destroys their HWNDs and WebViews",
+    "main UI remains writable after both secondary windows close",
+    "main close hides its HWND while WebView and embedded server remain healthy"
+  ],
+  "writes": [
+    {
+      "label": "main UI before child",
+      "status": 200,
+      "revision": 1
+    },
+    {
+      "label": "main original CSRF after child bootstrap",
+      "status": 200,
+      "revision": 2
+    },
+    {
+      "label": "child UI after main API save",
+      "status": 200,
+      "revision": 3
+    },
+    {
+      "label": "main UI after child UI save",
+      "status": 200,
+      "revision": 4
+    },
+    {
+      "label": "child original CSRF after main UI save",
+      "status": 200,
+      "revision": 5
+    },
+    {
+      "label": "main original CSRF after third window bootstrap",
+      "status": 200,
+      "revision": 6
+    },
+    {
+      "label": "main UI after secondary windows close",
+      "status": 200,
+      "revision": 7
+    }
+  ],
+  "authentication": {
+    "cookieStable": true,
+    "csrfStable": true,
+    "expiryStable": true,
+    "httpOnly": true,
+    "sameSite": "Lax",
+    "actualMainPutAfterSecondary": 200
+  },
+  "windows": {
+    "main": [
+      {
+        "Handle": 2841308,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 2560,
+        "Height": 1600,
+        "Dpi": 192,
+        "MaximizeHit": 9
+      }
+    ],
+    "secondary": [
+      {
+        "Handle": 4009568,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 2560,
+        "Height": 1600,
+        "Dpi": 192,
+        "MaximizeHit": 9
+      },
+      {
+        "Handle": 2841308,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 2560,
+        "Height": 1600,
+        "Dpi": 192,
+        "MaximizeHit": 9
+      }
+    ],
+    "nested": [
+      {
+        "Handle": 2769134,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 2560,
+        "Height": 1600,
+        "Dpi": 192,
+        "MaximizeHit": 9
+      },
+      {
+        "Handle": 4009568,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 2560,
+        "Height": 1600,
+        "Dpi": 192,
+        "MaximizeHit": 9
+      },
+      {
+        "Handle": 2841308,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 2560,
+        "Height": 1600,
+        "Dpi": 192,
+        "MaximizeHit": 9
+      }
+    ],
+    "afterSecondaryClose": [
+      {
+        "Handle": 2841308,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 2560,
+        "Height": 1600,
+        "Dpi": 192,
+        "MaximizeHit": 9
+      }
+    ],
+    "mainHidden": [
+      {
+        "Handle": 2841308,
+        "Title": "Orchester",
+        "Visible": false,
+        "Width": 2560,
+        "Height": 1600,
+        "Dpi": 192,
+        "MaximizeHit": 9
+      }
+    ]
+  },
+  "health": {
+    "afterSecondaryClose": 200,
+    "afterMainHide": 200
+  },
+  "pageErrors": [],
+  "uiFontProof": {
+    "body": {
+      "fontFamily": "\"LXGW WenKai\", \"PingFang SC\", \"Microsoft YaHei\", \"Noto Sans SC\", system-ui, sans-serif",
+      "fontWeight": "400"
+    },
+    "threadTitle": {
+      "fontFamily": "\"LXGW WenKai\", \"PingFang SC\", \"Microsoft YaHei\", \"Noto Sans SC\", system-ui, sans-serif",
+      "fontWeight": "500"
+    },
+    "lxgwFaces": [
+      {
+        "family": "LXGW WenKai",
+        "status": "loaded"
+      }
+    ],
+    "measurement": {
+      "text": "字体一致 Font 123",
+      "fontSizePx": 16,
+      "fontWeight": 400,
+      "fontFamily": "\"LXGW WenKai\", \"PingFang SC\", \"Microsoft YaHei\", \"Noto Sans SC\", system-ui, sans-serif",
+      "width": 137.471923828125
+    },
+    "assetPins": [
+      {
+        "path": "web/assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+        "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b"
+      }
+    ]
+  },
+  "scope": {
+    "isolatedExecutable": true,
+    "isolatedOrchesterHome": true,
+    "isolatedWebViewProfile": true,
+    "savedDelegateFixture": true,
+    "installedUserApplicationTouched": false,
+    "modelRunsRequested": false
+  },
+  "screenshotAcknowledgements": [
+    {
+      "index": 1,
+      "id": "34635180c9be058a1299e986f3a834b7",
+      "name": "desktop-secondary-history.png",
+      "sha256": "c8b51cddca297d3dbeea8cea6024a5b6bced8e26ca650c8b600ecd3bd70106e4",
+      "accepted": true
+    },
+    {
+      "index": 2,
+      "id": "3d991fcb44677c141e3b2167747b61c2",
+      "name": "desktop-main-after-secondary-close.png",
+      "sha256": "798ef455b537205393a2e8a56ce8088f0e65f4e5b7e59e967b1c925aea0ca4b7",
+      "accepted": true
+    }
+  ]
+}

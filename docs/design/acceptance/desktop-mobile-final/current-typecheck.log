@@ -1,0 +1,25 @@
+Scope: 8 of 9 workspace projects
+
+> @orchester/design@0.1.2 typecheck /home/han/project/Orchester/packages/design
+> vue-tsc --noEmit -p tsconfig.json
+
+
+> @orchester/protokoll@0.1.2 typecheck /home/han/project/Orchester/packages/protokoll
+> tsc -p tsconfig.json
+
+
+> @orchester/mobile@0.1.0 typecheck /home/han/project/Orchester/apps/mobile
+> vue-tsc --noEmit
+
+
+> @orchester/website@0.1.0 typecheck /home/han/project/Orchester/apps/web/site
+> vue-tsc --noEmit -p tsconfig.json
+
+
+> @orchester/ereignis@0.1.2 typecheck /home/han/project/Orchester/packages/ereignis
+> vue-tsc --noEmit -p tsconfig.json
+
+
+> @orchester/web@0.1.2 typecheck /home/han/project/Orchester/apps/web
+> vue-tsc --noEmit -p tsconfig.json
+

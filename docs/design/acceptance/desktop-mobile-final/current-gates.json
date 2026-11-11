@@ -1,0 +1,237 @@
+{
+  "format": "orchester-current-main-gates-v1",
+  "source_commit": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+  "started_at_utc": "2026-11-11T00:39:59.905943+00:00",
+  "source_fingerprint_sha256": "3d356a9b9269e3b57d7bd321747de31ea4e4e504e573bda626cacbad77510efc",
+  "source_file_count": 1118,
+  "original_package_test_script": "pnpm run test:tooling && pnpm -r test && pnpm --filter @orchester/desktop test:security && node --test werkzeug/desktop/*.test.mjs",
+  "executed_package_test_script": "pnpm run test:tooling && pnpm --workspace-concurrency=1 -r test && pnpm --filter @orchester/desktop test:security && node --test werkzeug/desktop/*.test.mjs",
+  "original_typecheck_script": "pnpm -r typecheck",
+  "executed_typecheck_script": "pnpm --workspace-concurrency=1 -r typecheck",
+  "concurrency": {
+    "CARGO_BUILD_JOBS": "2",
+    "RUST_TEST_THREADS": "2",
+    "TOKIO_WORKER_THREADS": "2"
+  },
+  "gates": [
+    {
+      "name": "frontend-tests",
+      "argv": [
+        "bash",
+        "-c",
+        "pnpm run test:tooling && pnpm --workspace-concurrency=1 -r test && pnpm --filter @orchester/desktop test:security && node --test werkzeug/desktop/*.test.mjs"
+      ],
+      "started_at_utc": "2026-11-11T00:39:59.930117+00:00",
+      "log": "/tmp/orchester-continued-main-gates-20261111T003959Z/frontend-tests.log",
+      "state": "passed",
+      "process_pid": 1052536,
+      "exit_code": 0,
+      "elapsed_seconds": 93.027,
+      "ended_at_utc": "2026-11-11T00:41:33.466438+00:00",
+      "log_bytes": 5638,
+      "log_sha256": "71e98724b3cf6d09ab7cd5ec8abba196754d50443a52532fdf508880c2cc48f3",
+      "vitest_tests_passed": 1445,
+      "node_tests_passed": 37,
+      "node_tests_breakdown": {
+        "frontend_tooling": 26,
+        "desktop_security": 1,
+        "desktop_packaging": 10
+      }
+    },
+    {
+      "name": "typecheck",
+      "argv": [
+        "bash",
+        "-c",
+        "pnpm --workspace-concurrency=1 -r typecheck"
+      ],
+      "started_at_utc": "2026-11-11T00:41:33.523684+00:00",
+      "log": "/tmp/orchester-continued-main-gates-20261111T003959Z/typecheck.log",
+      "state": "passed",
+      "process_pid": 1054343,
+      "exit_code": 0,
+      "elapsed_seconds": 11.934,
+      "ended_at_utc": "2026-11-11T00:41:45.457396+00:00",
+      "log_bytes": 706,
+      "log_sha256": "8f78c55d639b6d9ef376173347060bc7cd36ebc8487995c720c870615ef5538e"
+    },
+    {
+      "name": "rust-tests",
+      "argv": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--all-targets",
+        "--locked",
+        "--offline"
+      ],
+      "started_at_utc": "2026-11-11T00:41:45.484373+00:00",
+      "log": "/tmp/orchester-continued-main-gates-20261111T003959Z/rust-tests.log",
+      "state": "passed",
+      "process_pid": 1054471,
+      "exit_code": 0,
+      "elapsed_seconds": 259.092,
+      "ended_at_utc": "2026-11-11T00:46:05.045341+00:00",
+      "log_bytes": 121628,
+      "log_sha256": "74e07668e2206b12e1478a9d75861182126a0f9697c0402b092e3942a02d8535",
+      "test_counts": {
+        "passed": 1286,
+        "failed": 0,
+        "ignored": 1,
+        "test_programs": 102,
+        "doctests_included": false
+      }
+    },
+    {
+      "name": "rust-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "started_at_utc": "2026-11-11T00:46:05.247741+00:00",
+      "log": "/tmp/orchester-continued-main-gates-20261111T003959Z/rust-fmt.log",
+      "state": "passed",
+      "process_pid": 1069113,
+      "exit_code": 0,
+      "elapsed_seconds": 0.869,
+      "ended_at_utc": "2026-11-11T00:46:06.116935+00:00",
+      "log_bytes": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "rust-clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--locked",
+        "--offline",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "started_at_utc": "2026-11-11T00:46:06.139313+00:00",
+      "log": "/tmp/orchester-continued-main-gates-20261111T003959Z/rust-clippy.log",
+      "state": "passed",
+      "process_pid": 1069133,
+      "exit_code": 0,
+      "elapsed_seconds": 19.959,
+      "ended_at_utc": "2026-11-11T00:46:26.650410+00:00",
+      "log_bytes": 1232,
+      "log_sha256": "8fa75db3d409bd445bd97ccce17eec0354497e71816ff6aa35fcd06ee8665e79"
+    }
+  ],
+  "secret_scan": {
+    "tool": "gitleaks",
+    "version": "8.30.1",
+    "tool_sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509",
+    "argv": [
+      "/tmp/orchester-gitleaks-8.30.1/gitleaks",
+      "dir",
+      "--no-banner",
+      "--no-color",
+      "--redact=100",
+      "--report-format",
+      "json",
+      "--report-path",
+      "/tmp/orchester-continued-main-gates-20261111T003959Z/secret-scan-redacted.json",
+      "--gitleaks-ignore-path",
+      "/tmp/orchester-continued-main-gates-20261111T003959Z/scan-input",
+      "--ignore-gitleaks-allow",
+      "--timeout",
+      "120",
+      "/tmp/orchester-continued-main-gates-20261111T003959Z/scan-input"
+    ],
+    "started_at_utc": "2026-11-11T00:46:50.998237+00:00",
+    "ended_at_utc": "2026-11-11T00:46:52.091292+00:00",
+    "elapsed_seconds": 1.093,
+    "exit_code": 1,
+    "finding_count": 5,
+    "findings": [
+      {
+        "rule_id": "generic-api-key",
+        "path": "kisten/laufzeit/tests/durable_approval_barrier.rs",
+        "start_line": 97,
+        "end_line": 97,
+        "fingerprint": "/tmp/orchester-continued-main-gates-20261111T003959Z/scan-input/kisten/laufzeit/tests/durable_approval_barrier.rs:generic-api-key:97"
+      },
+      {
+        "rule_id": "private-key",
+        "path": "kisten/laufzeit/tests/feedback_loop.rs",
+        "start_line": 319,
+        "end_line": 406,
+        "fingerprint": "/tmp/orchester-continued-main-gates-20261111T003959Z/scan-input/kisten/laufzeit/tests/feedback_loop.rs:private-key:319"
+      },
+      {
+        "rule_id": "private-key",
+        "path": "kisten/laufzeit/tests/feedback_loop.rs",
+        "start_line": 460,
+        "end_line": 463,
+        "fingerprint": "/tmp/orchester-continued-main-gates-20261111T003959Z/scan-input/kisten/laufzeit/tests/feedback_loop.rs:private-key:460"
+      },
+      {
+        "rule_id": "generic-api-key",
+        "path": "patches/@xterm__xterm@6.0.0.patch",
+        "start_line": 6,
+        "end_line": 6,
+        "fingerprint": "/tmp/orchester-continued-main-gates-20261111T003959Z/scan-input/patches/@xterm__xterm@6.0.0.patch:generic-api-key:6"
+      },
+      {
+        "rule_id": "generic-api-key",
+        "path": "patches/@xterm__xterm@6.0.0.patch",
+        "start_line": 6,
+        "end_line": 6,
+        "fingerprint": "/tmp/orchester-continued-main-gates-20261111T003959Z/scan-input/patches/@xterm__xterm@6.0.0.patch:generic-api-key:6"
+      }
+    ],
+    "inventory_path": "/tmp/orchester-continued-main-gates-20261111T003959Z/secret-scan-inventory.json",
+    "input_inventory_sha256": "a741b9a9b86965836d571517153bcad135fe0016f10f8374ef1a5720dbe05de2",
+    "copied_file_count": 1498,
+    "pending_evidence_file_count": 0,
+    "report_path": "/tmp/orchester-continued-main-gates-20261111T003959Z/secret-scan-redacted.json",
+    "report_sha256": "128eeda8bc1bf6782cdd485e5046ee017441d06d4cd70ca3496ffb8faf476a10",
+    "log_path": "/tmp/orchester-continued-main-gates-20261111T003959Z/secret-scan.log",
+    "log_sha256": "090675e3040e74ae918a63444bde482b7bb7d2a3d087ee632ccee36c59055a06",
+    "review_state": "five-exact-findings-reviewed-as-test-fixtures-or-code-identifiers",
+    "review_path": "/tmp/orchester-continued-main-gates-20261111T003959Z/secret-scan-review.json",
+    "review_sha256": "8c85b1cacb074a4ae1d3da06b5778fae43d95aed84c84816f3f79a4a53668d73",
+    "baselined_scan": {
+      "argv": [
+        "/tmp/orchester-gitleaks-8.30.1/gitleaks",
+        "dir",
+        "--no-banner",
+        "--no-color",
+        "--redact=100",
+        "--report-format",
+        "json",
+        "--report-path",
+        "/tmp/orchester-continued-main-gates-20261111T003959Z/secret-scan-baselined-redacted.json",
+        "--baseline-path",
+        "/tmp/orchester-continued-main-gates-20261111T003959Z/secret-scan-redacted.json",
+        "--gitleaks-ignore-path",
+        "/tmp/orchester-continued-main-gates-20261111T003959Z/scan-input",
+        "--ignore-gitleaks-allow",
+        "--timeout",
+        "120",
+        "/tmp/orchester-continued-main-gates-20261111T003959Z/scan-input"
+      ],
+      "exit_code": 0,
+      "finding_count": 0,
+      "elapsed_seconds": 0.831,
+      "report_path": "/tmp/orchester-continued-main-gates-20261111T003959Z/secret-scan-baselined-redacted.json",
+      "report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "log_path": "/tmp/orchester-continued-main-gates-20261111T003959Z/secret-scan-baselined.log",
+      "log_sha256": "c5fe967668b73b0b1ff6679df90758c1d83ada6e63b7c1ea2429c5a41177221b"
+    }
+  },
+  "state": "passed-with-reviewed-secret-scan-baseline",
+  "ended_at_utc": "2026-11-11T00:46:26.674297+00:00",
+  "end_commit": "6df7a894af39a5ee1824931bc17412b71753826a",
+  "source_fingerprint_after_sha256": "3d356a9b9269e3b57d7bd321747de31ea4e4e504e573bda626cacbad77510efc",
+  "source_unchanged": true,
+  "code_gates_state": "passed"
+}

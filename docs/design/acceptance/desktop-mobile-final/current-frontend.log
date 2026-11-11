@@ -1,0 +1,148 @@
+
+> @orchester/workspace@ test:tooling /home/han/project/Orchester
+> node --test werkzeug/frontend/test/*.test.mjs
+
+✔ the local CLI is the cli surface of apps/ (10.12985ms)
+✔ doctor returns non-zero and preserves structured diagnostics when required checks fail (6.326174ms)
+✔ doctor returns zero for a warning-free web report (0.367161ms)
+✔ frontend operations documents every stable launch and verification command (11.632885ms)
+✔ toolchain guide names the machine-readable linker failures and supported repair (1.939673ms)
+✔ apps readme routes contributors through the stable surface commands (2.73877ms)
+✔ desktop download and install guidance ships in every readme (5.77072ms)
+✔ healthy Windows desktop prerequisites have no failures (2.563288ms)
+✔ missing Rust tools fail the desktop profile but not the web profile (1.041942ms)
+✔ ARM64 MSVC Rust rejects an MSYS linker and missing compiler with actionable codes (0.633204ms)
+✔ non-Windows desktop hosts do not require MSVC executables (0.195012ms)
+✔ launch plans use the declared packages and strict Vite ports (5.991866ms)
+✔ launch argument parsing is explicit and rejects unsupported surfaces (1.211795ms)
+✔ desktop launch stops before spawning when its required doctor report fails (7.121972ms)
+✔ runLaunchPlan delegates to the injected process runner and propagates its exit code (0.25176ms)
+✔ the shared TypeScript packages live in a root packages/ tier (8.468124ms)
+✔ Pages validates the shared stack contract before building the website (7.336363ms)
+✔ Pages path filters cover every checked-in input used by stack verification (1.889956ms)
+✔ root package exposes unambiguous surface and doctor commands (4.62573ms)
+✔ stack manifest exposes stable launch and deployment metadata (5.497928ms)
+✔ checked-in package, Vite, Tauri, and Pages settings match the manifest (4.130292ms)
+✔ repository validation reports port drift instead of accepting it (5.641669ms)
+✔ the workspace glob covers the deeper site payload (3.989608ms)
+✔ the GitHub Pages site is the site surface of apps/web (0.82236ms)
+✔ the pnpm workspace root is the repository root, like the reference layout (4.385858ms)
+✔ the workspace files no longer live inside apps/ (0.891735ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 102.198706
+Scope: 8 of 9 workspace projects
+
+> @orchester/design@0.1.2 test /home/han/project/Orchester/packages/design
+> vitest run
+
+
+ RUN  v4.1.10 /home/han/project/Orchester/packages/design
+
+
+ Test Files  52 passed (52)
+      Tests  308 passed (308)
+   Start at  08:40:01
+   Duration  10.18s (transform 61.04s, setup 0ms, import 87.17s, tests 2.85s, environment 77.64s)
+
+
+> @orchester/protokoll@0.1.2 test /home/han/project/Orchester/packages/protokoll
+> vitest run
+
+
+ RUN  v4.1.10 /home/han/project/Orchester/packages/protokoll
+
+
+ Test Files  28 passed (28)
+      Tests  94 passed (94)
+   Start at  08:40:11
+   Duration  584ms (transform 2.66s, setup 0ms, import 3.97s, tests 110ms, environment 2ms)
+
+
+> @orchester/mobile@0.1.0 test /home/han/project/Orchester/apps/mobile
+> vitest run
+
+
+ RUN  v4.1.10 /home/han/project/Orchester/apps/mobile
+
+
+ Test Files  9 passed (9)
+      Tests  124 passed (124)
+   Start at  08:40:12
+   Duration  1.84s (transform 1.27s, setup 0ms, import 1.50s, tests 2.36s, environment 1.85s)
+
+
+> @orchester/website@0.1.0 test /home/han/project/Orchester/apps/web/site
+> vitest run
+
+
+ RUN  v4.1.10 /home/han/project/Orchester/apps/web/site
+
+
+ Test Files  9 passed (9)
+      Tests  31 passed (31)
+   Start at  08:40:15
+   Duration  1.50s (transform 1.57s, setup 0ms, import 2.28s, tests 574ms, environment 4.21s)
+
+
+> @orchester/ereignis@0.1.2 test /home/han/project/Orchester/packages/ereignis
+> vitest run
+
+
+ RUN  v4.1.10 /home/han/project/Orchester/packages/ereignis
+
+
+ Test Files  6 passed (6)
+      Tests  28 passed (28)
+   Start at  08:40:16
+   Duration  673ms (transform 620ms, setup 0ms, import 811ms, tests 61ms, environment 2.50s)
+
+
+> @orchester/web@0.1.2 test /home/han/project/Orchester/apps/web
+> vitest run
+
+
+ RUN  v4.1.10 /home/han/project/Orchester/apps/web
+
+
+ Test Files  134 passed (134)
+      Tests  860 passed (860)
+   Start at  08:40:17
+   Duration  75.10s (transform 2.35s, setup 0ms, import 17.67s, tests 9.62s, environment 38.45s)
+
+
+> @orchester/desktop@0.1.8 test:security /home/han/project/Orchester/apps/desktop
+> node --test test/security-config.test.mjs
+
+✔ desktop security configuration is explicit and deny-by-default (6.783264ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 41.618128
+✔ installer naming follows the tauri product architecture convention (0.861018ms)
+✔ local upgrades select the requested installer while preserving older builds (1.945237ms)
+✔ release staging and publishing agree on the same asset names (0.693627ms)
+✔ argument parsing rejects missing and repeating values (0.20626ms)
+✔ checksum parsing round-trips the staged digest and rejects malformed lines (1.382175ms)
+✔ the desktop version is pinned consistently across the release manifests (0.246428ms)
+✔ version mismatches fail before a build starts (0.147872ms)
+✔ desktop release config enables per-user NSIS installers with the bundled web payload (0.861706ms)
+✔ desktop release workflow builds both Windows architectures before staging (1.026932ms)
+✔ desktop release workflow publishes immutable assets with limited permissions (0.193872ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 46.204271

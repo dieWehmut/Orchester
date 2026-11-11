@@ -1,0 +1,32 @@
+{
+    "status":  "exact-owned-cleanup-passed",
+    "allExactGuiHandlesExited":  true,
+    "allExactNodeHandlesExited":  true,
+    "debugPortReleased":  true,
+    "embeddedPort":  57039,
+    "unexpectedDescendants":  0,
+    "safeUnexpectedImages":  [
+
+                             ],
+    "guiOutcomes":  [
+                        "terminated-exact-owned-handle",
+                        "terminated-exact-owned-handle",
+                        "terminated-exact-owned-handle",
+                        "terminated-exact-owned-handle",
+                        "terminated-exact-owned-handle",
+                        "terminated-exact-owned-handle",
+                        "terminated-exact-owned-handle",
+                        "terminated-exact-owned-handle",
+                        "terminated-exact-owned-handle",
+                        "terminated-exact-owned-handle"
+                    ],
+    "nodeOutcomes":  [
+
+                     ],
+    "type":  null,
+    "diagnostic":  null,
+    "identityDiagnostic":  "QueryFullProcessImageName:5",
+    "originalHandlesKeptUntilCleanup":  true,
+    "modelCalls":  0,
+    "defaultServiceStopped":  false
+}

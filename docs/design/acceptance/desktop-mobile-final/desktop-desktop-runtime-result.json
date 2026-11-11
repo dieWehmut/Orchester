@@ -1,0 +1,15 @@
+{
+    "status":  "desktop-native-sixteen-checks-passed",
+    "sourceRevision":  "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+    "expectedPlanSha256":  "34c1c3f30bf4017ae05d78ea4a08c3d650ef04c589b5ef545999e5751f3257be",
+    "expectedFinalResultSha256":  "92f63202107394df408aea38b52c8e3679cdd845edbcb0fc682d8a297d941306",
+    "expectedPreparedScriptsSha256":  "caefcf92ee0fb3deb32fe516068da344ff3376ebda9d33fb0868fc04f7c59c08",
+    "binarySha256":  "4fc62550edfcee272b412ae2e4908173038e076bb1b2e6b6c58cea699748be13",
+    "checks":  16,
+    "writes":  7,
+    "screenshotsReviewed":  2,
+    "exactOwnedHandlesExited":  true,
+    "portsReleased":  true,
+    "modelCalls":  0,
+    "defaultInstallationChanged":  false
+}

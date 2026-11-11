@@ -1,0 +1,23 @@
+    Checking tokio v1.52.3
+    Checking orchester-protokoll v0.1.2 (/home/han/project/Orchester/kisten/protokoll)
+    Checking tokio-stream v0.1.18
+    Checking tokio-util v0.7.18
+    Checking orchester-vertrag v0.1.2 (/home/han/project/Orchester/kisten/vertrag)
+    Checking hyper v1.10.1
+    Checking orchester-adapter v0.1.2 (/home/han/project/Orchester/kisten/adapter)
+    Checking tower v0.5.3
+    Checking hyper-util v0.1.20
+    Checking orchester-verzeichnis v0.1.2 (/home/han/project/Orchester/kisten/verzeichnis)
+    Checking tokio-rustls v0.26.4
+    Checking tower-http v0.6.8
+    Checking hyper-rustls v0.27.9
+    Checking orchester-modell v0.1.2 (/home/han/project/Orchester/kisten/modell)
+    Checking reqwest v0.12.28
+    Checking tokio-tungstenite v0.29.0
+    Checking orchester-laufzeit v0.1.2 (/home/han/project/Orchester/kisten/laufzeit)
+    Checking axum v0.8.9
+    Checking tower-http v0.7.0
+    Checking orchester-anwendung v0.1.2 (/home/han/project/Orchester/kisten/anwendung)
+    Checking orchester-netz v0.1.2 (/home/han/project/Orchester/kisten/netz)
+    Checking orchester-konsole v0.1.2 (/home/han/project/Orchester/kisten/konsole)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 19.89s
