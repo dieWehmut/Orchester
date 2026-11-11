@@ -1,0 +1,90 @@
+{
+  "cliTools": [
+    {
+      "id": "claude",
+      "entry": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@anthropic-ai\\claude-code\\bin\\claude.exe"
+    },
+    {
+      "id": "codex",
+      "entry": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js"
+    },
+    {
+      "id": "crush",
+      "entry": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@charmland\\crush\\run-crush.js"
+    },
+    {
+      "id": "gemini",
+      "entry": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@google\\gemini-cli\\bundle\\gemini.js"
+    },
+    {
+      "id": "hermes",
+      "entry": "C:\\Users\\han\\AppData\\Local\\hermes\\bin\\hermes.exe"
+    },
+    {
+      "id": "openclaw",
+      "entry": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\openclaw\\openclaw.mjs"
+    },
+    {
+      "id": "opencode",
+      "entry": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\opencode-ai\\.\\bin\\opencode.exe"
+    },
+    {
+      "id": "pi",
+      "entry": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@earendil-works\\pi-coding-agent\\dist\\bundle\\cli.js"
+    },
+    {
+      "id": "qwen",
+      "entry": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@qwen-code\\qwen-code\\cli-entry.js"
+    }
+  ],
+  "editorExtensions": [
+    {
+      "id": "saoudrizwan.claude-dev",
+      "entry": "C:\\Users\\han\\.vscode\\extensions\\saoudrizwan.claude-dev-4.1.26\\package.json"
+    },
+    {
+      "id": "rooveterinaryinc.roo-cline",
+      "entry": "C:\\Users\\han\\.vscode\\extensions\\rooveterinaryinc.roo-cline-3.54.0\\package.json"
+    },
+    {
+      "id": "kilocode.kilo-code",
+      "entry": "C:\\Users\\han\\.vscode\\extensions\\kilocode.kilo-code-7.8.27-win32-x64\\package.json"
+    },
+    {
+      "id": "anthropic.claude-code",
+      "entry": "C:\\Users\\han\\.vscode\\extensions\\anthropic.claude-code-2.1.322-win32-x64\\package.json"
+    }
+  ],
+  "desktopFilesAndBootstrapper": [
+    {
+      "id": "workbuddy",
+      "kind": "desktop_service",
+      "entry": "C:\\Users\\han\\software\\workbuddy\\WorkBuddy.exe"
+    },
+    {
+      "id": "workbuddy_global",
+      "kind": "desktop_service",
+      "entry": "C:\\Users\\han\\WorkBuddy\\WorkBuddyAI\\WorkBuddyAI.exe"
+    },
+    {
+      "id": "zcode",
+      "kind": "desktop_service",
+      "entry": "C:\\Users\\han\\AppData\\Local\\Programs\\ZCode\\ZCode.exe"
+    },
+    {
+      "id": "craft",
+      "kind": "desktop_service",
+      "entry": "C:\\Users\\han\\AppData\\Local\\Programs\\@craft-agentelectron\\Craft Agents.exe"
+    },
+    {
+      "id": "trae",
+      "kind": "desktop_service",
+      "entry": "C:\\Users\\han\\AppData\\Local\\Programs\\Trae\\Trae.exe"
+    },
+    {
+      "id": "claude_app_bootstrapper",
+      "kind": "installer_bootstrapper_only",
+      "entry": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\claude-official-prepared-20261111-source\\Claude-Store-Installer.exe"
+    }
+  ]
+}

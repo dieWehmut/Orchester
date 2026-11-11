@@ -1,0 +1,22 @@
+{
+  "createdAtUTC": "2026-11-11T13:35:24.000194Z",
+  "archiveOnlySafeJSON": true,
+  "sources": [
+    {
+      "name": "support-primary-first-two.json",
+      "bytes": 640,
+      "sha256": "9adfd28f587867bb92ce7d1aa5034cd21dfd5fcf4997f0f6865445cd0341bb63"
+    },
+    {
+      "name": "support-primary-third-index.json",
+      "bytes": 430,
+      "sha256": "d285c8ad400415e37a1f321127f7f0da8056deeb629d5d62bd1b99797b953d10"
+    },
+    {
+      "name": "final-current-support-primary-safe.json",
+      "bytes": 3490,
+      "sha256": "9104bd92f7c83b476d7e20d662272cdbdf32934d07724c391641e00841d0559c"
+    }
+  ],
+  "excludeFullPublicPagesOrDownloadBinaries": true
+}

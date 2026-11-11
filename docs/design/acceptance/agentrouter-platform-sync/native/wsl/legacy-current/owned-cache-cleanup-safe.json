@@ -1,0 +1,34 @@
+{
+  "recordedAtUtc": "2026-11-11T13:49:17.385978+00:00",
+  "cleanupOnlyAfterAllOwnedInstallChecksPassed": true,
+  "removed": [
+    {
+      "ownedPath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/downloads",
+      "regularFileCount": 3,
+      "logicalBytes": 416952930,
+      "regenerableDownloadOrNpmCacheOnly": true,
+      "pathGoneAfterCleanup": true
+    },
+    {
+      "ownedPath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/npm-cache-dsh",
+      "regularFileCount": 2497,
+      "logicalBytes": 254693297,
+      "regenerableDownloadOrNpmCacheOnly": true,
+      "pathGoneAfterCleanup": true
+    }
+  ],
+  "totalLogicalBytesRemoved": 671646227,
+  "installedNpmLock": {
+    "file": "/home/han/.local/share/orchester-legacy-tools/deepseek-harness/0.2.2-rc.1/package-lock.json",
+    "sha256": "5b6b1f93604a249a368c062dacafc50a3c2f37d093d756e0ca6be8b233f571a8",
+    "pinnedVersion": "0.2.2-rc.1",
+    "resolvedOfficialRegistryTarball": "https://registry.npmjs.org/@deepseek-ai/dsh/-/dsh-0.2.2-rc.1.tgz",
+    "matchesVerifiedRegistryIntegrity": true
+  },
+  "installedNpmSymlinksAuditedNoCacheTargets": 13,
+  "installedNativeExecutablesStillExist": true,
+  "installedLaunchersStillExist": true,
+  "sourceAndPrivateProfileDeletion": false,
+  "windowsPhysicalFreeBytesClaimed": false,
+  "wslVhdxPhysicalReclamationClaimed": false
+}

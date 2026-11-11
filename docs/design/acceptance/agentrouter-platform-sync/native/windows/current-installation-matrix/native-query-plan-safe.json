@@ -1,0 +1,9 @@
+{
+  "cScript": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\official-installs-windows-matrix-20261111-current\\read-native-public-matrix.ps1",
+  "cInputs": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\official-installs-windows-matrix-20261111-current\\native-inputs-safe.json",
+  "cResult": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\official-installs-windows-matrix-20261111-current\\native-public-matrix-safe.json",
+  "scriptSha256": "cc0a04d946714a636e9055b0ef37796f58c10fb0e73e834a9a40236b9f21d0ba",
+  "inputsSha256": "83834978e75441cb6033d9f0b6eda6d0a35bc98fce1cc7d816cac8ca1281a01f",
+  "queryOnly": true,
+  "zeroGUIOrProcessSignals": true
+}

@@ -1,0 +1,66 @@
+[
+  {
+    "requestedUrl": "https://www.deepseek.com/download/",
+    "finalUrl": "https://www.deepseek.com/download/",
+    "status": 200,
+    "bytes": 64196,
+    "sha256": "0d454525d8870d4952328d5e63e5b1e155ae99eeb31ac2a8a5e26f508ec4e345",
+    "contentType": "text/html",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/additional-primary-0"
+  },
+  {
+    "requestedUrl": "https://chat.deepseek.com/downloads",
+    "finalUrl": "https://chat.deepseek.com/downloads",
+    "status": 200,
+    "bytes": 8623,
+    "sha256": "2dbd75fa4374c116ad0a22b9ad8ddf6615b2a09ff85cd0fb93dd69df78cd55a9",
+    "contentType": "text/html; charset=utf-8",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/additional-primary-1"
+  },
+  {
+    "requestedUrl": "https://www.deepseek.com/harness/",
+    "finalUrl": "https://www.deepseek.com/harness/",
+    "status": 200,
+    "bytes": 206789,
+    "sha256": "95694345987e3f5b763d53a378f6ac9cbc68079c5c469ff289b75043102365bc",
+    "contentType": "text/html",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/additional-primary-2"
+  },
+  {
+    "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/master/README.md",
+    "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/master/README.md",
+    "status": 200,
+    "bytes": 2673,
+    "sha256": "0f5516be2acde776f05572cbc8c3093c90549afe04ce118e11157d073d5d15f4",
+    "contentType": "text/plain; charset=utf-8",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/additional-primary-3"
+  },
+  {
+    "requestedUrl": "https://api.github.com/repos/deepseek-ai/deepseek-harness/releases/latest",
+    "errorType": "HTTPError",
+    "status": 404
+  },
+  {
+    "requestedUrl": "https://antigravity.google/docs/getting-started",
+    "finalUrl": "https://antigravity.google/docs/getting-started",
+    "status": 200,
+    "bytes": 235617,
+    "sha256": "c0ad1cf002cbe99da91893a713efdc7498559bb6b2d00339695abc699dc0a39d",
+    "contentType": "text/html",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/additional-primary-5"
+  },
+  {
+    "requestedUrl": "https://antigravity.google/docs/supported-countries",
+    "errorType": "HTTPError",
+    "status": 404
+  },
+  {
+    "requestedUrl": "https://antigravity.google/support",
+    "finalUrl": "https://antigravity.google/support",
+    "status": 200,
+    "bytes": 139625,
+    "sha256": "5c0d93905bdf4c9d0b5a7f1421108a698d00b7ccbde8aa910e44c5c6302ee54d",
+    "contentType": "text/html",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/additional-primary-7"
+  }
+]

@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "commandActualExitCode": 0,
+  "tests": 4,
+  "instrumentationCode": -1,
+  "nativeWindowsAdbServerPort": 5039,
+  "actualAvdHost": "Windows",
+  "actualAvdName": "Medium_Phone_API_37.0",
+  "serial": "emulator-5572",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "installedApkSha256": "f83fa2a75c712a3d2e1f3f203cf73ce89204fb4ca0bce4d8c2ef0c4fe3596d3c",
+  "testApkSha256": "b5c137aaeb1f40768dbf3a279028cea5e74f05bc55ad5b1b0fc4cc7c117e281f",
+  "originalCertificateSha256": "df6df435ccf10a685fb109668da8cdf7b022b481ba346f3143190aeda0c4468e",
+  "stdoutSha256": "042a00025f01e0ca6d864a3da34fcfc5204d3db4025f1154d5b7e625ca30b196",
+  "testsReRunAfterCorrectDeviceProvenanceAndInstall": true,
+  "defaultAdbOrUnknownLinuxTargetUsed": false,
+  "sixEncryptedValuesRetainedAfterNativeJUnit": true
+}

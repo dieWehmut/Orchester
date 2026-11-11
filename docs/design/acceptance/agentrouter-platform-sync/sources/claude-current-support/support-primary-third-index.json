@@ -1,0 +1,13 @@
+{
+  "name": "claude-support-public-index",
+  "requestedURL": "https://support.claude.com/en/",
+  "observedAtUTC": "2026-11-11T13:33:56.699898Z",
+  "finalURL": null,
+  "httpStatus": null,
+  "responseSHA256": null,
+  "responseBytes": 0,
+  "attemptCount": 1,
+  "errorType": "URLError",
+  "reasonType": "SSLEOFError",
+  "publicNetworkError": "[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1082)"
+}

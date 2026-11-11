@@ -60,7 +60,7 @@
       "proof": "deployments/linux/current-final21/final-safe.json"
     },
     {
-      "scope": "CurrentWSL read-only16unique nativeproducts/19entries and17persistent receipt copies verified;runtime oldstage notrerun",
+      "scope": "EarlierpostrestartWSL readonly19records/16unique+17persistentreceipt copies verified; before3newlegacyinstalls; historicalruntime notrerun",
       "proof": "native/wsl/current-matrix/current-native-installation-matrix-safe.json"
     },
     {
@@ -150,6 +150,70 @@
     {
       "scope": "OwnWindows2344/qemu3828 exactbirth7WMcloseposted then originalPIDabsenceobserver/0signals/defaultADBcommands; producerreported postwindowguard1 not replaced with0",
       "proof": "native/android/device-identity-current21/owned-windows-medium-normal-wmclose-exit-observed-safe.json"
+    },
+    {
+      "scope": "Windowscurrent native-readonly18entries=9CLI+4ext+5desktop/17unique=docs16+global1; finalnativeattempt2actual0/attempt1exit1retained; entryhash/8NPMversion/extpublicmanifest only notfreshversions/fullpayload",
+      "proof": "native/windows/current-installation-matrix/final-current-windows-installation-matrix-safe.json"
+    },
+    {
+      "scope": "ClaudecurrentUser2knownfamilyregistrations0/StartApps0/allusersAccessDeniednull; Storebootstrapper notpayload; CraftNotSigned/OpenClawmjsUnknownErrorliteral/OpenCodePE Bun1.4.4 not app1.19.5",
+      "proof": "native/windows/current-installation-matrix/final-current-windows-installation-matrix-safe.json"
+    },
+    {
+      "scope": "NewlegacyWSL Cursor3.29.15/AGDesktop2.31nativeELF+ldd+Electron0 andDeepSeekofficialWebCLI0.2.2rc1 npm/version/help0; CursorCLIinitial1/recheck0 anddshinstallinitial1/attempt2 0 retained;19distinctwithold16",
+      "proof": "native/wsl/legacy-current/final-wsl-install-safe.json"
+    },
+    {
+      "scope": "DeepSeekLinuxDesktopexplicitunsupported/officialWebCLIinstalleddistinct; AntigravityDesktop2.31 distinctfromIDE2.6; currentofficialservicecountrytable excludesMainlandChina/HK/Macao notTaiwan; no GUI/login/modeltests",
+      "proof": "native/wsl/legacy-current/final-primary-matrix-safe.json"
+    },
+    {
+      "scope": "Onlylegacyownedcache671646227logicalB removed/installedartifacts+WindowsCursorAGmetadata retained; no physicalC/VHDXreclaim",
+      "proof": "native/wsl/legacy-current/owned-cache-cleanup-safe.json"
+    },
+    {
+      "scope": "ThreecurrentClaudepublicsupportURLs noHTTPbody/platformlist/requirements/nativeLinuxGUIunverified; no inferredunsupported or applicableStoreInstaller silentflags",
+      "proof": "sources/claude-current-support/final-current-support-primary-safe.json"
+    },
+    {
+      "scope": "BoundedindependentWTS8602review sameSIDSession1Disconnected/Activecandidate0; no lockedstate/tokenjobisolation or visualacceptance",
+      "proof": "native/windows/interactive-current/independent-bounded-review-safe.json"
+    },
+    {
+      "scope": "Second218archive+MD219 exactGitblob/doc828ad10/main4d7d95/twopush0/defaultstagedwhitespace0/production71 and Pages177inputs unchanged; currentnewinstallepochnotyetcommitted",
+      "proof": "maintenance/git-delivery/second-step-delivery-safe.json"
+    },
+    {
+      "scope": "CorrectWindowsMedium5572/nativeADB5039 consoleAVD/PID/birth/listeners identityverified beforewrites; old20APKd0d1+6cipherrecords privatebackup exact/original5values match/oldown17379extra1",
+      "proof": "native/android/correct-windows-current21/correct-windows-original-five-values-safe.json"
+    },
+    {
+      "scope": "CorrectWin5572 samecertdf6/source71 f83app+b5ctest install0×2/original6ciphervaluesretained/no wipe/keyreplace/defaultADB",
+      "proof": "native/android/correct-windows-current21/correct-windows-final21-install-safe.json"
+    },
+    {
+      "scope": "CorrectWin5572 rerun NativeBridge4 actual0/instrumentationCode-1/currentf83/b5c/original6values retained; not previousLinuxguest attribution",
+      "proof": "native/android/correct-windows-current21/correct-windows-final21-native-bridge-safe.json"
+    },
+    {
+      "scope": "CorrectWin original5AES5success0fail andonly original7337/info1GET200/nameMatch/noNewPairing/noTokenOutput; not every5originalwiretested",
+      "proof": "native/android/correct-windows-current21/correct-windows-original-five-aes-and-existing-wire-attempt2-safe.json"
+    },
+    {
+      "scope": "OnlyownStudio19620optionalGoogle startupdialog normallyclosed/IDEalive/original23276untouched/noSignin/injection/forcekill; thisreceiptalone isnotSyncproof; actual17400msSync separatelyverified",
+      "proof": "native/android/correct-windows-current21/isolated-studio-optional-google-signin-normal-dismiss-safe.json"
+    },
+    {
+      "scope": "ActualStudio19620 ownproject source71 RESOLVE_PROJECT0/importexact/17400ms/JDKtemurin21/online5572; taskprivateconfigsystemlog/original23276untouched/qualifiedSDKJUnit not IDE toolbarRun",
+      "proof": "native/android/correct-windows-current21/isolated-studio-final21-actual-project-sync-safe.json"
+    },
+    {
+      "scope": "ActualownStudio19620 fiveEstablishedloopback5039/default5037none/exactbirthimage; no hostdesktopScreenshotor IDERun claim",
+      "proof": "native/android/correct-windows-current21/isolated-studio-actual-native-adb-transport-safe.json"
+    },
+    {
+      "scope": "Independent pre-report265snapshot:52targetsafeoriginalJSON/258archiveJSON/hashes/links/13requirements passed; early7publicnonJSONarchivehashreads disclosed/finalJSONsuffixguard/private0; produceractualexitcodesattested notnative rerun",
+      "proof": "sources/audit/epoch3-installation-archive-independent-review-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -161,10 +225,10 @@
   ],
   "pendingCurrentEpochScopes": [
     "Windows ownSession1 SameSIDproved butDisconnected/noActiveSameSIDcandidate/InputError5; externalDesktop28748 normaltrayexit/freshlatestprofilebackup/native18/reinstall/7338 stillpending",
-    "Correct nativeWindows AVD separate5572/ADB5039 exactidentity/install/JUnit/IDE/UI21+42/PTy/originalcredentialidentity+rollback/cleanup pending; previous5554currentAPKtesttarget actuallyLinuxorchester-qa",
+    "CorrectWin5572/source71/samecertinstall/JUnit4/original5AES+values/1original7337wire/actualStudioSync17400msJDK21online5572已证；UI21+42/PTy/oldown17379extra cleanup/wrongLinuxRAM+ownforward cleanup stillpending",
     "International WorkBuddy native WSL package and profile isolation; recorded official package unavailable",
     "Claude App current native Windows executable/package and official Linux support/install evidence",
-    "Currentcrosshost/profile/Gitstep correction archive awaits parent nextcommit/push/main;193archive step already delivered"
+    "CurrentWindowsmatrix/WSLlegacyinstall/Claudeboundedprimarysupport/newStudio partial receipts await parent nextcommit/push/main;218correction step already delivered"
   ],
   "folderResponsibilities": {
     "sources": "Official origins, source/provenance and current safe source audits",
@@ -181,7 +245,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-11T13:07:41.335513+00:00",
+  "updatedAt": "2026-11-11T14:51:49.509750+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentEffectiveLinuxDeviceCount": 3,
   "currentPersistedLinuxAuthEntryCount": 5,
@@ -200,13 +264,11 @@
   "currentWindowsInteractiveReadinessVerified": false,
   "currentWindowsSameUserInteractiveSessionProved": false,
   "currentAndroidPartialNativeBuildInstallTestsVerified": true,
-  "currentAndroidActualIDESyncVerified": false,
+  "currentAndroidActualIDESyncVerified": true,
   "currentAndroidNativeUI21Providers42ImagesVerified": false,
-  "documentedPublishedMainRevision": "32992976a98c5d20a9ea9b00948833325871dea0",
+  "documentedPublishedMainRevision": "4d7d95be513f92bd5877504d394a06e7995edba4",
   "productionSourceRevisionStillFrozen71": true,
   "currentCorrectionArchiveGitCommitted": false,
-  "currentAndroidTestEndpointHost": "Linux orchester-qa.avd reached through Windows wslrelay ports5554/5555/5037",
-  "currentAndroidWindowsOriginalAVDIdentityVerified": false,
   "originalWindowsCredentialsDamagedOrUnrecoverableClaimed": false,
   "currentWindowsOriginalProfilesByteExactProved": false,
   "historicalOfflineBackupReceiptRemainsValidForItsObservation": true,
@@ -218,5 +280,39 @@
   "currentAndroidWrongTargetRAMPreferencesReloaded": false,
   "currentOwnedWindowsQemuNormalCloseExitObserved": true,
   "newCrossHostIndependentSubagentReviewCompleted": false,
-  "newCrossHostIndependentSubagentReviewFailure": "Remote compaction failed due API token rate limit; latest archive self-checks remain separate from earlier completed independent reviews."
+  "newCrossHostIndependentSubagentReviewFailure": "Remote compaction failed due API token rate limit; latest archive self-checks remain separate from earlier completed independent reviews.",
+  "prior218CorrectionArchiveDelivered": true,
+  "currentWindowsReadOnlyNativeUniqueProductsInMatrix": 17,
+  "currentWindowsReadOnlyInstallationEntryCount": 18,
+  "currentWindowsReadOnlyMatrixExcludesLegacy3": true,
+  "currentWSLInstalledUniqueProductsIncludingLegacy3": 19,
+  "currentWSLDeepSeekInstalledProduct": "Official Harness Web/CLI0.2.2-rc.1",
+  "currentDeepSeekLinuxDesktopOfficialReleaseUnsupported": true,
+  "currentClaudeLinuxDesktopPlatformAndPackageVerified": false,
+  "currentWindowsAndroidMediumTargetIdentityVerified": true,
+  "historicalPre20AbsoluteAVDFingerprintProven": false,
+  "correctWindowsCurrent21NativeBridgeTests": 4,
+  "correctWindowsCurrent21NativeBridgeActualExitCode": 0,
+  "currentOriginalWindowsFiveEncryptedValuesPreserved": true,
+  "currentOriginalWindowsFiveAESDecryptSuccessCount": 5,
+  "currentOriginalWindowsFiveAESDecryptFailureCount": 0,
+  "currentOriginalLinux7337TokenOneInfoRequestActualStatus": 200,
+  "correctWindowsEncryptedRecordCountIncludingOldOwned17379Extra": 6,
+  "ownedOld17379ExtraCleanupVerified": false,
+  "currentAndroidActualIDESyncDurationMilliseconds": 17400,
+  "currentAndroidActualIDEProjectJdkName": "temurin-21",
+  "currentAndroidIDESdkNativeBridgeRunSeparateFromIDERun": true,
+  "currentAndroidIDEOnlineDevice": "Medium_Phone_API_37.0 [emulator-5572]",
+  "earlierDefault5554AndroidTestEndpointHost": "Linux orchester-qa.avd reached through Windows wslrelay ports5554/5555/5037",
+  "earlierDefault5554WindowsOriginalAVDIdentityVerified": false,
+  "currentAndroidTestEndpointHost": "Windows Medium_Phone_API_37.0 emulator-5572 through isolated native ADB5039; exact current target identity proved",
+  "epoch3InstallationArchiveIndependentReviewCompleted": true,
+  "epoch3InstallationArchiveIndependentReviewProof": "sources/audit/epoch3-installation-archive-independent-review-safe.json",
+  "epoch3InstallationArchiveIndependentReviewPreReportFileCount": 265,
+  "epoch3InstallationArchiveIndependentReviewTargetedSafeSourceJsonCount": 52,
+  "epoch3InstallationArchiveIndependentReviewArchiveJsonCount": 258,
+  "epoch3IndependentReviewPrivateReadCount": 0,
+  "epoch3IndependentReviewEarlierPublicNonJsonArchiveHashReadCount": 7,
+  "epoch3IndependentReviewFinalPassNonJsonReadCount": 0,
+  "epoch3IndependentReviewNativeNetworkAndGitReexecutions": 0
 }

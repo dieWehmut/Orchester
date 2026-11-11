@@ -1,0 +1,23 @@
+{
+  "status": "native-correct-windows-before-final21-readonly-backup",
+  "targetIdentityFile": "native-channel-5572-attempt2/channel-target-identity-safe.json",
+  "actualAvdHost": "Windows",
+  "actualAvdName": "Medium_Phone_API_37.0",
+  "nativeServerPort": 5039,
+  "serial": "emulator-5572",
+  "buildFingerprintSha256": "afacd774db24730d741a2d44545e9eb496f1d703fa6c472b110c3b4cd5f70523",
+  "bootCompleted": true,
+  "packageInstalled": true,
+  "nativeAdbCommandsUsePrivateServer": true,
+  "deviceWrites": 0,
+  "secretsPrinted": false,
+  "originalFiveRecoveryAttempted": false,
+  "installedApkSha256": "d0d1d4cddd0914e7b6e5800dfe66d32b7cf10e562fb687193da22492a12ac8a8",
+  "installedApkBytes": 13960545,
+  "nativeEncryptedPrefsFilePresent": true,
+  "nativeEncryptedPrefsSha256": "d33f5e97f5f1e32f0cbe2dca42024e4d33c1d1ca9d0a0bf9db2266c540693b40",
+  "nativeEncryptedCredentialRecordCount": 6,
+  "nativeEncryptedPrefsBackupByteExact": true,
+  "oldPre20FiveXmlSameBytes": false,
+  "nativeEncryptedPrefsBakPresent": false
+}

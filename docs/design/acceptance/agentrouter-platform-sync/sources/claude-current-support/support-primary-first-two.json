@@ -1,0 +1,21 @@
+{
+  "sources": [
+    {
+      "name": "claude-support-installing",
+      "requestedURL": "https://support.claude.com/en/articles/10065433-installing-claude-for-desktop",
+      "observedAt": 1794403730.4694443,
+      "errorType": "URLError",
+      "httpStatus": null
+    },
+    {
+      "name": "anthropic-support-legacy-installing",
+      "requestedURL": "https://support.anthropic.com/en/articles/10065433-installing-claude-for-desktop",
+      "observedAt": 1794403730.470014,
+      "errorType": "URLError",
+      "httpStatus": null
+    }
+  ],
+  "urlBudgetUsed": 2,
+  "maximumComplementaryURLs": 3,
+  "noCDNOrPayloadDownloadAttempts": true
+}

@@ -1,0 +1,11 @@
+{
+  "status": "actual-native-exit1-public-manifest-json-decode-failed",
+  "nativeExecutorSessionId": 98168,
+  "actualExitCode": 1,
+  "failureStage": "editorExtensions-kilo-public-package-json-default-encoding",
+  "resultReceiptProduced": false,
+  "privateContentsRead": false,
+  "versionCommands": 0,
+  "guiStarts": 0,
+  "signals": 0
+}

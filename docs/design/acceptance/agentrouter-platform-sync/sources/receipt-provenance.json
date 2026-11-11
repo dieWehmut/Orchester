@@ -1774,6 +1774,437 @@
       "bytes": 495,
       "byteExact": true,
       "scope": "After7ownWMclose exactpreviousbirth refs andbothoriginalPIDs actualgone;0signals/defaultADBcommands; not forcekill/defaultLinux5554close or newWin5572 launchproof."
+    },
+    {
+      "path": "native/windows/current-installation-matrix/current-filesystem-public-matrix-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/current-filesystem-public-matrix-safe.json",
+      "sourceSha256": "9d4fd644d4254ddcfda8518a7be2d97d5f52e94908c9fb16b2ec3c7987523c1b",
+      "archivedSha256": "9d4fd644d4254ddcfda8518a7be2d97d5f52e94908c9fb16b2ec3c7987523c1b",
+      "bytes": 14038,
+      "byteExact": true,
+      "scope": "Currentread-onlyWindowsmatrix18units/17unique doc16+global1; nativeattempt1exit1 retained/final0,publicentryhash+versions notfreshCLIruntime/fullpayload;4ext onlypublicmanifest;Claude currentUser0/allusersDeniednull not machineabsence."
+    },
+    {
+      "path": "native/windows/current-installation-matrix/current-public-windows-platform-payloads-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/current-public-windows-platform-payloads-safe.json",
+      "sourceSha256": "376885e9d9856cf170e7ce36f299241bdde61c1131167887a17c0658fb5afa87",
+      "archivedSha256": "376885e9d9856cf170e7ce36f299241bdde61c1131167887a17c0658fb5afa87",
+      "bytes": 1273,
+      "byteExact": true,
+      "scope": "Currentread-onlyWindowsmatrix18units/17unique doc16+global1; nativeattempt1exit1 retained/final0,publicentryhash+versions notfreshCLIruntime/fullpayload;4ext onlypublicmanifest;Claude currentUser0/allusersDeniednull not machineabsence."
+    },
+    {
+      "path": "native/windows/current-installation-matrix/final-current-windows-installation-matrix-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/final-current-windows-installation-matrix-safe.json",
+      "sourceSha256": "320d93efc8e4d0be8847bfe5600c3835a31211311e1493f018605d923d7a088c",
+      "archivedSha256": "320d93efc8e4d0be8847bfe5600c3835a31211311e1493f018605d923d7a088c",
+      "bytes": 24809,
+      "byteExact": true,
+      "scope": "Currentread-onlyWindowsmatrix18units/17unique doc16+global1; nativeattempt1exit1 retained/final0,publicentryhash+versions notfreshCLIruntime/fullpayload;4ext onlypublicmanifest;Claude currentUser0/allusersDeniednull not machineabsence."
+    },
+    {
+      "path": "native/windows/current-installation-matrix/native-execution-provenance-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/native-execution-provenance-safe.json",
+      "sourceSha256": "bdcc7de5e9d444a06f61bbee8bbf874d485fdfc2c844f80906c4962a66ec00b5",
+      "archivedSha256": "bdcc7de5e9d444a06f61bbee8bbf874d485fdfc2c844f80906c4962a66ec00b5",
+      "bytes": 1539,
+      "byteExact": true,
+      "scope": "Currentread-onlyWindowsmatrix18units/17unique doc16+global1; nativeattempt1exit1 retained/final0,publicentryhash+versions notfreshCLIruntime/fullpayload;4ext onlypublicmanifest;Claude currentUser0/allusersDeniednull not machineabsence."
+    },
+    {
+      "path": "native/windows/current-installation-matrix/native-inputs-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/native-inputs-safe.json",
+      "sourceSha256": "83834978e75441cb6033d9f0b6eda6d0a35bc98fce1cc7d816cac8ca1281a01f",
+      "archivedSha256": "83834978e75441cb6033d9f0b6eda6d0a35bc98fce1cc7d816cac8ca1281a01f",
+      "bytes": 2911,
+      "byteExact": true,
+      "scope": "Currentread-onlyWindowsmatrix18units/17unique doc16+global1; nativeattempt1exit1 retained/final0,publicentryhash+versions notfreshCLIruntime/fullpayload;4ext onlypublicmanifest;Claude currentUser0/allusersDeniednull not machineabsence."
+    },
+    {
+      "path": "native/windows/current-installation-matrix/native-query-plan-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/native-query-plan-safe.json",
+      "sourceSha256": "f96c287364c1fb43a4b9469c7c5cdb05433a999cfd4a4865a16a591ea7f9abd5",
+      "archivedSha256": "f96c287364c1fb43a4b9469c7c5cdb05433a999cfd4a4865a16a591ea7f9abd5",
+      "bytes": 663,
+      "byteExact": true,
+      "scope": "Currentread-onlyWindowsmatrix18units/17unique doc16+global1; nativeattempt1exit1 retained/final0,publicentryhash+versions notfreshCLIruntime/fullpayload;4ext onlypublicmanifest;Claude currentUser0/allusersDeniednull not machineabsence."
+    },
+    {
+      "path": "native/windows/current-installation-matrix/retained-owner-attempt1/native-execution-attempt-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/retained-owner-attempt1/native-execution-attempt-safe.json",
+      "sourceSha256": "adb01875f577b3a9d9ab78f9d23055ccb9208ec4075a89c03db275480b2ea0a0",
+      "archivedSha256": "adb01875f577b3a9d9ab78f9d23055ccb9208ec4075a89c03db275480b2ea0a0",
+      "bytes": 336,
+      "byteExact": true,
+      "scope": "Currentread-onlyWindowsmatrix18units/17unique doc16+global1; nativeattempt1exit1 retained/final0,publicentryhash+versions notfreshCLIruntime/fullpayload;4ext onlypublicmanifest;Claude currentUser0/allusersDeniednull not machineabsence."
+    },
+    {
+      "path": "native/windows/current-installation-matrix/retained-owner-attempt1/native-inputs-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/retained-owner-attempt1/native-inputs-safe.json",
+      "sourceSha256": "83834978e75441cb6033d9f0b6eda6d0a35bc98fce1cc7d816cac8ca1281a01f",
+      "archivedSha256": "83834978e75441cb6033d9f0b6eda6d0a35bc98fce1cc7d816cac8ca1281a01f",
+      "bytes": 2911,
+      "byteExact": true,
+      "scope": "Currentread-onlyWindowsmatrix18units/17unique doc16+global1; nativeattempt1exit1 retained/final0,publicentryhash+versions notfreshCLIruntime/fullpayload;4ext onlypublicmanifest;Claude currentUser0/allusersDeniednull not machineabsence."
+    },
+    {
+      "path": "native/windows/current-installation-matrix/retained-owner-attempt2-utf8/native-inputs-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/retained-owner-attempt2-utf8/native-inputs-safe.json",
+      "sourceSha256": "83834978e75441cb6033d9f0b6eda6d0a35bc98fce1cc7d816cac8ca1281a01f",
+      "archivedSha256": "83834978e75441cb6033d9f0b6eda6d0a35bc98fce1cc7d816cac8ca1281a01f",
+      "bytes": 2911,
+      "byteExact": true,
+      "scope": "Currentread-onlyWindowsmatrix18units/17unique doc16+global1; nativeattempt1exit1 retained/final0,publicentryhash+versions notfreshCLIruntime/fullpayload;4ext onlypublicmanifest;Claude currentUser0/allusersDeniednull not machineabsence."
+    },
+    {
+      "path": "native/windows/current-installation-matrix/retained-owner-attempt2-utf8/native-public-matrix-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/retained-owner-attempt2-utf8/native-public-matrix-safe.json",
+      "sourceSha256": "dc23cb593da21e78825a680c51cfd10cc8687479bbc8a35ab7d7ad1868079037",
+      "archivedSha256": "dc23cb593da21e78825a680c51cfd10cc8687479bbc8a35ab7d7ad1868079037",
+      "bytes": 28809,
+      "byteExact": true,
+      "scope": "Currentread-onlyWindowsmatrix18units/17unique doc16+global1; nativeattempt1exit1 retained/final0,publicentryhash+versions notfreshCLIruntime/fullpayload;4ext onlypublicmanifest;Claude currentUser0/allusersDeniednull not machineabsence."
+    },
+    {
+      "path": "native/windows/current-installation-matrix/safe-evidence-manifest.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/safe-evidence-manifest.json",
+      "sourceSha256": "d63cb1eaaa25098d11273cd54ed843dfcad119c1d72772a7e5b7f661cdfae447",
+      "archivedSha256": "d63cb1eaaa25098d11273cd54ed843dfcad119c1d72772a7e5b7f661cdfae447",
+      "bytes": 2472,
+      "byteExact": true,
+      "scope": "Originalexplicit10selectedsafeJSONmanifest; scripts/privateprofiles/rawsources excluded."
+    },
+    {
+      "path": "native/wsl/legacy-current/final-wsl-install-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/final-wsl-install-safe.json",
+      "sourceSha256": "f1ef551e24e0fd68e81aa2e61d6f6386716b3444387d33593e7f4d60989cda59",
+      "archivedSha256": "f1ef551e24e0fd68e81aa2e61d6f6386716b3444387d33593e7f4d60989cda59",
+      "bytes": 8184,
+      "byteExact": true,
+      "scope": "New3actualWSL Cursor3.29.15/AntigravityDesktop2.31/DeepSeekofficialWebCLI0.2.2rc1 installed/nativechecks0; DeepSeekLinuxDesktopofficialunsupported and not replaced; onlyowncache671646227logicalB/noCphysical/GUI/auth."
+    },
+    {
+      "path": "native/wsl/legacy-current/final-primary-matrix-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/final-primary-matrix-safe.json",
+      "sourceSha256": "4048348aa93d5f7f73a402f8b776b557745d93fbe45ccb1a8747c8e32615a6bf",
+      "archivedSha256": "4048348aa93d5f7f73a402f8b776b557745d93fbe45ccb1a8747c8e32615a6bf",
+      "bytes": 7409,
+      "byteExact": true,
+      "scope": "Originalexplicitlegacy3supportreceipt; primarypreinstallmatrix distinct from actualinstall+failure1/retry0/nativeCLI/ELF/launcher/icon/cachechecks; rawbinary/privateprofiles excluded."
+    },
+    {
+      "path": "native/wsl/legacy-current/installed-known-paths-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/installed-known-paths-safe.json",
+      "sourceSha256": "53ec73ae26f9f33cab36b087e1947a0bb6ad8069080600c109ba28f4852580d9",
+      "archivedSha256": "53ec73ae26f9f33cab36b087e1947a0bb6ad8069080600c109ba28f4852580d9",
+      "bytes": 3428,
+      "byteExact": true,
+      "scope": "Originalexplicitlegacy3supportreceipt; primarypreinstallmatrix distinct from actualinstall+failure1/retry0/nativeCLI/ELF/launcher/icon/cachechecks; rawbinary/privateprofiles excluded."
+    },
+    {
+      "path": "native/wsl/legacy-current/dsh-registry-metadata-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/dsh-registry-metadata-safe.json",
+      "sourceSha256": "5145fb751f6b6f7b4f2556d8d4a7ea927a192a1ab3d73b347f0c3b4e44638373",
+      "archivedSha256": "5145fb751f6b6f7b4f2556d8d4a7ea927a192a1ab3d73b347f0c3b4e44638373",
+      "bytes": 1472,
+      "byteExact": true,
+      "scope": "Originalexplicitlegacy3supportreceipt; primarypreinstallmatrix distinct from actualinstall+failure1/retry0/nativeCLI/ELF/launcher/icon/cachechecks; rawbinary/privateprofiles excluded."
+    },
+    {
+      "path": "native/wsl/legacy-current/dsh-tar-public-proof-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/dsh-tar-public-proof-safe.json",
+      "sourceSha256": "bf6861e5a37ec0e29e577801fdfc3750f5dbcdb5d0da1dff805931ae22028fa2",
+      "archivedSha256": "bf6861e5a37ec0e29e577801fdfc3750f5dbcdb5d0da1dff805931ae22028fa2",
+      "bytes": 4288,
+      "byteExact": true,
+      "scope": "Originalexplicitlegacy3supportreceipt; primarypreinstallmatrix distinct from actualinstall+failure1/retry0/nativeCLI/ELF/launcher/icon/cachechecks; rawbinary/privateprofiles excluded."
+    },
+    {
+      "path": "native/wsl/legacy-current/download-receipts-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/download-receipts-safe.json",
+      "sourceSha256": "7efad8770730ba541af963b3c720752d74949684c60316c919dfdcb2ccecbc70",
+      "archivedSha256": "7efad8770730ba541af963b3c720752d74949684c60316c919dfdcb2ccecbc70",
+      "bytes": 2713,
+      "byteExact": true,
+      "scope": "Originalexplicitlegacy3supportreceipt; primarypreinstallmatrix distinct from actualinstall+failure1/retry0/nativeCLI/ELF/launcher/icon/cachechecks; rawbinary/privateprofiles excluded."
+    },
+    {
+      "path": "native/wsl/legacy-current/desktop-package-layout-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/desktop-package-layout-safe.json",
+      "sourceSha256": "3ed46c24ae7a309848c234614d55bfcdaaea6d4b7964354e4475f2e1d4da60a6",
+      "archivedSha256": "3ed46c24ae7a309848c234614d55bfcdaaea6d4b7964354e4475f2e1d4da60a6",
+      "bytes": 647,
+      "byteExact": true,
+      "scope": "Originalexplicitlegacy3supportreceipt; primarypreinstallmatrix distinct from actualinstall+failure1/retry0/nativeCLI/ELF/launcher/icon/cachechecks; rawbinary/privateprofiles excluded."
+    },
+    {
+      "path": "native/wsl/legacy-current/desktop-user-extraction-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/desktop-user-extraction-safe.json",
+      "sourceSha256": "601a43198ecc9c02a746f3f550f23cb46e720781dd51ce6f72f70c2a6f7acc1d",
+      "archivedSha256": "601a43198ecc9c02a746f3f550f23cb46e720781dd51ce6f72f70c2a6f7acc1d",
+      "bytes": 495,
+      "byteExact": true,
+      "scope": "Originalexplicitlegacy3supportreceipt; primarypreinstallmatrix distinct from actualinstall+failure1/retry0/nativeCLI/ELF/launcher/icon/cachechecks; rawbinary/privateprofiles excluded."
+    },
+    {
+      "path": "native/wsl/legacy-current/desktop-native-checks-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/desktop-native-checks-safe.json",
+      "sourceSha256": "6fca3c07fcf05efae9d463a1b5c5f0e294ebcd4bdb582cfceb244f1105ce2f65",
+      "archivedSha256": "6fca3c07fcf05efae9d463a1b5c5f0e294ebcd4bdb582cfceb244f1105ce2f65",
+      "bytes": 2266,
+      "byteExact": true,
+      "scope": "Originalexplicitlegacy3supportreceipt; primarypreinstallmatrix distinct from actualinstall+failure1/retry0/nativeCLI/ELF/launcher/icon/cachechecks; rawbinary/privateprofiles excluded."
+    },
+    {
+      "path": "native/wsl/legacy-current/cursor-cli-version-recheck-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/cursor-cli-version-recheck-safe.json",
+      "sourceSha256": "50eb3183c1958b72177a3e9e2522b42ebc7d02b16a78a33aefeae51fed955c92",
+      "archivedSha256": "50eb3183c1958b72177a3e9e2522b42ebc7d02b16a78a33aefeae51fed955c92",
+      "bytes": 441,
+      "byteExact": true,
+      "scope": "Originalexplicitlegacy3supportreceipt; primarypreinstallmatrix distinct from actualinstall+failure1/retry0/nativeCLI/ELF/launcher/icon/cachechecks; rawbinary/privateprofiles excluded."
+    },
+    {
+      "path": "native/wsl/legacy-current/dsh-npm-install-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/dsh-npm-install-safe.json",
+      "sourceSha256": "e39f1b4a7dc8386ab1926038fdd49d91d8493834f8ad5a717cdfd8eb2115656e",
+      "archivedSha256": "e39f1b4a7dc8386ab1926038fdd49d91d8493834f8ad5a717cdfd8eb2115656e",
+      "bytes": 673,
+      "byteExact": true,
+      "scope": "Originalexplicitlegacy3supportreceipt; primarypreinstallmatrix distinct from actualinstall+failure1/retry0/nativeCLI/ELF/launcher/icon/cachechecks; rawbinary/privateprofiles excluded."
+    },
+    {
+      "path": "native/wsl/legacy-current/dsh-npm-install-attempt2-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/dsh-npm-install-attempt2-safe.json",
+      "sourceSha256": "1809b6fb141807d174a3ca65577986fe1d2931ec44f29e58bad08d4dd6a54731",
+      "archivedSha256": "1809b6fb141807d174a3ca65577986fe1d2931ec44f29e58bad08d4dd6a54731",
+      "bytes": 645,
+      "byteExact": true,
+      "scope": "Originalexplicitlegacy3supportreceipt; primarypreinstallmatrix distinct from actualinstall+failure1/retry0/nativeCLI/ELF/launcher/icon/cachechecks; rawbinary/privateprofiles excluded."
+    },
+    {
+      "path": "native/wsl/legacy-current/dsh-native-cli-checks-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/dsh-native-cli-checks-safe.json",
+      "sourceSha256": "e7990a448315f06a1fe7fa781d65c1615926727e67f95fd26a8e5dcd564f3b00",
+      "archivedSha256": "e7990a448315f06a1fe7fa781d65c1615926727e67f95fd26a8e5dcd564f3b00",
+      "bytes": 1476,
+      "byteExact": true,
+      "scope": "Originalexplicitlegacy3supportreceipt; primarypreinstallmatrix distinct from actualinstall+failure1/retry0/nativeCLI/ELF/launcher/icon/cachechecks; rawbinary/privateprofiles excluded."
+    },
+    {
+      "path": "native/wsl/legacy-current/launcher-icons-primary-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/launcher-icons-primary-safe.json",
+      "sourceSha256": "dcd3d0d7e28ee3922f4378de24e41e964e044af81a17a1abd1fe48b9b3ae7e05",
+      "archivedSha256": "dcd3d0d7e28ee3922f4378de24e41e964e044af81a17a1abd1fe48b9b3ae7e05",
+      "bytes": 850,
+      "byteExact": true,
+      "scope": "Originalexplicitlegacy3supportreceipt; primarypreinstallmatrix distinct from actualinstall+failure1/retry0/nativeCLI/ELF/launcher/icon/cachechecks; rawbinary/privateprofiles excluded."
+    },
+    {
+      "path": "native/wsl/legacy-current/user-launchers-and-icons-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/user-launchers-and-icons-safe.json",
+      "sourceSha256": "cd591e1ff095cc0e54bd3e7e6f7aea90cc6f84a9a130f86bbaaeaaa027daa86f",
+      "archivedSha256": "cd591e1ff095cc0e54bd3e7e6f7aea90cc6f84a9a130f86bbaaeaaa027daa86f",
+      "bytes": 2851,
+      "byteExact": true,
+      "scope": "Originalexplicitlegacy3supportreceipt; primarypreinstallmatrix distinct from actualinstall+failure1/retry0/nativeCLI/ELF/launcher/icon/cachechecks; rawbinary/privateprofiles excluded."
+    },
+    {
+      "path": "native/wsl/legacy-current/owned-cache-cleanup-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/owned-cache-cleanup-safe.json",
+      "sourceSha256": "3b83a486c8efcb77d9250101daac9cbe41a7091d87a69d0be6cfa4efa484d4cc",
+      "archivedSha256": "3b83a486c8efcb77d9250101daac9cbe41a7091d87a69d0be6cfa4efa484d4cc",
+      "bytes": 1389,
+      "byteExact": true,
+      "scope": "Originalexplicitlegacy3supportreceipt; primarypreinstallmatrix distinct from actualinstall+failure1/retry0/nativeCLI/ELF/launcher/icon/cachechecks; rawbinary/privateprofiles excluded."
+    },
+    {
+      "path": "sources/legacy-platform-current/primary-fetch-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/primary-fetch-safe.json",
+      "sourceSha256": "bdf0fa063465848f082eba7c8b70f6fbf5a0f999a7319741949f727146af5ce1",
+      "archivedSha256": "bdf0fa063465848f082eba7c8b70f6fbf5a0f999a7319741949f727146af5ce1",
+      "bytes": 2826,
+      "byteExact": true,
+      "scope": "Primaryofficialplatformfetchsafe metadata supporting DeepSeekLinuxDesktopexplicitunsupported/CursornativeLinuxformats/AntigravityDesktopvsIDE/version/countries; commercialfullsource excluded."
+    },
+    {
+      "path": "sources/legacy-platform-current/additional-primary-fetch-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/additional-primary-fetch-safe.json",
+      "sourceSha256": "74da0a07cac1d5438e0b3f9bb6ae8f079aaf645fe4a74541a32a1a90d0919377",
+      "archivedSha256": "74da0a07cac1d5438e0b3f9bb6ae8f079aaf645fe4a74541a32a1a90d0919377",
+      "bytes": 2740,
+      "byteExact": true,
+      "scope": "Primaryofficialplatformfetchsafe metadata supporting DeepSeekLinuxDesktopexplicitunsupported/CursornativeLinuxformats/AntigravityDesktopvsIDE/version/countries; commercialfullsource excluded."
+    },
+    {
+      "path": "sources/legacy-platform-current/last-primary-fetch-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/last-primary-fetch-safe.json",
+      "sourceSha256": "a040cfeca58af3039c89190a408c19fb85824ae7747b42277a8f23b50e1634c8",
+      "archivedSha256": "a040cfeca58af3039c89190a408c19fb85824ae7747b42277a8f23b50e1634c8",
+      "bytes": 2506,
+      "byteExact": true,
+      "scope": "Primaryofficialplatformfetchsafe metadata supporting DeepSeekLinuxDesktopexplicitunsupported/CursornativeLinuxformats/AntigravityDesktopvsIDE/version/countries; commercialfullsource excluded."
+    },
+    {
+      "path": "sources/legacy-platform-current/desktop-api-primary-fetch-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/desktop-api-primary-fetch-safe.json",
+      "sourceSha256": "a3aa0db7ce24e365f27bdc2e3f9630599023a7c02abe2f7101978edb53a7bc67",
+      "archivedSha256": "a3aa0db7ce24e365f27bdc2e3f9630599023a7c02abe2f7101978edb53a7bc67",
+      "bytes": 1705,
+      "byteExact": true,
+      "scope": "Primaryofficialplatformfetchsafe metadata supporting DeepSeekLinuxDesktopexplicitunsupported/CursornativeLinuxformats/AntigravityDesktopvsIDE/version/countries; commercialfullsource excluded."
+    },
+    {
+      "path": "sources/claude-current-support/support-primary-first-two.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/claude-current-support-primary/support-primary-first-two.json",
+      "sourceSha256": "9adfd28f587867bb92ce7d1aa5034cd21dfd5fcf4997f0f6865445cd0341bb63",
+      "archivedSha256": "9adfd28f587867bb92ce7d1aa5034cd21dfd5fcf4997f0f6865445cd0341bb63",
+      "bytes": 640,
+      "byteExact": true,
+      "scope": "Current3officialsupportURLattempts no readableHTTP/page/body; platforms/systemreq/nativeLinuxGUI/silentStoreflags unverified, not unsupported/no publishedresponsehash."
+    },
+    {
+      "path": "sources/claude-current-support/support-primary-third-index.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/claude-current-support-primary/support-primary-third-index.json",
+      "sourceSha256": "d285c8ad400415e37a1f321127f7f0da8056deeb629d5d62bd1b99797b953d10",
+      "archivedSha256": "d285c8ad400415e37a1f321127f7f0da8056deeb629d5d62bd1b99797b953d10",
+      "bytes": 430,
+      "byteExact": true,
+      "scope": "Current3officialsupportURLattempts no readableHTTP/page/body; platforms/systemreq/nativeLinuxGUI/silentStoreflags unverified, not unsupported/no publishedresponsehash."
+    },
+    {
+      "path": "sources/claude-current-support/final-current-support-primary-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/claude-current-support-primary/final-current-support-primary-safe.json",
+      "sourceSha256": "9104bd92f7c83b476d7e20d662272cdbdf32934d07724c391641e00841d0559c",
+      "archivedSha256": "9104bd92f7c83b476d7e20d662272cdbdf32934d07724c391641e00841d0559c",
+      "bytes": 3490,
+      "byteExact": true,
+      "scope": "Current3officialsupportURLattempts no readableHTTP/page/body; platforms/systemreq/nativeLinuxGUI/silentStoreflags unverified, not unsupported/no publishedresponsehash."
+    },
+    {
+      "path": "sources/claude-current-support/safe-evidence-manifest.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/claude-current-support-primary/safe-evidence-manifest.json",
+      "sourceSha256": "a9cc2097f81269e7dc9b47a1c4ddb305dd9605e1a9260751862ba5aa367b0127",
+      "archivedSha256": "a9cc2097f81269e7dc9b47a1c4ddb305dd9605e1a9260751862ba5aa367b0127",
+      "bytes": 658,
+      "byteExact": true,
+      "scope": "Original3safeofficialsupportselectionmanifest/no fullpublicpages or downloadbinaries."
+    },
+    {
+      "path": "maintenance/git-delivery/second-step-delivery-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/root-docs-review/second-step-delivery-safe.json",
+      "sourceSha256": "fffad97c2b6765fb22c17a35bd742af7f38bb815af0e6cd0056f3d98c923402c",
+      "archivedSha256": "fffad97c2b6765fb22c17a35bd742af7f38bb815af0e6cd0056f3d98c923402c",
+      "bytes": 601,
+      "byteExact": true,
+      "scope": "Prior218archive+MD219Gitblobexact/doc828ad10/main4d7d95/twopush0/default+stagedwhitespace0/production71+Pagesinputs unchanged; newepoch not yet committed and no fullnativecompletion."
+    },
+    {
+      "path": "native/windows/interactive-current/independent-bounded-review-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/native-ui-launcher/session1-disconnected-terminal/independent-bounded-review-safe.json",
+      "sourceSha256": "6be6a7af55e3216c482b97987a69661f8df79dc091624d9eee6c7b9e3d5256d9",
+      "archivedSha256": "6be6a7af55e3216c482b97987a69661f8df79dc091624d9eee6c7b9e3d5256d9",
+      "bytes": 1934,
+      "byteExact": true,
+      "scope": "Independentboundedreview of WTS8602actual4sessions/Session1SameSIDDisconnected4/Activecandidate0, not based solelySession3empty/no lockedstate/token/jobIsolationprobe/launch/GUIpass."
+    },
+    {
+      "path": "native/android/correct-windows-current21/native-channel-5572-attempt2/channel-target-identity-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/native-channel-5572-attempt2/channel-target-identity-safe.json",
+      "sourceSha256": "569cc37a84a2c82be42b49ce59f7ba12a0175b9b6db5aa5a1aafe7545b313217",
+      "archivedSha256": "569cc37a84a2c82be42b49ce59f7ba12a0175b9b6db5aa5a1aafe7545b313217",
+      "bytes": 3850,
+      "byteExact": true,
+      "scope": "CurrentWindowsMedium5572 console-name+PID/birth/images/nativeADB5039/listeners verified beforewrites; creatorhandlesretained; originalStudio23276preserved; not historicalpre20absoluteAVDfingerprint."
+    },
+    {
+      "path": "native/android/correct-windows-current21/correct-windows-before-final21-readonly-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-before-final21-readonly-safe.json",
+      "sourceSha256": "13bb9607dd56774e66f560a8ed8d99d8ac2886ea0c1c5e81839dd5f9fff09fed",
+      "archivedSha256": "13bb9607dd56774e66f560a8ed8d99d8ac2886ea0c1c5e81839dd5f9fff09fed",
+      "bytes": 1038,
+      "byteExact": true,
+      "scope": "CorrectexistingWin5572 old20APKd0d1/13960545B/originalnativepref6 exactprivatebackup/read-onlybeforeupdate; fullXML notpre20samebytes becauseoldown17379extra1; no wipe/restore/privatepayload."
+    },
+    {
+      "path": "native/android/correct-windows-current21/correct-windows-original-five-values-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-original-five-values-safe.json",
+      "sourceSha256": "020604800e495eb8ea814c6614e0681223b3038beddb96bb8fdf3e68b4a5e249",
+      "archivedSha256": "020604800e495eb8ea814c6614e0681223b3038beddb96bb8fdf3e68b4a5e249",
+      "bytes": 542,
+      "byteExact": true,
+      "scope": "CorrectWin native6 containsalloriginal5 ciphertextvalues exactly plusoldown17379extra1; no privatekeys/valuesprinted or restore; six is not sixoriginaldevices."
+    },
+    {
+      "path": "native/android/correct-windows-current21/correct-windows-original-certificate-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-original-certificate-safe.json",
+      "sourceSha256": "4aea050de91a4812d619198d94ceb3f5a7ed32ca30ede52273350ce5902aedfe",
+      "archivedSha256": "4aea050de91a4812d619198d94ceb3f5a7ed32ca30ede52273350ce5902aedfe",
+      "bytes": 570,
+      "byteExact": true,
+      "scope": "CorrectexistingWinAPKd0d1 certdf6=currentnewf83cert; command0 andinstall-r compatible; no key/profilepayload copied."
+    },
+    {
+      "path": "native/android/correct-windows-current21/correct-windows-final21-install-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-install-safe.json",
+      "sourceSha256": "d2a917bf910dacbea5a35d152a72cdfa9932e96339b8c9ee210cb509fb48e8f0",
+      "archivedSha256": "d2a917bf910dacbea5a35d152a72cdfa9932e96339b8c9ee210cb509fb48e8f0",
+      "bytes": 1569,
+      "byteExact": true,
+      "scope": "CorrectWin5572/source71 currentf83/app+testinstallactual0×2/originalcertdf6/6encryptedvalues+original5retained; no clear/wipe/keyreplace/defaultADB."
+    },
+    {
+      "path": "native/android/correct-windows-current21/correct-windows-final21-native-bridge-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-native-bridge-safe.json",
+      "sourceSha256": "7ad158baac519a67c020e85966a6529ec29e59fac7f457aa48d3cdace2200af5",
+      "archivedSha256": "7ad158baac519a67c020e85966a6529ec29e59fac7f457aa48d3cdace2200af5",
+      "bytes": 844,
+      "byteExact": true,
+      "scope": "CorrectWin5572 freshNativeBridge4tests actual0/instrumentationCode-1/source71/appf83+testb5c/certdf6/original6retained; previousLinux4stillhistoricalscope."
+    },
+    {
+      "path": "native/android/correct-windows-current21/correct-windows-original-five-aes-and-existing-wire-attempt2-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-original-five-aes-and-existing-wire-attempt2-safe.json",
+      "sourceSha256": "fa7b8d3063119a05ff710283ca8ac898fe254ee791eb962ed1ebb6e654ecc8e5",
+      "archivedSha256": "fa7b8d3063119a05ff710283ca8ac898fe254ee791eb962ed1ebb6e654ecc8e5",
+      "bytes": 802,
+      "byteExact": true,
+      "scope": "CorrectWin original5 AESdecrypt5/5success0fail andoriginaltoken only7337/infooneGET200/nameMatch/noPairing/tokenprinting; not all5originalnetworkrequest tests."
+    },
+    {
+      "path": "native/android/correct-windows-current21/isolated-studio-optional-google-signin-normal-dismiss-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/isolated-studio-optional-google-signin-normal-dismiss-safe.json",
+      "sourceSha256": "a8b438e73637d1ef5b1bbf27489967c19a5687eecb213edb6269e72712bd11d4",
+      "archivedSha256": "a8b438e73637d1ef5b1bbf27489967c19a5687eecb213edb6269e72712bd11d4",
+      "bytes": 1236,
+      "byteExact": true,
+      "scope": "OnlyownStudio19620optionalstartupdialog normalclosed, mainIDEalive/original23276untouched/no signin/injection/forcekill; thisreceipt alone notGradleSyncproof."
+    },
+    {
+      "path": "native/android/correct-windows-current21/isolated-studio-final21-actual-project-sync-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/isolated-studio-final21-actual-project-sync-safe.json",
+      "sourceSha256": "6e5c9b871dfff003d8c4ce20afebb4da7b1d6155f46b3a038ae9ba562ea0f392",
+      "archivedSha256": "6e5c9b871dfff003d8c4ce20afebb4da7b1d6155f46b3a038ae9ba562ea0f392",
+      "bytes": 3068,
+      "byteExact": true,
+      "scope": "ActualownStudio19620 privatepaths/source71 projectGradle RESOLVE_PROJECT0 success/importexact/17400ms/JDKtemurin21/Medium5572online/qualifiedSDKJUnit separatefromIDERun; original23276profileunchanged/no fullIdeaLog/hostdesktopstillDisconnected."
+    },
+    {
+      "path": "native/android/correct-windows-current21/isolated-studio-actual-native-adb-transport-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/isolated-studio-actual-native-adb-transport-safe.json",
+      "sourceSha256": "24a460808580f969cb09fa35080f2a2b22f8c729f5b790205f1c6f4be846fbd5",
+      "archivedSha256": "24a460808580f969cb09fa35080f2a2b22f8c729f5b790205f1c6f4be846fbd5",
+      "bytes": 2052,
+      "byteExact": true,
+      "scope": "OwnStudio19620 actual5loopbackEstablished5039/default5037none; exactbirth/image/sourcebound transport; no signals/IDE Run instrumentation claim."
+    },
+    {
+      "path": "sources/audit/epoch3-installation-archive-independent-review-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-docs-audit-20261111/epoch3-installation-archive-independent-review-safe.json",
+      "sourceSha256": "1513a8261017212da27cf5bf36af1ac1be27ddd5588b3a8e5b1845e62784aef8",
+      "archivedSha256": "1513a8261017212da27cf5bf36af1ac1be27ddd5588b3a8e5b1845e62784aef8",
+      "bytes": 42252,
+      "byteExact": true
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsCopied": false,
@@ -1894,16 +2325,16 @@
       "path": "sources/requirement-delivery-audit.json",
       "kind": "Derived requirement-to-evidence audit using only archived public/safe records; pending does not imply failure or successful native run.",
       "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
-      "archivedSha256": "8518018e2f013a12b6f4cd0eca6e5d3493ae255baf3ebb5f053894e781d4dd60",
-      "bytes": 14476
+      "archivedSha256": "1e99efe68b691932ce3f5dafe76a889584e1524eacf6d2f6bec09359b2063854",
+      "bytes": 17961
     }
   ],
-  "sourceEpochBoundary": "a96a06e historical20; final71 code/frontend/Pages/fullRust/currentLinux and Windows core16 verified; native runtime18/reinstallation/Android final21 pending",
+  "sourceEpochBoundary": "a96a06e historical20; final71 code/frontend/Pages/fullRust/currentLinux and Windows core16 verified; correctWindowsAndroid5572 samecertinstall/JUnit4/original5AES+values+one7337wire/actualIDE17400msSync verified; nativeUI21+42/PTy/cleanup/Windows runtime18/reinstallation pending",
   "finalSourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
-  "latestContinuationAt": "2026-11-11T13:08:27.984343+00:00",
+  "latestContinuationAt": "2026-11-11T14:53:35.698803+00:00",
   "originalSourceAvailabilityAtLatestContinuation": {
-    "selectedFiles": 206,
-    "availableCount": 179,
+    "selectedFiles": 254,
+    "availableCount": 227,
     "missingCount": 27,
     "missingSourceDoesNotRewriteHistoricalByteExact": true
   }

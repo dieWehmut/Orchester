@@ -1,0 +1,57 @@
+[
+  {
+    "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/master/docs/development.md",
+    "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/master/docs/development.md",
+    "status": 200,
+    "bytes": 26094,
+    "sha256": "cc5bcf6110e49babfe81d2bb7c4a40124483eb664646539928ba8ef1a8b8f646",
+    "contentType": "text/plain; charset=utf-8",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/last-primary-0"
+  },
+  {
+    "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/master/Makefile",
+    "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/master/Makefile",
+    "status": 200,
+    "bytes": 1198,
+    "sha256": "31d3c908181c6034eb955aad3ba25b50d16d941924f767c6d1be6b46b8201a04",
+    "contentType": "text/plain; charset=utf-8",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/last-primary-1"
+  },
+  {
+    "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/master/apps/desktop/package.json",
+    "errorType": "URLError",
+    "status": null
+  },
+  {
+    "requestedUrl": "https://deepseek-harness.github.io/deepseek-harness/guide/quickstart",
+    "errorType": "URLError",
+    "status": null
+  },
+  {
+    "requestedUrl": "https://antigravity.google/docs/install/",
+    "finalUrl": "https://antigravity.google/docs/install/",
+    "status": 200,
+    "bytes": 190449,
+    "sha256": "5faf9e8a9aea189285a2ac624e5f498605839fb326cb10ed30684ffe116abc67",
+    "contentType": "text/html",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/last-primary-4"
+  },
+  {
+    "requestedUrl": "https://antigravity.google/docs/faq/",
+    "finalUrl": "https://antigravity.google/docs/faq/",
+    "status": 200,
+    "bytes": 148815,
+    "sha256": "4ca8a1f40ea1a039610753500c047914cff7ffa092e315eacd215d5ecf748fc3",
+    "contentType": "text/html",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/last-primary-5"
+  },
+  {
+    "requestedUrl": "https://cursor.com/docs/get-started/installation",
+    "finalUrl": "https://cursor.com/docs/get-started/quickstart",
+    "status": 200,
+    "bytes": 264904,
+    "sha256": "8c9ea190c1ea8e1f0aeeffec34df3f9af2c3e47dd0934e8f44959c7eddf9478b",
+    "contentType": "text/html; charset=utf-8",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/last-primary-6"
+  }
+]

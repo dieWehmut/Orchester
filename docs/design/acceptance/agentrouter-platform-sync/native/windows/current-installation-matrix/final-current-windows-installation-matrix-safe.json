@@ -1,0 +1,566 @@
+{
+  "observedAt": "2026-11-11T13:09:56.3192041Z",
+  "status": "current Windows read-only installation evidence reviewed; required Claude application payload remains unconfirmed",
+  "sourceDigests": {
+    "nativeResultSha256": "dc23cb593da21e78825a680c51cfd10cc8687479bbc8a35ab7d7ad1868079037",
+    "filesystemSnapshotSha256": "9d4fd644d4254ddcfda8518a7be2d97d5f52e94908c9fb16b2ec3c7987523c1b",
+    "historicalNativeCliVersionReceiptSha256": "3e85f32a3ebfb7de81ac4ab4ef3624931e31ca49003e38e2185a1c964c1dac11",
+    "nativeExecutionProvenanceSha256": "bdcc7de5e9d444a06f61bbee8bbf874d485fdfc2c844f80906c4962a66ec00b5",
+    "agentRouterPrimaryScopeSha256": "5e2f545a0d09dce33df6f77dc0ae03aeffc247b86605ce907a4d9b937f19c761",
+    "supplementaryPublicPlatformPayloadSha256": "376885e9d9856cf170e7ce36f299241bdde61c1131167887a17c0658fb5afa87"
+  },
+  "counts": {
+    "cliEntries": 9,
+    "editorExtensionEntries": 4,
+    "desktopApplicationEntries": 5,
+    "verificationEntriesExcludingBootstrapper": 18,
+    "uniqueProductsVerifiedInThisMatrix": 17,
+    "knownProfilePathsCheckedWithoutReading": 12
+  },
+  "cliTools": [
+    {
+      "id": "claude",
+      "kind": "cli",
+      "entryWindowsPath": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@anthropic-ai\\claude-code\\bin\\claude.exe",
+      "entrySha256": "345996b4bdbae21d817f750fae2f34cbf8d81224a5444c78136091d121beb298",
+      "entryExistsNative": true,
+      "currentNativeFileMetadata": {
+        "productName": "Claude Code",
+        "productVersion": "2.1.322.0",
+        "fileVersion": "2.1.322.0",
+        "companyName": "Anthropic PBC"
+      },
+      "currentAuthenticode": {
+        "querySucceeded": true,
+        "status": "Valid",
+        "signerSubject": "CN=\"Anthropic, PBC\", O=\"Anthropic, PBC\", L=San Francisco, S=California, C=US, SERIALNUMBER=4860621, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=Delaware, OID.1.3.6.1.4.1.311.60.2.1.3=US",
+        "signerThumbprint": "60C2D9C51F09822FFF4F194DE9EEDB67451292D1"
+      },
+      "historicalApplicationVersion": "2.1.322",
+      "historicalActualVersionCommandExitCode": 0,
+      "entryHashEqualsHistoricalNativeVersionProof": true,
+      "currentVersionCommandRun": false,
+      "fullPackageByteIdentityClaimed": false,
+      "currentPublicPackageManifest": {
+        "windowsPath": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@anthropic-ai\\claude-code\\package.json",
+        "sha256": "4d880cb9add93733fa259286f7b0d5a03c69e4eace22be39b90d3b32792a4c08",
+        "name": "@anthropic-ai/claude-code",
+        "version": "2.1.322",
+        "readOnlyJsonMetadata": true
+      }
+    },
+    {
+      "id": "codex",
+      "kind": "cli",
+      "entryWindowsPath": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+      "entrySha256": "e14fc83739c13c1074b12bd1acce4010c893c7f6fbfc1593b4a31d74cabb57af",
+      "entryExistsNative": true,
+      "currentNativeFileMetadata": {
+        "productName": null,
+        "productVersion": null,
+        "fileVersion": null,
+        "companyName": null
+      },
+      "currentAuthenticode": {
+        "querySucceeded": true,
+        "status": "NotSigned",
+        "signerSubject": null,
+        "signerThumbprint": null
+      },
+      "historicalApplicationVersion": "0.167.1",
+      "historicalActualVersionCommandExitCode": 0,
+      "entryHashEqualsHistoricalNativeVersionProof": true,
+      "currentVersionCommandRun": false,
+      "fullPackageByteIdentityClaimed": false,
+      "currentPublicPackageManifest": {
+        "windowsPath": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\package.json",
+        "sha256": "e8e3347884c49f8105400f410399e54831c999988c964d289a12f08d28c0d1da",
+        "name": "@openai/codex",
+        "version": "0.167.1",
+        "readOnlyJsonMetadata": true
+      }
+    },
+    {
+      "id": "crush",
+      "kind": "cli",
+      "entryWindowsPath": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@charmland\\crush\\run-crush.js",
+      "entrySha256": "2cc1ac87cc237a6383702b59f985160e637d3ec853bbccba2d7ef6bbf4d94361",
+      "entryExistsNative": true,
+      "currentNativeFileMetadata": {
+        "productName": null,
+        "productVersion": null,
+        "fileVersion": null,
+        "companyName": null
+      },
+      "currentAuthenticode": {
+        "querySucceeded": true,
+        "status": "NotSigned",
+        "signerSubject": null,
+        "signerThumbprint": null
+      },
+      "historicalApplicationVersion": "0.100.0",
+      "historicalActualVersionCommandExitCode": 0,
+      "entryHashEqualsHistoricalNativeVersionProof": true,
+      "currentVersionCommandRun": false,
+      "fullPackageByteIdentityClaimed": false,
+      "currentPublicPackageManifest": {
+        "windowsPath": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@charmland\\crush\\package.json",
+        "sha256": "cd5f13ee8ccb4ea7f3826b4eafc3ecb70774b5d5c4cdf06a6f2b90beaf51a21a",
+        "name": "@charmland/crush",
+        "version": "0.100.0",
+        "readOnlyJsonMetadata": true
+      }
+    },
+    {
+      "id": "gemini",
+      "kind": "cli",
+      "entryWindowsPath": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@google\\gemini-cli\\bundle\\gemini.js",
+      "entrySha256": "fcc38edd4f864c2f5fa582d7d133c19b1a04c697ad3143ab8045f92b77644c68",
+      "entryExistsNative": true,
+      "currentNativeFileMetadata": {
+        "productName": null,
+        "productVersion": null,
+        "fileVersion": null,
+        "companyName": null
+      },
+      "currentAuthenticode": {
+        "querySucceeded": true,
+        "status": "NotSigned",
+        "signerSubject": null,
+        "signerThumbprint": null
+      },
+      "historicalApplicationVersion": "0.68.0",
+      "historicalActualVersionCommandExitCode": 0,
+      "entryHashEqualsHistoricalNativeVersionProof": true,
+      "currentVersionCommandRun": false,
+      "fullPackageByteIdentityClaimed": false,
+      "currentPublicPackageManifest": {
+        "windowsPath": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@google\\gemini-cli\\package.json",
+        "sha256": "3251e00608874812d7327f41cddb09a6f8e13613124c36d21fbf537e2510bbaa",
+        "name": "@google/gemini-cli",
+        "version": "0.68.0",
+        "readOnlyJsonMetadata": true
+      }
+    },
+    {
+      "id": "hermes",
+      "kind": "cli",
+      "entryWindowsPath": "C:\\Users\\han\\AppData\\Local\\hermes\\bin\\hermes.exe",
+      "entrySha256": "94206ceddcade3f3b65dc90ddfc61166067b9cce77eaa0d87626c8485fc8c3f9",
+      "entryExistsNative": true,
+      "currentNativeFileMetadata": {
+        "productName": null,
+        "productVersion": null,
+        "fileVersion": null,
+        "companyName": null
+      },
+      "currentAuthenticode": {
+        "querySucceeded": true,
+        "status": "NotSigned",
+        "signerSubject": null,
+        "signerThumbprint": null
+      },
+      "historicalApplicationVersion": "0.23.1+1899.g60f8163",
+      "historicalActualVersionCommandExitCode": 0,
+      "entryHashEqualsHistoricalNativeVersionProof": true,
+      "currentVersionCommandRun": false,
+      "fullPackageByteIdentityClaimed": false,
+      "versionBoundary": "Historical Hermes application version; unchanged launcher hash does not prove unchanged underlying Python package or a new runtime version check."
+    },
+    {
+      "id": "openclaw",
+      "kind": "cli",
+      "entryWindowsPath": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\openclaw\\openclaw.mjs",
+      "entrySha256": "469e60c9f60b615ff71c985a54238ee532a8f949866d76aebe7d6e4bc7219902",
+      "entryExistsNative": true,
+      "currentNativeFileMetadata": {
+        "productName": null,
+        "productVersion": null,
+        "fileVersion": null,
+        "companyName": null
+      },
+      "currentAuthenticode": {
+        "querySucceeded": true,
+        "status": "UnknownError",
+        "signerSubject": null,
+        "signerThumbprint": null
+      },
+      "historicalApplicationVersion": "2026.11.3",
+      "historicalActualVersionCommandExitCode": 0,
+      "entryHashEqualsHistoricalNativeVersionProof": true,
+      "currentVersionCommandRun": false,
+      "fullPackageByteIdentityClaimed": false,
+      "currentPublicPackageManifest": {
+        "windowsPath": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\openclaw\\package.json",
+        "sha256": "18f674ce22047b21d3e832372dff012914a5511cf98044ee0db4b8a065fa317d",
+        "name": "openclaw",
+        "version": "2026.11.3",
+        "readOnlyJsonMetadata": true
+      }
+    },
+    {
+      "id": "opencode",
+      "kind": "cli",
+      "entryWindowsPath": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\opencode-ai\\.\\bin\\opencode.exe",
+      "entrySha256": "d7b473388cb62555970e400ce54cdfb6d6573608beea6f8fdf382cd1a698a3fa",
+      "entryExistsNative": true,
+      "currentNativeFileMetadata": {
+        "productName": "Bun",
+        "productVersion": "1.4.4",
+        "fileVersion": "1.4.4",
+        "companyName": "Oven"
+      },
+      "currentAuthenticode": {
+        "querySucceeded": true,
+        "status": "Valid",
+        "signerSubject": "CN=\"Anomaly Innovations, Inc https://anoma.ly/\", O=\"Anomaly Innovations, Inc https://anoma.ly/\", L=Dover, S=Delaware, C=US",
+        "signerThumbprint": "BFADCB7D003A2EF4244E7386E8F7AF377D20E79A"
+      },
+      "historicalApplicationVersion": "1.19.5",
+      "historicalActualVersionCommandExitCode": 0,
+      "entryHashEqualsHistoricalNativeVersionProof": true,
+      "currentVersionCommandRun": false,
+      "fullPackageByteIdentityClaimed": false,
+      "currentPublicPackageManifest": {
+        "windowsPath": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\opencode-ai\\package.json",
+        "sha256": "b611692992fefe03641adf42bd26d1d3affc2ed7848122d6347879aa7890afc7",
+        "name": "opencode-ai",
+        "version": "1.19.5",
+        "readOnlyJsonMetadata": true
+      },
+      "nativeFileVersionBoundary": "PE ProductName Bun/ProductVersion 1.4.4 identifies embedded runtime, not OpenCode application version."
+    },
+    {
+      "id": "pi",
+      "kind": "cli",
+      "entryWindowsPath": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@earendil-works\\pi-coding-agent\\dist\\bundle\\cli.js",
+      "entrySha256": "e79626f2dd6f94aa45d30f3fa63cd84319a6eefcd150b353cfaf274366926774",
+      "entryExistsNative": true,
+      "currentNativeFileMetadata": {
+        "productName": null,
+        "productVersion": null,
+        "fileVersion": null,
+        "companyName": null
+      },
+      "currentAuthenticode": {
+        "querySucceeded": true,
+        "status": "NotSigned",
+        "signerSubject": null,
+        "signerThumbprint": null
+      },
+      "historicalApplicationVersion": "1.5.2",
+      "historicalActualVersionCommandExitCode": 0,
+      "entryHashEqualsHistoricalNativeVersionProof": true,
+      "currentVersionCommandRun": false,
+      "fullPackageByteIdentityClaimed": false,
+      "currentPublicPackageManifest": {
+        "windowsPath": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@earendil-works\\pi-coding-agent\\package.json",
+        "sha256": "18b422b7d80f2caa2551d253c0a8409e1caa54b954bfb7d18252e507bb8a0318",
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.5.2",
+        "readOnlyJsonMetadata": true
+      }
+    },
+    {
+      "id": "qwen",
+      "kind": "cli",
+      "entryWindowsPath": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@qwen-code\\qwen-code\\cli-entry.js",
+      "entrySha256": "113efe4104a9fc66f507d34bfd6abbd896ceb77de47f4b468a0825a327fdc6a5",
+      "entryExistsNative": true,
+      "currentNativeFileMetadata": {
+        "productName": null,
+        "productVersion": null,
+        "fileVersion": null,
+        "companyName": null
+      },
+      "currentAuthenticode": {
+        "querySucceeded": true,
+        "status": "NotSigned",
+        "signerSubject": null,
+        "signerThumbprint": null
+      },
+      "historicalApplicationVersion": "0.27.2",
+      "historicalActualVersionCommandExitCode": 0,
+      "entryHashEqualsHistoricalNativeVersionProof": true,
+      "currentVersionCommandRun": false,
+      "fullPackageByteIdentityClaimed": false,
+      "currentPublicPackageManifest": {
+        "windowsPath": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@qwen-code\\qwen-code\\package.json",
+        "sha256": "f7d94b9a470441e8447a21fa427f44e3d86f296aec782f999b7d26b54b4d359a",
+        "name": "@qwen-code/qwen-code",
+        "version": "0.27.2",
+        "readOnlyJsonMetadata": true
+      }
+    }
+  ],
+  "editorExtensions": [
+    {
+      "id": "cline",
+      "kind": "editor_extension",
+      "officialExtensionId": "saoudrizwan.claude-dev",
+      "publicManifestWindowsPath": "C:\\Users\\han\\.vscode\\extensions\\saoudrizwan.claude-dev-4.1.26\\package.json",
+      "publicManifestSha256": "4594e32552aeeaa9e0b056b3640c0572fec6ec10394f7e02a5a19b004b563df3",
+      "currentVersion": "4.1.26",
+      "nativeManifestQuerySucceeded": true,
+      "manifestMatchesHistoricalSha256": true,
+      "fullExtensionPayloadByteIdentityClaimed": false
+    },
+    {
+      "id": "roo",
+      "kind": "editor_extension",
+      "officialExtensionId": "rooveterinaryinc.roo-cline",
+      "publicManifestWindowsPath": "C:\\Users\\han\\.vscode\\extensions\\rooveterinaryinc.roo-cline-3.54.0\\package.json",
+      "publicManifestSha256": "d0779f28250fc06d48c849894d37b627ce7069c0d24a57f10938f7dc233a3c97",
+      "currentVersion": "3.54.0",
+      "nativeManifestQuerySucceeded": true,
+      "manifestMatchesHistoricalSha256": true,
+      "fullExtensionPayloadByteIdentityClaimed": false
+    },
+    {
+      "id": "kilo",
+      "kind": "editor_extension",
+      "officialExtensionId": "kilocode.kilo-code",
+      "publicManifestWindowsPath": "C:\\Users\\han\\.vscode\\extensions\\kilocode.kilo-code-7.8.27-win32-x64\\package.json",
+      "publicManifestSha256": "e604df5b42a7fc179457182fa4af309711b6c2a1cf7266799af982d44bb1b50c",
+      "currentVersion": "7.8.27",
+      "nativeManifestQuerySucceeded": true,
+      "manifestMatchesHistoricalSha256": true,
+      "fullExtensionPayloadByteIdentityClaimed": false
+    },
+    {
+      "id": "claude",
+      "kind": "editor_extension",
+      "officialExtensionId": "anthropic.claude-code",
+      "publicManifestWindowsPath": "C:\\Users\\han\\.vscode\\extensions\\anthropic.claude-code-2.1.322-win32-x64\\package.json",
+      "publicManifestSha256": "68b76b5e298c35d79cbc6e54c3e538d57068010e594246602b957b0f7e2eeb3b",
+      "currentVersion": "2.1.322",
+      "nativeManifestQuerySucceeded": true,
+      "manifestMatchesHistoricalSha256": true,
+      "fullExtensionPayloadByteIdentityClaimed": false
+    }
+  ],
+  "desktopApplications": [
+    {
+      "id": "workbuddy",
+      "kind": "desktop_service",
+      "entryWindowsPath": "C:\\Users\\han\\software\\workbuddy\\WorkBuddy.exe",
+      "entrySha256": "bbf504003825e0e22dd8c401b396d79db78ec603558088565d1b2e81561704a0",
+      "entryBytes": 204590360,
+      "entryExistsNative": true,
+      "currentPublicFileVersion": {
+        "productName": "WorkBuddy",
+        "productVersion": "5.9.3.0",
+        "fileVersion": "5.9.3",
+        "companyName": "Tencent Technology (Shenzhen) Company Limited"
+      },
+      "currentAuthenticode": {
+        "querySucceeded": true,
+        "status": "Valid",
+        "signerSubject": "CN=Tencent Technology (Shenzhen) Company Limited, O=Tencent Technology (Shenzhen) Company Limited, L=Shenzhen, S=Guangdong Province, C=CN, SERIALNUMBER=9144030071526726XG, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong Province, OID.1.3.6.1.4.1.311.60.2.1.3=CN",
+        "signerThumbprint": "2241B013E2D6B9AAD7590E8056BF5E17CB1C795B"
+      },
+      "historicalSameFileDigestBaselineAvailable": true,
+      "entryMatchesHistoricalDigest": true,
+      "guiInteractionVerifiedByThisTask": false,
+      "currentExactGuidUninstallRegistration": {
+        "guid": "BFD312E9-1019-4F57-9F44-F86246833B50",
+        "registryPath": "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\BFD312E9-1019-4F57-9F44-F86246833B50",
+        "displayName": "WorkBuddy 5.9.3",
+        "displayVersion": "5.9.3",
+        "publisher": "Tencent Technology (Shenzhen) Company Limited",
+        "displayIcon": "C:\\Users\\han\\software\\workbuddy\\WorkBuddy.exe,0",
+        "urlInfoAbout": "https://www.workbuddy.cn",
+        "urlUpdateInfo": "https://www.workbuddy.cn"
+      }
+    },
+    {
+      "id": "workbuddy_global",
+      "kind": "desktop_service",
+      "entryWindowsPath": "C:\\Users\\han\\WorkBuddy\\WorkBuddyAI\\WorkBuddyAI.exe",
+      "entrySha256": "15880ca7859f417bf8a6a639bacd1da6b63ced83fbead710317dad38b8f6fcc8",
+      "entryBytes": 204590360,
+      "entryExistsNative": true,
+      "currentPublicFileVersion": {
+        "productName": "WorkBuddy AI",
+        "productVersion": "5.9.4.0",
+        "fileVersion": "5.9.4",
+        "companyName": "Tencent Technology (Shenzhen) Company Limited"
+      },
+      "currentAuthenticode": {
+        "querySucceeded": true,
+        "status": "Valid",
+        "signerSubject": "CN=Tencent Technology (Shenzhen) Company Limited, O=Tencent Technology (Shenzhen) Company Limited, L=Shenzhen, S=Guangdong Province, C=CN, SERIALNUMBER=9144030071526726XG, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong Province, OID.1.3.6.1.4.1.311.60.2.1.3=CN",
+        "signerThumbprint": "2241B013E2D6B9AAD7590E8056BF5E17CB1C795B"
+      },
+      "historicalSameFileDigestBaselineAvailable": true,
+      "entryMatchesHistoricalDigest": true,
+      "guiInteractionVerifiedByThisTask": false,
+      "currentExactGuidUninstallRegistration": {
+        "guid": "C02C88CB-5DAE-4330-AEC1-572CFD048A59",
+        "registryPath": "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\C02C88CB-5DAE-4330-AEC1-572CFD048A59",
+        "displayName": "WorkBuddy AI 5.9.4",
+        "displayVersion": "5.9.4",
+        "publisher": "Tencent Technology (Shenzhen) Company Limited",
+        "displayIcon": "C:\\Users\\han\\WorkBuddy\\WorkBuddyAI\\WorkBuddyAI.exe,0",
+        "urlInfoAbout": "https://www.workbuddy.ai",
+        "urlUpdateInfo": "https://www.workbuddy.ai"
+      }
+    },
+    {
+      "id": "zcode",
+      "kind": "desktop_service",
+      "entryWindowsPath": "C:\\Users\\han\\AppData\\Local\\Programs\\ZCode\\ZCode.exe",
+      "entrySha256": "7aca3aeab3d3b775a39cf9cbe048b30a80278d3527b6fbcfd0e7b00f79a2c326",
+      "entryBytes": 246332312,
+      "entryExistsNative": true,
+      "currentPublicFileVersion": {
+        "productName": "ZCode",
+        "productVersion": "3.17.2.9661",
+        "fileVersion": "3.17.2.9661",
+        "companyName": "ZCode"
+      },
+      "currentAuthenticode": {
+        "querySucceeded": true,
+        "status": "Valid",
+        "signerSubject": "CN=北京智谱华章科技股份有限公司, O=北京智谱华章科技股份有限公司, S=北京市, C=CN, SERIALNUMBER=91110108MA01KP2T5U, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=海淀区, OID.1.3.6.1.4.1.311.60.2.1.2=北京市, OID.1.3.6.1.4.1.311.60.2.1.3=CN",
+        "signerThumbprint": "6F7B147DC610F91425750D2449C46002C3385BCF"
+      },
+      "historicalSameFileDigestBaselineAvailable": true,
+      "entryMatchesHistoricalDigest": true,
+      "guiInteractionVerifiedByThisTask": false
+    },
+    {
+      "id": "craft",
+      "kind": "desktop_service",
+      "entryWindowsPath": "C:\\Users\\han\\AppData\\Local\\Programs\\@craft-agentelectron\\Craft Agents.exe",
+      "entrySha256": "ca8f5aec86141cde2956be8b842a521c983ebcbe2c1dc8e88ca7ac4392a5f7c0",
+      "entryBytes": 210903040,
+      "entryExistsNative": true,
+      "currentPublicFileVersion": {
+        "productName": "Craft Agents",
+        "productVersion": "0.15.9.0",
+        "fileVersion": "0.15.9",
+        "companyName": "Craft Docs Ltd."
+      },
+      "currentAuthenticode": {
+        "querySucceeded": true,
+        "status": "NotSigned",
+        "signerSubject": null,
+        "signerThumbprint": null
+      },
+      "historicalSameFileDigestBaselineAvailable": true,
+      "entryMatchesHistoricalDigest": true,
+      "guiInteractionVerifiedByThisTask": false
+    },
+    {
+      "id": "trae",
+      "kind": "desktop_service",
+      "entryWindowsPath": "C:\\Users\\han\\AppData\\Local\\Programs\\Trae\\Trae.exe",
+      "entrySha256": "35be21aba3c0f4d85e1de007976d4ae69fcf92b653684589c5c2565673a0f4c9",
+      "entryBytes": 214728496,
+      "entryExistsNative": true,
+      "currentPublicFileVersion": {
+        "productName": "Trae",
+        "productVersion": "3.6.13",
+        "fileVersion": "2.3.99397",
+        "companyName": "SPRING (SG) PTE. LTD."
+      },
+      "currentAuthenticode": {
+        "querySucceeded": true,
+        "status": "Valid",
+        "signerSubject": "CN=SPRING (SG) PTE. LTD, O=SPRING (SG) PTE. LTD, L=Singapore, C=SG, SERIALNUMBER=202325236K, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.3=SG",
+        "signerThumbprint": "54651F859DD2D0CA549DDEC1DCEE2683B975AECC"
+      },
+      "historicalSameFileDigestBaselineAvailable": false,
+      "entryMatchesHistoricalDigest": null,
+      "guiInteractionVerifiedByThisTask": false
+    }
+  ],
+  "verifiedProductIds": [
+    "claude",
+    "cline",
+    "codex",
+    "craft",
+    "crush",
+    "gemini",
+    "hermes",
+    "kilo",
+    "openclaw",
+    "opencode",
+    "pi",
+    "qwen",
+    "roo",
+    "trae",
+    "workbuddy",
+    "workbuddy_global",
+    "zcode"
+  ],
+  "claudeApplication": {
+    "id": "claude_app",
+    "currentUserExactKnownFamilyRegistrationCount": 0,
+    "currentUserQuerySucceeded": true,
+    "startAppsExactKnownFamilyCount": 0,
+    "startAppsQuerySucceeded": true,
+    "allUsersQuerySucceeded": false,
+    "allUsersCount": null,
+    "allUsersErrorTypes": [
+      "System.UnauthorizedAccessException"
+    ],
+    "machineWideAbsenceClaimed": false,
+    "knownOfficialFamilies": [
+      "AnthropicPBC.Claude_fnn82j28hfe8t",
+      "Claude_pzs8sxrjxfjjc"
+    ],
+    "storeBootstrapper": {
+      "id": "claude_app_bootstrapper",
+      "kind": "installer_bootstrapper_only",
+      "path": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\claude-official-prepared-20261111-source\\Claude-Store-Installer.exe",
+      "exists": true,
+      "bytes": 813088,
+      "sha256": "8ab145dab22a698105f20e10b182e50d1c2422e2be1818349efadbb06e118a48",
+      "publicFileVersion": {
+        "productName": "Store Installer",
+        "productVersion": "22609.1501.4.0+2ee876db97d84a09e734c9def92bfc09c32ab513",
+        "fileVersion": "22609.1501.4.0",
+        "companyName": "Microsoft Corporation"
+      },
+      "authenticode": {
+        "querySucceeded": true,
+        "status": "Valid",
+        "signerSubject": "CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+        "signerThumbprint": "0F7E3531DB084A3D45759670B7699E53985E8742"
+      }
+    },
+    "bootstrapperIsApplicationPayload": false,
+    "applicationPayloadConfirmedByThisTask": false
+  },
+  "coverageBoundary": {
+    "agentRouterNamedProducts": 17,
+    "agentRouterProductsRepresentedByInstalledEntries": 16,
+    "agentRouterProductWithoutConfirmedApplicationPayload": "claude_app",
+    "userRequestedExtraProductVerified": "workbuddy_global",
+    "legacyDeepSeekCursorAntigravity": "Outside this Windows matrix; separate owners are verifying/installing current official products. No absence or unsupported claim from this matrix.",
+    "canonicalTotalScope": 21,
+    "thirdPartyGuidePlatformWordingIsVendorInstallationProof": false
+  },
+  "safeBoundaries": {
+    "privateProfileContentsRead": false,
+    "privateEnvironmentOrArgvRead": false,
+    "modelCalls": 0,
+    "authOrSetupCalls": 0,
+    "versionCommandsExecutedThisMatrix": 0,
+    "installationOrUpdateCommands": 0,
+    "guiStarts": 0,
+    "processSignals": 0,
+    "gitOrSourceEdits": 0,
+    "androidQueueWrites": 0
+  },
+  "materialLimits": [
+    "Historical native CLI version commands were actual successful earlier runs; this restart matrix verifies unchanged entry digests and eight current public npm manifest versions, not fresh runtime versions or whole package byte equality.",
+    "Extension IDs, versions and public manifest digests match prior proof; whole extension payload byte equality is not established.",
+    "OpenCode PE version is embedded Bun runtime metadata, not OpenCode application version.",
+    "Craft current public executable Authenticode status is NotSigned; OpenClaw .mjs signature query status is UnknownError. These are retained literally and not rewritten as valid signatures.",
+    "Windows desktop file/version/signature/registration evidence does not perform GUI interaction acceptance.",
+    "All-users Claude registration was access denied, not a machine-wide zero count."
+  ]
+}

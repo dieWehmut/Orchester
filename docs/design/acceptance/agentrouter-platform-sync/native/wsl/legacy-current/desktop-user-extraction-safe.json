@@ -1,0 +1,19 @@
+[
+  {
+    "product": "cursor",
+    "version": "3.29.15",
+    "root": "/home/han/.local/opt/cursor/3.29.15",
+    "actualExitCode": 0,
+    "stderrBytes": 0,
+    "extractor": "dpkg-deb --extract (no installer scripts)",
+    "durationSeconds": 10.995628833770752
+  },
+  {
+    "product": "antigravity",
+    "version": "2.31.0",
+    "root": "/home/han/.local/opt/antigravity/2.31.0",
+    "actualExitCode": 0,
+    "extractor": "Python tarfile data filter",
+    "durationSeconds": 2.24058198928833
+  }
+]

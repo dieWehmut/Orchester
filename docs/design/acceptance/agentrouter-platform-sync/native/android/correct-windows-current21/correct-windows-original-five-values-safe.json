@@ -1,0 +1,13 @@
+{
+  "status": "correct-windows-original-five-value-retention-verified",
+  "correctWindowsRecordCount": 6,
+  "pre20OriginalRecordCount": 5,
+  "originalFiveAllPresent": true,
+  "originalFiveAllEncryptedValuesEqual": true,
+  "extraCredentialCount": 1,
+  "extraCredentialPort17379": true,
+  "nativeBackupSha256": "d33f5e97f5f1e32f0cbe2dca42024e4d33c1d1ca9d0a0bf9db2266c540693b40",
+  "oldPre20BackupSha256": "f708ff5441e06dbe1c542d778ba70a270409bdef14a1fec508d88eeeb63abdbd",
+  "privateKeysOrValuesPrinted": false,
+  "anyRestorePerformed": false
+}

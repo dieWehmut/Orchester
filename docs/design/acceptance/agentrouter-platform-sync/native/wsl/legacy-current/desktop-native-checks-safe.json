@@ -1,0 +1,67 @@
+[
+  {
+    "product": "cursor",
+    "root": "/home/han/.local/opt/cursor/3.29.15",
+    "nativeElf": "/home/han/.local/opt/cursor/3.29.15/usr/share/cursor/cursor",
+    "elfX64Verified": true,
+    "elfBytes": 224689400,
+    "elfSha256": "b52bd49b56f0deb8c30cd25a72fdda71ff07f8e72aa502f2f8851a8c1d3ca239",
+    "lddActualExitCode": 0,
+    "missingSharedLibraries": [],
+    "nativeElectronNodeRuntimeCheck": {
+      "actualExitCode": 0,
+      "versionOutput": "v24.22.1",
+      "stderrBytes": 0
+    },
+    "officialProductPublicMetadata": {
+      "publicMetadataPath": "/home/han/.local/opt/cursor/3.29.15/usr/share/cursor/resources/app/package.json",
+      "bytes": 456,
+      "sha256": "5778aa0f30f31a19b0fdf5ef29530034f8d61c58c2d3785df88b35827fce4293",
+      "selected": {
+        "name": "Cursor",
+        "version": "3.29.15"
+      }
+    },
+    "cursorOfficialCliVersion": {
+      "actualExitCode": 1,
+      "versionOutput": [],
+      "stderrBytes": 265
+    },
+    "existingSharedGuiRuntimeReused": true,
+    "newGlobalLibrariesInstalled": false,
+    "guiLaunched": false,
+    "modelOrAuthCalls": false
+  },
+  {
+    "product": "antigravity",
+    "root": "/home/han/.local/opt/antigravity/2.31.0",
+    "nativeElf": "/home/han/.local/opt/antigravity/2.31.0/Antigravity-x64/antigravity",
+    "elfX64Verified": true,
+    "elfBytes": 228826440,
+    "elfSha256": "3ba9114b7fbaafaf548f72c5d1bc86b7dc81098a85361784359c2c1199625bfc",
+    "lddActualExitCode": 0,
+    "missingSharedLibraries": [],
+    "nativeElectronNodeRuntimeCheck": {
+      "actualExitCode": 0,
+      "versionOutput": "v24.22.0",
+      "stderrBytes": 0
+    },
+    "officialProductPublicMetadata": {
+      "publicMetadataPath": "/home/han/.local/opt/antigravity/2.31.0/Antigravity-x64/resources/app.asar",
+      "member": "package.json",
+      "bytes": 594,
+      "sha256": "41e1a0969f9330d85207e51a89c582a022a8e5476ea0dacf1b390e8c46b59493",
+      "selected": {
+        "name": "antigravity",
+        "version": "2.31.0",
+        "productName": "Antigravity",
+        "homepage": "https://antigravity.google"
+      }
+    },
+    "cursorOfficialCliVersion": null,
+    "existingSharedGuiRuntimeReused": true,
+    "newGlobalLibrariesInstalled": false,
+    "guiLaunched": false,
+    "modelOrAuthCalls": false
+  }
+]

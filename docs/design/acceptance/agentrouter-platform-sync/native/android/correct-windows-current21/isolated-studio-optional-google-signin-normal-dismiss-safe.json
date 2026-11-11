@@ -1,0 +1,31 @@
+{
+  "status": "own-optional-google-startup-normal-dismissed-main-IDE-preserved",
+  "studioPid": 19620,
+  "studioCreationFiletime": 134388759934247585,
+  "studioImageSha256": "a49ee7862667d8b0ddec9879a85a16be55d151e9878a328932087e6592f006d3",
+  "nativeJcmdActualExitCode": 0,
+  "liveAwtStartupSignInDialogActivity": true,
+  "captionCanonicalAndroidStudioMatched": true,
+  "captionSha256": "b96858aa7d234ce857142e385f5d9c03c614959cd1f55b3cacb738b4cbbdeddf",
+  "ownOptionalWindow": {
+    "hwnd": 2885876,
+    "ownerPid": 19620,
+    "className": "SunAwtDialog",
+    "visible": true,
+    "captionMentionsSignin": false,
+    "captionMentionsGoogle": false,
+    "captionEmpty": false,
+    "captionKnownAndroidStudioWelcome": true,
+    "captionContainsWelcome": false,
+    "captionContainsAndroidStudio": true,
+    "captionSha256": "b96858aa7d234ce857142e385f5d9c03c614959cd1f55b3cacb738b4cbbdeddf"
+  },
+  "normalWindowClosePosted": true,
+  "mainIdeWindowCloseRequested": false,
+  "originalStudio23276Signals": 0,
+  "googleAccountLoginAttempted": false,
+  "javaUiInjection": false,
+  "originalOptionalHwndActuallyGone": true,
+  "originalMainIdeProcessActuallyAlive": true,
+  "forceKillOrLoginFallbackUsed": false
+}

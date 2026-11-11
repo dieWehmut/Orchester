@@ -1,0 +1,44 @@
+{
+  "status": "actual-isolated-android-studio-project-sync-passed",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "projectRoot": "C:/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/apps/mobile/android",
+  "studioProcess": {
+    "pid": 19620,
+    "creationFiletime": 134388759934247585,
+    "image": "C:\\Users\\han\\software\\Androidstudio\\AndroidS\\bin\\studio64.exe",
+    "imageSha256": "a49ee7862667d8b0ddec9879a85a16be55d151e9878a328932087e6592f006d3",
+    "originalCreatorHandleRetained": true,
+    "actualExitCode": null
+  },
+  "effectiveIdePathsFromRealLog": {
+    "idea.config.path": "C:/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/ide-trusted-71/config",
+    "idea.system.path": "C:/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/ide-trusted-71/system",
+    "idea.log.path": "C:/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/ide-trusted-71/logs"
+  },
+  "trustedPathsFileSha256": "3364c347396d978e6aea0a2892ee462899f92ca21277f3ce81f95f1e5445c7d5",
+  "trustScopeOnlyOwnNativeProject": true,
+  "originalStudio23276OrProfileChanged": false,
+  "googleStartupSignInNormallySkipped": true,
+  "actualGradleResolveProjectSuccess": true,
+  "actualIdeProjectDataImportFinished": true,
+  "actualGradleSyncDurationMilliseconds": 17400,
+  "actualProjectJdkName": "temurin-21",
+  "gradleLocalJavaHome": "C:/Users/han/AppData/Local/Temp/Sandkasten-android-studio-20261110-7ef80b2/tools/jdk-21.0.13+9",
+  "gradleLocalJavaHomeFromExistingProjectConfiguration": true,
+  "ideNativeAdb5039Established": true,
+  "ideDefaultAdb5037Established": false,
+  "ideAdbOnlineDevice": "Medium_Phone_API_37.0 [emulator-5572]",
+  "actualNativeBridgeTestsViaQualifiedSdkSeparateFromIdeRun": true,
+  "ideRunInstrumentationInvoked": false,
+  "hostDesktopScreenshotStatus": "external-disconnected-desktop-unavailable",
+  "nativeAndroidScreenshotAvailableSeparately": true,
+  "safeSelectedLogLines": [
+    "2026-11-11 21:36:12,366 [1778487]   INFO - #com.android.tools.idea.adb.AdbService - Device [emulator-5572] has come online",
+    "2026-11-11 21:36:25,183 [1791304]   INFO - #com.android.tools.idea.gradle.project.sync.GradleSyncStateHolder$SyncStateUpdater - onSuccess(RESOLVE_PROJECT:0)",
+    "2026-11-11 21:36:26,496 [1792617]   INFO - #com.android.tools.idea.gradle.project.sync.jdk.ProjectJdkUtils - Updated project Jdk to: temurin-21",
+    "2026-11-11 21:36:26,888 [1793009]   INFO - #com.android.tools.idea.gradle.project.sync.GradleSyncStateHolder$DataImportListener - onImportFinished(C:/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/apps/mobile/android)",
+    "2026-11-11 21:36:26,890 [1793011]   INFO - #com.android.tools.idea.gradle.project.sync.GradleSyncStateHolder - Gradle sync finished in 17 s 400 ms"
+  ],
+  "safeSelectedLogLinesSha256": "b6f60ac58818406bf7c5e8c48b732f981cfdfc518f6eb231a51ee7666e7ee059",
+  "fullIdeaLogNotArchived": true
+}

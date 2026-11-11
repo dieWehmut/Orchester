@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
-  "generatedAt": "2026-11-11T13:07:41.335513+00:00",
+  "generatedAt": "2026-11-11T14:35:39.042081+00:00",
   "status": "current-evidence-audit-not-complete-all-platform-delivery",
   "requirements": [
     {
@@ -95,40 +95,41 @@
     {
       "id": "windows_agents",
       "userRequirement": "Install AgentRouter tools natively on local Windows",
-      "status": "partially-verified-final-install-matrix-pending",
+      "status": "current17unique-native-matrix-verified-claude-payload-and-legacy-windows-owner-final-pending",
       "evidence": [
         "native/windows/nine-native-cli-versions.json",
         "native/windows/new-gui-installed-identities.json",
         "native/windows/workbuddy-registration-paths-readonly-safe.json",
-        "native/windows/claude-current-official-source/handoff-safe-summary.json"
+        "native/windows/claude-current-official-source/handoff-safe-summary.json",
+        "native/windows/current-installation-matrix/final-current-windows-installation-matrix-safe.json"
       ],
-      "verifiedScope": "Historical9 nativeCLI --version successes, ZCode/Craft installations, retainedWorkBuddy editions/Trae; metadata/channel proof separates modelauthentication from installation.",
+      "verifiedScope": "Currentreadonly18units=9CLI+4editorExtensions+5desktop/17unique=doc16+globalWB1; Windowsowner currentqueryfinal0/initial1 retained.9entrySHA bound historicalactualversion0+8currentpublicNPMversions;4ext ID/version/publicmanifestsha only,not wholepayload. OriginalWorkBuddy2editions/Trae/ZCode/Craft metadata retained. OpenCodePE Bun1.4.4 not appversion1.19.5; CraftNotSigned/OpenClawmjsUnknownError literal. Claude currentUser known2families0/StartApps0,allUsersDenied=null notwholemachine0.",
       "remaining": [
-        "Current Windows fourVSCode-extension finalsafe receipt and installation-scope matrix.",
-        "ClaudeApp actualpayload/EXE registration and officialinstallation outcome; downloaded Storebootstrapper is notClaude.",
-        "Legacy3 canonicalproducts require individual nativeinstallation evidence if included in localinstall scope."
+        "ClaudeApp actualpayload/EXE registration and officialinstallation outcome; preparedMicrosoftStore bootstrapper is notClaudepayload and applicable silentflags unverified.",
+        "LegacyWindowsCursor/AG existingmetadata retained separately; DeepSeekofficialDesktop payload/source verification ownedbyWindowsagent, outside17product currentmatrix."
       ]
     },
     {
       "id": "wsl_agents",
       "userRequirement": "Install AgentRouter tools natively in WSL",
-      "status": "sixteen-unique-products-verified-official-gaps",
+      "status": "nineteen-distinct-products-native-installation-scopes-verified-official-desktop-gaps",
       "evidence": [
         "native/wsl/install-summary.json",
         "native/wsl/current-matrix/current-native-installation-matrix-safe.json",
-        "native/wsl/current-official-availability/final-official-install-status-safe.json"
+        "native/wsl/current-official-availability/final-official-install-status-safe.json",
+        "native/wsl/legacy-current/final-wsl-install-safe.json",
+        "native/wsl/legacy-current/final-primary-matrix-safe.json"
       ],
-      "verifiedScope": "19 recorded installation/runtime units =>16 distinct docproducts; currentpublicentries/recordedELF/versions stable; historicalruntime scopes retained.",
+      "verifiedScope": "Earlier19verificationunits/16distinctdocproducts pluscurrent3actuallegacyinstalls=>19distinctnativeproducts. Cursor3.29.15/AntigravityDesktop2.31 extracteduserprefix/nativeELF/ldd/Electron0, Cursorlauncher--version0 afterfirst1;DeepSeekofficialHarnessWebCLI0.2.2rc1 install0 afterfirst1/version/help0. Launcher syntaxall3=0 but no Antigravitylauncher --version claim;nativeAGruntime+publicversiondistinct. Officialiconsbyteexact. DeepSeekLinuxDesktopexplicitunsupported; WebCLI isdistinct official product notfakeDesktop. AGDesktop2.31 != IDE2.6,regionFAQ andCursorvendorWindowsWSLintegrationboundary retained. No GUI/model/authtest.",
       "remaining": [
-        "ClaudeApp official Linux package/platform unverified due TLS/route failures.",
-        "GlobalWorkBuddy currentofficial download lacks usableLinuxpackage; domestic remains unchanged.",
-        "Known7 legacypublicpaths absent is not whole-systemabsence proof; legacy3 nativeinstallation not proven."
+        "ClaudeApp officialLinux supportedplatform/nativeGUI release unverified; current3supportURLs noHTTPbody notunsupported.",
+        "GlobalWorkBuddy officialLinux usablepackage/profile isolation stillunverified/unavailable; domestic unchanged."
       ]
     },
     {
       "id": "android_studio",
       "userRequirement": "Actually open AndroidStudio and test mobile app",
-      "status": "current21-build-and-linux-emulator-install-tests-verified-correct-windows-device-ide-ui-final-pending",
+      "status": "actual-correct-windows-studio-sync-native-junit4-and-original-data-verified-ui-pty-cleanup-pending",
       "evidence": [
         "native/android/current21-partial/final21-source-mirror-safe.json",
         "native/android/current21-partial/final21-apk-provenance-safe.json",
@@ -138,13 +139,23 @@
         "native/android/device-identity-current21/final-avd-identity-audit-safe.json",
         "native/android/device-identity-current21/native-final21-device-provenance-correction-safe.json",
         "native/android/device-identity-current21/native-one-prefs-file-rollback-final-byte-exact-safe.json",
-        "native/android/device-identity-current21/owned-windows-medium-normal-wmclose-exit-observed-safe.json"
+        "native/android/device-identity-current21/owned-windows-medium-normal-wmclose-exit-observed-safe.json",
+        "native/android/correct-windows-current21/native-channel-5572-attempt2/channel-target-identity-safe.json",
+        "native/android/correct-windows-current21/correct-windows-before-final21-readonly-safe.json",
+        "native/android/correct-windows-current21/correct-windows-original-five-values-safe.json",
+        "native/android/correct-windows-current21/correct-windows-original-certificate-safe.json",
+        "native/android/correct-windows-current21/correct-windows-final21-install-safe.json",
+        "native/android/correct-windows-current21/correct-windows-final21-native-bridge-safe.json",
+        "native/android/correct-windows-current21/correct-windows-original-five-aes-and-existing-wire-attempt2-safe.json",
+        "native/android/correct-windows-current21/isolated-studio-optional-google-signin-normal-dismiss-safe.json",
+        "native/android/correct-windows-current21/isolated-studio-final21-actual-project-sync-safe.json",
+        "native/android/correct-windows-current21/isolated-studio-actual-native-adb-transport-safe.json"
       ],
-      "verifiedScope": "Current41nativeGitinputs/source71+17publicmirror/nativeWindowsGradle0 and signedcurrentappf83fa/testb5c13/certdf6/17APKresources valid. Successfulinstall and compactNativeBridgeOK/exit0 producer4tests remain actual, but device5554 proved Linuxorchester-qa through wslrelay; not Windows originalAVD. Pre20Windows5554 identity unverified and Sandkasten historicalStudio device5560 distinct. FiveAESfailed attempts on unboundhost/Keystore do not prove originalWindowskeydamage or unrecoverability. WrongLinuxguest original1 XML268B source701837 atomicallyrestored byteexact/writer0, shell-v2 proves no .bak; RAMreloadfalse and bothprivate1/5sourcespreserved, noKeystoreedit. Separate7ownWindowsWM_CLOSE and exact2344/3828PIDabsenceobserver0signals confirmed; firstguard1 is producerreport, not compactexitfield.",
+      "verifiedScope": "Current41nativeGitinputs/source71+17publicmirror/nativeWindowsGradle0 and signedcurrentappf83fa/testb5c13/certdf6/17APKresources valid. Successfulinstall and compactNativeBridgeOK/exit0 producer4tests remain actual, but device5554 proved Linuxorchester-qa through wslrelay; not Windows originalAVD. Pre20Windows5554 identity unverified and Sandkasten historicalStudio device5560 distinct. FiveAESfailed attempts on unboundhost/Keystore do not prove originalWindowskeydamage or unrecoverability. WrongLinuxguest original1 XML268B source701837 atomicallyrestored byteexact/writer0, shell-v2 proves no .bak; RAMreloadfalse and bothprivate1/5sourcespreserved, noKeystoreedit. Separate7ownWindowsWM_CLOSE and exact2344/3828PIDabsenceobserver0signals confirmed; firstguard1 is producerreport, not compactexitfield. CorrectWinMedium5572/ADB5039 nowidentityverified beforewrites; old20APKd0d1 andoriginalnative6 records containpre20original5valuesexact+oldown17379extra1. Newf83/b5c samecert install0×2 retains6; freshcorrectWinJUnit4 actual0/instrumentationCode-1 preserves6. Original5AESdecrypt5success0fail; original7337/infoonlyoneGET200/nameMatch/noNewPairing/tokensprinted. OwnStudiooptionalGooglemodal onlynormaldismissed/mainIDEalive; thisreceiptalone isnotSyncproof. ActualtypedSyncproof follows. ActualownStudio19620 isolatedconfig/system/log imports exactsource71nativeproject/RESOLVE_PROJECT0/17.4s sync/JDKtemurin21, DeviceMedium5572online and5Establishednative5039connections/default5037none. QualifiedSDKJUnit isseparatefromIDERun; optionalGooglenormallyskipped/no original23276configedit/fullIDElog.",
       "remaining": [
-        "Prove separate nativeWindows Medium5572/5573/ADB5039 actualPID/birth/listeners/consoleAVD identity before privateoperations; historicalpre20WindowsAVD identity remains unverified.",
-        "CurrentWindows Studio project/sync/window in provedcorrectuser/session plus actualcorrectWindowsdevice install/JUnit/UI21+42/PTYinput+resize.",
-        "CorrectWindows originalcredentialidentity/decryption and finalonlyownedcleanup stillpending; wrongLinuxdisk1XMLrestored but RAMreload/coldboot notproved, old5irrecoverability notclaimed."
+        "CorrectWin actualUI21providers/42themeimages and PTyinput/resize finalpending; hostDisconnected means nativeWindowsdesktop screenshot/tray stillunavailable.",
+        "Oldowned17379extra1 cleanup and onlyownedtemporarykey/device/forward/process cleanup; wrongLinuxRAMreload also unverified.",
+        "Historicalpre20absoluteAVD fingerprint stillunlocated; do not confuse it with currentcorrectMedium identity andcurrentoriginal5data/AESproven."
       ]
     },
     {
@@ -155,12 +166,11 @@
         "tests/backend/final71-full-workspace/summary.json",
         "deployments/linux/current-final21/final-safe.json",
         "deployments/linux/current-final21/root-independent-live-safe.json",
-        "deployments/linux/current-final21/controller-handoff-safe.json"
+        "deployments/linux/current-final21/controller-handoff-safe.json",
+        "native/android/correct-windows-current21/correct-windows-original-five-aes-and-existing-wire-attempt2-safe.json"
       ],
-      "verifiedScope": "Current7337 PID/startticks/ELFd983/source71 verified;21catalog/17resources/auth/revoke; original5tasks rawrows retained and5authentries/3distinctdevices semanticvalues retained. SQLJSONstring formatting/order differs.",
-      "remaining": [
-        "Existing userpairedtoken actualnetwork200 is not established by hashpreservation; only temporaryownauthentication test proven."
-      ]
+      "verifiedScope": "Current7337 PID/startticks/ELFd983/source71 verified;21catalog/17resources/auth/revoke; original5tasks rawrows retained and5authentries/3distinctdevices semanticvalues retained. SQLJSONstring formatting/order differs. LatercorrectWinMedium5572 uses originalstored7337credential forone /infoGET200/nameMatch/noNewPairing, proving thatoriginalwireauthscope; no originaltokenoutput.",
+      "remaining": []
     },
     {
       "id": "parallelism",
@@ -184,24 +194,26 @@
         "maintenance/owned-package-preparation-cache-cleanup-safe.json",
         "maintenance/workspace-current/actual-worktree-cleanup-safe.json",
         "maintenance/workspace-current/final-workspace-cleanup-candidates-safe.json",
-        "maintenance/workspace-current/same-user-process-path-observation-safe.json"
+        "maintenance/workspace-current/same-user-process-path-observation-safe.json",
+        "native/wsl/legacy-current/owned-cache-cleanup-safe.json"
       ],
-      "verifiedScope": "Historical73remote+3local mergedbranchrefs safelycleaned; CknownPDB/incremental7219765510B and officialinstallercache587458817B exactfiles removed. Free-space readings are snapshots. Current four oldworktree paths/localbranches absent and retainedcommits fullymerged; registeredworktrees15. Currentownedpackage-sourcecache25files/23373069logicalbytes deleted and28candidate inventory retained; no Cvolume physicalfree delta claim. Additionalactual4cleanmergedworktrees normalremove/branch-d0 and2missingregistrationprune0; nonancestorrefs/userdata retained; selected17783011371regularfilelogicalbytes are Linuxworkspace scope, not physicalCfreedbytes.",
+      "verifiedScope": "Historical73remote+3local mergedbranchrefs safelycleaned; CknownPDB/incremental7219765510B and officialinstallercache587458817B exactfiles removed. Free-space readings are snapshots. Current four oldworktree paths/localbranches absent and retainedcommits fullymerged; registeredworktrees15. Currentownedpackage-sourcecache25files/23373069logicalbytes deleted and28candidate inventory retained; no Cvolume physicalfree delta claim. Additionalactual4cleanmergedworktrees normalremove/branch-d0 and2missingregistrationprune0; nonancestorrefs/userdata retained; selected17783011371regularfilelogicalbytes are Linuxworkspace scope, not physicalCfreedbytes. Additionallegacyinstall ownrebuildablecache671646227logicalbytes deleted and installedartifactsretained; not physicalCspace or VHDXreclaim.",
       "remaining": [],
       "historicalMeasurementBoundary": "Original fourunused-worktree temporarycleanup receipts unavailable; historicaloperation/bytes not reconstructed; no Cphysicalreleaseclaim."
     },
     {
       "id": "git_steps",
       "userRequirement": "Verify separated commits, push remotely and merge main step by step",
-      "status": "prior193archive-step-delivered-current-corrections-await-parent-delivery",
+      "status": "two-prior-archive-steps-delivered-current-installation-epoch-awaits-parent",
       "evidence": [
         "sources/final71-source-binding.json",
         "maintenance/git-delivery/git-byte-and-crlf-correction-safe.json",
-        "maintenance/git-delivery/step-delivery-safe.json"
+        "maintenance/git-delivery/step-delivery-safe.json",
+        "maintenance/git-delivery/second-step-delivery-safe.json"
       ],
-      "verifiedScope": "Parentdocs193+MD exact194Gitblob comparisons. FirstdefaultCRLFwhitespacecheckexit2 preserved; doccommit213d315 alreadycreated, scopedattributes correction812e0e6 preserves原bytes andcheck0, main32992976 merged; feature/mainpushactual0. Frozenproduction71 unchanged. Docsagent noGitmutation.",
+      "verifiedScope": "Parentdocs193+MD exact194Gitblob comparisons. FirstdefaultCRLFwhitespacecheckexit2 preserved; doccommit213d315 alreadycreated, scopedattributes correction812e0e6 preserves原bytes andcheck0, main32992976 merged; feature/mainpushactual0. Frozenproduction71 unchanged. Docsagent noGitmutation. Second218archive+MD219Gitblobexact/currentdoc828ad10 mergedmain4d7d95, feature/mainpushactual0/default+stagedwhitespace0/production71+Pagesworkflowinputsunchanged; no allplatformcompletionclaim.",
       "remaining": [
-        "Currentcrosshost/profile/maintenance correction records need nextparentreview/commit/push/mainmerge; nativeacceptance scopes remain pending."
+        "CurrentWindows/WSL installation matrix,officialsupport and actualStudio partial epoch needs nextparentreview/commit/push/main; GUI/tray/reinstall/nativefinalpending."
       ]
     }
   ],

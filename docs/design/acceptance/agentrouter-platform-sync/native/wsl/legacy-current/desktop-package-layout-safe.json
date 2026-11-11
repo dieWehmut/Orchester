@@ -1,0 +1,21 @@
+{
+  "cursorDebControlActualExit": 0,
+  "publicFields": [
+    "Package: cursor",
+    "Version: 3.29.15-1794174137",
+    "Architecture: amd64"
+  ],
+  "sourcePackageSha256": "bc2d010514ce079bc55acff0332757e311e18b0da48dc24dc364bc8f695c11e5",
+  "antigravityArchiveTopLevels": [
+    "Antigravity-x64"
+  ],
+  "antigravityPublicMetadataMembers": [
+    "Antigravity-x64/resources/app.asar",
+    "Antigravity-x64/resources/default_app.asar",
+    "Antigravity-x64/resources/app.asar.unpacked/node_modules/chrome-devtools-mcp/package.json"
+  ],
+  "antigravityCandidateBinaries": [
+    "Antigravity-x64/antigravity",
+    "Antigravity-x64/chrome-sandbox"
+  ]
+}
