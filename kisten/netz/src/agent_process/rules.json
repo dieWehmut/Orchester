@@ -42,6 +42,7 @@
   ],
   "entries": {
     "@google/gemini-cli/dist/index.js": "gemini",
+    "@google/gemini-cli/bundle/gemini.js": "gemini",
     "@deepseek-ai/dsh/lib/bin.js": "deepseek",
     "deepseek-harness/apps/cli/src/bin.ts": "deepseek",
     "cursor-agent-host/dist/agent-host-daemon/dist/bin/daemon.cjs": "cursor",
@@ -187,6 +188,17 @@
     "hermes_cli.main": "hermes"
   },
   "cli_maintenance_commands": {
+    "gemini": [
+      "mcp",
+      "extensions",
+      "extension",
+      "skills",
+      "skill",
+      "hooks",
+      "hook",
+      "gemma",
+      "models"
+    ],
     "cline": [
       "auth",
       "config",
