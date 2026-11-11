@@ -616,6 +616,7 @@ fn parse_identity_counts(raw: &[u8]) -> Result<IdentityCounts, &'static str> {
                 | "qwen"
                 | "openclaw"
                 | "workbuddy"
+                | "workbuddy_global"
                 | "cline"
                 | "roo"
                 | "kilo"
@@ -1093,7 +1094,7 @@ mod tests {
             let snapshot = AgentProcessSnapshot::from_observations(identity_observations(
                 environment,
                 parse_identity_counts(
-                    br#"{"counts":{"qwen":1,"openclaw":2,"workbuddy":1},"complete":false}"#,
+                    br#"{"counts":{"qwen":1,"openclaw":2,"workbuddy":1,"workbuddy_global":1},"complete":false}"#,
                 )
                 .unwrap(),
                 "2026-11-11T06:00:00Z".into(),
@@ -1108,7 +1109,12 @@ mod tests {
                 .reconcile_external_processes(&snapshot, "2026-11-11T06:00:01Z")
                 .unwrap();
             let fleet = store.snapshot().unwrap();
-            for (provider, count) in [("qwen", 1), ("openclaw", 2), ("workbuddy", 1)] {
+            for (provider, count) in [
+                ("qwen", 1),
+                ("openclaw", 2),
+                ("workbuddy", 1),
+                ("workbuddy_global", 1),
+            ] {
                 let row = fleet
                     .agents
                     .iter()
@@ -1134,6 +1140,77 @@ mod tests {
                     .activity,
                 AgentActivityState::Unknown
             );
+        }
+    }
+
+    #[test]
+    fn workbuddy_editions_keep_independent_service_counts_and_quality() {
+        use orchester_protokoll::AgentActivityState;
+        let mut registry = orchester_verzeichnis::Registry::new();
+        registry.register_builtins();
+        let store =
+            crate::AgentRuntimeStatusStore::new(crate::agent_status_response(&registry)).unwrap();
+        for (raw, domestic_count, global_count, domestic_activity, global_activity) in [
+            (
+                br#"{"counts":{"workbuddy":2,"workbuddy_global":1},"complete":true}"#.as_slice(),
+                2,
+                1,
+                AgentActivityState::Running,
+                AgentActivityState::Running,
+            ),
+            (
+                br#"{"counts":{"workbuddy":2},"complete":true}"#.as_slice(),
+                2,
+                0,
+                AgentActivityState::Running,
+                AgentActivityState::Offline,
+            ),
+            (
+                br#"{"counts":{"workbuddy_global":3},"complete":false}"#.as_slice(),
+                0,
+                3,
+                AgentActivityState::Unknown,
+                AgentActivityState::Running,
+            ),
+        ] {
+            let snapshot = AgentProcessSnapshot::from_observations(identity_observations(
+                AgentProcessEnvironment::Windows,
+                parse_identity_counts(raw).unwrap(),
+                "2026-11-11T07:00:00Z".into(),
+            ));
+            store
+                .reconcile_external_processes(&snapshot, "2026-11-11T07:00:01Z")
+                .unwrap();
+            let fleet = store.snapshot().unwrap();
+            for (provider, count, activity) in [
+                ("workbuddy", domestic_count, domestic_activity),
+                ("workbuddy_global", global_count, global_activity),
+            ] {
+                let row = fleet
+                    .agents
+                    .iter()
+                    .find(|row| row.provider == provider)
+                    .unwrap();
+                assert_eq!(row.active_windows, count);
+                assert_eq!(row.activity, activity);
+                assert_eq!(row.active_sessions, 0);
+                assert_eq!(row.active_runs, 0);
+                assert_eq!(row.active_subagents, 0);
+                assert!(row
+                    .capabilities
+                    .iter()
+                    .any(|label| label == "service_presence"));
+                let sources = row.process_sources.as_ref().unwrap();
+                assert_eq!(sources[0].environment, AgentProcessEnvironment::Windows);
+                assert_eq!(sources[0].count, Some(count));
+                if !snapshot.is_complete() {
+                    assert_eq!(sources.last().unwrap().count, None);
+                    assert_eq!(
+                        sources.last().unwrap().status,
+                        AgentProcessSourceState::Unavailable
+                    );
+                }
+            }
         }
     }
 

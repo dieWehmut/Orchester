@@ -353,6 +353,25 @@ fn process_monitor_start_is_safe_without_a_tokio_runtime() {
 fn additional_providers_have_monitor_only_rows_without_runnable_adapters() {
     let registry = registry();
     let snapshot = agent_status_response(&registry);
+    assert_eq!(
+        snapshot
+            .agents
+            .iter()
+            .filter(|agent| agent.provider != "mock")
+            .count(),
+        21
+    );
+    assert_eq!(
+        snapshot
+            .agents
+            .iter()
+            .filter(|agent| agent
+                .capabilities
+                .iter()
+                .any(|label| label == "service_presence"))
+            .count(),
+        7
+    );
     for provider in [
         "gemini",
         "antigravity",
@@ -361,6 +380,7 @@ fn additional_providers_have_monitor_only_rows_without_runnable_adapters() {
         "qwen",
         "openclaw",
         "workbuddy",
+        "workbuddy_global",
         "cline",
         "roo",
         "kilo",
@@ -398,7 +418,13 @@ fn additional_providers_have_monitor_only_rows_without_runnable_adapters() {
                 .any(|label| label == "service_presence"),
             matches!(
                 provider,
-                "workbuddy" | "openclaw" | "claude_app" | "trae" | "zcode" | "craft"
+                "workbuddy"
+                    | "workbuddy_global"
+                    | "openclaw"
+                    | "claude_app"
+                    | "trae"
+                    | "zcode"
+                    | "craft"
             )
         );
         assert_eq!(
@@ -409,6 +435,11 @@ fn additional_providers_have_monitor_only_rows_without_runnable_adapters() {
             matches!(provider, "cline" | "roo" | "kilo")
         );
         assert_eq!(agent.activity, AgentActivityState::Unknown);
+        if provider == "workbuddy" {
+            assert_eq!(agent.display_name, "WorkBuddy 国内版");
+        } else if provider == "workbuddy_global" {
+            assert_eq!(agent.display_name, "WorkBuddy AI 国际版");
+        }
         assert!(!agent.installed && !agent.configured && !agent.authenticated);
         assert!(agent.last_error.is_none());
     }

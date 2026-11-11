@@ -326,6 +326,7 @@ pub fn agent_status_response(registry: &Registry) -> AgentFleetSnapshotDto {
         "qwen",
         "openclaw",
         "workbuddy",
+        "workbuddy_global",
         "cline",
         "roo",
         "kilo",
@@ -364,7 +365,7 @@ pub fn agent_status_response(registry: &Registry) -> AgentFleetSnapshotDto {
 fn service_provider(provider: &str) -> bool {
     matches!(
         provider,
-        "workbuddy" | "openclaw" | "claude_app" | "trae" | "zcode" | "craft"
+        "workbuddy" | "workbuddy_global" | "openclaw" | "claude_app" | "trae" | "zcode" | "craft"
     )
 }
 
@@ -620,7 +621,8 @@ fn display_name(provider: &str) -> String {
         "opencode" => "OpenCode".to_owned(),
         "qwen" => "Qwen Code".to_owned(),
         "openclaw" => "OpenClaw".to_owned(),
-        "workbuddy" => "WorkBuddy".to_owned(),
+        "workbuddy" => "WorkBuddy 国内版".to_owned(),
+        "workbuddy_global" => "WorkBuddy AI 国际版".to_owned(),
         "cline" => "Cline".to_owned(),
         "roo" => "Roo Code".to_owned(),
         "kilo" => "Kilo Code".to_owned(),

@@ -128,7 +128,7 @@ async fn paired_status_returns_the_same_typed_redacted_host_snapshot() {
         .unwrap();
     assert_eq!(codex.active_windows, 2);
     assert_eq!(codex.process_sources.as_ref().unwrap()[0].count, Some(2));
-    for provider in ["qwen", "workbuddy", "openclaw"] {
+    for provider in ["qwen", "workbuddy", "workbuddy_global", "openclaw"] {
         let agent = snapshot
             .agents
             .iter()
