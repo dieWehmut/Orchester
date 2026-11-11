@@ -1,0 +1,190 @@
+{
+  "observedAt": 1794401368.0337293,
+  "operation": "Linux qemu identity and fd/listener metadata read-only",
+  "originalProcessArgumentsRead": false,
+  "privateXmlKeystoreOrDiskContentsRead": false,
+  "processSignals": 0,
+  "adbCommands": 0,
+  "nativeQueueWrites": 0,
+  "process": {
+    "pid": 106668,
+    "uid": 1000,
+    "startTicks": 115649,
+    "image": "/home/han/Android/Sdk/emulator/qemu/linux-x86_64/qemu-system-x86_64-headless"
+  },
+  "selectedDescriptors": [
+    {
+      "fd": 3,
+      "target": "socket:[232042]"
+    },
+    {
+      "fd": 7,
+      "target": "socket:[237201]"
+    },
+    {
+      "fd": 8,
+      "target": "socket:[237202]"
+    },
+    {
+      "fd": 9,
+      "target": "/home/han/.android/avd/orchester-qa.avd/multiinstance.lock"
+    },
+    {
+      "fd": 10,
+      "target": "socket:[237203]"
+    },
+    {
+      "fd": 11,
+      "target": "socket:[237204]"
+    },
+    {
+      "fd": 12,
+      "target": "socket:[237205]"
+    },
+    {
+      "fd": 13,
+      "target": "socket:[237206]"
+    },
+    {
+      "fd": 15,
+      "target": "socket:[237209]"
+    },
+    {
+      "fd": 16,
+      "target": "socket:[237211]"
+    },
+    {
+      "fd": 24,
+      "target": "socket:[2806540]"
+    },
+    {
+      "fd": 32,
+      "target": "/home/han/.android/avd/orchester-qa.avd/cache.img.qcow2"
+    },
+    {
+      "fd": 33,
+      "target": "/home/han/.android/avd/orchester-qa.avd/cache.img.qcow2"
+    },
+    {
+      "fd": 34,
+      "target": "/home/han/.android/avd/orchester-qa.avd/cache.img"
+    },
+    {
+      "fd": 35,
+      "target": "/home/han/.android/avd/orchester-qa.avd/cache.img"
+    },
+    {
+      "fd": 36,
+      "target": "/home/han/.android/avd/orchester-qa.avd/userdata-qemu.img.qcow2"
+    },
+    {
+      "fd": 37,
+      "target": "/home/han/.android/avd/orchester-qa.avd/userdata-qemu.img.qcow2"
+    },
+    {
+      "fd": 38,
+      "target": "/home/han/.android/avd/orchester-qa.avd/userdata-qemu.img"
+    },
+    {
+      "fd": 39,
+      "target": "/home/han/.android/avd/orchester-qa.avd/userdata-qemu.img"
+    },
+    {
+      "fd": 40,
+      "target": "/home/han/.android/avd/orchester-qa.avd/encryptionkey.img.qcow2"
+    },
+    {
+      "fd": 41,
+      "target": "/home/han/.android/avd/orchester-qa.avd/encryptionkey.img.qcow2"
+    },
+    {
+      "fd": 42,
+      "target": "/home/han/.android/avd/orchester-qa.avd/encryptionkey.img"
+    },
+    {
+      "fd": 43,
+      "target": "/home/han/.android/avd/orchester-qa.avd/encryptionkey.img"
+    },
+    {
+      "fd": 47,
+      "target": "socket:[232956]"
+    },
+    {
+      "fd": 48,
+      "target": "socket:[232957]"
+    },
+    {
+      "fd": 49,
+      "target": "socket:[232958]"
+    },
+    {
+      "fd": 50,
+      "target": "socket:[232959]"
+    },
+    {
+      "fd": 51,
+      "target": "socket:[232960]"
+    },
+    {
+      "fd": 52,
+      "target": "socket:[232961]"
+    },
+    {
+      "fd": 61,
+      "target": "socket:[230797]"
+    },
+    {
+      "fd": 62,
+      "target": "socket:[230798]"
+    },
+    {
+      "fd": 69,
+      "target": "socket:[230800]"
+    },
+    {
+      "fd": 70,
+      "target": "socket:[230801]"
+    },
+    {
+      "fd": 80,
+      "target": "socket:[237221]"
+    },
+    {
+      "fd": 81,
+      "target": "socket:[219568]"
+    },
+    {
+      "fd": 82,
+      "target": "socket:[232051]"
+    },
+    {
+      "fd": 83,
+      "target": "socket:[237226]"
+    },
+    {
+      "fd": 84,
+      "target": "socket:[233647]"
+    },
+    {
+      "fd": 85,
+      "target": "socket:[237227]"
+    },
+    {
+      "fd": 102,
+      "target": "socket:[226131]"
+    }
+  ],
+  "processIdentityUnchangedAfterRead": true,
+  "ss": {
+    "actualExitCode": 0,
+    "rows": [
+      "State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess                                      ",
+      "LISTEN 0      128        127.0.0.1:5037      0.0.0.0:*    users:((\"adb\",pid=4899,fd=11))              ",
+      "LISTEN 0      4          127.0.0.1:5554      0.0.0.0:*    users:((\"qemu-system-x86\",pid=106668,fd=51))",
+      "LISTEN 0      5          127.0.0.1:5555      0.0.0.0:*    users:((\"qemu-system-x86\",pid=106668,fd=47))",
+      "LISTEN 0      5              [::1]:5555         [::]:*    users:((\"qemu-system-x86\",pid=106668,fd=48))",
+      "LISTEN 0      4              [::1]:5554         [::]:*    users:((\"qemu-system-x86\",pid=106668,fd=52))"
+    ],
+    "stderrBytes": 0
+  }
+}

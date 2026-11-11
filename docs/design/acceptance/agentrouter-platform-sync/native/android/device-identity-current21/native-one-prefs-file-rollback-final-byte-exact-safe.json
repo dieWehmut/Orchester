@@ -1,0 +1,23 @@
+{
+  "status": "quickboot-original-one-file-restored-byte-exact-awaiting-coldboot",
+  "sourceXmlSha256": "701837d71e1899778016f1b42d41c2e098329a513efa4b0ee0b78d3103166661",
+  "originalOnePrivateSourcePreserved": true,
+  "oldFivePrivateSourcePreserved": true,
+  "secretsPrinted": false,
+  "appSignals": 0,
+  "adbServerSignals": 0,
+  "previousBackupPresenceInferenceRejected": "exec-out lacks remote exit status; shell-v2 test used here",
+  "priorOwnAppBackgroundVerification": "native-current-one-preferences-rollback source verified before line23",
+  "sameNameBackupPresent": false,
+  "temporaryReadBytes": 268,
+  "temporarySha256": "701837d71e1899778016f1b42d41c2e098329a513efa4b0ee0b78d3103166661",
+  "temporaryByteExact": true,
+  "tempWriterAttempt": "native-one-prefs-file-rollback-before-normal-emu-exit-attempt2",
+  "windowsShellOutputEolCannotVerifyBinary": "verified with exec-out plus separate shell-v2 test exit status",
+  "privateTargetByteExact": true,
+  "encryptedRecordCount": 1,
+  "nativeWriterExitCode": 0,
+  "appRamPreferencesReloaded": false,
+  "keystoreModified": false,
+  "oldFiveDecryptionScope": "current Medium_Phone QuickBoot only; original AVD identity not proved"
+}

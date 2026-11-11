@@ -1,0 +1,31 @@
+{
+  "sourceIdentityReceipt": {
+    "path": "/mnt/c/Users/han/AppData/Local/Temp/Sandkasten-android-studio-20261110-7ef80b2/windows-final-identity.json",
+    "sha256": "4cbe63d6379d368478aaa356e12344cb25cc045c91cc56567294bd6032a7c050",
+    "serial": "emulator-5560",
+    "studioPid": 38392,
+    "finishedOriginal": "2026-11-10T14:56:45.7201546+08:00",
+    "finishedUTC": "2026-11-10T06:56:45.7201546Z",
+    "apkSha256": "484d281a24bba213793c58a0a03130c8bc7df4601e57ed254386b9ce094043d9",
+    "installedApkSha256": "484d281a24bba213793c58a0a03130c8bc7df4601e57ed254386b9ce094043d9"
+  },
+  "sourcePublicGuiLog": {
+    "path": "/mnt/c/Users/han/AppData/Local/Temp/Sandkasten-android-studio-20261110-7ef80b2/windows-studio-final-tree.log",
+    "sha256": "07df85d5e9da4cd335509e6563ac47cc0540e9e9f3dc63bc3c158a6f2c528cce",
+    "deviceAssociations": [
+      {
+        "line": 324,
+        "publicDeviceTokensInSameRow": [
+          "emulator-5560",
+          "Sandkasten_Windows_API37",
+          "emulator-5560"
+        ]
+      }
+    ]
+  },
+  "interpretation": "The November 10 Sandkasten Studio acceptance identifies Sandkasten_Windows_API37 as emulator-5560. It does not identify this AVD as the later pre20 emulator-5554.",
+  "privateXmlOrKeystoreRead": false,
+  "originalProcessArgumentsRead": false,
+  "deviceMutations": 0,
+  "timestampNormalizationPreservesAllSourceFractionalDigits": true
+}

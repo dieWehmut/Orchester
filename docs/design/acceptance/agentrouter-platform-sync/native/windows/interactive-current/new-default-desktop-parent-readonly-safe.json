@@ -1,0 +1,25 @@
+{
+    "observedAtUtc":  "2026-11-11T12:55:30.4110931Z",
+    "processes":  [
+                      {
+                          "pid":  28748,
+                          "parentPid":  8588,
+                          "name":  "orchester-desktop.exe",
+                          "image":  "C:\\Users\\han\\AppData\\Local\\Orchester\\orchester-desktop.exe",
+                          "creationUtc":  "2026-11-11T12:29:29.0831200Z",
+                          "sessionId":  1,
+                          "found":  true
+                      },
+                      {
+                          "pid":  8588,
+                          "parentPid":  8492,
+                          "name":  "explorer.exe",
+                          "image":  "C:\\WINDOWS\\Explorer.EXE",
+                          "creationUtc":  "2026-11-11T10:44:05.7074590Z",
+                          "sessionId":  1,
+                          "found":  true
+                      }
+                  ],
+    "argvOrEnvironmentRead":  false,
+    "signals":  0
+}

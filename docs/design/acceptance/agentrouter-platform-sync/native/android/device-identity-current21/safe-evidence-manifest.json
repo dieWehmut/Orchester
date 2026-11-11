@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    {
+      "name": "current-public-config-and-metadata-safe.json",
+      "bytes": 8618,
+      "sha256": "1a9d0160ba62c44cd13df5f82777f29ffb6844e2625b4dd5792f1a3f7d15cb22"
+    },
+    {
+      "name": "historical-sandkasten-5560-safe.json",
+      "bytes": 1391,
+      "sha256": "f3e6fb61822ef058dda78d4e6e77dbd47e78fb8b515fa8d227d5af5e6154743e"
+    },
+    {
+      "name": "current-linux5554-listener-and-avd-fd-safe.json",
+      "bytes": 4352,
+      "sha256": "bf33238d9a7aa1f3d39f16dbfa694282decc1c3dba18028483873e4ca94cafd6"
+    },
+    {
+      "name": "root-linux-endpoint-safe.json",
+      "bytes": 2460,
+      "sha256": "99a9986d723d86879085a35efec4bbad291931375166dc6e87bed3a2595d47ae"
+    },
+    {
+      "name": "native-metadata-request-safe.json",
+      "bytes": 255,
+      "sha256": "3bda45a8e5f1e35205e1b51179f7670cd05d1ebc14c2232d0ff436cac4d8b1f1"
+    },
+    {
+      "name": "final-avd-identity-audit-safe.json",
+      "bytes": 5303,
+      "sha256": "47d1d3bbb3cef892a4cc859cc8af23c13da96747169fa43b784034d72f7e43a7"
+    }
+  ],
+  "externalNativeSafeReceipts": [
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/own-emulator-console-port-readonly-safe.json",
+      "sha256": "0056b4266769cb0204f280938390ab41ad5518488262d918346804f3aede538a"
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/unexpected-own-console-port-owner-safe.json",
+      "sha256": "8eb20a320c53373f231ba0e3b51cdcad9b237400fbc8472da4e4346a4a6363a0"
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/windows-own-qemu-actual-listeners-safe.json",
+      "sha256": "bac7e866665ef9b8d1745b6ed92c58bd83f8f6d74ce6ac54370df1080fcbc819"
+    }
+  ],
+  "privateXmlKeystoreDiskContentsOrRawArgvCopied": false
+}

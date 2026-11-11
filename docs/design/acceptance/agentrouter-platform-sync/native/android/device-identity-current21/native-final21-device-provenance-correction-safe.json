@@ -1,0 +1,29 @@
+{
+  "status": "device-provenance-correction",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "nativeWindowsGradleBuildRemainsVerified": true,
+  "nativeWindowsAdbClientUsed": true,
+  "actualDefault5037And5554DeviceHost": "Linux via Windows WSL relay",
+  "actualDeviceAvdPath": "/home/han/.android/avd/orchester-qa.avd",
+  "actualDeviceLinuxQemuPid": 106668,
+  "actualDeviceLinuxQemuStartTicks": 115649,
+  "windowsRelayPid": 8412,
+  "defaultWindows5037_5554_5555ListenersOwnedByRelay": true,
+  "windowsOwnedEmulatorPid": 2344,
+  "windowsOwnedQemuPid": 3828,
+  "windowsOwnedQemuHasNo5554Or5555Listener": true,
+  "final21ApkInstallAndFourNativeBridgeTestsScope": "actual Linux orchester-qa Android guest through native Windows adb client",
+  "current21ApkInstalledInOriginalWindowsAvdVerified": false,
+  "oldFiveAesFailureScope": "actual Linux orchester-qa Android guest; not evidence of Windows AVD credential loss",
+  "currentActualTargetOriginalOneFileByteExactRestored": true,
+  "actualTargetOriginalOneXmlSha256": "701837d71e1899778016f1b42d41c2e098329a513efa4b0ee0b78d3103166661",
+  "actualTargetRamReloadVerified": false,
+  "originalFivePrivateBackupPreserved": true,
+  "noIrrecoverabilityClaim": true,
+  "nativeDeviceWritesFrozen": true,
+  "defaultAdbServerAndLinuxEmulatorNotSignalled": true,
+  "linuxEndpointEvidence": {
+    "path": "/home/han/.local/state/orchester-delivery/20261111/android-avd-identity-audit/root-linux-endpoint-safe.json",
+    "sha256": "99a9986d723d86879085a35efec4bbad291931375166dc6e87bed3a2595d47ae"
+  }
+}

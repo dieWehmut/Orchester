@@ -36,7 +36,7 @@
       "proof": "native/windows/final71-source-export.json"
     },
     {
-      "scope": "Windows original processes observed absent and offline consistent installation/profile/state backups exact; no old natural tray exit or reinstallation claim",
+      "scope": "Historical10:53 originalprocessabsence/offline consistentbackup exact; laterexternalDesktop28748/WebViewlock means currentprofile equality/freshbackup notproved",
       "proof": "native/windows/final71-preflight/offline-original-backup-safe.json"
     },
     {
@@ -104,12 +104,52 @@
       "proof": "native/android/current21-partial/final21-apk-provenance-safe.json"
     },
     {
-      "scope": "CurrentAndroidnewapp/test nativeinstall successful0/processExited/originalcert; install-r data retentionrequested,originalcredentials retentionnotyetproved",
+      "scope": "CurrentAndroidnewapp/test successful install0 viaWindowsnativeADB but device5554 corrected to Linuxorchester-qa/WSLrelay; originalWindowsAVD/credentialretention notproved",
       "proof": "native/android/current21-partial/install-native-final21-app-safe.json"
     },
     {
-      "scope": "CurrentAndroidNativeBridge compactsafe resultOK/exit0; producerreports4tests,parsedcountnotincompactJSON; IDE/UI/PTy/credentialidentity/finalcleanup pending",
+      "scope": "CurrentAndroid NativeBridge compactOK/exit0,producerreports4tests, actualdevice5554 is Linuxorchester-qa; not WindowsoriginalAVD/IDE/UI/PTy/prefs proof",
       "proof": "native/android/current21-partial/native-bridge-tests-final21-current-apk-result.json"
+    },
+    {
+      "scope": "First193archive+MD194Gitbytecomparisons exact; defaultCRLFwhitespacecheck2 retained then scope -text/cr-at-eol policyfix0 with原byteunaltered; productionunchanged",
+      "proof": "maintenance/git-delivery/git-byte-and-crlf-correction-safe.json"
+    },
+    {
+      "scope": "Docs213d315/policy812e0e6/main32992976 merged and two actualpush0; productioninputs71 stillsame; nativeacceptancepending",
+      "proof": "maintenance/git-delivery/step-delivery-safe.json"
+    },
+    {
+      "scope": "Actual4 cleanmergedworktrees normalremove+branch-d0/2missingregistrationsprune0/nonancestorrefsretained;17783011371logicalbytes not Cphysical",
+      "proof": "maintenance/workspace-current/actual-worktree-cleanup-safe.json"
+    },
+    {
+      "scope": "Independent Linuxqemu106668 FD+listeners prove current5554/5555 Linuxorchester-qa; Windows8412 isrelay; ownWinqemu3828 onlyauxports; pre20WindowsAVD identity unverified",
+      "proof": "native/android/device-identity-current21/final-avd-identity-audit-safe.json"
+    },
+    {
+      "scope": "External originalDesktop28748 withExplorer8588parent observedSession1 at12:29,not newtasklaunch; old10:53absence remainshistorical",
+      "proof": "native/windows/interactive-current/new-default-desktop-parent-readonly-safe.json"
+    },
+    {
+      "scope": "Currentprofilepreservationattempt actual1 due liveWebViewlock; originalinventoryunreadable/currentprofileexactfalse/oldprivatebackup62notrestoreovernewdata",
+      "proof": "native/windows/interactive-current/original-profile-preservation-attempt1-safe.json"
+    },
+    {
+      "scope": "TemporaryisolatedWindows7339/24c8backend source71 creatorhandleskept/public17HTTP200exact/unauth401; no privatepaircodeuse/formal14/18/default7338/promote/cleanup",
+      "proof": "native/windows/temporary-7339/public-http-preflight-safe.json"
+    },
+    {
+      "scope": "Complete4WTSsessions allqueries0/Session1SameSIDtrueDisconnected4/Session3Connected1withoutidentity/no ActiveSameSIDcandidate0 or inputready; currentGUI28748 canstilllive inDisconnectedSession1",
+      "proof": "native/windows/interactive-current/session-enumeration-windows-owner-current-safe.json"
+    },
+    {
+      "scope": "Devicecorrection authoritatively labels currentdefault5554 actualLinuxguest/nativeWindowsADBclient; original1privateXML268B byteexactwriter0/RAMreloadfalse/keyschanged0/no originalWindows credentiallossclaim",
+      "proof": "native/android/device-identity-current21/native-final21-device-provenance-correction-safe.json"
+    },
+    {
+      "scope": "OwnWindows2344/qemu3828 exactbirth7WMcloseposted then originalPIDabsenceobserver/0signals/defaultADBcommands; producerreported postwindowguard1 not replaced with0",
+      "proof": "native/android/device-identity-current21/owned-windows-medium-normal-wmclose-exit-observed-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -120,10 +160,11 @@
     "Selected C-drive caches7219765510+587458817 bytes removed; dynamic free-space values are snapshots"
   ],
   "pendingCurrentEpochScopes": [
-    "Windows sameuserinteractiveInputDesktop/cursor prerequisite currentlyblocked; native18/normal tray/reinstall/7338 pending",
-    "Android actualIDEprojectsync in proved correctuser/session/nativeUI21+42/PTy/credentialidentity/decryption/rollback and cleanup pending; signednew21APK/install/compactNativeBridgeOK alreadyverified",
+    "Windows ownSession1 SameSIDproved butDisconnected/noActiveSameSIDcandidate/InputError5; externalDesktop28748 normaltrayexit/freshlatestprofilebackup/native18/reinstall/7338 stillpending",
+    "Correct nativeWindows AVD separate5572/ADB5039 exactidentity/install/JUnit/IDE/UI21+42/PTy/originalcredentialidentity+rollback/cleanup pending; previous5554currentAPKtesttarget actuallyLinuxorchester-qa",
     "International WorkBuddy native WSL package and profile isolation; recorded official package unavailable",
-    "Claude App current native Windows executable/package and official Linux support/install evidence"
+    "Claude App current native Windows executable/package and official Linux support/install evidence",
+    "Currentcrosshost/profile/Gitstep correction archive awaits parent nextcommit/push/main;193archive step already delivered"
   ],
   "folderResponsibilities": {
     "sources": "Official origins, source/provenance and current safe source audits",
@@ -140,7 +181,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-11T12:31:46.264648+00:00",
+  "updatedAt": "2026-11-11T13:07:41.335513+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentEffectiveLinuxDeviceCount": 3,
   "currentPersistedLinuxAuthEntryCount": 5,
@@ -160,5 +201,22 @@
   "currentWindowsSameUserInteractiveSessionProved": false,
   "currentAndroidPartialNativeBuildInstallTestsVerified": true,
   "currentAndroidActualIDESyncVerified": false,
-  "currentAndroidNativeUI21Providers42ImagesVerified": false
+  "currentAndroidNativeUI21Providers42ImagesVerified": false,
+  "documentedPublishedMainRevision": "32992976a98c5d20a9ea9b00948833325871dea0",
+  "productionSourceRevisionStillFrozen71": true,
+  "currentCorrectionArchiveGitCommitted": false,
+  "currentAndroidTestEndpointHost": "Linux orchester-qa.avd reached through Windows wslrelay ports5554/5555/5037",
+  "currentAndroidWindowsOriginalAVDIdentityVerified": false,
+  "originalWindowsCredentialsDamagedOrUnrecoverableClaimed": false,
+  "currentWindowsOriginalProfilesByteExactProved": false,
+  "historicalOfflineBackupReceiptRemainsValidForItsObservation": true,
+  "temporaryWindows7339PublicPreflightVerified": true,
+  "temporaryWindows7339CleanupVerified": false,
+  "currentWindowsSameUserIdentityProvedInDisconnectedSession": true,
+  "currentWindowsSameUserActiveSessionCandidateCount": 0,
+  "currentAndroidWrongLinuxTargetOriginalOneFileByteExactRestored": true,
+  "currentAndroidWrongTargetRAMPreferencesReloaded": false,
+  "currentOwnedWindowsQemuNormalCloseExitObserved": true,
+  "newCrossHostIndependentSubagentReviewCompleted": false,
+  "newCrossHostIndependentSubagentReviewFailure": "Remote compaction failed due API token rate limit; latest archive self-checks remain separate from earlier completed independent reviews."
 }

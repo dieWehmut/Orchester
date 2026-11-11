@@ -1,0 +1,53 @@
+﻿{
+    "ownEmulatorListeners":  [
+                                 {
+                                     "LocalAddress":  "::1",
+                                     "LocalPort":  50638,
+                                     "OwningProcess":  3828
+                                 },
+                                 {
+                                     "LocalAddress":  "::1",
+                                     "LocalPort":  49591,
+                                     "OwningProcess":  3828
+                                 },
+                                 {
+                                     "LocalAddress":  "::1",
+                                     "LocalPort":  49588,
+                                     "OwningProcess":  3828
+                                 },
+                                 {
+                                     "LocalAddress":  "127.0.0.1",
+                                     "LocalPort":  50638,
+                                     "OwningProcess":  3828
+                                 }
+                             ],
+    "relevantHostListeners":  [
+                                  {
+                                      "LocalAddress":  "::1",
+                                      "LocalPort":  5555,
+                                      "OwningProcess":  8412
+                                  },
+                                  {
+                                      "LocalAddress":  "::1",
+                                      "LocalPort":  5554,
+                                      "OwningProcess":  8412
+                                  },
+                                  {
+                                      "LocalAddress":  "127.0.0.1",
+                                      "LocalPort":  5555,
+                                      "OwningProcess":  8412
+                                  },
+                                  {
+                                      "LocalAddress":  "127.0.0.1",
+                                      "LocalPort":  5554,
+                                      "OwningProcess":  8412
+                                  },
+                                  {
+                                      "LocalAddress":  "127.0.0.1",
+                                      "LocalPort":  5037,
+                                      "OwningProcess":  8412
+                                  }
+                              ],
+    "signals":  0,
+    "argvReadOrPrinted":  false
+}

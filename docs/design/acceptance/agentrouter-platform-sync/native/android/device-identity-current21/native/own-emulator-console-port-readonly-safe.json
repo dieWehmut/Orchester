@@ -1,0 +1,29 @@
+﻿{
+    "port5554":  [
+                     {
+                         "LocalAddress":  "::1",
+                         "LocalPort":  5554,
+                         "OwningProcess":  8412
+                     },
+                     {
+                         "LocalAddress":  "127.0.0.1",
+                         "LocalPort":  5554,
+                         "OwningProcess":  8412
+                     }
+                 ],
+    "ownedFamily":  [
+                        {
+                            "ProcessId":  2344,
+                            "ParentProcessId":  20004,
+                            "Name":  "emulator.exe",
+                            "CreationUtc":  "2026-11-11T11:03:35.0326140Z"
+                        },
+                        {
+                            "ProcessId":  3828,
+                            "ParentProcessId":  2344,
+                            "Name":  "qemu-system-x86_64.exe",
+                            "CreationUtc":  "2026-11-11T11:03:35.2212470Z"
+                        }
+                    ],
+    "signals":  0
+}

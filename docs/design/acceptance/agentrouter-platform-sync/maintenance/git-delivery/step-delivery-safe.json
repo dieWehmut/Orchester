@@ -1,0 +1,13 @@
+{
+  "operation": "verified acceptance archive step delivery",
+  "documentationCommit": "213d315f23c1d0155f7ae38bb1b55c41deeebcfd",
+  "receiptPolicyCommit": "812e0e69a4cc860fc03742a521d492e6195b95a7",
+  "mainMergeCommit": "32992976a98c5d20a9ea9b00948833325871dea0",
+  "featurePushExitCode": 0,
+  "mainPushExitCode": 0,
+  "rootClean": true,
+  "mainWorktreeClean": true,
+  "productionInputsEqual71": true,
+  "androidAndRuntimeAcceptanceStillPending": true,
+  "observedAt": "2026-11-11T12:51:04.384619+00:00"
+}

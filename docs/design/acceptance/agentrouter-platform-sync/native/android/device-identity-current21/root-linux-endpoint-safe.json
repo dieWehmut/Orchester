@@ -1,0 +1,69 @@
+{
+  "operation": "Linux Android endpoint read-only identity observation",
+  "observedAt": "2026-11-11T12:44:10.539486+00:00",
+  "pid": 106668,
+  "startTicks": 115649,
+  "exe": "/home/han/Android/Sdk/emulator/qemu/linux-x86_64/qemu-system-x86_64-headless",
+  "uid": 1000,
+  "filteredAvdOpenFiles": [
+    {
+      "fd": 9,
+      "path": "/home/han/.android/avd/orchester-qa.avd/multiinstance.lock"
+    },
+    {
+      "fd": 32,
+      "path": "/home/han/.android/avd/orchester-qa.avd/cache.img.qcow2"
+    },
+    {
+      "fd": 33,
+      "path": "/home/han/.android/avd/orchester-qa.avd/cache.img.qcow2"
+    },
+    {
+      "fd": 34,
+      "path": "/home/han/.android/avd/orchester-qa.avd/cache.img"
+    },
+    {
+      "fd": 35,
+      "path": "/home/han/.android/avd/orchester-qa.avd/cache.img"
+    },
+    {
+      "fd": 36,
+      "path": "/home/han/.android/avd/orchester-qa.avd/userdata-qemu.img.qcow2"
+    },
+    {
+      "fd": 37,
+      "path": "/home/han/.android/avd/orchester-qa.avd/userdata-qemu.img.qcow2"
+    },
+    {
+      "fd": 38,
+      "path": "/home/han/.android/avd/orchester-qa.avd/userdata-qemu.img"
+    },
+    {
+      "fd": 39,
+      "path": "/home/han/.android/avd/orchester-qa.avd/userdata-qemu.img"
+    },
+    {
+      "fd": 40,
+      "path": "/home/han/.android/avd/orchester-qa.avd/encryptionkey.img.qcow2"
+    },
+    {
+      "fd": 41,
+      "path": "/home/han/.android/avd/orchester-qa.avd/encryptionkey.img.qcow2"
+    },
+    {
+      "fd": 42,
+      "path": "/home/han/.android/avd/orchester-qa.avd/encryptionkey.img"
+    },
+    {
+      "fd": 43,
+      "path": "/home/han/.android/avd/orchester-qa.avd/encryptionkey.img"
+    }
+  ],
+  "listeners": "State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess                                      \nLISTEN 0      128        127.0.0.1:5037      0.0.0.0:*    users:((\"adb\",pid=4899,fd=11))              \nLISTEN 0      4          127.0.0.1:5554      0.0.0.0:*    users:((\"qemu-system-x86\",pid=106668,fd=51))\nLISTEN 0      5          127.0.0.1:5555      0.0.0.0:*    users:((\"qemu-system-x86\",pid=106668,fd=47))\nLISTEN 0      5              [::1]:5555         [::]:*    users:((\"qemu-system-x86\",pid=106668,fd=48))\nLISTEN 0      4              [::1]:5554         [::]:*    users:((\"qemu-system-x86\",pid=106668,fd=52))\n",
+  "argvRead": false,
+  "environmentRead": false,
+  "privateDiskContentsRead": false,
+  "signals": 0,
+  "adbCommands": 0,
+  "originalAvdIdentityClaimed": false
+}

@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-11-11T12:37:31.285400+00:00",
+  "mode": "read-only-preflight-candidates-not-deletion-proof",
+  "mainRevisionObserved": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "candidateCount": 4,
+  "candidates": [
+    {
+      "worktree": "/home/han/project/Orchester/.worktrees/additional-agent-monitors",
+      "branch": "refs/heads/feat/additional-agent-monitors",
+      "HEAD": "4842a22ea72ff8c81b93a7a8d7c2e29c77e039b7",
+      "mainRevisionObserved": "71def643cb08b208cc79687f79255c504eb14dc6",
+      "ancestorCheckExitCode": 0,
+      "trackedOrUntrackedCleanObserved": true,
+      "allIgnoredClassifiedRegenerative": true,
+      "ignoredCategoryCounts": {
+        "regenerative-node-modules": 15111,
+        "regenerative-frontend-dist": 38
+      },
+      "regularFileCount": 15799,
+      "regularFileLogicalBytes": 324598005,
+      "uniqueInodeLogicalBytes": 320217091,
+      "symlinkCount": 816,
+      "symlinkMetadataBytes": 46903,
+      "symlinkTargetsTraversed": false,
+      "specialFileCount": 0,
+      "metadataErrors": 0,
+      "linuxProcessCwdRefsObserved": [],
+      "linuxProcessExeRefsObserved": [],
+      "linuxOpenFdProcessRefsObserved": [],
+      "rootOwnershipConfirmation": "Current agents share root; parent confirmed current Linux workspace root and frozen Windowsexport/runtime do not depend on otherworktrees; final decision/preflight belongs root",
+      "proposedAction": "Revalidate clean+ancestor+retained outputs and exact paths; root may normal git worktree remove, then git branch -d. No force/reset/clean -fdx."
+    },
+    {
+      "worktree": "/home/han/project/Orchester/.worktrees/process-monitor-count-units",
+      "branch": "refs/heads/fix/process-monitor-count-units",
+      "HEAD": "f06b919cca25aa9fe55dd4c6f7c98572e611a4b0",
+      "mainRevisionObserved": "71def643cb08b208cc79687f79255c504eb14dc6",
+      "ancestorCheckExitCode": 0,
+      "trackedOrUntrackedCleanObserved": true,
+      "allIgnoredClassifiedRegenerative": true,
+      "ignoredCategoryCounts": {
+        "regenerative-frontend-dist": 38,
+        "regenerative-node-modules": 12850
+      },
+      "regularFileCount": 13808,
+      "regularFileLogicalBytes": 266880509,
+      "uniqueInodeLogicalBytes": 264965384,
+      "symlinkCount": 565,
+      "symlinkMetadataBytes": 33393,
+      "symlinkTargetsTraversed": false,
+      "specialFileCount": 0,
+      "metadataErrors": 0,
+      "linuxProcessCwdRefsObserved": [],
+      "linuxProcessExeRefsObserved": [],
+      "linuxOpenFdProcessRefsObserved": [],
+      "rootOwnershipConfirmation": "Current agents share root; parent confirmed current Linux workspace root and frozen Windowsexport/runtime do not depend on otherworktrees; final decision/preflight belongs root",
+      "proposedAction": "Revalidate clean+ancestor+retained outputs and exact paths; root may normal git worktree remove, then git branch -d. No force/reset/clean -fdx."
+    },
+    {
+      "worktree": "/home/han/project/Orchester/.worktrees/remote-terminal",
+      "branch": "refs/heads/feat/remote-interactive-terminal",
+      "HEAD": "d186c472fea9728b2c5b1253d0fc88e5dac9ef1c",
+      "mainRevisionObserved": "71def643cb08b208cc79687f79255c504eb14dc6",
+      "ancestorCheckExitCode": 0,
+      "trackedOrUntrackedCleanObserved": true,
+      "allIgnoredClassifiedRegenerative": true,
+      "ignoredCategoryCounts": {
+        "regenerative-node-modules": 15786,
+        "regenerative-frontend-dist": 5,
+        "regenerative-build-cache": 11672
+      },
+      "regularFileCount": 27726,
+      "regularFileLogicalBytes": 7244562279,
+      "uniqueInodeLogicalBytes": 6305834609,
+      "symlinkCount": 816,
+      "symlinkMetadataBytes": 46903,
+      "symlinkTargetsTraversed": false,
+      "specialFileCount": 0,
+      "metadataErrors": 0,
+      "linuxProcessCwdRefsObserved": [],
+      "linuxProcessExeRefsObserved": [],
+      "linuxOpenFdProcessRefsObserved": [],
+      "rootOwnershipConfirmation": "Current agents share root; parent confirmed current Linux workspace root and frozen Windowsexport/runtime do not depend on otherworktrees; final decision/preflight belongs root",
+      "proposedAction": "Revalidate clean+ancestor+retained outputs and exact paths; root may normal git worktree remove, then git branch -d. No force/reset/clean -fdx."
+    },
+    {
+      "worktree": "/home/han/project/Orchester/.worktrees/windows-wsl-helper-lifecycle",
+      "branch": "refs/heads/fix/windows-wsl-helper-lifecycle",
+      "HEAD": "9dccb34c2171ab5bf59cd521cfdeeacc23c5775a",
+      "mainRevisionObserved": "71def643cb08b208cc79687f79255c504eb14dc6",
+      "ancestorCheckExitCode": 0,
+      "trackedOrUntrackedCleanObserved": true,
+      "allIgnoredClassifiedRegenerative": true,
+      "ignoredCategoryCounts": {
+        "regenerative-build-cache": 9181
+      },
+      "regularFileCount": 10672,
+      "regularFileLogicalBytes": 9946970578,
+      "uniqueInodeLogicalBytes": 9493689970,
+      "symlinkCount": 0,
+      "symlinkMetadataBytes": 0,
+      "symlinkTargetsTraversed": false,
+      "specialFileCount": 0,
+      "metadataErrors": 0,
+      "linuxProcessCwdRefsObserved": [],
+      "linuxProcessExeRefsObserved": [],
+      "linuxOpenFdProcessRefsObserved": [],
+      "rootOwnershipConfirmation": "Current agents share root; parent confirmed current Linux workspace root and frozen Windowsexport/runtime do not depend on otherworktrees; final decision/preflight belongs root",
+      "proposedAction": "Revalidate clean+ancestor+retained outputs and exact paths; root may normal git worktree remove, then git branch -d. No force/reset/clean -fdx."
+    }
+  ],
+  "linuxProcessReadErrors": {
+    "cwd": 87,
+    "exe": 87,
+    "openFd": 91
+  },
+  "noNativeWindowsProcessQueryAttempted": true,
+  "absenceNotGeneralUnusedProof": true,
+  "regularFileLogicalBytesTotal": 17783011371,
+  "physicalCVolumeBytesReleasedOrMeasured": false,
+  "staleRegistrationPruneCandidates": [
+    {
+      "path": "/tmp/orchester-activity-state-audit",
+      "HEAD": "4b1e21e965c3d456f2d0e2c25ad4762bff37273c",
+      "branch": "refs/heads/fix/agent-process-source-status",
+      "HEADIsMainAncestor": false,
+      "pathExists": false,
+      "prunableReason": "gitdir file points to non-existent location",
+      "action": "prune missing registration only; retain any non-ancestor ref"
+    },
+    {
+      "path": "/tmp/orchester-navigation-before",
+      "HEAD": "ff1e066c519f708526e26133a26ba73210110f77",
+      "branch": null,
+      "HEADIsMainAncestor": true,
+      "pathExists": false,
+      "prunableReason": "gitdir file points to non-existent location",
+      "action": "prune missing registration only; retain any non-ancestor ref"
+    }
+  ],
+  "protectedWorktrees": [
+    "/home/han/project/Orchester",
+    "/home/han/project/Orchester/.worktrees/main-integration"
+  ],
+  "noGitMutationDeleteSignalOrPrivateFileRead": true
+}

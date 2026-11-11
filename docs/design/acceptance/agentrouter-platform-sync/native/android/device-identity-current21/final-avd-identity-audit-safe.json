@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "observedAt": 1794401703.6058981,
+  "scope": "Read-only original Android AVD identity audit with current cross-host endpoint correction.",
+  "conclusions": [
+    {
+      "requirement": "Current Windows emulator-5554 equals own Windows Medium_Phone",
+      "result": "contradicted",
+      "evidence": "Windows localhost 5554/5555/5037 listener owner is wslrelay.exe PID8412, not own Windows qemu3828. Linux5554/5555 listener qemu106668 opens /home/han/.android/avd/orchester-qa.avd/ image/lock files; Linux5037 belongs adb4899.",
+      "currentLinuxIdentity": {
+        "pid": 106668,
+        "startTicks": 115649,
+        "uid": 1000,
+        "image": "/home/han/Android/Sdk/emulator/qemu/linux-x86_64/qemu-system-x86_64-headless",
+        "avdDirectory": "/home/han/.android/avd/orchester-qa.avd"
+      },
+      "currentWindowsIdentity": {
+        "ownEmulatorPid": 2344,
+        "ownQemuPid": 3828,
+        "qemuCreationUTC": "2026-11-11T11:03:35.2212470Z",
+        "ownQemuObservedPorts": [
+          50638,
+          49591,
+          49588
+        ],
+        "wslRelayPid": 8412,
+        "wslRelayCreationUTC": "2026-11-11T10:44:11.7593050Z"
+      }
+    },
+    {
+      "requirement": "Historical Sandkasten Studio AVD was original pre20 emulator-5554",
+      "result": "not proven; historical acceptance explicitly identifies another serial",
+      "evidence": "Nov10 Windows Studio final identity and GUI same-row pairing identify Sandkasten_Windows_API37 with emulator-5560. finishedUTC2026-11-10T06:56:45.7201546Z."
+    },
+    {
+      "requirement": "Original pre20 5554 actual AVD was Medium_Phone_API_37.0",
+      "result": "unverified",
+      "evidence": "Medium existing config dates and inferred Nov9 process birth are supportive metadata only. The inherited qemu3816 Nov9 birth has no located exact persisted source; no pre20 original5554 console AVD name/path fingerprint found. Current bootstrap file named original-avd does not prove historical target identity."
+    },
+    {
+      "requirement": "Five AES decrypt failures prove damaged or unrecoverable original Windows credentials",
+      "result": "unsupported",
+      "evidence": "The tested endpoint/Keystore host scope was not proven Windows Medium and current mapping identifies Linux orchester-qa. Key namespace and target mismatch must be resolved before attributing failures to the original Windows AVD. No recovery impossibility asserted."
+    }
+  ],
+  "timestampBoundary": {
+    "allReportedTimesUseUTC": true,
+    "sourceTimestampFractionsRetainedInHistoricalIdentity": true,
+    "windowsConfigFileDatesReadThroughDrvFSAreMtimeCtimeNotBirthClaims": true,
+    "nativeCreationTimeFileProbePreparedButNotExecutedByAudit": true,
+    "mediumIniMtimeUTC": "2026-11-09T04:56:22.986492Z",
+    "sandkastenIniMtimeUTC": "2026-11-10T06:08:26.927243Z",
+    "mediumQuickBootRamMtimeUTC": "2026-11-09T05:44:58.997350Z",
+    "quickBootMetadataDoesNotProveLossOrRestoration": true
+  },
+  "rootApprovedNextStepBoundary": "Owner will normally close only pinned own Windows emulator2344/qemu3828, then reuse existing Windows Medium AVD on separate5572/5573 with independent nativeADB5039. Own PID/birth/image, exact listeners and console AVD identity must match before any private operation. This audit performs no such launch, close or device action.",
+  "sourceReceipts": [
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/android-avd-identity-audit/current-public-config-and-metadata-safe.json",
+      "sha256": "1a9d0160ba62c44cd13df5f82777f29ffb6844e2625b4dd5792f1a3f7d15cb22"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/android-avd-identity-audit/historical-sandkasten-5560-safe.json",
+      "sha256": "f3e6fb61822ef058dda78d4e6e77dbd47e78fb8b515fa8d227d5af5e6154743e"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/android-avd-identity-audit/current-linux5554-listener-and-avd-fd-safe.json",
+      "sha256": "bf33238d9a7aa1f3d39f16dbfa694282decc1c3dba18028483873e4ca94cafd6"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/android-avd-identity-audit/root-linux-endpoint-safe.json",
+      "sha256": "99a9986d723d86879085a35efec4bbad291931375166dc6e87bed3a2595d47ae"
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/own-emulator-console-port-readonly-safe.json",
+      "sha256": "0056b4266769cb0204f280938390ab41ad5518488262d918346804f3aede538a"
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/unexpected-own-console-port-owner-safe.json",
+      "sha256": "8eb20a320c53373f231ba0e3b51cdcad9b237400fbc8472da4e4346a4a6363a0"
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/windows-own-qemu-actual-listeners-safe.json",
+      "sha256": "bac7e866665ef9b8d1745b6ed92c58bd83f8f6d74ce6ac54370df1080fcbc819"
+    }
+  ],
+  "originalPrivateCredentialOrKeyMaterialRead": false,
+  "originalProcessArgvOrEnvironmentRead": false,
+  "adbCommands": 0,
+  "nativeQueueWrites": 0,
+  "avdLaunchStopResetOrRecreation": 0,
+  "processSignals": 0,
+  "gitOrApplicationSourceMutations": 0
+}

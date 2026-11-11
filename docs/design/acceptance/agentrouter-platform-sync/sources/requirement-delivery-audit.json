@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
-  "generatedAt": "2026-11-11T12:31:46.264648+00:00",
+  "generatedAt": "2026-11-11T13:07:41.335513+00:00",
   "status": "current-evidence-audit-not-complete-all-platform-delivery",
   "requirements": [
     {
@@ -72,18 +72,23 @@
     {
       "id": "desktop_reinstall",
       "userRequirement": "Reinstall Orchester Desktop preserving original data",
-      "status": "core-build-backup-and-file-preparation-verified-interactive-prerequisite-blocked",
+      "status": "core-build-backup-file-preparation-and-temporary-http-verified-current-original-profile-backup-pending",
       "evidence": [
         "native/windows/final71-build/final-result.json",
         "native/windows/final71-preflight/offline-original-backup-safe.json",
         "native/windows/final71-build/current-worker-observation-safe.json",
         "sources/audit/current-native16-review-safe.json",
         "native/windows/file-preparation/final21-portable-package-safe.json",
-        "native/windows/interactive-current/final21-readiness-blocked-safe.json"
+        "native/windows/interactive-current/final21-readiness-blocked-safe.json",
+        "native/windows/interactive-current/original-profile-preservation-attempt1-safe.json",
+        "native/windows/interactive-current/new-default-desktop-parent-readonly-safe.json",
+        "native/windows/temporary-7339/public-http-preflight-safe.json",
+        "native/windows/interactive-current/session-enumeration-windows-owner-current-safe.json"
       ],
-      "verifiedScope": "Core16 actualgates0/Desktop38/Remote18 publicfiles; original privateinstallation/profile/state backups exact; no oldnaturalexitclaim. Newnativeobserver confirms worker16008 PIDabsent; originalHANDLE identity notverified; no originalexecutor0 claim. Independentcore/967plan/54publichash review passes; rawgradlew CRLF Gitcheckout normalizedexact; EXEcontents notindependentlyread. Portablefilepackage28files/17Web verifier passes with newnative21APKf83fa; actualruntime14/AndroidFinalBinding/defaultinstall pending.",
+      "verifiedScope": "Core16 actualgates0/Desktop38/Remote18 publicfiles; original privateinstallation/profile/state backups exact; no oldnaturalexitclaim. Newnativeobserver confirms worker16008 PIDabsent; originalHANDLE identity notverified; no originalexecutor0 claim. Independentcore/967plan/54publichash review passes; rawgradlew CRLF Gitcheckout normalizedexact; EXEcontents notindependentlyread. Portablefilepackage28files/17Web verifier passes with newnative21APKf83fa; actualruntime14/AndroidFinalBinding/defaultinstall pending. Temporarynative7339 source71/24c8/17publicHTTP200exact andunauth401 passed; not formal7338/defaultinstall/native14or18. CompleteWTSquery4sessions0 confirms Session1 sameSIDbutDisconnected/ActiveSameSIDcandidate0; priorSession3noidentity not wholehostabsence.",
       "remaining": [
-        "Sameuserinteractive InputDesktop/cursor access is currentlyunproved/Error5; activeConsole3username/domain empty,neither same/differentaccountproved.",
+        "SameSID Session1 is currentDisconnected4 and noActive sameSID candidate; InputDesktop/cursor readiness stillfalse/Error5.",
+        "ExternaloriginalDesktop28748/Explorer8588 became live after old10:53offlinebackup; currentWebViewlock attempt1exit1/currentprofileexactunproved. Normaltrayexit and freshlatestbackup required before guardedreinstall; never overwrite newdata using oldbackup.",
         "Runtime18 and realtray normalexit; formalpromotion/reinstallation/Windows7338state retention."
       ]
     },
@@ -123,19 +128,23 @@
     {
       "id": "android_studio",
       "userRequirement": "Actually open AndroidStudio and test mobile app",
-      "status": "new21-native-build-sign-install-and-compact-test-result-verified-ide-ui-final-pending",
+      "status": "current21-build-and-linux-emulator-install-tests-verified-correct-windows-device-ide-ui-final-pending",
       "evidence": [
         "native/android/current21-partial/final21-source-mirror-safe.json",
         "native/android/current21-partial/final21-apk-provenance-safe.json",
         "native/android/current21-partial/install-native-final21-app-safe.json",
         "native/android/current21-partial/install-native-final21-tests-safe.json",
-        "native/android/current21-partial/native-bridge-tests-final21-current-apk-result.json"
+        "native/android/current21-partial/native-bridge-tests-final21-current-apk-result.json",
+        "native/android/device-identity-current21/final-avd-identity-audit-safe.json",
+        "native/android/device-identity-current21/native-final21-device-provenance-correction-safe.json",
+        "native/android/device-identity-current21/native-one-prefs-file-rollback-final-byte-exact-safe.json",
+        "native/android/device-identity-current21/owned-windows-medium-normal-wmclose-exit-observed-safe.json"
       ],
-      "verifiedScope": "Current41nativeGitinputs/source71+17publicmirror; nativeGradle0 and signedcurrent appf83fa/testb5c13 originalcertdf6 verified;17APKpublicresourcesexact; app/testsuccessfulinstall0. NativeBridge compactresultOK/exit0 with producerreport4tests; count/SID/IDEproofnotincompactJSON. Historical20 remains distinct; no finalnativeacceptanceclaim.",
+      "verifiedScope": "Current41nativeGitinputs/source71+17publicmirror/nativeWindowsGradle0 and signedcurrentappf83fa/testb5c13/certdf6/17APKresources valid. Successfulinstall and compactNativeBridgeOK/exit0 producer4tests remain actual, but device5554 proved Linuxorchester-qa through wslrelay; not Windows originalAVD. Pre20Windows5554 identity unverified and Sandkasten historicalStudio device5560 distinct. FiveAESfailed attempts on unboundhost/Keystore do not prove originalWindowskeydamage or unrecoverability. WrongLinuxguest original1 XML268B source701837 atomicallyrestored byteexact/writer0, shell-v2 proves no .bak; RAMreloadfalse and bothprivate1/5sourcespreserved, noKeystoreedit. Separate7ownWindowsWM_CLOSE and exact2344/3828PIDabsenceobserver0signals confirmed; firstguard1 is producerreport, not compactexitfield.",
       "remaining": [
-        "Actual AndroidStudio project/sync/window in provedcorrectuser/session; currentStudio ownprocess is Session1 whileInputDesktopError5/activeConsole3sameSIDunproved.",
-        "Current21 nativeUI exactprovider21+loadedimages42 and PTyinput/resize.",
-        "Originalcredential identity/decryption/rollback and onlyownedtemporarycleanup finalsafe proof; do not infer old5irrecoverable before deviceidentityaudit."
+        "Prove separate nativeWindows Medium5572/5573/ADB5039 actualPID/birth/listeners/consoleAVD identity before privateoperations; historicalpre20WindowsAVD identity remains unverified.",
+        "CurrentWindows Studio project/sync/window in provedcorrectuser/session plus actualcorrectWindowsdevice install/JUnit/UI21+42/PTYinput+resize.",
+        "CorrectWindows originalcredentialidentity/decryption and finalonlyownedcleanup stillpending; wrongLinuxdisk1XMLrestored but RAMreload/coldboot notproved, old5irrecoverability notclaimed."
       ]
     },
     {
@@ -172,22 +181,27 @@
         "maintenance/windows-approved-cache-cleanup.json",
         "maintenance/completed-official-installer-cache-cleanup.json",
         "maintenance/current-worktree-cleanup-state-safe.json",
-        "maintenance/owned-package-preparation-cache-cleanup-safe.json"
+        "maintenance/owned-package-preparation-cache-cleanup-safe.json",
+        "maintenance/workspace-current/actual-worktree-cleanup-safe.json",
+        "maintenance/workspace-current/final-workspace-cleanup-candidates-safe.json",
+        "maintenance/workspace-current/same-user-process-path-observation-safe.json"
       ],
-      "verifiedScope": "Historical73remote+3local mergedbranchrefs safelycleaned; CknownPDB/incremental7219765510B and officialinstallercache587458817B exactfiles removed. Free-space readings are snapshots. Current four oldworktree paths/localbranches absent and retainedcommits fullymerged; registeredworktrees15. Currentownedpackage-sourcecache25files/23373069logicalbytes deleted and28candidate inventory retained; no Cvolume physicalfree delta claim.",
+      "verifiedScope": "Historical73remote+3local mergedbranchrefs safelycleaned; CknownPDB/incremental7219765510B and officialinstallercache587458817B exactfiles removed. Free-space readings are snapshots. Current four oldworktree paths/localbranches absent and retainedcommits fullymerged; registeredworktrees15. Currentownedpackage-sourcecache25files/23373069logicalbytes deleted and28candidate inventory retained; no Cvolume physicalfree delta claim. Additionalactual4cleanmergedworktrees normalremove/branch-d0 and2missingregistrationprune0; nonancestorrefs/userdata retained; selected17783011371regularfilelogicalbytes are Linuxworkspace scope, not physicalCfreedbytes.",
       "remaining": [],
       "historicalMeasurementBoundary": "Original fourunused-worktree temporarycleanup receipts unavailable; historicaloperation/bytes not reconstructed; no Cphysicalreleaseclaim."
     },
     {
       "id": "git_steps",
       "userRequirement": "Verify separated commits, push remotely and merge main step by step",
-      "status": "parent-owned-delivery-pending",
+      "status": "prior193archive-step-delivered-current-corrections-await-parent-delivery",
       "evidence": [
-        "sources/final71-source-binding.json"
+        "sources/final71-source-binding.json",
+        "maintenance/git-delivery/git-byte-and-crlf-correction-safe.json",
+        "maintenance/git-delivery/step-delivery-safe.json"
       ],
-      "verifiedScope": "Frozen71 production source verified; docsagent performs noGitstage/commit/push. Parent owns separateddocumentationreview/commit/push/mainmerge and confirms frozenruntimeguards do not depend on laterdocsHEAD.",
+      "verifiedScope": "Parentdocs193+MD exact194Gitblob comparisons. FirstdefaultCRLFwhitespacecheckexit2 preserved; doccommit213d315 alreadycreated, scopedattributes correction812e0e6 preserves原bytes andcheck0, main32992976 merged; feature/mainpushactual0. Frozenproduction71 unchanged. Docsagent noGitmutation.",
       "remaining": [
-        "Finalreceipt/archive validation and parent documentationcommit/push/mainmerge."
+        "Currentcrosshost/profile/maintenance correction records need nextparentreview/commit/push/mainmerge; nativeacceptance scopes remain pending."
       ]
     }
   ],
