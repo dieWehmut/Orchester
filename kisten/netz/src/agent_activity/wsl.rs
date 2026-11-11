@@ -226,17 +226,28 @@ fn command_output_result(
     if start.elapsed() >= timeout {
         return Err(WslReadFailure::Timeout);
     }
-    let mut child = command
+    let command = command
         .stdout(Stdio::from(
             capture.reopen().map_err(|_| WslReadFailure::ReadFailed)?,
         ))
         .stderr(Stdio::null())
-        .stdin(Stdio::null())
-        .spawn()
+        .stdin(Stdio::null());
+    #[cfg(windows)]
+    let tree =
+        orchester_vertrag::process::ProcessTree::new().map_err(|_| WslReadFailure::Unavailable)?;
+    #[cfg(windows)]
+    let mut child = tree
+        .spawn_std(command)
         .map_err(|_| WslReadFailure::Unavailable)?;
+    #[cfg(not(windows))]
+    let mut child = command.spawn().map_err(|_| WslReadFailure::Unavailable)?;
     loop {
         match child.try_wait() {
             Ok(Some(status)) if status.success() => {
+                // A launcher may exit before its delegated wsl.exe/conhost.
+                // Stop those job members before taking the finite snapshot.
+                #[cfg(windows)]
+                tree.terminate_std(&mut child);
                 if start.elapsed() >= timeout {
                     return Err(WslReadFailure::Timeout);
                 }
@@ -274,12 +285,18 @@ fn command_output_result(
                     _ => None,
                 };
                 if let Some(failure) = failure {
+                    #[cfg(windows)]
+                    tree.terminate_std(&mut child);
+                    #[cfg(not(windows))]
                     let _ = child.kill();
                     let _ = child.wait();
                     return Err(failure);
                 }
             }
             Err(_) => {
+                #[cfg(windows)]
+                tree.terminate_std(&mut child);
+                #[cfg(not(windows))]
                 let _ = child.kill();
                 let _ = child.wait();
                 return Err(WslReadFailure::ReadFailed);

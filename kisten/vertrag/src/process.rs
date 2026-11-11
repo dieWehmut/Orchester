@@ -1,3 +1,5 @@
+#[cfg(windows)]
+mod std_windows;
 mod tree;
 #[cfg(windows)]
 mod windows;
