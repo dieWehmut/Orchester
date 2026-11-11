@@ -209,6 +209,16 @@
       "bytes": 2115
     },
     {
+      "path": "main-ci-audit-provenance.json",
+      "sha256": "cc364a2d7d6474814e9f19bffc201f5e890b677d9844ec7e609ac5913c13a4bb",
+      "bytes": 1780
+    },
+    {
+      "path": "main-ci-audit.json",
+      "sha256": "1be95a97977e2390b60f8e5e7947a02e0c7c5e51b4b0325cca7f0bded341f6c9",
+      "bytes": 2644
+    },
+    {
       "path": "memory-initialization/affected-clippy.log",
       "sha256": "f7ae66dd82c0cba08b742edf663a891bc74274a7c328aa11aed643212c390391",
       "bytes": 5183
@@ -533,7 +543,7 @@
     "temporary native proxy cleanup",
     "physical Android and iOS target environment"
   ],
-  "updatedAt": "2026-11-11T04:33:55.482331+00:00",
+  "updatedAt": "2026-11-11T04:41:27.734391+00:00",
   "functionalBaselineRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
   "acceptedLifecycleFixMainRevision": "8c24d0c73309e45738285cee4d0297ef4158810d",
   "currentMainIntegration": {
@@ -571,5 +581,14 @@
     "originalStateAndRunRecordsRetained": true,
     "testCredentialRevokedAndPairingClosed": true,
     "summarySha256": "0169d96478d7437ab6436e08cc578f107f13da2d27df7191f8646c666be96d3b"
+  },
+  "ciSnapshot": {
+    "sourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+    "observedAtUtc": "2026-11-11T04:36:48.439859+00:00",
+    "status": "no-exact-source-Actions-or-configured-required-contexts; absence-not-counted-as-CI-pass",
+    "latestSuccessfulPagesRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+    "pagesInputChanges": 0,
+    "sourceSha256": "1be95a97977e2390b60f8e5e7947a02e0c7c5e51b4b0325cca7f0bded341f6c9",
+    "path": "main-ci-audit.json"
   }
 }
