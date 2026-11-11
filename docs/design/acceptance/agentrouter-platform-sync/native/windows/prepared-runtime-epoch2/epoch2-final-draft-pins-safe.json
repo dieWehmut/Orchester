@@ -1,0 +1,134 @@
+{
+  "format": "orchester-runtime-epoch2-final-draft-pins-v1",
+  "status": "prepared-not-executed-independent-final-review-pending",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "formalEntryPoints": [
+    "launch-smoke.ps1",
+    "verify-portable-runtime-file.ps1"
+  ],
+  "excludedLegacyEntryPoint": "verify-portable-runtime-final.ps1",
+  "excludedLegacyOriginalBytesPreserved": true,
+  "originalManifestSha256": "61de2f683acf375dc698a3053a34a0fae1cb607813dbfe72f8a94bced9239a58",
+  "cloneManifestSha256": "807319a7aba30d967316c9087ee447059860bdc0f796b723110145945b61a6f5",
+  "originalFrozenFileBytesUnchanged": true,
+  "changedExistingFiles": [
+    "OwnedRuntimeProcesses.cs",
+    "launch-smoke.ps1",
+    "prepared-scripts.json",
+    "verify-portable-runtime-file.ps1"
+  ],
+  "unchangedExistingFileCount": 12,
+  "ownershipAdmissionRegionByteExact": true,
+  "ownershipAdmissionRegionSha256": "1948d3d4cd15fde4ec38cc02fb7622617bc785fc59f299cf5423653067cd31af",
+  "consumerRunningTerminateCalls": 0,
+  "retainerModuleSha256": "6f758142622e49e7b6e7892c7b254a5dda53b990425d0ff7b9e54d84a7523344",
+  "newFile": {
+    "path": "retain-owned-observation.ps1",
+    "sha256": "6f758142622e49e7b6e7892c7b254a5dda53b990425d0ff7b9e54d84a7523344"
+  },
+  "wslHostPublicMetadataReceiptSha256": "e13cb328f570bf7fcb763ef7ecccd306e57f7ee4ea233297765a867184594c10",
+  "nativeSuccessorMechanicalReceiptSha256": "b70d5c3ec0163017680cdf954ab2b273d35b6f92d85136cc53642874b0467296",
+  "files": [
+    {
+      "path": "InteractiveFileRunner.cs",
+      "originalSha256": "03783e81bee77f1e13d517c5efd4ad6caca45509960691faf5dc90ad8dc3cec3",
+      "cloneSha256": "03783e81bee77f1e13d517c5efd4ad6caca45509960691faf5dc90ad8dc3cec3",
+      "unchanged": true
+    },
+    {
+      "path": "NativeDesktopWindows.cs",
+      "originalSha256": "858fdf6e41f257b8923bed98c4ba15177c8538ef2240d51f8122519df9b5af58",
+      "cloneSha256": "858fdf6e41f257b8923bed98c4ba15177c8538ef2240d51f8122519df9b5af58",
+      "unchanged": true
+    },
+    {
+      "path": "NativeTrayQuit.cs",
+      "originalSha256": "bcaafea8a300f153a08657a657d650eb82282f97057d46533e05b290f4b9ce75",
+      "cloneSha256": "bcaafea8a300f153a08657a657d650eb82282f97057d46533e05b290f4b9ce75",
+      "unchanged": true
+    },
+    {
+      "path": "OwnedConsoleQuit.cs",
+      "originalSha256": "531a104d8e2075b4cf7f045b2078e7d4af1357704b37cde68bef331128790572",
+      "cloneSha256": "531a104d8e2075b4cf7f045b2078e7d4af1357704b37cde68bef331128790572",
+      "unchanged": true
+    },
+    {
+      "path": "OwnedRuntimeProcesses.cs",
+      "originalSha256": "ca811c1294281e53adf5fc80093020648a38b6822aea16831541ecb28744eb3c",
+      "cloneSha256": "d335743a632acae0c90968e482b87eda44aaf1dae241e938e62b5c7833598d45",
+      "unchanged": false
+    },
+    {
+      "path": "capture-desktop-descendants.ps1",
+      "originalSha256": "8e81166cd81e6fe3f97f0537fda6b998396f3af5a5b8a2f22b1a863d6de9133d",
+      "cloneSha256": "8e81166cd81e6fe3f97f0537fda6b998396f3af5a5b8a2f22b1a863d6de9133d",
+      "unchanged": true
+    },
+    {
+      "path": "inspect-or-quit-default-remote.ps1",
+      "originalSha256": "86f76c914b9c537d2d1708e10656666bce76ed8ee11cdab9abf98f3e30deaca5",
+      "cloneSha256": "86f76c914b9c537d2d1708e10656666bce76ed8ee11cdab9abf98f3e30deaca5",
+      "unchanged": true
+    },
+    {
+      "path": "invoke-owned-tray-quit.ps1",
+      "originalSha256": "610b484568af1f8b85fa0291ad7aa1a117ed69d7526b189d0f9b3a1ea50550fd",
+      "cloneSha256": "610b484568af1f8b85fa0291ad7aa1a117ed69d7526b189d0f9b3a1ea50550fd",
+      "unchanged": true
+    },
+    {
+      "path": "launch-smoke.ps1",
+      "originalSha256": "7c36903ce7ac83bc63124a014d1d706fbddc20e7da9908433525d808f417daed",
+      "cloneSha256": "b30e25096940a0604546ac77187650738a0ce76ba40049c656442ceed84c3001",
+      "unchanged": false
+    },
+    {
+      "path": "prepared-scripts.json",
+      "originalSha256": "61de2f683acf375dc698a3053a34a0fae1cb607813dbfe72f8a94bced9239a58",
+      "cloneSha256": "807319a7aba30d967316c9087ee447059860bdc0f796b723110145945b61a6f5",
+      "unchanged": false
+    },
+    {
+      "path": "resize-isolated-window.ps1",
+      "originalSha256": "0f573d3ea44247a442157369e26c35c1bde7e39d3f43c011a13de87a23581489",
+      "cloneSha256": "0f573d3ea44247a442157369e26c35c1bde7e39d3f43c011a13de87a23581489",
+      "unchanged": true
+    },
+    {
+      "path": "runtime-input-guards.ps1",
+      "originalSha256": "fa6ce76b0ac9d2c4a37b173931e4627d92cab7e5308e6f912b8467a5eb58ff6d",
+      "cloneSha256": "fa6ce76b0ac9d2c4a37b173931e4627d92cab7e5308e6f912b8467a5eb58ff6d",
+      "unchanged": true
+    },
+    {
+      "path": "verify-final-native.mjs",
+      "originalSha256": "7269430ac55b9cf1c22e9c6cfd26013d5d3abd5f839f33004e8ddaaaec9d63bd",
+      "cloneSha256": "7269430ac55b9cf1c22e9c6cfd26013d5d3abd5f839f33004e8ddaaaec9d63bd",
+      "unchanged": true
+    },
+    {
+      "path": "verify-portable-runtime-file.ps1",
+      "originalSha256": "3646928e84215c19261025289a94208721287f569a50eaf844871d14e53613bd",
+      "cloneSha256": "9b59595d838aed379e25cf4483fa8f6a24bf45f9d1d832c5eb83ae70ecf3e0a1",
+      "unchanged": false
+    },
+    {
+      "path": "verify-portable-runtime-final.ps1",
+      "originalSha256": "6d01f8496ff8c57317337448d47c450b3a4a8ab768f755e46f1f04466a485b6f",
+      "cloneSha256": "6d01f8496ff8c57317337448d47c450b3a4a8ab768f755e46f1f04466a485b6f",
+      "unchanged": true
+    },
+    {
+      "path": "window-snapshot.ps1",
+      "originalSha256": "de6406bd7241bf983ce82c1ee17f712cdc5293bfb054b35c4987849d2ffabfda",
+      "cloneSha256": "de6406bd7241bf983ce82c1ee17f712cdc5293bfb054b35c4987849d2ffabfda",
+      "unchanged": true
+    }
+  ],
+  "androidFinalAcceptanceBound": false,
+  "formal14Executed": false,
+  "formal18Executed": false,
+  "promoted": false,
+  "defaultProfilesModified": false
+}

@@ -1,0 +1,59 @@
+{
+  "observedAt": "2026-11-11T15:35:37.135951+00:00",
+  "requests": [
+    {
+      "requestedUrl": "https://www.deepseek.com/",
+      "finalUrl": "https://www.deepseek.com/",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "bytes": 115730,
+      "sha256": "d650c9e9a64dedfd0198472bff505a02032bd04083b53e2bf5c66e3af329b534",
+      "verifiedTls": true,
+      "publicBodyFile": "deepseek-home.html"
+    },
+    {
+      "requestedUrl": "https://www.deepseek.com/harness/",
+      "finalUrl": "https://www.deepseek.com/harness/",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "bytes": 206789,
+      "sha256": "95694345987e3f5b763d53a378f6ac9cbc68079c5c469ff289b75043102365bc",
+      "verifiedTls": true,
+      "publicBodyFile": "deepseek-harness.html"
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/master/apps/desktop/package.json",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/master/apps/desktop/package.json",
+      "httpStatus": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "bytes": 4443,
+      "sha256": "f27a39672ecc89876cd34db0f52aeee1459432c4bbc0557837716db8c7832acc",
+      "verifiedTls": true,
+      "publicBodyFile": "official-desktop-package.json"
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/master/apps/desktop/packaging/README.md",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/master/apps/desktop/packaging/README.md",
+      "httpStatus": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "bytes": 55734,
+      "sha256": "95ea269d00b700ee83078dd5f5f7aca85671f6c920e3814084a21ddf51b2a4a8",
+      "verifiedTls": true,
+      "publicBodyFile": "official-desktop-packaging-readme.md"
+    },
+    {
+      "requestedUrl": "https://github.com/deepseek-ai/deepseek-harness/tree/master/apps/desktop",
+      "finalUrl": "https://github.com/deepseek-ai/deepseek-harness/tree/master/apps/desktop",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 483847,
+      "sha256": "532359abba806c5a4aff116ae92e70ee287d524812cf35403381137b6e6e3032",
+      "verifiedTls": true,
+      "publicBodyFile": "official-desktop-tree.html"
+    }
+  ],
+  "installerDownloads": 0,
+  "githubRestApiCalls": 0,
+  "modelOrRuntimeApiCalls": 0,
+  "privateDataReads": 0
+}

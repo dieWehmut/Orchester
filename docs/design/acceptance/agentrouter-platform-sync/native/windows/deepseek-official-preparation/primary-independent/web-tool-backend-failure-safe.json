@@ -1,0 +1,6 @@
+{
+  "operation": "web tool official open",
+  "result": "tool backend HTTP404 Invalid URL POST /v1/alpha/search",
+  "websiteHttp404Claimed": false,
+  "fallback": "Normal hostname verified TLS urllib official public GET; no DNS or TLS override"
+}

@@ -1,0 +1,18 @@
+{
+  "requestedOfficialUrl": "https://download.deepseek.com/desktop/dsh-latest-windows-x64.exe",
+  "startedAt": "2026-11-11T15:37:04.912261+00:00",
+  "hostnameAndCertificateVerificationEnabled": true,
+  "installerExecuted": false,
+  "windowsInstallationOrUninstallPerformed": false,
+  "privateProfilesRead": false,
+  "runtimeApiOrModelCalls": 0,
+  "httpStatus": 200,
+  "finalUrlWithoutQuery": "https://download.deepseek.com/desktop/dsh-latest-windows-x64.exe",
+  "finalUrlHasQuery": false,
+  "contentType": "application/vnd.microsoft.portable-executable",
+  "declaredContentLength": "293425336",
+  "status": "official-installer-transport-failed",
+  "exceptionType": "AssertionError",
+  "ownedPartialBytesRetained": 286949376,
+  "finishedAt": "2026-11-11T15:43:23.521985+00:00"
+}

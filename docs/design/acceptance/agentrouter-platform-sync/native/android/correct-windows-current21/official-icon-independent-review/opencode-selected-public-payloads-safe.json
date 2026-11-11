@@ -1,0 +1,24 @@
+{
+  "sourceContainerPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-ui-icons-public-payload.json",
+  "sourceContainerSha256": "655d8cb896862cb73e18532faa0429ed82c77198a8cdab29c9db1ea8a89ed639",
+  "marks": [
+    {
+      "provider": "opencode",
+      "theme": "light",
+      "actualPayloadSha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70"
+    },
+    {
+      "provider": "opencode",
+      "theme": "dark",
+      "actualPayloadSha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70"
+    }
+  ],
+  "uniqueSelectedPayloadCount": 1,
+  "payload": {
+    "url": "data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20version='1.1'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='512'%20height='512'%3e%3csvg%20width='512'%20height='512'%20viewBox='0%200%20512%20512'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='512'%20height='512'%20fill='%23131010'%3e%3c/rect%3e%3cpath%20d='M320%20224V352H192V224H320Z'%20fill='%235A5858'%3e%3c/path%3e%3cpath%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M384%20416H128V96H384V416ZM320%20160H192V352H320V160Z'%20fill='white'%3e%3c/path%3e%3c/svg%3e%3cstyle%3e@media%20(prefers-color-scheme:%20light)%20{%20:root%20{%20filter:%20none;%20}%20}%20@media%20(prefers-color-scheme:%20dark)%20{%20:root%20{%20filter:%20none;%20}%20}%20%3c/style%3e%3c/svg%3e",
+    "bytesBase64": "PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZlcnNpb249JzEuMScgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc1MTInIGhlaWdodD0nNTEyJz48c3ZnIHdpZHRoPSc1MTInIGhlaWdodD0nNTEyJyB2aWV3Qm94PScwIDAgNTEyIDUxMicgZmlsbD0nbm9uZScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48cmVjdCB3aWR0aD0nNTEyJyBoZWlnaHQ9JzUxMicgZmlsbD0nIzEzMTAxMCc+PC9yZWN0PjxwYXRoIGQ9J00zMjAgMjI0VjM1MkgxOTJWMjI0SDMyMFonIGZpbGw9JyM1QTU4NTgnPjwvcGF0aD48cGF0aCBmaWxsLXJ1bGU9J2V2ZW5vZGQnIGNsaXAtcnVsZT0nZXZlbm9kZCcgZD0nTTM4NCA0MTZIMTI4Vjk2SDM4NFY0MTZaTTMyMCAxNjBIMTkyVjM1MkgzMjBWMTYwWicgZmlsbD0nd2hpdGUnPjwvcGF0aD48L3N2Zz48c3R5bGU+QG1lZGlhIChwcmVmZXJzLWNvbG9yLXNjaGVtZTogbGlnaHQpIHsgOnJvb3QgeyBmaWx0ZXI6IG5vbmU7IH0gfSBAbWVkaWEgKHByZWZlcnMtY29sb3Itc2NoZW1lOiBkYXJrKSB7IDpyb290IHsgZmlsdGVyOiBub25lOyB9IH0gPC9zdHlsZT48L3N2Zz4=",
+    "sha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70",
+    "bytes": 608
+  },
+  "privateData": false
+}

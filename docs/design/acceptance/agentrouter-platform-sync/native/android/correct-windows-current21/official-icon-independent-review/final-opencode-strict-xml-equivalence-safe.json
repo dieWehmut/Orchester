@@ -1,0 +1,435 @@
+{
+  "schemaVersion": 1,
+  "status": "pass-two-opencode-svg-marks-with-exact-vite-and-strict-xml-css-trivia-proof",
+  "observedAt": "2026-11-11T15:04:09.371609+00:00",
+  "scope": "Read-only public captured Android icons; no new native/UI/device operation or APK-install claim",
+  "initialComparisonSha256": "14c68d1ad5cfb20f37ca28fc46e9b8cb118498242f8d9790a519c2dd10a70bb1",
+  "capturedPublicPayloadSetSha256": "655d8cb896862cb73e18532faa0429ed82c77198a8cdab29c9db1ea8a89ed639",
+  "exactViteReplaySha256": "4c663f06fd094ec9febd1c7ba91453f1def983dcb185a0bc7eee9f8969161b76",
+  "independentCssProofSha256": "cc86688ab2a24746ff5d8e1904a7cff2d64ccfc7666f24ff395f0e498cd52ebd",
+  "initialMatchedMarks": 40,
+  "newlyMatchedOpenCodeMarks": 2,
+  "finalMatchedMarks": 42,
+  "totalThemeMarks": 42,
+  "canonicalProviders": 21,
+  "uniqueCapturedPayloads": 24,
+  "rawByteEqualMarks": 25,
+  "exactLocalViteNormalizedMarksExcludingRaw": 17,
+  "rows": [
+    {
+      "mark": "opencode_light",
+      "provider": "opencode",
+      "theme": "light",
+      "strictSourceEquivalent": true,
+      "sourceSha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+      "actualPayloadSha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70",
+      "rawBytesEqual": false,
+      "sourceBytes": 612,
+      "payloadBytes": 608,
+      "namespaceDeclarationsSource": [
+        [
+          "",
+          "http://www.w3.org/2000/svg"
+        ],
+        [
+          "xlink",
+          "http://www.w3.org/1999/xlink"
+        ],
+        [
+          "",
+          "http://www.w3.org/2000/svg"
+        ]
+      ],
+      "namespaceDeclarationsActual": [
+        [
+          "",
+          "http://www.w3.org/2000/svg"
+        ],
+        [
+          "xlink",
+          "http://www.w3.org/1999/xlink"
+        ],
+        [
+          "",
+          "http://www.w3.org/2000/svg"
+        ]
+      ],
+      "namespaceDeclarationsExact": true,
+      "elementCount": 6,
+      "completeAttributeCount": 16,
+      "orderedElementTreeAndExpandedNamesExact": true,
+      "allAttributeNamesAndValuesExact": true,
+      "elements": [
+        {
+          "path": "/svg",
+          "expandedName": "{http://www.w3.org/2000/svg}svg",
+          "allAttributes": {
+            "height": "512",
+            "version": "1.1",
+            "width": "512"
+          },
+          "allAttributesExact": true,
+          "orderedChildCount": 2
+        },
+        {
+          "path": "/svg/0",
+          "expandedName": "{http://www.w3.org/2000/svg}svg",
+          "allAttributes": {
+            "fill": "none",
+            "height": "512",
+            "viewBox": "0 0 512 512",
+            "width": "512"
+          },
+          "allAttributesExact": true,
+          "orderedChildCount": 3
+        },
+        {
+          "path": "/svg/0/0",
+          "expandedName": "{http://www.w3.org/2000/svg}rect",
+          "allAttributes": {
+            "fill": "#131010",
+            "height": "512",
+            "width": "512"
+          },
+          "allAttributesExact": true,
+          "orderedChildCount": 0
+        },
+        {
+          "path": "/svg/0/1",
+          "expandedName": "{http://www.w3.org/2000/svg}path",
+          "allAttributes": {
+            "d": "M320 224V352H192V224H320Z",
+            "fill": "#5A5858"
+          },
+          "allAttributesExact": true,
+          "orderedChildCount": 0
+        },
+        {
+          "path": "/svg/0/2",
+          "expandedName": "{http://www.w3.org/2000/svg}path",
+          "allAttributes": {
+            "clip-rule": "evenodd",
+            "d": "M384 416H128V96H384V416ZM320 160H192V352H320V160Z",
+            "fill": "white",
+            "fill-rule": "evenodd"
+          },
+          "allAttributesExact": true,
+          "orderedChildCount": 0
+        },
+        {
+          "path": "/svg/1",
+          "expandedName": "{http://www.w3.org/2000/svg}style",
+          "allAttributes": {},
+          "allAttributesExact": true,
+          "orderedChildCount": 0
+        }
+      ],
+      "pathGeometryAndColors": [
+        {
+          "path": "/svg/0/1",
+          "d": "M320 224V352H192V224H320Z",
+          "fill": "#5A5858",
+          "allGeometryAndColorAttributeValuesExact": true
+        },
+        {
+          "path": "/svg/0/2",
+          "d": "M384 416H128V96H384V416ZM320 160H192V352H320V160Z",
+          "fill": "white",
+          "allGeometryAndColorAttributeValuesExact": true
+        }
+      ],
+      "characterDataExactBeforePermittedTriviaNormalization": false,
+      "allCharacterDataDifferences": [
+        {
+          "path": "/svg/0",
+          "field": "text",
+          "sourceValue": "\n",
+          "actualValue": null,
+          "allowedReason": "One indentation LF between structural SVG elements; neither document contains text, foreignObject, or mixed content there."
+        },
+        {
+          "path": "/svg/0/0",
+          "field": "tail",
+          "sourceValue": "\n",
+          "actualValue": null,
+          "allowedReason": "One indentation LF between structural SVG elements; neither document contains text, foreignObject, or mixed content there."
+        },
+        {
+          "path": "/svg/0/1",
+          "field": "tail",
+          "sourceValue": "\n",
+          "actualValue": null,
+          "allowedReason": "One indentation LF between structural SVG elements; neither document contains text, foreignObject, or mixed content there."
+        },
+        {
+          "path": "/svg/0/2",
+          "field": "tail",
+          "sourceValue": "\n",
+          "actualValue": null,
+          "allowedReason": "One indentation LF between structural SVG elements; neither document contains text, foreignObject, or mixed content there."
+        },
+        {
+          "path": "/svg/1",
+          "field": "text",
+          "sourceValue": "@media (prefers-color-scheme: light) { :root { filter: none; } }\n@media (prefers-color-scheme: dark) { :root { filter: none; } }\n",
+          "actualValue": "@media (prefers-color-scheme: light) { :root { filter: none; } } @media (prefers-color-scheme: dark) { :root { filter: none; } } ",
+          "allowedReason": "Only the two exact LF-to-space CSS trivia changes independently proven by PostCSS tokens and AST; no other character-data normalization.",
+          "characterDifferences": [
+            [
+              64,
+              "\n",
+              " "
+            ],
+            [
+              128,
+              "\n",
+              " "
+            ]
+          ],
+          "independentCssProofSha256": "cc86688ab2a24746ff5d8e1904a7cff2d64ccfc7666f24ff395f0e498cd52ebd"
+        }
+      ],
+      "lexicalDifferences": {
+        "attributeDelimiterQuotesOnly": "double quotes in source; single quotes in exact Vite payload",
+        "documentTerminalLFSource": false,
+        "documentTerminalLFActual": false
+      },
+      "naiveElementTreeCanonicalizationEqual": false,
+      "naiveFailureReason": "strip_text trims ends but preserves an internal LF between complete CSS rules; actual Vite replaced that LF with one space.",
+      "exactLocalViteReplayMatched": true,
+      "sourceMutation": false
+    },
+    {
+      "mark": "opencode_dark",
+      "provider": "opencode",
+      "theme": "dark",
+      "strictSourceEquivalent": true,
+      "sourceSha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+      "actualPayloadSha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70",
+      "rawBytesEqual": false,
+      "sourceBytes": 612,
+      "payloadBytes": 608,
+      "namespaceDeclarationsSource": [
+        [
+          "",
+          "http://www.w3.org/2000/svg"
+        ],
+        [
+          "xlink",
+          "http://www.w3.org/1999/xlink"
+        ],
+        [
+          "",
+          "http://www.w3.org/2000/svg"
+        ]
+      ],
+      "namespaceDeclarationsActual": [
+        [
+          "",
+          "http://www.w3.org/2000/svg"
+        ],
+        [
+          "xlink",
+          "http://www.w3.org/1999/xlink"
+        ],
+        [
+          "",
+          "http://www.w3.org/2000/svg"
+        ]
+      ],
+      "namespaceDeclarationsExact": true,
+      "elementCount": 6,
+      "completeAttributeCount": 16,
+      "orderedElementTreeAndExpandedNamesExact": true,
+      "allAttributeNamesAndValuesExact": true,
+      "elements": [
+        {
+          "path": "/svg",
+          "expandedName": "{http://www.w3.org/2000/svg}svg",
+          "allAttributes": {
+            "height": "512",
+            "version": "1.1",
+            "width": "512"
+          },
+          "allAttributesExact": true,
+          "orderedChildCount": 2
+        },
+        {
+          "path": "/svg/0",
+          "expandedName": "{http://www.w3.org/2000/svg}svg",
+          "allAttributes": {
+            "fill": "none",
+            "height": "512",
+            "viewBox": "0 0 512 512",
+            "width": "512"
+          },
+          "allAttributesExact": true,
+          "orderedChildCount": 3
+        },
+        {
+          "path": "/svg/0/0",
+          "expandedName": "{http://www.w3.org/2000/svg}rect",
+          "allAttributes": {
+            "fill": "#131010",
+            "height": "512",
+            "width": "512"
+          },
+          "allAttributesExact": true,
+          "orderedChildCount": 0
+        },
+        {
+          "path": "/svg/0/1",
+          "expandedName": "{http://www.w3.org/2000/svg}path",
+          "allAttributes": {
+            "d": "M320 224V352H192V224H320Z",
+            "fill": "#5A5858"
+          },
+          "allAttributesExact": true,
+          "orderedChildCount": 0
+        },
+        {
+          "path": "/svg/0/2",
+          "expandedName": "{http://www.w3.org/2000/svg}path",
+          "allAttributes": {
+            "clip-rule": "evenodd",
+            "d": "M384 416H128V96H384V416ZM320 160H192V352H320V160Z",
+            "fill": "white",
+            "fill-rule": "evenodd"
+          },
+          "allAttributesExact": true,
+          "orderedChildCount": 0
+        },
+        {
+          "path": "/svg/1",
+          "expandedName": "{http://www.w3.org/2000/svg}style",
+          "allAttributes": {},
+          "allAttributesExact": true,
+          "orderedChildCount": 0
+        }
+      ],
+      "pathGeometryAndColors": [
+        {
+          "path": "/svg/0/1",
+          "d": "M320 224V352H192V224H320Z",
+          "fill": "#5A5858",
+          "allGeometryAndColorAttributeValuesExact": true
+        },
+        {
+          "path": "/svg/0/2",
+          "d": "M384 416H128V96H384V416ZM320 160H192V352H320V160Z",
+          "fill": "white",
+          "allGeometryAndColorAttributeValuesExact": true
+        }
+      ],
+      "characterDataExactBeforePermittedTriviaNormalization": false,
+      "allCharacterDataDifferences": [
+        {
+          "path": "/svg/0",
+          "field": "text",
+          "sourceValue": "\n",
+          "actualValue": null,
+          "allowedReason": "One indentation LF between structural SVG elements; neither document contains text, foreignObject, or mixed content there."
+        },
+        {
+          "path": "/svg/0/0",
+          "field": "tail",
+          "sourceValue": "\n",
+          "actualValue": null,
+          "allowedReason": "One indentation LF between structural SVG elements; neither document contains text, foreignObject, or mixed content there."
+        },
+        {
+          "path": "/svg/0/1",
+          "field": "tail",
+          "sourceValue": "\n",
+          "actualValue": null,
+          "allowedReason": "One indentation LF between structural SVG elements; neither document contains text, foreignObject, or mixed content there."
+        },
+        {
+          "path": "/svg/0/2",
+          "field": "tail",
+          "sourceValue": "\n",
+          "actualValue": null,
+          "allowedReason": "One indentation LF between structural SVG elements; neither document contains text, foreignObject, or mixed content there."
+        },
+        {
+          "path": "/svg/1",
+          "field": "text",
+          "sourceValue": "@media (prefers-color-scheme: light) { :root { filter: none; } }\n@media (prefers-color-scheme: dark) { :root { filter: none; } }\n",
+          "actualValue": "@media (prefers-color-scheme: light) { :root { filter: none; } } @media (prefers-color-scheme: dark) { :root { filter: none; } } ",
+          "allowedReason": "Only the two exact LF-to-space CSS trivia changes independently proven by PostCSS tokens and AST; no other character-data normalization.",
+          "characterDifferences": [
+            [
+              64,
+              "\n",
+              " "
+            ],
+            [
+              128,
+              "\n",
+              " "
+            ]
+          ],
+          "independentCssProofSha256": "cc86688ab2a24746ff5d8e1904a7cff2d64ccfc7666f24ff395f0e498cd52ebd"
+        }
+      ],
+      "lexicalDifferences": {
+        "attributeDelimiterQuotesOnly": "double quotes in source; single quotes in exact Vite payload",
+        "documentTerminalLFSource": false,
+        "documentTerminalLFActual": false
+      },
+      "naiveElementTreeCanonicalizationEqual": false,
+      "naiveFailureReason": "strip_text trims ends but preserves an internal LF between complete CSS rules; actual Vite replaced that LF with one space.",
+      "exactLocalViteReplayMatched": true,
+      "sourceMutation": false
+    }
+  ],
+  "immutableInputSnapshots": [
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/opencode.svg",
+      "sha256Before": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+      "sha256After": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+      "unchanged": true
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-ui-icons-public-payload.json",
+      "sha256Before": "655d8cb896862cb73e18532faa0429ed82c77198a8cdab29c9db1ea8a89ed639",
+      "sha256After": "655d8cb896862cb73e18532faa0429ed82c77198a8cdab29c9db1ea8a89ed639",
+      "unchanged": true
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-ui-official-icons-safe.json",
+      "sha256Before": "14c68d1ad5cfb20f37ca28fc46e9b8cb118498242f8d9790a519c2dd10a70bb1",
+      "sha256After": "14c68d1ad5cfb20f37ca28fc46e9b8cb118498242f8d9790a519c2dd10a70bb1",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/independent-css-review/exact-css-trivia-review-safe.json",
+      "sha256Before": "cc86688ab2a24746ff5d8e1904a7cff2d64ccfc7666f24ff395f0e498cd52ebd",
+      "sha256After": "cc86688ab2a24746ff5d8e1904a7cff2d64ccfc7666f24ff395f0e498cd52ebd",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/exact-local-vite-android-payload-replay-safe.json",
+      "sha256Before": "4c663f06fd094ec9febd1c7ba91453f1def983dcb185a0bc7eee9f8969161b76",
+      "sha256After": "4c663f06fd094ec9febd1c7ba91453f1def983dcb185a0bc7eee9f8969161b76",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/opencode-actual-public-payload.svg",
+      "sha256Before": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70",
+      "sha256After": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70",
+      "unchanged": true
+    }
+  ],
+  "comparisonRules": [
+    "Expanded namespace names, namespace declarations, ordered element tree, every attribute name/value, and full path/color strings compared exactly.",
+    "No basename identity comparison, no dropped attributes, no approximate path geometry/color comparison.",
+    "Only four precisely located structural indentation LFs and two precisely located CSS trivia LF-to-space changes accepted; CSS token/AST equality was independently proven.",
+    "Local Vite 7.3.6 exact transformation produces the exact 608-byte captured payload; actual public dist chunks and existing Pages proof match that same body."
+  ],
+  "sourceMutations": 0,
+  "nativeQueueOperations": 0,
+  "adbCalls": 0,
+  "uiOrDeviceOperations": 0,
+  "privateProfileReads": 0
+}

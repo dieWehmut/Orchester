@@ -56,7 +56,7 @@
       "proof": "sources/agentrouter/final-guide-scope-safe.json"
     },
     {
-      "scope": "Actual currentLinux7337 source71/ELFd983/21providers;17publicresourcesexact;3effective devices/5persistedentries JSONvaluesretained;5taskrawrowsexact;temporaryauthrevoked",
+      "scope": "PreviouslyobservedLinux7337/source71/ELFd983/21catalog+17resources/3effective5persistedentriesJSON/5taskrows/authrevocation proved; historicalbeforefresh23:31absence, notcurrentliveness",
       "proof": "deployments/linux/current-final21/final-safe.json"
     },
     {
@@ -196,7 +196,7 @@
       "proof": "native/android/correct-windows-current21/correct-windows-final21-native-bridge-safe.json"
     },
     {
-      "scope": "CorrectWin original5AES5success0fail andonly original7337/info1GET200/nameMatch/noNewPairing/noTokenOutput; not every5originalwiretested",
+      "scope": "CorrectWin original5AES5success0fail andhistorical original7337/info1GET200/nameMatch/noNewPairing/noTokenOutput; not every5originalwiretested",
       "proof": "native/android/correct-windows-current21/correct-windows-original-five-aes-and-existing-wire-attempt2-safe.json"
     },
     {
@@ -214,6 +214,74 @@
     {
       "scope": "Independent pre-report265snapshot:52targetsafeoriginalJSON/258archiveJSON/hashes/links/13requirements passed; early7publicnonJSONarchivehashreads disclosed/finalJSONsuffixguard/private0; produceractualexitcodesattested notnative rerun",
       "proof": "sources/audit/epoch3-installation-archive-independent-review-safe.json"
+    },
+    {
+      "scope": "CorrectWinnative21providers/42allloaded/24publiciconpayloads/25raw+15previousSVG+2strictOpenCodeXMLCSS exact; initial40false retained; actualsea palette/no lightsettingclaim/twoWorkBuddy names; publicscreenshots inspected",
+      "proof": "native/android/correct-windows-current21/correct-windows-final21-ui-all-official-icons-accepted-safe.json"
+    },
+    {
+      "scope": "OpenCode strict XML6elements3namespacedeclarations16attrs/path/colors exact and CSS2LFwhitespace PostCSS exact; localVite actual0 reproduces25raw+17normalized; twoinitialreviewscript1 failures retained",
+      "proof": "native/android/correct-windows-current21/official-icon-independent-review/final-opencode-strict-xml-equivalence-safe.json"
+    },
+    {
+      "scope": "Firstisolated7339 owncreatorhandles normalquit/allownedexit/portfree/executor22540actual0;330unknownsystem observations notunownedlifetimeproof; secondruntime notbound",
+      "proof": "native/windows/temporary-7339/original-executor-terminal-safe.json"
+    },
+    {
+      "scope": "Firstisolated7339 only3ownedprivate transportnames removedafterverifiedterminal/1264logicalB/remaining0/no contentsread/no Cphysicaldelta/defaultprofile untouched",
+      "proof": "native/windows/temporary-7339/private-transport-terminal-cleanup-safe.json"
+    },
+    {
+      "scope": "Successor2 nativeAST/AddType+44syntheticassertions3positive16negative/executor29820actual0 but nativePIDnotcaptured/nativeadmission0; onlyisolated7339 policy notformal14/18",
+      "proof": "native/windows/temporary-7339-successor-policy/successor2-native-typed-policy-safe.json"
+    },
+    {
+      "scope": "Formalepoch2 prepared32original+clonecomparisons/10manifest/retainer+ownershipregion/nativeAST0/terminalpins exact; originalfreeze unchanged/excludedlegacyentrypoint; no formal14/18 run/defaultinstall",
+      "proof": "native/windows/prepared-runtime-epoch2/root-formal-epoch2-final-hash-check-safe.json"
+    },
+    {
+      "scope": "CurrentWindowsknownDSHpublic installedPE/MZ+resources/app.asar sizes present; no wholeEXEhash/signaturerun/reinstall/privateprofile; fullofficialpayloadbinding notyetverified",
+      "proof": "native/windows/legacy-current-public-metadata/installed-dsh-public-known-files-safe.json"
+    },
+    {
+      "scope": "Secondisolated7339 source71/24c8/backend29308launcher21164/controller11248 owncreatorhandles/Session1 ready; actualPTY/pairrevoke/cleanup notprovedbyready andnotformal7338",
+      "proof": "native/windows/temporary-7339-attempt2/ready-safe.json"
+    },
+    {
+      "scope": "Third266archive+MD267exactGitblob/doc0e4367d/main8b0a016/tworequiredpush0/initialpremainpushuptodate separatelyretained/production71 unchanged; newepochnotcommitted",
+      "proof": "maintenance/git-delivery/third-step-delivery-safe.json"
+    },
+    {
+      "scope": "Historicalworker204892 absence only priorhandoff/snapshot; originalchildPID/birth/imageSHA/HANDLEunlocated, no childgone/newownership/signalclaim; current7339 hasseparatecreatorchain",
+      "proof": "native/windows/ownership-history/historical-unregistered-suspended-node-closure-gap-safe.json"
+    },
+    {
+      "scope": "CorrectWin5039 actualfocusedxtermCDPUnicode+nativeEnter0/outgoingWS+WindowsCmdparsedChineseEcho3input3output actual; not backendinjected; screenshotadfb privatehashonly/notarchived; resize/mobileclose/revoke/fullPTYfalse",
+      "proof": "native/android/correct-windows-current21/correct-windows-current7339-native-unicode-enter-safe.json"
+    },
+    {
+      "scope": "Independentcorrecttarget/Studio17400ms/native5039/UI21+42strictXMLCSS+actualUnicodeEnter completedsubchains only; no IDE Run/hostdesktop/lightselector/fullAndroid or fullterminalcleanupclaim",
+      "proof": "native/android/correct-windows-current21/studio-icons-and-unicode-independent-review-safe.json"
+    },
+    {
+      "scope": "Second7339 controller11248/birth15:14 InvalidOperationException/executor96860actual1; launcher0/normalquit/declaredoriginalhandlesallgone/portfree/3private transportsremoved; pairingActualCLIclosedfalse/resize/mobileclose/revocation false",
+      "proof": "native/windows/temporary-7339-attempt2/failed-final-safe-whitelist.json"
+    },
+    {
+      "scope": "OfficialDeepSeekwebsite293425336B/830947 installerprepared/publicPE0.2.2rc1/HangzhouDeepSeek; oldDataElement0.13+bundledHarnessCLI0.2.1rc3 differentofficialidentity/updateorigin; sourcepinnedcurrent0.2.2rc2 distinctdownloadversion; Authtrust/installpending",
+      "proof": "native/windows/deepseek-official-preparation/final-official-desktop-binding-safe.json"
+    },
+    {
+      "scope": "OfficialTLS200firstearlyEOF/286949376/exit1 preserved;206exact6475960 completesdeclared293425336/fullSHAactual0; firstETagunavailable/vendorchecksumandsingle-responsefalse/certtablepresentnotAuthenticodeValid",
+      "proof": "native/windows/deepseek-official-preparation/official-download/official-installer-transport-safe.json"
+    },
+    {
+      "scope": "Freshroot23:31UTC/Nov12Asia originalLinuxPID1023019 andcontroller1023013 absent/7337listeners0/previousHTTPURLError; exitcauseunknown/privateReads0/signals0; newrestorationpending, historicpassreceiptsunchanged",
+      "proof": "deployments/linux/current-runtime-observation/prior-instance-current-unavailable-safe.json"
+    },
+    {
+      "scope": "Independent pre-report320:310listedJSONhash+sizes/273selectedoriginalJSONbytes+1supplementalpublicsafeJSON/52phase4sources/8derived/159MDlinks/13req93links/6secretcategories allpassed;9nonJSONstatonly/private/native/network/ADB/Git0; requirement3complete10incomplete; historicLinuxcurrentunavailable/secondexec1/DSHprepared/fullPTY+14/18pending retained",
+      "proof": "sources/audit/epoch4-fixed-checkpoint-independent-review-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -221,14 +289,19 @@
     "a96a06e Windows16 build gates/coreDesktop38/coreRemote18 without APK",
     "a96a06e Linux7337 actual deployment and state/auth retention at original observation",
     "89e577 Pages26 live resources equal CI artifact",
-    "Selected C-drive caches7219765510+587458817 bytes removed; dynamic free-space values are snapshots"
+    "Selected C-drive caches7219765510+587458817 bytes removed; dynamic free-space values are snapshots",
+    "Prior source71 Linux7337 deployment/1023019 and oneoriginal7337/info200 before fresh23:31UTC absence; originalreceipts preserved historical"
   ],
   "pendingCurrentEpochScopes": [
-    "Windows ownSession1 SameSIDproved butDisconnected/noActiveSameSIDcandidate/InputError5; externalDesktop28748 normaltrayexit/freshlatestprofilebackup/native18/reinstall/7338 stillpending",
-    "CorrectWin5572/source71/samecertinstall/JUnit4/original5AES+values/1original7337wire/actualStudioSync17400msJDK21online5572已证；UI21+42/PTy/oldown17379extra cleanup/wrongLinuxRAM+ownforward cleanup stillpending",
-    "International WorkBuddy native WSL package and profile isolation; recorded official package unavailable",
-    "Claude App current native Windows executable/package and official Linux support/install evidence",
-    "CurrentWindowsmatrix/WSLlegacyinstall/Claudeboundedprimarysupport/newStudio partial receipts await parent nextcommit/push/main;218correction step already delivered"
+    "Fresh23:31UTC Linux7337 originalPID1023019/controller1023013 absent/no listener/HTTPURLError; currentstate restoration bylinux_restore pending freshactualdeployment+state-retention receipt; originalcauseunknown",
+    "Windows ownSession1 SameSIDproved butDisconnected/noActiveSameSIDcandidate/InputError5; externalDesktop28748 normaltrayexit/freshlatestprofilebackup/native14/18/reinstall/7338 stillpending",
+    "CorrectWin5572/source71/samecertinstall/JUnit4/original5AES+values/1original7337wire/actualStudio17400msJDK21/nativeUI21+42official/UnicodeEnter3input3output verified; PTYresize/mobileproductterminalclose/device6to5/revoked401 notcomplete; oldown17379extra cleanup andwrongLinuxRAM+ownforward finalunverified",
+    "SecondisolatedWindows7339 controller11248 InvalidOperationException/executor96860actual1; launcher0/normaldeclaredownedexit/portfree/3private-transportfilesremoved verified; this isfailedvalidation notfullAndroidPTY/authcleanup; attempt3 source/runtime and anyfinalinstall remain later separateepoch",
+    "International WorkBuddy native WSL usable package/profile isolation unverified/currentofficialdownloadunavailable; domestic unaffected",
+    "Claude App current native Windows executable/package and official Linux support/install evidence unverified",
+    "DeepSeek officialWindowswebsite293425336B installer830947/PE0.2.2rc1 prepared; WindowsAuthenticodeTrust/installation pending; existingDataElementwrapper0.13 withHarnessCLI0.2.1rc3 doesnotbindofficialcurrentDesktop",
+    "Formalepoch2 prepared32originalclone/10manifest/nativeAST0 verified; freshfullAndroidacceptance required for future runtimeinputsfreeze/run14/18/defaultreinstall",
+    "Phase4 checkpoint (UI42/Unicode/officialDSHprepared/attempt2failedterminal) awaits parentcommit/push/main; previous266archive+MD267 step already delivered"
   ],
   "folderResponsibilities": {
     "sources": "Official origins, source/provenance and current safe source audits",
@@ -245,12 +318,8 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-11T14:51:49.509750+00:00",
+  "updatedAt": "2026-11-11T23:53:59.153445+00:00",
   "currentCompiledInputUnionCount": 731,
-  "currentEffectiveLinuxDeviceCount": 3,
-  "currentPersistedLinuxAuthEntryCount": 5,
-  "currentLinuxRemoteStateSemanticJSONExact": true,
-  "currentLinuxRemoteStateRawSQLStringsExact": false,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
   "currentWindowsNativeRuntimeGateCount": 18,
@@ -265,15 +334,14 @@
   "currentWindowsSameUserInteractiveSessionProved": false,
   "currentAndroidPartialNativeBuildInstallTestsVerified": true,
   "currentAndroidActualIDESyncVerified": true,
-  "currentAndroidNativeUI21Providers42ImagesVerified": false,
-  "documentedPublishedMainRevision": "4d7d95be513f92bd5877504d394a06e7995edba4",
+  "currentAndroidNativeUI21Providers42ImagesVerified": true,
+  "documentedPublishedMainRevision": "8b0a0163e1df4e5cdaab293b8f8130eda91b3f2f",
   "productionSourceRevisionStillFrozen71": true,
   "currentCorrectionArchiveGitCommitted": false,
   "originalWindowsCredentialsDamagedOrUnrecoverableClaimed": false,
   "currentWindowsOriginalProfilesByteExactProved": false,
   "historicalOfflineBackupReceiptRemainsValidForItsObservation": true,
   "temporaryWindows7339PublicPreflightVerified": true,
-  "temporaryWindows7339CleanupVerified": false,
   "currentWindowsSameUserIdentityProvedInDisconnectedSession": true,
   "currentWindowsSameUserActiveSessionCandidateCount": 0,
   "currentAndroidWrongLinuxTargetOriginalOneFileByteExactRestored": true,
@@ -296,7 +364,6 @@
   "currentOriginalWindowsFiveEncryptedValuesPreserved": true,
   "currentOriginalWindowsFiveAESDecryptSuccessCount": 5,
   "currentOriginalWindowsFiveAESDecryptFailureCount": 0,
-  "currentOriginalLinux7337TokenOneInfoRequestActualStatus": 200,
   "correctWindowsEncryptedRecordCountIncludingOldOwned17379Extra": 6,
   "ownedOld17379ExtraCleanupVerified": false,
   "currentAndroidActualIDESyncDurationMilliseconds": 17400,
@@ -314,5 +381,73 @@
   "epoch3IndependentReviewPrivateReadCount": 0,
   "epoch3IndependentReviewEarlierPublicNonJsonArchiveHashReadCount": 7,
   "epoch3IndependentReviewFinalPassNonJsonReadCount": 0,
-  "epoch3IndependentReviewNativeNetworkAndGitReexecutions": 0
+  "epoch3IndependentReviewNativeNetworkAndGitReexecutions": 0,
+  "prior266InstallationAndStudioArchiveDelivered": true,
+  "currentAndroidNativeUIUniqueOfficialAssetCount": 24,
+  "currentAndroidNativeUIPalette": "sea",
+  "currentAndroidNativeUILightThemeSettingClaimed": false,
+  "firstTemporaryWindows7339CleanupVerified": true,
+  "firstTemporaryWindows7339UnknownSystemBrokerLifetimesProved": false,
+  "firstTemporaryWindows7339PrivateTransportCountRemaining": 0,
+  "secondTemporaryWindows7339ReadyVerified": true,
+  "secondTemporaryWindows7339CleanupVerified": false,
+  "successor2NativeSyntheticPolicyAssertionCount": 44,
+  "successor2PolicyAdmittedNativeProcessCount": 0,
+  "currentFormalRuntimeEpoch2NativeAstVerified": true,
+  "currentFormalRuntimeEpoch2RuntimeExecuted": false,
+  "epoch4IndependentReviewCompleted": true,
+  "historicalUnregisteredSuspendedChildIdentityAndClosureVerified": false,
+  "historicalUnregisteredSuspendedChildClaimedOrSignaled": false,
+  "currentDocumentationExecutionDateRangeAsiaShanghai": [
+    "2026-11-11",
+    "2026-11-12"
+  ],
+  "historicalReceiptUtcDatesAnd20261111PathsUnmodified": true,
+  "currentAndroidNativeUnicodeEnterVerified": true,
+  "currentAndroidNativeUnicodeInputPacketCount": 3,
+  "currentAndroidNativeUnicodeOutputPacketCount": 3,
+  "currentAndroidNativeResizeVerified": false,
+  "currentAndroidProductNormalTerminalCloseVerified": false,
+  "currentAndroidTemporaryDeviceRemovalAndRevocationVerified": false,
+  "currentAndroidFullPTYVerified": false,
+  "secondTemporaryWindows7339ControllerValidationPassed": false,
+  "secondTemporaryWindows7339ActualNativeExecutorExitCode": 1,
+  "secondTemporaryWindows7339DeclaredOriginalHandlesNormalExitVerified": true,
+  "secondTemporaryWindows7339PortReleased": true,
+  "secondTemporaryWindows7339PrivateTransportRemainingCount": 0,
+  "secondTemporaryWindows7339PairingClosedByActualCliEvent": false,
+  "currentWindowsDeepSeekOfficialDesktopInstalledVerified": false,
+  "currentWindowsDeepSeekOfficialInstallerPrepared": true,
+  "currentWindowsDeepSeekOfficialInstallerVersion": "0.2.2-rc.1",
+  "currentWindowsDeepSeekOfficialInstallerSha256": "830947f8996dc05d991ca9133fff4d3400073e47b9cfa6507754867e79482b23",
+  "currentWindowsDeepSeekOfficialInstallerBytes": 293425336,
+  "currentWindowsDeepSeekOfficialInstallerAuthenticodeTrustVerified": false,
+  "currentLegacyDataElementDSH013MatchesOfficialDesktopIdentity": false,
+  "lastVerifiedEffectiveLinuxDeviceCount": 3,
+  "lastVerifiedPersistedLinuxAuthEntryCount": 5,
+  "lastVerifiedLinuxRemoteStateSemanticJSONExact": true,
+  "lastVerifiedLinuxRemoteStateRawSQLStringsExact": false,
+  "historicalOriginalLinux7337TokenOneInfoRequestActualStatus": 200,
+  "currentLinuxDeploymentVerified": false,
+  "currentLinuxRestorationPending": true,
+  "currentLinuxRuntimeObservedAtUtc": "2026-11-11T23:31:29.037533+00:00",
+  "currentLinuxOldServicePidExists": false,
+  "currentLinuxOldControllerPidExists": false,
+  "currentLinux7337ListenerCount": 0,
+  "currentLinuxPreviousExitCauseVerified": false,
+  "epoch4IndependentReviewProof": "sources/audit/epoch4-fixed-checkpoint-independent-review-safe.json",
+  "epoch4IndependentReviewPreReportFileCount": 320,
+  "epoch4IndependentReviewListedJsonHashAndSizeCheckCount": 310,
+  "epoch4IndependentReviewArchiveJsonCountIncludingManifest": 311,
+  "epoch4IndependentReviewNonJsonStatOnlyCount": 9,
+  "epoch4IndependentReviewSelectedOriginalJsonByteComparisonCount": 273,
+  "epoch4IndependentReviewSupplementalSafeJsonOriginalByteComparisonCount": 1,
+  "epoch4IndependentReviewTargetedPhase4SafeJsonOriginalCount": 52,
+  "epoch4IndependentReviewPrivateReadNativeNetworkAdbQueueGitRepoMutationAndNonJsonReadCount": 0,
+  "oldEpoch4SourceOnlySubagentReportClaimedFinal": false,
+  "currentCheckpointRequirementStatusCounts": {
+    "completed": 3,
+    "incomplete": 10,
+    "missing": 0
+  }
 }

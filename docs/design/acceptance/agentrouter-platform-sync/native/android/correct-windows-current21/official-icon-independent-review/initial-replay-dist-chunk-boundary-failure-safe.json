@@ -1,0 +1,12 @@
+{
+  "attempt": 2,
+  "actualExitCode": 1,
+  "sourceScriptSha256": "81846ea0110a3353e246067279e48f4019fae1378832332f95b74308e65b0c18",
+  "failureType": "ERR_ASSERTION",
+  "failureStage": "Assumed every dist main index includes icon URL; web and Pages use public page chunks instead",
+  "all42ExactPayloadAssertionsReachedAndPassed": true,
+  "noCompletedReplayReceipt": true,
+  "sourceOrPayloadMutations": 0,
+  "deviceOrNativeOperations": 0,
+  "remediation": "Inspect all actual public JS chunks per dist directory, preserve main-index false rows, and require at least one exact generated URL match per distribution."
+}

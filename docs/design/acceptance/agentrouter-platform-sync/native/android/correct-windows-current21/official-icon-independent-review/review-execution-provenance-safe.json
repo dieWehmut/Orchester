@@ -1,0 +1,22 @@
+{
+  "viteReplay": {
+    "actualExitCode": 0,
+    "toolOutputChunk": "5c2577",
+    "scriptSha256": "90cf5fd522bb3ff59f26fe063e3bba81b3e824dc17ca7c23f6788850b2d976a6",
+    "resultSha256": "4c663f06fd094ec9febd1c7ba91453f1def983dcb185a0bc7eee9f8969161b76",
+    "previousTwoFailedAttemptsRetained": true
+  },
+  "strictXmlReview": {
+    "actualExitCode": 0,
+    "toolOutputChunk": "0bbf90",
+    "scriptSha256": "6b032e91c6ffc9a7242c7256285e652c0c6262bf2e4ac13c0b784f1b01c49c30",
+    "resultSha256": "e8de98f493e65b79be088a6f78b0b0cef3aa132a1992210951c3e43956ae1af2"
+  },
+  "independentCss": {
+    "executorAgent": "/root/official_installs/svg_text_review",
+    "actualExitCode": 0,
+    "confirmation": "Final agent report after actual Node execution; selected proof content and SHA independently read by parent",
+    "resultSha256": "cc86688ab2a24746ff5d8e1904a7cff2d64ccfc7666f24ff395f0e498cd52ebd"
+  },
+  "operationScope": "Read-only public files and owned evidence artifacts; source/device/native operations zero"
+}

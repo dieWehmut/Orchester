@@ -1,0 +1,30 @@
+{
+  "format": "orchester-historical-exact-child-closure-gap-v1",
+  "status": "historical-exact-child-closure-unverified",
+  "parentWorkerFromHandoff": {
+    "pid": 204892,
+    "creationUtc": "2026-11-11T10:06:01.0975596Z",
+    "source": "parent-task-handoff-not-new-native-query"
+  },
+  "oldInspectionScriptDirectoryPresent": false,
+  "knownSafeLedgerSearchComplete": true,
+  "originalExactChildPidKnown": false,
+  "originalExactChildCreatedKnown": false,
+  "originalExactChildImageAndShaKnown": false,
+  "originalCreatorHandleRecovered": false,
+  "historicalProcessSnapshotSha256": "1da6841dad437d64db75974c465459be4d31774456c5ccdfd9c91ee423b6c767",
+  "historicalSnapshotObservedAtUtc": "2026-11-11T10:53:49.7763467Z",
+  "historicalWorker204892ReportedAbsent": true,
+  "historicalVisibleNodeRowCount": 1,
+  "historicalVisibleNodeRowsHaveExpectedParent": false,
+  "currentDiagnosticSourceSha256": "fab5662f5001d8677c84c90c8796e9e10c3a1670f6865e062e94996c0e198924",
+  "currentSourceContainsFullCimEnumerationAndNodeNameSelection": true,
+  "diagnosticSourceHashAtHistoricalExecutionRecorded": false,
+  "workerAbsenceUsedAsChildExitProof": false,
+  "childGoneClaimed": false,
+  "childSignalIssued": false,
+  "signalsToUserNode": 0,
+  "newOwnershipAssumed": false,
+  "currentTemporary7339Touched": false,
+  "privateContentsPublished": false
+}

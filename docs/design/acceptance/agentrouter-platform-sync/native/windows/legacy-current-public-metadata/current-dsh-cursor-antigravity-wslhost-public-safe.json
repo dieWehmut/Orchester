@@ -1,0 +1,141 @@
+{
+    "format":  "orchester-current-legacy-app-wsl-helper-public-entities-v1",
+    "observedAtUtc":  "2026-11-11T13:33:43.3746110Z",
+    "files":  [
+                  {
+                      "path":  "C:\\Program Files\\WSL\\wslhost.exe",
+                      "exists":  true,
+                      "installerFilename":  false,
+                      "bytes":  3492664,
+                      "sha256":  "1f214fbb69efcd138260c4aa4e35182bfe5371afe4055b59a3133d8f88f9c3b7",
+                      "publicPeVersion":  {
+                                              "productName":  "Windows Subsystem for Linux",
+                                              "productVersion":  "2.7.14.0",
+                                              "fileVersion":  "2.7.14.0",
+                                              "companyName":  "Microsoft Corporation"
+                                          },
+                      "authenticode":  {
+                                           "status":  "Valid",
+                                           "signerSubject":  "CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+                                       }
+                  },
+                  {
+                      "path":  "C:\\Users\\han\\AppData\\Local\\Programs\\antigravity\\Antigravity.exe",
+                      "exists":  true,
+                      "installerFilename":  false,
+                      "bytes":  246599680,
+                      "sha256":  "9f26f3863c47b3c6e0e1bbc1a0936c54e484c5a6a2c01823c358390c526e6c9f",
+                      "publicPeVersion":  {
+                                              "productName":  "Antigravity",
+                                              "productVersion":  "2.31.0.0",
+                                              "fileVersion":  "2.31.0",
+                                              "companyName":  "Google"
+                                          },
+                      "authenticode":  {
+                                           "status":  "NotSigned",
+                                           "signerSubject":  null
+                                       }
+                  },
+                  {
+                      "path":  "C:\\Users\\han\\software\\cursor\\cursor\\Cursor.exe",
+                      "exists":  true,
+                      "installerFilename":  false,
+                      "bytes":  239315240,
+                      "sha256":  "126cff5a194a918bfebc70923e8f480e92c26748b27b51aa0e043722b2443d41",
+                      "publicPeVersion":  {
+                                              "productName":  "Cursor",
+                                              "productVersion":  "3.29.15",
+                                              "fileVersion":  "3.29.15",
+                                              "companyName":  "Anysphere"
+                                          },
+                      "authenticode":  {
+                                           "status":  "Valid",
+                                           "signerSubject":  "CN=\"Anysphere, Inc.\", O=\"Anysphere, Inc.\", L=San Francisco, S=California, C=US"
+                                       }
+                  },
+                  {
+                      "path":  "C:\\Users\\han\\software\\dshdesktop\\dsh-desktop-windows-x64-setup.exe",
+                      "exists":  true,
+                      "installerFilename":  true,
+                      "bytes":  285093216,
+                      "sha256":  "b5828420d4dccc7833fa6ee54e4261b5eeebd4cf261082e777632b61029f3fe7",
+                      "publicPeVersion":  {
+                                              "productName":  "DSH Desktop",
+                                              "productVersion":  "0.13.0",
+                                              "fileVersion":  "0.13.0",
+                                              "companyName":  "DataElement"
+                                          },
+                      "authenticode":  {
+                                           "status":  "Valid",
+                                           "signerSubject":  "CN=\"Beijing Shuju Xiangsu Intelligence Technology Co., Ltd.\", O=\"Beijing Shuju Xiangsu Intelligence Technology Co., Ltd.\", L=Beijing, S=Beijing, C=CN"
+                                       }
+                  },
+                  {
+                      "path":  "C:\\Users\\han\\software\\dshdesktop\\dsh-desktop-windows-x64-setup-0.12.1.exe",
+                      "exists":  true,
+                      "installerFilename":  true,
+                      "bytes":  284978856,
+                      "sha256":  "bc1996170091c75a40d2c1022d8df7fead68632a9f8c9967cf68e4ba18fc8ca8",
+                      "publicPeVersion":  {
+                                              "productName":  "DSH Desktop",
+                                              "productVersion":  "0.12.1",
+                                              "fileVersion":  "0.12.1",
+                                              "companyName":  "DataElement"
+                                          },
+                      "authenticode":  {
+                                           "status":  "Valid",
+                                           "signerSubject":  "CN=\"Beijing Shuju Xiangsu Intelligence Technology Co., Ltd.\", O=\"Beijing Shuju Xiangsu Intelligence Technology Co., Ltd.\", L=Beijing, S=Beijing, C=CN"
+                                       }
+                  }
+              ],
+    "dshRegistrations":  [
+                             {
+                                 "keyName":  "63aba052-5613-58ee-9049-667734229a73",
+                                 "displayName":  "DSH Desktop 0.13.0",
+                                 "displayVersion":  "0.13.0",
+                                 "publisher":  "DataElement",
+                                 "installLocation":  null,
+                                 "displayIcon":  "C:\\Program Files\\DSH Desktop\\DSH Desktop.exe,0"
+                             }
+                         ],
+    "registryErrors":  [
+
+                       ],
+    "dshProcesses":  [
+
+                     ],
+    "profileExistenceOnly":  [
+                                 {
+                                     "relativePath":  ".dsh",
+                                     "exists":  true,
+                                     "contentsRead":  false
+                                 },
+                                 {
+                                     "relativePath":  ".deepseek",
+                                     "exists":  false,
+                                     "contentsRead":  false
+                                 },
+                                 {
+                                     "relativePath":  "AppData\\Roaming\\DSH Desktop",
+                                     "exists":  false,
+                                     "contentsRead":  false
+                                 },
+                                 {
+                                     "relativePath":  "AppData\\Roaming\\dsh desktop",
+                                     "exists":  false,
+                                     "contentsRead":  false
+                                 },
+                                 {
+                                     "relativePath":  "AppData\\Roaming\\DeepSeek",
+                                     "exists":  false,
+                                     "contentsRead":  false
+                                 }
+                             ],
+    "wholeMachineAbsenceClaimed":  false,
+    "installerFileIsApplicationPayload":  false,
+    "versionCommands":  0,
+    "privateConfigsOrArgvRead":  false,
+    "installationCommands":  0,
+    "guiStarts":  0,
+    "signals":  0
+}

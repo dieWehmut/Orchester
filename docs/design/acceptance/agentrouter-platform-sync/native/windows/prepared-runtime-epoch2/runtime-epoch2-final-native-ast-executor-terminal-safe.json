@@ -1,0 +1,20 @@
+{
+  "format": "orchester-native-ast-executor-terminal-v1",
+  "status": "actual-native-ast-executor-exited-zero",
+  "executorSessionId": 11236,
+  "nativeActualExitCode": 0,
+  "nativeOriginalExecutorTerminalObserved": true,
+  "nativePid": 38584,
+  "nativeCreatedUtc": "2026-11-11T15:02:27.3354258Z",
+  "nativeImageSha256": "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+  "nativeSessionId": 1,
+  "childOnlyInteropUsed": "/run/WSL/2_interop",
+  "selectedInteropIsActualLiveLinuxAncestorSocket": true,
+  "globalInteropChanged": false,
+  "nativeAstResultSha256": "ff1e34fea655d30498c97025bf2eafcbc383c6240c8c2ba4cae1bf56e3964477",
+  "indexSha256": "6f5f70c819920a6471446bab3914bb5b777e0f5fbbe133e0638cdfee02c32ab5",
+  "productsLaunched": 0,
+  "signals": 0,
+  "formalRuntimeAccepted": false,
+  "defaultProfilesModified": false
+}

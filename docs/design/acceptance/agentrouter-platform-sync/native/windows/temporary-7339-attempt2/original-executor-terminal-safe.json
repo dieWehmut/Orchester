@@ -1,0 +1,18 @@
+{
+  "format": "orchester-failed-temporary-executor-terminal-v1",
+  "status": "actual-original-executor-exited-one-after-normal-owned-cleanup",
+  "nativeActualExitCode": 1,
+  "executorSessionId": 96860,
+  "originalExecutorTerminalObserved": true,
+  "controllerPid": 11248,
+  "controllerCreatedUtc": "2026-11-11T15:14:29.8418508Z",
+  "approvedSourceSha256": "4d194727cf6f31ec73ea64339f21bc475692184de91173d195fe41ae4edcea26",
+  "cleanupSha256": "138321ee2333fef1b55e76247ebd15eb3ffe2bcb71b9caca4b65314fdf5cab2b",
+  "originalLauncherActualExitCode": 0,
+  "allDeclaredOriginalHandlesExited": true,
+  "portReleased": true,
+  "controllerFailedValidation": true,
+  "androidFullAcceptancePassed": false,
+  "signals": 0,
+  "defaultProfilesModified": false
+}

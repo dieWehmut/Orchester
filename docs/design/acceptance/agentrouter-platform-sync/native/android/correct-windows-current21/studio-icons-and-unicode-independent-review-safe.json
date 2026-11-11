@@ -1,0 +1,141 @@
+{
+  "format": "orchester-independent-android-studio-icons-unicode-review-v1",
+  "status": "completed-subchains-only",
+  "reviewedAtUtc": "2026-11-11T15:49:36.939038+00:00",
+  "sourceReceipts": [
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/native-channel-5572-attempt2/channel-target-identity-safe.json",
+      "sha256": "569cc37a84a2c82be42b49ce59f7ba12a0175b9b6db5aa5a1aafe7545b313217",
+      "bytes": 3850
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/isolated-studio-final21-actual-project-sync-safe.json",
+      "sha256": "6e5c9b871dfff003d8c4ce20afebb4da7b1d6155f46b3a038ae9ba562ea0f392",
+      "bytes": 3068
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/isolated-studio-actual-native-adb-transport-safe.json",
+      "sha256": "24a460808580f969cb09fa35080f2a2b22f8c729f5b790205f1c6f4be846fbd5",
+      "bytes": 2052
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-ui-all-official-icons-accepted-safe.json",
+      "sha256": "729524beacdbe08afa14883a920df6feadfbf2c478d1221ffd89f1951996587b",
+      "bytes": 2172
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-ui-official-icons-safe.json",
+      "sha256": "14c68d1ad5cfb20f37ca28fc46e9b8cb118498242f8d9790a519c2dd10a70bb1",
+      "bytes": 18408
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-current7339-native-unicode-enter-safe.json",
+      "sha256": "93dbc3265b33d2b659983cbdbc034dd0aff9b0d77073721d3499a1e403f5ea68",
+      "bytes": 741
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/final-opencode-strict-xml-equivalence-safe.json",
+      "sha256": "e8de98f493e65b79be088a6f78b0b0cef3aa132a1992210951c3e43956ae1af2",
+      "bytes": 16235
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/independent-css-review/exact-css-trivia-review-safe.json",
+      "sha256": "cc86688ab2a24746ff5d8e1904a7cff2d64ccfc7666f24ff395f0e498cd52ebd",
+      "bytes": 13333
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/exact-local-vite-android-payload-replay-safe.json",
+      "sha256": "4c663f06fd094ec9febd1c7ba91453f1def983dcb185a0bc7eee9f8969161b76",
+      "bytes": 51095
+    }
+  ],
+  "actualPublicFileHashes": [
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/opencode.svg",
+      "sha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+      "hashExact": true
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-ui-icons-public-payload.json",
+      "sha256": "655d8cb896862cb73e18532faa0429ed82c77198a8cdab29c9db1ea8a89ed639",
+      "hashExact": true
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-ui-official-icons-safe.json",
+      "sha256": "14c68d1ad5cfb20f37ca28fc46e9b8cb118498242f8d9790a519c2dd10a70bb1",
+      "hashExact": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/independent-css-review/exact-css-trivia-review-safe.json",
+      "sha256": "cc86688ab2a24746ff5d8e1904a7cff2d64ccfc7666f24ff395f0e498cd52ebd",
+      "hashExact": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/exact-local-vite-android-payload-replay-safe.json",
+      "sha256": "4c663f06fd094ec9febd1c7ba91453f1def983dcb185a0bc7eee9f8969161b76",
+      "hashExact": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/opencode-actual-public-payload.svg",
+      "sha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70",
+      "hashExact": true
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-workbuddy-both-public.png",
+      "sha256": "14beca980cd92ff3778b6c9abb43f43697a2ba2b1918578c1ec0b1610603a69e",
+      "hashExact": true
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-openclaw-native.png",
+      "sha256": "1cd36a8efd603c8eb49b825cfc163ad19d5922ff149adb5865ca849d97f6909a",
+      "hashExact": true
+    }
+  ],
+  "checks": {
+    "studioOriginalCreatorIdentityLinked": true,
+    "studioTransportPidBirthImageLinked": true,
+    "studioActualGradleResolveAndImportCompleted": true,
+    "studioSafeLogDigestExact": true,
+    "studioNative5039Only": true,
+    "iconsInitialReceiptExact": true,
+    "iconsStrictReceiptExact": true,
+    "iconsStrictCssAndViteProofLinked": true,
+    "iconsPublicSnapshotsAndScreenshotsExact": true,
+    "all42CanonicalMarksLoadedAndOfficialMatched": true,
+    "twoWorkBuddyNamesSeparate": true,
+    "nativeUnicodeEnterActualOutputObserved": true,
+    "sameSourceAndPrivateNativeTarget": true
+  },
+  "counts": {
+    "studioSyncMilliseconds": 17400,
+    "canonicalProviders": 21,
+    "officialThemeMarks": 42,
+    "rawByteEqualMarks": 25,
+    "exactViteNormalizedMarks": 17,
+    "unicodeInputPackets": 3,
+    "unicodeOutputPackets": 3
+  },
+  "claimBoundaries": {
+    "ideRunButtonInstrumentationClaimed": false,
+    "hostWindowsDesktopVisualAcceptance": false,
+    "productLightThemeSelectorExists": false,
+    "controlledLightProductSettingClaimed": false,
+    "allTerminalCleanupComplete": false,
+    "androidFinalAcceptanceComplete": false
+  },
+  "pending": [
+    "current7339PTY-resize",
+    "current7339-product-terminal-close-and-device6to5",
+    "current7339-revocation401",
+    "observer-and-native-original-handle-terminal-proof",
+    "wrongLinux-single-credential-RAM-cleanup"
+  ],
+  "reviewerActions": {
+    "nativeExecutions": 0,
+    "adbCommands": 0,
+    "queueWrites": 0,
+    "guiActions": 0,
+    "productSourceEdits": 0,
+    "privateDataRead": 0
+  }
+}

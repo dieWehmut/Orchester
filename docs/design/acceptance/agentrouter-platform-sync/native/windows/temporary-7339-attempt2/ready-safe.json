@@ -1,0 +1,38 @@
+{
+    "format":  "orchester-final21-temporary-windows-server-v1",
+    "status":  "temporary-isolated-server-ready",
+    "sourceRevision":  "71def643cb08b208cc79687f79255c504eb14dc6",
+    "controller":  {
+                       "pid":  11248,
+                       "createdAtUtc":  "2026-11-11T15:14:29.8418508Z",
+                       "image":  "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                       "sha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+                       "sessionId":  1
+                   },
+    "launcher":  {
+                     "pid":  21164,
+                     "created":  134388838140689396,
+                     "image":  "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                     "sha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f"
+                 },
+    "backend":  {
+                    "pid":  29308,
+                    "created":  134388838149703115,
+                    "image":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\remote-package-fresh21\\orchester.exe",
+                    "sha256":  "24c8f9806256cc54b239b03f6b4adc976c3fee50c30bc0f2ecf601971c22ce2a"
+                },
+    "port":  7339,
+    "bind":  "127.0.0.1",
+    "androidUrl":  "http://10.0.2.2:7339",
+    "privateConnectionFile":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\temporary-windows-7339-final21-attempt2-20261111\\private\\android-connection-private.json",
+    "privateAclInheritanceDisabled":  true,
+    "originalCreatorHandlesKept":  true,
+    "androidFinalAcceptanceBound":  false,
+    "formalPortable14Accepted":  false,
+    "formalDesktop18Accepted":  false,
+    "default7338PortUsed":  false,
+    "defaultProfilesModified":  false,
+    "promoted":  false,
+    "signals":  0,
+    "modelCalls":  0
+}

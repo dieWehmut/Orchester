@@ -1,0 +1,22 @@
+{
+  "operation": "root final exact hash check of independently reviewed isolated Windows7339 successor",
+  "observedAt": "2026-11-11T14:40:23.197949+00:00",
+  "files": [
+    {
+      "file": "serve-temporary-final21-windows-7339-successor2.ps1",
+      "bytes": 18519,
+      "sha256": "4d194727cf6f31ec73ea64339f21bc475692184de91173d195fe41ae4edcea26"
+    },
+    {
+      "file": "successor2-native-typed-policy-safe.json",
+      "bytes": 2648,
+      "sha256": "b70d5c3ec0163017680cdf954ab2b273d35b6f92d85136cc53642874b0467296"
+    }
+  ],
+  "independentNativeAstCompileTypedAssertionsAccepted": true,
+  "scope": "only isolated7339 fixed pair close quit; formal14/18 and GUI unchanged pending",
+  "nativeProductLaunchByRoot": false,
+  "defaultInstallChanged": false,
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "modelOrAuthenticationCallsByRoot": 0
+}

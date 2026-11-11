@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-11T15:47:40.510427+00:00",
+  "status": "official-public-source-bound; installed-wrapper-official-distribution-not-proven-by-declared-component-metadata",
+  "scope": "Independent official webpages and commit-pinned public source only; installed ASAR facts were supplied by parent and remain for its first-hand binding proof",
+  "officialWebsite": {
+    "freshHome": {
+      "url": "https://www.deepseek.com/",
+      "title": "DeepSeek | 深度求索",
+      "httpStatus": 200,
+      "sha256": "d650c9e9a64dedfd0198472bff505a02032bd04083b53e2bf5c66e3af329b534",
+      "containsHarnessNavigation": true,
+      "containsDownloadNavigation": true,
+      "directLatestWindowsAnchorFound": false
+    },
+    "harnessPage": {
+      "url": "https://www.deepseek.com/harness/",
+      "title": "DeepSeek Harness｜共探智能上限",
+      "httpStatus": 200,
+      "sha256": "95694345987e3f5b763d53a378f6ac9cbc68079c5c469ff289b75043102365bc",
+      "directWindowsInstallerAnchor": "https://download.deepseek.com/desktop/dsh-latest-windows-x64.exe",
+      "officialRepositoryAnchor": "https://github.com/deepseek-ai/deepseek-harness"
+    },
+    "downloadPage": {
+      "url": "https://www.deepseek.com/download/",
+      "title": "DeepSeek | 下载 DeepSeek",
+      "httpStatus": 200,
+      "sha256": "0d454525d8870d4952328d5e63e5b1e155ae99eeb31ac2a8a5e26f508ec4e345",
+      "directWindowsInstallerAnchor": "https://download.deepseek.com/desktop/dsh-latest-windows-x64.exe"
+    }
+  },
+  "officialCurrentSource": {
+    "repository": "https://github.com/deepseek-ai/deepseek-harness",
+    "commit": "e8f7b93a344964de3dca1ace9e72b6e4d6de87cb",
+    "commitProof": "GitHub official desktop tree HTML currentOid, then raw files fetched using that exact commit",
+    "gitHubTreeHtmlSha256": "532359abba806c5a4aff116ae92e70ee287d524812cf35403381137b6e6e3032",
+    "desktopPackage": {
+      "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/package.json",
+      "sha256": "f27a39672ecc89876cd34db0f52aeee1459432c4bbc0557837716db8c7832acc",
+      "sourceManifestName": "@deepseek-ai/dsh-desktop",
+      "sourceManifestVersion": "0.2.2-rc.2",
+      "sourceManifestVersionIsLatestInstallerVersionProof": false,
+      "description": "Electron desktop shell for a bundled dsh runtime and external plugins",
+      "author": {
+        "name": "Hangzhou DeepSeek Artificial Intelligence Co., Ltd."
+      },
+      "license": "MIT",
+      "main": "lib/main.js",
+      "masterAndPinnedFileBytesExact": true
+    },
+    "builderFactory": {
+      "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts/electron-builder-config.mjs",
+      "sha256": "73608915307d975d582a93f434b2a00491c0cd219c8140af98ef614a19ebe6d2",
+      "productName": "DeepSeek Harness",
+      "productNameLine": 119,
+      "protocolName": "DeepSeek Harness",
+      "protocolScheme": "dsh",
+      "protocolLine": 111,
+      "artifactFilenamePattern": "deepseek-harness-${version}-${os}-${arch}${suffix}.${ext}",
+      "artifactPatternLine": 123,
+      "applicationIdSource": "Required DSH_DESKTOP_APP_ID reverse-DNS build setting; not a source constant or inferred from installed uninstall GUID.",
+      "officialArtifactAppIdDeterminedByThisChild": false,
+      "sourceScriptExecuted": false
+    },
+    "appIdResolver": {
+      "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts/desktop-release-environment.mjs",
+      "sha256": "477af1758005c74beabf201b3ca18eaf08945083b4b7fd565cbc170217c613e2",
+      "requiredSettingName": "DSH_DESKTOP_APP_ID",
+      "requiredValueLine": 64,
+      "reverseDnsValidationLine": 65,
+      "actualPrivateValueRead": false
+    },
+    "productionUpdateSource": {
+      "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts/desktop-auto-update-environment.mjs",
+      "sha256": "4fc37321febd4979b732a2832af4eb832602b30185e51584c1ddc0b0cb3db29a",
+      "fixedProductionOrigin": "https://download.deepseek.com",
+      "fixedOriginLine": 29,
+      "websiteInstallerFunctionLine": 54,
+      "winX64WebsiteInstallerUrlDerivedFromExactSource": "https://download.deepseek.com/desktop/dsh-latest-windows-x64.exe",
+      "productionWinX64FeedUrlStaticallyDerivedFromSource": "https://download.deepseek.com/dsh-desk/feeds/win-x64/",
+      "releasePrefixLine": 174,
+      "feedPrefixLine": 182,
+      "publicUrlLine": 190,
+      "liveFeedOrRuntimeApiRequested": false,
+      "productionSelectionOrChannelFromInstalledArtifactNotInferred": true
+    },
+    "packagingDocumentation": {
+      "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/packaging/README.md",
+      "sha256": "95ea269d00b700ee83078dd5f5f7aca85671f6c920e3814084a21ddf51b2a4a8",
+      "versionRule": "Production Desktop uses Harness base version; source manifest version does not bind a currently downloaded installer.",
+      "buildTraceFields": [
+        "dshBuildCommit",
+        "dshBuildDirty"
+      ],
+      "buildTraceLine": 64,
+      "signedAndUnsignedBrandingExplainedAtLine": 72,
+      "authorPublisherIndependentOfSigningCertificateLine": 301,
+      "authorPublisherRule": "The package author supplies installer publisher/executable company metadata independently of signing certificate identity."
+    }
+  },
+  "parentReportedInstalledIdentityForComparison": {
+    "provenance": "Parent /root/official_installs collaboration observations, not read or executed by this source-only child",
+    "desktopManifestName": "dsh-desktop",
+    "desktopShellVersion": "0.13.0",
+    "author": "DataElement",
+    "repository": "git+https://github.com/dataelement/dsh-desktop.git",
+    "homepage": "https://github.com/dataelement/dsh-desktop#readme",
+    "declaredUpdateOrigin": "https://dshdesktop.com/updates/latest/",
+    "declaredUpdatePublisherName": "Beijing Shuju Xiangsu Intelligence Technology Co., Ltd.",
+    "bundledOfficialNamespaceComponents": {
+      "@deepseek-ai/dsh": "0.2.1-rc.3",
+      "@deepseek-ai/dsh-web": "0.2.1-rc.3"
+    },
+    "wholeInstallerOfficialHashMatchSuppliedToThisChild": false
+  },
+  "conclusion": {
+    "officialWindowsDeepSeekHarnessDownloadExists": true,
+    "currentOfficialSourceProductAndReleaseIdentityConfirmed": true,
+    "parentReportedDesktopShellIdentityEqualsCurrentOfficialSource": false,
+    "parentReportedUpdaterOriginEqualsOfficialProductionOrigin": false,
+    "bundledOfficialHarnessComponentsProveWholeDesktopDistributionOfficial": false,
+    "signerValidityOrDataElementPublisherProvesOfficialDeepSeekOrigin": false,
+    "existingDesktopOfficialDistributionProvenByThisChild": false,
+    "boundedFinding": "The reported installed shell declares a DataElement repository and dshdesktop.com updater while the currently official DeepSeek source declares a DeepSeek-owned package/author and production updater. Official Harness components must be reported separately from whole-desktop official-release provenance.",
+    "historicalOfficialArtifactLineageOrByteIdentityAbsolutelyExcluded": false,
+    "requiredRemainingBinding": "First-hand prepared official installer/package metadata and official-download provenance comparison belong to parent; no substitution of component metadata or unrelated signatures."
+  },
+  "safety": {
+    "installerDownloads": 0,
+    "installerOrApplicationRuns": 0,
+    "githubRestApiCalls": 0,
+    "registryApiCalls": 0,
+    "runtimeModelOrAccountApiCalls": 0,
+    "guiOrQueueOrDeviceOperations": 0,
+    "privateProfilesOrEnvironmentValuesRead": 0,
+    "sourceScriptsExecuted": 0,
+    "gitOrProjectSourceMutations": 0,
+    "systemDnsOrTlsBypassChanges": 0
+  },
+  "inputIntegrity": [
+    {
+      "file": "deepseek-home.html",
+      "sha256Before": "d650c9e9a64dedfd0198472bff505a02032bd04083b53e2bf5c66e3af329b534",
+      "sha256After": "d650c9e9a64dedfd0198472bff505a02032bd04083b53e2bf5c66e3af329b534",
+      "unchanged": true
+    },
+    {
+      "file": "deepseek-harness.html",
+      "sha256Before": "95694345987e3f5b763d53a378f6ac9cbc68079c5c469ff289b75043102365bc",
+      "sha256After": "95694345987e3f5b763d53a378f6ac9cbc68079c5c469ff289b75043102365bc",
+      "unchanged": true
+    },
+    {
+      "file": "deepseek-download.html",
+      "sha256Before": "0d454525d8870d4952328d5e63e5b1e155ae99eeb31ac2a8a5e26f508ec4e345",
+      "sha256After": "0d454525d8870d4952328d5e63e5b1e155ae99eeb31ac2a8a5e26f508ec4e345",
+      "unchanged": true
+    },
+    {
+      "file": "official-desktop-tree.html",
+      "sha256Before": "532359abba806c5a4aff116ae92e70ee287d524812cf35403381137b6e6e3032",
+      "sha256After": "532359abba806c5a4aff116ae92e70ee287d524812cf35403381137b6e6e3032",
+      "unchanged": true
+    },
+    {
+      "file": "pinned-official-desktop-package.json",
+      "sha256Before": "f27a39672ecc89876cd34db0f52aeee1459432c4bbc0557837716db8c7832acc",
+      "sha256After": "f27a39672ecc89876cd34db0f52aeee1459432c4bbc0557837716db8c7832acc",
+      "unchanged": true
+    },
+    {
+      "file": "pinned-official-packaging-readme.md",
+      "sha256Before": "95ea269d00b700ee83078dd5f5f7aca85671f6c920e3814084a21ddf51b2a4a8",
+      "sha256After": "95ea269d00b700ee83078dd5f5f7aca85671f6c920e3814084a21ddf51b2a4a8",
+      "unchanged": true
+    },
+    {
+      "file": "pinned-official-electron-builder-config.mjs",
+      "sha256Before": "8e46b330a71d49b44409dcf4f2eeed3f16da2ee2d82e8299aa6dcd193ee990ed",
+      "sha256After": "8e46b330a71d49b44409dcf4f2eeed3f16da2ee2d82e8299aa6dcd193ee990ed",
+      "unchanged": true
+    },
+    {
+      "file": "pinned-official-electron-builder-factory.mjs",
+      "sha256Before": "73608915307d975d582a93f434b2a00491c0cd219c8140af98ef614a19ebe6d2",
+      "sha256After": "73608915307d975d582a93f434b2a00491c0cd219c8140af98ef614a19ebe6d2",
+      "unchanged": true
+    },
+    {
+      "file": "pinned-official-desktop-release-environment.mjs",
+      "sha256Before": "477af1758005c74beabf201b3ca18eaf08945083b4b7fd565cbc170217c613e2",
+      "sha256After": "477af1758005c74beabf201b3ca18eaf08945083b4b7fd565cbc170217c613e2",
+      "unchanged": true
+    },
+    {
+      "file": "pinned-official-desktop-auto-update-environment.mjs",
+      "sha256Before": "4fc37321febd4979b732a2832af4eb832602b30185e51584c1ddc0b0cb3db29a",
+      "sha256After": "4fc37321febd4979b732a2832af4eb832602b30185e51584c1ddc0b0cb3db29a",
+      "unchanged": true
+    }
+  ]
+}

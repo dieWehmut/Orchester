@@ -1,0 +1,24 @@
+{
+  "format": "orchester-root-final-formal-epoch2-pin-review-v1",
+  "observedAt": "2026-11-11T15:33:38.571966+00:00",
+  "status": "prepared-selected-entry-points-hash-verified",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "indexSha256": "6f5f70c819920a6471446bab3914bb5b777e0f5fbbe133e0638cdfee02c32ab5",
+  "originalAndCloneFileComparisons": 32,
+  "manifestFileComparisons": 10,
+  "retainerModuleVerified": true,
+  "originalOwnershipAdmissionRegionByteExactIndependentProofVerified": true,
+  "nativeAstActualExitCode": 0,
+  "nativeAstExecutorTerminalProofVerified": true,
+  "formalEntryPoints": [
+    "launch-smoke.ps1",
+    "verify-portable-runtime-file.ps1"
+  ],
+  "excludedLegacyEntryPoint": "verify-portable-runtime-final.ps1",
+  "freshActualAndroidAcceptanceRequiredBeforeFreezeAndRun": true,
+  "formal14ExecutedByRoot": false,
+  "formal18ExecutedByRoot": false,
+  "defaultReinstallationExecutedByRoot": false,
+  "productsLaunched": 0,
+  "signals": 0
+}

@@ -1,0 +1,69 @@
+{
+  "status": "passed",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "actualAvdHost": "Windows",
+  "actualAvdName": "Medium_Phone_API_37.0",
+  "nativeAdbServerPort": 5039,
+  "cdpPort": 19329,
+  "currentApkSha256": "f83fa2a75c712a3d2e1f3f203cf73ce89204fb4ca0bce4d8c2ef0c4fe3596d3c",
+  "canonicalProviderIds": [
+    "antigravity",
+    "claude",
+    "claude_app",
+    "cline",
+    "codex",
+    "craft",
+    "crush",
+    "cursor",
+    "deepseek",
+    "gemini",
+    "hermes",
+    "kilo",
+    "openclaw",
+    "opencode",
+    "pi",
+    "qwen",
+    "roo",
+    "trae",
+    "workbuddy",
+    "workbuddy_global",
+    "zcode"
+  ],
+  "canonicalProviderCount": 21,
+  "canonicalThemeImageCount": 42,
+  "allCanonicalThemeImagesLoaded": true,
+  "uniqueLoadedIconPayloadCount": 24,
+  "allCanonicalThemeMarksMatchOfficialSource": true,
+  "rawByteEqualMarkCount": 25,
+  "svgXmlCanonicalEqualMarkCount": 15,
+  "bothWorkBuddyVersionsRenderedWithCorrectSeparateNames": {
+    "workbuddy": "WorkBuddy 国内版",
+    "workbuddy_global": "WorkBuddy AI 国际版"
+  },
+  "actualProductPalette": "sea",
+  "realBackendAgentMonitorRowsNotInjected": true,
+  "controlledLightProductSettingClaimed": false,
+  "strictIndependentXmlCssNormalizedEqualAdditionalMarkCount": 2,
+  "officialSourceMatchedMarkCount": 42,
+  "initialComparisonReceipt": {
+    "fileName": "correct-windows-final21-ui-official-icons-safe.json",
+    "sha256": "14c68d1ad5cfb20f37ca28fc46e9b8cb118498242f8d9790a519c2dd10a70bb1",
+    "initialNormalizedMatchedCount": 40
+  },
+  "strictOpenCodeNormalizationReceipt": {
+    "fileName": "final-opencode-strict-xml-equivalence-safe.json",
+    "sha256": "e8de98f493e65b79be088a6f78b0b0cef3aa132a1992210951c3e43956ae1af2"
+  },
+  "nativeScreenshotsVisuallyInspected": true,
+  "publicScreenshots": [
+    {
+      "fileName": "correct-windows-final21-workbuddy-both-public.png",
+      "sha256": "14beca980cd92ff3778b6c9abb43f43697a2ba2b1918578c1ec0b1610603a69e"
+    },
+    {
+      "fileName": "correct-windows-final21-openclaw-native.png",
+      "sha256": "1cd36a8efd603c8eb49b825cfc163ad19d5922ff149adb5865ca849d97f6909a"
+    }
+  ],
+  "productLightThemeSelectorExists": false
+}

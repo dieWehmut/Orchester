@@ -1,0 +1,46 @@
+{
+  "observedAt": "2026-11-11T15:38:28.779538+00:00",
+  "commitFromOfficialGitHubHtmlCurrentOid": "e8f7b93a344964de3dca1ace9e72b6e4d6de87cb",
+  "requests": [
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/package.json",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/package.json",
+      "httpStatus": 200,
+      "bytes": 4443,
+      "sha256": "f27a39672ecc89876cd34db0f52aeee1459432c4bbc0557837716db8c7832acc",
+      "verifiedTls": true,
+      "publicBodyFile": "pinned-official-desktop-package.json"
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/electron-builder.config.mjs",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/electron-builder.config.mjs",
+      "httpStatus": 200,
+      "bytes": 259,
+      "sha256": "8e46b330a71d49b44409dcf4f2eeed3f16da2ee2d82e8299aa6dcd193ee990ed",
+      "verifiedTls": true,
+      "publicBodyFile": "pinned-official-electron-builder-config.mjs"
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/packaging/README.md",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/packaging/README.md",
+      "httpStatus": 200,
+      "bytes": 55734,
+      "sha256": "95ea269d00b700ee83078dd5f5f7aca85671f6c920e3814084a21ddf51b2a4a8",
+      "verifiedTls": true,
+      "publicBodyFile": "pinned-official-packaging-readme.md"
+    },
+    {
+      "requestedUrl": "https://www.deepseek.com/download/",
+      "finalUrl": "https://www.deepseek.com/download/",
+      "httpStatus": 200,
+      "bytes": 64196,
+      "sha256": "0d454525d8870d4952328d5e63e5b1e155ae99eeb31ac2a8a5e26f508ec4e345",
+      "verifiedTls": true,
+      "publicBodyFile": "deepseek-download.html"
+    }
+  ],
+  "installerDownloads": 0,
+  "githubRestApiCalls": 0,
+  "modelOrRuntimeApiCalls": 0,
+  "privateDataReads": 0
+}

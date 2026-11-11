@@ -1,0 +1,14 @@
+{
+  "format": "orchester-native-readonly-executor-terminal-v1",
+  "status": "actual-native-check-executor-exited-zero",
+  "nativeActualExitCode": 0,
+  "executorSessionId": 29820,
+  "nativePidNotCaptured": true,
+  "nativeCheckScriptSha256": "538d1e7a236e96b436bef3333e3c98e038d9ddb84b584f5014e4308903cb6d42",
+  "nativeCheckResultPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/successor2-native-typed-policy-safe.json",
+  "nativeCheckResultSha256": "b70d5c3ec0163017680cdf954ab2b273d35b6f92d85136cc53642874b0467296",
+  "originalExecutorTerminalObserved": true,
+  "productsLaunched": 0,
+  "signals": 0,
+  "formalRuntimeAccepted": false
+}

@@ -1,0 +1,710 @@
+{
+  "schemaVersion": 1,
+  "status": "pass-exact-css-grammar-with-two-whitespace-token-replacements",
+  "observedAt": "2026-11-11T14:55:31.812Z",
+  "source": {
+    "path": "/home/han/project/Orchester/packages/design/src/assets/agents/opencode.svg",
+    "sha256Before": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+    "sha256After": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+    "bytes": 612
+  },
+  "publicPayloadSet": {
+    "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-ui-icons-public-payload.json",
+    "sha256Before": "655d8cb896862cb73e18532faa0429ed82c77198a8cdab29c9db1ea8a89ed639",
+    "sha256After": "655d8cb896862cb73e18532faa0429ed82c77198a8cdab29c9db1ea8a89ed639",
+    "bytes": 599158
+  },
+  "selectedPayload": {
+    "sha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70",
+    "bytes": 608,
+    "sharedByDarkAndLight": true
+  },
+  "css": {
+    "sourceText": "@media (prefers-color-scheme: light) { :root { filter: none; } }\n@media (prefers-color-scheme: dark) { :root { filter: none; } }\n",
+    "payloadText": "@media (prefers-color-scheme: light) { :root { filter: none; } } @media (prefers-color-scheme: dark) { :root { filter: none; } } ",
+    "characterDifferences": [
+      {
+        "offset": 64,
+        "source": "\n",
+        "payload": " "
+      },
+      {
+        "offset": 128,
+        "source": "\n",
+        "payload": " "
+      }
+    ],
+    "tokenizer": "existing local PostCSS 8.5.26 lib/tokenize.js",
+    "tokenCount": 42,
+    "sourceTokens": [
+      [
+        "at-word",
+        "@media",
+        0,
+        5
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "brackets",
+        "(prefers-color-scheme: light)",
+        7,
+        35
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "{",
+        "{",
+        37
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        ":",
+        ":",
+        39
+      ],
+      [
+        "word",
+        "root",
+        40,
+        43
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "{",
+        "{",
+        45
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "word",
+        "filter",
+        47,
+        52
+      ],
+      [
+        ":",
+        ":",
+        53
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "word",
+        "none",
+        55,
+        58
+      ],
+      [
+        ";",
+        ";",
+        59
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "}",
+        "}",
+        61
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "}",
+        "}",
+        63
+      ],
+      [
+        "space",
+        "\n"
+      ],
+      [
+        "at-word",
+        "@media",
+        65,
+        70
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "brackets",
+        "(prefers-color-scheme: dark)",
+        72,
+        99
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "{",
+        "{",
+        101
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        ":",
+        ":",
+        103
+      ],
+      [
+        "word",
+        "root",
+        104,
+        107
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "{",
+        "{",
+        109
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "word",
+        "filter",
+        111,
+        116
+      ],
+      [
+        ":",
+        ":",
+        117
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "word",
+        "none",
+        119,
+        122
+      ],
+      [
+        ";",
+        ";",
+        123
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "}",
+        "}",
+        125
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "}",
+        "}",
+        127
+      ],
+      [
+        "space",
+        "\n"
+      ]
+    ],
+    "payloadTokens": [
+      [
+        "at-word",
+        "@media",
+        0,
+        5
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "brackets",
+        "(prefers-color-scheme: light)",
+        7,
+        35
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "{",
+        "{",
+        37
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        ":",
+        ":",
+        39
+      ],
+      [
+        "word",
+        "root",
+        40,
+        43
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "{",
+        "{",
+        45
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "word",
+        "filter",
+        47,
+        52
+      ],
+      [
+        ":",
+        ":",
+        53
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "word",
+        "none",
+        55,
+        58
+      ],
+      [
+        ";",
+        ";",
+        59
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "}",
+        "}",
+        61
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "}",
+        "}",
+        63
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "at-word",
+        "@media",
+        65,
+        70
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "brackets",
+        "(prefers-color-scheme: dark)",
+        72,
+        99
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "{",
+        "{",
+        101
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        ":",
+        ":",
+        103
+      ],
+      [
+        "word",
+        "root",
+        104,
+        107
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "{",
+        "{",
+        109
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "word",
+        "filter",
+        111,
+        116
+      ],
+      [
+        ":",
+        ":",
+        117
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "word",
+        "none",
+        119,
+        122
+      ],
+      [
+        ";",
+        ";",
+        123
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "}",
+        "}",
+        125
+      ],
+      [
+        "space",
+        " "
+      ],
+      [
+        "}",
+        "}",
+        127
+      ],
+      [
+        "space",
+        " "
+      ]
+    ],
+    "tokenDifferences": [
+      {
+        "index": 20,
+        "sourceToken": [
+          "space",
+          "\n"
+        ],
+        "payloadToken": [
+          "space",
+          " "
+        ]
+      },
+      {
+        "index": 41,
+        "sourceToken": [
+          "space",
+          "\n"
+        ],
+        "payloadToken": [
+          "space",
+          " "
+        ]
+      }
+    ],
+    "allOtherTokensExactIncludingTokenPositions": true,
+    "grammar": [
+      {
+        "type": "atrule",
+        "name": "media",
+        "params": "(prefers-color-scheme: light)",
+        "nodes": [
+          {
+            "type": "rule",
+            "selector": ":root",
+            "nodes": [
+              {
+                "type": "decl",
+                "prop": "filter",
+                "value": "none",
+                "important": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "atrule",
+        "name": "media",
+        "params": "(prefers-color-scheme: dark)",
+        "nodes": [
+          {
+            "type": "rule",
+            "selector": ":root",
+            "nodes": [
+              {
+                "type": "decl",
+                "prop": "filter",
+                "value": "none",
+                "important": false
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "sourceAstAllProperties": {
+      "nodes": [
+        {
+          "name": "media",
+          "nodes": [
+            {
+              "nodes": [
+                {
+                  "prop": "filter",
+                  "raws": {
+                    "before": " ",
+                    "between": ": "
+                  },
+                  "type": "decl",
+                  "value": "none"
+                }
+              ],
+              "raws": {
+                "before": " ",
+                "between": " ",
+                "semicolon": true,
+                "after": " "
+              },
+              "selector": ":root",
+              "type": "rule"
+            }
+          ],
+          "params": "(prefers-color-scheme: light)",
+          "raws": {
+            "before": "",
+            "between": " ",
+            "afterName": " ",
+            "semicolon": false,
+            "after": " "
+          },
+          "type": "atrule"
+        },
+        {
+          "name": "media",
+          "nodes": [
+            {
+              "nodes": [
+                {
+                  "prop": "filter",
+                  "raws": {
+                    "before": " ",
+                    "between": ": "
+                  },
+                  "type": "decl",
+                  "value": "none"
+                }
+              ],
+              "raws": {
+                "before": " ",
+                "between": " ",
+                "semicolon": true,
+                "after": " "
+              },
+              "selector": ":root",
+              "type": "rule"
+            }
+          ],
+          "params": "(prefers-color-scheme: dark)",
+          "raws": {
+            "before": " ",
+            "between": " ",
+            "afterName": " ",
+            "semicolon": false,
+            "after": " "
+          },
+          "type": "atrule"
+        }
+      ],
+      "raws": {
+        "semicolon": false,
+        "after": " "
+      },
+      "type": "root"
+    },
+    "payloadAstAllProperties": {
+      "nodes": [
+        {
+          "name": "media",
+          "nodes": [
+            {
+              "nodes": [
+                {
+                  "prop": "filter",
+                  "raws": {
+                    "before": " ",
+                    "between": ": "
+                  },
+                  "type": "decl",
+                  "value": "none"
+                }
+              ],
+              "raws": {
+                "before": " ",
+                "between": " ",
+                "semicolon": true,
+                "after": " "
+              },
+              "selector": ":root",
+              "type": "rule"
+            }
+          ],
+          "params": "(prefers-color-scheme: light)",
+          "raws": {
+            "before": "",
+            "between": " ",
+            "afterName": " ",
+            "semicolon": false,
+            "after": " "
+          },
+          "type": "atrule"
+        },
+        {
+          "name": "media",
+          "nodes": [
+            {
+              "nodes": [
+                {
+                  "prop": "filter",
+                  "raws": {
+                    "before": " ",
+                    "between": ": "
+                  },
+                  "type": "decl",
+                  "value": "none"
+                }
+              ],
+              "raws": {
+                "before": " ",
+                "between": " ",
+                "semicolon": true,
+                "after": " "
+              },
+              "selector": ":root",
+              "type": "rule"
+            }
+          ],
+          "params": "(prefers-color-scheme: dark)",
+          "raws": {
+            "before": " ",
+            "between": " ",
+            "afterName": " ",
+            "semicolon": false,
+            "after": " "
+          },
+          "type": "atrule"
+        }
+      ],
+      "raws": {
+        "semicolon": false,
+        "after": " "
+      },
+      "type": "root"
+    },
+    "allNonSourcePositionAstPropertiesCompared": true,
+    "onlyChangedTriviaProperties": [
+      "root.raws.after",
+      "root.nodes[1].raws.before"
+    ],
+    "patchedOnlyThoseTwoTriviaPropertiesThenExactAstEquality": true,
+    "patchedOnlyThoseTwoTriviaPropertiesThenExactCssStringEquality": true,
+    "cssCommentsStringsEscapesUrlsOrCustomPropertiesAbsent": true,
+    "firstChangeBoundary": "After both closing braces of first @media rule and before @media starting second rule.",
+    "secondChangeBoundary": "After both closing braces of second @media rule at end of stylesheet."
+  },
+  "parserFiles": [
+    {
+      "relativePath": "lib/postcss.js",
+      "sha256": "8314c843f5dfa922e6f3fb9b8d8bf3e4b0be0d94b08075e1b4f3599f4276fb67"
+    },
+    {
+      "relativePath": "lib/parse.js",
+      "sha256": "7662c5ad1fd5f97a7c1615f0e5e7bc268e762916bcf6fb7bf9dda45537493764"
+    },
+    {
+      "relativePath": "lib/parser.js",
+      "sha256": "5ac73eb5da16ec8f998a1a5aac28b15815c892c2a3957ab06ee8333f8718be6e"
+    },
+    {
+      "relativePath": "lib/tokenize.js",
+      "sha256": "ddfcaaa01f5eac9e4e8652044df1401ce6cc70295fd3f9fbb214ca66fb2bec72"
+    },
+    {
+      "relativePath": "lib/input.js",
+      "sha256": "52358502e6ea455d421d21a98fc0a3be3b974ca624b96f43b318780f3e150bc2"
+    }
+  ],
+  "scopeBoundary": "This proof audits only OpenCode CSS text; parent separately verifies SVG namespace/element tree/all attributes/path and colors, source Vite transformation, total 42 marks, and APK/UI provenance.",
+  "sourceMutation": false,
+  "nativeCommands": 0,
+  "queueWrites": 0,
+  "adbCommands": 0,
+  "uiOrDeviceActions": 0,
+  "privateDataReads": 0
+}

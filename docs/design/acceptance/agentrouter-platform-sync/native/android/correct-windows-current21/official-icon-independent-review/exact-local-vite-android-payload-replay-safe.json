@@ -1,0 +1,1133 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-11T15:00:48.754Z",
+  "operation": "Independent read-only exact local Vite SVG transformation replay against Android public captured icon payloads",
+  "initialComparisonSha256": "14c68d1ad5cfb20f37ca28fc46e9b8cb118498242f8d9790a519c2dd10a70bb1",
+  "publicPayloadContainerSha256": "655d8cb896862cb73e18532faa0429ed82c77198a8cdab29c9db1ea8a89ed639",
+  "providerCount": 21,
+  "themeMarkCount": 42,
+  "uniqueCapturedPayloadCount": 24,
+  "rawCanonicalMarkCount": 25,
+  "exactViteNormalizedMarkCountExcludingRaw": 17,
+  "all42CanonicalMarksMatched": true,
+  "initialMatches": 40,
+  "newlyMatchedOpenCodeMarks": 2,
+  "viteHelper": {
+    "path": "/home/han/project/Orchester/node_modules/.pnpm/vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.33.0/node_modules/vite/dist/node/chunks/config.js",
+    "sourceSha256": "c2fcfa51206dc1f8d22120ef4a82af8b9acdc02f4476520b6a0897d12a724ba3",
+    "extractedHelperSha256": "60324f8b9132279b6a228048377334db2ee3fbc6d3c97ce22cfdde7c2540afa1"
+  },
+  "archivedPagesVerifier": {
+    "path": "/home/han/project/Orchester/docs/design/acceptance/agentrouter-platform-sync/deployments/pages/current-live/verify-icon-mappings.cjs",
+    "sha256": "b09ba268a009737398aecc43de43460d781809cd6f6490e1e397f241f6829ee7",
+    "executed": false,
+    "reason": "Its fixed output path would mutate another role; the exact same helper extraction and byte comparison were reproduced in this owned read-only script."
+  },
+  "pagesOpenCodeCrossCheck": {
+    "provider": "opencode",
+    "actualName": "OpenCode",
+    "expectedName": "OpenCode",
+    "nameMatches": true,
+    "images": [
+      {
+        "theme": "dark",
+        "canonicalPath": "packages/design/src/assets/agents/opencode.svg",
+        "canonicalSha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+        "currentBodySha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70",
+        "currentBytes": 608,
+        "expectedNormalizedBodySha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70",
+        "encodedURLStringIdentical": true,
+        "loaded": true,
+        "visible": false,
+        "responseStatus": 200,
+        "matchKind": "exact-vite-7.3.6-svg-decoded-payload",
+        "matchesOfficialCanonical": true
+      },
+      {
+        "theme": "light",
+        "canonicalPath": "packages/design/src/assets/agents/opencode.svg",
+        "canonicalSha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+        "currentBodySha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70",
+        "currentBytes": 608,
+        "expectedNormalizedBodySha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70",
+        "encodedURLStringIdentical": true,
+        "loaded": true,
+        "visible": true,
+        "responseStatus": 200,
+        "matchKind": "exact-vite-7.3.6-svg-decoded-payload",
+        "matchesOfficialCanonical": true
+      }
+    ]
+  },
+  "distChecks": [
+    {
+      "directory": "apps/mobile/dist/assets",
+      "path": "apps/mobile/dist/assets/index--zaH3Y7H.js",
+      "sha256": "7e115c9d4b6236a5de0338b7499f0e09341df65ee03067ad71cd01b578a10a49",
+      "isMainIndex": true,
+      "exactGeneratedOpenCodeDataUrlPresent": true
+    },
+    {
+      "directory": "apps/mobile/android/app/src/main/assets/public/assets",
+      "path": "apps/mobile/android/app/src/main/assets/public/assets/index-BmCtg9vE.js",
+      "sha256": "2fc8ffc4c060b5306bbf413f51d21e0166169194347cbfb98f204639ef0e7c85",
+      "isMainIndex": true,
+      "exactGeneratedOpenCodeDataUrlPresent": true
+    },
+    {
+      "directory": "apps/web/dist/assets",
+      "path": "apps/web/dist/assets/AppInput-CSjQEbLs.js",
+      "sha256": "44d8be52667f6a7bc34a3d44af496e794db5c56cbb092028e84c6c03516e6046",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    },
+    {
+      "directory": "apps/web/dist/assets",
+      "path": "apps/web/dist/assets/NotFoundView-Dj7f_rEt.js",
+      "sha256": "afcd9bf4c16b351ed6ddec424152e4d3dbc9e5e583273407337c3b82a29c5204",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    },
+    {
+      "directory": "apps/web/dist/assets",
+      "path": "apps/web/dist/assets/PluginsView-DwsFtZg5.js",
+      "sha256": "f571b148b3e2239d38223e5e6a166385f5e0e64c756ee4800ee08cc2c18310cc",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    },
+    {
+      "directory": "apps/web/dist/assets",
+      "path": "apps/web/dist/assets/SchedulesView-wPX6ol9t.js",
+      "sha256": "62cf56d0c2b82caa65f8ce0c44651f790257c6d50a5248b29494c508159c6709",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    },
+    {
+      "directory": "apps/web/dist/assets",
+      "path": "apps/web/dist/assets/SettingsView-Du8MGut3.js",
+      "sha256": "87f248133640cce45417e3cf5600ca377703665429f47b95c7581bb53ff6ece5",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    },
+    {
+      "directory": "apps/web/dist/assets",
+      "path": "apps/web/dist/assets/Spinner-Zd3gNwm4.js",
+      "sha256": "afc198e83536ae86017d327daab19c11aeebb837e7fc286db715642dc36e9754",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    },
+    {
+      "directory": "apps/web/dist/assets",
+      "path": "apps/web/dist/assets/WorkspaceView-KpZkKQfO.js",
+      "sha256": "243c74f913d497712a61057ad7404de339c99a60333acbbeec001669107a1acf",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": true
+    },
+    {
+      "directory": "apps/web/dist/assets",
+      "path": "apps/web/dist/assets/download-Dj9Z1WJg.js",
+      "sha256": "ecb087fb21b5a4c95b925ecd936aec49b89b9bfdf320ff2157022963ff100e10",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    },
+    {
+      "directory": "apps/web/dist/assets",
+      "path": "apps/web/dist/assets/index-CjJI8zsH.js",
+      "sha256": "8c23847f1f064e9b06a2e0081f099fbe3ab60a9eec6f5017b004bc99f22e6ec6",
+      "isMainIndex": true,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    },
+    {
+      "directory": "apps/web/dist/assets",
+      "path": "apps/web/dist/assets/management-KGv57fFq.js",
+      "sha256": "98142d51327cb7ceae6c19ac4e472ee5eba9a45d476a4657978fd7e0e2a1960d",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    },
+    {
+      "directory": "apps/web/dist/assets",
+      "path": "apps/web/dist/assets/play-CEJEVyQt.js",
+      "sha256": "477a5119bbf3423927703559493762eb5697e674adcaacc0212e6fc89f41273f",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    },
+    {
+      "directory": "apps/web/dist/assets",
+      "path": "apps/web/dist/assets/plus-CBsVOPV5.js",
+      "sha256": "ae2f989bb6457520127354463e8c9408da9b55eea89a01d9278fdafea44331ab",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    },
+    {
+      "directory": "apps/web/site/dist/assets",
+      "path": "apps/web/site/dist/assets/ArchitectureView-CdKsCOaN.js",
+      "sha256": "5aad2b94f6cc79dc34dc226e65bc648375fe73c7b0dda84672a652f19a6dbe67",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    },
+    {
+      "directory": "apps/web/site/dist/assets",
+      "path": "apps/web/site/dist/assets/HomeView-D9jEx57f.js",
+      "sha256": "b6254d14c4e31226016b688569dcb9ed7e52ec980820b7f3ea182b0344436875",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": true
+    },
+    {
+      "directory": "apps/web/site/dist/assets",
+      "path": "apps/web/site/dist/assets/InstallView-sRCUto0M.js",
+      "sha256": "76a13fd71e7c5ed18f9d96b0fa57ae0caf399804509835f791452ff29f228a11",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    },
+    {
+      "directory": "apps/web/site/dist/assets",
+      "path": "apps/web/site/dist/assets/NotFoundView-DWZNCnot.js",
+      "sha256": "dae812db06766046b86eede95528c278a8b775f90288bfc317fd440e40338152",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    },
+    {
+      "directory": "apps/web/site/dist/assets",
+      "path": "apps/web/site/dist/assets/SiteShell.vue_vue_type_script_setup_true_lang-DKS4NJ52.js",
+      "sha256": "8a59c3a86ff4cab7c47c1926ce523f56163279f46fc9c62cb749cc6a0524b539",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    },
+    {
+      "directory": "apps/web/site/dist/assets",
+      "path": "apps/web/site/dist/assets/circle-check-BbxkWK2w.js",
+      "sha256": "01ac54049a9704a6f77352af501456dbfa497414cc07e11b5529147a12e54de6",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    },
+    {
+      "directory": "apps/web/site/dist/assets",
+      "path": "apps/web/site/dist/assets/index-D4whn8sl.js",
+      "sha256": "88dde3b0291e5dbc996c89a4661a50421e0fa2375822f20370ba8d20bb6ebd5b",
+      "isMainIndex": true,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    },
+    {
+      "directory": "apps/web/site/dist/assets",
+      "path": "apps/web/site/dist/assets/shield-check-gfhv5Q5H.js",
+      "sha256": "b4a40bafb94bdb0978c092e5b2515c05f666d8979eea72c084cecf52c6d69113",
+      "isMainIndex": false,
+      "exactGeneratedOpenCodeDataUrlPresent": false
+    }
+  ],
+  "rows": [
+    {
+      "provider": "antigravity",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/antigravity.svg",
+      "canonicalSourceSha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "sourceBytes": 5037,
+      "actualPayloadSha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "actualBytes": 5037,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": false,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "antigravity",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/antigravity.svg",
+      "canonicalSourceSha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "sourceBytes": 5037,
+      "actualPayloadSha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "actualBytes": 5037,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": false,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "claude",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/claude.png",
+      "canonicalSourceSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "sourceBytes": 10358,
+      "actualPayloadSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "actualBytes": 10358,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": null,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "claude",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/claude.png",
+      "canonicalSourceSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "sourceBytes": 10358,
+      "actualPayloadSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "actualBytes": 10358,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": null,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "claude_app",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/claude.png",
+      "canonicalSourceSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "sourceBytes": 10358,
+      "actualPayloadSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "actualBytes": 10358,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": null,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "claude_app",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/claude.png",
+      "canonicalSourceSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "sourceBytes": 10358,
+      "actualPayloadSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "actualBytes": 10358,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": null,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "cline",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/cline-dark.svg",
+      "canonicalSourceSha256": "a8932a1fa6a919466b4a36e76519be4a600fc1b83c41d84f94c3e8e45260a8e1",
+      "sourceBytes": 3574,
+      "actualPayloadSha256": "8dd3cedf23c35095e22321666fc0330e3253226412905c75913ef7f11819f68e",
+      "actualBytes": 3569,
+      "rawByteEqual": false,
+      "exactLocalViteDecodedPayloadEqual": true,
+      "encodedDataUrlExactlyMatchesLocalVite": true,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "cline",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/cline-light.svg",
+      "canonicalSourceSha256": "6aab009bf089a8dc1b5452c05c471244a08595b78fd639835eacc0821b887c06",
+      "sourceBytes": 3574,
+      "actualPayloadSha256": "bf827511f5c1d1dc376311b468d283d59eb01ebdc89554c4ed701770e30770bd",
+      "actualBytes": 3569,
+      "rawByteEqual": false,
+      "exactLocalViteDecodedPayloadEqual": true,
+      "encodedDataUrlExactlyMatchesLocalVite": true,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "codex",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/codex.png",
+      "canonicalSourceSha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+      "sourceBytes": 10969,
+      "actualPayloadSha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+      "actualBytes": 10969,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": null,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "codex",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/codex-light.svg",
+      "canonicalSourceSha256": "8652777b55544c572ba445dd230a90c2e248611e92eaa77de5805e8d0561fc30",
+      "sourceBytes": 2008,
+      "actualPayloadSha256": "64a99982306b619184bdb10900c05bef7b8f82694a9787be9c2834545b9abc8b",
+      "actualBytes": 1983,
+      "rawByteEqual": false,
+      "exactLocalViteDecodedPayloadEqual": true,
+      "encodedDataUrlExactlyMatchesLocalVite": true,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "craft",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/craft.svg",
+      "canonicalSourceSha256": "fd195ad28212109ce8fbcd6d2181556bc26b91e79998011af23d5bf0f08cf37c",
+      "sourceBytes": 787,
+      "actualPayloadSha256": "b0e1615c3fcb9fc1f2b8271dcb64cf64335d193a39151c11b65b054a1f5ee3e5",
+      "actualBytes": 720,
+      "rawByteEqual": false,
+      "exactLocalViteDecodedPayloadEqual": true,
+      "encodedDataUrlExactlyMatchesLocalVite": false,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "craft",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/craft.svg",
+      "canonicalSourceSha256": "fd195ad28212109ce8fbcd6d2181556bc26b91e79998011af23d5bf0f08cf37c",
+      "sourceBytes": 787,
+      "actualPayloadSha256": "b0e1615c3fcb9fc1f2b8271dcb64cf64335d193a39151c11b65b054a1f5ee3e5",
+      "actualBytes": 720,
+      "rawByteEqual": false,
+      "exactLocalViteDecodedPayloadEqual": true,
+      "encodedDataUrlExactlyMatchesLocalVite": false,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "crush",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/crush.png",
+      "canonicalSourceSha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "sourceBytes": 55448,
+      "actualPayloadSha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "actualBytes": 55448,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": null,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "crush",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/crush.png",
+      "canonicalSourceSha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "sourceBytes": 55448,
+      "actualPayloadSha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "actualBytes": 55448,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": null,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "cursor",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/cursor-dark.svg",
+      "canonicalSourceSha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+      "sourceBytes": 4373,
+      "actualPayloadSha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+      "actualBytes": 4373,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": false,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "cursor",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/cursor-light.svg",
+      "canonicalSourceSha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+      "sourceBytes": 4388,
+      "actualPayloadSha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+      "actualBytes": 4388,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": false,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "deepseek",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/deepseek-harness-dark.svg",
+      "canonicalSourceSha256": "dde7db781f41e7aeb4709ff5485af2bdcf7f4b4ea81b4500cfd5df44efdbd817",
+      "sourceBytes": 3634,
+      "actualPayloadSha256": "79d20c6d48a85321fc8e534b0e0b403d58c57ae549c193fcfb4def395ac8e2a3",
+      "actualBytes": 3630,
+      "rawByteEqual": false,
+      "exactLocalViteDecodedPayloadEqual": true,
+      "encodedDataUrlExactlyMatchesLocalVite": true,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "deepseek",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/deepseek-harness-light.svg",
+      "canonicalSourceSha256": "9e983b4f649c25c6ca0623a50be1a6e705fd8f49f756638b980fa13b40575ab6",
+      "sourceBytes": 3634,
+      "actualPayloadSha256": "4b90315d98d07987788d675ce7e16772495eef017795ba6aa265f08ab596c7ff",
+      "actualBytes": 3630,
+      "rawByteEqual": false,
+      "exactLocalViteDecodedPayloadEqual": true,
+      "encodedDataUrlExactlyMatchesLocalVite": true,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "gemini",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/gemini.png",
+      "canonicalSourceSha256": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee",
+      "sourceBytes": 2246,
+      "actualPayloadSha256": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee",
+      "actualBytes": 2246,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": null,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "gemini",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/gemini.png",
+      "canonicalSourceSha256": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee",
+      "sourceBytes": 2246,
+      "actualPayloadSha256": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee",
+      "actualBytes": 2246,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": null,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "hermes",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/hermes-dark.svg",
+      "canonicalSourceSha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+      "sourceBytes": 137768,
+      "actualPayloadSha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+      "actualBytes": 137768,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": false,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "hermes",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/hermes-light.svg",
+      "canonicalSourceSha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+      "sourceBytes": 116350,
+      "actualPayloadSha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+      "actualBytes": 116350,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": false,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "kilo",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/kilo.svg",
+      "canonicalSourceSha256": "5b537e31ef6037cadc434390c5d38687b3752c37ea8c4e2a09b9d62b4fae4c78",
+      "sourceBytes": 674,
+      "actualPayloadSha256": "c720142fba108fa18653dd99c15028a0a9ab57abe77edfeae4e2a2a3faa285b4",
+      "actualBytes": 628,
+      "rawByteEqual": false,
+      "exactLocalViteDecodedPayloadEqual": true,
+      "encodedDataUrlExactlyMatchesLocalVite": false,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "kilo",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/kilo.svg",
+      "canonicalSourceSha256": "5b537e31ef6037cadc434390c5d38687b3752c37ea8c4e2a09b9d62b4fae4c78",
+      "sourceBytes": 674,
+      "actualPayloadSha256": "c720142fba108fa18653dd99c15028a0a9ab57abe77edfeae4e2a2a3faa285b4",
+      "actualBytes": 628,
+      "rawByteEqual": false,
+      "exactLocalViteDecodedPayloadEqual": true,
+      "encodedDataUrlExactlyMatchesLocalVite": false,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "openclaw",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/openclaw.svg",
+      "canonicalSourceSha256": "74e1fb7542675f68aafe502576f7c857c3f3620d07095e910515e3c05d62ab2e",
+      "sourceBytes": 3271,
+      "actualPayloadSha256": "6618c620a52b84ed86b91b4638afd4611d194e1a3de909d9352f6992a015dd2e",
+      "actualBytes": 2961,
+      "rawByteEqual": false,
+      "exactLocalViteDecodedPayloadEqual": true,
+      "encodedDataUrlExactlyMatchesLocalVite": true,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "openclaw",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/openclaw.svg",
+      "canonicalSourceSha256": "74e1fb7542675f68aafe502576f7c857c3f3620d07095e910515e3c05d62ab2e",
+      "sourceBytes": 3271,
+      "actualPayloadSha256": "6618c620a52b84ed86b91b4638afd4611d194e1a3de909d9352f6992a015dd2e",
+      "actualBytes": 2961,
+      "rawByteEqual": false,
+      "exactLocalViteDecodedPayloadEqual": true,
+      "encodedDataUrlExactlyMatchesLocalVite": true,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "opencode",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/opencode.svg",
+      "canonicalSourceSha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+      "sourceBytes": 612,
+      "actualPayloadSha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70",
+      "actualBytes": 608,
+      "rawByteEqual": false,
+      "exactLocalViteDecodedPayloadEqual": true,
+      "encodedDataUrlExactlyMatchesLocalVite": true,
+      "officialSourceMatched": true,
+      "initialCheckMatched": false
+    },
+    {
+      "provider": "opencode",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/opencode.svg",
+      "canonicalSourceSha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+      "sourceBytes": 612,
+      "actualPayloadSha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70",
+      "actualBytes": 608,
+      "rawByteEqual": false,
+      "exactLocalViteDecodedPayloadEqual": true,
+      "encodedDataUrlExactlyMatchesLocalVite": true,
+      "officialSourceMatched": true,
+      "initialCheckMatched": false
+    },
+    {
+      "provider": "pi",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/pi.svg",
+      "canonicalSourceSha256": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b",
+      "sourceBytes": 334,
+      "actualPayloadSha256": "73c874374f3a26439d32029ee103e07534325e0be323b8434b506179fec21818",
+      "actualBytes": 322,
+      "rawByteEqual": false,
+      "exactLocalViteDecodedPayloadEqual": true,
+      "encodedDataUrlExactlyMatchesLocalVite": false,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "pi",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/pi.svg",
+      "canonicalSourceSha256": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b",
+      "sourceBytes": 334,
+      "actualPayloadSha256": "73c874374f3a26439d32029ee103e07534325e0be323b8434b506179fec21818",
+      "actualBytes": 322,
+      "rawByteEqual": false,
+      "exactLocalViteDecodedPayloadEqual": true,
+      "encodedDataUrlExactlyMatchesLocalVite": false,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "qwen",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/qwen.svg",
+      "canonicalSourceSha256": "24156c849c9124505e13b38c6583a9d5d85a1f57d996c324d967f480a4d88696",
+      "sourceBytes": 1117,
+      "actualPayloadSha256": "68fa32d3474d9ecfd248e2a4406849b86123fae1f3f0dd69fc1f709d67f78085",
+      "actualBytes": 1106,
+      "rawByteEqual": false,
+      "exactLocalViteDecodedPayloadEqual": true,
+      "encodedDataUrlExactlyMatchesLocalVite": true,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "qwen",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/qwen.svg",
+      "canonicalSourceSha256": "24156c849c9124505e13b38c6583a9d5d85a1f57d996c324d967f480a4d88696",
+      "sourceBytes": 1117,
+      "actualPayloadSha256": "68fa32d3474d9ecfd248e2a4406849b86123fae1f3f0dd69fc1f709d67f78085",
+      "actualBytes": 1106,
+      "rawByteEqual": false,
+      "exactLocalViteDecodedPayloadEqual": true,
+      "encodedDataUrlExactlyMatchesLocalVite": true,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "roo",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/roo.png",
+      "canonicalSourceSha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "sourceBytes": 5626,
+      "actualPayloadSha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "actualBytes": 5626,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": null,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "roo",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/roo.png",
+      "canonicalSourceSha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "sourceBytes": 5626,
+      "actualPayloadSha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "actualBytes": 5626,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": null,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "trae",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/trae.png",
+      "canonicalSourceSha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+      "sourceBytes": 488,
+      "actualPayloadSha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+      "actualBytes": 488,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": null,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "trae",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/trae.png",
+      "canonicalSourceSha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+      "sourceBytes": 488,
+      "actualPayloadSha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+      "actualBytes": 488,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": null,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "workbuddy",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/workbuddy.svg",
+      "canonicalSourceSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "sourceBytes": 4142,
+      "actualPayloadSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "actualBytes": 4142,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": false,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "workbuddy",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/workbuddy.svg",
+      "canonicalSourceSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "sourceBytes": 4142,
+      "actualPayloadSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "actualBytes": 4142,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": false,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "workbuddy_global",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/workbuddy.svg",
+      "canonicalSourceSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "sourceBytes": 4142,
+      "actualPayloadSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "actualBytes": 4142,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": false,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "workbuddy_global",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/workbuddy.svg",
+      "canonicalSourceSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "sourceBytes": 4142,
+      "actualPayloadSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "actualBytes": 4142,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": false,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "zcode",
+      "theme": "dark",
+      "canonicalPath": "packages/design/src/assets/agents/zcode.png",
+      "canonicalSourceSha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "sourceBytes": 6479,
+      "actualPayloadSha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "actualBytes": 6479,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": null,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    },
+    {
+      "provider": "zcode",
+      "theme": "light",
+      "canonicalPath": "packages/design/src/assets/agents/zcode.png",
+      "canonicalSourceSha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "sourceBytes": 6479,
+      "actualPayloadSha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "actualBytes": 6479,
+      "rawByteEqual": true,
+      "exactLocalViteDecodedPayloadEqual": false,
+      "encodedDataUrlExactlyMatchesLocalVite": null,
+      "officialSourceMatched": true,
+      "initialCheckMatched": true
+    }
+  ],
+  "immutableInputSnapshots": [
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-ui-official-icons-safe.json",
+      "sha256Before": "14c68d1ad5cfb20f37ca28fc46e9b8cb118498242f8d9790a519c2dd10a70bb1",
+      "sha256After": "14c68d1ad5cfb20f37ca28fc46e9b8cb118498242f8d9790a519c2dd10a70bb1",
+      "unchanged": true
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-ui-icons-public-payload.json",
+      "sha256Before": "655d8cb896862cb73e18532faa0429ed82c77198a8cdab29c9db1ea8a89ed639",
+      "sha256After": "655d8cb896862cb73e18532faa0429ed82c77198a8cdab29c9db1ea8a89ed639",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/docs/design/acceptance/agentrouter-platform-sync/sources/icons/final21-official-current-24-assets.json",
+      "sha256Before": "929cf354c42836cf4fa8f1c37457afd623015b42efe4484b471c4a6d5a3109df",
+      "sha256After": "929cf354c42836cf4fa8f1c37457afd623015b42efe4484b471c4a6d5a3109df",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/docs/design/acceptance/agentrouter-platform-sync/deployments/pages/current-live/current-icon-mapping-verification.json",
+      "sha256Before": "49b1a459ffc1e58062d19215f2d51cf618e7adfa1368a18aca17b41f9fef3ead",
+      "sha256After": "49b1a459ffc1e58062d19215f2d51cf618e7adfa1368a18aca17b41f9fef3ead",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/docs/design/acceptance/agentrouter-platform-sync/deployments/pages/current-live/verify-icon-mappings.cjs",
+      "sha256Before": "b09ba268a009737398aecc43de43460d781809cd6f6490e1e397f241f6829ee7",
+      "sha256After": "b09ba268a009737398aecc43de43460d781809cd6f6490e1e397f241f6829ee7",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/node_modules/.pnpm/vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.33.0/node_modules/vite/dist/node/chunks/config.js",
+      "sha256Before": "c2fcfa51206dc1f8d22120ef4a82af8b9acdc02f4476520b6a0897d12a724ba3",
+      "sha256After": "c2fcfa51206dc1f8d22120ef4a82af8b9acdc02f4476520b6a0897d12a724ba3",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/agent-identities.ts",
+      "sha256Before": "3244b95fec47ebecb8587097cfac3a949858384ccac6bc59470a4c8d8191899c",
+      "sha256After": "3244b95fec47ebecb8587097cfac3a949858384ccac6bc59470a4c8d8191899c",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/antigravity.svg",
+      "sha256Before": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "sha256After": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/claude.png",
+      "sha256Before": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "sha256After": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/cline-dark.svg",
+      "sha256Before": "a8932a1fa6a919466b4a36e76519be4a600fc1b83c41d84f94c3e8e45260a8e1",
+      "sha256After": "a8932a1fa6a919466b4a36e76519be4a600fc1b83c41d84f94c3e8e45260a8e1",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/cline-light.svg",
+      "sha256Before": "6aab009bf089a8dc1b5452c05c471244a08595b78fd639835eacc0821b887c06",
+      "sha256After": "6aab009bf089a8dc1b5452c05c471244a08595b78fd639835eacc0821b887c06",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/codex.png",
+      "sha256Before": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+      "sha256After": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/codex-light.svg",
+      "sha256Before": "8652777b55544c572ba445dd230a90c2e248611e92eaa77de5805e8d0561fc30",
+      "sha256After": "8652777b55544c572ba445dd230a90c2e248611e92eaa77de5805e8d0561fc30",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/craft.svg",
+      "sha256Before": "fd195ad28212109ce8fbcd6d2181556bc26b91e79998011af23d5bf0f08cf37c",
+      "sha256After": "fd195ad28212109ce8fbcd6d2181556bc26b91e79998011af23d5bf0f08cf37c",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/crush.png",
+      "sha256Before": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "sha256After": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/cursor-dark.svg",
+      "sha256Before": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+      "sha256After": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/cursor-light.svg",
+      "sha256Before": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+      "sha256After": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/deepseek-harness-dark.svg",
+      "sha256Before": "dde7db781f41e7aeb4709ff5485af2bdcf7f4b4ea81b4500cfd5df44efdbd817",
+      "sha256After": "dde7db781f41e7aeb4709ff5485af2bdcf7f4b4ea81b4500cfd5df44efdbd817",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/deepseek-harness-light.svg",
+      "sha256Before": "9e983b4f649c25c6ca0623a50be1a6e705fd8f49f756638b980fa13b40575ab6",
+      "sha256After": "9e983b4f649c25c6ca0623a50be1a6e705fd8f49f756638b980fa13b40575ab6",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/gemini.png",
+      "sha256Before": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee",
+      "sha256After": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/hermes-dark.svg",
+      "sha256Before": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+      "sha256After": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/hermes-light.svg",
+      "sha256Before": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+      "sha256After": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/kilo.svg",
+      "sha256Before": "5b537e31ef6037cadc434390c5d38687b3752c37ea8c4e2a09b9d62b4fae4c78",
+      "sha256After": "5b537e31ef6037cadc434390c5d38687b3752c37ea8c4e2a09b9d62b4fae4c78",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/openclaw.svg",
+      "sha256Before": "74e1fb7542675f68aafe502576f7c857c3f3620d07095e910515e3c05d62ab2e",
+      "sha256After": "74e1fb7542675f68aafe502576f7c857c3f3620d07095e910515e3c05d62ab2e",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/opencode.svg",
+      "sha256Before": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+      "sha256After": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/pi.svg",
+      "sha256Before": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b",
+      "sha256After": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/qwen.svg",
+      "sha256Before": "24156c849c9124505e13b38c6583a9d5d85a1f57d996c324d967f480a4d88696",
+      "sha256After": "24156c849c9124505e13b38c6583a9d5d85a1f57d996c324d967f480a4d88696",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/roo.png",
+      "sha256Before": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "sha256After": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/trae.png",
+      "sha256Before": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+      "sha256After": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/workbuddy.svg",
+      "sha256Before": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "sha256After": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/packages/design/src/assets/agents/zcode.png",
+      "sha256Before": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "sha256After": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/mobile/dist/assets/index--zaH3Y7H.js",
+      "sha256Before": "7e115c9d4b6236a5de0338b7499f0e09341df65ee03067ad71cd01b578a10a49",
+      "sha256After": "7e115c9d4b6236a5de0338b7499f0e09341df65ee03067ad71cd01b578a10a49",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/mobile/android/app/src/main/assets/public/assets/index-BmCtg9vE.js",
+      "sha256Before": "2fc8ffc4c060b5306bbf413f51d21e0166169194347cbfb98f204639ef0e7c85",
+      "sha256After": "2fc8ffc4c060b5306bbf413f51d21e0166169194347cbfb98f204639ef0e7c85",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/dist/assets/AppInput-CSjQEbLs.js",
+      "sha256Before": "44d8be52667f6a7bc34a3d44af496e794db5c56cbb092028e84c6c03516e6046",
+      "sha256After": "44d8be52667f6a7bc34a3d44af496e794db5c56cbb092028e84c6c03516e6046",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/dist/assets/NotFoundView-Dj7f_rEt.js",
+      "sha256Before": "afcd9bf4c16b351ed6ddec424152e4d3dbc9e5e583273407337c3b82a29c5204",
+      "sha256After": "afcd9bf4c16b351ed6ddec424152e4d3dbc9e5e583273407337c3b82a29c5204",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/dist/assets/PluginsView-DwsFtZg5.js",
+      "sha256Before": "f571b148b3e2239d38223e5e6a166385f5e0e64c756ee4800ee08cc2c18310cc",
+      "sha256After": "f571b148b3e2239d38223e5e6a166385f5e0e64c756ee4800ee08cc2c18310cc",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/dist/assets/SchedulesView-wPX6ol9t.js",
+      "sha256Before": "62cf56d0c2b82caa65f8ce0c44651f790257c6d50a5248b29494c508159c6709",
+      "sha256After": "62cf56d0c2b82caa65f8ce0c44651f790257c6d50a5248b29494c508159c6709",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/dist/assets/SettingsView-Du8MGut3.js",
+      "sha256Before": "87f248133640cce45417e3cf5600ca377703665429f47b95c7581bb53ff6ece5",
+      "sha256After": "87f248133640cce45417e3cf5600ca377703665429f47b95c7581bb53ff6ece5",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/dist/assets/Spinner-Zd3gNwm4.js",
+      "sha256Before": "afc198e83536ae86017d327daab19c11aeebb837e7fc286db715642dc36e9754",
+      "sha256After": "afc198e83536ae86017d327daab19c11aeebb837e7fc286db715642dc36e9754",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/dist/assets/WorkspaceView-KpZkKQfO.js",
+      "sha256Before": "243c74f913d497712a61057ad7404de339c99a60333acbbeec001669107a1acf",
+      "sha256After": "243c74f913d497712a61057ad7404de339c99a60333acbbeec001669107a1acf",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/dist/assets/download-Dj9Z1WJg.js",
+      "sha256Before": "ecb087fb21b5a4c95b925ecd936aec49b89b9bfdf320ff2157022963ff100e10",
+      "sha256After": "ecb087fb21b5a4c95b925ecd936aec49b89b9bfdf320ff2157022963ff100e10",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/dist/assets/index-CjJI8zsH.js",
+      "sha256Before": "8c23847f1f064e9b06a2e0081f099fbe3ab60a9eec6f5017b004bc99f22e6ec6",
+      "sha256After": "8c23847f1f064e9b06a2e0081f099fbe3ab60a9eec6f5017b004bc99f22e6ec6",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/dist/assets/management-KGv57fFq.js",
+      "sha256Before": "98142d51327cb7ceae6c19ac4e472ee5eba9a45d476a4657978fd7e0e2a1960d",
+      "sha256After": "98142d51327cb7ceae6c19ac4e472ee5eba9a45d476a4657978fd7e0e2a1960d",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/dist/assets/play-CEJEVyQt.js",
+      "sha256Before": "477a5119bbf3423927703559493762eb5697e674adcaacc0212e6fc89f41273f",
+      "sha256After": "477a5119bbf3423927703559493762eb5697e674adcaacc0212e6fc89f41273f",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/dist/assets/plus-CBsVOPV5.js",
+      "sha256Before": "ae2f989bb6457520127354463e8c9408da9b55eea89a01d9278fdafea44331ab",
+      "sha256After": "ae2f989bb6457520127354463e8c9408da9b55eea89a01d9278fdafea44331ab",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/site/dist/assets/ArchitectureView-CdKsCOaN.js",
+      "sha256Before": "5aad2b94f6cc79dc34dc226e65bc648375fe73c7b0dda84672a652f19a6dbe67",
+      "sha256After": "5aad2b94f6cc79dc34dc226e65bc648375fe73c7b0dda84672a652f19a6dbe67",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/site/dist/assets/HomeView-D9jEx57f.js",
+      "sha256Before": "b6254d14c4e31226016b688569dcb9ed7e52ec980820b7f3ea182b0344436875",
+      "sha256After": "b6254d14c4e31226016b688569dcb9ed7e52ec980820b7f3ea182b0344436875",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/site/dist/assets/InstallView-sRCUto0M.js",
+      "sha256Before": "76a13fd71e7c5ed18f9d96b0fa57ae0caf399804509835f791452ff29f228a11",
+      "sha256After": "76a13fd71e7c5ed18f9d96b0fa57ae0caf399804509835f791452ff29f228a11",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/site/dist/assets/NotFoundView-DWZNCnot.js",
+      "sha256Before": "dae812db06766046b86eede95528c278a8b775f90288bfc317fd440e40338152",
+      "sha256After": "dae812db06766046b86eede95528c278a8b775f90288bfc317fd440e40338152",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/site/dist/assets/SiteShell.vue_vue_type_script_setup_true_lang-DKS4NJ52.js",
+      "sha256Before": "8a59c3a86ff4cab7c47c1926ce523f56163279f46fc9c62cb749cc6a0524b539",
+      "sha256After": "8a59c3a86ff4cab7c47c1926ce523f56163279f46fc9c62cb749cc6a0524b539",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/site/dist/assets/circle-check-BbxkWK2w.js",
+      "sha256Before": "01ac54049a9704a6f77352af501456dbfa497414cc07e11b5529147a12e54de6",
+      "sha256After": "01ac54049a9704a6f77352af501456dbfa497414cc07e11b5529147a12e54de6",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/site/dist/assets/index-D4whn8sl.js",
+      "sha256Before": "88dde3b0291e5dbc996c89a4661a50421e0fa2375822f20370ba8d20bb6ebd5b",
+      "sha256After": "88dde3b0291e5dbc996c89a4661a50421e0fa2375822f20370ba8d20bb6ebd5b",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/project/Orchester/apps/web/site/dist/assets/shield-check-gfhv5Q5H.js",
+      "sha256Before": "b4a40bafb94bdb0978c092e5b2515c05f666d8979eea72c084cecf52c6d69113",
+      "sha256After": "b4a40bafb94bdb0978c092e5b2515c05f666d8979eea72c084cecf52c6d69113",
+      "unchanged": true
+    }
+  ],
+  "sourceMutations": 0,
+  "nativeQueueOperations": 0,
+  "adbCalls": 0,
+  "uiOrDeviceOperations": 0,
+  "privateProfileReads": 0
+}

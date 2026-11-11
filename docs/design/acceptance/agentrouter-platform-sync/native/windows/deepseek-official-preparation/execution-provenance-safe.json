@@ -1,0 +1,14 @@
+{
+  "readInstalledPublicAsarActualExitCode": 0,
+  "readInstalledPublicAsarToolChunk": "6f4b69",
+  "officialDownloadAttempt1ActualExitCode": 1,
+  "officialDownloadAttempt1ToolChunk": "d3e411",
+  "officialRangeResumeActualExitCode": 0,
+  "officialRangeResumeToolChunk": "4db2cf",
+  "readPreparedPublicPeActualExitCode": 0,
+  "readPreparedPublicPeToolChunk": "c3c22e",
+  "wholeInstallerHashObserved": "830947f8996dc05d991ca9133fff4d3400073e47b9cfa6507754867e79482b23",
+  "independentPrimaryExecutor": "/root/official_installs/dsh_official_source",
+  "installerNeverExecuted": true,
+  "signatureTrustNotClaimedFromCertificateTable": true
+}

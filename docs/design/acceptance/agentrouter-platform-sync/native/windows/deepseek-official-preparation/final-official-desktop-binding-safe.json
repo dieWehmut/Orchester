@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-11T15:53:29.265211+00:00",
+  "status": "installed-wrapper-and-official-Harness-component-separated; official website installer prepared for Windows trust-validation owner",
+  "installedShell": {
+    "shellPackageName": "dsh-desktop",
+    "shellVersion": "0.13.0",
+    "shellAuthor": "DataElement",
+    "shellRepository": {
+      "type": "git",
+      "url": "git+https://github.com/dataelement/dsh-desktop.git"
+    },
+    "harnessPackageName": "@deepseek-ai/dsh",
+    "harnessPackageVersion": "0.2.1-rc.3",
+    "harnessRepository": {
+      "type": "git",
+      "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+      "directory": "apps/cli"
+    },
+    "officialDesktopDistributionConfirmedByInstalledMetadata": false,
+    "componentNamespaceAndRepositoryAreNotVendorArtifactAuthenticityProof": true
+  },
+  "installedPublicUpdateOrigin": "https://dshdesktop.com/updates/latest/",
+  "officialSource": {
+    "canonicalRepository": "https://github.com/deepseek-ai/deepseek-harness",
+    "pinnedPublicCommit": "e8f7b93a344964de3dca1ace9e72b6e4d6de87cb",
+    "currentPublicDesktopPackageName": "@deepseek-ai/dsh-desktop",
+    "currentPublicSourcePackageVersion": "0.2.2-rc.2",
+    "publicProductName": "DeepSeek Harness",
+    "publicAuthorName": "Hangzhou DeepSeek Artificial Intelligence Co., Ltd.",
+    "officialWebsiteDownloadPage": "https://www.deepseek.com/download/",
+    "officialWebsiteHarnessPage": "https://www.deepseek.com/harness/",
+    "exactWindowsInstallerUrl": "https://download.deepseek.com/desktop/dsh-latest-windows-x64.exe",
+    "sourceDerivedProductionUpdateOrigin": "https://download.deepseek.com",
+    "currentSourceVersionIsNotDownloadedVersionClaim": true,
+    "actualOfficialAppIdNotGuessed": true
+  },
+  "preparedOfficialWebsiteInstaller": {
+    "wslPath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/official-download/dsh-latest-windows-x64.exe",
+    "bytes": 293425336,
+    "sha256": "830947f8996dc05d991ca9133fff4d3400073e47b9cfa6507754867e79482b23",
+    "publicPeVersionStrings": {
+      "CompanyName": "Hangzhou DeepSeek Artificial Intelligence Co., Ltd.",
+      "FileDescription": "Electron desktop shell for a bundled dsh runtime and external plugins",
+      "FileVersion": "0.2.2-rc.1",
+      "LegalCopyright": "Copyright © 2026 DeepSeek Harness",
+      "ProductName": "DeepSeek Harness",
+      "ProductVersion": "0.2.2-rc.1"
+    },
+    "peFixedVersion": {
+      "fileVersion": "0.2.2.0",
+      "productVersion": "0.2.2.0"
+    },
+    "certificateTablePresent": true,
+    "windowsAuthenticodeTrustVerifiedByThisTask": false,
+    "freshInstallerExecutionOrInstallPerformed": false,
+    "officialServiceVerifiedTlsRequests": [
+      {
+        "attempt": 1,
+        "httpStatus": 200,
+        "result": "early EOF; partial length mismatch; failure retained, not counted as prepared",
+        "bytesRetained": 286949376
+      },
+      {
+        "attempt": 2,
+        "httpStatus": 206,
+        "contentRange": "bytes 286949376-293425335/293425336",
+        "exactMissingBytesAppended": 6475960,
+        "result": "actual exit0; complete declared length and full SHA256 obtained"
+      }
+    ],
+    "firstResponseEtagUnavailable": true,
+    "resumedResponseEtag": "\"ecd1d9880f68ec91a63b4936163bfc44\"",
+    "resumedResponseLastModified": "Thu, 05 Nov 2026 14:07:09 GMT",
+    "singleResponseOrVendorWholeFileChecksumClaimed": false,
+    "requiresWindowsOwnerWholeFileShaAndAuthenticodeTrustVerificationBeforeInstallation": true,
+    "windowsX64TargetClaimSource": "Exact official website installer URL; NSIS installer PE-machine architecture is separate from payload target."
+  },
+  "sourceBindingConclusion": {
+    "officialWindowsDownloadEntryConfirmed": true,
+    "existingDataElementShellContainsHarnessNamespaceAndRepositoryMetadata": true,
+    "existingShellMatchesCurrentOfficialDesktopPackageIdentity": false,
+    "existingShellMatchesCurrentOfficialProductionUpdateOrigin": false,
+    "existingUserSetupSignaturesProveOfficialDeepSeekWebsitePayload": false,
+    "existingShellConfirmedAsDeepSeekOfficialDesktopDistribution": false,
+    "historicalVendorLineageAbsolutelyRuledOut": false,
+    "currentInstalledOfficialDesktopAbsenceWholeMachineClaimed": false,
+    "downloadedOfficialServiceArtifactPreparedNotInstalled": true
+  },
+  "evidence": {
+    "installedPublicAsarIdentity": {
+      "relativePath": "installed-public-asar-identity-safe.json",
+      "sha256": "fcf47b7f6a6c00bb59d5a32e8619de414226dcab0a4bf258032ba8b2a181bb11"
+    },
+    "independentOfficialPrimary": {
+      "relativePath": "primary-independent/official-current-desktop-identity-safe.json",
+      "sha256": "5b587f114b7a3b33d1fbda995deb081ec7c544d43752c9a0858d22383a786f6b"
+    },
+    "transport": {
+      "relativePath": "official-download/official-installer-transport-safe.json",
+      "sha256": "16f8a8b873d65de20f12739cce479767fad03ce12330f4a1db8986b2feff4619"
+    },
+    "publicPe": {
+      "relativePath": "official-download/prepared-installer-public-pe-metadata-safe.json",
+      "sha256": "8ce33ee443c08511af28d33d01a590008ccb958069c9bc7b50cb5a39608df63f"
+    }
+  },
+  "operationBoundaries": {
+    "privateProfilesOrEnvironmentOrActualArgvReads": 0,
+    "nativeQueueOperations": 0,
+    "windowsProcessQueriesOrGuiStarts": 0,
+    "runtimeApiOrModelCalls": 0,
+    "newInstallerExecutionOrInstallUninstall": 0,
+    "userInstallerOrInstalledAppOverwrites": 0,
+    "gitOrProjectSourceChanges": 0,
+    "authorizedOfficialWebsiteInstallerDownloadPerformed": true
+  }
+}

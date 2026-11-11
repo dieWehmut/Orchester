@@ -1,0 +1,31 @@
+{
+  "observedAt": "2026-11-11T15:45:09.890246+00:00",
+  "requests": [
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts/desktop-release-environment.mjs",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts/desktop-release-environment.mjs",
+      "httpStatus": 200,
+      "bytes": 5617,
+      "sha256": "477af1758005c74beabf201b3ca18eaf08945083b4b7fd565cbc170217c613e2",
+      "verifiedTls": true,
+      "publicBodyFile": "pinned-official-desktop-release-environment.mjs",
+      "sourceScriptExecuted": false,
+      "environmentRead": false
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts/desktop-auto-update-environment.mjs",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts/desktop-auto-update-environment.mjs",
+      "httpStatus": 200,
+      "bytes": 8873,
+      "sha256": "4fc37321febd4979b732a2832af4eb832602b30185e51584c1ddc0b0cb3db29a",
+      "verifiedTls": true,
+      "publicBodyFile": "pinned-official-desktop-auto-update-environment.mjs",
+      "sourceScriptExecuted": false,
+      "environmentRead": false
+    }
+  ],
+  "privateEnvironmentRead": false,
+  "sourceScriptsExecuted": false,
+  "installerDownloads": 0,
+  "runtimeApiCalls": 0
+}

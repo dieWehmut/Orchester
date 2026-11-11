@@ -1,0 +1,61 @@
+{
+  "format": "orchester-public-safe-json-whitelist-v1",
+  "privateRawOrInstallerFilesIncluded": false,
+  "files": [
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/successor2-native-typed-policy-safe.json",
+      "sha256": "b70d5c3ec0163017680cdf954ab2b273d35b6f92d85136cc53642874b0467296",
+      "bytes": 2648
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/successor2-native-check-executor-terminal-safe.json",
+      "sha256": "00b81f6a610f8d4a5552da64186f449b35fe91e11f7c494e4f2ab76a1f993c2d",
+      "bytes": 680
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/runtime-epoch2-final-native-ast-safe.json",
+      "sha256": "ff1e34fea655d30498c97025bf2eafcbc383c6240c8c2ba4cae1bf56e3964477",
+      "bytes": 1612
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/runtime-epoch2-final-native-ast-executor-terminal-safe.json",
+      "sha256": "5900f6c68344659266e69114edacf1727a5dce020b53a55a4dfbef55275ef31e",
+      "bytes": 844
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/runtime-epoch2-native-ast-preinterop-attempts-safe.json",
+      "sha256": "ab5346adff405818bb575648ed2a8cbe77c2b76734953f3ad72432a583eeb689",
+      "bytes": 740
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/audit/original-freeze-immutability-ownership-region-20261111.json",
+      "sha256": "7bc098e6a67cce2325ad3255a4dc13e5fb17ca6e91821d0e2af6486e5dbcfeba",
+      "bytes": 9895
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-epoch2-wslhost-20261111/epoch2-final-draft-pins-safe.json",
+      "sha256": "6f5f70c819920a6471446bab3914bb5b777e0f5fbbe133e0638cdfee02c32ab5",
+      "bytes": 5821
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/installed-dsh-public-known-files-safe.json",
+      "sha256": "dd840d256f08d96bca5c0a25176f387f423cf6e607a85a502903f3a17b3ee153",
+      "bytes": 907
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/current-dsh-cursor-antigravity-wslhost-public-safe.json",
+      "sha256": "e13cb328f570bf7fcb763ef7ecccd306e57f7ee4ea233297765a867184594c10",
+      "bytes": 7909
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt2-20261111/ready-safe.json",
+      "sha256": "81a60daa89471066a0a98ab1606cf701b6f8a1ddf7fd1585ad547e4ed9894eac",
+      "bytes": 2005
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-20261111/private-transport-terminal-cleanup-safe.json",
+      "sha256": "5d01cc236693516cb3da66cf6fc43ad4072bfc4368a7d2963973cbbe169727ca",
+      "bytes": 830
+    }
+  ]
+}

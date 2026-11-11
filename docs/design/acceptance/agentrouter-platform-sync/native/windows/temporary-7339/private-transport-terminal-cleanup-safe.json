@@ -1,0 +1,21 @@
+{
+  "format": "orchester-first-temporary-secret-transport-cleanup-v1",
+  "status": "exact-owned-transports-removed-after-actual-terminal",
+  "originalCleanupSha256": "b82d7cf34d666add180ee55c5ac06f58d0f090e311ad3277b90b56c7f6a259dc",
+  "originalExecutorTerminalSha256": "e2efae1dc68056cc4f2d82f6fe8cb5640d37210db94931032822583fd0b7e79e",
+  "actualNativeExecutorExitCode": 0,
+  "allDeclaredOriginalOwnedHandlesEndedBeforeDeletion": true,
+  "removedNames": [
+    "launcher-stdout-private.raw",
+    "launcher-stderr-private.raw",
+    "android-connection-private.json"
+  ],
+  "alreadyAbsentNames": [],
+  "logicalBytesRemoved": 1264,
+  "remainingExactTransportCount": 0,
+  "privateContentsReadOrPublished": false,
+  "otherUserProfilesModified": false,
+  "secondServerTouched": false,
+  "signals": 0,
+  "formalRuntimeAccepted": false
+}
