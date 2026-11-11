@@ -38,7 +38,8 @@
     "trae",
     "trae cn",
     "zcode",
-    "craft agents"
+    "craft agents",
+    "@craft-agentele"
   ],
   "entries": {
     "@google/gemini-cli/dist/index.js": "gemini",
@@ -115,8 +116,10 @@
   "desktop_services": {
     "workbuddy": "workbuddy",
     "craft agents": "craft",
+    "@craft-agentelectron": "craft",
     "trae": "trae",
     "trae cn": "trae",
+    "trae-cn": "trae",
     "zcode": "zcode"
   },
   "qwen_value_flags": [
