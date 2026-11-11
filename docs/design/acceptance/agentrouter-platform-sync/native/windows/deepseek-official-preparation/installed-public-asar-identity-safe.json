@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-11T15:46:21.187475+00:00",
+  "status": "installed-third-party-desktop-shell-containing-official-harness-namespace-components",
+  "installedWindowsPath": "C:\\Program Files\\DSH Desktop",
+  "preflightSafeReceiptSha256": "dd840d256f08d96bca5c0a25176f387f423cf6e607a85a502903f3a17b3ee153",
+  "existingNativeRegistrationAndInstallerSignatureReceiptSha256": "e13cb328f570bf7fcb763ef7ecccd306e57f7ee4ea233297765a867184594c10",
+  "asarContainerBytes": 369499529,
+  "publicAsarHeaderJsonBytes": 7185857,
+  "publicAsarHeaderSha256Before": "eddc2457049fe693b47c2e838ace010b27704cde7107ed516e1eba8a9e3cc736",
+  "publicAsarHeaderSha256After": "eddc2457049fe693b47c2e838ace010b27704cde7107ed516e1eba8a9e3cc736",
+  "headerAndSelectedPublicEntriesHashStable": true,
+  "wholeAsarHashCalculated": false,
+  "wholeArchiveByteIdentityClaimed": false,
+  "entries": [
+    {
+      "asarPublicEntry": "package.json",
+      "bytes": 13712,
+      "sha256": "b5d28e3c240636fe695dfec761b8fa9b0c9ee9d3950367fe52824411911ce14f",
+      "sha256ExactlyMatchesAsarHeaderIntegrity": true,
+      "publicPackageMetadata": {
+        "name": "dsh-desktop",
+        "version": "0.13.0",
+        "description": "A cross-platform desktop shell for DeepSeek Harness.",
+        "main": "./out/main/index.js",
+        "author": "DataElement",
+        "license": "MIT",
+        "repository": {
+          "type": "git",
+          "url": "git+https://github.com/dataelement/dsh-desktop.git"
+        },
+        "bugs": {
+          "url": "https://github.com/dataelement/dsh-desktop/issues"
+        },
+        "homepage": "https://github.com/dataelement/dsh-desktop#readme"
+      },
+      "publicBuildProvenanceFields": {},
+      "bundledHarnessDependencyVersion": "0.2.1-rc.3"
+    },
+    {
+      "asarPublicEntry": "node_modules/@deepseek-ai/dsh/package.json",
+      "bytes": 8468,
+      "sha256": "78f391f986b2511a3beefb238121105603e99c7620cbcc7a6e3075d6d0f1fec8",
+      "sha256ExactlyMatchesAsarHeaderIntegrity": true,
+      "publicPackageMetadata": {
+        "name": "@deepseek-ai/dsh",
+        "description": "dsh CLI: profile launch, plugin management, and configuration inspection",
+        "version": "0.2.1-rc.3",
+        "repository": {
+          "type": "git",
+          "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+          "directory": "apps/cli"
+        },
+        "bin": {
+          "dsh": "lib/bin.js"
+        },
+        "license": "MIT"
+      },
+      "publicBuildProvenanceFields": {},
+      "bundledHarnessDependencyVersion": null
+    },
+    {
+      "asarPublicEntry": "node_modules/@deepseek-ai/dsh-web/package.json",
+      "bytes": 1168,
+      "sha256": "494fbc2677e9afdc82cc50bd3c8404d9b7decb2ef586c36e5d81e602ad89f2d4",
+      "sha256ExactlyMatchesAsarHeaderIntegrity": true,
+      "publicPackageMetadata": {
+        "name": "@deepseek-ai/dsh-web",
+        "description": "Abstract web access capability seam (ctx.web) for the DeepSeek Harness — search/fetch provider registry, registration-order-independent selection, request/result vocabulary, and the WebError taxonomy",
+        "version": "0.2.1-rc.3",
+        "repository": {
+          "type": "git",
+          "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+          "directory": "packages/web/web"
+        },
+        "main": "lib/index.js",
+        "license": "MIT"
+      },
+      "publicBuildProvenanceFields": {},
+      "bundledHarnessDependencyVersion": null
+    },
+    {
+      "asarPublicEntry": "out/main/index.js",
+      "bytes": 1058901,
+      "sha256": "6f30e3088c4c33080089aad58997d7293a5a15c310379f14863a0284f83e0643",
+      "sha256ExactlyMatchesAsarHeaderIntegrity": true,
+      "staticHarnessEntryReferencePresent": true,
+      "staticDeepSeekComponentImportsPresent": true,
+      "scriptExecuted": false
+    }
+  ],
+  "resources": [
+    {
+      "relativePath": "resources/harness-node-entry.mjs",
+      "bytes": 6940,
+      "sha256Before": "02ccdb63de74ae3b09e939c7067da67efdfc03964d159874ba9bdffba1e27589",
+      "sha256After": "02ccdb63de74ae3b09e939c7067da67efdfc03964d159874ba9bdffba1e27589",
+      "hashStable": true,
+      "executed": false,
+      "staticArgumentEntryRouting": {
+        "acceptsDshEntryPathAsArgument": true,
+        "importsThatArgumentPath": true,
+        "readsActualRuntimeArgvOrEnvironmentHere": false
+      }
+    },
+    {
+      "relativePath": "resources/app-update.yml",
+      "bytes": 178,
+      "sha256Before": "0fc2fb12b1aa355b44c6f8922a6afd3eabca588a81fb4e926aaf71d8a7efc16b",
+      "sha256After": "0fc2fb12b1aa355b44c6f8922a6afd3eabca588a81fb4e926aaf71d8a7efc16b",
+      "hashStable": true,
+      "executed": false,
+      "publicUpdateConfigurationExact": "provider: generic\nurl: https://dshdesktop.com/updates/latest/\nupdaterCacheDirName: dsh-desktop-updater\npublisherName:\n  - Beijing Shuju Xiangsu Intelligence Technology Co., Ltd.\n"
+    }
+  ],
+  "existingRegistrationMetadata": [
+    {
+      "keyName": "63aba052-5613-58ee-9049-667734229a73",
+      "displayName": "DSH Desktop 0.13.0",
+      "displayVersion": "0.13.0",
+      "publisher": "DataElement",
+      "installLocation": null,
+      "displayIcon": "C:\\Program Files\\DSH Desktop\\DSH Desktop.exe,0"
+    }
+  ],
+  "existingUserInstallerSignatureMetadata": [
+    {
+      "path": "C:\\Users\\han\\software\\dshdesktop\\dsh-desktop-windows-x64-setup.exe",
+      "exists": true,
+      "installerFilename": true,
+      "bytes": 285093216,
+      "sha256": "b5828420d4dccc7833fa6ee54e4261b5eeebd4cf261082e777632b61029f3fe7",
+      "publicPeVersion": {
+        "productName": "DSH Desktop",
+        "productVersion": "0.13.0",
+        "fileVersion": "0.13.0",
+        "companyName": "DataElement"
+      },
+      "authenticode": {
+        "status": "Valid",
+        "signerSubject": "CN=\"Beijing Shuju Xiangsu Intelligence Technology Co., Ltd.\", O=\"Beijing Shuju Xiangsu Intelligence Technology Co., Ltd.\", L=Beijing, S=Beijing, C=CN"
+      }
+    },
+    {
+      "path": "C:\\Users\\han\\software\\dshdesktop\\dsh-desktop-windows-x64-setup-0.12.1.exe",
+      "exists": true,
+      "installerFilename": true,
+      "bytes": 284978856,
+      "sha256": "bc1996170091c75a40d2c1022d8df7fead68632a9f8c9967cf68e4ba18fc8ca8",
+      "publicPeVersion": {
+        "productName": "DSH Desktop",
+        "productVersion": "0.12.1",
+        "fileVersion": "0.12.1",
+        "companyName": "DataElement"
+      },
+      "authenticode": {
+        "status": "Valid",
+        "signerSubject": "CN=\"Beijing Shuju Xiangsu Intelligence Technology Co., Ltd.\", O=\"Beijing Shuju Xiangsu Intelligence Technology Co., Ltd.\", L=Beijing, S=Beijing, C=CN"
+      }
+    }
+  ],
+  "signatureBoundary": "Previous user installer signature receipt is preserved; installed application signature was not reverified and installer signatures do not bind the installed shell to the DeepSeek website download.",
+  "componentIdentity": {
+    "shellPackageName": "dsh-desktop",
+    "shellVersion": "0.13.0",
+    "shellAuthor": "DataElement",
+    "shellRepository": {
+      "type": "git",
+      "url": "git+https://github.com/dataelement/dsh-desktop.git"
+    },
+    "harnessPackageName": "@deepseek-ai/dsh",
+    "harnessPackageVersion": "0.2.1-rc.3",
+    "harnessRepository": {
+      "type": "git",
+      "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+      "directory": "apps/cli"
+    },
+    "officialDesktopDistributionConfirmedByInstalledMetadata": false,
+    "componentNamespaceAndRepositoryAreNotVendorArtifactAuthenticityProof": true
+  },
+  "sourceMutation": false,
+  "installerDownloadsByThisReadOnlyScript": 0,
+  "installerExecuted": false,
+  "nativeQueueOperations": 0,
+  "windowsProcessQueriesOrGuiStarts": 0,
+  "runtimeApiOrModelCalls": 0,
+  "privateProfileOrEnvironmentOrActualArgvReads": 0
+}

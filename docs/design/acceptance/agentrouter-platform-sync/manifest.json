@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-11T14:53:35.698803+00:00",
+  "createdAt": "2026-11-11T23:54:37.971076+00:00",
   "status": "final71-code-pages-linux-and-windows-core16-accepted-runtime18-android-reinstall-in-progress",
   "summaryPath": "summary.json",
   "files": [
@@ -33,6 +33,11 @@
       "path": "deployments/linux/current-final21/root-independent-live-safe.json",
       "sha256": "1dfbfac8acde28cf305b2a458465a17fac58b5bb5c977cee666c72404381ea12",
       "bytes": 528
+    },
+    {
+      "path": "deployments/linux/current-runtime-observation/prior-instance-current-unavailable-safe.json",
+      "sha256": "f7fbeafc1313df018e06be8d5121153320e1d6578a28eb5e066a9695b7c2c9b7",
+      "bytes": 628
     },
     {
       "path": "deployments/pages/89e577-live-ci-resource-verification.json",
@@ -170,6 +175,11 @@
       "bytes": 507
     },
     {
+      "path": "maintenance/git-delivery/third-step-delivery-safe.json",
+      "sha256": "c795729009d19800729c8fc426742ec0a0627c086a6a61dae2b95349acc98654",
+      "bytes": 614
+    },
+    {
       "path": "maintenance/merged-branch-cleanup.json",
       "sha256": "b848e6505e54cbcd308a80922e77574c0a5e8faecbdc2f76639729766829e12e",
       "bytes": 13184
@@ -205,6 +215,11 @@
       "bytes": 1038
     },
     {
+      "path": "native/android/correct-windows-current21/correct-windows-current7339-native-unicode-enter-safe.json",
+      "sha256": "93dbc3265b33d2b659983cbdbc034dd0aff9b0d77073721d3499a1e403f5ea68",
+      "bytes": 741
+    },
+    {
       "path": "native/android/correct-windows-current21/correct-windows-final21-install-safe.json",
       "sha256": "d2a917bf910dacbea5a35d152a72cdfa9932e96339b8c9ee210cb509fb48e8f0",
       "bytes": 1569
@@ -213,6 +228,11 @@
       "path": "native/android/correct-windows-current21/correct-windows-final21-native-bridge-safe.json",
       "sha256": "7ad158baac519a67c020e85966a6529ec29e59fac7f457aa48d3cdace2200af5",
       "bytes": 844
+    },
+    {
+      "path": "native/android/correct-windows-current21/correct-windows-final21-ui-all-official-icons-accepted-safe.json",
+      "sha256": "729524beacdbe08afa14883a920df6feadfbf2c478d1221ffd89f1951996587b",
+      "bytes": 2172
     },
     {
       "path": "native/android/correct-windows-current21/correct-windows-original-certificate-safe.json",
@@ -248,6 +268,66 @@
       "path": "native/android/correct-windows-current21/native-channel-5572-attempt2/channel-target-identity-safe.json",
       "sha256": "569cc37a84a2c82be42b49ce59f7ba12a0175b9b6db5aa5a1aafe7545b313217",
       "bytes": 3850
+    },
+    {
+      "path": "native/android/correct-windows-current21/official-icon-independent-review/captured-initial-icon-comparison-safe.json",
+      "sha256": "14c68d1ad5cfb20f37ca28fc46e9b8cb118498242f8d9790a519c2dd10a70bb1",
+      "bytes": 18408
+    },
+    {
+      "path": "native/android/correct-windows-current21/official-icon-independent-review/exact-local-vite-android-payload-replay-safe.json",
+      "sha256": "4c663f06fd094ec9febd1c7ba91453f1def983dcb185a0bc7eee9f8969161b76",
+      "bytes": 51095
+    },
+    {
+      "path": "native/android/correct-windows-current21/official-icon-independent-review/final-opencode-strict-xml-equivalence-safe.json",
+      "sha256": "e8de98f493e65b79be088a6f78b0b0cef3aa132a1992210951c3e43956ae1af2",
+      "bytes": 16235
+    },
+    {
+      "path": "native/android/correct-windows-current21/official-icon-independent-review/independent-css-review/exact-css-trivia-review-safe.json",
+      "sha256": "cc86688ab2a24746ff5d8e1904a7cff2d64ccfc7666f24ff395f0e498cd52ebd",
+      "bytes": 13333
+    },
+    {
+      "path": "native/android/correct-windows-current21/official-icon-independent-review/initial-replay-dist-chunk-boundary-failure-safe.json",
+      "sha256": "7abfc8bc9fe1d3861c974d8a6d58c587d521057eb1d5a76e41c273445afce455",
+      "bytes": 617
+    },
+    {
+      "path": "native/android/correct-windows-current21/official-icon-independent-review/initial-replay-failure-safe.json",
+      "sha256": "a28886aaad813680d700daa152142222f7ba1a128c40b41f3aead694003b2533",
+      "bytes": 538
+    },
+    {
+      "path": "native/android/correct-windows-current21/official-icon-independent-review/opencode-selected-public-payloads-safe.json",
+      "sha256": "42e2e50a68c52726a39352d83458ea487c41cfa782d8702f187cd7b07ae28d36",
+      "bytes": 2414
+    },
+    {
+      "path": "native/android/correct-windows-current21/official-icon-independent-review/review-execution-provenance-safe.json",
+      "sha256": "88131d807b6b2e00c67ac583379c1f250e33923c72f908451d06f14ed5e67856",
+      "bytes": 1014
+    },
+    {
+      "path": "native/android/correct-windows-current21/official-icon-independent-review/safe-evidence-manifest.json",
+      "sha256": "85d3a6494cf124488a802d1790e9fc323b68b6b6ef226e38ce405c405eba14e9",
+      "bytes": 3083
+    },
+    {
+      "path": "native/android/correct-windows-current21/studio-icons-and-unicode-independent-review-safe.json",
+      "sha256": "991a1ee3b1c5a9aa0e2d597b58cef05eec8d51c5c085a3230e466e4e2b046d91",
+      "bytes": 6484
+    },
+    {
+      "path": "native/android/correct-windows-current21/visual/correct-windows-final21-openclaw-native.png",
+      "sha256": "1cd36a8efd603c8eb49b825cfc163ad19d5922ff149adb5865ca849d97f6909a",
+      "bytes": 336192
+    },
+    {
+      "path": "native/android/correct-windows-current21/visual/correct-windows-final21-workbuddy-both-public.png",
+      "sha256": "14beca980cd92ff3778b6c9abb43f43697a2ba2b1918578c1ec0b1610603a69e",
+      "bytes": 167070
     },
     {
       "path": "native/android/current21-partial/final21-apk-provenance-safe.json",
@@ -645,6 +725,86 @@
       "bytes": 2472
     },
     {
+      "path": "native/windows/deepseek-official-preparation/execution-provenance-safe.json",
+      "sha256": "561304c648e21ec691a4403c793f96b272459f2e9c8a28bb5ed59fe726ebd1eb",
+      "bytes": 636
+    },
+    {
+      "path": "native/windows/deepseek-official-preparation/final-official-desktop-binding-safe.json",
+      "sha256": "3bebf4dcf4f33ebc98ee3edc29c2d37c2f85f84e99a1aaeebc84978f3d3f07d5",
+      "bytes": 5596
+    },
+    {
+      "path": "native/windows/deepseek-official-preparation/installed-public-asar-identity-safe.json",
+      "sha256": "fcf47b7f6a6c00bb59d5a32e8619de414226dcab0a4bf258032ba8b2a181bb11",
+      "bytes": 7812
+    },
+    {
+      "path": "native/windows/deepseek-official-preparation/official-download/official-installer-transport-attempt1-failed-safe.json",
+      "sha256": "43d7c56e729ab026a8eeef377936bcb13a866cb6edc1671a86f19cc339bb1056",
+      "bytes": 778
+    },
+    {
+      "path": "native/windows/deepseek-official-preparation/official-download/official-installer-transport-safe.json",
+      "sha256": "16f8a8b873d65de20f12739cce479767fad03ce12330f4a1db8986b2feff4619",
+      "bytes": 1413
+    },
+    {
+      "path": "native/windows/deepseek-official-preparation/official-download/prepared-installer-public-pe-metadata-safe.json",
+      "sha256": "8ce33ee443c08511af28d33d01a590008ccb958069c9bc7b50cb5a39608df63f",
+      "bytes": 2118
+    },
+    {
+      "path": "native/windows/deepseek-official-preparation/primary-independent/official-current-desktop-identity-safe.json",
+      "sha256": "5b587f114b7a3b33d1fbda995deb081ec7c544d43752c9a0858d22383a786f6b",
+      "bytes": 10610
+    },
+    {
+      "path": "native/windows/deepseek-official-preparation/primary-independent/official-desktop-package.json",
+      "sha256": "f27a39672ecc89876cd34db0f52aeee1459432c4bbc0557837716db8c7832acc",
+      "bytes": 4443
+    },
+    {
+      "path": "native/windows/deepseek-official-preparation/primary-independent/official-public-fetch-safe.json",
+      "sha256": "f4167c244513c961d7a02374cdb58588950564d88c8cf41c5278fcd81b6eedd9",
+      "bytes": 2418
+    },
+    {
+      "path": "native/windows/deepseek-official-preparation/primary-independent/pinned-builder-factory-curl-retry-safe.json",
+      "sha256": "a2d43ab91129f86373f4b2d68085765c7611a3e9f8a2bbbd0d36863f604e48db",
+      "bytes": 631
+    },
+    {
+      "path": "native/windows/deepseek-official-preparation/primary-independent/pinned-builder-factory-fetch-safe.json",
+      "sha256": "61fa75e066bfc7c5a73ad2736ea974208f1437e581d71e8f65798bef38767b39",
+      "bytes": 226
+    },
+    {
+      "path": "native/windows/deepseek-official-preparation/primary-independent/pinned-official-desktop-package.json",
+      "sha256": "f27a39672ecc89876cd34db0f52aeee1459432c4bbc0557837716db8c7832acc",
+      "bytes": 4443
+    },
+    {
+      "path": "native/windows/deepseek-official-preparation/primary-independent/pinned-public-release-config-fetch-safe.json",
+      "sha256": "5dba11bd0c6abe4b1814ecf5757fceafbe86672a6f96b5e026f146e549063346",
+      "bytes": 1553
+    },
+    {
+      "path": "native/windows/deepseek-official-preparation/primary-independent/pinned-public-source-fetch-safe.json",
+      "sha256": "69c3c433f70855fb6c96d59e7b042102282566b76191f493275b4ea4fa695995",
+      "bytes": 2276
+    },
+    {
+      "path": "native/windows/deepseek-official-preparation/primary-independent/web-tool-backend-failure-safe.json",
+      "sha256": "326fa94435ba10f3b749e21c24d0f8f0433b5f9569a28be0a9b6c7b62d729c15",
+      "bytes": 245
+    },
+    {
+      "path": "native/windows/deepseek-official-preparation/safe-evidence-manifest.json",
+      "sha256": "43440baaf6da71bdb91d88d948b54bab594e9d11b3c365138a6cf41437dee2d1",
+      "bytes": 3862
+    },
+    {
       "path": "native/windows/editions/workbuddy/global-native-public-metadata-safe.json",
       "sha256": "6a6160399635eec63f981f74144763867db8155cbd9cfd783235fe17164dddba",
       "bytes": 4135
@@ -735,6 +895,16 @@
       "bytes": 4949
     },
     {
+      "path": "native/windows/legacy-current-public-metadata/current-dsh-cursor-antigravity-wslhost-public-safe.json",
+      "sha256": "e13cb328f570bf7fcb763ef7ecccd306e57f7ee4ea233297765a867184594c10",
+      "bytes": 7909
+    },
+    {
+      "path": "native/windows/legacy-current-public-metadata/installed-dsh-public-known-files-safe.json",
+      "sha256": "dd840d256f08d96bca5c0a25176f387f423cf6e607a85a502903f3a17b3ee153",
+      "bytes": 907
+    },
+    {
       "path": "native/windows/new-gui-installed-identities.json",
       "sha256": "a229916de88817d39fab6a5997c874a88460e7e0ec1b8c9b3a264dc5fcccc7c7",
       "bytes": 5699
@@ -743,6 +913,41 @@
       "path": "native/windows/nine-native-cli-versions.json",
       "sha256": "3e85f32a3ebfb7de81ac4ab4ef3624931e31ca49003e38e2185a1c964c1dac11",
       "bytes": 5899
+    },
+    {
+      "path": "native/windows/ownership-history/historical-unregistered-suspended-node-closure-gap-safe.json",
+      "sha256": "8543e177a71a20cbe48b21bca64e61fea691bfd89f6e334b57a69320ea664a8e",
+      "bytes": 1339
+    },
+    {
+      "path": "native/windows/prepared-runtime-epoch2/epoch2-final-draft-pins-safe.json",
+      "sha256": "6f5f70c819920a6471446bab3914bb5b777e0f5fbbe133e0638cdfee02c32ab5",
+      "bytes": 5821
+    },
+    {
+      "path": "native/windows/prepared-runtime-epoch2/original-freeze-immutability-ownership-region-20261111.json",
+      "sha256": "7bc098e6a67cce2325ad3255a4dc13e5fb17ca6e91821d0e2af6486e5dbcfeba",
+      "bytes": 9895
+    },
+    {
+      "path": "native/windows/prepared-runtime-epoch2/root-formal-epoch2-final-hash-check-safe.json",
+      "sha256": "a43032110b8b8b0808f440db968f08dbb69dcae230f75ccf42f78a4ca46c407f",
+      "bytes": 980
+    },
+    {
+      "path": "native/windows/prepared-runtime-epoch2/runtime-epoch2-final-native-ast-executor-terminal-safe.json",
+      "sha256": "5900f6c68344659266e69114edacf1727a5dce020b53a55a4dfbef55275ef31e",
+      "bytes": 844
+    },
+    {
+      "path": "native/windows/prepared-runtime-epoch2/runtime-epoch2-final-native-ast-safe.json",
+      "sha256": "ff1e34fea655d30498c97025bf2eafcbc383c6240c8c2ba4cae1bf56e3964477",
+      "bytes": 1612
+    },
+    {
+      "path": "native/windows/prepared-runtime-epoch2/runtime-epoch2-native-ast-preinterop-attempts-safe.json",
+      "sha256": "ab5346adff405818bb575648ed2a8cbe77c2b76734953f3ad72432a583eeb689",
+      "bytes": 740
     },
     {
       "path": "native/windows/producer-prepared-a96a06e.json",
@@ -755,6 +960,21 @@
       "bytes": 385348
     },
     {
+      "path": "native/windows/temporary-7339/cleanup-safe.json",
+      "sha256": "b82d7cf34d666add180ee55c5ac06f58d0f090e311ad3277b90b56c7f6a259dc",
+      "bytes": 996
+    },
+    {
+      "path": "native/windows/temporary-7339/original-executor-terminal-safe.json",
+      "sha256": "e2efae1dc68056cc4f2d82f6fe8cb5640d37210db94931032822583fd0b7e79e",
+      "bytes": 633
+    },
+    {
+      "path": "native/windows/temporary-7339/private-transport-terminal-cleanup-safe.json",
+      "sha256": "5d01cc236693516cb3da66cf6fc43ad4072bfc4368a7d2963973cbbe169727ca",
+      "bytes": 830
+    },
+    {
       "path": "native/windows/temporary-7339/public-http-preflight-safe.json",
       "sha256": "55c86d8d88049c90dc867cacc7d35176d3639cc39c84295323930c4763478bfb",
       "bytes": 6952
@@ -763,6 +983,51 @@
       "path": "native/windows/temporary-7339/ready-safe.json",
       "sha256": "88477404ba3e2223b223d717a59a67dd648d73a58ad80e3dd2a0ee53860c2569",
       "bytes": 1996
+    },
+    {
+      "path": "native/windows/temporary-7339-attempt2/cleanup-safe.json",
+      "sha256": "138321ee2333fef1b55e76247ebd15eb3ffe2bcb71b9caca4b65314fdf5cab2b",
+      "bytes": 1080
+    },
+    {
+      "path": "native/windows/temporary-7339-attempt2/failed-final-safe-whitelist.json",
+      "sha256": "e5cccaf52fdf71751a2bc553a60231cbefd8eb9e9e29074ed88deabc549eac27",
+      "bytes": 1575
+    },
+    {
+      "path": "native/windows/temporary-7339-attempt2/failure-safe.json",
+      "sha256": "61f9188f4290ba764bfde894c6be549c4b0940939ee55c69435a4371e7fc0f7f",
+      "bytes": 770
+    },
+    {
+      "path": "native/windows/temporary-7339-attempt2/original-executor-terminal-safe.json",
+      "sha256": "7b2779e23907b87f4c04510f380a2bd12e04a18b234c4b05632d931119faac53",
+      "bytes": 749
+    },
+    {
+      "path": "native/windows/temporary-7339-attempt2/private-transport-cleanup-safe.json",
+      "sha256": "7b5b179c5e4fe104730bb9aa869ffb2a7460cca7dceaafb2f2f61c23eeebcae3",
+      "bytes": 519
+    },
+    {
+      "path": "native/windows/temporary-7339-attempt2/ready-safe.json",
+      "sha256": "81a60daa89471066a0a98ab1606cf701b6f8a1ddf7fd1585ad547e4ed9894eac",
+      "bytes": 2005
+    },
+    {
+      "path": "native/windows/temporary-7339-successor-policy/root-final-hash-check-safe.json",
+      "sha256": "2e27b1ad86d48f1773071d17bc5fb006bbb9c355229eafb93e0250958858c4c5",
+      "bytes": 869
+    },
+    {
+      "path": "native/windows/temporary-7339-successor-policy/successor2-native-check-executor-terminal-safe.json",
+      "sha256": "00b81f6a610f8d4a5552da64186f449b35fe91e11f7c494e4f2ab76a1f993c2d",
+      "bytes": 680
+    },
+    {
+      "path": "native/windows/temporary-7339-successor-policy/successor2-native-typed-policy-safe.json",
+      "sha256": "b70d5c3ec0163017680cdf954ab2b273d35b6f92d85136cc53642874b0467296",
+      "bytes": 2648
     },
     {
       "path": "native/windows/workbuddy-registration-paths-readonly-safe.json",
@@ -1120,6 +1385,11 @@
       "bytes": 42252
     },
     {
+      "path": "sources/audit/epoch4-fixed-checkpoint-independent-review-safe.json",
+      "sha256": "ae3cdd96ef495b8525061cd3f4c731bc43a8c85f8ac833f2a3ece93720b23a70",
+      "bytes": 78189
+    },
+    {
       "path": "sources/audit/final71-current-source-bindings.json",
       "sha256": "77e6ca44f69491c91aedd06a2b121673dc338dc955696c16befff836631129f9",
       "bytes": 1602
@@ -1133,6 +1403,11 @@
       "path": "sources/audit/initial-semantic-gaps.json",
       "sha256": "0978a72aa09ab47928e6945b55fff9a07eb711fa02493d1bebf7cc3a7cf773b2",
       "bytes": 1901
+    },
+    {
+      "path": "sources/audit/windows-epoch2-selected-safe-whitelist.json",
+      "sha256": "c951d7424254dd079fc8feb6ac8921a67aa34dbff4a04afe1d995fb95687ab90",
+      "bytes": 3208
     },
     {
       "path": "sources/claude-current-support/final-current-support-primary-safe.json",
@@ -1216,13 +1491,13 @@
     },
     {
       "path": "sources/receipt-provenance.json",
-      "sha256": "3f314dd986258698b192453269eec0f1a973cb6324b4b952034ee087da66c02f",
-      "bytes": 152583
+      "sha256": "86db3dbcce367f61db8c6d70849b6b97be360302abd4f0fb407a0bce35bfc0bc",
+      "bytes": 181163
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "1e99efe68b691932ce3f5dafe76a889584e1524eacf6d2f6bec09359b2063854",
-      "bytes": 17961
+      "sha256": "7266f82135c1fcf9d5f94a7b6b7676950c347868916865680568d7897973e4a7",
+      "bytes": 23778
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -1246,8 +1521,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "55a2393bb7968473f6019036653ec94c5160a473642a2ff476a8dbc8a5d34515",
-      "bytes": 21398
+      "sha256": "284c459780351e9e8e40cbebecb5738f65ffadc702f90cc8466cac2e36e1314f",
+      "bytes": 31879
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",

@@ -1,0 +1,18 @@
+{
+  "format": "orchester-root-prior-linux-instance-current-observation-v1",
+  "observedAt": "2026-11-11T23:31:29.037533+00:00",
+  "oldServicePid": 1023019,
+  "oldServiceStartTicksExpected": 256519,
+  "oldServicePidExists": false,
+  "oldControllerPid": 1023013,
+  "oldControllerPidExists": false,
+  "current7337Listeners": [],
+  "previousFreshProbe7337ListenerCount": 0,
+  "previousFreshUnauthenticatedHttpResult": "URLError",
+  "oldNaturalExitCauseVerified": false,
+  "currentRestorationOwner": "linux_restore",
+  "historicalLiveReceiptsRemainHistorical": true,
+  "privateStateReads": 0,
+  "signals": 0,
+  "restartsByRoot": 0
+}

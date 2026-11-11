@@ -1,0 +1,17 @@
+{
+  "format": "orchester-owned-native-controller-terminal-v1",
+  "status": "original-controller-native-executor-ended-zero",
+  "ownedNativeExecutorSessionId": 22540,
+  "nativeActualExitCode": 0,
+  "originalControllerPid": 25556,
+  "originalControllerCreationUtc": "2026-11-11T12:33:01.7938945Z",
+  "launcherPid": 11544,
+  "backendPid": 11524,
+  "normalQuitIssued": true,
+  "declaredOwnedHandlesExited": true,
+  "portReleased": true,
+  "unknownObservationCount": 330,
+  "allUnownedSystemBrokerLifetimesEndedProved": false,
+  "cleanupReceiptSha256": "b82d7cf34d666add180ee55c5ac06f58d0f090e311ad3277b90b56c7f6a259dc",
+  "signals": 0
+}

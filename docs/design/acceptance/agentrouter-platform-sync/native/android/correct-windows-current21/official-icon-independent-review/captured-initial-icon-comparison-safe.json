@@ -1,0 +1,468 @@
+{
+  "status": "current21-actual-native-windows-official-icon-comparison",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "actualAvdHost": "Windows",
+  "actualAvdName": "Medium_Phone_API_37.0",
+  "nativeAdbServerPort": 5039,
+  "cdpPort": 19329,
+  "currentApkSha256": "f83fa2a75c712a3d2e1f3f203cf73ce89204fb4ca0bce4d8c2ef0c4fe3596d3c",
+  "canonicalProviderIds": [
+    "antigravity",
+    "claude",
+    "claude_app",
+    "cline",
+    "codex",
+    "craft",
+    "crush",
+    "cursor",
+    "deepseek",
+    "gemini",
+    "hermes",
+    "kilo",
+    "openclaw",
+    "opencode",
+    "pi",
+    "qwen",
+    "roo",
+    "trae",
+    "workbuddy",
+    "workbuddy_global",
+    "zcode"
+  ],
+  "canonicalProviderCount": 21,
+  "canonicalThemeImageCount": 42,
+  "allCanonicalThemeImagesLoaded": true,
+  "uniqueLoadedIconPayloadCount": 24,
+  "allCanonicalThemeMarksMatchOfficialSource": false,
+  "rawByteEqualMarkCount": 25,
+  "svgXmlCanonicalEqualMarkCount": 15,
+  "bothWorkBuddyVersionsRenderedWithCorrectSeparateNames": {
+    "workbuddy": "WorkBuddy 国内版",
+    "workbuddy_global": "WorkBuddy AI 国际版"
+  },
+  "actualProductPalette": "sea",
+  "actualCanonicalImageSourceChecks": [
+    {
+      "canonicalProviderId": "antigravity",
+      "themeMark": "dark",
+      "sourceFileName": "antigravity.svg",
+      "sourceSha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "actualPayloadSha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "antigravity",
+      "themeMark": "light",
+      "sourceFileName": "antigravity.svg",
+      "sourceSha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "actualPayloadSha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "claude",
+      "themeMark": "dark",
+      "sourceFileName": "claude.png",
+      "sourceSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "actualPayloadSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "claude",
+      "themeMark": "light",
+      "sourceFileName": "claude.png",
+      "sourceSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "actualPayloadSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "claude_app",
+      "themeMark": "dark",
+      "sourceFileName": "claude.png",
+      "sourceSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "actualPayloadSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "claude_app",
+      "themeMark": "light",
+      "sourceFileName": "claude.png",
+      "sourceSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "actualPayloadSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "cline",
+      "themeMark": "dark",
+      "sourceFileName": "cline-dark.svg",
+      "sourceSha256": "a8932a1fa6a919466b4a36e76519be4a600fc1b83c41d84f94c3e8e45260a8e1",
+      "actualPayloadSha256": "8dd3cedf23c35095e22321666fc0330e3253226412905c75913ef7f11819f68e",
+      "rawByteEqual": false,
+      "svgXmlCanonicalEqual": true,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "cline",
+      "themeMark": "light",
+      "sourceFileName": "cline-light.svg",
+      "sourceSha256": "6aab009bf089a8dc1b5452c05c471244a08595b78fd639835eacc0821b887c06",
+      "actualPayloadSha256": "bf827511f5c1d1dc376311b468d283d59eb01ebdc89554c4ed701770e30770bd",
+      "rawByteEqual": false,
+      "svgXmlCanonicalEqual": true,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "codex",
+      "themeMark": "dark",
+      "sourceFileName": "codex.png",
+      "sourceSha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+      "actualPayloadSha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "codex",
+      "themeMark": "light",
+      "sourceFileName": "codex-light.svg",
+      "sourceSha256": "8652777b55544c572ba445dd230a90c2e248611e92eaa77de5805e8d0561fc30",
+      "actualPayloadSha256": "64a99982306b619184bdb10900c05bef7b8f82694a9787be9c2834545b9abc8b",
+      "rawByteEqual": false,
+      "svgXmlCanonicalEqual": true,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "craft",
+      "themeMark": "dark",
+      "sourceFileName": "craft.svg",
+      "sourceSha256": "fd195ad28212109ce8fbcd6d2181556bc26b91e79998011af23d5bf0f08cf37c",
+      "actualPayloadSha256": "b0e1615c3fcb9fc1f2b8271dcb64cf64335d193a39151c11b65b054a1f5ee3e5",
+      "rawByteEqual": false,
+      "svgXmlCanonicalEqual": true,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "craft",
+      "themeMark": "light",
+      "sourceFileName": "craft.svg",
+      "sourceSha256": "fd195ad28212109ce8fbcd6d2181556bc26b91e79998011af23d5bf0f08cf37c",
+      "actualPayloadSha256": "b0e1615c3fcb9fc1f2b8271dcb64cf64335d193a39151c11b65b054a1f5ee3e5",
+      "rawByteEqual": false,
+      "svgXmlCanonicalEqual": true,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "crush",
+      "themeMark": "dark",
+      "sourceFileName": "crush.png",
+      "sourceSha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "actualPayloadSha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "crush",
+      "themeMark": "light",
+      "sourceFileName": "crush.png",
+      "sourceSha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "actualPayloadSha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "cursor",
+      "themeMark": "dark",
+      "sourceFileName": "cursor-dark.svg",
+      "sourceSha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+      "actualPayloadSha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "cursor",
+      "themeMark": "light",
+      "sourceFileName": "cursor-light.svg",
+      "sourceSha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+      "actualPayloadSha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "deepseek",
+      "themeMark": "dark",
+      "sourceFileName": "deepseek-harness-dark.svg",
+      "sourceSha256": "dde7db781f41e7aeb4709ff5485af2bdcf7f4b4ea81b4500cfd5df44efdbd817",
+      "actualPayloadSha256": "79d20c6d48a85321fc8e534b0e0b403d58c57ae549c193fcfb4def395ac8e2a3",
+      "rawByteEqual": false,
+      "svgXmlCanonicalEqual": true,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "deepseek",
+      "themeMark": "light",
+      "sourceFileName": "deepseek-harness-light.svg",
+      "sourceSha256": "9e983b4f649c25c6ca0623a50be1a6e705fd8f49f756638b980fa13b40575ab6",
+      "actualPayloadSha256": "4b90315d98d07987788d675ce7e16772495eef017795ba6aa265f08ab596c7ff",
+      "rawByteEqual": false,
+      "svgXmlCanonicalEqual": true,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "gemini",
+      "themeMark": "dark",
+      "sourceFileName": "gemini.png",
+      "sourceSha256": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee",
+      "actualPayloadSha256": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "gemini",
+      "themeMark": "light",
+      "sourceFileName": "gemini.png",
+      "sourceSha256": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee",
+      "actualPayloadSha256": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "hermes",
+      "themeMark": "dark",
+      "sourceFileName": "hermes-dark.svg",
+      "sourceSha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+      "actualPayloadSha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "hermes",
+      "themeMark": "light",
+      "sourceFileName": "hermes-light.svg",
+      "sourceSha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+      "actualPayloadSha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "kilo",
+      "themeMark": "dark",
+      "sourceFileName": "kilo.svg",
+      "sourceSha256": "5b537e31ef6037cadc434390c5d38687b3752c37ea8c4e2a09b9d62b4fae4c78",
+      "actualPayloadSha256": "c720142fba108fa18653dd99c15028a0a9ab57abe77edfeae4e2a2a3faa285b4",
+      "rawByteEqual": false,
+      "svgXmlCanonicalEqual": true,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "kilo",
+      "themeMark": "light",
+      "sourceFileName": "kilo.svg",
+      "sourceSha256": "5b537e31ef6037cadc434390c5d38687b3752c37ea8c4e2a09b9d62b4fae4c78",
+      "actualPayloadSha256": "c720142fba108fa18653dd99c15028a0a9ab57abe77edfeae4e2a2a3faa285b4",
+      "rawByteEqual": false,
+      "svgXmlCanonicalEqual": true,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "openclaw",
+      "themeMark": "dark",
+      "sourceFileName": "openclaw.svg",
+      "sourceSha256": "74e1fb7542675f68aafe502576f7c857c3f3620d07095e910515e3c05d62ab2e",
+      "actualPayloadSha256": "6618c620a52b84ed86b91b4638afd4611d194e1a3de909d9352f6992a015dd2e",
+      "rawByteEqual": false,
+      "svgXmlCanonicalEqual": true,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "openclaw",
+      "themeMark": "light",
+      "sourceFileName": "openclaw.svg",
+      "sourceSha256": "74e1fb7542675f68aafe502576f7c857c3f3620d07095e910515e3c05d62ab2e",
+      "actualPayloadSha256": "6618c620a52b84ed86b91b4638afd4611d194e1a3de909d9352f6992a015dd2e",
+      "rawByteEqual": false,
+      "svgXmlCanonicalEqual": true,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "opencode",
+      "themeMark": "dark",
+      "sourceFileName": "opencode.svg",
+      "sourceSha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+      "actualPayloadSha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70",
+      "rawByteEqual": false,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": false
+    },
+    {
+      "canonicalProviderId": "opencode",
+      "themeMark": "light",
+      "sourceFileName": "opencode.svg",
+      "sourceSha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+      "actualPayloadSha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70",
+      "rawByteEqual": false,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": false
+    },
+    {
+      "canonicalProviderId": "pi",
+      "themeMark": "dark",
+      "sourceFileName": "pi.svg",
+      "sourceSha256": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b",
+      "actualPayloadSha256": "73c874374f3a26439d32029ee103e07534325e0be323b8434b506179fec21818",
+      "rawByteEqual": false,
+      "svgXmlCanonicalEqual": true,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "pi",
+      "themeMark": "light",
+      "sourceFileName": "pi.svg",
+      "sourceSha256": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b",
+      "actualPayloadSha256": "73c874374f3a26439d32029ee103e07534325e0be323b8434b506179fec21818",
+      "rawByteEqual": false,
+      "svgXmlCanonicalEqual": true,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "qwen",
+      "themeMark": "dark",
+      "sourceFileName": "qwen.svg",
+      "sourceSha256": "24156c849c9124505e13b38c6583a9d5d85a1f57d996c324d967f480a4d88696",
+      "actualPayloadSha256": "68fa32d3474d9ecfd248e2a4406849b86123fae1f3f0dd69fc1f709d67f78085",
+      "rawByteEqual": false,
+      "svgXmlCanonicalEqual": true,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "qwen",
+      "themeMark": "light",
+      "sourceFileName": "qwen.svg",
+      "sourceSha256": "24156c849c9124505e13b38c6583a9d5d85a1f57d996c324d967f480a4d88696",
+      "actualPayloadSha256": "68fa32d3474d9ecfd248e2a4406849b86123fae1f3f0dd69fc1f709d67f78085",
+      "rawByteEqual": false,
+      "svgXmlCanonicalEqual": true,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "roo",
+      "themeMark": "dark",
+      "sourceFileName": "roo.png",
+      "sourceSha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "actualPayloadSha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "roo",
+      "themeMark": "light",
+      "sourceFileName": "roo.png",
+      "sourceSha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "actualPayloadSha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "trae",
+      "themeMark": "dark",
+      "sourceFileName": "trae.png",
+      "sourceSha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+      "actualPayloadSha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "trae",
+      "themeMark": "light",
+      "sourceFileName": "trae.png",
+      "sourceSha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+      "actualPayloadSha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "workbuddy",
+      "themeMark": "dark",
+      "sourceFileName": "workbuddy.svg",
+      "sourceSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "actualPayloadSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "workbuddy",
+      "themeMark": "light",
+      "sourceFileName": "workbuddy.svg",
+      "sourceSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "actualPayloadSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "workbuddy_global",
+      "themeMark": "dark",
+      "sourceFileName": "workbuddy.svg",
+      "sourceSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "actualPayloadSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "workbuddy_global",
+      "themeMark": "light",
+      "sourceFileName": "workbuddy.svg",
+      "sourceSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "actualPayloadSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "zcode",
+      "themeMark": "dark",
+      "sourceFileName": "zcode.png",
+      "sourceSha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "actualPayloadSha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    },
+    {
+      "canonicalProviderId": "zcode",
+      "themeMark": "light",
+      "sourceFileName": "zcode.png",
+      "sourceSha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "actualPayloadSha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "rawByteEqual": true,
+      "svgXmlCanonicalEqual": false,
+      "officialSourceMatched": true
+    }
+  ],
+  "realBackendAgentMonitorRowsNotInjected": true,
+  "controlledLightProductSettingClaimed": false
+}

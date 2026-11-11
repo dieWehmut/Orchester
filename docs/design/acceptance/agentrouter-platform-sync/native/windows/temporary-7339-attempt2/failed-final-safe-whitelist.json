@@ -1,0 +1,29 @@
+{
+  "format": "orchester-owned-temporary-failed-terminal-safe-whitelist-v1",
+  "status": "controller-failed-after-unicode-and-enter-before-resize-revoke",
+  "androidResizeVerified": false,
+  "androidProductNormalTerminalCloseVerified": false,
+  "androidTemporaryDeviceRemovedAndRevokedVerified": false,
+  "files": [
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt2-20261111/failure-safe.json",
+      "sha256": "61f9188f4290ba764bfde894c6be549c4b0940939ee55c69435a4371e7fc0f7f",
+      "bytes": 770
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt2-20261111/original-executor-terminal-safe.json",
+      "sha256": "7b2779e23907b87f4c04510f380a2bd12e04a18b234c4b05632d931119faac53",
+      "bytes": 749
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt2-20261111/cleanup-safe.json",
+      "sha256": "138321ee2333fef1b55e76247ebd15eb3ffe2bcb71b9caca4b65314fdf5cab2b",
+      "bytes": 1080
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt2-20261111/private-transport-cleanup-safe.json",
+      "sha256": "7b5b179c5e4fe104730bb9aa869ffb2a7460cca7dceaafb2f2f61c23eeebcae3",
+      "bytes": 519
+    }
+  ]
+}

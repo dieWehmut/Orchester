@@ -1,0 +1,19 @@
+{
+    "status":  "temporary-server-failed-observing-original-handles",
+    "stage":  "serving-android-temporary-pty",
+    "exceptionType":  "System.InvalidOperationException",
+    "controller":  {
+                       "pid":  11248,
+                       "createdAtUtc":  "2026-11-11T15:14:29.8418508Z",
+                       "image":  "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                       "sha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+                       "sessionId":  1
+                   },
+    "serverReady":  true,
+    "started":  true,
+    "shutdownIssued":  false,
+    "defaultProfilesModified":  false,
+    "promoted":  false,
+    "signals":  0,
+    "modelCalls":  0
+}

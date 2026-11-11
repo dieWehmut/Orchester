@@ -1,0 +1,104 @@
+{
+  "scope": "Selected safe public identity/source/transport/version evidence only; raw ASAR modules and installer binary are retained separately and not copied as JSON receipts",
+  "files": [
+    {
+      "relativePath": "execution-provenance-safe.json",
+      "bytes": 636,
+      "sha256": "561304c648e21ec691a4403c793f96b272459f2e9c8a28bb5ed59fe726ebd1eb",
+      "validJson": true
+    },
+    {
+      "relativePath": "final-official-desktop-binding-safe.json",
+      "bytes": 5596,
+      "sha256": "3bebf4dcf4f33ebc98ee3edc29c2d37c2f85f84e99a1aaeebc84978f3d3f07d5",
+      "validJson": true
+    },
+    {
+      "relativePath": "installed-public-asar-identity-safe.json",
+      "bytes": 7812,
+      "sha256": "fcf47b7f6a6c00bb59d5a32e8619de414226dcab0a4bf258032ba8b2a181bb11",
+      "validJson": true
+    },
+    {
+      "relativePath": "official-download/official-installer-transport-attempt1-failed-safe.json",
+      "bytes": 778,
+      "sha256": "43d7c56e729ab026a8eeef377936bcb13a866cb6edc1671a86f19cc339bb1056",
+      "validJson": true
+    },
+    {
+      "relativePath": "official-download/official-installer-transport-safe.json",
+      "bytes": 1413,
+      "sha256": "16f8a8b873d65de20f12739cce479767fad03ce12330f4a1db8986b2feff4619",
+      "validJson": true
+    },
+    {
+      "relativePath": "official-download/prepared-installer-public-pe-metadata-safe.json",
+      "bytes": 2118,
+      "sha256": "8ce33ee443c08511af28d33d01a590008ccb958069c9bc7b50cb5a39608df63f",
+      "validJson": true
+    },
+    {
+      "relativePath": "primary-independent/official-current-desktop-identity-safe.json",
+      "bytes": 10610,
+      "sha256": "5b587f114b7a3b33d1fbda995deb081ec7c544d43752c9a0858d22383a786f6b",
+      "validJson": true
+    },
+    {
+      "relativePath": "primary-independent/official-desktop-package.json",
+      "bytes": 4443,
+      "sha256": "f27a39672ecc89876cd34db0f52aeee1459432c4bbc0557837716db8c7832acc",
+      "validJson": true
+    },
+    {
+      "relativePath": "primary-independent/official-public-fetch-safe.json",
+      "bytes": 2418,
+      "sha256": "f4167c244513c961d7a02374cdb58588950564d88c8cf41c5278fcd81b6eedd9",
+      "validJson": true
+    },
+    {
+      "relativePath": "primary-independent/pinned-builder-factory-curl-retry-safe.json",
+      "bytes": 631,
+      "sha256": "a2d43ab91129f86373f4b2d68085765c7611a3e9f8a2bbbd0d36863f604e48db",
+      "validJson": true
+    },
+    {
+      "relativePath": "primary-independent/pinned-builder-factory-fetch-safe.json",
+      "bytes": 226,
+      "sha256": "61fa75e066bfc7c5a73ad2736ea974208f1437e581d71e8f65798bef38767b39",
+      "validJson": true
+    },
+    {
+      "relativePath": "primary-independent/pinned-official-desktop-package.json",
+      "bytes": 4443,
+      "sha256": "f27a39672ecc89876cd34db0f52aeee1459432c4bbc0557837716db8c7832acc",
+      "validJson": true
+    },
+    {
+      "relativePath": "primary-independent/pinned-public-release-config-fetch-safe.json",
+      "bytes": 1553,
+      "sha256": "5dba11bd0c6abe4b1814ecf5757fceafbe86672a6f96b5e026f146e549063346",
+      "validJson": true
+    },
+    {
+      "relativePath": "primary-independent/pinned-public-source-fetch-safe.json",
+      "bytes": 2276,
+      "sha256": "69c3c433f70855fb6c96d59e7b042102282566b76191f493275b4ea4fa695995",
+      "validJson": true
+    },
+    {
+      "relativePath": "primary-independent/web-tool-backend-failure-safe.json",
+      "bytes": 245,
+      "sha256": "326fa94435ba10f3b749e21c24d0f8f0433b5f9569a28be0a9b6c7b62d729c15",
+      "validJson": true
+    }
+  ],
+  "safeJsonCount": 15,
+  "retainedPreparedInstaller": {
+    "relativePath": "official-download/dsh-latest-windows-x64.exe",
+    "bytes": 293425336,
+    "sha256": "830947f8996dc05d991ca9133fff4d3400073e47b9cfa6507754867e79482b23",
+    "notExecuted": true
+  },
+  "sourceMutations": 0,
+  "nativeQueueOrUiOrApiOrPrivateOperations": 0
+}

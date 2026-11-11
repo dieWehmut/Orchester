@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "actualNativeTargetHost": "Windows",
+  "nativeAdbServerPort": 5039,
+  "cdpPort": 19329,
+  "normalFocusedXtermInput": true,
+  "actualCdpUnicodeInputSent": true,
+  "actualNativeAndroidEnterCommandExitCode": 0,
+  "actualEnterWebSocketInputObserved": true,
+  "actualWindowsCmdCaretParsedUnicodeEchoReturned": true,
+  "receivedOutputPacketCount": 3,
+  "sentInputPacketCount": 3,
+  "unicodeOutputBytes": 271,
+  "actualNativeScreenshotSha256": "adfb735a0102e856425fd86892ac236a98b29121374bd7cd34477aa3f5de8761",
+  "onlyOwnedTemporary7339TerminalInput": true,
+  "backendOrDtoOutputsInjected": false,
+  "originalProjectTasksModified": false,
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6"
+}

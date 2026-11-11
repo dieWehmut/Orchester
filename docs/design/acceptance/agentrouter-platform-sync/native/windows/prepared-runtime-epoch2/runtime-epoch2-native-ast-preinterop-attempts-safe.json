@@ -1,0 +1,27 @@
+{
+  "format": "orchester-native-readonly-preinterop-attempts-v1",
+  "status": "two-readonly-launch-attempts-failed-before-native-start",
+  "scriptSha256": "9c96a5768d0f8117ad1cd2fa865d87bcbd445e10777fef7a0beca8a239345cc9",
+  "attempts": [
+    {
+      "executorSessionId": 96940,
+      "toolExitCode": 1,
+      "wslInteropErrorCode": 110,
+      "nativeStarted": false,
+      "nativePid": null
+    },
+    {
+      "executorSessionId": 66088,
+      "toolExitCode": 1,
+      "wslInteropErrorCode": 110,
+      "nativeStarted": false,
+      "nativePid": null
+    }
+  ],
+  "powershellNativeExitCode": null,
+  "nativeAstPassProved": false,
+  "productsLaunched": 0,
+  "signals": 0,
+  "formalRuntimeAccepted": false,
+  "globalInteropChanged": false
+}

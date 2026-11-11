@@ -1,0 +1,11 @@
+{
+  "attempt": 1,
+  "actualExitCode": 1,
+  "sourceScriptSha256": "d451d20f2fae86c2957b46d25c62b0aa6d95323ccbe73ddd52799301cca9dc76",
+  "failureType": "ERR_ASSERTION",
+  "failureStage": "Decode actual data URL with SVG-only MIME assertion while full42 matrix includes PNG data URLs",
+  "noCompletedReplayReceipt": true,
+  "sourceOrPayloadMutations": 0,
+  "deviceOrNativeOperations": 0,
+  "remediation": "Keep MIME expectation explicit for Vite SVG output; allow image data URLs for actual full matrix with exact body digest validation."
+}

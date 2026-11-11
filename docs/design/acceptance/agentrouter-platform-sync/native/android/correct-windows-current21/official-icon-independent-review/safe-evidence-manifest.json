@@ -1,0 +1,89 @@
+{
+  "scope": "Safe selected public icon receipts; preserved failed review attempts are not passes",
+  "files": [
+    {
+      "relativePath": "captured-initial-icon-comparison-safe.json",
+      "bytes": 18408,
+      "sha256": "14c68d1ad5cfb20f37ca28fc46e9b8cb118498242f8d9790a519c2dd10a70bb1",
+      "validJson": true
+    },
+    {
+      "relativePath": "exact-local-vite-android-payload-replay-safe.json",
+      "bytes": 51095,
+      "sha256": "4c663f06fd094ec9febd1c7ba91453f1def983dcb185a0bc7eee9f8969161b76",
+      "validJson": true
+    },
+    {
+      "relativePath": "final-opencode-strict-xml-equivalence-safe.json",
+      "bytes": 16235,
+      "sha256": "e8de98f493e65b79be088a6f78b0b0cef3aa132a1992210951c3e43956ae1af2",
+      "validJson": true
+    },
+    {
+      "relativePath": "independent-css-review/exact-css-trivia-review-safe.json",
+      "bytes": 13333,
+      "sha256": "cc86688ab2a24746ff5d8e1904a7cff2d64ccfc7666f24ff395f0e498cd52ebd",
+      "validJson": true
+    },
+    {
+      "relativePath": "initial-replay-dist-chunk-boundary-failure-safe.json",
+      "bytes": 617,
+      "sha256": "7abfc8bc9fe1d3861c974d8a6d58c587d521057eb1d5a76e41c273445afce455",
+      "validJson": true
+    },
+    {
+      "relativePath": "initial-replay-failure-safe.json",
+      "bytes": 538,
+      "sha256": "a28886aaad813680d700daa152142222f7ba1a128c40b41f3aead694003b2533",
+      "validJson": true
+    },
+    {
+      "relativePath": "opencode-selected-public-payloads-safe.json",
+      "bytes": 2414,
+      "sha256": "42e2e50a68c52726a39352d83458ea487c41cfa782d8702f187cd7b07ae28d36",
+      "validJson": true
+    },
+    {
+      "relativePath": "review-execution-provenance-safe.json",
+      "bytes": 1014,
+      "sha256": "88131d807b6b2e00c67ac583379c1f250e33923c72f908451d06f14ed5e67856",
+      "validJson": true
+    }
+  ],
+  "safeJsonCount": 8,
+  "reproducibleOwnedScriptsAndSelectedPublicSvg": [
+    {
+      "relativePath": "independent-css-review/verify-css-trivia.cjs",
+      "bytes": 7249,
+      "sha256": "c5f4ccb1e2f41072f7267872ac8db1832b8a283a3249d4fffc63bfcfa9e5492a"
+    },
+    {
+      "relativePath": "initial-replay-main-index-only-assumption.cjs",
+      "bytes": 9455,
+      "sha256": "81846ea0110a3353e246067279e48f4019fae1378832332f95b74308e65b0c18"
+    },
+    {
+      "relativePath": "initial-replay-svg-only-mime-assertion.cjs",
+      "bytes": 9320,
+      "sha256": "d451d20f2fae86c2957b46d25c62b0aa6d95323ccbe73ddd52799301cca9dc76"
+    },
+    {
+      "relativePath": "opencode-actual-public-payload.svg",
+      "bytes": 608,
+      "sha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70"
+    },
+    {
+      "relativePath": "replay-local-vite-public-icons.cjs",
+      "bytes": 9662,
+      "sha256": "90cf5fd522bb3ff59f26fe063e3bba81b3e824dc17ca7c23f6788850b2d976a6"
+    },
+    {
+      "relativePath": "review-opencode-strict-xml.py",
+      "bytes": 10156,
+      "sha256": "6b032e91c6ffc9a7242c7256285e652c0c6262bf2e4ac13c0b784f1b01c49c30"
+    }
+  ],
+  "sourceMutations": 0,
+  "nativeQueueOrAdbOrUiDeviceOperations": 0,
+  "privateProfileReads": 0
+}

@@ -1,0 +1,36 @@
+{
+    "format":  "orchester-runtime-epoch2-native-ast-v1",
+    "status":  "passed",
+    "indexSha256":  "6f5f70c819920a6471446bab3914bb5b777e0f5fbbe133e0638cdfee02c32ab5",
+    "nativePid":  38584,
+    "nativeCreatedUtc":  "2026-11-11T15:02:27.3354258Z",
+    "nativeImage":  "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "nativeImageSha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+    "nativeSessionId":  1,
+    "parsedFiles":  [
+                        "capture-desktop-descendants.ps1",
+                        "inspect-or-quit-default-remote.ps1",
+                        "invoke-owned-tray-quit.ps1",
+                        "launch-smoke.ps1",
+                        "resize-isolated-window.ps1",
+                        "runtime-input-guards.ps1",
+                        "verify-portable-runtime-file.ps1",
+                        "verify-portable-runtime-final.ps1",
+                        "window-snapshot.ps1",
+                        "retain-owned-observation.ps1"
+                    ],
+    "nativeAstErrors":  0,
+    "manifestFileCount":  10,
+    "allSourcePinsExact":  true,
+    "formalEntryPoints":  [
+                              "launch-smoke.ps1",
+                              "verify-portable-runtime-file.ps1"
+                          ],
+    "excludedLegacyEntryPoint":  "verify-portable-runtime-final.ps1",
+    "productsLaunched":  0,
+    "signals":  0,
+    "formalRuntimeExecuted":  false,
+    "androidFinalAcceptanceBound":  false,
+    "defaultProfilesModified":  false,
+    "promoted":  false
+}

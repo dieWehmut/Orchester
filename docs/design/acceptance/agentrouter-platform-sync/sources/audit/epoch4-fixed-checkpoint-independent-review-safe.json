@@ -1,0 +1,1406 @@
+{
+  "schemaVersion": 1,
+  "status": "fixed-pre-report-320-json-independent-review-passed",
+  "reviewer": "/root/artifact_audit_epoch4",
+  "reviewedAtUtc": "2026-11-11T23:48:50.804763+00:00",
+  "reviewScope": "Independent JSON-only review of frozen phase4 checkpoint; archive/source declarations, actual available safe JSON bytes, typed completed/failed/pending relationships, Markdown and requirement links, six credential-pattern categories. Producer tests and native operations were not repeated.",
+  "fixedPreReportSnapshot": {
+    "archiveFileCount": 320,
+    "manifestEntryCount": 319,
+    "expectedArchiveFileCount": 320,
+    "docSha256": "d720d2574f8a168001ca6346b9b7c18e031ff70f35786a081370b3fe920b0d72",
+    "manifestSha256": "c45cf1da65092a6aaf78fdf1c16db1387a44726d5fcaef19c2f6db504f98c6a8",
+    "fixedDocHashMatches": true,
+    "fixedManifestHashMatches": true,
+    "unchangedDuringRead": true,
+    "missing": [],
+    "extra": []
+  },
+  "counts": {
+    "archiveFiles": 320,
+    "manifestEntries": 319,
+    "archiveJsonIncludingManifest": 311,
+    "listedJsonActualHashAndSizeChecks": 310,
+    "nonJsonArchiveStatOnly": 9,
+    "selectedFiles": 308,
+    "availableSelectedOriginals": 281,
+    "availableSelectedOriginalJsonActualBytesCompared": 273,
+    "availableSelectedOriginalNonJsonStatOnly": 8,
+    "missingSelectedOriginals": 27,
+    "missingSelectedOriginalJson": 26,
+    "missingSelectedOriginalHistoricalNonJsonLog": 1,
+    "phase4SafeJsonOriginalsActualByteCompared": 52,
+    "derivedJsonDeclarationChecks": 8,
+    "relativeMarkdownLinks": 159,
+    "requirements": 13,
+    "requirementEvidenceLinks": 93,
+    "secretPatternCategories": 6,
+    "additionalWhitelistedSafeJsonOriginalByteChecks": 1,
+    "uniquePublicSafeJsonOriginalContentsRead": 274
+  },
+  "checks": {
+    "fixedExpectedDocAndManifestHashesMatch": true,
+    "noMissingExtraOrDuplicateManifestPaths": true,
+    "all310ListedJsonActualHashAndSizeChecksPass": true,
+    "all9NonJsonStatSizesMatchContentsNotRead": true,
+    "all273AvailableOriginalJsonActualBytesAndDeclarationsMatch": true,
+    "all8DerivedJsonDeclarationsMatchNoDerivationRerun": true,
+    "all159MarkdownAnd93RequirementLinksExist": true,
+    "sixPatternScanNoMatches": true,
+    "catalog17GuideUrls16DistinctGuideProductsPlusHomepageGemini17AndCanonical21": true,
+    "frozenSource71And731InputProofKeptAsProducerScope": true,
+    "correctWindows5572Server5039BoundBeforeWrites": true,
+    "studioCreatorPidBirthImageEqualsIdentityAndNativeTransport": true,
+    "studioActualResolveImport17400msJdk21AndSeparateSdkJUnit": true,
+    "studioNative5039FiveConnectionsNoDefault5037": true,
+    "correctWindowsActualJUnit4Exit0AndSameInstalledApkAsNativeIcons": true,
+    "originalFiveAes5Success0FailureRetainedAndHistoricalOriginalWireOne200": true,
+    "nativeCanonical21Ids42LoadedOfficialMarksAndWorkBuddySeparate": true,
+    "initial40AndStrictOpenCodeTwoCorrectionAreDistinctAndDigestLinked": true,
+    "actualNativeUnicodeEnter3Input3OutputNoDtoInjection": true,
+    "attempt2ControllerIdentitySameAcrossFailureCleanupTerminal": true,
+    "attempt2NativeExecutor1PreservedSeparateLauncher0NormalHandlesAndPortFree": true,
+    "attempt2Private3TransportsGoneAndPairingClosureFullPtyNotClaimed": true,
+    "successor44SyntheticAssertionsNativeAdmission0NotActualRuntime": true,
+    "formalAstTypedPidBirthImageIndexLinkedActualExecutor0NoRuntime14Or18": true,
+    "officialDeepSeek293425336ByteSha830947Rc1PreparedNotValidOrInstalled": true,
+    "DataElement013ShellRc3ComponentNotConfirmedOfficialDesktop": true,
+    "ClaudeMicrosoftValidBootstrapperNotClaudePayloadOrInstallation": true,
+    "freshLinuxOldPidAndControllerAbsentNo7337ListenersExitCauseUnknown": true,
+    "derivedLinuxCurrentPendingPreservesHistoricalProof": true,
+    "summaryNoFullPtyResizeRevokeReinstallCompletionClaim": true,
+    "allFourDeepSeekPrimaryTransportPeAndAsarEvidenceDigestsMatchSafeJsonOriginals": true,
+    "allNineStudioIconsUnicodeSubchainSourceJsonDigestsMatchActualOriginals": true,
+    "all52Phase4PublicSafeJsonOriginalsAvailableAndByteExact": true,
+    "fixedSnapshotStillUnchangedAtFinalSemanticCompletion": true
+  },
+  "allChecksPass": true,
+  "failedChecks": [],
+  "requirements": [
+    {
+      "id": "catalog_scope",
+      "userRequirement": "AgentRouter docs all named products, Qwen/OpenClaw and two WorkBuddy editions",
+      "status": "completed",
+      "statusScope": "entire requested delivery requirement; partial completed scopes listed separately",
+      "proved": "17 个官方目录产品，加既有 DeepSeek Harness、Cursor、Antigravity 和 WorkBuddy 国际版，21 canonical IDs 与 17 guide HTTP/heading 证明一致。",
+      "missingOrIncompleteProof": [],
+      "nextSafeOwnerAction": "保留 canonical 目录与冻结 71 的来源绑定，后续平台验收按这些 IDs 对齐。",
+      "evidence": [
+        {
+          "path": "sources/agentrouter/final-guide-scope-safe.json",
+          "archivedJsonSha256": "5e2f545a0d09dce33df6f77dc0ae03aeffc247b86605ce907a4d9b937f19c761",
+          "archivedBytes": 20465,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "sources/final71-source-binding.json",
+          "archivedJsonSha256": "413d19226cba700463d12dee28d20c592a4192425616575e4875a53beb01b50e",
+          "archivedBytes": 191724,
+          "originalSafeJsonCurrentlyAvailable": false,
+          "actualOriginalBytesMatch": null
+        }
+      ]
+    },
+    {
+      "id": "official_icons",
+      "userRequirement": "Every product uses official icons",
+      "status": "incomplete",
+      "statusScope": "entire requested delivery requirement; partial completed scopes listed separately",
+      "proved": "24 份官方资产、42 映射，以及 Pages 与正确 Windows Android 的全部加载已证。",
+      "missingOrIncompleteProof": [
+        "Windows 原生桌面 21 产品/42 图标 UI 验收未证；本审计不读取非 JSON 图标或截图字节。"
+      ],
+      "nextSafeOwnerAction": "在正式 Windows 桌面运行验收时核对 21/42 显示，并使用既有官方来源证明。",
+      "evidence": [
+        {
+          "path": "sources/icons/final21-official-current-24-assets.json",
+          "archivedJsonSha256": "929cf354c42836cf4fa8f1c37457afd623015b42efe4484b471c4a6d5a3109df",
+          "archivedBytes": 46061,
+          "originalSafeJsonCurrentlyAvailable": false,
+          "actualOriginalBytesMatch": null
+        },
+        {
+          "path": "deployments/pages/current-live/current-icon-mapping-verification.json",
+          "archivedJsonSha256": "49b1a459ffc1e58062d19215f2d51cf618e7adfa1368a18aca17b41f9fef3ead",
+          "archivedBytes": 32869,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/correct-windows-final21-ui-all-official-icons-accepted-safe.json",
+          "archivedJsonSha256": "729524beacdbe08afa14883a920df6feadfbf2c478d1221ffd89f1951996587b",
+          "archivedBytes": 2172,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/official-icon-independent-review/final-opencode-strict-xml-equivalence-safe.json",
+          "archivedJsonSha256": "e8de98f493e65b79be088a6f78b0b0cef3aa132a1992210951c3e43956ae1af2",
+          "archivedBytes": 16235,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        }
+      ]
+    },
+    {
+      "id": "separate_workbuddy",
+      "userRequirement": "Domestic and international WorkBuddy remain separate",
+      "status": "incomplete",
+      "statusScope": "entire requested delivery requirement; partial completed scopes listed separately",
+      "proved": "canonical、官网、既有 Windows 国内 5.9.3/国际 5.9.4 和 Android 名称分别保留。",
+      "missingOrIncompleteProof": [
+        "国际 WSL 官方可用包及 profile 隔离证明缺失。"
+      ],
+      "nextSafeOwnerAction": "由安装 owner 继续核对官方国际 Linux 包与实际命名空间，国内现有安装保留。",
+      "evidence": [
+        {
+          "path": "sources/workbuddy/official-regional-release-research.json",
+          "archivedJsonSha256": "64a1b9771a511d7ac87ebaffc7bae9b0feb509dd6014ce7dd4b2b1c8ee1d915f",
+          "archivedBytes": 5179,
+          "originalSafeJsonCurrentlyAvailable": false,
+          "actualOriginalBytesMatch": null
+        },
+        {
+          "path": "tests/frontend/workbuddy-editions/corrected-result.json",
+          "archivedJsonSha256": "0b8b3a785a9f26197134c3bec197c667c34438e270991d23cd539b993e6030bb",
+          "archivedBytes": 3856,
+          "originalSafeJsonCurrentlyAvailable": false,
+          "actualOriginalBytesMatch": null
+        },
+        {
+          "path": "native/windows/editions/workbuddy/global-native-public-metadata-safe.json",
+          "archivedJsonSha256": "6a6160399635eec63f981f74144763867db8155cbd9cfd783235fe17164dddba",
+          "archivedBytes": 4135,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/correct-windows-final21-ui-all-official-icons-accepted-safe.json",
+          "archivedJsonSha256": "729524beacdbe08afa14883a920df6feadfbf2c478d1221ffd89f1951996587b",
+          "archivedBytes": 2172,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        }
+      ]
+    },
+    {
+      "id": "tidy_code_and_folders",
+      "userRequirement": "Plan sensible folders and split files",
+      "status": "completed",
+      "statusScope": "entire requested delivery requirement; partial completed scopes listed separately",
+      "proved": "548 行生产前缀未变，19 identity 测试移入专用文件；来源、门禁、原生、部署和维护证据已按职责分文件夹。",
+      "missingOrIncompleteProof": [],
+      "nextSafeOwnerAction": "后续仅把新阶段凭据放入对应职责目录。",
+      "evidence": [
+        {
+          "path": "tests/backend/workbuddy-editions/test-split/migration-proof.json",
+          "archivedJsonSha256": "b135d6fb184a8c2e82dab8248659ee8da2c56f85cf4dd17fe94242d628a38158",
+          "archivedBytes": 3905,
+          "originalSafeJsonCurrentlyAvailable": false,
+          "actualOriginalBytesMatch": null
+        },
+        {
+          "path": "sources/receipt-provenance.json",
+          "archivedJsonSha256": "9a44aedcce15bd37dc309afcbf9c063cac383f9774d7c8968d7e8166731614e3",
+          "archivedBytes": 180689,
+          "originalSafeJsonCurrentlyAvailable": false,
+          "actualOriginalBytesMatch": null
+        }
+      ]
+    },
+    {
+      "id": "sync_frontend_surfaces",
+      "userRequirement": "Mobile,desktop,Web GUI and GitHubPages share current catalog",
+      "status": "incomplete",
+      "statusScope": "entire requested delivery requirement; partial completed scopes listed separately",
+      "proved": "冻结 71 的 Web 37/Mobile 17/Site 26 构建与 Pages 21/42、iOS public 同步、正确 Android 新 APK/UI 已证。",
+      "missingOrIncompleteProof": [
+        "Windows 桌面 runtime/default 重装和 Android 完整 PTY、临时设备撤销清理待验；iOS public 同步不能证明 iPhone 原生运行。"
+      ],
+      "nextSafeOwnerAction": "完成正确 Android 剩余 PTY 与正式 Windows 桌面/remote runtime 后再关闭跨端同步交付。",
+      "evidence": [
+        {
+          "path": "tests/frontend/final21-builds-independent-review.json",
+          "archivedJsonSha256": "8488a579092e3120c8b000e90a92cfd36a398e5d577af7024c8adccb333f16d2",
+          "archivedBytes": 14940,
+          "originalSafeJsonCurrentlyAvailable": false,
+          "actualOriginalBytesMatch": null
+        },
+        {
+          "path": "native/windows/final71-source-export.json",
+          "archivedJsonSha256": "6313572160eee0ed132a87e1fdb50d7a5ad0ff92ade66fac6c0346db86a39680",
+          "archivedBytes": 385572,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "deployments/pages/current-live/verification-summary.json",
+          "archivedJsonSha256": "3f53abba4b1dbcc32c34bd16fabe9365964911cafe1cf30686ac001c8b166e49",
+          "archivedBytes": 2811,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/ios/final21-public-sync.json",
+          "archivedJsonSha256": "f0367aa2a85acada61325260b3c5f8e69f37aebfa8cac8ddccd2f01e7aada894",
+          "archivedBytes": 4708,
+          "originalSafeJsonCurrentlyAvailable": false,
+          "actualOriginalBytesMatch": null
+        },
+        {
+          "path": "native/android/correct-windows-current21/correct-windows-final21-ui-all-official-icons-accepted-safe.json",
+          "archivedJsonSha256": "729524beacdbe08afa14883a920df6feadfbf2c478d1221ffd89f1951996587b",
+          "archivedBytes": 2172,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        }
+      ]
+    },
+    {
+      "id": "desktop_reinstall",
+      "userRequirement": "Reinstall Orchester Desktop preserving original data",
+      "status": "incomplete",
+      "statusScope": "entire requested delivery requirement; partial completed scopes listed separately",
+      "proved": "Windows core16、portable 文件准备、临时 7339 HTTP、两轮退出/清理及正式 AST 准备各自已证。",
+      "missingOrIncompleteProof": [
+        "同用户 WTSDisconnected；InputDesktop/cursor 未就绪；用户 Desktop28748 仍属外部原进程。",
+        "最新 WebView/profile 一致备份、正式 runtime14/18、正常 tray 退出、默认 desktop 与 Windows7338 remote 重装及状态保留未证。"
+      ],
+      "nextSafeOwnerAction": "待自然具备同用户可操作桌面，按既有正常退出流程获得最新一致备份，再由 owner 做正式验收和 guarded 重装；不请求解锁或信号外部 GUI。",
+      "evidence": [
+        {
+          "path": "native/windows/final71-build/final-result.json",
+          "archivedJsonSha256": "7ddcd67633e127a4b664dc69d91cf20bd8751a9ab6a009d8ca73d9b0951fe023",
+          "archivedBytes": 26903,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/final71-preflight/offline-original-backup-safe.json",
+          "archivedJsonSha256": "62b98bce6e0f98fb5dd5b14c0126e0988c4c16e79cbbc320e08eb4676440745c",
+          "archivedBytes": 3177,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/final71-build/current-worker-observation-safe.json",
+          "archivedJsonSha256": "f1270812981ebaedb2846b3e7f04c88fb592169030b0aec5f87cee7761f9dd4b",
+          "archivedBytes": 4875,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "sources/audit/current-native16-review-safe.json",
+          "archivedJsonSha256": "0902313d4e7ed12d58419d4bfe40e8f31a582a09129f62e1688d95a6ef935dea",
+          "archivedBytes": 15141,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/file-preparation/final21-portable-package-safe.json",
+          "archivedJsonSha256": "208f79f9ec5a2a581fd23792c3b97444dee2ae9a347c2ba21ce0f6c8acc083b2",
+          "archivedBytes": 16141,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/interactive-current/final21-readiness-blocked-safe.json",
+          "archivedJsonSha256": "e753c9807d09319ebbe3f8db4b56f45df0435f666d58ef0cc37025a9cbcb64f5",
+          "archivedBytes": 2327,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/interactive-current/original-profile-preservation-attempt1-safe.json",
+          "archivedJsonSha256": "ed6f9db60af2871a993d04a37a18548754780efb750019e03387267daf876f16",
+          "archivedBytes": 986,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/interactive-current/new-default-desktop-parent-readonly-safe.json",
+          "archivedJsonSha256": "401f867f4b99bd6de0f76fcbaa1656706abe02340adc266575553d0bb3a05402",
+          "archivedBytes": 1044,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/temporary-7339/public-http-preflight-safe.json",
+          "archivedJsonSha256": "55c86d8d88049c90dc867cacc7d35176d3639cc39c84295323930c4763478bfb",
+          "archivedBytes": 6952,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/interactive-current/session-enumeration-windows-owner-current-safe.json",
+          "archivedJsonSha256": "8602ceeea6f081767dad7ac5fd1f11bc49dda0ba47f9e7b444c45210bd445941",
+          "archivedBytes": 4949,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/temporary-7339/original-executor-terminal-safe.json",
+          "archivedJsonSha256": "e2efae1dc68056cc4f2d82f6fe8cb5640d37210db94931032822583fd0b7e79e",
+          "archivedBytes": 633,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/temporary-7339-successor-policy/successor2-native-typed-policy-safe.json",
+          "archivedJsonSha256": "b70d5c3ec0163017680cdf954ab2b273d35b6f92d85136cc53642874b0467296",
+          "archivedBytes": 2648,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/prepared-runtime-epoch2/root-formal-epoch2-final-hash-check-safe.json",
+          "archivedJsonSha256": "a43032110b8b8b0808f440db968f08dbb69dcae230f75ccf42f78a4ca46c407f",
+          "archivedBytes": 980,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/temporary-7339-attempt2/failed-final-safe-whitelist.json",
+          "archivedJsonSha256": "e5cccaf52fdf71751a2bc553a60231cbefd8eb9e9e29074ed88deabc549eac27",
+          "archivedBytes": 1575,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/temporary-7339-attempt2/original-executor-terminal-safe.json",
+          "archivedJsonSha256": "7b2779e23907b87f4c04510f380a2bd12e04a18b234c4b05632d931119faac53",
+          "archivedBytes": 749,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        }
+      ]
+    },
+    {
+      "id": "windows_agents",
+      "userRequirement": "Install AgentRouter tools natively on local Windows",
+      "status": "incomplete",
+      "statusScope": "entire requested delivery requirement; partial completed scopes listed separately",
+      "proved": "当前只读矩阵 18 entries/17 unique（9 CLI、4 extension、5 desktop）；旧 Cursor/Antigravity 元数据另存，官方 DeepSeek rc1 完整包已准备。",
+      "missingOrIncompleteProof": [
+        "Claude App 只有 Microsoft Valid Store bootstrapper，实际厂商 payload/注册/安装结果缺失。",
+        "DataElement DSH0.13 含官方 namespace 不证明官方 desktop；新 DeepSeek Windows whole-file native SHA、Authenticode trust、实际安装/runtime 未证。"
+      ],
+      "nextSafeOwnerAction": "由 Windows 安装 owner 完成已准备官方 DeepSeek 的本机整包 SHA/签名与实际安装，Claude 使用已验证适用的官方渠道确认真实 payload 后安装。",
+      "evidence": [
+        {
+          "path": "native/windows/nine-native-cli-versions.json",
+          "archivedJsonSha256": "3e85f32a3ebfb7de81ac4ab4ef3624931e31ca49003e38e2185a1c964c1dac11",
+          "archivedBytes": 5899,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/new-gui-installed-identities.json",
+          "archivedJsonSha256": "a229916de88817d39fab6a5997c874a88460e7e0ec1b8c9b3a264dc5fcccc7c7",
+          "archivedBytes": 5699,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/workbuddy-registration-paths-readonly-safe.json",
+          "archivedJsonSha256": "58348f792d0ee11544778af6281d5b1f26e79e869f64b48887273a57d9444260",
+          "archivedBytes": 2840,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/claude-current-official-source/handoff-safe-summary.json",
+          "archivedJsonSha256": "52e998536a96f2c655291007d153be4324740e7d0b39599e4b21dbdc27e54a77",
+          "archivedBytes": 4523,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/current-installation-matrix/final-current-windows-installation-matrix-safe.json",
+          "archivedJsonSha256": "320d93efc8e4d0be8847bfe5600c3835a31211311e1493f018605d923d7a088c",
+          "archivedBytes": 24809,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/legacy-current-public-metadata/installed-dsh-public-known-files-safe.json",
+          "archivedJsonSha256": "dd840d256f08d96bca5c0a25176f387f423cf6e607a85a502903f3a17b3ee153",
+          "archivedBytes": 907,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/legacy-current-public-metadata/current-dsh-cursor-antigravity-wslhost-public-safe.json",
+          "archivedJsonSha256": "e13cb328f570bf7fcb763ef7ecccd306e57f7ee4ea233297765a867184594c10",
+          "archivedBytes": 7909,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/deepseek-official-preparation/final-official-desktop-binding-safe.json",
+          "archivedJsonSha256": "3bebf4dcf4f33ebc98ee3edc29c2d37c2f85f84e99a1aaeebc84978f3d3f07d5",
+          "archivedBytes": 5596,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        }
+      ]
+    },
+    {
+      "id": "wsl_agents",
+      "userRequirement": "Install AgentRouter tools natively in WSL",
+      "status": "incomplete",
+      "statusScope": "entire requested delivery requirement; partial completed scopes listed separately",
+      "proved": "16 官方目录产品安装 scopes 加 3 个既有扩展，19 distinct 原生产品范围已证；DeepSeek 官方 Web CLI rc1 已装，Linux Desktop 明确不支持。",
+      "missingOrIncompleteProof": [
+        "Claude App 官方 Linux GUI 支持/发行证据未取得；三个支持 URL 未得到 body，不能判 unsupported。",
+        "WorkBuddy 国际版官方 Linux 包不可用，实际 ELF/profile 隔离未证。"
+      ],
+      "nextSafeOwnerAction": "保留原生已装 19 项，按官方可用发行继续处理剩余两项并明确平台支持限制。",
+      "evidence": [
+        {
+          "path": "native/wsl/install-summary.json",
+          "archivedJsonSha256": "4ddf817c5c3d9ed5a97a1c867ecb337a3b28cfcfd4d40ea008bf443564d173da",
+          "archivedBytes": 7734,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/wsl/current-matrix/current-native-installation-matrix-safe.json",
+          "archivedJsonSha256": "ba384b5d57ecbb1604f6f4d8e4958e2bbbc8d5e9dd5772fd771a57676c0d075e",
+          "archivedBytes": 27092,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/wsl/current-official-availability/final-official-install-status-safe.json",
+          "archivedJsonSha256": "443b579aa2e03a7b4ec04c15c4f6e055c7130e86f24663317209a513dc1822e8",
+          "archivedBytes": 3937,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/wsl/legacy-current/final-wsl-install-safe.json",
+          "archivedJsonSha256": "f1ef551e24e0fd68e81aa2e61d6f6386716b3444387d33593e7f4d60989cda59",
+          "archivedBytes": 8184,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/wsl/legacy-current/final-primary-matrix-safe.json",
+          "archivedJsonSha256": "4048348aa93d5f7f73a402f8b776b557745d93fbe45ccb1a8747c8e32615a6bf",
+          "archivedBytes": 7409,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        }
+      ]
+    },
+    {
+      "id": "android_studio",
+      "userRequirement": "Actually open AndroidStudio and test mobile app",
+      "status": "incomplete",
+      "statusScope": "entire requested delivery requirement; partial completed scopes listed separately",
+      "proved": "正确 Windows5572/ADB5039、同证书新 APK、4 项 SDK 原生 JUnit exit0、原5 AES全成功、真实 Studio sync17.4s/JDK21、21/42 UI 与 Unicode3进3出已证。",
+      "missingOrIncompleteProof": [
+        "JUnit 来自 qualified SDK，未宣称 IDE Run 按钮测试。",
+        "resize、产品 terminal 正常关闭、临时 device6→5、token撤销401、最终 observers、旧17379 extra 和错 Linux RAM reload 未证。",
+        "历史 pre20 绝对 AVD fingerprint 未找到。"
+      ],
+      "nextSafeOwnerAction": "Android owner 完成已授权 attempt3/final observer，仅处理自有临时终端、设备、forward、RAM；保留原5数据与当前正确目标绑定。",
+      "evidence": [
+        {
+          "path": "native/android/current21-partial/final21-source-mirror-safe.json",
+          "archivedJsonSha256": "11ff5c2aef76fb8cc5ddcc6d45108f14b88ecf1e2f9ab07abb07ab4189dcf93c",
+          "archivedBytes": 11361,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/current21-partial/final21-apk-provenance-safe.json",
+          "archivedJsonSha256": "99f975933c96942ae38868dcd8f9acd645a161f3a7396700b24c33b21bf5c003",
+          "archivedBytes": 4216,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/current21-partial/install-native-final21-app-safe.json",
+          "archivedJsonSha256": "3a6569ff8936ce4ba8e0ca19a321fd6bcac08d7752610393537119df7f001f4d",
+          "archivedBytes": 338,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/current21-partial/install-native-final21-tests-safe.json",
+          "archivedJsonSha256": "e9f71369f964d97f7f81dedd9d54321f40943b8ea03db8cb1e6612a710b6b2a0",
+          "archivedBytes": 339,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/current21-partial/native-bridge-tests-final21-current-apk-result.json",
+          "archivedJsonSha256": "9ba540d27e9f8182bc75a5950e0450d8680740bb8a9e6b099d21fa9ec50cc08f",
+          "archivedBytes": 227,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/device-identity-current21/final-avd-identity-audit-safe.json",
+          "archivedJsonSha256": "47d1d3bbb3cef892a4cc859cc8af23c13da96747169fa43b784034d72f7e43a7",
+          "archivedBytes": 5303,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/device-identity-current21/native-final21-device-provenance-correction-safe.json",
+          "archivedJsonSha256": "73233999233d54ef151515ec5cdd7bfb9926dce907d18d8f8746cf705202c87a",
+          "archivedBytes": 1555,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/device-identity-current21/native-one-prefs-file-rollback-final-byte-exact-safe.json",
+          "archivedJsonSha256": "e12e31ff91d4cb163a9f2951af5fa35116b21bcc4c2cebccbb6f4272e5e51219",
+          "archivedBytes": 1212,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/device-identity-current21/owned-windows-medium-normal-wmclose-exit-observed-safe.json",
+          "archivedJsonSha256": "024a85d390ecb70c4b2c2ddc0697329c9e414c3d3fd949881781d1ba48a004a9",
+          "archivedBytes": 495,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/native-channel-5572-attempt2/channel-target-identity-safe.json",
+          "archivedJsonSha256": "569cc37a84a2c82be42b49ce59f7ba12a0175b9b6db5aa5a1aafe7545b313217",
+          "archivedBytes": 3850,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/correct-windows-before-final21-readonly-safe.json",
+          "archivedJsonSha256": "13bb9607dd56774e66f560a8ed8d99d8ac2886ea0c1c5e81839dd5f9fff09fed",
+          "archivedBytes": 1038,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/correct-windows-original-five-values-safe.json",
+          "archivedJsonSha256": "020604800e495eb8ea814c6614e0681223b3038beddb96bb8fdf3e68b4a5e249",
+          "archivedBytes": 542,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/correct-windows-original-certificate-safe.json",
+          "archivedJsonSha256": "4aea050de91a4812d619198d94ceb3f5a7ed32ca30ede52273350ce5902aedfe",
+          "archivedBytes": 570,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/correct-windows-final21-install-safe.json",
+          "archivedJsonSha256": "d2a917bf910dacbea5a35d152a72cdfa9932e96339b8c9ee210cb509fb48e8f0",
+          "archivedBytes": 1569,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/correct-windows-final21-native-bridge-safe.json",
+          "archivedJsonSha256": "7ad158baac519a67c020e85966a6529ec29e59fac7f457aa48d3cdace2200af5",
+          "archivedBytes": 844,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/correct-windows-original-five-aes-and-existing-wire-attempt2-safe.json",
+          "archivedJsonSha256": "fa7b8d3063119a05ff710283ca8ac898fe254ee791eb962ed1ebb6e654ecc8e5",
+          "archivedBytes": 802,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/isolated-studio-optional-google-signin-normal-dismiss-safe.json",
+          "archivedJsonSha256": "a8b438e73637d1ef5b1bbf27489967c19a5687eecb213edb6269e72712bd11d4",
+          "archivedBytes": 1236,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/isolated-studio-final21-actual-project-sync-safe.json",
+          "archivedJsonSha256": "6e5c9b871dfff003d8c4ce20afebb4da7b1d6155f46b3a038ae9ba562ea0f392",
+          "archivedBytes": 3068,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/isolated-studio-actual-native-adb-transport-safe.json",
+          "archivedJsonSha256": "24a460808580f969cb09fa35080f2a2b22f8c729f5b790205f1c6f4be846fbd5",
+          "archivedBytes": 2052,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/correct-windows-final21-ui-all-official-icons-accepted-safe.json",
+          "archivedJsonSha256": "729524beacdbe08afa14883a920df6feadfbf2c478d1221ffd89f1951996587b",
+          "archivedBytes": 2172,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/official-icon-independent-review/final-opencode-strict-xml-equivalence-safe.json",
+          "archivedJsonSha256": "e8de98f493e65b79be088a6f78b0b0cef3aa132a1992210951c3e43956ae1af2",
+          "archivedBytes": 16235,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/correct-windows-current7339-native-unicode-enter-safe.json",
+          "archivedJsonSha256": "93dbc3265b33d2b659983cbdbc034dd0aff9b0d77073721d3499a1e403f5ea68",
+          "archivedBytes": 741,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/studio-icons-and-unicode-independent-review-safe.json",
+          "archivedJsonSha256": "991a1ee3b1c5a9aa0e2d597b58cef05eec8d51c5c085a3230e466e4e2b046d91",
+          "archivedBytes": 6484,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/temporary-7339-attempt2/failed-final-safe-whitelist.json",
+          "archivedJsonSha256": "e5cccaf52fdf71751a2bc553a60231cbefd8eb9e9e29074ed88deabc549eac27",
+          "archivedBytes": 1575,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        }
+      ]
+    },
+    {
+      "id": "linux_service",
+      "userRequirement": "Keep persistent Linux service updated with current mobile resources",
+      "status": "incomplete",
+      "statusScope": "entire requested delivery requirement; partial completed scopes listed separately",
+      "proved": "冻结71/ELFd983、21 catalog/17 resources/auth/state 的历史部署通过与原 token 单次 info200 均保留；fresh23:31UTC旧实例及控制器已无，7337无监听。",
+      "missingOrIncompleteProof": [
+        "旧服务退出原因不明；当前持久服务恢复、新 PID/start/image、API/resources 与当前 state/auth 保留尚无新证明。"
+      ],
+      "nextSafeOwnerAction": "linux_restore solewriter 从当前状态备份恢复，再归档新自有进程、API、资源和状态/auth 保留证明。",
+      "evidence": [
+        {
+          "path": "tests/backend/final71-full-workspace/summary.json",
+          "archivedJsonSha256": "4b6112c8df7367ac964478fb4b86ec59148b1d1ec452b4cdb0e8ea20d4ae62c9",
+          "archivedBytes": 12777,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "deployments/linux/current-final21/final-safe.json",
+          "archivedJsonSha256": "2a3159365a2c3f74c6d134dff2f1732802b1a73faf4b564e3618458fe727e017",
+          "archivedBytes": 5961,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "deployments/linux/current-final21/root-independent-live-safe.json",
+          "archivedJsonSha256": "1dfbfac8acde28cf305b2a458465a17fac58b5bb5c977cee666c72404381ea12",
+          "archivedBytes": 528,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "deployments/linux/current-final21/controller-handoff-safe.json",
+          "archivedJsonSha256": "48003ca6656f314e50c08bec01517dc9a2f4a9ab02b1f7ee3f9cf25aa816c48c",
+          "archivedBytes": 1236,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/android/correct-windows-current21/correct-windows-original-five-aes-and-existing-wire-attempt2-safe.json",
+          "archivedJsonSha256": "fa7b8d3063119a05ff710283ca8ac898fe254ee791eb962ed1ebb6e654ecc8e5",
+          "archivedBytes": 802,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "deployments/linux/current-runtime-observation/prior-instance-current-unavailable-safe.json",
+          "archivedJsonSha256": "f7fbeafc1313df018e06be8d5121153320e1d6578a28eb5e066a9695b7c2c9b7",
+          "archivedBytes": 628,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        }
+      ]
+    },
+    {
+      "id": "parallelism",
+      "userRequirement": "Use more subagents and expand concurrency limit",
+      "status": "completed",
+      "statusScope": "entire requested delivery requirement; partial completed scopes listed separately",
+      "proved": "当前 tool contract 为 root 内共9并发 slots，配置 max_threads8；未把配置改动声称为 runtime 热扩容原因。",
+      "missingOrIncompleteProof": [],
+      "nextSafeOwnerAction": "继续在可用 slots 内并行 owner 任务，保持写者职责单一。",
+      "evidence": [
+        {
+          "path": "maintenance/current-concurrency-safe.json",
+          "archivedJsonSha256": "399f02e065288854fafbcb5621ab4ecf77e9c1ee9207368008d544fc3cdb87b1",
+          "archivedBytes": 305,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        }
+      ]
+    },
+    {
+      "id": "cleanup",
+      "userRequirement": "Clean unused branches and caches to free C drive",
+      "status": "incomplete",
+      "statusScope": "entire requested delivery requirement; partial completed scopes listed separately",
+      "proved": "已选合并 branches/worktrees、C 自有 PDB/incremental 7,219,765,510B 和安装缓存587,458,817B、WSL rebuildable cache，以及第二7339正常退后3 transport清理各有证明。",
+      "missingOrIncompleteProof": [
+        "Android 临时 device/forward/RAM/fullPTY/revoke 最终清理未闭。",
+        "历史 suspended child 原 PID/birth/image/HANDLE 缺证，不能由 parent absent 判 child 已退。",
+        "Linux logical bytes 与 C free-space snapshots 不能作为 C 物理释放总量。"
+      ],
+      "nextSafeOwnerAction": "完成自有 Android 阶段终态后清理自有临时资源；历史 child 保持明确缺证，不扩大所有权或发信号。",
+      "evidence": [
+        {
+          "path": "maintenance/merged-branch-cleanup.json",
+          "archivedJsonSha256": "b848e6505e54cbcd308a80922e77574c0a5e8faecbdc2f76639729766829e12e",
+          "archivedBytes": 13184,
+          "originalSafeJsonCurrentlyAvailable": false,
+          "actualOriginalBytesMatch": null
+        },
+        {
+          "path": "maintenance/windows-approved-cache-cleanup.json",
+          "archivedJsonSha256": "f88b714a1bc013e8732b0b0ba1444ee3f34d785e59962f2518371f7438c27b14",
+          "archivedBytes": 1046,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "maintenance/completed-official-installer-cache-cleanup.json",
+          "archivedJsonSha256": "955315df30dc0be3cceb74ec6dc14499e21305c41f51a872f2b6008dd0235e50",
+          "archivedBytes": 3013,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "maintenance/current-worktree-cleanup-state-safe.json",
+          "archivedJsonSha256": "867310fb60421717a9ed51bc6e3bdbc41b809adc72305645f5f98f43cbe6f84d",
+          "archivedBytes": 1637,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "maintenance/owned-package-preparation-cache-cleanup-safe.json",
+          "archivedJsonSha256": "da010dd72a096b2d857c403b2c6804e432aa0ac62aaa06465c93fbb8695b680a",
+          "archivedBytes": 662,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "maintenance/workspace-current/actual-worktree-cleanup-safe.json",
+          "archivedJsonSha256": "eed4193ffe8a84b6ca2c03d690e5e914d6a73316a1caf6787fad8789ea09952c",
+          "archivedBytes": 3940,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "maintenance/workspace-current/final-workspace-cleanup-candidates-safe.json",
+          "archivedJsonSha256": "0651a278b74a334da62ae320a4da9c6722a6d25788dd0ac13cb272c7686e9cb2",
+          "archivedBytes": 6856,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "maintenance/workspace-current/same-user-process-path-observation-safe.json",
+          "archivedJsonSha256": "430674f4cb23284de97e1aba0283ef1d542b25e7ac96ad7efc0205131ee49d44",
+          "archivedBytes": 1465,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/wsl/legacy-current/owned-cache-cleanup-safe.json",
+          "archivedJsonSha256": "3b83a486c8efcb77d9250101daac9cbe41a7091d87a69d0be6cfa4efa484d4cc",
+          "archivedBytes": 1389,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/temporary-7339/private-transport-terminal-cleanup-safe.json",
+          "archivedJsonSha256": "5d01cc236693516cb3da66cf6fc43ad4072bfc4368a7d2963973cbbe169727ca",
+          "archivedBytes": 830,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/temporary-7339-attempt2/private-transport-cleanup-safe.json",
+          "archivedJsonSha256": "7b5b179c5e4fe104730bb9aa869ffb2a7460cca7dceaafb2f2f61c23eeebcae3",
+          "archivedBytes": 519,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "native/windows/ownership-history/historical-unregistered-suspended-node-closure-gap-safe.json",
+          "archivedJsonSha256": "8543e177a71a20cbe48b21bca64e61fea691bfd89f6e334b57a69320ea664a8e",
+          "archivedBytes": 1339,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        }
+      ]
+    },
+    {
+      "id": "git_steps",
+      "userRequirement": "Verify separated commits, push remotely and merge main step by step",
+      "status": "incomplete",
+      "statusScope": "entire requested delivery requirement; partial completed scopes listed separately",
+      "proved": "前三轮分步验证、commit、push0、main合并已证：第3 doc0e4367d/main8b0a016，production71输入固定。",
+      "missingOrIncompleteProof": [
+        "本第4 fixed 检查点待本报告 append、自审、parent commit/push/main；后续 runtime/install/reinstall 各独立阶段未完成。"
+      ],
+      "nextSafeOwnerAction": "docs owner 原字节 append 本报告并自审冻结；root 完成本阶段 commit、push 与 main 合并，再继续其余交付阶段。",
+      "evidence": [
+        {
+          "path": "sources/final71-source-binding.json",
+          "archivedJsonSha256": "413d19226cba700463d12dee28d20c592a4192425616575e4875a53beb01b50e",
+          "archivedBytes": 191724,
+          "originalSafeJsonCurrentlyAvailable": false,
+          "actualOriginalBytesMatch": null
+        },
+        {
+          "path": "maintenance/git-delivery/git-byte-and-crlf-correction-safe.json",
+          "archivedJsonSha256": "e6e04807d005310247b2d4edd985af17d343da809c6240b4ba30e875eb9b5080",
+          "archivedBytes": 547,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "maintenance/git-delivery/step-delivery-safe.json",
+          "archivedJsonSha256": "6e130032a0659efe8666cf735abf8ff923388df78d2f5ce2edf7f6fbb6d1301d",
+          "archivedBytes": 507,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "maintenance/git-delivery/second-step-delivery-safe.json",
+          "archivedJsonSha256": "fffad97c2b6765fb22c17a35bd742af7f38bb815af0e6cd0056f3d98c923402c",
+          "archivedBytes": 601,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        },
+        {
+          "path": "maintenance/git-delivery/third-step-delivery-safe.json",
+          "archivedJsonSha256": "c795729009d19800729c8fc426742ec0a0627c086a6a61dae2b95349acc98654",
+          "archivedBytes": 614,
+          "originalSafeJsonCurrentlyAvailable": true,
+          "actualOriginalBytesMatch": true
+        }
+      ]
+    }
+  ],
+  "requirementStatusCounts": {
+    "completed": 3,
+    "incomplete": 10,
+    "missing": 0
+  },
+  "initialMutablePhaseFindings": {
+    "initialPreReportArchiveFiles": 319,
+    "linuxCurrentClaimConflictFound": true,
+    "linuxConflictCorrectedInFixed320": true,
+    "cleanupSecond7339AlreadyClosedVsAndroidPendingWordingConflictFound": true,
+    "cleanupWordingCorrectedBeforeFreeze": true,
+    "noFixedSnapshotCorrectionsMadeByReviewer": true
+  },
+  "materialLimits": [
+    "This is approval of the phase4 evidence checkpoint, not completion of all platform delivery.",
+    "The fixed archive includes nine non-JSON files; this reviewer performed stat-size checks only and did not verify their actual content hashes. Producer all-file hashes and prior visual checks remain separate source evidence.",
+    "Eight available original non-JSON files were stat-only. Twenty-six original JSON sources and one historical log are now unavailable; archived declarations were checked, but vanished originals were not reconstructed or newly byte-verified.",
+    "All 273 available selected safe JSON original copies, including 52 phase4 JSON originals, were compared to archive bytes and declared SHA/size. This verifies safe receipts, not installed executables, full extension/package payloads or private databases.",
+    "731 frozen production-input and official asset proofs are kept as producer/source receipt scope; this JSON-only review did not reread production/source non-JSON files or Git blobs.",
+    "JSON-contained public SVG/CSS strings were treated as receipt data; no external SVG, PNG, JS, CJS, PS1, CS, executable, installer, raw log, private profile or backup body was read in the fixed review.",
+    "Actual Android Studio sync is distinct from the separate qualified SDK JUnit run; no IDE Run-button instrumentation claim.",
+    "Original five AES successes and one Linux original credential GET200 are historical observations; fresh old Linux absence does not negate them and does not prove current service liveness.",
+    "NativeAST exit0 and44 synthetic policy assertions do not prove formal runtime14/18, Windows tray/default reinstall or Android full PTY/cleanup.",
+    "Second7339 actual executor1 remains failure even though original declared handles ended normally, port released and three owned private transports were removed.",
+    "Windows same-user session remains disconnected with no active same-SID candidate; external GUI28748 ownership was not assumed or signaled.",
+    "Strict six-category scans found zero matches in 311 archive JSON texts plus Markdown; this is a pattern check, not a universal secret-absence guarantee.",
+    "Report is generated outside the archive; append1 plus resulting321-file self-check/commit/push/main are later owner operations and were not claimed executed by this review.",
+    "One additional subchain-whitelisted initial native icon-comparison safe JSON original was directly read because the selected receipt provenance copied its byte-identical captured snapshot from a different safe path. Actual unique safe original JSON content reads are274, selected-original comparisons remain273."
+  ],
+  "supportingDetailedIntegrityAudit": {
+    "path": "/home/han/.local/state/orchester-delivery/20261111/artifact-audit-epoch4/fixed-snapshot-integrity-review-safe.json",
+    "sha256": "5a0607141daffb3508d922bf75006ca49297d25c869499f4ccdf425a8c07a89c",
+    "bytes": 336322,
+    "containsPerFileJsonHashesSourceComparisonRowsAndLinkResults": true
+  },
+  "phase4JsonSafeSourceComparisons": [
+    {
+      "archivePath": "native/android/correct-windows-current21/official-icon-independent-review/safe-evidence-manifest.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/safe-evidence-manifest.json",
+      "sha256": "85d3a6494cf124488a802d1790e9fc323b68b6b6ef226e38ce405c405eba14e9",
+      "bytes": 3083,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/android/correct-windows-current21/official-icon-independent-review/captured-initial-icon-comparison-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/captured-initial-icon-comparison-safe.json",
+      "sha256": "14c68d1ad5cfb20f37ca28fc46e9b8cb118498242f8d9790a519c2dd10a70bb1",
+      "bytes": 18408,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/android/correct-windows-current21/official-icon-independent-review/exact-local-vite-android-payload-replay-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/exact-local-vite-android-payload-replay-safe.json",
+      "sha256": "4c663f06fd094ec9febd1c7ba91453f1def983dcb185a0bc7eee9f8969161b76",
+      "bytes": 51095,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/android/correct-windows-current21/official-icon-independent-review/final-opencode-strict-xml-equivalence-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/final-opencode-strict-xml-equivalence-safe.json",
+      "sha256": "e8de98f493e65b79be088a6f78b0b0cef3aa132a1992210951c3e43956ae1af2",
+      "bytes": 16235,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/android/correct-windows-current21/official-icon-independent-review/independent-css-review/exact-css-trivia-review-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/independent-css-review/exact-css-trivia-review-safe.json",
+      "sha256": "cc86688ab2a24746ff5d8e1904a7cff2d64ccfc7666f24ff395f0e498cd52ebd",
+      "bytes": 13333,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/android/correct-windows-current21/official-icon-independent-review/initial-replay-dist-chunk-boundary-failure-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/initial-replay-dist-chunk-boundary-failure-safe.json",
+      "sha256": "7abfc8bc9fe1d3861c974d8a6d58c587d521057eb1d5a76e41c273445afce455",
+      "bytes": 617,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/android/correct-windows-current21/official-icon-independent-review/initial-replay-failure-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/initial-replay-failure-safe.json",
+      "sha256": "a28886aaad813680d700daa152142222f7ba1a128c40b41f3aead694003b2533",
+      "bytes": 538,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/android/correct-windows-current21/official-icon-independent-review/opencode-selected-public-payloads-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/opencode-selected-public-payloads-safe.json",
+      "sha256": "42e2e50a68c52726a39352d83458ea487c41cfa782d8702f187cd7b07ae28d36",
+      "bytes": 2414,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/android/correct-windows-current21/official-icon-independent-review/review-execution-provenance-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/android-official-icon-review/review-execution-provenance-safe.json",
+      "sha256": "88131d807b6b2e00c67ac583379c1f250e33923c72f908451d06f14ed5e67856",
+      "bytes": 1014,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "sources/audit/windows-epoch2-selected-safe-whitelist.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/windows-reinstall/post-successor-epoch2-safe-whitelist.json",
+      "sha256": "c951d7424254dd079fc8feb6ac8921a67aa34dbff4a04afe1d995fb95687ab90",
+      "bytes": 3208,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/temporary-7339-successor-policy/successor2-native-typed-policy-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/successor2-native-typed-policy-safe.json",
+      "sha256": "b70d5c3ec0163017680cdf954ab2b273d35b6f92d85136cc53642874b0467296",
+      "bytes": 2648,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/temporary-7339-successor-policy/successor2-native-check-executor-terminal-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/successor2-native-check-executor-terminal-safe.json",
+      "sha256": "00b81f6a610f8d4a5552da64186f449b35fe91e11f7c494e4f2ab76a1f993c2d",
+      "bytes": 680,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/prepared-runtime-epoch2/runtime-epoch2-final-native-ast-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/runtime-epoch2-final-native-ast-safe.json",
+      "sha256": "ff1e34fea655d30498c97025bf2eafcbc383c6240c8c2ba4cae1bf56e3964477",
+      "bytes": 1612,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/prepared-runtime-epoch2/runtime-epoch2-final-native-ast-executor-terminal-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/runtime-epoch2-final-native-ast-executor-terminal-safe.json",
+      "sha256": "5900f6c68344659266e69114edacf1727a5dce020b53a55a4dfbef55275ef31e",
+      "bytes": 844,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/prepared-runtime-epoch2/runtime-epoch2-native-ast-preinterop-attempts-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/runtime-epoch2-native-ast-preinterop-attempts-safe.json",
+      "sha256": "ab5346adff405818bb575648ed2a8cbe77c2b76734953f3ad72432a583eeb689",
+      "bytes": 740,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/prepared-runtime-epoch2/original-freeze-immutability-ownership-region-20261111.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/audit/original-freeze-immutability-ownership-region-20261111.json",
+      "sha256": "7bc098e6a67cce2325ad3255a4dc13e5fb17ca6e91821d0e2af6486e5dbcfeba",
+      "bytes": 9895,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/prepared-runtime-epoch2/epoch2-final-draft-pins-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-epoch2-wslhost-20261111/epoch2-final-draft-pins-safe.json",
+      "sha256": "6f5f70c819920a6471446bab3914bb5b777e0f5fbbe133e0638cdfee02c32ab5",
+      "bytes": 5821,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/legacy-current-public-metadata/installed-dsh-public-known-files-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/installed-dsh-public-known-files-safe.json",
+      "sha256": "dd840d256f08d96bca5c0a25176f387f423cf6e607a85a502903f3a17b3ee153",
+      "bytes": 907,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/legacy-current-public-metadata/current-dsh-cursor-antigravity-wslhost-public-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/current-dsh-cursor-antigravity-wslhost-public-safe.json",
+      "sha256": "e13cb328f570bf7fcb763ef7ecccd306e57f7ee4ea233297765a867184594c10",
+      "bytes": 7909,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/temporary-7339-attempt2/ready-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt2-20261111/ready-safe.json",
+      "sha256": "81a60daa89471066a0a98ab1606cf701b6f8a1ddf7fd1585ad547e4ed9894eac",
+      "bytes": 2005,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/temporary-7339/private-transport-terminal-cleanup-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-20261111/private-transport-terminal-cleanup-safe.json",
+      "sha256": "5d01cc236693516cb3da66cf6fc43ad4072bfc4368a7d2963973cbbe169727ca",
+      "bytes": 830,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/temporary-7339/cleanup-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-20261111/cleanup-safe.json",
+      "sha256": "b82d7cf34d666add180ee55c5ac06f58d0f090e311ad3277b90b56c7f6a259dc",
+      "bytes": 996,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/temporary-7339/original-executor-terminal-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-20261111/original-executor-terminal-safe.json",
+      "sha256": "e2efae1dc68056cc4f2d82f6fe8cb5640d37210db94931032822583fd0b7e79e",
+      "bytes": 633,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/temporary-7339-successor-policy/root-final-hash-check-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/root-successor-review/final-hash-check-safe.json",
+      "sha256": "2e27b1ad86d48f1773071d17bc5fb006bbb9c355229eafb93e0250958858c4c5",
+      "bytes": 869,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "maintenance/git-delivery/third-step-delivery-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/root-docs-review/third-step-delivery-safe.json",
+      "sha256": "c795729009d19800729c8fc426742ec0a0627c086a6a61dae2b95349acc98654",
+      "bytes": 614,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/android/correct-windows-current21/correct-windows-final21-ui-all-official-icons-accepted-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-ui-all-official-icons-accepted-safe.json",
+      "sha256": "729524beacdbe08afa14883a920df6feadfbf2c478d1221ffd89f1951996587b",
+      "bytes": 2172,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/prepared-runtime-epoch2/root-formal-epoch2-final-hash-check-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/root-successor-review/formal-epoch2-final-hash-check-safe.json",
+      "sha256": "a43032110b8b8b0808f440db968f08dbb69dcae230f75ccf42f78a4ca46c407f",
+      "bytes": 980,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/ownership-history/historical-unregistered-suspended-node-closure-gap-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/historical-unregistered-suspended-node-closure-gap-safe.json",
+      "sha256": "8543e177a71a20cbe48b21bca64e61fea691bfd89f6e334b57a69320ea664a8e",
+      "bytes": 1339,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/deepseek-official-preparation/safe-evidence-manifest.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/safe-evidence-manifest.json",
+      "sha256": "43440baaf6da71bdb91d88d948b54bab594e9d11b3c365138a6cf41437dee2d1",
+      "bytes": 3862,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/deepseek-official-preparation/execution-provenance-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/execution-provenance-safe.json",
+      "sha256": "561304c648e21ec691a4403c793f96b272459f2e9c8a28bb5ed59fe726ebd1eb",
+      "bytes": 636,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/deepseek-official-preparation/final-official-desktop-binding-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/final-official-desktop-binding-safe.json",
+      "sha256": "3bebf4dcf4f33ebc98ee3edc29c2d37c2f85f84e99a1aaeebc84978f3d3f07d5",
+      "bytes": 5596,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/deepseek-official-preparation/installed-public-asar-identity-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/installed-public-asar-identity-safe.json",
+      "sha256": "fcf47b7f6a6c00bb59d5a32e8619de414226dcab0a4bf258032ba8b2a181bb11",
+      "bytes": 7812,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/deepseek-official-preparation/official-download/official-installer-transport-attempt1-failed-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/official-download/official-installer-transport-attempt1-failed-safe.json",
+      "sha256": "43d7c56e729ab026a8eeef377936bcb13a866cb6edc1671a86f19cc339bb1056",
+      "bytes": 778,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/deepseek-official-preparation/official-download/official-installer-transport-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/official-download/official-installer-transport-safe.json",
+      "sha256": "16f8a8b873d65de20f12739cce479767fad03ce12330f4a1db8986b2feff4619",
+      "bytes": 1413,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/deepseek-official-preparation/official-download/prepared-installer-public-pe-metadata-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/official-download/prepared-installer-public-pe-metadata-safe.json",
+      "sha256": "8ce33ee443c08511af28d33d01a590008ccb958069c9bc7b50cb5a39608df63f",
+      "bytes": 2118,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/deepseek-official-preparation/primary-independent/official-current-desktop-identity-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/official-current-desktop-identity-safe.json",
+      "sha256": "5b587f114b7a3b33d1fbda995deb081ec7c544d43752c9a0858d22383a786f6b",
+      "bytes": 10610,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/deepseek-official-preparation/primary-independent/official-desktop-package.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/official-desktop-package.json",
+      "sha256": "f27a39672ecc89876cd34db0f52aeee1459432c4bbc0557837716db8c7832acc",
+      "bytes": 4443,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/deepseek-official-preparation/primary-independent/official-public-fetch-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/official-public-fetch-safe.json",
+      "sha256": "f4167c244513c961d7a02374cdb58588950564d88c8cf41c5278fcd81b6eedd9",
+      "bytes": 2418,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/deepseek-official-preparation/primary-independent/pinned-builder-factory-curl-retry-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/pinned-builder-factory-curl-retry-safe.json",
+      "sha256": "a2d43ab91129f86373f4b2d68085765c7611a3e9f8a2bbbd0d36863f604e48db",
+      "bytes": 631,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/deepseek-official-preparation/primary-independent/pinned-builder-factory-fetch-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/pinned-builder-factory-fetch-safe.json",
+      "sha256": "61fa75e066bfc7c5a73ad2736ea974208f1437e581d71e8f65798bef38767b39",
+      "bytes": 226,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/deepseek-official-preparation/primary-independent/pinned-official-desktop-package.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/pinned-official-desktop-package.json",
+      "sha256": "f27a39672ecc89876cd34db0f52aeee1459432c4bbc0557837716db8c7832acc",
+      "bytes": 4443,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/deepseek-official-preparation/primary-independent/pinned-public-release-config-fetch-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/pinned-public-release-config-fetch-safe.json",
+      "sha256": "5dba11bd0c6abe4b1814ecf5757fceafbe86672a6f96b5e026f146e549063346",
+      "bytes": 1553,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/deepseek-official-preparation/primary-independent/pinned-public-source-fetch-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/pinned-public-source-fetch-safe.json",
+      "sha256": "69c3c433f70855fb6c96d59e7b042102282566b76191f493275b4ea4fa695995",
+      "bytes": 2276,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/deepseek-official-preparation/primary-independent/web-tool-backend-failure-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/web-tool-backend-failure-safe.json",
+      "sha256": "326fa94435ba10f3b749e21c24d0f8f0433b5f9569a28be0a9b6c7b62d729c15",
+      "bytes": 245,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/android/correct-windows-current21/studio-icons-and-unicode-independent-review-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/android-final-receipt-review-20261111/studio-icons-and-unicode-subchain-review.json",
+      "sha256": "991a1ee3b1c5a9aa0e2d597b58cef05eec8d51c5c085a3230e466e4e2b046d91",
+      "bytes": 6484,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/android/correct-windows-current21/correct-windows-current7339-native-unicode-enter-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-current7339-native-unicode-enter-safe.json",
+      "sha256": "93dbc3265b33d2b659983cbdbc034dd0aff9b0d77073721d3499a1e403f5ea68",
+      "bytes": 741,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/temporary-7339-attempt2/failed-final-safe-whitelist.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/windows-reinstall/attempt2-failed-final-safe-whitelist.json",
+      "sha256": "e5cccaf52fdf71751a2bc553a60231cbefd8eb9e9e29074ed88deabc549eac27",
+      "bytes": 1575,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/temporary-7339-attempt2/failure-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt2-20261111/failure-safe.json",
+      "sha256": "61f9188f4290ba764bfde894c6be549c4b0940939ee55c69435a4371e7fc0f7f",
+      "bytes": 770,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/temporary-7339-attempt2/original-executor-terminal-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt2-20261111/original-executor-terminal-safe.json",
+      "sha256": "7b2779e23907b87f4c04510f380a2bd12e04a18b234c4b05632d931119faac53",
+      "bytes": 749,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/temporary-7339-attempt2/cleanup-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt2-20261111/cleanup-safe.json",
+      "sha256": "138321ee2333fef1b55e76247ebd15eb3ffe2bcb71b9caca4b65314fdf5cab2b",
+      "bytes": 1080,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "native/windows/temporary-7339-attempt2/private-transport-cleanup-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt2-20261111/private-transport-cleanup-safe.json",
+      "sha256": "7b5b179c5e4fe104730bb9aa869ffb2a7460cca7dceaafb2f2f61c23eeebcae3",
+      "bytes": 519,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    },
+    {
+      "archivePath": "deployments/linux/current-runtime-observation/prior-instance-current-unavailable-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/root-linux-current/prior-instance-current-unavailable-safe.json",
+      "sha256": "f7fbeafc1313df018e06be8d5121153320e1d6578a28eb5e066a9695b7c2c9b7",
+      "bytes": 628,
+      "validJson": true,
+      "actualSourceAndArchiveBytesAndDeclarationsMatch": true
+    }
+  ],
+  "secretScan": {
+    "categoryCount": 6,
+    "categories": [
+      "providerApiKeys",
+      "githubCredentials",
+      "privateKeyPem",
+      "jwtCredentials",
+      "literalCredentialFields",
+      "literalBearerCredentials"
+    ],
+    "matchedValuesPublished": false,
+    "matches": []
+  },
+  "reviewerActions": {
+    "nativeExecutions": 0,
+    "networkRequests": 0,
+    "adbCommands": 0,
+    "queueWrites": 0,
+    "guiActions": 0,
+    "privateStateOrProfileReads": 0,
+    "originalNonJsonContentsRead": 0,
+    "archiveNonJsonContentsRead": 0,
+    "repoWrites": 0,
+    "gitCommandsInFixedSnapshotReview": 0,
+    "productTestsRerun": 0,
+    "supplementalPublicSafeJsonOriginalReadCount": 1,
+    "selectedPublicSafeJsonOriginalReadCount": 273
+  },
+  "disclosedTransientReaderError": {
+    "count": 1,
+    "kind": "An additional typed-relationship reader initially used UTF-8 without BOM support; JSONDecodeError occurred before first file was read. It was corrected to utf-8-sig and the targeted read exited0. Initial integrity reader already used utf-8-sig.",
+    "producerReceiptOrProductFailure": false,
+    "initialTypedPredicateWasOverlyNarrowToExactSelectedProvenanceSourcePath": true,
+    "predicateCorrection": "One cited initial icon-comparison original safe JSON is not a selected provenance source path, whose captured safe snapshot has the same SHA/size. The declared original was directly JSON-suffix guarded, parsed and SHA/size compared; its bytes match the selected snapshot. This resolved the transient predicate failure without changing any archive or source."
+  },
+  "allPlatformCompletionClaimed": false,
+  "productionSourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "publishedMainAtCheckpoint": "8b0a0163e1df4e5cdaab293b8f8130eda91b3f2f",
+  "supplementalWhitelistedSubchainSafeJsonOriginalComparisons": [
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-ui-official-icons-safe.json",
+      "sha256": "14c68d1ad5cfb20f37ca28fc46e9b8cb118498242f8d9790a519c2dd10a70bb1",
+      "bytes": 18408,
+      "validSafeJsonObject": true,
+      "declaredSubchainShaAndSizeMatch": true,
+      "equalToSelectedCapturedSafeJsonArchivePaths": [
+        "native/android/correct-windows-current21/official-icon-independent-review/captured-initial-icon-comparison-safe.json"
+      ],
+      "reason": "Subchain cites original native icon-comparison safe JSON; selected provenance instead copies its byte-identical captured snapshot under a different original safe path."
+    }
+  ]
+}

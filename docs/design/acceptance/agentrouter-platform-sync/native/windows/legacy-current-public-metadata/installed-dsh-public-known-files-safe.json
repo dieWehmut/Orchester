@@ -1,0 +1,38 @@
+{
+  "format": "orchester-installed-dsh-public-known-files-v1",
+  "status": "known-installed-path-readonly",
+  "installDirectory": "C:\\Program Files\\DSH Desktop",
+  "rows": [
+    {
+      "relativePath": "DSH Desktop.exe",
+      "exists": true,
+      "bytes": 235717016,
+      "mzHeaderPresent": true
+    },
+    {
+      "relativePath": "resources/harness-node-entry.mjs",
+      "exists": true,
+      "bytes": 6940
+    },
+    {
+      "relativePath": "resources/app.asar",
+      "exists": true,
+      "bytes": 369499529
+    },
+    {
+      "relativePath": "resources/app/package.json",
+      "exists": false
+    },
+    {
+      "relativePath": "resources/package.json",
+      "exists": false
+    }
+  ],
+  "exeWholeHashRead": false,
+  "appRuntimeVersionExecuted": false,
+  "signatureReverified": false,
+  "userProfilesRead": false,
+  "processesLaunched": 0,
+  "signals": 0,
+  "installedCopyReinstalled": false
+}

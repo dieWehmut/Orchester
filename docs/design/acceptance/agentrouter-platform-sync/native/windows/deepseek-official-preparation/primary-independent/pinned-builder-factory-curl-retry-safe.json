@@ -1,0 +1,11 @@
+{
+  "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts/electron-builder-config.mjs",
+  "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts/electron-builder-config.mjs",
+  "actualExitCode": 0,
+  "httpStatus": 200,
+  "bytes": 15350,
+  "sha256": "73608915307d975d582a93f434b2a00491c0cd219c8140af98ef614a19ebe6d2",
+  "verifiedTls": true,
+  "sourceScriptExecuted": false,
+  "retryAfter": "urllib URLError retained in pinned-builder-factory-fetch-safe.json"
+}

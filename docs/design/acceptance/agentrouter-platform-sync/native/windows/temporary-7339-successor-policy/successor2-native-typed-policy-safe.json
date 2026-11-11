@@ -1,0 +1,44 @@
+{
+    "format":  "orchester-successor-native-typed-policy-v1",
+    "status":  "passed",
+    "sourcePins":  {
+                       "successor":  {
+                                         "path":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-reinstall-preflight-20261111\\serve-temporary-final21-windows-7339-successor2.ps1",
+                                         "sha256":  "4d194727cf6f31ec73ea64339f21bc475692184de91173d195fe41ae4edcea26"
+                                     },
+                       "retainer":  {
+                                        "path":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continue-20261111-monitors-final21-71def64\\prepared-runtime-epoch2-wslhost-20261111\\retain-owned-observation.ps1",
+                                        "sha256":  "6f758142622e49e7b6e7892c7b254a5dda53b990425d0ff7b9e54d84a7523344"
+                                    },
+                       "helper":  {
+                                      "path":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continue-20261111-monitors-final21-71def64\\prepared-runtime-epoch2-wslhost-20261111\\OwnedRuntimeProcesses.cs",
+                                      "sha256":  "d335743a632acae0c90968e482b87eda44aaf1dae241e938e62b5c7833598d45"
+                                  },
+                       "interactive":  {
+                                           "path":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continue-20261111-monitors-final21-71def64\\prepared-runtime\\InteractiveFileRunner.cs",
+                                           "sha256":  "03783e81bee77f1e13d517c5efd4ad6caca45509960691faf5dc90ad8dc3cec3"
+                                       }
+                   },
+    "nativeAstParsed":  [
+                            "successor",
+                            "retainer"
+                        ],
+    "nativeAddTypeCompiled":  [
+                                  "OwnedRuntimeProcesses",
+                                  "InteractiveFileRunner",
+                                  "retainerPublisher"
+                              ],
+    "assertionCount":  44,
+    "typedControlPositiveCount":  3,
+    "typedControlNegativeCount":  16,
+    "allowPolicyAdmittedNativeProcessCount":  0,
+    "policyChecksUseOnlyUnadmittedSyntheticMetadata":  true,
+    "retainerMockHasNoNativeHandle":  true,
+    "retainerObservationFailureReusedSameObject":  true,
+    "productsLaunched":  0,
+    "schedulerTasksCreated":  0,
+    "signals":  0,
+    "privateContentsPublished":  false,
+    "defaultProfilesModified":  false,
+    "formalRuntimeAccepted":  false
+}
