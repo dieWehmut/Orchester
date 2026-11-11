@@ -17,7 +17,7 @@ import { useAgentFleetStore } from '../src/stores/agent-fleet'
 enableAutoUnmount(afterEach)
 
 const providers = Object.values(AGENT_IDENTITIES).map((identity) => ({ provider: identity.key, displayName: identity.displayName }))
-const serviceProviders = new Set(['workbuddy', 'openclaw', 'claude_app', 'trae', 'zcode', 'craft'])
+const serviceProviders = new Set(['workbuddy', 'workbuddy_global', 'openclaw', 'claude_app', 'trae', 'zcode', 'craft'])
 const sharedEditorProviders = new Set(['cline', 'roo', 'kilo'])
 const observedAt = '2026-11-11T07:00:00.000Z'
 
@@ -76,7 +76,7 @@ describe('new monitors through the shared status API and fleet', () => {
 
     expect(store.status).toBe('ready')
     expect(get).toHaveBeenCalledWith('/agents/status')
-    expect(store.snapshot?.agents.map((agent) => agent.provider)).toHaveLength(20)
+    expect(store.snapshot?.agents.map((agent) => agent.provider)).toHaveLength(Object.keys(AGENT_IDENTITIES).length)
     expect(store.activeSubagentCount).toBe(0)
     const panel = mount(AgentFleetPanel, {
       props: { snapshot: store.snapshot, status: store.status },
