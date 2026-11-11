@@ -22,6 +22,25 @@ pub struct ProcessTree {
 }
 
 impl ProcessTree {
+    /// Start a standard-library background command inside this Windows job
+    /// before its initial thread executes. Keep this tree alive until the
+    /// capture completes; dropping it also ends descendants after root exit.
+    #[cfg(windows)]
+    pub fn spawn_std(
+        &self,
+        command: &mut std::process::Command,
+    ) -> io::Result<std::process::Child> {
+        super::std_windows::spawn_in_job(command, &self.job)
+    }
+
+    /// End the complete job of a synchronous helper, including wrappers whose
+    /// initial process has already exited. The caller can still wait on child.
+    #[cfg(windows)]
+    pub fn terminate_std(&self, child: &mut std::process::Child) {
+        let _ = unsafe { TerminateJobObject(self.job.as_raw_handle() as HANDLE, 1) };
+        let _ = child.kill();
+    }
+
     /// Attach a PTY child, whose handle is owned by a portable PTY backend.
     /// On Unix the PTY backend has already made the child a session leader.
     pub fn attach_pid(&self, pid: u32) -> io::Result<()> {
@@ -85,6 +104,9 @@ impl ProcessTree {
     pub fn new() -> io::Result<Self> {
         #[cfg(windows)]
         {
+            // NULL security attributes create a non-inheritable, unnamed job.
+            // Only this owner holds it, so process exit also closes the last
+            // handle and terminates its tree even in detached worker threads.
             let handle = unsafe { CreateJobObjectW(std::ptr::null(), std::ptr::null()) };
             if handle.is_null() {
                 return Err(io::Error::last_os_error());
@@ -183,6 +205,18 @@ mod tests {
     const PROBE: &str = "ORCHESTER_PROCESS_TREE_PROBE";
     const ROOT: &str = "ORCHESTER_PROCESS_TREE_PROBE_ROOT";
     const TEST: &str = "process::tree::tests::job_probe";
+
+    #[test]
+    fn job_handle_is_not_inheritable() {
+        use windows_sys::Win32::Foundation::{GetHandleInformation, HANDLE_FLAG_INHERIT};
+        let tree = ProcessTree::new().unwrap();
+        let mut flags = 0;
+        assert_ne!(
+            unsafe { GetHandleInformation(tree.job.as_raw_handle() as HANDLE, &mut flags) },
+            0
+        );
+        assert_eq!(flags & HANDLE_FLAG_INHERIT, 0);
+    }
 
     #[test]
     fn job_probe() {
