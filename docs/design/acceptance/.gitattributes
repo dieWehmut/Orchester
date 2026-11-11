@@ -1,0 +1,2 @@
+# Preserve exact source receipt bytes, including native Windows CRLF records.
+agentrouter-platform-sync/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
