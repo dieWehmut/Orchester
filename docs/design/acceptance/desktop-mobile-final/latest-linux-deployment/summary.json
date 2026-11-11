@@ -1,0 +1,103 @@
+{
+  "oldPid": 1051536,
+  "oldStartTicks": 12133082,
+  "oldImage": "/home/han/project/Orchester/target/debug/orchester (deleted)",
+  "oldImageSha256": "2384f245e8e34900fa6141dcf27ba8b3fa09b41d040f7732e445ed69518fc968",
+  "newImage": "/home/han/project/Orchester/target/debug/orchester",
+  "newImageSha256": "0307664605c21ea7777572f388af1e19c19774b2cfe25bf6a56ac32932e1472e",
+  "binaryBuiltRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "acceptedSourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "rustInputsEqual": true,
+  "gateSummarySha256": "59395a1bb72da521225ccbeb387432e4d0859502834ebce1e4707ef9c5d12ae0",
+  "runCountBefore": 5,
+  "runStatesBefore": {
+    "completed": 4,
+    "cancelled": 1
+  },
+  "stateRowsBefore": 4,
+  "serviceArgumentsPreserved": true,
+  "fullExistingEnvironmentPreserved": true,
+  "modelCalls": 0,
+  "pairingEnabled": false,
+  "status": "deployed",
+  "backupDirectory": "/home/han/.local/state/orchester-remote-backups/lifecycle-35c75e6-before",
+  "backupFiles": [
+    {
+      "path": "state/remote.db",
+      "backupSha256": "de921f69d58f8d8c8cd5c50f8048b3f496027d9636355625390759f96a1f0ed4"
+    },
+    {
+      "path": "state/remote.lock.db",
+      "backupSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "rollbackBinarySha256": "2384f245e8e34900fa6141dcf27ba8b3fa09b41d040f7732e445ed69518fc968",
+  "oldSignal": "SIGTERM-handled-gracefully-by-remote-service",
+  "originalPidfdExited": true,
+  "publicHttpChecks": [
+    {
+      "path": "assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+      "status": 200,
+      "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b"
+    },
+    {
+      "path": "assets/brand-icon-Zjdxen9M.png",
+      "status": 200,
+      "sha256": "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06"
+    },
+    {
+      "path": "assets/index-BpSqRAdp.js",
+      "status": 200,
+      "sha256": "6d98e97e9bd5f167cfefb2516044597403c789fd700992f376b55d2532e8f008"
+    },
+    {
+      "path": "assets/index-DUL45N1m.css",
+      "status": 200,
+      "sha256": "da41e4d0cff358cf4526670a8b7b8e482d7993934318674a99389ccd51e420c0"
+    },
+    {
+      "path": "favicon.png",
+      "status": 200,
+      "sha256": "bd2b0e95dade84d5371027cc9616610813b3e7f878b434d54a3a1459111c7db2"
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "sha256": "ce89e38c05c2ebc02b57ee06dacb9a2181202135f5d667c4ce98f5dc8268b409"
+    }
+  ],
+  "unauthorizedInfo": 401,
+  "authorizedReadChecks": [
+    {
+      "path": "/info",
+      "status": 200,
+      "jsonContractVerified": true
+    },
+    {
+      "path": "/agents",
+      "status": 200,
+      "jsonContractVerified": true
+    },
+    {
+      "path": "/projects",
+      "status": 200,
+      "jsonContractVerified": true
+    }
+  ],
+  "testDeviceDeleted": true,
+  "revokedTokenStatus": 401,
+  "originalDevicesExactlyRetained": true,
+  "pairingClosedAfterChecks": true,
+  "newPid": 1130870,
+  "newStartTicks": 13485649,
+  "runCountAfter": 5,
+  "runStatesAfter": {
+    "completed": 4,
+    "cancelled": 1
+  },
+  "runRecordsExactlyRetained": true,
+  "authAndProjectStateExactlyRetained": true,
+  "startupPairingDisabled": true,
+  "listenerPort": 7337,
+  "controlledStdinRetained": true
+}

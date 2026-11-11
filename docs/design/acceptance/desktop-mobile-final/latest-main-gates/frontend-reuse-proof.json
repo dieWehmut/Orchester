@@ -1,0 +1,23 @@
+{
+  "baselineRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+  "currentRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "priorEvidence": "/tmp/orchester-continued-main-gates-20261111T003959Z",
+  "scope": "all prior and current tracked non-Markdown code/build inputs outside kisten; includes frontend/mobile/desktop source, pnpm manifests/lock, assets, scripts and CI",
+  "changedCodeBuildInputs": [
+    "kisten/laufzeit/src/harness/memory.rs",
+    "kisten/laufzeit/tests/memory_store.rs",
+    "kisten/netz/src/agent_activity/wsl.rs",
+    "kisten/netz/src/agent_activity/wsl_lifecycle_tests.rs",
+    "kisten/vertrag/Cargo.toml",
+    "kisten/vertrag/src/process.rs",
+    "kisten/vertrag/src/process/std_windows.rs",
+    "kisten/vertrag/src/process/tree.rs"
+  ],
+  "frontendChangedInputs": [],
+  "frontendInputCount": 747,
+  "baselineFrontendSha256": "59976533f3ee11802e1885f4425c856a133a9bc4c73e25d4c2b4a5ac2f15ae7a",
+  "currentFrontendSha256": "59976533f3ee11802e1885f4425c856a133a9bc4c73e25d4c2b4a5ac2f15ae7a",
+  "reusedFrontendVitestPassed": 1445,
+  "reusedFrontendNodePassed": 37,
+  "reusedTypecheckExitCode": 0
+}

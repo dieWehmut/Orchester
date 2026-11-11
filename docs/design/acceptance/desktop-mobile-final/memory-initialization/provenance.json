@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "selectedFiles": [
+    {
+      "path": "result.json",
+      "sourcePath": "/tmp/orchester-memory-init-validation/result.json",
+      "sourceSha256": "887173232a58b28d8354596c611ffef817576dcab99e46ca5aa726625fb469d3",
+      "archivedSha256": "887173232a58b28d8354596c611ffef817576dcab99e46ca5aa726625fb469d3",
+      "bytes": 2911,
+      "byteExact": true
+    },
+    {
+      "path": "reserved-lock-red.log",
+      "sourcePath": "/tmp/orchester-memory-init-validation/reserved-lock-red.log",
+      "sourceSha256": "8d7821aa5e06d48d8b6d3d7a8ddf729b2c01c4a07025ad91c266a815791ed5d3",
+      "archivedSha256": "8d7821aa5e06d48d8b6d3d7a8ddf729b2c01c4a07025ad91c266a815791ed5d3",
+      "bytes": 6592,
+      "byteExact": true
+    },
+    {
+      "path": "affected-tests.log",
+      "sourcePath": "/tmp/orchester-memory-init-validation/affected-tests.log",
+      "sourceSha256": "e7bb44f843146a379d1c40e75defa829811894af77b134fcf95b85d075afaa74",
+      "archivedSha256": "e7bb44f843146a379d1c40e75defa829811894af77b134fcf95b85d075afaa74",
+      "bytes": 58924,
+      "byteExact": true
+    },
+    {
+      "path": "affected-clippy.log",
+      "sourcePath": "/tmp/orchester-memory-init-validation/affected-clippy.log",
+      "sourceSha256": "f7ae66dd82c0cba08b742edf663a891bc74274a7c328aa11aed643212c390391",
+      "archivedSha256": "f7ae66dd82c0cba08b742edf663a891bc74274a7c328aa11aed643212c390391",
+      "bytes": 5183,
+      "byteExact": true
+    },
+    {
+      "path": "secret-scan-redacted.json",
+      "sourcePath": "/tmp/orchester-memory-init-validation/secret-scan-redacted.json",
+      "sourceSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "archivedSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3,
+      "byteExact": true
+    }
+  ],
+  "rootPinnedResultSha256": "887173232a58b28d8354596c611ffef817576dcab99e46ca5aa726625fb469d3",
+  "standaloneAndCopiedRedHashesEqual": true,
+  "emptyFormatLogHashVerified": true,
+  "privateDatabasesExcluded": true
+}

@@ -144,9 +144,104 @@
       "bytes": 3809
     },
     {
+      "path": "latest-linux-deployment/provenance.json",
+      "sha256": "f541d89f7df179fa00507e7cec03f43e04ecbb2d021e2f314b5b2608a5be98e5",
+      "bytes": 1538
+    },
+    {
+      "path": "latest-linux-deployment/static-review.json",
+      "sha256": "f19480c8faba99f17356c5b4da7ef2564137e8109940061a825ed65fc2c051c4",
+      "bytes": 4021
+    },
+    {
+      "path": "latest-linux-deployment/summary.json",
+      "sha256": "0169d96478d7437ab6436e08cc578f107f13da2d27df7191f8646c666be96d3b",
+      "bytes": 3251
+    },
+    {
+      "path": "latest-main-gates/archive-secret-scan.json",
+      "sha256": "9aabd65068341b9526e378cfa40d2f2038610083685e2d58bc5b7f2c8eccc85e",
+      "bytes": 539
+    },
+    {
+      "path": "latest-main-gates/frontend-reuse-proof.json",
+      "sha256": "fd3361884a2b603ff7d69ceff176756b684cccf5f6ce47c5454667611b1ffbbe",
+      "bytes": 1131
+    },
+    {
+      "path": "latest-main-gates/linux-native-build.log",
+      "sha256": "3aba4a7c8064688059c319a7c682edcdc9457b647e49811684e46d8b8b3be0ed",
+      "bytes": 405
+    },
+    {
+      "path": "latest-main-gates/provenance.json",
+      "sha256": "0a22ebf12c1cfe686594325ff7c57eead2275de506bede985bc34d81b3d9f6a4",
+      "bytes": 3795
+    },
+    {
+      "path": "latest-main-gates/rust-clippy.log",
+      "sha256": "2c5b4a346873d0c0fac112399f042dbbc8c5872c935fdeee272a66c7c4f38f8d",
+      "bytes": 405
+    },
+    {
+      "path": "latest-main-gates/rust-fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "latest-main-gates/rust-tests.log",
+      "sha256": "f91c022cb2a9df73828ec09b5b9faae93ed972a374dd61fd9fa405f98a6e5235",
+      "bytes": 121367
+    },
+    {
+      "path": "latest-main-gates/source-after.json",
+      "sha256": "583001dca6214b7b7eb8e4e83ea105a37854d66fe4f2f115c0371a394c195a35",
+      "bytes": 194285
+    },
+    {
+      "path": "latest-main-gates/summary.json",
+      "sha256": "59395a1bb72da521225ccbeb387432e4d0859502834ebce1e4707ef9c5d12ae0",
+      "bytes": 3886
+    },
+    {
       "path": "linux-deployment.json",
       "sha256": "cfee0b36566360bc77aaa34aa30741ebaa7b85e12b59c4f5655f466b3021f076",
       "bytes": 2115
+    },
+    {
+      "path": "memory-initialization/affected-clippy.log",
+      "sha256": "f7ae66dd82c0cba08b742edf663a891bc74274a7c328aa11aed643212c390391",
+      "bytes": 5183
+    },
+    {
+      "path": "memory-initialization/affected-tests.log",
+      "sha256": "e7bb44f843146a379d1c40e75defa829811894af77b134fcf95b85d075afaa74",
+      "bytes": 58924
+    },
+    {
+      "path": "memory-initialization/provenance.json",
+      "sha256": "867d0deeb8bccd356637820dda3b6e98b7214b88e039e3b7c526325ca4b1a362",
+      "bytes": 2051
+    },
+    {
+      "path": "memory-initialization/reserved-lock-red.log",
+      "sha256": "8d7821aa5e06d48d8b6d3d7a8ddf729b2c01c4a07025ad91c266a815791ed5d3",
+      "bytes": 6592
+    },
+    {
+      "path": "memory-initialization/result.json",
+      "sha256": "887173232a58b28d8354596c611ffef817576dcab99e46ca5aa726625fb469d3",
+      "bytes": 2911
+    },
+    {
+      "path": "memory-initialization/secret-scan-redacted.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "memory-initialization/summary.json",
+      "sha256": "909a3829e61687b1403299a8f8b9f49d2a368dbfd383fc90183a427d80d2aec7",
+      "bytes": 2939
     },
     {
       "path": "portable-cleanup-result.json",
@@ -182,6 +277,126 @@
       "path": "web-integrated.log",
       "sha256": "a380d26ed9f00f789c323d0a5de220be5b0765961f9a288ab7d5c8cf94503a4f",
       "bytes": 2252
+    },
+    {
+      "path": "windows-8c24-baseline/chrome-test/native-audit.json",
+      "sha256": "994befda18de9a0ee37561d9f36488369758493771c1a95454b5fbe19d49b918",
+      "bytes": 330
+    },
+    {
+      "path": "windows-8c24-baseline/cli-build/native-audit.json",
+      "sha256": "2729c985247e4fa66d7e0efadf1c93fa03c227adfb01412c11b94db3e5596fd2",
+      "bytes": 330
+    },
+    {
+      "path": "windows-8c24-baseline/desktop-build/native-audit.json",
+      "sha256": "4d06f0e4d832d39a024645c65d5886d6062f15079b9044d3b3065430532c9cd6",
+      "bytes": 330
+    },
+    {
+      "path": "windows-8c24-baseline/desktop-clippy/native-audit.json",
+      "sha256": "e2debbc87c3f8e8c639acabc234d04300da8b181b5d72a21a3bed27d26c8590c",
+      "bytes": 330
+    },
+    {
+      "path": "windows-8c24-baseline/desktop-fmt/native-audit.json",
+      "sha256": "2875bda1ad49dd3d7345740fd045ba0c99cf37efcc5cc194d79b410c13fea9e1",
+      "bytes": 330
+    },
+    {
+      "path": "windows-8c24-baseline/desktop-test/native-audit.json",
+      "sha256": "9419b1d0fef501c35d81da9328af991a3500dd411aa350c8ae5da4a0e69e9f90",
+      "bytes": 330
+    },
+    {
+      "path": "windows-8c24-baseline/final-result.json",
+      "sha256": "1b074bd5bc8d9b4bbc00d54c378a4d38a49d9ae244e91a79b5b4463e45fea4b4",
+      "bytes": 25554
+    },
+    {
+      "path": "windows-8c24-baseline/helper-contract/native-audit.json",
+      "sha256": "40defe9f6caea29a7a95a0406a653e8bd038280bc669431534198ef907371704",
+      "bytes": 330
+    },
+    {
+      "path": "windows-8c24-baseline/helper-wsl/native-audit.json",
+      "sha256": "8ebda588425aaef832c638c19467537366774c81781372de1ead7f6748465722",
+      "bytes": 330
+    },
+    {
+      "path": "windows-8c24-baseline/helper-wsl/test-summary.json",
+      "sha256": "2341b1166e8b8cd35ff85abbeda3c2091b029ef9498abf80f10a1ca46b7d6eb5",
+      "bytes": 172
+    },
+    {
+      "path": "windows-8c24-baseline/monitor-activity/native-audit.json",
+      "sha256": "26c84d4b679c27e722876f28bc37d92bf66607326daedf0081f7d5eabe948905",
+      "bytes": 330
+    },
+    {
+      "path": "windows-8c24-baseline/monitor-http/native-audit.json",
+      "sha256": "56f968d88c5f8e58b0df23ef65c721e68449fdb4004cf89aec87635deb213b4e",
+      "bytes": 330
+    },
+    {
+      "path": "windows-8c24-baseline/monitor-process/native-audit.json",
+      "sha256": "2251d6f5fb6853f438cb5d4534ca07f6b3d56013321fda17d7a19f3ba3341bd6",
+      "bytes": 330
+    },
+    {
+      "path": "windows-8c24-baseline/portable-runtime-final/cleanup-result.json",
+      "sha256": "d29fd986845d7582ed3318c987265e9d7d8a6ae7d2fc4b3156af9301e043c9d1",
+      "bytes": 5159
+    },
+    {
+      "path": "windows-8c24-baseline/portable-runtime-final/launcher-stderr-diagnostic.json",
+      "sha256": "d793938699d96cbebe87a26c1f5c68f6ffb58cae024663a368efa4a56f0ec62c",
+      "bytes": 202
+    },
+    {
+      "path": "windows-8c24-baseline/portable-runtime-final/normal-shutdown-observation.json",
+      "sha256": "0a347ace00d353d894a929c1bf48b5603e563d621e106c5299f34551ab09cdfd",
+      "bytes": 182
+    },
+    {
+      "path": "windows-8c24-baseline/portable-runtime-final/runtime-result.json",
+      "sha256": "5a523a47715c727a13dc5b9ef1a73d69207073e57689e398d65f3b5326a3e92e",
+      "bytes": 1706
+    },
+    {
+      "path": "windows-8c24-baseline/provenance.json",
+      "sha256": "e58c089ec60519e3957f633ec6a12de73110516930bad9ef2356376efbdaec8a",
+      "bytes": 8790
+    },
+    {
+      "path": "windows-8c24-baseline/remote-cli/native-audit.json",
+      "sha256": "653247ddad9c702edecc995cdc7b7541c2cb836c4d76cf6615af6900e3af55c4",
+      "bytes": 330
+    },
+    {
+      "path": "windows-8c24-baseline/root-clippy/native-audit.json",
+      "sha256": "807e7f65460720127b95a19f7d7d9574e12adc36dd51674018a5746a33938e88",
+      "bytes": 330
+    },
+    {
+      "path": "windows-8c24-baseline/root-fmt/native-audit.json",
+      "sha256": "f74a2a33c5521fa58fe5f819f0fe34b3ca5d25c16e126b8db699d2d5378e0c9c",
+      "bytes": 330
+    },
+    {
+      "path": "windows-8c24-baseline/source-binding.json",
+      "sha256": "05d98ca6862246da61e9486ddd366ddee0a5afc9b7908337221f9626461d9e73",
+      "bytes": 2133
+    },
+    {
+      "path": "windows-8c24-baseline/summary.json",
+      "sha256": "aa2362141759735c72dc36b30d095f07d60f69d9e145054ac607cbebeacba9d0",
+      "bytes": 948
+    },
+    {
+      "path": "windows-8c24-baseline/toolchain/native-audit.json",
+      "sha256": "09e5c721d4b8e17897d9ff211f5cd338715bf695cd0b6dd7cff25b47c6920150",
+      "bytes": 330
     },
     {
       "path": "windows-build-gates.json",
@@ -303,28 +518,58 @@
     "baseline Windows desktop sixteen native checks and own process cleanup",
     "Windows helper lifecycle native red/green fixtures bound to test49d90ac/fix9dccb34/main8c24d0c",
     "Linux targeted helper regression261tests and strictClippy",
-    "Android AVD actual shared terminal font/grid/native keyboard resize/PTY input and temporary credential cleanup"
+    "Android AVD actual shared terminal font/grid/native keyboard resize/PTY input and temporary credential cleanup",
+    "memory WAL deterministic reserved-lock red and629-test green bound to test231df95/fixd692ffa/main35c75e6",
+    "historical Windows8c24 exact15 native build gates and portable14 checks with product normalquit/passive5s zero own survivors",
+    "current35c75e6 full Rust1288passed1ignored102programs and fmt/strictClippy/nativeELFbuild",
+    "current35c75e6 Linux7337 actual mapped ELF deployment/auth/assets/temporary revoke/original state and5runs preservation"
   ],
   "requiredSeparateEvidence": [
-    "current main complete Rust integration after memory database concurrent initialization fix",
-    "Windows15-gate build-and-file result after helper fix",
-    "new Windows desktop native runtime after helper fix",
-    "Windows portable actual rebuilt runtime and normal helper exit after fix",
-    "default installation promotion",
-    "Windows7338 deployment with15-gate manager",
+    "current35c75e6 Windows16-gate build-and-file result",
+    "current35c75e6 Windows Desktop native runtime and natural GUI quit",
+    "current35c75e6 Windows Portable runtime and normal helper exit",
+    "default installation promotion for current source",
+    "Windows7338 deployment with current-gate manager",
     "temporary native proxy cleanup",
     "physical Android and iOS target environment"
   ],
-  "updatedAt": "2026-11-11T04:07:20.645944+00:00",
+  "updatedAt": "2026-11-11T04:33:55.482331+00:00",
   "functionalBaselineRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
   "acceptedLifecycleFixMainRevision": "8c24d0c73309e45738285cee4d0297ef4158810d",
   "currentMainIntegration": {
-    "sourceRevision": "8c24d0c73309e45738285cee4d0297ef4158810d",
-    "status": "failed-pending-memory-concurrent-initialization-fix",
-    "failedTest": "concurrent_first_open_applies_each_memory_migration_once",
-    "error": "DatabaseBusy (database is locked)",
-    "observationSource": "root current full Rust integration run",
-    "priorFullPassAppliesOnlyToFunctionalBaseline": true,
-    "evidence": "integration-memory-race/summary.json"
+    "sourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+    "status": "passed",
+    "rustPassed": 1288,
+    "rustIgnored": 1,
+    "rustTestPrograms": 102,
+    "fullRunnerExited0": true,
+    "allFourGatesExit0": true,
+    "sourceInputCount": 1109,
+    "inputSha256": "457cd3afb5539f790692b106a85391ac6e05ca74fe734089affa2b5629c9b8a1",
+    "originalSummarySha256": "59395a1bb72da521225ccbeb387432e4d0859502834ebce1e4707ef9c5d12ae0",
+    "priorFullPassNotInherited": true
+  },
+  "currentDeliverySourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "memoryFixMainRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "integrationHistory": [
+    {
+      "sourceRevision": "8c24d0c73309e45738285cee4d0297ef4158810d",
+      "status": "failed-pending-memory-concurrent-initialization-fix",
+      "failedTest": "concurrent_first_open_applies_each_memory_migration_once",
+      "error": "DatabaseBusy (database is locked)",
+      "observationSource": "root current full Rust integration run",
+      "priorFullPassAppliesOnlyToFunctionalBaseline": true,
+      "evidence": "integration-memory-race/summary.json"
+    }
+  ],
+  "currentLinuxDeployment": {
+    "sourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+    "status": "deployed-and-checked",
+    "pid": 1130870,
+    "startTicks": 13485649,
+    "imageSha256": "0307664605c21ea7777572f388af1e19c19774b2cfe25bf6a56ac32932e1472e",
+    "originalStateAndRunRecordsRetained": true,
+    "testCredentialRevokedAndPairingClosed": true,
+    "summarySha256": "0169d96478d7437ab6436e08cc578f107f13da2d27df7191f8646c666be96d3b"
   }
 }

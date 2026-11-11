@@ -1,0 +1,5 @@
+   Compiling orchester-laufzeit v0.1.2 (/home/han/project/Orchester/kisten/laufzeit)
+   Compiling orchester-anwendung v0.1.2 (/home/han/project/Orchester/kisten/anwendung)
+   Compiling orchester-netz v0.1.2 (/home/han/project/Orchester/kisten/netz)
+   Compiling orchester-konsole v0.1.2 (/home/han/project/Orchester/kisten/konsole)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 10.86s

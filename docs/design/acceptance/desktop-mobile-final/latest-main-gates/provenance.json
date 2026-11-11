@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-11-11T04:31:49.741766+00:00",
+  "sourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "selectedFiles": [
+    {
+      "path": "summary.json",
+      "sourcePath": "/tmp/orchester-memory-main-integration-20261111T042043Z/summary.json",
+      "sourceSha256": "59395a1bb72da521225ccbeb387432e4d0859502834ebce1e4707ef9c5d12ae0",
+      "archivedSha256": "59395a1bb72da521225ccbeb387432e4d0859502834ebce1e4707ef9c5d12ae0",
+      "bytes": 3886,
+      "byteExact": true
+    },
+    {
+      "path": "rust-tests.log",
+      "sourcePath": "/tmp/orchester-memory-main-integration-20261111T042043Z/rust-tests.log",
+      "sourceSha256": "f91c022cb2a9df73828ec09b5b9faae93ed972a374dd61fd9fa405f98a6e5235",
+      "archivedSha256": "f91c022cb2a9df73828ec09b5b9faae93ed972a374dd61fd9fa405f98a6e5235",
+      "bytes": 121367,
+      "byteExact": true
+    },
+    {
+      "path": "rust-fmt.log",
+      "sourcePath": "/tmp/orchester-memory-main-integration-20261111T042043Z/rust-fmt.log",
+      "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archivedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "byteExact": true
+    },
+    {
+      "path": "rust-clippy.log",
+      "sourcePath": "/tmp/orchester-memory-main-integration-20261111T042043Z/rust-clippy.log",
+      "sourceSha256": "2c5b4a346873d0c0fac112399f042dbbc8c5872c935fdeee272a66c7c4f38f8d",
+      "archivedSha256": "2c5b4a346873d0c0fac112399f042dbbc8c5872c935fdeee272a66c7c4f38f8d",
+      "bytes": 405,
+      "byteExact": true
+    },
+    {
+      "path": "linux-native-build.log",
+      "sourcePath": "/tmp/orchester-memory-main-integration-20261111T042043Z/linux-native-build.log",
+      "sourceSha256": "3aba4a7c8064688059c319a7c682edcdc9457b647e49811684e46d8b8b3be0ed",
+      "archivedSha256": "3aba4a7c8064688059c319a7c682edcdc9457b647e49811684e46d8b8b3be0ed",
+      "bytes": 405,
+      "byteExact": true
+    },
+    {
+      "path": "source-after.json",
+      "sourcePath": "/tmp/orchester-memory-main-integration-20261111T042043Z/source-after.json",
+      "sourceSha256": "583001dca6214b7b7eb8e4e83ea105a37854d66fe4f2f115c0371a394c195a35",
+      "archivedSha256": "583001dca6214b7b7eb8e4e83ea105a37854d66fe4f2f115c0371a394c195a35",
+      "bytes": 194285,
+      "byteExact": true
+    },
+    {
+      "path": "frontend-reuse-proof.json",
+      "sourcePath": "/tmp/orchester-memory-main-integration-20261111T042043Z/frontend-reuse-proof.json",
+      "sourceSha256": "fd3361884a2b603ff7d69ceff176756b684cccf5f6ce47c5454667611b1ffbbe",
+      "archivedSha256": "fd3361884a2b603ff7d69ceff176756b684cccf5f6ce47c5454667611b1ffbbe",
+      "bytes": 1131,
+      "byteExact": true
+    }
+  ],
+  "all1109SourceRowsBoundToCurrentMainGitBlobs": true,
+  "gitBlobByteExactCount": 1108,
+  "gitDeclaredCheckoutEolEquivalent": [
+    {
+      "path": "apps/mobile/android/gradlew.bat",
+      "checkoutSha256": "1d297e00bd21de3ace22b4d7f2de1f9dfa858883d66bbf7c1ccbecccec8f4f3b",
+      "gitBlobSha256": "94102713eb8fb22d032397924c0f38ab2da783ba60d07054339f1190a0c4e2cd",
+      "gitAttribute": "text eol=crlf",
+      "onlyCheckoutCRLFNormalizationDiff": true
+    }
+  ],
+  "beforeAndAfterFingerprintExactlyEqual": true,
+  "canonicalInputSha256": "457cd3afb5539f790692b106a85391ac6e05ca74fe734089affa2b5629c9b8a1",
+  "rootOwningSupervisorFinalExitCode": 0,
+  "rootSupervisorConfirmation": "root observed final completion of session32096 before requesting archive",
+  "gatesExitCodes": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "linuxElfSha256": "0307664605c21ea7777572f388af1e19c19774b2cfe25bf6a56ac32932e1472e",
+  "linuxElfBytes": 235242304,
+  "codeInputFingerprintOnlyNoSourceDirectoryCopy": true,
+  "prior6278And8c24EvidenceRetained": true
+}
