@@ -145,6 +145,7 @@ export function useRemoteFleet() {
       }
       if (host.control.connectionStatus.value === "connected") {
         await host.control.action(host.control.refresh);
+        await host.control.refreshAgentStatus();
         return host;
       }
       await host.control.connect({ address, name: device.name });
@@ -153,8 +154,10 @@ export function useRemoteFleet() {
         host.control.devices.value.find((d) => d.address === address)?.name ||
         device.name;
       hosts.value = [...hosts.value];
-      if (String(host.control.connectionStatus.value) === "connected")
+      if (String(host.control.connectionStatus.value) === "connected") {
+        await host.control.refreshAgentStatus();
         await restore(host);
+      }
       return host;
     })().finally(() => connecting.delete(address));
     connecting.set(address, work);
@@ -205,6 +208,7 @@ export function useRemoteFleet() {
         if (selected) await panel.control.open(selected);
       }
     }
+    await host.control.refreshAgentStatus();
     await restore(host);
     return host;
   }
@@ -303,6 +307,7 @@ export function useRemoteFleet() {
                 host.control.refreshProjects(),
               ]);
             });
+            await host.control.refreshAgentStatus();
             host.syncError = host.control.error.value;
           }),
       );

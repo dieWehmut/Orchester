@@ -1,39 +1,14 @@
 import type { AgentRuntimeSummaryDto } from '@orchester/protokoll'
+import { agentIdentity, type AgentIdentityKey, type AgentIdentityTone } from '@orchester/design/agent-identities'
 
-export type AgentProviderKey = 'codex' | 'claude' | 'deepseek' | 'opencode' | 'gemini' | 'antigravity' | 'cursor' | 'workbuddy' | 'qwen' | 'openclaw' | 'generic'
-export type AgentProviderTone = 'success' | 'warning' | 'info' | 'accent' | 'neutral'
+export type AgentProviderKey = AgentIdentityKey | 'generic'
+export type AgentProviderTone = AgentIdentityTone
 
 export interface AgentProviderPresentation {
   readonly key: AgentProviderKey
   readonly label: string
   readonly iconKey: AgentProviderKey
   readonly tone: AgentProviderTone
-}
-
-const PROVIDERS: Record<Exclude<AgentProviderKey, 'generic'>, AgentProviderPresentation> = {
-  codex: { key: 'codex', label: 'OpenAI', iconKey: 'codex', tone: 'success' },
-  claude: { key: 'claude', label: 'Anthropic', iconKey: 'claude', tone: 'warning' },
-  deepseek: { key: 'deepseek', label: 'DeepSeek', iconKey: 'deepseek', tone: 'info' },
-  opencode: { key: 'opencode', label: 'OpenCode', iconKey: 'opencode', tone: 'accent' },
-  gemini: { key: 'gemini', label: 'Google', iconKey: 'gemini', tone: 'info' },
-  antigravity: { key: 'antigravity', label: 'Google', iconKey: 'antigravity', tone: 'accent' },
-  cursor: { key: 'cursor', label: 'Cursor', iconKey: 'cursor', tone: 'neutral' },
-  workbuddy: { key: 'workbuddy', label: 'Tencent', iconKey: 'workbuddy', tone: 'accent' },
-  qwen: { key: 'qwen', label: 'Qwen', iconKey: 'qwen', tone: 'info' },
-  openclaw: { key: 'openclaw', label: 'OpenClaw', iconKey: 'openclaw', tone: 'accent' },
-}
-
-function knownProviderKey(value: string): Exclude<AgentProviderKey, 'generic'> | null {
-  const key = value.trim().toLowerCase()
-  if (key === 'openai') return 'codex'
-  if (key === 'anthropic') return 'claude'
-  return Object.prototype.hasOwnProperty.call(PROVIDERS, key)
-    ? key as Exclude<AgentProviderKey, 'generic'>
-    : null
-}
-
-function knownProvider(agent: AgentRuntimeSummaryDto): Exclude<AgentProviderKey, 'generic'> | null {
-  return knownProviderKey(agent.provider) ?? knownProviderKey(agent.icon_key)
 }
 
 function humanizeProvider(provider: string): string {
@@ -44,9 +19,9 @@ function humanizeProvider(provider: string): string {
 export function agentProviderPresentation(
   agent: AgentRuntimeSummaryDto,
 ): AgentProviderPresentation {
-  const key = knownProvider(agent)
-  return key
-    ? { ...PROVIDERS[key] }
+  const identity = agentIdentity(agent.provider) ?? agentIdentity(agent.icon_key)
+  return identity
+    ? { key: identity.key, label: identity.label, iconKey: identity.key, tone: identity.tone }
     : {
         key: 'generic',
         label: humanizeProvider(agent.provider),

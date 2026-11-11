@@ -18,3 +18,15 @@ export * from './fixtures/failure'
 export * from './fixtures/reconnect'
 export * from './fixtures/manifest'
 export * from './library'
+export {
+  agentFleetCountKey,
+  agentFleetWindowCount,
+  agentHasManagedActivity,
+  agentIsMonitorOnly,
+  agentPresenceCountKey,
+  agentPresentedActivity,
+  agentProcessSourcesComplete,
+  agentWindowCount,
+  type AgentPresenceCountQuality,
+  type AgentPresenceCountUnit,
+} from './agent-presence'

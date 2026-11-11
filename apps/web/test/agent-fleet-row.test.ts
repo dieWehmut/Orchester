@@ -1,3 +1,4 @@
+import { agentIdentity } from '@orchester/design/agent-identities'
 import {
   AGENT_FLEET_FIXTURE,
   type AgentRuntimeSummaryDto,
@@ -14,7 +15,7 @@ describe('AgentFleetRow', () => {
     const agent: AgentRuntimeSummaryDto = { ...source, icon_key: 'custom-provider' }
     const wrapper = mount(AgentFleetRow, { props: { agent } })
 
-    expect(wrapper.get('[data-agent-icon="codex"] img').attributes('src')).toBe('/agents/codex.png')
+    expect(wrapper.get('[data-agent-icon="codex"] img').attributes('src')).toBe(agentIdentity('codex')!.marks.dark)
     expect(wrapper.get('[data-agent-provider="codex"]')).toBeTruthy()
     expect(wrapper.get('[data-agent-provider-label]').text()).toBe('OpenAI')
     await wrapper.get('button').trigger('click')

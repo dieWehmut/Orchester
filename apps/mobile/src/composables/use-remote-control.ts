@@ -1,4 +1,5 @@
-import { computed, ref, onScopeDispose } from "vue";
+import { computed, ref, shallowRef, onScopeDispose } from "vue";
+import { parseAgentFleetSnapshot, type AgentFleetSnapshotDto } from "@orchester/protokoll";
 import { credentials } from "../credentials";
 import {
   RemoteClient,
@@ -40,6 +41,10 @@ export function useRemoteControl() {
     | "needs_pairing"
   >("disconnected");
   const error = computed(() => actionError.value || pollError.value);
+  const agentSnapshot = shallowRef<AgentFleetSnapshotDto | null>(null),
+    agentSnapshotStatus = ref<"idle" | "loading" | "ready" | "stale" | "error">("idle"),
+    agentSnapshotError = ref("");
+  let agentSnapshotRequest = 0;
   const agents = ref<
       {
         name: string;
@@ -121,6 +126,10 @@ export function useRemoteControl() {
     connection++;
     historyRequest++;
     projectRevision++;
+    agentSnapshotRequest++;
+    agentSnapshot.value = null;
+    agentSnapshotStatus.value = "idle";
+    agentSnapshotError.value = "";
     projectScoped = false;
     projects.value = [];
     project.value = null;
@@ -208,6 +217,30 @@ export function useRemoteControl() {
         connectionStatus.value = "connected";
     } catch (e) {
       if (current === client && revision === historyRequest) throw e;
+    }
+  }
+  async function refreshAgentStatus() {
+    const current = client;
+    if (!current || connectionStatus.value === "needs_pairing") return;
+    const revision = ++agentSnapshotRequest;
+    agentSnapshotStatus.value = agentSnapshot.value ? "stale" : "loading";
+    try {
+      const raw = await current.request<unknown>("/agents/status");
+      const snapshot = parseAgentFleetSnapshot(raw);
+      if (current !== client || revision !== agentSnapshotRequest) return;
+      if (!snapshot) throw new Error("Invalid agent snapshot");
+      agentSnapshot.value = snapshot;
+      agentSnapshotStatus.value = "ready";
+      agentSnapshotError.value = "";
+    } catch (error) {
+      if (current !== client || revision !== agentSnapshotRequest) return;
+      agentSnapshotStatus.value = agentSnapshot.value ? "stale" : "error";
+      agentSnapshotError.value = error instanceof RemoteError && error.status === 401
+        ? "配对已过期，请重新配对"
+        : error instanceof RemoteError && error.status === 404
+          ? "这台电脑尚不支持 Agent 监控"
+          : "Agent 状态暂时无法更新";
+      if (error instanceof RemoteError && error.status === 401) connectionStatus.value = "needs_pairing";
     }
   }
   async function open(run: Run) {
@@ -447,6 +480,10 @@ export function useRemoteControl() {
     operation++;
   });
   return {
+    agentSnapshot,
+    agentSnapshotStatus,
+    agentSnapshotError,
+    refreshAgentStatus,
     projects,
     project,
     attachments,

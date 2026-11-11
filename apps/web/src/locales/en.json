@@ -88,6 +88,8 @@
       "windows": "windows",
       "process": "process",
       "processes": "processes",
+      "service": "service process",
+      "services": "service processes",
       "instance": "instance",
       "instances": "instances",
       "run": "run",
