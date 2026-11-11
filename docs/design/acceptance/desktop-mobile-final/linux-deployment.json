@@ -1,0 +1,73 @@
+{
+  "sourceRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+  "binaryBuiltRevision": "9a1d5b1b364f5c1f731cb3404855d2451a7511ec",
+  "rustInputsEqual": true,
+  "binarySha256": "2384f245e8e34900fa6141dcf27ba8b3fa09b41d040f7732e445ed69518fc968",
+  "identity": {
+    "pid": 1051536,
+    "startTicks": 12133082,
+    "image": "/home/han/project/Orchester/target/debug/orchester"
+  },
+  "stateDirectory": "/home/han/.local/state/orchester-remote",
+  "listenerPort": 7337,
+  "bind": "0.0.0.0",
+  "runCountBefore": 5,
+  "runStatesBefore": {
+    "completed": 4,
+    "cancelled": 1
+  },
+  "previousRecordedServiceMissingNow": true,
+  "startupPairingDisabled": true,
+  "providerSettingsLoadedIntoChildOnly": true,
+  "modelCalls": 0,
+  "status": "deployed-and-verified",
+  "assets": [
+    {
+      "path": "assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+      "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b"
+    },
+    {
+      "path": "assets/brand-icon-Zjdxen9M.png",
+      "sha256": "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06"
+    },
+    {
+      "path": "assets/index-BpSqRAdp.js",
+      "sha256": "6d98e97e9bd5f167cfefb2516044597403c789fd700992f376b55d2532e8f008"
+    },
+    {
+      "path": "assets/index-DUL45N1m.css",
+      "sha256": "da41e4d0cff358cf4526670a8b7b8e482d7993934318674a99389ccd51e420c0"
+    },
+    {
+      "path": "favicon.png",
+      "sha256": "bd2b0e95dade84d5371027cc9616610813b3e7f878b434d54a3a1459111c7db2"
+    },
+    {
+      "path": "index.html",
+      "sha256": "ce89e38c05c2ebc02b57ee06dacb9a2181202135f5d667c4ce98f5dc8268b409"
+    }
+  ],
+  "unauthorizedInfo": 401,
+  "authorizedReadChecks": [
+    {
+      "path": "/info",
+      "status": 200
+    },
+    {
+      "path": "/agents",
+      "status": 200
+    },
+    {
+      "path": "/projects",
+      "status": 200
+    }
+  ],
+  "testDeviceDeleted": true,
+  "revokedTokenStatus": 401,
+  "originalDevicesExactlyRetained": true,
+  "runRecordsExactlyRetained": true,
+  "authAndProjectStateExactlyRetained": true,
+  "runCountAfter": 5,
+  "pairingClosedAfterChecks": true,
+  "controlledStdinRetained": true
+}

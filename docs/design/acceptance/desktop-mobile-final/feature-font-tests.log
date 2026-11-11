@@ -1,0 +1,67 @@
+LOG orchester-fonts-mobile-test.log
+SCOPE mobile-full
+
+> @orchester/mobile@0.1.0 test /home/han/project/Orchester/.worktrees/mobile-desktop-fonts/apps/mobile
+> vitest run
+
+
+ RUN  v4.1.10 /home/han/project/Orchester/.worktrees/mobile-desktop-fonts/apps/mobile
+
+
+ Test Files  9 passed (9)
+      Tests  124 passed (124)
+   Start at  22:32:46
+   Duration  1.91s (transform 1.23s, setup 0ms, import 1.51s, tests 2.32s, environment 2.15s)
+
+
+LOG orchester-fonts-design-step1.log
+SCOPE design-full-before-palette-final
+
+> @orchester/design@0.1.2 test /home/han/project/Orchester/.worktrees/mobile-desktop-fonts/packages/design
+> vitest run
+
+
+ RUN  v4.1.10 /home/han/project/Orchester/.worktrees/mobile-desktop-fonts/packages/design
+
+
+ Test Files  52 passed (52)
+      Tests  308 passed (308)
+   Start at  22:31:18
+   Duration  5.26s (transform 19.11s, setup 0ms, import 34.92s, tests 3.10s, environment 41.87s)
+
+
+LOG orchester-fonts-mobile-fonts-final.log
+SCOPE mobile-font-final
+
+ RUN  v4.1.10 /home/han/project/Orchester/.worktrees/mobile-desktop-fonts/apps/mobile
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  22:35:26
+   Duration  766ms (transform 270ms, setup 0ms, import 323ms, tests 28ms, environment 348ms)
+
+
+LOG orchester-fonts-palette-final.log
+SCOPE design-palette-final
+
+ RUN  v4.1.10 /home/han/project/Orchester/.worktrees/mobile-desktop-fonts/packages/design
+
+
+ Test Files  1 passed (1)
+      Tests  32 passed (32)
+   Start at  22:33:13
+   Duration  493ms (transform 21ms, setup 0ms, import 30ms, tests 11ms, environment 364ms)
+
+
+LOG orchester-fonts-web-appearance-test.log
+SCOPE web-appearance-feature
+
+ RUN  v4.1.10 /home/han/project/Orchester/.worktrees/mobile-desktop-fonts/apps/web
+
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  22:36:12
+   Duration  2.36s (transform 1.06s, setup 0ms, import 1.37s, tests 445ms, environment 361ms)
+
