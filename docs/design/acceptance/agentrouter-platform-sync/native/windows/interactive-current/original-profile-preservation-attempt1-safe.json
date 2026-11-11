@@ -1,0 +1,18 @@
+{
+  "format": "orchester-final21-original-profile-preservation-attempt-v1",
+  "status": "failed-current-desktop-webview-lockfile-in-use",
+  "nativeExecutorActualExitCode": 1,
+  "originalWebViewInventoryReadable": false,
+  "currentAllOriginalProfilesByteExactProved": false,
+  "rootProgressNotPersisted": true,
+  "newCurrentDesktopPid": 28748,
+  "newCurrentDesktopBirthUtc": "2026-11-11T12:29:29.0831200Z",
+  "newDesktopStartedByThisTask": false,
+  "newOriginalUserDesktopSignalled": false,
+  "initialOfflineBackupReceiptSha256": "62b98bce6e0f98fb5dd5b14c0126e0988c4c16e79cbbc320e08eb4676440745c",
+  "currentNativeMetadataReceiptSha256": "f095efe75e87614931d800c1452db22c8128b8340cc98d9b5617facd4bee9775",
+  "defaultProfilesModifiedByThisTask": false,
+  "privateRawContentsPublished": false,
+  "signals": 0,
+  "requiredNextCondition": "Normal exit of this new original desktop, then consistent backup of the latest private WebView/profile files before the eventual guarded reinstall."
+}

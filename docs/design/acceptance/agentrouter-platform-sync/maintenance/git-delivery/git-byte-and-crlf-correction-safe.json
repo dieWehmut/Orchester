@@ -1,0 +1,12 @@
+{
+  "operation": "Git committed receipt bytes and scoped CRLF whitespace policy correction",
+  "actualDefaultWhitespaceCheckBeforeScopeExitCode": 2,
+  "cause": "native Windows original CRLF records treated as trailing whitespace",
+  "archivedBytesNormalized": false,
+  "exactGitBlobAndWorkingFileComparisons": 194,
+  "allExact": true,
+  "correctedScopedWhitespaceCheckExitCode": 0,
+  "productionSourceChanges": 0,
+  "revisionBeforeAttributesCommit": "213d315f23c1d0155f7ae38bb1b55c41deeebcfd",
+  "observedAt": "2026-11-11T12:39:59.968944+00:00"
+}

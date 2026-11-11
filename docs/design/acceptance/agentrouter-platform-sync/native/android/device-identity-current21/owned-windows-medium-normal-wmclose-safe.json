@@ -1,0 +1,66 @@
+﻿{
+    "status":  "verified-owned-windows-emulator-normal-close-prepared",
+    "defaultAdbCommandsIssued":  0,
+    "processTerminations":  0,
+    "otherEmulatorsSignalled":  false,
+    "windowsMediumDiskOrKeyStoreEdited":  false,
+    "ownHead":  {
+                    "pid":  2344,
+                    "creationUtc":  "2026-11-11T11:03:35.0326143Z",
+                    "creationTicks":  639299918150326143,
+                    "image":  "C:\\Users\\han\\AppData\\Local\\Android\\Sdk\\emulator\\emulator.exe",
+                    "imageSha256":  "06af3c5da3c2cef7266822fe653f54371fc746d78db6f4282e1b2338a70970c8"
+                },
+    "ownQemu":  {
+                    "pid":  3828,
+                    "parentPid":  2344,
+                    "creationUtc":  "2026-11-11T11:03:35.2212470Z",
+                    "creationTicks":  639299918152212470,
+                    "image":  "C:\\Users\\han\\AppData\\Local\\Android\\Sdk\\emulator\\qemu\\windows-x86_64\\qemu-system-x86_64.exe",
+                    "imageSha256":  "43e837eac130136853bb945462ba104cdc1d8fb76ad5e7cc9d566f9cdda5b328"
+                },
+    "closeRequests":  [
+                          {
+                              "hwnd":  328864,
+                              "ownerPid":  3828,
+                              "message":  "WM_CLOSE",
+                              "posted":  true
+                          },
+                          {
+                              "hwnd":  395290,
+                              "ownerPid":  3828,
+                              "message":  "WM_CLOSE",
+                              "posted":  true
+                          },
+                          {
+                              "hwnd":  395314,
+                              "ownerPid":  3828,
+                              "message":  "WM_CLOSE",
+                              "posted":  true
+                          },
+                          {
+                              "hwnd":  526468,
+                              "ownerPid":  3828,
+                              "message":  "WM_CLOSE",
+                              "posted":  true
+                          },
+                          {
+                              "hwnd":  329842,
+                              "ownerPid":  3828,
+                              "message":  "WM_CLOSE",
+                              "posted":  true
+                          },
+                          {
+                              "hwnd":  917804,
+                              "ownerPid":  3828,
+                              "message":  "WM_CLOSE",
+                              "posted":  true
+                          },
+                          {
+                              "hwnd":  2228724,
+                              "ownerPid":  3828,
+                              "message":  "WM_CLOSE",
+                              "posted":  true
+                          }
+                      ]
+}

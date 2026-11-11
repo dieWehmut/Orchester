@@ -1,0 +1,14 @@
+﻿{
+    "status":  "owned-windows-medium-normal-wmclose-actual-exit-confirmed",
+    "priorReceiptFile":  "owned-windows-medium-normal-wmclose-safe.json",
+    "priorQemuCreationTicks":  639299918152212470,
+    "priorHeadCreationTicks":  639299918150326143,
+    "normalWmClosePostedCount":  7,
+    "originalQemuPidGone":  true,
+    "originalHeadPidGone":  true,
+    "observedOriginalPidRows":  [
+
+                                ],
+    "signals":  0,
+    "defaultAdbCommands":  0
+}

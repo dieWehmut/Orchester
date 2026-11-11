@@ -1,0 +1,207 @@
+[
+  {
+    "directory": "/mnt/c/Users/han/.android/avd/Medium_Phone.avd",
+    "files": [
+      {
+        "path": "/mnt/c/Users/han/.android/avd/Medium_Phone_API_37.0.ini",
+        "bytes": 121,
+        "mtimeUTC": "2026-11-09T04:56:22.986492+00:00",
+        "ctimeUTC": "2026-11-09T04:56:22.986492+00:00",
+        "sha256": "47fe0b97b105655cb8c2c56af3432038820090ea307e0f564b68601ffc5d0846",
+        "selectedPublicConfig": {
+          "path": "C:\\Users\\han\\.android\\avd\\Medium_Phone.avd",
+          "path.rel": "avd\\Medium_Phone.avd",
+          "target": "android-37.0"
+        }
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/Medium_Phone.avd/config.ini",
+        "bytes": 1443,
+        "mtimeUTC": "2026-11-09T05:06:31.531821+00:00",
+        "ctimeUTC": "2026-11-09T05:06:31.531821+00:00",
+        "sha256": "2c09c45e0c587d206264ed83ea246215fdd728ce30c035b0804f3b6f1899f4aa",
+        "selectedPublicConfig": {
+          "AvdId": "Medium_Phone_API_37.0",
+          "avd.ini.displayname": "Medium Phone API 37.0",
+          "fastboot.chosenSnapshotFile": "",
+          "fastboot.forceColdBoot": "no",
+          "fastboot.forceFastBoot": "yes",
+          "hw.device.manufacturer": "Generic",
+          "hw.device.name": "medium_phone",
+          "image.sysdir.1": "system-images\\android-37.0\\google_apis_playstore\\x86_64\\",
+          "skin.path": "1080x2400",
+          "target": "android-37.0"
+        }
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/Medium_Phone.avd/hardware-qemu.ini",
+        "bytes": 4557,
+        "mtimeUTC": "2026-11-11T11:03:36.160136+00:00",
+        "ctimeUTC": "2026-11-11T11:03:36.160688+00:00",
+        "sha256": "44dd91c1a7aaa486355b4ec1a320f036786376d2c91f32a8ee6e2b255869173f",
+        "selectedPublicConfig": {
+          "hw.device.name": "medium_phone",
+          "disk.dataPartition.path": "C:\\Users\\han\\.android\\avd\\..\\avd\\Medium_Phone.avd\\userdata-qemu.img",
+          "fastboot.forceColdBoot": "false"
+        }
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/Medium_Phone.avd/emulator-user.ini",
+        "bytes": 119,
+        "mtimeUTC": "2026-11-11T10:03:43.078824+00:00",
+        "ctimeUTC": "2026-11-11T10:03:43.081821+00:00"
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/Medium_Phone.avd/snapshots/default_boot/snapshot.pb",
+        "bytes": 11,
+        "mtimeUTC": "2026-11-11T11:03:38.514783+00:00",
+        "ctimeUTC": "2026-11-11T11:03:38.514783+00:00"
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/Medium_Phone.avd/snapshots/default_boot/ram.img",
+        "bytes": 4295032832,
+        "mtimeUTC": "2026-11-09T05:44:58.997350+00:00",
+        "ctimeUTC": "2026-11-09T05:44:58.997350+00:00"
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/Medium_Phone.avd/userdata-qemu.img",
+        "bytes": 10158080,
+        "mtimeUTC": "2026-11-09T05:44:57.716911+00:00",
+        "ctimeUTC": "2026-11-09T05:44:57.716911+00:00"
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/Medium_Phone.avd/userdata-qemu.img.qcow2",
+        "bytes": 3099066368,
+        "mtimeUTC": "2026-11-11T12:26:55.847959+00:00",
+        "ctimeUTC": "2026-11-11T12:26:55.847959+00:00"
+      }
+    ]
+  },
+  {
+    "directory": "/mnt/c/Users/han/.android/avd/Sandkasten_Windows_API37.avd",
+    "files": [
+      {
+        "path": "/mnt/c/Users/han/.android/avd/Sandkasten_Windows_API37.ini",
+        "bytes": 145,
+        "mtimeUTC": "2026-11-10T06:08:26.927243+00:00",
+        "ctimeUTC": "2026-11-10T06:08:26.927243+00:00",
+        "sha256": "4cbddc036d69ae98e63f319093f66cf6d29ac22abe5d51f8e7d83f19c6fb32c7",
+        "selectedPublicConfig": {
+          "path": "C:\\Users\\han\\.android\\avd\\Sandkasten_Windows_API37.avd",
+          "path.rel": "avd\\Sandkasten_Windows_API37.avd",
+          "target": "android-37.0"
+        }
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/Sandkasten_Windows_API37.avd/config.ini",
+        "bytes": 1456,
+        "mtimeUTC": "2026-11-10T06:08:44.031765+00:00",
+        "ctimeUTC": "2026-11-10T06:08:44.031765+00:00",
+        "sha256": "5eaa07a32aeac2202acf2ef1fccd1c82aa23b1dcfc1d96a2dae737173b421fd0",
+        "selectedPublicConfig": {
+          "AvdId": "Sandkasten_Windows_API37",
+          "avd.ini.displayname": "Sandkasten Windows API 37",
+          "fastboot.chosenSnapshotFile": "",
+          "fastboot.forceColdBoot": "yes",
+          "fastboot.forceFastBoot": "no",
+          "hw.device.manufacturer": "Generic",
+          "hw.device.name": "medium_phone",
+          "image.sysdir.1": "system-images\\android-37.0\\google_apis_playstore\\x86_64\\",
+          "skin.path": "1080x2400",
+          "target": "android-37.0"
+        }
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/Sandkasten_Windows_API37.avd/hardware-qemu.ini",
+        "bytes": 4518,
+        "mtimeUTC": "2026-11-10T06:08:48.571901+00:00",
+        "ctimeUTC": "2026-11-10T06:08:48.571901+00:00",
+        "sha256": "609159f8b1331e15adfddd64c92a9077ad67894066bdd3e913e2fc882f675b8c",
+        "selectedPublicConfig": {
+          "hw.device.name": "medium_phone",
+          "disk.dataPartition.path": "C:\\Users\\han\\.android\\avd\\..\\avd\\Sandkasten_Windows_API37.avd\\userdata-qemu.img",
+          "fastboot.forceColdBoot": "true"
+        }
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/Sandkasten_Windows_API37.avd/emulator-user.ini",
+        "bytes": 119,
+        "mtimeUTC": "2026-11-10T12:23:11.574960+00:00",
+        "ctimeUTC": "2026-11-10T12:23:11.574960+00:00"
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/Sandkasten_Windows_API37.avd/snapshots/default_boot/ram.img",
+        "bytes": 4295032832,
+        "mtimeUTC": "2026-11-10T06:08:48.640057+00:00",
+        "ctimeUTC": "2026-11-10T06:08:48.640057+00:00"
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/Sandkasten_Windows_API37.avd/userdata-qemu.img",
+        "bytes": 6356992,
+        "mtimeUTC": "2026-11-10T06:08:47.918748+00:00",
+        "ctimeUTC": "2026-11-10T06:08:47.918748+00:00"
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/Sandkasten_Windows_API37.avd/userdata-qemu.img.qcow2",
+        "bytes": 2536374272,
+        "mtimeUTC": "2026-11-10T12:23:06.585440+00:00",
+        "ctimeUTC": "2026-11-10T12:23:06.585440+00:00"
+      }
+    ]
+  },
+  {
+    "directory": "/mnt/c/Users/han/.android/avd/selbstlauf-qa.avd",
+    "files": [
+      {
+        "path": "/mnt/c/Users/han/.android/avd/selbstlauf-qa.ini",
+        "bytes": 90,
+        "mtimeUTC": "2026-11-09T20:29:02.304168+00:00",
+        "ctimeUTC": "2026-11-09T20:29:02.304168+00:00",
+        "sha256": "8bb34f355aedfc8e5731138a26f6692aa535a9523043c5884dbd5c35a84f0c8e",
+        "selectedPublicConfig": {
+          "path": "C:\\Users\\han\\.android\\avd\\selbstlauf-qa.avd",
+          "target": "android-37"
+        }
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/selbstlauf-qa.avd/config.ini",
+        "bytes": 474,
+        "mtimeUTC": "2026-11-09T20:29:02.493468+00:00",
+        "ctimeUTC": "2026-11-09T20:29:02.494468+00:00",
+        "sha256": "5de0070451e33f01d4aa8b0f382094735a91bfede7dcdb979b139049e81df2e4",
+        "selectedPublicConfig": {
+          "image.sysdir.1": "system-images/android-37.0/google_apis_playstore/x86_64/"
+        }
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/selbstlauf-qa.avd/hardware-qemu.ini",
+        "bytes": 4407,
+        "mtimeUTC": "2026-11-09T20:29:16.819699+00:00",
+        "ctimeUTC": "2026-11-09T20:29:16.820204+00:00",
+        "sha256": "8dfa27ba29be0627cd98c5a19152209265b30f3173bc58f522806358586b43e6",
+        "selectedPublicConfig": {
+          "disk.dataPartition.path": "C:\\Users\\han\\.android\\avd\\selbstlauf-qa.avd\\userdata-qemu.img",
+          "fastboot.forceColdBoot": "false"
+        }
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/selbstlauf-qa.avd/snapshots/default_boot/ram.img",
+        "bytes": 4295032832,
+        "mtimeUTC": "2026-11-09T20:29:16.941676+00:00",
+        "ctimeUTC": "2026-11-09T20:29:16.941676+00:00"
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/selbstlauf-qa.avd/userdata-qemu.img",
+        "bytes": 6356992,
+        "mtimeUTC": "2026-11-09T20:29:15.475785+00:00",
+        "ctimeUTC": "2026-11-09T20:29:15.475785+00:00"
+      },
+      {
+        "path": "/mnt/c/Users/han/.android/avd/selbstlauf-qa.avd/userdata-qemu.img.qcow2",
+        "bytes": 2821324800,
+        "mtimeUTC": "2026-11-11T10:42:04.229647+00:00",
+        "ctimeUTC": "2026-11-11T10:42:04.229647+00:00"
+      }
+    ]
+  }
+]

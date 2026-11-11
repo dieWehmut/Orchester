@@ -1549,6 +1549,231 @@
       "bytes": 227,
       "byteExact": true,
       "scope": "CurrentnativeBridge actual0/OK result with private stdout/stderr digests only; producer reports4tests, compactsafeJSON itself does not contain parsedtestcount/SID/IDEproof; no private stdoutcopied."
+    },
+    {
+      "path": "maintenance/git-delivery/git-byte-and-crlf-correction-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/root-docs-review/git-byte-and-crlf-correction-safe.json",
+      "sourceSha256": "e6e04807d005310247b2d4edd985af17d343da809c6240b4ba30e875eb9b5080",
+      "archivedSha256": "e6e04807d005310247b2d4edd985af17d343da809c6240b4ba30e875eb9b5080",
+      "bytes": 547,
+      "byteExact": true,
+      "scope": "Historical193archive+MD194 exactGitbytes and firstdefaultwhitespace2; scoped -text/cr-at-eol policyfix0 without normalizing sourcebytes;productionchanges0."
+    },
+    {
+      "path": "maintenance/git-delivery/step-delivery-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/root-docs-review/step-delivery-safe.json",
+      "sourceSha256": "6e130032a0659efe8666cf735abf8ff923388df78d2f5ce2edf7f6fbb6d1301d",
+      "archivedSha256": "6e130032a0659efe8666cf735abf8ff923388df78d2f5ce2edf7f6fbb6d1301d",
+      "bytes": 507,
+      "byteExact": true,
+      "scope": "213d315documentation/812e0e6receiptpolicy/main32992976 merge/twopushactual0; production71 unchanged and nativeacceptancepending."
+    },
+    {
+      "path": "maintenance/workspace-current/actual-worktree-cleanup-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/workspace-maintenance-audit/actual-worktree-cleanup-safe.json",
+      "sourceSha256": "eed4193ffe8a84b6ca2c03d690e5e914d6a73316a1caf6787fad8789ea09952c",
+      "archivedSha256": "eed4193ffe8a84b6ca2c03d690e5e914d6a73316a1caf6787fad8789ea09952c",
+      "bytes": 3940,
+      "byteExact": true,
+      "scope": "Actual4cleanmergedworktree normalremove+branch-d0 and2missingregistrationprune0,retainednonancestorrefs;17783011371logicalbytes not Cphysical."
+    },
+    {
+      "path": "maintenance/workspace-current/final-workspace-cleanup-candidates-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/workspace-maintenance-audit/final-workspace-cleanup-candidates-safe.json",
+      "sourceSha256": "0651a278b74a334da62ae320a4da9c6722a6d25788dd0ac13cb272c7686e9cb2",
+      "archivedSha256": "0651a278b74a334da62ae320a4da9c6722a6d25788dd0ac13cb272c7686e9cb2",
+      "bytes": 6856,
+      "byteExact": true,
+      "scope": "Initialcandidatepreflight4 exactcleanmergedownedtaskworktrees,regenerativeignoredcategories only; no deletionproofbyitself."
+    },
+    {
+      "path": "maintenance/workspace-current/same-user-process-path-observation-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/workspace-maintenance-audit/same-user-process-path-observation-safe.json",
+      "sourceSha256": "430674f4cb23284de97e1aba0283ef1d542b25e7ac96ad7efc0205131ee49d44",
+      "archivedSha256": "430674f4cb23284de97e1aba0283ef1d542b25e7ac96ad7efc0205131ee49d44",
+      "bytes": 1465,
+      "byteExact": true,
+      "scope": "SameLinuxuser-only75process pathmetadata observer; otherusers87excluded andreaderrors/races retained,zero observedrefs not generalunusedproof/authorization."
+    },
+    {
+      "path": "native/windows/interactive-current/native-current-after-profile-lock-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/native-current-after-profile-lock-safe.json",
+      "sourceSha256": "f095efe75e87614931d800c1452db22c8128b8340cc98d9b5617facd4bee9775",
+      "archivedSha256": "f095efe75e87614931d800c1452db22c8128b8340cc98d9b5617facd4bee9775",
+      "bytes": 9636,
+      "byteExact": true,
+      "scope": "CurrentexternaloriginalDesktop28748/birth12:29/session1+WebView508live; priorabsence10:53/offlinebackup only historical. Input/cursoraccess5;0signals/privatecontents."
+    },
+    {
+      "path": "native/windows/interactive-current/original-profile-preservation-attempt1-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/original-profile-preservation-attempt1-safe.json",
+      "sourceSha256": "ed6f9db60af2871a993d04a37a18548754780efb750019e03387267daf876f16",
+      "archivedSha256": "ed6f9db60af2871a993d04a37a18548754780efb750019e03387267daf876f16",
+      "bytes": 986,
+      "byteExact": true,
+      "scope": "Actualnativeexecutor1/WebViewlock/unreadableinventory/currentprofileexactnotproved; originalofflinbackup62unchanged/no profilewrite orsignal; futurefreshbackup afterownernormaltrayexit needed."
+    },
+    {
+      "path": "native/windows/interactive-current/new-default-desktop-parent-readonly-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/new-default-desktop-parent-readonly-safe.json",
+      "sourceSha256": "401f867f4b99bd6de0f76fcbaa1656706abe02340adc266575553d0bb3a05402",
+      "archivedSha256": "401f867f4b99bd6de0f76fcbaa1656706abe02340adc266575553d0bb3a05402",
+      "bytes": 1044,
+      "byteExact": true,
+      "scope": "CurrentDesktop28748 parentExplorer8588 oldbirth10:44/session1,not taskcontroller launch; exactpublicprocessmetadata only/no argv/env/signal."
+    },
+    {
+      "path": "native/windows/temporary-7339/ready-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-20261111/ready-safe.json",
+      "sourceSha256": "88477404ba3e2223b223d717a59a67dd648d73a58ad80e3dd2a0ee53860c2569",
+      "archivedSha256": "88477404ba3e2223b223d717a59a67dd648d73a58ad80e3dd2a0ee53860c2569",
+      "bytes": 1996,
+      "byteExact": true,
+      "scope": "ActualisolatedtemporaryWindows7339 ready/source71/backend24c8/creatorhandles kept; no privateconnectionread/formal14/18/7338/profilemodify/promotion/finalAndroidbinding orcleanupclaim."
+    },
+    {
+      "path": "native/windows/temporary-7339/public-http-preflight-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-20261111/public-http-preflight-safe.json",
+      "sourceSha256": "55c86d8d88049c90dc867cacc7d35176d3639cc39c84295323930c4763478bfb",
+      "archivedSha256": "55c86d8d88049c90dc867cacc7d35176d3639cc39c84295323930c4763478bfb",
+      "bytes": 6952,
+      "byteExact": true,
+      "scope": "Temporary7339 actual17publicHTTP200/byteexact/unauthprojects401/no pairingcode used; no ConPTY/formal14/18/defaultpromotion/cleanup."
+    },
+    {
+      "path": "native/android/device-identity-current21/current-public-config-and-metadata-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/android-avd-identity-audit/current-public-config-and-metadata-safe.json",
+      "sourceSha256": "1a9d0160ba62c44cd13df5f82777f29ffb6844e2625b4dd5792f1a3f7d15cb22",
+      "archivedSha256": "1a9d0160ba62c44cd13df5f82777f29ffb6844e2625b4dd5792f1a3f7d15cb22",
+      "bytes": 8618,
+      "byteExact": true,
+      "scope": "Currentcrosshostidentity whitelist evidence: Windows5554/5555/5037 relay actuallyLinuxorchester-qa qemu/FD/listeners; no privateXML/Keystore/disk/argv/env reads, no nativeADB/queue/VMsignal. Historicalpre20AVD identity notproved; currentAPKtests not invalidated."
+    },
+    {
+      "path": "native/android/device-identity-current21/historical-sandkasten-5560-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/android-avd-identity-audit/historical-sandkasten-5560-safe.json",
+      "sourceSha256": "f3e6fb61822ef058dda78d4e6e77dbd47e78fb8b515fa8d227d5af5e6154743e",
+      "archivedSha256": "f3e6fb61822ef058dda78d4e6e77dbd47e78fb8b515fa8d227d5af5e6154743e",
+      "bytes": 1391,
+      "byteExact": true,
+      "scope": "Currentcrosshostidentity whitelist evidence: Windows5554/5555/5037 relay actuallyLinuxorchester-qa qemu/FD/listeners; no privateXML/Keystore/disk/argv/env reads, no nativeADB/queue/VMsignal. Historicalpre20AVD identity notproved; currentAPKtests not invalidated."
+    },
+    {
+      "path": "native/android/device-identity-current21/current-linux5554-listener-and-avd-fd-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/android-avd-identity-audit/current-linux5554-listener-and-avd-fd-safe.json",
+      "sourceSha256": "bf33238d9a7aa1f3d39f16dbfa694282decc1c3dba18028483873e4ca94cafd6",
+      "archivedSha256": "bf33238d9a7aa1f3d39f16dbfa694282decc1c3dba18028483873e4ca94cafd6",
+      "bytes": 4352,
+      "byteExact": true,
+      "scope": "Currentcrosshostidentity whitelist evidence: Windows5554/5555/5037 relay actuallyLinuxorchester-qa qemu/FD/listeners; no privateXML/Keystore/disk/argv/env reads, no nativeADB/queue/VMsignal. Historicalpre20AVD identity notproved; currentAPKtests not invalidated."
+    },
+    {
+      "path": "native/android/device-identity-current21/root-linux-endpoint-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/android-avd-identity-audit/root-linux-endpoint-safe.json",
+      "sourceSha256": "99a9986d723d86879085a35efec4bbad291931375166dc6e87bed3a2595d47ae",
+      "archivedSha256": "99a9986d723d86879085a35efec4bbad291931375166dc6e87bed3a2595d47ae",
+      "bytes": 2460,
+      "byteExact": true,
+      "scope": "Currentcrosshostidentity whitelist evidence: Windows5554/5555/5037 relay actuallyLinuxorchester-qa qemu/FD/listeners; no privateXML/Keystore/disk/argv/env reads, no nativeADB/queue/VMsignal. Historicalpre20AVD identity notproved; currentAPKtests not invalidated."
+    },
+    {
+      "path": "native/android/device-identity-current21/native-metadata-request-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/android-avd-identity-audit/native-metadata-request-safe.json",
+      "sourceSha256": "3bda45a8e5f1e35205e1b51179f7670cd05d1ebc14c2232d0ff436cac4d8b1f1",
+      "archivedSha256": "3bda45a8e5f1e35205e1b51179f7670cd05d1ebc14c2232d0ff436cac4d8b1f1",
+      "bytes": 255,
+      "byteExact": true,
+      "scope": "Currentcrosshostidentity whitelist evidence: Windows5554/5555/5037 relay actuallyLinuxorchester-qa qemu/FD/listeners; no privateXML/Keystore/disk/argv/env reads, no nativeADB/queue/VMsignal. Historicalpre20AVD identity notproved; currentAPKtests not invalidated."
+    },
+    {
+      "path": "native/android/device-identity-current21/final-avd-identity-audit-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/android-avd-identity-audit/final-avd-identity-audit-safe.json",
+      "sourceSha256": "47d1d3bbb3cef892a4cc859cc8af23c13da96747169fa43b784034d72f7e43a7",
+      "archivedSha256": "47d1d3bbb3cef892a4cc859cc8af23c13da96747169fa43b784034d72f7e43a7",
+      "bytes": 5303,
+      "byteExact": true,
+      "scope": "Currentcrosshostidentity whitelist evidence: Windows5554/5555/5037 relay actuallyLinuxorchester-qa qemu/FD/listeners; no privateXML/Keystore/disk/argv/env reads, no nativeADB/queue/VMsignal. Historicalpre20AVD identity notproved; currentAPKtests not invalidated."
+    },
+    {
+      "path": "native/android/device-identity-current21/safe-evidence-manifest.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/android-avd-identity-audit/safe-evidence-manifest.json",
+      "sourceSha256": "0807a4eb4c91cdbd8e08dc5be0c8b6f1074ba414abcb1c72e566bf291fc3f7f9",
+      "archivedSha256": "0807a4eb4c91cdbd8e08dc5be0c8b6f1074ba414abcb1c72e566bf291fc3f7f9",
+      "bytes": 1929,
+      "byteExact": true,
+      "scope": "Originalexplicitselected6safeJSON+3externalnativehashreferences; no privatepayloadcopied."
+    },
+    {
+      "path": "native/android/device-identity-current21/native/own-emulator-console-port-readonly-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/own-emulator-console-port-readonly-safe.json",
+      "sourceSha256": "0056b4266769cb0204f280938390ab41ad5518488262d918346804f3aede538a",
+      "archivedSha256": "0056b4266769cb0204f280938390ab41ad5518488262d918346804f3aede538a",
+      "bytes": 1097,
+      "byteExact": true,
+      "scope": "Externalnativecurrent ownconsoleport/relayowner/qemuauxlisteners public-safe identityproof; not oldWindowsAVD validation or privatekeydata."
+    },
+    {
+      "path": "native/android/device-identity-current21/native/unexpected-own-console-port-owner-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/unexpected-own-console-port-owner-safe.json",
+      "sourceSha256": "8eb20a320c53373f231ba0e3b51cdcad9b237400fbc8472da4e4346a4a6363a0",
+      "archivedSha256": "8eb20a320c53373f231ba0e3b51cdcad9b237400fbc8472da4e4346a4a6363a0",
+      "bytes": 1488,
+      "byteExact": true,
+      "scope": "Externalnativecurrent ownconsoleport/relayowner/qemuauxlisteners public-safe identityproof; not oldWindowsAVD validation or privatekeydata."
+    },
+    {
+      "path": "native/android/device-identity-current21/native/windows-own-qemu-actual-listeners-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/windows-own-qemu-actual-listeners-safe.json",
+      "sourceSha256": "bac7e866665ef9b8d1745b6ed92c58bd83f8f6d74ce6ac54370df1080fcbc819",
+      "archivedSha256": "bac7e866665ef9b8d1745b6ed92c58bd83f8f6d74ce6ac54370df1080fcbc819",
+      "bytes": 2531,
+      "byteExact": true,
+      "scope": "Externalnativecurrent ownconsoleport/relayowner/qemuauxlisteners public-safe identityproof; not oldWindowsAVD validation or privatekeydata."
+    },
+    {
+      "path": "native/windows/interactive-current/session-enumeration-windows-owner-current-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/session-enumeration-windows-owner-current-safe.json",
+      "sourceSha256": "8602ceeea6f081767dad7ac5fd1f11bc49dda0ba47f9e7b444c45210bd445941",
+      "archivedSha256": "8602ceeea6f081767dad7ac5fd1f11bc49dda0ba47f9e7b444c45210bd445941",
+      "bytes": 4949,
+      "byteExact": true,
+      "scope": "Complete4WTSsessions/allqueries0: Session1 SameSIDtrue butDisconnected4,Session3Connected1/noidentity,ActiveSameSIDcandidate0/noInputready; names/SIDsnotcopied/no GUI/tasks/signals."
+    },
+    {
+      "path": "native/android/device-identity-current21/native-final21-device-provenance-correction-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/native-final21-device-provenance-correction-safe.json",
+      "sourceSha256": "73233999233d54ef151515ec5cdd7bfb9926dce907d18d8f8746cf705202c87a",
+      "archivedSha256": "73233999233d54ef151515ec5cdd7bfb9926dce907d18d8f8746cf705202c87a",
+      "bytes": 1555,
+      "byteExact": true,
+      "scope": "Authoritativescopecorrection: nativeWindowsGradle/ADBclient actual but default5554 guestLinuxorchester-qa; currentAPKinstall/JUnit validonlyLinuxguest; old5AES notWindowsloss; originaltarget1file restored/RAMreloadfalse/no defaultADB/Linuxsignal."
+    },
+    {
+      "path": "native/android/device-identity-current21/native-one-prefs-file-rollback-final-byte-exact-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/native-one-prefs-file-rollback-final-byte-exact-safe.json",
+      "sourceSha256": "e12e31ff91d4cb163a9f2951af5fa35116b21bcc4c2cebccbb6f4272e5e51219",
+      "archivedSha256": "e12e31ff91d4cb163a9f2951af5fa35116b21bcc4c2cebccbb6f4272e5e51219",
+      "bytes": 1212,
+      "byteExact": true,
+      "scope": "WrongactualLinuxguest original1 XML268B/source701837 byteexactatomicwriter0 with separate shell-v2 no .bak; RAMreloadfalse/keysuntouched/private1+5sourcespreserved. Legacy Medium scope phrase in this originalreceipt is superseded by separate732339 devicecorrection; originalbytes not edited."
+    },
+    {
+      "path": "native/android/device-identity-current21/owned-windows-medium-normal-wmclose-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/owned-windows-medium-normal-wmclose-safe.json",
+      "sourceSha256": "02409884ea72a0dec8bdc96215fa683ee8876467c15ef404532c50d7ad90dc4a",
+      "archivedSha256": "02409884ea72a0dec8bdc96215fa683ee8876467c15ef404532c50d7ad90dc4a",
+      "bytes": 2995,
+      "byteExact": true,
+      "scope": "ExactownWin2344/qemu3828birth/image pin and7postedWM_CLOSE; preparationreceipt statusretained/no processTermination/defaultADB/keyedit. Producer reports post-destroy guard script1; receipt lacks script exitfield, lateractualabsenceobserverseparate."
+    },
+    {
+      "path": "native/android/device-identity-current21/owned-windows-medium-normal-wmclose-exit-observed-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/owned-windows-medium-normal-wmclose-exit-observed-safe.json",
+      "sourceSha256": "024a85d390ecb70c4b2c2ddc0697329c9e414c3d3fd949881781d1ba48a004a9",
+      "archivedSha256": "024a85d390ecb70c4b2c2ddc0697329c9e414c3d3fd949881781d1ba48a004a9",
+      "bytes": 495,
+      "byteExact": true,
+      "scope": "After7ownWMclose exactpreviousbirth refs andbothoriginalPIDs actualgone;0signals/defaultADBcommands; not forcekill/defaultLinux5554close or newWin5572 launchproof."
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsCopied": false,
@@ -1669,16 +1894,16 @@
       "path": "sources/requirement-delivery-audit.json",
       "kind": "Derived requirement-to-evidence audit using only archived public/safe records; pending does not imply failure or successful native run.",
       "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
-      "archivedSha256": "68d095e839a8ec697ae727a27c56a8d692f0f4b9554b7a329f7d3c87e94a6bcd",
-      "bytes": 11784
+      "archivedSha256": "8518018e2f013a12b6f4cd0eca6e5d3493ae255baf3ebb5f053894e781d4dd60",
+      "bytes": 14476
     }
   ],
   "sourceEpochBoundary": "a96a06e historical20; final71 code/frontend/Pages/fullRust/currentLinux and Windows core16 verified; native runtime18/reinstallation/Android final21 pending",
   "finalSourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
-  "latestContinuationAt": "2026-11-11T12:32:44.029545+00:00",
+  "latestContinuationAt": "2026-11-11T13:08:27.984343+00:00",
   "originalSourceAvailabilityAtLatestContinuation": {
-    "selectedFiles": 181,
-    "availableCount": 154,
+    "selectedFiles": 206,
+    "availableCount": 179,
     "missingCount": 27,
     "missingSourceDoesNotRewriteHistoricalByteExact": true
   }

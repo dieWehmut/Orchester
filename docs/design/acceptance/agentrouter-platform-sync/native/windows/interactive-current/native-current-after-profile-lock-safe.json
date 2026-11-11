@@ -1,0 +1,178 @@
+{
+    "observedAtUtc":  "2026-11-11T12:50:14.1455363Z",
+    "input":  {
+                  "CursorRead":  false,
+                  "CursorError":  5,
+                  "InputDesktopOpened":  false,
+                  "InputDesktopError":  5,
+                  "InputDesktopName":  null,
+                  "InputDesktopIsDefault":  false,
+                  "ProcessesSignalled":  0
+              },
+    "processes":  [
+                      {
+                          "pid":  8176,
+                          "parentPid":  10736,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T10:44:07.7081020Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  12396,
+                          "parentPid":  8176,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T10:44:07.8176880Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  13184,
+                          "parentPid":  8176,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T10:44:07.9885300Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  13208,
+                          "parentPid":  8176,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T10:44:07.9894400Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  13292,
+                          "parentPid":  8176,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T10:44:08.0145310Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  13416,
+                          "parentPid":  8176,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T10:44:08.0871150Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  24552,
+                          "parentPid":  10860,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T10:45:07.8146800Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  24884,
+                          "parentPid":  24552,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T10:45:07.8297140Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  24040,
+                          "parentPid":  24552,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T10:45:07.9170830Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  24948,
+                          "parentPid":  24552,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T10:45:07.9182110Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  8576,
+                          "parentPid":  24552,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T10:45:07.9560740Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  24660,
+                          "parentPid":  24552,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T10:45:07.9937050Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  28748,
+                          "parentPid":  8588,
+                          "name":  "orchester-desktop.exe",
+                          "image":  "C:\\Users\\han\\AppData\\Local\\Orchester\\orchester-desktop.exe",
+                          "creationUtc":  "2026-11-11T12:29:29.0831200Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  508,
+                          "parentPid":  28748,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T12:29:29.1913080Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  3340,
+                          "parentPid":  508,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T12:29:29.2309960Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  19576,
+                          "parentPid":  508,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T12:29:29.3579980Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  21664,
+                          "parentPid":  508,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T12:29:29.3600530Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  23292,
+                          "parentPid":  508,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T12:29:29.3819620Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  23184,
+                          "parentPid":  508,
+                          "name":  "msedgewebview2.exe",
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "creationUtc":  "2026-11-11T12:29:29.4321690Z",
+                          "sessionId":  1
+                      },
+                      {
+                          "pid":  11524,
+                          "parentPid":  11544,
+                          "name":  "orchester.exe",
+                          "image":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\remote-package-fresh21\\orchester.exe",
+                          "creationUtc":  "2026-11-11T12:33:13.6594460Z",
+                          "sessionId":  1
+                      }
+                  ],
+    "privateArgvOrEnvironmentRead":  false,
+    "profileContentsRead":  false,
+    "signals":  0,
+    "productsLaunched":  0
+}

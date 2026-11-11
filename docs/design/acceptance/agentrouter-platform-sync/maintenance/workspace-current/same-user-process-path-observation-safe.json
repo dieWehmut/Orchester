@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-11-11T12:39:19.342487+00:00",
+  "mode": "read-only-current-exact-path-observation-same-linux-user-only",
+  "candidateProofSha256": "0651a278b74a334da62ae320a4da9c6722a6d25788dd0ac13cb272c7686e9cb2",
+  "sameUserProcessesExamined": 75,
+  "otherUserProcessesExcluded": 87,
+  "transientExitRaces": 9,
+  "readErrors": {
+    "ownerMetadata": 0,
+    "cwd": 1,
+    "exe": 1,
+    "openFd": 5,
+    "maps": 1
+  },
+  "candidatePathRefs": {
+    "/home/han/project/Orchester/.worktrees/additional-agent-monitors": {
+      "cwdProcessCount": 0,
+      "exeProcessCount": 0,
+      "openFdProcessCount": 0,
+      "mappedFileProcessCount": 0
+    },
+    "/home/han/project/Orchester/.worktrees/process-monitor-count-units": {
+      "cwdProcessCount": 0,
+      "exeProcessCount": 0,
+      "openFdProcessCount": 0,
+      "mappedFileProcessCount": 0
+    },
+    "/home/han/project/Orchester/.worktrees/remote-terminal": {
+      "cwdProcessCount": 0,
+      "exeProcessCount": 0,
+      "openFdProcessCount": 0,
+      "mappedFileProcessCount": 0
+    },
+    "/home/han/project/Orchester/.worktrees/windows-wsl-helper-lifecycle": {
+      "cwdProcessCount": 0,
+      "exeProcessCount": 0,
+      "openFdProcessCount": 0,
+      "mappedFileProcessCount": 0
+    }
+  },
+  "otherUserOrNativeWindowsProcessesNotProvedAbsent": true,
+  "zeroRefsDoesNotByItselfAuthorizeDeletion": true,
+  "noPrivateValuesOrArgvEnvExported": true,
+  "noDeleteOrSignal": true
+}

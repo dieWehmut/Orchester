@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-11T12:32:44.029545+00:00",
+  "createdAt": "2026-11-11T13:08:27.984343+00:00",
   "status": "final71-code-pages-linux-and-windows-core16-accepted-runtime18-android-reinstall-in-progress",
   "summaryPath": "summary.json",
   "files": [
@@ -155,6 +155,16 @@
       "bytes": 1637
     },
     {
+      "path": "maintenance/git-delivery/git-byte-and-crlf-correction-safe.json",
+      "sha256": "e6e04807d005310247b2d4edd985af17d343da809c6240b4ba30e875eb9b5080",
+      "bytes": 547
+    },
+    {
+      "path": "maintenance/git-delivery/step-delivery-safe.json",
+      "sha256": "6e130032a0659efe8666cf735abf8ff923388df78d2f5ce2edf7f6fbb6d1301d",
+      "bytes": 507
+    },
+    {
       "path": "maintenance/merged-branch-cleanup.json",
       "sha256": "b848e6505e54cbcd308a80922e77574c0a5e8faecbdc2f76639729766829e12e",
       "bytes": 13184
@@ -168,6 +178,21 @@
       "path": "maintenance/windows-approved-cache-cleanup.json",
       "sha256": "f88b714a1bc013e8732b0b0ba1444ee3f34d785e59962f2518371f7438c27b14",
       "bytes": 1046
+    },
+    {
+      "path": "maintenance/workspace-current/actual-worktree-cleanup-safe.json",
+      "sha256": "eed4193ffe8a84b6ca2c03d690e5e914d6a73316a1caf6787fad8789ea09952c",
+      "bytes": 3940
+    },
+    {
+      "path": "maintenance/workspace-current/final-workspace-cleanup-candidates-safe.json",
+      "sha256": "0651a278b74a334da62ae320a4da9c6722a6d25788dd0ac13cb272c7686e9cb2",
+      "bytes": 6856
+    },
+    {
+      "path": "maintenance/workspace-current/same-user-process-path-observation-safe.json",
+      "sha256": "430674f4cb23284de97e1aba0283ef1d542b25e7ac96ad7efc0205131ee49d44",
+      "bytes": 1465
     },
     {
       "path": "native/android/current21-partial/final21-apk-provenance-safe.json",
@@ -193,6 +218,76 @@
       "path": "native/android/current21-partial/native-bridge-tests-final21-current-apk-result.json",
       "sha256": "9ba540d27e9f8182bc75a5950e0450d8680740bb8a9e6b099d21fa9ec50cc08f",
       "bytes": 227
+    },
+    {
+      "path": "native/android/device-identity-current21/current-linux5554-listener-and-avd-fd-safe.json",
+      "sha256": "bf33238d9a7aa1f3d39f16dbfa694282decc1c3dba18028483873e4ca94cafd6",
+      "bytes": 4352
+    },
+    {
+      "path": "native/android/device-identity-current21/current-public-config-and-metadata-safe.json",
+      "sha256": "1a9d0160ba62c44cd13df5f82777f29ffb6844e2625b4dd5792f1a3f7d15cb22",
+      "bytes": 8618
+    },
+    {
+      "path": "native/android/device-identity-current21/final-avd-identity-audit-safe.json",
+      "sha256": "47d1d3bbb3cef892a4cc859cc8af23c13da96747169fa43b784034d72f7e43a7",
+      "bytes": 5303
+    },
+    {
+      "path": "native/android/device-identity-current21/historical-sandkasten-5560-safe.json",
+      "sha256": "f3e6fb61822ef058dda78d4e6e77dbd47e78fb8b515fa8d227d5af5e6154743e",
+      "bytes": 1391
+    },
+    {
+      "path": "native/android/device-identity-current21/native/own-emulator-console-port-readonly-safe.json",
+      "sha256": "0056b4266769cb0204f280938390ab41ad5518488262d918346804f3aede538a",
+      "bytes": 1097
+    },
+    {
+      "path": "native/android/device-identity-current21/native/unexpected-own-console-port-owner-safe.json",
+      "sha256": "8eb20a320c53373f231ba0e3b51cdcad9b237400fbc8472da4e4346a4a6363a0",
+      "bytes": 1488
+    },
+    {
+      "path": "native/android/device-identity-current21/native/windows-own-qemu-actual-listeners-safe.json",
+      "sha256": "bac7e866665ef9b8d1745b6ed92c58bd83f8f6d74ce6ac54370df1080fcbc819",
+      "bytes": 2531
+    },
+    {
+      "path": "native/android/device-identity-current21/native-final21-device-provenance-correction-safe.json",
+      "sha256": "73233999233d54ef151515ec5cdd7bfb9926dce907d18d8f8746cf705202c87a",
+      "bytes": 1555
+    },
+    {
+      "path": "native/android/device-identity-current21/native-metadata-request-safe.json",
+      "sha256": "3bda45a8e5f1e35205e1b51179f7670cd05d1ebc14c2232d0ff436cac4d8b1f1",
+      "bytes": 255
+    },
+    {
+      "path": "native/android/device-identity-current21/native-one-prefs-file-rollback-final-byte-exact-safe.json",
+      "sha256": "e12e31ff91d4cb163a9f2951af5fa35116b21bcc4c2cebccbb6f4272e5e51219",
+      "bytes": 1212
+    },
+    {
+      "path": "native/android/device-identity-current21/owned-windows-medium-normal-wmclose-exit-observed-safe.json",
+      "sha256": "024a85d390ecb70c4b2c2ddc0697329c9e414c3d3fd949881781d1ba48a004a9",
+      "bytes": 495
+    },
+    {
+      "path": "native/android/device-identity-current21/owned-windows-medium-normal-wmclose-safe.json",
+      "sha256": "02409884ea72a0dec8bdc96215fa683ee8876467c15ef404532c50d7ad90dc4a",
+      "bytes": 2995
+    },
+    {
+      "path": "native/android/device-identity-current21/root-linux-endpoint-safe.json",
+      "sha256": "99a9986d723d86879085a35efec4bbad291931375166dc6e87bed3a2595d47ae",
+      "bytes": 2460
+    },
+    {
+      "path": "native/android/device-identity-current21/safe-evidence-manifest.json",
+      "sha256": "0807a4eb4c91cdbd8e08dc5be0c8b6f1074ba414abcb1c72e566bf291fc3f7f9",
+      "bytes": 1929
     },
     {
       "path": "native/ios/final21-public-sync.json",
@@ -505,6 +600,26 @@
       "bytes": 2327
     },
     {
+      "path": "native/windows/interactive-current/native-current-after-profile-lock-safe.json",
+      "sha256": "f095efe75e87614931d800c1452db22c8128b8340cc98d9b5617facd4bee9775",
+      "bytes": 9636
+    },
+    {
+      "path": "native/windows/interactive-current/new-default-desktop-parent-readonly-safe.json",
+      "sha256": "401f867f4b99bd6de0f76fcbaa1656706abe02340adc266575553d0bb3a05402",
+      "bytes": 1044
+    },
+    {
+      "path": "native/windows/interactive-current/original-profile-preservation-attempt1-safe.json",
+      "sha256": "ed6f9db60af2871a993d04a37a18548754780efb750019e03387267daf876f16",
+      "bytes": 986
+    },
+    {
+      "path": "native/windows/interactive-current/session-enumeration-windows-owner-current-safe.json",
+      "sha256": "8602ceeea6f081767dad7ac5fd1f11bc49dda0ba47f9e7b444c45210bd445941",
+      "bytes": 4949
+    },
+    {
       "path": "native/windows/new-gui-installed-identities.json",
       "sha256": "a229916de88817d39fab6a5997c874a88460e7e0ec1b8c9b3a264dc5fcccc7c7",
       "bytes": 5699
@@ -523,6 +638,16 @@
       "path": "native/windows/source-export-a96a06e.json",
       "sha256": "ee214d8766ca7c1b7e300cc43da9551f84824aff0521b945caca99fa993b61c4",
       "bytes": 385348
+    },
+    {
+      "path": "native/windows/temporary-7339/public-http-preflight-safe.json",
+      "sha256": "55c86d8d88049c90dc867cacc7d35176d3639cc39c84295323930c4763478bfb",
+      "bytes": 6952
+    },
+    {
+      "path": "native/windows/temporary-7339/ready-safe.json",
+      "sha256": "88477404ba3e2223b223d717a59a67dd648d73a58ad80e3dd2a0ee53860c2569",
+      "bytes": 1996
     },
     {
       "path": "native/windows/workbuddy-registration-paths-readonly-safe.json",
@@ -851,13 +976,13 @@
     },
     {
       "path": "sources/receipt-provenance.json",
-      "sha256": "f17ada348938f2ac585338619f7d2fb59a8f58b065fcd28673c731bfb24b8996",
-      "bytes": 102467
+      "sha256": "0fb071b0cd8c1915bc807c9471fe4b4839779a7b5b9367d664c66deb04c0e653",
+      "bytes": 119878
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "68d095e839a8ec697ae727a27c56a8d692f0f4b9554b7a329f7d3c87e94a6bcd",
-      "bytes": 11784
+      "sha256": "8518018e2f013a12b6f4cd0eca6e5d3493ae255baf3ebb5f053894e781d4dd60",
+      "bytes": 14476
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -881,8 +1006,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "7344fcbd7f155bff86783d4defb03253ded83531f413cc12c561be8ddecd80f2",
-      "bytes": 10096
+      "sha256": "c69f9ad7e4a53ad24a783cf3a72efb93dbce17c00a571b78be8ff4958d99f8fb",
+      "bytes": 14385
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
