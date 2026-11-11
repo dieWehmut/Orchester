@@ -29,6 +29,7 @@
     "openclaw-gateway",
     "openclaw-gatewa",
     "workbuddy",
+    "workbuddyai",
     "cline",
     "kilo",
     "kilocode",
@@ -115,6 +116,7 @@
   ],
   "desktop_services": {
     "workbuddy": "workbuddy",
+    "workbuddyai": "workbuddy_global",
     "craft agents": "craft",
     "@craft-agentelectron": "craft",
     "trae": "trae",

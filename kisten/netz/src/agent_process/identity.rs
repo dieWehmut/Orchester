@@ -905,6 +905,78 @@ mod tests {
     }
 
     #[test]
+    fn workbuddy_editions_remain_distinct_locally_and_in_wsl() {
+        let fixtures = serde_json::json!([
+            {"pid":1, "name":"WorkBuddy.exe", "exe":"C:/Apps/workbuddy/WorkBuddy.exe", "args":["C:/Apps/workbuddy/WorkBuddy.exe"], "provider":"workbuddy"},
+            {"pid":2, "parent":1, "name":"WorkBuddyAI.exe", "exe":"C:/Apps/WorkBuddy/WorkBuddyAI/WorkBuddyAI.exe", "args":["C:/Apps/WorkBuddy/WorkBuddyAI/WorkBuddyAI.exe"], "provider":"workbuddy_global"},
+            {"pid":3, "name":"MainThread", "exe":"C:/Apps/WorkBuddy/WorkBuddyAI/WorkBuddyAI.exe", "args":["C:/Apps/WorkBuddy/WorkBuddyAI/WorkBuddyAI.exe"], "provider":"workbuddy_global"},
+            {"pid":4, "parent":2, "name":"WorkBuddyAI.exe", "exe":"C:/Apps/WorkBuddy/WorkBuddyAI/WorkBuddyAI.exe", "args":["WorkBuddyAI.exe", "--type=renderer"], "provider":null},
+            {"pid":5, "parent":2, "name":"WorkBuddyAI.exe", "exe":"C:/Apps/WorkBuddy/WorkBuddyAI/WorkBuddyAI.exe", "args":["WorkBuddyAI.exe", "--type", "utility"], "provider":null},
+            {"pid":6, "parent":2, "name":"WorkBuddyAI.exe", "exe":"C:/Apps/WorkBuddy/WorkBuddyAI/WorkBuddyAI.exe", "args":["WorkBuddyAI.exe", "--type=gpu-process"], "provider":null},
+            {"pid":7, "parent":2, "name":"WorkBuddyAI.exe", "exe":"C:/Apps/WorkBuddy/WorkBuddyAI/WorkBuddyAI.exe", "args":["WorkBuddyAI.exe", "--crashpad-handler"], "provider":null},
+            {"pid":8, "parent":2, "name":"WorkBuddyAI.exe", "exe":"C:/Apps/WorkBuddy/WorkBuddyAI/WorkBuddyAI.exe", "args":["WorkBuddyAI.exe", "--ms-enable-electron-run-as-node", "C:/Apps/WorkBuddy/resources/worker.js"], "provider":null},
+            {"pid":9, "parent":2, "name":"WorkBuddyAI.exe", "exe":"C:/Apps/WorkBuddy/WorkBuddyAI/WorkBuddyAI.exe", "args":["WorkBuddyAI.exe", "--expose-gc", "C:/Apps/WorkBuddy/resources/worker.js"], "provider":null},
+            {"pid":10, "name":"WorkBuddyAI.exe", "exe":"C:/Apps/WorkBuddy/WorkBuddyAI/WorkBuddyAI.exe", "args":[], "provider":null},
+            {"pid":11, "name":"workbuddy-editor-sdk-supervisor.exe", "exe":"C:/Apps/WorkBuddy/WorkBuddyAI/resources/workbuddy-editor-sdk-supervisor.exe", "args":["workbuddy-editor-sdk-supervisor.exe"], "provider":null},
+            {"pid":12, "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/@genie/workbuddy-desktop/main/index.js"], "provider":null},
+            {"pid":13, "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/unrelated.js", "--prompt", "C:/Apps/WorkBuddy/WorkBuddyAI/WorkBuddyAI.exe"], "provider":null},
+            {"pid":14, "name":"workbuddy_global.exe", "exe":"C:/Apps/WorkBuddy/workbuddy_global.exe", "args":["workbuddy_global.exe"], "provider":null}
+        ]);
+        let rows = fixtures
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter_map(|row| {
+                let args = row["args"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|arg| arg.as_str().unwrap().to_owned())
+                    .collect::<Vec<_>>();
+                let name = row["name"].as_str().unwrap();
+                let exe = row["exe"].as_str().unwrap();
+                let expected = row["provider"].as_str();
+                let provider = classify(name, exe, &args);
+                assert_eq!(provider.as_deref(), expected, "fixture: {row}");
+                if expected.is_some() {
+                    assert!(is_candidate(name));
+                    assert!(!relative_entry(&args));
+                }
+                #[cfg(unix)]
+                {
+                    let result = wsl_fixture(&serde_json::json!([row]));
+                    assert!(result.complete);
+                    assert_eq!(
+                        result.counts,
+                        expected
+                            .map(|provider| BTreeMap::from([(provider.to_owned(), 1)]))
+                            .unwrap_or_default()
+                    );
+                }
+                provider.map(|provider| {
+                    (
+                        row["pid"].as_u64().unwrap() as u32,
+                        row["parent"].as_u64().map(|pid| pid as u32),
+                        provider.clone(),
+                        instance_key(name, exe, &args),
+                    )
+                })
+            })
+            .collect::<Vec<_>>();
+        let expected = BTreeMap::from([
+            ("workbuddy".to_owned(), 1),
+            ("workbuddy_global".to_owned(), 2),
+        ]);
+        assert_eq!(count_instances(&rows), expected);
+        #[cfg(unix)]
+        {
+            let result = wsl_fixture(&fixtures);
+            assert!(result.complete);
+            assert_eq!(result.counts, expected);
+        }
+    }
+
+    #[test]
     fn agentrouter_cli_entrypoints_agree_locally_and_in_wsl() {
         let fixtures = serde_json::json!([
             {"name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/@mariozechner/pi-coding-agent/dist/cli.js"], "provider":"pi"},

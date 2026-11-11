@@ -94,9 +94,45 @@ async fn agent_status_route_returns_a_redaction_safe_runtime_snapshot() {
             "roo",
             "trae",
             "workbuddy",
+            "workbuddy_global",
             "zcode",
         ]
     );
+
+    assert_eq!(
+        agents
+            .iter()
+            .filter(|agent| agent["provider"] != "mock")
+            .count(),
+        21
+    );
+    assert_eq!(
+        agents
+            .iter()
+            .filter(|agent| agent["capabilities"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|capability| capability == "service_presence"))
+            .count(),
+        7
+    );
+    for (provider, display_name) in [
+        ("workbuddy", "WorkBuddy 国内版"),
+        ("workbuddy_global", "WorkBuddy AI 国际版"),
+    ] {
+        let agent = agents
+            .iter()
+            .find(|agent| agent["provider"] == provider)
+            .unwrap();
+        assert_eq!(agent["display_name"], display_name);
+        assert_eq!(agent["icon_key"], provider);
+        assert!(agent["capabilities"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|capability| capability == "monitor_only"));
+    }
 
     let mock = agents
         .iter()
