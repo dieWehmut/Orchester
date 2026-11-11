@@ -735,6 +735,58 @@ mod tests {
     }
 
     #[test]
+    fn current_gemini_bundle_uses_the_real_entrypoint_locally_and_in_wsl() {
+        let entry = "/opt/node_modules/@google/gemini-cli/bundle/gemini.js";
+        check("node", "/usr/bin/node", &["node", entry], Some("gemini"));
+        check(
+            "bun",
+            "/usr/bin/bun",
+            &["bun", "run", entry],
+            Some("gemini"),
+        );
+        check(
+            "node.exe",
+            r"C:\Program Files\nodejs\node.exe",
+            &[
+                "node",
+                "C:/npm/node_modules/@google/gemini-cli/bundle/gemini.js",
+            ],
+            Some("gemini"),
+        );
+        check("node", "/usr/bin/node", &["node", entry, "--version"], None);
+        check(
+            "node",
+            "/usr/bin/node",
+            &["node", entry, "mcp", "list"],
+            None,
+        );
+        check(
+            "node",
+            "/usr/bin/node",
+            &["node", entry, "--prompt", "mcp"],
+            Some("gemini"),
+        );
+        check(
+            "node",
+            "/usr/bin/node",
+            &["node", "/unrelated.js", entry],
+            None,
+        );
+        #[cfg(unix)]
+        {
+            let rows = serde_json::json!([
+                {"pid": 1, "name": "node", "exe": "/usr/bin/node", "args": ["node", entry]},
+                {"pid": 2, "name": "node", "exe": "/usr/bin/node", "args": ["node", entry, "--version"]},
+                {"pid": 3, "name": "node", "exe": "/usr/bin/node", "args": ["node", "/unrelated.js", entry]}
+            ]);
+            assert_eq!(
+                wsl_fixture(&rows).counts,
+                BTreeMap::from([("gemini".to_owned(), 1)])
+            );
+        }
+    }
+
+    #[test]
     fn qwen_and_openclaw_entrypoints_agree_locally_and_in_wsl() {
         let fixtures = serde_json::json!([
             {"case":"published Qwen wrapper", "name":"node", "exe":"/usr/bin/node", "args":["node", "/opt/node_modules/@qwen-code/qwen-code/cli-entry.js"], "provider":"qwen"},
