@@ -4,7 +4,7 @@ use std::fmt;
 use std::fs::{self, OpenOptions};
 use std::path::Path;
 use std::sync::{Mutex, MutexGuard, OnceLock};
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use getrandom::fill as fill_random;
 use orchester_protokoll::MemoryKind;
@@ -359,10 +359,10 @@ impl MemoryStore {
         connection.busy_timeout(MIGRATION_BUSY_TIMEOUT)?;
         connection.execute_batch(
             "PRAGMA foreign_keys = ON;
-             PRAGMA synchronous = FULL;
-             PRAGMA journal_mode = WAL;
-             PRAGMA secure_delete = ON;",
+             PRAGMA synchronous = FULL;",
         )?;
+        enable_wal_mode(&connection, MIGRATION_BUSY_TIMEOUT)?;
+        connection.execute_batch("PRAGMA secure_delete = ON;")?;
         ensure_schema(&mut connection)?;
         verify_schema(&connection)?;
         verify_integrity(&connection)?;
@@ -1188,6 +1188,37 @@ fn insert_event(
     Ok(())
 }
 
+fn enable_wal_mode(connection: &Connection, timeout: Duration) -> Result<(), MemoryError> {
+    // A journal-mode lock promotion can return BUSY without running SQLite's
+    // busy handler. Retry that pragma with the remaining opening budget; a
+    // full busy timeout on each attempt would multiply the total wait.
+    const RETRY_INTERVAL: Duration = Duration::from_millis(10);
+    let started = Instant::now();
+    let result = loop {
+        connection.busy_timeout(timeout.saturating_sub(started.elapsed()))?;
+        match connection.execute_batch("PRAGMA journal_mode = WAL;") {
+            Err(error)
+                if matches!(
+                    &error,
+                    rusqlite::Error::SqliteFailure(details, _)
+                        if matches!(
+                            details.code,
+                            rusqlite::ErrorCode::DatabaseBusy
+                                | rusqlite::ErrorCode::DatabaseLocked
+                        )
+                ) && started.elapsed() < timeout =>
+            {
+                std::thread::sleep(RETRY_INTERVAL.min(timeout.saturating_sub(started.elapsed())));
+            }
+            result => break result,
+        }
+    };
+    // Schema migration still has the full migration timeout. initialize()
+    // switches to its shorter interactive timeout after all checks pass.
+    connection.busy_timeout(timeout)?;
+    result.map_err(MemoryError::from)
+}
+
 fn ensure_schema(connection: &mut Connection) -> Result<(), MemoryError> {
     // Serialize schema discovery with migration. Otherwise a concurrent opener
     // can observe the legacy version table while another connection is midway
@@ -1798,4 +1829,52 @@ fn hex(bytes: &[u8]) -> String {
         output.push(DIGITS[(byte & 0x0f) as usize] as char);
     }
     output
+}
+
+#[cfg(test)]
+mod initialization_tests {
+    use super::*;
+
+    #[test]
+    fn journal_mode_contention_exhausts_one_wait_budget() {
+        let parent = std::env::temp_dir().join(format!(
+            "orchester-memory-journal-budget-{}",
+            std::process::id()
+        ));
+        let path = parent.join("memory.db");
+        prepare_database_file(&path).unwrap();
+        let mut blocker = Connection::open(&path).unwrap();
+        let transaction = blocker
+            .transaction_with_behavior(TransactionBehavior::Immediate)
+            .unwrap();
+        let contender = Connection::open(&path).unwrap();
+        let timeout = Duration::from_millis(30);
+        let started = Instant::now();
+        let result = enable_wal_mode(&contender, timeout);
+        let elapsed = started.elapsed();
+        let restored_timeout: u64 = contender
+            .query_row("PRAGMA busy_timeout", [], |row| row.get(0))
+            .unwrap();
+        transaction.rollback().unwrap();
+        drop(blocker);
+        drop(contender);
+        fs::remove_file(path).unwrap();
+        fs::remove_dir(parent).unwrap();
+        assert!(matches!(
+            result,
+            Err(MemoryError::Database(rusqlite::Error::SqliteFailure(
+                rusqlite::ffi::Error {
+                    code: rusqlite::ErrorCode::DatabaseBusy,
+                    ..
+                },
+                _
+            )))
+        ));
+        assert!(elapsed >= timeout);
+        assert!(
+            elapsed < Duration::from_secs(1),
+            "wait budget multiplied: {elapsed:?}"
+        );
+        assert_eq!(restored_timeout, 30);
+    }
 }
