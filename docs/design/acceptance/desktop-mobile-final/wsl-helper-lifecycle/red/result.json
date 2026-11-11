@@ -1,0 +1,18 @@
+{
+    "status":  "expected-five-behavior-failures",
+    "baseRevision":  "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+    "testOnlyOverlay":  true,
+    "command":  "cargo test --locked --offline --target x86_64-pc-windows-msvc -p orchester-netz --lib agent_activity::wsl::windows_lifecycle_tests -- --test-threads=1",
+    "nativeChildPid":  236316,
+    "nativeChildCreatedAt":  "2026-11-11T01:02:31.0555840Z",
+    "processExited":  true,
+    "timedOut":  false,
+    "exitCode":  101,
+    "observedSurvivingTreeAssertions":  5,
+    "expectedTests":  6,
+    "sourceInputsStable":  true,
+    "stdoutSha256":  "5930f7bb8ac0042d2f2a79fcc692c9d0931c27de2078baa5b146be4e5e19eedc",
+    "stderrSha256":  "a5b44d0e90ea330bcd3cf2170edb49c64741580524faf22e2196e58d789f1179",
+    "modelCalls":  0,
+    "defaultInstallationChanged":  false
+}

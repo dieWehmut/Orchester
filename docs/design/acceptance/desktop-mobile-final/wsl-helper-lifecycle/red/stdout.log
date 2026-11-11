@@ -1,0 +1,47 @@
+
+running 6 tests
+test agent_activity::wsl::windows_lifecycle_tests::backend_exit_cleans_detached_windows_helper_worker ... FAILED
+test agent_activity::wsl::windows_lifecycle_tests::failure_cleans_windows_wrapper_descendants ... FAILED
+test agent_activity::wsl::windows_lifecycle_tests::output_limit_cleans_windows_wrapper_descendants ... FAILED
+test agent_activity::wsl::windows_lifecycle_tests::success_cleans_windows_wrapper_descendants ... FAILED
+test agent_activity::wsl::windows_lifecycle_tests::timeout_cleans_windows_wrapper_descendants ... FAILED
+test agent_activity::wsl::windows_lifecycle_tests::windows_helper_probe ... ok
+
+failures:
+
+---- agent_activity::wsl::windows_lifecycle_tests::backend_exit_cleans_detached_windows_helper_worker stdout ----
+
+thread 'agent_activity::wsl::windows_lifecycle_tests::backend_exit_cleans_detached_windows_helper_worker' (204512) panicked at kisten\netz\src\agent_activity\wsl_lifecycle_tests.rs:147:9:
+owned Windows helper descendants survived
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- agent_activity::wsl::windows_lifecycle_tests::failure_cleans_windows_wrapper_descendants stdout ----
+
+thread 'agent_activity::wsl::windows_lifecycle_tests::failure_cleans_windows_wrapper_descendants' (246700) panicked at kisten\netz\src\agent_activity\wsl_lifecycle_tests.rs:147:9:
+owned Windows helper descendants survived
+
+---- agent_activity::wsl::windows_lifecycle_tests::output_limit_cleans_windows_wrapper_descendants stdout ----
+
+thread 'agent_activity::wsl::windows_lifecycle_tests::output_limit_cleans_windows_wrapper_descendants' (213328) panicked at kisten\netz\src\agent_activity\wsl_lifecycle_tests.rs:147:9:
+owned Windows helper descendants survived
+
+---- agent_activity::wsl::windows_lifecycle_tests::success_cleans_windows_wrapper_descendants stdout ----
+
+thread 'agent_activity::wsl::windows_lifecycle_tests::success_cleans_windows_wrapper_descendants' (202068) panicked at kisten\netz\src\agent_activity\wsl_lifecycle_tests.rs:147:9:
+owned Windows helper descendants survived
+
+---- agent_activity::wsl::windows_lifecycle_tests::timeout_cleans_windows_wrapper_descendants stdout ----
+
+thread 'agent_activity::wsl::windows_lifecycle_tests::timeout_cleans_windows_wrapper_descendants' (113492) panicked at kisten\netz\src\agent_activity\wsl_lifecycle_tests.rs:147:9:
+owned Windows helper descendants survived
+
+
+failures:
+    agent_activity::wsl::windows_lifecycle_tests::backend_exit_cleans_detached_windows_helper_worker
+    agent_activity::wsl::windows_lifecycle_tests::failure_cleans_windows_wrapper_descendants
+    agent_activity::wsl::windows_lifecycle_tests::output_limit_cleans_windows_wrapper_descendants
+    agent_activity::wsl::windows_lifecycle_tests::success_cleans_windows_wrapper_descendants
+    agent_activity::wsl::windows_lifecycle_tests::timeout_cleans_windows_wrapper_descendants
+
+test result: FAILED. 1 passed; 5 failed; 0 ignored; 0 measured; 93 filtered out; finished in 29.66s
+

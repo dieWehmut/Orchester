@@ -1,0 +1,30 @@
+
+running 25 tests
+test extract::tests::literal_vs_path ... ok
+test extract::tests::missing_path_is_none ... ok
+test extract::tests::nested_key_and_array_index ... ok
+test extract::tests::numbers_and_bools_stringify ... ok
+test extract::tests::plain_key ... ok
+test extract::tests::top_level_index ... ok
+test manifest_adapter::tests::assistant_line_maps_to_message ... ok
+test manifest_adapter::tests::availability_reports_existing_command ... ok
+test manifest_adapter::tests::availability_reports_missing_command ... ok
+test manifest_adapter::tests::build_args_substitutes_prompt ... ok
+test manifest_adapter::tests::build_args_uses_resume_template_when_resuming ... ok
+test manifest_adapter::tests::codex_reports_every_file_in_a_completed_patch ... ok
+test manifest_adapter::tests::result_line_maps_to_result ... ok
+test manifest_adapter::tests::session_id_emitted_once ... ok
+test manifest_adapter::tests::unknown_type_and_non_json_are_ignored ... ok
+test process::std_windows::tests::failed_job_assignment_reaps_original_child_without_running_user_code ... ok
+test process::std_windows::tests::suspended_start_probe ... ok
+test process::tests::background_child_has_no_console_and_keeps_output ... ok
+test process::tree::tests::job_handle_is_not_inheritable ... ok
+test process::tree::tests::job_probe ... ok
+test process::tree::tests::termination_stops_windows_child_and_descendant ... ok
+test process::windows::tests::native_opencode_npm_shim_preserves_literal_prompt_without_cmd ... ok
+test process::windows::tests::node_shim_invocation_bypasses_cmd ... ok
+test process::windows::tests::official_npm_variable_shim_selects_cli_without_running_prefix_discovery ... ok
+test process::windows::tests::opencode_shim_preserves_no_arg_web_default ... ok
+
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+

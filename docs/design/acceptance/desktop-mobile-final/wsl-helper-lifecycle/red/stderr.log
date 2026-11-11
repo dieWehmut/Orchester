@@ -1,0 +1,4 @@
+   Compiling orchester-netz v0.1.2 (C:\Users\han\AppData\Local\Orchester-build\wsl-helper-red-6278e3b-20261111\kisten\netz)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 35.33s
+     Running unittests src\lib.rs (C:\Users\han\AppData\Local\Orchester-build\8d6db06\target\x86_64-pc-windows-msvc\debug\deps\orchester_netz-7704a4c897a4ddab.exe)
+error: test failed, to rerun pass `-p orchester-netz --lib`

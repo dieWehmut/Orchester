@@ -1,0 +1,113 @@
+{
+  "format": "orchester-wsl-helper-linux-validation-v1",
+  "recorded_at_utc": "2026-11-11T01:13:17.772317+00:00",
+  "base_commit": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+  "source_files": [
+    {
+      "path": "kisten/vertrag/Cargo.toml",
+      "sha256": "047ddba519838a65075b5eddafa2435ecf7439232cab344a61f22b567f6f52f6"
+    },
+    {
+      "path": "kisten/vertrag/src/process.rs",
+      "sha256": "7eb0d4e56503a6c96016a740fede9d3ccda0127c43ce9a1aae253101d9adb315"
+    },
+    {
+      "path": "kisten/vertrag/src/process/tree.rs",
+      "sha256": "607835a6693fc41371468f192ef0fd6f305323bfc5873702ae93aad4413febc9"
+    },
+    {
+      "path": "kisten/vertrag/src/process/std_windows.rs",
+      "sha256": "8111833e94d6acc5cb6c2ef02082a6922508cfa91e24fa08039d3abd396ac94b"
+    },
+    {
+      "path": "kisten/netz/src/agent_activity/wsl.rs",
+      "sha256": "a85a8c6f24ea3c654cd4b588020147b67a039a3a9844ef2da375190307b37e87"
+    },
+    {
+      "path": "kisten/netz/src/agent_activity/wsl_lifecycle_tests.rs",
+      "sha256": "2e1abf37809a3edfb7b8c166c0ab86833b2ed5ee31f2626f613e6bdad58319f9"
+    }
+  ],
+  "worktree": "/home/han/project/Orchester/.worktrees/windows-wsl-helper-lifecycle",
+  "source_unchanged_since_green_freeze": true,
+  "gates": [
+    {
+      "command": "cargo test --locked --offline -p orchester-vertrag -p orchester-netz --all-targets",
+      "exit_code": 0,
+      "passed": 261,
+      "failed": 0,
+      "ignored": 1,
+      "test_programs": 36,
+      "log": {
+        "path": "/tmp/orchester-wsl-helper-linux-tests.log",
+        "bytes": 28978,
+        "sha256": "66351a476a911a2eb7aab3355178d786d7055d5a19672e2810eb6103d96c6301"
+      }
+    },
+    {
+      "command": "cargo clippy --locked --offline -p orchester-vertrag -p orchester-netz --all-targets -- -D warnings",
+      "exit_code": 0,
+      "log": {
+        "path": "/tmp/orchester-wsl-helper-linux-clippy.log",
+        "bytes": 6504,
+        "sha256": "600366f6c1270ee0fb7bfdd505256b9a5f61e2c93334e9c57ad37c4d85cc6ea8"
+      }
+    },
+    {
+      "command": "cargo fmt --all -- --check",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    },
+    {
+      "command": "cargo metadata --locked --offline --no-deps --format-version 1",
+      "exit_code": 0
+    },
+    {
+      "command": "cargo metadata --manifest-path apps/desktop/src-tauri/Cargo.toml --locked --offline --no-deps --format-version 1",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/tmp/orchester-gitleaks-8.30.1/gitleaks",
+        "dir",
+        "--no-banner",
+        "--no-color",
+        "--redact=100",
+        "--report-format",
+        "json",
+        "--report-path",
+        "/tmp/orchester-wsl-helper-secret-scan-redacted.json",
+        "--gitleaks-ignore-path",
+        "/tmp/orchester-wsl-helper-scan-input-dcrl3on9",
+        "--ignore-gitleaks-allow",
+        "/tmp/orchester-wsl-helper-scan-input-dcrl3on9"
+      ],
+      "exit_code": 0,
+      "finding_count": 0,
+      "report": {
+        "path": "/tmp/orchester-wsl-helper-secret-scan-redacted.json",
+        "bytes": 3,
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "log": {
+        "path": "/tmp/orchester-wsl-helper-secret-scan.log",
+        "bytes": 79,
+        "sha256": "28606c26e15e5659eb851dd847d1dd0ac1df0aa83d99c179e3a65dcc5506351d"
+      },
+      "scope": "only the six changed/new code files; no baseline exemptions"
+    }
+  ],
+  "concurrency": {
+    "CARGO_BUILD_JOBS": 2,
+    "RUST_TEST_THREADS": 2,
+    "TOKIO_WORKER_THREADS": 2
+  },
+  "limitations": [
+    "Windows-specific source was not compiled or executed by Linux; native red/green and Windows clippy are separate required gates.",
+    "All-targets cargo tests do not include doctests.",
+    "No commits, pushes, installed binaries, services, WSL sessions or model agents were changed by this validation."
+  ]
+}

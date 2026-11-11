@@ -1,0 +1,11 @@
+
+running 6 tests
+test agent_activity::wsl::windows_lifecycle_tests::backend_exit_cleans_detached_windows_helper_worker ... ok
+test agent_activity::wsl::windows_lifecycle_tests::failure_cleans_windows_wrapper_descendants ... ok
+test agent_activity::wsl::windows_lifecycle_tests::output_limit_cleans_windows_wrapper_descendants ... ok
+test agent_activity::wsl::windows_lifecycle_tests::success_cleans_windows_wrapper_descendants ... ok
+test agent_activity::wsl::windows_lifecycle_tests::timeout_cleans_windows_wrapper_descendants ... ok
+test agent_activity::wsl::windows_lifecycle_tests::windows_helper_probe ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 93 filtered out; finished in 5.61s
+
