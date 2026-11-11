@@ -8,6 +8,9 @@ describe('agent provider presentation', () => {
     { key: 'gemini', label: 'Google', tone: 'info' },
     { key: 'antigravity', label: 'Google', tone: 'accent' },
     { key: 'cursor', label: 'Cursor', tone: 'neutral' },
+    { key: 'workbuddy', label: 'Tencent', tone: 'accent' },
+    { key: 'qwen', label: 'Qwen', tone: 'info' },
+    { key: 'openclaw', label: 'OpenClaw', tone: 'accent' },
   ])('identifies $key independently of an unknown runtime icon', ({ key, label, tone }) => {
     const agent: AgentRuntimeSummaryDto = { ...AGENT_FLEET_FIXTURE.agents[0]!, provider: key, icon_key: 'custom-provider' }
 
@@ -27,6 +30,18 @@ describe('agent provider presentation', () => {
       iconKey: 'claude',
       tone: 'warning',
     })
+  })
+
+  it.each(['workbuddy', 'qwen', 'openclaw'])('keeps $0 provider identity when a runtime has an old known icon', (provider) => {
+    const agent: AgentRuntimeSummaryDto = { ...AGENT_FLEET_FIXTURE.agents[0]!, provider, icon_key: 'codex' }
+
+    expect(agentProviderPresentation(agent)).toMatchObject({ key: provider, iconKey: provider })
+  })
+
+  it.each(['workbuddy', 'qwen', 'openclaw'])('uses $0 as the icon fallback for an unknown provider', (iconKey) => {
+    const agent: AgentRuntimeSummaryDto = { ...AGENT_FLEET_FIXTURE.agents[0]!, provider: 'custom-runtime', icon_key: iconKey }
+
+    expect(agentProviderPresentation(agent)).toMatchObject({ key: iconKey, iconKey })
   })
 
   it('humanizes unknown providers and uses the generic identity', () => {

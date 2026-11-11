@@ -1,19 +1,17 @@
-# Provider marks
+# Agent marks
 
-Unmodified official assets, bundled locally for offline service identification.
-All trademarks remain the property of their respective owners; their inclusion
-does not imply endorsement of Orchester.
+The WorkBuddy, Qwen Code and OpenClaw marks were retrieved from their official
+sites or repositories on 2026-11-11. Each SVG is retained unchanged and used in
+both themes to identify the corresponding tool. The assets load locally through
+`AgentIcon.vue`.
 
-- `codex.png`: OpenAI Codex Windows package `26.1007.2314.0`,
-  `Assets/Square44x44Logo.targetsize-256_altform-unplated.png`.
-- `codex-light.png`: the same official package's
-  `Assets/Square44x44Logo.targetsize-256_altform-lightunplated.png`.
-- `claude.svg`: Anthropic's official VS Code extension
-  `anthropic.claude-code` version `2.1.296`, `resources/claude-logo.svg`.
-  [Extension listing](https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code).
-- `opencode-dark.svg`, `opencode-light.svg`: [OpenCode brand resources](https://opencode.ai/brand),
-  [official source directory](https://github.com/anomalyco/opencode/tree/dev/packages/console/app/src/asset/brand).
-- `deepseek.ico`: [DeepSeek website favicon](https://www.deepseek.com/favicon.ico).
+| Asset | Official source | SHA-256 |
+| --- | --- | --- |
+| `workbuddy.svg` | [WorkBuddy site's favicon](https://assets.workbuddy.cn/web/workbuddy/5611ca0b566ae70e862617fecf6f3c8b05e5515a/assets/logo.svg), linked by [WorkBuddy](https://www.workbuddy.cn/) | `10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d` |
+| `qwen.svg` | [Qwen Code desktop mark](https://github.com/QwenLM/qwen-code/blob/e19e1ebe7881960ab2e3319d677c491254600571/packages/desktop/bootstrap/qwen-code-logo.svg) | `24156c849c9124505e13b38c6583a9d5d85a1f57d996c324d967f480a4d88696` |
+| `openclaw.svg` | [OpenClaw Control UI favicon](https://github.com/openclaw/openclaw/blob/44a2948a9eaf4345069d4b652ae382d10dd08f62/ui/public/favicon.svg) | `74e1fb7542675f68aafe502576f7c857c3f3620d07095e910515e3c05d62ab2e` |
 
-Retrieved 2026-10-13. Light/dark assets are selected through the app's theme;
-the artwork is not tinted with the provider status or accent color.
+The Qwen Code repository's Apache 2.0 license is preserved in
+[`qwen-LICENSE.txt`](qwen-LICENSE.txt). OpenClaw's MIT license is preserved in
+[`openclaw-LICENSE.txt`](openclaw-LICENSE.txt). WorkBuddy's mark identifies Tencent's
+WorkBuddy product; the CDN name does not make it the CodeBuddy product.
