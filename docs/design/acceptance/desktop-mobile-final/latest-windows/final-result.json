@@ -1,0 +1,422 @@
+{
+    "status":  "build-and-file-gates-passed",
+    "sourceRevision":  "35c75e656d2c04cc6221d1dfb56c916aac706033",
+    "expectedPlanSha256":  "bf74addb6794ee13234d6ff344af542c7ebf4b742caa103a310fc80e29a5a391",
+    "finishedAt":  "2026-11-11T04:43:37.3352872Z",
+    "workerPid":  230188,
+    "gates":  [
+                  {
+                      "phase":  "toolchain",
+                      "childPid":  254192,
+                      "childCreatedAt":  "2026-11-11T04:38:50.9748450Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "processExited":  true,
+                      "terminationAttempted":  false,
+                      "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\toolchain\\stdout.log",
+                      "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\toolchain\\stderr.log"
+                  },
+                  {
+                      "phase":  "helper-contract",
+                      "childPid":  219116,
+                      "childCreatedAt":  "2026-11-11T04:38:52.4651766Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "processExited":  true,
+                      "terminationAttempted":  false,
+                      "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\helper-contract\\stdout.log",
+                      "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\helper-contract\\stderr.log"
+                  },
+                  {
+                      "phase":  "helper-wsl",
+                      "childPid":  239988,
+                      "childCreatedAt":  "2026-11-11T04:38:54.1930655Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "processExited":  true,
+                      "terminationAttempted":  false,
+                      "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\helper-wsl\\stdout.log",
+                      "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\helper-wsl\\stderr.log"
+                  },
+                  {
+                      "phase":  "memory-initialization",
+                      "childPid":  195340,
+                      "childCreatedAt":  "2026-11-11T04:39:01.5731063Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "processExited":  true,
+                      "terminationAttempted":  false,
+                      "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\memory-initialization\\stdout.log",
+                      "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\memory-initialization\\stderr.log"
+                  },
+                  {
+                      "phase":  "monitor-process",
+                      "childPid":  247268,
+                      "childCreatedAt":  "2026-11-11T04:39:11.0365133Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "processExited":  true,
+                      "terminationAttempted":  false,
+                      "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\monitor-process\\stdout.log",
+                      "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\monitor-process\\stderr.log"
+                  },
+                  {
+                      "phase":  "monitor-activity",
+                      "childPid":  211444,
+                      "childCreatedAt":  "2026-11-11T04:39:12.8013099Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "processExited":  true,
+                      "terminationAttempted":  false,
+                      "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\monitor-activity\\stdout.log",
+                      "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\monitor-activity\\stderr.log"
+                  },
+                  {
+                      "phase":  "monitor-http",
+                      "childPid":  194212,
+                      "childCreatedAt":  "2026-11-11T04:39:23.2266816Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "processExited":  true,
+                      "terminationAttempted":  false,
+                      "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\monitor-http\\stdout.log",
+                      "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\monitor-http\\stderr.log"
+                  },
+                  {
+                      "phase":  "remote-cli",
+                      "childPid":  192492,
+                      "childCreatedAt":  "2026-11-11T04:40:14.1312940Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "processExited":  true,
+                      "terminationAttempted":  false,
+                      "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\remote-cli\\stdout.log",
+                      "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\remote-cli\\stderr.log"
+                  },
+                  {
+                      "phase":  "root-clippy",
+                      "childPid":  222324,
+                      "childCreatedAt":  "2026-11-11T04:41:09.7002012Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "processExited":  true,
+                      "terminationAttempted":  false,
+                      "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\root-clippy\\stdout.log",
+                      "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\root-clippy\\stderr.log"
+                  },
+                  {
+                      "phase":  "root-fmt",
+                      "childPid":  224260,
+                      "childCreatedAt":  "2026-11-11T04:41:39.8806991Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "processExited":  true,
+                      "terminationAttempted":  false,
+                      "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\root-fmt\\stdout.log",
+                      "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\root-fmt\\stderr.log"
+                  },
+                  {
+                      "phase":  "cli-build",
+                      "childPid":  206136,
+                      "childCreatedAt":  "2026-11-11T04:41:42.3265740Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "processExited":  true,
+                      "terminationAttempted":  false,
+                      "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\cli-build\\stdout.log",
+                      "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\cli-build\\stderr.log"
+                  },
+                  {
+                      "phase":  "chrome-test",
+                      "childPid":  189436,
+                      "childCreatedAt":  "2026-11-11T04:41:49.3190629Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "processExited":  true,
+                      "terminationAttempted":  false,
+                      "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\chrome-test\\stdout.log",
+                      "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\chrome-test\\stderr.log"
+                  },
+                  {
+                      "phase":  "desktop-test",
+                      "childPid":  253128,
+                      "childCreatedAt":  "2026-11-11T04:41:51.6034835Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "processExited":  true,
+                      "terminationAttempted":  false,
+                      "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\desktop-test\\stdout.log",
+                      "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\desktop-test\\stderr.log"
+                  },
+                  {
+                      "phase":  "desktop-clippy",
+                      "childPid":  142184,
+                      "childCreatedAt":  "2026-11-11T04:43:05.8469400Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "processExited":  true,
+                      "terminationAttempted":  false,
+                      "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\desktop-clippy\\stdout.log",
+                      "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\desktop-clippy\\stderr.log"
+                  },
+                  {
+                      "phase":  "desktop-fmt",
+                      "childPid":  221764,
+                      "childCreatedAt":  "2026-11-11T04:43:20.7241088Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "processExited":  true,
+                      "terminationAttempted":  false,
+                      "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\desktop-fmt\\stdout.log",
+                      "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\desktop-fmt\\stderr.log"
+                  },
+                  {
+                      "phase":  "desktop-build",
+                      "childPid":  248044,
+                      "childCreatedAt":  "2026-11-11T04:43:23.3771309Z",
+                      "exitCode":  0,
+                      "timedOut":  false,
+                      "processExited":  true,
+                      "terminationAttempted":  false,
+                      "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\desktop-build\\stdout.log",
+                      "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\desktop-build\\stderr.log"
+                  }
+              ],
+    "desktopProfile":  "debug",
+    "desktopInventory":  [
+                             {
+                                 "path":  "orchester-desktop.exe",
+                                 "sha256":  "e42f0161eb2d0a402ad69f1951f7a5655b47ceb95151387a85b76a8b817c541f"
+                             },
+                             {
+                                 "path":  "web/agents/antigravity.svg",
+                                 "sha256":  "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e"
+                             },
+                             {
+                                 "path":  "web/agents/claude.svg",
+                                 "sha256":  "a3101f3047a119aa11825ad9369510f0c472428c8c52d420e31bc62db44a8364"
+                             },
+                             {
+                                 "path":  "web/agents/codex.png",
+                                 "sha256":  "2b001fb1f4e7d76e4d459c2ad8f9739e963ffc1c2137abcfffe8da3ee7775f7c"
+                             },
+                             {
+                                 "path":  "web/agents/codex-light.png",
+                                 "sha256":  "b45359d98553406d60c45e699cbe80de6fe733d51661a317ca37b41632b58823"
+                             },
+                             {
+                                 "path":  "web/agents/cursor-dark.svg",
+                                 "sha256":  "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260"
+                             },
+                             {
+                                 "path":  "web/agents/cursor-light.svg",
+                                 "sha256":  "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0"
+                             },
+                             {
+                                 "path":  "web/agents/deepseek.ico",
+                                 "sha256":  "30a4420e6e4dcb17fd7de560c5004346c2bc8cd971d2d5f5ee15326603e51321"
+                             },
+                             {
+                                 "path":  "web/agents/gemini.png",
+                                 "sha256":  "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee"
+                             },
+                             {
+                                 "path":  "web/agents/opencode-dark.svg",
+                                 "sha256":  "5dd4abb4de60204510edf140bbe74b3580d07ebdda79fdb0081cd45acb53d44b"
+                             },
+                             {
+                                 "path":  "web/agents/opencode-light.svg",
+                                 "sha256":  "b47a4fecc77599382e238868e74064bbe92307b0e253a32f0b1a026517a2d2a6"
+                             },
+                             {
+                                 "path":  "web/agents/README.md",
+                                 "sha256":  "0f957a0d6e146183bba44f0cf3d9cfa2f7cd4563502f79f0b8aad25e39cb1fb3"
+                             },
+                             {
+                                 "path":  "web/agents/SOURCES.md",
+                                 "sha256":  "6a36358fc1b175d004b5f3b540ed0c38f0a28ef753a3f1a5716cffb5ff3e926a"
+                             },
+                             {
+                                 "path":  "web/appearance-bootstrap.js",
+                                 "sha256":  "9e4ecb165d34acebf4729fc2145b1d9897038d6e0dae538675f064e42209ba29"
+                             },
+                             {
+                                 "path":  "web/apple-touch-icon.png",
+                                 "sha256":  "9846969f6bac3fa79ef3a196c5bd18e440eb16e7639476db22930919def007da"
+                             },
+                             {
+                                 "path":  "web/assets/download-DcI8ZH69.js",
+                                 "sha256":  "1e4f5d9c22e0101ca66ff67409d2a7710c624372aed2dcb12e038488eb79785d"
+                             },
+                             {
+                                 "path":  "web/assets/index-B6H1dEeP.js",
+                                 "sha256":  "92bbb2868c9efe5ac3f056f55c890acf86fb2ac90951669c2794ecec799c35a1"
+                             },
+                             {
+                                 "path":  "web/assets/index-nLCX3cZ6.css",
+                                 "sha256":  "f1335a8bf0d87cf71deefa54d304af009bec7ebb5a678d6792a2cecb457428ec"
+                             },
+                             {
+                                 "path":  "web/assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+                                 "sha256":  "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b"
+                             },
+                             {
+                                 "path":  "web/assets/management-cMFCfhng.js",
+                                 "sha256":  "0f71821d0da95bb15c141f35015456c9593b89411569cf0285673db33e522447"
+                             },
+                             {
+                                 "path":  "web/assets/management-DrC3akjz.css",
+                                 "sha256":  "d275f30dc6555b593ece72d623991cfa22b14aeaa10ec775637051079e877f5e"
+                             },
+                             {
+                                 "path":  "web/assets/NotFoundView-Bn9J4SyH.css",
+                                 "sha256":  "efe049d1379c46410a90537130dad072f5be0e115eccee31a0bd0c188dd38b65"
+                             },
+                             {
+                                 "path":  "web/assets/NotFoundView-DjOd5o4C.js",
+                                 "sha256":  "30829eb37e578f59a96ac4b33b4197ab83e9f3186981446ed28b6fcddf698c25"
+                             },
+                             {
+                                 "path":  "web/assets/orchester-mark-DnE_3Uv-.png",
+                                 "sha256":  "73a86d4d31c1a41216a1467e9710691dc5f548dddf66067a9e3dabe25f565e6b"
+                             },
+                             {
+                                 "path":  "web/assets/play-Du9pf6kR.js",
+                                 "sha256":  "0cc1065d9634cc799ab1f544258bde8f28ed4427f12b600e1b2097c5b570bac8"
+                             },
+                             {
+                                 "path":  "web/assets/PluginsView-N8i-wokc.js",
+                                 "sha256":  "9143b4c8e03df48ea7dad5fb004997489c47a024395893cc4a596a8de2f21ed8"
+                             },
+                             {
+                                 "path":  "web/assets/plus-BGolWEcK.js",
+                                 "sha256":  "9a03301d709bd832ea7531ee77a753a3a4f8a7271dcf77ddbac59359f43e0a80"
+                             },
+                             {
+                                 "path":  "web/assets/SchedulesView-pLJh1cll.js",
+                                 "sha256":  "a098c8b8348191823b7cce91215e9ef47a2eb49843a4fdc8033f1b52d2e602ca"
+                             },
+                             {
+                                 "path":  "web/assets/search-m4fEj3oz.js",
+                                 "sha256":  "128459c46fc69c5a683084efba9f2a925f67557b2b685c416a43269a630eae9c"
+                             },
+                             {
+                                 "path":  "web/assets/SettingsView-BdzVFuyJ.js",
+                                 "sha256":  "1c936e70e4a3d06c6d0b756669fdffebb90c5e5793e90b71e20a69e42d694314"
+                             },
+                             {
+                                 "path":  "web/assets/SettingsView-DY7Zn8Mz.css",
+                                 "sha256":  "c2efcde99222fec97d601e6fc9e552f31a12d2438bbc6f4114bb863ce6fb0792"
+                             },
+                             {
+                                 "path":  "web/assets/Spinner-8VGhTrjX.js",
+                                 "sha256":  "b986e4a1d33bfe5642891fc3ab756e15f09580de800ea52a9ed4e3fd2f93235c"
+                             },
+                             {
+                                 "path":  "web/assets/WorkspaceView-2qVNEqYO.css",
+                                 "sha256":  "6b70df3073757e22c80cff5108d6045b9c7bde219d0bb372a1bc4ea3b55c15c1"
+                             },
+                             {
+                                 "path":  "web/assets/WorkspaceView-CMkCi_B2.js",
+                                 "sha256":  "37b945b1e2a3605bb7dcdbeaeed83859ffd86fe33a514cdb58ed2df81a46ce01"
+                             },
+                             {
+                                 "path":  "web/favicon.png",
+                                 "sha256":  "a5d074c0581064520630e1ef7ae1e45eabc94e32e366b8448fcd94473af9f0c7"
+                             },
+                             {
+                                 "path":  "web/icon-512.png",
+                                 "sha256":  "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06"
+                             },
+                             {
+                                 "path":  "web/index.html",
+                                 "sha256":  "a97daca7d94739cc289eaa4b5098af74c81a0d8f911b98b3be66ed952183ab28"
+                             },
+                             {
+                                 "path":  "web/pets/xiaoxuan/pet.json",
+                                 "sha256":  "bcf9cceb7118979c34650d678bd0a6788ec4539ef64b9b121f1ac137cfc0ce6b"
+                             },
+                             {
+                                 "path":  "web/pets/xiaoxuan/spritesheet.webp",
+                                 "sha256":  "8d6686dd1a1f338ae4b210e468533f3652dfbfc0ddc29bf79ac6594cbcf16d5d"
+                             }
+                         ],
+    "remoteInventory":  [
+                            {
+                                "path":  "allow-lan.ps1",
+                                "sha256":  "2ff1fc87bd198337c2740ef08e51751380870a38376976d5e4e4e17d2efed727"
+                            },
+                            {
+                                "path":  "codex-provider.py",
+                                "sha256":  "5289ae1c9363a6d488c87a09d1e5c8987f231895633cbb2e8d37fe561c0416be"
+                            },
+                            {
+                                "path":  "LICENSE-APACHE",
+                                "sha256":  "d631bf0e88c15a29d2213a0424a633b958f2863c08081b6a8bf3df172427b77b"
+                            },
+                            {
+                                "path":  "LICENSE-MIT",
+                                "sha256":  "965ebe353c29b5a7812fe4034a27e6a557348130658ccfd3c5a680ead935a6cd"
+                            },
+                            {
+                                "path":  "orchester.exe",
+                                "sha256":  "ef633cc43b2e767f222fe861fd2dfeca718fc677c0761d03f4c20f08d6a7bd66"
+                            },
+                            {
+                                "path":  "orchester-mobile-debug.apk",
+                                "sha256":  "55530cbab620d6d5a7301650b300a8af90de3f936f6388584e4edeedc409b0ca"
+                            },
+                            {
+                                "path":  "package-info.json",
+                                "sha256":  "84fb3da22d115131df0b3ec3af25271dfb3cc7877d8a21337596d872595b0a0f"
+                            },
+                            {
+                                "path":  "README.md",
+                                "sha256":  "a304156de7b1497a7ba8f4b005e532852202a6bd22902bb6142bea7066d750c5"
+                            },
+                            {
+                                "path":  "SHA256SUMS.txt",
+                                "sha256":  "79c9e4856f7509d52f1fa7332870fc4143ed2212020ff35c1aa55761e06f4169"
+                            },
+                            {
+                                "path":  "start.ps1",
+                                "sha256":  "1cbfbc8651d747f834953e5c58b9a53944945637128ac88521ffc872b700b897"
+                            },
+                            {
+                                "path":  "verify.ps1",
+                                "sha256":  "498b81b4f5670f9ec20879162c5408ddf37188bbc9c3991fbede0fbbcb9f3014"
+                            },
+                            {
+                                "path":  "web/assets/brand-icon-Zjdxen9M.png",
+                                "sha256":  "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06"
+                            },
+                            {
+                                "path":  "web/assets/index-BpSqRAdp.js",
+                                "sha256":  "6d98e97e9bd5f167cfefb2516044597403c789fd700992f376b55d2532e8f008"
+                            },
+                            {
+                                "path":  "web/assets/index-DUL45N1m.css",
+                                "sha256":  "da41e4d0cff358cf4526670a8b7b8e482d7993934318674a99389ccd51e420c0"
+                            },
+                            {
+                                "path":  "web/assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+                                "sha256":  "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b"
+                            },
+                            {
+                                "path":  "web/favicon.png",
+                                "sha256":  "bd2b0e95dade84d5371027cc9616610813b3e7f878b434d54a3a1459111c7db2"
+                            },
+                            {
+                                "path":  "web/index.html",
+                                "sha256":  "ce89e38c05c2ebc02b57ee06dacb9a2181202135f5d667c4ce98f5dc8268b409"
+                            }
+                        ],
+    "desktopExeSha256":  "e42f0161eb2d0a402ad69f1951f7a5655b47ceb95151387a85b76a8b817c541f",
+    "remoteExeSha256":  "ef633cc43b2e767f222fe861fd2dfeca718fc677c0761d03f4c20f08d6a7bd66",
+    "apkSha256":  "55530cbab620d6d5a7301650b300a8af90de3f936f6388584e4edeedc409b0ca",
+    "modelCalls":  0,
+    "desktopWindowValidation":  "pending-root",
+    "remotePackageRuntimeValidation":  "pending-root",
+    "defaultInstallationChanged":  false,
+    "servicesChanged":  false
+}

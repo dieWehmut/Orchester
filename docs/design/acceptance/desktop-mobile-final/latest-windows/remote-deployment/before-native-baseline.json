@@ -1,0 +1,107 @@
+{
+    "native":  {
+                   "observedAt":  "2026-11-11T04:48:52.8977461Z",
+                   "installations":  [
+                                         {
+                                             "kind":  "Desktop",
+                                             "executable":  "C:\\Users\\han\\AppData\\Local\\Orchester\\orchester-desktop.exe",
+                                             "installedSha256":  "9688bae1a669a4c38004af88ae78ac1397d59abac1f8e82cddb6ff888ba5e3e5",
+                                             "liveIdentities":  [
+
+                                                                ]
+                                         },
+                                         {
+                                             "kind":  "Remote",
+                                             "executable":  "C:\\Users\\han\\Downloads\\OrchesterRemote\\orchester.exe",
+                                             "installedSha256":  "4569036d09a2279153f9e5fd3a362403212cd39b0ec68481b09fca7afe303cee",
+                                             "liveIdentities":  [
+
+                                                                ]
+                                         }
+                                     ],
+                   "port7338Listening":  false,
+                   "modelCalls":  0,
+                   "defaultInstallationChanged":  false,
+                   "rawArgumentsRead":  false
+               },
+    "desktopRegistration":  {
+                                "uninstallRegistry":  [
+                                                          {
+                                                              "key":  "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Orchester",
+                                                              "valueCount":  10,
+                                                              "sha256":  "682b249fd74a022a2bb3a0d8c366c24fa39db04500c71c1ff144c8485e370b0b"
+                                                          }
+                                                      ],
+                                "shortcuts":  [
+                                                  {
+                                                      "path":  "C:\\Users\\han\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Orchester.lnk",
+                                                      "sha256":  "0b85f38c051769805b1e35510eb791534c1216d93abe17ed1928d070abf37b11"
+                                                  },
+                                                  {
+                                                      "path":  "C:\\Users\\han\\Desktop\\Orchester.lnk",
+                                                      "sha256":  "25289ec74e1d72705dca9277a83b094b3eb748655b3a0cc8d9301cb023ce791e"
+                                                  }
+                                              ],
+                                "readOnly":  true,
+                                "modelCalls":  0
+                            },
+    "externalStateBefore":  [
+                                {
+                                    "root":  "C:\\Users\\han\\.orchester",
+                                    "inventory":  [
+                                                      {
+                                                          "path":  "orchester.jsonc",
+                                                          "sha256":  "3386642a32fb98aa72c0e43323259ea73ce2dbd85ba57ead1127f6063f72f22c"
+                                                      },
+                                                      {
+                                                          "path":  "orchester.jsonc.bak",
+                                                          "sha256":  "738cde621db770eecabc09fc3c365d2ae7ee510c99c233a933fbc7df0fa3c5e3"
+                                                      },
+                                                      {
+                                                          "path":  "sessions.jsonl",
+                                                          "sha256":  "497da74248ee72ac90afee5168dea78d9da4a6998d4c0c4542d3d472a71b9446"
+                                                      },
+                                                      {
+                                                          "path":  "state/audit.jsonl",
+                                                          "sha256":  "850eff529c07211938fa75ec40d5437b7a7007b39de8b50b2375b35a95ad1878"
+                                                      },
+                                                      {
+                                                          "path":  "state/composer.db",
+                                                          "sha256":  "8906348454ab3647151be0f6e11f7bd2a966e0c778bc15d03efb6b0ea1c5b9dd"
+                                                      },
+                                                      {
+                                                          "path":  "state/conversation-history.db",
+                                                          "sha256":  "e85329532af6b1e46b39983235548e19465197a75bc55cf37ebfe51e79ee7543"
+                                                      },
+                                                      {
+                                                          "path":  "state/library-preferences.db",
+                                                          "sha256":  "b530d61bd689654561f9938a8f4e6ed3e22771abf1755c39b7b86e6cdc39516a"
+                                                      },
+                                                      {
+                                                          "path":  "state/runs.db",
+                                                          "sha256":  "97526e4230185fde2789ce7016fae93d5594739c7afea307f44a5308017acf2d"
+                                                      },
+                                                      {
+                                                          "path":  "state/schedules.db",
+                                                          "sha256":  "9e84f371961c8cdf7848e490777c68be286886d14eb9ff605a24cfe6d9a07248"
+                                                      }
+                                                  ]
+                                },
+                                {
+                                    "root":  "C:\\Users\\han\\AppData\\Local\\OrchesterRemote\\state-home",
+                                    "inventory":  [
+                                                      {
+                                                          "path":  "state/remote.db",
+                                                          "sha256":  "e366bebb65c99c560c82395eebff95704dd6ce71909761b49d43f57f5501b4ba"
+                                                      },
+                                                      {
+                                                          "path":  "state/remote.lock.db",
+                                                          "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                                                      }
+                                                  ]
+                                }
+                            ],
+    "capturedBeforeAnyPromotion":  true,
+    "modelCalls":  0,
+    "defaultInstallationChanged":  false
+}

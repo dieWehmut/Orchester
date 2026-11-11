@@ -1,0 +1,24 @@
+{
+  "sourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "savedTasks": 4,
+  "states": {
+    "failed": 2,
+    "completed": 2
+  },
+  "activeTasks": 0,
+  "runsCanonicalSha256": "a69175304d23b42a649305ace11b5cc9154474f04ca512db5431dc523d7f9a64",
+  "persistentStateCanonicalSha256": "a1d02ee5f1f763c18a7f0fc7b45175d848f15feb953c50e07fe41302cc74764b",
+  "authCanonicalSha256": "8460e9a5e653595e8a25e7466b7ab6aaed504d2157bdbf21e0b201ba74a72983",
+  "projectsCanonicalSha256": "958287f73fbeb6f70dd05bb8541377d338aa2e179de2b5f8fb5aa36e911a3cd5",
+  "event": "default_remote_original_state_retained",
+  "beforeSafeSha256": "ad7f23f2e3176751f31cfdd5e5392933354bd3254a9e9fbb44e44e9968f3cce1",
+  "allOriginalTasksExact": true,
+  "allPersistentStateSemanticallyExact": true,
+  "originalAuthExact": true,
+  "originalProjectsExact": true,
+  "afterServiceStartupAndHttpChecks": true,
+  "sqliteOpenedReadOnly": true,
+  "rawValuesIncluded": false,
+  "stateModifiedByObserver": false,
+  "modelCalls": 0
+}

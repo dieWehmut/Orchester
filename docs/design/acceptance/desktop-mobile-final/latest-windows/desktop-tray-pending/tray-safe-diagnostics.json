@@ -1,0 +1,152 @@
+{
+  "tray-host-observation.json": {
+    "event": "owned_tray_host_observed",
+    "guiPid": 259148,
+    "guiCreated": 134388460748890199,
+    "binarySha256": "e42f0161eb2d0a402ad69f1951f7a5655b47ceb95151387a85b76a8b817c541f",
+    "trayWindowCount": 1,
+    "guiSessionId": 1,
+    "harnessSessionId": 1,
+    "modelCalls": 0
+  },
+  "tray-icon-rect-diagnostic.json": {
+    "event": "owned_tray_icon_rect_diagnostics",
+    "records": [
+      {
+        "Window": 4535058,
+        "Id": 1,
+        "HResult": -2147467259,
+        "Found": false,
+        "Left": 0,
+        "Top": 0,
+        "Right": 0,
+        "Bottom": 0
+      },
+      {
+        "Window": 4535058,
+        "Id": 2,
+        "HResult": 0,
+        "Found": true,
+        "Left": 463,
+        "Top": 2520,
+        "Right": 543,
+        "Bottom": 2640
+      },
+      {
+        "Window": 4535058,
+        "Id": 3,
+        "HResult": -2147467259,
+        "Found": false,
+        "Left": 0,
+        "Top": 0,
+        "Right": 0,
+        "Bottom": 0
+      },
+      {
+        "Window": 4535058,
+        "Id": 4,
+        "HResult": -2147467259,
+        "Found": false,
+        "Left": 0,
+        "Top": 0,
+        "Right": 0,
+        "Bottom": 0
+      },
+      {
+        "Window": 4535058,
+        "Id": 5,
+        "HResult": -2147467259,
+        "Found": false,
+        "Left": 0,
+        "Top": 0,
+        "Right": 0,
+        "Bottom": 0
+      },
+      {
+        "Window": 4535058,
+        "Id": 6,
+        "HResult": -2147467259,
+        "Found": false,
+        "Left": 0,
+        "Top": 0,
+        "Right": 0,
+        "Bottom": 0
+      },
+      {
+        "Window": 4535058,
+        "Id": 7,
+        "HResult": -2147467259,
+        "Found": false,
+        "Left": 0,
+        "Top": 0,
+        "Right": 0,
+        "Bottom": 0
+      },
+      {
+        "Window": 4535058,
+        "Id": 8,
+        "HResult": -2147467259,
+        "Found": false,
+        "Left": 0,
+        "Top": 0,
+        "Right": 0,
+        "Bottom": 0
+      }
+    ],
+    "readOnly": true,
+    "modelCalls": 0
+  },
+  "tray-thread-diagnostic.json": {
+    "event": "owned_tray_thread_diagnostics",
+    "records": [
+      {
+        "Window": 4535058,
+        "ThreadId": 212772,
+        "HarnessThreadId": 241556,
+        "DesktopNamesReadable": true,
+        "DesktopNamesMatch": true,
+        "TrayDesktopIsDefault": true,
+        "HarnessDesktopIsDefault": true,
+        "CursorRead": false,
+        "CursorX": 0,
+        "CursorY": 0
+      }
+    ],
+    "readOnly": true,
+    "modelCalls": 0
+  },
+  "tray-helper-failure.json": {
+    "status": "failed",
+    "stage": "owned-popup-window",
+    "type": "System.InvalidOperationException",
+    "staticCode": "tray-popup-not-unique",
+    "popupCount": 0,
+    "postMessageError": 0,
+    "itemCount": 0,
+    "unknownLabelCount": 0,
+    "knownMenuLabels": [],
+    "menuInvoked": false,
+    "modelCalls": 0
+  },
+  "input-desktop-observation.json": {
+    "observedAt": "2026-11-11T04:57:35.9950426Z",
+    "native": {
+      "CursorRead": false,
+      "CursorError": 5,
+      "WindowStationKnownName": "WinSta0",
+      "ThreadDesktopKnownName": "Default",
+      "InputDesktopOpened": false,
+      "InputDesktopError": 5,
+      "InputDesktopKnownName": "unavailable",
+      "InputAndThreadNamesReadable": false,
+      "InputAndThreadDesktopMatch": false
+    },
+    "readOnly": true,
+    "desktopSwitches": 0,
+    "inputActions": 0,
+    "modelCalls": 0
+  },
+  "sourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "naturalTrayAcceptancePassed": false,
+  "privateLogsOrStateIncluded": false
+}

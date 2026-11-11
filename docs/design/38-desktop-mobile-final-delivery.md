@@ -1,6 +1,6 @@
 # 桌面监控、手机共享字体与交付验收
 
-本页功能基线为 main `6278e3b522100b5d7ccc9a4df69d8abceb49aac6`，构建及原生字体验收执行于 2026-11-10，门禁、原生窗口和终端、Linux 部署及文件复核于 2026-11-11（Asia/Shanghai）。WSL 辅助进程生命周期测试及修复 `49d90ac`、`9dccb34` 已合入 `8c24d0c`；随后内存初始化锁争用测试及修复 `231df95`、`d692ffa` 已合入本轮源码 main `35c75e656d2c04cc6221d1dfb56c916aac706033`。此源码的完整 Rust 门禁及 Linux 7337 实际部署已通过；最新 Windows 候选运行、默认安装更新和 Windows 部署仍待验证。
+本页功能基线为 main `6278e3b522100b5d7ccc9a4df69d8abceb49aac6`，构建及原生字体验收执行于 2026-11-10，门禁、原生窗口和终端、Linux 部署及文件复核于 2026-11-11（Asia/Shanghai）。WSL 辅助进程生命周期测试及修复 `49d90ac`、`9dccb34` 已合入 `8c24d0c`；随后内存初始化锁争用测试及修复 `231df95`、`d692ffa` 已合入本轮源码 main `35c75e656d2c04cc6221d1dfb56c916aac706033`。此源码的完整 Rust 门禁、Linux 7337 实际部署、Windows 16 项构建门禁、便携包运行和默认远程包 Windows 7338 部署已通过，临时 Windows QA 代理已正常退出；桌面自然退出与默认桌面安装更新仍待会话解锁后验证。
 
 ## 功能与源码
 
@@ -71,12 +71,39 @@ main `8c24d0c` 的完整 Rust 集成复验出现真实失败：`concurrent_first
 
 修复后的 `orchester-laufzeit --all-targets --locked --offline` 专项为 629 项通过、43 个测试程序、无失败或忽略；原并发首次打开测试、预留锁等待测试、总预算耗尽测试均通过，格式和严格 Clippy 退出 0。两个源码散列均逐个等于修复提交和 main `35c75e6`，运行期间源码稳定；仅这两个源码文件的秘密扫描为 0 命中。[原始门禁](acceptance/desktop-mobile-final/memory-initialization/result.json)、[测试日志](acceptance/desktop-mobile-final/memory-initialization/affected-tests.log)、[提交绑定及复核](acceptance/desktop-mobile-final/memory-initialization/summary.json)、[选定文件原始散列](acceptance/desktop-mobile-final/memory-initialization/provenance.json)。专项和上述独立完整集成都不包含 doctest。
 
-## 尚待交付验证
+## Windows 当前构建与便携运行
 
-Windows 两项 EXE 须用包含内存修复的同一新源码 `35c75e6` 重新构建，完成精确有序的 16 项冻结门禁和对应桌面/便携运行复验后，再更新默认安装与 Windows 7338，补齐临时验收工具退出证据。旧包与历史运行记录继续保留，不作为本轮已部署证明。桌面还需产品菜单自然退出的实际证明；验收程序按自有句柄清理成功不替代该行为。
+`memory-final-35c75e6-crlf` 使用 Windows SDK/MSVC 环境、Rust/Cargo 1.99.1、`x86_64-pc-windows-msvc` 和 debug profile 构建。精确有序的 16 项门禁均绑定原始子进程 PID/创建时间和原生 audit，实际退出 0、无超时，包括 WSL 生命周期 6 项和新增原生内存库 148 项、memory store 15 项。冻结 446 项输入逐个核对一致，400 项 Git 输入等于 `35c75e6`，46 项为生成资源与版本记录；后续 main `831bde8` 只修改文档。候选桌面 39 项、便携 17 项完整文件集合及每项散列相等。[当前构建与源绑定](acceptance/desktop-mobile-final/latest-windows/build-portable-summary.json)、[原始完成记录](acceptance/desktop-mobile-final/latest-windows/final-result.json)、[独立复审](acceptance/desktop-mobile-final/latest-windows/independent-build-portable-review.json)。
 
-`8c24d0c` 的冻结构建与 promotion 脚本曾按精确有序的 15 项门禁复审；当前新套件将再包含内存初始化门禁。promotion 必须绑定同一源码、plan、final result、EXE、实际 runtime 和 cleanup 散列，以及完整旧目录 sibling 备份和外部状态保留。[旧套件只读复审](acceptance/desktop-mobile-final/wsl-helper-lifecycle/promotion-script-review.json)不代替当前最终构建、原生运行或安装验收。旧 13 门禁服务管理入口须另行准备适配版本后使用。
+| 当前候选产物 | 字节 / SHA-256 |
+| --- | --- |
+| Windows 桌面 debug EXE | 40,667,136 / `e42f0161eb2d0a402ad69f1951f7a5655b47ceb95151387a85b76a8b817c541f` |
+| Windows 远程 debug EXE | 30,777,344 / `ef633cc43b2e767f222fe861fd2dfeca718fc677c0761d03f4c20f08d6a7bd66` |
 
-iOS 已同步 6 项资源并检查 LaunchScreen XML，缺少 macOS/Xcode 原生构建、签名与 iPhone 安装证据。实体 Android 的 Wi-Fi 网络、字体缩放和终端交互仍需目标手机验证。这些范围不由 AVD、资源相等或构建成功代替。
+该源码便携包实际完成 14 项运行检查：打包启动器、静态页面字节、未授权 401、一次性配对、项目读写、Unicode/空格 cwd、ConPTY 交互、WebSocket 顺序、`96×31` resize、drained close 和未连接终端的后端关闭。产品 `quit` 退出 0，随后被动观察 5 秒，全部原始自有句柄已退出，零未知后代、零 fallback、端口释放、stderr 0 字节。结果绑定同一源码、plan、final、EXE 和 APK。[实际运行](acceptance/desktop-mobile-final/latest-windows/portable/runtime-result.json)、[自然退出观察](acceptance/desktop-mobile-final/latest-windows/portable/normal-shutdown-observation.json)、[最终句柄清理](acceptance/desktop-mobile-final/latest-windows/portable/cleanup-result.json)、[逐文件原始散列](acceptance/desktop-mobile-final/latest-windows/provenance.json)。
 
-[证据清单](acceptance/desktop-mobile-final/manifest.json)保存本页选定文件的 SHA-256；后续运行及部署结果另行追加。
+桌面候选的 16 项界面检查、7 次保存、2 次匹配截图原子 ACK 已通过，但托盘菜单未能调用，完整自然退出验收仍未通过。自有托盘窗口和 icon ID 2 已确认，GUI 与验收线程都处于 Session 1 / Default；GetCursorPos 和 OpenInputDesktop 返回错误 5，投递消息后没有 popup，也未调用菜单项。后续原句柄清理确认 GUI/Node 消失、端口释放，但产生 8 次强制清理结果，不能计为产品自然退出。[界面子集结果](acceptance/desktop-mobile-final/latest-windows/desktop-tray-pending/native-windows-result.json)、[自有输入桌面与托盘诊断](acceptance/desktop-mobile-final/latest-windows/desktop-tray-pending/tray-safe-diagnostics.json)、[失败与强制清理边界](acceptance/desktop-mobile-final/latest-windows/desktop-tray-pending/cleanup-result.json)。后续 Windows build 26200 的只读 WTS 查询确认同一 Session 1 为 Disconnected（4）、Locked（flags 0），没有读取用户名或域名。[会话数值记录](acceptance/desktop-mobile-final/latest-windows/desktop-tray-pending/current-session-state-observation.json)、[输入桌面访问记录](acceptance/desktop-mobile-final/latest-windows/desktop-tray-pending/input-desktop-observation.json)。没有切换桌面、操作输入或复制私人 WebView profile/state。
+
+## Windows 默认远程部署
+
+已依据同一源码、plan、final、EXE 与便携 runtime/cleanup 散列，仅将默认远程包更新为上述 `ef633cc4…` EXE。完整旧包保存在独立 sibling 备份，原包外状态两文件在更新前后逐字节相等；包内没有用户工作区文件，原包外 WSL 工作区保持存在。promotion 的两次原生身份检查没有发送进程信号；默认桌面 EXE、uninstaller、两项快捷方式、注册信息和桌面外部状态保持不变。[实际 promotion](acceptance/desktop-mobile-final/latest-windows/remote-deployment/promotion-result.json)、[原生身份 guard](acceptance/desktop-mobile-final/latest-windows/remote-deployment/promotion-native-guard.json)、[私人备份的安全散列记录](acceptance/desktop-mobile-final/latest-windows/remote-deployment/private-backup-metadata.json)、[工作区保留](acceptance/desktop-mobile-final/latest-windows/remote-deployment/workspace-preservation.json)。原 promotion 记录内的任务验收 `pending-root` 是当时的边界，后续实际服务和状态记录单独闭合。
+
+默认 `start.ps1` 通过支持本地管理命令的窗口恢复 Windows `0.0.0.0:7338`，启动配对关闭，保留原 state-home、实际 UNC 工作区、allow root 和 Windows 模型设置；管理命令为 `pair`、`devices`、`quit`，没有 transcript 或 stdout/stderr 重定向。原始 console PID `252404`、服务 PID `193764`、创建时间、实际 EXE 散列和监听归属均已核验。[管理窗口记录](acceptance/desktop-mobile-final/latest-windows/remote-deployment/management-console-launch.json)、[恢复身份 guard](acceptance/desktop-mobile-final/latest-windows/remote-deployment/restoration-native-guard.json)、[实际资源、监听与注册保留](acceptance/desktop-mobile-final/latest-windows/remote-deployment/native-service-verification.json)。6 项资源实际返回 200 且逐项字节相等；未授权 info 返回 401。自有临时设备配对后，info/agents/projects 三项授权读取均返回 200，实际 workspace、两个 roots、typed JSON schema 和原项目完整数组通过源码契约检查；随后撤销返回 204，旧临时 token 返回 401，关闭配对后再配对返回 429，零 fallback。[实际认证闭环](acceptance/desktop-mobile-final/latest-windows/remote-deployment/authorized-verification.json)。前三次认证观察程序的[失败记录](acceptance/desktop-mobile-final/latest-windows/remote-deployment/harness-attempts/authorized-first-failure.json)及后续记录保留为工具诊断，不计入本次产品通过数量。
+
+原 4 条任务完整语义保留，状态为 2 failed、2 completed、0 active；任务、持久状态、认证和项目的四组 canonical 散列在更新前、启动后、临时认证撤销后、QA 代理退出后完全相同。[更新前](acceptance/desktop-mobile-final/latest-windows/remote-deployment/before-state.json)、[启动后](acceptance/desktop-mobile-final/latest-windows/remote-deployment/after-startup-state.json)、[认证撤销后](acceptance/desktop-mobile-final/latest-windows/remote-deployment/after-auth-state.json)、[QA 退出后](acceptance/desktop-mobile-final/latest-windows/remote-deployment/after-qa-state.json)、[选定原始记录散列](acceptance/desktop-mobile-final/latest-windows/remote-deployment/provenance.json)。没有模型调用，未复制私人数据库、配对码、token 或响应正文。
+
+临时 QA 代理绑定原 PID `3348`、创建时间和 PowerShell 路径，空闲后由 stop 文件正常退出 0，自有 conhost 的原句柄也已结束，未知后代与强制清理均为 0；早期 `31824` 和本轮桌面验收 `235036` 的原记录身份已消失，未向它们发送信号。长期服务 `193764`、管理窗口 `252404` 的原句柄保持存活，7338 仍归属于原服务，随后实际 HTTP 与只读状态复核通过。[实际 QA 清理与长期服务保留](acceptance/desktop-mobile-final/latest-windows/remote-deployment/qa-helper-cleanup.json)、[历史身份和退出源码只读复审](acceptance/desktop-mobile-final/latest-windows/remote-deployment/qa-provenance-review.json)、[完整独立复审](acceptance/desktop-mobile-final/latest-windows/remote-deployment/independent-final-review.json)。原始启动记录没有 proxy.ps1 的散列，此边界保留，未把当前脚本散列倒推为启动时散列。当前冻结构建 400 项 Git 输入仍逐个等于 main `831bde8`，其余 46 项仍绑定通过的计划；后续文档提交不改变构建源码绑定。[当前 main 对应关系](acceptance/desktop-mobile-final/latest-windows/remote-deployment/source-main-closure.json)。
+
+本轮新增文件严格秘密初扫命中 7 处公开 SHA-256 元数据，分别绑定实际 canonical 状态散列或归档文件散列；它们不是可用 token 或密钥。原字段和字节保留，只按这 7 个精确 fingerprint 复核，没有目录或规则级忽略。[原始脱敏扫描结果](acceptance/desktop-mobile-final/latest-windows/archive-secret-scan-first-pass.json)、[逐项绑定与理由](acceptance/desktop-mobile-final/latest-windows/archive-secret-scan-review.json)、[最终扫描记录](acceptance/desktop-mobile-final/latest-windows/archive-secret-scan.json)。此阶段与前述全仓 5 项合成测试 baseline 分别计数。
+
+## 本轮本地待交付验证
+
+同一 `35c75e6` 桌面候选仍需在会话解锁后完成产品菜单自然退出、被动观察及零强制清理的实际证明，桌面旧默认安装保持不变。默认远程包和长期 7338 的实际更新已单独完成，不能据此宣称桌面默认安装或全部 Windows 交付已完成。旧包与历史运行记录继续保留，不作为本轮已部署证明。
+
+`8c24d0c` 的冻结构建与 promotion 脚本曾按精确有序的 15 项门禁复审；当前新套件已包含内存初始化门禁。promotion 必须绑定同一源码、plan、final result、EXE、实际 runtime 和 cleanup 散列，以及完整旧目录 sibling 备份和外部状态保留。[旧套件只读复审](acceptance/desktop-mobile-final/wsl-helper-lifecycle/promotion-script-review.json)不代替当前最终运行或安装验收；当前脚本与结果散列见上述独立复审，旧 13 门禁服务管理入口不能用于这次更新。
+
+## 独立目标环境验证
+
+iOS 已同步 6 项资源并检查 LaunchScreen XML，缺少 macOS/Xcode 原生构建、签名与 iPhone 安装证据。实体 Android 的 Wi-Fi 网络、字体缩放和终端交互仍需目标手机验证。这些独立目标环境范围与本轮本地 Windows 会话解锁后的桌面验收分别记录，不由 AVD、资源相等或构建成功代替。
+
+[证据清单](acceptance/desktop-mobile-final/manifest.json)保存本页选定文件的 SHA-256，[本轮新增文件扫描与归档复核](acceptance/desktop-mobile-final/latest-windows/archive-secret-scan.json)记录选定范围；后续桌面运行及部署结果另行追加。

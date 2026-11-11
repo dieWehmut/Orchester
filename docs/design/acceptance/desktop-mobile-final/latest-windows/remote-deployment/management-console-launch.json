@@ -1,0 +1,32 @@
+{
+    "expectedPlanSha256":  "bf74addb6794ee13234d6ff344af542c7ebf4b742caa103a310fc80e29a5a391",
+    "expectedFinalResultSha256":  "bdd23c9c0a87f27bc13f65656058ac92b43c061b76f56fdf6ad79f066ae6f30c",
+    "cleanupResultSha256":  "672b0aed1dbcf64a0e544f87fdc48a5667684a23a32245629240d9acd2230cfb",
+    "event":  "management_console_started",
+    "sourceRevision":  "35c75e656d2c04cc6221d1dfb56c916aac706033",
+    "launcherPid":  252404,
+    "launcherCreatedAt":  "2026-11-11T05:24:56.5004683Z",
+    "launcherExecutable":  "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "managerScriptSha256":  "78c918211906972f8812de0c3a08aa38c12d0856a825eb72571d13147d36b0a3",
+    "runtimeResultSha256":  "05313e9ccef5a25268dbb5779191f756817965f30c2381d299aedcd2dd3e99b6",
+    "promotionRecordSha256":  "69237992556c602ae1984e3d2e8e55b23785225e6a0a0d7f6e25dee2b28adcee",
+    "binarySha256":  "ef633cc43b2e767f222fe861fd2dfeca718fc677c0761d03f4c20f08d6a7bd66",
+    "port":  7338,
+    "bind":  "0.0.0.0",
+    "stateRoot":  "C:\\Users\\han\\AppData\\Local\\OrchesterRemote\\state-home",
+    "workspace":  "\\\\wsl.localhost\\Ubuntu-22.04\\home\\han\\project\\Orchester",
+    "allowRoot":  "\\\\wsl.localhost\\Ubuntu-22.04\\home\\han\\project",
+    "startupPairingDisabled":  true,
+    "interactiveCommands":  [
+                                "pair",
+                                "devices",
+                                "quit"
+                            ],
+    "optionalWindowsProviderOverride":  false,
+    "transcriptEnabled":  false,
+    "stdoutOrStderrRedirected":  false,
+    "previousProcessStopped":  false,
+    "launchReturnedWithoutWait":  true,
+    "modelCalls":  0,
+    "serviceVerification":  "pending-root"
+}

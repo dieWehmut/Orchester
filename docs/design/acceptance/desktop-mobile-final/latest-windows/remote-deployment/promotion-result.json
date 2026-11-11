@@ -1,0 +1,19 @@
+{
+    "kind":  "Remote",
+    "promoted":  true,
+    "destination":  "C:\\Users\\han\\Downloads\\OrchesterRemote",
+    "backup":  "C:\\Users\\han\\Downloads\\OrchesterRemote.before-35c75e6-20261111",
+    "sourceRevision":  "35c75e656d2c04cc6221d1dfb56c916aac706033",
+    "expectedPlanSha256":  "bf74addb6794ee13234d6ff344af542c7ebf4b742caa103a310fc80e29a5a391",
+    "previousExeSha256":  "4569036d09a2279153f9e5fd3a362403212cd39b0ec68481b09fca7afe303cee",
+    "currentExeSha256":  "ef633cc43b2e767f222fe861fd2dfeca718fc677c0761d03f4c20f08d6a7bd66",
+    "oldDirectoryPreserved":  true,
+    "externalStateRoot":  "C:\\Users\\han\\AppData\\Local\\OrchesterRemote\\state-home",
+    "externalStateFiles":  2,
+    "externalStateUnchanged":  true,
+    "uninstallerAndOtherDesktopFilesPreserved":  false,
+    "userProcessStoppedByScript":  false,
+    "userProcessRestartedByScript":  false,
+    "runtimeAndTaskRetentionValidation":  "pending-root",
+    "modelCalls":  0
+}

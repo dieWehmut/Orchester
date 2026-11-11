@@ -1,0 +1,95 @@
+{
+    "identityDiagnostic":  null,
+    "ownedIdentities":  [
+                            {
+                                "Pid":  191160,
+                                "ParentPid":  0,
+                                "Depth":  0,
+                                "Created":  134388460201448144,
+                                "Image":  "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                                "Sha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f"
+                            },
+                            {
+                                "Pid":  217988,
+                                "ParentPid":  191160,
+                                "Depth":  1,
+                                "Created":  134388460201683321,
+                                "Image":  "C:\\Windows\\System32\\conhost.exe",
+                                "Sha256":  "c86146188b78e484f32cc29e2331689659943b47689a85570342044f499938ac"
+                            },
+                            {
+                                "Pid":  256972,
+                                "ParentPid":  191160,
+                                "Depth":  1,
+                                "Created":  134388460209408743,
+                                "Image":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\memory-final-35c75e6-crlf\\remote-candidate\\orchester.exe",
+                                "Sha256":  "ef633cc43b2e767f222fe861fd2dfeca718fc677c0761d03f4c20f08d6a7bd66"
+                            },
+                            {
+                                "Pid":  234084,
+                                "ParentPid":  256972,
+                                "Depth":  2,
+                                "Created":  134388460209751596,
+                                "Image":  "C:\\Windows\\System32\\wsl.exe",
+                                "Sha256":  "fcd08205b608b5c4831e0dcb1801dd274436cd2c8420815f18ae58a085891a18"
+                            },
+                            {
+                                "Pid":  206688,
+                                "ParentPid":  234084,
+                                "Depth":  3,
+                                "Created":  134388460211689296,
+                                "Image":  "C:\\Windows\\System32\\conhost.exe",
+                                "Sha256":  "c86146188b78e484f32cc29e2331689659943b47689a85570342044f499938ac"
+                            },
+                            {
+                                "Pid":  248612,
+                                "ParentPid":  234084,
+                                "Depth":  3,
+                                "Created":  134388460211920873,
+                                "Image":  "C:\\Program Files\\WSL\\wsl.exe",
+                                "Sha256":  "051b7a9b7bda66817c052aced998e026610e5d4d18d63f45629d35d5cb5471c8"
+                            },
+                            {
+                                "Pid":  8984,
+                                "ParentPid":  256972,
+                                "Depth":  2,
+                                "Created":  134388460215099995,
+                                "Image":  "C:\\Windows\\System32\\conhost.exe",
+                                "Sha256":  "c86146188b78e484f32cc29e2331689659943b47689a85570342044f499938ac"
+                            },
+                            {
+                                "Pid":  245716,
+                                "ParentPid":  256972,
+                                "Depth":  2,
+                                "Created":  134388460215146426,
+                                "Image":  "C:\\Windows\\System32\\cmd.exe",
+                                "Sha256":  "15cd209c995b7d3009c91ca40892d5b8f1fb162f3e5f10716642ea278e8e0d7b"
+                            },
+                            {
+                                "Pid":  260156,
+                                "ParentPid":  256972,
+                                "Depth":  2,
+                                "Created":  134388460218116285,
+                                "Image":  "C:\\Windows\\System32\\conhost.exe",
+                                "Sha256":  "c86146188b78e484f32cc29e2331689659943b47689a85570342044f499938ac"
+                            },
+                            {
+                                "Pid":  214564,
+                                "ParentPid":  256972,
+                                "Depth":  2,
+                                "Created":  134388460218163499,
+                                "Image":  "C:\\Windows\\System32\\cmd.exe",
+                                "Sha256":  "15cd209c995b7d3009c91ca40892d5b8f1fb162f3e5f10716642ea278e8e0d7b"
+                            }
+                        ],
+    "allExactOwnedHandlesExited":  true,
+    "unexpectedDescendants":  0,
+    "safeUnexpectedImages":  [
+
+                             ],
+    "fallbackOutcomes":  [
+
+                         ],
+    "modelCalls":  0,
+    "defaultServiceStopped":  false
+}

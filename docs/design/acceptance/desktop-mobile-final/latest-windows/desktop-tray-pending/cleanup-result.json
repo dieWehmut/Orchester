@@ -1,0 +1,31 @@
+{
+    "status":  "failed",
+    "nativeTrayQuitNatural":  false,
+    "allExactGuiHandlesExited":  true,
+    "allExactNodeHandlesExited":  true,
+    "debugPortReleased":  true,
+    "embeddedPort":  50468,
+    "unexpectedDescendants":  0,
+    "safeUnexpectedImages":  [
+
+                             ],
+    "guiOutcomes":  [
+                        "terminated-exact-owned-handle",
+                        "terminated-exact-owned-handle",
+                        "terminated-exact-owned-handle",
+                        "terminated-exact-owned-handle",
+                        "terminated-exact-owned-handle",
+                        "terminated-exact-owned-handle",
+                        "terminated-exact-owned-handle",
+                        "terminated-exact-owned-handle"
+                    ],
+    "nodeOutcomes":  [
+
+                     ],
+    "type":  null,
+    "diagnostic":  null,
+    "identityDiagnostic":  null,
+    "originalHandlesKeptUntilCleanup":  true,
+    "modelCalls":  0,
+    "defaultServiceStopped":  false
+}
