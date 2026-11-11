@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { AGENT_IDENTITIES, AgentToolIcon } from '@orchester/design'
 import {
   ArrowUpRight,
   Box,
@@ -28,6 +29,7 @@ const iconMap: Record<HomeIcon, typeof Eye> = {
   runtime: Server,
   adapter: GitBranch,
 }
+const monitoredAgents = Object.values(AGENT_IDENTITIES)
 </script>
 
 <template>
@@ -103,6 +105,20 @@ const iconMap: Record<HomeIcon, typeof Eye> = {
         </div>
       </section>
 
+      <section class="site-section" data-agent-monitoring aria-labelledby="agent-monitoring-title">
+        <div class="site-section__heading">
+          <p class="site-eyebrow">Windows and WSL</p>
+          <h2 id="agent-monitoring-title">Monitor the tools you use.</h2>
+          <p>View available process and service status on your phone, desktop, or browser.</p>
+        </div>
+        <ul class="site-agent-grid" aria-label="Supported agent monitors">
+          <li v-for="agent in monitoredAgents" :key="agent.key" class="site-agent-tool" :data-agent-provider="agent.key">
+            <AgentToolIcon :icon-key="agent.key" />
+            <span>{{ agent.displayName }}</span>
+          </li>
+        </ul>
+      </section>
+
       <section class="governance-band" data-governance-section aria-labelledby="governance-title">
         <div class="governance-band__heading">
           <LockKeyhole :size="22" :stroke-width="1.8" aria-hidden="true" />
@@ -125,3 +141,23 @@ const iconMap: Record<HomeIcon, typeof Eye> = {
     </main>
   </SiteShell>
 </template>
+
+<style scoped>
+.site-agent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: var(--space-3);
+  padding: 0;
+  list-style: none;
+}
+.site-agent-tool {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border-base);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-elevated);
+  font-size: var(--text-sm);
+}
+</style>

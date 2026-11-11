@@ -1,3 +1,4 @@
+import { AGENT_IDENTITIES } from '@orchester/design/agent-identities'
 import {
   AGENT_FLEET_FIXTURE,
   type AgentFleetSnapshotDto,
@@ -15,15 +16,13 @@ import { useAgentFleetStore } from '../src/stores/agent-fleet'
 
 enableAutoUnmount(afterEach)
 
-const providers = [
-  { provider: 'workbuddy', displayName: 'WorkBuddy' },
-  { provider: 'qwen', displayName: 'Qwen Code' },
-  { provider: 'openclaw', displayName: 'OpenClaw' },
-] as const
+const providers = Object.values(AGENT_IDENTITIES).map((identity) => ({ provider: identity.key, displayName: identity.displayName }))
+const serviceProviders = new Set(['workbuddy', 'openclaw', 'claude_app', 'trae', 'zcode', 'craft'])
+const sharedEditorProviders = new Set(['cline', 'roo', 'kilo'])
 const observedAt = '2026-11-11T07:00:00.000Z'
 
 function monitor(provider: typeof providers[number], overrides: Partial<AgentRuntimeSummaryDto> = {}): AgentRuntimeSummaryDto {
-  return {
+  const agent: AgentRuntimeSummaryDto = {
     ...AGENT_FLEET_FIXTURE.agents[0]!,
     agent_id: provider.provider,
     provider: provider.provider,
@@ -42,10 +41,14 @@ function monitor(provider: typeof providers[number], overrides: Partial<AgentRun
     process_sources: null,
     last_heartbeat_at: null,
     last_error: null,
-    capabilities: ['monitor_only', 'process_presence', ...(provider.provider === 'qwen' ? [] : ['service_presence'])],
+    capabilities: ['monitor_only', 'process_presence', ...(serviceProviders.has(provider.provider) ? ['service_presence'] : []), ...(sharedEditorProviders.has(provider.provider) ? ['shared_editor_presence_unknown'] : [])],
     updated_at: observedAt,
     ...overrides,
   }
+  if (sharedEditorProviders.has(provider.provider) && agent.process_sources && !agent.process_sources.some((source) => source.status === 'unavailable')) {
+    agent.process_sources.push({ environment: 'local', status: 'unavailable', count: null, observed_at: null })
+  }
+  return agent
 }
 
 function mountViews(agent: AgentRuntimeSummaryDto) {
@@ -57,7 +60,7 @@ function mountViews(agent: AgentRuntimeSummaryDto) {
 }
 
 describe('new monitors through the shared status API and fleet', () => {
-  it('keeps all three server monitors visible when no adapter or observation is available', async () => {
+  it('keeps every documented server monitor visible when no adapter or observation is available', async () => {
     const incoming: AgentFleetSnapshotDto = {
       schema_version: 3,
       sequence: 1,
@@ -73,7 +76,7 @@ describe('new monitors through the shared status API and fleet', () => {
 
     expect(store.status).toBe('ready')
     expect(get).toHaveBeenCalledWith('/agents/status')
-    expect(store.snapshot?.agents.map((agent) => agent.provider)).toEqual(['workbuddy', 'qwen', 'openclaw'])
+    expect(store.snapshot?.agents.map((agent) => agent.provider)).toHaveLength(20)
     expect(store.activeSubagentCount).toBe(0)
     const panel = mount(AgentFleetPanel, {
       props: { snapshot: store.snapshot, status: store.status },
@@ -85,6 +88,8 @@ describe('new monitors through the shared status API and fleet', () => {
       expect(row.get('[data-agent-activity]').text()).toBe('状态未知')
       expect(row.get('[data-active-processes]').text()).toBe('—')
       expect(row.find('[data-agent-availability]').exists()).toBe(false)
+      expect(row.get(`[data-agent-icon="${provider.provider}"] img`).attributes('src')).toBeTruthy()
+      expect(row.find('[data-agent-icon="generic"]').exists()).toBe(false)
     }
   })
 })
@@ -98,16 +103,18 @@ describe.each(providers)('$displayName monitoring semantics', (provider) => {
     })
     const [row, details] = mountViews(agent)
     expect(row!.get('[data-agent-activity]').text()).toBe('服务运行')
-    expect(row!.get(`[data-agent-count-unit="${provider.provider === 'qwen' ? 'processes' : 'services'}"] dt`).text()).toBe(provider.provider === 'qwen' ? '进程' : '服务进程')
-    expect(row!.get('[data-active-processes]').text()).toBe('1')
+    expect(row!.get(`[data-agent-count-unit="${serviceProviders.has(provider.provider) ? 'services' : 'processes'}"] dt`).text()).toBe(serviceProviders.has(provider.provider) ? '服务进程' : '进程')
+    expect(row!.get('[data-active-processes]').text()).toBe(sharedEditorProviders.has(provider.provider) ? '至少 1' : '1')
     expect(details!.get('[data-agent-details-activity]').text()).toBe('服务运行')
     expect(details!.get('[data-agent-monitor-only]').text()).toBe('仅监控进程；服务存在不代表正在执行任务。')
     for (const wrapper of [row!, details!]) {
       expect(wrapper.find('[data-active-runs]').exists()).toBe(false)
       expect(wrapper.find('[data-active-subagents]').exists()).toBe(false)
       expect(wrapper.find('.status-dot--pulse').exists()).toBe(false)
-      expect(wrapper.text()).not.toMatch(/未安装|未配置|未认证|需要登录|不可用/)
+      expect(wrapper.find('[data-agent-availability], [data-agent-details-availability]').exists()).toBe(false)
+      expect(wrapper.text()).not.toMatch(/未安装|未配置|未认证|需要登录/)
     }
+    if (sharedEditorProviders.has(provider.provider)) expect(details!.get('[data-process-source-status="unavailable"]').text()).toContain('来源不可用')
   })
 
   it('announces no running process only for a complete zero observation', () => {
@@ -115,9 +122,10 @@ describe.each(providers)('$displayName monitoring semantics', (provider) => {
       activity: 'offline',
       process_sources: [{ environment: 'local', status: 'available', count: 0, observed_at: observedAt }],
     }))
-    expect(row!.get('[data-agent-activity]').text()).toBe('未发现运行进程')
-    expect(row!.get('[data-active-processes]').text()).toBe('0')
-    expect(details!.get('[data-agent-details-activity]').text()).toBe('未发现运行进程')
+    const complete = !sharedEditorProviders.has(provider.provider)
+    expect(row!.get('[data-agent-activity]').text()).toBe(complete ? '未发现运行进程' : '状态未知')
+    expect(row!.get('[data-active-processes]').text()).toBe(complete ? '0' : '—')
+    expect(details!.get('[data-agent-details-activity]').text()).toBe(complete ? '未发现运行进程' : '状态未知')
   })
 
   it('preserves positive evidence as a lower bound without adding old cached counts', () => {
@@ -131,6 +139,6 @@ describe.each(providers)('$displayName monitoring semantics', (provider) => {
       ],
     }))
     for (const wrapper of [row!, details!]) expect(wrapper.get('[data-active-processes]').text()).toBe('至少 1')
-    expect(row!.get('button').attributes('aria-label')).toContain(provider.provider === 'qwen' ? '至少 1 进程' : '至少 1 服务进程')
+    expect(row!.get('button').attributes('aria-label')).toContain(serviceProviders.has(provider.provider) ? '至少 1 服务进程' : '至少 1 进程')
   })
 })

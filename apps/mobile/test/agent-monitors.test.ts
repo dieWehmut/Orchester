@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { AGENT_IDENTITIES } from '@orchester/design/agent-identities'
 import { AGENT_FLEET_FIXTURE, type AgentFleetSnapshotDto } from '@orchester/protokoll'
 import { createApp, effectScope } from 'vue'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
@@ -73,6 +74,39 @@ it('loads the authorized typed status endpoint and renders official identities w
     expect(node(row, '[data-mobile-agent-count-unit]').getAttribute('data-mobile-agent-count-unit')).toBe(provider === 'qwen' ? 'processes' : 'services')
     expect(row.textContent).not.toMatch(/未安装|未配置|未认证|可用|任务数量/)
   }
+  expect(wrapper.querySelector('button')).toBeNull()
+})
+
+it('keeps the full server monitor roster and preserves unknown shared editor sources on mobile', async () => {
+  const services = new Set(['workbuddy', 'openclaw', 'claude_app', 'trae', 'zcode', 'craft'])
+  const sharedEditors = new Set(['cline', 'roo', 'kilo'])
+  const incoming: AgentFleetSnapshotDto = {
+    schema_version: 3, sequence: 1, generated_at: observedAt,
+    agents: Object.values(AGENT_IDENTITIES).map((identity) => ({
+      ...snapshot().agents[0]!, agent_id: identity.key, provider: identity.key,
+      display_name: identity.displayName, icon_key: identity.key, activity: 'offline', active_windows: 0,
+      process_sources: [
+        { environment: 'local', status: 'available', count: 0, observed_at: observedAt },
+        ...(sharedEditors.has(identity.key) ? [{ environment: 'local' as const, status: 'unavailable' as const, count: null, observed_at: null }] : []),
+      ],
+      capabilities: ['monitor_only', 'process_presence', ...(services.has(identity.key) ? ['service_presence'] : []), ...(sharedEditors.has(identity.key) ? ['shared_editor_presence_unknown'] : [])],
+    })),
+  }
+  request.mockResolvedValueOnce(incoming)
+  await control.refreshAgentStatus()
+  const wrapper = mountMonitor({ snapshot: control.agentSnapshot.value, status: 'ready', error: '' })
+  expect(wrapper.querySelectorAll('[data-mobile-agent-id]')).toHaveLength(20)
+  for (const identity of Object.values(AGENT_IDENTITIES)) {
+    const row = node(wrapper, `[data-mobile-agent-id="${identity.key}"]`)
+    const unknown = sharedEditors.has(identity.key)
+    expect(row.textContent).toContain(identity.displayName)
+    expect(node(row, `[data-agent-icon="${identity.key}"] img`).getAttribute('src')).toBeTruthy()
+    expect(node(row, '[data-mobile-agent-count-unit]').getAttribute('data-mobile-agent-count-unit')).toBe(services.has(identity.key) ? 'services' : 'processes')
+    expect(node(row, '[data-mobile-agent-activity]').textContent).toBe(unknown ? '状态未知' : '未发现运行进程')
+    expect(node(row, '[data-mobile-agent-count]').textContent).toBe(unknown ? '—' : '0')
+    if (unknown) expect(row.textContent).toContain('来源不可用')
+  }
+  expect(wrapper.querySelector('[data-agent-icon="generic"]')).toBeNull()
   expect(wrapper.querySelector('button')).toBeNull()
 })
 
