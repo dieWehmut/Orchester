@@ -88,6 +88,8 @@
       "windows": "窗口",
       "process": "进程",
       "processes": "进程",
+      "service": "服务进程",
+      "services": "服务进程",
       "instance": "实例",
       "instances": "实例",
       "run": "运行",

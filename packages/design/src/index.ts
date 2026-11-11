@@ -1,4 +1,6 @@
 export { default as AppBadge } from './components/AppBadge.vue'
+export { default as AgentToolIcon } from './components/AgentToolIcon.vue'
+export { AGENT_IDENTITIES, agentIdentity, type AgentIdentity, type AgentIdentityKey, type AgentIdentityTone } from './agent-identities'
 export { default as AppButton } from './components/AppButton.vue'
 export { default as AppCard } from './components/AppCard.vue'
 export { default as AppCheckbox } from './components/AppCheckbox.vue'

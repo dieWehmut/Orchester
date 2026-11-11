@@ -1,4 +1,5 @@
-import type { AgentRuntimeSummaryDto } from '@orchester/protokoll'
+import { agentHasManagedActivity, agentPresenceCountKey, agentPresentedActivity, agentWindowCount, type AgentRuntimeSummaryDto, type AgentPresenceCountQuality, type AgentPresenceCountUnit } from '@orchester/protokoll'
+export { agentFleetCountKey, agentFleetWindowCount, agentIsMonitorOnly, agentPresenceCountKey, agentPresentedActivity, agentProcessSourcesComplete, agentWindowCount } from '@orchester/protokoll'
 import type { I18n } from '../../i18n'
 
 import type { AgentStatusSocketStatus } from '../../transport/agent-status-socket'
@@ -31,13 +32,15 @@ export type AgentAvailabilityMessageKey =
   | 'agents.availability.authRequired'
   | 'agents.availability.error'
 
-export type AgentPresenceCountKey = 'windows' | 'processes' | 'instances'
+export type AgentPresenceCountKey = AgentPresenceCountUnit
 export type AgentCountKey = AgentPresenceCountKey | 'runs' | 'subagents'
 export type AgentCountMessageKey =
   | 'agents.counts.window'
   | 'agents.counts.windows'
   | 'agents.counts.process'
   | 'agents.counts.processes'
+  | 'agents.counts.service'
+  | 'agents.counts.services'
   | 'agents.counts.instance'
   | 'agents.counts.instances'
   | 'agents.counts.run'
@@ -56,42 +59,7 @@ export interface AgentCountEntry {
   readonly quality?: AgentCountQuality
 }
 
-export type AgentCountQuality = 'exact' | 'lower_bound' | 'unknown'
-
-export function agentProcessSourcesComplete(agent: AgentRuntimeSummaryDto): boolean {
-  return agent.process_sources !== null && agent.process_sources.length > 0 &&
-    agent.process_sources.every((source) => source.status === 'available')
-}
-
-export function agentIsMonitorOnly(agent: AgentRuntimeSummaryDto): boolean {
-  return agent.capabilities.includes('monitor_only')
-}
-
-function agentHasManagedActivity(agent: AgentRuntimeSummaryDto): boolean {
-  return agent.active_sessions > 0 || agent.active_runs > 0 || agent.active_subagents > 0 ||
-    (agent.window_count_source !== 'external_processes' && agent.active_windows > 0)
-}
-
-export function agentPresentedActivity(agent: AgentRuntimeSummaryDto): AgentRuntimeSummaryDto['activity'] {
-  if ((agent.activity === 'idle' || agent.activity === 'offline') && !agentHasManagedActivity(agent) && !agentProcessSourcesComplete(agent)) return 'unknown'
-  return agent.activity
-}
-
-export function agentWindowCount(agent: AgentRuntimeSummaryDto): { count: number | null; quality: AgentCountQuality } {
-  if (agentProcessSourcesComplete(agent) ||
-      (agent.window_count_source !== 'external_processes' && agent.active_windows > 0)) {
-    return { count: agent.active_windows, quality: 'exact' }
-  }
-  return agent.active_windows > 0
-    ? { count: agent.active_windows, quality: 'lower_bound' }
-    : { count: null, quality: 'unknown' }
-}
-
-export function agentFleetWindowCount(agents: readonly AgentRuntimeSummaryDto[]): { count: number | null; quality: AgentCountQuality } {
-  const count = agents.reduce((total, agent) => total + (agentWindowCount(agent).count ?? 0), 0)
-  if (agents.length > 0 && agents.every(agentProcessSourcesComplete)) return { count, quality: 'exact' }
-  return count > 0 ? { count, quality: 'lower_bound' } : { count: null, quality: 'unknown' }
-}
+export type AgentCountQuality = AgentPresenceCountQuality
 
 export function agentCountValue(entry: Pick<AgentCountEntry, 'count' | 'quality'>, t: I18n['t']): string {
   if (entry.count === null) return '—'
@@ -109,22 +77,12 @@ export function agentCountMessageKey(key: AgentCountKey, count = 2): AgentCountM
   if (count === 1) {
     if (key === 'windows') return 'agents.counts.window'
     if (key === 'processes') return 'agents.counts.process'
+    if (key === 'services') return 'agents.counts.service'
     if (key === 'instances') return 'agents.counts.instance'
     if (key === 'runs') return 'agents.counts.run'
     return 'agents.counts.subagent'
   }
   return `agents.counts.${key}`
-}
-
-export function agentPresenceCountKey(agent: AgentRuntimeSummaryDto): 'windows' | 'processes' {
-  return agent.window_count_source === 'external_processes' ? 'processes' : 'windows'
-}
-
-export function agentFleetCountKey(agents: readonly AgentRuntimeSummaryDto[]): AgentPresenceCountKey {
-  const first = agents[0]
-  if (!first) return 'instances'
-  const key = agentPresenceCountKey(first)
-  return agents.every((agent) => agentPresenceCountKey(agent) === key) ? key : 'instances'
 }
 
 export function agentWindowSourceMessageKey(

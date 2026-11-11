@@ -3,7 +3,9 @@
 The WorkBuddy, Qwen Code and OpenClaw marks were retrieved from their official
 sites or repositories on 2026-11-11. Each SVG is retained unchanged and used in
 both themes to identify the corresponding tool. The assets load locally through
-`AgentIcon.vue`.
+the shared `AgentToolIcon.vue` and `AGENT_IDENTITIES` metadata. Vite bundles the
+same source assets for WebUI, desktop, mobile, and the static site, including
+each application's configured base path.
 
 | Asset | Official source | SHA-256 |
 | --- | --- | --- |

@@ -64,6 +64,9 @@ importers:
       '@orchester/design':
         specifier: workspace:*
         version: link:../../packages/design
+      '@orchester/protokoll':
+        specifier: workspace:*
+        version: link:../../packages/protokoll
       '@xterm/addon-fit':
         specifier: 0.11.0
         version: 0.11.0

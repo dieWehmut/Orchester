@@ -21,6 +21,7 @@ import AppearancePage from "./components/AppearancePage.vue";
 import BottomPicker, { type PickerOption } from "./components/BottomPicker.vue";
 import FolderBrowser from "./components/FolderBrowser.vue";
 import AgentWorkbench from "./components/AgentWorkbench.vue";
+import AgentMonitorList from "./components/AgentMonitorList.vue";
 import RunList from "./components/RunList.vue";
 import RunOutput from "./components/RunOutput.vue";
 import DevicePage from "./views/DevicePage.vue";
@@ -401,6 +402,11 @@ watch(screen, async () => {
               }}
             </button>
           </div>
+          <AgentMonitorList
+            :snapshot="host.control.agentSnapshot.value"
+            :status="host.control.agentSnapshotStatus.value"
+            :error="host.control.agentSnapshotError.value"
+          />
         </article>
         <button class="primary-button full-button" @click="openPage('devices')">
           <AppIcon name="computer" />连接电脑

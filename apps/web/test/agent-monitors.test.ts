@@ -1,3 +1,4 @@
+import { agentIdentity } from '@orchester/design/agent-identities'
 import { AGENT_FLEET_FIXTURE, type AgentRuntimeSummaryDto } from '@orchester/protokoll'
 import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
@@ -47,13 +48,13 @@ describe('agent process monitors', () => {
     for (const wrapper of [row, details]) {
       expect(wrapper.get('[data-agent-provider-label]').text()).toBe(label)
       expect(wrapper.get(`[data-agent-provider="${provider}"]`)).toBeTruthy()
-      expect(wrapper.get(`[data-agent-icon="${provider}"] .agent-icon__dark`).attributes('src')).toBe(`/agents/${dark}`)
-      expect(wrapper.get(`[data-agent-icon="${provider}"] .agent-icon__light`).attributes('src')).toBe(`/agents/${light}`)
+      expect(wrapper.get(`[data-agent-icon="${provider}"] .agent-icon__dark`).attributes('src')).toBe(agentIdentity(provider)!.marks.dark)
+      expect(wrapper.get(`[data-agent-icon="${provider}"] .agent-icon__light`).attributes('src')).toBe(agentIdentity(provider)!.marks.light)
     }
     expect(row.get('button').attributes('aria-label')).toContain(display_name)
     expect(details.get('[data-agent-details-name]').text()).toBe(display_name)
-    expect(existsSync(resolve('public/agents', dark))).toBe(true)
-    expect(existsSync(resolve('public/agents', light))).toBe(true)
+    expect(existsSync(resolve('../../packages/design/src/assets/agents', dark))).toBe(true)
+    expect(existsSync(resolve('../../packages/design/src/assets/agents', light))).toBe(true)
   })
 
   it('renders complete zero observations as no running process and hides adapter availability', () => {

@@ -6,6 +6,7 @@
   "description": "Design tokens and primitives shared by every Orchester frontend",
   "exports": {
     ".": "./src/index.ts",
+    "./agent-identities": "./src/agent-identities.ts",
     "./appearance-script": "./src/appearance-script.ts",
     "./index.css": "./src/index.css",
     "./fonts.css": "./src/fonts.css",

@@ -88,6 +88,8 @@
       "windows": "視窗",
       "process": "程序",
       "processes": "程序",
+      "service": "服務程序",
+      "services": "服務程序",
       "instance": "實例",
       "instances": "實例",
       "run": "執行",

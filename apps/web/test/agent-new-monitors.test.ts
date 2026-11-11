@@ -42,7 +42,7 @@ function monitor(provider: typeof providers[number], overrides: Partial<AgentRun
     process_sources: null,
     last_heartbeat_at: null,
     last_error: null,
-    capabilities: ['monitor_only', 'process_presence'],
+    capabilities: ['monitor_only', 'process_presence', ...(provider.provider === 'qwen' ? [] : ['service_presence'])],
     updated_at: observedAt,
     ...overrides,
   }
@@ -98,7 +98,7 @@ describe.each(providers)('$displayName monitoring semantics', (provider) => {
     })
     const [row, details] = mountViews(agent)
     expect(row!.get('[data-agent-activity]').text()).toBe('服务运行')
-    expect(row!.get('[data-agent-count-unit="processes"] dt').text()).toBe('进程')
+    expect(row!.get(`[data-agent-count-unit="${provider.provider === 'qwen' ? 'processes' : 'services'}"] dt`).text()).toBe(provider.provider === 'qwen' ? '进程' : '服务进程')
     expect(row!.get('[data-active-processes]').text()).toBe('1')
     expect(details!.get('[data-agent-details-activity]').text()).toBe('服务运行')
     expect(details!.get('[data-agent-monitor-only]').text()).toBe('仅监控进程；服务存在不代表正在执行任务。')
@@ -131,6 +131,6 @@ describe.each(providers)('$displayName monitoring semantics', (provider) => {
       ],
     }))
     for (const wrapper of [row!, details!]) expect(wrapper.get('[data-active-processes]').text()).toBe('至少 1')
-    expect(row!.get('button').attributes('aria-label')).toContain('至少 1 进程')
+    expect(row!.get('button').attributes('aria-label')).toContain(provider.provider === 'qwen' ? '至少 1 进程' : '至少 1 服务进程')
   })
 })

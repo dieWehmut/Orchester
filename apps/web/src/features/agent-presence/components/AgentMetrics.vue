@@ -46,8 +46,9 @@ const windowSource = computed(() =>
       <dt>{{ t(agentCountMessageKey(entry.key, entry.count ?? 2)) }}</dt>
       <dd
         data-agent-detail-value
-        :data-active-windows="entry.key === 'windows' || entry.key === 'processes' ? '' : undefined"
-        :data-active-processes="entry.key === 'processes' ? '' : undefined"
+        :data-active-windows="['windows', 'processes', 'services'].includes(entry.key) ? '' : undefined"
+        :data-active-processes="entry.key === 'processes' || entry.key === 'services' ? '' : undefined"
+        :data-active-services="entry.key === 'services' ? '' : undefined"
         :data-active-runs="entry.key === 'runs' ? '' : undefined"
         :data-active-subagents="entry.key === 'subagents' ? '' : undefined"
       >
