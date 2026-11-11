@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 1,
+  "sourceDirectory": "/tmp/orchester-windows-final8c24-baseline",
+  "selectedFiles": [
+    {
+      "path": "summary.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/summary.json",
+      "sourceSha256": "aa2362141759735c72dc36b30d095f07d60f69d9e145054ac607cbebeacba9d0",
+      "archivedSha256": "aa2362141759735c72dc36b30d095f07d60f69d9e145054ac607cbebeacba9d0",
+      "bytes": 948,
+      "byteExact": true
+    },
+    {
+      "path": "final-result.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/final-result.json",
+      "sourceSha256": "1b074bd5bc8d9b4bbc00d54c378a4d38a49d9ae244e91a79b5b4463e45fea4b4",
+      "archivedSha256": "1b074bd5bc8d9b4bbc00d54c378a4d38a49d9ae244e91a79b5b4463e45fea4b4",
+      "bytes": 25554,
+      "byteExact": true
+    },
+    {
+      "path": "helper-wsl/test-summary.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/helper-wsl/test-summary.json",
+      "sourceSha256": "2341b1166e8b8cd35ff85abbeda3c2091b029ef9498abf80f10a1ca46b7d6eb5",
+      "archivedSha256": "2341b1166e8b8cd35ff85abbeda3c2091b029ef9498abf80f10a1ca46b7d6eb5",
+      "bytes": 172,
+      "byteExact": true
+    },
+    {
+      "path": "toolchain/native-audit.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/toolchain/native-audit.json",
+      "sourceSha256": "09e5c721d4b8e17897d9ff211f5cd338715bf695cd0b6dd7cff25b47c6920150",
+      "archivedSha256": "09e5c721d4b8e17897d9ff211f5cd338715bf695cd0b6dd7cff25b47c6920150",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "helper-contract/native-audit.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/helper-contract/native-audit.json",
+      "sourceSha256": "40defe9f6caea29a7a95a0406a653e8bd038280bc669431534198ef907371704",
+      "archivedSha256": "40defe9f6caea29a7a95a0406a653e8bd038280bc669431534198ef907371704",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "helper-wsl/native-audit.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/helper-wsl/native-audit.json",
+      "sourceSha256": "8ebda588425aaef832c638c19467537366774c81781372de1ead7f6748465722",
+      "archivedSha256": "8ebda588425aaef832c638c19467537366774c81781372de1ead7f6748465722",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "monitor-process/native-audit.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/monitor-process/native-audit.json",
+      "sourceSha256": "2251d6f5fb6853f438cb5d4534ca07f6b3d56013321fda17d7a19f3ba3341bd6",
+      "archivedSha256": "2251d6f5fb6853f438cb5d4534ca07f6b3d56013321fda17d7a19f3ba3341bd6",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "monitor-activity/native-audit.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/monitor-activity/native-audit.json",
+      "sourceSha256": "26c84d4b679c27e722876f28bc37d92bf66607326daedf0081f7d5eabe948905",
+      "archivedSha256": "26c84d4b679c27e722876f28bc37d92bf66607326daedf0081f7d5eabe948905",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "monitor-http/native-audit.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/monitor-http/native-audit.json",
+      "sourceSha256": "56f968d88c5f8e58b0df23ef65c721e68449fdb4004cf89aec87635deb213b4e",
+      "archivedSha256": "56f968d88c5f8e58b0df23ef65c721e68449fdb4004cf89aec87635deb213b4e",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "remote-cli/native-audit.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/remote-cli/native-audit.json",
+      "sourceSha256": "653247ddad9c702edecc995cdc7b7541c2cb836c4d76cf6615af6900e3af55c4",
+      "archivedSha256": "653247ddad9c702edecc995cdc7b7541c2cb836c4d76cf6615af6900e3af55c4",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "root-clippy/native-audit.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/root-clippy/native-audit.json",
+      "sourceSha256": "807e7f65460720127b95a19f7d7d9574e12adc36dd51674018a5746a33938e88",
+      "archivedSha256": "807e7f65460720127b95a19f7d7d9574e12adc36dd51674018a5746a33938e88",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "root-fmt/native-audit.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/root-fmt/native-audit.json",
+      "sourceSha256": "f74a2a33c5521fa58fe5f819f0fe34b3ca5d25c16e126b8db699d2d5378e0c9c",
+      "archivedSha256": "f74a2a33c5521fa58fe5f819f0fe34b3ca5d25c16e126b8db699d2d5378e0c9c",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "cli-build/native-audit.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/cli-build/native-audit.json",
+      "sourceSha256": "2729c985247e4fa66d7e0efadf1c93fa03c227adfb01412c11b94db3e5596fd2",
+      "archivedSha256": "2729c985247e4fa66d7e0efadf1c93fa03c227adfb01412c11b94db3e5596fd2",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "chrome-test/native-audit.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/chrome-test/native-audit.json",
+      "sourceSha256": "994befda18de9a0ee37561d9f36488369758493771c1a95454b5fbe19d49b918",
+      "archivedSha256": "994befda18de9a0ee37561d9f36488369758493771c1a95454b5fbe19d49b918",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "desktop-test/native-audit.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/desktop-test/native-audit.json",
+      "sourceSha256": "9419b1d0fef501c35d81da9328af991a3500dd411aa350c8ae5da4a0e69e9f90",
+      "archivedSha256": "9419b1d0fef501c35d81da9328af991a3500dd411aa350c8ae5da4a0e69e9f90",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "desktop-clippy/native-audit.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/desktop-clippy/native-audit.json",
+      "sourceSha256": "e2debbc87c3f8e8c639acabc234d04300da8b181b5d72a21a3bed27d26c8590c",
+      "archivedSha256": "e2debbc87c3f8e8c639acabc234d04300da8b181b5d72a21a3bed27d26c8590c",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "desktop-fmt/native-audit.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/desktop-fmt/native-audit.json",
+      "sourceSha256": "2875bda1ad49dd3d7345740fd045ba0c99cf37efcc5cc194d79b410c13fea9e1",
+      "archivedSha256": "2875bda1ad49dd3d7345740fd045ba0c99cf37efcc5cc194d79b410c13fea9e1",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "desktop-build/native-audit.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/desktop-build/native-audit.json",
+      "sourceSha256": "4d06f0e4d832d39a024645c65d5886d6062f15079b9044d3b3065430532c9cd6",
+      "archivedSha256": "4d06f0e4d832d39a024645c65d5886d6062f15079b9044d3b3065430532c9cd6",
+      "bytes": 330,
+      "byteExact": true
+    },
+    {
+      "path": "portable-runtime-final/runtime-result.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/portable-runtime-final/runtime-result.json",
+      "sourceSha256": "5a523a47715c727a13dc5b9ef1a73d69207073e57689e398d65f3b5326a3e92e",
+      "archivedSha256": "5a523a47715c727a13dc5b9ef1a73d69207073e57689e398d65f3b5326a3e92e",
+      "bytes": 1706,
+      "byteExact": true
+    },
+    {
+      "path": "portable-runtime-final/normal-shutdown-observation.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/portable-runtime-final/normal-shutdown-observation.json",
+      "sourceSha256": "0a347ace00d353d894a929c1bf48b5603e563d621e106c5299f34551ab09cdfd",
+      "archivedSha256": "0a347ace00d353d894a929c1bf48b5603e563d621e106c5299f34551ab09cdfd",
+      "bytes": 182,
+      "byteExact": true
+    },
+    {
+      "path": "portable-runtime-final/cleanup-result.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/portable-runtime-final/cleanup-result.json",
+      "sourceSha256": "d29fd986845d7582ed3318c987265e9d7d8a6ae7d2fc4b3156af9301e043c9d1",
+      "archivedSha256": "d29fd986845d7582ed3318c987265e9d7d8a6ae7d2fc4b3156af9301e043c9d1",
+      "bytes": 5159,
+      "byteExact": true
+    },
+    {
+      "path": "portable-runtime-final/launcher-stderr-diagnostic.json",
+      "sourcePath": "/tmp/orchester-windows-final8c24-baseline/portable-runtime-final/launcher-stderr-diagnostic.json",
+      "sourceSha256": "d793938699d96cbebe87a26c1f5c68f6ffb58cae024663a368efa4a56f0ec62c",
+      "archivedSha256": "d793938699d96cbebe87a26c1f5c68f6ffb58cae024663a368efa4a56f0ec62c",
+      "bytes": 202,
+      "byteExact": true
+    }
+  ],
+  "originalManifestSha256": "82bcf801428ff32be4bd97dafec719a12282e2f9853cd46ee22522dd3a1b6acf",
+  "allOriginal40FilesVerified": true,
+  "privateRuntimeLogsExcluded": true
+}

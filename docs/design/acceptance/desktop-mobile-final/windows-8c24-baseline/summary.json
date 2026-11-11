@@ -1,0 +1,19 @@
+{
+  "sourceRevision": "8c24d0c73309e45738285cee4d0297ef4158810d",
+  "status": "native15-and-portable14-passed-baseline-awaiting-new-memory-fix",
+  "planSha256": "6d03fdcd1c2df0941d4941275ee08fc5dcb71e467923ee6055bf3c048f99f098",
+  "finalResultSha256": "1b074bd5bc8d9b4bbc00d54c378a4d38a49d9ae244e91a79b5b4463e45fea4b4",
+  "desktopExeSha256": "01758d8c846af4fd143a3d5aaeaacc84dd7f2d3ca0298ca5a4268648533e1a34",
+  "remoteExeSha256": "1a4b77011211942c2a2470daeaaa07720c6687a4dd51f2f8c2710d1630fc04c3",
+  "apkSha256": "55530cbab620d6d5a7301650b300a8af90de3f936f6388584e4edeedc409b0ca",
+  "completedNativeGates": 15,
+  "portableChecks": 14,
+  "portableNormalShutdownExitCode": 0,
+  "portablePassiveOwnRemainders": 0,
+  "portableUnknownDescendants": 0,
+  "portableForcedCleanup": 0,
+  "defaultInstallationChanged": false,
+  "modelCalls": 0,
+  "desktopTrayRuntime": "currently-first-screenshot-ack-pending",
+  "promotionProhibitedForThisBaseline": true
+}

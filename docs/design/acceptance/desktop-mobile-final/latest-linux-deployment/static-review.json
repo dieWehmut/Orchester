@@ -1,0 +1,43 @@
+{
+  "format": "orchester-linux-lifecycle-independent-final-static-review-v1",
+  "reviewedAtUtc": "2026-11-11T04:23:38.110022+00:00",
+  "reviewer": "deployment_review",
+  "script": "/tmp/orchester-linux-lifecycle-update.py",
+  "scriptSha256": "6c1de590289cf81c19312bbaf40431ff2b1ffcf9b52f9068af535e3e9e0f4c9e",
+  "status": "static_guards_reviewed_execution_requires_actual_final_fullgate_pass",
+  "observedMainRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "fullGateResultObservedByReviewer": false,
+  "scriptExecutedByReviewer": false,
+  "oldServiceSignalledByReviewer": false,
+  "proxyOrAdbUsedByReviewer": false,
+  "modelCalls": 0,
+  "reviewedGuards": [
+    "Mandatory accepted40hex revision and candidate SHA tied to actual passed source-stable fullgate with exact rust-tests,rust-fmt,rust-clippy,linux-native-build sequence and source input hashes.",
+    "Original service PID/startticks/mapped image SHA plus original pidfd rechecked immediately before graceful SIGTERM; old pidfd exit and port release required.",
+    "Private unused backup stores all original state files and SQLite online DB backup plus exact original mapped executable; pre-shutdown state rows and candidate SHA rechecked.",
+    "New launch arguments and full existing environment held in memory without serialization; no startup pairing; owned stdin retained for ordinary quit.",
+    "Popen retained for every post-spawn setup failure; stdout JSON queue/stderr drain and pidfd acquisition under same cleanup guard.",
+    "Candidate start/verify in rollback protection; rollback start/verify independently protected and owned cleanup outcomes safely reported on failure.",
+    "New and rollback live /proc/exe SHA and image path validated.",
+    "Six actual public assets require200 and exact delivered bytes; HTTP uses ProxyHandler({}) direct loopback.",
+    "Unauthenticated GET /remote/v1/info requires401; route verified against actual RemoteControl router.",
+    "Local owned console pair with unique testdevice name; POST /remote/v1/pair200; authenticated JSON contracts for info/schema2+retainedhost/workspace/projectid, agentsarray+typedbooleans, and full originalprojects array.",
+    "DELETE /remote/v1/device204 removes current temporary token; same token GET /remote/v1/info401 proves revocation.",
+    "Pre-pair guard rejects originaldevicecount>=64 or any expires_at<=now+300 to avoid successfulpair pruning originals.",
+    "Temporary token and pairing code retained only in memory; cleanup uses both HTTP revoke and unique-name/newID difference through original owned console to handle lost pair response; original devices and parsed auth/project state exact afterwards.",
+    "Pairing closed on success/failure; whole original run rows exactly equal after; no model or task creation."
+  ],
+  "sourceRoutesVerified": {
+    "router": "/home/han/project/Orchester/kisten/netz/src/remote/mod.rs:307",
+    "auth": "/home/han/project/Orchester/kisten/netz/src/remote/auth.rs:8",
+    "projectId": "/home/han/project/Orchester/kisten/netz/src/remote/projects.rs:13",
+    "localCommands": "/home/han/project/Orchester/kisten/konsole/src/remote.rs:148"
+  },
+  "correction": "Earlier /info static HTTP claim is superseded; correct /remote/v1/info route and JSON body contracts now directly checked against source.",
+  "remainingRequirements": [
+    "Final source-bound full gate must actually pass before script --execute; current main fullgate still running according to root.",
+    "Root must pin reviewed script SHA and actual candidate/fullgate hashes before execution.",
+    "After execution inspect truthful deployment report and original controlled process/listener identity; require actual HTTP/auth/device/project/run-retention pass."
+  ],
+  "rollbackBoundary": "Rollback preserves backup and restarts old binary against current state; it does not overwrite changed state. Incompatible state changes should produce rollback verification failure and exact owned cleanup, not a successful full state restoration claim."
+}

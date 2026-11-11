@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-11-11T04:32:34.767363+00:00",
+  "sourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "selectedFiles": [
+    {
+      "path": "summary.json",
+      "sourcePath": "/tmp/orchester-linux-lifecycle-deployment.json",
+      "sourceSha256": "0169d96478d7437ab6436e08cc578f107f13da2d27df7191f8646c666be96d3b",
+      "archivedSha256": "0169d96478d7437ab6436e08cc578f107f13da2d27df7191f8646c666be96d3b",
+      "bytes": 3251,
+      "byteExact": true
+    },
+    {
+      "path": "static-review.json",
+      "sourcePath": "/tmp/orchester-linux-lifecycle-independent-final-review.json",
+      "sourceSha256": "f19480c8faba99f17356c5b4da7ef2564137e8109940061a825ed65fc2c051c4",
+      "archivedSha256": "f19480c8faba99f17356c5b4da7ef2564137e8109940061a825ed65fc2c051c4",
+      "bytes": 4021,
+      "byteExact": true
+    }
+  ],
+  "actualMappedProcessSha256Checked": true,
+  "actualProcessStartTicksChecked": true,
+  "oldProcessAbsent": true,
+  "newPid": 1130870,
+  "newStartTicks": 13485649,
+  "newImageSha256": "0307664605c21ea7777572f388af1e19c19774b2cfe25bf6a56ac32932e1472e",
+  "linkedFullGateSummarySha256": "59395a1bb72da521225ccbeb387432e4d0859502834ebce1e4707ef9c5d12ae0",
+  "allSixDeliveredAssetHashesEqualAcceptedAndroidAssets": true,
+  "originalFiveRunRecordsRetained": true,
+  "privateBackupStateArgvEnvironmentNotCopied": true,
+  "staticReviewDoesNotReplaceActualDeploymentChecks": true,
+  "copyScope": "only sanitized summary and static review, no backup database or raw service logs"
+}

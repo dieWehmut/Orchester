@@ -1,0 +1,107 @@
+{
+  "baseRevision": "8c24d0c73309e45738285cee4d0297ef4158810d",
+  "testCommit": "231df95103fee0d35f8023296b1c90910d54b366",
+  "source": [
+    {
+      "path": "kisten/laufzeit/src/harness/memory.rs",
+      "sha256": "b02c25f472d5c917b05fafb6582fe7f52e22466c9ec9cdcf6a8cb9154633403a"
+    },
+    {
+      "path": "kisten/laufzeit/tests/memory_store.rs",
+      "sha256": "4516ed1c2d7351db33073b0aa88644059c223ea42f8e43adbe235d0807a806b4"
+    }
+  ],
+  "gates": [
+    {
+      "phase": "affected-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "orchester-laufzeit",
+        "--all-targets",
+        "--locked",
+        "--offline"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 128.888,
+      "logSha256": "e7bb44f843146a379d1c40e75defa829811894af77b134fcf95b85d075afaa74",
+      "testPrograms": 43,
+      "passed": 629,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "phase": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 6.304,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "testPrograms": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "phase": "affected-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "orchester-laufzeit",
+        "--all-targets",
+        "--locked",
+        "--offline",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 29.673,
+      "logSha256": "f7ae66dd82c0cba08b742edf663a891bc74274a7c328aa11aed643212c390391",
+      "testPrograms": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    }
+  ],
+  "status": "passed",
+  "sourceStable": true,
+  "fixCommit": "d692ffafc7072a3beb95ba5a69b2623641490071",
+  "worktree": "/home/han/project/Orchester/.worktrees/memory-initialization",
+  "branch": "fix/memory-initialization",
+  "red": {
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "orchester-laufzeit",
+      "--test",
+      "memory_store",
+      "opening_memory_waits_for_reserved_journal_mode_lock",
+      "--locked",
+      "--offline"
+    ],
+    "exitCode": 101,
+    "passed": 0,
+    "failed": 1,
+    "compilationSucceeded": true,
+    "failureClass": "DatabaseBusy before the original reserved journal lock was released",
+    "logSha256": "8d7821aa5e06d48d8b6d3d7a8ddf729b2c01c4a07025ad91c266a815791ed5d3"
+  },
+  "secretScan": {
+    "exitCode": 0,
+    "sourceFiles": 2,
+    "findings": 0,
+    "reportSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "redacted": true,
+    "review": []
+  },
+  "scope": "MemoryStore WAL setup only; RunStore, migrations, permissions and in-memory journal behavior unchanged; total WAL budget 30 seconds then migration wait 30 seconds, interactive operations 5 seconds"
+}

@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "archivedAt": "2026-11-11T04:24:20.458192+00:00",
+  "baseRevision": "8c24d0c73309e45738285cee4d0297ef4158810d",
+  "testCommit": "231df95103fee0d35f8023296b1c90910d54b366",
+  "fixCommit": "d692ffafc7072a3beb95ba5a69b2623641490071",
+  "acceptedMainRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "status": "targeted-red-green-verified; full-main-verified-separately",
+  "originalResultSha256": "887173232a58b28d8354596c611ffef817576dcab99e46ca5aa726625fb469d3",
+  "source": [
+    {
+      "path": "kisten/laufzeit/src/harness/memory.rs",
+      "sha256": "b02c25f472d5c917b05fafb6582fe7f52e22466c9ec9cdcf6a8cb9154633403a",
+      "matchesFixCommit": true,
+      "matchesMainCommit": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/memory_store.rs",
+      "sha256": "4516ed1c2d7351db33073b0aa88644059c223ea42f8e43adbe235d0807a806b4",
+      "matchesFixCommit": true,
+      "matchesMainCommit": true
+    }
+  ],
+  "red": {
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "orchester-laufzeit",
+      "--test",
+      "memory_store",
+      "opening_memory_waits_for_reserved_journal_mode_lock",
+      "--locked",
+      "--offline"
+    ],
+    "exitCode": 101,
+    "passed": 0,
+    "failed": 1,
+    "compilationSucceeded": true,
+    "failureClass": "DatabaseBusy before the original reserved journal lock was released",
+    "logSha256": "8d7821aa5e06d48d8b6d3d7a8ddf729b2c01c4a07025ad91c266a815791ed5d3"
+  },
+  "green": {
+    "affectedPackage": "orchester-laufzeit",
+    "passed": 629,
+    "failed": 0,
+    "ignored": 0,
+    "testPrograms": 43,
+    "formatExitCode": 0,
+    "strictClippyExitCode": 0,
+    "sourceStable": true,
+    "sourceSecretScanFindings": 0
+  },
+  "sourceBindingScope": "Original result records the test commit and stable green source hashes. Both green files equal the fix and merged main Git blobs; the unchanged test file also equals the red test commit.",
+  "redTestFileSha256": "4516ed1c2d7351db33073b0aa88644059c223ea42f8e43adbe235d0807a806b4",
+  "redProductFileSha256": "4fd45d5d96b36105623504dddd6708909494378b4defa214004f6ad5fdcef943",
+  "priorFullFailureEvidence": "../integration-memory-race/summary.json",
+  "behavior": "WAL pragma retries SQLITE_BUSY/SQLITE_LOCKED using the remaining opening wait budget, then restores the migration wait timeout.",
+  "waitBudgetsSeconds": {
+    "walModeTotal": 30,
+    "migration": 30,
+    "interactiveOperations": 5
+  },
+  "testsObserved": [
+    "opening_memory_waits_for_reserved_journal_mode_lock",
+    "concurrent_first_open_applies_each_memory_migration_once",
+    "journal_mode_contention_exhausts_one_wait_budget"
+  ],
+  "scope": "Targeted package and full-main all-targets tests exclude doctests. Latest Windows16 build/runtime and deployment remain separate.",
+  "noPrivateDatabaseOrUserStateIncluded": true,
+  "noSourceFilesCopied": true,
+  "currentMainFullIntegrationEvidence": "../latest-main-gates/summary.json"
+}
