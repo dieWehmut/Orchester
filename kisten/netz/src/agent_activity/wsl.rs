@@ -377,6 +377,10 @@ pub(super) fn database_snapshot(path: &std::path::Path) -> Option<tempfile::Name
     Some(file)
 }
 
+#[cfg(all(test, windows))]
+#[path = "wsl_lifecycle_tests.rs"]
+mod windows_lifecycle_tests;
+
 #[cfg(test)]
 mod tests {
     use super::*;
