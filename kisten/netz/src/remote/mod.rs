@@ -309,6 +309,7 @@ impl RemoteControl {
             .route("/remote/v1/pair", post(pair))
             .route("/remote/v1/info", get(info))
             .route("/remote/v1/agents", get(agents))
+            .route("/remote/v1/agents/status", get(agent_status))
             .route("/remote/v1/projects", get(list_projects).post(add_project))
             .route("/remote/v1/folders", get(folders))
             .route("/remote/v1/runs", get(list).post(start))
@@ -386,6 +387,22 @@ async fn agents(
             .map(|a| json!({"name":a.name,"available":!a.is_missing(),"supports_resume":registry.get(&a.name).is_some_and(|adapter| adapter.capabilities().supports_resume)}))
             .collect();
     Ok(Json(json!({"agents":agents})))
+}
+
+async fn agent_status(
+    State(s): State<RemoteControl>,
+    h: HeaderMap,
+) -> Result<Json<orchester_protokoll::AgentFleetSnapshotDto>, StatusCode> {
+    s.authorize(&h)?;
+    let _ = s.0.context.refresh_agent_processes().await;
+    // Process collection may wait for a bounded worker. A device revoked while
+    // that worker is running must not receive the resulting host snapshot.
+    s.authorize(&h)?;
+    s.0.context
+        .agent_status_store()
+        .snapshot()
+        .map(Json)
+        .map_err(|_| StatusCode::SERVICE_UNAVAILABLE)
 }
 
 fn read_value<T: serde::de::DeserializeOwned>(

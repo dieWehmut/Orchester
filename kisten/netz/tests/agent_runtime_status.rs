@@ -361,6 +361,16 @@ fn additional_providers_have_monitor_only_rows_without_runnable_adapters() {
         "qwen",
         "openclaw",
         "workbuddy",
+        "cline",
+        "roo",
+        "kilo",
+        "hermes",
+        "pi",
+        "crush",
+        "claude_app",
+        "trae",
+        "zcode",
+        "craft",
     ] {
         assert!(!registry
             .list()
@@ -386,7 +396,17 @@ fn additional_providers_have_monitor_only_rows_without_runnable_adapters() {
                 .capabilities
                 .iter()
                 .any(|label| label == "service_presence"),
-            matches!(provider, "workbuddy" | "openclaw")
+            matches!(
+                provider,
+                "workbuddy" | "openclaw" | "claude_app" | "trae" | "zcode" | "craft"
+            )
+        );
+        assert_eq!(
+            agent
+                .capabilities
+                .iter()
+                .any(|label| label == "shared_editor_presence_unknown"),
+            matches!(provider, "cline" | "roo" | "kilo")
         );
         assert_eq!(agent.activity, AgentActivityState::Unknown);
         assert!(!agent.installed && !agent.configured && !agent.authenticated);
@@ -414,6 +434,8 @@ fn monitor_only_rows_observe_presence_absence_and_unknown_sources() {
             agent.activity,
             if agent.provider == "deepseek" {
                 AgentActivityState::Running
+            } else if matches!(agent.provider.as_str(), "cline" | "roo" | "kilo") {
+                AgentActivityState::Unknown
             } else {
                 AgentActivityState::Offline
             }

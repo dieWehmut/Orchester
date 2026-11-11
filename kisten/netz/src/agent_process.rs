@@ -445,7 +445,8 @@ impl AgentProcessSnapshot {
     }
 
     pub fn source_statuses(&self, provider: &str) -> Vec<AgentProcessSourceStatusDto> {
-        self.sources
+        let mut statuses: Vec<_> = self
+            .sources
             .iter()
             .map(|source| AgentProcessSourceStatusDto {
                 environment: source.environment,
@@ -459,7 +460,27 @@ impl AgentProcessSnapshot {
                 }),
                 observed_at: source.observed_at.clone(),
             })
-            .collect()
+            .collect();
+        // The shared editor host cannot establish any plugin's absence.
+        if shared_editor_provider(provider) {
+            let mut environments = Vec::new();
+            for source in &self.sources {
+                if !environments.contains(&source.environment) {
+                    environments.push(source.environment);
+                    statuses.push(AgentProcessSourceStatusDto {
+                        environment: source.environment,
+                        status: AgentProcessSourceState::Unavailable,
+                        count: None,
+                        observed_at: None,
+                    });
+                }
+            }
+        }
+        statuses
+    }
+
+    pub fn is_complete_for(&self, provider: &str) -> bool {
+        self.is_complete() && !shared_editor_provider(provider)
     }
 
     /// Safe diagnostic categories for acceptance probes; no command text or
@@ -470,6 +491,10 @@ impl AgentProcessSnapshot {
             .filter_map(|source| source.failure.map(|failure| (source.environment, failure)))
             .collect()
     }
+}
+
+fn shared_editor_provider(provider: &str) -> bool {
+    matches!(provider, "cline" | "roo" | "kilo")
 }
 
 fn count_names<I, S>(process_names: I) -> BTreeMap<String, u64>
@@ -591,6 +616,16 @@ fn parse_identity_counts(raw: &[u8]) -> Result<IdentityCounts, &'static str> {
                 | "qwen"
                 | "openclaw"
                 | "workbuddy"
+                | "cline"
+                | "roo"
+                | "kilo"
+                | "hermes"
+                | "pi"
+                | "crush"
+                | "claude_app"
+                | "trae"
+                | "zcode"
+                | "craft"
         )
     }) || result.counts.values().any(|count| *count > 512)
     {
@@ -1098,6 +1133,66 @@ mod tests {
                     .unwrap()
                     .activity,
                 AgentActivityState::Unknown
+            );
+        }
+    }
+
+    #[test]
+    fn shared_editor_sources_remain_unknown_after_successful_os_enumeration() {
+        use orchester_protokoll::AgentActivityState;
+        for environment in [
+            AgentProcessEnvironment::Local,
+            AgentProcessEnvironment::Windows,
+            AgentProcessEnvironment::Wsl,
+        ] {
+            let snapshot = AgentProcessSnapshot::from_observations(identity_observations(
+                environment,
+                parse_identity_counts(br#"{"counts":{"cline":1},"complete":true}"#).unwrap(),
+                "2026-11-11T06:00:00Z".into(),
+            ));
+            assert!(snapshot.is_complete());
+            assert!(snapshot.is_complete_for("codex"));
+            let mut registry = orchester_verzeichnis::Registry::new();
+            registry.register_builtins();
+            let store =
+                crate::AgentRuntimeStatusStore::new(crate::agent_status_response(&registry))
+                    .unwrap();
+            store
+                .reconcile_external_processes(&snapshot, "2026-11-11T06:00:01Z")
+                .unwrap();
+            for provider in ["cline", "roo", "kilo"] {
+                assert!(!snapshot.is_complete_for(provider));
+                let fleet = store.snapshot().unwrap();
+                let row = fleet
+                    .agents
+                    .iter()
+                    .find(|row| row.provider == provider)
+                    .unwrap();
+                let sources = row.process_sources.as_ref().unwrap();
+                assert_eq!(sources.len(), 2);
+                assert_eq!(sources[0].status, AgentProcessSourceState::Available);
+                assert_eq!(sources[1].status, AgentProcessSourceState::Unavailable);
+                assert_eq!(sources[1].count, None);
+                assert_eq!(
+                    row.activity,
+                    if provider == "cline" {
+                        AgentActivityState::Running
+                    } else {
+                        AgentActivityState::Unknown
+                    }
+                );
+                assert_eq!(row.active_windows, u64::from(provider == "cline"));
+                assert_eq!(row.active_sessions, 0);
+            }
+            let fleet = store.snapshot().unwrap();
+            assert_eq!(
+                fleet
+                    .agents
+                    .iter()
+                    .find(|row| row.provider == "crush")
+                    .unwrap()
+                    .activity,
+                AgentActivityState::Offline
             );
         }
     }

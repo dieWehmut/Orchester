@@ -35,7 +35,8 @@ def suffix(value, expected):
 
 def candidate(name):
     name = basename(name)
-    return (name in rules["primary"] or name in rules["desktop_services"] or name in rules["runtimes"]
+    return (name in rules["primary"] or name in rules["desktop_services"]
+            or name in rules["native_cli"] or name in rules["runtimes"]
             or name in rules["candidates"]
             or name.startswith(("python3.", "pypy3.")))
 
@@ -66,15 +67,17 @@ def entry_index(args):
 
 def classify(name, exe, args):
     name, exe = basename(name), path(exe)
+    if name == "claude" and not exe:
+        return None
+    desktop = desktop_provider(exe)
+    if desktop:
+        return desktop if desktop_main(args) else None
     if name in rules["primary"]:
         return rules["primary"][name]
     executable = basename(exe)
-    if executable in rules["desktop_services"]:
-        index = entry_index(args)
-        helper = index is not None and path(args[index]).endswith((".js", ".mjs", ".cjs", ".ts"))
-        return (rules["desktop_services"][executable] if args and not helper
-                and not any(arg.split("=", 1)[0] in ("--type", "--crashpad-handler") for arg in args)
-                else None)
+    if executable in rules["native_cli"]:
+        provider = rules["native_cli"][executable]
+        return provider if args and not cli_maintenance(provider, args[1:]) else None
     if cursor_cli_file(exe) in ("cursor-agent", "cursor-agent.exe", "agent", "agent.exe"):
         return "cursor"
     if name.startswith("language_server") or executable.startswith("language_server"):
@@ -90,6 +93,16 @@ def classify(name, exe, args):
                or (executable == "dsh desktop" and "/dsh desktop/" in exe))
     if not runtime:
         return None
+    python = executable.startswith(("python", "pypy"))
+    if python and name == "hermes" and args and basename(args[0]) == "hermes":
+        return "hermes"
+    if python:
+        module_index = 1
+        while module_index < len(args) and args[module_index] in ("-u", "-I", "-B", "-E", "-s", "-S"):
+            module_index += 1
+        if args[module_index:module_index + 1] == ["-m"]:
+            provider = rules["python_modules"].get(args[module_index + 1]) if module_index + 1 < len(args) else None
+            return provider if provider and not cli_maintenance(provider, args[module_index + 2:]) else None
     if args and basename(args[0]) == "openclaw-gateway":
         return "openclaw"
     index = entry_index(args)
@@ -113,7 +126,43 @@ def classify(name, exe, args):
         return None
     if provider == "openclaw" and not openclaw_gateway(args[index + 1:]):
         return None
+    if provider in rules["cli_maintenance_commands"] and cli_maintenance(provider, args[index + 1:]):
+        return None
     return provider
+
+def desktop_provider(exe):
+    if basename(exe) in rules["desktop_services"]:
+        return rules["desktop_services"][basename(exe)]
+    for brand, provider in sorted(rules["desktop_brands"].items()):
+        if suffix(exe, brand):
+            return provider
+    if basename(exe) == "claude" and ("/anthropicclaude/" in exe
+            or any(component.startswith("claude_") and component.endswith("__pzs8sxrjxfjjc") for component in exe.split("/"))):
+        return "claude_app"
+    return None
+
+def desktop_main(args):
+    index = entry_index(args)
+    helper = index is not None and path(args[index]).endswith((".js", ".mjs", ".cjs", ".ts"))
+    return bool(args and not helper and not any(arg.split("=", 1)[0] in ("--type", "--crashpad-handler", "--ms-enable-electron-run-as-node") for arg in args))
+
+def cli_maintenance(provider, args):
+    commands = rules["cli_maintenance_commands"].get(provider, [])
+    index = 0
+    while index < len(args):
+        arg = args[index]
+        key = arg.split("=", 1)[0]
+        if key in ("--prompt", "-p", "--message", "--query", "-q", "--"):
+            return False
+        if key in rules["qwen_value_flags"]:
+            index += 1 if "=" in arg else 2
+            continue
+        if arg in rules["maintenance"] or arg in ("-v", "version"):
+            return True
+        if not arg.startswith("-"):
+            return arg in commands
+        index += 1
+    return False
 
 def qwen_maintenance(args):
     index = 0
@@ -177,6 +226,8 @@ def dsh_maintenance(args):
     return False
 
 def relative_entry(args):
+    if args and (basename(args[0]) in rules["native_cli"] or basename(args[0]) in rules["desktop_services"] or basename(args[0]) in rules["primary"]):
+        return False
     index = entry_index(args)
     if index is None:
         return False
@@ -198,10 +249,12 @@ def bounded_args(args):
     return result, True
 
 def instance_key(name, exe, args):
+    if desktop_provider(path(exe)):
+        return "desktop:" + path(exe)
     if basename(name) in rules["primary"]:
         return "native:" + basename(name)
-    if basename(exe) in rules["desktop_services"]:
-        return "desktop:" + path(exe)
+    if basename(exe) in rules["native_cli"]:
+        return cli_instance_key(rules["native_cli"][basename(exe)], args[1:], True)
     if args and basename(args[0]) == "openclaw-gateway":
         return "openclaw:gateway-title"
     index = entry_index(args)
@@ -209,12 +262,22 @@ def instance_key(name, exe, args):
         if suffix(path(args[index]), "dsh desktop/resources/harness-node-entry.mjs"):
             index += 1
         if index < len(args):
+            provider = next((provider for expected, provider in sorted(rules["entries"].items()) if suffix(path(args[index]), expected)), None)
+            if provider in ("cline", "kilo", "crush", "hermes"):
+                return cli_instance_key(provider, args[index + 1:], False)
             digest = hashlib.sha256()
             for arg in args[index + 1:]:
                 digest.update(arg.encode("utf-8"))
                 digest.update(b"\0")
             return canonical_entry(path(args[index])) + ":" + digest.hexdigest()
     return path(exe)
+
+def cli_instance_key(provider, args, native):
+    digest = hashlib.sha256()
+    for arg in args:
+        digest.update(arg.encode("utf-8"))
+        digest.update(b"\0")
+    return ("native:" if native else "launcher:") + provider + ":" + digest.hexdigest()
 
 def canonical_entry(entry):
     for expected, provider in sorted(rules["entries"].items()):
@@ -224,6 +287,12 @@ def canonical_entry(entry):
     return entry
 
 def native_launcher_pair(provider, parent_key, key):
+    if provider in rules["native_cli"].values():
+        prefix = "launcher:" + provider + ":"
+        if parent_key.startswith(prefix):
+            return key == "native:" + provider + ":" + parent_key[len(prefix):]
+        if provider == "hermes" and parent_key.startswith("native:hermes:"):
+            return key == "launcher:hermes:" + parent_key[len("native:hermes:"):]
     launcher = {"codex": "/@openai/codex/bin/codex.js:",
                 "claude": "/@anthropic-ai/claude-code/cli.js:",
                 "opencode": "/opencode-ai/bin/opencode:"}.get(provider)

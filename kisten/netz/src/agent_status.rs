@@ -222,7 +222,7 @@ impl AgentRuntimeStatusStore {
                     agent.active_windows = 0;
                 }
                 if !managed_active && !managed_transition {
-                    agent.activity = if processes.is_complete() {
+                    agent.activity = if processes.is_complete_for(&agent.provider) {
                         activity_without_external_processes(agent)
                     } else {
                         AgentActivityState::Unknown
@@ -326,11 +326,26 @@ pub fn agent_status_response(registry: &Registry) -> AgentFleetSnapshotDto {
         "qwen",
         "openclaw",
         "workbuddy",
+        "cline",
+        "roo",
+        "kilo",
+        "hermes",
+        "pi",
+        "crush",
+        "claude_app",
+        "trae",
+        "zcode",
+        "craft",
     ] {
         if let Some(agent) = agents.iter_mut().find(|agent| agent.provider == provider) {
             agent.capabilities.push("process_presence".to_owned());
-            if matches!(provider, "workbuddy" | "openclaw") {
+            if service_provider(provider) {
                 agent.capabilities.push("service_presence".to_owned());
+            }
+            if matches!(provider, "cline" | "roo" | "kilo") {
+                agent
+                    .capabilities
+                    .push("shared_editor_presence_unknown".to_owned());
             }
         } else {
             agents.push(monitor_only_summary(provider, &now));
@@ -346,10 +361,20 @@ pub fn agent_status_response(registry: &Registry) -> AgentFleetSnapshotDto {
     }
 }
 
+fn service_provider(provider: &str) -> bool {
+    matches!(
+        provider,
+        "workbuddy" | "openclaw" | "claude_app" | "trae" | "zcode" | "craft"
+    )
+}
+
 fn monitor_only_summary(provider: &str, now: &str) -> AgentRuntimeSummaryDto {
     let mut capabilities = vec!["monitor_only".to_owned(), "process_presence".to_owned()];
-    if matches!(provider, "workbuddy" | "openclaw") {
+    if service_provider(provider) {
         capabilities.push("service_presence".to_owned());
+    }
+    if matches!(provider, "cline" | "roo" | "kilo") {
+        capabilities.push("shared_editor_presence_unknown".to_owned());
     }
     AgentRuntimeSummaryDto {
         agent_id: provider.to_owned(),
@@ -596,6 +621,16 @@ fn display_name(provider: &str) -> String {
         "qwen" => "Qwen Code".to_owned(),
         "openclaw" => "OpenClaw".to_owned(),
         "workbuddy" => "WorkBuddy".to_owned(),
+        "cline" => "Cline".to_owned(),
+        "roo" => "Roo Code".to_owned(),
+        "kilo" => "Kilo Code".to_owned(),
+        "hermes" => "Hermes Agent".to_owned(),
+        "pi" => "Pi".to_owned(),
+        "crush" => "Crush".to_owned(),
+        "claude_app" => "Claude App".to_owned(),
+        "trae" => "Trae".to_owned(),
+        "zcode" => "ZCode".to_owned(),
+        "craft" => "Craft Agents".to_owned(),
         other => other
             .split(['-', '_'])
             .filter(|part| !part.is_empty())

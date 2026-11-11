@@ -28,7 +28,17 @@
     "openclaw",
     "openclaw-gateway",
     "openclaw-gatewa",
-    "workbuddy"
+    "workbuddy",
+    "cline",
+    "kilo",
+    "kilocode",
+    "crush",
+    "hermes",
+    "pi",
+    "trae",
+    "trae cn",
+    "zcode",
+    "craft agents"
   ],
   "entries": {
     "@google/gemini-cli/dist/index.js": "gemini",
@@ -50,7 +60,20 @@
     "openclaw/openclaw.mjs": "openclaw",
     "openclaw/dist/entry.js": "openclaw",
     "openclaw/dist/entry.mjs": "openclaw",
-    "openclaw/dist/index.js": "openclaw"
+    "openclaw/dist/index.js": "openclaw",
+    "cline/bin/cline": "cline",
+    "@cline/cli/bin/cline": "cline",
+    "@cline/cli/dist/index.js": "cline",
+    "@kilocode/cli/bin/kilo": "kilo",
+    "@charmland/crush/run-crush.js": "crush",
+    "@earendil-works/pi-coding-agent/dist/bundle/cli.js": "pi",
+    "hermes_cli/main.py": "hermes",
+    "hermes-agent/.venv/bin/hermes": "hermes",
+    "hermes-agent/venv/bin/hermes": "hermes",
+    "hermes-agent/.venv/scripts/hermes.exe": "hermes",
+    "hermes-agent/venv/scripts/hermes.exe": "hermes",
+    "hermes-agent/bin/hermes": "hermes",
+    "@mariozechner/pi-coding-agent/dist/cli.js": "pi"
   },
   "runtime_value_flags": [
     "--import",
@@ -89,7 +112,11 @@
     "--from-default-profile"
   ],
   "desktop_services": {
-    "workbuddy": "workbuddy"
+    "workbuddy": "workbuddy",
+    "craft agents": "craft",
+    "trae": "trae",
+    "trae cn": "trae",
+    "zcode": "zcode"
   },
   "qwen_value_flags": [
     "--model",
@@ -147,5 +174,63 @@
     "--compact",
     "--raw-stream",
     "--task-supervisor"
-  ]
+  ],
+  "native_cli": {
+    "cline": "cline",
+    "kilo": "kilo",
+    "kilocode": "kilo",
+    "crush": "crush",
+    "hermes": "hermes"
+  },
+  "python_modules": {
+    "hermes_cli": "hermes",
+    "hermes_cli.main": "hermes"
+  },
+  "cli_maintenance_commands": {
+    "cline": [
+      "auth",
+      "config",
+      "models",
+      "logs",
+      "update",
+      "version"
+    ],
+    "kilo": [
+      "auth",
+      "config",
+      "models",
+      "update",
+      "version"
+    ],
+    "crush": [
+      "completion",
+      "update",
+      "version"
+    ],
+    "pi": [
+      "install",
+      "uninstall",
+      "remove",
+      "update",
+      "config"
+    ],
+    "hermes": [
+      "setup",
+      "auth",
+      "login",
+      "logout",
+      "config",
+      "status",
+      "doctor",
+      "update",
+      "uninstall",
+      "model",
+      "profile",
+      "models",
+      "version"
+    ]
+  },
+  "desktop_brands": {
+    "claude.app/contents/macos/claude": "claude_app"
+  }
 }
