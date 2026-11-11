@@ -1,0 +1,52 @@
+[
+  {
+    "product": "cursor",
+    "requestedUrl": "https://api2.cursor.sh/updates/download/golden/linux-x64-deb/cursor/3.29",
+    "ownedFile": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/downloads/cursor-linux-x64.deb",
+    "startedAtEpoch": 1794403194.5492766,
+    "finalUrl": "https://downloads.cursor.com/production/86776fcb52ca505783155631089b65d646f9b03f/linux/x64/deb/amd64/deb/cursor_3.29.15_amd64.deb",
+    "status": 200,
+    "contentType": "application/x-debian-package",
+    "declaredLength": "227031988",
+    "actualBytes": 227031988,
+    "sha256": "bc2d010514ce079bc55acff0332757e311e18b0da48dc24dc364bc8f695c11e5",
+    "sha512Base64": "wFBslFmkOIJZ1OUeVmB6UY9grn15ZJdkqX54huVlAss17KcqAVZnZlbgkT9Fx3u2ffFcW5PK0lZs9PJQP5CfAw==",
+    "sha1": "b625d6d45f4c7bca1cd22a1ec823fa8d227dc0c6",
+    "complete": true,
+    "finishedAtEpoch": 1794403260.176647
+  },
+  {
+    "product": "antigravity",
+    "requestedUrl": "https://storage.googleapis.com/antigravity-public/antigravity-hub/2.31.0-6379060755038208/linux-x64/Antigravity.tar.gz",
+    "ownedFile": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/downloads/antigravity-2.31.0-linux-x64.tar.gz",
+    "startedAtEpoch": 1794403194.549796,
+    "finalUrl": "https://storage.googleapis.com/antigravity-public/antigravity-hub/2.31.0-6379060755038208/linux-x64/Antigravity.tar.gz",
+    "status": 200,
+    "contentType": "application/x-tar",
+    "declaredLength": "189895745",
+    "actualBytes": 189895745,
+    "sha256": "30ccdea1fff0bf643b7f6e7aa493240d13ec1d866acf4f89c2a6cc3a2c33369c",
+    "sha512Base64": "Ok02+UDowMCuI2luPi9PNHN6r+L6MaThXnkXDg+F2kUSNhk4HzuoacaVKf++OoBfs2RlsfDs4NO43r6WhSPpEQ==",
+    "sha1": "d6a130958fe673e566aacaa387c6ca1cc59b3848",
+    "complete": true,
+    "finishedAtEpoch": 1794403242.979346
+  },
+  {
+    "product": "deepseek",
+    "requestedUrl": "https://registry.npmjs.org/@deepseek-ai/dsh/-/dsh-0.2.2-rc.1.tgz",
+    "ownedFile": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/downloads/dsh-0.2.2-rc.1.tgz",
+    "startedAtEpoch": 1794403194.550088,
+    "finalUrl": "https://registry.npmjs.org/@deepseek-ai/dsh/-/dsh-0.2.2-rc.1.tgz",
+    "status": 200,
+    "contentType": "application/octet-stream",
+    "declaredLength": "25197",
+    "actualBytes": 25197,
+    "sha256": "ad21968aed0337a326b853507a23b30eacbbec4d67ab07f3b6fde69b75b19cd6",
+    "sha512Base64": "ijR9UEVYkG15Q/Q79JzvzLBzQOQfc63VLr9n6flpwHPhr5IKn2UxthnSoto/P9l7qGd7pPvI1Ra6TW7LH3oKpg==",
+    "sha1": "95d1cf510061a57c97b4a68d43336658bcec6af1",
+    "matchesRegistrySha512": true,
+    "matchesRegistrySha1": true,
+    "complete": true,
+    "finishedAtEpoch": 1794403199.2782505
+  }
+]

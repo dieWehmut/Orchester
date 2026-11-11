@@ -1,0 +1,69 @@
+{
+  "scope": "Selected safe JSON receipts only; raw public vendor sources not included",
+  "root": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix",
+  "files": [
+    {
+      "relativePath": "current-filesystem-public-matrix-safe.json",
+      "bytes": 14038,
+      "sha256": "9d4fd644d4254ddcfda8518a7be2d97d5f52e94908c9fb16b2ec3c7987523c1b",
+      "validJson": true
+    },
+    {
+      "relativePath": "current-public-windows-platform-payloads-safe.json",
+      "bytes": 1273,
+      "sha256": "376885e9d9856cf170e7ce36f299241bdde61c1131167887a17c0658fb5afa87",
+      "validJson": true
+    },
+    {
+      "relativePath": "final-current-windows-installation-matrix-safe.json",
+      "bytes": 24809,
+      "sha256": "320d93efc8e4d0be8847bfe5600c3835a31211311e1493f018605d923d7a088c",
+      "validJson": true
+    },
+    {
+      "relativePath": "native-execution-provenance-safe.json",
+      "bytes": 1539,
+      "sha256": "bdcc7de5e9d444a06f61bbee8bbf874d485fdfc2c844f80906c4962a66ec00b5",
+      "validJson": true
+    },
+    {
+      "relativePath": "native-inputs-safe.json",
+      "bytes": 2911,
+      "sha256": "83834978e75441cb6033d9f0b6eda6d0a35bc98fce1cc7d816cac8ca1281a01f",
+      "validJson": true
+    },
+    {
+      "relativePath": "native-query-plan-safe.json",
+      "bytes": 663,
+      "sha256": "f96c287364c1fb43a4b9469c7c5cdb05433a999cfd4a4865a16a591ea7f9abd5",
+      "validJson": true
+    },
+    {
+      "relativePath": "retained-owner-attempt1/native-execution-attempt-safe.json",
+      "bytes": 336,
+      "sha256": "adb01875f577b3a9d9ab78f9d23055ccb9208ec4075a89c03db275480b2ea0a0",
+      "validJson": true
+    },
+    {
+      "relativePath": "retained-owner-attempt1/native-inputs-safe.json",
+      "bytes": 2911,
+      "sha256": "83834978e75441cb6033d9f0b6eda6d0a35bc98fce1cc7d816cac8ca1281a01f",
+      "validJson": true
+    },
+    {
+      "relativePath": "retained-owner-attempt2-utf8/native-inputs-safe.json",
+      "bytes": 2911,
+      "sha256": "83834978e75441cb6033d9f0b6eda6d0a35bc98fce1cc7d816cac8ca1281a01f",
+      "validJson": true
+    },
+    {
+      "relativePath": "retained-owner-attempt2-utf8/native-public-matrix-safe.json",
+      "bytes": 28809,
+      "sha256": "dc23cb593da21e78825a680c51cfd10cc8687479bbc8a35ab7d7ad1868079037",
+      "validJson": true
+    }
+  ],
+  "selectedSafeJsonCount": 10,
+  "containsPrivateProfileContents": false,
+  "nativeScriptAndInputDigestsAreBoundInProvenance": true
+}

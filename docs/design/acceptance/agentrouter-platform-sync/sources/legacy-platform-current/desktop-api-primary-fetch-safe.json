@@ -1,0 +1,26 @@
+[
+  {
+    "requestedUrl": "https://api.github.com/repos/deepseek-ai/deepseek-harness/contents/apps/desktop/README.md?ref=master",
+    "finalUrl": "https://api.github.com/repos/deepseek-ai/deepseek-harness/contents/apps/desktop/README.md?ref=master",
+    "status": 200,
+    "bytes": 124601,
+    "sha256": "a2d37efa84d70260976257dc12a300a371a978e586e88df78f0fd94a26a2ad3a",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/desktop-api-primary-0.json",
+    "decodedFile": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/desktop-api-source-0.md",
+    "decodedBytes": 89762,
+    "decodedSha256": "e68f8ef8aaa143cc95c6c444295041864aaf45e8235eda7ba682e6b77be1fe4a",
+    "officialHtmlUrl": "https://github.com/deepseek-ai/deepseek-harness/blob/master/apps/desktop/README.md"
+  },
+  {
+    "requestedUrl": "https://api.github.com/repos/deepseek-ai/deepseek-harness/contents/apps/desktop/packaging/README.md?ref=master",
+    "finalUrl": "https://api.github.com/repos/deepseek-ai/deepseek-harness/contents/apps/desktop/packaging/README.md?ref=master",
+    "status": 200,
+    "bytes": 77777,
+    "sha256": "0971dfcbe373e1d1aaf0c91882189b373a796a610b474997ecffdf8b4460d530",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/desktop-api-primary-1.json",
+    "decodedFile": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/desktop-api-source-1.md",
+    "decodedBytes": 55734,
+    "decodedSha256": "95ea269d00b700ee83078dd5f5f7aca85671f6c920e3814084a21ddf51b2a4a8",
+    "officialHtmlUrl": "https://github.com/deepseek-ai/deepseek-harness/blob/master/apps/desktop/packaging/README.md"
+  }
+]

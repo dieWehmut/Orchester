@@ -1,0 +1,25 @@
+{
+  "observedAt": "2026-11-11T13:15:42.191227+00:00",
+  "executorAgent": "/root/windows_reinstall",
+  "nativeExecutionConfirmationSource": "executor collaboration message after terminal result, not inferred from result-file existence",
+  "attempt1": {
+    "nativeExecId": 98168,
+    "terminalExitCode": 1,
+    "failedPublicStage": "Kilo public package.json ANSI decoding in Windows PowerShell default Get-Content before ConvertFrom-Json",
+    "sourceSha256": "cc0a04d946714a636e9055b0ef37796f58c10fb0e73e834a9a40236b9f21d0ba",
+    "inputsSha256": "83834978e75441cb6033d9f0b6eda6d0a35bc98fce1cc7d816cac8ca1281a01f",
+    "completionReceiptProduced": false,
+    "failureRetained": true
+  },
+  "attempt2": {
+    "nativeExecId": 16979,
+    "terminalExitCode": 0,
+    "stdoutLiteral": "public-matrix-written",
+    "sourceWindowsPath": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\official-installs-windows-matrix-20261111-current\\owner-attempt2-utf8\\read-native-public-matrix.ps1",
+    "sourceSha256": "303fb3f135f5b444addbfe6947a61a1fc31e9678fc33f2d743afee3baa0eef87",
+    "inputsSha256": "83834978e75441cb6033d9f0b6eda6d0a35bc98fce1cc7d816cac8ca1281a01f",
+    "resultSha256": "dc23cb593da21e78825a680c51cfd10cc8687479bbc8a35ab7d7ad1868079037",
+    "auditedDiff": "UTF8 explicit ReadAllText for task inputs and four public manifests; bounded top-level trap/stage labels; no added profile/GUI/version/model operations"
+  },
+  "ourDirectInteropProbe": "Pre-native UtilAcceptVsock 110; not an application absence or native query result."
+}

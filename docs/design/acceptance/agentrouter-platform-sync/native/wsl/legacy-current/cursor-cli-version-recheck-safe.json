@@ -1,0 +1,15 @@
+{
+  "actualExitCode": 0,
+  "versionOutput": [
+    "3.29.15",
+    "86776fcb52ca505783155631089b65d646f9b030",
+    "x64"
+  ],
+  "stderrBytes": 0,
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "taskOnlyWslPromptFlagExplicitlyDocumentedInVendorLauncher": true,
+  "vendorRecommendsWindowsCursorForWslIntegration": true,
+  "isolatedUserDataDir": true,
+  "guiLaunched": false,
+  "modelOrAuthCalls": false
+}

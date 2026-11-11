@@ -1,0 +1,43 @@
+{
+  "requestedUrl": "https://registry.npmjs.org/@deepseek-ai%2Fdsh/latest",
+  "finalUrl": "https://registry.npmjs.org/@deepseek-ai%2Fdsh/latest",
+  "status": 200,
+  "bytes": 8834,
+  "sha256": "d98830e89cf9b064e405fd08985b86dbdfda3ee396498f5981d01b9be0769881",
+  "publicPackage": {
+    "name": "@deepseek-ai/dsh",
+    "version": "0.2.2-rc.1",
+    "repository": {
+      "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+      "type": "git",
+      "directory": "apps/cli"
+    },
+    "homepage": "https://github.com/deepseek-ai/deepseek-harness#readme",
+    "engines": {
+      "node": ">=24.9.0"
+    },
+    "bin": {
+      "dsh": "lib/bin.js"
+    },
+    "scripts": null,
+    "_npmUser": {
+      "name": "imccyu",
+      "email": "imccyu@gmail.com"
+    }
+  },
+  "dist": {
+    "tarball": "https://registry.npmjs.org/@deepseek-ai/dsh/-/dsh-0.2.2-rc.1.tgz",
+    "integrity": "sha512-ijR9UEVYkG15Q/Q79JzvzLBzQOQfc63VLr9n6flpwHPhr5IKn2UxthnSoto/P9l7qGd7pPvI1Ra6TW7LH3oKpg==",
+    "shasum": "95d1cf510061a57c97b4a68d43336658bcec6af1",
+    "signatures": [
+      {
+        "sig": "MEQCIFBEZNLgEUMqpMutRa3dHfVAO8RhjmBbQTAOmsCa1msnAiB9PxSpU60azAlCiWIS4ryOBk37CcDr3zjPpjfulaWDyg==",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "sig": "MEYCIQD1xNMmUk4M5DRr8NfvytReZKACIsTVhtiQrlIX6miCtQIhAIakJ9wLrQD/ZOfkYUTTm8Q9bs0Kv+hIcd7Rr4xQrOx3",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ]
+  }
+}

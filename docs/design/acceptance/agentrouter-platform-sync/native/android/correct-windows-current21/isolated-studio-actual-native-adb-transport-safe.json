@@ -1,0 +1,42 @@
+﻿{
+    "status":  "own-isolated-studio-native-adb-transport-observed",
+    "studioPid":  19620,
+    "studioCreationFiletime":  134388759934247585,
+    "studioImageSha256":  "a49ee7862667d8b0ddec9879a85a16be55d151e9878a328932087e6592f006d3",
+    "transportConnections":  [
+                                 {
+                                     "owningProcess":  19620,
+                                     "localPort":  50865,
+                                     "remotePort":  5039,
+                                     "remoteIsLoopback":  true
+                                 },
+                                 {
+                                     "owningProcess":  19620,
+                                     "localPort":  50863,
+                                     "remotePort":  5039,
+                                     "remoteIsLoopback":  true
+                                 },
+                                 {
+                                     "owningProcess":  19620,
+                                     "localPort":  50860,
+                                     "remotePort":  5039,
+                                     "remoteIsLoopback":  true
+                                 },
+                                 {
+                                     "owningProcess":  19620,
+                                     "localPort":  50850,
+                                     "remotePort":  5039,
+                                     "remoteIsLoopback":  true
+                                 },
+                                 {
+                                     "owningProcess":  19620,
+                                     "localPort":  50849,
+                                     "remotePort":  5039,
+                                     "remoteIsLoopback":  true
+                                 }
+                             ],
+    "privateNative5039Established":  true,
+    "default5037Established":  false,
+    "signals":  0,
+    "ideRunInstrumentationInvoked":  false
+}

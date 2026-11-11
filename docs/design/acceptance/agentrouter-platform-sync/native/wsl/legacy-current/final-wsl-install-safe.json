@@ -1,0 +1,172 @@
+{
+  "recordedAtUtc": "2026-11-11T13:50:34.968674+00:00",
+  "scope": "Three canonical legacy extras only; authorized WSL user-space installation and primary platform closure",
+  "result": "All 3 authorized WSL installations and required safe runtime checks complete; DeepSeek Linux Desktop is explicitly unsupported and is not replaced by a fake native app",
+  "products": [
+    {
+      "id": "deepseek",
+      "officialProduct": "DeepSeek Harness Web/CLI",
+      "version": "0.2.2-rc.1",
+      "installPrefix": "/home/han/.local/share/orchester-legacy-tools/deepseek-harness/0.2.2-rc.1",
+      "launcher": "/home/han/.local/bin/dsh",
+      "publisherFromPublicNpmMetadata": "imccyu",
+      "officialRepository": "https://github.com/deepseek-ai/deepseek-harness",
+      "engine": ">=24.9.0",
+      "actualNativeNode": "24.21.0",
+      "officialTarballSha512AndSha1Matched": true,
+      "installedLockMatchesVerifiedIntegrity": true,
+      "npmInstallAttempt1": "actual1 before config resolution; distinct isolated user/global config files fixed it; original receipt retained",
+      "npmInstallFinalActualExitCode": 0,
+      "versionActualExitCode": 0,
+      "helpActualExitCode": 0,
+      "versionOutputMatchesInstalledVersion": true,
+      "taskDshHomeNotCreated": true,
+      "webStarted": false,
+      "modelAuthOrProfileBootCalls": false,
+      "linuxDesktopRelease": "not supported per official Desktop packaging docs",
+      "windowsDesktopOfficialInstallerAvailable": true,
+      "windowsInstallOwnedBy": "windows_reinstall",
+      "registrySignaturesPublished": true,
+      "registrySignaturesCryptographicallyVerified": false
+    },
+    {
+      "id": "cursor",
+      "officialProduct": "Cursor Linux desktop",
+      "version": "3.29.15",
+      "debVersion": "3.29.15-1794174137",
+      "architecture": "amd64",
+      "installRoot": "/home/han/.local/opt/cursor/3.29.15",
+      "launcher": "/home/han/.local/bin/cursor",
+      "nativeElfSha256": "b52bd49b56f0deb8c30cd25a72fdda71ff07f8e72aa502f2f8851a8c1d3ca239",
+      "sharedLibrariesMissing": [],
+      "nativeElectronNodeVersionCheckActualExitCode": 0,
+      "officialCursorCliVersionActualExitCode": 0,
+      "officialCliVersion": "3.29.15",
+      "officialCliCommit": "86776fcb52ca505783155631089b65d646f9b030",
+      "officialDesktopEntry": "/home/han/.local/share/applications/orchester-cursor.desktop",
+      "officialIconSource": "https://cursor.com/marketing-static/favicon.svg",
+      "officialIconByteExact": true,
+      "wslBoundary": "Vendor launcher recommends Windows Cursor for WSL integration; documented DONT_PROMPT_WSL_INSTALL is set only in the requested native Linux user launcher; native Linux GUI interaction not tested"
+    },
+    {
+      "id": "antigravity",
+      "officialProduct": "Google Antigravity Desktop",
+      "version": "2.31.0",
+      "architecture": "x64",
+      "installRoot": "/home/han/.local/opt/antigravity/2.31.0",
+      "launcher": "/home/han/.local/bin/antigravity",
+      "nativeElfSha256": "3ba9114b7fbaafaf548f72c5d1bc86b7dc81098a85361784359c2c1199625bfc",
+      "sharedLibrariesMissing": [],
+      "nativeElectronNodeVersionCheckActualExitCode": 0,
+      "officialPublicProductVersion": "2.31.0",
+      "officialDesktopEntry": "/home/han/.local/share/applications/orchester-antigravity.desktop",
+      "officialIconSource": "https://antigravity.google/favicon.svg",
+      "officialIconByteExact": true,
+      "distinctAntigravityIde26NotInstalledOrClaimed": true,
+      "regionBoundary": "Official FAQ lists supported account-associated countries; mainland China, Hong Kong and Macao not listed, Taiwan listed; download and native runtime success do not prove account availability"
+    }
+  ],
+  "existingWindowsProductsPreserved": [
+    {
+      "product": "Cursor",
+      "publicMetadataStillExact": true
+    },
+    {
+      "product": "Cursor",
+      "publicMetadataStillExact": true
+    },
+    {
+      "product": "Google Antigravity Desktop",
+      "publicMetadataStillExact": true
+    }
+  ],
+  "allActualInstalledLauncherChecksExitZero": true,
+  "existingSharedGuiLibrariesReused": true,
+  "newGlobalLibrariesSdkOrSudo": false,
+  "sharedToolsNpmManifestPreserved": true,
+  "onlyOwnedRebuildableCachesRemoved": true,
+  "logicalCacheBytesRemoved": 671646227,
+  "windowsPhysicalFreeBytesOrWslVhdxReclaimClaimed": false,
+  "installedArtifactsRetainedAfterCleanup": true,
+  "privateProfilesReadOrModified": false,
+  "guiStartedOrScreenshotAcceptanceClaimed": false,
+  "remote7337OrUserWorkTouched": false,
+  "gitOrOrchesterSourceModified": false,
+  "evidence": [
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/final-primary-matrix-safe.json",
+      "bytes": 7409,
+      "sha256": "4048348aa93d5f7f73a402f8b776b557745d93fbe45ccb1a8747c8e32615a6bf"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/installed-known-paths-safe.json",
+      "bytes": 3428,
+      "sha256": "53ec73ae26f9f33cab36b087e1947a0bb6ad8069080600c109ba28f4852580d9"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/dsh-registry-metadata-safe.json",
+      "bytes": 1472,
+      "sha256": "5145fb751f6b6f7b4f2556d8d4a7ea927a192a1ab3d73b347f0c3b4e44638373"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/dsh-tar-public-proof-safe.json",
+      "bytes": 4288,
+      "sha256": "bf6861e5a37ec0e29e577801fdfc3750f5dbcdb5d0da1dff805931ae22028fa2"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/download-receipts-safe.json",
+      "bytes": 2713,
+      "sha256": "7efad8770730ba541af963b3c720752d74949684c60316c919dfdcb2ccecbc70"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/desktop-package-layout-safe.json",
+      "bytes": 647,
+      "sha256": "3ed46c24ae7a309848c234614d55bfcdaaea6d4b7964354e4475f2e1d4da60a6"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/desktop-user-extraction-safe.json",
+      "bytes": 495,
+      "sha256": "601a43198ecc9c02a746f3f550f23cb46e720781dd51ce6f72f70c2a6f7acc1d"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/desktop-native-checks-safe.json",
+      "bytes": 2266,
+      "sha256": "6fca3c07fcf05efae9d463a1b5c5f0e294ebcd4bdb582cfceb244f1105ce2f65"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/cursor-cli-version-recheck-safe.json",
+      "bytes": 441,
+      "sha256": "50eb3183c1958b72177a3e9e2522b42ebc7d02b16a78a33aefeae51fed955c92"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/dsh-npm-install-safe.json",
+      "bytes": 673,
+      "sha256": "e39f1b4a7dc8386ab1926038fdd49d91d8493834f8ad5a717cdfd8eb2115656e"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/dsh-npm-install-attempt2-safe.json",
+      "bytes": 645,
+      "sha256": "1809b6fb141807d174a3ca65577986fe1d2931ec44f29e58bad08d4dd6a54731"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/dsh-native-cli-checks-safe.json",
+      "bytes": 1476,
+      "sha256": "e7990a448315f06a1fe7fa781d65c1615926727e67f95fd26a8e5dcd564f3b00"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/launcher-icons-primary-safe.json",
+      "bytes": 850,
+      "sha256": "dcd3d0d7e28ee3922f4378de24e41e964e044af81a17a1abd1fe48b9b3ae7e05"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/user-launchers-and-icons-safe.json",
+      "bytes": 2851,
+      "sha256": "cd591e1ff095cc0e54bd3e7e6f7aea90cc6f84a9a130f86bbaaeaaa027daa86f"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/owned-cache-cleanup-safe.json",
+      "bytes": 1389,
+      "sha256": "3b83a486c8efcb77d9250101daac9cbe41a7091d87a69d0be6cfa4efa484d4cc"
+    }
+  ]
+}

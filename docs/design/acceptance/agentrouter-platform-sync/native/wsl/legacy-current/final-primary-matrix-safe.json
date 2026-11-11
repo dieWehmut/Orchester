@@ -1,0 +1,175 @@
+{
+  "recordedAtUtc": "2026-11-11T13:16:16.013907+00:00",
+  "scope": "legacy canonical extra 3 only; current official platform support and bounded public installed metadata",
+  "phase": "primary pre-install matrix; root separately authorized following WSL install",
+  "products": [
+    {
+      "canonicalId": "deepseek",
+      "officialProduct": "DeepSeek Harness",
+      "officialWindowsDesktop": {
+        "supported": true,
+        "architectures": [
+          "x64"
+        ],
+        "installerUrl": "https://download.deepseek.com/desktop/dsh-latest-windows-x64.exe",
+        "publishedByOfficialPages": [
+          "https://www.deepseek.com/download/",
+          "https://www.deepseek.com/harness/"
+        ],
+        "fullInstallerHashOrSignatureNotYetVerified": true,
+        "installedKnownPathsConfirmed": false,
+        "wholeSystemAbsentClaimed": false
+      },
+      "officialLinuxDesktop": {
+        "supportedReleaseTarget": false,
+        "explicitPrimaryStatement": "Linux is not a supported Desktop release target.",
+        "source": "https://github.com/deepseek-ai/deepseek-harness/blob/master/apps/desktop/packaging/README.md",
+        "decodedSourceSha256": "95ea269d00b700ee83078dd5f5f7aca85671f6c920e3814084a21ddf51b2a4a8",
+        "line": 100,
+        "sourceBuildNotSubstitutedForOfficialRelease": true
+      },
+      "officialLinuxHarnessWebCli": {
+        "supportedOfficialProduct": "@deepseek-ai/dsh web",
+        "officialRepository": "https://github.com/deepseek-ai/deepseek-harness",
+        "desktopOrApiSdkClaimed": false,
+        "installedKnownPathsConfirmed": false,
+        "registryIntegrityVersionEngineVerificationRequiredBeforeInstall": true
+      },
+      "editionsAndRegions": {
+        "domesticInternationalDistinctDesktopEditionsFound": false,
+        "serviceRegionalRestrictionsFromInspectedPrimary": "not established; do not infer global or China access from download",
+        "loginOrServiceAvailabilityTested": false
+      }
+    },
+    {
+      "canonicalId": "cursor",
+      "officialProduct": "Cursor",
+      "officialDownloads": "https://cursor.com/download",
+      "officialWindowsDesktop": {
+        "supported": true,
+        "architectures": [
+          "x64",
+          "ARM64"
+        ],
+        "installKinds": [
+          "User",
+          "System"
+        ],
+        "installedConfirmed": true,
+        "installedVersionFromPublicMetadata": "3.29.15",
+        "installedRoot": "C:/Users/han/software/cursor/cursor",
+        "preserveNoDuplicateInstall": true,
+        "nativeVersionCommandNotRunByResearchAgent": true
+      },
+      "officialLinuxDesktop": {
+        "supported": true,
+        "architectures": [
+          "x64",
+          "ARM64"
+        ],
+        "formats": [
+          "deb",
+          "RPM",
+          "AppImage"
+        ],
+        "currentPublishedSeries": "3.29",
+        "preferredX64UserSpaceDebUrl": "https://api2.cursor.sh/updates/download/golden/linux-x64-deb/cursor/3.29",
+        "installedKnownPathsConfirmed": false,
+        "windowsMountedCursorCommandIsNotLinuxInstallation": true
+      },
+      "editionsAndRegions": {
+        "domesticInternationalDistinctEditionsFound": false,
+        "regionalLimitsFromInspectedPrimary": "not established; no login attempted"
+      }
+    },
+    {
+      "canonicalId": "antigravity",
+      "officialProduct": "Google Antigravity Desktop",
+      "officialDownloads": "https://antigravity.google/download",
+      "officialWindowsDesktop": {
+        "supported": true,
+        "architectures": [
+          "x64",
+          "ARM64"
+        ],
+        "installedConfirmed": true,
+        "installedVersionFromAsarPublicPackage": "2.31.0",
+        "installedRoot": "C:/Users/han/AppData/Local/Programs/antigravity",
+        "preserveNoDuplicateInstall": true,
+        "runtimeVersionText44_9_1NotUsedAsAppVersion": true
+      },
+      "officialLinuxDesktop": {
+        "supported": true,
+        "architectures": [
+          "x64",
+          "ARM64"
+        ],
+        "format": "tar.gz",
+        "currentPublishedVersion": "2.31.0",
+        "x64Url": "https://storage.googleapis.com/antigravity-public/antigravity-hub/2.31.0-6379060755038208/linux-x64/Antigravity.tar.gz",
+        "minimumGlibc": "2.28",
+        "minimumGlibcxx": "3.4.25",
+        "installedKnownPathsConfirmed": false
+      },
+      "separateIdeProduct": {
+        "name": "Antigravity IDE",
+        "currentPublishedVersion": "2.6.0",
+        "sameAsInstalledDesktopClaimed": false,
+        "additionalInstallNotIncludedWithoutRootScopeDecision": true
+      },
+      "editionsAndRegions": {
+        "chineseLocaleIsNotDomesticServiceEdition": true,
+        "regionalEvidence": {
+          "officialSource": "https://antigravity.google/docs/faq/#what-is-google-antigravitys-geographical-availability",
+          "sourceSha256": "4ca8a1f40ea1a039610753500c047914cff7ffa092e315eacd215d5ecf748fc3",
+          "mainlandChinaInList": false,
+          "taiwanInList": true,
+          "hongKongInList": false,
+          "macaoInList": false,
+          "officialListExplicitlyLimitsUseToListedCountries": true,
+          "countryAssociationAndAge18RequirementsExplicit": true,
+          "downloadAvailabilityDoesNotProveAccountServiceAvailability": true,
+          "parsedCountryListItemCount": 222,
+          "availabilityMembershipCheckedInFullGeographicalSectionText": true
+        },
+        "loginOrServiceAvailabilityTested": false
+      }
+    }
+  ],
+  "installedEvidence": {
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/installed-known-paths-safe.json",
+    "sha256": "53ec73ae26f9f33cab36b087e1947a0bb6ad8069080600c109ba28f4852580d9"
+  },
+  "sourceReceipts": [
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/primary-fetch-safe.json",
+      "sha256": "bdf0fa063465848f082eba7c8b70f6fbf5a0f999a7319741949f727146af5ce1"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/additional-primary-fetch-safe.json",
+      "sha256": "74da0a07cac1d5438e0b3f9bb6ae8f079aaf645fe4a74541a32a1a90d0919377"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/last-primary-fetch-safe.json",
+      "sha256": "a040cfeca58af3039c89190a408c19fb85824ae7747b42277a8f23b50e1634c8"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/desktop-api-primary-fetch-safe.json",
+      "sha256": "a3aa0db7ce24e365f27bdc2e3f9630599023a7c02abe2f7101978edb53a7bc67"
+    }
+  ],
+  "safety": {
+    "onlyPublicKnownMetadataRead": true,
+    "privateProfilesOrSecretsRead": false,
+    "windowsNativeVersionCommandsRun": false,
+    "applicationLaunches": false,
+    "packageInstallPerformedInThisPrimaryPhase": false,
+    "wholeSystemAbsenceClaimed": false,
+    "repeatedSameEndpointTlsRetries": false
+  },
+  "followUpOwnerActions": [
+    "WSL root authorization: verify official npm metadata/integrity then install dsh only user scope and version/help; do not start web/model/auth",
+    "WSL root authorization: verify/extract official Cursor and Antigravity user-space payloads and reuse current shared GUI libs/launcher conventions",
+    "Windows owner: retain existing Cursor/Antigravity; download DeepSeek only official pinned page URL, verify full hash/version/Authenticode before native install"
+  ]
+}

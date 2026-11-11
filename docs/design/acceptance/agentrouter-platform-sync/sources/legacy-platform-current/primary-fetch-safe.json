@@ -1,0 +1,70 @@
+[
+  {
+    "requestedUrl": "https://www.deepseek.com/",
+    "finalUrl": "https://www.deepseek.com/",
+    "status": 200,
+    "bytes": 115730,
+    "sha256": "d650c9e9a64dedfd0198472bff505a02032bd04083b53e2bf5c66e3af329b534",
+    "contentType": "text/html",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/primary-0"
+  },
+  {
+    "requestedUrl": "https://download.deepseek.com/app/",
+    "finalUrl": "https://download.deepseek.com/",
+    "status": 200,
+    "bytes": 2211,
+    "sha256": "11882015de84285fc9375ec4695d59ad78b8339afd3aa2b76425630865ddec0b",
+    "contentType": "text/html",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/primary-1"
+  },
+  {
+    "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/main/README.md",
+    "errorType": "HTTPError",
+    "status": 404
+  },
+  {
+    "requestedUrl": "https://api.github.com/repos/deepseek-ai/deepseek-harness",
+    "finalUrl": "https://api.github.com/repos/deepseek-ai/deepseek-harness",
+    "status": 200,
+    "bytes": 6766,
+    "sha256": "5ca57668885919a4220edcc9139376326b3b6f63554ad1da00adf54140c6732c",
+    "contentType": "application/json; charset=utf-8",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/primary-3"
+  },
+  {
+    "requestedUrl": "https://cursor.com/downloads",
+    "finalUrl": "https://cursor.com/download",
+    "status": 200,
+    "bytes": 473162,
+    "sha256": "4a915606143bab6a29aa9a207234b53c269ae9fb184bf777f063c5f9467935d3",
+    "contentType": "text/html; charset=utf-8",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/primary-4"
+  },
+  {
+    "requestedUrl": "https://antigravity.google/download",
+    "finalUrl": "https://antigravity.google/download",
+    "status": 200,
+    "bytes": 177045,
+    "sha256": "8cdd47151278e368279e3b5f2f3733c5bf59468a85b79a2f963d0f04e1f3ec1d",
+    "contentType": "text/html",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/primary-5"
+  },
+  {
+    "requestedUrl": "https://antigravity.google/docs/get-started",
+    "finalUrl": "https://antigravity.google/docs/get-started",
+    "status": 200,
+    "bytes": 1928,
+    "sha256": "f3ab5fc5378d23cca0a979c11a62a218453f529c3f096288b383ce936e8653ef",
+    "contentType": "text/html",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/primary-6"
+  },
+  {
+    "requestedUrl": "https://antigravity.google/",
+    "finalUrl": "https://antigravity.google/",
+    "status": 200,
+    "bytes": 216969,
+    "sha256": "c0363eef802710c8d19c646c129de3ea6895ffc5d2caaec4919f618013ea60aa",
+    "contentType": "text/html",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/primary-7"
+  }
+]

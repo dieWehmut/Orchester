@@ -1,0 +1,82 @@
+{
+  "installedFiles": [
+    {
+      "kind": "user-launcher",
+      "file": "/home/han/.local/bin/cursor",
+      "bytes": 349,
+      "sha256": "edd8d04ec0e10cea5f32108fe3b59023a8c198a026df9df16b0b26509e556962",
+      "shellSyntaxActualExitCode": 0
+    },
+    {
+      "kind": "user-launcher",
+      "file": "/home/han/.local/bin/antigravity",
+      "bytes": 320,
+      "sha256": "13452dad2175eabab20a295db66d7495d74d349c3db91d200fa05d4a13427c67",
+      "shellSyntaxActualExitCode": 0
+    },
+    {
+      "kind": "user-launcher",
+      "file": "/home/han/.local/bin/dsh",
+      "bytes": 182,
+      "sha256": "27bd3e00f6c2fb887cdf3551da389806d81937de85d7ff0b4f2522b032146785",
+      "shellSyntaxActualExitCode": 0
+    },
+    {
+      "kind": "desktop-entry",
+      "file": "/home/han/.local/share/applications/orchester-cursor.desktop",
+      "bytes": 169,
+      "sha256": "34df18103743eb911695ce7af4bfc2c0763d0bff6b06725799b3f465dce3eeea",
+      "officialIcon": "/home/han/.local/opt/cursor/3.29.15/cursor.svg",
+      "officialIconSha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+      "iconByteExactToOfficialDownload": true
+    },
+    {
+      "kind": "desktop-entry",
+      "file": "/home/han/.local/share/applications/orchester-antigravity.desktop",
+      "bytes": 195,
+      "sha256": "b4c28080bacf2612b93486fb421e9ea6c6d5e26f6d15d0498199d652cc78de1f",
+      "officialIcon": "/home/han/.local/opt/antigravity/2.31.0/antigravity.svg",
+      "officialIconSha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "iconByteExactToOfficialDownload": true
+    }
+  ],
+  "actualInstalledLauncherChecks": [
+    {
+      "launcher": "cursor",
+      "versionOrHelp": "--version",
+      "actualExitCode": 0,
+      "stdoutBytes": 53,
+      "stderrBytes": 0,
+      "stdoutSha256": "320c5134222cdf6eb9104fd176dd8504bee92e6348b8471b2d630bec6c8779ad",
+      "expectedVersionPresent": true,
+      "expectedHelpPresent": false
+    },
+    {
+      "launcher": "dsh",
+      "versionOrHelp": "--version",
+      "actualExitCode": 0,
+      "stdoutBytes": 11,
+      "stderrBytes": 0,
+      "stdoutSha256": "d319b8eb5b28c59dc921f50d4a0cce19ab3a24829ffd9ed16194cfc48adef6e4",
+      "expectedVersionPresent": true,
+      "expectedHelpPresent": false
+    },
+    {
+      "launcher": "dsh",
+      "versionOrHelp": "--help",
+      "actualExitCode": 0,
+      "stdoutBytes": 1820,
+      "stderrBytes": 0,
+      "stdoutSha256": "1622bf1e4dbf97d7e3964db53245e3b300bfe3cf4ebc7e77cb1ac134635a2585",
+      "expectedVersionPresent": false,
+      "expectedHelpPresent": true
+    }
+  ],
+  "guiLaunched": false,
+  "webListenersStarted": false,
+  "modelAuthCalls": false,
+  "originalPrivateProfilesModified": false,
+  "systemDesktopEntriesModified": false,
+  "cursorWslVendorAdvisoryRecorded": true,
+  "rootSharedToolsManifestUnchanged": true
+}

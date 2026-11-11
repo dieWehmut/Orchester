@@ -1,0 +1,118 @@
+{
+  "installedWindowsPublicMetadata": [
+    {
+      "product": "Cursor",
+      "knownPath": "/mnt/c/Users/han/software/cursor/cursor/resources/app/package.json",
+      "bytes": 421,
+      "sha256": "562c28a3e9efa859957de6916625a53461822b4a779258a244c8bb413e4ac449",
+      "selected": {
+        "name": "Cursor",
+        "version": "3.29.15"
+      }
+    },
+    {
+      "product": "Cursor",
+      "knownPath": "/mnt/c/Users/han/software/cursor/cursor/resources/app/product.json",
+      "bytes": 52789,
+      "sha256": "af23bdce2c89384a2d00d4dd29741e22327e854a4f08773e245940e61eb10585",
+      "selected": {
+        "version": "3.29.15",
+        "commit": "86776fcb52ca505783155631089b65d646f9b030",
+        "date": "2026-11-08T21:35:59.668Z",
+        "applicationName": "cursor",
+        "nameShort": "Cursor",
+        "quality": "stable",
+        "win32AppUserModelId": "Anysphere.Cursor"
+      }
+    },
+    {
+      "product": "Google Antigravity Desktop",
+      "knownPath": "/mnt/c/Users/han/AppData/Local/Programs/antigravity/resources/app.asar",
+      "publicMetadataMember": "package.json",
+      "metadataBytes": 594,
+      "metadataSha256": "41e1a0969f9330d85207e51a89c582a022a8e5476ea0dacf1b390e8c46b59493",
+      "selected": {
+        "name": "antigravity",
+        "version": "2.31.0",
+        "productName": "Antigravity",
+        "description": "Antigravity - Agentic Desktop Application",
+        "homepage": "https://antigravity.google"
+      },
+      "mainExeExists": true,
+      "runtimeVersionFileExcludedAsProductVersion": true
+    }
+  ],
+  "wslPathLookups": [
+    {
+      "name": "cursor",
+      "resolvedPath": "/mnt/c/Users/han/software/cursor/cursor/resources/app/bin/cursor",
+      "realPath": "/mnt/c/Users/han/software/cursor/cursor/resources/app/bin/cursor",
+      "isWindowsMountedPath": true
+    },
+    {
+      "name": "cursor-agent",
+      "resolvedPath": null,
+      "realPath": null,
+      "isWindowsMountedPath": null
+    },
+    {
+      "name": "agent",
+      "resolvedPath": null,
+      "realPath": null,
+      "isWindowsMountedPath": null
+    },
+    {
+      "name": "antigravity",
+      "resolvedPath": null,
+      "realPath": null,
+      "isWindowsMountedPath": null
+    },
+    {
+      "name": "deepseek",
+      "resolvedPath": null,
+      "realPath": null,
+      "isWindowsMountedPath": null
+    },
+    {
+      "name": "deepseek-harness",
+      "resolvedPath": null,
+      "realPath": null,
+      "isWindowsMountedPath": null
+    },
+    {
+      "name": "dsh",
+      "resolvedPath": null,
+      "realPath": null,
+      "isWindowsMountedPath": null
+    }
+  ],
+  "wslKnownPathChecks": [
+    {
+      "knownPath": "/home/han/.cursor-server",
+      "exists": false
+    },
+    {
+      "knownPath": "/home/han/.local/share/cursor-agent/versions",
+      "exists": false
+    },
+    {
+      "knownPath": "/home/han/.antigravity-server",
+      "exists": false
+    },
+    {
+      "knownPath": "/home/han/.local/share/antigravity",
+      "exists": false
+    }
+  ],
+  "knownToolsNpmManifest": {
+    "path": "/home/han/.local/share/orchester-tools/package.json",
+    "sha256": "fb29319bf5f3d4cd506d1bc37c47f5fa5253903cd1bdc06fc4bf2ba9fed33f09",
+    "legacyDependencies": {}
+  },
+  "wholeSystemAbsenceClaimed": false,
+  "windowsNativeVersionCommandsRun": false,
+  "installedApplicationsLaunched": false,
+  "privateProfilesRead": false,
+  "installationMutationPerformed": false,
+  "linuxArchitecture": "x86_64"
+}

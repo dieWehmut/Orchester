@@ -1,0 +1,44 @@
+{
+  "actualInstalledPackage": {
+    "name": "@deepseek-ai/dsh",
+    "version": "0.2.2-rc.1",
+    "engines": {
+      "node": ">=24.9.0"
+    },
+    "metadataPath": "/home/han/.local/share/orchester-legacy-tools/deepseek-harness/0.2.2-rc.1/node_modules/@deepseek-ai/dsh/package.json",
+    "sha256": "3e14837ceb3bbc0ba419ed08e9b5ba164338369b1268b93c3c25d89f7b1c9953"
+  },
+  "checks": [
+    {
+      "arguments": [
+        "--version"
+      ],
+      "actualExitCode": 0,
+      "stdoutBytes": 11,
+      "stderrBytes": 0,
+      "stdoutSha256": "d319b8eb5b28c59dc921f50d4a0cce19ab3a24829ffd9ed16194cfc48adef6e4",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expectedVersionPresent": true,
+      "expectedHelpPresent": false
+    },
+    {
+      "arguments": [
+        "--help"
+      ],
+      "actualExitCode": 0,
+      "stdoutBytes": 1820,
+      "stderrBytes": 0,
+      "stdoutSha256": "1622bf1e4dbf97d7e3964db53245e3b300bfe3cf4ebc7e77cb1ac134635a2585",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expectedVersionPresent": false,
+      "expectedHelpPresent": true
+    }
+  ],
+  "originalDshHomeReadOrChanged": false,
+  "taskDshHomeExistsAfterChecks": false,
+  "nativeNodeOnly": true,
+  "webListenerStarted": false,
+  "modelOrAuthOrProfileBootCalls": false,
+  "cliSourceShowsHelpVersionExitBeforeLoadLayeredEnvRunProfile": true,
+  "installFromOfficialNpmPinnedVersion": "0.2.2-rc.1"
+}

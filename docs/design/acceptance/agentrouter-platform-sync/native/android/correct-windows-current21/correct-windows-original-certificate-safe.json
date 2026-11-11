@@ -1,0 +1,10 @@
+{
+  "status": "correct-windows-original-install-certificate-verified",
+  "commandActualExitCode": 0,
+  "originalWindowsInstalledApkSha256": "d0d1d4cddd0914e7b6e5800dfe66d32b7cf10e562fb687193da22492a12ac8a8",
+  "originalWindowsInstalledCertificateSha256": "df6df435ccf10a685fb109668da8cdf7b022b481ba346f3143190aeda0c4468e",
+  "currentFinal21CertificateSha256": "df6df435ccf10a685fb109668da8cdf7b022b481ba346f3143190aeda0c4468e",
+  "originalWindowsEncryptedFiveValuesVerified": true,
+  "sameCertificateInstallRCompatible": true,
+  "privateKeyOrCredentialsPrinted": false
+}

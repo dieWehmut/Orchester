@@ -1,0 +1,82 @@
+{
+  "createdAtUTC": "2026-11-11T13:35:24.000194Z",
+  "task": "Bounded current Claude Desktop official-support availability verification",
+  "sources": [
+    {
+      "name": "claude-support-installing",
+      "requestedURL": "https://support.claude.com/en/articles/10065433-installing-claude-for-desktop",
+      "observedAtUTC": "2026-11-11T13:28:50.469444Z",
+      "sourceObservedAtEpoch": 1794403730.4694443,
+      "finalURL": null,
+      "httpStatus": null,
+      "responseSHA256": null,
+      "responseBodyRecorded": false,
+      "errorType": "URLError",
+      "networkReasonRecorded": false,
+      "inputRequestsForThisURL": 1
+    },
+    {
+      "name": "anthropic-support-legacy-installing",
+      "requestedURL": "https://support.anthropic.com/en/articles/10065433-installing-claude-for-desktop",
+      "observedAtUTC": "2026-11-11T13:28:50.470014Z",
+      "sourceObservedAtEpoch": 1794403730.470014,
+      "finalURL": null,
+      "httpStatus": null,
+      "responseSHA256": null,
+      "responseBodyRecorded": false,
+      "errorType": "URLError",
+      "networkReasonRecorded": false,
+      "inputRequestsForThisURL": 1
+    },
+    {
+      "name": "claude-support-public-index",
+      "requestedURL": "https://support.claude.com/en/",
+      "observedAtUTC": "2026-11-11T13:33:56.699898Z",
+      "finalURL": null,
+      "httpStatus": null,
+      "responseSHA256": null,
+      "responseBytes": 0,
+      "attemptCount": 1,
+      "errorType": "URLError",
+      "reasonType": "SSLEOFError",
+      "publicNetworkError": "[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1082)",
+      "responseBodyRecorded": false,
+      "inputRequestsForThisURL": 1
+    }
+  ],
+  "complementaryPrimaryURLCount": 3,
+  "maximumComplementaryURLs": 3,
+  "officialSupportPageSuccessfullyRetrievedCount": 0,
+  "evidenceScope": {
+    "currentSupportedPlatformList": null,
+    "currentSystemRequirements": null,
+    "officialNativeLinuxGUIReleaseURL": null,
+    "linuxNativeGUIReleaseAvailability": "Not established: no requested official support page supplied a readable HTTP response.",
+    "permanentLinuxUnsupportedClaim": false,
+    "absenceFromCurrentPlatformListClaim": false,
+    "officialChangeLogLinuxDesktopMentionsSufficientForNativeReleaseProof": false,
+    "httpFailureStatusClaim": false,
+    "firstTwoURLErrorSpecificTLSCauseClaim": false,
+    "thirdURLSpecificError": "SSLEOFError before an HTTP response"
+  },
+  "responseHashExplanation": "A response SHA256 is null when no page body was received; local receipt hashes are recorded separately in the evidence manifest.",
+  "actions": {
+    "payloadOrCDNDownloads": 0,
+    "repeatedInputURLRequests": 0,
+    "windowsNativeCommands": 0,
+    "installerExecution": 0,
+    "GUIOrBrowserLaunch": 0,
+    "ADBCommands": 0,
+    "androidQueueWrites": 0,
+    "AVDOrIDEStartStop": 0,
+    "privateProfileOrKeyReads": 0,
+    "processSignals": 0,
+    "sourceOrGitMutations": 0
+  },
+  "storeInstallerArguments": {
+    "verifiedApplicableSilentArguments": null,
+    "bootstrapperExecuted": false,
+    "note": "No applicable official Store Installer silent-argument document was established in this bounded task. Claude EXE or winget switches must not be inferred to apply to the prepared Microsoft Store bootstrapper."
+  },
+  "outcome": "Completed the authorized bounded read-only check with the official platform list unverified; handoff preserves the distinction between unavailable evidence and unsupported-platform claims."
+}

@@ -1,0 +1,16 @@
+{
+  "prefix": "/home/han/.local/share/orchester-legacy-tools/deepseek-harness/0.2.2-rc.1",
+  "actualExitCode": 0,
+  "durationSeconds": 286.97592210769653,
+  "stdoutBytes": 26,
+  "stderrBytes": 93,
+  "stdoutSha256": "8170979d3e0ffcc0439e495a16a0cc5c1742f3cc02acc7bfc91aa4d5aacea17c",
+  "stderrSha256": "9c06cf1a9709d4e19ec0a9b7488f4d9a8ea575baf77ab26cfe28e8c863cc376c",
+  "npmUserAndGlobalConfigTaskIsolatedAndDistinct": true,
+  "cacheTaskOwned": true,
+  "ignoreScripts": true,
+  "versionPinned": "0.2.2-rc.1",
+  "modelOrAuthOrSetupCalls": false,
+  "sharedToolsManifestChanged": false,
+  "priorAttemptFailedBeforeConfigResolveAndRetained": true
+}

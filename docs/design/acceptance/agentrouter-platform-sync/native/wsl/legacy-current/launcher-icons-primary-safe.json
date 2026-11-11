@@ -1,0 +1,22 @@
+[
+  {
+    "product": "cursor",
+    "requestedUrl": "https://cursor.com/marketing-static/favicon.svg",
+    "finalUrl": "https://cursor.com/marketing-static/favicon.svg",
+    "status": 200,
+    "bytes": 4373,
+    "sha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/cursor-official-icon.svg",
+    "validSvg": true
+  },
+  {
+    "product": "antigravity",
+    "requestedUrl": "https://antigravity.google/favicon.svg",
+    "finalUrl": "https://antigravity.google/favicon.svg",
+    "status": 200,
+    "bytes": 5037,
+    "sha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+    "file": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/antigravity-official-icon.svg",
+    "validSvg": true
+  }
+]

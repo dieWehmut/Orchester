@@ -1,0 +1,459 @@
+{
+    "observedAt":  "2026-11-11T13:09:56.3192041Z",
+    "operation":  "native Windows read-only public file/version/signature/package metadata",
+    "files":  [
+                  {
+                      "id":  "claude",
+                      "kind":  "cli",
+                      "path":  "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@anthropic-ai\\claude-code\\bin\\claude.exe",
+                      "exists":  true,
+                      "bytes":  346496160,
+                      "sha256":  "345996b4bdbae21d817f750fae2f34cbf8d81224a5444c78136091d121beb298",
+                      "publicFileVersion":  {
+                                                "productName":  "Claude Code",
+                                                "productVersion":  "2.1.322.0",
+                                                "fileVersion":  "2.1.322.0",
+                                                "companyName":  "Anthropic PBC"
+                                            },
+                      "authenticode":  {
+                                           "querySucceeded":  true,
+                                           "status":  "Valid",
+                                           "signerSubject":  "CN=\"Anthropic, PBC\", O=\"Anthropic, PBC\", L=San Francisco, S=California, C=US, SERIALNUMBER=4860621, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=Delaware, OID.1.3.6.1.4.1.311.60.2.1.3=US",
+                                           "signerThumbprint":  "60C2D9C51F09822FFF4F194DE9EEDB67451292D1"
+                                       }
+                  },
+                  {
+                      "id":  "codex",
+                      "kind":  "cli",
+                      "path":  "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+                      "exists":  true,
+                      "bytes":  9154,
+                      "sha256":  "e14fc83739c13c1074b12bd1acce4010c893c7f6fbfc1593b4a31d74cabb57af",
+                      "publicFileVersion":  {
+                                                "productName":  null,
+                                                "productVersion":  null,
+                                                "fileVersion":  null,
+                                                "companyName":  null
+                                            },
+                      "authenticode":  {
+                                           "querySucceeded":  true,
+                                           "status":  "NotSigned",
+                                           "signerSubject":  null,
+                                           "signerThumbprint":  null
+                                       }
+                  },
+                  {
+                      "id":  "crush",
+                      "kind":  "cli",
+                      "path":  "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@charmland\\crush\\run-crush.js",
+                      "exists":  true,
+                      "bytes":  158,
+                      "sha256":  "2cc1ac87cc237a6383702b59f985160e637d3ec853bbccba2d7ef6bbf4d94361",
+                      "publicFileVersion":  {
+                                                "productName":  null,
+                                                "productVersion":  null,
+                                                "fileVersion":  null,
+                                                "companyName":  null
+                                            },
+                      "authenticode":  {
+                                           "querySucceeded":  true,
+                                           "status":  "NotSigned",
+                                           "signerSubject":  null,
+                                           "signerThumbprint":  null
+                                       }
+                  },
+                  {
+                      "id":  "gemini",
+                      "kind":  "cli",
+                      "path":  "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@google\\gemini-cli\\bundle\\gemini.js",
+                      "exists":  true,
+                      "bytes":  5152,
+                      "sha256":  "fcc38edd4f864c2f5fa582d7d133c19b1a04c697ad3143ab8045f92b77644c68",
+                      "publicFileVersion":  {
+                                                "productName":  null,
+                                                "productVersion":  null,
+                                                "fileVersion":  null,
+                                                "companyName":  null
+                                            },
+                      "authenticode":  {
+                                           "querySucceeded":  true,
+                                           "status":  "NotSigned",
+                                           "signerSubject":  null,
+                                           "signerThumbprint":  null
+                                       }
+                  },
+                  {
+                      "id":  "hermes",
+                      "kind":  "cli",
+                      "path":  "C:\\Users\\han\\AppData\\Local\\hermes\\bin\\hermes.exe",
+                      "exists":  true,
+                      "bytes":  115115,
+                      "sha256":  "94206ceddcade3f3b65dc90ddfc61166067b9cce77eaa0d87626c8485fc8c3f9",
+                      "publicFileVersion":  {
+                                                "productName":  null,
+                                                "productVersion":  null,
+                                                "fileVersion":  null,
+                                                "companyName":  null
+                                            },
+                      "authenticode":  {
+                                           "querySucceeded":  true,
+                                           "status":  "NotSigned",
+                                           "signerSubject":  null,
+                                           "signerThumbprint":  null
+                                       }
+                  },
+                  {
+                      "id":  "openclaw",
+                      "kind":  "cli",
+                      "path":  "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\openclaw\\openclaw.mjs",
+                      "exists":  true,
+                      "bytes":  23906,
+                      "sha256":  "469e60c9f60b615ff71c985a54238ee532a8f949866d76aebe7d6e4bc7219902",
+                      "publicFileVersion":  {
+                                                "productName":  null,
+                                                "productVersion":  null,
+                                                "fileVersion":  null,
+                                                "companyName":  null
+                                            },
+                      "authenticode":  {
+                                           "querySucceeded":  true,
+                                           "status":  "UnknownError",
+                                           "signerSubject":  null,
+                                           "signerThumbprint":  null
+                                       }
+                  },
+                  {
+                      "id":  "opencode",
+                      "kind":  "cli",
+                      "path":  "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\opencode-ai\\.\\bin\\opencode.exe",
+                      "exists":  true,
+                      "bytes":  211564424,
+                      "sha256":  "d7b473388cb62555970e400ce54cdfb6d6573608beea6f8fdf382cd1a698a3fa",
+                      "publicFileVersion":  {
+                                                "productName":  "Bun",
+                                                "productVersion":  "1.4.4",
+                                                "fileVersion":  "1.4.4",
+                                                "companyName":  "Oven"
+                                            },
+                      "authenticode":  {
+                                           "querySucceeded":  true,
+                                           "status":  "Valid",
+                                           "signerSubject":  "CN=\"Anomaly Innovations, Inc https://anoma.ly/\", O=\"Anomaly Innovations, Inc https://anoma.ly/\", L=Dover, S=Delaware, C=US",
+                                           "signerThumbprint":  "BFADCB7D003A2EF4244E7386E8F7AF377D20E79A"
+                                       }
+                  },
+                  {
+                      "id":  "pi",
+                      "kind":  "cli",
+                      "path":  "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@earendil-works\\pi-coding-agent\\dist\\bundle\\cli.js",
+                      "exists":  true,
+                      "bytes":  160,
+                      "sha256":  "e79626f2dd6f94aa45d30f3fa63cd84319a6eefcd150b353cfaf274366926774",
+                      "publicFileVersion":  {
+                                                "productName":  null,
+                                                "productVersion":  null,
+                                                "fileVersion":  null,
+                                                "companyName":  null
+                                            },
+                      "authenticode":  {
+                                           "querySucceeded":  true,
+                                           "status":  "NotSigned",
+                                           "signerSubject":  null,
+                                           "signerThumbprint":  null
+                                       }
+                  },
+                  {
+                      "id":  "qwen",
+                      "kind":  "cli",
+                      "path":  "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@qwen-code\\qwen-code\\cli-entry.js",
+                      "exists":  true,
+                      "bytes":  18590,
+                      "sha256":  "113efe4104a9fc66f507d34bfd6abbd896ceb77de47f4b468a0825a327fdc6a5",
+                      "publicFileVersion":  {
+                                                "productName":  null,
+                                                "productVersion":  null,
+                                                "fileVersion":  null,
+                                                "companyName":  null
+                                            },
+                      "authenticode":  {
+                                           "querySucceeded":  true,
+                                           "status":  "NotSigned",
+                                           "signerSubject":  null,
+                                           "signerThumbprint":  null
+                                       }
+                  },
+                  {
+                      "id":  "workbuddy",
+                      "kind":  "desktop_service",
+                      "path":  "C:\\Users\\han\\software\\workbuddy\\WorkBuddy.exe",
+                      "exists":  true,
+                      "bytes":  204590360,
+                      "sha256":  "bbf504003825e0e22dd8c401b396d79db78ec603558088565d1b2e81561704a0",
+                      "publicFileVersion":  {
+                                                "productName":  "WorkBuddy",
+                                                "productVersion":  "5.9.3.0",
+                                                "fileVersion":  "5.9.3",
+                                                "companyName":  "Tencent Technology (Shenzhen) Company Limited"
+                                            },
+                      "authenticode":  {
+                                           "querySucceeded":  true,
+                                           "status":  "Valid",
+                                           "signerSubject":  "CN=Tencent Technology (Shenzhen) Company Limited, O=Tencent Technology (Shenzhen) Company Limited, L=Shenzhen, S=Guangdong Province, C=CN, SERIALNUMBER=9144030071526726XG, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong Province, OID.1.3.6.1.4.1.311.60.2.1.3=CN",
+                                           "signerThumbprint":  "2241B013E2D6B9AAD7590E8056BF5E17CB1C795B"
+                                       }
+                  },
+                  {
+                      "id":  "workbuddy_global",
+                      "kind":  "desktop_service",
+                      "path":  "C:\\Users\\han\\WorkBuddy\\WorkBuddyAI\\WorkBuddyAI.exe",
+                      "exists":  true,
+                      "bytes":  204590360,
+                      "sha256":  "15880ca7859f417bf8a6a639bacd1da6b63ced83fbead710317dad38b8f6fcc8",
+                      "publicFileVersion":  {
+                                                "productName":  "WorkBuddy AI",
+                                                "productVersion":  "5.9.4.0",
+                                                "fileVersion":  "5.9.4",
+                                                "companyName":  "Tencent Technology (Shenzhen) Company Limited"
+                                            },
+                      "authenticode":  {
+                                           "querySucceeded":  true,
+                                           "status":  "Valid",
+                                           "signerSubject":  "CN=Tencent Technology (Shenzhen) Company Limited, O=Tencent Technology (Shenzhen) Company Limited, L=Shenzhen, S=Guangdong Province, C=CN, SERIALNUMBER=9144030071526726XG, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong Province, OID.1.3.6.1.4.1.311.60.2.1.3=CN",
+                                           "signerThumbprint":  "2241B013E2D6B9AAD7590E8056BF5E17CB1C795B"
+                                       }
+                  },
+                  {
+                      "id":  "zcode",
+                      "kind":  "desktop_service",
+                      "path":  "C:\\Users\\han\\AppData\\Local\\Programs\\ZCode\\ZCode.exe",
+                      "exists":  true,
+                      "bytes":  246332312,
+                      "sha256":  "7aca3aeab3d3b775a39cf9cbe048b30a80278d3527b6fbcfd0e7b00f79a2c326",
+                      "publicFileVersion":  {
+                                                "productName":  "ZCode",
+                                                "productVersion":  "3.17.2.9661",
+                                                "fileVersion":  "3.17.2.9661",
+                                                "companyName":  "ZCode"
+                                            },
+                      "authenticode":  {
+                                           "querySucceeded":  true,
+                                           "status":  "Valid",
+                                           "signerSubject":  "CN=北京智谱华章科技股份有限公司, O=北京智谱华章科技股份有限公司, S=北京市, C=CN, SERIALNUMBER=91110108MA01KP2T5U, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=海淀区, OID.1.3.6.1.4.1.311.60.2.1.2=北京市, OID.1.3.6.1.4.1.311.60.2.1.3=CN",
+                                           "signerThumbprint":  "6F7B147DC610F91425750D2449C46002C3385BCF"
+                                       }
+                  },
+                  {
+                      "id":  "craft",
+                      "kind":  "desktop_service",
+                      "path":  "C:\\Users\\han\\AppData\\Local\\Programs\\@craft-agentelectron\\Craft Agents.exe",
+                      "exists":  true,
+                      "bytes":  210903040,
+                      "sha256":  "ca8f5aec86141cde2956be8b842a521c983ebcbe2c1dc8e88ca7ac4392a5f7c0",
+                      "publicFileVersion":  {
+                                                "productName":  "Craft Agents",
+                                                "productVersion":  "0.15.9.0",
+                                                "fileVersion":  "0.15.9",
+                                                "companyName":  "Craft Docs Ltd."
+                                            },
+                      "authenticode":  {
+                                           "querySucceeded":  true,
+                                           "status":  "NotSigned",
+                                           "signerSubject":  null,
+                                           "signerThumbprint":  null
+                                       }
+                  },
+                  {
+                      "id":  "trae",
+                      "kind":  "desktop_service",
+                      "path":  "C:\\Users\\han\\AppData\\Local\\Programs\\Trae\\Trae.exe",
+                      "exists":  true,
+                      "bytes":  214728496,
+                      "sha256":  "35be21aba3c0f4d85e1de007976d4ae69fcf92b653684589c5c2565673a0f4c9",
+                      "publicFileVersion":  {
+                                                "productName":  "Trae",
+                                                "productVersion":  "3.6.13",
+                                                "fileVersion":  "2.3.99397",
+                                                "companyName":  "SPRING (SG) PTE. LTD."
+                                            },
+                      "authenticode":  {
+                                           "querySucceeded":  true,
+                                           "status":  "Valid",
+                                           "signerSubject":  "CN=SPRING (SG) PTE. LTD, O=SPRING (SG) PTE. LTD, L=Singapore, C=SG, SERIALNUMBER=202325236K, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.3=SG",
+                                           "signerThumbprint":  "54651F859DD2D0CA549DDEC1DCEE2683B975AECC"
+                                       }
+                  },
+                  {
+                      "id":  "claude_app_bootstrapper",
+                      "kind":  "installer_bootstrapper_only",
+                      "path":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\claude-official-prepared-20261111-source\\Claude-Store-Installer.exe",
+                      "exists":  true,
+                      "bytes":  813088,
+                      "sha256":  "8ab145dab22a698105f20e10b182e50d1c2422e2be1818349efadbb06e118a48",
+                      "publicFileVersion":  {
+                                                "productName":  "Store Installer",
+                                                "productVersion":  "22609.1501.4.0+2ee876db97d84a09e734c9def92bfc09c32ab513",
+                                                "fileVersion":  "22609.1501.4.0",
+                                                "companyName":  "Microsoft Corporation"
+                                            },
+                      "authenticode":  {
+                                           "querySucceeded":  true,
+                                           "status":  "Valid",
+                                           "signerSubject":  "CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+                                           "signerThumbprint":  "0F7E3531DB084A3D45759670B7699E53985E8742"
+                                       }
+                  }
+              ],
+    "extensions":  [
+                       {
+                           "id":  "saoudrizwan.claude-dev",
+                           "path":  "C:\\Users\\han\\.vscode\\extensions\\saoudrizwan.claude-dev-4.1.26\\package.json",
+                           "exists":  true,
+                           "manifestSha256":  "4594e32552aeeaa9e0b056b3640c0572fec6ec10394f7e02a5a19b004b563df3",
+                           "publicId":  "saoudrizwan.claude-dev",
+                           "version":  "4.1.26"
+                       },
+                       {
+                           "id":  "rooveterinaryinc.roo-cline",
+                           "path":  "C:\\Users\\han\\.vscode\\extensions\\rooveterinaryinc.roo-cline-3.54.0\\package.json",
+                           "exists":  true,
+                           "manifestSha256":  "d0779f28250fc06d48c849894d37b627ce7069c0d24a57f10938f7dc233a3c97",
+                           "publicId":  "rooveterinaryinc.roo-cline",
+                           "version":  "3.54.0"
+                       },
+                       {
+                           "id":  "kilocode.kilo-code",
+                           "path":  "C:\\Users\\han\\.vscode\\extensions\\kilocode.kilo-code-7.8.27-win32-x64\\package.json",
+                           "exists":  true,
+                           "manifestSha256":  "e604df5b42a7fc179457182fa4af309711b6c2a1cf7266799af982d44bb1b50c",
+                           "publicId":  "kilocode.kilo-code",
+                           "version":  "7.8.27"
+                       },
+                       {
+                           "id":  "anthropic.claude-code",
+                           "path":  "C:\\Users\\han\\.vscode\\extensions\\anthropic.claude-code-2.1.322-win32-x64\\package.json",
+                           "exists":  true,
+                           "manifestSha256":  "68b76b5e298c35d79cbc6e54c3e538d57068010e594246602b957b0f7e2eeb3b",
+                           "publicId":  "anthropic.claude-code",
+                           "version":  "2.1.322"
+                       }
+                   ],
+    "workBuddyRegistrations":  [
+                                   {
+                                       "guid":  "BFD312E9-1019-4F57-9F44-F86246833B50",
+                                       "registryPath":  "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\BFD312E9-1019-4F57-9F44-F86246833B50",
+                                       "displayName":  "WorkBuddy 5.9.3",
+                                       "displayVersion":  "5.9.3",
+                                       "publisher":  "Tencent Technology (Shenzhen) Company Limited",
+                                       "displayIcon":  "C:\\Users\\han\\software\\workbuddy\\WorkBuddy.exe,0",
+                                       "urlInfoAbout":  "https://www.workbuddy.cn",
+                                       "urlUpdateInfo":  "https://www.workbuddy.cn"
+                                   },
+                                   {
+                                       "guid":  "C02C88CB-5DAE-4330-AEC1-572CFD048A59",
+                                       "registryPath":  "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\C02C88CB-5DAE-4330-AEC1-572CFD048A59",
+                                       "displayName":  "WorkBuddy AI 5.9.4",
+                                       "displayVersion":  "5.9.4",
+                                       "publisher":  "Tencent Technology (Shenzhen) Company Limited",
+                                       "displayIcon":  "C:\\Users\\han\\WorkBuddy\\WorkBuddyAI\\WorkBuddyAI.exe,0",
+                                       "urlInfoAbout":  "https://www.workbuddy.ai",
+                                       "urlUpdateInfo":  "https://www.workbuddy.ai"
+                                   }
+                               ],
+    "claudeApplicationRegistration":  {
+                                          "officialFamilies":  [
+                                                                   "AnthropicPBC.Claude_fnn82j28hfe8t",
+                                                                   "Claude_pzs8sxrjxfjjc"
+                                                               ],
+                                          "currentUserQuerySucceeded":  true,
+                                          "currentUserPackages":  [
+
+                                                                  ],
+                                          "startAppsQuerySucceeded":  true,
+                                          "startApps":  [
+
+                                                        ],
+                                          "allUsersQuerySucceeded":  false,
+                                          "allUsersMatchingCount":  null,
+                                          "allUsersPackages":  [
+
+                                                               ],
+                                          "queryErrors":  [
+                                                              {
+                                                                  "query":  "allUsersPackages",
+                                                                  "errorType":  "System.UnauthorizedAccessException"
+                                                              }
+                                                          ],
+                                          "bootstrapperIsApplicationPayload":  false
+                                      },
+    "profileExistenceOnly":  [
+                                 {
+                                     "relativePath":  ".codex",
+                                     "exists":  true,
+                                     "contentsRead":  false
+                                 },
+                                 {
+                                     "relativePath":  ".codex\\config.toml",
+                                     "exists":  true,
+                                     "contentsRead":  false
+                                 },
+                                 {
+                                     "relativePath":  ".codex\\auth.json",
+                                     "exists":  true,
+                                     "contentsRead":  false
+                                 },
+                                 {
+                                     "relativePath":  ".claude",
+                                     "exists":  true,
+                                     "contentsRead":  false
+                                 },
+                                 {
+                                     "relativePath":  ".claude\\settings.json",
+                                     "exists":  true,
+                                     "contentsRead":  false
+                                 },
+                                 {
+                                     "relativePath":  ".claude.json",
+                                     "exists":  true,
+                                     "contentsRead":  false
+                                 },
+                                 {
+                                     "relativePath":  ".qwen",
+                                     "exists":  false,
+                                     "contentsRead":  false
+                                 },
+                                 {
+                                     "relativePath":  ".openclaw",
+                                     "exists":  false,
+                                     "contentsRead":  false
+                                 },
+                                 {
+                                     "relativePath":  ".hermes",
+                                     "exists":  false,
+                                     "contentsRead":  false
+                                 },
+                                 {
+                                     "relativePath":  ".workbuddy",
+                                     "exists":  true,
+                                     "contentsRead":  false
+                                 },
+                                 {
+                                     "relativePath":  ".workbuddy-ai",
+                                     "exists":  true,
+                                     "contentsRead":  false
+                                 },
+                                 {
+                                     "relativePath":  ".orchester",
+                                     "exists":  true,
+                                     "contentsRead":  false
+                                 }
+                             ],
+    "privateProfileContentsRead":  false,
+    "privateEnvironmentOrArgvRead":  false,
+    "newVersionCommands":  0,
+    "installationCommands":  0,
+    "updateCommands":  0,
+    "guiStarts":  0,
+    "authOrSetupCalls":  0,
+    "modelCalls":  0,
+    "processSignals":  0
+}

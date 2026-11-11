@@ -1,0 +1,798 @@
+{
+  "schemaVersion": 1,
+  "status": "bounded-final-json-archive-review-passed-with-disclosed-earlier-scope-error",
+  "reviewer": "/root/docs_delivery/epoch3_archive_review",
+  "reviewedAtUtc": "2026-11-11T14:46:08.418300+00:00",
+  "reviewScope": "Installation/source receipts, correct Windows Android and typed Studio safe evidence, final pre-report archive JSON/provenance/links/requirement boundaries. Producer product tests were not rerun.",
+  "preExternalReportSnapshot": true,
+  "reportStoredOutsideArchive": true,
+  "combinedUniqueTargetedSafeOriginalJsonCount": 52,
+  "finalChecks": {
+    "frozenDocHashMatchesParent": true,
+    "frozenManifestHashMatchesCorrectedParent": true,
+    "archive265With258JsonAnd264ManifestEntries": true,
+    "safeJsonManifestHashSizeTypePathChecksPass": true,
+    "all253OriginDeclaredBindingsAnd220AvailableSafeJsonOriginalsPass": true,
+    "eightDerivedSafeJsonArchiveHashesPass": true,
+    "all123MarkdownAnd71ReceiptLinksFor13RequirementsResolve": true,
+    "allListedSecretPatternsZeroIn258JsonPlusMarkdown": true,
+    "nonJsonFinalPassSkippedBeforeContentRead": true,
+    "installationSource42ChecksPass": true,
+    "correctWindowsAndroid8ChecksPass": true,
+    "typedStudio2ChecksPass": true,
+    "correctedDerivedEpochWordingMatchesSources": true,
+    "currentIncompleteNativeUiWindowsGuiAndNoAllPlatformCompletion": true
+  },
+  "finalChecksAllPass": true,
+  "installationSource42Review": {
+    "reviewedSourceAtUtc": "2026-11-11T14:19:00.023220+00:00",
+    "reviewer": "/root/docs_delivery/epoch3_archive_review",
+    "sourceGroups": [
+      {
+        "referrerPath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/safe-evidence-manifest.json",
+        "declaredListCount": 10,
+        "everyEntryRehashedAndParsed": true
+      },
+      {
+        "referrerPath": "/home/han/.local/state/orchester-delivery/20261111/claude-current-support-primary/safe-evidence-manifest.json",
+        "declaredListCount": 3,
+        "everyEntryRehashedAndParsed": true
+      },
+      {
+        "referrerPath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/final-wsl-install-safe.json",
+        "declaredListCount": 15,
+        "everyEntryRehashedAndParsed": true
+      },
+      {
+        "referrerPath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/final-primary-matrix-safe.json",
+        "declaredListCount": 4,
+        "everyEntryRehashedAndParsed": true
+      }
+    ],
+    "uniqueSafeSourceJsonCount": 42,
+    "sourceReceipts": [
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/claude-current-support-primary/final-current-support-primary-safe.json",
+        "sha256": "9104bd92f7c83b476d7e20d662272cdbdf32934d07724c391641e00841d0559c",
+        "bytes": 3490,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/claude-current-support-primary/safe-evidence-manifest.json",
+        "sha256": "a9cc2097f81269e7dc9b47a1c4ddb305dd9605e1a9260751862ba5aa367b0127",
+        "bytes": 658,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/claude-current-support-primary/support-primary-first-two.json",
+        "sha256": "9adfd28f587867bb92ce7d1aa5034cd21dfd5fcf4997f0f6865445cd0341bb63",
+        "bytes": 640,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/claude-current-support-primary/support-primary-third-index.json",
+        "sha256": "d285c8ad400415e37a1f321127f7f0da8056deeb629d5d62bd1b99797b953d10",
+        "bytes": 430,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/additional-primary-fetch-safe.json",
+        "sha256": "74da0a07cac1d5438e0b3f9bb6ae8f079aaf645fe4a74541a32a1a90d0919377",
+        "bytes": 2740,
+        "jsonType": "array",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/cursor-cli-version-recheck-safe.json",
+        "sha256": "50eb3183c1958b72177a3e9e2522b42ebc7d02b16a78a33aefeae51fed955c92",
+        "bytes": 441,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/desktop-api-primary-fetch-safe.json",
+        "sha256": "a3aa0db7ce24e365f27bdc2e3f9630599023a7c02abe2f7101978edb53a7bc67",
+        "bytes": 1705,
+        "jsonType": "array",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/desktop-native-checks-safe.json",
+        "sha256": "6fca3c07fcf05efae9d463a1b5c5f0e294ebcd4bdb582cfceb244f1105ce2f65",
+        "bytes": 2266,
+        "jsonType": "array",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/desktop-package-layout-safe.json",
+        "sha256": "3ed46c24ae7a309848c234614d55bfcdaaea6d4b7964354e4475f2e1d4da60a6",
+        "bytes": 647,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/desktop-user-extraction-safe.json",
+        "sha256": "601a43198ecc9c02a746f3f550f23cb46e720781dd51ce6f72f70c2a6f7acc1d",
+        "bytes": 495,
+        "jsonType": "array",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/download-receipts-safe.json",
+        "sha256": "7efad8770730ba541af963b3c720752d74949684c60316c919dfdcb2ccecbc70",
+        "bytes": 2713,
+        "jsonType": "array",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/dsh-native-cli-checks-safe.json",
+        "sha256": "e7990a448315f06a1fe7fa781d65c1615926727e67f95fd26a8e5dcd564f3b00",
+        "bytes": 1476,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/dsh-npm-install-attempt2-safe.json",
+        "sha256": "1809b6fb141807d174a3ca65577986fe1d2931ec44f29e58bad08d4dd6a54731",
+        "bytes": 645,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/dsh-npm-install-safe.json",
+        "sha256": "e39f1b4a7dc8386ab1926038fdd49d91d8493834f8ad5a717cdfd8eb2115656e",
+        "bytes": 673,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/dsh-registry-metadata-safe.json",
+        "sha256": "5145fb751f6b6f7b4f2556d8d4a7ea927a192a1ab3d73b347f0c3b4e44638373",
+        "bytes": 1472,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/dsh-tar-public-proof-safe.json",
+        "sha256": "bf6861e5a37ec0e29e577801fdfc3750f5dbcdb5d0da1dff805931ae22028fa2",
+        "bytes": 4288,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/final-primary-matrix-safe.json",
+        "sha256": "4048348aa93d5f7f73a402f8b776b557745d93fbe45ccb1a8747c8e32615a6bf",
+        "bytes": 7409,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/final-wsl-install-safe.json",
+        "sha256": "f1ef551e24e0fd68e81aa2e61d6f6386716b3444387d33593e7f4d60989cda59",
+        "bytes": 8184,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/installed-known-paths-safe.json",
+        "sha256": "53ec73ae26f9f33cab36b087e1947a0bb6ad8069080600c109ba28f4852580d9",
+        "bytes": 3428,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/last-primary-fetch-safe.json",
+        "sha256": "a040cfeca58af3039c89190a408c19fb85824ae7747b42277a8f23b50e1634c8",
+        "bytes": 2506,
+        "jsonType": "array",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/launcher-icons-primary-safe.json",
+        "sha256": "dcd3d0d7e28ee3922f4378de24e41e964e044af81a17a1abd1fe48b9b3ae7e05",
+        "bytes": 850,
+        "jsonType": "array",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/owned-cache-cleanup-safe.json",
+        "sha256": "3b83a486c8efcb77d9250101daac9cbe41a7091d87a69d0be6cfa4efa484d4cc",
+        "bytes": 1389,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/primary-fetch-safe.json",
+        "sha256": "bdf0fa063465848f082eba7c8b70f6fbf5a0f999a7319741949f727146af5ce1",
+        "bytes": 2826,
+        "jsonType": "array",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/legacy-platform-primary/user-launchers-and-icons-safe.json",
+        "sha256": "cd591e1ff095cc0e54bd3e7e6f7aea90cc6f84a9a130f86bbaaeaaa027daa86f",
+        "bytes": 2851,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/native-ui-launcher/session1-disconnected-terminal/independent-bounded-review-safe.json",
+        "sha256": "6be6a7af55e3216c482b97987a69661f8df79dc091624d9eee6c7b9e3d5256d9",
+        "bytes": 1934,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/native-ui-launcher/session1-disconnected-terminal/session-enumeration-windows-owner-current-safe.json",
+        "sha256": "8602ceeea6f081767dad7ac5fd1f11bc49dda0ba47f9e7b444c45210bd445941",
+        "bytes": 4949,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/final-official-install-status-safe.json",
+        "sha256": "443b579aa2e03a7b4ec04c15c4f6e055c7130e86f24663317209a513dc1822e8",
+        "bytes": 3937,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/current-filesystem-public-matrix-safe.json",
+        "sha256": "9d4fd644d4254ddcfda8518a7be2d97d5f52e94908c9fb16b2ec3c7987523c1b",
+        "bytes": 14038,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/current-public-windows-platform-payloads-safe.json",
+        "sha256": "376885e9d9856cf170e7ce36f299241bdde61c1131167887a17c0658fb5afa87",
+        "bytes": 1273,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/final-current-windows-installation-matrix-safe.json",
+        "sha256": "320d93efc8e4d0be8847bfe5600c3835a31211311e1493f018605d923d7a088c",
+        "bytes": 24809,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/native-execution-provenance-safe.json",
+        "sha256": "bdcc7de5e9d444a06f61bbee8bbf874d485fdfc2c844f80906c4962a66ec00b5",
+        "bytes": 1539,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/native-inputs-safe.json",
+        "sha256": "83834978e75441cb6033d9f0b6eda6d0a35bc98fce1cc7d816cac8ca1281a01f",
+        "bytes": 2911,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/native-query-plan-safe.json",
+        "sha256": "f96c287364c1fb43a4b9469c7c5cdb05433a999cfd4a4865a16a591ea7f9abd5",
+        "bytes": 663,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/retained-owner-attempt1/native-execution-attempt-safe.json",
+        "sha256": "adb01875f577b3a9d9ab78f9d23055ccb9208ec4075a89c03db275480b2ea0a0",
+        "bytes": 336,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/retained-owner-attempt1/native-inputs-safe.json",
+        "sha256": "83834978e75441cb6033d9f0b6eda6d0a35bc98fce1cc7d816cac8ca1281a01f",
+        "bytes": 2911,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/retained-owner-attempt2-utf8/native-inputs-safe.json",
+        "sha256": "83834978e75441cb6033d9f0b6eda6d0a35bc98fce1cc7d816cac8ca1281a01f",
+        "bytes": 2911,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/retained-owner-attempt2-utf8/native-public-matrix-safe.json",
+        "sha256": "dc23cb593da21e78825a680c51cfd10cc8687479bbc8a35ab7d7ad1868079037",
+        "bytes": 28809,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-current-matrix/safe-evidence-manifest.json",
+        "sha256": "d63cb1eaaa25098d11273cd54ed843dfcad119c1d72772a7e5b7f661cdfae447",
+        "bytes": 2472,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/workbuddy/official-global-download-ui-platform-proof-safe.json",
+        "sha256": "30843d91ff140928254acd5f9bb10ac65c079984f3fe1af0ee44f6280a430e0c",
+        "bytes": 1703,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/workbuddy/official-global-platform-structured-data-safe.json",
+        "sha256": "fa68d622e47f5037883f002e687a128f804e336a64a4696d4407230d5a7b04dc",
+        "bytes": 604,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/wsl-current-matrix/current-native-installation-matrix-safe.json",
+        "sha256": "ba384b5d57ecbb1604f6f4d8e4958e2bbbc8d5e9dd5772fd771a57676c0d075e",
+        "bytes": 27092,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      },
+      {
+        "sourcePath": "/home/han/.local/state/orchester-delivery/20261111/root-docs-review/second-step-delivery-safe.json",
+        "sha256": "fffad97c2b6765fb22c17a35bd742af7f38bb815af0e6cd0056f3d98c923402c",
+        "bytes": 601,
+        "jsonType": "object",
+        "declaredShaMatches": true,
+        "declaredBytesMatch": true
+      }
+    ],
+    "checks": {
+      "safeJsonHashesBytesTypesPass": true,
+      "windows18VerificationUnits17UniqueProducts": true,
+      "windows9EntryHashesNativeSnapshotHistoricalExact": true,
+      "windows8PublicNpmManifestsMatchSnapshot": true,
+      "windows9HistoricalVersionExit0FreshVersionFalseFullPayloadFalse": true,
+      "windows4ExtensionIdVersionManifestHashExactFullPayloadFalse": true,
+      "windowsNativeInputsAndResultHashBound": true,
+      "windowsAttempt1Exit1Attempt2Utf8Exit0Retained": true,
+      "claudeKnown2FamiliesCurrentUser0StartApps0AllUsersDeniedNull": true,
+      "openCodeBunPE144Application1195Distinct": true,
+      "craftNotSignedOpenclawUnknownErrorLiteral": true,
+      "wslOld19Entries16UniquePlus3LegacyEquals19Distinct": true,
+      "wslLegacyVersionsCorrect": true,
+      "wsl3LauncherSyntaxExit0": true,
+      "wslActualCursorVersionDshVersionHelpExit0": true,
+      "wslLogicalCache671646227OwnedNotPhysical": true,
+      "claudeOfficial3UrlsNoHttpNoUnsupportedClaim": true,
+      "wtsSafeCopyHashBound": true,
+      "wtsSameUserDisconnectedNoActiveCandidateNoVisualAcceptance": true,
+      "priorDeliverySafeReceipt828ad10Main4d7d95Push0Comparisons219Production71": true
+    },
+    "sourceChecksAllPass": true,
+    "priorDeliveryScope": "Historical safe receipt claims were checked. Reviewer executed no Git command and did not recheck prior Git objects.",
+    "reviewerActions": {
+      "safeJsonReadsOnly": true,
+      "privateProfileOrSecretReads": 0,
+      "rawOfficialSourceOrBinaryReads": 0,
+      "nativeQueries": 0,
+      "launches": 0,
+      "networkRequests": 0,
+      "ADBCommands": 0,
+      "processSignals": 0,
+      "repoWrites": 0,
+      "gitCommands": 0
+    }
+  },
+  "correctWindowsAndroid8Review": {
+    "sourceRecords": [
+      {
+        "archivePath": "native/android/correct-windows-current21/native-channel-5572-attempt2/channel-target-identity-safe.json",
+        "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/native-channel-5572-attempt2/channel-target-identity-safe.json",
+        "sha256": "569cc37a84a2c82be42b49ce59f7ba12a0175b9b6db5aa5a1aafe7545b313217",
+        "bytes": 3850,
+        "validJsonObject": true,
+        "byteExactSourceAndDeclaration": true
+      },
+      {
+        "archivePath": "native/android/correct-windows-current21/correct-windows-before-final21-readonly-safe.json",
+        "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-before-final21-readonly-safe.json",
+        "sha256": "13bb9607dd56774e66f560a8ed8d99d8ac2886ea0c1c5e81839dd5f9fff09fed",
+        "bytes": 1038,
+        "validJsonObject": true,
+        "byteExactSourceAndDeclaration": true
+      },
+      {
+        "archivePath": "native/android/correct-windows-current21/correct-windows-original-five-values-safe.json",
+        "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-original-five-values-safe.json",
+        "sha256": "020604800e495eb8ea814c6614e0681223b3038beddb96bb8fdf3e68b4a5e249",
+        "bytes": 542,
+        "validJsonObject": true,
+        "byteExactSourceAndDeclaration": true
+      },
+      {
+        "archivePath": "native/android/correct-windows-current21/correct-windows-original-certificate-safe.json",
+        "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-original-certificate-safe.json",
+        "sha256": "4aea050de91a4812d619198d94ceb3f5a7ed32ca30ede52273350ce5902aedfe",
+        "bytes": 570,
+        "validJsonObject": true,
+        "byteExactSourceAndDeclaration": true
+      },
+      {
+        "archivePath": "native/android/correct-windows-current21/correct-windows-final21-install-safe.json",
+        "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-install-safe.json",
+        "sha256": "d2a917bf910dacbea5a35d152a72cdfa9932e96339b8c9ee210cb509fb48e8f0",
+        "bytes": 1569,
+        "validJsonObject": true,
+        "byteExactSourceAndDeclaration": true
+      },
+      {
+        "archivePath": "native/android/correct-windows-current21/correct-windows-final21-native-bridge-safe.json",
+        "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-native-bridge-safe.json",
+        "sha256": "7ad158baac519a67c020e85966a6529ec29e59fac7f457aa48d3cdace2200af5",
+        "bytes": 844,
+        "validJsonObject": true,
+        "byteExactSourceAndDeclaration": true
+      },
+      {
+        "archivePath": "native/android/correct-windows-current21/correct-windows-original-five-aes-and-existing-wire-attempt2-safe.json",
+        "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-original-five-aes-and-existing-wire-attempt2-safe.json",
+        "sha256": "fa7b8d3063119a05ff710283ca8ac898fe254ee791eb962ed1ebb6e654ecc8e5",
+        "bytes": 802,
+        "validJsonObject": true,
+        "byteExactSourceAndDeclaration": true
+      },
+      {
+        "archivePath": "native/android/correct-windows-current21/isolated-studio-optional-google-signin-normal-dismiss-safe.json",
+        "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/isolated-studio-optional-google-signin-normal-dismiss-safe.json",
+        "sha256": "a8b438e73637d1ef5b1bbf27489967c19a5687eecb213edb6269e72712bd11d4",
+        "bytes": 1236,
+        "validJsonObject": true,
+        "byteExactSourceAndDeclaration": true
+      }
+    ],
+    "checks": {
+      "all8SafeJsonObjectsByteExactOriginalAndDeclarations": true,
+      "currentWindowsMedium5572Server5039Bound": true,
+      "nativeQemuAndAdbListenerOwnersMatchIdentity": true,
+      "beforeUpdateOld20ApkReadonlySixRecordsNotPre20XmlByteExact": true,
+      "originalFiveAllValuesExactWithinSixExtra17379One": true,
+      "oldAndFinal21SameCertificate": true,
+      "freshFinal21AppTestInstallBothExit0RetainsSixAndOriginalFive": true,
+      "freshCorrectWindowsJUnit4Exit0InstrumentationMinus1": true,
+      "originalFiveAes5Success0FailOneOriginal7337Info200": true,
+      "optionalOwnStudioDismissPreservesMainOriginalStudioNoSyncInference": true
+    },
+    "allChecksPass": true,
+    "limits": [
+      "Safe source/archived JSON were independently rehashed; reviewer ran no ADB, JVM, installation, decryption, network, UI or native process checks.",
+      "Current native Windows Medium 5572 identity is bounded to current producer PID/birth/listener/console-name receipts; the historical pre20 absolute AVD fingerprint is not established.",
+      "Six stored records contain five original encrypted values plus one earlier task-owned 17379 extra; they are not six original devices, and original XML whole-file bytes differ from pre20.",
+      "AES receipt records five successes and zero failures; one existing original-token GET to 7337 /info returned 200/name-match. This does not test all five original credentials over the network.",
+      "Own optional Studio sign-in dialog normal dismissal is not Gradle Sync proof. Separate typed Studio Sync proof is pending; native UI 21/42, PTY, extra-record and forwarding cleanup, and wrong Linux RAM reload remain unproved."
+    ]
+  },
+  "typedStudio2Review": {
+    "sourceRecords": [
+      {
+        "archivePath": "native/android/correct-windows-current21/isolated-studio-final21-actual-project-sync-safe.json",
+        "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/isolated-studio-final21-actual-project-sync-safe.json",
+        "sha256": "6e5c9b871dfff003d8c4ce20afebb4da7b1d6155f46b3a038ae9ba562ea0f392",
+        "bytes": 3068,
+        "validJsonObject": true,
+        "sourceAndArchivedBytesExact": true,
+        "expectedShaAndSizeMatch": true
+      },
+      {
+        "archivePath": "native/android/correct-windows-current21/isolated-studio-actual-native-adb-transport-safe.json",
+        "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/isolated-studio-actual-native-adb-transport-safe.json",
+        "sha256": "24a460808580f969cb09fa35080f2a2b22f8c729f5b790205f1c6f4be846fbd5",
+        "bytes": 2052,
+        "validJsonObject": true,
+        "sourceAndArchivedBytesExact": true,
+        "expectedShaAndSizeMatch": true
+      }
+    ],
+    "checks": {
+      "bothTypedSafeJsonObjectsAndSourceArchiveExpectedHashesMatch": true,
+      "ownStudioPidBirthImageEqualsCorrectWindowsIdentity": true,
+      "actualResolveProjectSuccessImportFinished17400MillisecondsJdk21": true,
+      "selectedSafeExcerptSupportsResolve0ImportExactProjectDurationJdk": true,
+      "correct5572OnlineOwn5Native5039ConnectionsDefault5037False": true,
+      "originalStudio23276UnchangedSdkJUnitSeparateNoIDERunNoHostScreenshot": true
+    },
+    "allChecksPass": true,
+    "limits": [
+      "Approved safe JSON selected log excerpts were inspected. Raw Idea.log, private IDE configuration, JNI/JUnit stdout, process environment/argv and binaries were not read.",
+      "Producer safe receipts establish actual project resolve/import Sync 17.4 seconds and project JDK temurin-21, with online emulator-5572 and isolated native ADB5039 transport.",
+      "Four native SDK-qualified tests remain separate from IDE Run instrumentation. Host desktop screenshot and Windows GUI readiness are unavailable in the disconnected desktop; native UI 21/42, PTY and cleanup remain pending."
+    ]
+  },
+  "finalArchiveJsonOnlyReview": {
+    "reviewedAtUtc": "2026-11-11T14:46:08.418300+00:00",
+    "docPath": "/home/han/project/Orchester/docs/design/39-agentrouter-full-platform-sync.md",
+    "docSha256": "34142b92601076fe43aed705dda9e6d01bd75f67fcd8106bc17b69017da3afeb",
+    "manifestSha256": "6d38391f7625f5099a278af630a0084c8370319d6bc488c4a087776c36a47312",
+    "summarySha256": "e366b6946e46371874d5305f023b76b292c58101c69da0aaaf7eecfab221c8e8",
+    "requirementMatrixSha256": "1e99efe68b691932ce3f5dafe76a889584e1524eacf6d2f6bec09359b2063854",
+    "provenanceSha256": "4d0cadefd11d367604a3c9a6e2749f50ab1a8d87510cb96387b508ee83de075c",
+    "archiveFileCountIncludingManifest": 265,
+    "safeJsonArchiveFileCountIncludingManifest": 258,
+    "manifestListedFileCount": 264,
+    "unlistedExceptManifest": [],
+    "manifestDuplicatePaths": 0,
+    "symlinkFileCount": 0,
+    "safeJsonManifestErrors": [],
+    "excludedNonJsonArchiveCount": 7,
+    "excludedNonJsonArchiveMetadataOnly": [
+      {
+        "path": "deployments/pages/current-live/verify-icon-mappings.cjs",
+        "declaredSha256": "b09ba268a009737398aecc43de43460d781809cd6f6490e1e397f241f6829ee7",
+        "declaredBytes": 4775,
+        "present": true,
+        "sizeMetadataMatches": true,
+        "contentsReadDuringFinalJsonOnlyPass": false
+      },
+      {
+        "path": "deployments/pages/current-live/visual/pages-current-controlled-dark-grid-20261111.png",
+        "declaredSha256": "7bbc211a10b43ef79efd43b74b3e377fd2f66d11a42510da8835f786272648b0",
+        "declaredBytes": 34593,
+        "present": true,
+        "sizeMetadataMatches": true,
+        "contentsReadDuringFinalJsonOnlyPass": false
+      },
+      {
+        "path": "deployments/pages/current-live/visual/pages-current-desktop-grid-20261111.png",
+        "declaredSha256": "9191ea0d2f6048f7d497c0bdbf4bd6afd50e937f97b5b53331d36732e9417b60",
+        "declaredBytes": 34462,
+        "present": true,
+        "sizeMetadataMatches": true,
+        "contentsReadDuringFinalJsonOnlyPass": false
+      },
+      {
+        "path": "deployments/pages/current-live/visual/pages-current-phone-grid-20261111.png",
+        "declaredSha256": "4d05b7b10b76d904a2fe990d674ab6fb1d43e4e84106556bef67760af6606df2",
+        "declaredBytes": 41086,
+        "present": true,
+        "sizeMetadataMatches": true,
+        "contentsReadDuringFinalJsonOnlyPass": false
+      },
+      {
+        "path": "deployments/pages/visual/site-final21-dark-grid.png",
+        "declaredSha256": "6e69b38a8e1ee8a3255f283128b8c453ea4572e59de8fafd033df2a8e75e4a82",
+        "declaredBytes": 34592,
+        "present": true,
+        "sizeMetadataMatches": true,
+        "contentsReadDuringFinalJsonOnlyPass": false
+      },
+      {
+        "path": "deployments/pages/visual/site-final21-live-phone-grid.png",
+        "declaredSha256": "868f817616162f74cae61531d6ef191e1caf4554f272a01ff41b593b8ceb5e49",
+        "declaredBytes": 41084,
+        "present": true,
+        "sizeMetadataMatches": true,
+        "contentsReadDuringFinalJsonOnlyPass": false
+      },
+      {
+        "path": "tests/backend/workbuddy-editions/first-compile-failure.log",
+        "declaredSha256": "c02a062410c3ace2e102463b24f013a5d59b3d81832b8fb7b7aff2339fa86bd8",
+        "declaredBytes": 935,
+        "present": true,
+        "sizeMetadataMatches": true,
+        "contentsReadDuringFinalJsonOnlyPass": false
+      }
+    ],
+    "selectedOriginRecordCount": 253,
+    "availableOriginalMetadataCount": 226,
+    "historicalMissingOriginalMetadataCount": 27,
+    "availableSafeJsonOriginalContentVerifiedCount": 220,
+    "historicalMissingSafeJsonOriginalCount": 26,
+    "existingNonJsonSourceContentSkippedCount": 6,
+    "existingNonJsonSourceArchivePaths": [
+      "deployments/pages/visual/site-final21-dark-grid.png",
+      "deployments/pages/visual/site-final21-live-phone-grid.png",
+      "deployments/pages/current-live/verify-icon-mappings.cjs",
+      "deployments/pages/current-live/visual/pages-current-controlled-dark-grid-20261111.png",
+      "deployments/pages/current-live/visual/pages-current-desktop-grid-20261111.png",
+      "deployments/pages/current-live/visual/pages-current-phone-grid-20261111.png"
+    ],
+    "safeJsonOriginalErrors": [],
+    "safeJsonAndDeclaredNonJsonProvenanceErrors": [],
+    "derivedSafeJsonReceiptCount": 8,
+    "manifestOnlyRootMetadataPaths": [
+      "sources/icons/a96a06e-current-24-assets.json",
+      "sources/receipt-provenance.json",
+      "summary.json"
+    ],
+    "markdownLocalLinkCount": 123,
+    "brokenMarkdownLinks": [],
+    "requirementCount": 13,
+    "requirementEvidenceLinkCount": 71,
+    "brokenRequirementEvidenceLinks": [],
+    "safeJsonAndMdSecretPatternCounts": {
+      "privateKeyPem": 0,
+      "openAISecret": 0,
+      "githubToken": 0,
+      "awsAccessKey": 0,
+      "jwt": 0,
+      "rawWindowsUserSid": 0
+    },
+    "safeJsonAndMdSecretPatternScanFileCount": 259,
+    "summaryCurrentEpochStatus": "in-progress-not-final-platform-delivery",
+    "currentAndroidActualIDESyncVerified": true,
+    "currentAndroidTestEndpointHost": "Windows Medium_Phone_API_37.0 emulator-5572 through isolated native ADB5039; exact current target identity proved",
+    "currentAndroidNativeUI21Providers42ImagesVerified": false,
+    "currentWindowsInteractiveReadinessVerified": false,
+    "requirementStatuses": [
+      {
+        "id": "catalog_scope",
+        "status": "verified-current-source",
+        "remainingCount": 0
+      },
+      {
+        "id": "official_icons",
+        "status": "verified-source-and-pages-native-pending",
+        "remainingCount": 1
+      },
+      {
+        "id": "separate_workbuddy",
+        "status": "verified-code-ui-original-installations",
+        "remainingCount": 1
+      },
+      {
+        "id": "tidy_code_and_folders",
+        "status": "verified-current-source",
+        "remainingCount": 0
+      },
+      {
+        "id": "sync_frontend_surfaces",
+        "status": "verified-artifact-and-pages-native-pending",
+        "remainingCount": 2
+      },
+      {
+        "id": "desktop_reinstall",
+        "status": "core-build-backup-file-preparation-and-temporary-http-verified-current-original-profile-backup-pending",
+        "remainingCount": 3
+      },
+      {
+        "id": "windows_agents",
+        "status": "current17unique-native-matrix-verified-claude-payload-and-legacy-windows-owner-final-pending",
+        "remainingCount": 2
+      },
+      {
+        "id": "wsl_agents",
+        "status": "nineteen-distinct-products-native-installation-scopes-verified-official-desktop-gaps",
+        "remainingCount": 2
+      },
+      {
+        "id": "android_studio",
+        "status": "actual-correct-windows-studio-sync-native-junit4-and-original-data-verified-ui-pty-cleanup-pending",
+        "remainingCount": 3
+      },
+      {
+        "id": "linux_service",
+        "status": "verified-current-deployment",
+        "remainingCount": 0
+      },
+      {
+        "id": "parallelism",
+        "status": "verified-distinct-observations",
+        "remainingCount": 0
+      },
+      {
+        "id": "cleanup",
+        "status": "verified-exact-selected-cleanups-history-limited",
+        "remainingCount": 0
+      },
+      {
+        "id": "git_steps",
+        "status": "two-prior-archive-steps-delivered-current-installation-epoch-awaits-parent",
+        "remainingCount": 1
+      }
+    ],
+    "limits": [
+      "Final pass skips non-JSON archive/source bytes before any content read. Their presence, size metadata and manifest/provenance declared hash chains are checked only.",
+      "Missing historical originals are not reconstructed. Derived safe JSON hashes/sizes are verified without repeating their source derivation.",
+      "Zero matches covers only listed credential/SID patterns in safe JSON and the Markdown document; it does not establish arbitrary absence of secrets."
+    ]
+  },
+  "derivedEpochWordingCorrections": {
+    "resolved": true,
+    "priorSnapshotManifestSha256": "26e433040951435db3a24b7dc8d7e5bb9a5a306b957f9679021928579f47d5aa",
+    "finalSnapshotManifestSha256": "6d38391f7625f5099a278af630a0084c8370319d6bc488c4a087776c36a47312",
+    "resolvedItems": [
+      "Previous Linux5554 host and unverified historical Windows AVD identity are now earlierDefault5554 fields; currentAndroidTestEndpointHost describes native Windows Medium5572 through isolated ADB5039.",
+      "Own optional Studio Google startup-dialog dismissal is explicitly not Sync proof; actual 17400ms Sync is separately verified.",
+      "Android requirement removes stale Sync-pending wording and preserves native UI21/42, PTY, extra-record/forwarding cleanup and wrong Linux RAM reload pending.",
+      "Provenance source epoch boundary distinguishes correct Windows install/JUnit4/original-five AES/one7337 wire/actual IDE Sync from nativeUI/PTy/cleanup/runtime18/reinstallation pending."
+    ],
+    "originalReceiptContentsModifiedByCorrection": false
+  },
+  "scopeErrorDisclosure": {
+    "NonJsonArchiveHashReadCount": 7,
+    "countMeaning": "Unique already-archived public paths whose bytes were read for hashes during the intermediate pass.",
+    "publicPngArchivePathCount": 5,
+    "publicScriptArchivePathCount": 1,
+    "publicHistoricalCompileFailureLogArchivePathCount": 1,
+    "NonJsonSourceReadCount": 0,
+    "PrivateReadCount": 0,
+    "nonJsonContentPrintedOrCopied": false,
+    "cause": "The intermediate script performed archive hash reads before checking the .json suffix.",
+    "correction": "Final pass checks suffix before any content read and skips non-JSON source/archive bytes.",
+    "productTestFailureOrSecretReadClaimed": false,
+    "strictJsonOnlyScopeFollowedThroughoutReview": false,
+    "finalPassNonJsonArchiveContentReadCount": 0
+  },
+  "reviewerTotalActions": {
+    "GitCommands": 0,
+    "RepoWrites": 0,
+    "NativeQueries": 0,
+    "ADBCommands": 0,
+    "NetworkRequests": 0,
+    "ProductLaunches": 0,
+    "ProcessSignals": 0,
+    "PrivateReadCount": 0,
+    "NonJsonSourceReadCount": 0,
+    "NonJsonArchiveHashReadCount": 7
+  },
+  "allPlatformCompletionClaimed": false,
+  "producerRuntimeAndGitExitCodesIndependentlyReexecuted": false,
+  "materialLimits": [
+    "Windows18 units/17 unique comprise9CLI+4extensions+5desktop;17 unique are16 AgentRouter products plusWorkBuddyGlobal. CLI current9 entry hashes and8 public npm manifests associate historical actual version exit0; no fresh runtime or complete payload identity claim. Extensions bind only public ID/version/manifest hash.",
+    "Claude Windows current-user two-family registration0 and StartApps0 are bounded; all-users access denied yields null, not whole-machine absence. Microsoft Store bootstrapper is not Claude application payload; applicable silent flags remain unverified.",
+    "OpenCode PE Bun1.4.4 is runtime metadata distinct from application1.19.5. Craft Authenticode NotSigned and OpenClaw .mjs UnknownError remain literal.",
+    "WSL earlier19 verification units/16 unique plus3 legacy installations produce19 distinct products. Cursor3.29.15, Antigravity Desktop2.31.0 and official DeepSeek Harness Web/CLI0.2.2-rc.1 are separately named; Antigravity IDE2.6 is not installed or conflated.",
+    "WSL three launcher syntax checks exit0. Actual installed-launcher runtime checks are Cursor --version and dsh --version/--help; Antigravity has native ELF/ldd/ElectronRunAsNode and public application-version evidence, without an Antigravity launcher version invocation.",
+    "First Windows UTF8-independent matrix failure1 then success0, first Cursor CLI1 then recheck0 and first DeepSeek npm1 then isolated-config attempt2 success0 are preserved.",
+    "DeepSeek Linux Desktop is explicitly unsupported in the primary safe receipt while its official Harness Web/CLI is installed as a distinct product. WorkBuddyGlobal current official Linux usable package/profile isolation remains unavailable/unverified, not a permanent policy claim. Three Claude official support URLs yielded no HTTP page body; Linux support remains unverified, not unsupported.",
+    "671646227 logical bytes is owned rebuildable cache removal; no C physical-free-space or WSL VHDX physical-reclaim claim. Existing Windows Cursor/Antigravity public metadata retention is the producer receipt claim.",
+    "Current Windows Medium5572 native identity precedes writes; six encrypted records retain five original values plus one earlier owned17379 extra. Current whole XML is not pre20 byte-exact, and historical pre20 absolute AVD fingerprint remains unlocated. No private XML, keystore or credential values were read by reviewer.",
+    "Fresh correct-Windows app/test install exit0 and native SDK-qualified JUnit4 exit0/instrumentationCode-1 are safe producer proofs. Five original AES decryptions succeeded/zero failed; only one original-token7337 /info GET200/name-match is proven, not all five credentials over the network.",
+    "Actual typed Studio Sync is17.4s/temurin21 with correct5572 online and five own native5039 loopback connections/default5037 false. IDE Run instrumentation and host desktop screenshot are not proven. Approved safe selected log excerpts were inspected; full Idea.log and raw JUnit stdout were not read.",
+    "WTS proves same-user disconnected Session1 and no same-user Active candidate at observation; no whole-host no-login claim or GUI/tray acceptance. Windows runtime18/reinstallation, native UI21/42, PTY, owned extra/forwarding/process cleanup and wrong Linux RAM reload remain pending.",
+    "253 origin records comprise226 existing originals by metadata and27 historical missing originals. Only220 existing safe JSON originals were content-rehashed in the final pass; six existing non-JSON sources were skipped, and the27 missing originals include26JSON plus one historical log. Eight derived safe JSON archive hashes are checked without repeating derivation.",
+    "Secret pattern zero matches applies only to the six named patterns scanned in258 safe archive JSON files plus the Markdown document. It does not prove arbitrary secret absence or certify uninspected non-JSON content.",
+    "Historical prior218archive+MD219 Git blob/push/main and production71 claims were reviewed from the safe receipt. Reviewer executed no Git/native/ADB/network/product operation. The earlier seven archived public non-JSON hash reads are explicitly disclosed; final pass skipped them before content reads."
+  ]
+}
