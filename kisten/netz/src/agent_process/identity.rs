@@ -232,7 +232,9 @@ fn desktop_provider(exe: &str) -> Option<&str> {
     if basename(exe) == "claude"
         && (exe.contains("/anthropicclaude/")
             || exe.split('/').any(|component| {
-                component.starts_with("claude_") && component.ends_with("__pzs8sxrjxfjjc")
+                (component.starts_with("claude_") && component.ends_with("__pzs8sxrjxfjjc"))
+                    || (component.starts_with("anthropicpbc.claude_")
+                        && component.ends_with("__fnn82j28hfe8t"))
             }))
     {
         return Some("claude_app");
@@ -1046,12 +1048,77 @@ mod tests {
     }
 
     #[test]
+    fn installed_linux_desktop_entrypoints_agree_locally_and_in_wsl() {
+        let fixtures = serde_json::json!([
+            {"name":"@craft-agentelectron", "exe":"/opt/craft-agents/squashfs-root/@craft-agentelectron", "args":["/opt/craft-agents/squashfs-root/@craft-agentelectron"], "provider":"craft"},
+            {"name":"@craft-agentele", "exe":"/opt/craft-agents/squashfs-root/@craft-agentelectron", "args":["/opt/craft-agents/squashfs-root/@craft-agentelectron"], "provider":"craft"},
+            {"name":"MainThread", "exe":"/opt/craft-agents/squashfs-root/@craft-agentelectron", "args":["/opt/craft-agents/squashfs-root/@craft-agentelectron"], "provider":"craft"},
+            {"name":"@craft-agentele", "exe":"/opt/craft-agents/squashfs-root/@craft-agentelectron", "args":["/opt/craft-agents/squashfs-root/@craft-agentelectron", "--type=renderer"], "provider":null},
+            {"name":"@craft-agentele", "exe":"/opt/craft-agents/squashfs-root/@craft-agentelectron", "args":["/opt/craft-agents/squashfs-root/@craft-agentelectron", "/opt/craft-agents/squashfs-root/resources/app/dist/main.cjs"], "provider":null},
+            {"name":"@craft-agentele", "exe":"/opt/unrelated/@craft-agentele", "args":["/opt/unrelated/@craft-agentele"], "provider":null},
+            {"name":"craft-agents", "exe":"/opt/craft-agents/craft-agents", "args":["/opt/craft-agents/craft-agents"], "provider":null},
+            {"name":"AppRun", "exe":"/opt/craft-agents/squashfs-root/AppRun", "args":["/opt/craft-agents/squashfs-root/AppRun"], "provider":null},
+            {"name":"trae-cn", "exe":"/opt/trae/usr/share/trae-cn/trae-cn", "args":["/opt/trae/usr/share/trae-cn/trae-cn"], "provider":"trae"},
+            {"name":"trae-cn", "exe":"/opt/trae/usr/share/trae-cn/trae-cn", "args":["/opt/trae/usr/share/trae-cn/trae-cn", "--type", "utility"], "provider":null},
+            {"name":"trae-cn", "exe":"/opt/trae/usr/share/trae-cn/trae-cn", "args":["/opt/trae/usr/share/trae-cn/trae-cn", "--ms-enable-electron-run-as-node", "/opt/trae/usr/share/trae-cn/resources/app/out/cli.js"], "provider":null},
+            {"name":"trae-cn-launcher", "exe":"/opt/trae/trae-cn-launcher", "args":["/opt/trae/trae-cn-launcher"], "provider":null},
+            {"name":"workbuddy", "exe":"/opt/WorkBuddy/workbuddy", "args":["/opt/WorkBuddy/workbuddy"], "provider":"workbuddy"},
+            {"name":"zcode", "exe":"/opt/ZCode/zcode", "args":["/opt/ZCode/zcode"], "provider":"zcode"}
+        ]);
+        for row in fixtures.as_array().unwrap() {
+            let args = row["args"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|arg| arg.as_str().unwrap().to_owned())
+                .collect::<Vec<_>>();
+            let expected = row["provider"].as_str();
+            assert_eq!(
+                classify(
+                    row["name"].as_str().unwrap(),
+                    row["exe"].as_str().unwrap(),
+                    &args
+                )
+                .as_deref(),
+                expected,
+                "fixture: {row}"
+            );
+            if expected.is_some() {
+                assert!(is_candidate(row["name"].as_str().unwrap()));
+                assert!(!relative_entry(&args));
+            }
+            #[cfg(unix)]
+            {
+                let mut fixture = row.clone();
+                fixture["pid"] = serde_json::json!(1);
+                let result = wsl_fixture(&serde_json::json!([fixture]));
+                assert!(result.complete);
+                assert_eq!(
+                    result.counts,
+                    expected
+                        .map(|provider| BTreeMap::from([(provider.to_owned(), 1)]))
+                        .unwrap_or_default()
+                );
+            }
+        }
+    }
+
+    #[test]
     fn agentrouter_desktops_are_services_and_claude_cli_remains_separate() {
         let fixtures = serde_json::json!([
             {"name":"ZCode.exe", "exe":"C:/Apps/ZCode/ZCode.exe", "args":["ZCode.exe"], "provider":"zcode"},
             {"name":"ZCode.exe", "exe":"C:/Apps/ZCode/ZCode.exe", "args":["ZCode.exe", "--type=renderer"], "provider":null},
             {"name":"Claude.exe", "exe":"C:/Users/test/AppData/Local/AnthropicClaude/app-3.0/Claude.exe", "args":["Claude.exe"], "provider":"claude_app"},
             {"name":"Claude.exe", "exe":"C:/Program Files/WindowsApps/Claude_3.6556.2.0_x64__pzs8sxrjxfjjc/app/Claude.exe", "args":["Claude.exe"], "provider":"claude_app"},
+            {"name":"Claude.exe", "exe":"C:/Program Files/WindowsApps/AnthropicPBC.Claude_1.0.0.0_x64__fnn82j28hfe8t/app/Claude.exe", "args":["Claude.exe"], "provider":"claude_app"},
+            {"name":"MainThread", "exe":"C:/Program Files/WindowsApps/AnthropicPBC.Claude_1.0.0.0_arm64__fnn82j28hfe8t/app/Claude.exe", "args":["Claude.exe"], "provider":"claude_app"},
+            {"name":"Claude.exe", "exe":"C:/Program Files/WindowsApps/AnthropicPBC.Claude_1.0.0.0_x64__fnn82j28hfe8t/app/Claude.exe", "args":["Claude.exe", "--type=renderer"], "provider":null},
+            {"name":"Claude.exe", "exe":"C:/Program Files/WindowsApps/AnthropicPBC.Claude_1.0.0.0_x64__fnn82j28hfe8t/app/Claude.exe", "args":["Claude.exe", "--crashpad-handler"], "provider":null},
+            {"name":"Claude.exe", "exe":"C:/Program Files/WindowsApps/AnthropicPBC.Claude_1.0.0.0_x64__fnn82j28hfe8t/app/Claude.exe", "args":["Claude.exe", "--ms-enable-electron-run-as-node", "C:/app/worker.js"], "provider":null},
+            {"name":"ClaudeHelper.exe", "exe":"C:/Program Files/WindowsApps/AnthropicPBC.Claude_1.0.0.0_x64__fnn82j28hfe8t/app/ClaudeHelper.exe", "args":["ClaudeHelper.exe"], "provider":null},
+            {"name":"Claude.exe", "exe":"C:/Program Files/WindowsApps/AnthropicPBC.ClaudeEvil_1.0.0.0_x64__fnn82j28hfe8t/app/Claude.exe", "args":["Claude.exe"], "provider":"claude"},
+            {"name":"Claude.exe", "exe":"C:/Program Files/WindowsApps/AnthropicPBC.Claude_1.0.0.0_x64__unrelated/app/Claude.exe", "args":["Claude.exe"], "provider":"claude"},
+            {"name":"node", "exe":"C:/Tools/node.exe", "args":["node.exe", "C:/unrelated.js", "--prompt", "C:/Program Files/WindowsApps/AnthropicPBC.Claude_1.0.0.0_x64__fnn82j28hfe8t/app/Claude.exe"], "provider":null},
             {"name":"MainThread", "exe":"/Applications/Claude.app/Contents/MacOS/Claude", "args":["/Applications/Claude.app/Contents/MacOS/Claude"], "provider":"claude_app"},
             {"name":"claude.exe", "exe":"C:/Tools/claude/claude.exe", "args":["claude.exe"], "provider":"claude"},
             {"name":"Claude.exe", "exe":"C:/Users/test/AppData/Local/AnthropicClaude/app-3.0/Claude.exe", "args":["Claude.exe", "--type=renderer"], "provider":null},

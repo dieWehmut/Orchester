@@ -137,7 +137,9 @@ def desktop_provider(exe):
         if suffix(exe, brand):
             return provider
     if basename(exe) == "claude" and ("/anthropicclaude/" in exe
-            or any(component.startswith("claude_") and component.endswith("__pzs8sxrjxfjjc") for component in exe.split("/"))):
+            or any((component.startswith("claude_") and component.endswith("__pzs8sxrjxfjjc"))
+                   or (component.startswith("anthropicpbc.claude_") and component.endswith("__fnn82j28hfe8t"))
+                   for component in exe.split("/"))):
         return "claude_app"
     return None
 
