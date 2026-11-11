@@ -1,0 +1,196 @@
+{
+    "sourceRevision":  "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+    "expectedPlanSha256":  "34c1c3f30bf4017ae05d78ea4a08c3d650ef04c589b5ef545999e5751f3257be",
+    "expectedFinalResultSha256":  "92f63202107394df408aea38b52c8e3679cdd845edbcb0fc682d8a297d941306",
+    "expectedPreparedScriptsSha256":  "caefcf92ee0fb3deb32fe516068da344ff3376ebda9d33fb0868fc04f7c59c08",
+    "candidateInventory":  [
+                               {
+                                   "path":  "orchester-desktop.exe",
+                                   "sha256":  "4fc62550edfcee272b412ae2e4908173038e076bb1b2e6b6c58cea699748be13"
+                               },
+                               {
+                                   "path":  "web/agents/antigravity.svg",
+                                   "sha256":  "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e"
+                               },
+                               {
+                                   "path":  "web/agents/claude.svg",
+                                   "sha256":  "a3101f3047a119aa11825ad9369510f0c472428c8c52d420e31bc62db44a8364"
+                               },
+                               {
+                                   "path":  "web/agents/codex.png",
+                                   "sha256":  "2b001fb1f4e7d76e4d459c2ad8f9739e963ffc1c2137abcfffe8da3ee7775f7c"
+                               },
+                               {
+                                   "path":  "web/agents/codex-light.png",
+                                   "sha256":  "b45359d98553406d60c45e699cbe80de6fe733d51661a317ca37b41632b58823"
+                               },
+                               {
+                                   "path":  "web/agents/cursor-dark.svg",
+                                   "sha256":  "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260"
+                               },
+                               {
+                                   "path":  "web/agents/cursor-light.svg",
+                                   "sha256":  "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0"
+                               },
+                               {
+                                   "path":  "web/agents/deepseek.ico",
+                                   "sha256":  "30a4420e6e4dcb17fd7de560c5004346c2bc8cd971d2d5f5ee15326603e51321"
+                               },
+                               {
+                                   "path":  "web/agents/gemini.png",
+                                   "sha256":  "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee"
+                               },
+                               {
+                                   "path":  "web/agents/opencode-dark.svg",
+                                   "sha256":  "5dd4abb4de60204510edf140bbe74b3580d07ebdda79fdb0081cd45acb53d44b"
+                               },
+                               {
+                                   "path":  "web/agents/opencode-light.svg",
+                                   "sha256":  "b47a4fecc77599382e238868e74064bbe92307b0e253a32f0b1a026517a2d2a6"
+                               },
+                               {
+                                   "path":  "web/agents/README.md",
+                                   "sha256":  "0f957a0d6e146183bba44f0cf3d9cfa2f7cd4563502f79f0b8aad25e39cb1fb3"
+                               },
+                               {
+                                   "path":  "web/agents/SOURCES.md",
+                                   "sha256":  "6a36358fc1b175d004b5f3b540ed0c38f0a28ef753a3f1a5716cffb5ff3e926a"
+                               },
+                               {
+                                   "path":  "web/appearance-bootstrap.js",
+                                   "sha256":  "9e4ecb165d34acebf4729fc2145b1d9897038d6e0dae538675f064e42209ba29"
+                               },
+                               {
+                                   "path":  "web/apple-touch-icon.png",
+                                   "sha256":  "9846969f6bac3fa79ef3a196c5bd18e440eb16e7639476db22930919def007da"
+                               },
+                               {
+                                   "path":  "web/assets/download-DcI8ZH69.js",
+                                   "sha256":  "1e4f5d9c22e0101ca66ff67409d2a7710c624372aed2dcb12e038488eb79785d"
+                               },
+                               {
+                                   "path":  "web/assets/index-B6H1dEeP.js",
+                                   "sha256":  "92bbb2868c9efe5ac3f056f55c890acf86fb2ac90951669c2794ecec799c35a1"
+                               },
+                               {
+                                   "path":  "web/assets/index-nLCX3cZ6.css",
+                                   "sha256":  "f1335a8bf0d87cf71deefa54d304af009bec7ebb5a678d6792a2cecb457428ec"
+                               },
+                               {
+                                   "path":  "web/assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+                                   "sha256":  "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b"
+                               },
+                               {
+                                   "path":  "web/assets/management-cMFCfhng.js",
+                                   "sha256":  "0f71821d0da95bb15c141f35015456c9593b89411569cf0285673db33e522447"
+                               },
+                               {
+                                   "path":  "web/assets/management-DrC3akjz.css",
+                                   "sha256":  "d275f30dc6555b593ece72d623991cfa22b14aeaa10ec775637051079e877f5e"
+                               },
+                               {
+                                   "path":  "web/assets/NotFoundView-Bn9J4SyH.css",
+                                   "sha256":  "efe049d1379c46410a90537130dad072f5be0e115eccee31a0bd0c188dd38b65"
+                               },
+                               {
+                                   "path":  "web/assets/NotFoundView-DjOd5o4C.js",
+                                   "sha256":  "30829eb37e578f59a96ac4b33b4197ab83e9f3186981446ed28b6fcddf698c25"
+                               },
+                               {
+                                   "path":  "web/assets/orchester-mark-DnE_3Uv-.png",
+                                   "sha256":  "73a86d4d31c1a41216a1467e9710691dc5f548dddf66067a9e3dabe25f565e6b"
+                               },
+                               {
+                                   "path":  "web/assets/play-Du9pf6kR.js",
+                                   "sha256":  "0cc1065d9634cc799ab1f544258bde8f28ed4427f12b600e1b2097c5b570bac8"
+                               },
+                               {
+                                   "path":  "web/assets/PluginsView-N8i-wokc.js",
+                                   "sha256":  "9143b4c8e03df48ea7dad5fb004997489c47a024395893cc4a596a8de2f21ed8"
+                               },
+                               {
+                                   "path":  "web/assets/plus-BGolWEcK.js",
+                                   "sha256":  "9a03301d709bd832ea7531ee77a753a3a4f8a7271dcf77ddbac59359f43e0a80"
+                               },
+                               {
+                                   "path":  "web/assets/SchedulesView-pLJh1cll.js",
+                                   "sha256":  "a098c8b8348191823b7cce91215e9ef47a2eb49843a4fdc8033f1b52d2e602ca"
+                               },
+                               {
+                                   "path":  "web/assets/search-m4fEj3oz.js",
+                                   "sha256":  "128459c46fc69c5a683084efba9f2a925f67557b2b685c416a43269a630eae9c"
+                               },
+                               {
+                                   "path":  "web/assets/SettingsView-BdzVFuyJ.js",
+                                   "sha256":  "1c936e70e4a3d06c6d0b756669fdffebb90c5e5793e90b71e20a69e42d694314"
+                               },
+                               {
+                                   "path":  "web/assets/SettingsView-DY7Zn8Mz.css",
+                                   "sha256":  "c2efcde99222fec97d601e6fc9e552f31a12d2438bbc6f4114bb863ce6fb0792"
+                               },
+                               {
+                                   "path":  "web/assets/Spinner-8VGhTrjX.js",
+                                   "sha256":  "b986e4a1d33bfe5642891fc3ab756e15f09580de800ea52a9ed4e3fd2f93235c"
+                               },
+                               {
+                                   "path":  "web/assets/WorkspaceView-2qVNEqYO.css",
+                                   "sha256":  "6b70df3073757e22c80cff5108d6045b9c7bde219d0bb372a1bc4ea3b55c15c1"
+                               },
+                               {
+                                   "path":  "web/assets/WorkspaceView-CMkCi_B2.js",
+                                   "sha256":  "37b945b1e2a3605bb7dcdbeaeed83859ffd86fe33a514cdb58ed2df81a46ce01"
+                               },
+                               {
+                                   "path":  "web/favicon.png",
+                                   "sha256":  "a5d074c0581064520630e1ef7ae1e45eabc94e32e366b8448fcd94473af9f0c7"
+                               },
+                               {
+                                   "path":  "web/icon-512.png",
+                                   "sha256":  "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06"
+                               },
+                               {
+                                   "path":  "web/index.html",
+                                   "sha256":  "a97daca7d94739cc289eaa4b5098af74c81a0d8f911b98b3be66ed952183ab28"
+                               },
+                               {
+                                   "path":  "web/pets/xiaoxuan/pet.json",
+                                   "sha256":  "bcf9cceb7118979c34650d678bd0a6788ec4539ef64b9b121f1ac137cfc0ce6b"
+                               },
+                               {
+                                   "path":  "web/pets/xiaoxuan/spritesheet.webp",
+                                   "sha256":  "8d6686dd1a1f338ae4b210e468533f3652dfbfc0ddc29bf79ac6594cbcf16d5d"
+                               }
+                           ],
+    "binarySha256":  "4fc62550edfcee272b412ae2e4908173038e076bb1b2e6b6c58cea699748be13",
+    "fixtureSha256":  "f8ee52820bea4528873b44326f7f33440fc137c6f2ccdf29c0603fdb787b8c25",
+    "nodeSha256":  "ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32",
+    "webViewSha256":  "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+    "systemHelperPins":  [
+                             {
+                                 "path":  "C:\\WINDOWS\\System32\\icacls.exe",
+                                 "sha256":  "cb9e55d4c02f4e55100724d2da9a1267f49e196bd39fcdf36cec6ea6314fad2a"
+                             },
+                             {
+                                 "path":  "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                                 "sha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f"
+                             },
+                             {
+                                 "path":  "C:\\WINDOWS\\System32\\cmd.exe",
+                                 "sha256":  "15cd209c995b7d3009c91ca40892d5b8f1fb162f3e5f10716642ea278e8e0d7b"
+                             },
+                             {
+                                 "path":  "C:\\WINDOWS\\System32\\conhost.exe",
+                                 "sha256":  "c86146188b78e484f32cc29e2331689659943b47689a85570342044f499938ac"
+                             },
+                             {
+                                 "path":  "C:\\WINDOWS\\System32\\wsl.exe",
+                                 "sha256":  "fcd08205b608b5c4831e0dcb1801dd274436cd2c8420815f18ae58a085891a18"
+                             },
+                             {
+                                 "path":  "C:\\Program Files\\WSL\\wsl.exe",
+                                 "sha256":  "051b7a9b7bda66817c052aced998e026610e5d4d18d63f45629d35d5cb5471c8"
+                             }
+                         ],
+    "modelCalls":  0,
+    "defaultInstallationChanged":  false
+}

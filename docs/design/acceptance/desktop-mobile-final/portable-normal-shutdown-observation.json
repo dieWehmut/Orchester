@@ -1,0 +1,32 @@
+{
+    "normalBackendExited":  true,
+    "backendExit":  0,
+    "passiveWaitSeconds":  5,
+    "remainingIdentities":  [
+                                {
+                                    "Pid":  206636,
+                                    "ParentPid":  194328,
+                                    "Depth":  2,
+                                    "Created":  134388318032669222,
+                                    "Image":  "C:\\Windows\\System32\\wsl.exe",
+                                    "Sha256":  "fcd08205b608b5c4831e0dcb1801dd274436cd2c8420815f18ae58a085891a18"
+                                },
+                                {
+                                    "Pid":  197156,
+                                    "ParentPid":  206636,
+                                    "Depth":  3,
+                                    "Created":  134388318032740322,
+                                    "Image":  "C:\\Windows\\System32\\conhost.exe",
+                                    "Sha256":  "c86146188b78e484f32cc29e2331689659943b47689a85570342044f499938ac"
+                                },
+                                {
+                                    "Pid":  221320,
+                                    "ParentPid":  206636,
+                                    "Depth":  3,
+                                    "Created":  134388318033073050,
+                                    "Image":  "C:\\Program Files\\WSL\\wsl.exe",
+                                    "Sha256":  "051b7a9b7bda66817c052aced998e026610e5d4d18d63f45629d35d5cb5471c8"
+                                }
+                            ],
+    "modelCalls":  0
+}

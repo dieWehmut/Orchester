@@ -9,6 +9,66 @@
       "bytes": 14997
     },
     {
+      "path": "current-clippy.log",
+      "sha256": "8fa75db3d409bd445bd97ccce17eec0354497e71816ff6aa35fcd06ee8665e79",
+      "bytes": 1232
+    },
+    {
+      "path": "current-frontend.log",
+      "sha256": "71e98724b3cf6d09ab7cd5ec8abba196754d50443a52532fdf508880c2cc48f3",
+      "bytes": 5638
+    },
+    {
+      "path": "current-gates.json",
+      "sha256": "0c1c03ff981cb9396679c5c4aee60bb93527efd6201404e8ad9c7e2d3a582db0",
+      "bytes": 9287
+    },
+    {
+      "path": "current-rust.log",
+      "sha256": "74e07668e2206b12e1478a9d75861182126a0f9697c0402b092e3942a02d8535",
+      "bytes": 121628
+    },
+    {
+      "path": "current-source-inputs.json",
+      "sha256": "c883f6b3c681902bcb2a549eeb0b0e4bbf8b90a79b803c8a5334093d5bba6101",
+      "bytes": 195653
+    },
+    {
+      "path": "current-typecheck.log",
+      "sha256": "8f78c55d639b6d9ef376173347060bc7cd36ebc8487995c720c870615ef5538e",
+      "bytes": 706
+    },
+    {
+      "path": "desktop-cleanup-result.json",
+      "sha256": "cbfdf72cb8e37d3c71d2e2fa1461a28e3ed3380162643ec549413d84e3ba90a5",
+      "bytes": 1184
+    },
+    {
+      "path": "desktop-desktop-main-after-secondary-close.png",
+      "sha256": "798ef455b537205393a2e8a56ce8088f0e65f4e5b7e59e967b1c925aea0ca4b7",
+      "bytes": 180146
+    },
+    {
+      "path": "desktop-desktop-runtime-result.json",
+      "sha256": "e657a937d0dcb434f2e0fed61cd1a55613708b8b7d0fbd421759adc534ffc883",
+      "bytes": 729
+    },
+    {
+      "path": "desktop-desktop-secondary-history.png",
+      "sha256": "c8b51cddca297d3dbeea8cea6024a5b6bced8e26ca650c8b600ecd3bd70106e4",
+      "bytes": 178145
+    },
+    {
+      "path": "desktop-native-windows-result.json",
+      "sha256": "a66cb93e749631f3930f683c364533b7d02339fdae062f637208840ab800cb52",
+      "bytes": 5971
+    },
+    {
+      "path": "desktop-runtime-inputs.json",
+      "sha256": "2e6a539b06359e98862e31e444b932de1fe396ce8f588e2518d9c96d1103a631",
+      "bytes": 12632
+    },
+    {
       "path": "feature-font-tests.log",
       "sha256": "4072c3b7f986bfeddcc26bac3dbf011e051b80429c43a6f3bc0f27cdcf199fb8",
       "bytes": 1885
@@ -34,6 +94,36 @@
       "bytes": 2115
     },
     {
+      "path": "portable-cleanup-result.json",
+      "sha256": "10c28f302176dcccfc1e2b758d7dfa30e523cd91d9bcb47d27d44140cdf064a5",
+      "bytes": 5271
+    },
+    {
+      "path": "portable-failure.json",
+      "sha256": "0c2091e3ca7c31d7b233622510f37f73f87105c50e4d77305b2a89f753f7b5dc",
+      "bytes": 326
+    },
+    {
+      "path": "portable-normal-shutdown-observation.json",
+      "sha256": "bc1593929d28eda4ba4c88f0a04b1a8b6d0eb79aa1406936590cd654f90782c0",
+      "bytes": 1678
+    },
+    {
+      "path": "promotion-review.json",
+      "sha256": "84099781db9ae76fd24f00dec34b0699f714adfc496f0e50013bf96865e7b312",
+      "bytes": 3959
+    },
+    {
+      "path": "secret-scan-redacted.json",
+      "sha256": "128eeda8bc1bf6782cdd485e5046ee017441d06d4cd70ca3496ffb8faf476a10",
+      "bytes": 3424
+    },
+    {
+      "path": "secret-scan-review.json",
+      "sha256": "8c85b1cacb074a4ae1d3da06b5778fae43d95aed84c84816f3f79a4a53668d73",
+      "bytes": 4262
+    },
+    {
       "path": "web-integrated.log",
       "sha256": "a380d26ed9f00f789c323d0a5de220be5b0765961f9a288ab7d5c8cf94503a4f",
       "bytes": 2252
@@ -42,19 +132,26 @@
       "path": "windows-build-gates.json",
       "sha256": "0b276f9e59e8a2d00fc1bdad8e836e574f1025d267c735fc9c28d1f5bec35198",
       "bytes": 12071
+    },
+    {
+      "path": "windows-runtime-baseline.json",
+      "sha256": "79df9e33770d0399eb628ce944e5be52fb789f0690ada260edf0f755f4e39747",
+      "bytes": 2519
     }
   ],
   "completedScopes": [
     "Windows build-and-file-gates",
     "main integrated Web tests/types/build",
     "Android AVD installed APK/native bridge/font face",
-    "Linux7337 new assets, authenticated reads, test credential revocation, and original state retention"
+    "Linux7337 new assets, authenticated reads, test credential revocation, and original state retention",
+    "current full frontend and Rust code gates",
+    "baseline Windows desktop sixteen native checks and own process cleanup"
   ],
   "requiredSeparateEvidence": [
-    "Windows desktop runtime",
-    "Windows portable runtime",
+    "Windows portable helper lifecycle fix and rebuilt runtime",
+    "new Windows desktop build and runtime after helper fix",
     "default installation promotion",
-    "temporary native test worker cleanup",
+    "temporary native proxy cleanup",
     "physical Android and iOS target environment",
     "Windows7338 deployment"
   ]

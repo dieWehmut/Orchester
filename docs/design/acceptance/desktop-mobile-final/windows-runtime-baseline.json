@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "sourceRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+  "desktop": {
+    "status": "passed",
+    "resultDirectory": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/fonts-6278e3b/desktop-runtime-20261111-3",
+    "artifacts": [
+      {
+        "path": "desktop-runtime-result.json",
+        "sha256": "e657a937d0dcb434f2e0fed61cd1a55613708b8b7d0fbd421759adc534ffc883"
+      },
+      {
+        "path": "native-windows-result.json",
+        "sha256": "a66cb93e749631f3930f683c364533b7d02339fdae062f637208840ab800cb52"
+      },
+      {
+        "path": "cleanup-result.json",
+        "sha256": "cbfdf72cb8e37d3c71d2e2fa1461a28e3ed3380162643ec549413d84e3ba90a5"
+      },
+      {
+        "path": "runtime-inputs.json",
+        "sha256": "2e6a539b06359e98862e31e444b932de1fe396ce8f588e2518d9c96d1103a631"
+      },
+      {
+        "path": "launch-result.json",
+        "sha256": "34318c2c3c84691e28d2581ba4072b3c1267a661701aaaff4c9dfbe3b1ead047"
+      },
+      {
+        "path": "node-launch-result.json",
+        "sha256": "2b9f88e8d940a0e727af9f41369f183a847fb940b65ce45825540061bba4391a"
+      },
+      {
+        "path": "gui-owned-identities.json",
+        "sha256": "f7d7813f01c8a225afa1f24be297fcbc019faa4cc34396c2d3929edb0454c3b6"
+      },
+      {
+        "path": "node-owned-identities.json",
+        "sha256": "3fe8dbcde8b9705917d5520f31de513d64daadefec71276ec2c0178c5b2d3ef2"
+      },
+      {
+        "path": "desktop-secondary-history.png",
+        "sha256": "c8b51cddca297d3dbeea8cea6024a5b6bced8e26ca650c8b600ecd3bd70106e4"
+      },
+      {
+        "path": "desktop-main-after-secondary-close.png",
+        "sha256": "798ef455b537205393a2e8a56ce8088f0e65f4e5b7e59e967b1c925aea0ca4b7"
+      }
+    ]
+  },
+  "portable": {
+    "status": "failed-natural-helper-cleanup",
+    "resultDirectory": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/fonts-6278e3b/portable-runtime-20261111-5",
+    "artifacts": [
+      {
+        "path": "normal-shutdown-observation.json",
+        "sha256": "bc1593929d28eda4ba4c88f0a04b1a8b6d0eb79aa1406936590cd654f90782c0"
+      },
+      {
+        "path": "failure.json",
+        "sha256": "0c2091e3ca7c31d7b233622510f37f73f87105c50e4d77305b2a89f753f7b5dc"
+      },
+      {
+        "path": "cleanup-result.json",
+        "sha256": "10c28f302176dcccfc1e2b758d7dfa30e523cd91d9bcb47d27d44140cdf064a5"
+      }
+    ]
+  },
+  "modelCalls": 0,
+  "defaultInstallationChanged": false,
+  "proxyLeftRunningForRootAdb": true
+}

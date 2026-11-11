@@ -1,0 +1,9 @@
+{
+    "status":  "failed",
+    "stage":  "shutdown-unconnected-terminal",
+    "assertion":  "owned-handles-remained",
+    "exceptionType":  "System.Management.Automation.RuntimeException",
+    "baseExceptionType":  "System.Management.Automation.RuntimeException",
+    "staticCode":  "unlisted",
+    "modelCalls":  0
+}

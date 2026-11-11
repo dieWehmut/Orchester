@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-11T00:47:24.633517+00:00",
+  "sourceRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+  "scope": "Read-only file and script review; no native runtime approval or promotion performed",
+  "promotionScript": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continue-20261110\\monitor-final-promote.ps1",
+  "reviewedScriptHashes": {
+    "monitor-final-promote.ps1": "aab021d33c3ea7cfafdc000a0268deccdde58b77305303dca6665b98ff268063",
+    "monitor-final-common.ps1": "b9e6cecd9578269cd0b52737298f5f8205d85f5f51a2def14fc2e429e41f62de"
+  },
+  "sharedParameters": {
+    "PlanFile": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\fonts-6278e3b\\plan.json",
+    "ExpectedPlanSha256": "34c1c3f30bf4017ae05d78ea4a08c3d650ef04c589b5ef545999e5751f3257be",
+    "ExpectedFinalResultSha256": "92f63202107394df408aea38b52c8e3679cdd845edbcb0fc682d8a297d941306"
+  },
+  "checksVerifiedFromCurrentFiles": {
+    "planHashMatchesCompletedBuild": true,
+    "completedBuildSourceEqualsPlan": true,
+    "allSevenPreparedScriptHashesMatchFrozenPlan": true,
+    "thirteenGatesExitZeroAndProcessExitedWithoutTimeout": true
+  },
+  "scriptGuards": {
+    "frozenSourceAndAssetsInventoryChecked": true,
+    "candidateCompleteInventoryChecked": true,
+    "installedExeMustMatchReviewedHash": true,
+    "runningUserExecutableCheckedBeforeStagingAndBeforeMoves": true,
+    "userProcessesNotStoppedOrStartedByScript": true,
+    "backupMustBeUnusedSibling": true,
+    "wholeOriginalDirectoryMovedToBackup": true,
+    "desktopStagePreservesUninstallerAndAllFilesOutsideExeAndWeb": true,
+    "remoteStageRunsPackagedVerifier": true,
+    "externalStateInventoryMustRemainEqual": true,
+    "rollbackMovesOnlyInvocationOwnedDirectories": true,
+    "rollbackDoesNotOverwriteExistingDestination": true,
+    "failedCandidatePreservedAfterSwapRollback": true,
+    "separateRuntimeGateRequiredByOperator": true,
+    "promotionScriptItselfDoesNotCheckRuntimeResult": true
+  },
+  "targets": [
+    {
+      "kind": "Desktop",
+      "destination": "C:\\Users\\han\\AppData\\Local\\Orchester",
+      "expectedInstalledExeSha256": "9688bae1a669a4c38004af88ae78ac1397d59abac1f8e82cddb6ff888ba5e3e5",
+      "backupDirectory": "C:\\Users\\han\\AppData\\Local\\Orchester-backup-20261111-before-monitors-fonts-6278e3b",
+      "backupAbsentAtFileReview": true,
+      "currentDefaultFileCount": 156,
+      "candidateFileCount": 39,
+      "candidateCompleteFileSetAndHashesMatchBuild": true,
+      "candidateExeSha256": "4fc62550edfcee272b412ae2e4908173038e076bb1b2e6b6c58cea699748be13",
+      "externalStateDirectory": "C:\\Users\\han\\.orchester",
+      "externalStateDirectoryContentsRead": false
+    },
+    {
+      "kind": "Remote",
+      "destination": "C:\\Users\\han\\Downloads\\OrchesterRemote",
+      "expectedInstalledExeSha256": "4569036d09a2279153f9e5fd3a362403212cd39b0ec68481b09fca7afe303cee",
+      "backupDirectory": "C:\\Users\\han\\Downloads\\OrchesterRemote-backup-20261111-before-monitors-fonts-6278e3b",
+      "backupAbsentAtFileReview": true,
+      "currentDefaultFileCount": 16,
+      "candidateFileCount": 17,
+      "candidateCompleteFileSetAndHashesMatchBuild": true,
+      "candidateExeSha256": "70d784a849713a843e0b51c7ec44cc9f757582f84b0091a20c93df0f9d1f1cab",
+      "externalStateDirectory": "C:\\Users\\han\\AppData\\Local\\OrchesterRemote\\state-home",
+      "externalStateDirectoryContentsRead": false
+    }
+  ],
+  "modelCalls": 0,
+  "postPromotionChecks": [
+    "Run default Remote verify.ps1 with -PackageDirectory C:\\Users\\han\\Downloads\\OrchesterRemote",
+    "Compare full sibling backup inventory to pre-promotion installation inventory",
+    "Compare Desktop EXE/Web to candidate and uninstall.exe to backup; keep existing shortcuts and uninstall registry metadata",
+    "Inspect saved promotion JSON and verify default runtime/deployment separately"
+  ],
+  "installationMutationsPerformed": false
+}
