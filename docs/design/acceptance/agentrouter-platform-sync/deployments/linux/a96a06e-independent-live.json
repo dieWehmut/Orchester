@@ -1,0 +1,15 @@
+{
+  "deploymentReceiptSha256": "f12487154652a9263716d12e1ce57b1a176979eabd06e3697004973de26a0599",
+  "pid": 1244652,
+  "startTicks": 15063739,
+  "currentELFMatched": true,
+  "oldIdentityAbsent": true,
+  "unpairedRoutes": {
+    "/remote/v1/info": 401,
+    "/remote/v1/agents/status": 401
+  },
+  "original5DevicesTasksAuthProjectsRetained": true,
+  "publicResourcesVerified": 17,
+  "controlledSupervisorSession": 88100,
+  "originalSupervisorExitedCode": 0
+}

@@ -1,0 +1,341 @@
+{
+  "observed_at": 1794383929.2675397,
+  "main_sha": "683c293418fb6401b2081f6cb76828ff9da563c6",
+  "protected": [
+    "HEAD",
+    "feat/additional-agent-monitors",
+    "feat/additional-agent-monitors-backend",
+    "feat/additional-agent-monitors-frontend",
+    "feat/remote-interactive-terminal",
+    "feat/workbuddy-qwen-openclaw-monitors",
+    "fix/agent-process-source-status",
+    "fix/async-trait-clippy-compat",
+    "fix/cursor-cli-official-identity",
+    "fix/memory-initialization",
+    "fix/mobile-desktop-fonts",
+    "fix/mobile-native-back-navigation",
+    "fix/mobile-terminal-final-replay",
+    "fix/process-monitor-count-units",
+    "fix/windows-desktop-lock-sync",
+    "fix/windows-mcp-transport-size",
+    "fix/windows-wsl-helper-lifecycle",
+    "main"
+  ],
+  "remote": [
+    {
+      "name": "build/windows-cli-polish",
+      "sha": "a92e0606ed075d0393bc5e6a186f9a6dc6a2bbbf"
+    },
+    {
+      "name": "build/windows-ui-0.1.3",
+      "sha": "f1d66667fdfd1260e8c047e235be8e819294cbb6"
+    },
+    {
+      "name": "build/windows-ui-0.1.4",
+      "sha": "30a572e3028556857deac506e36a157193e51f27"
+    },
+    {
+      "name": "build/windows-ui-0.1.5",
+      "sha": "37338a651e74034672d2339c8c7ec448a1658c40"
+    },
+    {
+      "name": "build/windows-ui-0.1.6",
+      "sha": "c97a602e136cbaa980d34e216c8be720edaeb0a3"
+    },
+    {
+      "name": "chore/apps-lockfile",
+      "sha": "0599b0a13cd9e694bf7eaedceb99fdae50904ecd"
+    },
+    {
+      "name": "chore/desktop-release-workflow",
+      "sha": "590b6d3d9f53b3ed51e7d497f2a951b29eece945"
+    },
+    {
+      "name": "chore/tooling-launch-contract",
+      "sha": "89d39e701ee4054fcd215de465abf6a2280103ac"
+    },
+    {
+      "name": "chore/workspace-root",
+      "sha": "a7dd775baf5f6843464a62352014db6efb7cec0c"
+    },
+    {
+      "name": "codex/agent-conversation-navigation",
+      "sha": "04f62cc715f32117f5a1a565263b4454355903bb"
+    },
+    {
+      "name": "codex/agent-conversation-rendering",
+      "sha": "e06844aa567113c5148916dfb2f605da4375aeaa"
+    },
+    {
+      "name": "codex/agent-live-content",
+      "sha": "2344fb9c8ef56916ee4000af3403809027421daf"
+    },
+    {
+      "name": "codex/composer-add-menu",
+      "sha": "01f9b046229de801be6291ec798f3e1e61094cfa"
+    },
+    {
+      "name": "codex/live-conversation-rendering",
+      "sha": "972d73d6eaa7573b3a2904470dde3e8949583b04"
+    },
+    {
+      "name": "codex/model-menu-cli-alignment",
+      "sha": "0a95dd3984afebbde8dc56f06acb1efc8075bca4"
+    },
+    {
+      "name": "codex/queued-messages-and-history",
+      "sha": "c734bb51042975cebbdcf56bf6c276b1554049f4"
+    },
+    {
+      "name": "codex/sidebar-composer-reference",
+      "sha": "e0d35efff10845cde0be02cefe74a891b4420775"
+    },
+    {
+      "name": "docs/desktop-mobile-final-delivery",
+      "sha": "e6346288d0e4e80d360f0bad642d1859156c45b9"
+    },
+    {
+      "name": "feat/agent-fleet-protocol",
+      "sha": "8fc66dfe2c07808037481279849f87b709e1be6a"
+    },
+    {
+      "name": "feat/agent-process-presence-v2",
+      "sha": "c70327d6f2a80b2ab290a6583e74cf1748c7f562"
+    },
+    {
+      "name": "feat/app-icon-artwork",
+      "sha": "e474295dede7aca45609c05f9b2b9d8cb772f45a"
+    },
+    {
+      "name": "feat/backend-runs-bridge",
+      "sha": "2f5d7c117f846cf723f447062c96923c3309495a"
+    },
+    {
+      "name": "feat/backend-runs-contract",
+      "sha": "3de1849285b07d5943bac5a51c85cd58ba1f1da4"
+    },
+    {
+      "name": "feat/cli-interface-polish",
+      "sha": "057c22bb2020757338b2c9def1a75480fc65c2f6"
+    },
+    {
+      "name": "feat/codex-soft-surfaces",
+      "sha": "50bb51897601d1809e229ac35f463fa0ad9dfc9b"
+    },
+    {
+      "name": "feat/codex-workspace-polish",
+      "sha": "b14d6213b0fa484a9096829bf48af3b1a09eab68"
+    },
+    {
+      "name": "feat/design-pink-appearance",
+      "sha": "b0b188792928ac921f8178060edad621a77a5179"
+    },
+    {
+      "name": "feat/desktop-chrome-sync",
+      "sha": "58d03f3d9f609d93293d98b5dd224d96df5d0a3a"
+    },
+    {
+      "name": "feat/desktop-codex-shell",
+      "sha": "6da2611d29c06f6bbb1e158d56ead256e0341c3c"
+    },
+    {
+      "name": "feat/desktop-conversation-20260917",
+      "sha": "3f0538aaf5a6a0e1ffd82bb6c5f987271d8b7dd8"
+    },
+    {
+      "name": "feat/desktop-release-20260917",
+      "sha": "5fc8a9dec9f23fdd0644babe601bc9d93633e663"
+    },
+    {
+      "name": "feat/desktop-runtime-20260917",
+      "sha": "7de2ed4f821b9a7aa5d6eab979929932614152b9"
+    },
+    {
+      "name": "feat/desktop-tauri",
+      "sha": "c4be2be547165bf0621f29fca977f5b2fc63f100"
+    },
+    {
+      "name": "feat/desktop-window-chrome",
+      "sha": "e7e96677216ee8435a81f98b4282ee47bcea7127"
+    },
+    {
+      "name": "feat/ereignis-projection",
+      "sha": "091208ba578a65483ab96730a19fa4b18941ba78"
+    },
+    {
+      "name": "feat/frontend-platform",
+      "sha": "eddce90cf162f59fc7e4a3aee152984c41b6430c"
+    },
+    {
+      "name": "feat/mobile-remote-multidevice",
+      "sha": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6"
+    },
+    {
+      "name": "feat/model-setup",
+      "sha": "ebc85c1fbce8fa86ec8edb62a8a607f0af85eac1"
+    },
+    {
+      "name": "feat/netz-agent-runtime-store",
+      "sha": "5e3dfb38902a71ccb9a3b7ee57eee06fdb8e986e"
+    },
+    {
+      "name": "feat/netz-agent-status",
+      "sha": "7197f716bb6fa7540b500c3448767e61f142a62f"
+    },
+    {
+      "name": "feat/netz-model-catalog",
+      "sha": "1f573cf703cd37b32baa3ea58295f962eb494c52"
+    },
+    {
+      "name": "feat/netz-session-catalog",
+      "sha": "64f450fe286ffe42055f8e196f71b8ab3bbf828d"
+    },
+    {
+      "name": "feat/netz-static-web",
+      "sha": "ebe878ea5265497e2a14bdd75727a499d678c95c"
+    },
+    {
+      "name": "feat/pages-site",
+      "sha": "d418a225948c1c7bac85926928df956875081f9f"
+    },
+    {
+      "name": "feat/pet-roaming",
+      "sha": "534d904c1f148430042c38b005ad231f091e43e4"
+    },
+    {
+      "name": "feat/release-inline-changelog",
+      "sha": "36819083b281b30a80a15959f0b85989fe8ad6d3"
+    },
+    {
+      "name": "feat/run-submit-idempotency",
+      "sha": "cde19126aaf111eb8c38c393715ca8f696088f63"
+    },
+    {
+      "name": "feat/rust-agent-status-protocol",
+      "sha": "d63ff41d517633a0625613eca0153ad0356d6b2b"
+    },
+    {
+      "name": "feat/title-row-reference",
+      "sha": "ba84049d3561aeb761fc8038ce3f9be4430233d8"
+    },
+    {
+      "name": "feat/ui-u8-i18n",
+      "sha": "10587bffab8ffe565189d6a68509d95975e7d214"
+    },
+    {
+      "name": "feat/web-agent-fleet",
+      "sha": "815474f307d93b4470ccc950b336d1330deb83a7"
+    },
+    {
+      "name": "feat/web-agent-fleet-polish",
+      "sha": "a8f8f23fe4935017ffd3e7b265344c002541e420"
+    },
+    {
+      "name": "feat/web-agent-presence-v2",
+      "sha": "5a7ef7e187cb8792f619772b2cf21290a919d94b"
+    },
+    {
+      "name": "feat/web-agent-status-stream",
+      "sha": "2c30e5d2ff49d6e7af36ee245256f515c4bd2f62"
+    },
+    {
+      "name": "feat/web-change-inspector",
+      "sha": "9f25bd908295bca753b9c05811588f75111e5a35"
+    },
+    {
+      "name": "feat/web-codex-empty-state",
+      "sha": "ae37bc9a153ac582e166ea5f7cfaedff66574aff"
+    },
+    {
+      "name": "feat/web-codex-pet",
+      "sha": "796b2e4ea89762e899e65119df84241b07a078ea"
+    },
+    {
+      "name": "feat/web-composer-context-controls",
+      "sha": "d99eb347e49b53d2c1f6e71a226aa7e34a5e0dd7"
+    },
+    {
+      "name": "feat/web-run-api",
+      "sha": "a4583defa14c5c4ff7e9b8552811de6d4b24d183"
+    },
+    {
+      "name": "feat/web-run-live",
+      "sha": "bd575b77a099fd06d89afb55419bf2da2fc26448"
+    },
+    {
+      "name": "feat/web-run-transport",
+      "sha": "61b38e02678544cd277556abecb05548bdaad3c2"
+    },
+    {
+      "name": "feat/web-stack-foundation",
+      "sha": "706d3a53183919af77fd3118d83e9e5a77146895"
+    },
+    {
+      "name": "feat/web-submit-flow",
+      "sha": "2447e8ac436df3e8e3b7c2c43ad11d47e6de1d73"
+    },
+    {
+      "name": "feat/web-thread-header",
+      "sha": "1353ab8adb3186932441f1f2b41839a242e05028"
+    },
+    {
+      "name": "feat/website-giscus",
+      "sha": "902fdd496144751f1793ee295b0168008653ff75"
+    },
+    {
+      "name": "fix/activity-unknown-state",
+      "sha": "36734539cb6df17935be75053d1884974708c5e2"
+    },
+    {
+      "name": "integration/desktop-release-20260917",
+      "sha": "0ebb7305713483cbd3211da0394850fdf281b8b2"
+    },
+    {
+      "name": "integration/frontend-presence-chrome-20260822",
+      "sha": "e2ef522b4daae9f4eb83bee236bd1dc52efa14cb"
+    },
+    {
+      "name": "integration/tooling-contract-20260822",
+      "sha": "d26d8244e1db746ace125b497af84c97dda18ec9"
+    },
+    {
+      "name": "integration/ui-delivery-20260920",
+      "sha": "d1b1ee224f6bc378a1efdb218167f69423856d48"
+    },
+    {
+      "name": "refactor/apps-cli",
+      "sha": "ed7fe5c262bcb962c5f8fb4b69fa5044e6e18043"
+    },
+    {
+      "name": "refactor/apps-web-site",
+      "sha": "8e7710a211c917b0ddb12303782fe8e0f201b554"
+    },
+    {
+      "name": "refactor/packages-tier",
+      "sha": "1982088c2f9d6c2d323898c090e9afe2554cf886"
+    }
+  ],
+  "local": [
+    {
+      "name": "docs/desktop-mobile-final-delivery",
+      "sha": "702fa8d3b9e24051ef3c010f4e55a3ab77eb2e93",
+      "exit_code": 0
+    },
+    {
+      "name": "feat/mobile-remote-multidevice",
+      "sha": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+      "exit_code": 0
+    },
+    {
+      "name": "fix/activity-unknown-state",
+      "sha": "36734539cb6df17935be75053d1884974708c5e2",
+      "exit_code": 0
+    }
+  ],
+  "status": "completed",
+  "started_at": 1794384022.6952386,
+  "remote_exit_code": 0,
+  "remote_result": "To https://github.com/dieWehmut/Orchester.git\n - [deleted]         build/windows-cli-polish\n - [deleted]         build/windows-ui-0.1.3\n - [deleted]         build/windows-ui-0.1.4\n - [deleted]         build/windows-ui-0.1.5\n - [deleted]         build/windows-ui-0.1.6\n - [deleted]         chore/apps-lockfile\n - [deleted]         chore/desktop-release-workflow\n - [deleted]         chore/tooling-launch-contract\n - [deleted]         chore/workspace-root\n - [deleted]         codex/agent-conversation-navigation\n - [deleted]         codex/agent-conversation-rendering\n - [deleted]         codex/agent-live-content\n - [deleted]         codex/composer-add-menu\n - [deleted]         codex/live-conversation-rendering\n - [deleted]         codex/model-menu-cli-alignment\n - [deleted]         codex/queued-messages-and-history\n - [deleted]         codex/sidebar-composer-reference\n - [deleted]         docs/desktop-mobile-final-delivery\n - [deleted]         feat/agent-fleet-protocol\n - [deleted]         feat/agent-process-presence-v2\n - [deleted]         feat/app-icon-artwork\n - [deleted]         feat/backend-runs-bridge\n - [deleted]         feat/backend-runs-contract\n - [deleted]         feat/cli-interface-polish\n - [deleted]         feat/codex-soft-surfaces\n - [deleted]         feat/codex-workspace-polish\n - [deleted]         feat/design-pink-appearance\n - [deleted]         feat/desktop-chrome-sync\n - [deleted]         feat/desktop-codex-shell\n - [deleted]         feat/desktop-conversation-20260917\n - [deleted]         feat/desktop-release-20260917\n - [deleted]         feat/desktop-runtime-20260917\n - [deleted]         feat/desktop-tauri\n - [deleted]         feat/desktop-window-chrome\n - [deleted]         feat/ereignis-projection\n - [deleted]         feat/frontend-platform\n - [deleted]         feat/mobile-remote-multidevice\n - [deleted]         feat/model-setup\n - [deleted]         feat/netz-agent-runtime-store\n - [deleted]         feat/netz-agent-status\n - [deleted]         feat/netz-model-catalog\n - [deleted]         feat/netz-session-catalog\n - [deleted]         feat/netz-static-web\n - [deleted]         feat/pages-site\n - [deleted]         feat/pet-roaming\n - [deleted]         feat/release-inline-changelog\n - [deleted]         feat/run-submit-idempotency\n - [deleted]         feat/rust-agent-status-protocol\n - [deleted]         feat/title-row-reference\n - [deleted]         feat/ui-u8-i18n\n - [deleted]         feat/web-agent-fleet\n - [deleted]         feat/web-agent-fleet-polish\n - [deleted]         feat/web-agent-presence-v2\n - [deleted]         feat/web-agent-status-stream\n - [deleted]         feat/web-change-inspector\n - [deleted]         feat/web-codex-empty-state\n - [deleted]         feat/web-codex-pet\n - [deleted]         feat/web-composer-context-controls\n - [deleted]         feat/web-run-api\n - [deleted]         feat/web-run-live\n - [deleted]         feat/web-run-transport\n - [deleted]         feat/web-stack-foundation\n - [deleted]         feat/web-submit-flow\n - [deleted]         feat/web-thread-header\n - [deleted]         feat/website-giscus\n - [deleted]         fix/activity-unknown-state\n - [deleted]         integration/desktop-release-20260917\n - [deleted]         integration/frontend-presence-chrome-20260822\n - [deleted]         integration/tooling-contract-20260822\n - [deleted]         integration/ui-delivery-20260920\n - [deleted]         refactor/apps-cli\n - [deleted]         refactor/apps-web-site\n - [deleted]         refactor/packages-tier\n",
+  "remote_verified_absent": true,
+  "finished_at": 1794384031.061589
+}

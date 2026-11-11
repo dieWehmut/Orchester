@@ -1,0 +1,312 @@
+{
+  "originalReceipt": {
+    "sourcePath": "/tmp/orchester-final21-pages-ci-20261111/live-ci-resource-verification.json",
+    "sourceSha256": "21837649f050e0708a1c10ce20c54d0d4a315a9d64287a7c7e09979a693c472c",
+    "bytes": 60535
+  },
+  "runId": 42999110960,
+  "runURL": "https://github.com/dieWehmut/Orchester/actions/runs/42999110960",
+  "sourceCommit": "4cee1f8fe40ee8213f0f69a07682fa030f7c93ab",
+  "functionalFinalSource": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "workflowConclusion": "success",
+  "artifactDownloadActualExitCode": 0,
+  "artifactArchiveSha256": "7aec9cf3a22dc1c409bb7ebed88e52184ec361a980cbddaead2710f76290e23b",
+  "safeArchiveEntries": 26,
+  "siteDesignWorkflowInputCount": 177,
+  "allInputsEqualPagesCommitAndFinal71": true,
+  "inputMapSha256": "9d913f67dc6a662ee6095fef93432f48d760e8d9637a09db0c2d5f0a3d368a7f",
+  "resources": [
+    {
+      "path": "assets/ArchitectureView-CkP7hGHw.js",
+      "url": "https://diewehmut.github.io/Orchester/assets/ArchitectureView-CkP7hGHw.js",
+      "status": 200,
+      "ciBytes": 6009,
+      "liveBytes": 6009,
+      "ciSha256": "678ef69a30eabcd265a32ca4d5d2263998e6c3f4ad2fec9d0f4334ccd0cf7a4a",
+      "liveSha256": "678ef69a30eabcd265a32ca4d5d2263998e6c3f4ad2fec9d0f4334ccd0cf7a4a",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/crush-B1wob-OZ.png",
+      "url": "https://diewehmut.github.io/Orchester/assets/crush-B1wob-OZ.png",
+      "status": 200,
+      "ciBytes": 55448,
+      "liveBytes": 55448,
+      "ciSha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "liveSha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/cursor-dark-BM_3k4Y4.svg",
+      "url": "https://diewehmut.github.io/Orchester/assets/cursor-dark-BM_3k4Y4.svg",
+      "status": 200,
+      "ciBytes": 4373,
+      "liveBytes": 4373,
+      "ciSha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+      "liveSha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/index-BcAWhwG9.js",
+      "url": "https://diewehmut.github.io/Orchester/assets/index-BcAWhwG9.js",
+      "status": 200,
+      "ciBytes": 88674,
+      "liveBytes": 88674,
+      "ciSha256": "e258561c0d3e3517bede6ba95f216ec77f2b19d0fec2b2ccfe7ae3677cff1367",
+      "liveSha256": "e258561c0d3e3517bede6ba95f216ec77f2b19d0fec2b2ccfe7ae3677cff1367",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/zcode-yL2Qb12j.png",
+      "url": "https://diewehmut.github.io/Orchester/assets/zcode-yL2Qb12j.png",
+      "status": 200,
+      "ciBytes": 6479,
+      "liveBytes": 6479,
+      "ciSha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "liveSha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/index-BSUPKiSo.css",
+      "url": "https://diewehmut.github.io/Orchester/assets/index-BSUPKiSo.css",
+      "status": 200,
+      "ciBytes": 48692,
+      "liveBytes": 48692,
+      "ciSha256": "6a25e9d4ba7156b69e9bf76b462ca4829dbba785b73c5064a710f631e96a0e60",
+      "liveSha256": "6a25e9d4ba7156b69e9bf76b462ca4829dbba785b73c5064a710f631e96a0e60",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/HomeView-BS-pcExm.js",
+      "url": "https://diewehmut.github.io/Orchester/assets/HomeView-BS-pcExm.js",
+      "status": 200,
+      "ciBytes": 43633,
+      "liveBytes": 43633,
+      "ciSha256": "984e40e0778e7dfcf13c6daeb54e33672a88cd92d4bada4a2fd7a89ce732ebc1",
+      "liveSha256": "984e40e0778e7dfcf13c6daeb54e33672a88cd92d4bada4a2fd7a89ce732ebc1",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/roo-D8yWBDNL.png",
+      "url": "https://diewehmut.github.io/Orchester/assets/roo-D8yWBDNL.png",
+      "status": 200,
+      "ciBytes": 5626,
+      "liveBytes": 5626,
+      "ciSha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "liveSha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/cursor-light-DGKJuirn.svg",
+      "url": "https://diewehmut.github.io/Orchester/assets/cursor-light-DGKJuirn.svg",
+      "status": 200,
+      "ciBytes": 4388,
+      "liveBytes": 4388,
+      "ciSha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+      "liveSha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/hermes-dark-D5fo9gTB.svg",
+      "url": "https://diewehmut.github.io/Orchester/assets/hermes-dark-D5fo9gTB.svg",
+      "status": 200,
+      "ciBytes": 137768,
+      "liveBytes": 137768,
+      "ciSha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+      "liveSha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+      "exactBytes": true,
+      "previousTransportErrors": [
+        "URLError"
+      ]
+    },
+    {
+      "path": "assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+      "url": "https://diewehmut.github.io/Orchester/assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+      "status": 200,
+      "ciBytes": 8059324,
+      "liveBytes": 8059324,
+      "ciSha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b",
+      "liveSha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b",
+      "exactBytes": true,
+      "previousTransportErrors": [
+        "URLError"
+      ]
+    },
+    {
+      "path": "assets/workbuddy-D1Gu2IKl.svg",
+      "url": "https://diewehmut.github.io/Orchester/assets/workbuddy-D1Gu2IKl.svg",
+      "status": 200,
+      "ciBytes": 4142,
+      "liveBytes": 4142,
+      "ciSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "liveSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/NotFoundView-xeSxHblG.js",
+      "url": "https://diewehmut.github.io/Orchester/assets/NotFoundView-xeSxHblG.js",
+      "status": 200,
+      "ciBytes": 274,
+      "liveBytes": 274,
+      "ciSha256": "084d32cb72eb6661a9a2483cfda4f19488e98c17b2de227fd644ad301d492ef8",
+      "liveSha256": "084d32cb72eb6661a9a2483cfda4f19488e98c17b2de227fd644ad301d492ef8",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/circle-check-ZVk3X9MA.js",
+      "url": "https://diewehmut.github.io/Orchester/assets/circle-check-ZVk3X9MA.js",
+      "status": 200,
+      "ciBytes": 214,
+      "liveBytes": 214,
+      "ciSha256": "9c69a7794e89cd57e2accfafad4267e8a87f2286190ba6844c059da8c90b4ccd",
+      "liveSha256": "9c69a7794e89cd57e2accfafad4267e8a87f2286190ba6844c059da8c90b4ccd",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/HomeView-VYl1khHT.css",
+      "url": "https://diewehmut.github.io/Orchester/assets/HomeView-VYl1khHT.css",
+      "status": 200,
+      "ciBytes": 392,
+      "liveBytes": 392,
+      "ciSha256": "274cfaa7401387e8b1f8df232fbdf3b5586f8c4c01a2707b34b6f1fa2cd279bf",
+      "liveSha256": "274cfaa7401387e8b1f8df232fbdf3b5586f8c4c01a2707b34b6f1fa2cd279bf",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/SiteShell-DcGnkWKz.css",
+      "url": "https://diewehmut.github.io/Orchester/assets/SiteShell-DcGnkWKz.css",
+      "status": 200,
+      "ciBytes": 3407,
+      "liveBytes": 3407,
+      "ciSha256": "86934830eb21e9e3b42686f80b3d4889a2767867a4d050cba061028d3d3c9f2c",
+      "liveSha256": "86934830eb21e9e3b42686f80b3d4889a2767867a4d050cba061028d3d3c9f2c",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/shield-check--ZCfqxQj.js",
+      "url": "https://diewehmut.github.io/Orchester/assets/shield-check--ZCfqxQj.js",
+      "status": 200,
+      "ciBytes": 651,
+      "liveBytes": 651,
+      "ciSha256": "691465cb720a45d50616bbcc6c16a18de1fc9e405010e9b6b3ca2644e9705e6d",
+      "liveSha256": "691465cb720a45d50616bbcc6c16a18de1fc9e405010e9b6b3ca2644e9705e6d",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/orchester-workspace-D9U4oCdz.png",
+      "url": "https://diewehmut.github.io/Orchester/assets/orchester-workspace-D9U4oCdz.png",
+      "status": 200,
+      "ciBytes": 33754,
+      "liveBytes": 33754,
+      "ciSha256": "0a2949125eb65124f0bc442db9e8155aec352f12545c9849079111dca6122610",
+      "liveSha256": "0a2949125eb65124f0bc442db9e8155aec352f12545c9849079111dca6122610",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/SiteShell.vue_vue_type_script_setup_true_lang-C7VUzPwF.js",
+      "url": "https://diewehmut.github.io/Orchester/assets/SiteShell.vue_vue_type_script_setup_true_lang-C7VUzPwF.js",
+      "status": 200,
+      "ciBytes": 15940,
+      "liveBytes": 15940,
+      "ciSha256": "d8df5d49842584fe36c3f93a1f1a087ba9d499018c335ebe51635cd20d38d922",
+      "liveSha256": "d8df5d49842584fe36c3f93a1f1a087ba9d499018c335ebe51635cd20d38d922",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/InstallView-BHzAEGI1.js",
+      "url": "https://diewehmut.github.io/Orchester/assets/InstallView-BHzAEGI1.js",
+      "status": 200,
+      "ciBytes": 4640,
+      "liveBytes": 4640,
+      "ciSha256": "349a555121497f2c96659da9aa2b6aa20fb0bc9192772aa5608b2fd184cf2d9a",
+      "liveSha256": "349a555121497f2c96659da9aa2b6aa20fb0bc9192772aa5608b2fd184cf2d9a",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/claude-RJ8il4lB.png",
+      "url": "https://diewehmut.github.io/Orchester/assets/claude-RJ8il4lB.png",
+      "status": 200,
+      "ciBytes": 10358,
+      "liveBytes": 10358,
+      "ciSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "liveSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/hermes-light-x1BVlPhG.svg",
+      "url": "https://diewehmut.github.io/Orchester/assets/hermes-light-x1BVlPhG.svg",
+      "status": 200,
+      "ciBytes": 116350,
+      "liveBytes": 116350,
+      "ciSha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+      "liveSha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/codex-DODyF2an.png",
+      "url": "https://diewehmut.github.io/Orchester/assets/codex-DODyF2an.png",
+      "status": 200,
+      "ciBytes": 10969,
+      "liveBytes": 10969,
+      "ciSha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+      "liveSha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "assets/antigravity-DXFfVr6X.svg",
+      "url": "https://diewehmut.github.io/Orchester/assets/antigravity-DXFfVr6X.svg",
+      "status": 200,
+      "ciBytes": 5037,
+      "liveBytes": 5037,
+      "ciSha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "liveSha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "index.html",
+      "url": "https://diewehmut.github.io/Orchester/index.html",
+      "status": 200,
+      "ciBytes": 5427,
+      "liveBytes": 5427,
+      "ciSha256": "9da71bfe926913857eba1fcd976ecf8e14386ba1bf65dc28ae4420ac3b651945",
+      "liveSha256": "9da71bfe926913857eba1fcd976ecf8e14386ba1bf65dc28ae4420ac3b651945",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    },
+    {
+      "path": "404.html",
+      "url": "https://diewehmut.github.io/Orchester/404.html",
+      "status": 200,
+      "ciBytes": 5427,
+      "liveBytes": 5427,
+      "ciSha256": "9da71bfe926913857eba1fcd976ecf8e14386ba1bf65dc28ae4420ac3b651945",
+      "liveSha256": "9da71bfe926913857eba1fcd976ecf8e14386ba1bf65dc28ae4420ac3b651945",
+      "exactBytes": true,
+      "previousTransportErrors": []
+    }
+  ],
+  "allLiveResourcesExact": true,
+  "finalSourceInputProof": "sources/final71-source-binding.json"
+}

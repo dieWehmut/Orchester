@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 1,
+  "provider": "claude_app",
+  "platform": "native Linux x64 / WSL",
+  "status": "official-linux-installer-platform-verification-still-blocked",
+  "sourceEpoch": "independent-official-DoH-addresses-and-host-preserving-TLS-requests",
+  "previousEpoch": {
+    "receipt": "/home/han/.local/state/orchester-delivery/20261111/official-installs/claude-linux/final-platform-verification-safe.json",
+    "sha256": "e69149aff2abfa7fb2dea3449be4a5d6b712def32bd8e05ed97c4c5a2138cfaa",
+    "unchanged": true
+  },
+  "officialClaudeAppLinuxInstallerIdentified": false,
+  "officialNativeClaudeAppLinuxDistributionSupportedVerified": false,
+  "officialNativeClaudeAppLinuxDistributionUnsupportedVerified": false,
+  "officialDesktopLinuxExecutionContextsDocumented": true,
+  "desktopLinuxExecutionEvidence": {
+    "officialSource": "https://raw.githubusercontent.com/anthropics/claude-code/e379c8eca0af5b02a49bf8e784aeefdd1308de6f/CHANGELOG.md",
+    "commit": "e379c8eca0af5b02a49bf8e784aeefdd1308de6f",
+    "sha256": "a074556107911c423a449df2f0b1dbbabb51aaa66383b81c3ba4fea1c52679cf",
+    "bytes": 1193584,
+    "gitBlobExact": true,
+    "versions": [
+      "2.1.304",
+      "2.1.284"
+    ],
+    "lines": [
+      1003,
+      2557
+    ],
+    "scope": "Official Claude Code changelog records fixes for Claude Desktop-hosted Code tab sessions and app-created worktrees involving Linux. This establishes documented Desktop/Linux execution contexts, but does not by itself identify or certify a downloadable native Linux GUI app. Remote/hosted execution remains possible."
+  },
+  "officialAppPagesResolvedRequests": [
+    {
+      "host": "claude.com",
+      "url": "https://claude.com/download",
+      "DNSAddressCandidates": [
+        "160.79.104.10"
+      ],
+      "tlsVerification": true,
+      "globalDnsChanged": false,
+      "requestMethod": "GET",
+      "redirectsFollowed": false,
+      "observedAt": "2026-11-11T11:19:10.207468+00:00",
+      "actualExitCode": 35,
+      "processExited": true,
+      "selectedAddress": "160.79.104.10",
+      "curlPublicMetrics": [
+        "000",
+        "https://claude.com/download",
+        "",
+        "0",
+        "160.79.104.10",
+        "1"
+      ],
+      "stderr": "curl: (35) error:0A000126:SSL routines::unexpected eof while reading",
+      "bytes": 0
+    },
+    {
+      "host": "claude.ai",
+      "url": "https://claude.ai/download",
+      "DNSAddressCandidates": [
+        "160.79.104.10"
+      ],
+      "tlsVerification": true,
+      "globalDnsChanged": false,
+      "requestMethod": "GET",
+      "redirectsFollowed": false,
+      "observedAt": "2026-11-11T11:19:10.208862+00:00",
+      "actualExitCode": 35,
+      "processExited": true,
+      "selectedAddress": "160.79.104.10",
+      "curlPublicMetrics": [
+        "000",
+        "https://claude.ai/download",
+        "",
+        "0",
+        "160.79.104.10",
+        "1"
+      ],
+      "stderr": "curl: (35) error:0A000126:SSL routines::unexpected eof while reading",
+      "bytes": 0
+    },
+    {
+      "host": "support.claude.com",
+      "url": "https://support.claude.com/en/articles/10065433-installing-claude-desktop",
+      "DNSAddressCandidates": [
+        "160.79.104.10"
+      ],
+      "tlsVerification": true,
+      "globalDnsChanged": false,
+      "requestMethod": "GET",
+      "redirectsFollowed": false,
+      "observedAt": "2026-11-11T11:19:10.209108+00:00",
+      "actualExitCode": 35,
+      "processExited": true,
+      "selectedAddress": "160.79.104.10",
+      "curlPublicMetrics": [
+        "000",
+        "https://support.claude.com/en/articles/10065433-installing-claude-desktop",
+        "",
+        "0",
+        "160.79.104.10",
+        "1"
+      ],
+      "stderr": "curl: (35) error:0A000126:SSL routines::unexpected eof while reading",
+      "bytes": 0
+    },
+    {
+      "host": "code.claude.com",
+      "url": "https://code.claude.com/docs/en/desktop",
+      "DNSAddressCandidates": [
+        "160.79.104.10"
+      ],
+      "tlsVerification": true,
+      "globalDnsChanged": false,
+      "requestMethod": "GET",
+      "redirectsFollowed": false,
+      "observedAt": "2026-11-11T11:19:10.208463+00:00",
+      "actualExitCode": 35,
+      "processExited": true,
+      "selectedAddress": "160.79.104.10",
+      "curlPublicMetrics": [
+        "000",
+        "https://code.claude.com/docs/en/desktop",
+        "",
+        "0",
+        "160.79.104.10",
+        "1"
+      ],
+      "stderr": "curl: (35) error:0A000126:SSL routines::unexpected eof while reading",
+      "bytes": 0
+    }
+  ],
+  "allAppPageHTTPResponsesAbsent": true,
+  "hostnameTlsVerificationEnabled": true,
+  "certificatesSuccessfullyValidatedForAppPages": false,
+  "dnsProviderEvidence": "Google and Cloudflare official DoH JSON; each hostname independently resolved. code.claude.com Google attempt failed, Cloudflare succeeded. No downloads.claude.ai address copied to other hosts.",
+  "systemDnsOrSessionChanged": false,
+  "appPackageDownloads": 0,
+  "installedByThisAgent": false,
+  "productGuiLaunches": 0,
+  "authCalls": 0,
+  "setupCalls": 0,
+  "modelCalls": 0,
+  "privateProfilesConfigsEnvOrArgvRead": false,
+  "repoOrGitMutations": false,
+  "evidenceReceipts": [
+    {
+      "path": "CHANGELOG.md-receipt.json",
+      "bytes": 11597,
+      "sha256": "0e86153801927c8ecf5044cc6905d724d7f1e5f65c81f2be2d9aba318ad75698"
+    },
+    {
+      "path": "claude-ai-resolved-primary-receipt.json",
+      "bytes": 587,
+      "sha256": "f887e3ca875b59ee5573afbe6057f1e373faedfb7b3f09ff5b1d38d2d85229e1"
+    },
+    {
+      "path": "claude-com-resolved-primary-receipt.json",
+      "bytes": 590,
+      "sha256": "4943b44d1074cd66af6afb0d3af6517d6a974aecfc9cb1c7e93de8df822e4907"
+    },
+    {
+      "path": "claude.ai-cloudflare-doh-receipt.json",
+      "bytes": 449,
+      "sha256": "aa9a5f0f02846139893a86219271d1a839d9a3704f4c184579045bece0f13a0f"
+    },
+    {
+      "path": "claude.ai-cloudflare-doh.json",
+      "bytes": 182,
+      "sha256": "3e71866735887e0a923c0ce4f42a550d05fb3cd0fec5bfa7192e0b6699a0e784"
+    },
+    {
+      "path": "claude.ai-doh-receipt.json",
+      "bytes": 499,
+      "sha256": "ad7eaac46a2994fa69446da92a75dcaff6e08f353cc2a597d77f60b2248590e9"
+    },
+    {
+      "path": "claude.ai-doh.json",
+      "bytes": 227,
+      "sha256": "49669f6c163885aa214d3348e30d6eae6c9430d7e573f9e5c2f5697b4e558dc5"
+    },
+    {
+      "path": "claude.com-cloudflare-doh-receipt.json",
+      "bytes": 452,
+      "sha256": "abbf1c9ccefb48b4374f9332599a3d5f3ba63f10f82648725446de97c400935e"
+    },
+    {
+      "path": "claude.com-cloudflare-doh.json",
+      "bytes": 184,
+      "sha256": "b9e83aa27bcd82f9e2606fa72e609199514d182ff7637f8da612a9cedd606315"
+    },
+    {
+      "path": "claude.com-doh-receipt.json",
+      "bytes": 502,
+      "sha256": "86e33646b1372049a09c236a1776f13ac5bd2ddbe565e337d03195fbbef95959"
+    },
+    {
+      "path": "claude.com-doh.json",
+      "bytes": 229,
+      "sha256": "0d293a7beeed7fcb6f50e108e822202c082bd1c182e979fa02b1d8fead6d3ddc"
+    },
+    {
+      "path": "cloudflare-dns-summary.json",
+      "bytes": 1997,
+      "sha256": "a3d8600e359408a94eb3e67b6466c44f6d022aef14a0391bcbfa0b9712303396"
+    },
+    {
+      "path": "code-claude-com-resolved-primary-receipt.json",
+      "bytes": 619,
+      "sha256": "d62533e3cea50ce81d256f75d14f66cf2ed39ac7f1d2b2a1e0b894ba3b873c75"
+    },
+    {
+      "path": "code.claude.com-cloudflare-doh-receipt.json",
+      "bytes": 467,
+      "sha256": "ad6d8690e6e378f86c1c10878e3e53e70f154aef123f7c592869ffad056f3d3b"
+    },
+    {
+      "path": "code.claude.com-cloudflare-doh.json",
+      "bytes": 194,
+      "sha256": "d3d621b642c8d1905f33cc74622864ea40976a89fbfa19dc2e6c0dd200f4eba9"
+    },
+    {
+      "path": "code.claude.com-doh-receipt.json",
+      "bytes": 380,
+      "sha256": "92ea48e8397364bdebed6fa88c5ba3baae41523956390835f8988f9154a24601"
+    },
+    {
+      "path": "dns-summary.json",
+      "bytes": 2049,
+      "sha256": "0f36d2992762c436eb728481592a94babee231467cff1efb71bd914e6d29d2a5"
+    },
+    {
+      "path": "official-desktop-linux-contexts.json",
+      "bytes": 452,
+      "sha256": "0cf738303f9de760fdb3ce1354bd9a2ef90e81377f042886cca83c1532fbce78"
+    },
+    {
+      "path": "official-repository-desktop-notes-summary.json",
+      "bytes": 11813,
+      "sha256": "06f34eec50092dd903a7dffe5c188c4ce626dc86e2d494f54bf460f917a248d5"
+    },
+    {
+      "path": "resolved-primary-summary.json",
+      "bytes": 2696,
+      "sha256": "c09024fd41c7eba1b620253535bd6db4d011aae9ba7538e603b9c6888279d590"
+    },
+    {
+      "path": "support-claude-com-resolved-primary-receipt.json",
+      "bytes": 690,
+      "sha256": "0fb847319e2b2842d1891f342ffacce3c4c3ffcdb45a8542f36a8a6657054f43"
+    },
+    {
+      "path": "support.claude.com-cloudflare-doh-receipt.json",
+      "bytes": 475,
+      "sha256": "d04b25bfae3944977678a96f9584823810b43eae3b100965043321d56ca92a6c"
+    },
+    {
+      "path": "support.claude.com-cloudflare-doh.json",
+      "bytes": 199,
+      "sha256": "4791d2ef8dc4b202e6364b7ce16805c76ddb078aa7997271fd86855c49ade554"
+    },
+    {
+      "path": "support.claude.com-doh-receipt.json",
+      "bytes": 526,
+      "sha256": "0f7477884f11006d7200f863b0418dad78d91da84be52e35553f362875c100eb"
+    },
+    {
+      "path": "support.claude.com-doh.json",
+      "bytes": 245,
+      "sha256": "b6a9c23b0821df6c39ae164183386ba1beea20a0c5180b5d9b6b25e75f5a208b"
+    }
+  ],
+  "observedAt": "2026-11-11T11:25:18.123139+00:00"
+}

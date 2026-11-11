@@ -1,0 +1,356 @@
+{
+  "schemaVersion": 1,
+  "operation": "independent read-only Windows core16 and current Linux/concurrency review",
+  "observedAt": "2026-11-11T11:54:14.292395+00:00",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "currentGitHead": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "receipts": [
+    {
+      "kind": "final",
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/final-result.json",
+      "sha256": "7ddcd67633e127a4b664dc69d91cf20bd8751a9ab6a009d8ca73d9b0951fe023",
+      "expectedSha256": "7ddcd67633e127a4b664dc69d91cf20bd8751a9ab6a009d8ca73d9b0951fe023",
+      "hashMatches": true
+    },
+    {
+      "kind": "plan",
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/plan.json",
+      "sha256": "8645dca6d20f2d5ff0d845d7c74522f52ca72c6aec49ec9529dcb86a997911cd",
+      "expectedSha256": "8645dca6d20f2d5ff0d845d7c74522f52ca72c6aec49ec9529dcb86a997911cd",
+      "hashMatches": true
+    },
+    {
+      "kind": "predicateAudit",
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/audit/safe-audit-summary.json",
+      "sha256": "fd1eda459a39ef3c95bac5b6a2de1d2ac9f32f53b20c7e576923cc56ad825630",
+      "expectedSha256": "fd1eda459a39ef3c95bac5b6a2de1d2ac9f32f53b20c7e576923cc56ad825630",
+      "hashMatches": true
+    },
+    {
+      "kind": "sourceExport",
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/source-71def64-final21-20261111/SOURCE_EXPORT_AUDIT.json",
+      "sha256": "6313572160eee0ed132a87e1fdb50d7a5ad0ff92ade66fac6c0346db86a39680",
+      "expectedSha256": "6313572160eee0ed132a87e1fdb50d7a5ad0ff92ade66fac6c0346db86a39680",
+      "hashMatches": true
+    }
+  ],
+  "native16": {
+    "gateCount": 16,
+    "gateOrderMatchesFrozenPlan": true,
+    "all16TypedTerminalGatePass": true,
+    "gates": [
+      {
+        "phase": "toolchain",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 3784,
+        "childCreatedAt": "2026-11-11T11:26:35.9471526Z"
+      },
+      {
+        "phase": "helper-contract",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 19784,
+        "childCreatedAt": "2026-11-11T11:26:37.1971093Z"
+      },
+      {
+        "phase": "helper-wsl",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 11644,
+        "childCreatedAt": "2026-11-11T11:26:47.3382166Z"
+      },
+      {
+        "phase": "memory-initialization",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 20568,
+        "childCreatedAt": "2026-11-11T11:27:36.1755153Z"
+      },
+      {
+        "phase": "monitor-process",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 29000,
+        "childCreatedAt": "2026-11-11T11:28:07.7642158Z"
+      },
+      {
+        "phase": "monitor-activity",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 9420,
+        "childCreatedAt": "2026-11-11T11:28:09.2174179Z"
+      },
+      {
+        "phase": "monitor-http",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 29156,
+        "childCreatedAt": "2026-11-11T11:28:17.5656275Z"
+      },
+      {
+        "phase": "remote-cli",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 21524,
+        "childCreatedAt": "2026-11-11T11:29:14.6790912Z"
+      },
+      {
+        "phase": "root-clippy",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 24320,
+        "childCreatedAt": "2026-11-11T11:30:01.7455014Z"
+      },
+      {
+        "phase": "root-fmt",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 29248,
+        "childCreatedAt": "2026-11-11T11:30:31.2498225Z"
+      },
+      {
+        "phase": "cli-build",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 17392,
+        "childCreatedAt": "2026-11-11T11:30:33.2599203Z"
+      },
+      {
+        "phase": "chrome-test",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 10632,
+        "childCreatedAt": "2026-11-11T11:30:37.8852984Z"
+      },
+      {
+        "phase": "desktop-test",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 15864,
+        "childCreatedAt": "2026-11-11T11:30:39.4911714Z"
+      },
+      {
+        "phase": "desktop-clippy",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 8312,
+        "childCreatedAt": "2026-11-11T11:31:51.8910704Z"
+      },
+      {
+        "phase": "desktop-fmt",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 28580,
+        "childCreatedAt": "2026-11-11T11:32:05.9004618Z"
+      },
+      {
+        "phase": "desktop-build",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 6368,
+        "childCreatedAt": "2026-11-11T11:32:07.9260506Z"
+      }
+    ],
+    "finalBindsExactPlanSha256": true,
+    "allSourceRevisionsExact": true,
+    "APKBindingDeferred": true,
+    "APKHashesNull": true,
+    "freshAndroidFinalReceiptRequired": true,
+    "desktopRuntimePending": "pending-root",
+    "remoteRuntimePending": "pending-root",
+    "defaultInstallationChanged": false,
+    "servicesChanged": false,
+    "parentWorkerPidRecordedOnly": 16008,
+    "parentWorkerGoneOrExitCodeClaimed": false,
+    "WSLInteropExecutorExitCodeClaimed": false
+  },
+  "sourceExport": {
+    "auditHashMatchesPlan": true,
+    "trackedGitRecords": 1682,
+    "all1682MetadataCurrentRootAndExportedGitBytesExact": false,
+    "gitFailures": [
+      {
+        "path": "apps/mobile/android/gradlew.bat",
+        "gitHashEqualsExportMetadata": true,
+        "currentRootHashEqualsGit": false,
+        "exportedSourceHashEqualsGit": true
+      }
+    ],
+    "publicCompiledFiles": 54,
+    "compiledCounts": {
+      "apps/web/dist": 37,
+      "apps/mobile/dist": 17
+    },
+    "all54PublicRootAndExportBytesMatchFrozenHashes": true,
+    "compiledFailures": [],
+    "gradlewBatSHA256": "94102713eb8fb22d032397924c0f38ab2da783ba60d07054339f1190a0c4e2cd",
+    "sourceExportGitDirectoryAbsent": true,
+    "freshFrontendBuildCommandClaimedByThisReview": false
+  },
+  "frozenPlanInputChecks": {
+    "declaredInputs": 967,
+    "gitInputs": 911,
+    "publicDistInputs": 54,
+    "all967InputsMapToCurrentPublicGitOrDistHashes": false,
+    "failures": [
+      {
+        "path": "SOURCE_EXPORT_AUDIT.json",
+        "family": "unknown",
+        "metadataHashMatchesActualPublicSource": false
+      },
+      {
+        "path": "SOURCE_REVISION",
+        "family": "unknown",
+        "metadataHashMatchesActualPublicSource": false
+      }
+    ]
+  },
+  "packages": [
+    {
+      "kind": "desktop",
+      "recordedFileCount": 38,
+      "exactExpectedCorePaths": true,
+      "publicResourceCount": 37,
+      "publicResourceFailures": [],
+      "executableMetadataChecks": [
+        {
+          "path": "orchester-desktop.exe",
+          "isNativeExecutable": true,
+          "recordedSha256MatchesFinalExeField": true,
+          "currentFileExists": true,
+          "nativeExecutableContentRead": false
+        }
+      ],
+      "runtimeOrNative18ValidatedByThisReview": false
+    },
+    {
+      "kind": "remote",
+      "recordedFileCount": 18,
+      "exactExpectedCorePaths": true,
+      "publicResourceCount": 17,
+      "publicResourceFailures": [],
+      "executableMetadataChecks": [
+        {
+          "path": "orchester.exe",
+          "isNativeExecutable": true,
+          "recordedSha256MatchesFinalExeField": true,
+          "currentFileExists": true,
+          "nativeExecutableContentRead": false
+        }
+      ],
+      "runtimeOrNative18ValidatedByThisReview": false
+    }
+  ],
+  "predicateAuditBoundary": {
+    "nativePowerShellActualExitCode": 0,
+    "nativePowerShellCases": 62,
+    "allPowerShellCasesMatched": true,
+    "nativeJavaScriptSyntaxActualExitCode": 0,
+    "actualJavaScriptProviderCases": 24,
+    "allJavaScriptProviderCasesMatched": true,
+    "actualGUIOrInstallationExecuted": false,
+    "historicalHelpersModified": false,
+    "androidQueueOperations": 0,
+    "modelCalls": 0
+  },
+  "linuxBoundary": {
+    "finalReceiptSha256": "2a3159365a2c3f74c6d134dff2f1732802b1a73faf4b564e3618458fe727e017",
+    "independentLiveReceiptBindsFinalHash": true,
+    "controllerHandoffBindsFinalHash": true,
+    "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+    "currentRootSourceInputScope": 368,
+    "historicalSplitSourceInputScope": 367,
+    "stateJsonSemanticExact": true,
+    "stateRawRowsExact": false,
+    "originalLiveHostDevices": 3,
+    "originalPersistedAuthEntries": 5,
+    "originalLegacyDuplicates": 2,
+    "originalRunCount": 5,
+    "currentRunCount": 5,
+    "originalRunRowsExactlyRetained": true,
+    "originalHostAndLegacyAuthRowsExactlyRetained": true,
+    "temporaryOwnDeviceRemoved": true,
+    "revokedTemporaryTokenStatus": 401,
+    "pairingClosed": true,
+    "currentEnvironmentInherited": true,
+    "priorLiveEnvironmentEqualityClaimed": false,
+    "originalRuntimeHandlesInherited": false,
+    "controllerExternalStdinDevNull": true,
+    "controllerRetainsOriginalListenerWriterDescriptor": 4,
+    "toolSessionUsage": "Poll-only supervisor; its external stdin was devnull, not a TTY",
+    "currentIndependentLiveCheck": {
+      "pid": 1023019,
+      "expectedStartTicks": 256519,
+      "processExists": true,
+      "actualStartTicks": 256519,
+      "birthEqualsReceipt": true,
+      "imageSha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649",
+      "imageShaEqualsReceipt": true,
+      "listener7337Open": true
+    }
+  },
+  "concurrencyBoundary": {
+    "configuredMaxThreads": 8,
+    "configuredFileMode": "0o600",
+    "currentDeveloperRuntimeConcurrencyIncludingRoot": 9,
+    "runtimeLimitObservedFromCurrentToolContract": true,
+    "configurationChangeClaimedToCauseRuntimeExpansion": false,
+    "privateValuesCopied": false,
+    "observedAt": 1794397011.8357484
+  },
+  "allReviewedCoreBuildSourceAndPublicFileChecksPassed": false,
+  "native18DesktopReinstallOrAndroidFinalAcceptanceClaimed": false,
+  "nativeExecutableContentsIndependentlyRead": false,
+  "processSignalsOrStateMutations": 0,
+  "privateAuthConfigEnvArgvDatabaseProfilesKeysRawLogsRead": false,
+  "repositoryOrGitChanges": false
+}

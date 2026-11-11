@@ -1,0 +1,16 @@
+{
+  "guidePath": "/docs/trae.html",
+  "requestedURL": "https://agentrouter.org/docs/trae.html",
+  "anchorLabels": [
+    "Trae"
+  ],
+  "startedAt": 1794395965.404138,
+  "transport": "verified official HTTPS urllib",
+  "httpStatus": 200,
+  "responseURL": "https://agentrouter.org/docs/trae.html",
+  "bytes": 28547,
+  "sha256": "b1d0a13a2831acb478db5868a7de7653f8f74c7f894ccdd3e5d80459698921b0",
+  "processOperationCompleted": true,
+  "publicSnapshotFile": "trae.html",
+  "finishedAt": 1794395972.48225
+}

@@ -1,0 +1,117 @@
+{
+  "native_cli": "/home/han/.vscode-server/bin/c4453f8ea430795f941c1b2ff6c9321135a74a02/bin/code-server",
+  "settings_before_sha256": null,
+  "extensions_before": [
+    "ms-ceintl.vscode-language-pack-zh-hans-1.131.2026090407",
+    "ms-python.vscode-pylance-2026.4.1",
+    "esbenp.prettier-vscode-12.4.0",
+    "ms-python.debugpy-2026.6.0-linux-x64",
+    "ms-python.python-2026.10.0-linux-x64",
+    "ms-python.vscode-python-envs-1.42.0-linux-x64"
+  ],
+  "extensions": [
+    {
+      "id": "saoudrizwan.claude-dev",
+      "source": "https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev",
+      "argv": [
+        "/home/han/.vscode-server/bin/c4453f8ea430795f941c1b2ff6c9321135a74a02/bin/code-server",
+        "--extensions-dir",
+        "/home/han/.vscode-server/extensions",
+        "--install-extension",
+        "saoudrizwan.claude-dev",
+        "--telemetry-level",
+        "off"
+      ],
+      "pid": 1191662,
+      "status": "installed",
+      "started_at": 1794383896.8878543,
+      "exit_code": 0,
+      "finished_at": 1794383945.3990355,
+      "log_sha256": "d367425b937135d4c1412022cc8cddf0c474867c3dcfb299e1e51359568ba6a9"
+    },
+    {
+      "id": "RooVeterinaryInc.roo-cline",
+      "source": "https://github.com/RooCodeInc/Roo-Code/releases/tag/v3.54.0",
+      "argv": [
+        "/home/han/.vscode-server/bin/c4453f8ea430795f941c1b2ff6c9321135a74a02/bin/code-server",
+        "--extensions-dir",
+        "/home/han/.vscode-server/extensions",
+        "--install-extension",
+        "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/roo-cline-3.54.0.vsix",
+        "--telemetry-level",
+        "off"
+      ],
+      "pid": 1193191,
+      "status": "installed",
+      "started_at": 1794383945.4033709,
+      "exit_code": 0,
+      "finished_at": 1794383948.2234595,
+      "log_sha256": "b4979a58a995bc4934d7c5916e9f5ee2a89e700c49575edd4c67127da50cea5e",
+      "vsix_sha256": "615b7e30ab456c51fe2e1f413a6e05fe4bd370f2350e14de574ec92e25366b4b"
+    },
+    {
+      "id": "kilocode.Kilo-Code",
+      "source": "https://marketplace.visualstudio.com/items?itemName=kilocode.Kilo-Code",
+      "argv": [
+        "/home/han/.vscode-server/bin/c4453f8ea430795f941c1b2ff6c9321135a74a02/bin/code-server",
+        "--extensions-dir",
+        "/home/han/.vscode-server/extensions",
+        "--install-extension",
+        "kilocode.Kilo-Code",
+        "--telemetry-level",
+        "off"
+      ],
+      "pid": 1193226,
+      "status": "installed",
+      "started_at": 1794383948.3341553,
+      "exit_code": 0,
+      "finished_at": 1794384153.4906263,
+      "log_sha256": "1e3c01790e0f77189840fe2d390932cd8937238bb560911914ca8518ab92768a"
+    },
+    {
+      "id": "anthropic.claude-code",
+      "source": "https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code",
+      "argv": [
+        "/home/han/.vscode-server/bin/c4453f8ea430795f941c1b2ff6c9321135a74a02/bin/code-server",
+        "--extensions-dir",
+        "/home/han/.vscode-server/extensions",
+        "--install-extension",
+        "anthropic.claude-code",
+        "--telemetry-level",
+        "off"
+      ],
+      "pid": 1195588,
+      "status": "installed",
+      "started_at": 1794384153.5850372,
+      "exit_code": 0,
+      "finished_at": 1794384324.292915,
+      "log_sha256": "dc0c287ea81c09a02611d6527da01c953cbae8088c9de32f0b24b31c30ce82fa"
+    }
+  ],
+  "windows_interop_used": false,
+  "session_started": false,
+  "verification_list": {
+    "exit_code": 0,
+    "output": [
+      "anthropic.claude-code@2.1.322",
+      "esbenp.prettier-vscode@12.4.0",
+      "kilocode.kilo-code@7.8.27",
+      "ms-ceintl.vscode-language-pack-zh-hans@1.131.2026090407",
+      "ms-python.debugpy@2026.6.0",
+      "ms-python.python@2026.10.0",
+      "ms-python.vscode-pylance@2026.4.1",
+      "ms-python.vscode-python-envs@1.42.0",
+      "rooveterinaryinc.roo-cline@3.54.0",
+      "saoudrizwan.claude-dev@4.1.26"
+    ]
+  },
+  "settings_after_sha256": null,
+  "settings_unchanged": true,
+  "claude_native_binaries": [
+    {
+      "path": "/home/han/.vscode-server/extensions/anthropic.claude-code-2.1.322-linux-x64/resources/native-binary/claude",
+      "file": "ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=69e0821094c6c8ff81436e0a0adfc15b651a2679, not stripped",
+      "sha256": "bfb3703ad5380242328459bc62ada4bde8ae7ba57c6e1eeadb9c00e08874c478"
+    }
+  ]
+}

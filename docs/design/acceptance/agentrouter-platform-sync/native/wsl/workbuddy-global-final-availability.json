@@ -1,0 +1,107 @@
+{
+  "provider": "workbuddy_global",
+  "platform": "native WSL Linux x64",
+  "status": "official-global-linux-package-unavailable-in-this-environment",
+  "installed": false,
+  "officialHomepage": "https://www.workbuddy.ai/",
+  "officialLinuxUpdateURL": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-x64-deb",
+  "actualDebDownloadExitCode": 22,
+  "actualDebHTTPStatus": 404,
+  "debDownloadedBytes": 0,
+  "vendorDigestProvided": false,
+  "internationalLinuxELFOrProfileNamespaceVerified": false,
+  "windowsEditionsAlreadyInstalledAndPreserved": true,
+  "domesticLinuxInstallationPreserved": true,
+  "noWindowsInteropSubstitution": true,
+  "modelCalls": 0,
+  "evidence": {
+    "official-update.json": {
+      "sha256": "466b3060f0c4113fdbfea6fc5f32e7613e2e0741849927aa19033d56b58635d1",
+      "receipt": {
+        "version": "5.5.2.37849279",
+        "url": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-deb/WorkBuddy-linux-x64-deb-5.5.2.37849279-910352f0.deb",
+        "productVersion": "5.5.2.37849279",
+        "sha256hash": "",
+        "timestamp": 1788572479,
+        "hash": "",
+        "name": "",
+        "supportsFastUpdate": false
+      }
+    },
+    "interrupted-download-receipt.json": {
+      "sha256": "25c22aa62589e3b15ef62e75710481cab44751e4588800c620336808948eb24d",
+      "receipt": {
+        "previousReceipt": {
+          "source": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-deb/WorkBuddy-linux-x64-deb-5.5.2.37849279-910352f0.deb",
+          "version": "5.5.2.37849279",
+          "vendorSha256Present": false,
+          "status": "downloading",
+          "startedAt": 1794389981.7928329
+        },
+        "originalToolSession": 66368,
+        "originalSessionNoLongerKnown": true,
+        "matchingDownloadProcessCount": 0,
+        "partialOrFinalDebExists": false,
+        "note": "No terminal producer receipt; this attempt is not counted as a successful download."
+      }
+    },
+    "download-receipt.json": {
+      "sha256": "2fa5f6400afdba2885eb25daa02c207f3b2145e6b83eaea4ff435979f9f88609",
+      "receipt": {
+        "source": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-deb/WorkBuddy-linux-x64-deb-5.5.2.37849279-910352f0.deb",
+        "version": "5.5.2.37849279",
+        "vendorSha256Present": false,
+        "startedAt": 1794390614.3396177,
+        "status": "download-failed",
+        "actualExitCode": 22,
+        "httpStatus": "404",
+        "processExited": true,
+        "finishedAt": 1794390619.7801433,
+        "partialBytes": 0
+      }
+    },
+    "platforms/summary.json": {
+      "sha256": "c6fc5f17e9c873016356d9f4dcceabbf4fb520af42f901151b768c731a1bfe59",
+      "receipt": [
+        {
+          "platform": "workbuddy-linux-x64",
+          "errorType": "HTTPError",
+          "httpStatus": 400
+        },
+        {
+          "platform": "workbuddy-linux-x64-tar",
+          "errorType": "HTTPError",
+          "httpStatus": 400
+        },
+        {
+          "platform": "workbuddy-linux-x64-rpm",
+          "status": 200,
+          "bytes": 267,
+          "sha256": "2cf5895c585f1d59b215127dafcff4754099701bee5bc14b7265914be54a07b8",
+          "version": "5.5.2.37849279",
+          "packageURL": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-rpm/WorkBuddy-linux-x64-rpm-5.5.2.37849279-910352f0.rpm",
+          "vendorSha256": null
+        },
+        {
+          "platform": "workbuddy-linux-x64-deb",
+          "errorType": "URLError",
+          "httpStatus": null
+        }
+      ]
+    },
+    "platforms/rpm-download-availability.json": {
+      "sha256": "028b27d9c46a3c1a8f90a090f74887f43efa65d17a1d3b8fc3737e4be6dec5c4",
+      "receipt": {
+        "source": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-rpm/WorkBuddy-linux-x64-rpm-5.5.2.37849279-910352f0.rpm",
+        "version": "5.5.2.37849279",
+        "request": "HEAD",
+        "actualExitCode": 35,
+        "httpStatus": "000",
+        "processExited": true,
+        "vendorSha256Present": false,
+        "observedAt": 1794390983.944793
+      }
+    }
+  },
+  "observedAt": 1794391717.6638906
+}

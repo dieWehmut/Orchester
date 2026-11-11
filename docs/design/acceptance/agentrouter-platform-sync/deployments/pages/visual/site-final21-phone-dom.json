@@ -1,0 +1,114 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "horizontalOverflow": false,
+  "providers": [
+    {
+      "id": "codex",
+      "name": "Codex",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "claude",
+      "name": "Claude Code",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek Harness",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "opencode",
+      "name": "OpenCode",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini CLI",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "antigravity",
+      "name": "Antigravity",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "workbuddy",
+      "name": "WorkBuddy 国内版",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "workbuddy_global",
+      "name": "WorkBuddy AI 国际版",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "qwen",
+      "name": "Qwen Code",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "openclaw",
+      "name": "OpenClaw",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "cline",
+      "name": "Cline",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "roo",
+      "name": "Roo Code",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "kilo",
+      "name": "Kilo Code",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "hermes",
+      "name": "Hermes Agent",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "pi",
+      "name": "Pi",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "crush",
+      "name": "Crush",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "claude_app",
+      "name": "Claude App",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "trae",
+      "name": "Trae",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "zcode",
+      "name": "ZCode",
+      "visibleImageLoaded": true
+    },
+    {
+      "id": "craft",
+      "name": "Craft Agents",
+      "visibleImageLoaded": true
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-11T11:11:02.036326+00:00",
+  "summaryPath": "verification-summary.json",
+  "status": "current-public-pages-check-passed",
+  "fileCount": 12,
+  "files": [
+    {
+      "path": "current-https-resource-verification.json",
+      "sha256": "f1552c7eef7ed0afbc8b65e08b99bb5a0cb4f428fabbce2678973e86eebee6ec",
+      "bytes": 25033
+    },
+    {
+      "path": "current-icon-mapping-verification.json",
+      "sha256": "49b1a459ffc1e58062d19215f2d51cf618e7adfa1368a18aca17b41f9fef3ead",
+      "bytes": 32869
+    },
+    {
+      "path": "initial-url-string-only-icon-mapping.json",
+      "sha256": "a78efd5c311e4fe68d655d84a3359491615e18737a06ddf8bb730390b6ac7d71",
+      "bytes": 26880
+    },
+    {
+      "path": "verification-summary.json",
+      "sha256": "3f53abba4b1dbcc32c34bd16fabe9365964911cafe1cf30686ac001c8b166e49",
+      "bytes": 2811
+    },
+    {
+      "path": "verify-icon-mappings.cjs",
+      "sha256": "b09ba268a009737398aecc43de43460d781809cd6f6490e1e397f241f6829ee7",
+      "bytes": 4775
+    },
+    {
+      "path": "visual/pages-current-controlled-dark-20261111.json",
+      "sha256": "cf71a8cd166a5bdfe82f44b4be8fba8d763e1d5d537425fcb38b2e4dffc3d804",
+      "bytes": 293
+    },
+    {
+      "path": "visual/pages-current-controlled-dark-grid-20261111.png",
+      "sha256": "7bbc211a10b43ef79efd43b74b3e377fd2f66d11a42510da8835f786272648b0",
+      "bytes": 34593
+    },
+    {
+      "path": "visual/pages-current-desktop-grid-20261111.png",
+      "sha256": "9191ea0d2f6048f7d497c0bdbf4bd6afd50e937f97b5b53331d36732e9417b60",
+      "bytes": 34462
+    },
+    {
+      "path": "visual/pages-current-initial-dom-20261111.json",
+      "sha256": "c4e59bd3b078c02f9f3431039ef7001cf81b9503f61d3f866153638f95b08cc9",
+      "bytes": 6930
+    },
+    {
+      "path": "visual/pages-current-loaded-images-20261111.json",
+      "sha256": "3e5fd1df795628f290e6ef4c0d462439212092c2330ccd5adc14cf6fdb0a7884",
+      "bytes": 63567
+    },
+    {
+      "path": "visual/pages-current-phone-dom-20261111.json",
+      "sha256": "8eb3b7d5a11a17c6f0890b8f48eb62729382bad728e6b8bcfbd333fb1c016645",
+      "bytes": 2287
+    },
+    {
+      "path": "visual/pages-current-phone-grid-20261111.png",
+      "sha256": "4d05b7b10b76d904a2fe990d674ab6fb1d43e4e84106556bef67760af6606df2",
+      "bytes": 41086
+    }
+  ],
+  "secretScanFindingCount": 0,
+  "noPrivateDataOrRepositorySourceChanges": true
+}

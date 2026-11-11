@@ -1,0 +1,12 @@
+{
+  "name": "deb-range",
+  "source": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-deb/WorkBuddy-linux-x64-deb-5.5.2.37849279-910352f0.deb",
+  "requestType": "GET range",
+  "actualExitCode": 22,
+  "processExited": true,
+  "httpStatus": "404",
+  "bytes": 0,
+  "sha256": null,
+  "startedAt": 1794394700.2803023,
+  "finishedAt": 1794394704.249048
+}

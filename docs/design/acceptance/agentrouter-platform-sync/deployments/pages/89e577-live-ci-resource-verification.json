@@ -1,0 +1,194 @@
+{
+  "actionsRun": 42989238549,
+  "actionsURL": "https://github.com/dieWehmut/Orchester/actions/runs/42989238549",
+  "deployedSource": "89e577ee79e3bcd1a67f403b8f0e62a546458da0",
+  "currentFunctionalMain": "a96a06e445ab6bdc4483ac297c69f8a0e2382bc9",
+  "siteAndDesignGitInputsExactlyEqual": true,
+  "publicURL": "https://diewehmut.github.io/Orchester/",
+  "ciArtifactSha256": "41f9f0e5782d89e20aa90ae411a272c89cce68a02281ad493f36208d9c9916e3",
+  "files": [
+    {
+      "path": "index.html",
+      "status": 200,
+      "bytes": 5427,
+      "sha256": "a1f84cab3657355bc1d1350766d763078c9bb40368f27ef0e3f6c94f455f5f48",
+      "matchesCI": true
+    },
+    {
+      "path": "404.html",
+      "status": 200,
+      "bytes": 5427,
+      "sha256": "a1f84cab3657355bc1d1350766d763078c9bb40368f27ef0e3f6c94f455f5f48",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/antigravity-DXFfVr6X.svg",
+      "status": 200,
+      "bytes": 5037,
+      "sha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/shield-check-AsAY3JYJ.js",
+      "status": 200,
+      "bytes": 651,
+      "sha256": "dbcf1b92f90255271dc2b77a800b5992978b89e54bc53a4babd58092d73208c9",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/workbuddy-D1Gu2IKl.svg",
+      "status": 200,
+      "bytes": 4142,
+      "sha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/index-BAKHHwgm.js",
+      "status": 200,
+      "bytes": 88674,
+      "sha256": "baa9f975e179f028c3792d4c47e5919679e281f2117c5529e81dc3532198ad52",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/HomeView-Da4PCiE5.js",
+      "status": 200,
+      "bytes": 43472,
+      "sha256": "a0753e9313306eb6d51cbf9f556d757d956f77907e7b81b45c20091aa42b57d8",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/claude-RJ8il4lB.png",
+      "status": 200,
+      "bytes": 10358,
+      "sha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/HomeView-VYl1khHT.css",
+      "status": 200,
+      "bytes": 392,
+      "sha256": "274cfaa7401387e8b1f8df232fbdf3b5586f8c4c01a2707b34b6f1fa2cd279bf",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/orchester-workspace-D9U4oCdz.png",
+      "status": 200,
+      "bytes": 33754,
+      "sha256": "0a2949125eb65124f0bc442db9e8155aec352f12545c9849079111dca6122610",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/roo-D8yWBDNL.png",
+      "status": 200,
+      "bytes": 5626,
+      "sha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/cursor-dark-BM_3k4Y4.svg",
+      "status": 200,
+      "bytes": 4373,
+      "sha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/SiteShell-DcGnkWKz.css",
+      "status": 200,
+      "bytes": 3407,
+      "sha256": "86934830eb21e9e3b42686f80b3d4889a2767867a4d050cba061028d3d3c9f2c",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+      "status": 200,
+      "bytes": 8059324,
+      "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/index-BSUPKiSo.css",
+      "status": 200,
+      "bytes": 48692,
+      "sha256": "6a25e9d4ba7156b69e9bf76b462ca4829dbba785b73c5064a710f631e96a0e60",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/circle-check-C6rd3-D3.js",
+      "status": 200,
+      "bytes": 214,
+      "sha256": "464776c56812714c3bf6beb7bd5174b34ea2a6955d9ef794e9cbdeac6d06fa21",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/hermes-light-x1BVlPhG.svg",
+      "status": 200,
+      "bytes": 116350,
+      "sha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/codex-DODyF2an.png",
+      "status": 200,
+      "bytes": 10969,
+      "sha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/InstallView-DHh4Lay5.js",
+      "status": 200,
+      "bytes": 4640,
+      "sha256": "57eefd29aab781d9af5aa9ac956933ad02fca5b5862802ac340cfc3adbce7bf8",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/NotFoundView-C-vaTFSj.js",
+      "status": 200,
+      "bytes": 274,
+      "sha256": "9867c34e5aa20476053a1dfb96d7db97ce5a5a069acc80168434948b20f19735",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/hermes-dark-D5fo9gTB.svg",
+      "status": 200,
+      "bytes": 137768,
+      "sha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/ArchitectureView-C29pLQfB.js",
+      "status": 200,
+      "bytes": 6009,
+      "sha256": "675e1e346315df34bbedd9f8c9bab35ae672656da5f0b695c8a7089dd364af6f",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/cursor-light-DGKJuirn.svg",
+      "status": 200,
+      "bytes": 4388,
+      "sha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/SiteShell.vue_vue_type_script_setup_true_lang-Gezwn2cq.js",
+      "status": 200,
+      "bytes": 15940,
+      "sha256": "c60d275cd48395c23c4ad428e7808ba6561927dd2d7f9c74aa006c8c5ca20827",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/zcode-yL2Qb12j.png",
+      "status": 200,
+      "bytes": 6479,
+      "sha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "matchesCI": true
+    },
+    {
+      "path": "assets/crush-B1wob-OZ.png",
+      "status": 200,
+      "bytes": 55448,
+      "sha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "matchesCI": true
+    }
+  ],
+  "allLiveResourcesMatchCI": true
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "name": "homepage",
+    "url": "https://www.workbuddy.ai/",
+    "observedAt": 1794394605.7089164,
+    "errorType": "URLError",
+    "status": null
+  },
+  {
+    "name": "deb-update",
+    "url": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-x64-deb",
+    "observedAt": 1794394605.7092283,
+    "status": 200,
+    "finalURL": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-x64-deb",
+    "bytes": 267,
+    "sha256": "466b3060f0c4113fdbfea6fc5f32e7613e2e0741849927aa19033d56b58635d1",
+    "publicMetadata": {
+      "version": "5.5.2.37849279",
+      "url": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-deb/WorkBuddy-linux-x64-deb-5.5.2.37849279-910352f0.deb",
+      "productVersion": "5.5.2.37849279",
+      "sha256hash": "",
+      "timestamp": 1788572479,
+      "hash": "",
+      "name": "",
+      "supportsFastUpdate": false
+    }
+  },
+  {
+    "name": "rpm-update",
+    "url": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-x64-rpm",
+    "observedAt": 1794394605.7095625,
+    "errorType": "URLError",
+    "status": null
+  }
+]

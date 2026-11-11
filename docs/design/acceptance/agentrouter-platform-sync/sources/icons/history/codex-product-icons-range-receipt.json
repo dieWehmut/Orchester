@@ -1,0 +1,74 @@
+{
+  "source": "https://openai.gallerycdn.vsassets.io/extensions/openai/chatgpt/26.51106.51428/1794372105882/Microsoft.VisualStudio.Services.VSIXPackage",
+  "publisher": "openai",
+  "version": "26.51106.51428",
+  "platform": "linux-x64",
+  "requests": [
+    {
+      "start": 374310834,
+      "end": 374310855,
+      "bytes": 22,
+      "contentRange": "bytes 374310834-374310855/374310856"
+    },
+    {
+      "start": 374310814,
+      "end": 374310833,
+      "bytes": 20,
+      "contentRange": "bytes 374310814-374310833/374310856"
+    },
+    {
+      "start": 372748666,
+      "end": 374310833,
+      "bytes": 1562168,
+      "contentRange": "bytes 372748666-374310833/374310856"
+    },
+    {
+      "start": 27221,
+      "end": 27250,
+      "bytes": 30,
+      "contentRange": "bytes 27221-27250/374310856"
+    },
+    {
+      "start": 27251,
+      "end": 27287,
+      "bytes": 37,
+      "contentRange": "bytes 27251-27287/374310856"
+    },
+    {
+      "start": 27288,
+      "end": 28232,
+      "bytes": 945,
+      "contentRange": "bytes 27288-28232/374310856"
+    },
+    {
+      "start": 26193,
+      "end": 26222,
+      "bytes": 30,
+      "contentRange": "bytes 26193-26222/374310856"
+    },
+    {
+      "start": 26223,
+      "end": 26259,
+      "bytes": 37,
+      "contentRange": "bytes 26223-26259/374310856"
+    },
+    {
+      "start": 26260,
+      "end": 27204,
+      "bytes": 945,
+      "contentRange": "bytes 26260-27204/374310856"
+    }
+  ],
+  "packageBytes": 374310856,
+  "black": {
+    "entry": "extension/resources/blossom-black.svg",
+    "sha256": "8652777b55544c572ba445dd230a90c2e248611e92eaa77de5805e8d0561fc30",
+    "bytes": 2008
+  },
+  "white": {
+    "entry": "extension/resources/blossom-white.svg",
+    "sha256": "c6d12166686ed8c6b5b86f7eb7b5315c0b1b2fc7494e401b67ebb91f6c89dd95",
+    "bytes": 2031
+  },
+  "status": "official-product-icons-extracted"
+}

@@ -1,0 +1,18 @@
+{
+  "observedAt": "2026-11-11T10:55:52.480022+00:00",
+  "operation": "read-only",
+  "archiveFiles": 94,
+  "manifestDeclaredCount": 93,
+  "manifestEntries": 93,
+  "manifestMismatch": [],
+  "unlistedFiles": [],
+  "listedMissingFiles": [],
+  "provenanceEntries": 83,
+  "provenanceFailures": [],
+  "originalSourcesMissing": 27,
+  "relativeLinks": 57,
+  "brokenLinks": [],
+  "linksOutsideRepository": [],
+  "secretFindings": [],
+  "privateFileContentsRead": false
+}

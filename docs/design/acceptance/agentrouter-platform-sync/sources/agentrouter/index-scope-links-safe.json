@@ -1,0 +1,130 @@
+{
+  "sourceURL": "https://agentrouter.org/docs/index.html",
+  "sourceSha256": "5ed3e9ff682543e79edaf0d85a732d41029cf3aca1fe5c424beeddda16ba84ba",
+  "distinctGuideLinks": 17,
+  "guideLinks": [
+    {
+      "path": "/docs/claude-code.html",
+      "officialURL": "https://agentrouter.org/docs/claude-code.html",
+      "anchorLabels": [
+        "快速开始",
+        "Claude Code",
+        "开始使用"
+      ]
+    },
+    {
+      "path": "/docs/cline.html",
+      "officialURL": "https://agentrouter.org/docs/cline.html",
+      "anchorLabels": [
+        "Cline"
+      ]
+    },
+    {
+      "path": "/docs/roocode.html",
+      "officialURL": "https://agentrouter.org/docs/roocode.html",
+      "anchorLabels": [
+        "Roo Code"
+      ]
+    },
+    {
+      "path": "/docs/kilocode.html",
+      "officialURL": "https://agentrouter.org/docs/kilocode.html",
+      "anchorLabels": [
+        "Kilo Code"
+      ]
+    },
+    {
+      "path": "/docs/claude-code-vscode.html",
+      "officialURL": "https://agentrouter.org/docs/claude-code-vscode.html",
+      "anchorLabels": [
+        "Claude Code"
+      ]
+    },
+    {
+      "path": "/docs/codex.html",
+      "officialURL": "https://agentrouter.org/docs/codex.html",
+      "anchorLabels": [
+        "Codex"
+      ]
+    },
+    {
+      "path": "/docs/qwencode.html",
+      "officialURL": "https://agentrouter.org/docs/qwencode.html",
+      "anchorLabels": [
+        "Qwen Code"
+      ]
+    },
+    {
+      "path": "/docs/opencode.html",
+      "officialURL": "https://agentrouter.org/docs/opencode.html",
+      "anchorLabels": [
+        "OpenCode"
+      ]
+    },
+    {
+      "path": "/docs/openclaw.html",
+      "officialURL": "https://agentrouter.org/docs/openclaw.html",
+      "anchorLabels": [
+        "OpenClaw"
+      ]
+    },
+    {
+      "path": "/docs/hermes.html",
+      "officialURL": "https://agentrouter.org/docs/hermes.html",
+      "anchorLabels": [
+        "Hermes Agent"
+      ]
+    },
+    {
+      "path": "/docs/pi.html",
+      "officialURL": "https://agentrouter.org/docs/pi.html",
+      "anchorLabels": [
+        "Pi"
+      ]
+    },
+    {
+      "path": "/docs/crush.html",
+      "officialURL": "https://agentrouter.org/docs/crush.html",
+      "anchorLabels": [
+        "Crush"
+      ]
+    },
+    {
+      "path": "/docs/claude-app.html",
+      "officialURL": "https://agentrouter.org/docs/claude-app.html",
+      "anchorLabels": [
+        "Claude App"
+      ]
+    },
+    {
+      "path": "/docs/trae.html",
+      "officialURL": "https://agentrouter.org/docs/trae.html",
+      "anchorLabels": [
+        "Trae"
+      ]
+    },
+    {
+      "path": "/docs/zcode.html",
+      "officialURL": "https://agentrouter.org/docs/zcode.html",
+      "anchorLabels": [
+        "ZCode"
+      ]
+    },
+    {
+      "path": "/docs/workbuddy.html",
+      "officialURL": "https://agentrouter.org/docs/workbuddy.html",
+      "anchorLabels": [
+        "WorkBuddy"
+      ]
+    },
+    {
+      "path": "/docs/craft-agents.html",
+      "officialURL": "https://agentrouter.org/docs/craft-agents.html",
+      "anchorLabels": [
+        "Craft Agents"
+      ]
+    }
+  ],
+  "homepageGeminiFeatureHeadingPresent": true,
+  "dedicatedGeminiGuideLinkPresent": false
+}

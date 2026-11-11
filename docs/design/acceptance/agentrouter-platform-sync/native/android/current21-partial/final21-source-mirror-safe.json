@@ -1,0 +1,304 @@
+{
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "nativeSourceInputs": [
+    {
+      "path": "apps/mobile/android/.gitignore",
+      "sha256": "065e4a92a240fe11a0ea230491ad9dabef143f5fd5a3e6884ad6f0395666a971",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/.gitignore",
+      "sha256": "99c54e51ee601a60fbde8016b2cbf717483bc2e92773be86c9247d02a7fa6ea4",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/build.gradle",
+      "sha256": "efd7ba1528c0fe2cc893d633e6efcfb22637c9fe7c5e37969d074982855a618e",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/capacitor.build.gradle",
+      "sha256": "7051cadfdbc532197d2cfd4f8a11684d81367f23cf7952e5a208f7b6aa0833e0",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/proguard-rules.pro",
+      "sha256": "1cf8c57e8f79c250b0af9c1a5a4edad71a5c348a79ab70243b6bae086c150ad2",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/androidTest/java/dev/orchester/mobile/NativeBridgeTest.java",
+      "sha256": "25b88bb568e9652afbc5eb013fdb919819f4b0c133b560e0fe956228764f562a",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/AndroidManifest.xml",
+      "sha256": "1b6be63fa2b64d14dbd681eb597599a23a30b14e9473ce39ceaebe2e4e36a651",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/dev/orchester/mobile/CredentialsPlugin.java",
+      "sha256": "735d1ad2e1e1fd58b9ed190829db3c48972861b6ca94db082a5ce8265a70390c",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/java/dev/orchester/mobile/MainActivity.java",
+      "sha256": "27e6702659741f33c501c95d49cb6b023fc90d292f9749c601febb38d60478dc",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/drawable-nodpi/brand_splash_icon.png",
+      "sha256": "08f7ee1c26268ec5a28c8e2df9f4927501536cfe4ca1aef6343adbdfd646054e",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/layout/activity_main.xml",
+      "sha256": "5d770feb791313b947020cbfc57e5c733c556dac5e9e49261a1190e527073253",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "sha256": "9c3a7e0a6515c6e1a7ae834a9ae430311ebc3241f7b2e5e7f0460aa690709a7c",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+      "sha256": "9c3a7e0a6515c6e1a7ae834a9ae430311ebc3241f7b2e5e7f0460aa690709a7c",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+      "sha256": "68caee8e2329a52681ae15f43309f4e151c67214d29cbe6356a3a5d4698a69cb",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png",
+      "sha256": "932c0bd1baa0f37078004e38a4c286ca3d514c5a908d256837f92d50609623f2",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png",
+      "sha256": "68caee8e2329a52681ae15f43309f4e151c67214d29cbe6356a3a5d4698a69cb",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+      "sha256": "d902c667a6afceface786004ede2c279d8c2b356fcbce0c202831a6d19b9bc21",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png",
+      "sha256": "5b9ad2b6294c3e4ef4989d5e886e658994e1fd2fdfa8cc420f2ed37b699788f7",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png",
+      "sha256": "d902c667a6afceface786004ede2c279d8c2b356fcbce0c202831a6d19b9bc21",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+      "sha256": "0105e36f11bd283938d8269c77f62f4e335a00c3c4bbc87109f516c29a5cf55e",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png",
+      "sha256": "4298d5e16fc2dea33f37e6877ddc024da5c2bba1e939ad990e5356b1edeb0535",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png",
+      "sha256": "0105e36f11bd283938d8269c77f62f4e335a00c3c4bbc87109f516c29a5cf55e",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+      "sha256": "651540e7b0ddcc275ebbbc082f73a43b6bb3bba03b83f55d5277964496811a6f",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png",
+      "sha256": "413f0180ee3b5bba883c2597906123551f7e38cc8a3f30a4791ff641f9bbd697",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png",
+      "sha256": "651540e7b0ddcc275ebbbc082f73a43b6bb3bba03b83f55d5277964496811a6f",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "sha256": "2b3ec6f3e4e2015c9db4b8a8f79e8d86464ada1bb91b4ba3e40a317d3f80d743",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png",
+      "sha256": "69e343bd0274e005a0a9c0943c8d93589e3c5c3034efa5592596941974296208",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png",
+      "sha256": "2b3ec6f3e4e2015c9db4b8a8f79e8d86464ada1bb91b4ba3e40a317d3f80d743",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/values/ic_launcher_background.xml",
+      "sha256": "adac65c4feba308f8b703f19a7bd3407a8d64bf1b13055a7d9a3b0a9bb235d47",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/values/strings.xml",
+      "sha256": "ab811d1ec713701e18b8b2c60feb1ca1153ba392e83c59db49f4cfcab1d61e6f",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/values/styles.xml",
+      "sha256": "4419e6157eff9e73492dc42952e712ff1ca00b84e204dabf021539f926d98f88",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/app/src/main/res/xml/file_paths.xml",
+      "sha256": "a46ed43ef65c90cb6778f4581decf3556e3f0055aad8f36d69dae16f9a0e99aa",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/build.gradle",
+      "sha256": "e2aa5075e1fcfd5e77c63eb8d662932b3c8586c927376b88a4986365af3b635f",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/capacitor.settings.gradle",
+      "sha256": "6a2e98e5248691f7734140123df2a84665c6e50845bca28a7dbee06462649f22",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/gradle.properties",
+      "sha256": "3bab15c5b8bc4c2f4b6cf525497d15ad4abca53a460e6dd2eb0f0135817d31e6",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/gradle/wrapper/gradle-wrapper.jar",
+      "sha256": "7d3a4ac4de1c32b59bc6a4eb8ecb8e612ccd0cf1ae1e99f66902da64df296172",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/gradle/wrapper/gradle-wrapper.properties",
+      "sha256": "9a479a85aa879bb55284fc16d0de5b81a745c3854f4e2d88c42e7debaf007435",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/gradlew",
+      "sha256": "b187b4c52e749f5760afdd6fadc31b2a98ad35fb249bf0dff03b72650f320409",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/gradlew.bat",
+      "sha256": "94102713eb8fb22d032397924c0f38ab2da783ba60d07054339f1190a0c4e2cd",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/settings.gradle",
+      "sha256": "6ce098d15ebd69b44c4ecd786bca1bdc366340d2459b2af4d7bb0ab317aa9669",
+      "gitExact": true
+    },
+    {
+      "path": "apps/mobile/android/variables.gradle",
+      "sha256": "83d502c9ed8fcf1dd4791482067abeedbebae49fafe9cd14a8a1f5891deb0d88",
+      "gitExact": true
+    }
+  ],
+  "allSourceGitExact": true,
+  "publicArtifacts": [
+    {
+      "path": "assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+      "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b",
+      "bytes": 8059324
+    },
+    {
+      "path": "assets/antigravity-DXFfVr6X.svg",
+      "sha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "bytes": 5037
+    },
+    {
+      "path": "assets/brand-icon-Zjdxen9M.png",
+      "sha256": "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06",
+      "bytes": 377394
+    },
+    {
+      "path": "assets/claude-RJ8il4lB.png",
+      "sha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "bytes": 10358
+    },
+    {
+      "path": "assets/codex-DODyF2an.png",
+      "sha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+      "bytes": 10969
+    },
+    {
+      "path": "assets/crush-B1wob-OZ.png",
+      "sha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "bytes": 55448
+    },
+    {
+      "path": "assets/cursor-dark-BM_3k4Y4.svg",
+      "sha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+      "bytes": 4373
+    },
+    {
+      "path": "assets/cursor-light-DGKJuirn.svg",
+      "sha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+      "bytes": 4388
+    },
+    {
+      "path": "assets/hermes-dark-D5fo9gTB.svg",
+      "sha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+      "bytes": 137768
+    },
+    {
+      "path": "assets/hermes-light-x1BVlPhG.svg",
+      "sha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+      "bytes": 116350
+    },
+    {
+      "path": "assets/index--zaH3Y7H.js",
+      "sha256": "7e115c9d4b6236a5de0338b7499f0e09341df65ee03067ad71cd01b578a10a49",
+      "bytes": 538627
+    },
+    {
+      "path": "assets/index-9wEW8k7x.css",
+      "sha256": "0ccaec9543d9001c1e528918446afa1170c46d9fc676c46ba33f1a21a5fbbf20",
+      "bytes": 34506
+    },
+    {
+      "path": "assets/roo-D8yWBDNL.png",
+      "sha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "bytes": 5626
+    },
+    {
+      "path": "assets/workbuddy-D1Gu2IKl.svg",
+      "sha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "bytes": 4142
+    },
+    {
+      "path": "assets/zcode-yL2Qb12j.png",
+      "sha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "bytes": 6479
+    },
+    {
+      "path": "favicon.png",
+      "sha256": "bd2b0e95dade84d5371027cc9616610813b3e7f878b434d54a3a1459111c7db2",
+      "bytes": 8268
+    },
+    {
+      "path": "index.html",
+      "sha256": "8b944924f56c75a7e97a91bfd2bce4cacfab8b961e24fc04beff80af431bc033",
+      "bytes": 477
+    }
+  ],
+  "resourceCount": 17,
+  "nativeProject": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/apps/mobile/android",
+  "JdkConfiguration": "21.0.13+9 via #GRADLE_LOCAL_JAVA_HOME",
+  "old20MirrorAndArtifactsPreserved": true,
+  "initialEolDifferenceRecorded": true,
+  "initialMirrorReceipt": "initial-worktree-eol-mirror-safe.json"
+}

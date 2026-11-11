@@ -1,0 +1,10 @@
+{
+  "actualExitCode": 0,
+  "processExited": true,
+  "apk": "app-final21-installed-signer.apk",
+  "apkSha256": "f83fa2a75c712a3d2e1f3f203cf73ce89204fb4ca0bce4d8c2ef0c4fe3596d3c",
+  "certificatePreservationVerified": true,
+  "replaceInstallDataPreservationRequested": true,
+  "outputHasSuccess": true,
+  "firstAttemptFailedRetained": true
+}

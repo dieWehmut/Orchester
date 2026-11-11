@@ -1,0 +1,16 @@
+{
+  "guidePath": "/docs/qwencode.html",
+  "requestedURL": "https://agentrouter.org/docs/qwencode.html",
+  "anchorLabels": [
+    "Qwen Code"
+  ],
+  "startedAt": 1794395960.3980148,
+  "transport": "verified official HTTPS urllib",
+  "httpStatus": 200,
+  "responseURL": "https://agentrouter.org/docs/qwencode.html",
+  "bytes": 40082,
+  "sha256": "876359d537fcbe0b4a071a8cf656eaf04edb2b0125079badbb2ea79f18fe8681",
+  "processOperationCompleted": true,
+  "publicSnapshotFile": "qwencode.html",
+  "finishedAt": 1794395962.9300888
+}

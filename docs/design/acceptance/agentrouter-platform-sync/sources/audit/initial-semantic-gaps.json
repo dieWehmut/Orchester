@@ -1,0 +1,40 @@
+{
+  "issues": [
+    {
+      "file": "summary.json",
+      "issue": "pendingCurrentEpochScopes still lists source binding, new21 frontend/Pages and max_threads metadata despite archived proofs and document accepted sections."
+    },
+    {
+      "file": "sources/final71-source-binding.json",
+      "issue": "fullRustFinalSourceResult=pending-root-actual-result; final full Rust/native build summary absent from archive. Must append authoritative final result before marking complete."
+    },
+    {
+      "file": "tests/backend/workbuddy-editions/gates-independent-review.json",
+      "issue": "freshFinalFullRustResult pending; same final summary absence."
+    },
+    {
+      "file": "39-agentrouter-full-platform-sync.md",
+      "issue": "Current concurrency still says 4 slots; developer current limit is 9. Keep historic4/config8 distinction and add current9 evidence."
+    },
+    {
+      "file": "39-agentrouter-full-platform-sync.md",
+      "issue": "Historical a96 Rust paragraph says current source has not rerun complete103 programs, whereas immediately preceding final71 paragraph says it has; label the a96 scope explicitly."
+    },
+    {
+      "file": "39-agentrouter-full-platform-sync.md",
+      "issue": "Android d0d1... APK paragraph is historical20 stage but called current new APK; label historical20 and preserve final21 pending."
+    },
+    {
+      "file": "39-agentrouter-full-platform-sync.md",
+      "issue": "Global WSL paragraph says thread did not perform downloads/installs, while actual HTTP404/curl22 attempts are reported. Describe observed no international installation instead of thread attribution."
+    }
+  ],
+  "noRepositoryEdits": true,
+  "completionNotProven": [
+    "final21 Linux deployment",
+    "nativeWindows21/runtime/reinstall/7338",
+    "nativeAndroid21/Studiofinal/PTYcleanup",
+    "globalWorkBuddy nativeWSL install",
+    "ClaudeStore actual install"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "sourceInputsStable": true,
+  "revision": "a96a06e445ab6bdc4483ac297c69f8a0e2382bc9",
+  "headAfter": "a96a06e445ab6bdc4483ac297c69f8a0e2382bc9",
+  "binary": {
+    "path": "/home/han/project/Orchester/target/debug/orchester",
+    "sha256": "1a14692fec65687f6798bfe7f706da76d299c1c45288fa4fef92a59d4eb645c5",
+    "bytes": 236091336
+  },
+  "gates": [
+    {
+      "phase": "rust-tests",
+      "exitCode": 0,
+      "execution": "Prior complete 103-program workspace test run plus fresh 53-test target run for the only three changed identity inputs",
+      "fullReceipt": "/tmp/orchester-final20-rust-gates-20261111/result.json",
+      "targetReceipt": "/tmp/orchester-installed-desktop-identity-20261111/result.json"
+    },
+    {
+      "phase": "rust-fmt",
+      "exitCode": 0,
+      "execution": "Fresh cargo fmt --all -- --check in latest target receipt"
+    },
+    {
+      "phase": "rust-clippy",
+      "exitCode": 0,
+      "execution": "Prior strict full workspace Clippy and fresh strict netz all-target Clippy for the only three changed identity inputs"
+    },
+    {
+      "phase": "linux-native-build",
+      "exitCode": 0,
+      "receipt": "/tmp/orchester-final20-native-link-20261111/result.json"
+    }
+  ],
+  "onlyChangedRustInputsSinceFullRun": [
+    "kisten/netz/src/agent_process/identity.rs",
+    "kisten/netz/src/agent_process/rules.json",
+    "kisten/netz/src/agent_process/wsl_query.py"
+  ],
+  "sourceFileCount": 366
+}

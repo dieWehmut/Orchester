@@ -1,0 +1,11 @@
+{
+    "phase":  "monitor-process",
+    "childPid":  95660,
+    "childCreatedAt":  "2026-11-11T09:08:41.2734073Z",
+    "exitCode":  0,
+    "timedOut":  false,
+    "processExited":  true,
+    "terminationAttempted":  false,
+    "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final-a96a06e-20261111\\monitor-process\\stdout.log",
+    "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final-a96a06e-20261111\\monitor-process\\stderr.log"
+}

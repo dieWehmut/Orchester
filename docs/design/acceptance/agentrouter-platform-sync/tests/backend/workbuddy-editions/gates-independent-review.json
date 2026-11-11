@@ -1,0 +1,220 @@
+{
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "scope": "21-provider, 7-service monitoring; synthetic local/WSL identities only. Functionality runs runtime/routes/socket/catalog and shared remote DTO/auth tests. Test split reuses unchanged functionality results and reruns all process tests plus strict all-target netz clippy/fmt. No provider/model launches.",
+  "firstCompilationFailure": {
+    "receipt": {
+      "sourcePath": "/tmp/orchester-workbuddy-editions-backend-20261111/first-compile-failure-result.json",
+      "sourceSha256": "431b370356641b1f161dc336fcb116a8afd6bf77413ae96fd7e860873f4f50e7",
+      "bytes": 85565
+    },
+    "gates": [
+      {
+        "command": [
+          "cargo",
+          "test",
+          "-p",
+          "orchester-netz",
+          "--lib",
+          "agent_process::",
+          "--locked",
+          "--offline"
+        ],
+        "exitCode": 101,
+        "logPath": "/tmp/orchester-workbuddy-editions-backend-20261111/gate-0.log",
+        "logSha256": "c02a062410c3ace2e102463b24f013a5d59b3d81832b8fb7b7aff2339fa86bd8",
+        "seconds": 16.22,
+        "summaries": [
+          "error: could not compile `orchester-netz` (lib test) due to 1 previous error"
+        ]
+      }
+    ],
+    "sourceInputCount": 366,
+    "sourceStable": true,
+    "reason": "A new test called instance_key with four arguments; the function takes three."
+  },
+  "functionality": {
+    "receipt": {
+      "sourcePath": "/tmp/orchester-workbuddy-editions-backend-20261111/result.json",
+      "sourceSha256": "e63e0a4c6f8a4038107c7951e2d3a9ca49cdeabab78ea8be812ba0be3d87e696",
+      "bytes": 88413
+    },
+    "gates": [
+      {
+        "command": [
+          "cargo",
+          "test",
+          "-p",
+          "orchester-netz",
+          "--lib",
+          "agent_process::",
+          "--locked",
+          "--offline"
+        ],
+        "exitCode": 0,
+        "logPath": "/tmp/orchester-workbuddy-editions-backend-20261111/gate-0.log",
+        "logSha256": "826663be25bd717cf413a8aad32e81e325c945e55f498e44f692f048367d0b26",
+        "seconds": 35.84,
+        "summaries": [
+          "    Finished `test` profile [unoptimized + debuginfo] target(s) in 33.43s",
+          "test result: ok. 33 passed; 0 failed; 0 ignored; 0 measured; 78 filtered out; finished in 0.79s"
+        ]
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "-p",
+          "orchester-netz",
+          "--test",
+          "agent_runtime_status",
+          "--test",
+          "agent_status_routes",
+          "--test",
+          "agent_status_socket",
+          "--test",
+          "agent_process_monitor",
+          "--test",
+          "agent_process",
+          "--test",
+          "agent_catalog",
+          "--test",
+          "agent_routes",
+          "--test",
+          "remote_agent_status",
+          "--locked",
+          "--offline"
+        ],
+        "exitCode": 0,
+        "logPath": "/tmp/orchester-workbuddy-editions-backend-20261111/gate-1.log",
+        "logSha256": "c8158f650831b512aebadcce6d0d5fedb1b841b6d8c10e6057da16f880ba4d6d",
+        "seconds": 71.44,
+        "summaries": [
+          "    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 07s",
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+          "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+          "test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+          "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+          "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s"
+        ]
+      },
+      {
+        "command": [
+          "cargo",
+          "clippy",
+          "-p",
+          "orchester-netz",
+          "--all-targets",
+          "--locked",
+          "--offline",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exitCode": 0,
+        "logPath": "/tmp/orchester-workbuddy-editions-backend-20261111/gate-2.log",
+        "logSha256": "07b428169a4c7e1a67376bfa001ffbef0aeb2c4d51192dc8d91a1ba7e29e6252",
+        "seconds": 4.77,
+        "summaries": [
+          "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.48s"
+        ]
+      },
+      {
+        "command": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--",
+          "--check"
+        ],
+        "exitCode": 0,
+        "logPath": "/tmp/orchester-workbuddy-editions-backend-20261111/gate-3.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "seconds": 0.73,
+        "summaries": []
+      }
+    ],
+    "sourceInputCount": 366,
+    "sourceStable": true,
+    "testPassCount": 58
+  },
+  "testSplit": {
+    "receipt": {
+      "sourcePath": "/tmp/orchester-workbuddy-editions-backend-20261111/test-split/result.json",
+      "sourceSha256": "ecd042c2725e8a9b75b467e49c9410f635525423dda36b4b8eef45bfa217fba1",
+      "bytes": 86989
+    },
+    "gates": [
+      {
+        "command": [
+          "cargo",
+          "test",
+          "-p",
+          "orchester-netz",
+          "--lib",
+          "agent_process::",
+          "--locked",
+          "--offline"
+        ],
+        "exitCode": 0,
+        "logPath": "/tmp/orchester-workbuddy-editions-backend-20261111/test-split/gate-0.log",
+        "logSha256": "9e2803b5843414cbc02bd620bd09b4633299c1c2bc7313f73a66ae4f26f12577",
+        "seconds": 4.56,
+        "summaries": [
+          "    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.96s",
+          "test result: ok. 33 passed; 0 failed; 0 ignored; 0 measured; 78 filtered out; finished in 0.55s"
+        ]
+      },
+      {
+        "command": [
+          "cargo",
+          "clippy",
+          "-p",
+          "orchester-netz",
+          "--all-targets",
+          "--locked",
+          "--offline",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exitCode": 0,
+        "logPath": "/tmp/orchester-workbuddy-editions-backend-20261111/test-split/gate-1.log",
+        "logSha256": "9e0d13a091c6a0111d750f6a4a23b579c6a322a977a767f2179e31742659d562",
+        "seconds": 2.66,
+        "summaries": [
+          "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.58s"
+        ]
+      },
+      {
+        "command": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--",
+          "--check"
+        ],
+        "exitCode": 0,
+        "logPath": "/tmp/orchester-workbuddy-editions-backend-20261111/test-split/gate-2.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "seconds": 0.63,
+        "summaries": []
+      }
+    ],
+    "sourceInputCount": 367,
+    "sourceStable": true,
+    "testPassCount": 33,
+    "unchangedFunctionalityResultsReused": true,
+    "changedInputs": [
+      "kisten/netz/src/agent_process/identity.rs",
+      "kisten/netz/src/agent_process/tests/identity.rs"
+    ]
+  },
+  "complete": true,
+  "modelCalls": 0,
+  "freshFinalFullRustResult": "tests/backend/final71-full-workspace/summary.json",
+  "finalSourceInputProof": "sources/final71-source-binding.json",
+  "freshFinalFullRustInputCount": 368
+}

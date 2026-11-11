@@ -1,0 +1,162 @@
+{
+  "status": "all-nine-native-cli-version-executions-verified",
+  "tools": [
+    {
+      "id": "claude",
+      "status": "native-version-passed",
+      "version": "2.1.322",
+      "entry": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@anthropic-ai\\claude-code\\bin\\claude.exe",
+      "entrySha256": "345996b4bdbae21d817f750fae2f34cbf8d81224a5444c78136091d121beb298",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "childPid": 268024,
+      "childCreatedAt": "2026-11-11T08:15:01.5419486Z",
+      "argument": "--version",
+      "modelCalls": 0
+    },
+    {
+      "id": "codex",
+      "status": "native-version-passed",
+      "version": "0.167.1",
+      "entry": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+      "entrySha256": "e14fc83739c13c1074b12bd1acce4010c893c7f6fbfc1593b4a31d74cabb57af",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "childPid": 308568,
+      "childCreatedAt": "2026-11-11T08:14:59.1608998Z",
+      "argument": "--version",
+      "modelCalls": 0
+    },
+    {
+      "id": "crush",
+      "status": "native-version-passed",
+      "version": "0.100.0",
+      "entry": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@charmland\\crush\\run-crush.js",
+      "entrySha256": "2cc1ac87cc237a6383702b59f985160e637d3ec853bbccba2d7ef6bbf4d94361",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "childPid": 209436,
+      "childCreatedAt": "2026-11-11T08:15:04.0731271Z",
+      "argument": "--version",
+      "nativeAuditSha256": "d85d130af9e50e468448819f4d91bb65ffffdc8b3687f5a2a6819eb3bd26f1d7",
+      "rawVersionRetainedPrivately": true,
+      "modelCalls": 0
+    },
+    {
+      "id": "gemini",
+      "status": "native-version-passed",
+      "version": "0.68.0",
+      "entry": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@google\\gemini-cli\\bundle\\gemini.js",
+      "entrySha256": "fcc38edd4f864c2f5fa582d7d133c19b1a04c697ad3143ab8045f92b77644c68",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "childPid": 265556,
+      "childCreatedAt": "2026-11-11T08:23:19.0283775Z",
+      "argument": "--version",
+      "modelCalls": 0
+    },
+    {
+      "id": "hermes",
+      "status": "native-version-passed",
+      "version": "0.23.1+1899.g60f8163",
+      "entry": "C:\\Users\\han\\AppData\\Local\\hermes\\bin\\hermes.exe",
+      "entrySha256": "94206ceddcade3f3b65dc90ddfc61166067b9cce77eaa0d87626c8485fc8c3f9",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "childPid": 139252,
+      "childCreatedAt": "2026-11-11T08:23:22.9501023Z",
+      "argument": "--version",
+      "nativeAuditSha256": "68aebe93b1588e5763242be7f161354f2b3697d41dabc3f8c3df190400f4be42",
+      "rawVersionRetainedPrivately": true,
+      "modelCalls": 0
+    },
+    {
+      "id": "openclaw",
+      "status": "native-version-passed",
+      "version": "2026.11.3",
+      "entry": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\openclaw\\openclaw.mjs",
+      "entrySha256": "469e60c9f60b615ff71c985a54238ee532a8f949866d76aebe7d6e4bc7219902",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "childPid": 295204,
+      "childCreatedAt": "2026-11-11T08:15:02.7543621Z",
+      "argument": "--version",
+      "modelCalls": 0
+    },
+    {
+      "id": "opencode",
+      "status": "native-version-passed",
+      "version": "1.19.5",
+      "entry": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\opencode-ai\\.\\bin\\opencode.exe",
+      "entrySha256": "d7b473388cb62555970e400ce54cdfb6d6573608beea6f8fdf382cd1a698a3fa",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "childPid": 240236,
+      "childCreatedAt": "2026-11-11T08:15:02.2737077Z",
+      "argument": "--version",
+      "modelCalls": 0
+    },
+    {
+      "id": "pi",
+      "status": "native-version-passed",
+      "version": "1.5.2",
+      "entry": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@earendil-works\\pi-coding-agent\\dist\\bundle\\cli.js",
+      "entrySha256": "e79626f2dd6f94aa45d30f3fa63cd84319a6eefcd150b353cfaf274366926774",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "childPid": 280044,
+      "childCreatedAt": "2026-11-11T08:15:03.1063616Z",
+      "argument": "--version",
+      "modelCalls": 0
+    },
+    {
+      "id": "qwen",
+      "status": "native-version-passed",
+      "version": "0.27.2",
+      "entry": "C:\\Users\\han\\AppData\\Roaming\\npm\\node_modules\\@qwen-code\\qwen-code\\cli-entry.js",
+      "entrySha256": "113efe4104a9fc66f507d34bfd6abbd896ceb77de47f4b468a0825a327fdc6a5",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "childPid": 255564,
+      "childCreatedAt": "2026-11-11T08:15:01.6959917Z",
+      "argument": "--version",
+      "modelCalls": 0
+    }
+  ],
+  "allNativeExitCodesZero": true,
+  "allOriginalNativeChildrenExited": true,
+  "allTimeoutsFalse": true,
+  "originalFailedNumericParserResultsRetained": true,
+  "parserCorrection": "optional-v-prefix-and-Hermes-primary-version-line",
+  "preexistingProfilesAfterVersions": [
+    {
+      "relativePath": ".codex\\config.toml",
+      "sha256": "ffd11df0772d9c02f9c13d1b32f32975861d7a343f205e9670da07c32f50cab6"
+    },
+    {
+      "relativePath": ".codex\\auth.json",
+      "sha256": "10d223c8a4f0260dbfe63639ce69d17503068af4b034acd0d81e9fac3f27f384"
+    },
+    {
+      "relativePath": ".claude\\settings.json",
+      "sha256": "7aeea9f240efeb42f9bd2ee1f695dbe226325217799fcde3897dc24f169f681c"
+    },
+    {
+      "relativePath": ".claude.json",
+      "sha256": "c4aabe961a8a4240bb343c8b9c7ffd423e19f3a169bab146cb06c8c5cd006701"
+    }
+  ],
+  "preexistingProfilesUnchanged": true,
+  "bypassUnchangedAndNeverExecuted": true,
+  "authenticationVerified": false,
+  "modelCalls": 0
+}

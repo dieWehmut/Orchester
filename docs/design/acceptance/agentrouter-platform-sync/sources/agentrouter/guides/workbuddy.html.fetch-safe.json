@@ -1,0 +1,16 @@
+{
+  "guidePath": "/docs/workbuddy.html",
+  "requestedURL": "https://agentrouter.org/docs/workbuddy.html",
+  "anchorLabels": [
+    "WorkBuddy"
+  ],
+  "startedAt": 1794395966.822207,
+  "transport": "verified official HTTPS urllib",
+  "httpStatus": 200,
+  "responseURL": "https://agentrouter.org/docs/workbuddy.html",
+  "bytes": 28270,
+  "sha256": "b64e05de74baed30a1f1a4d65e109a265a171703c7cf63f9079324129c4b2ad8",
+  "processOperationCompleted": true,
+  "publicSnapshotFile": "workbuddy.html",
+  "finishedAt": 1794395970.0147355
+}

@@ -1,0 +1,43 @@
+{
+  "operation": "current-state read-only verification",
+  "entries": [
+    {
+      "path": "/home/han/project/Orchester/.worktrees/async-trait-clippy-compat",
+      "branch": "fix/async-trait-clippy-compat",
+      "retainedMergedCommit": "fb9095483d7df5ed2cb4e64c34ff49cf6f8bd1cb",
+      "pathAbsent": true,
+      "localBranchAbsent": true,
+      "commitStillFullyMergedInMain": true
+    },
+    {
+      "path": "/home/han/project/Orchester/.worktrees/memory-initialization",
+      "branch": "fix/memory-initialization",
+      "retainedMergedCommit": "d692ffafc7072a3beb95ba5a69b2623641490071",
+      "pathAbsent": true,
+      "localBranchAbsent": true,
+      "commitStillFullyMergedInMain": true
+    },
+    {
+      "path": "/home/han/project/Orchester/.worktrees/windows-desktop-lock-sync",
+      "branch": "fix/windows-desktop-lock-sync",
+      "retainedMergedCommit": "e0f524f4397411d032d2f140529c5d6ba449b1b7",
+      "pathAbsent": true,
+      "localBranchAbsent": true,
+      "commitStillFullyMergedInMain": true
+    },
+    {
+      "path": "/home/han/project/Orchester/.worktrees/windows-mcp-transport-size",
+      "branch": "fix/windows-mcp-transport-size",
+      "retainedMergedCommit": "0a209024704cbd42c094f1b8f0b81e9b9b7ef620",
+      "pathAbsent": true,
+      "localBranchAbsent": true,
+      "commitStillFullyMergedInMain": true
+    }
+  ],
+  "currentRegisteredWorktreeCount": 15,
+  "originalTemporaryCleanupReceiptsAvailable": false,
+  "historicalDeleteOperationOrBytesReconstructed": false,
+  "cDrivePhysicalSpaceReleaseClaimed": false,
+  "filesOrBranchesMutatedByThisVerification": false,
+  "observedAt": 1794397754.4486237
+}

@@ -1,0 +1,485 @@
+{
+  "schemaVersion": 1,
+  "observedAt": 1794396191.3155813,
+  "indexSource": {
+    "officialURL": "https://agentrouter.org/docs/index.html",
+    "sha256": "5ed3e9ff682543e79edaf0d85a732d41029cf3aca1fe5c424beeddda16ba84ba",
+    "guideLinkCount": 17
+  },
+  "guides": [
+    {
+      "guidePath": "/docs/claude-code.html",
+      "officialURL": "https://agentrouter.org/docs/claude-code.html",
+      "indexAnchorLabels": [
+        "快速开始",
+        "Claude Code",
+        "开始使用"
+      ],
+      "canonicalProvider": "claude",
+      "httpStatus": 200,
+      "rawPageSha256": "c32d0a654b33a96fee7f2159de886098e3aa6dbedbded4878d4600fcd8013280",
+      "fetchEvidenceFile": "guide-fetches-first-safe.json",
+      "pageTitle": "在 Claude Code CLI 中使用 AgentRouter | AgentRouter 接入说明",
+      "articleHeading": "在 Claude Code CLI 中使用 AgentRouter",
+      "articleTextChars": 1364,
+      "articleNormalizedTextSha256": "8097c27b41dc96b864cd3e9a277d10b037ef50a020fc5df2e1b4a8e063f19ccd",
+      "productIdentityVerifiedFromPageHeading": true,
+      "platformWordsMentioned": [],
+      "publicInstallationLinkDomains": [
+        "ps.air-outer.com"
+      ],
+      "platformMentionBoundary": "Guide text mentions are descriptive third-party documentation; they do not independently prove vendor-supported native packages or installation on any OS."
+    },
+    {
+      "guidePath": "/docs/cline.html",
+      "officialURL": "https://agentrouter.org/docs/cline.html",
+      "indexAnchorLabels": [
+        "Cline"
+      ],
+      "canonicalProvider": "cline",
+      "httpStatus": 200,
+      "rawPageSha256": "5b0b6dd3e3e756644105b32e19b27676e70317f8e9dc27295e253441c46c7ca9",
+      "fetchEvidenceFile": "guide-fetches-first-safe.json",
+      "pageTitle": "在 Cline 中使用 AgentRouter | AgentRouter 接入说明",
+      "articleHeading": "在 Cline 中使用 AgentRouter",
+      "articleTextChars": 1091,
+      "articleNormalizedTextSha256": "52231ca684e9245696b719e8f93d75e25793b0cff02bdbc8750cde3b29cd48a5",
+      "productIdentityVerifiedFromPageHeading": true,
+      "platformWordsMentioned": [
+        "vs code"
+      ],
+      "publicInstallationLinkDomains": [
+        "ps.air-outer.com"
+      ],
+      "platformMentionBoundary": "Guide text mentions are descriptive third-party documentation; they do not independently prove vendor-supported native packages or installation on any OS."
+    },
+    {
+      "guidePath": "/docs/roocode.html",
+      "officialURL": "https://agentrouter.org/docs/roocode.html",
+      "indexAnchorLabels": [
+        "Roo Code"
+      ],
+      "canonicalProvider": "roo",
+      "httpStatus": 200,
+      "rawPageSha256": "80f5779464899d3f3aa073197300577d256ca467766fc71b5e04aaaa3c6c18db",
+      "fetchEvidenceFile": "guide-fetches-first-safe.json",
+      "pageTitle": "在 Roo Code 中使用 AgentRouter | AgentRouter 接入说明",
+      "articleHeading": "在 Roo Code 中使用 AgentRouter",
+      "articleTextChars": 1121,
+      "articleNormalizedTextSha256": "e4e59b876ff8c38f3a937dabdfea4671a65a63c3b65c3ad9e8605001b4087e12",
+      "productIdentityVerifiedFromPageHeading": true,
+      "platformWordsMentioned": [
+        "vs code"
+      ],
+      "publicInstallationLinkDomains": [
+        "ps.air-outer.com"
+      ],
+      "platformMentionBoundary": "Guide text mentions are descriptive third-party documentation; they do not independently prove vendor-supported native packages or installation on any OS."
+    },
+    {
+      "guidePath": "/docs/kilocode.html",
+      "officialURL": "https://agentrouter.org/docs/kilocode.html",
+      "indexAnchorLabels": [
+        "Kilo Code"
+      ],
+      "canonicalProvider": "kilo",
+      "httpStatus": 200,
+      "rawPageSha256": "a829d655c659f783246da30eb0e0058b663899f1e421705f8b7d9c3e3b86fc4e",
+      "fetchEvidenceFile": "guide-fetches-first-safe.json",
+      "pageTitle": "在 Kilo Code 中使用 AgentRouter | AgentRouter 接入说明",
+      "articleHeading": "在 Kilo Code 中使用 AgentRouter",
+      "articleTextChars": 1241,
+      "articleNormalizedTextSha256": "cee62bdb3d83c683f0491f1fdd946151b8d4705d4ef0ea0aa3e34869b0bdb2e7",
+      "productIdentityVerifiedFromPageHeading": true,
+      "platformWordsMentioned": [
+        "vs code"
+      ],
+      "publicInstallationLinkDomains": [
+        "ps.air-outer.com"
+      ],
+      "platformMentionBoundary": "Guide text mentions are descriptive third-party documentation; they do not independently prove vendor-supported native packages or installation on any OS."
+    },
+    {
+      "guidePath": "/docs/claude-code-vscode.html",
+      "officialURL": "https://agentrouter.org/docs/claude-code-vscode.html",
+      "indexAnchorLabels": [
+        "Claude Code"
+      ],
+      "canonicalProvider": "claude",
+      "httpStatus": 200,
+      "rawPageSha256": "7ae2dad01c440417a41f1c889e4ae72f8ea7e15fe614ed31fb8d91ba44eb3499",
+      "fetchEvidenceFile": "guide-fetches-first-safe.json",
+      "pageTitle": "在 Claude Code（VS Code 插件）中使用 AgentRouter | AgentRouter 接入说明",
+      "articleHeading": "在 Claude Code（VS Code 插件）中使用 AgentRouter",
+      "articleTextChars": 1281,
+      "articleNormalizedTextSha256": "85516b4f4fe53ad44a16c40ea3175f98e0cb8b181fd277403743951c4ad107b6",
+      "productIdentityVerifiedFromPageHeading": true,
+      "platformWordsMentioned": [
+        "vs code"
+      ],
+      "publicInstallationLinkDomains": [
+        "ps.air-outer.com"
+      ],
+      "platformMentionBoundary": "Guide text mentions are descriptive third-party documentation; they do not independently prove vendor-supported native packages or installation on any OS."
+    },
+    {
+      "guidePath": "/docs/codex.html",
+      "officialURL": "https://agentrouter.org/docs/codex.html",
+      "indexAnchorLabels": [
+        "Codex"
+      ],
+      "canonicalProvider": "codex",
+      "httpStatus": 200,
+      "rawPageSha256": "0feb6b6a130c377ff9ef4108a19097927ac7ff6b28b4428b58ab860bfb6e8e4e",
+      "fetchEvidenceFile": "codex-guide-retry-safe.json",
+      "pageTitle": "在 Codex CLI 中使用 AgentRouter | AgentRouter 接入说明",
+      "articleHeading": "在 Codex CLI 中使用 AgentRouter",
+      "articleTextChars": 1774,
+      "articleNormalizedTextSha256": "6e065d4cc027e6d73b9a946f75fd67ee02e54b5ee837d5c55d914b0109feaaf0",
+      "productIdentityVerifiedFromPageHeading": true,
+      "platformWordsMentioned": [],
+      "publicInstallationLinkDomains": [
+        "ps.air-outer.com"
+      ],
+      "platformMentionBoundary": "Guide text mentions are descriptive third-party documentation; they do not independently prove vendor-supported native packages or installation on any OS."
+    },
+    {
+      "guidePath": "/docs/qwencode.html",
+      "officialURL": "https://agentrouter.org/docs/qwencode.html",
+      "indexAnchorLabels": [
+        "Qwen Code"
+      ],
+      "canonicalProvider": "qwen",
+      "httpStatus": 200,
+      "rawPageSha256": "876359d537fcbe0b4a071a8cf656eaf04edb2b0125079badbb2ea79f18fe8681",
+      "fetchEvidenceFile": "guide-fetches-first-safe.json",
+      "pageTitle": "在 Qwen Code 中使用 AgentRouter | AgentRouter 接入说明",
+      "articleHeading": "在 Qwen Code 中使用 AgentRouter",
+      "articleTextChars": 2780,
+      "articleNormalizedTextSha256": "b6571b4ddd96bdfed734094f61486a646f1927d2c3d30090254b4544717c3f1a",
+      "productIdentityVerifiedFromPageHeading": true,
+      "platformWordsMentioned": [],
+      "publicInstallationLinkDomains": [
+        "ps.air-outer.com"
+      ],
+      "platformMentionBoundary": "Guide text mentions are descriptive third-party documentation; they do not independently prove vendor-supported native packages or installation on any OS."
+    },
+    {
+      "guidePath": "/docs/opencode.html",
+      "officialURL": "https://agentrouter.org/docs/opencode.html",
+      "indexAnchorLabels": [
+        "OpenCode"
+      ],
+      "canonicalProvider": "opencode",
+      "httpStatus": 200,
+      "rawPageSha256": "db0ff17fadd91130da0aef70639f71625502c421844a35157724e0fd2c9dd22f",
+      "fetchEvidenceFile": "guide-fetches-first-safe.json",
+      "pageTitle": "在 OpenCode 中使用 AgentRouter | AgentRouter 接入说明",
+      "articleHeading": "在 OpenCode 中使用 AgentRouter",
+      "articleTextChars": 2196,
+      "articleNormalizedTextSha256": "26bb83d2479d1e70fd54ef3a605d2d9cc4d113d8ed8b6ae6492911f88efb8868",
+      "productIdentityVerifiedFromPageHeading": true,
+      "platformWordsMentioned": [],
+      "publicInstallationLinkDomains": [
+        "ps.air-outer.com"
+      ],
+      "platformMentionBoundary": "Guide text mentions are descriptive third-party documentation; they do not independently prove vendor-supported native packages or installation on any OS."
+    },
+    {
+      "guidePath": "/docs/openclaw.html",
+      "officialURL": "https://agentrouter.org/docs/openclaw.html",
+      "indexAnchorLabels": [
+        "OpenClaw"
+      ],
+      "canonicalProvider": "openclaw",
+      "httpStatus": 200,
+      "rawPageSha256": "2293e46cc47015dfeb867d455b7a7ef87920d9123f1890bbddcca61dda1d39e2",
+      "fetchEvidenceFile": "guide-fetches-first-safe.json",
+      "pageTitle": "在 OpenClaw 中使用 AgentRouter | AgentRouter 接入说明",
+      "articleHeading": "在 OpenClaw 中使用 AgentRouter",
+      "articleTextChars": 2136,
+      "articleNormalizedTextSha256": "79d790c0778e9ec2dbffe87af3ef3a1f661e7fa341362986b82d8fec9b608b12",
+      "productIdentityVerifiedFromPageHeading": true,
+      "platformWordsMentioned": [],
+      "publicInstallationLinkDomains": [
+        "ps.air-outer.com"
+      ],
+      "platformMentionBoundary": "Guide text mentions are descriptive third-party documentation; they do not independently prove vendor-supported native packages or installation on any OS."
+    },
+    {
+      "guidePath": "/docs/hermes.html",
+      "officialURL": "https://agentrouter.org/docs/hermes.html",
+      "indexAnchorLabels": [
+        "Hermes Agent"
+      ],
+      "canonicalProvider": "hermes",
+      "httpStatus": 200,
+      "rawPageSha256": "f44fefe62068b95791e0ed4178030720a70c665c5ff4eacc447fc8edfa04a9eb",
+      "fetchEvidenceFile": "guide-fetches-first-safe.json",
+      "pageTitle": "在 Hermes Agent 中使用 AgentRouter | AgentRouter 接入说明",
+      "articleHeading": "在 Hermes Agent 中使用 AgentRouter",
+      "articleTextChars": 2214,
+      "articleNormalizedTextSha256": "355e3e7ded4a1c6e4728208a5db7d7b8c982ba839746aff9bee65e731244b463",
+      "productIdentityVerifiedFromPageHeading": true,
+      "platformWordsMentioned": [
+        "linux",
+        "macos",
+        "windows"
+      ],
+      "publicInstallationLinkDomains": [
+        "ps.air-outer.com"
+      ],
+      "platformMentionBoundary": "Guide text mentions are descriptive third-party documentation; they do not independently prove vendor-supported native packages or installation on any OS."
+    },
+    {
+      "guidePath": "/docs/pi.html",
+      "officialURL": "https://agentrouter.org/docs/pi.html",
+      "indexAnchorLabels": [
+        "Pi"
+      ],
+      "canonicalProvider": "pi",
+      "httpStatus": 200,
+      "rawPageSha256": "5bbac8a6c3552c110b164e9b4370dfbba2a90f09da2c82ed5de265c38b454494",
+      "fetchEvidenceFile": "guide-fetches-first-safe.json",
+      "pageTitle": "在 Pi 中使用 AgentRouter | AgentRouter 接入说明",
+      "articleHeading": "在 Pi 中使用 AgentRouter",
+      "articleTextChars": 1845,
+      "articleNormalizedTextSha256": "106e7d60c6f10dd9640f6e9c3108426e91e052e67568abc1f05ec49819187897",
+      "productIdentityVerifiedFromPageHeading": true,
+      "platformWordsMentioned": [
+        "windows"
+      ],
+      "publicInstallationLinkDomains": [
+        "ps.air-outer.com"
+      ],
+      "platformMentionBoundary": "Guide text mentions are descriptive third-party documentation; they do not independently prove vendor-supported native packages or installation on any OS."
+    },
+    {
+      "guidePath": "/docs/crush.html",
+      "officialURL": "https://agentrouter.org/docs/crush.html",
+      "indexAnchorLabels": [
+        "Crush"
+      ],
+      "canonicalProvider": "crush",
+      "httpStatus": 200,
+      "rawPageSha256": "f081b4797962b4d706a0479e9e8dac17a804cdae4a6f38900c7e7a55d5fb5d6f",
+      "fetchEvidenceFile": "guide-fetches-first-safe.json",
+      "pageTitle": "在 Crush 中使用 AgentRouter | AgentRouter 接入说明",
+      "articleHeading": "在 Crush 中使用 AgentRouter",
+      "articleTextChars": 1738,
+      "articleNormalizedTextSha256": "30c1783a172787452bac2098925ee265c96e04bf4a2ec4d85c7aedad60ce6ed8",
+      "productIdentityVerifiedFromPageHeading": true,
+      "platformWordsMentioned": [],
+      "publicInstallationLinkDomains": [
+        "ps.air-outer.com"
+      ],
+      "platformMentionBoundary": "Guide text mentions are descriptive third-party documentation; they do not independently prove vendor-supported native packages or installation on any OS."
+    },
+    {
+      "guidePath": "/docs/claude-app.html",
+      "officialURL": "https://agentrouter.org/docs/claude-app.html",
+      "indexAnchorLabels": [
+        "Claude App"
+      ],
+      "canonicalProvider": "claude_app",
+      "httpStatus": 200,
+      "rawPageSha256": "a1a6cee75a5086fc1705bb869e352826850a4a9e4c8bde379d281da2d1338f80",
+      "fetchEvidenceFile": "guide-fetches-first-safe.json",
+      "pageTitle": "在 Claude App（Desktop）中使用 AgentRouter | AgentRouter 接入说明",
+      "articleHeading": "在 Claude App（Desktop）中使用 AgentRouter",
+      "articleTextChars": 537,
+      "articleNormalizedTextSha256": "33b33e55317b58b63961410f3b7d147ed24876d51eceedfd95df5746305f16ca",
+      "productIdentityVerifiedFromPageHeading": true,
+      "platformWordsMentioned": [],
+      "publicInstallationLinkDomains": [
+        "ps.air-outer.com"
+      ],
+      "platformMentionBoundary": "Guide text mentions are descriptive third-party documentation; they do not independently prove vendor-supported native packages or installation on any OS."
+    },
+    {
+      "guidePath": "/docs/trae.html",
+      "officialURL": "https://agentrouter.org/docs/trae.html",
+      "indexAnchorLabels": [
+        "Trae"
+      ],
+      "canonicalProvider": "trae",
+      "httpStatus": 200,
+      "rawPageSha256": "b1d0a13a2831acb478db5868a7de7653f8f74c7f894ccdd3e5d80459698921b0",
+      "fetchEvidenceFile": "guide-fetches-first-safe.json",
+      "pageTitle": "在 Trae 中使用 AgentRouter | AgentRouter 接入说明",
+      "articleHeading": "在 Trae 中使用 AgentRouter",
+      "articleTextChars": 947,
+      "articleNormalizedTextSha256": "eb5ae98c5f0a50e19b5dbd031840a25833f2f48fb762d625cc03a255be55659a",
+      "productIdentityVerifiedFromPageHeading": true,
+      "platformWordsMentioned": [],
+      "publicInstallationLinkDomains": [
+        "ps.air-outer.com",
+        "www.trae.cn"
+      ],
+      "platformMentionBoundary": "Guide text mentions are descriptive third-party documentation; they do not independently prove vendor-supported native packages or installation on any OS."
+    },
+    {
+      "guidePath": "/docs/zcode.html",
+      "officialURL": "https://agentrouter.org/docs/zcode.html",
+      "indexAnchorLabels": [
+        "ZCode"
+      ],
+      "canonicalProvider": "zcode",
+      "httpStatus": 200,
+      "rawPageSha256": "64a86526dceb13437b8d2f981ff97f513408e8422373d038ec927bc032a94a25",
+      "fetchEvidenceFile": "guide-fetches-first-safe.json",
+      "pageTitle": "在 ZCode 中使用 AgentRouter | AgentRouter 接入说明",
+      "articleHeading": "在 ZCode 中使用 AgentRouter",
+      "articleTextChars": 859,
+      "articleNormalizedTextSha256": "1ca4e2d128117aee5b54fcaf82b44075076922c5eef6735462b1e1719984ce40",
+      "productIdentityVerifiedFromPageHeading": true,
+      "platformWordsMentioned": [],
+      "publicInstallationLinkDomains": [
+        "ps.air-outer.com",
+        "zcode.z.ai"
+      ],
+      "platformMentionBoundary": "Guide text mentions are descriptive third-party documentation; they do not independently prove vendor-supported native packages or installation on any OS."
+    },
+    {
+      "guidePath": "/docs/workbuddy.html",
+      "officialURL": "https://agentrouter.org/docs/workbuddy.html",
+      "indexAnchorLabels": [
+        "WorkBuddy"
+      ],
+      "canonicalProvider": "workbuddy",
+      "httpStatus": 200,
+      "rawPageSha256": "b64e05de74baed30a1f1a4d65e109a265a171703c7cf63f9079324129c4b2ad8",
+      "fetchEvidenceFile": "guide-fetches-first-safe.json",
+      "pageTitle": "在 WorkBuddy 中使用 AgentRouter | AgentRouter 接入说明",
+      "articleHeading": "在 WorkBuddy 中使用 AgentRouter",
+      "articleTextChars": 773,
+      "articleNormalizedTextSha256": "78a182b75f85f611edbfcf4f0e6d787cdc9fb7cafd0e4bb6d8647729f40d04e5",
+      "productIdentityVerifiedFromPageHeading": true,
+      "platformWordsMentioned": [],
+      "publicInstallationLinkDomains": [
+        "ps.air-outer.com",
+        "www.workbuddy.cn"
+      ],
+      "platformMentionBoundary": "Guide text mentions are descriptive third-party documentation; they do not independently prove vendor-supported native packages or installation on any OS."
+    },
+    {
+      "guidePath": "/docs/craft-agents.html",
+      "officialURL": "https://agentrouter.org/docs/craft-agents.html",
+      "indexAnchorLabels": [
+        "Craft Agents"
+      ],
+      "canonicalProvider": "craft",
+      "httpStatus": 200,
+      "rawPageSha256": "36e86a69bb52a3ca5999fc452bb51245fb5459f84ba8f0c2d5ddc5dc941278a5",
+      "fetchEvidenceFile": "guide-fetches-first-safe.json",
+      "pageTitle": "在 Craft Agents 中使用 AgentRouter | AgentRouter 接入说明",
+      "articleHeading": "在 Craft Agents 中使用 AgentRouter",
+      "articleTextChars": 894,
+      "articleNormalizedTextSha256": "6b29f4913c3e1d111992ee0ed603cd7e0a83a150e473e4ce55631f20a54bac50",
+      "productIdentityVerifiedFromPageHeading": true,
+      "platformWordsMentioned": [],
+      "publicInstallationLinkDomains": [
+        "agents.craft.do",
+        "ps.air-outer.com"
+      ],
+      "platformMentionBoundary": "Guide text mentions are descriptive third-party documentation; they do not independently prove vendor-supported native packages or installation on any OS."
+    }
+  ],
+  "guidePageHTTP200Count": 17,
+  "all17GuidePagesVerifiedHTTP200": true,
+  "all17ProductHeadingIdentitiesVerified": true,
+  "distinctGuideProductCount": 16,
+  "guideProducts": [
+    "claude",
+    "claude_app",
+    "cline",
+    "codex",
+    "craft",
+    "crush",
+    "hermes",
+    "kilo",
+    "openclaw",
+    "opencode",
+    "pi",
+    "qwen",
+    "roo",
+    "trae",
+    "workbuddy",
+    "zcode"
+  ],
+  "duplicateProductGuides": {
+    "claude": [
+      "/docs/claude-code.html",
+      "/docs/claude-code-vscode.html"
+    ]
+  },
+  "homepageAdditionalProduct": {
+    "provider": "gemini",
+    "source": "homepage feature h2",
+    "sourceURL": "https://agentrouter.org/docs/index.html",
+    "sourceSha256": "5ed3e9ff682543e79edaf0d85a732d41029cf3aca1fe5c424beeddda16ba84ba",
+    "headingIdentity": "Gemini Cli",
+    "dedicatedGuideClaimed": false
+  },
+  "totalNamedAgentRouterProducts": 17,
+  "agentRouterProducts": [
+    "claude",
+    "claude_app",
+    "cline",
+    "codex",
+    "craft",
+    "crush",
+    "gemini",
+    "hermes",
+    "kilo",
+    "openclaw",
+    "opencode",
+    "pi",
+    "qwen",
+    "roo",
+    "trae",
+    "workbuddy",
+    "zcode"
+  ],
+  "canonicalCoverage": {
+    "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+    "metadataPath": "packages/design/src/agent-identities.ts",
+    "metadataSha256": "3244b95fec47ebecb8587097cfac3a949858384ccac6bc59470a4c8d8191899c",
+    "gitBlobByteExact": true,
+    "canonicalCount": 21,
+    "agentRouterProductsCovered": [
+      "claude",
+      "claude_app",
+      "cline",
+      "codex",
+      "craft",
+      "crush",
+      "gemini",
+      "hermes",
+      "kilo",
+      "openclaw",
+      "opencode",
+      "pi",
+      "qwen",
+      "roo",
+      "trae",
+      "workbuddy",
+      "zcode"
+    ],
+    "legacyProvidersBeyondAgentRouterNamedDirectory": [
+      "deepseek",
+      "cursor",
+      "antigravity"
+    ],
+    "userRequestedWorkBuddyInternationalEdition": [
+      "workbuddy_global"
+    ],
+    "missingCanonicalProviders": [],
+    "unexpectedCanonicalProviders": [],
+    "all21ExpectedProvidersMatch": true
+  },
+  "installationOrVendorPlatformSupportImpliedByDirectoryCoverage": false,
+  "modelCalls": 0,
+  "rawCredentialsEnvProfilesOrGuideCommandsExecuted": false,
+  "previousFetchFailuresRetained": true
+}

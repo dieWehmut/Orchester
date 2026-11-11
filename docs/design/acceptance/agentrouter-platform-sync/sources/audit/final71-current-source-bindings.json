@@ -1,0 +1,71 @@
+{
+  "observedAt": "2026-11-11T10:57:26.573276+00:00",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "currentHead": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "sourceRowsChecked": 730,
+  "frontendFamilyCount": 363,
+  "familyNames": [
+    "backendSplit367",
+    "frontendBuild363"
+  ],
+  "sourceBindingFailures": [],
+  "pages177Checks": 177,
+  "pagesCommitVsFinalFailures": [],
+  "assetsAndMetadataChecks": 27,
+  "assetFailures": [],
+  "canonicalProviderCount": 21,
+  "canonicalProviderIds": [
+    "codex",
+    "claude",
+    "deepseek",
+    "opencode",
+    "gemini",
+    "antigravity",
+    "cursor",
+    "workbuddy",
+    "workbuddy_global",
+    "qwen",
+    "openclaw",
+    "cline",
+    "roo",
+    "kilo",
+    "hermes",
+    "pi",
+    "crush",
+    "claude_app",
+    "trae",
+    "zcode",
+    "craft"
+  ],
+  "officialUniqueAssetCount": 24,
+  "themeMappings": 42,
+  "eachProviderHasExactlyTwoThemes": true,
+  "distCurrentState": [
+    {
+      "name": "web",
+      "directoryExists": true,
+      "recordedFileCount": 37,
+      "actualFileCount": 37,
+      "currentMissingOrMismatch": [],
+      "unlistedFiles": []
+    },
+    {
+      "name": "mobile",
+      "directoryExists": true,
+      "recordedFileCount": 17,
+      "actualFileCount": 17,
+      "currentMissingOrMismatch": [],
+      "unlistedFiles": []
+    },
+    {
+      "name": "site",
+      "directoryExists": true,
+      "recordedFileCount": 26,
+      "actualFileCount": 26,
+      "currentMissingOrMismatch": [],
+      "unlistedFiles": []
+    }
+  ],
+  "onlyPublicRepositoryAndArchiveFilesRead": true,
+  "backendFamilyCount": 367
+}

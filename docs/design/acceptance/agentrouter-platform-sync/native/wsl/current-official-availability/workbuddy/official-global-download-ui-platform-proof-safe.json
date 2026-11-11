@@ -1,0 +1,47 @@
+{
+  "sourceScope": "Current official global homepage and its directly linked public download component",
+  "observedAt": 1794395502.7350335,
+  "sourceFiles": [
+    {
+      "file": "homepage-curl.html",
+      "sha256": "ff62ba37882024c40571f2f9733284fce5620f460f4766023153a533c3ce9e20"
+    },
+    {
+      "file": "const-DJsdnJqH.js",
+      "sha256": "9f902ab7df7b180f7c7e62f380d3840fa60b4ab99bb86a29bcccaef12dc0d8bd"
+    },
+    {
+      "file": "index-DbGPyZE0.js",
+      "sha256": "6f2d9e1d437ec6e33b956ccd5cd064ca443dbd2ed64d172c951a7515b5f73636"
+    },
+    {
+      "file": "index-CQPC66NS.js",
+      "sha256": "e73890ee007f851f59e4f41a85fb1e23629279a83697fd65b3ab6c1bc77b261d"
+    },
+    {
+      "file": "invite-BP67xNKo.js",
+      "sha256": "5968800cf7f19124e8428683fa70ce4dda5f21beb66ffe7732fe0aff1f6efa66"
+    }
+  ],
+  "hostname": "www.workbuddy.ai",
+  "internationalHostnamePredicateMatches": true,
+  "homepageSelectsInternationalDesktopList": true,
+  "internationalDesktopKeys": [
+    "macArm64",
+    "macX64",
+    "windows",
+    "useOnline"
+  ],
+  "linuxTile": {
+    "key": "linux",
+    "domesticOnly": true,
+    "appStoreOnly": true
+  },
+  "domesticOnlyTilesFilteredForInternationalHost": true,
+  "linuxOptionDisplayedForInternationalHost": false,
+  "linuxLegacyPlatformName": "workbuddy-linux-x64-deb",
+  "interpretation": "The current official global product download UI does not offer Linux. Its legacy Linux update URL returns a package that is unavailable (actual full GET 404). This is evidence about present advertised/downloadable channels, not a formal claim that the vendor can never support Linux.",
+  "publicClientExecuted": false,
+  "privateSettingsRead": false,
+  "modelCalls": 0
+}

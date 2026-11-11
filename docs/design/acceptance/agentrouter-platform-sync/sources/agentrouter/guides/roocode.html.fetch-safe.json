@@ -1,0 +1,16 @@
+{
+  "guidePath": "/docs/roocode.html",
+  "requestedURL": "https://agentrouter.org/docs/roocode.html",
+  "anchorLabels": [
+    "Roo Code"
+  ],
+  "startedAt": 1794395955.6558757,
+  "transport": "verified official HTTPS urllib",
+  "httpStatus": 200,
+  "responseURL": "https://agentrouter.org/docs/roocode.html",
+  "bytes": 28516,
+  "sha256": "80f5779464899d3f3aa073197300577d256ca467766fc71b5e04aaaa3c6c18db",
+  "processOperationCompleted": true,
+  "publicSnapshotFile": "roocode.html",
+  "finishedAt": 1794395959.516558
+}

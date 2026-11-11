@@ -1,0 +1,15 @@
+{
+  "source": "https://www.workbuddy.ai/",
+  "htmlSha256": "ff62ba37882024c40571f2f9733284fce5620f460f4766023153a533c3ce9e20",
+  "publicStructuredDataApps": [
+    {
+      "type": "SoftwareApplication",
+      "name": "WorkBuddy",
+      "url": "https://www.workbuddy.ai/",
+      "operatingSystem": "Windows, macOS",
+      "applicationCategory": "BusinessApplication"
+    }
+  ],
+  "linuxDeclaredInStructuredPlatforms": false,
+  "interpretation": "The current official global landing-page platform list advertises Windows and macOS. This list alone does not prove a formal vendor Linux unsupported policy."
+}

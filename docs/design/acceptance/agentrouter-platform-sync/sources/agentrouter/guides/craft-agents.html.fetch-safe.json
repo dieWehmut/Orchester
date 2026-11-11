@@ -1,0 +1,16 @@
+{
+  "guidePath": "/docs/craft-agents.html",
+  "requestedURL": "https://agentrouter.org/docs/craft-agents.html",
+  "anchorLabels": [
+    "Craft Agents"
+  ],
+  "startedAt": 1794395968.264319,
+  "transport": "verified official HTTPS urllib",
+  "httpStatus": 200,
+  "responseURL": "https://agentrouter.org/docs/craft-agents.html",
+  "bytes": 28434,
+  "sha256": "36e86a69bb52a3ca5999fc452bb51245fb5459f84ba8f0c2d5ddc5dc941278a5",
+  "processOperationCompleted": true,
+  "publicSnapshotFile": "craft-agents.html",
+  "finishedAt": 1794395972.8307846
+}

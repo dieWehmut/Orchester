@@ -1,0 +1,19 @@
+{
+  "pid": 1023019,
+  "startTicks": 256519,
+  "imageSha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649",
+  "unauthorizedChecks": [
+    {
+      "path": "/remote/v1/info",
+      "status": 401
+    },
+    {
+      "path": "/remote/v1/agents/status",
+      "status": 401
+    }
+  ],
+  "publicIndexExact": true,
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "previousFinalReceiptSha256": "2a3159365a2c3f74c6d134dff2f1732802b1a73faf4b564e3618458fe727e017",
+  "observedAt": 1794397011.8340507
+}

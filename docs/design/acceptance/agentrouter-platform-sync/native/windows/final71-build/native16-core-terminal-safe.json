@@ -1,0 +1,19 @@
+{
+  "format": "orchester-final21-native-core-terminal-v1",
+  "status": "sixteen-build-gates-passed-worker-absent",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "coreSummaryFile": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\native16-core-safe-summary.json",
+  "coreSummarySha256": "5cdabd4d8f5736b81c32333b68e37f24e114f756b318feb94ad15cc50d7c4fe6",
+  "workerObservationFile": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\current-worker-observation-safe.json",
+  "workerObservationSha256": "f1270812981ebaedb2846b3e7f04c88fb592169030b0aec5f87cee7761f9dd4b",
+  "workerPid": 16008,
+  "workerCreationUtc": "2026-11-11T11:26:34.5903240Z",
+  "nativePidAbsent": true,
+  "oldCreationHandleAcquired": false,
+  "observationMethod": "native GetProcessById ArgumentException; PID absent",
+  "gatesPassed": 16,
+  "forcedTerminations": 0,
+  "desktopRuntimeAccepted": false,
+  "defaultDesktopInstalled": false,
+  "windows7338Upgraded": false
+}

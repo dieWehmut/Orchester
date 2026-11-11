@@ -1,0 +1,12 @@
+{
+  "commit": "2610645c42ea666ce38b2deb8439f624a1f96bf8",
+  "parent": "16ae928d1a9be633918337beb46257db011cdd92",
+  "files": [
+    "kisten/netz/src/agent_process/identity.rs",
+    "kisten/netz/src/agent_process/tests/identity.rs"
+  ],
+  "sourceMatchesPassedGate": true,
+  "gateReceiptSha256": "ecd042c2725e8a9b75b467e49c9410f635525423dda36b4b8eef45bfa217fba1",
+  "migrationProofSha256": "b135d6fb184a8c2e82dab8248659ee8da2c56f85cf4dd17fe94242d628a38158",
+  "testDiscoveryProofSha256": "12adb847a72668620cca7a60bd97eedbfceddfb7a75e03f1db0b62df1a2b6805"
+}

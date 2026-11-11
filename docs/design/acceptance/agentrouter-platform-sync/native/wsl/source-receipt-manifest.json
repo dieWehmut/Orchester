@@ -1,0 +1,87 @@
+[
+  {
+    "filename": "craft-agents-native-package-receipt.json",
+    "sha256": "96ec871f7595b8f116116341faee391e1dcacbeb47cfa956f0bb146886e793f3",
+    "bytes": 1071
+  },
+  {
+    "filename": "craft-agents-official-release.json",
+    "sha256": "82193e480600a4ce174de0a7a3e1f5ce398a85627c933eb9a13e2a9d7a63a1f8",
+    "bytes": 9234
+  },
+  {
+    "filename": "hermes-install.sh",
+    "sha256": "abf338605dae6dd28d101673ac6aed7995c955745db46d47676bc591a7957209",
+    "bytes": 66864
+  },
+  {
+    "filename": "hermes-install.source.json",
+    "sha256": "c434ea37aaf3eccaab2a4779b455e25ec866bd9f813b0e072a3da497bd70b7da",
+    "bytes": 228
+  },
+  {
+    "filename": "hermes-native-install-receipt.json",
+    "sha256": "4e358202b1713cd0c2588f220d242d5b491ccb5f21e31ddca2bfa7845d896ed0",
+    "bytes": 1157
+  },
+  {
+    "filename": "native-version-receipts.json",
+    "sha256": "77c7344b1ef52e08392487d487fa8c9f97050797a9d5fe167ecf1589cdb01403",
+    "bytes": 13271
+  },
+  {
+    "filename": "official-source-map.json",
+    "sha256": "97196ca24d710692fb81d0b604082607559a3aa7b08e379683cd7e8db0f32d94",
+    "bytes": 1110
+  },
+  {
+    "filename": "summary.json",
+    "sha256": "4ddf817c5c3d9ed5a97a1c867ecb337a3b28cfcfd4d40ea008bf443564d173da",
+    "bytes": 7734
+  },
+  {
+    "filename": "trae-native-package-receipt.json",
+    "sha256": "a3208eb7f667f66f979f009dc15210efa664ac6f3d3ecec524872983e74838ea",
+    "bytes": 1039
+  },
+  {
+    "filename": "trae-official-native-download-metadata.json",
+    "sha256": "52de377c40357e76075d213c6980395cd4e447fd5eacd1d4083625c718c265eb",
+    "bytes": 24986
+  },
+  {
+    "filename": "ubuntu-gui-runtime-receipt.json",
+    "sha256": "4eb8410b193f12b5f2c2ca8a677071f5cc7ee228721003f125536e65beb90414",
+    "bytes": 2304
+  },
+  {
+    "filename": "workbuddy-native-package-receipt.json",
+    "sha256": "a79ace6d1384402e76afd306576384e36d358e2adec4623a278d7afc80a93a64",
+    "bytes": 1063
+  },
+  {
+    "filename": "workbuddy-official-linux-update.json",
+    "sha256": "a3edb2d8f3137bd488396ae498e515ad0b37408a391a776db7aa16e6d91a2432",
+    "bytes": 331
+  },
+  {
+    "filename": "wsl-extensions-receipts.json",
+    "sha256": "55b980b919b8ad7a16fac398555092bc94f88351cf3d461fe16d1e91e6d9ae9e",
+    "bytes": 4473
+  },
+  {
+    "filename": "wsl-gui-runtime-receipts.json",
+    "sha256": "e340056ca0cd856028dfd452a34e4fca69310dd463381d2c1f291f33ebaf94da",
+    "bytes": 7516
+  },
+  {
+    "filename": "zcode-native-package-receipt.json",
+    "sha256": "d706e942edf2a455dc2ee0b35d6a2a0109674196d5b7e7e683df59432da6e755",
+    "bytes": 842
+  },
+  {
+    "filename": "zcode-official-linux-release.yml",
+    "sha256": "23a4021579fe05eefe431953b8e1c9245c0f0eeba9f3f8baf2339c67584cc0d4",
+    "bytes": 10048
+  }
+]

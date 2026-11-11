@@ -1,0 +1,26 @@
+[
+  {
+    "installerType": "exe",
+    "url": "https://downloads.claude.ai/releases/win32/x64/3.6556.2/Claude-20c019a1e61fa5b687616af57d31f97bb3181723.exe",
+    "expectedSha256": "945082290478e5c668e8aaa25a392e1cd129e6219173e907b7ff1f7f99ded45e",
+    "tls": "1.2 only",
+    "http": "1.1",
+    "actualExitCode": 35,
+    "processExited": true,
+    "httpStatus": "000",
+    "partialBytes": 0,
+    "observedAt": 1794394976.742927
+  },
+  {
+    "installerType": "msix",
+    "url": "https://downloads.claude.ai/releases/win32/x64/3.6556.2/Claude-20c019a1e61fa5b687616af57d31f97bb3181723.msix",
+    "expectedSha256": "c0ac245c9ad458abd550bcbf2a0b34c75c51173a27f3c870602e5452cf3484f1",
+    "tls": "1.2 only",
+    "http": "1.1",
+    "actualExitCode": 35,
+    "processExited": true,
+    "httpStatus": "000",
+    "partialBytes": 0,
+    "observedAt": 1794394977.161182
+  }
+]

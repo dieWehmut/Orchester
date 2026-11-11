@@ -1,0 +1,24 @@
+{
+  "actualExitCode": 0,
+  "processExited": true,
+  "stderrBytes": 0,
+  "scriptSha256": "6605c7a6e6e6692c8f9d9d696da667e3b0a39dc5c34b844c1cdd22301a1cfc7d",
+  "observedAt": 1794394974.298386,
+  "result": {
+    "observedAt": "2026-11-11T11:02:53.6807575Z",
+    "officialFamilies": [
+      "AnthropicPBC.Claude_fnn82j28hfe8t",
+      "Claude_pzs8sxrjxfjjc"
+    ],
+    "currentUserPackages": [],
+    "startApps": [],
+    "machineRegistrationNames": [],
+    "knownUninstall": [],
+    "knownExecutables": [],
+    "queryErrors": [],
+    "applicationPublicMetadataOnly": true,
+    "privateProfileContentsRead": false,
+    "installationChanges": 0,
+    "modelCalls": 0
+  }
+}

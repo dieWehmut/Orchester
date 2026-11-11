@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "observedAt": 1794395569.9852889,
+  "platform": "native WSL Linux x64",
+  "workbuddyGlobal": {
+    "provider": "workbuddy_global",
+    "officialHomepage": "https://www.workbuddy.ai/",
+    "status": "official-international-linux-download-not-currently-offered-and-legacy-package-unavailable",
+    "installedByThisRun": false,
+    "globalPrefixExists": false,
+    "globalLauncherExists": false,
+    "currentOfficialDesktopDownloadKeys": [
+      "macArm64",
+      "macX64",
+      "windows",
+      "useOnline"
+    ],
+    "linuxTileDomesticOnly": true,
+    "legacyLinuxVersion": "5.5.2.37849279",
+    "legacyPackageHTTPStatus": 404,
+    "legacyPackageActualDownloadExitCode": 22,
+    "legacyPackageBytes": 0,
+    "vendorDigestProvided": false,
+    "formalPermanentLinuxUnsupportedPolicyClaimed": false,
+    "nativeLinuxELFOrAppProfileNamespaceVerified": false
+  },
+  "workbuddyDomestic": {
+    "entry": "/home/han/.local/opt/workbuddy/5.6.2.40046327/opt/WorkBuddy/workbuddy",
+    "entrySha256BeforeAndAfter": "13bf1da1273c22f0536ee6a52fbadb3561dd31b63c11e80f7feff6beccac1578",
+    "entryUnchanged": true,
+    "sharedNativeRuntimeLibrariesExist": true,
+    "reinstalledOrUpdatedByThisRun": false
+  },
+  "claudeAppLinux": {
+    "status": "official-Linux-platform-and-package-verification-blocked-by-official-endpoint-transport-errors",
+    "installedByThisRun": false,
+    "ClaudeCodeCLIUsedAsDesktopSubstitute": false,
+    "formalLinuxUnsupportedClaimed": false,
+    "safeReceipt": "claude-linux/final-platform-verification-safe.json",
+    "safeReceiptSha256": "e69149aff2abfa7fb2dea3449be4a5d6b712def32bd8e05ed97c4c5a2138cfaa"
+  },
+  "windowsInstallationsTouched": false,
+  "privateProfileContentsRead": false,
+  "configurationWrites": 0,
+  "nativeGUIStarts": 0,
+  "modelCalls": 0,
+  "authOrSetupCalls": 0,
+  "noWindowsInteropSubstitution": true,
+  "evidence": [
+    {
+      "relativePath": "workbuddy/official-fetches.json",
+      "sha256": "c2379eae9f07817f2c49776c06ca3d469425e7c8bce4c7bddc323ec8a9ec63ff",
+      "bytes": 1084
+    },
+    {
+      "relativePath": "workbuddy/deb-update.json",
+      "sha256": "466b3060f0c4113fdbfea6fc5f32e7613e2e0741849927aa19033d56b58635d1",
+      "bytes": 267
+    },
+    {
+      "relativePath": "workbuddy/homepage-curl-receipt.json",
+      "sha256": "4cd434fd44f9495c9096eeffbbeeb7496d942c17392e1b54f2f88f5aefc5c598",
+      "bytes": 334
+    },
+    {
+      "relativePath": "workbuddy/deb-range-receipt.json",
+      "sha256": "89b95a38777d84b09cd55409dd6bea7112c69289e1f673c19e5f5ad01c72da08",
+      "bytes": 355
+    },
+    {
+      "relativePath": "workbuddy/deb-full-download-receipt.json",
+      "sha256": "419bf8fce453aa66d75981257c8fbb3b78ba1c0e27fba05a1a6c373fc074c96c",
+      "bytes": 423
+    },
+    {
+      "relativePath": "workbuddy/official-global-platform-structured-data-safe.json",
+      "sha256": "fa68d622e47f5037883f002e687a128f804e336a64a4696d4407230d5a7b04dc",
+      "bytes": 604
+    },
+    {
+      "relativePath": "workbuddy/official-global-download-ui-platform-proof-safe.json",
+      "sha256": "30843d91ff140928254acd5f9bb10ac65c079984f3fe1af0ee44f6280a430e0c",
+      "bytes": 1703
+    },
+    {
+      "relativePath": "workbuddy/domestic-current-public-preservation.json",
+      "sha256": "3a8ccbbec74878e01c6480c47573a38ee4c89faef4e200a97aa18b54e4f3470f",
+      "bytes": 336
+    },
+    {
+      "relativePath": "workbuddy/official-platform-client-fetches.json",
+      "sha256": "dc915707ecac7c011b318c3266367ce7466236bc07e3017612b2ebc0fc83216b",
+      "bytes": 773
+    },
+    {
+      "relativePath": "workbuddy/documentation-tool-limitations-safe.json",
+      "sha256": "fb0d537967019698ef2c737738b20ad4c49db27e0d60a4a71624cab1b439e8ee",
+      "bytes": 273
+    },
+    {
+      "relativePath": "claude-linux/final-platform-verification-safe.json",
+      "sha256": "e69149aff2abfa7fb2dea3449be4a5d6b712def32bd8e05ed97c4c5a2138cfaa",
+      "bytes": 4853
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "steps": [
+    {
+      "commit": "6eb4117",
+      "purpose": "Retain the selected external monitor when provider activity is cleared."
+    },
+    {
+      "commit": "cca3bd9",
+      "purpose": "Use separate domestic and international WorkBuddy names and 21 canonical monitor identities."
+    }
+  ],
+  "mergedMain": "4cee1f8fe40ee8213f0f69a07682fa030f7c93ab",
+  "pushActualExitCode": 0,
+  "firstEditionTestAttempt": {
+    "receiptPath": "/tmp/orchester-workbuddy-editions-frontend-20261111/result.json",
+    "receiptSha256": "163475fb5ec0aa332fd863caf77bb75f49d5278208f1c7b1d238c8c186d9e088",
+    "actualExitCode": 1,
+    "passed": 75,
+    "failed": 1,
+    "failure": "A prior hardcoded 20-entry expectation remained when the canonical catalog became 21; replaced with canonical metadata length."
+  },
+  "correctedValidation": {
+    "receiptPath": "/tmp/orchester-workbuddy-editions-frontend-v2-20261111/result.json",
+    "receiptSha256": "0b8b3a785a9f26197134c3bec197c667c34438e270991d23cd539b993e6030bb",
+    "actualExitCode": 0,
+    "webTests": 76,
+    "mobileTests": 6,
+    "designTests": 4,
+    "typechecks": 3,
+    "sourceStable": true
+  },
+  "builds": {
+    "receiptPath": "/tmp/orchester-final21-frontend-builds-20261111/summary.json",
+    "receiptSha256": "ac0ddec70de404ccc5600638bfed766cfcb7de069c013860ec52ef4443b51c34",
+    "webFiles": 37,
+    "mobileFiles": 17,
+    "siteFiles": 26,
+    "allActualExitCodes": 0,
+    "sourceStable": true
+  },
+  "pages": {
+    "runId": 42999110960,
+    "source": "4cee1f8fe40ee8213f0f69a07682fa030f7c93ab",
+    "receiptPath": "/tmp/orchester-final21-pages-ci-20261111/live-ci-resource-verification.json",
+    "receiptSha256": "21837649f050e0708a1c10ce20c54d0d4a315a9d64287a7c7e09979a693c472c",
+    "all26LiveResourcesExact": true
+  },
+  "localPreviewHelper": {
+    "toolSession": 89794,
+    "ordinaryQuitRequested": true,
+    "actualExitCode": 0
+  },
+  "modelCalls": 0,
+  "observedAt": 1794391901.2197886
+}

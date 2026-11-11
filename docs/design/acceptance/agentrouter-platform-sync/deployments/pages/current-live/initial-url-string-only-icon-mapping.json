@@ -1,0 +1,693 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-11T11:03:33.479Z",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "officialReceiptSourceRevision": "cca3bd9edc59c56f89d97e9b4a119ba30e9ef45c",
+  "providerCount": 21,
+  "themeImageCount": 42,
+  "uniqueRuntimeSourceCount": 24,
+  "uniqueCanonicalAssetCount": 24,
+  "all42MappingsLoadedAndMatchCanonical": false,
+  "rawCanonicalImageReferences": 25,
+  "viteNormalizedImageReferences": 11,
+  "viteHelper": {
+    "path": "/home/han/project/Orchester/node_modules/.pnpm/vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.33.0/node_modules/vite/dist/node/chunks/config.js",
+    "localSourceSha256": "c2fcfa51206dc1f8d22120ef4a82af8b9acdc02f4476520b6a0897d12a724ba3",
+    "extractedHelperSha256": "60324f8b9132279b6a228048377334db2ee3fbc6d3c97ce22cfdde7c2540afa1",
+    "purpose": "Reproduce exact bundler SVG inline transformation; canonical source bytes are preserved separately."
+  },
+  "rows": [
+    {
+      "provider": "codex",
+      "actualName": "Codex",
+      "expectedName": "Codex",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/codex.png",
+          "canonicalSha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+          "currentBodySha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+          "currentBytes": 10969,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/codex-light.svg",
+          "canonicalSha256": "8652777b55544c572ba445dd230a90c2e248611e92eaa77de5805e8d0561fc30",
+          "currentBodySha256": "64a99982306b619184bdb10900c05bef7b8f82694a9787be9c2834545b9abc8b",
+          "currentBytes": 1983,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "exact-vite-7.3.6-svg-inline-normalization",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "claude",
+      "actualName": "Claude Code",
+      "expectedName": "Claude Code",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/claude.png",
+          "canonicalSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+          "currentBodySha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+          "currentBytes": 10358,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/claude.png",
+          "canonicalSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+          "currentBodySha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+          "currentBytes": 10358,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "deepseek",
+      "actualName": "DeepSeek Harness",
+      "expectedName": "DeepSeek Harness",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/deepseek-harness-dark.svg",
+          "canonicalSha256": "dde7db781f41e7aeb4709ff5485af2bdcf7f4b4ea81b4500cfd5df44efdbd817",
+          "currentBodySha256": "79d20c6d48a85321fc8e534b0e0b403d58c57ae549c193fcfb4def395ac8e2a3",
+          "currentBytes": 3630,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "exact-vite-7.3.6-svg-inline-normalization",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/deepseek-harness-light.svg",
+          "canonicalSha256": "9e983b4f649c25c6ca0623a50be1a6e705fd8f49f756638b980fa13b40575ab6",
+          "currentBodySha256": "4b90315d98d07987788d675ce7e16772495eef017795ba6aa265f08ab596c7ff",
+          "currentBytes": 3630,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "exact-vite-7.3.6-svg-inline-normalization",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "opencode",
+      "actualName": "OpenCode",
+      "expectedName": "OpenCode",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/opencode.svg",
+          "canonicalSha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+          "currentBodySha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70",
+          "currentBytes": 608,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "exact-vite-7.3.6-svg-inline-normalization",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/opencode.svg",
+          "canonicalSha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+          "currentBodySha256": "c032feb64a15fe1fca83a3d992c643d0166b8e3a972069587eb6e77aa89a8b70",
+          "currentBytes": 608,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "exact-vite-7.3.6-svg-inline-normalization",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "gemini",
+      "actualName": "Gemini CLI",
+      "expectedName": "Gemini CLI",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/gemini.png",
+          "canonicalSha256": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee",
+          "currentBodySha256": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee",
+          "currentBytes": 2246,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/gemini.png",
+          "canonicalSha256": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee",
+          "currentBodySha256": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee",
+          "currentBytes": 2246,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "antigravity",
+      "actualName": "Antigravity",
+      "expectedName": "Antigravity",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/antigravity.svg",
+          "canonicalSha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+          "currentBodySha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+          "currentBytes": 5037,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/antigravity.svg",
+          "canonicalSha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+          "currentBodySha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+          "currentBytes": 5037,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "cursor",
+      "actualName": "Cursor",
+      "expectedName": "Cursor",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/cursor-dark.svg",
+          "canonicalSha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+          "currentBodySha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+          "currentBytes": 4373,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/cursor-light.svg",
+          "canonicalSha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+          "currentBodySha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+          "currentBytes": 4388,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "workbuddy",
+      "actualName": "WorkBuddy 国内版",
+      "expectedName": "WorkBuddy 国内版",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/workbuddy.svg",
+          "canonicalSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+          "currentBodySha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+          "currentBytes": 4142,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/workbuddy.svg",
+          "canonicalSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+          "currentBodySha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+          "currentBytes": 4142,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "workbuddy_global",
+      "actualName": "WorkBuddy AI 国际版",
+      "expectedName": "WorkBuddy AI 国际版",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/workbuddy.svg",
+          "canonicalSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+          "currentBodySha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+          "currentBytes": 4142,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/workbuddy.svg",
+          "canonicalSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+          "currentBodySha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+          "currentBytes": 4142,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "qwen",
+      "actualName": "Qwen Code",
+      "expectedName": "Qwen Code",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/qwen.svg",
+          "canonicalSha256": "24156c849c9124505e13b38c6583a9d5d85a1f57d996c324d967f480a4d88696",
+          "currentBodySha256": "68fa32d3474d9ecfd248e2a4406849b86123fae1f3f0dd69fc1f709d67f78085",
+          "currentBytes": 1106,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "exact-vite-7.3.6-svg-inline-normalization",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/qwen.svg",
+          "canonicalSha256": "24156c849c9124505e13b38c6583a9d5d85a1f57d996c324d967f480a4d88696",
+          "currentBodySha256": "68fa32d3474d9ecfd248e2a4406849b86123fae1f3f0dd69fc1f709d67f78085",
+          "currentBytes": 1106,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "exact-vite-7.3.6-svg-inline-normalization",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "openclaw",
+      "actualName": "OpenClaw",
+      "expectedName": "OpenClaw",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/openclaw.svg",
+          "canonicalSha256": "74e1fb7542675f68aafe502576f7c857c3f3620d07095e910515e3c05d62ab2e",
+          "currentBodySha256": "6618c620a52b84ed86b91b4638afd4611d194e1a3de909d9352f6992a015dd2e",
+          "currentBytes": 2961,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "exact-vite-7.3.6-svg-inline-normalization",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/openclaw.svg",
+          "canonicalSha256": "74e1fb7542675f68aafe502576f7c857c3f3620d07095e910515e3c05d62ab2e",
+          "currentBodySha256": "6618c620a52b84ed86b91b4638afd4611d194e1a3de909d9352f6992a015dd2e",
+          "currentBytes": 2961,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "exact-vite-7.3.6-svg-inline-normalization",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "cline",
+      "actualName": "Cline",
+      "expectedName": "Cline",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/cline-dark.svg",
+          "canonicalSha256": "a8932a1fa6a919466b4a36e76519be4a600fc1b83c41d84f94c3e8e45260a8e1",
+          "currentBodySha256": "8dd3cedf23c35095e22321666fc0330e3253226412905c75913ef7f11819f68e",
+          "currentBytes": 3569,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "exact-vite-7.3.6-svg-inline-normalization",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/cline-light.svg",
+          "canonicalSha256": "6aab009bf089a8dc1b5452c05c471244a08595b78fd639835eacc0821b887c06",
+          "currentBodySha256": "bf827511f5c1d1dc376311b468d283d59eb01ebdc89554c4ed701770e30770bd",
+          "currentBytes": 3569,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "exact-vite-7.3.6-svg-inline-normalization",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "roo",
+      "actualName": "Roo Code",
+      "expectedName": "Roo Code",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/roo.png",
+          "canonicalSha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+          "currentBodySha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+          "currentBytes": 5626,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/roo.png",
+          "canonicalSha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+          "currentBodySha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+          "currentBytes": 5626,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "kilo",
+      "actualName": "Kilo Code",
+      "expectedName": "Kilo Code",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/kilo.svg",
+          "canonicalSha256": "5b537e31ef6037cadc434390c5d38687b3752c37ea8c4e2a09b9d62b4fae4c78",
+          "currentBodySha256": "c720142fba108fa18653dd99c15028a0a9ab57abe77edfeae4e2a2a3faa285b4",
+          "currentBytes": 628,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "mismatch",
+          "matchesOfficialCanonical": false
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/kilo.svg",
+          "canonicalSha256": "5b537e31ef6037cadc434390c5d38687b3752c37ea8c4e2a09b9d62b4fae4c78",
+          "currentBodySha256": "c720142fba108fa18653dd99c15028a0a9ab57abe77edfeae4e2a2a3faa285b4",
+          "currentBytes": 628,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "mismatch",
+          "matchesOfficialCanonical": false
+        }
+      ]
+    },
+    {
+      "provider": "hermes",
+      "actualName": "Hermes Agent",
+      "expectedName": "Hermes Agent",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/hermes-dark.svg",
+          "canonicalSha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+          "currentBodySha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+          "currentBytes": 137768,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/hermes-light.svg",
+          "canonicalSha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+          "currentBodySha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+          "currentBytes": 116350,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "pi",
+      "actualName": "Pi",
+      "expectedName": "Pi",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/pi.svg",
+          "canonicalSha256": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b",
+          "currentBodySha256": "73c874374f3a26439d32029ee103e07534325e0be323b8434b506179fec21818",
+          "currentBytes": 322,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "mismatch",
+          "matchesOfficialCanonical": false
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/pi.svg",
+          "canonicalSha256": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b",
+          "currentBodySha256": "73c874374f3a26439d32029ee103e07534325e0be323b8434b506179fec21818",
+          "currentBytes": 322,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "mismatch",
+          "matchesOfficialCanonical": false
+        }
+      ]
+    },
+    {
+      "provider": "crush",
+      "actualName": "Crush",
+      "expectedName": "Crush",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/crush.png",
+          "canonicalSha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+          "currentBodySha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+          "currentBytes": 55448,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/crush.png",
+          "canonicalSha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+          "currentBodySha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+          "currentBytes": 55448,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "claude_app",
+      "actualName": "Claude App",
+      "expectedName": "Claude App",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/claude.png",
+          "canonicalSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+          "currentBodySha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+          "currentBytes": 10358,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/claude.png",
+          "canonicalSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+          "currentBodySha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+          "currentBytes": 10358,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "trae",
+      "actualName": "Trae",
+      "expectedName": "Trae",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/trae.png",
+          "canonicalSha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+          "currentBodySha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+          "currentBytes": 488,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/trae.png",
+          "canonicalSha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+          "currentBodySha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+          "currentBytes": 488,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "zcode",
+      "actualName": "ZCode",
+      "expectedName": "ZCode",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/zcode.png",
+          "canonicalSha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+          "currentBodySha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+          "currentBytes": 6479,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/zcode.png",
+          "canonicalSha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+          "currentBodySha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+          "currentBytes": 6479,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "original-canonical-bytes",
+          "matchesOfficialCanonical": true
+        }
+      ]
+    },
+    {
+      "provider": "craft",
+      "actualName": "Craft Agents",
+      "expectedName": "Craft Agents",
+      "nameMatches": true,
+      "images": [
+        {
+          "theme": "dark",
+          "canonicalPath": "packages/design/src/assets/agents/craft.svg",
+          "canonicalSha256": "fd195ad28212109ce8fbcd6d2181556bc26b91e79998011af23d5bf0f08cf37c",
+          "currentBodySha256": "b0e1615c3fcb9fc1f2b8271dcb64cf64335d193a39151c11b65b054a1f5ee3e5",
+          "currentBytes": 720,
+          "loaded": true,
+          "visible": false,
+          "responseStatus": 200,
+          "matchKind": "mismatch",
+          "matchesOfficialCanonical": false
+        },
+        {
+          "theme": "light",
+          "canonicalPath": "packages/design/src/assets/agents/craft.svg",
+          "canonicalSha256": "fd195ad28212109ce8fbcd6d2181556bc26b91e79998011af23d5bf0f08cf37c",
+          "currentBodySha256": "b0e1615c3fcb9fc1f2b8271dcb64cf64335d193a39151c11b65b054a1f5ee3e5",
+          "currentBytes": 720,
+          "loaded": true,
+          "visible": true,
+          "responseStatus": 200,
+          "matchKind": "mismatch",
+          "matchesOfficialCanonical": false
+        }
+      ]
+    }
+  ]
+}

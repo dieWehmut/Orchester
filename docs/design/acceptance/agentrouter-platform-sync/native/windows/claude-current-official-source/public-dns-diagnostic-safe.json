@@ -1,0 +1,37 @@
+{
+  "host": "downloads.claude.ai",
+  "systemAddresses": [
+    "198.18.0.67",
+    "2001:2::3e"
+  ],
+  "proxyEnvironmentPresent": false,
+  "observedAt": 1794395288.458085,
+  "google": {
+    "status": 200,
+    "dnsStatus": 0,
+    "answers": [
+      {
+        "name": "downloads.claude.ai.",
+        "type": 1,
+        "TTL": 300,
+        "data": "35.190.46.17"
+      }
+    ],
+    "sourceURL": "https://dns.google/resolve?name=downloads.claude.ai&type=A",
+    "sha256": "9c51774b49eb1f843dcf468d143899cebe56e9804503f319b08c2d766db89ffa"
+  },
+  "cloudflare": {
+    "status": 200,
+    "dnsStatus": 0,
+    "answers": [
+      {
+        "name": "downloads.claude.ai",
+        "type": 1,
+        "TTL": 231,
+        "data": "35.190.46.17"
+      }
+    ],
+    "sourceURL": "https://cloudflare-dns.com/dns-query?name=downloads.claude.ai&type=A",
+    "sha256": "3be35ba9b98901671e7b6e51b517839edd34674d43fdc1f4e0dab49f8c790a89"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "sourceBefore": {
+    "packages/design/src/agent-identities.ts": "3244b95fec47ebecb8587097cfac3a949858384ccac6bc59470a4c8d8191899c",
+    "packages/design/test/agent-identities.test.ts": "7b6322e0573b1fc7495b724607b258d07508a47e07481d2118382a0d3cba464b",
+    "apps/web/test/agent-new-monitors.test.ts": "e326ee435913e05d80d35d8cca8f56cc59e712f1235473825df7eeeb9e434df5",
+    "apps/mobile/test/agent-monitors.test.ts": "f903556414ef07d8eaa9999c066f56cbacd0c9c5753b4e3971c823c1352986f0",
+    "apps/web/src/views/WorkspaceView.vue": "1a2a6026cec79d330a133ffb1b3d248d82adc832a985517205de23f2302bdced",
+    "apps/web/test/workspace-view.test.ts": "a14918468dcfd9404c04969cae02e3e24a8e2dcbe6ef5c149b92fe8bc2d275c5"
+  },
+  "sourceAfter": {
+    "packages/design/src/agent-identities.ts": "3244b95fec47ebecb8587097cfac3a949858384ccac6bc59470a4c8d8191899c",
+    "packages/design/test/agent-identities.test.ts": "7b6322e0573b1fc7495b724607b258d07508a47e07481d2118382a0d3cba464b",
+    "apps/web/test/agent-new-monitors.test.ts": "e326ee435913e05d80d35d8cca8f56cc59e712f1235473825df7eeeb9e434df5",
+    "apps/mobile/test/agent-monitors.test.ts": "f903556414ef07d8eaa9999c066f56cbacd0c9c5753b4e3971c823c1352986f0",
+    "apps/web/src/views/WorkspaceView.vue": "1a2a6026cec79d330a133ffb1b3d248d82adc832a985517205de23f2302bdced",
+    "apps/web/test/workspace-view.test.ts": "a14918468dcfd9404c04969cae02e3e24a8e2dcbe6ef5c149b92fe8bc2d275c5"
+  },
+  "gates": [
+    {
+      "command": [
+        "pnpm",
+        "--filter",
+        "@orchester/web",
+        "exec",
+        "vitest",
+        "run",
+        "test/workspace-view.test.ts",
+        "test/agent-new-monitors.test.ts",
+        "--maxWorkers=2"
+      ],
+      "exitCode": 1,
+      "logSha256": "f1d2343cdd68faf0547273563b4454edca9e8b65439da26cbadcc4167f298584",
+      "summaries": [
+        "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+        "Test Files  1 failed | 1 passed (2)",
+        "Tests  1 failed | 75 passed (76)"
+      ]
+    }
+  ],
+  "sourceStable": true
+}

@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "observedAt": 1794395902.9511523,
+  "scope": "Read-only Claude Windows official channel verification and installer preparation; installation delegated to windows_reinstall.",
+  "vendorOfficialLatestManifest": {
+    "packageIdentifier": "Anthropic.Claude",
+    "version": "3.6556.2",
+    "releaseDate": "2026-10-23",
+    "sourceURL": "https://raw.githubusercontent.com/microsoft/winget-pkgs/master/manifests/a/Anthropic/Claude/3.6556.2/Anthropic.Claude.installer.yaml",
+    "sha256": "bc4e81e1ac442a0d79fa2f246ebb1881998772c432848f94855167ae0cb3cfdb",
+    "directEXEExpectedSha256": "945082290478e5c668e8aaa25a392e1cd129e6219173e907b7ff1f7f99ded45e",
+    "directMSIXExpectedSha256": "c0ac245c9ad458abd550bcbf2a0b34c75c51173a27f3c870602e5452cf3484f1",
+    "directMSIXFamily": "Claude_pzs8sxrjxfjjc"
+  },
+  "officialStore": {
+    "productId": "9P6K58THS811",
+    "sourceURL": "https://apps.microsoft.com/detail/9p6k58ths811?hl=en-US&gl=US",
+    "family": "AnthropicPBC.Claude_fnn82j28hfe8t",
+    "publisher": "Anthropic, PBC"
+  },
+  "officialBootstrapper": {
+    "sourceURL": "https://get.microsoft.com/installer/download/9P6K58THS811",
+    "sourceCodeProvenance": [
+      {
+        "url": "https://apps.microsoft.com/assets/js/constants-BfukTK7O.js",
+        "sha256": "223a300fbacac1d26c88788907af2a7c478f47e44eb0248a8a92781fc0963a69"
+      },
+      {
+        "url": "https://apps.microsoft.com/assets/js/psi-service-OjqYrXkZ.js",
+        "sha256": "da119b7aae9d6f9bf575fe0092125f0a142ba610cc451b1e49ac0471c9720237"
+      }
+    ],
+    "sourceCodeRelationship": "The Store site joins its public installer-download base URL with the uppercased product ID.",
+    "downloadStatus": 200,
+    "bytes": 813088,
+    "sha256": "8ab145dab22a698105f20e10b182e50d1c2422e2be1818349efadbb06e118a48",
+    "windowsPreparedFile": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\claude-official-prepared-20261111-source\\Claude-Store-Installer.exe",
+    "signature": {
+      "observedAt": "2026-11-11T11:14:21.4445854Z",
+      "path": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\claude-official-prepared-20261111-source\\Claude-Store-Installer.exe",
+      "bytes": 813088,
+      "sha256": "8ab145dab22a698105f20e10b182e50d1c2422e2be1818349efadbb06e118a48",
+      "productName": "Store Installer",
+      "fileDescription": "Store Installer",
+      "productVersion": "22609.1501.4.0+2ee876db97d84a09e734c9def92bfc09c32ab513",
+      "companyName": "Microsoft Corporation",
+      "signatureStatus": "Valid",
+      "signatureSubject": "CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+      "signatureThumbprint": "0F7E3531DB084A3D45759670B7699E53985E8742",
+      "signerNotBefore": "2026-09-24T23:28:51.0000000Z",
+      "signerNotAfter": "2026-09-27T23:28:51.0000000Z",
+      "isOSBinary": false,
+      "fileExecuted": false,
+      "installationChanges": 0,
+      "modelCalls": 0
+    },
+    "embeddedPublicProductIdObservation": {
+      "asciiProductIdPresent": false,
+      "utf16ProductIdPresent": false
+    },
+    "isClaudePayload": false,
+    "executedByThisTask": false,
+    "installationResultImplied": false,
+    "publisherPayloadDigestNotApplicableToBootstrapper": true
+  },
+  "latestNativeInstallationObservation": {
+    "receipt": "native-claude-all-known-families-safe.json",
+    "sha256": "fdbb5bfd0908a3dc92a0f7638211d49726980ee699b963d65d427cba708fc56e",
+    "actualExitCode": 0,
+    "currentUserMatchingPackages": 0,
+    "matchingStartApps": 0,
+    "matchingKnownMachineRegistrationNames": 0,
+    "knownProductCodeUninstallMatches": 0,
+    "knownPublicExecutableMatches": 0,
+    "queryErrors": [],
+    "wholeMachineAllUsersPackageInventoryImplied": false
+  },
+  "officialVendorDownloadBoundary": "Default TLS, TLS1.2/http1.1, real DoH address with original hostname/certificate verification, and isolated Chromium all failed before payload download. Official Microsoft Store bootstrapper is a distinct verified transport, not a verified Claude payload.",
+  "isolatedBrowserProbe": {
+    "sourceURL": "https://downloads.claude.ai/releases/win32/x64/RELEASES",
+    "result": "ERR_CONNECTION_CLOSED",
+    "ownIsolatedContext": "claude-windows-source",
+    "ownTabClosedNormally": true,
+    "globalBrowserClosed": false,
+    "nativeEdgeOrNodeStartedByThisTask": false
+  },
+  "shortNativeReadOnlyProbesAllExited": true,
+  "fileExecuted": false,
+  "installationChanges": 0,
+  "privateProfileContentsRead": false,
+  "modelsOrAuthCalls": 0,
+  "noGitOrSourceEdits": true
+}

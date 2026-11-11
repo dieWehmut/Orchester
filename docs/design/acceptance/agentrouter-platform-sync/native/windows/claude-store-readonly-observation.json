@@ -1,0 +1,10 @@
+{
+    "status":  "official-store-installed-metadata-observed",
+    "packages":  [
+
+                 ],
+    "matchingPackageCount":  0,
+    "noInstallersRerun":  true,
+    "userProfileOrCredentialsRead":  false,
+    "modelCalls":  0
+}

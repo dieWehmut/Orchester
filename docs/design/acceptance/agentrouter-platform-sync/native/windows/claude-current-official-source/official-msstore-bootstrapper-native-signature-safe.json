@@ -1,0 +1,26 @@
+{
+  "actualExitCode": 0,
+  "processExited": true,
+  "stderrBytes": 0,
+  "scriptSha256": "0e84f303e5978b9e84263b4bd2ceb68228b45c32beb1e165f9dc91f1a14920a8",
+  "observedAt": 1794395661.52908,
+  "result": {
+    "observedAt": "2026-11-11T11:14:21.4445854Z",
+    "path": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\claude-official-prepared-20261111-source\\Claude-Store-Installer.exe",
+    "bytes": 813088,
+    "sha256": "8ab145dab22a698105f20e10b182e50d1c2422e2be1818349efadbb06e118a48",
+    "productName": "Store Installer",
+    "fileDescription": "Store Installer",
+    "productVersion": "22609.1501.4.0+2ee876db97d84a09e734c9def92bfc09c32ab513",
+    "companyName": "Microsoft Corporation",
+    "signatureStatus": "Valid",
+    "signatureSubject": "CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+    "signatureThumbprint": "0F7E3531DB084A3D45759670B7699E53985E8742",
+    "signerNotBefore": "2026-09-24T23:28:51.0000000Z",
+    "signerNotAfter": "2026-09-27T23:28:51.0000000Z",
+    "isOSBinary": false,
+    "fileExecuted": false,
+    "installationChanges": 0,
+    "modelCalls": 0
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "commit": "16ae928d1a9be633918337beb46257db011cdd92",
+  "parent": "cca3bd9edc59c56f89d97e9b4a119ba30e9ef45c",
+  "files": [
+    "kisten/netz/src/agent_process.rs",
+    "kisten/netz/src/agent_process/identity.rs",
+    "kisten/netz/src/agent_process/rules.json",
+    "kisten/netz/src/agent_status.rs",
+    "kisten/netz/tests/agent_runtime_status.rs",
+    "kisten/netz/tests/agent_status_routes.rs",
+    "kisten/netz/tests/remote_agent_status.rs"
+  ],
+  "sourceMatchesPassedGate": true,
+  "gateReceiptSha256": "e63e0a4c6f8a4038107c7951e2d3a9ca49cdeabab78ea8be812ba0be3d87e696"
+}

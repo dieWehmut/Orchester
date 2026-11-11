@@ -1,0 +1,33 @@
+{
+  "frontendCommit": "6ef449fa97bed514a14d8369cda26aabe2470c33",
+  "siteCommit": "8cf6f65169ac46ca4d137ed3f1b6079e5799a303",
+  "mainCommit": "4804650f4eb9bd04171bf590144d58aeed297615",
+  "originalFrontendReceiptSha": "a511c7d1bbc49fc93df7fbe6b99c75aef439cbb84d7681f9d840571136b9c60e",
+  "codexCorrectionReceipt": "/tmp/orchester-official-legacy-icons-20261111/codex-visual-correction.json",
+  "finalSource": {
+    "apps/mobile/src/components/AgentMonitorList.vue": "f6a536edfa5e439903dfa18a98e0e72f9089957162be51e7b5f9b72b2638dfb9",
+    "apps/mobile/test/agent-monitors.test.ts": "08239319c73a003974d5a824feb292277edf424cfdd39af3c3d18ca2be31b162",
+    "apps/web/test/agent-monitors.test.ts": "446def7850911f322048de5335b5883faec0f4b7010bcf92e78deec05a273792",
+    "apps/web/test/agent-new-monitors.test.ts": "66ca96160b8af2542ccd8d6fccbbe5a2f0dcf41b8d5eaf5199a7b88a63c53740",
+    "packages/design/src/agent-identities.ts": "5a5be975eaba0a659458d5f6553360235eb761bd37dd85af89e054815e04a432",
+    "packages/design/src/assets/agents/SOURCES.md": "2a81136dddf0842802137772ba27a21bd7354cc0de18ee06e9252233665a78fc",
+    "packages/design/src/assets/agents/codex.png": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+    "packages/design/src/assets/agents/claude.png": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+    "packages/design/src/assets/agents/cline-dark.svg": "a8932a1fa6a919466b4a36e76519be4a600fc1b83c41d84f94c3e8e45260a8e1",
+    "packages/design/src/assets/agents/cline-light.svg": "6aab009bf089a8dc1b5452c05c471244a08595b78fd639835eacc0821b887c06",
+    "packages/design/src/assets/agents/codex-light.svg": "8652777b55544c572ba445dd230a90c2e248611e92eaa77de5805e8d0561fc30",
+    "packages/design/src/assets/agents/craft.svg": "fd195ad28212109ce8fbcd6d2181556bc26b91e79998011af23d5bf0f08cf37c",
+    "packages/design/src/assets/agents/crush.png": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+    "packages/design/src/assets/agents/deepseek-harness-dark.svg": "dde7db781f41e7aeb4709ff5485af2bdcf7f4b4ea81b4500cfd5df44efdbd817",
+    "packages/design/src/assets/agents/deepseek-harness-light.svg": "9e983b4f649c25c6ca0623a50be1a6e705fd8f49f756638b980fa13b40575ab6",
+    "packages/design/src/assets/agents/hermes-dark.svg": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+    "packages/design/src/assets/agents/hermes-light.svg": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+    "packages/design/src/assets/agents/kilo.svg": "5b537e31ef6037cadc434390c5d38687b3752c37ea8c4e2a09b9d62b4fae4c78",
+    "packages/design/src/assets/agents/opencode.svg": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+    "packages/design/src/assets/agents/pi.svg": "d266b2c1d2c7bf169ca30d438963b176fba16fea6263b9ac30c8302f34ad7ce7",
+    "packages/design/src/assets/agents/roo.png": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+    "packages/design/src/assets/agents/trae.png": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+    "packages/design/src/assets/agents/zcode.png": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+    "packages/design/test/agent-identities.test.ts": "d08143a1cbbef944e2adae5291a3cc0e6b9a8fd3e11a410781bf8223d7b5bf16"
+  }
+}

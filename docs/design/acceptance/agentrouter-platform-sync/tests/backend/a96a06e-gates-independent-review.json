@@ -1,0 +1,2019 @@
+{
+  "schemaVersion": 1,
+  "currentSourceRevision": "a96a06e445ab6bdc4483ac297c69f8a0e2382bc9",
+  "originalReceipts": [
+    {
+      "sourcePath": "/tmp/orchester-final20-rust-gates-20261111/result.json",
+      "sourceSha256": "ccff1b5c6cf91209211250dc7eb113ad60f8e24966910caa0d00f8d33129c72f",
+      "originalRetainedOutsideRepository": true
+    },
+    {
+      "sourcePath": "/tmp/orchester-installed-desktop-identity-20261111/result.json",
+      "sourceSha256": "87cc12950650ac1e2166bac291ecb98c2aa240bd3867690deead43f55e5e0364",
+      "originalRetainedOutsideRepository": true
+    },
+    {
+      "sourcePath": "/tmp/orchester-final20-native-link-20261111/result.json",
+      "sourceSha256": "26fe85e3516ceecf31a0b768c649c0fe39261fdd7486a63604503d6c99780e07",
+      "originalRetainedOutsideRepository": true
+    }
+  ],
+  "priorFullWorkspace": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--all-targets",
+        "--locked",
+        "--offline"
+      ],
+      "exitCode": 0,
+      "logSha256": "644e0012888576e8c8e6361eb293637113717e5678a33901a14a533740420e17",
+      "testPrograms": 103,
+      "passed": 1301,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--locked",
+        "--offline",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "logSha256": "b0a6433089edfab3b9c4418fca73d0c3de2b539554a049add878c0c54bcdd9b9",
+      "testPrograms": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "testPrograms": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "orchester-konsole",
+        "--bin",
+        "orchester",
+        "--locked",
+        "--offline"
+      ],
+      "exitCode": 0,
+      "logSha256": "86056a10ea7b49b4a87609d532e0c19efc2a32fd89e93bf0fc86ea409cada519",
+      "testPrograms": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    }
+  ],
+  "latestTargetedIdentityAndMonitor": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "orchester-netz",
+        "--lib",
+        "agent_process::",
+        "--locked",
+        "--offline"
+      ],
+      "exitCode": 0,
+      "logSha256": "da82da491c2e736a6b32c6ca7eabcc2c99249d00aeb6635750f15a9ab1ab8f94",
+      "testPrograms": 1,
+      "passed": 31,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "orchester-netz",
+        "--test",
+        "agent_runtime_status",
+        "--test",
+        "agent_status_routes",
+        "--test",
+        "agent_status_socket",
+        "--test",
+        "agent_process_monitor",
+        "--test",
+        "agent_process",
+        "--test",
+        "agent_catalog",
+        "--test",
+        "agent_routes",
+        "--locked",
+        "--offline"
+      ],
+      "exitCode": 0,
+      "logSha256": "0fe1458de116f26c01b2a96d6e4880891622154556453775dc37cadc97e13d7f",
+      "testPrograms": 7,
+      "passed": 22,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "orchester-netz",
+        "--all-targets",
+        "--locked",
+        "--offline",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "logSha256": "41e4a7e53564c61d8565fc3710d16003195c9b7d79b72d9e82b3dbeb1b40c250",
+      "testPrograms": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "testPrograms": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    }
+  ],
+  "sourceStableDuringEachReceipt": true,
+  "sourceInputCount": 366,
+  "onlyChangedInputsBetweenFullAndLatestTarget": [
+    "kisten/netz/src/agent_process/identity.rs",
+    "kisten/netz/src/agent_process/rules.json",
+    "kisten/netz/src/agent_process/wsl_query.py"
+  ],
+  "allCurrent366InputsByteEqualCurrentGitBlobs": true,
+  "sourceRows": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "f5432fa1754a162afd80d130f6271c9e86a9936b4b1d474b82557a677c7aecb2",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256": "8ac78e8ff2a4d8ae670fe8aa868bcdb8ff501fbc806314de4102b27eefffce43",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/adapter/Cargo.toml",
+      "sha256": "45c4e6c56788d2846abde015bf8a6a4005dd2c489b443c18b051635544a25f48",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/adapter/src/lib.rs",
+      "sha256": "bba5c84b0f3124e0cc2978a788dc431fbf24bf81d19c3553470574098797000b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/adapter/src/mock.rs",
+      "sha256": "a710e9dd9e495c2276746b91404fdacc6b1b46d45407525462dc5dc4f1853163",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/anwendung/Cargo.toml",
+      "sha256": "7b6111195a30c980c46a626144b14f9cd593088886f81a9ecae2827f5322f634",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/anwendung/src/lib.rs",
+      "sha256": "3a48778ecf171273305d2e0afe0b37628a02bf7aa88999fb562fcbca3c12ff7d",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/anwendung/src/library.rs",
+      "sha256": "c2e2270f6b84335cba38133a612d75110217cce8fcbb2ffd6ee1b3c5cee18c1a",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/anwendung/src/paths.rs",
+      "sha256": "cd70b18e6364e0ab9bbb03315f8fbfdee284f5c09fbbf2c4e24505c1d2701eb0",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/anwendung/src/self_agent.rs",
+      "sha256": "d91f7c69cd9769ab357cba1eb0ef9d5400483aeb926e5e1664d37593ed3cbd8e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/anwendung/src/session_history.rs",
+      "sha256": "23860016f00ce56e7190d9df1b1dafcbffaee1f02da6ecf46f9358923559e36e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/anwendung/src/session_history/conversations.rs",
+      "sha256": "fb22e816bc47faf0838fee994deb7545d82ce1bb21c7c2ffbd2c8941c7c38b69",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/anwendung/src/workspace_review.rs",
+      "sha256": "ecfd23b1b0814ddee8bf158d1cac5c73fb87662f57ff50c421536871a26a824e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/anwendung/tests/library.rs",
+      "sha256": "23f98f36d14aa448c07c70d9e713f4cba6956c8749907bea7adc3989809fdd91",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/anwendung/tests/session_history.rs",
+      "sha256": "857da170f865bcdc565f04680f73b8f7fb9f4d933b882100e4931817e63320ac",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/anwendung/tests/workspace_review.rs",
+      "sha256": "553f078de7df335a398307e89f5ba00e79bf11d07807f058897b7b55ac5c1882",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/Cargo.toml",
+      "sha256": "bef63aa007d8b24a2c88df0f1f6fdc2d787bc4f61b583262533f978df974487d",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/assets/logo.ansi",
+      "sha256": "fb8a007f184ad6a329b66b1b85a210aa932f11a3b93e5c5d4d8f51c9e7acff78",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/args.rs",
+      "sha256": "1915f7eac310adfedbb54b94c2f4261b688405540d6da80a51bf7a5a1abe2c28",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/avatar.rs",
+      "sha256": "cd893a9cf4f2cc66df6d14b2cf388117b0d2becee11e3671483c02cf3ae063cb",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/command_center.rs",
+      "sha256": "d9d71470b97e357af989dd1ebff141aa8659bf73677ba06d89b925db703adab4",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/command_center_data.rs",
+      "sha256": "05e34569344f5669fc77ef509c0bf845c412a6c6ec0f438d4647e71b27172429",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/interactive.rs",
+      "sha256": "ea3fac6e5e0977786acdbe68dfce376cfa5da99aa03b3e78002d99629e5f6e0e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/interactive/assets/README.md",
+      "sha256": "4a78b8b8b2a8740e9b9828af603a1aec43cc4f13fe9768924a30dad327e94171",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/interactive/assets/extract-portrait.py",
+      "sha256": "a75c9fc261efd4f53a4fc2d607ea600c765d4906002ce38537ff0b86f16ad548",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/interactive/assets/orchester-alpha.png",
+      "sha256": "6e63be55d00f666120b45d877606a474177ec61f064fd05bf80626501affccee",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/interactive/assets/orchester.alpha",
+      "sha256": "d7762138a6fd7136ad491b5cbe630df453f46ba4e6c6d71f430a426a67bf0ef2",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/interactive/assets/orchester.gray",
+      "sha256": "59695a734f11024642a9908b7069a937a645bb495fb1e8b2203c4833d592a07e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/interactive/brand.rs",
+      "sha256": "a99bdf1b7bf4a161ff92f928f7432429eed4419c840f28270edf851959059ad5",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/interactive/commands.rs",
+      "sha256": "92cfced3b34d25a8709bd31e543176b7051aba936a42320fec06e6cdaeeb7367",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/interactive/composer.rs",
+      "sha256": "ca67d366155411d535fbab79403701faf84b45091f3952f7a619b9ff8071397f",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/interactive/input.rs",
+      "sha256": "a596975e4bd0dafa092d1c2cda13a5efa69c220e3dfcc7c840d6fd083f15aabd",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/interactive/provider_form.rs",
+      "sha256": "d7c903bd80e588f849ef513d2e86a61999ae280568dfd7cfc87417679294afdb",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/interactive/screen.rs",
+      "sha256": "b94a5bb769744d65228e08a1e8ef419e2cdd1d0d51794394bee1dc45548ad280",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/interactive/secret.rs",
+      "sha256": "6c7e3e9c1af76e2d67bc27b61a493ebb8f1e04f42e372870ea11f588f35d1705",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/main.rs",
+      "sha256": "7b9a9f3e520d8db974830cb41458040b22535f4176f9249a279a1d5fd1ed8583",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/model_manager.rs",
+      "sha256": "244dd3cc7b64d1a75b844b12366c9c76559c285bd22364a6a0fc5d4e26f9a1a9",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/plugin.rs",
+      "sha256": "4812640e704ea90222a7054531a0631d65522994f6e39182edf0395c915c70ed",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/plugin/install.rs",
+      "sha256": "aff649bfa31364f1417865ffeddfd883fcab56e27d639599e383b4fa05ffad6a",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/plugin/remove.rs",
+      "sha256": "0235db2318f82b7a2f02944a50695c61e99c94f533e5aed7b5f63e53c5499228",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/process.rs",
+      "sha256": "960510f59d7a965a0a1c0474c2d94262788d7a7177b58a5c49509e441b8915db",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/remote.rs",
+      "sha256": "53ead6425af8855850799fd58759f6573f9fe28b71e6690d58ecf3c45d207a5e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/render.rs",
+      "sha256": "496258d8375ac9f1e27089264b8f74429aca93ddc2a6b24cb80c0cb48874b89c",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/self_agent.rs",
+      "sha256": "9bca3e5cb43e52c69daa726f0264884d3c52ce157eb3080a53d810c795a0708d",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/self_agent/config.rs",
+      "sha256": "9fce7aa6bd54d6b38ed81d0a8d1448d7744ecb747f138df63fdd02a245fe20f0",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/self_agent/credentials.rs",
+      "sha256": "c41afa624e61749cfe6a0b1dc96bd301941a142fb34618aae82610fb91ed1b94",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/self_agent/models.rs",
+      "sha256": "2214439379d89d1d833cbfd7c553a203fd0c0979c2b68fa6bb9c70c353f2d092",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/self_agent/permissions.rs",
+      "sha256": "9cd3395485f4a05483b60c2855d60ae5c1d5c62088c47fe3c4857a4be637da2b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/self_agent/render.rs",
+      "sha256": "abe3cc973aebae752a79d428b672852d93553004a16d5d9c7cf1e3aacf20e319",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/self_agent/resume.rs",
+      "sha256": "bd5b194f1f8fc00555a0ced925a92d6d527b4b2bee1f8ece2dbafc471c80a1ed",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/self_agent/status.rs",
+      "sha256": "2855efe15d45789058850b469e6bf33e87df4ac97de7c43e4fa1331402c680e9",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/text.rs",
+      "sha256": "7bc9e302be0af853cd3a4a4fcd220e29f395e28e32e0f620cc65888016c30dcd",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/theme.rs",
+      "sha256": "2e23a16a07a44fbdd17f2e21b7db6e987012ab6832e57fcdb0f88004423f8188",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/update.rs",
+      "sha256": "1749428401de4482b80f9444d73c23e70664e984ad71985114f5e9e15ec36003",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/src/workspace_overlay.rs",
+      "sha256": "3bc459e23e402284b5fa26239d2e1ca2e08fe625f21b0198c078d13f30760e92",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/tests/cli.rs",
+      "sha256": "6ab0505f40371e14401947624ebbcba355d1077b0f1a75554c864c73ef10fe1b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/tests/plugin_cli.rs",
+      "sha256": "b0ce3878e379019115871881bce0e1c0617b64bcc7f89a023a9261ead6ee1563",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/tests/plugin_mutation_cli.rs",
+      "sha256": "384c12a9e5937340e7d24ef6f5a2c88db96d68f5aec9890baa47fdb2addcaedb",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/tests/plugin_remove_cli.rs",
+      "sha256": "e869b23ffe5aa112733547b8e588cd3523322352e11939141c3d60813410b677",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/tests/remote_cli.rs",
+      "sha256": "0623de554501cd45a5326878a3f2061c3a82e6a2655c6ac03b430a03f49f75f9",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/tests/support/conpty.rs",
+      "sha256": "706782382bc9a1017b6c220484d016e72df88d08e2a53cb146851f8d807444db",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/tests/support/loopback_responses.rs",
+      "sha256": "c13f4472c87b051abd35576bd8b53cfe96002333897b638720b3cf9df38be962",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/tests/support/mod.rs",
+      "sha256": "e8122190af01acf90013d940c255b5ec88de38565585af4d1d30be014d418cdd",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/tests/support/plugin_fixture.rs",
+      "sha256": "8c01e807c277f8cc9e78dd43610df80460e8b893198b15791819d00cd58ee5cb",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/tests/support/secure_config.rs",
+      "sha256": "7805b1c866230eff24b177051fec05130d986ff0cf13d7557132bd63f7a2086a",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/konsole/tests/tty_windows.rs",
+      "sha256": "976f9f19ee915fecebc4ba3d392ff9577e41ab7707494dc424d36da5d4f2f4b6",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/Cargo.toml",
+      "sha256": "d674f014947d1eb948a59a223a363be6d41a93bf888da1c045fd1d39afff5873",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/migrations/0001_memory.sql",
+      "sha256": "25aa5c2e6c4a0adc2fe196c0e635ca0f4eb3c52a20e8c71ddc35f5b41881a2cc",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/migrations/0001_state.sql",
+      "sha256": "3f8336cbb574651c31b84e1b4346dea4a505963ab114fa1ebf21b3da58127466",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/migrations/0002_approval_barrier.sql",
+      "sha256": "90e4437a29af1934bb65e6df3f47cc10d7cf9fa369fb7b293dfab5a52d2389b8",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/migrations/0002_memory_access.sql",
+      "sha256": "af7f84f2d93dd60a2f43f79832baa0b652cc942a1ea936b86498440cc4bb6819",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/migrations/0003_memory_provenance.sql",
+      "sha256": "41f5afbd246b6a19cecccdf6b28ac5ca63280e5be562ddb79b3361055e65b207",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/migrations/0003_model_phase.sql",
+      "sha256": "41b451aa3759b6afddc2676e2908e3793ca5f0ecbc53229ec68c78d5c5cef113",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/migrations/0004_action_model_binding.sql",
+      "sha256": "0cd816fcf009e93d55d7878cd6a7c7ac8b61be662716641fe8945568335bba90",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/migrations/0004_memory_schema_namespace.sql",
+      "sha256": "d3321c6f26a0b070fc996b98a2c6632433019fbfc889c8fab217b488775e0073",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/migrations/0005_observation_links.sql",
+      "sha256": "32e4ed98dbfc6007214ed5fcada74bfa53f01558384bcfa1a912dfb5e4dff59c",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/migrations/0006_transcript_records.sql",
+      "sha256": "c3289dd8c9889d834fa8c2133587926e59ebcefbd5ec8222f5c32ca1cd611bf9",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/migrations/0007_transcript_bindings.sql",
+      "sha256": "a38a950d90b5fc9bb21d2bd7418faa2a2bd3a355a33be25f020fa27bf1f0cafa",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/migrations/0008_transcript_append_guards.sql",
+      "sha256": "a0777af4b34f6d1047a95d57379e8a25a3a6857d47154b31c70b3d3110be738b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/conductor.rs",
+      "sha256": "67cd9019c3d51f038a0c48a47f588aaacd670fc33a4af798f5685351ba2ad997",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/agent_loop.rs",
+      "sha256": "f0cd9a009a019efd7cdbed8f09e4edc7507ad41cb527e1a558a55fe55dd7b6c7",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/approval.rs",
+      "sha256": "60b00e28d7d67eadf4a9586e529a98296b59a25b9744612aa791ea74f8d751ac",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/audit.rs",
+      "sha256": "2198661f93d8c23ee382fb681535c6087885a9d3d3e629a7de99da1f5605b35d",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/audit/record.rs",
+      "sha256": "7dac947104ac3beb8f1065b2e2ae303d926f4abce4ff299c221dd402315cd9d7",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/barrier.rs",
+      "sha256": "02e9d8ee815ad8469e7846676116a751873dded048ad495450cfca9475b29f7f",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/config.rs",
+      "sha256": "7f6996475c4079ab0359e99077ae5797525364179edb6f39b668ada75e2aee5f",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/config/document.rs",
+      "sha256": "b2d04624ced433d9e81bff813afc017715e5aa98ba91b3f9c71b24d669746619",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/config/editor.rs",
+      "sha256": "5cd2dc3b4d28bd3bce7dad4316000cf2322ba78f9b85c9079b19dc5afe6b94d1",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/config/protected_file.rs",
+      "sha256": "cab055fda8088b678150678a4d6675c3d21b7b5f56a2f292098631e71796d5c7",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/config/protected_file/unix.rs",
+      "sha256": "5b513a875d102a58d6bc358f567c957eaebbb2a80822dfdc77718c41d77132be",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/config/protected_file/windows.rs",
+      "sha256": "2b1645ae4f9735e0e22b31ddd392b3f5d1a7f4deb4f2464b8f0eac4c95556c22",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/config/provider.rs",
+      "sha256": "7662210c0aadf812be9f8af0031326692c2bfb79998bdfdd397f073038c19a59",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/config/secrets.rs",
+      "sha256": "8db6545d9b21338a8710b8d8faba9aaa1f3b5bb878480973a1c94923c344ae72",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/config/template.rs",
+      "sha256": "a8367ac7ff5d6d938ab730508e1d06f203319399d31821f7e6ea19cb08ff9d1e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/context.rs",
+      "sha256": "3f8647667f97ca61a53fdc32d86d930e8cda07332bd3055b84ea57f11515c5a1",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/coordinator.rs",
+      "sha256": "629a0e87edd2a3c58bf5640330d49efb31e5fc1961e048eeb1dfdcb113640764",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/coordinator/continuation.rs",
+      "sha256": "52028a974505da8c5899137d4b595b8194f6058bab8f9f218165c3fce0e28613",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/credentials.rs",
+      "sha256": "27cfd8f05e28a4ec0a3e794141b190c02512bbb254e65e8de426b6db2f224717",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/evolution/candidate.rs",
+      "sha256": "e2bb4eb92bc72d42c654286e8ed17fab2fc10049aac00bccc5d7026f34fac1d5",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/evolution/error.rs",
+      "sha256": "4651b45e4aa6b5e05df1aef8e57f999e79d251a8a4c79d6ca431ed61db90ddc1",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/evolution/evaluation.rs",
+      "sha256": "145b071b409080db29f08651e9c6eacd7f2a9cff2eac28e0ae14278501892447",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/evolution/identity.rs",
+      "sha256": "3d42fb10db5ce638418857c168ce7bbf3405b855a3662e1ee941da1f3524b63c",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/evolution/mod.rs",
+      "sha256": "d11e734a23e997c7b3bb9d1382bc7c2f90a2a23d1273a18ae0c74f964838e68c",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/evolution/snapshots.rs",
+      "sha256": "a5c7bf01f56d4903b47516e347f2a3eacf251a6dc91e4fa404e8889132d33475",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/evolution/validation.rs",
+      "sha256": "054ed1522ec18e0aff888240da74ad7139adeaa86790b5c8f302bd19a1faaee8",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/execution/mod.rs",
+      "sha256": "14dbfad654cb7f4691518fc12b58b61a8d697943e902d8e82671d2dceaccdd46",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/execution/observation.rs",
+      "sha256": "1a987ccadefc902239076e9c39084fb10b8c77d4db8776accdcdf260f9bd32bf",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/executor.rs",
+      "sha256": "f6386492ef1c8ef696466598cccdee9478b62b0c76865359e5c7c5d9c5955a39",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/executor_tests.rs",
+      "sha256": "787d20fab0f05e19199a4f5487a8c8c067057a80fec369f0da161efc091e2c56",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/feedback.rs",
+      "sha256": "cad9ac2500878d76d6df144ee7bb5200349449019cf03490a272e921272dbbdb",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/files.rs",
+      "sha256": "140b5621f533e9e80d5fbf84464be2879cb52ae670dd47eaeb5143646914cacc",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/governance/command.rs",
+      "sha256": "2139abd2a719c11a5c679393668cd606578f90d7bcbcdcd37d41e3a4bead0e89",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/governance/mod.rs",
+      "sha256": "cadd1407f4da7cb8b63dd849139edb9b37101aab11c96837fee05b0908a4c6b7",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/governance/path_guard.rs",
+      "sha256": "eebd4df8fdb50411c4bac30e5a2fb6a929b2eda1011d24a247333c5a3714ff9f",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/governance/policy.rs",
+      "sha256": "e679b8fe2382181a32d17b687b8c1c5d66eba24728183f96dc3507beef7eb481",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/governance/workspace_lock.rs",
+      "sha256": "8c89d464734bab438c5e50dbb325beb438b29efd3a15210b7373f07b00b72883",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/memory.rs",
+      "sha256": "b02c25f472d5c917b05fafb6582fe7f52e22466c9ec9cdcf6a8cb9154633403a",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/mod.rs",
+      "sha256": "5c5b7e5d243c44b9e6781641d1022884aeff1082698d0d1505a0ae0e8a0331c7",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/model_events.rs",
+      "sha256": "da324c8918b75508b04bc1620415ebe09944c65200dc5c99da81c5322a6f150e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/mutation.rs",
+      "sha256": "c39b8dfd33d72e6265e43d22adf5002fb8edeaf366ea3de37b1b5f1d9c1a9fde",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/private_fs/mod.rs",
+      "sha256": "30d48c84eb7de876e14c8141364afa3a93ca4a42917fe27ed8ef79b407c87da4",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/private_fs/unix.rs",
+      "sha256": "b8bbfee805d3c63ade77d77870f92007fe73048c4b93df7bfd1a81fe35b64fe0",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/private_fs/windows.rs",
+      "sha256": "270264a820eebde78b9eaf852712caba92fd20d8b3dbd1a707fcf64a63aa9db8",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/process.rs",
+      "sha256": "786a13de463833ae092a23420cc2a6cf99c3d05cb2ed7640ecd294bc7104bb59",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/process_runtime.rs",
+      "sha256": "e940ec8e1f31101d972bf814637071c6e15fe7abe000100711d3fb6f9ab24e8d",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/process_runtime_tests.rs",
+      "sha256": "3d8da5564dbe9e26c8f045aabe2e7386673099059e3929b9a4fcb80a0bbc2d74",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/process_tree.rs",
+      "sha256": "8ccdfa5c5515d0a77f490444c4d0feb63fc5f03183f105d0d8f3f6f3f50a291a",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/provider/anthropic/mod.rs",
+      "sha256": "eed09b02f5df29fcd7e60b7291a8f6c8657efef31bee1f19712dac8546bb7e6b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/provider/anthropic/model.rs",
+      "sha256": "3d88c2dfd844a9a28a7b52d9ac1b2c695b062ad7ed2e092f87abc3806acedc5b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/provider/anthropic/request.rs",
+      "sha256": "2fff0f5b39de8817a5a3177bc9665a88568b6f6d112ee60fa891638012a70f0c",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/provider/anthropic/response.rs",
+      "sha256": "e337a1a2e59ce91e11322aab6805ff2e375289a7d1196fbea6d479ac103e5291",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/provider/http.rs",
+      "sha256": "6cda26181170b69533ef99e2ff9f840e9a7302b7e21270f77779996b35fb28cd",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/provider/http/client.rs",
+      "sha256": "6462faa3105bacdcacaac22e3ea5ac43d67ca3582e7ff65500dd0f13f86dcf15",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/provider/json.rs",
+      "sha256": "00030fba61f7914cd17030bdc28d29fcd5ad5052e6a7ff9c746ddd62b4c15fbb",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/provider/mod.rs",
+      "sha256": "f17661fc87cfa327eaf496d374aca884f73d555367b6c5461aff56dabee63fa0",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/provider/responses/mod.rs",
+      "sha256": "c1871ca9e023f7f06b7913780246f8a6d9a0527a4c98b167dd4c22eed60f9e87",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/provider/responses/model.rs",
+      "sha256": "4e20ba24029570253ca3d8e1ce3e9c2be319e81ecd83b6bc53b0329665595a31",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/provider/responses/request.rs",
+      "sha256": "779772f09af0f247a1dad6a3398e810d30199772143e8da71ec24fb21840b734",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/provider/responses/response.rs",
+      "sha256": "a993a27f31e837e4c2a735d5843c9e97f795ead5f45ebea5af355d18708ccb39",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/provider/retry.rs",
+      "sha256": "6177dc65d18fb0cab9e6f638707cec35bd641940010f253bf344716eb38fa48d",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/provider/sse.rs",
+      "sha256": "8a108ed27967b71cb077f3cb28518a8c0f10149deee72ee22c485504b25267a9",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/provider/wire.rs",
+      "sha256": "e02e5969d8c0e8b4ee6adf809d7646d1bf926eea9aba788bbd7e578c82629b89",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store.rs",
+      "sha256": "13019a5e52fb6b289461e4f8848e090a20dcab7c74b96f35c343ca812d76363e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store/database.rs",
+      "sha256": "8c7dcd0ee8014b0b5fafc670e3f878b85d7db62d5c37cfcb74f0ccc8c04b0aaa",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store/history.rs",
+      "sha256": "60db96152e8057cd480312208c88f3050ecceefc10d136912b5d753a48c250f8",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store/model.rs",
+      "sha256": "c7494cb118b8705fc20d8fc7fed901ee8cabade1cf1796261e6e980b86408d3d",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store/observation.rs",
+      "sha256": "9d2fe1ad8c825dcbc0d244fb2d3a2c6fb5f04274b97ba5f8d71bb32a57d9f631",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store/policy.rs",
+      "sha256": "4b1f2098fde48bc849de31eeb9fdc2f89877b0ec763026844ba8b6f4b03bdf4f",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store/resume.rs",
+      "sha256": "55a8516e46defa930c716549cf6ce939a6f4ebf2f8af90a1b0efffefde1b6744",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store/resume/evidence.rs",
+      "sha256": "190ddd9884ad4242469bceb5a16d646a473de86b37d36e8e90043657e489f02e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store/sanitized.rs",
+      "sha256": "34f850859c552a4fe2fc99eb1bc6af4a94d525b7367e80b02cdcda9f9216f570",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store/schema.rs",
+      "sha256": "bea0403b4b1ba3eb4cdb3609e7c3fb767537009a586052b3c9099c9bf0161e61",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store/schema/validation.rs",
+      "sha256": "156d47998091a104375ec7e595eb8b2e6d2616991095ad6db242e72fdcd2a76f",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store/schema/validation/bindings.rs",
+      "sha256": "4f432b521939211c8f9926df16e86fe1626b4de658dde7156219391ea766a6d8",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store/schema/validation/transcript.rs",
+      "sha256": "08fb43f907a4edb78cfef0adae918b7dccf5ff81c11ab45c957e632a503c12fb",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store/storage.rs",
+      "sha256": "b4c4e7bbefe25911a214c13ecd3c98b2622c36fdf4a688ce315c6fc573032a61",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store/transcript.rs",
+      "sha256": "8e6cd28fbd6583d0769848b0dfbdb451a679634e76a679ff9778626ed699b4bb",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store/transcript/binding.rs",
+      "sha256": "6ab891a0717748597065a931dd432d5de7d9a09cd2a8fc86c1d61194825574df",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store/transition.rs",
+      "sha256": "835c5c8a50bf22865f98e0d170f514d69498e073bd12e07843e1615647a50fd9",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/run_store/types.rs",
+      "sha256": "debe86913c221a572edf802d587b5f67b8fa5d102b4e3b2aee0feef4db54ebed",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/secret_scan.rs",
+      "sha256": "e49cbe0c503fd1a4cd26d08f00acb234b67d79bc491ddda3ff19483da8058316",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/service/builder.rs",
+      "sha256": "d09647ac75ead5cdc7b16129d23a16de6a87fb201faecbf66d39dfb05da34cd1",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/service/config_view.rs",
+      "sha256": "59256b6a49a7423b25b2b298e9dbe36b8297ecfe44c60cf6538286a5aff7906c",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/service/credentials.rs",
+      "sha256": "142739d94af23892ac17f1bdd66ae33f2eef6aab3de751027d756f0500c8036c",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/service/events.rs",
+      "sha256": "0f9f1b699ed3b90f4575ab75cf547dc27d984aa386380ff746f8324c5e8ec3ba",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/service/identity.rs",
+      "sha256": "9117e82d381e1adffd614df90dbedb482e5e575bb4517605ac44a99ffba1bc93",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/service/mod.rs",
+      "sha256": "d88214d41ee013ce4d6a8ffc29a21e8c649264fbd697ba7018131f9312aa0446",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/service/model_catalog.rs",
+      "sha256": "5733b6862e2a2926160c9c9a5cdde68837ce447931dd488f3c6a7eca2fd9af25",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/service/model_discovery.rs",
+      "sha256": "f91037556c3f1f9ed187770ec3fdf4cf4e9bcf3123b01b1c026aa7c9f45b542a",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/service/permissions.rs",
+      "sha256": "35d7cef53f9cd96908e56a042711faf303b0c95680da3b915762707f0662973e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/service/provider_editor.rs",
+      "sha256": "cc42bef00f50374146958b5036646c47a5756da21183f73878cbeece901e24b4",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/service/resume_catalog.rs",
+      "sha256": "8837baebe6b5c2935f7601dd7108faff8dcfa25082426a3a4a629ee8f09a8372",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/service/runtime.rs",
+      "sha256": "119b85e627a5e6781fe858642822bd6292204cb868a9ad1c3d28affadf567f6b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/service/runtime/approval.rs",
+      "sha256": "1948e23d4b8d63f5662102f38982f4246831dea6bbe54ece536548249e6d0288",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/service/runtime/outcome.rs",
+      "sha256": "47812201912c1dddf2bf61065e401946ee488dc5dc6ce86de21ded3db1469947",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/service/status.rs",
+      "sha256": "6e518e17fba00e419f07c8aae444a9881db76aa9e7b08fa078eb55d74fc31d5c",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/service/turn.rs",
+      "sha256": "a7721503a3375606ad50108dcca8f61382337763cf0af027a1bb3d66be28f21d",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/service/unresolved.rs",
+      "sha256": "c715c8be933abd714f89ce752708056643fe50d8deed62b0d85e1714dcce0c03",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/tools.rs",
+      "sha256": "e96579ef5a245d121a320c635858f6b42bc2cf3a40b154596a5e759247740bb7",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/transcript.rs",
+      "sha256": "32133547e0fbdaacf66cfc3c18a6818132b83e2f8437f2fe673f8a171b4c2de9",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/validator.rs",
+      "sha256": "ea3cf2f36a98e66c128854befdbb3a2efd5bd35845c5c00fdc9297dd1e07db3e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/workspace_patch.rs",
+      "sha256": "0f95a5e0c6157b6bd96cb01b178d2cbd6af03c30db3eed2dbc295d01d0463899",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/workspace_patch_tests.rs",
+      "sha256": "f24b668625f1cbf5449dfb102ea6214f1588b904f20de4d5cedb8707fc13f55e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/workspace_write.rs",
+      "sha256": "aa7db69dc8e1114007f81c449de288bda5ec27a1a3270261e6be34eda1978e3b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/harness/workspace_write_tests.rs",
+      "sha256": "1cf54fb8972155000d2bfa102772840bab26dae8c30e700461472a0acd1d66ef",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/lib.rs",
+      "sha256": "84d24536741a9397cacc0f9a56e6caf2aed819c5b0d4c4889d78ca98074ca464",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/session.rs",
+      "sha256": "c8f6dfa035f0629b86b8da55ec86321d17bf1b1c004a62edf8bf2c7ab79016dc",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/src/store.rs",
+      "sha256": "9175e798533eaa430bdaf18848d5935474fab8e29e404fdbb63d65f03d188e1e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/agent_loop.rs",
+      "sha256": "531bc33344df6ea77a2d1da0b61b394ac34426e4399eb05e52ba824e64b1f33e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/anthropic_model.rs",
+      "sha256": "67db1a0854b15b8c1bc781797ad2547969c1c410dec4af5148a9bdc44be3eaa6",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/anthropic_request.rs",
+      "sha256": "8e45d560aeef1327b8ac4d16d125257aa65d679bc65111deafb200742736bfdb",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/anthropic_response.rs",
+      "sha256": "e3225889228dcaa67bebc25f3096584d91b32015fb2ebc013ef3d4b3a3e5e2b2",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/audit_approval.rs",
+      "sha256": "6063b32662c6d3eb88b84e7a436761e48164df0bd75f15c0e8e84d81332a8d92",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/config_security.rs",
+      "sha256": "547b23a11578c5c1d742b7297b0ef56d2d277336a0aa25d26492149112ca56ff",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/config_template.rs",
+      "sha256": "c9c57cad5cce711d29d4150ae906b29efdf381a413b6c22ca68ba4e5baefa0f2",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/configured_secret_set.rs",
+      "sha256": "1888194eb6628cb8e320f60d3a85007bcb6788dae880277d2ac199acca0d8ccd",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/context_assembler.rs",
+      "sha256": "74de14fb24fac315e38c1295751b0176bcd14159f0a8f91d49b59dccf7ccb2ed",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/coordinator.rs",
+      "sha256": "00dd4abab1c6ece3f8f317398c16223dcc31303594c5bd483bbb5a70921d063b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/durable_approval_barrier.rs",
+      "sha256": "20b437ba4620c42ff2a829696922e0e750d91541567dbee42e6aa4e3466dd0b6",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/durable_observations.rs",
+      "sha256": "7a144da415f1345196c9699facf865d71a37dc1518dd457c5b9a329a99ac27cb",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/evolution_identity.rs",
+      "sha256": "09c8eaa4226c3fd80c37939eebbc39828ba12b965f96ef9c8698034dd88970bd",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/evolution_support/mod.rs",
+      "sha256": "b4560f57b4a99868a267bc2a55d6eb39ff44e9bb599c4f5b6c8cc2905607eb00",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/evolution_validation.rs",
+      "sha256": "40164d6dde575d082d7400a9d1f1671993057518f684a8769d3164475e440071",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/evolution_wire.rs",
+      "sha256": "a474c4a60250576f1a66450a0384c7b4e82d07d3ebc743e7c2e35828addd7417",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/feedback_loop.rs",
+      "sha256": "51ac4c2a97013b41dfb5af1d85e6c5003f7fe2c79b9b3d080c8de684385785bf",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/file_tools.rs",
+      "sha256": "b28d67683b5df55265c37dffff770a36ab42b6b33354e91ed104b810971fbad7",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/governed_execution.rs",
+      "sha256": "f2745349f6845870befd00b6562ee3f7fd6e97eede2a713c7a0a331d01540707",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/memory_store.rs",
+      "sha256": "4516ed1c2d7351db33073b0aa88644059c223ea42f8e43adbe235d0807a806b4",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/model_http_boundary.rs",
+      "sha256": "0aebf0e1b952fb8d42f7db6566f16e83c3c43533af6c14a07af7d3ee4f9b2a26",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/model_http_reqwest.rs",
+      "sha256": "b3758e19fb757375875787280ab2c7eb37106d18e65591337fdb50bcfbb9cf3c",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/model_profiles.rs",
+      "sha256": "295028fa22428965cc274cf3653c8b86aa85c61c03e7181e8cec703cf513ed43",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/path_guard.rs",
+      "sha256": "96aa22ad9a83610f3ce931763da51a563cb77f1b4298fd4d65f17526b4c47638",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/policy_matrix.rs",
+      "sha256": "c3bc8b5615611f1f6f3317f4c245d8b58874a3fc9a5504d7666b2c34e73778a7",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/responses_model.rs",
+      "sha256": "4944c791c8f735bafff1b0e1e8e816c818832d13f95a7dbb2a13cc5793f87bd4",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/responses_request.rs",
+      "sha256": "2a9d35ba993a92c4658609b8ab5d54c73c7f0c73c7d2665337edb7038f793a89",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/responses_response.rs",
+      "sha256": "8c3d3cb0877bc9e8af5cace2029e450081f94659a793d52e5cc457e684c67a96",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/run_store.rs",
+      "sha256": "a190421709a451fd831c1f9f3c447ad7092dfdbc59de9d8e259a5755c52a6a19",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/run_store_action_events.rs",
+      "sha256": "2fb67d15e4a38834100413784bffcf06aed7657577c9eb2b88aae1fc88a4965d",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/run_store_bindings.rs",
+      "sha256": "d6b78c7e60d709857d6e814cdb454475e59e06bfe3eecabb29c66b37f3b7d3ae",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/run_store_migrations.rs",
+      "sha256": "336df5caed5d37fa7ef92b8492fdaa0f7f707775110c1746098f337c186cb2ac",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/run_store_policy.rs",
+      "sha256": "8d81eb642481904cbf470aea5dca73c4ee20850eaff8d67a67e00bd8a41da156",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/run_store_resume.rs",
+      "sha256": "402be3fa3bec1b907a9639db37e2c7dfde458de4f43da3e999dc084262ccbb17",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/self_agent_builder.rs",
+      "sha256": "b5c9a260d3dbce76885d8e43fe129fac2501f9f0b1969d55591aec0885865acb",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/self_agent_models.rs",
+      "sha256": "5d628448a03fd440451023fdfac57d956a79a41e27fc4cc5db15d446259ccef7",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/self_agent_permissions.rs",
+      "sha256": "450352d3e442404f6ef970cef29a287f09c08bbd3546765dc7e0f3e1e9a06af3",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/self_agent_resume_catalog.rs",
+      "sha256": "1db9b47b6a5c6167ab64d2d843b4ae79b7b682a0a98ba6b481291cbb0264be2b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/self_agent_runtime.rs",
+      "sha256": "097e564979b55e4d0dfc0349af176815c65bd91f5c6ab75417aeea6e06df32b9",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/self_agent_service.rs",
+      "sha256": "bcf7547e1e4f2c9f5fd60fb369a1dea9b04296714f1f55b01be51240e83fde1b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/self_agent_status.rs",
+      "sha256": "82f14ed8dd987d4c90dde961116f9a291c7cb6e62253d153694e6732ff95d6ec",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/support/allowed_run.rs",
+      "sha256": "d6f9cf2dce6c0a15a12131a7311d5257de774664621a062eec3de68d1767b330",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/tool_registry.rs",
+      "sha256": "a79d6cc659ca2e61dd90e59066441a7e386497f9b7f364a71b166516a23aa713",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/laufzeit/tests/wire_factory.rs",
+      "sha256": "c982da2c809189d8c7a71b41ec47cd6de9ba68a4f3c5b1aec09abb65b48841d2",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/modell/Cargo.toml",
+      "sha256": "6eb0f2784cfd0b80b600e4be3201ccb4a0cae4b6e65b7d1e5bb5a77272e9ccba",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/modell/src/decoder.rs",
+      "sha256": "d777061714df4b0b5ae82cc4f77c73501479055c62fdf4fab146dd4701ba45ee",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/modell/src/lib.rs",
+      "sha256": "5ffe719aa109852a701a462c981e436fbd0114b821332a138a3a8bd2fa121bea",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/modell/src/scripted.rs",
+      "sha256": "a5c90de8db61257923955d87111c9cfb3bd7d32b8a9f9942c5a3918d3f2c93ae",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/modell/src/types.rs",
+      "sha256": "d27768f1c3c086d4dabd899513a98a9c328630acf6afd9427c08f0947104a7e6",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/modell/tests/scripted_loop_parts.rs",
+      "sha256": "6339ff0b1564f535c9546e44ec9a1e5bb4fa04135d4e2ee41ccae9b43c4f051b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/Cargo.toml",
+      "sha256": "68c339375734dbd368de8e2b4f6c9569d30a0e5836ee4c9ef975da8407daae1a",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/examples/agent_process_probe.rs",
+      "sha256": "86b972ee1e389c003e9ee61468f0451afb97e4998a5fd4d768a3b4c70aec3b59",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/examples/management_preview.rs",
+      "sha256": "b4519d30e8f4ea6bd08f1eb6846d7fc3f7fe55a5183f7310456eb19504223639",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/agent_activity.rs",
+      "sha256": "cd854c6d117362b7858e55acc5429ebf827f3043891995101bc2a98c55b616d1",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/agent_activity/files.rs",
+      "sha256": "9f420691226dd16e6bbff92393bfae4def523f7800f2b7d7cf92ec00eeb960a6",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/agent_activity/managed.rs",
+      "sha256": "bc0a5a4e8c986f3d4a8109769169ed7a48e40532742e74e3091a0c4658eab8e2",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/agent_activity/metadata.rs",
+      "sha256": "4311593a501cbdfe63a249f4718c95fbe03496383252de6656a6a97cc703079f",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/agent_activity/opencode.rs",
+      "sha256": "736100405ab2f922edbb9c511b8fe139b6fe47465d3a5c78f7a07c8f17a7a542",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/agent_activity/tests.rs",
+      "sha256": "6b5ba1104347553db2a2d55e49f736eb080e9f483fe2dbf48610a802dfb28b11",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/agent_activity/transcript.rs",
+      "sha256": "56259f8fbd237e46d5370b7c5e03ed8e556887c0188f8a7a38e6822908449500",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/agent_activity/wsl.rs",
+      "sha256": "a85a8c6f24ea3c654cd4b588020147b67a039a3a9844ef2da375190307b37e87",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/agent_activity/wsl_lifecycle_tests.rs",
+      "sha256": "2e1abf37809a3edfb7b8c166c0ab86833b2ed5ee31f2626f613e6bdad58319f9",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/agent_activity/wsl_snapshot.py",
+      "sha256": "2073d4c54888b1b04a67819351fbb5d6df121f4d6f07345383481b1ef7f15103",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/agent_catalog.rs",
+      "sha256": "b383633c6a73f130b15b3a5de20a5e61c37e5466625ad2ad5cd1128392d1e056",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/agent_process.rs",
+      "sha256": "9b235ec26aee8b2f800918782ea3bdad130274c21b6f1fa9ab2b43d5cfc0cd9e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/agent_process/identity.rs",
+      "sha256": "0bad32669b0440639e9573983f6ddfd73e27ab4154f927e58a31bff7d609c8cc",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/agent_process/rules.json",
+      "sha256": "a6941260b33e82ce07e3dd98597b9aa36805170dc842bb0afe9691928f25d4dd",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/agent_process/wsl_query.py",
+      "sha256": "fe1fcbf604b16619908ffb043d1d204d82e29792c2a2c2ad70f01de59cafbc06",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/agent_status.rs",
+      "sha256": "428c5937d59eccab4691018cfcabced38f87bfdae44b35024b4d3e80593459c0",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/api_error.rs",
+      "sha256": "7555033ce65a266d2a529b3062221a7e9dc11b7e25d4c6bc23ef266593cf922b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/bootstrap.rs",
+      "sha256": "7fe264e838ee6a8f04b1d77560215a9bbe551c0ea1435eb8a5ac5fbcda0ac710",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/composer.rs",
+      "sha256": "72102603a5ffc2144248fe81faf33c490ad9d9157fb9e08d2e77c02096429b5d",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/config.rs",
+      "sha256": "70db924c72644662681b2e21beb2159cb629c930e899149eb8dbeb6f6f2cff92",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/embedded.rs",
+      "sha256": "d58cc5a6f079685983fa9aede06832053d8925753a8e158613cf51ff67ac10fa",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/fragment.rs",
+      "sha256": "799095a47d8a80615bfb6f1edeeb01aa6f82cac2bc716e64c870e754fc5640c4",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/health.rs",
+      "sha256": "9a76fcb905cbdd781615d01570c4f71e103b7cde846d1b14e0fa8ca0218abf66",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/lib.rs",
+      "sha256": "e75aa9b88e855f903f591341941e071294dc72d376e94e420ab461038312f99a",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/library.rs",
+      "sha256": "9359d159805a4473dad15fd666dd7c16547d6f65eba163771bd9649ef58522e9",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/lifecycle.rs",
+      "sha256": "24bb315ec9204eb016eb934dff842d882692e25bc5ed7d02d2970ca1ffcbb4c8",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/listener.rs",
+      "sha256": "a3a91d615c7432a1c76df3c251d06b8ae350e2ed3de69b36be6e50467b309670",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/mcp.rs",
+      "sha256": "0d75e7b2dc67d427ae9b15ad06848a28f32e7e0d85a595b79b3b279d9f126c47",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/model_catalog.rs",
+      "sha256": "b537eb6c1a56b63d7d9e5a18ca01a26ac18d5b89c0554460bcd83e68c2da6bb4",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/model_selection.rs",
+      "sha256": "30b4b06f38185fe8ed5b3e25d27d437a70fed59107bb23167834fa525b4c7de5",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/plugins.rs",
+      "sha256": "5d66a47ac3f338fa3d97cd500b57fa222fefd3ebcd527d103fc4c34de7606cd3",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/remote/auth.rs",
+      "sha256": "aad1301075add2422d07efa110a8462aeb6ced830baa592c2585c6ddf2f91ccc",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/remote/mod.rs",
+      "sha256": "14f2ea1dd13c30c15df9b177991af3611b88047e9a789a9638f75d2a64102421",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/remote/projects.rs",
+      "sha256": "c737493ed99319ce194b9ddca44407ce605c7634e4290c0d52a482c91331499c",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/remote/runs.rs",
+      "sha256": "5e61c7e88f158ff5cc7308b9a74f243c440ecc6eeb2fee8c27ba70bc054608cc",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/remote/terminal/mod.rs",
+      "sha256": "4665bdea7d77ceeb558108ac83b839d3fff6629fb63797ae9a404a1283094d63",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/remote/terminal/runtime.rs",
+      "sha256": "989fa7a09f87a654cd51b038d7d7cfd579ecaeee087157e962516c171f918e55",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/router.rs",
+      "sha256": "261e75537adb7f44be2609d16266cbb148c294e3ce3d123ad16bd2e87140b64a",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/run.rs",
+      "sha256": "ad369c02d80de60918cbcd370180b475ef3290889fa1fe3c6c2113afa1f1f287",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/run_bridge.rs",
+      "sha256": "20728491d77300a4b6e85d89bcffbf15e2cdab9d5a9ab9f9bf2a55f86cc8ab01",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/run_contract.rs",
+      "sha256": "388cbe322c81f01c1a85fe6cf997d3d53cf68f1228eaadfcd0f574a099156bd9",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/run_registry.rs",
+      "sha256": "030a53d58c05e5f7abc966acc975d2cfe7384fc67e5754f036f98d0764f4cadd",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/schedule_store.rs",
+      "sha256": "0058b89bc38ce16c5bdbe4015e87a5abcd09158f8f577dcf0cde382cc750737a",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/schedules.rs",
+      "sha256": "1d50252e6722cb079cf443dc3edfa0e7d112472b0fc75c7cd29870198692bafc",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/session.rs",
+      "sha256": "0f71e631fb0d4e95142d42b8fa35eebcc9a654a834ceff4a6ec0b4598d59cbbc",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/session_history.rs",
+      "sha256": "c9eb07a0266e4d02c10c8c3cae7e128321c4bcf970ac6e64bd8b0b5f2fd526ac",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/workspace.rs",
+      "sha256": "0f434e950244ff5061cf51979c724d7b8e82df26110597d403f62b25643d16d9",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/src/workspace_review.rs",
+      "sha256": "6fa3d06505d1b3f7fdd5c1f9e668f835307e09f2098f83d9b17f49a459f8088e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/agent_catalog.rs",
+      "sha256": "ac3ed099efc65140bca90b9cc7ade33eb9ac306cdb98bfdc28b0ebc033461f3c",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/agent_process.rs",
+      "sha256": "5ac6d8191fa415e66bf8e0cbd458bed5a0b34ad54113fd3bc48c099fa44fc269",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/agent_process_monitor.rs",
+      "sha256": "def69116431f5211534da1862336821d22be49e2bce8059f6609266bcf3b9cf1",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/agent_routes.rs",
+      "sha256": "ef2530244b53669401251f19c4a555fdd140b6c7023a66cbc88e5761961c8d12",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/agent_runtime_status.rs",
+      "sha256": "915e6ef6c1f91100e6b54ea66ef1475206a6f37946edb0860721a0f0e394a818",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/agent_status_routes.rs",
+      "sha256": "35c5389df40f4f91dfcb4fd2870a89fe3088481414751ad39c11f6fe95a9d62b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/agent_status_socket.rs",
+      "sha256": "bce21234db76a8fa7ffe09a02f6b685fc5ffbfea08467f3931d2446df7571cb9",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/api_error.rs",
+      "sha256": "3ee625d540e33f56d7618f8bdd6314fd919e79b61986861ca757fb1ed5c5d345",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/bootstrap.rs",
+      "sha256": "1e59fd8656bebe026389d42334bd19f308aa003b8abf52dc8478e53b176ced66",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/composer_routes.rs",
+      "sha256": "14dd61634a0521d2c3358e5d5588cc45dff427195980c3ad4b6ba79a16d45b21",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/context_registry.rs",
+      "sha256": "96c2fcdaa98b01e0d530a649741543fe567e04d5a5fc8643184c7230bc1c0e2b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/embedded.rs",
+      "sha256": "0cbd7dcc7121a077a45ed2f0a08cb8d63c4610ab3d366f3b96eb2b93a3545087",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/fixtures/mcp-server.mjs",
+      "sha256": "33410ec8f340158600b3f3cdf5e1f8a0257e4102f2705b71abb236d4998b3412",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/health.rs",
+      "sha256": "cf357d4eb4316a641f750336eb40974edb329bc7561bfe68f5f15b53364b9ee7",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/http_routes.rs",
+      "sha256": "7f5e6c705979fac2381f233dec6c6249d4b66219feb482b853abd209d4165e09",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/library_routes.rs",
+      "sha256": "31afb812986e801ca55bd57c0ffb8df219d6477fe33f084ad3c38cc5ff82a925",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/lifecycle.rs",
+      "sha256": "28c83f15be49f03f2890645ea8abfb166ab419ec277493378e29c794d47c31a6",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/listener.rs",
+      "sha256": "3b1807ef8e68fa5556c74bdf5f8f487f72e37ef34956f2a47c68a49fcc72bf13",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/model_catalog.rs",
+      "sha256": "a8d6dec0263660733f3c03430310543176052b018f3cfa6e3b19a05ea3ed89de",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/model_routes.rs",
+      "sha256": "611a32cc98858302a99d41acb93eda51a865ac79e97f72a67f218023c08083c4",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/plugin_routes.rs",
+      "sha256": "a5837a31e41e59ece54d538332dfa37e7019f59911d5ab30d3caed2ccad97959",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/provider_routes.rs",
+      "sha256": "0fc60c452b15ebdeca95fcd0f58d34589ae61b13a72b9e29d998f6b612097301",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/remote_agent_status.rs",
+      "sha256": "1f95f9b954bbebc0dc4ae4c66910477659eee2efb6f747b25ed645ba9e5c7536",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/remote_routes.rs",
+      "sha256": "d678a870596e86d3179ce096a6fdc5ea4dcd3d137f185bce9768f0abc753e524",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/remote_terminals.rs",
+      "sha256": "fef207e8f2e2fa7bed18444ba98abb69eed98e367854b48739f033221d62a0e7",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/run_idempotency_http.rs",
+      "sha256": "4fc81350652f9cb392ca48fc12bc5db08a2475ad95e7aa5aba1dd566c5b3dc49",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/run_routes.rs",
+      "sha256": "cbf80ecdc1ebbbb5d48876bfe63fbe04806c430d21b3fbcb008d2c7bdff5090b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/schedule_routes.rs",
+      "sha256": "f2a0aa41a4eacb488777cd5cfb3ad15668fbec85916951196c9704066eaba0dc",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/server_config.rs",
+      "sha256": "6710c3a93d4845419632f1ca683d6f133aa851dddcae0eb2b0d173a0731176e6",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/session.rs",
+      "sha256": "1dfce6d20d14f9d1d4e327f38e7930210f86f7344b4f7ad12c82922c18082e5b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/session_history_dto.rs",
+      "sha256": "c1c5e6b72313a9c36a54952053fa72143c97b752570e5145e7e236a8aba01a9c",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/session_history_routes.rs",
+      "sha256": "75909a2e7f13168594eef79352d015c9adee7a46e2f72ef63a26bc21c36fd10f",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/static_routes.rs",
+      "sha256": "192486a08d95d946325c22c1fe8dee62e457c54d9d734aaf00b336672d8d5e23",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/workspace.rs",
+      "sha256": "ae79eda4f3d57dcf53c408b3ecb84e5ccad778758afc861df73f2bca21c67066",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/netz/tests/workspace_review_routes.rs",
+      "sha256": "896aa426a4bdd84f85565459ffc9b35824c24940b2700d07631b09a8b45db0b6",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/protokoll/Cargo.toml",
+      "sha256": "b9d5853ab6ef5d39308ea9c59ff6304409f6c44b0038c8274a85aad43956a099",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/protokoll/src/agent_status.rs",
+      "sha256": "432bab67697350082c4f15ae1bcd2cad03b2dc45013e64d977d456639fc14e76",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/protokoll/src/capability.rs",
+      "sha256": "2ef1ac0bfb0ee83d0aa97337080de101dfabf2b536854cfbd9d96633435cc293",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/protokoll/src/event.rs",
+      "sha256": "19f3a832619066b9f41cd481c72e9fb6bf8e265e84ac73b136b56a386a0200c5",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/protokoll/src/harness.rs",
+      "sha256": "10c682e1aff9bc57fafaab3c849f937d65eda8911b2a18cd5ee9242caf89f7e8",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/protokoll/src/lib.rs",
+      "sha256": "8be3c8879299f398823a4a9c33782a8667038643afa75a4eec9a7adb9297b76b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/protokoll/src/result.rs",
+      "sha256": "23392791a16467a3f8b381eab2eb8f3e5ff76b0bd2ed005964bf3a3115a799e7",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/protokoll/src/session.rs",
+      "sha256": "77b47bd4af9b05a37078d745a8096e1beaea0e303b9144d60e95c1465809c465",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/protokoll/src/task.rs",
+      "sha256": "a5d44fc57a0e4b4896d343a0683dadc982cf1d227a6c743b7f11432855cbfc81",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/protokoll/src/ui.rs",
+      "sha256": "effa4258db09abe949fa69254f549ec3cb907d69e9b21a302b8d8e5264b8906c",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/protokoll/src/ui/text.rs",
+      "sha256": "0180a6ba250d56bb8b91fe3eada135bb5cfb9425c354ae4e1ff6886d77718a34",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/protokoll/tests/agent_status.rs",
+      "sha256": "6d9c7513e29c16db275bec37327635dd8e5fb4e44036330b2ec3628b0a8e0187",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/protokoll/tests/harness_roundtrip.rs",
+      "sha256": "7467ecf7cf32f5c87cfe2bb24bcf8066d1ee8c7da998f81484e0e4ebc90d7312",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/protokoll/tests/roundtrip.rs",
+      "sha256": "deb8853e39f1c350d5c7ee2b1bd6e6a5711a7801204efb2024c8866d98848237",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/protokoll/tests/schema_compatibility.rs",
+      "sha256": "9ced19dcb94b82a1b9df733750a979f7fa9ff622250bcc9409fdeceb8b8c30f7",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/protokoll/tests/ui_public_api.rs",
+      "sha256": "8965fa003f4000d591ada9086662bcd498a1e9182f54157660056adce1d412d0",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/vertrag/Cargo.toml",
+      "sha256": "047ddba519838a65075b5eddafa2435ecf7439232cab344a61f22b567f6f52f6",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/vertrag/src/adapter.rs",
+      "sha256": "53af6cac90cc738d5a18fd1d50a70d7a5cfc77a84ff5a2f960ef02c7b300ffad",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/vertrag/src/error.rs",
+      "sha256": "6f7dbad3281dbc14e920fd90adf30cddfc1c5356e4452750087cc072b6fba3c3",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/vertrag/src/extract.rs",
+      "sha256": "66ae4ddcae41577a4ae555926a2d2333ade4f57a0b3956775d441c232476396f",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/vertrag/src/lib.rs",
+      "sha256": "2bf35d8cc7606eea750cdeaea48fbe363423844f9049b91b1a8d8897f897c5f4",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/vertrag/src/manifest.rs",
+      "sha256": "51aa965a71fdb9946334ab50e443a8eb2aa2eec13dd72567198f828e1ff0f302",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/vertrag/src/manifest_adapter.rs",
+      "sha256": "fee105c7ac29f367dd2c763a7de9eba7dc4b734651ff5f738e49c2aaf33bc55b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/vertrag/src/process.rs",
+      "sha256": "7eb0d4e56503a6c96016a740fede9d3ccda0127c43ce9a1aae253101d9adb315",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/vertrag/src/process/std_windows.rs",
+      "sha256": "8111833e94d6acc5cb6c2ef02082a6922508cfa91e24fa08039d3abd396ac94b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/vertrag/src/process/tree.rs",
+      "sha256": "607835a6693fc41371468f192ef0fd6f305323bfc5873702ae93aad4413febc9",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/vertrag/src/process/windows.rs",
+      "sha256": "e72a374ddd9cb9fc3aa85e77b037a05d3d6b0caecb865a0537c8064d3036877e",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/verzeichnis/Cargo.toml",
+      "sha256": "0e207d6755a252d93cbc7de61b74997dd5cdcf6fed0caf634e722da0f4c29551",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/verzeichnis/src/lib.rs",
+      "sha256": "c621142ca84e4f8c7079e6f8cdcc7cfab462be04591d6be948c6a3214b9bc6ed",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/verzeichnis/src/management.rs",
+      "sha256": "a19fff522d61c231ef7b69ddbdffc7ad01e9f2be10f8890e3b0bfbeaf6af2723",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/verzeichnis/src/management/install.rs",
+      "sha256": "50ab831c65cde378524334146cf1110b17e011b28de7a7c9fea7cea59a342690",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/verzeichnis/src/management/install/archive.rs",
+      "sha256": "b1cec5870f7444290ff3acc8548a2d46ea6c6a282ce3a441fa33c273f10ab5dd",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/verzeichnis/src/management/install/receipt.rs",
+      "sha256": "be9262fb3ed5e25ce199588a19232222d8032242ae17d5e719fc91e4ab91536d",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/verzeichnis/src/management/install/store.rs",
+      "sha256": "a0c9eab59578f8478a819f94f2d34b7cca5fa99054d2853dd6cfd9a547a3e4b1",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/verzeichnis/src/management/remove.rs",
+      "sha256": "424f28abbbc376dfaed05af538619a0017311ea4b3af9124e2c8ec8c9b5219c0",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/verzeichnis/src/plugin/descriptor.rs",
+      "sha256": "5efe4a24698cbadd0400261d696a7e0bbaf278dc58f086d2d518f86ebab76b58",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/verzeichnis/src/plugin/discovery.rs",
+      "sha256": "5dac6c4aa2da2779e4950a46f2b8a5fcf2637f230586fd603ae93ff7ec4ac745",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/verzeichnis/src/plugin/mod.rs",
+      "sha256": "9d20d64932a790a721184cbd1a4307c53723d6d4b7f829baf849e059e78a86c3",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/verzeichnis/src/plugin/package.rs",
+      "sha256": "800d721b79f781ab2acd3b813ab7133380fddef8b77224ff8229e4f09465203b",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/verzeichnis/src/process.rs",
+      "sha256": "9764ea57ae48fda79d6e67667e14248ab7405c78b152a3daae66bd4bc533fb88",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/verzeichnis/tests/plugin_discovery.rs",
+      "sha256": "9f24e63a60974480dc0e2f4a4470eb9bacd685ce856904ab944b214d3203f62c",
+      "currentGitBlobByteExact": true
+    },
+    {
+      "path": "kisten/verzeichnis/tests/plugin_package.rs",
+      "sha256": "79fe0dfc25694c53d76c6e62bb70c90d78bcfd0d72d49c3e0dc79109368341c4",
+      "currentGitBlobByteExact": true
+    }
+  ],
+  "fullCurrentWorkspaceRerunPerformed": false,
+  "coverageClosure": "prior1301passed/1ignored/103program full workspace plus latest53 targeted tests and strict netz all-target Clippy/fmt for only three changed identity inputs; fresh current-source Linux native link separately recorded",
+  "rawLogsOrPrivateStateCopied": false
+}

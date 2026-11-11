@@ -1,0 +1,22 @@
+[
+  {
+    "source": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/invite-BP67xNKo.js",
+    "file": "invite-BP67xNKo.js",
+    "actualExitCode": 0,
+    "httpStatus": "200",
+    "processExited": true,
+    "bytes": 14769,
+    "sha256": "5968800cf7f19124e8428683fa70ce4dda5f21beb66ffe7732fe0aff1f6efa66",
+    "observedAt": 1794395401.2976086
+  },
+  {
+    "source": "https://download.codebuddy.ai/web/workbuddy/05fd33c3609bc9cf5ae1fc387a142a2ad0fab64e/assets/index-CQPC66NS.js",
+    "file": "index-CQPC66NS.js",
+    "actualExitCode": 0,
+    "httpStatus": "200",
+    "processExited": true,
+    "bytes": 43963,
+    "sha256": "e73890ee007f851f59e4f41a85fb1e23629279a83697fd65b3ab6c1bc77b261d",
+    "observedAt": 1794395405.468611
+  }
+]

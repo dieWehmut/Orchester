@@ -1,0 +1,16 @@
+{
+  "guidePath": "/docs/opencode.html",
+  "requestedURL": "https://agentrouter.org/docs/opencode.html",
+  "anchorLabels": [
+    "OpenCode"
+  ],
+  "startedAt": 1794395960.5311558,
+  "transport": "verified official HTTPS urllib",
+  "httpStatus": 200,
+  "responseURL": "https://agentrouter.org/docs/opencode.html",
+  "bytes": 37189,
+  "sha256": "db0ff17fadd91130da0aef70639f71625502c421844a35157724e0fd2c9dd22f",
+  "processOperationCompleted": true,
+  "publicSnapshotFile": "opencode.html",
+  "finishedAt": 1794395965.6854596
+}

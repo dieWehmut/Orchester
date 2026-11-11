@@ -1,0 +1,453 @@
+{
+  "stage": "third-frontend-batch-all20-official-monitors",
+  "headAtReceipt": "5a97a472f7516ec5761b3ec21c3ad1707b2e3f25",
+  "frontendPreviousCommit": "fdf5d76e0ce52133e351553fc9b8d94235f9f875",
+  "currentFileCount": 24,
+  "deletedFileCount": 5,
+  "files": [
+    {
+      "status": " M",
+      "path": "apps/mobile/src/components/AgentMonitorList.vue",
+      "exists": true,
+      "bytes": 5314,
+      "sha256": "f6a536edfa5e439903dfa18a98e0e72f9089957162be51e7b5f9b72b2638dfb9"
+    },
+    {
+      "status": " M",
+      "path": "apps/mobile/test/agent-monitors.test.ts",
+      "exists": true,
+      "bytes": 9610,
+      "sha256": "08239319c73a003974d5a824feb292277edf424cfdd39af3c3d18ca2be31b162"
+    },
+    {
+      "status": " M",
+      "path": "apps/web/test/agent-monitors.test.ts",
+      "exists": true,
+      "bytes": 8046,
+      "sha256": "446def7850911f322048de5335b5883faec0f4b7010bcf92e78deec05a273792"
+    },
+    {
+      "status": " M",
+      "path": "apps/web/test/agent-new-monitors.test.ts",
+      "exists": true,
+      "bytes": 7285,
+      "sha256": "66ca96160b8af2542ccd8d6fccbbe5a2f0dcf41b8d5eaf5199a7b88a63c53740"
+    },
+    {
+      "status": " M",
+      "path": "packages/design/src/agent-identities.ts",
+      "exists": true,
+      "bytes": 4760,
+      "sha256": "5a5be975eaba0a659458d5f6553360235eb761bd37dd85af89e054815e04a432"
+    },
+    {
+      "status": " M",
+      "path": "packages/design/src/assets/agents/SOURCES.md",
+      "exists": true,
+      "bytes": 9477,
+      "sha256": "e30da4e567eea100e2061d283502d91f400bd2f69f602fb7edf35557e278aaee"
+    },
+    {
+      "status": " D",
+      "path": "packages/design/src/assets/agents/claude.svg",
+      "exists": false
+    },
+    {
+      "status": " D",
+      "path": "packages/design/src/assets/agents/codex-light.png",
+      "exists": false
+    },
+    {
+      "status": " M",
+      "path": "packages/design/src/assets/agents/codex.png",
+      "exists": true,
+      "bytes": 10969,
+      "sha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3"
+    },
+    {
+      "status": " D",
+      "path": "packages/design/src/assets/agents/deepseek.ico",
+      "exists": false
+    },
+    {
+      "status": " D",
+      "path": "packages/design/src/assets/agents/opencode-dark.svg",
+      "exists": false
+    },
+    {
+      "status": " D",
+      "path": "packages/design/src/assets/agents/opencode-light.svg",
+      "exists": false
+    },
+    {
+      "status": "??",
+      "path": "packages/design/src/assets/agents/claude.png",
+      "exists": true,
+      "bytes": 10358,
+      "sha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1"
+    },
+    {
+      "status": "??",
+      "path": "packages/design/src/assets/agents/cline-dark.svg",
+      "exists": true,
+      "bytes": 3574,
+      "sha256": "a8932a1fa6a919466b4a36e76519be4a600fc1b83c41d84f94c3e8e45260a8e1"
+    },
+    {
+      "status": "??",
+      "path": "packages/design/src/assets/agents/cline-light.svg",
+      "exists": true,
+      "bytes": 3574,
+      "sha256": "6aab009bf089a8dc1b5452c05c471244a08595b78fd639835eacc0821b887c06"
+    },
+    {
+      "status": "??",
+      "path": "packages/design/src/assets/agents/codex-light.svg",
+      "exists": true,
+      "bytes": 1091,
+      "sha256": "45be1f0757eb18889eefb1e7db79668ef46a275dc4e0e78e8df5ebd7f6cdeadc"
+    },
+    {
+      "status": "??",
+      "path": "packages/design/src/assets/agents/craft.svg",
+      "exists": true,
+      "bytes": 787,
+      "sha256": "fd195ad28212109ce8fbcd6d2181556bc26b91e79998011af23d5bf0f08cf37c"
+    },
+    {
+      "status": "??",
+      "path": "packages/design/src/assets/agents/crush.png",
+      "exists": true,
+      "bytes": 55448,
+      "sha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2"
+    },
+    {
+      "status": "??",
+      "path": "packages/design/src/assets/agents/deepseek-harness-dark.svg",
+      "exists": true,
+      "bytes": 3634,
+      "sha256": "dde7db781f41e7aeb4709ff5485af2bdcf7f4b4ea81b4500cfd5df44efdbd817"
+    },
+    {
+      "status": "??",
+      "path": "packages/design/src/assets/agents/deepseek-harness-light.svg",
+      "exists": true,
+      "bytes": 3634,
+      "sha256": "9e983b4f649c25c6ca0623a50be1a6e705fd8f49f756638b980fa13b40575ab6"
+    },
+    {
+      "status": "??",
+      "path": "packages/design/src/assets/agents/hermes-dark.svg",
+      "exists": true,
+      "bytes": 137768,
+      "sha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36"
+    },
+    {
+      "status": "??",
+      "path": "packages/design/src/assets/agents/hermes-light.svg",
+      "exists": true,
+      "bytes": 116350,
+      "sha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684"
+    },
+    {
+      "status": "??",
+      "path": "packages/design/src/assets/agents/kilo.svg",
+      "exists": true,
+      "bytes": 674,
+      "sha256": "5b537e31ef6037cadc434390c5d38687b3752c37ea8c4e2a09b9d62b4fae4c78"
+    },
+    {
+      "status": "??",
+      "path": "packages/design/src/assets/agents/opencode.svg",
+      "exists": true,
+      "bytes": 612,
+      "sha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9"
+    },
+    {
+      "status": "??",
+      "path": "packages/design/src/assets/agents/pi.svg",
+      "exists": true,
+      "bytes": 438,
+      "sha256": "d266b2c1d2c7bf169ca30d438963b176fba16fea6263b9ac30c8302f34ad7ce7"
+    },
+    {
+      "status": "??",
+      "path": "packages/design/src/assets/agents/roo.png",
+      "exists": true,
+      "bytes": 5626,
+      "sha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a"
+    },
+    {
+      "status": "??",
+      "path": "packages/design/src/assets/agents/trae.png",
+      "exists": true,
+      "bytes": 488,
+      "sha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4"
+    },
+    {
+      "status": "??",
+      "path": "packages/design/src/assets/agents/zcode.png",
+      "exists": true,
+      "bytes": 6479,
+      "sha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c"
+    },
+    {
+      "status": "??",
+      "path": "packages/design/test/agent-identities.test.ts",
+      "exists": true,
+      "bytes": 1418,
+      "sha256": "d08143a1cbbef944e2adae5291a3cc0e6b9a8fd3e11a410781bf8223d7b5bf16"
+    }
+  ],
+  "canonicalProviders": [
+    "codex",
+    "claude",
+    "deepseek",
+    "opencode",
+    "gemini",
+    "antigravity",
+    "cursor",
+    "workbuddy",
+    "qwen",
+    "openclaw",
+    "cline",
+    "roo",
+    "kilo",
+    "hermes",
+    "pi",
+    "crush",
+    "claude_app",
+    "trae",
+    "zcode",
+    "craft"
+  ],
+  "serviceProviders": [
+    "openclaw",
+    "workbuddy",
+    "claude_app",
+    "trae",
+    "zcode",
+    "craft"
+  ],
+  "sharedEditorPresenceUnknown": [
+    "cline",
+    "roo",
+    "kilo"
+  ],
+  "officialAssetReceipt": {
+    "path": "/tmp/orchester-complete-agent-frontend-validation-20261111/official-canonical-assets.json",
+    "sha256": "6d6900723c9927d8d1a46c19704295f3daa5982162013694ee7bfe0a1024271b"
+  },
+  "validation": {
+    "webFullInitial": [
+      {
+        "name": "web-full",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@orchester/web",
+          "exec",
+          "vitest",
+          "run"
+        ],
+        "exitCode": 1,
+        "durationSeconds": 164.745,
+        "log": "/tmp/orchester-complete-agent-frontend-validation-20261111/web-full.log",
+        "logSha256": "b4df2426034ce1a9af1ebb23505a81c6664f7f17e9dd5951169c6486d578aef0",
+        "passed": null,
+        "testFiles": null
+      }
+    ],
+    "webImpactedPrior": [
+      {
+        "name": "web-corrected-impacted",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@orchester/web",
+          "exec",
+          "vitest",
+          "run",
+          "test/agent-new-monitors.test.ts",
+          "test/agent-monitors.test.ts",
+          "test/agent-provider-presentation.test.ts"
+        ],
+        "exitCode": 1,
+        "durationSeconds": 14.395,
+        "log": "/tmp/orchester-complete-agent-frontend-validation-20261111/web-corrected-impacted.log",
+        "logSha256": "c96edca761a67f29aee55a492d99b765e1c674e3728d63863a99949e9c99d4d9",
+        "testSummary": [
+          "Test Files  1 failed | 2 passed (3)",
+          "Tests  3 failed | 89 passed (92)"
+        ]
+      }
+    ],
+    "webCorrectedAndDesignFull": [
+      {
+        "name": "web-monitors",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@orchester/web",
+          "exec",
+          "vitest",
+          "run",
+          "test/agent-new-monitors.test.ts"
+        ],
+        "exitCode": 0,
+        "durationSeconds": 9.488,
+        "log": "/tmp/orchester-complete-agent-frontend-validation-20261111/final-run/web-monitors.log",
+        "logSha256": "5076bae6a99152b37ac8a54d64041331c998cbf435fbe96e75900574c9ce5ac3",
+        "testSummary": [
+          "Test Files  1 passed (1)",
+          "Tests  61 passed (61)"
+        ]
+      },
+      {
+        "name": "design-full",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@orchester/design",
+          "exec",
+          "vitest",
+          "run"
+        ],
+        "exitCode": 1,
+        "durationSeconds": 49.995,
+        "log": "/tmp/orchester-complete-agent-frontend-validation-20261111/final-run/design-full.log",
+        "logSha256": "ccdd2d4efaa68f5582b309307aca1bd76f195f987b9c4723c82594e7c8a54ef8",
+        "testSummary": [
+          "Test Files  1 failed | 52 passed (53)",
+          "Tests  1 failed | 310 passed (311)"
+        ]
+      }
+    ],
+    "remainingChecksAndTimeoutRetry": [
+      {
+        "name": "design-timeout-retry",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@orchester/design",
+          "exec",
+          "vitest",
+          "run",
+          "test/code-preview.test.ts",
+          "--maxWorkers=1"
+        ],
+        "exitCode": 0,
+        "durationSeconds": 15.558,
+        "log": "/tmp/orchester-complete-agent-frontend-validation-20261111/remainder/design-timeout-retry.log",
+        "logSha256": "534c4f7b5cb0863768a6e9ab411282846940702ab25b00dc02deaf3d2c55f62c",
+        "testSummary": [
+          "Test Files  1 passed (1)",
+          "Tests  5 passed (5)"
+        ]
+      },
+      {
+        "name": "mobile-full",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@orchester/mobile",
+          "exec",
+          "vitest",
+          "run"
+        ],
+        "exitCode": 0,
+        "durationSeconds": 12.993,
+        "log": "/tmp/orchester-complete-agent-frontend-validation-20261111/remainder/mobile-full.log",
+        "logSha256": "2f56a729d3eb8656ec6b1a6f848d1fa87f60a363d943b82875f7997fff4576b7",
+        "testSummary": [
+          "Test Files  10 passed (10)",
+          "Tests  130 passed (130)"
+        ]
+      },
+      {
+        "name": "protokoll-full",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@orchester/protokoll",
+          "exec",
+          "vitest",
+          "run"
+        ],
+        "exitCode": 0,
+        "durationSeconds": 6.986,
+        "log": "/tmp/orchester-complete-agent-frontend-validation-20261111/remainder/protokoll-full.log",
+        "logSha256": "b4300af4004b3b1c30fff82b723d3d62d4feb20fc84e9c10960187734524599e",
+        "testSummary": [
+          "Test Files  29 passed (29)",
+          "Tests  97 passed (97)"
+        ]
+      },
+      {
+        "name": "web-typecheck",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@orchester/web",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "durationSeconds": 19.018,
+        "log": "/tmp/orchester-complete-agent-frontend-validation-20261111/remainder/web-typecheck.log",
+        "logSha256": "ae48dd5bca6a808484c9173aab6e7ff1469062f79aba8e5e1a6ad537c6d2fd88",
+        "testSummary": []
+      },
+      {
+        "name": "mobile-typecheck",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@orchester/mobile",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "durationSeconds": 8.532,
+        "log": "/tmp/orchester-complete-agent-frontend-validation-20261111/remainder/mobile-typecheck.log",
+        "logSha256": "514bd78c13cb2ffb39e7d8d63183c2d4521825211d6616aff578c0d0af7f37c0",
+        "testSummary": []
+      },
+      {
+        "name": "design-typecheck",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@orchester/design",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "durationSeconds": 3.576,
+        "log": "/tmp/orchester-complete-agent-frontend-validation-20261111/remainder/design-typecheck.log",
+        "logSha256": "3169d2b29987b9225df371f1c61f29b9551510e7708b90711d84245a0e50f2c0",
+        "testSummary": []
+      },
+      {
+        "name": "protokoll-typecheck",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@orchester/protokoll",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "durationSeconds": 1.351,
+        "log": "/tmp/orchester-complete-agent-frontend-validation-20261111/remainder/protokoll-typecheck.log",
+        "logSha256": "60d23bce07aa58d059655fc58e62a24704f9370d2682b3e46a887bb569be0034",
+        "testSummary": []
+      }
+    ],
+    "closure": "All 61 expanded monitor cases pass; other 2 impacted web files passed 31 cases. Web initial full run passed 135 files/940 cases and had only the 3 corrected monitor assertions failing. Design initial full run passed 52 files/310 cases, with one existing CodePreview timeout; its unchanged five cases passed on a one-worker retry. Mobile and Protokoll full commands and all four typecheck commands exited 0.",
+    "codeAndAssetSourceStableAcrossFinalChecks": true,
+    "documentationOnlyUpdateBetweenRuns": "SOURCES.md added already verified Gemini/Antigravity/Cursor primary hashes after the failed Design full run; no runtime or test source changed."
+  },
+  "safeScope": "Synthetic test fixtures and read-only official asset downloads; no provider/model execution or production mutation.",
+  "remainingTeamWork": [
+    "Root commit/push/build/site deployment and authenticated remote integration acceptance",
+    "Windows actual native 20-icons monitoring and tray/reinstall acceptance",
+    "Mobile device/Android runtime acceptance"
+  ]
+}

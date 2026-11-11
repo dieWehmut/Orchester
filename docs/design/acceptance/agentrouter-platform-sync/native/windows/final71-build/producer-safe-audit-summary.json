@@ -1,0 +1,120 @@
+{
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "modifiedTaskRoot": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64",
+  "sourceBefore": {
+    "monitor-final-promote.ps1": {
+      "sha256": "0de84ceca4e18f87ff2e842424e04b6161eb20d13282759efc98470abd5099c5",
+      "bytes": 18405
+    },
+    "prepared-runtime/runtime-input-guards.ps1": {
+      "sha256": "f98001d6628e9173e810ed6673f45b9b03350fdb851895b817128c557dd06a5a",
+      "bytes": 4808
+    },
+    "prepared-runtime/verify-final-native.mjs": {
+      "sha256": "b3208349a2d498bc935fd2f68c1131bb92496d9197133f439ef7870561c6de13",
+      "bytes": 22956
+    },
+    "prepared-runtime/launch-smoke.ps1": {
+      "sha256": "f16bfc6d47f95e4086eaf99cd368b0cfe168f7535d67074e08c0ef6062ed0271",
+      "bytes": 26558
+    },
+    "prepared-runtime/verify-portable-runtime-file.ps1": {
+      "sha256": "7d19dd26a079c59c59f44d358c49906c90a0b4effddd576c2bdb071bacc02534",
+      "bytes": 18869
+    }
+  },
+  "sourceAfter": {
+    "monitor-final-promote.ps1": {
+      "sha256": "01d96b35675d3a05acc800f44aed2dd29fdc12718b9f5db9303a7e0876ff53dc",
+      "bytes": 18438
+    },
+    "prepared-runtime/runtime-input-guards.ps1": {
+      "sha256": "fa6ce76b0ac9d2c4a37b173931e4627d92cab7e5308e6f912b8467a5eb58ff6d",
+      "bytes": 7594
+    },
+    "prepared-runtime/verify-final-native.mjs": {
+      "sha256": "7269430ac55b9cf1c22e9c6cfd26013d5d3abd5f839f33004e8ddaaaec9d63bd",
+      "bytes": 23995
+    },
+    "prepared-runtime/launch-smoke.ps1": {
+      "sha256": "7c36903ce7ac83bc63124a014d1d706fbddc20e7da9908433525d808f417daed",
+      "bytes": 26531
+    },
+    "prepared-runtime/verify-portable-runtime-file.ps1": {
+      "sha256": "3646928e84215c19261025289a94208721287f569a50eaf844871d14e53613bd",
+      "bytes": 18877
+    }
+  },
+  "changedOnlyFiveAuthorizedFiles": true,
+  "nativePowerShellPredicateActualExitCode": 0,
+  "nativePowerShellPredicateCases": 62,
+  "allNativePredicateCasesMatched": true,
+  "powerShellSyntaxErrors": 0,
+  "javascriptSyntaxActualExitCode": 0,
+  "actualJavaScriptProviderPredicateCases": 24,
+  "allJavaScriptProviderCasesMatched": true,
+  "javaScriptSourceHashMatchesActualPredicateReceipt": true,
+  "originalAndroidRequiredUiFields": {
+    "canonicalProviderIds": "actual distinct canonical DOM provider IDs, exact 21-set",
+    "canonicalProviderCount": "actual unique canonical count as integer 21",
+    "canonicalThemeImageCount": "actual canonical theme image count as integer 42",
+    "allCanonicalThemeImagesLoaded": "actual decoded-image check boolean true"
+  },
+  "historicalA96OrOldHelpersModified": false,
+  "legacyPortableFinalEntrypointAccepted": false,
+  "producerApkBindingStillDeferred": true,
+  "firstNativeHarnessAttempt": {
+    "actualExitCode": 1,
+    "reason": "Windows PowerShell generic-list serialization in the task-only result wrapper; fixed wrapper with ToArray, no predicate/source product change caused by this retry.",
+    "receiptSha256": "155ac1f8feacd88536af4098d92edf976a999f5112a9671d56a17f5719b79dd6"
+  },
+  "receipts": {
+    "provider-predicate-result.json": "f971bad17f74b321d7f29600bf3471b4fb0b509739bb3544124280bfa754a475",
+    "source-before.json": "bedba768cca5428228a536d7fa1c49e3902122a9f742ee536cc72dd3a2018638",
+    "export-independent-result.json": "a82ec997beaf6a0f87cceb34d085c24bf989d19f53092e87a6763e91d9ed9418",
+    "initial-harness-list-serialization-predicate-native-result.json": "155ac1f8feacd88536af4098d92edf976a999f5112a9671d56a17f5719b79dd6",
+    "source-after.json": "7f510ef8778c852c0d2832020a83034754fc4cf2b54231de37361bfcd63afd7b",
+    "initial-harness-list-serialization-predicate-native.stdout.json": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "predicate-native.stdout.json": "4c881bf0b246186cffd4d79bf87f97bbaa09d3855d5531fa73802f1c6cec0c38",
+    "predicate-native-result.json": "6620d5c793d841161bec10b85c1506597b4b6734ebc4256cbeb2e4bcf666b59a"
+  },
+  "exportProofAvailable": true,
+  "actualGuiOrInstallationExecuted": false,
+  "processSignals": 0,
+  "modelCalls": 0,
+  "androidQueueOperations": 0,
+  "gitHead": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "checkedAt": 1794395474.0841637,
+  "exportProof": {
+    "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+    "sourceAuditSha256": "6313572160eee0ed132a87e1fdb50d7a5ad0ff92ade66fac6c0346db86a39680",
+    "trackedFiles": 1682,
+    "all1682GitBlobsAndExportMetadataExact": true,
+    "mismatchPaths": [],
+    "compiled": {
+      "apps/web/dist": {
+        "fileCount": 37,
+        "allExportMatchesFrozenAudit": true,
+        "allCurrentWorkspaceDistBytesExact": true
+      },
+      "apps/mobile/dist": {
+        "fileCount": 17,
+        "allExportMatchesFrozenAudit": true,
+        "allCurrentWorkspaceDistBytesExact": true
+      }
+    },
+    "gitDirectoryAbsent": true,
+    "gradlewBatExactSha256": "94102713eb8fb22d032397924c0f38ab2da783ba60d07054339f1190a0c4e2cd",
+    "parentOwnedCargoScriptSha256": "af765a7c87be84d83b6a9057800d002cc5d51cbb0c294bc67b6428d7ca221b56",
+    "parentCargoRemoteStatusRouteTestsIncluded": true,
+    "nativeGateListChanged": false,
+    "buildReceiptBoundary": "The historical /tmp frontend build result is currently absent. This verifies frozen compiled-input hashes and current workspace artifact bytes, and does not claim a fresh frontend build command ran.",
+    "firstAttempt": {
+      "actualExitCode": 1,
+      "reason": "Historical /tmp/orchester-final21-frontend-builds-20261111/web-result.json absent at the compiled-proof step; no Windows product mutation."
+    },
+    "modelCalls": 0,
+    "observedAt": 1794395669.5377443
+  },
+  "finalCheckedAt": 1794395722.0260124
+}

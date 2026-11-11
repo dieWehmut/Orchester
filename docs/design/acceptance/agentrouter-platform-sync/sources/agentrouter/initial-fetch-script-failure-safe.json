@@ -1,0 +1,8 @@
+{
+  "phase": "guide fetch script parse",
+  "actualExitCode": 1,
+  "errorType": "SyntaxError",
+  "networkRequestsPerformed": 0,
+  "corrected": "keyword argument typo in exception-recording branch",
+  "productOrUserDataMutation": false
+}

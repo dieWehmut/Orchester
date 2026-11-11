@@ -1,0 +1,15 @@
+{
+  "suite": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-desktop-reinstall",
+  "sourceRevision": "a96a06e445ab6bdc4483ac297c69f8a0e2382bc9",
+  "files": {
+    "monitor-final-common.ps1": "709c3900ffc3a01f681f40f11b4e8672aa6027139fd4e71cf273bc8eb9f3b3c0",
+    "monitor-final-freeze.ps1": "a554076db194c749ec37114f6e749fb7171f7f1225a476dd523b41017afe6746",
+    "monitor-final-launch.ps1": "e74434b62befd74086440dbf95e9a5f5beea5835c57c241ff12a71183d652a4d",
+    "monitor-final-worker.ps1": "a7b926e23c70dff37e8bea14a181dee8f704c7456e403305fbf574e81b22710e",
+    "monitor-final-promote.ps1": "e72ff766ba5bc695b3a68cd3f31c421eb80fb43b8e31bc8590432026236d621e",
+    "monitor-final-selfcheck.ps1": "bde0241552070b1f06ebc73e6fd5e235cb5380d111246c0f8f999d309f755830",
+    "monitor-final-cargo.cmd": "6ce9a77b1fba947efba8f8a58bcb79534bf84d4575769768f3e3bb16720caffc"
+  },
+  "APKBinding": "deferred",
+  "gateCount": 16
+}

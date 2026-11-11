@@ -1,0 +1,80 @@
+{
+    "status":  "verified-two-native-official-gui-installations",
+    "products":  [
+                     {
+                         "providerId":  "zcode",
+                         "primaryExe":  "C:\\Users\\han\\AppData\\Local\\Programs\\ZCode\\ZCode.exe",
+                         "primaryExeSha256":  "7aca3aeab3d3b775a39cf9cbe048b30a80278d3527b6fbcfd0e7b00f79a2c326",
+                         "productName":  "ZCode",
+                         "productVersion":  "3.17.2.9661",
+                         "installerSha256":  "41edab524e9636451ba9db3f4d78b68d166e5602401267a14e63317f89c43e48",
+                         "staticVendorResources":  "C:\\Users\\han\\AppData\\Local\\Programs\\ZCode\\resources",
+                         "publicResourceFiles":  [
+                                                     {
+                                                         "name":  "app-update.yml",
+                                                         "bytes":  444,
+                                                         "sha256":  "1a3267a44c13837e5ecb49bc1c27af12cfe051fd0045a7abce08f2f4fd5e91aa"
+                                                     },
+                                                     {
+                                                         "name":  "app.asar",
+                                                         "bytes":  374653670,
+                                                         "sha256":  "b11a6bc5bb957af5b735701d94452ec6c3119a5d957fb772eb40a3cc94bcb24c"
+                                                     },
+                                                     {
+                                                         "name":  "elevate.exe",
+                                                         "bytes":  119704,
+                                                         "sha256":  "9b45da99298dfff38c6a12f3260ded8869d7fc3a6aca36591cda25f93ee0e123"
+                                                     },
+                                                     {
+                                                         "name":  "icon.png",
+                                                         "bytes":  215707,
+                                                         "sha256":  "edd87a182097389b0f59c07f8de283dbe433c9d37cd6e9a2a372611516ab81eb"
+                                                     },
+                                                     {
+                                                         "name":  "icon_windows.png",
+                                                         "bytes":  263521,
+                                                         "sha256":  "ae8cc4ca59180441ce3ba60a572ee9a5ee802f9ab9e7de1177ae5e0027c36a7a"
+                                                     },
+                                                     {
+                                                         "name":  "THIRD-PARTY-NOTICES.md",
+                                                         "bytes":  2329787,
+                                                         "sha256":  "a47c193b057b27035870ba283bdd7ba610e21eff65c1b892a4e7a5edf21b05bc"
+                                                     },
+                                                     {
+                                                         "name":  "tray_icon.ico",
+                                                         "bytes":  54556,
+                                                         "sha256":  "d2f81c9fd6d51e7bcff886a275b43c71f9214bcfd4d443ff5d2c9878414de093"
+                                                     }
+                                                 ],
+                         "modelCalls":  0
+                     },
+                     {
+                         "providerId":  "craft",
+                         "primaryExe":  "C:\\Users\\han\\AppData\\Local\\Programs\\@craft-agentelectron\\Craft Agents.exe",
+                         "primaryExeSha256":  "ca8f5aec86141cde2956be8b842a521c983ebcbe2c1dc8e88ca7ac4392a5f7c0",
+                         "productName":  "Craft Agents",
+                         "productVersion":  "0.15.9.0",
+                         "installerSha256":  "eba4ace5b3c0a32556813f3fc5885f28adcc531d2b9f047e5c892090a918cbb7",
+                         "staticVendorResources":  "C:\\Users\\han\\AppData\\Local\\Programs\\@craft-agentelectron\\resources",
+                         "publicResourceFiles":  [
+                                                     {
+                                                         "name":  "app-update.yml",
+                                                         "bytes":  118,
+                                                         "sha256":  "5f3adf16e4886fe568e100f8bb46ef6771d2e9f0238e23885687f0be4e83d02e"
+                                                     },
+                                                     {
+                                                         "name":  "elevate.exe",
+                                                         "bytes":  107520,
+                                                         "sha256":  "9b1fbf0c11c520ae714af8aa9af12cfd48503eedecd7398d8992ee94d1b4dc37"
+                                                     }
+                                                 ],
+                         "modelCalls":  0
+                     }
+                 ],
+    "initialCraftFailure":  "expected-path-differed-after-native-installer-exit-zero",
+    "installersNotRerun":  true,
+    "userProfileCacheRead":  false,
+    "credentialsParsedOrPrinted":  false,
+    "authenticationVerified":  false,
+    "modelCalls":  0
+}

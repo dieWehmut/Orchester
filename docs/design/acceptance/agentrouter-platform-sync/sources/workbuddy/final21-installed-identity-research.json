@@ -1,0 +1,76 @@
+{
+  "scope": "Read-only, public installed executable and package identity; synthetic monitor fixtures only",
+  "manifestPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/editions/workbuddy/safe-evidence-manifest.json",
+  "manifestSha256": "4169bb22dc85f4fdfb91eb1692ee0f5d5ebd19af15b5b18c71f4d6bfbf5ab674",
+  "pinnedPublicFiles": [
+    {
+      "file": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/workbuddy-editions-installed-readonly-safe.json",
+      "sha256": "4677830ed3b1fe1c2cf87d7db15327cc9d9c36f34511c25a05ef262026316b91",
+      "actualSha256": "4677830ed3b1fe1c2cf87d7db15327cc9d9c36f34511c25a05ef262026316b91"
+    },
+    {
+      "file": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/workbuddy-registration-paths-readonly-safe.json",
+      "sha256": "58348f792d0ee11544778af6281d5b1f26e79e869f64b48887273a57d9444260",
+      "actualSha256": "58348f792d0ee11544778af6281d5b1f26e79e869f64b48887273a57d9444260"
+    },
+    {
+      "file": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/editions/workbuddy/global-native-public-metadata-safe.json",
+      "sha256": "6a6160399635eec63f981f74144763867db8155cbd9cfd783235fe17164dddba",
+      "actualSha256": "6a6160399635eec63f981f74144763867db8155cbd9cfd783235fe17164dddba"
+    },
+    {
+      "file": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/editions/workbuddy/public-package-channel-proofs-safe.json",
+      "sha256": "41c52fec0869fd1ce19e9570e2636640d515942123734101b849e64fd8c08538",
+      "actualSha256": "41c52fec0869fd1ce19e9570e2636640d515942123734101b849e64fd8c08538"
+    },
+    {
+      "file": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/editions/workbuddy/profile-isolation-public-literals-safe.json",
+      "sha256": "4fb3103455762a7c3543c4d13dfddac63a697ab6fe1747fd9010f6e607afff4f",
+      "actualSha256": "4fb3103455762a7c3543c4d13dfddac63a697ab6fe1747fd9010f6e607afff4f"
+    }
+  ],
+  "globalPublicExeMetadata": {
+    "providerId": "workbuddy_global",
+    "primaryExe": "C:\\Users\\han\\WorkBuddy\\WorkBuddyAI\\WorkBuddyAI.exe",
+    "bytes": 204590360,
+    "sha256": "15880ca7859f417bf8a6a639bacd1da6b63ced83fbead710317dad38b8f6fcc8",
+    "productName": "WorkBuddy AI",
+    "productVersion": "5.9.4.0",
+    "companyName": "Tencent Technology (Shenzhen) Company Limited",
+    "authenticodeStatus": "Valid"
+  },
+  "domesticPublicMetadataPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/workbuddy-editions-installed-readonly-safe.json",
+  "domesticPublicMetadataSha256": "4677830ed3b1fe1c2cf87d7db15327cc9d9c36f34511c25a05ef262026316b91",
+  "publicPackages": [
+    {
+      "edition": "domestic",
+      "packageSha256": "e2538c1e91d5db78bf21337ea9b4d24eb591a995ae629d2d65876c221027de61",
+      "packagePublicFields": {
+        "name": "@genie/workbuddy-desktop",
+        "productName": "WorkBuddy",
+        "version": "5.9.3",
+        "main": "main/index.js",
+        "homepage": "https://www.workbuddy.cn"
+      },
+      "mainSha256": "2524eb599c6bbbef09e4a479cb4f719ed6b3bf5f455453d95989a0edbaa63e72"
+    },
+    {
+      "edition": "global",
+      "packageSha256": "a672cdabc92257df0ff8bb3020a86d7d8f46a6d36a10699d7f11e2b2476ad116",
+      "packagePublicFields": {
+        "name": "@genie/workbuddy-desktop",
+        "productName": "WorkBuddy AI",
+        "version": "5.9.4",
+        "main": "main/index.js",
+        "homepage": "https://www.workbuddy.ai"
+      },
+      "mainSha256": "2524eb599c6bbbef09e4a479cb4f719ed6b3bf5f455453d95989a0edbaa63e72"
+    }
+  ],
+  "classificationBoundary": "WorkBuddy.exe maps to workbuddy; WorkBuddyAI.exe maps to workbuddy_global. Shared @genie/workbuddy-desktop package and main script do not establish an edition. Electron/Node/supervisor helpers excluded. No unverified Linux-global executable alias added.",
+  "publicPackageProofSha256": "41c52fec0869fd1ce19e9570e2636640d515942123734101b849e64fd8c08538",
+  "privateProfilesRead": false,
+  "credentialsRead": false,
+  "installChangesByBackend": 0,
+  "modelCalls": 0
+}

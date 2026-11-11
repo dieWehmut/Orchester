@@ -1,0 +1,16 @@
+{
+  "guidePath": "/docs/pi.html",
+  "requestedURL": "https://agentrouter.org/docs/pi.html",
+  "anchorLabels": [
+    "Pi"
+  ],
+  "startedAt": 1794395963.479476,
+  "transport": "verified official HTTPS urllib",
+  "httpStatus": 200,
+  "responseURL": "https://agentrouter.org/docs/pi.html",
+  "bytes": 36022,
+  "sha256": "5bbac8a6c3552c110b164e9b4370dfbba2a90f09da2c82ed5de265c38b454494",
+  "processOperationCompleted": true,
+  "publicSnapshotFile": "pi.html",
+  "finishedAt": 1794395965.404023
+}

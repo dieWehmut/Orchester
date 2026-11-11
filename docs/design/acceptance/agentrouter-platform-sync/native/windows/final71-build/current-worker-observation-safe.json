@@ -1,0 +1,111 @@
+{
+    "observedAt":  "2026-11-11T11:54:19.9792857Z",
+    "workerPid":  16008,
+    "workerCreatedAt":  "2026-11-11T11:26:34.5903240Z",
+    "originalHandleIdentityVerified":  false,
+    "nativeWorkerLive":  false,
+    "nativePidAbsent":  true,
+    "currentPhase":  "desktop-build",
+    "completedGates":  [
+                           {
+                               "phase":  "chrome-test",
+                               "exitCode":  0,
+                               "timedOut":  false,
+                               "processExited":  true
+                           },
+                           {
+                               "phase":  "cli-build",
+                               "exitCode":  0,
+                               "timedOut":  false,
+                               "processExited":  true
+                           },
+                           {
+                               "phase":  "desktop-build",
+                               "exitCode":  0,
+                               "timedOut":  false,
+                               "processExited":  true
+                           },
+                           {
+                               "phase":  "desktop-clippy",
+                               "exitCode":  0,
+                               "timedOut":  false,
+                               "processExited":  true
+                           },
+                           {
+                               "phase":  "desktop-fmt",
+                               "exitCode":  0,
+                               "timedOut":  false,
+                               "processExited":  true
+                           },
+                           {
+                               "phase":  "desktop-test",
+                               "exitCode":  0,
+                               "timedOut":  false,
+                               "processExited":  true
+                           },
+                           {
+                               "phase":  "helper-contract",
+                               "exitCode":  0,
+                               "timedOut":  false,
+                               "processExited":  true
+                           },
+                           {
+                               "phase":  "helper-wsl",
+                               "exitCode":  0,
+                               "timedOut":  false,
+                               "processExited":  true
+                           },
+                           {
+                               "phase":  "memory-initialization",
+                               "exitCode":  0,
+                               "timedOut":  false,
+                               "processExited":  true
+                           },
+                           {
+                               "phase":  "monitor-activity",
+                               "exitCode":  0,
+                               "timedOut":  false,
+                               "processExited":  true
+                           },
+                           {
+                               "phase":  "monitor-http",
+                               "exitCode":  0,
+                               "timedOut":  false,
+                               "processExited":  true
+                           },
+                           {
+                               "phase":  "monitor-process",
+                               "exitCode":  0,
+                               "timedOut":  false,
+                               "processExited":  true
+                           },
+                           {
+                               "phase":  "remote-cli",
+                               "exitCode":  0,
+                               "timedOut":  false,
+                               "processExited":  true
+                           },
+                           {
+                               "phase":  "root-clippy",
+                               "exitCode":  0,
+                               "timedOut":  false,
+                               "processExited":  true
+                           },
+                           {
+                               "phase":  "root-fmt",
+                               "exitCode":  0,
+                               "timedOut":  false,
+                               "processExited":  true
+                           },
+                           {
+                               "phase":  "toolchain",
+                               "exitCode":  0,
+                               "timedOut":  false,
+                               "processExited":  true
+                           }
+                       ],
+    "finalStatus":  "build-and-file-gates-passed",
+    "nativeCFreeBytes":  41338273792,
+    "processesSignalled":  0,
+    "modelCalls":  0
+}

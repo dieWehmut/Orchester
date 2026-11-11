@@ -1,0 +1,16 @@
+{
+  "guidePath": "/docs/cline.html",
+  "requestedURL": "https://agentrouter.org/docs/cline.html",
+  "anchorLabels": [
+    "Cline"
+  ],
+  "startedAt": 1794395955.655566,
+  "transport": "verified official HTTPS urllib",
+  "httpStatus": 200,
+  "responseURL": "https://agentrouter.org/docs/cline.html",
+  "bytes": 28250,
+  "sha256": "5b0b6dd3e3e756644105b32e19b27676e70317f8e9dc27295e253441c46c7ca9",
+  "processOperationCompleted": true,
+  "publicSnapshotFile": "cline.html",
+  "finishedAt": 1794395960.531026
+}
