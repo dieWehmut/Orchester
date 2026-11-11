@@ -37,6 +37,8 @@ Claude Code、Codex CLI、OpenCode 等外部 Agent 只是可选委派能力。Or
 
 手机远程控制：参见 [架构与本地部署](docs/design/26-remote-control.md)、[手机端使用说明](apps/mobile/README.md)、[Android 构建](werkzeug/mobile/README.md) 与 [安装版验收记录](docs/design/27-remote-acceptance.md)。电脑通过 `orchester remote --workspace <目录> --bind 0.0.0.0` 启动服务，手机填写电脑 IP 和一次性配对码。`werkzeug/remote` 提供源码启动、Windows 便携打包、局域网防火墙辅助和真实 Agent 验收脚本。
 
+新版桌面监控、手机共享字体、真实终端与部署验收见[桌面与手机交付记录](docs/design/38-desktop-mobile-final-delivery.md)。
+
 - 仓库地址：<https://github.com/dieWehmut/Orchester>
 - npm 包：<https://www.npmjs.com/package/@orchester/cli>
 

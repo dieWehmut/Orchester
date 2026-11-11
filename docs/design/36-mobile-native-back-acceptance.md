@@ -40,4 +40,6 @@ Windows 新命名包 `OrchesterRemote-20261110-native-back-final` 由实际 Wind
 
 临时 17377 设备通过产品的“从本机移除”删除，本机保留另外五条设备记录，并在同一截图确认全部地址。该按钮负责本机记录和凭据移除；临时服务的唯一授权另由正常 admin `revoke` 撤销至零。随后 listener `2646618` 经 stdin `quit` 正常退出，父进程、listener 和 TCP 17377 均确认释放，默认 Linux 7337 保持运行。[安全截图与完整验收](acceptance/mobile-terminal-final/manifest.json)、[服务撤销](acceptance/mobile-terminal-final/temporary-server-revoke.json)、[正常退出](acceptance/mobile-terminal-final/temporary-listener-cleanup.json)。
 
-Windows V2 工具仍供新版桌面和后端构建验收使用；停止和退出证明在该验收结束后补齐。默认 Windows 便携包与桌面 EXE 的本次更新尚待新原生门禁，不把旧版部署当作新版交付。物理 Android Wi-Fi 与 iOS 原生目标仍待环境。
+截至该次验收，Windows V2 工具仍供新版桌面和后端构建验收使用；停止和退出证明在该验收结束后补齐。默认 Windows 便携包与桌面 EXE 的该次更新尚待新原生门禁，不把旧版部署当作新版交付。物理 Android Wi-Fi 与 iOS 原生目标仍待环境。
+
+后续 Windows 桌面、便携包、默认部署及工具退出结果统一见[桌面与手机交付记录](38-desktop-mobile-final-delivery.md)。

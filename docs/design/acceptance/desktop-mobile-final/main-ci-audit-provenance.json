@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "archivedAt": "2026-11-11T04:41:27.733993+00:00",
+  "sourcePath": "/tmp/orchester-final-main-ci-audit.json",
+  "sourceSha256": "1be95a97977e2390b60f8e5e7947a02e0c7c5e51b4b0325cca7f0bded341f6c9",
+  "archivedSha256": "1be95a97977e2390b60f8e5e7947a02e0c7c5e51b4b0325cca7f0bded341f6c9",
+  "byteExact": true,
+  "acceptedCodeSourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "observedGithubMainRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "observedAtUtc": "2026-11-11T04:36:48.439859+00:00",
+  "currentLocalHeadAtArchive": "68fa10cdf24f1163ff4a9849e0a5fac6b2d3a679",
+  "snapshotScope": "Read-only GitHub state at the recorded observation for exact source35c75; not a passing CI run or a live query for later docs-only main commits.",
+  "workflowSourceBindings": [
+    {
+      "path": ".github/workflows/pages.yml",
+      "sha256": "74eb87dd3a1194d52d2caf7d89e1307e37d7665bdc6274cbe78fb5173859087d",
+      "matchesAcceptedSourceAndCurrentHead": true
+    },
+    {
+      "path": ".github/workflows/desktop-release.yml",
+      "sha256": "8d358f9a5d4891ad67229d35a79acdd004bd75cfc0d1cf4191a8cffdc23f2261",
+      "matchesAcceptedSourceAndCurrentHead": true
+    },
+    {
+      "path": ".github/workflows/npm-release.yml",
+      "sha256": "acadc3be8cb5ca9f94a1b64ab65be1e7f1f40e718e7f7026b13bf921be313d73",
+      "matchesAcceptedSourceAndCurrentHead": true
+    }
+  ],
+  "latestSuccessfulPagesRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+  "pagesInputsUnchangedSinceThatRun": true,
+  "configuredRequiredChecksInSnapshot": 0,
+  "exactSourceActionsRunsInSnapshot": 0,
+  "sourceStatusesInSnapshot": 0,
+  "absentCiNotCountedAsPass": true,
+  "noSettingsMutatedOrWorkflowDispatched": true,
+  "rawPrivateCredentialsOrStateIncluded": false
+}

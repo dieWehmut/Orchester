@@ -25,4 +25,6 @@ Cursor 官方启动器的静态核实发现其真正入口是版本目录内的 
 
 [生产 Linux 只读取样](acceptance/additional-monitors/linux-production-snapshot.json)确认已有 Codex 3 个进程，同时保留 metadata unavailable 来源。其他 provider 在这次不完整采样中为未知，不能据零值宣称未运行。该取样没有启动模型，也不替代四项 provider 的实际运行验收。
 
-Windows 最终 EXE、配套 Web、用户桌面安装及 7337/7338 后端部署尚待新产物验证。历史安装和便携包的 v2 运行记录仍保留在[来源验收](32-windows-wsl-activity.md)，不作为本次新增监控的已部署证明。
+截至该次验收，Windows 最终 EXE、配套 Web、用户桌面安装及 7337/7338 后端部署尚待新产物验证。历史安装和便携包的 v2 运行记录仍保留在[来源验收](32-windows-wsl-activity.md)，不作为该次新增监控的已部署证明。
+
+后续监控产物、共享字体与 7337/7338 实际部署结果见[桌面与手机交付记录](38-desktop-mobile-final-delivery.md)。

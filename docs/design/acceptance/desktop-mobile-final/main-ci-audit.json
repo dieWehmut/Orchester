@@ -1,0 +1,73 @@
+{
+  "format": "orchester-read-only-main-ci-audit-v1",
+  "reviewer": "final_delivery_audit",
+  "observedAtUtc": "2026-11-11T04:36:48.439859+00:00",
+  "repository": "dieWehmut/Orchester",
+  "acceptedCodeSourceRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "githubMainRevision": "35c75e656d2c04cc6221d1dfb56c916aac706033",
+  "branchProtected": false,
+  "repositoryRulesets": [],
+  "classicProtectionQuery": {
+    "exitCode": 1,
+    "status": "404",
+    "message": "Branch not protected"
+  },
+  "exactSourceActionsRuns": [],
+  "exactSourceCheckRuns": {
+    "total_count": 0,
+    "checks": []
+  },
+  "exactSourceCommitStatuses": {
+    "state": "pending",
+    "total_count": 0,
+    "statuses": []
+  },
+  "combinedStatusInterpretation": "pending with total_count0 means no configured status contexts; it is not a running or passing CI job",
+  "localWorkflowInputs": [
+    {
+      "path": ".github/workflows/pages.yml",
+      "sha256": "74eb87dd3a1194d52d2caf7d89e1307e37d7665bdc6274cbe78fb5173859087d"
+    },
+    {
+      "path": ".github/workflows/desktop-release.yml",
+      "sha256": "8d358f9a5d4891ad67229d35a79acdd004bd75cfc0d1cf4191a8cffdc23f2261"
+    },
+    {
+      "path": ".github/workflows/npm-release.yml",
+      "sha256": "acadc3be8cb5ca9f94a1b64ab65be1e7f1f40e718e7f7026b13bf921be313d73"
+    }
+  ],
+  "workflowTriggers": {
+    "pages": "main push with explicit frontend/path filters, or workflow_dispatch",
+    "desktop-release": "workflow_dispatch only",
+    "npm-release": "workflow_dispatch only"
+  },
+  "pagesInputChangesSinceLastSuccessfulRun": [],
+  "latestSuccessfulMainPagesRun": {
+    "databaseId": 42837265375,
+    "headSha": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/dieWehmut/Orchester/actions/runs/42837265375",
+    "jobs": [
+      {
+        "name": "Build website",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/dieWehmut/Orchester/actions/runs/42837265375/job/129902696044"
+      },
+      {
+        "name": "Deploy website",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/dieWehmut/Orchester/actions/runs/42837265375/job/129903156659"
+      }
+    ]
+  },
+  "actualCurrentSourceCiFailures": [],
+  "conclusion": "current code source did not trigger a CI run; no configured required checks were found; local full/native gates are the execution evidence, not a claim that absent CI passed",
+  "settingsMutated": false,
+  "workflowDispatched": false,
+  "credentialsPrintedOrPersisted": false,
+  "msrvOutcomeInferred": false
+}
