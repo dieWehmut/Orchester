@@ -1,0 +1,30 @@
+    Checking windows-sys v0.61.2
+    Checking mio v1.2.1
+    Checking socket2 v0.6.5
+    Checking tokio v1.52.3
+    Checking hyper v1.10.1
+    Checking tokio-stream v0.1.18
+    Checking cap-primitives v4.0.2
+    Checking hyper-util v0.1.20
+    Checking tower v0.5.3
+    Checking cap-std v4.0.2
+    Checking tokio-rustls v0.26.4
+    Checking orchester-vertrag v0.1.2 (C:\Users\han\AppData\Local\Orchester-build\wsl-helper-green-20261111\kisten\vertrag)
+    Checking tokio-util v0.7.18
+    Checking tower-http v0.6.8
+    Checking hyper-rustls v0.27.9
+    Checking orchester-adapter v0.1.2 (C:\Users\han\AppData\Local\Orchester-build\wsl-helper-green-20261111\kisten\adapter)
+    Checking cap-fs-ext v4.0.2
+    Checking reqwest v0.12.28
+    Checking orchester-verzeichnis v0.1.2 (C:\Users\han\AppData\Local\Orchester-build\wsl-helper-green-20261111\kisten\verzeichnis)
+    Checking orchester-modell v0.1.2 (C:\Users\han\AppData\Local\Orchester-build\wsl-helper-green-20261111\kisten\modell)
+    Checking orchester-laufzeit v0.1.2 (C:\Users\han\AppData\Local\Orchester-build\wsl-helper-green-20261111\kisten\laufzeit)
+    Checking tokio-tungstenite v0.29.0
+    Checking serial2 v0.2.39
+    Checking portable-pty v0.9.0
+    Checking tempfile v3.27.0
+    Checking axum v0.8.9
+    Checking tower-http v0.7.0
+    Checking orchester-anwendung v0.1.2 (C:\Users\han\AppData\Local\Orchester-build\wsl-helper-green-20261111\kisten\anwendung)
+    Checking orchester-netz v0.1.2 (C:\Users\han\AppData\Local\Orchester-build\wsl-helper-green-20261111\kisten\netz)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 25.44s

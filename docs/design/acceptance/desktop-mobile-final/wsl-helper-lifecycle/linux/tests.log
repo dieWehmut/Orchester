@@ -1,0 +1,485 @@
+   Compiling orchester-vertrag v0.1.2 (/home/han/project/Orchester/.worktrees/windows-wsl-helper-lifecycle/kisten/vertrag)
+   Compiling orchester-adapter v0.1.2 (/home/han/project/Orchester/.worktrees/windows-wsl-helper-lifecycle/kisten/adapter)
+   Compiling orchester-verzeichnis v0.1.2 (/home/han/project/Orchester/.worktrees/windows-wsl-helper-lifecycle/kisten/verzeichnis)
+   Compiling orchester-laufzeit v0.1.2 (/home/han/project/Orchester/.worktrees/windows-wsl-helper-lifecycle/kisten/laufzeit)
+   Compiling orchester-anwendung v0.1.2 (/home/han/project/Orchester/.worktrees/windows-wsl-helper-lifecycle/kisten/anwendung)
+   Compiling orchester-netz v0.1.2 (/home/han/project/Orchester/.worktrees/windows-wsl-helper-lifecycle/kisten/netz)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 01s
+     Running unittests src/lib.rs (target/debug/deps/orchester_netz-efb51257438bf4bb)
+
+running 98 tests
+test agent_activity::metadata::wsl_paths::maps_only_index_paths_within_the_same_wsl_sessions_root ... ok
+test agent_activity::tests::appended_and_partially_written_records_are_refreshed_without_duplicates ... ok
+test agent_activity::tests::catalog_excludes_explicit_subagent_sources_even_without_agent_role ... ok
+test agent_activity::tests::catalog_over_128_sessions_reuses_summaries_and_prunes_deleted_files ... ok
+test agent_activity::tests::claude_keeps_tool_results_separate_from_prompts_and_skips_thinking ... ok
+test agent_activity::tests::claude_rewritten_tool_keeps_its_result_relationship ... ok
+test agent_activity::tests::codex_index_uses_source_titles_and_projects_without_following_outside_paths ... ok
+test agent_activity::tests::codex_preserves_source_turn_timing_and_visible_message_phases ... ok
+test agent_activity::tests::codex_reads_visible_messages_tools_and_lifecycle_without_private_payloads ... ok
+test agent_activity::tests::codex_without_an_index_keeps_older_project_sessions ... ok
+test agent_activity::tests::compressed_index_includes_every_top_level_session_and_resolves_oldest_detail ... ok
+test agent_activity::tests::every_compressed_history_page_is_contiguous_and_keeps_source_timing ... ok
+test agent_activity::tests::file_discovery_does_not_follow_external_symlinks ... ok
+test agent_activity::tests::local_reader_does_not_create_missing_provider_directories ... ok
+test agent_activity::tests::local_reader_does_not_infer_live_activity_from_stale_transcripts ... ok
+test agent_activity::tests::local_reader_uses_transcripts_without_starting_a_server ... ok
+test agent_activity::tests::long_messages_are_read_past_the_old_tail_window_and_clipped_only_at_the_text_bound ... ok
+test agent_activity::tests::managed_runs_expose_current_content_without_reasoning ... ok
+test agent_activity::tests::opencode_emits_results_only_when_tools_finish ... ok
+test agent_activity::files::tests::catalog_excerpt_cache_has_a_total_byte_budget_without_limiting_detail ... ok
+test agent_activity::tests::rewritten_claude_message_keeps_latest_timestamp_and_phase ... ok
+test agent_activity::tests::opencode_reads_sqlite_without_modifying_source ... ok
+test agent_activity::tests::stalled_wsl_source_does_not_block_another_sources_detail ... ok
+test agent_activity::tests::title_is_not_replaced_by_followup_and_tools_share_opaque_call_ids ... ok
+test agent_activity::tests::truncated_or_invalid_turn_times_do_not_invent_elapsed_time ... ok
+test agent_activity::tests::unavailable_database_and_missing_roots_are_distinct ... ok
+test agent_activity::tests::unavailable_wsl_detail_gate_does_not_lock_local_snapshot ... ok
+test agent_activity::tests::working_directory_survives_environment_project_isolation ... ok
+test agent_activity::tests::routes_require_a_session_reject_paths_and_return_no_store_content ... ok
+test agent_activity::wsl::tests::bounded_command_failures_keep_distinct_safe_diagnostics ... ok
+test agent_activity::wsl::tests::completed_command_does_not_wait_for_a_descendant_holding_stdout ... ok
+test agent_activity::wsl::tests::decodes_windows_distribution_names ... ok
+test agent_activity::wsl::tests::isolates_duplicate_sessions_and_retains_unavailable_history ... ok
+test agent_process::identity::tests::branded_agent_entries_are_recognized_across_runtime_wrappers ... ok
+test agent_process::identity::tests::helpers_generic_names_and_prompt_strings_are_never_agent_identities ... ok
+test agent_process::identity::tests::metadata_prefix_has_fixed_argument_and_byte_limits ... ok
+test agent_activity::wsl::tests::command_capture_rejects_timeouts_failures_and_excess_output ... ok
+test agent_process::identity::tests::partial_wsl_query_preserves_positives_but_skips_dead_and_truncated_candidates ... ok
+test agent_process::identity::tests::relative_dot_segments_do_not_turn_parent_entries_into_branded_services ... ok
+test agent_process::identity::tests::relative_source_entries_flags_and_maintenance_follow_the_real_entrypoint ... ok
+test agent_process::identity::tests::supervisor_child_pairs_count_once_and_independent_instances_remain_separate ... ok
+test agent_process::identity::tests::wsl_and_local_rules_agree_and_wsl_stdout_contains_only_safe_counts ... ok
+test agent_process::tests::bounded_identity_query_failure_never_confirms_zero_or_accepts_metadata ... ok
+test agent_process::tests::failed_distro_does_not_discard_other_current_counts ... ok
+test agent_process::tests::incomplete_identity_read_without_positives_never_confirms_zero ... ok
+test agent_process::tests::partial_identity_read_preserves_current_positive_counts_with_an_unknown_marker ... ok
+test agent_process::tests::partial_wsl_refresh_keeps_current_counts_separate_from_cached_stale_counts ... ok
+test agent_process::tests::production_reader_discards_late_results_at_the_source_deadline ... ok
+test agent_process::tests::production_reader_keeps_one_worker_after_timeout_and_accepts_fresh_recovery ... ok
+test agent_process::tests::production_reader_releases_its_gate_after_a_synthetic_panic ... ok
+test agent_process::tests::wsl_cache_busy_or_expired_marks_old_counts_stale_instead_of_live_or_zero_complete ... ok
+test agent_process::tests::wsl_cache_refreshes_only_on_snapshot_calls ... ok
+test agent_process::tests::wsl_failure_preserves_last_success_and_recovery_empty_confirms_zero ... ok
+test bootstrap::tests::cloned_contexts_share_the_run_registry ... ok
+test composer::tests::goals_persist_with_revision_and_paused_goals_do_not_affect_prompts ... ok
+test mcp::tests::definitions_reject_secrets_in_urls_and_shell_wrappers ... ok
+test mcp::tests::stream_handles_notifications_split_utf8_and_multiline_data ... ok
+test model_catalog::provider_editor_contract_tests::rich_editor_accepts_provider_scoped_models_without_redundant_provider_field ... ok
+test agent_process::identity::tests::official_cursor_cli_entrypoints_agree_locally_and_in_wsl ... ok
+test remote::terminal::runtime::tests::replay_memory_and_chunk_count_are_bounded ... ok
+test remote::terminal::runtime::tests::utf8_preserves_cjk_across_every_byte_boundary_and_invalid_bytes ... ok
+test run::tests::cancel_is_idempotent_and_emits_one_terminal_event ... ok
+test run::tests::dropping_a_request_waiting_for_model_selection_does_not_reserve_its_key ... ok
+test run::tests::event_socket_replays_from_the_cursor_then_streams_live_events ... ok
+test run::tests::event_socket_reports_an_unknown_run_as_not_found ... ok
+test run::tests::event_socket_requests_resync_for_an_evicted_cursor ... ok
+test remote::terminal::runtime::tests::expiry_and_manager_drop_release_shell_and_io_workers ... ok
+test run::tests::failed_journal_write_does_not_advance_sequence_or_make_a_stop_unretryable ... ok
+test run::tests::failed_http_submission_is_saved_and_can_continue_after_server_restart ... ok
+test run::tests::replay_requires_resync_when_the_requested_sequence_was_evicted ... ok
+test run::tests::replay_returns_a_bounded_page_after_the_requested_sequence ... ok
+test run::tests::snapshot_returns_the_registered_run_state ... ok
+test run::tests::the_failure_fallback_preserves_a_cancelled_run ... ok
+test run::tests::unfinished_failure_keeps_one_error_and_broadcasts_one_terminal_frame ... ok
+test run_bridge::tests::an_error_keeps_its_following_stop_reason_without_duplicate_terminal_events ... ok
+test run_bridge::tests::file_change_paths_are_redacted_before_they_leave_the_process ... ok
+test run_bridge::tests::narrated_markdown_survives_bridge_snapshot_and_repeated_wire_roundtrips ... ok
+test run_bridge::tests::narration_is_broadcast_before_the_producer_finishes ... ok
+test run_bridge::tests::the_runtime_vocabulary_maps_onto_the_ui_vocabulary ... ok
+test run_bridge::tests::tool_calls_pair_by_name_and_arrival_order ... ok
+test run_contract::tests::replay_limit_defaults_and_has_a_hard_cap ... ok
+test run_contract::tests::start_request_accepts_multiline_prompt ... ok
+test run_contract::tests::start_request_rejects_blank_prompt ... ok
+test run_contract::tests::start_request_reports_invalid_control_characters_by_field ... ok
+test run_contract::tests::stream_frame_uses_the_written_discriminator ... ok
+test run_registry::tests::a_failed_initial_event_publishes_neither_run_nor_key ... ok
+test run_registry::tests::a_registry_assigns_monotonic_sequences_and_replays_events ... ok
+test run_registry::tests::an_error_does_not_advertise_a_terminal_snapshot_before_its_stop_frame ... ok
+test run_registry::tests::cancellation_is_idempotent_and_marks_the_run_terminal ... ok
+test run_registry::tests::concurrent_appends_broadcast_in_journal_sequence_order ... ok
+test run_registry::tests::concurrent_retries_publish_one_initialized_run_and_one_execution_owner ... ok
+test run_registry::tests::durable_initialization_failure_leaves_the_key_retryable ... ok
+test run_registry::tests::keys_survive_the_retry_window_event_eviction_and_termination ... ok
+test run_registry::tests::retention_reports_a_resync_boundary_instead_of_silent_loss ... ok
+test schedule_store::tests::claims_persist_prevent_overlap_recover_and_isolate_workspaces ... ok
+test schedule_store::tests::one_shot_disables_and_manual_run_keeps_future_due_time ... ok
+test schedule_store::tests::opening_schedules_first_preserves_the_runtime_private_storage_boundary ... ok
+test run::tests::long_conversation_keeps_all_events_on_reload_and_server_restart ... ok
+
+test result: ok. 98 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.16s
+
+     Running tests/agent_catalog.rs (target/debug/deps/agent_catalog-86459f13b00f0db2)
+
+running 1 test
+test agent_catalog_projects_registry_without_commands_or_paths ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/agent_process.rs (target/debug/deps/agent_process-b0440f5a69edb6cf)
+
+running 3 tests
+test process_sources_are_injectable_without_exposing_raw_metadata ... ok
+test provider_matching_is_exact_and_case_insensitive ... ok
+test snapshot_keeps_only_provider_instance_counts ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/agent_process_monitor.rs (target/debug/deps/agent_process_monitor-8f4b786daf0010d8)
+
+running 1 test
+test process_monitor_publishes_changes_once_and_stops_with_the_server ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/agent_routes.rs (target/debug/deps/agent_routes-1b2d26f64cc6a2b4)
+
+running 1 test
+test agent_catalog_route_returns_sorted_path_free_registry_data ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running tests/agent_runtime_status.rs (target/debug/deps/agent_runtime_status-3227ff3407dbfa22)
+
+running 12 tests
+test additional_providers_have_monitor_only_rows_without_runnable_adapters ... ok
+test failed_process_task_publishes_unavailable_instead_of_retaining_a_confirmed_zero ... ok
+test incomplete_first_observation_is_unknown_and_partial_counts_remain_running ... ok
+test monitor_only_rows_observe_presence_absence_and_unknown_sources ... ok
+test process_monitor_start_is_safe_without_a_tokio_runtime ... ok
+test runtime_store_broadcasts_snapshots_and_heartbeats_to_subscribers ... ok
+test runtime_store_reconciles_external_processes_without_losing_managed_counts ... ok
+test runtime_store_redacts_failure_paths_before_the_snapshot_leaves_the_server ... ok
+test runtime_store_rejects_unknown_agents_without_mutating_the_snapshot ... ok
+test runtime_store_updates_one_agent_and_advances_the_snapshot_sequence ... ok
+test unavailable_external_sources_preserve_managed_approval_and_counts ... ok
+test source_quality_changes_publish_atomically_and_recovery_confirms_zero ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+
+     Running tests/agent_status_routes.rs (target/debug/deps/agent_status_routes-9dcc2288071fb443)
+
+running 3 tests
+test agent_status_route_reflects_runtime_updates_from_the_shared_context ... ok
+test agent_status_route_refreshes_external_process_counts_before_responding ... ok
+test agent_status_route_returns_a_redaction_safe_runtime_snapshot ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/agent_status_socket.rs (target/debug/deps/agent_status_socket-ff2846a7b397e468)
+
+running 1 test
+test agent_status_socket_streams_snapshot_updates_and_heartbeats ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/api_error.rs (target/debug/deps/api_error-4c392a0a46b49221)
+
+running 2 tests
+test api_error_mapping_returns_stable_status_and_safe_json ... ok
+test internal_error_mapping_does_not_echo_internal_details ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bootstrap.rs (target/debug/deps/bootstrap-0cdb282d089f51ce)
+
+running 2 tests
+test bootstrap_supports_an_unselected_workspace ... ok
+test bootstrap_projects_running_state_and_workspace_basename_without_paths ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/composer_routes.rs (target/debug/deps/composer_routes-19b7c638e9de399d)
+
+running 3 tests
+test http_mcp_negotiates_sessions_pagination_and_streamed_results ... ok
+test stdio_mcp_handshake_and_call_use_a_direct_background_process ... ignored, requires Node.js; included in desktop acceptance
+test context_and_servers_survive_restart_and_do_not_cross_workspaces ... ok
+
+test result: ok. 2 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/context_registry.rs (target/debug/deps/context_registry-df54df631e689f9c)
+
+running 3 tests
+test server_context_binds_delegate_history_to_the_selected_paths ... ok
+test server_context_binds_a_model_host_only_for_a_selected_workspace ... ok
+test server_context_discovers_project_manifests_into_its_registry ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests/embedded.rs (target/debug/deps/embedded-64cbb7b2420b14e3)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/health.rs (target/debug/deps/health-788c807002138c05)
+
+running 1 test
+test health_response_contains_only_stable_service_metadata ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/http_routes.rs (target/debug/deps/http_routes-1794f5429896693e)
+
+running 12 tests
+test bootstrap_route_returns_the_safe_context_snapshot ... ok
+test another_window_bootstrap_preserves_the_main_windows_mutation_authority ... ok
+test fragment_exchange_rejects_schema_mismatch_without_consuming_token ... ok
+test fragment_exchange_consumes_a_registered_token_once ... ok
+test malformed_json_returns_a_redacted_bad_request ... ok
+test health_route_returns_uncached_json_with_the_typed_payload ... ok
+test revoke_requires_csrf_and_accepts_the_issued_cookie_once ... ok
+test routes_generate_a_request_id_when_the_client_does_not_send_one ... ok
+test routes_propagate_a_client_request_id ... ok
+test session_bootstrap_sets_an_http_only_cookie_and_returns_only_csrf_json ... ok
+test unknown_api_routes_return_typed_json_errors ... ok
+test unknown_api_route_returns_not_found ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/library_routes.rs (target/debug/deps/library_routes-27e2af52c9f58a7f)
+
+running 1 test
+test library_routes_enforce_csrf_and_return_canonical_workspace ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running tests/lifecycle.rs (target/debug/deps/lifecycle-e2585987c53256f8)
+
+running 5 tests
+test control_broadcasts_one_shutdown_signal_and_completes_without_a_socket ... ok
+test concurrent_shutdown_requests_are_idempotent ... ok
+test lifecycle_rejects_skipping_a_state_or_restarting_after_stop ... ok
+test control_cannot_shutdown_before_starting ... ok
+test lifecycle_starts_in_starting_state_and_accepts_ordered_transitions ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/listener.rs (target/debug/deps/listener-26c5bb300ffce961)
+
+running 2 tests
+test binding_rejects_non_loopback_before_opening_a_socket ... ok
+test binding_ephemeral_port_exposes_an_allocated_loopback_address ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/model_catalog.rs (target/debug/deps/model_catalog-53ca2462e8671733)
+
+running 2 tests
+test model_catalog_projects_choices_without_provider_endpoints ... ok
+test unresolved_active_models_preserve_only_validation_metadata ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/model_routes.rs (target/debug/deps/model_routes-8537f94caeeee9c5)
+
+running 8 tests
+test model_catalog_route_does_not_echo_configuration_failures ... ok
+test model_catalog_route_projects_a_configured_workspace_model ... ok
+test model_catalog_without_workspace_returns_a_typed_unavailable_error ... ok
+test selection_route_names_a_profile_whole ... ok
+test selection_route_refuses_a_choice_this_workspace_cannot_apply ... ok
+test selection_route_refuses_a_field_it_cannot_believe ... ok
+test selection_route_requires_a_selected_workspace ... ok
+test selection_route_remembers_the_model_the_next_run_will_use ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+
+     Running tests/plugin_routes.rs (target/debug/deps/plugin_routes-d5603762503dfd1d)
+
+running 2 tests
+test plugin_catalog_is_explicitly_unavailable_without_workspace ... ok
+test catalog_and_mutation_validation_do_not_execute_arbitrary_packages ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/provider_routes.rs (target/debug/deps/provider_routes-a5d97e58df6c7251)
+
+running 13 tests
+test adding_a_provider_persists_only_a_reference_and_matches_the_next_catalog ... ok
+test duplicate_provider_is_refused_without_replacing_configuration_or_echoing_a_key ... ok
+test invalid_drafts_leave_both_configuration_and_credentials_untouched ... ok
+test editing_and_deleting_an_unrelated_provider_preserves_session_model ... ok
+test missing_workspace_and_uneditable_configuration_return_retryable_unavailable_errors ... ok
+test malformed_unknown_and_oversized_bodies_are_rejected_without_echoing_input ... ok
+test provider_setup_refuses_untrusted_host_origin_and_missing_session_or_csrf_without_outer_middleware ... ok
+test rich_provider_mutations_require_session_and_csrf_and_details_require_session ... ok
+test rich_provider_invalid_update_is_atomic_and_cannot_overwrite_another_provider_profile ... ok
+test rich_provider_optional_blank_display_name_is_normalized ... ok
+test rich_provider_routes_edit_reload_and_delete_preserve_other_provider_and_private_key ... ok
+test saving_a_provider_keeps_comments_and_clears_the_previous_session_override ... ok
+test simultaneous_duplicate_additions_are_serialized ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.65s
+
+     Running tests/remote_routes.rs (target/debug/deps/remote_routes-9e3d2e3be848aca9)
+
+running 18 tests
+test cancel_native_run_stops_child_and_descendant ... ok
+test cancel_before_dispatch_and_reject_unsupported_resume ... ok
+test failed_final_persistence_is_not_reported_as_completed ... ok
+test failed_revocation_keeps_authority_consistent_with_disk ... ok
+test folders_require_pairing_and_enforce_real_allowed_roots ... ok
+test folders_skip_unaddressable_non_utf8_entries_instead_of_panicking ... ok
+test mock_stream_retry_and_restart_history ... ok
+test oversized_unterminated_native_stdout_is_stopped_before_eof ... ok
+test native_manifests_resume_with_stdin_eof ... ok
+test paired_authority_is_computer_bound_and_attempts_are_bounded ... ok
+test pairing_is_one_time_persists_and_can_be_revoked ... ok
+test persisted_events_page_without_gaps ... ok
+test project_catalog_deduplicates_and_survives_restart_without_demo_agents ... ok
+test replacing_a_selected_project_with_another_project_symlink_is_rejected ... ok
+test selecting_a_legacy_workspace_imports_its_history_without_restart ... ok
+test selected_projects_use_their_own_cli_directory_sessions_and_idempotency_scope ... ok
+test unfinished_persisted_runs_become_interrupted ... ok
+test v1_idempotency_retries_keep_the_original_run_after_project_upgrade ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.49s
+
+     Running tests/remote_terminals.rs (target/debug/deps/remote_terminals-dff770cd3fe7e437)
+
+running 5 tests
+test authorization_ticket_binding_limits_and_shutdown ... ok
+test closing_terminal_kills_background_descendant_jobs ... ok
+test replay_overflow_reports_gap_then_replays_retained_output ... ok
+test project_cwd_revalidation_resume_cursor_and_invalid_messages ... ok
+test shell_input_unicode_resize_replay_and_exit_are_real ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.16s
+
+     Running tests/run_idempotency_http.rs (target/debug/deps/run_idempotency_http-74a55976d339960d)
+
+running 3 tests
+test a_lost_http_response_reuses_a_failed_run_instead_of_leaving_it_running ... ok
+test concurrent_http_retries_publish_one_initial_turn_and_a_working_replay_socket ... ok
+test http_conflicts_and_validation_errors_do_not_echo_submission_secrets ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+
+     Running tests/run_routes.rs (target/debug/deps/run_routes-42b0214c97570bef)
+
+running 15 tests
+test a_retry_after_cancellation_keeps_the_terminal_run ... ok
+test an_unconfigured_model_finishes_once_with_a_static_public_error ... ok
+test cancel_route_reports_not_found_without_a_bound_run ... ok
+test equivalent_json_and_null_resume_share_a_run_and_the_routed_events_url ... ok
+test rejected_payloads_do_not_reserve_the_key ... ok
+test replay_route_reports_not_found_without_a_bound_run ... ok
+test snapshot_route_reports_not_found_without_a_bound_run ... ok
+test start_route_compares_the_exact_prompt_and_resume ... ok
+test start_route_journals_the_readers_own_turn_first ... ok
+test start_route_rejects_an_invalid_idempotency_key ... ok
+test start_route_rejects_a_reused_key_with_a_different_request ... ok
+test start_route_reports_unavailable_without_a_selected_workspace ... ok
+test start_route_reuses_the_run_for_an_identical_idempotency_key ... ok
+test start_route_validates_key_boundaries_and_duplicate_headers ... ok
+test unkeyed_and_differently_keyed_submissions_remain_independent ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.78s
+
+     Running tests/schedule_routes.rs (target/debug/deps/schedule_routes-c64ff8e873907e67)
+
+running 2 tests
+test schedule_crud_persists_and_runs_through_the_real_runtime ... ok
+test a_due_once_task_is_dispatched_without_an_http_submission ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+
+     Running tests/server_config.rs (target/debug/deps/server_config-e7c368e214e93e83)
+
+running 4 tests
+test server_config_accepts_both_loopback_address_families ... ok
+test server_config_defaults_to_ephemeral_ipv4_loopback ... ok
+test server_config_preserves_explicit_network_and_static_asset_settings ... ok
+test server_config_rejects_non_loopback_bind_addresses ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/session.rs (target/debug/deps/session-93e01714c1cf803a)
+
+running 6 tests
+test fragment_exchange_debug_output_redacts_the_raw_token ... ok
+test fragment_store_rejects_empty_tokens_and_expired_entries ... ok
+test fragment_tokens_are_consumed_once_and_only_hashes_are_retained ... ok
+test session_bootstrap_debug_output_redacts_raw_tokens ... ok
+test session_store_issues_distinct_tokens_and_validates_csrf ... ok
+test session_store_rejects_expired_and_revoked_sessions ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/session_history_dto.rs (target/debug/deps/session_history_dto-c5bd02e6cdb261c3)
+
+running 2 tests
+test session_page_projection_matches_the_versioned_browser_contract ... ok
+test session_detail_projection_is_flat_path_free_and_bounded ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/session_history_routes.rs (target/debug/deps/session_history_routes-a29456619d6da2c2)
+
+running 5 tests
+test session_detail_route_returns_the_flat_opaque_history_record ... ok
+test session_list_route_pages_newest_first_with_opaque_cursors ... ok
+test session_detail_route_hides_lookup_and_workspace_failures ... ok
+test session_list_route_redacts_corrupt_history_storage_errors ... ok
+test session_list_route_returns_typed_errors_for_unavailable_or_invalid_queries ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.35s
+
+     Running tests/static_routes.rs (target/debug/deps/static_routes-3f669d228646e210)
+
+running 1 test
+test disabled_static_assets_keep_non_api_routes_as_typed_json_404 ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/workspace.rs (target/debug/deps/workspace-332a1dffbfb88c8c)
+
+running 4 tests
+test selection_canonicalizes_directory_and_keeps_the_same_home ... ok
+test selection_rejects_a_missing_workspace_without_echoing_the_path ... ok
+test selection_rejects_an_empty_workspace_path ... ok
+test selection_rejects_a_regular_file_as_workspace ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/workspace_review_routes.rs (target/debug/deps/workspace_review_routes-81095df51f70e5c3)
+
+running 6 tests
+test review_route_is_unavailable_when_no_workspace_is_selected ... ok
+test review_route_answers_a_plain_directory_with_an_empty_review ... ok
+test review_route_never_sends_an_absolute_path_to_the_browser ... ok
+test review_route_is_uncached_json_and_read_only ... ok
+test review_route_rejects_a_state_changing_method ... ok
+test review_route_reports_the_branch_and_each_paths_placement ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running unittests examples/agent_process_probe.rs (target/debug/examples/agent_process_probe-1cf2e05e7c19996a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/orchester_vertrag-2b0813b1cf863810)
+
+running 15 tests
+test extract::tests::literal_vs_path ... ok
+test extract::tests::missing_path_is_none ... ok
+test extract::tests::nested_key_and_array_index ... ok
+test extract::tests::numbers_and_bools_stringify ... ok
+test extract::tests::plain_key ... ok
+test extract::tests::top_level_index ... ok
+test manifest_adapter::tests::availability_reports_existing_command ... ok
+test manifest_adapter::tests::assistant_line_maps_to_message ... ok
+test manifest_adapter::tests::build_args_substitutes_prompt ... ok
+test manifest_adapter::tests::build_args_uses_resume_template_when_resuming ... ok
+test manifest_adapter::tests::codex_reports_every_file_in_a_completed_patch ... ok
+test manifest_adapter::tests::result_line_maps_to_result ... ok
+test manifest_adapter::tests::session_id_emitted_once ... ok
+test manifest_adapter::tests::unknown_type_and_non_json_are_ignored ... ok
+test manifest_adapter::tests::availability_reports_missing_command ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+

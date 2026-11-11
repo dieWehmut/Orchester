@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "selectedFiles": [
+    {
+      "path": "red/result.json",
+      "sourcePath": "/tmp/orchester-wsl-helper-lifecycle-red-evidence/result.json",
+      "sourceSha256": "82c90c143889fb7bd38e82e115c1c9914b3c350d93f90e43909183fb6805eb48",
+      "archivedSha256": "82c90c143889fb7bd38e82e115c1c9914b3c350d93f90e43909183fb6805eb48",
+      "byteExact": true,
+      "bytes": 844
+    },
+    {
+      "path": "red/native-audit.json",
+      "sourcePath": "/tmp/orchester-wsl-helper-lifecycle-red-evidence/native-audit.json",
+      "sourceSha256": "85febd7c648a736c2019064fcd8df737cdfc8fdf03ff160248895cb3863ab063",
+      "archivedSha256": "85febd7c648a736c2019064fcd8df737cdfc8fdf03ff160248895cb3863ab063",
+      "byteExact": true,
+      "bytes": 332
+    },
+    {
+      "path": "red/stdout.log",
+      "sourcePath": "/tmp/orchester-wsl-helper-lifecycle-red-evidence/stdout.log",
+      "sourceSha256": "5930f7bb8ac0042d2f2a79fcc692c9d0931c27de2078baa5b146be4e5e19eedc",
+      "archivedSha256": "5930f7bb8ac0042d2f2a79fcc692c9d0931c27de2078baa5b146be4e5e19eedc",
+      "byteExact": true,
+      "bytes": 2991
+    },
+    {
+      "path": "red/stderr.log",
+      "sourcePath": "/tmp/orchester-wsl-helper-lifecycle-red-evidence/stderr.log",
+      "sourceSha256": "a5b44d0e90ea330bcd3cf2170edb49c64741580524faf22e2196e58d789f1179",
+      "archivedSha256": "a5b44d0e90ea330bcd3cf2170edb49c64741580524faf22e2196e58d789f1179",
+      "byteExact": true,
+      "bytes": 422
+    },
+    {
+      "path": "green/result.json",
+      "sourcePath": "/tmp/orchester-wsl-helper-lifecycle-green-evidence/result.json",
+      "sourceSha256": "bef22fafa01aff6390ed20fcc1c1a86210970eefceececaba2299cd904b12ac1",
+      "archivedSha256": "bef22fafa01aff6390ed20fcc1c1a86210970eefceececaba2299cd904b12ac1",
+      "byteExact": true,
+      "bytes": 5570
+    },
+    {
+      "path": "linux/result.json",
+      "sourcePath": "/tmp/orchester-wsl-helper-linux-validation.json",
+      "sourceSha256": "d3933087e4b196421bdd756d21b323121847a43d600038142ebffac5781159b2",
+      "archivedSha256": "d3933087e4b196421bdd756d21b323121847a43d600038142ebffac5781159b2",
+      "byteExact": true,
+      "bytes": 3905
+    },
+    {
+      "path": "linux/tests.log",
+      "sourcePath": "/tmp/orchester-wsl-helper-linux-tests.log",
+      "sourceSha256": "66351a476a911a2eb7aab3355178d786d7055d5a19672e2810eb6103d96c6301",
+      "archivedSha256": "66351a476a911a2eb7aab3355178d786d7055d5a19672e2810eb6103d96c6301",
+      "byteExact": true,
+      "bytes": 28978
+    },
+    {
+      "path": "linux/clippy.log",
+      "sourcePath": "/tmp/orchester-wsl-helper-linux-clippy.log",
+      "sourceSha256": "600366f6c1270ee0fb7bfdd505256b9a5f61e2c93334e9c57ad37c4d85cc6ea8",
+      "archivedSha256": "600366f6c1270ee0fb7bfdd505256b9a5f61e2c93334e9c57ad37c4d85cc6ea8",
+      "byteExact": true,
+      "bytes": 6504
+    },
+    {
+      "path": "green/root-fmt/native-audit.json",
+      "sourcePath": "/tmp/orchester-wsl-helper-lifecycle-green-evidence/root-fmt/native-audit.json",
+      "sourceSha256": "8687af35df9b97b5cf3324e7e3751ff20b5bc620b0514761fd22c000091960f9",
+      "archivedSha256": "8687af35df9b97b5cf3324e7e3751ff20b5bc620b0514761fd22c000091960f9",
+      "byteExact": true,
+      "bytes": 330
+    },
+    {
+      "path": "green/helper-contract/native-audit.json",
+      "sourcePath": "/tmp/orchester-wsl-helper-lifecycle-green-evidence/helper-contract/native-audit.json",
+      "sourceSha256": "6f5caaab839afdd287b9f4d2149e6d2e23fa457587770dd04896c62fcc805c90",
+      "archivedSha256": "6f5caaab839afdd287b9f4d2149e6d2e23fa457587770dd04896c62fcc805c90",
+      "byteExact": true,
+      "bytes": 330
+    },
+    {
+      "path": "green/helper-wsl/native-audit.json",
+      "sourcePath": "/tmp/orchester-wsl-helper-lifecycle-green-evidence/helper-wsl/native-audit.json",
+      "sourceSha256": "82b8f292a64cd6cb6ad04ce34368521db451d9a7e758ef14eca85f0bee24b295",
+      "archivedSha256": "82b8f292a64cd6cb6ad04ce34368521db451d9a7e758ef14eca85f0bee24b295",
+      "byteExact": true,
+      "bytes": 330
+    },
+    {
+      "path": "green/helper-clippy/native-audit.json",
+      "sourcePath": "/tmp/orchester-wsl-helper-lifecycle-green-evidence/helper-clippy/native-audit.json",
+      "sourceSha256": "edc6fbe92f2a91fc92f6a0f0724dd9d1070e9e56b7d8aba054f2ad7b788117d9",
+      "archivedSha256": "edc6fbe92f2a91fc92f6a0f0724dd9d1070e9e56b7d8aba054f2ad7b788117d9",
+      "byteExact": true,
+      "bytes": 330
+    },
+    {
+      "path": "green/helper-contract/stdout.log",
+      "sourcePath": "/tmp/orchester-wsl-helper-lifecycle-green-evidence/helper-contract/stdout.log",
+      "sourceSha256": "68dad4dbe112309908c33243d2019084353b42686a4596d543879521f0fe6536",
+      "archivedSha256": "68dad4dbe112309908c33243d2019084353b42686a4596d543879521f0fe6536",
+      "byteExact": true,
+      "bytes": 1849
+    },
+    {
+      "path": "green/helper-wsl/stdout.log",
+      "sourcePath": "/tmp/orchester-wsl-helper-lifecycle-green-evidence/helper-wsl/stdout.log",
+      "sourceSha256": "a839af63a4f8aafae09daa4fe9540b891cf7330efd7ff89ff730b9fbe9727ccd",
+      "archivedSha256": "a839af63a4f8aafae09daa4fe9540b891cf7330efd7ff89ff730b9fbe9727ccd",
+      "byteExact": true,
+      "bytes": 711
+    },
+    {
+      "path": "green/helper-wsl/stderr.log",
+      "sourcePath": "/tmp/orchester-wsl-helper-lifecycle-green-evidence/helper-wsl/stderr.log",
+      "sourceSha256": "4c7bd27ec0cf4771590d2c14707760cb3390fc0a774dc24f6749142214375bf6",
+      "archivedSha256": "4c7bd27ec0cf4771590d2c14707760cb3390fc0a774dc24f6749142214375bf6",
+      "byteExact": true,
+      "bytes": 1754
+    },
+    {
+      "path": "green/helper-clippy/stderr.log",
+      "sourcePath": "/tmp/orchester-wsl-helper-lifecycle-green-evidence/helper-clippy/stderr.log",
+      "sourceSha256": "d788f50ec55d53c092f395e0034d61b635ab2b0a1b762c2efb0976e1abebdcd5",
+      "archivedSha256": "d788f50ec55d53c092f395e0034d61b635ab2b0a1b762c2efb0976e1abebdcd5",
+      "byteExact": true,
+      "bytes": 1620
+    }
+  ],
+  "sourceManifests": {
+    "red": "fe2c8bb790f97dd70e356292b2c660127213796eb00967cd90dca5a93a206971",
+    "green": "d2b68a725f544cf07334848a30db2fedf176a8055ad22651da0ce98780dd61b6"
+  }
+}

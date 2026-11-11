@@ -4,6 +4,46 @@
   "archivedAt": "2026-11-11T00:39:41.223448+00:00",
   "files": [
     {
+      "path": "android-terminal-fonts/font-grid-close-confirm.png",
+      "sha256": "e16080bf409d3e6f21958f3a219e1319cb2fe752de35a573d3862206981ce769",
+      "bytes": 263297
+    },
+    {
+      "path": "android-terminal-fonts/font-grid-connected.png",
+      "sha256": "ac1734951bbd489a327e8616d3e15a49ebec254c860c88786ec31885c41edc67",
+      "bytes": 155741
+    },
+    {
+      "path": "android-terminal-fonts/font-grid-ended.png",
+      "sha256": "0787e1abd5e33f085b7928549a12506b374b7ceeb1bb25aacb553c9994d17ac3",
+      "bytes": 211841
+    },
+    {
+      "path": "android-terminal-fonts/font-grid-input.png",
+      "sha256": "6d3bf60cb339c3f45b63875b96e0d6dbbaffb988baf219574b54e40baa925089",
+      "bytes": 283646
+    },
+    {
+      "path": "android-terminal-fonts/font-grid-keyboard.png",
+      "sha256": "7fe9e045a85009f8fee91351942dd0ec4c010b98cdd349035005468fab356b85",
+      "bytes": 219842
+    },
+    {
+      "path": "android-terminal-fonts/fonts-terminal-native.json",
+      "sha256": "c4963e145b9202b7895daf333a880f3515e3978fcb3115f09825fa55a9a95da8",
+      "bytes": 9065
+    },
+    {
+      "path": "android-terminal-fonts/manifest.json",
+      "sha256": "b1480cd3082daf8de26ac582556df4bcf29c675d5c08c65226e0f2f3e408572e",
+      "bytes": 998
+    },
+    {
+      "path": "android-terminal-fonts/provenance.json",
+      "sha256": "be3a9d33f44711c6e1cb127856702b96415486e6da7aeb77af64031cff1b2e6f",
+      "bytes": 1999
+    },
+    {
       "path": "artifacts.json",
       "sha256": "14169871fc59b3ab325a8852a60edb20d62b5b43bd15b67d1602bf512e42dfb3",
       "bytes": 14997
@@ -89,6 +129,21 @@
       "bytes": 3339
     },
     {
+      "path": "integration-memory-race/provenance.json",
+      "sha256": "1111f271c0984d51cd3824e1b680dae96cdddf97d1f176f1ea123b43a73d2014",
+      "bytes": 607
+    },
+    {
+      "path": "integration-memory-race/rust-tests.log",
+      "sha256": "691cf5a9d209dd88f30acab7dcdffe98c74a86d5ed3636bc1fde3bd48a48338e",
+      "bytes": 64480
+    },
+    {
+      "path": "integration-memory-race/summary.json",
+      "sha256": "58517525a45ea59c4265135eca0ebe273c726a22cfa0082ab2b6c93ddaa9eee2",
+      "bytes": 3809
+    },
+    {
       "path": "linux-deployment.json",
       "sha256": "cfee0b36566360bc77aaa34aa30741ebaa7b85e12b59c4f5655f466b3021f076",
       "bytes": 2115
@@ -137,6 +192,106 @@
       "path": "windows-runtime-baseline.json",
       "sha256": "79df9e33770d0399eb628ce944e5be52fb789f0690ada260edf0f755f4e39747",
       "bytes": 2519
+    },
+    {
+      "path": "wsl-helper-lifecycle/green/helper-clippy/native-audit.json",
+      "sha256": "edc6fbe92f2a91fc92f6a0f0724dd9d1070e9e56b7d8aba054f2ad7b788117d9",
+      "bytes": 330
+    },
+    {
+      "path": "wsl-helper-lifecycle/green/helper-clippy/stderr.log",
+      "sha256": "d788f50ec55d53c092f395e0034d61b635ab2b0a1b762c2efb0976e1abebdcd5",
+      "bytes": 1620
+    },
+    {
+      "path": "wsl-helper-lifecycle/green/helper-contract/native-audit.json",
+      "sha256": "6f5caaab839afdd287b9f4d2149e6d2e23fa457587770dd04896c62fcc805c90",
+      "bytes": 330
+    },
+    {
+      "path": "wsl-helper-lifecycle/green/helper-contract/stdout.log",
+      "sha256": "68dad4dbe112309908c33243d2019084353b42686a4596d543879521f0fe6536",
+      "bytes": 1849
+    },
+    {
+      "path": "wsl-helper-lifecycle/green/helper-wsl/native-audit.json",
+      "sha256": "82b8f292a64cd6cb6ad04ce34368521db451d9a7e758ef14eca85f0bee24b295",
+      "bytes": 330
+    },
+    {
+      "path": "wsl-helper-lifecycle/green/helper-wsl/stderr.log",
+      "sha256": "4c7bd27ec0cf4771590d2c14707760cb3390fc0a774dc24f6749142214375bf6",
+      "bytes": 1754
+    },
+    {
+      "path": "wsl-helper-lifecycle/green/helper-wsl/stdout.log",
+      "sha256": "a839af63a4f8aafae09daa4fe9540b891cf7330efd7ff89ff730b9fbe9727ccd",
+      "bytes": 711
+    },
+    {
+      "path": "wsl-helper-lifecycle/green/result.json",
+      "sha256": "bef22fafa01aff6390ed20fcc1c1a86210970eefceececaba2299cd904b12ac1",
+      "bytes": 5570
+    },
+    {
+      "path": "wsl-helper-lifecycle/green/root-fmt/native-audit.json",
+      "sha256": "8687af35df9b97b5cf3324e7e3751ff20b5bc620b0514761fd22c000091960f9",
+      "bytes": 330
+    },
+    {
+      "path": "wsl-helper-lifecycle/linux/clippy.log",
+      "sha256": "600366f6c1270ee0fb7bfdd505256b9a5f61e2c93334e9c57ad37c4d85cc6ea8",
+      "bytes": 6504
+    },
+    {
+      "path": "wsl-helper-lifecycle/linux/result.json",
+      "sha256": "d3933087e4b196421bdd756d21b323121847a43d600038142ebffac5781159b2",
+      "bytes": 3905
+    },
+    {
+      "path": "wsl-helper-lifecycle/linux/tests.log",
+      "sha256": "66351a476a911a2eb7aab3355178d786d7055d5a19672e2810eb6103d96c6301",
+      "bytes": 28978
+    },
+    {
+      "path": "wsl-helper-lifecycle/promotion-script-review.json",
+      "sha256": "fd14da417f4970ac5e3b51387abbbb9f1f6955efb1a08c919b3db1dcd1d596f5",
+      "bytes": 3037
+    },
+    {
+      "path": "wsl-helper-lifecycle/provenance.json",
+      "sha256": "99b8fd85ab89650fcce11d4bfc79cfa68f5d7ec0357ffad9c2a10c9c85578528",
+      "bytes": 6183
+    },
+    {
+      "path": "wsl-helper-lifecycle/red/native-audit.json",
+      "sha256": "85febd7c648a736c2019064fcd8df737cdfc8fdf03ff160248895cb3863ab063",
+      "bytes": 332
+    },
+    {
+      "path": "wsl-helper-lifecycle/red/result.json",
+      "sha256": "82c90c143889fb7bd38e82e115c1c9914b3c350d93f90e43909183fb6805eb48",
+      "bytes": 844
+    },
+    {
+      "path": "wsl-helper-lifecycle/red/stderr.log",
+      "sha256": "a5b44d0e90ea330bcd3cf2170edb49c64741580524faf22e2196e58d789f1179",
+      "bytes": 422
+    },
+    {
+      "path": "wsl-helper-lifecycle/red/stdout.log",
+      "sha256": "5930f7bb8ac0042d2f2a79fcc692c9d0931c27de2078baa5b146be4e5e19eedc",
+      "bytes": 2991
+    },
+    {
+      "path": "wsl-helper-lifecycle/secret-scan-review.json",
+      "sha256": "66be4d151b4319bdec1239071e8dcf90d58997d4adbb7a00ed26f2ff71864b81",
+      "bytes": 706
+    },
+    {
+      "path": "wsl-helper-lifecycle/summary.json",
+      "sha256": "642308df9b2b24be611fe854ed49a179de95a8b61b581b8c006443edde3f8d26",
+      "bytes": 7006
     }
   ],
   "completedScopes": [
@@ -144,15 +299,32 @@
     "main integrated Web tests/types/build",
     "Android AVD installed APK/native bridge/font face",
     "Linux7337 new assets, authenticated reads, test credential revocation, and original state retention",
-    "current full frontend and Rust code gates",
-    "baseline Windows desktop sixteen native checks and own process cleanup"
+    "functional6278 baseline full frontend and Rust code gates",
+    "baseline Windows desktop sixteen native checks and own process cleanup",
+    "Windows helper lifecycle native red/green fixtures bound to test49d90ac/fix9dccb34/main8c24d0c",
+    "Linux targeted helper regression261tests and strictClippy",
+    "Android AVD actual shared terminal font/grid/native keyboard resize/PTY input and temporary credential cleanup"
   ],
   "requiredSeparateEvidence": [
-    "Windows portable helper lifecycle fix and rebuilt runtime",
-    "new Windows desktop build and runtime after helper fix",
+    "current main complete Rust integration after memory database concurrent initialization fix",
+    "Windows15-gate build-and-file result after helper fix",
+    "new Windows desktop native runtime after helper fix",
+    "Windows portable actual rebuilt runtime and normal helper exit after fix",
     "default installation promotion",
+    "Windows7338 deployment with15-gate manager",
     "temporary native proxy cleanup",
-    "physical Android and iOS target environment",
-    "Windows7338 deployment"
-  ]
+    "physical Android and iOS target environment"
+  ],
+  "updatedAt": "2026-11-11T04:07:20.645944+00:00",
+  "functionalBaselineRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+  "acceptedLifecycleFixMainRevision": "8c24d0c73309e45738285cee4d0297ef4158810d",
+  "currentMainIntegration": {
+    "sourceRevision": "8c24d0c73309e45738285cee4d0297ef4158810d",
+    "status": "failed-pending-memory-concurrent-initialization-fix",
+    "failedTest": "concurrent_first_open_applies_each_memory_migration_once",
+    "error": "DatabaseBusy (database is locked)",
+    "observationSource": "root current full Rust integration run",
+    "priorFullPassAppliesOnlyToFunctionalBaseline": true,
+    "evidence": "integration-memory-race/summary.json"
+  }
 }

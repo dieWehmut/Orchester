@@ -1,0 +1,18 @@
+{
+  "sourceDirectory": "/tmp/orchester-wsl-helper-main-integration-20261111T035614Z",
+  "status": "failed",
+  "files": [
+    {
+      "path": "rust-tests.log",
+      "sha256": "691cf5a9d209dd88f30acab7dcdffe98c74a86d5ed3636bc1fde3bd48a48338e",
+      "bytes": 64480,
+      "originalSha256": "691cf5a9d209dd88f30acab7dcdffe98c74a86d5ed3636bc1fde3bd48a48338e"
+    },
+    {
+      "path": "summary.json",
+      "sha256": "58517525a45ea59c4265135eca0ebe273c726a22cfa0082ab2b6c93ddaa9eee2",
+      "bytes": 3809,
+      "originalSha256": "58517525a45ea59c4265135eca0ebe273c726a22cfa0082ab2b6c93ddaa9eee2"
+    }
+  ]
+}

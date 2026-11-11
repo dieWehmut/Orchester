@@ -1,0 +1,286 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "verifiedAt": "2026-11-11T01:24:08.545246+00:00",
+  "scope": "Actual native Android emulator-5554 WebView and real Linux Bash PTY. This does not certify physical Android, iOS, Windows runtime, or final package promotion.",
+  "android": {
+    "serial": "emulator-5554",
+    "appPackage": "dev.orchester.mobile",
+    "installedApkSha256": "55530cbab620d6d5a7301650b300a8af90de3f936f6388584e4edeedc409b0ca",
+    "installedApkHashReadAgainBeforeExperiment": true,
+    "buildRevision": "6ead03b078d6d93891c3cf9693236f5191d4b6e6",
+    "acceptedMobileSourceRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+    "mobileAndDesignSourceDiffToAcceptedRevisionEmpty": true,
+    "bindingEvidence": "docs/design/acceptance/desktop-mobile-final/artifacts.json and fonts-native.json",
+    "appDataCleared": false,
+    "appReinstalled": false,
+    "nativeBridge": "Capacitor Credentials / CapacitorHttp",
+    "inspection": "Raw CDP into the running native WebView; no xterm/font/PTY mocks"
+  },
+  "backendFixture": {
+    "status": "listener-ready",
+    "port": 17378,
+    "serverPid": 1076390,
+    "project": "/tmp/orchester-native-font-grid-20261111-9jvxt9xb/font-grid-project",
+    "artifacts": "/tmp/orchester-native-font-grid-20261111-9jvxt9xb",
+    "binarySha256": "8564fed583f8938f409c89aa98f860318122dd3c8be64ca901fef27ef8f1d770",
+    "modelCalls": 0,
+    "sourceRevision": "not-bound; local Linux debug binary identified by SHA256 only",
+    "ownedShellPid": 1076459,
+    "shell": "/bin/bash",
+    "shellCwd": "/tmp/orchester-native-font-grid-20261111-9jvxt9xb/font-grid-project",
+    "agentCliCalls": 0
+  },
+  "pairing": {
+    "method": "actual product Devices form",
+    "address": "http://10.0.2.2:17378",
+    "baselineDevices": 5,
+    "temporaryDeviceCount": 6,
+    "finalDevices": 5,
+    "originalMetadataExact": true,
+    "originalTheme": "indigo",
+    "secretsPersistedInEvidence": false,
+    "qaMemoryCleared": true
+  },
+  "gridStages": [
+    {
+      "stage": "before-native-keyboard",
+      "heading": "终端",
+      "connection": "已连接",
+      "theme": "indigo",
+      "fontSetStatus": "loaded",
+      "lxgwFace": [
+        {
+          "family": "LXGW WenKai",
+          "status": "loaded"
+        }
+      ],
+      "terminalFont": {
+        "fontFamily": "ui-monospace, \"Cascadia Code\", \"JetBrains Mono\", SFMono-Regular, Consolas, \"Liberation Mono\", monospace",
+        "fontSize": "13px",
+        "lineHeight": "normal"
+      },
+      "measure": {
+        "width": 249.52381896972656,
+        "height": 15.2380952835083
+      },
+      "screen": {
+        "width": 351,
+        "height": 427
+      },
+      "renderedRows": 28,
+      "viewport": {
+        "width": 411,
+        "height": 914,
+        "visualHeight": 914.2857055664062
+      },
+      "terminal": {
+        "id": "dc04b5d66a8ab43a94dda8df1c8220314f195f66a640dc68b8bd5aa39e385be9",
+        "state": "running",
+        "cols": 45,
+        "rows": 28
+      },
+      "staticOutput": {
+        "pwd": false,
+        "unicode": false,
+        "inputMarker": false
+      }
+    },
+    {
+      "stage": "native-keyboard-visible",
+      "heading": "终端",
+      "connection": "已连接",
+      "theme": "indigo",
+      "fontSetStatus": "loaded",
+      "lxgwFace": [
+        {
+          "family": "LXGW WenKai",
+          "status": "loaded"
+        }
+      ],
+      "terminalFont": {
+        "fontFamily": "ui-monospace, \"Cascadia Code\", \"JetBrains Mono\", SFMono-Regular, Consolas, \"Liberation Mono\", monospace",
+        "fontSize": "13px",
+        "lineHeight": "normal"
+      },
+      "measure": {
+        "width": 249.52381896972656,
+        "height": 15.2380952835083,
+        "sampleLength": 32,
+        "cellWidth": 7.797619342803955
+      },
+      "screen": {
+        "width": 351,
+        "height": 122
+      },
+      "renderedRows": 8,
+      "viewport": {
+        "width": 411,
+        "height": 578,
+        "visualHeight": 577.90478515625
+      },
+      "terminal": {
+        "id": "dc04b5d66a8ab43a94dda8df1c8220314f195f66a640dc68b8bd5aa39e385be9",
+        "state": "running",
+        "cols": 45,
+        "rows": 8
+      },
+      "staticOutput": {
+        "pwd": false,
+        "unicode": false,
+        "inputMarker": false
+      }
+    },
+    {
+      "stage": "native-keyboard-hidden",
+      "heading": "终端",
+      "connection": "已连接",
+      "theme": "indigo",
+      "fontSetStatus": "loaded",
+      "lxgwFace": [
+        {
+          "family": "LXGW WenKai",
+          "status": "loaded"
+        }
+      ],
+      "terminalFont": {
+        "fontFamily": "ui-monospace, \"Cascadia Code\", \"JetBrains Mono\", SFMono-Regular, Consolas, \"Liberation Mono\", monospace",
+        "fontSize": "13px",
+        "lineHeight": "normal"
+      },
+      "measure": {
+        "width": 249.52381896972656,
+        "height": 15.2380952835083,
+        "sampleLength": 32,
+        "cellWidth": 7.797619342803955
+      },
+      "screen": {
+        "width": 351,
+        "height": 427
+      },
+      "renderedRows": 28,
+      "viewport": {
+        "width": 411,
+        "height": 914,
+        "visualHeight": 914.2857055664062
+      },
+      "terminal": {
+        "id": "dc04b5d66a8ab43a94dda8df1c8220314f195f66a640dc68b8bd5aa39e385be9",
+        "state": "running",
+        "cols": 45,
+        "rows": 28
+      },
+      "staticOutput": {
+        "pwd": true,
+        "unicode": true,
+        "inputMarker": true
+      }
+    }
+  ],
+  "input": {
+    "asciiMethod": "native adb shell input text pwd then native KEYCODE_ENTER",
+    "unicodeMethod": "CDP Input.insertText into focused actual native xterm textarea, then native KEYCODE_ENTER",
+    "unicodeWasNativeImeCompositionTest": false,
+    "actualExpectedOutput": {
+      "pwdOwnFixture": true,
+      "unicode": "GRID_UNICODE_中文🙂",
+      "unicodeObserved": true,
+      "marker": "FONT_GRID_INPUT_OK",
+      "markerObserved": true
+    },
+    "screenshotsVisuallyInspected": true
+  },
+  "close": {
+    "productConfirmButtons": [
+      "保留终端",
+      "关闭进程"
+    ],
+    "finalConnection": "会话已结束",
+    "backendTerminalState": "closed",
+    "ownedBashExited": true,
+    "endedScreenshotVisuallyInspected": true
+  },
+  "cleanup": {
+    "ownCredentialRemoved": true,
+    "originalDevicesExactlyRetained": true,
+    "originalDeviceCount": 5,
+    "currentDeviceCount": 5,
+    "themeRestored": true,
+    "theme": "indigo",
+    "serverRevokeStatus": 204,
+    "revokedTokenStatus": 401,
+    "status": "normally-stopped",
+    "serverPid": 1076390,
+    "exitCode": 0,
+    "portReleased": true,
+    "remainingOwnedChildren": [],
+    "modelCalls": 0,
+    "ownedListenerProcessAbsent": true,
+    "long7337StillListening": true,
+    "originalLongServicePidStillPresent": true,
+    "finalUi": {
+      "heading": "控制台",
+      "theme": "indigo",
+      "deviceCount": 5,
+      "ownedQaMemoryAbsent": true
+    }
+  },
+  "checks": {
+    "nativeCapacitorCredentialsAndHttp": true,
+    "pairedThroughProductForm": true,
+    "sameRealPtyAcrossResize": true,
+    "fontSetLoaded": true,
+    "lxgwFaceLoaded": true,
+    "terminalFontSize13px": true,
+    "sharedMonospaceStack": true,
+    "nativeKeyboardChangedViewport": true,
+    "backendInitial45x28": true,
+    "backendKeyboard45x8": true,
+    "backendRestored45x28": true,
+    "realCellMeasurementsFitGrid": true,
+    "pwdActualOutput": true,
+    "unicodeActualOutput": true,
+    "inputMarkerActualOutput": true,
+    "terminalClosedByProductUi": true,
+    "ownedBashExited": true,
+    "ownNativeCredentialRemoved": true,
+    "original5DeviceRecordsExactlyPreserved": true,
+    "indigoPreserved": true,
+    "ownedDeviceServerRevoked": true,
+    "ownedListenerQuitExit0": true,
+    "ownedPortReleased": true,
+    "noRemainingOwnedChildren": true,
+    "long7337ServicePreserved": true,
+    "qaMemoryRemovedAndDashboardRestored": true
+  },
+  "modelCalls": 0,
+  "privacy": "Only self-owned fixture output and aggregate guards are archived. No device record list, pairing code, bearer token, original state, WebView profile, or server logs are included.",
+  "measurementScope": "13px terminal and 32-character live xterm measurement in this WebView only; no claim of identical glyph widths across platforms.",
+  "screenshots": [
+    {
+      "path": "font-grid-close-confirm.png",
+      "sha256": "e16080bf409d3e6f21958f3a219e1319cb2fe752de35a573d3862206981ce769",
+      "bytes": 263297
+    },
+    {
+      "path": "font-grid-connected.png",
+      "sha256": "ac1734951bbd489a327e8616d3e15a49ebec254c860c88786ec31885c41edc67",
+      "bytes": 155741
+    },
+    {
+      "path": "font-grid-ended.png",
+      "sha256": "0787e1abd5e33f085b7928549a12506b374b7ceeb1bb25aacb553c9994d17ac3",
+      "bytes": 211841
+    },
+    {
+      "path": "font-grid-input.png",
+      "sha256": "6d3bf60cb339c3f45b63875b96e0d6dbbaffb988baf219574b54e40baa925089",
+      "bytes": 283646
+    },
+    {
+      "path": "font-grid-keyboard.png",
+      "sha256": "7fe9e045a85009f8fee91351942dd0ec4c010b98cdd349035005468fab356b85",
+      "bytes": 219842
+    }
+  ]
+}

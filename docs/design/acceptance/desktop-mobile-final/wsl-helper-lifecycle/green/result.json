@@ -1,0 +1,110 @@
+{
+    "status":  "passed",
+    "baseRevision":  "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+    "sourcePatch":  [
+                        {
+                            "path":  "kisten/vertrag/Cargo.toml",
+                            "sha256":  "047ddba519838a65075b5eddafa2435ecf7439232cab344a61f22b567f6f52f6"
+                        },
+                        {
+                            "path":  "kisten/vertrag/src/process.rs",
+                            "sha256":  "7eb0d4e56503a6c96016a740fede9d3ccda0127c43ce9a1aae253101d9adb315"
+                        },
+                        {
+                            "path":  "kisten/vertrag/src/process/tree.rs",
+                            "sha256":  "607835a6693fc41371468f192ef0fd6f305323bfc5873702ae93aad4413febc9"
+                        },
+                        {
+                            "path":  "kisten/vertrag/src/process/std_windows.rs",
+                            "sha256":  "8111833e94d6acc5cb6c2ef02082a6922508cfa91e24fa08039d3abd396ac94b"
+                        },
+                        {
+                            "path":  "kisten/netz/src/agent_activity/wsl.rs",
+                            "sha256":  "a85a8c6f24ea3c654cd4b588020147b67a039a3a9844ef2da375190307b37e87"
+                        },
+                        {
+                            "path":  "kisten/netz/src/agent_activity/wsl_lifecycle_tests.rs",
+                            "sha256":  "2e1abf37809a3edfb7b8c166c0ab86833b2ed5ee31f2626f613e6bdad58319f9"
+                        }
+                    ],
+    "sourceInputsStable":  true,
+    "harnessFailure":  null,
+    "gates":  [
+                  {
+                      "phase":  "root-fmt",
+                      "status":  "passed",
+                      "nativeChildPid":  260476,
+                      "nativeChildCreatedAt":  "2026-11-11T01:28:58.5298713Z",
+                      "processExited":  true,
+                      "timedOut":  false,
+                      "exitCode":  0,
+                      "testResults":  [
+
+                                      ],
+                      "sourceInputsStable":  true,
+                      "stdoutSha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "stderrSha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "modelCalls":  0
+                  },
+                  {
+                      "phase":  "helper-contract",
+                      "status":  "passed",
+                      "nativeChildPid":  261024,
+                      "nativeChildCreatedAt":  "2026-11-11T01:29:01.3669331Z",
+                      "processExited":  true,
+                      "timedOut":  false,
+                      "exitCode":  0,
+                      "testResults":  [
+                                          {
+                                              "result":  "ok",
+                                              "passed":  25,
+                                              "failed":  0,
+                                              "ignored":  0
+                                          }
+                                      ],
+                      "sourceInputsStable":  true,
+                      "stdoutSha256":  "68dad4dbe112309908c33243d2019084353b42686a4596d543879521f0fe6536",
+                      "stderrSha256":  "84f0a9e13416e29efdc90843e62081c19d401b58f171cbf7c0bff885ad282a48",
+                      "modelCalls":  0
+                  },
+                  {
+                      "phase":  "helper-wsl",
+                      "status":  "passed",
+                      "nativeChildPid":  250584,
+                      "nativeChildCreatedAt":  "2026-11-11T01:29:29.7188058Z",
+                      "processExited":  true,
+                      "timedOut":  false,
+                      "exitCode":  0,
+                      "testResults":  [
+                                          {
+                                              "result":  "ok",
+                                              "passed":  6,
+                                              "failed":  0,
+                                              "ignored":  0
+                                          }
+                                      ],
+                      "sourceInputsStable":  true,
+                      "stdoutSha256":  "a839af63a4f8aafae09daa4fe9540b891cf7330efd7ff89ff730b9fbe9727ccd",
+                      "stderrSha256":  "4c7bd27ec0cf4771590d2c14707760cb3390fc0a774dc24f6749142214375bf6",
+                      "modelCalls":  0
+                  },
+                  {
+                      "phase":  "helper-clippy",
+                      "status":  "passed",
+                      "nativeChildPid":  260320,
+                      "nativeChildCreatedAt":  "2026-11-11T01:30:40.0416062Z",
+                      "processExited":  true,
+                      "timedOut":  false,
+                      "exitCode":  0,
+                      "testResults":  [
+
+                                      ],
+                      "sourceInputsStable":  true,
+                      "stdoutSha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "stderrSha256":  "d788f50ec55d53c092f395e0034d61b635ab2b0a1b762c2efb0976e1abebdcd5",
+                      "modelCalls":  0
+                  }
+              ],
+    "modelCalls":  0,
+    "defaultInstallationChanged":  false
+}

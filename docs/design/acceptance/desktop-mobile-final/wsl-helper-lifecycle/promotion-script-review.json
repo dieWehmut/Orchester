@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-11T04:04:13.426767+00:00",
+  "status": "read-only-script-review-complete; execution-and-final-results-pending",
+  "sourceRevisionToBuild": "8c24d0c73309e45738285cee4d0297ef4158810d",
+  "scriptDirectory": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111",
+  "scripts": [
+    {
+      "path": "monitor-final-common.ps1",
+      "sha256": "ce430e31a2a2e9eff1048f9ce1d016e4c04def34a82e5fe82142549483f1431d",
+      "bytes": 6958
+    },
+    {
+      "path": "monitor-final-freeze.ps1",
+      "sha256": "5962d503adb4d73a012f9f7d98b3ca8871eb1034779f7de709b43a2eaf7f04da",
+      "bytes": 3081
+    },
+    {
+      "path": "monitor-final-worker.ps1",
+      "sha256": "733587be9662980d249588a13973b92fde80295376b7e380535b5488739fc984",
+      "bytes": 6446
+    },
+    {
+      "path": "monitor-final-promote.ps1",
+      "sha256": "75de5c980122ff3cefc512d123e4d7c6e5adcf433bdcf5fa1ac966b7175afce9",
+      "bytes": 9576
+    },
+    {
+      "path": "prepared-runtime/launch-smoke.ps1",
+      "sha256": "47a93e54fb472c82c085c31fdee3a14fadc9316085e50bb99a639bdc8fa0dcc2",
+      "bytes": 22929
+    },
+    {
+      "path": "prepared-runtime/verify-portable-runtime-file.ps1",
+      "sha256": "0b8652317db365a3b01920eb18797b9cd7a6d2254c4753fa2dab281dc3e653b5",
+      "bytes": 18573
+    }
+  ],
+  "expectedOrderedGates": [
+    "toolchain",
+    "helper-contract",
+    "helper-wsl",
+    "monitor-process",
+    "monitor-activity",
+    "monitor-http",
+    "remote-cli",
+    "root-clippy",
+    "root-fmt",
+    "cli-build",
+    "chrome-test",
+    "desktop-test",
+    "desktop-clippy",
+    "desktop-fmt",
+    "desktop-build"
+  ],
+  "guards": {
+    "planCommandsExactlyEqualFixed15Names": true,
+    "missingExtraDuplicateOrReorderedGateRejected": true,
+    "sourcePlanFinalResultPins": true,
+    "runtimeAndCleanupShaRequiredBeforePromotion": true,
+    "desktop16Checks7Writes2Acknowledgements": true,
+    "portable14OrderedChecksBackendExit0": true,
+    "portablePassive5SecondNoSurvivorCheckBeforeVerifiedResult": true,
+    "normalRuntimeCleanupRequiredAndPortableFallbackEmpty": true,
+    "candidateCompleteInventoryChecked": true,
+    "oldDefaultExeShaAndNoExistingProcessCheckedTwice": true,
+    "completeOldDirectoryMovedToUnusedSiblingBackup": true,
+    "desktopUninstallerAndOtherExistingFilesPreserved": true,
+    "stateOutsidePackageRetainedByHash": true,
+    "rollbackDoesNotOverwriteExistingDestination": true,
+    "runtimeWriterBooleanAndNumericFieldsMatchPredicates": true
+  },
+  "nativeParserCheck": "performed separately by windows_runtime agent; not claimed by this text review",
+  "runtimeAuthorization": "This review is not a runtime pass, deployment result, or promotion execution. All final run pins and actual results remain required.",
+  "default7338Manager": "continue-20261110/launch-default-remote-20261111.ps1 is an older13-gate entry and must be replaced or prepared for15-gate plan before restore; no service started",
+  "modelCalls": 0,
+  "mutationsPerformedByReviewer": false
+}

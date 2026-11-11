@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    {
+      "path": "font-grid-close-confirm.png",
+      "sha256": "e16080bf409d3e6f21958f3a219e1319cb2fe752de35a573d3862206981ce769",
+      "bytes": 263297
+    },
+    {
+      "path": "font-grid-connected.png",
+      "sha256": "ac1734951bbd489a327e8616d3e15a49ebec254c860c88786ec31885c41edc67",
+      "bytes": 155741
+    },
+    {
+      "path": "font-grid-ended.png",
+      "sha256": "0787e1abd5e33f085b7928549a12506b374b7ceeb1bb25aacb553c9994d17ac3",
+      "bytes": 211841
+    },
+    {
+      "path": "font-grid-input.png",
+      "sha256": "6d3bf60cb339c3f45b63875b96e0d6dbbaffb988baf219574b54e40baa925089",
+      "bytes": 283646
+    },
+    {
+      "path": "font-grid-keyboard.png",
+      "sha256": "7fe9e045a85009f8fee91351942dd0ec4c010b98cdd349035005468fab356b85",
+      "bytes": 219842
+    },
+    {
+      "path": "fonts-terminal-native.json",
+      "sha256": "c4963e145b9202b7895daf333a880f3515e3978fcb3115f09825fa55a9a95da8",
+      "bytes": 9065
+    }
+  ]
+}

@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "archivedAt": "2026-11-11T04:02:19.663135+00:00",
+  "functionalBaselineRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+  "testCommit": "49d90acc6f889279b7e5810fb150e854f425278b",
+  "fixCommit": "9dccb34c2171ab5bf59cd521cfdeeacc23c5775a",
+  "acceptedMainRevision": "8c24d0c73309e45738285cee4d0297ef4158810d",
+  "scope": "Native Windows helper process ownership fixtures and targeted Linux regression checks; final rebuilt Desktop/Portable runtime and default promotion remain pending.",
+  "red": {
+    "status": "expected-five-behavior-failures",
+    "expectedProbePassed": 1,
+    "expectedBehaviorFailures": 5,
+    "exitCode": 101,
+    "processExited": true,
+    "timedOut": false,
+    "testOnlyOverlay": true,
+    "source": {
+      "originalManifestSha256": "fe2c8bb790f97dd70e356292b2c660127213796eb00967cd90dca5a93a206971",
+      "allOriginalManifestFilesVerified": true,
+      "originalManifestFileCount": 8,
+      "originalPlanSha256": "f28779dd7abfff5deea91f64ec3396d43a2fea6ebc53a3ec27b98f8be291f166",
+      "allFrozenSourceHashesVerified": true,
+      "frozenInputCount": 367,
+      "inputsCanonicalSha256": "10ac49795d57071967f4607aad710b5229fd3b2b34a9fca876d9a7ac354e4de4",
+      "gitBindingRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+      "gitBoundInputCount": 363,
+      "nonBaselineInputs": [
+        {
+          "path": "SOURCE_REVISION",
+          "sha256": "396b0ed7dd7483c9ba4f0bd79624228fbdae41865f185a1b29a6814b0502e788",
+          "matchesTestCommit": false
+        },
+        {
+          "path": "RED_OVERLAY.json",
+          "sha256": "1fa7f90bad9ecd69f2f40ee6fd92380a442288753789116346bb49b9cc0867c9",
+          "matchesTestCommit": false
+        },
+        {
+          "path": "kisten/netz/src/agent_activity/wsl.rs",
+          "sha256": "3322fbfc10a6607ef4533acd60cf7a73d13171f7ded903a042f97639623c27d4",
+          "matchesTestCommit": true
+        },
+        {
+          "path": "kisten/netz/src/agent_activity/wsl_lifecycle_tests.rs",
+          "sha256": "2e1abf37809a3edfb7b8c166c0ab86833b2ed5ee31f2626f613e6bdad58319f9",
+          "matchesTestCommit": true
+        }
+      ],
+      "sourceInputsStableDuringInvocation": true
+    },
+    "testOverlayMatchesAcceptedTestCommit": true
+  },
+  "green": {
+    "status": "passed",
+    "nativeGates": [
+      {
+        "phase": "root-fmt",
+        "exitCode": 0,
+        "processExited": true,
+        "timedOut": false,
+        "testResults": []
+      },
+      {
+        "phase": "helper-contract",
+        "exitCode": 0,
+        "processExited": true,
+        "timedOut": false,
+        "testResults": [
+          {
+            "result": "ok",
+            "passed": 25,
+            "failed": 0,
+            "ignored": 0
+          }
+        ]
+      },
+      {
+        "phase": "helper-wsl",
+        "exitCode": 0,
+        "processExited": true,
+        "timedOut": false,
+        "testResults": [
+          {
+            "result": "ok",
+            "passed": 6,
+            "failed": 0,
+            "ignored": 0
+          }
+        ]
+      },
+      {
+        "phase": "helper-clippy",
+        "exitCode": 0,
+        "processExited": true,
+        "timedOut": false,
+        "testResults": []
+      }
+    ],
+    "lifecycleTestsPassed": 6,
+    "contractTestsPassed": 25,
+    "source": {
+      "originalManifestSha256": "d2b68a725f544cf07334848a30db2fedf176a8055ad22651da0ce98780dd61b6",
+      "allOriginalManifestFilesVerified": true,
+      "originalManifestFileCount": 23,
+      "originalPlanSha256": "cf772b9be70df55cfba87c51e0407c95a988af01051f7a38d925efbbac542102",
+      "allFrozenSourceHashesVerified": true,
+      "frozenInputCount": 371,
+      "inputsCanonicalSha256": "f235bc132b8215c923e0b21d5c6c6bd7f86336fcf0f7fe57851a825b1b46baf8",
+      "gitBindingRevision": "9dccb34c2171ab5bf59cd521cfdeeacc23c5775a",
+      "gitBoundInputCount": 369,
+      "nonBaselineInputs": [
+        {
+          "path": "GREEN_PATCH.json",
+          "sha256": "9492ccabc8b0f8f1940b15cafadb2d35133b8cef315aa88e7de2046093d1ae1b",
+          "matchesTestCommit": false
+        },
+        {
+          "path": "SOURCE_REVISION",
+          "sha256": "396b0ed7dd7483c9ba4f0bd79624228fbdae41865f185a1b29a6814b0502e788",
+          "matchesTestCommit": false
+        }
+      ],
+      "sourceInputsStableDuringInvocation": true
+    },
+    "sourcePatch": [
+      {
+        "path": "kisten/vertrag/Cargo.toml",
+        "sha256": "047ddba519838a65075b5eddafa2435ecf7439232cab344a61f22b567f6f52f6",
+        "matchesFixCommit": true,
+        "matchesAcceptedMain": true
+      },
+      {
+        "path": "kisten/vertrag/src/process.rs",
+        "sha256": "7eb0d4e56503a6c96016a740fede9d3ccda0127c43ce9a1aae253101d9adb315",
+        "matchesFixCommit": true,
+        "matchesAcceptedMain": true
+      },
+      {
+        "path": "kisten/vertrag/src/process/tree.rs",
+        "sha256": "607835a6693fc41371468f192ef0fd6f305323bfc5873702ae93aad4413febc9",
+        "matchesFixCommit": true,
+        "matchesAcceptedMain": true
+      },
+      {
+        "path": "kisten/vertrag/src/process/std_windows.rs",
+        "sha256": "8111833e94d6acc5cb6c2ef02082a6922508cfa91e24fa08039d3abd396ac94b",
+        "matchesFixCommit": true,
+        "matchesAcceptedMain": true
+      },
+      {
+        "path": "kisten/netz/src/agent_activity/wsl.rs",
+        "sha256": "a85a8c6f24ea3c654cd4b588020147b67a039a3a9844ef2da375190307b37e87",
+        "matchesFixCommit": true,
+        "matchesAcceptedMain": true
+      },
+      {
+        "path": "kisten/netz/src/agent_activity/wsl_lifecycle_tests.rs",
+        "sha256": "2e1abf37809a3edfb7b8c166c0ab86833b2ed5ee31f2626f613e6bdad58319f9",
+        "matchesFixCommit": true,
+        "matchesAcceptedMain": true
+      }
+    ]
+  },
+  "linux": {
+    "status": "passed",
+    "sourceFilesEqualNativeGreen": true,
+    "testsPassed": 261,
+    "ignored": 1,
+    "testPrograms": 36,
+    "strictClippyExitCode": 0,
+    "formatExitCode": 0,
+    "patchSecretScanFindings": 0,
+    "originalEvidenceSha256": "d3933087e4b196421bdd756d21b323121847a43d600038142ebffac5781159b2"
+  },
+  "sourceVerification": "No source files are copied. All original frozen input hashes and original manifest hashes were checked; matching git blobs and six changed file hashes bind the accepted code.",
+  "fixtures": {
+    "threeProcessLiveHandshake": true,
+    "behaviorCases": [
+      "success",
+      "failure",
+      "timeout",
+      "output_limit",
+      "backend_exit_without_drop"
+    ],
+    "actualWslSessionsLaunched": 0,
+    "agentCliCalls": 0,
+    "modelCalls": 0,
+    "defaultInstallationChanged": false
+  },
+  "pending": [
+    "final Windows15-gate build-and-file result",
+    "rebuilt Windows Desktop native runtime",
+    "rebuilt Portable native runtime and passive helper exit",
+    "default installation promotion",
+    "Windows7338 deployment"
+  ],
+  "privacy": "Only fixture test names, safe native process audit and build logs are selected; no user device state, pairing token, prompt, WebView profile, or database."
+}
