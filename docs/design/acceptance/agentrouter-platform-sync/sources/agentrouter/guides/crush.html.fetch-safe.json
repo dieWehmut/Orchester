@@ -1,0 +1,16 @@
+{
+  "guidePath": "/docs/crush.html",
+  "requestedURL": "https://agentrouter.org/docs/crush.html",
+  "anchorLabels": [
+    "Crush"
+  ],
+  "startedAt": 1794395963.6078072,
+  "transport": "verified official HTTPS urllib",
+  "httpStatus": 200,
+  "responseURL": "https://agentrouter.org/docs/crush.html",
+  "bytes": 37727,
+  "sha256": "f081b4797962b4d706a0479e9e8dac17a804cdae4a6f38900c7e7a55d5fb5d6f",
+  "processOperationCompleted": true,
+  "publicSnapshotFile": "crush.html",
+  "finishedAt": 1794395966.8220718
+}

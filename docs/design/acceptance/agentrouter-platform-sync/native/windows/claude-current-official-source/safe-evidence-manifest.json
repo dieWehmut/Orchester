@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "safeReceipts": [
+    {
+      "name": "handoff-safe-summary.json",
+      "bytes": 4523,
+      "sha256": "52e998536a96f2c655291007d153be4324740e7d0b39599e4b21dbdc27e54a77",
+      "mode": "0o600"
+    },
+    {
+      "name": "official-sources-initial.json",
+      "bytes": 5757,
+      "sha256": "749152e2ccf610090ddb69638c86887a040c5c2a0e2e5ad284b80abcbb0f0776",
+      "mode": "0o600"
+    },
+    {
+      "name": "native-current-registration-safe.json",
+      "bytes": 721,
+      "sha256": "9c3d818949db29ab6946ed752d12b7e8f94a7da862c9bda0997da97d8fd3eb91",
+      "mode": "0o600"
+    },
+    {
+      "name": "native-claude-all-known-families-safe.json",
+      "bytes": 664,
+      "sha256": "fdbb5bfd0908a3dc92a0f7638211d49726980ee699b963d65d427cba708fc56e",
+      "mode": "0o600"
+    },
+    {
+      "name": "official-installer-tls12-downloads.json",
+      "bytes": 860,
+      "sha256": "b544601598342d781eebc876d8d364dd285d7f9d13fb42c676dadd2234cdbf2c",
+      "mode": "0o600"
+    },
+    {
+      "name": "public-dns-diagnostic-safe.json",
+      "bytes": 919,
+      "sha256": "08ada9223dcc49fa5916ec5bd0478b04e4ebd47a9555b6a16d3c8b43f611c24c",
+      "mode": "0o644"
+    },
+    {
+      "name": "official-installer-real-dns-download.json",
+      "bytes": 694,
+      "sha256": "4430ddd58d1c5f0c677fe0941c8b98d25a1e20900a3edff876f2359bd7c11859",
+      "mode": "0o600"
+    },
+    {
+      "name": "official-msstore-bootstrapper-download.json",
+      "bytes": 1158,
+      "sha256": "2d97ed79369d0c984bd4fa8e885583ce510d994cbef3d71d6df9c44a3559f31f",
+      "mode": "0o600"
+    },
+    {
+      "name": "official-msstore-bootstrapper-native-signature-safe.json",
+      "bytes": 1122,
+      "sha256": "825619ac2bd77eed877c6ad2cee851afb80b44990b79b68408f8a670d37cefe0",
+      "mode": "0o600"
+    }
+  ],
+  "doNotArchive": [
+    "installers",
+    "*.public official HTML or JavaScript",
+    "raw curl logs"
+  ],
+  "installerRetainedPrivatelyUntilWindowsInstallationReview": true
+}

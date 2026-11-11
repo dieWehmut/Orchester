@@ -1,0 +1,14 @@
+{
+  "sourceURL": "https://downloads.claude.ai/releases/win32/x64/3.6556.2/Claude-20c019a1e61fa5b687616af57d31f97bb3181723.exe",
+  "address": "35.190.46.17",
+  "addressSource": "Google and Cloudflare HTTPS DNS JSON both return identical A record",
+  "originalSystemResolverReturnedSyntheticAddresses": true,
+  "TLSCertificateVerificationEnabled": true,
+  "expectedSha256": "945082290478e5c668e8aaa25a392e1cd129e6219173e907b7ff1f7f99ded45e",
+  "actualExitCode": 35,
+  "processExited": true,
+  "httpStatus": "000",
+  "finalURL": "https://downloads.claude.ai/releases/win32/x64/3.6556.2/Claude-20c019a1e61fa5b687616af57d31f97bb3181723.exe",
+  "partialBytes": 0,
+  "observedAt": 1794395431.5939097
+}

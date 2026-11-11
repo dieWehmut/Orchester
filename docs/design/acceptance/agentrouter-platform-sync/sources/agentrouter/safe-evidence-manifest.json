@@ -1,0 +1,129 @@
+{
+  "selectedSafeJSON": [
+    {
+      "relativePath": "fetch-safe.json",
+      "sha256": "2d937ad3cb0192603f892dae42780ee65d144f0994c5939a04032723a2d05423",
+      "bytes": 335
+    },
+    {
+      "relativePath": "index-scope-links-safe.json",
+      "sha256": "f288a681d309aa75a14ba10b849dcffdcaf2803bb54b14345f4613f13d092766",
+      "bytes": 3178
+    },
+    {
+      "relativePath": "guide-fetches-first-safe.json",
+      "sha256": "ff5647c22d28c46387aeb8eeb24bb94ea40938f428ed014d1d505b4f5494ab73",
+      "bytes": 9322
+    },
+    {
+      "relativePath": "codex-guide-retry-safe.json",
+      "sha256": "dd182d341d7a6f6691fe183c5956ca197ad227e4c59ae5240bbcbad51902b1f4",
+      "bytes": 497
+    },
+    {
+      "relativePath": "codex-retry-url-field-boundary-safe.json",
+      "sha256": "1d6196f8ff445335b75d62535032bed88e439e9bc5376847a3b1ab26741ffc9f",
+      "bytes": 936
+    },
+    {
+      "relativePath": "initial-fetch-script-failure-safe.json",
+      "sha256": "dcbacc19418b1feec8f449f189cfff8d0b76fa5d668be93ca1bce9228228e296",
+      "bytes": 235
+    },
+    {
+      "relativePath": "final-guide-scope-safe.json",
+      "sha256": "5e2f545a0d09dce33df6f77dc0ae03aeffc247b86605ce907a4d9b937f19c761",
+      "bytes": 20465
+    },
+    {
+      "relativePath": "guides/claude-app.html.fetch-safe.json",
+      "sha256": "3248da132156fb857949e6d25617307dd79df203177c0ed6cb13012598c9c063",
+      "bytes": 533
+    },
+    {
+      "relativePath": "guides/claude-code-vscode.html.fetch-safe.json",
+      "sha256": "3ddf62b2ca69af96a7c5f815602eeef87819652dbf7a7f35906fcdb3ae884f67",
+      "bytes": 567
+    },
+    {
+      "relativePath": "guides/claude-code.html.fetch-safe.json",
+      "sha256": "22fb1e26765d6119014dc5c6ee9da8f84e5d52bcfca693494637478a4c783089",
+      "bytes": 579
+    },
+    {
+      "relativePath": "guides/cline.html.fetch-safe.json",
+      "sha256": "76d6649d023294757c9f2e0ac0fbe468a86c8f46d124ef493dc8c092b2807c59",
+      "bytes": 507
+    },
+    {
+      "relativePath": "guides/codex.html.fetch-safe.json",
+      "sha256": "28b68bd00791c5a2bb662aad5ba318377b46ccfcb16b0492ef9bdaee8345054d",
+      "bytes": 341
+    },
+    {
+      "relativePath": "guides/craft-agents.html.fetch-safe.json",
+      "sha256": "197afcd0b4c6fb397c00016fb2e1c39a11b24e93e9a91d49f5a441de624c2524",
+      "bytes": 543
+    },
+    {
+      "relativePath": "guides/crush.html.fetch-safe.json",
+      "sha256": "a4fbd2a92e1f376fa515113e1ea40893daa21570a9730dc7072fe2f93c4a2cc6",
+      "bytes": 509
+    },
+    {
+      "relativePath": "guides/hermes.html.fetch-safe.json",
+      "sha256": "68314416a674af8e7e73dfec9a75bf6e2daeccdbe6c62ddf7755af8f1417416a",
+      "bytes": 520
+    },
+    {
+      "relativePath": "guides/kilocode.html.fetch-safe.json",
+      "sha256": "cc3adcf1cbe8674419fbd133f2c3913f1d2c10f23b405be8131ca648b6e16a1f",
+      "bytes": 525
+    },
+    {
+      "relativePath": "guides/openclaw.html.fetch-safe.json",
+      "sha256": "4bbed1ca8cccc37618a710c391bae244b317ebed7ec3f7db032782e50744bdab",
+      "bytes": 523
+    },
+    {
+      "relativePath": "guides/opencode.html.fetch-safe.json",
+      "sha256": "548fc1b8d7155b02026893c9e0d993ae54f494524c8ffb728418f52a676a1176",
+      "bytes": 524
+    },
+    {
+      "relativePath": "guides/pi.html.fetch-safe.json",
+      "sha256": "07ba6261d28068aa6ce2c47d965667ad426a24f5c90582d929c27ff7c0c54a6a",
+      "bytes": 492
+    },
+    {
+      "relativePath": "guides/qwencode.html.fetch-safe.json",
+      "sha256": "b2b84b96f822cceec09e467600c862f72a269737b06e42bc0d3ecc5883674046",
+      "bytes": 525
+    },
+    {
+      "relativePath": "guides/roocode.html.fetch-safe.json",
+      "sha256": "626190e1f194614520de0a75fc7eeb9d5c68e63066a952d7080ddb83d44dffc9",
+      "bytes": 519
+    },
+    {
+      "relativePath": "guides/trae.html.fetch-safe.json",
+      "sha256": "ea652e55088d2009d775e779f6370e574c67e474139b183d2904692ab8173092",
+      "bytes": 501
+    },
+    {
+      "relativePath": "guides/workbuddy.html.fetch-safe.json",
+      "sha256": "9097cae59a86c3a1cf694ac448e589dcd81cf57d0184a5484b3774f4f365c0b8",
+      "bytes": 528
+    },
+    {
+      "relativePath": "guides/zcode.html.fetch-safe.json",
+      "sha256": "6e19a3b9584770b54938246f85d906ab7aa3f37ecbbaa8b05d830d06682bbd07",
+      "bytes": 508
+    }
+  ],
+  "publicRawHTMLPagesKeptPrivatelyForOriginalSHAReproduction": true,
+  "rawPageCopiesRequiredForRepo": false,
+  "privateUserDataCopied": false,
+  "modelCalls": 0,
+  "observedAt": 1794396557.1217678
+}

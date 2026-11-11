@@ -1,0 +1,16 @@
+{
+  "guidePath": "/docs/kilocode.html",
+  "requestedURL": "https://agentrouter.org/docs/kilocode.html",
+  "anchorLabels": [
+    "Kilo Code"
+  ],
+  "startedAt": 1794395955.6561277,
+  "transport": "verified official HTTPS urllib",
+  "httpStatus": 200,
+  "responseURL": "https://agentrouter.org/docs/kilocode.html",
+  "bytes": 28800,
+  "sha256": "a829d655c659f783246da30eb0e0058b663899f1e421705f8b7d9c3e3b86fc4e",
+  "processOperationCompleted": true,
+  "publicSnapshotFile": "kilocode.html",
+  "finishedAt": 1794395957.9373264
+}

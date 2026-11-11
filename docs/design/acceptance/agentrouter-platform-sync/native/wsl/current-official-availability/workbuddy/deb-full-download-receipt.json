@@ -1,0 +1,13 @@
+{
+  "source": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-deb/WorkBuddy-linux-x64-deb-5.5.2.37849279-910352f0.deb",
+  "version": "5.5.2.37849279",
+  "requestType": "full GET",
+  "vendorSha256Present": false,
+  "startedAt": 1794395279.0121436,
+  "status": "download-unavailable",
+  "actualExitCode": 22,
+  "httpStatus": "404",
+  "processExited": true,
+  "finishedAt": 1794395281.4176571,
+  "downloadedBytes": 0
+}

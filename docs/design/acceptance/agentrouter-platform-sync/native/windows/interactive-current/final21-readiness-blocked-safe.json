@@ -1,0 +1,53 @@
+{
+  "format": "orchester-final21-native-interactive-readiness-v1",
+  "status": "blocked-no-proved-same-user-interactive-input-desktop",
+  "actualConsoleSession": 3,
+  "currentOwnProcessesSession": 1,
+  "inputDesktopOpened": false,
+  "inputDesktopError": 5,
+  "cursorReadable": false,
+  "cursorError": 5,
+  "activeConsoleLoggedUserNamePresent": false,
+  "activeConsoleLoggedDomainNamePresent": false,
+  "wtsIdentityLookupAttempted": false,
+  "differentAccountProved": false,
+  "sameUserIdentityProved": false,
+  "wtsConnectionState": 1,
+  "wtsQueryErrors": 0,
+  "nativeSessionIdentityProbePid": 26256,
+  "nativeSessionIdentityProbeExitCode": 1,
+  "scheduledProductTasksRegistered": 0,
+  "productsLaunched": 0,
+  "credentialsRead": false,
+  "sessionChanges": 0,
+  "signals": 0,
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "native16Passed": true,
+  "native16WorkerAbsent": true,
+  "portable28FileVerifierPassed": true,
+  "runtime18Accepted": false,
+  "normalTrayQuitAccepted": false,
+  "windowsDesktopReinstalled": false,
+  "windows7338Upgraded": false,
+  "claudeWindowsPayloadInstalled": false,
+  "originalPrivateProfilesBackedUp": true,
+  "prerequisite": "An existing logged-in session for the current Windows account with working input desktop and cursor APIs.",
+  "evidence": [
+    {
+      "path": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-reinstall-preflight-20261111\\input-desktop-current-readonly-safe.json",
+      "sha256": "f6bd3649efcaaf83075a5989994e1dc9c8521890dadc0144fe7996f7fa105771"
+    },
+    {
+      "path": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-reinstall-preflight-20261111\\active-console-probe-attempt1-20261111\\task-safe-result.json",
+      "sha256": "8ed8b1c3724ec04ae913875520cd19c75a3b19b9f44d463c7d9b8a77656a3fbb"
+    },
+    {
+      "path": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-reinstall-preflight-20261111\\active-console-probe-attempt2-20261111\\active-console-probe\\task-safe-result.json",
+      "sha256": "5203e7efa2358833488ee345e3e7f6db9841351c3172c25095830f6de7bbdcca"
+    },
+    {
+      "path": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\native-ui-launcher-review-20261111\\session-identity-attempt1-safe.json",
+      "sha256": "de9690c905824d4c8dd1e0cbb80ed362cb1180893c95e5dfcd9cc93f90570cf8"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "finalReceiptSha256": "2a3159365a2c3f74c6d134dff2f1732802b1a73faf4b564e3618458fe727e017",
+  "defaultListenerPid": 1023019,
+  "defaultListenerStartTicks": 256519,
+  "controllerPid": 1023013,
+  "controllerStartTicks": 256475,
+  "controllerImage": "/usr/bin/python3.10",
+  "controllerImageSha256": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae",
+  "controllerScriptPath": "/home/han/.local/state/orchester-delivery/20261111/linux-restore/restore.py",
+  "controllerScriptSha256": "6be14768ecfa7871903c6a2a884121f8219179e46d497911781f21bf820fd086",
+  "ordinaryControlCommand": "quit newline on original stdin",
+  "toolSessionId": 10496,
+  "controlStdinPipeObserved": false,
+  "parentTask": "/root",
+  "observedAt": 1794396774.7638404,
+  "noPrivateDataCopied": true,
+  "listenerOriginalStdinPipeObserved": true,
+  "controllerRetainsOriginalStdinWriterDescriptor": 4,
+  "controllerExternalStdinIsDevNull": true,
+  "ordinaryControlTransport": "Original owned listener stdin pipe; verify PID/startTicks/image and held pidfd before writing quit newline through same-owner proc fd",
+  "ordinaryControlProcPath": "/proc/1023019/fd/0",
+  "toolSessionUsage": "Poll-only supervisor; its external stdin was devnull, not a TTY"
+}

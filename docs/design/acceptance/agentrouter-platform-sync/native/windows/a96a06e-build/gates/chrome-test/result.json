@@ -1,0 +1,11 @@
+{
+    "phase":  "chrome-test",
+    "childPid":  244788,
+    "childCreatedAt":  "2026-11-11T09:12:13.5552117Z",
+    "exitCode":  0,
+    "timedOut":  false,
+    "processExited":  true,
+    "terminationAttempted":  false,
+    "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final-a96a06e-20261111\\chrome-test\\stdout.log",
+    "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final-a96a06e-20261111\\chrome-test\\stderr.log"
+}

@@ -1,0 +1,11 @@
+{
+  "operation": "read-only independent live check",
+  "expectedReportSha256": "2a3159365a2c3f74c6d134dff2f1732802b1a73faf4b564e3618458fe727e017",
+  "pid": 1023019,
+  "startTicks": 256519,
+  "birthEqualsReceipt": true,
+  "imageEqualsReceipt": true,
+  "listener7337Open": true,
+  "modelCalls": 0,
+  "observedAt": 1794396501.8408675
+}

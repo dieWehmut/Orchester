@@ -1,0 +1,13 @@
+{
+  "guidePath": "/docs/codex.html",
+  "requestedURL": "https://agentrouter.org/docs/codex.html",
+  "anchorLabels": [
+    "Codex"
+  ],
+  "startedAt": 1794395959.5167074,
+  "transport": "verified official HTTPS urllib",
+  "errorType": "URLError",
+  "httpStatus": null,
+  "processOperationCompleted": true,
+  "finishedAt": 1794395963.6075046
+}

@@ -1,0 +1,16 @@
+{
+  "guidePath": "/docs/claude-app.html",
+  "requestedURL": "https://agentrouter.org/docs/claude-app.html",
+  "anchorLabels": [
+    "Claude App"
+  ],
+  "startedAt": 1794395964.924757,
+  "transport": "verified official HTTPS urllib",
+  "httpStatus": 200,
+  "responseURL": "https://agentrouter.org/docs/claude-app.html",
+  "bytes": 27729,
+  "sha256": "a1a6cee75a5086fc1705bb869e352826850a4a9e4c8bde379d281da2d1338f80",
+  "processOperationCompleted": true,
+  "publicSnapshotFile": "claude-app.html",
+  "finishedAt": 1794395968.2641323
+}

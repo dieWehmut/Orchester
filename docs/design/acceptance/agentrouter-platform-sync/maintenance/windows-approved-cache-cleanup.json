@@ -1,0 +1,21 @@
+{
+  "status": "approved-self-owned-cache-cleanup-verified",
+  "exactKnownPdbRemovalBytes": 4846878720,
+  "exactRemainingIncrementalRemovalBytes": 2372886790,
+  "exactCombinedKnownRemovalBytes": 7219765510,
+  "knownRemovedFiles": 4084,
+  "firstIncrementalAdditionalBytesUnquantified": true,
+  "finalNativeCBeforeRemainingBytes": 6315933696,
+  "finalNativeCAfterRemainingBytes": 8641257472,
+  "remainingIncrementalFilesExpected": 0,
+  "remainingCleanupResultPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/cache-cleanup-incremental-complete-3/final-result-safe.json",
+  "remainingCleanupResultSha256": "7e3ff84c249373426b88e7673c166fc0e5fa7aeb75e2249f027b538a374b4fb8",
+  "originalFinalWorkerPid": 276664,
+  "originalFinalWorkerCreatedAt": "2026-11-11T07:57:50.4008497Z",
+  "nativeFinalWorkerPidNowAbsent": true,
+  "preservedLatestMainPdbs": true,
+  "preservedAllExeDllRlibRmetaBuildFingerprint": true,
+  "preservedInstalledToolsProfilesStateAndRollback": true,
+  "processSignals": 0,
+  "modelCalls": 0
+}

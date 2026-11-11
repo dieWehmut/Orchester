@@ -1,0 +1,13 @@
+{
+  "guidePath": "/docs/codex.html",
+  "requestedURL": "https://agentrouter.org/docs/codex.html",
+  "responseURL": "https://agentrouter.org/docs/codex.html",
+  "transport": "verified official HTTPS curl TLS1.2 HTTP1.1",
+  "actualExitCode": 0,
+  "httpStatus": 200,
+  "bytes": 35911,
+  "sha256": "0feb6b6a130c377ff9ef4108a19097927ac7ff6b28b4428b58ab860bfb6e8e4e",
+  "processOperationCompleted": true,
+  "previousAttempt": "urllib URLError without HTTP response",
+  "observedAt": 1794396107.4325225
+}

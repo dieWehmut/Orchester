@@ -1,0 +1,113 @@
+{
+  "sourceBefore": {
+    "packages/design/src/agent-identities.ts": "3244b95fec47ebecb8587097cfac3a949858384ccac6bc59470a4c8d8191899c",
+    "packages/design/test/agent-identities.test.ts": "7b6322e0573b1fc7495b724607b258d07508a47e07481d2118382a0d3cba464b",
+    "packages/design/src/assets/agents/README.md": "5f7b7d47d764e9a73ebfe6ab6cd7f6380a6e604f64dc6a8cd912be2669bae7bf",
+    "apps/web/test/agent-new-monitors.test.ts": "592e492668697a2151b47e6094d088bbe6b47d709f2a51540aeb0c0badcba530",
+    "apps/mobile/test/agent-monitors.test.ts": "f903556414ef07d8eaa9999c066f56cbacd0c9c5753b4e3971c823c1352986f0",
+    "apps/web/src/views/WorkspaceView.vue": "1a2a6026cec79d330a133ffb1b3d248d82adc832a985517205de23f2302bdced",
+    "apps/web/test/workspace-view.test.ts": "a14918468dcfd9404c04969cae02e3e24a8e2dcbe6ef5c149b92fe8bc2d275c5"
+  },
+  "gates": [
+    {
+      "command": [
+        "pnpm",
+        "--filter",
+        "@orchester/web",
+        "exec",
+        "vitest",
+        "run",
+        "test/workspace-view.test.ts",
+        "test/agent-new-monitors.test.ts",
+        "--maxWorkers=2"
+      ],
+      "exitCode": 0,
+      "logSha256": "43117eb00d477976f273d2bf7ef9ad7e6153197e3d8e686b6888c38ecc47d3e7",
+      "summaries": [
+        "Test Files  2 passed (2)",
+        "Tests  76 passed (76)"
+      ]
+    },
+    {
+      "command": [
+        "pnpm",
+        "--filter",
+        "@orchester/mobile",
+        "exec",
+        "vitest",
+        "run",
+        "test/agent-monitors.test.ts",
+        "--maxWorkers=2"
+      ],
+      "exitCode": 0,
+      "logSha256": "5c63b855debde4f0f623676d31e1de0488927033a3c1c917c1afac840a74f756",
+      "summaries": [
+        "Test Files  1 passed (1)",
+        "Tests  6 passed (6)"
+      ]
+    },
+    {
+      "command": [
+        "pnpm",
+        "--filter",
+        "@orchester/design",
+        "exec",
+        "vitest",
+        "run",
+        "test/agent-identities.test.ts",
+        "--maxWorkers=2"
+      ],
+      "exitCode": 0,
+      "logSha256": "62b4ccd4065311bf7da8a56b787ff7dbbef024867369e2aa369a217f9524fafe",
+      "summaries": [
+        "Test Files  1 passed (1)",
+        "Tests  4 passed (4)"
+      ]
+    },
+    {
+      "command": [
+        "pnpm",
+        "--filter",
+        "@orchester/web",
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "logSha256": "ae48dd5bca6a808484c9173aab6e7ff1469062f79aba8e5e1a6ad537c6d2fd88",
+      "summaries": []
+    },
+    {
+      "command": [
+        "pnpm",
+        "--filter",
+        "@orchester/mobile",
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "logSha256": "514bd78c13cb2ffb39e7d8d63183c2d4521825211d6616aff578c0d0af7f37c0",
+      "summaries": []
+    },
+    {
+      "command": [
+        "pnpm",
+        "--filter",
+        "@orchester/design",
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "logSha256": "3169d2b29987b9225df371f1c61f29b9551510e7708b90711d84245a0e50f2c0",
+      "summaries": []
+    }
+  ],
+  "startedAt": 1794390586.7840195,
+  "sourceAfter": {
+    "packages/design/src/agent-identities.ts": "3244b95fec47ebecb8587097cfac3a949858384ccac6bc59470a4c8d8191899c",
+    "packages/design/test/agent-identities.test.ts": "7b6322e0573b1fc7495b724607b258d07508a47e07481d2118382a0d3cba464b",
+    "packages/design/src/assets/agents/README.md": "5f7b7d47d764e9a73ebfe6ab6cd7f6380a6e604f64dc6a8cd912be2669bae7bf",
+    "apps/web/test/agent-new-monitors.test.ts": "592e492668697a2151b47e6094d088bbe6b47d709f2a51540aeb0c0badcba530",
+    "apps/mobile/test/agent-monitors.test.ts": "f903556414ef07d8eaa9999c066f56cbacd0c9c5753b4e3971c823c1352986f0",
+    "apps/web/src/views/WorkspaceView.vue": "1a2a6026cec79d330a133ffb1b3d248d82adc832a985517205de23f2302bdced",
+    "apps/web/test/workspace-view.test.ts": "a14918468dcfd9404c04969cae02e3e24a8e2dcbe6ef5c149b92fe8bc2d275c5"
+  },
+  "finishedAt": 1794390672.2758725,
+  "sourceStable": true
+}

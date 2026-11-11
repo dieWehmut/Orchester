@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-11T12:02:28.632971+00:00",
+  "docSha256": "eba71cb74559221d704154be3025e64e0bd2467b58faa6b951be6ff3183ac430",
+  "manifestSha256": "edcfaa15ad79c1189e25bbdcb6e592129aa17a0c3f603d85984729f973e1204f",
+  "archiveFileCount": 182,
+  "manifestEntries": 181,
+  "manifestMismatches": [],
+  "unlistedFiles": [],
+  "missingFiles": [],
+  "provenanceEntries": 170,
+  "provenanceFailures": [],
+  "originalSourcesCurrentlyMissing": 27,
+  "relativeDocLinks": 80,
+  "brokenLinks": [],
+  "linksOutsideRepo": [],
+  "secretFindings": [],
+  "requirementFiles": [
+    {
+      "path": "sources/requirement-delivery-audit.json",
+      "keys": [
+        "schemaVersion",
+        "sourceRevision",
+        "generatedAt",
+        "status",
+        "requirements",
+        "historicalResultsRemainInOwnSourceEpoch",
+        "installationDoesNotEstablishAuthenticationOrModelTaskExecution",
+        "privateCredentialOrUserStateValuesIncluded"
+      ],
+      "listCounts": {
+        "requirements": 13
+      },
+      "topLevelStatus": "current-evidence-audit-not-complete-all-platform-delivery",
+      "allCompleted": null
+    }
+  ],
+  "summaryStatus": "in-progress-not-final-platform-delivery",
+  "pendingScopes": [
+    "New21 Windows runtime18/normal tray exit/OrchesterDesktop reinstall and Windows7338",
+    "Android Studio actual opened project/sync/new21APK/21-provider42-image UI/PTY/credential and owned-process cleanup",
+    "International WorkBuddy native WSL package and profile isolation; recorded official package unavailable",
+    "Claude App current native Windows executable/package and official Linux support/install evidence"
+  ],
+  "noPrivateFilesOrValuesRead": true,
+  "repositoryChanges": false
+}

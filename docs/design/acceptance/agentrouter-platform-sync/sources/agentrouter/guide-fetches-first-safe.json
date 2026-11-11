@@ -1,0 +1,273 @@
+[
+  {
+    "guidePath": "/docs/claude-code.html",
+    "requestedURL": "https://agentrouter.org/docs/claude-code.html",
+    "anchorLabels": [
+      "快速开始",
+      "Claude Code",
+      "开始使用"
+    ],
+    "startedAt": 1794395955.6552916,
+    "transport": "verified official HTTPS urllib",
+    "httpStatus": 200,
+    "responseURL": "https://agentrouter.org/docs/claude-code.html",
+    "bytes": 33280,
+    "sha256": "c32d0a654b33a96fee7f2159de886098e3aa6dbedbded4878d4600fcd8013280",
+    "processOperationCompleted": true,
+    "publicSnapshotFile": "claude-code.html",
+    "finishedAt": 1794395961.1046462
+  },
+  {
+    "guidePath": "/docs/cline.html",
+    "requestedURL": "https://agentrouter.org/docs/cline.html",
+    "anchorLabels": [
+      "Cline"
+    ],
+    "startedAt": 1794395955.655566,
+    "transport": "verified official HTTPS urllib",
+    "httpStatus": 200,
+    "responseURL": "https://agentrouter.org/docs/cline.html",
+    "bytes": 28250,
+    "sha256": "5b0b6dd3e3e756644105b32e19b27676e70317f8e9dc27295e253441c46c7ca9",
+    "processOperationCompleted": true,
+    "publicSnapshotFile": "cline.html",
+    "finishedAt": 1794395960.531026
+  },
+  {
+    "guidePath": "/docs/roocode.html",
+    "requestedURL": "https://agentrouter.org/docs/roocode.html",
+    "anchorLabels": [
+      "Roo Code"
+    ],
+    "startedAt": 1794395955.6558757,
+    "transport": "verified official HTTPS urllib",
+    "httpStatus": 200,
+    "responseURL": "https://agentrouter.org/docs/roocode.html",
+    "bytes": 28516,
+    "sha256": "80f5779464899d3f3aa073197300577d256ca467766fc71b5e04aaaa3c6c18db",
+    "processOperationCompleted": true,
+    "publicSnapshotFile": "roocode.html",
+    "finishedAt": 1794395959.516558
+  },
+  {
+    "guidePath": "/docs/kilocode.html",
+    "requestedURL": "https://agentrouter.org/docs/kilocode.html",
+    "anchorLabels": [
+      "Kilo Code"
+    ],
+    "startedAt": 1794395955.6561277,
+    "transport": "verified official HTTPS urllib",
+    "httpStatus": 200,
+    "responseURL": "https://agentrouter.org/docs/kilocode.html",
+    "bytes": 28800,
+    "sha256": "a829d655c659f783246da30eb0e0058b663899f1e421705f8b7d9c3e3b86fc4e",
+    "processOperationCompleted": true,
+    "publicSnapshotFile": "kilocode.html",
+    "finishedAt": 1794395957.9373264
+  },
+  {
+    "guidePath": "/docs/claude-code-vscode.html",
+    "requestedURL": "https://agentrouter.org/docs/claude-code-vscode.html",
+    "anchorLabels": [
+      "Claude Code"
+    ],
+    "startedAt": 1794395957.9374726,
+    "transport": "verified official HTTPS urllib",
+    "httpStatus": 200,
+    "responseURL": "https://agentrouter.org/docs/claude-code-vscode.html",
+    "bytes": 32193,
+    "sha256": "7ae2dad01c440417a41f1c889e4ae72f8ea7e15fe614ed31fb8d91ba44eb3499",
+    "processOperationCompleted": true,
+    "publicSnapshotFile": "claude-code-vscode.html",
+    "finishedAt": 1794395960.3978524
+  },
+  {
+    "guidePath": "/docs/codex.html",
+    "requestedURL": "https://agentrouter.org/docs/codex.html",
+    "anchorLabels": [
+      "Codex"
+    ],
+    "startedAt": 1794395959.5167074,
+    "transport": "verified official HTTPS urllib",
+    "errorType": "URLError",
+    "httpStatus": null,
+    "processOperationCompleted": true,
+    "finishedAt": 1794395963.6075046
+  },
+  {
+    "guidePath": "/docs/qwencode.html",
+    "requestedURL": "https://agentrouter.org/docs/qwencode.html",
+    "anchorLabels": [
+      "Qwen Code"
+    ],
+    "startedAt": 1794395960.3980148,
+    "transport": "verified official HTTPS urllib",
+    "httpStatus": 200,
+    "responseURL": "https://agentrouter.org/docs/qwencode.html",
+    "bytes": 40082,
+    "sha256": "876359d537fcbe0b4a071a8cf656eaf04edb2b0125079badbb2ea79f18fe8681",
+    "processOperationCompleted": true,
+    "publicSnapshotFile": "qwencode.html",
+    "finishedAt": 1794395962.9300888
+  },
+  {
+    "guidePath": "/docs/opencode.html",
+    "requestedURL": "https://agentrouter.org/docs/opencode.html",
+    "anchorLabels": [
+      "OpenCode"
+    ],
+    "startedAt": 1794395960.5311558,
+    "transport": "verified official HTTPS urllib",
+    "httpStatus": 200,
+    "responseURL": "https://agentrouter.org/docs/opencode.html",
+    "bytes": 37189,
+    "sha256": "db0ff17fadd91130da0aef70639f71625502c421844a35157724e0fd2c9dd22f",
+    "processOperationCompleted": true,
+    "publicSnapshotFile": "opencode.html",
+    "finishedAt": 1794395965.6854596
+  },
+  {
+    "guidePath": "/docs/openclaw.html",
+    "requestedURL": "https://agentrouter.org/docs/openclaw.html",
+    "anchorLabels": [
+      "OpenClaw"
+    ],
+    "startedAt": 1794395961.104788,
+    "transport": "verified official HTTPS urllib",
+    "httpStatus": 200,
+    "responseURL": "https://agentrouter.org/docs/openclaw.html",
+    "bytes": 37894,
+    "sha256": "2293e46cc47015dfeb867d455b7a7ef87920d9123f1890bbddcca61dda1d39e2",
+    "processOperationCompleted": true,
+    "publicSnapshotFile": "openclaw.html",
+    "finishedAt": 1794395963.4793572
+  },
+  {
+    "guidePath": "/docs/hermes.html",
+    "requestedURL": "https://agentrouter.org/docs/hermes.html",
+    "anchorLabels": [
+      "Hermes Agent"
+    ],
+    "startedAt": 1794395962.9302387,
+    "transport": "verified official HTTPS urllib",
+    "httpStatus": 200,
+    "responseURL": "https://agentrouter.org/docs/hermes.html",
+    "bytes": 39972,
+    "sha256": "f44fefe62068b95791e0ed4178030720a70c665c5ff4eacc447fc8edfa04a9eb",
+    "processOperationCompleted": true,
+    "publicSnapshotFile": "hermes.html",
+    "finishedAt": 1794395964.9246411
+  },
+  {
+    "guidePath": "/docs/pi.html",
+    "requestedURL": "https://agentrouter.org/docs/pi.html",
+    "anchorLabels": [
+      "Pi"
+    ],
+    "startedAt": 1794395963.479476,
+    "transport": "verified official HTTPS urllib",
+    "httpStatus": 200,
+    "responseURL": "https://agentrouter.org/docs/pi.html",
+    "bytes": 36022,
+    "sha256": "5bbac8a6c3552c110b164e9b4370dfbba2a90f09da2c82ed5de265c38b454494",
+    "processOperationCompleted": true,
+    "publicSnapshotFile": "pi.html",
+    "finishedAt": 1794395965.404023
+  },
+  {
+    "guidePath": "/docs/crush.html",
+    "requestedURL": "https://agentrouter.org/docs/crush.html",
+    "anchorLabels": [
+      "Crush"
+    ],
+    "startedAt": 1794395963.6078072,
+    "transport": "verified official HTTPS urllib",
+    "httpStatus": 200,
+    "responseURL": "https://agentrouter.org/docs/crush.html",
+    "bytes": 37727,
+    "sha256": "f081b4797962b4d706a0479e9e8dac17a804cdae4a6f38900c7e7a55d5fb5d6f",
+    "processOperationCompleted": true,
+    "publicSnapshotFile": "crush.html",
+    "finishedAt": 1794395966.8220718
+  },
+  {
+    "guidePath": "/docs/claude-app.html",
+    "requestedURL": "https://agentrouter.org/docs/claude-app.html",
+    "anchorLabels": [
+      "Claude App"
+    ],
+    "startedAt": 1794395964.924757,
+    "transport": "verified official HTTPS urllib",
+    "httpStatus": 200,
+    "responseURL": "https://agentrouter.org/docs/claude-app.html",
+    "bytes": 27729,
+    "sha256": "a1a6cee75a5086fc1705bb869e352826850a4a9e4c8bde379d281da2d1338f80",
+    "processOperationCompleted": true,
+    "publicSnapshotFile": "claude-app.html",
+    "finishedAt": 1794395968.2641323
+  },
+  {
+    "guidePath": "/docs/trae.html",
+    "requestedURL": "https://agentrouter.org/docs/trae.html",
+    "anchorLabels": [
+      "Trae"
+    ],
+    "startedAt": 1794395965.404138,
+    "transport": "verified official HTTPS urllib",
+    "httpStatus": 200,
+    "responseURL": "https://agentrouter.org/docs/trae.html",
+    "bytes": 28547,
+    "sha256": "b1d0a13a2831acb478db5868a7de7653f8f74c7f894ccdd3e5d80459698921b0",
+    "processOperationCompleted": true,
+    "publicSnapshotFile": "trae.html",
+    "finishedAt": 1794395972.48225
+  },
+  {
+    "guidePath": "/docs/zcode.html",
+    "requestedURL": "https://agentrouter.org/docs/zcode.html",
+    "anchorLabels": [
+      "ZCode"
+    ],
+    "startedAt": 1794395965.6856208,
+    "transport": "verified official HTTPS urllib",
+    "httpStatus": 200,
+    "responseURL": "https://agentrouter.org/docs/zcode.html",
+    "bytes": 28397,
+    "sha256": "64a86526dceb13437b8d2f981ff97f513408e8422373d038ec927bc032a94a25",
+    "processOperationCompleted": true,
+    "publicSnapshotFile": "zcode.html",
+    "finishedAt": 1794395968.969115
+  },
+  {
+    "guidePath": "/docs/workbuddy.html",
+    "requestedURL": "https://agentrouter.org/docs/workbuddy.html",
+    "anchorLabels": [
+      "WorkBuddy"
+    ],
+    "startedAt": 1794395966.822207,
+    "transport": "verified official HTTPS urllib",
+    "httpStatus": 200,
+    "responseURL": "https://agentrouter.org/docs/workbuddy.html",
+    "bytes": 28270,
+    "sha256": "b64e05de74baed30a1f1a4d65e109a265a171703c7cf63f9079324129c4b2ad8",
+    "processOperationCompleted": true,
+    "publicSnapshotFile": "workbuddy.html",
+    "finishedAt": 1794395970.0147355
+  },
+  {
+    "guidePath": "/docs/craft-agents.html",
+    "requestedURL": "https://agentrouter.org/docs/craft-agents.html",
+    "anchorLabels": [
+      "Craft Agents"
+    ],
+    "startedAt": 1794395968.264319,
+    "transport": "verified official HTTPS urllib",
+    "httpStatus": 200,
+    "responseURL": "https://agentrouter.org/docs/craft-agents.html",
+    "bytes": 28434,
+    "sha256": "36e86a69bb52a3ca5999fc452bb51245fb5459f84ba8f0c2d5ddc5dc941278a5",
+    "processOperationCompleted": true,
+    "publicSnapshotFile": "craft-agents.html",
+    "finishedAt": 1794395972.8307846
+  }
+]

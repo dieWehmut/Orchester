@@ -1,0 +1,12 @@
+{
+  "name": "homepage-curl",
+  "source": "https://www.workbuddy.ai/",
+  "requestType": "GET",
+  "actualExitCode": 0,
+  "processExited": true,
+  "httpStatus": "200",
+  "bytes": 19158,
+  "sha256": "ff62ba37882024c40571f2f9733284fce5620f460f4766023153a533c3ce9e20",
+  "startedAt": 1794394700.2806525,
+  "finishedAt": 1794394703.4132488
+}

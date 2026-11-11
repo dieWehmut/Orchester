@@ -1,0 +1,620 @@
+{
+  "schemaVersion": 1,
+  "observedAt": 1794396143.0274384,
+  "platform": "Native WSL Linux x64",
+  "operation": "Read-only post-restart existing-installation entry, ELF, launcher and public extension metadata comparison",
+  "verificationEntryCount": 19,
+  "uniqueProviderCount": 16,
+  "providers": [
+    "claude",
+    "cline",
+    "codex",
+    "craft",
+    "crush",
+    "gemini",
+    "hermes",
+    "kilo",
+    "openclaw",
+    "opencode",
+    "pi",
+    "qwen",
+    "roo",
+    "trae",
+    "workbuddy",
+    "zcode"
+  ],
+  "duplicateProductKinds": {
+    "claude": [
+      "CLI",
+      "VSCodeExtension"
+    ],
+    "cline": [
+      "CLI",
+      "VSCodeExtension"
+    ],
+    "kilo": [
+      "CLI",
+      "VSCodeExtension"
+    ]
+  },
+  "entries": [
+    {
+      "kind": "CLI",
+      "productPackage": "@openai/codex",
+      "provider": "codex",
+      "historicalVerifiedVersion": "0.167.1",
+      "historicalVersionExitCode": 0,
+      "currentPackagePublicVersion": "0.167.1",
+      "currentPackageName": "@openai/codex",
+      "currentPackageMetadataPath": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@openai/codex/package.json",
+      "currentPackageMetadataSha256": "e8e3347884c49f8105400f410399e54831c999988c964d289a12f08d28c0d1da",
+      "currentVersionMatchesHistorical": true,
+      "entry": {
+        "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@openai/codex/bin/codex.js",
+        "exists": true,
+        "expectedSha256": "e14fc83739c13c1074b12bd1acce4010c893c7f6fbfc1593b4a31d74cabb57af",
+        "currentSha256": "e14fc83739c13c1074b12bd1acce4010c893c7f6fbfc1593b4a31d74cabb57af",
+        "matchesOriginalDigest": true,
+        "bytes": 9154,
+        "nativeELF": false,
+        "hasExecuteBit": true
+      },
+      "platformBinaries": [
+        {
+          "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex",
+          "exists": true,
+          "expectedSha256": "dd5bfdf19d794dcc6fb482d2d5a2d9fb31d11f6caa44b303bb72890d461e8a02",
+          "currentSha256": "dd5bfdf19d794dcc6fb482d2d5a2d9fb31d11f6caa44b303bb72890d461e8a02",
+          "matchesOriginalDigest": true,
+          "bytes": 320186856,
+          "nativeELF": true,
+          "hasExecuteBit": true
+        }
+      ],
+      "newVersionCommandRun": false,
+      "wholeInstalledPackagePayloadByteEqualityClaimed": false
+    },
+    {
+      "kind": "CLI",
+      "productPackage": "@anthropic-ai/claude-code",
+      "provider": "claude",
+      "historicalVerifiedVersion": "2.1.322",
+      "historicalVersionExitCode": 0,
+      "currentPackagePublicVersion": "2.1.322",
+      "currentPackageName": "@anthropic-ai/claude-code",
+      "currentPackageMetadataPath": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@anthropic-ai/claude-code/package.json",
+      "currentPackageMetadataSha256": "4d880cb9add93733fa259286f7b0d5a03c69e4eace22be39b90d3b32792a4c08",
+      "currentVersionMatchesHistorical": true,
+      "entry": {
+        "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@anthropic-ai/claude-code/bin/claude.exe",
+        "exists": true,
+        "expectedSha256": "bfb3703ad5380242328459bc62ada4bde8ae7ba57c6e1eeadb9c00e08874c478",
+        "currentSha256": "bfb3703ad5380242328459bc62ada4bde8ae7ba57c6e1eeadb9c00e08874c478",
+        "matchesOriginalDigest": true,
+        "bytes": 341914128,
+        "nativeELF": true,
+        "hasExecuteBit": true
+      },
+      "platformBinaries": [],
+      "newVersionCommandRun": false,
+      "wholeInstalledPackagePayloadByteEqualityClaimed": false
+    },
+    {
+      "kind": "CLI",
+      "productPackage": "@google/gemini-cli",
+      "provider": "gemini",
+      "historicalVerifiedVersion": "0.68.0",
+      "historicalVersionExitCode": 0,
+      "currentPackagePublicVersion": "0.68.0",
+      "currentPackageName": "@google/gemini-cli",
+      "currentPackageMetadataPath": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@google/gemini-cli/package.json",
+      "currentPackageMetadataSha256": "3251e00608874812d7327f41cddb09a6f8e13613124c36d21fbf537e2510bbaa",
+      "currentVersionMatchesHistorical": true,
+      "entry": {
+        "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@google/gemini-cli/bundle/gemini.js",
+        "exists": true,
+        "expectedSha256": "fcc38edd4f864c2f5fa582d7d133c19b1a04c697ad3143ab8045f92b77644c68",
+        "currentSha256": "fcc38edd4f864c2f5fa582d7d133c19b1a04c697ad3143ab8045f92b77644c68",
+        "matchesOriginalDigest": true,
+        "bytes": 5152,
+        "nativeELF": false,
+        "hasExecuteBit": true
+      },
+      "platformBinaries": [],
+      "newVersionCommandRun": false,
+      "wholeInstalledPackagePayloadByteEqualityClaimed": false
+    },
+    {
+      "kind": "CLI",
+      "productPackage": "@qwen-code/qwen-code",
+      "provider": "qwen",
+      "historicalVerifiedVersion": "0.27.2",
+      "historicalVersionExitCode": 0,
+      "currentPackagePublicVersion": "0.27.2",
+      "currentPackageName": "@qwen-code/qwen-code",
+      "currentPackageMetadataPath": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@qwen-code/qwen-code/package.json",
+      "currentPackageMetadataSha256": "f7d94b9a470441e8447a21fa427f44e3d86f296aec782f999b7d26b54b4d359a",
+      "currentVersionMatchesHistorical": true,
+      "entry": {
+        "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@qwen-code/qwen-code/cli-entry.js",
+        "exists": true,
+        "expectedSha256": "113efe4104a9fc66f507d34bfd6abbd896ceb77de47f4b468a0825a327fdc6a5",
+        "currentSha256": "113efe4104a9fc66f507d34bfd6abbd896ceb77de47f4b468a0825a327fdc6a5",
+        "matchesOriginalDigest": true,
+        "bytes": 18590,
+        "nativeELF": false,
+        "hasExecuteBit": true
+      },
+      "platformBinaries": [],
+      "newVersionCommandRun": false,
+      "wholeInstalledPackagePayloadByteEqualityClaimed": false
+    },
+    {
+      "kind": "CLI",
+      "productPackage": "opencode-ai",
+      "provider": "opencode",
+      "historicalVerifiedVersion": "1.19.5",
+      "historicalVersionExitCode": 0,
+      "currentPackagePublicVersion": "1.19.5",
+      "currentPackageName": "opencode-ai",
+      "currentPackageMetadataPath": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/opencode-ai/package.json",
+      "currentPackageMetadataSha256": "b611692992fefe03641adf42bd26d1d3affc2ed7848122d6347879aa7890afc7",
+      "currentVersionMatchesHistorical": true,
+      "entry": {
+        "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/opencode-ai/bin/opencode.exe",
+        "exists": true,
+        "expectedSha256": "7df4e4136301f16589b0f30bf91a61380fca5f8ef22dd36570f5ebe1d4ec802c",
+        "currentSha256": "7df4e4136301f16589b0f30bf91a61380fca5f8ef22dd36570f5ebe1d4ec802c",
+        "matchesOriginalDigest": true,
+        "bytes": 214386864,
+        "nativeELF": true,
+        "hasExecuteBit": true
+      },
+      "platformBinaries": [],
+      "newVersionCommandRun": false,
+      "wholeInstalledPackagePayloadByteEqualityClaimed": false
+    },
+    {
+      "kind": "CLI",
+      "productPackage": "openclaw",
+      "provider": "openclaw",
+      "historicalVerifiedVersion": "2026.11.3",
+      "historicalVersionExitCode": 0,
+      "currentPackagePublicVersion": "2026.11.3",
+      "currentPackageName": "openclaw",
+      "currentPackageMetadataPath": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/openclaw/package.json",
+      "currentPackageMetadataSha256": "18f674ce22047b21d3e832372dff012914a5511cf98044ee0db4b8a065fa317d",
+      "currentVersionMatchesHistorical": true,
+      "entry": {
+        "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/openclaw/openclaw.mjs",
+        "exists": true,
+        "expectedSha256": "469e60c9f60b615ff71c985a54238ee532a8f949866d76aebe7d6e4bc7219902",
+        "currentSha256": "469e60c9f60b615ff71c985a54238ee532a8f949866d76aebe7d6e4bc7219902",
+        "matchesOriginalDigest": true,
+        "bytes": 23906,
+        "nativeELF": false,
+        "hasExecuteBit": true
+      },
+      "platformBinaries": [],
+      "newVersionCommandRun": false,
+      "wholeInstalledPackagePayloadByteEqualityClaimed": false
+    },
+    {
+      "kind": "CLI",
+      "productPackage": "@earendil-works/pi-coding-agent",
+      "provider": "pi",
+      "historicalVerifiedVersion": "1.5.2",
+      "historicalVersionExitCode": 0,
+      "currentPackagePublicVersion": "1.5.2",
+      "currentPackageName": "@earendil-works/pi-coding-agent",
+      "currentPackageMetadataPath": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@earendil-works/pi-coding-agent/package.json",
+      "currentPackageMetadataSha256": "18b422b7d80f2caa2551d253c0a8409e1caa54b954bfb7d18252e507bb8a0318",
+      "currentVersionMatchesHistorical": true,
+      "entry": {
+        "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@earendil-works/pi-coding-agent/dist/bundle/cli.js",
+        "exists": true,
+        "expectedSha256": "e79626f2dd6f94aa45d30f3fa63cd84319a6eefcd150b353cfaf274366926774",
+        "currentSha256": "e79626f2dd6f94aa45d30f3fa63cd84319a6eefcd150b353cfaf274366926774",
+        "matchesOriginalDigest": true,
+        "bytes": 160,
+        "nativeELF": false,
+        "hasExecuteBit": true
+      },
+      "platformBinaries": [],
+      "newVersionCommandRun": false,
+      "wholeInstalledPackagePayloadByteEqualityClaimed": false
+    },
+    {
+      "kind": "CLI",
+      "productPackage": "@charmland/crush",
+      "provider": "crush",
+      "historicalVerifiedVersion": "0.100.0",
+      "historicalVersionExitCode": 0,
+      "currentPackagePublicVersion": "0.100.0",
+      "currentPackageName": "@charmland/crush",
+      "currentPackageMetadataPath": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@charmland/crush/package.json",
+      "currentPackageMetadataSha256": "cd5f13ee8ccb4ea7f3826b4eafc3ecb70774b5d5c4cdf06a6f2b90beaf51a21a",
+      "currentVersionMatchesHistorical": true,
+      "entry": {
+        "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@charmland/crush/run-crush.js",
+        "exists": true,
+        "expectedSha256": "2cc1ac87cc237a6383702b59f985160e637d3ec853bbccba2d7ef6bbf4d94361",
+        "currentSha256": "2cc1ac87cc237a6383702b59f985160e637d3ec853bbccba2d7ef6bbf4d94361",
+        "matchesOriginalDigest": true,
+        "bytes": 158,
+        "nativeELF": false,
+        "hasExecuteBit": true
+      },
+      "platformBinaries": [
+        {
+          "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@charmland/crush/bin/crush",
+          "exists": true,
+          "expectedSha256": "b5deb25bfc13c7af566f56e03ce6d974c489fa24332b3d9c6d63e437ba6e3a7c",
+          "currentSha256": "b5deb25bfc13c7af566f56e03ce6d974c489fa24332b3d9c6d63e437ba6e3a7c",
+          "matchesOriginalDigest": true,
+          "bytes": 93302944,
+          "nativeELF": true,
+          "hasExecuteBit": true
+        }
+      ],
+      "newVersionCommandRun": false,
+      "wholeInstalledPackagePayloadByteEqualityClaimed": false
+    },
+    {
+      "kind": "CLI",
+      "productPackage": "cline",
+      "provider": "cline",
+      "historicalVerifiedVersion": "3.0.74",
+      "historicalVersionExitCode": 0,
+      "currentPackagePublicVersion": "3.0.74",
+      "currentPackageName": "cline",
+      "currentPackageMetadataPath": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/cline/package.json",
+      "currentPackageMetadataSha256": "a5c17df711f84636e22e867f4b0ea8ac09e98f6d0fad684daea38a20bf1acfe4",
+      "currentVersionMatchesHistorical": true,
+      "entry": {
+        "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/cline/bin/cline",
+        "exists": true,
+        "expectedSha256": "37848dcde533871a1a95af479221c8768292652ae73c73a8825288a67470f355",
+        "currentSha256": "37848dcde533871a1a95af479221c8768292652ae73c73a8825288a67470f355",
+        "matchesOriginalDigest": true,
+        "bytes": 5439,
+        "nativeELF": false,
+        "hasExecuteBit": true
+      },
+      "platformBinaries": [
+        {
+          "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/cline/bin/.cline",
+          "exists": true,
+          "expectedSha256": "80ee64f82f895ccc695b95acd18252e00f17186a308257d7b169d444a2b27ef4",
+          "currentSha256": "80ee64f82f895ccc695b95acd18252e00f17186a308257d7b169d444a2b27ef4",
+          "matchesOriginalDigest": true,
+          "bytes": 161793504,
+          "nativeELF": true,
+          "hasExecuteBit": true
+        }
+      ],
+      "newVersionCommandRun": false,
+      "wholeInstalledPackagePayloadByteEqualityClaimed": false
+    },
+    {
+      "kind": "CLI",
+      "productPackage": "@kilocode/cli",
+      "provider": "kilo",
+      "historicalVerifiedVersion": "7.8.27",
+      "historicalVersionExitCode": 0,
+      "currentPackagePublicVersion": "7.8.27",
+      "currentPackageName": "@kilocode/cli",
+      "currentPackageMetadataPath": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@kilocode/cli/package.json",
+      "currentPackageMetadataSha256": "20e2231aa0b00e6e7abf1c0140ce2f5ec2efb90f7bf880dd3d4f1659e4a59978",
+      "currentVersionMatchesHistorical": true,
+      "entry": {
+        "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@kilocode/cli/bin/kilo",
+        "exists": true,
+        "expectedSha256": "9a87f9e371c52fdc3259841fd8c79c8ed540b3fb00bb6998e3626a58b5407767",
+        "currentSha256": "9a87f9e371c52fdc3259841fd8c79c8ed540b3fb00bb6998e3626a58b5407767",
+        "matchesOriginalDigest": true,
+        "bytes": 6307,
+        "nativeELF": false,
+        "hasExecuteBit": true
+      },
+      "platformBinaries": [
+        {
+          "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@kilocode/cli/bin/.kilo",
+          "exists": true,
+          "expectedSha256": "0a29567164ab8b649f5db9dfd21862f8163c19c1e27e470dc40520814d51883b",
+          "currentSha256": "0a29567164ab8b649f5db9dfd21862f8163c19c1e27e470dc40520814d51883b",
+          "matchesOriginalDigest": true,
+          "bytes": 259201200,
+          "nativeELF": true,
+          "hasExecuteBit": true
+        }
+      ],
+      "newVersionCommandRun": false,
+      "wholeInstalledPackagePayloadByteEqualityClaimed": false
+    },
+    {
+      "kind": "HermesCLI",
+      "provider": "hermes",
+      "productPackage": "Hermes Agent",
+      "historicalVerifiedVersion": "0.23.1",
+      "historicalVersionExitCode": 0,
+      "historicalRepositoryCommit": "3b421578588243f920886e6fe79a6faa87ea026e",
+      "repositoryCommitRechecked": false,
+      "entry": {
+        "path": "/home/han/.local/bin/hermes",
+        "exists": true,
+        "expectedSha256": "4a7f7a45c033cbece7437b75a0dadc98ec279a21c4f9f1d832f2adc5edf16788",
+        "currentSha256": "4a7f7a45c033cbece7437b75a0dadc98ec279a21c4f9f1d832f2adc5edf16788",
+        "matchesOriginalDigest": true,
+        "bytes": 70,
+        "nativeELF": false,
+        "hasExecuteBit": true
+      },
+      "newVersionCommandRun": false,
+      "wholeInstalledPackagePayloadByteEqualityClaimed": false
+    },
+    {
+      "kind": "VSCodeExtension",
+      "provider": "cline",
+      "extensionId": "saoudrizwan.claude-dev",
+      "linuxExtensionsDirectory": "/home/han/.vscode-server/extensions/saoudrizwan.claude-dev-4.1.26",
+      "publicManifest": {
+        "path": "/home/han/.vscode-server/extensions/saoudrizwan.claude-dev-4.1.26/package.json",
+        "currentSha256": "e2371193a4cb2304109744f273c5715f1f3b295d9864077731a1803c8867b685",
+        "currentName": "claude-dev",
+        "currentPublisher": "saoudrizwan",
+        "currentVersion": "4.1.26",
+        "historicalVerifiedVersion": "4.1.26",
+        "idMatches": true,
+        "versionMatches": true,
+        "originalManifestSha256Available": false,
+        "fullPayloadByteEqualityClaimed": false
+      },
+      "historicalInstallExitCode": 0,
+      "historicalNativeInstallCli": "/home/han/.vscode-server/bin/c4453f8ea430795f941c1b2ff6c9321135a74a02/bin/code-server",
+      "historicalVSIXDigest": null,
+      "newVersionOrInstallCommandRun": false
+    },
+    {
+      "kind": "VSCodeExtension",
+      "provider": "roo",
+      "extensionId": "rooveterinaryinc.roo-cline",
+      "linuxExtensionsDirectory": "/home/han/.vscode-server/extensions/rooveterinaryinc.roo-cline-3.54.0",
+      "publicManifest": {
+        "path": "/home/han/.vscode-server/extensions/rooveterinaryinc.roo-cline-3.54.0/package.json",
+        "currentSha256": "e042dcf931e7d22f620b9273da2d7dc717050cedba3f49e81337217869e4de79",
+        "currentName": "roo-cline",
+        "currentPublisher": "RooVeterinaryInc",
+        "currentVersion": "3.54.0",
+        "historicalVerifiedVersion": "3.54.0",
+        "idMatches": true,
+        "versionMatches": true,
+        "originalManifestSha256Available": false,
+        "fullPayloadByteEqualityClaimed": false
+      },
+      "historicalInstallExitCode": 0,
+      "historicalNativeInstallCli": "/home/han/.vscode-server/bin/c4453f8ea430795f941c1b2ff6c9321135a74a02/bin/code-server",
+      "historicalVSIXDigest": "615b7e30ab456c51fe2e1f413a6e05fe4bd370f2350e14de574ec92e25366b4b",
+      "newVersionOrInstallCommandRun": false
+    },
+    {
+      "kind": "VSCodeExtension",
+      "provider": "kilo",
+      "extensionId": "kilocode.kilo-code",
+      "linuxExtensionsDirectory": "/home/han/.vscode-server/extensions/kilocode.kilo-code-7.8.27-linux-x64",
+      "publicManifest": {
+        "path": "/home/han/.vscode-server/extensions/kilocode.kilo-code-7.8.27-linux-x64/package.json",
+        "currentSha256": "38d6c4bb69683ecae4f51994ab2b40366ad3afa703a6831d3f6d6409b64703e1",
+        "currentName": "kilo-code",
+        "currentPublisher": "kilocode",
+        "currentVersion": "7.8.27",
+        "historicalVerifiedVersion": "7.8.27",
+        "idMatches": true,
+        "versionMatches": true,
+        "originalManifestSha256Available": false,
+        "fullPayloadByteEqualityClaimed": false
+      },
+      "historicalInstallExitCode": 0,
+      "historicalNativeInstallCli": "/home/han/.vscode-server/bin/c4453f8ea430795f941c1b2ff6c9321135a74a02/bin/code-server",
+      "historicalVSIXDigest": null,
+      "newVersionOrInstallCommandRun": false
+    },
+    {
+      "kind": "VSCodeExtension",
+      "provider": "claude",
+      "extensionId": "anthropic.claude-code",
+      "linuxExtensionsDirectory": "/home/han/.vscode-server/extensions/anthropic.claude-code-2.1.322-linux-x64",
+      "publicManifest": {
+        "path": "/home/han/.vscode-server/extensions/anthropic.claude-code-2.1.322-linux-x64/package.json",
+        "currentSha256": "45152e1b1d34bdf04246d0c620bb00fb462e209e5f4557513487264b7cd1f305",
+        "currentName": "claude-code",
+        "currentPublisher": "Anthropic",
+        "currentVersion": "2.1.322",
+        "historicalVerifiedVersion": "2.1.322",
+        "idMatches": true,
+        "versionMatches": true,
+        "originalManifestSha256Available": false,
+        "fullPayloadByteEqualityClaimed": false
+      },
+      "historicalInstallExitCode": 0,
+      "historicalNativeInstallCli": "/home/han/.vscode-server/bin/c4453f8ea430795f941c1b2ff6c9321135a74a02/bin/code-server",
+      "historicalVSIXDigest": null,
+      "newVersionOrInstallCommandRun": false
+    },
+    {
+      "kind": "LinuxDesktopApp",
+      "provider": "zcode",
+      "productName": "ZCode",
+      "historicalPackageVersion": "3.17.2",
+      "entry": {
+        "path": "/home/han/.local/opt/zcode/3.17.2/opt/ZCode/zcode",
+        "exists": true,
+        "expectedSha256": "10a14d05c6ff4f94075cfb3eeb6ed6571be33ebcc08cbd675b5ce9ff84706564",
+        "currentSha256": "10a14d05c6ff4f94075cfb3eeb6ed6571be33ebcc08cbd675b5ce9ff84706564",
+        "matchesOriginalDigest": true,
+        "bytes": 228605256,
+        "nativeELF": true,
+        "hasExecuteBit": true
+      },
+      "launcher": {
+        "path": "/home/han/.local/bin/zcode",
+        "exists": true,
+        "expectedSha256": "af4a6bab7752e4471d5e9ca6b8c24aed7f2093ecfed6bb32cacd3af3727f75bc",
+        "currentSha256": "af4a6bab7752e4471d5e9ca6b8c24aed7f2093ecfed6bb32cacd3af3727f75bc",
+        "matchesOriginalDigest": true,
+        "bytes": 302,
+        "nativeELF": false,
+        "hasExecuteBit": true
+      },
+      "desktopShortcutExists": true,
+      "desktopShortcutPath": "/home/han/.local/share/applications/orchester-zcode.desktop",
+      "historicalNativeRuntimeExitCode": 0,
+      "historicalVerificationMode": "Vendor ElectronRunAsNode only; no product GUI/auth/model run",
+      "newNativeRuntimeOrGuiRun": false,
+      "wholeInstalledPackagePayloadByteEqualityClaimed": false
+    },
+    {
+      "kind": "LinuxDesktopApp",
+      "provider": "craft",
+      "productName": "Craft Agents",
+      "historicalPackageVersion": "0.15.9",
+      "entry": {
+        "path": "/home/han/.local/opt/craft-agents/0.15.9/squashfs-root/@craft-agentelectron",
+        "exists": true,
+        "expectedSha256": "feab9d1667bce2ffc67eea1bccbbfaf99743ab26e2f01033369d60e99cff7d22",
+        "currentSha256": "feab9d1667bce2ffc67eea1bccbbfaf99743ab26e2f01033369d60e99cff7d22",
+        "matchesOriginalDigest": true,
+        "bytes": 199855320,
+        "nativeELF": true,
+        "hasExecuteBit": true
+      },
+      "launcher": {
+        "path": "/home/han/.local/bin/craft-agents",
+        "exists": true,
+        "expectedSha256": "b14512ff93ff254b2ce853289ac8079c9eec9c27698e6253aa5490da0c680bac",
+        "currentSha256": "b14512ff93ff254b2ce853289ac8079c9eec9c27698e6253aa5490da0c680bac",
+        "matchesOriginalDigest": true,
+        "bytes": 328,
+        "nativeELF": false,
+        "hasExecuteBit": true
+      },
+      "desktopShortcutExists": true,
+      "desktopShortcutPath": "/home/han/.local/share/applications/orchester-craft-agents.desktop",
+      "historicalNativeRuntimeExitCode": 0,
+      "historicalVerificationMode": "Vendor ElectronRunAsNode only; no product GUI/auth/model run",
+      "newNativeRuntimeOrGuiRun": false,
+      "wholeInstalledPackagePayloadByteEqualityClaimed": false
+    },
+    {
+      "kind": "LinuxDesktopApp",
+      "provider": "workbuddy",
+      "productName": "WorkBuddy",
+      "historicalPackageVersion": "5.6.2.40046327",
+      "entry": {
+        "path": "/home/han/.local/opt/workbuddy/5.6.2.40046327/opt/WorkBuddy/workbuddy",
+        "exists": true,
+        "expectedSha256": "13bf1da1273c22f0536ee6a52fbadb3561dd31b63c11e80f7feff6beccac1578",
+        "currentSha256": "13bf1da1273c22f0536ee6a52fbadb3561dd31b63c11e80f7feff6beccac1578",
+        "matchesOriginalDigest": true,
+        "bytes": 200842456,
+        "nativeELF": true,
+        "hasExecuteBit": true
+      },
+      "launcher": {
+        "path": "/home/han/.local/bin/workbuddy",
+        "exists": true,
+        "expectedSha256": "11adc0efee1ff96693c1055a1a3e3c62e8cd81d408bf9dacbc4e4f8f4ab334ac",
+        "currentSha256": "11adc0efee1ff96693c1055a1a3e3c62e8cd81d408bf9dacbc4e4f8f4ab334ac",
+        "matchesOriginalDigest": true,
+        "bytes": 322,
+        "nativeELF": false,
+        "hasExecuteBit": true
+      },
+      "desktopShortcutExists": true,
+      "desktopShortcutPath": "/home/han/.local/share/applications/orchester-workbuddy.desktop",
+      "historicalNativeRuntimeExitCode": 0,
+      "historicalVerificationMode": "Vendor ElectronRunAsNode only; no product GUI/auth/model run",
+      "newNativeRuntimeOrGuiRun": false,
+      "wholeInstalledPackagePayloadByteEqualityClaimed": false
+    },
+    {
+      "kind": "LinuxDesktopApp",
+      "provider": "trae",
+      "productName": "Trae CN",
+      "historicalPackageVersion": "3.4.17",
+      "entry": {
+        "path": "/home/han/.local/opt/trae/3.4.17/usr/share/trae-cn/trae-cn",
+        "exists": true,
+        "expectedSha256": "7d25cc69e7b52045276c1540d7e0bf015726f82c7e024cd858570e0197f757d1",
+        "currentSha256": "7d25cc69e7b52045276c1540d7e0bf015726f82c7e024cd858570e0197f757d1",
+        "matchesOriginalDigest": true,
+        "bytes": 202947800,
+        "nativeELF": true,
+        "hasExecuteBit": true
+      },
+      "launcher": {
+        "path": "/home/han/.local/bin/trae",
+        "exists": true,
+        "expectedSha256": "a532c31f2b4bdd8c1ead0ac5d48f71c79c638206592d1753b80ccbb01d4d7d68",
+        "currentSha256": "a532c31f2b4bdd8c1ead0ac5d48f71c79c638206592d1753b80ccbb01d4d7d68",
+        "matchesOriginalDigest": true,
+        "bytes": 348,
+        "nativeELF": false,
+        "hasExecuteBit": true
+      },
+      "desktopShortcutExists": true,
+      "desktopShortcutPath": "/home/han/.local/share/applications/orchester-trae.desktop",
+      "historicalNativeRuntimeExitCode": 0,
+      "historicalVerificationMode": "Vendor ElectronRunAsNode only; no product GUI/auth/model run",
+      "newNativeRuntimeOrGuiRun": false,
+      "wholeInstalledPackagePayloadByteEqualityClaimed": false
+    }
+  ],
+  "additionalNativeBinaryProofs": [
+    {
+      "kind": "nativeNodeRuntime",
+      "path": "/home/han/.nvm/versions/node/v24.21.0/bin/node",
+      "exists": true,
+      "expectedSha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c",
+      "currentSha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c",
+      "matchesOriginalDigest": true,
+      "bytes": 126595440,
+      "nativeELF": true,
+      "hasExecuteBit": true
+    },
+    {
+      "kind": "ClaudeCodeExtensionNativeELF",
+      "path": "/home/han/.vscode-server/extensions/anthropic.claude-code-2.1.322-linux-x64/resources/native-binary/claude",
+      "exists": true,
+      "expectedSha256": "bfb3703ad5380242328459bc62ada4bde8ae7ba57c6e1eeadb9c00e08874c478",
+      "currentSha256": "bfb3703ad5380242328459bc62ada4bde8ae7ba57c6e1eeadb9c00e08874c478",
+      "matchesOriginalDigest": true,
+      "bytes": 341914128,
+      "nativeELF": true,
+      "hasExecuteBit": true
+    }
+  ],
+  "all15CLIAndGUIEntriesMatchOriginalDigest": true,
+  "all4DesktopLaunchersMatchOriginalDigest": true,
+  "all4ExtensionIdsAndVersionsMatchOriginalPublicList": true,
+  "all10NpmPublicVersionsMatchHistorical": true,
+  "allAdditionalNativeBinaryDigestsMatchOriginal": true,
+  "fullPackageAndAllExtensionPayloadByteEqualityClaimed": false,
+  "newVersionCommands": 0,
+  "newInstallCommands": 0,
+  "newGuiStarts": 0,
+  "modelCalls": 0,
+  "authOrSetupCalls": 0,
+  "privateConfigurationsOrProfileContentsRead": false,
+  "liveProcessEnvironmentOrArgvRead": false,
+  "windowsInteropUsed": false,
+  "gitOrRepoWrites": 0,
+  "boundaries": [
+    "This verifies public installed entries/ELFs/launchers against the captured original digests, and current extension ids/versions against the original native list. It does not recalculate every package payload file.",
+    "The original extension receipt lacks original package.json/full extension payload digests. Current public manifest hashes are new observations, not proofs of unchanged full extension bytes.",
+    "Historical CLI and native ElectronRunAsNode exit0 tests are preserved; this restart audit does not claim newly running them or product GUI authentication."
+  ],
+  "allRecordedCliPlatformBinaryDigestsMatchOriginal": true,
+  "recordedCliPlatformBinaryDigestProofCount": 4,
+  "nativeDesktopEntryELFCount": 4
+}

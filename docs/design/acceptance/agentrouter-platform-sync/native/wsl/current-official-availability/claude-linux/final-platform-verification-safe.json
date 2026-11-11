@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "provider": "claude_app",
+  "platform": "native Linux x64 / WSL",
+  "status": "official-claude-app-linux-platform-verification-blocked",
+  "officialClaudeAppLinuxSupportVerified": false,
+  "officialClaudeAppLinuxSupportDisproved": false,
+  "officialClaudeAppLinuxInstallerIdentified": false,
+  "installedByThisAgent": false,
+  "existingNativeClaudeAppPresenceAudited": false,
+  "blocker": "Claude App download/help domains failed before HTTP in Python verified TLS, curl TLS1.2/HTTP1.1, and Chromium. Network failure cannot establish Linux unsupported.",
+  "primarySourcesAttempted": [
+    "https://claude.com/download",
+    "https://claude.ai/download",
+    "https://support.claude.com/en/articles/10065433-installing-claude-desktop",
+    "https://code.claude.com/docs/en/desktop",
+    "https://code.claude.com/docs/en/desktop.md"
+  ],
+  "availableOfficialRepositoryEvidence": {
+    "readmeURL": "https://raw.githubusercontent.com/anthropics/claude-code/main/README.md",
+    "readmeSha256": "07445fe9698dd4e038fa5b30ea3bde5f8f1480068b2f275fdd20725cecda0a6c",
+    "readmeBytes": 2867,
+    "repoTreeURL": "https://api.github.com/repos/anthropics/claude-code/git/trees/main?recursive=1",
+    "repoTreeSha256": "642b46a41d24d27b31585996e0cdc1f72c74aebaaf61cbe1c8cdeb5ecef5d9af",
+    "treeEntries": 1985,
+    "treeTruncated": false,
+    "treeCommit": "e379c8eca0af5b02a49bf8e784aeefdd1308de6f",
+    "evidenceBoundary": "Official README explicitly documents macOS/Linux installation for Claude Code terminal tool; this does not certify the separate Claude App Linux distribution. The fetched official repository tree contains no Desktop-specific installer/platform document path.",
+    "readmeGitBlobExact": true,
+    "readmeGitBlobSha1": "70754c523454ad5fd94e5ef910cc347cf69e6f6b",
+    "permalink": "https://github.com/anthropics/claude-code/blob/e379c8eca0af5b02a49bf8e784aeefdd1308de6f/README.md"
+  },
+  "toolFailures": {
+    "webBackend": "HTTP404 Invalid URL POST /v1/alpha/search; not target HTTP404",
+    "context7": "Monthly quota exceeded"
+  },
+  "transportAttempts": {
+    "pythonVerifiedTLSOfficialAppPages": 5,
+    "curlTLS12HTTP11OfficialPages": 3,
+    "chromiumIsolatedBackgroundNavigation": 1,
+    "curlExitCodes": [
+      35,
+      35,
+      35
+    ],
+    "appWebsiteHTTPResponsesReceived": 0
+  },
+  "noWindowsInteropSubstitution": true,
+  "noCommunityOrVendorRepackagedAppInstalled": true,
+  "downloads": 0,
+  "productGuiLaunches": 0,
+  "setupCalls": 0,
+  "authCalls": 0,
+  "modelCalls": 0,
+  "privateProfileConfigEnvArgvValuesRead": false,
+  "repoOrGitFilesChanged": false,
+  "evidenceReceipts": [
+    {
+      "path": "anthropic-code-readme-receipt.json",
+      "bytes": 372,
+      "sha256": "011f331d2a1c42fba7ce629548aacf25560fbdeea1d9836ca70198929c90d9fa"
+    },
+    {
+      "path": "anthropic-code-tree-receipt.json",
+      "bytes": 388,
+      "sha256": "8a638862bb8bb749db32823e376814a6a1889a6ce1393888d1a5f42dc56f8bd5"
+    },
+    {
+      "path": "chromium-official-download-receipt.json",
+      "bytes": 348,
+      "sha256": "df62dff9eee4418ac81400e66d306f4be1596c20d8d9ab208b98a7b76da18e0a"
+    },
+    {
+      "path": "claude-ai-download-receipt.json",
+      "bytes": 315,
+      "sha256": "c64971c1cd7aa37cc55f363131dd710c383a6999ec783db160ebd7b5dd0cc92d"
+    },
+    {
+      "path": "claude-code-desktop-md-receipt.json",
+      "bytes": 335,
+      "sha256": "c750fcf13ca1063a4b989d177bbfb268d9175bcbcf2de963fa882c8ddb6b26bb"
+    },
+    {
+      "path": "claude-code-desktop-receipt.json",
+      "bytes": 329,
+      "sha256": "54b86d6e28aede2e08db07e8d3c96dd933e099cf471659bb65ac09c592c2d0db"
+    },
+    {
+      "path": "claude-code-md-tls12-receipt.json",
+      "bytes": 411,
+      "sha256": "3c668a285c4866f651f556ed135ab56e28aa2ec1c7a3714ea64bdfb1976b930d"
+    },
+    {
+      "path": "claude-desktop-help-receipt.json",
+      "bytes": 363,
+      "sha256": "521d22fa01339f35b0c816acc17cb6aaf3faba26d65798262378308ca917f1a9"
+    },
+    {
+      "path": "claude-download-receipt.json",
+      "bytes": 313,
+      "sha256": "ded52f8f5541cb4fe58e7531318c497ba8e9cf29986807772ef1ce80bab8a207"
+    },
+    {
+      "path": "claude-download-tls12-receipt.json",
+      "bytes": 397,
+      "sha256": "b2a37228fff929be3a60be104a84075461c527d96a19ec4af8625e6b090fe141"
+    },
+    {
+      "path": "claude-help-tls12-receipt.json",
+      "bytes": 439,
+      "sha256": "d1786df87c5f9d1e46371d4a5273a37b1d56f16810d87994bc0bd72e95081a74"
+    },
+    {
+      "path": "first-official-get-summary.json",
+      "bytes": 2046,
+      "sha256": "23fcbe35279c0b4de3e7363473845765d500724d693bf57cf4d8f217e628eefd"
+    },
+    {
+      "path": "tls12-http11-summary.json",
+      "bytes": 1333,
+      "sha256": "78db32e115001e65d4406af8a202a962f7a75b67b693088a1bb042d309608243"
+    }
+  ],
+  "observedAt": "2026-11-11T11:04:00.987727+00:00"
+}

@@ -1,0 +1,1106 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-11-11T09:01:38.315924+00:00",
+  "sourceRevision": "a96a06e445ab6bdc4483ac297c69f8a0e2382bc9",
+  "providerCount": 20,
+  "uniqueCanonicalAssetCount": 24,
+  "themeMappingCount": 40,
+  "sharedConsumers": [
+    "web",
+    "desktop",
+    "mobile",
+    "site"
+  ],
+  "canonicalMetadata": [
+    {
+      "path": "packages/design/src/agent-identities.ts",
+      "sha256": "5a5be975eaba0a659458d5f6553360235eb761bd37dd85af89e054815e04a432",
+      "bytes": 4760,
+      "gitBlobByteExact": true
+    },
+    {
+      "path": "packages/design/src/assets/agents/SOURCES.md",
+      "sha256": "c41554bb5f1d675b37a7bed9814a732104f9f300b34aaf446e633c3e08511ad5",
+      "bytes": 9857,
+      "gitBlobByteExact": true
+    },
+    {
+      "path": "packages/design/src/assets/agents/README.md",
+      "sha256": "a99e11e64d1602e23e30a4cb3d563d92500d04da9d339b499eaec0b1865ee22e",
+      "bytes": 1547,
+      "gitBlobByteExact": true
+    }
+  ],
+  "assets": [
+    {
+      "path": "packages/design/src/assets/agents/antigravity.svg",
+      "sha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "bytes": 5037,
+      "officialSource": "https://antigravity.google/favicon.svg",
+      "upstreamSha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "SVG",
+        "rootNamespaceVerified": true,
+        "elementCount": 49,
+        "embeddedPngCount": 0,
+        "noScriptEventHandlersDtdEntitiesForeignObjectsOrExternalHref": true
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "antigravity",
+          "theme": "dark"
+        },
+        {
+          "provider": "antigravity",
+          "theme": "light"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/claude.png",
+      "sha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "bytes": 10358,
+      "officialSource": "https://anthropic.gallery.vsassets.io/_apis/public/gallery/publisher/anthropic/extension/claude-code/latest/assetbyname/Microsoft.VisualStudio.Services.Icons.Default",
+      "upstreamSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "PNG",
+        "signatureAndDecodeVerified": true,
+        "width": 266,
+        "height": 266
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "claude",
+          "theme": "dark"
+        },
+        {
+          "provider": "claude",
+          "theme": "light"
+        },
+        {
+          "provider": "claude_app",
+          "theme": "dark"
+        },
+        {
+          "provider": "claude_app",
+          "theme": "light"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/cline-dark.svg",
+      "sha256": "a8932a1fa6a919466b4a36e76519be4a600fc1b83c41d84f94c3e8e45260a8e1",
+      "bytes": 3574,
+      "officialSource": "https://raw.githubusercontent.com/cline/cline/c5df41f937c496ce8c8e689ba58776593c703dfa/assets/branding/logos/cline-icon-white.svg",
+      "upstreamSha256": "a8932a1fa6a919466b4a36e76519be4a600fc1b83c41d84f94c3e8e45260a8e1",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "SVG",
+        "rootNamespaceVerified": true,
+        "elementCount": 4,
+        "embeddedPngCount": 0,
+        "noScriptEventHandlersDtdEntitiesForeignObjectsOrExternalHref": true
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "cline",
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/cline-light.svg",
+      "sha256": "6aab009bf089a8dc1b5452c05c471244a08595b78fd639835eacc0821b887c06",
+      "bytes": 3574,
+      "officialSource": "https://raw.githubusercontent.com/cline/cline/c5df41f937c496ce8c8e689ba58776593c703dfa/assets/branding/logos/cline-icon-dark.svg",
+      "upstreamSha256": "6aab009bf089a8dc1b5452c05c471244a08595b78fd639835eacc0821b887c06",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "SVG",
+        "rootNamespaceVerified": true,
+        "elementCount": 4,
+        "embeddedPngCount": 0,
+        "noScriptEventHandlersDtdEntitiesForeignObjectsOrExternalHref": true
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "cline",
+          "theme": "light"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/codex-light.svg",
+      "sha256": "8652777b55544c572ba445dd230a90c2e248611e92eaa77de5805e8d0561fc30",
+      "bytes": 2008,
+      "officialSource": "https://openai.gallerycdn.vsassets.io/extensions/openai/chatgpt/26.51106.51428/1794372105882/Microsoft.VisualStudio.Services.VSIXPackage",
+      "upstreamSha256": "8652777b55544c572ba445dd230a90c2e248611e92eaa77de5805e8d0561fc30",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "SVG",
+        "rootNamespaceVerified": true,
+        "elementCount": 2,
+        "embeddedPngCount": 0,
+        "noScriptEventHandlersDtdEntitiesForeignObjectsOrExternalHref": true
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "codex",
+          "theme": "light"
+        }
+      ],
+      "officialPackageEntry": "extension/resources/blossom-black.svg"
+    },
+    {
+      "path": "packages/design/src/assets/agents/codex.png",
+      "sha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+      "bytes": 10969,
+      "officialSource": "https://openai.gallery.vsassets.io/_apis/public/gallery/publisher/openai/extension/chatgpt/latest/assetbyname/Microsoft.VisualStudio.Services.Icons.Default",
+      "upstreamSha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "PNG",
+        "signatureAndDecodeVerified": true,
+        "width": 385,
+        "height": 385
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "codex",
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/craft.svg",
+      "sha256": "fd195ad28212109ce8fbcd6d2181556bc26b91e79998011af23d5bf0f08cf37c",
+      "bytes": 787,
+      "officialSource": "https://raw.githubusercontent.com/craft-ai-agents/craft-agents-oss/3ce9fc12837541d688a59a8f0a2e9755ceb89ac2/apps/electron/resources/icon.svg",
+      "upstreamSha256": "fd195ad28212109ce8fbcd6d2181556bc26b91e79998011af23d5bf0f08cf37c",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "SVG",
+        "rootNamespaceVerified": true,
+        "elementCount": 7,
+        "embeddedPngCount": 0,
+        "noScriptEventHandlersDtdEntitiesForeignObjectsOrExternalHref": true
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "craft",
+          "theme": "dark"
+        },
+        {
+          "provider": "craft",
+          "theme": "light"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/crush.png",
+      "sha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "bytes": 55448,
+      "officialSource": "https://raw.githubusercontent.com/charmbracelet/crush/1b7582dbba81e0f716e50f20fe44bd04faf7251f/internal/ui/notification/crush-icon-solo.png",
+      "upstreamSha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "PNG",
+        "signatureAndDecodeVerified": true,
+        "width": 512,
+        "height": 512
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "crush",
+          "theme": "dark"
+        },
+        {
+          "provider": "crush",
+          "theme": "light"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/cursor-dark.svg",
+      "sha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+      "bytes": 4373,
+      "officialSource": "https://cursor.com/marketing-static/favicon.svg",
+      "upstreamSha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "SVG",
+        "rootNamespaceVerified": true,
+        "elementCount": 7,
+        "embeddedPngCount": 0,
+        "noScriptEventHandlersDtdEntitiesForeignObjectsOrExternalHref": true
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "cursor",
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/cursor-light.svg",
+      "sha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+      "bytes": 4388,
+      "officialSource": "https://cursor.com/marketing-static/favicon-light.svg",
+      "upstreamSha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "SVG",
+        "rootNamespaceVerified": true,
+        "elementCount": 7,
+        "embeddedPngCount": 0,
+        "noScriptEventHandlersDtdEntitiesForeignObjectsOrExternalHref": true
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "cursor",
+          "theme": "light"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/deepseek-harness-dark.svg",
+      "sha256": "dde7db781f41e7aeb4709ff5485af2bdcf7f4b4ea81b4500cfd5df44efdbd817",
+      "bytes": 3634,
+      "officialSource": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/fcc0ad462172522aaf5c93a7b2e01f6b9f0b0159/apps/web/public/favicon-dark.svg",
+      "upstreamSha256": "dde7db781f41e7aeb4709ff5485af2bdcf7f4b4ea81b4500cfd5df44efdbd817",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "SVG",
+        "rootNamespaceVerified": true,
+        "elementCount": 2,
+        "embeddedPngCount": 0,
+        "noScriptEventHandlersDtdEntitiesForeignObjectsOrExternalHref": true
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "deepseek",
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/deepseek-harness-light.svg",
+      "sha256": "9e983b4f649c25c6ca0623a50be1a6e705fd8f49f756638b980fa13b40575ab6",
+      "bytes": 3634,
+      "officialSource": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/fcc0ad462172522aaf5c93a7b2e01f6b9f0b0159/apps/web/public/favicon.svg",
+      "upstreamSha256": "9e983b4f649c25c6ca0623a50be1a6e705fd8f49f756638b980fa13b40575ab6",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "SVG",
+        "rootNamespaceVerified": true,
+        "elementCount": 2,
+        "embeddedPngCount": 0,
+        "noScriptEventHandlersDtdEntitiesForeignObjectsOrExternalHref": true
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "deepseek",
+          "theme": "light"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/gemini.png",
+      "sha256": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee",
+      "bytes": 2246,
+      "officialSource": "https://geminicli.com/icon.png",
+      "upstreamSha256": "351e9f5b1bf863d738cd7be4ed040a625a1419450ae7fc490143e4042b7c2438",
+      "upstreamBytesRetained": false,
+      "mediaValidation": {
+        "format": "PNG",
+        "signatureAndDecodeVerified": true,
+        "width": 64,
+        "height": 64
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "gemini",
+          "theme": "dark"
+        },
+        {
+          "provider": "gemini",
+          "theme": "light"
+        }
+      ],
+      "transformationVerification": {
+        "sourceDownloadPath": "/tmp/orchester-current-gemini-official-icon-20261111.png",
+        "sourceBytes": 46696,
+        "sourceSha256": "351e9f5b1bf863d738cd7be4ed040a625a1419450ae7fc490143e4042b7c2438",
+        "originalWidth": 1645,
+        "originalHeight": 1645,
+        "canonicalWidth": 64,
+        "canonicalHeight": 64,
+        "method": "Lanczos",
+        "matchedColorModePipeline": [
+          "original color mode"
+        ],
+        "decodedPixelsIndependentlyEqualExpectedResize": true
+      }
+    },
+    {
+      "path": "packages/design/src/assets/agents/hermes-dark.svg",
+      "sha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+      "bytes": 137768,
+      "officialSource": "https://raw.githubusercontent.com/NousResearch/hermes-agent/9373dc1e315a68446f9767afd7acd15d4c0642b8/assets/icon-master-dark.svg",
+      "upstreamSha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "SVG",
+        "rootNamespaceVerified": true,
+        "elementCount": 8,
+        "embeddedPngCount": 0,
+        "noScriptEventHandlersDtdEntitiesForeignObjectsOrExternalHref": true
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "hermes",
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/hermes-light.svg",
+      "sha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+      "bytes": 116350,
+      "officialSource": "https://raw.githubusercontent.com/NousResearch/hermes-agent/9373dc1e315a68446f9767afd7acd15d4c0642b8/assets/icon-master.svg",
+      "upstreamSha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "SVG",
+        "rootNamespaceVerified": true,
+        "elementCount": 8,
+        "embeddedPngCount": 0,
+        "noScriptEventHandlersDtdEntitiesForeignObjectsOrExternalHref": true
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "hermes",
+          "theme": "light"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/kilo.svg",
+      "sha256": "5b537e31ef6037cadc434390c5d38687b3752c37ea8c4e2a09b9d62b4fae4c78",
+      "bytes": 674,
+      "officialSource": "https://raw.githubusercontent.com/Kilo-Org/kilocode/2649e61b9eca9619f0dcbd3b2c53deb04c8b26ab/packages/kilo-docs/public/favicon/favicon.svg",
+      "upstreamSha256": "5b537e31ef6037cadc434390c5d38687b3752c37ea8c4e2a09b9d62b4fae4c78",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "SVG",
+        "rootNamespaceVerified": true,
+        "elementCount": 10,
+        "embeddedPngCount": 0,
+        "noScriptEventHandlersDtdEntitiesForeignObjectsOrExternalHref": true
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "kilo",
+          "theme": "dark"
+        },
+        {
+          "provider": "kilo",
+          "theme": "light"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/openclaw.svg",
+      "sha256": "74e1fb7542675f68aafe502576f7c857c3f3620d07095e910515e3c05d62ab2e",
+      "bytes": 3271,
+      "officialSource": "https://github.com/openclaw/openclaw/blob/44a2948a9eaf4345069d4b652ae382d10dd08f62/ui/public/favicon.svg",
+      "upstreamSha256": "74e1fb7542675f68aafe502576f7c857c3f3620d07095e910515e3c05d62ab2e",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "SVG",
+        "rootNamespaceVerified": true,
+        "elementCount": 22,
+        "embeddedPngCount": 0,
+        "noScriptEventHandlersDtdEntitiesForeignObjectsOrExternalHref": true
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "openclaw",
+          "theme": "dark"
+        },
+        {
+          "provider": "openclaw",
+          "theme": "light"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/opencode.svg",
+      "sha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+      "bytes": 612,
+      "officialSource": "https://raw.githubusercontent.com/anomalyco/opencode/e56eff2bc01649b3aa21224876b8874e77dea4b0/packages/ui/src/assets/favicon/favicon.svg",
+      "upstreamSha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "SVG",
+        "rootNamespaceVerified": true,
+        "elementCount": 6,
+        "embeddedPngCount": 0,
+        "noScriptEventHandlersDtdEntitiesForeignObjectsOrExternalHref": true
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "opencode",
+          "theme": "dark"
+        },
+        {
+          "provider": "opencode",
+          "theme": "light"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/pi.svg",
+      "sha256": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b",
+      "bytes": 334,
+      "officialSource": "https://pi.dev/logo.svg",
+      "upstreamSha256": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "SVG",
+        "rootNamespaceVerified": true,
+        "elementCount": 4,
+        "embeddedPngCount": 0,
+        "noScriptEventHandlersDtdEntitiesForeignObjectsOrExternalHref": true
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "pi",
+          "theme": "dark"
+        },
+        {
+          "provider": "pi",
+          "theme": "light"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/qwen.svg",
+      "sha256": "24156c849c9124505e13b38c6583a9d5d85a1f57d996c324d967f480a4d88696",
+      "bytes": 1117,
+      "officialSource": "https://github.com/QwenLM/qwen-code/blob/e19e1ebe7881960ab2e3319d677c491254600571/packages/desktop/bootstrap/qwen-code-logo.svg",
+      "upstreamSha256": "24156c849c9124505e13b38c6583a9d5d85a1f57d996c324d967f480a4d88696",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "SVG",
+        "rootNamespaceVerified": true,
+        "elementCount": 4,
+        "embeddedPngCount": 0,
+        "noScriptEventHandlersDtdEntitiesForeignObjectsOrExternalHref": true
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "qwen",
+          "theme": "dark"
+        },
+        {
+          "provider": "qwen",
+          "theme": "light"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/roo.png",
+      "sha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "bytes": 5626,
+      "officialSource": "https://RooVeterinaryInc.gallery.vsassets.io/_apis/public/gallery/publisher/RooVeterinaryInc/extension/roo-cline/latest/assetbyname/Microsoft.VisualStudio.Services.Icons.Default",
+      "upstreamSha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "PNG",
+        "signatureAndDecodeVerified": true,
+        "width": 128,
+        "height": 128
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "roo",
+          "theme": "dark"
+        },
+        {
+          "provider": "roo",
+          "theme": "light"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/trae.png",
+      "sha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+      "bytes": 488,
+      "officialSource": "https://lf-cdn.trae.com.cn/obj/trae-com-cn/trae_website_prod_cn/favicon.png",
+      "upstreamSha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "PNG",
+        "signatureAndDecodeVerified": true,
+        "width": 48,
+        "height": 48
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "trae",
+          "theme": "dark"
+        },
+        {
+          "provider": "trae",
+          "theme": "light"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/workbuddy.svg",
+      "sha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "bytes": 4142,
+      "officialSource": "https://assets.workbuddy.cn/web/workbuddy/5611ca0b566ae70e862617fecf6f3c8b05e5515a/assets/logo.svg",
+      "upstreamSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "SVG",
+        "rootNamespaceVerified": true,
+        "elementCount": 21,
+        "embeddedPngCount": 0,
+        "noScriptEventHandlersDtdEntitiesForeignObjectsOrExternalHref": true
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "workbuddy",
+          "theme": "dark"
+        },
+        {
+          "provider": "workbuddy",
+          "theme": "light"
+        }
+      ]
+    },
+    {
+      "path": "packages/design/src/assets/agents/zcode.png",
+      "sha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "bytes": 6479,
+      "officialSource": "https://zcode.z.ai/favicon-192x192.png?v=20260707-transparent",
+      "upstreamSha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "upstreamBytesRetained": true,
+      "mediaValidation": {
+        "format": "PNG",
+        "signatureAndDecodeVerified": true,
+        "width": 192,
+        "height": 192
+      },
+      "currentGitBlobByteExact": true,
+      "themesAndProviders": [
+        {
+          "provider": "zcode",
+          "theme": "dark"
+        },
+        {
+          "provider": "zcode",
+          "theme": "light"
+        }
+      ]
+    }
+  ],
+  "identities": [
+    {
+      "provider": "codex",
+      "displayName": "Codex",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/codex.png",
+          "sha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+          "bytes": 10969,
+          "officialSource": "https://openai.gallery.vsassets.io/_apis/public/gallery/publisher/openai/extension/chatgpt/latest/assetbyname/Microsoft.VisualStudio.Services.Icons.Default",
+          "upstreamSha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/codex-light.svg",
+          "sha256": "8652777b55544c572ba445dd230a90c2e248611e92eaa77de5805e8d0561fc30",
+          "bytes": 2008,
+          "officialSource": "https://openai.gallerycdn.vsassets.io/extensions/openai/chatgpt/26.51106.51428/1794372105882/Microsoft.VisualStudio.Services.VSIXPackage",
+          "upstreamSha256": "8652777b55544c572ba445dd230a90c2e248611e92eaa77de5805e8d0561fc30",
+          "upstreamBytesRetained": true,
+          "officialPackageEntry": "extension/resources/blossom-black.svg"
+        }
+      }
+    },
+    {
+      "provider": "claude",
+      "displayName": "Claude Code",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/claude.png",
+          "sha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+          "bytes": 10358,
+          "officialSource": "https://anthropic.gallery.vsassets.io/_apis/public/gallery/publisher/anthropic/extension/claude-code/latest/assetbyname/Microsoft.VisualStudio.Services.Icons.Default",
+          "upstreamSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/claude.png",
+          "sha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+          "bytes": 10358,
+          "officialSource": "https://anthropic.gallery.vsassets.io/_apis/public/gallery/publisher/anthropic/extension/claude-code/latest/assetbyname/Microsoft.VisualStudio.Services.Icons.Default",
+          "upstreamSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+          "upstreamBytesRetained": true
+        }
+      }
+    },
+    {
+      "provider": "deepseek",
+      "displayName": "DeepSeek Harness",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/deepseek-harness-dark.svg",
+          "sha256": "dde7db781f41e7aeb4709ff5485af2bdcf7f4b4ea81b4500cfd5df44efdbd817",
+          "bytes": 3634,
+          "officialSource": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/fcc0ad462172522aaf5c93a7b2e01f6b9f0b0159/apps/web/public/favicon-dark.svg",
+          "upstreamSha256": "dde7db781f41e7aeb4709ff5485af2bdcf7f4b4ea81b4500cfd5df44efdbd817",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/deepseek-harness-light.svg",
+          "sha256": "9e983b4f649c25c6ca0623a50be1a6e705fd8f49f756638b980fa13b40575ab6",
+          "bytes": 3634,
+          "officialSource": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/fcc0ad462172522aaf5c93a7b2e01f6b9f0b0159/apps/web/public/favicon.svg",
+          "upstreamSha256": "9e983b4f649c25c6ca0623a50be1a6e705fd8f49f756638b980fa13b40575ab6",
+          "upstreamBytesRetained": true
+        }
+      }
+    },
+    {
+      "provider": "opencode",
+      "displayName": "OpenCode",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/opencode.svg",
+          "sha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+          "bytes": 612,
+          "officialSource": "https://raw.githubusercontent.com/anomalyco/opencode/e56eff2bc01649b3aa21224876b8874e77dea4b0/packages/ui/src/assets/favicon/favicon.svg",
+          "upstreamSha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/opencode.svg",
+          "sha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+          "bytes": 612,
+          "officialSource": "https://raw.githubusercontent.com/anomalyco/opencode/e56eff2bc01649b3aa21224876b8874e77dea4b0/packages/ui/src/assets/favicon/favicon.svg",
+          "upstreamSha256": "e29bbe33380ad1c1ada9134b52f229d30e9776d60481512c9d81f2bb6f37def9",
+          "upstreamBytesRetained": true
+        }
+      }
+    },
+    {
+      "provider": "gemini",
+      "displayName": "Gemini CLI",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/gemini.png",
+          "sha256": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee",
+          "bytes": 2246,
+          "officialSource": "https://geminicli.com/icon.png",
+          "upstreamSha256": "351e9f5b1bf863d738cd7be4ed040a625a1419450ae7fc490143e4042b7c2438",
+          "upstreamBytesRetained": false
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/gemini.png",
+          "sha256": "b4e05f113a98f53b76e7832e116d3c3a93b90951ca4f358a7d46f3922e6f43ee",
+          "bytes": 2246,
+          "officialSource": "https://geminicli.com/icon.png",
+          "upstreamSha256": "351e9f5b1bf863d738cd7be4ed040a625a1419450ae7fc490143e4042b7c2438",
+          "upstreamBytesRetained": false
+        }
+      }
+    },
+    {
+      "provider": "antigravity",
+      "displayName": "Antigravity",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/antigravity.svg",
+          "sha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+          "bytes": 5037,
+          "officialSource": "https://antigravity.google/favicon.svg",
+          "upstreamSha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/antigravity.svg",
+          "sha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+          "bytes": 5037,
+          "officialSource": "https://antigravity.google/favicon.svg",
+          "upstreamSha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+          "upstreamBytesRetained": true
+        }
+      }
+    },
+    {
+      "provider": "cursor",
+      "displayName": "Cursor",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/cursor-dark.svg",
+          "sha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+          "bytes": 4373,
+          "officialSource": "https://cursor.com/marketing-static/favicon.svg",
+          "upstreamSha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/cursor-light.svg",
+          "sha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+          "bytes": 4388,
+          "officialSource": "https://cursor.com/marketing-static/favicon-light.svg",
+          "upstreamSha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+          "upstreamBytesRetained": true
+        }
+      }
+    },
+    {
+      "provider": "workbuddy",
+      "displayName": "WorkBuddy",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/workbuddy.svg",
+          "sha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+          "bytes": 4142,
+          "officialSource": "https://assets.workbuddy.cn/web/workbuddy/5611ca0b566ae70e862617fecf6f3c8b05e5515a/assets/logo.svg",
+          "upstreamSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/workbuddy.svg",
+          "sha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+          "bytes": 4142,
+          "officialSource": "https://assets.workbuddy.cn/web/workbuddy/5611ca0b566ae70e862617fecf6f3c8b05e5515a/assets/logo.svg",
+          "upstreamSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+          "upstreamBytesRetained": true
+        }
+      }
+    },
+    {
+      "provider": "qwen",
+      "displayName": "Qwen Code",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/qwen.svg",
+          "sha256": "24156c849c9124505e13b38c6583a9d5d85a1f57d996c324d967f480a4d88696",
+          "bytes": 1117,
+          "officialSource": "https://github.com/QwenLM/qwen-code/blob/e19e1ebe7881960ab2e3319d677c491254600571/packages/desktop/bootstrap/qwen-code-logo.svg",
+          "upstreamSha256": "24156c849c9124505e13b38c6583a9d5d85a1f57d996c324d967f480a4d88696",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/qwen.svg",
+          "sha256": "24156c849c9124505e13b38c6583a9d5d85a1f57d996c324d967f480a4d88696",
+          "bytes": 1117,
+          "officialSource": "https://github.com/QwenLM/qwen-code/blob/e19e1ebe7881960ab2e3319d677c491254600571/packages/desktop/bootstrap/qwen-code-logo.svg",
+          "upstreamSha256": "24156c849c9124505e13b38c6583a9d5d85a1f57d996c324d967f480a4d88696",
+          "upstreamBytesRetained": true
+        }
+      }
+    },
+    {
+      "provider": "openclaw",
+      "displayName": "OpenClaw",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/openclaw.svg",
+          "sha256": "74e1fb7542675f68aafe502576f7c857c3f3620d07095e910515e3c05d62ab2e",
+          "bytes": 3271,
+          "officialSource": "https://github.com/openclaw/openclaw/blob/44a2948a9eaf4345069d4b652ae382d10dd08f62/ui/public/favicon.svg",
+          "upstreamSha256": "74e1fb7542675f68aafe502576f7c857c3f3620d07095e910515e3c05d62ab2e",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/openclaw.svg",
+          "sha256": "74e1fb7542675f68aafe502576f7c857c3f3620d07095e910515e3c05d62ab2e",
+          "bytes": 3271,
+          "officialSource": "https://github.com/openclaw/openclaw/blob/44a2948a9eaf4345069d4b652ae382d10dd08f62/ui/public/favicon.svg",
+          "upstreamSha256": "74e1fb7542675f68aafe502576f7c857c3f3620d07095e910515e3c05d62ab2e",
+          "upstreamBytesRetained": true
+        }
+      }
+    },
+    {
+      "provider": "cline",
+      "displayName": "Cline",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/cline-dark.svg",
+          "sha256": "a8932a1fa6a919466b4a36e76519be4a600fc1b83c41d84f94c3e8e45260a8e1",
+          "bytes": 3574,
+          "officialSource": "https://raw.githubusercontent.com/cline/cline/c5df41f937c496ce8c8e689ba58776593c703dfa/assets/branding/logos/cline-icon-white.svg",
+          "upstreamSha256": "a8932a1fa6a919466b4a36e76519be4a600fc1b83c41d84f94c3e8e45260a8e1",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/cline-light.svg",
+          "sha256": "6aab009bf089a8dc1b5452c05c471244a08595b78fd639835eacc0821b887c06",
+          "bytes": 3574,
+          "officialSource": "https://raw.githubusercontent.com/cline/cline/c5df41f937c496ce8c8e689ba58776593c703dfa/assets/branding/logos/cline-icon-dark.svg",
+          "upstreamSha256": "6aab009bf089a8dc1b5452c05c471244a08595b78fd639835eacc0821b887c06",
+          "upstreamBytesRetained": true
+        }
+      }
+    },
+    {
+      "provider": "roo",
+      "displayName": "Roo Code",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/roo.png",
+          "sha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+          "bytes": 5626,
+          "officialSource": "https://RooVeterinaryInc.gallery.vsassets.io/_apis/public/gallery/publisher/RooVeterinaryInc/extension/roo-cline/latest/assetbyname/Microsoft.VisualStudio.Services.Icons.Default",
+          "upstreamSha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/roo.png",
+          "sha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+          "bytes": 5626,
+          "officialSource": "https://RooVeterinaryInc.gallery.vsassets.io/_apis/public/gallery/publisher/RooVeterinaryInc/extension/roo-cline/latest/assetbyname/Microsoft.VisualStudio.Services.Icons.Default",
+          "upstreamSha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+          "upstreamBytesRetained": true
+        }
+      }
+    },
+    {
+      "provider": "kilo",
+      "displayName": "Kilo Code",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/kilo.svg",
+          "sha256": "5b537e31ef6037cadc434390c5d38687b3752c37ea8c4e2a09b9d62b4fae4c78",
+          "bytes": 674,
+          "officialSource": "https://raw.githubusercontent.com/Kilo-Org/kilocode/2649e61b9eca9619f0dcbd3b2c53deb04c8b26ab/packages/kilo-docs/public/favicon/favicon.svg",
+          "upstreamSha256": "5b537e31ef6037cadc434390c5d38687b3752c37ea8c4e2a09b9d62b4fae4c78",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/kilo.svg",
+          "sha256": "5b537e31ef6037cadc434390c5d38687b3752c37ea8c4e2a09b9d62b4fae4c78",
+          "bytes": 674,
+          "officialSource": "https://raw.githubusercontent.com/Kilo-Org/kilocode/2649e61b9eca9619f0dcbd3b2c53deb04c8b26ab/packages/kilo-docs/public/favicon/favicon.svg",
+          "upstreamSha256": "5b537e31ef6037cadc434390c5d38687b3752c37ea8c4e2a09b9d62b4fae4c78",
+          "upstreamBytesRetained": true
+        }
+      }
+    },
+    {
+      "provider": "hermes",
+      "displayName": "Hermes Agent",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/hermes-dark.svg",
+          "sha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+          "bytes": 137768,
+          "officialSource": "https://raw.githubusercontent.com/NousResearch/hermes-agent/9373dc1e315a68446f9767afd7acd15d4c0642b8/assets/icon-master-dark.svg",
+          "upstreamSha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/hermes-light.svg",
+          "sha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+          "bytes": 116350,
+          "officialSource": "https://raw.githubusercontent.com/NousResearch/hermes-agent/9373dc1e315a68446f9767afd7acd15d4c0642b8/assets/icon-master.svg",
+          "upstreamSha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+          "upstreamBytesRetained": true
+        }
+      }
+    },
+    {
+      "provider": "pi",
+      "displayName": "Pi",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/pi.svg",
+          "sha256": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b",
+          "bytes": 334,
+          "officialSource": "https://pi.dev/logo.svg",
+          "upstreamSha256": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/pi.svg",
+          "sha256": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b",
+          "bytes": 334,
+          "officialSource": "https://pi.dev/logo.svg",
+          "upstreamSha256": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b",
+          "upstreamBytesRetained": true
+        }
+      }
+    },
+    {
+      "provider": "crush",
+      "displayName": "Crush",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/crush.png",
+          "sha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+          "bytes": 55448,
+          "officialSource": "https://raw.githubusercontent.com/charmbracelet/crush/1b7582dbba81e0f716e50f20fe44bd04faf7251f/internal/ui/notification/crush-icon-solo.png",
+          "upstreamSha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/crush.png",
+          "sha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+          "bytes": 55448,
+          "officialSource": "https://raw.githubusercontent.com/charmbracelet/crush/1b7582dbba81e0f716e50f20fe44bd04faf7251f/internal/ui/notification/crush-icon-solo.png",
+          "upstreamSha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+          "upstreamBytesRetained": true
+        }
+      }
+    },
+    {
+      "provider": "claude_app",
+      "displayName": "Claude App",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/claude.png",
+          "sha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+          "bytes": 10358,
+          "officialSource": "https://anthropic.gallery.vsassets.io/_apis/public/gallery/publisher/anthropic/extension/claude-code/latest/assetbyname/Microsoft.VisualStudio.Services.Icons.Default",
+          "upstreamSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/claude.png",
+          "sha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+          "bytes": 10358,
+          "officialSource": "https://anthropic.gallery.vsassets.io/_apis/public/gallery/publisher/anthropic/extension/claude-code/latest/assetbyname/Microsoft.VisualStudio.Services.Icons.Default",
+          "upstreamSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+          "upstreamBytesRetained": true
+        }
+      }
+    },
+    {
+      "provider": "trae",
+      "displayName": "Trae",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/trae.png",
+          "sha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+          "bytes": 488,
+          "officialSource": "https://lf-cdn.trae.com.cn/obj/trae-com-cn/trae_website_prod_cn/favicon.png",
+          "upstreamSha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/trae.png",
+          "sha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+          "bytes": 488,
+          "officialSource": "https://lf-cdn.trae.com.cn/obj/trae-com-cn/trae_website_prod_cn/favicon.png",
+          "upstreamSha256": "49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4",
+          "upstreamBytesRetained": true
+        }
+      }
+    },
+    {
+      "provider": "zcode",
+      "displayName": "ZCode",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/zcode.png",
+          "sha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+          "bytes": 6479,
+          "officialSource": "https://zcode.z.ai/favicon-192x192.png?v=20260707-transparent",
+          "upstreamSha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/zcode.png",
+          "sha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+          "bytes": 6479,
+          "officialSource": "https://zcode.z.ai/favicon-192x192.png?v=20260707-transparent",
+          "upstreamSha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+          "upstreamBytesRetained": true
+        }
+      }
+    },
+    {
+      "provider": "craft",
+      "displayName": "Craft Agents",
+      "marks": {
+        "dark": {
+          "path": "packages/design/src/assets/agents/craft.svg",
+          "sha256": "fd195ad28212109ce8fbcd6d2181556bc26b91e79998011af23d5bf0f08cf37c",
+          "bytes": 787,
+          "officialSource": "https://raw.githubusercontent.com/craft-ai-agents/craft-agents-oss/3ce9fc12837541d688a59a8f0a2e9755ceb89ac2/apps/electron/resources/icon.svg",
+          "upstreamSha256": "fd195ad28212109ce8fbcd6d2181556bc26b91e79998011af23d5bf0f08cf37c",
+          "upstreamBytesRetained": true
+        },
+        "light": {
+          "path": "packages/design/src/assets/agents/craft.svg",
+          "sha256": "fd195ad28212109ce8fbcd6d2181556bc26b91e79998011af23d5bf0f08cf37c",
+          "bytes": 787,
+          "officialSource": "https://raw.githubusercontent.com/craft-ai-agents/craft-agents-oss/3ce9fc12837541d688a59a8f0a2e9755ceb89ac2/apps/electron/resources/icon.svg",
+          "upstreamSha256": "fd195ad28212109ce8fbcd6d2181556bc26b91e79998011af23d5bf0f08cf37c",
+          "upstreamBytesRetained": true
+        }
+      }
+    }
+  ],
+  "allCurrentMetadataMappingsMatch24CurrentGitAssets": true,
+  "mediaCounts": {
+    "SVG": 17,
+    "PNG": 7
+  },
+  "priorAssetReceipt": {
+    "path": "/tmp/orchester-complete-agent-frontend-validation-20261111/official-canonical-assets.json",
+    "sha256": "6d6900723c9927d8d1a46c19704295f3daa5982162013694ee7bfe0a1024271b",
+    "scope": "historical upstream provenance; old Codex book and system-theme Pi favicon superseded only by explicit correction receipts"
+  },
+  "correctionReceipts": [
+    {
+      "path": "/tmp/orchester-official-legacy-icons-20261111/codex-visual-correction.json",
+      "sha256": "941b07c00efed55e0c5fb99609779db043f2c401248244593aaa0095433eabdc"
+    },
+    {
+      "path": "/tmp/orchester-official-legacy-icons-20261111/codex-product-icons-range-receipt.json",
+      "sha256": "c1577926942c4ae07f153186cff9ade051e13dbef40766f90793d9c27e618245"
+    },
+    {
+      "path": "/tmp/orchester-official-legacy-icons-20261111/pi-visual-correction.json",
+      "sha256": "3ebe331b3ab64da610d7df5058aaa44d1536f69ae00e9a699c4e0f5f6d06eb89"
+    }
+  ],
+  "upstreamVerificationBoundary": "Captured official-source hashes retained; current canonical Git bytes and media safety independently checked. Mutable latest URLs are snapshot URLs, not claims their remote bytes remain unchanged. Gemini primary PNG freshly downloaded; recorded Lanczos pixels independently verified.",
+  "guiNativeInstallAuthenticationOrModelAcceptanceImplied": false,
+  "privateDataCopied": false
+}

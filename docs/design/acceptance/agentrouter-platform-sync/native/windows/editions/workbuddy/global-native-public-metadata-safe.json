@@ -1,0 +1,70 @@
+{
+    "observedAt":  "2026-11-11T09:34:27.4604065Z",
+    "providerId":  "workbuddy_global",
+    "primaryExe":  "C:\\Users\\han\\WorkBuddy\\WorkBuddyAI\\WorkBuddyAI.exe",
+    "bytes":  204590360,
+    "sha256":  "15880ca7859f417bf8a6a639bacd1da6b63ced83fbead710317dad38b8f6fcc8",
+    "productName":  "WorkBuddy AI",
+    "productVersion":  "5.9.4.0",
+    "fileDescription":  "WorkBuddy AI",
+    "companyName":  "Tencent Technology (Shenzhen) Company Limited",
+    "authenticodeStatus":  "Valid",
+    "publicResources":  [
+                            {
+                                "path":  "C:\\Users\\han\\WorkBuddy\\WorkBuddyAI\\resources\\app.asar",
+                                "bytes":  181847875,
+                                "sha256":  "15a56244c1641096fba0fe0cbfabad1692f8ed473c61a2dae546d775fbab3b1d"
+                            },
+                            {
+                                "path":  "C:\\Users\\han\\WorkBuddy\\WorkBuddyAI\\resources\\install-manifest.json",
+                                "bytes":  9350,
+                                "sha256":  "00cb3caf61ec4d8bad8a70b9ca882c010a807bec8a4b2828bae44b08b3a65879"
+                            },
+                            {
+                                "path":  "C:\\Users\\han\\WorkBuddy\\WorkBuddyAI\\resources\\app.asar.unpacked\\resources\\icon.ico",
+                                "bytes":  62491,
+                                "sha256":  "3c772c4858d6a603da5ea0091b3cff4b642178e14a472c9451bff459aff3c3cd"
+                            },
+                            {
+                                "path":  "C:\\Users\\han\\WorkBuddy\\WorkBuddyAI\\resources\\app.asar.unpacked\\resources\\icon.png",
+                                "bytes":  286954,
+                                "sha256":  "3c2bc7d338c9eacc027af2b27693056b7cbea3a6c0a09225cf87020afe57fd7b"
+                            }
+                        ],
+    "knownProfileDirectoryExistence":  [
+                                           {
+                                               "path":  "C:\\Users\\han\\AppData\\Roaming\\WorkBuddy",
+                                               "exists":  false,
+                                               "contentsNotRead":  true
+                                           },
+                                           {
+                                               "path":  "C:\\Users\\han\\AppData\\Roaming\\WorkBuddy AI",
+                                               "exists":  false,
+                                               "contentsNotRead":  true
+                                           },
+                                           {
+                                               "path":  "C:\\Users\\han\\AppData\\Roaming\\WorkBuddyAI",
+                                               "exists":  false,
+                                               "contentsNotRead":  true
+                                           },
+                                           {
+                                               "path":  "C:\\Users\\han\\.workbuddy",
+                                               "exists":  true,
+                                               "contentsNotRead":  true
+                                           },
+                                           {
+                                               "path":  "C:\\Users\\han\\.workbuddy-ai",
+                                               "exists":  true,
+                                               "contentsNotRead":  true
+                                           },
+                                           {
+                                               "path":  "C:\\Users\\han\\.workbuddyai",
+                                               "exists":  false,
+                                               "contentsNotRead":  true
+                                           }
+                                       ],
+    "profileContentsNotRead":  true,
+    "credentialsNotRead":  true,
+    "installationChanges":  0,
+    "modelCalls":  0
+}

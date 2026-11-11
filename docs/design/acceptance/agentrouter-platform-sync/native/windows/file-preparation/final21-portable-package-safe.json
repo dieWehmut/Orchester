@@ -1,0 +1,237 @@
+{
+    "format":  "orchester-final21-portable-file-preparation-v1",
+    "status":  "file-package-ready-native-runtime-pending",
+    "sourceRevision":  "71def643cb08b208cc79687f79255c504eb14dc6",
+    "expectedPlanSha256":  "8645dca6d20f2d5ff0d845d7c74522f52ca72c6aec49ec9529dcb86a997911cd",
+    "expectedFinalResultSha256":  "7ddcd67633e127a4b664dc69d91cf20bd8751a9ab6a009d8ca73d9b0951fe023",
+    "sourceExportAuditSha256":  "6313572160eee0ed132a87e1fdb50d7a5ad0ff92ade66fac6c0346db86a39680",
+    "apkFile":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\android-studio-21-monitors-continuation-20261111\\app-final21-installed-signer.apk",
+    "apkSha256":  "f83fa2a75c712a3d2e1f3f203cf73ce89204fb4ca0bce4d8c2ef0c4fe3596d3c",
+    "apkBytes":  13960333,
+    "certificateSha256":  "df6df435ccf10a685fb109668da8cdf7b022b481ba346f3143190aeda0c4468e",
+    "nativeApkProvenanceFile":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\android-studio-21-monitors-continuation-20261111\\final21-apk-provenance-safe.json",
+    "nativeApkProvenanceSha256":  "99f975933c96942ae38868dcd8f9acd645a161f3a7396700b24c33b21bf5c003",
+    "remoteExeSha256":  "24c8f9806256cc54b239b03f6b4adc976c3fee50c30bc0f2ecf601971c22ce2a",
+    "remotePackageCandidate":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\remote-package-fresh21",
+    "remotePackageInventory":  [
+                                   {
+                                       "path":  "allow-lan.ps1",
+                                       "sha256":  "2ff1fc87bd198337c2740ef08e51751380870a38376976d5e4e4e17d2efed727"
+                                   },
+                                   {
+                                       "path":  "codex-provider.py",
+                                       "sha256":  "5289ae1c9363a6d488c87a09d1e5c8987f231895633cbb2e8d37fe561c0416be"
+                                   },
+                                   {
+                                       "path":  "LICENSE-APACHE",
+                                       "sha256":  "d631bf0e88c15a29d2213a0424a633b958f2863c08081b6a8bf3df172427b77b"
+                                   },
+                                   {
+                                       "path":  "LICENSE-MIT",
+                                       "sha256":  "965ebe353c29b5a7812fe4034a27e6a557348130658ccfd3c5a680ead935a6cd"
+                                   },
+                                   {
+                                       "path":  "orchester.exe",
+                                       "sha256":  "24c8f9806256cc54b239b03f6b4adc976c3fee50c30bc0f2ecf601971c22ce2a"
+                                   },
+                                   {
+                                       "path":  "orchester-mobile-debug.apk",
+                                       "sha256":  "f83fa2a75c712a3d2e1f3f203cf73ce89204fb4ca0bce4d8c2ef0c4fe3596d3c"
+                                   },
+                                   {
+                                       "path":  "package-info.json",
+                                       "sha256":  "c8ed817f6ccecd4e1f1d64967ad4e4c02bf4d4286ebff5f98d0c053455e90526"
+                                   },
+                                   {
+                                       "path":  "README.md",
+                                       "sha256":  "a304156de7b1497a7ba8f4b005e532852202a6bd22902bb6142bea7066d750c5"
+                                   },
+                                   {
+                                       "path":  "SHA256SUMS.txt",
+                                       "sha256":  "6d7ef60368d19c8c56b81a94559c29589fbb0742e3b5c52bc193bc288170a3bc"
+                                   },
+                                   {
+                                       "path":  "start.ps1",
+                                       "sha256":  "1cbfbc8651d747f834953e5c58b9a53944945637128ac88521ffc872b700b897"
+                                   },
+                                   {
+                                       "path":  "verify.ps1",
+                                       "sha256":  "498b81b4f5670f9ec20879162c5408ddf37188bbc9c3991fbede0fbbcb9f3014"
+                                   },
+                                   {
+                                       "path":  "web/assets/antigravity-DXFfVr6X.svg",
+                                       "sha256":  "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e"
+                                   },
+                                   {
+                                       "path":  "web/assets/brand-icon-Zjdxen9M.png",
+                                       "sha256":  "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06"
+                                   },
+                                   {
+                                       "path":  "web/assets/claude-RJ8il4lB.png",
+                                       "sha256":  "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1"
+                                   },
+                                   {
+                                       "path":  "web/assets/codex-DODyF2an.png",
+                                       "sha256":  "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3"
+                                   },
+                                   {
+                                       "path":  "web/assets/crush-B1wob-OZ.png",
+                                       "sha256":  "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2"
+                                   },
+                                   {
+                                       "path":  "web/assets/cursor-dark-BM_3k4Y4.svg",
+                                       "sha256":  "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260"
+                                   },
+                                   {
+                                       "path":  "web/assets/cursor-light-DGKJuirn.svg",
+                                       "sha256":  "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0"
+                                   },
+                                   {
+                                       "path":  "web/assets/hermes-dark-D5fo9gTB.svg",
+                                       "sha256":  "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36"
+                                   },
+                                   {
+                                       "path":  "web/assets/hermes-light-x1BVlPhG.svg",
+                                       "sha256":  "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684"
+                                   },
+                                   {
+                                       "path":  "web/assets/index-9wEW8k7x.css",
+                                       "sha256":  "0ccaec9543d9001c1e528918446afa1170c46d9fc676c46ba33f1a21a5fbbf20"
+                                   },
+                                   {
+                                       "path":  "web/assets/index--zaH3Y7H.js",
+                                       "sha256":  "7e115c9d4b6236a5de0338b7499f0e09341df65ee03067ad71cd01b578a10a49"
+                                   },
+                                   {
+                                       "path":  "web/assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+                                       "sha256":  "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b"
+                                   },
+                                   {
+                                       "path":  "web/assets/roo-D8yWBDNL.png",
+                                       "sha256":  "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a"
+                                   },
+                                   {
+                                       "path":  "web/assets/workbuddy-D1Gu2IKl.svg",
+                                       "sha256":  "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d"
+                                   },
+                                   {
+                                       "path":  "web/assets/zcode-yL2Qb12j.png",
+                                       "sha256":  "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c"
+                                   },
+                                   {
+                                       "path":  "web/favicon.png",
+                                       "sha256":  "bd2b0e95dade84d5371027cc9616610813b3e7f878b434d54a3a1459111c7db2"
+                                   },
+                                   {
+                                       "path":  "web/index.html",
+                                       "sha256":  "8b944924f56c75a7e97a91bfd2bce4cacfab8b961e24fc04beff80af431bc033"
+                                   }
+                               ],
+    "mobileDistInventory":  [
+                                {
+                                    "path":  "assets/antigravity-DXFfVr6X.svg",
+                                    "sha256":  "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e"
+                                },
+                                {
+                                    "path":  "assets/brand-icon-Zjdxen9M.png",
+                                    "sha256":  "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06"
+                                },
+                                {
+                                    "path":  "assets/claude-RJ8il4lB.png",
+                                    "sha256":  "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1"
+                                },
+                                {
+                                    "path":  "assets/codex-DODyF2an.png",
+                                    "sha256":  "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3"
+                                },
+                                {
+                                    "path":  "assets/crush-B1wob-OZ.png",
+                                    "sha256":  "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2"
+                                },
+                                {
+                                    "path":  "assets/cursor-dark-BM_3k4Y4.svg",
+                                    "sha256":  "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260"
+                                },
+                                {
+                                    "path":  "assets/cursor-light-DGKJuirn.svg",
+                                    "sha256":  "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0"
+                                },
+                                {
+                                    "path":  "assets/hermes-dark-D5fo9gTB.svg",
+                                    "sha256":  "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36"
+                                },
+                                {
+                                    "path":  "assets/hermes-light-x1BVlPhG.svg",
+                                    "sha256":  "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684"
+                                },
+                                {
+                                    "path":  "assets/index-9wEW8k7x.css",
+                                    "sha256":  "0ccaec9543d9001c1e528918446afa1170c46d9fc676c46ba33f1a21a5fbbf20"
+                                },
+                                {
+                                    "path":  "assets/index--zaH3Y7H.js",
+                                    "sha256":  "7e115c9d4b6236a5de0338b7499f0e09341df65ee03067ad71cd01b578a10a49"
+                                },
+                                {
+                                    "path":  "assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+                                    "sha256":  "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b"
+                                },
+                                {
+                                    "path":  "assets/roo-D8yWBDNL.png",
+                                    "sha256":  "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a"
+                                },
+                                {
+                                    "path":  "assets/workbuddy-D1Gu2IKl.svg",
+                                    "sha256":  "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d"
+                                },
+                                {
+                                    "path":  "assets/zcode-yL2Qb12j.png",
+                                    "sha256":  "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c"
+                                },
+                                {
+                                    "path":  "favicon.png",
+                                    "sha256":  "bd2b0e95dade84d5371027cc9616610813b3e7f878b434d54a3a1459111c7db2"
+                                },
+                                {
+                                    "path":  "index.html",
+                                    "sha256":  "8b944924f56c75a7e97a91bfd2bce4cacfab8b961e24fc04beff80af431bc033"
+                                }
+                            ],
+    "officialPackagingSourceInventory":  [
+                                             {
+                                                 "path":  "werkzeug/remote/package-windows.ps1",
+                                                 "sha256":  "d7ec6fb3895e86a8071ae2f4a04c27959d6fcbfbc76334c69610e2bb5633e956"
+                                             },
+                                             {
+                                                 "path":  "werkzeug/remote/verify-windows-package.ps1",
+                                                 "sha256":  "498b81b4f5670f9ec20879162c5408ddf37188bbc9c3991fbede0fbbcb9f3014"
+                                             },
+                                             {
+                                                 "path":  "werkzeug/remote/portable-start.ps1",
+                                                 "sha256":  "1cbfbc8651d747f834953e5c58b9a53944945637128ac88521ffc872b700b897"
+                                             },
+                                             {
+                                                 "path":  "werkzeug/remote/allow-lan.ps1",
+                                                 "sha256":  "2ff1fc87bd198337c2740ef08e51751380870a38376976d5e4e4e17d2efed727"
+                                             },
+                                             {
+                                                 "path":  "werkzeug/remote/codex-provider.py",
+                                                 "sha256":  "5289ae1c9363a6d488c87a09d1e5c8987f231895633cbb2e8d37fe561c0416be"
+                                             },
+                                             {
+                                                 "path":  "LICENSE-APACHE",
+                                                 "sha256":  "d631bf0e88c15a29d2213a0424a633b958f2863c08081b6a8bf3df172427b77b"
+                                             },
+                                             {
+                                                 "path":  "LICENSE-MIT",
+                                                 "sha256":  "965ebe353c29b5a7812fe4034a27e6a557348130658ccfd3c5a680ead935a6cd"
+                                             }
+                                         ],
+    "fileVerifierPassed":  true,
+    "androidFinalAcceptanceBound":  false,
+    "runtimeInputsFrozen":  false,
+    "nativePortableRuntimeAccepted":  false,
+    "defaultInstallChanged":  false,
+    "signals":  0,
+    "modelCalls":  0
+}

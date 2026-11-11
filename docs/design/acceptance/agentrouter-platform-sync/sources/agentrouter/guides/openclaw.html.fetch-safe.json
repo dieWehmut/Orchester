@@ -1,0 +1,16 @@
+{
+  "guidePath": "/docs/openclaw.html",
+  "requestedURL": "https://agentrouter.org/docs/openclaw.html",
+  "anchorLabels": [
+    "OpenClaw"
+  ],
+  "startedAt": 1794395961.104788,
+  "transport": "verified official HTTPS urllib",
+  "httpStatus": 200,
+  "responseURL": "https://agentrouter.org/docs/openclaw.html",
+  "bytes": 37894,
+  "sha256": "2293e46cc47015dfeb867d455b7a7ef87920d9123f1890bbddcca61dda1d39e2",
+  "processOperationCompleted": true,
+  "publicSnapshotFile": "openclaw.html",
+  "finishedAt": 1794395963.4793572
+}

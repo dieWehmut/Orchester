@@ -1,0 +1,44 @@
+{
+    "observedAt":  "2026-11-11T09:29:18.9078197Z",
+    "registrations":  [
+                          {
+                              "registrationId":  "BFD312E9-1019-4F57-9F44-F86246833B50",
+                              "publicFields":  {
+                                                   "DisplayName":  "WorkBuddy 5.9.3",
+                                                   "DisplayVersion":  "5.9.3",
+                                                   "Publisher":  "Tencent Technology (Shenzhen) Company Limited",
+                                                   "DisplayIcon":  "C:\\Users\\han\\software\\workbuddy\\WorkBuddy.exe,0",
+                                                   "URLInfoAbout":  "https://www.workbuddy.cn",
+                                                   "URLUpdateInfo":  "https://www.workbuddy.cn"
+                                               }
+                          },
+                          {
+                              "registrationId":  "C02C88CB-5DAE-4330-AEC1-572CFD048A59",
+                              "publicFields":  {
+                                                   "DisplayName":  "WorkBuddy AI 5.9.4",
+                                                   "DisplayVersion":  "5.9.4",
+                                                   "Publisher":  "Tencent Technology (Shenzhen) Company Limited",
+                                                   "DisplayIcon":  "C:\\Users\\han\\WorkBuddy\\WorkBuddyAI\\WorkBuddyAI.exe,0",
+                                                   "URLInfoAbout":  "https://www.workbuddy.ai",
+                                                   "URLUpdateInfo":  "https://www.workbuddy.ai"
+                                               }
+                          }
+                      ],
+    "brandShortcuts":  [
+                           {
+                               "shortcut":  "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\WorkBuddy AI.lnk",
+                               "targetPath":  "C:\\Users\\han\\WorkBuddy\\WorkBuddyAI\\WorkBuddyAI.exe",
+                               "shortcutSha256":  "f8a5e681a8e43b318d4a980434033af115274ae9a7216397c95cf8ae47cba324"
+                           },
+                           {
+                               "shortcut":  "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\WorkBuddy.lnk",
+                               "targetPath":  "C:\\Users\\han\\software\\workbuddy\\WorkBuddy.exe",
+                               "shortcutSha256":  "873ba4955350c7a1506e8b31d6d422555c5967a2167bffc3d98b1839b0dc6985"
+                           }
+                       ],
+    "shortcutArgumentsNotRead":  true,
+    "credentialsNotRead":  true,
+    "profileContentsNotRead":  true,
+    "installationChanges":  0,
+    "modelCalls":  0
+}

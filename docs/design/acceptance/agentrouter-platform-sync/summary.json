@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 2,
+  "status": "in-progress-not-final-platform-delivery",
+  "finalCodeRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "historicalSourceRevision": "a96a06e445ab6bdc4483ac297c69f8a0e2382bc9",
+  "historicalCatalogProductCount": 20,
+  "requestedCatalogProductCount": 21,
+  "requestedInternationalProductId": "workbuddy_global",
+  "verifiedCurrentSourceScopes": [
+    {
+      "scope": "21 shared provider identities,7 service categories,42 theme mappings and24 official assets",
+      "proof": "sources/audit/final71-current-source-bindings.json"
+    },
+    {
+      "scope": "Monitor selection regression and domestic/international WorkBuddy UI; Web76/Mobile6/Design4 and three typechecks passed",
+      "proof": "tests/frontend/workbuddy-editions/corrected-result.json"
+    },
+    {
+      "scope": "Web37/Mobile17/Site26 artifacts and originalselected730 sourceinput audit equal frozen71/currentbytes; currentfullRust broaderunion731 separately proven",
+      "proof": "sources/audit/final71-current-source-bindings.json"
+    },
+    {
+      "scope": "Functionality58 and test split33; strict netz Clippy/fmt passed,19 identity test names and production prefix preserved",
+      "proof": "tests/backend/workbuddy-editions/gates-independent-review.json"
+    },
+    {
+      "scope": "Original Pages run42999110960/26 live resources equal CI snapshot/177 source inputs equal71",
+      "proof": "deployments/pages/final21-ci-live-independent-review.json"
+    },
+    {
+      "scope": "iOS public sync17 exact; no Xcode/iPhone native acceptance",
+      "proof": "native/ios/final21-public-sync.json"
+    },
+    {
+      "scope": "Native final71 source export1682 Git files plus Web37/Mobile17 frozen",
+      "proof": "native/windows/final71-source-export.json"
+    },
+    {
+      "scope": "Windows original processes observed absent and offline consistent installation/profile/state backups exact; no old natural tray exit or reinstallation claim",
+      "proof": "native/windows/final71-preflight/offline-original-backup-safe.json"
+    },
+    {
+      "scope": "Current Pages26 actualHTTPS200+SHA/size equal originalCI snapshot;21providers42loadedimages24canonical assets/desktop andphone nooverflow",
+      "proof": "deployments/pages/current-live/verification-summary.json"
+    },
+    {
+      "scope": "Current globalWorkBuddy official downloads do not offerLinux and legacydeb404;domesticELF unchanged;ClaudeLinux official platform/package still unverified due transport errors",
+      "proof": "native/wsl/current-official-availability/final-official-install-status-safe.json"
+    },
+    {
+      "scope": "Current fullRust103testprograms1304pass1ignore/fmt/strictworkspaceClippy/nativebuild0;368inputs stable",
+      "proof": "tests/backend/final71-full-workspace/summary.json"
+    },
+    {
+      "scope": "Primary AgentRouter17 guide URLs verified/16unique guide products+Geminiindex=17 named products;canonical21 addslegacy3+WorkBuddyGlobal1,no missing",
+      "proof": "sources/agentrouter/final-guide-scope-safe.json"
+    },
+    {
+      "scope": "Actual currentLinux7337 source71/ELFd983/21providers;17publicresourcesexact;3effective devices/5persistedentries JSONvaluesretained;5taskrawrowsexact;temporaryauthrevoked",
+      "proof": "deployments/linux/current-final21/final-safe.json"
+    },
+    {
+      "scope": "CurrentWSL read-only16unique nativeproducts/19entries and17persistent receipt copies verified;runtime oldstage notrerun",
+      "proof": "native/wsl/current-matrix/current-native-installation-matrix-safe.json"
+    },
+    {
+      "scope": "Current Windows core16 all actualexit0/notimeout/childprocessexited; Desktop38/Remote18 immutablefiles; AndroidAPK explicitlydeferred; newnativeactualworkerPIDabsence observed withoutoriginalHANDLEverification",
+      "proof": "native/windows/final71-build/final-result.json"
+    },
+    {
+      "scope": "NativePowerShell62 and actualJavaScript24 strict provider/promotion/Android predicate audit passed; isolated firstwrapperfailure1 retained",
+      "proof": "native/windows/final71-build/producer-safe-audit-summary.json"
+    },
+    {
+      "scope": "Current configuredmaxthreads8/0600 and actual toolcontract9 includingroot separately observed; no causal hot-expansion claim",
+      "proof": "maintenance/current-concurrency-safe.json"
+    },
+    {
+      "scope": "Four oldworktree paths/localbranches currentlyabsent and retainedcommit mainancestors; originaldeletebytes not reconstructed; no Cphysicalreleaseclaim",
+      "proof": "maintenance/current-worktree-cleanup-state-safe.json"
+    },
+    {
+      "scope": "Actual newnative observation worker16008 PIDabsent,16completedgates0/noTimeout/0signals; originalHANDLE notverified/no originalexecutor exitcodeclaim",
+      "proof": "native/windows/final71-build/current-worker-observation-safe.json"
+    },
+    {
+      "scope": "Independent native16 orderedtypedgates/Git1682+Cexport/plan967=911Git+54public+2taskproof hashes exact; rootgradlew.batCRLF normalizes to originalGitLF; EXEcontents notindependentlyread",
+      "proof": "sources/audit/current-native16-review-safe.json"
+    },
+    {
+      "scope": "ActualWindows portablefilepackage28files/17Web fileverifier passed with current21APKf83fa/originalcertdf6; AndroidFinalBinding/runtimeInputs/nativeportable14/defaultinstall false",
+      "proof": "native/windows/file-preparation/final21-portable-package-safe.json"
+    },
+    {
+      "scope": "ActualWindows interactiveprerequisite blocked: InputDesktop/cursorError5,session1process vsactiveConsole3,no username/domain/sameSIDproof; native18/reinstall/tray/7338/Claudepayloadfalse",
+      "proof": "native/windows/interactive-current/final21-readiness-blocked-safe.json"
+    },
+    {
+      "scope": "Currentownedtaskcache25files/23373069logicalbytes removed;28preparedpackage and originalsource/profiles/backup unchanged; no netCphysicaldelta claim",
+      "proof": "maintenance/owned-package-preparation-cache-cleanup-safe.json"
+    },
+    {
+      "scope": "CurrentAndroid41nativeGitinputs+17publicmirror/source71/nativeGradle0/appf83fa/testb5c13/originalcertdf6/signverify0/17APKpublicresourcesexact",
+      "proof": "native/android/current21-partial/final21-apk-provenance-safe.json"
+    },
+    {
+      "scope": "CurrentAndroidnewapp/test nativeinstall successful0/processExited/originalcert; install-r data retentionrequested,originalcredentials retentionnotyetproved",
+      "proof": "native/android/current21-partial/install-native-final21-app-safe.json"
+    },
+    {
+      "scope": "CurrentAndroidNativeBridge compactsafe resultOK/exit0; producerreports4tests,parsedcountnotincompactJSON; IDE/UI/PTy/credentialidentity/finalcleanup pending",
+      "proof": "native/android/current21-partial/native-bridge-tests-final21-current-apk-result.json"
+    }
+  ],
+  "completedHistoricalEpochs": [
+    "a96a06e official assets and selected frontend/backend/native install receipts",
+    "a96a06e Windows16 build gates/coreDesktop38/coreRemote18 without APK",
+    "a96a06e Linux7337 actual deployment and state/auth retention at original observation",
+    "89e577 Pages26 live resources equal CI artifact",
+    "Selected C-drive caches7219765510+587458817 bytes removed; dynamic free-space values are snapshots"
+  ],
+  "pendingCurrentEpochScopes": [
+    "Windows sameuserinteractiveInputDesktop/cursor prerequisite currentlyblocked; native18/normal tray/reinstall/7338 pending",
+    "Android actualIDEprojectsync in proved correctuser/session/nativeUI21+42/PTy/credentialidentity/decryption/rollback and cleanup pending; signednew21APK/install/compactNativeBridgeOK alreadyverified",
+    "International WorkBuddy native WSL package and profile isolation; recorded official package unavailable",
+    "Claude App current native Windows executable/package and official Linux support/install evidence"
+  ],
+  "folderResponsibilities": {
+    "sources": "Official origins, source/provenance and current safe source audits",
+    "tests/backend": "Backend functionality, migration and full-workspace command scopes",
+    "tests/frontend": "Shared/mobile/Web builds and targeted validation scopes",
+    "native/windows": "Windows source export,build,install/runtime and Orchester reinstallation",
+    "native/wsl": "WSL native installation/runtime proofs and vendor-channel availability",
+    "native/android": "Android Studio/native APK/UI/PTY acceptance stages when actual receipts are available",
+    "native/ios": "Capacitor public-resource sync boundary",
+    "deployments/linux": "Actual persistent service and state/auth retention verification",
+    "deployments/pages": "CI snapshot and actual current public resource/DOM verification",
+    "maintenance": "Merged branches,selected cache cleanup and configured/runtime concurrency distinction"
+  },
+  "historicalObservationsAreNotCurrentProcessLiveness": true,
+  "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
+  "historical38Unmodified": true,
+  "updatedAt": "2026-11-11T12:31:46.264648+00:00",
+  "currentCompiledInputUnionCount": 731,
+  "currentEffectiveLinuxDeviceCount": 3,
+  "currentPersistedLinuxAuthEntryCount": 5,
+  "currentLinuxRemoteStateSemanticJSONExact": true,
+  "currentLinuxRemoteStateRawSQLStringsExact": false,
+  "currentWindowsCoreGateCount": 16,
+  "currentWindowsCoreGatesPassed": true,
+  "currentWindowsNativeRuntimeGateCount": 18,
+  "currentWindowsNativeRuntimeVerified": false,
+  "currentDeveloperRuntimeConcurrencyIncludingRoot": 9,
+  "configuredMaxThreads": 8,
+  "requirementAuditPath": "sources/requirement-delivery-audit.json",
+  "currentWindowsNativeWorkerPidAbsenceVerified": true,
+  "currentWindowsOriginalWorkerHandleIdentityVerified": false,
+  "currentWindowsCoreTerminalProof": "native/windows/final71-build/native16-core-terminal-safe.json",
+  "currentWindowsInteractiveReadinessVerified": false,
+  "currentWindowsSameUserInteractiveSessionProved": false,
+  "currentAndroidPartialNativeBuildInstallTestsVerified": true,
+  "currentAndroidActualIDESyncVerified": false,
+  "currentAndroidNativeUI21Providers42ImagesVerified": false
+}

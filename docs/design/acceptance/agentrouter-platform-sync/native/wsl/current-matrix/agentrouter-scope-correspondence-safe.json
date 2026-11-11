@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "observedAt": 1794396339.7075028,
+  "scopeSource": "https://agentrouter.org/docs/index.html",
+  "scopeIndexSha256": "5ed3e9ff682543e79edaf0d85a732d41029cf3aca1fe5c424beeddda16ba84ba",
+  "officialIndexLinkedUniqueGuides": [
+    {
+      "guidePath": "/docs/claude-app.html",
+      "provider": "claude_app"
+    },
+    {
+      "guidePath": "/docs/claude-code-vscode.html",
+      "provider": "claude"
+    },
+    {
+      "guidePath": "/docs/claude-code.html",
+      "provider": "claude"
+    },
+    {
+      "guidePath": "/docs/cline.html",
+      "provider": "cline"
+    },
+    {
+      "guidePath": "/docs/codex.html",
+      "provider": "codex"
+    },
+    {
+      "guidePath": "/docs/craft-agents.html",
+      "provider": "craft"
+    },
+    {
+      "guidePath": "/docs/crush.html",
+      "provider": "crush"
+    },
+    {
+      "guidePath": "/docs/hermes.html",
+      "provider": "hermes"
+    },
+    {
+      "guidePath": "/docs/kilocode.html",
+      "provider": "kilo"
+    },
+    {
+      "guidePath": "/docs/openclaw.html",
+      "provider": "openclaw"
+    },
+    {
+      "guidePath": "/docs/opencode.html",
+      "provider": "opencode"
+    },
+    {
+      "guidePath": "/docs/pi.html",
+      "provider": "pi"
+    },
+    {
+      "guidePath": "/docs/qwencode.html",
+      "provider": "qwen"
+    },
+    {
+      "guidePath": "/docs/roocode.html",
+      "provider": "roo"
+    },
+    {
+      "guidePath": "/docs/trae.html",
+      "provider": "trae"
+    },
+    {
+      "guidePath": "/docs/workbuddy.html",
+      "provider": "workbuddy"
+    },
+    {
+      "guidePath": "/docs/zcode.html",
+      "provider": "zcode"
+    }
+  ],
+  "uniqueLinkedGuideCount": 17,
+  "uniqueLinkedGuideProviders": 16,
+  "additionalGeminiEvidence": {
+    "source": "Official homepage rendered feature text",
+    "featureText": "支持 Claude Code、Codex、Gemini Cli 等多款工具",
+    "provider": "gemini"
+  },
+  "documentedDistinctProducts": [
+    "claude",
+    "claude_app",
+    "cline",
+    "codex",
+    "craft",
+    "crush",
+    "gemini",
+    "hermes",
+    "kilo",
+    "openclaw",
+    "opencode",
+    "pi",
+    "qwen",
+    "roo",
+    "trae",
+    "workbuddy",
+    "zcode"
+  ],
+  "documentedDistinctProductCount": 17,
+  "readOnlyCurrentNativeVerificationEntries": 19,
+  "readOnlyCurrentNativeDistinctProducts": [
+    "claude",
+    "cline",
+    "codex",
+    "craft",
+    "crush",
+    "gemini",
+    "hermes",
+    "kilo",
+    "openclaw",
+    "opencode",
+    "pi",
+    "qwen",
+    "roo",
+    "trae",
+    "workbuddy",
+    "zcode"
+  ],
+  "nativeDistinctProductCount": 16,
+  "missingDocumentedNativeProducts": [
+    "claude_app"
+  ],
+  "claudeAppLinux": {
+    "notCountedAsClaudeCodeCliOrVsCodeExtension": true,
+    "officialLinuxSupportAndPackageRemainUnverified": "See parent official platform research; CLI presence cannot prove Desktop App support."
+  },
+  "workbuddyGlobalAdditionalEdition": {
+    "notPartOf17ProductAgentRouterScope": true,
+    "notCountedAsInstalledLinux": true,
+    "currentOfficialGlobalLinuxChannelUnavailable": "Parent official primary download component + actual legacy404 evidence retained."
+  },
+  "legacyKnownPublicPaths": {
+    "deepseek": [
+      {
+        "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@deepseek-ai/dsh/lib/bin.js",
+        "exists": false
+      },
+      {
+        "path": "/home/han/.local/bin/dsh",
+        "exists": false
+      }
+    ],
+    "cursor": [
+      {
+        "path": "/home/han/.local/bin/cursor-agent",
+        "exists": false
+      },
+      {
+        "path": "/usr/bin/cursor-agent",
+        "exists": false
+      }
+    ],
+    "antigravity": [
+      {
+        "path": "/usr/bin/antigravity",
+        "exists": false
+      },
+      {
+        "path": "/usr/share/antigravity/bin/antigravity",
+        "exists": false
+      },
+      {
+        "path": "/home/han/.local/bin/antigravity",
+        "exists": false
+      }
+    ]
+  },
+  "legacyWholeSystemInstallationAbsenceClaimed": false,
+  "guideContentPagesFetchedByThisMatrixAudit": false,
+  "guideBodySupportClaimsImplied": false,
+  "installationMatrixSource": {
+    "relativePath": "current-native-installation-matrix-safe.json",
+    "sha256": "ba384b5d57ecbb1604f6f4d8e4958e2bbbc8d5e9dd5772fd771a57676c0d075e"
+  },
+  "noRuntimeVersionCommandsRepeated": true,
+  "modelCalls": 0,
+  "authOrSetupCalls": 0
+}

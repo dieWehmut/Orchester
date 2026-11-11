@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "observedAt": 1794396398.33319,
+  "selectedSafeFiles": [
+    {
+      "relativePath": "persistent-receipt-byte-comparison.json",
+      "bytes": 5121,
+      "sha256": "4ee686cf45fa982936cacec9dcfccc90bf59557887a2d17ad3627416e098f4ee"
+    },
+    {
+      "relativePath": "current-native-installation-matrix-safe.json",
+      "bytes": 27092,
+      "sha256": "ba384b5d57ecbb1604f6f4d8e4958e2bbbc8d5e9dd5772fd771a57676c0d075e"
+    },
+    {
+      "relativePath": "agentrouter-scope-correspondence-safe.json",
+      "bytes": 4321,
+      "sha256": "d1ef5b80a893875e8f2e34816aaa49609a0803f1ad9f37b58e6918f7865f0b4f"
+    }
+  ],
+  "secretPatternScanMatches": 0,
+  "sourceReceiptArchiveByteComparisons": 17,
+  "configurationContentsCopied": false,
+  "rawLiveProcessArgvOrEnvironmentCopied": false,
+  "installerExecutablesOrPrivateDatabasesCopied": false,
+  "operationMutations": [
+    "Only new task evidence JSONs in this private persistent directory"
+  ],
+  "gitOrRepoWrites": 0
+}

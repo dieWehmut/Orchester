@@ -1,0 +1,305 @@
+{
+  "url": "https://diewehmut.github.io/Orchester/",
+  "providerCount": 21,
+  "providers": [
+    {
+      "id": "codex",
+      "name": "Codex",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "claude",
+      "name": "Claude Code",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek Harness",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "opencode",
+      "name": "OpenCode",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini CLI",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "antigravity",
+      "name": "Antigravity",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "workbuddy",
+      "name": "WorkBuddy 国内版",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "workbuddy_global",
+      "name": "WorkBuddy AI 国际版",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "qwen",
+      "name": "Qwen Code",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "openclaw",
+      "name": "OpenClaw",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "cline",
+      "name": "Cline",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "roo",
+      "name": "Roo Code",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "kilo",
+      "name": "Kilo Code",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "hermes",
+      "name": "Hermes Agent",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "pi",
+      "name": "Pi",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "crush",
+      "name": "Crush",
+      "images": [
+        {
+          "loaded": false,
+          "visible": false
+        },
+        {
+          "loaded": false,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "claude_app",
+      "name": "Claude App",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "trae",
+      "name": "Trae",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "zcode",
+      "name": "ZCode",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "craft",
+      "name": "Craft Agents",
+      "images": [
+        {
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    }
+  ],
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "horizontalOverflow": false
+}

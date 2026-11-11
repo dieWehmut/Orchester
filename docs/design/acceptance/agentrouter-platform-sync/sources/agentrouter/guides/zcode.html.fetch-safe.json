@@ -1,0 +1,16 @@
+{
+  "guidePath": "/docs/zcode.html",
+  "requestedURL": "https://agentrouter.org/docs/zcode.html",
+  "anchorLabels": [
+    "ZCode"
+  ],
+  "startedAt": 1794395965.6856208,
+  "transport": "verified official HTTPS urllib",
+  "httpStatus": 200,
+  "responseURL": "https://agentrouter.org/docs/zcode.html",
+  "bytes": 28397,
+  "sha256": "64a86526dceb13437b8d2f981ff97f513408e8422373d038ec927bc032a94a25",
+  "processOperationCompleted": true,
+  "publicSnapshotFile": "zcode.html",
+  "finishedAt": 1794395968.969115
+}

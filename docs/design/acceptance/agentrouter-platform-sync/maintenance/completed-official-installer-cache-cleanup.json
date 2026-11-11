@@ -1,0 +1,61 @@
+{
+  "status": "completed-official-installer-caches-removed",
+  "beforeNativeCFreeBytes": 8999071744,
+  "afterNativeCFreeBytes": 9542107136,
+  "exactRemovedBytes": 587458817,
+  "removedFileCount": 3,
+  "removed": [
+    {
+      "path": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-reinstall-preflight-20261111\\official-gui-downloads\\ZCode-3.17.2.exe",
+      "bytes": 233839504,
+      "sha256": "41edab524e9636451ba9db3f4d78b68d166e5602401267a14e63317f89c43e48",
+      "nativeInstallerAuditSha256": "7ec89d9eca469fb82a9b7822255b5861a38724239ef034f06a0222d681c0b53f",
+      "installedIdentitySha256": "7aca3aeab3d3b775a39cf9cbe048b30a80278d3527b6fbcfd0e7b00f79a2c326"
+    },
+    {
+      "path": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-reinstall-preflight-20261111\\official-gui-downloads\\Craft-Agents-0.15.9.exe",
+      "bytes": 322781960,
+      "sha256": "eba4ace5b3c0a32556813f3fc5885f28adcc531d2b9f047e5c892090a918cbb7",
+      "nativeInstallerAuditSha256": "106c82b80fd289f5b7281af35814082338d74e2b0113751866c5d7941c83a710",
+      "installedIdentitySha256": "ca8f5aec86141cde2956be8b842a521c983ebcbe2c1dc8e88ca7ac4392a5f7c0"
+    },
+    {
+      "path": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-reinstall-preflight-20261111\\roo-cline-3.54.0.vsix",
+      "bytes": 30837353,
+      "sha256": "615b7e30ab456c51fe2e1f413a6e05fe4bd370f2350e14de574ec92e25366b4b",
+      "nativeInstallerAuditSha256": "b5f29df8a12310f238aa0ac46be4dafda860940ae1aa6eb7fc7a5ed391e04f68",
+      "installedIdentitySha256": "d0779f28250fc06d48c849894d37b627ce7069c0d24a57f10938f7dc233a3c97"
+    }
+  ],
+  "skipCount": 0,
+  "firstNativeWorker": {
+    "pid": 301428,
+    "createdAt": "2026-11-11T09:37:55.8814307Z",
+    "image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "imageSha256": "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f"
+  },
+  "firstNativeExitCode": 1,
+  "recoveryNativeWorker": {
+    "pid": 300704,
+    "createdAt": "2026-11-11T09:41:48.1729886Z",
+    "image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "imageSha256": "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f"
+  },
+  "recoveryNativeExitCode": 0,
+  "priorNativeWorkerGoneVerified": true,
+  "sourceRecords": [
+    {
+      "file": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/cleanup/completed-official-installer-downloads-20261111/partial-cache-cleanup-safe.json",
+      "sha256": "e9b79641b48a6993f53623a045fe8df61cc1e2fb77dc855d0d82724a23927ec1"
+    },
+    {
+      "file": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/cleanup/completed-official-installer-downloads-20261111-recovery/result-safe.json",
+      "sha256": "20d4a7a24fe7564fa4f2fe44be5fa808559bae74bca5c60c3230393182e8d6eb"
+    }
+  ],
+  "installedProductsUnchanged": true,
+  "userProfilesChanged": false,
+  "currentBuildProductsRemoved": false,
+  "processesSignalled": 0,
+  "modelCalls": 0
+}

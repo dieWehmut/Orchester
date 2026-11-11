@@ -1,0 +1,10 @@
+{
+  "requestedURL": "https://agentrouter.org/docs/index.html",
+  "responseURL": "https://agentrouter.org/docs/index.html",
+  "status": 200,
+  "bytes": 15858,
+  "sha256": "5ed3e9ff682543e79edaf0d85a732d41029cf3aca1fe5c424beeddda16ba84ba",
+  "observedAt": 1794395372.6775115,
+  "transport": "verified official HTTPS",
+  "modelCalls": 0
+}

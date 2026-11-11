@@ -1,0 +1,24 @@
+{
+  "commandKind": "PowerShell exact official Claude package family and StartApps read-only probe",
+  "actualExitCode": 0,
+  "processExited": true,
+  "stderrBytes": 0,
+  "scriptSha256": "470ec157fc3423b69e0fa6ef8054c3237a28e208680ff2564c9cf94acbffb4bc",
+  "observedAt": 1794394736.743858,
+  "result": {
+    "observedAt": "2026-11-11T10:58:55.3537349Z",
+    "packageFamily": "AnthropicPBC.Claude_fnn82j28hfe8t",
+    "currentUserPackages": [],
+    "allUserPackages": [],
+    "startApps": [],
+    "queryErrors": [
+      {
+        "errorType": "System.UnauthorizedAccessException",
+        "query": "allUserPackages"
+      }
+    ],
+    "installationChanges": 0,
+    "modelCalls": 0,
+    "userProfileContentsRead": false
+  }
+}

@@ -1,0 +1,11 @@
+{
+    "phase":  "desktop-build",
+    "childPid":  232588,
+    "childCreatedAt":  "2026-11-11T09:15:18.5640340Z",
+    "exitCode":  0,
+    "timedOut":  false,
+    "processExited":  true,
+    "terminationAttempted":  false,
+    "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final-a96a06e-20261111\\desktop-build\\stdout.log",
+    "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final-a96a06e-20261111\\desktop-build\\stderr.log"
+}

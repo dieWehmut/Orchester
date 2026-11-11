@@ -1,0 +1,21 @@
+{
+  "sourceURL": "https://get.microsoft.com/installer/download/9P6K58THS811",
+  "sourceCodeURLs": [
+    "https://apps.microsoft.com/assets/js/constants-BfukTK7O.js",
+    "https://apps.microsoft.com/assets/js/psi-service-OjqYrXkZ.js"
+  ],
+  "kind": "Official Microsoft Store product-specific bootstrapper; not Claude payload",
+  "productId": "9P6K58THS811",
+  "vendorPayloadDigestNotApplicable": true,
+  "observedAt": 1794395562.0816083,
+  "status": 200,
+  "finalURL": "https://get.microsoft.com/installer/download/9P6K58THS811",
+  "contentType": "application/octet-stream",
+  "contentDisposition": "attachment; filename=\"Claude Installer.exe\"; filename*=UTF-8''Claude%20Installer.exe",
+  "bytes": 813088,
+  "sha256": "8ab145dab22a698105f20e10b182e50d1c2422e2be1818349efadbb06e118a48",
+  "windowsMZ": true,
+  "file": "/home/han/.local/state/orchester-delivery/20261111/claude-windows-source/Claude-Store-Installer.exe",
+  "windowsPreparedFile": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\claude-official-prepared-20261111-source\\Claude-Store-Installer.exe",
+  "windowsCopySha256": "8ab145dab22a698105f20e10b182e50d1c2422e2be1818349efadbb06e118a48"
+}

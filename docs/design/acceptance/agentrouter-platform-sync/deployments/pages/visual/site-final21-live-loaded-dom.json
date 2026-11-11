@@ -1,0 +1,118 @@
+{
+  "url": "https://diewehmut.github.io/Orchester/",
+  "providerCount": 21,
+  "themeImageCount": 42,
+  "allLoaded": true,
+  "providers": [
+    {
+      "id": "codex",
+      "name": "Codex",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "claude",
+      "name": "Claude Code",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek Harness",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "opencode",
+      "name": "OpenCode",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini CLI",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "antigravity",
+      "name": "Antigravity",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "workbuddy",
+      "name": "WorkBuddy 国内版",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "workbuddy_global",
+      "name": "WorkBuddy AI 国际版",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "qwen",
+      "name": "Qwen Code",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "openclaw",
+      "name": "OpenClaw",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "cline",
+      "name": "Cline",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "roo",
+      "name": "Roo Code",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "kilo",
+      "name": "Kilo Code",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "hermes",
+      "name": "Hermes Agent",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "pi",
+      "name": "Pi",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "crush",
+      "name": "Crush",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "claude_app",
+      "name": "Claude App",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "trae",
+      "name": "Trae",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "zcode",
+      "name": "ZCode",
+      "allImagesLoaded": true
+    },
+    {
+      "id": "craft",
+      "name": "Craft Agents",
+      "allImagesLoaded": true
+    }
+  ],
+  "horizontalOverflow": false,
+  "viewport": {
+    "width": 390,
+    "height": 844
+  }
+}

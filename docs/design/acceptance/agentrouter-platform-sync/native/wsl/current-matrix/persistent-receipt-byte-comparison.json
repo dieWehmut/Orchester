@@ -1,0 +1,126 @@
+{
+  "scope": "Only previously selected safe installation receipts; no user configuration or live process metadata read",
+  "archiveManifestSha256": "2c0eccff4ad2414b8b1b35796f9aa71dfe1b802d825b521d4e390a69fffc6136",
+  "files": [
+    {
+      "file": "craft-agents-native-package-receipt.json",
+      "exists": true,
+      "expectedSha256": "96ec871f7595b8f116116341faee391e1dcacbeb47cfa956f0bb146886e793f3",
+      "currentSha256": "96ec871f7595b8f116116341faee391e1dcacbeb47cfa956f0bb146886e793f3",
+      "exact": true
+    },
+    {
+      "file": "craft-agents-official-release.json",
+      "exists": true,
+      "expectedSha256": "82193e480600a4ce174de0a7a3e1f5ce398a85627c933eb9a13e2a9d7a63a1f8",
+      "currentSha256": "82193e480600a4ce174de0a7a3e1f5ce398a85627c933eb9a13e2a9d7a63a1f8",
+      "exact": true
+    },
+    {
+      "file": "hermes-install.sh",
+      "exists": true,
+      "expectedSha256": "abf338605dae6dd28d101673ac6aed7995c955745db46d47676bc591a7957209",
+      "currentSha256": "abf338605dae6dd28d101673ac6aed7995c955745db46d47676bc591a7957209",
+      "exact": true
+    },
+    {
+      "file": "hermes-install.source.json",
+      "exists": true,
+      "expectedSha256": "c434ea37aaf3eccaab2a4779b455e25ec866bd9f813b0e072a3da497bd70b7da",
+      "currentSha256": "c434ea37aaf3eccaab2a4779b455e25ec866bd9f813b0e072a3da497bd70b7da",
+      "exact": true
+    },
+    {
+      "file": "hermes-native-install-receipt.json",
+      "exists": true,
+      "expectedSha256": "4e358202b1713cd0c2588f220d242d5b491ccb5f21e31ddca2bfa7845d896ed0",
+      "currentSha256": "4e358202b1713cd0c2588f220d242d5b491ccb5f21e31ddca2bfa7845d896ed0",
+      "exact": true
+    },
+    {
+      "file": "native-version-receipts.json",
+      "exists": true,
+      "expectedSha256": "77c7344b1ef52e08392487d487fa8c9f97050797a9d5fe167ecf1589cdb01403",
+      "currentSha256": "77c7344b1ef52e08392487d487fa8c9f97050797a9d5fe167ecf1589cdb01403",
+      "exact": true
+    },
+    {
+      "file": "official-source-map.json",
+      "exists": true,
+      "expectedSha256": "97196ca24d710692fb81d0b604082607559a3aa7b08e379683cd7e8db0f32d94",
+      "currentSha256": "97196ca24d710692fb81d0b604082607559a3aa7b08e379683cd7e8db0f32d94",
+      "exact": true
+    },
+    {
+      "file": "summary.json",
+      "exists": true,
+      "expectedSha256": "4ddf817c5c3d9ed5a97a1c867ecb337a3b28cfcfd4d40ea008bf443564d173da",
+      "currentSha256": "4ddf817c5c3d9ed5a97a1c867ecb337a3b28cfcfd4d40ea008bf443564d173da",
+      "exact": true
+    },
+    {
+      "file": "trae-native-package-receipt.json",
+      "exists": true,
+      "expectedSha256": "a3208eb7f667f66f979f009dc15210efa664ac6f3d3ecec524872983e74838ea",
+      "currentSha256": "a3208eb7f667f66f979f009dc15210efa664ac6f3d3ecec524872983e74838ea",
+      "exact": true
+    },
+    {
+      "file": "trae-official-native-download-metadata.json",
+      "exists": true,
+      "expectedSha256": "52de377c40357e76075d213c6980395cd4e447fd5eacd1d4083625c718c265eb",
+      "currentSha256": "52de377c40357e76075d213c6980395cd4e447fd5eacd1d4083625c718c265eb",
+      "exact": true
+    },
+    {
+      "file": "ubuntu-gui-runtime-receipt.json",
+      "exists": true,
+      "expectedSha256": "4eb8410b193f12b5f2c2ca8a677071f5cc7ee228721003f125536e65beb90414",
+      "currentSha256": "4eb8410b193f12b5f2c2ca8a677071f5cc7ee228721003f125536e65beb90414",
+      "exact": true
+    },
+    {
+      "file": "workbuddy-native-package-receipt.json",
+      "exists": true,
+      "expectedSha256": "a79ace6d1384402e76afd306576384e36d358e2adec4623a278d7afc80a93a64",
+      "currentSha256": "a79ace6d1384402e76afd306576384e36d358e2adec4623a278d7afc80a93a64",
+      "exact": true
+    },
+    {
+      "file": "workbuddy-official-linux-update.json",
+      "exists": true,
+      "expectedSha256": "a3edb2d8f3137bd488396ae498e515ad0b37408a391a776db7aa16e6d91a2432",
+      "currentSha256": "a3edb2d8f3137bd488396ae498e515ad0b37408a391a776db7aa16e6d91a2432",
+      "exact": true
+    },
+    {
+      "file": "wsl-extensions-receipts.json",
+      "exists": true,
+      "expectedSha256": "55b980b919b8ad7a16fac398555092bc94f88351cf3d461fe16d1e91e6d9ae9e",
+      "currentSha256": "55b980b919b8ad7a16fac398555092bc94f88351cf3d461fe16d1e91e6d9ae9e",
+      "exact": true
+    },
+    {
+      "file": "wsl-gui-runtime-receipts.json",
+      "exists": true,
+      "expectedSha256": "e340056ca0cd856028dfd452a34e4fca69310dd463381d2c1f291f33ebaf94da",
+      "currentSha256": "e340056ca0cd856028dfd452a34e4fca69310dd463381d2c1f291f33ebaf94da",
+      "exact": true
+    },
+    {
+      "file": "zcode-native-package-receipt.json",
+      "exists": true,
+      "expectedSha256": "d706e942edf2a455dc2ee0b35d6a2a0109674196d5b7e7e683df59432da6e755",
+      "currentSha256": "d706e942edf2a455dc2ee0b35d6a2a0109674196d5b7e7e683df59432da6e755",
+      "exact": true
+    },
+    {
+      "file": "zcode-official-linux-release.yml",
+      "exists": true,
+      "expectedSha256": "23a4021579fe05eefe431953b8e1c9245c0f0eeba9f3f8baf2339c67584cc0d4",
+      "currentSha256": "23a4021579fe05eefe431953b8e1c9245c0f0eeba9f3f8baf2339c67584cc0d4",
+      "exact": true
+    }
+  ],
+  "allExact": true
+}

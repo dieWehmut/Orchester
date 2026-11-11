@@ -1,0 +1,349 @@
+{
+  "observedAt": "2026-11-11T11:03:32.683Z",
+  "url": "https://diewehmut.github.io/Orchester/",
+  "providerCount": 21,
+  "themeImageCount": 42,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "horizontalOverflow": false,
+  "providers": [
+    {
+      "id": "codex",
+      "name": "Codex",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "claude",
+      "name": "Claude Code",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek Harness",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "opencode",
+      "name": "OpenCode",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini CLI",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "antigravity",
+      "name": "Antigravity",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "workbuddy",
+      "name": "WorkBuddy 国内版",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "workbuddy_global",
+      "name": "WorkBuddy AI 国际版",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "qwen",
+      "name": "Qwen Code",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "openclaw",
+      "name": "OpenClaw",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "cline",
+      "name": "Cline",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "roo",
+      "name": "Roo Code",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "kilo",
+      "name": "Kilo Code",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "hermes",
+      "name": "Hermes Agent",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "pi",
+      "name": "Pi",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "crush",
+      "name": "Crush",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "claude_app",
+      "name": "Claude App",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "trae",
+      "name": "Trae",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "zcode",
+      "name": "ZCode",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "craft",
+      "name": "Craft Agents",
+      "images": [
+        {
+          "classes": "agent-icon__dark",
+          "loaded": true,
+          "visible": false
+        },
+        {
+          "classes": "agent-icon__light",
+          "loaded": true,
+          "visible": true
+        }
+      ]
+    }
+  ]
+}

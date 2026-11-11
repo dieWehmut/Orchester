@@ -1,0 +1,16 @@
+{
+  "guidePath": "/docs/claude-code-vscode.html",
+  "requestedURL": "https://agentrouter.org/docs/claude-code-vscode.html",
+  "anchorLabels": [
+    "Claude Code"
+  ],
+  "startedAt": 1794395957.9374726,
+  "transport": "verified official HTTPS urllib",
+  "httpStatus": 200,
+  "responseURL": "https://agentrouter.org/docs/claude-code-vscode.html",
+  "bytes": 32193,
+  "sha256": "7ae2dad01c440417a41f1c889e4ae72f8ea7e15fe614ed31fb8d91ba44eb3499",
+  "processOperationCompleted": true,
+  "publicSnapshotFile": "claude-code-vscode.html",
+  "finishedAt": 1794395960.3978524
+}

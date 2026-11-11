@@ -1,0 +1,6 @@
+{
+  "webToolError": "backend Invalid URL POST /v1/alpha/search HTTP404 (not a website HTTP404)",
+  "context7Error": "Monthly quota exceeded",
+  "fallback": "Verified HTTPS Python urllib and TLS1.2/HTTP1.1 curl to official origins only",
+  "observedAt": 1794395568.9753587
+}

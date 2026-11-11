@@ -1,0 +1,18 @@
+{
+  "guidePath": "/docs/claude-code.html",
+  "requestedURL": "https://agentrouter.org/docs/claude-code.html",
+  "anchorLabels": [
+    "快速开始",
+    "Claude Code",
+    "开始使用"
+  ],
+  "startedAt": 1794395955.6552916,
+  "transport": "verified official HTTPS urllib",
+  "httpStatus": 200,
+  "responseURL": "https://agentrouter.org/docs/claude-code.html",
+  "bytes": 33280,
+  "sha256": "c32d0a654b33a96fee7f2159de886098e3aa6dbedbded4878d4600fcd8013280",
+  "processOperationCompleted": true,
+  "publicSnapshotFile": "claude-code.html",
+  "finishedAt": 1794395961.1046462
+}

@@ -1,0 +1,26 @@
+﻿{
+    "observedAtUtc":  "2026-11-11T10:53:49.7763467Z",
+    "queryOnly":  true,
+    "signals":  0,
+    "processes":  [
+                      {
+                          "pid":  20664,
+                          "parentPid":  7852,
+                          "name":  "node.exe",
+                          "creationUtc":  "2026-11-11T10:44:20.5873230Z",
+                          "sessionId":  1,
+                          "executablePath":  "C:\\Users\\han\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+                          "executableSha256":  null
+                      }
+                  ],
+    "targetsAbsent":  [
+                          280264,
+                          193764,
+                          252404,
+                          204892,
+                          229240
+                      ],
+    "listeners":  [
+
+                  ]
+}

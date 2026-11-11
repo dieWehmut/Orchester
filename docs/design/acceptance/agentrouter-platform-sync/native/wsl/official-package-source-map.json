@@ -1,0 +1,27 @@
+[
+  {
+    "filename": "hermes-install.sh",
+    "url": "https://hermes-agent.nousresearch.com/install.sh",
+    "sha256": "abf338605dae6dd28d101673ac6aed7995c955745db46d47676bc591a7957209"
+  },
+  {
+    "filename": "craft-agents-official-release.json",
+    "url": "https://api.github.com/repos/lukilabs/craft-agents-oss/releases/latest",
+    "sha256": "82193e480600a4ce174de0a7a3e1f5ce398a85627c933eb9a13e2a9d7a63a1f8"
+  },
+  {
+    "filename": "workbuddy-official-linux-update.json",
+    "url": "https://www.workbuddy.cn/v2/update?platform=workbuddy-linux-x64-deb",
+    "sha256": "a3edb2d8f3137bd488396ae498e515ad0b37408a391a776db7aa16e6d91a2432"
+  },
+  {
+    "filename": "trae-official-native-download-metadata.json",
+    "url": "https://api.trae.cn/icube/api/v1/native/version/trae/cn/latest",
+    "sha256": "52de377c40357e76075d213c6980395cd4e447fd5eacd1d4083625c718c265eb"
+  },
+  {
+    "filename": "zcode-official-linux-release.yml",
+    "url": "https://cdn-zcode.z.ai/zcode/electron/releases/3.17.2/linux-x64/latest.yml",
+    "sha256": "23a4021579fe05eefe431953b8e1c9245c0f0eeba9f3f8baf2339c67584cc0d4"
+  }
+]

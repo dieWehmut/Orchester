@@ -1,0 +1,14 @@
+{
+    "format":  "orchester-exact-owned-package-cache-cleanup-v1",
+    "status":  "passed",
+    "cacheDirectory":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\runtime-preparation\\package-source",
+    "cacheDirectoryAbsent":  true,
+    "deletedOwnFileCount":  25,
+    "releasedFileBytes":  23373069,
+    "actualRetainedPackageFileCount":  28,
+    "packagePreparationProofSha256":  "208f79f9ec5a2a581fd23792c3b97444dee2ae9a347c2ba21ce0f6c8acc083b2",
+    "originalProfilesTouched":  false,
+    "runtimeCandidateTouched":  false,
+    "producerInputsTouched":  false,
+    "signals":  0
+}

@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 1,
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "generatedAt": "2026-11-11T12:31:46.264648+00:00",
+  "status": "current-evidence-audit-not-complete-all-platform-delivery",
+  "requirements": [
+    {
+      "id": "catalog_scope",
+      "userRequirement": "AgentRouter docs all named products, Qwen/OpenClaw and two WorkBuddy editions",
+      "status": "verified-current-source",
+      "evidence": [
+        "sources/agentrouter/final-guide-scope-safe.json",
+        "sources/final71-source-binding.json"
+      ],
+      "verifiedScope": "17 named official-index products plus3 existing products plus globalWorkBuddy1 =>21 canonical IDs; 17 guide URLs individually verified.",
+      "remaining": []
+    },
+    {
+      "id": "official_icons",
+      "userRequirement": "Every product uses official icons",
+      "status": "verified-source-and-pages-native-pending",
+      "evidence": [
+        "sources/icons/final21-official-current-24-assets.json",
+        "deployments/pages/current-live/current-icon-mapping-verification.json"
+      ],
+      "verifiedScope": "42 exact decoded theme mappings /24 canonical official assets; bothWorkBuddy editions separately named using each official site source.",
+      "remaining": [
+        "Current Windows and Android native21/42 UI acceptance."
+      ]
+    },
+    {
+      "id": "separate_workbuddy",
+      "userRequirement": "Domestic and international WorkBuddy remain separate",
+      "status": "verified-code-ui-original-installations",
+      "evidence": [
+        "sources/workbuddy/official-regional-release-research.json",
+        "tests/frontend/workbuddy-editions/corrected-result.json",
+        "native/windows/editions/workbuddy/global-native-public-metadata-safe.json"
+      ],
+      "verifiedScope": "workbuddy and workbuddy_global distinguish registered binaries/profile directories; original Windows domestic5.9.3/international5.9.4 retained.",
+      "remaining": [
+        "Global nativeWSL package/profile isolation remains unverified; current official Linux download unavailable."
+      ]
+    },
+    {
+      "id": "tidy_code_and_folders",
+      "userRequirement": "Plan sensible folders and split files",
+      "status": "verified-current-source",
+      "evidence": [
+        "tests/backend/workbuddy-editions/test-split/migration-proof.json",
+        "sources/receipt-provenance.json"
+      ],
+      "verifiedScope": "Production548-line prefix and19 logical test names retained; test-only module split; evidence grouped into source/test/native/deployment/maintenance folders.",
+      "remaining": []
+    },
+    {
+      "id": "sync_frontend_surfaces",
+      "userRequirement": "Mobile,desktop,Web GUI and GitHubPages share current catalog",
+      "status": "verified-artifact-and-pages-native-pending",
+      "evidence": [
+        "tests/frontend/final21-builds-independent-review.json",
+        "native/windows/final71-source-export.json",
+        "deployments/pages/current-live/verification-summary.json",
+        "native/ios/final21-public-sync.json"
+      ],
+      "verifiedScope": "Web37/Mobile17/Site26 artifacts match frozen71;26current public Pages resources match historicalCI snapshot;21/42 actualonline DOM; iOS17 publicsync.",
+      "remaining": [
+        "Current Windows nativeDesktop/runtime/reinstallation and Android Studio signed21APK/actualnativeUI.",
+        "No Xcode/iPhone native run was requested or proven by iOSsync."
+      ]
+    },
+    {
+      "id": "desktop_reinstall",
+      "userRequirement": "Reinstall Orchester Desktop preserving original data",
+      "status": "core-build-backup-and-file-preparation-verified-interactive-prerequisite-blocked",
+      "evidence": [
+        "native/windows/final71-build/final-result.json",
+        "native/windows/final71-preflight/offline-original-backup-safe.json",
+        "native/windows/final71-build/current-worker-observation-safe.json",
+        "sources/audit/current-native16-review-safe.json",
+        "native/windows/file-preparation/final21-portable-package-safe.json",
+        "native/windows/interactive-current/final21-readiness-blocked-safe.json"
+      ],
+      "verifiedScope": "Core16 actualgates0/Desktop38/Remote18 publicfiles; original privateinstallation/profile/state backups exact; no oldnaturalexitclaim. Newnativeobserver confirms worker16008 PIDabsent; originalHANDLE identity notverified; no originalexecutor0 claim. Independentcore/967plan/54publichash review passes; rawgradlew CRLF Gitcheckout normalizedexact; EXEcontents notindependentlyread. Portablefilepackage28files/17Web verifier passes with newnative21APKf83fa; actualruntime14/AndroidFinalBinding/defaultinstall pending.",
+      "remaining": [
+        "Sameuserinteractive InputDesktop/cursor access is currentlyunproved/Error5; activeConsole3username/domain empty,neither same/differentaccountproved.",
+        "Runtime18 and realtray normalexit; formalpromotion/reinstallation/Windows7338state retention."
+      ]
+    },
+    {
+      "id": "windows_agents",
+      "userRequirement": "Install AgentRouter tools natively on local Windows",
+      "status": "partially-verified-final-install-matrix-pending",
+      "evidence": [
+        "native/windows/nine-native-cli-versions.json",
+        "native/windows/new-gui-installed-identities.json",
+        "native/windows/workbuddy-registration-paths-readonly-safe.json",
+        "native/windows/claude-current-official-source/handoff-safe-summary.json"
+      ],
+      "verifiedScope": "Historical9 nativeCLI --version successes, ZCode/Craft installations, retainedWorkBuddy editions/Trae; metadata/channel proof separates modelauthentication from installation.",
+      "remaining": [
+        "Current Windows fourVSCode-extension finalsafe receipt and installation-scope matrix.",
+        "ClaudeApp actualpayload/EXE registration and officialinstallation outcome; downloaded Storebootstrapper is notClaude.",
+        "Legacy3 canonicalproducts require individual nativeinstallation evidence if included in localinstall scope."
+      ]
+    },
+    {
+      "id": "wsl_agents",
+      "userRequirement": "Install AgentRouter tools natively in WSL",
+      "status": "sixteen-unique-products-verified-official-gaps",
+      "evidence": [
+        "native/wsl/install-summary.json",
+        "native/wsl/current-matrix/current-native-installation-matrix-safe.json",
+        "native/wsl/current-official-availability/final-official-install-status-safe.json"
+      ],
+      "verifiedScope": "19 recorded installation/runtime units =>16 distinct docproducts; currentpublicentries/recordedELF/versions stable; historicalruntime scopes retained.",
+      "remaining": [
+        "ClaudeApp official Linux package/platform unverified due TLS/route failures.",
+        "GlobalWorkBuddy currentofficial download lacks usableLinuxpackage; domestic remains unchanged.",
+        "Known7 legacypublicpaths absent is not whole-systemabsence proof; legacy3 nativeinstallation not proven."
+      ]
+    },
+    {
+      "id": "android_studio",
+      "userRequirement": "Actually open AndroidStudio and test mobile app",
+      "status": "new21-native-build-sign-install-and-compact-test-result-verified-ide-ui-final-pending",
+      "evidence": [
+        "native/android/current21-partial/final21-source-mirror-safe.json",
+        "native/android/current21-partial/final21-apk-provenance-safe.json",
+        "native/android/current21-partial/install-native-final21-app-safe.json",
+        "native/android/current21-partial/install-native-final21-tests-safe.json",
+        "native/android/current21-partial/native-bridge-tests-final21-current-apk-result.json"
+      ],
+      "verifiedScope": "Current41nativeGitinputs/source71+17publicmirror; nativeGradle0 and signedcurrent appf83fa/testb5c13 originalcertdf6 verified;17APKpublicresourcesexact; app/testsuccessfulinstall0. NativeBridge compactresultOK/exit0 with producerreport4tests; count/SID/IDEproofnotincompactJSON. Historical20 remains distinct; no finalnativeacceptanceclaim.",
+      "remaining": [
+        "Actual AndroidStudio project/sync/window in provedcorrectuser/session; currentStudio ownprocess is Session1 whileInputDesktopError5/activeConsole3sameSIDunproved.",
+        "Current21 nativeUI exactprovider21+loadedimages42 and PTyinput/resize.",
+        "Originalcredential identity/decryption/rollback and onlyownedtemporarycleanup finalsafe proof; do not infer old5irrecoverable before deviceidentityaudit."
+      ]
+    },
+    {
+      "id": "linux_service",
+      "userRequirement": "Keep persistent Linux service updated with current mobile resources",
+      "status": "verified-current-deployment",
+      "evidence": [
+        "tests/backend/final71-full-workspace/summary.json",
+        "deployments/linux/current-final21/final-safe.json",
+        "deployments/linux/current-final21/root-independent-live-safe.json",
+        "deployments/linux/current-final21/controller-handoff-safe.json"
+      ],
+      "verifiedScope": "Current7337 PID/startticks/ELFd983/source71 verified;21catalog/17resources/auth/revoke; original5tasks rawrows retained and5authentries/3distinctdevices semanticvalues retained. SQLJSONstring formatting/order differs.",
+      "remaining": [
+        "Existing userpairedtoken actualnetwork200 is not established by hashpreservation; only temporaryownauthentication test proven."
+      ]
+    },
+    {
+      "id": "parallelism",
+      "userRequirement": "Use more subagents and expand concurrency limit",
+      "status": "verified-distinct-observations",
+      "evidence": [
+        "maintenance/current-concurrency-safe.json"
+      ],
+      "verifiedScope": "Currenttoolcontract9 inclroot; configuredmax_threads8/file0600; priorruntime4 retainedhistorically. No claimlocalconfiguration caused runtimehotexpansion.",
+      "remaining": []
+    },
+    {
+      "id": "cleanup",
+      "userRequirement": "Clean unused branches and caches to free C drive",
+      "status": "verified-exact-selected-cleanups-history-limited",
+      "evidence": [
+        "maintenance/merged-branch-cleanup.json",
+        "maintenance/windows-approved-cache-cleanup.json",
+        "maintenance/completed-official-installer-cache-cleanup.json",
+        "maintenance/current-worktree-cleanup-state-safe.json",
+        "maintenance/owned-package-preparation-cache-cleanup-safe.json"
+      ],
+      "verifiedScope": "Historical73remote+3local mergedbranchrefs safelycleaned; CknownPDB/incremental7219765510B and officialinstallercache587458817B exactfiles removed. Free-space readings are snapshots. Current four oldworktree paths/localbranches absent and retainedcommits fullymerged; registeredworktrees15. Currentownedpackage-sourcecache25files/23373069logicalbytes deleted and28candidate inventory retained; no Cvolume physicalfree delta claim.",
+      "remaining": [],
+      "historicalMeasurementBoundary": "Original fourunused-worktree temporarycleanup receipts unavailable; historicaloperation/bytes not reconstructed; no Cphysicalreleaseclaim."
+    },
+    {
+      "id": "git_steps",
+      "userRequirement": "Verify separated commits, push remotely and merge main step by step",
+      "status": "parent-owned-delivery-pending",
+      "evidence": [
+        "sources/final71-source-binding.json"
+      ],
+      "verifiedScope": "Frozen71 production source verified; docsagent performs noGitstage/commit/push. Parent owns separateddocumentationreview/commit/push/mainmerge and confirms frozenruntimeguards do not depend on laterdocsHEAD.",
+      "remaining": [
+        "Finalreceipt/archive validation and parent documentationcommit/push/mainmerge."
+      ]
+    }
+  ],
+  "historicalResultsRemainInOwnSourceEpoch": true,
+  "installationDoesNotEstablishAuthenticationOrModelTaskExecution": true,
+  "privateCredentialOrUserStateValuesIncluded": false
+}

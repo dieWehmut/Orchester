@@ -1,0 +1,10 @@
+{
+  "path": "packages/design/src/assets/agents/pi.svg",
+  "beforeSha256": "d266b2c1d2c7bf169ca30d438963b176fba16fea6263b9ac30c8302f34ad7ce7",
+  "afterSha256": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b",
+  "officialSource": "https://pi.dev/logo.svg",
+  "bytes": 334,
+  "xmlSafe": true,
+  "reason": "Preserve visibility when app and system themes differ using the official color logo",
+  "metadataPathsUnchanged": true
+}

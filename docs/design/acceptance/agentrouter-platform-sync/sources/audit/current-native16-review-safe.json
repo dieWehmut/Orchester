@@ -1,0 +1,401 @@
+{
+  "schemaVersion": 2,
+  "operation": "independent read-only Windows core16 and current Linux/concurrency review",
+  "observedAt": "2026-11-11T12:01:22.721949+00:00",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "currentGitHead": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "receipts": [
+    {
+      "kind": "final",
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/final-result.json",
+      "sha256": "7ddcd67633e127a4b664dc69d91cf20bd8751a9ab6a009d8ca73d9b0951fe023",
+      "expectedSha256": "7ddcd67633e127a4b664dc69d91cf20bd8751a9ab6a009d8ca73d9b0951fe023",
+      "hashMatches": true
+    },
+    {
+      "kind": "plan",
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/plan.json",
+      "sha256": "8645dca6d20f2d5ff0d845d7c74522f52ca72c6aec49ec9529dcb86a997911cd",
+      "expectedSha256": "8645dca6d20f2d5ff0d845d7c74522f52ca72c6aec49ec9529dcb86a997911cd",
+      "hashMatches": true
+    },
+    {
+      "kind": "predicateAudit",
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/audit/safe-audit-summary.json",
+      "sha256": "fd1eda459a39ef3c95bac5b6a2de1d2ac9f32f53b20c7e576923cc56ad825630",
+      "expectedSha256": "fd1eda459a39ef3c95bac5b6a2de1d2ac9f32f53b20c7e576923cc56ad825630",
+      "hashMatches": true
+    },
+    {
+      "kind": "sourceExport",
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/source-71def64-final21-20261111/SOURCE_EXPORT_AUDIT.json",
+      "sha256": "6313572160eee0ed132a87e1fdb50d7a5ad0ff92ade66fac6c0346db86a39680",
+      "expectedSha256": "6313572160eee0ed132a87e1fdb50d7a5ad0ff92ade66fac6c0346db86a39680",
+      "hashMatches": true
+    }
+  ],
+  "native16": {
+    "gateCount": 16,
+    "gateOrderMatchesFrozenPlan": true,
+    "all16TypedTerminalGatePass": true,
+    "gates": [
+      {
+        "phase": "toolchain",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 3784,
+        "childCreatedAt": "2026-11-11T11:26:35.9471526Z"
+      },
+      {
+        "phase": "helper-contract",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 19784,
+        "childCreatedAt": "2026-11-11T11:26:37.1971093Z"
+      },
+      {
+        "phase": "helper-wsl",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 11644,
+        "childCreatedAt": "2026-11-11T11:26:47.3382166Z"
+      },
+      {
+        "phase": "memory-initialization",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 20568,
+        "childCreatedAt": "2026-11-11T11:27:36.1755153Z"
+      },
+      {
+        "phase": "monitor-process",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 29000,
+        "childCreatedAt": "2026-11-11T11:28:07.7642158Z"
+      },
+      {
+        "phase": "monitor-activity",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 9420,
+        "childCreatedAt": "2026-11-11T11:28:09.2174179Z"
+      },
+      {
+        "phase": "monitor-http",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 29156,
+        "childCreatedAt": "2026-11-11T11:28:17.5656275Z"
+      },
+      {
+        "phase": "remote-cli",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 21524,
+        "childCreatedAt": "2026-11-11T11:29:14.6790912Z"
+      },
+      {
+        "phase": "root-clippy",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 24320,
+        "childCreatedAt": "2026-11-11T11:30:01.7455014Z"
+      },
+      {
+        "phase": "root-fmt",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 29248,
+        "childCreatedAt": "2026-11-11T11:30:31.2498225Z"
+      },
+      {
+        "phase": "cli-build",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 17392,
+        "childCreatedAt": "2026-11-11T11:30:33.2599203Z"
+      },
+      {
+        "phase": "chrome-test",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 10632,
+        "childCreatedAt": "2026-11-11T11:30:37.8852984Z"
+      },
+      {
+        "phase": "desktop-test",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 15864,
+        "childCreatedAt": "2026-11-11T11:30:39.4911714Z"
+      },
+      {
+        "phase": "desktop-clippy",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 8312,
+        "childCreatedAt": "2026-11-11T11:31:51.8910704Z"
+      },
+      {
+        "phase": "desktop-fmt",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 28580,
+        "childCreatedAt": "2026-11-11T11:32:05.9004618Z"
+      },
+      {
+        "phase": "desktop-build",
+        "actualExitCode": 0,
+        "timedOut": false,
+        "processExited": true,
+        "terminationAttempted": false,
+        "typedTerminalGatePass": true,
+        "childPid": 6368,
+        "childCreatedAt": "2026-11-11T11:32:07.9260506Z"
+      }
+    ],
+    "finalBindsExactPlanSha256": true,
+    "allSourceRevisionsExact": true,
+    "APKBindingDeferred": true,
+    "APKHashesNull": true,
+    "freshAndroidFinalReceiptRequired": true,
+    "desktopRuntimePending": "pending-root",
+    "remoteRuntimePending": "pending-root",
+    "defaultInstallationChanged": false,
+    "servicesChanged": false,
+    "parentWorkerPidRecordedOnly": 16008,
+    "WSLInteropExecutorExitCodeClaimed": false,
+    "currentWorkerObservation": {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/current-worker-observation-safe.json",
+      "sha256": "f1270812981ebaedb2846b3e7f04c88fb592169030b0aec5f87cee7761f9dd4b",
+      "nativeObservedAt": "2026-11-11T11:54:19.9792857Z",
+      "nativeWorkerLive": false,
+      "nativePidAbsent": true,
+      "originalHandleIdentityVerified": false,
+      "nativeProcessSignals": 0,
+      "boundary": "Current native PID absence proven independently; no original worker HANDLE exit code or WSL Interop executor exit code is inferred."
+    },
+    "currentNativePIDAbsenceProven": true,
+    "originalWorkerHandleExitCodeClaimed": false,
+    "coreSummaryAndTerminalChain": {
+      "coreSummarySHA256": "5cdabd4d8f5736b81c32333b68e37f24e114f756b318feb94ad15cc50d7c4fe6",
+      "terminalSHA256": "adc75285d634d0cd7c9f3d08c428fa5290a7b34489b55a6bfba73faff2670c2b",
+      "exactPlanAndFinalSHA256Bindings": true,
+      "terminalBindsCoreSummaryAndCurrentWorkerObservation": true,
+      "originalSummaryNativeWorkerTerminationObserved": false,
+      "laterTerminalNativePIDAbsent": true,
+      "laterTerminalOriginalCreationHandleAcquired": false,
+      "originalSummaryRuntimeAccepted": false,
+      "terminalRuntimeAccepted": false,
+      "terminalDefaultDesktopInstalled": false,
+      "terminalWindows7338Upgraded": false,
+      "chronologicalBoundary": "Earlier summary lacks worker termination observation; later native PID absence supplements it without changing the original JSON or claiming the original HANDLE/Interop exit code."
+    }
+  },
+  "sourceExport": {
+    "auditHashMatchesPlan": true,
+    "trackedGitRecords": 1682,
+    "publicCompiledFiles": 54,
+    "compiledCounts": {
+      "apps/web/dist": 37,
+      "apps/mobile/dist": 17
+    },
+    "all54PublicRootAndExportBytesMatchFrozenHashes": true,
+    "compiledFailures": [],
+    "gradlewBatSHA256": "94102713eb8fb22d032397924c0f38ab2da783ba60d07054339f1190a0c4e2cd",
+    "sourceExportGitDirectoryAbsent": true,
+    "freshFrontendBuildCommandClaimedByThisReview": false,
+    "all1682GitMetadataAndExportedSourceBytesExact": true,
+    "gitAndExportFailures": [],
+    "currentWorkingTreeRawGitByteExactCount": 1681,
+    "currentWorkingTreeEOLOnlyDifferenceCount": 1,
+    "currentWorkingTreeAllFilesGitNormalizedEquivalent": true,
+    "currentWorkingTreeEOLDifference": {
+      "path": "apps/mobile/android/gradlew.bat",
+      "attributes": [
+        "apps/mobile/android/gradlew.bat: text: set",
+        "apps/mobile/android/gradlew.bat: eol: crlf"
+      ],
+      "rawSha256": "1d297e00bd21de3ace22b4d7f2de1f9dfa858883d66bbf7c1ccbecccec8f4f3b",
+      "gitAndExportSha256": "94102713eb8fb22d032397924c0f38ab2da783ba60d07054339f1190a0c4e2cd",
+      "CRLFNormalizedBytesEqualGit": true,
+      "fileModifiedByAudit": false
+    }
+  },
+  "frozenPlanInputChecks": {
+    "declaredInputs": 967,
+    "gitInputs": 911,
+    "publicDistInputs": 54,
+    "failures": [],
+    "provenanceProofInputs": 2,
+    "all967InputsMapToFrozenGitDistAndProvenanceProofHashes": true,
+    "proofInputs": [
+      {
+        "path": "SOURCE_EXPORT_AUDIT.json",
+        "expectedSha256": "6313572160eee0ed132a87e1fdb50d7a5ad0ff92ade66fac6c0346db86a39680",
+        "actualSha256": "6313572160eee0ed132a87e1fdb50d7a5ad0ff92ade66fac6c0346db86a39680",
+        "hashMatches": true,
+        "proofSourceRevisionMatches": true
+      },
+      {
+        "path": "SOURCE_REVISION",
+        "expectedSha256": "6b7cfeaef85f5b6c26e1d225fce5e7c443a5d4e9249e1625fb275c80714c5494",
+        "actualSha256": "6b7cfeaef85f5b6c26e1d225fce5e7c443a5d4e9249e1625fb275c80714c5494",
+        "hashMatches": true,
+        "proofSourceRevisionMatches": true
+      }
+    ]
+  },
+  "packages": [
+    {
+      "kind": "desktop",
+      "recordedFileCount": 38,
+      "exactExpectedCorePaths": true,
+      "publicResourceCount": 37,
+      "publicResourceFailures": [],
+      "executableMetadataChecks": [
+        {
+          "path": "orchester-desktop.exe",
+          "isNativeExecutable": true,
+          "recordedSha256MatchesFinalExeField": true,
+          "currentFileExists": true,
+          "nativeExecutableContentRead": false
+        }
+      ],
+      "runtimeOrNative18ValidatedByThisReview": false
+    },
+    {
+      "kind": "remote",
+      "recordedFileCount": 18,
+      "exactExpectedCorePaths": true,
+      "publicResourceCount": 17,
+      "publicResourceFailures": [],
+      "executableMetadataChecks": [
+        {
+          "path": "orchester.exe",
+          "isNativeExecutable": true,
+          "recordedSha256MatchesFinalExeField": true,
+          "currentFileExists": true,
+          "nativeExecutableContentRead": false
+        }
+      ],
+      "runtimeOrNative18ValidatedByThisReview": false
+    }
+  ],
+  "predicateAuditBoundary": {
+    "nativePowerShellActualExitCode": 0,
+    "nativePowerShellCases": 62,
+    "allPowerShellCasesMatched": true,
+    "nativeJavaScriptSyntaxActualExitCode": 0,
+    "actualJavaScriptProviderCases": 24,
+    "allJavaScriptProviderCasesMatched": true,
+    "actualGUIOrInstallationExecuted": false,
+    "historicalHelpersModified": false,
+    "androidQueueOperations": 0,
+    "modelCalls": 0
+  },
+  "linuxBoundary": {
+    "finalReceiptSha256": "2a3159365a2c3f74c6d134dff2f1732802b1a73faf4b564e3618458fe727e017",
+    "independentLiveReceiptBindsFinalHash": true,
+    "controllerHandoffBindsFinalHash": true,
+    "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+    "currentRootSourceInputScope": 368,
+    "historicalSplitSourceInputScope": 367,
+    "stateJsonSemanticExact": true,
+    "stateRawRowsExact": false,
+    "originalLiveHostDevices": 3,
+    "originalPersistedAuthEntries": 5,
+    "originalLegacyDuplicates": 2,
+    "originalRunCount": 5,
+    "currentRunCount": 5,
+    "originalRunRowsExactlyRetained": true,
+    "originalHostAndLegacyAuthRowsExactlyRetained": true,
+    "temporaryOwnDeviceRemoved": true,
+    "revokedTemporaryTokenStatus": 401,
+    "pairingClosed": true,
+    "currentEnvironmentInherited": true,
+    "priorLiveEnvironmentEqualityClaimed": false,
+    "originalRuntimeHandlesInherited": false,
+    "controllerExternalStdinDevNull": true,
+    "controllerRetainsOriginalListenerWriterDescriptor": 4,
+    "toolSessionUsage": "Poll-only supervisor; its external stdin was devnull, not a TTY",
+    "currentIndependentLiveCheck": {
+      "pid": 1023019,
+      "expectedStartTicks": 256519,
+      "processExists": true,
+      "actualStartTicks": 256519,
+      "birthEqualsReceipt": true,
+      "imageSha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649",
+      "imageShaEqualsReceipt": true,
+      "listener7337Open": true
+    }
+  },
+  "concurrencyBoundary": {
+    "configuredMaxThreads": 8,
+    "configuredFileMode": "0o600",
+    "currentDeveloperRuntimeConcurrencyIncludingRoot": 9,
+    "runtimeLimitObservedFromCurrentToolContract": true,
+    "configurationChangeClaimedToCauseRuntimeExpansion": false,
+    "privateValuesCopied": false,
+    "observedAt": 1794397011.8357484
+  },
+  "allReviewedCoreBuildSourceAndPublicFileChecksPassed": true,
+  "native18DesktopReinstallOrAndroidFinalAcceptanceClaimed": false,
+  "nativeExecutableContentsIndependentlyRead": false,
+  "processSignalsOrStateMutations": 0,
+  "privateAuthConfigEnvArgvDatabaseProfilesKeysRawLogsRead": false,
+  "repositoryOrGitChanges": false,
+  "initialReadOnlyObserver": {
+    "path": "/home/han/.local/state/orchester-docs-audit-20261111/current-native16-initial-workingtree-proof-scope-review.json",
+    "sha256": "305f8561e3c45ded19d225ea107f4c4fb8777aad91a546d730cc9972ba1e5c24",
+    "allChecksFlag": false,
+    "reason": "Initial observer incorrectly required raw LF bytes in an eol=crlf checkout and did not classify two legitimate provenance-proof inputs. Actual C export/Git hashes were already exact; public source files were not modified."
+  },
+  "checkedThroughTerminalChainAt": "2026-11-11T12:06:44.007266+00:00"
+}

@@ -1,0 +1,604 @@
+{
+  "schemaVersion": 1,
+  "operation": "current actual unauthenticated HTTPS GET",
+  "startedAt": "2026-11-11T11:02:32.839883+00:00",
+  "finishedAt": "2026-11-11T11:03:36.834084+00:00",
+  "historicalCISnapshot": {
+    "runId": 42999110960,
+    "runURL": "https://github.com/dieWehmut/Orchester/actions/runs/42999110960",
+    "sourceCommit": "4cee1f8fe40ee8213f0f69a07682fa030f7c93ab",
+    "artifactArchiveSha256": "7aec9cf3a22dc1c409bb7ebed88e52184ec361a980cbddaead2710f76290e23b",
+    "archivedReceiptPath": "/home/han/project/Orchester/docs/design/acceptance/agentrouter-platform-sync/deployments/pages/final21-ci-live-independent-review.json",
+    "archivedReceiptSha256": "e9cfc0176846353f79ebd0dfd65c145a6a727f17dbddc0b2bba16563c13b28e0"
+  },
+  "newCIRunRequestedOrClaimed": false,
+  "comparisonBoundary": "Actual current response SHA-256 and size against the archived CI snapshot; byte comparison also performed where a current local file equals the archived CI hash.",
+  "functionalFinalSource": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "sourceBindingAudit": {
+    "path": "/home/han/.local/state/orchester-docs-audit-20261111/source-bindings-readonly.json",
+    "sha256": "77e6ca44f69491c91aedd06a2b121673dc338dc955696c16befff836631129f9",
+    "pages177InputsEqualFinalSource": true
+  },
+  "resourceCount": 26,
+  "all26CurrentResponsesHTTP200AndMatchCI": true,
+  "resources": [
+    {
+      "path": "assets/ArchitectureView-CkP7hGHw.js",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/ArchitectureView-CkP7hGHw.js",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/ArchitectureView-CkP7hGHw.js",
+      "expectedCIBytes": 6009,
+      "expectedCISha256": "678ef69a30eabcd265a32ca4d5d2263998e6c3f4ad2fec9d0f4334ccd0cf7a4a",
+      "currentHTTPStatus": 200,
+      "currentBytes": 6009,
+      "currentSha256": "678ef69a30eabcd265a32ca4d5d2263998e6c3f4ad2fec9d0f4334ccd0cf7a4a",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": false,
+      "currentBytesEqualLocalCIReference": null,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 6009,
+          "bodySha256": "678ef69a30eabcd265a32ca4d5d2263998e6c3f4ad2fec9d0f4334ccd0cf7a4a"
+        }
+      ]
+    },
+    {
+      "path": "assets/crush-B1wob-OZ.png",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/crush-B1wob-OZ.png",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/crush-B1wob-OZ.png",
+      "expectedCIBytes": 55448,
+      "expectedCISha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "currentHTTPStatus": 200,
+      "currentBytes": 55448,
+      "currentSha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": true,
+      "currentBytesEqualLocalCIReference": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 55448,
+          "bodySha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2"
+        }
+      ]
+    },
+    {
+      "path": "assets/cursor-dark-BM_3k4Y4.svg",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/cursor-dark-BM_3k4Y4.svg",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/cursor-dark-BM_3k4Y4.svg",
+      "expectedCIBytes": 4373,
+      "expectedCISha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+      "currentHTTPStatus": 200,
+      "currentBytes": 4373,
+      "currentSha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": true,
+      "currentBytesEqualLocalCIReference": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 4373,
+          "bodySha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260"
+        }
+      ]
+    },
+    {
+      "path": "assets/index-BcAWhwG9.js",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/index-BcAWhwG9.js",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/index-BcAWhwG9.js",
+      "expectedCIBytes": 88674,
+      "expectedCISha256": "e258561c0d3e3517bede6ba95f216ec77f2b19d0fec2b2ccfe7ae3677cff1367",
+      "currentHTTPStatus": 200,
+      "currentBytes": 88674,
+      "currentSha256": "e258561c0d3e3517bede6ba95f216ec77f2b19d0fec2b2ccfe7ae3677cff1367",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": false,
+      "currentBytesEqualLocalCIReference": null,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 88674,
+          "bodySha256": "e258561c0d3e3517bede6ba95f216ec77f2b19d0fec2b2ccfe7ae3677cff1367"
+        }
+      ]
+    },
+    {
+      "path": "assets/zcode-yL2Qb12j.png",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/zcode-yL2Qb12j.png",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/zcode-yL2Qb12j.png",
+      "expectedCIBytes": 6479,
+      "expectedCISha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "currentHTTPStatus": 200,
+      "currentBytes": 6479,
+      "currentSha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": true,
+      "currentBytesEqualLocalCIReference": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 6479,
+          "bodySha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c"
+        }
+      ]
+    },
+    {
+      "path": "assets/index-BSUPKiSo.css",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/index-BSUPKiSo.css",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/index-BSUPKiSo.css",
+      "expectedCIBytes": 48692,
+      "expectedCISha256": "6a25e9d4ba7156b69e9bf76b462ca4829dbba785b73c5064a710f631e96a0e60",
+      "currentHTTPStatus": 200,
+      "currentBytes": 48692,
+      "currentSha256": "6a25e9d4ba7156b69e9bf76b462ca4829dbba785b73c5064a710f631e96a0e60",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": false,
+      "currentBytesEqualLocalCIReference": null,
+      "attempts": [
+        {
+          "attempt": 1,
+          "errorType": "URLError",
+          "httpStatus": null
+        },
+        {
+          "attempt": 2,
+          "httpStatus": 200,
+          "bodyBytes": 48692,
+          "bodySha256": "6a25e9d4ba7156b69e9bf76b462ca4829dbba785b73c5064a710f631e96a0e60"
+        }
+      ]
+    },
+    {
+      "path": "assets/HomeView-BS-pcExm.js",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/HomeView-BS-pcExm.js",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/HomeView-BS-pcExm.js",
+      "expectedCIBytes": 43633,
+      "expectedCISha256": "984e40e0778e7dfcf13c6daeb54e33672a88cd92d4bada4a2fd7a89ce732ebc1",
+      "currentHTTPStatus": 200,
+      "currentBytes": 43633,
+      "currentSha256": "984e40e0778e7dfcf13c6daeb54e33672a88cd92d4bada4a2fd7a89ce732ebc1",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": false,
+      "currentBytesEqualLocalCIReference": null,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 43633,
+          "bodySha256": "984e40e0778e7dfcf13c6daeb54e33672a88cd92d4bada4a2fd7a89ce732ebc1"
+        }
+      ]
+    },
+    {
+      "path": "assets/roo-D8yWBDNL.png",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/roo-D8yWBDNL.png",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/roo-D8yWBDNL.png",
+      "expectedCIBytes": 5626,
+      "expectedCISha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "currentHTTPStatus": 200,
+      "currentBytes": 5626,
+      "currentSha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": true,
+      "currentBytesEqualLocalCIReference": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 5626,
+          "bodySha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a"
+        }
+      ]
+    },
+    {
+      "path": "assets/cursor-light-DGKJuirn.svg",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/cursor-light-DGKJuirn.svg",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/cursor-light-DGKJuirn.svg",
+      "expectedCIBytes": 4388,
+      "expectedCISha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+      "currentHTTPStatus": 200,
+      "currentBytes": 4388,
+      "currentSha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": true,
+      "currentBytesEqualLocalCIReference": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 4388,
+          "bodySha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0"
+        }
+      ]
+    },
+    {
+      "path": "assets/hermes-dark-D5fo9gTB.svg",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/hermes-dark-D5fo9gTB.svg",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/hermes-dark-D5fo9gTB.svg",
+      "expectedCIBytes": 137768,
+      "expectedCISha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+      "currentHTTPStatus": 200,
+      "currentBytes": 137768,
+      "currentSha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": true,
+      "currentBytesEqualLocalCIReference": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 137768,
+          "bodySha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36"
+        }
+      ]
+    },
+    {
+      "path": "assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+      "expectedCIBytes": 8059324,
+      "expectedCISha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b",
+      "currentHTTPStatus": 200,
+      "currentBytes": 8059324,
+      "currentSha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": true,
+      "currentBytesEqualLocalCIReference": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 8059324,
+          "bodySha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b"
+        }
+      ]
+    },
+    {
+      "path": "assets/workbuddy-D1Gu2IKl.svg",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/workbuddy-D1Gu2IKl.svg",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/workbuddy-D1Gu2IKl.svg",
+      "expectedCIBytes": 4142,
+      "expectedCISha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "currentHTTPStatus": 200,
+      "currentBytes": 4142,
+      "currentSha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": true,
+      "currentBytesEqualLocalCIReference": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 4142,
+          "bodySha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d"
+        }
+      ]
+    },
+    {
+      "path": "assets/NotFoundView-xeSxHblG.js",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/NotFoundView-xeSxHblG.js",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/NotFoundView-xeSxHblG.js",
+      "expectedCIBytes": 274,
+      "expectedCISha256": "084d32cb72eb6661a9a2483cfda4f19488e98c17b2de227fd644ad301d492ef8",
+      "currentHTTPStatus": 200,
+      "currentBytes": 274,
+      "currentSha256": "084d32cb72eb6661a9a2483cfda4f19488e98c17b2de227fd644ad301d492ef8",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": false,
+      "currentBytesEqualLocalCIReference": null,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 274,
+          "bodySha256": "084d32cb72eb6661a9a2483cfda4f19488e98c17b2de227fd644ad301d492ef8"
+        }
+      ]
+    },
+    {
+      "path": "assets/circle-check-ZVk3X9MA.js",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/circle-check-ZVk3X9MA.js",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/circle-check-ZVk3X9MA.js",
+      "expectedCIBytes": 214,
+      "expectedCISha256": "9c69a7794e89cd57e2accfafad4267e8a87f2286190ba6844c059da8c90b4ccd",
+      "currentHTTPStatus": 200,
+      "currentBytes": 214,
+      "currentSha256": "9c69a7794e89cd57e2accfafad4267e8a87f2286190ba6844c059da8c90b4ccd",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": false,
+      "currentBytesEqualLocalCIReference": null,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 214,
+          "bodySha256": "9c69a7794e89cd57e2accfafad4267e8a87f2286190ba6844c059da8c90b4ccd"
+        }
+      ]
+    },
+    {
+      "path": "assets/HomeView-VYl1khHT.css",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/HomeView-VYl1khHT.css",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/HomeView-VYl1khHT.css",
+      "expectedCIBytes": 392,
+      "expectedCISha256": "274cfaa7401387e8b1f8df232fbdf3b5586f8c4c01a2707b34b6f1fa2cd279bf",
+      "currentHTTPStatus": 200,
+      "currentBytes": 392,
+      "currentSha256": "274cfaa7401387e8b1f8df232fbdf3b5586f8c4c01a2707b34b6f1fa2cd279bf",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": true,
+      "currentBytesEqualLocalCIReference": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 392,
+          "bodySha256": "274cfaa7401387e8b1f8df232fbdf3b5586f8c4c01a2707b34b6f1fa2cd279bf"
+        }
+      ]
+    },
+    {
+      "path": "assets/SiteShell-DcGnkWKz.css",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/SiteShell-DcGnkWKz.css",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/SiteShell-DcGnkWKz.css",
+      "expectedCIBytes": 3407,
+      "expectedCISha256": "86934830eb21e9e3b42686f80b3d4889a2767867a4d050cba061028d3d3c9f2c",
+      "currentHTTPStatus": 200,
+      "currentBytes": 3407,
+      "currentSha256": "86934830eb21e9e3b42686f80b3d4889a2767867a4d050cba061028d3d3c9f2c",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": true,
+      "currentBytesEqualLocalCIReference": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 3407,
+          "bodySha256": "86934830eb21e9e3b42686f80b3d4889a2767867a4d050cba061028d3d3c9f2c"
+        }
+      ]
+    },
+    {
+      "path": "assets/shield-check--ZCfqxQj.js",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/shield-check--ZCfqxQj.js",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/shield-check--ZCfqxQj.js",
+      "expectedCIBytes": 651,
+      "expectedCISha256": "691465cb720a45d50616bbcc6c16a18de1fc9e405010e9b6b3ca2644e9705e6d",
+      "currentHTTPStatus": 200,
+      "currentBytes": 651,
+      "currentSha256": "691465cb720a45d50616bbcc6c16a18de1fc9e405010e9b6b3ca2644e9705e6d",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": false,
+      "currentBytesEqualLocalCIReference": null,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 651,
+          "bodySha256": "691465cb720a45d50616bbcc6c16a18de1fc9e405010e9b6b3ca2644e9705e6d"
+        }
+      ]
+    },
+    {
+      "path": "assets/orchester-workspace-D9U4oCdz.png",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/orchester-workspace-D9U4oCdz.png",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/orchester-workspace-D9U4oCdz.png",
+      "expectedCIBytes": 33754,
+      "expectedCISha256": "0a2949125eb65124f0bc442db9e8155aec352f12545c9849079111dca6122610",
+      "currentHTTPStatus": 200,
+      "currentBytes": 33754,
+      "currentSha256": "0a2949125eb65124f0bc442db9e8155aec352f12545c9849079111dca6122610",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": true,
+      "currentBytesEqualLocalCIReference": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 33754,
+          "bodySha256": "0a2949125eb65124f0bc442db9e8155aec352f12545c9849079111dca6122610"
+        }
+      ]
+    },
+    {
+      "path": "assets/SiteShell.vue_vue_type_script_setup_true_lang-C7VUzPwF.js",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/SiteShell.vue_vue_type_script_setup_true_lang-C7VUzPwF.js",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/SiteShell.vue_vue_type_script_setup_true_lang-C7VUzPwF.js",
+      "expectedCIBytes": 15940,
+      "expectedCISha256": "d8df5d49842584fe36c3f93a1f1a087ba9d499018c335ebe51635cd20d38d922",
+      "currentHTTPStatus": 200,
+      "currentBytes": 15940,
+      "currentSha256": "d8df5d49842584fe36c3f93a1f1a087ba9d499018c335ebe51635cd20d38d922",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": false,
+      "currentBytesEqualLocalCIReference": null,
+      "attempts": [
+        {
+          "attempt": 1,
+          "errorType": "URLError",
+          "httpStatus": null
+        },
+        {
+          "attempt": 2,
+          "httpStatus": 200,
+          "bodyBytes": 15940,
+          "bodySha256": "d8df5d49842584fe36c3f93a1f1a087ba9d499018c335ebe51635cd20d38d922"
+        }
+      ]
+    },
+    {
+      "path": "assets/InstallView-BHzAEGI1.js",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/InstallView-BHzAEGI1.js",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/InstallView-BHzAEGI1.js",
+      "expectedCIBytes": 4640,
+      "expectedCISha256": "349a555121497f2c96659da9aa2b6aa20fb0bc9192772aa5608b2fd184cf2d9a",
+      "currentHTTPStatus": 200,
+      "currentBytes": 4640,
+      "currentSha256": "349a555121497f2c96659da9aa2b6aa20fb0bc9192772aa5608b2fd184cf2d9a",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": false,
+      "currentBytesEqualLocalCIReference": null,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 4640,
+          "bodySha256": "349a555121497f2c96659da9aa2b6aa20fb0bc9192772aa5608b2fd184cf2d9a"
+        }
+      ]
+    },
+    {
+      "path": "assets/claude-RJ8il4lB.png",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/claude-RJ8il4lB.png",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/claude-RJ8il4lB.png",
+      "expectedCIBytes": 10358,
+      "expectedCISha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "currentHTTPStatus": 200,
+      "currentBytes": 10358,
+      "currentSha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": true,
+      "currentBytesEqualLocalCIReference": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 10358,
+          "bodySha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1"
+        }
+      ]
+    },
+    {
+      "path": "assets/hermes-light-x1BVlPhG.svg",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/hermes-light-x1BVlPhG.svg",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/hermes-light-x1BVlPhG.svg",
+      "expectedCIBytes": 116350,
+      "expectedCISha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+      "currentHTTPStatus": 200,
+      "currentBytes": 116350,
+      "currentSha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": true,
+      "currentBytesEqualLocalCIReference": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "errorType": "URLError",
+          "httpStatus": null
+        },
+        {
+          "attempt": 2,
+          "httpStatus": 200,
+          "bodyBytes": 116350,
+          "bodySha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684"
+        }
+      ]
+    },
+    {
+      "path": "assets/codex-DODyF2an.png",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/codex-DODyF2an.png",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/codex-DODyF2an.png",
+      "expectedCIBytes": 10969,
+      "expectedCISha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+      "currentHTTPStatus": 200,
+      "currentBytes": 10969,
+      "currentSha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": true,
+      "currentBytesEqualLocalCIReference": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "errorType": "URLError",
+          "httpStatus": null
+        },
+        {
+          "attempt": 2,
+          "httpStatus": 200,
+          "bodyBytes": 10969,
+          "bodySha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3"
+        }
+      ]
+    },
+    {
+      "path": "assets/antigravity-DXFfVr6X.svg",
+      "requestedURL": "https://diewehmut.github.io/Orchester/assets/antigravity-DXFfVr6X.svg",
+      "finalURL": "https://diewehmut.github.io/Orchester/assets/antigravity-DXFfVr6X.svg",
+      "expectedCIBytes": 5037,
+      "expectedCISha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "currentHTTPStatus": 200,
+      "currentBytes": 5037,
+      "currentSha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": true,
+      "currentBytesEqualLocalCIReference": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "errorType": "URLError",
+          "httpStatus": null
+        },
+        {
+          "attempt": 2,
+          "httpStatus": 200,
+          "bodyBytes": 5037,
+          "bodySha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e"
+        }
+      ]
+    },
+    {
+      "path": "index.html",
+      "requestedURL": "https://diewehmut.github.io/Orchester/index.html",
+      "finalURL": "https://diewehmut.github.io/Orchester/index.html",
+      "expectedCIBytes": 5427,
+      "expectedCISha256": "9da71bfe926913857eba1fcd976ecf8e14386ba1bf65dc28ae4420ac3b651945",
+      "currentHTTPStatus": 200,
+      "currentBytes": 5427,
+      "currentSha256": "9da71bfe926913857eba1fcd976ecf8e14386ba1bf65dc28ae4420ac3b651945",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": false,
+      "currentBytesEqualLocalCIReference": null,
+      "attempts": [
+        {
+          "attempt": 1,
+          "httpStatus": 200,
+          "bodyBytes": 5427,
+          "bodySha256": "9da71bfe926913857eba1fcd976ecf8e14386ba1bf65dc28ae4420ac3b651945"
+        }
+      ]
+    },
+    {
+      "path": "404.html",
+      "requestedURL": "https://diewehmut.github.io/Orchester/404.html",
+      "finalURL": "https://diewehmut.github.io/Orchester/404.html",
+      "expectedCIBytes": 5427,
+      "expectedCISha256": "9da71bfe926913857eba1fcd976ecf8e14386ba1bf65dc28ae4420ac3b651945",
+      "currentHTTPStatus": 200,
+      "currentBytes": 5427,
+      "currentSha256": "9da71bfe926913857eba1fcd976ecf8e14386ba1bf65dc28ae4420ac3b651945",
+      "sha256AndSizeMatchArchivedCI": true,
+      "localCIByteReferenceAvailable": false,
+      "currentBytesEqualLocalCIReference": null,
+      "attempts": [
+        {
+          "attempt": 1,
+          "errorType": "URLError",
+          "httpStatus": null
+        },
+        {
+          "attempt": 2,
+          "httpStatus": 200,
+          "bodyBytes": 5427,
+          "bodySha256": "9da71bfe926913857eba1fcd976ecf8e14386ba1bf65dc28ae4420ac3b651945"
+        }
+      ]
+    }
+  ],
+  "credentialsUserCookiesOrOriginalBrowserContextAccessed": false,
+  "TLSCertificateVerificationDisabled": false
+}

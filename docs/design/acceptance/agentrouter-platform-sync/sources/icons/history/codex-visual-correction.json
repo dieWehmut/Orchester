@@ -1,0 +1,11 @@
+{
+  "originalFrontendReceipt": "/tmp/orchester-complete-agent-frontend-validation-20261111/summary.json",
+  "path": "packages/design/src/assets/agents/codex-light.svg",
+  "beforeSha256": "45be1f0757eb18889eefb1e7db79668ef46a275dc4e0e78e8df5ebd7f6cdeadc",
+  "afterSha256": "8652777b55544c572ba445dd230a90c2e248611e92eaa77de5805e8d0561fc30",
+  "bytes": 2008,
+  "reason": "Visual inspection identified a docs book instead of the Codex product blossom",
+  "upstreamPackageReceipt": "/tmp/orchester-official-legacy-icons-20261111/codex-product-icons-range-receipt.json",
+  "sourceUnchanged": "TypeScript metadata path remains codex-light.svg; other frontend code and assets remain unchanged",
+  "xmlSafe": true
+}

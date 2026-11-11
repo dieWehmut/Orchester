@@ -1,0 +1,11 @@
+{
+    "phase":  "helper-wsl",
+    "childPid":  267728,
+    "childCreatedAt":  "2026-11-11T09:06:45.3269943Z",
+    "exitCode":  0,
+    "timedOut":  false,
+    "processExited":  true,
+    "terminationAttempted":  false,
+    "stdout":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final-a96a06e-20261111\\helper-wsl\\stdout.log",
+    "stderr":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final-a96a06e-20261111\\helper-wsl\\stderr.log"
+}

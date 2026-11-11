@@ -1,0 +1,283 @@
+{
+  "native_node": {
+    "path": "/home/han/.nvm/versions/node/v24.21.0/bin/node",
+    "sha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c",
+    "file": "ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=bd05d6407047594fc3d31dd4ed4a37fe48c01f93, for GNU/Linux 3.2.0, with debug_info, not stripped, too many notes (256)",
+    "version": "v24.21.0"
+  },
+  "tools": [
+    {
+      "name": "@openai/codex",
+      "entry": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@openai/codex/bin/codex.js",
+      "entry_sha256": "e14fc83739c13c1074b12bd1acce4010c893c7f6fbfc1593b4a31d74cabb57af",
+      "entry_file": "a /usr/bin/env node script, ASCII text executable",
+      "argv": [
+        "/home/han/.nvm/versions/node/v24.21.0/bin/node",
+        "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@openai/codex/bin/codex.js",
+        "--version"
+      ],
+      "version": "0.167.1",
+      "version_output": [
+        "codex-cli 0.167.1"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "elapsed_seconds": 0.216,
+      "version_log_sha256": "e248d9860a2845d5c66274e8536631ea12768f12ebe0faf4dd691a32d61b4ac4",
+      "source": "https://registry.npmjs.org/@openai/codex/latest",
+      "integrity": "sha512-39uApTRT9bkhE8tMXTIfZxaZ27oi7hPqWoF2Coyp+iQFAD3NVHgH838IYVUfJaX85leMSP2s4JOmVw0mMSCN5Q==",
+      "status": "passed",
+      "platform_binary_proofs": [
+        {
+          "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex",
+          "file": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, stripped",
+          "sha256": "dd5bfdf19d794dcc6fb482d2d5a2d9fb31d11f6caa44b303bb72890d461e8a02"
+        }
+      ]
+    },
+    {
+      "name": "@anthropic-ai/claude-code",
+      "entry": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@anthropic-ai/claude-code/bin/claude.exe",
+      "entry_sha256": "bfb3703ad5380242328459bc62ada4bde8ae7ba57c6e1eeadb9c00e08874c478",
+      "entry_file": "ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=69e0821094c6c8ff81436e0a0adfc15b651a2679, not stripped",
+      "argv": [
+        "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@anthropic-ai/claude-code/bin/claude.exe",
+        "--version"
+      ],
+      "version": "2.1.322",
+      "version_output": [
+        "2.1.322 (Claude Code)"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "elapsed_seconds": 3.51,
+      "version_log_sha256": "b445bd47f91a2d4534915f9e4055f4e7f87e538026847ae530108d7b9c01c07c",
+      "source": "https://registry.npmjs.org/@anthropic-ai/claude-code/latest",
+      "integrity": "sha512-oP7oW4vM5DREWfL1jn4JSGlmLcrJ5QmppgADrVNJBUPiC1mQ5YvRrke0on+YZ/3QhKIaCJtdr6jPvehcAQIHLQ==",
+      "status": "passed",
+      "platform_binary_proofs": []
+    },
+    {
+      "name": "@google/gemini-cli",
+      "entry": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@google/gemini-cli/bundle/gemini.js",
+      "entry_sha256": "fcc38edd4f864c2f5fa582d7d133c19b1a04c697ad3143ab8045f92b77644c68",
+      "entry_file": "a /usr/bin/env node script, ASCII text executable",
+      "argv": [
+        "/home/han/.nvm/versions/node/v24.21.0/bin/node",
+        "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@google/gemini-cli/bundle/gemini.js",
+        "--version"
+      ],
+      "version": "0.68.0",
+      "version_output": [
+        "0.68.0"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "elapsed_seconds": 3.801,
+      "version_log_sha256": "de3b9e37071315b278b032a731e820c62b13c54106c60c32a14653a245461c75",
+      "source": "https://registry.npmjs.org/@google/gemini-cli/latest",
+      "integrity": "sha512-eq7AWY+YCijNGKVwyiRjN+GuOdXU/djuOZhX18p+HDmNyUqFdqH7C5V6vDJLl1uffhRPhGijePV+YvY8lymrbQ==",
+      "status": "passed",
+      "platform_binary_proofs": []
+    },
+    {
+      "name": "@qwen-code/qwen-code",
+      "entry": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@qwen-code/qwen-code/cli-entry.js",
+      "entry_sha256": "113efe4104a9fc66f507d34bfd6abbd896ceb77de47f4b468a0825a327fdc6a5",
+      "entry_file": "a /usr/bin/env node script, Unicode text, UTF-8 text executable",
+      "argv": [
+        "/home/han/.nvm/versions/node/v24.21.0/bin/node",
+        "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@qwen-code/qwen-code/cli-entry.js",
+        "--version"
+      ],
+      "version": "0.27.2",
+      "version_output": [
+        "0.27.2"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "elapsed_seconds": 0.032,
+      "version_log_sha256": "c0472ebd5e87101546086b873029c8e6b5b99460b97c596aa992fccbfb52027a",
+      "source": "https://registry.npmjs.org/@qwen-code/qwen-code/latest",
+      "integrity": "sha512-0X3lJvQI262mGK3P5iEQiGxu2Zg44aaV3du6Pe/JcWuhwlNeM9/cZF8bIpBhOgaymeSe8az15m//h5MHXHEkew==",
+      "status": "passed",
+      "platform_binary_proofs": []
+    },
+    {
+      "name": "opencode-ai",
+      "entry": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/opencode-ai/bin/opencode.exe",
+      "entry_sha256": "7df4e4136301f16589b0f30bf91a61380fca5f8ef22dd36570f5ebe1d4ec802c",
+      "entry_file": "ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=588d7307f333293c728b74df19b7323c20736899, not stripped",
+      "argv": [
+        "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/opencode-ai/bin/opencode.exe",
+        "--version"
+      ],
+      "version": "1.19.5",
+      "version_output": [
+        "1.19.5"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "elapsed_seconds": 3.771,
+      "version_log_sha256": "841f2d85d1f778cce0cf76d32368c88845e6847016e1397568e46f5b0745608e",
+      "source": "https://registry.npmjs.org/opencode-ai/latest",
+      "integrity": "sha512-tEqMvQahfhdDj8vceYpXtoIrvjPXm5XRfetWnPN5YISueU7adNx9JcUA3zZ+2GKuDVgDpGdQe1ZLtCZDjqodvA==",
+      "status": "passed",
+      "platform_binary_proofs": []
+    },
+    {
+      "name": "openclaw",
+      "entry": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/openclaw/openclaw.mjs",
+      "entry_sha256": "469e60c9f60b615ff71c985a54238ee532a8f949866d76aebe7d6e4bc7219902",
+      "entry_file": "a /usr/bin/env node script, ASCII text executable",
+      "argv": [
+        "/home/han/.nvm/versions/node/v24.21.0/bin/node",
+        "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/openclaw/openclaw.mjs",
+        "--version"
+      ],
+      "version": "2026.11.3",
+      "version_output": [
+        "OpenClaw 2026.11.3 (847611d)"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "elapsed_seconds": 0.113,
+      "version_log_sha256": "bddf5561fe0c3f225a1343211a2efb906385b9290a465aa24390b7fe5a748058",
+      "source": "https://registry.npmjs.org/openclaw/latest",
+      "integrity": "sha512-FBq/q0TCaoA2b7qfdV0q81fHhI6RBB1zAQfJQREc1u2TlK5khVgCUsAlXskLWthyVqRz5PWEj+oOmfYgK58dHg==",
+      "status": "passed",
+      "platform_binary_proofs": []
+    },
+    {
+      "name": "@earendil-works/pi-coding-agent",
+      "entry": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@earendil-works/pi-coding-agent/dist/bundle/cli.js",
+      "entry_sha256": "e79626f2dd6f94aa45d30f3fa63cd84319a6eefcd150b353cfaf274366926774",
+      "entry_file": "a /usr/bin/env node script, ASCII text executable",
+      "argv": [
+        "/home/han/.nvm/versions/node/v24.21.0/bin/node",
+        "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@earendil-works/pi-coding-agent/dist/bundle/cli.js",
+        "--version"
+      ],
+      "version": "1.5.2",
+      "version_output": [
+        "1.5.2"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "elapsed_seconds": 0.251,
+      "version_log_sha256": "ded1b601e81d31ca1f65c4f3ccf2ebd7992b6390e37bc2a86f3837282f1e00cf",
+      "source": "https://registry.npmjs.org/@earendil-works/pi-coding-agent/latest",
+      "integrity": "sha512-mUWI04rqF1Vd/m1q+Ps1XeWsTXEVvRUnsmRa83I3Dzua0Tx5bYS93imeqtIfrXf7PkkaR6ERz+AuQhIJlom5yA==",
+      "status": "passed",
+      "platform_binary_proofs": []
+    },
+    {
+      "name": "@charmland/crush",
+      "entry": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@charmland/crush/run-crush.js",
+      "entry_sha256": "2cc1ac87cc237a6383702b59f985160e637d3ec853bbccba2d7ef6bbf4d94361",
+      "entry_file": "a /usr/bin/env node script, ASCII text executable",
+      "argv": [
+        "/home/han/.nvm/versions/node/v24.21.0/bin/node",
+        "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@charmland/crush/run-crush.js",
+        "--version"
+      ],
+      "version": "0.100.0",
+      "version_output": [
+        "crush version v0.100.0"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "elapsed_seconds": 3.037,
+      "version_log_sha256": "e07c34d0e8dc013a34c7b8355da259637bcc8aadd7d5bcbb1f41fcd44ab415d4",
+      "source": "https://registry.npmjs.org/@charmland/crush/latest",
+      "integrity": "sha512-H9Lu/LS7DEGljV6jApERDQHDTBeodZfHTd1XnSKxMBBsgbmSjZRYJhl5dRqewwPF9KHb5iNqGEqE/URWAq2eRg==",
+      "status": "passed",
+      "platform_binary_proofs": [
+        {
+          "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@charmland/crush/bin/crush",
+          "file": "ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, Go BuildID=FKyBaBvJn_jsVC8UhfA-/Iw9TYvvrfmI4Yr53-bEs/9KAUsHc4gSIa8BTXjEOp/lOD9wnEDsaVvJ5iEvJ3e, BuildID[sha1]=3f3e041b7f2ff68877a293418370bcf933cbd7e7, stripped",
+          "sha256": "b5deb25bfc13c7af566f56e03ce6d974c489fa24332b3d9c6d63e437ba6e3a7c"
+        }
+      ]
+    },
+    {
+      "name": "cline",
+      "entry": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/cline/bin/cline",
+      "entry_sha256": "37848dcde533871a1a95af479221c8768292652ae73c73a8825288a67470f355",
+      "entry_file": "a /usr/bin/env node script, ASCII text executable",
+      "argv": [
+        "/home/han/.nvm/versions/node/v24.21.0/bin/node",
+        "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/cline/bin/cline",
+        "--version"
+      ],
+      "version": "3.0.74",
+      "version_output": [
+        "3.0.74"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "elapsed_seconds": 5.129,
+      "version_log_sha256": "d6809d090c25e478f47f22c9e20fd95c3937e6f84f5ca0d0cf9976a33d617a18",
+      "source": "https://registry.npmjs.org/cline/latest",
+      "integrity": "sha512-pCaRaJ6Jx50Urej+BYjpGkpZnFbPDCPsibKEbIjEuVxETXbZ/A1SMij8Thy8FobercevXX6hV7joAzU7OG5lzA==",
+      "status": "passed",
+      "platform_binary_proofs": [
+        {
+          "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/cline/bin/.cline",
+          "file": "ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=5afca2666bfab8605a934f1b6231dacae0518a5f, not stripped",
+          "sha256": "80ee64f82f895ccc695b95acd18252e00f17186a308257d7b169d444a2b27ef4"
+        }
+      ]
+    },
+    {
+      "name": "@kilocode/cli",
+      "entry": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@kilocode/cli/bin/kilo",
+      "entry_sha256": "9a87f9e371c52fdc3259841fd8c79c8ed540b3fb00bb6998e3626a58b5407767",
+      "entry_file": "a /usr/bin/env node script, ASCII text executable",
+      "argv": [
+        "/home/han/.nvm/versions/node/v24.21.0/bin/node",
+        "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@kilocode/cli/bin/kilo",
+        "--version"
+      ],
+      "version": "7.8.27",
+      "version_output": [
+        "7.8.27"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "elapsed_seconds": 1.003,
+      "version_log_sha256": "868a5199e018952d6c8b11f72ff5cf2489721d0c5d0def648a4737d42875311f",
+      "source": "https://registry.npmjs.org/@kilocode/cli/latest",
+      "integrity": "sha512-yDbBFQ3EfEY0xl31LFAEI8H2bsbORdoJ0sXEw8trnq7PvoGJODvNORJPmg7cxSh4Yt7s+GqOmpFQwtxJ0wDMtg==",
+      "status": "passed",
+      "platform_binary_proofs": [
+        {
+          "path": "/home/han/.nvm/versions/node/v24.21.0/lib/node_modules/@kilocode/cli/bin/.kilo",
+          "file": "ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=588d7307f333293c728b74df19b7323c20736899, not stripped",
+          "sha256": "0a29567164ab8b649f5db9dfd21862f8163c19c1e27e470dc40520814d51883b"
+        }
+      ]
+    }
+  ],
+  "model_calls": 0,
+  "verification_flags": [
+    "--version"
+  ],
+  "windows_interop_used": false,
+  "configuration_backup_unchanged": {
+    ".codex/config.toml": false,
+    ".codex/auth.json": true
+  },
+  "config_changes_observed_after_installation": {
+    "external_config_toml_changed_keys": [
+      "agents.default_subagent_model",
+      "model",
+      "review_model"
+    ],
+    "max_threads_8_preserved": true,
+    "auth_unchanged": true,
+    "providers_unchanged": true,
+    "root_independent_review": "Changes occurred outside installer work; preserve current state and do not roll back."
+  },
+  "configuration_at_install_end_unchanged": true
+}

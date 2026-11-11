@@ -1,0 +1,10 @@
+{
+  "edition": "domestic",
+  "entry": "/home/han/.local/opt/workbuddy/5.6.2.40046327/opt/WorkBuddy/workbuddy",
+  "entryExists": true,
+  "entrySha256": "13bf1da1273c22f0536ee6a52fbadb3561dd31b63c11e80f7feff6beccac1578",
+  "isNativeELF": true,
+  "sharedNativeLibsExist": true,
+  "profilesRead": false,
+  "observedAt": 1794394701.5734901
+}

@@ -1,0 +1,16 @@
+{
+  "guidePath": "/docs/hermes.html",
+  "requestedURL": "https://agentrouter.org/docs/hermes.html",
+  "anchorLabels": [
+    "Hermes Agent"
+  ],
+  "startedAt": 1794395962.9302387,
+  "transport": "verified official HTTPS urllib",
+  "httpStatus": 200,
+  "responseURL": "https://agentrouter.org/docs/hermes.html",
+  "bytes": 39972,
+  "sha256": "f44fefe62068b95791e0ed4178030720a70c665c5ff4eacc447fc8edfa04a9eb",
+  "processOperationCompleted": true,
+  "publicSnapshotFile": "hermes.html",
+  "finishedAt": 1794395964.9246411
+}

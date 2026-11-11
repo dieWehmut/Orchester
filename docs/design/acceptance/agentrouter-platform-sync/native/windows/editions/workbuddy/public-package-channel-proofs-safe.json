@@ -1,0 +1,30 @@
+[
+  {
+    "edition": "domestic",
+    "archive": "/mnt/c/Users/han/software/workbuddy/resources/app.asar",
+    "packageSha256": "e2538c1e91d5db78bf21337ea9b4d24eb591a995ae629d2d65876c221027de61",
+    "packagePublicFields": {
+      "name": "@genie/workbuddy-desktop",
+      "productName": "WorkBuddy",
+      "version": "5.9.3",
+      "main": "main/index.js",
+      "homepage": "https://www.workbuddy.cn"
+    },
+    "mainSha256": "2524eb599c6bbbef09e4a479cb4f719ed6b3bf5f455453d95989a0edbaa63e72",
+    "publicUserDataSetupSnippets": []
+  },
+  {
+    "edition": "global",
+    "archive": "/mnt/c/Users/han/WorkBuddy/WorkBuddyAI/resources/app.asar",
+    "packageSha256": "a672cdabc92257df0ff8bb3020a86d7d8f46a6d36a10699d7f11e2b2476ad116",
+    "packagePublicFields": {
+      "name": "@genie/workbuddy-desktop",
+      "productName": "WorkBuddy AI",
+      "version": "5.9.4",
+      "main": "main/index.js",
+      "homepage": "https://www.workbuddy.ai"
+    },
+    "mainSha256": "2524eb599c6bbbef09e4a479cb4f719ed6b3bf5f455453d95989a0edbaa63e72",
+    "publicUserDataSetupSnippets": []
+  }
+]
