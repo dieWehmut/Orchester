@@ -36,6 +36,9 @@ describe('agent process monitors', () => {
     { provider: 'antigravity', display_name: 'Antigravity', label: 'Google', dark: 'antigravity.svg', light: 'antigravity.svg' },
     { provider: 'cursor', display_name: 'Cursor', label: 'Cursor', dark: 'cursor-dark.svg', light: 'cursor-light.svg' },
     { provider: 'deepseek', display_name: 'DeepSeek Harness', label: 'DeepSeek', dark: 'deepseek.ico', light: 'deepseek.ico' },
+    { provider: 'workbuddy', display_name: 'WorkBuddy', label: 'Tencent', dark: 'workbuddy.svg', light: 'workbuddy.svg' },
+    { provider: 'qwen', display_name: 'Qwen Code', label: 'Qwen', dark: 'qwen.svg', light: 'qwen.svg' },
+    { provider: 'openclaw', display_name: 'OpenClaw', label: 'OpenClaw', dark: 'openclaw.svg', light: 'openclaw.svg' },
   ])('renders the $display_name identity and local official marks in row and details', ({ provider, display_name, label, dark, light }) => {
     const agent = monitor({ provider, display_name, icon_key: 'custom-provider' })
     const row = mount(AgentFleetRow, { props: { agent } })

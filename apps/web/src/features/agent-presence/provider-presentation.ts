@@ -1,6 +1,6 @@
 import type { AgentRuntimeSummaryDto } from '@orchester/protokoll'
 
-export type AgentProviderKey = 'codex' | 'claude' | 'deepseek' | 'opencode' | 'gemini' | 'antigravity' | 'cursor' | 'generic'
+export type AgentProviderKey = 'codex' | 'claude' | 'deepseek' | 'opencode' | 'gemini' | 'antigravity' | 'cursor' | 'workbuddy' | 'qwen' | 'openclaw' | 'generic'
 export type AgentProviderTone = 'success' | 'warning' | 'info' | 'accent' | 'neutral'
 
 export interface AgentProviderPresentation {
@@ -18,20 +18,22 @@ const PROVIDERS: Record<Exclude<AgentProviderKey, 'generic'>, AgentProviderPrese
   gemini: { key: 'gemini', label: 'Google', iconKey: 'gemini', tone: 'info' },
   antigravity: { key: 'antigravity', label: 'Google', iconKey: 'antigravity', tone: 'accent' },
   cursor: { key: 'cursor', label: 'Cursor', iconKey: 'cursor', tone: 'neutral' },
+  workbuddy: { key: 'workbuddy', label: 'Tencent', iconKey: 'workbuddy', tone: 'accent' },
+  qwen: { key: 'qwen', label: 'Qwen', iconKey: 'qwen', tone: 'info' },
+  openclaw: { key: 'openclaw', label: 'OpenClaw', iconKey: 'openclaw', tone: 'accent' },
 }
 
-function knownProvider(
-  agent: AgentRuntimeSummaryDto,
-): Exclude<AgentProviderKey, 'generic'> | null {
-  const candidates = [agent.provider, agent.icon_key].map((value) => value.trim().toLowerCase())
-  if (candidates.some((value) => value === 'codex' || value === 'openai')) return 'codex'
-  if (candidates.some((value) => value === 'claude' || value === 'anthropic')) return 'claude'
-  if (candidates.includes('deepseek')) return 'deepseek'
-  if (candidates.includes('opencode')) return 'opencode'
-  if (candidates.includes('gemini')) return 'gemini'
-  if (candidates.includes('antigravity')) return 'antigravity'
-  if (candidates.includes('cursor')) return 'cursor'
-  return null
+function knownProviderKey(value: string): Exclude<AgentProviderKey, 'generic'> | null {
+  const key = value.trim().toLowerCase()
+  if (key === 'openai') return 'codex'
+  if (key === 'anthropic') return 'claude'
+  return Object.prototype.hasOwnProperty.call(PROVIDERS, key)
+    ? key as Exclude<AgentProviderKey, 'generic'>
+    : null
+}
+
+function knownProvider(agent: AgentRuntimeSummaryDto): Exclude<AgentProviderKey, 'generic'> | null {
+  return knownProviderKey(agent.provider) ?? knownProviderKey(agent.icon_key)
 }
 
 function humanizeProvider(provider: string): string {
