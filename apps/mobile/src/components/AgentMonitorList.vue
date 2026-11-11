@@ -6,6 +6,7 @@ import {
   agentIsMonitorOnly,
   agentPresenceCountKey,
   agentPresentedActivity,
+  agentProcessSourcesComplete,
   agentWindowCount,
   type AgentFleetSnapshotDto,
   type AgentRuntimeSummaryDto,
@@ -47,7 +48,8 @@ function activity(agent: AgentRuntimeSummaryDto) {
 <template>
   <section class="agent-monitor-list" data-mobile-agent-monitors aria-label="电脑 Agent 状态">
     <h3>Agent 状态</h3>
-    <p v-if="status === 'loading' || status === 'idle'" class="hint" role="status">正在读取 Agent 状态…</p>
+    <p v-if="status === 'loading'" class="hint" role="status">正在读取 Agent 状态…</p>
+    <p v-else-if="status === 'idle'" class="hint" role="status">连接电脑后可查看 Agent 状态。</p>
     <p v-if="error" class="hint error-message" role="status">{{ error }}</p>
     <p v-if="status === 'stale' && snapshot" class="hint">保留上次列表，当前运行状态尚未确认。</p>
     <ul v-if="rows.length">
@@ -61,6 +63,15 @@ function activity(agent: AgentRuntimeSummaryDto) {
           <strong data-mobile-agent-count>{{ count(agent) }}</strong>{{ unit(agent) }}
         </span>
         <small v-if="agentIsMonitorOnly(agent)" class="agent-monitor-note">仅监控；服务存在不代表任务执行。</small>
+        <details v-if="!agentProcessSourcesComplete(agent)" class="agent-monitor-sources" data-mobile-agent-process-sources>
+          <summary>{{ agent.process_sources === null ? '进程来源尚未确认。' : '进程监控不完整。' }}</summary>
+          <ul v-if="agent.process_sources !== null">
+            <li v-for="(source, index) in agent.process_sources" :key="index" :data-mobile-process-source-status="source.status">
+              {{ { local: '本机', windows: 'Windows', wsl: 'WSL' }[source.environment] }}：
+              {{ source.status === 'unavailable' ? '来源不可用' : source.status === 'stale' ? `上次观测：${source.count}` : `当前：${source.count}` }}
+            </li>
+          </ul>
+        </details>
       </li>
     </ul>
     <p v-else-if="status === 'ready'" class="hint">这台电脑没有可显示的 Agent。</p>
@@ -78,4 +89,8 @@ function activity(agent: AgentRuntimeSummaryDto) {
 .agent-monitor-count { display: grid; justify-items: end; gap: 3px; }
 .agent-monitor-count strong { color: var(--color-text-primary); }
 .agent-monitor-note { grid-column: 2 / -1; margin-block-start: 3px; }
+.agent-monitor-sources { grid-column: 2 / -1; margin-block-start: 3px; color: var(--color-text-secondary); font-size: 12px; }
+.agent-monitor-sources summary { cursor: pointer; }
+.agent-monitor-sources ul { gap: 3px; margin-block-start: 4px; }
+.agent-monitor-sources li { display: block; }
 </style>

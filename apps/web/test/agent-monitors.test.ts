@@ -36,7 +36,7 @@ describe('agent process monitors', () => {
     { provider: 'gemini', display_name: 'Gemini CLI', label: 'Google', dark: 'gemini.png', light: 'gemini.png' },
     { provider: 'antigravity', display_name: 'Antigravity', label: 'Google', dark: 'antigravity.svg', light: 'antigravity.svg' },
     { provider: 'cursor', display_name: 'Cursor', label: 'Cursor', dark: 'cursor-dark.svg', light: 'cursor-light.svg' },
-    { provider: 'deepseek', display_name: 'DeepSeek Harness', label: 'DeepSeek', dark: 'deepseek.ico', light: 'deepseek.ico' },
+    { provider: 'deepseek', display_name: 'DeepSeek Harness', label: 'DeepSeek', dark: 'deepseek-harness-dark.svg', light: 'deepseek-harness-light.svg' },
     { provider: 'workbuddy', display_name: 'WorkBuddy', label: 'Tencent', dark: 'workbuddy.svg', light: 'workbuddy.svg' },
     { provider: 'qwen', display_name: 'Qwen Code', label: 'Qwen', dark: 'qwen.svg', light: 'qwen.svg' },
     { provider: 'openclaw', display_name: 'OpenClaw', label: 'OpenClaw', dark: 'openclaw.svg', light: 'openclaw.svg' },
