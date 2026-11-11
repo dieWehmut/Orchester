@@ -30,7 +30,7 @@ change. The light/dark files identify the intended UI backgrounds.
 | `kilo.svg` | [Official asset](https://raw.githubusercontent.com/Kilo-Org/kilocode/2649e61b9eca9619f0dcbd3b2c53deb04c8b26ab/packages/kilo-docs/public/favicon/favicon.svg) | `5b537e31ef6037cadc434390c5d38687b3752c37ea8c4e2a09b9d62b4fae4c78` |
 | `hermes-dark.svg` | [Official asset](https://raw.githubusercontent.com/NousResearch/hermes-agent/9373dc1e315a68446f9767afd7acd15d4c0642b8/assets/icon-master-dark.svg) | `e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36` |
 | `hermes-light.svg` | [Official asset](https://raw.githubusercontent.com/NousResearch/hermes-agent/9373dc1e315a68446f9767afd7acd15d4c0642b8/assets/icon-master.svg) | `6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684` |
-| `pi.svg` | [Official asset](https://pi.dev/favicon.svg) | `d266b2c1d2c7bf169ca30d438963b176fba16fea6263b9ac30c8302f34ad7ce7` |
+| `pi.svg` | [Official Pi color mark](https://pi.dev/logo.svg) | `abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b` |
 | `crush.png` | [Official asset](https://raw.githubusercontent.com/charmbracelet/crush/1b7582dbba81e0f716e50f20fe44bd04faf7251f/internal/ui/notification/crush-icon-solo.png) | `a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2` |
 | `trae.png` | [Official asset](https://lf-cdn.trae.com.cn/obj/trae-com-cn/trae_website_prod_cn/favicon.png) | `49d523938a22af5a70dd79923725df38674823026e2f917e76337319969f4af4` |
 | `zcode.png` | [Official asset](https://zcode.z.ai/favicon-192x192.png?v=20260707-transparent) | `089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c` |
@@ -82,3 +82,7 @@ Official repository license references: [Codex](https://github.com/openai/codex/
 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness/blob/fcc0ad462172522aaf5c93a7b2e01f6b9f0b0159/LICENSE),
 and [OpenCode](https://github.com/anomalyco/opencode/blob/e56eff2bc01649b3aa21224876b8874e77dea4b0/LICENSE).
 Publisher icons retain their respective product branding and publisher terms.
+
+The Pi row uses the official color logo in both themes. Its favicon follows the
+system color preference, which can differ from the selected app theme; using the
+original color logo keeps the mark visible without recoloring its bytes.
