@@ -35,7 +35,7 @@ def suffix(value, expected):
 
 def candidate(name):
     name = basename(name)
-    return (name in rules["primary"] or name in rules["runtimes"]
+    return (name in rules["primary"] or name in rules["desktop_services"] or name in rules["runtimes"]
             or name in rules["candidates"]
             or name.startswith(("python3.", "pypy3.")))
 
@@ -69,6 +69,12 @@ def classify(name, exe, args):
     if name in rules["primary"]:
         return rules["primary"][name]
     executable = basename(exe)
+    if executable in rules["desktop_services"]:
+        index = entry_index(args)
+        helper = index is not None and path(args[index]).endswith((".js", ".mjs", ".cjs", ".ts"))
+        return (rules["desktop_services"][executable] if args and not helper
+                and not any(arg.split("=", 1)[0] in ("--type", "--crashpad-handler") for arg in args)
+                else None)
     if cursor_cli_file(exe) in ("cursor-agent", "cursor-agent.exe", "agent", "agent.exe"):
         return "cursor"
     if name.startswith("language_server") or executable.startswith("language_server"):
@@ -84,6 +90,8 @@ def classify(name, exe, args):
                or (executable == "dsh desktop" and "/dsh desktop/" in exe))
     if not runtime:
         return None
+    if args and basename(args[0]) == "openclaw-gateway":
+        return "openclaw"
     index = entry_index(args)
     if index is None:
         return None
@@ -101,7 +109,55 @@ def classify(name, exe, args):
                      if suffix(entry, expected)), None)
     if provider == "deepseek" and dsh_maintenance(args[index + 1:]):
         return None
+    if provider == "qwen" and qwen_maintenance(args[index + 1:]):
+        return None
+    if provider == "openclaw" and not openclaw_gateway(args[index + 1:]):
+        return None
     return provider
+
+def qwen_maintenance(args):
+    index = 0
+    while index < len(args):
+        arg = args[index]
+        key = arg.split("=", 1)[0]
+        if key in ("--prompt", "-p", "--"):
+            return False
+        if key in rules["qwen_value_flags"]:
+            index += 1 if "=" in arg else 2
+            continue
+        if arg in rules["maintenance"] or arg == "-v":
+            return True
+        if not arg.startswith("-"):
+            return arg in rules["qwen_maintenance_commands"]
+        index += 1
+    return False
+
+def openclaw_gateway(args):
+    index, command, run = 0, False, False
+    while index < len(args):
+        arg = args[index]
+        key = arg.split("=", 1)[0]
+        value_flag = (key in rules["openclaw_root_value_flags"]
+                      or (command and key in rules["openclaw_gateway_value_flags"]))
+        if value_flag:
+            if "=" not in arg:
+                if index + 1 >= len(args) or not args[index + 1] or args[index + 1].startswith("-"):
+                    return False
+                index += 1
+            elif arg.endswith("="):
+                return False
+        elif (key in rules["openclaw_root_switch_flags"]
+              or (command and key in rules["openclaw_gateway_switch_flags"])):
+            if "=" in arg:
+                return False
+        elif not command and arg == "gateway":
+            command = True
+        elif command and not run and arg == "run":
+            run = True
+        else:
+            return False
+        index += 1
+    return command
 
 def dsh_maintenance(args):
     if args and args[0] == "plugin":
@@ -144,6 +200,10 @@ def bounded_args(args):
 def instance_key(name, exe, args):
     if basename(name) in rules["primary"]:
         return "native:" + basename(name)
+    if basename(exe) in rules["desktop_services"]:
+        return "desktop:" + path(exe)
+    if args and basename(args[0]) == "openclaw-gateway":
+        return "openclaw:gateway-title"
     index = entry_index(args)
     if index is not None:
         if suffix(path(args[index]), "dsh desktop/resources/harness-node-entry.mjs"):
@@ -153,8 +213,15 @@ def instance_key(name, exe, args):
             for arg in args[index + 1:]:
                 digest.update(arg.encode("utf-8"))
                 digest.update(b"\0")
-            return path(args[index]) + ":" + digest.hexdigest()
+            return canonical_entry(path(args[index])) + ":" + digest.hexdigest()
     return path(exe)
+
+def canonical_entry(entry):
+    for expected, provider in sorted(rules["entries"].items()):
+        if provider in ("qwen", "openclaw") and suffix(entry, expected):
+            package = "@qwen-code/qwen-code" if expected.startswith("@qwen-code/") else "qwen-code" if provider == "qwen" else "openclaw"
+            return entry[:-len(expected)] + package
+    return entry
 
 def native_launcher_pair(provider, parent_key, key):
     launcher = {"codex": "/@openai/codex/bin/codex.js:",
@@ -169,7 +236,8 @@ def counts(rows):
         parent = identities.get(row.get("parent"))
         if (parent and parent["provider"] == row["provider"]
                 and ((parent["key"] == row["key"] and not row["key"].startswith("native:"))
-                     or native_launcher_pair(row["provider"], parent["key"], row["key"]))):
+                     or native_launcher_pair(row["provider"], parent["key"], row["key"])
+                     or (row["provider"] == "openclaw" and row["key"] == "openclaw:gateway-title"))):
             continue
         result[row["provider"]] = result.get(row["provider"], 0) + 1
     return result

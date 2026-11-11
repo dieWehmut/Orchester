@@ -353,7 +353,15 @@ fn process_monitor_start_is_safe_without_a_tokio_runtime() {
 fn additional_providers_have_monitor_only_rows_without_runnable_adapters() {
     let registry = registry();
     let snapshot = agent_status_response(&registry);
-    for provider in ["gemini", "antigravity", "cursor", "deepseek"] {
+    for provider in [
+        "gemini",
+        "antigravity",
+        "cursor",
+        "deepseek",
+        "qwen",
+        "openclaw",
+        "workbuddy",
+    ] {
         assert!(!registry
             .list()
             .iter()
@@ -373,6 +381,13 @@ fn additional_providers_have_monitor_only_rows_without_runnable_adapters() {
             .capabilities
             .iter()
             .any(|label| label == "process_presence"));
+        assert_eq!(
+            agent
+                .capabilities
+                .iter()
+                .any(|label| label == "service_presence"),
+            matches!(provider, "workbuddy" | "openclaw")
+        );
         assert_eq!(agent.activity, AgentActivityState::Unknown);
         assert!(!agent.installed && !agent.configured && !agent.authenticated);
         assert!(agent.last_error.is_none());

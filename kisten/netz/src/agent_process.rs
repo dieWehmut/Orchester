@@ -581,7 +581,16 @@ fn parse_identity_counts(raw: &[u8]) -> Result<IdentityCounts, &'static str> {
     if result.counts.keys().any(|provider| {
         !matches!(
             provider.as_str(),
-            "claude" | "codex" | "opencode" | "deepseek" | "gemini" | "antigravity" | "cursor"
+            "claude"
+                | "codex"
+                | "opencode"
+                | "deepseek"
+                | "gemini"
+                | "antigravity"
+                | "cursor"
+                | "qwen"
+                | "openclaw"
+                | "workbuddy"
         )
     }) || result.counts.values().any(|count| *count > 512)
     {
@@ -1035,6 +1044,61 @@ mod tests {
             assert_eq!(sources.len(), 1);
             assert_eq!(sources[0].status, AgentProcessSourceState::Unavailable);
             assert_eq!(sources[0].count, None);
+        }
+    }
+
+    #[test]
+    fn new_monitor_identities_preserve_positive_counts_and_incomplete_sources() {
+        use orchester_protokoll::AgentActivityState;
+        for environment in [
+            AgentProcessEnvironment::Local,
+            AgentProcessEnvironment::Windows,
+            AgentProcessEnvironment::Wsl,
+        ] {
+            let snapshot = AgentProcessSnapshot::from_observations(identity_observations(
+                environment,
+                parse_identity_counts(
+                    br#"{"counts":{"qwen":1,"openclaw":2,"workbuddy":1},"complete":false}"#,
+                )
+                .unwrap(),
+                "2026-11-11T06:00:00Z".into(),
+            ));
+            assert!(!snapshot.is_complete());
+            let mut registry = orchester_verzeichnis::Registry::new();
+            registry.register_builtins();
+            let store =
+                crate::AgentRuntimeStatusStore::new(crate::agent_status_response(&registry))
+                    .unwrap();
+            store
+                .reconcile_external_processes(&snapshot, "2026-11-11T06:00:01Z")
+                .unwrap();
+            let fleet = store.snapshot().unwrap();
+            for (provider, count) in [("qwen", 1), ("openclaw", 2), ("workbuddy", 1)] {
+                let row = fleet
+                    .agents
+                    .iter()
+                    .find(|row| row.provider == provider)
+                    .unwrap();
+                assert_eq!(row.activity, AgentActivityState::Running);
+                assert_eq!(row.active_windows, count);
+                assert_eq!(row.active_sessions, 0);
+                assert_eq!(row.active_runs, 0);
+                let sources = row.process_sources.as_ref().unwrap();
+                assert_eq!(sources.len(), 2);
+                assert_eq!(sources[0].count, Some(count));
+                assert_eq!(sources[0].status, AgentProcessSourceState::Available);
+                assert_eq!(sources[1].count, None);
+                assert_eq!(sources[1].status, AgentProcessSourceState::Unavailable);
+            }
+            assert_eq!(
+                fleet
+                    .agents
+                    .iter()
+                    .find(|row| row.provider == "gemini")
+                    .unwrap()
+                    .activity,
+                AgentActivityState::Unknown
+            );
         }
     }
 

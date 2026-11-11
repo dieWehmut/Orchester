@@ -23,7 +23,12 @@
     "language_server_linux_x64",
     "language_server_linux_arm",
     "dsh desktop",
-    "mainthread"
+    "mainthread",
+    "qwen",
+    "openclaw",
+    "openclaw-gateway",
+    "openclaw-gatewa",
+    "workbuddy"
   ],
   "entries": {
     "@google/gemini-cli/dist/index.js": "gemini",
@@ -32,7 +37,20 @@
     "cursor-agent-host/dist/agent-host-daemon/dist/bin/daemon.cjs": "cursor",
     "@openai/codex/bin/codex.js": "codex",
     "@anthropic-ai/claude-code/cli.js": "claude",
-    "opencode-ai/bin/opencode": "opencode"
+    "opencode-ai/bin/opencode": "opencode",
+    "@qwen-code/qwen-code/cli-entry.js": "qwen",
+    "@qwen-code/qwen-code/cli.js": "qwen",
+    "@qwen-code/qwen-code/dist/index.js": "qwen",
+    "@qwen-code/qwen-code/scripts/cli-entry.js": "qwen",
+    "@qwen-code/qwen-code/dist/cli.js": "qwen",
+    "qwen-code/scripts/cli-entry.js": "qwen",
+    "qwen-code/dist/cli.js": "qwen",
+    "qwen-code/lib/cli-entry.js": "qwen",
+    "qwen-code/lib/cli.js": "qwen",
+    "openclaw/openclaw.mjs": "openclaw",
+    "openclaw/dist/entry.js": "openclaw",
+    "openclaw/dist/entry.mjs": "openclaw",
+    "openclaw/dist/index.js": "openclaw"
   },
   "runtime_value_flags": [
     "--import",
@@ -69,5 +87,65 @@
     "--model",
     "--config",
     "--from-default-profile"
+  ],
+  "desktop_services": {
+    "workbuddy": "workbuddy"
+  },
+  "qwen_value_flags": [
+    "--model",
+    "-m",
+    "--sandbox",
+    "--sandbox-image",
+    "--proxy",
+    "--extensions",
+    "--allowed-tools",
+    "--exclude-tools",
+    "--output-format",
+    "--input-format",
+    "--auth-type",
+    "--base-url",
+    "--api-key"
+  ],
+  "qwen_maintenance_commands": [
+    "mcp",
+    "extensions"
+  ],
+  "openclaw_root_value_flags": [
+    "--profile",
+    "--log-level",
+    "--container"
+  ],
+  "openclaw_root_switch_flags": [
+    "--dev",
+    "--no-color"
+  ],
+  "openclaw_gateway_value_flags": [
+    "--port",
+    "--bind",
+    "--token",
+    "--token-file",
+    "--auth",
+    "--password",
+    "--password-file",
+    "--tailscale",
+    "--ws-log",
+    "--raw-stream-path",
+    "--task-supervisor-child"
+  ],
+  "openclaw_gateway_switch_flags": [
+    "--tailscale-reset-on-exit",
+    "--allow-unconfigured",
+    "--dev",
+    "--ambient-channels",
+    "--dev-ambient-channels",
+    "--reset",
+    "--update-canary",
+    "--force",
+    "--verbose",
+    "--cli-backend-logs",
+    "--claude-cli-logs",
+    "--compact",
+    "--raw-stream",
+    "--task-supervisor"
   ]
 }
