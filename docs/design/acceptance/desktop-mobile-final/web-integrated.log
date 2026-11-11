@@ -1,0 +1,47 @@
+web-full-tests
+
+> @orchester/web@0.1.2 test /home/han/project/Orchester/apps/web
+> vitest run --maxWorkers=1
+
+
+ RUN  v4.1.10 /home/han/project/Orchester/apps/web
+
+
+ Test Files  134 passed (134)
+      Tests  860 passed (860)
+   Start at  22:41:00
+   Duration  76.78s (transform 2.49s, setup 0ms, import 18.05s, tests 9.80s, environment 39.39s)
+
+web-typecheck
+
+> @orchester/web@0.1.2 typecheck /home/han/project/Orchester/apps/web
+> vue-tsc --noEmit -p tsconfig.json
+
+web-production-build
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 2824 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                    0.72 kB │ gzip:   0.39 kB
+dist/appearance-bootstrap.js                       4.82 kB
+dist/assets/orchester-mark-DnE_3Uv-.png        1,690.39 kB
+dist/assets/LXGWWenKai-Regular-CB2zwLK-.woff2  8,059.32 kB
+dist/assets/NotFoundView-Bn9J4SyH.css              0.71 kB │ gzip:   0.31 kB
+dist/assets/management-DrC3akjz.css                5.31 kB │ gzip:   1.41 kB
+dist/assets/SettingsView-DY7Zn8Mz.css             13.94 kB │ gzip:   2.34 kB
+dist/assets/index-nLCX3cZ6.css                    79.74 kB │ gzip:  14.48 kB
+dist/assets/WorkspaceView-2qVNEqYO.css            94.72 kB │ gzip:  13.78 kB
+dist/assets/plus-BGolWEcK.js                       0.15 kB │ gzip:   0.15 kB
+dist/assets/download-DcI8ZH69.js                   0.23 kB │ gzip:   0.19 kB
+dist/assets/play-Du9pf6kR.js                       0.58 kB │ gzip:   0.36 kB
+dist/assets/NotFoundView-DjOd5o4C.js               0.69 kB │ gzip:   0.42 kB
+dist/assets/Spinner-8VGhTrjX.js                    1.47 kB │ gzip:   0.77 kB
+dist/assets/search-m4fEj3oz.js                     3.37 kB │ gzip:   1.57 kB
+dist/assets/management-cMFCfhng.js                 3.70 kB │ gzip:   1.71 kB
+dist/assets/PluginsView-N8i-wokc.js                4.49 kB │ gzip:   1.69 kB
+dist/assets/SchedulesView-pLJh1cll.js             10.31 kB │ gzip:   3.44 kB
+dist/assets/SettingsView-BdzVFuyJ.js              48.36 kB │ gzip:  12.33 kB
+dist/assets/index-B6H1dEeP.js                    302.50 kB │ gzip: 103.03 kB
+dist/assets/WorkspaceView-CMkCi_B2.js            319.90 kB │ gzip:  96.13 kB
+✓ built in 3.23s

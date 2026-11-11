@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "sourceRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+  "androidBuildRevision": "6ead03b078d6d93891c3cf9693236f5191d4b6e6",
+  "serial": "emulator-5554",
+  "originalEvidenceSha256": {
+    "font": "5e6927a399a51ff5d75b80df6b0b7153f2f8ac4ecb36dae5bac83da5d70e441c",
+    "installedApk": "bb8a5a7740b757e73b592fb61541cb53672e4ad40ff24d00ba08c823b9b9bf1f",
+    "bridge": "bd026680b99b0b9a0dc230292e53ebe1684c932722b285ca24ed15f149851210",
+    "fontInspector": "6efc3b5f2dbca8b910e120b9dc63f5a742728d611238aeccf8c5fb1c6b212fa8"
+  },
+  "installedApk": {
+    "serial": "emulator-5554",
+    "installedBaseApkSha256": "55530cbab620d6d5a7301650b300a8af90de3f936f6388584e4edeedc409b0ca",
+    "matchesBuiltAppApk": true,
+    "installedSplitCount": 1
+  },
+  "font": {
+    "status": "font-loaded",
+    "serial": "emulator-5554",
+    "apkSha256": "55530cbab620d6d5a7301650b300a8af90de3f936f6388584e4edeedc409b0ca",
+    "fontAssetSha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b",
+    "proof": {
+      "fontFamily": "\"LXGW WenKai\", \"PingFang SC\", \"Microsoft YaHei\", \"Noto Sans SC\", system-ui, sans-serif",
+      "fontWeight": "400",
+      "lxgwFaces": [
+        {
+          "family": "LXGW WenKai",
+          "status": "loaded"
+        }
+      ],
+      "measurement": {
+        "text": "字体一致 Font 123",
+        "fontSizePx": 16,
+        "fontWeight": 400,
+        "width": 137.47225952148438
+      },
+      "navButtons": 4
+    },
+    "modelCalls": 0
+  },
+  "nativeBridge": {
+    "testsPassed": 4,
+    "seconds": 15.028,
+    "childPid": 155456,
+    "childCreatedAt": "2026-11-10T14:52:24.2935991Z",
+    "exitCode": 0,
+    "processExited": true,
+    "timedOut": false,
+    "terminationAttempted": false,
+    "cleanupRequired": false
+  },
+  "nativeFontInspector": {
+    "childPid": 166096,
+    "childCreatedAt": "2026-11-10T15:11:56.0216033Z",
+    "exitCode": 0,
+    "processExited": true,
+    "timedOut": false,
+    "terminationAttempted": false,
+    "cleanupRequired": false
+  },
+  "screenshot": "font-settings.png",
+  "screenshotSourceCaptureSha256": "c0cd08fb366604c8dbbbcfdbd5f907117735454f88342dc09a5c3955d5bc40d6",
+  "nativeFontMeasureScope": "Only this AVD WebView, 16px/400 and static sample; not a cross-platform invariant",
+  "modelCalls": 0,
+  "physicalAndroid": "pending",
+  "iosNativeBuild": "not-run"
+}

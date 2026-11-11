@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "sourceRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+  "mainWeb": {
+    "status": "passed",
+    "startedAt": "2026-11-10T14:41:00.238998+00:00",
+    "gates": [
+      {
+        "name": "web-full-tests",
+        "exitCode": 0,
+        "seconds": 77.39
+      },
+      {
+        "name": "web-typecheck",
+        "exitCode": 0,
+        "seconds": 5.51
+      },
+      {
+        "name": "web-production-build",
+        "exitCode": 0,
+        "seconds": 3.66
+      }
+    ],
+    "passedTests": 860,
+    "originalEvidenceSha256": "bd01dbff9b3e2f9a49719b056fb3cf98eabf3644e488a02773cbdf1075bf152a",
+    "sourceFileCount": 342,
+    "sourceInputsCanonicalSha256": "727f93f29b554c6f36bf7cd042885a41404cd476ed9fce8018949c53bd9a5e9d",
+    "allRecordedSourcesMatchCurrentMain": true,
+    "log": "web-integrated.log",
+    "logSha256": "a380d26ed9f00f789c323d0a5de220be5b0765961f9a288ab7d5c8cf94503a4f"
+  },
+  "featureHistoricalTests": [
+    {
+      "name": "mobile-full",
+      "passed": 124,
+      "logSha256": "4aa1af005f65136075d512488d5b892ba69e5f71a314fa05820ce8f71655dfcb",
+      "historicalLogSource": "orchester-fonts-mobile-test.log",
+      "scopeRevisionBinding": "feature worktree sources now equal main; original log has no source fingerprint"
+    },
+    {
+      "name": "design-full-before-palette-final",
+      "passed": 308,
+      "logSha256": "66ee442718deef4b47f8f5f83018e17d8ac799f6218623f3458d4d8f31f3c30a",
+      "historicalLogSource": "orchester-fonts-design-step1.log",
+      "scopeRevisionBinding": "feature worktree sources now equal main; original log has no source fingerprint"
+    },
+    {
+      "name": "mobile-font-final",
+      "passed": 5,
+      "logSha256": "ecc7ba7391db3e5863c4e567fde7b58286a2bb2bba93f3bcae31b42da2a73ac9",
+      "historicalLogSource": "orchester-fonts-mobile-fonts-final.log",
+      "scopeRevisionBinding": "feature worktree sources now equal main; original log has no source fingerprint"
+    },
+    {
+      "name": "design-palette-final",
+      "passed": 32,
+      "logSha256": "5dd0b8237e60ddea97798086cf0147439b436303497211026d5b09f2f6ff08c8",
+      "historicalLogSource": "orchester-fonts-palette-final.log",
+      "scopeRevisionBinding": "feature worktree sources now equal main; original log has no source fingerprint"
+    },
+    {
+      "name": "web-appearance-feature",
+      "passed": 7,
+      "logSha256": "0027ca0756f0d72e45bcb6907ceca16531aeaf97d54ff61ea824b0a05919ca00",
+      "historicalLogSource": "orchester-fonts-web-appearance-test.log",
+      "scopeRevisionBinding": "feature worktree sources now equal main; original log has no source fingerprint"
+    }
+  ],
+  "featureRevision": "6ead03b078d6d93891c3cf9693236f5191d4b6e6",
+  "mobileDesignAndLockDiffToMainEmpty": true,
+  "typecheckLogs": [
+    {
+      "scope": "mobile",
+      "logSha256": "6740a8e7d7dfafa829bea7a1f7a208b86fb67f0731e51478acb32d8bbb5e3562"
+    },
+    {
+      "scope": "design",
+      "logSha256": "a99bbe0144826307339f91b985a9c29c6a25e4da6535faf34d34dc8e1a4ffaff"
+    }
+  ],
+  "mobileBuildLogSha256": "702de3f1ad52df1aa15b4a3a31508b970389dd3e473d6ed4c63ef174a4419b04",
+  "testCountsAreNotCombinedAcrossRepeatedScopes": true,
+  "historicalSelectedLogs": "feature-font-tests.log",
+  "historicalSelectedLogsSha256": "4072c3b7f986bfeddcc26bac3dbf011e051b80429c43a6f3bc0f27cdcf199fb8"
+}

@@ -1,0 +1,349 @@
+{
+  "schemaVersion": 1,
+  "sourceRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+  "completedAt": "2026-11-10T14:57:41.8642895Z",
+  "planSha256": "34c1c3f30bf4017ae05d78ea4a08c3d650ef04c589b5ef545999e5751f3257be",
+  "finalResultSha256": "92f63202107394df408aea38b52c8e3679cdd845edbcb0fc682d8a297d941306",
+  "cargoCommandScriptSha256": "bde28ccf4aadf41edd8118ce754505a5a684d1c119c52f854f48cf41f9eda9f3",
+  "target": "x86_64-pc-windows-msvc",
+  "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+  "cargo": "1.99.1 (5f94df478 2026-08-27)",
+  "profile": "debug",
+  "gates": [
+    {
+      "phase": "toolchain",
+      "childPid": 57524,
+      "childCreatedAt": "2026-11-10T14:51:08.1024724Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "terminationAttempted": false,
+      "nativeAuditSha256": "a9b1ea1447610088f674297add7f62c66213a86f87b6d58a7fdd39b2984fd628",
+      "resultSha256": "ac10f15e165b622ed12a7b95fd1b0edae509e9a7e3c2c4f411d3f0b41f8d4e68",
+      "stdoutSha256": "424d7f2a678a11516344ab6e606d02a785330da052f26197816e19182e5e2abc",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "testResults": []
+    },
+    {
+      "phase": "monitor-process",
+      "childPid": 161460,
+      "childCreatedAt": "2026-11-10T14:51:09.7899485Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "terminationAttempted": false,
+      "nativeAuditSha256": "108ba72d96bc576831aeefff51a82028e446281931bc02eafd0b53feaea1e36c",
+      "resultSha256": "f9dc90e1c92c0ca54319e731ba87bdf76dac9596b9019d57bc180cdd09435d90",
+      "stdoutSha256": "2a534c801ffdbc7b5cdf5077aed67c7fa6f8545ebde9de0cb86316f8bc9b092b",
+      "stderrSha256": "77fd105f87d108583b14028e65fe23f63155b6bc52191a9231d9c9c0619f4a90",
+      "testResults": [
+        {
+          "result": "ok",
+          "passed": 17,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 76,
+          "seconds": 0.11
+        }
+      ]
+    },
+    {
+      "phase": "monitor-activity",
+      "childPid": 153868,
+      "childCreatedAt": "2026-11-10T14:51:55.8656170Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "terminationAttempted": false,
+      "nativeAuditSha256": "864971e537be547e578a5b07be427b1361e6777198ff1692afa73cca259e4b36",
+      "resultSha256": "0a5cf439391f754b99f55f62f7b05b618942c2ba55351291b1c6ea5fd1d6bb4e",
+      "stdoutSha256": "e58aeec92accd683bce76960e2deca9af0b3bd1b91d795262160c20ec9390ddf",
+      "stderrSha256": "29ffaf763a2d9e9d8c1f7bf933232e9e08321e3953b9cddd492022033a0ff90e",
+      "testResults": [
+        {
+          "result": "ok",
+          "passed": 31,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 62,
+          "seconds": 3.43
+        }
+      ]
+    },
+    {
+      "phase": "monitor-http",
+      "childPid": 159316,
+      "childCreatedAt": "2026-11-10T14:52:01.5256621Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "terminationAttempted": false,
+      "nativeAuditSha256": "a8b857b074f1736e481f61240effd662378c23999e46d9c5a554434cc4a98ee8",
+      "resultSha256": "cc862b6cc45d4b5a2baef73423c14f07a36e1df20aa6dab5f0d0b00c05de8a2c",
+      "stdoutSha256": "d6a97395dc9515bc59f7fe9f1d022ed766281cae4a315e06e771fd2b7678fcc9",
+      "stderrSha256": "35c00bb4eff8707436f6260c9bbf03e32308340da823fd07ab6d3ae3dbaa9382",
+      "testResults": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 0,
+          "seconds": 0.01
+        },
+        {
+          "result": "ok",
+          "passed": 3,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 0,
+          "seconds": 0.0
+        },
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 0,
+          "seconds": 0.01
+        },
+        {
+          "result": "ok",
+          "passed": 3,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 0,
+          "seconds": 0.08
+        },
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 0,
+          "seconds": 0.02
+        },
+        {
+          "result": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 91,
+          "seconds": 0.0
+        },
+        {
+          "result": "ok",
+          "passed": 3,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 0,
+          "seconds": 1.68
+        }
+      ]
+    },
+    {
+      "phase": "remote-cli",
+      "childPid": 149364,
+      "childCreatedAt": "2026-11-10T14:52:54.1682819Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "terminationAttempted": false,
+      "nativeAuditSha256": "b84df1f350de59cf074e10d3ebf98597b07e52785b51c4c3814df523f5346211",
+      "resultSha256": "b5e1cb4c6a134f27bef9d3c06d91c93dc1a619f1e3fb04b6d56797a2cf142fe3",
+      "stdoutSha256": "6c6f9e2d339de1e7dd960d301c03a4ac84418c9d1d3528a237422eed6533b0c1",
+      "stderrSha256": "666034473b13d854a99f2b1b94de227eb8094b5ce30846b83350859430b26b92",
+      "testResults": [
+        {
+          "result": "ok",
+          "passed": 2,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 0,
+          "seconds": 1.18
+        },
+        {
+          "result": "ok",
+          "passed": 6,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 0,
+          "seconds": 3.9
+        }
+      ]
+    },
+    {
+      "phase": "root-clippy",
+      "childPid": 163208,
+      "childCreatedAt": "2026-11-10T14:53:49.5565773Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "terminationAttempted": false,
+      "nativeAuditSha256": "a09d14120e1e079d95a84877e89f34c5f041071d6ff03c610dea4547153fd253",
+      "resultSha256": "50f91124d30da32461e5781a907e39ebe7a07ef91ec269dccd6c533f2e8ec15b",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "0747b45186a7a7c1ab108a64e75d9ee89e469c84e36177ade178cb322af69de5",
+      "testResults": []
+    },
+    {
+      "phase": "root-fmt",
+      "childPid": 162948,
+      "childCreatedAt": "2026-11-10T14:54:01.0162990Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "terminationAttempted": false,
+      "nativeAuditSha256": "6aa491ca4239b7b0e87086ef2c1de9ae9bda7c50c367678127634daf1740ca55",
+      "resultSha256": "6cd2cdf673c7c8e84e16a657b66243b8cd2562aa933daa3c7ad33259adf8cce8",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "testResults": []
+    },
+    {
+      "phase": "cli-build",
+      "childPid": 162484,
+      "childCreatedAt": "2026-11-10T14:54:03.6642121Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "terminationAttempted": false,
+      "nativeAuditSha256": "2ccf9874afd30683a5c67dccbe99a01c0ad66ef86d2bcaff00fd36a9040a99d7",
+      "resultSha256": "ecc71eedaed996eb1f3814f4be1e200c7ca4cccae77dc8d8cc2af73d986dbb71",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "97cc6d328cc87a037c01a02295564e5f7fdaf6aada4e6d2f561c0079db2a6e7f",
+      "testResults": []
+    },
+    {
+      "phase": "chrome-test",
+      "childPid": 160844,
+      "childCreatedAt": "2026-11-10T14:54:09.7048181Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "terminationAttempted": false,
+      "nativeAuditSha256": "34b7baeeaa309e9c7d4a4f79a65d99eb36963e3fbe46c50809478cbcab4018bb",
+      "resultSha256": "f1542184aa6106b3ebf9c86520383a559b014145c289ac96fc7e75fea2f6841e",
+      "stdoutSha256": "dbecffdd5d890e0c5e31894e1268005e42cf88118ea216dbc0532824f1fdc9f9",
+      "stderrSha256": "e9416c4f446e5758d1fa63a56bde5286b348aa6e1e88bf542304d81a9e1f9233",
+      "testResults": [
+        {
+          "result": "ok",
+          "passed": 3,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 0,
+          "seconds": 0.02
+        },
+        {
+          "result": "ok",
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 0,
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "phase": "desktop-test",
+      "childPid": 160684,
+      "childCreatedAt": "2026-11-10T14:54:11.8595796Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "terminationAttempted": false,
+      "nativeAuditSha256": "f88d5905b3903bcfe0bc902f3b19eabd5c8982ec22d6a3965e250a601fae0b8a",
+      "resultSha256": "65d43c69b568ead89767632f1e9887ab572b4c18f968512f6a21847336fccc43",
+      "stdoutSha256": "433b2efe6383bfb65a98ca4f76c44db238628b25d5d721a82fdc28d93ec2d12f",
+      "stderrSha256": "1ad6495d16c5b8c2085b60099460f5d642ce0e2885bc2ddc130c950c3ecc7a9a",
+      "testResults": [
+        {
+          "result": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 0,
+          "seconds": 0.0
+        },
+        {
+          "result": "ok",
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 0,
+          "seconds": 0.0
+        },
+        {
+          "result": "ok",
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 0,
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "phase": "desktop-clippy",
+      "childPid": 163128,
+      "childCreatedAt": "2026-11-10T14:56:38.3707650Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "terminationAttempted": false,
+      "nativeAuditSha256": "ed4b1a753d7874ad277e771715a88728d0fac11e75fcfa8c5303a1547d44e9e3",
+      "resultSha256": "dee6a0e2630c2ec7c5677d8d0cacc5f84aa168139f7f3062841109a39821bdb1",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "c8e4009aba422ae2262e62e17170cf306f73652dd293759240d70fd6c4bc5aa1",
+      "testResults": []
+    },
+    {
+      "phase": "desktop-fmt",
+      "childPid": 163004,
+      "childCreatedAt": "2026-11-10T14:57:22.9572618Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "terminationAttempted": false,
+      "nativeAuditSha256": "a3e78145220dd9cc5c261ac5fb1550f7cfa4108532e7020fb4cd0888819ea22a",
+      "resultSha256": "e9022ff4e534a07a1669de173db826e978602490b29c924964b7ef6b5054cc91",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "testResults": []
+    },
+    {
+      "phase": "desktop-build",
+      "childPid": 163544,
+      "childCreatedAt": "2026-11-10T14:57:25.6935085Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "processExited": true,
+      "terminationAttempted": false,
+      "nativeAuditSha256": "8999854f6c068b2d2d09d53efdb8e75b79e0cbb9a97d6db975982a5dfc7c5568",
+      "resultSha256": "04b80b555529d80ae141f2add982415eee135862175b8011f68f996af0da6eea",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "a138ad23fc815d15bc63643312c094d9c929781fc12619abcf72e0d9b3425ee1",
+      "testResults": []
+    }
+  ],
+  "scope": "13 native build/test/lint/format gates; not native product runtime acceptance",
+  "desktopWindowAcceptance": "pending",
+  "remotePortableRuntimeAcceptance": "pending"
+}

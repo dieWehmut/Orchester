@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "sourceRevision": "6278e3b522100b5d7ccc9a4df69d8abceb49aac6",
+  "archivedAt": "2026-11-11T00:39:41.223448+00:00",
+  "files": [
+    {
+      "path": "artifacts.json",
+      "sha256": "14169871fc59b3ab325a8852a60edb20d62b5b43bd15b67d1602bf512e42dfb3",
+      "bytes": 14997
+    },
+    {
+      "path": "feature-font-tests.log",
+      "sha256": "4072c3b7f986bfeddcc26bac3dbf011e051b80429c43a6f3bc0f27cdcf199fb8",
+      "bytes": 1885
+    },
+    {
+      "path": "font-settings.png",
+      "sha256": "30ea5933a8e5e297cc05472c790177df4f3c40cf9b083c3308092e308f67ca74",
+      "bytes": 164556
+    },
+    {
+      "path": "fonts-native.json",
+      "sha256": "e7c5eeb1865380a8baa28c01dd7de0b6bd4e522349a73e99c4938fbb497b3560",
+      "bytes": 2373
+    },
+    {
+      "path": "frontend-gates.json",
+      "sha256": "dd537cea050e4fbb6097054af492e6b54102c84fdc622b9d7009e240ac4a29dd",
+      "bytes": 3339
+    },
+    {
+      "path": "linux-deployment.json",
+      "sha256": "cfee0b36566360bc77aaa34aa30741ebaa7b85e12b59c4f5655f466b3021f076",
+      "bytes": 2115
+    },
+    {
+      "path": "web-integrated.log",
+      "sha256": "a380d26ed9f00f789c323d0a5de220be5b0765961f9a288ab7d5c8cf94503a4f",
+      "bytes": 2252
+    },
+    {
+      "path": "windows-build-gates.json",
+      "sha256": "0b276f9e59e8a2d00fc1bdad8e836e574f1025d267c735fc9c28d1f5bec35198",
+      "bytes": 12071
+    }
+  ],
+  "completedScopes": [
+    "Windows build-and-file-gates",
+    "main integrated Web tests/types/build",
+    "Android AVD installed APK/native bridge/font face",
+    "Linux7337 new assets, authenticated reads, test credential revocation, and original state retention"
+  ],
+  "requiredSeparateEvidence": [
+    "Windows desktop runtime",
+    "Windows portable runtime",
+    "default installation promotion",
+    "temporary native test worker cleanup",
+    "physical Android and iOS target environment",
+    "Windows7338 deployment"
+  ]
+}
