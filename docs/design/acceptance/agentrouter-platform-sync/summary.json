@@ -362,6 +362,34 @@
     {
       "scope": "SeventhadditionalCLIcheckpointfeature1c2ebe2/maina5ea264/push0/437Gitblobsexact/frozen731sourcehashchecks",
       "proof": "maintenance/git-delivery/seventh-step-delivery-safe.json"
+    },
+    {
+      "scope": "Fresh15:09 actualnative0/sameoriginalownerSession1Active/WinSta0Default/InputDesktopDefault/cursortrueError0/readinesstrue; noformal14or18/defaultreinstallation fromreadonlyprobe",
+      "proof": "native/windows/current-readiness-20261112T1500/direct-readonly-safe.json"
+    },
+    {
+      "scope": "CurrentLinux15:08 samecontroller320847/service320854/originalwriterFD7+pidfdFD6/source71ELF/17publicHTTP200hashmatch; usermanager269live butprivateconnecterrno111, autostartnotproved",
+      "proof": "deployments/linux/current-readonly-20261112T1500/live-and-user-manager-safe.json"
+    },
+    {
+      "scope": "EighthAndroidnativecompletioncheckpointc19f621/main e8c3cd3/push0/507Gitblobsexact/731frozeninputs",
+      "proof": "maintenance/git-delivery/eighth-step-delivery-safe.json"
+    },
+    {
+      "scope": "HonestderivedAndroidcomposite actualverifier0/659assertions/45originalreceipts/41nativeGitblobs/17resources3trees+APK/cert preserves cmd1/taskwriter1; frozenPowerShellguard notyetacceptscomposite",
+      "proof": "native/windows/fresh-android-runtime-binding-20261112/verifier-execution-safe.json"
+    },
+    {
+      "scope": "Root originalWSLinterop1/native launchunproved; subsequentnativequery0/actioncurrentlyabsent/nooutputfiles. Nextactualnativefreeze1/failurecandidate retained/runtimeinputnotpublished; no14/18/defaultinstall.",
+      "proof": "native/windows/fresh-runtime-input-freeze-attempt1-20261112/actual-root-execution-safe.json"
+    },
+    {
+      "scope": "FreshClaude fixed5tasks/9distinctPID/originalBITS COM0x80200001 absent; knowncurrentuserfamily/registration/EXE0, alluserscountnull denied; oldWinGet0 notinstallation proof",
+      "proof": "native/windows/claude-current-readonly-20261112T1510/current-completion-safe.json"
+    },
+    {
+      "scope": "CurrentofficialClaudeTLS-beforeHTTP failures and WorkBuddyinternationalhomepage/update bytes unchanged; currentStore5.1231.2/MSIXmetadata same, noauth/GUIinstallation",
+      "proof": "sources/official-platform-current-20261112T1500/final-current-official-availability-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -373,12 +401,12 @@
     "Prior source71 Linux7337 deployment/1023019 and oneoriginal7337/info200 before fresh23:31UTC absence; originalreceipts preserved historical"
   ],
   "pendingCurrentEpochScopes": [
-    "WindowsSameSIDSession1nowActive/InputDesktopDefault opens butCursorError5/readinessfalse; currentoriginalDesktopabsent/latestofflinebackup677files verified; native14/18/tray/defaultreinstall/7338state remainpending",
+    "WindowsSameSIDSession1Active/InputDesktopDefault/cursortrue/readinesstrue at15:09; currentoriginalDesktopabsent/latestofflinebackup677files verified; native14/18/tray/defaultreinstall/7338state remainpending",
     "Linuxstaticuserunit/defaulttargetlink configured/parser0 but usermanagerbusunavailable and currentproducerstandalone; no restart/autostart/reboot-survival verified",
     "OfficialDeepSeekWindows installation/signature/HKCU/ASARrc1verified afteroriginalnumericPEverifierfailure; GUI/model/auth nottested; DataElementoriginalcurrentmetadataretained, wholeoldEXEbeforeafterhashnotproved",
     "InternationalWorkBuddy nativeWSL usablepackage/profile isolation andClaudeApp Windowspayload/LinuxofficialGUI release evidence pending",
     "Historicalunregisteredchildidentity/HANDLEclosure andwrongLinuxfullpackage rollback unproved; no new signal/claim",
-    "LatestnativeAndroid7339 terminal/retention/revoke/ownedcleanup completed, source71 installedAPKf83 exact; previousUI21/42/JUnit4/Studio17.4s separatelybound. Currentnativecompletion checkpointawaitsGitdelivery.",
+    "LatestnativeAndroid7339 terminal/retention/revoke/ownedcleanup completed, source71 installedAPKf83 exact; previousUI21/42/JUnit4/Studio17.4s separatelybound. Nativecompletioncheckpoint507files mergedmain e8c3cd3. Follow-up currentreadiness/binding evidence awaits own Gitdelivery.",
     "CurrentLinux7337 originalactualcredentialGET200 nowproved bynativeAndroid originalfivewire receipt; JSONexact/SQLrawfalse remainseparate, usermanager/autostart remainpending."
   ],
   "folderResponsibilities": {
@@ -397,7 +425,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-12T15:09:02.881950+00:00",
+  "updatedAt": "2026-11-12T15:38:35.142331+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -409,12 +437,12 @@
   "currentWindowsNativeWorkerPidAbsenceVerified": true,
   "currentWindowsOriginalWorkerHandleIdentityVerified": false,
   "currentWindowsCoreTerminalProof": "native/windows/final71-build/native16-core-terminal-safe.json",
-  "currentWindowsInteractiveReadinessVerified": false,
+  "currentWindowsInteractiveReadinessVerified": true,
   "currentWindowsSameUserInteractiveSessionProved": true,
   "currentAndroidPartialNativeBuildInstallTestsVerified": true,
   "currentAndroidActualIDESyncVerified": true,
   "currentAndroidNativeUI21Providers42ImagesVerified": true,
-  "documentedPublishedMainRevision": "a5ea264cbb1cc7f24d838df9cc25921c49018e1d",
+  "documentedPublishedMainRevision": "e8c3cd3de92f5371dcf23b56bbc59c381670b246",
   "productionSourceRevisionStillFrozen71": true,
   "currentCorrectionArchiveGitCommitted": false,
   "originalWindowsCredentialsDamagedOrUnrecoverableClaimed": false,
@@ -509,7 +537,7 @@
   "historicalOriginalLinux7337TokenOneInfoRequestActualStatus": 200,
   "currentLinuxDeploymentVerified": true,
   "currentLinuxRestorationPending": false,
-  "currentLinuxRuntimeObservedAtUtc": "2026-11-12T06:05:07.141142+00:00",
+  "currentLinuxRuntimeObservedAtUtc": "2026-11-12T15:08:18.270987+00:00",
   "currentLinuxOldServicePidExists": false,
   "currentLinuxOldControllerPidExists": false,
   "currentLinuxPreviousExitCauseVerified": false,
@@ -558,7 +586,7 @@
   "phase5IndependentReviewExternalOriginalComparisons": 0,
   "prior355FifthCheckpointArchiveDelivered": true,
   "currentWindowsSameUserActiveSessionId": 1,
-  "currentWindowsCursorAccessError": 5,
+  "currentWindowsCursorAccessError": 0,
   "currentWindowsInputDesktopName": "Default",
   "currentWindowsLatestOfflineBackupProof": "native/windows/interactive-post-reboot-20261112/offline-final21-post-reboot-backup-safe.json",
   "currentWindowsExternalOriginalDesktopObservedLive": false,
@@ -620,12 +648,22 @@
   "currentAndroidAppProcessDestructionClaimed": false,
   "currentAndroidNormalHomeExitCode": 0,
   "currentLinuxOriginalTokenWireProof": "native/android/post-reboot-completion-20261112/product/installed-apk-and-original-five-wire-safe.json",
-  "currentWindowsLatestInteractiveReadinessProof": "native/windows/formal-runtime-post-reboot-20261112/fresh-probe-final-safe.json",
-  "currentWindowsLatestInteractiveReadinessObservedAtUtc": "2026-11-12T09:26:03.3811854Z",
+  "currentWindowsLatestInteractiveReadinessProof": "native/windows/current-readiness-20261112T1500/direct-readonly-safe.json",
+  "currentWindowsLatestInteractiveReadinessObservedAtUtc": "2026-11-12T15:09:18.8314405Z",
   "currentWindowsHistorical07InteractiveProbeReadinessVerified": true,
   "currentWindowsHistorical07InteractiveProbeTaskNormalCleanupVerified": true,
   "additionalWindowsFreshUserPathSixExpectedCommandsResolveVerified": true,
   "additionalWindowsFreshUserPathResolutionProof": "native/additional-agents/root-integration/fresh-user-command-resolution-safe.json",
   "currentWindowsFormalPrepared40ScriptPinsAnd967ExportSourceHashesVerified": true,
-  "currentWindowsFormalCurrentPreparedPublicProof": "native/windows/formal-runtime-post-reboot-20261112/static-review-safe.json"
+  "currentWindowsFormalCurrentPreparedPublicProof": "native/windows/formal-runtime-post-reboot-20261112/static-review-safe.json",
+  "prior507EighthNativeCompletionCheckpointDelivered": true,
+  "currentLinuxReadOnlyLiveAndUserManagerProof": "deployments/linux/current-readonly-20261112T1500/live-and-user-manager-safe.json",
+  "currentWindowsCompositeAndroidAcceptanceVerified": true,
+  "currentWindowsCompositeAndroidAcceptanceAssertionCount": 659,
+  "currentWindowsCompositeAndroidAcceptanceProof": "native/windows/fresh-android-runtime-binding-20261112/verifier-execution-safe.json",
+  "currentWindowsFreshRuntimeInputsFrozen": false,
+  "currentWindowsFreshRuntimeInputFreezeActualExitCode": 1,
+  "currentWindowsFreshRuntimeInputFreezeFailureProof": "native/windows/fresh-runtime-input-freeze-attempt1-20261112/actual-root-execution-safe.json",
+  "currentWindowsClaudeOriginalAttemptsCurrentAbsenceProof": "native/windows/claude-current-readonly-20261112T1510/current-completion-safe.json",
+  "currentOfficialMissingPlatformProof": "sources/official-platform-current-20261112T1500/final-current-official-availability-safe.json"
 }

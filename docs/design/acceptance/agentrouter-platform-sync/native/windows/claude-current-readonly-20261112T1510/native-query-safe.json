@@ -1,0 +1,398 @@
+{
+    "schemaVersion":  1,
+    "status":  "fixed-claude-task-process-bits-registration-and-public-win32-paths-readonly-observation",
+    "observedAtUTC":  "2026-11-12T15:18:21.9337493Z",
+    "queryNativeSelf":  {
+                            "pid":  37172,
+                            "birthUTC":  "2026-11-12T15:18:16.0713519Z",
+                            "sessionId":  1,
+                            "image":  "powershell.exe",
+                            "sameOriginalOwner":  true,
+                            "imageSha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f"
+                        },
+    "querySourceSha256":  "3809074ea23efacb04b6809732056385d26f35ed29d76faed0eae4cbe4d1e929",
+    "queryInputsSha256":  "643bc565cf810808bed583210969d089f9ddd29c527153f2ecd655a8e83507c8",
+    "tasks":  [
+                  {
+                      "sourceDirectoryName":  "claude-interactive-store-20261112-085553",
+                      "taskName":  "Orchester-Claude-Own-3c656611cac140a2a9b3ebfac4a97a6f",
+                      "originalInstanceGuid":  "{91B476B0-582C-457C-AFD3-38670523CFE4}",
+                      "previousTaskDeletedFlag":  false,
+                      "currentTaskRegistered":  false,
+                      "querySucceeded":  true,
+                      "instanceCount":  0,
+                      "originalInstancePresent":  false,
+                      "otherInstanceCount":  0,
+                      "lastTaskResult":  null,
+                      "lastRunUTC":  null,
+                      "historicalDefinitionSha256":  "fafe7d55607b6b0bf2712d424f9bda0180b80666ab204c7bc3b58a7a2dd274f3",
+                      "currentDefinitionSha256":  null,
+                      "currentDefinitionMatchesHistoricalSha":  null,
+                      "missingHResult":  -2147024894,
+                      "readOnly":  true
+                  },
+                  {
+                      "sourceDirectoryName":  "claude-interactive-store-20261112-corrected-090650",
+                      "taskName":  "Orchester-Claude-Own-9e6dc4626de045818fdf1728f05ec4d5",
+                      "originalInstanceGuid":  "{ED46AD17-D930-489B-BB0A-4ABF4EE1FCBF}",
+                      "previousTaskDeletedFlag":  false,
+                      "currentTaskRegistered":  false,
+                      "querySucceeded":  true,
+                      "instanceCount":  0,
+                      "originalInstancePresent":  false,
+                      "otherInstanceCount":  0,
+                      "lastTaskResult":  null,
+                      "lastRunUTC":  null,
+                      "historicalDefinitionSha256":  "973b9b97db817840b9e87b19a7a4f4ed81a29b88eedc371965257989cb94949b",
+                      "currentDefinitionSha256":  null,
+                      "currentDefinitionMatchesHistoricalSha":  null,
+                      "missingHResult":  -2147024894,
+                      "readOnly":  true
+                  },
+                  {
+                      "sourceDirectoryName":  "claude-interactive-store-20261112-native-091321",
+                      "taskName":  "Orchester-Claude-Own-aa773271d29c4f44ae3fb8ccf9b9127d",
+                      "originalInstanceGuid":  "{C23566CE-0FBA-4128-8203-5A33838F2799}",
+                      "previousTaskDeletedFlag":  true,
+                      "currentTaskRegistered":  false,
+                      "querySucceeded":  true,
+                      "instanceCount":  0,
+                      "originalInstancePresent":  false,
+                      "otherInstanceCount":  0,
+                      "lastTaskResult":  null,
+                      "lastRunUTC":  null,
+                      "historicalDefinitionSha256":  "902cf401539ae8412d6926a6eb6fa5ef9d32faec2c9eaedd6f15fc88ca4c5d88",
+                      "currentDefinitionSha256":  null,
+                      "currentDefinitionMatchesHistoricalSha":  null,
+                      "missingHResult":  -2147024894,
+                      "readOnly":  true
+                  },
+                  {
+                      "sourceDirectoryName":  "claude-bits-classic-20261112-092157",
+                      "taskName":  "Orchester-Claude-Own-e759da00808d44cfa264948293e24ee5",
+                      "originalInstanceGuid":  "{91AE9C1C-64DB-401E-B765-AD6228720464}",
+                      "previousTaskDeletedFlag":  true,
+                      "currentTaskRegistered":  false,
+                      "querySucceeded":  true,
+                      "instanceCount":  0,
+                      "originalInstancePresent":  false,
+                      "otherInstanceCount":  0,
+                      "lastTaskResult":  null,
+                      "lastRunUTC":  null,
+                      "historicalDefinitionSha256":  "9973ca21ac40429e1989377b05e5e1db7f14462acdbb0fc5d1c3e21ba6fb3835",
+                      "currentDefinitionSha256":  null,
+                      "currentDefinitionMatchesHistoricalSha":  null,
+                      "missingHResult":  -2147024894,
+                      "readOnly":  true
+                  },
+                  {
+                      "sourceDirectoryName":  "claude-bits-classic-corrected-20261112-092923",
+                      "taskName":  "Orchester-Claude-Own-813992933a454188af446a8c5e3e2c9b",
+                      "originalInstanceGuid":  "{10686D3D-E2F0-48E6-98BE-B7CF59FDAF60}",
+                      "previousTaskDeletedFlag":  true,
+                      "currentTaskRegistered":  false,
+                      "querySucceeded":  true,
+                      "instanceCount":  0,
+                      "originalInstancePresent":  false,
+                      "otherInstanceCount":  0,
+                      "lastTaskResult":  null,
+                      "lastRunUTC":  null,
+                      "historicalDefinitionSha256":  "050135067f4a8598970b4cd9bf7443a72c52abad5cf0676acab55552c9eb75e3",
+                      "currentDefinitionSha256":  null,
+                      "currentDefinitionMatchesHistoricalSha":  null,
+                      "missingHResult":  -2147024894,
+                      "readOnly":  true
+                  }
+              ],
+    "processes":  [
+                      {
+                          "sourceDirectoryName":  "claude-msstore-install-20261112-070819",
+                          "kind":  "installer",
+                          "originalPid":  20212,
+                          "originalBirthUTC":  "2026-11-12T07:09:48.8040481Z",
+                          "expectedImage":  "winget.exe",
+                          "pidCurrentlyPresent":  false,
+                          "querySucceeded":  true,
+                          "currentBirthUTC":  null,
+                          "currentImageName":  null,
+                          "currentSessionId":  null,
+                          "originalExactIdentityCurrentlyLive":  false,
+                          "lookupHandleIsOriginalCreatorHandle":  false
+                      },
+                      {
+                          "sourceDirectoryName":  "claude-msstore-install-20261112-070819",
+                          "kind":  "installerRunner",
+                          "originalPid":  30308,
+                          "originalBirthUTC":  "2026-11-12T07:09:48.0612106Z",
+                          "expectedImage":  "powershell.exe",
+                          "pidCurrentlyPresent":  false,
+                          "querySucceeded":  true,
+                          "currentBirthUTC":  null,
+                          "currentImageName":  null,
+                          "currentSessionId":  null,
+                          "originalExactIdentityCurrentlyLive":  false,
+                          "lookupHandleIsOriginalCreatorHandle":  false
+                      },
+                      {
+                          "sourceDirectoryName":  "claude-msix-download-20261112-072256",
+                          "kind":  "installer",
+                          "originalPid":  29312,
+                          "originalBirthUTC":  "2026-11-12T07:23:53.7321922Z",
+                          "expectedImage":  "winget.exe",
+                          "pidCurrentlyPresent":  false,
+                          "querySucceeded":  true,
+                          "currentBirthUTC":  null,
+                          "currentImageName":  null,
+                          "currentSessionId":  null,
+                          "originalExactIdentityCurrentlyLive":  false,
+                          "lookupHandleIsOriginalCreatorHandle":  false
+                      },
+                      {
+                          "sourceDirectoryName":  "claude-msix-download-20261112-072256",
+                          "kind":  "installerRunner",
+                          "originalPid":  25348,
+                          "originalBirthUTC":  "2026-11-12T07:23:53.2196285Z",
+                          "expectedImage":  "powershell.exe",
+                          "pidCurrentlyPresent":  false,
+                          "querySucceeded":  true,
+                          "currentBirthUTC":  null,
+                          "currentImageName":  null,
+                          "currentSessionId":  null,
+                          "originalExactIdentityCurrentlyLive":  false,
+                          "lookupHandleIsOriginalCreatorHandle":  false
+                      },
+                      {
+                          "sourceDirectoryName":  "claude-interactive-store-20261112-corrected-090650",
+                          "kind":  "scheduledAction",
+                          "originalPid":  31720,
+                          "originalBirthUTC":  "2026-11-12T09:07:14.0803908Z",
+                          "expectedImage":  "powershell.exe",
+                          "pidCurrentlyPresent":  false,
+                          "querySucceeded":  true,
+                          "currentBirthUTC":  null,
+                          "currentImageName":  null,
+                          "currentSessionId":  null,
+                          "originalExactIdentityCurrentlyLive":  false,
+                          "lookupHandleIsOriginalCreatorHandle":  false
+                      },
+                      {
+                          "sourceDirectoryName":  "claude-interactive-store-20261112-native-091321",
+                          "kind":  "installer",
+                          "originalPid":  34268,
+                          "originalBirthUTC":  "2026-11-12T09:13:22.4512446Z",
+                          "expectedImage":  "winget.exe",
+                          "pidCurrentlyPresent":  false,
+                          "querySucceeded":  true,
+                          "currentBirthUTC":  null,
+                          "currentImageName":  null,
+                          "currentSessionId":  null,
+                          "originalExactIdentityCurrentlyLive":  false,
+                          "lookupHandleIsOriginalCreatorHandle":  false
+                      },
+                      {
+                          "sourceDirectoryName":  "claude-interactive-store-20261112-native-091321",
+                          "kind":  "installerRunner",
+                          "originalPid":  32892,
+                          "originalBirthUTC":  "2026-11-12T09:13:21.6894058Z",
+                          "expectedImage":  "powershell.exe",
+                          "pidCurrentlyPresent":  false,
+                          "querySucceeded":  true,
+                          "currentBirthUTC":  null,
+                          "currentImageName":  null,
+                          "currentSessionId":  null,
+                          "originalExactIdentityCurrentlyLive":  false,
+                          "lookupHandleIsOriginalCreatorHandle":  false
+                      },
+                      {
+                          "sourceDirectoryName":  "claude-interactive-store-20261112-native-091321",
+                          "kind":  "scheduledAction",
+                          "originalPid":  32892,
+                          "originalBirthUTC":  "2026-11-12T09:13:21.6894058Z",
+                          "expectedImage":  "powershell.exe",
+                          "pidCurrentlyPresent":  false,
+                          "querySucceeded":  true,
+                          "currentBirthUTC":  null,
+                          "currentImageName":  null,
+                          "currentSessionId":  null,
+                          "originalExactIdentityCurrentlyLive":  false,
+                          "lookupHandleIsOriginalCreatorHandle":  false
+                      },
+                      {
+                          "sourceDirectoryName":  "claude-bits-classic-20261112-092157",
+                          "kind":  "scheduledAction",
+                          "originalPid":  16788,
+                          "originalBirthUTC":  "2026-11-12T09:27:09.5888942Z",
+                          "expectedImage":  "powershell.exe",
+                          "pidCurrentlyPresent":  false,
+                          "querySucceeded":  true,
+                          "currentBirthUTC":  null,
+                          "currentImageName":  null,
+                          "currentSessionId":  null,
+                          "originalExactIdentityCurrentlyLive":  false,
+                          "lookupHandleIsOriginalCreatorHandle":  false
+                      },
+                      {
+                          "sourceDirectoryName":  "claude-bits-classic-corrected-20261112-092923",
+                          "kind":  "scheduledAction",
+                          "originalPid":  25728,
+                          "originalBirthUTC":  "2026-11-12T09:32:14.7030900Z",
+                          "expectedImage":  "powershell.exe",
+                          "pidCurrentlyPresent":  false,
+                          "querySucceeded":  true,
+                          "currentBirthUTC":  null,
+                          "currentImageName":  null,
+                          "currentSessionId":  null,
+                          "originalExactIdentityCurrentlyLive":  false,
+                          "lookupHandleIsOriginalCreatorHandle":  false
+                      }
+                  ],
+    "bitsJobs":  [
+                     {
+                         "sourceDirectoryName":  "claude-bits-classic-corrected-20261112-092923",
+                         "originalBitsJobGuid":  "3471e8bf-e0cd-4b2d-bce7-2d4e40a5b596",
+                         "querySucceeded":  false,
+                         "originalJobCurrentlyPresent":  null,
+                         "jobState":  null,
+                         "bytesTransferred":  null,
+                         "queryErrorIdentifier":  "GetBitsTransferInvalidIdError,Microsoft.BackgroundIntelligentTransfer.Management.GetBitsTransfer",
+                         "readOnly":  true
+                     }
+                 ],
+    "currentUserAppx":  {
+                            "querySucceeded":  true,
+                            "count":  0,
+                            "packages":  [
+
+                                         ]
+                        },
+    "allUsersAppx":  {
+                         "querySucceeded":  false,
+                         "count":  null,
+                         "errorType":  "UnauthorizedAccessException",
+                         "hResult":  -2147024891,
+                         "notWholeMachineAbsenceProof":  true
+                     },
+    "startApps":  {
+                      "querySucceeded":  true,
+                      "count":  0,
+                      "matches":  [
+
+                                  ]
+                  },
+    "win32UninstallRegistry":  [
+                                   {
+                                       "scope":  "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
+                                       "rootPresent":  true,
+                                       "querySucceeded":  true,
+                                       "matchCount":  0,
+                                       "matches":  [
+
+                                                   ]
+                                   },
+                                   {
+                                       "scope":  "HKCU:\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
+                                       "rootPresent":  true,
+                                       "querySucceeded":  true,
+                                       "matchCount":  0,
+                                       "matches":  [
+
+                                                   ]
+                                   },
+                                   {
+                                       "scope":  "HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
+                                       "rootPresent":  true,
+                                       "querySucceeded":  true,
+                                       "matchCount":  0,
+                                       "matches":  [
+
+                                                   ]
+                                   },
+                                   {
+                                       "scope":  "HKLM:\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
+                                       "rootPresent":  true,
+                                       "querySucceeded":  true,
+                                       "matchCount":  0,
+                                       "matches":  [
+
+                                                   ]
+                                   }
+                               ],
+    "knownPublicExeCandidates":  [
+                                     {
+                                         "publicCandidatePath":  "%LOCALAPPDATA%\\Claude\\Claude.exe",
+                                         "exists":  false,
+                                         "querySucceeded":  true,
+                                         "publicExeSha256":  null,
+                                         "bytes":  null,
+                                         "productName":  null,
+                                         "productVersion":  null,
+                                         "companyName":  null,
+                                         "signatureStatus":  null,
+                                         "fileExecuted":  false
+                                     },
+                                     {
+                                         "publicCandidatePath":  "%LOCALAPPDATA%\\AnthropicClaude\\Claude.exe",
+                                         "exists":  false,
+                                         "querySucceeded":  true,
+                                         "publicExeSha256":  null,
+                                         "bytes":  null,
+                                         "productName":  null,
+                                         "productVersion":  null,
+                                         "companyName":  null,
+                                         "signatureStatus":  null,
+                                         "fileExecuted":  false
+                                     },
+                                     {
+                                         "publicCandidatePath":  "%LOCALAPPDATA%\\Programs\\Claude\\Claude.exe",
+                                         "exists":  false,
+                                         "querySucceeded":  true,
+                                         "publicExeSha256":  null,
+                                         "bytes":  null,
+                                         "productName":  null,
+                                         "productVersion":  null,
+                                         "companyName":  null,
+                                         "signatureStatus":  null,
+                                         "fileExecuted":  false
+                                     },
+                                     {
+                                         "publicCandidatePath":  "%LOCALAPPDATA%\\Programs\\claude\\claude.exe",
+                                         "exists":  false,
+                                         "querySucceeded":  true,
+                                         "publicExeSha256":  null,
+                                         "bytes":  null,
+                                         "productName":  null,
+                                         "productVersion":  null,
+                                         "companyName":  null,
+                                         "signatureStatus":  null,
+                                         "fileExecuted":  false
+                                     },
+                                     {
+                                         "publicCandidatePath":  "%LOCALAPPDATA%\\Programs\\Anthropic\\Claude\\Claude.exe",
+                                         "exists":  false,
+                                         "querySucceeded":  true,
+                                         "publicExeSha256":  null,
+                                         "bytes":  null,
+                                         "productName":  null,
+                                         "productVersion":  null,
+                                         "companyName":  null,
+                                         "signatureStatus":  null,
+                                         "fileExecuted":  false
+                                     }
+                                 ],
+    "queryErrors":  [
+                        {
+                            "scope":  "fixed-bits-job",
+                            "errorIdentifier":  "GetBitsTransferInvalidIdError,Microsoft.BackgroundIntelligentTransfer.Management.GetBitsTransfer",
+                            "errorType":  "ArgumentException",
+                            "hResult":  -2147024809
+                        }
+                    ],
+    "originalCreatorHandlesInheritedOrAdopted":  false,
+    "installerOrGuiExecutions":  0,
+    "processSignals":  0,
+    "taskOrServiceMutations":  0,
+    "bitsJobMutations":  0,
+    "privateProfilesCredentialsEnvironmentValuesRawLogsOrSidsIncluded":  false,
+    "existingReceiptsMutated":  false,
+    "knownPathAndFamilyChecksNotWholeMachineAbsenceProof":  true
+}

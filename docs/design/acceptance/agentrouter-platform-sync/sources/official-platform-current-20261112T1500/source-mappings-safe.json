@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    {
+      "publicPath": "current-http-safe.json",
+      "sha256": "f5e45c9e8a07a6b55eefbd65c747aa7298149b3099f678187d8fe6a21c80688a",
+      "bytes": 1867,
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/official-remaining-1500/http-safe.json",
+      "sourceCopyByteExact": true,
+      "kind": "exact-current-safe-source-copy"
+    },
+    {
+      "publicPath": "final-current-official-availability-safe.json",
+      "sha256": "3021691b11a21534ec88384e4f503cd5e5302400f8daed42b0b11324e41c6080",
+      "bytes": 14293,
+      "sourcePath": null,
+      "sourceCopyByteExact": null,
+      "kind": "derived-current-public-scope-summary"
+    },
+    {
+      "publicPath": "store-catalog-http-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/official-remaining-1500/store-catalog-http-safe.json",
+      "sha256": "1589768e40da170f88f734445ede28b87d5f03d6090ed1bb54fc2905ca8bc04e",
+      "bytes": 349,
+      "sourceCopyByteExact": true,
+      "kind": "exact-current-safe-source-copy"
+    }
+  ],
+  "allBodiesAndNativePrivateStateExcluded": true,
+  "historicalNativeSafeCopies": [
+    {
+      "publicPath": "historical-native/store-0711-installer-terminal-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-msstore-install-20261112-070819/installer-terminal-safe.json",
+      "sha256": "5fbe4579bba9a8a78c345f91042bb53a504811624750dbe0d187042aafc531f6",
+      "bytes": 1186,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "historical-native/store-0711-installed-verification-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-msstore-install-20261112-070819/installed-verification-safe.json",
+      "sha256": "dc215e565fbf4f919da024174a8b5f8efb7e974b7a1dc5b430836e861e14fa94",
+      "bytes": 666,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "historical-native/store-0711-output-classification-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-msstore-install-20261112-070819/original-installer-output-classification-safe.json",
+      "sha256": "3be64b768d761e941e97f6886eda198e77665015dcf592dfea234cef85ae1f16",
+      "bytes": 635,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "historical-native/store-0915-installer-terminal-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-interactive-store-20261112-native-091321/installer-terminal-safe.json",
+      "sha256": "8d2b81a7f24de9cf84b63a855fc368832faf0cf4d269594a69f4d85b0d992546",
+      "bytes": 1255,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "historical-native/store-0915-installed-verification-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-interactive-store-20261112-native-091321/installed-verification-safe.json",
+      "sha256": "6053c53595235ff98c5e8fe73a47d9c752d6a5d34c8c98926d861591c4f397f4",
+      "bytes": 2095,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "historical-native/store-0915-scheduler-terminal-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-interactive-store-20261112-native-091321/scheduler-terminal-safe.json",
+      "sha256": "b9a28f2a2ee4d16d1cb79fd2f4e6e917ea40e48652056a48815eeaf35fa62b59",
+      "bytes": 2268,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "historical-native/download-0723-installer-terminal-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-msix-download-20261112-072256/installer-terminal-safe.json",
+      "sha256": "33735ae939c6b57170d0d0b0c5bb4569a7488e579d3e7272c839d6d95dee165d",
+      "bytes": 1261,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "historical-native/download-0723-downloaded-files-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-msix-download-20261112-072256/downloaded-public-files-safe.json",
+      "sha256": "53c5f0413975d3f70e5d9fb0732860da7776f1668849453b98deb6c362f046aa",
+      "bytes": 660,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "historical-native/bits-0934-terminal-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-bits-classic-corrected-20261112-092923/bits-terminal-safe.json",
+      "sha256": "aed56eb67162b8fcb45014dad40a24ce747a618ee19f52b0e4813e5de92fa068",
+      "bytes": 1162,
+      "sourceAndArchiveByteExact": true
+    }
+  ],
+  "explicitSafeOnly": true
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "status": "original-native-freeze-exit1-failed-candidate-retained-no-runtime-inputs-published",
+  "observedAtUtc": "2026-11-12T15:26:28.096059+00:00",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "firstOuterInteropExitCode": 1,
+  "firstOuterInteropNativeLaunchUnproved": true,
+  "firstOriginalExecSessionClosed": true,
+  "firstFreezeActionAbsentReadonlyQueryActualExitCode": 0,
+  "firstFailedNativeQueryExitCode": 1,
+  "firstFailedNativeQueryReason": "Shell quoting removed literal WQL string quotes; corrected fixed-file observer actual0 found zero matching actions.",
+  "secondNativeFreezeOuterActualExitCode": 1,
+  "secondNativeFreezeScriptSha256": "a19c9f65ea4661ac4a1d0e6dc8bccae3a09f9a7656fc40bee71b9bbb391371ce",
+  "secondOriginalExecSessionClosed": true,
+  "failureReceiptSha256": "94d10182a456c06a45c8a41d81d8965f9e3f89e44d440f64835a5cdc22da37e9",
+  "candidateInputsSha256": "0d2e51c9b4febbcc5797e7239ffbff077a31af6b40e8151a9a9e7b1d755e0009",
+  "runtimeInputsFrozen": false,
+  "defaultInstallationChanged": false,
+  "formal14Or18Executed": false,
+  "privatePayloadsLogsOrCredentialsIncluded": false
+}

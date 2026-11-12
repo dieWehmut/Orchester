@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "status": "fresh-fixed-claude-readonly-receipts-source-byte-exact",
+  "files": [
+    {
+      "publicPath": "query-inputs-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-current-readonly-20261112T1510/query-inputs-safe.json",
+      "bytes": 7627,
+      "sha256": "643bc565cf810808bed583210969d089f9ddd29c527153f2ecd655a8e83507c8",
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "native-query-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-current-readonly-20261112T1510/native-query-safe.json",
+      "bytes": 22610,
+      "sha256": "2c61e75e6a206269578bfa1a4e0571977dcdeea8ec331aa80d5b968544b20eb4",
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "native-bits-com-lookup-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-current-readonly-20261112T1510/native-bits-com-lookup-safe.json",
+      "bytes": 1120,
+      "sha256": "b4d5fb515718fbc9f9d04ba04a83e1e57ae1f57acb65699ff01a1d7484243e6b",
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "current-completion-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-current-readonly-20261112T1510/current-completion-safe.json",
+      "bytes": 2175,
+      "sha256": "23d03000b652817ff5cc691f0d1cff78ee0c53d7b4aad9352f927d1b0a27b560",
+      "sourceAndArchiveByteExact": true
+    }
+  ],
+  "readOnlyNativeSources": [
+    {
+      "kind": "reviewed-own-readonly-native-source",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-current-readonly-20261112T1510/query.ps1",
+      "bytes": 12115,
+      "sha256": "3809074ea23efacb04b6809732056385d26f35ed29d76faed0eae4cbe4d1e929",
+      "sourceContentsArchived": false,
+      "actualNativeExitCode": 0
+    },
+    {
+      "kind": "reviewed-own-readonly-native-source",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-current-readonly-20261112T1510/bits-lookup.ps1",
+      "bytes": 2571,
+      "sha256": "2149d2c76310ff9033d776aa6f18a159eeb53f5b0c686cbd2f163404d93ae757",
+      "sourceContentsArchived": false,
+      "actualNativeExitCode": 0
+    }
+  ],
+  "derivedFiles": [
+    {
+      "publicPath": "source-mappings-safe.json",
+      "kind": "public mapped source receipts and original read-only source digests"
+    }
+  ],
+  "rawPrivateContentsIncluded": false
+}

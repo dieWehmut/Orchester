@@ -1,0 +1,20 @@
+{
+    "schemaVersion":  1,
+    "status":  "original-fixed-bits-job-guid-readonly-native-COM-lookup",
+    "observedAtUTC":  "2026-11-12T15:22:00.6475271Z",
+    "originalBitsJobGuid":  "3471e8bf-e0cd-4b2d-bce7-2d4e40a5b596",
+    "nativeGetJobHResult":  -2145386495,
+    "nativeGetJobHResultHex":  "0x80200001",
+    "querySucceeded":  true,
+    "originalJobCurrentlyPresent":  false,
+    "jobInterfaceAndManagerReleased":  true,
+    "methodCalled":  "IBackgroundCopyManager.GetJob",
+    "managerClassId":  "4991d34b-80a1-4291-83b6-3328366b9097",
+    "notFoundValueFromLocalSDK":  "bitsmsg.h BG_E_NOT_FOUND 0x80200001",
+    "sdkVersion":  "10.0.26100.0",
+    "officialReturnValueDocumentation":  "https://learn.microsoft.com/windows/win32/api/bits/nf-bits-ibackgroundcopymanager-getjob",
+    "nativeSourceSha256":  "2149d2c76310ff9033d776aa6f18a159eeb53f5b0c686cbd2f163404d93ae757",
+    "nativeMethodsCreatingEnumeratingMutatingOrSignallingJobsCalled":  0,
+    "privateCredentialsUsernamesSidsEnvironmentOrRawLogsIncluded":  false,
+    "originalPowerShellCmdletUnclassifiedErrorReceiptPreserved":  true
+}

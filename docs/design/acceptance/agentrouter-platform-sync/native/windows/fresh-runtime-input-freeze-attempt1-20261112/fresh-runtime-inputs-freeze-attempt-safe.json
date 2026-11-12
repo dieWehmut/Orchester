@@ -1,0 +1,12 @@
+{
+    "format":  "orchester-final21-runtime-input-freeze-attempt-v1",
+    "status":  "failed-final-android-input-validation",
+    "candidateInputsFile":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\fresh-runtime-inputs-unverified-46aed2a5b57c456c9541f2d9481b7d61.json",
+    "candidateInputsSha256":  "0d2e51c9b4febbcc5797e7239ffbff077a31af6b40e8151a9a9e7b1d755e0009",
+    "runtimeInputsFrozen":  false,
+    "sourceRevision":  "71def643cb08b208cc79687f79255c504eb14dc6",
+    "exceptionType":  "System.ArgumentException",
+    "defaultInstallChanged":  false,
+    "modelCalls":  0,
+    "signals":  0
+}

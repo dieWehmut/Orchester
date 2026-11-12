@@ -1,0 +1,24 @@
+{
+    "observedAtUTC":  "2026-11-12T09:34:52.9001974Z",
+    "originalBitsJobGuid":  "3471e8bf-e0cd-4b2d-bce7-2d4e40a5b596",
+    "actualTerminalState":  "Error",
+    "actualInternalErrorCode":  -2147012867,
+    "actualErrorCondition":  null,
+    "actualErrorContext":  5,
+    "bytesTransferred":  0,
+    "publicErrorDescriptionClassifications":  {
+                                                  "dnsOrNameResolution":  false,
+                                                  "tlsOrCertificate":  false,
+                                                  "http404":  false,
+                                                  "authentication":  false
+                                              },
+    "rawErrorDescriptionIncluded":  false,
+    "originalGuidAndUniqueDisplayNameVerifiedBeforeCleanup":  true,
+    "actionFailedReadingUnsupportedErrorCodePropertyAfterJobLeftTransientState":  true,
+    "vendorPayloadObtained":  false,
+    "applicationInstallerExecuted":  false,
+    "otherBitsJobsOrServicesMutated":  false,
+    "jobResumeOrRestartIssued":  false,
+    "ownFailedJobRemovedNormally":  true,
+    "ownJobRemainingCount":  0
+}

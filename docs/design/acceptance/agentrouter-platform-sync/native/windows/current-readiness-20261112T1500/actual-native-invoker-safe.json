@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "status": "actual-own-direct-native-readonly-command-exit0-recorded-from-tool-result",
+  "observedAtUtc": "2026-11-12T15:11:26.091382+00:00",
+  "sourceSha256": "547a01096a44cfe08639d782bdb4a236c258bdaa643fd0b058208c093d23816b",
+  "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/formal-runtime-post-reboot-20261112/current-readiness-20261112T150835Z-772e6a5381a7/direct-readonly.ps1",
+  "receiptSha256": "0d1ff1c510b48c31f93611f2e2d29c743eb26898f8b887ae260bc0036ed456b0",
+  "actualOuterPowerShellExitCode": 0,
+  "actualOuterPowerShellToolChunkId": "3d32c5",
+  "observationPid": 31252,
+  "observationCreatedUtc": "2026-11-12T15:09:18.3505222Z",
+  "observationAtUtc": "2026-11-12T15:09:18.8314405Z",
+  "sameOriginalOwnerVerifiedByReviewedProbeContext": true,
+  "interactiveReadiness": true,
+  "executionEvidenceOrigin": "This agent actual exec_command call of this exact new direct invoker returned exit_code0; this derived actor record documents that call, rather than an independent rerun by a future reviewer.",
+  "existingTaskRunOrModificationCount": 0,
+  "nativeTasksCreated": 0,
+  "backendLaunches": 0,
+  "inputOrProcessSignals": 0,
+  "defaultInstallationsProfilesOrServiceStateMutated": false,
+  "thisReadinessProofDoesNotCompleteWindows14Or18OrDefaultReinstallation": true
+}

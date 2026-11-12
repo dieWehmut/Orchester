@@ -1,0 +1,188 @@
+{
+  "tasks": [
+    {
+      "sourceDirectoryName": "claude-interactive-store-20261112-085553",
+      "taskName": "Orchester-Claude-Own-3c656611cac140a2a9b3ebfac4a97a6f",
+      "originalInstanceGuid": "{91B476B0-582C-457C-AFD3-38670523CFE4}",
+      "definitionSha256": "fafe7d55607b6b0bf2712d424f9bda0180b80666ab204c7bc3b58a7a2dd274f3",
+      "previousTaskDeletedFlag": false
+    },
+    {
+      "sourceDirectoryName": "claude-interactive-store-20261112-corrected-090650",
+      "taskName": "Orchester-Claude-Own-9e6dc4626de045818fdf1728f05ec4d5",
+      "originalInstanceGuid": "{ED46AD17-D930-489B-BB0A-4ABF4EE1FCBF}",
+      "definitionSha256": "973b9b97db817840b9e87b19a7a4f4ed81a29b88eedc371965257989cb94949b",
+      "previousTaskDeletedFlag": false
+    },
+    {
+      "sourceDirectoryName": "claude-interactive-store-20261112-native-091321",
+      "taskName": "Orchester-Claude-Own-aa773271d29c4f44ae3fb8ccf9b9127d",
+      "originalInstanceGuid": "{C23566CE-0FBA-4128-8203-5A33838F2799}",
+      "definitionSha256": "902cf401539ae8412d6926a6eb6fa5ef9d32faec2c9eaedd6f15fc88ca4c5d88",
+      "previousTaskDeletedFlag": true
+    },
+    {
+      "sourceDirectoryName": "claude-bits-classic-20261112-092157",
+      "taskName": "Orchester-Claude-Own-e759da00808d44cfa264948293e24ee5",
+      "originalInstanceGuid": "{91AE9C1C-64DB-401E-B765-AD6228720464}",
+      "definitionSha256": "9973ca21ac40429e1989377b05e5e1db7f14462acdbb0fc5d1c3e21ba6fb3835",
+      "previousTaskDeletedFlag": true
+    },
+    {
+      "sourceDirectoryName": "claude-bits-classic-corrected-20261112-092923",
+      "taskName": "Orchester-Claude-Own-813992933a454188af446a8c5e3e2c9b",
+      "originalInstanceGuid": "{10686D3D-E2F0-48E6-98BE-B7CF59FDAF60}",
+      "definitionSha256": "050135067f4a8598970b4cd9bf7443a72c52abad5cf0676acab55552c9eb75e3",
+      "previousTaskDeletedFlag": true
+    }
+  ],
+  "processes": [
+    {
+      "sourceDirectoryName": "claude-msstore-install-20261112-070819",
+      "kind": "installer",
+      "pid": 20212,
+      "birthUTC": "2026-11-12T07:09:48.8040481Z",
+      "image": "winget.exe"
+    },
+    {
+      "sourceDirectoryName": "claude-msstore-install-20261112-070819",
+      "kind": "installerRunner",
+      "pid": 30308,
+      "birthUTC": "2026-11-12T07:09:48.0612106Z",
+      "image": "powershell.exe"
+    },
+    {
+      "sourceDirectoryName": "claude-msix-download-20261112-072256",
+      "kind": "installer",
+      "pid": 29312,
+      "birthUTC": "2026-11-12T07:23:53.7321922Z",
+      "image": "winget.exe"
+    },
+    {
+      "sourceDirectoryName": "claude-msix-download-20261112-072256",
+      "kind": "installerRunner",
+      "pid": 25348,
+      "birthUTC": "2026-11-12T07:23:53.2196285Z",
+      "image": "powershell.exe"
+    },
+    {
+      "sourceDirectoryName": "claude-interactive-store-20261112-corrected-090650",
+      "kind": "scheduledAction",
+      "pid": 31720,
+      "birthUTC": "2026-11-12T09:07:14.0803908Z",
+      "image": "powershell.exe"
+    },
+    {
+      "sourceDirectoryName": "claude-interactive-store-20261112-native-091321",
+      "kind": "installer",
+      "pid": 34268,
+      "birthUTC": "2026-11-12T09:13:22.4512446Z",
+      "image": "winget.exe"
+    },
+    {
+      "sourceDirectoryName": "claude-interactive-store-20261112-native-091321",
+      "kind": "installerRunner",
+      "pid": 32892,
+      "birthUTC": "2026-11-12T09:13:21.6894058Z",
+      "image": "powershell.exe"
+    },
+    {
+      "sourceDirectoryName": "claude-interactive-store-20261112-native-091321",
+      "kind": "scheduledAction",
+      "pid": 32892,
+      "birthUTC": "2026-11-12T09:13:21.6894058Z",
+      "image": "powershell.exe"
+    },
+    {
+      "sourceDirectoryName": "claude-bits-classic-20261112-092157",
+      "kind": "scheduledAction",
+      "pid": 16788,
+      "birthUTC": "2026-11-12T09:27:09.5888942Z",
+      "image": "powershell.exe"
+    },
+    {
+      "sourceDirectoryName": "claude-bits-classic-corrected-20261112-092923",
+      "kind": "scheduledAction",
+      "pid": 25728,
+      "birthUTC": "2026-11-12T09:32:14.7030900Z",
+      "image": "powershell.exe"
+    }
+  ],
+  "jobs": [
+    {
+      "sourceDirectoryName": "claude-bits-classic-corrected-20261112-092923",
+      "originalBitsJobGuid": "3471e8bf-e0cd-4b2d-bce7-2d4e40a5b596"
+    }
+  ],
+  "sourceMappings": [
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-msstore-install-20261112-070819/installer-start-safe.json",
+      "bytes": 853,
+      "sha256": "cebc5829d0b213f159818129fb7ac95769fc221ef7635e231ce3420a34ea15d2"
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-msix-download-20261112-072256/installer-start-safe.json",
+      "bytes": 998,
+      "sha256": "d157ceb51c7f3a9bb2ece2f7d7a318da84796d20356545024073eb0534f0a09a"
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-interactive-store-20261112-085553/task-owner-safe.json",
+      "bytes": 806,
+      "sha256": "d1612b233bf3ce41ef66d8dc1c7ae0cbe6a3b66627562fbd841229e0a261ad99"
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-interactive-store-20261112-corrected-090650/task-owner-safe.json",
+      "bytes": 806,
+      "sha256": "1642683c460e30094a762fd992d4d100f38befe4701ef3f006fe6c55f88c7e3f"
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-interactive-store-20261112-corrected-090650/action-terminal-marker-safe.json",
+      "bytes": 1778,
+      "sha256": "6d3677f91e85100a91d52d82f7e7e85105710e75ecfed0bad63686a1be3cfc74"
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-interactive-store-20261112-native-091321/task-owner-safe.json",
+      "bytes": 805,
+      "sha256": "f1233158b2f7985cbc3e248be6d2da1535f2ae1889662b7f7b8f08ea28a0e12e"
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-interactive-store-20261112-native-091321/installer-start-safe.json",
+      "bytes": 853,
+      "sha256": "53d88595167c3d10bf33a7e719f52b22c0e4cb0dd2057e167abc86c3bb001fc5"
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-interactive-store-20261112-native-091321/action-terminal-marker-safe.json",
+      "bytes": 1777,
+      "sha256": "70623cb4251ddcbea08ca3fc17eef0ebb7132cf949b10db7e5f97a25151af2d6"
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-bits-classic-20261112-092157/task-owner-safe.json",
+      "bytes": 805,
+      "sha256": "2f978febc91477b0aa1d9aa1a1619ee77fed4ea1279dedf58b71692b253b81e2"
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-bits-classic-20261112-092157/action-terminal-marker-safe.json",
+      "bytes": 1778,
+      "sha256": "12aa699176f788a807b0b7ffdfb7b15b7c8f33bed05919dbe1285503c935b023"
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-bits-classic-corrected-20261112-092923/task-owner-safe.json",
+      "bytes": 805,
+      "sha256": "7ffef0c1f8b123603d869bc68d468314efda287e1ad177940e54824fd13332e8"
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-bits-classic-corrected-20261112-092923/action-terminal-marker-safe.json",
+      "bytes": 1778,
+      "sha256": "d4f0a1e011e3d2c6d3b0c6667de292eec64726b9afedc70f31b115cddc146a55"
+    },
+    {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-bits-classic-corrected-20261112-092923/bits-start-safe.json",
+      "bytes": 854,
+      "sha256": "6df0dbeddd6434710977bce84bd901c097256ec555ca729c5f7782a01caf097c"
+    }
+  ],
+  "families": [
+    "AnthropicPBC.Claude_fnn82j28hfe8t",
+    "Claude_pzs8sxrjxfjjc"
+  ]
+}

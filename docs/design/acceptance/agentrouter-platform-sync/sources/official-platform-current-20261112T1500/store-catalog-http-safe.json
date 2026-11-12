@@ -1,0 +1,9 @@
+{
+  "observedAtUTC": "2026-11-12T15:20:38.744619+00:00",
+  "url": "https://displaycatalog.mp.microsoft.com/v7.0/products/9P6K58THS811?market=US&languages=en-US",
+  "actualCurlExitCode": 0,
+  "httpStatus": 200,
+  "payloadOrInstallerExecution": false,
+  "bytes": 46378,
+  "sha256": "ef28dab71ac0fd9d65e43fdfdc28036e7e1b1948cf97c9c856dc6515b605fab5"
+}

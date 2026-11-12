@@ -1,0 +1,31 @@
+{
+    "observedAtUTC":  "2026-11-12T09:15:30.6457710Z",
+    "runner":  {
+                   "pid":  32892,
+                   "startedAtUTC":  "2026-11-12T09:13:21.6894058Z",
+                   "image":  "powershell.exe",
+                   "managedOriginalSelfHandleAvailable":  true
+               },
+    "nativePid":  34268,
+    "nativeBirthUTC":  "2026-11-12T09:13:22.4512446Z",
+    "actualExitCode":  0,
+    "actualExitCodeHex":  "0x00000000",
+    "nativeHasExited":  true,
+    "originalManagedProcessObjectRetainedUntilActualExit":  true,
+    "originalHandleEqualityAtTerminal":  true,
+    "stdoutBytes":  792,
+    "stdoutSha256":  "67fbff5b63ebb72ef6d0362075491843346eb518e137f5452488829a8a4a894b",
+    "stderrBytes":  0,
+    "stderrSha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "publicErrorCodes":  [
+
+                         ],
+    "storeNoApplicableInstallerMentioned":  false,
+    "storePackageNotFoundMentioned":  false,
+    "storeInstallationSuccessMentioned":  true,
+    "modelLoginRequestedByTask":  false,
+    "storeInternalLicensingAuthTransportNotIndependentlyObserved":  true,
+    "modelCalls":  0,
+    "rawLogsIncluded":  false,
+    "signalsOrRestartsIssued":  false
+}

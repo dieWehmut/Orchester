@@ -1,0 +1,310 @@
+{
+  "schemaVersion": 1,
+  "observedAtUTC": "2026-11-12T15:17:14.248211+00:00",
+  "status": "official-channel-current-http-boundaries-preserved-claude-installation-and-global-workbuddy-wsl-still-unproved",
+  "scope": "Read-only current official website availability plus precise historical native result distinctions; no native invocation or installer in this record-producing actor.",
+  "currentHttpReceipt": "current-http-safe.json",
+  "researchTools": {
+    "webSearchAttempts": 1,
+    "webOpenAttempts": 1,
+    "webBackendResult": "HTTP404 Invalid URL POST /v1/alpha/search; no search result or opened page obtained",
+    "directOfficialHTTPAttempts": 6,
+    "tlsVerificationDisabled": false
+  },
+  "claude": {
+    "officialSupportURL": "https://support.claude.com/en/articles/10065433-installing-claude-for-desktop",
+    "officialDownloadURL": "https://claude.ai/download",
+    "officialReleasesURL": "https://downloads.claude.ai/releases/win32/x64/RELEASES",
+    "allThreeCurlActualExitCodes": [
+      35,
+      35,
+      35
+    ],
+    "readableResponseBodies": 0,
+    "httpStatuses": [
+      null,
+      null,
+      null
+    ],
+    "errorInterpretation": "curl SSL connection error before an HTTP status; exact SSL reason not included in this safe receipt.",
+    "currentLinuxSupportedPlatformListEstablished": false,
+    "permanentLinuxUnsupportedClaim": false,
+    "nativeReleaseURLEstablished": false,
+    "codeCLIUsedAsDesktopSubstitute": false,
+    "historicalActualStoreInstallReceipts": {
+      "0711": {
+        "directory": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-msstore-install-20261112-070819",
+        "nativeWinGetInstallerActualExitCode": 0,
+        "safeOriginalStdoutSuccessfullyInstalledClassification": true,
+        "immediateKnownFamilyPackageCount": 0,
+        "immediatePublicEntryCount": 0,
+        "immediateStartAppCount": 0
+      },
+      "0915": {
+        "directory": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-interactive-store-20261112-native-091321",
+        "nativeWinGetInstallerActualExitCode": 0,
+        "immediateKnownFamilyPackageCount": 0,
+        "immediatePublicEntryCount": 0,
+        "immediateStartAppCount": 0,
+        "nativeActionActualExitCode": 1,
+        "recordedOwnTaskDeleted": true,
+        "historicalCursorReadiness": false
+      },
+      "preparedStoreBootstrapperExecutedByEitherHistoricalWinGetAttempt": false,
+      "installationExitZeroDoesNotProveCurrentPayloadOrRegistration": true,
+      "historicalDownloadNativeActualExitCode": -1978335114,
+      "historicalDownloadResultHex": "0x8A150076",
+      "historicalDownloadResultMeaning": "APPINSTALLER_CLI_ERROR_AUTHENTICATION_INTERACTIVE_REQUIRED",
+      "historicalDownloadZeroPackageCount": true
+    },
+    "currentInstallationOrTaskLivenessIndependentlyQueriedByThisActor": false,
+    "conditionalNextAction": "First query exact existing original actions/tasks, BITS identity and current native registration. If terminal and current same-user GUI accessible, ordinary official Store/verified Microsoft bootstrapper UI is a different path from repeated silent WinGet attempts. Preserve task/process ownership and verify actual Claude signed payload and native current-user registration afterwards.",
+    "currentStoreCatalog": {
+      "sourceHTTPReceipt": "store-catalog-http-safe.json",
+      "sourceURL": "https://displaycatalog.mp.microsoft.com/v7.0/products/9P6K58THS811?market=US&languages=en-US",
+      "sourceObservedAtUTC": "2026-11-12T15:20:38.744619+00:00",
+      "sourceBytes": 46378,
+      "sourceSha256": "ef28dab71ac0fd9d65e43fdfdc28036e7e1b1948cf97c9c856dc6515b605fab5",
+      "sourceBytesExactlyEqual0653PublicCatalog": true,
+      "productId": "9P6K58THS811",
+      "productTitle": "Claude",
+      "publisher": "Anthropic, PBC",
+      "packageFamilyName": "AnthropicPBC.Claude_fnn82j28hfe8t",
+      "packages": [
+        {
+          "packageFullName": "AnthropicPBC.Claude_5.1231.2.0_x64__fnn82j28hfe8t",
+          "architectures": [
+            "x64"
+          ],
+          "packageFamilyName": "AnthropicPBC.Claude_fnn82j28hfe8t",
+          "packageFormat": "Msix",
+          "catalogAdvertisedSha256": "50ef9a8435f1005e17e06023c64fd888a7fa8a03d8f787e92e3540353d1d9e8c",
+          "catalogAdvertisedMaxDownloadBytes": 297604679,
+          "catalogAdvertisedDirectDownloadUris": null,
+          "catalogAdvertisedCapabilities": [
+            "runFullTrust",
+            "localSystemServices",
+            "packagedServices",
+            "unvirtualizedResources",
+            "internetClient",
+            "Microsoft.storeFilter.core.notSupported_8wekyb3d8bbwe"
+          ],
+          "applications": [
+            {
+              "applicationId": "Claude",
+              "extensions": [
+                "startupTask-startupTask",
+                "protocol-claude",
+                "appExecutionAlias-appExecutionAlias",
+                "service-service"
+              ]
+            }
+          ],
+          "platformDependencies": [
+            {
+              "platformName": "Windows.Desktop",
+              "minimumVersion": "10.0.18362.0"
+            }
+          ]
+        },
+        {
+          "packageFullName": "AnthropicPBC.Claude_5.1231.2.0_arm64__fnn82j28hfe8t",
+          "architectures": [
+            "arm64"
+          ],
+          "packageFamilyName": "AnthropicPBC.Claude_fnn82j28hfe8t",
+          "packageFormat": "Msix",
+          "catalogAdvertisedSha256": "cc2bfc88710a2ee5747b354a372dd0c03427a467cd5b17f8ba7663a091f9a310",
+          "catalogAdvertisedMaxDownloadBytes": 290069886,
+          "catalogAdvertisedDirectDownloadUris": null,
+          "catalogAdvertisedCapabilities": [
+            "runFullTrust",
+            "localSystemServices",
+            "packagedServices",
+            "unvirtualizedResources",
+            "internetClient",
+            "Microsoft.storeFilter.core.notSupported_8wekyb3d8bbwe"
+          ],
+          "applications": [
+            {
+              "applicationId": "Claude",
+              "extensions": [
+                "startupTask-startupTask",
+                "protocol-claude",
+                "appExecutionAlias-appExecutionAlias",
+                "service-service"
+              ]
+            }
+          ],
+          "platformDependencies": [
+            {
+              "platformName": "Windows.Desktop",
+              "minimumVersion": "10.0.18362.0"
+            }
+          ]
+        }
+      ],
+      "payloadDownloadedOrSignatureVerified": false
+    }
+  },
+  "globalWorkBuddy": {
+    "homepageURL": "https://www.workbuddy.ai/",
+    "currentHomepageHttpStatus": 200,
+    "currentHomepageStructuredOperatingSystem": "Windows, macOS",
+    "currentUpdateURL": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-x64-deb",
+    "currentUpdateHttpStatus": 200,
+    "currentAdvertisedVersion": "5.5.2.37849279",
+    "currentAdvertisedPackageURL": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-deb/WorkBuddy-linux-x64-deb-5.5.2.37849279-910352f0.deb",
+    "currentAdvertisedVendorSha256": "",
+    "homepageAndLinuxMetadataByteExactWith0656Sources": true,
+    "newExactPackageDownloadPerformed": false,
+    "currentPackageHTTP404IndependentlyReexecutedByThisActor": false,
+    "historicalFourAdvertisedPackageRangeGETStatuses": [
+      404,
+      404,
+      404,
+      404
+    ],
+    "internationalFrontendDomesticOnlyLinuxTileHistoryOnly": true,
+    "usableCurrentInternationalLinuxPayloadPrepared": false,
+    "nativeWSLInstallPerformed": false,
+    "actualLinuxProfileNamespaceVerified": false,
+    "domesticPackageOrWindowsInteropSubstitution": false,
+    "permanentUnsupportedPolicyClaim": false
+  },
+  "officialStoreAPIBoundary": {
+    "url": "https://learn.microsoft.com/uwp/api/windows.applicationmodel.store.preview.installcontrol.appinstallmanager?view=winrt-28000",
+    "currentMicrosoftLearnSearchAndFullFetchSucceeded": true,
+    "finding": "The AppInstallManager API is protected by a private capability restricted to Microsoft-developed apps. A custom helper is not an established substitute for the signed Microsoft Store/WinGet route.",
+    "nativeInstalledWingetBinarySourceVersionMatched": false
+  },
+  "selectedPublicBodyComparisons": [
+    {
+      "currentSourcePath": "/home/han/.local/state/orchester-delivery/20261112/official-remaining-1500/workbuddy-global-home.public-body",
+      "historicalSourcePath": "/home/han/.local/state/orchester-delivery/20261112/workbuddy-global-current/global-home-current-curl.public-body",
+      "currentBytes": 19158,
+      "historicalBytes": 19158,
+      "currentSha256": "ff62ba37882024c40571f2f9733284fce5620f460f4766023153a533c3ce9e20",
+      "historicalSha256": "ff62ba37882024c40571f2f9733284fce5620f460f4766023153a533c3ce9e20",
+      "sourceBytesEqual": true
+    },
+    {
+      "currentSourcePath": "/home/han/.local/state/orchester-delivery/20261112/official-remaining-1500/workbuddy-global-linux.public-body",
+      "historicalSourcePath": "/home/han/.local/state/orchester-delivery/20261112/workbuddy-global-current/global-linux-update.public-body",
+      "currentBytes": 267,
+      "historicalBytes": 267,
+      "currentSha256": "466b3060f0c4113fdbfea6fc5f32e7613e2e0741849927aa19033d56b58635d1",
+      "historicalSha256": "466b3060f0c4113fdbfea6fc5f32e7613e2e0741849927aa19033d56b58635d1",
+      "sourceBytesEqual": true
+    }
+  ],
+  "privateProfilesCredentialsSettingsRead": false,
+  "modelsOrLoginCalls": 0,
+  "externalInstallationsMutated": false,
+  "nativeGUIStarted": false,
+  "nativeCommandsExecuted": 0,
+  "rawWebsiteBodiesOrDiagnosticLogsArchived": false,
+  "historicalNativeSafeReceipts": [
+    {
+      "publicPath": "historical-native/store-0711-installer-terminal-safe.json",
+      "sha256": "5fbe4579bba9a8a78c345f91042bb53a504811624750dbe0d187042aafc531f6",
+      "bytes": 1186
+    },
+    {
+      "publicPath": "historical-native/store-0711-installed-verification-safe.json",
+      "sha256": "dc215e565fbf4f919da024174a8b5f8efb7e974b7a1dc5b430836e861e14fa94",
+      "bytes": 666
+    },
+    {
+      "publicPath": "historical-native/store-0711-output-classification-safe.json",
+      "sha256": "3be64b768d761e941e97f6886eda198e77665015dcf592dfea234cef85ae1f16",
+      "bytes": 635
+    },
+    {
+      "publicPath": "historical-native/store-0915-installer-terminal-safe.json",
+      "sha256": "8d2b81a7f24de9cf84b63a855fc368832faf0cf4d269594a69f4d85b0d992546",
+      "bytes": 1255
+    },
+    {
+      "publicPath": "historical-native/store-0915-installed-verification-safe.json",
+      "sha256": "6053c53595235ff98c5e8fe73a47d9c752d6a5d34c8c98926d861591c4f397f4",
+      "bytes": 2095
+    },
+    {
+      "publicPath": "historical-native/store-0915-scheduler-terminal-safe.json",
+      "sha256": "b9a28f2a2ee4d16d1cb79fd2f4e6e917ea40e48652056a48815eeaf35fa62b59",
+      "bytes": 2268
+    },
+    {
+      "publicPath": "historical-native/download-0723-installer-terminal-safe.json",
+      "sha256": "33735ae939c6b57170d0d0b0c5bb4569a7488e579d3e7272c839d6d95dee165d",
+      "bytes": 1261
+    },
+    {
+      "publicPath": "historical-native/download-0723-downloaded-files-safe.json",
+      "sha256": "53c5f0413975d3f70e5d9fb0732860da7776f1668849453b98deb6c362f046aa",
+      "bytes": 660
+    },
+    {
+      "publicPath": "historical-native/bits-0934-terminal-safe.json",
+      "sha256": "aed56eb67162b8fcb45014dad40a24ce747a618ee19f52b0e4813e5de92fa068",
+      "bytes": 1162
+    }
+  ],
+  "historicalBitsCorrectedFailure": {
+    "originalJobGuid": "3471e8bf-e0cd-4b2d-bce7-2d4e40a5b596",
+    "actualTerminalState": "Error",
+    "actualInternalErrorCode": -2147012867,
+    "actualErrorContext": 5,
+    "bytesTransferred": 0,
+    "originalGuidAndUniqueDisplayNameVerifiedBeforeCleanup": true,
+    "ownFailedJobRemovedNormally": true,
+    "ownJobRemainingCountAtHistoricalObservation": 0,
+    "applicationInstallerExecuted": false,
+    "emptyFollowupSafeReceiptIsNoEvidence": true,
+    "currentOriginalTaskLivenessNotInferredFromHistoricalBitsTermination": true
+  },
+  "officialMSIXServiceInstallBoundary": {
+    "officialDocumentation": [
+      {
+        "url": "https://learn.microsoft.com/windows/msix/desktop/managing-your-msix-deployment-targetdevices",
+        "microsoftLearnSearchAndFullFetchSucceeded": true,
+        "finding": "MSIX packages containing services require administrator installation, with packaged-service support introduced on Windows 10 2004."
+      },
+      {
+        "url": "https://learn.microsoft.com/windows/msix/packaging-tool/convert-an-installer-with-services",
+        "microsoftLearnSearchAndFullFetchSucceeded": true,
+        "finding": "An MSIX package containing a service requires admin privileges to install."
+      }
+    ],
+    "currentClaudeStoreMetadataAdvertisesLocalSystemServicesPackagedServicesAndServiceExtension": true,
+    "actualDownloadedPayloadManifestExamined": false,
+    "callerElevationOrApplicableLocalPolicyEstablished": false,
+    "historicalWinGetResultCauseInferredFromCatalogCapabilities": false,
+    "nextPreflight": "Check the actual package manifest, OS and native caller privileges if a signed payload becomes available; follow ordinary Store/AppInstaller elevation UI if requested."
+  },
+  "delegatedCurrentNativeVerification": {
+    "acceptanceRootRelativePath": "native/windows/claude-current-readonly-20261112T1510/current-completion-safe.json",
+    "sha256": "23d03000b652817ff5cc691f0d1cff78ee0c53d7b4aad9352f927d1b0a27b560",
+    "bytes": 2175,
+    "actor": "official_remaining/claude_native_state delegated read-only native queries",
+    "nativeQueriesActualExitCodes": [
+      0,
+      0
+    ],
+    "exactPriorTasksAbsent": 5,
+    "exactPriorDistinctProcessIdsAbsent": 9,
+    "exactPriorProcessBirthIdentityRecordsQueried": 10,
+    "originalBitsGuid": "3471e8bf-e0cd-4b2d-bce7-2d4e40a5b596",
+    "currentOriginalBitsNativeGetJobHRESULT": "0x80200001",
+    "currentOriginalBitsNativeGetJobMeaning": "BG_E_NOT_FOUND",
+    "currentUserKnownClaudeFamiliesPackageCount": 0,
+    "currentStartAppsMatchingCount": 0,
+    "currentWin32UninstallMatchingCount": 0,
+    "knownPublicExeExistenceCount": 0,
+    "allUsersQueryDeniedCountNull": true,
+    "oldLiveActionToWaitForEstablished": false,
+    "currentAbsenceDoesNotProveEarlierOriginalHandleNormalExit": true,
+    "newGUIOrInstallerInvokedByDelegate": false
+  }
+}

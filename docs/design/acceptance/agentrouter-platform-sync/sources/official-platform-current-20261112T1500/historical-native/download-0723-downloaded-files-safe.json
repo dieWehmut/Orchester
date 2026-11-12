@@ -1,0 +1,16 @@
+{
+    "observedAtUTC":  "2026-11-12T07:23:55.7858438Z",
+    "status":  "official-store-native-download-actual-failure-preserved",
+    "actualNativeDownloadExitCode":  -1978335114,
+    "allOwnPublicDownloadedFiles":  [
+
+                                    ],
+    "packageFileCount":  0,
+    "downloadDoesNotProveInstallation":  true,
+    "offlineLicenseGenerationSkippedByDocumentedFlag":  true,
+    "packageSignatureTrustNotYetVerified":  true,
+    "privateProfileContentsRead":  false,
+    "modelLoginRequested":  false,
+    "storeInternalLicensingAuthTransportNotIndependentlyObserved":  true,
+    "preparedStoreBootstrapperExecuted":  false
+}
