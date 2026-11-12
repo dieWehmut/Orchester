@@ -282,6 +282,46 @@
     {
       "scope": "Independent pre-report320:310listedJSONhash+sizes/273selectedoriginalJSONbytes+1supplementalpublicsafeJSON/52phase4sources/8derived/159MDlinks/13req93links/6secretcategories allpassed;9nonJSONstatonly/private/native/network/ADB/Git0; requirement3complete10incomplete; historicLinuxcurrentunavailable/secondexec1/DSHprepared/fullPTY+14/18pending retained",
       "proof": "sources/audit/epoch4-fixed-checkpoint-independent-review-safe.json"
+    },
+    {
+      "scope": "NewLinux7337 source71/d983/2330202ticks4550341/controller2330194ticks4550291/nameduserunitactive-running/samecgroup/LingerYes/source368 stable; old1023019 exitunknown/historicalf7 notrewritten",
+      "proof": "deployments/linux/20261112-persistent-default/completion-live-safe.json"
+    },
+    {
+      "scope": "IndependentnewPIDs/image/source/userunit/cgroup/correctremote/v1/info401 afteroriginallauncherexit; initialobserverwrong/api/info404exit1 retainednotproductfailure; nooldparenttoolstdinrequired",
+      "proof": "deployments/linux/20261112-persistent-default/root-independent-persistent-live-safe.json"
+    },
+    {
+      "scope": "CurrentSQLstate/newconsistentbackup rawrows retained true, original5tasksfullrows/5persisted3distinct JSONvalues exact/17publicbytes/source21schema3; oldlegacybackuprawcomparisonfalse notoverwritten; singleownpairDELETE204/revoked401/closed; originaltokenwire nottested",
+      "proof": "deployments/linux/20261112-persistent-default/final-safe.json"
+    },
+    {
+      "scope": "ActualoriginalwriterFD8/childstdinpipe/pidfd/fixedsameUIDcontrolsocket/currentnamedunit; normalquit source route notexecuted/noOSresetresistancepromise; currentenvheap only/privatebackupnotarchived",
+      "proof": "deployments/linux/20261112-persistent-default/controller-handoff-safe.json"
+    },
+    {
+      "scope": "WrongLinuxonlyowneddebugPID7354 forcedonceforstaleRAM thenoriginal1nativeGetdecrypt success/XML268hash701837/fourLS+session/coral retained/own19327removed/globalADBVMsignals0; f83/b5 updates kept/nofullrollback",
+      "proof": "native/android/wrong-linux-final-cleanup/wrong-linux-own-debug-app-ram-and-forward-cleanup-safe.json"
+    },
+    {
+      "scope": "WrongLinuxown successor20930 normalExitAppthenHome/background notresumed verified inlaterobserver; initialimmediatefalse retained/forceStopnotagain/no successorPIDgone claim",
+      "proof": "native/android/wrong-linux-final-cleanup/wrong-linux-own-activity-normal-exit-observed-safe.json"
+    },
+    {
+      "scope": "Windowsnativepublicsignaturesnapshot101692/birth23:45 full830947/293425336B stable/AuthenticodeValid/HangzhouDeepSeekEV/rc1; noactualexecutorExitCodefield notinferred/installerExecutedfalse/productslaunched0",
+      "proof": "native/windows/deepseek-official-post-checkpoint/native-signature-and-context-safe.json"
+    },
+    {
+      "scope": "ActualNSIS appID/uninstallGUID+officialrc1 source/currentUser/S/D andpreparedCreateNewcopy exact; notallusers, differentinstallDir doesnotisolate sharedDSH_HOME, originalDataElement mustretain; staticnoactualinstallerexecution",
+      "proof": "native/windows/deepseek-official-post-checkpoint/post-checkpoint-layout/final-readonly-installer-layout-and-copy-safe.json"
+    },
+    {
+      "scope": "Actualbinaryordinarysilent withoutforce-run/updated returnsbeforeautolaunch; onSuccess=-1/UI skipped/currenttemplatecrosscheck/versiontag404 preserved; onlystaticNSIS ABI+rc1controlflow no installed/runtimeclaim",
+      "proof": "native/windows/deepseek-official-post-checkpoint/silent-no-launch-review/decision-ordinary-current-user-silent-safe.json"
+    },
+    {
+      "scope": "Fourth321archive+MD322exactGitblobs/commitcaa60/main60b4/featuremainpush0/production71unchanged; phase4Linuxabsence historicallaternewruntime separateepoch",
+      "proof": "maintenance/git-delivery/fourth-step-delivery-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -293,15 +333,13 @@
     "Prior source71 Linux7337 deployment/1023019 and oneoriginal7337/info200 before fresh23:31UTC absence; originalreceipts preserved historical"
   ],
   "pendingCurrentEpochScopes": [
-    "Fresh23:31UTC Linux7337 originalPID1023019/controller1023013 absent/no listener/HTTPURLError; currentstate restoration bylinux_restore pending freshactualdeployment+state-retention receipt; originalcauseunknown",
-    "Windows ownSession1 SameSIDproved butDisconnected/noActiveSameSIDcandidate/InputError5; externalDesktop28748 normaltrayexit/freshlatestprofilebackup/native14/18/reinstall/7338 stillpending",
-    "CorrectWin5572/source71/samecertinstall/JUnit4/original5AES+values/1original7337wire/actualStudio17400msJDK21/nativeUI21+42official/UnicodeEnter3input3output verified; PTYresize/mobileproductterminalclose/device6to5/revoked401 notcomplete; oldown17379extra cleanup andwrongLinuxRAM+ownforward finalunverified",
-    "SecondisolatedWindows7339 controller11248 InvalidOperationException/executor96860actual1; launcher0/normaldeclaredownedexit/portfree/3private-transportfilesremoved verified; this isfailedvalidation notfullAndroidPTY/authcleanup; attempt3 source/runtime and anyfinalinstall remain later separateepoch",
-    "International WorkBuddy native WSL usable package/profile isolation unverified/currentofficialdownloadunavailable; domestic unaffected",
-    "Claude App current native Windows executable/package and official Linux support/install evidence unverified",
-    "DeepSeek officialWindowswebsite293425336B installer830947/PE0.2.2rc1 prepared; WindowsAuthenticodeTrust/installation pending; existingDataElementwrapper0.13 withHarnessCLI0.2.1rc3 doesnotbindofficialcurrentDesktop",
-    "Formalepoch2 prepared32originalclone/10manifest/nativeAST0 verified; freshfullAndroidacceptance required for future runtimeinputsfreeze/run14/18/defaultreinstall",
-    "Phase4 checkpoint (UI42/Unicode/officialDSHprepared/attempt2failedterminal) awaits parentcommit/push/main; previous266archive+MD267 step already delivered"
+    "Windows sameSIDSession1 disconnected/InputDesktopError5; originalexternalDesktop28748 normaltray/freshlatestprofilebackup/native14/18/defaultreinstall/7338 stillpending",
+    "CorrectWin5572 Studio17400ms/JUnit4/original5AES/data/UI42/Unicode verified; nativePTYresize/mobileterminalclose/tempdevice6to5/revoked401 and newattempt3 finalacceptance pending",
+    "NewLinux7337 nameduserunit2330202 currentdeployment/resources/authownpair/5tasks5persisted3distinct retained verified; existingoriginaltoken actualwire200 nottestednewepoch, historicalold200 remains historical",
+    "OfficialDeepSeekWindowsfull830947 signatureValid/rc1/controlflowordinarysilent static verified; actualinstaller execution/registration/runtime pending; DataElement0.13 original preserved",
+    "InternationalWorkBuddy nativeWSL usablepackage/profile isolation andClaudeApp Windowspayload/LinuxofficialGUI release evidence pending",
+    "Historicalunregisteredchildoriginalidentity/HANDLEclosure missing; wrongLinuxoriginal1/RAM/ownforward/normalactivitybackground nowverified but nofullpackage rollback orsuccessorprocessgone claim",
+    "Phase5 completedLinuxnewruntime/wrongLinuxcleanup/DSHsignature+static-source checkpoint awaits parentnextcommit/push/main; prior321 fourthstep already delivered"
   ],
   "folderResponsibilities": {
     "sources": "Official origins, source/provenance and current safe source audits",
@@ -318,7 +356,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-11T23:53:59.153445+00:00",
+  "updatedAt": "2026-11-12T00:14:34.105565+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -335,7 +373,7 @@
   "currentAndroidPartialNativeBuildInstallTestsVerified": true,
   "currentAndroidActualIDESyncVerified": true,
   "currentAndroidNativeUI21Providers42ImagesVerified": true,
-  "documentedPublishedMainRevision": "8b0a0163e1df4e5cdaab293b8f8130eda91b3f2f",
+  "documentedPublishedMainRevision": "60b4bd8e153e783f433147274fc31ff72563cbea",
   "productionSourceRevisionStillFrozen71": true,
   "currentCorrectionArchiveGitCommitted": false,
   "originalWindowsCredentialsDamagedOrUnrecoverableClaimed": false,
@@ -345,7 +383,7 @@
   "currentWindowsSameUserIdentityProvedInDisconnectedSession": true,
   "currentWindowsSameUserActiveSessionCandidateCount": 0,
   "currentAndroidWrongLinuxTargetOriginalOneFileByteExactRestored": true,
-  "currentAndroidWrongTargetRAMPreferencesReloaded": false,
+  "currentAndroidWrongTargetRAMPreferencesReloaded": true,
   "currentOwnedWindowsQemuNormalCloseExitObserved": true,
   "newCrossHostIndependentSubagentReviewCompleted": false,
   "newCrossHostIndependentSubagentReviewFailure": "Remote compaction failed due API token rate limit; latest archive self-checks remain separate from earlier completed independent reviews.",
@@ -421,19 +459,18 @@
   "currentWindowsDeepSeekOfficialInstallerVersion": "0.2.2-rc.1",
   "currentWindowsDeepSeekOfficialInstallerSha256": "830947f8996dc05d991ca9133fff4d3400073e47b9cfa6507754867e79482b23",
   "currentWindowsDeepSeekOfficialInstallerBytes": 293425336,
-  "currentWindowsDeepSeekOfficialInstallerAuthenticodeTrustVerified": false,
+  "currentWindowsDeepSeekOfficialInstallerAuthenticodeTrustVerified": true,
   "currentLegacyDataElementDSH013MatchesOfficialDesktopIdentity": false,
   "lastVerifiedEffectiveLinuxDeviceCount": 3,
   "lastVerifiedPersistedLinuxAuthEntryCount": 5,
   "lastVerifiedLinuxRemoteStateSemanticJSONExact": true,
   "lastVerifiedLinuxRemoteStateRawSQLStringsExact": false,
   "historicalOriginalLinux7337TokenOneInfoRequestActualStatus": 200,
-  "currentLinuxDeploymentVerified": false,
-  "currentLinuxRestorationPending": true,
-  "currentLinuxRuntimeObservedAtUtc": "2026-11-11T23:31:29.037533+00:00",
+  "currentLinuxDeploymentVerified": true,
+  "currentLinuxRestorationPending": false,
+  "currentLinuxRuntimeObservedAtUtc": "2026-11-11T23:48:45.767757+00:00",
   "currentLinuxOldServicePidExists": false,
   "currentLinuxOldControllerPidExists": false,
-  "currentLinux7337ListenerCount": 0,
   "currentLinuxPreviousExitCauseVerified": false,
   "epoch4IndependentReviewProof": "sources/audit/epoch4-fixed-checkpoint-independent-review-safe.json",
   "epoch4IndependentReviewPreReportFileCount": 320,
@@ -445,9 +482,37 @@
   "epoch4IndependentReviewTargetedPhase4SafeJsonOriginalCount": 52,
   "epoch4IndependentReviewPrivateReadNativeNetworkAdbQueueGitRepoMutationAndNonJsonReadCount": 0,
   "oldEpoch4SourceOnlySubagentReportClaimedFinal": false,
-  "currentCheckpointRequirementStatusCounts": {
+  "phase4CheckpointRequirementStatusCounts": {
     "completed": 3,
     "incomplete": 10,
     "missing": 0
-  }
+  },
+  "prior321FourthCheckpointArchiveDelivered": true,
+  "currentLinuxServicePid": 2330202,
+  "currentLinuxServiceStartTicks": 4550341,
+  "currentLinuxControllerPid": 2330194,
+  "currentLinuxControllerStartTicks": 4550291,
+  "currentLinuxNamedUserService": "orchester-default-remote-7337-20261112.service",
+  "currentLinuxUserManagerLingerActual": "yes",
+  "currentLinuxRuntimeListenerVerified": true,
+  "currentLinuxEffectiveDeviceCount": 3,
+  "currentLinuxPersistedAuthEntryCount": 5,
+  "currentLinuxRemoteStateSemanticJSONExact": true,
+  "currentLinuxRemoteStateRawRowsExactlyRetainedComparedToNewCurrentBackup": true,
+  "currentLinuxPreflightRawStateRowsEqualOldLegacyBackup": false,
+  "currentLinuxExistingOriginalTokenWire200TestedThisEpoch": false,
+  "currentWindowsDeepSeekOrdinarySilentNoAutoLaunchStaticVerified": true,
+  "currentWindowsDeepSeekInstallerNativeExecutionTested": false,
+  "currentWrongLinuxOriginalOneNativeCredentialGetSucceeded": true,
+  "currentWrongLinuxOwnForward19327Removed": true,
+  "currentWrongLinuxOwnActivityNormalBackgroundObserved": true,
+  "currentWrongLinuxSuccessorProcessExitedClaimed": false,
+  "currentWrongLinuxPackageDowngradeOrFullRollbackClaimed": false,
+  "phase5IndependentReviewCompleted": true,
+  "priorUnavailableObservation7337ListenerCount": 0,
+  "phase5IndependentReviewProof": "sources/audit/epoch5-fixed-checkpoint-independent-review-safe.json",
+  "phase5IndependentReviewPreReportFileCount": 354,
+  "phase5IndependentReviewListedJsonHashSizeCount": 344,
+  "phase5IndependentReviewNonJsonStatOnlyCount": 9,
+  "phase5IndependentReviewExternalOriginalComparisons": 0
 }

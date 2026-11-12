@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "format": "orchester-epoch5-fixed-checkpoint-independent-public-archive-review-v1",
+  "observedAt": "2026-11-12T05:39:31Z",
+  "reviewer": "/root/phase5_review",
+  "status": "pass-public-archive-integrity-and-claim-boundaries-with-nonblocking-wording-recommendation",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "currentGitHeadAtSnapshot": "caa60d76f4826fbccc1638e06bf73f6693168c3e",
+  "snapshotBoundary": {
+    "scope": "Public repository checkpoint before adding this report or any subsequent root documentation/manifest updates",
+    "archiveFilesBeforeReport": 354,
+    "manifestListedFiles": 353,
+    "manifestListedJsonFiles": 344,
+    "manifestListedNonJsonFiles": 9,
+    "archiveJsonFilesIncludingManifest": 345,
+    "manifestSelfReferenceExcluded": true,
+    "onlyUnlistedArchiveFile": "manifest.json",
+    "manifest": {
+      "path": "manifest.json",
+      "bytes": 73148,
+      "sha256": "26492d48c6a5ec79111c160f3088b4a4f6637b8ddfd481173a83efbf0f283ffc"
+    },
+    "subsequentReportAndRootEditsRequireNewManifestSelfCheck": true
+  },
+  "checks": {
+    "manifestListedJsonParseCount": 344,
+    "manifestListedJsonHashAndSizeComparisons": 344,
+    "manifestListedJsonHashAndSizePassed": true,
+    "manifestJsonParsedSeparately": true,
+    "manifestDuplicatePathCount": 0,
+    "manifestMissingListedPathCount": 0,
+    "nonJsonStatOnlySizeComparisons": 9,
+    "nonJsonStatOnlySizePassed": true,
+    "nonJsonContentReadCount": 0,
+    "nonJsonContentHashVerifiedCount": 0,
+    "selectedProvenanceEntries": 342,
+    "selectedProvenanceJsonEntries": 333,
+    "selectedProvenanceNonJsonEntries": 9,
+    "selectedProvenanceJsonArchivedHashAndSizeComparisons": 333,
+    "selectedProvenanceJsonArchivedHashAndSizePassed": true,
+    "derivedProvenanceJsonArchivedHashAndSizeComparisons": 8,
+    "derivedProvenanceJsonArchivedHashAndSizePassed": true,
+    "selectedAndDerivedPathOverlapCount": 0,
+    "newSelectedJsonEntriesSinceCurrentGitHead": 33,
+    "newJsonInternalSourceReferenceComparisons": 30,
+    "newJsonInternalSourceReferenceHashAndSizePassed": true,
+    "externalOriginalReceiptByteComparisonCount": 0,
+    "documentationLinksChecked": 203,
+    "documentationMissingLocalLinkCount": 0,
+    "requirementsReviewed": 13,
+    "requirementEvidenceReferencesChecked": 105,
+    "requirementMissingEvidenceReferenceCount": 0,
+    "declaredSourceShaEqualsArchivedShaIsMetadataNotExternalOriginalByteProof": true
+  },
+  "lexicalSecretPatternChecks": {
+    "scope": "344 listed public JSON files; lexical matches only, not a comprehensive proof that arbitrary secret encodings are absent",
+    "privateKeyHeaderMatches": 0,
+    "bearerValueMatches": 0,
+    "githubTokenMatches": 0,
+    "openaiKeyMatches": 0,
+    "jwtShapeMatches": 0,
+    "urlUserPasswordMatches": 0
+  },
+  "claimBoundaryReview": {
+    "linuxOldAndNewEpochsRemainSeparate": true,
+    "linuxOldExitCauseStillUnknown": true,
+    "linuxRawStateOldLegacyBackupFalseAndNewCurrentBackupTrueHaveDifferentComparisonObjects": true,
+    "linuxOriginalStoredTokenWire200NotPromotedIntoNewEpoch": true,
+    "linuxCurrentLiveReobservedByThisReviewer": false,
+    "linuxNormalQuitExecutedByThisReviewer": false,
+    "linuxForcedKillOrOsResetResistanceClaimed": false,
+    "wrongLinuxForceStopAndLaterNormalActivityBackgroundRemainDistinct": true,
+    "wrongLinuxSuccessorProcessExitOrFullPackageRollbackClaimed": false,
+    "deepSeekSignatureObservationNotPromotedToInstallerExecution": true,
+    "deepSeekOrdinarySilentNoLaunchEvidenceRemainsStatic": true,
+    "deepSeekInstallerRuntimeTestedByThisReviewer": false,
+    "deepSeekDifferentInstallDirectoryNotClaimedToIsolateSharedDshHome": true,
+    "windowsDesktopReinstallAndFullPtyRemainPending": true,
+    "previousFailuresAndMissingHistoricalIdentityProofRemainPreserved": true,
+    "allPlatformCompletionClaimed": false
+  },
+  "nonblockingRecommendation": {
+    "path": "sources/requirement-delivery-audit.json",
+    "requirementId": "linux_service",
+    "field": "verifiedScope",
+    "snapshotWording": "Currentrestoration fromcurrentstate ownerlinux_restore, no newruntimepass claimed.",
+    "reason": "The following sentence correctly describes the later verified new runtime, so explicitly labeling the earlier sentence as the phase4 historical checkpoint removes ambiguous current wording.",
+    "rootCorrectionPendingAtReportSnapshot": true,
+    "reviewerModifiedRequirementAudit": false
+  },
+  "selectedSnapshotDigests": [
+    {
+      "path": "sources/receipt-provenance.json",
+      "bytes": 198387,
+      "sha256": "f3c3896c266a5a8c3449415143067ee1e20b7fe0b603a4352795519af959d80c"
+    },
+    {
+      "path": "sources/requirement-delivery-audit.json",
+      "bytes": 26965,
+      "sha256": "3b82443f83b5406be9f28a224df7b2332b76f9c661b19d718eafeb1f2564c2f7"
+    },
+    {
+      "path": "summary.json",
+      "bytes": 35983,
+      "sha256": "abd668652cf71ae38aae89478c829cd52a568fa48d4efb4ef7ec9c2d57733a9c"
+    },
+    {
+      "path": "deployments/linux/20261112-persistent-default/completion-live-safe.json",
+      "bytes": 3385,
+      "sha256": "6207e80182ac328d0c69426539478876137f7d04377c3c57a508717fb1bd0d81"
+    },
+    {
+      "path": "deployments/linux/20261112-persistent-default/root-independent-persistent-live-safe.json",
+      "bytes": 998,
+      "sha256": "8799315720f98905358e94e1b3c4d9b119ce3d7449aa1d83655a0e97c127358f"
+    },
+    {
+      "path": "native/android/wrong-linux-final-cleanup/wrong-linux-own-debug-app-ram-and-forward-cleanup-safe.json",
+      "bytes": 1849,
+      "sha256": "66ee03e5de7e70757d85781449815672e0ff98f3448307a4cf8dcd8a9a3b3ec9"
+    },
+    {
+      "path": "native/android/wrong-linux-final-cleanup/wrong-linux-own-activity-normal-exit-observed-safe.json",
+      "bytes": 527,
+      "sha256": "3034635ba9d75ee5f425e006ab203eaa72eafcdeaf9eb1c96cac7f8a0253da8e"
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/native-signature-and-context-safe.json",
+      "bytes": 1696,
+      "sha256": "9fbec4376fb39ac018e95fb6998bd5d070802d2b43628659cab71ac41c5a2653"
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/silent-no-launch-review/actual-nsis-ordinary-silent-no-launch-safe.json",
+      "bytes": 17618,
+      "sha256": "f82c2705f6626c80657d7279397cd116afe80344d5d242cbfd3c207524ed8977"
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/silent-no-launch-review/decision-ordinary-current-user-silent-safe.json",
+      "bytes": 1786,
+      "sha256": "20b0d9d68df99a91c1d3b2b900550fef13e750be30f7b332c72cf7284c72f30a"
+    }
+  ],
+  "documentationSnapshot": {
+    "path": "docs/design/39-agentrouter-full-platform-sync.md",
+    "bytes": 75611,
+    "sha256": "46e778b19cd5dc1bda805e01b76a284c8e79a5bc1e6790aac47beddbb3b0abf9"
+  },
+  "executionLimits": {
+    "privateDataOrBackupContentReads": 0,
+    "externalOriginalReceiptReads": 0,
+    "rawLogReads": 0,
+    "nonJsonContentReads": 0,
+    "windowsNativeOrQueueCalls": 0,
+    "adbCommands": 0,
+    "networkRequests": 0,
+    "serviceOrProcessSignals": 0,
+    "gitMutations": 0,
+    "existingRepositoryFileEdits": 0,
+    "onlyNewReportFileWritten": true,
+    "archiveConsistencyDoesNotIndependentlyReproveHistoricalNativeExecution": true,
+    "originalExternalReceiptAvailabilityCountsNotIndependentlyRechecked": true,
+    "nonJsonHashesRemainProducerMetadataOnly": true,
+    "sourceBodyAndActualInstallerDecodeNotReexecutedByThisReviewer": true,
+    "privateBackupsCredentialsDatabasesInstallersAndRawLogsIncluded": false
+  }
+}

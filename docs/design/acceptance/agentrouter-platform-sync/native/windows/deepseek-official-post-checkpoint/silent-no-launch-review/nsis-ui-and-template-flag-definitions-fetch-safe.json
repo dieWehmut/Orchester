@@ -1,0 +1,25 @@
+{
+  "observedAt": "2026-11-11T23:38:12.829322+00:00",
+  "requests": [
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/kichik/nsis/master/Source/exehead/Ui.c",
+      "verifiedTls": true,
+      "httpStatus": 200,
+      "finalUrl": "https://raw.githubusercontent.com/kichik/nsis/master/Source/exehead/Ui.c",
+      "bytes": 52011,
+      "sha256": "4615c72585a558f82d1bb9698fdf68fd03e5cfea65bb73d06a50fa656811b185",
+      "publicBodyFile": "nsis-official-Ui.c"
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/templates/nsis/common.nsh",
+      "verifiedTls": true,
+      "httpStatus": 200,
+      "finalUrl": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/templates/nsis/common.nsh",
+      "bytes": 4086,
+      "sha256": "099caf1e42392de28050b0abdecaf4e1d4e26830b627376dfced6c3cf9e4cebe",
+      "publicBodyFile": "upstream-master-common.nsh"
+    }
+  ],
+  "installerExecuted": false,
+  "apiOrPrivateReads": 0
+}

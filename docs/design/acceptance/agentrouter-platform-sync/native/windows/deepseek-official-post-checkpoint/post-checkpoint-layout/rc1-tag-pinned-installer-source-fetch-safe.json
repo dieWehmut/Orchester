@@ -1,0 +1,101 @@
+{
+  "observedAt": "2026-11-11T15:59:19.874790+00:00",
+  "observedActualTag": "dsh-v0.2.2-rc.1",
+  "tagIsDesktopVersionTag": false,
+  "sourceCommitFromOfficialReleasePage": "66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db",
+  "requests": [
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/package.json",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/package.json",
+      "httpStatus": 200,
+      "bytes": 4355,
+      "sha256": "692a3ed711497a6ffeeecd64748ea4d907ed8b80677d0f32798c109792734576",
+      "publicBodyFile": "rc1-desktop-package.json",
+      "verifiedTls": true
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/scripts/electron-builder-config.mjs",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/scripts/electron-builder-config.mjs",
+      "httpStatus": 200,
+      "bytes": 15183,
+      "sha256": "54c286edc4d3707a313444c73af58c47cb802d4ed68e68013e0642c488368931",
+      "publicBodyFile": "rc1-electron-builder-factory.mjs",
+      "verifiedTls": true
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/scripts/installer.nsh",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/scripts/installer.nsh",
+      "httpStatus": 200,
+      "bytes": 7902,
+      "sha256": "ac6fe5da94c56679f0a39ab69ec683268f93df519f6843be21be1eb5b1e7afdf",
+      "publicBodyFile": "rc1-installer.nsh",
+      "verifiedTls": true
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/installer/pages.nsh",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/installer/pages.nsh",
+      "httpStatus": 200,
+      "bytes": 14487,
+      "sha256": "eacda5167cb481c5a5eb01b83b399bec17ce1b8e6c9ab342c417730edee27f43",
+      "publicBodyFile": "rc1-installer-pages.nsh",
+      "verifiedTls": true
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/installer/lifecycle.nsh",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/installer/lifecycle.nsh",
+      "httpStatus": 200,
+      "bytes": 3169,
+      "sha256": "ed7c33f6c65f0d3185c4dadc59da6195459fc090187e708b45587dd0dcff3b4b",
+      "publicBodyFile": "rc1-installer-lifecycle.nsh",
+      "verifiedTls": true
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/installer/uninstall.nsh",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/installer/uninstall.nsh",
+      "httpStatus": 200,
+      "bytes": 1434,
+      "sha256": "f9d9884ba9e9a5cdddb89f70c59b84982364f3098f680c3f1cee59c8b615f0d4",
+      "publicBodyFile": "rc1-uninstall.nsh",
+      "verifiedTls": true
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/tests/windows-installer-smoke.ps1",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/tests/windows-installer-smoke.ps1",
+      "httpStatus": 200,
+      "bytes": 16870,
+      "sha256": "2d6c60d7d19e396a431c03d63c2e5dfcba26ab471e1850475e873a74d86de8ed",
+      "publicBodyFile": "rc1-windows-installer-smoke.ps1",
+      "verifiedTls": true
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/README.md",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/README.md",
+      "httpStatus": 200,
+      "bytes": 83841,
+      "sha256": "37888f2f0ed6a12eb53fff560bd6f7211bf458c306f475ba077b9897380f2c5a",
+      "publicBodyFile": "rc1-desktop-readme.md",
+      "verifiedTls": true
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/packaging/README.md",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/packaging/README.md",
+      "httpStatus": 200,
+      "bytes": 51613,
+      "sha256": "a10d6d0e0090c34b9e249b3746a1a57d95c34c40435b18c6882a2e107a9fea2b",
+      "publicBodyFile": "rc1-packaging-readme.md",
+      "verifiedTls": true
+    },
+    {
+      "requestedUrl": "https://github.com/deepseek-ai/deepseek-harness/tags?after=dsh-v0.1.7-alpha.1",
+      "finalUrl": "https://github.com/deepseek-ai/deepseek-harness/tags?after=dsh-v0.1.7-alpha.1",
+      "httpStatus": 200,
+      "bytes": 223643,
+      "sha256": "464005891c7fe36cce1c403a0e9a4493b765120f1ad4ee3a4008487696b23894",
+      "publicBodyFile": "official-tags-page3.html",
+      "verifiedTls": true
+    }
+  ],
+  "installerExecution": false,
+  "apiCalls": 0,
+  "privateDataReads": 0
+}

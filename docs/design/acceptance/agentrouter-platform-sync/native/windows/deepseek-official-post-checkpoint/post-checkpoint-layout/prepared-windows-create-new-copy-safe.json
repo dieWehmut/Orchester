@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-11T16:00:42.061645+00:00",
+  "action": "CreateNew-copy-created-without-overwrite",
+  "wslSource": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/official-download/dsh-latest-windows-x64.exe",
+  "preparedWindowsPath": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\deepseek-harness-official-prepared-20261111\\DeepSeek-Harness-0.2.2-rc.1-Windows-x64.exe",
+  "bytes": 293425336,
+  "sourceSha256BeforeAndAfter": "830947f8996dc05d991ca9133fff4d3400073e47b9cfa6507754867e79482b23",
+  "preparedWindowsFileSha256After": "830947f8996dc05d991ca9133fff4d3400073e47b9cfa6507754867e79482b23",
+  "sourceAndPreparedCopyByteDigestEqual": true,
+  "installerExecuted": false,
+  "windowsAuthenticodeTrustVerificationPerformedByThisCopy": false,
+  "signatureVerificationOwner": "/root/windows_reinstall",
+  "userInstallerOrInstalledDshFilesOverwritten": false,
+  "nativeQueueOperations": 0,
+  "privateProfileReads": 0,
+  "windowsAppOrApiOperations": 0
+}

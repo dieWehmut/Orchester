@@ -1,0 +1,14 @@
+{
+  "reviewProvenance": "Reported by independent /root/linux_restore/studio_cli_primary via collaboration final; this receipt serialized by owner",
+  "reviewScope": "static read-only current controller; reviewer did not run service or read DB/env/token",
+  "controllerScriptSha256": "32bac728b72036fa7ff4b3788cf180da763d37fa2bb1aa634b83237b7227e12e",
+  "reportedStaticReviewClear": true,
+  "reportedBlockersFixed": [
+    "stderr fixed chunk drain",
+    "stdout bounded management queue then discard",
+    "independent own-device cleanup including error events and private unique own name",
+    "steady ordinary exceptions use same Popen normal quit finally",
+    "revoked safe flag reflects actual source result"
+  ],
+  "systemdLifetimeBoundary": "named independent user unit; cannot guarantee resistance to forced kill or OS/WSL reset"
+}

@@ -1,0 +1,72 @@
+{
+  "observedAt": "2026-11-11T15:57:24.241065+00:00",
+  "sourceCommit": "e8f7b93a344964de3dca1ace9e72b6e4d6de87cb",
+  "requests": [
+    {
+      "requestedUrl": "https://github.com/deepseek-ai/deepseek-harness/tags?after=dsh-v0.2.1-alpha.5",
+      "finalUrl": "https://github.com/deepseek-ai/deepseek-harness/tags?after=dsh-v0.2.1-alpha.5",
+      "httpStatus": 200,
+      "bytes": 225039,
+      "sha256": "331a6a1b9c7562eedd0c30914a9a9e5cc3a9dd20295878cc6dd473224bbae753",
+      "publicBodyFile": "official-tags-page2.html",
+      "verifiedTls": true
+    },
+    {
+      "requestedUrl": "https://github.com/deepseek-ai/deepseek-harness/releases/tag/dsh-v0.2.2-rc.1",
+      "finalUrl": "https://github.com/deepseek-ai/deepseek-harness/releases/tag/dsh-v0.2.2-rc.1",
+      "httpStatus": 200,
+      "bytes": 271963,
+      "sha256": "b4a33d5ce74b8984696d527f6566b9863fbd04b325ec79a96ae6b41424b57769",
+      "publicBodyFile": "official-dsh-rc1-release.html",
+      "verifiedTls": true
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts/installer.nsh",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts/installer.nsh",
+      "httpStatus": 200,
+      "bytes": 8230,
+      "sha256": "570ed398c9b6b70d7428945502a45f328504b1dc847dfcc869dbea3ec9f5fb6d",
+      "publicBodyFile": "head-installer.nsh",
+      "verifiedTls": true
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts/installer-directories.nsh",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts/installer-directories.nsh",
+      "httpStatus": 200,
+      "bytes": 6496,
+      "sha256": "1c77168ed7abe7465f05c0e5d65f53f09a30decd0e4bb4147555577e06809cef",
+      "publicBodyFile": "head-installer-directories.nsh",
+      "verifiedTls": true
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts/test-windows-installer.mjs",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts/test-windows-installer.mjs",
+      "httpStatus": 200,
+      "bytes": 9052,
+      "sha256": "47c93a83263803ca630da1bf5860d9d03c40129635362a0460292e7fb43c34eb",
+      "publicBodyFile": "head-test-windows-installer.mjs",
+      "verifiedTls": true
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts/prepare-windows-installer.ps1",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts/prepare-windows-installer.ps1",
+      "httpStatus": 200,
+      "bytes": 7149,
+      "sha256": "3396a7610ccf605435bbdbf46ba981d6c5691956ae345c21f8bed41eaecab5f2",
+      "publicBodyFile": "head-prepare-windows-installer.ps1",
+      "verifiedTls": true
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/README.md",
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/README.md",
+      "httpStatus": 200,
+      "bytes": 89762,
+      "sha256": "e68f8ef8aaa143cc95c6c444295041864aaf45e8235eda7ba682e6b77be1fe4a",
+      "publicBodyFile": "head-desktop-readme.md",
+      "verifiedTls": true
+    }
+  ],
+  "installerExecution": false,
+  "apiCalls": 0,
+  "privateDataReads": 0
+}

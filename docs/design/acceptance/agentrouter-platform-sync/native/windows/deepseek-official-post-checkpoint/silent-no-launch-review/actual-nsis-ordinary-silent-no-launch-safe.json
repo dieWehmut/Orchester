@@ -1,0 +1,560 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-11T23:45:11.026428+00:00",
+  "status": "pass-static-ordinary-current-user-silent-install-does-not-auto-launch-application",
+  "decisionForWindowsOwner": {
+    "ordinaryParameters": "/S /D=<explicit current-user installation directory>",
+    "doNotAddUpdaterOrForceRunFlags": [
+      "--force-run",
+      "--updated"
+    ],
+    "staticNoAutomaticHarnessLaunchConclusion": true,
+    "actualInstallerExecutionTestPerformed": false,
+    "signatureTrustStillExternalOwnerResponsibility": true,
+    "standaloneNoLaunchFlagRequiredForOrdinarySilentBranch": false
+  },
+  "actualInstaller": {
+    "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/official-download/dsh-latest-windows-x64.exe",
+    "bytes": 293425336,
+    "sha256": "830947f8996dc05d991ca9133fff4d3400073e47b9cfa6507754867e79482b23",
+    "version": "0.2.2-rc.1",
+    "decodedNsisHeaderSha256": "235688829217712fdd2a765255521339fd90bb962af0671f7bf17691abc59617",
+    "defaultFeatureAbiValidation": {
+      "headerBytes": 300,
+      "pages": 5,
+      "pageBytes": 64,
+      "sections": 1,
+      "sectionHeaderBytes": 24,
+      "unicodeSectionNameCapacity": 8192,
+      "entries": 4733,
+      "entryBytes": 28,
+      "mainSectionStartEntry": 4186,
+      "mainSectionInstructionCount": 530
+    }
+  },
+  "actualWorkerAutoLaunchGate": {
+    "parameterQueried": "force-run",
+    "testParameterResultVariable": "R9",
+    "resultComparedWith": "true",
+    "ifNotTrueJumpEncoded": 4717,
+    "ifNotTrueNextZeroBasedEntry": 4716,
+    "nextInstruction": "EW_RET",
+    "ifTrueSecondGate": "exec_flags_t.silent field 8",
+    "launchReachableOnlyWhen": "TestParameter(force-run) == true AND silent != 0",
+    "actualLaunchInstruction": {
+      "entry": 4714,
+      "pluginExport": "StdUtils::ExecShellAsUser"
+    },
+    "ordinarySilentWithoutForceRunPath": [
+      4689,
+      4690,
+      4691,
+      4692,
+      4693,
+      4694,
+      4695,
+      4716
+    ],
+    "instructions": [
+      {
+        "zeroBasedEntry": 4689,
+        "opcode": 31,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_PUSHPOP",
+        "operands": [
+          13683,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4690,
+        "opcode": 5,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_CALL",
+        "operands": [
+          4720,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4691,
+        "opcode": 20,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_EXTRACTFILE",
+        "operands": [
+          33554601,
+          1709,
+          14957,
+          -1,
+          -1,
+          -37
+        ]
+      },
+      {
+        "zeroBasedEntry": 4692,
+        "opcode": 13,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_SETFLAG",
+        "operands": [
+          13,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4693,
+        "opcode": 44,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_REGISTERDLL",
+        "operands": [
+          1709,
+          1777,
+          0,
+          1,
+          1,
+          -37
+        ]
+      },
+      {
+        "zeroBasedEntry": 4694,
+        "opcode": 31,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_PUSHPOP",
+        "operands": [
+          19,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4695,
+        "opcode": 26,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_STRCMP",
+        "operands": [
+          1697,
+          1791,
+          0,
+          4717,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4696,
+        "opcode": 14,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_IFFLAG",
+        "operands": [
+          0,
+          4717,
+          8,
+          -1,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4697,
+        "opcode": 39,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_SHOWWINDOW",
+        "operands": [
+          1796,
+          104,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4698,
+        "opcode": 31,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_PUSHPOP",
+        "operands": [
+          9501,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4699,
+        "opcode": 5,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_CALL",
+        "operands": [
+          4720,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4700,
+        "opcode": 20,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_EXTRACTFILE",
+        "operands": [
+          33554601,
+          1709,
+          14957,
+          -1,
+          -1,
+          -37
+        ]
+      },
+      {
+        "zeroBasedEntry": 4701,
+        "opcode": 13,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_SETFLAG",
+        "operands": [
+          13,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4702,
+        "opcode": 44,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_REGISTERDLL",
+        "operands": [
+          1709,
+          1777,
+          0,
+          1,
+          1,
+          -37
+        ]
+      },
+      {
+        "zeroBasedEntry": 4703,
+        "opcode": 31,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_PUSHPOP",
+        "operands": [
+          19,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4704,
+        "opcode": 26,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_STRCMP",
+        "operands": [
+          1697,
+          1791,
+          0,
+          4708,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4705,
+        "opcode": 25,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_ASSIGNVAR",
+        "operands": [
+          132,
+          9509,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4706,
+        "opcode": 2,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_NOP",
+        "operands": [
+          4709,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4707,
+        "opcode": 25,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_ASSIGNVAR",
+        "operands": [
+          132,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4708,
+        "opcode": 31,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_PUSHPOP",
+        "operands": [
+          13693,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4709,
+        "opcode": 31,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_PUSHPOP",
+        "operands": [
+          9519,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4710,
+        "opcode": 31,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_PUSHPOP",
+        "operands": [
+          13696,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4711,
+        "opcode": 5,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_CALL",
+        "operands": [
+          4720,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4712,
+        "opcode": 20,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_EXTRACTFILE",
+        "operands": [
+          33554601,
+          1709,
+          14957,
+          -1,
+          -1,
+          -37
+        ]
+      },
+      {
+        "zeroBasedEntry": 4713,
+        "opcode": 13,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_SETFLAG",
+        "operands": [
+          13,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4714,
+        "opcode": 44,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_REGISTERDLL",
+        "operands": [
+          1709,
+          9524,
+          0,
+          1,
+          1,
+          -37
+        ]
+      },
+      {
+        "zeroBasedEntry": 4715,
+        "opcode": 31,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_PUSHPOP",
+        "operands": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "zeroBasedEntry": 4716,
+        "opcode": 1,
+        "opcodeNameUnderValidatedStandardNsisAbi": "EW_RET",
+        "operands": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "actualGuiLaunchPath": {
+    "finishPageIndex": 4,
+    "finishLeaveFunctionEntry": 2852,
+    "directApplicationExecEntry": 2884,
+    "finishLeaveCalledByAnyExplicitCallInstruction": false,
+    "finishLeaveExplicitJumpFound": false,
+    "pageCallbacksRunInsideNonSilentUiBranch": true,
+    "onInstSuccessCallback": -1,
+    "successCallbackAbsent": true
+  },
+  "sourceBinding": {
+    "projectVersionTagCommit": "66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db",
+    "projectVersion": "0.2.2-rc.1",
+    "sourceLockResolvedElectronBuilder": "26.17.0",
+    "sourceLockAppBuilderPatchHash": "b70dc2a2a78ffabb80a4f14fafc7c103237f2b0a207e1f296fa1c1387ea29348",
+    "patchModifiesOnlyMacDmgOptionsAndSchema": true,
+    "currentUpstreamAssistedTemplateMatchesActualBinaryPredicate": true,
+    "currentUpstreamIsNotExactV26_17_0Claim": true,
+    "exactUpstreamV26_17_0TagUnavailableHttp404Retained": true,
+    "conclusionPrimaryBasis": "Actual prepared installer NSIS instruction/control-flow decode, current primary NSIS serialized ABI and interpreter semantics, and corresponding rc1 custom script/page bindings; current electron-builder template only cross-checks the same actual predicate."
+  },
+  "limits": [
+    "This is static source and actual binary control-flow evidence, not a newly executed installer or no-launch runtime test.",
+    "Windows owner still verifies whole-file Authenticode and exact public installer hash before the actual current-user installation.",
+    "Ordinary installation must omit --force-run and updater --updated flags; the force-run silent branch explicitly starts the application.",
+    "Interactive completion has a checked-by-default launch checkbox and is a different path.",
+    "No application auto-launch means this path does not bootstrap Harness to read/write shared DSH_HOME; application state isolation has not been changed or claimed."
+  ],
+  "immutablePublicInputSnapshots": [
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/public-sources/rc1-app-builder-lib-26.17.0.patch",
+      "sha256Before": "b70dc2a2a78ffabb80a4f14fafc7c103237f2b0a207e1f296fa1c1387ea29348",
+      "sha256After": "b70dc2a2a78ffabb80a4f14fafc7c103237f2b0a207e1f296fa1c1387ea29348",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/public-sources/rc1-root-package.json",
+      "sha256Before": "805ddd9dce6f9c80b7050e2c9938f423088e422b31dec9bc53128e35c6e664d2",
+      "sha256After": "805ddd9dce6f9c80b7050e2c9938f423088e422b31dec9bc53128e35c6e664d2",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/public-sources/upstream-master-assistedInstaller.nsh",
+      "sha256Before": "19afb9aad871b4a5e882031605bad5a22c943ff1f4494efcf86519789a06b19d",
+      "sha256After": "19afb9aad871b4a5e882031605bad5a22c943ff1f4494efcf86519789a06b19d",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/public-sources/upstream-master-common.nsh",
+      "sha256Before": "099caf1e42392de28050b0abdecaf4e1d4e26830b627376dfced6c3cf9e4cebe",
+      "sha256After": "099caf1e42392de28050b0abdecaf4e1d4e26830b627376dfced6c3cf9e4cebe",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/public-sources/upstream-master-installSection.nsh",
+      "sha256Before": "cda0454c5d32586925665db393872436cc4c640e2dc3b665740bb5552c223b70",
+      "sha256After": "cda0454c5d32586925665db393872436cc4c640e2dc3b665740bb5552c223b70",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/public-sources/nsis-official-fileform.h",
+      "sha256Before": "750f008fabd57be46b6df362b06d69b8c75190bc75efddfb0b154e53f0157370",
+      "sha256After": "750f008fabd57be46b6df362b06d69b8c75190bc75efddfb0b154e53f0157370",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/public-sources/nsis-official-api.h",
+      "sha256Before": "7320b14365a8e4805dd03378d96c4298af4df12cb7ad4e94fbf133b93a1fe1dc",
+      "sha256After": "7320b14365a8e4805dd03378d96c4298af4df12cb7ad4e94fbf133b93a1fe1dc",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/public-sources/nsis-official-exec.c",
+      "sha256Before": "677f7275929173eb6c7187e98d1b6f6c0af13f2c13f926ea309ad055a3652433",
+      "sha256After": "677f7275929173eb6c7187e98d1b6f6c0af13f2c13f926ea309ad055a3652433",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/public-sources/rc1-pnpm-lock.yaml",
+      "sha256Before": "aa1293f2e8d3ee82cb3cfcb0e65ba8a0ef73ab80fad4c35d7ed2f7c67b95a625",
+      "sha256After": "aa1293f2e8d3ee82cb3cfcb0e65ba8a0ef73ab80fad4c35d7ed2f7c67b95a625",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/public-sources/nsis-official-Ui.c",
+      "sha256Before": "4615c72585a558f82d1bb9698fdf68fd03e5cfea65bb73d06a50fa656811b185",
+      "sha256After": "4615c72585a558f82d1bb9698fdf68fd03e5cfea65bb73d06a50fa656811b185",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/public-sources/rc1-pnpm-workspace.yaml",
+      "sha256Before": "eb42731b8f509dd4ee3ae880eae1cde5381a1875a3598fd2fa83d1c1e5e1ef1a",
+      "sha256After": "eb42731b8f509dd4ee3ae880eae1cde5381a1875a3598fd2fa83d1c1e5e1ef1a",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/installer-readonly/rc1-installer.nsh",
+      "sha256Before": "ac6fe5da94c56679f0a39ab69ec683268f93df519f6843be21be1eb5b1e7afdf",
+      "sha256After": "ac6fe5da94c56679f0a39ab69ec683268f93df519f6843be21be1eb5b1e7afdf",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/installer-readonly/rc1-installer-pages.nsh",
+      "sha256Before": "eacda5167cb481c5a5eb01b83b399bec17ce1b8e6c9ab342c417730edee27f43",
+      "sha256After": "eacda5167cb481c5a5eb01b83b399bec17ce1b8e6c9ab342c417730edee27f43",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/installer-readonly/rc1-installer-lifecycle.nsh",
+      "sha256Before": "ed7c33f6c65f0d3185c4dadc59da6195459fc090187e708b45587dd0dcff3b4b",
+      "sha256After": "ed7c33f6c65f0d3185c4dadc59da6195459fc090187e708b45587dd0dcff3b4b",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/installer-readonly/rc1-electron-builder-factory.mjs",
+      "sha256Before": "54c286edc4d3707a313444c73af58c47cb802d4ed68e68013e0642c488368931",
+      "sha256After": "54c286edc4d3707a313444c73af58c47cb802d4ed68e68013e0642c488368931",
+      "unchanged": true
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/installer-readonly/rc1-windows-installer-smoke.ps1",
+      "sha256Before": "2d6c60d7d19e396a431c03d63c2e5dfcba26ab471e1850475e873a74d86de8ed",
+      "sha256After": "2d6c60d7d19e396a431c03d63c2e5dfcba26ab471e1850475e873a74d86de8ed",
+      "unchanged": true
+    }
+  ],
+  "safety": {
+    "installerExecuted": false,
+    "embeddedDllOrApplicationExecuted": false,
+    "windowsNativeOrQueueCalls": 0,
+    "windowsArtifactMutations": 0,
+    "privateProfilesOrActualRuntimeEnvironmentArgvReads": 0,
+    "runtimeApiOrModelCalls": 0,
+    "prior15And8SafeEpochsOverwritten": false
+  }
+}

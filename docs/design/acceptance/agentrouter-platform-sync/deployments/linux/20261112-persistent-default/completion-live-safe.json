@@ -1,0 +1,79 @@
+{
+  "observedAtEpoch": 1794440964.7167864,
+  "status": "default-7337-restored-live-owned",
+  "newEpochDirectory": "/home/han/.local/state/orchester-delivery/20261112/linux-restore",
+  "sourceCompiledRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "currentGitHeadAtRestore": "0e4367d2438bd95a8696eb7cfdaaa95ff3585643",
+  "coreSource368BytesEqual71Gate": true,
+  "binarySha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649",
+  "listenerPid": 2330202,
+  "listenerStartTicks": 4550341,
+  "controllerPid": 2330194,
+  "controllerStartTicks": 4550291,
+  "namedUserService": "orchester-default-remote-7337-20261112.service",
+  "privateFixedControlSocket": "/home/han/.local/state/orchester-delivery/20261112/linux-restore/control.sock",
+  "independentLauncherExitedLiveCheckPassed": true,
+  "actualOriginalWriterAndPidfdOwnershipPassed": true,
+  "userManagerLingerActual": "yes",
+  "privateCurrentBackupMadeRowsExact": true,
+  "originalPriorSnapshot5RunsRetained": true,
+  "currentAllStateJsonEqualNewBackup": true,
+  "rawCurrentStateRowsEqualBackup": true,
+  "currentRunCount": 5,
+  "currentAuthEntriesAcrossScopes": 5,
+  "currentDistinctCredentials": 3,
+  "public17ActualBytesExact": true,
+  "unauthRoutes401": true,
+  "canonical21Schema3Checked": true,
+  "serviceCapabilityProviders": 7,
+  "twoWorkBuddyDistinct": true,
+  "sharedEditorUnknownProviders": 3,
+  "singleTemporaryOwnPairCleanupVerified": true,
+  "existingOriginalTokenActualHttp200Claimed": false,
+  "oldInstanceExitCause": "unknown",
+  "oldReceiptBytesUnmodified": true,
+  "stateBackupOverwrittenIntoCurrent": false,
+  "environmentSecretPersistedOrOutput": false,
+  "modelCalls": 0,
+  "userPidSignals": 0,
+  "defaultProducerLeftRunning": true,
+  "sourceOrWindowsAndroidWrites": false,
+  "osOrWslResetOrForcedKillResistanceClaimed": false,
+  "evidence": [
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261112/linux-restore/preflight-safe.json",
+      "bytes": 701,
+      "sha256": "66240032fa78c45a7dad198f73b3ac2cdf92fef796ceb8b084b3c73c961f1fae"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261112/linux-restore/final-safe.json",
+      "bytes": 6934,
+      "sha256": "caa6505849d4df1962c73b313ad2bdb1ba10fce7f7e9f9c3122b9b80b33623fb"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261112/linux-restore/unit-launch-safe.json",
+      "bytes": 631,
+      "sha256": "23b68fc75c0b385cf41aa62e3cc4d4b2c51b6e13d7d0dd2afb67a6fbd6191054"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261112/linux-restore/independent-live-safe.json",
+      "bytes": 5182,
+      "sha256": "d91dc459c3b1bc2509ac1fe282a5ee0ede386c6d9cb95d2ab2b4a76c4cae1c2e"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261112/linux-restore/linger-safe.json",
+      "bytes": 417,
+      "sha256": "5250d44119b280acf5517fd0e20bee1c2569efaa6b92eba29972bd70720f9d56"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261112/linux-restore/review-safe.json",
+      "bytes": 838,
+      "sha256": "3dcb1eefe4b562dbcd91b5181a6d7bbf67767791ced7083115232aa528ec0d36"
+    },
+    {
+      "file": "/home/han/.local/state/orchester-delivery/20261112/linux-restore/controller-handoff-safe.json",
+      "bytes": 1669,
+      "sha256": "06fad4f6c95a63cb8febdced4f4a19474db32a849b3c88e66eb0cec89883beff"
+    }
+  ]
+}

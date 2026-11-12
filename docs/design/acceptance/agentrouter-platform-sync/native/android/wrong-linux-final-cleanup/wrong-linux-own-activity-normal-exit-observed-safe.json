@@ -1,0 +1,15 @@
+{
+  "status": "wrong-linux-own-activity-normal-background-observed",
+  "actualTargetHost": "Linux",
+  "actualAvdName": "orchester-qa",
+  "ownSuccessorPid": 20930,
+  "ownSuccessorStartTicks": 4454555,
+  "normalProductExitAppPreviouslyRequested": true,
+  "normalHomeKeyNeededAfterExitApp": true,
+  "ownActivityNotResumed": true,
+  "forceStopAppliedAgain": false,
+  "onlyOwnForward19327PreviouslyRemoved": true,
+  "vmOrGlobalAdbSignals": 0,
+  "originalOneNativeDecryptionPreviouslySucceeded": true,
+  "privateDataPrinted": false
+}

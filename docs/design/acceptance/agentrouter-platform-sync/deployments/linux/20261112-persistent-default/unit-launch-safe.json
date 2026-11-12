@@ -1,0 +1,15 @@
+{
+  "bootstrapResponseStatus": "deployed-and-verified",
+  "unitMetadata": {
+    "MainPID": "2330194",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/orchester-default-remote-7337-20261112.service",
+    "ActiveState": "active",
+    "SubState": "running"
+  },
+  "launcherExitedAfterPrivateBootstrap": true,
+  "currentEnvironmentInHeapOnly": true,
+  "noGlobalUserManagerEnvironmentImport": true,
+  "producerOwnedByNamedIndependentUserUnit": true,
+  "runnerCgroup": "0::/",
+  "controllerCgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/orchester-default-remote-7337-20261112.service"
+}

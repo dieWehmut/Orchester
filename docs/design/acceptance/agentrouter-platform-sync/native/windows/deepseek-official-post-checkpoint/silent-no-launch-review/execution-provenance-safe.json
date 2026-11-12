@@ -1,0 +1,11 @@
+{
+  "actualStaticReviewExitCode": 0,
+  "toolOutputChunk": "5d4f14",
+  "sourceScriptPath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/review-silent-actual-nsis.py",
+  "sourceScriptSha256": "a6b1c90998bf5f73d019b3c03cf41e4d9c8306aa11914e20e53e649f0fcbb7fd",
+  "proofSha256": "f82c2705f6626c80657d7279397cd116afe80344d5d242cbfd3c207524ed8977",
+  "installerNotExecuted": true,
+  "failedUpstreamV26_17_0TagRequestsRetained": true,
+  "sourceAgentFollowupDeniedByAgentThreadLimit": true,
+  "reviewCompletedInParentWithIndependentPublicSourceReadsAndActualBinaryDecode": true
+}
