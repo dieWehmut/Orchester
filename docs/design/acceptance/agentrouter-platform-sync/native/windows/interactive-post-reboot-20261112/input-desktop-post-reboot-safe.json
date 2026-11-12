@@ -1,0 +1,14 @@
+{
+    "ObservedAtUtc":  "2026-11-12T06:02:06.0007049Z",
+    "Pid":  18112,
+    "CreatedUtc":  "2026-11-12T06:02:05.7061751Z",
+    "SessionId":  1,
+    "CursorAccess":  false,
+    "CursorError":  5,
+    "InputDesktopOpened":  true,
+    "InputDesktopError":  0,
+    "InputDesktopName":  "Default",
+    "InputDesktopNameError":  0,
+    "InteractiveReadiness":  false,
+    "InputOrProcessSignals":  0
+}

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
-  "generatedAt": "2026-11-11T14:35:39.042081+00:00",
+  "generatedAt": "2026-11-12T06:10:21.192664+00:00",
   "status": "current-evidence-audit-not-complete-all-platform-delivery",
   "requirements": [
     {
@@ -76,7 +76,7 @@
     {
       "id": "desktop_reinstall",
       "userRequirement": "Reinstall Orchester Desktop preserving original data",
-      "status": "core-build-backup-file-preparation-and-temporary-http-verified-current-original-profile-backup-pending",
+      "status": "current-original-offline-backup-verified-native-runtime-and-default-reinstallation-pending",
       "evidence": [
         "native/windows/final71-build/final-result.json",
         "native/windows/final71-preflight/offline-original-backup-safe.json",
@@ -92,19 +92,22 @@
         "native/windows/temporary-7339-successor-policy/successor2-native-typed-policy-safe.json",
         "native/windows/prepared-runtime-epoch2/root-formal-epoch2-final-hash-check-safe.json",
         "native/windows/temporary-7339-attempt2/failed-final-safe-whitelist.json",
-        "native/windows/temporary-7339-attempt2/original-executor-terminal-safe.json"
+        "native/windows/temporary-7339-attempt2/original-executor-terminal-safe.json",
+        "native/windows/interactive-post-reboot-20261112/offline-final21-post-reboot-backup-safe.json",
+        "native/windows/interactive-post-reboot-20261112/session-enumeration-post-reboot-20261112-safe.json",
+        "native/windows/interactive-post-reboot-20261112/input-desktop-post-reboot-safe.json"
       ],
-      "verifiedScope": "Core16 actualgates0/Desktop38/Remote18 publicfiles; original privateinstallation/profile/state backups exact; no oldnaturalexitclaim. Newnativeobserver confirms worker16008 PIDabsent; originalHANDLE identity notverified; no originalexecutor0 claim. Independentcore/967plan/54publichash review passes; rawgradlew CRLF Gitcheckout normalizedexact; EXEcontents notindependentlyread. Portablefilepackage28files/17Web verifier passes with newnative21APKf83fa; actualruntime14/AndroidFinalBinding/defaultinstall pending. Temporarynative7339 source71/24c8/17publicHTTP200exact andunauth401 passed; not formal7338/defaultinstall/native14or18. CompleteWTSquery4sessions0 confirms Session1 sameSIDbutDisconnected/ActiveSameSIDcandidate0; priorSession3noidentity not wholehostabsence. Firstisolated7339 ownednormalquit/executor0/portfree verified, unknownsystembrokerlifetime unproved;successor44syntheticnativeassertions/nativeadmission0 andformalclone32+manifest10/nativeAST0 preparedpins verified, formal14/18/defaultinstall notrun. Second7339 controllerInvalidOperationException/nativeexecutor96860actual1 failed validation preserved; normalownedquit/launcher0/originaldeclaredhandlesexit/portfree/private3transports0 verified, notAndroidproductclose/revocation/fullPTY.",
+      "verifiedScope": "Core16 actualgates0/Desktop38/Remote18 publicfiles; original privateinstallation/profile/state backups exact; no oldnaturalexitclaim. Newnativeobserver confirms worker16008 PIDabsent; originalHANDLE identity notverified; no originalexecutor0 claim. Independentcore/967plan/54publichash review passes; rawgradlew CRLF Gitcheckout normalizedexact; EXEcontents notindependentlyread. Portablefilepackage28files/17Web verifier passes with newnative21APKf83fa; actualruntime14/AndroidFinalBinding/defaultinstall pending. Temporarynative7339 source71/24c8/17publicHTTP200exact andunauth401 passed; not formal7338/defaultinstall/native14or18. CompleteWTSquery4sessions0 confirms Session1 sameSIDbutDisconnected/ActiveSameSIDcandidate0; priorSession3noidentity not wholehostabsence. Firstisolated7339 ownednormalquit/executor0/portfree verified, unknownsystembrokerlifetime unproved;successor44syntheticnativeassertions/nativeadmission0 andformalclone32+manifest10/nativeAST0 preparedpins verified, formal14/18/defaultinstall notrun. Second7339 controllerInvalidOperationException/nativeexecutor96860actual1 failed validation preserved; normalownedquit/launcher0/originaldeclaredhandlesexit/portfree/private3transports0 verified, notAndroidproductclose/revocation/fullPTY. Newpostreboot actualSameSIDSession1Active/candidate1/InputDesktopDefault opens/cursorError5. OriginalDesktop/Remoteabsent, latest5existingroots677files privatebackupsourcebeforeafterexact; oldlockattempt1 preserved, no naturaltrayexit claim.",
       "remaining": [
-        "SameSID Session1 is currentDisconnected4 and noActive sameSID candidate; InputDesktop/cursor readiness stillfalse/Error5.",
-        "ExternaloriginalDesktop28748/Explorer8588 became live after old10:53offlinebackup; currentWebViewlock attempt1exit1/currentprofileexactunproved. Normaltrayexit and freshlatestbackup required before guardedreinstall; never overwrite newdata using oldbackup.",
-        "Runtime18 and realtray normalexit; formalpromotion/reinstallation/Windows7338state retention."
+        "SameSIDSession1 nowWTSActive/InputDesktopDefault opens but GetCursorPosError5; GUI runtime/tray native18 stillunverified.",
+        "Freshprivateofflinebackup verified at2026-11-12T06:05UTC; revalidate unchanged immediatelybefore promotion; currentdefaultinstall notyetupdated.",
+        "Fullruntime14/18, actualtraynormalexit, formalWindows7338promotion/reinstallation andstate retention."
       ]
     },
     {
       "id": "windows_agents",
       "userRequirement": "Install AgentRouter tools natively on local Windows",
-      "status": "current17matrix-and-official-deepseek-signature-static-preparation-verified-installation-claude-pending",
+      "status": "current-matrix-and-official-deepseek-current-user-installation-verified-claude-pending",
       "evidence": [
         "native/windows/nine-native-cli-versions.json",
         "native/windows/new-gui-installed-identities.json",
@@ -116,12 +119,13 @@
         "native/windows/deepseek-official-preparation/final-official-desktop-binding-safe.json",
         "native/windows/deepseek-official-post-checkpoint/native-signature-and-context-safe.json",
         "native/windows/deepseek-official-post-checkpoint/post-checkpoint-layout/final-readonly-installer-layout-and-copy-safe.json",
-        "native/windows/deepseek-official-post-checkpoint/silent-no-launch-review/decision-ordinary-current-user-silent-safe.json"
+        "native/windows/deepseek-official-post-checkpoint/silent-no-launch-review/decision-ordinary-current-user-silent-safe.json",
+        "native/windows/deepseek-official-installed-20261112/corrected-verification-safe.json"
       ],
-      "verifiedScope": "Currentreadonly18units=9CLI+4editorExtensions+5desktop/17unique=doc16+globalWB1; Windowsowner currentqueryfinal0/initial1 retained.9entrySHA bound historicalactualversion0+8currentpublicNPMversions;4ext ID/version/publicmanifestsha only,not wholepayload. OriginalWorkBuddy2editions/Trae/ZCode/Craft metadata retained. OpenCodePE Bun1.4.4 not appversion1.19.5; CraftNotSigned/OpenClawmjsUnknownError literal. Claude currentUser known2families0/StartApps0,allUsersDenied=null notwholemachine0. CurrentknownDSHPE/MZ/resources/app.asar publicpaths present; no wholeEXEhash/newsignature/version/runtime/reinstall/officialfullpayloadbinding yet. CurrentDataElementdsh-desktop0.13 withbundled@deepseek-ai/dsh0.2.1rc3 isnotconfirmedcurrentofficialDesktop distribution; officialDeepSeekdownload293425336B/SHA830947/publicPEDeepSeekHarness0.2.2rc1/HangzhouDeepSeek prepared, sourcepinned0.2.2rc2 separate. FirstTLSearlyEOF1/range206retry0 retained; WindowsAuthtrust/installnotperformed, certtablepresent notValid. NewnativeWindowsGetAuthenticodeSignature Valid/full830947293425336Bstable/HangzhouDeepSeekEV/rc1 observed; noactualexecutorExitCodefieldclaim. OrdinarycurrentUser/S/D(noforce-run/noupdated)noautolaunch staticactualNSISproof; sourceversionrc1/HEADrc2 separate, WindowsCreateNewcopynotinstallation, installDir notsharedDSH_HOMEisolation.",
+      "verifiedScope": "Currentreadonly18units=9CLI+4editorExtensions+5desktop/17unique=doc16+globalWB1; Windowsowner currentqueryfinal0/initial1 retained.9entrySHA bound historicalactualversion0+8currentpublicNPMversions;4ext ID/version/publicmanifestsha only,not wholepayload. OriginalWorkBuddy2editions/Trae/ZCode/Craft metadata retained. OpenCodePE Bun1.4.4 not appversion1.19.5; CraftNotSigned/OpenClawmjsUnknownError literal. Claude currentUser known2families0/StartApps0,allUsersDenied=null notwholemachine0. CurrentknownDSHPE/MZ/resources/app.asar publicpaths present; no wholeEXEhash/newsignature/version/runtime/reinstall/officialfullpayloadbinding yet. CurrentDataElementdsh-desktop0.13 withbundled@deepseek-ai/dsh0.2.1rc3 isnotconfirmedcurrentofficialDesktop distribution; officialDeepSeekdownload293425336B/SHA830947/publicPEDeepSeekHarness0.2.2rc1/HangzhouDeepSeek prepared, sourcepinned0.2.2rc2 separate. FirstTLSearlyEOF1/range206retry0 retained; WindowsAuthtrust/installnotperformed, certtablepresent notValid. NewnativeWindowsGetAuthenticodeSignature Valid/full830947293425336Bstable/HangzhouDeepSeekEV/rc1 observed; noactualexecutorExitCodefieldclaim. OrdinarycurrentUser/S/D(noforce-run/noupdated)noautolaunch staticactualNSISproof; sourceversionrc1/HEADrc2 separate, WindowsCreateNewcopynotinstallation, installDir notsharedDSH_HOMEisolation. NewofficialDeepSeekinstallerexecutionactual0/runnerverifier1 retained; installedEXEbad50d/246343656B/AuthenticodeValid,HKCUrc1/publicASAR@deepseek-ai/dsh-desktoprc1 verified. PEProductVersion0.2.2.0 isdistinctnumericresource. NoactualGUI/modelacceptance; currentDataElement0.13 registrationstillpresent.",
       "remaining": [
-        "ClaudeApp actualpayload/EXE registration and officialinstallation outcome; preparedMicrosoftStore bootstrapper is notClaudepayload and applicable silentflags unverified.",
-        "OfficialDeepSeekWindows actualinstaller/registration/runtime pending; signatureValid nowverified but actualinstaller execution remainsfalse, preserve originalDataElement/sharedDSH_HOME before startup. ExistingCursor/AG retained."
+        "ClaudeApp actualofficialpayload/EXE registration/installation outcome pending; preparedStorebootstrapper remains unexecuted with silentflags unverified.",
+        "OfficialDeepSeekGUI/runtime andsharedDSH_HOME credential retention afterstartup untested; installedapplication notstarted byroot. ExistingCursor/AG andDataElement retained."
       ]
     },
     {
@@ -183,7 +187,7 @@
     {
       "id": "linux_service",
       "userRequirement": "Keep persistent Linux service updated with current mobile resources",
-      "status": "current-persistent-deployment-state-retention-verified-original-wire-subcheck-pending",
+      "status": "post-reboot-current-standalone-owned-deployment-verified-static-unit-autostart-and-original-wire-pending",
       "evidence": [
         "tests/backend/final71-full-workspace/summary.json",
         "deployments/linux/current-final21/final-safe.json",
@@ -194,11 +198,16 @@
         "deployments/linux/20261112-persistent-default/completion-live-safe.json",
         "deployments/linux/20261112-persistent-default/root-independent-persistent-live-safe.json",
         "deployments/linux/20261112-persistent-default/controller-handoff-safe.json",
-        "deployments/linux/20261112-persistent-default/preflight-safe.json"
+        "deployments/linux/20261112-persistent-default/preflight-safe.json",
+        "deployments/linux/20261112-post-reboot/final-safe.json",
+        "deployments/linux/20261112-post-reboot/root-independent-live-safe.json",
+        "deployments/linux/20261112-post-reboot/static-unit-configuration-safe.json"
       ],
-      "verifiedScope": "Historicalsource71 Linux7337 PID1023019/ticks256519/ELFd983/21catalog/17resources/authrevoke/5tasksrows/5entries3effective semanticstate retained; JSONrawstrings differ. HistoricalcorrectWin originalstoredtoken/infoone200/nameMatch preserved. Freshroot2026-11-11T23:31UTC(originalUTC retained,Nov12Asia) actualoldservice/controllerabsent/7337listeners0/previousHTTPURLError, priorinstanceexitcauseunknown; this doesnotreverse historicaltestpassed. Phase4 historicalcheckpoint: restoration fromcurrentstate ownerlinux_restore, no newruntimepass claimed atthat earlierobservation. Laternewruntime2330202/4550341+controller2330194/4550291/nameduserunitactive-running+samecgroup/LingerYes/source71/d983/368stable/17publicbytes/21schema3/twoWorkBuddys/ownpairDELETE204-revoked401close verifiedafterlauncherexit/originalwriterFD8/pidfd. Current5fulltaskrows+5persisted3distinct values retained andcurrentnewbackuprawrows true; prioroldlegacybackuprawfalse withparsedequal/currentchangesnot-overwritten retained asdifferentbasis. Rootinitial/api/info404 observerexit1 notproductfailure, correctedremote/v1/info401 actual. Old1023019 exitunknown/historicalF7absencereal; no oldheapenv orOSresetresistance claim.",
+      "verifiedScope": "Historicalsource71 Linux7337 PID1023019/ticks256519/ELFd983/21catalog/17resources/authrevoke/5tasksrows/5entries3effective semanticstate retained; JSONrawstrings differ. HistoricalcorrectWin originalstoredtoken/infoone200/nameMatch preserved. Freshroot2026-11-11T23:31UTC(originalUTC retained,Nov12Asia) actualoldservice/controllerabsent/7337listeners0/previousHTTPURLError, priorinstanceexitcauseunknown; this doesnotreverse historicaltestpassed. Phase4 historicalcheckpoint: restoration fromcurrentstate ownerlinux_restore, no newruntimepass claimed atthat earlierobservation. Laternewruntime2330202/4550341+controller2330194/4550291/nameduserunitactive-running+samecgroup/LingerYes/source71/d983/368stable/17publicbytes/21schema3/twoWorkBuddys/ownpairDELETE204-revoked401close verifiedafterlauncherexit/originalwriterFD8/pidfd. Current5fulltaskrows+5persisted3distinct values retained andcurrentnewbackuprawrows true; prioroldlegacybackuprawfalse withparsedequal/currentchangesnot-overwritten retained asdifferentbasis. Rootinitial/api/info404 observerexit1 notproductfailure, correctedremote/v1/info401 actual. Old1023019 exitunknown/historicalF7absencereal; no oldheapenv orOSresetresistance claim. Newpostreboot320854/ticks451458/owncontroller320847 exactsource71/resources21+17/ownpairrevoked401/current5tasksrawretained and5auth3distinctJSONvaluesretained; currentSQLrawtextfalse explicit. Condaos.pidfd_openmissing firstfailureownedlistener0/portfree, corrected/usr/bin/python3. Usermanagerbusunavailable, standaloneoriginalwriter/pidfd/peer verified; staticunitparser0/defaulttargetlinkconfigured notrunning/autostartuntested.",
       "remaining": [
-        "Existingoriginalpairedcredential actualwire200 nottested on thisnewruntime; historical prior200 notpromoted to newepoch. Routine normalquit route notexecuted thisepoch, serviceleft running."
+        "Existingoriginalactualrawcredential wire200 nottested thisnewruntime; initial401usedauthlookuphash anddoesnotproveactualoriginalcredentialfailure.",
+        "Staticuserunit/defaulttargetlink configured, usermanagerbus unavailable; actualautostart/reboot-persistence notverified; currentlystandalonecontrollerlive andcontrolled.",
+        "Routineproductionnormalquit notexecuted thisepoch; serviceleft running."
       ]
     },
     {
@@ -241,18 +250,19 @@
     {
       "id": "git_steps",
       "userRequirement": "Verify separated commits, push remotely and merge main step by step",
-      "status": "four-prior-checkpoints-delivered-current-fifth-source-epoch-awaits-parent",
+      "status": "five-checkpoints-pushed-merged-current-sixth-awaits-delivery",
       "evidence": [
         "sources/final71-source-binding.json",
         "maintenance/git-delivery/git-byte-and-crlf-correction-safe.json",
         "maintenance/git-delivery/step-delivery-safe.json",
         "maintenance/git-delivery/second-step-delivery-safe.json",
         "maintenance/git-delivery/third-step-delivery-safe.json",
-        "maintenance/git-delivery/fourth-step-delivery-safe.json"
+        "maintenance/git-delivery/fourth-step-delivery-safe.json",
+        "maintenance/git-delivery/fifth-step-delivery-safe.json"
       ],
       "verifiedScope": "Parentdocs193+MD exact194Gitblob comparisons. FirstdefaultCRLFwhitespacecheckexit2 preserved; doccommit213d315 alreadycreated, scopedattributes correction812e0e6 preserves原bytes andcheck0, main32992976 merged; feature/mainpushactual0. Frozenproduction71 unchanged. Docsagent noGitmutation. Second218archive+MD219Gitblobexact/currentdoc828ad10 mergedmain4d7d95, feature/mainpushactual0/default+stagedwhitespace0/production71+Pagesworkflowinputsunchanged; no allplatformcompletionclaim. Third266archive+MD267blobsexact/doc0e4367d/main8b0a016push0/production71equal delivered. Fourth321archive+MD322exactGitblob/commitcaa60/main60b4/featuremainpush0/source71equal delivered. SubsequentnewLinux/signature/cleanup sourceepochs kept separate fromfourthabsencestage.",
       "remaining": [
-        "Phase5 completednewLinux/wrongLinuxspecificcleanup/DSHnativeValid+staticsource checkpoint awaits parentreview/commit/push/main; actualinstaller/nativefullPTY/formal14/18/defaultreinstall laterepochs."
+        "Phase6actualLinuxpostrebootrestore/DeepSeekofficialinstallation/currentWindowsofflinebackup andreadiness await verifiedcommit/push/main; fullPTY/runtime14/18/defaultreinstall later."
       ]
     }
   ],

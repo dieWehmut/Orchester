@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-12T00:16:22.229105+00:00",
+  "createdAt": "2026-11-12T06:26:21.469336+00:00",
   "status": "final71-code-pages-linux-and-windows-core16-accepted-runtime18-android-reinstall-in-progress",
   "summaryPath": "summary.json",
   "files": [
@@ -48,6 +48,46 @@
       "path": "deployments/linux/20261112-persistent-default/unit-launch-safe.json",
       "sha256": "23b68fc75c0b385cf41aa62e3cc4d4b2c51b6e13d7d0dd2afb67a6fbd6191054",
       "bytes": 631
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/attempt1-safe.json",
+      "sha256": "f2abf556188173014bfe5ec039307b08d29c8c62af8f7d61d329923f6f0d7985",
+      "bytes": 321
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/final-safe.json",
+      "sha256": "aa5aa9ef95ff6c5b9699ee501e460641e92c629f94c651daffa7177244745399",
+      "bytes": 6885
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/initial-original-wire-observer-error-safe.json",
+      "sha256": "c1c9fec71b9403f22fd79bc05aa54fe1a5f01506c46236f61ee3627fe8807f3f",
+      "bytes": 227
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/preflight-safe.json",
+      "sha256": "41312fdb8cd6524607eef1467bc85f7bd28a7e1ee26d812cca06473a7a407eeb",
+      "bytes": 816
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/prior-owned-exit-safe.json",
+      "sha256": "229a90af5e644f4ac465994b9f578b807465fd0b11b9081c43177f8500a56c85",
+      "bytes": 121
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/root-independent-live-safe.json",
+      "sha256": "19dc27c903fb091dfbc28d9702dfd7c5ce8869e633beff5ceef781a5b2be55fe",
+      "bytes": 1427
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/static-unit-configuration-safe.json",
+      "sha256": "49f35a3858db01b4582109a608dda6bbf086072530be5476ae24e18f127c8f3a",
+      "bytes": 823
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/unit-launch-safe.json",
+      "sha256": "169667b0f0143516ae58a36e5fc02dded064efd24c21cde9c1e9fce7fc37f966",
+      "bytes": 725
     },
     {
       "path": "deployments/linux/a96a06e-final-deployment.json",
@@ -203,6 +243,11 @@
       "path": "maintenance/current-worktree-cleanup-state-safe.json",
       "sha256": "867310fb60421717a9ed51bc6e3bdbc41b809adc72305645f5f98f43cbe6f84d",
       "bytes": 1637
+    },
+    {
+      "path": "maintenance/git-delivery/fifth-step-delivery-safe.json",
+      "sha256": "79ee74d11888647b61e8bf4a22cdc1223f685a43991fda1f0bdd6dd3a5b704cf",
+      "bytes": 540
     },
     {
       "path": "maintenance/git-delivery/fourth-step-delivery-safe.json",
@@ -785,6 +830,26 @@
       "bytes": 2472
     },
     {
+      "path": "native/windows/deepseek-official-installed-20261112/actual-current-user-installation-safe.json",
+      "sha256": "c05015a3872ae0a73727c846f50c93bd34cddbbd1e88313bf947e7d61c90e264",
+      "bytes": 1018
+    },
+    {
+      "path": "native/windows/deepseek-official-installed-20261112/corrected-verification-safe.json",
+      "sha256": "e2ce4fbf66b5e037e7d48fe47b039aaf60b94ba2df38c81273d6b3f5d8453f11",
+      "bytes": 2449
+    },
+    {
+      "path": "native/windows/deepseek-official-installed-20261112/current-user-installation-runner-native-ast-safe.json",
+      "sha256": "ae703cc8e2a6e10152faaad12df2b5db9ee3fb29c8bbf6a803a22c77e2b9f9a2",
+      "bytes": 620
+    },
+    {
+      "path": "native/windows/deepseek-official-installed-20261112/post-install-readonly-safe.json",
+      "sha256": "d8f64010b202c52b1dc09ef787624fcca7c5d8d5482e7d95091aeae9f4d8f338",
+      "bytes": 1940
+    },
+    {
       "path": "native/windows/deepseek-official-post-checkpoint/native-signature-and-context-safe.json",
       "sha256": "9fbec4376fb39ac018e95fb6998bd5d070802d2b43628659cab71ac41c5a2653",
       "bytes": 1696
@@ -1058,6 +1123,26 @@
       "path": "native/windows/interactive-current/session-enumeration-windows-owner-current-safe.json",
       "sha256": "8602ceeea6f081767dad7ac5fd1f11bc49dda0ba47f9e7b444c45210bd445941",
       "bytes": 4949
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/input-desktop-post-reboot-safe.json",
+      "sha256": "02232a863f54ab5368cbc62b99edbadfbdea9168d661290e2d048d78bff3ef58",
+      "bytes": 412
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/offline-final21-post-reboot-backup-safe.json",
+      "sha256": "d1f9b696eb6a4441534253ead43e82fedb5cfed22108469cfc0a7783c182bfe7",
+      "bytes": 3189
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/previous-worker-identities-post-reboot-safe.json",
+      "sha256": "de64162f9c6b00cc1ec4c33a3a9796a05af5059699516b9ade9cdf92a35f5aa4",
+      "bytes": 3317
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/session-enumeration-post-reboot-20261112-safe.json",
+      "sha256": "7a6bcb131f0c875a22ad7b3cabf94fd260953369e2855ca3017fd917f8512426",
+      "bytes": 4944
     },
     {
       "path": "native/windows/legacy-current-public-metadata/current-dsh-cursor-antigravity-wslhost-public-safe.json",
@@ -1560,6 +1645,11 @@
       "bytes": 7554
     },
     {
+      "path": "sources/audit/epoch6-public-claim-boundary-review-safe.json",
+      "sha256": "719fba99d8940869a8e234412ca6b0696fa647436203417c830da0f778478c3e",
+      "bytes": 7014
+    },
+    {
       "path": "sources/audit/final71-current-source-bindings.json",
       "sha256": "77e6ca44f69491c91aedd06a2b121673dc338dc955696c16befff836631129f9",
       "bytes": 1602
@@ -1661,13 +1751,13 @@
     },
     {
       "path": "sources/receipt-provenance.json",
-      "sha256": "ab4f8fdc0d579e746040db4450e97fbceef2e1532becb895f2f9fcef6dcd527a",
-      "bytes": 198743
+      "sha256": "99b2992f8f68dc14acca4a1837a088ff1e9ba341245dc4ef90883fcd626d620c",
+      "bytes": 207242
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "f485bd3589bb39ab9f4c91e9e91ce204b11157b7ede3d585a798e7f1e6930a81",
-      "bytes": 27013
+      "sha256": "3acf3720c78e971490b61bb7f3bf32f5c57dd1a6d0a21e16544475b5eb623443",
+      "bytes": 28700
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -1691,8 +1781,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "c12fbecd989c6f511fb27283e8b8fe6df3b51bad397ddbbfe68664494cf399c3",
-      "bytes": 36306
+      "sha256": "0838e812d167976143bdecfefdc384b68fd3fa84e657b51c8a1ab11752a51da7",
+      "bytes": 38970
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "status": "official-current-user-installed-payload-signature-registration-and-package-version-verified",
+  "observedAtUtc": "2026-11-12T06:05:50.701111+00:00",
+  "actualInstallerExitCode": 0,
+  "originalInstallerRunnerActualExitCode": 1,
+  "originalRunnerFailurePreserved": true,
+  "failureReasonConfirmedByCurrentPublicMetadata": "Runner demanded rc semantic app version in numeric PE ProductVersion; actual PE version0.2.2.0, registered/ASAR app version0.2.2-rc.1. Installer execution succeeded; first verifier failed.",
+  "installerExecutedOnce": true,
+  "installerReexecutedForCorrection": false,
+  "installedImageSha256": "bad50d18a3cf42621ac03aeaf1dc527ee20384ca4c0b7eee64512954ddb9a76e",
+  "installedImageBytes": 246343656,
+  "installedImageSignature": "Valid",
+  "installedImageSigner": "Hangzhou DeepSeek Artificial Intelligence Co., Ltd.",
+  "numericPEProductVersion": "0.2.2.0",
+  "currentUserRegistration": {
+    "version": "0.2.2-rc.1",
+    "name": "DeepSeek Harness",
+    "publisher": "Hangzhou DeepSeek Artificial Intelligence Co., Ltd.",
+    "hive": "HKCU:",
+    "icon": "C:\\Users\\han\\AppData\\Local\\Programs\\DeepSeekHarnessOfficial\\DeepSeek Harness.exe,0",
+    "key": "1bf39983-50d0-5fe0-9ef4-cece76f67c5e",
+    "location": "C:\\Users\\han\\AppData\\Local\\Programs\\DeepSeekHarnessOfficial"
+  },
+  "installedAsarPublicPackage": {
+    "name": "@deepseek-ai/dsh-desktop",
+    "version": "0.2.2-rc.1",
+    "packageJsonBytes": 882,
+    "packageJsonSha256": "cbf5dc8ff3e6318cc61d966010e427aefa2042a1371155596de7f5af53bd3c64",
+    "asarEntryIntegrityVerified": true
+  },
+  "originalDataElementCurrentRegisteredVersion": "0.13.0",
+  "originalDataElementWholeExeBeforeAfterByteEqualityProved": false,
+  "currentInstalledAppProcessCount": 0,
+  "guiRuntimeOrModelAuthenticationAccepted": false,
+  "sharedDshHomeCredentialContentsReadOrModifiedByRoot": false,
+  "sources": [
+    {
+      "path": "current-user-installation-runner-native-ast-safe.json",
+      "sha256": "ae703cc8e2a6e10152faaad12df2b5db9ee3fb29c8bbf6a803a22c77e2b9f9a2",
+      "bytes": 620
+    },
+    {
+      "path": "post-install-readonly-safe.json",
+      "sha256": "d8f64010b202c52b1dc09ef787624fcca7c5d8d5482e7d95091aeae9f4d8f338",
+      "bytes": 1940
+    },
+    {
+      "path": "actual-current-user-installation-safe.json",
+      "sha256": "c05015a3872ae0a73727c846f50c93bd34cddbbd1e88313bf947e7d61c90e264",
+      "bytes": 1018
+    }
+  ]
+}

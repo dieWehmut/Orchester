@@ -1,0 +1,18 @@
+{
+  "bootstrapResponseStatus": "deployed-and-verified",
+  "unitMetadata": {
+    "controlMode": "independent-owned-controller-user-manager-unavailable",
+    "MainPID": "320847"
+  },
+  "launcherExitedAfterVerification": true,
+  "currentEnvironmentInHeapOnly": false,
+  "privateCurrentEnvironmentSnapshotUsed": true,
+  "persistentUserUnitConfigured": true,
+  "rebootAutostartActuallyTested": false,
+  "noGlobalUserManagerEnvironmentImport": true,
+  "producerOwnedByNamedIndependentUserUnit": false,
+  "userManagerStartFailedFallbackUsed": true,
+  "independentControllerDetachedAfterVerifiedStartup": true,
+  "runnerCgroup": "0::/codex.slice/codex-workloads.slice",
+  "controllerCgroup": "0::/codex.slice/codex-workloads.slice"
+}

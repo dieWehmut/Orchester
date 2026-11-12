@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "format": "orchester-epoch6-public-claim-boundary-review-v1",
+  "observedAtUtc": "2026-11-12T06:17:19.797914+00:00",
+  "reviewer": "/root/phase5_review",
+  "status": "public-claim-boundaries-reviewed-with-root-documentation-corrections-recommended",
+  "reviewScope": {
+    "linuxPostRebootJsonFilesRead": 8,
+    "deepSeekInstalledJsonFilesRead": 4,
+    "windowsInteractivePostRebootJsonFilesRead": 3,
+    "derivedRequirementAuditAndSummaryJsonFilesRead": 2,
+    "designDocumentRead": "docs/design/39-agentrouter-full-platform-sync.md",
+    "manifestAndProvenanceNotReviewedDuringTheirUpdates": true,
+    "fullArchiveHashAndSizeVerificationClaimed": false
+  },
+  "confirmedPublicRecordBoundaries": {
+    "linux": {
+      "listenerPid": 320854,
+      "listenerStartTicks": 451458,
+      "controllerPid": 320847,
+      "controllerStartTicks": 451383,
+      "controlMode": "standalone-owned-controller-user-manager-unavailable",
+      "namedUnitOwnsCurrentProducer": false,
+      "staticUserUnitConfiguredNotRunning": true,
+      "bootAutostartNotTested": true,
+      "currentEnvironmentSnapshotPrivateFileNotHeapOnly": true,
+      "runCount": 5,
+      "completedRuns": 4,
+      "cancelledRuns": 1,
+      "persistedAuthEntries": 5,
+      "distinctEffectiveCredentials": 3,
+      "originalRunRowsRetainedDeclared": true,
+      "remoteStateJsonValuesRetainedDeclared": true,
+      "remoteStateSqlRawStringsRetainedDeclared": false,
+      "initialIncorrectAuthLookupHash401IsNotOriginalCredentialFailure": true,
+      "originalRawCredentialNewEpochWireTestNotProved": true,
+      "condaPidfdErrorAndOwnedExitZeroRemainSeparateFromCorrectedDeployment": true
+    },
+    "deepSeek": {
+      "actualInstallerExitCode": 0,
+      "originalInstallerRunnerVerificationExitCode": 1,
+      "originalFailureNotRewritten": true,
+      "installerNotRerunForVerificationCorrection": true,
+      "numericPeProductVersion": "0.2.2.0",
+      "hkcuAndInstalledAsarPackageVersion": "0.2.2-rc.1",
+      "installedImageSignatureDeclared": "Valid",
+      "originalDataElementRegistrationStillPresentDeclared": true,
+      "originalDataElementWholeExeBeforeAfterEqualityNotProved": true,
+      "noAutoLaunchObservedAndCurrentProductProcessCountZeroAreObservationBounds": true,
+      "guiRuntimeModelAuthenticationOrSharedHomeStartupRetentionNotProved": true
+    },
+    "windowsInteractiveAndBackup": {
+      "sameSidActiveSessionId": 1,
+      "sameSidActiveCandidateCount": 1,
+      "inputDesktopName": "Default",
+      "inputDesktopOpened": true,
+      "cursorAccess": false,
+      "cursorError": 5,
+      "interactiveReadiness": false,
+      "existingBackupRoots": 5,
+      "existingRootFileCounts": [156, 9, 493, 17, 2],
+      "existingRootFileCountSum": 677,
+      "absentRoamingRootFileCount": 0,
+      "backupSourceStableAndExactDeclared": true,
+      "originalProcessAbsenceNotNaturalTrayExit": true,
+      "defaultDesktopReinstallationNotProved": true
+    }
+  },
+  "recommendationsForRoot": [
+    {
+      "path": "deployments/linux/20261112-post-reboot/final-safe.json",
+      "field": "stdinControllerMode",
+      "finding": "The inherited description says named user service, while this receipt's codex cgroup and unit-launch-safe.json producerOwnedByNamedIndependentUserUnit=false prove that the current producer uses the standalone fallback.",
+      "action": "Preserve the original receipt bytes; explain in derived documentation that this inherited descriptive field is not proof of unit ownership or a running named service."
+    },
+    {
+      "path": "summary.json",
+      "field": "currentLinuxRuntimeObservedAtUtc",
+      "finding": "The reviewed value06:10:21.192664 is the summary generation time; the public independent runtime receipt is observedAtUtc06:05:07.141142.",
+      "action": "Use the actual public runtime observation timestamp, or provide the separate later observation receipt supporting a later timestamp."
+    },
+    {
+      "path": "summary.json",
+      "field": "currentLinuxUserManagerLingerActual",
+      "finding": "The retained yes value is proven in the previous epoch; this phase's public records state that user-manager control is unavailable and do not independently requery Linger.",
+      "action": "Label yes as the previous epoch's verified observation rather than a newly reverified post-reboot value."
+    },
+    {
+      "path": "summary.json",
+      "field": "pendingCurrentEpochScopes",
+      "finding": "The statement currenthostoldnativeworkers/AVD absent lacks a corresponding identity/process enumeration observation in the15 targeted phase6 public receipts.",
+      "action": "Describe current native workers/AVD identity as requiring revalidation for the next owned attempt, or add the existing public process observation supporting this statement."
+    },
+    {
+      "path": "docs/design/39-agentrouter-full-platform-sync.md",
+      "finding": "The installation records directly establish that no automatic application launch was observed and that the sampled current process list is empty; they do not independently prove absence for every instant after installation.",
+      "action": "Prefer the observed no-auto-launch/current-process0 wording and preserve the fact that root has not actively launched the application."
+    }
+  ],
+  "selectedPublicReceiptDigests": [
+    {
+      "path": "deployments/linux/20261112-post-reboot/final-safe.json",
+      "bytes": 6777,
+      "sha256": "14e61fd4a3ca65ba650fb636380354e218f4e5cd28bcfca9527b3c321952ac76"
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/root-independent-live-safe.json",
+      "bytes": 1427,
+      "sha256": "19dc27c903fb091dfbc28d9702dfd7c5ce8869e633beff5ceef781a5b2be55fe"
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/unit-launch-safe.json",
+      "bytes": 725,
+      "sha256": "169667b0f0143516ae58a36e5fc02dded064efd24c21cde9c1e9fce7fc37f966"
+    },
+    {
+      "path": "native/windows/deepseek-official-installed-20261112/corrected-verification-safe.json",
+      "bytes": 2449,
+      "sha256": "e2ce4fbf66b5e037e7d48fe47b039aaf60b94ba2df38c81273d6b3f5d8453f11"
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/offline-final21-post-reboot-backup-safe.json",
+      "bytes": 3189,
+      "sha256": "d1f9b696eb6a4441534253ead43e82fedb5cfed22108469cfc0a7783c182bfe7"
+    }
+  ],
+  "executionLimits": {
+    "externalOriginalReceiptReads": 0,
+    "privateBackupsCredentialsDatabasesEnvironmentOrRawLogReads": 0,
+    "nonJsonArchiveContentReads": 0,
+    "nativeWindowsOrQueueCalls": 0,
+    "adbCommands": 0,
+    "networkRequests": 0,
+    "independentRuntimeReexecutions": 0,
+    "installerReexecutions": 0,
+    "processSignals": 0,
+    "gitMutations": 0,
+    "existingFileEdits": 0,
+    "onlyThisNewReportFileWritten": true,
+    "currentLiveStateNotIndependentlyProvedByThisReviewer": true,
+    "fullArchiveHashVerificationNotClaimed": true,
+    "allPlatformCompletionClaimed": false,
+    "privatePayloadIncluded": false
+  }
+}
