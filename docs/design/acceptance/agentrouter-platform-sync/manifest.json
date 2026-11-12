@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-12T22:45:43.139727+00:00",
-  "status": "eleven-checkpoints-delivered-current-exact-merged-cleanup-verified-platform-runtime-pending",
+  "createdAt": "2026-11-12T23:04:15.110886+00:00",
+  "status": "twelve-checkpoints-delivered-managed-linux-userbus-and-lifecycle-verified-reboot-token-wire-and-windows-pending",
   "summaryPath": "summary.json",
   "files": [
     {
@@ -88,6 +88,146 @@
       "path": "deployments/linux/20261112-post-reboot/unit-launch-safe.json",
       "sha256": "169667b0f0143516ae58a36e5fc02dded064efd24c21cde9c1e9fce7fc37f966",
       "bytes": 725
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/first-managed-after-stop-producer-public-safe.json",
+      "sha256": "dd8ede894ef9d5a87aecc97bcf91cd274c5d9378ec8deeec5509d214bbfd5513",
+      "bytes": 6943
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/first-managed-normal-exit-safe.json",
+      "sha256": "c160e4677f151dca8970241f0cf18129b996e0ef033268fd063f6c6132a1b0f9",
+      "bytes": 121
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/first-managed-start-producer-public-safe.json",
+      "sha256": "dd8ede894ef9d5a87aecc97bcf91cd274c5d9378ec8deeec5509d214bbfd5513",
+      "bytes": 6943
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/independent-final-live-safe.json",
+      "sha256": "e09dfca9eea30522bfffa866921cbbaa067e433e7f753fbb1d284c74796e36b2",
+      "bytes": 7032
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/initial-controller-native-path-failure-safe.json",
+      "sha256": "74fb8e5332b14f3d5f9c2f9ea28dd357c45752a510cd94e74a62eeba2cdd4166",
+      "bytes": 767
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/managed-user-bus-recovery-safe.json",
+      "sha256": "861754c76140985a05eef9299ef47d089a29159a83735ad6abc783f4569b0807",
+      "bytes": 1637
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/managed-user-bus-resume-safe.json",
+      "sha256": "c9d3d5271c26f11e46a96575495861abc6aaf9f1fc9ce67101357e9683af273d",
+      "bytes": 3547
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/new-controller-preparation-safe.json",
+      "sha256": "7c2605ba8e458352539ea3159530957a92498c2880fb4521e65923227ece7af6",
+      "bytes": 620
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/official-user-bus-source-safe.json",
+      "sha256": "860d5040aac958a4e7f36ce9f450f716534ab3799370fba03d1528004e4a7d4c",
+      "bytes": 1392
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/persistent-service-lifecycle-safe.json",
+      "sha256": "a52a73af7220201a81d6cd0a295342956cc5829729dd0d24c586eec8b2b493bc",
+      "bytes": 5603
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/persistent-service-transfer-safe.json",
+      "sha256": "c7f1b02a97d09563af1f8f0ce565c74b43fcfd12ae109b7692236229fcf42a02",
+      "bytes": 2173
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/pre-recovery-live-safe.json",
+      "sha256": "44882ce0e495a21e495f9eb5f0b72aea66eab9c30b7779557556b9916faf55b9",
+      "bytes": 7638
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/root-independent-live-and-state-safe.json",
+      "sha256": "310fdb6053159119bd2743ecb1eb29650ee2dbfeda5805ebf1ce29c2bc71e5c9",
+      "bytes": 4655
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/runtime/controller-successor.py",
+      "sha256": "b70fcda2c9df0e9e214204b46297849fe4ebcbd0a5f01766586c5e26d6686c4b",
+      "bytes": 34680
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/runtime/default-remote-7337.service",
+      "sha256": "3119c552d11c49ca97c9db018aec53af82aa30adcde2a367e3b9479ea438f35c",
+      "bytes": 641
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/runtime/initial-controller-deep-path.py",
+      "sha256": "e01b856cee2051083bc9c729294c84e774282372980de92e663391f6dfc22aea",
+      "bytes": 34647
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/runtime/official-dbus.service",
+      "sha256": "19d7b51e1e6da255346ac6acbf95627baf14c324e84ee841d90fab98bcc0e994",
+      "bytes": 360
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/runtime/official-dbus.socket",
+      "sha256": "eb9bcc798c347ea00544ca79f3ca07f3f6bd675235c9d73a42b6dcc9fd16a927",
+      "bytes": 174
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/runtime/original-controller-before-transfer.py",
+      "sha256": "49746d3838c6b3b2232273dfe4e6b4342d4cf90e303a1d75bc0cbb2caa0bbbc8",
+      "bytes": 34628
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/runtime/original-default-unit-before-transfer.service",
+      "sha256": "371ffb332878590823e530ae5aaa62f5a4ab192a5276889f71aa0af7c0fd322f",
+      "bytes": 441
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/second-managed-start-producer-public-safe.json",
+      "sha256": "462786ffdba78f17df89d156e92718110d708c1524b864bb8cbff58f9bdf2f00",
+      "bytes": 6942
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/source-mappings-safe.json",
+      "sha256": "fe28149f84c4680953a45324d4d720f0c5d68703ae6e79d44d20bc289cb56519",
+      "bytes": 13949
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/sources/default-lifecycle-successor.py",
+      "sha256": "2352a93707b4f5d1e3e8bfe118417464c59fa1cc2109e7e869bf1f7cd82d0e18",
+      "bytes": 9959
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/sources/first-temporary-bus-attempt.py",
+      "sha256": "ac0709ca262ea167048653f6509587a0a9537c564a0745645b096c04b008eb1c",
+      "bytes": 11887
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/sources/initial-default-transfer.py",
+      "sha256": "1f06491c847f7046ed210c4f4e0f7ee29ce248bc094fbb73335104b5992fa321",
+      "bytes": 12258
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/sources/managed-bus-successor.py",
+      "sha256": "f4f1d17b90d1c42fd2fb0a9fee63bdbe73d0e402c1dd57e324033e0804aa9b70",
+      "bytes": 7369
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/sources/second-managed-bus-observer-attempt.py",
+      "sha256": "78b3b82ed1dd08eaf5641bc051e810288b0672b4ca824345a5dae6aaf3af5934",
+      "bytes": 8210
+    },
+    {
+      "path": "deployments/linux/20261113-userbus-managed-default/user-bus-recovery-safe.json",
+      "sha256": "a59921bbf8b9403d6a4b4446964ce27fab2be9cd07dff117e126ba8774f46212",
+      "bytes": 870
     },
     {
       "path": "deployments/linux/a96a06e-final-deployment.json",
@@ -308,6 +448,11 @@
       "path": "maintenance/git-delivery/third-step-delivery-safe.json",
       "sha256": "c795729009d19800729c8fc426742ec0a0627c086a6a61dae2b95349acc98654",
       "bytes": 614
+    },
+    {
+      "path": "maintenance/git-delivery/twelfth-step-delivery-safe.json",
+      "sha256": "71716f317ae33f95de2942f4c152d46c66de45da060188bce09a7b42df60fd07",
+      "bytes": 727
     },
     {
       "path": "maintenance/merged-branch-cleanup.json",
@@ -2951,8 +3096,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "3717560d1068a352a261eb51df669f9ce24043c88e5c80db4e2fbdbc725fc8c3",
-      "bytes": 39940
+      "sha256": "ee678dc4d072e710007bd45ae54ede683718ac591ac709241545de7c4f4b26de",
+      "bytes": 41799
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -2976,8 +3121,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "23a29ac87e7251eec2f4d45f718c40170b9a47f614465d0eff57b3d61ef3df76",
-      "bytes": 57910
+      "sha256": "3bf4a28685c43243f0b9700e97e102d4ef39ae7d317a7afe519c4d4c4022dca4",
+      "bytes": 61086
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
@@ -3061,5 +3206,5 @@
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
-  "checkpointScope": "Previous594 archivefiles preserved except current summary/audit; originaltenth delivery copied byteexact plus sourceJSONL-bound originalexecutor terminal137 andcurrent22:34nativeaccess failures. HistoricalfailedDesktop18/runtime/handle receipts untouched. CurrentWindowsGUI/childrenlifetime unverified; no fullDesktop18/defaultreinstallation/platformcompletion claim. CurrentinternationalWorkBuddy fourmetadata200/fouradvertisedpayload404 andhomepage/clientbytesexact-history scope appended asfour safeJSONs only; no package/profile/install completion. CurrentClaude Storecatalog5.11492.0.0 vs historical5.1231.2.0/separateWinGet3.6556.2/exactofficialEXE+MSIX curl35+HTTPnull+0bytes appended assixsafeJSONs withsourcehashes. No downloadedpayload/Authenticode/install/currentregistration proof; originalStore1612andallhistoricalreceipts untouched. Eleventh607filecontinuation8548830/mainbdd8a0d delivery receipt plus currentthreecleanmergedworktrees/localbranches andsixexact-tip-leasedremote ref cleanup withindependentreview appended asfour byteexactsafeJSONs. Registered6; three nonancestor/dirtymonitor retained; 1023583391regularlogicalB notCphysical. Originalplatform/runtime gaps remain."
+  "checkpointScope": "Previous594 archivefiles preserved except current summary/audit; originaltenth delivery copied byteexact plus sourceJSONL-bound originalexecutor terminal137 andcurrent22:34nativeaccess failures. HistoricalfailedDesktop18/runtime/handle receipts untouched. CurrentWindowsGUI/childrenlifetime unverified; no fullDesktop18/defaultreinstallation/platformcompletion claim. CurrentinternationalWorkBuddy fourmetadata200/fouradvertisedpayload404 andhomepage/clientbytesexact-history scope appended asfour safeJSONs only; no package/profile/install completion. CurrentClaude Storecatalog5.11492.0.0 vs historical5.1231.2.0/separateWinGet3.6556.2/exactofficialEXE+MSIX curl35+HTTPnull+0bytes appended assixsafeJSONs withsourcehashes. No downloadedpayload/Authenticode/install/currentregistration proof; originalStore1612andallhistoricalreceipts untouched. Eleventh607filecontinuation8548830/mainbdd8a0d delivery receipt plus currentthreecleanmergedworktrees/localbranches andsixexact-tip-leasedremote ref cleanup withindependentreview appended asfour byteexactsafeJSONs. Registered6; three nonancestor/dirtymonitor retained; 1023583391regularlogicalB notCphysical. Originalplatform/runtime gaps remain. Twelfth611filecleanup9a48d20/main1dec0b4 delivered; 27 producerpublicarchivefiles withoriginal26source mappings plusrootindependentlive/state andtwelfthdelivery byteexact appended. Managedoriginalsystemd269dbus recovery anddefault7337normalstop0/start0/current2888953+2888962 verified; originalfailures andpublicderivation scope retained. RealWSLrebootautostart andcurrentoriginalphonetokenwire nottested; Windowsentry110/fullDesktop18/vendorinstallation remain pending."
 }

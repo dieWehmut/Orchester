@@ -1,0 +1,18 @@
+[Unit]
+Description=Orchester default remote 7337 post-reboot owned controller
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/han/.local/state/orchester-delivery/20261112-post-reboot/linux-restore/controller.py serve
+WorkingDirectory=/home/han/project/Orchester
+StandardInput=null
+StandardOutput=null
+StandardError=null
+Restart=no
+KillMode=process
+SendSIGKILL=no
+TimeoutStopSec=infinity
+UMask=0077
+
+[Install]
+WantedBy=default.target

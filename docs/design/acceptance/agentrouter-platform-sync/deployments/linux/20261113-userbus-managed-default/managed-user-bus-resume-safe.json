@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-12T22:40:25.882090+00:00",
+  "status": "managed-user-bus-restored-original-manager-and-service-identities-preserved",
+  "managerPid": 269,
+  "managerStartTicks": 1374,
+  "managerRestarted": false,
+  "systemServicesChanged": false,
+  "otherProjectServicesStartedStoppedOrRestarted": false,
+  "privateEnvironmentCredentialsStateOrJournalPublished": false,
+  "rebootAutostartActuallyTested": false,
+  "events": [
+    {
+      "label": "supported-sigusr1-after-verified-configuration-reload",
+      "signal": 10
+    },
+    {
+      "label": "original-manager-actually-started-official-dbus",
+      "process": {
+        "pid": 1992305,
+        "uid": 1000,
+        "startTicks": 6262225,
+        "exeSha256": "9e5cf3260e8b0d68a88732ebc4386970ff5977f4a9bcb9022a13ab905f832bbc",
+        "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/dbus.service"
+      }
+    },
+    {
+      "label": "supported-sigusr1-reconnect-managed-active-dbus",
+      "signal": 10
+    },
+    {
+      "label": "formal-systemd-user-api-owner-proven",
+      "actualOwnerPid": 269
+    },
+    {
+      "label": "formal-manager-environment-update",
+      "actualExitCode": 0,
+      "stderrBytes": 0
+    },
+    {
+      "label": "formal-daemon-reload-after-dropin-removal",
+      "actualExitCode": 0,
+      "stderrBytes": 0
+    },
+    {
+      "label": "final-unit-state-dbus.socket",
+      "actualExitCode": 0,
+      "stderrBytes": 0
+    },
+    {
+      "label": "final-unit-state-dbus.service",
+      "actualExitCode": 0,
+      "stderrBytes": 0
+    }
+  ],
+  "priorAttemptSafeReceiptSha256": "861754c76140985a05eef9299ef47d089a29159a83735ad6abc783f4569b0807",
+  "priorObservationFailureBoundary": "SIGHUP was delivered and journal Reloading observed; observer incorrectly required an INFO completion text absent in systemd249. Previous attempt ended before SIGUSR1, and is preserved as failed.",
+  "originalControllerIdentity": {
+    "pid": 320847,
+    "uid": 1000,
+    "startTicks": 451383,
+    "exeSha256": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae",
+    "cgroup": "0::/codex.slice/codex-workloads.slice"
+  },
+  "originalListenerIdentity": {
+    "pid": 320854,
+    "uid": 1000,
+    "startTicks": 451458,
+    "exeSha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649",
+    "cgroup": "0::/codex.slice/codex-workloads.slice"
+  },
+  "originalDirmngrIdentity": {
+    "pid": 1377876,
+    "uid": 1000,
+    "startTicks": 4076338,
+    "exeSha256": "ebc20de9ce0991bede885de2401a1125b9b5db77c90c51ad9261ae3bb52ba1fe",
+    "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/dirmngr.service"
+  },
+  "dbus.socket": {
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/dbus.socket",
+    "ActiveState": "active",
+    "SubState": "running",
+    "FragmentPath": "/home/han/.config/systemd/user/dbus.socket"
+  },
+  "dbus.service": {
+    "MainPID": "1992305",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/dbus.service",
+    "ActiveState": "active",
+    "SubState": "running",
+    "FragmentPath": "/home/han/.config/systemd/user/dbus.service"
+  },
+  "officialUserUnitsByteExact": true,
+  "startupSocketLinkExact": true,
+  "temporaryBootstrapDropinRemoved": true,
+  "managerFinalIdentity": {
+    "pid": 269,
+    "uid": 1000,
+    "startTicks": 1374,
+    "exeSha256": "39bbddd818ef6b4b9ae87e7cac22476f60a63efb8dfec77dd11f03672462931d",
+    "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/init.scope"
+  }
+}

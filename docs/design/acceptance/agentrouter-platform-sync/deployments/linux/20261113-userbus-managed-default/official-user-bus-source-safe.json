@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "status": "official-ubuntu-package-and-managed-user-units-verified",
+  "observedAtUtc": "2026-11-12T22:49:11.669021+00:00",
+  "officialPackage": "dbus-user-session",
+  "version": "1.12.20-2ubuntu4.1",
+  "officialPackageUrl": "http://archive.ubuntu.com/ubuntu/pool/main/d/dbus/dbus-user-session_1.12.20-2ubuntu4.1_amd64.deb",
+  "packageBytes": 9442,
+  "aptMetadataSha256": "fcd6b45ba6577f4ffb395a08fc73aedc0e530f8d72d7b24575e44e4b7fd55d3b",
+  "downloadedBytesHashExact": true,
+  "packageInstalledSystemWide": false,
+  "exactOfficialUnitsAppliedOnlyToCurrentUser": true,
+  "newUserSocketTargetLink": "sockets.target.wants/dbus.socket -> ../dbus.socket",
+  "systemdInstalledVersion": "249.11",
+  "supportedSignalSources": [
+    {
+      "url": "https://www.freedesktop.org/software/systemd/man/latest/systemd.html",
+      "localManPath": "/usr/share/man/man1/systemd.1.gz",
+      "signals": [
+        "SIGHUP daemon reload",
+        "SIGUSR1 D-Bus start or reconnect"
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/systemd/systemd/v249/src/core/manager.c",
+      "localSourceSha256": "d6b5f6888f8873c82428ca71562387ab414d76e976bd2da50bd8a969b0c8a4b3",
+      "requiredObservedBehavior": "SIGUSR1 starts dbus.service when D-Bus units are not running and reconnects API when they are active."
+    }
+  ],
+  "privateDataOrEnvironmentPublished": false
+}

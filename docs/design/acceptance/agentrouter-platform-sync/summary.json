@@ -442,6 +442,22 @@
     {
       "scope": "Currentthreecleanmergedworktrees/localbranches normalremove+branch-d actual0/pathabsence/retainedtipsmainancestor; independentinventoryregularlogical1023583391B, noCphysicaldelta claim. Sixmergedremoterefs exact-tipleases pushactual0/freshabsenceverified; threemainnonancestor+dirtymonitor worktrees retained, registered6/731productioninputs retained",
       "proof": "maintenance/workspace-current/20261113/independent-review-safe.json"
+    },
+    {
+      "scope": "Twelfthverifiedcleanup9a48d20/main1dec0b4/actualfeaturepush0/mainmerge0/mainpush0/611manifest+mainblobchecks/731sourcechecks; exactworktree/refcleanup checkpoint delivered",
+      "proof": "maintenance/git-delivery/twelfth-step-delivery-safe.json"
+    },
+    {
+      "scope": "Currentoriginalsystemd269/ticks1374 not restarted; officialcanonicaldbus.socket/service active/running andformaluserAPI recovered. Firsttemporarybus/managedobserverfailure andsupportedreload/reconnect successor scopes separately retained",
+      "proof": "deployments/linux/20261113-userbus-managed-default/managed-user-bus-resume-safe.json"
+    },
+    {
+      "scope": "Ownstandalone320847/320854 normalquit viaoriginalwriter/pidfd/listener0/portreleased/oldfinal+env unchanged; firstmanagedcontroller path108B failedbeforelistener1, short43B successor preserved. Actualmanageddefault7337 stop0/start0 complete andleftunitenabled-active/controller2888953+listener2888962/originalwriterFD7+pidfd/source71/21catalog17resources/5task+5authJSON retained; SQLrawfalse stays separate",
+      "proof": "deployments/linux/20261113-userbus-managed-default/persistent-service-lifecycle-safe.json"
+    },
+    {
+      "scope": "Rootindependentlive service/unitPID+ticks+ELF+cgroup/sameUID and17publicHTTP200 hash+currentdistbytes all exact; 3privatebackupdatabases retain5taskrows+remoteJSON/5auth. Rootsignals/serviceoperations/pairing/model0; lifecycleproof separate. CurrentoriginalphonecredentialHTTPwire not rerun; priorAndroidGET200 remainshistorical. ActualWSLreboot-autostart untested",
+      "proof": "deployments/linux/20261113-userbus-managed-default/root-independent-live-and-state-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -454,12 +470,12 @@
   ],
   "pendingCurrentEpochScopes": [
     "FormalPortable14 passed andDesktop18 failedafter12checks6writes. Originalexecutor90867 actualterminalfailed137 at16:29:48Z; retained10handle snapshot historicalonly, currentWindowsGUI/childrenliveness andnormaltrayquit unverified. Current22:34 readonlynativegateways inherited/3097/910/7250 allinterop110; sameGUI DOM diagnosis/fullDesktop18/defaultreinstall/7338state remain pending.",
-    "Linuxstaticuserunit/defaulttargetlink configured/parser0 but usermanagerbusunavailable and currentproducerstandalone; no restart/autostart/reboot-survival verified",
+    "Canonicaluserbus restored onoriginalsystemd269 withoutmanagerrestart; default7337 transferredtoactive managedunit andactualnormalstop0/start0 complete. Enabledstartup link isconfigured; realWSL reboot/autostart remainsuntested. Originalphone token wireGET onthisnew2888962instance hasnotbeenrerun; 5authJSON preservation andhistoricalAndroidGET200 do not substitute currentwireproof.",
     "OfficialDeepSeekWindows installation/signature/HKCU/ASARrc1verified afteroriginalnumericPEverifierfailure; GUI/model/auth nottested; DataElementoriginalcurrentmetadataretained, wholeoldEXEbeforeafterhashnotproved",
     "InternationalWorkBuddy nativeWSL usablepackage/profile isolation pending: currentfourofficialmetadata200 butfouradvertisedpayloads404/0bytes; publichomepage/clientbytes equalhistory. OfficialClaudeApp Windows payload/LinuxGUI release evidence remains pending.",
     "Historicalunregisteredchildidentity/HANDLEclosure andwrongLinuxfullpackage rollback unproved; no new signal/claim",
-    "CorrectWindowsAndroid original5 retained/fullPTY+cleanup andASCIIcomposite659 verified. Eleventhcurrentcontinuation/officialchannels checkpoint8548830 mergedmainbdd8a0d with607manifest/731productionchecks; currentmergedworktree+remote cleanup andeleventhdelivery receipt await their independent archive commit.",
-    "CurrentLinux7337 originalactualcredentialGET200 nowproved bynativeAndroid originalfivewire receipt; JSONexact/SQLrawfalse remainseparate, usermanager/autostart remainpending.",
+    "CorrectWindowsAndroid original5 retained/fullPTY+cleanup andASCIIcomposite659 verified. Twelfthcleanup9a48d20 mergedmain1dec0b4 with611manifest/731productionchecks; currentLinuxmanagedbus/service-lifecycle evidence andtwelfthdelivery receipt await separatearchivecommit.",
+    "Linux7337 currentmanagedinstance2888962 has5task/5authJSON retained across3privatebackups and17resources/21catalog verified. PriorAndroidoriginaltokenGET200 historicalonly; currentnewinstance originalphone-tokenHTTPwire notrerun. SQLrawfalse explicit; actualWSLreboot-autostart stillpending.",
     "HistoricalClaudeStoreUI cannotconnect/bootstrapperactual1612 retained. CurrentStoremetadata5.11492.0.0 differsfromhistorical5.1231.2.0; independentWinGet3.6556.2 exactEXE/MSIX GET bothcurl35/HTTPnull/0bytes. OfficialClaudepayload/digest/Authenticode/nativeinstallation/registration pending; nativegateway andofficialdownload/Storetransport require recovery."
   ],
   "folderResponsibilities": {
@@ -478,7 +494,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-12T22:45:43.139727+00:00",
+  "updatedAt": "2026-11-12T23:04:15.110886+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -495,7 +511,7 @@
   "currentAndroidPartialNativeBuildInstallTestsVerified": true,
   "currentAndroidActualIDESyncVerified": true,
   "currentAndroidNativeUI21Providers42ImagesVerified": true,
-  "documentedPublishedMainRevision": "bdd8a0d111facd94e7fbc648b4fe37c869ce61bb",
+  "documentedPublishedMainRevision": "1dec0b4ec1c7b62a1d90538da70e8bf8f5c3b140",
   "productionSourceRevisionStillFrozen71": true,
   "currentCorrectionArchiveGitCommitted": true,
   "originalWindowsCredentialsDamagedOrUnrecoverableClaimed": false,
@@ -590,7 +606,7 @@
   "historicalOriginalLinux7337TokenOneInfoRequestActualStatus": 200,
   "currentLinuxDeploymentVerified": true,
   "currentLinuxRestorationPending": false,
-  "currentLinuxRuntimeObservedAtUtc": "2026-11-12T15:08:18.270987+00:00",
+  "currentLinuxRuntimeObservedAtUtc": "2026-11-12T22:49:27.643471+00:00",
   "currentLinuxOldServicePidExists": false,
   "currentLinuxOldControllerPidExists": false,
   "currentLinuxPreviousExitCauseVerified": false,
@@ -610,10 +626,10 @@
     "missing": 0
   },
   "prior321FourthCheckpointArchiveDelivered": true,
-  "currentLinuxServicePid": 320854,
-  "currentLinuxServiceStartTicks": 451458,
-  "currentLinuxControllerPid": 320847,
-  "currentLinuxControllerStartTicks": 451383,
+  "currentLinuxServicePid": 2888962,
+  "currentLinuxServiceStartTicks": 6300089,
+  "currentLinuxControllerPid": 2888953,
+  "currentLinuxControllerStartTicks": 6300064,
   "currentLinuxNamedUserService": "orchester-default-remote-7337-20261112-post-reboot.service",
   "currentLinuxUserManagerLingerActual": "yes",
   "currentLinuxRuntimeListenerVerified": true,
@@ -622,7 +638,7 @@
   "currentLinuxRemoteStateSemanticJSONExact": true,
   "currentLinuxRemoteStateRawRowsExactlyRetainedComparedToNewCurrentBackup": false,
   "currentLinuxPreflightRawStateRowsEqualOldLegacyBackup": false,
-  "currentLinuxExistingOriginalTokenWire200TestedThisEpoch": true,
+  "currentLinuxExistingOriginalTokenWire200TestedThisEpoch": false,
   "currentWindowsDeepSeekOrdinarySilentNoAutoLaunchStaticVerified": true,
   "currentWindowsDeepSeekInstallerNativeExecutionTested": true,
   "currentWrongLinuxOriginalOneNativeCredentialGetSucceeded": true,
@@ -649,9 +665,9 @@
   "currentWindowsDeepSeekInstalledAppVersion": "0.2.2-rc.1",
   "currentWindowsDeepSeekInstalledNumericPEVersion": "0.2.2.0",
   "currentWindowsDeepSeekInstalledGuiRuntimeVerified": false,
-  "currentLinuxNamedUserServiceRunning": false,
-  "currentLinuxStandaloneOwnedControllerVerified": true,
-  "currentLinuxUserManagerControlAvailable": false,
+  "currentLinuxNamedUserServiceRunning": true,
+  "currentLinuxStandaloneOwnedControllerVerified": false,
+  "currentLinuxUserManagerControlAvailable": true,
   "currentLinuxStaticUnitDefaultTargetLinkConfigured": true,
   "currentLinuxBootAutostartTested": false,
   "phase6IndependentSubagentReviewCompleted": true,
@@ -710,7 +726,7 @@
   "currentWindowsFormalPrepared40ScriptPinsAnd967ExportSourceHashesVerified": true,
   "currentWindowsFormalCurrentPreparedPublicProof": "native/windows/formal-runtime-post-reboot-20261112/static-review-safe.json",
   "prior507EighthNativeCompletionCheckpointDelivered": true,
-  "currentLinuxReadOnlyLiveAndUserManagerProof": "deployments/linux/current-readonly-20261112T1500/live-and-user-manager-safe.json",
+  "currentLinuxReadOnlyLiveAndUserManagerProof": "deployments/linux/20261113-userbus-managed-default/root-independent-live-and-state-safe.json",
   "currentWindowsCompositeAndroidAcceptanceVerified": true,
   "currentWindowsCompositeAndroidAcceptanceAssertionCount": 659,
   "currentWindowsCompositeAndroidAcceptanceProof": "native/windows/fresh-android-runtime-binding-20261112/verifier-execution-safe.json",
@@ -809,5 +825,23 @@
   "currentWorktreeCleanupPhysicalWindowsCDriveFreedBytesClaimed": false,
   "currentRegisteredWorktreeCountAfterCleanup": 6,
   "currentNonAncestorWorktreesRetained": 3,
-  "currentDirtyMonitorWorktreeRetained": true
+  "currentDirtyMonitorWorktreeRetained": true,
+  "prior611TwelfthCleanupCheckpointDelivered": true,
+  "historicalLinuxReadOnlyLiveAndUserManagerProof": "deployments/linux/current-readonly-20261112T1500/live-and-user-manager-safe.json",
+  "historicalLinuxOriginalTokenWire200Verified": true,
+  "currentLinuxUserManagerPid": 269,
+  "currentLinuxUserManagerStartTicks": 1374,
+  "currentLinuxUserManagerRestarted": false,
+  "currentLinuxOfficialDbusServiceActiveRunning": true,
+  "currentLinuxManagedUserBusProof": "deployments/linux/20261113-userbus-managed-default/managed-user-bus-resume-safe.json",
+  "currentLinuxManagedStartStopStartProof": "deployments/linux/20261113-userbus-managed-default/persistent-service-lifecycle-safe.json",
+  "currentLinuxManagedStartStopStartVerified": true,
+  "currentLinuxPrivateEnvironmentSnapshotRetained": true,
+  "currentLinuxOriginalFinalReceiptUnchanged": true,
+  "currentLinuxCurrentRunRowsExact": true,
+  "currentLinuxPrivateBackupDatabaseComparisons": 3,
+  "currentLinuxRetainedOriginalWriterFd": 7,
+  "currentLinuxOriginalPidfdHeld": true,
+  "currentLinuxNativeControlSocketPathFailurePreserved": true,
+  "currentLinuxOriginalTokenWireCurrentInstanceVerified": false
 }

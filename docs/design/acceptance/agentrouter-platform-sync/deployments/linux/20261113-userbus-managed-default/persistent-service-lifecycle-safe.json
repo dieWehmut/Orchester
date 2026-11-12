@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-12T22:46:44.029783+00:00",
+  "status": "default-service-managed-start-stop-start-verified-and-left-running",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "userManagerRestarted": false,
+  "WSLOrWindowsRebooted": false,
+  "otherProjectServicesStartedStoppedOrRestarted": false,
+  "privateCredentialsStateEnvironmentValuesPublished": false,
+  "processSignals": 0,
+  "rebootAutostartActuallyTested": false,
+  "events": [
+    {
+      "label": "diagnostic-dropin-removed-final-unit-daemon-reload",
+      "actualExitCode": 0,
+      "stderrBytes": 0
+    },
+    {
+      "label": "final-default-unit-systemd-verify",
+      "actualExitCode": 0,
+      "stderrBytes": 0
+    },
+    {
+      "label": "first-managed-start-fully-verified",
+      "unitState": {
+        "MainPID": "2781987",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/orchester-default-remote-7337-20261112-post-reboot.service",
+        "ActiveState": "active",
+        "SubState": "running",
+        "UnitFileState": "enabled"
+      },
+      "controllerStatus": {
+        "status": "live-owned",
+        "controllerPid": 2781987,
+        "controllerStartTicks": 6293999,
+        "controllerExecutableSha256": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae",
+        "controllerScriptSha256": "b70fcda2c9df0e9e214204b46297849fe4ebcbd0a5f01766586c5e26d6686c4b",
+        "listenerPid": 2781994,
+        "listenerStartTicks": 6294042,
+        "listenerExecutableSha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649",
+        "listening7337": true,
+        "retainedWriterFd": 7,
+        "pidfdHeld": true,
+        "namedUserService": "orchester-default-remote-7337-20261112-post-reboot.service",
+        "fixedPrivateControlSocket": "/run/user/1000/orchester-7337-20261113.sock"
+      },
+      "originalRunRowsExact": true,
+      "allRemoteStateJsonExact": true,
+      "allRemoteStateRawRowsExact": true,
+      "currentCanonicalProviders": 21,
+      "publicResourcesVerified": 17
+    },
+    {
+      "label": "managed-default-service-normal-systemctl-stop",
+      "actualExitCode": 0,
+      "stderrBytes": 0
+    },
+    {
+      "label": "managed-normal-stop-original-processes-terminal-and-state-retained",
+      "unitState": {
+        "MainPID": "0",
+        "ControlGroup": "",
+        "ActiveState": "inactive",
+        "SubState": "dead",
+        "UnitFileState": "enabled"
+      },
+      "listenerActualExitCode": 0,
+      "originalRunRowsExact": true,
+      "allRemoteStateJsonExact": true,
+      "portReleased": true
+    },
+    {
+      "label": "second-managed-default-service-start",
+      "actualExitCode": 0,
+      "stderrBytes": 0
+    },
+    {
+      "label": "default-unit-is-enabled",
+      "actualExitCode": 0,
+      "stderrBytes": 0
+    }
+  ],
+  "priorTransferFailureReceiptSha256": "1495fa30f94e83628bd5ab97e0e9949ef358621f28bd954119dab2a4dbc3c82f",
+  "oldExactOwnedNormalQuitVerified": {
+    "label": "original-controller-normal-quit-proven-by-original-writer-and-pidfd-terminal",
+    "control": {
+      "status": "owned-normal-quit-complete",
+      "listenerExitCode": 0,
+      "samePopenWriterUsed": true,
+      "userPidSignals": 0
+    },
+    "originalControllerTerminal": true,
+    "originalListenerTerminal": true,
+    "port7337ReleasedBeforeNewStart": true,
+    "originalFinalReceiptUnchanged": true
+  },
+  "originalRunCount": 5,
+  "originalAuthEntryCount": 5,
+  "preTransferPrivateBackupRowsAndJsonExact": true,
+  "finalUnitState": {
+    "MainPID": "2888953",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/orchester-default-remote-7337-20261112-post-reboot.service",
+    "ActiveState": "active",
+    "SubState": "running",
+    "UnitFileState": "enabled"
+  },
+  "finalControllerStatus": {
+    "status": "live-owned",
+    "controllerPid": 2888953,
+    "controllerStartTicks": 6300064,
+    "controllerExecutableSha256": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae",
+    "controllerScriptSha256": "b70fcda2c9df0e9e214204b46297849fe4ebcbd0a5f01766586c5e26d6686c4b",
+    "listenerPid": 2888962,
+    "listenerStartTicks": 6300089,
+    "listenerExecutableSha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649",
+    "listening7337": true,
+    "retainedWriterFd": 7,
+    "pidfdHeld": true,
+    "namedUserService": "orchester-default-remote-7337-20261112-post-reboot.service",
+    "fixedPrivateControlSocket": "/run/user/1000/orchester-7337-20261113.sock"
+  },
+  "currentRunRowsByteExact": true,
+  "currentRemoteStateJsonExact": true,
+  "currentRemoteStateRawRowsByteExact": false,
+  "originalPersistedAuthValuesExact": true,
+  "originalPrivateEnvironmentCopyExact": true,
+  "oldFinalReceiptUnchanged": true,
+  "diagnosticDropinRemoved": true,
+  "canonicalProviderCount": 21,
+  "publicResourceCount": 17,
+  "finalProducerReceiptSha256": "678570319bcc8f50d10ff41f69c73c3dc6f12d33d836fed1476797555e382d8a",
+  "defaultTargetStartupLinkExact": true,
+  "actualWSLRebootAutostartVerified": false,
+  "currentUnitSha256": "3119c552d11c49ca97c9db018aec53af82aa30adcde2a367e3b9479ea438f35c",
+  "systemctlLifecycleVerified": true,
+  "publicDerivation": {
+    "kind": "private-path-and-run-status-omission-only",
+    "sourceSha256": "cb48dda69ca4a663b6f83fe592abbcff1783d748992eb5a81cec9f7bf8817850",
+    "sourceBytes": 5326,
+    "omittedKeys": [
+      "privateBackupDirectory",
+      "backupFiles",
+      "currentRunStates",
+      "originalRunStates",
+      "stateRoot"
+    ],
+    "allRetainedDecodedJsonValuesUnchanged": true
+  }
+}

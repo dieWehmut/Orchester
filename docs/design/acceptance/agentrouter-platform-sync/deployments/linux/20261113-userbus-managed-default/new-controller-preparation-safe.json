@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "newControllerPath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/persistent-controller/controller.py",
+  "newControllerSha256": "e01b856cee2051083bc9c729294c84e774282372980de92e663391f6dfc22aea",
+  "originalControllerSourceSha256": "49746d3838c6b3b2232273dfe4e6b4342d4cf90e303a1d75bc0cbb2caa0bbbc8",
+  "onlyControllerSourceChange": "OUT path isolated into current continuation epoch",
+  "environmentProtectedCopyByteExact": true,
+  "originalUnitSha256": "371ffb332878590823e530ae5aaa62f5a4ab192a5276889f71aa0af7c0fd322f",
+  "privateEnvironmentPublished": false
+}
