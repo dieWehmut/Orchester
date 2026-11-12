@@ -1,0 +1,24 @@
+{
+    "status":  "failed",
+    "nativeTrayQuitNatural":  false,
+    "allExactGuiHandlesExited":  false,
+    "allExactNodeHandlesExited":  true,
+    "debugPortReleased":  false,
+    "embeddedPort":  65138,
+    "unexpectedDescendants":  0,
+    "safeUnexpectedImages":  [
+
+                             ],
+    "guiOutcomes":  [
+
+                    ],
+    "nodeOutcomes":  [
+
+                     ],
+    "type":  null,
+    "diagnostic":  null,
+    "identityDiagnostic":  null,
+    "originalHandlesKeptUntilCleanup":  true,
+    "modelCalls":  0,
+    "defaultServiceStopped":  false
+}

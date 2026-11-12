@@ -1,0 +1,29 @@
+{
+    "status":  "three-fixed-public-receipts-parsed-readonly",
+    "observations":  [
+                         {
+                             "fileName":  "fresh-runtime-inputs-unverified-46aed2a5b57c456c9541f2d9481b7d61.json",
+                             "parsed":  true,
+                             "exceptionType":  null,
+                             "publicStaticJsonParserDiagnostic":  null,
+                             "fileSha256":  "0d2e51c9b4febbcc5797e7239ffbff077a31af6b40e8151a9a9e7b1d755e0009"
+                         },
+                         {
+                             "fileName":  "normalized-acceptance-safe.json",
+                             "parsed":  true,
+                             "exceptionType":  null,
+                             "publicStaticJsonParserDiagnostic":  null,
+                             "fileSha256":  "d8a5fe51d3221a2e4715288c1ae4bc1d7357158e5ef0995148cad22d4ddcad73"
+                         },
+                         {
+                             "fileName":  "original-composite-acceptance-safe.json",
+                             "parsed":  false,
+                             "exceptionType":  "System.ArgumentException",
+                             "publicStaticJsonParserDiagnostic":  null,
+                             "fileSha256":  "38ab35f8a20adbf92743902358ce33473f122e2aadb0c1e46d6448871d14e8f6"
+                         }
+                     ],
+    "originalInputsModified":  false,
+    "credentialsRawLogsOrPrivateStateRead":  false,
+    "freezeOrRuntimeInvoked":  false
+}

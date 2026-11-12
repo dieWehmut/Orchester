@@ -1,0 +1,75 @@
+{
+    "schemaVersion":  1,
+    "observedAtUTC":  "2026-11-12T15:39:17.3554100Z",
+    "status":  "fresh-same-owner-native-store-ui-readonly-observation",
+    "selfPid":  35152,
+    "selfBirthUTC":  "2026-11-12T15:39:16.7644480Z",
+    "sameOriginalOwner":  true,
+    "sessionId":  1,
+    "selfImageSha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+    "interactiveObservation":  {
+                                   "processWindowStation":  "WinSta0",
+                                   "processWindowStationQueryError":  0,
+                                   "threadDesktop":  "Default",
+                                   "threadDesktopQueryError":  0,
+                                   "inputDesktopOpened":  true,
+                                   "inputDesktopError":  0,
+                                   "inputDesktopName":  "Default",
+                                   "inputDesktopNameError":  0,
+                                   "inputDesktopQueryHandleClosed":  true,
+                                   "inputDesktopCloseError":  0,
+                                   "cursorRead":  true,
+                                   "cursorError":  0,
+                                   "currentSessionStateRead":  true,
+                                   "currentSessionStateQueryError":  0,
+                                   "currentSessionState":  0,
+                                   "interactiveReadiness":  true,
+                                   "cursorCoordinatesIncluded":  false,
+                                   "inputOrProcessSignals":  0
+                               },
+    "existingSelectedStoreProcesses":  [
+                                           {
+                                               "pid":  33128,
+                                               "birthUTC":  "2026-11-12T15:39:00.5897935Z",
+                                               "sessionId":  1,
+                                               "processName":  "WinStore.App",
+                                               "mainWindowHandle":  0,
+                                               "publicImageName":  "WinStore.App.exe",
+                                               "imageSha256":  "d8cfd173c907fd932bfda7f41365aa42fe2cc2bfb6fdf45fd73bf29dd22827f9",
+                                               "querySucceeded":  true
+                                           }
+                                       ],
+    "selectedStoreWindows":  [
+                                 {
+                                     "windowPid":  30436,
+                                     "nativeWindowHandle":  8258416,
+                                     "title":  "Microsoft Store",
+                                     "claudeProductTextPresent":  false,
+                                     "accountPromptRecognized":  false,
+                                     "administratorOrUacPromptRecognized":  false,
+                                     "selectedPublicControls":  [
+                                                                    {
+                                                                        "name":  "Microsoft Store",
+                                                                        "controlType":  "ControlType.Window",
+                                                                        "automationId":  "TitleBar",
+                                                                        "isEnabled":  true,
+                                                                        "isOffscreen":  false,
+                                                                        "pid":  30436
+                                                                    },
+                                                                    {
+                                                                        "name":  "Microsoft Store",
+                                                                        "controlType":  "ControlType.Window",
+                                                                        "automationId":  "",
+                                                                        "isEnabled":  true,
+                                                                        "isOffscreen":  false,
+                                                                        "pid":  33128
+                                                                    }
+                                                                ],
+                                     "rawControlTextIncluded":  false
+                                 }
+                             ],
+    "installerGuiLaunches":  0,
+    "uiInputCount":  0,
+    "processTaskOrServiceMutations":  0,
+    "rawAccountNamesSidsOrPrivateUiTextIncluded":  false
+}

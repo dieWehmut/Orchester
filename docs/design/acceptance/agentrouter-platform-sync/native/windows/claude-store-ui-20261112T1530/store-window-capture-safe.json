@@ -1,0 +1,19 @@
+{
+    "schemaVersion":  1,
+    "observedAtUTC":  "2026-11-12T15:41:13.7412837Z",
+    "status":  "exact-current-store-window-captured-readonly-not-public-archived",
+    "windowPid":  30436,
+    "storePid":  33128,
+    "storeBirthUTC":  "2026-11-12T15:39:00.5897935Z",
+    "storeImageSha256":  "d8cfd173c907fd932bfda7f41365aa42fe2cc2bfb6fdf45fd73bf29dd22827f9",
+    "nativeWindowHandle":  8258416,
+    "printWindowSucceeded":  true,
+    "imageWidth":  1296,
+    "imageHeight":  2552,
+    "screenshotSha256":  "96d9fd94481dc5b9fe124443b40b65fe119388c7bfb86497a49dedf01f3abe56",
+    "sourceStoreWindowIsOriginalBootstrapperProcess":  false,
+    "originalBootstrapperNativeHandleNormalExitNotInferred":  true,
+    "uiInputOrProcessSignals":  0,
+    "privateWindowScreenshotNotPublicArchived":  true,
+    "wholeDesktopScreenshotTaken":  false
+}

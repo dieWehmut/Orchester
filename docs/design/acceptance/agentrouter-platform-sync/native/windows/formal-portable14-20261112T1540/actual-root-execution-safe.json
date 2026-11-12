@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "status": "formal-portable14-native-actual-exit-zero-and-original-handles-ended",
+  "observedAtUtc": "2026-11-12T15:53:31.714129+00:00",
+  "actualOuterNativePowerShellExitCode": 0,
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "sourceSha256": "9b59595d838aed379e25cf4483fa8f6a24bf45f9d1d832c5eb83ae70ecf3e0a1",
+  "runtimeResultSha256": "39049d9c38b1591f98da0505eaf845d1cface715edd7796a4e5461f4162bc573",
+  "cleanupResultSha256": "3dd820b7d68c2a9213b549c35deccee91d4ee3aed0423a44db17b2c0751226fb",
+  "checks": 14,
+  "originalExecSessionTerminal": true,
+  "backendExitCode": 0,
+  "originalExactOwnedHandlesEnded": true,
+  "portsReleased": true,
+  "unexpectedDescendants": 0,
+  "retainedRegistryLastIdentityDiagnostic": "QueryFullProcessImageName:5",
+  "lastIdentityDiagnosticNotClaimedAbsent": true,
+  "stderrBytes": 0,
+  "defaultInstallationChanged": false,
+  "modelsOrLoginInvoked": 0,
+  "privateCredentialsRawLogsOrScreenshotsIncluded": false
+}

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "observedAtUTC": "2026-11-12T15:58:45.624017+00:00",
+  "status": "post-bootstrapper-registration-followup-native-launch-unproved-interop-terminals-preserved",
+  "attempts": [
+    {
+      "sourceFilename": "after-store-native-registration.ps1",
+      "toolSessionId": 59224,
+      "outerInteropActualExitCode": 1,
+      "error": "WSL UtilAcceptVsock accept4 failed110",
+      "nativeResultFilePresent": false,
+      "nativeExecutionOrNativeExitCodeEstablished": false
+    },
+    {
+      "sourceFilename": "after-store-native-registration-interop2.ps1",
+      "toolSessionId": 4898,
+      "outerInteropActualExitCode": 1,
+      "error": "WSL UtilAcceptVsock accept4 failed110",
+      "nativeResultFilePresent": false,
+      "nativeExecutionOrNativeExitCodeEstablished": false
+    },
+    {
+      "sourceFilename": "query-final-known-families.ps1",
+      "toolSessionId": 72977,
+      "outerInteropActualExitCode": 1,
+      "error": "WSL UtilAcceptVsock accept4 failed110",
+      "nativeResultFilePresent": false,
+      "nativeAdmissionReceiptFilePresent": false,
+      "nativeExecutionOrNativeExitCodeEstablished": false
+    }
+  ],
+  "firstFollowupOriginalNativeProcessAbsenceSeparatelyQueriedAt1546": true,
+  "secondAndFinalFollowupNativeProcessLivenessNotFinallyProvedByThisActor": true,
+  "noneOfTheseFailedOuterCallsReranInstallerOrGui": true,
+  "zeroKnownFamilyPackageCountAfterThisUIAttemptNotClaimed": true,
+  "nativeInteropFailureNotAccountAuthenticationOrPackageDamageProof": true,
+  "nextSafeAction": "Use a presently live native gateway and first query precise final read-only script process identities; never restart an old action only because the outer interop observation failed."
+}

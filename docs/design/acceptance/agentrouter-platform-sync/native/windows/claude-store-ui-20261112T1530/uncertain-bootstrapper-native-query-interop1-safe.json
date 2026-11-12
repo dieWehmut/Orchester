@@ -1,0 +1,14 @@
+{
+    "schemaVersion":  1,
+    "observedAtUTC":  "2026-11-12T15:38:26.0485721Z",
+    "status":  "readonly-query-of-uncertain-original-interop-native-handle",
+    "originalInteropTerminalExit":  1,
+    "originalInteropError":  "WSL UtilAcceptVsock accept4 failed110",
+    "originalNativeActionsNotInferredFromInteropExit":  true,
+    "matchingKnownProcesses":  [
+
+                               ],
+    "newInstallerOrControllerRunCount":  0,
+    "signalsOrServiceTaskChanges":  0,
+    "rawPrivateContentsIncluded":  false
+}

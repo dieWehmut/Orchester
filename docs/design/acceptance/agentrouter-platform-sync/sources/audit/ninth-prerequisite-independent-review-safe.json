@@ -1,0 +1,45 @@
+{
+  "counts": {
+    "selected_files": 36,
+    "json_parsed": 34,
+    "public_mapping_entries": 25,
+    "source_archive_exact_copies": 24,
+    "derived_public_hash_only": 1,
+    "android_component_pins": 45,
+    "android_component_source_archive_equal": 41,
+    "claude_input_source_pins": 13,
+    "fixed_native_script_pins": 5,
+    "secret_scanned_selected_files": 36
+  },
+  "mapping_issues": [],
+  "secret_shape_hits": [],
+  "scope": "only explicitly listed selected public archives, source mappings, component pins and fixed pinned native scripts; no private directory traversal; no native/network execution",
+  "consistency_checks_passed": 17,
+  "local_link_checks": {
+    "markdown": 200,
+    "summary": 115,
+    "requirements": 136,
+    "issues": []
+  },
+  "supplemental_fixed_script_hash_checks": 3,
+  "review_notes": [
+    {
+      "file": "summary.json",
+      "line": 383,
+      "note": "First interop nofreezeaction/nooutputs wording exceeds native-launch-unproved boundary; current absence supports action absent at observer time."
+    },
+    {
+      "file": "sources/requirement-delivery-audit.json",
+      "line": 105,
+      "note": "Specific JSON parsing reason not recorded by this batch safe failure receipt; ArgumentException only. Fixed pinned scripts expose JSON parsing among validation steps but do not prove failing step."
+    },
+    {
+      "file": "sources/requirement-delivery-audit.json",
+      "line": 303,
+      "note": "updatedAt still09:39 while generatedAt15:31; stale freshness metadata."
+    }
+  ],
+  "review_notes_resolved_by_root": true,
+  "remaining_critical_issues": [],
+  "scope_finalization": "Root confirmed subsequent ASCII successor acceptance/freeze/native14 runtime is a later batch and excluded."
+}

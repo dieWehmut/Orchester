@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "status": "current-native-prerequisite-and-original-freeze-failure-checkpoint-pushed-and-merged-main",
+  "observedAtUtc": "2026-11-12T15:53:31.677161+00:00",
+  "featureCommit": "f6520a870d17e35157f95cfe34ff3279e389856e",
+  "mainRevision": "92c668e89334a4a3e768e61c4d236b68041d3efb",
+  "featurePushActualExitCode": 0,
+  "mainMergeActualExitCode": 0,
+  "mainPushActualExitCode": 0,
+  "bothRemoteRefHashesMatched": true,
+  "stagedGitBlobFilesExactlyEqualCurrentAtCheckpoint": 540,
+  "manifestFiles": 538,
+  "frozenProductionSourceInputHashChecks": 731,
+  "firstCompositeActualVerifierExitCode": 0,
+  "firstCompositeAssertionCount": 659,
+  "originalFreezeValidationActualExitCode": 1,
+  "originalFreezeInputsNotPublishedAtThatCheckpoint": true,
+  "laterAsciiSuccessorFreezeAndNativeRuntimeScopesSeparate": true,
+  "originalAllPlatformCompletionClaimed": false
+}

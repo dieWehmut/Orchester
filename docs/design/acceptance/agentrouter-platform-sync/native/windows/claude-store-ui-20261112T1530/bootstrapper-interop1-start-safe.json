@@ -1,0 +1,18 @@
+{
+    "schemaVersion":  1,
+    "observedAtUTC":  "2026-11-12T15:38:56.7964967Z",
+    "status":  "own-official-store-bootstrapper-created-original-handle-retained",
+    "nativePid":  32252,
+    "nativeBirthUTC":  "2026-11-12T15:38:56.7813325Z",
+    "originalCreatorNativeProcessObjectRetained":  true,
+    "originalCreatorNativeHandleRetained":  true,
+    "nativeImageQuerySucceeded":  true,
+    "nativeImageSha256":  "8ab145dab22a698105f20e10b182e50d1c2422e2be1818349efadbb06e118a48",
+    "expectedNativeImageSha256":  "8ab145dab22a698105f20e10b182e50d1c2422e2be1818349efadbb06e118a48",
+    "sessionId":  1,
+    "sourceSha256":  "2a79eb6fc5e30ace5e13d1209b33dd9669972513031719278b35af3b88a976fa",
+    "ordinaryUI":  true,
+    "argumentsSupplied":  0,
+    "otherProcessOrTaskSignals":  0,
+    "unknownBrokerProcessesAdopted":  false
+}

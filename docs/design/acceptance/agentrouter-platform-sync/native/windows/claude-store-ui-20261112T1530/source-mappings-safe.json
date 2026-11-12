@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "status": "explicit-safe-native-receipts-and-public-store-error-window-byte-exact",
+  "files": [
+    {
+      "publicPath": "before-store-ui-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/before-store-ui-safe.json",
+      "bytes": 1967,
+      "sha256": "7b7b73783123b13cb7f1ed9f399fa984cd84e1cb29a5bcbb8e71bcbdbb750c94",
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "initial-readonly-parser-failure-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/initial-readonly-parser-failure-safe.json",
+      "bytes": 556,
+      "sha256": "9603423a5f8a2f471b4dabadc7a830591b8f411dc6f80d837377030d5f7f68da",
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "initial-bootstrapper-source-prelaunch-failure-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/initial-bootstrapper-source-prelaunch-failure-safe.json",
+      "bytes": 625,
+      "sha256": "716257ddcfcd59e16663786d6ccae71341f2f5de5502bf58dd5e3fc7f80fe521",
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "interop-observation-failures-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/interop-observation-failures-safe.json",
+      "bytes": 845,
+      "sha256": "63ef66feb3acf50f91986d1387c956dfa47ba86874538758f48b8dbc57bc178c",
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "uncertain-bootstrapper-native-query-interop1-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/uncertain-bootstrapper-native-query-interop1-safe.json",
+      "bytes": 536,
+      "sha256": "e1f7eb8a176e449903564a9e75d24a248e2093decf9290fa7e8e0dbc6e22764d",
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "bootstrapper-interop1-preflight-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/bootstrapper-interop1-preflight-safe.json",
+      "bytes": 2128,
+      "sha256": "ca956e9d2a3981493d6c8ee38356027fc8169d8eb6df252471d544b28470d1de",
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "bootstrapper-interop1-start-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/bootstrapper-interop1-start-safe.json",
+      "bytes": 851,
+      "sha256": "4368e0ca3f72e557e76652bc68295079220503c570f13e18358c7e6bc7d09b8d",
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "bootstrapper-interop1-terminal-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/bootstrapper-interop1-terminal-safe.json",
+      "bytes": 826,
+      "sha256": "df6b8e0d2b7a19f77dbe766e5d4d725e6e0cbefcb6d07b695f33592441953162",
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "after-store-ui-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/after-store-ui-safe.json",
+      "bytes": 4882,
+      "sha256": "61afd47539a2ffa0d28a01246dd2def9ad5df52e1a8286bfeeb6a177faba584f",
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "store-window-capture-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/store-window-capture-safe.json",
+      "bytes": 857,
+      "sha256": "d31535f27e8d76de3bd96f4529019ebe34b3919d34b18d2569ac67f7b5d7ca3b",
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "after-registration-interop-query-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/after-registration-interop-query-safe.json",
+      "bytes": 1155,
+      "sha256": "63ebd0f4b7abc4fac1376352acff50bc9b031094c5a5091a2d7c3d497f9e2e83",
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "microsoft-store-connection-error.png",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/current-store-window-private.png",
+      "bytes": 277422,
+      "sha256": "96d9fd94481dc5b9fe124443b40b65fe119388c7bfb86497a49dedf01f3abe56",
+      "sourceAndArchiveByteExact": true,
+      "visualReview": "Only public Microsoft Store connection-error UI; no user account name, credentials, network address or private content visible.",
+      "captureScope": "PrintWindow of the exact inspected Microsoft Store HWND, no whole-desktop capture."
+    },
+    {
+      "publicPath": "post-ui-registration-interop-failures-safe.json",
+      "bytes": 1720,
+      "sha256": "045570966d869b4b39cf52e24e1b59a61b11fcdc933a1b4c36e5e4c0e4e25b38",
+      "kind": "derived-actual-tool-scope-and-explicit-safe-receipts-summary"
+    },
+    {
+      "publicPath": "final-store-ui-attempt-safe.json",
+      "bytes": 5157,
+      "sha256": "16ba234e1c834ae3b54f184a439e72120d207ae0c8a24cc7c08a567b7e12c46c",
+      "kind": "derived-actual-tool-scope-and-explicit-safe-receipts-summary"
+    }
+  ],
+  "preparedNativeSourceHashes": [
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/inspect-store-ui.ps1",
+      "sha256": "3370adc7a3c1c0a593dd831eb9ebd63d243446ac46c0e8efc2a3fd3a34184f8c",
+      "bytes": 4572,
+      "sourceContentsArchived": false,
+      "kind": "own-prepared-readonly-or-original-handle-preserving-native-source"
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/inspect-store-ui-utf8.ps1",
+      "sha256": "db211eef48a432d060b94b7a9d033e5040d54674076b72c7fc529a6e151f0b26",
+      "bytes": 4611,
+      "sourceContentsArchived": false,
+      "kind": "own-prepared-readonly-or-original-handle-preserving-native-source"
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/start-store-ui-owned.ps1",
+      "sha256": "1d2540b2f70f5915cbc24389c599599b584ab17bba7dafb5b337c8042d8fc91c",
+      "bytes": 5890,
+      "sourceContentsArchived": false,
+      "kind": "own-prepared-readonly-or-original-handle-preserving-native-source"
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/start-store-ui-owned-corrected.ps1",
+      "sha256": "e7279df53eb76e27ce0870c50c024bdd73ed08ce6f69fa1a0797bd25db028fc9",
+      "bytes": 6170,
+      "sourceContentsArchived": false,
+      "kind": "own-prepared-readonly-or-original-handle-preserving-native-source"
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/query-uncertain-bootstrapper.ps1",
+      "sha256": "61179da2bfed6d347bddc864dc458775f712b8f69e089f452ecb6a4fdd993afb",
+      "bytes": 1766,
+      "sourceContentsArchived": false,
+      "kind": "own-prepared-readonly-or-original-handle-preserving-native-source"
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/query-uncertain-bootstrapper-interop1.ps1",
+      "sha256": "01073dc78348cae245e143231431eddbb000f08d3b623143c8acd079ae4f9853",
+      "bytes": 1775,
+      "sourceContentsArchived": false,
+      "kind": "own-prepared-readonly-or-original-handle-preserving-native-source"
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/start-store-ui-owned-interop1.ps1",
+      "sha256": "2a79eb6fc5e30ace5e13d1209b33dd9669972513031719278b35af3b88a976fa",
+      "bytes": 6206,
+      "sourceContentsArchived": false,
+      "kind": "own-prepared-readonly-or-original-handle-preserving-native-source"
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/inspect-store-ui-after.ps1",
+      "sha256": "c9fe277aba074562cbf7e69b1700fdc35749336b03916250831bdb35bc7b1164",
+      "bytes": 4610,
+      "sourceContentsArchived": false,
+      "kind": "own-prepared-readonly-or-original-handle-preserving-native-source"
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/capture-current-store-window.ps1",
+      "sha256": "4001803d3bdc430ab5b2078672d64ee47755b1471a8119278c6986d421c68a6d",
+      "bytes": 3321,
+      "sourceContentsArchived": false,
+      "kind": "own-prepared-readonly-or-original-handle-preserving-native-source"
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/after-store-native-registration.ps1",
+      "sha256": "02b34edf905d8e9c1cc5a08ae9daec70e5080eabee7dceac66203e0dfdee5dab",
+      "bytes": 2310,
+      "sourceContentsArchived": false,
+      "kind": "own-prepared-readonly-or-original-handle-preserving-native-source"
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/query-uncertain-after-registration.ps1",
+      "sha256": "693c47d6f9acc6668778297bee3bc5f4bee717c390c81606de89922833dd4747",
+      "bytes": 1764,
+      "sourceContentsArchived": false,
+      "kind": "own-prepared-readonly-or-original-handle-preserving-native-source"
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/after-store-native-registration-interop2.ps1",
+      "sha256": "57372ad084ecb8f48d24f318b65e5f3e175d7e68197e7f289c216f3bf070c163",
+      "bytes": 2319,
+      "sourceContentsArchived": false,
+      "kind": "own-prepared-readonly-or-original-handle-preserving-native-source"
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/claude-store-ui-20261112T1530/query-final-known-families.ps1",
+      "sha256": "a3524c118caad8cc70174ca9bbc59e361a9be394754595b6fd6f1b6c8d41fc1a",
+      "bytes": 2225,
+      "sourceContentsArchived": false,
+      "kind": "own-prepared-readonly-or-original-handle-preserving-native-source"
+    }
+  ],
+  "rawPrivateProfilesCredentialsDiagnosticsOrUnselectedFilesReadForArchive": false
+}

@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "observedAtUTC": "2026-11-12T15:34:50.611096+00:00",
+  "status": "initial-native-source-prelaunch-failure-preserved",
+  "actualNativeProcessExitCode": 1,
+  "sourceSha256": "1d2540b2f70f5915cbc24389c599599b584ab17bba7dafb5b337c8042d8fc91c",
+  "sourceBytes": 5890,
+  "reason": "Derived receipt literal booleans lacked PowerShell $ prefix; first preflight Save value construction and error receipt construction failed before native Create stage. Original source retained.",
+  "bootstrapperLaunches": 0,
+  "uiInputCount": 0,
+  "childNativeHandleCreated": false,
+  "sourceOriginalBytesPreserved": true
+}

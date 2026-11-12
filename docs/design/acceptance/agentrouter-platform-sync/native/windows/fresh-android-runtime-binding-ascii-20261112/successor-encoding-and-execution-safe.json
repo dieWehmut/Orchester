@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "status": "ascii-escaped-successor-semantically-equal-and-unmodified-native-guard-passed",
+  "observedAtUtc": "2026-11-12T15:33:50.932428+00:00",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "oldOriginalCompositeSha256": "38ab35f8a20adbf92743902358ce33473f122e2aadb0c1e46d6448871d14e8f6",
+  "successorOriginalCompositeSha256": "91df37944b7bc0940859d4df6def87efc35e24efe1a9ca3c26a2e961e84c9413",
+  "oldNormalizedSha256": "d8a5fe51d3221a2e4715288c1ae4bc1d7357158e5ef0995148cad22d4ddcad73",
+  "successorNormalizedSha256": "0e103df7ea49b11327d47082fab1fdc57602f99be4f0b10b16cfbc24cbec6290",
+  "originalDecodedNativeEvidenceSemanticallyEqual": true,
+  "originalMetadataExclusionForComparison": [
+    "verifierSourceSha256"
+  ],
+  "normalizedDecodedEvidenceSemanticallyEqual": true,
+  "normalizedMetadataExclusionsForComparison": [
+    "originalReceiptFile",
+    "originalReceiptSha256"
+  ],
+  "successorOriginalCompositeAllBytesAscii": true,
+  "jsonUnicodeEscapesPreserveActualChineseUiLabels": true,
+  "windowsPowerShell5DefaultEncodingOriginalParseSucceeded": false,
+  "windowsPowerShell5ExplicitUtf8OriginalParseSucceeded": true,
+  "successorCompositeVerifierActualExitCode": 0,
+  "successorCompositeVerifierAssertionsPassed": 659,
+  "successorCompositeVerifierSourceSha256": "6d5b67bbe5f774adbd67d02629c3030da083c512f4e3c53439051c09918b70e5",
+  "successorNativeReadOnlyGuardInvokerActualExitCode": 0,
+  "successorNativeReadOnlyGuardAcceptedCandidate": true,
+  "successorNativeReadOnlyGuardSourceSha256": "61689e736f8a25a47d2336ebd87d32d3225d8d8531b8123652260ef9e2345e0d",
+  "unmodifiedGuardSha256": "fa6ce76b0ac9d2c4a37b173931e4627d92cab7e5308e6f912b8467a5eb58ff6d",
+  "originalFailedNativeFreezeAttemptAndCandidateSavedByteExact": [
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/fresh-runtime-inputs-freeze-attempt-safe.json",
+      "savedPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1555-ascii/prior-freeze-attempt-safe.json",
+      "sha256": "94d10182a456c06a45c8a41d81d8965f9e3f89e44d440f64835a5cdc22da37e9",
+      "bytes": 675,
+      "byteExact": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/fresh-runtime-inputs-unverified-46aed2a5b57c456c9541f2d9481b7d61.json",
+      "savedPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1555-ascii/prior-failed-candidate-safe.json",
+      "sha256": "0d2e51c9b4febbcc5797e7239ffbff077a31af6b40e8151a9a9e7b1d755e0009",
+      "bytes": 13660,
+      "byteExact": true
+    }
+  ],
+  "freezeInvokedByThisSuccessor": false,
+  "freshRuntimeInputsPublished": false,
+  "native14Or18Invoked": false,
+  "defaultInstallationChanged": false,
+  "priorInputsReceiptsOrGateModified": false,
+  "executionEvidence": [
+    "functions.exec exec_command chunke1eab5 + write_stdin chunk019bc1 originalsession12805 actualexit0 native readonly guard invocation",
+    "functions.exec exec_command chunkb158d9 Python successor composite verification actualexit0"
+  ]
+}

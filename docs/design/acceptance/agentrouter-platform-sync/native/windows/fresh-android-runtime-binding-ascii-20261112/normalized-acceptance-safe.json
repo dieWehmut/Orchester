@@ -1,0 +1,93 @@
+{
+  "format": "orchester-fresh-native-android-acceptance-v1",
+  "status": "passed",
+  "receiptKind": "normalized-derived-composite-binding-not-single-native-execution",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "apkSha256": "f83fa2a75c712a3d2e1f3f203cf73ce89204fb4ca0bce4d8c2ef0c4fe3596d3c",
+  "certificateSha256": "df6df435ccf10a685fb109668da8cdf7b022b481ba346f3143190aeda0c4468e",
+  "sourceAndDistVerified": true,
+  "originalInstalledCertificateMatched": true,
+  "nativeBridgeAccepted": true,
+  "nativeUiAccepted": true,
+  "nativeTerminalAccepted": true,
+  "cleanupAccepted": true,
+  "nativeGradleExitCode": 0,
+  "nativeInstallExitCode": 0,
+  "originalReceiptFile": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\formal-android-composite-20261112T1555-ascii\\original-composite-acceptance-safe.json",
+  "originalReceiptSha256": "91df37944b7bc0940859d4df6def87efc35e24efe1a9ca3c26a2e961e84c9413",
+  "mobileDistInventory": [
+    {
+      "path": "assets/antigravity-DXFfVr6X.svg",
+      "sha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e"
+    },
+    {
+      "path": "assets/brand-icon-Zjdxen9M.png",
+      "sha256": "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06"
+    },
+    {
+      "path": "assets/claude-RJ8il4lB.png",
+      "sha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1"
+    },
+    {
+      "path": "assets/codex-DODyF2an.png",
+      "sha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3"
+    },
+    {
+      "path": "assets/crush-B1wob-OZ.png",
+      "sha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2"
+    },
+    {
+      "path": "assets/cursor-dark-BM_3k4Y4.svg",
+      "sha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260"
+    },
+    {
+      "path": "assets/cursor-light-DGKJuirn.svg",
+      "sha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0"
+    },
+    {
+      "path": "assets/hermes-dark-D5fo9gTB.svg",
+      "sha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36"
+    },
+    {
+      "path": "assets/hermes-light-x1BVlPhG.svg",
+      "sha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684"
+    },
+    {
+      "path": "assets/index-9wEW8k7x.css",
+      "sha256": "0ccaec9543d9001c1e528918446afa1170c46d9fc676c46ba33f1a21a5fbbf20"
+    },
+    {
+      "path": "assets/index--zaH3Y7H.js",
+      "sha256": "7e115c9d4b6236a5de0338b7499f0e09341df65ee03067ad71cd01b578a10a49"
+    },
+    {
+      "path": "assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+      "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b"
+    },
+    {
+      "path": "assets/roo-D8yWBDNL.png",
+      "sha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a"
+    },
+    {
+      "path": "assets/workbuddy-D1Gu2IKl.svg",
+      "sha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d"
+    },
+    {
+      "path": "assets/zcode-yL2Qb12j.png",
+      "sha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c"
+    },
+    {
+      "path": "favicon.png",
+      "sha256": "bd2b0e95dade84d5371027cc9616610813b3e7f878b434d54a3a1459111c7db2"
+    },
+    {
+      "path": "index.html",
+      "sha256": "8b944924f56c75a7e97a91bfd2bce4cacfab8b961e24fc04beff80af431bc033"
+    }
+  ],
+  "limitations": "Every required source/build/install/Bridge/UI/terminal/owned-cleanup scope is supported by its listed historical native receipt; current public source/APK/resource/certificate bytes were independently reread. Passed does not convert nonzero product or observer exits to zero.",
+  "taskCleanupInvokerActualExitCode": 1,
+  "actualClosedCmdTerminalExitCode": 1,
+  "formalWindows14Or18Accepted": false,
+  "defaultInstallationChanged": false
+}

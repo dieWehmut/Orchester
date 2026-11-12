@@ -1,0 +1,109 @@
+{
+    "status":  "original-owned-handles-still-live-retained",
+    "observedAtUtc":  "2026-11-12T16:01:47.4448944Z",
+    "remainingCount":  10,
+    "remaining":  [
+                      {
+                          "pid":  37324,
+                          "created":  134389718070239855,
+                          "parentPid":  0,
+                          "parentCreated":  null,
+                          "image":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\desktop-candidate\\orchester-desktop.exe",
+                          "sha256":  "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+                          "originalHandleLive":  true
+                      },
+                      {
+                          "pid":  16548,
+                          "created":  134389718070340155,
+                          "parentPid":  37324,
+                          "parentCreated":  134389718070239855,
+                          "image":  "C:\\Windows\\System32\\conhost.exe",
+                          "sha256":  "c86146188b78e484f32cc29e2331689659943b47689a85570342044f499938ac",
+                          "originalHandleLive":  true
+                      },
+                      {
+                          "pid":  29196,
+                          "created":  134389718071276076,
+                          "parentPid":  37324,
+                          "parentCreated":  134389718070239855,
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "sha256":  "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+                          "originalHandleLive":  true
+                      },
+                      {
+                          "pid":  25672,
+                          "created":  134389718071560996,
+                          "parentPid":  29196,
+                          "parentCreated":  134389718071276076,
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "sha256":  "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+                          "originalHandleLive":  true
+                      },
+                      {
+                          "pid":  6188,
+                          "created":  134389718072652348,
+                          "parentPid":  29196,
+                          "parentCreated":  134389718071276076,
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "sha256":  "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+                          "originalHandleLive":  true
+                      },
+                      {
+                          "pid":  7324,
+                          "created":  134389718072652375,
+                          "parentPid":  29196,
+                          "parentCreated":  134389718071276076,
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "sha256":  "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+                          "originalHandleLive":  true
+                      },
+                      {
+                          "pid":  33444,
+                          "created":  134389718072821911,
+                          "parentPid":  29196,
+                          "parentCreated":  134389718071276076,
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "sha256":  "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+                          "originalHandleLive":  true
+                      },
+                      {
+                          "pid":  10680,
+                          "created":  134389718073392842,
+                          "parentPid":  29196,
+                          "parentCreated":  134389718071276076,
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "sha256":  "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+                          "originalHandleLive":  true
+                      },
+                      {
+                          "pid":  29380,
+                          "created":  134389718203081445,
+                          "parentPid":  29196,
+                          "parentCreated":  134389718071276076,
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "sha256":  "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+                          "originalHandleLive":  true
+                      },
+                      {
+                          "pid":  39540,
+                          "created":  134389718219228955,
+                          "parentPid":  29196,
+                          "parentCreated":  134389718071276076,
+                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                          "sha256":  "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+                          "originalHandleLive":  true
+                      }
+                  ],
+    "nativeProcess":  {
+                          "pid":  37324,
+                          "created":  null,
+                          "originalHandleLive":  true
+                      },
+    "allOriginalHandlesEndedProved":  false,
+    "observationFailed":  false,
+    "observationErrorType":  null,
+    "originalRegistryAndCreatorProcessRetained":  true,
+    "systemBrokerSignalled":  false,
+    "sharedLifetimeClaimed":  false,
+    "signals":  0
+}

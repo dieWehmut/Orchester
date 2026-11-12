@@ -1,0 +1,12 @@
+{
+    "status":  "failed",
+    "stage":  "desktop-eighteen-checks",
+    "type":  "System.InvalidOperationException",
+    "baseExceptionType":  "System.InvalidOperationException",
+    "staticCode":  null,
+    "safeUnexpectedImages":  [
+
+                             ],
+    "modelCalls":  0,
+    "defaultInstallationChanged":  false
+}

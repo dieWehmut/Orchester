@@ -1,0 +1,530 @@
+{
+  "format": "orchester-derived-composite-native-android-acceptance-v1",
+  "status": "passed",
+  "receiptKind": "derived-composite-of-hash-verified-original-native-receipts",
+  "singleNativeExecutionClaimed": false,
+  "nativeCommandsReexecutedByCompositeVerifier": false,
+  "acceptanceMeaning": "Every required source/build/install/Bridge/UI/terminal/owned-cleanup scope is supported by its listed historical native receipt; current public source/APK/resource/certificate bytes were independently reread. Passed does not convert nonzero product or observer exits to zero.",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "apkSha256": "f83fa2a75c712a3d2e1f3f203cf73ce89204fb4ca0bce4d8c2ef0c4fe3596d3c",
+  "certificateSha256": "df6df435ccf10a685fb109668da8cdf7b022b481ba346f3143190aeda0c4468e",
+  "resourcesDistMirrorAndApkByteExact": true,
+  "resourceInventory": [
+    {
+      "path": "assets/antigravity-DXFfVr6X.svg",
+      "sha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e"
+    },
+    {
+      "path": "assets/brand-icon-Zjdxen9M.png",
+      "sha256": "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06"
+    },
+    {
+      "path": "assets/claude-RJ8il4lB.png",
+      "sha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1"
+    },
+    {
+      "path": "assets/codex-DODyF2an.png",
+      "sha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3"
+    },
+    {
+      "path": "assets/crush-B1wob-OZ.png",
+      "sha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2"
+    },
+    {
+      "path": "assets/cursor-dark-BM_3k4Y4.svg",
+      "sha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260"
+    },
+    {
+      "path": "assets/cursor-light-DGKJuirn.svg",
+      "sha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0"
+    },
+    {
+      "path": "assets/hermes-dark-D5fo9gTB.svg",
+      "sha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36"
+    },
+    {
+      "path": "assets/hermes-light-x1BVlPhG.svg",
+      "sha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684"
+    },
+    {
+      "path": "assets/index-9wEW8k7x.css",
+      "sha256": "0ccaec9543d9001c1e528918446afa1170c46d9fc676c46ba33f1a21a5fbbf20"
+    },
+    {
+      "path": "assets/index--zaH3Y7H.js",
+      "sha256": "7e115c9d4b6236a5de0338b7499f0e09341df65ee03067ad71cd01b578a10a49"
+    },
+    {
+      "path": "assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+      "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b"
+    },
+    {
+      "path": "assets/roo-D8yWBDNL.png",
+      "sha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a"
+    },
+    {
+      "path": "assets/workbuddy-D1Gu2IKl.svg",
+      "sha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d"
+    },
+    {
+      "path": "assets/zcode-yL2Qb12j.png",
+      "sha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c"
+    },
+    {
+      "path": "favicon.png",
+      "sha256": "bd2b0e95dade84d5371027cc9616610813b3e7f878b434d54a3a1459111c7db2"
+    },
+    {
+      "path": "index.html",
+      "sha256": "8b944924f56c75a7e97a91bfd2bce4cacfab8b961e24fc04beff80af431bc033"
+    }
+  ],
+  "build": {
+    "nativeWindows": true,
+    "exitCode": 0,
+    "receiptKey": "gradle_result",
+    "historicalOriginalPid": 27644,
+    "firstBuildFailurePreserved": true
+  },
+  "install": {
+    "appExitCode": 0,
+    "testExitCode": 0,
+    "receiptKey": "install",
+    "targetHost": "Windows",
+    "serial": "emulator-5572"
+  },
+  "nativeBridge": {
+    "status": "passed",
+    "commandActualExitCode": 0,
+    "tests": 4,
+    "receiptKey": "bridge"
+  },
+  "ui": {
+    "status": "passed",
+    "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+    "actualAvdHost": "Windows",
+    "actualAvdName": "Medium_Phone_API_37.0",
+    "nativeAdbServerPort": 5039,
+    "cdpPort": 19329,
+    "currentApkSha256": "f83fa2a75c712a3d2e1f3f203cf73ce89204fb4ca0bce4d8c2ef0c4fe3596d3c",
+    "canonicalProviderIds": [
+      "antigravity",
+      "claude",
+      "claude_app",
+      "cline",
+      "codex",
+      "craft",
+      "crush",
+      "cursor",
+      "deepseek",
+      "gemini",
+      "hermes",
+      "kilo",
+      "openclaw",
+      "opencode",
+      "pi",
+      "qwen",
+      "roo",
+      "trae",
+      "workbuddy",
+      "workbuddy_global",
+      "zcode"
+    ],
+    "canonicalProviderCount": 21,
+    "canonicalThemeImageCount": 42,
+    "allCanonicalThemeImagesLoaded": true,
+    "uniqueLoadedIconPayloadCount": 24,
+    "allCanonicalThemeMarksMatchOfficialSource": true,
+    "rawByteEqualMarkCount": 25,
+    "svgXmlCanonicalEqualMarkCount": 15,
+    "bothWorkBuddyVersionsRenderedWithCorrectSeparateNames": {
+      "workbuddy": "WorkBuddy \u56fd\u5185\u7248",
+      "workbuddy_global": "WorkBuddy AI \u56fd\u9645\u7248"
+    },
+    "actualProductPalette": "sea",
+    "realBackendAgentMonitorRowsNotInjected": true,
+    "controlledLightProductSettingClaimed": false,
+    "strictIndependentXmlCssNormalizedEqualAdditionalMarkCount": 2,
+    "officialSourceMatchedMarkCount": 42,
+    "initialComparisonReceipt": {
+      "fileName": "correct-windows-final21-ui-official-icons-safe.json",
+      "sha256": "14c68d1ad5cfb20f37ca28fc46e9b8cb118498242f8d9790a519c2dd10a70bb1",
+      "initialNormalizedMatchedCount": 40
+    },
+    "strictOpenCodeNormalizationReceipt": {
+      "fileName": "final-opencode-strict-xml-equivalence-safe.json",
+      "sha256": "e8de98f493e65b79be088a6f78b0b0cef3aa132a1992210951c3e43956ae1af2"
+    },
+    "nativeScreenshotsVisuallyInspected": true,
+    "publicScreenshots": [
+      {
+        "fileName": "correct-windows-final21-workbuddy-both-public.png",
+        "sha256": "14beca980cd92ff3778b6c9abb43f43697a2ba2b1918578c1ec0b1610603a69e"
+      },
+      {
+        "fileName": "correct-windows-final21-openclaw-native.png",
+        "sha256": "1cd36a8efd603c8eb49b825cfc163ad19d5922ff149adb5865ca849d97f6909a"
+      }
+    ],
+    "productLightThemeSelectorExists": false,
+    "receiptKey": "ui"
+  },
+  "terminal": {
+    "status": "passed",
+    "receiptKeys": [
+      "terminal_created",
+      "unicode",
+      "resize",
+      "close"
+    ],
+    "actualClosedCmdTerminalExitCode": 1,
+    "webSocketExitPacketState": null,
+    "webSocketExitPacketCode": null,
+    "normalProductCloseAndDrain": true
+  },
+  "cleanup": {
+    "status": "passed",
+    "receiptKeys": [
+      "removal",
+      "wire",
+      "channel_cleanup",
+      "completion"
+    ],
+    "ownTaskAbsent": true,
+    "taskCleanupInvokerActualExitCode": 1,
+    "directPreDeleteTaskResultZeroRecorded": false,
+    "preDeleteTaskZeroSourceFlowOnly": true,
+    "ownBackendOriginalHandlesNormalExitVerified": true,
+    "normalHomeDoesNotProveAppProcessDestroyed": true,
+    "serverRevokeWasSeparateNormalApiRequest": true
+  },
+  "androidStudio": {
+    "actualResolveAndImport": true,
+    "syncMilliseconds": 17400,
+    "receiptKey": "studio",
+    "ideRunInstrumentationClaimed": false
+  },
+  "originalNativeReceipts": [
+    {
+      "key": "source_mirror",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/final21-source-mirror-safe.json",
+      "sha256": "11ff5c2aef76fb8cc5ddcc6d45108f14b88ecf1e2f9ab07abb07ab4189dcf93c",
+      "bytes": 11361,
+      "archivePath": "native/android/current21-partial/final21-source-mirror-safe.json"
+    },
+    {
+      "key": "apk_provenance",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/final21-apk-provenance-safe.json",
+      "sha256": "99f975933c96942ae38868dcd8f9acd645a161f3a7396700b24c33b21bf5c003",
+      "bytes": 4216,
+      "archivePath": "native/android/current21-partial/final21-apk-provenance-safe.json"
+    },
+    {
+      "key": "install",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-install-safe.json",
+      "sha256": "d2a917bf910dacbea5a35d152a72cdfa9932e96339b8c9ee210cb509fb48e8f0",
+      "bytes": 1569,
+      "archivePath": "native/android/correct-windows-current21/correct-windows-final21-install-safe.json"
+    },
+    {
+      "key": "certificate",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-original-certificate-safe.json",
+      "sha256": "4aea050de91a4812d619198d94ceb3f5a7ed32ca30ede52273350ce5902aedfe",
+      "bytes": 570,
+      "archivePath": "native/android/correct-windows-current21/correct-windows-original-certificate-safe.json"
+    },
+    {
+      "key": "bridge",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-native-bridge-safe.json",
+      "sha256": "7ad158baac519a67c020e85966a6529ec29e59fac7f457aa48d3cdace2200af5",
+      "bytes": 844,
+      "archivePath": "native/android/correct-windows-current21/correct-windows-final21-native-bridge-safe.json"
+    },
+    {
+      "key": "ui",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-ui-all-official-icons-accepted-safe.json",
+      "sha256": "729524beacdbe08afa14883a920df6feadfbf2c478d1221ffd89f1951996587b",
+      "bytes": 2172,
+      "archivePath": "native/android/correct-windows-current21/correct-windows-final21-ui-all-official-icons-accepted-safe.json"
+    },
+    {
+      "key": "studio",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/isolated-studio-final21-actual-project-sync-safe.json",
+      "sha256": "6e5c9b871dfff003d8c4ce20afebb4da7b1d6155f46b3a038ae9ba562ea0f392",
+      "bytes": 3068,
+      "archivePath": "native/android/correct-windows-current21/isolated-studio-final21-actual-project-sync-safe.json"
+    },
+    {
+      "key": "gradle_result",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/native-gradle-final21-app-qualified-result.json",
+      "sha256": "697b476705bed538d239d7427c4fbd765761960c3f69e05b0fb764141151df0c",
+      "bytes": 227
+    },
+    {
+      "key": "gradle_started",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/native-gradle-final21-app-qualified-started.json",
+      "sha256": "bd8766138e332886d64d3848587bc2fa84bbc29de0fecd5f82c03475ac26e819",
+      "bytes": 153
+    },
+    {
+      "key": "initial_gradle_failed",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/native-gradle-final21-result.json",
+      "sha256": "b5c968cf083a848f3b065fe859c4567469fe4b5d10e20d9b44797715c06227ac",
+      "bytes": 228
+    },
+    {
+      "key": "qualified_dependency_failed",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/native-gradle-final21-correct-dependency-result.json",
+      "sha256": "d49c68e42ef20328e6af07b696802b78723bf56360abb08e3ea8a6b4e6d8c2e1",
+      "bytes": 228
+    },
+    {
+      "key": "supporting_native_0",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/native-channel-5572-post-reboot-20261112/channel-target-identity-safe.json",
+      "sha256": "9f9235d601e73bb36e2acc57b8ff49586ad4bbb19b2b35cce1b3fe87c4ae18f5",
+      "bytes": 3456,
+      "archivePath": "native/android/post-reboot-completion-20261112/channel-target-identity-safe.json"
+    },
+    {
+      "key": "supporting_native_1",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-native-main-opened-post-reboot-20261112-safe.json",
+      "sha256": "6b1f029c66b891512af5d87439b043e4746abb4e396e16b2a11d31a262df88f0",
+      "bytes": 613,
+      "archivePath": "native/android/post-reboot-completion-20261112/native-main-opened-safe.json"
+    },
+    {
+      "key": "supporting_native_2",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-original-five-aes-and-existing-wire-post-reboot-20261112-safe.json",
+      "sha256": "fa7b8d3063119a05ff710283ca8ac898fe254ee791eb962ed1ebb6e654ecc8e5",
+      "bytes": 802,
+      "archivePath": "native/android/post-reboot-completion-20261112/initial-original-five-wire-safe.json"
+    },
+    {
+      "key": "wire",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/installed-apk-and-original-five-wire-safe.json",
+      "sha256": "19ea99b1a709ef2ac434f5e29be565aac595d626acb2dcd3b9ab75b6a4c0cac5",
+      "bytes": 782,
+      "archivePath": "native/android/post-reboot-completion-20261112/product/installed-apk-and-original-five-wire-safe.json"
+    },
+    {
+      "key": "supporting_native_4",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-app-normal-exit-observer-failed-safe.json",
+      "sha256": "0ec8562a5b8ad823f278cf1a9b85e9500f21292966f519d5b6393086cb07481b",
+      "bytes": 60,
+      "archivePath": "native/android/post-reboot-completion-20261112/product/own-app-normal-exit-observer-failed-safe.json"
+    },
+    {
+      "key": "supporting_native_5",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-app-normal-home-safe.json",
+      "sha256": "b06412a5b0302f5da8a0ece9958f7c7fe9e9dbd6174df7d687bab4b6e43c8969",
+      "bytes": 363,
+      "archivePath": "native/android/post-reboot-completion-20261112/product/own-app-normal-home-safe.json"
+    },
+    {
+      "key": "removal",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-device-product-removal-and-revocation-safe.json",
+      "sha256": "86def36015020ff982c45861373071ca39aad1726dc022d7c162a9f11767f853",
+      "bytes": 894,
+      "archivePath": "native/android/post-reboot-completion-20261112/product/own-device-product-removal-and-revocation-safe.json"
+    },
+    {
+      "key": "resize",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-keyboard-native-resize-safe.json",
+      "sha256": "421a340ae571b85100ceeb02a9cb718eee7fcf62f363c3a940bf3f7ca8b42aeb",
+      "bytes": 612,
+      "archivePath": "native/android/post-reboot-completion-20261112/product/own-keyboard-native-resize-safe.json"
+    },
+    {
+      "key": "supporting_native_8",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-native-channel-normal-exit-failure-safe.json",
+      "sha256": "b613718894d3e793de545860a348ef5d74707af715e4c5105a82eab7b66a117f",
+      "bytes": 372,
+      "archivePath": "native/android/post-reboot-completion-20261112/product/own-native-channel-normal-exit-failure-safe.json"
+    },
+    {
+      "key": "channel_cleanup",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-native-channel-normal-exit-normalized-safe.json",
+      "sha256": "b21772895d89cdaeaba607ffc1246e499e790399a4ef866b901b76768e8f3f21",
+      "bytes": 1003,
+      "archivePath": "native/android/post-reboot-completion-20261112/product/own-native-channel-normal-exit-normalized-safe.json"
+    },
+    {
+      "key": "unicode",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-native-unicode-safe.json",
+      "sha256": "93dbc3265b33d2b659983cbdbc034dd0aff9b0d77073721d3499a1e403f5ea68",
+      "bytes": 741,
+      "archivePath": "native/android/post-reboot-completion-20261112/product/own-native-unicode-safe.json"
+    },
+    {
+      "key": "close",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-product-close-and-drain-safe.json",
+      "sha256": "6c7aeb17ebd1860cfb4a4dd047aaf066867f40bbcd1d8ee61cccaa79de0f436b",
+      "bytes": 634,
+      "archivePath": "native/android/post-reboot-completion-20261112/product/own-product-close-and-drain-safe.json"
+    },
+    {
+      "key": "supporting_native_12",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-reconnected-safe.json",
+      "sha256": "92425b77c4b3216576965e00e7993f963a42ee3e6e3c2291b734e9e7c1c7f73d",
+      "bytes": 372,
+      "archivePath": "native/android/post-reboot-completion-20261112/product/own-reconnected-safe.json"
+    },
+    {
+      "key": "terminal_created",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-terminal-created-safe.json",
+      "sha256": "4667a3385fa949fa4135f74e34a62a29b8cd2c25be9b5daea1b7383c3eb02b90",
+      "bytes": 509,
+      "archivePath": "native/android/post-reboot-completion-20261112/product/own-terminal-created-safe.json"
+    },
+    {
+      "key": "supporting_native_14",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt3-resume-state-20261111/ready-safe.json",
+      "sha256": "c73ed07afaf6c60a66650964bd0f1bd0d357b88c6bb66485459d83d517e4c112",
+      "bytes": 2237,
+      "archivePath": "native/android/post-reboot-completion-20261112/temporary-backend/ready-safe.json"
+    },
+    {
+      "key": "supporting_native_15",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt3-resume-state-20261111/pairing-close-safe.json",
+      "sha256": "cac96594ec1ee177d1327765006e91f5850ba335ecc13db09c5c872cf6444a4c",
+      "bytes": 201,
+      "archivePath": "native/android/post-reboot-completion-20261112/temporary-backend/pairing-close-safe.json"
+    },
+    {
+      "key": "supporting_native_16",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt3-resume-state-20261111/cleanup-safe.json",
+      "sha256": "29e0dbed15b21121fae3bc68ca3b4a16408ee197c3d48b01f898d05694b6f7bb",
+      "bytes": 1069,
+      "archivePath": "native/android/post-reboot-completion-20261112/temporary-backend/cleanup-safe.json"
+    },
+    {
+      "key": "supporting_native_17",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt3-resume-state-20261111/private-transport-cleanup-safe.json",
+      "sha256": "7b5b179c5e4fe104730bb9aa869ffb2a7460cca7dceaafb2f2f61c23eeebcae3",
+      "bytes": 519,
+      "archivePath": "native/android/post-reboot-completion-20261112/temporary-backend/private-transport-cleanup-safe.json"
+    },
+    {
+      "key": "supporting_native_18",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/runtime/task-owner-safe.json",
+      "sha256": "128449c9247061a66017da9b264f2591c2d3ec44a4adabbdabac2abea4d0f46f",
+      "bytes": 613,
+      "archivePath": "native/android/post-reboot-completion-20261112/original-task/task-owner-safe.json"
+    },
+    {
+      "key": "supporting_native_19",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/runtime/start-safe.json",
+      "sha256": "d759414a8a75aa9bba8cfb9a59f01c9120a36569ae3828484a889fa14231dc82",
+      "bytes": 1195,
+      "archivePath": "native/android/post-reboot-completion-20261112/original-task/start-safe.json"
+    },
+    {
+      "key": "supporting_native_20",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/runtime/action-link-safe.json",
+      "sha256": "61fddff12776c349e26cde237729a4776f11723577cc919277a90ef389294268",
+      "bytes": 453,
+      "archivePath": "native/android/post-reboot-completion-20261112/original-task/action-link-safe.json"
+    },
+    {
+      "key": "supporting_native_21",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/runtime/action-return-safe.json",
+      "sha256": "1fd54ca0b86aeedb14a35fe220dcc7c12fd4128db4bb9b4083907fdc25603c78",
+      "bytes": 437,
+      "archivePath": "native/android/post-reboot-completion-20261112/original-task/action-return-safe.json"
+    },
+    {
+      "key": "supporting_native_22",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/own-cleanup-readonly-review-20261112/current-cleanup-gates-safe.json",
+      "sha256": "5dbed15399d3efa93a1a896105277b1193def3281bf4f47fc35b975d7ac2c250",
+      "bytes": 6554,
+      "archivePath": "native/android/post-reboot-completion-20261112/cleanup-observations/current-cleanup-gates-safe.json"
+    },
+    {
+      "key": "supporting_native_23",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/own-cleanup-readonly-review-20261112/current-cleanup-gates-failure-safe.json",
+      "sha256": "c9b390c4d1b9241c5c0eb0a92ef11a1bf6a4d91c57b1c3cfe505840a68d3f716",
+      "bytes": 332,
+      "archivePath": "native/android/post-reboot-completion-20261112/cleanup-observations/current-cleanup-gates-failure-safe.json"
+    },
+    {
+      "key": "supporting_native_24",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/own-cleanup-readonly-pre-close-20261112/current-cleanup-gates-safe.json",
+      "sha256": "7f1112c696c9b2c6d8ed6b8bc1ff57a35f29a162ce55d4fb906012092b926038",
+      "bytes": 6554,
+      "archivePath": "native/android/post-reboot-completion-20261112/cleanup-observations/current-cleanup-preclose-safe.json"
+    },
+    {
+      "key": "supporting_native_25",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/own-task-terminal-cleanup-utc-20261112/cleanup-failure-safe.json",
+      "sha256": "865fed6f0d82c7e77466fe844752d2ec8aa57d2ed0d9dabff733c67e56b2451b",
+      "bytes": 659,
+      "archivePath": "native/android/post-reboot-completion-20261112/cleanup-observations/task-cleanup-initial-failure-safe.json"
+    },
+    {
+      "key": "supporting_native_26",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/native-channel-5572-post-reboot-20261112/manager-current-safe.json",
+      "sha256": "a805fb029e5111f0ae08a5f063095a574c253ca027ca55760489dfa36f46b9a0",
+      "bytes": 1523,
+      "archivePath": "native/android/post-reboot-completion-20261112/native-cleanup/original-manager-terminal-safe.json"
+    },
+    {
+      "key": "supporting_native_27",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/private-channel-manager-post-reboot-20261112-launch-safe.json",
+      "sha256": "c8e3ef1dea721842c5f4deaeec1dbde06dfbb406f8a98390dcbcec283018339d",
+      "bytes": 649,
+      "archivePath": "native/android/post-reboot-completion-20261112/native-cleanup/original-manager-launch-safe.json"
+    },
+    {
+      "key": "supporting_native_28",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-new-private-revoked-token-cleanup-safe.json",
+      "sha256": "acdd756e6e7a41a1cb1e4a28a4c1d9512a8634dd32581245da561eba1c02a09c",
+      "bytes": 316,
+      "archivePath": "native/android/post-reboot-completion-20261112/product/own-new-private-revoked-token-cleanup-safe.json"
+    },
+    {
+      "key": "supporting_native_29",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/own-task-terminal-cleanup-utc-20261112/derived-task-owner-state.json",
+      "sha256": "af243ccded0ac1dcaafcedda46e918656e6bb285a0600058bc3a432b6d3f9b31",
+      "bytes": 612,
+      "archivePath": "native/android/post-reboot-completion-20261112/cleanup-observations/derived-task-deleted-state-safe.json"
+    },
+    {
+      "key": "supporting_native_30",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/own-task-post-delete-readonly-diagnostic-20261112/post-delete-diagnostic-safe.json",
+      "sha256": "41106d0df275c880c3ce4600d2a75d7e847e5d6f5f1284ed7e49953ab45efe84",
+      "bytes": 2326,
+      "archivePath": "native/android/post-reboot-completion-20261112/cleanup-observations/task-post-delete-independent-readonly-safe.json"
+    },
+    {
+      "key": "supporting_native_31",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/own-task-terminal-readonly-diagnostic-20261112/terminal-gate-diagnostic-failure-safe.json",
+      "sha256": "6e01b5f273c90ad0c99c0e07b4f2b66b43d1ec9c95f2957ec4c50a0c842f2316",
+      "bytes": 303,
+      "archivePath": "native/android/post-reboot-completion-20261112/cleanup-observations/terminal-gate-diagnostic-failure-safe.json"
+    },
+    {
+      "key": "supporting_native_32",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/own-task-terminal-readonly-diagnostic-20261112/terminal-gate-diagnostic-v2-failure-safe.json",
+      "sha256": "6d560badccb5fabda585d5359139c2b7f764dedfa73e06d37e29c108a52cd2fb",
+      "bytes": 303,
+      "archivePath": "native/android/post-reboot-completion-20261112/cleanup-observations/terminal-gate-diagnostic-v2-failure-safe.json"
+    },
+    {
+      "key": "completion",
+      "sourcePath": "/home/han/project/Orchester/docs/design/acceptance/agentrouter-platform-sync/native/android/post-reboot-completion-20261112/final-completion-safe.json",
+      "sha256": "1d73cf88c2444d65c7771df2280e11f65dc6b6c8c9f026fe7984f78812209110",
+      "bytes": 3934,
+      "archivePath": "native/android/post-reboot-completion-20261112/final-completion-safe.json"
+    }
+  ],
+  "currentVerificationAssertions": 657,
+  "verifierSourceSha256": "6d5b67bbe5f774adbd67d02629c3030da083c512f4e3c53439051c09918b70e5",
+  "apksigner": {
+    "actualExitCode": 0,
+    "toolSha256": "b47549e373b895ce6ca620d0c7887e674d9615ffa837a86ac601dcfd04adb0f0",
+    "certificateSha256": "df6df435ccf10a685fb109668da8cdf7b022b481ba346f3143190aeda0c4468e"
+  },
+  "formalWindowsPortable14OrDesktop18Accepted": false,
+  "defaultWindowsInstallationChanged": false,
+  "privateCredentialsEnvironmentRawLogsOrScreenshotsIncluded": false
+}
