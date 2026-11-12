@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "status": "six-merged-remote-branches-removed-with-exact-tip-leases",
+  "observedAtUtc": "2026-11-12T22:41:40.599571+00:00",
+  "mainRevisionAtVerification": "3712edd8d1569003d5b53ba02af9cc28a969d687",
+  "actualPushExitCode": 0,
+  "items": [
+    {
+      "ref": "refs/heads/feat/additional-agent-monitors",
+      "expectedTip": "4842a22ea72ff8c81b93a7a8d7c2e29c77e039b7",
+      "tipVerifiedMainAncestor": true
+    },
+    {
+      "ref": "refs/heads/feat/remote-interactive-terminal",
+      "expectedTip": "d186c472fea9728b2c5b1253d0fc88e5dac9ef1c",
+      "tipVerifiedMainAncestor": true
+    },
+    {
+      "ref": "refs/heads/fix/memory-initialization",
+      "expectedTip": "d692ffafc7072a3beb95ba5a69b2623641490071",
+      "tipVerifiedMainAncestor": true
+    },
+    {
+      "ref": "refs/heads/fix/mobile-native-back-navigation",
+      "expectedTip": "5d8518f308cab654de201bf2c633b6450ab14ebb",
+      "tipVerifiedMainAncestor": true
+    },
+    {
+      "ref": "refs/heads/fix/mobile-terminal-final-replay",
+      "expectedTip": "4730e9d22af98a7bdf4b4efd5096a31a95ae539a",
+      "tipVerifiedMainAncestor": true
+    },
+    {
+      "ref": "refs/heads/fix/windows-wsl-helper-lifecycle",
+      "expectedTip": "9dccb34c2171ab5bf59cd521cfdeeacc23c5775a",
+      "tipVerifiedMainAncestor": true
+    }
+  ],
+  "remoteAbsenceRechecked": true,
+  "mergedCommitsRetainedInMain": true,
+  "nonAncestorBranchesRetained": true
+}

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-12T22:41:38.190876+00:00",
-  "status": "ten-checkpoints-delivered-original-desktop18-executor-terminal-failed-current-native-access-unavailable",
+  "createdAt": "2026-11-12T22:45:43.139727+00:00",
+  "status": "eleven-checkpoints-delivered-current-exact-merged-cleanup-verified-platform-runtime-pending",
   "summaryPath": "summary.json",
   "files": [
     {
@@ -255,6 +255,11 @@
       "bytes": 949
     },
     {
+      "path": "maintenance/git-delivery/eleventh-step-delivery-safe.json",
+      "sha256": "0dd6851640e667beca60c016e3a010ee56140cddfe087bcdfd4d3c76a1b4c1e7",
+      "bytes": 744
+    },
+    {
       "path": "maintenance/git-delivery/fifth-step-delivery-safe.json",
       "sha256": "79ee74d11888647b61e8bf4a22cdc1223f685a43991fda1f0bdd6dd3a5b704cf",
       "bytes": 540
@@ -318,6 +323,21 @@
       "path": "maintenance/windows-approved-cache-cleanup.json",
       "sha256": "f88b714a1bc013e8732b0b0ba1444ee3f34d785e59962f2518371f7438c27b14",
       "bytes": 1046
+    },
+    {
+      "path": "maintenance/workspace-current/20261113/actual-local-worktree-cleanup-safe.json",
+      "sha256": "b7e4004e17b1907797bd65ff2e1686abd9efadd560b5cd3d83ac8550f17e01b1",
+      "bytes": 2177
+    },
+    {
+      "path": "maintenance/workspace-current/20261113/actual-remote-branch-cleanup-safe.json",
+      "sha256": "979b98e3e96bcaf085c5d3c9c8eb5c93b911b742f57e8c9410f99593bee2ca48",
+      "bytes": 1432
+    },
+    {
+      "path": "maintenance/workspace-current/20261113/independent-review-safe.json",
+      "sha256": "66a8b3aa7e7887b3283a36605582be9809e528d36b56a9386d6ae88e21295389",
+      "bytes": 5140
     },
     {
       "path": "maintenance/workspace-current/actual-worktree-cleanup-safe.json",
@@ -2931,8 +2951,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "47ee74169f90a63c43f4a7b0194e5ee9d80278daac81fe02b64473a5018bc7a1",
-      "bytes": 39022
+      "sha256": "3717560d1068a352a261eb51df669f9ce24043c88e5c80db4e2fbdbc725fc8c3",
+      "bytes": 39940
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -2956,8 +2976,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "9fc0c73cf398e6431206908365d9c63dddee824c245dc76cbcc4e20b6e8099c6",
-      "bytes": 56224
+      "sha256": "23a29ac87e7251eec2f4d45f718c40170b9a47f614465d0eff57b3d61ef3df76",
+      "bytes": 57910
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
@@ -3041,5 +3061,5 @@
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
-  "checkpointScope": "Previous594 archivefiles preserved except current summary/audit; originaltenth delivery copied byteexact plus sourceJSONL-bound originalexecutor terminal137 andcurrent22:34nativeaccess failures. HistoricalfailedDesktop18/runtime/handle receipts untouched. CurrentWindowsGUI/childrenlifetime unverified; no fullDesktop18/defaultreinstallation/platformcompletion claim. CurrentinternationalWorkBuddy fourmetadata200/fouradvertisedpayload404 andhomepage/clientbytesexact-history scope appended asfour safeJSONs only; no package/profile/install completion. CurrentClaude Storecatalog5.11492.0.0 vs historical5.1231.2.0/separateWinGet3.6556.2/exactofficialEXE+MSIX curl35+HTTPnull+0bytes appended assixsafeJSONs withsourcehashes. No downloadedpayload/Authenticode/install/currentregistration proof; originalStore1612andallhistoricalreceipts untouched."
+  "checkpointScope": "Previous594 archivefiles preserved except current summary/audit; originaltenth delivery copied byteexact plus sourceJSONL-bound originalexecutor terminal137 andcurrent22:34nativeaccess failures. HistoricalfailedDesktop18/runtime/handle receipts untouched. CurrentWindowsGUI/childrenlifetime unverified; no fullDesktop18/defaultreinstallation/platformcompletion claim. CurrentinternationalWorkBuddy fourmetadata200/fouradvertisedpayload404 andhomepage/clientbytesexact-history scope appended asfour safeJSONs only; no package/profile/install completion. CurrentClaude Storecatalog5.11492.0.0 vs historical5.1231.2.0/separateWinGet3.6556.2/exactofficialEXE+MSIX curl35+HTTPnull+0bytes appended assixsafeJSONs withsourcehashes. No downloadedpayload/Authenticode/install/currentregistration proof; originalStore1612andallhistoricalreceipts untouched. Eleventh607filecontinuation8548830/mainbdd8a0d delivery receipt plus currentthreecleanmergedworktrees/localbranches andsixexact-tip-leasedremote ref cleanup withindependentreview appended asfour byteexactsafeJSONs. Registered6; three nonancestor/dirtymonitor retained; 1023583391regularlogicalB notCphysical. Originalplatform/runtime gaps remain."
 }

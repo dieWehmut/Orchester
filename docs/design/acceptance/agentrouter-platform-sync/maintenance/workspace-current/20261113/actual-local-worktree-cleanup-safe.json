@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "status": "three-clean-merged-worktrees-and-local-branches-removed",
+  "observedAtUtc": "2026-11-12T22:41:10.312953+00:00",
+  "mainRevisionAtVerification": "3712edd8d1569003d5b53ba02af9cc28a969d687",
+  "items": [
+    {
+      "worktree": ".worktrees/mobile-desktop-fonts",
+      "branch": "fix/mobile-desktop-fonts",
+      "tip": "6ead03b078d6d93891c3cf9693236f5191d4b6e6",
+      "mainAncestor": true,
+      "gitClean": true,
+      "observedReadableProcessReferences": 0,
+      "regularLogicalBytesFromIndependentInventory": 421969222,
+      "actualWorktreeRemoveExitCode": 0,
+      "actualLocalBranchDeleteExitCode": 0,
+      "removedPathAbsent": true,
+      "retainedTipStillMainAncestor": true
+    },
+    {
+      "worktree": ".worktrees/mobile-native-back-navigation",
+      "branch": "fix/mobile-native-back-navigation",
+      "tip": "5d8518f308cab654de201bf2c633b6450ab14ebb",
+      "mainAncestor": true,
+      "gitClean": true,
+      "observedReadableProcessReferences": 0,
+      "regularLogicalBytesFromIndependentInventory": 350355548,
+      "actualWorktreeRemoveExitCode": 0,
+      "actualLocalBranchDeleteExitCode": 0,
+      "removedPathAbsent": true,
+      "retainedTipStillMainAncestor": true
+    },
+    {
+      "worktree": ".worktrees/mobile-terminal-final-replay",
+      "branch": "fix/mobile-terminal-final-replay",
+      "tip": "4730e9d22af98a7bdf4b4efd5096a31a95ae539a",
+      "mainAncestor": true,
+      "gitClean": true,
+      "observedReadableProcessReferences": 0,
+      "regularLogicalBytesFromIndependentInventory": 251258621,
+      "actualWorktreeRemoveExitCode": 0,
+      "actualLocalBranchDeleteExitCode": 0,
+      "removedPathAbsent": true,
+      "retainedTipStillMainAncestor": true
+    }
+  ],
+  "regularLogicalBytesFromIndependentInventory": 1023583391,
+  "wslFilesystemAvailableBytesBefore": 575599226880,
+  "wslFilesystemAvailableBytesAfter": 576033972224,
+  "wslFilesystemAvailabilityDeltaIncludesConcurrentActivity": true,
+  "physicalWindowsCDriveFreedBytesClaimed": false,
+  "nonAncestorOrDirtyWorktreesRetained": true,
+  "processSignals": 0,
+  "protectedProcessCwdMapsAndWindowsOpenFileStateNotFullyReadable": true
+}

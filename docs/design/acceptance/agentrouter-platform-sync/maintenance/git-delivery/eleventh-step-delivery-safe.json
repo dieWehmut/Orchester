@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "status": "continuation-and-current-official-channel-checkpoint-pushed-merged-main",
+  "observedAtUtc": "2026-11-12T22:44:00.750521+00:00",
+  "featureCommit": "8548830c559b1a6382adab19e4d99d18a1346ac1",
+  "mainRevision": "bdd8a0d111facd94e7fbc648b4fe37c869ce61bb",
+  "actualFeaturePushExitCode": 0,
+  "actualMainMergeExitCode": 0,
+  "actualMainPushExitCode": 0,
+  "bothRemoteRefsVerified": true,
+  "manifestHashSizeAndMainGitBlobChecks": 607,
+  "sourceFrozenHashChecks": 731,
+  "stagedFileChecks": 17,
+  "secretShapeFindings": 0,
+  "bothWorktreesClean": true,
+  "goalFullCompletionClaimed": false,
+  "originalWindowsExecutor137AndCurrentGateway110Retained": true,
+  "vendorPayloadInstallationsStillIncomplete": true
+}

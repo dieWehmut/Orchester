@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "status": "current-merged-cleanup-independently-verified",
+  "observedAtUtc": "2026-11-12T22:43:19.172249+00:00",
+  "reviewScope": "Current exact worktree/ref absence, retained commits/worktrees and production source, independently read after cleanup; past remove/delete/push commands not rerun",
+  "reviewerTask": "cleanup_candidates",
+  "rootHead": "8548830c559b1a6382adab19e4d99d18a1346ac1",
+  "mainRevision": "bdd8a0d111facd94e7fbc648b4fe37c869ce61bb",
+  "headAndMainStableDuringReview": true,
+  "producerReceipts": [
+    {
+      "path": "actual-local-worktree-cleanup-safe.json",
+      "sha256": "b7e4004e17b1907797bd65ff2e1686abd9efadd560b5cd3d83ac8550f17e01b1"
+    },
+    {
+      "path": "actual-remote-branch-cleanup-safe.json",
+      "sha256": "979b98e3e96bcaf085c5d3c9c8eb5c93b911b742f57e8c9410f99593bee2ca48"
+    }
+  ],
+  "localChecks": [
+    {
+      "worktree": ".worktrees/mobile-desktop-fonts",
+      "tip": "6ead03b078d6d93891c3cf9693236f5191d4b6e6",
+      "exactPathAbsent": true,
+      "registeredWorktreeAbsent": true,
+      "localBranchAbsent": true,
+      "tipCommitStillExists": true,
+      "tipStillMainAncestor": true
+    },
+    {
+      "worktree": ".worktrees/mobile-native-back-navigation",
+      "tip": "5d8518f308cab654de201bf2c633b6450ab14ebb",
+      "exactPathAbsent": true,
+      "registeredWorktreeAbsent": true,
+      "localBranchAbsent": true,
+      "tipCommitStillExists": true,
+      "tipStillMainAncestor": true
+    },
+    {
+      "worktree": ".worktrees/mobile-terminal-final-replay",
+      "tip": "4730e9d22af98a7bdf4b4efd5096a31a95ae539a",
+      "exactPathAbsent": true,
+      "registeredWorktreeAbsent": true,
+      "localBranchAbsent": true,
+      "tipCommitStillExists": true,
+      "tipStillMainAncestor": true
+    }
+  ],
+  "remoteChecks": [
+    {
+      "ref": "refs/heads/feat/additional-agent-monitors",
+      "originalTip": "4842a22ea72ff8c81b93a7a8d7c2e29c77e039b7",
+      "freshRemoteRefAbsent": true,
+      "tipCommitStillExists": true,
+      "tipStillMainAncestor": true
+    },
+    {
+      "ref": "refs/heads/feat/remote-interactive-terminal",
+      "originalTip": "d186c472fea9728b2c5b1253d0fc88e5dac9ef1c",
+      "freshRemoteRefAbsent": true,
+      "tipCommitStillExists": true,
+      "tipStillMainAncestor": true
+    },
+    {
+      "ref": "refs/heads/fix/memory-initialization",
+      "originalTip": "d692ffafc7072a3beb95ba5a69b2623641490071",
+      "freshRemoteRefAbsent": true,
+      "tipCommitStillExists": true,
+      "tipStillMainAncestor": true
+    },
+    {
+      "ref": "refs/heads/fix/mobile-native-back-navigation",
+      "originalTip": "5d8518f308cab654de201bf2c633b6450ab14ebb",
+      "freshRemoteRefAbsent": true,
+      "tipCommitStillExists": true,
+      "tipStillMainAncestor": true
+    },
+    {
+      "ref": "refs/heads/fix/mobile-terminal-final-replay",
+      "originalTip": "4730e9d22af98a7bdf4b4efd5096a31a95ae539a",
+      "freshRemoteRefAbsent": true,
+      "tipCommitStillExists": true,
+      "tipStillMainAncestor": true
+    },
+    {
+      "ref": "refs/heads/fix/windows-wsl-helper-lifecycle",
+      "originalTip": "9dccb34c2171ab5bf59cd521cfdeeacc23c5775a",
+      "freshRemoteRefAbsent": true,
+      "tipCommitStillExists": true,
+      "tipStillMainAncestor": true
+    }
+  ],
+  "freshRemoteQueryActualExitCode": 0,
+  "retainedNonAncestorWorktrees": [
+    {
+      "worktree": ".worktrees/additional-agent-monitors-backend",
+      "pathRetained": true,
+      "registered": true,
+      "headExact": true,
+      "notMainAncestor": true,
+      "workingTreeClean": true
+    },
+    {
+      "worktree": ".worktrees/additional-agent-monitors-frontend",
+      "pathRetained": true,
+      "registered": true,
+      "headExact": true,
+      "notMainAncestor": true,
+      "workingTreeClean": true
+    },
+    {
+      "worktree": ".worktrees/cursor-cli-identity",
+      "pathRetained": true,
+      "registered": true,
+      "headExact": true,
+      "notMainAncestor": true,
+      "workingTreeClean": true
+    }
+  ],
+  "retainedDirtyMonitorWorktree": {
+    "pathRetained": true,
+    "registered": true,
+    "dirtyEntryCount": 23,
+    "statusSha256": "ee29b4250d843a24a4d672625aded00c5911299c903ec15d02ab0163dbc667a3"
+  },
+  "rootWorkingTreeChangesOnlyDesignDocumentation": true,
+  "rootPendingDocumentationEntries": 0,
+  "mainWorkingTreeClean": true,
+  "registeredWorktreeCount": 6,
+  "frozenSourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "frozenSourceFilesChecked": 731,
+  "currentSourceSha256AndSourceRevisionBlobAndHeadBlobAllEqual": true,
+  "productionPathsRetained": [
+    {
+      "path": "kisten",
+      "exists": true
+    },
+    {
+      "path": "apps/mobile/dist",
+      "exists": true
+    },
+    {
+      "path": "target/debug/orchester",
+      "exists": true
+    },
+    {
+      "path": "apps/desktop",
+      "exists": true
+    },
+    {
+      "path": "packages/design",
+      "exists": true
+    }
+  ],
+  "regularLogicalBytesFromPriorIndependentInventory": 1023583391,
+  "physicalWindowsCDriveFreedBytesClaimed": false,
+  "processSignals": 0,
+  "gitMutationCount": 0,
+  "privateCredentialsEnvironmentOrRawCmdlinesIncluded": false
+}
