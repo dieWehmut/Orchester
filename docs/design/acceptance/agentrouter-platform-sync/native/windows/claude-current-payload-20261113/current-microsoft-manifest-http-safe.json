@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-12T22:37:01.109704+00:00",
+  "url": "https://raw.githubusercontent.com/microsoft/winget-pkgs/master/manifests/a/Anthropic/Claude/3.6556.2/Anthropic.Claude.installer.yaml",
+  "actualExitCode": 0,
+  "httpStatus": 200,
+  "TLSVerificationEnabled": true,
+  "bytes": 2286,
+  "sha256": "bc4e81e1ac442a0d79fa2f246ebb1881998772c432848f94855167ae0cb3cfdb"
+}

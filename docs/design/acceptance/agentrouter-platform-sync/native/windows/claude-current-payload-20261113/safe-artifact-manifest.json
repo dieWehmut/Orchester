@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    {
+      "path": "current-http-safe.json",
+      "bytes": 3235,
+      "sha256": "01ad8796ea90968e51c3374da29472d2350f34e63182c757781146a299f261c2",
+      "archivePath": "native/windows/claude-current-payload-20261113/current-http-safe.json",
+      "archiveBytes": 3235,
+      "archiveSha256": "01ad8796ea90968e51c3374da29472d2350f34e63182c757781146a299f261c2",
+      "archiveByteExactToSource": true
+    },
+    {
+      "path": "current-microsoft-manifest-http-safe.json",
+      "bytes": 400,
+      "sha256": "bf34f56cc3868e86e17203841a6809b9168682e294ebdd6ccc249e4fa4ed1b9e",
+      "archivePath": "native/windows/claude-current-payload-20261113/current-microsoft-manifest-http-safe.json",
+      "archiveBytes": 400,
+      "archiveSha256": "bf34f56cc3868e86e17203841a6809b9168682e294ebdd6ccc249e4fa4ed1b9e",
+      "archiveByteExactToSource": true
+    },
+    {
+      "path": "current-official-payload-downloads-safe.json",
+      "bytes": 1442,
+      "sha256": "598e970be4940ee2287a91e692f812050938fe51b5d00d37e4c493768c16074a",
+      "archivePath": "native/windows/claude-current-payload-20261113/current-official-payload-downloads-safe.json",
+      "archiveBytes": 1442,
+      "archiveSha256": "598e970be4940ee2287a91e692f812050938fe51b5d00d37e4c493768c16074a",
+      "archiveByteExactToSource": true
+    },
+    {
+      "path": "current-store-catalog-safe.json",
+      "bytes": 3299,
+      "sha256": "f8185c76958637c6bb8caaa85614bee8caaa49bab86c10bcdbad9e363c3798b9",
+      "archivePath": "native/windows/claude-current-payload-20261113/current-store-catalog-safe.json",
+      "archiveBytes": 3299,
+      "archiveSha256": "f8185c76958637c6bb8caaa85614bee8caaa49bab86c10bcdbad9e363c3798b9",
+      "archiveByteExactToSource": true
+    },
+    {
+      "path": "final-claude-payload-preparation-safe.json",
+      "bytes": 4126,
+      "sha256": "a230a7e43a23f5c1c41b812ff284c0adcca1c6c5edb12283900c3d0387fe3d87",
+      "archivePath": "native/windows/claude-current-payload-20261113/final-claude-payload-preparation-safe.json",
+      "archiveBytes": 4465,
+      "archiveSha256": "fe340159b6f2794c36474751d1b02ad388a984fcd63e2acb02978c017a944771",
+      "archiveByteExactToSource": false
+    }
+  ],
+  "rawBodiesExcluded": true,
+  "sourceRoot": "/home/han/.local/state/orchester-delivery/20261113/claude-payload-continuation",
+  "sourceArtifactManifestOriginalSha256": "677acd033ac083d1bf82b26c4012a360ee78f4ee808126a45335b144a6c6bc2f",
+  "sourceArtifactManifestOriginalBytes": 925,
+  "archiveNormalization": "Final receipt references use archive-root-relative paths; current WinGet manifest and exact payload-request receipts added as explicit links. All source path/hash/bytes fields retain their original source scope.",
+  "producerScriptsArchived": false
+}

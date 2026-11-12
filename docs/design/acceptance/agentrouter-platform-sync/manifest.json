@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-12T16:13:08.144879+00:00",
-  "status": "formal-portable14-and-input-freeze-verified-desktop18-failed-with-original-handles-live-store-connection-failed",
+  "createdAt": "2026-11-12T22:41:38.190876+00:00",
+  "status": "ten-checkpoints-delivered-original-desktop18-executor-terminal-failed-current-native-access-unavailable",
   "summaryPath": "summary.json",
   "files": [
     {
@@ -293,6 +293,11 @@
       "path": "maintenance/git-delivery/step-delivery-safe.json",
       "sha256": "6e130032a0659efe8666cf735abf8ff923388df78d2f5ce2edf7f6fbb6d1301d",
       "bytes": 507
+    },
+    {
+      "path": "maintenance/git-delivery/tenth-step-delivery-safe.json",
+      "sha256": "3d5c1118d8fb034b3fef92116c3e91e4e8b0d5acd46066ebe37a6d10c72136a1",
+      "bytes": 2193
     },
     {
       "path": "maintenance/git-delivery/third-step-delivery-safe.json",
@@ -1290,6 +1295,36 @@
       "bytes": 1983
     },
     {
+      "path": "native/windows/claude-current-payload-20261113/current-http-safe.json",
+      "sha256": "01ad8796ea90968e51c3374da29472d2350f34e63182c757781146a299f261c2",
+      "bytes": 3235
+    },
+    {
+      "path": "native/windows/claude-current-payload-20261113/current-microsoft-manifest-http-safe.json",
+      "sha256": "bf34f56cc3868e86e17203841a6809b9168682e294ebdd6ccc249e4fa4ed1b9e",
+      "bytes": 400
+    },
+    {
+      "path": "native/windows/claude-current-payload-20261113/current-official-payload-downloads-safe.json",
+      "sha256": "598e970be4940ee2287a91e692f812050938fe51b5d00d37e4c493768c16074a",
+      "bytes": 1442
+    },
+    {
+      "path": "native/windows/claude-current-payload-20261113/current-store-catalog-safe.json",
+      "sha256": "f8185c76958637c6bb8caaa85614bee8caaa49bab86c10bcdbad9e363c3798b9",
+      "bytes": 3299
+    },
+    {
+      "path": "native/windows/claude-current-payload-20261113/final-claude-payload-preparation-safe.json",
+      "sha256": "fe340159b6f2794c36474751d1b02ad388a984fcd63e2acb02978c017a944771",
+      "bytes": 4465
+    },
+    {
+      "path": "native/windows/claude-current-payload-20261113/safe-artifact-manifest.json",
+      "sha256": "a1ace50d2f203eb4c2be1751045d014f223689ee7a8dd386c891cc83f2ade583",
+      "bytes": 2791
+    },
+    {
       "path": "native/windows/claude-current-readonly-20261112T1510/current-completion-safe.json",
       "sha256": "23d03000b652817ff5cc691f0d1cff78ee0c53d7b4aad9352f927d1b0a27b560",
       "bytes": 2175
@@ -1393,6 +1428,11 @@
       "path": "native/windows/claude-store-ui-20261112T1530/uncertain-bootstrapper-native-query-interop1-safe.json",
       "sha256": "e1f7eb8a176e449903564a9e75d24a248e2093decf9290fa7e8e0dbc6e22764d",
       "bytes": 536
+    },
+    {
+      "path": "native/windows/current-access-20261113/current-native-access-and-original-executor-safe.json",
+      "sha256": "5dea2711cdec378b203980f0e89ae19d8072af9f7855797c76475bf09e730f30",
+      "bytes": 2605
     },
     {
       "path": "native/windows/current-installation-matrix/current-filesystem-public-matrix-safe.json",
@@ -1773,6 +1813,11 @@
       "path": "native/windows/formal-desktop18-attempt1-20261112T1545/node-owned-identities.json",
       "sha256": "88ebe46b5cf2b8ed3d0b09b49391a111cab74f431d09924f06741c5990ac7adf",
       "bytes": 287
+    },
+    {
+      "path": "native/windows/formal-desktop18-attempt1-20261112T1545/original-executor-terminal-safe.json",
+      "sha256": "1167e628a0916da3e52d7a27c9592170b2cb897a69ef2c220f88300d91742ba6",
+      "bytes": 1679
     },
     {
       "path": "native/windows/formal-desktop18-attempt1-20261112T1545/prepared-readonly-diagnostics/continuation-plan-safe.json",
@@ -2515,6 +2560,26 @@
       "bytes": 2712
     },
     {
+      "path": "native/wsl/workbuddy-global-current-20261113/client-http-safe.json",
+      "sha256": "8a86ad874762e0514137e6112401cca5f59a872b9649d6aff15ebb24c8a31f24",
+      "bytes": 1675
+    },
+    {
+      "path": "native/wsl/workbuddy-global-current-20261113/current-http-safe.json",
+      "sha256": "cc0d1b24de5bd2a5e2deabf1b05d2e0fe479cbe33fc0b0f825c3a52e75af1474",
+      "bytes": 4613
+    },
+    {
+      "path": "native/wsl/workbuddy-global-current-20261113/final-global-linux-continuation-safe.json",
+      "sha256": "7b548454d9c676e191d8508a834e491c718ddb24c275723810121d7b158111f3",
+      "bytes": 5213
+    },
+    {
+      "path": "native/wsl/workbuddy-global-current-20261113/safe-source-mappings.json",
+      "sha256": "1d51a6eaebec77ed667e1d4602ad212fd686a51c1be25e30d77b543d387b0d79",
+      "bytes": 2307
+    },
+    {
       "path": "native/wsl/workbuddy-global-final-availability.json",
       "sha256": "0caab134a78b378ada79a14759016a74e91f90fb4785800a9d97c435f20cf2fc",
       "bytes": 4065
@@ -2866,8 +2931,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "d7223adf38fd6459d2bd02c3bc9e9bbac0a5bb0707b5a3cfdd73be5c3622fad4",
-      "bytes": 35452
+      "sha256": "47ee74169f90a63c43f4a7b0194e5ee9d80278daac81fe02b64473a5018bc7a1",
+      "bytes": 39022
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -2891,8 +2956,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "42ddd3a75f2af1b5f94b74ac43c9a9cd257b1f4fbc42cd317c2d4d1e96d4b827",
-      "bytes": 50583
+      "sha256": "9fc0c73cf398e6431206908365d9c63dddee824c245dc76cbcc4e20b6e8099c6",
+      "bytes": 56224
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
@@ -2976,5 +3041,5 @@
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
-  "checkpointScope": "Previous538 archivefiles plus ASCIIcompatible Android evidence/unmodifiedguard/freeze0/Portable14 native0/failedDesktop18 originalHANDLE retention/realStore1612andconnectionerror/currentstep9delivery and independentreviews. No defaultreinstallation or Desktop18 green claim; preparedCDPdiagnostic notexecuted."
+  "checkpointScope": "Previous594 archivefiles preserved except current summary/audit; originaltenth delivery copied byteexact plus sourceJSONL-bound originalexecutor terminal137 andcurrent22:34nativeaccess failures. HistoricalfailedDesktop18/runtime/handle receipts untouched. CurrentWindowsGUI/childrenlifetime unverified; no fullDesktop18/defaultreinstallation/platformcompletion claim. CurrentinternationalWorkBuddy fourmetadata200/fouradvertisedpayload404 andhomepage/clientbytesexact-history scope appended asfour safeJSONs only; no package/profile/install completion. CurrentClaude Storecatalog5.11492.0.0 vs historical5.1231.2.0/separateWinGet3.6556.2/exactofficialEXE+MSIX curl35+HTTPnull+0bytes appended assixsafeJSONs withsourcehashes. No downloadedpayload/Authenticode/install/currentregistration proof; originalStore1612andallhistoricalreceipts untouched."
 }

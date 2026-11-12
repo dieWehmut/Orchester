@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "status": "old-executor-terminal-verified-current-native-access-unavailable",
+  "observedAtUtc": "2026-11-12T22:34:00.093136+00:00",
+  "previousGoalTurnClassification": "no-progress-after-api-resource-failures",
+  "evidenceChangesNextAction": true,
+  "originalThreadSourceSha256": "fd66c0e19637dc223d2fee935da770f989c5641aaada589cdf786a5b3f0eac7a",
+  "oldExecutorTerminal": {
+    "sourceEventTimestampUtc": "2026-11-12T16:29:48.479Z",
+    "commandExecutionId": "exec-83cbaf0e-09a7-40bd-9b80-b64a602c657e",
+    "originalExecSessionId": 90867,
+    "status": "failed",
+    "actualOuterExitCode": 137,
+    "durationSeconds": 2651,
+    "safeOutput": "Desktop native verification failed at desktop-eighteen-checks (System.InvalidOperationException, code=)",
+    "terminalDoesNotProveWindowsGuiChildrenExited": true
+  },
+  "retainedSnapshot": {
+    "observedAtUtc": "2026-11-12T16:29:48.0647414Z",
+    "sha256": "bf36370c55ebd5757ea0dfb02ee0ffd2c83d9ba3d44c97a5a75c47025deb66d3",
+    "remainingHandleCountAtHistoricalSnapshot": 10,
+    "notCurrentLivenessProof": true
+  },
+  "currentReadOnlyNativeQueries": [
+    {
+      "gateway": "inherited",
+      "command": "cmd.exe /d /c ver",
+      "actualOuterExitCode": 1,
+      "errorNumber": 110,
+      "originalToolSessionId": 95596
+    },
+    {
+      "gateway": "/run/WSL/3097_interop",
+      "command": "cmd.exe /d /c ver",
+      "actualOuterExitCode": 1,
+      "errorNumber": 110,
+      "originalToolSessionId": 12804
+    },
+    {
+      "gateway": "/run/WSL/910_interop",
+      "command": "cmd.exe /d /c ver",
+      "actualOuterExitCode": 1,
+      "errorNumber": 110,
+      "originalToolSessionId": 1308
+    },
+    {
+      "gateway": "/run/WSL/7250_interop",
+      "command": "cmd.exe /d /c ver",
+      "actualOuterExitCode": 1,
+      "errorNumber": 110,
+      "originalToolSessionId": 36672
+    }
+  ],
+  "currentDirectConnectionChecks": [
+    {
+      "hostScope": "WSL-loopback",
+      "port": 19322,
+      "connectErrno": 111
+    },
+    {
+      "hostScope": "Windows-WSL-gateway",
+      "port": 19322,
+      "connectErrno": 11
+    },
+    {
+      "hostScope": "WSL-loopback",
+      "port": 65138,
+      "connectErrno": 111
+    },
+    {
+      "hostScope": "Windows-WSL-gateway",
+      "port": 65138,
+      "connectErrno": 11
+    }
+  ],
+  "currentWindowsGuiLiveness": "unverified",
+  "currentWindowsGuiNaturalExit": "unverified",
+  "defaultReinstallationCompleted": false,
+  "nativeGuiRestarted": false,
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "fullObjectiveComplete": false,
+  "privateContentsIncluded": false
+}

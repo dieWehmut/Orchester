@@ -404,7 +404,7 @@
       "proof": "native/windows/formal-portable14-20261112T1540/actual-root-execution-safe.json"
     },
     {
-      "scope": "FormalDesktop18 actualattempt12checks/6writes/pageErrors0 then monitorrosterAssertionError; NODEvalidationfailed/originalouterexec90867stilllive/GUI37324originalhandles10 retained; no18green/tray/defaultreinstall",
+      "scope": "Historical16:01 FormalDesktop18 actualattempt12checks/6writes/pageErrors0 then monitorrosterAssertionError; NODEvalidationfailed/originalouterexec90867stilllive/GUI37324originalhandles10 retained atthat observation; no18green/tray/defaultreinstall. Later originalexecutor terminal137 is separately proven; historicalsnapshot is not currentliveness.",
       "proof": "native/windows/formal-desktop18-attempt1-20261112T1545/actual-root-execution-safe.json"
     },
     {
@@ -414,6 +414,26 @@
     {
       "scope": "Ninthprerequisitecheckpointf6520a8/main92c668e/push0/540Gitblobsexact/731frozeninputs",
       "proof": "maintenance/git-delivery/ninth-step-delivery-safe.json"
+    },
+    {
+      "scope": "Tenthformalruntime checkpoint1824cf2/main3712edd/actualfeaturepush0/mainmerge0/mainpush0/596Gitblobsexact/594manifestchecks; deliveryreceipt copied byteexact fromoriginal16:19 checkpoint and independently verified beforethisarchive update",
+      "proof": "maintenance/git-delivery/tenth-step-delivery-safe.json"
+    },
+    {
+      "scope": "OriginalCommandExecution90867 actualterminalfailed/outerexit137 at16:29:48Z/sourceJSONLhash+eventline bound. OriginalWindowsGUI37324 andchildexit/normaltrayquit notproved; no executor restart required from an observation timeout",
+      "proof": "native/windows/formal-desktop18-attempt1-20261112T1545/original-executor-terminal-safe.json"
+    },
+    {
+      "scope": "Current22:34 readonlyWindowsqueries via inherited/3097/910/7250 each actualouter1/interop110; CDP19322 andruntime65138 directconnections unavailable. Old16:29 handle snapshot10 is historical; currentGUIliveness/naturalexit/interactive readiness unverified",
+      "proof": "native/windows/current-access-20261113/current-native-access-and-original-executor-safe.json"
+    },
+    {
+      "scope": "Current22:34internationalWorkBuddy officialhomepage200/fourLinuxupdate metadata200/four exactadvertisedpayload RangeGET404+0bytes/three linkedclients200; all8publicsource bytes matchedhistoricalandclientstaticchecks passed. OriginaldomesticELFhash/launcher retained; nointernationalpackage/nativeELF/profile namespace/install/GUI/model proof",
+      "proof": "native/wsl/workbuddy-global-current-20261113/final-global-linux-continuation-safe.json"
+    },
+    {
+      "scope": "Current22:39StorecatalogHTTP200 newlyadvertises5.11492.0.0 vs historical5.1231.2.0; ownchannel no directpackageDownloadURI. IndependentMicrosoftWinGet channelstill3.6556.2/manifest200 exacthistorical; exactofficialEXE+MSIX GET bothcurl35/beforeHTTP/0bytes/no payloadSHAverified. HistoricalStore1612andconnectionerror unchanged; no nativeinstallation/registration/auth/model/ClaudeLinuxsupport proof",
+      "proof": "native/windows/claude-current-payload-20261113/final-claude-payload-preparation-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -425,14 +445,14 @@
     "Prior source71 Linux7337 deployment/1023019 and oneoriginal7337/info200 before fresh23:31UTC absence; originalreceipts preserved historical"
   ],
   "pendingCurrentEpochScopes": [
-    "Windows inputdesktop/cursor true at15:30, formalPortable14 passed/nativefreeze b364 ready. Desktop18 attempted12checks6writes then monitorassertion failed; originalexec90867 retains GUI37324/10handles, nativegateway110 blocks freshDOMdiagnosis and normaltrayquit. Desktop18/defaultreinstall/7338state pending.",
+    "FormalPortable14 passed andDesktop18 failedafter12checks6writes. Originalexecutor90867 actualterminalfailed137 at16:29:48Z; retained10handle snapshot historicalonly, currentWindowsGUI/childrenliveness andnormaltrayquit unverified. Current22:34 readonlynativegateways inherited/3097/910/7250 allinterop110; sameGUI DOM diagnosis/fullDesktop18/defaultreinstall/7338state remain pending.",
     "Linuxstaticuserunit/defaulttargetlink configured/parser0 but usermanagerbusunavailable and currentproducerstandalone; no restart/autostart/reboot-survival verified",
     "OfficialDeepSeekWindows installation/signature/HKCU/ASARrc1verified afteroriginalnumericPEverifierfailure; GUI/model/auth nottested; DataElementoriginalcurrentmetadataretained, wholeoldEXEbeforeafterhashnotproved",
-    "InternationalWorkBuddy nativeWSL usablepackage/profile isolation andClaudeApp Windowspayload/LinuxofficialGUI release evidence pending",
+    "InternationalWorkBuddy nativeWSL usablepackage/profile isolation pending: currentfourofficialmetadata200 butfouradvertisedpayloads404/0bytes; publichomepage/clientbytes equalhistory. OfficialClaudeApp Windows payload/LinuxGUI release evidence remains pending.",
     "Historicalunregisteredchildidentity/HANDLEclosure andwrongLinuxfullpackage rollback unproved; no new signal/claim",
-    "CorrectWindowsAndroid original5 retained/fullPTY+cleanup and ASCIIcomposite659 verified. Prior540 prerequisite checkpointmerged92c668e; currentfreeze0/Portable14/failedDesktop18/StoreUI checkpoint delivery is separate.",
+    "CorrectWindowsAndroid original5 retained/fullPTY+cleanup andASCIIcomposite659 verified. Tenthfreeze0/Portable14/failedDesktop18/StoreUI checkpoint1824cf2 mergedmain3712edd with596Gitblobs/594manifest; thislaterdelivery andexecutor-terminal/access update is a separate archive step.",
     "CurrentLinux7337 originalactualcredentialGET200 nowproved bynativeAndroid originalfivewire receipt; JSONexact/SQLrawfalse remainseparate, usermanager/autostart remainpending.",
-    "Claude officialStore actualUI cannotconnect/bootstrappernative1612; followingregistrations notproved because newnativeinterop110. CurrentStoreconnection and nativegateway recovery required; no silentinstallerretry."
+    "HistoricalClaudeStoreUI cannotconnect/bootstrapperactual1612 retained. CurrentStoremetadata5.11492.0.0 differsfromhistorical5.1231.2.0; independentWinGet3.6556.2 exactEXE/MSIX GET bothcurl35/HTTPnull/0bytes. OfficialClaudepayload/digest/Authenticode/nativeinstallation/registration pending; nativegateway andofficialdownload/Storetransport require recovery."
   ],
   "folderResponsibilities": {
     "sources": "Official origins, source/provenance and current safe source audits",
@@ -450,7 +470,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-12T16:04:30.245637+00:00",
+  "updatedAt": "2026-11-12T22:41:38.190876+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -462,12 +482,12 @@
   "currentWindowsNativeWorkerPidAbsenceVerified": true,
   "currentWindowsOriginalWorkerHandleIdentityVerified": false,
   "currentWindowsCoreTerminalProof": "native/windows/final71-build/native16-core-terminal-safe.json",
-  "currentWindowsInteractiveReadinessVerified": true,
-  "currentWindowsSameUserInteractiveSessionProved": true,
+  "currentWindowsInteractiveReadinessVerified": null,
+  "currentWindowsSameUserInteractiveSessionProved": null,
   "currentAndroidPartialNativeBuildInstallTestsVerified": true,
   "currentAndroidActualIDESyncVerified": true,
   "currentAndroidNativeUI21Providers42ImagesVerified": true,
-  "documentedPublishedMainRevision": "92c668e89334a4a3e768e61c4d236b68041d3efb",
+  "documentedPublishedMainRevision": "3712edd8d1569003d5b53ba02af9cc28a969d687",
   "productionSourceRevisionStillFrozen71": true,
   "currentCorrectionArchiveGitCommitted": true,
   "originalWindowsCredentialsDamagedOrUnrecoverableClaimed": false,
@@ -611,7 +631,7 @@
   "phase5IndependentReviewExternalOriginalComparisons": 0,
   "prior355FifthCheckpointArchiveDelivered": true,
   "currentWindowsSameUserActiveSessionId": 1,
-  "currentWindowsCursorAccessError": 0,
+  "currentWindowsCursorAccessError": null,
   "currentWindowsInputDesktopName": "Default",
   "currentWindowsLatestOfflineBackupProof": "native/windows/interactive-post-reboot-20261112/offline-final21-post-reboot-backup-safe.json",
   "currentWindowsExternalOriginalDesktopObservedLive": false,
@@ -701,15 +721,72 @@
   "currentWindowsDesktop18CompletedChecks": 12,
   "currentWindowsDesktop18CompletedWrites": 6,
   "currentWindowsDesktop18ActualNodeValidationFailed": true,
-  "currentWindowsDesktop18OuterExecutorTerminal": false,
+  "currentWindowsDesktop18OuterExecutorTerminal": true,
   "currentWindowsDesktop18OriginalExecSessionId": 90867,
   "currentWindowsDesktop18OriginalGuiPid": 37324,
   "currentWindowsDesktop18OriginalGuiCreatedFileTime": 134389718070239855,
-  "currentWindowsDesktop18OriginalCreatorHandlesRetainedLive": true,
+  "currentWindowsDesktop18OriginalCreatorHandlesRetainedLive": null,
   "currentWindowsDesktop18FailureAndRetentionProof": "native/windows/formal-desktop18-attempt1-20261112T1545/actual-root-execution-safe.json",
   "currentWindowsStoreBootstrapperActualExitCode": 1612,
   "currentWindowsStoreProductInstallUiConnectionErrorObserved": true,
   "currentWindowsStoreGuiProof": "native/windows/claude-store-ui-20261112T1530/final-store-ui-attempt-safe.json",
   "prior540NinthPrerequisiteCheckpointDelivered": true,
-  "currentWindowsAsciiCompositeProof": "native/windows/fresh-android-runtime-binding-ascii-20261112/successor-encoding-and-execution-safe.json"
+  "currentWindowsAsciiCompositeProof": "native/windows/fresh-android-runtime-binding-ascii-20261112/successor-encoding-and-execution-safe.json",
+  "prior596TenthFormalRuntimeCheckpointDelivered": true,
+  "currentWindowsNativeAccessProof": "native/windows/current-access-20261113/current-native-access-and-original-executor-safe.json",
+  "currentWindowsNativeAccessObservedAtUtc": "2026-11-12T22:34:00.093136+00:00",
+  "currentWindowsNativeAccessAvailable": false,
+  "currentWindowsDesktop18OuterExecutorActualExitCode": 137,
+  "currentWindowsDesktop18OuterExecutorTerminalObservedAtUtc": "2026-11-12T16:29:48.479Z",
+  "currentWindowsDesktop18OuterExecutorTerminalProof": "native/windows/formal-desktop18-attempt1-20261112T1545/original-executor-terminal-safe.json",
+  "currentWindowsDesktop18OriginalCreatorHandlesCurrentState": "unverified",
+  "currentWindowsDesktop18OriginalCreatorHandlesLastSnapshotObservedAtUtc": "2026-11-12T16:29:48.0647414Z",
+  "currentWindowsDesktop18OriginalCreatorHandlesLastSnapshotSha256": "bf36370c55ebd5757ea0dfb02ee0ffd2c83d9ba3d44c97a5a75c47025deb66d3",
+  "currentWindowsDesktop18OriginalCreatorHandlesLastSnapshotCount": 10,
+  "currentWindowsDesktop18GuiLiveness": "unverified",
+  "currentWindowsDesktop18GuiNaturalExit": "unverified",
+  "historicalWindowsInteractiveReadinessAt1509Verified": true,
+  "historicalWindowsCursorAccessErrorAt1509": 0,
+  "historicalWindowsSameUserInteractiveSessionProved": true,
+  "currentWindowsInteractiveReadinessCurrentState": "unverified-native-query-unavailable",
+  "currentInternationalWorkBuddyLinuxAvailabilityProof": "native/wsl/workbuddy-global-current-20261113/final-global-linux-continuation-safe.json",
+  "currentInternationalWorkBuddyLinuxAvailabilityObservedAtUtc": "2026-11-12T22:34:38.328828+00:00",
+  "currentInternationalWorkBuddyLinuxMetadataHttpStatuses": [
+    200,
+    200,
+    200,
+    200
+  ],
+  "currentInternationalWorkBuddyLinuxAdvertisedPayloadRangeGetHttpStatuses": [
+    404,
+    404,
+    404,
+    404
+  ],
+  "currentInternationalWorkBuddyOfficialHomepageAndClientsBytesEqualHistory": true,
+  "currentInternationalWorkBuddyLinuxInstalled": false,
+  "currentInternationalWorkBuddyLinuxActualProfileNamespaceVerified": false,
+  "currentClaudeOfficialWindowsPayloadPreparationProof": "native/windows/claude-current-payload-20261113/final-claude-payload-preparation-safe.json",
+  "currentClaudeOfficialWindowsPayloadPreparationObservedAtUtc": "2026-11-12T22:39:08.253479+00:00",
+  "currentClaudeStoreCatalogPackageVersions": [
+    "5.11492.0.0"
+  ],
+  "currentClaudeStoreCatalogDiffersFromHistorical5123120": true,
+  "currentClaudeWinGetIndependentChannelVersion": "3.6556.2",
+  "currentClaudeOfficialX64PayloadDownloadExitCodes": [
+    35,
+    35
+  ],
+  "currentClaudeOfficialX64PayloadHttpStatuses": [
+    null,
+    null
+  ],
+  "currentClaudeOfficialX64PayloadBytesReceived": [
+    0,
+    0
+  ],
+  "currentClaudeOfficialApplicationPayloadPrepared": false,
+  "currentClaudeInstallationVerified": false,
+  "historicalWindowsStoreBootstrapperActualExitCode": 1612,
+  "currentClaudeNativeInvocationCountInPayloadPreparation": 0
 }

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "status": "official-x64-payload-requests-completed",
+  "rows": [
+    {
+      "kind": "msix",
+      "urlFromCurrentMicrosoftWinGetManifest": "https://downloads.claude.ai/releases/win32/x64/3.6556.2/Claude-20c019a1e61fa5b687616af57d31f97bb3181723.msix",
+      "expectedPayloadSha256": "c0ac245c9ad458abd550bcbf2a0b34c75c51173a27f3c870602e5452cf3484f1",
+      "observedAtUtc": "2026-11-12T22:37:30.544093+00:00",
+      "actualExitCode": 35,
+      "httpStatus": null,
+      "TLSCertificateVerificationEnabled": true,
+      "curlProcessExited": true,
+      "bytesReceived": 0,
+      "payloadDownloaded": false,
+      "payloadSHA256Verified": false,
+      "errorClass": "curl-35"
+    },
+    {
+      "kind": "exe",
+      "urlFromCurrentMicrosoftWinGetManifest": "https://downloads.claude.ai/releases/win32/x64/3.6556.2/Claude-20c019a1e61fa5b687616af57d31f97bb3181723.exe",
+      "expectedPayloadSha256": "945082290478e5c668e8aaa25a392e1cd129e6219173e907b7ff1f7f99ded45e",
+      "observedAtUtc": "2026-11-12T22:37:30.544400+00:00",
+      "actualExitCode": 35,
+      "httpStatus": null,
+      "TLSCertificateVerificationEnabled": true,
+      "curlProcessExited": true,
+      "bytesReceived": 0,
+      "payloadDownloaded": false,
+      "payloadSHA256Verified": false,
+      "errorClass": "curl-35"
+    }
+  ],
+  "installerInvocations": 0,
+  "nativeInvocations": 0,
+  "modelsOrAuthRequests": 0,
+  "privateContentsRead": false
+}

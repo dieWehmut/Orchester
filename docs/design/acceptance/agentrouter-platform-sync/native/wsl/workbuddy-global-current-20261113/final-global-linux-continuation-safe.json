@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "observedAtUTC": "2026-11-12T22:34:38.328828+00:00",
+  "status": "current-official-international-linux-payload-unavailable-no-installation",
+  "scope": "Fresh official homepage, linked public client and four update channels, exact advertised package RangeGETs plus native installed domestic executable existence/hash",
+  "officialHomepage": "https://www.workbuddy.ai/",
+  "currentHomepageOperatingSystem": "Windows, macOS",
+  "currentInternationalDownloadKeys": [
+    "macArm64",
+    "macX64",
+    "windows",
+    "useOnline"
+  ],
+  "currentLinkedClientBytesEqualHistoricalVerifiedClients": true,
+  "currentClientExecuted": false,
+  "httpReceipt": "native/wsl/workbuddy-global-current-20261113/current-http-safe.json",
+  "clientHttpReceipt": "native/wsl/workbuddy-global-current-20261113/client-http-safe.json",
+  "fourCurrentAdvertisedPackageRangeGETStatuses": [
+    404,
+    404,
+    404,
+    404
+  ],
+  "globalPrefixExists": false,
+  "globalLauncherExists": false,
+  "currentNativeGlobalPackagePrepared": false,
+  "actualLinuxGlobalProfileNamespaceVerified": false,
+  "globalWindowsProfileAppliedToLinuxByInference": false,
+  "domesticExecutableSha256": "13bf1da1273c22f0536ee6a52fbadb3561dd31b63c11e80f7feff6beccac1578",
+  "domesticExecutableMatchesOriginalVerifiedInstallation": true,
+  "domesticLauncherExists": true,
+  "domesticHistoricalPackageCacheAbsent": true,
+  "existingInstallationWrites": 0,
+  "privateProfileReads": 0,
+  "profileNamespaceWrites": 0,
+  "modelCalls": 0,
+  "nativeGUIStarts": 0,
+  "installerExecutions": 0,
+  "permanentLinuxUnsupportedPolicyClaimed": false,
+  "comparisons": [
+    {
+      "currentArtifact": "homepage.public-body",
+      "historicalArtifact": "/home/han/.local/state/orchester-delivery/20261112/workbuddy-global-current/global-home-current-curl.public-body",
+      "bytesEqual": true,
+      "sha256": "ff62ba37882024c40571f2f9733284fce5620f460f4766023153a533c3ce9e20",
+      "bytes": 19158
+    },
+    {
+      "currentArtifact": "linux-x64-deb.public-body",
+      "historicalArtifact": "/home/han/.local/state/orchester-delivery/20261112/workbuddy-global-current/global-linux-update.public-body",
+      "bytesEqual": true,
+      "sha256": "466b3060f0c4113fdbfea6fc5f32e7613e2e0741849927aa19033d56b58635d1",
+      "bytes": 267
+    },
+    {
+      "currentArtifact": "linux-x64-rpm.public-body",
+      "historicalArtifact": "/home/han/.local/state/orchester-delivery/20261112/workbuddy-global-current/global-linux-x64-rpm-update.public-body",
+      "bytesEqual": true,
+      "sha256": "2cf5895c585f1d59b215127dafcff4754099701bee5bc14b7265914be54a07b8",
+      "bytes": 267
+    },
+    {
+      "currentArtifact": "linux-arm64-deb.public-body",
+      "historicalArtifact": "/home/han/.local/state/orchester-delivery/20261112/workbuddy-global-current/global-linux-arm64-deb-update.public-body",
+      "bytesEqual": true,
+      "sha256": "84b83887c98cd7c3cc0f586de4e7e58b69cf6b789df7a61ca6e26fe0b9bda27f",
+      "bytes": 271
+    },
+    {
+      "currentArtifact": "linux-arm64-rpm.public-body",
+      "historicalArtifact": "/home/han/.local/state/orchester-delivery/20261112/workbuddy-global-current/global-linux-arm64-rpm-update.public-body",
+      "bytesEqual": true,
+      "sha256": "f69b1924dd62b059c7293cc9486bc77bd6b087dc11537e346cc53be4235af20c",
+      "bytes": 271
+    },
+    {
+      "currentArtifact": "download-page.public-body",
+      "historicalArtifact": "/home/han/.local/state/orchester-delivery/20261112/workbuddy-global-current/global-download-page-current.public-body",
+      "bytesEqual": true,
+      "sha256": "6f2d9e1d437ec6e33b956ccd5cd064ca443dbd2ed64d172c951a7515b5f73636",
+      "bytes": 34026
+    },
+    {
+      "currentArtifact": "platform-list.public-body",
+      "historicalArtifact": "/home/han/.local/state/orchester-delivery/20261112/workbuddy-global-current/global-platform-list-current.public-body",
+      "bytesEqual": true,
+      "sha256": "e73890ee007f851f59e4f41a85fb1e23629279a83697fd65b3ab6c1bc77b261d",
+      "bytes": 43963
+    },
+    {
+      "currentArtifact": "routes.public-body",
+      "historicalArtifact": "/home/han/.local/state/orchester-delivery/20261112/workbuddy-global-current/global-download-routes-current.public-body",
+      "bytesEqual": true,
+      "sha256": "5968800cf7f19124e8428683fa70ce4dda5f21beb66ffe7732fe0aff1f6efa66",
+      "bytes": 14769
+    }
+  ],
+  "nextAction": "A usable official international Linux payload is needed; then inspect package identity and native ELF/profile namespace before installing into a separate user prefix. Current exact advertised packages are HTTP404, so installation and actual profile isolation remain incomplete.",
+  "currentPublicClientStaticChecks": {
+    "internationalListHasMacArmMacXWindowsAndOnline": true,
+    "sharedListWindowsIndex1": true,
+    "linuxTileIsDomesticAndAppStoreOnly": true,
+    "downloadFiltersDomesticItemsForInternational": true
+  },
+  "currentPublicClientStaticChecksAllPassed": true,
+  "comparisonArtifactPathScope": "unarchived official public bodies in source directories",
+  "comparisonSourceRoot": "/home/han/.local/state/orchester-delivery/20261113/workbuddy-global-continuation",
+  "comparisonBodiesArchived": false
+}
