@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "status": "independent-native-windows-version-command-passed",
+  "host": "Windows native",
+  "entry": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\goose\\bin\\goose.exe",
+  "entryBytes": 172380160,
+  "entrySha256": "5a424ab992d75aaefdc54ccf27719f62c3995e6d9b283d1cca016ec4d4b055ef",
+  "pythonImage": "C:\\Users\\han\\AppData\\Roaming\\uv\\python\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+  "pythonImageSha256": "204d51f19707da17766bccecce2ceececadab350663a8190420d1377bac1150d",
+  "pid": 17404,
+  "creationFiletime": 134389417528729593,
+  "actualExitCode": 0,
+  "stdoutPublicVersion": "1.59.0",
+  "stderrBytes": 0,
+  "originalPopenCreatorHandleRetainedUntilExit": true,
+  "independentReadOnlyCheckPreviousPowershellControllerNotRestartedOrStopped": true,
+  "authenticodeQueriedByThisCheck": false,
+  "argv": [
+    "--version"
+  ],
+  "modelsOrLoginsInvoked": 0,
+  "globalPATHOrOriginalConfigurationModified": false,
+  "observedAtUnixNs": 1794468153021702700,
+  "officialReleaseTag": "v1.59.0"
+}

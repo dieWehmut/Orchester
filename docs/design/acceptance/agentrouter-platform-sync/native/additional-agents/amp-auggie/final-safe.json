@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "status": "two-additional-products-four-platform-install-units-verified",
+  "observedAtUtc": "2026-11-12T08:53:57.267108+00:00",
+  "newDistinctProducts": 2,
+  "actualInstalledPlatformUnits": 4,
+  "products": [
+    {
+      "name": "Amp",
+      "npmPackage": "@ampcode/cli",
+      "version": "0.0.1794456033-gb2ff22",
+      "nativeWindowsInstalledAndVersionVerified": true,
+      "wslInstalledAndVersionVerified": true,
+      "officialWindowsNativeReleaseVerified": true,
+      "receipt": "amp/final-safe.json"
+    },
+    {
+      "name": "Auggie",
+      "npmPackage": "@augmentcode/auggie",
+      "version": "0.37.1",
+      "nativeWindowsInstalledAndVersionVerified": true,
+      "wslInstalledAndVersionVerified": true,
+      "officialVendorPlatformDocSupportsWindowsWSL": true,
+      "officialNativeWindowsFullRuntimeSupportVerified": false,
+      "receipt": "auggie/final-safe.json"
+    }
+  ],
+  "onlyTargetToolPrefixesAndTaskFilesMutated": true,
+  "globalPathModified": false,
+  "originalUserCredentialContentsRead": false,
+  "modelCalls": 0,
+  "loginInvoked": false,
+  "sourcegraphAmpAliasCountedAsExtraProduct": false,
+  "ownPublicSafetyReceiptFiles": [
+    {
+      "path": "amp/correction-process-observation-safe.json",
+      "bytes": 369,
+      "sha256": "59968bbe75855f287810a57a260edfbdf16e9eefdf0b6c3aa1ce1e2146acf0e6"
+    },
+    {
+      "path": "amp/final-safe.json",
+      "bytes": 1677,
+      "sha256": "9b8d9e7583e1a18a93c557603a1755e9ed6cabd270f16fb7d0dd6605f5bb67b7"
+    },
+    {
+      "path": "amp/official-channel-safe.json",
+      "bytes": 1256,
+      "sha256": "4ecfe8f21bbbb0b048ecbe7fe269110b1909aca25896ad5917f40971e5dc256b"
+    },
+    {
+      "path": "amp/pinned-platform-metadata-safe.json",
+      "bytes": 2016,
+      "sha256": "0e62bacfa56afd242aa35b9bef56f909f1d437214da2a3d1529ecc7bf3d53e17"
+    },
+    {
+      "path": "amp/platform-byte-binding-safe.json",
+      "bytes": 1795,
+      "sha256": "1f1c4112d8fb9ed3e1e574f3b071d6ff070c75522c9dabd2e8da11f75e5c4bd6"
+    },
+    {
+      "path": "amp/windows-corrected-verification-safe.json",
+      "bytes": 2366,
+      "sha256": "33704d452e0539f2efdf411a63aa5ec038765f0a38aec3d75e38f0e3716287d3"
+    },
+    {
+      "path": "amp/windows-install-safe.json",
+      "bytes": 2477,
+      "sha256": "ecb726a0b1e78215e5e9ce80e0becdfc6b7f0641edf09d98c43f0837707e16fb"
+    },
+    {
+      "path": "amp/wsl-install-safe.json",
+      "bytes": 1978,
+      "sha256": "0ba6ae110c1f1271aa3a64981399cdeb6e86ff14f798621c3325f9c149fd8bf8"
+    },
+    {
+      "path": "auggie/final-safe.json",
+      "bytes": 2905,
+      "sha256": "478a0efe8307c64bd926d06e3fd8affc07ded403543a7738405ea42874371dbe"
+    },
+    {
+      "path": "auggie/npm-public-payload-binding-safe.json",
+      "bytes": 1014,
+      "sha256": "dd7be592800551216ce2afbd9c5e3a5cd5a216dcda595627fca154fa7c4b380c"
+    },
+    {
+      "path": "auggie/official-channel-safe.json",
+      "bytes": 3272,
+      "sha256": "5e3a5be2e4d777e86a5011775d7692875cc5d9095437486134c515c8d754c6d6"
+    },
+    {
+      "path": "auggie/windows-install-safe.json",
+      "bytes": 3387,
+      "sha256": "4cbefb236845ad21ef4e74588497ecc2defd3e1d23112c88684d0522cbea88b8"
+    },
+    {
+      "path": "auggie/wsl-install-safe.json",
+      "bytes": 2147,
+      "sha256": "2d61e6d498181885f8cdf06012e5d01ccb82681069239c5cacc1faf3c76dc1a9"
+    }
+  ],
+  "launchers": {
+    "Amp": {
+      "wsl": "/home/han/.local/share/orchester-agents/amp/node_modules/.bin/amp",
+      "nativeWindows": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\amp\\node_modules\\@ampcode\\cli\\bin\\amp.exe"
+    },
+    "Auggie": {
+      "wsl": "/home/han/.local/share/orchester-agents/auggie/node_modules/.bin/auggie",
+      "nativeWindows": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\auggie\\node_modules\\.bin\\auggie.cmd"
+    }
+  }
+}

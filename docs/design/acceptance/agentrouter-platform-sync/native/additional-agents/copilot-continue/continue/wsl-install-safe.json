@@ -1,0 +1,25 @@
+{
+  "status": "actual-installation-or-verification-failed",
+  "platform": "WSL/Linux",
+  "package": "@continuedev/cli",
+  "pinnedVersion": "1.5.47",
+  "prefix": "/home/han/.local/share/orchester-agents/continue",
+  "globalPrefixChanged": false,
+  "userPathChanged": false,
+  "modelsInvoked": 0,
+  "loginInvoked": 0,
+  "credentialFilesDeliberatelyRead": 0,
+  "originalInstallationsOverwritten": false,
+  "sourceScriptSha256": "219037c27238e78a4fef107d0ae8f8f1ab33edfd62ee53d1d9235fa76c7711cc",
+  "commands": [
+    {
+      "label": "npm-install",
+      "pid": 1439111,
+      "startTicks": 860076,
+      "actualExitCode": 1,
+      "originalPopenHandleRetained": true,
+      "originalHandleHeldUntilActualExit": true
+    }
+  ],
+  "errorType": "AssertionError"
+}

@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "status": "wsl-and-native-windows-local-package-installed-and-version-verified",
+  "observedAtUtc": "2026-11-12T07:27:38.315011+00:00",
+  "product": "Auggie",
+  "officialPackage": "@augmentcode/auggie",
+  "packageVersion": "0.37.1",
+  "verifiedVersionOutput": "0.37.1 (commit e8d38687)",
+  "windowsNativeSupportedByCurrentVendorDocs": false,
+  "vendorDocumentedPlatforms": [
+    "MacOS",
+    "Windows WSL",
+    "Linux"
+  ],
+  "nativeWindowsVersionCheckIsCompatibilityObservationNotFullRuntimeSupportProof": true,
+  "wsl": {
+    "entry": "/home/han/.local/share/orchester-agents/auggie/node_modules/@augmentcode/auggie/augment.mjs",
+    "npmShim": "/home/han/.local/share/orchester-agents/auggie/node_modules/.bin/auggie",
+    "installExitCode": 0,
+    "versionExitCode": 0,
+    "nodePath": "/home/han/.nvm/versions/node/v24.21.0/bin/node"
+  },
+  "windows": {
+    "entry": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\auggie\\node_modules\\@augmentcode\\auggie\\augment.mjs",
+    "npmShim": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\auggie\\node_modules\\.bin\\auggie.cmd",
+    "installExitCode": 0,
+    "versionExitCode": 0,
+    "nodePath": "C:\\Users\\han\\software\\node\\node.exe",
+    "nativeCallerSessionId": 1,
+    "nativeNodeVersion": "v24.21.0",
+    "nativeOwnerActualExitCodeObservedByTool": 0
+  },
+  "officialSourceUrls": [
+    "https://docs.augmentcode.com/cli/setup-auggie/install-auggie-cli",
+    "https://raw.githubusercontent.com/augmentcode/auggie/main/README.md",
+    "https://registry.npmjs.org/@augmentcode%2fauggie/0.37.1"
+  ],
+  "packageAndCliEntryBytesBothEqualVerifiedOfficialTarball": true,
+  "userProfiles": {
+    "wslAugmentDirectoryExistsAfter": false,
+    "windowsAugmentDirectoryExistsAfter": false,
+    "beforeSnapshotCaptured": false,
+    "privateProfileContentsReadByThisVerifier": false,
+    "profileByteEqualityClaimed": false,
+    "originalUserDirectoriesExplicitlyModifiedByInstallRunner": false,
+    "naturalInitializationBeforeAfterProved": false
+  },
+  "globalNpmPrefixOrPathModifiedByThisTask": false,
+  "npmInstallerCacheIsolatedExplicitly": true,
+  "optionalDependencyInternalCacheBehaviorIndependentlyAudited": false,
+  "modelOrAuthCommandsInitiated": 0,
+  "sources": [
+    {
+      "path": "official-channel-safe.json",
+      "sha256": "5e3a5be2e4d777e86a5011775d7692875cc5d9095437486134c515c8d754c6d6",
+      "bytes": 3272
+    },
+    {
+      "path": "npm-public-payload-binding-safe.json",
+      "sha256": "dd7be592800551216ce2afbd9c5e3a5cd5a216dcda595627fca154fa7c4b380c",
+      "bytes": 1014
+    },
+    {
+      "path": "wsl-install-safe.json",
+      "sha256": "2d61e6d498181885f8cdf06012e5d01ccb82681069239c5cacc1faf3c76dc1a9",
+      "bytes": 2147
+    },
+    {
+      "path": "windows-install-safe.json",
+      "sha256": "4cbefb236845ad21ef4e74588497ecc2defd3e1d23112c88684d0522cbea88b8",
+      "bytes": 3387
+    }
+  ]
+}

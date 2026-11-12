@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "status": "version-command-passed",
+  "host": "WSL Linux native",
+  "installedPrefix": "/home/han/.local/share/orchester-agents/goose",
+  "entry": "/home/han/.local/share/orchester-agents/goose/bin/goose",
+  "entryBytes": 208612352,
+  "entrySha256": "4ee4e39acff02e725e6959a71b5f4d91da9e8c0bd7b95bc2dce4a753abbecede",
+  "observedAt": "2026-11-12T07:08:02.812889+00:00",
+  "actualNativeProcessPid": 1504254,
+  "actualExitCode": 0,
+  "originalPopenHandleHeldUntilExit": true,
+  "argv": [
+    "--version"
+  ],
+  "stdoutPublicVersion": "1.59.0",
+  "stderrBytes": 0,
+  "modelsOrLoginsInvoked": 0,
+  "globalPATHOrOriginalConfigurationModified": false,
+  "officialAsset": "goose-x86_64-unknown-linux-gnu.tar.gz",
+  "officialReleaseTag": "v1.59.0"
+}

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
-  "generatedAt": "2026-11-12T06:10:21.192664+00:00",
+  "generatedAt": "2026-11-12T09:17:00.791458+00:00",
   "status": "current-evidence-audit-not-complete-all-platform-delivery",
   "requirements": [
     {
@@ -250,7 +250,7 @@
     {
       "id": "git_steps",
       "userRequirement": "Verify separated commits, push remotely and merge main step by step",
-      "status": "five-checkpoints-pushed-merged-current-sixth-awaits-delivery",
+      "status": "six-checkpoints-pushed-merged-additional-cli-checkpoint-awaits-delivery",
       "evidence": [
         "sources/final71-source-binding.json",
         "maintenance/git-delivery/git-byte-and-crlf-correction-safe.json",
@@ -258,18 +258,38 @@
         "maintenance/git-delivery/second-step-delivery-safe.json",
         "maintenance/git-delivery/third-step-delivery-safe.json",
         "maintenance/git-delivery/fourth-step-delivery-safe.json",
-        "maintenance/git-delivery/fifth-step-delivery-safe.json"
+        "maintenance/git-delivery/fifth-step-delivery-safe.json",
+        "maintenance/git-delivery/sixth-step-delivery-safe.json"
       ],
-      "verifiedScope": "Parentdocs193+MD exact194Gitblob comparisons. FirstdefaultCRLFwhitespacecheckexit2 preserved; doccommit213d315 alreadycreated, scopedattributes correction812e0e6 preserves原bytes andcheck0, main32992976 merged; feature/mainpushactual0. Frozenproduction71 unchanged. Docsagent noGitmutation. Second218archive+MD219Gitblobexact/currentdoc828ad10 mergedmain4d7d95, feature/mainpushactual0/default+stagedwhitespace0/production71+Pagesworkflowinputsunchanged; no allplatformcompletionclaim. Third266archive+MD267blobsexact/doc0e4367d/main8b0a016push0/production71equal delivered. Fourth321archive+MD322exactGitblob/commitcaa60/main60b4/featuremainpush0/source71equal delivered. SubsequentnewLinux/signature/cleanup sourceepochs kept separate fromfourthabsencestage.",
+      "verifiedScope": "Parentdocs193+MD exact194Gitblob comparisons. FirstdefaultCRLFwhitespacecheckexit2 preserved; doccommit213d315 alreadycreated, scopedattributes correction812e0e6 preserves原bytes andcheck0, main32992976 merged; feature/mainpushactual0. Frozenproduction71 unchanged. Docsagent noGitmutation. Second218archive+MD219Gitblobexact/currentdoc828ad10 mergedmain4d7d95, feature/mainpushactual0/default+stagedwhitespace0/production71+Pagesworkflowinputsunchanged; no allplatformcompletionclaim. Third266archive+MD267blobsexact/doc0e4367d/main8b0a016push0/production71equal delivered. Fourth321archive+MD322exactGitblob/commitcaa60/main60b4/featuremainpush0/source71equal delivered. SubsequentnewLinux/signature/cleanup sourceepochs kept separate fromfourthabsencestage. Sixth docc20fa1b/mainf462fd7 delivered, feature/mainpushactual0 and374Gitblobs exact. Additional sixCLI/twelveinstallunits andcommandregistration verified innew epoch.",
       "remaining": [
-        "Phase6actualLinuxpostrebootrestore/DeepSeekofficialinstallation/currentWindowsofflinebackup andreadiness await verifiedcommit/push/main; fullPTY/runtime14/18/defaultreinstall later."
+        "Current additional CLI installation checkpoint requires verified commit/push/main. Original full native runtime/default reinstall scope remains in its own requirement."
+      ]
+    },
+    {
+      "id": "additional_agents_20261112",
+      "userRequirement": "本机windows和wsl装的agent还不够多：继续追加 agent 安装",
+      "status": "six-additional-products-twelve-platform-installations-and-registered-version-commands-verified",
+      "evidence": [
+        "native/additional-agents/copilot-continue/final-additional-agent-installations-safe.json",
+        "native/additional-agents/aider-goose/final-four-installations-safe.json",
+        "native/additional-agents/amp-auggie/final-safe.json",
+        "native/additional-agents/root-integration/command-entry-matrix-safe.json",
+        "native/additional-agents/root-integration/registered-command-entries-safe.json",
+        "native/additional-agents/root-integration/registered-command-version-gates-safe.json",
+        "native/additional-agents/root-integration/wsl-registered-command-version-gates-safe.json",
+        "native/additional-agents/independent-review-safe.json"
+      ],
+      "verifiedScope": "Copilot CLI1.0.109/ContinueCLI1.5.47/Aider0.86.2/Goose1.59.0/Amp0.0.1794456033-gb2ff22/Auggie0.37.1 installed Windows native +WSL. Twelve registered convenience-command --version managed original objects held toactual exit0. Windows sixknownwrappers/userPATHdirectory registered preservingoldentries; WSLsixuserbin symlinks. PowerShell7.7.0 prerequisite anddeprecatedAmpalias count0 products. Model/login0. Independent54historicalJSON consistency review doesnot independentlyrerunnative; root registration version tests separate. Auggie nativeWindows versioncompatibility tested, vendor-supportedfullnativeWindowsruntime unproved. Goosefirstcontrollerexit/Authenticode unproved; preserved historicalfailure metadata. Existing21monitorcatalog remains ownscope.",
+      "remaining": [
+        "Login/model tasks were not part of this installation step and were not executed. Original catalogue/runtime/platform acceptance requirements remain separate."
       ]
     }
   ],
   "historicalResultsRemainInOwnSourceEpoch": true,
   "installationDoesNotEstablishAuthenticationOrModelTaskExecution": true,
   "privateCredentialOrUserStateValuesIncluded": false,
-  "updatedAt": "2026-11-12T00:14:34.105565+00:00",
+  "updatedAt": "2026-11-12T09:17:00.791458+00:00",
   "documentationExecutionDateRangeAsiaShanghai": [
     "2026-11-11",
     "2026-11-12"

@@ -1,0 +1,28 @@
+{
+    "status":  "actual-installation-or-verification-failed",
+    "platform":  "NativeWindows",
+    "package":  "@continuedev/cli",
+    "pinnedVersion":  "1.5.47",
+    "prefix":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\continue",
+    "globalPrefixChanged":  false,
+    "userPathChanged":  false,
+    "modelsInvoked":  0,
+    "loginInvoked":  0,
+    "credentialFilesDeliberatelyRead":  0,
+    "originalInstallationsOverwritten":  false,
+    "sourceScriptSha256":  "5108992650cdcbc1c89805c9a69d39b2df303a0b0d45a4718454bb96418a0c2a",
+    "commands":  [
+                     {
+                         "label":  "npm-install",
+                         "pid":  30036,
+                         "createdUtc":  "2026-11-12T07:03:53.1828667Z",
+                         "image":  "C:\\Users\\han\\software\\node\\node.exe",
+                         "imageSha256":  "ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32",
+                         "originalManagedCreatorHandleRetained":  true,
+                         "actualExitCode":  0,
+                         "originalHandleHeldUntilActualExit":  true
+                     }
+                 ],
+    "errorType":  "System.Management.Automation.PSArgumentException",
+    "hresult":  -2147024809
+}

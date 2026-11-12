@@ -1,0 +1,12 @@
+{
+  "format": "orchester-copilot-powershell-prerequisite-transport-v1",
+  "officialUrl": "https://github.com/PowerShell/PowerShell/releases/download/v7.7.0/PowerShell-7.7.0-win-x64.zip",
+  "expectedBytes": 115330228,
+  "expectedDigest": "sha256:7c74e03b20a75b59715847439d046a6214b1863ee79b187872980f139bb4a05f",
+  "downloadAttempts": 1,
+  "status": "official-powershell-zip-downloaded-full-digest-verified",
+  "actualHttpStatus": 200,
+  "finalOfficialAssetUrlHost": "release-assets.githubusercontent.com",
+  "actualBytes": 115330228,
+  "actualSha256": "7c74e03b20a75b59715847439d046a6214b1863ee79b187872980f139bb4a05f"
+}

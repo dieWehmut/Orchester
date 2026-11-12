@@ -1,0 +1,86 @@
+{
+    "status":  "six-registered-windows-wrapper-version-gates-passed",
+    "installationCommandsRepeated":  0,
+    "gates":  [
+                  {
+                      "modelOrLoginCommands":  0,
+                      "creator":  {
+                                      "pid":  31616,
+                                      "originalCreatorHandleHeld":  true,
+                                      "createdUtc":  "2026-11-12T09:03:12.4859234Z"
+                                  },
+                      "rawOutputPublished":  false,
+                      "actualExitCode":  0,
+                      "command":  "copilot",
+                      "expectedVersionObserved":  true,
+                      "expectedVersion":  "1.0.109"
+                  },
+                  {
+                      "modelOrLoginCommands":  0,
+                      "creator":  {
+                                      "pid":  20060,
+                                      "originalCreatorHandleHeld":  true,
+                                      "createdUtc":  "2026-11-12T09:03:12.7299090Z"
+                                  },
+                      "rawOutputPublished":  false,
+                      "actualExitCode":  0,
+                      "command":  "cn",
+                      "expectedVersionObserved":  true,
+                      "expectedVersion":  "1.5.47"
+                  },
+                  {
+                      "modelOrLoginCommands":  0,
+                      "creator":  {
+                                      "pid":  31328,
+                                      "originalCreatorHandleHeld":  true,
+                                      "createdUtc":  "2026-11-12T09:03:13.6202918Z"
+                                  },
+                      "rawOutputPublished":  false,
+                      "actualExitCode":  0,
+                      "command":  "aider",
+                      "expectedVersionObserved":  true,
+                      "expectedVersion":  "0.86.2"
+                  },
+                  {
+                      "modelOrLoginCommands":  0,
+                      "creator":  {
+                                      "pid":  32968,
+                                      "originalCreatorHandleHeld":  true,
+                                      "createdUtc":  "2026-11-12T09:03:15.8098588Z"
+                                  },
+                      "rawOutputPublished":  false,
+                      "actualExitCode":  0,
+                      "command":  "goose",
+                      "expectedVersionObserved":  true,
+                      "expectedVersion":  "1.59.0"
+                  },
+                  {
+                      "modelOrLoginCommands":  0,
+                      "creator":  {
+                                      "pid":  31736,
+                                      "originalCreatorHandleHeld":  true,
+                                      "createdUtc":  "2026-11-12T09:03:15.9352810Z"
+                                  },
+                      "rawOutputPublished":  false,
+                      "actualExitCode":  0,
+                      "command":  "amp",
+                      "expectedVersionObserved":  true,
+                      "expectedVersion":  "0.0.1794456033-gb2ff22"
+                  },
+                  {
+                      "modelOrLoginCommands":  0,
+                      "creator":  {
+                                      "pid":  27668,
+                                      "originalCreatorHandleHeld":  true,
+                                      "createdUtc":  "2026-11-12T09:03:16.4937104Z"
+                                  },
+                      "rawOutputPublished":  false,
+                      "actualExitCode":  0,
+                      "command":  "auggie",
+                      "expectedVersionObserved":  true,
+                      "expectedVersion":  "0.37.1"
+                  }
+              ],
+    "originalHandlesHeldUntilActualExit":  true,
+    "observedAtUtc":  "2026-11-12T09:03:17.2516827Z"
+}

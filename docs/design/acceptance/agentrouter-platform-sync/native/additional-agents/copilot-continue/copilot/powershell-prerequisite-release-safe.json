@@ -1,0 +1,15 @@
+{
+  "officialSourceUrl": "https://api.github.com/repos/PowerShell/PowerShell/releases/latest",
+  "httpStatus": 200,
+  "responseSha256": "f240ceaa77e9f74eb21b1bfbd460503af63941ff5d8e4ffd3f4f50b352f4236a",
+  "responseBytes": 42648,
+  "tag": "v7.7.0",
+  "releasePage": "https://github.com/PowerShell/PowerShell/releases/tag/v7.7.0",
+  "asset": {
+    "name": "PowerShell-7.7.0-win-x64.zip",
+    "browser_download_url": "https://github.com/PowerShell/PowerShell/releases/download/v7.7.0/PowerShell-7.7.0-win-x64.zip",
+    "size": 115330228,
+    "digest": "sha256:7c74e03b20a75b59715847439d046a6214b1863ee79b187872980f139bb4a05f"
+  },
+  "supportedPrerequisiteFor": "GitHub Copilot CLI Windows PowerShell6+"
+}

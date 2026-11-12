@@ -1,0 +1,20 @@
+{
+    "observedAtUtc":  "2026-11-12T07:24:59.5084299Z",
+    "currentGooseExactImageProcesses":  [
+
+                                        ],
+    "processSignals":  0,
+    "status":  "read-only-own-script-controller-observation",
+    "creatorHandlesAdopted":  false,
+    "inlineObserverFailureChangedInstallationOrController":  false,
+    "controllers":  [
+                        {
+                            "userTime":  "10468750",
+                            "matchesOwnKnownScript":  true,
+                            "pid":  21452,
+                            "kernelTime":  "7968750",
+                            "createdUtc":  "2026-11-12T07:08:00.1956240Z"
+                        }
+                    ],
+    "initialInlineCqlQuotingObserverExitCode":  1
+}

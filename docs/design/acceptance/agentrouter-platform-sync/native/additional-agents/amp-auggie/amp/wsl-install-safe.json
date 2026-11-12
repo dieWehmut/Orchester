@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "status": "installed-native-entry-and-version-verified",
+  "platform": "WSL-linux-x64",
+  "prefix": "/home/han/.local/share/orchester-agents/amp",
+  "package": "@ampcode/cli",
+  "versionPinned": "0.0.1794456033-gb2ff22",
+  "sourceScriptSha256": "9c59291d8faf8b6a8fbe47fd27af6aee93d29cefb84b24dedcb0024b2dbca066",
+  "officialDocsUrl": "https://ampcode.com/docs/cli",
+  "officialWindowsInstallerSourceUrl": "https://ampcode.com/install.ps1",
+  "officialNativePlatformsFromPackage": [
+    "linux-x64",
+    "win32-x64"
+  ],
+  "sharedPathModified": false,
+  "globalNpmPrefixModified": false,
+  "originalUserConfigurationOrCredentialContentsRead": false,
+  "modelsInvoked": 0,
+  "loginInvoked": false,
+  "processSignals": 0,
+  "originalInstallPid": 1838234,
+  "originalCreatorObjectHeld": true,
+  "observedAtUtc": "2026-11-12T07:24:21.768296+00:00",
+  "actualInstallExitCode": 0,
+  "originalCreatorObjectHeldUntilActualExit": true,
+  "actualVersionExitCode": 0,
+  "versionOutput": "0.0.1794456033-gb2ff22 (released 2026-11-12T04:00:33.000Z, 3h ago)",
+  "entry": "/home/han/.local/share/orchester-agents/amp/node_modules/@ampcode/cli/bin/amp",
+  "cliShim": "/home/han/.local/share/orchester-agents/amp/node_modules/.bin/amp",
+  "entrySha256": "8e7d7f19cb2321bba7821fe8d1869cbd071be403dffdb47875dfc23dd0487db2",
+  "entryBytes": 155723952,
+  "nativeMagic": "ELF",
+  "installedPlatformPayloadByteExact": true,
+  "installedPackageVersion": "0.0.1794456033-gb2ff22",
+  "lockSha256": "e06d1efcc569cddf87e016b23e4d55e7728171f94ea0a44a08281e258e8c66f7",
+  "npmPlatformIntegrity": "sha512-BorO4k3He0fZIuIkkQ27mjHfjQK+sZjHQTI9w8mNMw4628FDg5SL1docPR1G27xnHlle/ppJusTtmlA+TL2e1Q==",
+  "configurationDirectoryPresenceBeforeVersion": {
+    "/home/han/.amp": false,
+    "/home/han/.config/amp": false
+  },
+  "configurationDirectoryPresenceAfterVersion": {
+    "/home/han/.amp": false,
+    "/home/han/.config/amp": false
+  },
+  "rawLogsOrCredentialContentsArchived": false
+}

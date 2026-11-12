@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "status": "official-aider-installed-and-native-version-verified-on-both-windows-and-wsl",
+  "observedAtUtc": "2026-11-12T07:30:20.272113+00:00",
+  "package": "aider-chat",
+  "version": "0.86.2",
+  "windowsNative": {
+    "entryPath": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\aider\\venv\\Scripts\\aider.exe",
+    "entrySha256": "de01e3bbeaea7dd90b3bee61a9b374e08ee196e7119c45886746f98c55e00e18",
+    "versionOutput": "aider 0.86.2",
+    "versionCommandActualExitCode": 0,
+    "packageInstallerRecoveryActualExitCode": 0,
+    "pythonVersion": "3.10.11",
+    "initialPipActualExitCode": 2,
+    "initialFailureType": "ReadTimeoutError",
+    "initialFailurePreserved": true,
+    "sameOwnIsolatedVenvResumed": true
+  },
+  "wslNative": {
+    "entryPath": "/home/han/.local/share/orchester-agents/aider/venv/bin/aider",
+    "entrySha256": "98ab33671767821d48daca76b6edf1b367f2ba4d763fc9670e61e1ae9205170a",
+    "versionOutput": "aider 0.86.2",
+    "versionCommandActualExitCode": 0,
+    "packageInstallerActualExitCode": 0,
+    "pythonVersion": "3.10.12"
+  },
+  "officialWheelSha256": "64f6a0c66c9f4633ad9f479bca3e64ebcba02b9da03c6b604b74a44736b2416e",
+  "officialInstallDocsUrl": "https://aider.chat/docs/install.html",
+  "officialRepositoryUrl": "https://github.com/Aider-AI/aider",
+  "officialPypiUrl": "https://pypi.org/project/aider-chat/",
+  "allOwnedInstallerAndVersionProcessObjectsKeptUntilActualExit": true,
+  "sharedGlobalPathModified": false,
+  "systemPythonOrGlobalUvUpgraded": false,
+  "originalUserInstallationConfigurationOrCredentialsOverwritten": false,
+  "modelInvocationsAndLoginActions": 0,
+  "installedOnlyInExplicitSeparatePrefixes": true,
+  "sources": [
+    {
+      "path": "windows-first-failed-installation-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/OrchesterAgents/aider/installation-evidence/current-safe.json",
+      "bytes": 2275,
+      "sha256": "a64780e5b986555d83619ebff859b4238f8ec517b7aaf6301cd6040d3e6325ca",
+      "archivedByteExact": true
+    },
+    {
+      "path": "windows-first-failure-diagnostic-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/OrchesterAgents/aider/installation-evidence/installation-failure-diagnostic-safe.json",
+      "bytes": 278,
+      "sha256": "5cb82d28200289bbd9f4af42f290a020d82f551d6f8f7d9e7edf1be21efb73c1",
+      "archivedByteExact": true
+    },
+    {
+      "path": "windows-installed-recovery-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/OrchesterAgents/aider/installation-recovery1/current-safe.json",
+      "bytes": 3792,
+      "sha256": "2fb2fe3d6faa62afe3cbd1a6a155c0eb4fdf323b79b77d3645849ac9a6e9aceb",
+      "archivedByteExact": true
+    }
+  ],
+  "cliEntrypointIsInstalledConsoleScriptNotNpxTransient": true,
+  "modelOrGuiSessionAcceptanceClaimed": false,
+  "privateRawLogsIncluded": false
+}

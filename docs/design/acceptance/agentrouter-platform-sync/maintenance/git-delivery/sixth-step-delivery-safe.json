@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "status": "sixth-checkpoint-pushed-and-merged-main",
+  "observedAtUtc": "2026-11-12T06:40:45.269141+00:00",
+  "featureCommit": "c20fa1b743f9dbdd44b1a26b87d46e235ae75051",
+  "mainRevision": "f462fd739a9f88c7c3e5ee8ab8eafcd84f579a06",
+  "featurePushActualExitCode": 0,
+  "mainPushActualExitCode": 0,
+  "gitBlobFilesExactlyEqualCurrent": 374,
+  "rootAndMainWorktreesClean": true,
+  "allPlatformGoalComplete": false,
+  "linuxCurrentControlCommand": [
+    "/usr/bin/python3",
+    "/home/han/.local/state/orchester-delivery/20261112-post-reboot/linux-restore/controller.py",
+    "status"
+  ],
+  "linuxCurrentNormalQuitCommand": [
+    "/usr/bin/python3",
+    "/home/han/.local/state/orchester-delivery/20261112-post-reboot/linux-restore/controller.py",
+    "quit"
+  ],
+  "linuxCurrentListenerPid": 320854,
+  "linuxCurrentListenerStartTicks": 451458,
+  "linuxCurrentControllerPid": 320847,
+  "linuxCurrentUnitActuallyRunning": false,
+  "doNotRestartExistingLiveListener": true,
+  "newOfflineBackupExistsAndExactAtReceipt": true,
+  "defaultDesktopReinstallPerformed": false,
+  "remaining": [
+    "FullWindowsPortable14/Desktop18/nativeGUI/tray anddefaultreinstall/7338",
+    "CorrectWindowsAndroidfreshownedAVD/fullPTYresize/productterminalclose/tempdevice6to5/revoked401",
+    "ClaudeAppWindowsactualinstallation/Linuxofficialrelease andWorkBuddyGlobalLinuxpackage/profileisolation",
+    "CurrentLinuxactualoriginalrawcredentialwire anduser-serviceautostart verification",
+    "OfficialDeepSeekGUI/runtime/sharedDSH_HOME startup preservation"
+  ],
+  "nextPublicArchiveMayIncludeThisDeliveryReceipt": true
+}

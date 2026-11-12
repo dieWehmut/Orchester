@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "status": "official-cli-native-platform-installation-and-frozen-payload-source-verified",
+  "observedAtUtc": "2026-11-12T08:52:55.312192+00:00",
+  "product": "Amp",
+  "npmCanonicalPackage": "@ampcode/cli",
+  "legacySourcegraphPackageIsAliasNotSeparateProduct": true,
+  "frozenVersion": "0.0.1794456033-gb2ff22",
+  "supportedNativePlatformsObservedInOfficialInstallerAndNpm": [
+    "linux-x64",
+    "win32-x64"
+  ],
+  "sources": [
+    {
+      "url": "https://ampcode.com/docs/cli",
+      "httpStatus": 200,
+      "bytes": 109692,
+      "sha256": "1c902776840ba10d23551a8a480c9293056d6cdb2ed4b4aa53dd6d8405c56707",
+      "sourceBodyArchived": false
+    },
+    {
+      "url": "https://ampcode.com/install.ps1",
+      "httpStatus": 200,
+      "bytes": 7266,
+      "sha256": "4181d7cc6fca00d4ab890799d6825ba3f44c79313b5557cfed78326d86e29398",
+      "sourceBodyArchived": false
+    },
+    {
+      "url": "https://ampcode.com/install.sh",
+      "httpStatus": 200,
+      "bytes": 13614,
+      "sha256": "83b0a61b09cb653b92e47e039e3aba8bda60c62c0eea6e1467c1b1b12c258cc9",
+      "sourceBodyArchived": false
+    }
+  ],
+  "bothInstalledNativePayloadsMatchVendorFrozenChecksum": true,
+  "privateConfigurationOrRawLogContentsIncluded": false
+}

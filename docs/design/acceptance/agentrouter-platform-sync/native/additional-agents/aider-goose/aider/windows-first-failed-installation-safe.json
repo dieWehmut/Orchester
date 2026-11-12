@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "status": "installation-or-version-verification-failed-original-exit-retained",
+  "platform": "Windows-native",
+  "prefix": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\aider",
+  "wheelSha256": "64f6a0c66c9f4633ad9f479bca3e64ebcba02b9da03c6b604b74a44736b2416e",
+  "package": "aider-chat",
+  "expectedVersion": "0.86.2",
+  "globalPathChanges": 0,
+  "originalUserInstallationOrConfigurationChanges": 0,
+  "modelCalls": 0,
+  "forcedTerminations": 0,
+  "steps": [
+    {
+      "label": "base-python-version",
+      "pid": 6464,
+      "command": [
+        "C:\\Users\\han\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "--version"
+      ],
+      "originalCreatorObjectRetained": true,
+      "actualExitCode": 0,
+      "startedAtUtc": "2026-11-12T07:09:17.046475+00:00",
+      "creationFiletime": 134389409570435265,
+      "processActuallyExited": true,
+      "stdoutBytes": 16,
+      "stderrBytes": 0
+    },
+    {
+      "label": "create-isolated-venv",
+      "pid": 7144,
+      "command": [
+        "C:\\Users\\han\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "-m",
+        "venv",
+        "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\aider\\venv"
+      ],
+      "originalCreatorObjectRetained": true,
+      "actualExitCode": 0,
+      "startedAtUtc": "2026-11-12T07:09:17.314479+00:00",
+      "creationFiletime": 134389409573112236,
+      "processActuallyExited": true,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    {
+      "label": "install-official-checked-wheel",
+      "pid": 3980,
+      "command": [
+        "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\aider\\venv\\Scripts\\python.exe",
+        "-m",
+        "pip",
+        "install",
+        "--index-url",
+        "https://pypi.org/simple",
+        "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\aider\\aider_chat-0.86.2-py3-none-any.whl"
+      ],
+      "originalCreatorObjectRetained": true,
+      "actualExitCode": 2,
+      "startedAtUtc": "2026-11-12T07:09:26.172404+00:00",
+      "creationFiletime": 134389409661681825,
+      "processActuallyExited": true,
+      "stdoutBytes": 3334,
+      "stderrBytes": 7553
+    }
+  ],
+  "errorType": "RuntimeError"
+}

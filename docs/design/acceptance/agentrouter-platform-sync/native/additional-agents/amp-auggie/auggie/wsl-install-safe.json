@@ -1,0 +1,51 @@
+{
+  "format": "orchester-additional-agent-install-v1",
+  "product": "Auggie",
+  "platform": "WSL Linux x86_64",
+  "officialPackage": "@augmentcode/auggie",
+  "pinnedVersion": "0.37.1",
+  "prefix": "/home/han/.local/share/orchester-agents/auggie",
+  "modelsInvoked": 0,
+  "authenticationRequested": false,
+  "sharedPathOrGlobalPrefixModified": false,
+  "userProfileContentsRead": false,
+  "commands": [
+    {
+      "label": "npm-install",
+      "pid": 1534367,
+      "creatorObjectRetained": true,
+      "startedAtUtc": "2026-11-12T07:08:57.570454+00:00",
+      "actualExitCode": 0,
+      "processRestartedOnObservationTimeout": false,
+      "processActuallyExited": true,
+      "completedAtUtc": "2026-11-12T07:09:39.611828+00:00",
+      "stdoutBytes": 25,
+      "stdoutSha256": "ac29a5764baffc78d77034f031f7969ec33e32f02d224cf6600aa59cfc3288e3",
+      "stderrBytes": 585,
+      "stderrSha256": "98498bcbbfd8ebb1a1e7dd97c655b3582806dc864d5da67383b03c65b2edec9c"
+    },
+    {
+      "label": "version",
+      "pid": 1551421,
+      "creatorObjectRetained": true,
+      "startedAtUtc": "2026-11-12T07:09:39.612817+00:00",
+      "actualExitCode": 0,
+      "processRestartedOnObservationTimeout": false,
+      "processActuallyExited": true,
+      "completedAtUtc": "2026-11-12T07:09:40.277857+00:00",
+      "stdoutBytes": 25,
+      "stdoutSha256": "29497a76725c6b9f9d95415b010e722d9c363ad6c5cc9aa23055e93ea815eefa",
+      "stderrBytes": 0,
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "status": "official-package-installed-and-version-verified",
+  "nodePath": "/home/han/.nvm/versions/node/v24.21.0/bin/node",
+  "entry": "/home/han/.local/share/orchester-agents/auggie/node_modules/@augmentcode/auggie/augment.mjs",
+  "npmShim": "/home/han/.local/share/orchester-agents/auggie/node_modules/.bin/auggie",
+  "packageJsonSha256": "a7397d92994236a3e6c4cb7f1f98b05b8066c4a3d4500766ee44c74ff01f4f65",
+  "entrySha256": "7d809fef34f9cb0eae57559ced737e225ec74a390cf325ea453871d847d716c9",
+  "entryBytes": 13446452,
+  "versionOutput": "0.37.1 (commit e8d38687)",
+  "vendorDocumentsWslLinuxSupport": true
+}

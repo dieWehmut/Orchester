@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "status": "current-official-release-selected-not-installed",
+  "requestedReleaseURL": "https://api.github.com/repos/block/goose/releases/latest",
+  "canonicalReleaseURL": "https://api.github.com/repos/aaif-goose/goose/releases/440669043",
+  "releaseURL": "https://github.com/aaif-goose/goose/releases/tag/v1.59.0",
+  "tag": "v1.59.0",
+  "publishedAt": "2026-11-10T17:17:02Z",
+  "observedAt": "2026-11-12T07:04:48.705381+00:00",
+  "assets": [
+    {
+      "name": "goose-x86_64-unknown-linux-gnu.tar.gz",
+      "size": 62450309,
+      "digest": "sha256:a774667de6c20206a60d78d7bece2d9dda8389667e4f5c2fc8aaa758d1e81ef3",
+      "browser_download_url": "https://github.com/aaif-goose/goose/releases/download/v1.59.0/goose-x86_64-unknown-linux-gnu.tar.gz",
+      "id": 732280546
+    },
+    {
+      "name": "goose-x86_64-pc-windows-msvc.zip",
+      "size": 53276891,
+      "digest": "sha256:8b9ef7be66f469bdafd018de943a095ed83c32775dd623bebb0ab730da22d0d0",
+      "browser_download_url": "https://github.com/aaif-goose/goose/releases/download/v1.59.0/goose-x86_64-pc-windows-msvc.zip",
+      "id": 732283236
+    }
+  ],
+  "context7DocumentationQueryError": "monthly quota exceeded",
+  "webSearchError": "backend POST search404",
+  "actualNativeInstallationClaimed": false
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@github/copilot",
+  "version": "1.0.109",
+  "bin": {
+    "copilot": "npm-loader.js"
+  },
+  "repository": {
+    "url": "git+https://github.com/github/copilot-cli.git",
+    "type": "git"
+  },
+  "homepage": "https://github.com/github/copilot-cli/#readme",
+  "optionalDependencies": {
+    "@github/copilot-linux-x64": "1.0.109",
+    "@github/copilot-win32-x64": "1.0.109",
+    "@github/copilot-darwin-x64": "1.0.109",
+    "@github/copilot-linux-arm64": "1.0.109",
+    "@github/copilot-win32-arm64": "1.0.109",
+    "@github/copilot-darwin-arm64": "1.0.109",
+    "@github/copilot-linuxmusl-x64": "1.0.109",
+    "@github/copilot-linuxmusl-arm64": "1.0.109"
+  },
+  "registryDist": {
+    "tarball": "https://registry.npmjs.org/@github/copilot/-/copilot-1.0.109.tgz",
+    "integrity": "sha512-wvQlzpdtCk8ujg3SRdAZ/0iKXbfIknlkTREmgvtiqP1PtFtsoMHAhgNwNtoSPY7FKYg6TWRfzu6vg6ElyThmZA==",
+    "shasum": "caa8f00056c6cf8c1e4e0b82fce2a1ae649a561b",
+    "fileCount": 4,
+    "unpackedSize": 14862
+  },
+  "source": {
+    "url": "https://registry.npmjs.org/@github%2Fcopilot/latest",
+    "rawPublicResponseSha256": "a7da526fe0462c98dc3e4d32cea92fd702d2054e5b08b5a6a1f30baf8a0615d1",
+    "rawPublicResponseBytes": 3737
+  }
+}

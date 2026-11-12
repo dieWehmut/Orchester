@@ -1,0 +1,878 @@
+{
+  "schemaVersion": 1,
+  "status": "public-and-root-declared-safe-source-mappings-with-derived-file-exception",
+  "reviewedAtUtc": "2026-11-12T09:14:20.159377+00:00",
+  "scope": "The same 54 historical public JSON files reviewed in independent-review-safe.json. Embedded public sourcePath declarations were checked against local public JSON hashes/sizes. Root subsequently declared 53 actual original safe-source byte comparisons and supplied source paths; this reviewer accepted that statement without opening or comparing those external files. The Copilot safe-archive-manifest is derived and lacks a same-name source comparison. No original path is guessed.",
+  "publicJsonFileCount": 54,
+  "withEmbeddedOriginalSafeSourcePath": 26,
+  "withoutEmbeddedOriginalSafeSourcePath": 28,
+  "all54OriginalSafeSourcePathsProved": false,
+  "originalPrivateSourceOrRawLogContentsRead": false,
+  "rows": [
+    {
+      "publicPath": "aider-goose/aider/final-aider-installed-safe.json",
+      "publicBytes": 2853,
+      "publicSha256": "fc26ee7b930b215fcecaf9d1981f7ad1704910e41bcb8d35902c921178d0c9f1",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/aider-goose/aider/final-aider-installed-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "aider-goose/aider/source-selection-safe.json",
+      "publicBytes": 1528,
+      "publicSha256": "bd83de4600bb17d1474ed6021bed6983f0fd6078d0865860bec484cae6e24ac7",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/aider-goose/aider/source-selection-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "aider-goose/aider/windows-first-failed-installation-safe.json",
+      "publicBytes": 2275,
+      "publicSha256": "a64780e5b986555d83619ebff859b4238f8ec517b7aaf6301cd6040d3e6325ca",
+      "originalSafeSourcePath": "/mnt/c/Users/han/AppData/Local/OrchesterAgents/aider/installation-evidence/current-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/mnt/c/Users/han/AppData/Local/OrchesterAgents/aider/installation-evidence/current-safe.json",
+          "declarationReceipt": "aider-goose/aider/final-aider-installed-safe.json",
+          "declarationPointer": "$.sources[0]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/aider-goose/aider/windows-first-failed-installation-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "aider-goose/aider/windows-first-failure-diagnostic-safe.json",
+      "publicBytes": 278,
+      "publicSha256": "5cb82d28200289bbd9f4af42f290a020d82f551d6f8f7d9e7edf1be21efb73c1",
+      "originalSafeSourcePath": "/mnt/c/Users/han/AppData/Local/OrchesterAgents/aider/installation-evidence/installation-failure-diagnostic-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/mnt/c/Users/han/AppData/Local/OrchesterAgents/aider/installation-evidence/installation-failure-diagnostic-safe.json",
+          "declarationReceipt": "aider-goose/aider/final-aider-installed-safe.json",
+          "declarationPointer": "$.sources[1]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/aider-goose/aider/windows-first-failure-diagnostic-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "aider-goose/aider/windows-installed-recovery-safe.json",
+      "publicBytes": 3792,
+      "publicSha256": "2fb2fe3d6faa62afe3cbd1a6a155c0eb4fdf323b79b77d3645849ac9a6e9aceb",
+      "originalSafeSourcePath": "/mnt/c/Users/han/AppData/Local/OrchesterAgents/aider/installation-recovery1/current-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/mnt/c/Users/han/AppData/Local/OrchesterAgents/aider/installation-recovery1/current-safe.json",
+          "declarationReceipt": "aider-goose/aider/final-aider-installed-safe.json",
+          "declarationPointer": "$.sources[2]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/aider-goose/aider/windows-installed-recovery-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "aider-goose/aider/wsl-installed-safe.json",
+      "publicBytes": 3800,
+      "publicSha256": "c3dfe1e9773ba157e3db4975ced9aecac8ca77d91d4ffb3a69d5f55d5cffc8c2",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/aider-goose/aider/wsl/current-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "aider-goose/final-four-installations-safe.json",
+      "publicBytes": 1935,
+      "publicSha256": "a8dbb26f0296b517205cb19437527e46a940eb82264fe0f9f09bc84553a08ae6",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/aider-goose/final-four-installations-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "aider-goose/goose/download-binding-safe.json",
+      "publicBytes": 667,
+      "publicSha256": "0a3dba952a6049e30f17ee312277716cba9a4b760eaf2d79dbe2aee0829f555f",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/aider-goose/goose/download-binding-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "aider-goose/goose/final-installation-safe.json",
+      "publicBytes": 5269,
+      "publicSha256": "d533ecfdf06e84aa0ce7704122438bee65fdfdb749d2bb4d84368d7068a83376",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/aider-goose/goose/final-installation-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "aider-goose/goose/linux-installation-safe.json",
+      "publicBytes": 768,
+      "publicSha256": "ddeb8ff1c843bf7df7591307ee3a40d347189fd72d4990e81e1ea5d64276764c",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/aider-goose/goose/linux-installation-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "aider-goose/goose/official-current-release-safe.json",
+      "publicBytes": 1292,
+      "publicSha256": "f58730c281e180e92848e66cf21bf54bc7d3da715e1b7c4c5bfee960412892c4",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/aider-goose/goose/official-current-release-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "aider-goose/goose/official-installation-doc-safe.json",
+      "publicBytes": 557,
+      "publicSha256": "02edde738903beb0f592beb41ce30062a9a8a6d872f090f71f62655604309767",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/aider-goose/goose/official-installation-doc-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "aider-goose/goose/windows-controller-current-safe.json",
+      "publicBytes": 787,
+      "publicSha256": "db53702e38f7aebeff133cd3f54ffc5154e76c430cf667af523a0836d30ebc26",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/aider-goose/goose/windows-controller-current-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "aider-goose/goose/windows-python-version-safe.json",
+      "publicBytes": 1058,
+      "publicSha256": "2f694726630dc159ba5c2ac1e966354fd389de8461506ae13f7e419aa6b1c5e6",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/aider-goose/goose/windows-python-version-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "amp-auggie/amp/correction-process-observation-safe.json",
+      "publicBytes": 369,
+      "publicSha256": "59968bbe75855f287810a57a260edfbdf16e9eefdf0b6c3aa1ce1e2146acf0e6",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/amp-auggie/amp/correction-process-observation-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "amp-auggie/amp/final-safe.json",
+      "publicBytes": 1677,
+      "publicSha256": "9b8d9e7583e1a18a93c557603a1755e9ed6cabd270f16fb7d0dd6605f5bb67b7",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/amp-auggie/amp/final-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "amp-auggie/amp/official-channel-safe.json",
+      "publicBytes": 1256,
+      "publicSha256": "4ecfe8f21bbbb0b048ecbe7fe269110b1909aca25896ad5917f40971e5dc256b",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/amp-auggie/amp/official-channel-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "amp-auggie/amp/pinned-platform-metadata-safe.json",
+      "publicBytes": 2016,
+      "publicSha256": "0e62bacfa56afd242aa35b9bef56f909f1d437214da2a3d1529ecc7bf3d53e17",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/amp-auggie/amp/pinned-platform-metadata-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "amp-auggie/amp/platform-byte-binding-safe.json",
+      "publicBytes": 1795,
+      "publicSha256": "1f1c4112d8fb9ed3e1e574f3b071d6ff070c75522c9dabd2e8da11f75e5c4bd6",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/amp-auggie/amp/platform-byte-binding-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "amp-auggie/amp/windows-corrected-verification-safe.json",
+      "publicBytes": 2366,
+      "publicSha256": "33704d452e0539f2efdf411a63aa5ec038765f0a38aec3d75e38f0e3716287d3",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/amp-auggie/amp/windows-corrected-verification-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "amp-auggie/amp/windows-install-safe.json",
+      "publicBytes": 2477,
+      "publicSha256": "ecb726a0b1e78215e5e9ce80e0becdfc6b7f0641edf09d98c43f0837707e16fb",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/amp-auggie/amp/windows-install-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "amp-auggie/amp/wsl-install-safe.json",
+      "publicBytes": 1978,
+      "publicSha256": "0ba6ae110c1f1271aa3a64981399cdeb6e86ff14f798621c3325f9c149fd8bf8",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/amp-auggie/amp/wsl-install-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "amp-auggie/auggie/final-safe.json",
+      "publicBytes": 2905,
+      "publicSha256": "478a0efe8307c64bd926d06e3fd8affc07ded403543a7738405ea42874371dbe",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/amp-auggie/auggie/final-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "amp-auggie/auggie/npm-public-payload-binding-safe.json",
+      "publicBytes": 1014,
+      "publicSha256": "dd7be592800551216ce2afbd9c5e3a5cd5a216dcda595627fca154fa7c4b380c",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/amp-auggie/auggie/npm-public-payload-binding-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "amp-auggie/auggie/official-channel-safe.json",
+      "publicBytes": 3272,
+      "publicSha256": "5e3a5be2e4d777e86a5011775d7692875cc5d9095437486134c515c8d754c6d6",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/amp-auggie/auggie/official-channel-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "amp-auggie/auggie/windows-install-safe.json",
+      "publicBytes": 3387,
+      "publicSha256": "4cbefb236845ad21ef4e74588497ecc2defd3e1d23112c88684d0522cbea88b8",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/amp-auggie/auggie/windows-install-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "amp-auggie/auggie/wsl-install-safe.json",
+      "publicBytes": 2147,
+      "publicSha256": "2d61e6d498181885f8cdf06012e5d01ccb82681069239c5cacc1faf3c76dc1a9",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/amp-auggie/auggie/wsl-install-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "amp-auggie/final-safe.json",
+      "publicBytes": 3832,
+      "publicSha256": "97f6ac7c4f06435fbd2c868d900498eafab66262b2276def9e732a9b11ef9815",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/amp-auggie/final-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/continue/final-continue-dual-platform-safe.json",
+      "publicBytes": 6670,
+      "publicSha256": "e5d78702e0d91a4d04f6b7260ac195f2ae009ce750df175e6862b3525d5a5854",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/final-continue-dual-platform-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/final-continue-dual-platform-safe.json",
+          "declarationReceipt": "copilot-continue/continue/safe-archive-manifest.json",
+          "declarationPointer": "$.files[6]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/final-continue-dual-platform-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/continue/npm-metadata-safe.json",
+      "publicBytes": 3043,
+      "publicSha256": "06392643f6e12e792a4f94d8fb22b8f4b68039f9cadbd26bc785cb89acffa4af",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/npm-metadata-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/npm-metadata-safe.json",
+          "declarationReceipt": "copilot-continue/continue/safe-archive-manifest.json",
+          "declarationPointer": "$.files[1]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/npm-metadata-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/continue/official-readme-safe.json",
+      "publicBytes": 724,
+      "publicSha256": "597876f185112cbe30fc65589dbfbaf3f892cc03c7a1e6e9ed8fea07ae048e93",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/official-readme-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/official-readme-safe.json",
+          "declarationReceipt": "copilot-continue/continue/safe-archive-manifest.json",
+          "declarationPointer": "$.files[2]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/official-readme-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/continue/official-source-requests-safe.json",
+      "publicBytes": 3775,
+      "publicSha256": "468e4fd680b1f7a2f720a91f656bbc930da3a6b84d189907eb9764afb1ab4087",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/official-source-requests-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/official-source-requests-safe.json",
+          "declarationReceipt": "copilot-continue/continue/safe-archive-manifest.json",
+          "declarationPointer": "$.files[0]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/official-source-requests-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/continue/safe-archive-manifest.json",
+      "publicBytes": 2945,
+      "publicSha256": "03169813d51252a9c119083ccc7fb01b1ed97b8a5446ad609084be7ce215ed3d",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/safe-archive-manifest.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/continue/windows-corrected-verification-safe.json",
+      "publicBytes": 2750,
+      "publicSha256": "df2aff47af9b35e81b47caa71283aeed44fd7746e44f0c21421f4a2797913f03",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/windows-corrected-verification-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/windows-corrected-verification-safe.json",
+          "declarationReceipt": "copilot-continue/continue/safe-archive-manifest.json",
+          "declarationPointer": "$.files[5]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/windows-corrected-verification-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/continue/windows-install-safe.json",
+      "publicBytes": 1291,
+      "publicSha256": "fe13b2f32266f234192ce0e11042a1fd8b178416f62e85f021331825db37151c",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/windows-install-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/windows-install-safe.json",
+          "declarationReceipt": "copilot-continue/continue/safe-archive-manifest.json",
+          "declarationPointer": "$.files[4]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/windows-install-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/continue/wsl-attempt2/wsl-install-safe.json",
+      "publicBytes": 1871,
+      "publicSha256": "4b813c802820575292e056073d2d9a3c2eda770b967631ee5ebe58c537fdada4",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/wsl-attempt2/wsl-install-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/wsl-attempt2/wsl-install-safe.json",
+          "declarationReceipt": "copilot-continue/continue/safe-archive-manifest.json",
+          "declarationPointer": "$.files[7]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/wsl-attempt2/wsl-install-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/continue/wsl-install-safe.json",
+      "publicBytes": 758,
+      "publicSha256": "878560f8b4eb2839840c16c4d033a0759bbc4c43b0136f15938f580354f24a54",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/wsl-install-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/wsl-install-safe.json",
+          "declarationReceipt": "copilot-continue/continue/safe-archive-manifest.json",
+          "declarationPointer": "$.files[3]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/wsl-install-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/copilot/final-copilot-dual-platform-safe.json",
+      "publicBytes": 3657,
+      "publicSha256": "a3aeef62bda2c5f79ded4b3c686a38e4aac1c76e28e4c5218d48886337b28df6",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/final-copilot-dual-platform-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/final-copilot-dual-platform-safe.json",
+          "declarationReceipt": "copilot-continue/copilot/safe-archive-manifest.json",
+          "declarationPointer": "$.files[14]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/final-copilot-dual-platform-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/copilot/initial-native-prerequisite-validator-failed-safe.json",
+      "publicBytes": 730,
+      "publicSha256": "de5a65323e1023e8eba75df4a2c570fd283e95416ccc60614f5d9fdd1c2da65c",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/initial-native-prerequisite-validator-failed-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/initial-native-prerequisite-validator-failed-safe.json",
+          "declarationReceipt": "copilot-continue/copilot/safe-archive-manifest.json",
+          "declarationPointer": "$.files[10]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/initial-native-prerequisite-validator-failed-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/copilot/initial-scoped-launcher-observer-failed-safe.json",
+      "publicBytes": 440,
+      "publicSha256": "ed2508dea4840306b16c273cff72b5fc14dabea2ece2a633bf1bfbb10107f226",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/initial-scoped-launcher-observer-failed-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/initial-scoped-launcher-observer-failed-safe.json",
+          "declarationReceipt": "copilot-continue/copilot/safe-archive-manifest.json",
+          "declarationPointer": "$.files[11]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/initial-scoped-launcher-observer-failed-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/copilot/native-entries-and-pwsh-safe.json",
+      "publicBytes": 2831,
+      "publicSha256": "68e6e6dd35f36c3042746952dd4c3297cc9dfc1f8383e41989cf040d3763dee7",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/native-entries-and-pwsh-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/native-entries-and-pwsh-safe.json",
+          "declarationReceipt": "copilot-continue/copilot/safe-archive-manifest.json",
+          "declarationPointer": "$.files[4]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/native-entries-and-pwsh-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/copilot/official-current-npm-package-safe.json",
+      "publicBytes": 1216,
+      "publicSha256": "455faf8a37816f9adbc18b0f7647636f8a42ffac4006369771c5461a4169984d",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/official-current-npm-package-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/official-current-npm-package-safe.json",
+          "declarationReceipt": "copilot-continue/copilot/safe-archive-manifest.json",
+          "declarationPointer": "$.files[1]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/official-current-npm-package-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/copilot/powershell-prerequisite-file-install-safe.json",
+      "publicBytes": 462,
+      "publicSha256": "31efa2a7d913e60d7c200fff3c5539a638bd3a67dbbd58e10ef99172d3f41e29",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/powershell-prerequisite-file-install-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/powershell-prerequisite-file-install-safe.json",
+          "declarationReceipt": "copilot-continue/copilot/safe-archive-manifest.json",
+          "declarationPointer": "$.files[9]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/powershell-prerequisite-file-install-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/copilot/powershell-prerequisite-release-safe.json",
+      "publicBytes": 703,
+      "publicSha256": "d755537dd6183ca6eafed360146594bb42665c97e04d52afc79d20c7913e6858",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/powershell-prerequisite-release-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/powershell-prerequisite-release-safe.json",
+          "declarationReceipt": "copilot-continue/copilot/safe-archive-manifest.json",
+          "declarationPointer": "$.files[7]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/powershell-prerequisite-release-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/copilot/powershell-prerequisite-transport-safe.json",
+      "publicBytes": 621,
+      "publicSha256": "813af7138bda51db1aa040196b10411dce328eacef37a4d5622b656b286063ce",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/powershell-prerequisite-transport-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/powershell-prerequisite-transport-safe.json",
+          "declarationReceipt": "copilot-continue/copilot/safe-archive-manifest.json",
+          "declarationPointer": "$.files[8]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/powershell-prerequisite-transport-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/copilot/safe-archive-manifest.json",
+      "publicBytes": 5745,
+      "publicSha256": "37dfb889378eb824ee1f9349543f71ac65210acf623fe169d60deb228ac9645d",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": null,
+      "rootProvidedClassification": "agent-derived-archive-manifest-no-same-name-safe-source-byte-comparison-claimed",
+      "rootProvidedSourceByteExactClaim": false,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/copilot/scoped-launcher-safe.json",
+      "publicBytes": 632,
+      "publicSha256": "1f27931e00bdf2f57516cbef1963125fb7813e1e2a2e42c207b37925e3da66df",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/scoped-launcher-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/scoped-launcher-safe.json",
+          "declarationReceipt": "copilot-continue/copilot/safe-archive-manifest.json",
+          "declarationPointer": "$.files[12]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/scoped-launcher-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/copilot/scoped-launcher-version-safe.json",
+      "publicBytes": 821,
+      "publicSha256": "fad2084fbe7767b176dfd50d41dc7ed4b2673432ca31a01a37dcaae14a126b6f",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/scoped-launcher-version-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/scoped-launcher-version-safe.json",
+          "declarationReceipt": "copilot-continue/copilot/safe-archive-manifest.json",
+          "declarationPointer": "$.files[13]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/scoped-launcher-version-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/copilot/source-transport-safe.json",
+      "publicBytes": 947,
+      "publicSha256": "fdbf07337a0152831849b609a0130074d1d6364a5a7d03084e0da313e8827550",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/source-transport-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/source-transport-safe.json",
+          "declarationReceipt": "copilot-continue/copilot/safe-archive-manifest.json",
+          "declarationPointer": "$.files[0]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/source-transport-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/copilot/windows-install-safe.json",
+      "publicBytes": 3954,
+      "publicSha256": "1b4d2473c08db00d20a91b678f40d6ce53db62dd23b6be579cee60e62b78bf73",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/windows-install-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/windows-install-safe.json",
+          "declarationReceipt": "copilot-continue/copilot/safe-archive-manifest.json",
+          "declarationPointer": "$.files[3]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/windows-install-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/copilot/windows-installed-npm-package-integrity-safe.json",
+      "publicBytes": 919,
+      "publicSha256": "d1d6370d1a0236e6b9f7feb99936cee80584e687723be2262ba8230d9bc280f5",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/windows-installed-npm-package-integrity-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/windows-installed-npm-package-integrity-safe.json",
+          "declarationReceipt": "copilot-continue/copilot/safe-archive-manifest.json",
+          "declarationPointer": "$.files[6]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/windows-installed-npm-package-integrity-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/copilot/wsl-install-safe.json",
+      "publicBytes": 2670,
+      "publicSha256": "0f47654d9fd836e38f2c91f2dbbee04f7cdfa3e8b1ed51e8463b338a05b9188d",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/wsl-install-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/wsl-install-safe.json",
+          "declarationReceipt": "copilot-continue/copilot/safe-archive-manifest.json",
+          "declarationPointer": "$.files[2]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/wsl-install-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/copilot/wsl-installed-npm-package-integrity-safe.json",
+      "publicBytes": 919,
+      "publicSha256": "4f3c7383dbd6eb6d7c7bb2ee1144664fed974f3e817fc87b49765f0cb99e32f3",
+      "originalSafeSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/wsl-installed-npm-package-integrity-safe.json",
+      "sourcePathStatus": "embedded-public-declaration-not-independently-opened",
+      "sourceDeclarations": [
+        {
+          "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/wsl-installed-npm-package-integrity-safe.json",
+          "declarationReceipt": "copilot-continue/copilot/safe-archive-manifest.json",
+          "declarationPointer": "$.files[5]",
+          "archivedSourceByteExactClaim": true,
+          "independentlyComparedToOriginalSource": false
+        }
+      ],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/wsl-installed-npm-package-integrity-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    },
+    {
+      "publicPath": "copilot-continue/final-additional-agent-installations-safe.json",
+      "publicBytes": 1949,
+      "publicSha256": "3d240f8296aa90a4b14ce1e44eecf1c46ed8914e8bfd468cfb9c5260b81e8495",
+      "originalSafeSourcePath": null,
+      "sourcePathStatus": "not-declared-in-reviewed-public-json",
+      "sourceDeclarations": [],
+      "rootProvidedSafeProvenanceSourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/final-additional-agent-installations-safe.json",
+      "rootProvidedClassification": "root-declared-actual-safe-source-byte-comparison-not-repeated-by-reviewer",
+      "rootProvidedSourceByteExactClaim": true,
+      "independentReviewerReadOrComparedRootProvidedOriginalSource": false
+    }
+  ],
+  "rootProvidedSafeMappingsReceipt": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/root-integration/source-mappings-safe.json",
+  "rootProvidedSafeMappingsReceiptContentsIndependentlyRead": false,
+  "rootProvidedSafeSourceByteComparisonsDeclared": 53,
+  "withDeclaredSafeProvenanceSourcePath": 53,
+  "withoutDeclaredSafeProvenanceSourcePath": 1,
+  "derivedFilesWithoutSourceByteExactClaim": [
+    "copilot-continue/copilot/safe-archive-manifest.json"
+  ],
+  "rootProvidedMappingsReceiptScopeTextCorrectionPendingAtDeclaration": "Root reported stale 52 wording while actual mapping count is 53; root owns correction."
+}

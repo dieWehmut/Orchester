@@ -1,0 +1,60 @@
+{
+    "format":  "orchester-additional-agent-native-install-v1",
+    "product":  "Auggie",
+    "platform":  "native Windows x64",
+    "officialPackage":  "@augmentcode/auggie",
+    "pinnedVersion":  "0.37.1",
+    "prefix":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\auggie",
+    "caller":  {
+                   "imageSha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+                   "pid":  27520,
+                   "createdAtUtc":  "2026-11-12T07:12:24.5839533Z",
+                   "sessionId":  1
+               },
+    "nodeImage":  "C:\\Users\\han\\software\\node\\node.exe",
+    "nodeImageSha256":  "ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32",
+    "nativeNodeVersion":  "v24.21.0",
+    "modelsInvoked":  0,
+    "authenticationRequested":  false,
+    "sharedPathOrGlobalPrefixModified":  false,
+    "originalUserProfileContentsReadByInstallerScript":  false,
+    "vendorDocumentsWindowsWSLOnly":  true,
+    "vendorNativeWindowsSupportConfirmed":  false,
+    "commands":  [
+                     {
+                         "label":  "npm-install",
+                         "pid":  18380,
+                         "createdAtUtc":  "2026-11-12T07:12:25.0197032Z",
+                         "image":  "C:\\Users\\han\\software\\node\\node.exe",
+                         "originalManagedCreatorObjectRetained":  true,
+                         "actualExitCode":  0,
+                         "processActuallyExited":  true,
+                         "restartOnObservationTimeout":  false,
+                         "stdoutBytes":  25,
+                         "stdoutSha256":  "6ba9ac80ec3e235b20cbfff8f4f6002e2162cbb86fde6912c7292df239fd2a0d",
+                         "stderrBytes":  585,
+                         "stderrSha256":  "98498bcbbfd8ebb1a1e7dd97c655b3582806dc864d5da67383b03c65b2edec9c"
+                     },
+                     {
+                         "label":  "version",
+                         "pid":  17996,
+                         "createdAtUtc":  "2026-11-12T07:13:19.1932270Z",
+                         "image":  "C:\\Users\\han\\software\\node\\node.exe",
+                         "originalManagedCreatorObjectRetained":  true,
+                         "actualExitCode":  0,
+                         "processActuallyExited":  true,
+                         "restartOnObservationTimeout":  false,
+                         "stdoutBytes":  25,
+                         "stdoutSha256":  "29497a76725c6b9f9d95415b010e722d9c363ad6c5cc9aa23055e93ea815eefa",
+                         "stderrBytes":  0,
+                         "stderrSha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                     }
+                 ],
+    "status":  "official-package-installed-native-windows-version-verified-vendor-support-unconfirmed",
+    "entry":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\auggie\\node_modules\\@augmentcode\\auggie\\augment.mjs",
+    "npmShim":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\auggie\\node_modules\\.bin\\auggie.cmd",
+    "packageJsonSha256":  "a7397d92994236a3e6c4cb7f1f98b05b8066c4a3d4500766ee44c74ff01f4f65",
+    "entrySha256":  "7d809fef34f9cb0eae57559ced737e225ec74a390cf325ea453871d847d716c9",
+    "entryBytes":  13446452,
+    "versionOutput":  "0.37.1 (commit e8d38687)"
+}

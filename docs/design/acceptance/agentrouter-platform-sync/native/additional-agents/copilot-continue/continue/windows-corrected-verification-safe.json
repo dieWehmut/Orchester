@@ -1,0 +1,48 @@
+{
+    "status":  "installed-version-and-help-verified",
+    "platform":  "NativeWindows",
+    "package":  "@continuedev/cli",
+    "pinnedVersion":  "1.5.47",
+    "prefix":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\continue",
+    "globalPrefixChanged":  false,
+    "userPathChanged":  false,
+    "modelsInvoked":  0,
+    "loginInvoked":  0,
+    "credentialFilesDeliberatelyRead":  0,
+    "originalInstallationsOverwritten":  false,
+    "sourceScriptSha256":  "cc736925cf0286c5fcbe6dc3a3f11f4d03cf66ef952b807d7a3d8e52ee04103f",
+    "commands":  [
+                     {
+                         "label":  "cn-version-corrected",
+                         "pid":  22028,
+                         "createdUtc":  "2026-11-12T07:07:11.4962453Z",
+                         "image":  "C:\\Users\\han\\software\\node\\node.exe",
+                         "imageSha256":  "ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32",
+                         "originalManagedCreatorHandleRetained":  true,
+                         "actualExitCode":  0,
+                         "originalHandleHeldUntilActualExit":  true
+                     },
+                     {
+                         "label":  "cn-help-corrected",
+                         "pid":  484,
+                         "createdUtc":  "2026-11-12T07:07:12.6289382Z",
+                         "image":  "C:\\Users\\han\\software\\node\\node.exe",
+                         "imageSha256":  "ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32",
+                         "originalManagedCreatorHandleRetained":  true,
+                         "actualExitCode":  0,
+                         "originalHandleHeldUntilActualExit":  true
+                     }
+                 ],
+    "originalInstallerActualExitCode":  0,
+    "originalVerifierActualExitCode":  1,
+    "installerReexecuted":  false,
+    "originalVerifierFailure":  "PowerShell5 ConvertFrom-Json rejects package-lock empty root package key; parse public lock with dictionary serializer.",
+    "entryPath":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\continue\\node_modules\\@continuedev\\cli\\dist\\cn.js",
+    "npmShim":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\continue\\node_modules\\.bin\\cn.cmd",
+    "versionOutput":  "1.5.47",
+    "entrySha256":  "8b9c1d5bff438d558b537e1e8436ae645728bd6f100fa6e7a2a810d01413e18f",
+    "packageManifestSha256":  "854698a173d9324bd76dcde2e248a7f4a51deec04dbeea4d60b25312b1efc609",
+    "npmLockIntegrityExactlyMatchesOfficial":  "sha512-gtpewV3RoIOD9dyTtKIBi1SY0VOHRu3Ehe7C/mmnswm+j34MPyrcQhQaWj/m+jdfGO4fNIKdrgGIlLso1ULDFw==",
+    "helpBytes":  3087,
+    "completedAtUtc":  "2026-11-12T07:07:13.7445875Z"
+}

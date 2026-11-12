@@ -1,0 +1,21 @@
+{
+  "status": "both-official-cli-downloads-complete-and-release-digest-bound",
+  "observedAt": "2026-11-12T07:06:55.337649+00:00",
+  "tag": "v1.59.0",
+  "assets": [
+    {
+      "name": "goose-x86_64-unknown-linux-gnu.tar.gz",
+      "bytes": 62450309,
+      "sha256": "a774667de6c20206a60d78d7bece2d9dda8389667e4f5c2fc8aaa758d1e81ef3",
+      "officialReleaseDigestMatched": true,
+      "actualCurlExitCode": 0
+    },
+    {
+      "name": "goose-x86_64-pc-windows-msvc.zip",
+      "bytes": 53276891,
+      "sha256": "8b9ef7be66f469bdafd018de943a095ed83c32775dd623bebb0ab730da22d0d0",
+      "officialReleaseDigestMatched": true,
+      "actualCurlExitCode": 0
+    }
+  ]
+}

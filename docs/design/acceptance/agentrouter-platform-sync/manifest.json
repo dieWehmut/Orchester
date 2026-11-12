@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-12T06:26:21.469336+00:00",
+  "createdAt": "2026-11-12T09:18:11.437800+00:00",
   "status": "final71-code-pages-linux-and-windows-core16-accepted-runtime18-android-reinstall-in-progress",
   "summaryPath": "summary.json",
   "files": [
@@ -265,6 +265,11 @@
       "bytes": 601
     },
     {
+      "path": "maintenance/git-delivery/sixth-step-delivery-safe.json",
+      "sha256": "0899daa254fc1a755a1fcb2432573a0bbcdda8e2157a0089dcefbdca7218d407",
+      "bytes": 1625
+    },
+    {
       "path": "maintenance/git-delivery/step-delivery-safe.json",
       "sha256": "6e130032a0659efe8666cf735abf8ff923388df78d2f5ce2edf7f6fbb6d1301d",
       "bytes": 507
@@ -303,6 +308,311 @@
       "path": "maintenance/workspace-current/same-user-process-path-observation-safe.json",
       "sha256": "430674f4cb23284de97e1aba0283ef1d542b25e7ac96ad7efc0205131ee49d44",
       "bytes": 1465
+    },
+    {
+      "path": "native/additional-agents/aider-goose/aider/final-aider-installed-safe.json",
+      "sha256": "fc26ee7b930b215fcecaf9d1981f7ad1704910e41bcb8d35902c921178d0c9f1",
+      "bytes": 2853
+    },
+    {
+      "path": "native/additional-agents/aider-goose/aider/source-selection-safe.json",
+      "sha256": "bd83de4600bb17d1474ed6021bed6983f0fd6078d0865860bec484cae6e24ac7",
+      "bytes": 1528
+    },
+    {
+      "path": "native/additional-agents/aider-goose/aider/windows-first-failed-installation-safe.json",
+      "sha256": "a64780e5b986555d83619ebff859b4238f8ec517b7aaf6301cd6040d3e6325ca",
+      "bytes": 2275
+    },
+    {
+      "path": "native/additional-agents/aider-goose/aider/windows-first-failure-diagnostic-safe.json",
+      "sha256": "5cb82d28200289bbd9f4af42f290a020d82f551d6f8f7d9e7edf1be21efb73c1",
+      "bytes": 278
+    },
+    {
+      "path": "native/additional-agents/aider-goose/aider/windows-installed-recovery-safe.json",
+      "sha256": "2fb2fe3d6faa62afe3cbd1a6a155c0eb4fdf323b79b77d3645849ac9a6e9aceb",
+      "bytes": 3792
+    },
+    {
+      "path": "native/additional-agents/aider-goose/aider/wsl-installed-safe.json",
+      "sha256": "c3dfe1e9773ba157e3db4975ced9aecac8ca77d91d4ffb3a69d5f55d5cffc8c2",
+      "bytes": 3800
+    },
+    {
+      "path": "native/additional-agents/aider-goose/final-four-installations-safe.json",
+      "sha256": "a8dbb26f0296b517205cb19437527e46a940eb82264fe0f9f09bc84553a08ae6",
+      "bytes": 1935
+    },
+    {
+      "path": "native/additional-agents/aider-goose/goose/download-binding-safe.json",
+      "sha256": "0a3dba952a6049e30f17ee312277716cba9a4b760eaf2d79dbe2aee0829f555f",
+      "bytes": 667
+    },
+    {
+      "path": "native/additional-agents/aider-goose/goose/final-installation-safe.json",
+      "sha256": "d533ecfdf06e84aa0ce7704122438bee65fdfdb749d2bb4d84368d7068a83376",
+      "bytes": 5269
+    },
+    {
+      "path": "native/additional-agents/aider-goose/goose/linux-installation-safe.json",
+      "sha256": "ddeb8ff1c843bf7df7591307ee3a40d347189fd72d4990e81e1ea5d64276764c",
+      "bytes": 768
+    },
+    {
+      "path": "native/additional-agents/aider-goose/goose/official-current-release-safe.json",
+      "sha256": "f58730c281e180e92848e66cf21bf54bc7d3da715e1b7c4c5bfee960412892c4",
+      "bytes": 1292
+    },
+    {
+      "path": "native/additional-agents/aider-goose/goose/official-installation-doc-safe.json",
+      "sha256": "02edde738903beb0f592beb41ce30062a9a8a6d872f090f71f62655604309767",
+      "bytes": 557
+    },
+    {
+      "path": "native/additional-agents/aider-goose/goose/windows-controller-current-safe.json",
+      "sha256": "db53702e38f7aebeff133cd3f54ffc5154e76c430cf667af523a0836d30ebc26",
+      "bytes": 787
+    },
+    {
+      "path": "native/additional-agents/aider-goose/goose/windows-python-version-safe.json",
+      "sha256": "2f694726630dc159ba5c2ac1e966354fd389de8461506ae13f7e419aa6b1c5e6",
+      "bytes": 1058
+    },
+    {
+      "path": "native/additional-agents/amp-auggie/amp/correction-process-observation-safe.json",
+      "sha256": "59968bbe75855f287810a57a260edfbdf16e9eefdf0b6c3aa1ce1e2146acf0e6",
+      "bytes": 369
+    },
+    {
+      "path": "native/additional-agents/amp-auggie/amp/final-safe.json",
+      "sha256": "9b8d9e7583e1a18a93c557603a1755e9ed6cabd270f16fb7d0dd6605f5bb67b7",
+      "bytes": 1677
+    },
+    {
+      "path": "native/additional-agents/amp-auggie/amp/official-channel-safe.json",
+      "sha256": "4ecfe8f21bbbb0b048ecbe7fe269110b1909aca25896ad5917f40971e5dc256b",
+      "bytes": 1256
+    },
+    {
+      "path": "native/additional-agents/amp-auggie/amp/pinned-platform-metadata-safe.json",
+      "sha256": "0e62bacfa56afd242aa35b9bef56f909f1d437214da2a3d1529ecc7bf3d53e17",
+      "bytes": 2016
+    },
+    {
+      "path": "native/additional-agents/amp-auggie/amp/platform-byte-binding-safe.json",
+      "sha256": "1f1c4112d8fb9ed3e1e574f3b071d6ff070c75522c9dabd2e8da11f75e5c4bd6",
+      "bytes": 1795
+    },
+    {
+      "path": "native/additional-agents/amp-auggie/amp/windows-corrected-verification-safe.json",
+      "sha256": "33704d452e0539f2efdf411a63aa5ec038765f0a38aec3d75e38f0e3716287d3",
+      "bytes": 2366
+    },
+    {
+      "path": "native/additional-agents/amp-auggie/amp/windows-install-safe.json",
+      "sha256": "ecb726a0b1e78215e5e9ce80e0becdfc6b7f0641edf09d98c43f0837707e16fb",
+      "bytes": 2477
+    },
+    {
+      "path": "native/additional-agents/amp-auggie/amp/wsl-install-safe.json",
+      "sha256": "0ba6ae110c1f1271aa3a64981399cdeb6e86ff14f798621c3325f9c149fd8bf8",
+      "bytes": 1978
+    },
+    {
+      "path": "native/additional-agents/amp-auggie/auggie/final-safe.json",
+      "sha256": "478a0efe8307c64bd926d06e3fd8affc07ded403543a7738405ea42874371dbe",
+      "bytes": 2905
+    },
+    {
+      "path": "native/additional-agents/amp-auggie/auggie/npm-public-payload-binding-safe.json",
+      "sha256": "dd7be592800551216ce2afbd9c5e3a5cd5a216dcda595627fca154fa7c4b380c",
+      "bytes": 1014
+    },
+    {
+      "path": "native/additional-agents/amp-auggie/auggie/official-channel-safe.json",
+      "sha256": "5e3a5be2e4d777e86a5011775d7692875cc5d9095437486134c515c8d754c6d6",
+      "bytes": 3272
+    },
+    {
+      "path": "native/additional-agents/amp-auggie/auggie/windows-install-safe.json",
+      "sha256": "4cbefb236845ad21ef4e74588497ecc2defd3e1d23112c88684d0522cbea88b8",
+      "bytes": 3387
+    },
+    {
+      "path": "native/additional-agents/amp-auggie/auggie/wsl-install-safe.json",
+      "sha256": "2d61e6d498181885f8cdf06012e5d01ccb82681069239c5cacc1faf3c76dc1a9",
+      "bytes": 2147
+    },
+    {
+      "path": "native/additional-agents/amp-auggie/final-safe.json",
+      "sha256": "97f6ac7c4f06435fbd2c868d900498eafab66262b2276def9e732a9b11ef9815",
+      "bytes": 3832
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/continue/final-continue-dual-platform-safe.json",
+      "sha256": "e5d78702e0d91a4d04f6b7260ac195f2ae009ce750df175e6862b3525d5a5854",
+      "bytes": 6670
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/continue/npm-metadata-safe.json",
+      "sha256": "06392643f6e12e792a4f94d8fb22b8f4b68039f9cadbd26bc785cb89acffa4af",
+      "bytes": 3043
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/continue/official-readme-safe.json",
+      "sha256": "597876f185112cbe30fc65589dbfbaf3f892cc03c7a1e6e9ed8fea07ae048e93",
+      "bytes": 724
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/continue/official-source-requests-safe.json",
+      "sha256": "468e4fd680b1f7a2f720a91f656bbc930da3a6b84d189907eb9764afb1ab4087",
+      "bytes": 3775
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/continue/safe-archive-manifest.json",
+      "sha256": "03169813d51252a9c119083ccc7fb01b1ed97b8a5446ad609084be7ce215ed3d",
+      "bytes": 2945
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/continue/windows-corrected-verification-safe.json",
+      "sha256": "df2aff47af9b35e81b47caa71283aeed44fd7746e44f0c21421f4a2797913f03",
+      "bytes": 2750
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/continue/windows-install-safe.json",
+      "sha256": "fe13b2f32266f234192ce0e11042a1fd8b178416f62e85f021331825db37151c",
+      "bytes": 1291
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/continue/wsl-attempt2/wsl-install-safe.json",
+      "sha256": "4b813c802820575292e056073d2d9a3c2eda770b967631ee5ebe58c537fdada4",
+      "bytes": 1871
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/continue/wsl-install-safe.json",
+      "sha256": "878560f8b4eb2839840c16c4d033a0759bbc4c43b0136f15938f580354f24a54",
+      "bytes": 758
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/copilot/final-copilot-dual-platform-safe.json",
+      "sha256": "a3aeef62bda2c5f79ded4b3c686a38e4aac1c76e28e4c5218d48886337b28df6",
+      "bytes": 3657
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/copilot/initial-native-prerequisite-validator-failed-safe.json",
+      "sha256": "de5a65323e1023e8eba75df4a2c570fd283e95416ccc60614f5d9fdd1c2da65c",
+      "bytes": 730
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/copilot/initial-scoped-launcher-observer-failed-safe.json",
+      "sha256": "ed2508dea4840306b16c273cff72b5fc14dabea2ece2a633bf1bfbb10107f226",
+      "bytes": 440
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/copilot/native-entries-and-pwsh-safe.json",
+      "sha256": "68e6e6dd35f36c3042746952dd4c3297cc9dfc1f8383e41989cf040d3763dee7",
+      "bytes": 2831
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/copilot/official-current-npm-package-safe.json",
+      "sha256": "455faf8a37816f9adbc18b0f7647636f8a42ffac4006369771c5461a4169984d",
+      "bytes": 1216
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/copilot/powershell-prerequisite-file-install-safe.json",
+      "sha256": "31efa2a7d913e60d7c200fff3c5539a638bd3a67dbbd58e10ef99172d3f41e29",
+      "bytes": 462
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/copilot/powershell-prerequisite-release-safe.json",
+      "sha256": "d755537dd6183ca6eafed360146594bb42665c97e04d52afc79d20c7913e6858",
+      "bytes": 703
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/copilot/powershell-prerequisite-transport-safe.json",
+      "sha256": "813af7138bda51db1aa040196b10411dce328eacef37a4d5622b656b286063ce",
+      "bytes": 621
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/copilot/safe-archive-manifest.json",
+      "sha256": "37dfb889378eb824ee1f9349543f71ac65210acf623fe169d60deb228ac9645d",
+      "bytes": 5745
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/copilot/scoped-launcher-safe.json",
+      "sha256": "1f27931e00bdf2f57516cbef1963125fb7813e1e2a2e42c207b37925e3da66df",
+      "bytes": 632
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/copilot/scoped-launcher-version-safe.json",
+      "sha256": "fad2084fbe7767b176dfd50d41dc7ed4b2673432ca31a01a37dcaae14a126b6f",
+      "bytes": 821
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/copilot/source-transport-safe.json",
+      "sha256": "fdbf07337a0152831849b609a0130074d1d6364a5a7d03084e0da313e8827550",
+      "bytes": 947
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/copilot/windows-install-safe.json",
+      "sha256": "1b4d2473c08db00d20a91b678f40d6ce53db62dd23b6be579cee60e62b78bf73",
+      "bytes": 3954
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/copilot/windows-installed-npm-package-integrity-safe.json",
+      "sha256": "d1d6370d1a0236e6b9f7feb99936cee80584e687723be2262ba8230d9bc280f5",
+      "bytes": 919
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/copilot/wsl-install-safe.json",
+      "sha256": "0f47654d9fd836e38f2c91f2dbbee04f7cdfa3e8b1ed51e8463b338a05b9188d",
+      "bytes": 2670
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/copilot/wsl-installed-npm-package-integrity-safe.json",
+      "sha256": "4f3c7383dbd6eb6d7c7bb2ee1144664fed974f3e817fc87b49765f0cb99e32f3",
+      "bytes": 919
+    },
+    {
+      "path": "native/additional-agents/copilot-continue/final-additional-agent-installations-safe.json",
+      "sha256": "3d240f8296aa90a4b14ce1e44eecf1c46ed8914e8bfd468cfb9c5260b81e8495",
+      "bytes": 1949
+    },
+    {
+      "path": "native/additional-agents/independent-review-safe.json",
+      "sha256": "dce3a3c27ee87db3550db3128c4f86826063a05dca72ae4cc1b01563ed557542",
+      "bytes": 8911
+    },
+    {
+      "path": "native/additional-agents/review-sources-safe.json",
+      "sha256": "581283c187b541bd9fed5ac9db13d6bb1a7c1d08779db1b877a68c7f57d1a425",
+      "bytes": 56476
+    },
+    {
+      "path": "native/additional-agents/root-integration/command-entry-matrix-safe.json",
+      "sha256": "bdd7011055307ba3a34ce370523c4c77721beba76b2e433d10e79cf118868680",
+      "bytes": 2465
+    },
+    {
+      "path": "native/additional-agents/root-integration/registered-command-entries-safe.json",
+      "sha256": "7b3254dc9b97cafad70dcf84da3f529eaba19333311fad0eece3f3fe3d9c42ab",
+      "bytes": 3856
+    },
+    {
+      "path": "native/additional-agents/root-integration/registered-command-version-gates-safe.json",
+      "sha256": "57e8c8f432be8ab21eda09583f1fac458c95ebc3ea658ce075fb91d2d373773f",
+      "bytes": 4074
+    },
+    {
+      "path": "native/additional-agents/root-integration/user-environment-notification-safe.json",
+      "sha256": "a9fc0034f402914ba30715a03c5966717acc58b5a8f10188bd8c18f58e5b067f",
+      "bytes": 636
+    },
+    {
+      "path": "native/additional-agents/root-integration/wsl-registered-command-version-gates-safe.json",
+      "sha256": "9a04ceea07a7f461138399edcbd10baa2f33f267d91bd351743c5572ab8c0dcd",
+      "bytes": 1548
     },
     {
       "path": "native/android/correct-windows-current21/correct-windows-before-final21-readonly-safe.json",
@@ -470,21 +780,6 @@
       "bytes": 1391
     },
     {
-      "path": "native/android/device-identity-current21/native/own-emulator-console-port-readonly-safe.json",
-      "sha256": "0056b4266769cb0204f280938390ab41ad5518488262d918346804f3aede538a",
-      "bytes": 1097
-    },
-    {
-      "path": "native/android/device-identity-current21/native/unexpected-own-console-port-owner-safe.json",
-      "sha256": "8eb20a320c53373f231ba0e3b51cdcad9b237400fbc8472da4e4346a4a6363a0",
-      "bytes": 1488
-    },
-    {
-      "path": "native/android/device-identity-current21/native/windows-own-qemu-actual-listeners-safe.json",
-      "sha256": "bac7e866665ef9b8d1745b6ed92c58bd83f8f6d74ce6ac54370df1080fcbc819",
-      "bytes": 2531
-    },
-    {
       "path": "native/android/device-identity-current21/native-final21-device-provenance-correction-safe.json",
       "sha256": "73233999233d54ef151515ec5cdd7bfb9926dce907d18d8f8746cf705202c87a",
       "bytes": 1555
@@ -498,6 +793,21 @@
       "path": "native/android/device-identity-current21/native-one-prefs-file-rollback-final-byte-exact-safe.json",
       "sha256": "e12e31ff91d4cb163a9f2951af5fa35116b21bcc4c2cebccbb6f4272e5e51219",
       "bytes": 1212
+    },
+    {
+      "path": "native/android/device-identity-current21/native/own-emulator-console-port-readonly-safe.json",
+      "sha256": "0056b4266769cb0204f280938390ab41ad5518488262d918346804f3aede538a",
+      "bytes": 1097
+    },
+    {
+      "path": "native/android/device-identity-current21/native/unexpected-own-console-port-owner-safe.json",
+      "sha256": "8eb20a320c53373f231ba0e3b51cdcad9b237400fbc8472da4e4346a4a6363a0",
+      "bytes": 1488
+    },
+    {
+      "path": "native/android/device-identity-current21/native/windows-own-qemu-actual-listeners-safe.json",
+      "sha256": "bac7e866665ef9b8d1745b6ed92c58bd83f8f6d74ce6ac54370df1080fcbc819",
+      "bytes": 2531
     },
     {
       "path": "native/android/device-identity-current21/owned-windows-medium-normal-wmclose-exit-observed-safe.json",
@@ -1210,31 +1520,6 @@
       "bytes": 385348
     },
     {
-      "path": "native/windows/temporary-7339/cleanup-safe.json",
-      "sha256": "b82d7cf34d666add180ee55c5ac06f58d0f090e311ad3277b90b56c7f6a259dc",
-      "bytes": 996
-    },
-    {
-      "path": "native/windows/temporary-7339/original-executor-terminal-safe.json",
-      "sha256": "e2efae1dc68056cc4f2d82f6fe8cb5640d37210db94931032822583fd0b7e79e",
-      "bytes": 633
-    },
-    {
-      "path": "native/windows/temporary-7339/private-transport-terminal-cleanup-safe.json",
-      "sha256": "5d01cc236693516cb3da66cf6fc43ad4072bfc4368a7d2963973cbbe169727ca",
-      "bytes": 830
-    },
-    {
-      "path": "native/windows/temporary-7339/public-http-preflight-safe.json",
-      "sha256": "55c86d8d88049c90dc867cacc7d35176d3639cc39c84295323930c4763478bfb",
-      "bytes": 6952
-    },
-    {
-      "path": "native/windows/temporary-7339/ready-safe.json",
-      "sha256": "88477404ba3e2223b223d717a59a67dd648d73a58ad80e3dd2a0ee53860c2569",
-      "bytes": 1996
-    },
-    {
       "path": "native/windows/temporary-7339-attempt2/cleanup-safe.json",
       "sha256": "138321ee2333fef1b55e76247ebd15eb3ffe2bcb71b9caca4b65314fdf5cab2b",
       "bytes": 1080
@@ -1278,6 +1563,31 @@
       "path": "native/windows/temporary-7339-successor-policy/successor2-native-typed-policy-safe.json",
       "sha256": "b70d5c3ec0163017680cdf954ab2b273d35b6f92d85136cc53642874b0467296",
       "bytes": 2648
+    },
+    {
+      "path": "native/windows/temporary-7339/cleanup-safe.json",
+      "sha256": "b82d7cf34d666add180ee55c5ac06f58d0f090e311ad3277b90b56c7f6a259dc",
+      "bytes": 996
+    },
+    {
+      "path": "native/windows/temporary-7339/original-executor-terminal-safe.json",
+      "sha256": "e2efae1dc68056cc4f2d82f6fe8cb5640d37210db94931032822583fd0b7e79e",
+      "bytes": 633
+    },
+    {
+      "path": "native/windows/temporary-7339/private-transport-terminal-cleanup-safe.json",
+      "sha256": "5d01cc236693516cb3da66cf6fc43ad4072bfc4368a7d2963973cbbe169727ca",
+      "bytes": 830
+    },
+    {
+      "path": "native/windows/temporary-7339/public-http-preflight-safe.json",
+      "sha256": "55c86d8d88049c90dc867cacc7d35176d3639cc39c84295323930c4763478bfb",
+      "bytes": 6952
+    },
+    {
+      "path": "native/windows/temporary-7339/ready-safe.json",
+      "sha256": "88477404ba3e2223b223d717a59a67dd648d73a58ad80e3dd2a0ee53860c2569",
+      "bytes": 1996
     },
     {
       "path": "native/windows/workbuddy-registration-paths-readonly-safe.json",
@@ -1751,13 +2061,13 @@
     },
     {
       "path": "sources/receipt-provenance.json",
-      "sha256": "99b2992f8f68dc14acca4a1837a088ff1e9ba341245dc4ef90883fcd626d620c",
-      "bytes": 207242
+      "sha256": "86b232503551727aee4af2c7f475b3f40ada9dcc8d1f3bd0f8ce1018683a7f96",
+      "bytes": 236971
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "3acf3720c78e971490b61bb7f3bf32f5c57dd1a6d0a21e16544475b5eb623443",
-      "bytes": 28700
+      "sha256": "094898261ed1fce96dddd30b45e26f3b431e5bc7e3155ef062afbbb0f560c784",
+      "bytes": 30891
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -1781,8 +2091,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "0838e812d167976143bdecfefdc384b68fd3fa84e657b51c8a1ab11752a51da7",
-      "bytes": 38970
+      "sha256": "252e4f4374defd09c64a285610875d23ba617acceb7954319ec7a61d24717c7d",
+      "bytes": 40711
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
@@ -1865,5 +2175,6 @@
       "bytes": 2070
     }
   ],
-  "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false
+  "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
+  "checkpointScope": "Prior372listed files plus completed additionalCLI receipts and sixthGitdelivery; concurrently unfinished nativeAndroid/Claude evidence excluded from this checkpoint."
 }

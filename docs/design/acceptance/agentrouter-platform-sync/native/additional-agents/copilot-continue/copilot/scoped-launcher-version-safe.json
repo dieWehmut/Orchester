@@ -1,0 +1,17 @@
+{
+    "modelsOrLoginInvoked":  0,
+    "observedAtUtc":  "2026-11-12T08:43:36.9907128Z",
+    "processPathOnlyPrepend":  true,
+    "actualVersion":  "GitHub Copilot CLI 1.0.109.\nRun \u0027copilot update\u0027 to check for updates.",
+    "globalPathModified":  false,
+    "launcher":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\copilot\\bin\\copilot.cmd",
+    "actualExitCode":  0,
+    "status":  "scoped-launcher-native-version-verified",
+    "stderrCharacterCount":  0,
+    "originalCreator":  {
+                            "pid":  3236,
+                            "originalManagedCreatorHandleHeldUntilActualExit":  true,
+                            "createdUtc":  "2026-11-12T08:43:36.7721278Z",
+                            "image":  "C:\\Windows\\System32\\cmd.exe"
+                        }
+}

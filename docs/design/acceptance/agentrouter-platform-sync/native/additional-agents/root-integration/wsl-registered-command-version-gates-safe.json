@@ -1,0 +1,55 @@
+{
+  "status": "six-registered-wsl-command-version-gates-passed",
+  "observedAtUtc": "2026-11-12T09:03:16.571027+00:00",
+  "gates": [
+    {
+      "command": "copilot",
+      "expectedVersion": "1.0.109",
+      "actualExitCode": 0,
+      "expectedVersionObserved": true,
+      "originalCreatorObjectHeldUntilActualExit": true,
+      "modelOrLoginCommands": 0
+    },
+    {
+      "command": "cn",
+      "expectedVersion": "1.5.47",
+      "actualExitCode": 0,
+      "expectedVersionObserved": true,
+      "originalCreatorObjectHeldUntilActualExit": true,
+      "modelOrLoginCommands": 0
+    },
+    {
+      "command": "aider",
+      "expectedVersion": "0.86.2",
+      "actualExitCode": 0,
+      "expectedVersionObserved": true,
+      "originalCreatorObjectHeldUntilActualExit": true,
+      "modelOrLoginCommands": 0
+    },
+    {
+      "command": "goose",
+      "expectedVersion": "1.59.0",
+      "actualExitCode": 0,
+      "expectedVersionObserved": true,
+      "originalCreatorObjectHeldUntilActualExit": true,
+      "modelOrLoginCommands": 0
+    },
+    {
+      "command": "amp",
+      "expectedVersion": "0.0.1794456033-gb2ff22",
+      "actualExitCode": 0,
+      "expectedVersionObserved": true,
+      "originalCreatorObjectHeldUntilActualExit": true,
+      "modelOrLoginCommands": 0
+    },
+    {
+      "command": "auggie",
+      "expectedVersion": "0.37.1",
+      "actualExitCode": 0,
+      "expectedVersionObserved": true,
+      "originalCreatorObjectHeldUntilActualExit": true,
+      "modelOrLoginCommands": 0
+    }
+  ],
+  "installersRepeated": 0
+}

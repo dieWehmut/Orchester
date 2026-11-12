@@ -1,0 +1,49 @@
+{
+    "format":  "orchester-additional-copilot-windows-native-entry-and-prerequisite-v1",
+    "status":  "native-core-cmd-shim-and-powershell7-verified",
+    "steps":  [
+                  {
+                      "name":  "actual-native-copilot-version",
+                      "pid":  18424,
+                      "createdUtc":  "2026-11-12T07:23:36.7586898Z",
+                      "image":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\copilot\\node_modules\\@github\\copilot-win32-x64\\copilot.exe",
+                      "imageSha256":  "83967cd5f12ac86df19b816e6595d997bc4479fa56f1822a4f776894affa2d0a",
+                      "originalManagedCreatorHandleHeld":  true,
+                      "actualExitCode":  0,
+                      "publicVersionOutput":  "GitHub Copilot CLI 1.0.109.\nRun \u0027copilot update\u0027 to check for updates.",
+                      "stderrCharacterCount":  0
+                  },
+                  {
+                      "name":  "actual-windows-cmd-shim-version",
+                      "pid":  13456,
+                      "createdUtc":  "2026-11-12T07:23:36.9839975Z",
+                      "image":  "C:\\Windows\\System32\\cmd.exe",
+                      "imageSha256":  "15cd209c995b7d3009c91ca40892d5b8f1fb162f3e5f10716642ea278e8e0d7b",
+                      "originalManagedCreatorHandleHeld":  true,
+                      "actualExitCode":  0,
+                      "publicVersionOutput":  "GitHub Copilot CLI 1.0.109.\nRun \u0027copilot update\u0027 to check for updates.",
+                      "stderrCharacterCount":  0
+                  },
+                  {
+                      "name":  "actual-portable-powershell-prerequisite-version",
+                      "pid":  16084,
+                      "createdUtc":  "2026-11-12T07:23:37.1413377Z",
+                      "image":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\copilot\\prerequisites\\powershell7\\pwsh.exe",
+                      "imageSha256":  "f2833e07a5a7d59153ffc63db83bd6b62f6c63ffd8b5b5099a2feadf6b605336",
+                      "originalManagedCreatorHandleHeld":  true,
+                      "actualExitCode":  0,
+                      "publicVersionOutput":  "7.7.0",
+                      "stderrCharacterCount":  0
+                  }
+              ],
+    "actualCopilotVersion":  "1.0.109",
+    "actualPwshVersion":  "7.7.0",
+    "pwshPath":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\copilot\\prerequisites\\powershell7\\pwsh.exe",
+    "pwshSignatureStatus":  "Valid",
+    "pwshSigner":  "Microsoft Corporation",
+    "actualCmdShimVersionVerified":  true,
+    "globalPathModified":  false,
+    "existingProfilesOrCredentialsReadByScript":  false,
+    "modelOrLoginCommands":  0,
+    "observedAtUtc":  "2026-11-12T07:23:37.4025613Z"
+}

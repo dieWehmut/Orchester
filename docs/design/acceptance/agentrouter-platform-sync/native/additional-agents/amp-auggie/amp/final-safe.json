@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "status": "both-platforms-installed-and-native-version-verified",
+  "product": "Amp",
+  "version": "0.0.1794456033-gb2ff22",
+  "verifiedInstallUnits": 2,
+  "platforms": [
+    {
+      "platform": "WSL-linux-x64",
+      "entry": "/home/han/.local/share/orchester-agents/amp/node_modules/@ampcode/cli/bin/amp",
+      "cliShim": "/home/han/.local/share/orchester-agents/amp/node_modules/.bin/amp",
+      "actualInstallExitCode": 0,
+      "actualVersionExitCode": 0,
+      "versionOutput": "0.0.1794456033-gb2ff22 (released 2026-11-12T04:00:33.000Z, 3h ago)",
+      "entrySha256": "8e7d7f19cb2321bba7821fe8d1869cbd071be403dffdb47875dfc23dd0487db2"
+    },
+    {
+      "platform": "native-Windows-x64",
+      "entry": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\amp\\node_modules\\@ampcode\\cli\\bin\\amp.exe",
+      "cliShim": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\amp\\node_modules\\.bin\\amp.cmd",
+      "actualInstallExitCode": 0,
+      "actualVersionExitCode": 0,
+      "versionOutput": "0.0.1794456033-gb2ff22 (released 2026-11-12T04:00:33.000Z, 3h ago)",
+      "entrySha256": "3d043572234a6fe1f40a9ffa5179c757c26c547a6e7eb849aa02ae5bd20b12eb",
+      "outerPostInstallVerifierActualExitCode": 1,
+      "laterInteropObservationDoesNotProveNativeExit": true
+    }
+  ],
+  "officialVendorChecksumAndNpmSRIIndependentByteProof": "platform-byte-binding-safe.json",
+  "furtherRuntimeModelLoginTested": false,
+  "globalPathOrOriginalPrefixChanged": false,
+  "modelsInvoked": 0,
+  "loginInvoked": false,
+  "originalCredentialContentsRead": false,
+  "rawLogsArchived": false,
+  "processSignals": 0,
+  "originalFailureReceiptsPreserved": true
+}

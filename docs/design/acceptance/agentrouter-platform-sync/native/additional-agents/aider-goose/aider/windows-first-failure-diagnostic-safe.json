@@ -1,0 +1,12 @@
+{
+  "status": "derived-own-installer-failure-categories-only",
+  "matchedCategories": {
+    "ReadTimeout": 3
+  },
+  "exceptionTypes": [
+    "TimeoutError",
+    "pip._vendor.urllib3.exceptions.ReadTimeoutError"
+  ],
+  "missingModuleNames": [],
+  "rawPrivateLogIncluded": false
+}

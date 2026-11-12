@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "status": "official-isolated-agent-installed-and-native-version-verified",
+  "platform": "WSL-native",
+  "prefix": "/home/han/.local/share/orchester-agents/aider",
+  "wheelSha256": "64f6a0c66c9f4633ad9f479bca3e64ebcba02b9da03c6b604b74a44736b2416e",
+  "package": "aider-chat",
+  "expectedVersion": "0.86.2",
+  "globalPathChanges": 0,
+  "originalUserInstallationOrConfigurationChanges": 0,
+  "modelCalls": 0,
+  "forcedTerminations": 0,
+  "steps": [
+    {
+      "label": "base-python-version",
+      "pid": 1545228,
+      "command": [
+        "/usr/bin/python3.10",
+        "--version"
+      ],
+      "originalCreatorObjectRetained": true,
+      "actualExitCode": 0,
+      "startedAtUtc": "2026-11-12T07:09:16.833885+00:00",
+      "processActuallyExited": true,
+      "stdoutBytes": 15,
+      "stderrBytes": 0
+    },
+    {
+      "label": "create-isolated-venv",
+      "pid": 1545229,
+      "command": [
+        "/home/han/.local/bin/uv",
+        "--no-config",
+        "venv",
+        "--python",
+        "/usr/bin/python3.10",
+        "/home/han/.local/share/orchester-agents/aider/venv"
+      ],
+      "originalCreatorObjectRetained": true,
+      "actualExitCode": 0,
+      "startedAtUtc": "2026-11-12T07:09:17.085444+00:00",
+      "processActuallyExited": true,
+      "stdoutBytes": 0,
+      "stderrBytes": 136
+    },
+    {
+      "label": "install-official-checked-wheel",
+      "pid": 1545233,
+      "command": [
+        "/home/han/.local/bin/uv",
+        "--no-config",
+        "pip",
+        "install",
+        "--python",
+        "/home/han/.local/share/orchester-agents/aider/venv/bin/python",
+        "--index-url",
+        "https://pypi.org/simple",
+        "/home/han/.local/state/orchester-delivery/20261112/additional-agents/aider-goose/aider/aider_chat-0.86.2-py3-none-any.whl"
+      ],
+      "originalCreatorObjectRetained": true,
+      "actualExitCode": 0,
+      "startedAtUtc": "2026-11-12T07:09:17.336765+00:00",
+      "processActuallyExited": true,
+      "stdoutBytes": 0,
+      "stderrBytes": 3305
+    },
+    {
+      "label": "native-installed-cli-version",
+      "pid": 1650004,
+      "command": [
+        "/home/han/.local/share/orchester-agents/aider/venv/bin/aider",
+        "--config",
+        "/home/han/.local/share/orchester-agents/aider/acceptance-empty-config.yml",
+        "--version"
+      ],
+      "originalCreatorObjectRetained": true,
+      "actualExitCode": 0,
+      "startedAtUtc": "2026-11-12T07:15:36.646411+00:00",
+      "processActuallyExited": true,
+      "stdoutBytes": 13,
+      "stderrBytes": 0
+    },
+    {
+      "label": "installed-package-metadata",
+      "pid": 1651100,
+      "command": [
+        "/home/han/.local/share/orchester-agents/aider/venv/bin/python",
+        "-c",
+        "import importlib.metadata as m,json;d=m.distribution('aider-chat');print(json.dumps({'name':d.metadata['Name'],'version':d.version,'requiresPython':d.metadata['Requires-Python'],'entryPoints':{e.name:e.value for e in d.entry_points if e.group=='console_scripts'},'distributionFileCount':len(d.files or [])}))"
+      ],
+      "originalCreatorObjectRetained": true,
+      "actualExitCode": 0,
+      "startedAtUtc": "2026-11-12T07:15:39.858861+00:00",
+      "processActuallyExited": true,
+      "stdoutBytes": 153,
+      "stderrBytes": 0
+    }
+  ],
+  "entryPath": "/home/han/.local/share/orchester-agents/aider/venv/bin/aider",
+  "entrySha256": "98ab33671767821d48daca76b6edf1b367f2ba4d763fc9670e61e1ae9205170a",
+  "entryBytes": 337,
+  "nativeVersionOutput": "aider 0.86.2",
+  "installedMetadata": {
+    "name": "aider-chat",
+    "version": "0.86.2",
+    "requiresPython": "<3.13,>=3.10",
+    "entryPoints": {
+      "aider": "aider.main:main"
+    },
+    "distributionFileCount": 240
+  },
+  "completedAtUtc": "2026-11-12T07:15:40.110771+00:00"
+}
