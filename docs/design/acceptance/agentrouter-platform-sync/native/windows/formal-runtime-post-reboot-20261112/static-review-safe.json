@@ -1,0 +1,516 @@
+{
+  "schemaVersion": 1,
+  "status": "fixed-public-sources-and-runtime-candidate-pins-pass-runtime-inputs-and-interactive-execution-still-required",
+  "observedAtUtc": "2026-11-12T09:34:58.070228+00:00",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "scope": {
+    "fixedSourceHashCheckCount": 40,
+    "clonePreparedManifestReferenceChecks": 10,
+    "selectedPublicReceiptAndPreparationSourceCount": 50,
+    "publicCandidateInventoryFileHashCheckCount": 84,
+    "nativeHelperAndToolBinaryHashCheckCount": 9,
+    "nativeCommandsRun": 0,
+    "processOrTaskActions": 0,
+    "GUIActions": 0,
+    "installedUserProfileOrCredentialContentsRead": false,
+    "networkCalls": 0,
+    "independentCurrentHostInteractiveProbePerformed": false,
+    "separateParentProbeResultIncludedAsDeclarationOnly": "Parent reports own 09:26 UTC cursorError5, actual Start/Observe/Cleanup0. This reviewer didnot independently inspect that receipt."
+  },
+  "planBuildAndPreparation": {
+    "planFile": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/plan.json",
+    "planSha256": "8645dca6d20f2d5ff0d845d7c74522f52ca72c6aec49ec9529dcb86a997911cd",
+    "finalResultFile": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/final-result.json",
+    "finalResultSha256": "7ddcd67633e127a4b664dc69d91cf20bd8751a9ab6a009d8ca73d9b0951fe023",
+    "sourceExportAuditSha256": "6313572160eee0ed132a87e1fdb50d7a5ad0ff92ade66fac6c0346db86a39680",
+    "allPinsMatched": true,
+    "historicalNativeGateCount": 16,
+    "historicalGateActualExitCodesAll0AndTypedTerminal": true,
+    "historicalGatesRerun": false,
+    "producerInputInventoryCount": 967,
+    "producerSourceInputContentsRehashedThisReview": false,
+    "frozenProducerDeferredApkBinding": "deferred-fresh-native-android-source-receipt",
+    "producerApkSha256": null,
+    "desktopExeSha256": "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+    "remoteExeSha256": "24c8f9806256cc54b239b03f6b4adc976c3fee50c30bc0f2ecf601971c22ce2a",
+    "freshApkSha256": "f83fa2a75c712a3d2e1f3f203cf73ce89204fb4ca0bce4d8c2ef0c4fe3596d3c",
+    "freshApkBytes": 13960333,
+    "freshApkBytesMatched": true,
+    "currentAPKCertificateInspectionPerformed": false,
+    "freshRuntimeInputsFile": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/fresh-runtime-inputs.json",
+    "freshRuntimeInputsFileExists": false
+  },
+  "fixedSourcePins": [
+    {
+      "scope": "original",
+      "name": "InteractiveFileRunner.cs",
+      "expectedSha256": "03783e81bee77f1e13d517c5efd4ad6caca45509960691faf5dc90ad8dc3cec3",
+      "actualSha256": "03783e81bee77f1e13d517c5efd4ad6caca45509960691faf5dc90ad8dc3cec3",
+      "matches": true
+    },
+    {
+      "scope": "clone",
+      "name": "InteractiveFileRunner.cs",
+      "expectedSha256": "03783e81bee77f1e13d517c5efd4ad6caca45509960691faf5dc90ad8dc3cec3",
+      "actualSha256": "03783e81bee77f1e13d517c5efd4ad6caca45509960691faf5dc90ad8dc3cec3",
+      "matches": true
+    },
+    {
+      "scope": "original",
+      "name": "NativeDesktopWindows.cs",
+      "expectedSha256": "858fdf6e41f257b8923bed98c4ba15177c8538ef2240d51f8122519df9b5af58",
+      "actualSha256": "858fdf6e41f257b8923bed98c4ba15177c8538ef2240d51f8122519df9b5af58",
+      "matches": true
+    },
+    {
+      "scope": "clone",
+      "name": "NativeDesktopWindows.cs",
+      "expectedSha256": "858fdf6e41f257b8923bed98c4ba15177c8538ef2240d51f8122519df9b5af58",
+      "actualSha256": "858fdf6e41f257b8923bed98c4ba15177c8538ef2240d51f8122519df9b5af58",
+      "matches": true
+    },
+    {
+      "scope": "original",
+      "name": "NativeTrayQuit.cs",
+      "expectedSha256": "bcaafea8a300f153a08657a657d650eb82282f97057d46533e05b290f4b9ce75",
+      "actualSha256": "bcaafea8a300f153a08657a657d650eb82282f97057d46533e05b290f4b9ce75",
+      "matches": true
+    },
+    {
+      "scope": "clone",
+      "name": "NativeTrayQuit.cs",
+      "expectedSha256": "bcaafea8a300f153a08657a657d650eb82282f97057d46533e05b290f4b9ce75",
+      "actualSha256": "bcaafea8a300f153a08657a657d650eb82282f97057d46533e05b290f4b9ce75",
+      "matches": true
+    },
+    {
+      "scope": "original",
+      "name": "OwnedConsoleQuit.cs",
+      "expectedSha256": "531a104d8e2075b4cf7f045b2078e7d4af1357704b37cde68bef331128790572",
+      "actualSha256": "531a104d8e2075b4cf7f045b2078e7d4af1357704b37cde68bef331128790572",
+      "matches": true
+    },
+    {
+      "scope": "clone",
+      "name": "OwnedConsoleQuit.cs",
+      "expectedSha256": "531a104d8e2075b4cf7f045b2078e7d4af1357704b37cde68bef331128790572",
+      "actualSha256": "531a104d8e2075b4cf7f045b2078e7d4af1357704b37cde68bef331128790572",
+      "matches": true
+    },
+    {
+      "scope": "original",
+      "name": "OwnedRuntimeProcesses.cs",
+      "expectedSha256": "ca811c1294281e53adf5fc80093020648a38b6822aea16831541ecb28744eb3c",
+      "actualSha256": "ca811c1294281e53adf5fc80093020648a38b6822aea16831541ecb28744eb3c",
+      "matches": true
+    },
+    {
+      "scope": "clone",
+      "name": "OwnedRuntimeProcesses.cs",
+      "expectedSha256": "d335743a632acae0c90968e482b87eda44aaf1dae241e938e62b5c7833598d45",
+      "actualSha256": "d335743a632acae0c90968e482b87eda44aaf1dae241e938e62b5c7833598d45",
+      "matches": true
+    },
+    {
+      "scope": "original",
+      "name": "capture-desktop-descendants.ps1",
+      "expectedSha256": "8e81166cd81e6fe3f97f0537fda6b998396f3af5a5b8a2f22b1a863d6de9133d",
+      "actualSha256": "8e81166cd81e6fe3f97f0537fda6b998396f3af5a5b8a2f22b1a863d6de9133d",
+      "matches": true
+    },
+    {
+      "scope": "clone",
+      "name": "capture-desktop-descendants.ps1",
+      "expectedSha256": "8e81166cd81e6fe3f97f0537fda6b998396f3af5a5b8a2f22b1a863d6de9133d",
+      "actualSha256": "8e81166cd81e6fe3f97f0537fda6b998396f3af5a5b8a2f22b1a863d6de9133d",
+      "matches": true
+    },
+    {
+      "scope": "original",
+      "name": "inspect-or-quit-default-remote.ps1",
+      "expectedSha256": "86f76c914b9c537d2d1708e10656666bce76ed8ee11cdab9abf98f3e30deaca5",
+      "actualSha256": "86f76c914b9c537d2d1708e10656666bce76ed8ee11cdab9abf98f3e30deaca5",
+      "matches": true
+    },
+    {
+      "scope": "clone",
+      "name": "inspect-or-quit-default-remote.ps1",
+      "expectedSha256": "86f76c914b9c537d2d1708e10656666bce76ed8ee11cdab9abf98f3e30deaca5",
+      "actualSha256": "86f76c914b9c537d2d1708e10656666bce76ed8ee11cdab9abf98f3e30deaca5",
+      "matches": true
+    },
+    {
+      "scope": "original",
+      "name": "invoke-owned-tray-quit.ps1",
+      "expectedSha256": "610b484568af1f8b85fa0291ad7aa1a117ed69d7526b189d0f9b3a1ea50550fd",
+      "actualSha256": "610b484568af1f8b85fa0291ad7aa1a117ed69d7526b189d0f9b3a1ea50550fd",
+      "matches": true
+    },
+    {
+      "scope": "clone",
+      "name": "invoke-owned-tray-quit.ps1",
+      "expectedSha256": "610b484568af1f8b85fa0291ad7aa1a117ed69d7526b189d0f9b3a1ea50550fd",
+      "actualSha256": "610b484568af1f8b85fa0291ad7aa1a117ed69d7526b189d0f9b3a1ea50550fd",
+      "matches": true
+    },
+    {
+      "scope": "original",
+      "name": "launch-smoke.ps1",
+      "expectedSha256": "7c36903ce7ac83bc63124a014d1d706fbddc20e7da9908433525d808f417daed",
+      "actualSha256": "7c36903ce7ac83bc63124a014d1d706fbddc20e7da9908433525d808f417daed",
+      "matches": true
+    },
+    {
+      "scope": "clone",
+      "name": "launch-smoke.ps1",
+      "expectedSha256": "b30e25096940a0604546ac77187650738a0ce76ba40049c656442ceed84c3001",
+      "actualSha256": "b30e25096940a0604546ac77187650738a0ce76ba40049c656442ceed84c3001",
+      "matches": true
+    },
+    {
+      "scope": "original",
+      "name": "prepared-scripts.json",
+      "expectedSha256": "61de2f683acf375dc698a3053a34a0fae1cb607813dbfe72f8a94bced9239a58",
+      "actualSha256": "61de2f683acf375dc698a3053a34a0fae1cb607813dbfe72f8a94bced9239a58",
+      "matches": true
+    },
+    {
+      "scope": "clone",
+      "name": "prepared-scripts.json",
+      "expectedSha256": "807319a7aba30d967316c9087ee447059860bdc0f796b723110145945b61a6f5",
+      "actualSha256": "807319a7aba30d967316c9087ee447059860bdc0f796b723110145945b61a6f5",
+      "matches": true
+    },
+    {
+      "scope": "original",
+      "name": "resize-isolated-window.ps1",
+      "expectedSha256": "0f573d3ea44247a442157369e26c35c1bde7e39d3f43c011a13de87a23581489",
+      "actualSha256": "0f573d3ea44247a442157369e26c35c1bde7e39d3f43c011a13de87a23581489",
+      "matches": true
+    },
+    {
+      "scope": "clone",
+      "name": "resize-isolated-window.ps1",
+      "expectedSha256": "0f573d3ea44247a442157369e26c35c1bde7e39d3f43c011a13de87a23581489",
+      "actualSha256": "0f573d3ea44247a442157369e26c35c1bde7e39d3f43c011a13de87a23581489",
+      "matches": true
+    },
+    {
+      "scope": "original",
+      "name": "runtime-input-guards.ps1",
+      "expectedSha256": "fa6ce76b0ac9d2c4a37b173931e4627d92cab7e5308e6f912b8467a5eb58ff6d",
+      "actualSha256": "fa6ce76b0ac9d2c4a37b173931e4627d92cab7e5308e6f912b8467a5eb58ff6d",
+      "matches": true
+    },
+    {
+      "scope": "clone",
+      "name": "runtime-input-guards.ps1",
+      "expectedSha256": "fa6ce76b0ac9d2c4a37b173931e4627d92cab7e5308e6f912b8467a5eb58ff6d",
+      "actualSha256": "fa6ce76b0ac9d2c4a37b173931e4627d92cab7e5308e6f912b8467a5eb58ff6d",
+      "matches": true
+    },
+    {
+      "scope": "original",
+      "name": "verify-final-native.mjs",
+      "expectedSha256": "7269430ac55b9cf1c22e9c6cfd26013d5d3abd5f839f33004e8ddaaaec9d63bd",
+      "actualSha256": "7269430ac55b9cf1c22e9c6cfd26013d5d3abd5f839f33004e8ddaaaec9d63bd",
+      "matches": true
+    },
+    {
+      "scope": "clone",
+      "name": "verify-final-native.mjs",
+      "expectedSha256": "7269430ac55b9cf1c22e9c6cfd26013d5d3abd5f839f33004e8ddaaaec9d63bd",
+      "actualSha256": "7269430ac55b9cf1c22e9c6cfd26013d5d3abd5f839f33004e8ddaaaec9d63bd",
+      "matches": true
+    },
+    {
+      "scope": "original",
+      "name": "verify-portable-runtime-file.ps1",
+      "expectedSha256": "3646928e84215c19261025289a94208721287f569a50eaf844871d14e53613bd",
+      "actualSha256": "3646928e84215c19261025289a94208721287f569a50eaf844871d14e53613bd",
+      "matches": true
+    },
+    {
+      "scope": "clone",
+      "name": "verify-portable-runtime-file.ps1",
+      "expectedSha256": "9b59595d838aed379e25cf4483fa8f6a24bf45f9d1d832c5eb83ae70ecf3e0a1",
+      "actualSha256": "9b59595d838aed379e25cf4483fa8f6a24bf45f9d1d832c5eb83ae70ecf3e0a1",
+      "matches": true
+    },
+    {
+      "scope": "original",
+      "name": "verify-portable-runtime-final.ps1",
+      "expectedSha256": "6d01f8496ff8c57317337448d47c450b3a4a8ab768f755e46f1f04466a485b6f",
+      "actualSha256": "6d01f8496ff8c57317337448d47c450b3a4a8ab768f755e46f1f04466a485b6f",
+      "matches": true
+    },
+    {
+      "scope": "clone",
+      "name": "verify-portable-runtime-final.ps1",
+      "expectedSha256": "6d01f8496ff8c57317337448d47c450b3a4a8ab768f755e46f1f04466a485b6f",
+      "actualSha256": "6d01f8496ff8c57317337448d47c450b3a4a8ab768f755e46f1f04466a485b6f",
+      "matches": true
+    },
+    {
+      "scope": "original",
+      "name": "window-snapshot.ps1",
+      "expectedSha256": "de6406bd7241bf983ce82c1ee17f712cdc5293bfb054b35c4987849d2ffabfda",
+      "actualSha256": "de6406bd7241bf983ce82c1ee17f712cdc5293bfb054b35c4987849d2ffabfda",
+      "matches": true
+    },
+    {
+      "scope": "clone",
+      "name": "window-snapshot.ps1",
+      "expectedSha256": "de6406bd7241bf983ce82c1ee17f712cdc5293bfb054b35c4987849d2ffabfda",
+      "actualSha256": "de6406bd7241bf983ce82c1ee17f712cdc5293bfb054b35c4987849d2ffabfda",
+      "matches": true
+    },
+    {
+      "scope": "retainer",
+      "name": "retain-owned-observation.ps1",
+      "expectedSha256": "6f758142622e49e7b6e7892c7b254a5dda53b990425d0ff7b9e54d84a7523344",
+      "actualSha256": "6f758142622e49e7b6e7892c7b254a5dda53b990425d0ff7b9e54d84a7523344",
+      "matches": true
+    },
+    {
+      "scope": "producer",
+      "name": "monitor-final-cargo.cmd",
+      "expectedSha256": "af765a7c87be84d83b6a9057800d002cc5d51cbb0c294bc67b6428d7ca221b56",
+      "actualSha256": "af765a7c87be84d83b6a9057800d002cc5d51cbb0c294bc67b6428d7ca221b56",
+      "matches": true
+    },
+    {
+      "scope": "producer",
+      "name": "monitor-final-common.ps1",
+      "expectedSha256": "2d4e07f3d703043ea9af8fbf6377814f08135253837b4e36b8f075ea3aeb2f4f",
+      "actualSha256": "2d4e07f3d703043ea9af8fbf6377814f08135253837b4e36b8f075ea3aeb2f4f",
+      "matches": true
+    },
+    {
+      "scope": "producer",
+      "name": "monitor-final-freeze.ps1",
+      "expectedSha256": "f872fc758b36631cf1d8efe55d75f081273a560ab9835c0d72a182314c78d24c",
+      "actualSha256": "f872fc758b36631cf1d8efe55d75f081273a560ab9835c0d72a182314c78d24c",
+      "matches": true
+    },
+    {
+      "scope": "producer",
+      "name": "monitor-final-launch.ps1",
+      "expectedSha256": "e74434b62befd74086440dbf95e9a5f5beea5835c57c241ff12a71183d652a4d",
+      "actualSha256": "e74434b62befd74086440dbf95e9a5f5beea5835c57c241ff12a71183d652a4d",
+      "matches": true
+    },
+    {
+      "scope": "producer",
+      "name": "monitor-final-promote.ps1",
+      "expectedSha256": "01d96b35675d3a05acc800f44aed2dd29fdc12718b9f5db9303a7e0876ff53dc",
+      "actualSha256": "01d96b35675d3a05acc800f44aed2dd29fdc12718b9f5db9303a7e0876ff53dc",
+      "matches": true
+    },
+    {
+      "scope": "producer",
+      "name": "monitor-final-selfcheck.ps1",
+      "expectedSha256": "bde0241552070b1f06ebc73e6fd5e235cb5380d111246c0f8f999d309f755830",
+      "actualSha256": "bde0241552070b1f06ebc73e6fd5e235cb5380d111246c0f8f999d309f755830",
+      "matches": true
+    },
+    {
+      "scope": "producer",
+      "name": "monitor-final-worker.ps1",
+      "expectedSha256": "a7b926e23c70dff37e8bea14a181dee8f704c7456e403305fbf574e81b22710e",
+      "actualSha256": "a7b926e23c70dff37e8bea14a181dee8f704c7456e403305fbf574e81b22710e",
+      "matches": true
+    }
+  ],
+  "candidateInventories": [
+    {
+      "kind": "desktop-candidate",
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/desktop-candidate",
+      "count": 38,
+      "everyPublicFileHashMatched": true,
+      "missingCount": 0,
+      "extraCount": 0
+    },
+    {
+      "kind": "remote-candidate",
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/remote-candidate",
+      "count": 18,
+      "everyPublicFileHashMatched": true,
+      "missingCount": 0,
+      "extraCount": 0
+    },
+    {
+      "kind": "derived-fresh-remote-package",
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/remote-package-fresh21",
+      "count": 28,
+      "everyPublicFileHashMatched": true,
+      "missingCount": 0,
+      "extraCount": 0
+    }
+  ],
+  "nativeToolPins": [
+    {
+      "label": "node",
+      "path": "C:\\Users\\han\\AppData\\Local\\dsh-shortcut\\node\\node-v24.21.0-win-x64\\node.exe",
+      "expectedSha256": "ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32",
+      "actualSha256": "ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32",
+      "matches": true
+    },
+    {
+      "label": "webview",
+      "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+      "expectedSha256": "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+      "actualSha256": "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+      "matches": true
+    },
+    {
+      "label": "icacls",
+      "path": "C:\\Windows\\System32\\icacls.exe",
+      "expectedSha256": "cb9e55d4c02f4e55100724d2da9a1267f49e196bd39fcdf36cec6ea6314fad2a",
+      "actualSha256": "cb9e55d4c02f4e55100724d2da9a1267f49e196bd39fcdf36cec6ea6314fad2a",
+      "matches": true
+    },
+    {
+      "label": "powershell",
+      "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "expectedSha256": "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+      "actualSha256": "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+      "matches": true
+    },
+    {
+      "label": "cmd",
+      "path": "C:\\Windows\\System32\\cmd.exe",
+      "expectedSha256": "15cd209c995b7d3009c91ca40892d5b8f1fb162f3e5f10716642ea278e8e0d7b",
+      "actualSha256": "15cd209c995b7d3009c91ca40892d5b8f1fb162f3e5f10716642ea278e8e0d7b",
+      "matches": true
+    },
+    {
+      "label": "conhost",
+      "path": "C:\\Windows\\System32\\conhost.exe",
+      "expectedSha256": "c86146188b78e484f32cc29e2331689659943b47689a85570342044f499938ac",
+      "actualSha256": "c86146188b78e484f32cc29e2331689659943b47689a85570342044f499938ac",
+      "matches": true
+    },
+    {
+      "label": "system-wsl",
+      "path": "C:\\Windows\\System32\\wsl.exe",
+      "expectedSha256": "fcd08205b608b5c4831e0dcb1801dd274436cd2c8420815f18ae58a085891a18",
+      "actualSha256": "fcd08205b608b5c4831e0dcb1801dd274436cd2c8420815f18ae58a085891a18",
+      "matches": true
+    },
+    {
+      "label": "msi-wsl",
+      "path": "C:\\Program Files\\WSL\\wsl.exe",
+      "expectedSha256": "051b7a9b7bda66817c052aced998e026610e5d4d18d63f45629d35d5cb5471c8",
+      "actualSha256": "051b7a9b7bda66817c052aced998e026610e5d4d18d63f45629d35d5cb5471c8",
+      "matches": true
+    },
+    {
+      "label": "wslhost",
+      "path": "C:\\Program Files\\WSL\\wslhost.exe",
+      "expectedSha256": "1f214fbb69efcd138260c4aa4e35182bfe5371afe4055b59a3133d8f88f9c3b7",
+      "actualSha256": "1f214fbb69efcd138260c4aa4e35182bfe5371afe4055b59a3133d8f88f9c3b7",
+      "matches": true
+    }
+  ],
+  "entryPoints": {
+    "freshInputsFreeze": {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/freeze-fresh-runtime-inputs.ps1",
+      "sha256": "a19c9f65ea4661ac4a1d0e6dc8bccae3a09f9a7656fc40bee71b9bbb391371ce",
+      "parameters": [
+        "AndroidAcceptanceReceiptFile",
+        "ExpectedAndroidAcceptanceReceiptSha256"
+      ],
+      "preconditions": [
+        "Read-Plan source/export/producer/16-gate pins",
+        "Prepared fresh Remote package and actual13,960,333B APK",
+        "Normalized Android passed receipt with source71/APK/cert/Gradle0/install0/Bridge/UI/terminal/cleanup true",
+        "Its originalReceiptFile must hashmatch and expose passed build/install/4Bridge/21canonicalIDs/42loadedImages/terminal/cleanup plus exact17mobile-resource inventory",
+        "fresh-runtime-inputs.json must not exist; temporarycandidate preserved on failure"
+      ]
+    },
+    "portable14": {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-epoch2-wslhost-20261111/verify-portable-runtime-file.ps1",
+      "sha256": "9b59595d838aed379e25cf4483fa8f6a24bf45f9d1d832c5eb83ae70ecf3e0a1",
+      "parameters": [
+        "PlanFile",
+        "ExpectedPlanSha256",
+        "ExpectedFinalResultSha256",
+        "ExpectedApkSha256",
+        "RuntimeInputsFile",
+        "ExpectedRuntimeInputsSha256",
+        "ResultDirectory"
+      ],
+      "resultFile": "runtime-result.json",
+      "checks": 14,
+      "ownership": "Uses original restricted native HANDLE and stdin writer, CaptureNativeRoot, own normal quit, passive original-handle observation; never calls bounded Run method for this entry",
+      "notExecuted": true
+    },
+    "desktop18": {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-epoch2-wslhost-20261111/launch-smoke.ps1",
+      "sha256": "b30e25096940a0604546ac77187650738a0ce76ba40049c656442ceed84c3001",
+      "parameters": [
+        "PlanFile",
+        "ExpectedPlanSha256",
+        "ExpectedFinalResultSha256",
+        "ExpectedPreparedScriptsSha256",
+        "RuntimeInputsFile",
+        "ExpectedRuntimeInputsSha256",
+        "ResultDirectory"
+      ],
+      "preparedManifestSha256": "807319a7aba30d967316c9087ee447059860bdc0f796b723110145945b61a6f5",
+      "nodeAndWebViewDefaultsCurrentlyHashMatch": true,
+      "cdpPort": 19322,
+      "resultFile": "desktop-runtime-result.json",
+      "checks": 18,
+      "writesRequired": 7,
+      "screenshotsRequired": 2,
+      "screenshotAckNames": [
+        "desktop-secondary-history.png",
+        "desktop-main-after-secondary-close.png"
+      ],
+      "screenshotAckRequires": "Actual PNG review then matching event/id/nonce/name/sha256/accepted=true. No following product action runs before each ACK. Default900s timeout each.",
+      "nativeTrayRequirement": "Normal native tray menu UIAutomation.InvokePattern, GUI exit0, all owned handles ended, unexpected0, both ports released and forced0.",
+      "notExecuted": true
+    },
+    "excludedLegacyPortableEntrypoint": "verify-portable-runtime-final.ps1",
+    "promotion": {
+      "path": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/monitor-final-promote.ps1",
+      "sha256": "01d96b35675d3a05acc800f44aed2dd29fdc12718b9f5db9303a7e0876ff53dc",
+      "parameters": [
+        "Kind (Desktop|Remote)",
+        "PlanFile",
+        "ExpectedPlanSha256",
+        "ExpectedInstalledExeSha256",
+        "ExpectedFinalResultSha256",
+        "RuntimeResultFile",
+        "ExpectedRuntimeResultSha256",
+        "ExpectedCleanupResultSha256",
+        "ExpectedRuntimeInputsGuardSha256",
+        "RuntimeInputsFile",
+        "ExpectedRuntimeInputsSha256",
+        "BackupDirectory"
+      ],
+      "preconditions": [
+        "Full exact source/build/freshAndroid/runtime and normalcleanup pins",
+        "Desktop18 actual21 roster/DTO/units/images/themes/screenshotACKs + natural tray proof OR exact Remote14 orderedchecks/backendExit0/normalcleanup",
+        "Expected current original installed EXE hash and twice-observed absence of that exact installedpath process",
+        "New sibling BackupDirectory; original full installation inventory rechecked before move",
+        "Stage files copied/checked; original installation moved to retained backup; ownstage moved to default; rollback only own directory moves",
+        "External user state inventory before/after exact; originaluninstaller and other desktopinstalledfiles preserved"
+      ],
+      "notExecuted": true
+    }
+  },
+  "callerRequirementsAndLimitations": [
+    "Entry scripts do not independently prove current caller sameSID/WinSta0/InputDesktop/cursor readiness. Caller must enforce root fresh probe gate; historical07:04 success cannot replace09:26 Error5.",
+    "Source/AST preparation and source hash equality do not prove formal14/18 or default reinstall success.",
+    "Existing offline677files backup06:05 UTC is historical. Promotion entry doesnot consume/pin this separate wholeprofile backup receipt; root requires fresh wholeprofile/offlinebackup and rollback gate before invoking.",
+    "Promotion itself doesnot start the default app, validate retained tasks/credentials/7338 live API, or prove original tray naturalexit; its output explicitly leaves runtimeAndTaskRetentionValidation pending-root.",
+    "No current Authenticode revalidation, installed default EXE/profile hashes, source967fullinventory rehash, running-port identity or current resource liveness is asserted by this review."
+  ],
+  "actualFormal14Executed": false,
+  "actualFormal18Executed": false,
+  "defaultPromotionExecuted": false,
+  "privateValuesOrRawLogsIncluded": false
+}

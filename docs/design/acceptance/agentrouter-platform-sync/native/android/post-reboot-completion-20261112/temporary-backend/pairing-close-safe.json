@@ -1,0 +1,7 @@
+{
+    "status":  "own-fixed-close-pairing-command-observed",
+    "actualCliEvent":  "pairing_closed",
+    "originalHandlesHeld":  true,
+    "defaultProfilesModified":  false,
+    "signals":  0
+}

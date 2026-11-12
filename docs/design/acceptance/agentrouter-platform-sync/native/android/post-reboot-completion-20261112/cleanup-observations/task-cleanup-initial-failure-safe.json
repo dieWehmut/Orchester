@@ -1,0 +1,16 @@
+{
+    "status":  "owned-scheduler-bridge-failed-closed",
+    "mode":  "Cleanup",
+    "stage":  "verify-actual-owned-terminal",
+    "errorType":  "System.Management.Automation.RuntimeException",
+    "hResult":  -2146233087,
+    "taskName":  "Orchester-Own-Successor3-3b025a45d89643d1ae67aee99697fb5c",
+    "registered":  true,
+    "runAttempted":  true,
+    "definitionSha256":  "13ed03d42d9ab10d99e65e3a01a2e30eef4dc6dd6e417faee2278aa769392e72",
+    "originalInstanceGuid":  "{171240AD-F9B6-4789-8142-836DD79F4D86}",
+    "originalInstanceUnavailable":  false,
+    "processSignals":  0,
+    "rerunAttempted":  false,
+    "guiAccepted":  false
+}

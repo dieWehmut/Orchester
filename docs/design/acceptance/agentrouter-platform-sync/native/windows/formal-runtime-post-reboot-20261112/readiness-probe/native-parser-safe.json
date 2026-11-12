@@ -1,0 +1,25 @@
+﻿{
+    "inputOrProcessSignals":  0,
+    "files":  [
+                  {
+                      "nativeAstErrorCount":  0,
+                      "sha256":  "7dbfc7fb8dc20deedbc1d575cb58d41bbd8c9c6cd408fae2258dd96ed4e7e164",
+                      "file":  "probe-common.ps1"
+                  },
+                  {
+                      "nativeAstErrorCount":  0,
+                      "sha256":  "4d96a2f148c74d0c7937567ae195893c0f70bfbc7fabdf2efcaac3a71a10067b",
+                      "file":  "readonly-action.ps1"
+                  },
+                  {
+                      "nativeAstErrorCount":  0,
+                      "sha256":  "8044b9c61f094d3b7c1d6a6b9d44a7467394232c8f9c60d05c3fc0f4621104ed",
+                      "file":  "task-probe.ps1"
+                  }
+              ],
+    "parserErrorCount":  0,
+    "productsLaunched":  0,
+    "observedAtUtc":  "2026-11-12T09:25:41.6949890Z",
+    "taskRegistered":  false,
+    "status":  "new-self-owned-readonly-probe-scripts-native-parser-passed"
+}

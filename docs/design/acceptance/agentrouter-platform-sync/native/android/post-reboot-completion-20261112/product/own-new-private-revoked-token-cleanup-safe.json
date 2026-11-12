@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "onlyNewOwnedRevokedTokenFileRemoved": true,
+  "onlyOwnedFileName": "own-revocation-token-private.json",
+  "sameTokenAlreadyRevoked204ThenRejected401": true,
+  "fileAbsentAfterRemoval": true,
+  "originalPrivateBaselinesAndProofScreenshotsRetained": true,
+  "privateContentsPrinted": false
+}

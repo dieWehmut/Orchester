@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
-  "generatedAt": "2026-11-12T09:17:00.791458+00:00",
+  "generatedAt": "2026-11-12T15:09:02.880915+00:00",
   "status": "current-evidence-audit-not-complete-all-platform-delivery",
   "requirements": [
     {
@@ -65,11 +65,12 @@
         "native/windows/final71-source-export.json",
         "deployments/pages/current-live/verification-summary.json",
         "native/ios/final21-public-sync.json",
-        "native/android/correct-windows-current21/correct-windows-final21-ui-all-official-icons-accepted-safe.json"
+        "native/android/correct-windows-current21/correct-windows-final21-ui-all-official-icons-accepted-safe.json",
+        "native/android/post-reboot-completion-20261112/final-completion-safe.json"
       ],
-      "verifiedScope": "Web37/Mobile17/Site26 artifacts match frozen71;26current public Pages resources match historicalCI snapshot;21/42 actualonline DOM; iOS17 publicsync. CorrectWinAndroidsamecertnewAPK/nativeJUnit4/actualIDE17400msJDK21/native21+42officialUI verified.",
+      "verifiedScope": "Web37/Mobile17/Site26 artifacts match frozen71;26current public Pages resources match historicalCI snapshot;21/42 actualonline DOM; iOS17 publicsync. CorrectWinAndroidsamecertnewAPK/nativeJUnit4/actualIDE17400msJDK21/native21+42officialUI verified. New correct-Windows native Android PTY/keyboard resize/product close and own cleanup verified by separately bound final-completion receipt; terminal actual exit1 and task cleanup invoker exit1 preserved.",
       "remaining": [
-        "Current Windows nativeDesktop/runtime/reinstallation and Android PTY/ownedcleanup final acceptance.",
+        "Current Windows nativeDesktop/runtime/reinstallation acceptance.",
         "No Xcode/iPhone native run was requested or proven by iOSsync."
       ]
     },
@@ -95,7 +96,8 @@
         "native/windows/temporary-7339-attempt2/original-executor-terminal-safe.json",
         "native/windows/interactive-post-reboot-20261112/offline-final21-post-reboot-backup-safe.json",
         "native/windows/interactive-post-reboot-20261112/session-enumeration-post-reboot-20261112-safe.json",
-        "native/windows/interactive-post-reboot-20261112/input-desktop-post-reboot-safe.json"
+        "native/windows/interactive-post-reboot-20261112/input-desktop-post-reboot-safe.json",
+        "native/windows/formal-runtime-post-reboot-20261112/fresh-probe-final-safe.json"
       ],
       "verifiedScope": "Core16 actualgates0/Desktop38/Remote18 publicfiles; original privateinstallation/profile/state backups exact; no oldnaturalexitclaim. Newnativeobserver confirms worker16008 PIDabsent; originalHANDLE identity notverified; no originalexecutor0 claim. Independentcore/967plan/54publichash review passes; rawgradlew CRLF Gitcheckout normalizedexact; EXEcontents notindependentlyread. Portablefilepackage28files/17Web verifier passes with newnative21APKf83fa; actualruntime14/AndroidFinalBinding/defaultinstall pending. Temporarynative7339 source71/24c8/17publicHTTP200exact andunauth401 passed; not formal7338/defaultinstall/native14or18. CompleteWTSquery4sessions0 confirms Session1 sameSIDbutDisconnected/ActiveSameSIDcandidate0; priorSession3noidentity not wholehostabsence. Firstisolated7339 ownednormalquit/executor0/portfree verified, unknownsystembrokerlifetime unproved;successor44syntheticnativeassertions/nativeadmission0 andformalclone32+manifest10/nativeAST0 preparedpins verified, formal14/18/defaultinstall notrun. Second7339 controllerInvalidOperationException/nativeexecutor96860actual1 failed validation preserved; normalownedquit/launcher0/originaldeclaredhandlesexit/portfree/private3transports0 verified, notAndroidproductclose/revocation/fullPTY. Newpostreboot actualSameSIDSession1Active/candidate1/InputDesktopDefault opens/cursorError5. OriginalDesktop/Remoteabsent, latest5existingroots677files privatebackupsourcebeforeafterexact; oldlockattempt1 preserved, no naturaltrayexit claim.",
       "remaining": [
@@ -148,7 +150,7 @@
     {
       "id": "android_studio",
       "userRequirement": "Actually open AndroidStudio and test mobile app",
-      "status": "studio-sync-junit4-original-data-ui42-and-unicode-verified-controller-failed-before-full-pty",
+      "status": "source71-windows-native-studio-junit-ui-full-pty-original-data-and-owned-current-cleanup-verified",
       "evidence": [
         "native/android/current21-partial/final21-source-mirror-safe.json",
         "native/android/current21-partial/final21-apk-provenance-safe.json",
@@ -175,19 +177,19 @@
         "native/android/correct-windows-current21/studio-icons-and-unicode-independent-review-safe.json",
         "native/windows/temporary-7339-attempt2/failed-final-safe-whitelist.json",
         "native/android/wrong-linux-final-cleanup/wrong-linux-own-debug-app-ram-and-forward-cleanup-safe.json",
-        "native/android/wrong-linux-final-cleanup/wrong-linux-own-activity-normal-exit-observed-safe.json"
+        "native/android/wrong-linux-final-cleanup/wrong-linux-own-activity-normal-exit-observed-safe.json",
+        "native/android/post-reboot-completion-20261112/final-completion-safe.json"
       ],
-      "verifiedScope": "Current41nativeGitinputs/source71+17publicmirror/nativeWindowsGradle0 and signedcurrentappf83fa/testb5c13/certdf6/17APKresources valid. Successfulinstall and compactNativeBridgeOK/exit0 producer4tests remain actual, but device5554 proved Linuxorchester-qa through wslrelay; not Windows originalAVD. Pre20Windows5554 identity unverified and Sandkasten historicalStudio device5560 distinct. FiveAESfailed attempts on unboundhost/Keystore do not prove originalWindowskeydamage or unrecoverability. WrongLinuxguest original1 XML268B source701837 atomicallyrestored byteexact/writer0, shell-v2 proves no .bak; RAMreloadfalse and bothprivate1/5sourcespreserved, noKeystoreedit. Separate7ownWindowsWM_CLOSE and exact2344/3828PIDabsenceobserver0signals confirmed; firstguard1 is producerreport, not compactexitfield. CorrectWinMedium5572/ADB5039 nowidentityverified beforewrites; old20APKd0d1 andoriginalnative6 records containpre20original5valuesexact+oldown17379extra1. Newf83/b5c samecert install0×2 retains6; freshcorrectWinJUnit4 actual0/instrumentationCode-1 preserves6. Original5AESdecrypt5success0fail; original7337/infoonlyoneGET200/nameMatch/noNewPairing/tokensprinted. OwnStudiooptionalGooglemodal onlynormaldismissed/mainIDEalive; thisreceiptalone isnotSyncproof. ActualtypedSyncproof follows. ActualownStudio19620 isolatedconfig/system/log imports exactsource71nativeproject/RESOLVE_PROJECT0/17.4s sync/JDKtemurin21, DeviceMedium5572online and5Establishednative5039connections/default5037none. QualifiedSDKJUnit isseparatefromIDERun; optionalGooglenormallyskipped/no original23276configedit/fullIDElog. NativeUI21providers/42allloadedimages/24publicpayloads allofficialsource matched after strictOpenCode2 normalization; initial40false retained, twopublicscreenshots visuallyinspected without privatehostdata. ActualnormalfocusedxtermCDPUnicode/nativeEnter0 plusWindowsCmdChineseecho3input3output verified; fullprivateUnicode screenshot onlyhash retained. Secondcontroller failedwithInvalidOperationException/executor1 afterUnicode before resize/mobileterminalclose/device6to5/revoke; originaldeclaredhandles normalexit/portfree/3private transports0 separatelyproven. WrongLinuxoriginal1XML268/NativenativeGetdecrypt/RAMreload/4LS/session/coral retained+own19327removed nowverified; onlyowndebugPID7354 forcedonce forstaleRAM, notnaturalexit; successor20930 normalExitApp/Home activitybackground observedlater, initialfalse kept, noPIDgone/fullpackagerollback.",
+      "verifiedScope": "Current41nativeGitinputs/source71+17publicmirror/nativeWindowsGradle0 and signedcurrentappf83fa/testb5c13/certdf6/17APKresources valid. Successfulinstall and compactNativeBridgeOK/exit0 producer4tests remain actual, but device5554 proved Linuxorchester-qa through wslrelay; not Windows originalAVD. Pre20Windows5554 identity unverified and Sandkasten historicalStudio device5560 distinct. FiveAESfailed attempts on unboundhost/Keystore do not prove originalWindowskeydamage or unrecoverability. WrongLinuxguest original1 XML268B source701837 atomicallyrestored byteexact/writer0, shell-v2 proves no .bak; RAMreloadfalse and bothprivate1/5sourcespreserved, noKeystoreedit. Separate7ownWindowsWM_CLOSE and exact2344/3828PIDabsenceobserver0signals confirmed; firstguard1 is producerreport, not compactexitfield. CorrectWinMedium5572/ADB5039 nowidentityverified beforewrites; old20APKd0d1 andoriginalnative6 records containpre20original5valuesexact+oldown17379extra1. Newf83/b5c samecert install0×2 retains6; freshcorrectWinJUnit4 actual0/instrumentationCode-1 preserves6. Original5AESdecrypt5success0fail; original7337/infoonlyoneGET200/nameMatch/noNewPairing/tokensprinted. OwnStudiooptionalGooglemodal onlynormaldismissed/mainIDEalive; thisreceiptalone isnotSyncproof. ActualtypedSyncproof follows. ActualownStudio19620 isolatedconfig/system/log imports exactsource71nativeproject/RESOLVE_PROJECT0/17.4s sync/JDKtemurin21, DeviceMedium5572online and5Establishednative5039connections/default5037none. QualifiedSDKJUnit isseparatefromIDERun; optionalGooglenormallyskipped/no original23276configedit/fullIDElog. NativeUI21providers/42allloadedimages/24publicpayloads allofficialsource matched after strictOpenCode2 normalization; initial40false retained, twopublicscreenshots visuallyinspected without privatehostdata. ActualnormalfocusedxtermCDPUnicode/nativeEnter0 plusWindowsCmdChineseecho3input3output verified; fullprivateUnicode screenshot onlyhash retained. Secondcontroller failedwithInvalidOperationException/executor1 afterUnicode before resize/mobileterminalclose/device6to5/revoke; originaldeclaredhandles normalexit/portfree/3private transports0 separatelyproven. WrongLinuxoriginal1XML268/NativenativeGetdecrypt/RAMreload/4LS/session/coral retained+own19327removed nowverified; onlyowndebugPID7354 forcedonce forstaleRAM, notnaturalexit; successor20930 normalExitApp/Home activitybackground observedlater, initialfalse kept, noPIDgone/fullpackagerollback. NewpostrebootcurrentWindows5039/emulator5572/source71/APKf83 actuallyverified; normalownprojectterminal0to1/cmdunicode3input3output/nativekeyboardviewport914.2857to577.9048+rows28to8/productcloseactualexit1/WSexitdrain. Localown6to5exactoriginalfive/AES5success0failed/original7337GET200; productForgetlocalonly/separateownDELETE204then401. Ownbackendoriginalhandles0/privateportsreleased; normalownemu/ADB shutdown/originalmanagerhead+server0; taskabsenceindependent, taskwriteractual1preserved andpredeleteTaskResult0onlyexecutedguardflow inferred.",
       "remaining": [
-        "CorrectWin fullPTYresize/mobileproductterminalclose/tempdevice6to5 andrevoked401 notcomplete; attempt3/finalobservers/cleanup will be separateepoch. HostDisconnected keepsWindowsdesktop screenshot/tray unavailable.",
-        "CorrectWindowsMedium owned17379/tempdevice6to5/terminalforward/newattempt3 process cleanup andfullPTY/revoked401 remainpending. WrongLinuxRAM/19327/activitybackground subscopes completed; f83/b5 updates kept/originaltestpresence unknown/fullpackage rollback notclaimed.",
-        "Historicalpre20absoluteAVD fingerprint stillunlocated; do not confuse it with currentcorrectMedium identity andcurrentoriginal5data/AESproven."
+        "Historical pre20 absolute AVD fingerprint and historical unregistered child lifetime were not independently established; current correct target and original five data are separately verified.",
+        "Current same-source UI21/42 and Studio/JUnit proofs remain their separately recorded actual scope; hostdesktopGUI/fullWindows14/18/defaultreinstall belong to other requirements."
       ]
     },
     {
       "id": "linux_service",
       "userRequirement": "Keep persistent Linux service updated with current mobile resources",
-      "status": "post-reboot-current-standalone-owned-deployment-verified-static-unit-autostart-and-original-wire-pending",
+      "status": "post-reboot-standalone-owned-deployment-and-original-token-wire-verified-user-unit-autostart-pending",
       "evidence": [
         "tests/backend/final71-full-workspace/summary.json",
         "deployments/linux/current-final21/final-safe.json",
@@ -201,11 +203,11 @@
         "deployments/linux/20261112-persistent-default/preflight-safe.json",
         "deployments/linux/20261112-post-reboot/final-safe.json",
         "deployments/linux/20261112-post-reboot/root-independent-live-safe.json",
-        "deployments/linux/20261112-post-reboot/static-unit-configuration-safe.json"
+        "deployments/linux/20261112-post-reboot/static-unit-configuration-safe.json",
+        "native/android/post-reboot-completion-20261112/product/installed-apk-and-original-five-wire-safe.json"
       ],
-      "verifiedScope": "Historicalsource71 Linux7337 PID1023019/ticks256519/ELFd983/21catalog/17resources/authrevoke/5tasksrows/5entries3effective semanticstate retained; JSONrawstrings differ. HistoricalcorrectWin originalstoredtoken/infoone200/nameMatch preserved. Freshroot2026-11-11T23:31UTC(originalUTC retained,Nov12Asia) actualoldservice/controllerabsent/7337listeners0/previousHTTPURLError, priorinstanceexitcauseunknown; this doesnotreverse historicaltestpassed. Phase4 historicalcheckpoint: restoration fromcurrentstate ownerlinux_restore, no newruntimepass claimed atthat earlierobservation. Laternewruntime2330202/4550341+controller2330194/4550291/nameduserunitactive-running+samecgroup/LingerYes/source71/d983/368stable/17publicbytes/21schema3/twoWorkBuddys/ownpairDELETE204-revoked401close verifiedafterlauncherexit/originalwriterFD8/pidfd. Current5fulltaskrows+5persisted3distinct values retained andcurrentnewbackuprawrows true; prioroldlegacybackuprawfalse withparsedequal/currentchangesnot-overwritten retained asdifferentbasis. Rootinitial/api/info404 observerexit1 notproductfailure, correctedremote/v1/info401 actual. Old1023019 exitunknown/historicalF7absencereal; no oldheapenv orOSresetresistance claim. Newpostreboot320854/ticks451458/owncontroller320847 exactsource71/resources21+17/ownpairrevoked401/current5tasksrawretained and5auth3distinctJSONvaluesretained; currentSQLrawtextfalse explicit. Condaos.pidfd_openmissing firstfailureownedlistener0/portfree, corrected/usr/bin/python3. Usermanagerbusunavailable, standaloneoriginalwriter/pidfd/peer verified; staticunitparser0/defaulttargetlinkconfigured notrunning/autostartuntested.",
+      "verifiedScope": "Historicalsource71 Linux7337 PID1023019/ticks256519/ELFd983/21catalog/17resources/authrevoke/5tasksrows/5entries3effective semanticstate retained; JSONrawstrings differ. HistoricalcorrectWin originalstoredtoken/infoone200/nameMatch preserved. Freshroot2026-11-11T23:31UTC(originalUTC retained,Nov12Asia) actualoldservice/controllerabsent/7337listeners0/previousHTTPURLError, priorinstanceexitcauseunknown; this doesnotreverse historicaltestpassed. Phase4 historicalcheckpoint: restoration fromcurrentstate ownerlinux_restore, no newruntimepass claimed atthat earlierobservation. Laternewruntime2330202/4550341+controller2330194/4550291/nameduserunitactive-running+samecgroup/LingerYes/source71/d983/368stable/17publicbytes/21schema3/twoWorkBuddys/ownpairDELETE204-revoked401close verifiedafterlauncherexit/originalwriterFD8/pidfd. Current5fulltaskrows+5persisted3distinct values retained andcurrentnewbackuprawrows true; prioroldlegacybackuprawfalse withparsedequal/currentchangesnot-overwritten retained asdifferentbasis. Rootinitial/api/info404 observerexit1 notproductfailure, correctedremote/v1/info401 actual. Old1023019 exitunknown/historicalF7absencereal; no oldheapenv orOSresetresistance claim. Newpostreboot320854/ticks451458/owncontroller320847 exactsource71/resources21+17/ownpairrevoked401/current5tasksrawretained and5auth3distinctJSONvaluesretained; currentSQLrawtextfalse explicit. Condaos.pidfd_openmissing firstfailureownedlistener0/portfree, corrected/usr/bin/python3. Usermanagerbusunavailable, standaloneoriginalwriter/pidfd/peer verified; staticunitparser0/defaulttargetlinkconfigured notrunning/autostartuntested. CurrentnativeAndroidoriginal7337token actual/infoGET200+hostnamematch with originalfiveAES5/0, no originalfivepairing.",
       "remaining": [
-        "Existingoriginalactualrawcredential wire200 nottested thisnewruntime; initial401usedauthlookuphash anddoesnotproveactualoriginalcredentialfailure.",
         "Staticuserunit/defaulttargetlink configured, usermanagerbus unavailable; actualautostart/reboot-persistence notverified; currentlystandalonecontrollerlive andcontrolled.",
         "Routineproductionnormalquit notexecuted thisepoch; serviceleft running."
       ]
@@ -238,11 +240,11 @@
         "native/windows/temporary-7339-attempt2/private-transport-cleanup-safe.json",
         "native/windows/ownership-history/historical-unregistered-suspended-node-closure-gap-safe.json",
         "native/android/wrong-linux-final-cleanup/wrong-linux-own-debug-app-ram-and-forward-cleanup-safe.json",
-        "native/android/wrong-linux-final-cleanup/wrong-linux-own-activity-normal-exit-observed-safe.json"
+        "native/android/wrong-linux-final-cleanup/wrong-linux-own-activity-normal-exit-observed-safe.json",
+        "native/android/post-reboot-completion-20261112/final-completion-safe.json"
       ],
-      "verifiedScope": "Historical73remote+3local mergedbranchrefs safelycleaned; CknownPDB/incremental7219765510B and officialinstallercache587458817B exactfiles removed. Free-space readings are snapshots. Current four oldworktree paths/localbranches absent and retainedcommits fullymerged; registeredworktrees15. Currentownedpackage-sourcecache25files/23373069logicalbytes deleted and28candidate inventory retained; no Cvolume physicalfree delta claim. Additionalactual4cleanmergedworktrees normalremove/branch-d0 and2missingregistrationprune0; nonancestorrefs/userdata retained; selected17783011371regularfilelogicalbytes are Linuxworkspace scope, not physicalCfreedbytes. Additionallegacyinstall ownrebuildablecache671646227logicalbytes deleted and installedartifactsretained; not physicalCspace or VHDXreclaim. First7339 normalownedexit proven and3taskprivate transportfiles removed onlyafterterminal,1264logicalB/remaining0/no contentsread/no Cphysicaldelta; Android productdevice/forward/RAMcleanup notyetclosed; second7339 exactownedhandle andtransportcleanup proved by later receipts. Second7339 exactdeclaredoriginalhandles normalexit/portfree before3ownedprivate transportfilesremoved/remaining0; nativeexecutor1 staysfailure, nooriginalprofilechanges/no contentspublished. HistoricalunregisteredchildoriginalPID/birth/imageSHA/HANDLEunlocated; parentabsence notchildexit/newownership/signals. NewwrongLinuxownstaleRAMreload/original1XMLAES/LS/session/coral/19327forward removed andownactivitynormalbackground observed, initialimmediatefalse andoneauthorizeddebugforceStop retained; unknownVM/globalADB untouched/fullpackagerollbacknotclaimed.",
+      "verifiedScope": "Historical73remote+3local mergedbranchrefs safelycleaned; CknownPDB/incremental7219765510B and officialinstallercache587458817B exactfiles removed. Free-space readings are snapshots. Current four oldworktree paths/localbranches absent and retainedcommits fullymerged; registeredworktrees15. Currentownedpackage-sourcecache25files/23373069logicalbytes deleted and28candidate inventory retained; no Cvolume physicalfree delta claim. Additionalactual4cleanmergedworktrees normalremove/branch-d0 and2missingregistrationprune0; nonancestorrefs/userdata retained; selected17783011371regularfilelogicalbytes are Linuxworkspace scope, not physicalCfreedbytes. Additionallegacyinstall ownrebuildablecache671646227logicalbytes deleted and installedartifactsretained; not physicalCspace or VHDXreclaim. First7339 normalownedexit proven and3taskprivate transportfiles removed onlyafterterminal,1264logicalB/remaining0/no contentsread/no Cphysicaldelta; Android productdevice/forward/RAMcleanup notyetclosed; second7339 exactownedhandle andtransportcleanup proved by later receipts. Second7339 exactdeclaredoriginalhandles normalexit/portfree before3ownedprivate transportfilesremoved/remaining0; nativeexecutor1 staysfailure, nooriginalprofilechanges/no contentspublished. HistoricalunregisteredchildoriginalPID/birth/imageSHA/HANDLEunlocated; parentabsence notchildexit/newownership/signals. NewwrongLinuxownstaleRAMreload/original1XMLAES/LS/session/coral/19327forward removed andownactivitynormalbackground observed, initialimmediatefalse andoneauthorizeddebugforceStop retained; unknownVM/globalADB untouched/fullpackagerollbacknotclaimed. Latest correct-Windows Medium native PTY/resize/product close, local own saved device6to5/originalfiveexact AES5of5 and separate own server revoke204+GET401 verified; original own backend normalquit and native handles/ports5039,5572,5573,19329 released. Own task absence separately verified after cleanup invoker1; direct saved pre-delete TaskResult0 unavailable and source-flow boundary retained.",
       "remaining": [
-        "CorrectWindowsMediumtemporarydevice/terminal/forward/fullPTY+revocation cleanup remainspending; wrongLinuxspecificRAM/19327/background scopes closed.",
         "Historicalunregisteredchildclosure unverified because originalexactidentity/HANDLEmissing; no newclaim/signal issued."
       ],
       "historicalMeasurementBoundary": "Original fourunused-worktree temporarycleanup receipts unavailable; historicaloperation/bytes not reconstructed; no Cphysicalreleaseclaim."
@@ -250,7 +252,7 @@
     {
       "id": "git_steps",
       "userRequirement": "Verify separated commits, push remotely and merge main step by step",
-      "status": "six-checkpoints-pushed-merged-additional-cli-checkpoint-awaits-delivery",
+      "status": "seven-checkpoints-pushed-merged-current-native-completion-checkpoint-awaits-delivery",
       "evidence": [
         "sources/final71-source-binding.json",
         "maintenance/git-delivery/git-byte-and-crlf-correction-safe.json",
@@ -259,11 +261,12 @@
         "maintenance/git-delivery/third-step-delivery-safe.json",
         "maintenance/git-delivery/fourth-step-delivery-safe.json",
         "maintenance/git-delivery/fifth-step-delivery-safe.json",
-        "maintenance/git-delivery/sixth-step-delivery-safe.json"
+        "maintenance/git-delivery/sixth-step-delivery-safe.json",
+        "maintenance/git-delivery/seventh-step-delivery-safe.json"
       ],
-      "verifiedScope": "Parentdocs193+MD exact194Gitblob comparisons. FirstdefaultCRLFwhitespacecheckexit2 preserved; doccommit213d315 alreadycreated, scopedattributes correction812e0e6 preserves原bytes andcheck0, main32992976 merged; feature/mainpushactual0. Frozenproduction71 unchanged. Docsagent noGitmutation. Second218archive+MD219Gitblobexact/currentdoc828ad10 mergedmain4d7d95, feature/mainpushactual0/default+stagedwhitespace0/production71+Pagesworkflowinputsunchanged; no allplatformcompletionclaim. Third266archive+MD267blobsexact/doc0e4367d/main8b0a016push0/production71equal delivered. Fourth321archive+MD322exactGitblob/commitcaa60/main60b4/featuremainpush0/source71equal delivered. SubsequentnewLinux/signature/cleanup sourceepochs kept separate fromfourthabsencestage. Sixth docc20fa1b/mainf462fd7 delivered, feature/mainpushactual0 and374Gitblobs exact. Additional sixCLI/twelveinstallunits andcommandregistration verified innew epoch.",
+      "verifiedScope": "Parentdocs193+MD exact194Gitblob comparisons. FirstdefaultCRLFwhitespacecheckexit2 preserved; doccommit213d315 alreadycreated, scopedattributes correction812e0e6 preserves原bytes andcheck0, main32992976 merged; feature/mainpushactual0. Frozenproduction71 unchanged. Docsagent noGitmutation. Second218archive+MD219Gitblobexact/currentdoc828ad10 mergedmain4d7d95, feature/mainpushactual0/default+stagedwhitespace0/production71+Pagesworkflowinputsunchanged; no allplatformcompletionclaim. Third266archive+MD267blobsexact/doc0e4367d/main8b0a016push0/production71equal delivered. Fourth321archive+MD322exactGitblob/commitcaa60/main60b4/featuremainpush0/source71equal delivered. SubsequentnewLinux/signature/cleanup sourceepochs kept separate fromfourthabsencestage. Sixth docc20fa1b/mainf462fd7 delivered, feature/mainpushactual0 and374Gitblobs exact. Additional sixCLI/twelveinstallunits andcommandregistration verified innew epoch. SeventhCLIcheckpoint1c2ebe2/maina5ea264/push0/437Gitblobsexact/frozen731inputs passed.",
       "remaining": [
-        "Current additional CLI installation checkpoint requires verified commit/push/main. Original full native runtime/default reinstall scope remains in its own requirement."
+        "Current native completion/readiness archive awaits verified commit/push/main. Original fullWindowsruntime/defaultreinstall remains separate."
       ]
     },
     {
@@ -289,7 +292,7 @@
   "historicalResultsRemainInOwnSourceEpoch": true,
   "installationDoesNotEstablishAuthenticationOrModelTaskExecution": true,
   "privateCredentialOrUserStateValuesIncluded": false,
-  "updatedAt": "2026-11-12T09:17:00.791458+00:00",
+  "updatedAt": "2026-11-12T09:39:17.294815+00:00",
   "documentationExecutionDateRangeAsiaShanghai": [
     "2026-11-11",
     "2026-11-12"

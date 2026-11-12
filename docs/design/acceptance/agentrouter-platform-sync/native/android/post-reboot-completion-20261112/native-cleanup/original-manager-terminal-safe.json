@@ -1,0 +1,36 @@
+{
+  "status": "all-original-owned-child-handles-actually-exited-manager-normal-exit",
+  "managerPid": 30436,
+  "managerImage": "C:\\Users\\han\\AppData\\Roaming\\uv\\python\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+  "managerImageSha256": "204d51f19707da17766bccecce2ceececadab350663a8190420d1377bac1150d",
+  "sourceSha256": "c9d76a8b69d1ffd1d5fc7da7502249ee1f24f07ab4ad12487e30a968ec1dd7dd",
+  "nativeServerPort": 5039,
+  "consolePort": 5572,
+  "guestAdbPort": 5573,
+  "cdpPort": 19329,
+  "existingAvdName": "Medium_Phone_API_37.0",
+  "otherUserStudioProcessesNotSignalled": true,
+  "default5037Or5554Commands": 0,
+  "processTerminations": 0,
+  "diskWipeResetRecreate": false,
+  "managerCreationFiletime": 134389406416098295,
+  "allFourWindowsPortsWereFree": true,
+  "adbServer": {
+    "pid": 14648,
+    "creationFiletime": 134389406419545296,
+    "image": "C:\\Users\\han\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe",
+    "imageSha256": "b4a6b455702684652cccf7b46258b29e653538904359a58fd4931cf3ef286b3f",
+    "originalCreatorHandleRetained": true,
+    "actualExitCode": 0
+  },
+  "serverListeningObserved": true,
+  "emulator": {
+    "pid": 29496,
+    "creationFiletime": 134389406419932540,
+    "image": "C:\\Users\\han\\AppData\\Local\\Android\\Sdk\\emulator\\emulator.exe",
+    "imageSha256": "06af3c5da3c2cef7266822fe653f54371fc746d78db6f4282e1b2338a70970c8",
+    "originalCreatorHandleRetained": true,
+    "actualExitCode": 0
+  },
+  "errorType": "AssertionError"
+}

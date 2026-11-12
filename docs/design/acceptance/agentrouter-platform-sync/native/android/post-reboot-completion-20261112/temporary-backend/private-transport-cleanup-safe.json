@@ -1,0 +1,12 @@
+{
+    "status":  "exact-owned-secret-transports-removed-after-handles-ended",
+    "allExactOwnedHandlesAlreadyExited":  true,
+    "removedTransportNames":  [
+                                  "launcher-stdout-private.raw",
+                                  "launcher-stderr-private.raw",
+                                  "android-connection-private.json"
+                              ],
+    "remainingTransportCount":  0,
+    "privateContentsPublished":  false,
+    "originalUserProfilesTouched":  false
+}

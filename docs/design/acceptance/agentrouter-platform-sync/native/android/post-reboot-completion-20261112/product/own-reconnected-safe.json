@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "beforeConnection": "disconnected",
+  "afterConnection": "connected",
+  "ownNativeInfoStatus": 200,
+  "savedDevicesUntouched": 6,
+  "originalFiveRepaired": false,
+  "ownProjectState": {
+    "ownProjectSectionCount": 1,
+    "terminalButtons": 1
+  },
+  "privateTokensOutput": false,
+  "nativeAdbServerPort": 5039,
+  "cdpPort": 19329
+}

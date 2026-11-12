@@ -1,0 +1,41 @@
+{
+    "status":  "own-original-task-deleted-post-delete-observer-failure-diagnosed-readonly",
+    "observedAtUtc":  "2026-11-12T09:32:23.1920760Z",
+    "sourceSha256":  "9ffccf60e330dcb08eb84d1a2122983c4b93946f295afb43257692581b67af4a",
+    "taskName":  "Orchester-Own-Successor3-3b025a45d89643d1ae67aee99697fb5c",
+    "originalTaskAbsentOnActualLookup":  true,
+    "taskLookupErrorType":  "System.IO.FileNotFoundException",
+    "taskLookupHResult":  -2147024894,
+    "originalStatePreservedSha256":  "128449c9247061a66017da9b264f2591c2d3ec44a4adabbdabac2abea4d0f46f",
+    "derivedTaskDeletedTrue":  true,
+    "derivedStateSha256":  "af243ccded0ac1dcaafcedda46e918656e6bb285a0600058bc3a432b6d3f9b31",
+    "failedCleanupSourceSha256":  "206094b2bc88cf1e0e5b23d9e658125bb42a2042ecba4ad1ea8e25507eb8ff27",
+    "failedCleanupReceiptSha256":  "865fed6f0d82c7e77466fe844752d2ec8aa57d2ed0d9dabff733c67e56b2451b",
+    "cleanupFailureStage":  "verify-actual-owned-terminal",
+    "cleanupFailureExceptionType":  "System.Management.Automation.RuntimeException",
+    "originalControllerHandlesActuallyEnded":  true,
+    "actualOriginalLauncherExitCode":  0,
+    "normalQuitIssued":  true,
+    "privateTransportRemaining":  0,
+    "actualPort7339ReleasedNow":  true,
+    "originalActionReturnIntendedExitCode":  0,
+    "originalActionSourceInvocationReturned":  true,
+    "sourceFlowFacts":  {
+                            "exactDeleteThenDerivedStateSaveBeforeReceipt":  true,
+                            "terminalDefinitionAndInstanceGuardsBeforeDelete":  true,
+                            "taskResultZeroGuardBeforeDelete":  true,
+                            "lastRunCorrelationExplicitUtc":  true,
+                            "deletedComTaskGettersUsedDuringLaterReceipt":  true
+                        },
+    "failureCauseInferredFromSourceFlow":  "post-delete-task-com-properties-read-during-receipt-construction",
+    "preDeleteLastTaskResultReceiptDirectlyRecorded":  false,
+    "taskOperationalLogEnabled":  false,
+    "taskOperationalLogRecordCount":  0,
+    "taskMatchingEvents":  [
+
+                           ],
+    "eventQueryErrorType":  null,
+    "noTaskRunsStopsDeletesOrRewritesIssued":  true,
+    "noProcessSignalsOrNativeAdbCommands":  true,
+    "privateValuesIncluded":  false
+}

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-12T09:18:11.437800+00:00",
-  "status": "final71-code-pages-linux-and-windows-core16-accepted-runtime18-android-reinstall-in-progress",
+  "createdAt": "2026-11-12T15:12:20.680081+00:00",
+  "status": "final71-android-native-acceptance-archived-windows-runtime-and-default-reinstallation-pending",
   "summaryPath": "summary.json",
   "files": [
     {
@@ -263,6 +263,11 @@
       "path": "maintenance/git-delivery/second-step-delivery-safe.json",
       "sha256": "fffad97c2b6765fb22c17a35bd742af7f38bb815af0e6cd0056f3d98c923402c",
       "bytes": 601
+    },
+    {
+      "path": "maintenance/git-delivery/seventh-step-delivery-safe.json",
+      "sha256": "b252b7dc9c4e8b7cc8d756d24fa0e1b853a4a612dfbc1c193a703f9e706c63e1",
+      "bytes": 773
     },
     {
       "path": "maintenance/git-delivery/sixth-step-delivery-safe.json",
@@ -595,6 +600,11 @@
       "bytes": 2465
     },
     {
+      "path": "native/additional-agents/root-integration/fresh-user-command-resolution-safe.json",
+      "sha256": "2d9437273f9700669205e2750b0da84e705e6e2b7447b5eef98c8b0d9424a708",
+      "bytes": 2742
+    },
+    {
       "path": "native/additional-agents/root-integration/registered-command-entries-safe.json",
       "sha256": "7b3254dc9b97cafad70dcf84da3f529eaba19333311fad0eece3f3fe3d9c42ab",
       "bytes": 3856
@@ -828,6 +838,191 @@
       "path": "native/android/device-identity-current21/safe-evidence-manifest.json",
       "sha256": "0807a4eb4c91cdbd8e08dc5be0c8b6f1074ba414abcb1c72e566bf291fc3f7f9",
       "bytes": 1929
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/channel-target-identity-safe.json",
+      "sha256": "9f9235d601e73bb36e2acc57b8ff49586ad4bbb19b2b35cce1b3fe87c4ae18f5",
+      "bytes": 3456
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/cleanup-observations/current-cleanup-gates-failure-safe.json",
+      "sha256": "c9b390c4d1b9241c5c0eb0a92ef11a1bf6a4d91c57b1c3cfe505840a68d3f716",
+      "bytes": 332
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/cleanup-observations/current-cleanup-gates-safe.json",
+      "sha256": "5dbed15399d3efa93a1a896105277b1193def3281bf4f47fc35b975d7ac2c250",
+      "bytes": 6554
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/cleanup-observations/current-cleanup-preclose-safe.json",
+      "sha256": "7f1112c696c9b2c6d8ed6b8bc1ff57a35f29a162ce55d4fb906012092b926038",
+      "bytes": 6554
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/cleanup-observations/derived-task-deleted-state-safe.json",
+      "sha256": "af243ccded0ac1dcaafcedda46e918656e6bb285a0600058bc3a432b6d3f9b31",
+      "bytes": 612
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/cleanup-observations/task-cleanup-initial-failure-safe.json",
+      "sha256": "865fed6f0d82c7e77466fe844752d2ec8aa57d2ed0d9dabff733c67e56b2451b",
+      "bytes": 659
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/cleanup-observations/task-post-delete-independent-readonly-safe.json",
+      "sha256": "41106d0df275c880c3ce4600d2a75d7e847e5d6f5f1284ed7e49953ab45efe84",
+      "bytes": 2326
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/cleanup-observations/terminal-gate-diagnostic-failure-safe.json",
+      "sha256": "6e01b5f273c90ad0c99c0e07b4f2b66b43d1ec9c95f2957ec4c50a0c842f2316",
+      "bytes": 303
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/cleanup-observations/terminal-gate-diagnostic-v2-failure-safe.json",
+      "sha256": "6d560badccb5fabda585d5359139c2b7f764dedfa73e06d37e29c108a52cd2fb",
+      "bytes": 303
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/core-completion-safe.json",
+      "sha256": "39c3c158dc7cbcd76baae2329ffffb7e78700e90655e5ab24a03e9d54dd255d8",
+      "bytes": 1849
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/final-completion-safe.json",
+      "sha256": "1d73cf88c2444d65c7771df2280e11f65dc6b6c8c9f026fe7984f78812209110",
+      "bytes": 3934
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/initial-original-five-wire-safe.json",
+      "sha256": "fa7b8d3063119a05ff710283ca8ac898fe254ee791eb962ed1ebb6e654ecc8e5",
+      "bytes": 802
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/native-cleanup/original-manager-launch-safe.json",
+      "sha256": "c8e3ef1dea721842c5f4deaeec1dbde06dfbb406f8a98390dcbcec283018339d",
+      "bytes": 649
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/native-cleanup/original-manager-terminal-safe.json",
+      "sha256": "a805fb029e5111f0ae08a5f063095a574c253ca027ca55760489dfa36f46b9a0",
+      "bytes": 1523
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/native-main-opened-safe.json",
+      "sha256": "6b1f029c66b891512af5d87439b043e4746abb4e396e16b2a11d31a262df88f0",
+      "bytes": 613
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/original-task/action-link-safe.json",
+      "sha256": "61fddff12776c349e26cde237729a4776f11723577cc919277a90ef389294268",
+      "bytes": 453
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/original-task/action-return-safe.json",
+      "sha256": "1fd54ca0b86aeedb14a35fe220dcc7c12fd4128db4bb9b4083907fdc25603c78",
+      "bytes": 437
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/original-task/start-safe.json",
+      "sha256": "d759414a8a75aa9bba8cfb9a59f01c9120a36569ae3828484a889fa14231dc82",
+      "bytes": 1195
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/original-task/task-owner-safe.json",
+      "sha256": "128449c9247061a66017da9b264f2591c2d3ec44a4adabbdabac2abea4d0f46f",
+      "bytes": 613
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/product/installed-apk-and-original-five-wire-safe.json",
+      "sha256": "19ea99b1a709ef2ac434f5e29be565aac595d626acb2dcd3b9ab75b6a4c0cac5",
+      "bytes": 782
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/product/own-app-normal-exit-observer-failed-safe.json",
+      "sha256": "0ec8562a5b8ad823f278cf1a9b85e9500f21292966f519d5b6393086cb07481b",
+      "bytes": 60
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/product/own-app-normal-home-safe.json",
+      "sha256": "b06412a5b0302f5da8a0ece9958f7c7fe9e9dbd6174df7d687bab4b6e43c8969",
+      "bytes": 363
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/product/own-device-product-removal-and-revocation-safe.json",
+      "sha256": "86def36015020ff982c45861373071ca39aad1726dc022d7c162a9f11767f853",
+      "bytes": 894
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/product/own-keyboard-native-resize-safe.json",
+      "sha256": "421a340ae571b85100ceeb02a9cb718eee7fcf62f363c3a940bf3f7ca8b42aeb",
+      "bytes": 612
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/product/own-native-channel-normal-exit-failure-safe.json",
+      "sha256": "b613718894d3e793de545860a348ef5d74707af715e4c5105a82eab7b66a117f",
+      "bytes": 372
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/product/own-native-channel-normal-exit-normalized-safe.json",
+      "sha256": "b21772895d89cdaeaba607ffc1246e499e790399a4ef866b901b76768e8f3f21",
+      "bytes": 1003
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/product/own-native-unicode-safe.json",
+      "sha256": "93dbc3265b33d2b659983cbdbc034dd0aff9b0d77073721d3499a1e403f5ea68",
+      "bytes": 741
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/product/own-new-private-revoked-token-cleanup-safe.json",
+      "sha256": "acdd756e6e7a41a1cb1e4a28a4c1d9512a8634dd32581245da561eba1c02a09c",
+      "bytes": 316
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/product/own-product-close-and-drain-safe.json",
+      "sha256": "6c7aeb17ebd1860cfb4a4dd047aaf066867f40bbcd1d8ee61cccaa79de0f436b",
+      "bytes": 634
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/product/own-reconnected-safe.json",
+      "sha256": "92425b77c4b3216576965e00e7993f963a42ee3e6e3c2291b734e9e7c1c7f73d",
+      "bytes": 372
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/product/own-terminal-created-safe.json",
+      "sha256": "4667a3385fa949fa4135f74e34a62a29b8cd2c25be9b5daea1b7383c3eb02b90",
+      "bytes": 509
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/safe-archive-manifest.json",
+      "sha256": "fe7f3587f9d87f2aba70c0ff41475ada6b7ad9d57547828d08930e1edebe5f36",
+      "bytes": 6562
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/selected-safe-provenance.json",
+      "sha256": "6e2cbdb65651f98afc20bfde905e844369ca8a2be34841e4ef781e8ec3061592",
+      "bytes": 14780
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/temporary-backend/cleanup-safe.json",
+      "sha256": "29e0dbed15b21121fae3bc68ca3b4a16408ee197c3d48b01f898d05694b6f7bb",
+      "bytes": 1069
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/temporary-backend/pairing-close-safe.json",
+      "sha256": "cac96594ec1ee177d1327765006e91f5850ba335ecc13db09c5c872cf6444a4c",
+      "bytes": 201
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/temporary-backend/private-transport-cleanup-safe.json",
+      "sha256": "7b5b179c5e4fe104730bb9aa869ffb2a7460cca7dceaafb2f2f61c23eeebcae3",
+      "bytes": 519
+    },
+    {
+      "path": "native/android/post-reboot-completion-20261112/temporary-backend/ready-safe.json",
+      "sha256": "c73ed07afaf6c60a66650964bd0f1bd0d357b88c6bb66485459d83d517e4c112",
+      "bytes": 2237
     },
     {
       "path": "native/android/wrong-linux-final-cleanup/wrong-linux-own-activity-normal-exit-observed-safe.json",
@@ -1405,6 +1600,76 @@
       "bytes": 385572
     },
     {
+      "path": "native/windows/formal-runtime-post-reboot-20261112/fresh-probe-final-safe.json",
+      "sha256": "f53c1c30ef2ac9c0cb73848160992c61800a4b4049951eec5b281570f7081847",
+      "bytes": 2282
+    },
+    {
+      "path": "native/windows/formal-runtime-post-reboot-20261112/native-source967-readonly-safe.json",
+      "sha256": "f4a0bc7f04152593047401d110c50cd9c1f0eb73f8d33015666b5541f7f6b2fc",
+      "bytes": 984
+    },
+    {
+      "path": "native/windows/formal-runtime-post-reboot-20261112/readiness-probe/native-parser-safe.json",
+      "sha256": "3736e7626133598ae461fd80b9a0e73230b3dc092dca7617e1e9c9bd5fa590aa",
+      "bytes": 1037
+    },
+    {
+      "path": "native/windows/formal-runtime-post-reboot-20261112/readiness-probe/new-source-pins-safe.json",
+      "sha256": "80ffcafc0949377b8ff4fda248e2125f529d35d44d809b1742a17add68c9d1e1",
+      "bytes": 1286
+    },
+    {
+      "path": "native/windows/formal-runtime-post-reboot-20261112/readiness-probe/own-task-absence-safe.json",
+      "sha256": "9fcc63593df09bd56916625ecc895ddd08a2cd7ee3fa1c4b2d17f70545f8f1aa",
+      "bytes": 702
+    },
+    {
+      "path": "native/windows/formal-runtime-post-reboot-20261112/readiness-probe/runtime/action-result-safe.json",
+      "sha256": "9b12c32688e48ad51eb1eb363da791cb85cb201d7cd13f0f3f4865bb2a0f6cf7",
+      "bytes": 1972
+    },
+    {
+      "path": "native/windows/formal-runtime-post-reboot-20261112/readiness-probe/runtime/cleanup-safe.json",
+      "sha256": "20c3354e923e8bde09a6bcb4645aa9b673323f999ae5732b5cb25b753316a33f",
+      "bytes": 3474
+    },
+    {
+      "path": "native/windows/formal-runtime-post-reboot-20261112/readiness-probe/runtime/observe-safe.json",
+      "sha256": "258001dc7c6e361943514a3fd6f94c491389026b17c0d6604c70d743978e092f",
+      "bytes": 3472
+    },
+    {
+      "path": "native/windows/formal-runtime-post-reboot-20261112/readiness-probe/runtime/start-safe.json",
+      "sha256": "67768d070d7b1677e359ed491242a065fec506d0bc38a548c98a660323422701",
+      "bytes": 2332
+    },
+    {
+      "path": "native/windows/formal-runtime-post-reboot-20261112/readiness-probe/runtime/task-owner-safe.json",
+      "sha256": "f5ae8bed3f823a913bd0039c503abb698961ed58553e890fb908863a39deceb4",
+      "bytes": 819
+    },
+    {
+      "path": "native/windows/formal-runtime-post-reboot-20261112/repository-source731-readonly-safe.json",
+      "sha256": "b94e32c53e2ac40bce417063e1da2e101f5b1332044c9b4c3f77be18fccc2d7a",
+      "bytes": 763
+    },
+    {
+      "path": "native/windows/formal-runtime-post-reboot-20261112/source-mappings-safe.json",
+      "sha256": "dea1029d23bb16c27d0e76a0a795466fcd6ee5563a44b46945dd69c5277d6a94",
+      "bytes": 5312
+    },
+    {
+      "path": "native/windows/formal-runtime-post-reboot-20261112/static-review-safe.json",
+      "sha256": "cb2e7d24ac729a4916be850fb4950904de3054937ca75bc37382d53bdec30464",
+      "bytes": 23484
+    },
+    {
+      "path": "native/windows/formal-runtime-post-reboot-20261112/static-review-source-mappings-safe.json",
+      "sha256": "c3457457652b5d36597adf1cef53d3d0f4ec42ca5d829c6b850ea9897077d63b",
+      "bytes": 16248
+    },
+    {
       "path": "native/windows/interactive-current/final21-readiness-blocked-safe.json",
       "sha256": "e753c9807d09319ebbe3f8db4b56f45df0435f666d58ef0cc37025a9cbcb64f5",
       "bytes": 2327
@@ -1443,6 +1708,91 @@
       "path": "native/windows/interactive-post-reboot-20261112/offline-final21-post-reboot-backup-safe.json",
       "sha256": "d1f9b696eb6a4441534253ead43e82fedb5cfed22108469cfc0a7783c182bfe7",
       "bytes": 3189
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe/native-preparation-safe.json",
+      "sha256": "dfff2ee15c11d897501ba17dd4c74b4dbb367224f151d1a746ac9f8ab649283d",
+      "bytes": 1172
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe/root-utc-cleanup-execution-provenance-safe.json",
+      "sha256": "46e818efb6b5885732fcb3aec07c263fe5104011ff64957fff603ebc430098e1",
+      "bytes": 1461
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe/runtime/action-result-safe.json",
+      "sha256": "29b9a9802e66b630dc0f1820232c82426b9161badf1f931f9c5b1180a637cb0e",
+      "bytes": 1971
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe/runtime/observe-failure-safe.json",
+      "sha256": "33574b38fefd035727254cd1805ee439ad83f7b65374897a83527f9ce95e5b23",
+      "bytes": 631
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe/runtime/start-safe.json",
+      "sha256": "bb513d7798c13c8fe29b25c32195ba94612166b9e7a0f2538664f624e2120cf9",
+      "bytes": 1071
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe/runtime/task-owner-safe.json",
+      "sha256": "54adeee0c92306096ff8cdffd0c4092dabf1a45e239aff69b39d2f82e0b61c6f",
+      "bytes": 821
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe/source-pins-safe.json",
+      "sha256": "a8f3244635c0f94788f33a6201c1f9c28bb61c9672176373349e35d7a3f133f4",
+      "bytes": 970
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe/terminal-observation-correction-20261112/diagnostic-runtime/cleanup-failure-safe.json",
+      "sha256": "1dd994733b54545bab0d1949367517c7acf96a2ee0cb086ea335fe2f1e4df5f6",
+      "bytes": 771
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe/terminal-observation-correction-20261112/diagnostic-runtime/cleanup-pre-delete-safe.json",
+      "sha256": "a3cad9ce243b12b77edf196b27915f90c6578df71ca779dccbf615f4a04392f6",
+      "bytes": 3827
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe/terminal-observation-correction-20261112/native-preparation-safe.json",
+      "sha256": "55dcb3e65f106afdc22d9383bd374f83919953c3d8fe6e9ca4e44757c33cbd97",
+      "bytes": 1027
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe/terminal-observation-correction-20261112/runtime/cleanup-failure-safe.json",
+      "sha256": "31b2c29aec4c941305db9a721958d33656f4c638e49786bd2367e2ef59795ef0",
+      "bytes": 703
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe/terminal-observation-correction-20261112/runtime/cleanup-pre-delete-safe.json",
+      "sha256": "37255b95166d311e352449731ba2c2b01acf7073881c1774055e34a94a1e3f1a",
+      "bytes": 3827
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe/terminal-observation-correction-20261112/runtime/observe-pre-delete-safe.json",
+      "sha256": "6a9e303d9ef09f429b96816bbd95de827c7898ee17981492124672c6db4dd433",
+      "bytes": 3827
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe/terminal-observation-correction-20261112/runtime/observe-safe.json",
+      "sha256": "4cfb48461e649045ed64a55bfc1557258ad145e0211f17cff9313d3c0d1fc85b",
+      "bytes": 3905
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe/terminal-observation-correction-20261112/source-pins-safe.json",
+      "sha256": "ccc53041e0a57b96374be0f523e69aac1828f67f14fe16193ff0d1bc0617b582",
+      "bytes": 709
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe/terminal-observation-correction-20261112/utc-correlation-runtime/cleanup-pre-delete-safe.json",
+      "sha256": "dabdbc5351196cf16deb0797df2c43b25f95580ff7f9f1e2c6fae30dc1327317",
+      "bytes": 3953
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe/terminal-observation-correction-20261112/utc-correlation-runtime/cleanup-safe.json",
+      "sha256": "1232ac6da6bc5ec05da8dd070c8c588f67fee7117760364905dd71ef2bbf654c",
+      "bytes": 4050
     },
     {
       "path": "native/windows/interactive-post-reboot-20261112/previous-worker-identities-post-reboot-safe.json",
@@ -1960,6 +2310,11 @@
       "bytes": 7014
     },
     {
+      "path": "sources/audit/epoch8-native-completion-independent-review-safe.json",
+      "sha256": "1073c783665ecd07ee134ca670856b59a33d9b8f22155736688c0e1f44d9348b",
+      "bytes": 10368
+    },
+    {
       "path": "sources/audit/final71-current-source-bindings.json",
       "sha256": "77e6ca44f69491c91aedd06a2b121673dc338dc955696c16befff836631129f9",
       "bytes": 1602
@@ -2066,8 +2421,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "094898261ed1fce96dddd30b45e26f3b431e5bc7e3155ef062afbbb0f560c784",
-      "bytes": 30891
+      "sha256": "ba6de9ea0be40c27802b1e8aee3d78931ddeedebe977b8f5fc2b737e9c370429",
+      "bytes": 32140
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -2091,8 +2446,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "252e4f4374defd09c64a285610875d23ba617acceb7954319ec7a61d24717c7d",
-      "bytes": 40711
+      "sha256": "2e4b911e4713e983df377d9eed2f744698aace6114f6eb388e097c5f00406a2f",
+      "bytes": 43676
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
@@ -2176,5 +2531,5 @@
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
-  "checkpointScope": "Prior372listed files plus completed additionalCLI receipts and sixthGitdelivery; concurrently unfinished nativeAndroid/Claude evidence excluded from this checkpoint."
+  "checkpointScope": "Seventh checkpoint437Gitblobs plus 68 nativecompletion/probe/static JSON receipts and their independent audit, fresh sixcommand resolution and seventh delivery; current follow-up readiness/LINUX/binding probes excluded until their own verified step."
 }

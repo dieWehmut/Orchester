@@ -346,6 +346,22 @@
     {
       "scope": "Sixthcheckpoint374Gitblobsexact/featurec20fa1b/mainf462fd7/push0; originalplatformfullacceptanceremainspending",
       "proof": "maintenance/git-delivery/sixth-step-delivery-safe.json"
+    },
+    {
+      "scope": "Current source71 Windows nativeAPKf83 terminal/Unicode/keyboardresize/productclose exit1/wsdrain/originalfiveexact AES5/0/originalwire200/separateownDELETE204+401/ownedruntimecleanup completed",
+      "proof": "native/android/post-reboot-completion-20261112/final-completion-safe.json"
+    },
+    {
+      "scope": "SameuseruniqueInteractiveToken historical07probe readinesstrue/taskResult0/strictUTCcleanup0; current09:26probe actual0 butcursorError5/readinessfalse, no Desktop14/18/defaultpromotion",
+      "proof": "native/windows/formal-runtime-post-reboot-20261112/fresh-probe-final-safe.json"
+    },
+    {
+      "scope": "AdditionalCLI userPATH fromregistry resolvesall6expectednativecmdwrappers; recorded allsixresolution true, no login/models",
+      "proof": "native/additional-agents/root-integration/fresh-user-command-resolution-safe.json"
+    },
+    {
+      "scope": "SeventhadditionalCLIcheckpointfeature1c2ebe2/maina5ea264/push0/437Gitblobsexact/frozen731sourcehashchecks",
+      "proof": "maintenance/git-delivery/seventh-step-delivery-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -358,13 +374,12 @@
   ],
   "pendingCurrentEpochScopes": [
     "WindowsSameSIDSession1nowActive/InputDesktopDefault opens butCursorError5/readinessfalse; currentoriginalDesktopabsent/latestofflinebackup677files verified; native14/18/tray/defaultreinstall/7338state remainpending",
-    "CorrectWindowsAndroid Studio17.4s/JUnit4/original5AES/UI42/Unicode are earlier verified subscopes; nativeworkers/AVD state mustbe freshlychecked before newattempt, fullPTYresize/productterminalclose/tempdevice6to5/revoked401 require new owned attempt",
-    "NewLinux7337 source71 standaloneownedcontroller/currentresource+ownauth+original5tasks5auth3distinct JSONretention verified; SQLrawstringschanged; originalactualcredentialwire not tested, initialincorrectstoredhashrequest401 retained",
     "Linuxstaticuserunit/defaulttargetlink configured/parser0 but usermanagerbusunavailable and currentproducerstandalone; no restart/autostart/reboot-survival verified",
     "OfficialDeepSeekWindows installation/signature/HKCU/ASARrc1verified afteroriginalnumericPEverifierfailure; GUI/model/auth nottested; DataElementoriginalcurrentmetadataretained, wholeoldEXEbeforeafterhashnotproved",
     "InternationalWorkBuddy nativeWSL usablepackage/profile isolation andClaudeApp Windowspayload/LinuxofficialGUI release evidence pending",
     "Historicalunregisteredchildidentity/HANDLEclosure andwrongLinuxfullpackage rollback unproved; no new signal/claim",
-    "AdditionalCLI6products/12installationunits and12registeredversioncommands actual0; checkpointawaitsverifiedGitdelivery. This doesnotcompleteoriginalnative/runtime/defaultreinstall requirements."
+    "LatestnativeAndroid7339 terminal/retention/revoke/ownedcleanup completed, source71 installedAPKf83 exact; previousUI21/42/JUnit4/Studio17.4s separatelybound. Currentnativecompletion checkpointawaitsGitdelivery.",
+    "CurrentLinux7337 originalactualcredentialGET200 nowproved bynativeAndroid originalfivewire receipt; JSONexact/SQLrawfalse remainseparate, usermanager/autostart remainpending."
   ],
   "folderResponsibilities": {
     "sources": "Official origins, source/provenance and current safe source audits",
@@ -376,12 +391,13 @@
     "native/ios": "Capacitor public-resource sync boundary",
     "deployments/linux": "Actual persistent service and state/auth retention verification",
     "deployments/pages": "CI snapshot and actual current public resource/DOM verification",
-    "maintenance": "Merged branches,selected cache cleanup and configured/runtime concurrency distinction"
+    "maintenance": "Merged branches,selected cache cleanup and configured/runtime concurrency distinction",
+    "native/additional-agents": "Additional CLI official installs and command entries, separate from original21monitorcatalog."
   },
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-12T09:17:00.791458+00:00",
+  "updatedAt": "2026-11-12T15:09:02.881950+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -398,7 +414,7 @@
   "currentAndroidPartialNativeBuildInstallTestsVerified": true,
   "currentAndroidActualIDESyncVerified": true,
   "currentAndroidNativeUI21Providers42ImagesVerified": true,
-  "documentedPublishedMainRevision": "f462fd739a9f88c7c3e5ee8ab8eafcd84f579a06",
+  "documentedPublishedMainRevision": "a5ea264cbb1cc7f24d838df9cc25921c49018e1d",
   "productionSourceRevisionStillFrozen71": true,
   "currentCorrectionArchiveGitCommitted": false,
   "originalWindowsCredentialsDamagedOrUnrecoverableClaimed": false,
@@ -469,10 +485,10 @@
   "currentAndroidNativeUnicodeEnterVerified": true,
   "currentAndroidNativeUnicodeInputPacketCount": 3,
   "currentAndroidNativeUnicodeOutputPacketCount": 3,
-  "currentAndroidNativeResizeVerified": false,
-  "currentAndroidProductNormalTerminalCloseVerified": false,
-  "currentAndroidTemporaryDeviceRemovalAndRevocationVerified": false,
-  "currentAndroidFullPTYVerified": false,
+  "currentAndroidNativeResizeVerified": true,
+  "currentAndroidProductNormalTerminalCloseVerified": true,
+  "currentAndroidTemporaryDeviceRemovalAndRevocationVerified": true,
+  "currentAndroidFullPTYVerified": true,
   "secondTemporaryWindows7339ControllerValidationPassed": false,
   "secondTemporaryWindows7339ActualNativeExecutorExitCode": 1,
   "secondTemporaryWindows7339DeclaredOriginalHandlesNormalExitVerified": true,
@@ -525,7 +541,7 @@
   "currentLinuxRemoteStateSemanticJSONExact": true,
   "currentLinuxRemoteStateRawRowsExactlyRetainedComparedToNewCurrentBackup": false,
   "currentLinuxPreflightRawStateRowsEqualOldLegacyBackup": false,
-  "currentLinuxExistingOriginalTokenWire200TestedThisEpoch": false,
+  "currentLinuxExistingOriginalTokenWire200TestedThisEpoch": true,
   "currentWindowsDeepSeekOrdinarySilentNoAutoLaunchStaticVerified": true,
   "currentWindowsDeepSeekInstallerNativeExecutionTested": true,
   "currentWrongLinuxOriginalOneNativeCredentialGetSucceeded": true,
@@ -580,5 +596,36 @@
   "additionalInstallationProof": "native/additional-agents/root-integration/command-entry-matrix-safe.json",
   "additionalInstallationHistoricalReceiptConsistencyIndependentReview": "native/additional-agents/independent-review-safe.json",
   "additionalInstallationHistoricalJsonReviewCount": 54,
-  "additionalInstallationReviewIndependentlyReranNativeCommands": false
+  "additionalInstallationReviewIndependentlyReranNativeCommands": false,
+  "prior437SeventhAdditionalAgentCheckpointDelivered": true,
+  "currentAndroidFullPTYProof": "native/android/post-reboot-completion-20261112/final-completion-safe.json",
+  "currentAndroidActualClosedCmdTerminalExitCode": 1,
+  "currentAndroidOriginalFiveSavedRecordsAndEncryptedKeyValueExactlyRetained": true,
+  "currentAndroidCurrentEncryptedRecordCount": 5,
+  "currentAndroidProductForgetRevokesServerToken": false,
+  "currentAndroidSeparateOwnServerRevokeActualStatus": 204,
+  "currentAndroidRevokedOwnTokenActualGetStatus": 401,
+  "currentAndroidOwnBackendNormalQuitAndOriginalHandlesEnded": true,
+  "currentAndroidOwnNativeChannelNormalCleanupVerified": true,
+  "currentAndroidPrivateNativePortsReleased": [
+    5039,
+    5572,
+    5573,
+    19329
+  ],
+  "currentAndroidOwnTaskDeletedIndependentlyObserved": true,
+  "currentAndroidTaskCleanupInvokerActualExitCode": 1,
+  "currentAndroidPreDeleteTaskResultZeroDirectlySaved": false,
+  "currentAndroidPreDeleteTaskResultZeroBoundByExecutedGuardFlow": true,
+  "currentAndroidAppProcessDestructionClaimed": false,
+  "currentAndroidNormalHomeExitCode": 0,
+  "currentLinuxOriginalTokenWireProof": "native/android/post-reboot-completion-20261112/product/installed-apk-and-original-five-wire-safe.json",
+  "currentWindowsLatestInteractiveReadinessProof": "native/windows/formal-runtime-post-reboot-20261112/fresh-probe-final-safe.json",
+  "currentWindowsLatestInteractiveReadinessObservedAtUtc": "2026-11-12T09:26:03.3811854Z",
+  "currentWindowsHistorical07InteractiveProbeReadinessVerified": true,
+  "currentWindowsHistorical07InteractiveProbeTaskNormalCleanupVerified": true,
+  "additionalWindowsFreshUserPathSixExpectedCommandsResolveVerified": true,
+  "additionalWindowsFreshUserPathResolutionProof": "native/additional-agents/root-integration/fresh-user-command-resolution-safe.json",
+  "currentWindowsFormalPrepared40ScriptPinsAnd967ExportSourceHashesVerified": true,
+  "currentWindowsFormalCurrentPreparedPublicProof": "native/windows/formal-runtime-post-reboot-20261112/static-review-safe.json"
 }

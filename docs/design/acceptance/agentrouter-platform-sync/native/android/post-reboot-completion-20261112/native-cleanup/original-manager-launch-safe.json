@@ -1,0 +1,10 @@
+{
+    "pid":  30436,
+    "creationUtc":  "2026-11-12T07:04:01.6098295Z",
+    "image":  "C:\\Users\\han\\AppData\\Roaming\\uv\\python\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+    "imageSha256":  "204d51f19707da17766bccecce2ceececadab350663a8190420d1377bac1150d",
+    "script":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\android-studio-21-monitors-continuation-20261111\\manage-private-native-android-channel-post-reboot-20261112.py",
+    "scriptSha256":  "c9d76a8b69d1ffd1d5fc7da7502249ee1f24f07ab4ad12487e30a968ec1dd7dd",
+    "status":  "single-original-new-native-channel-manager-created",
+    "processTerminations":  0
+}

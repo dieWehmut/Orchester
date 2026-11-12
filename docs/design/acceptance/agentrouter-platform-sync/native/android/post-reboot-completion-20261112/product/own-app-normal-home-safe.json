@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "nativeAppExitPluginAvailable": false,
+  "normalNativeAndroidHomeCommandExitCode": 0,
+  "nativeActivityDumpActualExitCode": 0,
+  "ownAppIsResumedAfterHome": false,
+  "processForceStopUsed": false,
+  "processDestroyedClaimed": false,
+  "originalFiveSavedDevicesRemain": true,
+  "nativeAdbServerPort": 5039,
+  "cdpPort": 19329
+}

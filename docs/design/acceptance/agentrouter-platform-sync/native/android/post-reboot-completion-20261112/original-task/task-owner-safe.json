@@ -1,0 +1,12 @@
+{
+    "format":  "orchester-own-scheduler-bridge-v1",
+    "taskName":  "Orchester-Own-Successor3-3b025a45d89643d1ae67aee99697fb5c",
+    "definitionSha256":  "13ed03d42d9ab10d99e65e3a01a2e30eef4dc6dd6e417faee2278aa769392e72",
+    "instanceGuid":  "{171240AD-F9B6-4789-8142-836DD79F4D86}",
+    "sourceSha256":  "ba30875b16967f8f7202c52864a54a096f6cc59d2999fc9d4ed0bd1dcf830a0c",
+    "actionSha256":  "e8c76486dff0c0a17360be36aa803ff5e38543ba3e69bd37650eac08388f4422",
+    "registered":  true,
+    "runAttempted":  true,
+    "runRequestedUtc":  "2026-11-12T08:45:08.0426953Z",
+    "taskDeleted":  false
+}

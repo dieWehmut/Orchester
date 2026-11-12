@@ -1,0 +1,8 @@
+{
+    "status":  "terminal-gate-readonly-diagnostic-failed",
+    "sourceSha256":  "599552a93a509a35a3619a23b68c14efde53e526da2247a6044824e7b5f12635",
+    "exceptionType":  "System.IO.FileNotFoundException",
+    "safeReasonCode":  null,
+    "sourceLine":  68,
+    "noSignalsOrTaskWrites":  true
+}

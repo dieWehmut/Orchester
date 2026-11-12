@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "normalProductCloseClicked": true,
+  "normalProductCloseConfirmed": true,
+  "beforeBackendState": "running",
+  "afterBackendState": "closed",
+  "actualBackendExitCode": 1,
+  "actualTerminalWebSocketExitCount": 1,
+  "actualWebSocketExitPacketState": null,
+  "actualWebSocketExitPacketCode": null,
+  "terminalOutputDrainedByWebSocketExit": true,
+  "terminalConnectedAfterClose": false,
+  "productExitStatusPresent": true,
+  "productCloseButtonRemoved": true,
+  "onlyOwnedTemporaryTerminalClosed": true,
+  "originalUserTasksModified": false,
+  "nativeAdbServerPort": 5039,
+  "cdpPort": 19329
+}

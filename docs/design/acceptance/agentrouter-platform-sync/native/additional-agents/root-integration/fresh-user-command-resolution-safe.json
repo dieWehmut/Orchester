@@ -1,0 +1,54 @@
+﻿{
+    "schemaVersion":  1,
+    "status":  "fresh-user-environment-command-resolution-checked",
+    "observedAtUtc":  "2026-11-12T09:27:12.6265978Z",
+    "allSixRegisteredCommandsResolveExpectedWrapper":  true,
+    "gates":  [
+                  {
+                      "command":  "copilot",
+                      "resolvedExpectedRegisteredWrapper":  true,
+                      "expectedWrapper":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\copilot.cmd",
+                      "commandType":  "Application",
+                      "unexpectedResolvedPathPublished":  false
+                  },
+                  {
+                      "command":  "cn",
+                      "resolvedExpectedRegisteredWrapper":  true,
+                      "expectedWrapper":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\cn.cmd",
+                      "commandType":  "Application",
+                      "unexpectedResolvedPathPublished":  false
+                  },
+                  {
+                      "command":  "aider",
+                      "resolvedExpectedRegisteredWrapper":  true,
+                      "expectedWrapper":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\aider.cmd",
+                      "commandType":  "Application",
+                      "unexpectedResolvedPathPublished":  false
+                  },
+                  {
+                      "command":  "goose",
+                      "resolvedExpectedRegisteredWrapper":  true,
+                      "expectedWrapper":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\goose.cmd",
+                      "commandType":  "Application",
+                      "unexpectedResolvedPathPublished":  false
+                  },
+                  {
+                      "command":  "amp",
+                      "resolvedExpectedRegisteredWrapper":  true,
+                      "expectedWrapper":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\amp.cmd",
+                      "commandType":  "Application",
+                      "unexpectedResolvedPathPublished":  false
+                  },
+                  {
+                      "command":  "auggie",
+                      "resolvedExpectedRegisteredWrapper":  true,
+                      "expectedWrapper":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\auggie.cmd",
+                      "commandType":  "Application",
+                      "unexpectedResolvedPathPublished":  false
+                  }
+              ],
+    "processPathAssembledFromMachineAndUserRegistry":  true,
+    "environmentContentsPublished":  false,
+    "systemOrUserPathMutatedByThisVerifier":  false,
+    "modelOrLoginCommands":  0
+}

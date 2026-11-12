@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "status": "current-native-public-source-export967-producer-input-hashes-verified-readonly",
+  "observedAtUtc": "2026-11-12T09:38:32.637347+00:00",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "planFile": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/plan.json",
+  "planSha256": "8645dca6d20f2d5ff0d845d7c74522f52ca72c6aec49ec9529dcb86a997911cd",
+  "publicSourceRoot": "/mnt/c/Users/han/AppData/Local/Orchester-build/source-71def64-final21-20261111",
+  "producerInputFilesChecked": 967,
+  "inputHashMismatches": [],
+  "currentWindowsHostRuntimeOrAuthVerified": false,
+  "sourceMutationCount": 0,
+  "nativeGuiTaskInstallerNetworkOrGitExecutionsInThisHashCheck": 0,
+  "privateProfilesCredentialsEnvironmentRawLogsRead": false,
+  "sourceListScope": "Only fixed immutable plan.inputs below owned public source export; no unlisted file enumeration or environment/profile contents."
+}

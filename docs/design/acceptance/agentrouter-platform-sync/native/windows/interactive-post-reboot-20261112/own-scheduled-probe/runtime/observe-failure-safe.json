@@ -1,0 +1,15 @@
+{
+    "status":  "owned-readonly-probe-failed-closed",
+    "mode":  "Observe",
+    "stage":  "verify-owned-definition",
+    "errorType":  "System.InvalidOperationException",
+    "hResult":  -2146233079,
+    "taskName":  "Orchester-Own-InteractiveProbe-5b13a112be5a4d18b7879942828428d9",
+    "registered":  true,
+    "runAttempted":  true,
+    "definitionSha256":  "edb9a15ee4a7c4872f29fbf94daaf41212ba91ceed117b289e2cdc009b4e63fb",
+    "originalInstanceGuid":  "{BDABA3F9-FB92-4B2C-ADD6-E1E6A427B4B0}",
+    "originalInstanceUnavailable":  false,
+    "processOrInputSignals":  0,
+    "taskRerunOrStopCalled":  false
+}

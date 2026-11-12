@@ -1,0 +1,15 @@
+{
+  "status": "current-final21-correct-windows-native-main-opened",
+  "appPid": 7605,
+  "appStartTicks": 606392,
+  "appPreviouslyRunning": null,
+  "normalActivityOpenRequestedInThisAttempt": true,
+  "nativeServerPort": 5039,
+  "serial": "emulator-5572",
+  "cdpPort": 19329,
+  "webviewSocketSuffixMatchesOwnAppPid": true,
+  "screenshotSha256": "6bea767a25b060f207d96980538c4030aa4ec5fd47271634249ccd06dc32857e",
+  "currentFinal21ApkSha256": "f83fa2a75c712a3d2e1f3f203cf73ce89204fb4ca0bce4d8c2ef0c4fe3596d3c",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "defaultAdbCommands": 0
+}

@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "status": "native-completion-public-records-and-explicit-safe-source-copies-consistent-with-preserved-limitations",
+  "reviewedAtUtc": "2026-11-12T09:42:42.290Z",
+  "reviewer": "native-completion-independent-review-agent",
+  "scope": {
+    "archiveDirectories": [
+      "native/windows/interactive-post-reboot-20261112/own-scheduled-probe",
+      "native/android/post-reboot-completion-20261112",
+      "native/windows/formal-runtime-post-reboot-20261112"
+    ],
+    "publicJsonFilesParsed": 68,
+    "explicitSafeOriginalJsonFilesCompared": 62,
+    "independentNativeAdbNetworkInstallerOrGitReexecutions": 0,
+    "sourceScriptsInstalledPayloadScreenshotsPrivateCredentialsRawLogsOrNonJsonContentsRead": 0,
+    "rootSharedManifestProvenanceDocsOrRepositorySourceReviewed": false,
+    "method": "Parse selected public JSON, recompute archive and mapped safe-source SHA256/size/bytes, compare task and product records, and use separate read-only semantic subreviews. This is a record and safe-source-copy audit; original native API execution and private state contents are not independently rerun or read."
+  },
+  "snapshotDigestFormat": "For each listed directory, SHA256 of UTF-8 lexicographically sorted relative-path TAB byte-size TAB sha256 LF records for JSON files. This review is outside those directories and excluded.",
+  "snapshots": [
+    {
+      "directory": "native/windows/interactive-post-reboot-20261112/own-scheduled-probe",
+      "publicJsonCount": 17,
+      "snapshotSha256": "e1768704ccb8637838558125ade02b64792993664bec82c93b776540320dc070",
+      "selectedMappedSafeSourceCopiesCompared": 16,
+      "extraRootDerivedActorRecordCount": 1
+    },
+    {
+      "directory": "native/android/post-reboot-completion-20261112",
+      "publicJsonCount": 37,
+      "snapshotSha256": "8b30d9deee4eaa9936d44789ca3fdb7cd4cfce3c9a00047932de5a14d67f452e",
+      "selectedMappedSafeSourceCopiesCompared": 33,
+      "derivedPublicRecordCount": 4
+    },
+    {
+      "directory": "native/windows/formal-runtime-post-reboot-20261112",
+      "publicJsonCount": 14,
+      "snapshotSha256": "f0b1fa95f41712a1d86d30d951191c004a4aeb6a49ede0007b915bca933fe1b0",
+      "selectedMappedSafeSourceCopiesCompared": 13,
+      "derivedPublicSourceMappingCount": 1
+    }
+  ],
+  "checks": {
+    "probeOriginalMappingSetAndHashSizeChecksPassed": 16,
+    "probeOriginalSafeSourceByteComparisonsPassed": 16,
+    "androidSelectedArchiveHashAndSizeChecksPassed": 33,
+    "androidExplicitSafeSourceByteComparisonsPassed": 33,
+    "androidManifestHashAndSizeEntriesPassed": 36,
+    "formalExplicitSafeSourceAndArchiveByteComparisonsPassed": 13,
+    "currentMappedSourceMissingOrMismatchCount": 0,
+    "androidSnapshotStableBetweenSourceCopyAuditAndFinalPublicAudit": true,
+    "formalSnapshotStableBetweenSourceCopyAuditAndFinalPublicAudit": true,
+    "secondaryReadOnlyProbeSemanticAssertionsReportedPassed": 69,
+    "secondaryReadOnlyAndroidSemanticAssertionsReportedPassed": 198,
+    "currentGuiScopeAssertionsExecutedByThisReviewer": 35,
+    "selectedSecretPatternCount": 5,
+    "selectedSecretPatternMatchCount": 0
+  },
+  "probe": {
+    "sourceMappingSha256": "1fb2a7355436e71c4f7e0454b87e3a408c59235f1466212445ac622403bc0cb4",
+    "initialStartRemainsLiveAndUnbound": true,
+    "originalObserveAndFirstCleanupFailuresPreserved": true,
+    "originalActionPid": 29308,
+    "originalActionBirthUtc": "2026-11-12T07:04:01.2914145Z",
+    "originalActionReadinessObservationUtc": "2026-11-12T07:04:01.9207786Z",
+    "strictCurrentTaskSemanticsAndActionReceiptIdentityInternallyBound": true,
+    "earlyTaskResultZeroAndInstanceZeroNotMisreportedAsCorrelatedTerminalZero": true,
+    "finalUtcCleanupOriginalActionLastTaskResultInRecord": 0,
+    "finalUtcCleanupCurrentInstanceCountInRecord": 0,
+    "finalUtcCleanupOwnTaskDeletedInRecord": true,
+    "historicalReadinessNotCurrentGuiProof": true,
+    "rootActorProvenance": {
+      "receiptSha256": "46e818efb6b5885732fcb3aec07c263fe5104011ff64957fff603ebc430098e1",
+      "declaredActualOuterPowerShellExitCode": 0,
+      "declaredExecutedSourceSha256": "856081274aad5d632693f716063bd9e3fab10469b71dc2d4c8af95b983538246",
+      "cleanupReceiptReferenceMatched": true,
+      "executionEvidenceOrigin": "Root earlier actual functions exec_command nativePowerShell invocation exit_code0, retained in continuation summary; this actor-provenance record is derived and not an independent native rerun.",
+      "sourceScriptContentsOrNativeExecutionIndependentlyRead": false
+    },
+    "rootActorProvenanceDoesNotEstablishReviewerNativeExecutionOrSourceScriptValidation": true
+  },
+  "android": {
+    "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+    "actualNativeTargetAsRecorded": "Windows Medium_Phone_API_37.0 emulator-5572; native ADB 5039; CDP 19329",
+    "installedApkSha256AsRecorded": "f83fa2a75c712a3d2e1f3f203cf73ce89204fb4ca0bce4d8c2ef0c4fe3596d3c",
+    "installedApkBytesAsRecorded": 13960333,
+    "normalOwnTerminalProductCreateCountBefore": 0,
+    "normalOwnTerminalProductCreateCountAfter": 1,
+    "nativeUnicodeInputPacketCount": 3,
+    "nativeUnicodeOutputPacketCount": 3,
+    "nativeEnterCommandActualExitCodeInRecord": 0,
+    "trustedKeyboardTouchWithoutInjectedEmulationMetrics": true,
+    "viewportHeightBefore": 914.2857055664062,
+    "viewportHeightAfter": 577.90478515625,
+    "sameBackendTerminalRowsBefore": 28,
+    "sameBackendTerminalRowsAfter": 8,
+    "normalOwnProductCloseAndConfirm": true,
+    "closedBackendTerminalActualExitCodeInRecord": 1,
+    "websocketExitPacketCountInRecord": 1,
+    "websocketOutputDrainedInRecord": true,
+    "websocketExitPacketStateAndCodeNotRecorded": true,
+    "normalProductOwnSavedDeviceRemovalBefore": 6,
+    "normalProductOwnSavedDeviceRemovalAfter": 5,
+    "originalFiveEncryptedKeyValueAndSavedDeviceRecordsExactlyRetainedAsRecorded": true,
+    "originalFiveNativeAesDecryptSuccessCountInRecord": 5,
+    "originalFiveNativeAesDecryptFailureCountInRecord": 0,
+    "original7337CredentialWireStatusInRecord": 200,
+    "productForgetOnlyRemovesLocalSavedDeviceAndCredential": true,
+    "separateOwnServerNormalRevokeStatusInRecord": 204,
+    "sameOwnTokenAfterRevokeStatusInRecord": 401,
+    "originalPendingCoreReceiptNotRewritten": true,
+    "finalCompletionSeparatelySupersedesPendingCoreCleanup": true,
+    "originalControllerBackendHandlesHeldUntilNormalQuitAsRecorded": true,
+    "backendLauncherActualExitCodeInRecord": 0,
+    "temporary7339PortReleasedAndPrivateTransportCountZeroAsRecorded": true,
+    "originalManagerCreatorEmulatorAndServerHandleExitCodesInRecord": [
+      0,
+      0
+    ],
+    "nativeQemuHeadServerAndManagerQueryHandleExitCodesInRecord": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "observationQueryHandlesNotClaimedAsCreatorHandles": true,
+    "fourOwnNativePrivatePortsReleasedAsRecorded": true,
+    "normalOwnEmulatorConsoleAndOwnAdb5039KillServerCommandsExitCodesInRecord": [
+      0,
+      0
+    ],
+    "normalHomeCommandActualExitCodeInRecord": 0,
+    "appProcessDestroyedClaimed": false,
+    "taskCleanupInvokerActualExitCodeInRecord": 1,
+    "ownTaskAbsenceIndependentLookupRecorded": true,
+    "ownTaskAbsenceLookupHResultAsRecorded": -2147024894,
+    "preDeleteTaskResultZeroOnlySupportedByExecutedSourceFlowDeclaration": true,
+    "preDeleteTaskResultZeroDirectReceiptOrEventLogProved": false,
+    "postDeleteReceiptWriterFailureCauseInferredFromSourceFlowNotIndependentlyValidatedHere": true,
+    "fullHistoricalUi21And42AndIdeSyncNotReexecutedOrIndependentlyReauditedHere": true
+  },
+  "currentWindows": {
+    "freshProbeActionPid": 38608,
+    "freshProbeActionBirthUtc": "2026-11-12T09:26:02.8142443Z",
+    "sameOwnerSession1WinSta0DefaultAndOpenInputDesktopAsRecorded": true,
+    "cursorReadAsRecorded": false,
+    "cursorErrorAsRecorded": 5,
+    "interactiveReadinessAsRecorded": false,
+    "freshProbeActionAndTaskCorrelationResultAsRecorded": 0,
+    "freshProbeNormalTaskCleanupAndIndependentAbsenceChecksAsRecorded": true,
+    "portable14Desktop18AndDefaultReinstallationExecuted": false,
+    "staticAnd731967InputAuditReceiptsDoNotProveNativeRuntimeExecution": true
+  },
+  "preservedObserverDiagnostics": [
+    {
+      "stage": "initial-secret-pattern-scan",
+      "actualExitCode": 1,
+      "reason": "Unbounded sk- pattern matched the suffix of task- in three public status/format strings; token-boundary scan passed with zero matches. No receipt changed."
+    },
+    {
+      "stage": "initial-android-selected-count-guard",
+      "actualExitCode": 1,
+      "reason": "The selected-source set expanded from26 to33 while the final native archive was being published; review continued against the parent-confirmed final37JSON snapshot."
+    },
+    {
+      "stage": "initial-safe-source-filename-guard",
+      "actualExitCode": 1,
+      "reason": "A public explicitly mapped derived-task-owner-state.json source does not use a safe.json suffix. Final audit used only explicit public-safe provenance entries and JSON extension guards; all33 mapped sources matched."
+    }
+  ],
+  "limitations": [
+    "Recorded native command results and original private encrypted state comparisons are reviewed for consistency. This reviewer did not rerun native commands or read the private state.",
+    "The owned cmd terminal actual exit1 is preserved. A WebSocket exit event and drain are recorded, but its state/code fields are null; do not claim a frame carried code1.",
+    "Product Forget only removed the own local saved device and credential. Server revocation was a separate normal own API request.",
+    "TaskCleanup invoker exit1 remains failure. Independent same-task lookup proves task absence; pre-delete TaskResult0 is source-flow evidence and lacks a direct saved pre-delete result or event log.",
+    "The 07:04 successful Windows readiness observation is historical. The fresh09:26 probe records cursorError5/readinessfalse, so no current desktop14/18 or default reinstallation acceptance is established.",
+    "Root's added UTC cleanup actor record supplies declared scriptSHA/outerexit0 from its earlier tool result, not an independent source-script validation or native rerun by this reviewer."
+  ],
+  "privatePayloadsScreenshotsCredentialsEnvironmentSidOrRawLogsIncluded": false,
+  "reviewFileMutationOnly": "sources/audit/epoch8-native-completion-independent-review-safe.json"
+}

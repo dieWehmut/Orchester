@@ -1,0 +1,26 @@
+{
+    "format":  "orchester-final21-temporary-windows-server-cleanup-v1",
+    "status":  "normal-quit-all-owned-handles-exited",
+    "controller":  {
+                       "pid":  8708,
+                       "createdAtUtc":  "2026-11-12T08:45:08.1486358Z",
+                       "image":  "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                       "sha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+                       "sessionId":  1
+                   },
+    "launcherExitCode":  0,
+    "normalQuitIssued":  true,
+    "pairingRenewed":  false,
+    "pairingClosedByActualCliEvent":  true,
+    "allExactOwnedHandlesExited":  true,
+    "portReleased":  true,
+    "unexpectedDescendants":  0,
+    "originalCreatorHandlesKeptUntilCleanup":  true,
+    "privateRawOutputPublished":  false,
+    "defaultProfilesModified":  false,
+    "formalPortable14Accepted":  false,
+    "formalDesktop18Accepted":  false,
+    "promoted":  false,
+    "forcedTerminations":  0,
+    "modelCalls":  0
+}
