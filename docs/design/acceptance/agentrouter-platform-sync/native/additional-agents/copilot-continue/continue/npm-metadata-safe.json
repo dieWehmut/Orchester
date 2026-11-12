@@ -1,0 +1,68 @@
+{
+  "url": "https://registry.npmjs.org/@continuedev%2fcli/latest",
+  "observedAtUtc": "2026-11-12T07:01:42.443679+00:00",
+  "httpStatus": 200,
+  "responseBytes": 5887,
+  "responseSha256": "2f57352a309e554e2813f694729a1db0b40039c62fc75d53ce6e239a2262c8b4",
+  "finalUrl": "https://registry.npmjs.org/@continuedev%2fcli/latest",
+  "metadata": {
+    "name": "@continuedev/cli",
+    "version": "1.5.47",
+    "repository": {
+      "url": "git+https://github.com/continuedev/continue.git",
+      "type": "git"
+    },
+    "homepage": "https://continue.dev",
+    "bin": {
+      "cn": "dist/cn.js"
+    },
+    "engines": null,
+    "os": null,
+    "cpu": null,
+    "scripts": {
+      "dev": "tsx src/index.ts",
+      "lint": "tsc --noEmit && eslint .",
+      "test": "vitest run",
+      "build": "npm run build:validate && npm run build:bundle",
+      "start": "node dist/cn.js",
+      "format": "prettier --write .",
+      "prepare": "npm run build",
+      "test:ui": "vitest --ui",
+      "lint:fix": "eslint . --fix",
+      "test:e2e": "vitest run --config vitest.e2e.config.ts",
+      "build:tsc": "tsc -p tsconfig.build.json",
+      "typecheck": "tsc --noEmit",
+      "test:smoke": "node smoke-test.mjs",
+      "test:watch": "vitest watch",
+      "watch:logs": "touch ~/.continue/logs/cn.log && tail -f ~/.continue/logs/cn.log",
+      "repomix:cli": "npx repomix --ignore sdk-repomix.xml -o cli-repomix.xml",
+      "repomix:sdk": "npx repomix node_modules/@continuedev/sdk --ignore **/api,cli-repomix.xml -o sdk-repomix.xml",
+      "build:bundle": "node build.mjs",
+      "format:check": "prettier --check .",
+      "build:validate": "node validate-aliases.mjs",
+      "test:smoke-api": "vitest run --config vitest.smoke-api.config.ts",
+      "build:local-deps": "cd ../../packages/config-types && npm i && npm run build && cd ../fetch && npm i && npm run build && cd ../llm-info && npm i && npm run build && cd ../terminal-security && npm i && npm run build && cd ../config-yaml && npm i && npm run build && cd ../openai-adapters && npm i && npm run build && cd ../../core && npm i && npm run build && cd ../extensions/cli && npm i",
+      "semantic-release": "semantic-release",
+      "semantic-release:dry-run": "semantic-release --dry-run"
+    },
+    "dist": {
+      "shasum": "78fd1f0c1274a9b52b10e7a1a68fa5d20e6453fb",
+      "tarball": "https://registry.npmjs.org/@continuedev/cli/-/cli-1.5.47.tgz",
+      "fileCount": 454,
+      "integrity": "sha512-gtpewV3RoIOD9dyTtKIBi1SY0VOHRu3Ehe7C/mmnswm+j34MPyrcQhQaWj/m+jdfGO4fNIKdrgGIlLso1ULDFw==",
+      "signatures": [
+        {
+          "sig": "MEUCIAhu9YpMXn0AeBLvUNs+BILBIKVhzotgcHsqaJg2wWRYAiEA+xlX36Xn92RfjiAAKVgDvG+YFomt5tDktW88tgaN9Yw=",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        }
+      ],
+      "attestations": {
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@continuedev%2fcli@1.5.47",
+        "provenance": {
+          "predicateType": "https://slsa.dev/provenance/v1"
+        }
+      },
+      "unpackedSize": 64823055
+    }
+  }
+}

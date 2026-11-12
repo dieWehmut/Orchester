@@ -1,0 +1,9 @@
+{
+  "status": "official-portable-powershell-files-installed-native-validation-pending",
+  "zipSha256": "7c74e03b20a75b59715847439d046a6214b1863ee79b187872980f139bb4a05f",
+  "zipFilesExtracted": 810,
+  "windowsPrefix": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\copilot\\prerequisites\\powershell7",
+  "nativePwshSha256": "f2833e07a5a7d59153ffc63db83bd6b62f6c63ffd8b5b5099a2feadf6b605336",
+  "globalPathModified": false,
+  "symlinkOrZipEscapeEntries": 0
+}

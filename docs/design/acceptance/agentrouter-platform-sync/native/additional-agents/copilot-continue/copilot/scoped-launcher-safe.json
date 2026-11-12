@@ -1,0 +1,12 @@
+{
+  "status": "tool-scoped-launchers-created-global-path-unchanged",
+  "windowsLauncher": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\copilot\\bin\\copilot.cmd",
+  "windowsLauncherSha256": "2e77ffc01bfb05bae70da81f2d846019f251c1fc3437e77054b2805b9517c4c4",
+  "windowsProcessPathOnlyPrepend": [
+    "tool-scoped PowerShell7 prerequisite",
+    "existing native Node installation"
+  ],
+  "sharedUserOrSystemPathModified": false,
+  "wslLauncher": "/home/han/.local/share/orchester-agents/copilot/bin/copilot",
+  "wslLauncherResolved": "/home/han/.local/share/orchester-agents/copilot/node_modules/@github/copilot/npm-loader.js"
+}

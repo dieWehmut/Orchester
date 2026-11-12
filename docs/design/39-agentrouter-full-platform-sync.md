@@ -190,6 +190,8 @@ Windows Android Studio 2026.2.2 / IDE JBR 25、Gradle JDK 21 的原生构建已�
 
 ## 维护与并发上限
 
+2026-11-12 用户追加要求本机 Windows 与 WSL 安装更多 agent。现已实际追加 Copilot CLI、Continue CLI、Aider、Goose、Amp、Auggie 六种产品，两端共 12 个安装单元，注册后的 12 次版本命令均退出 0。常用命令、安装目录、版本及平台支持边界见[追加安装记录](40-additional-agent-installations.md)。这些新增安装单独计数，登录/模型任务尚未执行，当前 21 项监控产品目录不据此增加。
+
 第 5 检查点的[独立公共归档终审](acceptance/agentrouter-platform-sync/sources/audit/epoch5-fixed-checkpoint-independent-review-safe.json)绑定加入报告前的 354 文件快照：344 份 listed JSON 的解析、SHA-256 与大小通过，9 份非 JSON 只核对 stat，203 个文档链接及 13 项需求的 105 个证据引用存在。审查没有读取外部原 receipt、私人资料或非 JSON 内容，也没有重跑 native、ADB 或网络；不替代当前进程存活和全平台终验。原第 4 阶段 Linux 无新版运行通过的措辞已明确限定为历史检查点，后续恢复记录继续独立保存。
 
 已实际清理 73 个完全 ancestor merged 远程 ref 和 3 个本地 merged 分支，保护 attached/current/PR refs，使用 lease 与 atomic，原控制进程退出 0、远程不存在复核通过。[逐项安全清理记录](acceptance/agentrouter-platform-sync/maintenance/merged-branch-cleanup.json)。

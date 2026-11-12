@@ -1,0 +1,61 @@
+{
+  "tools": [
+    {
+      "command": "copilot",
+      "name": "GitHub Copilot CLI",
+      "version": "1.0.109",
+      "windows": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\copilot\\bin\\copilot.cmd",
+      "wsl": "/home/han/.local/share/orchester-agents/copilot/bin/copilot",
+      "wslUserBin": "/home/han/.local/bin/copilot",
+      "wslRegistrationStatus": "new-user-bin-symlink-created"
+    },
+    {
+      "command": "cn",
+      "name": "Continue CLI",
+      "version": "1.5.47",
+      "windows": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\continue\\node_modules\\.bin\\cn.cmd",
+      "wsl": "/home/han/.local/share/orchester-agents/continue/node_modules/.bin/cn",
+      "wslUserBin": "/home/han/.local/bin/cn",
+      "wslRegistrationStatus": "new-user-bin-symlink-created"
+    },
+    {
+      "command": "aider",
+      "name": "Aider",
+      "version": "0.86.2",
+      "windows": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\aider\\venv\\Scripts\\aider.exe",
+      "wsl": "/home/han/.local/share/orchester-agents/aider/venv/bin/aider",
+      "wslUserBin": "/home/han/.local/bin/aider",
+      "wslRegistrationStatus": "new-user-bin-symlink-created"
+    },
+    {
+      "command": "goose",
+      "name": "Goose",
+      "version": "1.59.0",
+      "windows": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\goose\\bin\\goose.exe",
+      "wsl": "/home/han/.local/share/orchester-agents/goose/bin/goose",
+      "wslUserBin": "/home/han/.local/bin/goose",
+      "wslRegistrationStatus": "new-user-bin-symlink-created"
+    },
+    {
+      "command": "amp",
+      "name": "Amp",
+      "version": "0.0.1794456033-gb2ff22",
+      "windows": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\amp\\node_modules\\@ampcode\\cli\\bin\\amp.exe",
+      "wsl": "/home/han/.local/share/orchester-agents/amp/node_modules/.bin/amp",
+      "wslUserBin": "/home/han/.local/bin/amp",
+      "wslRegistrationStatus": "new-user-bin-symlink-created"
+    },
+    {
+      "command": "auggie",
+      "name": "Auggie",
+      "version": "0.37.1",
+      "windows": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\auggie\\node_modules\\.bin\\auggie.cmd",
+      "wsl": "/home/han/.local/share/orchester-agents/auggie/node_modules/.bin/auggie",
+      "wslUserBin": "/home/han/.local/bin/auggie",
+      "wslRegistrationStatus": "new-user-bin-symlink-created"
+    }
+  ],
+  "newDistinctProducts": 6,
+  "platformInstallationUnits": 12,
+  "originalUserCommandEntriesOverwritten": 0
+}

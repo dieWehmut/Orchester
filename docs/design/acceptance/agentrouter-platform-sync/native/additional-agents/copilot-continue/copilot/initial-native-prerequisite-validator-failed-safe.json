@@ -1,0 +1,12 @@
+{
+  "status": "first-entry-prerequisite-validator-failed-before-extraction-completed",
+  "nativeExecutorActualExitCode": 1,
+  "errorType": "System.ComponentModel.Win32Exception",
+  "sourceSha256": "ea6bc7e0a5fdbd7c7d543819c9ae0c40258b05952f318624f81d9122299db787",
+  "reason": "The initial validation was started while the separately-running prerequisite ZIP extraction tool session had not completed. The new pwsh.exe was not yet available. This is an observation ordering error, not Copilot npm installation failure.",
+  "npmInstallerReexecuted": false,
+  "powershellZipExtractionRestarted": false,
+  "nativeFailurePidCaptured": false,
+  "originalFailurePreserved": true,
+  "observedAtUtc": "2026-11-12T07:23:00.464996+00:00"
+}

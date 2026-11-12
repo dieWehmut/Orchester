@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "status": "installed-native-entry-and-original-managed-version-verified",
+  "platform": "native-Windows-x64",
+  "package": "@ampcode/cli",
+  "versionPinned": "0.0.1794456033-gb2ff22",
+  "actualInstallExitCode": 0,
+  "originalInstallCreatorObjectHeldUntilActualExit": true,
+  "actualVersionExitCode": 0,
+  "versionOutput": "0.0.1794456033-gb2ff22 (released 2026-11-12T04:00:33.000Z, 3h ago)",
+  "entry": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\amp\\node_modules\\@ampcode\\cli\\bin\\amp.exe",
+  "cliShim": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\amp\\node_modules\\.bin\\amp.cmd",
+  "entrySha256": "3d043572234a6fe1f40a9ffa5179c757c26c547a6e7eb849aa02ae5bd20b12eb",
+  "entryBytes": 131411792,
+  "nativeMagic": "MZ/PE",
+  "originalManagedNativeVersionImageHashMatchesCurrentEntry": true,
+  "installedNativePayloadByteExactToNpmTarball": true,
+  "officialVendorChecksumMatchesInstalledEntry": true,
+  "originalPostInstallVerifierActualExitCode": 1,
+  "originalPostInstallVerifierErrorType": "System.Management.Automation.PSArgumentException",
+  "originalSuccessfulInstallAndVersionExitCodesPreserved": true,
+  "installationRepeatedForCorrection": false,
+  "followupReadOnlyVersionInteropObservationExitCodes": [
+    1,
+    1
+  ],
+  "followupInteropError": "WSL UtilAcceptVsock accept4 failed110",
+  "followupNativeActualExecutionOrExitProved": false,
+  "firstFollowupExactScriptCurrentProcessCount": 0,
+  "originalVersionStdoutSha256": "55ea3300eabdd9c92cf9c7df39d66ca998a4291f93aebc4a752b940473a5746f",
+  "versionStdoutRawContentArchived": false,
+  "originalNativeVersionCreator": {
+    "imageSha256": "3d043572234a6fe1f40a9ffa5179c757c26c547a6e7eb849aa02ae5bd20b12eb",
+    "pid": 29044,
+    "actualExitCode": 0,
+    "originalCreatorObjectHeldUntilActualExit": true,
+    "image": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\amp\\node_modules\\@ampcode\\cli\\bin\\amp.exe",
+    "originalCreatorObjectHeld": true,
+    "createdUtc": "2026-11-12T07:25:33.5841181Z"
+  },
+  "nativeAuthenticodeTrustClaimed": false,
+  "vendorPlatformSupportSources": [
+    "https://ampcode.com/install.ps1",
+    "https://ampcode.com/docs/cli"
+  ],
+  "modelsInvoked": 0,
+  "loginInvoked": false,
+  "sharedPathModified": false,
+  "globalNpmPrefixModified": false,
+  "userConfigurationOrCredentialContentsRead": false,
+  "processSignals": 0
+}

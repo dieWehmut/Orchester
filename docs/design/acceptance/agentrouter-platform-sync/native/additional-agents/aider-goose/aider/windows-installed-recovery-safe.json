@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "status": "official-isolated-agent-installed-and-native-version-verified",
+  "platform": "Windows-native",
+  "prefix": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\aider",
+  "wheelSha256": "64f6a0c66c9f4633ad9f479bca3e64ebcba02b9da03c6b604b74a44736b2416e",
+  "package": "aider-chat",
+  "expectedVersion": "0.86.2",
+  "globalPathChanges": 0,
+  "originalUserInstallationOrConfigurationChanges": 0,
+  "modelCalls": 0,
+  "forcedTerminations": 0,
+  "steps": [
+    {
+      "label": "base-python-version",
+      "pid": 18872,
+      "command": [
+        "C:\\Users\\han\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "--version"
+      ],
+      "originalCreatorObjectRetained": true,
+      "actualExitCode": 0,
+      "startedAtUtc": "2026-11-12T07:18:32.652340+00:00",
+      "creationFiletime": 134389415126485161,
+      "processActuallyExited": true,
+      "stdoutBytes": 16,
+      "stderrBytes": 0
+    },
+    {
+      "label": "install-official-checked-wheel",
+      "pid": 3276,
+      "command": [
+        "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\aider\\venv\\Scripts\\python.exe",
+        "-m",
+        "pip",
+        "install",
+        "--timeout",
+        "60",
+        "--retries",
+        "8",
+        "--index-url",
+        "https://pypi.org/simple",
+        "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\aider\\aider_chat-0.86.2-py3-none-any.whl"
+      ],
+      "originalCreatorObjectRetained": true,
+      "actualExitCode": 0,
+      "startedAtUtc": "2026-11-12T07:18:32.922699+00:00",
+      "creationFiletime": 134389415129185243,
+      "processActuallyExited": true,
+      "stdoutBytes": 18643,
+      "stderrBytes": 0
+    },
+    {
+      "label": "native-installed-cli-version",
+      "pid": 20264,
+      "command": [
+        "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\aider\\venv\\Scripts\\aider.exe",
+        "--config",
+        "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\aider\\acceptance-empty-config.yml",
+        "--version"
+      ],
+      "originalCreatorObjectRetained": true,
+      "actualExitCode": 0,
+      "startedAtUtc": "2026-11-12T07:25:09.657133+00:00",
+      "creationFiletime": 134389419096502510,
+      "processActuallyExited": true,
+      "stdoutBytes": 14,
+      "stderrBytes": 0
+    },
+    {
+      "label": "installed-package-metadata",
+      "pid": 14052,
+      "command": [
+        "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\aider\\venv\\Scripts\\python.exe",
+        "-c",
+        "import importlib.metadata as m,json;d=m.distribution('aider-chat');print(json.dumps({'name':d.metadata['Name'],'version':d.version,'requiresPython':d.metadata['Requires-Python'],'entryPoints':{e.name:e.value for e in d.entry_points if e.group=='console_scripts'},'distributionFileCount':len(d.files or [])}))"
+      ],
+      "originalCreatorObjectRetained": true,
+      "actualExitCode": 0,
+      "startedAtUtc": "2026-11-12T07:25:11.489412+00:00",
+      "creationFiletime": 134389419114870776,
+      "processActuallyExited": true,
+      "stdoutBytes": 154,
+      "stderrBytes": 0
+    }
+  ],
+  "resumedOnlyOwnFirstFailedEnvironment": true,
+  "priorNativePipActualExitCode": 2,
+  "entryPath": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\aider\\venv\\Scripts\\aider.exe",
+  "entrySha256": "de01e3bbeaea7dd90b3bee61a9b374e08ee196e7119c45886746f98c55e00e18",
+  "entryBytes": 108419,
+  "nativeVersionOutput": "aider 0.86.2",
+  "installedMetadata": {
+    "name": "aider-chat",
+    "version": "0.86.2",
+    "requiresPython": "<3.13,>=3.10",
+    "entryPoints": {
+      "aider": "aider.main:main"
+    },
+    "distributionFileCount": 320
+  },
+  "completedAtUtc": "2026-11-12T07:25:11.749809+00:00"
+}

@@ -1,0 +1,9 @@
+{
+  "status": "first-scoped-launcher-observer-powershell-command-parse-failed",
+  "actualPowerShellExitCode": 1,
+  "nativeScopedLauncherStarted": false,
+  "reason": "Outer -Command inline quoting was rejected by the PowerShell parser; use the new file-based verifier for only this new scoped launcher.",
+  "previousNativeCoreCmdShimAndPwshPassedChecksRepeated": false,
+  "npmInstallReexecuted": false,
+  "userOrGlobalPathModified": false
+}

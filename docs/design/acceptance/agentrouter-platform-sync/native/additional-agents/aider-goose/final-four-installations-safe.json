@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "status": "two-additional-official-cli-products-installed-on-four-native-platform-scopes-original-goose-verifier-cleanup-pending",
+  "observedAtUtc": "2026-11-12T07:34:43.303840+00:00",
+  "uniqueAdditionalProducts": 2,
+  "actualNativeInstallationScopes": 4,
+  "installations": [
+    {
+      "product": "Aider",
+      "version": "0.86.2",
+      "WindowsEntry": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\aider\\venv\\Scripts\\aider.exe",
+      "WslEntry": "/home/han/.local/share/orchester-agents/aider/venv/bin/aider",
+      "bothNativeVersionCommandsActualExitCode": 0
+    },
+    {
+      "product": "Goose",
+      "version": "1.59.0",
+      "WindowsEntry": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\goose\\bin\\goose.exe",
+      "WslEntry": "/home/han/.local/share/orchester-agents/goose/bin/goose",
+      "bothNativeVersionCommandsActualExitCode": 0
+    }
+  ],
+  "originalGlobalPATHAndUserConfigurationChanges": 0,
+  "loginAndModelCommands": 0,
+  "aiderFirstNativePipReadTimeoutExit2PreservedAndOwnVenvRecoveryExit0Verified": true,
+  "gooseFirstPowershellVerifierControllerPid": 21452,
+  "gooseFirstVerifierBirthUtc": "2026-11-12T07:08:00.1956240Z",
+  "gooseFirstVerifierExitOrAuthenticodeNotProved": true,
+  "gooseFirstVerifierSource": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\goose\\verify-native.ps1",
+  "gooseFirstVerifierControllerMustNotBeRestartedOrStoppedByObservationTimeout": true,
+  "allCreatedInstallationOrVerificationProcessesCleanedUp": false,
+  "parentMustIntegrateSharedPathAliasesIfDesired": true,
+  "sourceRecords": [
+    {
+      "path": "aider/final-aider-installed-safe.json",
+      "sha256": "fc26ee7b930b215fcecaf9d1981f7ad1704910e41bcb8d35902c921178d0c9f1",
+      "bytes": 2853
+    },
+    {
+      "path": "goose/final-installation-safe.json",
+      "sha256": "d533ecfdf06e84aa0ce7704122438bee65fdfdb749d2bb4d84368d7068a83376",
+      "bytes": 5269
+    }
+  ]
+}

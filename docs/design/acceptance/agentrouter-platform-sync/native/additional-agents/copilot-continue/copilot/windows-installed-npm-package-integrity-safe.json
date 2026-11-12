@@ -1,0 +1,21 @@
+{
+  "packageLockSha256": "f685647c7c5491948af465996d7a0647fa2f0c65ee68cfea60359bcc7cd83f98",
+  "installedGithubPackages": [
+    {
+      "name": "@github/copilot",
+      "version": "1.0.109",
+      "resolvedUrl": "https://registry.npmjs.org/@github/copilot/-/copilot-1.0.109.tgz",
+      "integrity": "sha512-wvQlzpdtCk8ujg3SRdAZ/0iKXbfIknlkTREmgvtiqP1PtFtsoMHAhgNwNtoSPY7FKYg6TWRfzu6vg6ElyThmZA==",
+      "actualInstalledDirectoryExists": true
+    },
+    {
+      "name": "@github/copilot-win32-x64",
+      "version": "1.0.109",
+      "resolvedUrl": "https://registry.npmjs.org/@github/copilot-win32-x64/-/copilot-win32-x64-1.0.109.tgz",
+      "integrity": "sha512-NFErPWrWc7ky/PxYb+X/2oJXJ6amJBSHm6BMYhMDsm8MnWdxzrCcdlK55wL7+dyJh7eRB5pVt4dDb/f1mkbDbw==",
+      "actualInstalledDirectoryExists": true
+    }
+  ],
+  "wholePayloadIntegrityIndependentlyRehashed": false,
+  "npmPerformedRegistryIntegrityVerification": true
+}

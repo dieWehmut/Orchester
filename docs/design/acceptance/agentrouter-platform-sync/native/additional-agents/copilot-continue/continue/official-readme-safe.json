@@ -1,0 +1,16 @@
+{
+  "url": "https://raw.githubusercontent.com/continuedev/continue/main/extensions/cli/README.md",
+  "observedAtUtc": "2026-11-12T07:04:53.461755+00:00",
+  "httpStatus": 200,
+  "responseBytes": 3262,
+  "responseSha256": "72b3c3309b8718a78577bbce9c6d1fc4d09622059b7785bf6156283dc88eefb4",
+  "selectedInstallationLines": [
+    "## Installation",
+    "**macOS / Linux:**",
+    "curl -fsSL https://raw.githubusercontent.com/continuedev/continue/main/extensions/cli/scripts/install.sh | bash",
+    "**Windows (PowerShell):**",
+    "irm https://raw.githubusercontent.com/continuedev/continue/main/extensions/cli/scripts/install.ps1 | iex",
+    "Or install with npm if you have Node.js 20+:",
+    "npm i -g @continuedev/cli"
+  ]
+}

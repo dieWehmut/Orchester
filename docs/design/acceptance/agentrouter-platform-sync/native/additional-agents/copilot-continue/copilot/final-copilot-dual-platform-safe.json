@@ -1,0 +1,75 @@
+{
+  "format": "orchester-additional-copilot-dual-platform-installed-v1",
+  "status": "installed-both-platforms-native-version-and-windows-prerequisite-verified",
+  "observedAtUtc": "2026-11-12T08:45:41.021187+00:00",
+  "tool": "GitHub Copilot CLI",
+  "package": "@github/copilot",
+  "version": "1.0.109",
+  "officialRepository": "https://github.com/github/copilot-cli",
+  "officialRegistryUrl": "https://registry.npmjs.org/@github%2Fcopilot/latest",
+  "sourceSupport": [
+    "Windows",
+    "Linux",
+    "macOS"
+  ],
+  "sourceSupportedPlatformEvidence": "source-transport-safe.json official-readme currentHTTP200, raw official source retained privately",
+  "platforms": {
+    "wsl": {
+      "npmInstallActualExitCode": 0,
+      "actualVersionCommandExitCode": 0,
+      "originalNodeCreatorStepsTerminal": true,
+      "entry": "/home/han/.local/share/orchester-agents/copilot/node_modules/.bin/copilot",
+      "scopedLauncher": "/home/han/.local/share/orchester-agents/copilot/bin/copilot",
+      "scopedLauncherResolvesToPassedInstalledEntry": true,
+      "nativeExecutable": "/home/han/.local/share/orchester-agents/copilot/node_modules/@github/copilot-linux-x64/copilot",
+      "nativeExecutableSha256": "298e2bcb58dea462a2bedf2bd34a6d1ff2df59e825e1e289707b8eaadfc0be48",
+      "nativeExecutableBytes": 213257024,
+      "nativeFormat": "ELF"
+    },
+    "windows": {
+      "npmInstallActualExitCode": 0,
+      "nativeLoaderVersionCommandActualExitCode": 0,
+      "nativeCoreVersionCommandActualExitCode": 0,
+      "actualCmdShimVersionCommandActualExitCode": 0,
+      "originalManagedCreatorStepsTerminal": true,
+      "entry": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\copilot\\node_modules\\.bin\\copilot.cmd",
+      "nativeExecutable": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\copilot\\node_modules\\@github\\copilot-win32-x64\\copilot.exe",
+      "nativeExecutableSha256": "83967cd5f12ac86df19b816e6595d997bc4479fa56f1822a4f776894affa2d0a",
+      "nativeExecutableBytes": 191658784,
+      "nativeExecutableSignatureStatus": "Valid",
+      "scopedLauncher": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\copilot\\bin\\copilot.cmd",
+      "scopedLauncherVersionCommandActualExitCode": 0,
+      "powershellPrerequisite": {
+        "version": "7.7.0",
+        "nativePwshPath": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\copilot\\prerequisites\\powershell7\\pwsh.exe",
+        "actualVersionCommandExitCode": 0,
+        "signatureStatus": "Valid",
+        "signer": "Microsoft Corporation",
+        "officialRelease": "https://github.com/PowerShell/PowerShell/releases/tag/v7.7.0",
+        "downloadedZipSha256": "7c74e03b20a75b59715847439d046a6214b1863ee79b187872980f139bb4a05f",
+        "toolScopedInstallationOnly": true
+      }
+    }
+  },
+  "installationCount": 2,
+  "additionalPowerShellPrerequisiteCount": 1,
+  "configuredUserOrSystemPathModified": false,
+  "globalNpmPrefixModified": false,
+  "existingUserInstallationsOverwritten": false,
+  "modelOrLoginCommandsInvoked": 0,
+  "modelOrSubscriptionAvailabilityClaimed": false,
+  "helpCommandsExecutedForCopilot": false,
+  "rawLogsInstallersZipTokensAndProfilesIncludedInPublicArchive": false,
+  "failuresPreserved": [
+    "initial-native-prerequisite-validator-failed-safe.json",
+    "initial-scoped-launcher-observer-failed-safe.json"
+  ],
+  "privateInstallLogsOnlyHashAndSizeInReceipts": true,
+  "windowsNodeVersionObserved": "v24.21.0",
+  "wslNodeVersionObserved": "v24.21.0",
+  "sourceIntegrityEvidence": [
+    "official-current-npm-package-safe.json",
+    "wsl-installed-npm-package-integrity-safe.json",
+    "windows-installed-npm-package-integrity-safe.json"
+  ]
+}

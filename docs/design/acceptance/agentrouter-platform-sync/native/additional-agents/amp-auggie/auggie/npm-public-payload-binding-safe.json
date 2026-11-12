@@ -1,0 +1,17 @@
+{
+  "status": "official-npm-cache-tarball-integrity-and-installed-wsl-windows-entry-byte-exact",
+  "observedAtUtc": "2026-11-12T07:25:41.965467+00:00",
+  "url": "https://registry.npmjs.org/@augmentcode/auggie/-/auggie-0.37.1.tgz",
+  "tarballReadFromThisTasksIsolatedNpmCache": true,
+  "extraDirectTarballHttpAttemptFailedBeforeResponse": true,
+  "extraDirectTarballErrorType": "SSLEOFError",
+  "tarballBytes": 4152934,
+  "tarballSha256": "f5bd2a0bcd517b86c3eab012ddffe8afd298c5b51c6172ac8e5059e152662a0f",
+  "npmSha512IntegrityVerified": true,
+  "npmIntegrity": "sha512-TFnkuFUFR5U2xWXbsol8sbO9w0im9nyH+cI6AzJmSAjvkcAiTeLxAf4SX8TcwWq4S6HdhmgOdYfAHKXeF/DjnQ==",
+  "packageJsonSha256": "a7397d92994236a3e6c4cb7f1f98b05b8066c4a3d4500766ee44c74ff01f4f65",
+  "entrySha256": "7d809fef34f9cb0eae57559ced737e225ec74a390cf325ea453871d847d716c9",
+  "wslAndWindowsInstalledPublicEntryAndPackageJsonByteExact": true,
+  "tarballExtractedToUserFilesystem": false,
+  "windowsAndWslPackageLockIntegrityEqualsOfficialDist": true
+}

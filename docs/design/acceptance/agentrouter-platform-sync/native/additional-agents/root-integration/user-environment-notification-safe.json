@@ -1,0 +1,15 @@
+﻿{
+    "schemaVersion":  1,
+    "status":  "user-environment-change-notification-requested",
+    "observedAtUtc":  "2026-11-12T09:15:25.8482193Z",
+    "message":  "WM_SETTINGCHANGE",
+    "payload":  "Environment",
+    "broadcastReturnNonzero":  true,
+    "win32ErrorObserved":  203,
+    "userPathContainsKnownCommandDirectory":  true,
+    "userPathContentsPublished":  false,
+    "systemPathChanged":  false,
+    "oldTerminalEnvironmentRefreshClaimed":  false,
+    "officialDocumentation":  "https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-settingchange",
+    "officialDocumentationFetchActualStatus":  200
+}

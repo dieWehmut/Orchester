@@ -1,0 +1,12 @@
+{
+    "processes":  [
+
+                  ],
+    "observedAtUtc":  "2026-11-12T08:47:29.6539254Z",
+    "signals":  0,
+    "processCount":  0,
+    "resultExists":  false,
+    "status":  "exact-script-current-native-read-only-process-observation",
+    "originalCreatorHandleOrExitCodeClaimed":  false,
+    "scriptName":  "verify-installed-native-windows.ps1"
+}

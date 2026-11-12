@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "status": "selected-public-safe-continue-installation-receipts",
+  "observedAtUtc": "2026-11-12T07:16:14.744783+00:00",
+  "files": [
+    {
+      "path": "official-source-requests-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/official-source-requests-safe.json",
+      "sha256": "468e4fd680b1f7a2f720a91f656bbc930da3a6b84d189907eb9764afb1ab4087",
+      "bytes": 3775,
+      "byteExact": true
+    },
+    {
+      "path": "npm-metadata-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/npm-metadata-safe.json",
+      "sha256": "06392643f6e12e792a4f94d8fb22b8f4b68039f9cadbd26bc785cb89acffa4af",
+      "bytes": 3043,
+      "byteExact": true
+    },
+    {
+      "path": "official-readme-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/official-readme-safe.json",
+      "sha256": "597876f185112cbe30fc65589dbfbaf3f892cc03c7a1e6e9ed8fea07ae048e93",
+      "bytes": 724,
+      "byteExact": true
+    },
+    {
+      "path": "wsl-install-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/wsl-install-safe.json",
+      "sha256": "878560f8b4eb2839840c16c4d033a0759bbc4c43b0136f15938f580354f24a54",
+      "bytes": 758,
+      "byteExact": true
+    },
+    {
+      "path": "windows-install-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/windows-install-safe.json",
+      "sha256": "fe13b2f32266f234192ce0e11042a1fd8b178416f62e85f021331825db37151c",
+      "bytes": 1291,
+      "byteExact": true
+    },
+    {
+      "path": "windows-corrected-verification-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/windows-corrected-verification-safe.json",
+      "sha256": "df2aff47af9b35e81b47caa71283aeed44fd7746e44f0c21421f4a2797913f03",
+      "bytes": 2750,
+      "byteExact": true
+    },
+    {
+      "path": "final-continue-dual-platform-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/final-continue-dual-platform-safe.json",
+      "sha256": "e5d78702e0d91a4d04f6b7260ac195f2ae009ce750df175e6862b3525d5a5854",
+      "bytes": 6670,
+      "byteExact": true
+    },
+    {
+      "path": "wsl-attempt2/wsl-install-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/continue/wsl-attempt2/wsl-install-safe.json",
+      "sha256": "4b813c802820575292e056073d2d9a3c2eda770b967631ee5ebe58c537fdada4",
+      "bytes": 1871,
+      "byteExact": true
+    }
+  ],
+  "privateLogsCredentialsProfilesNodeModulesAndPayloadsArchived": false
+}

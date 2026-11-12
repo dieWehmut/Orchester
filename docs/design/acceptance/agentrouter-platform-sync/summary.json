@@ -334,6 +334,18 @@
     {
       "scope": "CurrentWindowsSameSIDSession1 WTSActive1candidate/InputDesktopDefaulttrue/cursorfalseError5; fresh offlinebackup5existingroots/677files exact/privateACL/nooriginaltrayexitclaim",
       "proof": "native/windows/interactive-post-reboot-20261112/offline-final21-post-reboot-backup-safe.json"
+    },
+    {
+      "scope": "SixadditionalCLIproducts installednativeWindows+WSL; twelve registeredcommandversiongatesactual0; no login/modelcommands",
+      "proof": "native/additional-agents/root-integration/command-entry-matrix-safe.json"
+    },
+    {
+      "scope": "Independent consistency review54historicalpublicJSON and53hashreferenceassertions; native/sourcebyte/rootregistration excluded",
+      "proof": "native/additional-agents/independent-review-safe.json"
+    },
+    {
+      "scope": "Sixthcheckpoint374Gitblobsexact/featurec20fa1b/mainf462fd7/push0; originalplatformfullacceptanceremainspending",
+      "proof": "maintenance/git-delivery/sixth-step-delivery-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -352,7 +364,7 @@
     "OfficialDeepSeekWindows installation/signature/HKCU/ASARrc1verified afteroriginalnumericPEverifierfailure; GUI/model/auth nottested; DataElementoriginalcurrentmetadataretained, wholeoldEXEbeforeafterhashnotproved",
     "InternationalWorkBuddy nativeWSL usablepackage/profile isolation andClaudeApp Windowspayload/LinuxofficialGUI release evidence pending",
     "Historicalunregisteredchildidentity/HANDLEclosure andwrongLinuxfullpackage rollback unproved; no new signal/claim",
-    "Phase6currentLinuxrestore/DeepSeekactualinstallation/Windowslatestbackup andcurrentreadiness checkpoint awaits commit/push/main; prior355phase5delivered"
+    "AdditionalCLI6products/12installationunits and12registeredversioncommands actual0; checkpointawaitsverifiedGitdelivery. This doesnotcompleteoriginalnative/runtime/defaultreinstall requirements."
   ],
   "folderResponsibilities": {
     "sources": "Official origins, source/provenance and current safe source audits",
@@ -369,7 +381,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-12T06:10:21.192664+00:00",
+  "updatedAt": "2026-11-12T09:17:00.791458+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -386,7 +398,7 @@
   "currentAndroidPartialNativeBuildInstallTestsVerified": true,
   "currentAndroidActualIDESyncVerified": true,
   "currentAndroidNativeUI21Providers42ImagesVerified": true,
-  "documentedPublishedMainRevision": "65ef142f79c22e031e4fc4ccf36ef81f6107ca42",
+  "documentedPublishedMainRevision": "f462fd739a9f88c7c3e5ee8ab8eafcd84f579a06",
   "productionSourceRevisionStillFrozen71": true,
   "currentCorrectionArchiveGitCommitted": false,
   "originalWindowsCredentialsDamagedOrUnrecoverableClaimed": false,
@@ -548,5 +560,25 @@
   "phase6IndependentSubagentReviewCompleted": true,
   "currentLinuxUserManagerLingerActualObservedEpoch": "20261112-post-reboot static-unit-configuration-safe.json loginctl readonlyquery0",
   "phase6IndependentSubagentReviewProof": "sources/audit/epoch6-public-claim-boundary-review-safe.json",
-  "phase6IndependentReviewRecommendationsResolvedByRoot": true
+  "phase6IndependentReviewRecommendationsResolvedByRoot": true,
+  "prior374SixthCheckpointArchiveDelivered": true,
+  "additionalInstalledDistinctProducts": 6,
+  "additionalInstalledPlatformUnits": 12,
+  "additionalRegisteredCommands": [
+    "copilot",
+    "cn",
+    "aider",
+    "goose",
+    "amp",
+    "auggie"
+  ],
+  "additionalRegisteredNativeVersionGateCount": 12,
+  "additionalRegisteredNativeVersionGatesPassed": true,
+  "additionalAgentLoginOrModelCommands": 0,
+  "additionalAuggieVendorDocumentedWindowsPlatform": "WSL; nativeWindows versioncompatibility actual0, fullvendor-supportednativeWindowsruntime notproved",
+  "additionalGooseOriginalVerifierControllerTerminalAndAuthenticodeVerified": false,
+  "additionalInstallationProof": "native/additional-agents/root-integration/command-entry-matrix-safe.json",
+  "additionalInstallationHistoricalReceiptConsistencyIndependentReview": "native/additional-agents/independent-review-safe.json",
+  "additionalInstallationHistoricalJsonReviewCount": 54,
+  "additionalInstallationReviewIndependentlyReranNativeCommands": false
 }

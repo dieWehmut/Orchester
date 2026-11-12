@@ -1,0 +1,57 @@
+[
+  {
+    "url": "https://registry.npmjs.org/@ampcode%2fcli/0.0.1794456033-gb2ff22",
+    "httpStatus": 200,
+    "metadataSha256": "d51f068cda3e451f8578250719419007591ef5a2d07fe3b2bd35cc670e0e5398",
+    "package": "@ampcode/cli",
+    "version": "0.0.1794456033-gb2ff22",
+    "bin": {
+      "amp": "bin/amp.exe"
+    },
+    "os": null,
+    "cpu": null,
+    "dist": {
+      "tarball": "https://registry.npmjs.org/@ampcode/cli/-/cli-0.0.1794456033-gb2ff22.tgz",
+      "integrity": "sha512-cO2drANXxlnMbMmt1hrOP6SB8LFPakAjfJeaE/z9e8Ur393UKP3y/t0ohkxE3c/2ZgRGHMUnwGZgW0svynm08w==",
+      "shasum": "c1bcdcb5abe6814a0904debad1b803a9eb88e77b"
+    }
+  },
+  {
+    "url": "https://registry.npmjs.org/@ampcode%2fcli-linux-x64/0.0.1794456033-gb2ff22",
+    "httpStatus": 200,
+    "metadataSha256": "92e7def49c63ce97270fa92ad17c018f60efe12b1dcfe36a68edfd8660d0313f",
+    "package": "@ampcode/cli-linux-x64",
+    "version": "0.0.1794456033-gb2ff22",
+    "bin": null,
+    "os": [
+      "linux"
+    ],
+    "cpu": [
+      "x64"
+    ],
+    "dist": {
+      "tarball": "https://registry.npmjs.org/@ampcode/cli-linux-x64/-/cli-linux-x64-0.0.1794456033-gb2ff22.tgz",
+      "integrity": "sha512-BorO4k3He0fZIuIkkQ27mjHfjQK+sZjHQTI9w8mNMw4628FDg5SL1docPR1G27xnHlle/ppJusTtmlA+TL2e1Q==",
+      "shasum": "a1c67bbc19e25bb2f9041c2f6d517acd1b01c221"
+    }
+  },
+  {
+    "url": "https://registry.npmjs.org/@ampcode%2fcli-win32-x64/0.0.1794456033-gb2ff22",
+    "httpStatus": 200,
+    "metadataSha256": "6b0ff0913db0fceb77c34b12ef87e4671290c2724b514062cbf828df38999f6f",
+    "package": "@ampcode/cli-win32-x64",
+    "version": "0.0.1794456033-gb2ff22",
+    "bin": null,
+    "os": [
+      "win32"
+    ],
+    "cpu": [
+      "x64"
+    ],
+    "dist": {
+      "tarball": "https://registry.npmjs.org/@ampcode/cli-win32-x64/-/cli-win32-x64-0.0.1794456033-gb2ff22.tgz",
+      "integrity": "sha512-ZBOU+dDxmz6lWzGk+MjnDRylbBB/IBJNTtaFrnnGVDXLwHqeqvYLKwyUpVyc+fCUg1V24gy9xQY5JTZJKWRfrQ==",
+      "shasum": "8b83f35eeef768ed135b733830321f86ed25a816"
+    }
+  }
+]

@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "status": "official-goose-cli-1.59.0-installed-and-native-version-verified-on-wsl-and-windows-first-ps-verifier-pending",
+  "observedAtUtc": "2026-11-12T07:25:04.021372+00:00",
+  "officialReleaseTag": "v1.59.0",
+  "officialReleaseURL": "https://github.com/aaif-goose/goose/releases/tag/v1.59.0",
+  "requestedLegacyOfficialAPI": "https://api.github.com/repos/block/goose/releases/latest",
+  "currentRepositoryMovedTo": "aaif-goose/goose",
+  "officialInstallDocURL": "https://raw.githubusercontent.com/block/goose/main/documentation/docs/getting-started/installation.md",
+  "wsl": {
+    "schemaVersion": 1,
+    "status": "version-command-passed",
+    "host": "WSL Linux native",
+    "installedPrefix": "/home/han/.local/share/orchester-agents/goose",
+    "entry": "/home/han/.local/share/orchester-agents/goose/bin/goose",
+    "entryBytes": 208612352,
+    "entrySha256": "4ee4e39acff02e725e6959a71b5f4d91da9e8c0bd7b95bc2dce4a753abbecede",
+    "observedAt": "2026-11-12T07:08:02.812889+00:00",
+    "actualNativeProcessPid": 1504254,
+    "actualExitCode": 0,
+    "originalPopenHandleHeldUntilExit": true,
+    "argv": [
+      "--version"
+    ],
+    "stdoutPublicVersion": "1.59.0",
+    "stderrBytes": 0,
+    "modelsOrLoginsInvoked": 0,
+    "globalPATHOrOriginalConfigurationModified": false,
+    "officialAsset": "goose-x86_64-unknown-linux-gnu.tar.gz",
+    "officialReleaseTag": "v1.59.0"
+  },
+  "windows": {
+    "schemaVersion": 1,
+    "status": "independent-native-windows-version-command-passed",
+    "host": "Windows native",
+    "entry": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\goose\\bin\\goose.exe",
+    "entryBytes": 172380160,
+    "entrySha256": "5a424ab992d75aaefdc54ccf27719f62c3995e6d9b283d1cca016ec4d4b055ef",
+    "pythonImage": "C:\\Users\\han\\AppData\\Roaming\\uv\\python\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+    "pythonImageSha256": "204d51f19707da17766bccecce2ceececadab350663a8190420d1377bac1150d",
+    "pid": 17404,
+    "creationFiletime": 134389417528729593,
+    "actualExitCode": 0,
+    "stdoutPublicVersion": "1.59.0",
+    "stderrBytes": 0,
+    "originalPopenCreatorHandleRetainedUntilExit": true,
+    "independentReadOnlyCheckPreviousPowershellControllerNotRestartedOrStopped": true,
+    "authenticodeQueriedByThisCheck": false,
+    "argv": [
+      "--version"
+    ],
+    "modelsOrLoginsInvoked": 0,
+    "globalPATHOrOriginalConfigurationModified": false,
+    "observedAtUnixNs": 1794468153021702700,
+    "officialReleaseTag": "v1.59.0"
+  },
+  "bothInstalledEntriesExactlyEqualOfficialArchiveMembers": true,
+  "bothArchiveDigestsExactlyEqualOfficialGitHubReleaseDigests": true,
+  "WindowsCliIsNativePEAndNotWslCommandWrapper": true,
+  "originalUserInstallationOrGlobalPATHOrConfigurationFilesModified": false,
+  "modelsAndAuthenticationCommands": 0,
+  "firstWindowsPowershellVerifier": {
+    "currentControllerObservation": {
+      "observedAtUtc": "2026-11-12T07:24:59.5084299Z",
+      "currentGooseExactImageProcesses": [],
+      "processSignals": 0,
+      "status": "read-only-own-script-controller-observation",
+      "creatorHandlesAdopted": false,
+      "inlineObserverFailureChangedInstallationOrController": false,
+      "controllers": [
+        {
+          "userTime": "10468750",
+          "matchesOwnKnownScript": true,
+          "pid": 21452,
+          "kernelTime": "7968750",
+          "createdUtc": "2026-11-12T07:08:00.1956240Z"
+        }
+      ],
+      "initialInlineCqlQuotingObserverExitCode": 1
+    },
+    "nativeControllerSource": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\goose\\verify-native.ps1",
+    "sourceSha256": "e573ec8c6541313555c0160675758174bf3fb9e576333b289ce9851f89be7654",
+    "originalExecutionTerminalProved": false,
+    "originalExecutionExitCodeClaimed": false,
+    "unifiedExecSessionIdForOwningAgentOnly": 76488,
+    "originalNativeGooseVersionExitCodeClaimed": false,
+    "currentExactGooseChildProcessCount": 0,
+    "sourceStageAfterVersionWait": "ReadToEndAsync/GetAwaiter completion then Get-AuthenticodeSignature; actual blocked call not instrumented and not claimed",
+    "originalControllerNotKilledStoppedOrRestarted": true
+  },
+  "signerAuthenticodeVerified": false,
+  "allInstallerOrVerificationProcessesCleanedUp": false,
+  "sources": [
+    {
+      "path": "official-current-release-safe.json",
+      "bytes": 1292,
+      "sha256": "f58730c281e180e92848e66cf21bf54bc7d3da715e1b7c4c5bfee960412892c4"
+    },
+    {
+      "path": "official-installation-doc-safe.json",
+      "bytes": 557,
+      "sha256": "02edde738903beb0f592beb41ce30062a9a8a6d872f090f71f62655604309767"
+    },
+    {
+      "path": "download-binding-safe.json",
+      "bytes": 667,
+      "sha256": "0a3dba952a6049e30f17ee312277716cba9a4b760eaf2d79dbe2aee0829f555f"
+    },
+    {
+      "path": "linux-installation-safe.json",
+      "bytes": 768,
+      "sha256": "ddeb8ff1c843bf7df7591307ee3a40d347189fd72d4990e81e1ea5d64276764c"
+    },
+    {
+      "path": "windows-python-version-safe.json",
+      "bytes": 1058,
+      "sha256": "2f694726630dc159ba5c2ac1e966354fd389de8461506ae13f7e419aa6b1c5e6"
+    },
+    {
+      "path": "windows-controller-current-safe.json",
+      "bytes": 787,
+      "sha256": "db53702e38f7aebeff133cd3f54ffc5154e76c430cf667af523a0836d30ebc26"
+    }
+  ]
+}

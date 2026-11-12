@@ -1,0 +1,20 @@
+[
+  {
+    "name": "official-readme",
+    "requestedUrl": "https://raw.githubusercontent.com/github/copilot-cli/main/README.md",
+    "finalUrl": "https://raw.githubusercontent.com/github/copilot-cli/main/README.md",
+    "httpStatus": 200,
+    "sha256": "8b1a33b43bd12dcc8262c620341cf9113ee75928dcbc90b1197d37b7e70de284",
+    "bytes": 8633,
+    "localPublicSource": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/official-readme.md"
+  },
+  {
+    "name": "npm-current-metadata",
+    "requestedUrl": "https://registry.npmjs.org/@github%2Fcopilot/latest",
+    "finalUrl": "https://registry.npmjs.org/@github%2Fcopilot/latest",
+    "httpStatus": 200,
+    "sha256": "a7da526fe0462c98dc3e4d32cea92fd702d2054e5b08b5a6a1f30baf8a0615d1",
+    "bytes": 3737,
+    "localPublicSource": "/home/han/.local/state/orchester-delivery/20261112/additional-agents/copilot-continue/copilot/npm-current-metadata.json"
+  }
+]

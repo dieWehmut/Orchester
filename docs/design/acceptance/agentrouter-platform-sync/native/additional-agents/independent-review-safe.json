@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "status": "public-historical-receipts-consistent-with-explicit-runtime-and-controller-limitations",
+  "reviewedAtUtc": "2026-11-12T09:12:59.220290+00:00",
+  "reviewer": "independent-additional-install-review-agent",
+  "scope": {
+    "publicDirectories": [
+      "aider-goose",
+      "copilot-continue",
+      "amp-auggie"
+    ],
+    "publicJsonFileCount": 54,
+    "groupJsonCounts": {
+      "aider-goose": 14,
+      "copilot-continue": 26,
+      "amp-auggie": 14
+    },
+    "method": "Parse every public JSON; recompute local JSON reference SHA256/size; compare aggregate product/version/path/exit evidence and five embedded Goose/Continue source objects. Review public historical receipt consistency only.",
+    "independentActualInstallerOrCliReexecution": false,
+    "externalInstalledPayloadOrPrivateSourceContentsRead": false,
+    "networkOrCurrentVendorDocumentationRevalidation": false,
+    "currentManifestReviewed": false,
+    "rootCommonCommandRegistrationReviewed": false
+  },
+  "snapshot": {
+    "digestFormat": "SHA256 of UTF-8 lexicographically sorted relative-path TAB byte-size TAB sha256 LF records for the 54 reviewed JSON files; excludes this review and root integration.",
+    "sha256": "4cef0c56bb3aea86eee255c8cfd3fd79701254796570b73e1c88df9353156420",
+    "aggregates": [
+      {
+        "path": "aider-goose/final-four-installations-safe.json",
+        "bytes": 1935,
+        "sha256": "a8dbb26f0296b517205cb19437527e46a940eb82264fe0f9f09bc84553a08ae6"
+      },
+      {
+        "path": "copilot-continue/final-additional-agent-installations-safe.json",
+        "bytes": 1949,
+        "sha256": "3d240f8296aa90a4b14ce1e44eecf1c46ed8914e8bfd468cfb9c5260b81e8495"
+      },
+      {
+        "path": "amp-auggie/final-safe.json",
+        "bytes": 3832,
+        "sha256": "97f6ac7c4f06435fbd2c868d900498eafab66262b2276def9e732a9b11ef9815"
+      }
+    ]
+  },
+  "referenceChecks": {
+    "localHashedJsonReferenceAssertions": 53,
+    "uniqueReferencedPublicJsonFiles": 47,
+    "hashOrSizeMismatches": 0,
+    "missingHashedJsonTargets": 0,
+    "exactEmbeddedSourceObjectChecksPassed": 5,
+    "copilotContinueSelectedSourceChecks": 23,
+    "privateSourceAndArchiveByteEqualityIndependentlyVerified": false,
+    "remoteSourceBodyHashesAndInstalledPayloadHashesIndependentlyRecomputed": false
+  },
+  "counting": {
+    "distinctAdditionalProducts": 6,
+    "historicalNativePlatformInstallationUnits": 12,
+    "PowerShellPrerequisiteAdditionalProductCount": 0,
+    "sourcegraphAmpAliasAdditionalProductCount": 0,
+    "entireHostPriorProductAbsenceVerified": false
+  },
+  "products": [
+    {
+      "product": "Aider",
+      "packageOrRelease": "aider-chat",
+      "version": "0.86.2",
+      "nativeWindowsVersionActualExitCodeInReceipt": 0,
+      "wslVersionActualExitCodeInReceipt": 0,
+      "windowsEvidence": "aider-goose/aider/windows-installed-recovery-safe.json",
+      "wslEvidence": "aider-goose/aider/wsl-installed-safe.json",
+      "vendorPlatformSupportAsRecorded": "documented-native-Windows-installation"
+    },
+    {
+      "product": "Goose",
+      "packageOrRelease": "Goose CLI release",
+      "version": "1.59.0",
+      "nativeWindowsVersionActualExitCodeInReceipt": 0,
+      "wslVersionActualExitCodeInReceipt": 0,
+      "windowsEvidence": "aider-goose/goose/windows-python-version-safe.json",
+      "wslEvidence": "aider-goose/goose/linux-installation-safe.json",
+      "vendorPlatformSupportAsRecorded": "documented-native-Windows-CLI"
+    },
+    {
+      "product": "GitHub Copilot CLI",
+      "packageOrRelease": "@github/copilot",
+      "version": "1.0.109",
+      "nativeWindowsVersionActualExitCodeInReceipt": 0,
+      "wslVersionActualExitCodeInReceipt": 0,
+      "windowsEvidence": "copilot-continue/copilot/native-entries-and-pwsh-safe.json",
+      "wslEvidence": "copilot-continue/copilot/wsl-install-safe.json",
+      "vendorPlatformSupportAsRecorded": "documented-Windows-platform-with-PowerShell-prerequisite"
+    },
+    {
+      "product": "Continue CLI",
+      "packageOrRelease": "@continuedev/cli",
+      "version": "1.5.47",
+      "nativeWindowsVersionActualExitCodeInReceipt": 0,
+      "wslVersionActualExitCodeInReceipt": 0,
+      "windowsEvidence": "copilot-continue/continue/windows-corrected-verification-safe.json",
+      "wslEvidence": "copilot-continue/continue/wsl-attempt2/wsl-install-safe.json",
+      "vendorPlatformSupportAsRecorded": "documented-native-Windows-installation"
+    },
+    {
+      "product": "Amp",
+      "packageOrRelease": "@ampcode/cli",
+      "version": "0.0.1794456033-gb2ff22",
+      "nativeWindowsVersionActualExitCodeInReceipt": 0,
+      "wslVersionActualExitCodeInReceipt": 0,
+      "windowsEvidence": "amp-auggie/amp/windows-install-safe.json",
+      "wslEvidence": "amp-auggie/amp/wsl-install-safe.json",
+      "vendorPlatformSupportAsRecorded": "official-native-Windows-platform-payload"
+    },
+    {
+      "product": "Auggie",
+      "packageOrRelease": "@augmentcode/auggie",
+      "version": "0.37.1",
+      "nativeWindowsVersionActualExitCodeInReceipt": 0,
+      "wslVersionActualExitCodeInReceipt": 0,
+      "windowsEvidence": "amp-auggie/auggie/windows-install-safe.json",
+      "wslEvidence": "amp-auggie/auggie/wsl-install-safe.json",
+      "vendorPlatformSupportAsRecorded": "native-Windows-version-compatibility-only-vendor-documents-Windows-WSL"
+    }
+  ],
+  "boundaries": [
+    {
+      "id": "auggie-native-compatibility",
+      "evidence": "amp-auggie/auggie/final-safe.json",
+      "conclusion": "Windows native Node/package version exit 0 is compatibility evidence. Current archived vendor observations document Windows WSL; native Windows full runtime support is explicitly unverified."
+    },
+    {
+      "id": "goose-original-controller-unresolved",
+      "evidence": "aider-goose/goose/windows-controller-current-safe.json",
+      "conclusion": "The 2026-11-12T07:24:59.5084299Z snapshot records own PowerShell controller PID 21452, birth 2026-11-12T07:08:00.1956240Z, without creator-handle adoption. Original controller terminal state/exit, original version exit and Authenticode remain unproved. Separate native Windows version receipt actual 0 is valid historical evidence; all-process cleanup is false. This review does not assert controller current state."
+    },
+    {
+      "id": "failures-retained",
+      "conclusion": "Aider first Windows pip actual 2 and ReadTimeout diagnosis precede same-own-venv recovery actual 0. Continue first WSL npm actual 1 and Windows npm actual 0 with failed metadata verifier precede corrected checks; Windows correction did not reinstall. Copilot initial prerequisite availability and scoped-launcher outer parse failures actual 1 remain preserved and are not npm installation failures."
+    },
+    {
+      "id": "amp-correction-not-native-rerun",
+      "evidence": "amp-auggie/amp/windows-corrected-verification-safe.json",
+      "conclusion": "Original managed Windows npm install and native PE version actual 0 are preserved alongside outer post-verifier actual 1/PSArgumentException. Two later WSL interop observations actual 1/accept4 failed110 and absent result do not prove native execution, native exit, or cleanup. Recorded vendor checksum and SRI binding are internally consistent but were not independently recomputed here."
+    },
+    {
+      "id": "receipt-metadata-caveats",
+      "conclusion": "Copilot original npm steps retain observedLiveNow=true beside terminal/actualExitCode=0; this is not evidence of a currently live process. Amp original Windows observedAtUtc precedes its native-version createdUtc; do not use that field as completedAtUtc. Neither caveat contradicts the recorded native version exit 0."
+    },
+    {
+      "id": "safety-and-runtime-scope",
+      "conclusion": "Recorded installer-scope PATH/global-prefix and intentional credential/profile mutations remain false/zero; root later command registration is excluded. No model/authentication/subscription or full runtime acceptance is proved. Auggie lacks a before-profile snapshot and independently audited optional-dependency internal caches, so only declared direct task mutations are supported, not whole-profile byte equality or exhaustive side-effect confinement."
+    }
+  ],
+  "unsupportedBroadClaims": [
+    "Six fully vendor-supported native Windows agent runtimes",
+    "All created installer/verifier controllers exited and were cleaned up",
+    "Models, login, paid subscription and authenticated agent sessions are usable",
+    "All installed payloads, remote source bodies and native CLI execution independently reverified by this reviewer",
+    "Original private profile byte equality or every dependency cache side effect proved"
+  ],
+  "reviewMutations": [
+    "native/additional-agents/independent-review-safe.json",
+    "native/additional-agents/review-sources-safe.json"
+  ],
+  "privateRawLogsTokensProfilesOrPayloadsIncluded": false
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "status": "both-native-platform-payloads-independent-sri-and-vendor-checksum-verified",
+  "observedAtUtc": "2026-11-12T08:51:54.333416+00:00",
+  "platforms": [
+    {
+      "platform": "WSL-linux-x64",
+      "package": "@ampcode/cli-linux-x64",
+      "pinnedVersion": "0.0.1794456033-gb2ff22",
+      "npmPackageIntegrity": "sha512-BorO4k3He0fZIuIkkQ27mjHfjQK+sZjHQTI9w8mNMw4628FDg5SL1docPR1G27xnHlle/ppJusTtmlA+TL2e1Q==",
+      "cachedTarballSRIIndependentVerified": true,
+      "installedNativePayloadByteExactToOfficialNpmTarball": true,
+      "nativePayloadSha256": "8e7d7f19cb2321bba7821fe8d1869cbd071be403dffdb47875dfc23dd0487db2",
+      "nativePayloadBytes": 155723952,
+      "officialFrozenChecksumUrl": "https://static.ampcode.com/cli/0.0.1794456033-gb2ff22/linux-x64-amp.sha256",
+      "officialFrozenChecksumHttpStatus": 200,
+      "officialFrozenChecksumMatchesInstalledPayload": true
+    },
+    {
+      "platform": "native-Windows-x64",
+      "package": "@ampcode/cli-win32-x64",
+      "pinnedVersion": "0.0.1794456033-gb2ff22",
+      "npmPackageIntegrity": "sha512-ZBOU+dDxmz6lWzGk+MjnDRylbBB/IBJNTtaFrnnGVDXLwHqeqvYLKwyUpVyc+fCUg1V24gy9xQY5JTZJKWRfrQ==",
+      "cachedTarballSRIIndependentVerified": true,
+      "installedNativePayloadByteExactToOfficialNpmTarball": true,
+      "nativePayloadSha256": "3d043572234a6fe1f40a9ffa5179c757c26c547a6e7eb849aa02ae5bd20b12eb",
+      "nativePayloadBytes": 131411792,
+      "officialFrozenChecksumUrl": "https://static.ampcode.com/cli/0.0.1794456033-gb2ff22/windows-x64-amp.sha256",
+      "officialFrozenChecksumHttpStatus": 200,
+      "officialFrozenChecksumMatchesInstalledPayload": true
+    }
+  ],
+  "privateRawLogsContentsArchived": false,
+  "modelsInvoked": 0,
+  "loginInvoked": false,
+  "processSignals": 0
+}

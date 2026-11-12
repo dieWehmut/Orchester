@@ -1,0 +1,86 @@
+{
+  "status": "current-official-channel-observations",
+  "observations": [
+    {
+      "url": "https://docs.augmentcode.com/cli/setup-auggie/install-auggie-cli",
+      "observedAtUtc": "2026-11-12T07:07:08.708862+00:00",
+      "httpStatus": 200,
+      "finalUrl": "https://docs.augmentcode.com/cli/setup-auggie/install-auggie-cli",
+      "bytes": 181234,
+      "sha256": "8ee5b549ebc477f8d2f5d78fb91c8d7313d5b81b3092f66122c4e27d46eb607a",
+      "windowsMentionPresent": true,
+      "packageNameMentionPresent": true,
+      "linuxMentionPresent": true,
+      "documentedPlatforms": [
+        "MacOS",
+        "Windows WSL",
+        "Linux"
+      ],
+      "documentedPackage": "@augmentcode/auggie",
+      "nodeRequirement": "20+",
+      "vendorNativeWindowsSupportConfirmed": false
+    },
+    {
+      "url": "https://docs.augmentcode.com/llms.txt",
+      "observedAtUtc": "2026-11-12T07:07:08.709215+00:00",
+      "httpStatus": 200,
+      "finalUrl": "https://docs.augmentcode.com/llms.txt",
+      "bytes": 86243,
+      "sha256": "fec365ee8bcbd71a77029976776add503170e471a2a9669da559ccdecbe4f09a",
+      "windowsMentionPresent": true,
+      "packageNameMentionPresent": false,
+      "linuxMentionPresent": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/augmentcode/auggie/main/README.md",
+      "observedAtUtc": "2026-11-12T07:07:08.709516+00:00",
+      "httpStatus": 200,
+      "finalUrl": "https://raw.githubusercontent.com/augmentcode/auggie/main/README.md",
+      "bytes": 2960,
+      "sha256": "d0405b01143a23fc107d2691519b88c155344a3774f5c6a36bf362a65467f60b",
+      "windowsMentionPresent": false,
+      "packageNameMentionPresent": true,
+      "linuxMentionPresent": false
+    },
+    {
+      "url": "https://registry.npmjs.org/@augmentcode%2fauggie/0.37.1",
+      "observedAtUtc": "2026-11-12T07:07:08.709768+00:00",
+      "httpStatus": 200,
+      "finalUrl": "https://registry.npmjs.org/@augmentcode%2fauggie/0.37.1",
+      "bytes": 2288,
+      "sha256": "7d431731b851e65b686588df1301f459c99b626f7cccd10bdf7f5a6158a8fb34",
+      "packageMetadata": {
+        "name": "@augmentcode/auggie",
+        "version": "0.37.1",
+        "bin": {
+          "auggie": "augment.mjs"
+        },
+        "engines": {
+          "node": ">=20.0.0"
+        },
+        "homepage": "https://augmentcode.com",
+        "os": null,
+        "cpu": null
+      },
+      "dist": {
+        "shasum": "999880f0ca6192f62d3f5789ed6cacbd18d21340",
+        "tarball": "https://registry.npmjs.org/@augmentcode/auggie/-/auggie-0.37.1.tgz",
+        "fileCount": 4,
+        "integrity": "sha512-TFnkuFUFR5U2xWXbsol8sbO9w0im9nyH+cI6AzJmSAjvkcAiTeLxAf4SX8TcwWq4S6HdhmgOdYfAHKXeF/DjnQ==",
+        "signatures": [
+          {
+            "sig": "MEYCIQCS98rMyXyKIvXOg1x0jAJ0kodJezhCDVr5vA7lF3lc0wIhANxelSySeT3so/hel8CrAcYhbvQuklBqlFDXm5qYH/+8",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          },
+          {
+            "sig": "MEUCIQDuJ/yYeFBCPavHzcParQCu+sWk1puSJeQgQt1zGz3YSAIgXi6W5x1qPs2qtkAm9XWZJdNt1PB1VthpWwjCSzKlOEs=",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          }
+        ],
+        "unpackedSize": 13449965
+      }
+    }
+  ],
+  "context7TransportFailed": true,
+  "webSearchBackendReturned404": true
+}

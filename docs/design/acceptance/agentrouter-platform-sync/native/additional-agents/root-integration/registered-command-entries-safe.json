@@ -1,0 +1,60 @@
+{
+    "userPathAddedKnownDirectory":  true,
+    "observedAtUtc":  "2026-11-12T09:02:22.8425859Z",
+    "userPathContentsPublished":  false,
+    "commands":  [
+                     {
+                         "wrapper":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\copilot.cmd",
+                         "wrapperMatchesThisKnownTarget":  true,
+                         "registrationState":  "new-user-command-wrapper-created",
+                         "command":  "copilot",
+                         "sha256":  "077a1345d308d4a0efd336c0a3f79e0d9554756a63e74a604d82a83d6d6e12de",
+                         "target":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\copilot\\bin\\copilot.cmd"
+                     },
+                     {
+                         "wrapper":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\cn.cmd",
+                         "wrapperMatchesThisKnownTarget":  true,
+                         "registrationState":  "new-user-command-wrapper-created",
+                         "command":  "cn",
+                         "sha256":  "f12f6de6ff7a7a8e40b8d6343b7566a0b70359cf22358e4ee2432cf2ec27b05c",
+                         "target":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\continue\\node_modules\\.bin\\cn.cmd"
+                     },
+                     {
+                         "wrapper":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\aider.cmd",
+                         "wrapperMatchesThisKnownTarget":  true,
+                         "registrationState":  "new-user-command-wrapper-created",
+                         "command":  "aider",
+                         "sha256":  "5f23025add6a8a335f8f9731e2fc10608f6e24f094c691c39dddc2d0621f367e",
+                         "target":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\aider\\venv\\Scripts\\aider.exe"
+                     },
+                     {
+                         "wrapper":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\goose.cmd",
+                         "wrapperMatchesThisKnownTarget":  true,
+                         "registrationState":  "new-user-command-wrapper-created",
+                         "command":  "goose",
+                         "sha256":  "9c64b66930e1302b8269e435698d1ec30b4a63bc1209948f131c718e15add3d7",
+                         "target":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\goose\\bin\\goose.exe"
+                     },
+                     {
+                         "wrapper":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\amp.cmd",
+                         "wrapperMatchesThisKnownTarget":  true,
+                         "registrationState":  "new-user-command-wrapper-created",
+                         "command":  "amp",
+                         "sha256":  "c773d166dda4cce17e2f3d42aa68eaf7fb55f5cf1bd40d9b3eebc7a5ad53002f",
+                         "target":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\amp\\node_modules\\@ampcode\\cli\\bin\\amp.exe"
+                     },
+                     {
+                         "wrapper":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\bin\\auggie.cmd",
+                         "wrapperMatchesThisKnownTarget":  true,
+                         "registrationState":  "new-user-command-wrapper-created",
+                         "command":  "auggie",
+                         "sha256":  "3c0c949e930679b3540b5522118692e0b59919adf7fe1c9dc94eb90f88aa4462",
+                         "target":  "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\auggie\\node_modules\\.bin\\auggie.cmd"
+                     }
+                 ],
+    "originalWrappersOverwritten":  0,
+    "systemPathChanged":  false,
+    "status":  "six-agent-user-command-entries-registered",
+    "userPathContainsCommandDirectory":  true,
+    "modelCommands":  0
+}

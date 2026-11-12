@@ -1,0 +1,10 @@
+{
+  "status": "official-current-installation-doc-retrieved",
+  "requestedURL": "https://raw.githubusercontent.com/block/goose/main/documentation/docs/getting-started/installation.md",
+  "bytes": 18453,
+  "sha256": "6601a57ed0a7197d1b9defdfaaefd8af22f5cebf052137fcfa41dffbb75a1cbf",
+  "windowsNativeCliExplicitlySupported": true,
+  "linuxCliExplicitlySupported": true,
+  "configurationOptOutDocumented": "CONFIGURE=false",
+  "localApproach": "Exact pinned release CLI archive payload extracted to distinct user prefix; no configure or global PATH changes"
+}

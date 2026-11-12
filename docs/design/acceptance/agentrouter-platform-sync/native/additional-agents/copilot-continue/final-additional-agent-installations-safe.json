@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "status": "two-official-cli-products-installed-and-native-version-verified-on-windows-and-wsl",
+  "observedAtUtc": "2026-11-12T08:46:54.348326+00:00",
+  "tools": [
+    {
+      "name": "GitHub Copilot CLI",
+      "package": "@github/copilot",
+      "version": "1.0.109",
+      "platforms": [
+        "Windows native",
+        "WSL/Linux native"
+      ],
+      "source": "copilot/final-copilot-dual-platform-safe.json",
+      "sourceSha256": "a3aeef62bda2c5f79ded4b3c686a38e4aac1c76e28e4c5218d48886337b28df6",
+      "windowsScopedLauncher": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\copilot\\bin\\copilot.cmd",
+      "wslScopedLauncher": "/home/han/.local/share/orchester-agents/copilot/bin/copilot",
+      "windowsPowerShellPrerequisiteVersion": "7.7.0"
+    },
+    {
+      "name": "Continue CLI",
+      "package": "@continuedev/cli",
+      "version": "1.5.47",
+      "platforms": [
+        "Windows native",
+        "WSL/Linux native"
+      ],
+      "source": "continue/final-continue-dual-platform-safe.json",
+      "sourceSha256": "e5d78702e0d91a4d04f6b7260ac195f2ae009ce750df175e6862b3525d5a5854",
+      "windowsEntry": "C:\\Users\\han\\AppData\\Local\\OrchesterAgents\\continue\\node_modules\\.bin\\cn.cmd",
+      "wslEntry": "/home/han/.local/share/orchester-agents/continue/node_modules/.bin/cn"
+    }
+  ],
+  "distinctToolProductCount": 2,
+  "nativePlatformInstallationUnits": 4,
+  "additionalNonAgentPrerequisites": 1,
+  "wholeHostPriorProductAbsenceClaimed": false,
+  "allModelsLoginAuthenticationOrSubscriptionAvailabilityClaimed": false,
+  "modelsOrLoginInvoked": 0,
+  "sharedUserSystemPathModified": false,
+  "globalNpmPrefixModified": false,
+  "selectedOriginalSafeJsonHashAndSizeChecks": 23,
+  "originalToolInstallationAndVerifierFailuresPreserved": true,
+  "existingSharedSourceManifestSummaryProvenanceMdModified": false,
+  "privateProfilesRawLogsTokensZipAndInstalledBinaryPayloadsArchived": false
+}
