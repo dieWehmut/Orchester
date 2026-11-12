@@ -1,0 +1,9 @@
+{
+    "status":  "own-native-normal-cleanup-failed-closed",
+    "stage":  "normal-own-avd-name",
+    "errorType":  "System.Management.Automation.RuntimeException",
+    "safeReasonCode":  "own-avd-console-name-differs",
+    "processSignals":  0,
+    "forcedTerminations":  0,
+    "sourceSha256":  "0bc61ed3500a4c9491a0bbc930a07cfdaa532e3bd1930f23abeccf15bf45b49a"
+}

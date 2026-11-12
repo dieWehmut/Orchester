@@ -1,0 +1,14 @@
+{
+    "status":  "own-probe-task-absence-verified-after-normal-terminal-delete",
+    "observedAtUtc":  "2026-11-12T09:31:06.8884403Z",
+    "taskName":  "Orchester-Own-FormalReadiness-e811c16267ca4b11950c38c56c27c8bf",
+    "originalInstanceGuid":  "{F22D5799-A4AF-49D3-8260-B4D50743DE95}",
+    "ownFinalStateSha256":  "f5ae8bed3f823a913bd0039c503abb698961ed58553e890fb908863a39deceb4",
+    "sameOriginalOwner":  true,
+    "ownTaskAbsent":  true,
+    "expectedFileNotFoundHResult":  -2147024894,
+    "allTasksEnumerated":  false,
+    "taskRunsStopsDeletesCalled":  0,
+    "productOrInputSignals":  0,
+    "sourceSha256":  "7eb79e25c1a680f21c76250e628dda86d6c182493ab57935a35c58efd967a216"
+}

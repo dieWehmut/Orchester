@@ -1,0 +1,14 @@
+{
+    "status":  "original-probe-correction-failed-closed",
+    "mode":  "Cleanup",
+    "stage":  "verify-terminal-zero-before-own-delete",
+    "errorType":  "System.InvalidOperationException",
+    "hResult":  -2146233079,
+    "taskName":  "Orchester-Own-InteractiveProbe-5b13a112be5a4d18b7879942828428d9",
+    "originalInstanceGuid":  "{BDABA3F9-FB92-4B2C-ADD6-E1E6A427B4B0}",
+    "originalDefinitionXmlSha256":  "edb9a15ee4a7c4872f29fbf94daaf41212ba91ceed117b289e2cdc009b4e63fb",
+    "currentDefinitionXmlSha256":  "edb9a15ee4a7c4872f29fbf94daaf41212ba91ceed117b289e2cdc009b4e63fb",
+    "oldStateRewritten":  false,
+    "taskRunsOrStopsOrRestarts":  0,
+    "taskDeletedClaimed":  false
+}

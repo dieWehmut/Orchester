@@ -1,0 +1,23 @@
+{
+    "status":  "passed",
+    "observedAtUtc":  "2026-11-12T09:27:26.7876825Z",
+    "sourceSha256":  "b9aa99a8b4cbcafeaf4c3947c0450ebfcfc8ce6c224976d76fb7f0c3b777e4a5",
+    "sameOriginalBirthImageAndPrivatePortsVerified":  true,
+    "nativeOwnAvdNameCommandExitCode":  0,
+    "normalOwnEmulatorConsoleKillExitCode":  0,
+    "actualQemuQueryHandleExitCode":  0,
+    "actualHeadQueryHandleExitCode":  0,
+    "normalOwnAdb5039KillServerCommandExitCode":  0,
+    "actualServerQueryHandleExitCode":  0,
+    "originalManagerCreatorEmulatorHandleActualExitCode":  0,
+    "originalManagerCreatorServerHandleActualExitCode":  0,
+    "actualManagerQueryHandleExitCode":  0,
+    "queryHandlesClaimedAsCreatorHandles":  false,
+    "allFourPrivatePortsReleased":  true,
+    "default5037Or5554Commands":  0,
+    "processSignals":  0,
+    "forcedTerminations":  0,
+    "originalAvdWipedResetRecreated":  false,
+    "otherStudioProcessesTouched":  false,
+    "privateRawOutputsIncluded":  false
+}

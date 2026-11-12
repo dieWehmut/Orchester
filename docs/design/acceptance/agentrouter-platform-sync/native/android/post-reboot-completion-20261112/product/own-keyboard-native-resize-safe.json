@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "nativeAdbServerPort": 5039,
+  "cdpPort": 19329,
+  "productShowKeyboardTrustedTouch": true,
+  "emulationMetricsInjected": false,
+  "beforeViewportHeight": 914.2857055664062,
+  "afterViewportHeight": 577.90478515625,
+  "beforeBackendCols": 45,
+  "beforeBackendRows": 28,
+  "afterBackendCols": 45,
+  "afterBackendRows": 8,
+  "nativeViewportActuallyShrunk": true,
+  "backendDimensionsActuallyChanged": true,
+  "sameOwnTerminalStillRunning": true,
+  "terminalConnected": true,
+  "nativeScreenshotSha256": "a09c3585d2b0f43b6cd6d5050500b08dfec7dc811063960018b7ffdd32d13b48"
+}

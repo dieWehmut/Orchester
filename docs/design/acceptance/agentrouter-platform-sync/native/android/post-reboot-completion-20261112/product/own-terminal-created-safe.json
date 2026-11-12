@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "beforeOwnedTerminalCount": 0,
+  "afterOwnedTerminalCount": 1,
+  "normalProductProjectTerminalClicked": true,
+  "normalProductNewTerminalClicked": true,
+  "connected": true,
+  "inputEnabled": true,
+  "shellBaseName": "cmd.exe",
+  "actualBackendCols": 45,
+  "actualBackendRows": 28,
+  "onlyIsolatedTemporaryProject": true,
+  "backendStatus": "running",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "nativeAdbServerPort": 5039,
+  "cdpPort": 19329
+}

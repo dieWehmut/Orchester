@@ -1,0 +1,13 @@
+{
+  "format": "orchester-probe-original-task-terminal-correction-source-v1",
+  "status": "prepared-native-ast-and-review-pending",
+  "file": "observe-or-cleanup-own-original-probe.ps1",
+  "bytes": 15784,
+  "sha256": "43da5f0f2474e8b97c7483ed40a1e28c9555bc5e3d6a382bb1065d84a48dbe41",
+  "originalImmediateDefinitionXmlSha256": "edb9a15ee4a7c4872f29fbf94daaf41212ba91ceed117b289e2cdc009b4e63fb",
+  "originalStateSha256": "54adeee0c92306096ff8cdffd0c4092dabf1a45e239aff69b39d2f82e0b61c6f",
+  "originalActionResultSha256": "29b9a9802e66b630dc0f1820232c82426b9161badf1f931f9c5b1180a637cb0e",
+  "taskMutationOrRunPerformed": false,
+  "originalFilesModified": false,
+  "historicalXmlByteEquivalenceClaimed": false
+}

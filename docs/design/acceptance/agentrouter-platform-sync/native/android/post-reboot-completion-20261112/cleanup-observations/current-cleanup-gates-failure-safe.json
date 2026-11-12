@@ -1,0 +1,9 @@
+{
+    "status":  "readonly-own-cleanup-gate-failed",
+    "stage":  "native-channel-read",
+    "exceptionType":  "System.IO.IOException",
+    "safeReasonCode":  null,
+    "hResult":  -2147024816,
+    "noSignalsOrTaskMutations":  true,
+    "sourceSha256":  "f71e4d56cd1d4d2dff85c1df68b46efc8ceb250d1b0448629edeee3dbe7002a1"
+}

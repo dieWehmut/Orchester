@@ -1,0 +1,108 @@
+{
+    "status":  "current-own-runtime-readonly-cleanup-gates-verified",
+    "observedAtUtc":  "2026-11-12T09:20:13.9323119Z",
+    "sourceSha256":  "b4552163774b7b17cc26e33d86c6d0726e36840c44785f19a376134ff9438a50",
+    "originalBridgeStateSha256":  "128449c9247061a66017da9b264f2591c2d3ec44a4adabbdabac2abea4d0f46f",
+    "originalActionLinkSha256":  "61fddff12776c349e26cde237729a4776f11723577cc919277a90ef389294268",
+    "taskName":  "Orchester-Own-Successor3-3b025a45d89643d1ae67aee99697fb5c",
+    "originalInstanceGuid":  "{171240AD-F9B6-4789-8142-836DD79F4D86}",
+    "currentDefinitionSemantics":  {
+                                       "currentDefinitionXmlSha256":  "13ed03d42d9ab10d99e65e3a01a2e30eef4dc6dd6e417faee2278aa769392e72",
+                                       "principalSerializedAsSid":  false,
+                                       "currentPrincipalResolvedToOwnSid":  true,
+                                       "logonType":  3,
+                                       "runLevel":  0,
+                                       "exactActionCount":  1,
+                                       "exactActionType":  0,
+                                       "actionImageArgumentsCorrelationAndWorkingDirectoryMatch":  true,
+                                       "triggerCount":  0,
+                                       "exactSettingsAndXmlFieldCoverageMatch":  true,
+                                       "currentStrictDefinitionSemanticsMatch":  true,
+                                       "rawXmlOrSidOrAccountNameIncluded":  false
+                                   },
+    "historicalXmlSha256":  "13ed03d42d9ab10d99e65e3a01a2e30eef4dc6dd6e417faee2278aa769392e72",
+    "currentXmlMatchesHistorical":  true,
+    "currentInstanceCount":  1,
+    "unexpectedInstances":  0,
+    "actualLastTaskResult":  267009,
+    "lastRunUtc":  "2026-11-12T08:45:08.0000000Z",
+    "lastRunBoundUsingExplicitUtc":  true,
+    "actualActionTerminalZero":  false,
+    "currentNativeProcessIdentity":  [
+                                         {
+                                             "label":  "manager",
+                                             "pid":  30436,
+                                             "creationFiletime":  134389406416098295,
+                                             "imageSha256":  "204d51f19707da17766bccecce2ceececadab350663a8190420d1377bac1150d",
+                                             "birthAndImageMatch":  true,
+                                             "liveReadOnlyHandleObserved":  true,
+                                             "observationHandleIsOriginalCreatorHandle":  false
+                                         },
+                                         {
+                                             "label":  "server",
+                                             "pid":  14648,
+                                             "creationFiletime":  134389406419545296,
+                                             "imageSha256":  "b4a6b455702684652cccf7b46258b29e653538904359a58fd4931cf3ef286b3f",
+                                             "birthAndImageMatch":  true,
+                                             "liveReadOnlyHandleObserved":  true,
+                                             "observationHandleIsOriginalCreatorHandle":  false
+                                         },
+                                         {
+                                             "label":  "head",
+                                             "pid":  29496,
+                                             "creationFiletime":  134389406419932540,
+                                             "imageSha256":  "06af3c5da3c2cef7266822fe653f54371fc746d78db6f4282e1b2338a70970c8",
+                                             "birthAndImageMatch":  true,
+                                             "liveReadOnlyHandleObserved":  true,
+                                             "observationHandleIsOriginalCreatorHandle":  false
+                                         },
+                                         {
+                                             "label":  "qemu",
+                                             "pid":  11140,
+                                             "creationFiletime":  134389406420584962,
+                                             "imageSha256":  "161d3bcef3d5a93698a77f292c899d131d3e92e335c7b5b2360bbc5ce364cf4c",
+                                             "birthAndImageMatch":  true,
+                                             "liveReadOnlyHandleObserved":  true,
+                                             "observationHandleIsOriginalCreatorHandle":  false
+                                         }
+                                     ],
+    "originalQemuParentMatched":  true,
+    "privatePorts":  [
+                         {
+                             "port":  5039,
+                             "expectedOwnerPid":  14648,
+                             "listenerCount":  1,
+                             "allLoopbackListenersExclusivelyOwned":  true
+                         },
+                         {
+                             "port":  5572,
+                             "expectedOwnerPid":  11140,
+                             "listenerCount":  2,
+                             "allLoopbackListenersExclusivelyOwned":  true
+                         },
+                         {
+                             "port":  5573,
+                             "expectedOwnerPid":  11140,
+                             "listenerCount":  2,
+                             "allLoopbackListenersExclusivelyOwned":  true
+                         },
+                         {
+                             "port":  19329,
+                             "expectedOwnerPid":  14648,
+                             "listenerCount":  1,
+                             "allLoopbackListenersExclusivelyOwned":  true
+                         }
+                     ],
+    "originalManagerCreatorChildHandlesRetained":  true,
+    "managerChildExitCodes":  [
+                                  null,
+                                  null
+                              ],
+    "currentControllerHeartbeatObservedAtUtc":  "2026-11-12T09:20:01.0573013Z",
+    "currentControllerPid":  8708,
+    "currentBackendPid":  19808,
+    "noTaskMutation":  true,
+    "noProcessSignals":  true,
+    "noAdbCommands":  true,
+    "rawPrivateContentsIncluded":  false
+}

@@ -1,0 +1,11 @@
+{
+    "taskName":  "Orchester-Own-Successor3-3b025a45d89643d1ae67aee99697fb5c",
+    "pid":  8708,
+    "createdUtc":  "2026-11-12T08:45:08.1486358Z",
+    "sessionId":  1,
+    "imageSha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+    "sourceSha256":  "ba30875b16967f8f7202c52864a54a096f6cc59d2999fc9d4ed0bd1dcf830a0c",
+    "sameOwnProfileSid":  true,
+    "selfMetadataOnly":  true,
+    "enginePidAdopted":  false
+}

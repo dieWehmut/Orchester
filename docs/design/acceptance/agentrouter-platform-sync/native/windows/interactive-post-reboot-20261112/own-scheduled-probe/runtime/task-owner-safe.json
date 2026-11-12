@@ -1,0 +1,16 @@
+{
+    "format":  "orchester-own-interactive-probe-task-v1",
+    "taskName":  "Orchester-Own-InteractiveProbe-5b13a112be5a4d18b7879942828428d9",
+    "definitionSha256":  "edb9a15ee4a7c4872f29fbf94daaf41212ba91ceed117b289e2cdc009b4e63fb",
+    "instanceGuid":  "{BDABA3F9-FB92-4B2C-ADD6-E1E6A427B4B0}",
+    "actionSha256":  "e04a0537e86ad9a71c850047c65bcb2759bf6682c700a82b8841b4362d981e79",
+    "taskSourceSha256":  "f33c0a3728e9bb89822441e8aa5917e8d094db09a9ffee9023809956ac387ece",
+    "readOnlyCodeSha256":  "905ce9d8fe25be5e9e643eebbc3815d52d2e2139ea961789883541ba05826c04",
+    "registered":  true,
+    "runAttempted":  true,
+    "runRequestedUtc":  "2026-11-12T07:04:01.2778506Z",
+    "taskDeleted":  false,
+    "targetSessionId":  1,
+    "interactiveTokenLogon":  true,
+    "limitedRunLevel":  true
+}

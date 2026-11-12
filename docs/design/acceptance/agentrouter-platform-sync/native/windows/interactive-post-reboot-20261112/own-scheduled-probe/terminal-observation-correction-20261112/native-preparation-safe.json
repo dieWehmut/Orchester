@@ -1,0 +1,20 @@
+{
+  "format": "orchester-probe-terminal-correction-native-preparation-v1",
+  "observedAtUtc": "2026-11-12T08:54:09.262396+00:00",
+  "scriptSha256": "43da5f0f2474e8b97c7483ed40a1e28c9555bc5e3d6a382bb1065d84a48dbe41",
+  "nativeAstActualExitCode": 0,
+  "nativeAstErrorCount": 0,
+  "exactThreeSemanticFunctionsExtractedReadOnlyTestActualExitCode": 0,
+  "exactFunctionsCurrentSemanticsMatch": true,
+  "currentDefinitionXmlSha256AtSelectedRead": "edb9a15ee4a7c4872f29fbf94daaf41212ba91ceed117b289e2cdc009b4e63fb",
+  "historicalXmlByteEquivalenceClaimed": false,
+  "firstExtractedFunctionTestWithoutProcessExecutionPolicyFailedActualExitCode": 1,
+  "failedTestStoppedBeforeCurrentTaskQuery": true,
+  "processExecutionPolicyBypassPassedTestSeparate": true,
+  "scriptObserveOrCleanupEntryExecuted": false,
+  "nativeTaskRegistrationsRunsStopsOrDeletes": 0,
+  "originalProbeFilesModified": false,
+  "privateContentsRead": false,
+  "rootIndependentSourceReviewRequiredBeforeExecution": true,
+  "subagentReadOnlySourceReviewPassed": true
+}

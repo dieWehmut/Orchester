@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "status": "current-frozen-repository-source731-input-hashes-verified-readonly",
+  "observedAtUtc": "2026-11-12T09:31:55.633645+00:00",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "sourceBindingReceipt": "docs/design/acceptance/agentrouter-platform-sync/sources/final71-source-binding.json",
+  "sourceBindingReceiptSha256": "413d19226cba700463d12dee28d20c592a4192425616575e4875a53beb01b50e",
+  "sourceInputFilesChecked": 731,
+  "sourceInputHashMismatches": [],
+  "sourceMutationCount": 0,
+  "gitNativeNetworkOrGuiExecutions": 0,
+  "externalSourceExportOrCompiledBinaryValidationIncluded": false,
+  "runtime14Runtime18AndDefaultReinstallExecuted": false,
+  "privateProfilesCredentialsEnvironmentRawLogsRead": false
+}

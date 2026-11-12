@@ -1,0 +1,21 @@
+{
+  "originalEncryptedRecordCount": 5,
+  "decryptSucceededCount": 5,
+  "decryptFailedCount": 0,
+  "original7337GetStatusCodes": [
+    200
+  ],
+  "original7337Actual200Count": 1,
+  "original7337InfoNameMatched": true,
+  "newPairingUsed": false,
+  "tokensPrinted": false,
+  "requestsOnlyOriginal7337Info": true,
+  "status": "correct-windows-original-five-aes-and-existing-credential-wire-check",
+  "actualAvdHost": "Windows",
+  "actualAvdName": "Medium_Phone_API_37.0",
+  "nativeAdbServerPort": 5039,
+  "cdpPort": 19329,
+  "originalFiveCiphertextSha256": "f708ff5441e06dbe1c542d778ba70a270409bdef14a1fec508d88eeeb63abdbd",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "currentFinal21ApkSha256": "f83fa2a75c712a3d2e1f3f203cf73ce89204fb4ca0bce4d8c2ef0c4fe3596d3c"
+}

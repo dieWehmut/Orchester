@@ -1,0 +1,70 @@
+﻿{
+    "status":  "private-native-windows-medium-target-identity-verified",
+    "sourceRevision":  "71def643cb08b208cc79687f79255c504eb14dc6",
+    "actualAvdName":  "Medium_Phone_API_37.0",
+    "actualAvdHost":  "Windows",
+    "serial":  "emulator-5572",
+    "nativeAdbServerPort":  5039,
+    "consolePort":  5572,
+    "guestAdbPort":  5573,
+    "cdpPort":  19329,
+    "managerPid":  30436,
+    "managerCreationFiletime":  134389406416098295,
+    "server":  {
+                   "pid":  14648,
+                   "creationFiletime":  134389406419545296,
+                   "image":  "C:\\Users\\han\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe",
+                   "imageSha256":  "b4a6b455702684652cccf7b46258b29e653538904359a58fd4931cf3ef286b3f",
+                   "originalCreatorHandleRetained":  true,
+                   "actualExitCode":  null
+               },
+    "head":  {
+                 "pid":  29496,
+                 "creationFiletime":  134389406419932540,
+                 "image":  "C:\\Users\\han\\AppData\\Local\\Android\\Sdk\\emulator\\emulator.exe",
+                 "imageSha256":  "06af3c5da3c2cef7266822fe653f54371fc746d78db6f4282e1b2338a70970c8",
+                 "originalCreatorHandleRetained":  true,
+                 "actualExitCode":  null
+             },
+    "qemu":  {
+                 "pid":  11140,
+                 "parentPid":  29496,
+                 "creationFiletime":  134389406420584962,
+                 "creationUtc":  "2026-11-12T07:04:02.0584962Z",
+                 "image":  "C:\\Users\\han\\AppData\\Local\\Android\\Sdk\\emulator\\qemu\\windows-x86_64\\qemu-system-x86_64-headless.exe",
+                 "imageSha256":  "161d3bcef3d5a93698a77f292c899d131d3e92e335c7b5b2360bbc5ce364cf4c"
+             },
+    "privatePortListeners":  [
+                                 {
+                                     "LocalAddress":  "::1",
+                                     "LocalPort":  5573,
+                                     "OwningProcess":  11140
+                                 },
+                                 {
+                                     "LocalAddress":  "::1",
+                                     "LocalPort":  5572,
+                                     "OwningProcess":  11140
+                                 },
+                                 {
+                                     "LocalAddress":  "127.0.0.1",
+                                     "LocalPort":  5573,
+                                     "OwningProcess":  11140
+                                 },
+                                 {
+                                     "LocalAddress":  "127.0.0.1",
+                                     "LocalPort":  5572,
+                                     "OwningProcess":  11140
+                                 },
+                                 {
+                                     "LocalAddress":  "127.0.0.1",
+                                     "LocalPort":  5039,
+                                     "OwningProcess":  14648
+                                 }
+                             ],
+    "noDefaultAdbCommands":  true,
+    "originalLinuxUnknownTargetSignals":  0,
+    "originalWindowsAvdNotWipedResetOrRecreated":  true,
+    "deviceWritesOrInstallPerformedAfterThisIdentityCheck":  0,
+    "studioStartedThisAttempt":  false,
+    "historicalStudioSyncRemainsSeparate":  true
+}

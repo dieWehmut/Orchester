@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "status": "selected-fresh-public-safe-receipts-byte-exact",
+  "files": [
+    {
+      "publicPath": "readiness-probe/new-source-pins-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/formal-runtime-post-reboot-20261112/readiness-probe/new-source-pins-safe.json",
+      "sha256": "80ffcafc0949377b8ff4fda248e2125f529d35d44d809b1742a17add68c9d1e1",
+      "bytes": 1286,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "readiness-probe/native-parser-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/formal-runtime-post-reboot-20261112/readiness-probe/native-parser-safe.json",
+      "sha256": "3736e7626133598ae461fd80b9a0e73230b3dc092dca7617e1e9c9bd5fa590aa",
+      "bytes": 1037,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "readiness-probe/own-task-absence-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/formal-runtime-post-reboot-20261112/readiness-probe/own-task-absence-safe.json",
+      "sha256": "9fcc63593df09bd56916625ecc895ddd08a2cd7ee3fa1c4b2d17f70545f8f1aa",
+      "bytes": 702,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "readiness-probe/runtime/task-owner-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/formal-runtime-post-reboot-20261112/readiness-probe/runtime/task-owner-safe.json",
+      "sha256": "f5ae8bed3f823a913bd0039c503abb698961ed58553e890fb908863a39deceb4",
+      "bytes": 819,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "readiness-probe/runtime/start-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/formal-runtime-post-reboot-20261112/readiness-probe/runtime/start-safe.json",
+      "sha256": "67768d070d7b1677e359ed491242a065fec506d0bc38a548c98a660323422701",
+      "bytes": 2332,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "readiness-probe/runtime/action-result-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/formal-runtime-post-reboot-20261112/readiness-probe/runtime/action-result-safe.json",
+      "sha256": "9b12c32688e48ad51eb1eb363da791cb85cb201d7cd13f0f3f4865bb2a0f6cf7",
+      "bytes": 1972,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "readiness-probe/runtime/observe-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/formal-runtime-post-reboot-20261112/readiness-probe/runtime/observe-safe.json",
+      "sha256": "258001dc7c6e361943514a3fd6f94c491389026b17c0d6604c70d743978e092f",
+      "bytes": 3472,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "readiness-probe/runtime/cleanup-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/formal-runtime-post-reboot-20261112/readiness-probe/runtime/cleanup-safe.json",
+      "sha256": "20c3354e923e8bde09a6bcb4645aa9b673323f999ae5732b5cb25b753316a33f",
+      "bytes": 3474,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "repository-source731-readonly-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/formal-runtime-post-reboot/repository-source731-readonly-safe.json",
+      "sha256": "b94e32c53e2ac40bce417063e1da2e101f5b1332044c9b4c3f77be18fccc2d7a",
+      "bytes": 763,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "fresh-probe-final-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/formal-runtime-post-reboot/fresh-probe-final-safe.json",
+      "sha256": "f53c1c30ef2ac9c0cb73848160992c61800a4b4049951eec5b281570f7081847",
+      "bytes": 2282,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "static-review-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/formal-runtime-post-reboot/static-review-safe.json",
+      "sha256": "cb2e7d24ac729a4916be850fb4950904de3054937ca75bc37382d53bdec30464",
+      "bytes": 23484,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "static-review-source-mappings-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/formal-runtime-post-reboot/static-review-source-mappings-safe.json",
+      "sha256": "c3457457652b5d36597adf1cef53d3d0f4ec42ca5d829c6b850ea9897077d63b",
+      "bytes": 16248,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "native-source967-readonly-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112/formal-runtime-post-reboot/native-source967-readonly-safe.json",
+      "sha256": "f4a0bc7f04152593047401d110c50cd9c1f0eb73f8d33015666b5541f7f6b2fc",
+      "bytes": 984,
+      "sourceAndArchiveByteExact": true
+    }
+  ],
+  "derivedFiles": [
+    {
+      "publicPath": "source-mappings-safe.json",
+      "kind": "Child-generated public source map for selected safe receipts; no private payload or scripts archived."
+    }
+  ]
+}

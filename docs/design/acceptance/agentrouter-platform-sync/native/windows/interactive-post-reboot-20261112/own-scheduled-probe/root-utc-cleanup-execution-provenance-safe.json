@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "status": "root-actual-utc-corrected-probe-cleanup-execution-observed",
+  "recordedAtUtc": "2026-11-12T09:32:43.679289+00:00",
+  "executedSourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/post-reboot-interactive-probe-20261112/terminal-observation-correction-20261112/observe-or-cleanup-own-original-probe-utc.ps1",
+  "executedSourceSha256": "856081274aad5d632693f716063bd9e3fab10469b71dc2d4c8af95b983538246",
+  "mode": "Cleanup",
+  "actualOuterNativePowerShellExitCode": 0,
+  "executionEvidenceOrigin": "Root earlier actual functions exec_command nativePowerShell invocation exit_code0, retained in continuation summary; this actor-provenance record is derived and not an independent native rerun.",
+  "cleanupReceiptRelativePath": "terminal-observation-correction-20261112/utc-correlation-runtime/cleanup-safe.json",
+  "cleanupReceiptSha256": "1232ac6da6bc5ec05da8dd070c8c588f67fee7117760364905dd71ef2bbf654c",
+  "taskName": "Orchester-Own-InteractiveProbe-5b13a112be5a4d18b7879942828428d9",
+  "originalInstanceGuid": "{BDABA3F9-FB92-4B2C-ADD6-E1E6A427B4B0}",
+  "nativeActionActualLastTaskResult": 0,
+  "strictSemanticsAndUtcTerminalBoundInReceipt": true,
+  "ownTaskDeletedInReceipt": true,
+  "historicalReadinessObservedAtUtc": "2026-11-12T07:04:01.9207786Z",
+  "currentGuiReadinessClaimed": false,
+  "nativeTaskRerunsOrSignals": 0,
+  "rawXmlUserNamesSidOrCredentialsIncluded": false
+}

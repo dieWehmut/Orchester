@@ -1,0 +1,37 @@
+{
+  "status": "new-readonly-self-owned-probe-prepared-not-run",
+  "createdAtUtc": "2026-11-12T09:25:41.132752+00:00",
+  "sourceCodeOrigin": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/post-reboot-interactive-probe-20261112",
+  "files": [
+    {
+      "name": "ReadOnlyInteractiveContext.cs",
+      "sha256": "905ce9d8fe25be5e9e643eebbc3815d52d2e2139ea961789883541ba05826c04",
+      "bytes": 3306
+    },
+    {
+      "name": "parse-new-probe.ps1",
+      "sha256": "b8f7ef91ae35c94e9a932e08a1b10ee77a27dc8c5fa3dece822586692ba8a726",
+      "bytes": 930
+    },
+    {
+      "name": "probe-common.ps1",
+      "sha256": "7dbfc7fb8dc20deedbc1d575cb58d41bbd8c9c6cd408fae2258dd96ed4e7e164",
+      "bytes": 3688
+    },
+    {
+      "name": "readonly-action.ps1",
+      "sha256": "4d96a2f148c74d0c7937567ae195893c0f70bfbc7fabdf2efcaac3a71a10067b",
+      "bytes": 2133
+    },
+    {
+      "name": "task-probe.ps1",
+      "sha256": "8044b9c61f094d3b7c1d6a6b9d44a7467394232c8f9c60d05c3fc0f4621104ed",
+      "bytes": 16588
+    }
+  ],
+  "rawHistoricalXmlHashGateReplacedWithStrictCurrentCOMAndXMLSemanticGate": true,
+  "allDateTimeCorrelationsExplicitUtc": true,
+  "oldSourcesOrTasksRewritten": false,
+  "productOrInstallerLaunches": 0,
+  "processOrInputSignals": 0
+}

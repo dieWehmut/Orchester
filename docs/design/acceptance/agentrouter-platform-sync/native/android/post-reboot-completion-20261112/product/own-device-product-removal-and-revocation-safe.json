@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "beforeSavedDeviceCount": 6,
+  "afterSavedDeviceCount": 5,
+  "beforeNativeEncryptedRecordCount": 6,
+  "afterNativeEncryptedRecordCount": 5,
+  "normalProductRemoveClicked": true,
+  "onlyOwn7339RowMatched": true,
+  "ownLocalCredentialMissing": true,
+  "originalFiveEncryptedKeyValuePairsExactlyRetained": true,
+  "originalFiveCiphertextBaselineSha256": "f708ff5441e06dbe1c542d778ba70a270409bdef14a1fec508d88eeeb63abdbd",
+  "originalFiveNativeAesDecryptSucceeded": 5,
+  "originalFiveNativeAesDecryptFailed": 0,
+  "ownBackendInfoBeforeProductRemovalStatus": 200,
+  "ownBackendRevokeStatus": 204,
+  "ownTokenAfterRevokeInfoStatus": 401,
+  "productForgetRemovesLocalCredential": true,
+  "serverRevocationSeparateNormalApiRequest": true,
+  "originalUserKeysRemoved": 0,
+  "privateTokenPrinted": false,
+  "nativeAdbServerPort": 5039,
+  "cdpPort": 19329
+}

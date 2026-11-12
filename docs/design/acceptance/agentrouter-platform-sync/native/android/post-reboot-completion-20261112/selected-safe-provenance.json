@@ -1,0 +1,240 @@
+{
+  "status": "selected-receipts-byte-exact",
+  "selectedFileCount": 33,
+  "entries": [
+    {
+      "archivePath": "channel-target-identity-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/native-channel-5572-post-reboot-20261112/channel-target-identity-safe.json",
+      "bytes": 3456,
+      "sha256": "9f9235d601e73bb36e2acc57b8ff49586ad4bbb19b2b35cce1b3fe87c4ae18f5",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "native-main-opened-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-final21-native-main-opened-post-reboot-20261112-safe.json",
+      "bytes": 613,
+      "sha256": "6b1f029c66b891512af5d87439b043e4746abb4e396e16b2a11d31a262df88f0",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "initial-original-five-wire-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-original-five-aes-and-existing-wire-post-reboot-20261112-safe.json",
+      "bytes": 802,
+      "sha256": "fa7b8d3063119a05ff710283ca8ac898fe254ee791eb962ed1ebb6e654ecc8e5",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "product/installed-apk-and-original-five-wire-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/installed-apk-and-original-five-wire-safe.json",
+      "bytes": 782,
+      "sha256": "19ea99b1a709ef2ac434f5e29be565aac595d626acb2dcd3b9ab75b6a4c0cac5",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "product/own-app-normal-exit-observer-failed-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-app-normal-exit-observer-failed-safe.json",
+      "bytes": 60,
+      "sha256": "0ec8562a5b8ad823f278cf1a9b85e9500f21292966f519d5b6393086cb07481b",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "product/own-app-normal-home-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-app-normal-home-safe.json",
+      "bytes": 363,
+      "sha256": "b06412a5b0302f5da8a0ece9958f7c7fe9e9dbd6174df7d687bab4b6e43c8969",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "product/own-device-product-removal-and-revocation-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-device-product-removal-and-revocation-safe.json",
+      "bytes": 894,
+      "sha256": "86def36015020ff982c45861373071ca39aad1726dc022d7c162a9f11767f853",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "product/own-keyboard-native-resize-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-keyboard-native-resize-safe.json",
+      "bytes": 612,
+      "sha256": "421a340ae571b85100ceeb02a9cb718eee7fcf62f363c3a940bf3f7ca8b42aeb",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "product/own-native-channel-normal-exit-failure-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-native-channel-normal-exit-failure-safe.json",
+      "bytes": 372,
+      "sha256": "b613718894d3e793de545860a348ef5d74707af715e4c5105a82eab7b66a117f",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "product/own-native-channel-normal-exit-normalized-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-native-channel-normal-exit-normalized-safe.json",
+      "bytes": 1003,
+      "sha256": "b21772895d89cdaeaba607ffc1246e499e790399a4ef866b901b76768e8f3f21",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "product/own-native-unicode-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-native-unicode-safe.json",
+      "bytes": 741,
+      "sha256": "93dbc3265b33d2b659983cbdbc034dd0aff9b0d77073721d3499a1e403f5ea68",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "product/own-product-close-and-drain-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-product-close-and-drain-safe.json",
+      "bytes": 634,
+      "sha256": "6c7aeb17ebd1860cfb4a4dd047aaf066867f40bbcd1d8ee61cccaa79de0f436b",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "product/own-reconnected-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-reconnected-safe.json",
+      "bytes": 372,
+      "sha256": "92425b77c4b3216576965e00e7993f963a42ee3e6e3c2291b734e9e7c1c7f73d",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "product/own-terminal-created-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-terminal-created-safe.json",
+      "bytes": 509,
+      "sha256": "4667a3385fa949fa4135f74e34a62a29b8cd2c25be9b5daea1b7383c3eb02b90",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "temporary-backend/ready-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt3-resume-state-20261111/ready-safe.json",
+      "bytes": 2237,
+      "sha256": "c73ed07afaf6c60a66650964bd0f1bd0d357b88c6bb66485459d83d517e4c112",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "temporary-backend/pairing-close-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt3-resume-state-20261111/pairing-close-safe.json",
+      "bytes": 201,
+      "sha256": "cac96594ec1ee177d1327765006e91f5850ba335ecc13db09c5c872cf6444a4c",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "temporary-backend/cleanup-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt3-resume-state-20261111/cleanup-safe.json",
+      "bytes": 1069,
+      "sha256": "29e0dbed15b21121fae3bc68ca3b4a16408ee197c3d48b01f898d05694b6f7bb",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "temporary-backend/private-transport-cleanup-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/temporary-windows-7339-final21-attempt3-resume-state-20261111/private-transport-cleanup-safe.json",
+      "bytes": 519,
+      "sha256": "7b5b179c5e4fe104730bb9aa869ffb2a7460cca7dceaafb2f2f61c23eeebcae3",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "original-task/task-owner-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/runtime/task-owner-safe.json",
+      "bytes": 613,
+      "sha256": "128449c9247061a66017da9b264f2591c2d3ec44a4adabbdabac2abea4d0f46f",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "original-task/start-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/runtime/start-safe.json",
+      "bytes": 1195,
+      "sha256": "d759414a8a75aa9bba8cfb9a59f01c9120a36569ae3828484a889fa14231dc82",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "original-task/action-link-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/runtime/action-link-safe.json",
+      "bytes": 453,
+      "sha256": "61fddff12776c349e26cde237729a4776f11723577cc919277a90ef389294268",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "original-task/action-return-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/runtime/action-return-safe.json",
+      "bytes": 437,
+      "sha256": "1fd54ca0b86aeedb14a35fe220dcc7c12fd4128db4bb9b4083907fdc25603c78",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "cleanup-observations/current-cleanup-gates-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/own-cleanup-readonly-review-20261112/current-cleanup-gates-safe.json",
+      "bytes": 6554,
+      "sha256": "5dbed15399d3efa93a1a896105277b1193def3281bf4f47fc35b975d7ac2c250",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "cleanup-observations/current-cleanup-gates-failure-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/own-cleanup-readonly-review-20261112/current-cleanup-gates-failure-safe.json",
+      "bytes": 332,
+      "sha256": "c9b390c4d1b9241c5c0eb0a92ef11a1bf6a4d91c57b1c3cfe505840a68d3f716",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "cleanup-observations/current-cleanup-preclose-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/own-cleanup-readonly-pre-close-20261112/current-cleanup-gates-safe.json",
+      "bytes": 6554,
+      "sha256": "7f1112c696c9b2c6d8ed6b8bc1ff57a35f29a162ce55d4fb906012092b926038",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "cleanup-observations/task-cleanup-initial-failure-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/own-task-terminal-cleanup-utc-20261112/cleanup-failure-safe.json",
+      "bytes": 659,
+      "sha256": "865fed6f0d82c7e77466fe844752d2ec8aa57d2ed0d9dabff733c67e56b2451b",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "native-cleanup/original-manager-terminal-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/native-channel-5572-post-reboot-20261112/manager-current-safe.json",
+      "bytes": 1523,
+      "sha256": "a805fb029e5111f0ae08a5f063095a574c253ca027ca55760489dfa36f46b9a0",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "native-cleanup/original-manager-launch-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/private-channel-manager-post-reboot-20261112-launch-safe.json",
+      "bytes": 649,
+      "sha256": "c8e3ef1dea721842c5f4deaeec1dbde06dfbb406f8a98390dcbcec283018339d",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "product/own-new-private-revoked-token-cleanup-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/post-reboot-product-completion-20261112/own-new-private-revoked-token-cleanup-safe.json",
+      "bytes": 316,
+      "sha256": "acdd756e6e7a41a1cb1e4a28a4c1d9512a8634dd32581245da561eba1c02a09c",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "cleanup-observations/derived-task-deleted-state-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/own-task-terminal-cleanup-utc-20261112/derived-task-owner-state.json",
+      "bytes": 612,
+      "sha256": "af243ccded0ac1dcaafcedda46e918656e6bb285a0600058bc3a432b6d3f9b31",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "cleanup-observations/task-post-delete-independent-readonly-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/own-task-post-delete-readonly-diagnostic-20261112/post-delete-diagnostic-safe.json",
+      "bytes": 2326,
+      "sha256": "41106d0df275c880c3ce4600d2a75d7e847e5d6f5f1284ed7e49953ab45efe84",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "cleanup-observations/terminal-gate-diagnostic-failure-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/own-task-terminal-readonly-diagnostic-20261112/terminal-gate-diagnostic-failure-safe.json",
+      "bytes": 303,
+      "sha256": "6e01b5f273c90ad0c99c0e07b4f2b66b43d1ec9c95f2957ec4c50a0c842f2316",
+      "publicBytesEqualSelectedSource": true
+    },
+    {
+      "archivePath": "cleanup-observations/terminal-gate-diagnostic-v2-failure-safe.json",
+      "sourceLocalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/scheduler-successor3-bridge-20261112/own-task-terminal-readonly-diagnostic-20261112/terminal-gate-diagnostic-v2-failure-safe.json",
+      "bytes": 303,
+      "sha256": "6d560badccb5fabda585d5359139c2b7f764dedfa73e06d37e29c108a52cd2fb",
+      "publicBytesEqualSelectedSource": true
+    }
+  ],
+  "rawCredentialsOrPrivateScreenshotsIncluded": false,
+  "coreCompletionIsDerivedFromSelectedReceipts": true,
+  "finalCompletionIsDerivedFromSelectedReceipts": true
+}
