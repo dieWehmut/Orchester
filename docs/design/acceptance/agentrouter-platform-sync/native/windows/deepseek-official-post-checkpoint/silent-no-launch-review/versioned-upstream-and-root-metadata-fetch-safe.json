@@ -1,0 +1,46 @@
+{
+  "observedAt": "2026-11-11T23:29:00.353921+00:00",
+  "requests": [
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/package.json",
+      "verifiedTls": true,
+      "httpStatus": 200,
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/package.json",
+      "bytes": 19933,
+      "sha256": "805ddd9dce6f9c80b7050e2c9938f423088e422b31dec9bc53128e35c6e664d2",
+      "publicBodyFile": "rc1-root-package.json"
+    },
+    {
+      "requestedUrl": "https://github.com/electron-userland/electron-builder/tree/v26.17.0",
+      "verifiedTls": true,
+      "exceptionType": "HTTPError",
+      "httpStatus": 404
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/electron-userland/electron-builder/v26.17.0/packages/app-builder-lib/templates/nsis/installer.nsi",
+      "verifiedTls": true,
+      "exceptionType": "HTTPError",
+      "httpStatus": 404
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/electron-userland/electron-builder/v26.17.0/packages/app-builder-lib/templates/nsis/installSection.nsh",
+      "verifiedTls": true,
+      "exceptionType": "HTTPError",
+      "httpStatus": 404
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/electron-userland/electron-builder/v26.17.0/packages/app-builder-lib/templates/nsis/assistedInstaller.nsh",
+      "verifiedTls": true,
+      "exceptionType": "HTTPError",
+      "httpStatus": 404
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/electron-userland/electron-builder/v26.17.0/packages/app-builder-lib/src/targets/nsis/NsisTarget.ts",
+      "verifiedTls": true,
+      "exceptionType": "HTTPError",
+      "httpStatus": 404
+    }
+  ],
+  "installerExecuted": false,
+  "apiOrPrivateReads": 0
+}

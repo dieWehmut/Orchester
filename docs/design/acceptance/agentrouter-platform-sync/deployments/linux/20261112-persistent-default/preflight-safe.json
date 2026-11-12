@@ -1,0 +1,20 @@
+{
+  "observedCurrentRunCount": 5,
+  "observedCurrentRemoteStateKeyCount": 4,
+  "observedCurrentPersistedTokenEntries": 5,
+  "observedCurrentDistinctTokenKeys": 3,
+  "runStateCounts": {
+    "completed": 4,
+    "cancelled": 1
+  },
+  "currentHead": "0e4367d2438bd95a8696eb7cfdaaa95ff3585643",
+  "priorBackupOriginalRunCount": 5,
+  "priorBackupOriginalRowsRetainedAll": true,
+  "priorBackupParsedValuesEqualCurrent": true,
+  "currentRawStateRowsEqualOldBackup": false,
+  "currentChangesPreservedNotOverwritten": true,
+  "sourceFilesChecked": 368,
+  "allSourceBytesStillEqual71Gate": true,
+  "currentDbBytes": 28672,
+  "currentDbSha256": "4b5fcf432e7aad57fa862b653dbfa28def908fab178056d081a1dc2b47099506"
+}

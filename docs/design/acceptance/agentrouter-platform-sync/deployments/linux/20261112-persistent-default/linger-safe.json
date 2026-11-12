@@ -1,0 +1,16 @@
+{
+  "installedCliHelpVerifiedEnableLingerAndNoAskPassword": true,
+  "enableLingerActualExitCode": 0,
+  "enableLingerStdoutBytes": 0,
+  "enableLingerStderrBytes": 0,
+  "afterQueryActualExitCode": 0,
+  "afterMetadata": {
+    "State": "active",
+    "Sessions": "1",
+    "Linger": "yes"
+  },
+  "currentUserOnly": true,
+  "sudoUsed": false,
+  "interactiveAuthOrLoginAttempted": false,
+  "remoteStateOrKeysChanged": false
+}

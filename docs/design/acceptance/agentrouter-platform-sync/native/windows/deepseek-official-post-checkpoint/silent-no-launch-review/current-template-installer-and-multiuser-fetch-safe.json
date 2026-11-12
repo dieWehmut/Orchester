@@ -1,0 +1,20 @@
+{
+  "observedAt": "2026-11-11T23:42:35.558386+00:00",
+  "requests": [
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/templates/nsis/installer.nsi",
+      "verifiedTls": true,
+      "exceptionType": "TimeoutError",
+      "httpStatus": null
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/templates/nsis/multiUser.nsh",
+      "verifiedTls": true,
+      "exceptionType": "TimeoutError",
+      "httpStatus": null
+    }
+  ],
+  "currentSourcesNotExactBuilderVersionClaim": true,
+  "installerExecuted": false,
+  "apiOrPrivateReads": 0
+}

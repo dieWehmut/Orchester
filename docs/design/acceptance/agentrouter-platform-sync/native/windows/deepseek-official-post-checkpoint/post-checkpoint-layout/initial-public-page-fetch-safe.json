@@ -1,0 +1,35 @@
+{
+  "observedAt": "2026-11-11T15:54:41.388103+00:00",
+  "requests": [
+    {
+      "requestedUrl": "https://github.com/deepseek-ai/deepseek-harness/tags",
+      "finalUrl": "https://github.com/deepseek-ai/deepseek-harness/tags",
+      "httpStatus": 200,
+      "bytes": 224556,
+      "sha256": "91152416690a67dc815fb4f65827d262a1555059c2b152ba1e7f6200870a2e8b",
+      "publicBodyFile": "official-tags.html",
+      "verifiedTls": true
+    },
+    {
+      "requestedUrl": "https://github.com/deepseek-ai/deepseek-harness/tree/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/installer",
+      "finalUrl": "https://github.com/deepseek-ai/deepseek-harness/tree/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/installer",
+      "httpStatus": 200,
+      "bytes": 211597,
+      "sha256": "85296f81c737cd96ddf10dba74a42dcc9c0df0d017f50886b6fd3380525c474f",
+      "publicBodyFile": "official-installer-tree.html",
+      "verifiedTls": true
+    },
+    {
+      "requestedUrl": "https://github.com/deepseek-ai/deepseek-harness/tree/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts",
+      "finalUrl": "https://github.com/deepseek-ai/deepseek-harness/tree/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/apps/desktop/scripts",
+      "httpStatus": 200,
+      "bytes": 467129,
+      "sha256": "707e69a824db93b1c1455e28c2dea382c87ef1abcd2b574dfa5f59c9adbcb107",
+      "publicBodyFile": "official-scripts-tree.html",
+      "verifiedTls": true
+    }
+  ],
+  "installerExecution": false,
+  "apiCalls": 0,
+  "privateDataReads": 0
+}

@@ -1,0 +1,50 @@
+{
+  "observedAt": "2026-11-11T23:37:00.684818+00:00",
+  "requests": [
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/kichik/nsis/master/Source/exehead/api.h",
+      "verifiedTls": true,
+      "httpStatus": 200,
+      "finalUrl": "https://raw.githubusercontent.com/kichik/nsis/master/Source/exehead/api.h",
+      "bytes": 3330,
+      "sha256": "7320b14365a8e4805dd03378d96c4298af4df12cb7ad4e94fbf133b93a1fe1dc",
+      "publicBodyFile": "nsis-official-api.h"
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/kichik/nsis/master/Source/exehead/exec.c",
+      "verifiedTls": true,
+      "httpStatus": 200,
+      "finalUrl": "https://raw.githubusercontent.com/kichik/nsis/master/Source/exehead/exec.c",
+      "bytes": 54233,
+      "sha256": "677f7275929173eb6c7187e98d1b6f6c0af13f2c13f926ea309ad055a3652433",
+      "publicBodyFile": "nsis-official-exec.c"
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/kichik/nsis/master/Source/exehead/ui.c",
+      "verifiedTls": true,
+      "exceptionType": "HTTPError",
+      "httpStatus": 404
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/templates/nsis/installSection.nsh",
+      "verifiedTls": true,
+      "httpStatus": 200,
+      "finalUrl": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/templates/nsis/installSection.nsh",
+      "bytes": 4206,
+      "sha256": "cda0454c5d32586925665db393872436cc4c640e2dc3b665740bb5552c223b70",
+      "publicBodyFile": "upstream-master-installSection.nsh"
+    },
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/templates/nsis/assistedInstaller.nsh",
+      "verifiedTls": true,
+      "httpStatus": 200,
+      "finalUrl": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/templates/nsis/assistedInstaller.nsh",
+      "bytes": 6163,
+      "sha256": "19afb9aad871b4a5e882031605bad5a22c943ff1f4494efcf86519789a06b19d",
+      "publicBodyFile": "upstream-master-assistedInstaller.nsh"
+    }
+  ],
+  "currentSourcesAreNotExactBuilderVersionClaim": true,
+  "installerExecuted": false,
+  "apiOrPrivateReads": 0
+}

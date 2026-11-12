@@ -1,0 +1,15 @@
+{
+  "operation": "fourth verified checkpoint pushed and merged main",
+  "documentationCommit": "caa60d76f4826fbccc1638e06bf73f6693168c3e",
+  "mainMerge": "60b4bd8e153e783f433147274fc31ff72563cbea",
+  "featurePushActualExitCode": 0,
+  "mainPushActualExitCode": 0,
+  "exactGitBlobComparisons": 322,
+  "productionSourceEqual71": true,
+  "rootAndMainClean": true,
+  "defaultAndStagedWhitespaceChecksPassed": true,
+  "allPlatformCompletionClaimed": false,
+  "checkpointKnownLinuxAbsenceCorrectlyPreservedAsHistoricalObservation": true,
+  "subsequentLinuxRestorationRequiresNewReceiptEpoch": true,
+  "observedAt": "2026-11-12T00:00:08.967743+00:00"
+}

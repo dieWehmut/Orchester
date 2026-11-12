@@ -1,0 +1,59 @@
+{
+  "scope": "New read-only ordinary silent no-autolaunch static proof; failed public fetches remain failures and exact version tag unavailability is retained",
+  "files": [
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/actual-nsis-ordinary-silent-no-launch-safe.json",
+      "bytes": 17618,
+      "sha256": "f82c2705f6626c80657d7279397cd116afe80344d5d242cbfd3c207524ed8977"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/current-template-installer-and-multiuser-fetch-safe.json",
+      "bytes": 702,
+      "sha256": "78fc318f96504b171e86d095adff7d19c6aefe2d87c434c26e91fcdeea18e6fe"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/decision-ordinary-current-user-silent-safe.json",
+      "bytes": 1786,
+      "sha256": "20b0d9d68df99a91c1d3b2b900550fef13e750be30f7b332c72cf7284c72f30a"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/execution-provenance-safe.json",
+      "bytes": 626,
+      "sha256": "c8fcaf2709da1605978c51d49bf28269a67a48647c3f3b469cec1b5e932676da"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/initial-lock-and-upstream-docs-fetch-safe.json",
+      "bytes": 800,
+      "sha256": "045a5b05406ca442fa5e4ce3e3dec542fab6265ad6f0902ba41f71ed2e9862ad"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/nsis-execution-contract-and-current-template-fetch-safe.json",
+      "bytes": 2312,
+      "sha256": "c81edd443b411cba0c0c7422084eba35db04106ed9865a8e00dc83d7644d17bd"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/nsis-ui-and-template-flag-definitions-fetch-safe.json",
+      "bytes": 1062,
+      "sha256": "c62b9c75ae4c5b6696653d4d743e97a69b99cbbd0dab5f30fdff35e379573ab7"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/official-builder-patch-fetch-safe.json",
+      "bytes": 523,
+      "sha256": "4ae2c0a0e960bb53ed1d5a6e95ae96e437e9482b256323751a58ad5e6c17705e"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/patch-config-and-upstream-releases-fetch-safe.json",
+      "bytes": 1259,
+      "sha256": "6b31e229c0212f7731dca26203721d9219ea3abaedcf99476189c83909df4d9c"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/silent-no-launch-review/versioned-upstream-and-root-metadata-fetch-safe.json",
+      "bytes": 1866,
+      "sha256": "b5316098d6e8bdfe2bc4d6d54af5404970422fb64a7831a4a438fad8c92b2f9c"
+    }
+  ],
+  "safeJsonCount": 10,
+  "rawPublicSourceBodiesExcludedFromGitReceiptWhitelist": true,
+  "prior15And8EpochsOverwritten": false,
+  "installerOrNativePrivateOperations": 0
+}

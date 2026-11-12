@@ -1,9 +1,54 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-11T23:54:37.971076+00:00",
+  "createdAt": "2026-11-12T00:16:22.229105+00:00",
   "status": "final71-code-pages-linux-and-windows-core16-accepted-runtime18-android-reinstall-in-progress",
   "summaryPath": "summary.json",
   "files": [
+    {
+      "path": "deployments/linux/20261112-persistent-default/completion-live-safe.json",
+      "sha256": "6207e80182ac328d0c69426539478876137f7d04377c3c57a508717fb1bd0d81",
+      "bytes": 3385
+    },
+    {
+      "path": "deployments/linux/20261112-persistent-default/controller-handoff-safe.json",
+      "sha256": "06fad4f6c95a63cb8febdced4f4a19474db32a849b3c88e66eb0cec89883beff",
+      "bytes": 1669
+    },
+    {
+      "path": "deployments/linux/20261112-persistent-default/final-safe.json",
+      "sha256": "caa6505849d4df1962c73b313ad2bdb1ba10fce7f7e9f9c3122b9b80b33623fb",
+      "bytes": 6934
+    },
+    {
+      "path": "deployments/linux/20261112-persistent-default/independent-live-safe.json",
+      "sha256": "d91dc459c3b1bc2509ac1fe282a5ee0ede386c6d9cb95d2ab2b4a76c4cae1c2e",
+      "bytes": 5182
+    },
+    {
+      "path": "deployments/linux/20261112-persistent-default/linger-safe.json",
+      "sha256": "5250d44119b280acf5517fd0e20bee1c2569efaa6b92eba29972bd70720f9d56",
+      "bytes": 417
+    },
+    {
+      "path": "deployments/linux/20261112-persistent-default/preflight-safe.json",
+      "sha256": "66240032fa78c45a7dad198f73b3ac2cdf92fef796ceb8b084b3c73c961f1fae",
+      "bytes": 701
+    },
+    {
+      "path": "deployments/linux/20261112-persistent-default/review-safe.json",
+      "sha256": "3dcb1eefe4b562dbcd91b5181a6d7bbf67767791ced7083115232aa528ec0d36",
+      "bytes": 838
+    },
+    {
+      "path": "deployments/linux/20261112-persistent-default/root-independent-persistent-live-safe.json",
+      "sha256": "8799315720f98905358e94e1b3c4d9b119ce3d7449aa1d83655a0e97c127358f",
+      "bytes": 998
+    },
+    {
+      "path": "deployments/linux/20261112-persistent-default/unit-launch-safe.json",
+      "sha256": "23b68fc75c0b385cf41aa62e3cc4d4b2c51b6e13d7d0dd2afb67a6fbd6191054",
+      "bytes": 631
+    },
     {
       "path": "deployments/linux/a96a06e-final-deployment.json",
       "sha256": "f12487154652a9263716d12e1ce57b1a176979eabd06e3697004973de26a0599",
@@ -158,6 +203,11 @@
       "path": "maintenance/current-worktree-cleanup-state-safe.json",
       "sha256": "867310fb60421717a9ed51bc6e3bdbc41b809adc72305645f5f98f43cbe6f84d",
       "bytes": 1637
+    },
+    {
+      "path": "maintenance/git-delivery/fourth-step-delivery-safe.json",
+      "sha256": "7cfddff697b2a8f5dbabc1ccf81a5bb4a48bd6c8bd6572a8b27be11c35fbd48b",
+      "bytes": 645
     },
     {
       "path": "maintenance/git-delivery/git-byte-and-crlf-correction-safe.json",
@@ -423,6 +473,16 @@
       "path": "native/android/device-identity-current21/safe-evidence-manifest.json",
       "sha256": "0807a4eb4c91cdbd8e08dc5be0c8b6f1074ba414abcb1c72e566bf291fc3f7f9",
       "bytes": 1929
+    },
+    {
+      "path": "native/android/wrong-linux-final-cleanup/wrong-linux-own-activity-normal-exit-observed-safe.json",
+      "sha256": "3034635ba9d75ee5f425e006ab203eaa72eafcdeaf9eb1c96cac7f8a0253da8e",
+      "bytes": 527
+    },
+    {
+      "path": "native/android/wrong-linux-final-cleanup/wrong-linux-own-debug-app-ram-and-forward-cleanup-safe.json",
+      "sha256": "66ee03e5de7e70757d85781449815672e0ff98f3448307a4cf8dcd8a9a3b3ec9",
+      "bytes": 1849
     },
     {
       "path": "native/ios/final21-public-sync.json",
@@ -723,6 +783,111 @@
       "path": "native/windows/current-installation-matrix/safe-evidence-manifest.json",
       "sha256": "d63cb1eaaa25098d11273cd54ed843dfcad119c1d72772a7e5b7f661cdfae447",
       "bytes": 2472
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/native-signature-and-context-safe.json",
+      "sha256": "9fbec4376fb39ac018e95fb6998bd5d070802d2b43628659cab71ac41c5a2653",
+      "bytes": 1696
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/post-checkpoint-layout/actual-nsis-header-appid-and-uninstall-guid-safe.json",
+      "sha256": "0ce06e7ef7d0d5415b3854e60e664af33125e0dfc058192d983d8ab9f56104c4",
+      "bytes": 2649
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/post-checkpoint-layout/final-readonly-installer-layout-and-copy-safe.json",
+      "sha256": "568e1d4b96887b14ff8b255fffefbe3fd49bc9f1a9dd2006063369de770238b8",
+      "bytes": 11672
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/post-checkpoint-layout/head-installer-and-tags-source-fetch-safe.json",
+      "sha256": "998b64843792ec2e5398ed4f991a182a8446587eaf7c12c1d91ac24967c33c4f",
+      "bytes": 3862
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/post-checkpoint-layout/initial-public-page-fetch-safe.json",
+      "sha256": "7eeeba6afc637baf7f771adab46151800e224612f8431b14422b2e8642fbaf33",
+      "bytes": 1525
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/post-checkpoint-layout/prepared-windows-create-new-copy-safe.json",
+      "sha256": "33f024104156bd45e2e46b2e80d55f8ad35bfce7d79ac684fd7ed2dbcdcfffde",
+      "bytes": 1039
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/post-checkpoint-layout/rc1-desktop-package.json",
+      "sha256": "692a3ed711497a6ffeeecd64748ea4d907ed8b80677d0f32798c109792734576",
+      "bytes": 4355
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/post-checkpoint-layout/rc1-installer-parameters-directories-state-safe.json",
+      "sha256": "b5c069997d5afbf94c42b1a7bca85cd45ec03c90c053964f5f95cd0fb3e564f7",
+      "bytes": 12064
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/post-checkpoint-layout/rc1-tag-pinned-installer-source-fetch-safe.json",
+      "sha256": "749bc5e3ba2f6480dae76407b8cc8baa1a76a11ac0add7b40dad561eb82a36cc",
+      "bytes": 5654
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/post-checkpoint-layout/safe-evidence-manifest.json",
+      "sha256": "b1a4865b59b0fbeff959e036a51d4a6a00c9aab5bc8031600f1dcce957556a5b",
+      "bytes": 2716
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/silent-no-launch-review/actual-nsis-ordinary-silent-no-launch-safe.json",
+      "sha256": "f82c2705f6626c80657d7279397cd116afe80344d5d242cbfd3c207524ed8977",
+      "bytes": 17618
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/silent-no-launch-review/current-template-installer-and-multiuser-fetch-safe.json",
+      "sha256": "78fc318f96504b171e86d095adff7d19c6aefe2d87c434c26e91fcdeea18e6fe",
+      "bytes": 702
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/silent-no-launch-review/decision-ordinary-current-user-silent-safe.json",
+      "sha256": "20b0d9d68df99a91c1d3b2b900550fef13e750be30f7b332c72cf7284c72f30a",
+      "bytes": 1786
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/silent-no-launch-review/execution-provenance-safe.json",
+      "sha256": "c8fcaf2709da1605978c51d49bf28269a67a48647c3f3b469cec1b5e932676da",
+      "bytes": 626
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/silent-no-launch-review/initial-lock-and-upstream-docs-fetch-safe.json",
+      "sha256": "045a5b05406ca442fa5e4ce3e3dec542fab6265ad6f0902ba41f71ed2e9862ad",
+      "bytes": 800
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/silent-no-launch-review/nsis-execution-contract-and-current-template-fetch-safe.json",
+      "sha256": "c81edd443b411cba0c0c7422084eba35db04106ed9865a8e00dc83d7644d17bd",
+      "bytes": 2312
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/silent-no-launch-review/nsis-ui-and-template-flag-definitions-fetch-safe.json",
+      "sha256": "c62b9c75ae4c5b6696653d4d743e97a69b99cbbd0dab5f30fdff35e379573ab7",
+      "bytes": 1062
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/silent-no-launch-review/official-builder-patch-fetch-safe.json",
+      "sha256": "4ae2c0a0e960bb53ed1d5a6e95ae96e437e9482b256323751a58ad5e6c17705e",
+      "bytes": 523
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/silent-no-launch-review/patch-config-and-upstream-releases-fetch-safe.json",
+      "sha256": "6b31e229c0212f7731dca26203721d9219ea3abaedcf99476189c83909df4d9c",
+      "bytes": 1259
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/silent-no-launch-review/safe-evidence-manifest.json",
+      "sha256": "0caf2228d17c8d62b1f7b8c2b005609633fd44fd251af5fcc060f7d33d06ea26",
+      "bytes": 3396
+    },
+    {
+      "path": "native/windows/deepseek-official-post-checkpoint/silent-no-launch-review/versioned-upstream-and-root-metadata-fetch-safe.json",
+      "sha256": "b5316098d6e8bdfe2bc4d6d54af5404970422fb64a7831a4a438fad8c92b2f9c",
+      "bytes": 1866
     },
     {
       "path": "native/windows/deepseek-official-preparation/execution-provenance-safe.json",
@@ -1390,6 +1555,11 @@
       "bytes": 78189
     },
     {
+      "path": "sources/audit/epoch5-fixed-checkpoint-independent-review-safe.json",
+      "sha256": "165d0351990113b9322563317f573b180df8b9915876c14cd1b50999dcb6d373",
+      "bytes": 7554
+    },
+    {
       "path": "sources/audit/final71-current-source-bindings.json",
       "sha256": "77e6ca44f69491c91aedd06a2b121673dc338dc955696c16befff836631129f9",
       "bytes": 1602
@@ -1491,13 +1661,13 @@
     },
     {
       "path": "sources/receipt-provenance.json",
-      "sha256": "86db3dbcce367f61db8c6d70849b6b97be360302abd4f0fb407a0bce35bfc0bc",
-      "bytes": 181163
+      "sha256": "ab4f8fdc0d579e746040db4450e97fbceef2e1532becb895f2f9fcef6dcd527a",
+      "bytes": 198743
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "7266f82135c1fcf9d5f94a7b6b7676950c347868916865680568d7897973e4a7",
-      "bytes": 23778
+      "sha256": "f485bd3589bb39ab9f4c91e9e91ce204b11157b7ede3d585a798e7f1e6930a81",
+      "bytes": 27013
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -1521,8 +1691,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "284c459780351e9e8e40cbebecb5738f65ffadc702f90cc8466cac2e36e1314f",
-      "bytes": 31879
+      "sha256": "c12fbecd989c6f511fb27283e8b8fe6df3b51bad397ddbbfe68664494cf399c3",
+      "bytes": 36306
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",

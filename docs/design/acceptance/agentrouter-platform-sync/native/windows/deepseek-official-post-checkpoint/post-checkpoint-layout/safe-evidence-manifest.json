@@ -1,0 +1,47 @@
+{
+  "scope": "New post-checkpoint reversible prepared-copy and independent read-only installer-source proof; original checkpoint unchanged",
+  "safeJsonFiles": [
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/post-checkpoint-layout/actual-nsis-header-appid-and-uninstall-guid-safe.json",
+      "bytes": 2649,
+      "sha256": "0ce06e7ef7d0d5415b3854e60e664af33125e0dfc058192d983d8ab9f56104c4"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/post-checkpoint-layout/final-readonly-installer-layout-and-copy-safe.json",
+      "bytes": 11672,
+      "sha256": "568e1d4b96887b14ff8b255fffefbe3fd49bc9f1a9dd2006063369de770238b8"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/post-checkpoint-layout/prepared-windows-create-new-copy-safe.json",
+      "bytes": 1039,
+      "sha256": "33f024104156bd45e2e46b2e80d55f8ad35bfce7d79ac684fd7ed2dbcdcfffde"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/installer-readonly/head-installer-and-tags-source-fetch-safe.json",
+      "bytes": 3862,
+      "sha256": "998b64843792ec2e5398ed4f991a182a8446587eaf7c12c1d91ac24967c33c4f"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/installer-readonly/initial-public-page-fetch-safe.json",
+      "bytes": 1525,
+      "sha256": "7eeeba6afc637baf7f771adab46151800e224612f8431b14422b2e8642fbaf33"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/installer-readonly/rc1-desktop-package.json",
+      "bytes": 4355,
+      "sha256": "692a3ed711497a6ffeeecd64748ea4d907ed8b80677d0f32798c109792734576"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/installer-readonly/rc1-installer-parameters-directories-state-safe.json",
+      "bytes": 12064,
+      "sha256": "b5c069997d5afbf94c42b1a7bca85cd45ec03c90c053964f5f95cd0fb3e564f7"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/installer-readonly/rc1-tag-pinned-installer-source-fetch-safe.json",
+      "bytes": 5654,
+      "sha256": "749bc5e3ba2f6480dae76407b8cc8baa1a76a11ac0add7b40dad561eb82a36cc"
+    }
+  ],
+  "safeJsonCount": 8,
+  "installerExecutionOrPrivateStateChanges": 0
+}

@@ -1,0 +1,22 @@
+{
+  "observedAt": "2026-11-11T23:26:36.457623+00:00",
+  "requests": [
+    {
+      "requestedUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/pnpm-lock.yaml",
+      "verifiedTls": true,
+      "httpStatus": 200,
+      "finalUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/pnpm-lock.yaml",
+      "bytes": 1199362,
+      "sha256": "aa1293f2e8d3ee82cb3cfcb0e65ba8a0ef73ab80fad4c35d7ed2f7c67b95a625",
+      "publicBodyFile": "rc1-pnpm-lock.yaml"
+    },
+    {
+      "requestedUrl": "https://www.electron.build/nsis",
+      "verifiedTls": true,
+      "exceptionType": "RemoteDisconnected",
+      "httpStatus": null
+    }
+  ],
+  "installerExecuted": false,
+  "apiOrPrivateReads": 0
+}

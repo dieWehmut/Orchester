@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-11T16:08:54.376418+00:00",
+  "status": "official artifact copy and read-only installer-source layout review complete; Windows signature trust and actual installation remain owned externally",
+  "preparedWindowsArtifact": {
+    "schemaVersion": 1,
+    "observedAt": "2026-11-11T16:00:42.061645+00:00",
+    "action": "CreateNew-copy-created-without-overwrite",
+    "wslSource": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/official-download/dsh-latest-windows-x64.exe",
+    "preparedWindowsPath": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\deepseek-harness-official-prepared-20261111\\DeepSeek-Harness-0.2.2-rc.1-Windows-x64.exe",
+    "bytes": 293425336,
+    "sourceSha256BeforeAndAfter": "830947f8996dc05d991ca9133fff4d3400073e47b9cfa6507754867e79482b23",
+    "preparedWindowsFileSha256After": "830947f8996dc05d991ca9133fff4d3400073e47b9cfa6507754867e79482b23",
+    "sourceAndPreparedCopyByteDigestEqual": true,
+    "installerExecuted": false,
+    "windowsAuthenticodeTrustVerificationPerformedByThisCopy": false,
+    "signatureVerificationOwner": "/root/windows_reinstall",
+    "userInstallerOrInstalledDshFilesOverwritten": false,
+    "nativeQueueOperations": 0,
+    "privateProfileReads": 0,
+    "windowsAppOrApiOperations": 0
+  },
+  "actualInstallerFormatAndIdentifiers": {
+    "installerFormat": "NSIS",
+    "appId": "com.deepseek.dsh",
+    "uninstallGuid": "1bf39983-50d0-5fe0-9ef4-cece76f67c5e",
+    "existingUserDataElementUninstallGuid": "63aba052-5613-58ee-9049-667734229a73",
+    "sameExactUninstallGuid": false,
+    "guidDifferenceIsNotFullCoexistenceRuntimeAcceptance": true,
+    "publicDecodedHeaderSha256": "235688829217712fdd2a765255521339fd90bb962af0671f7bf17691abc59617"
+  },
+  "correspondingOfficialRc1Source": {
+    "tagFoundViaActualOfficialLinks": "dsh-v0.2.2-rc.1",
+    "tagPinnedCommit": "66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db",
+    "desktopPackageName": "@deepseek-ai/dsh-desktop",
+    "sourcePackageVersion": "0.2.2-rc.1",
+    "actualPreparedInstallerPublicPeVersion": "0.2.2-rc.1",
+    "initialCurrentSourceHeadPackageVersion": "0.2.2-rc.2",
+    "tagIsDshVersionTagNotProvenDesktopReleaseTag": true,
+    "actualBinaryDshBuildCommitExtracted": false
+  },
+  "officialSourceWindowsInstallerType": {
+    "source": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/scripts/electron-builder-config.mjs",
+    "sha256": "54c286edc4d3707a313444c73af58c47cb802d4ed68e68013e0642c488368931",
+    "target": "nsis",
+    "targetLine": 253,
+    "options": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": false,
+      "allowToChangeInstallationDirectory": false
+    },
+    "optionLines": {
+      "oneClick": 264,
+      "perMachine": 265,
+      "allowElevation": 266,
+      "allowToChangeInstallationDirectory": 267
+    },
+    "perUserEnforcementCustomSource": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/scripts/installer.nsh",
+    "allUsersModeRejectedInCustomInit": true,
+    "sourceAllUsersExpectedExitCode": 2,
+    "actualInstallerAllUsersModeExecutionPerformed": false
+  },
+  "officialSourceExplicitParameters": {
+    "sourceTestUrl": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/tests/windows-installer-smoke.ps1",
+    "sourceTestSha256": "2d6c60d7d19e396a431c03d63c2e5dfcba26ab471e1850475e873a74d86de8ed",
+    "silent": {
+      "parameter": "/S",
+      "explicitlyUsedByOfficialOwnInstallerSmokeSource": true,
+      "sourceLine": 216,
+      "usageContext": "Silent setup while an installed test application is running; expected rejection exit 2 before extraction. This proves source usage, not a newly run silent installation."
+    },
+    "directory": {
+      "parameter": "/D=<absolute-path>",
+      "explicitlyUsedByOfficialOwnInstallerSmokeSource": true,
+      "sourceLines": [
+        31,
+        212,
+        216
+      ],
+      "scriptConcatenationPlacesDirectoryParameterLast": true,
+      "readmeDocumentsEditableDirectory": true,
+      "directoryChooserSourceLine": 278
+    },
+    "silentUpdate": {
+      "arguments": "/S --updated",
+      "officialSourceLine": 240,
+      "sourceExpectedExitCode": 0,
+      "followupInstallLocationRetentionChecks": [
+        244,
+        246
+      ],
+      "updaterSpecificFlagNotRecommendedAsGenericNewInstall": true
+    },
+    "allUsers": {
+      "arguments": "/S /allusers /D=<path>",
+      "officialSourceLine": 248,
+      "sourceExpectedExitCode": 2,
+      "supportedInstallationScope": "current user only"
+    },
+    "theme": {
+      "parameter": "/THEME=light|dark|auto",
+      "parsedByCustomInstallerSource": true,
+      "source": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/scripts/installer.nsh"
+    },
+    "keepAppData": {
+      "parameter": "/KEEP_APP_DATA",
+      "scope": "Existing uninstaller data-cleanup opt-out, not asserted as a generic fresh installer argument",
+      "source": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/installer/uninstall.nsh",
+      "sourceOptionLine": 19
+    },
+    "silentFlagGuessedFromNsisTypeOnly": false,
+    "officialOwnSmokeScriptExecutedByThisChild": false,
+    "freshSilentPositiveInstallationWithChosenDirectoryTestedByThisChild": false,
+    "preparedBinaryArgumentParserQueriedOrRun": false
+  },
+  "officialSourceDirectoryBehavior": {
+    "defaultAbsoluteInstallationDirectoryProvenByInspectedApplicationSources": false,
+    "defaultNsisDirectoryGuessed": false,
+    "stockDirectoryChangePageDisabled": true,
+    "customWelcomeDirectoryStillEditable": true,
+    "customPathEditSource": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/installer/pages.nsh",
+    "customPathEditLines": [
+      104,
+      134,
+      215,
+      269
+    ],
+    "customFolderChooserLine": 278,
+    "customInstallerPreservesChosenDirectory": true,
+    "customPreservationSourceLine": 80,
+    "sourceReadmeStatementLine": 253,
+    "registeredInstallLocationRetainedInSilentUpdateSourceTest": true,
+    "directoryPreflightIncludesValidationOfCurrentPath": true,
+    "noApplicationInstalledOrMovedByThisChild": true
+  },
+  "officialSourceStateBoundaries": {
+    "sourceReadme": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/README.md",
+    "sha256": "37888f2f0ed6a12eb53fff560bd6f7211bf458c306f475ba077b9897380f2c5a",
+    "electronUserData": {
+      "documentedWindowsDefaultSettingsPath": "%APPDATA%\\@deepseek-ai\\dsh-desktop\\desktop\\settings.json",
+      "documentedSourceLine": 293,
+      "keybindingsRelativeToUserData": "keybindings.json",
+      "keybindingsSeparateFromDshHome": true,
+      "keybindingsSourceLine": 90,
+      "browserStorageAndElectronSettingsAreSeparateFromHarnessHome": true,
+      "packagedElectronUserDataOverrideExplicitlyProvenByThisReview": false,
+      "developmentOnlyIsolationSettingsMustNotBeAssumedPackagedOverrides": true,
+      "dshHomeOverrideAloneDoesNotProveBrowserProfileIsolation": true
+    },
+    "harnessHome": {
+      "documentedDefault": "~/.dsh",
+      "explicitOverrideSettingName": "DSH_HOME",
+      "desktopRuntimeProfile": "$DSH_HOME/profiles/desktop",
+      "desktopProfileOwnershipSourceLines": [
+        121,
+        144
+      ],
+      "sharedWithCli": [
+        "sessions",
+        "settings",
+        "credentials",
+        "workspaces",
+        "storage"
+      ],
+      "sharingSourceLine": 372,
+      "fullyIsolatedByInstallDirectoryAlone": false,
+      "actualWindowsConfiguredHomeRead": false,
+      "actualStateOrCredentialsReadOrChanged": false
+    },
+    "guiFinishPage": {
+      "launchCheckboxSelectedByDefaultInOfficialReadme": true,
+      "sourceReadmeLine": 253,
+      "interactiveInstallMayLaunchProductWhenAccepted": true,
+      "silentNoLaunchGuaranteeProvenForPreparedBinary": false,
+      "forceRunArgumentInferredOrUsed": false
+    },
+    "uninstall": {
+      "source": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/66491b05e3f05ad35bcdd4f6cd7ed26041d9e3db/apps/desktop/installer/uninstall.nsh",
+      "sha256": "f9d9884ba9e9a5cdddb89f70c59b84982364f3098f680c3f1cee59c8b615f0d4",
+      "appDataProductPathExpression": "$APPDATA\\${PRODUCT_FILENAME}",
+      "appDataPackagePathExpression": "$APPDATA\\${APP_PACKAGE_NAME}",
+      "updaterCachePathExpression": "$LOCALAPPDATA\\${DSH_UPDATER_CACHE_NAME}",
+      "documentedHarnessHomePreserved": true,
+      "documentationLine": 261,
+      "explicitKeepAppDataCleanupSkipOption": true,
+      "windowsDshHomeVisibilityBoundary": "The uninstaller only sees DSH_HOME when published as a Windows environment variable; no environment values were read by this child."
+    }
+  },
+  "executionLimits": {
+    "readOnlySourceAssertionsDoNotClaimActualInstallerFlagsRun": true,
+    "silentInstallNoApplicationLaunchGuaranteeEstablishedByThisTask": false,
+    "defaultInstallAbsoluteDirectoryNotGuessed": true,
+    "independentInstallDirectoryDoesNotIsolateHarnessHomeState": true,
+    "electronPackagedUserDataOverrideNotGuessed": true,
+    "installerExecuted": false,
+    "userExistingDshOrInstallerOverwritten": false,
+    "privateUserStateReadOrChanged": false,
+    "nativeQueueOperations": 0,
+    "windowsGuiOrApiModelOperations": 0,
+    "windowsAuthenticodeTrustVerifiedHere": false
+  },
+  "requiredOwnerValidation": {
+    "owner": "/root/windows_reinstall",
+    "fullArtifactSha256": "830947f8996dc05d991ca9133fff4d3400073e47b9cfa6507754867e79482b23",
+    "size": 293425336,
+    "wholeFileAuthenticodeTrustAndOfficialPublisherBeforeInstall": true,
+    "firstHttps200TruncatedReceiptRetained": true,
+    "https206ResumeInitialPrefixEtagUnavailableRetained": true,
+    "preserveUserDataElementApplicationAndAllProfiles": true,
+    "noForcedUpdaterFlagsForOrdinaryNewInstall": true
+  },
+  "evidence": {
+    "copyReceipt": {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/post-checkpoint-layout/prepared-windows-create-new-copy-safe.json",
+      "sha256": "33f024104156bd45e2e46b2e80d55f8ad35bfce7d79ac684fd7ed2dbcdcfffde"
+    },
+    "actualHeader": {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/post-checkpoint-layout/actual-nsis-header-appid-and-uninstall-guid-safe.json",
+      "sha256": "0ce06e7ef7d0d5415b3854e60e664af33125e0dfc058192d983d8ab9f56104c4"
+    },
+    "officialRc1Source": {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/installer-readonly/rc1-installer-parameters-directories-state-safe.json",
+      "sha256": "b5c069997d5afbf94c42b1a7bca85cd45ec03c90c053964f5f95cd0fb3e564f7"
+    },
+    "officialRc1SourceManifest": {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/primary-independent/installer-readonly/safe-evidence-manifest.json",
+      "sha256": "b69043a0a75cd2c626c4936b9aa2127148621866cc2223c7a7c065b596191915"
+    },
+    "earlierCheckpointUnchanged": {
+      "path": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/safe-evidence-manifest.json",
+      "sha256": "43440baaf6da71bdb91d88d948b54bab594e9d11b3c365138a6cf41437dee2d1"
+    }
+  }
+}

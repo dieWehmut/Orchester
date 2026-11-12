@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "operation": "Read-only exact NSIS signature and raw-deflate public installer-header decode; no installer execution",
+  "wslInstallerPath": "/home/han/.local/state/orchester-delivery/20261111/official-installs/windows-dsh-official-binding/official-download/dsh-latest-windows-x64.exe",
+  "knownWholeInstallerSha256": "830947f8996dc05d991ca9133fff4d3400073e47b9cfa6507754867e79482b23",
+  "installerBytes": 293425336,
+  "installerFormat": "NSIS",
+  "nsisFirstHeaderOffset": 105472,
+  "nsisSignatureHex": "efbeadde4e756c6c736f6674496e7374",
+  "compressedHeaderOffset": 105500,
+  "compressedHeaderBytes": 34349,
+  "decompressedHeaderBytes": 236482,
+  "decompressedHeaderSha256": "235688829217712fdd2a765255521339fd90bb962af0671f7bf17691abc59617",
+  "nsisHeaderOriginalFlags": 0,
+  "actualAppIdFromHeader": {
+    "decodedHeaderOffset": 176516,
+    "literal": "com.deepseek.dsh"
+  },
+  "actualUninstallRegistryKeyFromHeader": {
+    "decodedHeaderOffset": 172908,
+    "literal": "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\1bf39983-50d0-5fe0-9ef4-cece76f67c5e"
+  },
+  "actualOfficialUninstallGuid": "1bf39983-50d0-5fe0-9ef4-cece76f67c5e",
+  "existingDataElementUninstallGuid": "63aba052-5613-58ee-9049-667734229a73",
+  "sameExactUninstallGuid": false,
+  "oldDataElementGuidLiteralPresentInThisHeader": false,
+  "exactPublicIdentityStrings": [
+    {
+      "decodedHeaderOffset": 152532,
+      "literal": "Software\\1bf39983-50d0-5fe0-9ef4-cece76f67c5e"
+    },
+    {
+      "decodedHeaderOffset": 172908,
+      "literal": "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\1bf39983-50d0-5fe0-9ef4-cece76f67c5e"
+    },
+    {
+      "decodedHeaderOffset": 175384,
+      "literal": "Uninstall DeepSeek Harness.exe"
+    },
+    {
+      "decodedHeaderOffset": 175812,
+      "literal": "DeepSeek Harness"
+    },
+    {
+      "decodedHeaderOffset": 176104,
+      "literal": "Hangzhou DeepSeek Artificial Intelligence Co., Ltd."
+    },
+    {
+      "decodedHeaderOffset": 176516,
+      "literal": "com.deepseek.dsh"
+    },
+    {
+      "decodedHeaderOffset": 177202,
+      "literal": "DeepSeek Harness 0.2.2-rc.1"
+    },
+    {
+      "decodedHeaderOffset": 225610,
+      "literal": "DeepSeek Harness"
+    }
+  ],
+  "defaultInstallDirectoryProvenFromStringFragmentsAlone": false,
+  "supportedSilentParametersProvenFromFormatAlone": false,
+  "fullCoexistenceOrInstalledUserStateIsolationClaimed": false,
+  "windowsAuthenticodeTrustVerifiedHere": false,
+  "installerOrEmbeddedProgramsExecuted": false,
+  "userInstalledShellOrProfileReads": false,
+  "nativeQueueOrApiCalls": 0,
+  "officialSourceParametersAreSeparateProof": true
+}
