@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "status": "official-claude-windows-payload-preparation-blocked-by-current-vendor-tls-transport",
+  "observedAtUtc": "2026-11-12T22:39:08.253479+00:00",
+  "scope": "No native commands, installations, Store bootstrapper reexecution, login or model requests. Current official metadata and exact payload GETs only.",
+  "officialPageAvailabilityReceipt": "native/windows/claude-current-payload-20261113/current-http-safe.json",
+  "currentMicrosoftWinGetManifest": {
+    "sourceURL": "https://raw.githubusercontent.com/microsoft/winget-pkgs/master/manifests/a/Anthropic/Claude/3.6556.2/Anthropic.Claude.installer.yaml",
+    "httpStatus": 200,
+    "actualExitCode": 0,
+    "version": "3.6556.2",
+    "sourceSha256": "bc4e81e1ac442a0d79fa2f246ebb1881998772c432848f94855167ae0cb3cfdb",
+    "sourceByteExactWithHistorical": true,
+    "latestVersionDirectoryFromCurrentMicrosoftRepository": "3.6556.2",
+    "latestVersionsListingSourceSha256": "6d5ac2788e25a36db6a25391ff496dc4bcc2d179bf8c4a67599bbe39c043b63a",
+    "channelMustNotBeConflatedWithStorePackageVersion": true,
+    "httpReceipt": "native/windows/claude-current-payload-20261113/current-microsoft-manifest-http-safe.json"
+  },
+  "currentOfficialX64PayloadRequests": [
+    {
+      "kind": "msix",
+      "urlFromCurrentMicrosoftWinGetManifest": "https://downloads.claude.ai/releases/win32/x64/3.6556.2/Claude-20c019a1e61fa5b687616af57d31f97bb3181723.msix",
+      "expectedPayloadSha256": "c0ac245c9ad458abd550bcbf2a0b34c75c51173a27f3c870602e5452cf3484f1",
+      "observedAtUtc": "2026-11-12T22:37:30.544093+00:00",
+      "actualExitCode": 35,
+      "httpStatus": null,
+      "TLSCertificateVerificationEnabled": true,
+      "curlProcessExited": true,
+      "bytesReceived": 0,
+      "payloadDownloaded": false,
+      "payloadSHA256Verified": false,
+      "errorClass": "curl-35"
+    },
+    {
+      "kind": "exe",
+      "urlFromCurrentMicrosoftWinGetManifest": "https://downloads.claude.ai/releases/win32/x64/3.6556.2/Claude-20c019a1e61fa5b687616af57d31f97bb3181723.exe",
+      "expectedPayloadSha256": "945082290478e5c668e8aaa25a392e1cd129e6219173e907b7ff1f7f99ded45e",
+      "observedAtUtc": "2026-11-12T22:37:30.544400+00:00",
+      "actualExitCode": 35,
+      "httpStatus": null,
+      "TLSCertificateVerificationEnabled": true,
+      "curlProcessExited": true,
+      "bytesReceived": 0,
+      "payloadDownloaded": false,
+      "payloadSHA256Verified": false,
+      "errorClass": "curl-35"
+    }
+  ],
+  "currentStoreCatalogReceipt": "native/windows/claude-current-payload-20261113/current-store-catalog-safe.json",
+  "currentStorePackageVersions": [
+    "5.11492.0.0"
+  ],
+  "currentOfficialStoreCatalogDiffersFromHistorical": true,
+  "historicalStoreBootstrapperNativeExitCode": 1612,
+  "historicalStoreConnectionErrorPreserved": true,
+  "existingStoreBootstrapperFile": {
+    "exists": true,
+    "isClaudePayload": false,
+    "fileExecutedByThisActor": false,
+    "currentNativeSignatureVerificationRun": false,
+    "bytes": 813088,
+    "sha256": "8ab145dab22a698105f20e10b182e50d1c2422e2be1818349efadbb06e118a48",
+    "mzHeader": true,
+    "peSignature": true,
+    "matchesHistoricalVerifiedMicrosoftStoreBootstrapperBytes": true
+  },
+  "claudeApplicationPayloadPrepared": false,
+  "nativeCurrentUserRegistrationVerifiedByThisActor": false,
+  "vendorDownloadTLSCertificateVerificationEnabled": true,
+  "transportErrorSpecificNetworkOrProxyOrFirewallCauseEstablished": false,
+  "currentClaudeLinuxSupportedPlatformListEstablished": false,
+  "permanentLinuxUnsupportedClaimed": false,
+  "privateProfilesCredentialsSettingsRead": false,
+  "rawDiagnosticLogsOrPublicBodiesForArchive": false,
+  "nextRequiredActions": [
+    "Restore a live Windows native gateway before querying exact former observer and Store process identities.",
+    "Restore successful official downloads.claude.ai or normal Microsoft Store transport; all current exact vendor payload GETs ended before HTTP with curl35 and zero bytes.",
+    "After download, verify actual digest and native Authenticode, then install through the vendor-supported path and verify actual current-user registration.",
+    "Use the fresh Store5.11492.0.0 metadata and its own digest; do not reuse historicalStore5.1231.2.0 metadata or mix it with WinGet3.6556.2."
+  ],
+  "fullObjectiveComplete": false,
+  "officialX64PayloadRequestsReceipt": "native/windows/claude-current-payload-20261113/current-official-payload-downloads-safe.json"
+}

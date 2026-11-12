@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "status": "formalportable14-checkpoint-pushed-and-merged-main-remaining-desktop-installation-blocked-by-nativegateway",
+  "observedAtUtc": "2026-11-12T16:19:07.803224+00:00",
+  "featureCommit": "1824cf2005225638ae9ab427da0c9ef9a2657a61",
+  "mainRevision": "3712edd8d1569003d5b53ba02af9cc28a969d687",
+  "actualFeaturePushExitCode": 0,
+  "actualMainMergeExitCode": 0,
+  "actualMainPushExitCode": 0,
+  "bothRemoteRefsVerified": true,
+  "allSelectedGitBlobsByteExact": 596,
+  "manifestHashSizeChecks": 594,
+  "bothWorktreesClean": true,
+  "nativePortable14ActualExitCode": 0,
+  "sourceRevisionStillFrozen": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "nativeDesktop18Verified": false,
+  "defaultReinstallationCompleted": false,
+  "previousGoalTurnClassification": "progress",
+  "progressEvidence": [
+    "Three verified commits c19f621/f6520a8/1824cf2 pushed and merged main.",
+    "Actual unchanged input guard/native freeze0 and actual formal Portable14 native0.",
+    "FormalDesktop18 actualfailure atmonitor with12checks6writes/pageErrors0; originalexec90867 retained live.",
+    "Actual signed Microsoft Store bootstrapper1612 and UIconnectionerror preserve external block."
+  ],
+  "remainingOriginalExecSessionId": 90867,
+  "remainingOriginalGuiPid": 37324,
+  "remainingOriginalGuiFileTimeExact": "134389718070239855",
+  "doNotRestartOriginalExecutorOrAdoptNewHandlesBasedOnObservationTimeout": true,
+  "requiredNextWork": [
+    "Restore or observe a functioning native gateway without restarting originalexec90867.",
+    "Diagnose current same-GUI monitor assert via prepared readonly CDP; preserve all original21/42/service truth invariants.",
+    "Normal exact-owned native tray quit and poll original90867 terminal.",
+    "Complete full Desktop18 and refresh data/credential backups before default7338/Desktop reinstall.",
+    "Actual officialClaude Windows payload/registration and Linux support evidence/globalWorkBuddy Linux usablepackage/profile isolation.",
+    "Linux static userunit actualautostart/service lifecycle remains unverified."
+  ],
+  "publicArchiveNotClaimedToIncludeThisLaterGitDeliveryRecord": true,
+  "goalFullCompletionClaimed": false
+}

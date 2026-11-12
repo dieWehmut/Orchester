@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "status": "current-official-http-queries-completed",
+  "rows": [
+    {
+      "name": "claude-support",
+      "requestedURL": "https://support.claude.com/en/articles/10065433-installing-claude-for-desktop",
+      "observedAtUtc": "2026-11-12T22:36:18.178845+00:00",
+      "actualExitCode": 35,
+      "httpStatus": null,
+      "TLSVerificationEnabled": true,
+      "curlProcessExited": true,
+      "redirectProtocolRestrictedToHTTPS": true,
+      "bodyReceived": false,
+      "errorClass": "curl-35"
+    },
+    {
+      "name": "claude-download",
+      "requestedURL": "https://claude.ai/download",
+      "observedAtUtc": "2026-11-12T22:36:18.179119+00:00",
+      "actualExitCode": 35,
+      "httpStatus": null,
+      "TLSVerificationEnabled": true,
+      "curlProcessExited": true,
+      "redirectProtocolRestrictedToHTTPS": true,
+      "bodyReceived": false,
+      "errorClass": "curl-35"
+    },
+    {
+      "name": "claude-com-download",
+      "requestedURL": "https://claude.com/download",
+      "observedAtUtc": "2026-11-12T22:36:18.179360+00:00",
+      "actualExitCode": 35,
+      "httpStatus": null,
+      "TLSVerificationEnabled": true,
+      "curlProcessExited": true,
+      "redirectProtocolRestrictedToHTTPS": true,
+      "bodyReceived": false,
+      "errorClass": "curl-35"
+    },
+    {
+      "name": "claude-releases",
+      "requestedURL": "https://downloads.claude.ai/releases/win32/x64/RELEASES",
+      "observedAtUtc": "2026-11-12T22:36:18.179605+00:00",
+      "actualExitCode": 35,
+      "httpStatus": null,
+      "TLSVerificationEnabled": true,
+      "curlProcessExited": true,
+      "redirectProtocolRestrictedToHTTPS": true,
+      "bodyReceived": false,
+      "errorClass": "curl-35"
+    },
+    {
+      "name": "microsoft-winget-versions",
+      "requestedURL": "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/a/Anthropic/Claude",
+      "observedAtUtc": "2026-11-12T22:36:18.180264+00:00",
+      "actualExitCode": 0,
+      "httpStatus": 200,
+      "TLSVerificationEnabled": true,
+      "curlProcessExited": true,
+      "redirectProtocolRestrictedToHTTPS": true,
+      "bodyReceived": true,
+      "bytes": 155216,
+      "sha256": "6d5ac2788e25a36db6a25391ff496dc4bcc2d179bf8c4a67599bbe39c043b63a",
+      "finalURL": "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/a/Anthropic/Claude"
+    },
+    {
+      "name": "microsoft-store-catalog",
+      "requestedURL": "https://displaycatalog.mp.microsoft.com/v7.0/products/9P6K58THS811?market=US&languages=en-US",
+      "observedAtUtc": "2026-11-12T22:36:18.180478+00:00",
+      "actualExitCode": 0,
+      "httpStatus": 200,
+      "TLSVerificationEnabled": true,
+      "curlProcessExited": true,
+      "redirectProtocolRestrictedToHTTPS": true,
+      "bodyReceived": true,
+      "bytes": 46386,
+      "sha256": "6552bc24e202ac62f5b267065c80417d0a3884bef73189d636710972e307e17f",
+      "finalURL": "https://displaycatalog.mp.microsoft.com/v7.0/products/9P6K58THS811?market=US&languages=en-US"
+    }
+  ],
+  "webToolResult": "404 Invalid URL POST /v1/alpha/search",
+  "nativeCommandsExecuted": 0,
+  "installerInvocations": 0,
+  "modelsOrAuthRequests": 0,
+  "privateProfilesCredentialsSettingsRead": false
+}

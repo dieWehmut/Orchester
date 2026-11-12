@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "generatedAtUTC": "2026-11-12T22:35:54.972445+00:00",
+  "sourceRoot": "/home/han/.local/state/orchester-delivery/20261113/workbuddy-global-continuation",
+  "publicSafeSelectedArtifacts": [
+    {
+      "relativePath": "current-http-safe.json",
+      "bytes": 4613,
+      "sha256": "cc0d1b24de5bd2a5e2deabf1b05d2e0fe479cbe33fc0b0f825c3a52e75af1474",
+      "archivePath": "native/wsl/workbuddy-global-current-20261113/current-http-safe.json",
+      "archiveBytes": 4613,
+      "archiveSha256": "cc0d1b24de5bd2a5e2deabf1b05d2e0fe479cbe33fc0b0f825c3a52e75af1474",
+      "archiveByteExactToSource": true
+    },
+    {
+      "relativePath": "client-http-safe.json",
+      "bytes": 1675,
+      "sha256": "8a86ad874762e0514137e6112401cca5f59a872b9649d6aff15ebb24c8a31f24",
+      "archivePath": "native/wsl/workbuddy-global-current-20261113/client-http-safe.json",
+      "archiveBytes": 1675,
+      "archiveSha256": "8a86ad874762e0514137e6112401cca5f59a872b9649d6aff15ebb24c8a31f24",
+      "archiveByteExactToSource": true
+    },
+    {
+      "relativePath": "final-global-linux-continuation-safe.json",
+      "bytes": 4884,
+      "sha256": "9a8c639b380d2e10d8e627c633a062bc2c42a417402a9c727140d8e5d42128ad",
+      "archivePath": "native/wsl/workbuddy-global-current-20261113/final-global-linux-continuation-safe.json",
+      "archiveBytes": 5213,
+      "archiveSha256": "7b548454d9c676e191d8508a834e491c718ddb24c275723810121d7b158111f3",
+      "archiveByteExactToSource": false
+    },
+    {
+      "relativePath": "fetch-current.py",
+      "bytes": 2288,
+      "sha256": "5262447523618d08616d460c3a96d7a211dbe2305b24d688637d9ab3d3b7eaf1",
+      "archivePath": null,
+      "notArchivedReason": "producer script is outside the selected safe JSON archive scope"
+    }
+  ],
+  "rawOfficialPublicBodiesArchived": false,
+  "privateProfileOrCredentialValuesIncluded": false,
+  "gitMutations": 0,
+  "sourceMappingOriginalSha256": "e09a2d86c6a8c9f182cfa6c5f46cdce4e5138174a9dd63fe87d7106f66db8f41",
+  "sourceMappingOriginalBytes": 1010,
+  "archiveNormalization": "Final receipt uses archive-root-relative HTTP receipt references and explicitly scopes body comparison paths to unarchived source artifacts; source hashes and byte counts remain their original values.",
+  "producerScriptArchived": false
+}

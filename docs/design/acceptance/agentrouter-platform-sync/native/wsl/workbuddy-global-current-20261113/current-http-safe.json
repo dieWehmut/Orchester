@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "scope": "Current official international WorkBuddy Linux channels; bounded public HTTP only",
+  "tlsVerificationDisabled": false,
+  "webToolUnavailable": "HTTP404 Invalid URL POST /v1/alpha/search",
+  "attempts": [
+    {
+      "name": "homepage",
+      "requestedURL": "https://www.workbuddy.ai/",
+      "observedAtUTC": "2026-11-12T22:33:32.978362+00:00",
+      "httpStatus": 200,
+      "finalURL": "https://www.workbuddy.ai/",
+      "bytesRead": 19158,
+      "sha256": "ff62ba37882024c40571f2f9733284fce5620f460f4766023153a533c3ce9e20",
+      "readBoundBytes": 1000000,
+      "requestMethod": "GET"
+    },
+    {
+      "name": "linux-x64-deb",
+      "requestedURL": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-x64-deb",
+      "observedAtUTC": "2026-11-12T22:33:32.978796+00:00",
+      "httpStatus": 200,
+      "finalURL": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-x64-deb",
+      "bytesRead": 267,
+      "sha256": "466b3060f0c4113fdbfea6fc5f32e7613e2e0741849927aa19033d56b58635d1",
+      "readBoundBytes": 1000000,
+      "advertisedVersion": "5.5.2.37849279",
+      "vendorDigestProvided": false,
+      "requestMethod": "GET"
+    },
+    {
+      "name": "linux-x64-rpm",
+      "requestedURL": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-x64-rpm",
+      "observedAtUTC": "2026-11-12T22:33:32.979091+00:00",
+      "httpStatus": 200,
+      "finalURL": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-x64-rpm",
+      "bytesRead": 267,
+      "sha256": "2cf5895c585f1d59b215127dafcff4754099701bee5bc14b7265914be54a07b8",
+      "readBoundBytes": 1000000,
+      "advertisedVersion": "5.5.2.37849279",
+      "vendorDigestProvided": false,
+      "requestMethod": "GET"
+    },
+    {
+      "name": "linux-arm64-deb",
+      "requestedURL": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-arm64-deb",
+      "observedAtUTC": "2026-11-12T22:33:32.979303+00:00",
+      "httpStatus": 200,
+      "finalURL": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-arm64-deb",
+      "bytesRead": 271,
+      "sha256": "84b83887c98cd7c3cc0f586de4e7e58b69cf6b789df7a61ca6e26fe0b9bda27f",
+      "readBoundBytes": 1000000,
+      "advertisedVersion": "5.5.2.37849279",
+      "vendorDigestProvided": false,
+      "requestMethod": "GET"
+    },
+    {
+      "name": "linux-arm64-rpm",
+      "requestedURL": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-arm64-rpm",
+      "observedAtUTC": "2026-11-12T22:33:32.979573+00:00",
+      "httpStatus": 200,
+      "finalURL": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-arm64-rpm",
+      "bytesRead": 271,
+      "sha256": "f69b1924dd62b059c7293cc9486bc77bd6b087dc11537e346cc53be4235af20c",
+      "readBoundBytes": 1000000,
+      "advertisedVersion": "5.5.2.37849279",
+      "vendorDigestProvided": false,
+      "requestMethod": "GET"
+    },
+    {
+      "name": "linux-x64-deb-package",
+      "requestedURL": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-deb/WorkBuddy-linux-x64-deb-5.5.2.37849279-910352f0.deb",
+      "observedAtUTC": "2026-11-12T22:33:34.063893+00:00",
+      "httpStatus": 404,
+      "errorType": "HTTPError",
+      "bytesRead": 0,
+      "requestMethod": "GET",
+      "rangeHeader": "bytes=0-1023"
+    },
+    {
+      "name": "linux-x64-rpm-package",
+      "requestedURL": "https://download.codebuddy.ai/workbuddy/saas/linux-x64-rpm/WorkBuddy-linux-x64-rpm-5.5.2.37849279-910352f0.rpm",
+      "observedAtUTC": "2026-11-12T22:33:34.064207+00:00",
+      "httpStatus": 404,
+      "errorType": "HTTPError",
+      "bytesRead": 0,
+      "requestMethod": "GET",
+      "rangeHeader": "bytes=0-1023"
+    },
+    {
+      "name": "linux-arm64-deb-package",
+      "requestedURL": "https://download.codebuddy.ai/workbuddy/saas/linux-arm64-deb/WorkBuddy-linux-arm64-deb-5.5.2.37849279-910352f0.deb",
+      "observedAtUTC": "2026-11-12T22:33:34.064516+00:00",
+      "httpStatus": 404,
+      "errorType": "HTTPError",
+      "bytesRead": 0,
+      "requestMethod": "GET",
+      "rangeHeader": "bytes=0-1023"
+    },
+    {
+      "name": "linux-arm64-rpm-package",
+      "requestedURL": "https://download.codebuddy.ai/workbuddy/saas/linux-arm64-rpm/WorkBuddy-linux-arm64-rpm-5.5.2.37849279-910352f0.rpm",
+      "observedAtUTC": "2026-11-12T22:33:34.064861+00:00",
+      "httpStatus": 404,
+      "errorType": "HTTPError",
+      "bytesRead": 0,
+      "requestMethod": "GET",
+      "rangeHeader": "bytes=0-1023"
+    }
+  ],
+  "privateProfileReads": 0,
+  "modelCalls": 0,
+  "nativeGUIStarts": 0,
+  "installerExecutions": 0,
+  "existingInstallationWrites": 0
+}

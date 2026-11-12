@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
-  "generatedAt": "2026-11-12T16:04:30.245637+00:00",
+  "generatedAt": "2026-11-12T22:41:38.190876+00:00",
   "status": "current-evidence-audit-not-complete-all-platform-delivery",
   "requirements": [
     {
@@ -38,11 +38,15 @@
         "sources/workbuddy/official-regional-release-research.json",
         "tests/frontend/workbuddy-editions/corrected-result.json",
         "native/windows/editions/workbuddy/global-native-public-metadata-safe.json",
-        "native/android/correct-windows-current21/correct-windows-final21-ui-all-official-icons-accepted-safe.json"
+        "native/android/correct-windows-current21/correct-windows-final21-ui-all-official-icons-accepted-safe.json",
+        "native/wsl/workbuddy-global-current-20261113/final-global-linux-continuation-safe.json",
+        "native/wsl/workbuddy-global-current-20261113/current-http-safe.json",
+        "native/wsl/workbuddy-global-current-20261113/client-http-safe.json",
+        "native/wsl/workbuddy-global-current-20261113/safe-source-mappings.json"
       ],
-      "verifiedScope": "workbuddy and workbuddy_global distinguish registered binaries/profile directories; original Windows domestic5.9.3/international5.9.4 retained. NativeAndroid realmonitor shows WorkBuddy国内版 andWorkBuddyAI国际版 separate names/sameofficialbrandmarks.",
+      "verifiedScope": "workbuddy and workbuddy_global distinguish registered binaries/profile directories; original Windows domestic5.9.3/international5.9.4 retained. NativeAndroid realmonitor shows WorkBuddy国内版 andWorkBuddyAI国际版 separate names/sameofficialbrandmarks. CurrentNov13Asia officialhomepage andlinkedclients bytesexacthistory; fourLinuxmetadata200 butfouradvertisedpayload RangeGET404/0bytes; existingdomesticELFhash retained, nointernationalnativepackage/profile inference.",
       "remaining": [
-        "Global nativeWSL package/profile isolation remains unverified; current official Linux download unavailable."
+        "GlobalnativeWSL package/profile isolation remains unverified; currentfourofficialLinuxmetadata200 do not provide a usablepayload (fourexactadvertisedRangeGET404/0bytes)."
       ]
     },
     {
@@ -77,7 +81,7 @@
     {
       "id": "desktop_reinstall",
       "userRequirement": "Reinstall Orchester Desktop preserving original data",
-      "status": "portable14-and-fresh-inputs-verified-desktop18-failed-monitor-check-with-original-gui-handles-retained",
+      "status": "portable14-verified-desktop18-failed-executor-terminal-current-windows-gui-state-unverified",
       "evidence": [
         "native/windows/final71-build/final-result.json",
         "native/windows/final71-preflight/offline-original-backup-safe.json",
@@ -104,11 +108,13 @@
         "native/windows/fresh-android-runtime-binding-ascii-20261112/successor-encoding-and-execution-safe.json",
         "native/windows/fresh-runtime-input-freeze-success-20261112T1538/actual-root-execution-safe.json",
         "native/windows/formal-portable14-20261112T1540/actual-root-execution-safe.json",
-        "native/windows/formal-desktop18-attempt1-20261112T1545/actual-root-execution-safe.json"
+        "native/windows/formal-desktop18-attempt1-20261112T1545/actual-root-execution-safe.json",
+        "native/windows/formal-desktop18-attempt1-20261112T1545/original-executor-terminal-safe.json",
+        "native/windows/current-access-20261113/current-native-access-and-original-executor-safe.json"
       ],
-      "verifiedScope": "Core16 actualgates0/Desktop38/Remote18 publicfiles; original privateinstallation/profile/state backups exact; no oldnaturalexitclaim. Newnativeobserver confirms worker16008 PIDabsent; originalHANDLE identity notverified; no originalexecutor0 claim. Independentcore/967plan/54publichash review passes; rawgradlew CRLF Gitcheckout normalizedexact; EXEcontents notindependentlyread. Portablefilepackage28files/17Web verifier passes with newnative21APKf83fa; actualruntime14/AndroidFinalBinding/defaultinstall pending. Temporarynative7339 source71/24c8/17publicHTTP200exact andunauth401 passed; not formal7338/defaultinstall/native14or18. CompleteWTSquery4sessions0 confirms Session1 sameSIDbutDisconnected/ActiveSameSIDcandidate0; priorSession3noidentity not wholehostabsence. Firstisolated7339 ownednormalquit/executor0/portfree verified, unknownsystembrokerlifetime unproved;successor44syntheticnativeassertions/nativeadmission0 andformalclone32+manifest10/nativeAST0 preparedpins verified, formal14/18/defaultinstall notrun. Second7339 controllerInvalidOperationException/nativeexecutor96860actual1 failed validation preserved; normalownedquit/launcher0/originaldeclaredhandlesexit/portfree/private3transports0 verified, notAndroidproductclose/revocation/fullPTY. Newpostreboot actualSameSIDSession1Active/candidate1/InputDesktopDefault opens/cursorError5. OriginalDesktop/Remoteabsent, latest5existingroots677files privatebackupsourcebeforeafterexact; oldlockattempt1 preserved, no naturaltrayexit claim. New15:09 actualnative readonly0 proves sameownerSession1Active/inputdesktopDefault/cursorreadtrue/readinesstrue; no formalruntime or defaultpromotion inferred. Honest45-receipt derivedAndroidcomposite verifieractual0/659passes binds actualsubscopes/currentAPKresources; firstactualfreeze1 failed input validation and preservedcandidate, no frozenruntimeinput/14/18/defaultpromote. Subsequent ASCIIescaping preserves Android decoded evidence and originalguardactual0; actualfreeze0/b364 frozen. FormalPortable14actual0/all14checks/originalhandlesended/portfree/stderr0. FormalDesktop18actualattempt12checks6writes then monitorAssertionError/pageErrors0; Nodefailed and originalouter90867live retains GUI37324, no18green/defaultpromotion.",
+      "verifiedScope": "Core16 actualgates0/Desktop38/Remote18 publicfiles; original privateinstallation/profile/state backups exact; no oldnaturalexitclaim. Newnativeobserver confirms worker16008 PIDabsent; originalHANDLE identity notverified; no originalexecutor0 claim. Independentcore/967plan/54publichash review passes; rawgradlew CRLF Gitcheckout normalizedexact; EXEcontents notindependentlyread. Portablefilepackage28files/17Web verifier passes with newnative21APKf83fa; actualruntime14/AndroidFinalBinding/defaultinstall pending. Temporarynative7339 source71/24c8/17publicHTTP200exact andunauth401 passed; not formal7338/defaultinstall/native14or18. CompleteWTSquery4sessions0 confirms Session1 sameSIDbutDisconnected/ActiveSameSIDcandidate0; priorSession3noidentity not wholehostabsence. Firstisolated7339 ownednormalquit/executor0/portfree verified, unknownsystembrokerlifetime unproved;successor44syntheticnativeassertions/nativeadmission0 andformalclone32+manifest10/nativeAST0 preparedpins verified, formal14/18/defaultinstall notrun. Second7339 controllerInvalidOperationException/nativeexecutor96860actual1 failed validation preserved; normalownedquit/launcher0/originaldeclaredhandlesexit/portfree/private3transports0 verified, notAndroidproductclose/revocation/fullPTY. Newpostreboot actualSameSIDSession1Active/candidate1/InputDesktopDefault opens/cursorError5. OriginalDesktop/Remoteabsent, latest5existingroots677files privatebackupsourcebeforeafterexact; oldlockattempt1 preserved, no naturaltrayexit claim. New15:09 actualnative readonly0 proves sameownerSession1Active/inputdesktopDefault/cursorreadtrue/readinesstrue; no formalruntime or defaultpromotion inferred. Honest45-receipt derivedAndroidcomposite verifieractual0/659passes binds actualsubscopes/currentAPKresources; firstactualfreeze1 failed input validation and preservedcandidate, no frozenruntimeinput/14/18/defaultpromote. Subsequent ASCIIescaping preserves Android decoded evidence and originalguardactual0; actualfreeze0/b364 frozen. FormalPortable14actual0/all14checks/originalhandlesended/portfree/stderr0. FormalDesktop18actualattempt12checks6writes then monitorAssertionError/pageErrors0; Nodefailed and at16:01 originalouter90867live retained GUI37324, no18green/defaultpromotion. Later sourceJSONL item_completed proves outer90867failed137 at16:29:48; this doesnot proveWindowsGUIchildrenexit. Current22:34 nativequeries4xinterop110, GUIliveness/normaltrayquit unverified; old10handle snapshot ishistoricalonly.",
       "remaining": [
-        "Diagnose real native monitor assertion in same owned GUI. New Windows command gateway interop110 blocks current DOM diagnostics and normal tray quit; original native executor90867/GUI37324 HANDLE registry remains live.",
+        "Restore working nativeWindows observation and diagnose original desktop monitor assertion; originalexecutor90867 is terminalfailed137, currentGUI37324/childrenliveness andnormaltrayquit unverified. Currentfourreadonlynativegateways allinterop110; no replacementGUI launched from stale snapshot.",
         "Freshprivateofflinebackup verified at2026-11-12T06:05UTC; revalidate unchanged immediatelybefore promotion; currentdefaultinstall notyetupdated.",
         "Full Desktop18/UI21+42/normal tray exit, formal7338promotion/defaultreinstallation/state retention. FormalPortable14 already passed separately."
       ]
@@ -132,11 +138,15 @@
         "native/windows/deepseek-official-installed-20261112/corrected-verification-safe.json",
         "native/windows/claude-current-readonly-20261112T1510/current-completion-safe.json",
         "sources/official-platform-current-20261112T1500/final-current-official-availability-safe.json",
-        "native/windows/claude-store-ui-20261112T1530/final-store-ui-attempt-safe.json"
+        "native/windows/claude-store-ui-20261112T1530/final-store-ui-attempt-safe.json",
+        "native/windows/claude-current-payload-20261113/final-claude-payload-preparation-safe.json",
+        "native/windows/claude-current-payload-20261113/current-store-catalog-safe.json",
+        "native/windows/claude-current-payload-20261113/current-official-payload-downloads-safe.json",
+        "native/windows/claude-current-payload-20261113/safe-artifact-manifest.json"
       ],
-      "verifiedScope": "Currentreadonly18units=9CLI+4editorExtensions+5desktop/17unique=doc16+globalWB1; Windowsowner currentqueryfinal0/initial1 retained.9entrySHA bound historicalactualversion0+8currentpublicNPMversions;4ext ID/version/publicmanifestsha only,not wholepayload. OriginalWorkBuddy2editions/Trae/ZCode/Craft metadata retained. OpenCodePE Bun1.4.4 not appversion1.19.5; CraftNotSigned/OpenClawmjsUnknownError literal. Claude currentUser known2families0/StartApps0,allUsersDenied=null notwholemachine0. CurrentknownDSHPE/MZ/resources/app.asar publicpaths present; no wholeEXEhash/newsignature/version/runtime/reinstall/officialfullpayloadbinding yet. CurrentDataElementdsh-desktop0.13 withbundled@deepseek-ai/dsh0.2.1rc3 isnotconfirmedcurrentofficialDesktop distribution; officialDeepSeekdownload293425336B/SHA830947/publicPEDeepSeekHarness0.2.2rc1/HangzhouDeepSeek prepared, sourcepinned0.2.2rc2 separate. FirstTLSearlyEOF1/range206retry0 retained; WindowsAuthtrust/installnotperformed, certtablepresent notValid. NewnativeWindowsGetAuthenticodeSignature Valid/full830947293425336Bstable/HangzhouDeepSeekEV/rc1 observed; noactualexecutorExitCodefieldclaim. OrdinarycurrentUser/S/D(noforce-run/noupdated)noautolaunch staticactualNSISproof; sourceversionrc1/HEADrc2 separate, WindowsCreateNewcopynotinstallation, installDir notsharedDSH_HOMEisolation. NewofficialDeepSeekinstallerexecutionactual0/runnerverifier1 retained; installedEXEbad50d/246343656B/AuthenticodeValid,HKCUrc1/publicASAR@deepseek-ai/dsh-desktoprc1 verified. PEProductVersion0.2.2.0 isdistinctnumericresource. NoactualGUI/modelacceptance; currentDataElement0.13 registrationstillpresent. Current15:22 fixedClaude5tasks/9distinctPID/originalBITS absent, knowncurrentuserfamilies0/StartApps0/fixedregistrationroots0/EXE0; historicalWinGet0711+0915 actual0 are notpayloadproof. FreshofficialStorecatalog200 byteequal5.1231.2; bootstrapper itself still unexecuted. Current support/downloadTLSfail notunsupportedproof. OfficialMicrosoftStorebootstrapper actualnormalcreator1612 (outer76), StoreGUI shows cannotconnect and noClaudeInstall/Get/account/UAC; input0. Laterregistrationqueriesinteropfailed/launchunproved, no newinstallationclaim.",
+      "verifiedScope": "Currentreadonly18units=9CLI+4editorExtensions+5desktop/17unique=doc16+globalWB1; Windowsowner currentqueryfinal0/initial1 retained.9entrySHA bound historicalactualversion0+8currentpublicNPMversions;4ext ID/version/publicmanifestsha only,not wholepayload. OriginalWorkBuddy2editions/Trae/ZCode/Craft metadata retained. OpenCodePE Bun1.4.4 not appversion1.19.5; CraftNotSigned/OpenClawmjsUnknownError literal. Claude currentUser known2families0/StartApps0,allUsersDenied=null notwholemachine0. CurrentknownDSHPE/MZ/resources/app.asar publicpaths present; no wholeEXEhash/newsignature/version/runtime/reinstall/officialfullpayloadbinding yet. CurrentDataElementdsh-desktop0.13 withbundled@deepseek-ai/dsh0.2.1rc3 isnotconfirmedcurrentofficialDesktop distribution; officialDeepSeekdownload293425336B/SHA830947/publicPEDeepSeekHarness0.2.2rc1/HangzhouDeepSeek prepared, sourcepinned0.2.2rc2 separate. FirstTLSearlyEOF1/range206retry0 retained; WindowsAuthtrust/installnotperformed, certtablepresent notValid. NewnativeWindowsGetAuthenticodeSignature Valid/full830947293425336Bstable/HangzhouDeepSeekEV/rc1 observed; noactualexecutorExitCodefieldclaim. OrdinarycurrentUser/S/D(noforce-run/noupdated)noautolaunch staticactualNSISproof; sourceversionrc1/HEADrc2 separate, WindowsCreateNewcopynotinstallation, installDir notsharedDSH_HOMEisolation. NewofficialDeepSeekinstallerexecutionactual0/runnerverifier1 retained; installedEXEbad50d/246343656B/AuthenticodeValid,HKCUrc1/publicASAR@deepseek-ai/dsh-desktoprc1 verified. PEProductVersion0.2.2.0 isdistinctnumericresource. NoactualGUI/modelacceptance; currentDataElement0.13 registrationstillpresent. Current15:22 fixedClaude5tasks/9distinctPID/originalBITS absent, knowncurrentuserfamilies0/StartApps0/fixedregistrationroots0/EXE0; historicalWinGet0711+0915 actual0 are notpayloadproof. Historical15:20 officialStorecatalog200 byteequal5.1231.2; bootstrapper itself stillunexecuted atthat observation. Current support/downloadTLSfail notunsupportedproof. OfficialMicrosoftStorebootstrapper actualnormalcreator1612 (outer76), StoreGUI shows cannotconnect and noClaudeInstall/Get/account/UAC; input0. Laterregistrationqueriesinteropfailed/launchunproved, no newinstallationclaim. CurrentNov13Asia22:39 Storecatalog200 now5.11492.0.0/noDownloadURIs, historical5.1231.2.0 remains original. SeparateWinGet3.6556.2 latestdirectory/manifest200 exacthistorical; exactofficialEXE/MSIX requests bothcurl35/HTTPnull/0bytes. NoClaudeapplicationpayload/digest/Authenticode/install/registration verification; existingMicrosoftStorebootstrapperbytes retained but notClaudepayload, notexecutedagain.",
       "remaining": [
-        "ClaudeApp actualofficialpayload/registration/installation stillpending: realStoreGUI cannotconnect and installer1612. Need a functioning nativegateway and Storeconnection; knownoldWinGet0 does not satisfy installed outcome.",
+        "ClaudeApp officialpayload/digest/nativeAuthenticode/installation/registration pending: currentStorecatalog5.11492.0.0 hasno directDownloadURI; separateWinGet3.6556.2 exactEXE/MSIX GET bothcurl35/HTTPnull/0bytes. Restore functioning nativegateway andofficialvendor/Storetransport; historicalStore1612/oldWinGet0 notinstallation proof.",
         "OfficialDeepSeekGUI/runtime andsharedDSH_HOME credential retention afterstartup untested; installedapplication notstarted byroot. ExistingCursor/AG andDataElement retained."
       ]
     },
@@ -150,12 +160,15 @@
         "native/wsl/current-official-availability/final-official-install-status-safe.json",
         "native/wsl/legacy-current/final-wsl-install-safe.json",
         "native/wsl/legacy-current/final-primary-matrix-safe.json",
-        "sources/official-platform-current-20261112T1500/final-current-official-availability-safe.json"
+        "sources/official-platform-current-20261112T1500/final-current-official-availability-safe.json",
+        "native/wsl/workbuddy-global-current-20261113/final-global-linux-continuation-safe.json",
+        "native/wsl/workbuddy-global-current-20261113/current-http-safe.json",
+        "native/windows/claude-current-payload-20261113/final-claude-payload-preparation-safe.json"
       ],
-      "verifiedScope": "Earlier19verificationunits/16distinctdocproducts pluscurrent3actuallegacyinstalls=>19distinctnativeproducts. Cursor3.29.15/AntigravityDesktop2.31 extracteduserprefix/nativeELF/ldd/Electron0, Cursorlauncher--version0 afterfirst1;DeepSeekofficialHarnessWebCLI0.2.2rc1 install0 afterfirst1/version/help0. Launcher syntaxall3=0 but no Antigravitylauncher --version claim;nativeAGruntime+publicversiondistinct. Officialiconsbyteexact. DeepSeekLinuxDesktopexplicitunsupported; WebCLI isdistinct official product notfakeDesktop. AGDesktop2.31 != IDE2.6,regionFAQ andCursorvendorWindowsWSLintegrationboundary retained. No GUI/model/authtest.",
+      "verifiedScope": "Earlier19verificationunits/16distinctdocproducts pluscurrent3actuallegacyinstalls=>19distinctnativeproducts. Cursor3.29.15/AntigravityDesktop2.31 extracteduserprefix/nativeELF/ldd/Electron0, Cursorlauncher--version0 afterfirst1;DeepSeekofficialHarnessWebCLI0.2.2rc1 install0 afterfirst1/version/help0. Launcher syntaxall3=0 but no Antigravitylauncher --version claim;nativeAGruntime+publicversiondistinct. Officialiconsbyteexact. DeepSeekLinuxDesktopexplicitunsupported; WebCLI isdistinct official product notfakeDesktop. AGDesktop2.31 != IDE2.6,regionFAQ andCursorvendorWindowsWSLintegrationboundary retained. No GUI/model/authtest. CurrentNov13Asia fourinternationalWorkBuddy officialLinux update metadata200 andfourexactadvertisedpayload RangeGET404/0bytes reconfirmed; currenthomepage/threeclient assets exacthistorical bytes; originaldomesticELFhash/launcher retained, noinstallation/profilewrite. CurrentClaudeofficialsupport/download pages eachcurl35/beforeHTTP; this doesnot establishpermanentLinuxunsupportedpolicy.",
       "remaining": [
-        "ClaudeApp officialLinux supportedplatform/nativeGUI release unverified; current3supportURLs noHTTPbody notunsupported.",
-        "GlobalWorkBuddy officialLinux usablepackage/profile isolation stillunverified/unavailable; domestic unchanged."
+        "ClaudeApp officialLinux supportedplatform/nativeGUI release unverified; currentofficialsupport/download pagescurl35/HTTPnull/no body do not proveunsupported.",
+        "GlobalWorkBuddy officialLinux usablepackage/nativeELF/profile isolation stillunverified/unavailable: fourcurrentmetadata200, fouradvertisedpayloads404/0bytes; domestic unchanged."
       ]
     },
     {
@@ -254,19 +267,21 @@
         "native/android/wrong-linux-final-cleanup/wrong-linux-own-debug-app-ram-and-forward-cleanup-safe.json",
         "native/android/wrong-linux-final-cleanup/wrong-linux-own-activity-normal-exit-observed-safe.json",
         "native/android/post-reboot-completion-20261112/final-completion-safe.json",
-        "native/windows/formal-desktop18-attempt1-20261112T1545/actual-root-execution-safe.json"
+        "native/windows/formal-desktop18-attempt1-20261112T1545/actual-root-execution-safe.json",
+        "native/windows/formal-desktop18-attempt1-20261112T1545/original-executor-terminal-safe.json",
+        "native/windows/current-access-20261113/current-native-access-and-original-executor-safe.json"
       ],
-      "verifiedScope": "Historical73remote+3local mergedbranchrefs safelycleaned; CknownPDB/incremental7219765510B and officialinstallercache587458817B exactfiles removed. Free-space readings are snapshots. Current four oldworktree paths/localbranches absent and retainedcommits fullymerged; registeredworktrees15. Currentownedpackage-sourcecache25files/23373069logicalbytes deleted and28candidate inventory retained; no Cvolume physicalfree delta claim. Additionalactual4cleanmergedworktrees normalremove/branch-d0 and2missingregistrationprune0; nonancestorrefs/userdata retained; selected17783011371regularfilelogicalbytes are Linuxworkspace scope, not physicalCfreedbytes. Additionallegacyinstall ownrebuildablecache671646227logicalbytes deleted and installedartifactsretained; not physicalCspace or VHDXreclaim. First7339 normalownedexit proven and3taskprivate transportfiles removed onlyafterterminal,1264logicalB/remaining0/no contentsread/no Cphysicaldelta; Android productdevice/forward/RAMcleanup notyetclosed; second7339 exactownedhandle andtransportcleanup proved by later receipts. Second7339 exactdeclaredoriginalhandles normalexit/portfree before3ownedprivate transportfilesremoved/remaining0; nativeexecutor1 staysfailure, nooriginalprofilechanges/no contentspublished. HistoricalunregisteredchildoriginalPID/birth/imageSHA/HANDLEunlocated; parentabsence notchildexit/newownership/signals. NewwrongLinuxownstaleRAMreload/original1XMLAES/LS/session/coral/19327forward removed andownactivitynormalbackground observed, initialimmediatefalse andoneauthorizeddebugforceStop retained; unknownVM/globalADB untouched/fullpackagerollbacknotclaimed. Latest correct-Windows Medium native PTY/resize/product close, local own saved device6to5/originalfiveexact AES5of5 and separate own server revoke204+GET401 verified; original own backend normalquit and native handles/ports5039,5572,5573,19329 released. Own task absence separately verified after cleanup invoker1; direct saved pre-delete TaskResult0 unavailable and source-flow boundary retained.",
+      "verifiedScope": "Historical73remote+3local mergedbranchrefs safelycleaned; CknownPDB/incremental7219765510B and officialinstallercache587458817B exactfiles removed. Free-space readings are snapshots. Current four oldworktree paths/localbranches absent and retainedcommits fullymerged; registeredworktrees15. Currentownedpackage-sourcecache25files/23373069logicalbytes deleted and28candidate inventory retained; no Cvolume physicalfree delta claim. Additionalactual4cleanmergedworktrees normalremove/branch-d0 and2missingregistrationprune0; nonancestorrefs/userdata retained; selected17783011371regularfilelogicalbytes are Linuxworkspace scope, not physicalCfreedbytes. Additionallegacyinstall ownrebuildablecache671646227logicalbytes deleted and installedartifactsretained; not physicalCspace or VHDXreclaim. First7339 normalownedexit proven and3taskprivate transportfiles removed onlyafterterminal,1264logicalB/remaining0/no contentsread/no Cphysicaldelta; Android productdevice/forward/RAMcleanup notyetclosed; second7339 exactownedhandle andtransportcleanup proved by later receipts. Second7339 exactdeclaredoriginalhandles normalexit/portfree before3ownedprivate transportfilesremoved/remaining0; nativeexecutor1 staysfailure, nooriginalprofilechanges/no contentspublished. HistoricalunregisteredchildoriginalPID/birth/imageSHA/HANDLEunlocated; parentabsence notchildexit/newownership/signals. NewwrongLinuxownstaleRAMreload/original1XMLAES/LS/session/coral/19327forward removed andownactivitynormalbackground observed, initialimmediatefalse andoneauthorizeddebugforceStop retained; unknownVM/globalADB untouched/fullpackagerollbacknotclaimed. Latest correct-Windows Medium native PTY/resize/product close, local own saved device6to5/originalfiveexact AES5of5 and separate own server revoke204+GET401 verified; original own backend normalquit and native handles/ports5039,5572,5573,19329 released. Own task absence separately verified after cleanup invoker1; direct saved pre-delete TaskResult0 unavailable and source-flow boundary retained. OriginalDesktop18 outer90867 terminalfailed137 at16:29:48 is independently sourced; last10HANDLE snapshot not currentGUIliveness and noWindowschildexit/normaltrayquit claim.",
       "remaining": [
         "Historicalunregisteredchildclosure unverified because originalexactidentity/HANDLEmissing; no newclaim/signal issued.",
-        "Current owned Desktop18 GUI37324 still live under originalexec90867 HANDLE registry after validation failure; newnativeinterop110 blocks normaltrayquit. Unknown nonowned processes not signalled."
+        "OriginalDesktop18 executor90867 terminalfailed137 proved. CurrentGUI37324/childrenliveness andnormaltrayquit unverified; 10HANDLE snapshot historicalonly and currentfournativequeriesinterop110. Unknown nonowned processes not signalled."
       ],
       "historicalMeasurementBoundary": "Original fourunused-worktree temporarycleanup receipts unavailable; historicaloperation/bytes not reconstructed; no Cphysicalreleaseclaim."
     },
     {
       "id": "git_steps",
       "userRequirement": "Verify separated commits, push remotely and merge main step by step",
-      "status": "nine-checkpoints-pushed-merged-current-formal-runtime-checkpoint-prepared",
+      "status": "ten-checkpoints-pushed-and-merged-current-observation-archive-prepared",
       "evidence": [
         "sources/final71-source-binding.json",
         "maintenance/git-delivery/git-byte-and-crlf-correction-safe.json",
@@ -278,11 +293,12 @@
         "maintenance/git-delivery/sixth-step-delivery-safe.json",
         "maintenance/git-delivery/seventh-step-delivery-safe.json",
         "maintenance/git-delivery/eighth-step-delivery-safe.json",
-        "maintenance/git-delivery/ninth-step-delivery-safe.json"
+        "maintenance/git-delivery/ninth-step-delivery-safe.json",
+        "maintenance/git-delivery/tenth-step-delivery-safe.json"
       ],
-      "verifiedScope": "Parentdocs193+MD exact194Gitblob comparisons. FirstdefaultCRLFwhitespacecheckexit2 preserved; doccommit213d315 alreadycreated, scopedattributes correction812e0e6 preserves原bytes andcheck0, main32992976 merged; feature/mainpushactual0. Frozenproduction71 unchanged. Docsagent noGitmutation. Second218archive+MD219Gitblobexact/currentdoc828ad10 mergedmain4d7d95, feature/mainpushactual0/default+stagedwhitespace0/production71+Pagesworkflowinputsunchanged; no allplatformcompletionclaim. Third266archive+MD267blobsexact/doc0e4367d/main8b0a016push0/production71equal delivered. Fourth321archive+MD322exactGitblob/commitcaa60/main60b4/featuremainpush0/source71equal delivered. SubsequentnewLinux/signature/cleanup sourceepochs kept separate fromfourthabsencestage. Sixth docc20fa1b/mainf462fd7 delivered, feature/mainpushactual0 and374Gitblobs exact. Additional sixCLI/twelveinstallunits andcommandregistration verified innew epoch. SeventhCLIcheckpoint1c2ebe2/maina5ea264/push0/437Gitblobsexact/frozen731inputs passed. Eighthnativecompletion docc19f621/maine8c3cd3/push0/507Gitblobsexact/731sourcehashchecks delivered. Ninthf6520a8/main92c668e/push0/540exactGitblobs and731sourcehash verified.",
+      "verifiedScope": "Parentdocs193+MD exact194Gitblob comparisons. FirstdefaultCRLFwhitespacecheckexit2 preserved; doccommit213d315 alreadycreated, scopedattributes correction812e0e6 preserves原bytes andcheck0, main32992976 merged; feature/mainpushactual0. Frozenproduction71 unchanged. Docsagent noGitmutation. Second218archive+MD219Gitblobexact/currentdoc828ad10 mergedmain4d7d95, feature/mainpushactual0/default+stagedwhitespace0/production71+Pagesworkflowinputsunchanged; no allplatformcompletionclaim. Third266archive+MD267blobsexact/doc0e4367d/main8b0a016push0/production71equal delivered. Fourth321archive+MD322exactGitblob/commitcaa60/main60b4/featuremainpush0/source71equal delivered. SubsequentnewLinux/signature/cleanup sourceepochs kept separate fromfourthabsencestage. Sixth docc20fa1b/mainf462fd7 delivered, feature/mainpushactual0 and374Gitblobs exact. Additional sixCLI/twelveinstallunits andcommandregistration verified innew epoch. SeventhCLIcheckpoint1c2ebe2/maina5ea264/push0/437Gitblobsexact/frozen731inputs passed. Eighthnativecompletion docc19f621/maine8c3cd3/push0/507Gitblobsexact/731sourcehashchecks delivered. Ninthf6520a8/main92c668e/push0/540exactGitblobs and731sourcehash verified. Tenth1824cf2/main3712edd actualfeaturepush0/mainmerge0/mainpush0/remoteexact/596Gitblobsexact/594manifestchecks delivered; currentindependent594manifest+731sourcefreeze checks passedbeforearchive edits.",
       "remaining": [
-        "Current ASCIIcorrection/nativefreeze0/Portable14/failedDesktop18+StoreGUI receipts await their verified Git delivery; full desktopreinstall separate."
+        "Currentexecutor-terminal/nativeaccess andoriginaltenthdelivery receipt archive await their separate verified commit/push/mainmerge; originalfullDesktop18/defaultreinstall requirements remain separate."
       ]
     },
     {
@@ -308,9 +324,9 @@
   "historicalResultsRemainInOwnSourceEpoch": true,
   "installationDoesNotEstablishAuthenticationOrModelTaskExecution": true,
   "privateCredentialOrUserStateValuesIncluded": false,
-  "updatedAt": "2026-11-12T16:04:30.245637+00:00",
+  "updatedAt": "2026-11-12T22:41:38.190876+00:00",
   "documentationExecutionDateRangeAsiaShanghai": [
     "2026-11-11",
-    "2026-11-12"
+    "2026-11-13"
   ]
 }

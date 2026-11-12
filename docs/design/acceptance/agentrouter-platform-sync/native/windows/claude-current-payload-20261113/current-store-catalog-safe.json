@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "status": "current-official-store-metadata-changed-payload-still-unavailable",
+  "observedAtUtc": "2026-11-12T22:39:08.240917+00:00",
+  "sourceURL": "https://displaycatalog.mp.microsoft.com/v7.0/products/9P6K58THS811?market=US&languages=en-US",
+  "actualCurlExitCode": 0,
+  "httpStatus": 200,
+  "sourceBytes": 46386,
+  "sourceSha256": "6552bc24e202ac62f5b267065c80417d0a3884bef73189d636710972e307e17f",
+  "productId": "9P6K58THS811",
+  "productTitle": "Claude",
+  "publisher": "Anthropic, PBC",
+  "currentSkuLastUpdateDates": [
+    "2026-11-12T22:10:06.0000000Z"
+  ],
+  "packages": [
+    {
+      "PackageFullName": "AnthropicPBC.Claude_5.11492.0.0_arm64__fnn82j28hfe8t",
+      "PackageFamilyName": "AnthropicPBC.Claude_fnn82j28hfe8t",
+      "Architectures": [
+        "arm64"
+      ],
+      "PackageFormat": "Msix",
+      "Capabilities": [
+        "runFullTrust",
+        "localSystemServices",
+        "packagedServices",
+        "unvirtualizedResources",
+        "internetClient",
+        "Microsoft.storeFilter.core.notSupported_8wekyb3d8bbwe"
+      ],
+      "MaxDownloadSizeInBytes": 291688610,
+      "PackageDownloadUris": null,
+      "catalogAdvertisedSha256": "34bc90e800ddca45026bdd4d48c1874fe5e11308a51df2adc834602c612d5d80",
+      "applications": [
+        {
+          "applicationId": "Claude",
+          "extensions": [
+            "startupTask-startupTask",
+            "protocol-claude",
+            "appExecutionAlias-appExecutionAlias",
+            "service-service"
+          ]
+        }
+      ],
+      "packageVersionString": "5.11492.0.0"
+    },
+    {
+      "PackageFullName": "AnthropicPBC.Claude_5.11492.0.0_x64__fnn82j28hfe8t",
+      "PackageFamilyName": "AnthropicPBC.Claude_fnn82j28hfe8t",
+      "Architectures": [
+        "x64"
+      ],
+      "PackageFormat": "Msix",
+      "Capabilities": [
+        "runFullTrust",
+        "localSystemServices",
+        "packagedServices",
+        "unvirtualizedResources",
+        "internetClient",
+        "Microsoft.storeFilter.core.notSupported_8wekyb3d8bbwe"
+      ],
+      "MaxDownloadSizeInBytes": 299243274,
+      "PackageDownloadUris": null,
+      "catalogAdvertisedSha256": "763f6d4b7da7431f9b2a86837de132d6ee97fd20f1a3904affe169a777c1dde5",
+      "applications": [
+        {
+          "applicationId": "Claude",
+          "extensions": [
+            "startupTask-startupTask",
+            "protocol-claude",
+            "appExecutionAlias-appExecutionAlias",
+            "service-service"
+          ]
+        }
+      ],
+      "packageVersionString": "5.11492.0.0"
+    }
+  ],
+  "historicalCatalog": {
+    "sourceReceipt": "sources/official-platform-current-20261112T1500/store-catalog-http-safe.json",
+    "observedAtUtc": "2026-11-12T15:20:38.744619+00:00",
+    "sourceSha256": "ef28dab71ac0fd9d65e43fdfdc28036e7e1b1948cf97c9c856dc6515b605fab5",
+    "packageVersion": "5.1231.2.0",
+    "historyNotRewritten": true
+  },
+  "currentPackageVersionDiffersFromHistorical": true,
+  "allAdvertisedDirectPackageDownloadUrisAbsent": true,
+  "packageUriIsOnlyIngestionStorageHostNotDownloadablePayloadURL": true,
+  "payloadDownloaded": false,
+  "actualDownloadedPackageManifestOrSignatureVerified": false,
+  "installerOrModelInvocationCount": 0,
+  "nativeInvocationCount": 0,
+  "privateContentsIncluded": false
+}
