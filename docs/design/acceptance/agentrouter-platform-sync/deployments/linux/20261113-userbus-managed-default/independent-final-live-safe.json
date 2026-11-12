@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "status": "independent-final-managed-userbus-and-default7337-live-verified",
+  "observedAtUtc": "2026-11-12T22:47:58.747976+00:00",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "privateCredentialsStateEnvironmentValuesPublished": false,
+  "processSignals": 0,
+  "serviceStartStopRestartCalls": 0,
+  "actualWSLRebootAutostartVerified": false,
+  "processes": [
+    {
+      "pid": 269,
+      "startTicks": 1374,
+      "parentPid": 1,
+      "uid": 1000,
+      "exeSha256": "39bbddd818ef6b4b9ae87e7cac22476f60a63efb8dfec77dd11f03672462931d",
+      "expectedExecutableHashExact": true,
+      "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/init.scope"
+    },
+    {
+      "pid": 1992305,
+      "startTicks": 6262225,
+      "parentPid": 269,
+      "uid": 1000,
+      "exeSha256": "9e5cf3260e8b0d68a88732ebc4386970ff5977f4a9bcb9022a13ab905f832bbc",
+      "expectedExecutableHashExact": true,
+      "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/dbus.service"
+    },
+    {
+      "pid": 2888953,
+      "startTicks": 6300064,
+      "parentPid": 269,
+      "uid": 1000,
+      "exeSha256": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae",
+      "expectedExecutableHashExact": true,
+      "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/orchester-default-remote-7337-20261112-post-reboot.service"
+    },
+    {
+      "pid": 2888962,
+      "startTicks": 6300089,
+      "parentPid": 2888953,
+      "uid": 1000,
+      "exeSha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649",
+      "expectedExecutableHashExact": true,
+      "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/orchester-default-remote-7337-20261112-post-reboot.service"
+    }
+  ],
+  "controllerOwnership": {
+    "writerFd": 7,
+    "samePipeAsOriginalChildStdin": true,
+    "pidfdHeld": true,
+    "pidfdChildPidExact": true,
+    "privateSocketPeerUidPidExact": true
+  },
+  "publicResources": [
+    {
+      "path": "assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+      "status": 200,
+      "bytes": 8059324,
+      "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b",
+      "expectedHashExact": true
+    },
+    {
+      "path": "assets/antigravity-DXFfVr6X.svg",
+      "status": 200,
+      "bytes": 5037,
+      "sha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "expectedHashExact": true
+    },
+    {
+      "path": "assets/brand-icon-Zjdxen9M.png",
+      "status": 200,
+      "bytes": 377394,
+      "sha256": "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06",
+      "expectedHashExact": true
+    },
+    {
+      "path": "assets/claude-RJ8il4lB.png",
+      "status": 200,
+      "bytes": 10358,
+      "sha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "expectedHashExact": true
+    },
+    {
+      "path": "assets/codex-DODyF2an.png",
+      "status": 200,
+      "bytes": 10969,
+      "sha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+      "expectedHashExact": true
+    },
+    {
+      "path": "assets/crush-B1wob-OZ.png",
+      "status": 200,
+      "bytes": 55448,
+      "sha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "expectedHashExact": true
+    },
+    {
+      "path": "assets/cursor-dark-BM_3k4Y4.svg",
+      "status": 200,
+      "bytes": 4373,
+      "sha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+      "expectedHashExact": true
+    },
+    {
+      "path": "assets/cursor-light-DGKJuirn.svg",
+      "status": 200,
+      "bytes": 4388,
+      "sha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+      "expectedHashExact": true
+    },
+    {
+      "path": "assets/hermes-dark-D5fo9gTB.svg",
+      "status": 200,
+      "bytes": 137768,
+      "sha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+      "expectedHashExact": true
+    },
+    {
+      "path": "assets/hermes-light-x1BVlPhG.svg",
+      "status": 200,
+      "bytes": 116350,
+      "sha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+      "expectedHashExact": true
+    },
+    {
+      "path": "assets/index--zaH3Y7H.js",
+      "status": 200,
+      "bytes": 538627,
+      "sha256": "7e115c9d4b6236a5de0338b7499f0e09341df65ee03067ad71cd01b578a10a49",
+      "expectedHashExact": true
+    },
+    {
+      "path": "assets/index-9wEW8k7x.css",
+      "status": 200,
+      "bytes": 34506,
+      "sha256": "0ccaec9543d9001c1e528918446afa1170c46d9fc676c46ba33f1a21a5fbbf20",
+      "expectedHashExact": true
+    },
+    {
+      "path": "assets/roo-D8yWBDNL.png",
+      "status": 200,
+      "bytes": 5626,
+      "sha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "expectedHashExact": true
+    },
+    {
+      "path": "assets/workbuddy-D1Gu2IKl.svg",
+      "status": 200,
+      "bytes": 4142,
+      "sha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "expectedHashExact": true
+    },
+    {
+      "path": "assets/zcode-yL2Qb12j.png",
+      "status": 200,
+      "bytes": 6479,
+      "sha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "expectedHashExact": true
+    },
+    {
+      "path": "favicon.png",
+      "status": 200,
+      "bytes": 8268,
+      "sha256": "bd2b0e95dade84d5371027cc9616610813b3e7f878b434d54a3a1459111c7db2",
+      "expectedHashExact": true
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "bytes": 477,
+      "sha256": "8b944924f56c75a7e97a91bfd2bce4cacfab8b961e24fc04beff80af431bc033",
+      "expectedHashExact": true
+    }
+  ],
+  "protectedInfoUnauthenticatedStatus": 401,
+  "dbus.socket": {
+    "actualSystemctlShowExitCode": 0,
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/dbus.socket",
+    "ActiveState": "active",
+    "SubState": "running"
+  },
+  "dbus.service": {
+    "actualSystemctlShowExitCode": 0,
+    "MainPID": "1992305",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/dbus.service",
+    "ActiveState": "active",
+    "SubState": "running"
+  },
+  "orchester-default-remote-7337-20261112-post-reboot.service": {
+    "actualSystemctlShowExitCode": 0,
+    "MainPID": "2888953",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/orchester-default-remote-7337-20261112-post-reboot.service",
+    "ActiveState": "active",
+    "SubState": "running"
+  },
+  "unitVerifyExitCode": 0,
+  "systemdDefault7337UnitSha256": "3119c552d11c49ca97c9db018aec53af82aa30adcde2a367e3b9479ea438f35c",
+  "successorControllerSourceSha256": "b70fcda2c9df0e9e214204b46297849fe4ebcbd0a5f01766586c5e26d6686c4b",
+  "defaultTargetStartupLinkExact": true,
+  "temporaryBootstrapAndDiagnosticDropinsAbsent": true,
+  "canonicalCatalog21AuthenticatedChecksHaveSeparateProducerReceipt": true,
+  "originalCredentialHTTPWireNotRerun": true,
+  "original5TasksAnd5AuthEntriesComparedInSeparateLifecycleReceipt": true
+}

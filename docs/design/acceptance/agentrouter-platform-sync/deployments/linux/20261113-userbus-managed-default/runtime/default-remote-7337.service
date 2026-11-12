@@ -1,0 +1,20 @@
+[Unit]
+Description=Orchester persistent default remote 7337 owned controller
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/persistent-controller/controller-successor.py serve
+ExecStop=/usr/bin/python3 /home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/persistent-controller/controller-successor.py quit
+WorkingDirectory=/home/han/project/Orchester
+StandardInput=null
+StandardOutput=null
+StandardError=null
+Restart=on-failure
+RestartSec=5
+KillMode=process
+SendSIGKILL=no
+TimeoutStopSec=infinity
+UMask=0077
+
+[Install]
+WantedBy=default.target

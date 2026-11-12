@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "status": "verified-worktree-and-branch-cleanup-checkpoint-pushed-merged-main",
+  "observedAtUtc": "2026-11-12T22:48:24.497702+00:00",
+  "featureCommit": "9a48d20a11e969711109152428e305c800a934d1",
+  "mainRevision": "1dec0b4ec1c7b62a1d90538da70e8bf8f5c3b140",
+  "actualFeaturePushExitCode": 0,
+  "actualMainMergeExitCode": 0,
+  "actualMainPushExitCode": 0,
+  "bothRemoteRefsVerified": true,
+  "manifestHashSizeAndMainGitBlobChecks": 611,
+  "sourceFrozenHashChecks": 731,
+  "stagedFileChecks": 8,
+  "secretShapeFindings": 0,
+  "bothWorktreesClean": true,
+  "threeCleanMergedWorktreesAndLocalBranchesRemoved": true,
+  "sixExactTipLeaseRemoteBranchesAbsent": true,
+  "goalFullCompletionClaimed": false
+}

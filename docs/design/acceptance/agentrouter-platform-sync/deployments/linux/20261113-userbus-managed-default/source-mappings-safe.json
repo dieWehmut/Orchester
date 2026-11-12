@@ -1,0 +1,246 @@
+{
+  "schemaVersion": 1,
+  "status": "public-safe-source-and-archive-mapping-complete",
+  "observedAtUtc": "2026-11-12T22:49:11.669848+00:00",
+  "archivePrefix": "deployments/linux/20261113-userbus-managed-default/",
+  "files": [
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/pre-recovery-live-safe.json",
+      "sourceBytes": 7638,
+      "sourceSha256": "44882ce0e495a21e495f9eb5f0b72aea66eab9c30b7779557556b9916faf55b9",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/pre-recovery-live-safe.json",
+      "archiveBytes": 7638,
+      "archiveSha256": "44882ce0e495a21e495f9eb5f0b72aea66eab9c30b7779557556b9916faf55b9",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/user-bus-recovery-safe.json",
+      "sourceBytes": 870,
+      "sourceSha256": "a59921bbf8b9403d6a4b4446964ce27fab2be9cd07dff117e126ba8774f46212",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/user-bus-recovery-safe.json",
+      "archiveBytes": 870,
+      "archiveSha256": "a59921bbf8b9403d6a4b4446964ce27fab2be9cd07dff117e126ba8774f46212",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/managed-user-bus-recovery-safe.json",
+      "sourceBytes": 1637,
+      "sourceSha256": "861754c76140985a05eef9299ef47d089a29159a83735ad6abc783f4569b0807",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/managed-user-bus-recovery-safe.json",
+      "archiveBytes": 1637,
+      "archiveSha256": "861754c76140985a05eef9299ef47d089a29159a83735ad6abc783f4569b0807",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/managed-user-bus-resume-safe.json",
+      "sourceBytes": 3547,
+      "sourceSha256": "c9d3d5271c26f11e46a96575495861abc6aaf9f1fc9ce67101357e9683af273d",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/managed-user-bus-resume-safe.json",
+      "archiveBytes": 3547,
+      "archiveSha256": "c9d3d5271c26f11e46a96575495861abc6aaf9f1fc9ce67101357e9683af273d",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/new-controller-preparation-safe.json",
+      "sourceBytes": 620,
+      "sourceSha256": "7c2605ba8e458352539ea3159530957a92498c2880fb4521e65923227ece7af6",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/new-controller-preparation-safe.json",
+      "archiveBytes": 620,
+      "archiveSha256": "7c2605ba8e458352539ea3159530957a92498c2880fb4521e65923227ece7af6",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/initial-controller-native-path-failure-safe.json",
+      "sourceBytes": 767,
+      "sourceSha256": "74fb8e5332b14f3d5f9c2f9ea28dd357c45752a510cd94e74a62eeba2cdd4166",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/initial-controller-native-path-failure-safe.json",
+      "archiveBytes": 767,
+      "archiveSha256": "74fb8e5332b14f3d5f9c2f9ea28dd357c45752a510cd94e74a62eeba2cdd4166",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/persistent-service-transfer-safe.json",
+      "sourceBytes": 1772,
+      "sourceSha256": "1495fa30f94e83628bd5ab97e0e9949ef358621f28bd954119dab2a4dbc3c82f",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/persistent-service-transfer-safe.json",
+      "archiveBytes": 2173,
+      "archiveSha256": "c7f1b02a97d09563af1f8f0ce565c74b43fcfd12ae109b7692236229fcf42a02",
+      "derivation": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/persistent-service-lifecycle-safe.json",
+      "sourceBytes": 5326,
+      "sourceSha256": "cb48dda69ca4a663b6f83fe592abbcff1783d748992eb5a81cec9f7bf8817850",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/persistent-service-lifecycle-safe.json",
+      "archiveBytes": 5603,
+      "archiveSha256": "a52a73af7220201a81d6cd0a295342956cc5829729dd0d24c586eec8b2b493bc",
+      "derivation": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/independent-final-live-safe.json",
+      "sourceBytes": 7032,
+      "sourceSha256": "e09dfca9eea30522bfffa866921cbbaa067e433e7f753fbb1d284c74796e36b2",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/independent-final-live-safe.json",
+      "archiveBytes": 7032,
+      "archiveSha256": "e09dfca9eea30522bfffa866921cbbaa067e433e7f753fbb1d284c74796e36b2",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/persistent-controller/final-safe.json",
+      "sourceBytes": 7265,
+      "sourceSha256": "678570319bcc8f50d10ff41f69c73c3dc6f12d33d836fed1476797555e382d8a",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/second-managed-start-producer-public-safe.json",
+      "archiveBytes": 6942,
+      "archiveSha256": "462786ffdba78f17df89d156e92718110d708c1524b864bb8cbff58f9bdf2f00",
+      "derivation": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/first-managed-start/producer-final-safe.json",
+      "sourceBytes": 7266,
+      "sourceSha256": "b399d0a0c2eb5c8ee13819722d97766fa55b3cf5de43073ec6ea5b93d394e23d",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/first-managed-start-producer-public-safe.json",
+      "archiveBytes": 6943,
+      "archiveSha256": "dd8ede894ef9d5a87aecc97bcf91cd274c5d9378ec8deeec5509d214bbfd5513",
+      "derivation": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/first-managed-start/normal-exit-safe.json",
+      "sourceBytes": 121,
+      "sourceSha256": "c160e4677f151dca8970241f0cf18129b996e0ef033268fd063f6c6132a1b0f9",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/first-managed-normal-exit-safe.json",
+      "archiveBytes": 121,
+      "archiveSha256": "c160e4677f151dca8970241f0cf18129b996e0ef033268fd063f6c6132a1b0f9",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/first-managed-start/producer-final-after-stop-safe.json",
+      "sourceBytes": 7266,
+      "sourceSha256": "b399d0a0c2eb5c8ee13819722d97766fa55b3cf5de43073ec6ea5b93d394e23d",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/first-managed-after-stop-producer-public-safe.json",
+      "archiveBytes": 6943,
+      "archiveSha256": "dd8ede894ef9d5a87aecc97bcf91cd274c5d9378ec8deeec5509d214bbfd5513",
+      "derivation": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/recover-user-bus.py",
+      "sourceBytes": 11887,
+      "sourceSha256": "ac0709ca262ea167048653f6509587a0a9537c564a0745645b096c04b008eb1c",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/sources/first-temporary-bus-attempt.py",
+      "archiveBytes": 11887,
+      "archiveSha256": "ac0709ca262ea167048653f6509587a0a9537c564a0745645b096c04b008eb1c",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/recover-managed-user-bus.py",
+      "sourceBytes": 8210,
+      "sourceSha256": "78b3b82ed1dd08eaf5641bc051e810288b0672b4ca824345a5dae6aaf3af5934",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/sources/second-managed-bus-observer-attempt.py",
+      "archiveBytes": 8210,
+      "archiveSha256": "78b3b82ed1dd08eaf5641bc051e810288b0672b4ca824345a5dae6aaf3af5934",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/resume-managed-user-bus.py",
+      "sourceBytes": 7369,
+      "sourceSha256": "f4f1d17b90d1c42fd2fb0a9fee63bdbe73d0e402c1dd57e324033e0804aa9b70",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/sources/managed-bus-successor.py",
+      "archiveBytes": 7369,
+      "archiveSha256": "f4f1d17b90d1c42fd2fb0a9fee63bdbe73d0e402c1dd57e324033e0804aa9b70",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/transfer-persistent-service.py",
+      "sourceBytes": 12258,
+      "sourceSha256": "1f06491c847f7046ed210c4f4e0f7ee29ce248bc094fbb73335104b5992fa321",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/sources/initial-default-transfer.py",
+      "archiveBytes": 12258,
+      "archiveSha256": "1f06491c847f7046ed210c4f4e0f7ee29ce248bc094fbb73335104b5992fa321",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/verify-persistent-lifecycle.py",
+      "sourceBytes": 9959,
+      "sourceSha256": "2352a93707b4f5d1e3e8bfe118417464c59fa1cc2109e7e869bf1f7cd82d0e18",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/sources/default-lifecycle-successor.py",
+      "archiveBytes": 9959,
+      "archiveSha256": "2352a93707b4f5d1e3e8bfe118417464c59fa1cc2109e7e869bf1f7cd82d0e18",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/persistent-controller/controller.py",
+      "sourceBytes": 34647,
+      "sourceSha256": "e01b856cee2051083bc9c729294c84e774282372980de92e663391f6dfc22aea",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/runtime/initial-controller-deep-path.py",
+      "archiveBytes": 34647,
+      "archiveSha256": "e01b856cee2051083bc9c729294c84e774282372980de92e663391f6dfc22aea",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/persistent-controller/controller-successor.py",
+      "sourceBytes": 34680,
+      "sourceSha256": "b70fcda2c9df0e9e214204b46297849fe4ebcbd0a5f01766586c5e26d6686c4b",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/runtime/controller-successor.py",
+      "archiveBytes": 34680,
+      "archiveSha256": "b70fcda2c9df0e9e214204b46297849fe4ebcbd0a5f01766586c5e26d6686c4b",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112-post-reboot/linux-restore/controller.py",
+      "sourceBytes": 34628,
+      "sourceSha256": "49746d3838c6b3b2232273dfe4e6b4342d4cf90e303a1d75bc0cbb2caa0bbbc8",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/runtime/original-controller-before-transfer.py",
+      "archiveBytes": 34628,
+      "archiveSha256": "49746d3838c6b3b2232273dfe4e6b4342d4cf90e303a1d75bc0cbb2caa0bbbc8",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/original-default-unit-before-transfer.service",
+      "sourceBytes": 441,
+      "sourceSha256": "371ffb332878590823e530ae5aaa62f5a4ab192a5276889f71aa0af7c0fd322f",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/runtime/original-default-unit-before-transfer.service",
+      "archiveBytes": 441,
+      "archiveSha256": "371ffb332878590823e530ae5aaa62f5a4ab192a5276889f71aa0af7c0fd322f",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.config/systemd/user/orchester-default-remote-7337-20261112-post-reboot.service",
+      "sourceBytes": 641,
+      "sourceSha256": "3119c552d11c49ca97c9db018aec53af82aa30adcde2a367e3b9479ea438f35c",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/runtime/default-remote-7337.service",
+      "archiveBytes": 641,
+      "archiveSha256": "3119c552d11c49ca97c9db018aec53af82aa30adcde2a367e3b9479ea438f35c",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/extracted/usr/lib/systemd/user/dbus.socket",
+      "sourceBytes": 174,
+      "sourceSha256": "eb9bcc798c347ea00544ca79f3ca07f3f6bd675235c9d73a42b6dcc9fd16a927",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/runtime/official-dbus.socket",
+      "archiveBytes": 174,
+      "archiveSha256": "eb9bcc798c347ea00544ca79f3ca07f3f6bd675235c9d73a42b6dcc9fd16a927",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/extracted/usr/lib/systemd/user/dbus.service",
+      "sourceBytes": 360,
+      "sourceSha256": "19d7b51e1e6da255346ac6acbf95627baf14c324e84ee841d90fab98bcc0e994",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/runtime/official-dbus.service",
+      "archiveBytes": 360,
+      "archiveSha256": "19d7b51e1e6da255346ac6acbf95627baf14c324e84ee841d90fab98bcc0e994",
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-service-recovery/official-user-bus-source-safe.json",
+      "sourceBytes": 1392,
+      "sourceSha256": "860d5040aac958a4e7f36ce9f450f716534ab3799370fba03d1528004e4a7d4c",
+      "archivePath": "deployments/linux/20261113-userbus-managed-default/official-user-bus-source-safe.json",
+      "archiveBytes": 1392,
+      "archiveSha256": "860d5040aac958a4e7f36ce9f450f716534ab3799370fba03d1528004e4a7d4c",
+      "derivation": false
+    }
+  ],
+  "count": 26,
+  "privateEnvironmentsDatabaseBackupsAndRawLogsIncluded": false,
+  "actualWSLRebootAutostartVerified": false,
+  "originalCredentialHTTPWireNotRerunInThisEpoch": true
+}

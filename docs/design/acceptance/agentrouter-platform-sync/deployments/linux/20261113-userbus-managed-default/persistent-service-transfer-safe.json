@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-12T22:42:43.475427+00:00",
+  "status": "persistent-service-transfer-failed",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "userManagerRestarted": false,
+  "WSLOrWindowsRebooted": false,
+  "otherProjectServicesStartedStoppedOrRestarted": false,
+  "privateCredentialsStateEnvironmentValuesPublished": false,
+  "processSignals": 0,
+  "rebootAutostartActuallyTested": false,
+  "events": [
+    {
+      "label": "new-consistent-private-backup-verified-before-any-stop"
+    },
+    {
+      "label": "updated-default-unit-systemd-verify",
+      "actualExitCode": 0,
+      "stderrBytes": 0
+    },
+    {
+      "label": "updated-default-unit-daemon-reload",
+      "actualExitCode": 0,
+      "stderrBytes": 0
+    },
+    {
+      "label": "current-original-controller-status-before-normal-quit-proven",
+      "controllerPid": 320847,
+      "listenerPid": 320854
+    },
+    {
+      "label": "original-controller-normal-quit-proven-by-original-writer-and-pidfd-terminal",
+      "control": {
+        "status": "owned-normal-quit-complete",
+        "listenerExitCode": 0,
+        "samePopenWriterUsed": true,
+        "userPidSignals": 0
+      },
+      "originalControllerTerminal": true,
+      "originalListenerTerminal": true,
+      "port7337ReleasedBeforeNewStart": true,
+      "originalFinalReceiptUnchanged": true
+    },
+    {
+      "label": "first-managed-default-service-start",
+      "actualExitCode": 0,
+      "stderrBytes": 0
+    }
+  ],
+  "consistentPrivateBackupBeforeTransfer": {
+    "fileCount": 2,
+    "allSourceBeforeAfterExact": true,
+    "allBackupRunRowsExact": true,
+    "allBackupStateRowsExact": true,
+    "originalRunCount": 5,
+    "originalAuthEntryCount": 5
+  },
+  "errorType": "RuntimeError",
+  "publicDerivation": {
+    "kind": "private-path-and-run-status-omission-only",
+    "sourceSha256": "1495fa30f94e83628bd5ab97e0e9949ef358621f28bd954119dab2a4dbc3c82f",
+    "sourceBytes": 1772,
+    "omittedKeys": [
+      "privateBackupDirectory",
+      "backupFiles",
+      "currentRunStates",
+      "originalRunStates",
+      "stateRoot"
+    ],
+    "allRetainedDecodedJsonValuesUnchanged": true
+  }
+}

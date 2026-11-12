@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-12T22:45:43.939234+00:00",
+  "status": "initial-owned-controller-setup-failed-before-listener-start",
+  "actualExecMainStatus": 1,
+  "failureType": "OSError",
+  "failureReason": "AF_UNIX path too long",
+  "failedPrivateControlPathByteLength": 108,
+  "newPrivateControlPathByteLength": 43,
+  "initialFailedControllerSourcePreservedSha256": "e01b856cee2051083bc9c729294c84e774282372980de92e663391f6dfc22aea",
+  "successorControllerSourceSha256": "b70fcda2c9df0e9e214204b46297849fe4ebcbd0a5f01766586c5e26d6686c4b",
+  "successorAdditionalSourceChangeOnly": "use short dedicated runtime control socket path",
+  "oldProducerFinalReceiptPreserved": true,
+  "unknownProcessesSignalled": 0,
+  "privateLogPublished": false
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-12T22:39:05.460939+00:00",
+  "status": "managed-user-bus-recovery-failed",
+  "managerPid": 269,
+  "managerStartTicks": 1374,
+  "managerRestarted": false,
+  "systemServicesChanged": false,
+  "otherProjectServicesStartedStoppedOrRestarted": false,
+  "privateEnvironmentCredentialsStateOrJournalPublished": false,
+  "rebootAutostartActuallyTested": false,
+  "events": [
+    {
+      "label": "official-unit-created",
+      "unit": "dbus.socket",
+      "sha256": "eb9bcc798c347ea00544ca79f3ca07f3f6bd675235c9d73a42b6dcc9fd16a927"
+    },
+    {
+      "label": "official-unit-created",
+      "unit": "dbus.service",
+      "sha256": "19d7b51e1e6da255346ac6acbf95627baf14c324e84ee841d90fab98bcc0e994"
+    },
+    {
+      "label": "supported-sighup-daemon-reload-original-manager",
+      "signal": 1
+    }
+  ],
+  "originalControllerIdentity": {
+    "pid": 320847,
+    "uid": 1000,
+    "startTicks": 451383,
+    "exeSha256": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae",
+    "cgroup": "0::/codex.slice/codex-workloads.slice"
+  },
+  "originalListenerIdentity": {
+    "pid": 320854,
+    "uid": 1000,
+    "startTicks": 451458,
+    "exeSha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649",
+    "cgroup": "0::/codex.slice/codex-workloads.slice"
+  },
+  "originalDirmngrIdentity": {
+    "pid": 1377876,
+    "uid": 1000,
+    "startTicks": 4076338,
+    "exeSha256": "ebc20de9ce0991bede885de2401a1125b9b5db77c90c51ad9261ae3bb52ba1fe",
+    "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/dirmngr.service"
+  },
+  "errorType": "TimeoutError"
+}

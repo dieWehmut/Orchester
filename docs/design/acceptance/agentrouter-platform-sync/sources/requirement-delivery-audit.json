@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
-  "generatedAt": "2026-11-12T22:45:43.139727+00:00",
+  "generatedAt": "2026-11-12T23:04:15.110886+00:00",
   "status": "current-evidence-audit-not-complete-all-platform-delivery",
   "requirements": [
     {
@@ -213,7 +213,7 @@
     {
       "id": "linux_service",
       "userRequirement": "Keep persistent Linux service updated with current mobile resources",
-      "status": "post-reboot-standalone-owned-deployment-and-original-token-wire-verified-user-unit-autostart-pending",
+      "status": "canonical-userbus-and-managed-default-service-lifecycle-verified-reboot-and-original-token-wire-pending",
       "evidence": [
         "tests/backend/final71-full-workspace/summary.json",
         "deployments/linux/current-final21/final-safe.json",
@@ -229,12 +229,18 @@
         "deployments/linux/20261112-post-reboot/root-independent-live-safe.json",
         "deployments/linux/20261112-post-reboot/static-unit-configuration-safe.json",
         "native/android/post-reboot-completion-20261112/product/installed-apk-and-original-five-wire-safe.json",
-        "deployments/linux/current-readonly-20261112T1500/live-and-user-manager-safe.json"
+        "deployments/linux/current-readonly-20261112T1500/live-and-user-manager-safe.json",
+        "deployments/linux/20261113-userbus-managed-default/managed-user-bus-resume-safe.json",
+        "deployments/linux/20261113-userbus-managed-default/persistent-service-lifecycle-safe.json",
+        "deployments/linux/20261113-userbus-managed-default/second-managed-start-producer-public-safe.json",
+        "deployments/linux/20261113-userbus-managed-default/root-independent-live-and-state-safe.json",
+        "deployments/linux/20261113-userbus-managed-default/source-mappings-safe.json",
+        "deployments/linux/20261113-userbus-managed-default/initial-controller-native-path-failure-safe.json"
       ],
-      "verifiedScope": "Historicalsource71 Linux7337 PID1023019/ticks256519/ELFd983/21catalog/17resources/authrevoke/5tasksrows/5entries3effective semanticstate retained; JSONrawstrings differ. HistoricalcorrectWin originalstoredtoken/infoone200/nameMatch preserved. Freshroot2026-11-11T23:31UTC(originalUTC retained,Nov12Asia) actualoldservice/controllerabsent/7337listeners0/previousHTTPURLError, priorinstanceexitcauseunknown; this doesnotreverse historicaltestpassed. Phase4 historicalcheckpoint: restoration fromcurrentstate ownerlinux_restore, no newruntimepass claimed atthat earlierobservation. Laternewruntime2330202/4550341+controller2330194/4550291/nameduserunitactive-running+samecgroup/LingerYes/source71/d983/368stable/17publicbytes/21schema3/twoWorkBuddys/ownpairDELETE204-revoked401close verifiedafterlauncherexit/originalwriterFD8/pidfd. Current5fulltaskrows+5persisted3distinct values retained andcurrentnewbackuprawrows true; prioroldlegacybackuprawfalse withparsedequal/currentchangesnot-overwritten retained asdifferentbasis. Rootinitial/api/info404 observerexit1 notproductfailure, correctedremote/v1/info401 actual. Old1023019 exitunknown/historicalF7absencereal; no oldheapenv orOSresetresistance claim. Newpostreboot320854/ticks451458/owncontroller320847 exactsource71/resources21+17/ownpairrevoked401/current5tasksrawretained and5auth3distinctJSONvaluesretained; currentSQLrawtextfalse explicit. Condaos.pidfd_openmissing firstfailureownedlistener0/portfree, corrected/usr/bin/python3. Usermanagerbusunavailable, standaloneoriginalwriter/pidfd/peer verified; staticunitparser0/defaulttargetlinkconfigured notrunning/autostartuntested. CurrentnativeAndroidoriginal7337token actual/infoGET200+hostnamematch with originalfiveAES5/0, no originalfivepairing.",
+      "verifiedScope": "Historicalsource71 Linux7337 PID1023019/ticks256519/ELFd983/21catalog/17resources/authrevoke/5tasksrows/5entries3effective semanticstate retained; JSONrawstrings differ. HistoricalcorrectWin originalstoredtoken/infoone200/nameMatch preserved. Freshroot2026-11-11T23:31UTC(originalUTC retained,Nov12Asia) actualoldservice/controllerabsent/7337listeners0/previousHTTPURLError, priorinstanceexitcauseunknown; this doesnotreverse historicaltestpassed. Phase4 historicalcheckpoint: restoration fromcurrentstate ownerlinux_restore, no newruntimepass claimed atthat earlierobservation. Laternewruntime2330202/4550341+controller2330194/4550291/nameduserunitactive-running+samecgroup/LingerYes/source71/d983/368stable/17publicbytes/21schema3/twoWorkBuddys/ownpairDELETE204-revoked401close verifiedafterlauncherexit/originalwriterFD8/pidfd. Current5fulltaskrows+5persisted3distinct values retained andcurrentnewbackuprawrows true; prioroldlegacybackuprawfalse withparsedequal/currentchangesnot-overwritten retained asdifferentbasis. Rootinitial/api/info404 observerexit1 notproductfailure, correctedremote/v1/info401 actual. Old1023019 exitunknown/historicalF7absencereal; no oldheapenv orOSresetresistance claim. Newpostreboot320854/ticks451458/owncontroller320847 exactsource71/resources21+17/ownpairrevoked401/current5tasksrawretained and5auth3distinctJSONvaluesretained; currentSQLrawtextfalse explicit. Condaos.pidfd_openmissing firstfailureownedlistener0/portfree, corrected/usr/bin/python3. Usermanagerbusunavailable, standaloneoriginalwriter/pidfd/peer verified; staticunitparser0/defaulttargetlinkconfigured notrunning/autostartuntested. CurrentnativeAndroidoriginal7337token actual/infoGET200+hostnamematch with originalfiveAES5/0, no originalfivepairing. CurrentNov13Asia canonicalofficialdbus active/running/formaluserAPIowner269/ticks1374 preserved withoutmanagerrestart; initialtemporarybus/managedobserverfailures remain. Ownoriginal320847/320854 normalquit/listener0 viaoriginalwriter+pidfd/portreleased/final+env unchanged. Firstmanagedcontroller AF_UNIX108Bpath failedbeforelistener exit1; short43B successor preserved. Actualsystemctlstop0/start0 fullyverified/controller2888953+listener2888962/ticks6300064+6300089/namedunitactiveenabled/source71/originalwriterFD7+pidfd/21catalog17resources/5task+5authJSON retained; SQLrawfalse explicit. RootindependentPID+unit+cgroup+ELF+17HTTP200distbytes+3privatebackupDB5taskrows+remoteJSON retained. Publicderivedreceipts omitonlyprivatepath/runstatus andallretainedvalues equaloriginal; source-mappings binds26raw/derivedfiles. Originalphonecredential wire notrerun oncurrentinstance; priorAndroidGET200 historical.",
       "remaining": [
-        "Static unit/default-target link/verify0/lingerYes and live standalone controller reconfirmed15:08; usermanager269 live but bus missing/privateconnecterrno111, actual autostart not verified.",
-        "Routineproductionnormalquit notexecuted thisepoch; serviceleft running."
+        "RealWSL reboot/autostart remainsuntested; enabledstartup link/configuration andactualsystemctlstart-stop-start do not prove rebootstart.",
+        "Originalphone savedtoken actualHTTPGET onnewmanaged2888962instance notrerun;5authJSONvaluesretainedandhistoricalAndroidGET200 do not establishcurrentwire success."
       ]
     },
     {
@@ -284,7 +290,7 @@
     {
       "id": "git_steps",
       "userRequirement": "Verify separated commits, push remotely and merge main step by step",
-      "status": "eleven-checkpoints-pushed-merged-current-cleanup-archive-prepared",
+      "status": "twelve-checkpoints-pushed-merged-current-linux-lifecycle-archive-prepared",
       "evidence": [
         "sources/final71-source-binding.json",
         "maintenance/git-delivery/git-byte-and-crlf-correction-safe.json",
@@ -298,11 +304,12 @@
         "maintenance/git-delivery/eighth-step-delivery-safe.json",
         "maintenance/git-delivery/ninth-step-delivery-safe.json",
         "maintenance/git-delivery/tenth-step-delivery-safe.json",
-        "maintenance/git-delivery/eleventh-step-delivery-safe.json"
+        "maintenance/git-delivery/eleventh-step-delivery-safe.json",
+        "maintenance/git-delivery/twelfth-step-delivery-safe.json"
       ],
-      "verifiedScope": "Parentdocs193+MD exact194Gitblob comparisons. FirstdefaultCRLFwhitespacecheckexit2 preserved; doccommit213d315 alreadycreated, scopedattributes correction812e0e6 preserves原bytes andcheck0, main32992976 merged; feature/mainpushactual0. Frozenproduction71 unchanged. Docsagent noGitmutation. Second218archive+MD219Gitblobexact/currentdoc828ad10 mergedmain4d7d95, feature/mainpushactual0/default+stagedwhitespace0/production71+Pagesworkflowinputsunchanged; no allplatformcompletionclaim. Third266archive+MD267blobsexact/doc0e4367d/main8b0a016push0/production71equal delivered. Fourth321archive+MD322exactGitblob/commitcaa60/main60b4/featuremainpush0/source71equal delivered. SubsequentnewLinux/signature/cleanup sourceepochs kept separate fromfourthabsencestage. Sixth docc20fa1b/mainf462fd7 delivered, feature/mainpushactual0 and374Gitblobs exact. Additional sixCLI/twelveinstallunits andcommandregistration verified innew epoch. SeventhCLIcheckpoint1c2ebe2/maina5ea264/push0/437Gitblobsexact/frozen731inputs passed. Eighthnativecompletion docc19f621/maine8c3cd3/push0/507Gitblobsexact/731sourcehashchecks delivered. Ninthf6520a8/main92c668e/push0/540exactGitblobs and731sourcehash verified. Tenth1824cf2/main3712edd actualfeaturepush0/mainmerge0/mainpush0/remoteexact/596Gitblobsexact/594manifestchecks delivered; currentindependent594manifest+731sourcefreeze checks passedbeforearchive edits. Eleventhcurrentcontinuation8548830/mainbdd8a0d actualfeaturepush0/mainmerge0/mainpush0/remoteexact/607manifesthash+size+mainblobchecks/731sourcechecks delivered.",
+      "verifiedScope": "Parentdocs193+MD exact194Gitblob comparisons. FirstdefaultCRLFwhitespacecheckexit2 preserved; doccommit213d315 alreadycreated, scopedattributes correction812e0e6 preserves原bytes andcheck0, main32992976 merged; feature/mainpushactual0. Frozenproduction71 unchanged. Docsagent noGitmutation. Second218archive+MD219Gitblobexact/currentdoc828ad10 mergedmain4d7d95, feature/mainpushactual0/default+stagedwhitespace0/production71+Pagesworkflowinputsunchanged; no allplatformcompletionclaim. Third266archive+MD267blobsexact/doc0e4367d/main8b0a016push0/production71equal delivered. Fourth321archive+MD322exactGitblob/commitcaa60/main60b4/featuremainpush0/source71equal delivered. SubsequentnewLinux/signature/cleanup sourceepochs kept separate fromfourthabsencestage. Sixth docc20fa1b/mainf462fd7 delivered, feature/mainpushactual0 and374Gitblobs exact. Additional sixCLI/twelveinstallunits andcommandregistration verified innew epoch. SeventhCLIcheckpoint1c2ebe2/maina5ea264/push0/437Gitblobsexact/frozen731inputs passed. Eighthnativecompletion docc19f621/maine8c3cd3/push0/507Gitblobsexact/731sourcehashchecks delivered. Ninthf6520a8/main92c668e/push0/540exactGitblobs and731sourcehash verified. Tenth1824cf2/main3712edd actualfeaturepush0/mainmerge0/mainpush0/remoteexact/596Gitblobsexact/594manifestchecks delivered; currentindependent594manifest+731sourcefreeze checks passedbeforearchive edits. Eleventhcurrentcontinuation8548830/mainbdd8a0d actualfeaturepush0/mainmerge0/mainpush0/remoteexact/607manifesthash+size+mainblobchecks/731sourcechecks delivered. Twelfthcleanup9a48d20/main1dec0b4 actualfeaturepush0/mainmerge0/mainpush0/remoteexact/611manifesthash+size+mainblobchecks/731sourcechecks delivered.",
       "remaining": [
-        "Currentverified3worktree/localbranch+6remoteref cleanup andeleventhdelivery receipt await separateverifiedarchivecommit/push/mainmerge; originalfullDesktop18/defaultreinstall andLinuxservice lifecycle remain separate."
+        "CurrentcanonicalLinuxuserbus/managed7337lifecycle androotindependentstate/resource evidence withtwelfthdelivery receipt awaitseparateverifiedarchivecommit/push/mainmerge; originalWindowsfullDesktop18/defaultreinstall/vendorpayloads plusLinuxreboot/currentoriginaltokenwire remain separate."
       ]
     },
     {
@@ -328,7 +335,7 @@
   "historicalResultsRemainInOwnSourceEpoch": true,
   "installationDoesNotEstablishAuthenticationOrModelTaskExecution": true,
   "privateCredentialOrUserStateValuesIncluded": false,
-  "updatedAt": "2026-11-12T22:45:43.139727+00:00",
+  "updatedAt": "2026-11-12T23:04:15.110886+00:00",
   "documentationExecutionDateRangeAsiaShanghai": [
     "2026-11-11",
     "2026-11-13"

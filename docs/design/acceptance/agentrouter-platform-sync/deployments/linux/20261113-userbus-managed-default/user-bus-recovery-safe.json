@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-12T22:36:18.516689+00:00",
+  "status": "recovery-failed",
+  "managerPid": 269,
+  "managerStartTicks": 1374,
+  "managerRestarted": false,
+  "systemServicesChanged": false,
+  "otherProjectServicesStartedStoppedOrRestarted": false,
+  "privateEnvironmentCredentialsStateOrJournalPublished": false,
+  "rebootAutostartActuallyTested": false,
+  "events": [
+    {
+      "label": "accurate-manager-supported-sigusr1-reconnect",
+      "actualSignal": 10
+    },
+    {
+      "label": "original-bootstrap-daemon-finally-normal-termination",
+      "actualExitCode": 0
+    }
+  ],
+  "bootstrapOriginalPopenAndPidfdIdentity": {
+    "pid": 1389403,
+    "uid": 1000,
+    "startTicks": 6237453,
+    "exeSha256": "9e5cf3260e8b0d68a88732ebc4386970ff5977f4a9bcb9022a13ab905f832bbc",
+    "cgroup": "0::/"
+  },
+  "errorType": "TimeoutError"
+}
