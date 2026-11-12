@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "observedAtUTC": "2026-11-12T15:38:27.131810+00:00",
+  "status": "original-corrected-controller-and-original-readonly-query-interop-handles-terminal1-native-status-unproved",
+  "originalCorrectedControllerToolSession": 7434,
+  "originalCorrectedControllerInteropActualExitCode": 1,
+  "originalReadonlyQueryToolSession": 90739,
+  "originalReadonlyQueryInteropActualExitCode": 1,
+  "bothError": "WSL UtilAcceptVsock accept4 failed110",
+  "originalInteropSocket2151ExistsNow": false,
+  "alternateInteropSocket1ExistsNow": true,
+  "originalNativePreflightOrStartReceiptsPresent": false,
+  "nativeActionRestartedBasedOnlyOnMissingReceipts": false,
+  "nextAction": "Fresh read-only exactProcess commandLine query over current existing interop1 socket; no bootstrapper repeat until original native processes proven absent."
+}

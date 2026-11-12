@@ -1,0 +1,19 @@
+{
+    "format":  "orchester-final21-runtime-input-freeze-v1",
+    "status":  "fresh-runtime-inputs-frozen-after-real-final-android",
+    "runtimeInputsFile":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\fresh-runtime-inputs.json",
+    "runtimeInputsSha256":  "b364598c896cbcd8f4c7a70129a3ecbb6088f8930a0ea591a3860aaba6c7f86f",
+    "androidAcceptanceReceiptFile":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\formal-android-composite-20261112T1555-ascii\\normalized-acceptance-safe.json",
+    "androidAcceptanceReceiptSha256":  "0e103df7ea49b11327d47082fab1fdc57602f99be4f0b10b16cfbc24cbec6290",
+    "originalAndroidReceiptSha256":  "91df37944b7bc0940859d4df6def87efc35e24efe1a9ca3c26a2e961e84c9413",
+    "sourceRevision":  "71def643cb08b208cc79687f79255c504eb14dc6",
+    "expectedPlanSha256":  "8645dca6d20f2d5ff0d845d7c74522f52ca72c6aec49ec9529dcb86a997911cd",
+    "expectedFinalResultSha256":  "7ddcd67633e127a4b664dc69d91cf20bd8751a9ab6a009d8ca73d9b0951fe023",
+    "apkSha256":  "f83fa2a75c712a3d2e1f3f203cf73ce89204fb4ca0bce4d8c2ef0c4fe3596d3c",
+    "runtimeInputsGuardSha256":  "fa6ce76b0ac9d2c4a37b173931e4627d92cab7e5308e6f912b8467a5eb58ff6d",
+    "nativeDesktop18Accepted":  false,
+    "nativePortable14Accepted":  false,
+    "defaultInstallChanged":  false,
+    "modelCalls":  0,
+    "signals":  0
+}

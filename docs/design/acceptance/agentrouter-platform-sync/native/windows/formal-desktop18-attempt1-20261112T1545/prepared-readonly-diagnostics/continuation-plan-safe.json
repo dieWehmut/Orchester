@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "status": "prepared-not-executed-native-gateway-required",
+  "preparedAtUtc": "2026-11-12T16:09:07.122812+00:00",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "originalLiveExecSessionId": 90867,
+  "originalGuiPid": 37324,
+  "originalGuiCreatedFileTime": 134389718070239855,
+  "originalGuiImageSha256": "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+  "nativeNodeImage": "C:\\Users\\han\\AppData\\Local\\dsh-shortcut\\node\\node-v24.21.0-win-x64\\node.exe",
+  "nativeNodeExpectedSha256": "ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32",
+  "diagnosticSourceSha256": "a65b54a3cbcee6ed229d32822fe51f022633aff8a49e0296d6775598d632a172",
+  "diagnosticUsesBuiltinCdpAndNoUncPlaywrightDependency": true,
+  "originalNodeAttemptLaunchStateStillRequiresReadonlyNativeProcessQueryBeforeNewDiagnosticInvocation": true,
+  "nextSteps": [
+    "Poll originalexec90867; never infer terminal from an observation timeout or static file.",
+    "On restored gateway, query fixed root-monitor-readonly.mjs and last registration observer identities before any new invocation; preserve original failures.",
+    "Validate originalGUI PID/birth/image and current listener ownership before running this read-only diagnostic with original launch-result.json and a new output path.",
+    "Use the real DOM/DTO evidence to diagnose the monitor assertion. Preserve all21providers/42icons/sevenservice semantics; do not weaken a failing invariant without proving it incorrect.",
+    "Normal UI tray quit the exact owned GUI and poll originalexec90867 through terminal; never restart it or signal another process.",
+    "Only after fullDesktop18 and fresh original data/credential backups pass may defaultreinstallation/promotion proceed."
+  ],
+  "actualDiagnosticExecutionClaimed": false,
+  "diagnosticNativeLaunchCount": 0,
+  "defaultInstallOrGuardOrProductionSourceMutationCount": 0,
+  "normalTrayQuitCompleted": false,
+  "privateContentsIncluded": false,
+  "originalGuiCreatedFileTimeExactString": "134389718070239855",
+  "originalFileTimeComparisonAvoidsJavascriptNumberPrecisionLoss": true
+}

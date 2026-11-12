@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "observedAtUTC": "2026-11-12T15:30:59.217102+00:00",
+  "status": "initial-readonly-ui-source-native-parser-failure-preserved",
+  "actualNativeProcessExitCode": 1,
+  "sourceSha256": "3370adc7a3c1c0a593dd831eb9ebd63d243446ac46c0e8efc2a3fd3a34184f8c",
+  "sourceBytes": 4572,
+  "reason": "Windows PowerShell5 read the UTF8 source without BOM using legacy encoding; nonASCII public-name literals caused native parser errors. No script body ran.",
+  "installerLaunches": 0,
+  "uiInputCount": 0,
+  "sourceOriginalBytesPreserved": true
+}

@@ -1,0 +1,16 @@
+{
+    "status":  "failed-candidate-rejected-by-unmodified-guard",
+    "stage":  "read-failed-candidate-through-unmodified-guard",
+    "readOnly":  true,
+    "exceptionType":  "System.ArgumentException",
+    "hResult":  -2147024809,
+    "knownStaticErrorLabel":  null,
+    "errorFullyQualifiedId":  "System.ArgumentException,Microsoft.PowerShell.Commands.ConvertFromJsonCommand",
+    "scriptFrames":  [
+
+                     ],
+    "originalFilesModified":  false,
+    "freezeInvoked":  false,
+    "runtimeInvoked":  false,
+    "privateContentsOrRawMessageIncluded":  false
+}

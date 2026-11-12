@@ -1,0 +1,10 @@
+{
+    "status":  "fixed-public-composite-default-and-explicit-utf8-parser-comparison",
+    "windowsPowerShellMajorVersion":  5,
+    "defaultContentEncodingParsed":  false,
+    "explicitUtf8ContentEncodingParsed":  true,
+    "fileSha256":  "38ab35f8a20adbf92743902358ce33473f122e2aadb0c1e46d6448871d14e8f6",
+    "originalInputsChanged":  false,
+    "gateChanged":  false,
+    "privateStateOrRawMessageIncluded":  false
+}

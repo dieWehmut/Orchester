@@ -1,0 +1,9 @@
+{
+  "status": "failed",
+  "stage": "twenty-monitor-roster-and-truth",
+  "type": "AssertionError",
+  "completedChecks": 12,
+  "completedWrites": 6,
+  "pageErrorCount": 0,
+  "modelCalls": 0
+}

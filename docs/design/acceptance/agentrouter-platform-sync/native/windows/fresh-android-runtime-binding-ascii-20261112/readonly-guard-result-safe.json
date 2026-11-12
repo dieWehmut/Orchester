@@ -1,0 +1,11 @@
+{
+    "status":  "successor-readonly-diagnostic-candidate-now-accepted-by-unmodified-guard",
+    "stage":  "read-successor-readonly-diagnostic-candidate-through-unmodified-guard",
+    "readOnly":  true,
+    "candidateSha256":  "6f18b0cf72de54bdb0a60d68c0e533b20049f11e17bf4fa220b2ab516cda5b63",
+    "guardSha256":  "fa6ce76b0ac9d2c4a37b173931e4627d92cab7e5308e6f912b8467a5eb58ff6d",
+    "runtimeInputsFrozen":  false,
+    "originalFilesModified":  false,
+    "freezeInvoked":  false,
+    "runtimeInvoked":  false
+}

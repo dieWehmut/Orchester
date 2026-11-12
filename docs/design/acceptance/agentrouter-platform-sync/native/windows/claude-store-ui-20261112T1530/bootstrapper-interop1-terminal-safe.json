@@ -1,0 +1,16 @@
+{
+    "schemaVersion":  1,
+    "observedAtUTC":  "2026-11-12T15:39:01.2591635Z",
+    "status":  "own-official-store-bootstrapper-actual-original-handle-terminal",
+    "nativePid":  32252,
+    "nativeBirthUTC":  "2026-11-12T15:38:56.7813325Z",
+    "actualNativeExitCode":  1612,
+    "originalCreatorNativeProcessObjectHeldUntilActualExit":  true,
+    "originalCreatorNativeHandleHeldUntilActualExit":  true,
+    "sourceSha256":  "2a79eb6fc5e30ace5e13d1209b33dd9669972513031719278b35af3b88a976fa",
+    "imageCurrentSha256":  "8ab145dab22a698105f20e10b182e50d1c2422e2be1818349efadbb06e118a48",
+    "timeoutKillStopOrRestartIssued":  false,
+    "unknownBrokerProcessesAdopted":  false,
+    "nativeTerminalExitDoesNotProveClaudePayloadInstallation":  true,
+    "installerGUIOrProcessSignalsIssuedByController":  0
+}

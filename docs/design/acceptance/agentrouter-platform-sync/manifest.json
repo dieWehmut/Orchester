@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-12T15:38:35.144240+00:00",
-  "status": "fresh-windows-readiness-and-android-composite-verified-original-freeze-failure-preserved-runtime-pending",
+  "createdAt": "2026-11-12T16:13:08.144879+00:00",
+  "status": "formal-portable14-and-input-freeze-verified-desktop18-failed-with-original-handles-live-store-connection-failed",
   "summaryPath": "summary.json",
   "files": [
     {
@@ -268,6 +268,11 @@
       "path": "maintenance/git-delivery/git-byte-and-crlf-correction-safe.json",
       "sha256": "e6e04807d005310247b2d4edd985af17d343da809c6240b4ba30e875eb9b5080",
       "bytes": 547
+    },
+    {
+      "path": "maintenance/git-delivery/ninth-step-delivery-safe.json",
+      "sha256": "8bf2808cc2131321a7c897172c888225fc1560b39f1b2fe759398541557af7b4",
+      "bytes": 884
     },
     {
       "path": "maintenance/git-delivery/second-step-delivery-safe.json",
@@ -1315,6 +1320,81 @@
       "bytes": 243
     },
     {
+      "path": "native/windows/claude-store-ui-20261112T1530/after-registration-interop-query-safe.json",
+      "sha256": "63ebd0f4b7abc4fac1376352acff50bc9b031094c5a5091a2d7c3d497f9e2e83",
+      "bytes": 1155
+    },
+    {
+      "path": "native/windows/claude-store-ui-20261112T1530/after-store-ui-safe.json",
+      "sha256": "61afd47539a2ffa0d28a01246dd2def9ad5df52e1a8286bfeeb6a177faba584f",
+      "bytes": 4882
+    },
+    {
+      "path": "native/windows/claude-store-ui-20261112T1530/before-store-ui-safe.json",
+      "sha256": "7b7b73783123b13cb7f1ed9f399fa984cd84e1cb29a5bcbb8e71bcbdbb750c94",
+      "bytes": 1967
+    },
+    {
+      "path": "native/windows/claude-store-ui-20261112T1530/bootstrapper-interop1-preflight-safe.json",
+      "sha256": "ca956e9d2a3981493d6c8ee38356027fc8169d8eb6df252471d544b28470d1de",
+      "bytes": 2128
+    },
+    {
+      "path": "native/windows/claude-store-ui-20261112T1530/bootstrapper-interop1-start-safe.json",
+      "sha256": "4368e0ca3f72e557e76652bc68295079220503c570f13e18358c7e6bc7d09b8d",
+      "bytes": 851
+    },
+    {
+      "path": "native/windows/claude-store-ui-20261112T1530/bootstrapper-interop1-terminal-safe.json",
+      "sha256": "df6b8e0d2b7a19f77dbe766e5d4d725e6e0cbefcb6d07b695f33592441953162",
+      "bytes": 826
+    },
+    {
+      "path": "native/windows/claude-store-ui-20261112T1530/final-store-ui-attempt-safe.json",
+      "sha256": "16ba234e1c834ae3b54f184a439e72120d207ae0c8a24cc7c08a567b7e12c46c",
+      "bytes": 5157
+    },
+    {
+      "path": "native/windows/claude-store-ui-20261112T1530/initial-bootstrapper-source-prelaunch-failure-safe.json",
+      "sha256": "716257ddcfcd59e16663786d6ccae71341f2f5de5502bf58dd5e3fc7f80fe521",
+      "bytes": 625
+    },
+    {
+      "path": "native/windows/claude-store-ui-20261112T1530/initial-readonly-parser-failure-safe.json",
+      "sha256": "9603423a5f8a2f471b4dabadc7a830591b8f411dc6f80d837377030d5f7f68da",
+      "bytes": 556
+    },
+    {
+      "path": "native/windows/claude-store-ui-20261112T1530/interop-observation-failures-safe.json",
+      "sha256": "63ef66feb3acf50f91986d1387c956dfa47ba86874538758f48b8dbc57bc178c",
+      "bytes": 845
+    },
+    {
+      "path": "native/windows/claude-store-ui-20261112T1530/microsoft-store-connection-error.png",
+      "sha256": "96d9fd94481dc5b9fe124443b40b65fe119388c7bfb86497a49dedf01f3abe56",
+      "bytes": 277422
+    },
+    {
+      "path": "native/windows/claude-store-ui-20261112T1530/post-ui-registration-interop-failures-safe.json",
+      "sha256": "045570966d869b4b39cf52e24e1b59a61b11fcdc933a1b4c36e5e4c0e4e25b38",
+      "bytes": 1720
+    },
+    {
+      "path": "native/windows/claude-store-ui-20261112T1530/source-mappings-safe.json",
+      "sha256": "8e31a4c6d264f5af9196738dad21e2f6e3c2a730cc5eeea1991f6593b9d289c3",
+      "bytes": 10175
+    },
+    {
+      "path": "native/windows/claude-store-ui-20261112T1530/store-window-capture-safe.json",
+      "sha256": "d31535f27e8d76de3bd96f4529019ebe34b3919d34b18d2569ac67f7b5d7ca3b",
+      "bytes": 857
+    },
+    {
+      "path": "native/windows/claude-store-ui-20261112T1530/uncertain-bootstrapper-native-query-interop1-safe.json",
+      "sha256": "e1f7eb8a176e449903564a9e75d24a248e2093decf9290fa7e8e0dbc6e22764d",
+      "bytes": 536
+    },
+    {
       "path": "native/windows/current-installation-matrix/current-filesystem-public-matrix-safe.json",
       "sha256": "9d4fd644d4254ddcfda8518a7be2d97d5f52e94908c9fb16b2ec3c7987523c1b",
       "bytes": 14038
@@ -1655,6 +1735,91 @@
       "bytes": 385572
     },
     {
+      "path": "native/windows/formal-desktop18-attempt1-20261112T1545/actual-root-execution-safe.json",
+      "sha256": "4f8c4e454e7d4739d88068539e6aa167c7ab0fa2cb957da9e5ed70fb14557b2d",
+      "bytes": 1247
+    },
+    {
+      "path": "native/windows/formal-desktop18-attempt1-20261112T1545/cleanup-result.json",
+      "sha256": "580e7967d2cc8a68a854c657502cc1f6d9b2495511d1ba8618652faacca29b8c",
+      "bytes": 602
+    },
+    {
+      "path": "native/windows/formal-desktop18-attempt1-20261112T1545/desktop-worker-failure.json",
+      "sha256": "59c2ba3409c343ba4ca61f4decada7482e22f555cf70c799b43281e0be0167ac",
+      "bytes": 344
+    },
+    {
+      "path": "native/windows/formal-desktop18-attempt1-20261112T1545/gui-owned-identities.json",
+      "sha256": "a9f9479eb2bf3f14709c94d770d3cab0db6bbfe8e33919c1eef1daaf81219a00",
+      "bytes": 8558
+    },
+    {
+      "path": "native/windows/formal-desktop18-attempt1-20261112T1545/launch-result.json",
+      "sha256": "a4644db099c7792b2f3e7949041c99824d71a24c2d5e3cdc6519288db1e2cb07",
+      "bytes": 1625
+    },
+    {
+      "path": "native/windows/formal-desktop18-attempt1-20261112T1545/native-final-failure.json",
+      "sha256": "8f4a4c2949f3d71bd91bd1cfb4d73f9bfaeeb4c973378eed14f92cd1ee363f49",
+      "bytes": 190
+    },
+    {
+      "path": "native/windows/formal-desktop18-attempt1-20261112T1545/node-launch-result.json",
+      "sha256": "5d2759ea06f1ad0f28b31e2c3adca92a3c3ef97e3f0288674cb80662ea934e8a",
+      "bytes": 275
+    },
+    {
+      "path": "native/windows/formal-desktop18-attempt1-20261112T1545/node-owned-identities.json",
+      "sha256": "88ebe46b5cf2b8ed3d0b09b49391a111cab74f431d09924f06741c5990ac7adf",
+      "bytes": 287
+    },
+    {
+      "path": "native/windows/formal-desktop18-attempt1-20261112T1545/prepared-readonly-diagnostics/continuation-plan-safe.json",
+      "sha256": "2e065e09a71caccd3702b72e407bf3070856cd694f9c57a3f5e13cf54078a081",
+      "bytes": 2151
+    },
+    {
+      "path": "native/windows/formal-desktop18-attempt1-20261112T1545/prepared-readonly-diagnostics/read-current-monitor-cdp.mjs",
+      "sha256": "a65b54a3cbcee6ed229d32822fe51f022633aff8a49e0296d6775598d632a172",
+      "bytes": 3813
+    },
+    {
+      "path": "native/windows/formal-desktop18-attempt1-20261112T1545/retained-original-handles-at-archive-safe.json",
+      "sha256": "f541a9d2b7c921cd696132271d9e808bae043407e58688bf741c50bab051cedb",
+      "bytes": 6245
+    },
+    {
+      "path": "native/windows/formal-desktop18-attempt1-20261112T1545/runtime-listener.json",
+      "sha256": "75a063a9becd62036974b7960f3d7b2074fa8b30e4394d18d524d3a194e85b86",
+      "bytes": 48
+    },
+    {
+      "path": "native/windows/formal-portable14-20261112T1540/actual-root-execution-safe.json",
+      "sha256": "6229e180ba381489000fae91eecec584c2bb4300130257fadc41a434081df256",
+      "bytes": 992
+    },
+    {
+      "path": "native/windows/formal-portable14-20261112T1540/cleanup-result.json",
+      "sha256": "3dd820b7d68c2a9213b549c35deccee91d4ee3aed0423a44db17b2c0751226fb",
+      "bytes": 8436
+    },
+    {
+      "path": "native/windows/formal-portable14-20261112T1540/launcher-stderr-diagnostic.json",
+      "sha256": "d793938699d96cbebe87a26c1f5c68f6ffb58cae024663a368efa4a56f0ec62c",
+      "bytes": 202
+    },
+    {
+      "path": "native/windows/formal-portable14-20261112T1540/normal-shutdown-observation.json",
+      "sha256": "0a347ace00d353d894a929c1bf48b5603e563d621e106c5299f34551ab09cdfd",
+      "bytes": 182
+    },
+    {
+      "path": "native/windows/formal-portable14-20261112T1540/runtime-result.json",
+      "sha256": "39049d9c38b1591f98da0505eaf845d1cface715edd7796a4e5461f4162bc573",
+      "bytes": 1824
+    },
+    {
       "path": "native/windows/formal-runtime-post-reboot-20261112/fresh-probe-final-safe.json",
       "sha256": "f53c1c30ef2ac9c0cb73848160992c61800a4b4049951eec5b281570f7081847",
       "bytes": 2282
@@ -1760,6 +1925,96 @@
       "bytes": 1930
     },
     {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/build-composite.py",
+      "sha256": "6d5b67bbe5f774adbd67d02629c3030da083c512f4e3c53439051c09918b70e5",
+      "bytes": 18312
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/composite-verification-safe.json",
+      "sha256": "8546c990698fbe5cf5177a8e7426ed38fac1def096e71480290691bdb9843705",
+      "bytes": 972
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/input-pins.json",
+      "sha256": "6f832d511b5e8a8f78214c072fa773661186b5c93199851e6890d4a2b3773759",
+      "bytes": 20137
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/normalized-acceptance-safe.json",
+      "sha256": "0e103df7ea49b11327d47082fab1fdc57602f99be4f0b10b16cfbc24cbec6290",
+      "bytes": 3801
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/original-composite-acceptance-safe.json",
+      "sha256": "91df37944b7bc0940859d4df6def87efc35e24efe1a9ca3c26a2e961e84c9413",
+      "bytes": 27712
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/original-parser-diagnostics/explicit-utf8-parser-result-safe.json",
+      "sha256": "3cc8a52d86720e2fce002545ca9ffee5368798cc1cd92bf37acb4fbb2dc3b1eb",
+      "bytes": 429
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/original-parser-diagnostics/parse-public-receipts.ps1",
+      "sha256": "69b1b9636eaf975656e5ceac0649069de78254143e80d1b8343596b24dc46a40",
+      "bytes": 2009
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/original-parser-diagnostics/public-json-parser-result-safe.json",
+      "sha256": "732b44de6fe98b483b1256f61ba4bf2def1ab36e4bde39c89cff29e2d637bf0d",
+      "bytes": 1578
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/original-parser-diagnostics/read-failed-candidate.ps1",
+      "sha256": "6eee21e12c5645e5acb298f0dbc74d018a60791dd9c8ddbe7790b20b16afa9a9",
+      "bytes": 3987
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/original-parser-diagnostics/readonly-guard-result-safe.json",
+      "sha256": "2117fa8c341b482ef10b223882218908daefacf6a108896caeef6869f1487fc8",
+      "bytes": 590
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/original-parser-diagnostics/verify-json-utf8.ps1",
+      "sha256": "cca83862571fa56e23381d85284c6dab061518f265615b56df692f7073b90495",
+      "bytes": 1281
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/prior-failed-candidate-safe.json",
+      "sha256": "0d2e51c9b4febbcc5797e7239ffbff077a31af6b40e8151a9a9e7b1d755e0009",
+      "bytes": 13660
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/prior-freeze-attempt-safe.json",
+      "sha256": "94d10182a456c06a45c8a41d81d8965f9e3f89e44d440f64835a5cdc22da37e9",
+      "bytes": 675
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/read-successor-candidate.ps1",
+      "sha256": "61689e736f8a25a47d2336ebd87d32d3225d8d8531b8123652260ef9e2345e0d",
+      "bytes": 4097
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/readonly-diagnostic-candidate-safe.json",
+      "sha256": "6f18b0cf72de54bdb0a60d68c0e533b20049f11e17bf4fa220b2ab516cda5b63",
+      "bytes": 7714
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/readonly-guard-result-safe.json",
+      "sha256": "ff19527fc3be79058d973c2dc83c8d7183db5e068b3799c0ceb7bdb432b7514b",
+      "bytes": 525
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/source-mappings-safe.json",
+      "sha256": "906eadec1f041bf30fa38533de3ae035ebf58498b23fc13b0f7d05d0aaf7f365",
+      "bytes": 6592
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/successor-encoding-and-execution-safe.json",
+      "sha256": "e6e235d5b65bf30bed3f1886658c64c4c35d7b8d5c3cb5192162527a4dd295b7",
+      "bytes": 3196
+    },
+    {
       "path": "native/windows/fresh-runtime-input-freeze-attempt1-20261112/actual-root-execution-safe.json",
       "sha256": "82551efcb93b89b7d96858199b294153127f296290785b44098b1b688d517635",
       "bytes": 1157
@@ -1768,6 +2023,21 @@
       "path": "native/windows/fresh-runtime-input-freeze-attempt1-20261112/fresh-runtime-inputs-freeze-attempt-safe.json",
       "sha256": "94d10182a456c06a45c8a41d81d8965f9e3f89e44d440f64835a5cdc22da37e9",
       "bytes": 675
+    },
+    {
+      "path": "native/windows/fresh-runtime-input-freeze-success-20261112T1538/actual-root-execution-safe.json",
+      "sha256": "e87b38d88a9a09024fce4958c7e4109bf67a725d36eeb37c409272bd0352d718",
+      "bytes": 871
+    },
+    {
+      "path": "native/windows/fresh-runtime-input-freeze-success-20261112T1538/fresh-runtime-inputs-freeze-safe.json",
+      "sha256": "17e730259143b756bf91f6a267af26f3926091e179c193c2b9988b7cda444449",
+      "bytes": 1398
+    },
+    {
+      "path": "native/windows/fresh-runtime-input-freeze-success-20261112T1538/fresh-runtime-inputs.json",
+      "sha256": "b364598c896cbcd8f4c7a70129a3ecbb6088f8930a0ea591a3860aaba6c7f86f",
+      "bytes": 13666
     },
     {
       "path": "native/windows/interactive-current/final21-readiness-blocked-safe.json",
@@ -2430,6 +2700,16 @@
       "bytes": 1901
     },
     {
+      "path": "sources/audit/ninth-prerequisite-independent-review-safe.json",
+      "sha256": "a562ba3eeed1aff42b543a84da004744685eddebc2eb177b1aa5b6d76b5684b3",
+      "bytes": 1743
+    },
+    {
+      "path": "sources/audit/tenth-runtime-independent-review-safe.json",
+      "sha256": "88fcf778ece6dfc019f9b318be5915f503c6819012870db50603c3818eea2124",
+      "bytes": 1329
+    },
+    {
       "path": "sources/audit/windows-epoch2-selected-safe-whitelist.json",
       "sha256": "c951d7424254dd079fc8feb6ac8921a67aa34dbff4a04afe1d995fb95687ab90",
       "bytes": 3208
@@ -2586,8 +2866,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "fbdb3252e8a7411ade91c0d785a8dbb0809ef93aa4bbc521fe470fa9d54ea8db",
-      "bytes": 33718
+      "sha256": "d7223adf38fd6459d2bd02c3bc9e9bbac0a5bb0707b5a3cfdd73be5c3622fad4",
+      "bytes": 35452
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -2611,8 +2891,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "28bb8c44df0b2493e56da928e799ac3f5a23262d559fca5f210c0840e59c40ce",
-      "bytes": 46835
+      "sha256": "42ddd3a75f2af1b5f94b74ac43c9a9cd257b1f4fbc42cd317c2d4d1e96d4b827",
+      "bytes": 50583
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
@@ -2696,5 +2976,5 @@
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
-  "checkpointScope": "Previous505files plus currentreadiness4/composite7/freeze-failure2/Claudecurrent5/official13/Linux1/eighthdelivery1; subsequentencoding-successor and actualGUI/runtime attempts are separate."
+  "checkpointScope": "Previous538 archivefiles plus ASCIIcompatible Android evidence/unmodifiedguard/freeze0/Portable14 native0/failedDesktop18 originalHANDLE retention/realStore1612andconnectionerror/currentstep9delivery and independentreviews. No defaultreinstallation or Desktop18 green claim; preparedCDPdiagnostic notexecuted."
 }

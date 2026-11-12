@@ -1,0 +1,128 @@
+{
+  "status": "ascii-successor-and-original-failed-parser-diagnostics-byte-exact",
+  "files": [
+    {
+      "publicPath": "build-composite.py",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1555-ascii/build-composite.py",
+      "sha256": "6d5b67bbe5f774adbd67d02629c3030da083c512f4e3c53439051c09918b70e5",
+      "bytes": 18312,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "input-pins.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1555-ascii/input-pins.json",
+      "sha256": "6f832d511b5e8a8f78214c072fa773661186b5c93199851e6890d4a2b3773759",
+      "bytes": 20137,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "original-composite-acceptance-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1555-ascii/original-composite-acceptance-safe.json",
+      "sha256": "91df37944b7bc0940859d4df6def87efc35e24efe1a9ca3c26a2e961e84c9413",
+      "bytes": 27712,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "normalized-acceptance-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1555-ascii/normalized-acceptance-safe.json",
+      "sha256": "0e103df7ea49b11327d47082fab1fdc57602f99be4f0b10b16cfbc24cbec6290",
+      "bytes": 3801,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "composite-verification-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1555-ascii/composite-verification-safe.json",
+      "sha256": "8546c990698fbe5cf5177a8e7426ed38fac1def096e71480290691bdb9843705",
+      "bytes": 972,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "read-successor-candidate.ps1",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1555-ascii/read-successor-candidate.ps1",
+      "sha256": "61689e736f8a25a47d2336ebd87d32d3225d8d8531b8123652260ef9e2345e0d",
+      "bytes": 4097,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "readonly-guard-result-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1555-ascii/readonly-guard-result-safe.json",
+      "sha256": "ff19527fc3be79058d973c2dc83c8d7183db5e068b3799c0ceb7bdb432b7514b",
+      "bytes": 525,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "prior-freeze-attempt-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1555-ascii/prior-freeze-attempt-safe.json",
+      "sha256": "94d10182a456c06a45c8a41d81d8965f9e3f89e44d440f64835a5cdc22da37e9",
+      "bytes": 675,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "prior-failed-candidate-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1555-ascii/prior-failed-candidate-safe.json",
+      "sha256": "0d2e51c9b4febbcc5797e7239ffbff077a31af6b40e8151a9a9e7b1d755e0009",
+      "bytes": 13660,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "successor-encoding-and-execution-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1555-ascii/successor-encoding-and-execution-safe.json",
+      "sha256": "e6e235d5b65bf30bed3f1886658c64c4c35d7b8d5c3cb5192162527a4dd295b7",
+      "bytes": 3196,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "original-parser-diagnostics/read-failed-candidate.ps1",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-guard-diagnostic-20261112T1550/read-failed-candidate.ps1",
+      "sha256": "6eee21e12c5645e5acb298f0dbc74d018a60791dd9c8ddbe7790b20b16afa9a9",
+      "bytes": 3987,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "original-parser-diagnostics/readonly-guard-result-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-guard-diagnostic-20261112T1550/readonly-guard-result-safe.json",
+      "sha256": "2117fa8c341b482ef10b223882218908daefacf6a108896caeef6869f1487fc8",
+      "bytes": 590,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "original-parser-diagnostics/parse-public-receipts.ps1",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-guard-diagnostic-20261112T1550/parse-public-receipts.ps1",
+      "sha256": "69b1b9636eaf975656e5ceac0649069de78254143e80d1b8343596b24dc46a40",
+      "bytes": 2009,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "original-parser-diagnostics/public-json-parser-result-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-guard-diagnostic-20261112T1550/public-json-parser-result-safe.json",
+      "sha256": "732b44de6fe98b483b1256f61ba4bf2def1ab36e4bde39c89cff29e2d637bf0d",
+      "bytes": 1578,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "original-parser-diagnostics/verify-json-utf8.ps1",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-guard-diagnostic-20261112T1550/verify-json-utf8.ps1",
+      "sha256": "cca83862571fa56e23381d85284c6dab061518f265615b56df692f7073b90495",
+      "bytes": 1281,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "original-parser-diagnostics/explicit-utf8-parser-result-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-guard-diagnostic-20261112T1550/explicit-utf8-parser-result-safe.json",
+      "sha256": "3cc8a52d86720e2fce002545ca9ffee5368798cc1cd92bf37acb4fbb2dc3b1eb",
+      "bytes": 429,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "readonly-diagnostic-candidate-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-final-20261110/monitors-final21-71def64-20261111/fresh-runtime-inputs-readonly-diagnostic-c3c39a78.json",
+      "sha256": "6f18b0cf72de54bdb0a60d68c0e533b20049f11e17bf4fa220b2ab516cda5b63",
+      "bytes": 7714,
+      "sourceAndArchiveByteExact": true
+    }
+  ],
+  "singleNativeAcceptanceExecutionClaimed": false,
+  "unmodifiedGuardActuallyAcceptedReadonlyDiagnosticCandidate": true,
+  "freezeOr14Or18ExecutedByChild": false,
+  "privateStateOrRawLogsIncluded": false
+}

@@ -1,0 +1,22 @@
+{
+    "schemaVersion":  1,
+    "observedAtUTC":  "2026-11-12T15:46:02.2484248Z",
+    "status":  "readonly-query-of-uncertain-original-interop-native-handle",
+    "originalInteropTerminalExit":  1,
+    "originalInteropError":  "WSL UtilAcceptVsock accept4 failed110",
+    "originalNativeActionsNotInferredFromInteropExit":  true,
+    "matchingKnownProcesses":  [
+                                   {
+                                       "pid":  33128,
+                                       "birthUTC":  "2026-11-12T15:39:00.5897930Z",
+                                       "sessionId":  1,
+                                       "publicImageName":  "WinStore.App.exe",
+                                       "exactOwnControllerCommandLineMatched":  false,
+                                       "exactPreparedBootstrapperImageMatched":  false,
+                                       "commandLineOrEnvironmentContentsIncluded":  false
+                                   }
+                               ],
+    "newInstallerOrControllerRunCount":  0,
+    "signalsOrServiceTaskChanges":  0,
+    "rawPrivateContentsIncluded":  false
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "status": "unchanged-original-guard-actual-native-freeze-exit-zero",
+  "observedAtUtc": "2026-11-12T15:53:31.721483+00:00",
+  "actualOuterNativePowerShellExitCode": 0,
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "runtimeInputsSha256": "b364598c896cbcd8f4c7a70129a3ecbb6088f8930a0ea591a3860aaba6c7f86f",
+  "freshRuntimeInputFileByteExact": true,
+  "intermediateAsciiLaunchInteropActualExitCode": 1,
+  "intermediateAsciiNativeLaunchUnproved": true,
+  "subsequentFreezeActionCurrentAbsenceReadonlyQueryActualExitCode": 0,
+  "samefailedcandidateAndOriginalFailureReceiptRetainedBySuccessorArchive": true,
+  "finalExecSessionTerminal": true,
+  "originalGuardModified": false,
+  "formalPortable14SubsequentlyVerifiedInSeparateReceipt": true,
+  "desktop18OrDefaultInstallationClaimed": false,
+  "privateContentsIncluded": false
+}
