@@ -1,0 +1,7 @@
+{
+  "status": "observer-used-persisted-auth-lookup-key-not-raw-credential",
+  "actualHttpStatus": 401,
+  "actualOriginalCredentialReadOrWireTested": false,
+  "credentialOrAuthRowsChanged": false,
+  "listenerRestarted": false
+}

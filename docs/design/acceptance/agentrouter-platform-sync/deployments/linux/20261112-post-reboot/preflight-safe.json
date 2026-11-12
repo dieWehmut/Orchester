@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "status": "post-reboot-default-listener-absent",
+  "observedAtUtc": "2026-11-12T05:38:14Z",
+  "bootId": "d67ae493-3005-46f2-8b83-1e02e78a7dff",
+  "previousListenerPid": 2330202,
+  "previousControllerPid": 2330194,
+  "previousListenerProcExists": false,
+  "previousControllerProcExists": false,
+  "previousTransientUnitLoadState": "not-found",
+  "priorOwnedExitCode": 0,
+  "priorOwnedExitReceiptSha256": "229a90af5e644f4ac465994b9f578b807465fd0b11b9081c43177f8500a56c85",
+  "previousExitCauseProved": false,
+  "currentCallerEnvironmentCapturePrivate": true,
+  "currentEnvironmentCaptureMode": "0o600",
+  "currentEnvironmentValueCountOrValuesCopiedToPublic": false,
+  "priorProcessEnvironmentEqualityClaimed": false,
+  "restorationUsesExistingStateRoot": true,
+  "port7337ConnectCode": 111
+}

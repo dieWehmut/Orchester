@@ -1,0 +1,204 @@
+{
+  "status": "deployed-and-verified",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "binarySha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649",
+  "gateSummarySha256": "4b6112c8df7367ac964478fb4b86ec59148b1d1ec452b4cdb0e8ea20d4ae62c9",
+  "rustSourceInputsChecked": 368,
+  "mobileReceiptSha256": "8488a579092e3120c8b000e90a92cfd36a398e5d577af7024c8adccb333f16d2",
+  "consistentBackupRowsExactlyEqual": true,
+  "originalPort7337ObservedClosed": true,
+  "priorProcessHandlesInherited": false,
+  "currentEnvironmentInheritedExceptExplicitStateHome": true,
+  "currentEnvironmentTransfer": "current caller snapshot in task-owned regular 0600 private JSON; loaded at service startup; not prior-process environment",
+  "currentEnvironmentInHeapOnly": false,
+  "privateCurrentEnvironmentSnapshotUsed": true,
+  "environmentSnapshotPubliclyArchived": false,
+  "persistentUserUnitConfigured": true,
+  "rebootAutostartActuallyTested": false,
+  "staleOwnControlSocketRemoved": false,
+  "oldSnapshotOriginalRunRowsRetained": true,
+  "oldSnapshotStateJsonEqualCurrent": true,
+  "currentGitHead": "caa60d76f4826fbccc1638e06bf73f6693168c3e",
+  "oldProcessExitCause": "unknown",
+  "namedUserService": "orchester-default-remote-7337-20261112-post-reboot.service",
+  "controllerPid": 320847,
+  "controllerStartTicks": 451383,
+  "controllerExecutableSha256": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae",
+  "controllerScriptSha256": "49746d3838c6b3b2232273dfe4e6b4342d4cf90e303a1d75bc0cbb2caa0bbbc8",
+  "controllerCgroup": "0::/codex.slice/codex-workloads.slice",
+  "fixedPrivateControlSocket": "/home/han/.local/state/orchester-delivery/20261112-post-reboot/linux-restore/control.sock",
+  "stdinControllerMode": "independent detached same-UID controller; original Popen stdin writer retained; configured static user unit is not running",
+  "priorLiveArgvOrEnvironmentEqualityClaimed": false,
+  "originalRunCount": 5,
+  "originalRunStates": {
+    "completed": 4,
+    "cancelled": 1
+  },
+  "originalLiveHostDeviceCount": 3,
+  "originalPersistedAuthEntryCountAcrossScopes": 5,
+  "originalDuplicateLegacyAuthEntryCount": 2,
+  "modelCalls": 0,
+  "existingCredentialValuesCopiedToSafeReport": false,
+  "pid": 320854,
+  "startTicks": 451458,
+  "startupPairingDisabled": true,
+  "publicResources": [
+    {
+      "path": "assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+      "status": 200,
+      "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b"
+    },
+    {
+      "path": "assets/antigravity-DXFfVr6X.svg",
+      "status": 200,
+      "sha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e"
+    },
+    {
+      "path": "assets/brand-icon-Zjdxen9M.png",
+      "status": 200,
+      "sha256": "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06"
+    },
+    {
+      "path": "assets/claude-RJ8il4lB.png",
+      "status": 200,
+      "sha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1"
+    },
+    {
+      "path": "assets/codex-DODyF2an.png",
+      "status": 200,
+      "sha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3"
+    },
+    {
+      "path": "assets/crush-B1wob-OZ.png",
+      "status": 200,
+      "sha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2"
+    },
+    {
+      "path": "assets/cursor-dark-BM_3k4Y4.svg",
+      "status": 200,
+      "sha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260"
+    },
+    {
+      "path": "assets/cursor-light-DGKJuirn.svg",
+      "status": 200,
+      "sha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0"
+    },
+    {
+      "path": "assets/hermes-dark-D5fo9gTB.svg",
+      "status": 200,
+      "sha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36"
+    },
+    {
+      "path": "assets/hermes-light-x1BVlPhG.svg",
+      "status": 200,
+      "sha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684"
+    },
+    {
+      "path": "assets/index--zaH3Y7H.js",
+      "status": 200,
+      "sha256": "7e115c9d4b6236a5de0338b7499f0e09341df65ee03067ad71cd01b578a10a49"
+    },
+    {
+      "path": "assets/index-9wEW8k7x.css",
+      "status": 200,
+      "sha256": "0ccaec9543d9001c1e528918446afa1170c46d9fc676c46ba33f1a21a5fbbf20"
+    },
+    {
+      "path": "assets/roo-D8yWBDNL.png",
+      "status": 200,
+      "sha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a"
+    },
+    {
+      "path": "assets/workbuddy-D1Gu2IKl.svg",
+      "status": 200,
+      "sha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d"
+    },
+    {
+      "path": "assets/zcode-yL2Qb12j.png",
+      "status": 200,
+      "sha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c"
+    },
+    {
+      "path": "favicon.png",
+      "status": 200,
+      "sha256": "bd2b0e95dade84d5371027cc9616610813b3e7f878b434d54a3a1459111c7db2"
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "sha256": "8b944924f56c75a7e97a91bfd2bce4cacfab8b961e24fc04beff80af431bc033"
+    }
+  ],
+  "unauthenticatedProtectedRoutesStatus": 401,
+  "canonicalProviderCount": 21,
+  "canonicalProviderIds": [
+    "antigravity",
+    "claude",
+    "claude_app",
+    "cline",
+    "codex",
+    "craft",
+    "crush",
+    "cursor",
+    "deepseek",
+    "gemini",
+    "hermes",
+    "kilo",
+    "openclaw",
+    "opencode",
+    "pi",
+    "qwen",
+    "roo",
+    "trae",
+    "workbuddy",
+    "workbuddy_global",
+    "zcode"
+  ],
+  "serviceProviderCount": 7,
+  "sharedEditorUnknownProviderCount": 3,
+  "workBuddyEditionNamesDistinct": true,
+  "snapshotSchemaVersion": 3,
+  "authorizedReadChecks": [
+    {
+      "path": "/info",
+      "status": 200,
+      "jsonContractVerified": true
+    },
+    {
+      "path": "/projects",
+      "status": 200,
+      "jsonContractVerified": true
+    },
+    {
+      "path": "/agents",
+      "status": 200,
+      "jsonContractVerified": true
+    },
+    {
+      "path": "/agents/status",
+      "status": 200,
+      "jsonContractVerified": true
+    }
+  ],
+  "temporaryOwnDeviceRemoved": true,
+  "revokedTemporaryTokenStatus": 401,
+  "pairingClosedAfterChecks": true,
+  "originalLiveHostDevicesExactlyRetained": true,
+  "originalProjectAndHostStateExactlyRetained": true,
+  "originalRunRowsExactlyRetained": true,
+  "allRemoteStateJsonExactlyRetained": true,
+  "allRemoteStateRawRowsExactlyRetained": false,
+  "currentRunCount": 5,
+  "currentRunStates": {
+    "completed": 4,
+    "cancelled": 1
+  },
+  "controlledStdinRetained": true,
+  "listenerPort": 7337,
+  "userProcessSignals": 0,
+  "verificationCompletedAt": 1794462820.8117702,
+  "privateBackupContentsArchived": false,
+  "originalHostAndLegacyAuthJSONValuesExactlyRetained": true,
+  "originalProducerAuthRowsLabelCorrectedToParsedJsonValuesInSafeDerivedArchive": true,
+  "namedUserServiceIsConfiguredNameOnlyThisEpoch": true
+}

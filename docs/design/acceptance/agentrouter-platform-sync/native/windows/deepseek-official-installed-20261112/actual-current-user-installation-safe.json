@@ -1,0 +1,21 @@
+{
+    "status":  "official-installation-failed-or-verification-pending",
+    "stage":  "verify-actual-installed-payload-and-registration",
+    "exceptionType":  "System.Management.Automation.RuntimeException",
+    "hresult":  -2146233087,
+    "installer":  {
+                      "pid":  9004,
+                      "createdUtc":  "2026-11-12T05:50:28.8749710Z",
+                      "image":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\deepseek-harness-official-prepared-20261111\\DeepSeek-Harness-0.2.2-rc.1-Windows-x64.exe",
+                      "sha256":  "830947f8996dc05d991ca9133fff4d3400073e47b9cfa6507754867e79482b23",
+                      "originalManagedCreatorHandleHeld":  true
+                  },
+    "installerActuallyStarted":  true,
+    "actualInstallerExitCode":  0,
+    "applicationAutoLaunchObserved":  false,
+    "installedApplicationProcessesObserved":  [
+
+                                              ],
+    "guiAccepted":  false,
+    "forcedTerminations":  0
+}

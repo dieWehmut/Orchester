@@ -1,0 +1,17 @@
+{
+  "status": "static-user-unit-and-default-target-link-configured-not-running-in-user-manager",
+  "unitPath": "/home/han/.config/systemd/user/orchester-default-remote-7337-20261112-post-reboot.service",
+  "unitSha256": "371ffb332878590823e530ae5aaa62f5a4ab192a5276889f71aa0af7c0fd322f",
+  "defaultTargetLinkResolvesToUnit": true,
+  "privateCurrentEnvironmentSnapshotMode": "0o600",
+  "currentEnvironmentValuesArchived": false,
+  "originalEnvironmentEqualityClaimed": false,
+  "userManagerBusControlAvailable": false,
+  "userManagerRestarted": false,
+  "bootAutostartTested": false,
+  "fallbackControllerCurrentlyVerifiedLive": true,
+  "staticSystemdAnalyzeVerifyActualExitCode": 0,
+  "currentUserLingerReadonlyActual": "yes",
+  "lingerQueryActualExitCode": 0,
+  "lingerObservedAtUtc": "2026-11-12T06:26:21.461684+00:00"
+}

@@ -1,0 +1,39 @@
+{
+    "signer":  "Hangzhou DeepSeek Artificial Intelligence Co., Ltd.",
+    "version":  "0.2.2.0",
+    "guiAccepted":  false,
+    "bytes":  246343656,
+    "company":  "Hangzhou DeepSeek Artificial Intelligence Co., Ltd.",
+    "observedAt":  "2026-11-12T05:53:42.0640519Z",
+    "signature":  "Valid",
+    "installerInvocations":  0,
+    "status":  "read-only-current-installed-official-product-observation",
+    "signals":  0,
+    "product":  "DeepSeek Harness",
+    "registration":  [
+                         {
+                             "version":  "0.2.2-rc.1",
+                             "name":  "DeepSeek Harness",
+                             "publisher":  "Hangzhou DeepSeek Artificial Intelligence Co., Ltd.",
+                             "hive":  "HKCU:",
+                             "icon":  "C:\\Users\\han\\AppData\\Local\\Programs\\DeepSeekHarnessOfficial\\DeepSeek Harness.exe,0",
+                             "key":  "1bf39983-50d0-5fe0-9ef4-cece76f67c5e",
+                             "location":  "C:\\Users\\han\\AppData\\Local\\Programs\\DeepSeekHarnessOfficial"
+                         },
+                         {
+                             "version":  "0.13.0",
+                             "name":  "DSH Desktop 0.13.0",
+                             "publisher":  "DataElement",
+                             "hive":  "HKLM:",
+                             "icon":  "C:\\Program Files\\DSH Desktop\\DSH Desktop.exe,0",
+                             "key":  "63aba052-5613-58ee-9049-667734229a73",
+                             "location":  null
+                         }
+                     ],
+    "image":  "C:\\Users\\han\\AppData\\Local\\Programs\\DeepSeekHarnessOfficial\\DeepSeek Harness.exe",
+    "profileReads":  0,
+    "applicationProcesses":  [
+
+                             ],
+    "sha256":  "bad50d18a3cf42621ac03aeaf1dc527ee20384ca4c0b7eee64512954ddb9a76e"
+}

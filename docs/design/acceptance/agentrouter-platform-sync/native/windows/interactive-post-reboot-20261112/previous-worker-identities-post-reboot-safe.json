@@ -1,0 +1,75 @@
+{
+    "selectedPorts":  [
+                          {
+                              "listenerCount":  0,
+                              "port":  5039
+                          },
+                          {
+                              "listenerCount":  0,
+                              "port":  5572
+                          },
+                          {
+                              "listenerCount":  0,
+                              "port":  5573
+                          },
+                          {
+                              "listenerCount":  0,
+                              "port":  7338
+                          },
+                          {
+                              "listenerCount":  0,
+                              "port":  7339
+                          },
+                          {
+                              "listenerCount":  0,
+                              "port":  19329
+                          }
+                      ],
+    "processSignals":  0,
+    "unlistedNewNativeWorkersAndAvdsEnumerated":  false,
+    "historicalOriginalHandleExitOrTrayNormalExitClaimed":  false,
+    "observedAtUtc":  "2026-11-12T06:25:49.4778291Z",
+    "previousPids":  [
+                         {
+                             "sameOriginalBirthAndImageClaimed":  false,
+                             "previousTrackedPid":  2516,
+                             "currentPidExists":  false
+                         },
+                         {
+                             "sameOriginalBirthAndImageClaimed":  false,
+                             "previousTrackedPid":  32120,
+                             "currentPidExists":  false
+                         },
+                         {
+                             "sameOriginalBirthAndImageClaimed":  false,
+                             "previousTrackedPid":  33572,
+                             "currentPidExists":  false
+                         },
+                         {
+                             "sameOriginalBirthAndImageClaimed":  false,
+                             "previousTrackedPid":  11852,
+                             "currentPidExists":  false
+                         },
+                         {
+                             "sameOriginalBirthAndImageClaimed":  false,
+                             "previousTrackedPid":  22268,
+                             "currentPidExists":  false
+                         },
+                         {
+                             "sameOriginalBirthAndImageClaimed":  false,
+                             "previousTrackedPid":  19620,
+                             "currentPidExists":  false
+                         },
+                         {
+                             "sameOriginalBirthAndImageClaimed":  false,
+                             "previousTrackedPid":  28748,
+                             "currentPidExists":  false
+                         },
+                         {
+                             "sameOriginalBirthAndImageClaimed":  false,
+                             "previousTrackedPid":  8588,
+                             "currentPidExists":  false
+                         }
+                     ],
+    "status":  "previous-tracked-pid-and-selected-port-current-read-only-observation"
+}

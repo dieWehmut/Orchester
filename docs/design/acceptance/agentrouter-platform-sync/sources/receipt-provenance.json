@@ -2909,6 +2909,86 @@
       "archivedSha256": "7cfddff697b2a8f5dbabc1ccf81a5bb4a48bd6c8bd6572a8b27be11c35fbd48b",
       "bytes": 645,
       "byteExact": true
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/preflight-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112-post-reboot/linux-restore/preflight-safe.json",
+      "sourceSha256": "41312fdb8cd6524607eef1467bc85f7bd28a7e1ee26d812cca06473a7a407eeb",
+      "archivedSha256": "41312fdb8cd6524607eef1467bc85f7bd28a7e1ee26d812cca06473a7a407eeb",
+      "bytes": 816,
+      "byteExact": true
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/prior-owned-exit-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112-post-reboot/linux-restore/prior-owned-exit-safe.json",
+      "sourceSha256": "229a90af5e644f4ac465994b9f578b807465fd0b11b9081c43177f8500a56c85",
+      "archivedSha256": "229a90af5e644f4ac465994b9f578b807465fd0b11b9081c43177f8500a56c85",
+      "bytes": 121,
+      "byteExact": true
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/unit-launch-safe.json",
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261112-post-reboot/linux-restore/unit-launch-safe.json",
+      "sourceSha256": "169667b0f0143516ae58a36e5fc02dded064efd24c21cde9c1e9fce7fc37f966",
+      "archivedSha256": "169667b0f0143516ae58a36e5fc02dded064efd24c21cde9c1e9fce7fc37f966",
+      "bytes": 725,
+      "byteExact": true
+    },
+    {
+      "path": "native/windows/deepseek-official-installed-20261112/current-user-installation-runner-native-ast-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/deepseek-harness-official-prepared-20261111/current-user-installation-runner-native-ast-safe.json",
+      "sourceSha256": "ae703cc8e2a6e10152faaad12df2b5db9ee3fb29c8bbf6a803a22c77e2b9f9a2",
+      "archivedSha256": "ae703cc8e2a6e10152faaad12df2b5db9ee3fb29c8bbf6a803a22c77e2b9f9a2",
+      "bytes": 620,
+      "byteExact": true
+    },
+    {
+      "path": "native/windows/deepseek-official-installed-20261112/post-install-readonly-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/deepseek-harness-official-prepared-20261111/post-install-readonly-safe.json",
+      "sourceSha256": "d8f64010b202c52b1dc09ef787624fcca7c5d8d5482e7d95091aeae9f4d8f338",
+      "archivedSha256": "d8f64010b202c52b1dc09ef787624fcca7c5d8d5482e7d95091aeae9f4d8f338",
+      "bytes": 1940,
+      "byteExact": true
+    },
+    {
+      "path": "native/windows/deepseek-official-installed-20261112/actual-current-user-installation-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/deepseek-harness-official-prepared-20261111/actual-current-user-installation-safe.json",
+      "sourceSha256": "c05015a3872ae0a73727c846f50c93bd34cddbbd1e88313bf947e7d61c90e264",
+      "archivedSha256": "c05015a3872ae0a73727c846f50c93bd34cddbbd1e88313bf947e7d61c90e264",
+      "bytes": 1018,
+      "byteExact": true
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/session-enumeration-post-reboot-20261112-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/session-enumeration-post-reboot-20261112-safe.json",
+      "sourceSha256": "7a6bcb131f0c875a22ad7b3cabf94fd260953369e2855ca3017fd917f8512426",
+      "archivedSha256": "7a6bcb131f0c875a22ad7b3cabf94fd260953369e2855ca3017fd917f8512426",
+      "bytes": 4944,
+      "byteExact": true
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/input-desktop-post-reboot-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/input-desktop-post-reboot-safe.json",
+      "sourceSha256": "02232a863f54ab5368cbc62b99edbadfbdea9168d661290e2d048d78bff3ef58",
+      "archivedSha256": "02232a863f54ab5368cbc62b99edbadfbdea9168d661290e2d048d78bff3ef58",
+      "bytes": 412,
+      "byteExact": true
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/offline-final21-post-reboot-backup-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/monitor-reinstall-preflight-20261111/offline-final21-post-reboot-backup-safe.json",
+      "sourceSha256": "d1f9b696eb6a4441534253ead43e82fedb5cfed22108469cfc0a7783c182bfe7",
+      "archivedSha256": "d1f9b696eb6a4441534253ead43e82fedb5cfed22108469cfc0a7783c182bfe7",
+      "bytes": 3189,
+      "byteExact": true
+    },
+    {
+      "path": "native/windows/interactive-post-reboot-20261112/previous-worker-identities-post-reboot-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/previous-worker-identities-post-reboot-safe.json",
+      "sourceSha256": "de64162f9c6b00cc1ec4c33a3a9796a05af5059699516b9ade9cdf92a35f5aa4",
+      "archivedSha256": "de64162f9c6b00cc1ec4c33a3a9796a05af5059699516b9ade9cdf92a35f5aa4",
+      "bytes": 3317,
+      "byteExact": true
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsCopied": false,
@@ -3029,23 +3109,78 @@
       "path": "sources/requirement-delivery-audit.json",
       "kind": "Derived requirement-to-evidence audit using only archived public/safe records; pending does not imply failure or successful native run.",
       "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
-      "archivedSha256": "f485bd3589bb39ab9f4c91e9e91ce204b11157b7ede3d585a798e7f1e6930a81",
-      "bytes": 27013
+      "archivedSha256": "3acf3720c78e971490b61bb7f3bf32f5c57dd1a6d0a21e16544475b5eb623443",
+      "bytes": 28700
     },
     {
       "path": "sources/audit/epoch5-fixed-checkpoint-independent-review-safe.json",
       "kind": "Independent public checkpoint integrity and claim-boundary review; no external original, non-JSON content or runtime reexecution.",
       "archivedSha256": "165d0351990113b9322563317f573b180df8b9915876c14cd1b50999dcb6d373",
       "bytes": 7554
+    },
+    {
+      "path": "sources/icons/a96a06e-current-24-assets.json",
+      "kind": "Current root safe observation or derived verification; historical/source epochs remain distinct, no private content archived.",
+      "archivedSha256": "df0be40bbaeb6d079dc9fc4e9f7ef7b38a6b273c1f55987416ca41d822fe5ecb",
+      "bytes": 45485
+    },
+    {
+      "path": "native/windows/deepseek-official-installed-20261112/corrected-verification-safe.json",
+      "kind": "Current root safe observation or derived verification; historical/source epochs remain distinct, no private content archived.",
+      "archivedSha256": "e2ce4fbf66b5e037e7d48fe47b039aaf60b94ba2df38c81273d6b3f5d8453f11",
+      "bytes": 2449
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/final-safe.json",
+      "kind": "Current root safe observation or derived verification; historical/source epochs remain distinct, no private content archived.",
+      "archivedSha256": "aa5aa9ef95ff6c5b9699ee501e460641e92c629f94c651daffa7177244745399",
+      "bytes": 6885
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/attempt1-safe.json",
+      "kind": "Current root safe observation or derived verification; historical/source epochs remain distinct, no private content archived.",
+      "archivedSha256": "f2abf556188173014bfe5ec039307b08d29c8c62af8f7d61d329923f6f0d7985",
+      "bytes": 321
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/initial-original-wire-observer-error-safe.json",
+      "kind": "Current root safe observation or derived verification; historical/source epochs remain distinct, no private content archived.",
+      "archivedSha256": "c1c9fec71b9403f22fd79bc05aa54fe1a5f01506c46236f61ee3627fe8807f3f",
+      "bytes": 227
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/root-independent-live-safe.json",
+      "kind": "Current root safe observation or derived verification; historical/source epochs remain distinct, no private content archived.",
+      "archivedSha256": "19dc27c903fb091dfbc28d9702dfd7c5ce8869e633beff5ceef781a5b2be55fe",
+      "bytes": 1427
+    },
+    {
+      "path": "deployments/linux/20261112-post-reboot/static-unit-configuration-safe.json",
+      "kind": "Current root safe observation or derived verification; historical/source epochs remain distinct, no private content archived.",
+      "archivedSha256": "49f35a3858db01b4582109a608dda6bbf086072530be5476ae24e18f127c8f3a",
+      "bytes": 823
+    },
+    {
+      "path": "maintenance/git-delivery/fifth-step-delivery-safe.json",
+      "kind": "Current root safe observation or derived verification; historical/source epochs remain distinct, no private content archived.",
+      "archivedSha256": "79ee74d11888647b61e8bf4a22cdc1223f685a43991fda1f0bdd6dd3a5b704cf",
+      "bytes": 540
+    },
+    {
+      "path": "sources/audit/epoch6-public-claim-boundary-review-safe.json",
+      "kind": "Independent phase6 public claim-boundary review before final root corrections; no manifest/provenance or runtime reexecution.",
+      "archivedSha256": "719fba99d8940869a8e234412ca6b0696fa647436203417c830da0f778478c3e",
+      "bytes": 7014
     }
   ],
-  "sourceEpochBoundary": "2026-11-11 to12 Asia/Shanghai, originalUTC/paths kept; phase4historic321checkpointLinux23:31absent preserved; phase5newLinuxuserunit2330202/pidfd/writer/LingerYes/currentbackuprawtrue(oldlegacyrawfalse distinct)/5runs5persisted3distinct+resources/authownpair verified; wrongLinuxspecificRAM/19327/activitybackground complete; DeepSeeknativeSignatureValid+ordinarysilentstatic prepared; originalwire200/currentWindowsinstaller/fullPTY/formal14/18/defaultreinstall pending",
+  "sourceEpochBoundary": "2026-11-11 to12 Asia/Shanghai, originalUTC/paths kept; phase4historic321checkpointLinux23:31absent preserved; phase5newLinuxuserunit2330202/pidfd/writer/LingerYes/currentbackuprawtrue(oldlegacyrawfalse distinct)/5runs5persisted3distinct+resources/authownpair verified; wrongLinuxspecificRAM/19327/activitybackground complete; DeepSeeknativeSignatureValid+ordinarysilentstatic prepared; originalwire200/currentWindowsinstaller/fullPTY/formal14/18/defaultreinstall pending; phase6postreboot current320854 standaloneowned(userbusunavailable/staticconfigured/autostartuntested)/SQLrawfalseJSONtrue/resources/ownauth, DeepSeekinstalleractual0/initialverifier1 numericPEvsappversion/correctedinstalledsignedHKCUASARrc1, latestWindowsoffline677files/WTSActivebutcursorError5; originalcredentialwire/fullPTY/native14/18/defaultreinstall pending",
   "finalSourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
-  "latestContinuationAt": "2026-11-12T00:16:22.229105+00:00",
+  "latestContinuationAt": "2026-11-12T06:13:42.088753+00:00",
   "originalSourceAvailabilityAtLatestContinuation": {
     "selectedFiles": 342,
     "availableCount": 315,
     "missingCount": 27,
-    "missingSourceDoesNotRewriteHistoricalByteExact": true
+    "missingSourceDoesNotRewriteHistoricalByteExact": true,
+    "lastActualAvailabilityAuditScope": "phase5 snapshot; not rechecked all historical external source availability this phase"
   }
 }

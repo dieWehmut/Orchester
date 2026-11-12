@@ -1,0 +1,10 @@
+{
+  "status": "verification-failed-owned-listener-stopped",
+  "errorType": "AttributeError",
+  "ownedExitCode": 0,
+  "listenerPortReleased": true,
+  "controllerPid": 295199,
+  "pidfdOpenUnavailableInCondaPythonVerified": true,
+  "correctedExecutor": "/usr/bin/python3",
+  "priorFailedOwnedListenerExit0Preserved": true
+}

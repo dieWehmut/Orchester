@@ -1,0 +1,16 @@
+{
+    "status":  "installer-runner-native-ast-passed",
+    "sourceSha256":  "05297c68a67363489a43f3419edb33f50e3d667b2f8eeb7c197ae626fd5501b0",
+    "sourceBytes":  11049,
+    "native":  {
+                   "pid":  87792,
+                   "createdUtc":  "2026-11-12T00:15:32.0050845Z",
+                   "sessionId":  1,
+                   "imageSha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f"
+               },
+    "parserErrorCount":  0,
+    "scriptInvocations":  0,
+    "installerProcessesLaunched":  0,
+    "guiAccepted":  false,
+    "profileOrCredentialChanges":  0
+}

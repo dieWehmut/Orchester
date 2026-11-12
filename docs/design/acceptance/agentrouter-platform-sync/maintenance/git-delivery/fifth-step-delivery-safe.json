@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "status": "fifth-checkpoint-pushed-and-merged-main",
+  "featureCommit": "750b158bf72c7e94b2fa9dcc9dbb44967e3ff8f3",
+  "mainRevision": "65ef142f79c22e031e4fc4ccf36ef81f6107ca42",
+  "featurePushFirstActualExitCode": 128,
+  "featurePushFirstError": "TLS handshake terminated",
+  "featurePushRetryActualExitCode": 0,
+  "mainPushActualExitCode": 0,
+  "gitBlobFilesExactlyEqualCurrentAtCheckpoint": 356,
+  "productionSourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "allPlatformCompletionClaimed": false
+}

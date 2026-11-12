@@ -1,0 +1,32 @@
+{
+  "control": {
+    "status": "live-owned",
+    "controllerPid": 320847,
+    "controllerStartTicks": 451383,
+    "controllerExecutableSha256": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae",
+    "controllerScriptSha256": "49746d3838c6b3b2232273dfe4e6b4342d4cf90e303a1d75bc0cbb2caa0bbbc8",
+    "listenerPid": 320854,
+    "listenerStartTicks": 451458,
+    "listenerExecutableSha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649",
+    "listening7337": true,
+    "retainedWriterFd": 7,
+    "pidfdHeld": true,
+    "namedUserService": "orchester-default-remote-7337-20261112-post-reboot.service",
+    "stateRoot": "/home/han/.local/state/orchester-remote",
+    "fixedPrivateControlSocket": "/home/han/.local/state/orchester-delivery/20261112-post-reboot/linux-restore/control.sock"
+  },
+  "unitMetadata": {
+    "controlMode": "independent-owned-controller-user-manager-unavailable",
+    "MainPID": "320847"
+  },
+  "observedAtUtc": "2026-11-12T06:05:07.141142+00:00",
+  "independentProcImageAndBirthExact": true,
+  "mobileIndexByteExact": true,
+  "unauthenticatedProtectedRoutesStatus": 401,
+  "originalStoredCredentialWireTested": false,
+  "initialObserverIncorrectAuthHashRequest401IsNotOriginalCredentialFailure": true,
+  "normalQuitExecutedThisEpoch": false,
+  "configuredStaticUserUnitRunning": false,
+  "userManagerControlUnavailableActual": true,
+  "userManagerRestartOrSignals": 0
+}

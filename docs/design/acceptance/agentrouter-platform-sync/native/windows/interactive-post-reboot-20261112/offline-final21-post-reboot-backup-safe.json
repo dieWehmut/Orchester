@@ -1,0 +1,64 @@
+{
+    "status":  "offline-original-installation-and-profile-backups-verified",
+    "observedAtUtc":  "2026-11-12T06:05:15.3688206Z",
+    "sourceRevision":  "71def643cb08b208cc79687f79255c504eb14dc6",
+    "backupDirectory":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\reinstall-backups\\private-final21-offline-20261112-post-reboot",
+    "originalProcessesObservedAbsent":  true,
+    "originalAbsenceClaimedNaturalTrayExit":  false,
+    "currentNamedOrchesterProcessCount":  0,
+    "roots":  [
+                  {
+                      "name":  "desktop-installation",
+                      "source":  "C:\\Users\\han\\AppData\\Local\\Orchester",
+                      "exists":  true,
+                      "files":  156,
+                      "verified":  true,
+                      "privateInventorySha256":  "98a633ada544e1f432c3eb4198720371ea258b19eae95986288608af347bf66d"
+                  },
+                  {
+                      "name":  "orchester-user-state",
+                      "source":  "C:\\Users\\han\\.orchester",
+                      "exists":  true,
+                      "files":  9,
+                      "verified":  true,
+                      "privateInventorySha256":  "955265bffcdc62bd1a19ec69d863d81a9e129134f66b962cecf6ecd40e5b6288"
+                  },
+                  {
+                      "name":  "desktop-local-webview",
+                      "source":  "C:\\Users\\han\\AppData\\Local\\io.github.diewehmut.orchester",
+                      "exists":  true,
+                      "files":  493,
+                      "verified":  true,
+                      "privateInventorySha256":  "09edf0c2a56b9d241e140643d107fb8b87df3f4ae26f19741e899078423d1670"
+                  },
+                  {
+                      "name":  "desktop-roaming-profile",
+                      "source":  "C:\\Users\\han\\AppData\\Roaming\\io.github.diewehmut.orchester",
+                      "exists":  false,
+                      "files":  0,
+                      "verified":  true
+                  },
+                  {
+                      "name":  "remote-installation",
+                      "source":  "C:\\Users\\han\\Downloads\\OrchesterRemote",
+                      "exists":  true,
+                      "files":  17,
+                      "verified":  true,
+                      "privateInventorySha256":  "6a0be4c731fa0964a68635a20da09e023b9a56b2f04c9b3f97c60e7f5778aacf"
+                  },
+                  {
+                      "name":  "remote-state-home",
+                      "source":  "C:\\Users\\han\\AppData\\Local\\OrchesterRemote\\state-home",
+                      "exists":  true,
+                      "files":  2,
+                      "verified":  true,
+                      "privateInventorySha256":  "ae06a0d233a98c6c2146c33ce807fe64195bcd65dde551d25ee19fb55a1196df"
+                  }
+              ],
+    "allExistingRootsSourceStableAndBackupExact":  true,
+    "privateAclInheritanceDisabled":  true,
+    "rawStateContentsCopiedToPublicEvidence":  false,
+    "originalFilesModified":  false,
+    "processesSignalled":  0,
+    "modelCalls":  0
+}
