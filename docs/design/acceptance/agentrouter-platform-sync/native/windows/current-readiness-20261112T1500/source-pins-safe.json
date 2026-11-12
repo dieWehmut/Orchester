@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "status": "new-direct-invoker-and-original-reviewed-readonly-code-source-pins-currently-byte-exact",
+  "observedAtUtc": "2026-11-12T15:11:26.088591+00:00",
+  "sourceFiles": [
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/formal-runtime-post-reboot-20261112/readiness-probe/probe-common.ps1",
+      "sha256": "7dbfc7fb8dc20deedbc1d575cb58d41bbd8c9c6cd408fae2258dd96ed4e7e164",
+      "bytes": 3688,
+      "hashMatch": true,
+      "sourceRole": "fixed-reviewed-native-readonly-context"
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/formal-runtime-post-reboot-20261112/readiness-probe/ReadOnlyInteractiveContext.cs",
+      "sha256": "905ce9d8fe25be5e9e643eebbc3815d52d2e2139ea961789883541ba05826c04",
+      "bytes": 3306,
+      "hashMatch": true,
+      "sourceRole": "fixed-reviewed-native-readonly-context"
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/formal-runtime-post-reboot-20261112/current-readiness-20261112T150835Z-772e6a5381a7/direct-readonly.ps1",
+      "sha256": "547a01096a44cfe08639d782bdb4a236c258bdaa643fd0b058208c093d23816b",
+      "bytes": 1776,
+      "hashMatch": true,
+      "sourceRole": "new-own-direct-invoker-only-reads-reviewed-original-common-and-native-csharp-and-writes-new-safe-receipt"
+    }
+  ],
+  "originalSourcesChanged": false,
+  "newSourceWrites": 1,
+  "inputOrProcessSignals": 0,
+  "backendLaunches": 0,
+  "nativeTasksCreated": 0,
+  "privateProfilesCredentialsEnvironmentOrRawLogsRead": false
+}

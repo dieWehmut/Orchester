@@ -1,0 +1,22 @@
+{
+  "status": "all-listed-original-scopes-and-current-public-bytes-validated",
+  "observedAtUtc": "2026-11-12T15:20:24.990223+00:00",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "assertionsPassed": 658,
+  "originalNativeReceiptComponentCount": 45,
+  "originalReceiptSha256": "38ab35f8a20adbf92743902358ce33473f122e2aadb0c1e46d6448871d14e8f6",
+  "normalizedReceiptSha256": "d8a5fe51d3221a2e4715288c1ae4bc1d7357158e5ef0995148cad22d4ddcad73",
+  "nativeSourceGitBlobChecks": 41,
+  "resourceFilesComparedPerTree": 17,
+  "resourceTreesCompared": 3,
+  "apkEmbeddedPublicResourceFilesCompared": 17,
+  "actualApksignerExitCode": 0,
+  "verifierSourceSha256": "b8b2fb9e54db5c2bf8de3b38bd09d7fda6b011409d32221524ea3ac2e5a2b17b",
+  "modelCalls": 0,
+  "processOrInputSignals": 0,
+  "runtime14Executed": false,
+  "runtime18Executed": false,
+  "defaultInstallationChanged": false,
+  "historicalNativeCommandsRerun": false,
+  "privateContentsReadOrIncluded": false
+}

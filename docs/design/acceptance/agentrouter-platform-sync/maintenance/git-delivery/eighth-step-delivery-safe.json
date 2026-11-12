@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "status": "android-native-completion-checkpoint-pushed-and-merged-main",
+  "observedAtUtc": "2026-11-12T15:14:27.874158+00:00",
+  "featureCommit": "c19f6211dc788ab21881fd00b0f2edf76a0ac954",
+  "mainRevision": "e8c3cd3de92f5371dcf23b56bbc59c381670b246",
+  "featurePushActualExitCode": 0,
+  "mainMergeActualExitCode": 0,
+  "mainPushActualExitCode": 0,
+  "remoteLsRemoteActualExitCode": 0,
+  "bothRemoteRefHashesMatched": true,
+  "stagedGitBlobFilesExactlyEqualCurrentAtCheckpoint": 507,
+  "manifestFiles": 505,
+  "frozenProductionSourceInputHashChecks": 731,
+  "nativeJsonFilesIndependentlyReviewed": 68,
+  "explicitSafeOriginalSourceCopiesCompared": 62,
+  "androidFinalNativePTYResizeCloseRevokeAndOwnCleanupArchived": true,
+  "preservedClosedCmdTerminalExitCode": 1,
+  "preservedTaskCleanupInvokerExitCode": 1,
+  "windowsFormal14Or18OrDefaultReinstallationClaimed": false,
+  "originalAllPlatformCompletionClaimed": false
+}

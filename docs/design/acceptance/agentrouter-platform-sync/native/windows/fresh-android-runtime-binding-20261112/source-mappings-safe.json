@@ -1,0 +1,49 @@
+{
+  "status": "all-selected-composite-verifier-and-derived-outputs-byte-exact",
+  "files": [
+    {
+      "publicPath": "build-composite.py",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1520/build-composite.py",
+      "sha256": "b8b2fb9e54db5c2bf8de3b38bd09d7fda6b011409d32221524ea3ac2e5a2b17b",
+      "bytes": 18161,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "input-pins.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1520/input-pins.json",
+      "sha256": "6f832d511b5e8a8f78214c072fa773661186b5c93199851e6890d4a2b3773759",
+      "bytes": 20137,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "original-composite-acceptance-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1520/original-composite-acceptance-safe.json",
+      "sha256": "38ab35f8a20adbf92743902358ce33473f122e2aadb0c1e46d6448871d14e8f6",
+      "bytes": 27694,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "normalized-acceptance-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1520/normalized-acceptance-safe.json",
+      "sha256": "d8a5fe51d3221a2e4715288c1ae4bc1d7357158e5ef0995148cad22d4ddcad73",
+      "bytes": 3795,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "composite-verification-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1520/composite-verification-safe.json",
+      "sha256": "69c13de7ac6e998605d66018f2b009be9b08bd05098ef52984cd26747783d3e0",
+      "bytes": 972,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "verifier-execution-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1520/verifier-execution-safe.json",
+      "sha256": "bfc81cc7a8a51835f99b911892f758a91ab0a0382bcee6e49b3215f34a94535a",
+      "bytes": 1930,
+      "sourceAndArchiveByteExact": true
+    }
+  ],
+  "derivedReceiptNotSingleNativeExecution": true,
+  "privateContentsIncluded": false
+}

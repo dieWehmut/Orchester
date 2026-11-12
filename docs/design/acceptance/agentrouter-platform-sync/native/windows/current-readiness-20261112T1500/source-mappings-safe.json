@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "status": "current-direct-native-readiness-public-safe-receipts-byte-exact",
+  "files": [
+    {
+      "publicPath": "direct-readonly-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/formal-runtime-post-reboot-20261112/current-readiness-20261112T150835Z-772e6a5381a7/direct-readonly-safe.json",
+      "sha256": "0d1ff1c510b48c31f93611f2e2d29c743eb26898f8b887ae260bc0036ed456b0",
+      "bytes": 1962,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "source-pins-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/formal-runtime-post-reboot-20261112/current-readiness-20261112T150835Z-772e6a5381a7/source-pins-safe.json",
+      "sha256": "7574410ececebbb9b8af9f69b83e9d9c72e2cca7eb112f9abc01f589b22dc66e",
+      "bytes": 1657,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "publicPath": "actual-native-invoker-safe.json",
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/native-ui-launcher-review-20261111/formal-runtime-post-reboot-20261112/current-readiness-20261112T150835Z-772e6a5381a7/actual-native-invoker-safe.json",
+      "sha256": "71f42bed105f9503b75e79414ccdc0259a95ec51dc38c8249fb0a4e38d65a5fc",
+      "bytes": 1355,
+      "sourceAndArchiveByteExact": true
+    }
+  ],
+  "derivedPublicFiles": [
+    "source-mappings-safe.json"
+  ],
+  "reviewedAtUtc": "2026-11-12T15:11:26.101320+00:00",
+  "sourceContentsOrNativeExecutionIndependentlyRerunByFutureReviewerClaimed": false,
+  "privatePayloadsCredentialsEnvironmentOrRawLogsIncluded": false
+}

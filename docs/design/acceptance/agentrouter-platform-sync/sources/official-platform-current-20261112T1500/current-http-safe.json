@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "rows": [
+    {
+      "name": "claude-support",
+      "requestedURL": "https://support.claude.com/en/articles/10065433-installing-claude-for-desktop",
+      "observedAtUTC": "2026-11-12T15:07:52.363903+00:00",
+      "actualExitCode": 35,
+      "httpStatus": null,
+      "curlProcessExited": true,
+      "bodyReceived": false,
+      "errorClass": "curl-35"
+    },
+    {
+      "name": "claude-download",
+      "requestedURL": "https://claude.ai/download",
+      "observedAtUTC": "2026-11-12T15:07:52.364152+00:00",
+      "actualExitCode": 35,
+      "httpStatus": null,
+      "curlProcessExited": true,
+      "bodyReceived": false,
+      "errorClass": "curl-35"
+    },
+    {
+      "name": "claude-releases",
+      "requestedURL": "https://downloads.claude.ai/releases/win32/x64/RELEASES",
+      "observedAtUTC": "2026-11-12T15:07:52.364379+00:00",
+      "actualExitCode": 35,
+      "httpStatus": null,
+      "curlProcessExited": true,
+      "bodyReceived": false,
+      "errorClass": "curl-35"
+    },
+    {
+      "name": "workbuddy-global-home",
+      "requestedURL": "https://www.workbuddy.ai/",
+      "observedAtUTC": "2026-11-12T15:07:52.364612+00:00",
+      "actualExitCode": 0,
+      "httpStatus": 200,
+      "curlProcessExited": true,
+      "bytes": 19158,
+      "sha256": "ff62ba37882024c40571f2f9733284fce5620f460f4766023153a533c3ce9e20"
+    },
+    {
+      "name": "workbuddy-global-linux",
+      "requestedURL": "https://www.workbuddy.ai/v2/update?platform=workbuddy-linux-x64-deb",
+      "observedAtUTC": "2026-11-12T15:07:52.364828+00:00",
+      "actualExitCode": 0,
+      "httpStatus": 200,
+      "curlProcessExited": true,
+      "bytes": 267,
+      "sha256": "466b3060f0c4113fdbfea6fc5f32e7613e2e0741849927aa19033d56b58635d1"
+    }
+  ],
+  "existingInstallationsMutated": false,
+  "modelsOrAuthRequests": 0,
+  "nativeCommands": 0
+}

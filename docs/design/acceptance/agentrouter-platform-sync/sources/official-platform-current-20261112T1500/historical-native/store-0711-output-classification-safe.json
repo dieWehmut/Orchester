@@ -1,0 +1,21 @@
+{
+  "alreadyInstalled": false,
+  "noAvailableUpgrade": false,
+  "successfullyInstalled": true,
+  "notApplicableInstaller": false,
+  "installingPackage": false,
+  "startingPackageInstall": true,
+  "noUpgradeApplicable": false,
+  "purchaseRequired": false,
+  "installCancelled": false,
+  "authenticationRequired": false,
+  "publicFoundClaudeMatches": [
+    {
+      "name": "Claude",
+      "id": "9P6K58THS811",
+      "version": null
+    }
+  ],
+  "source": "Own original WinGet stdout after confirmed terminal; full raw output not printed/archived.",
+  "stdoutSha256": "67fbff5b63ebb72ef6d0362075491843346eb518e137f5452488829a8a4a894b"
+}

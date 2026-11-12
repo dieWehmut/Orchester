@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "status": "read-only-composite-verifier-actual-terminal-zero",
+  "observedAtUtc": "2026-11-12T15:22:06.438033+00:00",
+  "verifierSourceFile": "/mnt/c/Users/han/AppData/Local/Orchester-build/formal-android-composite-20261112T1520/build-composite.py",
+  "verifierSourceSha256": "b8b2fb9e54db5c2bf8de3b38bd09d7fda6b011409d32221524ea3ac2e5a2b17b",
+  "inputPinsSha256": "6f832d511b5e8a8f78214c072fa773661186b5c93199851e6890d4a2b3773759",
+  "actualVerifierExitCode": 0,
+  "actualExecutionEvidence": "functions.exec exec_command chunk01fa8e: python3 build-composite.py exit_code0; stdout reported normalizedSHA and659passed assertions.",
+  "nativeHistoricalReceiptComponents": 45,
+  "assertionsPassed": 659,
+  "originalCompositeReceiptSha256": "38ab35f8a20adbf92743902358ce33473f122e2aadb0c1e46d6448871d14e8f6",
+  "normalizedReceiptSha256": "d8a5fe51d3221a2e4715288c1ae4bc1d7357158e5ef0995148cad22d4ddcad73",
+  "originalReceiptsModified": false,
+  "defaultInstallationChanged": false,
+  "native14Executed": false,
+  "native18Executed": false,
+  "historicalNativeAcceptanceCommandsRerun": false,
+  "officialApkSignatureVerifierActuallyRerun": true,
+  "observerDiagnosticsPreserved": [
+    {
+      "stage": "initial-list-equality-verifier",
+      "actualVerifierExitCode": 1,
+      "reason": "Python ordinal inventory order differed from immutable PowerShell culture-sorted inventory; all17 path/hash pairs were independently equal. No receipt produced."
+    },
+    {
+      "stage": "second-resource-tree-verifier",
+      "actualVerifierExitCode": 1,
+      "reason": "Native mirror uses apps/mobile/android/app/src/main/assets/public and does not contain apps/mobile/dist. Corrected audit compares actual source-export dist, repo dist and mirror assets/public. No missing directory is claimed verified. No receipt produced."
+    }
+  ],
+  "privateCredentialsEnvironmentRawLogsOrScreenshotsReadOrIncluded": false
+}

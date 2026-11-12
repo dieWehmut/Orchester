@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-12T15:12:20.680081+00:00",
-  "status": "final71-android-native-acceptance-archived-windows-runtime-and-default-reinstallation-pending",
+  "createdAt": "2026-11-12T15:38:35.144240+00:00",
+  "status": "fresh-windows-readiness-and-android-composite-verified-original-freeze-failure-preserved-runtime-pending",
   "summaryPath": "summary.json",
   "files": [
     {
@@ -118,6 +118,11 @@
       "path": "deployments/linux/current-final21/root-independent-live-safe.json",
       "sha256": "1dfbfac8acde28cf305b2a458465a17fac58b5bb5c977cee666c72404381ea12",
       "bytes": 528
+    },
+    {
+      "path": "deployments/linux/current-readonly-20261112T1500/live-and-user-manager-safe.json",
+      "sha256": "d20412f6ee78efc864e5af06601fb969a168c5eb4a82f3e642c836e3875c8cc7",
+      "bytes": 7638
     },
     {
       "path": "deployments/linux/current-runtime-observation/prior-instance-current-unavailable-safe.json",
@@ -243,6 +248,11 @@
       "path": "maintenance/current-worktree-cleanup-state-safe.json",
       "sha256": "867310fb60421717a9ed51bc6e3bdbc41b809adc72305645f5f98f43cbe6f84d",
       "bytes": 1637
+    },
+    {
+      "path": "maintenance/git-delivery/eighth-step-delivery-safe.json",
+      "sha256": "1884f744d503846972cb380c76ccfcc7d4f4c0067d2a3b1953131ea5e1f75f7a",
+      "bytes": 949
     },
     {
       "path": "maintenance/git-delivery/fifth-step-delivery-safe.json",
@@ -1275,6 +1285,31 @@
       "bytes": 1983
     },
     {
+      "path": "native/windows/claude-current-readonly-20261112T1510/current-completion-safe.json",
+      "sha256": "23d03000b652817ff5cc691f0d1cff78ee0c53d7b4aad9352f927d1b0a27b560",
+      "bytes": 2175
+    },
+    {
+      "path": "native/windows/claude-current-readonly-20261112T1510/native-bits-com-lookup-safe.json",
+      "sha256": "b4d5fb515718fbc9f9d04ba04a83e1e57ae1f57acb65699ff01a1d7484243e6b",
+      "bytes": 1120
+    },
+    {
+      "path": "native/windows/claude-current-readonly-20261112T1510/native-query-safe.json",
+      "sha256": "2c61e75e6a206269578bfa1a4e0571977dcdeea8ec331aa80d5b968544b20eb4",
+      "bytes": 22610
+    },
+    {
+      "path": "native/windows/claude-current-readonly-20261112T1510/query-inputs-safe.json",
+      "sha256": "643bc565cf810808bed583210969d089f9ddd29c527153f2ecd655a8e83507c8",
+      "bytes": 7627
+    },
+    {
+      "path": "native/windows/claude-current-readonly-20261112T1510/source-mappings-safe.json",
+      "sha256": "3e7268d1e18160944e183574c89bb58968ee13540ba3f31201bc6c33c3231aa0",
+      "bytes": 2454
+    },
+    {
       "path": "native/windows/claude-store-readonly-observation.json",
       "sha256": "ca5e9212173034a29087df4cbbae947902677fd8eee6c711d5670d403b0fec54",
       "bytes": 243
@@ -1333,6 +1368,26 @@
       "path": "native/windows/current-installation-matrix/safe-evidence-manifest.json",
       "sha256": "d63cb1eaaa25098d11273cd54ed843dfcad119c1d72772a7e5b7f661cdfae447",
       "bytes": 2472
+    },
+    {
+      "path": "native/windows/current-readiness-20261112T1500/actual-native-invoker-safe.json",
+      "sha256": "71f42bed105f9503b75e79414ccdc0259a95ec51dc38c8249fb0a4e38d65a5fc",
+      "bytes": 1355
+    },
+    {
+      "path": "native/windows/current-readiness-20261112T1500/direct-readonly-safe.json",
+      "sha256": "0d1ff1c510b48c31f93611f2e2d29c743eb26898f8b887ae260bc0036ed456b0",
+      "bytes": 1962
+    },
+    {
+      "path": "native/windows/current-readiness-20261112T1500/source-mappings-safe.json",
+      "sha256": "68fc0e322e5eb97eb98298e363ea01440ac250d9e0b53885625a7f96a1af9d92",
+      "bytes": 1661
+    },
+    {
+      "path": "native/windows/current-readiness-20261112T1500/source-pins-safe.json",
+      "sha256": "7574410ececebbb9b8af9f69b83e9d9c72e2cca7eb112f9abc01f589b22dc66e",
+      "bytes": 1657
     },
     {
       "path": "native/windows/deepseek-official-installed-20261112/actual-current-user-installation-safe.json",
@@ -1668,6 +1723,51 @@
       "path": "native/windows/formal-runtime-post-reboot-20261112/static-review-source-mappings-safe.json",
       "sha256": "c3457457652b5d36597adf1cef53d3d0f4ec42ca5d829c6b850ea9897077d63b",
       "bytes": 16248
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-20261112/build-composite.py",
+      "sha256": "b8b2fb9e54db5c2bf8de3b38bd09d7fda6b011409d32221524ea3ac2e5a2b17b",
+      "bytes": 18161
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-20261112/composite-verification-safe.json",
+      "sha256": "69c13de7ac6e998605d66018f2b009be9b08bd05098ef52984cd26747783d3e0",
+      "bytes": 972
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-20261112/input-pins.json",
+      "sha256": "6f832d511b5e8a8f78214c072fa773661186b5c93199851e6890d4a2b3773759",
+      "bytes": 20137
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-20261112/normalized-acceptance-safe.json",
+      "sha256": "d8a5fe51d3221a2e4715288c1ae4bc1d7357158e5ef0995148cad22d4ddcad73",
+      "bytes": 3795
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-20261112/original-composite-acceptance-safe.json",
+      "sha256": "38ab35f8a20adbf92743902358ce33473f122e2aadb0c1e46d6448871d14e8f6",
+      "bytes": 27694
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-20261112/source-mappings-safe.json",
+      "sha256": "4bf7649726e9a3c6c9738b0f6280383869bacbc0aaa1d995cee00510fb1bb798",
+      "bytes": 2264
+    },
+    {
+      "path": "native/windows/fresh-android-runtime-binding-20261112/verifier-execution-safe.json",
+      "sha256": "bfc81cc7a8a51835f99b911892f758a91ab0a0382bcee6e49b3215f34a94535a",
+      "bytes": 1930
+    },
+    {
+      "path": "native/windows/fresh-runtime-input-freeze-attempt1-20261112/actual-root-execution-safe.json",
+      "sha256": "82551efcb93b89b7d96858199b294153127f296290785b44098b1b688d517635",
+      "bytes": 1157
+    },
+    {
+      "path": "native/windows/fresh-runtime-input-freeze-attempt1-20261112/fresh-runtime-inputs-freeze-attempt-safe.json",
+      "sha256": "94d10182a456c06a45c8a41d81d8965f9e3f89e44d440f64835a5cdc22da37e9",
+      "bytes": 675
     },
     {
       "path": "native/windows/interactive-current/final21-readiness-blocked-safe.json",
@@ -2415,14 +2515,79 @@
       "bytes": 2826
     },
     {
+      "path": "sources/official-platform-current-20261112T1500/current-http-safe.json",
+      "sha256": "f5e45c9e8a07a6b55eefbd65c747aa7298149b3099f678187d8fe6a21c80688a",
+      "bytes": 1867
+    },
+    {
+      "path": "sources/official-platform-current-20261112T1500/final-current-official-availability-safe.json",
+      "sha256": "3021691b11a21534ec88384e4f503cd5e5302400f8daed42b0b11324e41c6080",
+      "bytes": 14293
+    },
+    {
+      "path": "sources/official-platform-current-20261112T1500/historical-native/bits-0934-terminal-safe.json",
+      "sha256": "aed56eb67162b8fcb45014dad40a24ce747a618ee19f52b0e4813e5de92fa068",
+      "bytes": 1162
+    },
+    {
+      "path": "sources/official-platform-current-20261112T1500/historical-native/download-0723-downloaded-files-safe.json",
+      "sha256": "53c5f0413975d3f70e5d9fb0732860da7776f1668849453b98deb6c362f046aa",
+      "bytes": 660
+    },
+    {
+      "path": "sources/official-platform-current-20261112T1500/historical-native/download-0723-installer-terminal-safe.json",
+      "sha256": "33735ae939c6b57170d0d0b0c5bb4569a7488e579d3e7272c839d6d95dee165d",
+      "bytes": 1261
+    },
+    {
+      "path": "sources/official-platform-current-20261112T1500/historical-native/store-0711-installed-verification-safe.json",
+      "sha256": "dc215e565fbf4f919da024174a8b5f8efb7e974b7a1dc5b430836e861e14fa94",
+      "bytes": 666
+    },
+    {
+      "path": "sources/official-platform-current-20261112T1500/historical-native/store-0711-installer-terminal-safe.json",
+      "sha256": "5fbe4579bba9a8a78c345f91042bb53a504811624750dbe0d187042aafc531f6",
+      "bytes": 1186
+    },
+    {
+      "path": "sources/official-platform-current-20261112T1500/historical-native/store-0711-output-classification-safe.json",
+      "sha256": "3be64b768d761e941e97f6886eda198e77665015dcf592dfea234cef85ae1f16",
+      "bytes": 635
+    },
+    {
+      "path": "sources/official-platform-current-20261112T1500/historical-native/store-0915-installed-verification-safe.json",
+      "sha256": "6053c53595235ff98c5e8fe73a47d9c752d6a5d34c8c98926d861591c4f397f4",
+      "bytes": 2095
+    },
+    {
+      "path": "sources/official-platform-current-20261112T1500/historical-native/store-0915-installer-terminal-safe.json",
+      "sha256": "8d2b81a7f24de9cf84b63a855fc368832faf0cf4d269594a69f4d85b0d992546",
+      "bytes": 1255
+    },
+    {
+      "path": "sources/official-platform-current-20261112T1500/historical-native/store-0915-scheduler-terminal-safe.json",
+      "sha256": "b9a28f2a2ee4d16d1cb79fd2f4e6e917ea40e48652056a48815eeaf35fa62b59",
+      "bytes": 2268
+    },
+    {
+      "path": "sources/official-platform-current-20261112T1500/source-mappings-safe.json",
+      "sha256": "43939d4f328dd0e26373d0d23bcab6421e0e4f114643f57790387f65e90ed8a7",
+      "bytes": 4651
+    },
+    {
+      "path": "sources/official-platform-current-20261112T1500/store-catalog-http-safe.json",
+      "sha256": "1589768e40da170f88f734445ede28b87d5f03d6090ed1bb54fc2905ca8bc04e",
+      "bytes": 349
+    },
+    {
       "path": "sources/receipt-provenance.json",
       "sha256": "86b232503551727aee4af2c7f475b3f40ada9dcc8d1f3bd0f8ce1018683a7f96",
       "bytes": 236971
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "ba6de9ea0be40c27802b1e8aee3d78931ddeedebe977b8f5fc2b737e9c370429",
-      "bytes": 32140
+      "sha256": "fbdb3252e8a7411ade91c0d785a8dbb0809ef93aa4bbc521fe470fa9d54ea8db",
+      "bytes": 33718
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -2446,8 +2611,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "2e4b911e4713e983df377d9eed2f744698aace6114f6eb388e097c5f00406a2f",
-      "bytes": 43676
+      "sha256": "28bb8c44df0b2493e56da928e799ac3f5a23262d559fca5f210c0840e59c40ce",
+      "bytes": 46835
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
@@ -2531,5 +2696,5 @@
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
-  "checkpointScope": "Seventh checkpoint437Gitblobs plus 68 nativecompletion/probe/static JSON receipts and their independent audit, fresh sixcommand resolution and seventh delivery; current follow-up readiness/LINUX/binding probes excluded until their own verified step."
+  "checkpointScope": "Previous505files plus currentreadiness4/composite7/freeze-failure2/Claudecurrent5/official13/Linux1/eighthdelivery1; subsequentencoding-successor and actualGUI/runtime attempts are separate."
 }

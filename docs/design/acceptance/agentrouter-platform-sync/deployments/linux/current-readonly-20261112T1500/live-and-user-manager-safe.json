@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 1,
+  "status": "current-linux-source71-live-static-unit-verified-user-manager-control-unavailable",
+  "observedAtUtc": "2026-11-12T15:08:18.270987+00:00",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "readOnly": true,
+  "privateCredentialsEnvironmentDatabasesRawLogsRead": false,
+  "processSignals": 0,
+  "serviceStartsStopsRestarts": 0,
+  "userManagerRestarts": 0,
+  "processes": [
+    {
+      "pid": 320847,
+      "startTicks": 451383,
+      "parentPid": 1,
+      "uid": 1000,
+      "state": "S",
+      "exeSha256": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae",
+      "expectedExeSha256Exact": true,
+      "cgroup": "0::/codex.slice/codex-workloads.slice"
+    },
+    {
+      "pid": 320854,
+      "startTicks": 451458,
+      "parentPid": 320847,
+      "uid": 1000,
+      "state": "S",
+      "exeSha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649",
+      "expectedExeSha256Exact": true,
+      "cgroup": "0::/codex.slice/codex-workloads.slice"
+    }
+  ],
+  "controllerOwnership": {
+    "writerFd": 7,
+    "writerIsPipe": true,
+    "childStdinPipeExact": true,
+    "pidfdFd": 6,
+    "pidfdTypeExact": true,
+    "pidfdListenerPidExact": true
+  },
+  "controllerScriptHashChecks": [
+    {
+      "sha256": "49746d3838c6b3b2232273dfe4e6b4342d4cf90e303a1d75bc0cbb2caa0bbbc8",
+      "matchesPriorPinnedScript": true
+    }
+  ],
+  "publicResources": [
+    {
+      "path": "assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+      "status": 200,
+      "bytes": 8059324,
+      "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b",
+      "expectedByteHashExact": true
+    },
+    {
+      "path": "assets/antigravity-DXFfVr6X.svg",
+      "status": 200,
+      "bytes": 5037,
+      "sha256": "de7911c3d206a3d2fe3d5b4e76e84b185c581d7a259406f64db247b5b824f02e",
+      "expectedByteHashExact": true
+    },
+    {
+      "path": "assets/brand-icon-Zjdxen9M.png",
+      "status": 200,
+      "bytes": 377394,
+      "sha256": "c280f2cd646b1bd5008338081fb2fbd6444faf9f56649604272b6ec4bf1bef06",
+      "expectedByteHashExact": true
+    },
+    {
+      "path": "assets/claude-RJ8il4lB.png",
+      "status": 200,
+      "bytes": 10358,
+      "sha256": "7241633e5a39b44a947c7b9a821637f30d6e86716e7a8c847136d91f9c3f6ba1",
+      "expectedByteHashExact": true
+    },
+    {
+      "path": "assets/codex-DODyF2an.png",
+      "status": 200,
+      "bytes": 10969,
+      "sha256": "2ce1c57dd3b312417106a487815ab1235bddce17e1fa9b32a2f048bd71ee25d3",
+      "expectedByteHashExact": true
+    },
+    {
+      "path": "assets/crush-B1wob-OZ.png",
+      "status": 200,
+      "bytes": 55448,
+      "sha256": "a41177d5afbdbc6838526d0a1b62076a686a18d2949e262eb405a2142dd082f2",
+      "expectedByteHashExact": true
+    },
+    {
+      "path": "assets/cursor-dark-BM_3k4Y4.svg",
+      "status": 200,
+      "bytes": 4373,
+      "sha256": "878309a7f82021e76cdf211188dd052fe6aaf2f435c24887a731d8a19582d260",
+      "expectedByteHashExact": true
+    },
+    {
+      "path": "assets/cursor-light-DGKJuirn.svg",
+      "status": 200,
+      "bytes": 4388,
+      "sha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0",
+      "expectedByteHashExact": true
+    },
+    {
+      "path": "assets/hermes-dark-D5fo9gTB.svg",
+      "status": 200,
+      "bytes": 137768,
+      "sha256": "e1517a2d5b81108f74e938997c442eaa0562af73b7b6beecb3363f3062b8ef36",
+      "expectedByteHashExact": true
+    },
+    {
+      "path": "assets/hermes-light-x1BVlPhG.svg",
+      "status": 200,
+      "bytes": 116350,
+      "sha256": "6c4968c1a46f104559684826ed8061fad6052711ff0af9c6b36a6ce674536684",
+      "expectedByteHashExact": true
+    },
+    {
+      "path": "assets/index--zaH3Y7H.js",
+      "status": 200,
+      "bytes": 538627,
+      "sha256": "7e115c9d4b6236a5de0338b7499f0e09341df65ee03067ad71cd01b578a10a49",
+      "expectedByteHashExact": true
+    },
+    {
+      "path": "assets/index-9wEW8k7x.css",
+      "status": 200,
+      "bytes": 34506,
+      "sha256": "0ccaec9543d9001c1e528918446afa1170c46d9fc676c46ba33f1a21a5fbbf20",
+      "expectedByteHashExact": true
+    },
+    {
+      "path": "assets/roo-D8yWBDNL.png",
+      "status": 200,
+      "bytes": 5626,
+      "sha256": "6dfbd44c806ace9d2b2d71f011cfb72fea5bfd501ab586e841a4c5f87c10f39a",
+      "expectedByteHashExact": true
+    },
+    {
+      "path": "assets/workbuddy-D1Gu2IKl.svg",
+      "status": 200,
+      "bytes": 4142,
+      "sha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "expectedByteHashExact": true
+    },
+    {
+      "path": "assets/zcode-yL2Qb12j.png",
+      "status": 200,
+      "bytes": 6479,
+      "sha256": "089bdfa74910eaed241eac46bf5d02bb5718f15d8d6b247a1ee61b3372c9c82c",
+      "expectedByteHashExact": true
+    },
+    {
+      "path": "favicon.png",
+      "status": 200,
+      "bytes": 8268,
+      "sha256": "bd2b0e95dade84d5371027cc9616610813b3e7f878b434d54a3a1459111c7db2",
+      "expectedByteHashExact": true
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "bytes": 477,
+      "sha256": "8b944924f56c75a7e97a91bfd2bce4cacfab8b961e24fc04beff80af431bc033",
+      "expectedByteHashExact": true
+    }
+  ],
+  "unauthenticatedProtectedInfoStatus": 401,
+  "staticUserUnit": {
+    "unitPath": "/home/han/.config/systemd/user/orchester-default-remote-7337-20261112-post-reboot.service",
+    "sha256": "371ffb332878590823e530ae5aaa62f5a4ab192a5276889f71aa0af7c0fd322f",
+    "sha256ExactPrior": true,
+    "mode": "0o600",
+    "ownerUid": 1000,
+    "defaultTargetLinkExact": true,
+    "runningClaimed": false,
+    "systemdAnalyzeVerifyActualExitCode": 0
+  },
+  "userManager": {
+    "pid": 269,
+    "live": true,
+    "busPathExists": false,
+    "privatePathExists": true,
+    "sameMountNamespace": true,
+    "sameNetNamespace": true,
+    "readOnlyConnectAttempts": [
+      {
+        "path": "/run/user/1000/systemd/private",
+        "connected": false,
+        "errno": 111,
+        "errorType": "ConnectionRefusedError"
+      },
+      {
+        "path": "/proc/269/root/run/user/1000/systemd/private",
+        "connected": false,
+        "errno": 111,
+        "errorType": "ConnectionRefusedError"
+      }
+    ],
+    "ordinary-user-manager": {
+      "actualExitCode": 1,
+      "stderrNoSuchFile": true,
+      "stderrConnectionRefused": false
+    },
+    "direct-private-socket": {
+      "actualExitCode": 1,
+      "stderrNoSuchFile": false,
+      "stderrConnectionRefused": true
+    },
+    "machine-user-host": {
+      "actualExitCode": 1,
+      "stderrNoSuchFile": true,
+      "stderrConnectionRefused": false
+    },
+    "loginctlReadonlyActualExitCode": 0,
+    "lingerYes": true,
+    "systemUnitReadonlyActualExitCode": 0,
+    "systemUserUnitActiveRunning": true
+  },
+  "listenerPort": 7337,
+  "canonicalCatalogPreviouslyVerifiedButNotAuthenticatedRerun": true,
+  "existingOriginalCredentialWireNotRerun": true,
+  "stateRetentionNotReadOrRerun": true,
+  "normalQuitNotRun": true,
+  "rebootAutostartActuallyTested": false,
+  "limitations": [
+    "Read-only directproc and HTTP public resource verification proves current source71 standalone service liveness. It does not prove full current authenticated catalog or state retention.",
+    "Usermanager process and private listening socket metadata remain present, but the current filesystem socket connection returns errno111; ordinary user bus and machine-user host routes fail with no such file. No cause of inaccessible socket is asserted.",
+    "No service, usermanager, task, original process, configuration, private environment, or state database mutation was performed. Native reboot/autostart remains untested."
+  ]
+}

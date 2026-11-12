@@ -1,0 +1,21 @@
+{
+    "observedAtUTC":  "2026-11-12T07:11:58.1010314Z",
+    "status":  "installer-exit0-current-official-installed-package-not-proved",
+    "actualInstallerExitCode":  0,
+    "packages":  [
+
+                 ],
+    "knownFamilyPackageCount":  0,
+    "officialStoreFamilyCount":  0,
+    "officialPublicNativeEntryCount":  0,
+    "startApps":  [
+
+                  ],
+    "currentUserOnly":  true,
+    "wholeMachineAllUsersInventoryClaimed":  false,
+    "privateProfileContentsRead":  false,
+    "modelsOrLoginCalls":  0,
+    "actualGuiAcceptance":  false,
+    "installedAppLaunchedByTask":  false,
+    "preparedStoreBootstrapperExecuted":  false
+}
