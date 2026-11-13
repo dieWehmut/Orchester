@@ -1,0 +1,263 @@
+{
+  "format": "orchester-desktop18-msaa-preparation-v1",
+  "status": "prepared-only-not-executed",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "privatePreparedRoot": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/desktop18-msaa-prepared-20261113-bf492b45",
+  "privateSourceBundle": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/desktop18-msaa-prepared-20261113-bf492b45/sources",
+  "windowsPreparedDirectory": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continue-20261111-monitors-final21-71def64\\p18m-1113-bf492b45",
+  "windowsResultDirectory": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\d18m-1113-bf492b45",
+  "newWrapper": {
+    "file": "invoke-fresh-desktop18-msaa.ps1",
+    "bytes": 2685,
+    "sha256": "4b292ef18d65703476bce0af1766b8a3c22c06b01fbb7f7c8b9fb7ecaa29e38e"
+  },
+  "newManifestSha256": "6725e731344348beae0d0106596bdd6d6809752e8f9f6c1acecf898d8d678705",
+  "entryPointSha256": "2650988b451a2f4135cc4f8f3bc2247a906967efdd8904a6a70324217994d5d2",
+  "parentCommon": {
+    "path": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continue-20261111-monitors-final21-71def64\\monitor-final-common.ps1",
+    "sha256": "2d4e07f3d703043ea9af8fbf6377814f08135253837b4e36b8f075ea3aeb2f4f",
+    "explicitRootWrapperShaGateAdded": true,
+    "originalParentAndItsPlanScriptsMustRemainAvailable": true
+  },
+  "sourceFiles": [
+    {
+      "path": "InteractiveFileRunner.cs",
+      "bytes": 19425,
+      "sha256": "03783e81bee77f1e13d517c5efd4ad6caca45509960691faf5dc90ad8dc3cec3",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/InteractiveFileRunner.cs",
+      "originSha256": "03783e81bee77f1e13d517c5efd4ad6caca45509960691faf5dc90ad8dc3cec3",
+      "unchangedFromSelectedOrigin": true
+    },
+    {
+      "path": "NativeDesktopWindows.cs",
+      "bytes": 8305,
+      "sha256": "858fdf6e41f257b8923bed98c4ba15177c8538ef2240d51f8122519df9b5af58",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/NativeDesktopWindows.cs",
+      "originSha256": "858fdf6e41f257b8923bed98c4ba15177c8538ef2240d51f8122519df9b5af58",
+      "unchangedFromSelectedOrigin": true
+    },
+    {
+      "path": "NativeTrayQuit.cs",
+      "bytes": 17145,
+      "sha256": "5e33b5f26a7250aaa8c5c86f0b5540e1a7dd07106cfce00570d9e31a4becd32c",
+      "origin": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/tray-msaa-succ-20261113/NativeTrayQuit.cs",
+      "originSha256": "5e33b5f26a7250aaa8c5c86f0b5540e1a7dd07106cfce00570d9e31a4becd32c",
+      "unchangedFromSelectedOrigin": true
+    },
+    {
+      "path": "OwnedConsoleQuit.cs",
+      "bytes": 8043,
+      "sha256": "531a104d8e2075b4cf7f045b2078e7d4af1357704b37cde68bef331128790572",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/OwnedConsoleQuit.cs",
+      "originSha256": "531a104d8e2075b4cf7f045b2078e7d4af1357704b37cde68bef331128790572",
+      "unchangedFromSelectedOrigin": true
+    },
+    {
+      "path": "OwnedRuntimeProcesses.cs",
+      "bytes": 15478,
+      "sha256": "d335743a632acae0c90968e482b87eda44aaf1dae241e938e62b5c7833598d45",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/OwnedRuntimeProcesses.cs",
+      "originSha256": "d335743a632acae0c90968e482b87eda44aaf1dae241e938e62b5c7833598d45",
+      "unchangedFromSelectedOrigin": true
+    },
+    {
+      "path": "capture-desktop-descendants.ps1",
+      "bytes": 12611,
+      "sha256": "8e81166cd81e6fe3f97f0537fda6b998396f3af5a5b8a2f22b1a863d6de9133d",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/capture-desktop-descendants.ps1",
+      "originSha256": "8e81166cd81e6fe3f97f0537fda6b998396f3af5a5b8a2f22b1a863d6de9133d",
+      "unchangedFromSelectedOrigin": true
+    },
+    {
+      "path": "epoch2-draft-pins-safe.json",
+      "bytes": 3030,
+      "sha256": "29ef3f9e06fb75a9f85354689386e5200e16b798c4999ef9ba1d4c7dd95f72cc",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/epoch2-draft-pins-safe.json",
+      "originSha256": "29ef3f9e06fb75a9f85354689386e5200e16b798c4999ef9ba1d4c7dd95f72cc",
+      "unchangedFromSelectedOrigin": true
+    },
+    {
+      "path": "epoch2-final-draft-pins-safe.json",
+      "bytes": 5821,
+      "sha256": "6f5f70c819920a6471446bab3914bb5b777e0f5fbbe133e0638cdfee02c32ab5",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/epoch2-final-draft-pins-safe.json",
+      "originSha256": "6f5f70c819920a6471446bab3914bb5b777e0f5fbbe133e0638cdfee02c32ab5",
+      "unchangedFromSelectedOrigin": true
+    },
+    {
+      "path": "inspect-or-quit-default-remote.ps1",
+      "bytes": 2710,
+      "sha256": "86f76c914b9c537d2d1708e10656666bce76ed8ee11cdab9abf98f3e30deaca5",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/inspect-or-quit-default-remote.ps1",
+      "originSha256": "86f76c914b9c537d2d1708e10656666bce76ed8ee11cdab9abf98f3e30deaca5",
+      "unchangedFromSelectedOrigin": true
+    },
+    {
+      "path": "invoke-owned-tray-quit.ps1",
+      "bytes": 10951,
+      "sha256": "215c7279b991264a5bba35518aabdd0c71ebaa8f9dd04be90a7e993e7b05b30e",
+      "origin": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/tray-msaa-succ-20261113/invoke-owned-tray-quit.ps1",
+      "originSha256": "215c7279b991264a5bba35518aabdd0c71ebaa8f9dd04be90a7e993e7b05b30e",
+      "unchangedFromSelectedOrigin": true
+    },
+    {
+      "path": "launch-smoke.ps1",
+      "bytes": 29600,
+      "sha256": "2650988b451a2f4135cc4f8f3bc2247a906967efdd8904a6a70324217994d5d2",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/launch-smoke.ps1",
+      "originSha256": "b30e25096940a0604546ac77187650738a0ce76ba40049c656442ceed84c3001",
+      "unchangedFromSelectedOrigin": false
+    },
+    {
+      "path": "prepared-scripts.json",
+      "bytes": 1441,
+      "sha256": "6725e731344348beae0d0106596bdd6d6809752e8f9f6c1acecf898d8d678705",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/prepared-scripts.json",
+      "originSha256": "448f0a30c6c004efa1d178c996318c175aabf47c11eea8c8ed08d4fb5c329731",
+      "unchangedFromSelectedOrigin": false
+    },
+    {
+      "path": "resize-isolated-window.ps1",
+      "bytes": 654,
+      "sha256": "0f573d3ea44247a442157369e26c35c1bde7e39d3f43c011a13de87a23581489",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/resize-isolated-window.ps1",
+      "originSha256": "0f573d3ea44247a442157369e26c35c1bde7e39d3f43c011a13de87a23581489",
+      "unchangedFromSelectedOrigin": true
+    },
+    {
+      "path": "retain-owned-observation.ps1",
+      "bytes": 2859,
+      "sha256": "6f758142622e49e7b6e7892c7b254a5dda53b990425d0ff7b9e54d84a7523344",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/retain-owned-observation.ps1",
+      "originSha256": "6f758142622e49e7b6e7892c7b254a5dda53b990425d0ff7b9e54d84a7523344",
+      "unchangedFromSelectedOrigin": true
+    },
+    {
+      "path": "runtime-input-guards.ps1",
+      "bytes": 7594,
+      "sha256": "fa6ce76b0ac9d2c4a37b173931e4627d92cab7e5308e6f912b8467a5eb58ff6d",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/runtime-input-guards.ps1",
+      "originSha256": "fa6ce76b0ac9d2c4a37b173931e4627d92cab7e5308e6f912b8467a5eb58ff6d",
+      "unchangedFromSelectedOrigin": true
+    },
+    {
+      "path": "verify-final-native.mjs",
+      "bytes": 24024,
+      "sha256": "edede6aaedc94aaa13eb1ce0a583a471cfea3285749a438caff05ceae416e18c",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/verify-final-native.mjs",
+      "originSha256": "edede6aaedc94aaa13eb1ce0a583a471cfea3285749a438caff05ceae416e18c",
+      "unchangedFromSelectedOrigin": true
+    },
+    {
+      "path": "verify-portable-runtime-file.ps1",
+      "bytes": 19949,
+      "sha256": "9b59595d838aed379e25cf4483fa8f6a24bf45f9d1d832c5eb83ae70ecf3e0a1",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/verify-portable-runtime-file.ps1",
+      "originSha256": "9b59595d838aed379e25cf4483fa8f6a24bf45f9d1d832c5eb83ae70ecf3e0a1",
+      "unchangedFromSelectedOrigin": true
+    },
+    {
+      "path": "verify-portable-runtime-final.ps1",
+      "bytes": 17525,
+      "sha256": "6d01f8496ff8c57317337448d47c450b3a4a8ab768f755e46f1f04466a485b6f",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/verify-portable-runtime-final.ps1",
+      "originSha256": "6d01f8496ff8c57317337448d47c450b3a4a8ab768f755e46f1f04466a485b6f",
+      "unchangedFromSelectedOrigin": true
+    },
+    {
+      "path": "window-snapshot.ps1",
+      "bytes": 659,
+      "sha256": "de6406bd7241bf983ce82c1ee17f712cdc5293bfb054b35c4987849d2ffabfda",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/window-snapshot.ps1",
+      "originSha256": "de6406bd7241bf983ce82c1ee17f712cdc5293bfb054b35c4987849d2ffabfda",
+      "unchangedFromSelectedOrigin": true
+    },
+    {
+      "path": "worker3-preparation-pins-safe.json",
+      "bytes": 6170,
+      "sha256": "2dede7709c8b3227bb49cc2c104011754ec3c76246cf8f11626b3e1a0ae773ed",
+      "origin": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prepared-runtime-worker3-20261113/worker3-preparation-pins-safe.json",
+      "originSha256": "2dede7709c8b3227bb49cc2c104011754ec3c76246cf8f11626b3e1a0ae773ed",
+      "unchangedFromSelectedOrigin": true
+    }
+  ],
+  "replacedNativeTrayOriginRuntimeProof": {
+    "jobId": "568c3763e3a04c4a720f3c39c8e20309",
+    "terminalSha256": "34d424f81824f8e2b40e269152be16d208308b0bdf0c8e9b28a5f1bfb5c33685",
+    "actualNativeExitCode": 0,
+    "finishedAtUtc": "2026-11-13T14:56:30.4871934Z",
+    "menuObservationSha256": "8c4182591e68431cb709f1ea80655e192baca69bb69ee3d7f85add662ea7bcb5",
+    "actualActivation": "MSAA.IAccessible.accDoDefaultAction",
+    "sourcePinsMatchCopiedHelpers": true,
+    "provesNewFull18": false
+  },
+  "changedClonedFiles": [
+    "invoke-owned-tray-quit.ps1",
+    "launch-smoke.ps1",
+    "NativeTrayQuit.cs",
+    "prepared-scripts.json"
+  ],
+  "allOriginal20FilesStillByteExact": true,
+  "launchChangesOnly": [
+    "read actual safe menu activation receipt",
+    "verify exact ordered 3 labels, owned GUI PID/exact birth/image SHA",
+    "write actual nativeMenuActivation instead of UIA constant"
+  ],
+  "launchAcceptanceRegionInverseByteExact": true,
+  "newWrapperChangesOnly": [
+    "new source namespace",
+    "new fresh result namespace",
+    "updated entrypoint and manifest SHA pins",
+    "parent-common SHA gate"
+  ],
+  "wrapperInverseByteExact": true,
+  "oldCopiedPinReceiptsAreHistorical": [
+    "epoch2-draft-pins-safe.json",
+    "epoch2-final-draft-pins-safe.json",
+    "worker3-preparation-pins-safe.json"
+  ],
+  "authoritativeNewPinsReceipt": "desktop18-msaa-preparation-pins-safe.json",
+  "unchangedAcceptanceGates": {
+    "desktopChecks": 18,
+    "canonicalProviderIds": 21,
+    "themeImages": 42,
+    "serviceSemantics": 7,
+    "successfulPutWrites": 7,
+    "reviewedScreenshots": 2,
+    "ackTimeoutSecondsEach": 900,
+    "runtimeTimeoutSeconds": 2400,
+    "exactAckEventIdNonceNameHashAccepted": true,
+    "noFollowingUIActionBeforeAck": true,
+    "noPageErrors": true,
+    "originalHeldGuiExitCodeMustBeZero": true,
+    "heldDescendantsAndNodeMustExitNaturally": true,
+    "cdpAndEmbeddedPortsMustBeReleased": true,
+    "frozenCandidateAndAndroidSourceBindingsPreserved": true
+  },
+  "pathPreparation": {
+    "knownConstructedResultPathsMaxChars": 194,
+    "maxPathLimitExclusive": 260,
+    "includesDynamicAckIdAndAtomicTemporarySuffix": true,
+    "unknownWebViewInternalGeneratedPathsNotClaimed": true,
+    "resultPathUnderOriginalPlanRunDirectory": true,
+    "resultAndBundleAbsentInObservedWslFilesystem": true,
+    "runtimeMustRecheckAbsentAndOld19322Free": true
+  },
+  "validation": {
+    "exact10ManifestFileHashes": true,
+    "other16ClonedFilesByteExact": true,
+    "verifierBytesUnchanged": true,
+    "helperBytesEqualActualValidatedSources": true,
+    "launchAndNewWrapperLinuxAstErrors": 0,
+    "copiedHelperSameSourcePriorCSharpCompileExitCode": 0,
+    "namespaceClassCollisionsFound": false,
+    "actualMsaaMenuReceiptMappingChecked": true,
+    "windowsRuntimeExecuted": false,
+    "cdpExecuted": false,
+    "workerJobSubmitted": false,
+    "productionFilesChanged": 0,
+    "repoManifestAuditSummaryChanged": false,
+    "desktop18Passed": false,
+    "promoted": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+    "status":  "exact-owned-cleanup-passed",
+    "nativeTrayQuitNatural":  true,
+    "allExactGuiHandlesExited":  true,
+    "allExactNodeHandlesExited":  true,
+    "debugPortReleased":  true,
+    "embeddedPort":  64420,
+    "unexpectedDescendants":  0,
+    "safeUnexpectedImages":  [
+
+                             ],
+    "guiOutcomes":  [
+
+                    ],
+    "nodeOutcomes":  [
+
+                     ],
+    "type":  null,
+    "diagnostic":  null,
+    "identityDiagnostic":  "QueryFullProcessImageName:5",
+    "originalHandlesKeptUntilCleanup":  true,
+    "modelCalls":  0,
+    "defaultServiceStopped":  false
+}

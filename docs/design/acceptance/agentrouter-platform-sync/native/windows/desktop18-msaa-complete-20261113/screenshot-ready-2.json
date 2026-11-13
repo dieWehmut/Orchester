@@ -1,0 +1,10 @@
+{
+  "event": "screenshot_ready",
+  "index": 2,
+  "id": "c8a7e99e5bb0054d203caa43f523b0f5",
+  "nonce": "0c725576da7eb23b742c87b038a2012e16a63bf456f230c7",
+  "name": "desktop-main-after-secondary-close.png",
+  "sha256": "cc57f4ad2e19b28b29700bdc4be56e80dfd6a76f15c8e78217d68130acf569da",
+  "ackFile": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\d18m-1113-bf492b45\\screenshot-ack-c8a7e99e5bb0054d203caa43f523b0f5.json",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6"
+}

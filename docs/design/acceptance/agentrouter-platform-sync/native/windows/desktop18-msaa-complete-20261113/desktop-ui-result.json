@@ -1,0 +1,9 @@
+{
+    "status":  "desktop-eighteen-ui-checks-passed-cleanup-pending",
+    "sourceRevision":  "71def643cb08b208cc79687f79255c504eb14dc6",
+    "checks":  18,
+    "writes":  7,
+    "screenshotsReviewed":  2,
+    "modelCalls":  0,
+    "defaultInstallationChanged":  false
+}
