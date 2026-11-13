@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "status": "explicit-public-source-selection-byte-exact-native-linux-original-one-wire-archive",
+  "createdAtUtc": "2026-11-13T03:59:04.944006+00:00",
+  "privateAllowlistOrCredentialSourceFilesIncluded": false,
+  "compiledDexOrClassesIncluded": false,
+  "files": [
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-original-one-wire/current-managed-listener-wire-binding-safe.json",
+      "archivePath": "deployments/linux/20261113-native-original-one-wire/current-managed-listener-wire-binding-safe.json",
+      "sha256": "975766223361017967186bb61baf726797ee46d648d399907af6fa37f0f242e6",
+      "bytes": 465,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-original-one-wire/current-native-identity-safe.json",
+      "archivePath": "deployments/linux/20261113-native-original-one-wire/current-native-identity-safe.json",
+      "sha256": "3945d4957c3b6cf722e9e8c874acf76d6f0c134dd3e9155de0df19c49b7e60cf",
+      "bytes": 698,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-original-one-wire/existing-alias-guard-shell-v2-safe.json",
+      "archivePath": "deployments/linux/20261113-native-original-one-wire/existing-alias-guard-shell-v2-safe.json",
+      "sha256": "6b7bc36847467ce938e7350a1709e28689b8f531dac9c90c56f37d28cf2c01f0",
+      "bytes": 535,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-original-one-wire/existing-alias-guard2-shell-v2-safe.json",
+      "archivePath": "deployments/linux/20261113-native-original-one-wire/existing-alias-guard2-shell-v2-safe.json",
+      "sha256": "e4c20b224c5d25cba19495ff095962df1f81d8f7cad167e2497ffb0e57e827b4",
+      "bytes": 632,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-original-one-wire/final-scope-safe.json",
+      "archivePath": "deployments/linux/20261113-native-original-one-wire/final-scope-safe.json",
+      "sha256": "ce9456a577154f15861c67b04e1b8506d7fc5d76c2e6a3f2bf3efef249f61ca8",
+      "bytes": 3410,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-original-one-wire/initial-exec-out-alias-guard-abort-safe.json",
+      "archivePath": "deployments/linux/20261113-native-original-one-wire/initial-exec-out-alias-guard-abort-safe.json",
+      "sha256": "5dd50b042093dd2606c6bb8918d4b668435191ffd3e94b18486aabb1c5f2d467",
+      "bytes": 550,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-original-one-wire/listener-current-revalidation-safe.json",
+      "archivePath": "deployments/linux/20261113-native-original-one-wire/listener-current-revalidation-safe.json",
+      "sha256": "fe3c76c63b81d1d8176bffee2541cfac91c290b6af2c39ff1e1cc563c9514ae5",
+      "bytes": 725,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-original-one-wire/native-product-after-safe.json",
+      "archivePath": "deployments/linux/20261113-native-original-one-wire/native-product-after-safe.json",
+      "sha256": "409b62cf803b145c7d364e66277ad466c6183be569f2467e1fbabd2d1bdcddfe",
+      "bytes": 1043,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-original-one-wire/native-product-metadata-safe.json",
+      "archivePath": "deployments/linux/20261113-native-original-one-wire/native-product-metadata-safe.json",
+      "sha256": "281814a8e58a41656aebe4347bd5172a055f29d08f48382ddeb56df3d9e6ca8c",
+      "bytes": 1046,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-original-one-wire/native-product-wire-safe.json",
+      "archivePath": "deployments/linux/20261113-native-original-one-wire/native-product-wire-safe.json",
+      "sha256": "b129154986dfd05c58aba3ed912c0e80e82aac11af7eaf3c4d47d71db79ffd5e",
+      "bytes": 1179,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-original-one-wire/normal-cleanup-and-original-record-retention-safe.json",
+      "archivePath": "deployments/linux/20261113-native-original-one-wire/normal-cleanup-and-original-record-retention-safe.json",
+      "sha256": "0ed1cba7551e49f6c4925746070833edbd8c5b52b5ed5ded4f0aeeb193289003",
+      "bytes": 897,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-original-one-wire/normal-product-exit-request-safe.json",
+      "archivePath": "deployments/linux/20261113-native-original-one-wire/normal-product-exit-request-safe.json",
+      "sha256": "b897041519a0a135115ba9a55eb9680864754220ce8feeb5a22ef897cff1572b",
+      "bytes": 335,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-original-one-wire/ExistingAliasGuard.java",
+      "archivePath": "deployments/linux/20261113-native-original-one-wire/ExistingAliasGuard.java",
+      "sha256": "3f73a17be703d091e921e26e90e2f981fc6cf0bc3c68d91655af42801225ba72",
+      "bytes": 760,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-original-one-wire/ExistingAliasGuardWithProvider.java",
+      "archivePath": "deployments/linux/20261113-native-original-one-wire/ExistingAliasGuardWithProvider.java",
+      "sha256": "40006721ac77b8b73ce9ab20cf5e4fcac573469ddec04764d89330be0891d7ec",
+      "bytes": 956,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-original-one-wire/native-product-probe.mjs",
+      "archivePath": "deployments/linux/20261113-native-original-one-wire/native-product-probe.mjs",
+      "sha256": "2d4d65a39d7d2cdca8b4d00dd006a8c098630ce29fb6eb5b3a031ea5a3aadc0c",
+      "bytes": 5991,
+      "sourceAndArchiveByteExact": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/linux-original-one-wire/normal-product-exit.mjs",
+      "archivePath": "deployments/linux/20261113-native-original-one-wire/normal-product-exit.mjs",
+      "sha256": "50a4562536c92a27fbcd7c0d9985172517fca4ef2cf49c7ec653553ee77a9d53",
+      "bytes": 2135,
+      "sourceAndArchiveByteExact": true
+    }
+  ]
+}

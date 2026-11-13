@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-13T02:56:01.683417+00:00",
-  "status": "thirteen-checkpoints-delivered-managed-linux-lifecycle-archive-delivered-full-platform-verification-pending",
+  "createdAt": "2026-11-13T04:01:42.158154+00:00",
+  "status": "native-linux-original-one-wire-verified-full-platform-delivery-incomplete",
   "summaryPath": "summary.json",
   "files": [
     {
@@ -88,6 +88,96 @@
       "path": "deployments/linux/20261112-post-reboot/unit-launch-safe.json",
       "sha256": "169667b0f0143516ae58a36e5fc02dded064efd24c21cde9c1e9fce7fc37f966",
       "bytes": 725
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/ExistingAliasGuard.java",
+      "sha256": "3f73a17be703d091e921e26e90e2f981fc6cf0bc3c68d91655af42801225ba72",
+      "bytes": 760
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/ExistingAliasGuardWithProvider.java",
+      "sha256": "40006721ac77b8b73ce9ab20cf5e4fcac573469ddec04764d89330be0891d7ec",
+      "bytes": 956
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/current-managed-listener-wire-binding-safe.json",
+      "sha256": "975766223361017967186bb61baf726797ee46d648d399907af6fa37f0f242e6",
+      "bytes": 465
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/current-native-identity-safe.json",
+      "sha256": "3945d4957c3b6cf722e9e8c874acf76d6f0c134dd3e9155de0df19c49b7e60cf",
+      "bytes": 698
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/existing-alias-guard-shell-v2-safe.json",
+      "sha256": "6b7bc36847467ce938e7350a1709e28689b8f531dac9c90c56f37d28cf2c01f0",
+      "bytes": 535
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/existing-alias-guard2-shell-v2-safe.json",
+      "sha256": "e4c20b224c5d25cba19495ff095962df1f81d8f7cad167e2497ffb0e57e827b4",
+      "bytes": 632
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/final-scope-safe.json",
+      "sha256": "ce9456a577154f15861c67b04e1b8506d7fc5d76c2e6a3f2bf3efef249f61ca8",
+      "bytes": 3410
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/independent-static-review-safe.json",
+      "sha256": "5fa31227cfa19c2932573677d0e3d9867835f0235c4a9497fa9caf2ab8aef4ed",
+      "bytes": 1136
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/initial-exec-out-alias-guard-abort-safe.json",
+      "sha256": "5dd50b042093dd2606c6bb8918d4b668435191ffd3e94b18486aabb1c5f2d467",
+      "bytes": 550
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/listener-current-revalidation-safe.json",
+      "sha256": "fe3c76c63b81d1d8176bffee2541cfac91c290b6af2c39ff1e1cc563c9514ae5",
+      "bytes": 725
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/native-product-after-safe.json",
+      "sha256": "409b62cf803b145c7d364e66277ad466c6183be569f2467e1fbabd2d1bdcddfe",
+      "bytes": 1043
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/native-product-metadata-safe.json",
+      "sha256": "281814a8e58a41656aebe4347bd5172a055f29d08f48382ddeb56df3d9e6ca8c",
+      "bytes": 1046
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/native-product-probe.mjs",
+      "sha256": "2d4d65a39d7d2cdca8b4d00dd006a8c098630ce29fb6eb5b3a031ea5a3aadc0c",
+      "bytes": 5991
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/native-product-wire-safe.json",
+      "sha256": "b129154986dfd05c58aba3ed912c0e80e82aac11af7eaf3c4d47d71db79ffd5e",
+      "bytes": 1179
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/normal-cleanup-and-original-record-retention-safe.json",
+      "sha256": "0ed1cba7551e49f6c4925746070833edbd8c5b52b5ed5ded4f0aeeb193289003",
+      "bytes": 897
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/normal-product-exit-request-safe.json",
+      "sha256": "b897041519a0a135115ba9a55eb9680864754220ce8feeb5a22ef897cff1572b",
+      "bytes": 335
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/normal-product-exit.mjs",
+      "sha256": "50a4562536c92a27fbcd7c0d9985172517fca4ef2cf49c7ec653553ee77a9d53",
+      "bytes": 2135
+    },
+    {
+      "path": "deployments/linux/20261113-native-original-one-wire/source-mappings-safe.json",
+      "sha256": "d334337674ed19967d2789fcd7c188329ed2ff7cf5a8ded3419120fa22c51fe1",
+      "bytes": 6731
     },
     {
       "path": "deployments/linux/20261113-userbus-managed-default/first-managed-after-stop-producer-public-safe.json",
@@ -458,6 +548,11 @@
       "path": "maintenance/git-delivery/twelfth-step-delivery-safe.json",
       "sha256": "71716f317ae33f95de2942f4c152d46c66de45da060188bce09a7b42df60fd07",
       "bytes": 727
+    },
+    {
+      "path": "maintenance/git-delivery/two-doc-continuation-steps-safe.json",
+      "sha256": "a03f2ceab1773d770b6eaf76fb68ab8d77757643ef548ef96eeef2c82651c9fb",
+      "bytes": 830
     },
     {
       "path": "maintenance/merged-branch-cleanup.json",
@@ -3116,8 +3211,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "cd164224c7be99c249f9e5cdac3ae18d66a1674ec4cebcaf4db0e37609bb71a1",
-      "bytes": 42574
+      "sha256": "3c58dca0d5adcb89c81c81a5a3f2d71828e5bc21f4dbd80be5c009796b234e56",
+      "bytes": 43817
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -3141,8 +3236,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "57525039ba817862a34e82b7d8edb87f545734e4e3728413b667d2e0d6500128",
-      "bytes": 61853
+      "sha256": "4816c8f8aa249b95edf1c250ee6c3841553a50a177c50999619149befe347e7f",
+      "bytes": 62845
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
@@ -3226,5 +3321,5 @@
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
-  "checkpointScope": "Previous594 archivefiles preserved except current summary/audit; originaltenth delivery copied byteexact plus sourceJSONL-bound originalexecutor terminal137 andcurrent22:34nativeaccess failures. HistoricalfailedDesktop18/runtime/handle receipts untouched. CurrentWindowsGUI/childrenlifetime unverified; no fullDesktop18/defaultreinstallation/platformcompletion claim. CurrentinternationalWorkBuddy fourmetadata200/fouradvertisedpayload404 andhomepage/clientbytesexact-history scope appended asfour safeJSONs only; no package/profile/install completion. CurrentClaude Storecatalog5.11492.0.0 vs historical5.1231.2.0/separateWinGet3.6556.2/exactofficialEXE+MSIX curl35+HTTPnull+0bytes appended assixsafeJSONs withsourcehashes. No downloadedpayload/Authenticode/install/currentregistration proof; originalStore1612andallhistoricalreceipts untouched. Eleventh607filecontinuation8548830/mainbdd8a0d delivery receipt plus currentthreecleanmergedworktrees/localbranches andsixexact-tip-leasedremote ref cleanup withindependentreview appended asfour byteexactsafeJSONs. Registered6; three nonancestor/dirtymonitor retained; 1023583391regularlogicalB notCphysical. Originalplatform/runtime gaps remain. Twelfth611filecleanup9a48d20/main1dec0b4 delivered; 27 producerpublicarchivefiles withoriginal26source mappings plusrootindependentlive/state andtwelfthdelivery byteexact appended. Managedoriginalsystemd269dbus recovery anddefault7337normalstop0/start0/current2888953+2888962 verified; originalfailures andpublicderivation scope retained. RealWSLrebootautostart andcurrentoriginalphonetokenwire nottested; Windowsentry110/fullDesktop18/vendorinstallation remain pending. Thirteenth delivery receipt8fa6bb7/main3f01075 appended byte-exact; current summary/audit/docs corrected from awaiting delivery to delivered. Historical native and lifecycle receipts remain unchanged; full platform completion is not claimed. Historical official Claude SFS strict per-request TLS/category404 receipt and public Microsoft Root2011 DER archived with local-byte verification. No current network/native/install verification inferred; no global trust changes."
+  "checkpointScope": "Previous594 archivefiles preserved except current summary/audit; originaltenth delivery copied byteexact plus sourceJSONL-bound originalexecutor terminal137 andcurrent22:34nativeaccess failures. HistoricalfailedDesktop18/runtime/handle receipts untouched. CurrentWindowsGUI/childrenlifetime unverified; no fullDesktop18/defaultreinstallation/platformcompletion claim. CurrentinternationalWorkBuddy fourmetadata200/fouradvertisedpayload404 andhomepage/clientbytesexact-history scope appended asfour safeJSONs only; no package/profile/install completion. CurrentClaude Storecatalog5.11492.0.0 vs historical5.1231.2.0/separateWinGet3.6556.2/exactofficialEXE+MSIX curl35+HTTPnull+0bytes appended assixsafeJSONs withsourcehashes. No downloadedpayload/Authenticode/install/currentregistration proof; originalStore1612andallhistoricalreceipts untouched. Eleventh607filecontinuation8548830/mainbdd8a0d delivery receipt plus currentthreecleanmergedworktrees/localbranches andsixexact-tip-leasedremote ref cleanup withindependentreview appended asfour byteexactsafeJSONs. Registered6; three nonancestor/dirtymonitor retained; 1023583391regularlogicalB notCphysical. Originalplatform/runtime gaps remain. Twelfth611filecleanup9a48d20/main1dec0b4 delivered; 27 producerpublicarchivefiles withoriginal26source mappings plusrootindependentlive/state andtwelfthdelivery byteexact appended. Managedoriginalsystemd269dbus recovery anddefault7337normalstop0/start0/current2888953+2888962 verified; originalfailures andpublicderivation scope retained. RealWSLrebootautostart andcurrentoriginalphonetokenwire nottested; Windowsentry110/fullDesktop18/vendorinstallation remain pending. Thirteenth delivery receipt8fa6bb7/main3f01075 appended byte-exact; current summary/audit/docs corrected from awaiting delivery to delivered. Historical native and lifecycle receipts remain unchanged; full platform completion is not claimed. Historical official Claude SFS strict per-request TLS/category404 receipt and public Microsoft Root2011 DER archived with local-byte verification. No current network/native/install verification inferred; no global trust changes. New native Linux original-one credential and current managed7337 GET200/nameMatch proven with existing alias/byte-exactAPK/XML and listener binding; initial abort/provider/exit-method failures retained, startup auto-reconnect and prelaunchLS limitations explicit. Own normalBack/forward2Dex cleanup proved, Windows originalfive/reboot remain pending. Previous two-doc continuation delivery335e52f/47ea750/main989f776 receipt appended byte-exact."
 }

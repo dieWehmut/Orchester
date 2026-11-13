@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "status": "two-separated-documentation-commits-pushed-merged-current-platform-goal-incomplete",
+  "observedAtUtc": "2026-11-13T03:02:55.083613+00:00",
+  "featureCommit": "47ea750fbeac8be4b736f0855307017be9b3679b",
+  "mainRevision": "989f7762e3b92fbf85ddd5d7b38b4580c02c47e9",
+  "separateFeatureCommits": [
+    "335e52f",
+    "47ea750"
+  ],
+  "actualFeaturePushExitCodes": [
+    0,
+    0
+  ],
+  "actualMainMergeExitCodes": [
+    0,
+    0
+  ],
+  "actualMainPushExitCodes": [
+    0,
+    0
+  ],
+  "bothRemoteRefsVerified": true,
+  "featureAncestorOfMain": true,
+  "bothWorktreesClean": true,
+  "manifestHashSizeMainGitBlobChecks": 644,
+  "sourceHashChecks": 731,
+  "currentGoalTurnClassification": "progress",
+  "fullObjectiveComplete": false,
+  "noInstallationOrDesktopAcceptanceCompletionInferred": true
+}

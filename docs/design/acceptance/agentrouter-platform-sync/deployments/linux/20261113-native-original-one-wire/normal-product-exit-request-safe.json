@@ -1,0 +1,10 @@
+{
+  "status": "normal-product-exit-requested",
+  "observedAtUtc": "2026-11-13T03:46:23.668Z",
+  "targetHost": "Linux",
+  "targetAppPid": 13826,
+  "normalProductExitRequested": false,
+  "forcedStopCalls": 0,
+  "appProcessDestructionClaimed": false,
+  "sourceSha256": "50a4562536c92a27fbcd7c0d9985172517fca4ef2cf49c7ec653553ee77a9d53"
+}

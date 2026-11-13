@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "status": "current-listener-revalidated-for-recorded-native-original-one-wire",
+  "observedAtUtc": "2026-11-13T03:56:32.899230+00:00",
+  "listenerPid": 2888962,
+  "listenerStartTicks": 6300089,
+  "managedPort": 7337,
+  "listenerElfSha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649",
+  "currentListeningSocketOwned": true,
+  "associatedWireProbeObservedAtUtc": "2026-11-13T03:41:54.153Z",
+  "associatedWireProbeSha256": "b129154986dfd05c58aba3ed912c0e80e82aac11af7eaf3c4d47d71db79ffd5e",
+  "associatedNativeSavedEndpointPredicateMatched": true,
+  "associatedNativeHttpStatus": 200,
+  "wireWasNotReexecutedByThisRevalidation": true,
+  "privateEndpointValuesIncluded": false
+}

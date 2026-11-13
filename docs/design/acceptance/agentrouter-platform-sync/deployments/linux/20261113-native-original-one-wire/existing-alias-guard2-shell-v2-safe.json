@@ -1,0 +1,12 @@
+{
+  "status": "existing-alias-guard-with-provider-execution",
+  "observedAtUtc": "2026-11-13T03:34:42.149452+00:00",
+  "actualShellV2ExitCode": 0,
+  "stdout": "GUARD_PID=13802\n{\"appUid\":10216,\"existingAliasPresent\":true,\"keyGenerationCalls\":0,\"credentialReads\":0}",
+  "stderr": "",
+  "sourceSha256": "40006721ac77b8b73ce9ab20cf5e4fcac573469ddec04764d89330be0891d7ec",
+  "dexSha256": "d597e37b5e5730c4db4f502d3ee771bcfe96e9a208c60a38338c00305fbcb80f",
+  "officialProviderSourceSha256": "94330409cc9ccdda914a7c8bf80005634bc2342c3daf5ec5fc3221e9d80bc6e8",
+  "credentialReadsRequested": 0,
+  "keyGenerationCallsRequested": 0
+}

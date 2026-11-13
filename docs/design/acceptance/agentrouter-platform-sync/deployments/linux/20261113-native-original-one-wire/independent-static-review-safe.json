@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "status": "independent-static-source-and-safe-receipt-review-completed",
+  "recordedAtUtc": "2026-11-13T04:01:42.158154+00:00",
+  "reviewerTask": "linux_wire_review",
+  "reviewedNativeDeviceOrNetworkStateIndependently": false,
+  "readPrivateAllowlistOrCredentialSources": false,
+  "sourceSha256BindingsChecked": 6,
+  "newFinalScopeClarificationsAccepted": true,
+  "newListenerWireShaTimestampPredicateAndStatusLinksMatched": true,
+  "originalRawReceiptsAndSourcesNeedNotBeChanged": true,
+  "localStorageRetentionScope": "03:41:05-03:43:41 UTC explicit probe; before-launch values not captured",
+  "nativeCredentialEvidenceScope": "nonempty native get result plus original XML/byte-identical plugin supports AES conclusion; no internal Cipher trace",
+  "normalExitScope": "App.exitApp method false/outer1; later normal Back and own foreground/transport cleanup are producer summaries",
+  "listenerTimingScope": "03:56 listener revalidation links recorded03:41 native wire; it is not simultaneous server-side request tracing",
+  "originalWindowsFiveCredentialWireVerified": false,
+  "fullGoalCompleted": false
+}

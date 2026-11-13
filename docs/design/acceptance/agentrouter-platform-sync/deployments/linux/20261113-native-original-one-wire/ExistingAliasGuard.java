@@ -1,0 +1,16 @@
+import java.security.KeyStore;
+public final class ExistingAliasGuard {
+ public static void main(String[] args) {
+  try {
+   if (android.os.Process.myUid() != 10216) throw new SecurityException("unexpected-app-uid");
+   KeyStore store = KeyStore.getInstance("AndroidKeyStore");
+   store.load(null);
+   boolean exists = store.containsAlias("orchester.remote.credentials.v1");
+   System.out.println("{\"appUid\":10216,\"existingAliasPresent\":" + exists + ",\"keyGenerationCalls\":0,\"credentialReads\":0}");
+   System.exit(exists ? 0 : 2);
+  } catch (Throwable error) {
+   System.out.println("{\"existingAliasPresent\":null,\"keyGenerationCalls\":0,\"credentialReads\":0,\"errorType\":\"" + error.getClass().getSimpleName() + "\"}");
+   System.exit(1);
+  }
+ }
+}
