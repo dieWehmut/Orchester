@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-13T14:48:33.549481Z",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "status": "fresh-current-worker-sdk-avd-ports-and-same-avd-gates-passed",
+  "namespaceId": "c5f9a692e9c24e1dbb2016d34d043c7f",
+  "bindingSha256": "0ce84cad70e70f2068cc5278877f0a2449d8cbbc3a9bf6fa4d494d2acfd3c7a2",
+  "oldExactProcesses": [
+    {
+      "role": "manager",
+      "pid": 30436,
+      "originalBirth": "134389406416098295",
+      "absent": false,
+      "reused": true,
+      "matchingTerminal": false
+    },
+    {
+      "role": "adb",
+      "pid": 14648,
+      "originalBirth": "134389406419545296",
+      "absent": false,
+      "reused": true,
+      "matchingTerminal": false
+    },
+    {
+      "role": "emulator",
+      "pid": 29496,
+      "originalBirth": "134389406419932540",
+      "absent": true,
+      "reused": false,
+      "matchingTerminal": false
+    },
+    {
+      "role": "qemu",
+      "pid": 11140,
+      "originalBirth": "134389406420584962",
+      "absent": false,
+      "reused": true,
+      "matchingTerminal": false
+    }
+  ],
+  "sameAvdProcessGuard": {
+    "schemaVersion": 1,
+    "status": "no-current-process-uses-original-medium-avd",
+    "observedAtUtc": "2026-11-13T14:48:33.4467602Z",
+    "currentCandidateCount": 0,
+    "currentOfficialSdkCandidateCount": 0,
+    "nonOfficialImageCandidateCount": 0,
+    "departedCandidateCount": 0,
+    "nativeCreationSubmicrosecondCandidateCount": 0,
+    "currentSameAvdProcessCount": 0,
+    "candidateReadUnknown": false,
+    "safeStage": "complete",
+    "safeFailureCode": null,
+    "safeNativeApi": null,
+    "safeNativeError": null,
+    "cimBirthComparisonPrecision": "microsecond",
+    "rawCommandLinesPathsUsersOrPrivateValuesIncluded": false,
+    "nonOfficialCommandLinesRead": 0,
+    "otherAvdProcessesSignalled": 0,
+    "productsStarted": 0,
+    "sourceSha256": "11795c1aa06f9ba6475158c5fde709d0eff4085fe41315e160e59cd3344bbc4e"
+  },
+  "currentWorker": {
+    "pid": 432400,
+    "createdExact": "134390532801688162",
+    "image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "sha256": "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+    "sessionId": 1,
+    "sameUserAsManager": true
+  },
+  "currentAvailabilityIsNotFutureReservation": true
+}

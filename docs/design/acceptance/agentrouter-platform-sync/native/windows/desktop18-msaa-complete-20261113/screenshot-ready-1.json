@@ -1,0 +1,10 @@
+{
+  "event": "screenshot_ready",
+  "index": 1,
+  "id": "7656c287c11ac494e6200fb8a6803483",
+  "nonce": "16520542746099c8219aecb507ebed3b450c2afd19ce145c",
+  "name": "desktop-secondary-history.png",
+  "sha256": "1ce6d984607c3b63388833617634f5995a192b033e59feb5d0d8e97c7d991b48",
+  "ackFile": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\d18m-1113-bf492b45\\screenshot-ack-7656c287c11ac494e6200fb8a6803483.json",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6"
+}

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "status": "actual-two-png-hashes-and-root-reviewed-acks-verified",
+  "reviewEvidence": "root reported independent VIEW_IMAGE opens on both actual PNGs, followed by exact actual screenshot_reviewed ACKs",
+  "rootViewImageReportedForBoth": true,
+  "pngOrAckFixturesUsed": false,
+  "thisArchiverOpenedImagesAgain": false,
+  "reviews": [
+    {
+      "index": 1,
+      "name": "desktop-secondary-history.png",
+      "pngBytes": 274562,
+      "pngSha256": "1ce6d984607c3b63388833617634f5995a192b033e59feb5d0d8e97c7d991b48",
+      "readyFile": "screenshot-ready-1.json",
+      "readySha256": "e11c384d2b9148b878071c614702a23cc2ead2aaeff672551eb9599b28f0c1b0",
+      "actualAckFile": "screenshot-ack-7656c287c11ac494e6200fb8a6803483.json",
+      "actualAckSha256": "8a56a69be6128a048c5a2592ea4ddcdfcde1fe8bc6f4cee1a36f7d3f66a24828",
+      "eventIdNonceNameHashAcceptedAllExact": true
+    },
+    {
+      "index": 2,
+      "name": "desktop-main-after-secondary-close.png",
+      "pngBytes": 277578,
+      "pngSha256": "cc57f4ad2e19b28b29700bdc4be56e80dfd6a76f15c8e78217d68130acf569da",
+      "readyFile": "screenshot-ready-2.json",
+      "readySha256": "aaa26480978fd8b0ec2d17c82470f92350cec4ff225cdcc128c200899a34317a",
+      "actualAckFile": "screenshot-ack-c8a7e99e5bb0054d203caa43f523b0f5.json",
+      "actualAckSha256": "7df34e0c5be1ec392cdfb31bd233e5d71ecdec7c9b27115d0b679b3c429aa7ec",
+      "eventIdNonceNameHashAcceptedAllExact": true
+    }
+  ]
+}

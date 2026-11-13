@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "status": "private-safe-assembly-originals-byte-exact",
+  "mappings": [
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android5-current-wire-runtime-20261113/runtime-c5f9a692e9c24e1dbb2016d34d043c7f/preflight-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt2/preflight-safe.json",
+      "sourceSha256": "12de06101ce6d4974a30430f58e18f67e311a5ebb6e238ff3fbb7d207244cfda",
+      "sourceBytes": 2381,
+      "archivedSha256": "12de06101ce6d4974a30430f58e18f67e311a5ebb6e238ff3fbb7d207244cfda",
+      "archivedBytes": 2381,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android5-current-wire-runtime-20261113/runtime-c5f9a692e9c24e1dbb2016d34d043c7f/devices-registration-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt2/devices-registration-safe.json",
+      "sourceSha256": "537feef2752cd9b83b19cb5c4ca8018b6d3f50197bd0ca640e3a663c5be172b3",
+      "sourceBytes": 666,
+      "archivedSha256": "537feef2752cd9b83b19cb5c4ca8018b6d3f50197bd0ca640e3a663c5be172b3",
+      "archivedBytes": 666,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android5-current-wire-runtime-20261113/runtime-c5f9a692e9c24e1dbb2016d34d043c7f/failure-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt2/failure-safe.json",
+      "sourceSha256": "2f880571cc52399fcab094bbff3ca46c67ba65fc61bb58444041f9ca2a1fbb77",
+      "sourceBytes": 456,
+      "archivedSha256": "2f880571cc52399fcab094bbff3ca46c67ba65fc61bb58444041f9ca2a1fbb77",
+      "archivedBytes": 456,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android5-current-wire-runtime-20261113/runtime-c5f9a692e9c24e1dbb2016d34d043c7f/terminal-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt2/terminal-safe.json",
+      "sourceSha256": "183ed1ed8eba627d91a6a6512d024358b27b079a19cf058db748ef23fb04d16d",
+      "sourceBytes": 1986,
+      "archivedSha256": "183ed1ed8eba627d91a6a6512d024358b27b079a19cf058db748ef23fb04d16d",
+      "archivedBytes": 1986,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/a5w4-4896ca7d/manager-bindings.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt2/manager-bindings.json",
+      "sourceSha256": "0ce84cad70e70f2068cc5278877f0a2449d8cbbc3a9bf6fa4d494d2acfd3c7a2",
+      "sourceBytes": 1160,
+      "archivedSha256": "0ce84cad70e70f2068cc5278877f0a2449d8cbbc3a9bf6fa4d494d2acfd3c7a2",
+      "archivedBytes": 1160,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/a5w4-4896ca7d/preflight4-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt2/preflight4-safe.json",
+      "sourceSha256": "90b444de104bad2a85e341acbe155a675790c1ba6b751b0ab583e9a7ad64bdab",
+      "sourceBytes": 7262,
+      "archivedSha256": "90b444de104bad2a85e341acbe155a675790c1ba6b751b0ab583e9a7ad64bdab",
+      "archivedBytes": 7262,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/a5w4-4896ca7d/session-proof-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt2/session-proof-safe.json",
+      "sourceSha256": "7b06f5b0ef535b23f6970bccfc73e12bfb95d96149e905d47f71139aa2bd84c8",
+      "sourceBytes": 424,
+      "archivedSha256": "7b06f5b0ef535b23f6970bccfc73e12bfb95d96149e905d47f71139aa2bd84c8",
+      "archivedBytes": 424,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/a5w4-4896ca7d/src/manage-owned-windows-original-avd.py",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt2/sources/manage-owned-windows-original-avd.py",
+      "sourceSha256": "6878d51581ed69c0d5baf70da758d2646d2c19ec1cc91c8f461e95d68a92f4f2",
+      "sourceBytes": 28256,
+      "archivedSha256": "6878d51581ed69c0d5baf70da758d2646d2c19ec1cc91c8f461e95d68a92f4f2",
+      "archivedBytes": 28256,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt4-1ed007a58623f12c8e1c1223/sources/029c9f29a001c7da525e7694786f7f3d.ps1",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt2/sources/029c9f29a001c7da525e7694786f7f3d.ps1",
+      "sourceSha256": "4ca748dafad33c8e371a6982d5f16b171195fa87f8bc114581b2670e3cfafcff",
+      "sourceBytes": 2794,
+      "archivedSha256": "4ca748dafad33c8e371a6982d5f16b171195fa87f8bc114581b2670e3cfafcff",
+      "archivedBytes": 2794,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt4-1ed007a58623f12c8e1c1223/jobs/029c9f29a001c7da525e7694786f7f3d/start-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt2/worker-job-start-safe.json",
+      "sourceSha256": "dd3c8a0890765faef8fb41946d4077d981925e04289f1ae1f7741fcc68a937fe",
+      "sourceBytes": 388,
+      "archivedSha256": "dd3c8a0890765faef8fb41946d4077d981925e04289f1ae1f7741fcc68a937fe",
+      "archivedBytes": 388,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt4-1ed007a58623f12c8e1c1223/jobs/029c9f29a001c7da525e7694786f7f3d/terminal-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt2/worker-job-terminal-safe.json",
+      "sourceSha256": "92863847be56a7f56b8db84ddadcfaf4be8a8be6df0719800d352e8a1508329a",
+      "sourceBytes": 453,
+      "archivedSha256": "92863847be56a7f56b8db84ddadcfaf4be8a8be6df0719800d352e8a1508329a",
+      "archivedBytes": 453,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/android5-current-wire-runtime-20261113/runtime-14e50741778942af8d28ce788cf9ee14/failure-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt3/failure-safe.json",
+      "sourceSha256": "3acbb45095fe140d2f5662c78622501b9870e2402c8cb2623e7c704b0b5e534c",
+      "sourceBytes": 453,
+      "archivedSha256": "3acbb45095fe140d2f5662c78622501b9870e2402c8cb2623e7c704b0b5e534c",
+      "archivedBytes": 453,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/a5w4-1b2f8e6a/manager-bindings.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt3/manager-bindings.json",
+      "sourceSha256": "3e804002d532472e1a8bd078396a6a8e68e7fe401d6a104c39d244c22b891889",
+      "sourceBytes": 1160,
+      "archivedSha256": "3e804002d532472e1a8bd078396a6a8e68e7fe401d6a104c39d244c22b891889",
+      "archivedBytes": 1160,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/a5w4-1b2f8e6a/preflight4-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt3/preflight4-safe.json",
+      "sourceSha256": "fcf831326d0709f2a517056fd857186085c9aa63b0ef85bd00fd8a9c03da02fe",
+      "sourceBytes": 7262,
+      "archivedSha256": "fcf831326d0709f2a517056fd857186085c9aa63b0ef85bd00fd8a9c03da02fe",
+      "archivedBytes": 7262,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/a5w4-1b2f8e6a/session-proof-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt3/session-proof-safe.json",
+      "sourceSha256": "d23798cdc63cbcb7fb46cbe51e5c08152e9b4bac0f83081686edc0434dcaa9d1",
+      "sourceBytes": 424,
+      "archivedSha256": "d23798cdc63cbcb7fb46cbe51e5c08152e9b4bac0f83081686edc0434dcaa9d1",
+      "archivedBytes": 424,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/a5w4-1b2f8e6a/src/manage-owned-windows-original-avd.py",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt3/sources/manage-owned-windows-original-avd.py",
+      "sourceSha256": "d45cfa2267dfe7e43e2da2ca63063a5480a13df199bcd2af63bbd5e6827a9947",
+      "sourceBytes": 28313,
+      "archivedSha256": "d45cfa2267dfe7e43e2da2ca63063a5480a13df199bcd2af63bbd5e6827a9947",
+      "archivedBytes": 28313,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt4-1ed007a58623f12c8e1c1223/sources/5d48496123deccd9626bd1aa55b726c4.ps1",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt3/sources/5d48496123deccd9626bd1aa55b726c4.ps1",
+      "sourceSha256": "4dd745f825c870c8d6571c50340216c46a34c0b7dbae07daadf3e28a343a2860",
+      "sourceBytes": 2794,
+      "archivedSha256": "4dd745f825c870c8d6571c50340216c46a34c0b7dbae07daadf3e28a343a2860",
+      "archivedBytes": 2794,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt4-1ed007a58623f12c8e1c1223/jobs/5d48496123deccd9626bd1aa55b726c4/start-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt3/worker-job-start-safe.json",
+      "sourceSha256": "f3b0ecfc88895e66cb27490c44008edd21420b704626dde04676cd797d32d508",
+      "sourceBytes": 387,
+      "archivedSha256": "f3b0ecfc88895e66cb27490c44008edd21420b704626dde04676cd797d32d508",
+      "archivedBytes": 387,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt4-1ed007a58623f12c8e1c1223/jobs/5d48496123deccd9626bd1aa55b726c4/terminal-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/android/worker4-original-five-owned-channel-20261113/attempt3/worker-job-terminal-safe.json",
+      "sourceSha256": "f35313088fb3036982b5d1b1505f0aa90607011e9196b4775d0d58f990565dc5",
+      "sourceBytes": 452,
+      "archivedSha256": "f35313088fb3036982b5d1b1505f0aa90607011e9196b4775d0d58f990565dc5",
+      "archivedBytes": 452,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    }
+  ],
+  "sourceMappingCount": 19,
+  "rawLogsKeyMacRequestOrCoordinateDiagnosticsRead": false
+}

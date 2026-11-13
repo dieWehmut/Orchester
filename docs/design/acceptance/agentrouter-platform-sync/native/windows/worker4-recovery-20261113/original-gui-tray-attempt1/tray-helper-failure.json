@@ -1,0 +1,15 @@
+{
+    "status":  "failed",
+    "stage":  "native-popup-accessibility",
+    "type":  "System.InvalidOperationException",
+    "staticCode":  "tray-native-menu-items-differ",
+    "popupCount":  1,
+    "postMessageError":  0,
+    "itemCount":  0,
+    "unknownLabelCount":  0,
+    "knownMenuLabels":  [
+
+                        ],
+    "menuInvoked":  false,
+    "modelCalls":  0
+}

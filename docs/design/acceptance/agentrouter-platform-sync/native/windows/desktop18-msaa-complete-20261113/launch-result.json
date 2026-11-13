@@ -1,0 +1,22 @@
+{
+    "ProcessId":  443516,
+    "Created":  134390565318720113,
+    "Path":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\desktop-candidate\\orchester-desktop.exe",
+    "binarySha256":  "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+    "packageDirectory":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\desktop-candidate",
+    "uiFontAssetPins":  [
+                            {
+                                "path":  "web/assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+                                "sha256":  "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b"
+                            }
+                        ],
+    "stateHome":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\d18m-1113-bf492b45\\state-home",
+    "webViewProfile":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\d18m-1113-bf492b45\\webview-profile",
+    "cdpPort":  19322,
+    "sourceRevision":  "71def643cb08b208cc79687f79255c504eb14dc6",
+    "expectedPlanSha256":  "8645dca6d20f2d5ff0d845d7c74522f52ca72c6aec49ec9529dcb86a997911cd",
+    "expectedFinalResultSha256":  "7ddcd67633e127a4b664dc69d91cf20bd8751a9ab6a009d8ca73d9b0951fe023",
+    "expectedRuntimeInputsSha256":  "b364598c896cbcd8f4c7a70129a3ecbb6088f8930a0ea591a3860aaba6c7f86f",
+    "ackTimeoutSeconds":  900,
+    "modelCalls":  0
+}

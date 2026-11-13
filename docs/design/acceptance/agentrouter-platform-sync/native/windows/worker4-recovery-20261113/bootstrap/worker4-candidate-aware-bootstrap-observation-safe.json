@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-13T14:05:55.855298+00:00",
+  "sourceSha256": "fb13624a6d20d3fc4c65cd6d38b89acf2fcafd86fbfb9876eb073d294811e09f",
+  "actualInteropExitCode": 1,
+  "stdoutBytes": 0,
+  "stderrBytes": 67,
+  "nativeBootstrapStartedSafePresent": false,
+  "nativeWorkerReadySafePresent": false,
+  "rawLogsArchived": false,
+  "workerLiveClaimed": false
+}

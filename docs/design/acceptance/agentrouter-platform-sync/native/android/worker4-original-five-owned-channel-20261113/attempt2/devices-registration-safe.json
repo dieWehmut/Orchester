@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-13T14:48:56.109795Z",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "status": "original-private-adb-target-registered",
+  "namespaceId": "c5f9a692e9c24e1dbb2016d34d043c7f",
+  "bindingSha256": "0ce84cad70e70f2068cc5278877f0a2449d8cbbc3a9bf6fa4d494d2acfd3c7a2",
+  "probeNumber": 19,
+  "nativeProbeExitCode": 0,
+  "targetCount": 1,
+  "unexpectedTargetCount": 0,
+  "originalTargetState": "device",
+  "currentNativeOwnershipVerifiedBeforeAndAfterProbe": true,
+  "rawCommandOutputOrPrivateValuesIncluded": false,
+  "maximumWaitSeconds": 240,
+  "timeoutNeverForcesNativeExit": true
+}

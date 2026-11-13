@@ -1,0 +1,10 @@
+{
+    "guiExitCode":  0,
+    "passiveWaitSeconds":  5,
+    "remainingIdentities":  [
+
+                            ],
+    "unexpectedDescendants":  0,
+    "forcedTerminations":  0,
+    "modelCalls":  0
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "status": "worker4-owned-channel-progress-preserved-not-current-windows-five-wire-acceptance",
+  "attempt2": {
+    "namespaceId": "c5f9a692e9c24e1dbb2016d34d043c7f",
+    "registrationProbeNumber": 19,
+    "nativeRegistrationProbeExitCode": 0,
+    "singleExpectedDeviceRegistered": true,
+    "failureCode": "native-avd-name-differs",
+    "actualWorkerJobExitCode": 1,
+    "actualManagerSourceSha256": "6878d51581ed69c0d5baf70da758d2646d2c19ec1cc91c8f461e95d68a92f4f2",
+    "parserRequiresExactStrippedWholeOutputSplitlines": true,
+    "rawAvdNameOutputReadByThisAssembly": false,
+    "allTwentySixOriginalCreatorsExit0": true,
+    "qemuQueryExit0": true,
+    "allFourPortsReleased": true,
+    "normalQuitRequested": true,
+    "terminalObservedAtUtc": "2026-11-13T14:51:29.429470Z",
+    "appOrCredentialOrHttpOperations": 0
+  },
+  "attempt3": {
+    "namespaceId": "14e50741778942af8d28ce788cf9ee14",
+    "failureCode": "fresh-native-preflight-required",
+    "failurePhase": "binding-preflight",
+    "childrenCreated": 0,
+    "appOrCredentialOrHttpOperations": 0,
+    "actualWorkerJobExitCode": 1,
+    "managerSourceSha256": "d45cfa2267dfe7e43e2da2ca63063a5480a13df199bcd2af63bbd5e6827a9947",
+    "successorFiltersBlankLinesBeforeSameExactNameAndOKCheck": true,
+    "freshPreflightFailedBeforeNativeChildrenCreation": true
+  },
+  "currentWindowsOriginalFiveWireVerified": false,
+  "sourceMappings": "source-mappings-safe.json",
+  "rawPrivateCommandOutputIncluded": false,
+  "forcedTerminations": 0,
+  "fullAcceptanceClaimed": false
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "purpose": "windows-original-five-owned-manager",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "managerSourceSha256": "bfabe11f7352809885167c75f6e0556c1ebe3ce64ff65537e534b413ecd97027",
+  "sameAvdGuardSha256": "11795c1aa06f9ba6475158c5fde709d0eff4085fe41315e160e59cd3344bbc4e",
+  "namespaceId": "f2a1d6fffa3f4cd5988c8e9ec172eb98",
+  "outputDirectory": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\android5-current-wire-runtime-20261113\\runtime-f2a1d6fffa3f4cd5988c8e9ec172eb98",
+  "nativeWorker": {
+    "pid": 432400,
+    "createdExact": "134390532801688162",
+    "imageSha256": "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+    "sessionId": 1
+  },
+  "currentPreflightFile": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\a5w4-b03a222c\\preflight4-safe.json",
+  "currentPreflightSha256": "2865224efe20c9e43910301943eae3b8f9c9c4b5222d19bddaaf3c7d53aec8c3",
+  "rootNativeSessionProofFile": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\a5w4-b03a222c\\session-proof-safe.json",
+  "rootNativeSessionProofSha256": "93032f3abb174abfc13df00d23834df2f0b50e827c323b16d096ff9282033ee2"
+}

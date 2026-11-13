@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "status": "private-safe-assembly-originals-byte-exact",
+  "mappings": [
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt4-1ed007a58623f12c8e1c1223/jobs/568c3763e3a04c4a720f3c39c8e20309/start-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/original-gui-msaa-normal-exit-20261113/start-safe.json",
+      "sourceSha256": "e0569f7e951e26b9120094ef47afdd4e2c754a29beb342c7670fdeeb8ad19ae5",
+      "sourceBytes": 387,
+      "archivedSha256": "e0569f7e951e26b9120094ef47afdd4e2c754a29beb342c7670fdeeb8ad19ae5",
+      "archivedBytes": 387,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt4-1ed007a58623f12c8e1c1223/jobs/568c3763e3a04c4a720f3c39c8e20309/terminal-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/original-gui-msaa-normal-exit-20261113/terminal-safe.json",
+      "sourceSha256": "34d424f81824f8e2b40e269152be16d208308b0bdf0c8e9b28a5f1bfb5c33685",
+      "sourceBytes": 452,
+      "archivedSha256": "34d424f81824f8e2b40e269152be16d208308b0bdf0c8e9b28a5f1bfb5c33685",
+      "archivedBytes": 452,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt4-1ed007a58623f12c8e1c1223/jobs/568c3763e3a04c4a720f3c39c8e20309/fresh-held-original-gui-tray-before-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/original-gui-msaa-normal-exit-20261113/fresh-held-original-gui-tray-before-safe.json",
+      "sourceSha256": "70270f99efa4cddc9929de4669b38a42ce9908fa2d40379daaacb4f2ac9b41b4",
+      "sourceBytes": 8011,
+      "archivedSha256": "70270f99efa4cddc9929de4669b38a42ce9908fa2d40379daaacb4f2ac9b41b4",
+      "archivedBytes": 8011,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt4-1ed007a58623f12c8e1c1223/jobs/568c3763e3a04c4a720f3c39c8e20309/fresh-held-original-gui-normal-tray-terminal-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/original-gui-msaa-normal-exit-20261113/fresh-held-original-gui-normal-tray-terminal-safe.json",
+      "sourceSha256": "2d36530939910f347e23fa0302984af7c1f69b310cfeec40735e25fbbbbba807",
+      "sourceBytes": 8846,
+      "archivedSha256": "2d36530939910f347e23fa0302984af7c1f69b310cfeec40735e25fbbbbba807",
+      "archivedBytes": 8846,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt4-1ed007a58623f12c8e1c1223/jobs/568c3763e3a04c4a720f3c39c8e20309/tray-uia-before-msaa-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/original-gui-msaa-normal-exit-20261113/tray-uia-before-msaa-safe.json",
+      "sourceSha256": "8697626b349bc59a79a59ff20d94a0b808bb1f99a87ad7de3b3e84439b055039",
+      "sourceBytes": 315,
+      "archivedSha256": "8697626b349bc59a79a59ff20d94a0b808bb1f99a87ad7de3b3e84439b055039",
+      "archivedBytes": 315,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt4-1ed007a58623f12c8e1c1223/jobs/568c3763e3a04c4a720f3c39c8e20309/tray-msaa-first-read-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/original-gui-msaa-normal-exit-20261113/tray-msaa-first-read-safe.json",
+      "sourceSha256": "66150384f52a334ce4d9a578ebf04c719db418454ee37745c3d22d9f4af1b58c",
+      "sourceBytes": 1465,
+      "archivedSha256": "66150384f52a334ce4d9a578ebf04c719db418454ee37745c3d22d9f4af1b58c",
+      "archivedBytes": 1465,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt4-1ed007a58623f12c8e1c1223/jobs/568c3763e3a04c4a720f3c39c8e20309/tray-menu-observation.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/original-gui-msaa-normal-exit-20261113/tray-menu-observation.json",
+      "sourceSha256": "8c4182591e68431cb709f1ea80655e192baca69bb69ee3d7f85add662ea7bcb5",
+      "sourceBytes": 1860,
+      "archivedSha256": "8c4182591e68431cb709f1ea80655e192baca69bb69ee3d7f85add662ea7bcb5",
+      "archivedBytes": 1860,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/tray-msaa-succ-20261113/NativeTrayQuit.cs",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/original-gui-msaa-normal-exit-20261113/sources/NativeTrayQuit.cs",
+      "sourceSha256": "5e33b5f26a7250aaa8c5c86f0b5540e1a7dd07106cfce00570d9e31a4becd32c",
+      "sourceBytes": 17145,
+      "archivedSha256": "5e33b5f26a7250aaa8c5c86f0b5540e1a7dd07106cfce00570d9e31a4becd32c",
+      "archivedBytes": 17145,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/tray-msaa-succ-20261113/invoke-owned-tray-quit.ps1",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/original-gui-msaa-normal-exit-20261113/sources/invoke-owned-tray-quit.ps1",
+      "sourceSha256": "215c7279b991264a5bba35518aabdd0c71ebaa8f9dd04be90a7e993e7b05b30e",
+      "sourceBytes": 10951,
+      "archivedSha256": "215c7279b991264a5bba35518aabdd0c71ebaa8f9dd04be90a7e993e7b05b30e",
+      "archivedBytes": 10951,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/tray-msaa-succ-20261113/original-gui-normal-tray-current-held-msaa-successor-20261113.ps1",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/original-gui-msaa-normal-exit-20261113/sources/original-gui-normal-tray-current-held-msaa-successor-20261113.ps1",
+      "sourceSha256": "ba59800b1a5c0c56379d84ee47ba5287c1931aecfae7b836af6b89e7a77df174",
+      "sourceBytes": 15152,
+      "archivedSha256": "ba59800b1a5c0c56379d84ee47ba5287c1931aecfae7b836af6b89e7a77df174",
+      "archivedBytes": 15152,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/tray-msaa-succ-20261113/prepared-msaa-successor-plan-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/original-gui-msaa-normal-exit-20261113/sources/prepared-msaa-successor-plan-safe.json",
+      "sourceSha256": "dbc9f31a73f3813134c476ca2adcb31def7d61d1442ec90caa0bbb9ed0965e7d",
+      "sourceBytes": 4034,
+      "archivedSha256": "dbc9f31a73f3813134c476ca2adcb31def7d61d1442ec90caa0bbb9ed0965e7d",
+      "archivedBytes": 4034,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt4-1ed007a58623f12c8e1c1223/sources/568c3763e3a04c4a720f3c39c8e20309.ps1",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/original-gui-msaa-normal-exit-20261113/sources/568c3763e3a04c4a720f3c39c8e20309.ps1",
+      "sourceSha256": "7875812850b5ff9f1c09e8c10ee3d6bb431fe2f1b2e0540c3360c73ebed73266",
+      "sourceBytes": 15300,
+      "archivedSha256": "7875812850b5ff9f1c09e8c10ee3d6bb431fe2f1b2e0540c3360c73ebed73266",
+      "archivedBytes": 15300,
+      "transform": "byte-exact-captured-source",
+      "sourceUnchangedThroughCopy": true
+    }
+  ],
+  "sourceMappingCount": 12,
+  "rawLogsKeyMacRequestOrCoordinateDiagnosticsRead": false
+}

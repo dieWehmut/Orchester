@@ -1,2 +1,7 @@
 # Preserve exact source receipt bytes, including native Windows CRLF records.
 agentrouter-platform-sync/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# These native source snapshots retain their original trailing blank line.
+agentrouter-platform-sync/native/windows/original-gui-msaa-normal-exit-20261113/sources/568c3763e3a04c4a720f3c39c8e20309.ps1 -text whitespace=-blank-at-eof,blank-at-eol,space-before-tab,cr-at-eol
+agentrouter-platform-sync/native/windows/original-gui-msaa-normal-exit-20261113/sources/original-gui-normal-tray-current-held-msaa-successor-20261113.ps1 -text whitespace=-blank-at-eof,blank-at-eol,space-before-tab,cr-at-eol
+agentrouter-platform-sync/native/windows/worker4-recovery-20261113/sources/d07bd4381cf7bc8b9bbb8f0324bfc8f7.ps1 -text whitespace=-blank-at-eof,blank-at-eol,space-before-tab,cr-at-eol

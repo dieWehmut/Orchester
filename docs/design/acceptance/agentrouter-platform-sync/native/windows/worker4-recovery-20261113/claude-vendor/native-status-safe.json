@@ -1,0 +1,59 @@
+{
+    "phase":  "failed-no-platform-nonexistence-conclusion",
+    "exit_code":  13,
+    "complete_html_read":  false,
+    "source_url":  "https://claude.ai/download",
+    "final_source_url_without_query":  null,
+    "http_code":  null,
+    "content_type":  null,
+    "declared_content_length":  null,
+    "source_html_encoding_name":  null,
+    "bytes_written":  0,
+    "body_sha256":  null,
+    "retained_body_path":  null,
+    "body_is_partial":  true,
+    "safe_proxy_meta":  {
+                            "default_proxy_present":  true,
+                            "target_is_bypassed":  false,
+                            "resolved_route_is_direct":  false,
+                            "resolved_proxy_is_loopback":  true,
+                            "non_loopback_endpoint_withheld":  false,
+                            "endpoint":  {
+                                             "protocol":  "http",
+                                             "host":  "127.0.0.1",
+                                             "port":  7897
+                                         },
+                            "evaluation_error_type":  null
+                        },
+    "page_trace":  {
+                       "http_code":  null,
+                       "redirects":  0,
+                       "final_url_without_query":  null,
+                       "final_url_query_present":  false,
+                       "content_type":  null,
+                       "content_length":  null,
+                       "off_vendor_or_non_https_redirect_blocked":  false
+                   },
+    "redirects":  0,
+    "challenge_page_detected":  false,
+    "linux_candidates":  [
+
+                         ],
+    "linux_candidates_present":  false,
+    "head_results":  [
+
+                     ],
+    "head_metadata_incomplete":  false,
+    "candidate_limit_reached":  false,
+    "credential_bearing_hrefs_omitted":  false,
+    "unsupported_href_whitespace_omitted":  false,
+    "base_href_present":  false,
+    "relative_hrefs_withheld_due_to_base":  false,
+    "exception_type":  "System.Management.Automation.MethodInvocationException",
+    "web_exception_status":  "SendFailure",
+    "native_hresult":  -2146233087,
+    "linux_release_nonexistence_concluded":  false,
+    "complete_installer_downloaded":  false,
+    "payload_executed":  false,
+    "pac_or_bypass_values_emitted":  false
+}

@@ -1,0 +1,762 @@
+{
+  "passed": true,
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "expectedPlanSha256": "8645dca6d20f2d5ff0d845d7c74522f52ca72c6aec49ec9529dcb86a997911cd",
+  "expectedFinalResultSha256": "7ddcd67633e127a4b664dc69d91cf20bd8751a9ab6a009d8ca73d9b0951fe023",
+  "binarySha256": "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+  "checks": [
+    "saved fixture transcript and main UI save succeeded",
+    "main HWND shown with native maximize hit testing",
+    "invalid conversation identifier rejected without creating window",
+    "secondary bootstrap retains shared HttpOnly Cookie, CSRF token and expiry",
+    "actual secondary HWND shown with native chrome, renamed title and authenticated saved transcript",
+    "original main-window CSRF permits PUT 200 after secondary bootstrap",
+    "main and secondary UI saves both succeed with revision conflict recovery",
+    "secondary original CSRF permits PUT 200 after main changes",
+    "secondary receives allowed window controls and ungranted hide remains denied",
+    "secondary caller opens another authorized native window and original main CSRF stays valid",
+    "native navigation rejects a different loopback origin",
+    "native popup policy denies browser-created windows",
+    "all twenty-one canonical provider identities and every corresponding official image load in the native WebView",
+    "actual DTO and native service units agree and shared editor sources remain unavailable with unknown or lower-bound counts",
+    "secondary reload preserves authentication and restores final saved title and answer",
+    "closing secondary windows destroys their HWNDs and WebViews",
+    "main UI remains writable after both secondary windows close",
+    "main close hides its HWND while WebView and embedded server remain healthy"
+  ],
+  "writes": [
+    {
+      "label": "main UI before child",
+      "status": 200,
+      "revision": 1
+    },
+    {
+      "label": "main original CSRF after child bootstrap",
+      "status": 200,
+      "revision": 2
+    },
+    {
+      "label": "child UI after main API save",
+      "status": 200,
+      "revision": 3
+    },
+    {
+      "label": "main UI after child UI save",
+      "status": 200,
+      "revision": 4
+    },
+    {
+      "label": "child original CSRF after main UI save",
+      "status": 200,
+      "revision": 5
+    },
+    {
+      "label": "main original CSRF after third window bootstrap",
+      "status": 200,
+      "revision": 6
+    },
+    {
+      "label": "main UI after secondary windows close",
+      "status": 200,
+      "revision": 7
+    }
+  ],
+  "authentication": {
+    "cookieStable": true,
+    "csrfStable": true,
+    "expiryStable": true,
+    "httpOnly": true,
+    "sameSite": "Lax",
+    "actualMainPutAfterSecondary": 200
+  },
+  "windows": {
+    "main": [
+      {
+        "Handle": 32704554,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 3200,
+        "Height": 2000,
+        "Dpi": 240,
+        "MaximizeHit": 9
+      }
+    ],
+    "secondary": [
+      {
+        "Handle": 2624030,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 3200,
+        "Height": 2000,
+        "Dpi": 240,
+        "MaximizeHit": 9
+      },
+      {
+        "Handle": 32704554,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 3200,
+        "Height": 2000,
+        "Dpi": 240,
+        "MaximizeHit": 9
+      }
+    ],
+    "nested": [
+      {
+        "Handle": 20252874,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 3200,
+        "Height": 2000,
+        "Dpi": 240,
+        "MaximizeHit": 9
+      },
+      {
+        "Handle": 2624030,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 3200,
+        "Height": 2000,
+        "Dpi": 240,
+        "MaximizeHit": 9
+      },
+      {
+        "Handle": 32704554,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 3200,
+        "Height": 2000,
+        "Dpi": 240,
+        "MaximizeHit": 9
+      }
+    ],
+    "afterSecondaryClose": [
+      {
+        "Handle": 32704554,
+        "Title": "Orchester",
+        "Visible": true,
+        "Width": 3200,
+        "Height": 2000,
+        "Dpi": 240,
+        "MaximizeHit": 9
+      }
+    ],
+    "mainHidden": [
+      {
+        "Handle": 32704554,
+        "Title": "Orchester",
+        "Visible": false,
+        "Width": 3200,
+        "Height": 2000,
+        "Dpi": 240,
+        "MaximizeHit": 9
+      }
+    ]
+  },
+  "health": {
+    "afterSecondaryClose": 200,
+    "afterMainHide": 200
+  },
+  "pageErrors": [],
+  "uiFontProof": {
+    "body": {
+      "fontFamily": "\"LXGW WenKai\", \"PingFang SC\", \"Microsoft YaHei\", \"Noto Sans SC\", system-ui, sans-serif",
+      "fontWeight": "400"
+    },
+    "threadTitle": {
+      "fontFamily": "\"LXGW WenKai\", \"PingFang SC\", \"Microsoft YaHei\", \"Noto Sans SC\", system-ui, sans-serif",
+      "fontWeight": "500"
+    },
+    "lxgwFaces": [
+      {
+        "family": "LXGW WenKai",
+        "status": "loaded"
+      }
+    ],
+    "measurement": {
+      "text": "字体一致 Font 123",
+      "fontSizePx": 16,
+      "fontWeight": 400,
+      "fontFamily": "\"LXGW WenKai\", \"PingFang SC\", \"Microsoft YaHei\", \"Noto Sans SC\", system-ui, sans-serif",
+      "width": 137.471923828125
+    },
+    "assetPins": [
+      {
+        "path": "web/assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+        "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b"
+      }
+    ]
+  },
+  "monitorProof": {
+    "roster": [
+      {
+        "id": "codex",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "claude",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "deepseek",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "opencode",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "gemini",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "antigravity",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "cursor",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "workbuddy",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "workbuddy_global",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "qwen",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "openclaw",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "cline",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "roo",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "kilo",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "hermes",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "pi",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "crush",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "claude_app",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "trae",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "zcode",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      },
+      {
+        "id": "craft",
+        "officialSourceBoundByBuildInputs": true,
+        "loaded": true,
+        "themeImagesLoaded": 2,
+        "darkAndLightSwitchObserved": true,
+        "instanceCount": 1
+      }
+    ],
+    "units": [
+      {
+        "id": "codex",
+        "unit": "processes",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "codex",
+            "provider": "codex",
+            "unit": "windows",
+            "externalSource": false,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "claude",
+        "unit": "processes",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "claude",
+            "provider": "claude",
+            "unit": "windows",
+            "externalSource": false,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "deepseek",
+        "unit": "processes",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "deepseek",
+            "provider": "deepseek",
+            "unit": "processes",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "opencode",
+        "unit": "processes",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "opencode",
+            "provider": "opencode",
+            "unit": "windows",
+            "externalSource": false,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "gemini",
+        "unit": "processes",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "gemini",
+            "provider": "gemini",
+            "unit": "processes",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "antigravity",
+        "unit": "processes",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "antigravity",
+            "provider": "antigravity",
+            "unit": "processes",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "cursor",
+        "unit": "processes",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "cursor",
+            "provider": "cursor",
+            "unit": "processes",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "workbuddy",
+        "unit": "services",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "workbuddy",
+            "provider": "workbuddy",
+            "unit": "services",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "workbuddy_global",
+        "unit": "services",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "workbuddy_global",
+            "provider": "workbuddy_global",
+            "unit": "services",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "qwen",
+        "unit": "processes",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "qwen",
+            "provider": "qwen",
+            "unit": "processes",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "openclaw",
+        "unit": "services",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "openclaw",
+            "provider": "openclaw",
+            "unit": "services",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "cline",
+        "unit": "processes",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "cline",
+            "provider": "cline",
+            "unit": "processes",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "roo",
+        "unit": "processes",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "roo",
+            "provider": "roo",
+            "unit": "processes",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "kilo",
+        "unit": "processes",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "kilo",
+            "provider": "kilo",
+            "unit": "processes",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "hermes",
+        "unit": "processes",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "hermes",
+            "provider": "hermes",
+            "unit": "processes",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "pi",
+        "unit": "processes",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "pi",
+            "provider": "pi",
+            "unit": "processes",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "crush",
+        "unit": "processes",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "crush",
+            "provider": "crush",
+            "unit": "processes",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "claude_app",
+        "unit": "services",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "claude_app",
+            "provider": "claude_app",
+            "unit": "services",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "trae",
+        "unit": "services",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "trae",
+            "provider": "trae",
+            "unit": "services",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "zcode",
+        "unit": "services",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "zcode",
+            "provider": "zcode",
+            "unit": "services",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      },
+      {
+        "id": "craft",
+        "unit": "services",
+        "instanceCount": 1,
+        "instances": [
+          {
+            "agentId": "craft",
+            "provider": "craft",
+            "unit": "services",
+            "externalSource": true,
+            "actualDtoAndNativeUiAgree": true,
+            "loaded": true,
+            "themeImagesLoaded": 2,
+            "darkAndLightSwitchObserved": true
+          }
+        ]
+      }
+    ],
+    "sharedEditors": [
+      {
+        "id": "cline",
+        "unavailableSourceVisible": true,
+        "countKind": "unknown"
+      },
+      {
+        "id": "roo",
+        "unavailableSourceVisible": true,
+        "countKind": "unknown"
+      },
+      {
+        "id": "kilo",
+        "unavailableSourceVisible": true,
+        "countKind": "unknown"
+      }
+    ]
+  },
+  "scope": {
+    "isolatedExecutable": true,
+    "isolatedOrchesterHome": true,
+    "isolatedWebViewProfile": true,
+    "savedDelegateFixture": true,
+    "installedUserApplicationTouched": false,
+    "modelRunsRequested": false
+  },
+  "screenshotAcknowledgements": [
+    {
+      "index": 1,
+      "id": "7656c287c11ac494e6200fb8a6803483",
+      "name": "desktop-secondary-history.png",
+      "sha256": "1ce6d984607c3b63388833617634f5995a192b033e59feb5d0d8e97c7d991b48",
+      "accepted": true
+    },
+    {
+      "index": 2,
+      "id": "c8a7e99e5bb0054d203caa43f523b0f5",
+      "name": "desktop-main-after-secondary-close.png",
+      "sha256": "cc57f4ad2e19b28b29700bdc4be56e80dfd6a76f15c8e78217d68130acf569da",
+      "accepted": true
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+    "schemaVersion":  1,
+    "status":  "fresh-held-current-worker-session-observed",
+    "observedAtUtc":  "2026-11-13T14:53:05.6078417Z",
+    "workerPid":  432400,
+    "creationFiletimeExact":  "134390532801688162",
+    "imageSha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+    "sessionId":  1,
+    "nativeHandleHeldThroughObservation":  true,
+    "rawUserOrSidIncluded":  false
+}

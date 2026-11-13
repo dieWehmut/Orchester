@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "status": "private-assembly-prepared-current-native-route-restored-full-objective-incomplete",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "assembledAtUtc": "2026-11-13T14:50:58.431473+00:00",
+  "privateAssemblyOnly": true,
+  "nativeWorker": {
+    "pid": 432400,
+    "createdExact": "134390532801688162",
+    "exactBirthUtc": "2026-11-13T14:21:20.1688162Z",
+    "sourceSha256": "16ee5cae10190473a2f05b1c496d1323b1c929763d3ce2b9b37570f976b461b5",
+    "nativeBootstrapActualExitCode": 0,
+    "twoDistinctHeartbeatObservationsPreserved": true,
+    "helloActualNativeExitCode": 0,
+    "currentTaskFileTransportNativeJobExecutionVerified": true,
+    "allInteropRoutesRecoveredClaimed": false
+  },
+  "inputDesktop": {
+    "actualNativeExitCode": 0,
+    "freshHeldOriginalGuiPid": 37324,
+    "exactGuiBirthAndImageMatched": true,
+    "currentObservedOriginalGuiLive": true,
+    "sameWindowsSession1": true,
+    "windowStationWinSta0": true,
+    "threadAndInputDesktopDefault": true,
+    "cursorReadSucceeded": true,
+    "cursorCoordinatesIncluded": false,
+    "activePhysicalConsoleSessionId": 2,
+    "physicalConsoleAligned": false,
+    "successfulTrayInputGuaranteed": false
+  },
+  "normalTrayAttempt": {
+    "actualNativeExitCode": 1,
+    "originalGuiAndEightCurrentlyObservedDescendantIdentitiesFreshlyBound": true,
+    "helperInvoked": true,
+    "helperReturned": false,
+    "failureStaticCode": "tray-native-menu-items-differ",
+    "popupCount": 1,
+    "itemCount": 0,
+    "menuInvoked": false,
+    "normalTrayExitVerified": false,
+    "forcedTerminations": 0
+  },
+  "androidFivePreflight": {
+    "actualNativeExitCode": 0,
+    "worker432400SameSession1FreshlyBound": true,
+    "sixSdkAvdPinsMatch": true,
+    "fourTaskPortsAbsentAtObservation": true,
+    "oldPidReusedIdentitiesNotQueriedOrSignalled": true,
+    "currentAndroidTargetIdentityVerified": false,
+    "originalCredentialsRead": false
+  },
+  "androidFiveManagerAttempt1": {
+    "wrapperActualNativeExitCode": 1,
+    "preflightPassed": true,
+    "failureCode": "private-adb-target-set-differs",
+    "appOrCredentialOrHttpOperations": 0,
+    "normalQuitRequested": true,
+    "allSevenOriginalCreatorExitCodes": 0,
+    "qemuQueryHandleExitCode": 0,
+    "allCreatedNativeHandlesActuallyTerminal": true,
+    "allFourPrivatePortsReleased": true,
+    "forcedTerminations": 0,
+    "currentWindowsOriginalFiveWireVerified": false,
+    "mutableManagerCurrentNotUsedAsFinalProof": true
+  },
+  "claudeVendorAttempt": {
+    "outerAndInnerActualNativeExitCode": 13,
+    "sourceUrl": "https://claude.ai/download",
+    "webExceptionStatus": "SendFailure",
+    "httpStatus": null,
+    "bytesWritten": 0,
+    "completeHtmlRead": false,
+    "officialLinuxReleaseNonexistenceConcluded": false,
+    "payloadOrGuiExecuted": false,
+    "rawOutputsOmittedOnlyFromDerivedPageReceipt": true
+  },
+  "fullDesktop18Passed": false,
+  "defaultDesktopReinstallationOrPromotionCompleted": false,
+  "fullObjectiveComplete": false,
+  "excludedUnread": [
+    "all request JSON and MAC fields",
+    "bridge-key-private.bin and private key bytes",
+    "private baselines and original app/credential/state values",
+    "stdout-native.log and stderr-native.log or other raw output log files",
+    "tray-thread/icon-rectangle/popup diagnostics containing coordinates",
+    "mutable manager-current receipt as final proof"
+  ],
+  "remaining": [
+    "Diagnose current normal-tray accessibility menu failure and complete original GUI normal exit before full Desktop18/current21x42/default reinstall.",
+    "Current Windows original-five token wire acceptance not performed: first same-AVD manager failed startup, although own normal cleanup completed.",
+    "Claude official vendor/native transport still fails before HTTP; no payload/signature/install/nativeLinuxrelease proof.",
+    "International WorkBuddy Linux usable package/profile isolation and real WSL reboot-autostart/current newest Linux original-token wire remain separately incomplete."
+  ]
+}

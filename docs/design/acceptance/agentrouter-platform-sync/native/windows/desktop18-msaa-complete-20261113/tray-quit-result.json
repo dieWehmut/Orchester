@@ -1,0 +1,18 @@
+{
+    "event":  "owned_native_tray_quit_verified",
+    "sourceRevision":  "71def643cb08b208cc79687f79255c504eb14dc6",
+    "expectedPlanSha256":  "8645dca6d20f2d5ff0d845d7c74522f52ca72c6aec49ec9529dcb86a997911cd",
+    "expectedFinalResultSha256":  "7ddcd67633e127a4b664dc69d91cf20bd8751a9ab6a009d8ca73d9b0951fe023",
+    "expectedRuntimeInputsSha256":  "b364598c896cbcd8f4c7a70129a3ecbb6088f8930a0ea591a3860aaba6c7f86f",
+    "binarySha256":  "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+    "nativeMenuActivation":  "MSAA.IAccessible.accDoDefaultAction",
+    "guiExitCode":  0,
+    "allExactGuiHandlesExited":  true,
+    "allExactNodeHandlesExited":  true,
+    "debugAndEmbeddedPortsReleased":  true,
+    "forcedTerminations":  0,
+    "unexpectedDescendants":  0,
+    "passiveWaitSeconds":  5,
+    "modelCalls":  0,
+    "defaultInstallationChanged":  false
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-13T14:58:18.055026Z",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "status": "preflight-or-startup-failed",
+  "phase": "binding-preflight",
+  "failureCode": "fresh-native-preflight-required",
+  "errorType": "GuardError",
+  "nativeError": null,
+  "rawErrorsIncluded": false,
+  "childrenCreated": 0,
+  "forcedTerminations": 0,
+  "appOrCredentialOrHttpOperations": 0
+}

@@ -1,0 +1,118 @@
+{
+    "schemaVersion":  1,
+    "status":  "fresh-held-original-gui-normal-tray-failed",
+    "actualTargetHost":  "Windows",
+    "guiPid":  37324,
+    "guiCreatedFileTimeExact":  "134389718070239855",
+    "guiBinarySha256":  "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+    "historicalCreatorHandlesRequired":  false,
+    "observationScope":  "currently observed descendants of the freshly held exact GUI",
+    "forcedTerminations":  0,
+    "modelCalls":  0,
+    "defaultInstallationChanged":  false,
+    "privateValuesIncluded":  false,
+    "currentCdpOwnerPid":  29196,
+    "currentCdpOwnerCreatedFileTimeExact":  "134389718071276076",
+    "currentObservationStartedAtUtc":  "2026-11-13T14:36:27.5826472Z",
+    "stage":  "existing-native-normal-tray-helper",
+    "exceptionType":  "System.InvalidOperationException",
+    "normalTrayHelperInvoked":  true,
+    "normalTrayHelperReturned":  false,
+    "actualGuiNativeExitCode":  null,
+    "currentObservedIdentities":  [
+                                      {
+                                          "pid":  6188,
+                                          "createdFileTimeExact":  "134389718072652348",
+                                          "parentPid":  29196,
+                                          "parentCreatedFileTimeExact":  "134389718071276076",
+                                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                                          "imageSha256":  "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+                                          "firstObservedAtUtc":  "2026-11-13T14:36:26.1672782Z",
+                                          "freshHandleStillLive":  true
+                                      },
+                                      {
+                                          "pid":  33444,
+                                          "createdFileTimeExact":  "134389718072821911",
+                                          "parentPid":  29196,
+                                          "parentCreatedFileTimeExact":  "134389718071276076",
+                                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                                          "imageSha256":  "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+                                          "firstObservedAtUtc":  "2026-11-13T14:36:26.3470694Z",
+                                          "freshHandleStillLive":  true
+                                      },
+                                      {
+                                          "pid":  25672,
+                                          "createdFileTimeExact":  "134389718071560996",
+                                          "parentPid":  29196,
+                                          "parentCreatedFileTimeExact":  "134389718071276076",
+                                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                                          "imageSha256":  "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+                                          "firstObservedAtUtc":  "2026-11-13T14:36:26.0839180Z",
+                                          "freshHandleStillLive":  true
+                                      },
+                                      {
+                                          "pid":  7324,
+                                          "createdFileTimeExact":  "134389718072652375",
+                                          "parentPid":  29196,
+                                          "parentCreatedFileTimeExact":  "134389718071276076",
+                                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                                          "imageSha256":  "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+                                          "firstObservedAtUtc":  "2026-11-13T14:36:26.2608476Z",
+                                          "freshHandleStillLive":  true
+                                      },
+                                      {
+                                          "pid":  39540,
+                                          "createdFileTimeExact":  "134389718219228955",
+                                          "parentPid":  29196,
+                                          "parentCreatedFileTimeExact":  "134389718071276076",
+                                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                                          "imageSha256":  "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+                                          "firstObservedAtUtc":  "2026-11-13T14:36:26.5126205Z",
+                                          "freshHandleStillLive":  true
+                                      },
+                                      {
+                                          "pid":  16548,
+                                          "createdFileTimeExact":  "134389718070340155",
+                                          "parentPid":  37324,
+                                          "parentCreatedFileTimeExact":  "134389718070239855",
+                                          "image":  "C:\\WINDOWS\\system32\\conhost.exe",
+                                          "imageSha256":  "c86146188b78e484f32cc29e2331689659943b47689a85570342044f499938ac",
+                                          "firstObservedAtUtc":  "2026-11-13T14:36:25.9085409Z",
+                                          "freshHandleStillLive":  true
+                                      },
+                                      {
+                                          "pid":  29196,
+                                          "createdFileTimeExact":  "134389718071276076",
+                                          "parentPid":  37324,
+                                          "parentCreatedFileTimeExact":  "134389718070239855",
+                                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                                          "imageSha256":  "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+                                          "firstObservedAtUtc":  "2026-11-13T14:36:25.9982421Z",
+                                          "freshHandleStillLive":  true
+                                      },
+                                      {
+                                          "pid":  10680,
+                                          "createdFileTimeExact":  "134389718073392842",
+                                          "parentPid":  29196,
+                                          "parentCreatedFileTimeExact":  "134389718071276076",
+                                          "image":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.42\\msedgewebview2.exe",
+                                          "imageSha256":  "51b4cd503d669d8f7f6ff6e9e22effeebd28cce11262ddec815972a424474533",
+                                          "firstObservedAtUtc":  "2026-11-13T14:36:26.4339673Z",
+                                          "freshHandleStillLive":  true
+                                      },
+                                      {
+                                          "pid":  37324,
+                                          "createdFileTimeExact":  "134389718070239855",
+                                          "parentPid":  0,
+                                          "parentCreatedFileTimeExact":  "0",
+                                          "image":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\monitor-final-20261110\\monitors-final21-71def64-20261111\\desktop-candidate\\orchester-desktop.exe",
+                                          "imageSha256":  "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+                                          "firstObservedAtUtc":  "2026-11-13T14:36:21.1315379Z",
+                                          "freshHandleStillLive":  true
+                                      }
+                                  ],
+    "selfReportedExitCode":  1,
+    "selfReportedNotIndependentOsExit":  true,
+    "observedAtUtc":  "2026-11-13T14:36:33.3800834Z",
+    "sourceSha256":  "73561132dfdda9dc0fcd1471debf89e9e628ff735cd713e81b3c834d669749b6"
+}

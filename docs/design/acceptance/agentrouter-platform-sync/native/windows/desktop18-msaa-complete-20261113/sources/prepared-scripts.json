@@ -1,0 +1,45 @@
+{
+  "format": "orchester-desktop-native-script-pins-v1",
+  "files": [
+    {
+      "path": "NativeDesktopWindows.cs",
+      "sha256": "858fdf6e41f257b8923bed98c4ba15177c8538ef2240d51f8122519df9b5af58"
+    },
+    {
+      "path": "OwnedRuntimeProcesses.cs",
+      "sha256": "d335743a632acae0c90968e482b87eda44aaf1dae241e938e62b5c7833598d45"
+    },
+    {
+      "path": "launch-smoke.ps1",
+      "sha256": "2650988b451a2f4135cc4f8f3bc2247a906967efdd8904a6a70324217994d5d2"
+    },
+    {
+      "path": "resize-isolated-window.ps1",
+      "sha256": "0f573d3ea44247a442157369e26c35c1bde7e39d3f43c011a13de87a23581489"
+    },
+    {
+      "path": "verify-final-native.mjs",
+      "sha256": "edede6aaedc94aaa13eb1ce0a583a471cfea3285749a438caff05ceae416e18c"
+    },
+    {
+      "path": "window-snapshot.ps1",
+      "sha256": "de6406bd7241bf983ce82c1ee17f712cdc5293bfb054b35c4987849d2ffabfda"
+    },
+    {
+      "path": "NativeTrayQuit.cs",
+      "sha256": "5e33b5f26a7250aaa8c5c86f0b5540e1a7dd07106cfce00570d9e31a4becd32c"
+    },
+    {
+      "path": "invoke-owned-tray-quit.ps1",
+      "sha256": "215c7279b991264a5bba35518aabdd0c71ebaa8f9dd04be90a7e993e7b05b30e"
+    },
+    {
+      "path": "runtime-input-guards.ps1",
+      "sha256": "fa6ce76b0ac9d2c4a37b173931e4627d92cab7e5308e6f912b8467a5eb58ff6d"
+    },
+    {
+      "path": "retain-owned-observation.ps1",
+      "sha256": "6f758142622e49e7b6e7892c7b254a5dda53b990425d0ff7b9e54d84a7523344"
+    }
+  ]
+}

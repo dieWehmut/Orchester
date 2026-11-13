@@ -1,0 +1,79 @@
+{
+  "status": "prepared-not-executed-independent-review-pending",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "originalPreparedFilesUnchanged": true,
+  "originalPreparedManifestSha256": "61de2f683acf375dc698a3053a34a0fae1cb607813dbfe72f8a94bced9239a58",
+  "sourcePlanSha256": "8645dca6d20f2d5ff0d845d7c74522f52ca72c6aec49ec9529dcb86a997911cd",
+  "coreFinalSha256": "7ddcd67633e127a4b664dc69d91cf20bd8751a9ab6a009d8ca73d9b0951fe023",
+  "wslHostPath": "C:\\Program Files\\WSL\\wslhost.exe",
+  "wslHostSha256": "1f214fbb69efcd138260c4aa4e35182bfe5371afe4055b59a3133d8f88f9c3b7",
+  "wslHostSignatureMetadataReceiptSha256": "e13cb328f570bf7fcb763ef7ecccd306e57f7ee4ea233297765a867184594c10",
+  "passiveBrokerTerminationExcluded": true,
+  "ownershipAdmissionCoreUnchanged": true,
+  "files": [
+    {
+      "path": "capture-desktop-descendants.ps1",
+      "sha256": "8e81166cd81e6fe3f97f0537fda6b998396f3af5a5b8a2f22b1a863d6de9133d"
+    },
+    {
+      "path": "inspect-or-quit-default-remote.ps1",
+      "sha256": "86f76c914b9c537d2d1708e10656666bce76ed8ee11cdab9abf98f3e30deaca5"
+    },
+    {
+      "path": "InteractiveFileRunner.cs",
+      "sha256": "03783e81bee77f1e13d517c5efd4ad6caca45509960691faf5dc90ad8dc3cec3"
+    },
+    {
+      "path": "invoke-owned-tray-quit.ps1",
+      "sha256": "610b484568af1f8b85fa0291ad7aa1a117ed69d7526b189d0f9b3a1ea50550fd"
+    },
+    {
+      "path": "launch-smoke.ps1",
+      "sha256": "2ce36236e41841aae974fe4bc25bc52d78cef645594458f6e6013821549ddbbd"
+    },
+    {
+      "path": "NativeDesktopWindows.cs",
+      "sha256": "858fdf6e41f257b8923bed98c4ba15177c8538ef2240d51f8122519df9b5af58"
+    },
+    {
+      "path": "NativeTrayQuit.cs",
+      "sha256": "bcaafea8a300f153a08657a657d650eb82282f97057d46533e05b290f4b9ce75"
+    },
+    {
+      "path": "OwnedConsoleQuit.cs",
+      "sha256": "531a104d8e2075b4cf7f045b2078e7d4af1357704b37cde68bef331128790572"
+    },
+    {
+      "path": "OwnedRuntimeProcesses.cs",
+      "sha256": "d335743a632acae0c90968e482b87eda44aaf1dae241e938e62b5c7833598d45"
+    },
+    {
+      "path": "prepared-scripts.json",
+      "sha256": "35436531140f1d8fc8ca36a21160cb413d73ab90262b529b323f355a34f52e3f"
+    },
+    {
+      "path": "resize-isolated-window.ps1",
+      "sha256": "0f573d3ea44247a442157369e26c35c1bde7e39d3f43c011a13de87a23581489"
+    },
+    {
+      "path": "runtime-input-guards.ps1",
+      "sha256": "fa6ce76b0ac9d2c4a37b173931e4627d92cab7e5308e6f912b8467a5eb58ff6d"
+    },
+    {
+      "path": "verify-final-native.mjs",
+      "sha256": "7269430ac55b9cf1c22e9c6cfd26013d5d3abd5f839f33004e8ddaaaec9d63bd"
+    },
+    {
+      "path": "verify-portable-runtime-file.ps1",
+      "sha256": "41e4c2575237bd147eb4ce23cdb4f7f14b5b62382b4f422e4f7555875df606f8"
+    },
+    {
+      "path": "verify-portable-runtime-final.ps1",
+      "sha256": "1591846f4d41798bdc2140e4a429ac9ae368bb31be7deaaf6179e41ee584b440"
+    },
+    {
+      "path": "window-snapshot.ps1",
+      "sha256": "de6406bd7241bf983ce82c1ee17f712cdc5293bfb054b35c4987849d2ffabfda"
+    }
+  ]
+}
