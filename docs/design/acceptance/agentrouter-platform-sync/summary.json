@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "status": "native-worker-runtime-and-current-theme-control-verified-full-platform-delivery-incomplete",
+  "status": "native-existing-windows-avd-preflight-verified-current-native-entry-and-full-platform-delivery-pending",
   "finalCodeRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
   "historicalSourceRevision": "a96a06e445ab6bdc4483ac297c69f8a0e2382bc9",
   "historicalCatalogProductCount": 20,
@@ -462,6 +462,22 @@
     {
       "scope": "Linux native orchester-qa original-one credential get plus specified current managed7337 info GET200/nameMatch; original XML retained and own foreground/forward/Dex cleanup verified; startup requests and prelaunch LS not measured; Windows five not rerun",
       "proof": "deployments/linux/20261113-native-original-one-wire/final-scope-safe.json"
+    },
+    {
+      "scope": "Native Windows existing original AVD/SDK6 pins verified, old4 identities not live and4 private ports observed free; native successor2 held job0, original failure1 retained; no original five Credentials.get or current7337 HTTP performed.",
+      "proof": "native/windows/android5-current-preflight-20261113/native-android5-preflight-scope-safe.json"
+    },
+    {
+      "scope": "Fresh originalGUI37324 birth/binary/session1 verified at11:53UTC; WinSta0/Default/inputDesktop READOBJECTS succeeds, cursor error5 andactive physicalconsole2; tray callback menu0/native job1, normalGUI exit unproven; no locked-state or session2 SID inferred.",
+      "proof": "native/windows/interactive-input-and-tray-20261113/safe-derived-scope.json"
+    },
+    {
+      "scope": "Native current-user proxy metadata0; exact officialClaude3.6556.2 EXE forced through same original127.0.0.1:7897 nonbypass route: held collector13/child13, SendFailure/HTTPnull/0bytes, no payload hash/signature/install. Raw stdout/stderr excluded from derived report; originals separately bound.",
+      "proof": "native/windows/claude-user-proxy-transport-20261113/safe-derived-scope.json"
+    },
+    {
+      "scope": "Worker3 reached90min lifetime self-reported terminal0; independent workerOS exit not observed. Three fresh Windows-cwd interop launches actual1/accept4 error110/no native bootstrap or worker4 readiness. One owned2MiB collapse errno12/own mapping released/no other process signals or sysctl changes.",
+      "proof": "native/windows/native-worker-lifetime-and-current-access-20261113/native-lifetime-and-access-scope-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -473,14 +489,14 @@
     "Prior source71 Linux7337 deployment/1023019 and oneoriginal7337/info200 before fresh23:31UTC absence; originalreceipts preserved historical"
   ],
   "pendingCurrentEpochScopes": [
-    "FormalPortable14 passed; originalDesktop18 failedafter12checks6writes and originalexecutor90867 terminal137. NewWindowsfileworker sustainedheartbeat and actualnativejobs verified. FreshheldoriginalGUI37324 plusCDP29196 directancestry and readonlyDOM observed at11:07UTC: oldrailtheme selector0/actualworkspace-theme1, visible21dualloadedtheme pairs; status401 meansDTOunobtained. FreshfullDesktop18/authenticatedDTO/normaltrayquit/defaultreinstall/7338state remainpending; historical10creatorhandlesnotrecovered.",
-    "Canonical user bus and managed7337 active, normal start-stop-start verified. Linux native original-one saved credential specified info GET200 is now verified separately. Real WSL reboot/autostart and current original Windows-phone five saved credentials wire requests remain unverified.",
+    "FormalPortable14 passed; originalDesktop18 failedafter12checks6writes/originalexecutor90867 terminal137. Fresh originalGUI37324/CDP29196 identity andreadonlyDOM11:07UTC show oldrailtheme0/actualtheme1/21dualloadedtheme pairs; GET401 leavesDTO unobtained. Nativeinput11:53UTC: GUI+executorSession1, inputDefault read succeeds, cursorerror5, active physicalconsole2; tray popup0/job1, naturalexit unproven. FreshfullDesktop18/authenticatedDTO/defaultreinstall/7338state pending; historical10creatorhandlesnotrecovered. Worker3 reachedownedlifetime; currentnativeentry failed110.",
+    "Canonical user bus and managed7337 active, normal start-stop-start and Linux native original-one saved infoGET200 separately verified. Native Windows successor2 originalAVD/SDK pins andold4 identity/private4port preflight passed0; currenttarget/actualWindowsrun-asUID/alias existence/native five saved Credentials.get andonly originally saved7337 current-instance GET pending. Real WSL reboot/autostart remains unverified.",
     "OfficialDeepSeekWindows installation/signature/HKCU/ASARrc1verified afteroriginalnumericPEverifierfailure; GUI/model/auth nottested; DataElementoriginalcurrentmetadataretained, wholeoldEXEbeforeafterhashnotproved",
     "InternationalWorkBuddy nativeWSL usablepackage/profile isolation pending: currentfourofficialmetadata200 butfouradvertisedpayloads404/0bytes; publichomepage/clientbytes equalhistory. OfficialClaudeApp Windows payload/LinuxGUI release evidence remains pending.",
     "Historicalunregisteredchildidentity/HANDLEclosure andwrongLinuxfullpackage rollback unproved; no new signal/claim",
     "Correct Windows Android original five retained/full PTY+cleanup and ASCII composite659 verified. Twelfth cleanup9a48d20/main1dec0b4 delivered; thirteenth managed Linux bus/service lifecycle8fa6bb7/main3f01075 delivered with640 manifest/main Git blob checks and731 production hash checks. Remaining Windows Desktop18/default reinstallation, official clients, actual WSL reboot/autostart and current original phone-token wire request retain their separate pending scopes.",
     "Managed Linux listener2888962/6300089/ELFd983 current ownership is linked to the Linux native original-one saved credential GET200 receipt; no simultaneous server-side packet trace is claimed. Original XML retained and own Android foreground/forward/Dex cleaned. Original Windows-phone five wire and real WSL reboot/autostart remain pending; historical SQL formatting differences are retained.",
-    "HistoricalClaudeStoreUI failure1612 retained. CurrentWinGet3.6556.2 exactofficialEXE/MSIX Linuxrequests and actualWindowsEXErequest failedTLS35/HTTP000/0bytes; Windowscollectoractual13. Nativefileworkerexecutionverified; officialvendorpayload/fullSHA/Authenticode/nativeinstallation/registration and vendor TLS/Store transport recoveryremainpending."
+    "HistoricalClaudeStoreUI1612 retained. ExactWinGet3.6556.2 official EXE/MSIX requests failedTLS35/HTTP000/0bytes; native systemcurl collector13. Additional native current-user DefaultWebProxy127.0.0.1:7897 nonbypass forced request actualcollector13/child13 SendFailure/HTTPnull/0bytes. Nativeworker3 prior execution proven but nowownedlifetime reached; newnativeentry110. Full vendorpayload/SHA/Authenticode/installregistration/LinuxvendorGUI remainpending."
   ],
   "folderResponsibilities": {
     "sources": "Official origins, source/provenance and current safe source audits",
@@ -771,7 +787,7 @@
   "currentWindowsDesktop18OriginalCreatorHandlesLastSnapshotObservedAtUtc": "2026-11-12T16:29:48.0647414Z",
   "currentWindowsDesktop18OriginalCreatorHandlesLastSnapshotSha256": "bf36370c55ebd5757ea0dfb02ee0ffd2c83d9ba3d44c97a5a75c47025deb66d3",
   "currentWindowsDesktop18OriginalCreatorHandlesLastSnapshotCount": 10,
-  "currentWindowsDesktop18GuiLiveness": "verified-at-2026-11-13T11:07:36Z-by-fresh-native-held-handle",
+  "currentWindowsDesktop18GuiLiveness": "verified-at-2026-11-13T11:53:36Z-by-fresh-native-held-handle",
   "currentWindowsDesktop18GuiNaturalExit": "unverified",
   "historicalWindowsInteractiveReadinessAt1509Verified": true,
   "historicalWindowsCursorAccessErrorAt1509": 0,
@@ -862,16 +878,16 @@
   "currentLinuxNativeOriginalOneExplicitInfoGetActualStatus": 200,
   "currentLinuxNativeOriginalOnePreLaunchLocalStorageCaptured": false,
   "currentLinuxNativeOriginalOneStartupReconnectRequestsMeasured": false,
-  "currentWindowsNativeAccessWindowsCwdRecheckProof": "native/windows/current-access-windows-cwd-20261113/windows-path-command-results-safe.json",
+  "currentWindowsNativeAccessWindowsCwdRecheckProof": "native/windows/native-worker-lifetime-and-current-access-20261113/native-lifetime-and-access-scope-safe.json",
   "currentWindowsNativeAccessWindowsCwdCommandsSucceeded": false,
   "currentWindowsMonitorReadonlyDiagnosticSuccessorPrepared": true,
   "currentWindowsMonitorReadonlyDiagnosticSuccessorProof": "native/windows/formal-desktop18-attempt1-20261112T1545/prepared-readonly-diagnostics/prepared-successor-plan-safe.json",
   "currentWindowsMonitorReadonlyDiagnosticSuccessorRuntimeExecuted": true,
   "currentWindowsMonitorAssertionCauseEstablished": false,
   "currentWindowsInteropMemoryInvestigationProof": "native/windows/interop-memory-investigation-20261113/investigation-and-native-execution-safe.json",
-  "lastNativeWindowsOriginalGuiLiveObservedAtUtc": "2026-11-13T11:07:36.0456119Z",
+  "lastNativeWindowsOriginalGuiLiveObservedAtUtc": "2026-11-13T11:53:36.7116780Z",
   "lastNativeWindowsOriginalGuiBirthAndBinaryVerified": true,
-  "currentWindowsInteropAfterBriefRecoveryAvailable": true,
+  "currentWindowsInteropAfterBriefRecoveryAvailable": false,
   "currentWindowsPersistentFileWorkerActualStartupVerified": true,
   "currentWindowsNativeWorkerAstFailureObserved": true,
   "currentWindowsNativeWorkerAstFollowupProof": "native/windows/interop-memory-investigation-20261113/syntax-diagnostic-and-followup-safe.json",
@@ -893,14 +909,52 @@
   "currentWindowsNativeCurrentClaudeDownloadCollectorOsExitCode": 13,
   "currentWindowsNativeCurrentClaudeDownloadSystemCurlExitCode": 35,
   "currentWindowsNativeCurrentClaudeDownloadBytes": 0,
-  "currentWindowsPersistentFileWorkerCompletedJobsObservedCount": 4,
+  "currentWindowsPersistentFileWorkerCompletedJobsObservedCount": 10,
   "currentWindowsPersistentFileWorkerObservedJobOsExitCodes": [
     0,
     0,
     0,
-    13
+    13,
+    1,
+    0,
+    1,
+    0,
+    13,
+    0
   ],
-  "currentWindowsNativeAccessVerifiedScope": "Windows file-worker startup, advancing heartbeat, three held native child jobs exited0, one current official payload download child exited13; current GUI/CDP identity snapshot at11:07UTC. Continuous generic WSL executable interop availability is not claimed.",
-  "currentWindowsInteropAfterBriefRecoveryObservedAtUtc": "2026-11-13T10:49:46Z",
-  "currentWindowsInteropContinuousAvailabilityVerified": false
+  "currentWindowsNativeAccessVerifiedScope": "Historical worker3 startup/advancing heartbeat and10 held native jobs observed. Worker3 self-reported lifetime terminal12:19UTC; independent workerOS exit not observed. Current fresh Windows-cwd launches on3097/7250/1 endpoints eachactual1/accept4 error110; newworker4 bootstrap/readiness/heartbeat unverified, current native request channel unavailable.",
+  "currentWindowsInteropAfterBriefRecoveryObservedAtUtc": "2026-11-13T12:48:51.515147+00:00",
+  "currentWindowsInteropContinuousAvailabilityVerified": false,
+  "lastWindowsInteropBriefRecoveryAvailableObservedAtUtc": "2026-11-13T10:49:46Z",
+  "currentWindowsNativeExecutionChannelReady": false,
+  "currentWindowsNativeExecutionChannelProof": "native/windows/native-worker-lifetime-and-current-access-20261113/native-lifetime-and-access-scope-safe.json",
+  "currentWindowsWorker3LifetimeReachedSelfReported": true,
+  "currentWindowsWorker3IndependentOsExitCode": null,
+  "currentWindowsWorker4NativeStartupVerified": false,
+  "currentWindowsWorker4ClientStateActivated": false,
+  "currentWindowsOriginalInputReadinessProof": "native/windows/interactive-input-and-tray-20261113/safe-derived-scope.json",
+  "currentWindowsOriginalInputReadinessObservedAtUtc": "2026-11-13T11:53:36.7116780Z",
+  "currentWindowsGuiAndExecutorSessionId": 1,
+  "currentWindowsActivePhysicalConsoleSessionIdAtInputObservation": 2,
+  "currentWindowsSession2UserOrSidIdentityProved": false,
+  "currentWindowsGetCursorPosSucceeded": false,
+  "currentWindowsGetCursorPosNativeError": 5,
+  "currentWindowsLockedOrUnlockedStateProved": false,
+  "currentWindowsNormalTrayQuitAttempted": true,
+  "currentWindowsNormalTrayQuitVerified": false,
+  "currentWindowsNormalTrayQuitAttemptJobOsExitCode": 1,
+  "currentWindowsAndroidExistingAvdPreflightNativeVerified": true,
+  "currentWindowsAndroidExistingAvdPreflightProof": "native/windows/android5-current-preflight-20261113/native-android5-preflight-scope-safe.json",
+  "currentWindowsAndroidExistingAvdPreflightObservedAtUtc": "2026-11-13T12:18:45.3618589Z",
+  "currentWindowsAndroidExistingAvdPinsMatched": 6,
+  "currentWindowsAndroidOldExactIdentitiesLiveCount": 0,
+  "currentWindowsAndroidFiveCurrentNativeCredentialGetCount": null,
+  "currentWindowsAndroidCurrent7337SavedCredentialHttpGetVerified": false,
+  "currentWindowsAndroidPrivatePortsReserved": false,
+  "currentWindowsClaudeOriginalUserProxyTransportProof": "native/windows/claude-user-proxy-transport-20261113/safe-derived-scope.json",
+  "currentWindowsClaudeForcedOriginalUserProxyDownloadCollectorOsExitCode": 13,
+  "currentWindowsClaudeForcedOriginalUserProxyDownloadChildOsExitCode": 13,
+  "currentWindowsClaudeForcedOriginalUserProxyDownloadWebExceptionStatus": "SendFailure",
+  "currentWindowsClaudeForcedOriginalUserProxyDownloadHttpStatus": null,
+  "currentWindowsClaudeForcedOriginalUserProxyDownloadBytes": 0
 }

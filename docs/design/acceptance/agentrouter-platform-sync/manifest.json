@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "createdAt": "2026-11-13T12:59:04.782203+00:00",
-  "status": "new-native-observation-evidence-archived-summary-update-pending",
+  "status": "native-existing-windows-avd-preflight-verified-current-native-entry-and-full-platform-delivery-pending",
   "summaryPath": "summary.json",
   "files": [
     {
@@ -3726,8 +3726,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "3d5ba5f1b75b4f65295cd2a45a3a3ac0e1fcdbfa95a2ab0b25dac4978abef888",
-      "bytes": 66603
+      "sha256": "bd2b3ba2cf833cb488167c3a97ec17b39108354c53d6725a467d10b5f88e7b68",
+      "bytes": 71072
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
