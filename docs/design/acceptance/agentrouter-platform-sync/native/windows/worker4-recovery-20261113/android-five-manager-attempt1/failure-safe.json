@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-13T14:39:14.900257Z",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "status": "preflight-or-startup-failed",
+  "phase": "original-avd-headless-start",
+  "failureCode": "private-adb-target-set-differs",
+  "errorType": "GuardError",
+  "nativeError": null,
+  "rawErrorsIncluded": false,
+  "childrenCreated": 5,
+  "forcedTerminations": 0,
+  "appOrCredentialOrHttpOperations": 0
+}

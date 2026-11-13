@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "status": "private-prepared-msaa-normal-tray-successor-not-executed",
+  "sourceFiles": [
+    {
+      "file": "NativeTrayQuit.cs",
+      "bytes": 17145,
+      "sha256": "5e33b5f26a7250aaa8c5c86f0b5540e1a7dd07106cfce00570d9e31a4becd32c"
+    },
+    {
+      "file": "invoke-owned-tray-quit.ps1",
+      "bytes": 10951,
+      "sha256": "215c7279b991264a5bba35518aabdd0c71ebaa8f9dd04be90a7e993e7b05b30e"
+    },
+    {
+      "file": "original-gui-normal-tray-current-held-msaa-successor-20261113.ps1",
+      "bytes": 15152,
+      "sha256": "ba59800b1a5c0c56379d84ee47ba5287c1931aecfae7b836af6b89e7a77df174"
+    }
+  ],
+  "windowsHelperRoot": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continuation-native-access-20261113\\tray-msaa-succ-20261113",
+  "originalObserver": {
+    "path": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/original-gui-normal-tray-current-held-shortnames-successor-20261113-90250e92.ps1",
+    "sha256": "4df91ef0c4a72702924400e89ac06c48be66ec527bdccb05156cf28025e790f0",
+    "onlyChanges": [
+      "helperRoot literal",
+      "NativeTrayQuit.cs hash pin",
+      "invoke-owned-tray-quit.ps1 hash pin"
+    ],
+    "inverseBytesEqualOriginal": true
+  },
+  "originalHelperPinsUnmodified": {
+    "NativeTrayQuit.cs": "bcaafea8a300f153a08657a657d650eb82282f97057d46533e05b290f4b9ce75",
+    "invoke-owned-tray-quit.ps1": "610b484568af1f8b85fa0291ad7aa1a117ed69d7526b189d0f9b3a1ea50550fd"
+  },
+  "route": [
+    "fresh exact original GUI held PID/birth/image/hash",
+    "same GUI/worker Session and Default popup/harness/input desktop",
+    "unique owned visible #32768 popup",
+    "existing UIA first, separate safe failure if unavailable",
+    "same-popup MSAA OBJID_CLIENT only",
+    "actual count3 and exact ordered Open Orchester / Settings... / Quit Orchester labels",
+    "ROLE_SYSTEM_MENUPOPUP root and enabled visible leaf ROLE_SYSTEM_MENUITEM children",
+    "actual VT_I4 child IDs or IAccessible child with CHILDID_SELF",
+    "WindowFromAccessibleObject equals held popup",
+    "two independent strict reads and last identity/desktop gate",
+    "single actual Quit child accDoDefaultAction",
+    "finally held PID/exact birth and native signalled-or-live check",
+    "unchanged observer requires actual original GUI ExitCode0, currently held descendants exited,19322 free"
+  ],
+  "actionBoundary": {
+    "comDisconnectIsSuccessProof": false,
+    "actionRetried": false,
+    "actionAttemptedAndReturnedRecordedSeparately": true,
+    "postActionHeldCheckAlwaysInFinally": true,
+    "comDisconnectReturnAllowedOnlyIfOriginalHeldHandleAlreadySignalled": true
+  },
+  "localValidation": {
+    "cSharpCompiler": "Linux .NET10 Roslyn csc against Windows .NET4 mscorlib/System/Accessibility reference assemblies",
+    "cSharpCompileExitCode": 0,
+    "powerShellParser": "Linux ParseOnly System.Management.Automation Parser.ParseFile only",
+    "powerShellHelperParseErrors": 0,
+    "powerShellObserverParseErrors": 0,
+    "noNativeDllInvoked": true,
+    "noComOrUIInvoked": true,
+    "noWindowsProcessStarted": true,
+    "staticChecksOnly": true
+  },
+  "scope": {
+    "runtimeInvoked": false,
+    "guiCurrentLivenessProvedByThisPreparation": false,
+    "desktop18Passed": false,
+    "historical10CreatorHandlesRestored": false,
+    "normalGuiExitObserved": false,
+    "port19322CurrentlyFreeProved": false,
+    "androidFiveCurrentWireProved": false,
+    "claudeInstalled": false,
+    "modelCalls": 0,
+    "coordinatesUsed": false,
+    "unknownLabelsWritten": false,
+    "wmCommandSynthesized": false,
+    "appExitCalledDirectly": false,
+    "forcedTermination": false,
+    "crossUserDesktopEntered": false
+  },
+  "officialContracts": [
+    "https://learn.microsoft.com/windows/win32/winauto/pop-up-menu",
+    "https://learn.microsoft.com/windows/win32/winauto/menu-item",
+    "https://learn.microsoft.com/windows/win32/api/oleacc/nf-oleacc-accessiblechildren",
+    "https://learn.microsoft.com/windows/win32/api/oleacc/nf-oleacc-windowfromaccessibleobject"
+  ]
+}

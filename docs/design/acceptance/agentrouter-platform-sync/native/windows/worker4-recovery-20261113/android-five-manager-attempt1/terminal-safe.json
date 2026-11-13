@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-13T14:42:13.477514Z",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "status": "owned-channel-terminal-with-preserved-failure",
+  "namespaceId": "f2a1d6fffa3f4cd5988c8e9ec172eb98",
+  "bindingSha256": "9b904eddb4d1a4e20bbf55736743238ee248c7d382dfdc0fef5ba022ad0701cb",
+  "manager": {
+    "pid": 441708,
+    "createdExact": "134390543423913954",
+    "image": "C:\\Users\\han\\AppData\\Roaming\\uv\\python\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+    "sha256": "204d51f19707da17766bccecce2ceececadab350663a8190420d1377bac1150d",
+    "sessionId": 1,
+    "sameUserAsManager": true
+  },
+  "originalCreatorExitCodes": {
+    "same-avd-preflight": 0,
+    "server": 0,
+    "same-avd-before-head": 0,
+    "head": 0,
+    "devices-identity": 0,
+    "normal-emu-kill": 0,
+    "normal-server-kill": 0
+  },
+  "qemuQueryHandleExitCode": 0,
+  "allCreatedNativeHandlesActuallyTerminal": true,
+  "allFourPrivatePortsReleased": true,
+  "normalQuitRequested": true,
+  "failureCode": "private-adb-target-set-differs",
+  "forcedTerminations": 0,
+  "appOrCredentialOrHttpOperations": 0
+}

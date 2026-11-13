@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-13T12:24:04.909700+00:00",
+  "linuxObserverPid": 3443955,
+  "route": "3097_interop",
+  "actualInteropExitCode": 1,
+  "stdoutBytes": 0,
+  "stderrBytes": 67,
+  "nativeBootstrapStartedSafePresent": false,
+  "nativeWorkerReadySafePresent": false,
+  "rawLogsArchived": false,
+  "workerLiveClaimed": false
+}

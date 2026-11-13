@@ -1,0 +1,24 @@
+{
+  "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt4-1ed007a58623f12c8e1c1223/jobs/fa5f68dd35d15a5eeb074ab50d626ed6/cl-page.json",
+  "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/worker4-recovery-20261113/claude-vendor/cl-page-public-derived-safe.json",
+  "sourceSha256": "57a5954df5bb7652b6a3e3e0106269a75646bb3e3e54abbe1589116d3a2355a1",
+  "sourceBytes": 6882,
+  "archivedSha256": "1902631276777f60d3e975f16e6628a7e3b95528d6941a0dd367113bc7341bf1",
+  "archivedBytes": 3367,
+  "transform": "recursive-remove-object-fields-named-stdout-or-stderr-only",
+  "omittedFields": [
+    {
+      "jsonPointer": "/process/stdout",
+      "reason": "embedded raw native output omitted",
+      "valueType": "str"
+    },
+    {
+      "jsonPointer": "/process/stderr",
+      "reason": "embedded raw native output omitted",
+      "valueType": "str"
+    }
+  ],
+  "allRetainedDecodedValuesEqualOriginal": true,
+  "nativeStatusExactDecodedEqualSeparateOriginal": true,
+  "sourceUnchangedThroughCopy": true
+}

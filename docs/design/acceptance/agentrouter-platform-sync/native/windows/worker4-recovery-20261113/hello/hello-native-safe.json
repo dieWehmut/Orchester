@@ -1,0 +1,13 @@
+{
+    "schemaVersion":  1,
+    "status":  "owned-native-worker-hello",
+    "actualTargetHost":  "Windows",
+    "observedAtUtc":  "2026-11-13T14:24:30.5095047Z",
+    "pid":  436376,
+    "createdFileTimeExact":  "134390534700306782",
+    "sessionId":  1,
+    "powerShellVersion":  "5.1.26100.9711",
+    "workingDirectory":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continuation-native-access-20261113\\owned-native-worker-attempt4-1ed007a58623f12c8e1c1223",
+    "sourceSha256":  "4bd18c234952ff80766fc68cdec8bc3ba9e9a3e313c2ba8eaa524d61b89b81a9",
+    "privateValuesIncluded":  false
+}

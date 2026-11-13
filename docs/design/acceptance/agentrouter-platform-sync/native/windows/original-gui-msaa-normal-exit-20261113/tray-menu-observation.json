@@ -1,0 +1,48 @@
+{
+    "event":  "owned_native_tray_menu_observed",
+    "guiPid":  37324,
+    "guiCreatedFileTimeExact":  "134389718070239855",
+    "binarySha256":  "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+    "trayHwnd":  1313132,
+    "popupHwnd":  39327928,
+    "nativeClass":  "#32768",
+    "labels":  [
+                   "Open Orchester",
+                   "Settings...",
+                   "Quit Orchester"
+               ],
+    "selected":  "Quit Orchester",
+    "activation":  "MSAA.IAccessible.accDoDefaultAction",
+    "read":  {
+                 "HResult":  0,
+                 "RootRole":  11,
+                 "ItemCount":  3,
+                 "ChildrenObtained":  3,
+                 "QuitRole":  12,
+                 "QuitState":  0,
+                 "Labels":  [
+                                "Open Orchester",
+                                "Settings...",
+                                "Quit Orchester"
+                            ],
+                 "KnownLabelCount":  3,
+                 "UnknownLabelCount":  0,
+                 "ReadComplete":  true,
+                 "StrictLabelsVerified":  true,
+                 "DefaultDesktopVerified":  true,
+                 "QuitDefaultActionAvailable":  true,
+                 "TwoIndependentStrictReadsVerified":  true,
+                 "ActionInvoked":  true,
+                 "ActionAttempted":  true,
+                 "ActionReturned":  true,
+                 "ActionHResult":  0,
+                 "ActionErrorType":  null,
+                 "GuiHeldHandleSignalledAfterAction":  false,
+                 "SafeReadErrorType":  null,
+                 "StaticCode":  null
+             },
+    "originalProcessHandleRetained":  true,
+    "noForcedProcessTermination":  true,
+    "actualGuiNativeExitCode":  null,
+    "modelCalls":  0
+}

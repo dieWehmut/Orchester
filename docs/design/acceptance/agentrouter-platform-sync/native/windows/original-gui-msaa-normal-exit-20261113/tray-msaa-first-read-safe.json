@@ -1,0 +1,37 @@
+{
+    "event":  "owned_native_msaa_menu_read",
+    "guiPid":  37324,
+    "guiCreatedFileTimeExact":  "134389718070239855",
+    "binarySha256":  "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+    "popupHwnd":  39327928,
+    "read":  {
+                 "HResult":  0,
+                 "RootRole":  11,
+                 "ItemCount":  3,
+                 "ChildrenObtained":  3,
+                 "QuitRole":  12,
+                 "QuitState":  0,
+                 "Labels":  [
+                                "Open Orchester",
+                                "Settings...",
+                                "Quit Orchester"
+                            ],
+                 "KnownLabelCount":  3,
+                 "UnknownLabelCount":  0,
+                 "ReadComplete":  true,
+                 "StrictLabelsVerified":  true,
+                 "DefaultDesktopVerified":  true,
+                 "QuitDefaultActionAvailable":  true,
+                 "TwoIndependentStrictReadsVerified":  false,
+                 "ActionInvoked":  false,
+                 "ActionAttempted":  false,
+                 "ActionReturned":  false,
+                 "ActionHResult":  null,
+                 "ActionErrorType":  null,
+                 "GuiHeldHandleSignalledAfterAction":  false,
+                 "SafeReadErrorType":  null,
+                 "StaticCode":  null
+             },
+    "menuInvoked":  false,
+    "modelCalls":  0
+}

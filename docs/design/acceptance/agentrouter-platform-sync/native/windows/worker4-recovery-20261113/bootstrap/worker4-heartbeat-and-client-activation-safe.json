@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "state": "worker4-startup-heartbeat-advance-and-client-activation-verified",
+  "worker": {
+    "schema": 1,
+    "state": "ready",
+    "pid": 432400,
+    "exactBirthUtc": "2026-11-13T14:21:20.1688162Z",
+    "source": "worker.ps1",
+    "sourceSha256": "16ee5cae10190473a2f05b1c496d1323b1c929763d3ce2b9b37570f976b461b5",
+    "nonce": "51d781bb546747a29542cf180aadfffa",
+    "readyAtUtc": "2026-11-13T14:21:20.6698825Z",
+    "lifetimeMinutes": 90
+  },
+  "firstHeartbeatUtc": "2026-11-13T14:24:24.1170705Z",
+  "secondHeartbeatUtc": "2026-11-13T14:24:28.2894820Z",
+  "keyOrMacReadOrPrinted": false,
+  "actualNativeJobVerified": false
+}
