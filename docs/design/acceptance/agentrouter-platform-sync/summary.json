@@ -458,6 +458,10 @@
     {
       "scope": "Rootindependentlive service/unitPID+ticks+ELF+cgroup/sameUID and17publicHTTP200 hash+currentdistbytes all exact; 3privatebackupdatabases retain5taskrows+remoteJSON/5auth. Rootsignals/serviceoperations/pairing/model0; lifecycleproof separate. CurrentoriginalphonecredentialHTTPwire not rerun; priorAndroidGET200 remainshistorical. ActualWSLreboot-autostart untested",
       "proof": "deployments/linux/20261113-userbus-managed-default/root-independent-live-and-state-safe.json"
+    },
+    {
+      "scope": "Linux native orchester-qa original-one credential get plus specified current managed7337 info GET200/nameMatch; original XML retained and own foreground/forward/Dex cleanup verified; startup requests and prelaunch LS not measured; Windows five not rerun",
+      "proof": "deployments/linux/20261113-native-original-one-wire/final-scope-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -470,12 +474,12 @@
   ],
   "pendingCurrentEpochScopes": [
     "FormalPortable14 passed andDesktop18 failedafter12checks6writes. Originalexecutor90867 actualterminalfailed137 at16:29:48Z; retained10handle snapshot historicalonly, currentWindowsGUI/childrenliveness andnormaltrayquit unverified. Current22:34 readonlynativegateways inherited/3097/910/7250 allinterop110; sameGUI DOM diagnosis/fullDesktop18/defaultreinstall/7338state remain pending.",
-    "Canonicaluserbus restored onoriginalsystemd269 withoutmanagerrestart; default7337 transferredtoactive managedunit andactualnormalstop0/start0 complete. Enabledstartup link isconfigured; realWSL reboot/autostart remainsuntested. Originalphone token wireGET onthisnew2888962instance hasnotbeenrerun; 5authJSON preservation andhistoricalAndroidGET200 do not substitute currentwireproof.",
+    "Canonical user bus and managed7337 active, normal start-stop-start verified. Linux native original-one saved credential specified info GET200 is now verified separately. Real WSL reboot/autostart and current original Windows-phone five saved credentials wire requests remain unverified.",
     "OfficialDeepSeekWindows installation/signature/HKCU/ASARrc1verified afteroriginalnumericPEverifierfailure; GUI/model/auth nottested; DataElementoriginalcurrentmetadataretained, wholeoldEXEbeforeafterhashnotproved",
     "InternationalWorkBuddy nativeWSL usablepackage/profile isolation pending: currentfourofficialmetadata200 butfouradvertisedpayloads404/0bytes; publichomepage/clientbytes equalhistory. OfficialClaudeApp Windows payload/LinuxGUI release evidence remains pending.",
     "Historicalunregisteredchildidentity/HANDLEclosure andwrongLinuxfullpackage rollback unproved; no new signal/claim",
     "Correct Windows Android original five retained/full PTY+cleanup and ASCII composite659 verified. Twelfth cleanup9a48d20/main1dec0b4 delivered; thirteenth managed Linux bus/service lifecycle8fa6bb7/main3f01075 delivered with640 manifest/main Git blob checks and731 production hash checks. Remaining Windows Desktop18/default reinstallation, official clients, actual WSL reboot/autostart and current original phone-token wire request retain their separate pending scopes.",
-    "Linux7337 currentmanagedinstance2888962 has5task/5authJSON retained across3privatebackups and17resources/21catalog verified. PriorAndroidoriginaltokenGET200 historicalonly; currentnewinstance originalphone-tokenHTTPwire notrerun. SQLrawfalse explicit; actualWSLreboot-autostart stillpending.",
+    "Managed Linux listener2888962/6300089/ELFd983 current ownership is linked to the Linux native original-one saved credential GET200 receipt; no simultaneous server-side packet trace is claimed. Original XML retained and own Android foreground/forward/Dex cleaned. Original Windows-phone five wire and real WSL reboot/autostart remain pending; historical SQL formatting differences are retained.",
     "HistoricalClaudeStoreUI cannotconnect/bootstrapperactual1612 retained. CurrentStoremetadata5.11492.0.0 differsfromhistorical5.1231.2.0; independentWinGet3.6556.2 exactEXE/MSIX GET bothcurl35/HTTPnull/0bytes. OfficialClaudepayload/digest/Authenticode/nativeinstallation/registration pending; nativegateway andofficialdownload/Storetransport require recovery."
   ],
   "folderResponsibilities": {
@@ -494,7 +498,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-13T02:56:01.683417+00:00",
+  "updatedAt": "2026-11-13T04:01:42.158154+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -843,12 +847,19 @@
   "currentLinuxRetainedOriginalWriterFd": 7,
   "currentLinuxOriginalPidfdHeld": true,
   "currentLinuxNativeControlSocketPathFailurePreserved": true,
-  "currentLinuxOriginalTokenWireCurrentInstanceVerified": false,
+  "currentLinuxOriginalTokenWireCurrentInstanceVerified": true,
   "prior640ThirteenthLinuxLifecycleCheckpointDelivered": true,
   "thirteenthLinuxLifecycleDeliveryProof": "maintenance/git-delivery/thirteenth-step-delivery-safe.json",
   "historicalClaudePublicSfsProof": "sources/claude-sfs-20261113/official-sfs-root-repair-and-product-boundary-safe.json",
   "historicalClaudePublicSfsRequestTlsVerified": true,
   "historicalClaudePublicSfsCategoryHttpStatus": 404,
   "historicalClaudePublicSfsPayloadPrepared": false,
-  "historicalClaudePublicSfsArchiveBindingProof": "sources/claude-sfs-20261113/public-archive-binding-safe.json"
+  "historicalClaudePublicSfsArchiveBindingProof": "sources/claude-sfs-20261113/public-archive-binding-safe.json",
+  "currentLinuxOriginalTokenWireCurrentInstanceScope": "Linux orchester-qa native original-one saved credential; not original Windows-five",
+  "currentLinuxNativeAndroidOriginalOneWireVerified": true,
+  "currentLinuxNativeAndroidOriginalOneWireProof": "deployments/linux/20261113-native-original-one-wire/final-scope-safe.json",
+  "currentOriginalWindowsFiveTokenWireCurrentInstanceVerified": false,
+  "currentLinuxNativeOriginalOneExplicitInfoGetActualStatus": 200,
+  "currentLinuxNativeOriginalOnePreLaunchLocalStorageCaptured": false,
+  "currentLinuxNativeOriginalOneStartupReconnectRequestsMeasured": false
 }

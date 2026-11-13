@@ -1,0 +1,11 @@
+{
+  "status": "existing-alias-guard-execution",
+  "observedAtUtc": "2026-11-13T03:31:06.233719+00:00",
+  "actualShellV2ExitCode": 1,
+  "stdout": "GUARD_PID=13764\n{\"existingAliasPresent\":null,\"keyGenerationCalls\":0,\"credentialReads\":0,\"errorType\":\"KeyStoreException\"}",
+  "stderr": "",
+  "sourceSha256": "3f73a17be703d091e921e26e90e2f981fc6cf0bc3c68d91655af42801225ba72",
+  "dexSha256": "070d8b2a2228301cdd0eae83a345b516c77f7f17639f156b7412ed796d0a1057",
+  "credentialReadsRequested": 0,
+  "keyGenerationCallsRequested": 0
+}

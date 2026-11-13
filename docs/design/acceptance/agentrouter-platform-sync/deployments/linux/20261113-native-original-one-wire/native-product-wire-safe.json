@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "status": "native-product-probe-completed",
+  "phase": "wire",
+  "observedAtUtc": "2026-11-13T03:41:54.153Z",
+  "targetHost": "Linux",
+  "targetAvd": "orchester-qa",
+  "targetAppPid": 13826,
+  "appUid": 10216,
+  "originalRecordCount": 1,
+  "localStorageValueHashes": {
+    "orchester.devices": "811b5c8295090c1b45f5c970157cb38b812439a0f8682f4068a833116a9992f2",
+    "orchester.panels": null,
+    "orchester.panel-columns": null,
+    "orchester.theme": null
+  },
+  "nativeBridgePresent": true,
+  "selectedPalette": "coral",
+  "metadataMatchesManagedEndpoint": true,
+  "explicitCredentialGetCalls": 1,
+  "explicitHttpRequests": 1,
+  "nativeAesDecryptionSucceeded": true,
+  "actualHttpStatus": 200,
+  "infoObjectShapeMatches": true,
+  "originalSavedNameMatches": true,
+  "automaticStartupReconnectRequestsNotMeasured": true,
+  "totalNativeCredentialAndHttpCallCountsNotClaimed": true,
+  "newPairSetRemoveOrConnectCallsIssuedByProbe": 0,
+  "rawCredentialsDeviceAddressesNamesAndResponsesIncluded": false,
+  "originalWindowsFiveCredentialWireVerificationClaimed": false,
+  "sourceSha256": "2d4d65a39d7d2cdca8b4d00dd006a8c098630ce29fb6eb5b3a031ea5a3aadc0c"
+}

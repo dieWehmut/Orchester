@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "status": "own-native-foreground-and-transports-normal-cleanup-verified",
+  "observedAtUtc": "2026-11-13T03:49:24.147022+00:00",
+  "targetHost": "Linux",
+  "targetAvd": "orchester-qa",
+  "appUid": 10216,
+  "ownAppActivityNotResumed": true,
+  "normalAndroidBackCommandActualExitCode": 0,
+  "appPluginExitMethodUnavailablePreserved": true,
+  "forcedStopsOrVmOrAdbServerSignalsIssued": 0,
+  "appProcessDestructionClaimed": false,
+  "ownForwardPortRemoved": 39403,
+  "otherForwardCountRetained": 1,
+  "otherForwardRowsExactlyRetained": true,
+  "ownedTemporaryDexFilesRemoved": 2,
+  "originalEncryptedXmlSha256": "701837d71e1899778016f1b42d41c2e098329a513efa4b0ee0b78d3103166661",
+  "originalEncryptedXmlByteExactComparedToHistoricalOriginal": true,
+  "apkOrTestPackagesReinstalled": 0,
+  "keystoreKeysGeneratedOrChangedByProbe": 0,
+  "privateCredentialValuesOutput": false
+}

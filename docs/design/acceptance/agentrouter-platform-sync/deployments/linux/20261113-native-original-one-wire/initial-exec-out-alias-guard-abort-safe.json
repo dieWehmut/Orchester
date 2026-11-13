@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "status": "initial-exec-out-alias-guard-aborted-exact-native-exit-unverified",
+  "recordedAtUtc": "2026-11-13T03:56:32.899230+00:00",
+  "originalToolSessionId": 46239,
+  "actualAdbExecOutWrapperExitCode": 0,
+  "recordedSafeOutput": "Aborted",
+  "exactNativeChildExitCode": null,
+  "nativeChildExitZeroNotClaimed": true,
+  "nativeAliasPresenceProven": false,
+  "credentialGetOrKeyGenerationCallsRequested": 0,
+  "sourceSha256": "3f73a17be703d091e921e26e90e2f981fc6cf0bc3c68d91655af42801225ba72",
+  "failurePreserved": true
+}

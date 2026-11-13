@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-13T03:38:29.619220+00:00",
+  "targetHost": "Linux",
+  "avd": "orchester-qa",
+  "serial": "emulator-5554",
+  "adbServerPort": 5037,
+  "qemuPid": 95271,
+  "qemuStartTicks": 370196,
+  "appUid": 10216,
+  "launchedAppPid": 13826,
+  "ownForwardPort": 39403,
+  "ownForwardTarget": "webview_devtools_remote_13826",
+  "actualForwardExitCode": 0,
+  "installedApkSha256": "f83fa2a75c712a3d2e1f3f203cf73ce89204fb4ca0bce4d8c2ef0c4fe3596d3c",
+  "originalEncryptedXmlSha256": "701837d71e1899778016f1b42d41c2e098329a513efa4b0ee0b78d3103166661",
+  "existingNativeKeystoreAliasPresentBeforeCredentialGet": true,
+  "keyGenerationCalls": 0,
+  "credentialReads": 0
+}

@@ -1,0 +1,11 @@
+{
+  "status": "current-managed-linux-listener-bound-to-native-wire-observation",
+  "listenerPid": 2888962,
+  "listenerStartTicks": 6300089,
+  "currentListeningSocketOwned": true,
+  "listenerElfSha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649",
+  "nativeSavedCredentialInfoStatus": 200,
+  "nativeOriginalOneSavedNameMatched": true,
+  "originalWindowsFiveTokenWireClaimed": false,
+  "rawAddressesCredentialsOrResponseNamesIncluded": false
+}
