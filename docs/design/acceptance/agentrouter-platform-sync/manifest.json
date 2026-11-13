@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-13T10:21:03.266721+00:00",
-  "status": "native-file-worker-heartbeat-fix-prepared-full-delivery-incomplete",
+  "createdAt": "2026-11-13T11:19:28.312136+00:00",
+  "status": "native-worker-runtime-and-current-theme-control-verified-full-platform-delivery-incomplete",
   "summaryPath": "summary.json",
   "files": [
     {
@@ -1075,21 +1075,6 @@
       "bytes": 1391
     },
     {
-      "path": "native/android/device-identity-current21/native-final21-device-provenance-correction-safe.json",
-      "sha256": "73233999233d54ef151515ec5cdd7bfb9926dce907d18d8f8746cf705202c87a",
-      "bytes": 1555
-    },
-    {
-      "path": "native/android/device-identity-current21/native-metadata-request-safe.json",
-      "sha256": "3bda45a8e5f1e35205e1b51179f7670cd05d1ebc14c2232d0ff436cac4d8b1f1",
-      "bytes": 255
-    },
-    {
-      "path": "native/android/device-identity-current21/native-one-prefs-file-rollback-final-byte-exact-safe.json",
-      "sha256": "e12e31ff91d4cb163a9f2951af5fa35116b21bcc4c2cebccbb6f4272e5e51219",
-      "bytes": 1212
-    },
-    {
       "path": "native/android/device-identity-current21/native/own-emulator-console-port-readonly-safe.json",
       "sha256": "0056b4266769cb0204f280938390ab41ad5518488262d918346804f3aede538a",
       "bytes": 1097
@@ -1103,6 +1088,21 @@
       "path": "native/android/device-identity-current21/native/windows-own-qemu-actual-listeners-safe.json",
       "sha256": "bac7e866665ef9b8d1745b6ed92c58bd83f8f6d74ce6ac54370df1080fcbc819",
       "bytes": 2531
+    },
+    {
+      "path": "native/android/device-identity-current21/native-final21-device-provenance-correction-safe.json",
+      "sha256": "73233999233d54ef151515ec5cdd7bfb9926dce907d18d8f8746cf705202c87a",
+      "bytes": 1555
+    },
+    {
+      "path": "native/android/device-identity-current21/native-metadata-request-safe.json",
+      "sha256": "3bda45a8e5f1e35205e1b51179f7670cd05d1ebc14c2232d0ff436cac4d8b1f1",
+      "bytes": 255
+    },
+    {
+      "path": "native/android/device-identity-current21/native-one-prefs-file-rollback-final-byte-exact-safe.json",
+      "sha256": "e12e31ff91d4cb163a9f2951af5fa35116b21bcc4c2cebccbb6f4272e5e51219",
+      "bytes": 1212
     },
     {
       "path": "native/android/device-identity-current21/owned-windows-medium-normal-wmclose-exit-observed-safe.json",
@@ -1613,6 +1613,31 @@
       "path": "native/windows/claude-current-readonly-20261112T1510/source-mappings-safe.json",
       "sha256": "3e7268d1e18160944e183574c89bb58968ee13540ba3f31201bc6c33c3231aa0",
       "bytes": 2454
+    },
+    {
+      "path": "native/windows/claude-native-current-payload-20261113/claude-official-payload-native-safe.json",
+      "sha256": "236e4778ef76181249ad316fa210767bfa141d8090c79f5ab673c3b3471c8ab8",
+      "bytes": 4084
+    },
+    {
+      "path": "native/windows/claude-native-current-payload-20261113/download-and-verify-native.ps1",
+      "sha256": "5ec88df1119ecb41c96956c5fa8d4499a26589eae84109001c5224fcff37517d",
+      "bytes": 19586
+    },
+    {
+      "path": "native/windows/claude-native-current-payload-20261113/native-official-payload-failure-scope-safe.json",
+      "sha256": "74728cadc45a55bf4beee836e343f842c88c08f97b93c371155c9eb7a17e050a",
+      "bytes": 1456
+    },
+    {
+      "path": "native/windows/claude-native-current-payload-20261113/start-safe.json",
+      "sha256": "f78582799a15090bddccaa84be50d3742ede6f5f4f234a385f0f17422a28a741",
+      "bytes": 388
+    },
+    {
+      "path": "native/windows/claude-native-current-payload-20261113/terminal-safe.json",
+      "sha256": "c0e1b3c05fafdb207cc592dd1f283c0162cc5e85c7a358b35f730f8fee2b92fa",
+      "bytes": 454
     },
     {
       "path": "native/windows/claude-store-readonly-observation.json",
@@ -2595,6 +2620,81 @@
       "bytes": 497
     },
     {
+      "path": "native/windows/owned-file-worker-runtime-20261113/bootstrap-started-native-safe.json",
+      "sha256": "46829838669e4b266bf71797b267373900e05dd470a2d4eaf969ec4faedb31ca",
+      "bytes": 513
+    },
+    {
+      "path": "native/windows/owned-file-worker-runtime-20261113/bootstrap-terminal-native-safe.json",
+      "sha256": "6c3880a068446e348c262aab164f19c3c2286fe9fb9dd5af779bbeeef7f62689",
+      "bytes": 614
+    },
+    {
+      "path": "native/windows/owned-file-worker-runtime-20261113/diagnostic-job-start-native-safe.json",
+      "sha256": "ed568e4cd1b4a72041ded6dab96bae984cb04ef879b0d97a2b000c54e1957f18",
+      "bytes": 388
+    },
+    {
+      "path": "native/windows/owned-file-worker-runtime-20261113/diagnostic-job-terminal-native-safe.json",
+      "sha256": "fe6133ca018344d074423c4775c3fcad828d91f3415e898cdb66d0257556ab12",
+      "bytes": 453
+    },
+    {
+      "path": "native/windows/owned-file-worker-runtime-20261113/held-original-gui-collector-terminal-safe.json",
+      "sha256": "0c19be6c88be4960c878bb0c317b41d318673b6cefb8a279a21ef70ed22d1692",
+      "bytes": 780
+    },
+    {
+      "path": "native/windows/owned-file-worker-runtime-20261113/held-original-gui-job-source.ps1",
+      "sha256": "82436bb5fca1f44495af5606979eda50b62ec01abe7cd4b9d3ec21d03a914d8f",
+      "bytes": 6489
+    },
+    {
+      "path": "native/windows/owned-file-worker-runtime-20261113/held-original-gui-native-gate-safe.json",
+      "sha256": "b957c665ec6770d27451b395befee4d9b1fa0276b79e8e8f79051b2d61a37cec",
+      "bytes": 1075
+    },
+    {
+      "path": "native/windows/owned-file-worker-runtime-20261113/hello-job-source.ps1",
+      "sha256": "f2d0856ebd23f6270c7a30dcb589c00d2c6c208d64e055850bf69f736f52bb83",
+      "bytes": 1095
+    },
+    {
+      "path": "native/windows/owned-file-worker-runtime-20261113/hello-job-start-native-safe.json",
+      "sha256": "34ce9c94655db0667e6a23adbdd94a0ce0073621b56ac430ec48bf40d0837fd3",
+      "bytes": 388
+    },
+    {
+      "path": "native/windows/owned-file-worker-runtime-20261113/hello-job-terminal-native-safe.json",
+      "sha256": "3b0aa0339d802b58694951052802f957da22d846b1daf7a7aaa7cb1830b9168a",
+      "bytes": 453
+    },
+    {
+      "path": "native/windows/owned-file-worker-runtime-20261113/hello-native-safe.json",
+      "sha256": "17045596201fe427812368cdd9a0cac8f18ac54bf7e56e2d25a65aacf7bf7f1b",
+      "bytes": 603
+    },
+    {
+      "path": "native/windows/owned-file-worker-runtime-20261113/monitor-readonly-diagnostic-original-safe.json",
+      "sha256": "9b1b6b0b078f8df497930223be64de03919ab67789fc1e77250ccb75dba044a2",
+      "bytes": 33203
+    },
+    {
+      "path": "native/windows/owned-file-worker-runtime-20261113/native-runtime-bindings-and-diagnostic-scope-safe.json",
+      "sha256": "dce9a681e1c3e4dab007f53e4a3386f9cc91f6dabf272a5545d98ceb97aab3f7",
+      "bytes": 11269
+    },
+    {
+      "path": "native/windows/owned-file-worker-runtime-20261113/worker-ready-native-safe.json",
+      "sha256": "27f487aabce255ab7af544b5244083e1c0a1ca4aded94151104e31a00c712c36",
+      "bytes": 300
+    },
+    {
+      "path": "native/windows/owned-file-worker-runtime-20261113/worker-runtime-original-derived-safe.json",
+      "sha256": "9f8cff9608e9eb6c523260adc075bb34427298f09932cfba7916a488101c3c3d",
+      "bytes": 979
+    },
+    {
       "path": "native/windows/ownership-history/historical-unregistered-suspended-node-closure-gap-safe.json",
       "sha256": "8543e177a71a20cbe48b21bca64e61fea691bfd89f6e334b57a69320ea664a8e",
       "bytes": 1339
@@ -2635,9 +2735,74 @@
       "bytes": 939
     },
     {
+      "path": "native/windows/selector-auth-readonly-native-20261113/current-held-original-gui-native-gate-safe.json",
+      "sha256": "0230fd460fd759d356ea199026373eb86f06bcb15d18712fb8664c8f56621cc0",
+      "bytes": 1075
+    },
+    {
+      "path": "native/windows/selector-auth-readonly-native-20261113/current-monitor-readonly-diagnostic-safe.json",
+      "sha256": "93c365cce9e87e4ca1ccf6e9f82600ad616c37b0228b1fe3652e9265c92b5498",
+      "bytes": 32951
+    },
+    {
+      "path": "native/windows/selector-auth-readonly-native-20261113/held-native-collector.ps1",
+      "sha256": "1e078eb73f8c8d7258755e39961470842b29df05838e6f55969ee797146754ce",
+      "bytes": 6580
+    },
+    {
+      "path": "native/windows/selector-auth-readonly-native-20261113/held-original-gui-diagnostic-terminal-safe.json",
+      "sha256": "f38d405ad19b287211639df91bd1f5fc5b5dcf764374a50392e077e80f5f872c",
+      "bytes": 780
+    },
+    {
+      "path": "native/windows/selector-auth-readonly-native-20261113/native-selector-auth-scope-safe.json",
+      "sha256": "5c583174f185761118c0196270d69b575a7fc22b5dab40164e0674c9f84cf44d",
+      "bytes": 3638
+    },
+    {
+      "path": "native/windows/selector-auth-readonly-native-20261113/read-current-monitor-cdp-selector-auth-successor.mjs",
+      "sha256": "5b4b45529fbf424e3d6a80b9c2e9432da1c2b12c55a6549452340628a50b769a",
+      "bytes": 19953
+    },
+    {
+      "path": "native/windows/selector-auth-readonly-native-20261113/start-safe.json",
+      "sha256": "45466af49ca5a2805ed74d8e7e47a45174c9af5abdf3fa6f3ed8f3e2bc3ceef7",
+      "bytes": 388
+    },
+    {
+      "path": "native/windows/selector-auth-readonly-native-20261113/terminal-safe.json",
+      "sha256": "77a2ccad40348570012ef11cf9e3b6a6e35717927d5ceb4beff9653cc73b301c",
+      "bytes": 453
+    },
+    {
       "path": "native/windows/source-export-a96a06e.json",
       "sha256": "ee214d8766ca7c1b7e300cc43da9551f84824aff0521b945caca99fa993b61c4",
       "bytes": 385348
+    },
+    {
+      "path": "native/windows/temporary-7339/cleanup-safe.json",
+      "sha256": "b82d7cf34d666add180ee55c5ac06f58d0f090e311ad3277b90b56c7f6a259dc",
+      "bytes": 996
+    },
+    {
+      "path": "native/windows/temporary-7339/original-executor-terminal-safe.json",
+      "sha256": "e2efae1dc68056cc4f2d82f6fe8cb5640d37210db94931032822583fd0b7e79e",
+      "bytes": 633
+    },
+    {
+      "path": "native/windows/temporary-7339/private-transport-terminal-cleanup-safe.json",
+      "sha256": "5d01cc236693516cb3da66cf6fc43ad4072bfc4368a7d2963973cbbe169727ca",
+      "bytes": 830
+    },
+    {
+      "path": "native/windows/temporary-7339/public-http-preflight-safe.json",
+      "sha256": "55c86d8d88049c90dc867cacc7d35176d3639cc39c84295323930c4763478bfb",
+      "bytes": 6952
+    },
+    {
+      "path": "native/windows/temporary-7339/ready-safe.json",
+      "sha256": "88477404ba3e2223b223d717a59a67dd648d73a58ad80e3dd2a0ee53860c2569",
+      "bytes": 1996
     },
     {
       "path": "native/windows/temporary-7339-attempt2/cleanup-safe.json",
@@ -2683,31 +2848,6 @@
       "path": "native/windows/temporary-7339-successor-policy/successor2-native-typed-policy-safe.json",
       "sha256": "b70d5c3ec0163017680cdf954ab2b273d35b6f92d85136cc53642874b0467296",
       "bytes": 2648
-    },
-    {
-      "path": "native/windows/temporary-7339/cleanup-safe.json",
-      "sha256": "b82d7cf34d666add180ee55c5ac06f58d0f090e311ad3277b90b56c7f6a259dc",
-      "bytes": 996
-    },
-    {
-      "path": "native/windows/temporary-7339/original-executor-terminal-safe.json",
-      "sha256": "e2efae1dc68056cc4f2d82f6fe8cb5640d37210db94931032822583fd0b7e79e",
-      "bytes": 633
-    },
-    {
-      "path": "native/windows/temporary-7339/private-transport-terminal-cleanup-safe.json",
-      "sha256": "5d01cc236693516cb3da66cf6fc43ad4072bfc4368a7d2963973cbbe169727ca",
-      "bytes": 830
-    },
-    {
-      "path": "native/windows/temporary-7339/public-http-preflight-safe.json",
-      "sha256": "55c86d8d88049c90dc867cacc7d35176d3639cc39c84295323930c4763478bfb",
-      "bytes": 6952
-    },
-    {
-      "path": "native/windows/temporary-7339/ready-safe.json",
-      "sha256": "88477404ba3e2223b223d717a59a67dd648d73a58ad80e3dd2a0ee53860c2569",
-      "bytes": 1996
     },
     {
       "path": "native/windows/workbuddy-registration-paths-readonly-safe.json",
@@ -3311,8 +3451,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "dd868806cc3ba1da0311626cf75595854dea9ebc15584d9bb5463192d414899d",
-      "bytes": 46755
+      "sha256": "d0e88b9ba960a460a461d7590a76b868ba2b35fffaca3b731ef278a6618aa4fe",
+      "bytes": 47833
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -3336,8 +3476,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "a6f8081e7ff14db2c37e87470981de5230ce695ea56f3af8c65e9544bc8784ad",
-      "bytes": 64686
+      "sha256": "3d5ba5f1b75b4f65295cd2a45a3a3ac0e1fcdbfa95a2ab0b25dac4978abef888",
+      "bytes": 66603
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
@@ -3421,5 +3561,5 @@
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
-  "checkpointScope": "Previous594 archivefiles preserved except current summary/audit; originaltenth delivery copied byteexact plus sourceJSONL-bound originalexecutor terminal137 andcurrent22:34nativeaccess failures. HistoricalfailedDesktop18/runtime/handle receipts untouched. CurrentWindowsGUI/childrenlifetime unverified; no fullDesktop18/defaultreinstallation/platformcompletion claim. CurrentinternationalWorkBuddy fourmetadata200/fouradvertisedpayload404 andhomepage/clientbytesexact-history scope appended asfour safeJSONs only; no package/profile/install completion. CurrentClaude Storecatalog5.11492.0.0 vs historical5.1231.2.0/separateWinGet3.6556.2/exactofficialEXE+MSIX curl35+HTTPnull+0bytes appended assixsafeJSONs withsourcehashes. No downloadedpayload/Authenticode/install/currentregistration proof; originalStore1612andallhistoricalreceipts untouched. Eleventh607filecontinuation8548830/mainbdd8a0d delivery receipt plus currentthreecleanmergedworktrees/localbranches andsixexact-tip-leasedremote ref cleanup withindependentreview appended asfour byteexactsafeJSONs. Registered6; three nonancestor/dirtymonitor retained; 1023583391regularlogicalB notCphysical. Originalplatform/runtime gaps remain. Twelfth611filecleanup9a48d20/main1dec0b4 delivered; 27 producerpublicarchivefiles withoriginal26source mappings plusrootindependentlive/state andtwelfthdelivery byteexact appended. Managedoriginalsystemd269dbus recovery anddefault7337normalstop0/start0/current2888953+2888962 verified; originalfailures andpublicderivation scope retained. RealWSLrebootautostart andcurrentoriginalphonetokenwire nottested; Windowsentry110/fullDesktop18/vendorinstallation remain pending. Thirteenth delivery receipt8fa6bb7/main3f01075 appended byte-exact; current summary/audit/docs corrected from awaiting delivery to delivered. Historical native and lifecycle receipts remain unchanged; full platform completion is not claimed. Historical official Claude SFS strict per-request TLS/category404 receipt and public Microsoft Root2011 DER archived with local-byte verification. No current network/native/install verification inferred; no global trust changes. New native Linux original-one credential and current managed7337 GET200/nameMatch proven with existing alias/byte-exactAPK/XML and listener binding; initial abort/provider/exit-method failures retained, startup auto-reconnect and prelaunchLS limitations explicit. Own normalBack/forward2Dex cleanup proved, Windows originalfive/reboot remain pending. Previous two-doc continuation delivery335e52f/47ea750/main989f776 receipt appended byte-exact. Current read-only desktop diagnostic successor maps required active_windows and preserves null/unknown/source/service semantics, with public protocol/static synthetic verification only. Original helper and plan remain byte-exact; original executor terminal137/currentGUI ownership unknown. Actual Windows-cwd commands returned outer1/interop110, no native output or file bridge receipt. No Desktop18 diagnosis/pass, tray quit, installation or promotion claimed. Actual native Windows CMD/PowerShell0 and 05:31 original GUI identity observation archived with direct VMBus order7 allocation evidence; subsequent interop110 relapse retained. All bounded owned mappings released, no THP/cause/fullDesktop18/currentliveness claim. Private bridge capability and foreign VM contents excluded. Current official MCP2026 Linux wording and paths verified against pinned/current bytes; vendor payload/platform list and native Linux installation remain unverified. Native transient readiness, later worker absence and owned File.Replace probe verified; corrected source/client compatibility prepared, no current authenticated job/GUI runtime completion."
+  "checkpointScope": "Actual native file worker startup/heartbeat/hello and held GUI/CDP readonly theme/auth observation; Desktop18, default reinstallation, Windows original-five current token wire, real WSL reboot, vendor package installation and DeepSeek GUI remain incomplete."
 }

@@ -1,0 +1,61 @@
+{
+    "schema_version":  1,
+    "task":  "claude-official-payload-native-safe-download-verification",
+    "started_utc":  "2026-11-13T11:10:17.1261735Z",
+    "finished_utc":  "2026-11-13T11:10:21.4495861Z",
+    "phase":  "failed-no-install",
+    "exit_code":  13,
+    "source":  {
+                   "package":  "Anthropic.Claude",
+                   "version":  "3.6556.2",
+                   "architecture":  "x64",
+                   "installer_type":  "exe",
+                   "url":  "https://downloads.claude.ai/releases/win32/x64/3.6556.2/Claude-20c019a1e61fa5b687616af57d31f97bb3181723.exe",
+                   "manifest_url":  "https://raw.githubusercontent.com/microsoft/winget-pkgs/dde9f425ebb1721103491cd450e25ea7059ef98a/manifests/a/Anthropic/Claude/3.6556.2/Anthropic.Claude.installer.yaml",
+                   "expected_sha256":  "945082290478E5C668E8AAA25A392E1CD129E6219173E907B7FF1F7F99DED45E"
+               },
+    "limits":  {
+                   "download_seconds":  120,
+                   "download_process_guard_seconds":  126,
+                   "signature_process_seconds":  45,
+                   "termination_grace_seconds":  5,
+                   "output_drain_timeout_seconds":  5,
+                   "maximum_accepted_payload_bytes":  1073741824
+               },
+    "download":  {
+                     "executable":  "C:\\WINDOWS\\System32\\curl.exe",
+                     "timed_out":  false,
+                     "native_exited":  true,
+                     "actual_exit_code":  35,
+                     "elapsed_seconds":  4.153,
+                     "stdout":  "http_code=000\r\nsize_download=0\r\nssl_verify_result=0\r\nnum_redirects=0\r\n",
+                     "stderr":  "curl: (35) schannel: failed to receive handshake, SSL/TLS connection failed\r\n",
+                     "method":  "system-curl-default-chain-and-hostname-validation"
+                 },
+    "hash":  null,
+    "signature":  null,
+    "signature_process":  null,
+    "artifact":  {
+                     "directory":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continuation-native-access-20261113\\owned-native-worker-attempt3-3fa131682683515d5d18a4e5\\jobs\\23fd582bdce1abd4fa64435560a8d95d\\claude-official-3.6556.2-download-b4cb0d61b4214a79aee20abccbf79986",
+                     "retained_path":  null,
+                     "retained_bytes":  0,
+                     "partial_path":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continuation-native-access-20261113\\owned-native-worker-attempt3-3fa131682683515d5d18a4e5\\jobs\\23fd582bdce1abd4fa64435560a8d95d\\claude-official-3.6556.2-download-b4cb0d61b4214a79aee20abccbf79986\\Claude-3.6556.2-x64.exe.partial",
+                     "partial_exists":  false,
+                     "downloaded_sha_matched_path":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continuation-native-access-20261113\\owned-native-worker-attempt3-3fa131682683515d5d18a4e5\\jobs\\23fd582bdce1abd4fa64435560a8d95d\\claude-official-3.6556.2-download-b4cb0d61b4214a79aee20abccbf79986\\Claude-3.6556.2-x64.downloaded.exe",
+                     "downloaded_sha_matched_exists":  false,
+                     "verified_path":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continuation-native-access-20261113\\owned-native-worker-attempt3-3fa131682683515d5d18a4e5\\jobs\\23fd582bdce1abd4fa64435560a8d95d\\claude-official-3.6556.2-download-b4cb0d61b4214a79aee20abccbf79986\\Claude-3.6556.2-x64.verified.exe",
+                     "verified_exists":  false,
+                     "installed":  false,
+                     "executed":  false
+                 },
+    "error":  {
+                  "type":  "System.Management.Automation.RuntimeException",
+                  "message":  "System curl returned a nonzero exit code; download is not complete."
+              },
+    "installed":  false,
+    "payload_executed":  false,
+    "gui_started":  false,
+    "tls_validation_disabled":  false,
+    "global_proxy_or_dns_changed":  false,
+    "verification_complete":  false
+}

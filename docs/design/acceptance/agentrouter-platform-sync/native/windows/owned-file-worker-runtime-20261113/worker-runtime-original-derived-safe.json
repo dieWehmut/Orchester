@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-13T10:50:57.947238+00:00",
+  "bootstrapActualOsExitCode": 0,
+  "workerIdentity": {
+    "pid": 326920,
+    "exactBirthUtc": "2026-11-13T10:49:47.2180528Z",
+    "sourceSha256": "16ee5cae10190473a2f05b1c496d1323b1c929763d3ce2b9b37570f976b461b5",
+    "nonce": "2813cc3396434e7a80ea020f3b5d2692"
+  },
+  "observedHeartbeatFirstUtc": "2026-11-13T10:50:56.2622563Z",
+  "observedHeartbeatAdvancedUtc": "2026-11-13T10:50:58.3454163Z",
+  "heartbeatTimestampAdvancedObserved": true,
+  "workerTerminalExists": false,
+  "helloOsExitVerified": true,
+  "helloJobId": "66be38c3abd97b88cad1f6f4da277e2c",
+  "helloSourceSha256": "f2d0856ebd23f6270c7a30dcb589c00d2c6c208d64e055850bf69f736f52bb83",
+  "helloObservedNativeOsExitCode": 0,
+  "helloNativeProcessPid": 327996,
+  "helloNativeProcessExactBirthUtc": "2026-11-13T10:52:55.4871203Z",
+  "helloFileTimeExact": "134390407754871203",
+  "helloVerifiedAtUtc": "2026-11-13T10:53:23.763512+00:00"
+}

@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "status": "actual-native-held-readonly-selector-and-auth-observation-full-desktop18-incomplete",
+  "observedAtUtc": "2026-11-13T11:07:35.984Z",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "collectorJobId": "ea80e4cec17d0c6e46fa713c833630ce",
+  "collectorNativeOsExitCode": 0,
+  "diagnosticNodeNativeOsExitCode": 0,
+  "currentOriginalGuiPid": 37324,
+  "currentOriginalGuiFileTimeExact": "134389718070239855",
+  "currentGuiBirthImageSessionAndCdpAncestryHeldVerified": true,
+  "nativeHandlesHeldDuringDiagnostic": 2,
+  "guiLiveAtDiagnosticEnd": true,
+  "guiCreatorHistoricalHandlesRecovered": false,
+  "currentCdpOwnerPid": 29196,
+  "originalFirstThemeSelectorCurrentAssertionReproduction": {
+    "sourceSha256": "7269430ac55b9cf1c22e9c6cfd26013d5d3abd5f839f33004e8ddaaaec9d63bd",
+    "line": 109,
+    "expected": 1,
+    "observedLegacySelectorCount": 0,
+    "actualWorkspaceThemeSelectorCount": 1,
+    "historicalFailureExactLineClaimed": false
+  },
+  "views": [
+    {
+      "viewIndex": 0,
+      "httpStatus": 401,
+      "renderedCanonicalProviders": [],
+      "renderedRowCount": 0,
+      "allRenderedRowsHaveLoadedThemePair": null,
+      "actualWorkspaceThemeButtonCount": 1,
+      "legacyRailThemeButtonCount": 0,
+      "dtoObtained": false,
+      "dtoCorrespondenceChecked": false,
+      "dtoMissingOrMismatchClaimed": false
+    },
+    {
+      "viewIndex": 1,
+      "httpStatus": 401,
+      "renderedCanonicalProviders": [
+        "antigravity",
+        "claude",
+        "claude_app",
+        "cline",
+        "codex",
+        "craft",
+        "crush",
+        "cursor",
+        "deepseek",
+        "gemini",
+        "hermes",
+        "kilo",
+        "openclaw",
+        "opencode",
+        "pi",
+        "qwen",
+        "roo",
+        "trae",
+        "workbuddy",
+        "workbuddy_global",
+        "zcode"
+      ],
+      "renderedRowCount": 21,
+      "allRenderedRowsHaveLoadedThemePair": true,
+      "actualWorkspaceThemeButtonCount": 1,
+      "legacyRailThemeButtonCount": 0,
+      "dtoObtained": false,
+      "dtoCorrespondenceChecked": false,
+      "dtoMissingOrMismatchClaimed": false
+    }
+  ],
+  "domainFixtureCasesPassed": 2,
+  "readOnlySourceIndependentReviewPassed": true,
+  "nativeRuntimeIsFixtureTest": false,
+  "fullDesktop18AcceptancePassed": false,
+  "normalTrayQuitProved": false,
+  "modelCalls": 0,
+  "domMutations": 0,
+  "credentialWrites": 0,
+  "sourceBindings": [
+    {
+      "path": "current-held-original-gui-native-gate-safe.json",
+      "bytes": 1075,
+      "sha256": "0230fd460fd759d356ea199026373eb86f06bcb15d18712fb8664c8f56621cc0"
+    },
+    {
+      "path": "current-monitor-readonly-diagnostic-safe.json",
+      "bytes": 32951,
+      "sha256": "93c365cce9e87e4ca1ccf6e9f82600ad616c37b0228b1fe3652e9265c92b5498"
+    },
+    {
+      "path": "held-native-collector.ps1",
+      "bytes": 6580,
+      "sha256": "1e078eb73f8c8d7258755e39961470842b29df05838e6f55969ee797146754ce"
+    },
+    {
+      "path": "held-original-gui-diagnostic-terminal-safe.json",
+      "bytes": 780,
+      "sha256": "f38d405ad19b287211639df91bd1f5fc5b5dcf764374a50392e077e80f5f872c"
+    },
+    {
+      "path": "read-current-monitor-cdp-selector-auth-successor.mjs",
+      "bytes": 19953,
+      "sha256": "5b4b45529fbf424e3d6a80b9c2e9432da1c2b12c55a6549452340628a50b769a"
+    },
+    {
+      "path": "start-safe.json",
+      "bytes": 388,
+      "sha256": "45466af49ca5a2805ed74d8e7e47a45174c9af5abdf3fa6f3ed8f3e2bc3ceef7"
+    },
+    {
+      "path": "terminal-safe.json",
+      "bytes": 453,
+      "sha256": "77a2ccad40348570012ef11cf9e3b6a6e35717927d5ceb4beff9653cc73b301c"
+    }
+  ]
+}
