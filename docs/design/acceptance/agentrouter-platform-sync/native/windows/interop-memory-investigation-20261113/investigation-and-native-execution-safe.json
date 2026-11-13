@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-11-13T07:26:46.316382+00:00",
+  "status": "native-access-briefly-recovered-original-gui-observed-interop-relapsed",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "actualKernelVersion": "6.18.33.2-microsoft-standard-WSL2",
+  "ringAllocationFailures": [
+    {
+      "order": 7,
+      "mode": "GFP_KERNEL|__GFP_ZERO",
+      "allocator": "vmbus_alloc_ring",
+      "hypervSocketProbeSeen": true,
+      "kernelUptimeSeconds": "94882.954205"
+    }
+  ],
+  "abnormallyLongAcceptLogCount": 2475,
+  "resourceRootCauseScope": "Actual order7 VMBus ring allocation failures are observed; this does not prove every interop110 instance has the same immediate cause.",
+  "boundedMemoryAttempts": {
+    "count": 3,
+    "maximumOwnedBackingBytesPerAttempt": 4194304,
+    "allOwnedMappingsReleased": true,
+    "successfulThpCollapseCount": 0,
+    "sysctlOrGlobalConfigurationChanges": 0,
+    "foreignProcessSignalsOrMemoryChanges": 0,
+    "recoveryCausalityProved": false
+  },
+  "nativeCommands": [
+    {
+      "operation": "cmd.exe /d /c ver",
+      "workingDirectoryScope": "Windows C: Orchester-build",
+      "interopRoute": "/run/WSL/7250_interop",
+      "actualExitCode": 0,
+      "numericWindowsVersion": "10.0.26200.9711",
+      "rawConsoleEncodingPreserved": false
+    },
+    {
+      "operation": "existing owned PowerShell file-bridge probe",
+      "actualExitCode": 0,
+      "actualNativePid": 153208,
+      "exactNativeBirthFileTime": "134390212658420992",
+      "nativeSessionId": 1,
+      "receiptFile": "native-file-bridge-probe-executed-safe.json"
+    },
+    {
+      "operation": "native original GUI read-only observation",
+      "execSessionId": 92030,
+      "actualExitCode": 0,
+      "nativeCollectorPid": 154432,
+      "observedAtUtc": "2026-11-13T05:31:45.2006253Z",
+      "originalGuiPid": 37324,
+      "exactOriginalBirthVerified": true,
+      "originalBinaryShaVerified": true,
+      "originalGuiHandleHeldDuringObservation": true,
+      "handleReleasedAfterObservation": true,
+      "cdp19322OwnerPid": 29196,
+      "cdpOwnerGuiAncestryVerified": false,
+      "oldMonitorNode36084Absent": true,
+      "matchingReadonlyMonitorNodeCount": 0
+    },
+    {
+      "operation": "held GUI diagnostic bootstrap attempt",
+      "execSessionId": 67183,
+      "actualOuterExitCode": 1,
+      "interopError": 110,
+      "diagnosticGateOrOutputFileProduced": false
+    },
+    {
+      "operation": "owned persistent native worker bootstrap attempt1",
+      "execSessionId": 99680,
+      "actualOuterExitCode": 1,
+      "interopError": 110,
+      "nativeWorkerReadyOrLockProduced": false
+    },
+    {
+      "operation": "owned persistent native worker bootstrap attempt2",
+      "execSessionId": 78319,
+      "actualOuterExitCode": 1,
+      "interopError": 110,
+      "nativeWorkerReadyOrLockProduced": false
+    },
+    {
+      "operation": "native worker bootstrap rejected by actual PowerShell AST validation",
+      "actualOuterExitCode": 1,
+      "interopErrorObserved": false,
+      "nativeWorkerCreated": false,
+      "receiptFile": "native-worker-ast-rejection-original-safe.json"
+    },
+    {
+      "operation": "native PowerShell Parser.ParseFile diagnostic",
+      "actualExitCode": 0,
+      "workerParseErrorCount": 9,
+      "bootstrapParseErrorCount": 0,
+      "receiptFile": "syntax-diagnostic-and-followup-safe.json"
+    }
+  ],
+  "lastNativeGuiObservationProvesOnlyItsTimestamp": true,
+  "latestNativeAccessAvailable": false,
+  "currentGuiLivenessAfterInteropRelapseVerified": false,
+  "currentOriginalCreatorHandlesVerified": false,
+  "actualDomDiagnosticExecuted": false,
+  "desktop18Passed": false,
+  "trayQuitOrDefaultPromotionPerformed": false,
+  "foreignSelbstlaufVmShutdownPerformed": false,
+  "privateVmContentsOrBridgeKeyOrCredentialsIncluded": false,
+  "sourceMappings": [
+    {
+      "archiveFile": "bounded-collapse-attempt1-safe.json",
+      "sourceSha256": "877bafc01231602df379e30118ac0d965e6d5b37440b013b31348a8e91912f50",
+      "sourceBytes": 1485,
+      "byteExact": true
+    },
+    {
+      "archiveFile": "bounded-collapse-attempt2-safe.json",
+      "sourceSha256": "f3b6ebe960ac5c668a97e34aa9a0fb5e3e9eb3f7d079861984d8f04c940fa041",
+      "sourceBytes": 1485,
+      "byteExact": true
+    },
+    {
+      "archiveFile": "bounded-hugepage-hint-attempt3-safe.json",
+      "sourceSha256": "1527a2a115229b22fefd2edde3bd3d3f059724344f1ad96ac101e51f8c710328",
+      "sourceBytes": 1204,
+      "byteExact": true
+    },
+    {
+      "archiveFile": "native-file-bridge-probe-executed-safe.json",
+      "sourceSha256": "847f949e2202cd20fcb4a009425838ff3758c5dae8a74135314485b4ddb30a0a",
+      "sourceBytes": 454,
+      "byteExact": true
+    },
+    {
+      "archiveFile": "native-original-gui-observation-safe.json",
+      "sourceSha256": "79a4a6291a6084af9d6f02c063cc12f4e9bf6a4750cef2a23d7196d3e7327834",
+      "sourceBytes": 1019,
+      "byteExact": true
+    },
+    {
+      "archiveFile": "native-worker-ast-rejection-original-safe.json",
+      "sourceSha256": "421df76ad7d658ea3fd302fb46dc5cbbe763a08c55a8aaab73e2a658b415798a",
+      "sourceBytes": 229,
+      "byteExact": true
+    }
+  ],
+  "officialPrimaryReferences": [
+    "https://github.com/microsoft/WSL/blob/2.7.14/src/linux/init/binfmt.cpp",
+    "https://github.com/microsoft/WSL/blob/2.7.14/src/windows/common/interop.cpp",
+    "https://man7.org/linux/man-pages/man2/madvise.2.html"
+  ],
+  "nativeWorkerSyntaxFollowupProof": "syntax-diagnostic-and-followup-safe.json"
+}

@@ -1,0 +1,27 @@
+{
+    "schemaVersion":  1,
+    "observedAtUtc":  "2026-11-13T05:31:45.2006253Z",
+    "status":  "current-native-readonly-observation",
+    "actualTargetHost":  "Windows",
+    "collectorPid":  154432,
+    "collectorSessionId":  1,
+    "guiPid":  37324,
+    "guiPresent":  true,
+    "guiHandleHeldDuringObservation":  true,
+    "guiExactOriginalBirthMatches":  true,
+    "guiOriginalBinaryShaMatches":  true,
+    "cdp19322ListeningOwners":  [
+                                    29196
+                                ],
+    "originalNode36084Present":  false,
+    "readonlyNodeAttemptCount":  0,
+    "targetAppStarts":  0,
+    "modelCalls":  0,
+    "processSignals":  0,
+    "guiHasExited":  false,
+    "guiCreatedFileTimeExact":  "134389718070239855",
+    "guiSessionId":  1,
+    "guiBinarySha256":  "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+    "actualNativeQueryExitCode":  0,
+    "sourceSha256":  "82cd8783857aab0252e9b70619e738ae472c59f255e683d734b79d8cd989580b"
+}

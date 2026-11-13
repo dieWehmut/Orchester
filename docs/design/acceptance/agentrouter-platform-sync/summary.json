@@ -498,7 +498,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-13T04:40:53.265922+00:00",
+  "updatedAt": "2026-11-13T07:26:46.316382+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -867,5 +867,12 @@
   "currentWindowsMonitorReadonlyDiagnosticSuccessorPrepared": true,
   "currentWindowsMonitorReadonlyDiagnosticSuccessorProof": "native/windows/formal-desktop18-attempt1-20261112T1545/prepared-readonly-diagnostics/prepared-successor-plan-safe.json",
   "currentWindowsMonitorReadonlyDiagnosticSuccessorRuntimeExecuted": false,
-  "currentWindowsMonitorAssertionCauseEstablished": false
+  "currentWindowsMonitorAssertionCauseEstablished": false,
+  "currentWindowsInteropMemoryInvestigationProof": "native/windows/interop-memory-investigation-20261113/investigation-and-native-execution-safe.json",
+  "lastNativeWindowsOriginalGuiLiveObservedAtUtc": "2026-11-13T05:31:45.2006253Z",
+  "lastNativeWindowsOriginalGuiBirthAndBinaryVerified": true,
+  "currentWindowsInteropAfterBriefRecoveryAvailable": false,
+  "currentWindowsPersistentFileWorkerActualStartupVerified": false,
+  "currentWindowsNativeWorkerAstFailureObserved": true,
+  "currentWindowsNativeWorkerAstFollowupProof": "native/windows/interop-memory-investigation-20261113/syntax-diagnostic-and-followup-safe.json"
 }

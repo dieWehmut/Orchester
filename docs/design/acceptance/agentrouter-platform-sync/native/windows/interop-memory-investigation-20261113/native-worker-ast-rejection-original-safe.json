@@ -1,0 +1,1 @@
+{"schema":1,"state":"failed","bootstrap":null,"worker":null,"exitCode":1,"workerNativeExitCode":null,"stage":"script_ast_validation","exceptionType":"System.IO.InvalidDataException","finishedAtUtc":"2026-11-13T07:17:25.7614589Z"}
