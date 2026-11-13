@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-12T23:04:15.110886+00:00",
-  "status": "twelve-checkpoints-delivered-managed-linux-userbus-and-lifecycle-verified-reboot-token-wire-and-windows-pending",
+  "createdAt": "2026-11-13T02:23:04.142484+00:00",
+  "status": "thirteen-checkpoints-delivered-managed-linux-lifecycle-archive-delivered-full-platform-verification-pending",
   "summaryPath": "summary.json",
   "files": [
     {
@@ -448,6 +448,11 @@
       "path": "maintenance/git-delivery/third-step-delivery-safe.json",
       "sha256": "c795729009d19800729c8fc426742ec0a0627c086a6a61dae2b95349acc98654",
       "bytes": 614
+    },
+    {
+      "path": "maintenance/git-delivery/thirteenth-step-delivery-safe.json",
+      "sha256": "0a7b46ab6b0aa123dcec6bbb648d8a58312f2fc08384958ebb18b8ed902e2e3a",
+      "bytes": 1553
     },
     {
       "path": "maintenance/git-delivery/twelfth-step-delivery-safe.json",
@@ -3096,8 +3101,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "ee678dc4d072e710007bd45ae54ede683718ac591ac709241545de7c4f4b26de",
-      "bytes": 41799
+      "sha256": "a4afe78a0702e4c1c5b904ea792e900f8ec7c11950508d0c233e0a5ae62adf56",
+      "bytes": 42020
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -3121,8 +3126,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "3bf4a28685c43243f0b9700e97e102d4ef39ae7d317a7afe519c4d4c4022dca4",
-      "bytes": 61086
+      "sha256": "3d3202f07ec5d59f1da4e682fd553ca84f539b88d68d93a0c298ca682ccaa3b7",
+      "bytes": 61454
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
@@ -3206,5 +3211,5 @@
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
-  "checkpointScope": "Previous594 archivefiles preserved except current summary/audit; originaltenth delivery copied byteexact plus sourceJSONL-bound originalexecutor terminal137 andcurrent22:34nativeaccess failures. HistoricalfailedDesktop18/runtime/handle receipts untouched. CurrentWindowsGUI/childrenlifetime unverified; no fullDesktop18/defaultreinstallation/platformcompletion claim. CurrentinternationalWorkBuddy fourmetadata200/fouradvertisedpayload404 andhomepage/clientbytesexact-history scope appended asfour safeJSONs only; no package/profile/install completion. CurrentClaude Storecatalog5.11492.0.0 vs historical5.1231.2.0/separateWinGet3.6556.2/exactofficialEXE+MSIX curl35+HTTPnull+0bytes appended assixsafeJSONs withsourcehashes. No downloadedpayload/Authenticode/install/currentregistration proof; originalStore1612andallhistoricalreceipts untouched. Eleventh607filecontinuation8548830/mainbdd8a0d delivery receipt plus currentthreecleanmergedworktrees/localbranches andsixexact-tip-leasedremote ref cleanup withindependentreview appended asfour byteexactsafeJSONs. Registered6; three nonancestor/dirtymonitor retained; 1023583391regularlogicalB notCphysical. Originalplatform/runtime gaps remain. Twelfth611filecleanup9a48d20/main1dec0b4 delivered; 27 producerpublicarchivefiles withoriginal26source mappings plusrootindependentlive/state andtwelfthdelivery byteexact appended. Managedoriginalsystemd269dbus recovery anddefault7337normalstop0/start0/current2888953+2888962 verified; originalfailures andpublicderivation scope retained. RealWSLrebootautostart andcurrentoriginalphonetokenwire nottested; Windowsentry110/fullDesktop18/vendorinstallation remain pending."
+  "checkpointScope": "Previous594 archivefiles preserved except current summary/audit; originaltenth delivery copied byteexact plus sourceJSONL-bound originalexecutor terminal137 andcurrent22:34nativeaccess failures. HistoricalfailedDesktop18/runtime/handle receipts untouched. CurrentWindowsGUI/childrenlifetime unverified; no fullDesktop18/defaultreinstallation/platformcompletion claim. CurrentinternationalWorkBuddy fourmetadata200/fouradvertisedpayload404 andhomepage/clientbytesexact-history scope appended asfour safeJSONs only; no package/profile/install completion. CurrentClaude Storecatalog5.11492.0.0 vs historical5.1231.2.0/separateWinGet3.6556.2/exactofficialEXE+MSIX curl35+HTTPnull+0bytes appended assixsafeJSONs withsourcehashes. No downloadedpayload/Authenticode/install/currentregistration proof; originalStore1612andallhistoricalreceipts untouched. Eleventh607filecontinuation8548830/mainbdd8a0d delivery receipt plus currentthreecleanmergedworktrees/localbranches andsixexact-tip-leasedremote ref cleanup withindependentreview appended asfour byteexactsafeJSONs. Registered6; three nonancestor/dirtymonitor retained; 1023583391regularlogicalB notCphysical. Originalplatform/runtime gaps remain. Twelfth611filecleanup9a48d20/main1dec0b4 delivered; 27 producerpublicarchivefiles withoriginal26source mappings plusrootindependentlive/state andtwelfthdelivery byteexact appended. Managedoriginalsystemd269dbus recovery anddefault7337normalstop0/start0/current2888953+2888962 verified; originalfailures andpublicderivation scope retained. RealWSLrebootautostart andcurrentoriginalphonetokenwire nottested; Windowsentry110/fullDesktop18/vendorinstallation remain pending. Thirteenth delivery receipt8fa6bb7/main3f01075 appended byte-exact; current summary/audit/docs corrected from awaiting delivery to delivered. Historical native and lifecycle receipts remain unchanged; full platform completion is not claimed."
 }

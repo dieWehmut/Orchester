@@ -1,6 +1,6 @@
 # AgentRouter 全目录与多平台同步验收
 
-本轮扩展范围与此前[38 的桌面/手机交付历史](38-desktop-mobile-final-delivery.md)分别归档，原源码、失败和退出边界保留。本检查点生产源码为 `71def643cb08b208cc79687f79255c504eb14dc6`。此前十二轮检查点已推送并合并到 main `1dec0b4ec1c7b62a1d90538da70e8bf8f5c3b140`；其中新增六种 CLI 的 Windows / WSL 共 12 个安装单元及常用命令均通过版本检查，见[追加安装记录](40-additional-agent-installations.md)。执行跨 2026-11-11 至 2026-11-13（Asia/Shanghai），原 receipt UTC 日期和 `20261111` 目录保持原值。监控目录分别展示 WorkBuddy 国内、国际两版，共 21 providers、7 services、42 项主题映射与 24 份官方图标。
+本轮扩展范围与此前[38 的桌面/手机交付历史](38-desktop-mobile-final-delivery.md)分别归档，原源码、失败和退出边界保留。本检查点生产源码为 `71def643cb08b208cc79687f79255c504eb14dc6`。此前十三轮检查点已推送并合并到 main `3f01075b3490f6920cd7e42d730fd339456728d9`；其中新增六种 CLI 的 Windows / WSL 共 12 个安装单元及常用命令均通过版本检查，见[追加安装记录](40-additional-agent-installations.md)。执行跨 2026-11-11 至 2026-11-13（Asia/Shanghai），原 receipt UTC 日期和 `20261111` 目录保持原值。监控目录分别展示 WorkBuddy 国内、国际两版，共 21 providers、7 services、42 项主题映射与 24 份官方图标。
 
 前端、Pages 与 Linux 新实例恢复已有实证，Windows 核心构建通过。正确 Windows Android 5572 已完成同证书新 APK、4 项原生测试、原五 AES 验证、Android Studio 17.4 秒同步 / JDK 21，以及 21 产品 / 42 图标。新一轮原生终端、真实键盘 resize、正常关闭、临时设备移除和撤销及自有环境清理已补齐；[最终安全记录](acceptance/agentrouter-platform-sync/native/android/post-reboot-completion-20261112/final-completion-safe.json)保留终端退出码 1 和任务删除后回执程序失败的边界。原五凭据保留，原 Linux 7337 凭据实际请求 200。Windows 正式 Portable14 已实际通过；Desktop18 在监控目录处失败，默认重装仍待执行；此前 5554 Linux 目标及初始 20 项阶段保留历史绑定。
 
@@ -255,6 +255,8 @@ C 盘精确已知删除量为 7,219,765,510 字节：36 个旧 PDB 4,846,878,720
 [第十一轮实际交付](acceptance/agentrouter-platform-sync/maintenance/git-delivery/eleventh-step-delivery-safe.json)将当前执行器终态与官方渠道续验提交 `8548830…` 合并 main `bdd8a0d…`，feature push / main merge / main push 均实际退出 0；607 项 manifest 与远程 main 文件相等、731 项生产输入通过。新的精确工作树与远程分支清理另行归档，原生安装和完整平台验收仍待完成。
 
 [第十二轮实际交付](acceptance/agentrouter-platform-sync/maintenance/git-delivery/twelfth-step-delivery-safe.json)将精确工作树与分支清理提交 `9a48d20…` 合并 main `1dec0b4…`，feature push / main merge / main push 均实际退出 0；611 项 manifest 与远程 main 文件相等、731 项生产输入通过。当前 Linux 用户总线、服务生命周期和独立状态验收另行归档；Windows 原生入口 110、完整桌面及官方安装的剩余边界保持。
+
+[第十三轮实际交付](acceptance/agentrouter-platform-sync/maintenance/git-delivery/thirteenth-step-delivery-safe.json)记录 Linux 用户总线和 managed 7337 生命周期归档提交 `8fa6bb7…` 合并 main `3f01075…`，feature push / main merge / main push 均实际退出 0；640 项 manifest 文件的散列、大小和远程 main Git blob，以及 731 项生产输入均通过。该交付已完成；真实 WSL 重启自动启动、当前实例的原手机 token 请求、Windows Desktop18 和默认重装及官方客户端缺口仍需分别验收。
 
 [安全证据来源](acceptance/agentrouter-platform-sync/sources/receipt-provenance.json)逐项记录选定原文件 SHA-256 与归档字节。后续原生/runtime/部署/Pages终态只追加新的 source epoch；历史失败和 pending 不被改成通过。[逐项需求验收审计](acceptance/agentrouter-platform-sync/sources/requirement-delivery-audit.json)分别列出原 13 项用户要求与本轮追加安装要求、已证范围和剩余实际验收，不把当前部分完成说成所有平台交付完毕。[当前范围摘要](acceptance/agentrouter-platform-sync/summary.json)与[文件散列清单](acceptance/agentrouter-platform-sync/manifest.json)放在顶层，其余按职责归档。旧临时源文件缺失不改写归档原字节或原源码字段；[本轮独立源码与产物复核](acceptance/agentrouter-platform-sync/sources/audit/final71-current-source-bindings.json)核对当时 730 项源码和 80 项构建文件均相等，当前持久完整 Rust 纳入 `.cargo/config.toml` 后为 731 项联合输入。[初始归档完整性快照](acceptance/agentrouter-platform-sync/sources/audit/initial-archive-integrity.json)保留归档原散列、链接与秘密扫描边界：
 
