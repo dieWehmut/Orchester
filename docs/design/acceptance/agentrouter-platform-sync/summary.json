@@ -474,7 +474,7 @@
     "OfficialDeepSeekWindows installation/signature/HKCU/ASARrc1verified afteroriginalnumericPEverifierfailure; GUI/model/auth nottested; DataElementoriginalcurrentmetadataretained, wholeoldEXEbeforeafterhashnotproved",
     "InternationalWorkBuddy nativeWSL usablepackage/profile isolation pending: currentfourofficialmetadata200 butfouradvertisedpayloads404/0bytes; publichomepage/clientbytes equalhistory. OfficialClaudeApp Windows payload/LinuxGUI release evidence remains pending.",
     "Historicalunregisteredchildidentity/HANDLEclosure andwrongLinuxfullpackage rollback unproved; no new signal/claim",
-    "CorrectWindowsAndroid original5 retained/fullPTY+cleanup andASCIIcomposite659 verified. Twelfthcleanup9a48d20 mergedmain1dec0b4 with611manifest/731productionchecks; currentLinuxmanagedbus/service-lifecycle evidence andtwelfthdelivery receipt await separatearchivecommit.",
+    "Correct Windows Android original five retained/full PTY+cleanup and ASCII composite659 verified. Twelfth cleanup9a48d20/main1dec0b4 delivered; thirteenth managed Linux bus/service lifecycle8fa6bb7/main3f01075 delivered with640 manifest/main Git blob checks and731 production hash checks. Remaining Windows Desktop18/default reinstallation, official clients, actual WSL reboot/autostart and current original phone-token wire request retain their separate pending scopes.",
     "Linux7337 currentmanagedinstance2888962 has5task/5authJSON retained across3privatebackups and17resources/21catalog verified. PriorAndroidoriginaltokenGET200 historicalonly; currentnewinstance originalphone-tokenHTTPwire notrerun. SQLrawfalse explicit; actualWSLreboot-autostart stillpending.",
     "HistoricalClaudeStoreUI cannotconnect/bootstrapperactual1612 retained. CurrentStoremetadata5.11492.0.0 differsfromhistorical5.1231.2.0; independentWinGet3.6556.2 exactEXE/MSIX GET bothcurl35/HTTPnull/0bytes. OfficialClaudepayload/digest/Authenticode/nativeinstallation/registration pending; nativegateway andofficialdownload/Storetransport require recovery."
   ],
@@ -494,7 +494,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-12T23:04:15.110886+00:00",
+  "updatedAt": "2026-11-13T02:23:04.142484+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -843,5 +843,7 @@
   "currentLinuxRetainedOriginalWriterFd": 7,
   "currentLinuxOriginalPidfdHeld": true,
   "currentLinuxNativeControlSocketPathFailurePreserved": true,
-  "currentLinuxOriginalTokenWireCurrentInstanceVerified": false
+  "currentLinuxOriginalTokenWireCurrentInstanceVerified": false,
+  "prior640ThirteenthLinuxLifecycleCheckpointDelivered": true,
+  "thirteenthLinuxLifecycleDeliveryProof": "maintenance/git-delivery/thirteenth-step-delivery-safe.json"
 }

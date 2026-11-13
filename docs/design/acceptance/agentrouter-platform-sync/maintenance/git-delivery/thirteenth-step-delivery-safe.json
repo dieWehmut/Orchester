@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "status": "managed-linux-recovery-checkpoint-pushed-merged-main-full-objective-remains-active",
+  "observedAtUtc": "2026-11-12T23:08:50.263197+00:00",
+  "featureCommit": "8fa6bb769afe32dc33687b436e343e4c81575c15",
+  "mainRevision": "3f01075b3490f6920cd7e42d730fd339456728d9",
+  "actualFeaturePushExitCode": 0,
+  "actualMainMergeExitCode": 0,
+  "actualMainPushExitCode": 0,
+  "bothRemoteRefsVerified": true,
+  "bothWorktreesClean": true,
+  "manifestHashSizeMainGitBlobChecks": 640,
+  "sourceHashChecks": 731,
+  "stagedFileChecks": 33,
+  "secretShapeFindings": 0,
+  "currentDefault7337UnitActiveRunning": true,
+  "currentOriginalUnitControllerPid": 2888953,
+  "currentExactListenerPid": 2888962,
+  "currentExactListenerStartTicks": 6300089,
+  "currentPortListenerSocketOwnershipVerified": true,
+  "currentPublicIndexStatus": 200,
+  "currentProtectedInfoUnauthenticatedStatus": 401,
+  "currentRunAndAuthRetentionRootProof": "deployments/linux/20261113-userbus-managed-default/root-independent-live-and-state-safe.json",
+  "fullObjectiveComplete": false,
+  "currentGoalTurnClassification": "progress",
+  "remaining": [
+    "Windows native gateway unavailable: latest four actual queries exit1/110; full Desktop18 and default reinstall incomplete.",
+    "Official Claude payload TLS failure and international WorkBuddy Linux advertised payload404 prevent those installations.",
+    "Actual WSL reboot autostart and newest Linux instance original mobile-token HTTP request not verified."
+  ],
+  "privateStateValuesIncluded": false
+}
