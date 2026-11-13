@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "task": "claude-user-proxy-transport-20261113",
+  "assembled_at_utc": "2026-11-13T12:43:01.203258+00:00",
+  "scope": "Observed native local proxy metadata and failed exact official EXE transport only",
+  "observations": {
+    "proxy_query": {
+      "job_id": "e7c481a8d190795acdb939dab33541a9",
+      "native_exit_code": 0,
+      "started_at_utc": "2026-11-13T11:29:54.5639886Z",
+      "finished_at_utc": "2026-11-13T11:29:55.1180444Z",
+      "query_succeeded": true,
+      "current_user_proxy": {
+        "protocol": "http",
+        "host": "127.0.0.1",
+        "port": 7897
+      },
+      "current_user_proxy_target_protocol": "all",
+      "winhttp_machine_default_direct_configured": true,
+      "network_requests_made": false,
+      "tls_success_proved": false,
+      "authenticated_native_gui_pass_proved": false
+    },
+    "forced_native_dotnet_exact_official_payload": {
+      "job_id": "eac94f27e09d1c4af3b10a59cd52a60b",
+      "native_exit_code": 13,
+      "download_child_actual_exit_code": 13,
+      "started_at_utc": "2026-11-13T11:54:03.9492611Z",
+      "finished_at_utc": "2026-11-13T11:54:11.4175662Z",
+      "package": {
+        "package": "Anthropic.Claude",
+        "version": "3.6556.2",
+        "architecture": "x64",
+        "installer_type": "exe",
+        "url": "https://downloads.claude.ai/releases/win32/x64/3.6556.2/Claude-20c019a1e61fa5b687616af57d31f97bb3181723.exe",
+        "manifest_url": "https://raw.githubusercontent.com/microsoft/winget-pkgs/dde9f425ebb1721103491cd450e25ea7059ef98a/manifests/a/Anthropic/Claude/3.6556.2/Anthropic.Claude.installer.yaml",
+        "expected_sha256": "945082290478E5C668E8AAA25A392E1CD129E6219173E907B7FF1F7F99DED45E"
+      },
+      "method": "forced-native-dotnet-current-user-default-proxy-in-isolated-process",
+      "resolved_proxy": {
+        "protocol": "http",
+        "host": "127.0.0.1",
+        "port": 7897
+      },
+      "same_proxy_as_current_user_metadata": true,
+      "target_is_bypassed": false,
+      "resolved_route_is_direct": false,
+      "web_exception_status": "SendFailure",
+      "exception_error_type": "System.Management.Automation.MethodInvocationException",
+      "http_code": null,
+      "bytes_written": 0,
+      "content_length": null,
+      "complete": false,
+      "retained_payload_bytes": 0,
+      "retained_payload_path": null,
+      "tls_validation_disabled": false,
+      "tls12_enabled_process_only": true,
+      "revocation_check_enabled_process_only": true,
+      "specific_root_cause_determined": false
+    }
+  },
+  "claims": {
+    "complete_claude_payload_proved": false,
+    "actual_full_payload_sha256_proved": false,
+    "valid_authenticode_signature_proved": false,
+    "installation_proved": false,
+    "payload_execution_proved": false,
+    "desktop_18_pass_proved": false,
+    "historical_exact_failure_line_reproduced": false,
+    "historical_creator_10_handles_recovered": false,
+    "authenticated_current_gui_dto_correspondence_proved": false
+  },
+  "assembly_actions": {
+    "source_and_receipt_inspection": true,
+    "private_archive_writes": true,
+    "native_execution": false,
+    "cdp_access": false,
+    "network_requests": false,
+    "repository_changes": false
+  },
+  "privacy": {
+    "original_download_report_archived_byteexact": false,
+    "stdout_stderr_excluded": true,
+    "raw_logs_archived": false,
+    "private_credentials_keys_macs_sids_or_html_archived": false,
+    "public_worker_identity_fields_retained": true,
+    "source_code_archived_byteexact": true
+  },
+  "dependency_boundary": {
+    "implementation": "Complete inline implementation in each executed worker source",
+    "external_runtime_code_dependencies": [],
+    "external_prefix_source_sha_or_helper_paths_header_present": false,
+    "unbound_preparation_helpers_archived": false,
+    "preparation_templates_not_runtime_evidence": true
+  },
+  "evidence_boundary": "Start/terminal receipts bind executed source SHA256, PID, exact birth and public worker nonce. This assembly does not independently inspect live OS state; facts are limited to recorded observation timestamps. Proxy-query exit 0 is not vendor TLS or GUI authentication success. SendFailure does not determine a specific TLS root cause."
+}

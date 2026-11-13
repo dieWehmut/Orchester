@@ -1,0 +1,13 @@
+{
+    "schemaVersion":  1,
+    "status":  "readonly-windows-android5-preflight-failed",
+    "stage":  "old-exact-process-identities",
+    "observedAtUtc":  "2026-11-13T11:42:36.8068494Z",
+    "errorType":  "RuntimeException",
+    "rawErrorOrPrivateValuesIncluded":  false,
+    "productsStarted":  0,
+    "adbOrEmulatorCommandsInvoked":  0,
+    "cdpOrHttpRequests":  0,
+    "processOrInputSignals":  0,
+    "fullWindowsFiveCurrentWireVerified":  false
+}

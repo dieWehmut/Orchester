@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "status": "native-successor2-existing-windows-avd-preflight-passed-full-five-wire-pending",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "actualHost": "Windows",
+  "successor2": {
+    "id": "54fdcb3218245026a461792bad7688f3",
+    "pid": 373740,
+    "exactBirthUtc": "2026-11-13T12:18:43.8084260Z",
+    "jobSourceSha256": "f12bfd6872ddaf2a64dbd7ce729046f29b0487a20fc1a3f99b21f0ca534e876b",
+    "dependencySourceSha256": "dce8f140d1172f5df0961849918917891e65e032466ab80ee486682a2a43409c",
+    "nativeExitCode": 0,
+    "observedAtUtc": "2026-11-13T12:18:45.3618589Z"
+  },
+  "predecessor": {
+    "id": "8e41a9c881c2b3d174c44fd9d47904f8",
+    "pid": 329160,
+    "exactBirthUtc": "2026-11-13T11:42:36.0737385Z",
+    "jobSourceSha256": "407b048609dad05aaf7c89acebb44c3a411de455051dd903e5412d0b759969d0",
+    "dependencySourceSha256": "2712818f73e1369a484455f7344f9e47ed2fe711fecb2082ab400798fb4d02e9",
+    "nativeExitCode": 1,
+    "observedAtUtc": "2026-11-13T11:42:36.8068494Z"
+  },
+  "sdkAndExistingAvdPinsMatched": 6,
+  "originalAvdIniAndConfigExact": true,
+  "oldExactIdentitiesCurrentlyLive": 0,
+  "oldPidReusedDifferentBirthCount": 3,
+  "oldPidAbsentCount": 1,
+  "oldCreatorHandleRecoveryClaimed": false,
+  "portsObservedFree": [
+    5039,
+    5572,
+    5573,
+    19329
+  ],
+  "futurePortReservationClaimed": false,
+  "currentAvdNewOwnersExcluded": false,
+  "originalDataOrCredentialsRead": false,
+  "keystoreAliasVerified": false,
+  "nativeFiveCredentialGetSuccessCount": null,
+  "currentOriginal7337CredentialHttpGetVerified": false,
+  "fullWindowsFiveCurrentWireVerified": false,
+  "productsStarted": 0,
+  "avdOrAppOrDefaultAdbMutationCount": 0,
+  "privateKeysOrTokensOrRawLogsArchived": false,
+  "predecessorFailurePreserved": true
+}

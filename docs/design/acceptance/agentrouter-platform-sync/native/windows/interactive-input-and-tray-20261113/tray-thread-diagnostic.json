@@ -1,0 +1,19 @@
+{
+    "event":  "owned_tray_thread_diagnostics",
+    "records":  [
+                    {
+                        "Window":  1313132,
+                        "ThreadId":  22480,
+                        "HarnessThreadId":  339032,
+                        "DesktopNamesReadable":  true,
+                        "DesktopNamesMatch":  true,
+                        "TrayDesktopIsDefault":  true,
+                        "HarnessDesktopIsDefault":  true,
+                        "CursorRead":  false,
+                        "CursorX":  0,
+                        "CursorY":  0
+                    }
+                ],
+    "readOnly":  true,
+    "modelCalls":  0
+}

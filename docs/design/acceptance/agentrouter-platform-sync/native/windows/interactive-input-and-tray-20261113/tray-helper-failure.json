@@ -1,0 +1,15 @@
+{
+    "status":  "failed",
+    "stage":  "owned-popup-window",
+    "type":  "System.InvalidOperationException",
+    "staticCode":  "tray-popup-not-unique",
+    "popupCount":  0,
+    "postMessageError":  0,
+    "itemCount":  0,
+    "unknownLabelCount":  0,
+    "knownMenuLabels":  [
+
+                        ],
+    "menuInvoked":  false,
+    "modelCalls":  0
+}

@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    {
+      "originalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/worker.terminal-safe.json",
+      "archivePath": "worker3-self-reported-terminal-safe.json",
+      "role": "self-report-not-independent-os-exit",
+      "sha256": "7b03463beb2f7e8f9c7447ecab7039a69369c3dddfc4f24ecf3f7a8500f56fb6",
+      "bytes": 392,
+      "copiedByteExact": true
+    },
+    {
+      "originalPath": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/worker4-direct-bootstrap-observation-safe.json",
+      "archivePath": "worker4-direct-bootstrap-observation-safe.json",
+      "role": "actual-interop-observer-terminal",
+      "sha256": "c591a03494aab51795facde8f79347ef6959351f7030d880e9b46f0ebe3aac3f",
+      "bytes": 354,
+      "copiedByteExact": true
+    },
+    {
+      "originalPath": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/worker4-guarded-bootstrap-observation-safe.json",
+      "archivePath": "worker4-guarded-bootstrap-observation-safe.json",
+      "role": "actual-interop-observer-terminal",
+      "sha256": "6b2e61e1888a0a7cc87c0bea9b06e2c5c2ebfbbdc4f5e237ade5df8762ae0304",
+      "bytes": 354,
+      "copiedByteExact": true
+    },
+    {
+      "originalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt4-1ed007a58623f12c8e1c1223/launch-guard.ps1",
+      "archivePath": "prepared-original-user-and-existing-worker-guard.ps1",
+      "role": "prepared-unexecuted-native-source",
+      "sha256": "2b9354addfdad4954b1d9548b4611627e5a1524a51eec62ac4072d513d6c1113",
+      "bytes": 2746,
+      "copiedByteExact": true
+    },
+    {
+      "originalPath": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/bounded-owned-collapse-worker4-20261113/attempt-safe.json",
+      "archivePath": "bounded-owned-collapse-result-safe.json",
+      "role": "actual-one-owned-mapping-result",
+      "sha256": "9ec27c0f6188c85db4516c4a8c297d3a3ed8a4604596539625e795b3b1239285",
+      "bytes": 1275,
+      "copiedByteExact": true
+    },
+    {
+      "originalPath": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/bounded-owned-collapse-worker4-20261113/attempt.py",
+      "archivePath": "bounded-owned-collapse-source.py",
+      "role": "actual-linux-owned-mapping-source",
+      "sha256": "343b459c32e126eef81f36a416d59dfdb77bdc2fd4e3c6b5d85d0cd462c61128",
+      "bytes": 2515,
+      "copiedByteExact": true
+    },
+    {
+      "originalPath": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/worker4-core-bootstrap-observation-safe.json",
+      "archivePath": "worker4-core-bootstrap-observation-safe.json",
+      "role": "actual-core-endpoint-interop-observer-terminal",
+      "sha256": "9757cc808c5407be8440da6f550fbf3ea1a06326c41d3f932b63123179b2e90a",
+      "bytes": 351,
+      "copiedByteExact": true
+    },
+    {
+      "originalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt4-1ed007a58623f12c8e1c1223/launch-guard-successor.ps1",
+      "archivePath": "prepared-original-user-and-existing-worker-guard-successor.ps1",
+      "role": "prepared-unexecuted-bootstrap-exit-forwarding-successor",
+      "sha256": "03875c219c5b8082d3c717b69560960982f5b1a32c0d366e0f6b8f8fd7adf039",
+      "bytes": 2825,
+      "copiedByteExact": true
+    }
+  ],
+  "originalsByteExact": 8
+}

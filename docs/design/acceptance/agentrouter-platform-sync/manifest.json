@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-13T11:19:28.312136+00:00",
-  "status": "native-worker-runtime-and-current-theme-control-verified-full-platform-delivery-incomplete",
+  "createdAt": "2026-11-13T12:59:04.782203+00:00",
+  "status": "new-native-observation-evidence-archived-summary-update-pending",
   "summaryPath": "summary.json",
   "files": [
     {
@@ -1510,6 +1510,66 @@
       "bytes": 430
     },
     {
+      "path": "native/windows/android5-current-preflight-20261113/native-android5-preflight-scope-safe.json",
+      "sha256": "38da3bbb47962f80530f1301d68170228c2f962314ea44e773b986ad61b7c97a",
+      "bytes": 1784
+    },
+    {
+      "path": "native/windows/android5-current-preflight-20261113/predecessor-dependency-source.ps1",
+      "sha256": "2712818f73e1369a484455f7344f9e47ed2fe711fecb2082ab400798fb4d02e9",
+      "bytes": 8597
+    },
+    {
+      "path": "native/windows/android5-current-preflight-20261113/predecessor-executed-source.ps1",
+      "sha256": "407b048609dad05aaf7c89acebb44c3a411de455051dd903e5412d0b759969d0",
+      "bytes": 1564
+    },
+    {
+      "path": "native/windows/android5-current-preflight-20261113/predecessor-result-safe.json",
+      "sha256": "fde14793b3ae360f62eaed188e02489bd9ec2f1c2edfbfadbcfcc0f0d9fc2754",
+      "bytes": 465
+    },
+    {
+      "path": "native/windows/android5-current-preflight-20261113/predecessor-start-safe.json",
+      "sha256": "d2fabedeca595dc5d108a57a0cdf5766e572c41829adb4cfc743b0bfb07ea58b",
+      "bytes": 388
+    },
+    {
+      "path": "native/windows/android5-current-preflight-20261113/predecessor-terminal-safe.json",
+      "sha256": "2352ef366568430e95cbd41a931dfe53484b1ebbe1787b0e20f8ad9c61d27179",
+      "bytes": 453
+    },
+    {
+      "path": "native/windows/android5-current-preflight-20261113/source-bindings-safe.json",
+      "sha256": "9f43b392a5290e15c22926cd4cb03f1b08169a5988abdc02427f66a4638f9d33",
+      "bytes": 4692
+    },
+    {
+      "path": "native/windows/android5-current-preflight-20261113/successor2-dependency-source.ps1",
+      "sha256": "dce8f140d1172f5df0961849918917891e65e032466ab80ee486682a2a43409c",
+      "bytes": 12767
+    },
+    {
+      "path": "native/windows/android5-current-preflight-20261113/successor2-executed-source.ps1",
+      "sha256": "f12bfd6872ddaf2a64dbd7ce729046f29b0487a20fc1a3f99b21f0ca534e876b",
+      "bytes": 1597
+    },
+    {
+      "path": "native/windows/android5-current-preflight-20261113/successor2-result-safe.json",
+      "sha256": "946ad4df53fb5f0c9e91fcd691b74c8197f1e9a9b02872376c707b9c0b5ed6f8",
+      "bytes": 7262
+    },
+    {
+      "path": "native/windows/android5-current-preflight-20261113/successor2-start-safe.json",
+      "sha256": "0fe2c72a0319a911c34d2eb939082c6f1d670d088d7f22fe594fced44892484c",
+      "bytes": 388
+    },
+    {
+      "path": "native/windows/android5-current-preflight-20261113/successor2-terminal-safe.json",
+      "sha256": "d897e6b67d1ad091926398e9f580d9ba0a271ba58ff14bb7e186349803890cd8",
+      "bytes": 453
+    },
+    {
       "path": "native/windows/claude-current-official-source/handoff-safe-summary.json",
       "sha256": "52e998536a96f2c655291007d153be4324740e7d0b39599e4b21dbdc27e54a77",
       "bytes": 4523
@@ -1718,6 +1778,61 @@
       "path": "native/windows/claude-store-ui-20261112T1530/uncertain-bootstrapper-native-query-interop1-safe.json",
       "sha256": "e1f7eb8a176e449903564a9e75d24a248e2093decf9290fa7e8e0dbc6e22764d",
       "bytes": 536
+    },
+    {
+      "path": "native/windows/claude-user-proxy-transport-20261113/claude-official-payload-native-dotnet-user-proxy-derived-safe.json",
+      "sha256": "532d2e034dc558b248949beaf31dce5a80e4507741851a43c92ccafde80ae4fb",
+      "bytes": 4121
+    },
+    {
+      "path": "native/windows/claude-user-proxy-transport-20261113/dotnet-download-status.json",
+      "sha256": "48eb8078f7b2cd26a840a230b889eb0c3ae2fce1d38933646cd52d5b7ca0d287",
+      "bytes": 1263
+    },
+    {
+      "path": "native/windows/claude-user-proxy-transport-20261113/forced-dotnet-executed-source.ps1",
+      "sha256": "eda5bec9e797ae03f344b033abb470c2c66b03f14c5c8d5190c71b6327fba95a",
+      "bytes": 20990
+    },
+    {
+      "path": "native/windows/claude-user-proxy-transport-20261113/forced-dotnet-start-safe.json",
+      "sha256": "02135df4a7344398a8fec47fbf558e3cc79d703ebd73c20d9f06d900594b2e64",
+      "bytes": 388
+    },
+    {
+      "path": "native/windows/claude-user-proxy-transport-20261113/forced-dotnet-terminal-safe.json",
+      "sha256": "783c397719c33db464a2cfbbe9aa54607c50cb29e624fb86ade81373f00715cb",
+      "bytes": 454
+    },
+    {
+      "path": "native/windows/claude-user-proxy-transport-20261113/proxy-query-executed-source.ps1",
+      "sha256": "5920b93a178b06b20b560fdf89a1924c763356d3020bf86addce8c734771eb3a",
+      "bytes": 9202
+    },
+    {
+      "path": "native/windows/claude-user-proxy-transport-20261113/proxy-query-start-safe.json",
+      "sha256": "fc96ca422b26b19a4259e345f4cf83d0ba3b2b646a78e8c32fa7d5059b6b71d6",
+      "bytes": 388
+    },
+    {
+      "path": "native/windows/claude-user-proxy-transport-20261113/proxy-query-terminal-safe.json",
+      "sha256": "cf82fc55d884d9a5a30b46670b8431ca1ba0e6b4880e36e9cd5bf5f95af83af5",
+      "bytes": 453
+    },
+    {
+      "path": "native/windows/claude-user-proxy-transport-20261113/safe-derived-scope.json",
+      "sha256": "df9f1a5c44d32477de50568b9f945315b57a3743cb2968c2c137c81f201f9396",
+      "bytes": 4236
+    },
+    {
+      "path": "native/windows/claude-user-proxy-transport-20261113/source-binding-safe.json",
+      "sha256": "8ed61d9cd50efaad3c3f0d72b4ccf63d6b67835f3c8cc2563d0255b4acb548d9",
+      "bytes": 8614
+    },
+    {
+      "path": "native/windows/claude-user-proxy-transport-20261113/windows-system-proxy-metadata-readonly.json",
+      "sha256": "6b812e1607bd0d8ab25f4caaad24a29f45ea7905a0209848f02fe62a427ce7aa",
+      "bytes": 3340
     },
     {
       "path": "native/windows/current-access-20261113/current-native-access-and-original-executor-safe.json",
@@ -2420,6 +2535,91 @@
       "bytes": 4949
     },
     {
+      "path": "native/windows/interactive-input-and-tray-20261113/dependencies/NativeTrayQuit.cs",
+      "sha256": "bcaafea8a300f153a08657a657d650eb82282f97057d46533e05b290f4b9ce75",
+      "bytes": 7251
+    },
+    {
+      "path": "native/windows/interactive-input-and-tray-20261113/dependencies/input-desktop-readiness-prepared.ps1",
+      "sha256": "3fdcf76ef70648416fa42b5cb64224e055da4855efe605910d4f9c8a0aa66385",
+      "bytes": 21426
+    },
+    {
+      "path": "native/windows/interactive-input-and-tray-20261113/dependencies/invoke-owned-tray-quit.ps1",
+      "sha256": "610b484568af1f8b85fa0291ad7aa1a117ed69d7526b189d0f9b3a1ea50550fd",
+      "bytes": 6456
+    },
+    {
+      "path": "native/windows/interactive-input-and-tray-20261113/fresh-held-original-gui-tray-before-safe.json",
+      "sha256": "cf3e83435cb3a8eb2005613817041fcfce9c07e029273f6ed7df337afc77892e",
+      "bytes": 8011
+    },
+    {
+      "path": "native/windows/interactive-input-and-tray-20261113/input-desktop-readiness-safe.json",
+      "sha256": "8ad61462e44a6566ab56cc1caf130bfedd3f6b78b86627318045eeabf24823dd",
+      "bytes": 4679
+    },
+    {
+      "path": "native/windows/interactive-input-and-tray-20261113/input-job-source.ps1",
+      "sha256": "b88c6e28e5349edc670d4eae51db4889e93beb080a8c1ce8e7587b5e2aa084f1",
+      "bytes": 21574
+    },
+    {
+      "path": "native/windows/interactive-input-and-tray-20261113/input-start-native-safe.json",
+      "sha256": "cbfaa684d29d7d3d490860d820d3c852e3fcc0df4af49d68087caa3f62ddc767",
+      "bytes": 388
+    },
+    {
+      "path": "native/windows/interactive-input-and-tray-20261113/input-terminal-native-safe.json",
+      "sha256": "8243c60ee1d4c8672cbb8bbe70b30ea62d85c3091fe5f856acaea83748f60c77",
+      "bytes": 453
+    },
+    {
+      "path": "native/windows/interactive-input-and-tray-20261113/safe-derived-scope.json",
+      "sha256": "aaa3ee5293a308a17dd940189efbccd806ddcd12026709f18e0cbbfe38b1ba44",
+      "bytes": 5782
+    },
+    {
+      "path": "native/windows/interactive-input-and-tray-20261113/source-binding-safe.json",
+      "sha256": "36b457f8cb7641d936e436c0ca8512318e7916fb05d670c06a5e54a5e14c9b0a",
+      "bytes": 9553
+    },
+    {
+      "path": "native/windows/interactive-input-and-tray-20261113/tray-helper-failure.json",
+      "sha256": "159808bc47d5050ec16e839247dd5d576786f2ff528d3e2d85188cbca2c3bd20",
+      "bytes": 373
+    },
+    {
+      "path": "native/windows/interactive-input-and-tray-20261113/tray-host-observation.json",
+      "sha256": "b91100e8376fd43a7431d4af4e24d5b264368214cdca6fd8d86e7d206b384c84",
+      "bytes": 304
+    },
+    {
+      "path": "native/windows/interactive-input-and-tray-20261113/tray-icon-rect-diagnostic.json",
+      "sha256": "b13cf437ffa19be5264fccc9bd4e411a52563604e2519455c6f4e3ba557ad3c2",
+      "bytes": 3084
+    },
+    {
+      "path": "native/windows/interactive-input-and-tray-20261113/tray-job-source.ps1",
+      "sha256": "b67f616713b906310ef802e25d37e5b9d2d958ed0f575349012d39a37009de95",
+      "bytes": 15196
+    },
+    {
+      "path": "native/windows/interactive-input-and-tray-20261113/tray-start-native-safe.json",
+      "sha256": "af8a17cc62f0504f0efab424defaec2bb46c33192cda445daec439de1ae713ed",
+      "bytes": 388
+    },
+    {
+      "path": "native/windows/interactive-input-and-tray-20261113/tray-terminal-native-safe.json",
+      "sha256": "fbd4c32467a5267a4b5dc9335bbca6a367379cb4c4d308308372f53b84f7eb8c",
+      "bytes": 453
+    },
+    {
+      "path": "native/windows/interactive-input-and-tray-20261113/tray-thread-diagnostic.json",
+      "sha256": "3fd43fad30266919299ab7a6a1a8e17365fd7b6dba0c99061e4234fe26b53ffc",
+      "bytes": 676
+    },
+    {
       "path": "native/windows/interactive-post-reboot-20261112/input-desktop-post-reboot-safe.json",
       "sha256": "02232a863f54ab5368cbc62b99edbadfbdea9168d661290e2d048d78bff3ef58",
       "bytes": 412
@@ -2573,6 +2773,56 @@
       "path": "native/windows/legacy-current-public-metadata/installed-dsh-public-known-files-safe.json",
       "sha256": "dd840d256f08d96bca5c0a25176f387f423cf6e607a85a502903f3a17b3ee153",
       "bytes": 907
+    },
+    {
+      "path": "native/windows/native-worker-lifetime-and-current-access-20261113/bounded-owned-collapse-result-safe.json",
+      "sha256": "9ec27c0f6188c85db4516c4a8c297d3a3ed8a4604596539625e795b3b1239285",
+      "bytes": 1275
+    },
+    {
+      "path": "native/windows/native-worker-lifetime-and-current-access-20261113/bounded-owned-collapse-source.py",
+      "sha256": "343b459c32e126eef81f36a416d59dfdb77bdc2fd4e3c6b5d85d0cd462c61128",
+      "bytes": 2515
+    },
+    {
+      "path": "native/windows/native-worker-lifetime-and-current-access-20261113/native-lifetime-and-access-scope-safe.json",
+      "sha256": "fd1c5e843df18082598dbcb0a7fdb4edf0e8d818e03c17b6f15d96f40b36df53",
+      "bytes": 3759
+    },
+    {
+      "path": "native/windows/native-worker-lifetime-and-current-access-20261113/prepared-original-user-and-existing-worker-guard-successor.ps1",
+      "sha256": "03875c219c5b8082d3c717b69560960982f5b1a32c0d366e0f6b8f8fd7adf039",
+      "bytes": 2825
+    },
+    {
+      "path": "native/windows/native-worker-lifetime-and-current-access-20261113/prepared-original-user-and-existing-worker-guard.ps1",
+      "sha256": "2b9354addfdad4954b1d9548b4611627e5a1524a51eec62ac4072d513d6c1113",
+      "bytes": 2746
+    },
+    {
+      "path": "native/windows/native-worker-lifetime-and-current-access-20261113/source-bindings-safe.json",
+      "sha256": "53bac7ccd831e095763fab224156497f0840d5657717c19b28445a04bb2608c5",
+      "bytes": 3567
+    },
+    {
+      "path": "native/windows/native-worker-lifetime-and-current-access-20261113/worker3-self-reported-terminal-safe.json",
+      "sha256": "7b03463beb2f7e8f9c7447ecab7039a69369c3dddfc4f24ecf3f7a8500f56fb6",
+      "bytes": 392
+    },
+    {
+      "path": "native/windows/native-worker-lifetime-and-current-access-20261113/worker4-core-bootstrap-observation-safe.json",
+      "sha256": "9757cc808c5407be8440da6f550fbf3ea1a06326c41d3f932b63123179b2e90a",
+      "bytes": 351
+    },
+    {
+      "path": "native/windows/native-worker-lifetime-and-current-access-20261113/worker4-direct-bootstrap-observation-safe.json",
+      "sha256": "c591a03494aab51795facde8f79347ef6959351f7030d880e9b46f0ebe3aac3f",
+      "bytes": 354
+    },
+    {
+      "path": "native/windows/native-worker-lifetime-and-current-access-20261113/worker4-guarded-bootstrap-observation-safe.json",
+      "sha256": "6b2e61e1888a0a7cc87c0bea9b06e2c5c2ebfbbdc4f5e237ade5df8762ae0304",
+      "bytes": 354
     },
     {
       "path": "native/windows/new-gui-installed-identities.json",

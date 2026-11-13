@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "task": "claude-user-proxy-transport-20261113-source-binding",
+  "archive_directory": "/home/han/.local/state/orchester-delivery/20261113/checkpoint-native-new-material-qtuvziqq/native/windows/claude-user-proxy-transport-20261113",
+  "worker_root": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5",
+  "files": [
+    {
+      "archived_file": "proxy-query-executed-source.ps1",
+      "archived_sha256": "5920b93a178b06b20b560fdf89a1924c763356d3020bf86addce8c734771eb3a",
+      "archived_bytes": 9202,
+      "origin_path": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/sources/e7c481a8d190795acdb939dab33541a9.ps1",
+      "origin_sha256": "5920b93a178b06b20b560fdf89a1924c763356d3020bf86addce8c734771eb3a",
+      "origin_bytes": 9202,
+      "copy_mode": "byteexact"
+    },
+    {
+      "archived_file": "proxy-query-start-safe.json",
+      "archived_sha256": "fc96ca422b26b19a4259e345f4cf83d0ba3b2b646a78e8c32fa7d5059b6b71d6",
+      "archived_bytes": 388,
+      "origin_path": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/jobs/e7c481a8d190795acdb939dab33541a9/start-safe.json",
+      "origin_sha256": "fc96ca422b26b19a4259e345f4cf83d0ba3b2b646a78e8c32fa7d5059b6b71d6",
+      "origin_bytes": 388,
+      "copy_mode": "byteexact"
+    },
+    {
+      "archived_file": "proxy-query-terminal-safe.json",
+      "archived_sha256": "cf82fc55d884d9a5a30b46670b8431ca1ba0e6b4880e36e9cd5bf5f95af83af5",
+      "archived_bytes": 453,
+      "origin_path": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/jobs/e7c481a8d190795acdb939dab33541a9/terminal-safe.json",
+      "origin_sha256": "cf82fc55d884d9a5a30b46670b8431ca1ba0e6b4880e36e9cd5bf5f95af83af5",
+      "origin_bytes": 453,
+      "copy_mode": "byteexact"
+    },
+    {
+      "archived_file": "windows-system-proxy-metadata-readonly.json",
+      "archived_sha256": "6b812e1607bd0d8ab25f4caaad24a29f45ea7905a0209848f02fe62a427ce7aa",
+      "archived_bytes": 3340,
+      "origin_path": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/jobs/e7c481a8d190795acdb939dab33541a9/windows-system-proxy-metadata-readonly.json",
+      "origin_sha256": "6b812e1607bd0d8ab25f4caaad24a29f45ea7905a0209848f02fe62a427ce7aa",
+      "origin_bytes": 3340,
+      "copy_mode": "byteexact"
+    },
+    {
+      "archived_file": "forced-dotnet-executed-source.ps1",
+      "archived_sha256": "eda5bec9e797ae03f344b033abb470c2c66b03f14c5c8d5190c71b6327fba95a",
+      "archived_bytes": 20990,
+      "origin_path": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/sources/eac94f27e09d1c4af3b10a59cd52a60b.ps1",
+      "origin_sha256": "eda5bec9e797ae03f344b033abb470c2c66b03f14c5c8d5190c71b6327fba95a",
+      "origin_bytes": 20990,
+      "copy_mode": "byteexact"
+    },
+    {
+      "archived_file": "forced-dotnet-start-safe.json",
+      "archived_sha256": "02135df4a7344398a8fec47fbf558e3cc79d703ebd73c20d9f06d900594b2e64",
+      "archived_bytes": 388,
+      "origin_path": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/jobs/eac94f27e09d1c4af3b10a59cd52a60b/start-safe.json",
+      "origin_sha256": "02135df4a7344398a8fec47fbf558e3cc79d703ebd73c20d9f06d900594b2e64",
+      "origin_bytes": 388,
+      "copy_mode": "byteexact"
+    },
+    {
+      "archived_file": "forced-dotnet-terminal-safe.json",
+      "archived_sha256": "783c397719c33db464a2cfbbe9aa54607c50cb29e624fb86ade81373f00715cb",
+      "archived_bytes": 454,
+      "origin_path": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/jobs/eac94f27e09d1c4af3b10a59cd52a60b/terminal-safe.json",
+      "origin_sha256": "783c397719c33db464a2cfbbe9aa54607c50cb29e624fb86ade81373f00715cb",
+      "origin_bytes": 454,
+      "copy_mode": "byteexact"
+    },
+    {
+      "archived_file": "dotnet-download-status.json",
+      "archived_sha256": "48eb8078f7b2cd26a840a230b889eb0c3ae2fce1d38933646cd52d5b7ca0d287",
+      "archived_bytes": 1263,
+      "origin_path": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/jobs/eac94f27e09d1c4af3b10a59cd52a60b/dl-4f5277baeeb94c6192671987858bd03b/dotnet-download-status.json",
+      "origin_sha256": "48eb8078f7b2cd26a840a230b889eb0c3ae2fce1d38933646cd52d5b7ca0d287",
+      "origin_bytes": 1263,
+      "copy_mode": "byteexact"
+    },
+    {
+      "archived_file": "claude-official-payload-native-dotnet-user-proxy-derived-safe.json",
+      "archived_sha256": "532d2e034dc558b248949beaf31dce5a80e4507741851a43c92ccafde80ae4fb",
+      "archived_bytes": 4121,
+      "origin_path": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/jobs/eac94f27e09d1c4af3b10a59cd52a60b/claude-official-payload-native-dotnet-user-proxy.json",
+      "origin_sha256": "f57a10cdc1f1a100c5244f86c4e6f4e9427a37b655861e198178a5231734a85a",
+      "origin_bytes": 7005,
+      "copy_mode": "safe-derived-not-byteexact",
+      "excluded_json_fields": [
+        "download.stdout",
+        "download.stderr"
+      ],
+      "transformation": "Parse JSON; recursively exclude stdout/stderr; preserve all other structured values; serialize UTF-8 JSON."
+    },
+    {
+      "archived_file": "safe-derived-scope.json",
+      "archived_sha256": "df9f1a5c44d32477de50568b9f945315b57a3743cb2968c2c137c81f201f9396",
+      "archived_bytes": 4236,
+      "copy_mode": "generated-derived-scope",
+      "origin_evidence_files": [
+        "proxy-query-start-safe.json",
+        "proxy-query-terminal-safe.json",
+        "windows-system-proxy-metadata-readonly.json",
+        "forced-dotnet-start-safe.json",
+        "forced-dotnet-terminal-safe.json",
+        "dotnet-download-status.json",
+        "claude-official-payload-native-dotnet-user-proxy-derived-safe.json"
+      ]
+    }
+  ],
+  "total_archive_files_including_this_binding": 11,
+  "self_hash_policy": "Own digest omitted to avoid a circular digest; final verification reports this binding SHA256 and bytes externally.",
+  "executed_source_pins": {
+    "proxy_query": {
+      "job_id": "e7c481a8d190795acdb939dab33541a9",
+      "sha256": "5920b93a178b06b20b560fdf89a1924c763356d3020bf86addce8c734771eb3a",
+      "bytes": 9202,
+      "start_file": "proxy-query-start-safe.json",
+      "terminal_file": "proxy-query-terminal-safe.json",
+      "native_exit_code": 0
+    },
+    "forced_dotnet": {
+      "job_id": "eac94f27e09d1c4af3b10a59cd52a60b",
+      "sha256": "eda5bec9e797ae03f344b033abb470c2c66b03f14c5c8d5190c71b6327fba95a",
+      "bytes": 20990,
+      "start_file": "forced-dotnet-start-safe.json",
+      "terminal_file": "forced-dotnet-terminal-safe.json",
+      "native_exit_code": 13
+    }
+  },
+  "dependencies": {
+    "executed_source_has_external_prefixsource_sha_or_helperpaths_header": false,
+    "code_runtime_dependencies_copied": [],
+    "reason": "Executed sources contain all task functions and child code inline. Standard Windows winhttp/kernel32 and system PowerShell/.NET are platform prerequisites, not custom helper artifacts."
+  },
+  "omissions": [
+    {
+      "origin_path": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/jobs/eac94f27e09d1c4af3b10a59cd52a60b/claude-official-payload-native-dotnet-user-proxy.json",
+      "origin_sha256": "f57a10cdc1f1a100c5244f86c4e6f4e9427a37b655861e198178a5231734a85a",
+      "origin_bytes": 7005,
+      "omitted_fields": [
+        "download.stdout",
+        "download.stderr"
+      ],
+      "reason": "Raw streams excluded; safe derived receipt archived instead of original JSON."
+    },
+    {
+      "path_scope": "Requests, keys, MACs, raw logs, SIDs, credentials, HTML, payload executables, unbound preparation and AST helper candidates",
+      "reason": "Outside public-safe archive scope; not copied."
+    }
+  ],
+  "filesystem_policy": {
+    "directories": "0700",
+    "files": "0600",
+    "repository_files_modified": false
+  }
+}
