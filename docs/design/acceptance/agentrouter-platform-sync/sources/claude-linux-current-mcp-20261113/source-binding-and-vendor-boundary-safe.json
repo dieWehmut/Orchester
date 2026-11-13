@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-11-13T07:55:41.520452+00:00",
+  "scope": "current-official-mcp-documentation-linux-claim-only",
+  "receiptSha256": "454a34efecb7b47bd4203eb47734c53e8b7a1b776f2f12398610114f6bbbf38e",
+  "receiptBytes": 1689,
+  "receiptArchiveByteExact": true,
+  "sourceRepository": "modelcontextprotocol/modelcontextprotocol",
+  "sourceCommit": "c713a5485f653cc1da8c2658510862030846d498",
+  "sourcePath": "docs/docs/2026-07-28/develop/connect-local-servers.mdx",
+  "sourceUrl": "https://raw.githubusercontent.com/modelcontextprotocol/modelcontextprotocol/c713a5485f653cc1da8c2658510862030846d498/docs/docs/2026-07-28/develop/connect-local-servers.mdx",
+  "sourceBytes": 12180,
+  "sourceSha256": "2160564eec018b52bc7ef5311a2e4f1bb34af0219e7897675ad83cc98a90caee",
+  "currentMainAndPinnedSourceBytesEqual": true,
+  "verifiedSourceLines": [
+    23,
+    86,
+    233
+  ],
+  "shortAvailabilityExcerpt": "Claude Desktop is available for macOS, Windows, and Linux.",
+  "fullSourceDocumentArchived": false,
+  "exactVendorLinuxPayloadUrlPresent": false,
+  "nativeLinuxInstallationVerified": false,
+  "independentVendorPlatformListVerified": false,
+  "oldArchived2025UnsupportedClaimIsNotCurrentDocumentation": true,
+  "vendorNewHostReadOnlyRequests": [
+    {
+      "url": "https://claude.com/download",
+      "curlExitCode": 35,
+      "httpStatus": null,
+      "payloadBytes": 0,
+      "certificateAndHostnameVerificationDisabled": false
+    },
+    {
+      "url": "https://www.anthropic.com/claude/download",
+      "curlExitCode": 35,
+      "httpStatus": null,
+      "payloadBytes": 0,
+      "certificateAndHostnameVerificationDisabled": false
+    },
+    {
+      "url": "https://www.claude.ai/download",
+      "curlExitCode": 35,
+      "httpStatus": null,
+      "payloadBytes": 0,
+      "certificateAndHostnameVerificationDisabled": false
+    }
+  ],
+  "commercialPageBodiesOrPrivateCredentialsIncluded": false
+}
