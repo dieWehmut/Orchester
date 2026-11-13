@@ -1,0 +1,13 @@
+{
+    "schemaVersion":  1,
+    "status":  "native-file-bridge-probe-executed",
+    "observedAtUtc":  "2026-11-13T05:27:46.0866991Z",
+    "processId":  153208,
+    "createdFileTimeExact":  "134390212658420992",
+    "sessionId":  1,
+    "modelCalls":  0,
+    "processSignals":  0,
+    "targetAppStarts":  0,
+    "probeNonce":  "0ef80cf96c1e5ff2d6ef6581",
+    "sourceSha256":  "2e92b93adff806925a0f77b50fad24c86a4241a25637f62bbb39e3dbded390bd"
+}

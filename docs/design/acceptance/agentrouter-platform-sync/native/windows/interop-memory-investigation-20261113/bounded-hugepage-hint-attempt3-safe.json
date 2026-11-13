@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-11-13T06:57:40.007821+00:00",
+  "status": "bounded-owned-anonymous-thp-hint-and-two-faults-completed",
+  "beforeMemoryKiB": {
+    "MemFree": 69596,
+    "MemAvailable": 1016004
+  },
+  "virtualBytes": 6291456,
+  "maximumThpBackingBytes": 4194304,
+  "applicationBytesWritten": 2,
+  "madvHugepageReturn": 0,
+  "errno": 0,
+  "ownRegionAnonHugePagesKiB": 0,
+  "faults": [
+    {
+      "chunk": 0,
+      "singleByteFaultElapsedMs": 2.718
+    },
+    {
+      "chunk": 1,
+      "singleByteFaultElapsedMs": 0.082
+    }
+  ],
+  "munmapReturn": 0,
+  "allOwnedMappingReleased": true,
+  "sysctlOrConfigurationWrites": 0,
+  "otherProcessSignalsOrMemoryAccess": 0,
+  "buddyBefore": [
+    "Node 0, zone    DMA32     68    136    602    466    229     71      3      0      0      0      0 ",
+    "Node 0, zone   Normal    689    261    248    158     40      5      1      0      0      0      0 "
+  ],
+  "buddyAfter": [
+    "Node 0, zone    DMA32   4038   1211    696    493    232     74      3      0      0      0      0 ",
+    "Node 0, zone   Normal   1613    564    370    195     45     10      1      0      0      0      0 "
+  ],
+  "windowsRecoveryClaimed": false
+}

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-11-13T06:08:39.274784+00:00",
+  "status": "bounded-owned-anonymous-madv-collapse-attempt-completed",
+  "sourceSha256": "48aeb27d5fea565b484eb3411fd4ef4a2f84a896b7067915d7c0cbfe13f09bb1",
+  "pid": 1264035,
+  "beforeMemoryKiB": {
+    "MemFree": 78924,
+    "MemAvailable": 892684
+  },
+  "physicalBytesTouched": 4194304,
+  "virtualMappingBytes": 6291456,
+  "chunks": [
+    {
+      "chunk": 0,
+      "bytes": 2097152,
+      "actualReturn": -1,
+      "errno": 12,
+      "errnoName": "ENOMEM",
+      "elapsedMilliseconds": 1.001
+    },
+    {
+      "chunk": 1,
+      "bytes": 2097152,
+      "actualReturn": -1,
+      "errno": 12,
+      "errnoName": "ENOMEM",
+      "elapsedMilliseconds": 0.025
+    }
+  ],
+  "ownRegionAnonHugePagesKiB": 0,
+  "actualMunmapReturn": 0,
+  "allOwnedMappingReleased": true,
+  "buddyBefore": [
+    "Node 0, zone    DMA32   3178    629    162    170    162    151     16      0      0      0      0 ",
+    "Node 0, zone   Normal    664    782    209     95     30     11      6      0      0      0      0 "
+  ],
+  "buddyAfter": [
+    "Node 0, zone    DMA32   4447   1108    388    273    196    152     16      0      0      0      0 ",
+    "Node 0, zone   Normal   2060   1180    369    157     43     11      4      0      1      0      0 "
+  ],
+  "sysctlOrConfigurationWrites": 0,
+  "signalsOrOtherProcessMemoryReads": 0,
+  "windowsRecoveryClaimed": false,
+  "globalCompactionOrReclaimSideEffectsExcluded": false
+}

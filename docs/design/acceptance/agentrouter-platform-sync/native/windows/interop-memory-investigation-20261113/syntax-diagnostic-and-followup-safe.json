@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-11-13T07:26:46.316382+00:00",
+  "status": "native-powershell-ast-rejection-observed-corrected-worker-startup-unverified",
+  "actualTargetHost": "Windows",
+  "failedBootstrap": {
+    "actualOuterExitCode": 1,
+    "interopErrorObserved": false,
+    "nativeTerminalFile": "native-worker-ast-rejection-original-safe.json",
+    "nativeFinishedAtUtc": "2026-11-13T07:17:25.7614589Z",
+    "bootstrapSourceSha256": "619edb8801695595d2ac4d8bf35463bfcecae3d8dff454c1942f17cd006e97aa",
+    "workerSourceSha256": "9cf26c61ddbe377a53925f1eb25e27e8991d8c74588038bfb24933502b1bcc91",
+    "stage": "script_ast_validation",
+    "nativeChildWorkerCreated": false
+  },
+  "actualNativeParserDiagnostic": {
+    "actualExitCode": 0,
+    "workerErrorCount": 9,
+    "bootstrapErrorCount": 0,
+    "firstErrorLine": 285,
+    "firstErrorColumn": 70,
+    "firstErrorId": "MissingEndParenthesisInExpression",
+    "rootCause": "PowerShell command expression crossed a newline between Join-Path arguments without continuation.",
+    "rawConsoleMessagesIncluded": false
+  },
+  "preparedCorrection": {
+    "workerSourceSha256": "092b77a3e27fc30fac1b5f48eba1f9f2a0dc0350972bc5f9793d910b4b339103",
+    "bootstrapSourceUnchanged": true,
+    "change": "Place the rejected-request Join-Path expression on one line.",
+    "originalFailedSourceAndLockAndTerminalPreserved": true,
+    "newAttemptHasSeparateOwnedDirectoryAndNewPrivateKey": true,
+    "actualNativeAstPassed": false,
+    "nativeWorkerStartupVerified": false
+  },
+  "correctedWorkerBootstrapAttempts": [
+    {
+      "execSessionId": 11636,
+      "route": "/run/WSL/7250_interop",
+      "actualOuterExitCode": 1,
+      "interopError": 110,
+      "nativeReadyOrLockProduced": false
+    },
+    {
+      "execSessionId": 21357,
+      "route": "/run/WSL/3097_interop",
+      "actualOuterExitCode": 1,
+      "interopError": 110,
+      "nativeReadyOrLockProduced": false
+    },
+    {
+      "execSessionId": 82105,
+      "route": "/run/WSL/7250_interop",
+      "actualOuterExitCode": 1,
+      "interopError": 110,
+      "nativeReadyOrLockProduced": false
+    }
+  ],
+  "currentGuiIdentityReobserved": false,
+  "desktop18Passed": false,
+  "foreignProcessSignals": 0,
+  "privateKeyOrCredentialOrVmContentsIncluded": false
+}
