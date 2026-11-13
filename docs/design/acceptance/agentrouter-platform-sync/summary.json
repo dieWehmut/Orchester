@@ -494,7 +494,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-13T02:23:04.142484+00:00",
+  "updatedAt": "2026-11-13T02:56:01.683417+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -845,5 +845,10 @@
   "currentLinuxNativeControlSocketPathFailurePreserved": true,
   "currentLinuxOriginalTokenWireCurrentInstanceVerified": false,
   "prior640ThirteenthLinuxLifecycleCheckpointDelivered": true,
-  "thirteenthLinuxLifecycleDeliveryProof": "maintenance/git-delivery/thirteenth-step-delivery-safe.json"
+  "thirteenthLinuxLifecycleDeliveryProof": "maintenance/git-delivery/thirteenth-step-delivery-safe.json",
+  "historicalClaudePublicSfsProof": "sources/claude-sfs-20261113/official-sfs-root-repair-and-product-boundary-safe.json",
+  "historicalClaudePublicSfsRequestTlsVerified": true,
+  "historicalClaudePublicSfsCategoryHttpStatus": 404,
+  "historicalClaudePublicSfsPayloadPrepared": false,
+  "historicalClaudePublicSfsArchiveBindingProof": "sources/claude-sfs-20261113/public-archive-binding-safe.json"
 }

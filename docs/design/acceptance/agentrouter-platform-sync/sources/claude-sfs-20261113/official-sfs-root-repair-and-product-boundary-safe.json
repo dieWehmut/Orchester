@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "status": "official-root-per-request-trust-repair-verified-exact-claude-public-sfs-category-http404-payload-not-ready",
+  "observedAtUtc": "2026-11-12T23:27:03.136667+00:00",
+  "priorFailurePreserved": {
+    "rawProbe": "official-sfs-select-result-private.json",
+    "actualCurlExitCode": 60,
+    "httpResponseReceived": false,
+    "strictSystemRootLeafChainVerifyExitCode": 2,
+    "strictSystemRootFailure": "error20-at-depth1-missing-root-issuer"
+  },
+  "officialRoot2011": {
+    "pkiDownloadURL": "https://www.microsoft.com/pki/certs/MicRooCerAut2011_2011_03_22.crt",
+    "secondOfficialDownloadURL": "https://download.microsoft.com/download/2/4/8/248D8A62-FCCD-475C-85E7-6ED59520FC0F/MicrosoftRootCertificateAuthority2011.cer",
+    "bothHTTP200VerifiedUsingOriginalSystemRootAndHTTPSOnly": true,
+    "bothDERFilesByteExact": true,
+    "bytes": 1521,
+    "sha256": "847df6a78497943f27fc72eb93f9a637320a02b561d0a91b09e87a7807ed7c61",
+    "sha1": "8f43288ad272f3103b6fb1428485ea3014c0bcfe",
+    "publishedThumbprint": "8F43288AD272F3103B6FB1428485EA3014C0BCFE",
+    "publishedThumbprintLength": 40,
+    "publishedFullThumbprintExactlyMatchesActual": true,
+    "officialPkiRepositoryURL": "https://www.microsoft.com/pkiops/docs/repository.htm",
+    "officialPkiRepositorySha256": "2e1150fdf31d1304a3f5c421d4332ba89d23815ca504ee1094f54bb93ee3c4b7",
+    "secondOfficialFullThumbprintSourceURL": "https://learn.microsoft.com/en-us/azure/aks-hybrid-edge/edge-essentials/aks-edge-howto-offline-install",
+    "secondOfficialFullThumbprintSourceSha256": "34d148717610299eb87d64776ea26639b9bce2fac089a9b526d53e3709a1abe0",
+    "subjectAndIssuer": "CN=Microsoft Root Certificate Authority 2011,O=Microsoft Corporation,L=Redmond,ST=Washington,C=US",
+    "serial": "3F8BC8B5FC9FB29643B569D66C42E144",
+    "notBeforeUtc": "2011-03-22T22:05:28Z",
+    "notAfterUtc": "2036-03-22T22:13:04Z",
+    "basicConstraintsCritical": true,
+    "isCA": true,
+    "actualSelfSignatureVerifyExitCode": 0,
+    "currentValidityCheckActualExitCode": 0,
+    "strictOriginalSystemRootTrustWasNotExpanded": true,
+    "usedOnlyAsExplicitCAForExactOfficialSfsHostnameInOneRequest": true,
+    "requestTlsRootAndLeafAndHostnameVerifyActualExitCode": 0
+  },
+  "currentCategoryBinding": {
+    "catalogURL": "https://displaycatalog.mp.microsoft.com/v7.0/products/9P6K58THS811?market=US&languages=en-US",
+    "catalogObservedAtUtc": "2026-11-12T23:25:48.743129+00:00",
+    "catalogSha256": "6552bc24e202ac62f5b267065c80417d0a3884bef73189d636710972e307e17f",
+    "catalogHTTP200ViaOriginalSystemRoot": true,
+    "productId": "9P6K58THS811",
+    "publisher": "Anthropic, PBC",
+    "currentPackageFamilyName": "AnthropicPBC.Claude_fnn82j28hfe8t",
+    "currentPackageFullNames": [
+      "AnthropicPBC.Claude_5.11492.0.0_arm64__fnn82j28hfe8t",
+      "AnthropicPBC.Claude_5.11492.0.0_x64__fnn82j28hfe8t"
+    ],
+    "publicWuCategoryId": "4a6b0974-ca0c-4154-8da2-8166c30c009c",
+    "allCurrentPublicSkuPackageCategoriesMatchQueriedCategoryExactly": true
+  },
+  "actualOfficialSfsRequest": {
+    "sdkSource": "https://github.com/microsoft/sfs-client/blob/0e27525d597c730e71646fd0b15bdc8c8503f24d/client/src/details/SFSClientImpl.cpp#L196",
+    "sdkPinnedRevision": "0e27525d597c730e71646fd0b15bdc8c8503f24d",
+    "method": "POST",
+    "hostname": "storeapps.api.cdp.microsoft.com",
+    "path": "/api/v2/contents/storeapps/namespaces/default/names/4a6b0974-ca0c-4154-8da2-8166c30c009c/versions/latest",
+    "queryAction": "select",
+    "requestJSONBody": {
+      "TargetingAttributes": {}
+    },
+    "userAgent": "Microsoft-SFSClient/1.1.0 (Linux; x86_64)",
+    "freshCorrelationVectorUsed": true,
+    "authorizationHeaders": 0,
+    "nativeWindowsCommands": 0,
+    "observedAtUtc": "2026-11-12T23:23:17.948492+00:00",
+    "actualCurlExitCode": 0,
+    "httpStatus": 404,
+    "responseBytes": 0,
+    "certificateVerificationAndHostnameVerificationEnabled": true,
+    "rootAndCategoryExpectedBindingsMatched": true,
+    "generatedFilesUrlRequests": 0,
+    "payloadDownloaded": false,
+    "fullArtifactReady": false
+  },
+  "officialWinGet404Meaning": {
+    "sourceURL": "https://github.com/microsoft/winget-cli/blob/57d424f360608411e871c44c7d0ba21d848bcab6/src/AppInstallerCommonCore/MSStoreDownload.cpp#L982",
+    "sourceFileSha256": "6a6014ddb333c2a42b352160e6d276faf75aa978cec764b1e99f2f854b5243bb",
+    "sourceRevision": "57d424f360608411e871c44c7d0ba21d848bcab6",
+    "errorId": "APPINSTALLER_CLI_ERROR_SFSCLIENT_PACKAGE_NOT_SUPPORTED",
+    "meaning": "Package download not supported for this exact category in this SFS dataset",
+    "wholeClaudeProductAllInstallMethodsUnsupportedNotClaimed": true
+  },
+  "restrictedCatalogDownloadBranch": {
+    "officialWinGetURLParameters": {
+      "fieldsTemplate": "Details",
+      "catalogIds": "4"
+    },
+    "anonymousHTTPStatus": 403,
+    "repeated403Requests": 0,
+    "authenticationOrAccessControlBypassed": false
+  },
+  "unsafeOrUnrequestedChanges": {
+    "globalTrustChanges": 0,
+    "tlsVerificationDisabled": false,
+    "userCredentialsRead": false,
+    "loginOrTokenForgeryOrModelRequests": 0,
+    "installerInvocations": 0,
+    "guessedCDNUrlsOrThirdPartyLinkGeneratorsUsed": false
+  },
+  "payloadPrepared": false,
+  "fullObjectiveComplete": false,
+  "nextRequiredWork": "Restore native Windows access/normal official Store transport or obtain a vendor-supported direct official Claude payload; do not treat SFS404 as an installed application or an available package."
+}

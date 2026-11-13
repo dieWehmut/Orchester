@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "status": "historical-official-sfs-result-archived-public-source-bytes-verified",
+  "observedAtUtc": "2026-11-13T02:56:01.683417+00:00",
+  "historicalOfficialRequestObservedAtUtc": "2026-11-12T23:23:17.948492+00:00",
+  "historicalSfsHttpStatus": 404,
+  "officialReceiptSourceSha256": "cea63ef6030a7a253e2808c8adf36bc4c4379828aee6a33ec58355e004b33b04",
+  "officialReceiptByteExact": true,
+  "officialRootDERBytes": 1521,
+  "officialRootDERSha256": "847df6a78497943f27fc72eb93f9a637320a02b561d0a91b09e87a7807ed7c61",
+  "bothLocalOfficialSourceDERFilesByteExact": true,
+  "archivedCertificateByteExact": true,
+  "newNetworkRequests": 0,
+  "newNativeWindowsInvocations": 0,
+  "globalTrustChanges": 0,
+  "privateSourceFilesRead": 0,
+  "historicalSdkProtocolAndWireResultIndependentlyReexecuted": false,
+  "payloadPrepared": false,
+  "installationVerified": false,
+  "fullObjectiveComplete": false
+}
