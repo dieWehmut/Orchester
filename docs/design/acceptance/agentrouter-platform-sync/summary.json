@@ -498,7 +498,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-13T07:26:46.316382+00:00",
+  "updatedAt": "2026-11-13T07:55:41.520452+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -874,5 +874,7 @@
   "currentWindowsInteropAfterBriefRecoveryAvailable": false,
   "currentWindowsPersistentFileWorkerActualStartupVerified": false,
   "currentWindowsNativeWorkerAstFailureObserved": true,
-  "currentWindowsNativeWorkerAstFollowupProof": "native/windows/interop-memory-investigation-20261113/syntax-diagnostic-and-followup-safe.json"
+  "currentWindowsNativeWorkerAstFollowupProof": "native/windows/interop-memory-investigation-20261113/syntax-diagnostic-and-followup-safe.json",
+  "currentClaudeLinuxMcpDocumentationMentionsLinux": true,
+  "currentClaudeLinuxMcpDocumentationProof": "sources/claude-linux-current-mcp-20261113/source-binding-and-vendor-boundary-safe.json"
 }

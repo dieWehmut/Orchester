@@ -167,11 +167,12 @@
         "sources/official-platform-current-20261112T1500/final-current-official-availability-safe.json",
         "native/wsl/workbuddy-global-current-20261113/final-global-linux-continuation-safe.json",
         "native/wsl/workbuddy-global-current-20261113/current-http-safe.json",
-        "native/windows/claude-current-payload-20261113/final-claude-payload-preparation-safe.json"
+        "native/windows/claude-current-payload-20261113/final-claude-payload-preparation-safe.json",
+        "sources/claude-linux-current-mcp-20261113/source-binding-and-vendor-boundary-safe.json"
       ],
-      "verifiedScope": "Earlier19verificationunits/16distinctdocproducts pluscurrent3actuallegacyinstalls=>19distinctnativeproducts. Cursor3.29.15/AntigravityDesktop2.31 extracteduserprefix/nativeELF/ldd/Electron0, Cursorlauncher--version0 afterfirst1;DeepSeekofficialHarnessWebCLI0.2.2rc1 install0 afterfirst1/version/help0. Launcher syntaxall3=0 but no Antigravitylauncher --version claim;nativeAGruntime+publicversiondistinct. Officialiconsbyteexact. DeepSeekLinuxDesktopexplicitunsupported; WebCLI isdistinct official product notfakeDesktop. AGDesktop2.31 != IDE2.6,regionFAQ andCursorvendorWindowsWSLintegrationboundary retained. No GUI/model/authtest. CurrentNov13Asia fourinternationalWorkBuddy officialLinux update metadata200 andfourexactadvertisedpayload RangeGET404/0bytes reconfirmed; currenthomepage/threeclient assets exacthistorical bytes; originaldomesticELFhash/launcher retained, noinstallation/profilewrite. CurrentClaudeofficialsupport/download pages eachcurl35/beforeHTTP; this doesnot establishpermanentLinuxunsupportedpolicy.",
+      "verifiedScope": "Earlier19verificationunits/16distinctdocproducts pluscurrent3actuallegacyinstalls=>19distinctnativeproducts. Cursor3.29.15/AntigravityDesktop2.31 extracteduserprefix/nativeELF/ldd/Electron0, Cursorlauncher--version0 afterfirst1;DeepSeekofficialHarnessWebCLI0.2.2rc1 install0 afterfirst1/version/help0. Launcher syntaxall3=0 but no Antigravitylauncher --version claim;nativeAGruntime+publicversiondistinct. Officialiconsbyteexact. DeepSeekLinuxDesktopexplicitunsupported; WebCLI isdistinct official product notfakeDesktop. AGDesktop2.31 != IDE2.6,regionFAQ andCursorvendorWindowsWSLintegrationboundary retained. No GUI/model/authtest. CurrentNov13Asia fourinternationalWorkBuddy officialLinux update metadata200 andfourexactadvertisedpayload RangeGET404/0bytes reconfirmed; currenthomepage/threeclient assets exacthistorical bytes; originaldomesticELFhash/launcher retained, noinstallation/profilewrite. CurrentClaudeofficialsupport/download pages eachcurl35/beforeHTTP; this doesnot establishpermanentLinuxunsupportedpolicy. Current official MCP repository 2026 documentation at c713a548 explicitly mentions Claude Desktop Linux availability and configuration/log paths; current main and pinned source bytes match. This supersedes archived 2025 MCP unsupported wording only; vendor platform list, exact Linux payload and native installation remain unverified.",
       "remaining": [
-        "ClaudeApp officialLinux supportedplatform/nativeGUI release unverified; currentofficialsupport/download pagescurl35/HTTPnull/no body do not proveunsupported.",
+        "ClaudeApp currentofficialMCP2026 documentation mentionsLinux, butindependentvendorplatformlist/exactofficialLinuxpayload/nativeGUIinstallation remainunverified. Additionalofficialvendordownloadhost requestsreturnedcurl35/beforeHTTP; no packageobtained.",
         "GlobalWorkBuddy officialLinux usablepackage/nativeELF/profile isolation stillunverified/unavailable: fourcurrentmetadata200, fouradvertisedpayloads404/0bytes; domestic unchanged."
       ]
     },
@@ -342,7 +343,7 @@
   "historicalResultsRemainInOwnSourceEpoch": true,
   "installationDoesNotEstablishAuthenticationOrModelTaskExecution": true,
   "privateCredentialOrUserStateValuesIncluded": false,
-  "updatedAt": "2026-11-13T03:59:04.944006+00:00",
+  "updatedAt": "2026-11-13T07:55:41.520452+00:00",
   "documentationExecutionDateRangeAsiaShanghai": [
     "2026-11-11",
     "2026-11-13"
