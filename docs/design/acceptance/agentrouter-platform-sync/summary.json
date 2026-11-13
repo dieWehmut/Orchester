@@ -498,7 +498,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-13T04:01:42.158154+00:00",
+  "updatedAt": "2026-11-13T04:40:53.265922+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -861,5 +861,11 @@
   "currentOriginalWindowsFiveTokenWireCurrentInstanceVerified": false,
   "currentLinuxNativeOriginalOneExplicitInfoGetActualStatus": 200,
   "currentLinuxNativeOriginalOnePreLaunchLocalStorageCaptured": false,
-  "currentLinuxNativeOriginalOneStartupReconnectRequestsMeasured": false
+  "currentLinuxNativeOriginalOneStartupReconnectRequestsMeasured": false,
+  "currentWindowsNativeAccessWindowsCwdRecheckProof": "native/windows/current-access-windows-cwd-20261113/windows-path-command-results-safe.json",
+  "currentWindowsNativeAccessWindowsCwdCommandsSucceeded": false,
+  "currentWindowsMonitorReadonlyDiagnosticSuccessorPrepared": true,
+  "currentWindowsMonitorReadonlyDiagnosticSuccessorProof": "native/windows/formal-desktop18-attempt1-20261112T1545/prepared-readonly-diagnostics/prepared-successor-plan-safe.json",
+  "currentWindowsMonitorReadonlyDiagnosticSuccessorRuntimeExecuted": false,
+  "currentWindowsMonitorAssertionCauseEstablished": false
 }

@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "status": "prepared-successor-static-fixtures-pass-runtime-not-executed",
+  "preparedAtUtc": "2026-11-13T04:31:49Z",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "successorScript": "read-current-monitor-cdp-successor.mjs",
+  "successorScriptSha256": "65bf0d72a652c8b6ee12216dc4fb12e5ecc52973bf8726fdd582295b0ffde543",
+  "preservedOriginalFiles": [
+    {
+      "file": "read-current-monitor-cdp.mjs",
+      "sha256": "a65b54a3cbcee6ed229d32822fe51f022633aff8a49e0296d6775598d632a172",
+      "originalBytesUnchanged": true
+    },
+    {
+      "file": "continuation-plan-safe.json",
+      "sha256": "2e065e09a71caccd3702b72e407bf3070856cd694f9c57a3f5e13cf54078a081",
+      "originalBytesUnchanged": true
+    }
+  ],
+  "historicalOriginalLaunchBinding": {
+    "publicOriginalGuiPid": 37324,
+    "createdFileTimeExactString": "134389718070239855",
+    "binarySha256": "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+    "cdpPort": 19322,
+    "basis": "Original launch-result.json only; numeric FileTime is checked from original JSON digits, not a rounded JavaScript Number.",
+    "currentGuiIdentityOrLivenessProved": false,
+    "originalOuterExecutor": "Original session 90867 already terminated with actual exit 137; do not poll it as a running owner or infer Windows child exit from that terminal event."
+  },
+  "executionPrerequisite": {
+    "nativeWindowsAccessMustBeRestored": true,
+    "freshCurrentOriginalGuiHandleAndPortOwnerGateRequiredBeforeInvocation": true,
+    "callerMustProduceGateFromActualNativeCollector": true,
+    "callerMustRetainAndVerifyOriginalNativeHandleIdentity": true,
+    "callerMustVerifyCurrent19322OwnerAndItsOriginalGuiOwnershipChain": true,
+    "callerMustAccountForPreviousReadonlyNodeAttemptsBeforeAnotherInvocation": true,
+    "staticLaunchOrGateJsonDoesNotIndependentlyProveOsFacts": true,
+    "failedNativeGateAllowsDiagnosticInvocationOrReplacementGuiLaunch": false,
+    "scriptIndependentlyRunsNativeCollectorOrOpensWindowsHandles": false,
+    "runtimeArgumentsInOrder": [
+      "original launch-result.json",
+      "new output file; CreateNew semantics",
+      "fresh public native gate receipt",
+      "SHA-256 of that exact native gate receipt"
+    ],
+    "nativeGateRequiredFields": {
+      "schemaVersion": 1,
+      "status": "current-native-original-gui-and-cdp-owner-verified",
+      "actualTargetHost": "Windows",
+      "observedAtUtc": "actual native observation time, not fixture/preparation time",
+      "launchResultSha256": "SHA-256 of the supplied original launch-result.json bytes",
+      "actualNativeQueryExitCode": 0,
+      "originalNativeHandleIdentityVerified": true,
+      "currentCdpPortOwnerIdentityVerified": true,
+      "originalReadonlyNodeAttemptsAccountedFor": true
+    },
+    "nativeGateMaximumAgeMilliseconds": 300000,
+    "futureOrStaleNativeGateRejectedBeforeNetwork": true,
+    "nativeGateShaPurpose": "Pins reviewed input bytes; the caller must separately verify actual current Windows HANDLE, identity and port-owner facts. Synthetic receipts prove only the prerequisite predicate.",
+    "currentHandleMeaning": "Open and hold a fresh native Windows HANDLE, then verify the current process matches the original GUI PID, exact birth FileTime and binary SHA. This does not restore or attest the ten creator HANDLEs owned by executor90867, which already exited137."
+  },
+  "actualContractBindings": [
+    {
+      "file": "packages/protokoll/src/agent-status.ts",
+      "sha256": "7832b20235f5e0916869d43f46aea29e321faa21ac873c8cb5168e97f98528e0"
+    },
+    {
+      "file": "packages/protokoll/src/agent-presence.ts",
+      "sha256": "07a5ef00ce3e6cd90a974ed2aa1c798469bb3c9b4a9b40548adbc4561335b50a"
+    },
+    {
+      "file": "kisten/protokoll/src/agent_status.rs",
+      "sha256": "432bab67697350082c4f15ae1bcd2cad03b2dc45013e64d977d456639fc14e76"
+    },
+    {
+      "file": "kisten/netz/src/agent_status.rs",
+      "sha256": "ca7931f4488db6244eb9023b6ca3f02d6d587464bf926a057d6bfcfc3281427d"
+    },
+    {
+      "file": "packages/design/src/agent-identities.ts",
+      "sha256": "3244b95fec47ebecb8587097cfac3a949858384ccac6bc59470a4c8d8191899c"
+    },
+    {
+      "file": "packages/design/src/components/AgentToolIcon.vue",
+      "sha256": "f3f104e83335d754a9ab76795ca38ac9c58f22b7a164dc82b4193befa87c6f7a"
+    },
+    {
+      "file": "apps/web/src/features/agent-presence/components/AgentFleetRow.vue",
+      "sha256": "744d49eea3411ec46431de83f5a7711bf9758c31b0d2f09c46bfd2a2212b46f1"
+    },
+    {
+      "file": "apps/web/src/features/agent-presence/components/AgentFleetPanel.vue",
+      "sha256": "4b28f6a423c014245c684d5de12dd7ddb07ca534617133b4dcce75fba2c464c1"
+    },
+    {
+      "file": "apps/web/src/features/agent-presence/components/AgentMetrics.vue",
+      "sha256": "dce5796be6a3968a4e743faa8567fcf59a0a9c60b218ef42c9e874271c4fd253"
+    },
+    {
+      "file": "apps/web/src/components/layout/WorkspaceSidebar.vue",
+      "sha256": "0d69a73c472cae384de3fcce6a606f97ed678154d4ebd97d3089af176aede9d2"
+    },
+    {
+      "file": "apps/web/src/api/agents.ts",
+      "sha256": "9b0790d259cea7d6a1fdd09b6254ab028903b79a29e7c667e869364e2790df99"
+    }
+  ],
+  "mappingCorrections": {
+    "activeWindows": "Read active_windows, never nonexistent window_count. TS number/Rust u64 is required and nonnullable. Invalid or missing data is diagnostically null with validity=false, not accepted as a legal DTO or substituted with zero.",
+    "windowCountSource": "Read window_count_source: managed_sessions, tauri_windows, external_processes. Unknown/missing values are null and flagged.",
+    "processSources": "Read process_sources without null-to-empty-array conversion. Null means unobserved; unavailable source count stays null. Preserve duplicate environments and stale counts; malformed/empty arrays are flagged. Schema2 legitimately omits process_sources and is marked legacy-unobserved/null; schema3 requires an explicit null or valid nonempty array. Schema2 with this field is rejected as a contract mismatch.",
+    "sourceObservationTimes": "Expose null/presence validity flags rather than raw timestamps; validate the same calendar/time structure as the public TS parser.",
+    "derivedCount": "Complete available sources yield exact counts; an incomplete positive count is a lower bound; incomplete zero remains unknown/null. Non-external positive active_windows retains exact Windows-count semantics.",
+    "externalAvailableAggregate": "Compare active_windows with available-source counts only. Stale observations never enter the current available aggregate; unobserved source arrays do not become a confirmed aggregate zero.",
+    "serviceSemantics": "Derive the actual unit from window_count_source and service_presence. Compare external services with the seven providers in the frozen Rust service_provider function; non-external rows retain windows units.",
+    "safeCapabilityFlags": "Only monitor_only/process_presence/service_presence flags are projected. Installation/configuration/authentication placeholder booleans do not become installation or login proof.",
+    "domDtoCorrespondence": "Match DOM data-agent-id against DTO agent_id internally; output only match counts and canonical-provider equality, never raw agent IDs or session identifiers.",
+    "sourceObjectAndCapabilities": "Source objects must contain only environment/status/count/observed_at. Capability entries must be nonempty strings of at most80 characters without slash/backslash, matching the public parser. External active_windows must match the available aggregate. Only validity flags and allowlisted capability booleans are exposed.",
+    "domMetricApplicability": "The observed compact rail deliberately omits AgentMetrics. Missing data-agent-count-unit is untested/null, never a unit mismatch or a pass. Provider summaries aggregate only rows containing actual metrics; ARIA Chinese-unit booleans remain language-specific partial observations."
+  },
+  "diagnosticScope": {
+    "canonicalProviderCount": 21,
+    "serviceProviderCount": 7,
+    "layoutScope": "rendered-fleet-rows-current-page",
+    "rowSelector": "[data-rail-section=\"fleet\"] [data-agent-fleet] > div > .agent-fleet__rows > [data-agent-id]",
+    "themePairCheck": "Each rendered provider row: matching holder, dark/light images loaded and one CSS-shown variant matching the theme. getClientRects establishes rendering; clipping and viewport/scroll visibility are not checked.",
+    "hiddenRowsOrDetailsInspected": false,
+    "bothThemeSwitchesOrOfficialIconPayloadBytesVerified": false,
+    "readonlyOperations": [
+      "GET loopback CDP /json/list after current native gate",
+      "CDP Runtime.evaluate of DOM reads and GET /api/v1/agents/status"
+    ],
+    "clicksOrInputOrUiMutations": 0,
+    "modelCalls": 0,
+    "processLaunchRestartOrSignals": 0,
+    "rawCredentialsPidAgentIdsNamesTitlesPathsOrUrlsIncluded": false,
+    "viewportClippingOrScrollVisibilityChecked": false,
+    "metricUnitAttributesRequiredOnCompactRows": false,
+    "compactMetricUnitCheckResult": null
+  },
+  "preparationVerification": {
+    "nodeVersion": "v24.21.0",
+    "nodeSyntaxCheckActualExitCode": 0,
+    "inMemoryFixtureCommandActualExitCode": 0,
+    "countedFixtureScenarios": 12,
+    "countedFixtureChecks": 49,
+    "actualPublicProtocolParserUsed": "packages/protokoll/src/agent-status.ts parseAgentFleetSnapshot",
+    "actualPublicFixtureFile": "packages/protokoll/src/fixtures/agents.ts",
+    "actualPublicFixtureSha256": "79ade7a038e04e961d9e1f70e7f93a3926c6c6f363bfdca037ff472bdcb741be",
+    "actualPublicFixtureAgentCount": 5,
+    "initialDirectFixtureImportExitCode": 1,
+    "initialFailure": "Node ESM did not resolve the fixture's extensionless relative TypeScript import. Fixture source values were not changed; the in-memory verification resolved only that import specifier and used Node stripTypeScriptTypes.",
+    "cases": [
+      "Actual public protocol fixture active_windows mapping",
+      "Null source array and unknown derived zero",
+      "Available/stale/unavailable mixed sources with repeated environment and preserved null",
+      "Complete-source exact zero",
+      "Managed positive Windows count with null external observation",
+      "Illegal null/missing active_windows rejected by actual parser and flagged by projection",
+      "Empty sources and invalid calendar date rejected",
+      "Stale counts excluded from available aggregate",
+      "All 21 canonical rows and seven actual service capabilities; no raw private-shaped fixture values projected",
+      "DOM/DTO provider mismatch remains a failing diagnostic",
+      "Generated browser expression with mock DOM and one synthetic GET",
+      "Synthetic native-gate pin, freshness, host and original-handle/port-owner predicate failures"
+    ],
+    "actualNativeDeviceGuiOrNetworkCalls": 0,
+    "syntheticDomGetCalls": 1,
+    "originalScriptsAndPlansModified": false,
+    "productionSourceOrTopLevelManifestModified": false,
+    "verificationStageScope": "Subagent preparation only; top-level archive integration is performed afterward by root.",
+    "scriptSha256AtVerification": "37f98ab55b08d88340627093e0be2527bd7432799082cd595c6274110bca50da",
+    "scope": "Initial subagent candidate, before root compatibility and DOM applicability corrections. Its synthetic test counts do not prove the final script."
+  },
+  "actualDiagnosticRuntimeExecuted": false,
+  "currentWindowsGuiLiveClaimed": false,
+  "originalMonitorAssertionCauseEstablished": false,
+  "desktop18Passed": false,
+  "normalTrayQuitOrDefaultPromotionPerformed": false,
+  "nextStep": "After Windows access recovers, the caller must open and hold a fresh native HANDLE and verify the current process matches the original GUI identity and CDP19322 owner. Only then invoke this successor on that GUI. A failed gate prevents this invocation; full Desktop18, normal tray quit, fresh data backup and default promotion remain separate required work.",
+  "rootStaticVerification": {
+    "recordedAtUtc": "2026-11-13T04:40:53.265922+00:00",
+    "nodeSyntaxCheckActualExitCode": 0,
+    "inMemoryProtocolComparisonActualExitCode": 0,
+    "actualSharedCountAndUnitComparisons": 11,
+    "canonicalSyntheticRows": 21,
+    "loadedSyntheticThemeImages": 42,
+    "serviceCapabilityCount": 7,
+    "actualPublicParserAndPresenceHelpersUsed": true,
+    "invalidNullOrMissingActiveWindowsRejected": true,
+    "privateShapedSentinelsAbsentFromOutput": true,
+    "syntheticGatePinFreshnessAndOwnershipPredicateChecksPassed": true,
+    "originalFilesByteExactComparedToHead": 2,
+    "contractSourceHashesMatched": 6,
+    "successorAndFixtureHashesMatched": 2,
+    "actualNativeOrNetworkCalls": 0,
+    "scriptSha256AtInitialVerification": "37f98ab55b08d88340627093e0be2527bd7432799082cd595c6274110bca50da"
+  },
+  "rootSchemaCompatibilityVerification": {
+    "actualCommandExitCode": 0,
+    "countAndUnitComparisons": 12,
+    "actualSchema2And3ParserAndPresenceHelpersUsed": true,
+    "invalidVersionSourceCombinationsRejected": 2,
+    "actualNativeOrNetworkCalls": 0,
+    "scope": "After schema2 normalization correction; final compact/strictness regression is recorded separately."
+  },
+  "rootFinalComponentAndContractVerification": {
+    "recordedAtUtc": "2026-11-13T05:01:04.216618+00:00",
+    "scriptSha256": "65bf0d72a652c8b6ee12216dc4fb12e5ecc52973bf8726fdd582295b0ffde543",
+    "actualCommand": "pnpm exec vitest run test/current-desktop-diagnostic-prepared.test.ts",
+    "actualCommandExitCode": 0,
+    "actualVitestVersion": "4.1.10",
+    "testFileCount": 1,
+    "testCount": 2,
+    "temporaryTestSourceSha256": "223f517c983bebeee09d664cc81a3c09207fa25243e21ae7600cb731ea5b4242",
+    "actualCompactAgentFleetPanelMounted": true,
+    "actualRenderedPublicFixtureRows": 5,
+    "compactAbsentMetricsReportedUntestedNull": true,
+    "generatedReadOnlyExpressionEvaluated": true,
+    "syntheticGetCalls": 1,
+    "actualPublicParserMalformedSourcesAndCapabilitiesRejected": true,
+    "getClientRectsStubbedForJsdom": true,
+    "viewportOrNativeIconLoadingProved": false,
+    "actualDeviceGuiCdpOrNetworkCalls": 0,
+    "ownedPnpmWrapperWslpathQueryInterrupted": {
+      "pid": 105100,
+      "parentPid": 105095,
+      "exactArgsCwdOwnerAndPidfdVerifiedBeforeSigint": true,
+      "scope": "Only this owned pnpm path-conversion query. Original pnpm command resumed and completed the two tests with exit0."
+    },
+    "optionalDirectVitestModuleProbeActualExitCode": 1,
+    "optionalDirectProbeFailure": "The apps/web/node_modules/vitest/vitest.mjs path was absent. No test or runtime ran through that entry.",
+    "temporaryTestSourceRemovedAfterVerification": true
+  },
+  "independentStaticReview": {
+    "agent": "successor_delivery_review",
+    "scriptSha256": "65bf0d72a652c8b6ee12216dc4fb12e5ecc52973bf8726fdd582295b0ffde543",
+    "status": "all-raised-diagnostic-issues-resolved",
+    "inMemoryRegressionCases": 8,
+    "actualPublicParserAndPresenceHelpersUsed": true,
+    "schema2NormalizationAndInvalidSchemaFieldCombinationsChecked": true,
+    "compactMetricApplicabilityAndCheckedRowAggregationChecked": true,
+    "strictSourceKeysCapabilitiesAndExternalAvailableCountMismatchChecked": true,
+    "renderedScopeAndNoViewportClaimChecked": true,
+    "actualNativeDeviceCdpOrNetworkCalls": 0,
+    "peerWroteFilesOrChangedGit": false,
+    "planMetadataSyncedByRootAfterPeerSnapshot": true
+  }
+}
