@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "status": "ten-native-originals-byte-exact",
+  "files": [
+    {
+      "role": "actual-worker-job-start",
+      "originalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/jobs/8e41a9c881c2b3d174c44fd9d47904f8/start-safe.json",
+      "archivePath": "predecessor-start-safe.json",
+      "sha256": "d2fabedeca595dc5d108a57a0cdf5766e572c41829adb4cfc743b0bfb07ea58b",
+      "bytes": 388,
+      "copiedByteExact": true
+    },
+    {
+      "role": "actual-worker-held-native-exit",
+      "originalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/jobs/8e41a9c881c2b3d174c44fd9d47904f8/terminal-safe.json",
+      "archivePath": "predecessor-terminal-safe.json",
+      "sha256": "2352ef366568430e95cbd41a931dfe53484b1ebbe1787b0e20f8ad9c61d27179",
+      "bytes": 453,
+      "copiedByteExact": true
+    },
+    {
+      "role": "actual-expanded-job-source",
+      "originalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/sources/8e41a9c881c2b3d174c44fd9d47904f8.ps1",
+      "archivePath": "predecessor-executed-source.ps1",
+      "sha256": "407b048609dad05aaf7c89acebb44c3a411de455051dd903e5412d0b759969d0",
+      "bytes": 1564,
+      "copiedByteExact": true
+    },
+    {
+      "role": "native-readonly-preflight-output",
+      "originalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/jobs/8e41a9c881c2b3d174c44fd9d47904f8/windows-android5-readonly-preflight-safe.json",
+      "archivePath": "predecessor-result-safe.json",
+      "sha256": "fde14793b3ae360f62eaed188e02489bd9ec2f1c2edfbfadbcfcc0f0d9fc2754",
+      "bytes": 465,
+      "copiedByteExact": true
+    },
+    {
+      "role": "executed-byte-pinned-dependency",
+      "originalPath": "/home/han/.local/state/orchester-delivery/20261113/android5-current-wire-preflight-20261113/read-current-windows-android5-preflight.ps1",
+      "archivePath": "predecessor-dependency-source.ps1",
+      "sha256": "2712818f73e1369a484455f7344f9e47ed2fe711fecb2082ab400798fb4d02e9",
+      "bytes": 8597,
+      "copiedByteExact": true
+    },
+    {
+      "role": "actual-worker-job-start",
+      "originalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/jobs/54fdcb3218245026a461792bad7688f3/start-safe.json",
+      "archivePath": "successor2-start-safe.json",
+      "sha256": "0fe2c72a0319a911c34d2eb939082c6f1d670d088d7f22fe594fced44892484c",
+      "bytes": 388,
+      "copiedByteExact": true
+    },
+    {
+      "role": "actual-worker-held-native-exit",
+      "originalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/jobs/54fdcb3218245026a461792bad7688f3/terminal-safe.json",
+      "archivePath": "successor2-terminal-safe.json",
+      "sha256": "d897e6b67d1ad091926398e9f580d9ba0a271ba58ff14bb7e186349803890cd8",
+      "bytes": 453,
+      "copiedByteExact": true
+    },
+    {
+      "role": "actual-expanded-job-source",
+      "originalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/sources/54fdcb3218245026a461792bad7688f3.ps1",
+      "archivePath": "successor2-executed-source.ps1",
+      "sha256": "f12bfd6872ddaf2a64dbd7ce729046f29b0487a20fc1a3f99b21f0ca534e876b",
+      "bytes": 1597,
+      "copiedByteExact": true
+    },
+    {
+      "role": "native-readonly-preflight-output",
+      "originalPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continuation-native-access-20261113/owned-native-worker-attempt3-3fa131682683515d5d18a4e5/jobs/54fdcb3218245026a461792bad7688f3/windows-android5-readonly-preflight-successor2-safe.json",
+      "archivePath": "successor2-result-safe.json",
+      "sha256": "946ad4df53fb5f0c9e91fcd691b74c8197f1e9a9b02872376c707b9c0b5ed6f8",
+      "bytes": 7262,
+      "copiedByteExact": true
+    },
+    {
+      "role": "executed-byte-pinned-dependency",
+      "originalPath": "/home/han/.local/state/orchester-delivery/20261113/android5-current-wire-preflight-20261113/read-current-windows-android5-preflight-successor2.ps1",
+      "archivePath": "successor2-dependency-source.ps1",
+      "sha256": "dce8f140d1172f5df0961849918917891e65e032466ab80ee486682a2a43409c",
+      "bytes": 12767,
+      "copiedByteExact": true
+    }
+  ]
+}

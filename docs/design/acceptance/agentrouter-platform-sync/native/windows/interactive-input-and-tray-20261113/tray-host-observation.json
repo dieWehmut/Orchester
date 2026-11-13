@@ -1,0 +1,10 @@
+{
+    "event":  "owned_tray_host_observed",
+    "guiPid":  37324,
+    "guiCreated":  134389718070239855,
+    "binarySha256":  "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+    "trayWindowCount":  1,
+    "guiSessionId":  1,
+    "harnessSessionId":  1,
+    "modelCalls":  0
+}

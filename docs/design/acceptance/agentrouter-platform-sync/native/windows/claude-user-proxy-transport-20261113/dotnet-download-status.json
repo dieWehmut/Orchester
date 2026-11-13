@@ -1,0 +1,27 @@
+{
+    "method":  "native-dotnet-default-chain-and-hostname-validation",
+    "complete":  false,
+    "http_code":  null,
+    "bytes_written":  0,
+    "content_length":  null,
+    "redirects":  0,
+    "tls12_enabled_process_only":  true,
+    "revocation_check_enabled_process_only":  true,
+    "phase":  "download-failed",
+    "safe_proxy_meta":  {
+                            "default_proxy_present":  true,
+                            "target_is_bypassed":  false,
+                            "resolved_route_is_direct":  false,
+                            "resolved_proxy_is_loopback":  true,
+                            "non_loopback_endpoint_withheld":  false,
+                            "endpoint":  {
+                                             "protocol":  "http",
+                                             "host":  "127.0.0.1",
+                                             "port":  7897
+                                         },
+                            "evaluation_error_type":  null
+                        },
+    "web_exception_status":  "SendFailure",
+    "error":  "System.Management.Automation.MethodInvocationException: download or TLS validation failed; raw URL-bearing exception omitted",
+    "exit_code":  13
+}

@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "status": "worker3-reached-owned-lifetime-current-native-entry-not-ready",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "worker3SelfReportedTerminal": {
+    "schema": 1,
+    "state": "lifetime_elapsed",
+    "pid": 326920,
+    "exactBirthUtc": "2026-11-13T10:49:47.2180528Z",
+    "source": "worker.ps1",
+    "sourceSha256": "16ee5cae10190473a2f05b1c496d1323b1c929763d3ce2b9b37570f976b461b5",
+    "nonce": "2813cc3396434e7a80ea020f3b5d2692",
+    "selfReportedExitCode": 0,
+    "selfReportedNotIndependentOsExit": true,
+    "stage": null,
+    "exceptionType": null,
+    "finishedAtUtc": "2026-11-13T12:19:47.6051412Z"
+  },
+  "worker3IndependentActualOsExitCode": null,
+  "worker3AcceptingNewRequests": false,
+  "worker3CreatorHandlesRecovered": false,
+  "worker4SourceAndBootstrapPinsEqualWorker3": true,
+  "worker4BootstrapNativeStartedVerified": false,
+  "worker4AdvancingHeartbeatVerified": false,
+  "worker4ActivatedAsClientState": false,
+  "currentNativeExecutionChannelAcceptingVerifiedRequests": false,
+  "actualInteropAttempts": [
+    {
+      "route": "3097_interop",
+      "observedAtUtc": "2026-11-13T12:24:04.909700+00:00",
+      "actualInteropExitCode": 1,
+      "safeError": "UtilAcceptVsock:273: accept4 failed 110",
+      "privateErrorInputSha256": "4e2341e8e618f6fa0716eb27d58069b77c55fa6d90eacf39d771e7faea1da790",
+      "privateErrorInputBytes": 67,
+      "rawErrorLogArchived": false,
+      "nativeBootstrapStartedRecorded": false,
+      "workerReadyRecorded": false
+    },
+    {
+      "route": "7250_interop",
+      "observedAtUtc": "2026-11-13T12:34:42.369856+00:00",
+      "actualInteropExitCode": 1,
+      "safeError": "UtilAcceptVsock:273: accept4 failed 110",
+      "privateErrorInputSha256": "17676f06c926fce01cde5f8e986bd54a8ee5fddf57402780f7bdb3aaab8ca31d",
+      "privateErrorInputBytes": 67,
+      "rawErrorLogArchived": false,
+      "nativeBootstrapStartedRecorded": false,
+      "workerReadyRecorded": false
+    },
+    {
+      "route": "1_interop",
+      "observedAtUtc": "2026-11-13T12:48:51.515147+00:00",
+      "actualInteropExitCode": 1,
+      "safeError": "UtilAcceptVsock:273: accept4 failed 110",
+      "privateErrorInputSha256": "b53a53a9e48d70e01b428f91cd6aaaa30b84c5a81fdf9955567cbdb5a0a91c38",
+      "privateErrorInputBytes": 67,
+      "rawErrorLogArchived": false,
+      "nativeBootstrapStartedRecorded": false,
+      "workerReadyRecorded": false
+    }
+  ],
+  "currentInteropErrorCausalDiagnosisEstablished": false,
+  "oneOwnedLinuxCollapse": {
+    "regionBytes": 2097152,
+    "virtualBytes": 4194304,
+    "madviseCollapseReturn": -1,
+    "errno": 12,
+    "ownRegionAnonHugePagesKiB": 0,
+    "allOwnedMappingReleased": true,
+    "sysctlOrConfigurationWrites": 0,
+    "otherProcessSignalsOrMemoryAccess": 0,
+    "windowsRecoveryClaimed": false
+  },
+  "noWorkerRestartBasedOnObservationTimeout": true,
+  "guardPreventsLaunchingWhenAnyExistingOwnedWorkerCandidateOrRecordFound": true,
+  "worker4GuardNativeExecutionVerified": false,
+  "nativeWindowAndOriginalFiveAndOfficialClientsPending": true,
+  "privateKeysOrCredentialValuesOrMacsOrRawLogsArchived": false,
+  "fullPlatformDeliveryComplete": false,
+  "observedAtUtc": "2026-11-13T12:48:51.515147+00:00",
+  "preparedGuardSuccessor": {
+    "archiveFile": "prepared-original-user-and-existing-worker-guard-successor.ps1",
+    "sha256": "03875c219c5b8082d3c717b69560960982f5b1a32c0d366e0f6b8f8fd7adf039",
+    "originalAttemptedGuardPreserved": true,
+    "childBootstrapExitCodeForwarded": true,
+    "exitForwardingPatternAlreadyUsedByActualNativePreflightWrapper": true,
+    "linuxPowerShell7ParseOnlyErrorCount": 0,
+    "nativePowerShell51ExecutionVerified": false,
+    "workerOrBootstrapPinnedSourcesChanged": false
+  }
+}

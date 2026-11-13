@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-11-13T12:33:20.819142+00:00",
+  "status": "one-owned-2MiB-collapse-completed",
+  "beforeMemoryKiB": {
+    "MemFree": 94548,
+    "MemAvailable": 940684
+  },
+  "virtualBytes": 4194304,
+  "applicationBytesWritten": 2097152,
+  "collapseRegionBytes": 2097152,
+  "madviseCollapseReturn": -1,
+  "errno": 12,
+  "elapsedMs": 4.141,
+  "ownRegionAnonHugePagesKiB": 0,
+  "munmapReturn": 0,
+  "allOwnedMappingReleased": true,
+  "sysctlOrConfigurationWrites": 0,
+  "otherProcessSignalsOrMemoryAccess": 0,
+  "buddyBefore": [
+    "Node 0, zone    DMA32    459   1028    869    506    259    103     10      3      0      0      0 ",
+    "Node 0, zone   Normal    838    730    479     66     19      2      1      0      0      0      0 "
+  ],
+  "buddyAfter": [
+    "Node 0, zone    DMA32   5544   2509   1056    695    279    119     22      3      0      0      0 ",
+    "Node 0, zone   Normal   2329   1280    548    127     26      2      1      0      0      0      0 "
+  ],
+  "windowsRecoveryClaimed": false,
+  "primaryDocumentation": "https://docs.kernel.org/admin-guide/mm/transhuge.html",
+  "constantSource": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/plain/include/uapi/asm-generic/mman-common.h?h=v6.18"
+}

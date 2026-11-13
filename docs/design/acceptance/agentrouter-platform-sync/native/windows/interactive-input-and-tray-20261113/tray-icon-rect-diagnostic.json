@@ -1,0 +1,87 @@
+{
+    "event":  "owned_tray_icon_rect_diagnostics",
+    "records":  [
+                    {
+                        "Window":  1313132,
+                        "Id":  1,
+                        "HResult":  -2147467259,
+                        "Found":  false,
+                        "Left":  0,
+                        "Top":  0,
+                        "Right":  0,
+                        "Bottom":  0
+                    },
+                    {
+                        "Window":  1313132,
+                        "Id":  2,
+                        "HResult":  0,
+                        "Found":  true,
+                        "Left":  1918,
+                        "Top":  1504,
+                        "Right":  1982,
+                        "Bottom":  1600
+                    },
+                    {
+                        "Window":  1313132,
+                        "Id":  3,
+                        "HResult":  -2147467259,
+                        "Found":  false,
+                        "Left":  0,
+                        "Top":  0,
+                        "Right":  0,
+                        "Bottom":  0
+                    },
+                    {
+                        "Window":  1313132,
+                        "Id":  4,
+                        "HResult":  -2147467259,
+                        "Found":  false,
+                        "Left":  0,
+                        "Top":  0,
+                        "Right":  0,
+                        "Bottom":  0
+                    },
+                    {
+                        "Window":  1313132,
+                        "Id":  5,
+                        "HResult":  -2147467259,
+                        "Found":  false,
+                        "Left":  0,
+                        "Top":  0,
+                        "Right":  0,
+                        "Bottom":  0
+                    },
+                    {
+                        "Window":  1313132,
+                        "Id":  6,
+                        "HResult":  -2147467259,
+                        "Found":  false,
+                        "Left":  0,
+                        "Top":  0,
+                        "Right":  0,
+                        "Bottom":  0
+                    },
+                    {
+                        "Window":  1313132,
+                        "Id":  7,
+                        "HResult":  -2147467259,
+                        "Found":  false,
+                        "Left":  0,
+                        "Top":  0,
+                        "Right":  0,
+                        "Bottom":  0
+                    },
+                    {
+                        "Window":  1313132,
+                        "Id":  8,
+                        "HResult":  -2147467259,
+                        "Found":  false,
+                        "Left":  0,
+                        "Top":  0,
+                        "Right":  0,
+                        "Bottom":  0
+                    }
+                ],
+    "readOnly":  true,
+    "modelCalls":  0
+}

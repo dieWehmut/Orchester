@@ -1,0 +1,133 @@
+{
+    "schemaVersion":  1,
+    "status":  "readonly-windows-sdk-existing-avd-and-old-channel-preflight-successor2-passed",
+    "observedAtUtc":  "2026-11-13T12:18:45.3618589Z",
+    "sourceRevision":  "71def643cb08b208cc79687f79255c504eb14dc6",
+    "actualHost":  "Windows",
+    "scriptSha256":  "dce8f140d1172f5df0961849918917891e65e032466ab80ee486682a2a43409c",
+    "currentWorker":  {
+                          "pid":  326920,
+                          "creationFiletimeExact":  "134390405872180528",
+                          "imageSha256":  "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+                          "queryAndSynchronizeHandleHeldThroughObservation":  true,
+                          "imageQueryPerformed":  true
+                      },
+    "existingAvdName":  "Medium_Phone_API_37.0",
+    "existingAvdIniAndConfigExact":  true,
+    "existingAvdPathBoundInMemory":  true,
+    "sdkAndAvdFiles":  [
+                           {
+                               "label":  "adb",
+                               "sha256":  "b4a6b455702684652cccf7b46258b29e653538904359a58fd4931cf3ef286b3f",
+                               "exactPinMatch":  true
+                           },
+                           {
+                               "label":  "emulator",
+                               "sha256":  "06af3c5da3c2cef7266822fe653f54371fc746d78db6f4282e1b2338a70970c8",
+                               "exactPinMatch":  true
+                           },
+                           {
+                               "label":  "headless-qemu",
+                               "sha256":  "161d3bcef3d5a93698a77f292c899d131d3e92e335c7b5b2360bbc5ce364cf4c",
+                               "exactPinMatch":  true
+                           },
+                           {
+                               "label":  "native-python",
+                               "sha256":  "204d51f19707da17766bccecce2ceececadab350663a8190420d1377bac1150d",
+                               "exactPinMatch":  true
+                           },
+                           {
+                               "label":  "existing-avd-ini",
+                               "sha256":  "47fe0b97b105655cb8c2c56af3432038820090ea307e0f564b68601ffc5d0846",
+                               "exactPinMatch":  true
+                           },
+                           {
+                               "label":  "existing-avd-config",
+                               "sha256":  "2c09c45e0c587d206264ed83ea246215fdd728ce30c035b0804f3b6f1899f4aa",
+                               "exactPinMatch":  true
+                           }
+                       ],
+    "oldExactProcesses":  [
+                              {
+                                  "role":  "manager",
+                                  "pid":  30436,
+                                  "originalCreationFiletimeExact":  "134389406416098295",
+                                  "pidCurrentlyAbsent":  false,
+                                  "originalIdentityCurrentlyLive":  false,
+                                  "pidReusedWithDifferentBirth":  true,
+                                  "matchingOriginalHandleTerminal":  false,
+                                  "oldProcessImageQueryPerformed":  false,
+                                  "absenceNativeError":  null
+                              },
+                              {
+                                  "role":  "adb",
+                                  "pid":  14648,
+                                  "originalCreationFiletimeExact":  "134389406419545296",
+                                  "pidCurrentlyAbsent":  false,
+                                  "originalIdentityCurrentlyLive":  false,
+                                  "pidReusedWithDifferentBirth":  true,
+                                  "matchingOriginalHandleTerminal":  false,
+                                  "oldProcessImageQueryPerformed":  false,
+                                  "absenceNativeError":  null
+                              },
+                              {
+                                  "role":  "emulator",
+                                  "pid":  29496,
+                                  "originalCreationFiletimeExact":  "134389406419932540",
+                                  "pidCurrentlyAbsent":  true,
+                                  "originalIdentityCurrentlyLive":  false,
+                                  "pidReusedWithDifferentBirth":  false,
+                                  "matchingOriginalHandleTerminal":  false,
+                                  "oldProcessImageQueryPerformed":  false,
+                                  "absenceNativeError":  87
+                              },
+                              {
+                                  "role":  "qemu",
+                                  "pid":  11140,
+                                  "originalCreationFiletimeExact":  "134389406420584962",
+                                  "pidCurrentlyAbsent":  false,
+                                  "originalIdentityCurrentlyLive":  false,
+                                  "pidReusedWithDifferentBirth":  true,
+                                  "matchingOriginalHandleTerminal":  false,
+                                  "oldProcessImageQueryPerformed":  false,
+                                  "absenceNativeError":  null
+                              }
+                          ],
+    "privatePorts":  [
+                         {
+                             "port":  5039,
+                             "currentNativeTcpLocalEndpointCount":  0,
+                             "absentFromCurrentNativeTcpTable":  true
+                         },
+                         {
+                             "port":  5572,
+                             "currentNativeTcpLocalEndpointCount":  0,
+                             "absentFromCurrentNativeTcpTable":  true
+                         },
+                         {
+                             "port":  5573,
+                             "currentNativeTcpLocalEndpointCount":  0,
+                             "absentFromCurrentNativeTcpTable":  true
+                         },
+                         {
+                             "port":  19329,
+                             "currentNativeTcpLocalEndpointCount":  0,
+                             "absentFromCurrentNativeTcpTable":  true
+                         }
+                     ],
+    "predecessorFailurePreserved":  true,
+    "oldProcessIdentityBasis":  "exact-birth-and-native-wait-only",
+    "oldProcessImagesQueried":  0,
+    "historicalCreatorExitReceiptsUsedAsCurrentLivenessProof":  false,
+    "currentProcessHandlesClosedOnlyAfterObservation":  true,
+    "portReservationOrFutureAvailabilityClaimed":  false,
+    "currentEmulatorOrAdbTargetIdentityVerified":  false,
+    "originalDataOrKeystoreOrTokensRead":  false,
+    "credentialGetInvoked":  false,
+    "adbOrEmulatorCommandsInvoked":  0,
+    "cdpOrHttpRequests":  0,
+    "productsStarted":  0,
+    "processOrInputSignals":  0,
+    "avdOrAppOrDefaultAdbMutationCount":  0,
+    "fullWindowsFiveCurrentWireVerified":  false
+}

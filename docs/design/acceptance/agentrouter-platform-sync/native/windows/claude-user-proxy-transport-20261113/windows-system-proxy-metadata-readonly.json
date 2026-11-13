@@ -1,0 +1,56 @@
+{
+    "schema_version":  1,
+    "task":  "windows-system-proxy-metadata-readonly",
+    "started_utc":  "2026-11-13T11:29:54.8283630Z",
+    "finished_utc":  "2026-11-13T11:29:55.0748909Z",
+    "exit_code":  0,
+    "query_succeeded":  true,
+    "wininet_current_user":  {
+                                 "query_succeeded":  true,
+                                 "native_error_code":  0,
+                                 "auto_detect_enabled":  false,
+                                 "pac_configured":  false,
+                                 "bypass_configured":  true,
+                                 "proxy":  {
+                                               "proxy_configured":  true,
+                                               "loopback_proxy_configured":  true,
+                                               "non_loopback_proxy_configured":  false,
+                                               "endpoint_details_withheld":  false,
+                                               "unparsed_proxy_configured":  false,
+                                               "loopback_endpoints":  [
+                                                                          {
+                                                                              "protocol":  "http",
+                                                                              "target_protocol":  "all",
+                                                                              "host":  "127.0.0.1",
+                                                                              "port":  7897
+                                                                          }
+                                                                      ]
+                                           },
+                                 "error_type":  null
+                             },
+    "winhttp_machine_default":  {
+                                    "query_succeeded":  true,
+                                    "native_error_code":  0,
+                                    "direct_configured":  true,
+                                    "automatic_proxy_mode_configured":  false,
+                                    "named_proxy_mode_configured":  false,
+                                    "bypass_configured":  false,
+                                    "proxy":  {
+                                                  "proxy_configured":  false,
+                                                  "loopback_proxy_configured":  false,
+                                                  "non_loopback_proxy_configured":  false,
+                                                  "endpoint_details_withheld":  false,
+                                                  "unparsed_proxy_configured":  false,
+                                                  "loopback_endpoints":  [
+
+                                                                         ]
+                                              },
+                                    "error_type":  null
+                                },
+    "error_type":  null,
+    "pac_evaluated":  false,
+    "network_requests_made":  false,
+    "environment_values_read_or_emitted":  false,
+    "credentials_emitted":  false,
+    "global_proxy_dns_or_tls_modified":  false
+}

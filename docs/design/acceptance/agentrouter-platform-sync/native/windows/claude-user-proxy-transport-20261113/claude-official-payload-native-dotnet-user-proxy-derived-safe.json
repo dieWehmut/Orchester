@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "task": "claude-official-payload-native-dotnet-user-proxy-download-verification",
+  "forced_native_dotnet": true,
+  "prerequisite_proxy_query_job": "e7c481a8d190795acdb939dab33541a9",
+  "started_utc": "2026-11-13T11:54:04.2172466Z",
+  "finished_utc": "2026-11-13T11:54:11.3405082Z",
+  "phase": "failed-no-install",
+  "exit_code": 13,
+  "source": {
+    "package": "Anthropic.Claude",
+    "version": "3.6556.2",
+    "architecture": "x64",
+    "installer_type": "exe",
+    "url": "https://downloads.claude.ai/releases/win32/x64/3.6556.2/Claude-20c019a1e61fa5b687616af57d31f97bb3181723.exe",
+    "manifest_url": "https://raw.githubusercontent.com/microsoft/winget-pkgs/dde9f425ebb1721103491cd450e25ea7059ef98a/manifests/a/Anthropic/Claude/3.6556.2/Anthropic.Claude.installer.yaml",
+    "expected_sha256": "945082290478E5C668E8AAA25A392E1CD129E6219173E907B7FF1F7F99DED45E"
+  },
+  "limits": {
+    "download_seconds": 120,
+    "download_process_guard_seconds": 126,
+    "signature_process_seconds": 45,
+    "termination_grace_seconds": 5,
+    "output_drain_timeout_seconds": 5,
+    "maximum_accepted_payload_bytes": 1073741824
+  },
+  "download": {
+    "executable": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "timed_out": false,
+    "native_exited": true,
+    "actual_exit_code": 13,
+    "elapsed_seconds": 6.93,
+    "method": "forced-native-dotnet-current-user-default-proxy-in-isolated-process",
+    "native_status": {
+      "method": "native-dotnet-default-chain-and-hostname-validation",
+      "complete": false,
+      "http_code": null,
+      "bytes_written": 0,
+      "content_length": null,
+      "redirects": 0,
+      "tls12_enabled_process_only": true,
+      "revocation_check_enabled_process_only": true,
+      "phase": "download-failed",
+      "safe_proxy_meta": {
+        "default_proxy_present": true,
+        "target_is_bypassed": false,
+        "resolved_route_is_direct": false,
+        "resolved_proxy_is_loopback": true,
+        "non_loopback_endpoint_withheld": false,
+        "endpoint": {
+          "protocol": "http",
+          "host": "127.0.0.1",
+          "port": 7897
+        },
+        "evaluation_error_type": null
+      },
+      "web_exception_status": "SendFailure",
+      "error": "System.Management.Automation.MethodInvocationException: download or TLS validation failed; raw URL-bearing exception omitted",
+      "exit_code": 13
+    }
+  },
+  "hash": null,
+  "signature": null,
+  "signature_process": null,
+  "artifact": {
+    "directory": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continuation-native-access-20261113\\owned-native-worker-attempt3-3fa131682683515d5d18a4e5\\jobs\\eac94f27e09d1c4af3b10a59cd52a60b\\dl-4f5277baeeb94c6192671987858bd03b",
+    "retained_path": null,
+    "retained_bytes": 0,
+    "partial_path": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continuation-native-access-20261113\\owned-native-worker-attempt3-3fa131682683515d5d18a4e5\\jobs\\eac94f27e09d1c4af3b10a59cd52a60b\\dl-4f5277baeeb94c6192671987858bd03b\\Claude-3.6556.2-x64.exe.partial",
+    "partial_exists": false,
+    "downloaded_sha_matched_path": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continuation-native-access-20261113\\owned-native-worker-attempt3-3fa131682683515d5d18a4e5\\jobs\\eac94f27e09d1c4af3b10a59cd52a60b\\dl-4f5277baeeb94c6192671987858bd03b\\Claude-3.6556.2-x64.downloaded.exe",
+    "downloaded_sha_matched_exists": false,
+    "verified_path": "C:\\Users\\han\\AppData\\Local\\Orchester-build\\continuation-native-access-20261113\\owned-native-worker-attempt3-3fa131682683515d5d18a4e5\\jobs\\eac94f27e09d1c4af3b10a59cd52a60b\\dl-4f5277baeeb94c6192671987858bd03b\\Claude-3.6556.2-x64.verified.exe",
+    "verified_exists": false,
+    "installed": false,
+    "executed": false
+  },
+  "error": {
+    "type": "System.Management.Automation.RuntimeException",
+    "message": "Native .NET download failed; download is not complete."
+  },
+  "installed": false,
+  "payload_executed": false,
+  "gui_started": false,
+  "tls_validation_disabled": false,
+  "global_proxy_or_dns_changed": false,
+  "verification_complete": false
+}

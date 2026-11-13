@@ -262,6 +262,14 @@ C 盘精确已知删除量为 7,219,765,510 字节：36 个旧 PDB 4,846,878,720
 
 本轮[独立安装与归档复核](acceptance/agentrouter-platform-sync/sources/audit/epoch3-installation-archive-independent-review-safe.json)绑定加入审查报告前的 265 文件快照，52 份选定来源 JSON、258 份归档 JSON、链接与 13 项需求的证据关系均通过。审查没有重跑 native/network/ADB/Git，也未读取私人内容；中间扫描曾为计算散列读取 7 份已归档公共非 JSON 文件，报告保留该范围错误，最终扫描已先检查 JSON 后缀、非 JSON 内容读取为 0。报告加入归档后的清单另由当前自检更新，旧独立审查因 API 限流未完成的阶段仍保持失败边界。
 
+[Windows 原 AVD 原生前置检查](acceptance/agentrouter-platform-sync/native/windows/android5-current-preflight-20261113/native-android5-preflight-scope-safe.json)实际作业退出 0，六项 SDK/AVD 文件固定散列相等，四个旧精确进程身份已不存活，四个专用端口在检查时空闲；旧前置检查退出 1 的原回执保留。当前 Windows run-as UID、既存 AES alias、五项保存凭据的原生读取及仅原先指向 7337 的当前实例请求仍需执行，端口检查不代表已预留未来命名空间。
+
+[原输入桌面与托盘尝试](acceptance/agentrouter-platform-sync/native/windows/interactive-input-and-tray-20261113/safe-derived-scope.json)确认原 GUI 的出生时间、二进制及会话 1。原生读取 WinSta0/Default 输入桌面成功，但读取光标返回错误 5，当前物理控制台为会话 2；没有据此推断锁屏或会话 2 的用户身份。托盘请求没有打开菜单，执行作业退出 1，GUI 正常退出尚未证明，Desktop18 与默认重装保持待验收。
+
+[遵循用户原代理的 Claude 官方负载请求](acceptance/agentrouter-platform-sync/native/windows/claude-user-proxy-transport-20261113/safe-derived-scope.json)固定同一 3.6556.2 官方 EXE，实际使用用户原有的 `127.0.0.1:7897` 非直连代理路由；父作业及下载子进程均退出 13，`SendFailure`、HTTP 状态空、收到 0 字节。未取得完整负载、实际散列、签名或安装；派生安全报告明确排除 stdout/stderr，原报告散列和字节数另行绑定。
+
+[执行器时限与当前原生入口](acceptance/agentrouter-platform-sync/native/windows/native-worker-lifetime-and-current-access-20261113/native-lifetime-and-access-scope-safe.json)保留执行器在 90 分钟时限后的自报终态 0，此值不是独立 OS 退出证明。新的 Windows 路径启动在三个互通端点均实际退出 1、返回 `accept4 failed 110`，新执行器没有原生启动、就绪或心跳证明。一块自有 2 MiB 内存的整理尝试返回 errno 12，映射已释放，没有修改系统配置或向其他项目进程发信号；完整平台交付继续待验收。
+
 [第十轮实际交付](acceptance/agentrouter-platform-sync/maintenance/git-delivery/tenth-step-delivery-safe.json)记录提交 `1824cf2…` 合并 main `3712edd…`、feature push / main merge / main push 均实际退出 0。原 16:19 安全回执现按原字节归档，596 项 Git blob 与 594 项 manifest 证明保持原检查点范围；本次独立核对这 594 个文件与远程 main 全相等、577 份 JSON 可解析、731 项生产输入相等。后续执行器终态与当前访问失败另加新证据，完整平台交付仍未完成。
 
 [第十一轮实际交付](acceptance/agentrouter-platform-sync/maintenance/git-delivery/eleventh-step-delivery-safe.json)将当前执行器终态与官方渠道续验提交 `8548830…` 合并 main `bdd8a0d…`，feature push / main merge / main push 均实际退出 0；607 项 manifest 与远程 main 文件相等、731 项生产输入通过。新的精确工作树与远程分支清理另行归档，原生安装和完整平台验收仍待完成。
