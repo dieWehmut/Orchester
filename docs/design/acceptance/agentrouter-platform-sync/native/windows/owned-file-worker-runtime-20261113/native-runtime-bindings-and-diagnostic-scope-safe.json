@@ -1,0 +1,251 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-11-13T11:10:52.291605+00:00",
+  "status": "owned-native-file-worker-and-two-jobs-executed-http401-dto-comparisons-unchecked-not-desktop18-acceptance",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "validationMethod": "Byte-exact source copies, integer 100ns identity conversion, SHA bindings and archived native held-process exit observations; no new Windows command was run by this archiver.",
+  "bootstrapAndWorker": {
+    "actualBootstrapOsExitCode": 0,
+    "bootstrapOsExitSourceThreadId": "01a1d2a9-fb64-7850-8148-5e28c8a56e40",
+    "bootstrapOsExitSourceCallLine": 4119,
+    "bootstrapOsExitSourceResultLine": 4122,
+    "bootstrapOsExitSourceResultRecordedAtUtc": "2026-11-13T10:49:47.435Z",
+    "bootstrapPid": 325756,
+    "workerIdentity": {
+      "pid": 326920,
+      "exactBirthUtc": "2026-11-13T10:49:47.2180528Z",
+      "sourceSha256": "16ee5cae10190473a2f05b1c496d1323b1c929763d3ce2b9b37570f976b461b5",
+      "nonce": "2813cc3396434e7a80ea020f3b5d2692"
+    },
+    "workerFileTimeExactCalculatedFromBirthUtc": "134390405872180528",
+    "bootstrapAndWorkerSourcesMatchPreviouslyArchivedPreparedFiles": true,
+    "workerSourceArchive": "native/windows/owned-file-worker-heartbeat-fix-20261113/prepared/worker.ps1",
+    "bootstrapSourceArchive": "native/windows/owned-file-worker-heartbeat-fix-20261113/prepared/bootstrap.ps1",
+    "nativeReadyObserved": true,
+    "observedHeartbeatFirstUtc": "2026-11-13T10:50:56.2622563Z",
+    "observedHeartbeatAdvancedUtc": "2026-11-13T10:50:58.3454163Z",
+    "heartbeatTimestampAdvancedObservedInOriginalRootReceipt": true,
+    "nativeHeartbeatFilesIndependentlyRereadByThisArchiver": false,
+    "originalRootReceiptContainsIncrementalObservationTimes": true,
+    "workerNativeExitObserved": false,
+    "workerCurrentLivenessBeyondArchivedObservationsClaimed": false
+  },
+  "helloJob": {
+    "id": "66be38c3abd97b88cad1f6f4da277e2c",
+    "nativeChildPid": 327996,
+    "exactBirthUtc": "2026-11-13T10:52:55.4871203Z",
+    "fileTimeExact": "134390407754871203",
+    "birthToFileTime100nsIntegerEqualityVerified": true,
+    "sourceSha256": "f2d0856ebd23f6270c7a30dcb589c00d2c6c208d64e055850bf69f736f52bb83",
+    "nativeProcessHandleExitObservationCode": 0,
+    "startedAndTerminalIdentitiesAndSourceBytesMatch": true,
+    "nativeTargetHost": "Windows",
+    "nativeSessionId": 1,
+    "rootHelloVerifiedAtUtc": "2026-11-13T10:53:23.763512+00:00"
+  },
+  "originalGuiHeldDiagnostic": {
+    "id": "6567ecac4bdf45dc33d773977a4e08c3",
+    "collectorPid": 328612,
+    "collectorExactBirthUtc": "2026-11-13T10:55:38.0011512Z",
+    "collectorSourceSha256": "82436bb5fca1f44495af5606979eda50b62ec01abe7cd4b9d3ec21d03a914d8f",
+    "collectorHeldNativeOsExitCode": 0,
+    "diagnosticNodeHeldNativeExitCode": 0,
+    "freshGateSha256": "b957c665ec6770d27451b395befee4d9b1fa0276b79e8e8f79051b2d61a37cec",
+    "freshGateObservedAtUtc": "2026-11-13T10:55:45.3310534Z",
+    "originalGuiPid": 37324,
+    "originalGuiFileTimeExact": "134389718070239855",
+    "originalGuiExeSha256PinVerifiedByExecutedCollector": "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+    "cdpPort": 19322,
+    "cdpOwnerPid": 29196,
+    "cdpOwnerDirectParentPid": 37324,
+    "currentCdpOwnerChain": [
+      {
+        "processId": 29196,
+        "createdFileTimeExact": "134389718071276076",
+        "parentProcessId": 37324
+      }
+    ],
+    "freshNativeHandleHeldCount": 2,
+    "handlesHeldThroughoutDiagnostic": true,
+    "originalGuiHandleStillLiveAtCollectorTerminal": true,
+    "collectorTerminalObservedAtUtc": "2026-11-13T10:55:45.6449177Z",
+    "launchResultSha256": "a4644db099c7792b2f3e7949041c99824d71a24c2d5e3cdc6519288db1e2cb07",
+    "launchResultArchive": "native/windows/formal-desktop18-attempt1-20261112T1545/launch-result.json",
+    "diagnosticHelperSourceSha256": "65bf0d72a652c8b6ee12216dc4fb12e5ecc52973bf8726fdd582295b0ffde543",
+    "diagnosticHelperSourceArchive": "native/windows/formal-desktop18-attempt1-20261112T1545/prepared-readonly-diagnostics/read-current-monitor-cdp-successor.mjs",
+    "gateHashMatchesOriginalDiagnosticAndCollectorTerminal": true,
+    "oldCreatorExecutorHandlesRecoveredOrExitVerified": false,
+    "nativeIdentityIndependentlyVerifiedByNodeScriptAlone": false
+  },
+  "originalDiagnosticInterpretation": {
+    "originalOutputArchive": "monitor-readonly-diagnostic-original-safe.json",
+    "originalOutputSha256": "9b1b6b0b078f8df497930223be64de03919ab67789fc1e77250ccb75dba044a2",
+    "originalOutputByteExactPreserved": true,
+    "originalDiagnosticObservedAtUtc": "2026-11-13T10:55:45.593Z",
+    "viewCount": 2,
+    "configuredCanonicalProviderCount": 21,
+    "configuredServiceProviderCount": 7,
+    "rosterHttpStatuses": [
+      401,
+      401
+    ],
+    "rosterDtoObtained": false,
+    "dtoProviderPresenceVerified": false,
+    "dtoProviderMatchComparisonResult": null,
+    "dtoProviderAndRowIdentityComparisonsApplicable": false,
+    "dtoUnitComparisonResult": null,
+    "dtoSourceMeasurementComparisonResult": null,
+    "rawMissingDtoProvidersAndFalseMatchFieldsAreActualMismatchEvidence": false,
+    "rawMissingDtoAndFalseFieldsScope": "Both requests returned HTTP401 and no DTO was obtained. The raw helper treated unavailable DTOs as an empty roster; missingDtoProviders and false row/DTO matches are uninspected comparisons, not measured missing providers or actual data mismatches.",
+    "views": [
+      {
+        "viewIndex": 0,
+        "httpStatus": 401,
+        "rosterDtoObtained": false,
+        "renderedFleetRowCount": 0,
+        "rowDtoComparisonResult": null,
+        "dtoUnitComparisonResult": null,
+        "legacyThemeSelectorMatchCount": 0,
+        "themeControlAvailabilityEstablished": false,
+        "themeSwitchPerformed": false
+      },
+      {
+        "viewIndex": 1,
+        "httpStatus": 401,
+        "rosterDtoObtained": false,
+        "renderedFleetRowCount": 21,
+        "rowDtoComparisonResult": null,
+        "dtoUnitComparisonResult": null,
+        "legacyThemeSelectorMatchCount": 0,
+        "themeControlAvailabilityEstablished": false,
+        "themeSwitchPerformed": false
+      }
+    ],
+    "zeroRowViewScope": "No fleet rows were observed in view0; this does not establish provider absence across the GUI or native monitor processes.",
+    "view1CanonicalRenderedProviderRows": 21,
+    "view1EveryConfiguredProviderHasOneRenderedRow": true,
+    "view1LoadedDarkLightImagePairs": 21,
+    "view1LoadedThemeImageCount": 42,
+    "view1EachPairHasOneCurrentLightImageRendered": true,
+    "officialIconPayloadBytesIndependentlyReadOrVerifiedByThisDiagnostic": false,
+    "metricUnitRowCheckCount": 0,
+    "metricUnitsInspected": false,
+    "renderedRowsAreNotViewportVisibilityProof": true,
+    "legacyThemeSelectorZeroDoesNotEstablishMissingThemeControl": true,
+    "currentLightThemeObservationDoesNotEstablishDarkThemeSwitching": true
+  },
+  "scope": {
+    "authenticatedNativeHelloJobCompleted": true,
+    "heldGuiReadonlyDiagnosticInvoked": true,
+    "guiCurrentLivenessBeyondCollectorObservationClaimed": false,
+    "originalDesktop18MonitorAssertionCauseEstablished": false,
+    "desktop18Passed": false,
+    "trayQuitPerformed": false,
+    "defaultPromotionPerformed": false,
+    "modelCallsByThisArchiverOrArchivedJobs": 0,
+    "guiMutationsOrInputSignalsByArchivedJobs": 0,
+    "foreignVmShutdownOrOtherProjectProcessSignals": false,
+    "bridgeKeyPrivateStateRequestMacRawLogsAndVmContentsReadOrIncluded": false,
+    "rootManifestSummaryAuditOrProductFilesModifiedByThisArchiver": false
+  },
+  "sourceMappings": [
+    {
+      "archiveFile": "bootstrap-started-native-safe.json",
+      "sourceBytes": 513,
+      "sourceSha256": "46829838669e4b266bf71797b267373900e05dd470a2d4eaf969ec4faedb31ca",
+      "byteExact": true,
+      "sourceKind": "native-original-safe-json"
+    },
+    {
+      "archiveFile": "bootstrap-terminal-native-safe.json",
+      "sourceBytes": 614,
+      "sourceSha256": "6c3880a068446e348c262aab164f19c3c2286fe9fb9dd5af779bbeeef7f62689",
+      "byteExact": true,
+      "sourceKind": "native-original-safe-json"
+    },
+    {
+      "archiveFile": "worker-ready-native-safe.json",
+      "sourceBytes": 300,
+      "sourceSha256": "27f487aabce255ab7af544b5244083e1c0a1ca4aded94151104e31a00c712c36",
+      "byteExact": true,
+      "sourceKind": "native-original-safe-json"
+    },
+    {
+      "archiveFile": "worker-runtime-original-derived-safe.json",
+      "sourceBytes": 979,
+      "sourceSha256": "9f8cff9608e9eb6c523260adc075bb34427298f09932cfba7916a488101c3c3d",
+      "byteExact": true,
+      "sourceKind": "original-root-derived-receipt"
+    },
+    {
+      "archiveFile": "hello-job-start-native-safe.json",
+      "sourceBytes": 388,
+      "sourceSha256": "34ce9c94655db0667e6a23adbdd94a0ce0073621b56ac430ec48bf40d0837fd3",
+      "byteExact": true,
+      "sourceKind": "native-original-safe-json"
+    },
+    {
+      "archiveFile": "hello-job-terminal-native-safe.json",
+      "sourceBytes": 453,
+      "sourceSha256": "3b0aa0339d802b58694951052802f957da22d846b1daf7a7aaa7cb1830b9168a",
+      "byteExact": true,
+      "sourceKind": "native-original-safe-json"
+    },
+    {
+      "archiveFile": "hello-native-safe.json",
+      "sourceBytes": 603,
+      "sourceSha256": "17045596201fe427812368cdd9a0cac8f18ac54bf7e56e2d25a65aacf7bf7f1b",
+      "byteExact": true,
+      "sourceKind": "native-original-safe-json"
+    },
+    {
+      "archiveFile": "hello-job-source.ps1",
+      "sourceBytes": 1095,
+      "sourceSha256": "f2d0856ebd23f6270c7a30dcb589c00d2c6c208d64e055850bf69f736f52bb83",
+      "byteExact": true,
+      "sourceKind": "native-job-source"
+    },
+    {
+      "archiveFile": "diagnostic-job-start-native-safe.json",
+      "sourceBytes": 388,
+      "sourceSha256": "ed568e4cd1b4a72041ded6dab96bae984cb04ef879b0d97a2b000c54e1957f18",
+      "byteExact": true,
+      "sourceKind": "native-original-safe-json"
+    },
+    {
+      "archiveFile": "diagnostic-job-terminal-native-safe.json",
+      "sourceBytes": 453,
+      "sourceSha256": "fe6133ca018344d074423c4775c3fcad828d91f3415e898cdb66d0257556ab12",
+      "byteExact": true,
+      "sourceKind": "native-original-safe-json"
+    },
+    {
+      "archiveFile": "held-original-gui-native-gate-safe.json",
+      "sourceBytes": 1075,
+      "sourceSha256": "b957c665ec6770d27451b395befee4d9b1fa0276b79e8e8f79051b2d61a37cec",
+      "byteExact": true,
+      "sourceKind": "native-original-safe-json"
+    },
+    {
+      "archiveFile": "held-original-gui-collector-terminal-safe.json",
+      "sourceBytes": 780,
+      "sourceSha256": "0c19be6c88be4960c878bb0c317b41d318673b6cefb8a279a21ef70ed22d1692",
+      "byteExact": true,
+      "sourceKind": "native-original-safe-json"
+    },
+    {
+      "archiveFile": "monitor-readonly-diagnostic-original-safe.json",
+      "sourceBytes": 33203,
+      "sourceSha256": "9b1b6b0b078f8df497930223be64de03919ab67789fc1e77250ccb75dba044a2",
+      "byteExact": true,
+      "sourceKind": "native-original-safe-json"
+    },
+    {
+      "archiveFile": "held-original-gui-job-source.ps1",
+      "sourceBytes": 6489,
+      "sourceSha256": "82436bb5fca1f44495af5606979eda50b62ec01abe7cd4b9d3ec21d03a914d8f",
+      "byteExact": true,
+      "sourceKind": "native-job-source"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "status": "actual-windows-native-current-official-payload-tls-failure-no-install",
+  "observedAtUtc": "2026-11-13T11:10:21.4495861Z",
+  "nativeCollectorOsExitCode": 13,
+  "nativeSystemCurlObservedExitCode": 35,
+  "nativeSystemCurlReportedExited": true,
+  "httpStatus": 0,
+  "payloadBytes": 0,
+  "fullShaVerified": false,
+  "authenticodeVerified": false,
+  "installed": false,
+  "payloadExecuted": false,
+  "tlsValidationDisabled": false,
+  "systemDnsOrProxyChanged": false,
+  "officialSourceUrl": "https://downloads.claude.ai/releases/win32/x64/3.6556.2/Claude-20c019a1e61fa5b687616af57d31f97bb3181723.exe",
+  "expectedSha256": "945082290478e5c668e8aaa25a392e1cd129e6219173e907b7ff1f7f99ded45e",
+  "curlSslVerifyResultZeroDoesNotProveCompletedHandshake": true,
+  "sourceBindings": [
+    {
+      "path": "claude-official-payload-native-safe.json",
+      "bytes": 4084,
+      "sha256": "236e4778ef76181249ad316fa210767bfa141d8090c79f5ab673c3b3471c8ab8"
+    },
+    {
+      "path": "download-and-verify-native.ps1",
+      "bytes": 19586,
+      "sha256": "5ec88df1119ecb41c96956c5fa8d4499a26589eae84109001c5224fcff37517d"
+    },
+    {
+      "path": "start-safe.json",
+      "bytes": 388,
+      "sha256": "f78582799a15090bddccaa84be50d3742ede6f5f4f234a385f0f17422a28a741"
+    },
+    {
+      "path": "terminal-safe.json",
+      "bytes": 454,
+      "sha256": "c0e1b3c05fafdb207cc592dd1f283c0162cc5e85c7a358b35f730f8fee2b92fa"
+    }
+  ]
+}

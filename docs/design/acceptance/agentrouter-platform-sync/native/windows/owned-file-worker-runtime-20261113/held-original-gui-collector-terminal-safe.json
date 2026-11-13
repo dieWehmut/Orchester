@@ -1,0 +1,19 @@
+{
+    "schemaVersion":  1,
+    "status":  "held-original-gui-readonly-diagnostic-terminal",
+    "actualTargetHost":  "Windows",
+    "collectorPid":  328612,
+    "nativeHandleGatePassed":  true,
+    "diagnosticInvoked":  true,
+    "targetGuiStarts":  0,
+    "modelCalls":  0,
+    "processSignals":  0,
+    "actualDiagnosticNativeExitCode":  0,
+    "guiOriginalHandleStillLiveAfterDiagnostic":  true,
+    "nativeHandleHeldCountThroughoutDiagnostic":  2,
+    "nativeGateSha256":  "b957c665ec6770d27451b395befee4d9b1fa0276b79e8e8f79051b2d61a37cec",
+    "diagnosticOutputExists":  true,
+    "actualOuterNativeExitCode":  0,
+    "observedAtUtc":  "2026-11-13T10:55:45.6449177Z",
+    "sourceSha256":  "82436bb5fca1f44495af5606979eda50b62ec01abe7cd4b9d3ec21d03a914d8f"
+}

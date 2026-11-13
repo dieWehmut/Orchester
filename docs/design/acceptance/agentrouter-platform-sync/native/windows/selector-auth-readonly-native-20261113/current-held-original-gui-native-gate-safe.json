@@ -1,0 +1,23 @@
+{
+    "schemaVersion":  1,
+    "status":  "current-native-original-gui-and-cdp-owner-verified",
+    "actualTargetHost":  "Windows",
+    "observedAtUtc":  "2026-11-13T11:07:35.7754870Z",
+    "launchResultSha256":  "a4644db099c7792b2f3e7949041c99824d71a24c2d5e3cdc6519288db1e2cb07",
+    "actualNativeQueryExitCode":  0,
+    "originalNativeHandleIdentityVerified":  true,
+    "currentCdpPortOwnerIdentityVerified":  true,
+    "originalReadonlyNodeAttemptsAccountedFor":  true,
+    "guiPid":  37324,
+    "guiCreatedFileTimeExact":  "134389718070239855",
+    "currentCdpOwnerPid":  29196,
+    "currentCdpOwnerChain":  [
+                                 {
+                                     "processId":  29196,
+                                     "createdFileTimeExact":  "134389718071276076",
+                                     "parentProcessId":  37324
+                                 }
+                             ],
+    "nativeHandleHeldCount":  2,
+    "collectorSourceSha256":  "1e078eb73f8c8d7258755e39961470842b29df05838e6f55969ee797146754ce"
+}
