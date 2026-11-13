@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "status": "windows-cwd-native-commands-returned-wsl-interop110",
+  "recordedAtUtc": "2026-11-13T04:40:53.265922+00:00",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "userSteering": "Switch to a Windows filesystem path and run the corresponding commands.",
+  "commands": [
+    {
+      "workingDirectoryWindows": "C:\\Users\\han",
+      "command": "cmd.exe /d /c ver",
+      "execSessionId": 16630,
+      "actualOuterExitCode": 1,
+      "wslError": "UtilAcceptVsock:273: accept4 failed 110",
+      "nativeVersionOutputProduced": false
+    },
+    {
+      "workingDirectoryWindows": "C:\\Windows\\System32",
+      "command": "powershell.exe -NoProfile -NonInteractive -Command Get-Location and OSVersion",
+      "execSessionId": 68296,
+      "actualOuterExitCode": 1,
+      "wslError": "UtilAcceptVsock:273: accept4 failed 110",
+      "nativeLocationOrVersionOutputProduced": false
+    },
+    {
+      "workingDirectoryScope": "existing owned native file-bridge probe directory on C:",
+      "command": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File existing probe.ps1 using its C: path",
+      "execSessionId": 20477,
+      "actualOuterExitCode": 1,
+      "wslError": "UtilAcceptVsock:273: accept4 failed 110",
+      "nativeFileBridgeReceiptProduced": false
+    },
+    {
+      "workingDirectoryScope": "existing C: Orchester-build directory",
+      "command": "cmd.exe /d /c ver with explicit existing WSL_INTEROP route",
+      "interopRoute": "/run/WSL/2_interop",
+      "execSessionId": 28671,
+      "actualOuterExitCode": 1,
+      "wslError": "UtilAcceptVsock:273: accept4 failed 110",
+      "nativeVersionOutputProduced": false
+    },
+    {
+      "workingDirectoryScope": "existing C: Orchester-build directory",
+      "command": "cmd.exe /d /c ver with explicit existing WSL_INTEROP route",
+      "interopRoute": "/run/WSL/7250_interop",
+      "execSessionId": 40696,
+      "actualOuterExitCode": 1,
+      "wslError": "UtilAcceptVsock:273: accept4 failed 110",
+      "nativeVersionOutputProduced": false
+    }
+  ],
+  "probeSourceSha256": "2e92b93adff806925a0f77b50fad24c86a4241a25637f62bbb39e3dbded390bd",
+  "probeDirectoryOnlyContainsOriginalScript": true,
+  "nativeChildStartOrExitIndependentlyObserved": false,
+  "currentWindowsGuiOrCreatorHandleStateVerified": false,
+  "desktop18DiagnosticExecuted": false,
+  "defaultInstallPromoted": false,
+  "actualNativeRuntimePassClaimed": false
+}

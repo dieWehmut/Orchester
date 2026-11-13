@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-13T04:01:42.158154+00:00",
-  "status": "native-linux-original-one-wire-verified-full-platform-delivery-incomplete",
+  "createdAt": "2026-11-13T05:01:04.218599+00:00",
+  "status": "readonly-desktop-diagnostic-successor-prepared-full-platform-delivery-incomplete",
   "summaryPath": "summary.json",
   "files": [
     {
@@ -1700,6 +1700,11 @@
       "bytes": 2605
     },
     {
+      "path": "native/windows/current-access-windows-cwd-20261113/windows-path-command-results-safe.json",
+      "sha256": "1b45dbd47b3f5d68e623c65a1d26e41f66be5477f1e59ae374e4a133ef8f310a",
+      "bytes": 2465
+    },
+    {
       "path": "native/windows/current-installation-matrix/current-filesystem-public-matrix-safe.json",
       "sha256": "9d4fd644d4254ddcfda8518a7be2d97d5f52e94908c9fb16b2ec3c7987523c1b",
       "bytes": 14038
@@ -2088,6 +2093,16 @@
       "path": "native/windows/formal-desktop18-attempt1-20261112T1545/prepared-readonly-diagnostics/continuation-plan-safe.json",
       "sha256": "2e065e09a71caccd3702b72e407bf3070856cd694f9c57a3f5e13cf54078a081",
       "bytes": 2151
+    },
+    {
+      "path": "native/windows/formal-desktop18-attempt1-20261112T1545/prepared-readonly-diagnostics/prepared-successor-plan-safe.json",
+      "sha256": "cbe9e7b35a1c02111c866719428349f06bbcf07cd12e3e3302a7972fa9971a89",
+      "bytes": 15417
+    },
+    {
+      "path": "native/windows/formal-desktop18-attempt1-20261112T1545/prepared-readonly-diagnostics/read-current-monitor-cdp-successor.mjs",
+      "sha256": "65bf0d72a652c8b6ee12216dc4fb12e5ecc52973bf8726fdd582295b0ffde543",
+      "bytes": 19316
     },
     {
       "path": "native/windows/formal-desktop18-attempt1-20261112T1545/prepared-readonly-diagnostics/read-current-monitor-cdp.mjs",
@@ -3211,8 +3226,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "3c58dca0d5adcb89c81c81a5a3f2d71828e5bc21f4dbd80be5c009796b234e56",
-      "bytes": 43817
+      "sha256": "3c49a197ba921a24a12e8939513c717d30149bc80d7df09588be11a96e3b2812",
+      "bytes": 44563
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -3236,8 +3251,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "4816c8f8aa249b95edf1c250ee6c3841553a50a177c50999619149befe347e7f",
-      "bytes": 62845
+      "sha256": "db22e6ef081c87bba33f7c81bd5c4c7ec4e77c639a15068e907041b53165403f",
+      "bytes": 63442
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
@@ -3321,5 +3336,5 @@
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
-  "checkpointScope": "Previous594 archivefiles preserved except current summary/audit; originaltenth delivery copied byteexact plus sourceJSONL-bound originalexecutor terminal137 andcurrent22:34nativeaccess failures. HistoricalfailedDesktop18/runtime/handle receipts untouched. CurrentWindowsGUI/childrenlifetime unverified; no fullDesktop18/defaultreinstallation/platformcompletion claim. CurrentinternationalWorkBuddy fourmetadata200/fouradvertisedpayload404 andhomepage/clientbytesexact-history scope appended asfour safeJSONs only; no package/profile/install completion. CurrentClaude Storecatalog5.11492.0.0 vs historical5.1231.2.0/separateWinGet3.6556.2/exactofficialEXE+MSIX curl35+HTTPnull+0bytes appended assixsafeJSONs withsourcehashes. No downloadedpayload/Authenticode/install/currentregistration proof; originalStore1612andallhistoricalreceipts untouched. Eleventh607filecontinuation8548830/mainbdd8a0d delivery receipt plus currentthreecleanmergedworktrees/localbranches andsixexact-tip-leasedremote ref cleanup withindependentreview appended asfour byteexactsafeJSONs. Registered6; three nonancestor/dirtymonitor retained; 1023583391regularlogicalB notCphysical. Originalplatform/runtime gaps remain. Twelfth611filecleanup9a48d20/main1dec0b4 delivered; 27 producerpublicarchivefiles withoriginal26source mappings plusrootindependentlive/state andtwelfthdelivery byteexact appended. Managedoriginalsystemd269dbus recovery anddefault7337normalstop0/start0/current2888953+2888962 verified; originalfailures andpublicderivation scope retained. RealWSLrebootautostart andcurrentoriginalphonetokenwire nottested; Windowsentry110/fullDesktop18/vendorinstallation remain pending. Thirteenth delivery receipt8fa6bb7/main3f01075 appended byte-exact; current summary/audit/docs corrected from awaiting delivery to delivered. Historical native and lifecycle receipts remain unchanged; full platform completion is not claimed. Historical official Claude SFS strict per-request TLS/category404 receipt and public Microsoft Root2011 DER archived with local-byte verification. No current network/native/install verification inferred; no global trust changes. New native Linux original-one credential and current managed7337 GET200/nameMatch proven with existing alias/byte-exactAPK/XML and listener binding; initial abort/provider/exit-method failures retained, startup auto-reconnect and prelaunchLS limitations explicit. Own normalBack/forward2Dex cleanup proved, Windows originalfive/reboot remain pending. Previous two-doc continuation delivery335e52f/47ea750/main989f776 receipt appended byte-exact."
+  "checkpointScope": "Previous594 archivefiles preserved except current summary/audit; originaltenth delivery copied byteexact plus sourceJSONL-bound originalexecutor terminal137 andcurrent22:34nativeaccess failures. HistoricalfailedDesktop18/runtime/handle receipts untouched. CurrentWindowsGUI/childrenlifetime unverified; no fullDesktop18/defaultreinstallation/platformcompletion claim. CurrentinternationalWorkBuddy fourmetadata200/fouradvertisedpayload404 andhomepage/clientbytesexact-history scope appended asfour safeJSONs only; no package/profile/install completion. CurrentClaude Storecatalog5.11492.0.0 vs historical5.1231.2.0/separateWinGet3.6556.2/exactofficialEXE+MSIX curl35+HTTPnull+0bytes appended assixsafeJSONs withsourcehashes. No downloadedpayload/Authenticode/install/currentregistration proof; originalStore1612andallhistoricalreceipts untouched. Eleventh607filecontinuation8548830/mainbdd8a0d delivery receipt plus currentthreecleanmergedworktrees/localbranches andsixexact-tip-leasedremote ref cleanup withindependentreview appended asfour byteexactsafeJSONs. Registered6; three nonancestor/dirtymonitor retained; 1023583391regularlogicalB notCphysical. Originalplatform/runtime gaps remain. Twelfth611filecleanup9a48d20/main1dec0b4 delivered; 27 producerpublicarchivefiles withoriginal26source mappings plusrootindependentlive/state andtwelfthdelivery byteexact appended. Managedoriginalsystemd269dbus recovery anddefault7337normalstop0/start0/current2888953+2888962 verified; originalfailures andpublicderivation scope retained. RealWSLrebootautostart andcurrentoriginalphonetokenwire nottested; Windowsentry110/fullDesktop18/vendorinstallation remain pending. Thirteenth delivery receipt8fa6bb7/main3f01075 appended byte-exact; current summary/audit/docs corrected from awaiting delivery to delivered. Historical native and lifecycle receipts remain unchanged; full platform completion is not claimed. Historical official Claude SFS strict per-request TLS/category404 receipt and public Microsoft Root2011 DER archived with local-byte verification. No current network/native/install verification inferred; no global trust changes. New native Linux original-one credential and current managed7337 GET200/nameMatch proven with existing alias/byte-exactAPK/XML and listener binding; initial abort/provider/exit-method failures retained, startup auto-reconnect and prelaunchLS limitations explicit. Own normalBack/forward2Dex cleanup proved, Windows originalfive/reboot remain pending. Previous two-doc continuation delivery335e52f/47ea750/main989f776 receipt appended byte-exact. Current read-only desktop diagnostic successor maps required active_windows and preserves null/unknown/source/service semantics, with public protocol/static synthetic verification only. Original helper and plan remain byte-exact; original executor terminal137/currentGUI ownership unknown. Actual Windows-cwd commands returned outer1/interop110, no native output or file bridge receipt. No Desktop18 diagnosis/pass, tray quit, installation or promotion claimed."
 }
