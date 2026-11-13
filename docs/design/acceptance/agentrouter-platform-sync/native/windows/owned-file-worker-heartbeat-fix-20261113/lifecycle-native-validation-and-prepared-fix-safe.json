@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-11-13T10:21:03.266721+00:00",
+  "status": "native-worker-heartbeat-failure-reproduced-prepared-fix-runtime-unverified",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "actualBootstrap2OuterExitCode": 0,
+  "bootstrap2ReadyWasSnapshotOnly": true,
+  "bootstrap2WorkerPid": 292200,
+  "bootstrap2WorkerExactBirthUtc": "2026-11-13T09:55:38.6130763Z",
+  "bootstrap2WorkerSourceSha256": "092b77a3e27fc30fac1b5f48eba1f9f2a0dc0350972bc5f9793d910b4b339103",
+  "worker2HeartbeatFailedAfterReady": true,
+  "worker2SelfReportedExitCode": 1,
+  "worker2IndependentOsExitCodeVerified": false,
+  "nativeReplacementAndCurrentAbsenceProbeActualExitCode": 0,
+  "nativeWorker2AbsentAtProbe": true,
+  "nativeProbeObservedAtUtc": "2026-11-13T10:02:49.8950219Z",
+  "nativeNullBackupReplaceSucceeded": false,
+  "nativeNullBackupErrorType": "System.ArgumentException",
+  "nativeExplicitOwnedBackupReplaceSucceeded": true,
+  "nativeProbeTemporaryDirectoryAndBackupRemoved": true,
+  "preparedWorker3SourceSha256": "16ee5cae10190473a2f05b1c496d1323b1c929763d3ce2b9b37570f976b461b5",
+  "preparedWorker3Change": "Use a unique backup beside the owned temporary JSON file for atomic File.Replace and remove only that own backup. Preserve CreateOnly/Move.",
+  "preparedWorker3NativeRuntimeVerified": false,
+  "preparedWorker3BootstrapAttempts": [
+    {
+      "execSessionId": 50959,
+      "actualOuterExitCode": 1,
+      "interopError": 110,
+      "nativeReadyOrLockProduced": false
+    },
+    {
+      "execSessionId": 96922,
+      "actualOuterExitCode": 1,
+      "interopError": 110,
+      "nativeReadyOrLockProduced": false
+    },
+    {
+      "execSessionId": 28396,
+      "actualOuterExitCode": 1,
+      "interopError": 110,
+      "nativeReadyOrLockProduced": false
+    }
+  ],
+  "clientPython310SevenFractionalDigitsParseFailureObserved": true,
+  "clientCompatibilityChange": "Truncate only heartbeat age parsing copy to six fractional digits. Preserve exactBirthUtc comparisons, expiry and five-item LF HMAC canonical.",
+  "actualPython310TimestampExpressionFixturesPassed": 3,
+  "clientHelloRequestSubmitted": false,
+  "authenticatedNativeJobCompleted": false,
+  "guiDiagnosticExecuted": false,
+  "desktop18Passed": false,
+  "defaultPromotionPerformed": false,
+  "foreignVmShutdownOrOtherProjectProcessSignals": false,
+  "privateKeysStateFilesCredentialsAndJobMacsIncluded": false,
+  "sourceMappings": [
+    {
+      "archiveFile": "prepared/worker.ps1",
+      "sourceBytes": 22910,
+      "sourceSha256": "16ee5cae10190473a2f05b1c496d1323b1c929763d3ce2b9b37570f976b461b5",
+      "byteExact": true
+    },
+    {
+      "archiveFile": "prepared/bootstrap.ps1",
+      "sourceBytes": 10565,
+      "sourceSha256": "619edb8801695595d2ac4d8bf35463bfcecae3d8dff454c1942f17cd006e97aa",
+      "byteExact": true
+    },
+    {
+      "archiveFile": "prepared/native_worker_client.py",
+      "sourceBytes": 2241,
+      "sourceSha256": "493aae3f7de6b0390798166f90a83b197fe8df5cc72c7471aaf46cbfb1e45171",
+      "byteExact": true
+    },
+    {
+      "archiveFile": "worker2-bootstrap-terminal-native-safe.json",
+      "sourceBytes": 614,
+      "sourceSha256": "13b5987c29bfd94e5cb2d72730132b679d4a0341fff79a3470306761962ff51a",
+      "byteExact": true
+    },
+    {
+      "archiveFile": "worker2-failed-terminal-self-report-safe.json",
+      "sourceBytes": 441,
+      "sourceSha256": "48ad049021c1cd971aba23d0001694ca41af65fdbcbf678ab5b5f0ba84bbbc70",
+      "byteExact": true
+    },
+    {
+      "archiveFile": "worker2-native-absence-and-replacement-probe-safe.json",
+      "sourceBytes": 497,
+      "sourceSha256": "23a0061adb5eb900b0811c544c776cb7ff6eebf5df0b0994005c232bda6da923",
+      "byteExact": true
+    }
+  ],
+  "nativeProbeDestinationAndBackupTextMatched": true
+}

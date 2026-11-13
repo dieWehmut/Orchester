@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-13T07:55:41.520452+00:00",
-  "status": "current-official-mcp-linux-documentation-boundary-full-delivery-incomplete",
+  "createdAt": "2026-11-13T10:21:03.266721+00:00",
+  "status": "native-file-worker-heartbeat-fix-prepared-full-delivery-incomplete",
   "summaryPath": "summary.json",
   "files": [
     {
@@ -2560,6 +2560,41 @@
       "bytes": 5899
     },
     {
+      "path": "native/windows/owned-file-worker-heartbeat-fix-20261113/lifecycle-native-validation-and-prepared-fix-safe.json",
+      "sha256": "9afacb6cef7333b8c60f6b49b6444f3efdfb3e480f4f2b9d2dffd85bed8d2e1a",
+      "bytes": 3789
+    },
+    {
+      "path": "native/windows/owned-file-worker-heartbeat-fix-20261113/prepared/bootstrap.ps1",
+      "sha256": "619edb8801695595d2ac4d8bf35463bfcecae3d8dff454c1942f17cd006e97aa",
+      "bytes": 10565
+    },
+    {
+      "path": "native/windows/owned-file-worker-heartbeat-fix-20261113/prepared/native_worker_client.py",
+      "sha256": "493aae3f7de6b0390798166f90a83b197fe8df5cc72c7471aaf46cbfb1e45171",
+      "bytes": 2241
+    },
+    {
+      "path": "native/windows/owned-file-worker-heartbeat-fix-20261113/prepared/worker.ps1",
+      "sha256": "16ee5cae10190473a2f05b1c496d1323b1c929763d3ce2b9b37570f976b461b5",
+      "bytes": 22910
+    },
+    {
+      "path": "native/windows/owned-file-worker-heartbeat-fix-20261113/worker2-bootstrap-terminal-native-safe.json",
+      "sha256": "13b5987c29bfd94e5cb2d72730132b679d4a0341fff79a3470306761962ff51a",
+      "bytes": 614
+    },
+    {
+      "path": "native/windows/owned-file-worker-heartbeat-fix-20261113/worker2-failed-terminal-self-report-safe.json",
+      "sha256": "48ad049021c1cd971aba23d0001694ca41af65fdbcbf678ab5b5f0ba84bbbc70",
+      "bytes": 441
+    },
+    {
+      "path": "native/windows/owned-file-worker-heartbeat-fix-20261113/worker2-native-absence-and-replacement-probe-safe.json",
+      "sha256": "23a0061adb5eb900b0811c544c776cb7ff6eebf5df0b0994005c232bda6da923",
+      "bytes": 497
+    },
+    {
       "path": "native/windows/ownership-history/historical-unregistered-suspended-node-closure-gap-safe.json",
       "sha256": "8543e177a71a20cbe48b21bca64e61fea691bfd89f6e334b57a69320ea664a8e",
       "bytes": 1339
@@ -3276,8 +3311,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "07f9f3c30076a9da0aade7e99459d20b62dc104ad290eeaac978a938a724b59c",
-      "bytes": 46047
+      "sha256": "dd868806cc3ba1da0311626cf75595854dea9ebc15584d9bb5463192d414899d",
+      "bytes": 46755
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -3301,8 +3336,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "c046455917521fcf1dfc88155dc0ca23e1dbd5ad3cbbff0dbd3d5ba2ca6a6f38",
-      "bytes": 64263
+      "sha256": "a6f8081e7ff14db2c37e87470981de5230ce695ea56f3af8c65e9544bc8784ad",
+      "bytes": 64686
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
@@ -3386,5 +3421,5 @@
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
-  "checkpointScope": "Previous594 archivefiles preserved except current summary/audit; originaltenth delivery copied byteexact plus sourceJSONL-bound originalexecutor terminal137 andcurrent22:34nativeaccess failures. HistoricalfailedDesktop18/runtime/handle receipts untouched. CurrentWindowsGUI/childrenlifetime unverified; no fullDesktop18/defaultreinstallation/platformcompletion claim. CurrentinternationalWorkBuddy fourmetadata200/fouradvertisedpayload404 andhomepage/clientbytesexact-history scope appended asfour safeJSONs only; no package/profile/install completion. CurrentClaude Storecatalog5.11492.0.0 vs historical5.1231.2.0/separateWinGet3.6556.2/exactofficialEXE+MSIX curl35+HTTPnull+0bytes appended assixsafeJSONs withsourcehashes. No downloadedpayload/Authenticode/install/currentregistration proof; originalStore1612andallhistoricalreceipts untouched. Eleventh607filecontinuation8548830/mainbdd8a0d delivery receipt plus currentthreecleanmergedworktrees/localbranches andsixexact-tip-leasedremote ref cleanup withindependentreview appended asfour byteexactsafeJSONs. Registered6; three nonancestor/dirtymonitor retained; 1023583391regularlogicalB notCphysical. Originalplatform/runtime gaps remain. Twelfth611filecleanup9a48d20/main1dec0b4 delivered; 27 producerpublicarchivefiles withoriginal26source mappings plusrootindependentlive/state andtwelfthdelivery byteexact appended. Managedoriginalsystemd269dbus recovery anddefault7337normalstop0/start0/current2888953+2888962 verified; originalfailures andpublicderivation scope retained. RealWSLrebootautostart andcurrentoriginalphonetokenwire nottested; Windowsentry110/fullDesktop18/vendorinstallation remain pending. Thirteenth delivery receipt8fa6bb7/main3f01075 appended byte-exact; current summary/audit/docs corrected from awaiting delivery to delivered. Historical native and lifecycle receipts remain unchanged; full platform completion is not claimed. Historical official Claude SFS strict per-request TLS/category404 receipt and public Microsoft Root2011 DER archived with local-byte verification. No current network/native/install verification inferred; no global trust changes. New native Linux original-one credential and current managed7337 GET200/nameMatch proven with existing alias/byte-exactAPK/XML and listener binding; initial abort/provider/exit-method failures retained, startup auto-reconnect and prelaunchLS limitations explicit. Own normalBack/forward2Dex cleanup proved, Windows originalfive/reboot remain pending. Previous two-doc continuation delivery335e52f/47ea750/main989f776 receipt appended byte-exact. Current read-only desktop diagnostic successor maps required active_windows and preserves null/unknown/source/service semantics, with public protocol/static synthetic verification only. Original helper and plan remain byte-exact; original executor terminal137/currentGUI ownership unknown. Actual Windows-cwd commands returned outer1/interop110, no native output or file bridge receipt. No Desktop18 diagnosis/pass, tray quit, installation or promotion claimed. Actual native Windows CMD/PowerShell0 and 05:31 original GUI identity observation archived with direct VMBus order7 allocation evidence; subsequent interop110 relapse retained. All bounded owned mappings released, no THP/cause/fullDesktop18/currentliveness claim. Private bridge capability and foreign VM contents excluded. Current official MCP2026 Linux wording and paths verified against pinned/current bytes; vendor payload/platform list and native Linux installation remain unverified."
+  "checkpointScope": "Previous594 archivefiles preserved except current summary/audit; originaltenth delivery copied byteexact plus sourceJSONL-bound originalexecutor terminal137 andcurrent22:34nativeaccess failures. HistoricalfailedDesktop18/runtime/handle receipts untouched. CurrentWindowsGUI/childrenlifetime unverified; no fullDesktop18/defaultreinstallation/platformcompletion claim. CurrentinternationalWorkBuddy fourmetadata200/fouradvertisedpayload404 andhomepage/clientbytesexact-history scope appended asfour safeJSONs only; no package/profile/install completion. CurrentClaude Storecatalog5.11492.0.0 vs historical5.1231.2.0/separateWinGet3.6556.2/exactofficialEXE+MSIX curl35+HTTPnull+0bytes appended assixsafeJSONs withsourcehashes. No downloadedpayload/Authenticode/install/currentregistration proof; originalStore1612andallhistoricalreceipts untouched. Eleventh607filecontinuation8548830/mainbdd8a0d delivery receipt plus currentthreecleanmergedworktrees/localbranches andsixexact-tip-leasedremote ref cleanup withindependentreview appended asfour byteexactsafeJSONs. Registered6; three nonancestor/dirtymonitor retained; 1023583391regularlogicalB notCphysical. Originalplatform/runtime gaps remain. Twelfth611filecleanup9a48d20/main1dec0b4 delivered; 27 producerpublicarchivefiles withoriginal26source mappings plusrootindependentlive/state andtwelfthdelivery byteexact appended. Managedoriginalsystemd269dbus recovery anddefault7337normalstop0/start0/current2888953+2888962 verified; originalfailures andpublicderivation scope retained. RealWSLrebootautostart andcurrentoriginalphonetokenwire nottested; Windowsentry110/fullDesktop18/vendorinstallation remain pending. Thirteenth delivery receipt8fa6bb7/main3f01075 appended byte-exact; current summary/audit/docs corrected from awaiting delivery to delivered. Historical native and lifecycle receipts remain unchanged; full platform completion is not claimed. Historical official Claude SFS strict per-request TLS/category404 receipt and public Microsoft Root2011 DER archived with local-byte verification. No current network/native/install verification inferred; no global trust changes. New native Linux original-one credential and current managed7337 GET200/nameMatch proven with existing alias/byte-exactAPK/XML and listener binding; initial abort/provider/exit-method failures retained, startup auto-reconnect and prelaunchLS limitations explicit. Own normalBack/forward2Dex cleanup proved, Windows originalfive/reboot remain pending. Previous two-doc continuation delivery335e52f/47ea750/main989f776 receipt appended byte-exact. Current read-only desktop diagnostic successor maps required active_windows and preserves null/unknown/source/service semantics, with public protocol/static synthetic verification only. Original helper and plan remain byte-exact; original executor terminal137/currentGUI ownership unknown. Actual Windows-cwd commands returned outer1/interop110, no native output or file bridge receipt. No Desktop18 diagnosis/pass, tray quit, installation or promotion claimed. Actual native Windows CMD/PowerShell0 and 05:31 original GUI identity observation archived with direct VMBus order7 allocation evidence; subsequent interop110 relapse retained. All bounded owned mappings released, no THP/cause/fullDesktop18/currentliveness claim. Private bridge capability and foreign VM contents excluded. Current official MCP2026 Linux wording and paths verified against pinned/current bytes; vendor payload/platform list and native Linux installation remain unverified. Native transient readiness, later worker absence and owned File.Replace probe verified; corrected source/client compatibility prepared, no current authenticated job/GUI runtime completion."
 }

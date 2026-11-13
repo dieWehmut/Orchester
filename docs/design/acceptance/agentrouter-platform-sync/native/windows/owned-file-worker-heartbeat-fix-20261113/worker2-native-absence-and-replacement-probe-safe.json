@@ -1,0 +1,14 @@
+{
+    "schemaVersion":  1,
+    "actualTargetHost":  "Windows",
+    "observedAtUtc":  "2026-11-13T10:02:49.8950219Z",
+    "worker292200CurrentPresent":  false,
+    "worker292200SameBirth":  false,
+    "worker292200HeldLive":  false,
+    "nullBackupReplaceSucceeded":  false,
+    "explicitBackupReplaceSucceeded":  true,
+    "nullBackupErrorType":  "System.ArgumentException",
+    "nullBackupEmptyPathError":  false,
+    "backupRemoved":  true,
+    "ownedProbeDirectoryRemoved":  true
+}
