@@ -1,0 +1,78 @@
+{
+    "schemaVersion":  1,
+    "status":  "current-original-installation-and-cim-readonly-observed",
+    "processSignals":  0,
+    "installationMutations":  0,
+    "stateMutations":  0,
+    "privateExceptionValuesIncluded":  false,
+    "roots":  [
+                  {
+                      "name":  "desktop-installation",
+                      "sourceExists":  true,
+                      "sourceFiles":  156,
+                      "currentEqualsFreshOriginal":  true
+                  },
+                  {
+                      "name":  "orchester-user-state",
+                      "sourceExists":  true,
+                      "sourceFiles":  9,
+                      "currentEqualsFreshOriginal":  true
+                  },
+                  {
+                      "name":  "desktop-local-webview",
+                      "sourceExists":  true,
+                      "sourceFiles":  493,
+                      "currentEqualsFreshOriginal":  true
+                  },
+                  {
+                      "name":  "desktop-roaming-profile",
+                      "sourceExists":  false,
+                      "sourceFiles":  0,
+                      "currentEqualsFreshOriginal":  true
+                  },
+                  {
+                      "name":  "remote-installation",
+                      "sourceExists":  true,
+                      "sourceFiles":  17,
+                      "currentEqualsFreshOriginal":  true
+                  },
+                  {
+                      "name":  "remote-state-home",
+                      "sourceExists":  true,
+                      "sourceFiles":  2,
+                      "currentEqualsFreshOriginal":  true
+                  }
+              ],
+    "allCurrentRootsEqualFreshOriginal":  true,
+    "desktopSiblingBackupExists":  false,
+    "remoteSiblingBackupExists":  false,
+    "currentDesktopExeSha256":  "9688bae1a669a4c38004af88ae78ac1397d59abac1f8e82cddb6ff888ba5e3e5",
+    "currentRemoteExeSha256":  "ef633cc43b2e767f222fe861fd2dfeca718fc677c0761d03f4c20f08d6a7bd66",
+    "readonlyQueries":  [
+                            {
+                                "operationTimeoutSec":  5,
+                                "returned":  false,
+                                "rowCount":  null,
+                                "elapsedMilliseconds":  5113,
+                                "exceptionType":  "Microsoft.Management.Infrastructure.CimException",
+                                "cimStatusName":  "1",
+                                "cimStatusNumeric":  1,
+                                "hResult":  -2146233088
+                            },
+                            {
+                                "operationTimeoutSec":  60,
+                                "returned":  true,
+                                "rowCount":  0,
+                                "elapsedMilliseconds":  5602,
+                                "exceptionType":  null,
+                                "cimStatusName":  null,
+                                "cimStatusNumeric":  null,
+                                "hResult":  null
+                            }
+                        ],
+    "originalFailedExceptionObjectRecovered":  false,
+    "originalFailureCauseEstablished":  false,
+    "actualNativeExitCode":  0,
+    "observedAtUtc":  "2026-11-13T16:10:50.9667197Z",
+    "privateDiagnosticSha256":  "3a01e52668ed4df0e646f032acc174ef20ff4a95354990bc05b60534b701b312"
+}

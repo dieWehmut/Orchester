@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "status": "actual-default-Desktop-and-Remote-directory-promotion-with-offline-retention-verified",
+  "observationScope": "four bound native jobs and original safe outputs through Remote promotion terminal; subsequent default runtime is a separate requirement",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "actualPromotionMethod": "same-volume-staged-directory-promotion",
+  "actualDefaultDirectoryPromotionCompletedForDesktopAndRemote": true,
+  "nativeInstallerExecuted": false,
+  "nsisInstallerExecutionObserved": false,
+  "observedSourceBuiltAuthenticodeStatus": "NotSigned",
+  "vendorInstallerSignatureProof": false,
+  "products": [
+    {
+      "kind": "Desktop",
+      "candidateExeSha256": "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+      "candidateBytes": 40820736,
+      "oldExeSha256": "9688bae1a669a4c38004af88ae78ac1397d59abac1f8e82cddb6ff888ba5e3e5",
+      "promotedExeSha256": "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+      "originalInstallationPreservedAsSiblingBackup": true,
+      "originalExternalStateByteExact": true,
+      "allOwnedExternalReadLocksReleased": true,
+      "actualResultExitCode": 0,
+      "observedAtUtc": "2026-11-13T16:14:27.2167143Z"
+    },
+    {
+      "kind": "Remote",
+      "candidateExeSha256": "24c8f9806256cc54b239b03f6b4adc976c3fee50c30bc0f2ecf601971c22ce2a",
+      "candidateBytes": 30998528,
+      "oldExeSha256": "ef633cc43b2e767f222fe861fd2dfeca718fc677c0761d03f4c20f08d6a7bd66",
+      "promotedExeSha256": "24c8f9806256cc54b239b03f6b4adc976c3fee50c30bc0f2ecf601971c22ce2a",
+      "originalInstallationPreservedAsSiblingBackup": true,
+      "originalExternalStateByteExact": true,
+      "allOwnedExternalReadLocksReleased": true,
+      "actualResultExitCode": 0,
+      "observedAtUtc": "2026-11-13T16:16:12.3502147Z"
+    }
+  ],
+  "nativeJobs": [
+    {
+      "jobId": "cce1db23c311e256c89357f8c9b75e8c",
+      "role": "Desktop-original-failure",
+      "sourceSha256": "139eca3b2b75712b9037a245b9387c170040f0ade8ce3b7cfe2e03ea2d9ce150",
+      "rootWrapperSha256": "139eca3b2b75712b9037a245b9387c170040f0ade8ce3b7cfe2e03ea2d9ce150",
+      "rootWrapperAndExecutedSourceByteExact": true,
+      "nativePid": 452864,
+      "exactBirthUtc": "2026-11-13T16:02:44.2093482Z",
+      "finishedAtUtc": "2026-11-13T16:03:01.0498857Z",
+      "actualNativeOsExitCode": 1
+    },
+    {
+      "jobId": "260a1535d107bd27339b651e2a8925db",
+      "role": "readonly-cim-diagnostic",
+      "sourceSha256": "1858289e75512e4f99d36362e3cf0608a39b0e2eedf9658490a33ea3fe0ccbd9",
+      "rootWrapperSha256": "1858289e75512e4f99d36362e3cf0608a39b0e2eedf9658490a33ea3fe0ccbd9",
+      "rootWrapperAndExecutedSourceByteExact": true,
+      "nativePid": 42252,
+      "exactBirthUtc": "2026-11-13T16:10:34.6882472Z",
+      "finishedAtUtc": "2026-11-13T16:10:51.0575327Z",
+      "actualNativeOsExitCode": 0
+    },
+    {
+      "jobId": "dca22d098bc585e266fbc766f8c6e775",
+      "role": "Desktop-current-promotion",
+      "sourceSha256": "b82ae009c0a6f73f9709b444e348021e383b76055a69bc2b1bc920772b0e5811",
+      "rootWrapperSha256": "b82ae009c0a6f73f9709b444e348021e383b76055a69bc2b1bc920772b0e5811",
+      "rootWrapperAndExecutedSourceByteExact": true,
+      "nativePid": 449472,
+      "exactBirthUtc": "2026-11-13T16:13:46.9317956Z",
+      "finishedAtUtc": "2026-11-13T16:14:27.3362170Z",
+      "actualNativeOsExitCode": 0
+    },
+    {
+      "jobId": "b60d1660f6c517336162f0203675d57a",
+      "role": "Remote-current-promotion",
+      "sourceSha256": "2d776c0249c05f4b4168b74a93fb837984d9d2ab37202396ea45e8091831c5b9",
+      "rootWrapperSha256": "2d776c0249c05f4b4168b74a93fb837984d9d2ab37202396ea45e8091831c5b9",
+      "rootWrapperAndExecutedSourceByteExact": true,
+      "nativePid": 24248,
+      "exactBirthUtc": "2026-11-13T16:15:33.2699529Z",
+      "finishedAtUtc": "2026-11-13T16:16:12.3866616Z",
+      "actualNativeOsExitCode": 0
+    }
+  ],
+  "processSignals": 0,
+  "defaultLaunches": 0,
+  "modelCalls": 0,
+  "noAutoLaunch": true,
+  "runtimePostPromotionAcceptanceAtBothPromotionReceipts": "pending-root",
+  "actualDefaultRuntime7338AcceptanceProvedByThesePromotionJobs": false,
+  "current7338ListenerCountAtEachPromotionReceipt": 0,
+  "continuousCurrentListenerOrDefaultRuntimeStateClaimed": false,
+  "priorFailedDesktopPromotionPreserved": {
+    "jobId": "cce1db23c311e256c89357f8c9b75e8c",
+    "actualNativeOsExitCode": 1,
+    "safeResultNativeExitCode": 1,
+    "stage": "authorized-staged-promotion",
+    "exceptionType": "Microsoft.Management.Infrastructure.CimException"
+  },
+  "priorCimReadonlyDiagnosticPreserved": {
+    "jobId": "260a1535d107bd27339b651e2a8925db",
+    "allSixCurrentRootsEqualFreshOriginal": true,
+    "desktopAndRemoteSiblingBackupsAbsentAtThatDiagnostic": true,
+    "operationTimeout5Returned": false,
+    "operationTimeout5ElapsedMilliseconds": 5113,
+    "operationTimeout60Returned": true,
+    "operationTimeout60ElapsedMilliseconds": 5602,
+    "originalFailureCauseEstablished": false,
+    "originalFailedExceptionObjectRecovered": false
+  },
+  "freshBackupReference": "prior-fresh-backup-link-safe.json",
+  "privateManifestContentsReadOrArchived": false,
+  "privateInventoryProfileStateOrExceptionValuesReadOrArchived": false,
+  "privateBackupDirectoryValueCopied": false,
+  "executionSourcePathsOnlyInSourceMappings": true,
+  "windowsRuntimeRerunByArchiver": false,
+  "repoFilesChangedByArchiver": false
+}

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-13T16:03:55.282138+00:00",
-  "status": "fresh-native-desktop18-msaa-runtime-and-owned-cleanup-verified-default-reinstallation-and-full-platform-delivery-pending",
+  "createdAt": "2026-11-16T07:04:59.865382+00:00",
+  "status": "dated-native-backup-and-default-directory-update-verified-post-promotion-runtime-and-full-platform-delivery-pending",
   "summaryPath": "summary.json",
   "files": [
     {
@@ -2230,6 +2230,161 @@
       "bytes": 3862
     },
     {
+      "path": "native/windows/default-directory-promotion-20261113T1616/cim-readonly-77674fe5fb3c4ede8f24a6066fa6b64d-safe.json",
+      "sha256": "bd11332eda37a45ed4095138ade1aa0a9433fd21f31ad19852e97b31c546e1e7",
+      "bytes": 3513
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/jobs/260a1535d107bd27339b651e2a8925db/source.ps1",
+      "sha256": "1858289e75512e4f99d36362e3cf0608a39b0e2eedf9658490a33ea3fe0ccbd9",
+      "bytes": 836
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/jobs/260a1535d107bd27339b651e2a8925db/start-safe.json",
+      "sha256": "7823f527590906b6ba8f7c81c984bb1a02bb22cd49f0f1c080700af5aaf7d7f6",
+      "bytes": 387
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/jobs/260a1535d107bd27339b651e2a8925db/terminal-safe.json",
+      "sha256": "7daa15c80ab3e7e1f522ff1d15213b03949c8c09478448bd8d04b2171724e1a1",
+      "bytes": 452
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/jobs/b60d1660f6c517336162f0203675d57a/source.ps1",
+      "sha256": "2d776c0249c05f4b4168b74a93fb837984d9d2ab37202396ea45e8091831c5b9",
+      "bytes": 1000
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/jobs/b60d1660f6c517336162f0203675d57a/start-safe.json",
+      "sha256": "16dc2681297e168a41605147c0372540ae23940e3a3fa363c98a6290d4905bff",
+      "bytes": 387
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/jobs/b60d1660f6c517336162f0203675d57a/terminal-safe.json",
+      "sha256": "c0fd04d75851e92e02fe4be1704a5dddd7c0c79857fde48358ef7d8edd674d86",
+      "bytes": 452
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/jobs/cce1db23c311e256c89357f8c9b75e8c/source.ps1",
+      "sha256": "139eca3b2b75712b9037a245b9387c170040f0ade8ce3b7cfe2e03ea2d9ce150",
+      "bytes": 995
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/jobs/cce1db23c311e256c89357f8c9b75e8c/start-safe.json",
+      "sha256": "d3427f3ab1e4b219982e9f981df9c3e33e2bc0d3de851f26452961871e7c3c41",
+      "bytes": 388
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/jobs/cce1db23c311e256c89357f8c9b75e8c/terminal-safe.json",
+      "sha256": "1fc418a373c09a37278dace0c3fe5a39e978d608b4d212bcee02ff757236388b",
+      "bytes": 453
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/jobs/dca22d098bc585e266fbc766f8c6e775/source.ps1",
+      "sha256": "b82ae009c0a6f73f9709b444e348021e383b76055a69bc2b1bc920772b0e5811",
+      "bytes": 1001
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/jobs/dca22d098bc585e266fbc766f8c6e775/start-safe.json",
+      "sha256": "aba97110f474db2d679e1fba7e7ef7043ee139713aa8a525db6072ff35346267",
+      "bytes": 388
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/jobs/dca22d098bc585e266fbc766f8c6e775/terminal-safe.json",
+      "sha256": "7985e5fa89004e1b6b642988535dd9880098ace5ba7a01993cc972f0b8045452",
+      "bytes": 453
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/prior-fresh-backup-link-safe.json",
+      "sha256": "fbe5fd8e29fd68ef1756f1e7266fbdea957fdc0bffc9c9cb3892fb66d53d4e37",
+      "bytes": 860
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/promotion-desktop-6e645a43f8dc4ce18a41e170032ba126-safe.json",
+      "sha256": "04515405b849e912dbea44c4561e04c5233a08271e364a42242b242ef6086409",
+      "bytes": 1404
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/promotion-desktop-dc20c9a96b8842a282eb93493cd5658f-safe.json",
+      "sha256": "1bcd446069a3231eeffdb9bb6868d14865f4515e3801c7ce722f8ef2f2b99e36",
+      "bytes": 905
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/promotion-remote-e4a25a1a80f747c499e02dade8490ecd-safe.json",
+      "sha256": "4e4821ec399b3884ca0a407d186c91be6d180af4327463a1939271a360f44960",
+      "bytes": 1403
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/reviewed-cim-timeout-source-change-safe.json",
+      "sha256": "37e7e180c13345d978be105da624272b0f4a7d9a5fcf368641ec062129c2399b",
+      "bytes": 877
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/source-bindings-and-scope-safe.json",
+      "sha256": "d8e12959321cb5f6b9e1ac749897e75c3bf80f8f423d67d01298d4e9c65b8ec0",
+      "bytes": 5455
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/source-mappings-safe.json",
+      "sha256": "355e6cf0e1b6ccea3e83a5f5e3123a57227552f695bbb432c3a44570d1d9741e",
+      "bytes": 14540
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/sources/02-promote-with-fresh-offline-retention.ps1",
+      "sha256": "f18fcf1fa73a3036decac23c355f8f3e4a64b2acb589e947576e854bd8727ae2",
+      "bytes": 8866
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/sources/02a-current-promotion-and-cim-readonly-diagnostic.ps1",
+      "sha256": "4485b26d34fabf46ef16b0c2eb03a97d938e2eb32ed55326c1ae96bdc3221f55",
+      "bytes": 4705
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/sources/02b-promote-with-reviewed-cim60-and-retention.ps1",
+      "sha256": "4d4be0273dad68655ca83f7c655eb9c42fad4eecb797dce356460dfc6ed263c6",
+      "bytes": 9754
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/sources/invoke-native-current-promotion-cim-diagnostic-20261113.ps1",
+      "sha256": "1858289e75512e4f99d36362e3cf0608a39b0e2eedf9658490a33ea3fe0ccbd9",
+      "bytes": 836
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/sources/invoke-native-default-promote-cim60-desktop-20261113.ps1",
+      "sha256": "b82ae009c0a6f73f9709b444e348021e383b76055a69bc2b1bc920772b0e5811",
+      "bytes": 1001
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/sources/invoke-native-default-promote-cim60-remote-20261113.ps1",
+      "sha256": "2d776c0249c05f4b4168b74a93fb837984d9d2ab37202396ea45e8091831c5b9",
+      "bytes": 1000
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/sources/invoke-native-default-promote-desktop-20261113.ps1",
+      "sha256": "139eca3b2b75712b9037a245b9387c170040f0ade8ce3b7cfe2e03ea2d9ce150",
+      "bytes": 995
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/sources/invoke-native-default-promote-remote-20261113.ps1",
+      "sha256": "110f205b30becadc5501e0cc25a7dfe38ee35dbe3b83fc7ceb95d7677bb486b8",
+      "bytes": 994
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/sources/monitor-final-common.ps1",
+      "sha256": "2d4e07f3d703043ea9af8fbf6377814f08135253837b4e36b8f075ea3aeb2f4f",
+      "bytes": 7856
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/sources/monitor-final-promote-cim60-prm-1113-8798425b.ps1",
+      "sha256": "7db0b54b8abb8809720ec97228bd95a5abacacae52b07d87dc2ffef23b02ce41",
+      "bytes": 18440
+    },
+    {
+      "path": "native/windows/default-directory-promotion-20261113T1616/sources/monitor-final-promote.ps1",
+      "sha256": "01d96b35675d3a05acc800f44aed2dd29fdc12718b9f5db9303a7e0876ff53dc",
+      "bytes": 18438
+    },
+    {
       "path": "native/windows/desktop18-msaa-complete-20261113/actual-native-worker-job-source.ps1",
       "sha256": "4b292ef18d65703476bce0af1766b8a3c22c06b01fbb7f7c8b9fb7ecaa29e38e",
       "bytes": 2685
@@ -2828,6 +2983,51 @@
       "path": "native/windows/fresh-android-runtime-binding-ascii-20261112/successor-encoding-and-execution-safe.json",
       "sha256": "e6e235d5b65bf30bed3f1886658c64c4c35d7b8d5c3cb5192162527a4dd295b7",
       "bytes": 3196
+    },
+    {
+      "path": "native/windows/fresh-offline-original-backup-20261113T1555/derived-transformation-safe.json",
+      "sha256": "492ef4eb80f17f5db535f619bc6c41bbbcb6a7ac0735137f9e9697f1640ad5f4",
+      "bytes": 848
+    },
+    {
+      "path": "native/windows/fresh-offline-original-backup-20261113T1555/fresh-offline-backup-public-derived-safe.json",
+      "sha256": "158ffa766cfacf0cd0e9d65b1fe0bff5feca15f686471a64eb748337d6f9afa2",
+      "bytes": 1562
+    },
+    {
+      "path": "native/windows/fresh-offline-original-backup-20261113T1555/source-bindings-and-scope-safe.json",
+      "sha256": "d371fe80a0423fc136ffe6da6fff918c44e65f3be76c185cdcca39479da11e42",
+      "bytes": 2164
+    },
+    {
+      "path": "native/windows/fresh-offline-original-backup-20261113T1555/source-mappings-safe.json",
+      "sha256": "cdbfabcf365f816b1fbee9a1f5a9050d062a921aa964baa457a184e3fed600a6",
+      "bytes": 4448
+    },
+    {
+      "path": "native/windows/fresh-offline-original-backup-20261113T1555/sources/01-fresh-offline-backup.ps1",
+      "sha256": "a5ca1344c232c390408ab32b68a86b330e5b37c610c03791a608cfe03ffbd4c1",
+      "bytes": 7641
+    },
+    {
+      "path": "native/windows/fresh-offline-original-backup-20261113T1555/sources/d3ab84bc805252121a543a01d16c0923.ps1",
+      "sha256": "e2067c8eac4e667e039989d79951b7dd97466232208d4a578bfec73697d8ccc7",
+      "bytes": 928
+    },
+    {
+      "path": "native/windows/fresh-offline-original-backup-20261113T1555/sources/invoke-native-fresh-offline-original-backup-20261113.ps1",
+      "sha256": "e2067c8eac4e667e039989d79951b7dd97466232208d4a578bfec73697d8ccc7",
+      "bytes": 928
+    },
+    {
+      "path": "native/windows/fresh-offline-original-backup-20261113T1555/start-safe.json",
+      "sha256": "320678ab39f0e188868d58f7163d6706ed968d6dec25f06beaeac1ed29ea0cc9",
+      "bytes": 388
+    },
+    {
+      "path": "native/windows/fresh-offline-original-backup-20261113T1555/terminal-safe.json",
+      "sha256": "a75074a49684ac568e2d9579967e860191c8f8828fa0a2bd89f1f62f2c690145",
+      "bytes": 453
     },
     {
       "path": "native/windows/fresh-runtime-input-freeze-attempt1-20261112/actual-root-execution-safe.json",
@@ -4386,8 +4586,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "8283251fd7cb3bd26ad75356201f29068be3e777f89a43519451cb827790c2a0",
-      "bytes": 53103
+      "sha256": "de826886461723fed5c7d66e7a0c3667611b2c7ebb3773399475ff2b38667c25",
+      "bytes": 55188
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -4411,8 +4611,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "4df5ebff57aec16c4df289ca48c0916ff524d8e4eefc7784e886da584d59e3a3",
-      "bytes": 78092
+      "sha256": "b570e8b28719253588e99d914c9c8ef2f7bb3e6af0de75c814f2dc52616b2d21",
+      "bytes": 82489
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
@@ -4496,5 +4696,5 @@
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
-  "checkpointScope": "Earlier public receipts and original failed Desktop18/executor137/ten unrecovered creator-handle boundaries remain unchanged. Worker4 native startup/advancing heartbeat/client activation/input-cursor and original GUI37324 normalMSAA0/nine fresh-held terminal identities are verified in their source epochs. Fresh isolated frozen71 actual native5 Desktop18 job53f6e99 ended0: 18checks/7PUT200/pageErrors0/21providers42images7services/actual per-instance DTO-nativeUI correspondence/two actual reviewed PNG ACKs; newGUI443516 normalMSAA0/all641 unique held GUI identities terminal/oneNode completion gate0/CDP19322+64420 released. Separate independent Node OS-exit receipt and universal image-query success are not claimed. Default user Desktop reinstallation/promotion, managedRemote7338, current Windows original-five credential/token wire, vendor installation, real WSL reboot/autostart and DeepSeek GUI remain incomplete; unarchived running operations do not change public status. Historical unregistered-child identity/closure and wrong-Linux full-package rollback remain unproved boundaries, not new recovery tasks. All898 archive files are included, root manifest excludes itself; production731 inputs stay frozen71."
+  "checkpointScope": "Earlier public receipts and original failed Desktop18/executor137/ten unrecovered creator-handle boundaries remain unchanged. Worker4 native startup/advancing heartbeat/client activation/input-cursor and original GUI37324 normalMSAA0/nine fresh-held terminal identities are verified in their source epochs. Fresh isolated frozen71 actual native5 Desktop18 job53f6e99 ended0: 18checks/7PUT200/pageErrors0/21providers42images7services/actual per-instance DTO-nativeUI correspondence/two actual reviewed PNG ACKs; newGUI443516 normalMSAA0/all641 unique held GUI identities terminal/oneNode completion gate0/CDP19322+64420 released. Separate independent Node OS-exit receipt and universal image-query success are not claimed. Fresh native offline original backup0/sixroots-fiveexisting/677files-readlocks/source-before-copy-after equal/locks released and actual default Desktop+Remote same-volume staged-directory promotion0/e4aa765b+24c8f980/sibling backups/external state byte-exact are verified. Source-built NotSigned/no native or NSIS installer/defaultLaunch0; prior promotion1 and CIM diagnosis0 retained. Actual default GUI launch/213 task-record retention, managedRemote7338 runtime, current Windows original-five credential/token wire, vendor installation, real WSL reboot/autostart and DeepSeek GUI remain incomplete; unarchived running operations do not change public status. Historical unregistered-child identity/closure and wrong-Linux full-package rollback remain unproved boundaries, not new recovery tasks. All938 archive files are included, root manifest excludes itself; production731 inputs stay frozen71. Native/runtime PID, listener, service and worker observations retain their original source-epoch dates; the 2026-11-16 archive/source review establishes no current process liveness or native execution-channel availability."
 }
