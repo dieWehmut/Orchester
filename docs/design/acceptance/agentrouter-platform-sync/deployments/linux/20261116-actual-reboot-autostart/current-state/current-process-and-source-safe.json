@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-16T08:59:40.529625+00:00",
+  "kernelBootId": "04a4390b-1b73-42f2-b3ae-906308618b42",
+  "priorObservedKernelBootId": "ce7a729b-8f28-4a97-a177-86bb96a9b896",
+  "originalArchivedKernelBootId": "d67ae493-3005-46f2-8b83-1e02e78a7dff",
+  "threeDistinctKernelBootIdentities": true,
+  "unit": "orchester-default-remote-7337-20261112-post-reboot.service",
+  "unitProperties": {
+    "MainPID": "293",
+    "ActiveState": "active",
+    "SubState": "running",
+    "UnitFileState": "enabled",
+    "ActiveEnterTimestampMonotonic": "2836055",
+    "InvocationID": "5ea55369162d46b085132afbb956c25f"
+  },
+  "controller": {
+    "pid": 293,
+    "ppid": 266,
+    "startTicks": 283,
+    "state": "S",
+    "uid": 1000,
+    "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/orchester-default-remote-7337-20261112-post-reboot.service",
+    "executableSha256": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae"
+  },
+  "manager": {
+    "pid": 266,
+    "ppid": 1,
+    "startTicks": 277,
+    "state": "S",
+    "uid": 1000,
+    "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/init.scope",
+    "executableSha256": "39bbddd818ef6b4b9ae87e7cac22476f60a63efb8dfec77dd11f03672462931d"
+  },
+  "listener": {
+    "pid": 427,
+    "ppid": 293,
+    "startTicks": 342,
+    "state": "S",
+    "uid": 1000,
+    "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/orchester-default-remote-7337-20261112-post-reboot.service",
+    "executableSha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649"
+  },
+  "sole7337Listener": {
+    "table": "tcp",
+    "inode": 5011,
+    "uid": 1000,
+    "port": 7337,
+    "ownerPid": 427,
+    "ownerStartTicks": 342,
+    "ownerFileDescriptors": [
+      10
+    ]
+  },
+  "unitCurrentBytesExactArchived": true,
+  "unitSha256": "3119c552d11c49ca97c9db018aec53af82aa30adcde2a367e3b9479ea438f35c",
+  "controllerCurrentBytesExactArchived": true,
+  "controllerSha256": "b70fcda2c9df0e9e214204b46297849fe4ebcbd0a5f01766586c5e26d6686c4b",
+  "defaultTargetEnableLinkExact": true,
+  "processSourceUnitEnvironmentAndBootStableThroughAudit": true,
+  "listenerSourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "observedUnitPropertiesNotRebootCauseByThemselves": true,
+  "processSignals": 0,
+  "serviceStartStopRestartEnableReloadCommands": 0,
+  "requestedOrPerformedReboot": false,
+  "modelPairingOrCredentialRequests": 0
+}

@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-16T07:28:06.795252+00:00",
+  "kernelBootId": "ce7a729b-8f28-4a97-a177-86bb96a9b896",
+  "journalBootId128": "ce7a729b8f284a97a17786bb96a9b896",
+  "kernelBtime": 1794811354,
+  "kernelBtimeUtc": "2026-11-16T06:42:34+00:00",
+  "archivedKernelBootId": "d67ae493-3005-46f2-8b83-1e02e78a7dff",
+  "archivedKernelBootObservedAtUtc": "2026-11-12T05:38:14Z",
+  "actualKernelBootIdentityChanged": true,
+  "unit": "orchester-default-remote-7337-20261112-post-reboot.service",
+  "unitState": {
+    "commandExitCode": 0,
+    "stderrBytes": 0,
+    "properties": {
+      "MainPID": "301",
+      "ActiveState": "active",
+      "SubState": "running",
+      "UnitFileState": "enabled",
+      "ActiveEnterTimestampMonotonic": "2509235",
+      "InvocationID": "e4578d377a2e4e2781057adcf2c9709c"
+    }
+  },
+  "defaultTargetState": {
+    "commandExitCode": 0,
+    "stderrBytes": 0,
+    "properties": {
+      "ActiveState": "active",
+      "SubState": "active",
+      "ActiveEnterTimestampMonotonic": "2509326",
+      "InvocationID": "739111d415d44cf684199e5b2c3938a3"
+    }
+  },
+  "processes": [
+    {
+      "pid": 301,
+      "ppid": 255,
+      "startTicks": 250,
+      "state": "S",
+      "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/orchester-default-remote-7337-20261112-post-reboot.service",
+      "exeSha256": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae"
+    },
+    {
+      "pid": 255,
+      "ppid": 1,
+      "startTicks": 243,
+      "state": "S",
+      "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/init.scope",
+      "exeSha256": "39bbddd818ef6b4b9ae87e7cac22476f60a63efb8dfec77dd11f03672462931d"
+    },
+    {
+      "pid": 397,
+      "ppid": 301,
+      "startTicks": 309,
+      "state": "S",
+      "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/orchester-default-remote-7337-20261112-post-reboot.service",
+      "exeSha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649"
+    }
+  ],
+  "listeners": [
+    {
+      "port": 7337,
+      "table": "tcp",
+      "state": "LISTEN",
+      "inode": 5534,
+      "uid": 1000,
+      "owners": [
+        {
+          "pid": 397,
+          "fd": 10,
+          "startTicks": 309
+        }
+      ]
+    }
+  ],
+  "unitManagerParentAncestryExact": true,
+  "allObservedProcessBirthsAndBootStableThroughReadOnlyAudit": true,
+  "foreignOldQemu": {
+    "originalPid": 95271,
+    "originalStartTicks": 370196,
+    "currentPidAbsent": true,
+    "currentOriginalIdentityAlive": false,
+    "currentPidReused": false
+  },
+  "clockTicksPerSecond": 100
+}

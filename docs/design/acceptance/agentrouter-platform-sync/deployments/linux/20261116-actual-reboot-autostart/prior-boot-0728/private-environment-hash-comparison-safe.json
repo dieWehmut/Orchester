@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "objects": {
+    "currentEnvironmentSnapshot": {
+      "bytes": 5332,
+      "sha256": "2163cbf48fe3bc26b0a70246f7ef907180b7a0dd7232ffa9c772770f35357c5f",
+      "uid": 1000,
+      "mode": "0o600",
+      "metadataStableThroughHash": true
+    },
+    "originalEnvironmentSnapshotCopy": {
+      "bytes": 5332,
+      "sha256": "2163cbf48fe3bc26b0a70246f7ef907180b7a0dd7232ffa9c772770f35357c5f",
+      "uid": 1000,
+      "mode": "0o600",
+      "metadataStableThroughHash": true
+    }
+  },
+  "currentEnvironmentSnapshotMatchesOriginalCopyHashAndSize": true,
+  "privateEnvironmentValuesParsedOrPublished": false,
+  "currentRuntimeHeapEnvironmentCompared": false,
+  "originalFiveTokenStateCurrentComparisonPerformed": false,
+  "publicBaselineLinuxAuthRowHashAvailable": false,
+  "privateStateDatabaseRowsRead": false
+}

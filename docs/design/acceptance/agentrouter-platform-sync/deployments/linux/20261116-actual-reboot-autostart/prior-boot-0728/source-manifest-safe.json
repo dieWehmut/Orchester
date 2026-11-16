@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    {
+      "path": "boot-and-current-process-safe.json",
+      "sha256": "c85d4ce28b102e4f0cf9d1b2005dd76de1b1814f8ae0d31500d38c360db39723",
+      "bytes": 2611
+    },
+    {
+      "path": "current-public-resources-safe.json",
+      "sha256": "8923ee996bf78c74fc696baf84b35fb069e8af532946a19f3cbc4223c243ff62",
+      "bytes": 6263
+    },
+    {
+      "path": "main-database-hash-only-boundary-safe.json",
+      "sha256": "413032c83174ea96e5cbd981730ac8ea85341b67e828833c3940fa512b0c24ce",
+      "bytes": 1140
+    },
+    {
+      "path": "manager-current-boot-lifecycle-safe.json",
+      "sha256": "ba057582e54781e9f48e06f3eefa45b265d05e4962dce7d26d2f3f4796d78a28",
+      "bytes": 2721
+    },
+    {
+      "path": "private-environment-hash-comparison-safe.json",
+      "sha256": "c077bf8d29181d9b1e05f97582ccc452046c565e9d6f318e3f4b32404ce943b0",
+      "bytes": 835
+    },
+    {
+      "path": "source-unit-enable-link-bindings-safe.json",
+      "sha256": "3527ce509072a07f82c91592eb06fda3c9d6a2a512e9da067f0f2e5de519baef",
+      "bytes": 830
+    },
+    {
+      "path": "summary-safe.json",
+      "sha256": "ffcac60dfa8ffae976e1df59344afbc6acd1850701db025f64607a5427b1bb08",
+      "bytes": 1865
+    }
+  ],
+  "privateAuditOnly": true,
+  "repositoryOrServiceMutation": false
+}

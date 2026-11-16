@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "journalQueryExitCode": 0,
+  "journalQueryStderrBytes": 0,
+  "kernelUuidNormalizedToJournalId128": true,
+  "systemdManagerPid": 255,
+  "systemdManagerRecordCount": 25,
+  "selectedRecords": [
+    {
+      "__REALTIME_TIMESTAMP": "1794811276374225",
+      "__MONOTONIC_TIMESTAMP": "2520135",
+      "_BOOT_ID": "ce7a729b8f284a97a17786bb96a9b896",
+      "_PID": "255",
+      "_COMM": "systemd",
+      "USER_UNIT": "basic.target",
+      "MESSAGE_ID": "39f53479d3a045ac8e11786248231fbf",
+      "JOB_TYPE": "start",
+      "JOB_RESULT": "done",
+      "safeLifecycleMessage": "Reached target Basic System.",
+      "messageSha256": "d051d83bced60e0e9587bf049b1e5acb1310e662c76a0ef194089c03595c2a48"
+    },
+    {
+      "__REALTIME_TIMESTAMP": "1794811276374324",
+      "__MONOTONIC_TIMESTAMP": "2520233",
+      "_BOOT_ID": "ce7a729b8f284a97a17786bb96a9b896",
+      "_PID": "255",
+      "_COMM": "systemd",
+      "USER_UNIT": "orchester-default-remote-7337-20261112-post-reboot.service",
+      "MESSAGE_ID": "39f53479d3a045ac8e11786248231fbf",
+      "JOB_TYPE": "start",
+      "JOB_RESULT": "done",
+      "safeLifecycleMessage": "Started Orchester persistent default remote 7337 owned controller.",
+      "messageSha256": "558784abad8b264e7fa9c19d669ea759729a201b14f59a258afff678cca6a597"
+    },
+    {
+      "__REALTIME_TIMESTAMP": "1794811276374355",
+      "__MONOTONIC_TIMESTAMP": "2520265",
+      "_BOOT_ID": "ce7a729b8f284a97a17786bb96a9b896",
+      "_PID": "255",
+      "_COMM": "systemd",
+      "USER_UNIT": "default.target",
+      "MESSAGE_ID": "39f53479d3a045ac8e11786248231fbf",
+      "JOB_TYPE": "start",
+      "JOB_RESULT": "done",
+      "safeLifecycleMessage": "Reached target Main User Target.",
+      "messageSha256": "b5cb233eab30bc2528eae709fa7c4f2792908a25cab5180c040da81a78ea59e5"
+    }
+  ],
+  "selectedLifecycleRecordCount": 3,
+  "unitStartJobDoneInSameBootBeforeMainUserTargetReached": true,
+  "unitAndDefaultTargetBootMonotonicMicroseconds": {
+    "unitActiveEntered": 2509235,
+    "unitStartedJournal": 2520233,
+    "defaultTargetActiveEntered": 2509326,
+    "defaultTargetReachedJournal": 2520265
+  },
+  "journalWallTimeAndCurrentProcBtimeNotAssumedAligned": true,
+  "journalUnitStartedWallUtcRaw": "2026-11-16T06:41:16.374324+00:00",
+  "causalBasis": "same boot ID, same parent user-manager PID, typed unit start job done before default.target reached, exact enabled target symlink and source binding; monotonic boot timestamps are authoritative for ordering",
+  "serviceStdoutOrStderrRead": false,
+  "rawUnrelatedJournalMessagesReturned": false,
+  "priorUuidWithHyphensJournalOptionAttempt": {
+    "actualExitCode": 1,
+    "stderrBytes": 71,
+    "serviceFailureClaimed": false
+  }
+}

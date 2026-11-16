@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-16T08:59:40.529625+00:00",
+  "kernelBootId": "04a4390b-1b73-42f2-b3ae-906308618b42",
+  "baselinePublicReceipt": "deployments/linux/20261113-userbus-managed-default/first-managed-start-producer-public-safe.json",
+  "baselinePublicReceiptSha256": "dd8ede894ef9d5a87aecc97bcf91cd274c5d9378ec8deeec5509d214bbfd5513",
+  "baselinePrivateProducerReceiptSha256": "b399d0a0c2eb5c8ee13819722d97766fa55b3cf5de43073ec6ea5b93d394e23d",
+  "baselinePrivateProducerMatchesArchivedDerivation": true,
+  "baselineDatabaseSha256": "e93a99147e8fb0833cecda8d57d0c39795112efde9e33e4ea0efa00dee5ce1f3",
+  "baselineDatabasePinnedToProducer": true,
+  "currentStartupReceiptSha256": "d58463dd57fb6c19dd50f73669c47bb23b4a0b85caf17f2520682be38a028ac1",
+  "currentStartupReceiptMatchesCurrentControllerAndListener": true,
+  "currentStartupBackupDatabaseSha256": "478d47654994e1794b950e1ee1f4bba40a88d9f41c23f1db2c92ca5513cecba9",
+  "currentStartupBackupMatchesProducerReceipt": true,
+  "currentMainDatabaseSha256": "f1b1289f9dba2d806fbac0fd8b68dbc05e8f4b2a96adb866906740e91b12f775",
+  "sourceDatabaseAndWalBytesStableBeforeAndAfterComparison": true,
+  "originalSharedMemoryReadOrCopied": false,
+  "sqliteOpenedOnlyOwnedPrivateCopies": true,
+  "privateScratchRemoved": true,
+  "originalRunCount": 5,
+  "currentRunCount": 5,
+  "originalPersistedAuthEntryCount": 5,
+  "currentPersistedAuthEntryCount": 5,
+  "originalAndCurrentRunRowsAggregateSha256": "b1563782da9785498d646d32044f67ca4b06a88391dc1194cba9ad5f1e518403",
+  "originalAndCurrentAuthJsonAggregateSha256": "994039f341372312fa9732f924ba68360f336bbc330918e38f12388cccd5dd0a",
+  "originalAndCurrentAllRemoteStateJsonAggregateSha256": "b2ff3f8d8f48825561330cfdd1ee00352911cd888a271e25a06e807ec89d13d9",
+  "allOriginalRunRowsByteExact": true,
+  "allOriginalAuthJsonExactlyEqual": true,
+  "allOriginalRemoteStateJsonExactlyEqual": true,
+  "allOriginalRemoteStateRawRowsExactlyEqual": false,
+  "existingPrivateBackupComparisons": [
+    {
+      "ordinal": 0,
+      "databaseSha256": "e93a99147e8fb0833cecda8d57d0c39795112efde9e33e4ea0efa00dee5ce1f3",
+      "databaseBytes": 28672,
+      "runCount": 5,
+      "authEntryCount": 5,
+      "allOriginalRunRowsByteExact": true,
+      "allOriginalRemoteStateJsonExact": true
+    },
+    {
+      "ordinal": 1,
+      "databaseSha256": "e93a99147e8fb0833cecda8d57d0c39795112efde9e33e4ea0efa00dee5ce1f3",
+      "databaseBytes": 28672,
+      "runCount": 5,
+      "authEntryCount": 5,
+      "allOriginalRunRowsByteExact": true,
+      "allOriginalRemoteStateJsonExact": true
+    },
+    {
+      "ordinal": 2,
+      "databaseSha256": "0447995e5b872542a9ea35241dcc4d94e31964bd3a196d55c65a1d6da591473a",
+      "databaseBytes": 28672,
+      "runCount": 5,
+      "authEntryCount": 5,
+      "allOriginalRunRowsByteExact": true,
+      "allOriginalRemoteStateJsonExact": true
+    },
+    {
+      "ordinal": 3,
+      "databaseSha256": "b5907eb70081b8a03629052d9bdd0643a8d5c186394750035e592ba6a90b04d5",
+      "databaseBytes": 28672,
+      "runCount": 5,
+      "authEntryCount": 5,
+      "allOriginalRunRowsByteExact": true,
+      "allOriginalRemoteStateJsonExact": true
+    },
+    {
+      "ordinal": 4,
+      "databaseSha256": "2101932371dce1d9434bf4faee6887076b7bbbe47650380796578b2238b26d6b",
+      "databaseBytes": 28672,
+      "runCount": 5,
+      "authEntryCount": 5,
+      "allOriginalRunRowsByteExact": true,
+      "allOriginalRemoteStateJsonExact": true
+    },
+    {
+      "ordinal": 5,
+      "databaseSha256": "478d47654994e1794b950e1ee1f4bba40a88d9f41c23f1db2c92ca5513cecba9",
+      "databaseBytes": 28672,
+      "runCount": 5,
+      "authEntryCount": 5,
+      "allOriginalRunRowsByteExact": true,
+      "allOriginalRemoteStateJsonExact": true
+    }
+  ],
+  "rowValuesTokenValuesOrPrivateDatabasePathsPublished": false,
+  "newPhoneTokenAuthenticatedHttpVerified": false
+}

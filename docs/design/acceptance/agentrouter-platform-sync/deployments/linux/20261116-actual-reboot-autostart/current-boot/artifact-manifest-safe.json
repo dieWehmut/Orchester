@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-16T08:57:56.251159+00:00",
+  "files": [
+    {
+      "path": "boot-and-current-process-safe.json",
+      "bytes": 3028,
+      "sha256": "fa621f9ca51d169be5e02ddfc44ed197b77c7a8aec1bb78e44f27469ad72e167"
+    },
+    {
+      "path": "manager-current-boot-lifecycle-safe.json",
+      "bytes": 3303,
+      "sha256": "20acec9402b5d4121ab1b04cacb1daf74b9142c70ffa189ec59572ae15393e78"
+    },
+    {
+      "path": "source-unit-enable-link-bindings-safe.json",
+      "bytes": 888,
+      "sha256": "82fcde649929ca8d24ed27b415e81ed04c6194587102ec4914cddeb02bbc39cb"
+    },
+    {
+      "path": "summary-safe.json",
+      "bytes": 1041,
+      "sha256": "b2c682d91fa6145140e738a0849b6e72c182736445925ea23d676dd1db7169fa"
+    },
+    {
+      "path": "current-boot-lifecycle-source.py",
+      "bytes": 16690,
+      "sha256": "2c46e65446b89cd32e8bb04d3be55a32fc9221d3141f7cc7f7acff171c00850d"
+    }
+  ]
+}
