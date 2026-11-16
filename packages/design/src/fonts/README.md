@@ -1,6 +1,6 @@
 # Classic-mode typography and motion source
 
-The requested local `D:\project\dieWehmut.github.io` path was not accessible in this environment. The user's public repository was available at commit [`89531e0ab8695e6d75c0596a658e3c1ead77093e`](https://github.com/dieWehmut/dieWehmut.github.io/tree/89531e0ab8695e6d75c0596a658e3c1ead77093e).
+The user's Windows reference is available at `C:\Users\han\project\dieWehmut.github.io` (WSL: `/mnt/c/Users/han/project/dieWehmut.github.io`). On 2026-11-16, its local `src/assets/fonts/LXGWWenKai-Regular.ttf` was verified to have the original SHA-256 below, so the bundled WOFF2 uses the requested font. The earlier public source was commit [`89531e0ab8695e6d75c0596a658e3c1ead77093e`](https://github.com/dieWehmut/dieWehmut.github.io/tree/89531e0ab8695e6d75c0596a658e3c1ead77093e).
 
 - Font declaration: `src/styles/fonts/index.scss`.
 - Original font: `src/assets/fonts/LXGWWenKai-Regular.ttf`.
