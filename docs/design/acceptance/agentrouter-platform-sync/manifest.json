@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-16T07:04:59.865382+00:00",
-  "status": "dated-native-backup-and-default-directory-update-verified-post-promotion-runtime-and-full-platform-delivery-pending",
+  "createdAt": "2026-11-16T09:30:08.754637+00:00",
+  "status": "dated-linux-actual-reboot-autostart-and-state-verified-full-platform-runtime-pending",
   "summaryPath": "summary.json",
   "files": [
     {
@@ -318,6 +318,146 @@
       "path": "deployments/linux/20261113-userbus-managed-default/user-bus-recovery-safe.json",
       "sha256": "a59921bbf8b9403d6a4b4446964ce27fab2be9cd07dff117e126ba8774f46212",
       "bytes": 870
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/README.md",
+      "sha256": "d4cc42a8e490fadd56ce50ed680c77159395a887323bbfb67069dd6c76040814",
+      "bytes": 2880
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/current-boot/artifact-manifest-safe.json",
+      "sha256": "19c4bd5fe163acb043d84279272f0abc588527ed405f6227a2a3816223113134",
+      "bytes": 937
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/current-boot/boot-and-current-process-safe.json",
+      "sha256": "fa621f9ca51d169be5e02ddfc44ed197b77c7a8aec1bb78e44f27469ad72e167",
+      "bytes": 3028
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/current-boot/current-boot-lifecycle-source.py",
+      "sha256": "2c46e65446b89cd32e8bb04d3be55a32fc9221d3141f7cc7f7acff171c00850d",
+      "bytes": 16690
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/current-boot/manager-current-boot-lifecycle-safe.json",
+      "sha256": "20acec9402b5d4121ab1b04cacb1daf74b9142c70ffa189ec59572ae15393e78",
+      "bytes": 3303
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/current-boot/source-unit-enable-link-bindings-safe.json",
+      "sha256": "82fcde649929ca8d24ed27b415e81ed04c6194587102ec4914cddeb02bbc39cb",
+      "bytes": 888
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/current-boot/summary-safe.json",
+      "sha256": "b2c682d91fa6145140e738a0849b6e72c182736445925ea23d676dd1db7169fa",
+      "bytes": 1041
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/current-state/current-process-and-source-safe.json",
+      "sha256": "7e0dd611b25e0c3c098f728caffa3f026bc62e93a71a8d9456acd58ba3f2ab20",
+      "bytes": 2446
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/current-state/current-public-resources-safe.json",
+      "sha256": "d4a823250e26b4f88cffe572d5917b16938ffead65dfc9ca91441c36a2359d0d",
+      "bytes": 4321
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/current-state/observe-readonly.py",
+      "sha256": "c0717b4bfe16f7d2aef3625df1644afe998049884134c1fc0a0aa8aa7a5aec93",
+      "bytes": 17133
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/current-state/observer-result-safe.json",
+      "sha256": "f449105e9ce48fedbd6ddbd84dde55f65c54e7478d50de555c6e067d03f74e2e",
+      "bytes": 486
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/current-state/original-logical-state-retention-safe.json",
+      "sha256": "c971ac9d6d406e294b2eebfa9a2c1cca5b03ffb2e237f393cfbd7eecddfe3e32",
+      "bytes": 3876
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/current-state/private-environment-current-hash-safe.json",
+      "sha256": "4c67344eea7b7f4625b93d92c1b0fd4c02f4cd9f51162fb2a624f088acd42e82",
+      "bytes": 323
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/execution-provenance-safe.json",
+      "sha256": "0ad2b0b27e04f2ff7e6afc9b6ffb0af75161042bb3a767cfbabb1026c6d91ee9",
+      "bytes": 1424
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/initial-readonly-attempt/observe-readonly.py",
+      "sha256": "28942806460c758cffd9daba7972f181ece73b18594e609137b55e5c9bac53d2",
+      "bytes": 17123
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/initial-readonly-attempt/observer-failure-safe.json",
+      "sha256": "b9d78431a7ce47db5469f87e44bd3f93aa836e1e10d8a4315ce8b6e8a90c33c6",
+      "bytes": 136
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/initial-readonly-attempt/private-environment-current-hash-safe.json",
+      "sha256": "ffad7c6f246e51d9e0fb3cea7ec1ade0f4c178a59a2134c0d905e1ffd800d814",
+      "bytes": 323
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/prior-boot-0728/boot-and-current-process-safe.json",
+      "sha256": "c85d4ce28b102e4f0cf9d1b2005dd76de1b1814f8ae0d31500d38c360db39723",
+      "bytes": 2611
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/prior-boot-0728/current-public-resources-safe.json",
+      "sha256": "8923ee996bf78c74fc696baf84b35fb069e8af532946a19f3cbc4223c243ff62",
+      "bytes": 6263
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/prior-boot-0728/main-database-hash-only-boundary-safe.json",
+      "sha256": "413032c83174ea96e5cbd981730ac8ea85341b67e828833c3940fa512b0c24ce",
+      "bytes": 1140
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/prior-boot-0728/manager-current-boot-lifecycle-safe.json",
+      "sha256": "ba057582e54781e9f48e06f3eefa45b265d05e4962dce7d26d2f3f4796d78a28",
+      "bytes": 2721
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/prior-boot-0728/private-environment-hash-comparison-safe.json",
+      "sha256": "c077bf8d29181d9b1e05f97582ccc452046c565e9d6f318e3f4b32404ce943b0",
+      "bytes": 835
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/prior-boot-0728/source-manifest-safe.json",
+      "sha256": "b008ac3dc9325fcd443b7aedba21b842355ab63cbed328791173a09228f8a5e7",
+      "bytes": 1307
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/prior-boot-0728/source-unit-enable-link-bindings-safe.json",
+      "sha256": "3527ce509072a07f82c91592eb06fda3c9d6a2a512e9da067f0f2e5de519baef",
+      "bytes": 830
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/prior-boot-0728/summary-safe.json",
+      "sha256": "ffcac60dfa8ffae976e1df59344afbc6acd1850701db025f64607a5427b1bb08",
+      "bytes": 1865
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/reboot-and-retention-summary-safe.json",
+      "sha256": "552e9c368f96fd5045698aa4678acb983d74eb59d2cf4b39bf1ded7a664fe09b",
+      "bytes": 1871
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/source-mappings-safe.json",
+      "sha256": "a6b5881552b3ea271cf4c2d8d08318c14e09b735e9752ef705e9bee1fa81a0b1",
+      "bytes": 15167
+    },
+    {
+      "path": "deployments/linux/20261116-actual-reboot-autostart/sources/assemble-safe-archive.py",
+      "sha256": "8046e25352e98a6e6a9c8b40f7bbea170463911fcdafcf35c9faaaee9fc368ad",
+      "bytes": 11887
     },
     {
       "path": "deployments/linux/a96a06e-final-deployment.json",
@@ -4586,8 +4726,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "de826886461723fed5c7d66e7a0c3667611b2c7ebb3773399475ff2b38667c25",
-      "bytes": 55188
+      "sha256": "9a98625ef1e9e9b75d2f876afc418b7e7c0e59166f6a5b9b56a7083ada1c5b94",
+      "bytes": 56559
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -4611,8 +4751,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "b570e8b28719253588e99d914c9c8ef2f7bb3e6af0de75c814f2dc52616b2d21",
-      "bytes": 82489
+      "sha256": "f90da5f6221a7dca4042276abbc6d07cd41d5fbe8be4ddb8e651d21f93bf9022",
+      "bytes": 84169
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
@@ -4696,5 +4836,5 @@
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
-  "checkpointScope": "Earlier public receipts and original failed Desktop18/executor137/ten unrecovered creator-handle boundaries remain unchanged. Worker4 native startup/advancing heartbeat/client activation/input-cursor and original GUI37324 normalMSAA0/nine fresh-held terminal identities are verified in their source epochs. Fresh isolated frozen71 actual native5 Desktop18 job53f6e99 ended0: 18checks/7PUT200/pageErrors0/21providers42images7services/actual per-instance DTO-nativeUI correspondence/two actual reviewed PNG ACKs; newGUI443516 normalMSAA0/all641 unique held GUI identities terminal/oneNode completion gate0/CDP19322+64420 released. Separate independent Node OS-exit receipt and universal image-query success are not claimed. Fresh native offline original backup0/sixroots-fiveexisting/677files-readlocks/source-before-copy-after equal/locks released and actual default Desktop+Remote same-volume staged-directory promotion0/e4aa765b+24c8f980/sibling backups/external state byte-exact are verified. Source-built NotSigned/no native or NSIS installer/defaultLaunch0; prior promotion1 and CIM diagnosis0 retained. Actual default GUI launch/213 task-record retention, managedRemote7338 runtime, current Windows original-five credential/token wire, vendor installation, real WSL reboot/autostart and DeepSeek GUI remain incomplete; unarchived running operations do not change public status. Historical unregistered-child identity/closure and wrong-Linux full-package rollback remain unproved boundaries, not new recovery tasks. All938 archive files are included, root manifest excludes itself; production731 inputs stay frozen71. Native/runtime PID, listener, service and worker observations retain their original source-epoch dates; the 2026-11-16 archive/source review establishes no current process liveness or native execution-channel availability."
+  "checkpointScope": "Earlier public receipts and original failed Desktop18/executor137/ten unrecovered creator-handle boundaries remain unchanged. Worker4 native startup/advancing heartbeat/client activation/input-cursor and original GUI37324 normalMSAA0/nine fresh-held terminal identities are verified in their source epochs. Fresh isolated frozen71 actual native5 Desktop18 job53f6e99 ended0: 18checks/7PUT200/pageErrors0/21providers42images7services/actual per-instance DTO-nativeUI correspondence/two actual reviewed PNG ACKs; newGUI443516 normalMSAA0/all641 unique held GUI identities terminal/oneNode completion gate0/CDP19322+64420 released. Separate independent Node OS-exit receipt and universal image-query success are not claimed. Fresh native offline original backup0/sixroots-fiveexisting/677files-readlocks/source-before-copy-after equal/locks released and actual default Desktop+Remote same-volume staged-directory promotion0/e4aa765b+24c8f980/sibling backups/external state byte-exact are verified. Source-built NotSigned/no native or NSIS installer/defaultLaunch0; prior promotion1 and CIM diagnosis0 retained. Actual default GUI launch/213 task-record retention, managedRemote7338 runtime, current Windows original-five credential/token wire, vendor installation and DeepSeek GUI remain incomplete; unarchived running operations do not change public status. Historical unregistered-child identity/closure and wrong-Linux full-package rollback remain unproved boundaries, not new recovery tasks. All966 archive files are included, root manifest excludes itself; production731 inputs stay frozen71. Native/runtime PID, listener, service and worker observations retain their original source-epoch dates; the 2026-11-16 archive/source review establishes no current process liveness or native execution-channel availability. November16 actual WSL reboot/autostart and original5run/5auth logical retention are now verified by the separately dated28-file group; failed first observer1 and corrected observer0 remain distinct. Current Windows original-five token wire to listener427/ticks342 remains pending."
 }

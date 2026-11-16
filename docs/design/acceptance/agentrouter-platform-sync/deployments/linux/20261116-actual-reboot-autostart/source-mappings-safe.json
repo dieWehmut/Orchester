@@ -1,0 +1,254 @@
+{
+  "schemaVersion": 1,
+  "status": "selected-safe-artifacts-byte-exact",
+  "archivePrefix": "deployments/linux/20261116-actual-reboot-autostart/",
+  "files": [
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/readonly-wsl-boot-autostart-audit-20261116T072805Z/boot-and-current-process-safe.json",
+      "sourceSha256": "c85d4ce28b102e4f0cf9d1b2005dd76de1b1814f8ae0d31500d38c360db39723",
+      "sourceBytes": 2611,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/prior-boot-0728/boot-and-current-process-safe.json",
+      "archiveSha256": "c85d4ce28b102e4f0cf9d1b2005dd76de1b1814f8ae0d31500d38c360db39723",
+      "archiveBytes": 2611,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/readonly-wsl-boot-autostart-audit-20261116T072805Z/current-public-resources-safe.json",
+      "sourceSha256": "8923ee996bf78c74fc696baf84b35fb069e8af532946a19f3cbc4223c243ff62",
+      "sourceBytes": 6263,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/prior-boot-0728/current-public-resources-safe.json",
+      "archiveSha256": "8923ee996bf78c74fc696baf84b35fb069e8af532946a19f3cbc4223c243ff62",
+      "archiveBytes": 6263,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/readonly-wsl-boot-autostart-audit-20261116T072805Z/main-database-hash-only-boundary-safe.json",
+      "sourceSha256": "413032c83174ea96e5cbd981730ac8ea85341b67e828833c3940fa512b0c24ce",
+      "sourceBytes": 1140,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/prior-boot-0728/main-database-hash-only-boundary-safe.json",
+      "archiveSha256": "413032c83174ea96e5cbd981730ac8ea85341b67e828833c3940fa512b0c24ce",
+      "archiveBytes": 1140,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/readonly-wsl-boot-autostart-audit-20261116T072805Z/manager-current-boot-lifecycle-safe.json",
+      "sourceSha256": "ba057582e54781e9f48e06f3eefa45b265d05e4962dce7d26d2f3f4796d78a28",
+      "sourceBytes": 2721,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/prior-boot-0728/manager-current-boot-lifecycle-safe.json",
+      "archiveSha256": "ba057582e54781e9f48e06f3eefa45b265d05e4962dce7d26d2f3f4796d78a28",
+      "archiveBytes": 2721,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/readonly-wsl-boot-autostart-audit-20261116T072805Z/private-environment-hash-comparison-safe.json",
+      "sourceSha256": "c077bf8d29181d9b1e05f97582ccc452046c565e9d6f318e3f4b32404ce943b0",
+      "sourceBytes": 835,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/prior-boot-0728/private-environment-hash-comparison-safe.json",
+      "archiveSha256": "c077bf8d29181d9b1e05f97582ccc452046c565e9d6f318e3f4b32404ce943b0",
+      "archiveBytes": 835,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/readonly-wsl-boot-autostart-audit-20261116T072805Z/source-unit-enable-link-bindings-safe.json",
+      "sourceSha256": "3527ce509072a07f82c91592eb06fda3c9d6a2a512e9da067f0f2e5de519baef",
+      "sourceBytes": 830,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/prior-boot-0728/source-unit-enable-link-bindings-safe.json",
+      "archiveSha256": "3527ce509072a07f82c91592eb06fda3c9d6a2a512e9da067f0f2e5de519baef",
+      "archiveBytes": 830,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/readonly-wsl-boot-autostart-audit-20261116T072805Z/summary-safe.json",
+      "sourceSha256": "ffcac60dfa8ffae976e1df59344afbc6acd1850701db025f64607a5427b1bb08",
+      "sourceBytes": 1865,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/prior-boot-0728/summary-safe.json",
+      "archiveSha256": "ffcac60dfa8ffae976e1df59344afbc6acd1850701db025f64607a5427b1bb08",
+      "archiveBytes": 1865,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/readonly-wsl-boot-autostart-audit-20261116T072805Z/private-audit-manifest.json",
+      "sourceSha256": "b008ac3dc9325fcd443b7aedba21b842355ab63cbed328791173a09228f8a5e7",
+      "sourceBytes": 1307,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/prior-boot-0728/source-manifest-safe.json",
+      "archiveSha256": "b008ac3dc9325fcd443b7aedba21b842355ab63cbed328791173a09228f8a5e7",
+      "archiveBytes": 1307,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-autostart-lifecycle-private/boot-and-current-process-safe.json",
+      "sourceSha256": "fa621f9ca51d169be5e02ddfc44ed197b77c7a8aec1bb78e44f27469ad72e167",
+      "sourceBytes": 3028,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/current-boot/boot-and-current-process-safe.json",
+      "archiveSha256": "fa621f9ca51d169be5e02ddfc44ed197b77c7a8aec1bb78e44f27469ad72e167",
+      "archiveBytes": 3028,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-autostart-lifecycle-private/manager-current-boot-lifecycle-safe.json",
+      "sourceSha256": "20acec9402b5d4121ab1b04cacb1daf74b9142c70ffa189ec59572ae15393e78",
+      "sourceBytes": 3303,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/current-boot/manager-current-boot-lifecycle-safe.json",
+      "archiveSha256": "20acec9402b5d4121ab1b04cacb1daf74b9142c70ffa189ec59572ae15393e78",
+      "archiveBytes": 3303,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-autostart-lifecycle-private/source-unit-enable-link-bindings-safe.json",
+      "sourceSha256": "82fcde649929ca8d24ed27b415e81ed04c6194587102ec4914cddeb02bbc39cb",
+      "sourceBytes": 888,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/current-boot/source-unit-enable-link-bindings-safe.json",
+      "archiveSha256": "82fcde649929ca8d24ed27b415e81ed04c6194587102ec4914cddeb02bbc39cb",
+      "archiveBytes": 888,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-autostart-lifecycle-private/summary-safe.json",
+      "sourceSha256": "b2c682d91fa6145140e738a0849b6e72c182736445925ea23d676dd1db7169fa",
+      "sourceBytes": 1041,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/current-boot/summary-safe.json",
+      "archiveSha256": "b2c682d91fa6145140e738a0849b6e72c182736445925ea23d676dd1db7169fa",
+      "archiveBytes": 1041,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-autostart-lifecycle-private/current-boot-lifecycle-source.py",
+      "sourceSha256": "2c46e65446b89cd32e8bb04d3be55a32fc9221d3141f7cc7f7acff171c00850d",
+      "sourceBytes": 16690,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/current-boot/current-boot-lifecycle-source.py",
+      "archiveSha256": "2c46e65446b89cd32e8bb04d3be55a32fc9221d3141f7cc7f7acff171c00850d",
+      "archiveBytes": 16690,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-autostart-lifecycle-private/artifact-manifest-safe.json",
+      "sourceSha256": "19c4bd5fe163acb043d84279272f0abc588527ed405f6227a2a3816223113134",
+      "sourceBytes": 937,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/current-boot/artifact-manifest-safe.json",
+      "archiveSha256": "19c4bd5fe163acb043d84279272f0abc588527ed405f6227a2a3816223113134",
+      "archiveBytes": 937,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-retention-private/attempt2/observe-readonly.py",
+      "sourceSha256": "c0717b4bfe16f7d2aef3625df1644afe998049884134c1fc0a0aa8aa7a5aec93",
+      "sourceBytes": 17133,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/current-state/observe-readonly.py",
+      "archiveSha256": "c0717b4bfe16f7d2aef3625df1644afe998049884134c1fc0a0aa8aa7a5aec93",
+      "archiveBytes": 17133,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-retention-private/attempt2/private-environment-current-hash-safe.json",
+      "sourceSha256": "4c67344eea7b7f4625b93d92c1b0fd4c02f4cd9f51162fb2a624f088acd42e82",
+      "sourceBytes": 323,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/current-state/private-environment-current-hash-safe.json",
+      "archiveSha256": "4c67344eea7b7f4625b93d92c1b0fd4c02f4cd9f51162fb2a624f088acd42e82",
+      "archiveBytes": 323,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-retention-private/attempt2/current-public-resources-safe.json",
+      "sourceSha256": "d4a823250e26b4f88cffe572d5917b16938ffead65dfc9ca91441c36a2359d0d",
+      "sourceBytes": 4321,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/current-state/current-public-resources-safe.json",
+      "archiveSha256": "d4a823250e26b4f88cffe572d5917b16938ffead65dfc9ca91441c36a2359d0d",
+      "archiveBytes": 4321,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-retention-private/attempt2/original-logical-state-retention-safe.json",
+      "sourceSha256": "c971ac9d6d406e294b2eebfa9a2c1cca5b03ffb2e237f393cfbd7eecddfe3e32",
+      "sourceBytes": 3876,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/current-state/original-logical-state-retention-safe.json",
+      "archiveSha256": "c971ac9d6d406e294b2eebfa9a2c1cca5b03ffb2e237f393cfbd7eecddfe3e32",
+      "archiveBytes": 3876,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-retention-private/attempt2/current-process-and-source-safe.json",
+      "sourceSha256": "7e0dd611b25e0c3c098f728caffa3f026bc62e93a71a8d9456acd58ba3f2ab20",
+      "sourceBytes": 2446,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/current-state/current-process-and-source-safe.json",
+      "archiveSha256": "7e0dd611b25e0c3c098f728caffa3f026bc62e93a71a8d9456acd58ba3f2ab20",
+      "archiveBytes": 2446,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-retention-private/attempt2/observer-result-safe.json",
+      "sourceSha256": "f449105e9ce48fedbd6ddbd84dde55f65c54e7478d50de555c6e067d03f74e2e",
+      "sourceBytes": 486,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/current-state/observer-result-safe.json",
+      "archiveSha256": "f449105e9ce48fedbd6ddbd84dde55f65c54e7478d50de555c6e067d03f74e2e",
+      "archiveBytes": 486,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-retention-private/observe-readonly.py",
+      "sourceSha256": "28942806460c758cffd9daba7972f181ece73b18594e609137b55e5c9bac53d2",
+      "sourceBytes": 17123,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/initial-readonly-attempt/observe-readonly.py",
+      "archiveSha256": "28942806460c758cffd9daba7972f181ece73b18594e609137b55e5c9bac53d2",
+      "archiveBytes": 17123,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-retention-private/observer-failure-safe.json",
+      "sourceSha256": "b9d78431a7ce47db5469f87e44bd3f93aa836e1e10d8a4315ce8b6e8a90c33c6",
+      "sourceBytes": 136,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/initial-readonly-attempt/observer-failure-safe.json",
+      "archiveSha256": "b9d78431a7ce47db5469f87e44bd3f93aa836e1e10d8a4315ce8b6e8a90c33c6",
+      "archiveBytes": 136,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-retention-private/private-environment-current-hash-safe.json",
+      "sourceSha256": "ffad7c6f246e51d9e0fb3cea7ec1ade0f4c178a59a2134c0d905e1ffd800d814",
+      "sourceBytes": 323,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/initial-readonly-attempt/private-environment-current-hash-safe.json",
+      "archiveSha256": "ffad7c6f246e51d9e0fb3cea7ec1ade0f4c178a59a2134c0d905e1ffd800d814",
+      "archiveBytes": 323,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-retention-private/execution-provenance-safe.json",
+      "sourceSha256": "0ad2b0b27e04f2ff7e6afc9b6ffb0af75161042bb3a767cfbabb1026c6d91ee9",
+      "sourceBytes": 1424,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/execution-provenance-safe.json",
+      "archiveSha256": "0ad2b0b27e04f2ff7e6afc9b6ffb0af75161042bb3a767cfbabb1026c6d91ee9",
+      "archiveBytes": 1424,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-retention-private/reboot-and-retention-summary-safe.json",
+      "sourceSha256": "552e9c368f96fd5045698aa4678acb983d74eb59d2cf4b39bf1ded7a664fe09b",
+      "sourceBytes": 1871,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/reboot-and-retention-summary-safe.json",
+      "archiveSha256": "552e9c368f96fd5045698aa4678acb983d74eb59d2cf4b39bf1ded7a664fe09b",
+      "archiveBytes": 1871,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-retention-private/README.md",
+      "sourceSha256": "d4cc42a8e490fadd56ce50ed680c77159395a887323bbfb67069dd6c76040814",
+      "sourceBytes": 2880,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/README.md",
+      "archiveSha256": "d4cc42a8e490fadd56ce50ed680c77159395a887323bbfb67069dd6c76040814",
+      "archiveBytes": 2880,
+      "derivation": false
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261116/wsl-current-reboot-retention-private/assemble-safe-archive.py",
+      "sourceSha256": "8046e25352e98a6e6a9c8b40f7bbea170463911fcdafcf35c9faaaee9fc368ad",
+      "sourceBytes": 11887,
+      "archivePath": "deployments/linux/20261116-actual-reboot-autostart/sources/assemble-safe-archive.py",
+      "archiveSha256": "8046e25352e98a6e6a9c8b40f7bbea170463911fcdafcf35c9faaaee9fc368ad",
+      "archiveBytes": 11887,
+      "derivation": false
+    }
+  ],
+  "allSelectedSourceAndArchiveBytesExactlyEqual": true,
+  "privateDatabaseEnvironmentAndTokenValuesArchived": false,
+  "sourceManifestsVerified": true,
+  "initialFailedAttemptPreserved": true
+}

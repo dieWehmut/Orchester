@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-16T07:29:34.547852+00:00",
+  "comparisonType": "whole-main-database-file-hash-only-not-logical-state",
+  "currentMainDatabaseBytes": 28672,
+  "currentMainDatabaseSha256": "be4200523d5b6f9de3839657291d5d3021ef3c6fa7d4cdb0d94873fd660e0859",
+  "mainDatabaseMetadataStableThroughHash": true,
+  "historicalEarlyPublicBackupMainDatabaseBytes": 28672,
+  "historicalEarlyPublicBackupMainDatabaseSha256": "dbc3f4e20288d151268ea399df392c68899f8c4c3d389b8dbbaa76cfae83600a",
+  "historicalPublicBackupReference": "docs/design/acceptance/agentrouter-platform-sync/deployments/linux/20261112-persistent-default/final-safe.json",
+  "wholeMainDatabaseHashEqualsHistoricalEarlyBackup": false,
+  "walExists": false,
+  "shmExists": false,
+  "privateDatabaseRowsParsedOrReturned": false,
+  "logicalRunsAuthRetentionOrLossProvenByThisHash": false,
+  "interpretation": "Earlier baseline is a separate historical backup and existing receipts already distinguish raw SQL text changes. A differing whole-file hash does not prove lost run/auth values; a current private readonly logical comparison is separate."
+}

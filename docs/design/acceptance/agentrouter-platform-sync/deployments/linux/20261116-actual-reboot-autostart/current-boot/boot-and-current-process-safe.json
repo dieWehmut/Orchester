@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-16T08:57:55.921912+00:00",
+  "completedAtUtc": "2026-11-16T08:57:56.250617+00:00",
+  "kernelBootId": "04a4390b-1b73-42f2-b3ae-906308618b42",
+  "journalBootId128": "04a4390b1b7342f2b3ae906308618b42",
+  "kernelBtime": 1794814391,
+  "kernelBtimeUtc": "2026-11-16T07:33:11+00:00",
+  "priorObservedKernelBootId": "ce7a729b-8f28-4a97-a177-86bb96a9b896",
+  "priorObservedAtUtc": "2026-11-16T07:28:06.795252+00:00",
+  "priorSafeEvidenceSha256": "c85d4ce28b102e4f0cf9d1b2005dd76de1b1814f8ae0d31500d38c360db39723",
+  "actualKernelBootIdentityChanged": true,
+  "unit": "orchester-default-remote-7337-20261112-post-reboot.service",
+  "unitState": {
+    "MainPID": "293",
+    "ExecMainStartTimestampMonotonic": "2836032",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/orchester-default-remote-7337-20261112-post-reboot.service",
+    "Id": "orchester-default-remote-7337-20261112-post-reboot.service",
+    "ActiveState": "active",
+    "SubState": "running",
+    "UnitFileState": "enabled",
+    "ActiveEnterTimestampMonotonic": "2836055",
+    "InvocationID": "5ea55369162d46b085132afbb956c25f"
+  },
+  "defaultTargetState": {
+    "ActiveState": "active",
+    "SubState": "active",
+    "ActiveEnterTimestampMonotonic": "2836111",
+    "InvocationID": "ff5ed987dff643d5a489512ecd6f63b3"
+  },
+  "systemManagerUnitState": {
+    "MainPID": "266",
+    "ExecMainStartTimestampMonotonic": "2771912",
+    "ActiveState": "active",
+    "SubState": "running",
+    "InvocationID": "15d8a0852c0146d1ae20026f3c1b332c"
+  },
+  "processes": [
+    {
+      "pid": 266,
+      "ppid": 1,
+      "startTicks": 277,
+      "state": "S",
+      "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/init.scope",
+      "exeSha256": "39bbddd818ef6b4b9ae87e7cac22476f60a63efb8dfec77dd11f03672462931d"
+    },
+    {
+      "pid": 293,
+      "ppid": 266,
+      "startTicks": 283,
+      "state": "S",
+      "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/orchester-default-remote-7337-20261112-post-reboot.service",
+      "exeSha256": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae"
+    },
+    {
+      "pid": 427,
+      "ppid": 293,
+      "startTicks": 342,
+      "state": "S",
+      "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/orchester-default-remote-7337-20261112-post-reboot.service",
+      "exeSha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649"
+    }
+  ],
+  "listeners": [
+    {
+      "port": 7337,
+      "table": "tcp",
+      "state": "LISTEN",
+      "inode": 5011,
+      "uid": 1000,
+      "ownersWithinNamedUnit": [
+        {
+          "pid": 427,
+          "fd": 10,
+          "startTicks": 342
+        }
+      ]
+    }
+  ],
+  "unitManagerParentAncestryExact": true,
+  "clockTicksPerSecond": 100,
+  "allObservedProcessBirthsAndBootStableThroughReadOnlyAudit": true,
+  "socketOwnerSearchScope": "named unit cgroup only; no ownership claim for other processes holding duplicated descriptors"
+}

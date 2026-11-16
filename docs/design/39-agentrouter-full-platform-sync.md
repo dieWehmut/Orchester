@@ -2,7 +2,7 @@
 
 本轮扩展范围与此前[38 的桌面/手机交付历史](38-desktop-mobile-final-delivery.md)分别归档，原源码、失败和退出边界保留。本检查点生产源码为 `71def643cb08b208cc79687f79255c504eb14dc6`。此前十三轮检查点已推送并合并到 main `3f01075b3490f6920cd7e42d730fd339456728d9`；其中新增六种 CLI 的 Windows / WSL 共 12 个安装单元及常用命令均通过版本检查，见[追加安装记录](40-additional-agent-installations.md)。执行跨 2026-11-11 至 2026-11-13（Asia/Shanghai），原 receipt UTC 日期和 `20261111` 目录保持原值。监控目录分别展示 WorkBuddy 国内、国际两版，共 21 providers、7 services、42 项主题映射与 24 份官方图标。
 
-前端、Pages 与 Linux 新实例恢复已有实证，Windows 核心构建通过。正确 Windows Android 5572 已完成同证书新 APK、4 项原生测试、原五 AES 验证、Android Studio 17.4 秒同步 / JDK 21，以及 21 产品 / 42 图标。新一轮原生终端、真实键盘 resize、正常关闭、临时设备移除和撤销及自有环境清理已补齐；[最终安全记录](acceptance/agentrouter-platform-sync/native/android/post-reboot-completion-20261112/final-completion-safe.json)保留终端退出码 1 和任务删除后回执程序失败的边界。原五凭据保留，原 Linux 7337 凭据实际请求 200。Windows 正式 Portable14 和新的完整 Desktop18 均已实际通过；原 Desktop18 监控目录失败保留，新验收使用隔离候选及原句柄完成正常 MSAA 退出。新的离线原用户备份和默认 Desktop / Remote 安装目录更新已完成；默认应用实际启动、原 213 条任务记录保留与 managed Remote7338 运行仍待验收；此前 5554 Linux 目标及初始 20 项阶段保留历史绑定。
+前端、Pages 与 Linux 新实例恢复已有实证，Windows 核心构建通过。正确 Windows Android 5572 已完成同证书新 APK、4 项原生测试、原五 AES 验证、Android Studio 17.4 秒同步 / JDK 21，以及 21 产品 / 42 图标。新一轮原生终端、真实键盘 resize、正常关闭、临时设备移除和撤销及自有环境清理已补齐；[最终安全记录](acceptance/agentrouter-platform-sync/native/android/post-reboot-completion-20261112/final-completion-safe.json)保留终端退出码 1 和任务删除后回执程序失败的边界。原五凭据保留，原 Linux 7337 凭据实际请求 200。Windows 正式 Portable14 和新的完整 Desktop18 均已实际通过；原 Desktop18 监控目录失败保留，新验收使用隔离候选及原句柄完成正常 MSAA 退出。新的离线原用户备份和默认 Desktop / Remote 安装目录更新已完成；默认应用实际启动、原 213 条任务记录保留与 managed Remote7338 运行仍待验收；此前 5554 Linux 目标及初始 20 项阶段保留历史绑定。11 月 16 日已验证真实 WSL 重启、自启动及原 Linux 数据保留；原 Windows 五条凭据对这次新实例的实际请求仍待执行。
 
 本次 11 月 16 日续审只核对归档、来源绑定和冻结源码。原生运行、PID、监听、用户总线、句柄及输入桌面的观察均保留各回执原日期，11 月 13 日的执行成功与就绪不能作为当前存活或当前原生渠道可用的证明。默认 Desktop / Remote 目录更新保留为已执行结论；默认 GUI、原 213 条任务记录、managed7338 运行及完整重装验收仍未完成。
 
@@ -45,6 +45,8 @@
 [11 月 13 日 Claude 官方 payload 续验](acceptance/agentrouter-platform-sync/native/windows/claude-current-payload-20261113/final-claude-payload-preparation-safe.json)实际取得最新一次 Microsoft Store 目录 HTTP 200：包版本已变为 `5.11492.0.0`，与 15:20 的 `5.1231.2.0` 历史观察分别保留；该目录仍没有可用的直接包下载 URI。Microsoft WinGet 独立渠道的当前 manifest 为 `3.6556.2` / HTTP 200，字节与历史相等，两种渠道版本分别绑定。按当前 WinGet manifest 的精确官方 EXE / MSIX URL 下载均实际 curl 35 / HTTP 未建立 / 零字节，未获得完整 Claude payload，也未验证其散列、原生签名、安装或注册。原 Store 安装器退出 1612 与连接错误保留，此次没有重执行安装器；官方支持页面的 TLS 失败仍不能证明 Claude Linux 永久不受支持。
 
 [AgentRouter 官方目录覆盖凭据](acceptance/agentrouter-platform-sync/sources/agentrouter/final-guide-scope-safe.json)逐项核对 17 个唯一 guide URL 的 HTTP、title、h1 与文章散列：Claude Code CLI / VS Code 为同一产品，guide 去重为 16 项；主页另列 Gemini CLI，因此官方目录共 17 个产品。最终 canonical 21 项为这 17 项加既有 DeepSeek Harness / Cursor / Antigravity 及新增 WorkBuddy 国际版，没有缺项。第三方 guide 的平台用词不作为厂商支持或本机安装证据。
+
+[11 月 16 日实际 WSL 重启与自启动](acceptance/agentrouter-platform-sync/deployments/linux/20261116-actual-reboot-autostart/reboot-and-retention-summary-safe.json)已补齐此前待验门槛：当前 kernel boot `04a4390b…` 与先前 `ce7a729b…`、归档 `d67ae493…` 均不同；同一用户管理器 `266` 的启动 journal 按单调时间记录 Basic System → 原 enabled 服务 start/done → default.target，当前进程链为 `266 → 293 → 427`、listener ticks `342`。原 unit、controller、冻结 71 ELF 与环境副本散列相等，17 项资源 HTTP 200 且散列匹配。原 5 条 run 逐字相等，5 条鉴权及全部 remote-state JSON 与原绑定备份及六份一致性备份逻辑相等；SQL JSON 文本及整个数据库文件不逐字相等。[执行来源](acceptance/agentrouter-platform-sync/deployments/linux/20261116-actual-reboot-autostart/execution-provenance-safe.json)保留首次错误 `/info` 观察退出 1，以及仅改 `/remote/v1/info` 后实际退出 0。审计没有发起重启、服务启停或配对；这次证明 WSL 自启动与原 Linux 数据保留，原 Windows 手机五条凭据对当前实例的原生读取和实际 HTTP 请求仍待验证。
 
 ## 目录、展示与官方图标
 

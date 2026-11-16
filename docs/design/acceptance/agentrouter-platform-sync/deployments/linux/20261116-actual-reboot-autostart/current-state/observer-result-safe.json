@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "observedAtUtc": "2026-11-16T08:59:40.529625+00:00",
+  "finishedAtUtc": "2026-11-16T08:59:40.791258+00:00",
+  "sourceSha256": "c0717b4bfe16f7d2aef3625df1644afe998049884134c1fc0a0aa8aa7a5aec93",
+  "allOriginalRun5Auth5LogicalStateRetained": true,
+  "all17CurrentPublicResourcesExact": true,
+  "currentBootAndProcessSourceBindingsStable": true,
+  "originalPhoneCurrentTokenWireVerified": false,
+  "runtimeProcessOrServiceMutation": false
+}

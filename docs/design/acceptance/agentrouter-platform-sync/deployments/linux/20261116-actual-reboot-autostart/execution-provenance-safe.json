@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "provenance": "Actual completed exec_command tool results observed by the executing agent; these values are not inferred from script assertions.",
+  "initialReadonlyObserver": {
+    "actualProcessExitCode": 1,
+    "processExited": true,
+    "toolChunkId": "3e50f6",
+    "sourceSha256": "28942806460c758cffd9daba7972f181ece73b18594e609137b55e5c9bac53d2",
+    "failureSourceLine": 166,
+    "failureType": "AssertionError",
+    "dataRetentionComparisonReached": false,
+    "diagnosis": "Initial anonymous HTTP probe omitted /remote/v1; separate read-only diagnosis returned HTTP 404 for /info and /api/info."
+  },
+  "correctedReadonlyObserver": {
+    "actualProcessExitCode": 0,
+    "processExited": true,
+    "toolChunkId": "f35d24",
+    "sourceSha256": "c0717b4bfe16f7d2aef3625df1644afe998049884134c1fc0a0aa8aa7a5aec93",
+    "onlySourceChange": "anonymous endpoint /info -> /remote/v1/info",
+    "singleEndpointReplacementReproducesExactCorrectedSourceBytes": true
+  },
+  "independentCurrentBootLifecycleObserver": {
+    "actualProcessExitCode": 0,
+    "processExited": true,
+    "sourceSha256": "2c46e65446b89cd32e8bb04d3be55a32fc9221d3141f7cc7f7acff171c00850d",
+    "provenance": "Actual completed tool result reported by the independent lifecycle observer agent."
+  },
+  "priorBootAudit": {
+    "sourceFilesHashAndSizeVerified": true,
+    "retrospectiveNativeProcessExitCodeClaimed": false
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-16T08:59:40.529625+00:00",
+  "sha256": "2163cbf48fe3bc26b0a70246f7ef907180b7a0dd7232ffa9c772770f35357c5f",
+  "bytes": 5332,
+  "mode": "0o600",
+  "originalArchivedEnvironmentHashEqual": true,
+  "valuesParsedOrPublished": false,
+  "runtimeHeapEnvironmentCompared": false
+}

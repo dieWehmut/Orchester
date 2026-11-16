@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "unitSha256": "3119c552d11c49ca97c9db018aec53af82aa30adcde2a367e3b9479ea438f35c",
+  "unitBytes": 641,
+  "unitCurrentBytesExactArchived": true,
+  "unitArchiveReference": "docs/design/acceptance/agentrouter-platform-sync/deployments/linux/20261113-userbus-managed-default/runtime/default-remote-7337.service",
+  "defaultTargetEnableLinkExact": true,
+  "controllerSha256": "b70fcda2c9df0e9e214204b46297849fe4ebcbd0a5f01766586c5e26d6686c4b",
+  "controllerBytes": 34680,
+  "controllerCurrentBytesExactArchived": true,
+  "controllerArchiveReference": "docs/design/acceptance/agentrouter-platform-sync/deployments/linux/20261113-userbus-managed-default/runtime/controller-successor.py",
+  "environmentFileDirectivePresent": false,
+  "publicReferenceSourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "sourceAndEnabledLinkStableThroughReadOnlyAudit": true
+}
