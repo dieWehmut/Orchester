@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "status": "fresh-native-desktop18-msaa-runtime-and-owned-cleanup-verified-default-reinstallation-and-full-platform-delivery-pending",
+  "status": "dated-native-backup-and-default-directory-update-verified-post-promotion-runtime-and-full-platform-delivery-pending",
   "finalCodeRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
   "historicalSourceRevision": "a96a06e445ab6bdc4483ac297c69f8a0e2382bc9",
   "historicalCatalogProductCount": 20,
@@ -502,6 +502,14 @@
     {
       "scope": "Actual native5 job53f6e99b485a0d904194fb354fcdea04 endedOS0 at15:26:32UTC; isolated frozen71 Desktop18 completed18checks/7actualPUT200 with increasing revisions/pageErrors0/21providers42dark-lightimages7services and actual per-instance DTO/nativeUI correspondence, including3windows11processes7services. Two actual PNGs were independently opened by root and exact actual ACK hashes matched. NewGUI443516/exactBirth134390565318720113 normalMSAA quit0; two strict menu reads/actionHResult0, all641 unique held GUI identities terminal and one held Node completion gate0, CDP19322/embedded64420 released. No independent Node OS-exit receipt, all image API successes, default reinstall/Remote7338/Windows-five wire/vendor installation or historical ten-handle restoration is claimed. Earlier GUI37324 and nine fresh-held terminals remain their separate prior proof.",
       "proof": "native/windows/desktop18-msaa-complete-20261113/safe-derived-scope.json"
+    },
+    {
+      "scope": "Actual native fresh-offline backup jobd3ab84bc endedOS0/result0 at15:55:03UTC. Six original roots/five existing held677 native read locks and677 files; source-before/copy/after equality proved and every own read lock released. 7338 listeners/named Orchester processes0 at that observation, no signals/installer/defaultlaunch. Public derivation omits only backupDirectory and preserves42 decoded leaves; private manifest/inventory/content were not read or archived and its recorded hash was not independently recomputed by assembly.",
+      "proof": "native/windows/fresh-offline-original-backup-20261113T1555/source-bindings-and-scope-safe.json"
+    },
+    {
+      "scope": "Default Desktop and Remote same-volume staged-directory promotion completed with actual nativeOS0/result0 at16:14:27/16:16:12UTC; promoted frozen71 EXE hashes e4aa765b/24c8f980 match reviewed candidates. Original installations preserved as sibling backups, external state byte-exact and own read locks released; Desktop uninstaller/other installed files preserved by the pinned inventory guard. Source-built Authenticode is NotSigned, no native/NSIS installer or auto-defaultlaunch. Original Desktop promotion1/CimException and readonly diagnostic0 preserved; timeout60 successor did not establish the original exception cause. Default GUI/213-record task retention and managed7338 runtime acceptance remain unexecuted by these promotion jobs; current Windows-five wire/vendor/Linux reboot remain separate.",
+      "proof": "native/windows/default-directory-promotion-20261113T1616/source-bindings-and-scope-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -513,12 +521,12 @@
     "Prior source71 Linux7337 deployment/1023019 and oneoriginal7337/info200 before fresh23:31UTC absence; originalreceipts preserved historical"
   ],
   "pendingCurrentEpochScopes": [
-    "Take a fresh offline original-user backup, reinstall/promote the frozen candidate to default Desktop, and update/verify managed Remote7338 with original state preserved. Isolated native Desktop18 now passed all18checks/7PUT200/21providers42images7services/DTO-nativeUI correspondence/two reviewed PNGs and normal MSAA owned cleanup; that job did not change the default installation or prove Remote7338.",
+    "Actually launch the promoted default Desktop and verify the original GUI/task state, including all213 records, then start and verify managed Remote7338/current-instance resources, authentication and original state retention. Fresh offline original backup and Desktop/Remote default-directory promotion are already complete; promotion jobs performed no default launches and did not prove post-promotion runtime.",
     "Canonical user bus/managed7337 normal start-stop-start and Linux native original-one saved GET200 separately verified. Worker4 Windows existing sixSDK/AVD pins and own preflight0 passed; original-five manager attempts1/2 failed before app/credential/HTTP and completed normal owned creator/port cleanup, attempt3 failed fresh preflight before children. Current correct Android target, actual Windows run-as UID/alias and five native saved Credentials.get/current7337 saved-token GET remain pending. Real WSL reboot/autostart remains unverified.",
     "OfficialDeepSeekWindows installation/signature/HKCU/ASARrc1verified afteroriginalnumericPEverifierfailure; GUI/model/auth nottested; DataElementoriginalcurrentmetadataretained, wholeoldEXEbeforeafterhashnotproved",
     "InternationalWorkBuddy nativeWSL usablepackage/profile isolation pending: currentfourofficialmetadata200 butfouradvertisedpayloads404/0bytes; publichomepage/clientbytes equalhistory. OfficialClaudeApp Windows payload/LinuxGUI release evidence remains pending.",
     "Historical boundary only: unregistered suspended-child identity/HANDLE closure and wrong-Linux full-package rollback were not independently established; no retrospective recovery, claim, signal or new execution task is implied.",
-    "Correct Windows Android original five retained/full PTY+cleanup and ASCII composite659 verified; prior thirteenth managed Linux lifecycle checkpoint delivered. Fresh isolated native Desktop18/normalMSAA cleanup now passed; remaining default Desktop reinstallation/Remote7338, official clients, actual WSL reboot/autostart and current original Windows-phone token wire retain separate pending scopes.",
+    "Correct Windows Android original five retained/full PTY+cleanup and ASCII composite659 verified; prior thirteenth managed Linux lifecycle checkpoint delivered. Isolated native Desktop18/normalMSAA cleanup, fresh offline backup and default Desktop/Remote directory promotion passed. Remaining actual default launch/213-record task retention/managed7338 runtime, official clients, real WSL reboot/autostart and current original Windows-phone token wire retain separate pending scopes.",
     "Managed Linux listener2888962/6300089/ELFd983 current ownership is linked to the Linux native original-one saved credential GET200 receipt; no simultaneous server-side packet trace is claimed. Original XML retained and own Android foreground/forward/Dex cleaned. Original Windows-phone five wire and real WSL reboot/autostart remain pending; historical SQL formatting differences are retained.",
     "HistoricalClaudeStoreUI1612 retained; exactWinGet EXE/MSIX TLS35/HTTP000/0bytes and native current-user proxy collector13 remain failed. Worker4 native route is now verified, but its Claude vendor page collector13/SendFailure/HTTPnull/0bytes still gives no payload/SHA/Authenticode/installregistration/LinuxvendorGUI proof."
   ],
@@ -538,7 +546,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-13T16:03:55.282138+00:00",
+  "updatedAt": "2026-11-16T07:04:59.865382+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -701,7 +709,7 @@
   "currentWindowsSameUserActiveSessionId": 1,
   "currentWindowsCursorAccessError": 0,
   "currentWindowsInputDesktopName": "Default",
-  "currentWindowsLatestOfflineBackupProof": "native/windows/interactive-post-reboot-20261112/offline-final21-post-reboot-backup-safe.json",
+  "currentWindowsLatestOfflineBackupProof": "native/windows/fresh-offline-original-backup-20261113T1555/source-bindings-and-scope-safe.json",
   "currentWindowsExternalOriginalDesktopObservedLive": false,
   "currentWindowsDeepSeekOrdinarySilentNoAutoLaunchObserved": true,
   "currentWindowsDeepSeekOriginalInstallerActualExitCode": 0,
@@ -803,7 +811,7 @@
   "prior596TenthFormalRuntimeCheckpointDelivered": true,
   "currentWindowsNativeAccessProof": "native/windows/worker4-recovery-20261113/summary-safe.json",
   "currentWindowsNativeAccessObservedAtUtc": "2026-11-13T14:24:30.5095047Z",
-  "currentWindowsNativeAccessAvailable": true,
+  "currentWindowsNativeAccessAvailable": null,
   "currentWindowsDesktop18OuterExecutorActualExitCode": 137,
   "currentWindowsDesktop18OuterExecutorTerminalObservedAtUtc": "2026-11-12T16:29:48.479Z",
   "currentWindowsDesktop18OuterExecutorTerminalProof": "native/windows/formal-desktop18-attempt1-20261112T1545/original-executor-terminal-safe.json",
@@ -816,7 +824,7 @@
   "historicalWindowsInteractiveReadinessAt1509Verified": true,
   "historicalWindowsCursorAccessErrorAt1509": 0,
   "historicalWindowsSameUserInteractiveSessionProved": true,
-  "currentWindowsInteractiveReadinessCurrentState": "worker4-native-input-desktop-and-cursor-observed; original-gui-normal-msaa-quit0-observed; physical-console-session2-not-aligned; fresh-native-desktop18-runtime-and-msaa-cleanup-passed; default-reinstallation-and-managed7338-pending",
+  "currentWindowsInteractiveReadinessCurrentState": "2026-11-13 source-epoch input-desktop/cursor and GUI/desktop18/MSAA/backup/default-directory-update observations retained; no 2026-11-16 native process liveness or gateway availability revalidation; current native execution channel not ready; default-launch-task213-retention-and-managed7338-runtime-pending",
   "currentInternationalWorkBuddyLinuxAvailabilityProof": "native/wsl/workbuddy-global-current-20261113/final-global-linux-continuation-safe.json",
   "currentInternationalWorkBuddyLinuxAvailabilityObservedAtUtc": "2026-11-12T22:34:38.328828+00:00",
   "currentInternationalWorkBuddyLinuxMetadataHttpStatuses": [
@@ -946,11 +954,11 @@
     13,
     0
   ],
-  "currentWindowsNativeAccessVerifiedScope": "Worker4 native bootstrap0/PID432400/exact birth/source16ee5c and two advancing heartbeat observations/client activation verified; held native hello child0 in Session1 establishes task-file native execution. Earlier worker3 lifetime terminal0 was self-reported only and its independent OS exit remains null. Interop routes and continuous availability remain separate; original GUI normal MSAA exit0 and all nine current fresh-held identities terminal/CDP19322 free are independently bound.",
+  "currentWindowsNativeAccessVerifiedScope": "At the recorded 2026-11-13 observations, worker4 bootstrap0/PID432400/exact birth/source16ee5c, two advancing heartbeat observations/client activation and held native hello child0 in Session1 proved task-file native execution. These dated results do not establish current native availability or process liveness on 2026-11-16. Earlier worker3 lifetime terminal0 was self-reported only and its independent OS exit remains null. Original GUI normal MSAA exit0 and all nine then-fresh-held identities terminal/CDP19322 free remain their independently bound historical proof.",
   "currentWindowsInteropAfterBriefRecoveryObservedAtUtc": "2026-11-13T12:48:51.515147+00:00",
   "currentWindowsInteropContinuousAvailabilityVerified": false,
   "lastWindowsInteropBriefRecoveryAvailableObservedAtUtc": "2026-11-13T10:49:46Z",
-  "currentWindowsNativeExecutionChannelReady": true,
+  "currentWindowsNativeExecutionChannelReady": false,
   "currentWindowsNativeExecutionChannelProof": "native/windows/worker4-recovery-20261113/summary-safe.json",
   "currentWindowsWorker3LifetimeReachedSelfReported": true,
   "currentWindowsWorker3IndependentOsExitCode": null,
@@ -1024,5 +1032,36 @@
   "currentWindowsDesktop18IsolatedSavedDelegateFixtureUsed": true,
   "historicalWindowsOriginalGui37324NormalExitAndNineFreshHeldTerminalsVerified": true,
   "historicalWindowsOriginalGui37324NormalExitProof": "native/windows/original-gui-msaa-normal-exit-20261113/independent-assembly-binding-proof-safe.json",
-  "fullObjectiveComplete": false
+  "fullObjectiveComplete": false,
+  "currentWindowsFreshOfflineBackupVerified": true,
+  "currentWindowsFreshOfflineBackupObservedAtUtc": "2026-11-13T15:55:03.3703236Z",
+  "currentWindowsFreshOfflineBackupNativeJobExitCode": 0,
+  "currentWindowsFreshOfflineBackupRootCount": 6,
+  "currentWindowsFreshOfflineBackupExistingRootCount": 5,
+  "currentWindowsFreshOfflineBackupFileCount": 677,
+  "currentWindowsFreshOfflineBackupHeldReadLockCount": 677,
+  "currentWindowsFreshOfflineBackupReadLocksReleased": true,
+  "currentWindowsFreshOfflineBackupPublicDerivedProof": "native/windows/fresh-offline-original-backup-20261113T1555/fresh-offline-backup-public-derived-safe.json",
+  "currentWindowsDefaultDesktopDirectoryPromoted": true,
+  "currentWindowsDefaultRemoteDirectoryPromoted": true,
+  "currentWindowsReinstallationDirectoryUpdated": true,
+  "currentWindowsDefaultDirectoryPromotionProof": "native/windows/default-directory-promotion-20261113T1616/source-bindings-and-scope-safe.json",
+  "currentWindowsDefaultDirectoryPromotionMethod": "same-volume-staged-directory-promotion",
+  "currentWindowsDefaultDesktopDirectoryPromotionNativeExitCode": 0,
+  "currentWindowsDefaultRemoteDirectoryPromotionNativeExitCode": 0,
+  "currentWindowsDefaultDesktopPromotedExeSha256": "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+  "currentWindowsDefaultRemotePromotedExeSha256": "24c8f9806256cc54b239b03f6b4adc976c3fee50c30bc0f2ecf601971c22ce2a",
+  "currentWindowsDefaultDirectoryPromotionSiblingBackupsPreserved": true,
+  "currentWindowsDefaultDirectoryPromotionExternalStateByteExact": true,
+  "currentWindowsDefaultDirectoryPromotionOwnedReadLocksReleased": true,
+  "currentWindowsDefaultDirectoryPromotionSourceBuiltAuthenticodeStatus": "NotSigned",
+  "currentWindowsDefaultDirectoryPromotionNativeInstallerExecuted": false,
+  "currentWindowsDefaultDirectoryPromotionNsisInstallerExecuted": false,
+  "currentWindowsDefaultDirectoryPromotionDefaultLaunches": 0,
+  "currentWindowsDefaultGuiPostPromotionVerified": false,
+  "currentWindowsDefaultTask213RetentionVerified": false,
+  "lastVerifiedWindowsNativeAccessAvailable": true,
+  "lastVerifiedWindowsNativeExecutionChannelReady": true,
+  "nativeAndRuntimeLivenessObservationBoundary": "Stored PID, listener, service, handle and input-desktop observations describe the original dated source epochs, principally 2026-11-13. This 2026-11-16 archive/source review does not revalidate current native/runtime process liveness or gateway availability.",
+  "currentNativeProcessLivenessRevalidated": false
 }

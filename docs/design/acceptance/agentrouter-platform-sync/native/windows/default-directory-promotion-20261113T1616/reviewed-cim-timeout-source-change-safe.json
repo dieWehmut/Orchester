@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "status": "source-byte-exact-reviewed-cim-timeout-only-successor",
+  "originalPromotionSourceSha256": "01d96b35675d3a05acc800f44aed2dd29fdc12718b9f5db9303a7e0876ff53dc",
+  "reviewedSuccessorSha256": "7db0b54b8abb8809720ec97228bd95a5abacacae52b07d87dc2ffef23b02ce41",
+  "originalBytes": 18438,
+  "successorBytes": 18440,
+  "replacementCount": 2,
+  "onlyReplacement": {
+    "from": "OperationTimeoutSec 5",
+    "to": "OperationTimeoutSec 60"
+  },
+  "allOtherSourceBytesEqual": true,
+  "original02WrapperSha256": "f18fcf1fa73a3036decac23c355f8f3e4a64b2acb589e947576e854bd8727ae2",
+  "successor02bWrapperSha256": "4d4be0273dad68655ca83f7c655eb9c42fad4eecb797dce356460dfc6ed263c6",
+  "nativeJobSuccessWrapperPinsActual02bAnd02bPins01d9And7db0": true,
+  "timeoutReproductionProvesOriginalFailureCause": false,
+  "originalFailedExceptionObjectRead": false
+}

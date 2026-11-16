@@ -1,0 +1,22 @@
+{
+    "schemaVersion":  1,
+    "kind":  "Desktop",
+    "status":  "failed",
+    "sourceRevision":  "71def643cb08b208cc79687f79255c504eb14dc6",
+    "installationMethod":  "same-volume-staged-directory-promotion",
+    "nativeInstallerExecuted":  false,
+    "processSignals":  0,
+    "defaultLaunches":  0,
+    "modelCalls":  0,
+    "privateStateValuesIncluded":  false,
+    "candidateExeSha256":  "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+    "candidateBytes":  40820736,
+    "observedNativeAuthenticodeStatus":  "NotSigned",
+    "signatureIsVendorInstallerProof":  false,
+    "promotionAttempted":  true,
+    "stage":  "authorized-staged-promotion",
+    "exceptionType":  "Microsoft.Management.Infrastructure.CimException",
+    "allOwnedExternalReadLocksReleased":  true,
+    "actualNativeExitCode":  1,
+    "observedAtUtc":  "2026-11-13T16:03:00.9139586Z"
+}

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "status": "fresh-offline-original-backup-verified",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "originalFilesModified": false,
+  "processSignals": 0,
+  "installerExecutions": 0,
+  "defaultLaunches": 0,
+  "privateStateValuesIncluded": false,
+  "heldReadLockCount": 677,
+  "observedAtUtc": "2026-11-13T15:55:03.3703236Z",
+  "privateManifestSha256": "a3b9f604aa32da99f8e1cd08d4671c638cd7b263cfaf9b46717accc6a094e33c",
+  "roots": [
+    {
+      "name": "desktop-installation",
+      "exists": true,
+      "files": 156,
+      "sourceBeforeCopyAndAfterEqual": true
+    },
+    {
+      "name": "orchester-user-state",
+      "exists": true,
+      "files": 9,
+      "sourceBeforeCopyAndAfterEqual": true
+    },
+    {
+      "name": "desktop-local-webview",
+      "exists": true,
+      "files": 493,
+      "sourceBeforeCopyAndAfterEqual": true
+    },
+    {
+      "name": "desktop-roaming-profile",
+      "exists": false,
+      "files": 0,
+      "sourceBeforeCopyAndAfterEqual": true
+    },
+    {
+      "name": "remote-installation",
+      "exists": true,
+      "files": 17,
+      "sourceBeforeCopyAndAfterEqual": true
+    },
+    {
+      "name": "remote-state-home",
+      "exists": true,
+      "files": 2,
+      "sourceBeforeCopyAndAfterEqual": true
+    }
+  ],
+  "allExistingRootsVerified": true,
+  "current7338ListenerCount": 0,
+  "currentNamedOrchesterProcessCount": 0,
+  "privateAclInheritanceDisabled": true,
+  "lockReleaseBeforePromotionRequired": true,
+  "allOwnedReadLocksReleased": true,
+  "actualNativeExitCode": 0
+}

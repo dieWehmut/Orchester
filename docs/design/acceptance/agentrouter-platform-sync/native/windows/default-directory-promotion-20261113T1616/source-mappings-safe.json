@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 1,
+  "status": "byte-exact-public-safe-native-directory-promotion-evidence",
+  "files": [
+    {
+      "file": "sources/monitor-final-promote.ps1",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/monitor-final-promote.ps1",
+      "kind": "actual-pinned-promotion-dependency-source",
+      "bytes": 18438,
+      "sha256": "01d96b35675d3a05acc800f44aed2dd29fdc12718b9f5db9303a7e0876ff53dc",
+      "byteExact": true
+    },
+    {
+      "file": "sources/monitor-final-promote-cim60-prm-1113-8798425b.ps1",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/monitor-final-promote-cim60-prm-1113-8798425b.ps1",
+      "kind": "actual-pinned-promotion-dependency-source",
+      "bytes": 18440,
+      "sha256": "7db0b54b8abb8809720ec97228bd95a5abacacae52b07d87dc2ffef23b02ce41",
+      "byteExact": true
+    },
+    {
+      "file": "sources/monitor-final-common.ps1",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/monitor-final-common.ps1",
+      "kind": "actual-pinned-promotion-dependency-source",
+      "bytes": 7856,
+      "sha256": "2d4e07f3d703043ea9af8fbf6377814f08135253837b4e36b8f075ea3aeb2f4f",
+      "byteExact": true
+    },
+    {
+      "file": "sources/02-promote-with-fresh-offline-retention.ps1",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prm-1113-8798425b/02-promote-with-fresh-offline-retention.ps1",
+      "kind": "actual-pinned-promotion-dependency-source",
+      "bytes": 8866,
+      "sha256": "f18fcf1fa73a3036decac23c355f8f3e4a64b2acb589e947576e854bd8727ae2",
+      "byteExact": true
+    },
+    {
+      "file": "sources/02b-promote-with-reviewed-cim60-and-retention.ps1",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prm-1113-8798425b/02b-promote-with-reviewed-cim60-and-retention.ps1",
+      "kind": "actual-pinned-promotion-dependency-source",
+      "bytes": 9754,
+      "sha256": "4d4be0273dad68655ca83f7c655eb9c42fad4eecb797dce356460dfc6ed263c6",
+      "byteExact": true
+    },
+    {
+      "file": "sources/02a-current-promotion-and-cim-readonly-diagnostic.ps1",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prm-1113-8798425b/02a-current-promotion-and-cim-readonly-diagnostic.ps1",
+      "kind": "actual-pinned-promotion-dependency-source",
+      "bytes": 4705,
+      "sha256": "4485b26d34fabf46ef16b0c2eb03a97d938e2eb32ed55326c1ae96bdc3221f55",
+      "byteExact": true
+    },
+    {
+      "file": "sources/invoke-native-default-promote-desktop-20261113.ps1",
+      "originExecutionPath": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/invoke-native-default-promote-desktop-20261113.ps1",
+      "kind": "root-wrapper-source",
+      "bytes": 995,
+      "sha256": "139eca3b2b75712b9037a245b9387c170040f0ade8ce3b7cfe2e03ea2d9ce150",
+      "byteExact": true
+    },
+    {
+      "file": "sources/invoke-native-default-promote-remote-20261113.ps1",
+      "originExecutionPath": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/invoke-native-default-promote-remote-20261113.ps1",
+      "kind": "root-wrapper-source",
+      "bytes": 994,
+      "sha256": "110f205b30becadc5501e0cc25a7dfe38ee35dbe3b83fc7ceb95d7677bb486b8",
+      "byteExact": true
+    },
+    {
+      "file": "sources/invoke-native-default-promote-cim60-desktop-20261113.ps1",
+      "originExecutionPath": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/invoke-native-default-promote-cim60-desktop-20261113.ps1",
+      "kind": "root-wrapper-source",
+      "bytes": 1001,
+      "sha256": "b82ae009c0a6f73f9709b444e348021e383b76055a69bc2b1bc920772b0e5811",
+      "byteExact": true
+    },
+    {
+      "file": "sources/invoke-native-default-promote-cim60-remote-20261113.ps1",
+      "originExecutionPath": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/invoke-native-default-promote-cim60-remote-20261113.ps1",
+      "kind": "root-wrapper-source",
+      "bytes": 1000,
+      "sha256": "2d776c0249c05f4b4168b74a93fb837984d9d2ab37202396ea45e8091831c5b9",
+      "byteExact": true
+    },
+    {
+      "file": "sources/invoke-native-current-promotion-cim-diagnostic-20261113.ps1",
+      "originExecutionPath": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/invoke-native-current-promotion-cim-diagnostic-20261113.ps1",
+      "kind": "root-wrapper-source",
+      "bytes": 836,
+      "sha256": "1858289e75512e4f99d36362e3cf0608a39b0e2eedf9658490a33ea3fe0ccbd9",
+      "byteExact": true
+    },
+    {
+      "file": "jobs/cce1db23c311e256c89357f8c9b75e8c/source.ps1",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Temp/ow5-b6a630ee5c59d13b61baf13e/sources/cce1db23c311e256c89357f8c9b75e8c.ps1",
+      "kind": "actual-native-job-source",
+      "bytes": 995,
+      "sha256": "139eca3b2b75712b9037a245b9387c170040f0ade8ce3b7cfe2e03ea2d9ce150",
+      "byteExact": true
+    },
+    {
+      "file": "jobs/cce1db23c311e256c89357f8c9b75e8c/start-safe.json",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Temp/ow5-b6a630ee5c59d13b61baf13e/jobs/cce1db23c311e256c89357f8c9b75e8c/start-safe.json",
+      "kind": "actual-held-native-job-receipt",
+      "bytes": 388,
+      "sha256": "d3427f3ab1e4b219982e9f981df9c3e33e2bc0d3de851f26452961871e7c3c41",
+      "byteExact": true
+    },
+    {
+      "file": "jobs/cce1db23c311e256c89357f8c9b75e8c/terminal-safe.json",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Temp/ow5-b6a630ee5c59d13b61baf13e/jobs/cce1db23c311e256c89357f8c9b75e8c/terminal-safe.json",
+      "kind": "actual-held-native-job-receipt",
+      "bytes": 453,
+      "sha256": "1fc418a373c09a37278dace0c3fe5a39e978d608b4d212bcee02ff757236388b",
+      "byteExact": true
+    },
+    {
+      "file": "jobs/260a1535d107bd27339b651e2a8925db/source.ps1",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Temp/ow5-b6a630ee5c59d13b61baf13e/sources/260a1535d107bd27339b651e2a8925db.ps1",
+      "kind": "actual-native-job-source",
+      "bytes": 836,
+      "sha256": "1858289e75512e4f99d36362e3cf0608a39b0e2eedf9658490a33ea3fe0ccbd9",
+      "byteExact": true
+    },
+    {
+      "file": "jobs/260a1535d107bd27339b651e2a8925db/start-safe.json",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Temp/ow5-b6a630ee5c59d13b61baf13e/jobs/260a1535d107bd27339b651e2a8925db/start-safe.json",
+      "kind": "actual-held-native-job-receipt",
+      "bytes": 387,
+      "sha256": "7823f527590906b6ba8f7c81c984bb1a02bb22cd49f0f1c080700af5aaf7d7f6",
+      "byteExact": true
+    },
+    {
+      "file": "jobs/260a1535d107bd27339b651e2a8925db/terminal-safe.json",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Temp/ow5-b6a630ee5c59d13b61baf13e/jobs/260a1535d107bd27339b651e2a8925db/terminal-safe.json",
+      "kind": "actual-held-native-job-receipt",
+      "bytes": 452,
+      "sha256": "7daa15c80ab3e7e1f522ff1d15213b03949c8c09478448bd8d04b2171724e1a1",
+      "byteExact": true
+    },
+    {
+      "file": "jobs/dca22d098bc585e266fbc766f8c6e775/source.ps1",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Temp/ow6-bdc2b76903a834325d0c5e3d/sources/dca22d098bc585e266fbc766f8c6e775.ps1",
+      "kind": "actual-native-job-source",
+      "bytes": 1001,
+      "sha256": "b82ae009c0a6f73f9709b444e348021e383b76055a69bc2b1bc920772b0e5811",
+      "byteExact": true
+    },
+    {
+      "file": "jobs/dca22d098bc585e266fbc766f8c6e775/start-safe.json",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Temp/ow6-bdc2b76903a834325d0c5e3d/jobs/dca22d098bc585e266fbc766f8c6e775/start-safe.json",
+      "kind": "actual-held-native-job-receipt",
+      "bytes": 388,
+      "sha256": "aba97110f474db2d679e1fba7e7ef7043ee139713aa8a525db6072ff35346267",
+      "byteExact": true
+    },
+    {
+      "file": "jobs/dca22d098bc585e266fbc766f8c6e775/terminal-safe.json",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Temp/ow6-bdc2b76903a834325d0c5e3d/jobs/dca22d098bc585e266fbc766f8c6e775/terminal-safe.json",
+      "kind": "actual-held-native-job-receipt",
+      "bytes": 453,
+      "sha256": "7985e5fa89004e1b6b642988535dd9880098ace5ba7a01993cc972f0b8045452",
+      "byteExact": true
+    },
+    {
+      "file": "jobs/b60d1660f6c517336162f0203675d57a/source.ps1",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Temp/ow6-bdc2b76903a834325d0c5e3d/sources/b60d1660f6c517336162f0203675d57a.ps1",
+      "kind": "actual-native-job-source",
+      "bytes": 1000,
+      "sha256": "2d776c0249c05f4b4168b74a93fb837984d9d2ab37202396ea45e8091831c5b9",
+      "byteExact": true
+    },
+    {
+      "file": "jobs/b60d1660f6c517336162f0203675d57a/start-safe.json",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Temp/ow6-bdc2b76903a834325d0c5e3d/jobs/b60d1660f6c517336162f0203675d57a/start-safe.json",
+      "kind": "actual-held-native-job-receipt",
+      "bytes": 387,
+      "sha256": "16dc2681297e168a41605147c0372540ae23940e3a3fa363c98a6290d4905bff",
+      "byteExact": true
+    },
+    {
+      "file": "jobs/b60d1660f6c517336162f0203675d57a/terminal-safe.json",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Temp/ow6-bdc2b76903a834325d0c5e3d/jobs/b60d1660f6c517336162f0203675d57a/terminal-safe.json",
+      "kind": "actual-held-native-job-receipt",
+      "bytes": 452,
+      "sha256": "c0fd04d75851e92e02fe4be1704a5dddd7c0c79857fde48358ef7d8edd674d86",
+      "byteExact": true
+    },
+    {
+      "file": "promotion-desktop-dc20c9a96b8842a282eb93493cd5658f-safe.json",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prm-1113-8798425b/promotion-desktop-dc20c9a96b8842a282eb93493cd5658f-safe.json",
+      "kind": "original-native-public-safe-result",
+      "bytes": 905,
+      "sha256": "1bcd446069a3231eeffdb9bb6868d14865f4515e3801c7ce722f8ef2f2b99e36",
+      "byteExact": true
+    },
+    {
+      "file": "cim-readonly-77674fe5fb3c4ede8f24a6066fa6b64d-safe.json",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prm-1113-8798425b/cim-readonly-77674fe5fb3c4ede8f24a6066fa6b64d-safe.json",
+      "kind": "original-native-public-safe-result",
+      "bytes": 3513,
+      "sha256": "bd11332eda37a45ed4095138ade1aa0a9433fd21f31ad19852e97b31c546e1e7",
+      "byteExact": true
+    },
+    {
+      "file": "promotion-desktop-6e645a43f8dc4ce18a41e170032ba126-safe.json",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prm-1113-8798425b/promotion-desktop-6e645a43f8dc4ce18a41e170032ba126-safe.json",
+      "kind": "original-native-public-safe-result",
+      "bytes": 1404,
+      "sha256": "04515405b849e912dbea44c4561e04c5233a08271e364a42242b242ef6086409",
+      "byteExact": true
+    },
+    {
+      "file": "promotion-remote-e4a25a1a80f747c499e02dade8490ecd-safe.json",
+      "originExecutionPath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prm-1113-8798425b/promotion-remote-e4a25a1a80f747c499e02dade8490ecd-safe.json",
+      "kind": "original-native-public-safe-result",
+      "bytes": 1403,
+      "sha256": "4e4821ec399b3884ca0a407d186c91be6d180af4327463a1939271a360f44960",
+      "byteExact": true
+    }
+  ],
+  "jobBindings": [
+    {
+      "jobId": "cce1db23c311e256c89357f8c9b75e8c",
+      "role": "Desktop-original-failure",
+      "sourceSha256": "139eca3b2b75712b9037a245b9387c170040f0ade8ce3b7cfe2e03ea2d9ce150",
+      "rootWrapperSha256": "139eca3b2b75712b9037a245b9387c170040f0ade8ce3b7cfe2e03ea2d9ce150",
+      "rootWrapperAndExecutedSourceByteExact": true,
+      "nativePid": 452864,
+      "exactBirthUtc": "2026-11-13T16:02:44.2093482Z",
+      "finishedAtUtc": "2026-11-13T16:03:01.0498857Z",
+      "actualNativeOsExitCode": 1
+    },
+    {
+      "jobId": "260a1535d107bd27339b651e2a8925db",
+      "role": "readonly-cim-diagnostic",
+      "sourceSha256": "1858289e75512e4f99d36362e3cf0608a39b0e2eedf9658490a33ea3fe0ccbd9",
+      "rootWrapperSha256": "1858289e75512e4f99d36362e3cf0608a39b0e2eedf9658490a33ea3fe0ccbd9",
+      "rootWrapperAndExecutedSourceByteExact": true,
+      "nativePid": 42252,
+      "exactBirthUtc": "2026-11-13T16:10:34.6882472Z",
+      "finishedAtUtc": "2026-11-13T16:10:51.0575327Z",
+      "actualNativeOsExitCode": 0
+    },
+    {
+      "jobId": "dca22d098bc585e266fbc766f8c6e775",
+      "role": "Desktop-current-promotion",
+      "sourceSha256": "b82ae009c0a6f73f9709b444e348021e383b76055a69bc2b1bc920772b0e5811",
+      "rootWrapperSha256": "b82ae009c0a6f73f9709b444e348021e383b76055a69bc2b1bc920772b0e5811",
+      "rootWrapperAndExecutedSourceByteExact": true,
+      "nativePid": 449472,
+      "exactBirthUtc": "2026-11-13T16:13:46.9317956Z",
+      "finishedAtUtc": "2026-11-13T16:14:27.3362170Z",
+      "actualNativeOsExitCode": 0
+    },
+    {
+      "jobId": "b60d1660f6c517336162f0203675d57a",
+      "role": "Remote-current-promotion",
+      "sourceSha256": "2d776c0249c05f4b4168b74a93fb837984d9d2ab37202396ea45e8091831c5b9",
+      "rootWrapperSha256": "2d776c0249c05f4b4168b74a93fb837984d9d2ab37202396ea45e8091831c5b9",
+      "rootWrapperAndExecutedSourceByteExact": true,
+      "nativePid": 24248,
+      "exactBirthUtc": "2026-11-13T16:15:33.2699529Z",
+      "finishedAtUtc": "2026-11-13T16:16:12.3866616Z",
+      "actualNativeOsExitCode": 0
+    }
+  ],
+  "unusedOriginalRemoteRootWrapperStatus": "prepared source retained; no original-02 Remote execution receipt claimed",
+  "freshBackupGroupReference": "prior-fresh-backup-link-safe.json",
+  "excluded": [
+    "all private backup manifests and inventories",
+    "all profile/state contents",
+    "all raw private promotion exceptions",
+    "all stdout/stderr/raw logs",
+    "worker keys MAC requests",
+    "raw backup directory value"
+  ],
+  "scopeFile": "source-bindings-and-scope-safe.json",
+  "scopeSha256": "d8e12959321cb5f6b9e1ac749897e75c3bf80f8f423d67d01298d4e9c65b8ec0",
+  "sourceChangeFile": "reviewed-cim-timeout-source-change-safe.json",
+  "sourceChangeSha256": "37e7e180c13345d978be105da624272b0f4a7d9a5fcf368641ec062129c2399b",
+  "priorBackupLinkSha256": "fbe5fd8e29fd68ef1756f1e7266fbdea957fdc0bffc9c9cb3892fb66d53d4e37"
+}

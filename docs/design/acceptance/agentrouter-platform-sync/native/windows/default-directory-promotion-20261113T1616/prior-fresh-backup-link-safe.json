@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "referencedAcceptanceGroup": "native/windows/fresh-offline-original-backup-20261113T1555",
+  "safeOriginalBackupResultSha256": "c2277a82ccf1df70c61ac18190fdc803801053f54d36dcbdcff06febd89a090d",
+  "publicDerivedBackupResultSha256": "158ffa766cfacf0cd0e9d65b1fe0bff5feca15f686471a64eb748337d6f9afa2",
+  "privateManifestSha256AsRecordedOnly": "a3b9f604aa32da99f8e1cd08d4671c638cd7b263cfaf9b46717accc6a094e33c",
+  "privateManifestContentsReadOrArchived": false,
+  "privateManifestHashIndependentlyRecomputedHere": false,
+  "privateInventoryReadOrArchived": false,
+  "privateBackupDirectoryValueCopied": false,
+  "priorBackupAllSixRootCategoriesVerified": true,
+  "priorBackupOriginalFiles": 677,
+  "priorBackupReadLocksReleased": true,
+  "referencedPrivatePreparedAssemblyExists": true,
+  "publicationOfReferencedGroupInferred": false
+}

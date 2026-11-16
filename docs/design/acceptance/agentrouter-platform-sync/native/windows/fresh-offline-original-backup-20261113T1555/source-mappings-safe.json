@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "status": "private-assembly-safe-originals-and-one-explicit-derivation",
+  "mappings": [
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prm-1113-8798425b/01-fresh-offline-backup.ps1",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/fresh-offline-original-backup-20261113T1555/sources/01-fresh-offline-backup.ps1",
+      "sourceSha256": "a5ca1344c232c390408ab32b68a86b330e5b37c610c03791a608cfe03ffbd4c1",
+      "sourceBytes": 7641,
+      "archivedSha256": "a5ca1344c232c390408ab32b68a86b330e5b37c610c03791a608cfe03ffbd4c1",
+      "archivedBytes": 7641,
+      "transform": "byte-exact",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/home/han/.local/state/orchester-delivery/20261113/root-resumed-continuation/invoke-native-fresh-offline-original-backup-20261113.ps1",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/fresh-offline-original-backup-20261113T1555/sources/invoke-native-fresh-offline-original-backup-20261113.ps1",
+      "sourceSha256": "e2067c8eac4e667e039989d79951b7dd97466232208d4a578bfec73697d8ccc7",
+      "sourceBytes": 928,
+      "archivedSha256": "e2067c8eac4e667e039989d79951b7dd97466232208d4a578bfec73697d8ccc7",
+      "archivedBytes": 928,
+      "transform": "byte-exact",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Temp/ow5-b6a630ee5c59d13b61baf13e/sources/d3ab84bc805252121a543a01d16c0923.ps1",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/fresh-offline-original-backup-20261113T1555/sources/d3ab84bc805252121a543a01d16c0923.ps1",
+      "sourceSha256": "e2067c8eac4e667e039989d79951b7dd97466232208d4a578bfec73697d8ccc7",
+      "sourceBytes": 928,
+      "archivedSha256": "e2067c8eac4e667e039989d79951b7dd97466232208d4a578bfec73697d8ccc7",
+      "archivedBytes": 928,
+      "transform": "byte-exact",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Temp/ow5-b6a630ee5c59d13b61baf13e/jobs/d3ab84bc805252121a543a01d16c0923/start-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/fresh-offline-original-backup-20261113T1555/start-safe.json",
+      "sourceSha256": "320678ab39f0e188868d58f7163d6706ed968d6dec25f06beaeac1ed29ea0cc9",
+      "sourceBytes": 388,
+      "archivedSha256": "320678ab39f0e188868d58f7163d6706ed968d6dec25f06beaeac1ed29ea0cc9",
+      "archivedBytes": 388,
+      "transform": "byte-exact",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Temp/ow5-b6a630ee5c59d13b61baf13e/jobs/d3ab84bc805252121a543a01d16c0923/terminal-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/fresh-offline-original-backup-20261113T1555/terminal-safe.json",
+      "sourceSha256": "a75074a49684ac568e2d9579967e860191c8f8828fa0a2bd89f1f62f2c690145",
+      "sourceBytes": 453,
+      "archivedSha256": "a75074a49684ac568e2d9579967e860191c8f8828fa0a2bd89f1f62f2c690145",
+      "archivedBytes": 453,
+      "transform": "byte-exact",
+      "sourceUnchangedThroughCopy": true
+    },
+    {
+      "sourcePath": "/mnt/c/Users/han/AppData/Local/Orchester-build/continue-20261111-monitors-final21-71def64/prm-1113-8798425b/fresh-offline-backup-safe.json",
+      "destinationPath": "docs/design/acceptance/agentrouter-platform-sync/native/windows/fresh-offline-original-backup-20261113T1555/fresh-offline-backup-public-derived-safe.json",
+      "sourceSha256": "c2277a82ccf1df70c61ac18190fdc803801053f54d36dcbdcff06febd89a090d",
+      "sourceBytes": 2402,
+      "archivedSha256": "158ffa766cfacf0cd0e9d65b1fe0bff5feca15f686471a64eb748337d6f9afa2",
+      "archivedBytes": 1562,
+      "transform": "remove-only-top-level-backupDirectory-property",
+      "omittedJsonPointers": [
+        "/backupDirectory"
+      ],
+      "omittedPrivateValueIncluded": false,
+      "allRetainedDecodedLeafValuesExact": true,
+      "retainedDecodedLeafComparisonCount": 42,
+      "sourceUnchangedThroughCopy": true
+    }
+  ],
+  "sourceMappingCount": 6,
+  "rawLogRequestKeyMacPrivateManifestInventoryOrBackupContentsRead": false,
+  "privateBackupDirectoryOnlyOmittedFromDerivedResult": true,
+  "repositoryOrGitMutation": false
+}
