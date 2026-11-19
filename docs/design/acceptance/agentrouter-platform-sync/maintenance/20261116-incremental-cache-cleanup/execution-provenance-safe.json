@@ -1,0 +1,22 @@
+{
+  "authorizedDirectoryAbsentCurrent": true,
+  "beforeInventoryHashIsMetadataInventoryNotFileContents": true,
+  "fileSHA256": {
+    "before-inventory-private.json": "f70fbd325979052b62d4c5c7c6bf59ccf2d6f63ea72079680eaf2fb9bc48a447",
+    "cleanup-owned-incremental.py": "2a456ab67fd46097d3b7d97c1e8471aad11b91c03da2feee329f4e97a7ade7c8",
+    "cleanup-result-safe.json": "e49dd3246978bfbc4bb538998957970e0dc15724ac1cf132288fe558e9985ccf",
+    "process-usage-before-safe.json": "66330086dce96497fa3f2921b69ff75d33efb27cadeade9f9a8625c10f2f824d",
+    "windows-pdb-preparation-plan-safe.json": "1377f3acc25350cf97d343410a1bc2429582cedaaf5cdf5be099ecef6b945b5a"
+  },
+  "observedAtUtc": "2026-11-16T10:43:57.588753+00:00",
+  "observedToolExitCode": 0,
+  "originalUnifiedExecSessionId": 90014,
+  "physicalOrCDriveReleaseClaimed": false,
+  "schemaVersion": 1,
+  "scriptExecutedOnce": true,
+  "scriptRestarted": false,
+  "scriptResultAndToolExitAgree": true,
+  "scriptResultExitCode": 0,
+  "sourceExecution": "tools.exec_command with final tools.write_stdin completion",
+  "windowsNativeProbeOrDeletionExecuted": false
+}

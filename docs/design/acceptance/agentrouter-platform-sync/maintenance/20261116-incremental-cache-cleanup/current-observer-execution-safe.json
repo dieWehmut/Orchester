@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "command": "python3 docs/design/acceptance/agentrouter-platform-sync/maintenance/20261116-incremental-cache-cleanup/observe-current-readonly.py",
+  "observedToolExitCode": 0,
+  "outputIsOriginalToolStdout": true,
+  "outputArtifact": "current-readonly-safe.json",
+  "observerArtifact": "observe-current-readonly.py",
+  "originalCleanupUnifiedExecSessionId": 90014,
+  "originalCleanupToolExitCode": 0,
+  "cleanupRerunByObserver": false,
+  "nativeWindowsActions": 0,
+  "processSignals": 0
+}

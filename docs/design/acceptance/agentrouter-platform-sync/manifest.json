@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-16T09:30:08.754637+00:00",
+  "createdAt": "2026-11-19T05:52:28.229457+00:00",
   "status": "dated-linux-actual-reboot-autostart-and-state-verified-full-platform-runtime-pending",
   "summaryPath": "summary.json",
   "files": [
@@ -603,6 +603,61 @@
       "path": "deployments/pages/visual/site-final21-phone-dom.json",
       "sha256": "2a6ce2142d38f782b059f1b2484eafe0231184782331852eea94e239ed4e10c9",
       "bytes": 2124
+    },
+    {
+      "path": "maintenance/20261116-incremental-cache-cleanup/README.md",
+      "sha256": "03512edbe91b0caadc0eed230fa7ff90f29fd964e92233df08088764b4c3e047",
+      "bytes": 3076
+    },
+    {
+      "path": "maintenance/20261116-incremental-cache-cleanup/cleanup-owned-incremental.py",
+      "sha256": "2a456ab67fd46097d3b7d97c1e8471aad11b91c03da2feee329f4e97a7ade7c8",
+      "bytes": 9301
+    },
+    {
+      "path": "maintenance/20261116-incremental-cache-cleanup/cleanup-result-safe.json",
+      "sha256": "e49dd3246978bfbc4bb538998957970e0dc15724ac1cf132288fe558e9985ccf",
+      "bytes": 2040
+    },
+    {
+      "path": "maintenance/20261116-incremental-cache-cleanup/continuation-20261119-current-readonly-safe.json",
+      "sha256": "d607864483c4e1cd3848dd6ac04d2a962b02c5d230ca80abaf64339bebd43027",
+      "bytes": 1283
+    },
+    {
+      "path": "maintenance/20261116-incremental-cache-cleanup/continuation-20261119-observer-execution-safe.json",
+      "sha256": "0dc7cb8d93b33decc2c7541b0e5609df4b0390ad605934f74577bc545e3b2715",
+      "bytes": 429
+    },
+    {
+      "path": "maintenance/20261116-incremental-cache-cleanup/current-observer-execution-safe.json",
+      "sha256": "124a7a98ca745ae68df5cfa7fcf0788f508304b6a22ba54e894a89ad2d3adbd8",
+      "bytes": 514
+    },
+    {
+      "path": "maintenance/20261116-incremental-cache-cleanup/current-readonly-safe.json",
+      "sha256": "0b21d0786dc97ce04f3c586f66d87435d63581845b0c55ae9909b2a7978d60ff",
+      "bytes": 1283
+    },
+    {
+      "path": "maintenance/20261116-incremental-cache-cleanup/execution-provenance-safe.json",
+      "sha256": "388195fabb605257e1f68b9c11d4f909d68d816acf2efb195b467b246be1d7e9",
+      "bytes": 1112
+    },
+    {
+      "path": "maintenance/20261116-incremental-cache-cleanup/observe-current-readonly.py",
+      "sha256": "05c6400d26fbfd8d2c436826169a57ef43c05b98f7c487c5daba504841612fd3",
+      "bytes": 3591
+    },
+    {
+      "path": "maintenance/20261116-incremental-cache-cleanup/process-usage-before-safe.json",
+      "sha256": "66330086dce96497fa3f2921b69ff75d33efb27cadeade9f9a8625c10f2f824d",
+      "bytes": 274
+    },
+    {
+      "path": "maintenance/20261116-incremental-cache-cleanup/source-mappings-safe.json",
+      "sha256": "12a02f457bad88dc6fd13a06499eb87c6cb4026a3fe37ec785b5a738eb7c3328",
+      "bytes": 3767
     },
     {
       "path": "maintenance/completed-official-installer-cache-cleanup.json",
@@ -4726,8 +4781,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "9a98625ef1e9e9b75d2f876afc418b7e7c0e59166f6a5b9b56a7083ada1c5b94",
-      "bytes": 56559
+      "sha256": "194450cc7d8e8b329c02252ed42c8e5089c7de5c016a6243e11e43d3fb7a1d9a",
+      "bytes": 57133
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -4751,8 +4806,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "f90da5f6221a7dca4042276abbc6d07cd41d5fbe8be4ddb8e651d21f93bf9022",
-      "bytes": 84169
+      "sha256": "d69756ee81394386f793fec05da0443eedb42d92cc1b4e231c200c764df49938",
+      "bytes": 84709
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
@@ -4836,5 +4891,5 @@
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
-  "checkpointScope": "Earlier public receipts and original failed Desktop18/executor137/ten unrecovered creator-handle boundaries remain unchanged. Worker4 native startup/advancing heartbeat/client activation/input-cursor and original GUI37324 normalMSAA0/nine fresh-held terminal identities are verified in their source epochs. Fresh isolated frozen71 actual native5 Desktop18 job53f6e99 ended0: 18checks/7PUT200/pageErrors0/21providers42images7services/actual per-instance DTO-nativeUI correspondence/two actual reviewed PNG ACKs; newGUI443516 normalMSAA0/all641 unique held GUI identities terminal/oneNode completion gate0/CDP19322+64420 released. Separate independent Node OS-exit receipt and universal image-query success are not claimed. Fresh native offline original backup0/sixroots-fiveexisting/677files-readlocks/source-before-copy-after equal/locks released and actual default Desktop+Remote same-volume staged-directory promotion0/e4aa765b+24c8f980/sibling backups/external state byte-exact are verified. Source-built NotSigned/no native or NSIS installer/defaultLaunch0; prior promotion1 and CIM diagnosis0 retained. Actual default GUI launch/213 task-record retention, managedRemote7338 runtime, current Windows original-five credential/token wire, vendor installation and DeepSeek GUI remain incomplete; unarchived running operations do not change public status. Historical unregistered-child identity/closure and wrong-Linux full-package rollback remain unproved boundaries, not new recovery tasks. All966 archive files are included, root manifest excludes itself; production731 inputs stay frozen71. Native/runtime PID, listener, service and worker observations retain their original source-epoch dates; the 2026-11-16 archive/source review establishes no current process liveness or native execution-channel availability. November16 actual WSL reboot/autostart and original5run/5auth logical retention are now verified by the separately dated28-file group; failed first observer1 and corrected observer0 remain distinct. Current Windows original-five token wire to listener427/ticks342 remains pending."
+  "checkpointScope": "Earlier public receipts and original failed Desktop18/executor137/ten unrecovered creator-handle boundaries remain unchanged. Worker4 native startup/advancing heartbeat/client activation/input-cursor and original GUI37324 normalMSAA0/nine fresh-held terminal identities are verified in their source epochs. Fresh isolated frozen71 actual native5 Desktop18 job53f6e99 ended0: 18checks/7PUT200/pageErrors0/21providers42images7services/actual per-instance DTO-nativeUI correspondence/two actual reviewed PNG ACKs; newGUI443516 normalMSAA0/all641 unique held GUI identities terminal/oneNode completion gate0/CDP19322+64420 released. Separate independent Node OS-exit receipt and universal image-query success are not claimed. Fresh native offline original backup0/sixroots-fiveexisting/677files-readlocks/source-before-copy-after equal/locks released and actual default Desktop+Remote same-volume staged-directory promotion0/e4aa765b+24c8f980/sibling backups/external state byte-exact are verified. Source-built NotSigned/no native or NSIS installer/defaultLaunch0; prior promotion1 and CIM diagnosis0 retained. Actual default GUI launch/213 task-record retention, managedRemote7338 runtime, current Windows original-five credential/token wire, vendor installation and DeepSeek GUI remain incomplete; unarchived running operations do not change public status. Historical unregistered-child identity/closure and wrong-Linux full-package rollback remain unproved boundaries, not new recovery tasks. All966 archive files are included, root manifest excludes itself; production731 inputs stay frozen71. Native/runtime PID, listener, service and worker observations retain their original source-epoch dates; the 2026-11-16 archive/source review establishes no current process liveness or native execution-channel availability. November16 actual WSL reboot/autostart and original5run/5auth logical retention are now verified by the separately dated28-file group; failed first observer1 and corrected observer0 remain distinct. Current Windows original-five token wire to listener427/ticks342 remains pending. An eleven-file November16 incremental-cache archive with November19 readonly continuation proves the selected deletion and unchanged original7337 identity only; complete platform delivery still has separate open gates."
 }
