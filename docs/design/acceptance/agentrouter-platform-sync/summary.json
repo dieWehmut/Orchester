@@ -546,7 +546,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-16T09:30:08.754637+00:00",
+  "updatedAt": "2026-11-19T05:52:28.229457+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -1084,5 +1084,15 @@
   "currentNativeProcessLivenessRevalidatedScope": "Linux named managed7337 service only, observed2026-11-16T08:59:40.529625+00:00",
   "historicalBefore20261116Reboot_currentLinuxRetainedOriginalWriterFd": 7,
   "historicalBefore20261116Reboot_currentLinuxOriginalPidfdHeld": true,
-  "currentLinuxWriterFdAndPidfdDirectlyInspectedThisRebootAudit": false
+  "currentLinuxWriterFdAndPidfdDirectlyInspectedThisRebootAudit": false,
+  "currentLinuxIncrementalCacheCleanup": {
+    "proof": "maintenance/20261116-incremental-cache-cleanup/cleanup-result-safe.json",
+    "regularFileLogicalBytesRemoved": 11441931494,
+    "uniqueIdentityLogicalBytes": 10981446886,
+    "physicalOrCDriveReleaseClaimed": false,
+    "lastReadOnlyProof": "maintenance/20261116-incremental-cache-cleanup/continuation-20261119-current-readonly-safe.json",
+    "lastObservedAtUtc": "2026-11-19T05:52:28.148101+00:00",
+    "original7337ElfAndProcessExact": true,
+    "cleanupExecutedOnce": true
+  }
 }

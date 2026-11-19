@@ -1,0 +1,97 @@
+{
+  "assembledAtUtc": "2026-11-16T10:47:00.553363+00:00",
+  "continuedAtUtc": "2026-11-19T05:52:28.148101+00:00",
+  "deletedCounts": {
+    "directories": 1473,
+    "files": 42657,
+    "hardLinkedFiles": 7835,
+    "symlinks": 0
+  },
+  "deletedRegularFileLogicalBytes": 11441931494,
+  "deletedUniqueIdentityLogicalBytes": 10981446886,
+  "externalOriginalProvenanceReferences": [
+    "before-inventory-private.json",
+    "windows-pdb-preparation-plan-safe.json"
+  ],
+  "files": [
+    {
+      "bytes": 3076,
+      "originalPrivateSourceBytesPreserved": false,
+      "path": "README.md",
+      "sha256": "03512edbe91b0caadc0eed230fa7ff90f29fd964e92233df08088764b4c3e047",
+      "sourceFamily": "new-readonly-observer-or-documentation"
+    },
+    {
+      "bytes": 9301,
+      "originalPrivateSourceBytesPreserved": true,
+      "path": "cleanup-owned-incremental.py",
+      "sha256": "2a456ab67fd46097d3b7d97c1e8471aad11b91c03da2feee329f4e97a7ade7c8",
+      "sourceFamily": "original-owned-cleanup-artifact"
+    },
+    {
+      "bytes": 2040,
+      "originalPrivateSourceBytesPreserved": true,
+      "path": "cleanup-result-safe.json",
+      "sha256": "e49dd3246978bfbc4bb538998957970e0dc15724ac1cf132288fe558e9985ccf",
+      "sourceFamily": "original-owned-cleanup-artifact"
+    },
+    {
+      "bytes": 514,
+      "originalPrivateSourceBytesPreserved": false,
+      "path": "current-observer-execution-safe.json",
+      "sha256": "124a7a98ca745ae68df5cfa7fcf0788f508304b6a22ba54e894a89ad2d3adbd8",
+      "sourceFamily": "new-readonly-observer-or-documentation"
+    },
+    {
+      "bytes": 1283,
+      "originalPrivateSourceBytesPreserved": false,
+      "path": "current-readonly-safe.json",
+      "sha256": "0b21d0786dc97ce04f3c586f66d87435d63581845b0c55ae9909b2a7978d60ff",
+      "sourceFamily": "new-readonly-observer-or-documentation"
+    },
+    {
+      "bytes": 1112,
+      "originalPrivateSourceBytesPreserved": true,
+      "path": "execution-provenance-safe.json",
+      "sha256": "388195fabb605257e1f68b9c11d4f909d68d816acf2efb195b467b246be1d7e9",
+      "sourceFamily": "original-owned-cleanup-artifact"
+    },
+    {
+      "bytes": 3591,
+      "originalPrivateSourceBytesPreserved": false,
+      "path": "observe-current-readonly.py",
+      "sha256": "05c6400d26fbfd8d2c436826169a57ef43c05b98f7c487c5daba504841612fd3",
+      "sourceFamily": "new-readonly-observer-or-documentation"
+    },
+    {
+      "bytes": 274,
+      "originalPrivateSourceBytesPreserved": true,
+      "path": "process-usage-before-safe.json",
+      "sha256": "66330086dce96497fa3f2921b69ff75d33efb27cadeade9f9a8625c10f2f824d",
+      "sourceFamily": "original-owned-cleanup-artifact"
+    },
+    {
+      "bytes": 1283,
+      "originalPrivateSourceBytesPreserved": false,
+      "path": "continuation-20261119-current-readonly-safe.json",
+      "sha256": "d607864483c4e1cd3848dd6ac04d2a962b02c5d230ca80abaf64339bebd43027",
+      "sourceFamily": "new-continuation-readonly-observation"
+    },
+    {
+      "bytes": 429,
+      "originalPrivateSourceBytesPreserved": false,
+      "path": "continuation-20261119-observer-execution-safe.json",
+      "sha256": "0dc7cb8d93b33decc2c7541b0e5609df4b0390ad605934f74577bc545e3b2715",
+      "sourceFamily": "new-continuation-readonly-observation"
+    }
+  ],
+  "mappingExcludesItself": true,
+  "physicalOrCDriveReleaseClaimed": false,
+  "privateCanonicalMetadataRowsSHA256": "b06d3b175e5d33a96cbe82de79eae46fd9922b62d7d503e1a3481221ff49138a",
+  "privateCompleteInventoryBytes": 9268086,
+  "privateCompleteInventoryCopied": false,
+  "privateCompleteInventorySHA256": "f70fbd325979052b62d4c5c7c6bf59ccf2d6f63ea72079680eaf2fb9bc48a447",
+  "privateInventoryHashIncludesFileContents": false,
+  "schemaVersion": 1,
+  "windowsProbeOrDeletionProvedByThisArchive": false
+}
