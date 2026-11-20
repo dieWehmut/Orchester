@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "startedAtUtc": "2026-11-20T04:13:32.176830+00:00",
+  "endedAtUtc": "2026-11-20T04:14:36.895239+00:00",
+  "elapsedSeconds": 62.43531383795198,
+  "actualExternalNativeExitCode": 0,
+  "bridgeSourceSha256": "25681075af7414b556a7c95a08b8f284a706633716ea78f8bb5b26f453304210",
+  "copiedSystemCmdSha256": "15cd209c995b7d3009c91ca40892d5b8f1fb162f3e5f10716642ea278e8e0d7b",
+  "nativeScriptSourceSha256": "06c203c371d381d008f4aeaae8da1984cae86910730ef5f3422d93bbfc75e92e",
+  "nativePowerShellWorkingDirectorySetByScript": "C:\\Users\\han",
+  "stdoutSha256": "f0b6268573c7434a08b42dd640a618a2a8b02d65b38c559f7edd12480a4f0a37",
+  "stderrSha256": "303c50e6ec56685e60110591857cef32c7e555e1044bba10f1cd4f690c56ae56",
+  "stdoutBytes": 3361,
+  "stderrBytes": 52769,
+  "staleDrvfsMountChanged": false,
+  "processSignals": 0,
+  "credentialCommands": 0,
+  "modelCalls": 0,
+  "privateValuesIncludedInReceipt": false
+}

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "status": "agent-recorded-original-launch-bridge-timeout",
+  "evidenceOrigin": "tools.write_stdin session64387 returned Python subprocess.TimeoutExpired after300seconds",
+  "timeoutSeconds": 300,
+  "originalBridgeSourceSha256": "25681075af7414b556a7c95a08b8f284a706633716ea78f8bb5b26f453304210",
+  "productionManagerRestarted": false,
+  "subprocessRunTimeoutMayKillOnlyInteropForwarder": true,
+  "nativeManagedServerStillLiveProvenLater": true,
+  "rawRuntimeProcessExitCodeNotInferred": true,
+  "privateValuesIncluded": false
+}
