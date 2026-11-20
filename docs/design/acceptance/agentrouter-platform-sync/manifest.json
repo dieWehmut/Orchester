@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-20T02:46:21.810273+00:00",
-  "status": "official-claude-installations-verified-other-platform-continuation-in-progress",
+  "createdAt": "2026-11-20T03:00:25.862949+00:00",
+  "status": "default-installation-and-native-platform-history-verified-current-windows-revalidation-and-workbuddy-global-linux-pending",
   "summaryPath": "summary.json",
   "files": [
     {
@@ -738,6 +738,11 @@
       "path": "maintenance/current-worktree-cleanup-state-safe.json",
       "sha256": "867310fb60421717a9ed51bc6e3bdbc41b809adc72305645f5f98f43cbe6f84d",
       "bytes": 1637
+    },
+    {
+      "path": "maintenance/git-delivery/20261120-six-step-delivery-safe.json",
+      "sha256": "cf05430c476d5744ab2353c59fff823f5206455e8791e3a436466dba84bb688a",
+      "bytes": 4155
     },
     {
       "path": "maintenance/git-delivery/eighth-step-delivery-safe.json",
@@ -6216,8 +6221,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "d413232121834228f0f550eb061333c941bd0c91fcfbfcc341b9f7abc52f47c7",
-      "bytes": 64649
+      "sha256": "7adf2cdb1b839ec3e5ba8a8af2ab15eec53ced9e3b73d4e6a694d69d0e3e13f9",
+      "bytes": 65054
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -6241,8 +6246,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "5e417d30a283a54c4b4e2f9fafdfe61b18f7c07134d89fcfada0fc371171cff4",
-      "bytes": 92783
+      "sha256": "0490a54e08b43aa29cf7089e24bcd81da8bcab59bf17b841ae1c6432a7f6f1bb",
+      "bytes": 93131
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
@@ -6326,5 +6331,5 @@
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
-  "checkpointScope": "All listed tracked archive files are hash/size-bound; manifest excludes itself. Historical receipt bytes and dates remain unchanged. This checkpoint adds self-contained official Windows/WSL Claude installation evidence, independent review, and 17 offline semantic/signature negative cases. Windows independent GUI and account/model availability are not claimed. Other platform finalization and WorkBuddy global native Linux package remain separate pending scopes. Site style and font documentation changed after frozen71; no new blanket731-production-input equality is asserted."
+  "checkpointScope": "Every listed tracked public artifact is hash/size-bound, excluding this manifest itself. Six continuation content changes have separate validation, commits, main merges and actual remote ref readback. Official Claude Windows/WSL installation, original Windows Android five credential/currentLinux wire, Studio tests/analysis, default Desktop original213records and historical managed7338 external OS0 are verified in dated epochs. Current November20 Windows revalidation failed and /mnt/c returns I/O errno5; official international WorkBuddy Linux exact advertised packages404 remain unavailable. Full objective is false. Site HTML/CSS/fontREADME changed in reviewed commits, so only728of731 original inputs remain equal; all368backend inputs remain frozen71. Historical failures, manager exit1, source correction and later external nonzero revalidations are preserved. No omitted private state, account/model availability or currentWindows liveness is inferred."
 }
