@@ -127,8 +127,12 @@ it("stops retrying expired authentication and permits explicit re-pair", async (
 });
 function deferred<T>() {
   let resolve!: (value: T) => void;
-  const promise = new Promise<T>((r) => (resolve = r));
-  return { promise, resolve };
+  let reject!: (reason: unknown) => void;
+  const promise = new Promise<T>((r, j) => {
+    resolve = r;
+    reject = j;
+  });
+  return { promise, resolve, reject };
 }
 it("keeps a new device pairing code when an old credential write finishes", async () => {
   const save = deferred<void>(),
@@ -324,4 +328,96 @@ it("removes a selected task that another device deleted during output polling", 
   expect(vi.getTimerCount()).toBe(0);
   expect(control.error.value).toContain("其他设备删除");
   expect(control.connectionStatus.value).toBe("connected");
+});
+
+it.each([
+  ["project catalog", () => control.refreshProjects()],
+  ["agent catalog", () => control.listAgents("project")],
+  ["folder browser", () => control.browseFolders("/work")],
+  ["project creation", () => control.addProject("/work")],
+] as const)("marks expired authentication from %s as needing pairing", async (_, invoke) => {
+  request.mockRejectedValueOnce(new RemoteError(401, "expired"));
+  await expect(invoke()).rejects.toMatchObject({ status: 401 });
+  expect(control.connectionStatus.value).toBe("needs_pairing");
+});
+
+it.each([
+  ["agent catalog", () => control.listAgents("old-project"), { agents: [] }],
+  ["folder browser", () => control.browseFolders("/old"), {
+    path: "/old", parent_path: null, roots: [], entries: [], next_offset: null,
+  }],
+  ["terminal request", () => control.remoteRequest("/terminals"), { terminals: [] }],
+] as const)("rejects a late %s result after reconnecting", async (_, invoke, response) => {
+  const old = deferred<unknown>();
+  request.mockReturnValueOnce(old.promise);
+  const result = expect(invoke()).rejects.toThrow("连接已切换");
+  await control.connect();
+  old.resolve(response);
+  await result;
+  expect(control.connectionStatus.value).toBe("connected");
+});
+
+it.each([
+  ["project catalog", () => control.refreshProjects()],
+  ["agent catalog", () => control.listAgents("project")],
+  ["folder browser", () => control.browseFolders("/work")],
+  ["project creation", () => control.addProject("/work")],
+  ["terminal request", () => control.remoteRequest("/terminals")],
+] as const)("ignores a late %s authentication failure after reconnecting", async (_, invoke) => {
+  const old = deferred<unknown>();
+  request.mockReturnValueOnce(old.promise);
+  const result = expect(invoke()).rejects.toThrow("连接已切换");
+  await control.connect();
+  old.reject(new RemoteError(401, "expired"));
+  await result;
+  expect(control.connectionStatus.value).toBe("connected");
+});
+
+it("does not refresh the new computer after an old project creation finishes", async () => {
+  const old = deferred<unknown>();
+  request.mockReturnValueOnce(old.promise);
+  const result = expect(control.addProject("/old")).rejects.toThrow("连接已切换");
+  await control.connect({ address: "http://second:7337", name: "second computer" });
+  const calls = request.mock.calls.length;
+  old.resolve({ id: "old-project", name: "old", path: "/old" });
+  await result;
+  expect(request.mock.calls).toHaveLength(calls);
+  expect(control.projects.value).toEqual([]);
+});
+
+it("does not return an old project when reconnecting during its catalog refresh", async () => {
+  const catalog = deferred<unknown>();
+  request
+    .mockResolvedValueOnce({ id: "old-project", name: "old", path: "/old" })
+    .mockReturnValueOnce(catalog.promise);
+  const result = expect(control.addProject("/old")).rejects.toThrow("连接已切换");
+  await vi.waitFor(() => expect(request).toHaveBeenCalledWith("/projects", "GET", undefined));
+  await control.connect({ address: "http://second:7337", name: "second computer" });
+  catalog.resolve({ projects: [{ id: "old-project", name: "old", path: "/old" }] });
+  await result;
+  expect(control.projects.value).toEqual([]);
+});
+
+it("keeps the draft without submitting when its agent is unavailable", async () => {
+  control.agent.value = "";
+  control.prompt.value = "keep this draft";
+  const calls = request.mock.calls.length;
+  await control.submit();
+  expect(request.mock.calls).toHaveLength(calls);
+  expect(control.prompt.value).toBe("keep this draft");
+});
+
+it("keeps the catalog refreshed after adding a project when an older refresh finishes later", async () => {
+  const older = deferred<unknown>();
+  request.mockReturnValueOnce(older.promise);
+  const refreshing = control.refreshProjects();
+  const added = { id: "new-project", name: "New", path: "/new" };
+  request
+    .mockResolvedValueOnce(added)
+    .mockResolvedValueOnce({ projects: [added] });
+  await expect(control.addProject("/new")).resolves.toEqual(added);
+  expect(control.projects.value).toEqual([added]);
+  older.resolve({ projects: [] });
+  await refreshing;
+  expect(control.projects.value).toEqual([added]);
 });
