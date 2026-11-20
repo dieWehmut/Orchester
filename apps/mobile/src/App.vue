@@ -170,6 +170,8 @@ async function forget(device: SavedDevice) {
   if (host) await fleet.forgetHost(host);
 }
 async function browse(path?: string, more = false) {
+  const current = more ? folder.value : null;
+  if (more && (!current || current.next_offset === null)) return;
   const host = selectedHost.value,
     revision = ++folderRevision;
   if (!host) return;
@@ -177,8 +179,8 @@ async function browse(path?: string, more = false) {
   folderError.value = "";
   try {
     const page = await host.control.browseFolders(
-      path,
-      more ? (folder.value?.next_offset ?? 0) : 0,
+      current?.path ?? path,
+      current?.next_offset ?? 0,
     );
     if (revision !== folderRevision || host !== selectedHost.value) return;
     folder.value =
@@ -625,7 +627,7 @@ watch(screen, async () => {
           :error="folderError"
           mode="project"
           @navigate="browse"
-          @more="browse(folderPath, true)"
+          @more="browse(undefined, true)"
           @choose-directory="addProject"
       /></template>
       <template v-else-if="screen === 'agents'"

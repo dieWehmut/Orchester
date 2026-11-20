@@ -39,14 +39,16 @@ function chooseTask(id: string) {
   const run = tasks.value.find((task) => task.id === id);
   if (run) void open(run);
 }
-async function browse(target: string, more = false) {
+async function browse(target?: string, more = false) {
+  const current = more ? folder.value : null;
+  if (more && (!current || current.next_offset === null)) return;
   const revision = ++request;
   folderBusy.value = true;
   folderError.value = "";
   try {
     const page = await control.browseFolders(
-      target,
-      more ? (folder.value?.next_offset ?? 0) : 0,
+      current?.path ?? target,
+      current?.next_offset ?? 0,
     );
     if (revision !== request) return;
     folder.value =
@@ -114,7 +116,7 @@ async function open(run: Run) {
         :error="folderError"
         mode="file"
         @navigate="browse"
-        @more="browse(path, true)"
+        @more="browse(undefined, true)"
         @choose-file="attach"
       />
       <template v-else>
