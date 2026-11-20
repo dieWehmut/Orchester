@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "createdAtUtc": "2026-11-20T04:11:30.351194+00:00",
+  "scope": "All archive files except manifest and derived verification output",
+  "artifacts": [
+    {
+      "path": "README.md",
+      "bytes": 3003,
+      "sha256": "9898bb8b141d54a4941b20dedac536cc8a0e316a9a2e15ca952982ec3475072a"
+    },
+    {
+      "path": "actual-linux-identity-safe.json",
+      "bytes": 2110,
+      "sha256": "0b0a7236139a5f9f1089aed50ecb6a23af6a3d28ba9e6fb7eccbbbd09870b87f"
+    },
+    {
+      "path": "candidate-discovery-safe.json",
+      "bytes": 2963,
+      "sha256": "1308ac1ff85ab4087615d86b3c67e5fafcd851021a5978b05642da59e21b2f77"
+    },
+    {
+      "path": "failures/gui-attempt1-outer-safe.json",
+      "bytes": 2152,
+      "sha256": "d4d72ae8d9ca7826daff02fbeec44e0df7aa116212305368a499bccf1d1399f3"
+    },
+    {
+      "path": "failures/gui-attempt1-outer.stderr.txt",
+      "bytes": 68,
+      "sha256": "9e58e93fe7b213cc36dcedb81ccb76e396680fd2a2963c6d86cb884301135e78"
+    },
+    {
+      "path": "failures/gui-attempt2-outer-safe.json",
+      "bytes": 2202,
+      "sha256": "e42a41b53a8d6c2217fa8035ef2099bd6ecbd8efbdf377a0962af6977c8351a6"
+    },
+    {
+      "path": "failures/gui-attempt2-outer.stderr.txt",
+      "bytes": 276,
+      "sha256": "4bb8881486ec123fc6ee17f5c7bec9b71fbc3252daf961c0ac2c181ea9089632"
+    },
+    {
+      "path": "failures/gui-attempt2-xvfb.stderr.txt",
+      "bytes": 549,
+      "sha256": "19b4767e1c4ee2a201e8375ff2a59138cc94219fc52e05ab8fa383e0a1836735"
+    },
+    {
+      "path": "failures/headless-gtk-startup-safe.json",
+      "bytes": 21845,
+      "sha256": "a17cd391641429c070e696c1166a8f157e3ddff8b29ccfbd7decd0983a85e23d"
+    },
+    {
+      "path": "failures/version-initial-isolation-error-safe.json",
+      "bytes": 2033,
+      "sha256": "1bcf1102b82dfce3b608b5f7fb0049d94f8716ec77b9680a6d12114839c0e754"
+    },
+    {
+      "path": "failures/version-without-display-safe.json",
+      "bytes": 6043,
+      "sha256": "ff3f9b949edb4d713d5a0ab33c9403ab2d04d6b18307be95bcee8bdc967f2ba3"
+    },
+    {
+      "path": "gui-native-completion-derived-safe.json",
+      "bytes": 1214,
+      "sha256": "8cc4349b90302f8faf70446d941251f78054d76a08a20eaa482b1cd0e638cfb7"
+    },
+    {
+      "path": "native-international-installation-safe.json",
+      "bytes": 3223,
+      "sha256": "856eb0cfd923ea86baebb018f08ff30f3d9c3d0dfc8188288e250c41caefe943"
+    },
+    {
+      "path": "native-prefix-extraction-safe.json",
+      "bytes": 1244,
+      "sha256": "f54381679aa785ca82723b271ded6eee44ce7426afda6b6dd5e5a06713c91b9f"
+    },
+    {
+      "path": "official-bucket-publisher-binding-safe.json",
+      "bytes": 894,
+      "sha256": "8dacea660d5d9d0048cd1bdd27552dc09b5a3811cf7e3d02084fde9ff15f9c5c"
+    },
+    {
+      "path": "official-payload-download-safe.json",
+      "bytes": 1225,
+      "sha256": "ab4929a1e7c601b88e2b12714d7088e2f39bb54a21515decf0a2d76206d7f832"
+    },
+    {
+      "path": "omitted-source-bindings-safe.json",
+      "bytes": 3313,
+      "sha256": "1ee00a39824c371b553e9eaa73a97a9369bebe6d4d7167e33e1abd40943f0c8f"
+    },
+    {
+      "path": "preservation-and-profile-final-safe.json",
+      "bytes": 1600,
+      "sha256": "e72952f74762fc8df91f3afd69db90c89c120f65809d2656fb6487a1652ccb77"
+    },
+    {
+      "path": "raw/gui-native-result-safe.json",
+      "bytes": 2770,
+      "sha256": "a1e9303ae94adab313adc67b788977b22b5ba86ddafe862bed729570539868b2"
+    },
+    {
+      "path": "raw/gui-outer-execution-safe.json",
+      "bytes": 2202,
+      "sha256": "c341080f5fb0bbab6471db86a3702e926e324959a1d5bef3449fa71dd37e2b53"
+    },
+    {
+      "path": "raw/independent-install-review-before-gui-safe.json",
+      "bytes": 2582,
+      "sha256": "f38e6ab27c9f3a3d0de7f153bb9b2ce9b47b66770e962b9dd97419b430575db7"
+    },
+    {
+      "path": "sources/actual-linux-package.json",
+      "bytes": 10474,
+      "sha256": "096b2dbd19a33671652255bd40da0d728eb6618a029443cfeed61adadc223e18"
+    },
+    {
+      "path": "sources/discovery-community-manifest.yml",
+      "bytes": 5383,
+      "sha256": "a769761b2c13de599a2a5755925ee560b772890969ee4834244ba57888426873"
+    },
+    {
+      "path": "sources/discovery-community-resolver.sh",
+      "bytes": 4915,
+      "sha256": "60b6b332e51f80471e7cdeb04950b3e26728d16122945c45ca4575afe4181eba"
+    },
+    {
+      "path": "sources/gui-isolated-controller.py",
+      "bytes": 5682,
+      "sha256": "199c74d5a547ccb8a3e48bd6e3b22356898caf6b685519b9878def59063ee491"
+    },
+    {
+      "path": "sources/official-codebuddy-home.html",
+      "bytes": 10145,
+      "sha256": "068c1200e52ba9028f256e447dc51e92c29169f68ffd22939e0d48248f96fee3"
+    },
+    {
+      "path": "sources/run-isolated-gui.py",
+      "bytes": 2473,
+      "sha256": "ef01ae39972df3ba537978266a5271f2a02714117d0c912ee35bd8ed70589bc1"
+    },
+    {
+      "path": "summary-safe.json",
+      "bytes": 3947,
+      "sha256": "834c7d684ef28a507217bef4a0149d09e64444585121d5638f431b7c692ef714"
+    },
+    {
+      "path": "validate.py",
+      "bytes": 17897,
+      "sha256": "656f67e0af30ab50bbabb1eda45b1218e27b447c5934d96ab7707349037dd561"
+    }
+  ]
+}

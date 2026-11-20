@@ -1,0 +1,1 @@
+bwrap: Can't create file at /usr/bin/xkbcomp: Read-only file system

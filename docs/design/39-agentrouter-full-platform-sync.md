@@ -4,6 +4,8 @@
 
 [独立原生命令通道](acceptance/agentrouter-platform-sync/native/windows/20261120-interop-route-recovery/README.md)已实际恢复：新的非管理员 9P 连接读取原 System32 `cmd.exe`，副本与随后原生读取的散列完全相同，Microsoft Windows 签名为 Valid；通过已有会话套接字调用原系统 PowerShell，返回精确 sentinel，外部执行器退出 0。旧 `/mnt/c` 仍返回 I/O 错误，本次没有重挂载、重启 WSL 或停止原服务。初始路径调用失败、复制命令缺少 MUI 的诊断均保留。该通道仅证明原生入口可用，当前 Remote 恢复由后续独立验收判定。
 
+[国际 WorkBuddy Linux 安装](acceptance/agentrouter-platform-sync/native/wsl/20261120-workbuddy-global-installed/README.md)现已完成。沿公开清单找到不同版本的精确厂商 CDN 地址后，核对官方站点对该 bucket 的引用，直接下载官方 `5.7.6.40488862-3e43260f` deb；实际 ELF、ASAR 和产品配置确认国际版身份，使用独立安装目录、`workbuddy-ai` 命令及 `.workbuddy-ai/app` 主配置目录，国内版入口与程序字节保留。隔离原 HOME、禁止外网的 Xvfb 环境实际显示 1199×799 的 WorkBuddy AI 窗口，Ctrl+Q 后应用和外层均退出 0。国际版仍会在新 HOME 的 `.workbuddy/logs` 生成辅助日志，不能称所有辅助路径均隔离；原用户目录未被测试读取。早期无显示环境导致的退出 139 和两次 Xvfb 准备失败保留，未宣称 `--version` 成功、版本最新、登录或模型可用。29 项归档摘要、19 项语义负例和 9 个实际公开文件散列通过。
+
 ## 11 月 19–20 日续验
 
 [默认 Desktop / Remote 原生验收](acceptance/agentrouter-platform-sync/native/windows/20261119-default-runtime/README.md)已恢复原执行器的实际退出证据。11 月 19 日默认桌面保留 213 条原记录，显示 21 个产品、42 张图标，并通过原生托盘正常退出；GUI、Node 和外部执行器均退出 0。默认 Remote 7338 完成 60.38 秒、107 次采样，17 项资源、138 条原始数据库行和 6 份备份保留通过，匿名认证门返回 401，实际外部执行器退出 0。更新方法仍为此前已验证的默认目录原子替换，未执行 NSIS 安装器。

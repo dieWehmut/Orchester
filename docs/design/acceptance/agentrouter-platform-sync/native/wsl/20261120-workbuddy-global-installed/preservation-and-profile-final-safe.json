@@ -1,0 +1,42 @@
+{
+  "observedAtUtc": "2026-11-20T04:06:10.705209+00:00",
+  "domesticPreservationAfter": [
+    {
+      "path": "/home/han/.local/bin/workbuddy",
+      "bytes": 322,
+      "sha256": "11adc0efee1ff96693c1055a1a3e3c62e8cd81d408bf9dacbc4e4f8f4ab334ac",
+      "matchesBefore": true
+    },
+    {
+      "path": "/home/han/.local/share/applications/orchester-workbuddy.desktop",
+      "bytes": 228,
+      "sha256": "e4098750ef91ed2fcede51987fce504f758ada1e677bacc397e94c93eddbf610",
+      "matchesBefore": true
+    },
+    {
+      "path": "/home/han/.local/opt/workbuddy/5.6.2.40046327/opt/WorkBuddy/workbuddy",
+      "bytes": 200842456,
+      "sha256": "13bf1da1273c22f0536ee6a52fbadb3561dd31b63c11e80f7feff6beccac1578",
+      "matchesBefore": true
+    }
+  ],
+  "allDomesticArtifactsByteUnchanged": true,
+  "freshTestHomePrimaryProfileExists": true,
+  "freshTestHomeDomesticNamedHelperFiles": [
+    {
+      "path": ".workbuddy/logs/automation.log",
+      "bytes": 216,
+      "sha256": "c5d1f0217ea42f44eaad11d01125acae4f03c3cf75f5bab1e38bcdeb29e60615"
+    },
+    {
+      "path": ".workbuddy/logs/startup/2026-11-20/6-115835.jsonl",
+      "bytes": 8898,
+      "sha256": "44ca12d98f075a21fa6778b9913a743d06da507b870ab22965e64b50887b13ac"
+    }
+  ],
+  "profileBoundary": "The primary international profile is .workbuddy-ai/app; fresh test HOME also creates .workbuddy/logs for helper logging. No claim that every helper path is edition-specific. Original HOME hidden in all tests.",
+  "originalPrivateProfilesRead": false,
+  "windowsApplicationsTouched": false,
+  "authenticationActions": 0,
+  "modelCalls": 0
+}

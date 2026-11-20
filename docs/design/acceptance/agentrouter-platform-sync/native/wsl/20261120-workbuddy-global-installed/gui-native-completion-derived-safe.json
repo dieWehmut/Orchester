@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "sourceReceiptSha256": "a1e9303ae94adab313adc67b788977b22b5ba86ddafe862bed729570539868b2",
+  "actualOuterExitCode": 0,
+  "actualAppExitCode": 0,
+  "originalGuiReceiptPreserved": true,
+  "observedAllNonInfrastructureAppIdentitiesTerminal": true,
+  "observedNonInfrastructureIdentityCount": 13,
+  "excludedPidNamespaceInit": {
+    "pid": 1,
+    "birthTicks": 32164947,
+    "exeBasename": "bwrap",
+    "scope": "PID namespace init must remain live while the inner controller records results; outer bwrap actual exit0 supplies its terminal observation."
+  },
+  "normalProductCtrlQQuitVerified": true,
+  "appSignals": [],
+  "windowTitle": "WorkBuddy AI",
+  "windowGeometry": {
+    "WINDOW": 2097155,
+    "X": 0,
+    "Y": 0,
+    "WIDTH": 1199,
+    "HEIGHT": 799,
+    "SCREEN": 0
+  },
+  "primaryInternationalProfileCreated": true,
+  "freshHomeAlsoContainsDomesticNamedDirectory": true,
+  "profileBoundary": "Primary international application state is .workbuddy-ai/app. The clean test HOME also created .workbuddy; isolation does not claim every helper/cache namespace is edition-specific. Original real HOME was hidden and inaccessible inside test; no existing profiles read or overwritten."
+}

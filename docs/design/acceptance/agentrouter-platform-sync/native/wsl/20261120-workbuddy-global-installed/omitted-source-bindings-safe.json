@@ -1,0 +1,65 @@
+{
+  "note": "Large binaries/full package metadata/private fresh-test logs omitted; hashes are provenance, not claims that absent files were independently reviewed by the offline validator.",
+  "omitted": [
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261120/workbuddy-new-route/WorkBuddy-linux-x64-5.7.6.40488862-3e43260f.deb",
+      "bytes": 421733316,
+      "sha256": "3cf1244520d54eca391378a29579918122006f5bfdba942fe977b908365e93db",
+      "archiveStatus": "Not copied; retained local source only"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261120/workbuddy-new-route/actual-linux-asar-source-bindings-safe.json",
+      "bytes": 230462,
+      "sha256": "f35248b66b4800f4e1903af3df907a0c8786f05470ef8254f1966f37ecede3b8",
+      "archiveStatus": "Not copied; retained local source only"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261120/workbuddy-new-route/actual-linux-profile-source-review-safe.json",
+      "bytes": 13511,
+      "sha256": "53c9b550bc8639c5e20084db6ce3980ff9b24edca487110f0dee30cb9d76b68a",
+      "archiveStatus": "Not copied; retained local source only"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261120/workbuddy-new-route/additional-official-doc-pages-safe.json",
+      "bytes": 9172,
+      "sha256": "0517793dd6d582692b5352bc3cc471f3d34ef9619a62cd210c430d1695ed1368",
+      "archiveStatus": "Not copied; retained local source only"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261120/workbuddy-new-route/additional-public-source-review-safe.json",
+      "bytes": 12117,
+      "sha256": "bf882cb36df25c99a25b01d479248d0e2cc2db17509a96be6d8af6338fe16ddb",
+      "archiveStatus": "Not copied; retained local source only"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261120/workbuddy-new-route/headless-startup.stdout.private",
+      "bytes": 5463,
+      "sha256": "78755cc8375f067846258f33c88138343973a3e10df847a15ba74825cc71e178",
+      "archiveStatus": "Not copied; retained local source only"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261120/workbuddy-new-route/headless-startup.stderr.private",
+      "bytes": 2863,
+      "sha256": "1fa5111aad9c91e4b6e86fbd53ce095b3d45505e3e41ad450caef48673a29531",
+      "archiveStatus": "Not copied; retained local source only"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261120/workbuddy-new-route/gui-xvfb-attempt3/app.stdout.private",
+      "bytes": 6724,
+      "sha256": "88b0855a494a26d3032924ff465560e78cf32a2da20b866ca66060f58490a117",
+      "archiveStatus": "Not copied; retained local source only"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261120/workbuddy-new-route/gui-xvfb-attempt3/app.stderr.private",
+      "bytes": 4550,
+      "sha256": "f9292889ffad798ee833f0446c64ca393c388cfbbfd48884439dc1749133ba69",
+      "archiveStatus": "Not copied; retained local source only"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-delivery/20261120/workbuddy-new-route/gui-xvfb-attempt3/outer.stderr.private",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archiveStatus": "Not copied; retained local source only"
+    }
+  ]
+}

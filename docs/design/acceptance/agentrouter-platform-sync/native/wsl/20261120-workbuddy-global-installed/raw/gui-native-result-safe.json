@@ -1,0 +1,131 @@
+{
+  "startedAtUtc": "2026-11-20T03:58:34.517212+00:00",
+  "status": "pass",
+  "networkNamespaceIsolated": true,
+  "originalHomeHidden": true,
+  "freshHome": "/tmp/orchester-smoke/home",
+  "appSignals": [],
+  "nativeKeyboardActions": [
+    {
+      "keys": "ctrl+q",
+      "exitCode": 0,
+      "targetOwnedDisplay": true
+    }
+  ],
+  "pidfdIdentities": [
+    {
+      "pid": 1,
+      "birthTicks": 32164947,
+      "exeBasename": "bwrap",
+      "terminal": false
+    },
+    {
+      "pid": 3,
+      "birthTicks": 32164951,
+      "exeBasename": "Xvfb",
+      "terminal": true
+    },
+    {
+      "pid": 6,
+      "birthTicks": 32164968,
+      "exeBasename": "dash",
+      "terminal": true
+    },
+    {
+      "pid": 12,
+      "birthTicks": 32164983,
+      "exeBasename": "workbuddyai",
+      "terminal": true
+    },
+    {
+      "pid": 13,
+      "birthTicks": 32164983,
+      "exeBasename": "workbuddyai",
+      "terminal": true
+    },
+    {
+      "pid": 15,
+      "birthTicks": 32164986,
+      "exeBasename": "workbuddyai",
+      "terminal": true
+    },
+    {
+      "pid": 61,
+      "birthTicks": 32165031,
+      "exeBasename": "workbuddyai",
+      "terminal": true
+    },
+    {
+      "pid": 94,
+      "birthTicks": 32165038,
+      "exeBasename": "workbuddyai",
+      "terminal": true
+    },
+    {
+      "pid": 114,
+      "birthTicks": 32165054,
+      "exeBasename": "workbuddyai",
+      "terminal": true
+    },
+    {
+      "pid": 125,
+      "birthTicks": 32165060,
+      "exeBasename": "workbuddyai",
+      "terminal": true
+    },
+    {
+      "pid": 171,
+      "birthTicks": 32165143,
+      "exeBasename": "dpkg-query",
+      "terminal": true
+    },
+    {
+      "pid": 172,
+      "birthTicks": 32165144,
+      "exeBasename": "workbuddyai",
+      "terminal": true
+    },
+    {
+      "pid": 201,
+      "birthTicks": 32165347,
+      "exeBasename": "python3.13",
+      "terminal": true
+    },
+    {
+      "pid": 202,
+      "birthTicks": 32165348,
+      "exeBasename": "node",
+      "terminal": true
+    },
+    {
+      "pid": 215,
+      "birthTicks": 32165479,
+      "exeBasename": "node",
+      "terminal": true
+    }
+  ],
+  "ownedDisplay": ":0",
+  "xvfbPid": 3,
+  "appPid": 6,
+  "windowGeometry": {
+    "WINDOW": 2097155,
+    "X": 0,
+    "Y": 0,
+    "WIDTH": 1199,
+    "HEIGHT": 799,
+    "SCREEN": 0
+  },
+  "window": 2097155,
+  "windowTitle": "WorkBuddy AI",
+  "mappedWindowObserved": true,
+  "freshInternationalProfileCreated": true,
+  "domesticProfileCreated": true,
+  "windowFocusExitCode": 0,
+  "appNativeExitCode": 0,
+  "normalProductQuitVerified": true,
+  "allObservedAppPidfdsTerminalBeforeXvfbStop": false,
+  "observedAppIdentityCount": 14,
+  "ownedXvfbExitCode": 0,
+  "allObservedPidfdsTerminalAfterOwnCleanup": false,
+  "endedAtUtc": "2026-11-20T03:58:42.151124+00:00"
+}

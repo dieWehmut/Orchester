@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/tmp/orchester-smoke/controller.py", line 59, in <module>
+    collect()
+  File "/tmp/orchester-smoke/controller.py", line 19, in collect
+    if select.select([fd],[],[],0)[0]:counts[identity]['terminal']=True
+KeyError: (3, 32137120)

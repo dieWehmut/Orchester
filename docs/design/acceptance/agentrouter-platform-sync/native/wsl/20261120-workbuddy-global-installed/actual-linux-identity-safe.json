@@ -1,0 +1,52 @@
+{
+  "observedAtUtc": "2026-11-20T04:07:13.503098+00:00",
+  "scope": "Actual downloaded and extracted official Linux package; no Windows source used for this identity proof",
+  "actualElf": {
+    "path": "/home/han/.local/opt/workbuddy-ai/5.7.6.40488862-3e43260f/opt/WorkBuddy AI/workbuddyai",
+    "bytes": 200842456,
+    "sha256": "13bf1da1273c22f0536ee6a52fbadb3561dd31b63c11e80f7feff6beccac1578",
+    "firstFourBytesHex": "7f454c46",
+    "elfClass": 2,
+    "elfDataEncoding": 1,
+    "elfMachine": 62
+  },
+  "actualAsar": {
+    "path": "/home/han/.local/opt/workbuddy-ai/5.7.6.40488862-3e43260f/opt/WorkBuddy AI/resources/app.asar",
+    "bytes": 211013471,
+    "sha256": "e36c06c540327affc48bcabde4f8152d26f91f781157b329629d7a4d7d0e6f58"
+  },
+  "actualAsarPackageEntry": {
+    "entry": "package.json",
+    "bytes": 10474,
+    "sha256": "096b2dbd19a33671652255bd40da0d728eb6618a029443cfeed61adadc223e18",
+    "archivedAs": "sources/actual-linux-package.json"
+  },
+  "actualProductJson": {
+    "path": "/home/han/.local/opt/workbuddy-ai/5.7.6.40488862-3e43260f/opt/WorkBuddy AI/resources/app.asar.unpacked/cli/product.json",
+    "bytes": 378007,
+    "sha256": "26271e75c2af04beadb45ba665caa3facd0ebe328d01d1466eb0ff235b09b609"
+  },
+  "selectedProduct": {
+    "productName": "WorkBuddy AI",
+    "applicationName": "workbuddy-ai",
+    "isOversea": true,
+    "dataFolderName": ".workbuddy-ai",
+    "defaultFolderName": "workbuddy-ai",
+    "urlProtocol": "workbuddy-ai",
+    "updateUrl": "https://www.workbuddy.ai",
+    "deploymentType": "SaaS",
+    "commit": "3e43260f771393d75c6504db99e751eb03dea8db",
+    "date": "2026-10-07T03:58:00.444Z",
+    "genieVersion": "5.7.6"
+  },
+  "selectedProductConfig": {
+    "customUserDataDir": ".workbuddy-ai"
+  },
+  "runtimeDependencies": {
+    "lddExitCode": 0,
+    "missing": [],
+    "guiRuntimeLibraryPrefix": "/home/han/.local/lib/orchester-linux-gui-runtime/usr/lib/x86_64-linux-gnu"
+  },
+  "nativeWindowsSourceUsedAsLinuxProof": false,
+  "profileBoundary": "Primary international namespace .workbuddy-ai/app; helper logs may still use .workbuddy/logs in a clean HOME."
+}

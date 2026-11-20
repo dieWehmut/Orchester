@@ -9,3 +9,4 @@ agentrouter-platform-sync/native/windows/worker4-recovery-20261113/sources/d07bd
 # These executed source snapshots retain one original trailing space.
 agentrouter-platform-sync/native/windows/20261119-default-runtime/sources/08-verify-current-stable-managed.ps1 -text whitespace=-blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 agentrouter-platform-sync/native/windows/20261119-default-runtime/sources/11-refresh-current-stable-managed.ps1 -text whitespace=-blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+agentrouter-platform-sync/native/wsl/20261120-workbuddy-global-installed/failures/gui-attempt2-xvfb.stderr.txt -text whitespace=-blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

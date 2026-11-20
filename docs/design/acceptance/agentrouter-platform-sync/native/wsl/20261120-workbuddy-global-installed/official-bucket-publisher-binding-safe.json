@@ -1,0 +1,22 @@
+{
+  "name": "official-codebuddy-bucket-binding",
+  "requestedUrl": "https://www.codebuddy.ai/",
+  "observedAtUtc": "2026-11-20T03:20:05.440130+00:00",
+  "method": "GET",
+  "tlsVerificationDisabled": false,
+  "priorAttempt": {
+    "errorType": "RemoteDisconnected",
+    "error": "Remote end closed connection without response",
+    "bodyObtained": false
+  },
+  "httpStatus": 200,
+  "finalUrl": "https://www.codebuddy.ai/",
+  "bytesRead": 10145,
+  "sha256": "068c1200e52ba9028f256e447dc51e92c29169f68ffd22939e0d48248f96fee3",
+  "exactBucketReferences": [
+    "https://codebuddy-1328495429.cos.accelerate.myqcloud.com",
+    "https://codebuddy-1328495429.cos.accelerate.myqcloud.com/web/ide/logo.svg"
+  ],
+  "exactBucketReferenceCount": 3,
+  "meaning": "Primary official CodeBuddy HTTPS page explicitly uses candidate exact COS bucket; binary product identity still requires package inspection."
+}

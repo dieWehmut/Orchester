@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="https://codebuddy-1328495429.cos.accelerate.myqcloud.com/web/ide/logo.svg">
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no,shrink-to-fit=no">
+    <meta name="og:title" content="" />
+    <meta name="og:description" content="" />
+    <meta name="og:image" content="https://codebuddy-1328495429.cos.accelerate.myqcloud.com/web/ide/logo.svg" />
+    <meta name="google-site-verification" content="Y9TVyotLR88ZBJQxSIzUY9tzl7ZPI-nUOgeH4c5HuZg" />
+    <meta name="baidu-site-verification" content="codeva-jT5rpV6jeD" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="msvalidate.01" content="041E2D26A7BBE604CD3E83CF3B2E8CCC" />
+    <link rel="preconnect" href="https://codebuddy-1328495429.cos.accelerate.myqcloud.com" crossorigin />
+    <title></title>
+    <!-- 品牌 TKD 首帧落地：在 HTML 解析时同步根据域名设置 title / keywords / description
+         以及 og:title / og:description（微信/QQ/IM 分享卡片），避免 workbuddy 域名下闪现 CodeBuddy 标题。
+         og:image 的替换放在 main.tsx updateTKD() 中（需要 import SVG asset）。 -->
+    <script>
+      (function () {
+        try {
+          var h = window.location.hostname;
+          var IS_WB = h.indexOf('.workbuddy.') !== -1;
+          var IS_CN = h.indexOf('.cn') !== -1 || h.indexOf('copilot.tencent.com') !== -1 || h.indexOf('codebuddy.net') !== -1;
+
+          function setMeta(name, content, isOg) {
+            var el = document.querySelector('meta[' + (isOg ? 'name="og:' + name + '"' : 'name="' + name + '"') + ']');
+            if (!el) {
+              el = document.createElement('meta');
+              el.name = isOg ? 'og:' + name : name;
+              document.head.appendChild(el);
+            }
+            el.content = content;
+          }
+
+          if (IS_WB) {
+            var wbTitle = IS_CN ? 'WorkBuddy IDE - AI 智能编程伙伴' : 'WorkBuddy IDE - AI Code Editor';
+            document.title = wbTitle;
+            setMeta('keywords', IS_CN
+              ? 'WorkBuddy,WorkBuddy IDE,AI编程,智能编程IDE,代码编辑器,腾讯云'
+              : 'WorkBuddy,WorkBuddy IDE,AI programming,code editor,Tencent Cloud');
+            setMeta('description', IS_CN
+              ? 'WorkBuddy IDE 是腾讯云推出的下一代 AI 代码编辑器，基于腾讯混元代码大模型，提供代码补全、错误诊断、技术问答和性能优化等服务。'
+              : 'WorkBuddy IDE is a next-generation AI code editor. Powered by the Tencent Yuanbao Code Large Model, it provides code completion, error diagnosis, technical Q&A, and performance optimization.');
+            setMeta('title', wbTitle, true);
+            setMeta('description', IS_CN
+              ? 'WorkBuddy IDE 是腾讯云推出的下一代 AI 代码编辑器，基于腾讯混元代码大模型，提供代码补全、错误诊断、技术问答和性能优化等服务。'
+              : 'WorkBuddy IDE is a next-generation AI code editor. Powered by the Tencent Yuanbao Code Large Model, it provides code completion, error diagnosis, technical Q&A, and performance optimization.', true);
+          } else {
+            var cbTitle = IS_CN
+              ? '腾讯云代码助手 CodeBuddy IDE – AI 时代的智能编程伙伴'
+              : 'Tencent Cloud Code Assistant CodeBuddy – AI Code Editor';
+            document.title = cbTitle;
+            setMeta('keywords', IS_CN
+              ? 'CodeBuddy,CodeBuddy IDE,IDE,智能编程IDE,AI代码编辑器,腾讯云'
+              : 'CodeBuddy,CodeBuddy IDE,IDE,Intelligent Programming IDE,AI Code Editor');
+            setMeta('description', IS_CN
+              ? '腾讯云代码助手 CodeBuddy IDE 是下一代 AI 代码编辑器，基于腾讯混元代码大模型，提供代码补全、错误诊断、技术问答和性能优化等服务，支持主流编程语言，提升编码效率 90%、降低代码错误率 35%，适用于企业级应用开发与教学实践。'
+              : 'Tencent Cloud CodeBuddy is a next-generation AI Code Editor. Powered by the Tencent Yuanbao Code Large Model, it provides services such as code completion, error diagnosis, technical Q&A, and performance optimization. Supporting mainstream programming languages, it improves coding efficiency by 90% and reduces code error rates by 35%, making it suitable for enterprise-level application development and teaching practices.');
+            setMeta('title', cbTitle, true);
+            setMeta('description', IS_CN
+              ? '腾讯云代码助手 CodeBuddy IDE 是下一代 AI 代码编辑器，基于腾讯混元代码大模型，提供代码补全、错误诊断、技术问答和性能优化等服务，支持主流编程语言，提升编码效率 90%、降低代码错误率 35%，适用于企业级应用开发与教学实践。'
+              : 'Tencent Cloud CodeBuddy is a next-generation AI Code Editor. Powered by the Tencent Yuanbao Code Large Model, it provides services such as code completion, error diagnosis, technical Q&A, and performance optimization. Supporting mainstream programming languages, it improves coding efficiency by 90% and reduces code error rates by 35%, making it suitable for enterprise-level application development and teaching practices.', true);
+          }
+        } catch (e) { /* 判定失败时留给 main.tsx 的 updateTKD() 兜底 */ }
+      })();
+    </script>
+    <link rel="modulepreload" href="//download.codebuddy.ai/web/ide/c60cd4b9898c3e3f909728759ea99609136208eb/assets/js/main-C_PCyf_Y.js" crossorigin>
+<link rel="stylesheet" href="//download.codebuddy.ai/web/ide/c60cd4b9898c3e3f909728759ea99609136208eb/assets/css/main-C914sIrY.css">
+<link rel="stylesheet" href="//download.codebuddy.ai/web/ide/c60cd4b9898c3e3f909728759ea99609136208eb/assets/css/app-CxR-j0_6.css">
+    <script>
+        window.__toCdnUrl = (url) => {
+            const BASE_URL = '//download.codebuddy.ai/web/ide/c60cd4b9898c3e3f909728759ea99609136208eb';
+            return (/__.*?__$/.test(BASE_URL) ? '' : BASE_URL) + '/' + url;
+        }
+        window.APP_TYPE = 'oversea';
+        window.RUN_ENV = '__RUN_ENV__';
+        window.SKIP_PLUGIN_LOGIN_FOR_ADMIN = '__SKIP_PLUGIN_LOGIN_FOR_ADMIN__';
+        window.PRODUCT_FEATURES = '__PRODUCT_FEATURES__';
+    </script>
+    <!--
+      Google Ads gtag（ide 海外站专用）：
+      - ide 国际站构建服务 www.codebuddy.ai / www.workbuddy.ai 的 /login；
+      - 仅注入国际账户 AW-18319947891（与 workbuddy/login 国际站一致），不装国内 AW；
+      - 排除 staging，避免测试注册污染生产 Ads 转化口径（#124888）；
+      - 转化事件在 SelectAccount 登录成功后触发，此处只做引导脚本。
+    -->
+    <script>
+      (function () {
+        var h = window.location.hostname;
+        var isProdIntl = h === 'www.codebuddy.ai' || h === 'www.workbuddy.ai';
+        if (!isProdIntl) {
+          return;
+        }
+
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+
+        var googleAdsId = 'AW-18319947891';
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=' + googleAdsId;
+        document.head.appendChild(script);
+
+        window.gtag('js', new Date());
+        window.gtag('config', googleAdsId);
+      })();
+    </script>
+    <!-- 根路径做登录状态检测和跳转 -->
+    <script>
+        (function checkLoginAndRedirect() {
+            // 只在根路径才执行
+            if (window.location.pathname !== '/') {
+                return;
+            }
+
+            // 功能开关：设为 true 启用登录检测跳转，false 则直接跳转 /home
+            var ENABLE_LOGIN_REDIRECT = false;
+
+            if (!ENABLE_LOGIN_REDIRECT) {
+                window.location.replace('/home');
+                return;
+            }
+
+            // 使用 fetch 调用 accounts 接口检测登录状态
+            fetch('/console/accounts', {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(result) {
+                    // 如果 accounts 数组存在且有数据，说明已登录
+                    if (result && result.data && result.data.accounts && result.data.accounts.length > 0) {
+                        window.location.replace('/agents');
+                    } else {
+                        window.location.replace('/home');
+                    }
+                })
+                .catch(function(error) {
+                    console.warn('[LoginCheck] Failed to check login status:', error);
+                    window.location.replace('/home');
+                });
+        })();
+    </script>
+  <script type="module" crossorigin src="//download.codebuddy.ai/web/ide/c60cd4b9898c3e3f909728759ea99609136208eb/assets/js/main-DmguMEb0.js"></script>
+  <link rel="modulepreload" crossorigin href="//download.codebuddy.ai/web/ide/c60cd4b9898c3e3f909728759ea99609136208eb/assets/js/modulepreload-polyfill-B5Qt9EMX.js">
+</head>
+
+<body>
+    <div id="root"><div class="auth-loading"><div><div class="t-loading t-loading--center t-size-m" style="color:#32E6B9"><svg class="t-loading__gradient t-icon-loading" viewBox="0 0 12 12" version="1.1" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg"><foreignObject x="0" y="0" width="12" height="12"><div class="t-loading__gradient-conic"></div></foreignObject></svg></div></div></div><script nonce="the-nonce">window.__staticRouterHydrationData = JSON.parse("{\"loaderData\":{\"2\":null,\"2-0\":{\"available\":true}},\"actionData\":null,\"errors\":null}");</script></div>
+</body>
+</html>

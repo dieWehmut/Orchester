@@ -1,0 +1,61 @@
+{
+  "requests": [
+    {
+      "name": "flatpark-public-manifest",
+      "requestedUrl": "https://raw.githubusercontent.com/flatpark/flatpark/main/registry/com.tencent.WorkBuddyAI/com.tencent.WorkBuddyAI.yml",
+      "observedAtUtc": "2026-11-20T03:14:37.150611+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "sourceClass": "Community manifest discovery, unverified publisher until primary binding",
+      "httpStatus": 200,
+      "finalUrl": "https://raw.githubusercontent.com/flatpark/flatpark/main/registry/com.tencent.WorkBuddyAI/com.tencent.WorkBuddyAI.yml",
+      "bytesRead": 5383,
+      "sha256": "a769761b2c13de599a2a5755925ee560b772890969ee4834244ba57888426873",
+      "headers": {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Content-Length": "5383",
+        "ETag": "\"4e3591ec1631f3be84f5a00063ac6a10df52f72d46d91c86b41146a100ba7342\""
+      }
+    },
+    {
+      "name": "flatpark-public-resolver",
+      "requestedUrl": "https://raw.githubusercontent.com/flatpark/flatpark/main/registry/com.tencent.WorkBuddyAI/resolve-update.sh",
+      "observedAtUtc": "2026-11-20T03:14:37.151144+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "sourceClass": "Community manifest discovery, unverified publisher until primary binding",
+      "httpStatus": 200,
+      "finalUrl": "https://raw.githubusercontent.com/flatpark/flatpark/main/registry/com.tencent.WorkBuddyAI/resolve-update.sh",
+      "bytesRead": 4915,
+      "sha256": "60b6b332e51f80471e7cdeb04950b3e26728d16122945c45ca4575afe4181eba",
+      "headers": {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Content-Length": "4915",
+        "ETag": "\"f2aee9bbfb97a168d4dab7f3ea5ccfa31bb3d34ac1c12da4174ce949074eb030\""
+      }
+    },
+    {
+      "name": "candidate-exact-upstream-range",
+      "requestedUrl": "https://codebuddy-1328495429.cos.accelerate.myqcloud.com/workbuddy/saas/linux-x64/WorkBuddy-linux-x64-5.7.6.40488862-3e43260f.deb",
+      "observedAtUtc": "2026-11-20T03:14:37.151472+00:00",
+      "method": "GET",
+      "tlsVerificationDisabled": false,
+      "sourceClass": "Candidate exact upstream from community manifest; publisher verification pending",
+      "httpStatus": 206,
+      "finalUrl": "https://codebuddy-1328495429.cos.accelerate.myqcloud.com/workbuddy/saas/linux-x64/WorkBuddy-linux-x64-5.7.6.40488862-3e43260f.deb",
+      "bytesRead": 1024,
+      "sha256": "5265d9812de80fb09e5e22d5c7beadca1e796fe9ac6048c76bb7909ba21d27b0",
+      "headers": {
+        "Content-Type": "application/x-debian-package",
+        "Content-Length": "1024",
+        "Content-Range": "bytes 0-1023/421733316",
+        "ETag": "\"f47c5c10fec3fc312d255e3bb9e3d881-403\"",
+        "Last-Modified": "Wed, 07 Oct 2026 04:07:01 GMT",
+        "x-cos-version-id": "MTg0NDQ5NTI3Mjc2ODg1MzA3MDI"
+      },
+      "startsWithDebArMagic": true
+    }
+  ],
+  "thirdPartyBinaryUsed": false,
+  "arbitraryUrlConstruction": false
+}
