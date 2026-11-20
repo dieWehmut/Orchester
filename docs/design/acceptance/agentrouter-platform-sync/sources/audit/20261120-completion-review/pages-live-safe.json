@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "status": "current-live-Pages-style-font-catalog-and-mobile-navigation-verified-with-preserved-transient-failure",
+  "assembledAtUtc": "2026-11-20T02:19:02.936333+00:00",
+  "scope": "Independent HTTPS byte observations and actual isolated Chrome browser interactions only; no deployment or native application actions.",
+  "site": "https://diewehmut.github.io/Orchester/",
+  "httpResources": {
+    "atUtc": "2026-11-20T02:01:44.425839+00:00",
+    "site": "https://diewehmut.github.io/Orchester/",
+    "liveRuntimeCheck": true,
+    "resources": [
+      {
+        "path": "/Orchester/assets/index-dDiQL8lp.css",
+        "status": 200,
+        "bytes": 50210,
+        "sha256": "cf89e609646eaba6351fbbc88e7b15fe92ff0d0a4a28e138571ef879e798059b",
+        "matchesCurrentLocalDist": true
+      },
+      {
+        "path": "/Orchester/assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+        "status": 200,
+        "bytes": 8059324,
+        "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b",
+        "matchesCurrentLocalDist": true
+      },
+      {
+        "path": "/Orchester/favicon.svg",
+        "status": 200,
+        "bytes": 272,
+        "sha256": "a5e4295b48f9c258b5e2daa55414e8ac461987dd72b2b2dfe6f2cfcb8144f817",
+        "matchesCurrentLocalDist": true
+      }
+    ],
+    "homepageStatus": 200,
+    "htmlBytes": 5534,
+    "htmlSha256": "7dd463924da2f112e7670161880938215614c1bdf6de2d98db5d2979e788c3b2",
+    "moduleScripts": [
+      "/Orchester/assets/index-DAeEEPNO.js"
+    ],
+    "localJsByteIdentityClaimed": false
+  },
+  "httpBoundedRetry": {
+    "atUtc": "2026-11-20T02:12:38.022139+00:00",
+    "scope": "one bounded retry after Chrome navigation timeout",
+    "resources": [
+      {
+        "url": "https://diewehmut.github.io/Orchester/",
+        "status": 200,
+        "bytes": 5534,
+        "sha256": "7dd463924da2f112e7670161880938215614c1bdf6de2d98db5d2979e788c3b2"
+      },
+      {
+        "url": "https://diewehmut.github.io/Orchester/assets/LXGWWenKai-Regular-CB2zwLK-.woff2",
+        "status": 200,
+        "bytes": 8059324,
+        "sha256": "23685af09c203fdf70cfcc15595411162ace2f75120a056134387dc4681b898b"
+      }
+    ]
+  },
+  "browserObservations": {
+    "pages_light_retry": {
+      "observedAtUtc": "2026-11-20T02:14:23.877Z",
+      "url": "https://diewehmut.github.io/Orchester/?completion-audit=20261120",
+      "title": "Orchester",
+      "viewport": {
+        "width": 1905,
+        "height": 2053
+      },
+      "theme": "light",
+      "fontFamily": "\"LXGW WenKai\", \"PingFang SC\", \"Microsoft YaHei\", \"Noto Sans SC\", system-ui, sans-serif",
+      "fontLoaded": true,
+      "fontFaces": [
+        {
+          "family": "LXGW WenKai",
+          "status": "loaded",
+          "weight": "400"
+        }
+      ],
+      "background": "#ffffff",
+      "textPrimary": "#000000",
+      "radiusMd": "0",
+      "horizontalOverflow": false,
+      "providerCount": 21,
+      "providerIds": [
+        "codex",
+        "claude",
+        "deepseek",
+        "opencode",
+        "gemini",
+        "antigravity",
+        "cursor",
+        "workbuddy",
+        "workbuddy_global",
+        "qwen",
+        "openclaw",
+        "cline",
+        "roo",
+        "kilo",
+        "hermes",
+        "pi",
+        "crush",
+        "claude_app",
+        "trae",
+        "zcode",
+        "craft"
+      ],
+      "imageCount": 42,
+      "allIconsLoaded": true,
+      "meaningfulContent": true,
+      "hasFrameworkErrorOverlay": false
+    },
+    "pages_mobile_retry": {
+      "observedAtUtc": "2026-11-20T02:16:02.345Z",
+      "url": "https://diewehmut.github.io/Orchester/?completion-audit=20261120",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "fontLoaded": true,
+      "fontFamily": "\"LXGW WenKai\", \"PingFang SC\", \"Microsoft YaHei\", \"Noto Sans SC\", system-ui, sans-serif",
+      "horizontalOverflow": false,
+      "providerCount": 21,
+      "imageCount": 42,
+      "menuVisible": true,
+      "menuExpanded": "false"
+    },
+    "pages_mobile_escape_retry": {
+      "observedAtUtc": "2026-11-20T02:16:42.704Z",
+      "menuExpanded": "false",
+      "menuAbsent": true,
+      "focusOnMenuTrigger": true,
+      "horizontalOverflow": false
+    },
+    "pages_mobile_route_retry": {
+      "observedAtUtc": "2026-11-20T02:17:03.426Z",
+      "url": "https://diewehmut.github.io/Orchester/architecture",
+      "h1": "Architecture that keeps authority in one place.",
+      "menuExpanded": "false",
+      "menuAbsent": true,
+      "width": 390,
+      "height": 844,
+      "fontLoaded": true,
+      "horizontalOverflow": false,
+      "hasFrameworkErrorOverlay": false
+    },
+    "console": {
+      "status": "no-console-messages-found",
+      "types": [
+        "error",
+        "warn"
+      ],
+      "pageId": 3
+    },
+    "desktopDarkHistoricalObservation": {
+      "observedAtUtc": "2026-11-20T02:09:27.696Z",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "theme": "dark",
+      "background": "#000000",
+      "textPrimary": "#e0e0e0",
+      "radiusMd": "0",
+      "horizontalOverflow": false,
+      "providerCount": 21,
+      "imageCount": 42,
+      "allIconsLoaded": true,
+      "fontLoaded": false,
+      "meaningfulContent": true,
+      "hasFrameworkErrorOverlay": false
+    },
+    "failuresAndBoundaries": {
+      "initialArchitectureWaitUsedUnmatchedHeading": true,
+      "initialArchitectureRouteActuallyReached": true,
+      "attemptedOutsideWorkspaceScriptOutputFileDenied": true,
+      "initialEmulateMobileTriggeredNavigationTimeout": true,
+      "initialTimedOutRequest": {
+        "url": "https://diewehmut.github.io/Orchester/",
+        "status": "net::ERR_TIMED_OUT"
+      },
+      "freshIsolatedRetryCompleted": true,
+      "localJavascriptByteIdentityClaimed": false,
+      "ciArtifactDownloadedOrValidatedByThisAudit": false,
+      "referenceWindowsFontFileRereadByThisAudit": false
+    }
+  },
+  "actualBrowserTabCleanupCompleted": true,
+  "privateUserStateReadOrWritten": false,
+  "existingUserBrowserContextUsed": false,
+  "localJavascriptByteIdentityClaimed": false,
+  "downloadedCiArtifactVerificationClaimed": false,
+  "referenceWindowsFontFileReread": false,
+  "screenshotVisualReviewPerformedByThisAudit": false
+}
