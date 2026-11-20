@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "status": "new-read-route-and-native-powershell-sentinel-verified",
+  "existingMountRepaired": false,
+  "nativeExecutionAccepted": true,
+  "nativeSentinelAccepted": true,
+  "copiedCmdVerSemanticAccepted": false,
+  "nativeTcpQueryReturnedRows": 0,
+  "nativeTcpQueryErrorFreeCertified": false,
+  "portReservedOrDefaultRuntimeAcceptanceProven": false,
+  "rootCauseEstablished": false,
+  "sourceMatchesInstalledWslEstablished": false,
+  "controllerActions": {
+    "mountMutations": 0,
+    "globalServiceRestarts": 0,
+    "signalsToExistingProcesses": 0,
+    "writesToExistingWindowsFiles": 0,
+    "createdLinuxExecutableCopies": 1,
+    "windowsNaturalProcessCacheSideEffectsMeasured": false
+  },
+  "counterInterpretation": "Controller mutation counts derive from bounded reviewed operations; natural Windows/PowerShell module cache writes were not measured and all-Windows-writes-zero is not claimed.",
+  "omittedArtifacts": [
+    "Windows executable binary",
+    "full downloaded upstream source",
+    "full kernel logs",
+    "raw garbled wsl status",
+    "raw stderr/CLIXML",
+    "Windows user profile content",
+    "raw Codex conversation"
+  ],
+  "acceptanceBoundary": "Proves an alternative ordinary 9P public-file read and native PowerShell execution route at the recorded time. Default Windows runtime recovery is accepted separately."
+}

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-20T03:00:25.862949+00:00",
+  "createdAt": "2026-11-20T04:10:48.922617+00:00",
   "status": "default-installation-and-native-platform-history-verified-current-windows-revalidation-and-workbuddy-global-linux-pending",
   "summaryPath": "summary.json",
   "files": [
@@ -2903,6 +2903,96 @@
       "path": "native/windows/20261120-deepseek-runtime/validate.py",
       "sha256": "9fa0bb6e66d05ef723ddc68365a52192d10c254ae8b9bf00b5e0156290b23fe3",
       "bytes": 9927
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/9p-public-file-read-safe.json",
+      "sha256": "8e662c83bfba3314aa909d91efe80360c79a7da4bde4d52aff8c0eaec27a31c8",
+      "bytes": 2606
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/README.md",
+      "sha256": "71e8bccd30f7dfd20b211e15995807449a560e32149152a803f1d908c2754d31",
+      "bytes": 4641
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/artifact-manifest.json",
+      "sha256": "9d504316a8114e5e961d0de26c82698776f213ea2a816f87ee4566ae72cdb739",
+      "bytes": 2781
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/copied-public-command-identity-safe.json",
+      "sha256": "01eb0ed9dccc641c47981a369ef42cbccae552f76fb25de04b30e85c67957a1a",
+      "bytes": 1356
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/direct-init-failures-safe.json",
+      "sha256": "75e4cf66a8cee82b71fb6bd7f457a9dc0d31e5c0c80f2d4c72a55e07de56c3be",
+      "bytes": 620
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/linux-route-observation-safe.json",
+      "sha256": "1c427d8c852b08e16decb920826a77539ac1f8da4672b83bf6af1e8b4b589277",
+      "bytes": 1677
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/native-host-command-identity-selected-safe.json",
+      "sha256": "a6b69fee95907ab1f624d1bd20a2fe20f4f786b2389456a3174798a335db83bf",
+      "bytes": 1909
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/native-sentinel.stdout.txt",
+      "sha256": "f25fbc086b7dd5a830b6654d339b4ce86255ce9710178d1403ba65eaa48eeb6e",
+      "bytes": 27
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/native-tcp-query-selected-safe.json",
+      "sha256": "e342d3b8335496720c8d217c579ee28bb7dc95de88cda3afbd7cdb4f6a0b713b",
+      "bytes": 680
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/native-tool-receipt-safe.json",
+      "sha256": "dac0e2731dddb02d9e3881aa3341a8191b308b9110117096a97bb072b7d0104d",
+      "bytes": 2453
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/source-provenance-safe.json",
+      "sha256": "1f05959c5354e03ab9f9520c3eafe50f0df8fed8ce75061e75997ac05374d422",
+      "bytes": 3839
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/source-review.md",
+      "sha256": "4ecdc159ac64a4551af632d26dac1ec22393c52808d2e123d42abfc680b6ad85",
+      "bytes": 4034
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/sources/native_windows_readonly_probe.py",
+      "sha256": "f369fa857fb05b79157429b84b07bc740f83b5adee8944b92f53736a99921b62",
+      "bytes": 1894
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/sources/probe_drvfs9p.template.py",
+      "sha256": "014f3f9350c0a19447ada6551f74ac4f7bbaf71be4947cb86f620920d2c4a66d",
+      "bytes": 3281
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/sources/read_public_cmd.template.py",
+      "sha256": "451c755a01d3da978765e5691b6233e3a0fd50b5c7374c50a113901125466beb",
+      "bytes": 2923
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/summary-safe.json",
+      "sha256": "227989ab7ea78be004485b5e4eaad2368647485d350d3766910314a0415ad30f",
+      "bytes": 1366
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/validate.py",
+      "sha256": "ccf0ff4f15d0d116d822866933fa876e99baaa920c9c3b1b2eedc43d1610b87d",
+      "bytes": 11431
+    },
+    {
+      "path": "native/windows/20261120-interop-route-recovery/verification-safe.json",
+      "sha256": "a9c2b58e1e90a04ac631c2a590f35440feeba46a3b7b68bd429c20704452ea6a",
+      "bytes": 261
     },
     {
       "path": "native/windows/a96a06e-build/final-result.json",
@@ -6221,8 +6311,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "7adf2cdb1b839ec3e5ba8a8af2ab15eec53ced9e3b73d4e6a694d69d0e3e13f9",
-      "bytes": 65054
+      "sha256": "9114d6bc184d8341fee84d02b32a0b5ce811aba5d4e6d865b6c57b735d9b0fac",
+      "bytes": 65372
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -6246,8 +6336,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "0490a54e08b43aa29cf7089e24bcd81da8bcab59bf17b841ae1c6432a7f6f1bb",
-      "bytes": 93131
+      "sha256": "32941b2dea2aea93689708bc4c73195844993949b67ca622eadb053515a9a2a6",
+      "bytes": 93519
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",

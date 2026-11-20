@@ -1,0 +1,80 @@
+{
+  "observedAtUtc": "2026-11-20T03:19:14.924290+00:00",
+  "port": 50002,
+  "hostCid": 2,
+  "status": "read-only-public-command-file-route-verified",
+  "freshVsockConnected": true,
+  "version": "9P2000.L",
+  "serverMsize": 65536,
+  "walkedPublicCommandComponents": 3,
+  "publicCmdMode": 33133,
+  "publicCmdBytes": 339968,
+  "publicCmdInitialBytesRead": 4096,
+  "publicCmdMZMagic": true,
+  "publicCmdHeaderSha256": "3f4bb06faf96a027fae810a308248f6bd3911f6d51feeba3f8381c5ff8275ef1",
+  "seconds": 0.009265661996323615,
+  "protocolFrames": [
+    {
+      "requestType": 100,
+      "responseType": 101,
+      "tag": 65535,
+      "responseBytes": 21,
+      "responseSha256": "7b98707414dc86c432bccfd27b501251aa92d2f2b125a7469ad297e8020b3913"
+    },
+    {
+      "requestType": 104,
+      "responseType": 105,
+      "tag": 1,
+      "responseBytes": 20,
+      "responseSha256": "9c556210b093939aa4f3aaf5654b3eecfce8857ce7ffe2eb16e2431c428a0666"
+    },
+    {
+      "requestType": 110,
+      "responseType": 111,
+      "tag": 2,
+      "responseBytes": 48,
+      "responseSha256": "452dc20c33773721a70ef790daf2032cb2bdbdcce31e6ec55ee7795f4c4182c3"
+    },
+    {
+      "requestType": 24,
+      "responseType": 25,
+      "tag": 3,
+      "responseBytes": 160,
+      "responseSha256": "d7fd8347f27ce6c451349d5a0ccef9b5f8f9d2d81a355ed1940c2324605be1b4"
+    },
+    {
+      "requestType": 12,
+      "responseType": 13,
+      "tag": 4,
+      "responseBytes": 24,
+      "responseSha256": "d5770903bcd24f6adf4c555d01f0447b81d0564499fa742cc49df3671c4b3d7c"
+    },
+    {
+      "requestType": 116,
+      "responseType": 117,
+      "tag": 5,
+      "responseBytes": 4107,
+      "responseSha256": "b1e690080a8868d1dfe0932d0a7ed1ee22257bc3c9d99f788d7226a26cafc729"
+    },
+    {
+      "requestType": 120,
+      "responseType": 121,
+      "tag": 6,
+      "responseBytes": 7,
+      "responseSha256": "de932f7eef5610cdfd875ee6d9a1fbbf794dd0b085081e80cf370cf682e82008"
+    },
+    {
+      "requestType": 120,
+      "responseType": 121,
+      "tag": 7,
+      "responseBytes": 7,
+      "responseSha256": "77300b6d8e09fc6e9cba990bbe6148b7f6fea7d3ee860f540cbf58002cb5a9fa"
+    }
+  ],
+  "serverSelection": "port 50002, ordinary DrvFs endpoint; no measured Windows token elevation claim",
+  "attachSucceeded": true,
+  "operationPolicy": "Only Tversion, Tattach, Twalk, Tgetattr, Tlopen(flags=0), Tread and Tclunk were sent. Attach itself did not enforce a read-only share.",
+  "declaredAttachUid": 1000,
+  "declaredAttachGid": 1000,
+  "identityCaveat": "Attach uid/gid are protocol input literals, not independent process identity measurements."
+}

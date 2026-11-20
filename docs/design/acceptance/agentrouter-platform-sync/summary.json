@@ -546,6 +546,10 @@
     {
       "scope": "Nov19 default installedGUI213records/21products42images/original138DBrows/settingslogs/backups retained/normaltrayGui+Node0; managed7338 actual60.38s107samples17resources138rows401zeroUnknown/actual external0 recovered from exact selected session events. Nov20 failures and mountIO remain separate pending current revalidation.",
       "proof": "native/windows/20261119-default-runtime/historical-native-tool/bindings-safe.json"
+    },
+    {
+      "scope": "Freshnonadmin9P publicSystem32cmdcopy matches native Microsoft signedSystem32file; nativePS sentinel/external0 proven viaexisting357interop while original/mnt/c remains EIO. No original runtime success inferred.",
+      "proof": "native/windows/20261120-interop-route-recovery/summary-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -557,7 +561,7 @@
     "Prior source71 Linux7337 deployment/1023019 and oneoriginal7337/info200 before fresh23:31UTC absence; originalreceipts preserved historical"
   ],
   "pendingCurrentEpochScopes": [
-    "Restore observable Windows access after /mnt/c I/O errno5, then successfully revalidate the existing managed Remote7338 identity/listener/resource/state/authentication following the November20 aggregate guard failure. November19 actual Desktop and managed60s external OS0 remain verified; current final revalidation is false. Original saved Remote7338 credential wire and Windows runtime autostart were not proved by this archive.",
+    "Use recovered native Windows access to restore/revalidate current managed Remote7338 identity, listener,17resources, original138state rows and401authentication gate after strict original PID absence. Original saved7338tokenwire and Windowsautostart remain unrequested unmeasured limits.",
     "Obtain and verify a downloadable genuine official WorkBuddy Global Linux package, then install it separately from domestic WorkBuddy while preserving original data. Six current exact advertised package URLs returned404; enterpriseAppImage400. No permanent unsupported-policy or domestic-substitution claim."
   ],
   "folderResponsibilities": {
@@ -576,7 +580,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-20T02:58:19.495944+00:00",
+  "updatedAt": "2026-11-20T04:10:48.553354+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -958,8 +962,8 @@
   "currentWindowsInteropAfterBriefRecoveryObservedAtUtc": "2026-11-13T12:48:51.515147+00:00",
   "currentWindowsInteropContinuousAvailabilityVerified": false,
   "lastWindowsInteropBriefRecoveryAvailableObservedAtUtc": "2026-11-13T10:49:46Z",
-  "currentWindowsNativeExecutionChannelReady": false,
-  "currentWindowsNativeExecutionChannelProof": "native/windows/worker4-recovery-20261113/summary-safe.json",
+  "currentWindowsNativeExecutionChannelReady": true,
+  "currentWindowsNativeExecutionChannelProof": "native/windows/20261120-interop-route-recovery/summary-safe.json",
   "currentWindowsWorker3LifetimeReachedSelfReported": true,
   "currentWindowsWorker3IndependentOsExitCode": null,
   "currentWindowsWorker4NativeStartupVerified": true,
@@ -1200,5 +1204,8 @@
   "documentedPublishedMainRevisionScope": "Six preceding content changes before the delivery receipt commit; actual ls-remote readback.",
   "currentContinuationDeliveryProof": "maintenance/git-delivery/20261120-six-step-delivery-safe.json",
   "currentContinuationContentCommitCount": 6,
-  "currentContinuationPeakAgentConcurrencyIncludingRoot": 9
+  "currentContinuationPeakAgentConcurrencyIncludingRoot": 9,
+  "currentWindowsNativeExecutionChannelObservedAtUtc": "2026-11-20T03:28:09.711549+00:00",
+  "currentWindowsDrvfsOriginalMountRepaired": false,
+  "currentWindowsFreshReadRouteUsesNonAdminServer": true
 }

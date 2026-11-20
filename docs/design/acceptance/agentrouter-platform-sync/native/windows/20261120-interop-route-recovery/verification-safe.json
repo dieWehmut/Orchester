@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "artifactDigestsVerified": 16,
+  "semanticNegativeCasesRejected": 11,
+  "actualPrivateCopyIndependentlyRehashed": true,
+  "nativeProbesInvoked": false,
+  "existingMountRepaired": false,
+  "defaultRuntimeAcceptedByThisArchive": false
+}

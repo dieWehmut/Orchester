@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "externalEvidenceKind": "Codex CommandExecution item_completed, selected fields",
+  "externalEventTimestampUtc": "2026-11-20T03:28:09.715Z",
+  "externalEventOrdinal": 1047,
+  "externalCommandId": "exec-3bc34559-0ce1-4ffa-bae8-5155d452222c",
+  "externalProcessId": "97208",
+  "externalStatus": "completed",
+  "externalExitCode": 0,
+  "externalDuration": {
+    "secs": 1,
+    "nanos": 301949020
+  },
+  "externalEventLineSha256": "f7b7d378d26838b39fb5a13e4c2952031b3e2b07e355b35b5b14cfbb0ca76344",
+  "observedAtUtc": "2026-11-20T03:28:09.711549+00:00",
+  "observedSourcePath": "sources/native_windows_readonly_probe.py",
+  "observedSourceSha256": "f369fa857fb05b79157429b84b07bc740f83b5adee8944b92f53736a99921b62",
+  "sourceMatchedExternalHeredocExactly": true,
+  "argvIdentity": {
+    "linuxEntryPoint": "/init",
+    "ownedLinuxPublicCommandBasename": "owned-native-cmd.exe",
+    "argv0": "/init",
+    "interopSocket": "/run/WSL/357_interop",
+    "windowsPowerShellPath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "powershellFlags": [
+      "-NoLogo",
+      "-NoProfile",
+      "-NonInteractive",
+      "-EncodedCommand"
+    ],
+    "encodedCommandEncoding": "utf-16le"
+  },
+  "nativeProbes": [
+    {
+      "label": "ascii-interoperability-sentinel",
+      "actualPowerShellScript": "Write-Output 'ORCHESTER_NATIVE_ROUTE_OK'",
+      "nativeProcessExitCode": 0,
+      "seconds": 0.33777578797889873,
+      "stdoutPath": "native-sentinel.stdout.txt",
+      "stdoutBytes": 27,
+      "stdoutSha256": "f25fbc086b7dd5a830b6654d339b4ce86255ce9710178d1403ba65eaa48eeb6e",
+      "sourceLabelClarification": "Original command label says echo; the executed source uses PowerShell Write-Output."
+    },
+    {
+      "label": "windows-port-and-wsl-readonly",
+      "nativeProcessExitCode": 0,
+      "seconds": 1.064033699047286,
+      "selectedOutputPath": "native-tcp-query-selected-safe.json"
+    }
+  ],
+  "stderrInterpretation": "Original decoded and bounded stderr includes copied-cmd MUI diagnostics and PowerShell module progress CLIXML. It is not empty, and is omitted from this archive. No claim of stderr cleanliness is made.",
+  "scope": "External completion verifies the observed Python controller completed with exit 0; native exit codes are its subprocess.returncode observations, supported by exact source and retained output. This is not a retained Windows process handle or signature attestation."
+}

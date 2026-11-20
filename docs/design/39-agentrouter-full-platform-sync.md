@@ -1,5 +1,9 @@
 # AgentRouter 全目录与多平台同步验收
 
+## 11 月 20 日通道恢复续验
+
+[独立原生命令通道](acceptance/agentrouter-platform-sync/native/windows/20261120-interop-route-recovery/README.md)已实际恢复：新的非管理员 9P 连接读取原 System32 `cmd.exe`，副本与随后原生读取的散列完全相同，Microsoft Windows 签名为 Valid；通过已有会话套接字调用原系统 PowerShell，返回精确 sentinel，外部执行器退出 0。旧 `/mnt/c` 仍返回 I/O 错误，本次没有重挂载、重启 WSL 或停止原服务。初始路径调用失败、复制命令缺少 MUI 的诊断均保留。该通道仅证明原生入口可用，当前 Remote 恢复由后续独立验收判定。
+
 ## 11 月 19–20 日续验
 
 [默认 Desktop / Remote 原生验收](acceptance/agentrouter-platform-sync/native/windows/20261119-default-runtime/README.md)已恢复原执行器的实际退出证据。11 月 19 日默认桌面保留 213 条原记录，显示 21 个产品、42 张图标，并通过原生托盘正常退出；GUI、Node 和外部执行器均退出 0。默认 Remote 7338 完成 60.38 秒、107 次采样，17 项资源、138 条原始数据库行和 6 份备份保留通过，匿名认证门返回 401，实际外部执行器退出 0。更新方法仍为此前已验证的默认目录原子替换，未执行 NSIS 安装器。
