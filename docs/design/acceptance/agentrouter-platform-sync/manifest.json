@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-20T02:31:12.919879+00:00",
+  "createdAt": "2026-11-20T02:33:33.970794+00:00",
   "status": "official-claude-installations-verified-other-platform-continuation-in-progress",
   "summaryPath": "summary.json",
   "files": [
@@ -5370,6 +5370,26 @@
       "bytes": 4451
     },
     {
+      "path": "sources/audit/20261120-completion-review/completion-review-safe.json",
+      "sha256": "ebd0b8b5d8436377497dfd3ed4cf74c6b3da5798cda1eed2f468a4fd9bd9eb38",
+      "bytes": 8582
+    },
+    {
+      "path": "sources/audit/20261120-completion-review/current-source-scope-safe.json",
+      "sha256": "2a97af8a6fd041e4624cbbcd84f6721517e9a29dd30da343d19bacb4fddaf52e",
+      "bytes": 1884
+    },
+    {
+      "path": "sources/audit/20261120-completion-review/pages-live-safe.json",
+      "sha256": "13402201cf8d74c9eb6a5dcfc0d551ccda3950359582e9c207d1f4d0049b42ed",
+      "bytes": 6251
+    },
+    {
+      "path": "sources/audit/20261120-completion-review/verify-current-source.py",
+      "sha256": "f79f111ffac7dd9d4e9aec9dba2f2b06a271aa5dda99f5b0a9abc2ae000e7206",
+      "bytes": 3479
+    },
+    {
       "path": "sources/audit/current-docs-post-native16-readonly-validation.json",
       "sha256": "e50f62e753f747f8f47836586e5ff1eefb3055444d9441397728fd950f80be74",
       "bytes": 1737
@@ -5616,8 +5636,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "63786e2607499dc556c96aceb8e19cb4a4fe65647b9b1e44e0bd688d8d173510",
-      "bytes": 61164
+      "sha256": "091b59196241ce044e9b7bae06ceff36f735939ca7bd209d082cb0d25835a2d9",
+      "bytes": 62368
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -5641,8 +5661,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "83b8ada881d3eb565cd870bd836b829438c09707e6f20e5e22c354f0d9f48aff",
-      "bytes": 89215
+      "sha256": "36fdf70c7f5826ad9c8e0a665002f2a94b00feca4c7e99ca6eb7f03abed3bfc9",
+      "bytes": 90207
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",

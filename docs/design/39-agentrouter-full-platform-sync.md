@@ -16,6 +16,8 @@
 
 [缓存与分支续审](acceptance/agentrouter-platform-sync/maintenance/20261120-cache-and-branch-continuation/README.md)补存此前 5 个 Linux、8 个 Windows 缓存目录及 4 个本地分支、3 个工作树、2 个远程分支的清理摘要。本次另清理闲置 npm 下载缓存 191,672,408 逻辑字节，实际退出 0，37 项归档检查通过；未重复计入此前 11.44 GB 增量缓存。未合并分支和有改动的工作树保留，Windows I/O 错误不作当前缓存不存在或 C 盘释放量的证明。
 
+[当前 Pages 实测](acceptance/agentrouter-platform-sync/sources/audit/20261120-completion-review/pages-live-safe.json)确认线上 CSS、霞鹜文楷字体和 favicon 与当前构建字节一致，实际浏览器显示 21 个产品、42 张图标，390×844 下无横向溢出，菜单打开、Escape 关闭与路由跳转关闭均通过。首次导航超时、一次深色字体尚未加载的观察保留；没有宣称本地 JS 与 CI 制品逐字节相等。[源码范围复核](acceptance/agentrouter-platform-sync/sources/audit/20261120-completion-review/current-source-scope-safe.json)确认原 731 项中 728 项未变，3 项变化仅为已审查的官网 HTML / CSS 和字体 README，另增加官网 favicon；全部 368 项后端输入仍与冻结 71 相等。此前“731 项全部相等”的结论仅适用于其历史日期。
+
 ## 此前检查点
 
 本轮扩展范围与此前[38 的桌面/手机交付历史](38-desktop-mobile-final-delivery.md)分别归档，原源码、失败和退出边界保留。本检查点生产源码为 `71def643cb08b208cc79687f79255c504eb14dc6`。此前十三轮检查点已推送并合并到 main `3f01075b3490f6920cd7e42d730fd339456728d9`；其中新增六种 CLI 的 Windows / WSL 共 12 个安装单元及常用命令均通过版本检查，见[追加安装记录](40-additional-agent-installations.md)。执行跨 2026-11-11 至 2026-11-13（Asia/Shanghai），原 receipt UTC 日期和 `20261111` 目录保持原值。监控目录分别展示 WorkBuddy 国内、国际两版，共 21 providers、7 services、42 项主题映射与 24 份官方图标。

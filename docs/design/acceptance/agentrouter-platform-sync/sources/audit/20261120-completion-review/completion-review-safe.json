@@ -1,0 +1,223 @@
+{
+  "schemaVersion": 1,
+  "status": "independent-bounded-completion-review",
+  "observedAtUtc": "2026-11-20T02:19:02.964023+00:00",
+  "reviewedCheckoutRevision": "3d6209251d41496aa7c96f26829bb6ad5e9de072",
+  "reviewedRemoteTrackingMainRevision": "90eb627aed846c7d7117ddb2b46bb38185cfded9",
+  "nativeOrModelActions": 0,
+  "gitMutations": 0,
+  "productionCodeEdits": 0,
+  "privateCredentialContentsRead": false,
+  "archivedReceiptValidation": {
+    "claude": {
+      "command": "python3 -B native/claude/20261119-official-installations/validate.py",
+      "exitCode": 0,
+      "archiveFiles": 55,
+      "signedRepositoryMetadataVerifiedOffline": true,
+      "nativeAcceptanceRerun": false
+    },
+    "android": {
+      "initialRunExitCode": 1,
+      "initialReason": "three producer files changed after then-current manifest generation",
+      "finalRunExitCode": 0,
+      "finalArchiveFileCount": 57,
+      "nativeAcceptanceRerun": false,
+      "initialFailureNotCountedAsNativeProductFailure": true
+    }
+  },
+  "historicalDirtyWorktreeReview": {
+    "snapshotEntries": 23,
+    "byteEqualToReviewedCurrentCheckoutCount": 12,
+    "paths": [
+      {
+        "path": "apps/desktop/src-tauri/Cargo.lock",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": false
+      },
+      {
+        "path": "apps/web/src/api/agent-activity.ts",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": true
+      },
+      {
+        "path": "apps/web/src/features/agent-presence/components/ActivitySessionRow.vue",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": false
+      },
+      {
+        "path": "apps/web/src/features/agent-presence/components/AgentActivitySidebar.vue",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": true
+      },
+      {
+        "path": "apps/web/src/features/agent-presence/components/AgentActivityView.vue",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": false
+      },
+      {
+        "path": "apps/web/src/features/agent-presence/use-agent-activity.ts",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": true
+      },
+      {
+        "path": "apps/web/src/locales/en.json",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": false
+      },
+      {
+        "path": "apps/web/src/locales/zh-CN.json",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": false
+      },
+      {
+        "path": "apps/web/src/locales/zh-TW.json",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": false
+      },
+      {
+        "path": "apps/web/test/agent-activity-view.test.ts",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": false
+      },
+      {
+        "path": "kisten/konsole/src/command_center.rs",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": true
+      },
+      {
+        "path": "kisten/konsole/src/command_center_data.rs",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": true
+      },
+      {
+        "path": "kisten/netz/Cargo.toml",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": false
+      },
+      {
+        "path": "kisten/netz/src/agent_activity.rs",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": true
+      },
+      {
+        "path": "kisten/netz/src/agent_activity/files.rs",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": true
+      },
+      {
+        "path": "kisten/netz/src/agent_activity/metadata.rs",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": true
+      },
+      {
+        "path": "kisten/netz/src/agent_activity/opencode.rs",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": true
+      },
+      {
+        "path": "kisten/netz/src/agent_activity/tests.rs",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": true
+      },
+      {
+        "path": "kisten/netz/src/agent_activity/transcript.rs",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": true
+      },
+      {
+        "path": "kisten/netz/src/agent_process.rs",
+        "oldWorktreeStatus": " M",
+        "byteEqualToReviewedCurrentCheckout": false
+      },
+      {
+        "path": "kisten/netz/examples/local_monitor_probe.rs",
+        "oldWorktreeStatus": "??",
+        "byteEqualToReviewedCurrentCheckout": false
+      },
+      {
+        "path": "kisten/netz/src/agent_activity/wsl.rs",
+        "oldWorktreeStatus": "??",
+        "byteEqualToReviewedCurrentCheckout": false
+      },
+      {
+        "path": "kisten/netz/src/agent_activity/wsl_snapshot.py",
+        "oldWorktreeStatus": "??",
+        "byteEqualToReviewedCurrentCheckout": true
+      }
+    ],
+    "requiredFeaturePatchInferredFromDirtyStatus": false,
+    "sourceFindings": [
+      "Current production already contains WSL activity discovery, per-source caches, environment and cwd grouping and filtering.",
+      "Current ActivitySessionRow preserves completed, interrupted and unknown state labels; the retained dirty tree has the earlier inactive label.",
+      "Current WSL capture helper includes later Job Object descendant lifecycle bounds and typed failure reasons; the retained tree predates these fixes."
+    ]
+  },
+  "mockReview": {
+    "scope": [
+      "kisten/adapter/src/lib.rs",
+      "kisten/verzeichnis/src/lib.rs",
+      "kisten/netz/Cargo.toml",
+      "kisten/laufzeit/Cargo.toml",
+      "apps/mobile/src",
+      "apps/web/src"
+    ],
+    "mockAdapterGatedToTestOrExplicitTestSupportFeature": true,
+    "testSupportEnabledOnlyInReviewedDevDependencies": true,
+    "productionRegistryBuiltins": [
+      "claude",
+      "codex",
+      "opencode"
+    ],
+    "newEvidenceOfMockBackedProductFlowFound": false,
+    "cliReservedAgentsParallelAutoFlagsStillUnimplemented": true,
+    "reservedCliRoadmapFlagsAreNotMobilePaneRequirement": true
+  },
+  "remainingScopeAtThisReview": [
+    "Default Desktop and managed Remote7338 runtime archive was being finalized independently; this review does not duplicate or pre-judge its result.",
+    "Official DeepSeek Windows installation is proven, while its GUI startup and shared DSH_HOME credential-retention native runtime still require the prepared bounded check; login or model calls are not required by the installation task.",
+    "Global WorkBuddy Linux native package and profile isolation require the separate current vendor availability investigation; an unavailable vendor payload does not justify substituting the domestic package."
+  ],
+  "historicalLimitsNotNewProductFailures": [
+    "Unrecoverable historical creator handles or earliest whole private metadata file do not erase later current owned cleanup and field-retention proofs.",
+    "iOS Xcode or physical-phone runs and account/model availability are independent scope, not inferred as requested from emulator and installation work."
+  ],
+  "sourceScopeBoundary": "Historical frozen71 native/backend/mobile bindings are dated. Current Pages index.html/site.css and shared font README changed later; a blanket731-input unchanged claim is not made.",
+  "pagesEvidence": "pages-live-safe.json",
+  "sources": [
+    {
+      "path": "kisten/adapter/src/lib.rs",
+      "sha256": "bba5c84b0f3124e0cc2978a788dc431fbf24bf81d19c3553470574098797000b",
+      "bytes": 3300
+    },
+    {
+      "path": "kisten/verzeichnis/src/lib.rs",
+      "sha256": "c621142ca84e4f8c7079e6f8cdcc7cfab462be04591d6be948c6a3214b9bc6ed",
+      "bytes": 7151
+    },
+    {
+      "path": "kisten/netz/Cargo.toml",
+      "sha256": "68c339375734dbd368de8e2b4f6c9569d30a0e5836ee4c9ef975da8407daae1a",
+      "bytes": 1609
+    },
+    {
+      "path": "kisten/laufzeit/Cargo.toml",
+      "sha256": "d674f014947d1eb948a59a223a363be6d41a93bf888da1c045fd1d39afff5873",
+      "bytes": 1498
+    },
+    {
+      "path": "apps/web/src/features/agent-presence/components/ActivitySessionRow.vue",
+      "sha256": "9769eeb9f0264ff35c596c9f0d67f8940dfa067646bd27643b132deb7dec8305",
+      "bytes": 5121
+    },
+    {
+      "path": "kisten/netz/src/agent_activity/wsl.rs",
+      "sha256": "a85a8c6f24ea3c654cd4b588020147b67a039a3a9844ef2da375190307b37e87",
+      "bytes": 17325
+    },
+    {
+      "path": "kisten/netz/src/agent_process.rs",
+      "sha256": "a89b8d830fe290f6473eecf6849395674402b5d68bbf608a7abfefb0bd247a5c",
+      "bytes": 48642
+    }
+  ]
+}

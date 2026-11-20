@@ -1,0 +1,39 @@
+{
+  "status": "pass",
+  "recordedSourceBindingSha256": "413d19226cba700463d12dee28d20c592a4192425616575e4875a53beb01b50e",
+  "recordedInputCount": 731,
+  "frozenBaselineRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "unchangedRecordedInputs": 728,
+  "backendInputsIdenticalToFrozen71": 368,
+  "changedInputs": [
+    {
+      "path": "apps/web/site/index.html",
+      "frozen71Sha256": "1ff8f19b909b3303c35bcf5915fb1536ce70cb73dd2d02d1594fcb97d1307650",
+      "currentSha256": "d8376c4d41779b615520960b1a208e3d90b306f36446827971fa4adc5c348200",
+      "currentBytes": 572,
+      "reviewedChangeCommit": "4234c704d98b20e625359a4e2c5dbca7c12acac0"
+    },
+    {
+      "path": "apps/web/site/src/styles/site.css",
+      "frozen71Sha256": "3c1e5087770fcd771b646b02bb99444da8abcf0a8cea756570efbcd7fe62463e",
+      "currentSha256": "87e10312a1ccefeac943d16741be0ab69f842e2e15679f1d19ce18c3b332fd48",
+      "currentBytes": 25311,
+      "reviewedChangeCommit": "4234c704d98b20e625359a4e2c5dbca7c12acac0"
+    },
+    {
+      "path": "packages/design/src/fonts/README.md",
+      "frozen71Sha256": "553ebe5005588ed2e1ce5448cb7202ba389c0a0070d13e01aa5891f0cfbc0cb7",
+      "currentSha256": "f3d6a21a97ae637b9d93140bdce393a0da333dec0d23cd2f2f3eab5a325c740f",
+      "currentBytes": 1971,
+      "reviewedChangeCommit": "db80049c0f4aaebb6340d920c7c89b2cd6f002b4"
+    }
+  ],
+  "addedSiteFavicon": {
+    "path": "apps/web/site/public/favicon.svg",
+    "sha256": "a5e4295b48f9c258b5e2daa55414e8ac461987dd72b2b2dfe6f2cfcb8144f817",
+    "bytes": 272
+  },
+  "scope": "Only site HTML/CSS and font README differ from frozen71. The separately deployed site uses its reviewed November16 source; old731all-identical claims remain historical. Native backend/mobile inputs remain frozen71. External installed tools are outside repository source checks.",
+  "gitMutations": 0,
+  "nativeOrNetworkActions": 0
+}
