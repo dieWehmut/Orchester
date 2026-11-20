@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "status": "current-original-native-processes-absent-and-private-ports-released",
+  "observedAtUtc": "2026-11-19T06:22:07.5289485Z",
+  "processes": [
+    {
+      "role": "manager",
+      "observation": {
+        "pid": 25436,
+        "expectedCreatedExact": "134392957905433988",
+        "currentPidAbsent": false,
+        "birthMatched": true,
+        "currentNativeHandleTerminal": true,
+        "originalProcessAbsent": true,
+        "queryHandleClosed": true
+      }
+    },
+    {
+      "role": "worker",
+      "observation": {
+        "pid": 5340,
+        "expectedCreatedExact": "134392926334771025",
+        "currentPidAbsent": false,
+        "birthMatched": true,
+        "currentNativeHandleTerminal": true,
+        "originalProcessAbsent": true,
+        "queryHandleClosed": true
+      }
+    },
+    {
+      "role": "server",
+      "observation": {
+        "pid": 28772,
+        "expectedCreatedExact": "134392957914721635",
+        "currentPidAbsent": false,
+        "birthMatched": true,
+        "currentNativeHandleTerminal": true,
+        "originalProcessAbsent": true,
+        "queryHandleClosed": true
+      }
+    },
+    {
+      "role": "head",
+      "observation": {
+        "pid": 4080,
+        "expectedCreatedExact": "134392957921995388",
+        "currentPidAbsent": false,
+        "birthMatched": true,
+        "currentNativeHandleTerminal": true,
+        "originalProcessAbsent": true,
+        "queryHandleClosed": true
+      }
+    },
+    {
+      "role": "qemu",
+      "observation": {
+        "pid": 33048,
+        "expectedCreatedExact": "134392957922548739",
+        "currentPidAbsent": false,
+        "birthMatched": true,
+        "currentNativeHandleTerminal": true,
+        "originalProcessAbsent": true,
+        "queryHandleClosed": true
+      }
+    }
+  ],
+  "allFiveOriginalNativeProcessesAbsent": true,
+  "privatePorts": [
+    5041,
+    5572,
+    5573,
+    19330
+  ],
+  "privateTcpRowCount": 0,
+  "privateTcpRows": [],
+  "queryHandlesClosed": true,
+  "processSignals": 0,
+  "adbOperations": 0,
+  "avdOperations": 0,
+  "newJobsSubmitted": 0,
+  "rawAddressesOrUserValuesIncluded": false
+}

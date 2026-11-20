@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "status": "known-private-reference-scan-passed",
+  "observedAtUtc": "2026-11-19T06:28:51.857117+00:00",
+  "scannedPublicFileCount": 44,
+  "knownCiphertextValueCount": 6,
+  "knownDeviceAndLongStorageValueCount": 14,
+  "matchedFileCount": 0,
+  "rawKnownValuesOrMatchedSnippetsPublished": false,
+  "scanScope": "preserved historical private XML and QA device/profile fields only; published JSON separately restricts private-value field keys",
+  "referenceXmlSha256": "d33f5e97f5f1e32f0cbe2dca42024e4d33c1d1ca9d0a0bf9db2266c540693b40",
+  "referenceQaSha256": "35aabae803dfef0f6412a0861b1955cb35f102702e01494ff0670fa9d192bc79"
+}

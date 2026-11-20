@@ -4,6 +4,10 @@
 
 [Claude 官方安装归档](acceptance/agentrouter-platform-sync/native/claude/20261119-official-installations/README.md)已补齐 Windows 与 WSL 的安装缺口：Windows Store 原生安装退出 0，当前用户注册包为 `5.11492.5.0`，已安装 EXE / ASAR 为 `5.11492.5`，Anthropic 签名 Valid；WSL 官方签名仓库、deb、实际 APT 安装与版本命令构成完整来源链。Linux 独立 WSLg 窗口实际显示地域限制页面，Ctrl+Q 后退出 0，16 个原 pidfd 全部终止。Windows 独立 GUI 测试因已有外部应用进程而未执行；安装通过不代表登录或模型可用。55 个归档文件的离线校验及 17 个语义、签名负向用例通过，原始失败和版本纠正记录均保留。
 
+[Windows Android 原五条续验](acceptance/agentrouter-platform-sync/native/android/20261119-original-five-and-studio/README.md)已通过：正确 Medium AVD、已安装 APK 与冻结产物匹配，原五条凭据读取和解密均为 5/5，原保存的 7337 地址单次显式请求为 200、名称匹配。其 Linux owner 与 11 月 16 日重启、自启动回执为同一 boot / listener 身份。实际产品的 21 项目录、42 张图标、自有终端输入输出与正常 exit、原 XML 和四项持久化数据摘要保留均有记录；自有通道正常释放，manager 历史 MemoryError 与最终退出 1 保留。
+
+同一 Android Studio 实例于 11 月 16 日完成项目同步（44.193 秒），11 月 19 日实际分析凭据插件（0 错误、0 警告）。同 APK 的 4 项原生测试来自此前正确 Windows 目标；单元任务 NO-SOURCE 不计测试通过。真实键盘 resize 已在此前自有 7339 后端完成，本次没有重新验证当前 7337 resize。58 个公开文件的校验在 Python 3.10 / 3.14 通过，12 项语义负向检查均拒绝；最终重复读取的 Windows 原件发生 I/O 错误，不影响已保留归档的离线校验，也不构成新一次原生通过。
+
 ## 此前检查点
 
 本轮扩展范围与此前[38 的桌面/手机交付历史](38-desktop-mobile-final-delivery.md)分别归档，原源码、失败和退出边界保留。本检查点生产源码为 `71def643cb08b208cc79687f79255c504eb14dc6`。此前十三轮检查点已推送并合并到 main `3f01075b3490f6920cd7e42d730fd339456728d9`；其中新增六种 CLI 的 Windows / WSL 共 12 个安装单元及常用命令均通过版本检查，见[追加安装记录](40-additional-agent-installations.md)。执行跨 2026-11-11 至 2026-11-13（Asia/Shanghai），原 receipt UTC 日期和 `20261111` 目录保持原值。监控目录分别展示 WorkBuddy 国内、国际两版，共 21 providers、7 services、42 项主题映射与 24 份官方图标。

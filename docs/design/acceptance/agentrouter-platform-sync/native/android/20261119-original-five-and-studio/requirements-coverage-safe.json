@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "status": "dated-native-evidence-coverage-reviewed",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "nativeAcceptanceRerunForArchive": false,
+  "currentOriginalFiveAesAndSaved7337Wire": {
+    "date": "2026-11-19",
+    "receipt": "wire/native-five-wire-safe.json",
+    "getCount": 5,
+    "decryptSuccesses": 5,
+    "decryptFailures": 0,
+    "explicitSaved7337Statuses": [
+      200
+    ]
+  },
+  "currentProductMonitorAndOwnTerminal": {
+    "date": "2026-11-19",
+    "receipt": "wire/native-five-wire-safe.json",
+    "canonicalProviders": 21,
+    "loadedThemeImages": 42,
+    "ownInputOutputAndNormalExit": true,
+    "resizeMeasuredInThisRun": false
+  },
+  "historicalNativeKeyboardResize": {
+    "date": "2026-11-12",
+    "receipt": "history/keyboard-resize-20261112-safe.json",
+    "sourceAndApkBindingReceipt": "history/product-completion-20261112-safe.json",
+    "temporaryBackendPort": 7339,
+    "backendRowsBefore": 28,
+    "backendRowsAfter": 8,
+    "current7337ResizeClaimed": false
+  },
+  "currentStudioInstance": {
+    "syncDate": "2026-11-16",
+    "syncReceipt": "studio/project-sync-20261116-safe.json",
+    "validationReceipt": "studio/project-validation-20261116-safe.json",
+    "syncMilliseconds": 44193,
+    "analysisDate": "2026-11-19",
+    "analysisReceipt": "studio/actual-credentials-analysis-safe.json",
+    "ideInstrumentationRunInvoked": false,
+    "unitTaskStatus": "NO-SOURCE",
+    "unitTestsPassedClaim": false
+  },
+  "historicalNativeInstrumentation": {
+    "date": "2026-11-11",
+    "receipt": "history/native-bridge-tests-20261111-safe.json",
+    "tests": 4,
+    "qualifiedWindowsSdkRunSeparateFromIde": true,
+    "sameInstalledApkAsCurrentWire": true
+  },
+  "linuxAfterRebootBinding": {
+    "rebootDate": "2026-11-16",
+    "rebootReceipt": "history/linux-reboot-lifecycle-20261116-safe.json",
+    "currentOwnerReceipt": "ownership/linux-owner-safe.json",
+    "currentWireReceipt": "wire/native-five-wire-safe.json",
+    "sameKernelBootAndListenerIdentity": true,
+    "linuxOwnerIndependentlyReverifiedByWindows": false
+  },
+  "limitations": [
+    "Current 2026-11-19 PTY resize was not measured; historical trusted native keyboard resize used the owned temporary 7339 backend.",
+    "Project sync was observed on 2026-11-16; 2026-11-19 rechecked the same Studio process identity and analyzed CredentialsPlugin.java.",
+    "Four instrumentation tests were run through the qualified native SDK on 2026-11-11, separately from IDE Run. The 2026-11-16 Gradle unit task returned NO-SOURCE with zero reports.",
+    "Earliest whole private metadata file remains unavailable; current full persisted fields are compared to the pinned historical QA-derived original-five selection."
+  ]
+}

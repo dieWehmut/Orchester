@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-19T05:59:11.558858Z",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "status": "current-owned-windows-medium-target-verified",
+  "namespaceId": "0b12b11bcb5c477aba71c94aab73367b",
+  "bindingSha256": "a0994a5e9fe37be0f14dc590ce592c851c6d1203aa095541884848cb9f878787",
+  "manager": {
+    "pid": 25436,
+    "createdExact": "134392957905433988",
+    "image": "<USERPROFILE>\\AppData\\Roaming\\uv\\python\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+    "sha256": "204d51f19707da17766bccecce2ceececadab350663a8190420d1377bac1150d",
+    "sessionId": 1,
+    "sameUserAsManager": true
+  },
+  "worker": {
+    "pid": 5340,
+    "createdExact": "134392926334771025",
+    "image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "sha256": "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+    "sessionId": 1,
+    "sameUserAsManager": true
+  },
+  "server": {
+    "pid": 28772,
+    "createdExact": "134392957914721635",
+    "image": "<USERPROFILE>\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe",
+    "sha256": "b4a6b455702684652cccf7b46258b29e653538904359a58fd4931cf3ef286b3f",
+    "sessionId": 1,
+    "sameUserAsManager": true
+  },
+  "head": {
+    "pid": 4080,
+    "createdExact": "134392957921995388",
+    "image": "<USERPROFILE>\\AppData\\Local\\Android\\Sdk\\emulator\\emulator.exe",
+    "sha256": "06af3c5da3c2cef7266822fe653f54371fc746d78db6f4282e1b2338a70970c8",
+    "sessionId": 1,
+    "sameUserAsManager": true
+  },
+  "qemu": {
+    "pid": 33048,
+    "createdExact": "134392957922548739",
+    "image": "<USERPROFILE>\\AppData\\Local\\Android\\Sdk\\emulator\\qemu\\windows-x86_64\\qemu-system-x86_64-headless.exe",
+    "sha256": "161d3bcef3d5a93698a77f292c899d131d3e92e335c7b5b2360bbc5ce364cf4c",
+    "sessionId": 1,
+    "sameUserAsManager": true
+  },
+  "actualAvdName": "Medium_Phone_API_37.0",
+  "actualAvdHost": "Windows",
+  "serial": "emulator-5572",
+  "serverPort": 5041,
+  "consolePort": 5572,
+  "guestAdbPort": 5573,
+  "cdpPort": 19330,
+  "nativePortOwners": [
+    {
+      "port": 5041,
+      "ownerPid": 28772,
+      "loopback": true,
+      "state": 2
+    },
+    {
+      "port": 5572,
+      "ownerPid": 33048,
+      "loopback": true,
+      "state": 2
+    },
+    {
+      "port": 5573,
+      "ownerPid": 33048,
+      "loopback": true,
+      "state": 2
+    },
+    {
+      "port": 5573,
+      "ownerPid": 33048,
+      "loopback": true,
+      "state": 5
+    },
+    {
+      "port": 5572,
+      "ownerPid": 33048,
+      "loopback": true,
+      "state": 2
+    },
+    {
+      "port": 5573,
+      "ownerPid": 33048,
+      "loopback": true,
+      "state": 2
+    }
+  ],
+  "originalCreatorHandlesHeld": true,
+  "qemuQueryAndSynchronizeHandleHeld": true,
+  "transportIdentityCommandsCompleted": true,
+  "originalCreatorHandlesHeldScope": "current active server/head original creator handles; completed probe creator handles closed after actual native terminal",
+  "activeCreatorHandleCount": 2,
+  "compactTerminalRecordCount": 21,
+  "completedCreatorHandlesClosedAfterActualTerminal": true,
+  "appOrCredentialOrHttpOperations": 0,
+  "rawCredentialsOrCommandLinesIncluded": false,
+  "independentlyVerifiedCurrentNativeProcesses": true,
+  "independentObserver": {
+    "pid": 24512,
+    "createdExact": "134395415480125957",
+    "image": "<USERPROFILE>\\AppData\\Roaming\\uv\\python\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+    "sha256": "204d51f19707da17766bccecce2ceececadab350663a8190420d1377bac1150d",
+    "sessionId": 1
+  },
+  "independentParentAndCommandComparisons": {
+    "managerBindingInCommand": true,
+    "qemuParentMatches": true,
+    "headParentMatches": true,
+    "headUsesOriginalAvd": true,
+    "managerParentPresent": true,
+    "workerOriginalPathMatches": true
+  },
+  "managerCurrentHolderProofObservedAtUtc": "2026-11-19T05:59:11.464808Z",
+  "managerPreservedFailureCode": "native-observation-or-control-failed",
+  "originalCreatorHandleClaimsSource": "current-original-manager-retained-loop-receipt",
+  "independentObserverOwnQueryHandlesHeldThroughObservation": true,
+  "independentObserverSignals": 0,
+  "independentObserverAdbCommands": 0,
+  "independentObserverOwnQueryHandlesClosed": true
+}

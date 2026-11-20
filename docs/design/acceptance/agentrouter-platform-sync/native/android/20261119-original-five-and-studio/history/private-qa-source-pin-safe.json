@@ -1,0 +1,24 @@
+{
+  "heading": "控制台",
+  "native": true,
+  "navButtons": [
+    "控制台",
+    "任务",
+    "项目",
+    "设置"
+  ],
+  "devicesCount": 6,
+  "localStorageKeys": [
+    "orchester.devices",
+    "orchester.panels",
+    "orchester.theme",
+    "orchester.panel-columns"
+  ],
+  "terminalDomCount": 0,
+  "agentCardCount": 0,
+  "status": "correct-native-windows-before-current-UI-test-backup",
+  "privateBaselineSha256": "c564a9fa9dbdde0dd5ffd52d179a84294cbca6d315a0908d2646a9a5375754cb",
+  "privatePayloadPrinted": false,
+  "cdpPort": 19329,
+  "actualWindowsNativeServerPort": 5039
+}

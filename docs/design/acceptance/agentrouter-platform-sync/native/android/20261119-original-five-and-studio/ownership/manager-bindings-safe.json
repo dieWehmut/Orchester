@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "purpose": "windows-original-five-owned-manager",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "managerSourceSha256": "0a7ffd9d406a93237231fa24813425a6bf9a44e2bf165ba542ac7e23468cfc33",
+  "sameAvdGuardSha256": "11795c1aa06f9ba6475158c5fde709d0eff4085fe41315e160e59cd3344bbc4e",
+  "namespaceId": "0b12b11bcb5c477aba71c94aab73367b",
+  "outputDirectory": "<USERPROFILE>\\AppData\\Local\\Orchester-build\\android5-current-wire-runtime-20261113\\runtime-0b12b11bcb5c477aba71c94aab73367b",
+  "channel": {
+    "serverPort": 5041,
+    "consolePort": 5572,
+    "guestAdbPort": 5573,
+    "cdpPort": 19330
+  },
+  "nativeWorker": {
+    "pid": 5340,
+    "createdExact": "134392926334771025",
+    "imageSha256": "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+    "sessionId": 1
+  },
+  "currentPreflightFile": "<USERPROFILE>\\AppData\\Local\\Orchester-build\\a5di-0b12b11b\\fresh-preflight-safe.json",
+  "currentPreflightSha256": "500fb97e185e76d489d780fc0bb2d31b12f6c0cd22228544d33a5ce724e497b7"
+}

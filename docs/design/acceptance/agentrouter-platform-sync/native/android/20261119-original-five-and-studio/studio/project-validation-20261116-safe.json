@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-16T08:00:56.491554+00:00",
+  "scope": "actual Windows Android Studio launch, IDE sync and IDE source analysis; separate Gradle unit task",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "studioPid": 30552,
+  "studioExactBirthUtc": "2026-11-16T07:50:48.8717106Z",
+  "studioImageSha256": "a49ee7862667d8b0ddec9879a85a16be55d151e9878a328932087e6592f006d3",
+  "actualNativeStudioLaunched": true,
+  "actualIdeProjectSyncSuccess": true,
+  "actualIdeSyncDurationMilliseconds": 44193,
+  "actualCliConnectedToCurrentIde": true,
+  "ideSourceAnalysis": [
+    {
+      "file": "MainActivity.java",
+      "actualStudioPid": 30552,
+      "errors": 0,
+      "warnings": 0,
+      "infos": 2,
+      "infoMessages": [
+        "'if' statement can be replaced with 'switch' statement",
+        "String can be replaced with text block"
+      ],
+      "sourceOutputSha256": "8d06d57d4005cb6c698da99e60dfb9416244cb3267749c497b08517ae08fbeb2"
+    },
+    {
+      "file": "CredentialsPlugin.java",
+      "actualStudioPid": 30552,
+      "errors": 0,
+      "warnings": 0,
+      "infos": 3,
+      "infoMessages": [
+        "String can be replaced with text block",
+        "Consider unknown contexts non-blocking",
+        "'if' statement can be replaced with 'switch' statement"
+      ],
+      "sourceOutputSha256": "b9f0f66c717ea561487257689fe322354f1f02045b9e1e29e0183967d3c33869"
+    }
+  ],
+  "actualIdeInstrumentationRunInvoked": false,
+  "separateGradleUnitTask": {
+    "task": ":app:testDebugUnitTest",
+    "actualNativeExitCode": 0,
+    "status": "NO-SOURCE",
+    "testReportXmlCount": 0,
+    "unitTestsPassedClaim": false
+  },
+  "sourceAndPackagedWebInputsAfterChecks": {
+    "count": 58,
+    "allHashesEqual": true
+  },
+  "windowPropertiesVisible": true,
+  "foregroundScreenshotCaptured": false,
+  "printWindowImageVisuallyReviewed": true,
+  "printWindowImageStatus": "blank-not-accepted",
+  "studioSession": 1,
+  "studioSessionWtsState": "Disconnected",
+  "activeConsoleSession": 2,
+  "activeConsoleSessionWtsState": "Connected",
+  "studioStillHeld": {
+    "observedAtUtc": "2026-11-16T08:00:54.4658915Z",
+    "pid": 30552,
+    "exactBirthUtc": "2026-11-16T07:50:48.8717106Z",
+    "creatorHandleRetained": true,
+    "hasExited": false,
+    "exitCode": null
+  },
+  "originalCredentialOperations": 0,
+  "adbServerOrAvdStopOperations": 0,
+  "emulatorOrApkOrSdkCreationOrInstallOperations": 0,
+  "jobs": [
+    {
+      "label": "native-preflight",
+      "jobId": "01b67e88fe0c240966e9aa586f784b7b",
+      "sourceSha256": "7f6953da4edc213f2dfdc1c6796898e1bab8ebb529a2d4f99cc6fe203a2179f7",
+      "actualWrapperExitCode": 0,
+      "startReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/01b67e88fe0c240966e9aa586f784b7b/start-safe.json",
+      "terminalReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/01b67e88fe0c240966e9aa586f784b7b/terminal-safe.json"
+    },
+    {
+      "label": "studio-launch-retained",
+      "jobId": "c8cd6c3ac1b491f0e2ce13823b2c3a02",
+      "sourceSha256": "1a53b3c4501e36ba3885b5291682190bd18b8c2a4783e4a74e50f28a658b3276",
+      "actualWrapperExitCode": null,
+      "startReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/c8cd6c3ac1b491f0e2ce13823b2c3a02/start-safe.json",
+      "terminalReceipt": null
+    },
+    {
+      "label": "blank-printwindow",
+      "jobId": "5972bb63ea6e301ef8b3b23f30f7368e",
+      "sourceSha256": "d6ada3bf048a025635a8efd446e68062f00275702625da75c4e86a572a7f1db0",
+      "actualWrapperExitCode": 0,
+      "startReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/5972bb63ea6e301ef8b3b23f30f7368e/start-safe.json",
+      "terminalReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/5972bb63ea6e301ef8b3b23f30f7368e/terminal-safe.json"
+    },
+    {
+      "label": "foreground-unavailable",
+      "jobId": "0710e49de11266e53914fdaf117fc012",
+      "sourceSha256": "17545e33122396a1fab0199ebf396c49e8bceddbe3af589744d6bd86985d686d",
+      "actualWrapperExitCode": 0,
+      "startReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/0710e49de11266e53914fdaf117fc012/start-safe.json",
+      "terminalReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/0710e49de11266e53914fdaf117fc012/terminal-safe.json"
+    },
+    {
+      "label": "session-check",
+      "jobId": "e2460ed45e6bf85e1d1e31344ca7809f",
+      "sourceSha256": "bff8b3358f33893d8300ba2ef278de6e5254fd741d84026fd6f457c93097468d",
+      "actualWrapperExitCode": 0,
+      "startReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/e2460ed45e6bf85e1d1e31344ca7809f/start-safe.json",
+      "terminalReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/e2460ed45e6bf85e1d1e31344ca7809f/terminal-safe.json"
+    },
+    {
+      "label": "unit-no-source",
+      "jobId": "c00890b79dfaa2a354719bdd461a4051",
+      "sourceSha256": "ac5b0380d29e0a52d99c4355cc217a67fa74df025da4369bbaa85446f0510306",
+      "actualWrapperExitCode": 0,
+      "startReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/c00890b79dfaa2a354719bdd461a4051/start-safe.json",
+      "terminalReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/c00890b79dfaa2a354719bdd461a4051/terminal-safe.json"
+    },
+    {
+      "label": "cli-missing-java",
+      "jobId": "599cd9d3295fd6493a38c84b89a9cd98",
+      "sourceSha256": "98afc417ca4bfcdd6d25974a3866f424df214ae8cc36db8ff34edef4cb3db046",
+      "actualWrapperExitCode": 1,
+      "startReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/599cd9d3295fd6493a38c84b89a9cd98/start-safe.json",
+      "terminalReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/599cd9d3295fd6493a38c84b89a9cd98/terminal-safe.json"
+    },
+    {
+      "label": "cli-missing-launcher-property",
+      "jobId": "d9c5e8148e8bfa13c3809a38a3e9a384",
+      "sourceSha256": "09d5f14e367777d6d2b11d0cd4ae6f658ea5b8a3e5e990b7ed76e99f71e03883",
+      "actualWrapperExitCode": 0,
+      "startReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/d9c5e8148e8bfa13c3809a38a3e9a384/start-safe.json",
+      "terminalReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/d9c5e8148e8bfa13c3809a38a3e9a384/terminal-safe.json",
+      "actualCliChildExitCodes": [
+        1,
+        1
+      ]
+    },
+    {
+      "label": "cli-ready-main-analysis",
+      "jobId": "b20b2a271223d0bcdc0bf809f3456513",
+      "sourceSha256": "b24a5c0873e1b61240e64e18d9eed40e4ad274878d3fbd8843647feff51d2ddc",
+      "actualWrapperExitCode": 0,
+      "startReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/b20b2a271223d0bcdc0bf809f3456513/start-safe.json",
+      "terminalReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/b20b2a271223d0bcdc0bf809f3456513/terminal-safe.json",
+      "actualCliChildExitCodes": [
+        0,
+        0
+      ]
+    },
+    {
+      "label": "cli-credentials-analysis",
+      "jobId": "6f07702443cf39af4bc3fef2d5b35de4",
+      "sourceSha256": "025f2e44128b255e910adaaeed47300d7a0ff87cfa2aba7422676e31ae6fdde1",
+      "actualWrapperExitCode": 0,
+      "startReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/6f07702443cf39af4bc3fef2d5b35de4/start-safe.json",
+      "terminalReceipt": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Temp/ow7-def9f7ab18b83ef89e19bde6/jobs/6f07702443cf39af4bc3fef2d5b35de4/terminal-safe.json",
+      "actualCliChildExitCodes": [
+        0
+      ]
+    }
+  ],
+  "syncReceipt": "<POSIX_USER_HOME>/.local/state/orchester-delivery/20261116/android-studio-test-agent/current-studio-sync-safe.json",
+  "protectedActiveStudioDirectories": [
+    "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/ide-trusted-71",
+    "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/apps/mobile/android"
+  ],
+  "limitations": [
+    "IDE is in disconnected Windows session; no valid desktop screenshot.",
+    "No JVM unit test source exists; successful Gradle task is not a passing-test claim.",
+    "No native Android instrumentation or original-five credentials test was executed in this task."
+  ]
+}

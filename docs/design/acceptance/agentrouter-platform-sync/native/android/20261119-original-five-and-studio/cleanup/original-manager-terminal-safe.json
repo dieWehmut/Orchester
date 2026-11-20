@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-19T06:14:40.553063Z",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "status": "owned-channel-terminal-with-preserved-failure",
+  "namespaceId": "0b12b11bcb5c477aba71c94aab73367b",
+  "bindingSha256": "a0994a5e9fe37be0f14dc590ce592c851c6d1203aa095541884848cb9f878787",
+  "manager": {
+    "pid": 25436,
+    "createdExact": "134392957905433988",
+    "image": "<USERPROFILE>\\AppData\\Roaming\\uv\\python\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+    "sha256": "204d51f19707da17766bccecce2ceececadab350663a8190420d1377bac1150d",
+    "sessionId": 1,
+    "sameUserAsManager": true
+  },
+  "originalCreatorExitCodes": {
+    "same-avd-preflight": 0,
+    "same-avd-before-head": 0,
+    "devices-registration-probe-0001": 0,
+    "devices-registration-probe-0002": 0,
+    "devices-registration-probe-0003": 0,
+    "devices-registration-probe-0004": 0,
+    "devices-registration-probe-0005": 0,
+    "devices-registration-probe-0006": 0,
+    "devices-registration-probe-0007": 0,
+    "devices-registration-probe-0008": 0,
+    "devices-registration-probe-0009": 0,
+    "devices-registration-probe-0010": 0,
+    "devices-registration-probe-0011": 0,
+    "devices-registration-probe-0012": 0,
+    "devices-registration-probe-0013": 0,
+    "devices-registration-probe-0014": 0,
+    "devices-registration-probe-0015": 0,
+    "devices-registration-probe-0016": 0,
+    "devices-registration-probe-0017": 0,
+    "devices-registration-probe-0018": 0,
+    "avd-name-identity": 0,
+    "normal-emu-kill": 0,
+    "head": 0,
+    "normal-server-kill": 0,
+    "server": 0
+  },
+  "qemuQueryHandleExitCode": 0,
+  "compactCreatorTerminalRecords": {
+    "same-avd-preflight": [
+      29488,
+      "134392957909543586",
+      0,
+      "2026-11-16T09:43:11.461214Z"
+    ],
+    "same-avd-before-head": [
+      2412,
+      "134392957916824299",
+      0,
+      "2026-11-16T09:43:12.184870Z"
+    ],
+    "devices-registration-probe-0001": [
+      12348,
+      "134392957930386131",
+      0,
+      "2026-11-16T09:43:13.141384Z"
+    ],
+    "devices-registration-probe-0002": [
+      24060,
+      "134392957935955130",
+      0,
+      "2026-11-16T09:43:13.697065Z"
+    ],
+    "devices-registration-probe-0003": [
+      24608,
+      "134392957941599627",
+      0,
+      "2026-11-16T09:43:14.261489Z"
+    ],
+    "devices-registration-probe-0004": [
+      33112,
+      "134392957947148143",
+      0,
+      "2026-11-16T09:43:14.816452Z"
+    ],
+    "devices-registration-probe-0005": [
+      18860,
+      "134392957952639226",
+      0,
+      "2026-11-16T09:43:15.366480Z"
+    ],
+    "devices-registration-probe-0006": [
+      2896,
+      "134392957958150642",
+      0,
+      "2026-11-16T09:43:15.917863Z"
+    ],
+    "devices-registration-probe-0007": [
+      30212,
+      "134392957963708916",
+      0,
+      "2026-11-16T09:43:16.472708Z"
+    ],
+    "devices-registration-probe-0008": [
+      34040,
+      "134392957969149446",
+      0,
+      "2026-11-16T09:43:17.019168Z"
+    ],
+    "devices-registration-probe-0009": [
+      31688,
+      "134392957974628323",
+      0,
+      "2026-11-16T09:43:17.566130Z"
+    ],
+    "devices-registration-probe-0010": [
+      33816,
+      "134392957980217014",
+      0,
+      "2026-11-16T09:43:18.123041Z"
+    ],
+    "devices-registration-probe-0011": [
+      7680,
+      "134392957985798753",
+      0,
+      "2026-11-16T09:43:18.681189Z"
+    ],
+    "devices-registration-probe-0012": [
+      20020,
+      "134392957991445668",
+      0,
+      "2026-11-16T09:43:19.246979Z"
+    ],
+    "devices-registration-probe-0013": [
+      30248,
+      "134392957997174756",
+      0,
+      "2026-11-16T09:43:19.819150Z"
+    ],
+    "devices-registration-probe-0014": [
+      22624,
+      "134392958002686345",
+      0,
+      "2026-11-16T09:43:20.370692Z"
+    ],
+    "devices-registration-probe-0015": [
+      22652,
+      "134392958008221868",
+      0,
+      "2026-11-16T09:43:20.923900Z"
+    ],
+    "devices-registration-probe-0016": [
+      26144,
+      "134392958013876084",
+      0,
+      "2026-11-16T09:43:21.489282Z"
+    ],
+    "devices-registration-probe-0017": [
+      11172,
+      "134392958019749384",
+      0,
+      "2026-11-16T09:43:22.080672Z"
+    ],
+    "devices-registration-probe-0018": [
+      27952,
+      "134392958025692674",
+      0,
+      "2026-11-16T09:43:22.671702Z"
+    ],
+    "avd-name-identity": [
+      27856,
+      "134392958028455801",
+      0,
+      "2026-11-16T09:43:22.948660Z"
+    ],
+    "normal-emu-kill": [
+      322900,
+      "134395423601819435",
+      0,
+      "2026-11-19T06:12:40.288552Z"
+    ],
+    "head": [
+      4080,
+      "134392957921995388",
+      0,
+      "2026-11-19T06:12:42.314983Z"
+    ],
+    "normal-server-kill": [
+      16380,
+      "134395423623250938",
+      0,
+      "2026-11-19T06:12:42.529102Z"
+    ],
+    "server": [
+      28772,
+      "134392957914721635",
+      0,
+      "2026-11-19T06:12:43.036970Z"
+    ]
+  },
+  "allCreatorHandlesClosedAfterActualTerminal": true,
+  "allCreatedNativeHandlesActuallyTerminal": true,
+  "allFourPrivatePortsReleased": true,
+  "normalQuitRequested": true,
+  "failureCode": "native-observation-or-control-failed",
+  "forcedTerminations": 0,
+  "appOrCredentialOrHttpOperations": 0
+}

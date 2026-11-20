@@ -514,6 +514,10 @@
     {
       "scope": "Official Windows Store package5.11492.5.0/Valid Anthropic installedEXE+ASAR5.11492.5; official signed Linux repository/APT/nativeversion5.11492.5; WSLg region-page observed/normalCtrlQ exit0/all16pidfds terminal. Installation only, no model availability claim.",
       "proof": "native/claude/20261119-official-installations/summary-safe.json"
+    },
+    {
+      "scope": "Nov19 correctWindows originalfive GET5/decrypt5/one saved7337GET200; originalXML and fourstoragepairs retained;21products42loadedimages/PTY input-output-exit and ownrelease; sameStudio actual44.193s syncNov16/analysisNov19; historical native4/7339resize kept separately.",
+      "proof": "native/android/20261119-original-five-and-studio/summary-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -526,7 +530,6 @@
   ],
   "pendingCurrentEpochScopes": [
     "Actually launch the promoted default Desktop and verify the original GUI/task state, including all213 records, then start and verify managed Remote7338/current-instance resources, authentication and original state retention. Fresh offline original backup and Desktop/Remote default-directory promotion are already complete; promotion jobs performed no default launches and did not prove post-promotion runtime.",
-    "Canonical user bus/managed7337 normal start-stop-start and Linux native original-one saved GET200 separately verified. Worker4 Windows existing sixSDK/AVD pins and own preflight0 passed; original-five manager attempts1/2 failed before app/credential/HTTP and completed normal owned creator/port cleanup, attempt3 failed fresh preflight before children. Current correct Android target, actual Windows run-as UID/alias and five native saved Credentials.get/current7337 saved-token GET remain pending.",
     "OfficialDeepSeekWindows installation/signature/HKCU/ASARrc1verified afteroriginalnumericPEverifierfailure; GUI/model/auth nottested; DataElementoriginalcurrentmetadataretained, wholeoldEXEbeforeafterhashnotproved",
     "InternationalWorkBuddy nativeWSL usablepackage/profile isolation pending: currentfourofficialmetadata200 butfouradvertisedpayloads404/0bytes; publichomepage/clientbytes equalhistory.",
     "Historical boundary only: unregistered suspended-child identity/HANDLE closure and wrong-Linux full-package rollback were not independently established; no retrospective recovery, claim, signal or new execution task is implied.",
@@ -550,7 +553,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-20T02:11:47.324395+00:00",
+  "updatedAt": "2026-11-20T02:22:50.426646+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -693,7 +696,7 @@
   "currentLinuxRemoteStateSemanticJSONExact": true,
   "currentLinuxRemoteStateRawRowsExactlyRetainedComparedToNewCurrentBackup": false,
   "currentLinuxPreflightRawStateRowsEqualOldLegacyBackup": false,
-  "currentLinuxExistingOriginalTokenWire200TestedThisEpoch": false,
+  "currentLinuxExistingOriginalTokenWire200TestedThisEpoch": true,
   "currentWindowsDeepSeekOrdinarySilentNoAutoLaunchStaticVerified": true,
   "currentWindowsDeepSeekInstallerNativeExecutionTested": true,
   "currentWrongLinuxOriginalOneNativeCredentialGetSucceeded": true,
@@ -875,7 +878,7 @@
   "currentLinuxRetainedOriginalWriterFd": null,
   "currentLinuxOriginalPidfdHeld": null,
   "currentLinuxNativeControlSocketPathFailurePreserved": true,
-  "currentLinuxOriginalTokenWireCurrentInstanceVerified": false,
+  "currentLinuxOriginalTokenWireCurrentInstanceVerified": true,
   "prior640ThirteenthLinuxLifecycleCheckpointDelivered": true,
   "thirteenthLinuxLifecycleDeliveryProof": "maintenance/git-delivery/thirteenth-step-delivery-safe.json",
   "historicalClaudePublicSfsProof": "sources/claude-sfs-20261113/official-sfs-root-repair-and-product-boundary-safe.json",
@@ -883,7 +886,7 @@
   "historicalClaudePublicSfsCategoryHttpStatus": 404,
   "historicalClaudePublicSfsPayloadPrepared": false,
   "historicalClaudePublicSfsArchiveBindingProof": "sources/claude-sfs-20261113/public-archive-binding-safe.json",
-  "currentLinuxOriginalTokenWireCurrentInstanceScope": "Original Windows-phone saved credentials and authenticated request to listener427/ticks342 remain pending; prior Linux original-one GET200 retains its November13 source epoch.",
+  "currentLinuxOriginalTokenWireCurrentInstanceScope": "Windows original five native credential reads and AES5/5; one explicit original-saved7337 info GET200 against boot04a4390b/listener427/ticks342. Actual2026-11-19 observation only; automatic reconnect requests unmeasured.",
   "currentLinuxNativeAndroidOriginalOneWireVerified": true,
   "currentLinuxNativeAndroidOriginalOneWireProof": "deployments/linux/20261113-native-original-one-wire/final-scope-safe.json",
   "currentOriginalWindowsFiveTokenWireCurrentInstanceVerified": false,
@@ -954,8 +957,8 @@
   "currentWindowsAndroidExistingAvdPreflightObservedAtUtc": "2026-11-13T12:18:45.3618589Z",
   "currentWindowsAndroidExistingAvdPinsMatched": 6,
   "currentWindowsAndroidOldExactIdentitiesLiveCount": 0,
-  "currentWindowsAndroidFiveCurrentNativeCredentialGetCount": null,
-  "currentWindowsAndroidCurrent7337SavedCredentialHttpGetVerified": false,
+  "currentWindowsAndroidFiveCurrentNativeCredentialGetCount": 5,
+  "currentWindowsAndroidCurrent7337SavedCredentialHttpGetVerified": true,
   "currentWindowsAndroidPrivatePortsReserved": false,
   "currentWindowsNormalTrayQuitProof": "native/windows/original-gui-msaa-normal-exit-20261113/independent-assembly-binding-proof-safe.json",
   "currentWindowsNormalTrayQuitObservedAtUtc": "2026-11-13T14:56:30.4286338Z",
@@ -1106,5 +1109,11 @@
   "currentClaudeInstalledApplicationVersion": "5.11492.5",
   "currentClaudeWindowsIndependentGuiVerified": false,
   "currentClaudeLinuxNativeGuiNormalExitVerified": true,
-  "currentClaudeAccountOrModelAvailabilityVerified": false
+  "currentClaudeAccountOrModelAvailabilityVerified": false,
+  "currentWindowsAndroidOriginalFiveContinuationProof": "native/android/20261119-original-five-and-studio/summary-safe.json",
+  "currentWindowsAndroidOriginalFiveObservedAtUtc": "2026-11-19T06:15:41.726654+00:00",
+  "currentAndroidStudioContinuationProof": "native/android/20261119-original-five-and-studio/requirements-coverage-safe.json",
+  "currentAndroidContinuation7337ResizeRerun": false,
+  "currentAndroidStudioUnitTaskNoSource": true,
+  "currentAndroidStudioCurrentInstanceSyncMilliseconds": 44193
 }

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "status": "same-job-native-boot-app-read-and-wire-binding-materialized",
+  "observedAtUtc": "2026-11-19T05:59:41.3516315Z",
+  "namespaceId": "0b12b11bcb5c477aba71c94aab73367b",
+  "identitySha256": "166100e89fa36cb1fe8e3d4de2bdd5507efb149e79fedbea10719e7417645a5b",
+  "managerBindingSha256": "a0994a5e9fe37be0f14dc590ce592c851c6d1203aa095541884848cb9f878787",
+  "actualWindowsRunAsAppUid": 10235,
+  "actualNativeBootExitCode": 0,
+  "bootProofSha256": "3c0f6b757c60c8d1b4628bbbfd6d4234471b8a06d5916535ababb15eb19f67fe",
+  "actualNativeAppBindingExitCode": 0,
+  "appProofSha256": "4ac2e5be11599ec6cfc6a123b8704dea2851da26dac9f002c70f6230ed1f9d3f",
+  "readBindingSha256": "6361154960680f340f1afc50aacc0fff8a12e71363a483fe5e12e57cd78ae741",
+  "wireBindingFile": "<USERPROFILE>\\AppData\\Local\\Orchester-build\\android-resume-original5-20261119\\wire-self-7ec170eaf03e41c8a0fd080d67c7853d.json",
+  "wireBindingSha256": "01bc796e280140dcca0544e4e823616c545727b753c2940d4bd089a291484530",
+  "wireSafeOutputFile": "<USERPROFILE>\\AppData\\Local\\Orchester-build\\android5-current-wire-runtime-20261113\\runtime-0b12b11bcb5c477aba71c94aab73367b\\native-five-wire-7ec170eaf03e41c8a0fd080d67c7853d-safe.json",
+  "sourceInputsAndRuntimeProofsReadLocked": true,
+  "rawPrivateValuesIncluded": false,
+  "linuxOwnerProofIndependentlyReverifiedByWindows": false
+}
