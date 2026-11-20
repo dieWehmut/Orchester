@@ -116,10 +116,29 @@ export function useRemoteFleet() {
     persist();
   }
   async function restore(host: RemoteHost) {
-    for (const item of [...remembered].filter(
-      (p) => p.hostAddress === host.address,
-    )) {
+    if (host.control.connectionStatus.value !== "connected") return;
+    const targets = new Map(
+      [...remembered, ...panels.value.map((panel) => ({
+        hostAddress: panel.hostAddress,
+        projectId: panel.project.id,
+        agent: panel.agent,
+      }))]
+        .filter((item) => item.hostAddress === host.address)
+        .map((item) => [JSON.stringify([item.projectId, item.agent]), item]),
+    );
+    for (const item of targets.values()) {
       if (disposed || !hosts.value.includes(host)) return;
+      // Connected panels own their polling and selected run. Only retry clients
+      // which never connected; an expired token still needs explicit pairing.
+      const existing = panels.value.find((panel) =>
+        panel.hostAddress === host.address &&
+        panel.project.id === item.projectId && panel.agent === item.agent,
+      );
+      const wanted = existing || remembered.some((panel) =>
+        panel.hostAddress === host.address &&
+        panel.projectId === item.projectId && panel.agent === item.agent,
+      );
+      if (!wanted || existing?.control.connected.value) continue;
       const project = host.control.projects.value.find(
         (p) => p.id === item.projectId,
       );
@@ -146,6 +165,7 @@ export function useRemoteFleet() {
       if (host.control.connectionStatus.value === "connected") {
         await host.control.action(host.control.refresh);
         await host.control.refreshAgentStatus();
+        await restore(host);
         return host;
       }
       await host.control.connect({ address, name: device.name });
@@ -188,25 +208,11 @@ export function useRemoteFleet() {
     old?.scope.stop();
     const host = markRaw({ address, name, ...worker, syncError: "" });
     hosts.value = [...hosts.value.filter((h) => h.address !== address), host];
-    // Re-pairing changes only this computer's clients and retains each panel's run.
+    // Rebind each panel to its requested project/agent, never the host default.
     for (const panel of panels.value.filter((p) => p.hostAddress === address)) {
       if (disposed || !hosts.value.includes(host)) return null;
-      const selected = panel.control.selected.value;
-      await panel.control.connect({ address, name });
-      if (disposed || !panels.value.includes(panel)) continue;
-      const project = panel.control.projects.value.find(
-        (p) => p.id === panel.project.id,
-      );
-      if (project) {
-        await panel.control.selectProject(project);
-        if (disposed || !panels.value.includes(panel)) continue;
-        panel.control.agent.value = panel.control.agents.value.some(
-          (a) => a.name === panel.agent && a.available,
-        )
-          ? panel.agent
-          : "";
-        if (selected) await panel.control.open(selected);
-      }
+      if (!panels.value.includes(panel)) continue;
+      await startPanel(host, panel.project, panel.agent, true);
     }
     await host.control.refreshAgentStatus();
     await restore(host);
@@ -217,30 +223,55 @@ export function useRemoteFleet() {
     project: Project,
     agent: string,
   ): Promise<AgentPanel | null> {
+    return startPanel(host, project, agent);
+  }
+  function startPanel(
+    host: RemoteHost,
+    project: Project,
+    agent: string,
+    reconnect = false,
+  ): Promise<AgentPanel | null> {
     if (disposed || !hosts.value.includes(host)) return Promise.resolve(null);
     const id = JSON.stringify([host.address, project.id, agent]),
       existing = panels.value.find((p) => p.id === id);
     const inFlight = opening.get(id);
-    if (inFlight) return inFlight;
-    if (existing) return Promise.resolve(existing);
-    if (panels.value.length >= 12) {
+    if (inFlight && !reconnect) return inFlight;
+    if (
+      existing && !reconnect &&
+      existing.control.connectionStatus.value === "connected" &&
+      existing.control.project.value?.id === project.id &&
+      existing.control.agent.value === agent
+    ) return Promise.resolve(existing);
+    if (!existing && panels.value.length >= 12) {
       error.value = "最多打开 12 个 Agent 栏，请先关闭一个栏";
       return Promise.resolve(null);
     }
-    const panel = markRaw({
+    const panel = existing ?? markRaw({
       id,
       hostAddress: host.address,
       project,
       agent,
       ...spawn(),
     });
-    panels.value = [...panels.value, panel];
-    const work = (async () => {
+    if (!existing) panels.value = [...panels.value, panel];
+    const selected = panel.control.selected.value;
+    const active = () =>
+      !disposed && hosts.value.includes(host) &&
+      panels.value.includes(panel) && opening.get(id) === work;
+    const work: Promise<AgentPanel | null> = (async () => {
       await panel.control.connect({ address: host.address, name: host.name });
-      if (disposed || !panels.value.includes(panel)) return null;
+      if (!active()) return null;
+      panel.control.agent.value = "";
       if (panel.control.connectionStatus.value !== "connected") return panel;
-      await panel.control.selectProject(project);
-      if (disposed || !panels.value.includes(panel)) return null;
+      const target = panel.control.projects.value.find((p) => p.id === project.id);
+      if (!target) {
+        panel.control.project.value = null;
+        panel.control.runs.value = [];
+        error.value = "该项目已不可用，请重新选择项目";
+        return panel;
+      }
+      await panel.control.selectProject(target);
+      if (!active()) return null;
       panel.control.agent.value = "";
       const available = panel.control.agents.value.find(
         (a) => a.name === agent && a.available,
@@ -250,16 +281,21 @@ export function useRemoteFleet() {
         return panel;
       }
       panel.control.agent.value = agent;
-      const run = panel.control.runs.value.find((r) => r.agent === agent);
+      const matching = panel.control.runs.value.filter((r) => r.agent === agent);
+      const run = matching.find((r) => r.id === selected?.id) ?? matching[0];
       if (run) await panel.control.open(run);
-      if (disposed || !panels.value.includes(panel)) return null;
+      if (!active()) return null;
       remember(panel);
       return panel;
-    })().finally(() => opening.delete(id));
+    })().finally(() => {
+      if (opening.get(id) === work) opening.delete(id);
+    });
     opening.set(id, work);
     return work;
   }
   function closePanel(panel: AgentPanel) {
+    if (!panels.value.includes(panel)) return;
+    opening.delete(panel.id);
     panel.scope.stop();
     panels.value = panels.value.filter((p) => p !== panel);
     remembered = remembered.filter(
@@ -297,10 +333,14 @@ export function useRemoteFleet() {
         hosts.value
           .filter(
             (h) =>
-              h.control.connected.value &&
               h.control.connectionStatus.value !== "needs_pairing",
           )
           .map(async (host) => {
+            if (!host.control.connected.value) {
+              await connectSaved(host);
+              host.syncError = host.control.error.value;
+              return;
+            }
             await host.control.action(async () => {
               await Promise.all([
                 host.control.refresh(),
@@ -308,6 +348,7 @@ export function useRemoteFleet() {
               ]);
             });
             await host.control.refreshAgentStatus();
+            await restore(host);
             host.syncError = host.control.error.value;
           }),
       );
