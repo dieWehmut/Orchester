@@ -34,7 +34,7 @@
     {
       "id": "separate_workbuddy",
       "userRequirement": "Domestic and international WorkBuddy remain separate",
-      "status": "verified-code-ui-original-installations",
+      "status": "genuine-international-native-linux-installed-separate-primary-profile-and-domestic-preserved",
       "evidence": [
         "sources/workbuddy/official-regional-release-research.json",
         "tests/frontend/workbuddy-editions/corrected-result.json",
@@ -44,11 +44,16 @@
         "native/wsl/workbuddy-global-current-20261113/current-http-safe.json",
         "native/wsl/workbuddy-global-current-20261113/client-http-safe.json",
         "native/wsl/workbuddy-global-current-20261113/safe-source-mappings.json",
-        "native/wsl/20261120-workbuddy-global/current-global-linux-result-safe.json"
+        "native/wsl/20261120-workbuddy-global/current-global-linux-result-safe.json",
+        "native/wsl/20261120-workbuddy-global-installed/summary-safe.json",
+        "native/wsl/20261120-workbuddy-global-installed/actual-linux-identity-safe.json",
+        "native/wsl/20261120-workbuddy-global-installed/preservation-and-profile-final-safe.json"
       ],
-      "verifiedScope": "workbuddy and workbuddy_global distinguish registered binaries/profile directories; original Windows domestic5.9.3/international5.9.4 retained. NativeAndroid realmonitor shows WorkBuddy国内版 andWorkBuddyAI国际版 separate names/sameofficialbrandmarks. CurrentNov13Asia officialhomepage andlinkedclients bytesexacthistory; fourLinuxmetadata200 butfouradvertisedpayload RangeGET404/0bytes; existingdomesticELFhash retained, nointernationalnativepackage/profile inference. November20 current official docsbuild432ddbdc516/1954routes still no international Linux package link; six source-supported feeds return5.5.2.37849279 but their exact six advertised URLs all404; source-supported enterpriseAppImage400. Domestic executable unchanged, no substitution/global installation.",
-      "remaining": [
-        "Obtain a source-supported downloadable official international WorkBuddy Linux package, verify genuine international ELF/profile identity, and install without overwriting domestic or original user data. Six currently advertised exact URLs return404; this is not a permanent unsupported-policy claim."
+      "verifiedScope": "workbuddy and workbuddy_global distinguish registered binaries/profile directories; original Windows domestic5.9.3/international5.9.4 retained. NativeAndroid realmonitor shows WorkBuddy国内版 andWorkBuddyAI国际版 separate names/sameofficialbrandmarks. CurrentNov13Asia officialhomepage andlinkedclients bytesexacthistory; fourLinuxmetadata200 butfouradvertisedpayload RangeGET404/0bytes; existingdomesticELFhash retained, nointernationalnativepackage/profile inference. November20 current official docsbuild432ddbdc516/1954routes still no international Linux package link; six source-supported feeds return5.5.2.37849279 but their exact six advertised URLs all404; source-supported enterpriseAppImage400. Domestic executable unchanged, no substitution/global installation. Later source-supported official TencentCDN5.7.6.40488862-3e43260f complete421733316B downloaded200/TLSverified, actual international ELF+ASAR/productisOversea/workbuddy.ai/.workbuddy-ai confirmed. Extract-only separate nativeprefix/workbuddy-ai userlauncher/desktop registered, domesticthreefiles unchanged. OwnedXvfbmapped1199x799 titleWorkBuddyAI, CtrlQ app0+outer0/13observednoninfraidentitiesterminal. ExistingHOMEhidden/networkdenied; primary.workbuddy-ai/app separate but shared.workbuddy/logs twohelpers disclosed. Earlierdeadfeeds/139version-headless/setupfailures preserved. No successfulversion-only/latest/login/model claim.",
+      "remaining": [],
+      "limitations": [
+        "Native international application primary profile is separate; helper logs also use .workbuddy/logs in fresh test HOME. Existing profiles were hidden and untouched; concurrent cross-edition helper behavior was not tested.",
+        "Current official website six feed URLs remain unavailable in their earlier observation; actual installation uses a distinct verified official-bucket package and does not imply every public channel works."
       ]
     },
     {
@@ -194,7 +199,7 @@
     {
       "id": "wsl_agents",
       "userRequirement": "Install AgentRouter tools natively in WSL",
-      "status": "twenty-distinct-native-products-verified-workbuddy-global-official-payload-unavailable",
+      "status": "genuine-international-native-linux-installed-separate-primary-profile-and-domestic-preserved",
       "evidence": [
         "native/wsl/install-summary.json",
         "native/wsl/current-matrix/current-native-installation-matrix-safe.json",
@@ -208,11 +213,16 @@
         "sources/claude-linux-current-mcp-20261113/source-binding-and-vendor-boundary-safe.json",
         "native/claude/20261119-official-installations/summary-safe.json",
         "native/20261120-installation-coverage/current-public-entry-audit-safe.json",
-        "native/wsl/20261120-workbuddy-global/current-global-linux-result-safe.json"
+        "native/wsl/20261120-workbuddy-global/current-global-linux-result-safe.json",
+        "native/wsl/20261120-workbuddy-global-installed/summary-safe.json",
+        "native/wsl/20261120-workbuddy-global-installed/actual-linux-identity-safe.json",
+        "native/wsl/20261120-workbuddy-global-installed/preservation-and-profile-final-safe.json"
       ],
-      "verifiedScope": "Earlier19verificationunits/16distinctdocproducts pluscurrent3actuallegacyinstalls=>19distinctnativeproducts. Cursor3.29.15/AntigravityDesktop2.31 extracteduserprefix/nativeELF/ldd/Electron0, Cursorlauncher--version0 afterfirst1;DeepSeekofficialHarnessWebCLI0.2.2rc1 install0 afterfirst1/version/help0. Launcher syntaxall3=0 but no Antigravitylauncher --version claim;nativeAGruntime+publicversiondistinct. Officialiconsbyteexact. DeepSeekLinuxDesktopexplicitunsupported; WebCLI isdistinct official product notfakeDesktop. AGDesktop2.31 != IDE2.6,regionFAQ andCursorvendorWindowsWSLintegrationboundary retained. No GUI/model/authtest. CurrentNov13Asia fourinternationalWorkBuddy officialLinux update metadata200 andfourexactadvertisedpayload RangeGET404/0bytes reconfirmed; currenthomepage/threeclient assets exacthistorical bytes; originaldomesticELFhash/launcher retained, noinstallation/profilewrite. CurrentClaudeofficialsupport/download pages eachcurl35/beforeHTTP; this doesnot establishpermanentLinuxunsupportedpolicy. Current official MCP repository 2026 documentation at c713a548 explicitly mentions Claude Desktop Linux availability and configuration/log paths; current main and pinned source bytes match. This supersedes archived 2025 MCP unsupported wording only; vendor platform list, exact Linux payload and native installation remain unverified. November19 official Claude Desktop installation is now verified separately: Windows Store native installer exit0/registered5.11492.5.0/installed EXE and ASAR5.11492.5/Valid Anthropic signature; WSL signed repository/APT native installation+version5.11492.5/dpkg integrity and actual WSLg window. Ctrl+Q exited0 and all16 original pidfds ended. Linux region restriction and unperformed Windows independent GUI remain explicit functional limits. November20 current official docsbuild432ddbdc516/1954routes still no international Linux package link; six source-supported feeds return5.5.2.37849279 but their exact six advertised URLs all404; source-supported enterpriseAppImage400. Domestic executable unchanged, no substitution/global installation.",
-      "remaining": [
-        "Obtain a source-supported downloadable official international WorkBuddy Linux package, verify genuine international ELF/profile identity, and install without overwriting domestic or original user data. Six currently advertised exact URLs return404; this is not a permanent unsupported-policy claim."
+      "verifiedScope": "Earlier19verificationunits/16distinctdocproducts pluscurrent3actuallegacyinstalls=>19distinctnativeproducts. Cursor3.29.15/AntigravityDesktop2.31 extracteduserprefix/nativeELF/ldd/Electron0, Cursorlauncher--version0 afterfirst1;DeepSeekofficialHarnessWebCLI0.2.2rc1 install0 afterfirst1/version/help0. Launcher syntaxall3=0 but no Antigravitylauncher --version claim;nativeAGruntime+publicversiondistinct. Officialiconsbyteexact. DeepSeekLinuxDesktopexplicitunsupported; WebCLI isdistinct official product notfakeDesktop. AGDesktop2.31 != IDE2.6,regionFAQ andCursorvendorWindowsWSLintegrationboundary retained. No GUI/model/authtest. CurrentNov13Asia fourinternationalWorkBuddy officialLinux update metadata200 andfourexactadvertisedpayload RangeGET404/0bytes reconfirmed; currenthomepage/threeclient assets exacthistorical bytes; originaldomesticELFhash/launcher retained, noinstallation/profilewrite. CurrentClaudeofficialsupport/download pages eachcurl35/beforeHTTP; this doesnot establishpermanentLinuxunsupportedpolicy. Current official MCP repository 2026 documentation at c713a548 explicitly mentions Claude Desktop Linux availability and configuration/log paths; current main and pinned source bytes match. This supersedes archived 2025 MCP unsupported wording only; vendor platform list, exact Linux payload and native installation remain unverified. November19 official Claude Desktop installation is now verified separately: Windows Store native installer exit0/registered5.11492.5.0/installed EXE and ASAR5.11492.5/Valid Anthropic signature; WSL signed repository/APT native installation+version5.11492.5/dpkg integrity and actual WSLg window. Ctrl+Q exited0 and all16 original pidfds ended. Linux region restriction and unperformed Windows independent GUI remain explicit functional limits. November20 current official docsbuild432ddbdc516/1954routes still no international Linux package link; six source-supported feeds return5.5.2.37849279 but their exact six advertised URLs all404; source-supported enterpriseAppImage400. Domestic executable unchanged, no substitution/global installation. Later source-supported official TencentCDN5.7.6.40488862-3e43260f complete421733316B downloaded200/TLSverified, actual international ELF+ASAR/productisOversea/workbuddy.ai/.workbuddy-ai confirmed. Extract-only separate nativeprefix/workbuddy-ai userlauncher/desktop registered, domesticthreefiles unchanged. OwnedXvfbmapped1199x799 titleWorkBuddyAI, CtrlQ app0+outer0/13observednoninfraidentitiesterminal. ExistingHOMEhidden/networkdenied; primary.workbuddy-ai/app separate but shared.workbuddy/logs twohelpers disclosed. Earlierdeadfeeds/139version-headless/setupfailures preserved. No successfulversion-only/latest/login/model claim.",
+      "remaining": [],
+      "limitations": [
+        "Native international application primary profile is separate; helper logs also use .workbuddy/logs in fresh test HOME. Existing profiles were hidden and untouched; concurrent cross-edition helper behavior was not tested.",
+        "Current official website six feed URLs remain unavailable in their earlier observation; actual installation uses a distinct verified official-bucket package and does not imply every public channel works."
       ]
     },
     {
@@ -402,7 +412,7 @@
   "historicalResultsRemainInOwnSourceEpoch": true,
   "installationDoesNotEstablishAuthenticationOrModelTaskExecution": true,
   "privateCredentialOrUserStateValuesIncluded": false,
-  "updatedAt": "2026-11-20T04:10:48.553354+00:00",
+  "updatedAt": "2026-11-20T04:25:06.016766+00:00",
   "documentationExecutionDateRangeAsiaShanghai": [
     "2026-11-11",
     "2026-11-20"

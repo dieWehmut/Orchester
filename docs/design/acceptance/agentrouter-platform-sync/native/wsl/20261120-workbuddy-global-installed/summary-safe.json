@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-20T04:07:14.405325+00:00",
+  "status": "official-international-linux-native-installed-and-isolated-gui-normal-quit-verified",
+  "officialPayloadUrl": "https://codebuddy-1328495429.cos.accelerate.myqcloud.com/workbuddy/saas/linux-x64/WorkBuddy-linux-x64-5.7.6.40488862-3e43260f.deb",
+  "packageVersion": "5.7.6.40488862-3e43260f",
+  "packageSha256": "3cf1244520d54eca391378a29579918122006f5bfdba942fe977b908365e93db",
+  "packageBytes": 421733316,
+  "officialPublisherBinding": "https://www.codebuddy.ai/ explicitly uses exact COS bucket; candidate URL discovered in community manifest; binary fetched directly from official bucket",
+  "communityBinaryInstalled": false,
+  "arbitraryPackageUrlGuessed": false,
+  "nativeElfAndInternationalProductVerified": true,
+  "separateNativePrefixInstalled": true,
+  "nativeGuiMapped": true,
+  "normalProductCtrlQQuitVerified": true,
+  "actualApplicationExitCode": 0,
+  "actualOuterExitCode": 0,
+  "allNonInfrastructureObservedProcessesTerminal": true,
+  "primaryInternationalProfile": ".workbuddy-ai/app",
+  "helperProfileNamespaceAlsoCreated": ".workbuddy/logs",
+  "allHelperPathsEditionSpecificClaimed": false,
+  "domesticArtifactsBytePreserved": true,
+  "originalHomeHiddenDuringTests": true,
+  "testNetworkNamespaceIsolated": true,
+  "versionOnlyCommandSupportedClaimed": false,
+  "currentWebsiteLinuxButtonAvailableClaimed": false,
+  "allOfficialChannelsWorkingClaimed": false,
+  "latestVersionClaimed": false,
+  "accountLoginTested": false,
+  "regionalServiceAvailabilityTested": false,
+  "modelCalls": 0,
+  "authenticationActions": 0,
+  "existingPrivateProfileReads": 0,
+  "windowsApplicationsTouched": false,
+  "nativePackageMaintainerScriptsExecuted": false,
+  "failedAttempts": [
+    {
+      "path": "failures/version-initial-isolation-error-safe.json",
+      "sha256": "1bcf1102b82dfce3b608b5f7fb0049d94f8716ec77b9680a6d12114839c0e754",
+      "bytes": 2033,
+      "exit": 1,
+      "reason": "bwrap destination was on readonly root; application not executed",
+      "countsAsSuccessfulVersionOrGuiProof": false
+    },
+    {
+      "path": "failures/version-without-display-safe.json",
+      "sha256": "ff3f9b949edb4d713d5a0ab33c9403ab2d04d6b18307be95bcee8bdc967f2ba3",
+      "bytes": 6043,
+      "exit": 139,
+      "reason": "--version enters desktop initialization; missing X server/DISPLAY caused exit139",
+      "countsAsSuccessfulVersionOrGuiProof": false
+    },
+    {
+      "path": "failures/headless-gtk-startup-safe.json",
+      "sha256": "a17cd391641429c070e696c1166a8f157e3ddff8b29ccfbd7decd0983a85e23d",
+      "bytes": 21845,
+      "exit": 139,
+      "reason": "Headless Ozone initialized CellJS/runtime but GTK widget/style creation caused exit139",
+      "countsAsSuccessfulVersionOrGuiProof": false
+    },
+    {
+      "path": "failures/gui-attempt1-outer-safe.json",
+      "sha256": "d4d72ae8d9ca7826daff02fbeec44e0df7aa116212305368a499bccf1d1399f3",
+      "bytes": 2152,
+      "exit": 1,
+      "reason": "bwrap target /usr/bin/xkbcomp was unavailable on readonly root",
+      "countsAsSuccessfulVersionOrGuiProof": false
+    },
+    {
+      "path": "failures/gui-attempt2-outer-safe.json",
+      "sha256": "e42a41b53a8d6c2217fa8035ef2099bd6ecbd8efbdf377a0962af6977c8351a6",
+      "bytes": 2202,
+      "exit": 1,
+      "reason": "Owned Xvfb lacked libxkbfile.so.1 for xkbcomp; failure cleanup instrumentation also raised KeyError. Both raw errors retained. Later attempt corrected runtime and process collection.",
+      "countsAsSuccessfulVersionOrGuiProof": false
+    }
+  ],
+  "beforeGuiIndependentReview": "raw/independent-install-review-before-gui-safe.json",
+  "historicalBoundary": "Earlier 20261120-workbuddy-global archive truthfully records six dead feed URLs. This later source-backed official-bucket route resolves package availability; earlier failures remain historical evidence.",
+  "binaryAndPrivateLogsArchived": false
+}

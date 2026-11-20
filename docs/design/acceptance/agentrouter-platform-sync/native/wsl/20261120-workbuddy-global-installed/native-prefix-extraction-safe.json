@@ -1,0 +1,16 @@
+{
+  "observedAtUtc": "2026-11-20T03:23:22.121514+00:00",
+  "method": "dpkg-deb --extract; no maintainer scripts",
+  "package": "/home/han/.local/state/orchester-delivery/20261120/workbuddy-new-route/WorkBuddy-linux-x64-5.7.6.40488862-3e43260f.deb",
+  "packageSha256": "3cf1244520d54eca391378a29579918122006f5bfdba942fe977b908365e93db",
+  "prefix": "/home/han/.local/opt/workbuddy-ai/5.7.6.40488862-3e43260f",
+  "metadata": "Package: workbuddyai\nVersion: 5.7.6\nLicense: unknown\nVendor: Tencent Technology (Shenzhen) Company Limited <workbuddy@tencent.com>\nArchitecture: amd64\nMaintainer: Tencent Technology (Shenzhen) Company Limited <workbuddy@tencent.com>\nInstalled-Size: 1545495\nDepends: libgtk-3-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libatspi2.0-0, libuuid1, libsecret-1-0\nRecommends: libappindicator3-1, imagemagick\nSection: default\nPriority: optional\nHomepage: https://www.workbuddy.ai\nDescription: \n  WorkBuddy Desktop - AI Agent Desktop Application\n",
+  "existingPrefixAbsentBefore": true,
+  "installerScriptsExecuted": false,
+  "nativeApplicationStarts": 0,
+  "authenticationActions": 0,
+  "modelCalls": 0,
+  "extractExit": 0,
+  "extractError": "",
+  "completedAtUtc": "2026-11-20T03:23:34.962190+00:00"
+}

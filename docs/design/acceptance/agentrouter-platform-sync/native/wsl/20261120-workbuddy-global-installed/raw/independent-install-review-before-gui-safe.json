@@ -1,0 +1,55 @@
+{
+  "observedAtUtc": "2026-11-20T03:40:55.658192+00:00",
+  "reviewer": "independent-install-proof-review",
+  "scope": "Read-only local public package/source/proof review; no application execution or private profile reads by reviewer",
+  "result": "installation-and-international-identity-supported; version-success-not-supported-by-current-smoke",
+  "verified": {
+    "officialPublisherBucketBinding": true,
+    "downloadCompleteDigestVerified": true,
+    "actualInternationalAsarPackage": {
+      "version": "5.7.6",
+      "name": "@genie/workbuddy-desktop",
+      "homepage": "https://www.workbuddy.ai",
+      "productName": "WorkBuddy AI",
+      "entrySha256": "096b2dbd19a33671652255bd40da0d728eb6618a029443cfeed61adadc223e18"
+    },
+    "actualInternationalProductIdentity": {
+      "productName": "WorkBuddy AI",
+      "applicationName": "workbuddy-ai",
+      "dataFolderName": ".workbuddy-ai",
+      "isOversea": true,
+      "deploymentType": "SaaS",
+      "urlProtocol": "workbuddy-ai",
+      "updateUrl": "https://www.workbuddy.ai",
+      "commit": "3e43260f771393d75c6504db99e751eb03dea8db",
+      "genieVersion": "5.7.6",
+      "customUserDataDir": ".workbuddy-ai"
+    },
+    "nativeElfAndLauncherReceiptBytesMatch": true,
+    "runtimeLibraryDependenciesMissing": [],
+    "domesticPreserved": true
+  },
+  "runtimeProof": {
+    "exit": 139,
+    "freshInternationalNamespaceCreated": true,
+    "freshDomesticNamespaceAlsoCreated": true,
+    "originalHomeHiddenByTmpfs": true,
+    "networkNamespaceIsolated": true,
+    "versionOutputObserved": false,
+    "failure": "Application initializes then fails because no X server/DISPLAY is available; --version does not behave as a version-only CLI."
+  },
+  "requiredClaimLimits": [
+    "Can claim official-bucket package downloaded, actual international Linux identity verified, isolated native prefix/launcher installed, domestic installation preserved.",
+    "Current smoke cannot support --version success or usable desktop GUI startup.",
+    "Explicit --user-data-dir did not prevent .workbuddy-ai/app creation; fresh HOME and hidden original /home provided profile isolation.",
+    "No authenticated account, model request, regional service availability or Windows preservation test was performed in this review."
+  ],
+  "materialDefects": [
+    {
+      "id": "runtime-version-claim",
+      "status": "reported-to-parent",
+      "summary": "Any successful --version claim must be corrected or supported by a different controlled startup result."
+    }
+  ],
+  "evidence": "independent-install-review-observations-safe.json"
+}

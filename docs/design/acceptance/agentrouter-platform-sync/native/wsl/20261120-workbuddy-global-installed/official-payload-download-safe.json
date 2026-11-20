@@ -1,0 +1,24 @@
+{
+  "requestedUrl": "https://codebuddy-1328495429.cos.accelerate.myqcloud.com/workbuddy/saas/linux-x64/WorkBuddy-linux-x64-5.7.6.40488862-3e43260f.deb",
+  "observedAtUtc": "2026-11-20T03:20:05.440144+00:00",
+  "method": "GET",
+  "tlsVerificationDisabled": false,
+  "publisherBinding": "official-bucket-publisher-binding-safe.json",
+  "communityManifestDigestIsCorroborationOnly": true,
+  "installerExecuted": false,
+  "httpStatus": 200,
+  "finalUrl": "https://codebuddy-1328495429.cos.accelerate.myqcloud.com/workbuddy/saas/linux-x64/WorkBuddy-linux-x64-5.7.6.40488862-3e43260f.deb",
+  "headers": {
+    "Content-Type": "application/x-debian-package",
+    "Content-Length": "421733316",
+    "ETag": "\"f47c5c10fec3fc312d255e3bb9e3d881-403\"",
+    "Last-Modified": "Wed, 07 Oct 2026 04:07:01 GMT",
+    "x-cos-version-id": "MTg0NDQ5NTI3Mjc2ODg1MzA3MDI"
+  },
+  "bytesRead": 421733316,
+  "sha256": "3cf1244520d54eca391378a29579918122006f5bfdba942fe977b908365e93db",
+  "matchesCommunityManifestSha256": true,
+  "localPath": "/home/han/.local/state/orchester-delivery/20261120/workbuddy-new-route/WorkBuddy-linux-x64-5.7.6.40488862-3e43260f.deb",
+  "downloadComplete": true,
+  "completedAtUtc": "2026-11-20T03:20:21.117409+00:00"
+}

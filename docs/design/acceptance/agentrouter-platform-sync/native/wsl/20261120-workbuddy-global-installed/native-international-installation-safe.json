@@ -1,0 +1,61 @@
+{
+  "observedAtUtc": "2026-11-20T03:34:19.676016+00:00",
+  "status": "isolated-international-native-installation-created-runtime-verification-pending",
+  "prefix": "/home/han/.local/opt/workbuddy-ai/5.7.6.40488862-3e43260f",
+  "elf": {
+    "path": "/home/han/.local/opt/workbuddy-ai/5.7.6.40488862-3e43260f/opt/WorkBuddy AI/workbuddyai",
+    "bytes": 200842456,
+    "sha256": "13bf1da1273c22f0536ee6a52fbadb3561dd31b63c11e80f7feff6beccac1578",
+    "file": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=15060f4b47acd9539319315f05973430f6e0ac00, stripped"
+  },
+  "identity": {
+    "productName": "WorkBuddy AI",
+    "applicationName": "workbuddy-ai",
+    "dataFolderName": ".workbuddy-ai",
+    "urlProtocol": "workbuddy-ai",
+    "updateUrl": "https://www.workbuddy.ai",
+    "deploymentType": "SaaS",
+    "isOversea": true,
+    "customUserDataDir": ".workbuddy-ai",
+    "genieVersion": "5.7.6",
+    "commit": "3e43260f771393d75c6504db99e751eb03dea8db",
+    "date": "2026-10-07T03:58:00.444Z"
+  },
+  "productJson": {
+    "path": "/home/han/.local/opt/workbuddy-ai/5.7.6.40488862-3e43260f/opt/WorkBuddy AI/resources/app.asar.unpacked/cli/product.json",
+    "bytes": 378007,
+    "sha256": "26271e75c2af04beadb45ba665caa3facd0ebe328d01d1466eb0ff235b09b609"
+  },
+  "launcher": {
+    "path": "/home/han/.local/bin/workbuddy-ai",
+    "content": "#!/bin/sh\nexport LD_LIBRARY_PATH=/home/han/.local/lib/orchester-linux-gui-runtime/usr/lib/x86_64-linux-gnu${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\nexport ALSA_CONFIG_PATH=/home/han/.local/lib/orchester-linux-gui-runtime/usr/share/alsa/alsa.conf\nexec \"/home/han/.local/opt/workbuddy-ai/5.7.6.40488862-3e43260f/opt/WorkBuddy AI/workbuddyai\" \"$@\"\n",
+    "sha256": "a943f36562159975da496017cdf213e47d8480466ed913e80e3602c6fd533d95"
+  },
+  "desktop": {
+    "path": "/home/han/.local/share/applications/orchester-workbuddy-ai.desktop",
+    "content": "[Desktop Entry]\nName=WorkBuddy AI\nExec=/home/han/.local/bin/workbuddy-ai %U\nTerminal=false\nType=Application\nIcon=/home/han/.local/opt/workbuddy-ai/5.7.6.40488862-3e43260f/usr/share/icons/hicolor/256x256/apps/workbuddyai.png\nStartupWMClass=workbuddyai\nComment=WorkBuddy Desktop - AI Agent Desktop Application\nMimeType=x-scheme-handler/workbuddy-ai;\nCategories=Development;\n",
+    "sha256": "3a29fdd807614494fdd6ef7118e1232b4659f753b49989f00e030ff43f8edc89"
+  },
+  "domesticPreservationBefore": [
+    {
+      "path": "/home/han/.local/bin/workbuddy",
+      "bytes": 322,
+      "sha256": "11adc0efee1ff96693c1055a1a3e3c62e8cd81d408bf9dacbc4e4f8f4ab334ac"
+    },
+    {
+      "path": "/home/han/.local/share/applications/orchester-workbuddy.desktop",
+      "bytes": 228,
+      "sha256": "e4098750ef91ed2fcede51987fce504f758ada1e677bacc397e94c93eddbf610"
+    },
+    {
+      "path": "/home/han/.local/opt/workbuddy/5.6.2.40046327/opt/WorkBuddy/workbuddy",
+      "bytes": 200842456,
+      "sha256": "13bf1da1273c22f0536ee6a52fbadb3561dd31b63c11e80f7feff6beccac1578"
+    }
+  ],
+  "originalProfileReads": 0,
+  "installerScriptsExecuted": false,
+  "modelsConfigured": false,
+  "authenticationActions": 0,
+  "windowsActions": 0
+}

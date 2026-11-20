@@ -550,6 +550,10 @@
     {
       "scope": "Freshnonadmin9P publicSystem32cmdcopy matches native Microsoft signedSystem32file; nativePS sentinel/external0 proven viaexisting357interop while original/mnt/c remains EIO. No original runtime success inferred.",
       "proof": "native/windows/20261120-interop-route-recovery/summary-safe.json"
+    },
+    {
+      "scope": "Genuine official bucket internationalWorkBuddy5.7.6.40488862-3e43260f installed isolatednativeprefix/workbuddy-ai;actualinternationalELF+ASAR+productprofile verified/domesticpreserved;normalownedXvfbGUI1199x799CtrlQapp0+outer0/nooriginalHOME/network/models. Sharedhelperlogs disclosed, previous139/setupfailures retained.",
+      "proof": "native/wsl/20261120-workbuddy-global-installed/summary-safe.json"
     }
   ],
   "completedHistoricalEpochs": [
@@ -561,8 +565,7 @@
     "Prior source71 Linux7337 deployment/1023019 and oneoriginal7337/info200 before fresh23:31UTC absence; originalreceipts preserved historical"
   ],
   "pendingCurrentEpochScopes": [
-    "Use recovered native Windows access to restore/revalidate current managed Remote7338 identity, listener,17resources, original138state rows and401authentication gate after strict original PID absence. Original saved7338tokenwire and Windowsautostart remain unrequested unmeasured limits.",
-    "Obtain and verify a downloadable genuine official WorkBuddy Global Linux package, then install it separately from domestic WorkBuddy while preserving original data. Six current exact advertised package URLs returned404; enterpriseAppImage400. No permanent unsupported-policy or domestic-substitution claim."
+    "Use recovered native Windows access to restore/revalidate current managed Remote7338 identity, listener,17resources, original138state rows and401authentication gate after strict original PID absence. Original saved7338tokenwire and Windowsautostart remain unrequested unmeasured limits."
   ],
   "folderResponsibilities": {
     "sources": "Official origins, source/provenance and current safe source audits",
@@ -580,7 +583,7 @@
   "historicalObservationsAreNotCurrentProcessLiveness": true,
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
   "historical38Unmodified": true,
-  "updatedAt": "2026-11-20T04:10:48.553354+00:00",
+  "updatedAt": "2026-11-20T04:25:06.016766+00:00",
   "currentCompiledInputUnionCount": 731,
   "currentWindowsCoreGateCount": 16,
   "currentWindowsCoreGatesPassed": true,
@@ -1144,8 +1147,8 @@
   "currentAndroidStudioUnitTaskNoSource": true,
   "currentAndroidStudioCurrentInstanceSyncMilliseconds": 44193,
   "currentInstallationCoverageProof": "native/20261120-installation-coverage/current-public-entry-audit-safe.json",
-  "currentWorkBuddyGlobalLinuxProof": "native/wsl/20261120-workbuddy-global/current-global-linux-result-safe.json",
-  "currentWorkBuddyGlobalLinuxInstalled": false,
+  "currentWorkBuddyGlobalLinuxProof": "native/wsl/20261120-workbuddy-global-installed/summary-safe.json",
+  "currentWorkBuddyGlobalLinuxInstalled": true,
   "currentWorkBuddyGlobalLinuxExactAdvertisedPayloadHttpStatuses": [
     404,
     404,
@@ -1207,5 +1210,15 @@
   "currentContinuationPeakAgentConcurrencyIncludingRoot": 9,
   "currentWindowsNativeExecutionChannelObservedAtUtc": "2026-11-20T03:28:09.711549+00:00",
   "currentWindowsDrvfsOriginalMountRepaired": false,
-  "currentWindowsFreshReadRouteUsesNonAdminServer": true
+  "currentWindowsFreshReadRouteUsesNonAdminServer": true,
+  "currentWorkBuddyGlobalLinuxInstalledVersion": "5.7.6.40488862-3e43260f",
+  "currentWorkBuddyGlobalLinuxNativeGuiVerified": true,
+  "currentWorkBuddyGlobalLinuxGuiNormalExitCode": 0,
+  "currentWorkBuddyGlobalLinuxProductProfileNamespace": ".workbuddy-ai/app",
+  "currentWorkBuddyGlobalLinuxAllHelperNamespacesIsolated": false,
+  "currentWorkBuddyGlobalLinuxDomesticPreserved": true,
+  "historicalBeforeGlobalInstall_pendingCurrentEpochScopes": [
+    "Use recovered native Windows access to restore/revalidate current managed Remote7338 identity, listener,17resources, original138state rows and401authentication gate after strict original PID absence. Original saved7338tokenwire and Windowsautostart remain unrequested unmeasured limits.",
+    "Obtain and verify a downloadable genuine official WorkBuddy Global Linux package, then install it separately from domestic WorkBuddy while preserving original data. Six current exact advertised package URLs returned404; enterpriseAppImage400. No permanent unsupported-policy or domestic-substitution claim."
+  ]
 }

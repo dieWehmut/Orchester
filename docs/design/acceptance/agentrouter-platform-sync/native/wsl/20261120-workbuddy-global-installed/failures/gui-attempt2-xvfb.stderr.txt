@@ -1,0 +1,8 @@
+_XSERVTransmkdir: ERROR: euid != 0,directory /tmp/.X11-unix will not be created.
+/usr/bin/xkbcomp: error while loading shared libraries: libxkbfile.so.1: cannot open shared object file: No such file or directory
+/usr/bin/xkbcomp: error while loading shared libraries: libxkbfile.so.1: cannot open shared object file: No such file or directory
+XKB: Failed to compile keymap
+Keyboard initialization failed. This could be a missing or incorrect setup of xkeyboard-config.
+(EE) 
+Fatal server error:
+(EE) Failed to activate virtual core keyboard: 2(EE) 
