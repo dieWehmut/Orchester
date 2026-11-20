@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "reviewedAtUtc": "2026-11-20T04:52:55.105576+00:00",
+  "status": "original-user-requirements-reconciled",
+  "recoveryMethod": "Only actual user instructions in the inherited continuation chain define requested scope; assistant suggestions do not add requirements.",
+  "inheritedThreadCount": 12,
+  "actualUserMessageCount": 57,
+  "privateDerivedReviewSha256": "83a8b6317cce7bc3f10e43895c13a90477c8d2a85c6e0fd9bea5030a97d058c1",
+  "rawConversationOrPrivatePathsPublished": false,
+  "foundationalRequirements": [
+    {
+      "id": "remote_backend",
+      "scope": "Local backend deployment, IP-based authenticated remote control, pairing and revocation, real terminal and files",
+      "status": "verified-dated-native-history-with-current-source-binding",
+      "remaining": [],
+      "evidence": [
+        {
+          "path": "docs/design/26-remote-control.md",
+          "sha256": "02a368c7c397b16f37574b864abf878d6f441655cc9ecc2c15162edd1ae8ee6b"
+        },
+        {
+          "path": "docs/design/27-remote-acceptance.md",
+          "sha256": "b7292cb1712672589649cb6351cf8742e046db2d9570c78575a77884c10f0d2a"
+        },
+        {
+          "path": "docs/design/34-remote-final-artifacts-and-deployment.md",
+          "sha256": "6ecb497ea38f0c78228d31dd1be9473134f32d6653cb59d06094e268430d5d8b"
+        },
+        {
+          "path": "docs/design/38-desktop-mobile-final-delivery.md",
+          "sha256": "45ac8d43bc62b03f44227e5e51933aa2c1e3bd060e52851c420a72383e056844"
+        }
+      ]
+    },
+    {
+      "id": "multi_device_workspace",
+      "scope": "Multiple devices/projects/agent panes, real directory/file selection, isolated pane state, resume and stop/delete",
+      "status": "verified-dated-native-history-with-current-source-binding",
+      "remaining": [],
+      "evidence": [
+        {
+          "path": "docs/design/29-mobile-reference-ui.md",
+          "sha256": "8a5f1f3f5d5aa5b95526b63222f86af49308e4cac13a03d43703e87864423f27"
+        },
+        {
+          "path": "docs/design/31-mobile-native-branding.md",
+          "sha256": "88663342b9c3d8b1469b2931a7200d03cdc88d99ed82a5b5c439c04f7f282c02"
+        }
+      ]
+    },
+    {
+      "id": "device_console_tasks",
+      "scope": "Device-grouped console/tasks and per-host project/run views with device filters",
+      "status": "verified-dated-native-history-with-current-source-binding",
+      "remaining": [],
+      "evidence": [
+        {
+          "path": "docs/design/29-mobile-reference-ui.md",
+          "sha256": "8a5f1f3f5d5aa5b95526b63222f86af49308e4cac13a03d43703e87864423f27"
+        },
+        {
+          "path": "docs/design/31-mobile-native-branding.md",
+          "sha256": "88663342b9c3d8b1469b2931a7200d03cdc88d99ed82a5b5c439c04f7f282c02"
+        }
+      ]
+    },
+    {
+      "id": "native_terminal",
+      "scope": "Actual Gboard to Bash/ConPTY, PTY input/output, replay, resize, themes and explicit terminal closure",
+      "status": "verified-dated-native-history-with-current-source-binding",
+      "remaining": [],
+      "evidence": [
+        {
+          "path": "docs/design/31-remote-interactive-terminal.md",
+          "sha256": "4f5e5f2ac7e8b12b78f9478499d480f4ad8c2d1427d5bc8726e9d63153fd16e7"
+        },
+        {
+          "path": "docs/design/34-remote-final-artifacts-and-deployment.md",
+          "sha256": "6ecb497ea38f0c78228d31dd1be9473134f32d6653cb59d06094e268430d5d8b"
+        },
+        {
+          "path": "docs/design/36-mobile-native-back-acceptance.md",
+          "sha256": "ad2ff1d950121ef4b44d1b12b08118e2fd71bf3c4ada36ebe7d189c7b2ddac74"
+        },
+        {
+          "path": "docs/design/38-desktop-mobile-final-delivery.md",
+          "sha256": "45ac8d43bc62b03f44227e5e51933aa2c1e3bd060e52851c420a72383e056844"
+        }
+      ]
+    },
+    {
+      "id": "themes_branding",
+      "scope": "Six themes, shared desktop/mobile application icon and native startup animation",
+      "status": "verified-dated-native-history-with-current-source-binding",
+      "remaining": [],
+      "evidence": [
+        {
+          "path": "docs/design/31-mobile-native-branding.md",
+          "sha256": "88663342b9c3d8b1469b2931a7200d03cdc88d99ed82a5b5c439c04f7f282c02"
+        },
+        {
+          "path": "docs/design/36-mobile-native-back-acceptance.md",
+          "sha256": "ad2ff1d950121ef4b44d1b12b08118e2fd71bf3c4ada36ebe7d189c7b2ddac74"
+        }
+      ]
+    },
+    {
+      "id": "real_integrations",
+      "scope": "Real backend/files/subprocesses without production mock data; real Android Codex and Linux OpenCode initial/resume historical model runs",
+      "status": "verified-dated-native-history-with-current-source-binding",
+      "remaining": [],
+      "evidence": [
+        {
+          "path": "docs/design/27-remote-acceptance.md",
+          "sha256": "b7292cb1712672589649cb6351cf8742e046db2d9570c78575a77884c10f0d2a"
+        },
+        {
+          "path": "docs/design/31-mobile-native-branding.md",
+          "sha256": "88663342b9c3d8b1469b2931a7200d03cdc88d99ed82a5b5c439c04f7f282c02"
+        }
+      ]
+    }
+  ],
+  "boundaryDecisions": [
+    {
+      "id": "windows_autostart",
+      "originalCompletionGate": false,
+      "scope": "Documented Windows foreground runtime is the requested local deployment model; system autostart is future work.",
+      "evidence": [
+        "docs/design/26-remote-control.md:46",
+        "docs/design/27-remote-acceptance.md:162",
+        "docs/design/34-remote-final-artifacts-and-deployment.md:31"
+      ]
+    },
+    {
+      "id": "original_saved_7338_token_wire",
+      "originalCompletionGate": false,
+      "scope": "Original data/auth/project/task retention and functional authenticated remote control are required and proven. Requesting this one saved token was not separately required.",
+      "evidence": [
+        "docs/design/38-desktop-mobile-final-delivery.md:91"
+      ]
+    },
+    {
+      "id": "physical_android_and_ios",
+      "originalCompletionGate": false,
+      "scope": "User allowed local Android Studio testing. No physical Android Wi-Fi or native Xcode/iPhone run is claimed.",
+      "evidence": [
+        "docs/design/34-remote-final-artifacts-and-deployment.md:33"
+      ]
+    }
+  ],
+  "modelScope": "Multi-pane native tests used a real isolated Python CLI, backend and filesystem; independent dated actual Codex/OpenCode runs prove model integration. No new Windows Codex run or quota use occurred in this continuation."
+}

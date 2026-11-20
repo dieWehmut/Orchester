@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-20T04:52:55.105576+00:00",
+  "status": "three-follow-on-content-steps-merged-pushed-and-final-prerequisite-remote-readback-matched",
+  "priorSixStepProof": "maintenance/git-delivery/20261120-six-step-delivery-safe.json",
+  "priorReceiptCommit": "9de9ce6be3eb8d3d91b6d314fe910a0fd3322da5",
+  "priorReceiptMainMerge": "683ca48e8d4a36bb30ce7e09e2d303690958b870",
+  "steps": [
+    {
+      "scope": "native-route",
+      "commit": "737c84da1b7d62b1f4a266670e59c566d8c97277",
+      "mainMergeCommit": "7254aadd996e7f883163e4a62ecf3c7a524d8fd9",
+      "secondParentMatches": true,
+      "ancestorOfRecordedMain": true
+    },
+    {
+      "scope": "international-workbuddy-linux",
+      "commit": "34d1c532565f7fa927a998099a26dda1f15cd20d",
+      "mainMergeCommit": "bd95225356ce90f35f489a3265bbe57f2d90144f",
+      "secondParentMatches": true,
+      "ancestorOfRecordedMain": true
+    },
+    {
+      "scope": "recovered-managed-windows-runtime",
+      "commit": "79c6ca8165c143749d381a86a9fbd7f10437d84c",
+      "mainMergeCommit": "c951f6681d2e890b486b2d597462fb63715bdf19",
+      "secondParentMatches": true,
+      "ancestorOfRecordedMain": true
+    }
+  ],
+  "latestAtomicPushActualExitCode": 0,
+  "latestRemoteReadbackActualExitCode": 0,
+  "remoteMain": "c951f6681d2e890b486b2d597462fb63715bdf19",
+  "remoteFeature": "79c6ca8165c143749d381a86a9fbd7f10437d84c",
+  "remoteMatchesLocal": true,
+  "dirtyMonitorValidationWorktreeRetained": true,
+  "unmergedRailReferenceBranchRetained": true,
+  "receiptBoundary": "These actual revisions precede this final completion artifact commit. Its own commit/merge/push and final remote readback are verified by the delivering execution, not by a self-referential commit hash inside this file."
+}

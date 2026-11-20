@@ -1,12 +1,20 @@
 # AgentRouter 全目录与多平台同步验收
 
+## 11 月 20 日最终对账
+
+[最终验收对账](acceptance/agentrouter-platform-sync/sources/audit/20261120-final-completion/README.md)已闭合原产品需求与 14 项续验需求：不仅核对后续安装、目录同步和维护，也回查多设备 / 多项目双栏、真实目录文件、按设备分组的控制台任务、原生终端、六主题、统一应用图标与启动动画。原生双栏使用真实后端和隔离 CLI，历史 Android Codex / Linux OpenCode 的实际模型运行独立保留；没有把每一栏说成重新跑过模型。16 个 subagent 分别复核，当前工具容量为含主代理共 17 个；不宣称 17 个始终同时运行。
+
+本轮新增通道恢复、国际 WorkBuddy Linux 安装及 Windows Remote 恢复均单独验证、提交、合并；[实际交付回读](acceptance/agentrouter-platform-sync/sources/audit/20261120-final-completion/git-delivery-before-completion-safe.json)对应 `main c951f66`。本最终对账自身的提交与远程回读由交付执行另行核验，避免把自身哈希写进自身。官网另补存了 [390px 菜单实际展开 / Escape 关闭回执](acceptance/agentrouter-platform-sync/sources/audit/20261120-final-completion/pages-mobile-open-safe.json)。
+
+旧 `/mnt/c` I/O 故障、未测 Windows 开机自启动 / 原 7338 令牌请求、实体手机 Wi-Fi 与 iOS，以及国际版共享辅助日志目录均按原始要求保留为实测边界；原用户数据保留、已验收的鉴权与终端功能不因此省略。历史失败与旧的未完成检查点保留原日期，当前结论以本节与后继证据为准。
+
 ## 11 月 20 日通道恢复续验
 
 [独立原生命令通道](acceptance/agentrouter-platform-sync/native/windows/20261120-interop-route-recovery/README.md)已实际恢复：新的非管理员 9P 连接读取原 System32 `cmd.exe`，副本与随后原生读取的散列完全相同，Microsoft Windows 签名为 Valid；通过已有会话套接字调用原系统 PowerShell，返回精确 sentinel，外部执行器退出 0。旧 `/mnt/c` 仍返回 I/O 错误，本次没有重挂载、重启 WSL 或停止原服务。初始路径调用失败、复制命令缺少 MUI 的诊断均保留。该通道仅证明原生入口可用，当前 Remote 恢复由后续独立验收判定。
 
 [国际 WorkBuddy Linux 安装](acceptance/agentrouter-platform-sync/native/wsl/20261120-workbuddy-global-installed/README.md)现已完成。沿公开清单找到不同版本的精确厂商 CDN 地址后，核对官方站点对该 bucket 的引用，直接下载官方 `5.7.6.40488862-3e43260f` deb；实际 ELF、ASAR 和产品配置确认国际版身份，使用独立安装目录、`workbuddy-ai` 命令及 `.workbuddy-ai/app` 主配置目录，国内版入口与程序字节保留。隔离原 HOME、禁止外网的 Xvfb 环境实际显示 1199×799 的 WorkBuddy AI 窗口，Ctrl+Q 后应用和外层均退出 0。国际版仍会在新 HOME 的 `.workbuddy/logs` 生成辅助日志，不能称所有辅助路径均隔离；原用户目录未被测试读取。早期无显示环境导致的退出 139 和两次 Xvfb 准备失败保留，未宣称 `--version` 成功、版本最新、登录或模型可用。29 项归档摘要、19 项语义负例和 9 个实际公开文件散列通过。
 
-[Windows Remote 7338 恢复验收](acceptance/agentrouter-platform-sync/native/windows/20261120-recovered-managed-runtime/README.md)现已通过。原生检查确认旧 manager / server 均不存在且端口空闲后，仅启动一次有界句柄管理器；独立附着观察持续 60.494701 秒、88 次采样，17 个资源、6 个数据库 / 26 张表中的 138 条原始记录，以及设置、追加日志和 6 组备份均保留，匿名鉴权门返回 401，外部执行器退出 0。管理器仅释放由原句柄证明已退出的子进程，根服务句柄持续保留；随后独立探针再次以精确出生时间核对 manager `49728` / server `39092`、源码和程序摘要、父子关系及监听归属，实际退出 0。首次观察失败及 Linux 桥接 300 秒超时均保留，旧进程退出原因未知；不宣称永久存活、Windows 开机自启动或原 7338 令牌逐项联网。这两项并非原始用户追加要求，原数据保留与已验收的鉴权、终端功能仍分别有实证。两个实际续验缺口均已补齐，最终原始需求对账及远程交付复核正在收尾。
+[Windows Remote 7338 恢复验收](acceptance/agentrouter-platform-sync/native/windows/20261120-recovered-managed-runtime/README.md)现已通过。原生检查确认旧 manager / server 均不存在且端口空闲后，仅启动一次有界句柄管理器；独立附着观察持续 60.494701 秒、88 次采样，17 个资源、6 个数据库 / 26 张表中的 138 条原始记录，以及设置、追加日志和 6 组备份均保留，匿名鉴权门返回 401，外部执行器退出 0。管理器仅释放由原句柄证明已退出的子进程，根服务句柄持续保留；随后独立探针再次以精确出生时间核对 manager `49728` / server `39092`、源码和程序摘要、父子关系及监听归属，实际退出 0。首次观察失败及 Linux 桥接 300 秒超时均保留，旧进程退出原因未知；不宣称永久存活、Windows 开机自启动或原 7338 令牌逐项联网。这两项并非原始用户追加要求，原数据保留与已验收的鉴权、终端功能仍分别有实证。两个实际续验缺口均已补齐。
 
 ## 11 月 19–20 日续验
 

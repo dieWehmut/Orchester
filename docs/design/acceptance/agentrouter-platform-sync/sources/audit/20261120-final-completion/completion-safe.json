@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "reviewedAtUtc": "2026-11-20T04:52:55.105576+00:00",
+  "status": "original-product-and-fourteen-continuation-requirements-closed",
+  "originalObjectiveContinuation": "01a1e3cc-4599-76a0-b395-a6e62cfcc3cd",
+  "productionBackendRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "technicalRemainingScopes": [],
+  "continuationRequirementCount": 14,
+  "foundationalRequirementGroupCount": 6,
+  "auditPath": "sources/requirement-delivery-audit.json",
+  "originalBoundaryPath": "sources/audit/20261120-final-completion/original-requirement-boundaries-safe.json",
+  "delegatedReviewPath": "sources/audit/20261120-final-completion/subagent-reviews-safe.json",
+  "resolvedActualGaps": [
+    "Official international WorkBuddy Linux native installation, genuine product/profile identity and normal GUI quit while retaining domestic original files.",
+    "Current managed Windows Remote7338 restored through verified alternative native access, immutable resource match and original data retention, successful attached observer and independent native post-probe."
+  ],
+  "evidenceEpochPolicy": "Historical success/failure remains dated; current runtime proof never rewrites earlier failures or proves indefinite liveness.",
+  "limits": [
+    "Original /mnt/c still returns EIO; alternative native route is verified.",
+    "Windows foreground runtime is held; no Windows autostart or indefinite reliability claim.",
+    "Original Remote7338 saved token was not sent; original state retention and matched real authenticated product behavior are separately proven.",
+    "No new Windows Codex invocation/quota use, account/model login test, physical Android Wi-Fi or native iOS test.",
+    "International WorkBuddy primary profile is separate; helper .workbuddy/logs paths are not edition-exclusive.",
+    "Windows global installation sweep remains historical where mount reads were unavailable; official Claude and DeepSeek have independent native proofs.",
+    "Current Pages CSS/font/favicon and actual UI are verified; complete current CI JS artifact byte identity is not claimed.",
+    "Two historical remote branch deletions remain summary-backed; selected current cache cleanup has actual execution evidence."
+  ],
+  "finalGitPublicationPolicy": "Final artifact commit must be merged to main, pushed and remotely read back before the owning goal is marked complete. This report excludes a self-referential final commit hash."
+}
