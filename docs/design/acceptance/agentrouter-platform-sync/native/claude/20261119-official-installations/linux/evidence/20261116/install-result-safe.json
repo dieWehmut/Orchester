@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "mode": "install",
+  "startedAtUtc": "2026-11-16T10:38:15.614448+00:00",
+  "systemPackageActionAuthorizedByRoot": true,
+  "defaultUserOrPasswordChanged": false,
+  "service7337Actions": 0,
+  "modelOrAuthenticationCalls": 0,
+  "preinstall": {
+    "debBytes": 183335272,
+    "debSHA256": "b96208b207e450b740f7dbe304f6077fed80e7f3d37ddd545991c4e8201564cf",
+    "repositorySignatureExitCode": 0,
+    "repositoryValidFingerprint": "31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE",
+    "packagesSHA256": "f3cc31278f67ef11687864b3f05a5e7274403d5e10eaa9fe9b02576a2ffc22fd",
+    "priorPackage": {
+      "argv": [
+        "dpkg-query",
+        "-W",
+        "-f=${Status}\n${Version}\n",
+        "claude-desktop"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "dpkg-query: no packages found matching claude-desktop\n"
+    },
+    "existingClaudeDesktopProcesses": []
+  },
+  "aptInstallation": {
+    "argv": [
+      "apt-get",
+      "-y",
+      "--no-install-recommends",
+      "-o",
+      "DPkg::Lock::Timeout=60",
+      "install",
+      "/tmp/orchester-official-linux-20261116-h1huoyvo/claude-desktop_5.11492.5_amd64.deb"
+    ],
+    "exitCode": 0,
+    "pid": 2064601,
+    "startTicks": "1110436",
+    "stdoutLog": "apt-install.stdout.log",
+    "stderrLog": "apt-install.stderr.log"
+  },
+  "actualInstallationInvocations": 1,
+  "postInstallPackage": {
+    "argv": [
+      "dpkg-query",
+      "-W",
+      "-f=${Status}\n${Version}\n${Architecture}\n",
+      "claude-desktop"
+    ],
+    "exitCode": 0,
+    "stdout": "install ok installed\n5.11492.5\namd64\n",
+    "stderr": ""
+  },
+  "nativeElf": {
+    "path": "/usr/lib/claude-desktop/claude-desktop",
+    "bytes": 234466632,
+    "sha256": "fe6219735b2e67422a9a23de2fc35371b09980531601c019b7cc2b001e29c7a8",
+    "entrySymlinkTarget": "../lib/claude-desktop/claude-desktop"
+  },
+  "sandbox": {
+    "uid": 0,
+    "gid": 0,
+    "mode": "0o4755"
+  },
+  "nativeExecutableRuns": 0,
+  "exitCode": 0,
+  "finishedAtUtc": "2026-11-16T10:38:35.900835+00:00"
+}

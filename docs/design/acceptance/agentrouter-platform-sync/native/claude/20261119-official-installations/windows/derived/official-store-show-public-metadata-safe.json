@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "status": "derived-native-WinGet-show-public-Store-metadata",
+  "observedAtUtc": "2026-11-19T05:58:31.0903961Z",
+  "nativeShowExitCode": 0,
+  "productName": "Claude",
+  "productId": "9P6K58THS811",
+  "publisher": "Anthropic, PBC",
+  "reportedVersion": "Unknown",
+  "installerType": "msstore",
+  "rawStdoutSha256": "b6560c8cc5859a6246cf151776e426048f3fc2b5c57071ff9cd8842f7898914e",
+  "rawStdoutBytes": 4419,
+  "rawLogIncluded": false,
+  "installationProvedByThisShowOutput": false
+}

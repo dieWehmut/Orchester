@@ -1,0 +1,15 @@
+Windows Claude was installed through the official Microsoft Store on 2026-11-19. Native WinGet install returned 0, and both retained original installer/conhost handles ended with native exit 0. The package registered for the current user as AnthropicPBC.Claude 5.11492.5.0 with Status Ok and SignatureKind Store.
+
+The actual installed EXE is 249955664 bytes, SHA256 093fb6529006fe5fbe28b61231484734dab78a497dc1b05311f2315590118414. Native Authenticode is Valid with signer Anthropic, PBC. EXE FileVersion/ProductVersion and ASAR package version are 5.11492.5. The ASAR is 88787202 bytes, SHA256 47433b3c91cdbc813de9d277dfb5b0fbc21d17a7b3a49528e07ef1edc0935ed2. A separate native read-only check at 2026-11-19T06:22:27Z reconfirmed registration, signatures and file digests.
+
+The catalog receipt retains its real 2026-11-16 observation date; its advertised MSIX-container hash is metadata only. Microsoft Store performed deployment and signature/license checks. A local MSIX-container digest and the internal Store licensing transport were not independently observed. Installation OS exit 0 does not establish model login, AgentRouter configuration, Cowork tasks or model availability.
+
+The Nov16 pinned EXE installation failed during Squirrel extraction with native exit -1. Its partial files were retained. A later candidate was proven to be an incomplete prefix of that same pinned EXE and was not executed. These historical failures are context, not current installation failures. Binary installers, profiles and raw logs remain private.
+
+The original show/install start field wingetVersion is 1.29.379.0, the Microsoft.DesktopAppInstaller Appx package version read by the source, rather than a winget.exe CLI --version observation. A derived label clarification preserves the original bytes and explains this distinction.
+
+The install terminal receipt has inherited show-prefixed field labels. The original bytes are preserved; the adjacent reconciliation receipt explains that those fields describe the install invocation. Actual registration and installed-file proof establish installation.
+
+Independent Windows GUI smoke is optional and incomplete. Before creating a process, the smoke preflight detected six existing installed-image processes with a root creation time of 06:05:01Z, after this task installer had exited. Current parent metadata identified Explorer; the observer did not hold an original creator handle and cannot establish the original activation source. They were not launched or stopped by this task. This observer saw no visible HWND for them and claims no Windows visible-window or normal-GUI-exit pass. No user window screenshot or profile content is archived.
+
+Run validation with python3 windows/validate-windows-archive.py from the parent archive, or run the script using an absolute path. It validates only this archive and starts no application or installer. Original files are byte-for-byte copies; derived selections and source-byte hashes are identified in source-map.json.

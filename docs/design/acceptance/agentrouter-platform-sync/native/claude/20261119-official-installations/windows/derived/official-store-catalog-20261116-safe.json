@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "status": "derived-selected-official-Microsoft-Store-catalog-metadata",
+  "observedAtUtc": "2026-11-16T10:03:41.234446+00:00",
+  "httpStatus": 200,
+  "sourceUrl": "https://displaycatalog.mp.microsoft.com/v7.0/products/9P6K58THS811?market=US&languages=en-US",
+  "storeProductId": "9P6K58THS811",
+  "packageIdentityName": "AnthropicPBC.Claude",
+  "packageFamilyName": "AnthropicPBC.Claude_fnn82j28hfe8t",
+  "publisherCertificateName": "CN=0ED83B57-1FA9-465C-98F8-41F190D0DF7F",
+  "catalogRevisionId": "2026-11-14T00:05:57.6544447Z",
+  "architectures": [
+    "x64"
+  ],
+  "packageFormat": "Msix",
+  "packageFullName": "AnthropicPBC.Claude_5.11492.5.0_x64__fnn82j28hfe8t",
+  "packageId": "b1a5e780-5828-ec3a-7a27-301b4cf6b792-X64",
+  "advertisedPackageSha256": "1390820805969b9408896c0cea6c95f3b918721dca723557493036ab9ba06130",
+  "advertisedHashAlgorithm": "SHA256",
+  "advertisedMaximumDownloadBytes": 299341719,
+  "advertisedMaximumInstallBytes": 768917504,
+  "packageDownloadUris": null,
+  "containerPayloadDigestIndependentlyRecomputed": false,
+  "catalogHashIsMetadataOnly": true,
+  "actualInstallationProvedByNativeStoreRegistrationAndSignedInstalledFiles": true,
+  "sourceBodySha256": "fcca2a8ef43d6b23f1277fae5e77ee4898f0a89df3066a62dd19981c2bfb16d3",
+  "sourceBodyBytes": 46386,
+  "profileOrCredentialsRead": false
+}

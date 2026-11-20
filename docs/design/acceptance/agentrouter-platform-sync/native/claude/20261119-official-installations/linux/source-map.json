@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 1,
+  "assembledAtUtc": "2026-11-19T06:23:55.706977+00:00",
+  "scope": "Historical official Claude Linux installation and native WSLg smoke evidence; no live actions performed for assembly",
+  "sourceCollections": {
+    "20261116-official-source": "Original public repository metadata downloaded on November 16, 2026",
+    "20261116-preparation": "Private fixed-package preparation receipts from November 16, 2026",
+    "20261116-native-installation": "Private actual APT and --version receipts from November 16, 2026",
+    "20261119-native-GUI": "Private isolated-profile GUI receipts and reconciliation from November 19, 2026"
+  },
+  "sources": [
+    {
+      "id": "repository/key.asc",
+      "sourceCollection": "20261116-official-source",
+      "sourceFileName": "claude-apt-key.body",
+      "sourceBytes": 1688,
+      "sourceSha256": "bd70a5e4a268002704024ceba7f8446024114e94f3f0bdd11c23a9e592be81c6",
+      "archivePath": "repository/key.asc",
+      "archiveBytes": 1688,
+      "archiveSha256": "bd70a5e4a268002704024ceba7f8446024114e94f3f0bdd11c23a9e592be81c6",
+      "representation": "original-bytes",
+      "sourceUrl": "https://downloads.claude.ai/claude-desktop/key.asc"
+    },
+    {
+      "id": "repository/InRelease",
+      "sourceCollection": "20261116-official-source",
+      "sourceFileName": "claude-apt-inrelease.body",
+      "sourceBytes": 3006,
+      "sourceSha256": "5dc7b148878e542165b3219bed92bbf9b8774d177334526061cd46e4c2082cc6",
+      "archivePath": "repository/InRelease",
+      "archiveBytes": 3006,
+      "archiveSha256": "5dc7b148878e542165b3219bed92bbf9b8774d177334526061cd46e4c2082cc6",
+      "representation": "original-bytes",
+      "sourceUrl": "https://downloads.claude.ai/claude-desktop/apt/stable/dists/stable/InRelease"
+    },
+    {
+      "id": "repository/Packages-amd64",
+      "sourceCollection": "20261116-official-source",
+      "sourceFileName": "claude-apt-packages-amd64.body",
+      "sourceBytes": 77044,
+      "sourceSha256": "f3cc31278f67ef11687864b3f05a5e7274403d5e10eaa9fe9b02576a2ffc22fd",
+      "archivePath": "repository/Packages-amd64",
+      "archiveBytes": 77044,
+      "archiveSha256": "f3cc31278f67ef11687864b3f05a5e7274403d5e10eaa9fe9b02576a2ffc22fd",
+      "representation": "original-bytes",
+      "sourceUrl": "https://downloads.claude.ai/claude-desktop/apt/stable/dists/stable/main/binary-amd64/Packages"
+    },
+    {
+      "id": "evidence/20261116/signed-repository-verification-safe.json",
+      "sourceCollection": "20261116-preparation",
+      "sourceFileName": "signed-repository-verification-safe.json",
+      "sourceBytes": 2271,
+      "sourceSha256": "152841da06f034df83fa73dd40d0f5674a9d2dfd4af1afe6ef40ef80853f0063",
+      "archivePath": "evidence/20261116/signed-repository-verification-safe.json",
+      "archiveBytes": 2271,
+      "archiveSha256": "152841da06f034df83fa73dd40d0f5674a9d2dfd4af1afe6ef40ef80853f0063",
+      "representation": "original-bytes"
+    },
+    {
+      "id": "evidence/20261116/linux-deb-download-safe.json",
+      "sourceCollection": "20261116-preparation",
+      "sourceFileName": "linux-deb-download-safe.json",
+      "sourceBytes": 810,
+      "sourceSha256": "3df58053479bef3c1a303bd198388ffcf25c333db879d60ee2da54e72100d086",
+      "archivePath": "evidence/20261116/linux-deb-download-safe.json",
+      "archiveBytes": 810,
+      "archiveSha256": "3df58053479bef3c1a303bd198388ffcf25c333db879d60ee2da54e72100d086",
+      "representation": "original-bytes"
+    },
+    {
+      "id": "evidence/20261116/linux-deb-resumed-download-safe.json",
+      "sourceCollection": "20261116-preparation",
+      "sourceFileName": "linux-deb-resumed-download-safe.json",
+      "sourceBytes": 799,
+      "sourceSha256": "f252d88eb62b38168e91801442f598cf2f30a86cca8670cbc4f42c1ef30164a2",
+      "archivePath": "evidence/20261116/linux-deb-resumed-download-safe.json",
+      "archiveBytes": 799,
+      "archiveSha256": "f252d88eb62b38168e91801442f598cf2f30a86cca8670cbc4f42c1ef30164a2",
+      "representation": "original-bytes"
+    },
+    {
+      "id": "evidence/20261116/linux-deb-static-inspection-safe.json",
+      "sourceCollection": "20261116-preparation",
+      "sourceFileName": "linux-deb-static-inspection-safe.json",
+      "sourceBytes": 6834,
+      "sourceSha256": "56c30a14940c69624181ae92f82b7ef1459813ce4a2f829785a75433d8bde4b5",
+      "archivePath": "evidence/20261116/linux-deb-static-inspection-safe.json",
+      "archiveBytes": 6834,
+      "archiveSha256": "56c30a14940c69624181ae92f82b7ef1459813ce4a2f829785a75433d8bde4b5",
+      "representation": "original-bytes"
+    },
+    {
+      "id": "evidence/20261116/preflight-safe.json",
+      "sourceCollection": "20261116-native-installation",
+      "sourceFileName": "preflight-safe.json",
+      "sourceBytes": 768,
+      "sourceSha256": "86ed5677ac2f15ce984a0004b35ba2ce4aa3d4d4b25e768680c44d1aaa1fa215",
+      "archivePath": "evidence/20261116/preflight-safe.json",
+      "archiveBytes": 768,
+      "archiveSha256": "86ed5677ac2f15ce984a0004b35ba2ce4aa3d4d4b25e768680c44d1aaa1fa215",
+      "representation": "original-bytes"
+    },
+    {
+      "id": "evidence/20261116/simulate-result-safe.json",
+      "sourceCollection": "20261116-native-installation",
+      "sourceFileName": "simulate-result-safe.json",
+      "sourceBytes": 4443,
+      "sourceSha256": "40d82948e58c03b73724cc1702c09981a475829a21dca7b3eaddbe3e5e227a2c",
+      "archivePath": "evidence/20261116/simulate-result-safe.json",
+      "archiveBytes": 4443,
+      "archiveSha256": "40d82948e58c03b73724cc1702c09981a475829a21dca7b3eaddbe3e5e227a2c",
+      "representation": "original-bytes"
+    },
+    {
+      "id": "evidence/20261116/install-result-safe.json",
+      "sourceCollection": "20261116-native-installation",
+      "sourceFileName": "install-result-safe.json",
+      "sourceBytes": 2025,
+      "sourceSha256": "6fbbbc63ce8d5a5a0ece367b0a305453c6d13d8f025630d4f1c553132ce41371",
+      "archivePath": "evidence/20261116/install-result-safe.json",
+      "archiveBytes": 2025,
+      "archiveSha256": "6fbbbc63ce8d5a5a0ece367b0a305453c6d13d8f025630d4f1c553132ce41371",
+      "representation": "original-bytes"
+    },
+    {
+      "id": "evidence/20261116/native-version-result-safe.json",
+      "sourceCollection": "20261116-native-installation",
+      "sourceFileName": "native-version-result-safe.json",
+      "sourceBytes": 2091,
+      "sourceSha256": "ae2210f5bf6c278107008fb8c3cb14e27ae646aaa8279e1ca62947f65ce97e40",
+      "archivePath": "evidence/20261116/native-version-result-safe.json",
+      "archiveBytes": 2091,
+      "archiveSha256": "ae2210f5bf6c278107008fb8c3cb14e27ae646aaa8279e1ca62947f65ce97e40",
+      "representation": "original-bytes"
+    },
+    {
+      "id": "evidence/20261119/native-gui-result-original-safe.json",
+      "sourceCollection": "20261119-native-GUI",
+      "sourceFileName": "native-gui-result-original-safe.json",
+      "sourceBytes": 7192,
+      "sourceSha256": "2934e7b4f1c89b226eb8b136ab969c2b96780adf2908a0be26eef803a7267617",
+      "archivePath": "evidence/20261119/native-gui-result-original-safe.json",
+      "archiveBytes": 7192,
+      "archiveSha256": "2934e7b4f1c89b226eb8b136ab969c2b96780adf2908a0be26eef803a7267617",
+      "representation": "original-bytes"
+    },
+    {
+      "id": "evidence/20261119/native-gui-result-safe.json",
+      "sourceCollection": "20261119-native-GUI",
+      "sourceFileName": "native-gui-result-safe.json",
+      "sourceBytes": 8237,
+      "sourceSha256": "1d1fa14dbecb7d4ff9b3a98b85868788f20dc000a9fc3b5eb8d4bc3b0e7c3683",
+      "archivePath": "evidence/20261119/native-gui-result-safe.json",
+      "archiveBytes": 8237,
+      "archiveSha256": "1d1fa14dbecb7d4ff9b3a98b85868788f20dc000a9fc3b5eb8d4bc3b0e7c3683",
+      "representation": "original-bytes"
+    },
+    {
+      "id": "evidence/20261119/final-native-linux-verification-safe.json",
+      "sourceCollection": "20261119-native-GUI",
+      "sourceFileName": "final-native-linux-verification-safe.json",
+      "sourceBytes": 640,
+      "sourceSha256": "fa36207bcbb54fea27c4bfb330809bb2ab9d4716bad2aa4c6e972200e2f37b88",
+      "archivePath": "evidence/20261119/final-native-linux-verification-safe.json",
+      "archiveBytes": 640,
+      "archiveSha256": "fa36207bcbb54fea27c4bfb330809bb2ab9d4716bad2aa4c6e972200e2f37b88",
+      "representation": "original-bytes"
+    },
+    {
+      "id": "evidence/20261119/post-gui-native-package-reconciliation-safe.json",
+      "sourceCollection": "20261119-native-GUI",
+      "sourceFileName": "post-gui-native-package-reconciliation-safe.json",
+      "sourceBytes": 413,
+      "sourceSha256": "dd2239db1645fe0f60f788c2f3b450ed682f49df4be475e17eabd1ec9811296c",
+      "archivePath": "evidence/20261119/post-gui-native-package-reconciliation-safe.json",
+      "archiveBytes": 413,
+      "archiveSha256": "dd2239db1645fe0f60f788c2f3b450ed682f49df4be475e17eabd1ec9811296c",
+      "representation": "original-bytes"
+    },
+    {
+      "id": "controllers/install-native.py.txt",
+      "sourceCollection": "20261116-native-installation",
+      "sourceFileName": "install-native.py",
+      "sourceBytes": 8026,
+      "sourceSha256": "d0b188e2642e219d826d2f22ec8915641533d868ba6939406a5fbdc835f434fc",
+      "archivePath": "controllers/install-native.py.txt",
+      "archiveBytes": 8026,
+      "archiveSha256": "d0b188e2642e219d826d2f22ec8915641533d868ba6939406a5fbdc835f434fc",
+      "representation": "derived-source-export",
+      "transformations": [
+        "Exported source as inert .py.txt text for review; original code bytes unchanged."
+      ]
+    },
+    {
+      "id": "controllers/native-version.py.txt",
+      "sourceCollection": "20261116-native-installation",
+      "sourceFileName": "native-version.py",
+      "sourceBytes": 5506,
+      "sourceSha256": "47034537e67cf75bb31d1a40d3c3528f1a1b5df4ab1f4aeb2363870d165a4796",
+      "archivePath": "controllers/native-version.py.txt",
+      "archiveBytes": 5506,
+      "archiveSha256": "47034537e67cf75bb31d1a40d3c3528f1a1b5df4ab1f4aeb2363870d165a4796",
+      "representation": "derived-source-export",
+      "transformations": [
+        "Exported source as inert .py.txt text for review; original code bytes unchanged."
+      ]
+    },
+    {
+      "id": "controllers/native-gui-smoke.py.txt",
+      "sourceCollection": "20261119-native-GUI",
+      "sourceFileName": "native-gui-smoke.py",
+      "sourceBytes": 14228,
+      "sourceSha256": "279819ec1eae15cf9c2250df9520a8d5da54fde07e451249f5286604484d0a4c",
+      "archivePath": "controllers/native-gui-smoke.py.txt",
+      "archiveBytes": 14252,
+      "archiveSha256": "e601f2b6f7b8d211b38ed3ccf50b4a38a5b1c2562eb685cb900eec24fec26977",
+      "representation": "derived-text",
+      "transformations": [
+        {
+          "operation": "replace-local-account-literal",
+          "replacement": "<LOCAL_ACCOUNT>",
+          "count": 2
+        }
+      ],
+      "runtimeExecutedForArchive": false
+    },
+    {
+      "id": "evidence/20261116/linux-repo-requests-Claude-only-derived-safe.json",
+      "sourceCollection": "20261116-preparation",
+      "sourceFileName": "linux-repo-requests-safe.json",
+      "sourceBytes": 2170,
+      "sourceSha256": "4abdb1df0d6d602c8441b23ddd0df5b6033c0205125cae2582d161c5d4e99b2b",
+      "archivePath": "evidence/20261116/linux-repo-requests-Claude-only-derived-safe.json",
+      "archiveBytes": 1897,
+      "archiveSha256": "959d129743f8406cda0428df73b8f7b29beb83704efe70760c8c0838388617f2",
+      "representation": "derived-selection",
+      "transformations": [
+        "Selected the four Claude request rows; no timestamp, hashes, sizes, status or source URL modified."
+      ]
+    },
+    {
+      "id": "GUI-receipt-complete-change-audit",
+      "sourceCollection": "20261119-native-GUI",
+      "sourceFileName": "native-gui-result-safe.json",
+      "sourceBytes": 8237,
+      "sourceSha256": "1d1fa14dbecb7d4ff9b3a98b85868788f20dc000a9fc3b5eb8d4bc3b0e7c3683",
+      "archivePath": "evidence/20261119/gui-metadata-change-audit-derived-safe.json",
+      "archiveBytes": 2271,
+      "archiveSha256": "5f55d7edaecb1a4d08b44a0782a01f1a58ff76a09578a8f858193547d477c653",
+      "representation": "derived-selected-fields",
+      "transformations": [
+        "Compare original and corrected source receipts without editing them; retain both original byte/hash references and complete changed/removed/added field sets.",
+        "Explain original userProfileReads to testControllerUserProfileReads rename and additional metadata/visual annotations; no native or GUI rerun."
+      ]
+    }
+  ],
+  "omittedArtifactsFile": "omitted-artifacts-safe.json",
+  "payloadHashRecomputationAvailableInArchive": false,
+  "privateProfileContentsReadForArchive": false,
+  "installationOrGuiReruns": 0
+}

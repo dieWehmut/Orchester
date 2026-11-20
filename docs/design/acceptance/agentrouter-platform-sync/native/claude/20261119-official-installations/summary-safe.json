@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "status": "public-self-contained-Claude-official-native-installation-archive",
+  "assembledAtUtc": "2026-11-19T06:32:44.783263+00:00",
+  "historicalObservationDatesPreserved": [
+    "2026-11-16",
+    "2026-11-19"
+  ],
+  "windows": {
+    "nativeInstallationCompleted": true,
+    "successfulChannel": "official Microsoft Store native WinGet install",
+    "nativeInstallerExitCode": 0,
+    "originalInstallerAndConhostHandlesTerminalCount": 2,
+    "registeredPackageVersion": "5.11492.5.0",
+    "registeredPackageStatus": "Ok",
+    "registeredPackageSignatureKind": "Store",
+    "installedExeVersion": "5.11492.5",
+    "installedAsarPackageVersion": "5.11492.5",
+    "installedExeAuthenticodeStatus": "Valid",
+    "installedExeSignerSimpleName": "Anthropic, PBC",
+    "currentRegistrationAndDigestRecheckObservedAtUtc": "2026-11-19T06:22:27.1537578Z",
+    "currentReadOnlyNativeExitCode": 0,
+    "installationEvidence": "windows/original/installed-windows-native-final-safe.json",
+    "currentEvidence": "windows/original/current-registered-installed-proof-safe.json",
+    "independentGuiSmokeClaimed": false,
+    "externalExistingApplicationRetained": true,
+    "optionalGuiStatusEvidence": "windows/derived/windows-optional-gui-status-safe.json",
+    "authOrModelAvailabilityClaimed": false
+  },
+  "linux": {
+    "nativeInstallationCompleted": true,
+    "signedRepositoryChainRetainedForOfflineValidation": true,
+    "installedPackageVersion": "5.11492.5",
+    "nativeAptInstallationExitCode": 0,
+    "nativeVersionExitCode": 0,
+    "nativeGuiExitCode": 0,
+    "allOriginalGuiPidfdsTerminal": true,
+    "originalGuiPidfdCount": 16,
+    "nativeProcessesAfterGuiExit": 0,
+    "dpkgVerifyMismatchCount": 0,
+    "nativeWSLgOwnedWindowAndNormalCtrlQQuitVerified": true,
+    "renderedState": "Official App unavailable in region page",
+    "authOrModelAvailabilityClaimed": false,
+    "installationEvidence": "linux/evidence/20261116/install-result-safe.json",
+    "finalEvidence": "linux/evidence/20261119/final-native-linux-verification-safe.json"
+  },
+  "metadataCorrectionsTransparent": true,
+  "originalAndDerivedRepresentationsRecordedInSourceMaps": true,
+  "binariesProfilesRawLogsAndScreenshotsIncluded": false,
+  "archiveAssemblyNativeInstallationOrGuiActions": 0,
+  "scope": "Installation and native observations only; no account/model availability or AgentRouter provider/configuration success is inferred from OS exit 0."
+}

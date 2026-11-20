@@ -1,0 +1,436 @@
+{
+  "schemaVersion": 1,
+  "scope": "Windows official native Claude installation evidence only",
+  "sources": [
+    {
+      "id": "S001",
+      "artifactLabel": "Nov19 native Windows winget-store-show-start-safe.json",
+      "sha256": "113d3df46288aaa497d8157bedd64a5e946874a7d118563c5bfa826c222d057c",
+      "bytes": 625,
+      "originalBytesIncluded": true,
+      "originUrl": null,
+      "observedAtUtc": "2026-11-19T05:58:28.5909400Z"
+    },
+    {
+      "id": "S002",
+      "artifactLabel": "Nov19 native Windows winget-store-show-terminal-safe.json",
+      "sha256": "3edf6f979fb3caabeb824eae3e3ec1c9a6811603fb3001509cb9f322d5e22c54",
+      "bytes": 2089,
+      "originalBytesIncluded": true,
+      "originUrl": null,
+      "observedAtUtc": "2026-11-19T05:58:31.0903961Z"
+    },
+    {
+      "id": "S003",
+      "artifactLabel": "Nov19 native Windows winget-store-install-start-safe.json",
+      "sha256": "8a91e783ff64c2cad4aa5a9fb7567909faf6b1f90a24bad8f5fd39b1dfe30d10",
+      "bytes": 668,
+      "originalBytesIncluded": true,
+      "originUrl": null,
+      "observedAtUtc": "2026-11-19T05:59:49.9572036Z"
+    },
+    {
+      "id": "S004",
+      "artifactLabel": "Nov19 native Windows winget-store-install-terminal-safe.json",
+      "sha256": "ce0474ec6f0db7196baa00956b4664d749fc37159e2223a082a7e94b34e2b4f1",
+      "bytes": 2092,
+      "originalBytesIncluded": true,
+      "originUrl": null,
+      "observedAtUtc": "2026-11-19T06:01:06.5322578Z"
+    },
+    {
+      "id": "S005",
+      "artifactLabel": "Nov19 native Windows winget-store-installed-registration-safe.json",
+      "sha256": "35b1f28546567c61c35cb25f3254085aaa9d2254dc23467246a2bc65182ff2cd",
+      "bytes": 1142,
+      "originalBytesIncluded": true,
+      "originUrl": null,
+      "observedAtUtc": "2026-11-19T06:01:06.7130687Z"
+    },
+    {
+      "id": "S006",
+      "artifactLabel": "Nov19 native Windows installed-windows-native-final-safe.json",
+      "sha256": "d35ae2549d88ee02d9844460a989e8bfc0d7ea421028710db5e7094d2edd198b",
+      "bytes": 3291,
+      "originalBytesIncluded": true,
+      "originUrl": null,
+      "observedAtUtc": "2026-11-19T06:02:27.9230855Z"
+    },
+    {
+      "id": "S007",
+      "artifactLabel": "Nov19 native Windows store-install-terminal-field-label-reconciliation-safe.json",
+      "sha256": "3c7046fe57d5980fe88db8a228530e3630925b5247bbc227983d07f6588ca1c5",
+      "bytes": 1145,
+      "originalBytesIncluded": true,
+      "originUrl": null,
+      "observedAtUtc": "2026-11-19T06:12:55.150198+00:00"
+    },
+    {
+      "id": "S008",
+      "artifactLabel": "Nov19 native Windows current-registered-installed-proof-safe.json",
+      "sha256": "81f1a9eff58eebc9b37f524d7024403a757d39dc11d0eefe51313f2c1403d026",
+      "bytes": 1395,
+      "originalBytesIncluded": true,
+      "originUrl": null,
+      "observedAtUtc": "2026-11-19T06:22:27.1537578Z"
+    },
+    {
+      "id": "S009",
+      "artifactLabel": "Nov19 native Windows native-windows-gui-failure-safe.json",
+      "sha256": "6abf03b6bbd1df52e6f12d151ed31b66cd0fdf5c9338d683874f209e9b844c70",
+      "bytes": 474,
+      "originalBytesIncluded": true,
+      "originUrl": null,
+      "observedAtUtc": "2026-11-19T06:09:17.0844548Z"
+    },
+    {
+      "id": "S010",
+      "artifactLabel": "Executed native source OwnedClaudeInstall.cs",
+      "sha256": "c44e4cc7947d500765a7f6d214bae54c1ac52a59d2a6de6c78632c286a345a5f",
+      "bytes": 6375,
+      "originalBytesIncluded": true,
+      "originUrl": null,
+      "observedAtUtc": null
+    },
+    {
+      "id": "S011",
+      "artifactLabel": "Executed native source show-current-official-store-native.ps1",
+      "sha256": "c4cdd7c4a0f591656a25da4a2deff8e71105280df2d8cd0c2e94fff1b8d2ff77",
+      "bytes": 4092,
+      "originalBytesIncluded": true,
+      "originUrl": null,
+      "observedAtUtc": null
+    },
+    {
+      "id": "S012",
+      "artifactLabel": "Executed native source install-current-official-store-native.ps1",
+      "sha256": "0e91060300f3dd9fcd9fb72342719275a96777dbea1f625b1443f07aa28c0624",
+      "bytes": 5722,
+      "originalBytesIncluded": true,
+      "originUrl": null,
+      "observedAtUtc": null
+    },
+    {
+      "id": "S013",
+      "artifactLabel": "Executed native source verify-installed-official-store-native.ps1",
+      "sha256": "ab309e8aff3db1ae77fece106fcafc3602fcebcb923b886cb9dc411fb0c432c9",
+      "bytes": 5608,
+      "originalBytesIncluded": true,
+      "originUrl": null,
+      "observedAtUtc": null
+    },
+    {
+      "id": "S014",
+      "artifactLabel": "Executed native source read-current-registered-installed-proof.ps1",
+      "sha256": "72e43b027673727b71289011c3f11cfa9a85e217e1b0b11e308541feacec479e",
+      "bytes": 2595,
+      "originalBytesIncluded": true,
+      "originUrl": null,
+      "observedAtUtc": null
+    },
+    {
+      "id": "S015",
+      "artifactLabel": "Nov16 Microsoft Store public catalog response",
+      "sha256": "fcca2a8ef43d6b23f1277fae5e77ee4898f0a89df3066a62dd19981c2bfb16d3",
+      "bytes": 46386,
+      "originalBytesIncluded": false,
+      "originUrl": "https://displaycatalog.mp.microsoft.com/v7.0/products/9P6K58THS811?market=US&languages=en-US",
+      "observedAtUtc": "2026-11-16T10:03:41.234446+00:00"
+    },
+    {
+      "id": "S016",
+      "artifactLabel": "Nov16 official metadata HTTP/source receipt",
+      "sha256": "707d78e3e3e30bf13159fe28b8d51ca6e348e09ee5f0e00d10d99b4eb879faac",
+      "bytes": 5956,
+      "originalBytesIncluded": false,
+      "originUrl": null,
+      "observedAtUtc": null
+    },
+    {
+      "id": "S017",
+      "artifactLabel": "Nov19 native WinGet show stdout (raw log retained privately)",
+      "sha256": "b6560c8cc5859a6246cf151776e426048f3fc2b5c57071ff9cd8842f7898914e",
+      "bytes": 4419,
+      "originalBytesIncluded": false,
+      "originUrl": "https://apps.microsoft.com/detail/9P6K58THS811",
+      "observedAtUtc": "2026-11-19T05:58:31.0903961Z"
+    },
+    {
+      "id": "S018",
+      "artifactLabel": "Nov16 failed Squirrel installer original native terminal",
+      "sha256": "5f857b63d3744f49ff69f8b652afab77279b0323c2f3eeba9e203731fef42482",
+      "bytes": 2097,
+      "originalBytesIncluded": false,
+      "originUrl": null,
+      "observedAtUtc": null
+    },
+    {
+      "id": "S019",
+      "artifactLabel": "Nov16 failed Squirrel original failure",
+      "sha256": "f71e7a9b06a16fef7536cba3f06fdcdb64ff177839065078d7f42a3eec3500d5",
+      "bytes": 550,
+      "originalBytesIncluded": false,
+      "originUrl": null,
+      "observedAtUtc": null
+    },
+    {
+      "id": "S020",
+      "artifactLabel": "Nov19 native retained-partial-file/hash observation",
+      "sha256": "7581d0953ced5143023668be1fdb55a2071720dd71eb5a4147233ab7772e7e18",
+      "bytes": 3532,
+      "originalBytesIncluded": false,
+      "originUrl": null,
+      "observedAtUtc": null
+    },
+    {
+      "id": "S021",
+      "artifactLabel": "Nov19 truncated-prefix structural metadata",
+      "sha256": "fde3bcc540e5f622d350dad9f1a7a2e683c57b196bd0b84e035ffce7a15072ca",
+      "bytes": 922,
+      "originalBytesIncluded": false,
+      "originUrl": null,
+      "observedAtUtc": null
+    },
+    {
+      "id": "S022",
+      "artifactLabel": "Nov16 official pinned EXE download/hash receipt",
+      "sha256": "9dd34b4ae01a1cf6e692d2249b582bc6edf3a29f6a57507928ee42408733021b",
+      "bytes": 1766,
+      "originalBytesIncluded": false,
+      "originUrl": null,
+      "observedAtUtc": null
+    },
+    {
+      "id": "S023",
+      "artifactLabel": "Nov16 Microsoft WinGet pinned 3.6556.2 manifest",
+      "sha256": "bc4e81e1ac442a0d79fa2f246ebb1881998772c432848f94855167ae0cb3cfdb",
+      "bytes": 2286,
+      "originalBytesIncluded": false,
+      "originUrl": null,
+      "observedAtUtc": null
+    },
+    {
+      "id": "S024",
+      "artifactLabel": "Nov19 external existing Claude process session metadata",
+      "sha256": "0f0028d3b6e9fdd8872cdf2b67d30bacafaff7b08f2a0bff5766d722d33f8f80",
+      "bytes": 4611,
+      "originalBytesIncluded": false,
+      "originUrl": null,
+      "observedAtUtc": "2026-11-19T06:11:31.8367255Z"
+    },
+    {
+      "id": "S025",
+      "artifactLabel": "Nov19 existing Claude visible-window metadata",
+      "sha256": "53a394aecfa7b500e815e4a40ec28a618799cd9c8c9fd54c97f9392feb04fe5d",
+      "bytes": 3735,
+      "originalBytesIncluded": false,
+      "originUrl": null,
+      "observedAtUtc": "2026-11-19T06:10:11.6664160Z"
+    }
+  ],
+  "publishedArtifacts": [
+    {
+      "path": "original/winget-store-show-start-safe.json",
+      "sha256": "113d3df46288aaa497d8157bedd64a5e946874a7d118563c5bfa826c222d057c",
+      "bytes": 625,
+      "representation": "original-bytes",
+      "sourceIds": [
+        "S001"
+      ],
+      "derivation": "Byte-for-byte safe original; JSON whitespace and mixed CRLF/LF retained."
+    },
+    {
+      "path": "original/winget-store-show-terminal-safe.json",
+      "sha256": "3edf6f979fb3caabeb824eae3e3ec1c9a6811603fb3001509cb9f322d5e22c54",
+      "bytes": 2089,
+      "representation": "original-bytes",
+      "sourceIds": [
+        "S002"
+      ],
+      "derivation": "Byte-for-byte safe original; JSON whitespace and mixed CRLF/LF retained."
+    },
+    {
+      "path": "original/winget-store-install-start-safe.json",
+      "sha256": "8a91e783ff64c2cad4aa5a9fb7567909faf6b1f90a24bad8f5fd39b1dfe30d10",
+      "bytes": 668,
+      "representation": "original-bytes",
+      "sourceIds": [
+        "S003"
+      ],
+      "derivation": "Byte-for-byte safe original; JSON whitespace and mixed CRLF/LF retained."
+    },
+    {
+      "path": "original/winget-store-install-terminal-safe.json",
+      "sha256": "ce0474ec6f0db7196baa00956b4664d749fc37159e2223a082a7e94b34e2b4f1",
+      "bytes": 2092,
+      "representation": "original-bytes",
+      "sourceIds": [
+        "S004"
+      ],
+      "derivation": "Byte-for-byte safe original; JSON whitespace and mixed CRLF/LF retained."
+    },
+    {
+      "path": "original/winget-store-installed-registration-safe.json",
+      "sha256": "35b1f28546567c61c35cb25f3254085aaa9d2254dc23467246a2bc65182ff2cd",
+      "bytes": 1142,
+      "representation": "original-bytes",
+      "sourceIds": [
+        "S005"
+      ],
+      "derivation": "Byte-for-byte safe original; JSON whitespace and mixed CRLF/LF retained."
+    },
+    {
+      "path": "original/installed-windows-native-final-safe.json",
+      "sha256": "d35ae2549d88ee02d9844460a989e8bfc0d7ea421028710db5e7094d2edd198b",
+      "bytes": 3291,
+      "representation": "original-bytes",
+      "sourceIds": [
+        "S006"
+      ],
+      "derivation": "Byte-for-byte safe original; JSON whitespace and mixed CRLF/LF retained."
+    },
+    {
+      "path": "original/store-install-terminal-field-label-reconciliation-safe.json",
+      "sha256": "3c7046fe57d5980fe88db8a228530e3630925b5247bbc227983d07f6588ca1c5",
+      "bytes": 1145,
+      "representation": "original-bytes",
+      "sourceIds": [
+        "S007"
+      ],
+      "derivation": "Byte-for-byte safe original; JSON whitespace and mixed CRLF/LF retained."
+    },
+    {
+      "path": "original/current-registered-installed-proof-safe.json",
+      "sha256": "81f1a9eff58eebc9b37f524d7024403a757d39dc11d0eefe51313f2c1403d026",
+      "bytes": 1395,
+      "representation": "original-bytes",
+      "sourceIds": [
+        "S008"
+      ],
+      "derivation": "Byte-for-byte safe original; JSON whitespace and mixed CRLF/LF retained."
+    },
+    {
+      "path": "original/native-windows-gui-failure-safe.json",
+      "sha256": "6abf03b6bbd1df52e6f12d151ed31b66cd0fdf5c9338d683874f209e9b844c70",
+      "bytes": 474,
+      "representation": "original-bytes",
+      "sourceIds": [
+        "S009"
+      ],
+      "derivation": "Byte-for-byte safe original; JSON whitespace and mixed CRLF/LF retained."
+    },
+    {
+      "path": "sources/OwnedClaudeInstall.cs",
+      "sha256": "c44e4cc7947d500765a7f6d214bae54c1ac52a59d2a6de6c78632c286a345a5f",
+      "bytes": 6375,
+      "representation": "original-bytes",
+      "sourceIds": [
+        "S010"
+      ],
+      "derivation": "Byte-for-byte executed source; inert archive copy. Private logs and installer binaries referenced by the source are excluded."
+    },
+    {
+      "path": "sources/show-current-official-store-native.ps1",
+      "sha256": "c4cdd7c4a0f591656a25da4a2deff8e71105280df2d8cd0c2e94fff1b8d2ff77",
+      "bytes": 4092,
+      "representation": "original-bytes",
+      "sourceIds": [
+        "S011"
+      ],
+      "derivation": "Byte-for-byte executed source; inert archive copy. Private logs and installer binaries referenced by the source are excluded."
+    },
+    {
+      "path": "sources/install-current-official-store-native.ps1",
+      "sha256": "0e91060300f3dd9fcd9fb72342719275a96777dbea1f625b1443f07aa28c0624",
+      "bytes": 5722,
+      "representation": "original-bytes",
+      "sourceIds": [
+        "S012"
+      ],
+      "derivation": "Byte-for-byte executed source; inert archive copy. Private logs and installer binaries referenced by the source are excluded."
+    },
+    {
+      "path": "sources/verify-installed-official-store-native.ps1",
+      "sha256": "ab309e8aff3db1ae77fece106fcafc3602fcebcb923b886cb9dc411fb0c432c9",
+      "bytes": 5608,
+      "representation": "original-bytes",
+      "sourceIds": [
+        "S013"
+      ],
+      "derivation": "Byte-for-byte executed source; inert archive copy. Private logs and installer binaries referenced by the source are excluded."
+    },
+    {
+      "path": "sources/read-current-registered-installed-proof.ps1",
+      "sha256": "72e43b027673727b71289011c3f11cfa9a85e217e1b0b11e308541feacec479e",
+      "bytes": 2595,
+      "representation": "original-bytes",
+      "sourceIds": [
+        "S014"
+      ],
+      "derivation": "Byte-for-byte executed source; inert archive copy. Private logs and installer binaries referenced by the source are excluded."
+    },
+    {
+      "path": "derived/official-store-catalog-20261116-safe.json",
+      "sha256": "6df1a5a7470bb6531fd4b7283a2da854d3039b86535b14e313e9d63958b97f44",
+      "bytes": 1349,
+      "representation": "derived-selected-fields",
+      "sourceIds": [
+        "S015",
+        "S016"
+      ],
+      "derivation": "Retains the official x64 identity, advertised metadata digest and byte limits. Catalog digest is not asserted to be a locally recomputed MSIX container digest; other catalog fields omitted."
+    },
+    {
+      "path": "derived/official-store-show-public-metadata-safe.json",
+      "sha256": "cb3d198d6be2f9d182f10ae96c48bd25cba6ffae43358050b5dd8dfee3e51d53",
+      "bytes": 509,
+      "representation": "derived-selected-fields",
+      "sourceIds": [
+        "S017"
+      ],
+      "derivation": "Selects only public product metadata from native stdout; the raw log is excluded."
+    },
+    {
+      "path": "derived/prior-failure-and-truncated-candidate-safe.json",
+      "sha256": "990be379964ebc6b9e466d6c6854fffd5806ef7182f241e22a428beb540da317",
+      "bytes": 2936,
+      "representation": "derived-selected-fields",
+      "sourceIds": [
+        "S018",
+        "S019",
+        "S020",
+        "S021",
+        "S022",
+        "S023"
+      ],
+      "derivation": "Retains dates, original exit/hash/size metadata, static exception classification and PE prefix result; removes all machine-specific private source/install-stage paths. Does not promote failed/truncated EXE into installation proof."
+    },
+    {
+      "path": "derived/windows-optional-gui-status-safe.json",
+      "sha256": "45d9e20d43aa5d9b11790134dd9b6a1dbdc77028ffd01aa23dcffc064158bf99",
+      "bytes": 1035,
+      "representation": "derived-selected-fields",
+      "sourceIds": [
+        "S024",
+        "S025"
+      ],
+      "derivation": "Replaces external app PIDs and machine image paths with counts/classes. Preserves observed dates, session/count limits and the explicit missing independent GUI proof."
+    },
+    {
+      "path": "derived/appinstaller-package-version-label-clarification-safe.json",
+      "sha256": "79d8fd409afbfe3144e6e4d6b13e2be310fd7df4eb41e32cd3086c19bd970b55",
+      "bytes": 821,
+      "representation": "derived-selected-fields",
+      "sourceIds": [
+        "S001",
+        "S003",
+        "S011",
+        "S012"
+      ],
+      "derivation": "Clarifies the original show/install start field using the archived executed source expression; source/original bytes retained."
+    }
+  ],
+  "privateSourcePathsPublished": false,
+  "binaryProfilesScreenshotsAndRawLogsPublished": false,
+  "sourceBindingRecordRetainedPrivately": true
+}

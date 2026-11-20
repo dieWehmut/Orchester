@@ -1,0 +1,118 @@
+from pathlib import Path
+from datetime import datetime, timezone
+import os, sys, json, subprocess, hashlib, re, fcntl
+
+BASE = Path(__file__).parent
+SOURCE = Path('/tmp/orchester-official-linux-20261116-h1huoyvo')
+DEB = SOURCE / 'claude-desktop_5.11492.5_amd64.deb'
+EXPECTED_SHA = 'b96208b207e450b740f7dbe304f6077fed80e7f3d37ddd545991c4e8201564cf'
+EXPECTED_ELF_SHA = 'fe6219735b2e67422a9a23de2fc35371b09980531601c019b7cc2b001e29c7a8'
+EXPECTED_FPR = '31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE'
+VERSION = '5.11492.5'
+MODE = sys.argv[1]
+if MODE not in ('simulate', 'install') or os.getuid() != 0:
+    raise SystemExit('Explicit root installation channel and known mode required')
+
+def now(): return datetime.now(timezone.utc).isoformat()
+def digest(path):
+    h = hashlib.sha256()
+    with Path(path).open('rb') as f:
+        while chunk := f.read(1024 * 1024): h.update(chunk)
+    return h.hexdigest()
+def run(args, env=None):
+    p = subprocess.run(args, capture_output=True, text=True, env=env)
+    return {'argv': args, 'exitCode': p.returncode, 'stdout': p.stdout, 'stderr': p.stderr}
+def save(name, obj):
+    dst = BASE / name
+    tmp = BASE / (name + '.tmp')
+    tmp.write_text(json.dumps(obj, indent=2) + '\n')
+    os.chmod(tmp, 0o644)
+    os.replace(tmp, dst)
+def state_ticks(pid):
+    text = Path(f'/proc/{pid}/stat').read_text()
+    return text[text.rindex(')')+2:].split()[19]
+
+lock = (BASE / (MODE + '.lock')).open('a')
+fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+status_path = BASE / (MODE + '-status-safe.json')
+if status_path.exists():
+    raise SystemExit('This exact phase already has a receipt; inspect current original handle/state, never duplicate')
+status = {'schemaVersion': 1, 'mode': MODE, 'status': 'running', 'startedAtUtc': now(), 'pid': os.getpid(), 'startTicks': state_ticks(os.getpid()), 'uid': os.getuid(), 'bootId': Path('/proc/sys/kernel/random/boot_id').read_text().strip(), 'installerActionsOnly': True, 'defaultUserOrPasswordChanged': False, 'modelOrAuthenticationCalls': 0}
+save(status_path.name, status)
+result = {'schemaVersion': 1, 'mode': MODE, 'startedAtUtc': now(), 'systemPackageActionAuthorizedByRoot': True, 'defaultUserOrPasswordChanged': False, 'service7337Actions': 0, 'modelOrAuthenticationCalls': 0}
+exit_code = 1
+try:
+    assert digest(DEB) == EXPECTED_SHA, 'Official deb SHA drift'
+    assert DEB.stat().st_size == 183335272, 'Official deb size drift'
+    assert run(['dpkg-deb', '-f', str(DEB), 'Version'])['stdout'].strip() == VERSION
+    assert run(['dpkg-deb', '-f', str(DEB), 'Architecture'])['stdout'].strip() == 'amd64'
+    trustdir = BASE / 'root-public-signature-check'
+    trustdir.mkdir(exist_ok=True)
+    os.chmod(trustdir, 0o700)
+    verification = run(['gpgv', '--homedir', str(trustdir), '--keyring', str(SOURCE / 'claude-desktop-keyring.gpg'), '--status-fd', '1', str(SOURCE / 'claude-apt-inrelease.body')])
+    assert verification['exitCode'] == 0 and ('VALIDSIG ' + EXPECTED_FPR) in verification['stdout'], 'Official repository signature failed'
+    packages_sha = digest(SOURCE / 'claude-apt-packages-amd64.body')
+    assert packages_sha in (SOURCE / 'claude-apt-inrelease.body').read_text(), 'Packages not bound to signed InRelease'
+    assert EXPECTED_SHA in (SOURCE / 'claude-apt-packages-amd64.body').read_text(), 'deb not bound to signed Packages'
+    current = run(['dpkg-query', '-W', '-f=${Status}\n${Version}\n', 'claude-desktop'])
+    installed = current['exitCode'] == 0 and current['stdout'].startswith('install ok installed\n')
+    if installed:
+        current_version = current['stdout'].splitlines()[1]
+        higher = run(['dpkg', '--compare-versions', current_version, 'gt', VERSION])['exitCode'] == 0
+        assert not higher, 'Higher current Claude version may not be downgraded'
+    processes = []
+    for path in Path('/proc').iterdir():
+        if not path.name.isdigit(): continue
+        try:
+            exe = os.readlink(path / 'exe')
+            if 'claude-desktop' in exe:
+                processes.append({'pid': int(path.name), 'startTicks': state_ticks(path.name)})
+        except OSError: pass
+    assert not processes, 'Existing Claude Desktop execution must remain untouched'
+    result['preinstall'] = {'debBytes': DEB.stat().st_size, 'debSHA256': EXPECTED_SHA, 'repositorySignatureExitCode': verification['exitCode'], 'repositoryValidFingerprint': EXPECTED_FPR, 'packagesSHA256': packages_sha, 'priorPackage': current, 'existingClaudeDesktopProcesses': processes}
+    if MODE == 'simulate':
+        command = ['apt-get', '-s', '--no-install-recommends', 'install', str(DEB)]
+        simulation = run(command)
+        (BASE / 'apt-simulation.stdout.log').write_text(simulation['stdout'])
+        (BASE / 'apt-simulation.stderr.log').write_text(simulation['stderr'])
+        removals = [x for x in simulation['stdout'].splitlines() if x.startswith('Remv ')]
+        changes = [x for x in simulation['stdout'].splitlines() if x.startswith(('Inst ', 'Conf '))]
+        result['simulation'] = {'argv': command, 'exitCode': simulation['exitCode'], 'removals': removals, 'plannedChanges': changes, 'stderr': simulation['stderr']}
+        assert simulation['exitCode'] == 0 and not removals, 'Simulation must resolve required deps with no package removals'
+        result['actualInstallationInvocations'] = 0
+        exit_code = 0
+    else:
+        simulation = json.loads((BASE / 'simulate-result-safe.json').read_text())
+        assert simulation['exitCode'] == 0 and simulation['simulation']['exitCode'] == 0 and not simulation['simulation']['removals'], 'Reviewed passing exact simulation required'
+        environment = os.environ.copy()
+        environment['DEBIAN_FRONTEND'] = 'noninteractive'
+        command = ['apt-get', '-y', '--no-install-recommends', '-o', 'DPkg::Lock::Timeout=60', 'install', str(DEB)]
+        process = subprocess.Popen(command, stdout=(BASE / 'apt-install.stdout.log').open('w'), stderr=(BASE / 'apt-install.stderr.log').open('w'), env=environment)
+        status['aptPid'] = process.pid
+        status['aptStartTicks'] = state_ticks(process.pid)
+        save(status_path.name, status)
+        actual = process.wait()
+        result['aptInstallation'] = {'argv': command, 'exitCode': actual, 'pid': process.pid, 'startTicks': status['aptStartTicks'], 'stdoutLog': 'apt-install.stdout.log', 'stderrLog': 'apt-install.stderr.log'}
+        result['actualInstallationInvocations'] = 1
+        assert actual == 0, 'APT native installation failed; preserve logs and current package state'
+        query = run(['dpkg-query', '-W', '-f=${Status}\n${Version}\n${Architecture}\n', 'claude-desktop'])
+        result['postInstallPackage'] = query
+        assert query['exitCode'] == 0 and query['stdout'].splitlines() == ['install ok installed', VERSION, 'amd64'], 'Native package status/version/arch mismatch'
+        native = Path('/usr/lib/claude-desktop/claude-desktop')
+        result['nativeElf'] = {'path': str(native), 'bytes': native.stat().st_size, 'sha256': digest(native), 'entrySymlinkTarget': os.readlink('/usr/bin/claude-desktop')}
+        assert result['nativeElf']['sha256'] == EXPECTED_ELF_SHA, 'Installed native ELF must match signed package'
+        sandbox = Path('/usr/lib/claude-desktop/chrome-sandbox')
+        result['sandbox'] = {'uid': sandbox.stat().st_uid, 'gid': sandbox.stat().st_gid, 'mode': oct(sandbox.stat().st_mode & 0o7777)}
+        assert result['sandbox']['uid'] == 0 and result['sandbox']['mode'] == '0o4755', 'Installed sandbox ownership/mode mismatch'
+        result['nativeExecutableRuns'] = 0
+        exit_code = 0
+except Exception as error:
+    result['error'] = {'type': type(error).__name__, 'message': str(error)}
+finally:
+    result['exitCode'] = exit_code
+    result['finishedAtUtc'] = now()
+    save(MODE + '-result-safe.json', result)
+    status.update({'status': 'complete' if exit_code == 0 else 'failed', 'finishedAtUtc': now(), 'exitCode': exit_code})
+    save(status_path.name, status)
+    print(json.dumps(result))
+raise SystemExit(exit_code)

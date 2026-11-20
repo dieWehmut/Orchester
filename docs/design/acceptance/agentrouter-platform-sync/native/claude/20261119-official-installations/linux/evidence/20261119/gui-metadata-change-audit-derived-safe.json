@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "status": "derived-complete-GUI-receipt-metadata-change-audit",
+  "originalReceiptSha256": "2934e7b4f1c89b226eb8b136ab969c2b96780adf2908a0be26eef803a7267617",
+  "originalReceiptBytes": 7192,
+  "correctedSourceReceiptSha256": "1d1fa14dbecb7d4ff9b3a98b85868788f20dc000a9fc3b5eb8d4bc3b0e7c3683",
+  "correctedSourceReceiptBytes": 8237,
+  "changedCommonFields": {
+    "installedVersion": {
+      "originalValue": "45.2.1",
+      "correctedValue": "5.11492.5"
+    }
+  },
+  "removedOriginalFields": {
+    "userProfileReads": 0
+  },
+  "addedMetadataFields": {
+    "dpkgIdentity": "claude-desktop\t5.11492.5\tinstall ok installed",
+    "installedPackageVersion": "5.11492.5",
+    "loginOrModelAvailabilityProven": false,
+    "metadataCorrection": {
+      "atUtc": "2026-11-19T05:53:19.299071+00:00",
+      "originalReceiptFile": "native-gui-result-original-safe.json",
+      "originalReceiptSHA256": "2934e7b4f1c89b226eb8b136ab969c2b96780adf2908a0be26eef803a7267617",
+      "field": "installedVersion",
+      "oldValue": "45.2.1",
+      "oldSource": "/usr/lib/claude-desktop/version is packaged Electron runtime version",
+      "newValue": "5.11492.5",
+      "newSource": "Installed app.asar package.json corroborated by dpkg-query",
+      "guiRerunPerformed": false
+    },
+    "packagedElectronRuntimeVersion": "45.2.1",
+    "renderedState": "Official App unavailable in region page",
+    "renderedStateEvidence": "Visual inspection of own-fresh-profile-window.private.png; no existing user profile or authentication was used",
+    "successScope": "Native GUI launch, owned mapped WSLg window and normal product quit only",
+    "testControllerUserProfileReads": 0
+  },
+  "allOtherOriginalFieldsUnchanged": true,
+  "privacyCounterClarification": "The original userProfileReads=0 was renamed to testControllerUserProfileReads=0. This states test-controller reads only, not a claim that the product never reads its fresh profile.",
+  "additionalMetadataMeaning": "Package/runtime version, dpkg corroboration, own-image visual annotation, scope and explicit availability limit; no second GUI run.",
+  "guiRerunPerformed": false,
+  "originalAndCorrectedPrivateSourceBytesUnchangedDuringArchiveAssembly": true,
+  "representation": "derived-selected-fields"
+}

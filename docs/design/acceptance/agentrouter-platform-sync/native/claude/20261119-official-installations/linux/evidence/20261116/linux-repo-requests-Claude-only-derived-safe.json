@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "representation": "derived-selection",
+  "observedAtUtc": "2026-11-16T10:04:48.846444+00:00",
+  "requests": [
+    {
+      "name": "claude-linux-docs",
+      "url": "https://code.claude.com/docs/en/desktop-linux",
+      "exit": 0,
+      "httpStatus": 200,
+      "finalUrl": "https://code.claude.com/docs/en/desktop-linux",
+      "bytes": 326057,
+      "sha256": "3c7736953c2dad1dad1123ab98be69d4916e10913c9770b626ee0fbec8c36440",
+      "error": ""
+    },
+    {
+      "name": "claude-apt-key",
+      "url": "https://downloads.claude.ai/claude-desktop/key.asc",
+      "exit": 0,
+      "httpStatus": 200,
+      "finalUrl": "https://downloads.claude.ai/claude-desktop/key.asc",
+      "bytes": 1688,
+      "sha256": "bd70a5e4a268002704024ceba7f8446024114e94f3f0bdd11c23a9e592be81c6",
+      "error": ""
+    },
+    {
+      "name": "claude-apt-inrelease",
+      "url": "https://downloads.claude.ai/claude-desktop/apt/stable/dists/stable/InRelease",
+      "exit": 0,
+      "httpStatus": 200,
+      "finalUrl": "https://downloads.claude.ai/claude-desktop/apt/stable/dists/stable/InRelease",
+      "bytes": 3006,
+      "sha256": "5dc7b148878e542165b3219bed92bbf9b8774d177334526061cd46e4c2082cc6",
+      "error": ""
+    },
+    {
+      "name": "claude-apt-packages-amd64",
+      "url": "https://downloads.claude.ai/claude-desktop/apt/stable/dists/stable/main/binary-amd64/Packages",
+      "exit": 0,
+      "httpStatus": 200,
+      "finalUrl": "https://downloads.claude.ai/claude-desktop/apt/stable/dists/stable/main/binary-amd64/Packages",
+      "bytes": 77044,
+      "sha256": "f3cc31278f67ef11687864b3f05a5e7274403d5e10eaa9fe9b02576a2ffc22fd",
+      "error": ""
+    }
+  ],
+  "trustVerificationDisabled": false,
+  "selection": "Only Claude source rows; unrelated DeepSeek row omitted",
+  "derivedFromSourceSha256": "4abdb1df0d6d602c8441b23ddd0df5b6033c0205125cae2582d161c5d4e99b2b"
+}

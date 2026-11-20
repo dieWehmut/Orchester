@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "scope": "Every Linux archive file except this index itself",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4419,
+      "sha256": "12858ca6c6e78dc9053244655ea4e03ff9b86fa25f7503f9fcb3a38f846485ec"
+    },
+    {
+      "path": "controllers/install-native.py.txt",
+      "bytes": 8026,
+      "sha256": "d0b188e2642e219d826d2f22ec8915641533d868ba6939406a5fbdc835f434fc"
+    },
+    {
+      "path": "controllers/native-gui-smoke.py.txt",
+      "bytes": 14252,
+      "sha256": "e601f2b6f7b8d211b38ed3ccf50b4a38a5b1c2562eb685cb900eec24fec26977"
+    },
+    {
+      "path": "controllers/native-version.py.txt",
+      "bytes": 5506,
+      "sha256": "47034537e67cf75bb31d1a40d3c3528f1a1b5df4ab1f4aeb2363870d165a4796"
+    },
+    {
+      "path": "evidence/20261116/install-result-safe.json",
+      "bytes": 2025,
+      "sha256": "6fbbbc63ce8d5a5a0ece367b0a305453c6d13d8f025630d4f1c553132ce41371"
+    },
+    {
+      "path": "evidence/20261116/linux-deb-download-safe.json",
+      "bytes": 810,
+      "sha256": "3df58053479bef3c1a303bd198388ffcf25c333db879d60ee2da54e72100d086"
+    },
+    {
+      "path": "evidence/20261116/linux-deb-resumed-download-safe.json",
+      "bytes": 799,
+      "sha256": "f252d88eb62b38168e91801442f598cf2f30a86cca8670cbc4f42c1ef30164a2"
+    },
+    {
+      "path": "evidence/20261116/linux-deb-static-inspection-safe.json",
+      "bytes": 6834,
+      "sha256": "56c30a14940c69624181ae92f82b7ef1459813ce4a2f829785a75433d8bde4b5"
+    },
+    {
+      "path": "evidence/20261116/linux-repo-requests-Claude-only-derived-safe.json",
+      "bytes": 1897,
+      "sha256": "959d129743f8406cda0428df73b8f7b29beb83704efe70760c8c0838388617f2"
+    },
+    {
+      "path": "evidence/20261116/native-version-result-safe.json",
+      "bytes": 2091,
+      "sha256": "ae2210f5bf6c278107008fb8c3cb14e27ae646aaa8279e1ca62947f65ce97e40"
+    },
+    {
+      "path": "evidence/20261116/preflight-safe.json",
+      "bytes": 768,
+      "sha256": "86ed5677ac2f15ce984a0004b35ba2ce4aa3d4d4b25e768680c44d1aaa1fa215"
+    },
+    {
+      "path": "evidence/20261116/signed-repository-verification-safe.json",
+      "bytes": 2271,
+      "sha256": "152841da06f034df83fa73dd40d0f5674a9d2dfd4af1afe6ef40ef80853f0063"
+    },
+    {
+      "path": "evidence/20261116/simulate-result-safe.json",
+      "bytes": 4443,
+      "sha256": "40d82948e58c03b73724cc1702c09981a475829a21dca7b3eaddbe3e5e227a2c"
+    },
+    {
+      "path": "evidence/20261119/final-native-linux-verification-safe.json",
+      "bytes": 640,
+      "sha256": "fa36207bcbb54fea27c4bfb330809bb2ab9d4716bad2aa4c6e972200e2f37b88"
+    },
+    {
+      "path": "evidence/20261119/gui-metadata-change-audit-derived-safe.json",
+      "bytes": 2271,
+      "sha256": "5f55d7edaecb1a4d08b44a0782a01f1a58ff76a09578a8f858193547d477c653"
+    },
+    {
+      "path": "evidence/20261119/native-gui-result-original-safe.json",
+      "bytes": 7192,
+      "sha256": "2934e7b4f1c89b226eb8b136ab969c2b96780adf2908a0be26eef803a7267617"
+    },
+    {
+      "path": "evidence/20261119/native-gui-result-safe.json",
+      "bytes": 8237,
+      "sha256": "1d1fa14dbecb7d4ff9b3a98b85868788f20dc000a9fc3b5eb8d4bc3b0e7c3683"
+    },
+    {
+      "path": "evidence/20261119/post-gui-native-package-reconciliation-safe.json",
+      "bytes": 413,
+      "sha256": "dd2239db1645fe0f60f788c2f3b450ed682f49df4be475e17eabd1ec9811296c"
+    },
+    {
+      "path": "omitted-artifacts-safe.json",
+      "bytes": 5113,
+      "sha256": "5ab3b0f3323c60474fe27b6edaa91c3317e40d8c0c33e0594f53fd09ea3c1a7b"
+    },
+    {
+      "path": "repository/InRelease",
+      "bytes": 3006,
+      "sha256": "5dc7b148878e542165b3219bed92bbf9b8774d177334526061cd46e4c2082cc6"
+    },
+    {
+      "path": "repository/Packages-amd64",
+      "bytes": 77044,
+      "sha256": "f3cc31278f67ef11687864b3f05a5e7274403d5e10eaa9fe9b02576a2ffc22fd"
+    },
+    {
+      "path": "repository/key.asc",
+      "bytes": 1688,
+      "sha256": "bd70a5e4a268002704024ceba7f8446024114e94f3f0bdd11c23a9e592be81c6"
+    },
+    {
+      "path": "source-map.json",
+      "bytes": 12730,
+      "sha256": "768450b579cbb44caa28a5ee796ac026261f8531cb9c7bbaa0f46d679180259b"
+    },
+    {
+      "path": "validate-linux-archive.py",
+      "bytes": 19564,
+      "sha256": "589f21c18fd5bb0383ae6fe2fef0f998ceba1994e9c59b38f4ae50193f04b650"
+    }
+  ]
+}

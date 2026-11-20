@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-16T10:14:53.439008+00:00",
+  "status": "complete",
+  "priorCurlExit": 28,
+  "priorPartialBytes": 101141040,
+  "priorPartialSha256": "5e0dc496de4ef3268ff63b259a0179cf986294e58178a4dafd3238ae2d503061",
+  "sameFixedVersionUrl": true,
+  "url": "https://downloads.claude.ai/claude-desktop/apt/stable/pool/main/c/claude-desktop/claude-desktop_5.11492.5_amd64.deb",
+  "curlExit": 0,
+  "httpStatus": 206,
+  "file": "/tmp/orchester-official-linux-20261116-h1huoyvo/claude-desktop_5.11492.5_amd64.deb",
+  "bytes": 183335272,
+  "sha256": "b96208b207e450b740f7dbe304f6077fed80e7f3d37ddd545991c4e8201564cf",
+  "sizeMatchesSignedPackages": true,
+  "sha256MatchesSignedPackages": true,
+  "error": "",
+  "trustVerificationDisabled": false,
+  "installed": false
+}

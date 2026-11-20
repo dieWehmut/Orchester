@@ -1,0 +1,335 @@
+{
+  "schemaVersion": 1,
+  "scope": "Only this Claude platform archive; no global delivery manifest changes",
+  "generatedAtUtc": "2026-11-19T06:32:44.791685+00:00",
+  "manifestFileExcludedFromOwnDigestList": true,
+  "fileCountExcludingManifest": 54,
+  "bytesExcludingManifest": 313751,
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "representation": "generated-archive-documentation-or-index"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4452,
+      "sha256": "091a9445e95c04329e02ae1153d36b0ec1284d2b9c62c89578d65e743edd6e4d",
+      "representation": "generated-archive-documentation-or-index"
+    },
+    {
+      "path": "linux/.gitattributes",
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "representation": "generated-archive-documentation-or-index"
+    },
+    {
+      "path": "linux/README.md",
+      "bytes": 4419,
+      "sha256": "12858ca6c6e78dc9053244655ea4e03ff9b86fa25f7503f9fcb3a38f846485ec",
+      "representation": "generated-archive-documentation-or-index"
+    },
+    {
+      "path": "linux/artifact-index.json",
+      "bytes": 4467,
+      "sha256": "9b10a1e0d9466438846029f14e7abae1f73bdeb216427306d07d5a29122aa33d",
+      "representation": "generated-archive-documentation-or-index"
+    },
+    {
+      "path": "linux/controllers/install-native.py.txt",
+      "bytes": 8026,
+      "sha256": "d0b188e2642e219d826d2f22ec8915641533d868ba6939406a5fbdc835f434fc",
+      "representation": "derived-source-export"
+    },
+    {
+      "path": "linux/controllers/native-gui-smoke.py.txt",
+      "bytes": 14252,
+      "sha256": "e601f2b6f7b8d211b38ed3ccf50b4a38a5b1c2562eb685cb900eec24fec26977",
+      "representation": "derived-text"
+    },
+    {
+      "path": "linux/controllers/native-version.py.txt",
+      "bytes": 5506,
+      "sha256": "47034537e67cf75bb31d1a40d3c3528f1a1b5df4ab1f4aeb2363870d165a4796",
+      "representation": "derived-source-export"
+    },
+    {
+      "path": "linux/evidence/20261116/install-result-safe.json",
+      "bytes": 2025,
+      "sha256": "6fbbbc63ce8d5a5a0ece367b0a305453c6d13d8f025630d4f1c553132ce41371",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "linux/evidence/20261116/linux-deb-download-safe.json",
+      "bytes": 810,
+      "sha256": "3df58053479bef3c1a303bd198388ffcf25c333db879d60ee2da54e72100d086",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "linux/evidence/20261116/linux-deb-resumed-download-safe.json",
+      "bytes": 799,
+      "sha256": "f252d88eb62b38168e91801442f598cf2f30a86cca8670cbc4f42c1ef30164a2",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "linux/evidence/20261116/linux-deb-static-inspection-safe.json",
+      "bytes": 6834,
+      "sha256": "56c30a14940c69624181ae92f82b7ef1459813ce4a2f829785a75433d8bde4b5",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "linux/evidence/20261116/linux-repo-requests-Claude-only-derived-safe.json",
+      "bytes": 1897,
+      "sha256": "959d129743f8406cda0428df73b8f7b29beb83704efe70760c8c0838388617f2",
+      "representation": "derived-selection"
+    },
+    {
+      "path": "linux/evidence/20261116/native-version-result-safe.json",
+      "bytes": 2091,
+      "sha256": "ae2210f5bf6c278107008fb8c3cb14e27ae646aaa8279e1ca62947f65ce97e40",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "linux/evidence/20261116/preflight-safe.json",
+      "bytes": 768,
+      "sha256": "86ed5677ac2f15ce984a0004b35ba2ce4aa3d4d4b25e768680c44d1aaa1fa215",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "linux/evidence/20261116/signed-repository-verification-safe.json",
+      "bytes": 2271,
+      "sha256": "152841da06f034df83fa73dd40d0f5674a9d2dfd4af1afe6ef40ef80853f0063",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "linux/evidence/20261116/simulate-result-safe.json",
+      "bytes": 4443,
+      "sha256": "40d82948e58c03b73724cc1702c09981a475829a21dca7b3eaddbe3e5e227a2c",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "linux/evidence/20261119/final-native-linux-verification-safe.json",
+      "bytes": 640,
+      "sha256": "fa36207bcbb54fea27c4bfb330809bb2ab9d4716bad2aa4c6e972200e2f37b88",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "linux/evidence/20261119/gui-metadata-change-audit-derived-safe.json",
+      "bytes": 2271,
+      "sha256": "5f55d7edaecb1a4d08b44a0782a01f1a58ff76a09578a8f858193547d477c653",
+      "representation": "derived-selected-fields"
+    },
+    {
+      "path": "linux/evidence/20261119/native-gui-result-original-safe.json",
+      "bytes": 7192,
+      "sha256": "2934e7b4f1c89b226eb8b136ab969c2b96780adf2908a0be26eef803a7267617",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "linux/evidence/20261119/native-gui-result-safe.json",
+      "bytes": 8237,
+      "sha256": "1d1fa14dbecb7d4ff9b3a98b85868788f20dc000a9fc3b5eb8d4bc3b0e7c3683",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "linux/evidence/20261119/post-gui-native-package-reconciliation-safe.json",
+      "bytes": 413,
+      "sha256": "dd2239db1645fe0f60f788c2f3b450ed682f49df4be475e17eabd1ec9811296c",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "linux/omitted-artifacts-safe.json",
+      "bytes": 5113,
+      "sha256": "5ab3b0f3323c60474fe27b6edaa91c3317e40d8c0c33e0594f53fd09ea3c1a7b",
+      "representation": "generated-archive-documentation-or-index"
+    },
+    {
+      "path": "linux/repository/InRelease",
+      "bytes": 3006,
+      "sha256": "5dc7b148878e542165b3219bed92bbf9b8774d177334526061cd46e4c2082cc6",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "linux/repository/Packages-amd64",
+      "bytes": 77044,
+      "sha256": "f3cc31278f67ef11687864b3f05a5e7274403d5e10eaa9fe9b02576a2ffc22fd",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "linux/repository/key.asc",
+      "bytes": 1688,
+      "sha256": "bd70a5e4a268002704024ceba7f8446024114e94f3f0bdd11c23a9e592be81c6",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "linux/source-map.json",
+      "bytes": 12730,
+      "sha256": "768450b579cbb44caa28a5ee796ac026261f8531cb9c7bbaa0f46d679180259b",
+      "representation": "generated-archive-documentation-or-index"
+    },
+    {
+      "path": "linux/validate-linux-archive.py",
+      "bytes": 19564,
+      "sha256": "589f21c18fd5bb0383ae6fe2fef0f998ceba1994e9c59b38f4ae50193f04b650",
+      "representation": "generated-archive-documentation-or-index"
+    },
+    {
+      "path": "review-safe.json",
+      "bytes": 10231,
+      "sha256": "748411f411aea870a21b54eba1217310ea9290211871d144cd7c93a01341ddb7",
+      "representation": "generated-archive-documentation-or-index"
+    },
+    {
+      "path": "summary-safe.json",
+      "bytes": 2454,
+      "sha256": "5ec815c86080d9db2bfce4807f8b3e673a89fbd01b02ebe31bd82178e90432fb",
+      "representation": "generated-archive-documentation-or-index"
+    },
+    {
+      "path": "validate-negative-cases.py",
+      "bytes": 8298,
+      "sha256": "966284821ff0da95c55ccb3bc5749d1c6021b8452e14b172d1e8df298799a40d",
+      "representation": "generated-archive-documentation-or-index"
+    },
+    {
+      "path": "validate.py",
+      "bytes": 7120,
+      "sha256": "42ae38e5f6c3d2726f18852b04dd446a59acad2c0840a3dd937533a42f83c1dd",
+      "representation": "generated-archive-documentation-or-index"
+    },
+    {
+      "path": "windows/README.md",
+      "bytes": 3012,
+      "sha256": "9e5fd4e9fe1dc08e32bb3cd7ffeef16e4b81b1befe4833514cdc33d7576c806d",
+      "representation": "generated-archive-documentation-or-index"
+    },
+    {
+      "path": "windows/derived/appinstaller-package-version-label-clarification-safe.json",
+      "bytes": 821,
+      "sha256": "79d8fd409afbfe3144e6e4d6b13e2be310fd7df4eb41e32cd3086c19bd970b55",
+      "representation": "derived-selected-fields"
+    },
+    {
+      "path": "windows/derived/official-store-catalog-20261116-safe.json",
+      "bytes": 1349,
+      "sha256": "6df1a5a7470bb6531fd4b7283a2da854d3039b86535b14e313e9d63958b97f44",
+      "representation": "derived-selected-fields"
+    },
+    {
+      "path": "windows/derived/official-store-show-public-metadata-safe.json",
+      "bytes": 509,
+      "sha256": "cb3d198d6be2f9d182f10ae96c48bd25cba6ffae43358050b5dd8dfee3e51d53",
+      "representation": "derived-selected-fields"
+    },
+    {
+      "path": "windows/derived/prior-failure-and-truncated-candidate-safe.json",
+      "bytes": 2936,
+      "sha256": "990be379964ebc6b9e466d6c6854fffd5806ef7182f241e22a428beb540da317",
+      "representation": "derived-selected-fields"
+    },
+    {
+      "path": "windows/derived/windows-optional-gui-status-safe.json",
+      "bytes": 1035,
+      "sha256": "45d9e20d43aa5d9b11790134dd9b6a1dbdc77028ffd01aa23dcffc064158bf99",
+      "representation": "derived-selected-fields"
+    },
+    {
+      "path": "windows/original/current-registered-installed-proof-safe.json",
+      "bytes": 1395,
+      "sha256": "81f1a9eff58eebc9b37f524d7024403a757d39dc11d0eefe51313f2c1403d026",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "windows/original/installed-windows-native-final-safe.json",
+      "bytes": 3291,
+      "sha256": "d35ae2549d88ee02d9844460a989e8bfc0d7ea421028710db5e7094d2edd198b",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "windows/original/native-windows-gui-failure-safe.json",
+      "bytes": 474,
+      "sha256": "6abf03b6bbd1df52e6f12d151ed31b66cd0fdf5c9338d683874f209e9b844c70",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "windows/original/store-install-terminal-field-label-reconciliation-safe.json",
+      "bytes": 1145,
+      "sha256": "3c7046fe57d5980fe88db8a228530e3630925b5247bbc227983d07f6588ca1c5",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "windows/original/winget-store-install-start-safe.json",
+      "bytes": 668,
+      "sha256": "8a91e783ff64c2cad4aa5a9fb7567909faf6b1f90a24bad8f5fd39b1dfe30d10",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "windows/original/winget-store-install-terminal-safe.json",
+      "bytes": 2092,
+      "sha256": "ce0474ec6f0db7196baa00956b4664d749fc37159e2223a082a7e94b34e2b4f1",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "windows/original/winget-store-installed-registration-safe.json",
+      "bytes": 1142,
+      "sha256": "35b1f28546567c61c35cb25f3254085aaa9d2254dc23467246a2bc65182ff2cd",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "windows/original/winget-store-show-start-safe.json",
+      "bytes": 625,
+      "sha256": "113d3df46288aaa497d8157bedd64a5e946874a7d118563c5bfa826c222d057c",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "windows/original/winget-store-show-terminal-safe.json",
+      "bytes": 2089,
+      "sha256": "3edf6f979fb3caabeb824eae3e3ec1c9a6811603fb3001509cb9f322d5e22c54",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "windows/source-map.json",
+      "bytes": 16420,
+      "sha256": "8c7a0494b7126d146c63029b06a4d5b2ddc5a5d2e17c239b03b1f716aa607d1d",
+      "representation": "generated-archive-documentation-or-index"
+    },
+    {
+      "path": "windows/sources/OwnedClaudeInstall.cs",
+      "bytes": 6375,
+      "sha256": "c44e4cc7947d500765a7f6d214bae54c1ac52a59d2a6de6c78632c286a345a5f",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "windows/sources/install-current-official-store-native.ps1",
+      "bytes": 5722,
+      "sha256": "0e91060300f3dd9fcd9fb72342719275a96777dbea1f625b1443f07aa28c0624",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "windows/sources/read-current-registered-installed-proof.ps1",
+      "bytes": 2595,
+      "sha256": "72e43b027673727b71289011c3f11cfa9a85e217e1b0b11e308541feacec479e",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "windows/sources/show-current-official-store-native.ps1",
+      "bytes": 4092,
+      "sha256": "c4cdd7c4a0f591656a25da4a2deff8e71105280df2d8cd0c2e94fff1b8d2ff77",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "windows/sources/verify-installed-official-store-native.ps1",
+      "bytes": 5608,
+      "sha256": "ab309e8aff3db1ae77fece106fcafc3602fcebcb923b886cb9dc411fb0c432c9",
+      "representation": "original-bytes"
+    },
+    {
+      "path": "windows/validate-windows-archive.py",
+      "bytes": 21279,
+      "sha256": "79fbfd2037e11eb85c930058d404d54337117a99867c99c45d63303347c6ac43",
+      "representation": "generated-archive-documentation-or-index"
+    }
+  ],
+  "lastReviewedAtUtc": "2026-11-20T01:59:35.473388+00:00"
+}

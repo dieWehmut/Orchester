@@ -1,0 +1,44 @@
+{
+    "status":  "native-winget-current-official-Store-show-terminal",
+    "observedAtUtc":  "2026-11-19T05:58:31.0903961Z",
+    "actualNativeExitCode":  0,
+    "originalCreatorAndQueryHandlesHeldToExit":  true,
+    "identities":  [
+                       {
+                           "pid":  314792,
+                           "createdFileTimeExact":  "134395415085143474",
+                           "parentPid":  0,
+                           "parentCreatedFileTimeExact":  "0",
+                           "image":  "C:\\Program Files\\WindowsApps\\Microsoft.DesktopAppInstaller_1.29.379.0_x64__8wekyb3d8bbwe\\winget.exe",
+                           "imageSha256":  "ce0bb2b4871cb7f41f40d34ad47e8414a426dc5f6a303c14cee335a71d8602ed",
+                           "originalHandleLive":  false,
+                           "endedFileTimeExact":  "134395415105579740",
+                           "nativeExitCode":  0
+                       },
+                       {
+                           "pid":  316432,
+                           "createdFileTimeExact":  "134395415085954768",
+                           "parentPid":  314792,
+                           "parentCreatedFileTimeExact":  "134395415085143474",
+                           "image":  "C:\\Windows\\System32\\conhost.exe",
+                           "imageSha256":  "c86146188b78e484f32cc29e2331689659943b47689a85570342044f499938ac",
+                           "originalHandleLive":  false,
+                           "endedFileTimeExact":  "134395415105613212",
+                           "nativeExitCode":  0
+                       }
+                   ],
+    "publicCatalogProductId":  "9P6K58THS811",
+    "showStdoutBytes":  4419,
+    "showStderrBytes":  0,
+    "publicErrorCodes":  [
+
+                         ],
+    "storeInstallerMetadataPresent":  true,
+    "nativeShowReturnedSuccess":  true,
+    "installOperations":  0,
+    "explicitLoginActions":  0,
+    "modelAuthCalls":  0,
+    "profileValuesRead":  false,
+    "sharedWorkerOperations":  0,
+    "processSignals":  0
+}

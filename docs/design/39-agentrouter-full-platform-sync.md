@@ -1,5 +1,11 @@
 # AgentRouter 全目录与多平台同步验收
 
+## 11 月 19–20 日续验
+
+[Claude 官方安装归档](acceptance/agentrouter-platform-sync/native/claude/20261119-official-installations/README.md)已补齐 Windows 与 WSL 的安装缺口：Windows Store 原生安装退出 0，当前用户注册包为 `5.11492.5.0`，已安装 EXE / ASAR 为 `5.11492.5`，Anthropic 签名 Valid；WSL 官方签名仓库、deb、实际 APT 安装与版本命令构成完整来源链。Linux 独立 WSLg 窗口实际显示地域限制页面，Ctrl+Q 后退出 0，16 个原 pidfd 全部终止。Windows 独立 GUI 测试因已有外部应用进程而未执行；安装通过不代表登录或模型可用。55 个归档文件的离线校验及 17 个语义、签名负向用例通过，原始失败和版本纠正记录均保留。
+
+## 此前检查点
+
 本轮扩展范围与此前[38 的桌面/手机交付历史](38-desktop-mobile-final-delivery.md)分别归档，原源码、失败和退出边界保留。本检查点生产源码为 `71def643cb08b208cc79687f79255c504eb14dc6`。此前十三轮检查点已推送并合并到 main `3f01075b3490f6920cd7e42d730fd339456728d9`；其中新增六种 CLI 的 Windows / WSL 共 12 个安装单元及常用命令均通过版本检查，见[追加安装记录](40-additional-agent-installations.md)。执行跨 2026-11-11 至 2026-11-13（Asia/Shanghai），原 receipt UTC 日期和 `20261111` 目录保持原值。监控目录分别展示 WorkBuddy 国内、国际两版，共 21 providers、7 services、42 项主题映射与 24 份官方图标。
 
 前端、Pages 与 Linux 新实例恢复已有实证，Windows 核心构建通过。正确 Windows Android 5572 已完成同证书新 APK、4 项原生测试、原五 AES 验证、Android Studio 17.4 秒同步 / JDK 21，以及 21 产品 / 42 图标。新一轮原生终端、真实键盘 resize、正常关闭、临时设备移除和撤销及自有环境清理已补齐；[最终安全记录](acceptance/agentrouter-platform-sync/native/android/post-reboot-completion-20261112/final-completion-safe.json)保留终端退出码 1 和任务删除后回执程序失败的边界。原五凭据保留，原 Linux 7337 凭据实际请求 200。Windows 正式 Portable14 和新的完整 Desktop18 均已实际通过；原 Desktop18 监控目录失败保留，新验收使用隔离候选及原句柄完成正常 MSAA 退出。新的离线原用户备份和默认 Desktop / Remote 安装目录更新已完成；默认应用实际启动、原 213 条任务记录保留与 managed Remote7338 运行仍待验收；此前 5554 Linux 目标及初始 20 项阶段保留历史绑定。11 月 16 日已验证真实 WSL 重启、自启动及原 Linux 数据保留；原 Windows 五条凭据对这次新实例的实际请求仍待执行。

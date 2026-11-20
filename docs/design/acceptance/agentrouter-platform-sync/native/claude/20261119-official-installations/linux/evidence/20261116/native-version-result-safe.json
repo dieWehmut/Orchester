@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "startedAtUtc": "2026-11-16T10:43:08.197553+00:00",
+  "finishedAtUtc": "2026-11-16T10:43:08.441655+00:00",
+  "scope": "Actual UID1000 installed native --version execution and owned process lifecycle; no GUI or login/model run",
+  "uid": 1000,
+  "argv": [
+    "/usr/bin/claude-desktop",
+    "--version",
+    "--user-data-dir=/tmp/orchester-official-linux-install-20261116/version-only-fresh-profile/electron",
+    "--password-store=basic"
+  ],
+  "installedElfSHA256": "fe6219735b2e67422a9a23de2fc35371b09980531601c019b7cc2b001e29c7a8",
+  "installedASARSHA256": "33a8a05f5704a7159711c7aa9ab99086ea2b04f17ac9e494fb1df54c19a142e6",
+  "installedASARMatchesSignedPackage": true,
+  "profileInitiallyEmpty": true,
+  "inheritedEnvironmentKeys": [
+    "CLAUDE_CONFIG_DIR",
+    "DBUS_SESSION_BUS_ADDRESS",
+    "DISPLAY",
+    "HOME",
+    "LANG",
+    "LOGNAME",
+    "PATH",
+    "USER",
+    "WAYLAND_DISPLAY",
+    "XDG_CACHE_HOME",
+    "XDG_CONFIG_HOME",
+    "XDG_DATA_HOME",
+    "XDG_RUNTIME_DIR"
+  ],
+  "providerSecretEnvironmentKeysPassed": false,
+  "root": {
+    "pid": 2137323,
+    "startTicks": "1139680",
+    "pidfdHeld": true,
+    "expectedInstalledElfSHA256": "fe6219735b2e67422a9a23de2fc35371b09980531601c019b7cc2b001e29c7a8"
+  },
+  "actualExitCode": 0,
+  "versionOutput": "5.11492.5",
+  "versionMatchesPackage": true,
+  "heldObjects": [
+    {
+      "pid": 2137323,
+      "startTicks": "1139680",
+      "pidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 2137326,
+      "startTicks": "1139689",
+      "pidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 2137327,
+      "startTicks": "1139691",
+      "pidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    },
+    {
+      "pid": 2137329,
+      "startTicks": "1139692",
+      "pidfdHeld": true,
+      "terminalByOriginalPidfd": true
+    }
+  ],
+  "signalCleanupActions": [],
+  "stderrBytes": 0,
+  "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "success": true,
+  "loginOrModelActions": 0,
+  "service7337Actions": 0
+}

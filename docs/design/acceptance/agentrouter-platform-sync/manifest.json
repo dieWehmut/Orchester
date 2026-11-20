@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-11-19T05:52:28.229457+00:00",
-  "status": "dated-linux-actual-reboot-autostart-and-state-verified-full-platform-runtime-pending",
+  "createdAt": "2026-11-20T02:16:05.588048+00:00",
+  "status": "official-claude-installations-verified-other-platform-continuation-in-progress",
   "summaryPath": "summary.json",
   "files": [
     {
@@ -1270,21 +1270,6 @@
       "bytes": 1391
     },
     {
-      "path": "native/android/device-identity-current21/native/own-emulator-console-port-readonly-safe.json",
-      "sha256": "0056b4266769cb0204f280938390ab41ad5518488262d918346804f3aede538a",
-      "bytes": 1097
-    },
-    {
-      "path": "native/android/device-identity-current21/native/unexpected-own-console-port-owner-safe.json",
-      "sha256": "8eb20a320c53373f231ba0e3b51cdcad9b237400fbc8472da4e4346a4a6363a0",
-      "bytes": 1488
-    },
-    {
-      "path": "native/android/device-identity-current21/native/windows-own-qemu-actual-listeners-safe.json",
-      "sha256": "bac7e866665ef9b8d1745b6ed92c58bd83f8f6d74ce6ac54370df1080fcbc819",
-      "bytes": 2531
-    },
-    {
       "path": "native/android/device-identity-current21/native-final21-device-provenance-correction-safe.json",
       "sha256": "73233999233d54ef151515ec5cdd7bfb9926dce907d18d8f8746cf705202c87a",
       "bytes": 1555
@@ -1298,6 +1283,21 @@
       "path": "native/android/device-identity-current21/native-one-prefs-file-rollback-final-byte-exact-safe.json",
       "sha256": "e12e31ff91d4cb163a9f2951af5fa35116b21bcc4c2cebccbb6f4272e5e51219",
       "bytes": 1212
+    },
+    {
+      "path": "native/android/device-identity-current21/native/own-emulator-console-port-readonly-safe.json",
+      "sha256": "0056b4266769cb0204f280938390ab41ad5518488262d918346804f3aede538a",
+      "bytes": 1097
+    },
+    {
+      "path": "native/android/device-identity-current21/native/unexpected-own-console-port-owner-safe.json",
+      "sha256": "8eb20a320c53373f231ba0e3b51cdcad9b237400fbc8472da4e4346a4a6363a0",
+      "bytes": 1488
+    },
+    {
+      "path": "native/android/device-identity-current21/native/windows-own-qemu-actual-listeners-safe.json",
+      "sha256": "bac7e866665ef9b8d1745b6ed92c58bd83f8f6d74ce6ac54370df1080fcbc819",
+      "bytes": 2531
     },
     {
       "path": "native/android/device-identity-current21/owned-windows-medium-normal-wmclose-exit-observed-safe.json",
@@ -1618,6 +1618,281 @@
       "path": "native/android/wrong-linux-final-cleanup/wrong-linux-own-debug-app-ram-and-forward-cleanup-safe.json",
       "sha256": "66ee03e5de7e70757d85781449815672e0ff98f3448307a4cf8dcd8a9a3b3ec9",
       "bytes": 1849
+    },
+    {
+      "path": "native/claude/20261119-official-installations/.gitattributes",
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "bytes": 8
+    },
+    {
+      "path": "native/claude/20261119-official-installations/README.md",
+      "sha256": "091a9445e95c04329e02ae1153d36b0ec1284d2b9c62c89578d65e743edd6e4d",
+      "bytes": 4452
+    },
+    {
+      "path": "native/claude/20261119-official-installations/artifact-manifest.json",
+      "sha256": "1bbc54e287addefaa62e0fa29d679d32a0887f2ebd315d2ce76cdf71279c0a72",
+      "bytes": 12798
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/.gitattributes",
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "bytes": 8
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/README.md",
+      "sha256": "12858ca6c6e78dc9053244655ea4e03ff9b86fa25f7503f9fcb3a38f846485ec",
+      "bytes": 4419
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/artifact-index.json",
+      "sha256": "9b10a1e0d9466438846029f14e7abae1f73bdeb216427306d07d5a29122aa33d",
+      "bytes": 4467
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/controllers/install-native.py.txt",
+      "sha256": "d0b188e2642e219d826d2f22ec8915641533d868ba6939406a5fbdc835f434fc",
+      "bytes": 8026
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/controllers/native-gui-smoke.py.txt",
+      "sha256": "e601f2b6f7b8d211b38ed3ccf50b4a38a5b1c2562eb685cb900eec24fec26977",
+      "bytes": 14252
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/controllers/native-version.py.txt",
+      "sha256": "47034537e67cf75bb31d1a40d3c3528f1a1b5df4ab1f4aeb2363870d165a4796",
+      "bytes": 5506
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/evidence/20261116/install-result-safe.json",
+      "sha256": "6fbbbc63ce8d5a5a0ece367b0a305453c6d13d8f025630d4f1c553132ce41371",
+      "bytes": 2025
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/evidence/20261116/linux-deb-download-safe.json",
+      "sha256": "3df58053479bef3c1a303bd198388ffcf25c333db879d60ee2da54e72100d086",
+      "bytes": 810
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/evidence/20261116/linux-deb-resumed-download-safe.json",
+      "sha256": "f252d88eb62b38168e91801442f598cf2f30a86cca8670cbc4f42c1ef30164a2",
+      "bytes": 799
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/evidence/20261116/linux-deb-static-inspection-safe.json",
+      "sha256": "56c30a14940c69624181ae92f82b7ef1459813ce4a2f829785a75433d8bde4b5",
+      "bytes": 6834
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/evidence/20261116/linux-repo-requests-Claude-only-derived-safe.json",
+      "sha256": "959d129743f8406cda0428df73b8f7b29beb83704efe70760c8c0838388617f2",
+      "bytes": 1897
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/evidence/20261116/native-version-result-safe.json",
+      "sha256": "ae2210f5bf6c278107008fb8c3cb14e27ae646aaa8279e1ca62947f65ce97e40",
+      "bytes": 2091
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/evidence/20261116/preflight-safe.json",
+      "sha256": "86ed5677ac2f15ce984a0004b35ba2ce4aa3d4d4b25e768680c44d1aaa1fa215",
+      "bytes": 768
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/evidence/20261116/signed-repository-verification-safe.json",
+      "sha256": "152841da06f034df83fa73dd40d0f5674a9d2dfd4af1afe6ef40ef80853f0063",
+      "bytes": 2271
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/evidence/20261116/simulate-result-safe.json",
+      "sha256": "40d82948e58c03b73724cc1702c09981a475829a21dca7b3eaddbe3e5e227a2c",
+      "bytes": 4443
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/evidence/20261119/final-native-linux-verification-safe.json",
+      "sha256": "fa36207bcbb54fea27c4bfb330809bb2ab9d4716bad2aa4c6e972200e2f37b88",
+      "bytes": 640
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/evidence/20261119/gui-metadata-change-audit-derived-safe.json",
+      "sha256": "5f55d7edaecb1a4d08b44a0782a01f1a58ff76a09578a8f858193547d477c653",
+      "bytes": 2271
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/evidence/20261119/native-gui-result-original-safe.json",
+      "sha256": "2934e7b4f1c89b226eb8b136ab969c2b96780adf2908a0be26eef803a7267617",
+      "bytes": 7192
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/evidence/20261119/native-gui-result-safe.json",
+      "sha256": "1d1fa14dbecb7d4ff9b3a98b85868788f20dc000a9fc3b5eb8d4bc3b0e7c3683",
+      "bytes": 8237
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/evidence/20261119/post-gui-native-package-reconciliation-safe.json",
+      "sha256": "dd2239db1645fe0f60f788c2f3b450ed682f49df4be475e17eabd1ec9811296c",
+      "bytes": 413
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/omitted-artifacts-safe.json",
+      "sha256": "5ab3b0f3323c60474fe27b6edaa91c3317e40d8c0c33e0594f53fd09ea3c1a7b",
+      "bytes": 5113
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/repository/InRelease",
+      "sha256": "5dc7b148878e542165b3219bed92bbf9b8774d177334526061cd46e4c2082cc6",
+      "bytes": 3006
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/repository/Packages-amd64",
+      "sha256": "f3cc31278f67ef11687864b3f05a5e7274403d5e10eaa9fe9b02576a2ffc22fd",
+      "bytes": 77044
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/repository/key.asc",
+      "sha256": "bd70a5e4a268002704024ceba7f8446024114e94f3f0bdd11c23a9e592be81c6",
+      "bytes": 1688
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/source-map.json",
+      "sha256": "768450b579cbb44caa28a5ee796ac026261f8531cb9c7bbaa0f46d679180259b",
+      "bytes": 12730
+    },
+    {
+      "path": "native/claude/20261119-official-installations/linux/validate-linux-archive.py",
+      "sha256": "589f21c18fd5bb0383ae6fe2fef0f998ceba1994e9c59b38f4ae50193f04b650",
+      "bytes": 19564
+    },
+    {
+      "path": "native/claude/20261119-official-installations/review-safe.json",
+      "sha256": "748411f411aea870a21b54eba1217310ea9290211871d144cd7c93a01341ddb7",
+      "bytes": 10231
+    },
+    {
+      "path": "native/claude/20261119-official-installations/summary-safe.json",
+      "sha256": "5ec815c86080d9db2bfce4807f8b3e673a89fbd01b02ebe31bd82178e90432fb",
+      "bytes": 2454
+    },
+    {
+      "path": "native/claude/20261119-official-installations/validate-negative-cases.py",
+      "sha256": "966284821ff0da95c55ccb3bc5749d1c6021b8452e14b172d1e8df298799a40d",
+      "bytes": 8298
+    },
+    {
+      "path": "native/claude/20261119-official-installations/validate.py",
+      "sha256": "42ae38e5f6c3d2726f18852b04dd446a59acad2c0840a3dd937533a42f83c1dd",
+      "bytes": 7120
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/README.md",
+      "sha256": "9e5fd4e9fe1dc08e32bb3cd7ffeef16e4b81b1befe4833514cdc33d7576c806d",
+      "bytes": 3012
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/derived/appinstaller-package-version-label-clarification-safe.json",
+      "sha256": "79d8fd409afbfe3144e6e4d6b13e2be310fd7df4eb41e32cd3086c19bd970b55",
+      "bytes": 821
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/derived/official-store-catalog-20261116-safe.json",
+      "sha256": "6df1a5a7470bb6531fd4b7283a2da854d3039b86535b14e313e9d63958b97f44",
+      "bytes": 1349
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/derived/official-store-show-public-metadata-safe.json",
+      "sha256": "cb3d198d6be2f9d182f10ae96c48bd25cba6ffae43358050b5dd8dfee3e51d53",
+      "bytes": 509
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/derived/prior-failure-and-truncated-candidate-safe.json",
+      "sha256": "990be379964ebc6b9e466d6c6854fffd5806ef7182f241e22a428beb540da317",
+      "bytes": 2936
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/derived/windows-optional-gui-status-safe.json",
+      "sha256": "45d9e20d43aa5d9b11790134dd9b6a1dbdc77028ffd01aa23dcffc064158bf99",
+      "bytes": 1035
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/original/current-registered-installed-proof-safe.json",
+      "sha256": "81f1a9eff58eebc9b37f524d7024403a757d39dc11d0eefe51313f2c1403d026",
+      "bytes": 1395
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/original/installed-windows-native-final-safe.json",
+      "sha256": "d35ae2549d88ee02d9844460a989e8bfc0d7ea421028710db5e7094d2edd198b",
+      "bytes": 3291
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/original/native-windows-gui-failure-safe.json",
+      "sha256": "6abf03b6bbd1df52e6f12d151ed31b66cd0fdf5c9338d683874f209e9b844c70",
+      "bytes": 474
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/original/store-install-terminal-field-label-reconciliation-safe.json",
+      "sha256": "3c7046fe57d5980fe88db8a228530e3630925b5247bbc227983d07f6588ca1c5",
+      "bytes": 1145
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/original/winget-store-install-start-safe.json",
+      "sha256": "8a91e783ff64c2cad4aa5a9fb7567909faf6b1f90a24bad8f5fd39b1dfe30d10",
+      "bytes": 668
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/original/winget-store-install-terminal-safe.json",
+      "sha256": "ce0474ec6f0db7196baa00956b4664d749fc37159e2223a082a7e94b34e2b4f1",
+      "bytes": 2092
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/original/winget-store-installed-registration-safe.json",
+      "sha256": "35b1f28546567c61c35cb25f3254085aaa9d2254dc23467246a2bc65182ff2cd",
+      "bytes": 1142
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/original/winget-store-show-start-safe.json",
+      "sha256": "113d3df46288aaa497d8157bedd64a5e946874a7d118563c5bfa826c222d057c",
+      "bytes": 625
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/original/winget-store-show-terminal-safe.json",
+      "sha256": "3edf6f979fb3caabeb824eae3e3ec1c9a6811603fb3001509cb9f322d5e22c54",
+      "bytes": 2089
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/source-map.json",
+      "sha256": "8c7a0494b7126d146c63029b06a4d5b2ddc5a5d2e17c239b03b1f716aa607d1d",
+      "bytes": 16420
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/sources/OwnedClaudeInstall.cs",
+      "sha256": "c44e4cc7947d500765a7f6d214bae54c1ac52a59d2a6de6c78632c286a345a5f",
+      "bytes": 6375
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/sources/install-current-official-store-native.ps1",
+      "sha256": "0e91060300f3dd9fcd9fb72342719275a96777dbea1f625b1443f07aa28c0624",
+      "bytes": 5722
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/sources/read-current-registered-installed-proof.ps1",
+      "sha256": "72e43b027673727b71289011c3f11cfa9a85e217e1b0b11e308541feacec479e",
+      "bytes": 2595
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/sources/show-current-official-store-native.ps1",
+      "sha256": "c4cdd7c4a0f591656a25da4a2deff8e71105280df2d8cd0c2e94fff1b8d2ff77",
+      "bytes": 4092
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/sources/verify-installed-official-store-native.ps1",
+      "sha256": "ab309e8aff3db1ae77fece106fcafc3602fcebcb923b886cb9dc411fb0c432c9",
+      "bytes": 5608
+    },
+    {
+      "path": "native/claude/20261119-official-installations/windows/validate-windows-archive.py",
+      "sha256": "79fbfd2037e11eb85c930058d404d54337117a99867c99c45d63303347c6ac43",
+      "bytes": 21279
     },
     {
       "path": "native/ios/final21-public-sync.json",
@@ -3845,31 +4120,6 @@
       "bytes": 385348
     },
     {
-      "path": "native/windows/temporary-7339/cleanup-safe.json",
-      "sha256": "b82d7cf34d666add180ee55c5ac06f58d0f090e311ad3277b90b56c7f6a259dc",
-      "bytes": 996
-    },
-    {
-      "path": "native/windows/temporary-7339/original-executor-terminal-safe.json",
-      "sha256": "e2efae1dc68056cc4f2d82f6fe8cb5640d37210db94931032822583fd0b7e79e",
-      "bytes": 633
-    },
-    {
-      "path": "native/windows/temporary-7339/private-transport-terminal-cleanup-safe.json",
-      "sha256": "5d01cc236693516cb3da66cf6fc43ad4072bfc4368a7d2963973cbbe169727ca",
-      "bytes": 830
-    },
-    {
-      "path": "native/windows/temporary-7339/public-http-preflight-safe.json",
-      "sha256": "55c86d8d88049c90dc867cacc7d35176d3639cc39c84295323930c4763478bfb",
-      "bytes": 6952
-    },
-    {
-      "path": "native/windows/temporary-7339/ready-safe.json",
-      "sha256": "88477404ba3e2223b223d717a59a67dd648d73a58ad80e3dd2a0ee53860c2569",
-      "bytes": 1996
-    },
-    {
       "path": "native/windows/temporary-7339-attempt2/cleanup-safe.json",
       "sha256": "138321ee2333fef1b55e76247ebd15eb3ffe2bcb71b9caca4b65314fdf5cab2b",
       "bytes": 1080
@@ -3913,6 +4163,31 @@
       "path": "native/windows/temporary-7339-successor-policy/successor2-native-typed-policy-safe.json",
       "sha256": "b70d5c3ec0163017680cdf954ab2b273d35b6f92d85136cc53642874b0467296",
       "bytes": 2648
+    },
+    {
+      "path": "native/windows/temporary-7339/cleanup-safe.json",
+      "sha256": "b82d7cf34d666add180ee55c5ac06f58d0f090e311ad3277b90b56c7f6a259dc",
+      "bytes": 996
+    },
+    {
+      "path": "native/windows/temporary-7339/original-executor-terminal-safe.json",
+      "sha256": "e2efae1dc68056cc4f2d82f6fe8cb5640d37210db94931032822583fd0b7e79e",
+      "bytes": 633
+    },
+    {
+      "path": "native/windows/temporary-7339/private-transport-terminal-cleanup-safe.json",
+      "sha256": "5d01cc236693516cb3da66cf6fc43ad4072bfc4368a7d2963973cbbe169727ca",
+      "bytes": 830
+    },
+    {
+      "path": "native/windows/temporary-7339/public-http-preflight-safe.json",
+      "sha256": "55c86d8d88049c90dc867cacc7d35176d3639cc39c84295323930c4763478bfb",
+      "bytes": 6952
+    },
+    {
+      "path": "native/windows/temporary-7339/ready-safe.json",
+      "sha256": "88477404ba3e2223b223d717a59a67dd648d73a58ad80e3dd2a0ee53860c2569",
+      "bytes": 1996
     },
     {
       "path": "native/windows/workbuddy-registration-paths-readonly-safe.json",
@@ -4781,8 +5056,8 @@
     },
     {
       "path": "sources/requirement-delivery-audit.json",
-      "sha256": "194450cc7d8e8b329c02252ed42c8e5089c7de5c016a6243e11e43d3fb7a1d9a",
-      "bytes": 57133
+      "sha256": "e713ba49cf5c04bc2630158b4f1335f7f424ed6279e0814f7f3a23ab0c496a6c",
+      "bytes": 57395
     },
     {
       "path": "sources/workbuddy/cn-linux-update.json",
@@ -4806,8 +5081,8 @@
     },
     {
       "path": "summary.json",
-      "sha256": "d69756ee81394386f793fec05da0443eedb42d92cc1b4e231c200c764df49938",
-      "bytes": 84709
+      "sha256": "dd5660162bf79c42c701bd566cdf46f2811092459012b1578731669038cfa045",
+      "bytes": 86108
     },
     {
       "path": "tests/backend/a96a06e-deployment-gates-summary.json",
@@ -4891,5 +5166,5 @@
     }
   ],
   "privateBackupsSettingsEnvTokensSessionsDatabasesInstallersAndRawLogsIncluded": false,
-  "checkpointScope": "Earlier public receipts and original failed Desktop18/executor137/ten unrecovered creator-handle boundaries remain unchanged. Worker4 native startup/advancing heartbeat/client activation/input-cursor and original GUI37324 normalMSAA0/nine fresh-held terminal identities are verified in their source epochs. Fresh isolated frozen71 actual native5 Desktop18 job53f6e99 ended0: 18checks/7PUT200/pageErrors0/21providers42images7services/actual per-instance DTO-nativeUI correspondence/two actual reviewed PNG ACKs; newGUI443516 normalMSAA0/all641 unique held GUI identities terminal/oneNode completion gate0/CDP19322+64420 released. Separate independent Node OS-exit receipt and universal image-query success are not claimed. Fresh native offline original backup0/sixroots-fiveexisting/677files-readlocks/source-before-copy-after equal/locks released and actual default Desktop+Remote same-volume staged-directory promotion0/e4aa765b+24c8f980/sibling backups/external state byte-exact are verified. Source-built NotSigned/no native or NSIS installer/defaultLaunch0; prior promotion1 and CIM diagnosis0 retained. Actual default GUI launch/213 task-record retention, managedRemote7338 runtime, current Windows original-five credential/token wire, vendor installation and DeepSeek GUI remain incomplete; unarchived running operations do not change public status. Historical unregistered-child identity/closure and wrong-Linux full-package rollback remain unproved boundaries, not new recovery tasks. All966 archive files are included, root manifest excludes itself; production731 inputs stay frozen71. Native/runtime PID, listener, service and worker observations retain their original source-epoch dates; the 2026-11-16 archive/source review establishes no current process liveness or native execution-channel availability. November16 actual WSL reboot/autostart and original5run/5auth logical retention are now verified by the separately dated28-file group; failed first observer1 and corrected observer0 remain distinct. Current Windows original-five token wire to listener427/ticks342 remains pending. An eleven-file November16 incremental-cache archive with November19 readonly continuation proves the selected deletion and unchanged original7337 identity only; complete platform delivery still has separate open gates."
+  "checkpointScope": "All listed tracked archive files are hash/size-bound; manifest excludes itself. Historical receipt bytes and dates remain unchanged. This checkpoint adds self-contained official Windows/WSL Claude installation evidence, independent review, and 17 offline semantic/signature negative cases. Windows independent GUI and account/model availability are not claimed. Other platform finalization and WorkBuddy global native Linux package remain separate pending scopes. Site style and font documentation changed after frozen71; no new blanket731-production-input equality is asserted."
 }

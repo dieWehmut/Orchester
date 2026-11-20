@@ -1,0 +1,297 @@
+{
+  "schemaVersion": 1,
+  "reviewedAtUtc": "2026-11-20T01:59:35.424958+00:00",
+  "scope": "Independent archive/source-map/controller review followed by offline semantic validation; historical installation and GUI observations were not rerun.",
+  "historicalObservationDatesUnchanged": [
+    "2026-11-16",
+    "2026-11-19"
+  ],
+  "originalSafeSourceRehash": {
+    "windowsSourceCount": 20,
+    "linuxSourceMapEntries": 20,
+    "linuxUniqueSourceFiles": 19,
+    "uniqueSafeSourceFiles": 39,
+    "allRecordedOriginalHashesAndSizesMatch": true,
+    "sourcePathsPublished": false,
+    "excludedRawLogsBinariesImagesAndProfilesRead": false,
+    "windowsSources": [
+      {
+        "sourceId": "S001",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S002",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S003",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S004",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S005",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S006",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S007",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S008",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S009",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S010",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S011",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S012",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S013",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S014",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S016",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S018",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S019",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S020",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S021",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "S022",
+        "originalSha256AndSizeMatch": true
+      }
+    ],
+    "linuxSources": [
+      {
+        "sourceId": "repository/key.asc",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "repository/InRelease",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "repository/Packages-amd64",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "evidence/20261116/signed-repository-verification-safe.json",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "evidence/20261116/linux-deb-download-safe.json",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "evidence/20261116/linux-deb-resumed-download-safe.json",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "evidence/20261116/linux-deb-static-inspection-safe.json",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "evidence/20261116/preflight-safe.json",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "evidence/20261116/simulate-result-safe.json",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "evidence/20261116/install-result-safe.json",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "evidence/20261116/native-version-result-safe.json",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "evidence/20261119/native-gui-result-original-safe.json",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "evidence/20261119/native-gui-result-safe.json",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "evidence/20261119/final-native-linux-verification-safe.json",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "evidence/20261119/post-gui-native-package-reconciliation-safe.json",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "controllers/install-native.py.txt",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "controllers/native-version.py.txt",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "controllers/native-gui-smoke.py.txt",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "evidence/20261116/linux-repo-requests-Claude-only-derived-safe.json",
+        "originalSha256AndSizeMatch": true
+      },
+      {
+        "sourceId": "GUI-receipt-complete-change-audit",
+        "originalSha256AndSizeMatch": true
+      }
+    ]
+  },
+  "corrections": [
+    "Windows README now distinguishes currently observed Explorer parent metadata from unproven original activation provenance.",
+    "Windows current native exit, complete registered package identity, EXE metadata and signature kind are bound to prior original installation proof.",
+    "Windows selected catalog/show summaries are bound to original source digest/size metadata; GUI limits and truncated-candidate rejection are enforced.",
+    "Linux post-GUI package/runtime correction receipt, unique process identities, owned-window/image geometry, directed normal quit and incomplete prior download are checked.",
+    "Top platform summaries are derived against validated receipts rather than accepting contradictory exit or version fields.",
+    "Windows checks use explicit exceptions so validation remains active under Python optimization."
+  ],
+  "originalEvidenceReceiptsModifiedDuringReview": false,
+  "negativeValidation": {
+    "status": "pass",
+    "baseline": "pass",
+    "negativeCases": [
+      {
+        "case": "summary-install-exit-contradiction",
+        "status": "rejected",
+        "reason": "Windows summary contradicts validated receipts"
+      },
+      {
+        "case": "summary-gui-exit-contradiction",
+        "status": "rejected",
+        "reason": "Linux summary contradicts validated receipts"
+      },
+      {
+        "case": "current-Windows-native-nonzero-exit",
+        "status": "rejected",
+        "reason": "Windows evidence invariant: fresh['actualNativeExitCode']==0"
+      },
+      {
+        "case": "current-Windows-Store-signature-kind",
+        "status": "rejected",
+        "reason": "current registration identity mismatch: registeredPackageSignatureKind"
+      },
+      {
+        "case": "current-Windows-complete-package-identity",
+        "status": "rejected",
+        "reason": "current registration identity mismatch: registeredPackageFullName"
+      },
+      {
+        "case": "current-Windows-EXE-version",
+        "status": "rejected",
+        "reason": "current installed-file metadata mismatch: installedExeFileVersion"
+      },
+      {
+        "case": "catalog-source-digest-binding",
+        "status": "rejected",
+        "reason": "Windows evidence invariant: catalog['sourceBodySha256']==sources['S015']['sha256'] and catalog['sourceBodyBytes']==sources['S015']['bytes']"
+      },
+      {
+        "case": "show-source-digest-binding",
+        "status": "rejected",
+        "reason": "Windows evidence invariant: publicshow['rawStdoutSha256']==sources['S017']['sha256'] and publicshow['rawStdoutBytes']==sources['S017']['bytes']"
+      },
+      {
+        "case": "Windows-visible-window-overclaim",
+        "status": "rejected",
+        "reason": "Windows evidence invariant: gui['observerVisibleWindowCount']==gui['processSignals']==gui['GUIActions']==0"
+      },
+      {
+        "case": "truncated-candidate-promoted-to-setup",
+        "status": "rejected",
+        "reason": "Windows evidence invariant: prior['truncatedCandidateAcceptedAsCurrentSetup'] is False and prior['pinnedVersionClaimedLatest'] is False"
+      },
+      {
+        "case": "Linux-failed-download-promoted-to-install",
+        "status": "rejected",
+        "reason": "historical incomplete download must remain a failed preparation attempt"
+      },
+      {
+        "case": "Linux-correction-ASAR-version",
+        "status": "rejected",
+        "reason": "post-GUI package/runtime correction evidence"
+      },
+      {
+        "case": "Linux-quit-target-not-owned-window",
+        "status": "rejected",
+        "reason": "normal quit must target the observed owned window"
+      },
+      {
+        "case": "Linux-image-window-geometry-mismatch",
+        "status": "rejected",
+        "reason": "owned-window/image geometry mismatch"
+      },
+      {
+        "case": "Linux-duplicate-held-process-identity",
+        "status": "rejected",
+        "reason": "GUI distinct process/window identities"
+      },
+      {
+        "case": "retained-InRelease-signature-tamper",
+        "status": "rejected",
+        "reason": "retained InRelease signature invalid"
+      },
+      {
+        "case": "Packages-not-bound-to-signed-release",
+        "status": "rejected",
+        "reason": "Packages not bound to signed InRelease"
+      }
+    ],
+    "ordinaryDigestMetadataRefreshedBeforeEveryCase": true,
+    "privateInputs": 0,
+    "networkAccess": false,
+    "nativeInstallationOrGuiActions": 0
+  },
+  "boundaries": [
+    "Retained Linux InRelease signature and Packages bytes are verified offline against the fixed signer fingerprint.",
+    "Unarchived installers, installed EXE/ELF/ASAR and screenshots cannot be rehashed or replayed from this public archive.",
+    "Windows Authenticode and registration are original native observations, not an offline execution of Windows verification.",
+    "Linux GUI reached the official regional restriction page; Windows independent visible-window/normal-exit smoke remains incomplete.",
+    "No account login, model call, AgentRouter provider configuration or Cowork task availability is proved."
+  ],
+  "nativeInstallationOrGuiActions": 0,
+  "existingWindowsProcessesTouched": 0,
+  "windowsCodexCalls": 0,
+  "networkAccess": false
+}
