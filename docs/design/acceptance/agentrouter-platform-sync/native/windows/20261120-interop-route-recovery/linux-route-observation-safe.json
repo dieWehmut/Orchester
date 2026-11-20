@@ -1,0 +1,53 @@
+{
+  "routeObservedAtUtc": "2026-11-20T03:10:17Z",
+  "measuredLinuxRealEffectiveSavedFilesystemUids": [
+    "1000",
+    "1000",
+    "1000",
+    "1000"
+  ],
+  "inheritedInteropPath": "/run/WSL/2482_interop",
+  "inheritedInteropSocketPresentInCapturedListing": false,
+  "peerObservedAtUtc": "2026-11-20T03:11:32Z",
+  "selectedSocketPeers": [
+    {
+      "path": "/run/WSL/357_interop",
+      "connected": true,
+      "peer_pid": 357,
+      "peer_uid": 0,
+      "peer_gid": 0
+    },
+    {
+      "path": "/run/WSL/628707_interop",
+      "connected": true,
+      "peer_pid": 628707,
+      "peer_uid": 0,
+      "peer_gid": 0
+    }
+  ],
+  "existingCDriveShare": [
+    {
+      "path": "/mnt/c",
+      "error": "[Errno 5] Input/output error: '/mnt/c'",
+      "errno": 5
+    }
+  ],
+  "otherHostShareEnumerationSucceeded": true,
+  "existingMountTransport": "9p trans=fd,rfd=6,wfd=6",
+  "existingMountRepaired": false,
+  "selectedKernelEvidence": {
+    "observedAtUtc": "2026-11-20T03:15:02Z",
+    "recordedAllocationFailureCount": 4,
+    "kernelVersion": "6.18.33.2-microsoft-standard-WSL2",
+    "allocationOrder": 7,
+    "allocationWorkqueue": "hv_pri_chan vmbus_add_channel_work",
+    "selectedCallChain": [
+      "vmbus_alloc_ring",
+      "vmbus_open",
+      "hvs_probe"
+    ],
+    "recordedNormalZoneOrder7FreeBlocksAtFailure": 0,
+    "causalInterpretation": "Consistent with a high-order allocation/transport failure hypothesis. Does not establish that it caused this mount/interop failure, or that the new route repaired that cause."
+  },
+  "excluded": "Full process ancestry, other processes, hostname, Windows profile paths, directory contents and full kernel logs are omitted."
+}

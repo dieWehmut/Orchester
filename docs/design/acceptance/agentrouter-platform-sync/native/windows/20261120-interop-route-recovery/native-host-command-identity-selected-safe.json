@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "evidenceKind": "Selected public system cmd.exe identity from a completed native Windows preflight",
+  "observedAtUtc": "2026-11-20T03:48:42.1359741Z",
+  "nativeSystemCommandImagePin": {
+    "path": "C:\\WINDOWS\\System32\\cmd.exe",
+    "sha256": "15cd209c995b7d3009c91ca40892d5b8f1fb162f3e5f10716642ea278e8e0d7b",
+    "authenticodeStatus": "Valid",
+    "signerSubject": "CN=Microsoft Windows, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+  },
+  "selectedFrom": {
+    "nativeStdoutBasename": "stdout-safe.log",
+    "nativeStdoutField": "signedSystemImagePins[path case-insensitive equals C:\\Windows\\System32\\cmd.exe]",
+    "externalExecutionReceiptBasename": "execution-safe.json",
+    "nativeStdoutBytes": 4686,
+    "nativeStdoutSha256": "b162fa637af907c1831788dddad20162be29dd81b40757dc38a37686c01529f2",
+    "externalExecutionReceiptSha256": "5976f8091aab7eb502cc2532fb9294e3ab0bd0aac60e8c9df602f2c9cc140282"
+  },
+  "externalExecution": {
+    "startedAtUtc": "2026-11-20T03:48:31.084222+00:00",
+    "endedAtUtc": "2026-11-20T03:48:42.133705+00:00",
+    "actualExternalNativeExitCode": 0,
+    "copiedSystemCmdSha256": "15cd209c995b7d3009c91ca40892d5b8f1fb162f3e5f10716642ea278e8e0d7b",
+    "nativeScriptSourceSha256": "a7a6b50cad8418c1e859484487511a01e483b2ab392bef7abe49ca4841b7f767",
+    "stdoutSha256": "b162fa637af907c1831788dddad20162be29dd81b40757dc38a37686c01529f2",
+    "stdoutBytes": 4686
+  },
+  "sourceReceiptStdoutDigestIndependentlyMatched": true,
+  "matchesIndependentLinuxAcquiredByteSha256": true,
+  "scope": "Only the original public System32 cmd.exe hash, signature status and signer identity are selected. Runtime, profile/state and other image results from the source are not included or accepted by this route archive. Signature validity was reported at the later native preflight time; no earlier-time attestation or mount repair is inferred."
+}

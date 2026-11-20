@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "sourceSnapshots": [
+    {
+      "snapshotName": "interop.md",
+      "officialUrl": "https://raw.githubusercontent.com/microsoft/WSL/master/doc/docs/technical-documentation/interop.md",
+      "sourcePath": "doc/docs/technical-documentation/interop.md",
+      "sourceRetrievalExternalEventTimestampUtc": "2026-11-20T03:09:40.073Z",
+      "snapshotBytes": 2887,
+      "snapshotSha256": "734732e4bfb5fa4bf107edc3e5c3be0be6e4724f749256b3a2f7b7b2e4a56133",
+      "revision": "master; immutable revision not established",
+      "fullSourceArchived": false
+    },
+    {
+      "snapshotName": "binfmt.cpp",
+      "officialUrl": "https://raw.githubusercontent.com/microsoft/WSL/master/src/linux/init/binfmt.cpp",
+      "sourcePath": "src/linux/init/binfmt.cpp",
+      "sourceRetrievalExternalEventTimestampUtc": "2026-11-20T03:09:40.073Z",
+      "snapshotBytes": 27191,
+      "snapshotSha256": "6e98c733bb7362780cb5cf1167d078727aeb76b51b54754842f4ae8a3e7f4948",
+      "revision": "master; immutable revision not established",
+      "fullSourceArchived": false
+    },
+    {
+      "snapshotName": "drvfs.cpp",
+      "officialUrl": "https://raw.githubusercontent.com/microsoft/WSL/master/src/linux/init/drvfs.cpp",
+      "sourcePath": "src/linux/init/drvfs.cpp",
+      "sourceRetrievalExternalEventTimestampUtc": "2026-11-20T03:09:40.073Z",
+      "snapshotBytes": 23529,
+      "snapshotSha256": "e6bedaa4dfa11b45ba0f6592d935661ba596b7f1f644e44bbcc9e92a5fc85a47",
+      "revision": "master; immutable revision not established",
+      "fullSourceArchived": false
+    },
+    {
+      "snapshotName": "init.cpp",
+      "officialUrl": "https://raw.githubusercontent.com/microsoft/WSL/master/src/linux/init/init.cpp",
+      "sourcePath": "src/linux/init/init.cpp",
+      "sourceRetrievalExternalEventTimestampUtc": "2026-11-20T03:11:50.234Z",
+      "snapshotBytes": 112609,
+      "snapshotSha256": "c8af01aef79147a21883fed15b3c44139b7103180ee54fd4b16e1c4107e5c243",
+      "revision": "master; immutable revision not established",
+      "fullSourceArchived": false
+    },
+    {
+      "snapshotName": "lxinitshared.h",
+      "officialUrl": "https://raw.githubusercontent.com/microsoft/WSL/master/src/shared/inc/lxinitshared.h",
+      "sourcePath": "src/shared/inc/lxinitshared.h",
+      "sourceRetrievalExternalEventTimestampUtc": "2026-11-20T03:16:10.772Z",
+      "snapshotBytes": 63090,
+      "snapshotSha256": "f741fd2984aa8d79452fa6e4dead79ff7a397a40c8f1a26da1f06493fc79fdc2",
+      "revision": "master; immutable revision not established",
+      "fullSourceArchived": false
+    },
+    {
+      "snapshotName": "util.cpp",
+      "officialUrl": "https://raw.githubusercontent.com/microsoft/WSL/master/src/linux/init/util.cpp",
+      "sourcePath": "src/linux/init/util.cpp",
+      "sourceRetrievalExternalEventTimestampUtc": "2026-11-20T03:16:10.772Z",
+      "snapshotBytes": 99592,
+      "snapshotSha256": "b3a6c74e515c0b03ca351c693b108aebf5cb26d3628f1e56f2829a0eec09488a",
+      "revision": "master; immutable revision not established",
+      "fullSourceArchived": false
+    },
+    {
+      "snapshotName": "kernel9p-client.c",
+      "officialRepository": "https://github.com/microsoft/WSL2-Linux-Kernel",
+      "sourcePath": "net/9p/client.c",
+      "snapshotBytes": 55974,
+      "snapshotSha256": "a5afc56720b1a2da6db39a29742772c34d0dbe3ceb0254721f5eb8b7a3d6771d",
+      "revision": "download ref not retained in this archive; method cross-check only",
+      "fullSourceArchived": false
+    }
+  ],
+  "installedVersionBindingEstablished": false,
+  "sourcePinAttempt": "A separate current master commit API request timed out; no fabricated immutable revision or byte match is asserted.",
+  "use": "Method rationale and independent protocol review only; observed wire responses and actual process output establish this execution."
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "wslpathInput": "/mnt/c/Windows/System32/cmd.exe",
+    "exit": 1,
+    "stdout": "",
+    "stderr": "/usr/bin/wslpath: /mnt/c/Windows/System32/cmd.exe: I/O error"
+  },
+  {
+    "wslpathInput": "/mnt/c",
+    "exit": 0,
+    "stdout": "C:\\",
+    "stderr": ""
+  },
+  {
+    "method": "direct-init-standard-entry",
+    "socket": "357_interop",
+    "exitCode": 1,
+    "seconds": 0.0005419880035333335,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "method": "direct-init-standard-entry",
+    "socket": "628707_interop",
+    "exitCode": 1,
+    "seconds": 0.000468224985525012,
+    "stdout": "",
+    "stderr": ""
+  }
+]

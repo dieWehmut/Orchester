@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "scope": "Retained route evidence only. Self-manifest and generated verification are excluded from digest recursion.",
+  "artifacts": [
+    {
+      "path": "9p-public-file-read-safe.json",
+      "bytes": 2606,
+      "sha256": "8e662c83bfba3314aa909d91efe80360c79a7da4bde4d52aff8c0eaec27a31c8"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4641,
+      "sha256": "71e8bccd30f7dfd20b211e15995807449a560e32149152a803f1d908c2754d31"
+    },
+    {
+      "path": "copied-public-command-identity-safe.json",
+      "bytes": 1356,
+      "sha256": "01eb0ed9dccc641c47981a369ef42cbccae552f76fb25de04b30e85c67957a1a"
+    },
+    {
+      "path": "direct-init-failures-safe.json",
+      "bytes": 620,
+      "sha256": "75e4cf66a8cee82b71fb6bd7f457a9dc0d31e5c0c80f2d4c72a55e07de56c3be"
+    },
+    {
+      "path": "linux-route-observation-safe.json",
+      "bytes": 1677,
+      "sha256": "1c427d8c852b08e16decb920826a77539ac1f8da4672b83bf6af1e8b4b589277"
+    },
+    {
+      "path": "native-host-command-identity-selected-safe.json",
+      "bytes": 1909,
+      "sha256": "a6b69fee95907ab1f624d1bd20a2fe20f4f786b2389456a3174798a335db83bf"
+    },
+    {
+      "path": "native-sentinel.stdout.txt",
+      "bytes": 27,
+      "sha256": "f25fbc086b7dd5a830b6654d339b4ce86255ce9710178d1403ba65eaa48eeb6e"
+    },
+    {
+      "path": "native-tcp-query-selected-safe.json",
+      "bytes": 680,
+      "sha256": "e342d3b8335496720c8d217c579ee28bb7dc95de88cda3afbd7cdb4f6a0b713b"
+    },
+    {
+      "path": "native-tool-receipt-safe.json",
+      "bytes": 2453,
+      "sha256": "dac0e2731dddb02d9e3881aa3341a8191b308b9110117096a97bb072b7d0104d"
+    },
+    {
+      "path": "source-provenance-safe.json",
+      "bytes": 3839,
+      "sha256": "1f05959c5354e03ab9f9520c3eafe50f0df8fed8ce75061e75997ac05374d422"
+    },
+    {
+      "path": "source-review.md",
+      "bytes": 4034,
+      "sha256": "4ecdc159ac64a4551af632d26dac1ec22393c52808d2e123d42abfc680b6ad85"
+    },
+    {
+      "path": "sources/native_windows_readonly_probe.py",
+      "bytes": 1894,
+      "sha256": "f369fa857fb05b79157429b84b07bc740f83b5adee8944b92f53736a99921b62"
+    },
+    {
+      "path": "sources/probe_drvfs9p.template.py",
+      "bytes": 3281,
+      "sha256": "014f3f9350c0a19447ada6551f74ac4f7bbaf71be4947cb86f620920d2c4a66d"
+    },
+    {
+      "path": "sources/read_public_cmd.template.py",
+      "bytes": 2923,
+      "sha256": "451c755a01d3da978765e5691b6233e3a0fd50b5c7374c50a113901125466beb"
+    },
+    {
+      "path": "summary-safe.json",
+      "bytes": 1366,
+      "sha256": "227989ab7ea78be004485b5e4eaad2368647485d350d3766910314a0415ad30f"
+    },
+    {
+      "path": "validate.py",
+      "bytes": 11431,
+      "sha256": "ccf0ff4f15d0d116d822866933fa876e99baaa920c9c3b1b2eedc43d1610b87d"
+    }
+  ]
+}

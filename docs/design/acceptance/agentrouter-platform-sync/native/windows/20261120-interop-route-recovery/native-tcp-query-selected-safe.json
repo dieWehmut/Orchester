@@ -1,0 +1,14 @@
+{
+  "observedAtUtc": "2026-11-20T03:28:09.711549+00:00",
+  "nativeProcessExitCode": 0,
+  "queryKind": "Get-NetTCPConnection -LocalPort 7338 -ErrorAction SilentlyContinue",
+  "selectedNativeOutput": {
+    "tcpCount": 0,
+    "tcp": [],
+    "ownerCount": 0,
+    "owners": []
+  },
+  "selection": "Decoded native stdout JSON projected onto tcpCount,tcp,ownerCount,owners; malformed wslStatus omitted. Original command suppressed TCP query errors, so zero returned rows does not independently prove query success or port reservation.",
+  "sourceDecodedStdoutUtf8Sha256": "2a9713ac3cb9faac646c7cf0f71f771352a08b41d3add06b18210aa323002074",
+  "unselectedWslStatusUsedAsEvidence": false
+}
