@@ -1,6 +1,7 @@
 'use strict';
 
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
 
@@ -55,6 +56,9 @@ const expectedTargets = [
     binaryPath: 'bin/orchester.exe',
   },
 ];
+const workspaceVersion = /^version = "([^"]+)"/m.exec(
+  fs.readFileSync(path.join(__dirname, '../../../Cargo.toml'), 'utf8'),
+)?.[1];
 
 test('resolves every supported Node platform and architecture', () => {
   for (const expected of expectedTargets) {
@@ -94,7 +98,7 @@ test('target manifest contains exactly the unique supported targets', () => {
 
 test('meta package pins every platform package without lifecycle scripts', () => {
   assert.equal(packageJson.name, '@orchester/cli');
-  assert.equal(packageJson.version, '0.1.2');
+  assert.equal(packageJson.version, workspaceVersion);
   assert.equal(packageJson.type, 'commonjs');
   assert.equal(packageJson.repository, 'https://github.com/dieWehmut/Orchester');
   assert.deepEqual(packageJson.engines, { node: '>=18' });
@@ -105,7 +109,7 @@ test('meta package pins every platform package without lifecycle scripts', () =>
   assert.deepEqual(
     packageJson.optionalDependencies,
     Object.fromEntries(
-      expectedTargets.map(({ packageName }) => [packageName, '0.1.2']),
+      expectedTargets.map(({ packageName }) => [packageName, packageJson.version]),
     ),
   );
 

@@ -384,7 +384,7 @@ impl Session {
         })
     }
     async fn initialize(&mut self) -> Result<Value> {
-        let value=self.call("initialize",json!({"protocolVersion":VERSION,"capabilities":{},"clientInfo":{"name":"Orchester","version":"0.1.8"}})).await?;
+        let value=self.call("initialize",json!({"protocolVersion":VERSION,"capabilities":{},"clientInfo":{"name":"Orchester","version":env!("CARGO_PKG_VERSION")}})).await?;
         let version = value["protocolVersion"]
             .as_str()
             .ok_or(ApiErrorCode::Unavailable)?;
