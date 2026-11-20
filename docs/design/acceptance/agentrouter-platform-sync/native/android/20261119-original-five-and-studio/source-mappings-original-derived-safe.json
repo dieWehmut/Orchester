@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "status": "safe-runtime-source-mappings-prepared",
+  "rawPrivateValuesIncluded": false,
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "sourceMappings": [
+    {
+      "path": "src/native_five_current_wire.py",
+      "sha256": "52a2f0aa4431f2f3211cd823206182cb085c1bd5c2adb6be33755a5edf0d099e",
+      "bytes": 37366
+    },
+    {
+      "path": "src/read_installed_app_binding.py",
+      "sha256": "985e0dddfc8f9c3777320534316ed33c65f82b137a30cf1f023b118112a075ea",
+      "bytes": 6604
+    },
+    {
+      "path": "src/native_wire_common.py",
+      "sha256": "e5c7c058c9d6644e4a9a11296ac4b1f04ccd8a07f534c6059f814dc6ea1e79b7",
+      "bytes": 13724
+    },
+    {
+      "path": "src/cdp_transport_owned.py",
+      "sha256": "d4d66a18e453cbaf7e6e71bc036ad40372e54f6d633429254b6961817d07cf05",
+      "bytes": 6299
+    },
+    {
+      "path": "src/native_five_wire_expression.js",
+      "sha256": "14bc742b9de3ed8e4b8f5434aeb2a0bda2db600a822a9c53f7662dcc955b9ae3",
+      "bytes": 4552
+    },
+    {
+      "path": "src/ExistingWindowsAliasGuard.java",
+      "sha256": "3071fcc2dd91a1a459327dfc0462471c30585bdbbf0bcef587937dc07d6cdf5e",
+      "bytes": 1483
+    },
+    {
+      "path": "src/dex/classes.dex",
+      "sha256": "df15578ba781311a7a00377af05c387731c663906ec4174d7a8f46ee9a5ebd31",
+      "bytes": 2764
+    },
+    {
+      "path": "src/wait_owned_android_boot.py",
+      "sha256": "5a7422457887bae319e8e5aab63871b34d13da18c89ddbe91cebc76aa2a4a840",
+      "bytes": 7115
+    },
+    {
+      "path": "refresh-current-identity.py",
+      "sha256": "390ea55fa0e0d6d517424816c3496377f03332c8cae91efd38ec098c4324dc70",
+      "bytes": 4720
+    },
+    {
+      "path": "verify-full-product-storage-tail.py",
+      "sha256": "7a9c936da2e4068158570a33493b8296a0d61ce9836b6a7006db80cc7f329658",
+      "bytes": 7201
+    },
+    {
+      "path": "collect-current-linux-owner.py",
+      "sha256": "9d1758de3cd5f893f4cdc81c0855bc75028d67af151ee436913625e55bdcda8d",
+      "bytes": 2946
+    },
+    {
+      "path": "invoke-acceptance.ps1",
+      "sha256": "68149e95afde04488f4a0e775a5fa8614e15cca13ed0f0fe92efe474fef1f5d0",
+      "bytes": 11081
+    },
+    {
+      "path": "read-current-studio.ps1",
+      "sha256": "a6b4a786fe45bc4b8f2aaef5dd44ddecb5c35a4b4f989ca5357aa3a6f6ad6a4b",
+      "bytes": 868
+    },
+    {
+      "path": "normal-manager-quit.py",
+      "sha256": "788f10f547c07db0c505301dddce9d7c574ab4e5c9257b2c8448d332913c4c27",
+      "bytes": 4872
+    }
+  ],
+  "receiptMappings": [
+    {
+      "path": "summary-safe.json",
+      "sha256": "f6f24dd9f66e55359fc35e93c1aae11055cb81bbde27c7ee759baf804069371c",
+      "bytes": 2947
+    },
+    {
+      "path": "native-five-wire-7ec170eaf03e41c8a0fd080d67c7853d-safe.json",
+      "sha256": "2fdd6e0a20b78fef8b87df8a3ba4b0dfcd1f448c316fd3a2df7439b6587b719d",
+      "bytes": 8344
+    },
+    {
+      "path": "full-product-storage-tail-safe.json",
+      "sha256": "fddb3f6233ae3bfc017cca53a7799ce64ce84fffbf35344e095f4f7fe7e39a97",
+      "bytes": 2513
+    },
+    {
+      "path": "legacy-original-five-digest-safe.json",
+      "sha256": "aee5c9ac3063005106696d86f4ad33c379eee4489c2f173af8a2eec4eb47d618",
+      "bytes": 776
+    },
+    {
+      "path": "legacy-saved-five-metadata-safe.json",
+      "sha256": "17eac785a409ee20a83a4a61ed357e70e4582bd053baeb620eb27218f98fb2eb",
+      "bytes": 1295
+    },
+    {
+      "path": "normal-manager-quit-safe.json",
+      "sha256": "609cb19e9ee869cb2706435809d2c786264ae934f208cb6036466f35705cca76",
+      "bytes": 1436
+    },
+    {
+      "path": "original-manager-terminal-safe.json",
+      "sha256": "ccf3c36f87c08c4618658bc5662c8942b39cd877acdc2490b5b02ff5f647711d",
+      "bytes": 5431
+    },
+    {
+      "path": "android-studio-current-safe.json",
+      "sha256": "6f6e495982e4c236c5d7af0554a71cb80c5fa0e5c72eb60c5fe632f655e66d38",
+      "bytes": 751
+    },
+    {
+      "path": "app-self-7ec170eaf03e41c8a0fd080d67c7853d-safe.json",
+      "sha256": "4ac2e5be11599ec6cfc6a123b8704dea2851da26dac9f002c70f6230ed1f9d3f",
+      "bytes": 2327
+    },
+    {
+      "path": "boot-self-7ec170eaf03e41c8a0fd080d67c7853d-safe.json",
+      "sha256": "3c0f6b757c60c8d1b4628bbbfd6d4234471b8a06d5916535ababb15eb19f67fe",
+      "bytes": 1479
+    }
+  ],
+  "independentStudioSafeSourceMapping": "<POSIX_USER_HOME>/.local/state/orchester-delivery/20261119/android-studio-independent/source-receipt-mapping-safe.json"
+}

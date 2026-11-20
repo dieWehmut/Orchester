@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "namespaceId": "0b12b11bcb5c477aba71c94aab73367b",
+  "status": "owned-Windows-original-AVD-boot-completed-readonly-passed",
+  "actualAvdHost": "Windows",
+  "actualAvdName": "Medium_Phone_API_37.0",
+  "serial": "emulator-5572",
+  "nativeAdbServerPort": 5041,
+  "maximumReadinessSeconds": 180,
+  "apkMetadataXmlOrTokenReads": 0,
+  "nativeCredentialGets": 0,
+  "nativeHttpRequests": 0,
+  "activityOpenRequests": 0,
+  "appInstallResetOrWipe": false,
+  "sysBootCompletedOneObserved": true,
+  "forcedTerminations": 0,
+  "rawCommandOutputPrivateValuesOrErrorsIncluded": false,
+  "currentNativeObserver": {
+    "pid": 317972,
+    "createdExact": "134395415516304797",
+    "image": "<USERPROFILE>\\AppData\\Roaming\\uv\\python\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+    "sha256": "204d51f19707da17766bccecce2ceececadab350663a8190420d1377bac1150d",
+    "sessionId": 1
+  },
+  "probeCount": 1,
+  "lastNativeGetpropExitCode": 0,
+  "nativeHostIdentityVerifiedAfterBootObservation": true,
+  "nativeHostQueryHandlesClosed": true,
+  "allNativeAdbCreatorHandlesActualTerminal": true,
+  "nativeAdbCreatorActualExitCodes": [
+    0
+  ],
+  "observedAtUtc": "2026-11-19T05:59:12.364597Z",
+  "bindingSha256": "6361154960680f340f1afc50aacc0fff8a12e71363a483fe5e12e57cd78ae741",
+  "sourceSha256": "5a7422457887bae319e8e5aab63871b34d13da18c89ddbe91cebc76aa2a4a840"
+}

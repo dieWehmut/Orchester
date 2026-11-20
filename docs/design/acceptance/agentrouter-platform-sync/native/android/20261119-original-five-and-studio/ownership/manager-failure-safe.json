@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-17T10:04:28.214117Z",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "status": "failure-owned-handles-retained",
+  "phase": "current-owned-target-ready",
+  "failureCode": "native-observation-or-control-failed",
+  "nativeError": null,
+  "errorType": "MemoryError",
+  "observationStep": "qemu-identity",
+  "diagnostic": {
+    "nativeOperation": "image-sha-read",
+    "lastAllocationRequestedBytes": 1048576,
+    "tokenSizeQueryOk": false,
+    "tokenSizeQueryError": 122,
+    "tokenSizeRequestedBytes": 44,
+    "staticTraceback": {
+      "frames": [
+        {
+          "source": "prepared-manager",
+          "function": "retained_loop",
+          "line": 484,
+          "bytecodeOffset": 304
+        },
+        {
+          "source": "prepared-manager",
+          "function": "refresh_owned",
+          "line": 378,
+          "bytecodeOffset": 690
+        },
+        {
+          "source": "prepared-manager",
+          "function": "identity",
+          "line": 178,
+          "bytecodeOffset": 286
+        },
+        {
+          "source": "prepared-manager",
+          "function": "sha_file",
+          "line": 59,
+          "bytecodeOffset": 192
+        }
+      ],
+      "maximumFrames": 12,
+      "truncated": false
+    }
+  },
+  "rawErrorsLocalsSourceLinesSidOrPrivateValuesIncluded": false,
+  "rawErrorsIncluded": false,
+  "forcedTerminations": 0,
+  "appOrCredentialOrHttpOperations": 0
+}

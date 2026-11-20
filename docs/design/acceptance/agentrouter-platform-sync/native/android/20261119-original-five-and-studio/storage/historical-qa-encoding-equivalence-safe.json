@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "status": "historical-qa-encoding-values-equal",
+  "cp936ReferenceSha256": "c564a9fa9dbdde0dd5ffd52d179a84294cbca6d315a0908d2646a9a5375754cb",
+  "utf8ReferenceSha256": "35aabae803dfef0f6412a0861b1955cb35f102702e01494ff0670fa9d192bc79",
+  "fullParsedJsonCanonicalSha256": "24e9c993bf7ccdc57c6fc164930ce994fa96c522109a60eee3af88eea91c02e1",
+  "parsedValuesExactlyEqual": true,
+  "rawPrivateReferencesIncluded": false,
+  "sourceBodiesOmitted": true
+}

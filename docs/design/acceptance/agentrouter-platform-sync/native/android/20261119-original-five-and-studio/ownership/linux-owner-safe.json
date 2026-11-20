@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "status": "current-managed-linux7337-owner-verified",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "observedAtUtc": "2026-11-19T05:59:07.469967+00:00",
+  "targetHost": "Linux",
+  "port": 7337,
+  "currentListeningSocketOwned": true,
+  "managedUnitActive": true,
+  "listenerPid": 427,
+  "listenerStartTicks": 342,
+  "listenerElfSha256": "d983bceea7c0797c995c7ffb038eaa984323ee1106293da18433f2a3f22d6649",
+  "controllerPid": 293,
+  "controllerStartTicks": 283,
+  "systemdManagerPid": 266,
+  "kernelBootId": "04a4390b-1b73-42f2-b3ae-906308618b42",
+  "unitName": "orchester-default-remote-7337-20261112-post-reboot.service",
+  "listenerSocketInode": 5011,
+  "pidBirthCgroupAndBootStable": true,
+  "serviceActions": 0,
+  "processSignals": 0,
+  "environmentDatabaseOrAuthenticationValuesRead": false
+}

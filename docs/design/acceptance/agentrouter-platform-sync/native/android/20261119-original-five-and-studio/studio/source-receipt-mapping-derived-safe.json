@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "status": "independent-current-windows-studio-source-analysis-passed",
+  "actualWrapperExitCode": 0,
+  "actualAnalysisNativeExitCode": 0,
+  "analysisErrorCount": 0,
+  "analysisWarningCount": 0,
+  "analysisInfoCount": 3,
+  "rawStdoutOrStderrArchived": false,
+  "privateUserValuesIncluded": false,
+  "sourcesAndReceipts": [
+    {
+      "linuxFile": "<POSIX_USER_HOME>/.local/state/orchester-delivery/20261119/android-studio-independent/read-current-studio.ps1",
+      "windowsFile": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Orchester-build/android-studio-independent-20261119/read-current-studio.ps1",
+      "sha256": "9e99ebb6f024975121de3749f9afa2d2eb7a46bb4db0e5c36522c75df57857e3",
+      "bytes": 2638,
+      "linuxAndWindowsBytesEqual": true
+    },
+    {
+      "linuxFile": "<POSIX_USER_HOME>/.local/state/orchester-delivery/20261119/android-studio-independent/analyze-current-credentials-safe.ps1",
+      "windowsFile": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Orchester-build/android-studio-independent-20261119/analyze-current-credentials-safe.ps1",
+      "sha256": "0145464747a8ffdcb1de3ab8b4117969dec47eb1867cfcd0af2f1c8235db1a2d",
+      "bytes": 7595,
+      "linuxAndWindowsBytesEqual": true
+    },
+    {
+      "linuxFile": "<POSIX_USER_HOME>/.local/state/orchester-delivery/20261119/android-studio-independent/current-studio-identity-safe.json",
+      "windowsFile": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Orchester-build/android-studio-independent-20261119/current-studio-identity-safe.json",
+      "sha256": "92be7a7e700c6a75b0c058635c577c78dc3c3108d8a564abbe1c86d18d7023bf",
+      "bytes": 1688,
+      "linuxAndWindowsBytesEqual": true
+    },
+    {
+      "linuxFile": "<POSIX_USER_HOME>/.local/state/orchester-delivery/20261119/android-studio-independent/studio-credentials-current-analysis-corrected-safe.json",
+      "windowsFile": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Orchester-build/android-studio-independent-20261119/studio-credentials-current-analysis-corrected-safe.json",
+      "sha256": "cb3c50ced060d0dc071bee7e326ae7610163b182dd776bca7fca0d1eaf63ac68",
+      "bytes": 2728,
+      "linuxAndWindowsBytesEqual": true
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "status": "current-windows-studio-and-analysis-inputs-verified",
+  "observedAtUtc": "2026-11-19T06:08:20.4847600Z",
+  "studioPid": 30552,
+  "processSignals": 0,
+  "adbOperations": 0,
+  "avdOperations": 0,
+  "privateValuesIncluded": false,
+  "studioCreatedExact": "134392890488717106",
+  "studioImageSha256": "a49ee7862667d8b0ddec9879a85a16be55d151e9878a328932087e6592f006d3",
+  "studioIdentityMatches": true,
+  "originalQueryHandleHeld": true,
+  "windowPresent": true,
+  "responding": true,
+  "sources": [
+    {
+      "path": "<USERPROFILE>\\software\\Androidstudio\\AndroidS\\jbr\\bin\\java.exe",
+      "sha256": "397eca543a6761376f2704190aa08f1fde2f784c05e1b2b2bbec64c4dbcc4f41",
+      "bytes": 33432
+    },
+    {
+      "path": "<USERPROFILE>\\.android\\cli\\bundles\\43dc5c48789c6d01ddf15ccb4e7958b231c1e2e3\\main.jar",
+      "sha256": "8e9409225796e1b3619b9cfc3d8461c8ab301df70b852ca596b19708342a4701",
+      "bytes": 63589710
+    },
+    {
+      "path": "<USERPROFILE>\\AppData\\Local\\Orchester-build\\android-studio-21-monitors-continuation-20261111\\apps\\mobile\\android\\app\\src\\main\\java\\dev\\orchester\\mobile\\CredentialsPlugin.java",
+      "sha256": "735d1ad2e1e1fd58b9ed190829db3c48972861b6ca94db082a5ce8265a70390c",
+      "bytes": 3934
+    }
+  ],
+  "queryHandleClosed": true
+}

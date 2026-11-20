@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "purpose": "windows-original-five-readonly-app-binding",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "namespaceId": "0b12b11bcb5c477aba71c94aab73367b",
+  "identityFile": "<USERPROFILE>\\AppData\\Local\\Orchester-build\\android-resume-original5-20261119\\identity-self-7ec170eaf03e41c8a0fd080d67c7853d.json",
+  "identitySha256": "166100e89fa36cb1fe8e3d4de2bdd5507efb149e79fedbea10719e7417645a5b",
+  "managerBindingSha256": "a0994a5e9fe37be0f14dc590ce592c851c6d1203aa095541884848cb9f878787",
+  "worker": {
+    "pid": 5340,
+    "createdExact": "134392926334771025",
+    "sha256": "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+    "sessionId": 1
+  },
+  "baselineEncryptedXml": "<USERPROFILE>\\AppData\\Local\\Temp\\Orchester-final20-android-20261111\\credentials-before-private-stdout.log"
+}

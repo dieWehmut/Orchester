@@ -1,0 +1,1135 @@
+{
+  "schemaVersion": 1,
+  "archiveSourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "rawPrivateValuesIncluded": false,
+  "provenance": [
+    {
+      "publicPath": "summary-safe.json",
+      "sourceRole": "current-android-completion-summary",
+      "sourceFilename": "summary-safe.json",
+      "sourceSha256": "f6f24dd9f66e55359fc35e93c1aae11055cb81bbde27c7ee759baf804069371c",
+      "sourceBytes": 2947,
+      "publicSha256": "f6f24dd9f66e55359fc35e93c1aae11055cb81bbde27c7ee759baf804069371c",
+      "publicBytes": 2947,
+      "representation": "original-bytes",
+      "fieldChanges": [],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "wire/native-five-wire-safe.json",
+      "sourceRole": "actual-native-five-and-product-ui-receipt",
+      "sourceFilename": "native-five-wire-7ec170eaf03e41c8a0fd080d67c7853d-safe.json",
+      "sourceSha256": "2fdd6e0a20b78fef8b87df8a3ba4b0dfcd1f448c316fd3a2df7439b6587b719d",
+      "sourceBytes": 8344,
+      "publicSha256": "b50b801c38a112ad58339b58def419da02d65bb509f2cdfc4a157cccfd59235b",
+      "publicBytes": 8101,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/currentNativeObserver/image",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "wire/installed-app-read-safe.json",
+      "sourceRole": "actual-installed-APK-UID-and-original-digest-read",
+      "sourceFilename": "app-self-7ec170eaf03e41c8a0fd080d67c7853d-safe.json",
+      "sourceSha256": "4ac2e5be11599ec6cfc6a123b8704dea2851da26dac9f002c70f6230ed1f9d3f",
+      "sourceBytes": 2327,
+      "publicSha256": "eb134424a8423e0a59b9960947f571c17db822fcce0604f455341d79a28a6de9",
+      "publicBytes": 2279,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/currentNativeObserver/image",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "wire/boot-readiness-safe.json",
+      "sourceRole": "actual-original-AVD-boot-readiness",
+      "sourceFilename": "boot-self-7ec170eaf03e41c8a0fd080d67c7853d-safe.json",
+      "sourceSha256": "3c0f6b757c60c8d1b4628bbbfd6d4234471b8a06d5916535ababb15eb19f67fe",
+      "sourceBytes": 1479,
+      "publicSha256": "de9280b40edabdc63516d3cebb91b8c9fed35f645d7a7a207da75ac704061bff",
+      "publicBytes": 1441,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/currentNativeObserver/image",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "wire/binding-safe.json",
+      "sourceRole": "same-job-pinned-native-wire-bindings",
+      "sourceFilename": "wire-self-7ec170eaf03e41c8a0fd080d67c7853d.json",
+      "sourceSha256": "01bc796e280140dcca0544e4e823616c545727b753c2940d4bd089a291484530",
+      "sourceBytes": 2342,
+      "publicSha256": "73d72526e64ead109ecee2989539adaa063efa103da64ec861e809c5aadb2289",
+      "publicBytes": 2171,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/identityFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/baselineEncryptedXml",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/installedAppBindingFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/baselineMetadataJson",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/currentManagedLinux7337File",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/aliasDexFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/outputFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "wire/app-read-binding-safe.json",
+      "sourceRole": "same-job-pinned-app-read-bindings",
+      "sourceFilename": "read-self-7ec170eaf03e41c8a0fd080d67c7853d.json",
+      "sourceSha256": "6361154960680f340f1afc50aacc0fff8a12e71363a483fe5e12e57cd78ae741",
+      "sourceBytes": 980,
+      "publicSha256": "25416485de352ad9897f94a4fc89c4b0349e9946231a7da8699a4c16b2483ba0",
+      "publicBytes": 858,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/identityFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/baselineEncryptedXml",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "wire/self-binding-safe.json",
+      "sourceRole": "same-job-binding-and-native-exit-proof",
+      "sourceFilename": "self-binding-7ec170eaf03e41c8a0fd080d67c7853d-safe.json",
+      "sourceSha256": "a993635a24d762814649a6ddd306d73e2d30184de1813fa31b29f6428f4f5cff",
+      "sourceBytes": 1449,
+      "publicSha256": "e3e76b91746cbc1df3be4de67c323f618b48a9e8d6e4892cc8916908f2913d64",
+      "publicBytes": 1373,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/wireBindingFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/wireSafeOutputFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "ownership/identity-safe.json",
+      "sourceRole": "actual-independent-current-native-identity-for-wire",
+      "sourceFilename": "identity-current-safe.json",
+      "sourceSha256": "166100e89fa36cb1fe8e3d4de2bdd5507efb149e79fedbea10719e7417645a5b",
+      "sourceBytes": 4364,
+      "publicSha256": "cb8dd6a6ed984d000fc03ba2b6fd84dff7b2e434c2a9d22077add3c2d4a9966f",
+      "publicBytes": 4234,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/manager/image",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/server/image",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/head/image",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/qemu/image",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/independentObserver/image",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "ownership/linux-owner-safe.json",
+      "sourceRole": "actual-Linux7337-owner-for-native-request",
+      "sourceFilename": "linux-owner-7ec170eaf03e41c8a0fd080d67c7853d-safe.json",
+      "sourceSha256": "306dcc4ffe1a41ebb9454ee6c582dc1864e02e0cc7894e4108b956e42c091009",
+      "sourceBytes": 842,
+      "publicSha256": "306dcc4ffe1a41ebb9454ee6c582dc1864e02e0cc7894e4108b956e42c091009",
+      "publicBytes": 842,
+      "representation": "original-bytes",
+      "fieldChanges": [],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "ownership/manager-bindings-safe.json",
+      "sourceRole": "original-manager-pinned-bindings",
+      "sourceFilename": "manager-bindings.json",
+      "sourceSha256": "a0994a5e9fe37be0f14dc590ce592c851c6d1203aa095541884848cb9f878787",
+      "sourceBytes": 1299,
+      "publicSha256": "7c0dd46e872e17e73cb0e5bf7fd50934a1398bfc08296f57bf7a79ead8e59198",
+      "publicBytes": 1052,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/outputDirectory",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/currentPreflightFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "ownership/manager-failure-safe.json",
+      "sourceRole": "original-retained-historical-MemoryError",
+      "sourceFilename": "failure-safe.json",
+      "sourceSha256": "495fc1719f7813b6331130346fc3d723941fa51ca1d15ebc679d0c3bb49d9224",
+      "sourceBytes": 1513,
+      "publicSha256": "d5a036852abc4916f0c7f50e921ce887785af5986250ef96fc22e34dd32b2ffe",
+      "publicBytes": 1461,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "storage/full-product-storage-tail-safe.json",
+      "sourceRole": "actual-current-whole-profile-tail",
+      "sourceFilename": "full-product-storage-tail-safe.json",
+      "sourceSha256": "fddb3f6233ae3bfc017cca53a7799ce64ce84fffbf35344e095f4f7fe7e39a97",
+      "sourceBytes": 2513,
+      "publicSha256": "2543227f8f5740415ee1ce9d08cf107ca56e09dbcecbd8fef50c67fa74afe6d0",
+      "publicBytes": 2442,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "storage/historical-xml-digest-safe.json",
+      "sourceRole": "historical-private-XML-five-digest-derivation",
+      "sourceFilename": "legacy-original-five-digest-safe.json",
+      "sourceSha256": "aee5c9ac3063005106696d86f4ad33c379eee4489c2f173af8a2eec4eb47d618",
+      "sourceBytes": 776,
+      "publicSha256": "abe983edc46d6db8377e8fd6b7cffda730ee1ca75dee7f6f51f2a57776d9f41c",
+      "publicBytes": 787,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/sourceFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "storage/historical-saved-fields-safe.json",
+      "sourceRole": "historical-saved-five-and-whole-profile-digest-derivation",
+      "sourceFilename": "legacy-saved-five-metadata-safe.json",
+      "sourceSha256": "17eac785a409ee20a83a4a61ed357e70e4582bd053baeb620eb27218f98fb2eb",
+      "sourceBytes": 1295,
+      "publicSha256": "6277a198b60e37f01c1c2db615d16daae66af8d20b4191c88e0dee1ac9cf3b1c",
+      "publicBytes": 1306,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/sourceMetadataFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "cleanup/normal-manager-quit-safe.json",
+      "sourceRole": "actual-original-manager-normal-control-and-native-terminal",
+      "sourceFilename": "normal-manager-quit-safe.json",
+      "sourceSha256": "609cb19e9ee869cb2706435809d2c786264ae934f208cb6036466f35705cca76",
+      "sourceBytes": 1436,
+      "publicSha256": "3c9882314a3eed9ab08c9169ce5fd675e04dfc68d52d9317e9d6b7f31da8b824",
+      "publicBytes": 1402,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "cleanup/original-manager-terminal-safe.json",
+      "sourceRole": "original-manager-own-terminal-receipt",
+      "sourceFilename": "original-manager-terminal-safe.json",
+      "sourceSha256": "ccf3c36f87c08c4618658bc5662c8942b39cd877acdc2490b5b02ff5f647711d",
+      "sourceBytes": 5431,
+      "publicSha256": "f4a5725105b2555e764a73af212c1e54b4955cef140c0e18129454611798a828",
+      "publicBytes": 5227,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/manager/image",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "cleanup/post-release-current-safe.json",
+      "sourceRole": "current-readonly-original-process-nonliveness-and-port-release",
+      "sourceFilename": "post-release-current-safe.json",
+      "sourceSha256": "9bcd4936915b6169ff192bcbefd0021de6b5d809e8e159840bb25e1b817d6b21",
+      "sourceBytes": 4344,
+      "publicSha256": "b1ff4b90d7ca4145da157c96fadd8e4d4499be6df7e00ecdb41bbd8f6bb193ee",
+      "publicBytes": 2141,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "cleanup/own-cache-cleanup-safe.json",
+      "sourceRole": "own-cache-cleanup-receipt",
+      "sourceFilename": "own-cache-cleanup-safe.json",
+      "sourceSha256": "ead3c06cf5c305a1500b9788494d42fde32f9e63f850941bb666954fb75d0815",
+      "sourceBytes": 290,
+      "publicSha256": "ead3c06cf5c305a1500b9788494d42fde32f9e63f850941bb666954fb75d0815",
+      "publicBytes": 290,
+      "representation": "original-bytes",
+      "fieldChanges": [],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "studio/current-studio-identity-safe.json",
+      "sourceRole": "actual-independent-Studio-native-identity",
+      "sourceFilename": "current-studio-identity-safe.json",
+      "sourceSha256": "92be7a7e700c6a75b0c058635c577c78dc3c3108d8a564abbe1c86d18d7023bf",
+      "sourceBytes": 1688,
+      "publicSha256": "674fc6a556f0f7c5e7b124e71004c3b4a443ca397429ad5c8f9bc7f8ea49950a",
+      "publicBytes": 1322,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/sources/0/path",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/sources/1/path",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/sources/2/path",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "studio/actual-credentials-analysis-safe.json",
+      "sourceRole": "actual-independent-Studio-source-analysis",
+      "sourceFilename": "studio-credentials-current-analysis-corrected-safe.json",
+      "sourceSha256": "cb3c50ced060d0dc071bee7e326ae7610163b182dd776bca7fca0d1eaf63ac68",
+      "sourceBytes": 2728,
+      "publicSha256": "6b5d5e2875bfb85bc67987dd51d05ffa93dbb93e844b2cc5b2dfcc52061dbbf3",
+      "publicBytes": 2191,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "studio/source-receipt-mapping-derived-safe.json",
+      "sourceRole": "original-Studio-source-receipt-binding-map",
+      "sourceFilename": "source-receipt-mapping-safe.json",
+      "sourceSha256": "80250c56ae6ce9976cf251dcbe268e96fbd1569c2c348e976f4a3d64a9ae5255",
+      "sourceBytes": 2115,
+      "publicSha256": "6326adacb9f3348064e752b914301f9499da66f460a6abd15dd18dddac8d5518",
+      "publicBytes": 2191,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/sourcesAndReceipts/0/linuxFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/sourcesAndReceipts/0/windowsFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/sourcesAndReceipts/1/linuxFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/sourcesAndReceipts/1/windowsFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/sourcesAndReceipts/2/linuxFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/sourcesAndReceipts/2/windowsFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/sourcesAndReceipts/3/linuxFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/sourcesAndReceipts/3/windowsFile",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "source-mappings-original-derived-safe.json",
+      "sourceRole": "original-Android-source-receipt-binding-map",
+      "sourceFilename": "source-mappings-safe.json",
+      "sourceSha256": "eb03841801105053c25ca6564b14a001a793addf0446f5fe5efc845bf7cd06da",
+      "sourceBytes": 4399,
+      "publicSha256": "fd820d88ddc4f5fe55fedf8a0dc398166bb39d9a50ada232fb47c2d78cdbb716",
+      "publicBytes": 4407,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/independentStudioSafeSourceMapping",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "history/original-five-values-safe.json",
+      "sourceRole": "historical-original-five-ciphertext-retention",
+      "sourceFilename": "correct-windows-original-five-values-safe.json",
+      "sourceSha256": "020604800e495eb8ea814c6614e0681223b3038beddb96bb8fdf3e68b4a5e249",
+      "sourceBytes": 542,
+      "publicSha256": "879b5ff3f1b1520c48577727c9cb9a6ed6b14565e931d2e9f0738babdc118f7f",
+      "publicBytes": 543,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "history/private-qa-source-pin-safe.json",
+      "sourceRole": "historical-private-QA-file-pin-no-theme-value",
+      "sourceFilename": "correct-windows-ui-before-current-qa-safe-utf8.json",
+      "sourceSha256": "647e11958a124aea32dc2e2892de95cf29c54a416d94a8dcd4fdb9cd786990ea",
+      "sourceBytes": 603,
+      "publicSha256": "f5ee642cdfa8f2c45500a181f3797918136584b239a1aaf2577a557f4a19741b",
+      "publicBytes": 586,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/theme",
+          "action": "omitted-private-persisted-theme-value",
+          "originalJsonValueSha256": "61248de591af1d246529929e4c398af3eb5e1e84673f067e2f57db5e8d445613"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "history/post-reboot-original-five-wire-safe.json",
+      "sourceRole": "historical-original-saved-five-native-auth-proof",
+      "sourceFilename": "installed-apk-and-original-five-wire-safe.json",
+      "sourceSha256": "19ea99b1a709ef2ac434f5e29be565aac595d626acb2dcd3b9ab75b6a4c0cac5",
+      "sourceBytes": 782,
+      "publicSha256": "f51731f1ef3b15738f38b9ad05124dc684ec5b322eda547fd547721a0d1ee49d",
+      "publicBytes": 761,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [],
+      "resultStatusOrExitCodesChanged": false
+    },
+    {
+      "publicPath": "sources/native/native_five_current_wire.template.py",
+      "sourceRole": "executed-native-acceptance-source",
+      "sourceFilename": "native_five_current_wire.py",
+      "sourceSha256": "52a2f0aa4431f2f3211cd823206182cb085c1bd5c2adb6be33755a5edf0d099e",
+      "sourceBytes": 37366,
+      "publicSha256": "643b66daf15d379cd8733fca5aaca8cae84b13220459cc17361c136f5e60bb37",
+      "publicBytes": 37577,
+      "representation": "derived-review-template-no-native-replay",
+      "fieldChanges": [
+        {
+          "scope": "source-text",
+          "action": "user-specific-absolute-paths-to-public-placeholders"
+        },
+        {
+          "scope": "source-text",
+          "action": "prepend-explicit-main-execution-disabled-guard"
+        }
+      ],
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "sources/native/read_installed_app_binding.template.py",
+      "sourceRole": "executed-installed-app-read-source",
+      "sourceFilename": "read_installed_app_binding.py",
+      "sourceSha256": "985e0dddfc8f9c3777320534316ed33c65f82b137a30cf1f023b118112a075ea",
+      "sourceBytes": 6604,
+      "publicSha256": "8b9564c5d19674e9e6566786e5af39f9bdef1b6ec8bb5165c34d65642623faba",
+      "publicBytes": 6813,
+      "representation": "derived-review-template-no-native-replay",
+      "fieldChanges": [
+        {
+          "scope": "source-text",
+          "action": "prepend-explicit-main-execution-disabled-guard"
+        }
+      ],
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "sources/native/native_wire_common.template.py",
+      "sourceRole": "executed-common-native-query-source",
+      "sourceFilename": "native_wire_common.py",
+      "sourceSha256": "e5c7c058c9d6644e4a9a11296ac4b1f04ccd8a07f534c6059f814dc6ea1e79b7",
+      "sourceBytes": 13724,
+      "publicSha256": "b00aae98554af63bf28ca8355f7360c1b7979d558e938544a3359fa51f659536",
+      "publicBytes": 13935,
+      "representation": "derived-review-template-no-native-replay",
+      "fieldChanges": [
+        {
+          "scope": "source-text",
+          "action": "user-specific-absolute-paths-to-public-placeholders"
+        },
+        {
+          "scope": "source-text",
+          "action": "prepend-explicit-main-execution-disabled-guard"
+        }
+      ],
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "sources/native/cdp_transport_owned.py",
+      "sourceRole": "executed-fixed-loopback-CDP-source",
+      "sourceFilename": "cdp_transport_owned.py",
+      "sourceSha256": "d4d66a18e453cbaf7e6e71bc036ad40372e54f6d633429254b6961817d07cf05",
+      "sourceBytes": 6299,
+      "publicSha256": "d4d66a18e453cbaf7e6e71bc036ad40372e54f6d633429254b6961817d07cf05",
+      "publicBytes": 6299,
+      "representation": "original-bytes",
+      "fieldChanges": [],
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "sources/native/native_five_wire_expression.js",
+      "sourceRole": "executed-no-private-return-native-expression-template",
+      "sourceFilename": "native_five_wire_expression.js",
+      "sourceSha256": "14bc742b9de3ed8e4b8f5434aeb2a0bda2db600a822a9c53f7662dcc955b9ae3",
+      "sourceBytes": 4552,
+      "publicSha256": "14bc742b9de3ed8e4b8f5434aeb2a0bda2db600a822a9c53f7662dcc955b9ae3",
+      "publicBytes": 4552,
+      "representation": "original-bytes",
+      "fieldChanges": [],
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "sources/native/ExistingWindowsAliasGuard.java",
+      "sourceRole": "executed-readonly-alias-guard-source",
+      "sourceFilename": "ExistingWindowsAliasGuard.java",
+      "sourceSha256": "3071fcc2dd91a1a459327dfc0462471c30585bdbbf0bcef587937dc07d6cdf5e",
+      "sourceBytes": 1483,
+      "publicSha256": "3071fcc2dd91a1a459327dfc0462471c30585bdbbf0bcef587937dc07d6cdf5e",
+      "publicBytes": 1483,
+      "representation": "original-bytes",
+      "fieldChanges": [],
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "sources/native/alias-guard.dex",
+      "sourceRole": "executed-readonly-alias-guard-dex",
+      "sourceFilename": "classes.dex",
+      "sourceSha256": "df15578ba781311a7a00377af05c387731c663906ec4174d7a8f46ee9a5ebd31",
+      "sourceBytes": 2764,
+      "publicSha256": "df15578ba781311a7a00377af05c387731c663906ec4174d7a8f46ee9a5ebd31",
+      "publicBytes": 2764,
+      "representation": "original-bytes",
+      "fieldChanges": [],
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "sources/native/wait_owned_android_boot.template.py",
+      "sourceRole": "executed-boot-readiness-source",
+      "sourceFilename": "wait_owned_android_boot.py",
+      "sourceSha256": "5a7422457887bae319e8e5aab63871b34d13da18c89ddbe91cebc76aa2a4a840",
+      "sourceBytes": 7115,
+      "publicSha256": "af4895a4d86c42797e4296cb6e1269cd16374059a48380958cde4585db15d590",
+      "publicBytes": 7324,
+      "representation": "derived-review-template-no-native-replay",
+      "fieldChanges": [
+        {
+          "scope": "source-text",
+          "action": "prepend-explicit-main-execution-disabled-guard"
+        }
+      ],
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "sources/native/refresh-current-identity.template.py",
+      "sourceRole": "executed-independent-native-identity-source",
+      "sourceFilename": "refresh-current-identity.py",
+      "sourceSha256": "390ea55fa0e0d6d517424816c3496377f03332c8cae91efd38ec098c4324dc70",
+      "sourceBytes": 4720,
+      "publicSha256": "794224158e37c08c04ac78e20ffdce8bf58a62d2235930455008882765f99879",
+      "publicBytes": 4930,
+      "representation": "derived-review-template-no-native-replay",
+      "fieldChanges": [
+        {
+          "scope": "source-text",
+          "action": "user-specific-absolute-paths-to-public-placeholders"
+        },
+        {
+          "scope": "source-text",
+          "action": "prepend-explicit-main-execution-disabled-guard"
+        }
+      ],
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "sources/native/verify-full-product-storage-tail.template.py",
+      "sourceRole": "executed-current-profile-tail-source",
+      "sourceFilename": "verify-full-product-storage-tail.py",
+      "sourceSha256": "7a9c936da2e4068158570a33493b8296a0d61ce9836b6a7006db80cc7f329658",
+      "sourceBytes": 7201,
+      "publicSha256": "f5e5a5f3b6391f515b24d2e89c02076c900574c1a6c712857e4c3c521fd3c77e",
+      "publicBytes": 7411,
+      "representation": "derived-review-template-no-native-replay",
+      "fieldChanges": [
+        {
+          "scope": "source-text",
+          "action": "user-specific-absolute-paths-to-public-placeholders"
+        },
+        {
+          "scope": "source-text",
+          "action": "prepend-explicit-main-execution-disabled-guard"
+        }
+      ],
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "sources/native/collect-current-linux-owner.template.py",
+      "sourceRole": "executed-Linux-owner-source",
+      "sourceFilename": "collect-current-linux-owner.py",
+      "sourceSha256": "9d1758de3cd5f893f4cdc81c0855bc75028d67af151ee436913625e55bdcda8d",
+      "sourceBytes": 2946,
+      "publicSha256": "ef82cff82368f26abd02145367e239ce95d14ef1281ec8c4615293dc2c923e19",
+      "publicBytes": 3155,
+      "representation": "derived-review-template-no-native-replay",
+      "fieldChanges": [
+        {
+          "scope": "source-text",
+          "action": "prepend-explicit-main-execution-disabled-guard"
+        }
+      ],
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "sources/native/invoke-acceptance.template.ps1",
+      "sourceRole": "executed-native-acceptance-wrapper-source",
+      "sourceFilename": "invoke-acceptance.ps1",
+      "sourceSha256": "68149e95afde04488f4a0e775a5fa8614e15cca13ed0f0fe92efe474fef1f5d0",
+      "sourceBytes": 11081,
+      "publicSha256": "53fdad92f111fd950db414ff945689acc213df24102529c58479204083c123bc",
+      "publicBytes": 11255,
+      "representation": "derived-review-template-no-native-replay",
+      "fieldChanges": [
+        {
+          "scope": "source-text",
+          "action": "user-specific-absolute-paths-to-public-placeholders"
+        },
+        {
+          "scope": "source-text",
+          "action": "prepend-explicit-main-execution-disabled-guard"
+        }
+      ],
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "sources/native/normal-manager-quit.template.py",
+      "sourceRole": "executed-normal-original-manager-control-source",
+      "sourceFilename": "normal-manager-quit.py",
+      "sourceSha256": "788f10f547c07db0c505301dddce9d7c574ab4e5c9257b2c8448d332913c4c27",
+      "sourceBytes": 4872,
+      "publicSha256": "c856d1c337f2b8fe636139db64079939da98d290631476e459cb2190f530f0ad",
+      "publicBytes": 5083,
+      "representation": "derived-review-template-no-native-replay",
+      "fieldChanges": [
+        {
+          "scope": "source-text",
+          "action": "user-specific-absolute-paths-to-public-placeholders"
+        },
+        {
+          "scope": "source-text",
+          "action": "prepend-explicit-main-execution-disabled-guard"
+        }
+      ],
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "sources/native/read-current-owned-release.template.ps1",
+      "sourceRole": "executed-current-native-release-readonly-source",
+      "sourceFilename": "read-current-owned-release.ps1",
+      "sourceSha256": "ddf7c6ee6cf3e9d2882fd1ed4c90c38e07a0e5ddf9fa6451a4e9dcb292a90ec8",
+      "sourceBytes": 2965,
+      "publicSha256": "4e775e3acda06e1fffed019ceeb21f7204bb1c0366a89a60edbdbea9751088dc",
+      "publicBytes": 3130,
+      "representation": "derived-review-template-no-native-replay",
+      "fieldChanges": [
+        {
+          "scope": "source-text",
+          "action": "user-specific-absolute-paths-to-public-placeholders"
+        },
+        {
+          "scope": "source-text",
+          "action": "prepend-explicit-main-execution-disabled-guard"
+        }
+      ],
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "sources/studio/analyze-current-credentials-safe.template.ps1",
+      "sourceRole": "executed-Studio-source-analysis-source",
+      "sourceFilename": "analyze-current-credentials-safe.ps1",
+      "sourceSha256": "0145464747a8ffdcb1de3ab8b4117969dec47eb1867cfcd0af2f1c8235db1a2d",
+      "sourceBytes": 7595,
+      "publicSha256": "3213304a8c0538c88aab22c042a37757ed34abfb2376df0f2df32c8515e8553e",
+      "publicBytes": 7766,
+      "representation": "derived-review-template-no-native-replay",
+      "fieldChanges": [
+        {
+          "scope": "source-text",
+          "action": "user-specific-absolute-paths-to-public-placeholders"
+        },
+        {
+          "scope": "source-text",
+          "action": "prepend-explicit-main-execution-disabled-guard"
+        }
+      ],
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "sources/studio/read-current-studio.template.ps1",
+      "sourceRole": "executed-Studio-native-identity-source",
+      "sourceFilename": "read-current-studio.ps1",
+      "sourceSha256": "9e99ebb6f024975121de3749f9afa2d2eb7a46bb4db0e5c36522c75df57857e3",
+      "sourceBytes": 2638,
+      "publicSha256": "a0aa2eba4e43e053120ccccec29275aeeeae0638eb59cfa12f531313b6f817ab",
+      "publicBytes": 2807,
+      "representation": "derived-review-template-no-native-replay",
+      "fieldChanges": [
+        {
+          "scope": "source-text",
+          "action": "user-specific-absolute-paths-to-public-placeholders"
+        },
+        {
+          "scope": "source-text",
+          "action": "prepend-explicit-main-execution-disabled-guard"
+        }
+      ],
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "sources/studio/CredentialsPlugin.java",
+      "sourceRole": "actual-fixed-source-analyzed-in-Studio",
+      "sourceFilename": "CredentialsPlugin.java",
+      "sourceSha256": "735d1ad2e1e1fd58b9ed190829db3c48972861b6ca94db082a5ce8265a70390c",
+      "sourceBytes": 3934,
+      "publicSha256": "735d1ad2e1e1fd58b9ed190829db3c48972861b6ca94db082a5ce8265a70390c",
+      "publicBytes": 3934,
+      "representation": "original-bytes",
+      "fieldChanges": [],
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "storage/historical-qa-encoding-equivalence-safe.json",
+      "sourceRole": "derived-readonly-JSON-encoding-equivalence",
+      "representation": "derived-from-omitted-CP936-and-UTF8-refs-by-JSON-value-equality",
+      "sourceReferenceHashes": [
+        "c564a9fa9dbdde0dd5ffd52d179a84294cbca6d315a0908d2646a9a5375754cb",
+        "35aabae803dfef0f6412a0861b1955cb35f102702e01494ff0670fa9d192bc79"
+      ],
+      "publicSha256": "3d08a1ad0f2534070508c35e29ac4f8d6e182c02e48328920492878436409f68",
+      "publicBytes": 474,
+      "rawPrivateBodyIncluded": false
+    },
+    {
+      "publicPath": "privacy-scan-safe.json",
+      "sourceRole": "derived-readonly-known-private-reference-byte-scan",
+      "representation": "derived-validation-of-published-bytes-against-omitted-private-reference-values",
+      "sourceReferenceHashes": [
+        "d33f5e97f5f1e32f0cbe2dca42024e4d33c1d1ca9d0a0bf9db2266c540693b40",
+        "35aabae803dfef0f6412a0861b1955cb35f102702e01494ff0670fa9d192bc79"
+      ],
+      "publicSha256": "30a3a81aa5c601b92968992803ce5bdd6d669c7441f7cd3ba1a007725b548047",
+      "publicBytes": 650,
+      "rawPrivateBodyIncluded": false
+    },
+    {
+      "publicPath": "validate-archive.py",
+      "sourceRole": "authored-readonly-archive-review-successor",
+      "sourceFilename": "validate-archive.py",
+      "sourceSha256": "d94779eb1e88566d2a4fa7b9119a594357147bb1190125b6178619b6d4b1c529",
+      "sourceBytes": 16604,
+      "publicSha256": "47a7229ced615115796904663cc3471da80364063aa7fd09349b0820b8158702",
+      "publicBytes": 29429,
+      "representation": "derived-authored-archive-review-update",
+      "fieldChanges": [
+        {
+          "scope": "archive-validator-or-documentation-only",
+          "action": "normalize-only-calendar-comparison-copy-for-Python310-Windows-fraction"
+        },
+        {
+          "scope": "archive-validator-or-documentation-only",
+          "action": "add-role-bound-original-source-checks-and-explicit-dated-requirement-coverage"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false,
+      "originalNativeReceiptBytesChanged": false,
+      "nativeExecutionReplayedForArchive": false,
+      "priorPublicSha256": "838f21104f464cc1fdf637ec07bcaa11864fecc892948ed355cdf28bc68b544d",
+      "priorPublicBytes": 17082
+    },
+    {
+      "publicPath": "README.md",
+      "sourceRole": "authored-dated-scope-and-review-documentation",
+      "sourceFilename": "README.md",
+      "sourceSha256": "35574379ee8c9047a7717dc97ddd4355d107bbeba603f54ac59214863f6f09f2",
+      "sourceBytes": 3488,
+      "publicSha256": "4b4557cbe025ff8f6f3e0f6fa02c1b4fb23fb7f5d6d47f9f5dcaf0b24dd2cf9c",
+      "publicBytes": 5450,
+      "representation": "derived-authored-archive-review-update",
+      "fieldChanges": [
+        {
+          "scope": "archive-validator-or-documentation-only",
+          "action": "document-two-local-Python-CLIs-and-unmodified-exact-time-identities"
+        },
+        {
+          "scope": "archive-validator-or-documentation-only",
+          "action": "add-role-bound-original-source-checks-and-explicit-dated-requirement-coverage"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false,
+      "originalNativeReceiptBytesChanged": false,
+      "nativeExecutionReplayedForArchive": false,
+      "priorPublicSha256": "c50d73e51045415a111f3a78429f33d6a66ad612a575a914d91457878726bac5",
+      "priorPublicBytes": 3802
+    },
+    {
+      "publicPath": "history/studio-project-sync-20261111-safe.json",
+      "sourceRole": "historical-actual-IDE-sync-17s400",
+      "sourceFilename": "isolated-studio-final21-actual-project-sync-safe.json",
+      "sourceSha256": "6e5c9b871dfff003d8c4ce20afebb4da7b1d6155f46b3a038ae9ba562ea0f392",
+      "sourceBytes": 3068,
+      "publicSha256": "b5da5519cd1310f37b5697b5d996609c644ca2e044a5ce2e17b543a3f23b429a",
+      "publicBytes": 3074,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/projectRoot",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/studioProcess/image",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/effectiveIdePathsFromRealLog/idea.config.path",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/effectiveIdePathsFromRealLog/idea.system.path",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/effectiveIdePathsFromRealLog/idea.log.path",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/gradleLocalJavaHome",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/safeSelectedLogLines/3",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false,
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "history/native-bridge-tests-20261111-safe.json",
+      "sourceRole": "historical-four-native-instrumentation-tests",
+      "sourceFilename": "correct-windows-final21-native-bridge-safe.json",
+      "sourceSha256": "7ad158baac519a67c020e85966a6529ec29e59fac7f457aa48d3cdace2200af5",
+      "sourceBytes": 844,
+      "publicSha256": "f0b726a34517e4af365c26952039a15eeed0978c7dc351a0a3edc9aace568184",
+      "publicBytes": 828,
+      "representation": "derived-json-canonical-serialization",
+      "fieldChanges": [],
+      "resultStatusOrExitCodesChanged": false,
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "history/keyboard-resize-20261112-safe.json",
+      "sourceRole": "historical-native-keyboard-own-PTY-resize",
+      "sourceFilename": "own-keyboard-native-resize-safe.json",
+      "sourceSha256": "421a340ae571b85100ceeb02a9cb718eee7fcf62f363c3a940bf3f7ca8b42aeb",
+      "sourceBytes": 612,
+      "publicSha256": "aa9fce1c6f084284056e2cd55a949fbbbf61676d90eba909bb64f510410d29f5",
+      "publicBytes": 596,
+      "representation": "derived-json-canonical-serialization",
+      "fieldChanges": [],
+      "resultStatusOrExitCodesChanged": false,
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "history/product-completion-20261112-safe.json",
+      "sourceRole": "historical-own-product-and-preserved-exit-failures",
+      "sourceFilename": "final-completion-safe.json",
+      "sourceSha256": "1d73cf88c2444d65c7771df2280e11f65dc6b6c8c9f026fe7984f78812209110",
+      "sourceBytes": 3934,
+      "publicSha256": "1d73cf88c2444d65c7771df2280e11f65dc6b6c8c9f026fe7984f78812209110",
+      "publicBytes": 3934,
+      "representation": "derived-json-canonical-serialization",
+      "fieldChanges": [],
+      "resultStatusOrExitCodesChanged": false,
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "studio/project-sync-20261116-safe.json",
+      "sourceRole": "actual-current-Studio-instance-project-sync-44s193",
+      "sourceFilename": "current-studio-sync-safe.json",
+      "sourceSha256": "285ec0061b0edb4012cb537076a42bec083f16855f15cccd1e5810dbd05e8371",
+      "sourceBytes": 1327,
+      "publicSha256": "2dea05b440ebefa2fc6396edb97db70cb3a7e93041c35856e0a8bcd29650f21b",
+      "publicBytes": 1328,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/selectedLogLines/3",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false,
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "studio/project-validation-20261116-safe.json",
+      "sourceRole": "actual-current-Studio-sync-analysis-and-unit-NO-SOURCE",
+      "sourceFilename": "android-studio-validation-summary-safe.json",
+      "sourceSha256": "3ab469b8bd1f97a0de85af01d060bc49e1a7cca62d5b3084cafd3731a23355b7",
+      "sourceBytes": 8427,
+      "publicSha256": "99760c033130d3314e2ad5a37aeba8bb3ae6aeb8cafd2706ee3a3adc979d3db2",
+      "publicBytes": 8666,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/jobs/0/startReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/0/terminalReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/1/startReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/2/startReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/2/terminalReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/3/startReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/3/terminalReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/4/startReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/4/terminalReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/5/startReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/5/terminalReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/6/startReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/6/terminalReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/7/startReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/7/terminalReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/8/startReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/8/terminalReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/9/startReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/jobs/9/terminalReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/syncReceipt",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/protectedActiveStudioDirectories/0",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        },
+        {
+          "jsonPointer": "/protectedActiveStudioDirectories/1",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false,
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "history/linux-reboot-lifecycle-20261116-safe.json",
+      "sourceRole": "actual-Linux-kernel-reboot-and-autostart-lifecycle",
+      "sourceFilename": "summary-safe.json",
+      "sourceSha256": "b2c682d91fa6145140e738a0849b6e72c182736445925ea23d676dd1db7169fa",
+      "sourceBytes": 1041,
+      "publicSha256": "b2c682d91fa6145140e738a0849b6e72c182736445925ea23d676dd1db7169fa",
+      "publicBytes": 1041,
+      "representation": "derived-json-canonical-serialization",
+      "fieldChanges": [],
+      "resultStatusOrExitCodesChanged": false,
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "requirements-coverage-safe.json",
+      "sourceRole": "authored-dated-requirement-coverage-and-limits",
+      "representation": "authored-dated-coverage-review",
+      "publicSha256": "941ad1460c5c2b44923bb9e06ac5f2002f9aa4b1cc2ffc84da8e55b46421e175",
+      "publicBytes": 2751,
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "history/studio-preanalysis-snapshot-20261119-safe.json",
+      "sourceRole": "original-mapping-preanalysis-Studio-snapshot",
+      "sourceFilename": "android-studio-current-safe.json",
+      "sourceSha256": "6f6e495982e4c236c5d7af0554a71cb80c5fa0e5c72eb60c5fe632f655e66d38",
+      "sourceBytes": 751,
+      "publicSha256": "026f7e93732f4f1b452988fbd00fbb16b0cf4c4c24e9bcd519cbf2566baaec1c",
+      "publicBytes": 576,
+      "representation": "derived-json-public-path-redaction-and-canonical-serialization",
+      "fieldChanges": [
+        {
+          "jsonPointer": "/rows/0/path",
+          "action": "user-specific-absolute-path-to-public-placeholder"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false,
+      "nativeExecutionReplayedForArchive": false
+    },
+    {
+      "publicPath": "sources/studio/read-current-studio-preanalysis.template.ps1",
+      "sourceRole": "original-mapping-preanalysis-Studio-source",
+      "sourceFilename": "read-current-studio.ps1",
+      "sourceSha256": "a6b4a786fe45bc4b8f2aaef5dd44ddecb5c35a4b4f989ca5357aa3a6f6ad6a4b",
+      "sourceBytes": 868,
+      "publicSha256": "51643127d235a07ac1ac1e1b67a5d56f94f8767e083a37e144c0ff9413ab75e4",
+      "publicBytes": 1033,
+      "representation": "derived-review-template-no-native-replay",
+      "fieldChanges": [
+        {
+          "scope": "source-text",
+          "action": "user-specific-absolute-paths-to-public-placeholders"
+        },
+        {
+          "scope": "source-text",
+          "action": "prepend-explicit-main-execution-disabled-guard"
+        }
+      ],
+      "resultStatusOrExitCodesChanged": false,
+      "nativeExecutionReplayedForArchive": false
+    }
+  ],
+  "omittedSources": [
+    {
+      "sourceRole": "historical-six-record-ciphertext-reference",
+      "sourceSha256": "d33f5e97f5f1e32f0cbe2dca42024e4d33c1d1ca9d0a0bf9db2266c540693b40",
+      "sourceBytes": 1231,
+      "representation": "omitted-private-reference",
+      "reason": "contains-original-ciphertext-or-saved-device-and-persisted-profile-values"
+    },
+    {
+      "sourceRole": "historical-private-QA-CP936-reference",
+      "sourceSha256": "c564a9fa9dbdde0dd5ffd52d179a84294cbca6d315a0908d2646a9a5375754cb",
+      "sourceBytes": 960,
+      "representation": "omitted-private-reference",
+      "reason": "contains-original-ciphertext-or-saved-device-and-persisted-profile-values"
+    },
+    {
+      "sourceRole": "historical-private-QA-UTF8-reference",
+      "sourceSha256": "35aabae803dfef0f6412a0861b1955cb35f102702e01494ff0670fa9d192bc79",
+      "sourceBytes": 953,
+      "representation": "omitted-private-reference",
+      "reason": "contains-original-ciphertext-or-saved-device-and-persisted-profile-values"
+    }
+  ],
+  "missingEarliestMetadataReference": {
+    "expectedSha256": "e6e6b72a2617b84821736d55a3e2f39cd7c5f5f9747df1e87571653c4620f46c",
+    "sourceBytes": null,
+    "representation": "unavailable-reference-not-claimed-reverified"
+  }
+}

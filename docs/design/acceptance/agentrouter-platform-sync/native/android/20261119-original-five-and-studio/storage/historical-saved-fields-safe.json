@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "status": "historical-pinned-qa-original-five-saved-device-digest-derived",
+  "observedAtUtc": "2026-11-19T06:03:55.567105+00:00",
+  "sourceMetadataFile": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-ui-before-current-qa-private-utf8.json",
+  "sourceMetadataSha256": "35aabae803dfef0f6412a0861b1955cb35f102702e01494ff0670fa9d192bc79",
+  "sourceRecordCount": 6,
+  "derivedOriginalRecordCount": 5,
+  "derivedOriginalRecordBytes": 315,
+  "derivedOriginalRecordsCompactUtf8Sha256": "4bc316d7b725d29b35d0aec0b794afa155beac989787fd31565d334da2821fe6",
+  "derivedByExactOriginalEncryptedKeyOriginMatch": true,
+  "originalEarliestWholeMetadataSha256Recovered": false,
+  "independentHistoricalSingleFieldDigestAvailable": false,
+  "rawDevicesAddressesNamesOrTokenValuesArchived": false,
+  "historicalQaFullStorageDerivedOriginalFiveEntryCount": 4,
+  "historicalQaFullSortedStorageWithOriginalFiveSha256": "aebbb8ab42d7bceea9aff31ef4a2e1ce6a46b301696573188646af9cd51b0855",
+  "currentFullStorageMatchedDerivedHistoricalQA": true,
+  "historicalQaThemeJsonValueSha256": "61248de591af1d246529929e4c398af3eb5e1e84673f067e2f57db5e8d445613",
+  "currentThemeMatchedHistoricalQA": true,
+  "userValuesIncluded": false
+}

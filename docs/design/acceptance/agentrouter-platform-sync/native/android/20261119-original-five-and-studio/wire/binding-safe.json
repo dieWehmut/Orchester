@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "purpose": "windows-original-five-native-current-wire",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "namespaceId": "0b12b11bcb5c477aba71c94aab73367b",
+  "identityFile": "<USERPROFILE>\\AppData\\Local\\Orchester-build\\android-resume-original5-20261119\\identity-self-7ec170eaf03e41c8a0fd080d67c7853d.json",
+  "identitySha256": "166100e89fa36cb1fe8e3d4de2bdd5507efb149e79fedbea10719e7417645a5b",
+  "managerBindingSha256": "a0994a5e9fe37be0f14dc590ce592c851c6d1203aa095541884848cb9f878787",
+  "worker": {
+    "pid": 5340,
+    "createdExact": "134392926334771025",
+    "sha256": "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+    "sessionId": 1
+  },
+  "baselineEncryptedXml": "<USERPROFILE>\\AppData\\Local\\Temp\\Orchester-final20-android-20261111\\credentials-before-private-stdout.log",
+  "installedAppBindingFile": "<USERPROFILE>\\AppData\\Local\\Orchester-build\\android-resume-original5-20261119\\app-self-7ec170eaf03e41c8a0fd080d67c7853d-safe.json",
+  "installedAppBindingSha256": "4ac2e5be11599ec6cfc6a123b8704dea2851da26dac9f002c70f6230ed1f9d3f",
+  "expectedActualRunAsAppUid": 10235,
+  "baselineMetadataJson": "<USERPROFILE>\\AppData\\Local\\Temp\\Orchester-final20-android-20261111\\baseline-private.json",
+  "baselineMetadataSha256": "e6e6b72a2617b84821736d55a3e2f39cd7c5f5f9747df1e87571653c4620f46c",
+  "currentManagedLinux7337File": "<USERPROFILE>\\AppData\\Local\\Orchester-build\\android-resume-original5-20261119\\linux-owner-7ec170eaf03e41c8a0fd080d67c7853d-safe.json",
+  "currentManagedLinux7337Sha256": "306dcc4ffe1a41ebb9454ee6c582dc1864e02e0cc7894e4108b956e42c091009",
+  "aliasDexFile": "<USERPROFILE>\\AppData\\Local\\Orchester-build\\android-resume-original5-20261119\\src\\dex\\classes.dex",
+  "aliasDexSha256": "df15578ba781311a7a00377af05c387731c663906ec4174d7a8f46ee9a5ebd31",
+  "expressionSha256": "14bc742b9de3ed8e4b8f5434aeb2a0bda2db600a822a9c53f7662dcc955b9ae3",
+  "outputFile": "<USERPROFILE>\\AppData\\Local\\Orchester-build\\android5-current-wire-runtime-20261113\\runtime-0b12b11bcb5c477aba71c94aab73367b\\native-five-wire-7ec170eaf03e41c8a0fd080d67c7853d-safe.json"
+}

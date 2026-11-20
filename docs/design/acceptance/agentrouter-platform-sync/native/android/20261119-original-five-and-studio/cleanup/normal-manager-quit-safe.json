@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "status": "original-owned-manager-normal-control-native-children-and-ports-released",
+  "processSignals": 0,
+  "forcedTerminations": 0,
+  "newManagersOrAvdsStarted": 0,
+  "rawPrivateValuesIncluded": false,
+  "control": {
+    "schemaVersion": 1,
+    "action": "normal_quit",
+    "namespaceId": "0b12b11bcb5c477aba71c94aab73367b",
+    "bindingSha256": "a0994a5e9fe37be0f14dc590ce592c851c6d1203aa095541884848cb9f878787",
+    "managerPid": 25436,
+    "managerCreatedExact": "134392957905433988"
+  },
+  "normalControlSubmitted": true,
+  "originalManagerHolderProofObservedAtUtc": "2026-11-19T06:12:39.470700Z",
+  "preservedOriginalManagerFailureCode": "native-observation-or-control-failed",
+  "nativeExitCodes": {
+    "manager": 1,
+    "server": 0,
+    "head": 0,
+    "qemu": 0
+  },
+  "originalManagerTerminalStatus": "owned-channel-terminal-with-preserved-failure",
+  "originalManagerFailurePreserved": "native-observation-or-control-failed",
+  "originalManagerTerminalReceiptSha256": "ccf3c36f87c08c4618658bc5662c8942b39cd877acdc2490b5b02ff5f647711d",
+  "allOriginalManagerCreatorHandlesActuallyClosed": true,
+  "allFourPrivatePortsReleased": true,
+  "allOriginalChannelChildExitCodesZero": true,
+  "ownNativeQueryHandlesClosed": true,
+  "observedAtUtc": "2026-11-19T06:14:40.736084+00:00",
+  "sourceSha256": "788f10f547c07db0c505301dddce9d7c574ab4e5c9257b2c8448d332913c4c27"
+}

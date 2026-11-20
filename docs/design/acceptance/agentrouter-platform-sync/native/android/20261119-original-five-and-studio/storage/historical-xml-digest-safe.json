@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "status": "legacy-private-six-record-backup-derived-original-five-digest-passed",
+  "sourceFile": "<WINDOWS_USERPROFILE_MOUNT>/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/correct-windows-before-final21-credentials-private.xml",
+  "sourceSha256": "d33f5e97f5f1e32f0cbe2dca42024e4d33c1d1ca9d0a0bf9db2266c540693b40",
+  "sourceBytes": 1231,
+  "sourceRecordCount": 6,
+  "omittedSingleExtraCompleteXmlElementByteRange": [
+    447,
+    639
+  ],
+  "derivedOriginalBytes": 1039,
+  "derivedOriginalRecordCount": 5,
+  "derivedOriginalSha256": "f708ff5441e06dbe1c542d778ba70a270409bdef14a1fec508d88eeeb63abdbd",
+  "rawKeysCiphertextOrDerivedXmlArchived": false,
+  "originalPrivateTempFilesRestored": false,
+  "deviceOrAppOperations": 0
+}

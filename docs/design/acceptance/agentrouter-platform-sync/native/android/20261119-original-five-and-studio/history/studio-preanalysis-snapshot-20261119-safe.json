@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "status": "current-android-studio-processes-readonly-observed",
+  "observedAtUtc": "2026-11-19T05:56:34.6791610Z",
+  "studioProcessCount": 1,
+  "rows": [
+    {
+      "pid": 30552,
+      "createdExact": "134392890488717106",
+      "path": "<USERPROFILE>\\software\\Androidstudio\\AndroidS\\bin\\studio64.exe",
+      "sha256": "a49ee7862667d8b0ddec9879a85a16be55d151e9878a328932087e6592f006d3",
+      "responsive": true,
+      "hasWindow": true
+    }
+  ],
+  "processSignals": 0,
+  "appOrAdbOperations": 0,
+  "windowTitlesOrUserValuesIncluded": false
+}

@@ -1,0 +1,17 @@
+{
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "studioPid": 30552,
+  "studioExactBirthUtc": "2026-11-16T07:50:48.8717106Z",
+  "selectedLogLines": [
+    "2026-11-16 15:50:59,952 [   7338]   INFO - #com.android.tools.idea.adb.AdbService - Device [emulator-5572] has come online",
+    "2026-11-16 15:51:04,649 [  12035]   INFO - #com.android.tools.idea.gradle.project.sync.GradleSyncStateHolder - Started (TRIGGER_PROJECT_REOPEN) sync with Gradle for project 'android'.",
+    "2026-11-16 15:51:48,303 [  55689]   INFO - #com.android.tools.idea.gradle.project.sync.GradleSyncStateHolder$SyncStateUpdater - onSuccess(RESOLVE_PROJECT:0)",
+    "2026-11-16 15:51:48,842 [  56228]   INFO - #com.android.tools.idea.gradle.project.sync.GradleSyncStateHolder$DataImportListener - onImportFinished(<USERPROFILE>/AppData/Local/Orchester-build/android-studio-21-monitors-continuation-20261111/apps/mobile/android)",
+    "2026-11-16 15:51:48,842 [  56228]   INFO - #com.android.tools.idea.gradle.project.sync.GradleSyncStateHolder - Gradle sync finished in 44 s 193 ms"
+  ],
+  "selectedLogLinesSha256": "e5f0601ca012fd3382c4d19df20b60befd895de0e3e88ab26be902cc1f175615",
+  "actualIdeProjectSyncSuccess": true,
+  "actualIdeProjectImportFinished": true,
+  "actualIdeTestRunInvoked": false,
+  "fullIdeaLogNotArchived": true
+}
