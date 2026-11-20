@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    {
+      "path": "apk-build-safe.json",
+      "bytes": 218,
+      "sha256": "58df9e9a4c0573e250f559addb2df8651c8ce7b6d9b13f4e831218e46c4b9895"
+    },
+    {
+      "path": "linux-live-resources-safe.json",
+      "bytes": 3356,
+      "sha256": "1a08cb1d84b5d973891ab06ad0be122fccc8971cc4814b54a37c1149e35ad81e"
+    },
+    {
+      "path": "owned-backend-cleanup-safe.json",
+      "bytes": 141,
+      "sha256": "1a3d28790e5559598c1cefdc9803465311d5a6371bd2753a354a0bcd00ab5d80"
+    },
+    {
+      "path": "real-browser-pagination-safe.json",
+      "bytes": 1142,
+      "sha256": "e76cf497bd2c3ca6f59dad56cbd8a021a3ef22d8918964d7141a59396dfb2a53"
+    },
+    {
+      "path": "summary.json",
+      "bytes": 5093,
+      "sha256": "7f609c29d6b8ca406c45f9e4558741a392beeffccb31ab9cdb064a2afddc8e06"
+    }
+  ],
+  "scope": "Current JSON receipts; excludes this manifest. Source files are separately hashed by summary.json."
+}

@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-11-20T07:18:01.366120+00:00",
+  "status": "mobile-reliability-fixes-verified-merged-and-content-remotely-read-back",
+  "baselineMain": "f6f873a47dc45a8f4362ae67599b6ca099ebe051",
+  "contentRevision": "66be37814d2408a8946501ec7f7f653f3810a0e4",
+  "contentMainMerge": "a5887af45d344730a1a1c0810a9f44e763d4f657",
+  "changes": [
+    {
+      "path": "apps/mobile/src/App.vue",
+      "sha256": "7ca164845f4459881c0963e54e97eca1f4bedbebcf8e060b044b4a4adc9a66a6"
+    },
+    {
+      "path": "apps/mobile/src/components/AgentWorkbench.vue",
+      "sha256": "591f3caf6ea3969e8e4a7cc3b8a2a4ab63e5312870da52f9b73dd4af918f78af"
+    },
+    {
+      "path": "apps/mobile/src/composables/use-remote-control.ts",
+      "sha256": "4bb28f99c7afc0b8aaaaed706b5942ecdd0ae94cc32a5c00d48f7e4cd784d471"
+    },
+    {
+      "path": "apps/mobile/src/composables/use-remote-fleet.ts",
+      "sha256": "dd58db9f0c369710b974a13b1d7e53bb4098a2960f6dd89c311e50da8fcd6bdb"
+    },
+    {
+      "path": "apps/mobile/test/controller.test.ts",
+      "sha256": "6faedd38c970e83dec9801bb7f8d8bc2c91cd7bd05783638f734cdf1c33e3c10"
+    },
+    {
+      "path": "apps/mobile/test/fleet.test.ts",
+      "sha256": "e758e57cbe5897e76850ff473724c7a74fc45a4a93acc3b285e36030c6c98118"
+    },
+    {
+      "path": "apps/mobile/test/folder-pagination.test.ts",
+      "sha256": "d5d2caa1897bb02f1f3cb020f9634ca69a019b3569a03f0fc8677b04599fe401"
+    }
+  ],
+  "verification": {
+    "mobileVitestFiles": 11,
+    "mobileVitestPassed": 158,
+    "mobileVitestFailed": 0,
+    "additionalCasesSinceBaseline": 28,
+    "controllerCases": 36,
+    "fleetCases": 13,
+    "folderPaginationCases": 4,
+    "vueTypecheckExitCode": 0,
+    "productionViteBuildExitCode": 0,
+    "capacitorAndroidSyncExitCode": 0,
+    "gradleOfflineAssembleDebugExitCode": 0,
+    "gradleBuildSecondsReported": 9,
+    "gradleActionableTasks": 71,
+    "gradleExecutedTasks": 24,
+    "gradleUpToDateTasks": 47,
+    "unitAndComponentTestsAreNativeDeviceProof": false,
+    "newAndroidInstallOrStudioRunClaimed": false
+  },
+  "realBrowserScope": "Actual production-built client paired to an owned isolated real backend; real filesystem entries, HTTP directory pagination, 390px viewport; no request interception or model commands. Test state and credentials were new and isolated.",
+  "productionLinuxScope": "Existing7337 process427 serves apps/mobile/dist; all17HTTP200 resource bytes matched this build; anonymous info401. No production process restart, saved-token use or original database reads were performed.",
+  "failureAndWarningBoundary": [
+    "Each new regression was first observed failing before its corresponding fix; controller originally20 and fleet5 tests were retained.",
+    "Review found a closed-panel resurrection during re-pair/recovery and an old same-connection project catalog overwriting newer additions; dedicated regression cases now pass.",
+    "Initial targeted pnpm test invocation forwarded an extra -- and ran the whole suite, including concurrent red tests; later explicit filters and final full suite were used.",
+    "Owned browser setup initially stored a duplicated http scheme in metadata and seeded only105 entries (backend page size200); metadata was corrected and test directories expanded to505, without backend restart. These are test-setup issues, not product passes.",
+    "Vite retains the existing >500kB JS chunk warning; Gradle reports existing flatDir warnings and several NO-SOURCE tasks. NO-SOURCE is not counted as a test pass."
+  ],
+  "gitSteps": [
+    {
+      "scope": "request-authentication-and-connection-generation",
+      "commit": "814d865ca27d368d3df3eab187d4295686a652a0",
+      "mainMergeCommit": "526403bca9a147921ed5a746861e5b4aec3180ea",
+      "matchingSecondParent": true,
+      "atomicPushExitCode": 0
+    },
+    {
+      "scope": "offline-host-and-panel-recovery",
+      "commit": "707b820a48b6ce1912098ad787704f3f4426d941",
+      "mainMergeCommit": "d91711e246d2348ba0f818209a71f175e698b9dc",
+      "matchingSecondParent": true,
+      "atomicPushExitCode": 0
+    },
+    {
+      "scope": "displayed-directory-pagination",
+      "commit": "66be37814d2408a8946501ec7f7f653f3810a0e4",
+      "mainMergeCommit": "a5887af45d344730a1a1c0810a9f44e763d4f657",
+      "matchingSecondParent": true,
+      "atomicPushExitCode": 0
+    }
+  ],
+  "lastActualRemoteReadback": {
+    "exitCode": 0,
+    "main": "a5887af45d344730a1a1c0810a9f44e763d4f657",
+    "feature": "66be37814d2408a8946501ec7f7f653f3810a0e4",
+    "matchesLocal": true
+  },
+  "receiptBoundary": "This records the three preceding functional commits. The documentation/verification artifact commit and its final push are verified separately by the delivering execution.",
+  "historicalAcceptancePolicy": "The prior 71def643 mobile-source equality and native APK receipts remain dated historical evidence. This iteration intentionally changes four mobile source files; Rust backend and native plugins are unchanged.",
+  "windowsCodexInvocations": 0,
+  "modelCommands": 0,
+  "privateTokensOrOriginalUserStateIncluded": false
+}

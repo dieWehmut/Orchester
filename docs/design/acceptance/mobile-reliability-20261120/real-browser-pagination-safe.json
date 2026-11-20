@@ -1,0 +1,38 @@
+{
+  "observedAtUtc": "2026-11-20T07:14:45.884Z",
+  "width": 390,
+  "height": 844,
+  "before": {
+    "rows": 200,
+    "draft": "/home/han/.local/state/orchester-iteration/20261120-mobile-reliability/browser/workspace/directory-b"
+  },
+  "middle": {
+    "rows": 400,
+    "path": "/home/han/.local/state/orchester-iteration/20261120-mobile-reliability/browser/workspace/directory-a"
+  },
+  "after": {
+    "rows": 505,
+    "path": "/home/han/.local/state/orchester-iteration/20261120-mobile-reliability/browser/workspace/directory-a",
+    "moreAbsent": true
+  },
+  "requests": [
+    {
+      "path": null,
+      "offset": "0"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-iteration/20261120-mobile-reliability/browser/workspace/directory-a",
+      "offset": "0"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-iteration/20261120-mobile-reliability/browser/workspace/directory-a",
+      "offset": "200"
+    },
+    {
+      "path": "/home/han/.local/state/orchester-iteration/20261120-mobile-reliability/browser/workspace/directory-a",
+      "offset": "400"
+    }
+  ],
+  "horizontalOverflow": false,
+  "modelActions": 0
+}
