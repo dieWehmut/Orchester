@@ -4,12 +4,35 @@ param(
     [string]$Bind = '127.0.0.1',
     [ValidateRange(1, 65535)][int]$Port = 7337,
     [string]$Assets,
-    [string]$StateRoot = "$env:LOCALAPPDATA\OrchesterRemote\state-home",
+    [string]$StateRoot = $null,
     [string]$TargetDir = "$env:LOCALAPPDATA\OrchesterRemote\target",
     [switch]$SkipBuild,
     [switch]$NoPairing
 )
 $ErrorActionPreference = 'Stop'
+
+function Resolve-RemoteStateRoot {
+    param(
+        [string]$StateRoot,
+        [bool]$StateRootWasSpecified
+    )
+
+    if ($StateRootWasSpecified) {
+        if ([string]::IsNullOrWhiteSpace($StateRoot)) {
+            throw 'StateRoot must be a non-empty path.'
+        }
+        $selectedStateRoot = $StateRoot
+    } elseif (-not [string]::IsNullOrWhiteSpace($env:ORCHESTER_HOME)) {
+        $selectedStateRoot = $env:ORCHESTER_HOME
+    } else {
+        $selectedStateRoot = Join-Path $env:LOCALAPPDATA 'OrchesterRemote/state-home'
+    }
+
+    # GetFullPath resolves relative values against the caller's working directory,
+    # matching the existing behavior for -StateRoot.
+    return [System.IO.Path]::GetFullPath($selectedStateRoot)
+}
+
 # Path may be provider-qualified for UNC locations; native tools require the
 # filesystem path (ProviderPath), including when this script runs from WSL.
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).ProviderPath
@@ -37,7 +60,8 @@ if (-not $SkipBuild) {
 }
 $binary = Join-Path $TargetDir 'x86_64-pc-windows-msvc/debug/orchester.exe'
 if (-not (Test-Path -LiteralPath $binary -PathType Leaf)) { throw "Backend not found: $binary" }
-$env:ORCHESTER_HOME = [System.IO.Path]::GetFullPath($StateRoot)
+$stateRootWasSpecified = $PSBoundParameters.ContainsKey('StateRoot')
+$env:ORCHESTER_HOME = Resolve-RemoteStateRoot -StateRoot $StateRoot -StateRootWasSpecified $stateRootWasSpecified
 $serveArgs = @('remote', '--workspace', $workspacePath, '--bind', $Bind,
     '--port', "$Port", '--assets', $assetsPath)
 foreach ($rootPath in $allowRootPaths) { $serveArgs += @('--allow-root', $rootPath) }

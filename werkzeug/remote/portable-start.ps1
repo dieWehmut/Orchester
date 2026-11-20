@@ -3,7 +3,7 @@ param(
     [string[]]$AllowRoot = @(),
     [string]$Bind = '127.0.0.1',
     [ValidateRange(1, 65535)][int]$Port = 7337,
-    [string]$StateRoot = "$env:LOCALAPPDATA\OrchesterRemote\state-home",
+    [string]$StateRoot = $null,
     [switch]$OpenCodeFromCodex,
     [string]$CodexConfig = "$env:USERPROFILE\.codex\config.toml",
     [string]$CodexAuth = "$env:USERPROFILE\.codex\auth.json",
@@ -11,6 +11,27 @@ param(
     [switch]$Json
 )
 $ErrorActionPreference = 'Stop'
+
+function Resolve-RemoteStateRoot {
+    param(
+        [string]$StateRoot,
+        [bool]$StateRootWasSpecified
+    )
+
+    if ($StateRootWasSpecified) {
+        if ([string]::IsNullOrWhiteSpace($StateRoot)) {
+            throw 'StateRoot must be a non-empty path.'
+        }
+        $selectedStateRoot = $StateRoot
+    } elseif (-not [string]::IsNullOrWhiteSpace($env:ORCHESTER_HOME)) {
+        $selectedStateRoot = $env:ORCHESTER_HOME
+    } else {
+        $selectedStateRoot = Join-Path $env:LOCALAPPDATA 'OrchesterRemote/state-home'
+    }
+
+    return [System.IO.Path]::GetFullPath($selectedStateRoot)
+}
+
 # ProviderPath preserves native UNC paths without a PowerShell provider prefix.
 $workspacePath = (Resolve-Path -LiteralPath $Workspace).ProviderPath
 if (-not (Test-Path -LiteralPath $workspacePath -PathType Container)) {
@@ -29,7 +50,8 @@ $assetsPath = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot 'web')).Provid
 if (-not (Test-Path -LiteralPath (Join-Path $assetsPath 'index.html') -PathType Leaf)) {
     throw 'The portable package is incomplete: web/index.html is missing.'
 }
-$env:ORCHESTER_HOME = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($StateRoot)
+$stateRootWasSpecified = $PSBoundParameters.ContainsKey('StateRoot')
+$env:ORCHESTER_HOME = Resolve-RemoteStateRoot -StateRoot $StateRoot -StateRootWasSpecified $stateRootWasSpecified
 $serveArgs = @('remote', '--workspace', $workspacePath, '--bind', $Bind,
     '--port', "$Port", '--assets', $assetsPath)
 foreach ($rootPath in $allowRootPaths) { $serveArgs += @('--allow-root', $rootPath) }
