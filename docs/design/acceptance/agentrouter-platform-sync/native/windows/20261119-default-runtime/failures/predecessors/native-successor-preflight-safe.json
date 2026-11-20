@@ -1,0 +1,10 @@
+{
+    "schemaVersion":  1,
+    "status":  "native-ast-node-syntax-and-current-interactive-default-verified",
+    "observedAtUtc":  "2026-11-19T06:40:32.9713179Z",
+    "actualNativeExitCode":  0,
+    "currentSessionId":  1,
+    "interactiveDefault":  true,
+    "processSignals":  0,
+    "privateValuesIncluded":  false
+}

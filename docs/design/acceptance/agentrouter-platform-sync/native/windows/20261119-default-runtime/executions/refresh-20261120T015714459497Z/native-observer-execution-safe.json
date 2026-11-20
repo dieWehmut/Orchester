@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "status": "native-observer-execution-failed",
+  "startedAtUtc": "2026-11-20T01:57:14.460230+00:00",
+  "endedAtUtc": "2026-11-20T01:58:08.330786+00:00",
+  "executorSourceSha256": "63cd328b317aefd3efec9256213bfbad34f4d5d28010d121e6a4590658423de2",
+  "nativePowerShellExeSha256": "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+  "nativeObserverSourceSha256": "ab1b77988a2a180c0041bf571e27d75e7e1598962480fd6bae6aafe391e6dded",
+  "nativeCommandWorkingDirectory": "C:\\Users\\han",
+  "nativeObserverArgumentObserveSeconds": 30,
+  "wslInteropObservedNativePowerShellExitCode": 2,
+  "nativeObserverStdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "nativeObserverStderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "observerResultDirectory": null,
+  "existingRuntimeReused": true,
+  "runtimeRestartCount": 0,
+  "processSignals": 0,
+  "credentialCommands": 0,
+  "modelCalls": 0,
+  "privateValuesIncluded": false
+}

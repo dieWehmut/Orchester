@@ -1,0 +1,14 @@
+{
+    "schemaVersion":  1,
+    "status":  "original-state-preflight-with-held-managed-7338",
+    "observedAtUtc":  "2026-11-19T06:49:41.5076430Z",
+    "guiCurrentlyAbsent":  true,
+    "defaultUserProfileUsed":  true,
+    "current7338IdentityRetained":  true,
+    "current7338RuntimeLeaseOwnerVerified":  true,
+    "binarySha256":  "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+    "current7338Pid":  98280,
+    "current7338CreatedFileTimeExact":  "134395444824347878",
+    "current7338ExeSha256":  "24c8f9806256cc54b239b03f6b4adc976c3fee50c30bc0f2ecf601971c22ce2a",
+    "privateValuesIncluded":  false
+}

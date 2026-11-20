@@ -1,0 +1,64 @@
+{
+    "schemaVersion":  1,
+    "status":  "current-original-native-tree-images-and-signatures-observed",
+    "observedAtUtc":  "2026-11-19T06:37:42.5245020Z",
+    "originalCreatorHandleRecovered":  false,
+    "freshQueryHandlesHeldDuringSnapshot":  true,
+    "ownedObservedTree":  [
+                              {
+                                  "pid":  21176,
+                                  "parentPid":  0,
+                                  "depth":  0,
+                                  "createdFileTimeExact":  "134392960887170890",
+                                  "image":  "C:\\Users\\han\\Downloads\\OrchesterRemote\\orchester.exe",
+                                  "imageSha256":  "24c8f9806256cc54b239b03f6b4adc976c3fee50c30bc0f2ecf601971c22ce2a",
+                                  "signatureStatus":  "NotSigned",
+                                  "signerIsMicrosoft":  false,
+                                  "sameHeldHandleLive":  true
+                              },
+                              {
+                                  "pid":  25248,
+                                  "parentPid":  21176,
+                                  "depth":  1,
+                                  "createdFileTimeExact":  "134392960887286205",
+                                  "image":  "C:\\Windows\\System32\\conhost.exe",
+                                  "imageSha256":  "c86146188b78e484f32cc29e2331689659943b47689a85570342044f499938ac",
+                                  "signatureStatus":  "Valid",
+                                  "signerIsMicrosoft":  false,
+                                  "sameHeldHandleLive":  true
+                              }
+                          ],
+    "unknownObservationEvents":  0,
+    "safeUnexpectedImages":  [
+
+                             ],
+    "systemImageVerification":  [
+                                    {
+                                        "image":  "C:\\WINDOWS\\System32\\conhost.exe",
+                                        "sha256":  "c86146188b78e484f32cc29e2331689659943b47689a85570342044f499938ac",
+                                        "signatureStatus":  "Valid",
+                                        "signerIsMicrosoft":  false
+                                    },
+                                    {
+                                        "image":  "C:\\WINDOWS\\System32\\wsl.exe",
+                                        "sha256":  "fcd08205b608b5c4831e0dcb1801dd274436cd2c8420815f18ae58a085891a18",
+                                        "signatureStatus":  "Valid",
+                                        "signerIsMicrosoft":  false
+                                    },
+                                    {
+                                        "image":  "C:\\Program Files\\WSL\\wsl.exe",
+                                        "sha256":  "051b7a9b7bda66817c052aced998e026610e5d4d18d63f45629d35d5cb5471c8",
+                                        "signatureStatus":  "Valid",
+                                        "signerIsMicrosoft":  true
+                                    },
+                                    {
+                                        "image":  "C:\\Program Files\\WSL\\wslhost.exe",
+                                        "sha256":  "1f214fbb69efcd138260c4aa4e35182bfe5371afe4055b59a3133d8f88f9c3b7",
+                                        "signatureStatus":  "Valid",
+                                        "signerIsMicrosoft":  true
+                                    }
+                                ],
+    "processSignals":  0,
+    "commandLinesRead":  false,
+    "privateDataValuesIncluded":  false
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "status": "original-source-bound-normal-quit-remote-exit-observed-manager-wait-expired",
+  "observedAtUtc": "2026-11-19T06:38:49.5707127Z",
+  "originalRemotePid": 21176,
+  "originalRemoteCreatedFileTimeExact": "134392960887170890",
+  "originalManagerPid": 4184,
+  "originalManagerCreatedFileTimeExact": "134392960875953491",
+  "originalManagerSourceSha256": "3f0a3efb99ded06451159a9570b185cc91cab969aa31edf84315cf43d7a3fb10",
+  "sourceBoundNormalQuitRequestFileCreated": true,
+  "originalObserverHeldServerHandleWaitForExitSucceeded": true,
+  "originalObserverManagerWaitTimedOutSeconds": 10,
+  "actualNativeServerExitCode": null,
+  "serverExitCodeNotSampledBecauseOriginalObserverWaitedForManagerFirst": true,
+  "subsequentNativeQueryBothOriginalProcessesAbsent": true,
+  "subsequentNativeQuery7338NewOwnerPid": 9844,
+  "originalCumulativeUnknownObservationEvents": 7598,
+  "originalUnknownImageSha256": "051b7a9b7bda66817c052aced998e026610e5d4d18d63f45629d35d5cb5471c8",
+  "forcedTerminations": 0,
+  "originalFailureRewritten": false,
+  "privateValuesIncluded": false
+}

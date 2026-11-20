@@ -1,0 +1,31 @@
+{
+  "observedAtUtc": "2026-11-20T02:34:15.477589+00:00",
+  "nativeExecution": false,
+  "processOrServiceActions": 0,
+  "paths": [
+    {
+      "path": "/mnt/c",
+      "readableStat": false,
+      "errno": 5,
+      "error": "Input/output error"
+    },
+    {
+      "path": "/mnt/c/Windows",
+      "readableStat": false,
+      "errno": 5,
+      "error": "Input/output error"
+    },
+    {
+      "path": "/mnt/c/Users/han",
+      "readableStat": false,
+      "errno": 5,
+      "error": "Input/output error"
+    }
+  ],
+  "anonymous7338": {
+    "httpStatus": null,
+    "errorType": "URLError",
+    "reason": "[Errno 111] Connection refused"
+  },
+  "boundary": "Linux localhost refusal does not establish native Windows server stopped. No native PID/handle/process status observed while mount I/O5."
+}

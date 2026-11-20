@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "status": "agent-recorded-native-tool-result",
+  "observedAtUtc": "2026-11-20T01:59:37.4228329Z",
+  "evidenceOrigin": "functions.exec tools.exec_command result in this conversation; separate raw native external-executor receipt was not created for this short probe",
+  "nativeToolReportedExitCode": 0,
+  "nativePowerShellExeSha256": "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+  "sourcePath": "sources/09-current-stable-readonly-probe.ps1",
+  "sourceSha256": "6ca0fe455feab495d7fb90707389feafa1ccdceb54a227f8663a429e6ce747f8",
+  "nativeCommandWorkingDirectory": "C:\\Users\\han",
+  "rawSafeResultPath": "managed-stable/current-probes/current-stable-probe-c28bfbd2198a407091e801dd8e3e128f-safe.json",
+  "rawSafeResultSha256": "746baece75901caa49c35f14378b2c7293f8fdc1a6a44eb42d086418d33e94f6",
+  "processSignals": 0,
+  "privateValuesIncluded": false
+}

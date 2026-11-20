@@ -1,0 +1,12 @@
+{
+    "schemaVersion":  1,
+    "status":  "owned-server-original-observer-native-exit-observed",
+    "observedAtUtc":  "2026-11-19T06:44:45.6703840Z",
+    "serverPid":  9844,
+    "serverCreatedFileTimeExact":  "134395440680673328",
+    "actualNativeServerExitCode":  0,
+    "heldOriginalObserverProcessHandleUntilNativeExit":  true,
+    "sourceBoundNormalStdinQuitOnly":  true,
+    "forcedTerminations":  0,
+    "privateValuesIncluded":  false
+}

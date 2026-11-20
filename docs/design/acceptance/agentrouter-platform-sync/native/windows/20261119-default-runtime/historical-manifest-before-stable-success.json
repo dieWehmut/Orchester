@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "status": "default-gui-native-runtime-and-original-retention-safe-evidence-archived-managed-final-guard-pending",
+  "createdAtUtc": "2026-11-19T06:43:44.217047+00:00",
+  "sourceRevision": "71def643cb08b208cc79687f79255c504eb14dc6",
+  "items": [
+    {
+      "path": "default-current-native-gate-safe.json",
+      "sha256": "7560d4ed830ba36b4f1f04716fbb7854b7555b97fc1056a467ed2fe887eefd5d",
+      "sizeBytes": 611
+    },
+    {
+      "path": "default-native-readonly-ui-safe.json",
+      "sha256": "56db8bfc2fbad235c69239c07d1b29cf3cd03f770f0c736227420eeaba0a9f22",
+      "sizeBytes": 1171
+    },
+    {
+      "path": "default-runtime-and-retained-7338-final-safe.json",
+      "sha256": "aeaded7320bde6719365ee1a034868bd3151d9bf1bce45ea035bd0e5eb0dfa26",
+      "sizeBytes": 2451
+    },
+    {
+      "path": "default-runtime-before-retention-safe.json",
+      "sha256": "161c9111ebcd58685a2be150356d07568315e573d4ad9701d781c179753122de",
+      "sizeBytes": 1332
+    },
+    {
+      "path": "launch-result.json",
+      "sha256": "e66f308fbed486647b78a25150253d240b23d9a4e649c49928196c64ecc39d58",
+      "sizeBytes": 477
+    },
+    {
+      "path": "managed-7338-ready-safe.json",
+      "sha256": "53844eefd557186b598153554b35e6564e9f1b9e011181417608228a78bd3cd8",
+      "sizeBytes": 954
+    },
+    {
+      "path": "post-default-runtime-state-retention-a0064efebd258df0-safe.json",
+      "sha256": "5d5ba9ff68e94ac874474022ab082bc86facc157a6c4fd03b2db349c9e055271",
+      "sizeBytes": 1123
+    },
+    {
+      "path": "preflight-default-runtime-state-retention-57e77cd9786d37b5-safe.json",
+      "sha256": "52c059171fdb3f425b95b58afad126a076907aa2871161a070febfb1d56bf0ec",
+      "sizeBytes": 1129
+    },
+    {
+      "path": "preflight-held-managed-7338-safe.json",
+      "sha256": "28d47bc6cd8d1844ff4507aea5bb55d1ec42b2fbea1df7d00adbd15e17abf93b",
+      "sizeBytes": 638
+    },
+    {
+      "path": "tray-host-observation.json",
+      "sha256": "dc3df64cf67113195a6f080ffbfba648c593f527ece7c04fe2432bb14a382b45",
+      "sizeBytes": 305
+    },
+    {
+      "path": "tray-menu-observation.json",
+      "sha256": "2dd204644cd43cf9ee9f5644a8939c0d4663f7cde6bf95b8d13c98a7884bcdb7",
+      "sizeBytes": 1860
+    },
+    {
+      "path": "tray-msaa-first-read-safe.json",
+      "sha256": "24df66d20aad2f2784ae9ef7b7010a01e034ec7bd6a11ab4a506c339a7b28dd0",
+      "sizeBytes": 1465
+    },
+    {
+      "path": "tray-uia-before-msaa-safe.json",
+      "sha256": "19866b9bc5bc0b810dc2ef04f43a9355e10d83a6a1cbf034ebe0a3184c8a37ce",
+      "sizeBytes": 316
+    },
+    {
+      "path": "original-attempt-default-runtime-failure-0d16fd01e3a2403685f0a5e77ee6efc7-safe.json",
+      "sha256": "dad145e902ed338ad7b04e9480e6c69c43506db56794eeb00e5b919c1d380ae7",
+      "sizeBytes": 560,
+      "originalFailurePreserved": true
+    },
+    {
+      "path": "original-attempt-managed-7338-failure-d31b6f1964044d08a123ce86b48ebef4-safe.json",
+      "sha256": "c462113bceca481b52262bae07fc88db625756b8f578325d2defafb219524853",
+      "sizeBytes": 222,
+      "originalFailurePreserved": true
+    },
+    {
+      "path": "original-attempt-managed-7338-failure-static-safe.json",
+      "sha256": "ed94ccba7aabdbc8559e0bfed868f1f678855c7cc9b2808409bb4318c6139bf7",
+      "sizeBytes": 892,
+      "originalFailurePreserved": true
+    },
+    {
+      "sourcePath": "05-successor-default-runtime.ps1",
+      "sha256": "dc2a2bfeb0b6e19d86d6cf34d2aebd47281eb71040f40e03b0841879eea11f02",
+      "sizeBytes": 29816
+    },
+    {
+      "sourcePath": "06-successor-managed-7338.ps1",
+      "sha256": "a55066cbd1b7f19b835e50b1d55962c1ff60ab6e74bd862cbd1af38e35b6b48b",
+      "sizeBytes": 13632
+    },
+    {
+      "sourcePath": "current-handoff-readonly.ps1",
+      "sha256": "fab00bfefd83989b01ac33d881c11ce17e3f9a70e3350f64e6a7630b16499be6",
+      "sizeBytes": 3522
+    },
+    {
+      "sourcePath": "invoke-preflight.ps1",
+      "sha256": "c6b48caee91da86391e63fe2cd6f12e6d8b863a6bdc24e029c3ba15fe0b70175",
+      "sizeBytes": 1576
+    },
+    {
+      "sourcePath": "invoke-successor-runtime.ps1",
+      "sha256": "0aed89934a9799608c37d4b657da5011b5a4629fe50171ad56d58dc2c2a7c035",
+      "sizeBytes": 1244
+    },
+    {
+      "sourcePath": "normal-close-original-managed.ps1",
+      "sha256": "3ae299d984fa9496576c73bd48fa5bba2ddff4c64066e644bb2a98571cdb0b09",
+      "sizeBytes": 3452
+    },
+    {
+      "sourcePath": "original-tree-readonly.ps1",
+      "sha256": "3973e88c8c226e798ab41323c3e9e0821c81bb1b93c9e5a2be4dcde25ba0076a",
+      "sizeBytes": 2749
+    },
+    {
+      "sourcePath": "successor-tree-readonly.ps1",
+      "sha256": "0a1eea0e5cc1ecf8e4bd18d86527cb09f6daf94c0ac6e1792a11668890e78733",
+      "sizeBytes": 2750
+    }
+  ],
+  "defaultRuntimePassed": true,
+  "originalSavedApiRecordsRetained": 213,
+  "providers": 21,
+  "loadedAndExactInstalledThemeIcons": 42,
+  "actualMsaaQuitMenuActionAndOriginalGuiExit0": true,
+  "retention": {
+    "staticFiles": 2,
+    "appendOnlyLogs": 2,
+    "sqliteDatabases": 6,
+    "originalTables": 26,
+    "originalRows": 138
+  },
+  "remoteSavedCredentialWireVerified": false,
+  "strictManagedHandoffUnknownGuardPassed": false,
+  "currentSuccessorUnknownObservationEvents": 6,
+  "forcedTerminations": 0,
+  "privateValuesIncluded": false
+}

@@ -1,0 +1,1 @@
+{"schemaVersion":1,"status":"failed","stage":"native-root-query-handles","staticCode":"creator-current-identity-or-zero-unknown-guard-differs","sourceLine":3,"exceptionType":"System.InvalidOperationException","observedAtUtc":"2026-11-20T02:04:07.7883182Z","runtimeRestartCount":0,"processSignals":0,"privateValuesIncluded":false}

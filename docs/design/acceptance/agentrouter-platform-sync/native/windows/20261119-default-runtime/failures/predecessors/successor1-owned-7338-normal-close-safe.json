@@ -1,0 +1,17 @@
+{
+    "schemaVersion":  1,
+    "status":  "exact-owned-failed-attempt-normal-stdin-close-verified",
+    "observedAtUtc":  "2026-11-19T06:44:46.2718305Z",
+    "originalServerPid":  9844,
+    "originalManagerPid":  28744,
+    "originalServerExitCode":  0,
+    "originalManagerExitCode":  1,
+    "heldProcessHandlesUntilExit":  true,
+    "normalStdinQuitThroughOriginalController":  true,
+    "originalManagerAcceptanceFailed":  true,
+    "7338Released":  true,
+    "forcedTerminations":  0,
+    "pairingOrCredentialActions":  0,
+    "modelCalls":  0,
+    "privateValuesIncluded":  false
+}

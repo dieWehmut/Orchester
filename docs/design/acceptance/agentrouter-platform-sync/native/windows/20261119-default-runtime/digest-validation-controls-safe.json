@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "status": "digest-format-and-explicit-source-link-controls-verified",
+  "positiveOriginalArchiveVerifierExitCode": 0,
+  "negativeControls": [
+    {
+      "case": "truncated-invoker-digest",
+      "manifestRecomputedForMutation": true,
+      "verifierRejected": true,
+      "actualVerifierExitCode": 1,
+      "originalArchiveModified": false
+    },
+    {
+      "case": "wrong-valid-invoker-digest",
+      "manifestRecomputedForMutation": true,
+      "verifierRejected": true,
+      "actualVerifierExitCode": 1,
+      "originalArchiveModified": false
+    },
+    {
+      "case": "wrong-valid-source-path",
+      "manifestRecomputedForMutation": true,
+      "verifierRejected": true,
+      "actualVerifierExitCode": 1,
+      "originalArchiveModified": false
+    }
+  ],
+  "testScope": "offline temporary archive copies only; manifest regenerated for each mutation to test semantic checks beyond byte integrity",
+  "rawOriginalToolEventsModified": false,
+  "nativeOperations": 0
+}

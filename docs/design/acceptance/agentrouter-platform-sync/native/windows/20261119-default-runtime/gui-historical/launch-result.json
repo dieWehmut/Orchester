@@ -1,0 +1,11 @@
+{
+    "ProcessId":  35360,
+    "Created":  "134395440702275344",
+    "binarySha256":  "e4aa765befa85c7fb053075844be5693685c00677dd62b4cfff4592ec68c1d05",
+    "packageDirectory":  "C:\\Users\\han\\AppData\\Local\\Orchester",
+    "defaultUserProfileUsed":  true,
+    "defaultProfileSource":  "original Windows user home and default Tauri WebView profile",
+    "cdpPort":  19323,
+    "sourceRevision":  "71def643cb08b208cc79687f79255c504eb14dc6",
+    "modelCalls":  0
+}

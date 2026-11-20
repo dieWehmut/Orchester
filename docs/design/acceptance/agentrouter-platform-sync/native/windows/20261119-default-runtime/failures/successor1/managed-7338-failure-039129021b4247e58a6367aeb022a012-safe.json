@@ -1,0 +1,7 @@
+{
+    "status":  "failed",
+    "stage":  "retained-managed-7338",
+    "exceptionType":  "System.InvalidOperationException",
+    "observedAtUtc":  "2026-11-19T06:44:46.1843164Z",
+    "privateValuesIncluded":  false
+}

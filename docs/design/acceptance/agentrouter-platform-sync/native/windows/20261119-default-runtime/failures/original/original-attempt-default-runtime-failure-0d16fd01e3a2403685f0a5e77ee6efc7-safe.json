@@ -1,0 +1,12 @@
+{
+    "schemaVersion":  1,
+    "status":  "failed",
+    "stage":  "actual-default-readonly-ui-and-original-saved-content",
+    "exceptionType":  "System.InvalidOperationException",
+    "actualNativeExitCode":  1,
+    "observedAtUtc":  "2026-11-16T09:48:16.7079538Z",
+    "privateRuntimeDirectory":  "C:\\Users\\han\\AppData\\Local\\Orchester-build\\reinstall-backups\\private-final21-offline-prm-1113-8798425b\\runtime-12ec60f8c4144d89a6469b21b02368cf",
+    "7338Stopped":  false,
+    "forcedTerminations":  0,
+    "privateValuesIncluded":  false
+}

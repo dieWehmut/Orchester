@@ -1,0 +1,20 @@
+{
+    "schemaVersion":  1,
+    "status":  "native-managed-7338-static-failure-observed",
+    "stage":  "retained-managed-7338",
+    "sourceLine":  6,
+    "exceptionType":  "System.InvalidOperationException",
+    "staticCode":  "managed-backend-normal-exit-not-proven",
+    "ownedRootCaptured":  true,
+    "ownedIdentityCount":  72916,
+    "unexpectedDescendants":  7598,
+    "safeUnexpectedImages":  {
+                                 "Basename":  "wsl.exe",
+                                 "SystemRootRelativePath":  null,
+                                 "Sha256":  "051b7a9b7bda66817c052aced998e026610e5d4d18d63f45629d35d5cb5471c8"
+                             },
+    "lastHelperStaticIdentityDiagnostic":  "QueryFullProcessImageName:5",
+    "originalServerStillLive":  false,
+    "privateMessagesArgumentsOrStateValuesIncluded":  false,
+    "forcedTerminations":  0
+}

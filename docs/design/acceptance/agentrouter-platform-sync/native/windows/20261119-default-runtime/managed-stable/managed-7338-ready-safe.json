@@ -1,0 +1,21 @@
+{
+    "schemaVersion":  1,
+    "status":  "managed-original-state-7338-listener-verified-awaiting-normal-command",
+    "observedAtUtc":  "2026-11-19T06:48:02.8760660Z",
+    "managerPid":  81620,
+    "managerCreatedFileTimeExact":  "134395444813697914",
+    "managerSourceSha256":  "14a2c2c3bee403def8651c88172e8b33e40f89aaab02a4dbafd1b3b01d52f702",
+    "remotePid":  98280,
+    "remoteCreatedFileTimeExact":  "134395444824347878",
+    "remoteExeSha256":  "24c8f9806256cc54b239b03f6b4adc976c3fee50c30bc0f2ecf601971c22ce2a",
+    "remoteExe":  "C:\\Users\\han\\Downloads\\OrchesterRemote\\orchester.exe",
+    "port":  7338,
+    "bind":  "0.0.0.0",
+    "currentListenerOwnedByOriginalStartedProcess":  true,
+    "originalServerProcessAndKernelHandleRetained":  true,
+    "originalStateHomeUsed":  true,
+    "startupPairingDisabled":  true,
+    "pairingOrCredentialCommands":  0,
+    "modelCalls":  0,
+    "privateValuesIncluded":  false
+}
