@@ -514,3 +514,167 @@ it("discards an opening panel's delayed output and metadata after it is closed",
   expect(savedPanels()).toEqual([]);
   expect(httpCalls.every((call) => call.method === "GET")).toBe(true);
 });
+
+it("reconnects a saved host after an offline cold start and restores its panels", async () => {
+  const host = hostFixture("http://alpha:7337", "Alpha");
+  host.offline = true;
+  storage.set("orchester.devices", JSON.stringify([{ address: host.address, name: host.name }]));
+  storage.set("orchester.panels", JSON.stringify([
+    { hostAddress: host.address, projectId: "service", agent: "claude" },
+  ]));
+  const { fleet } = mountFleet();
+  await vi.waitFor(() => {
+    expect(fleet.hosts.value[0]?.control.connectionStatus.value).toBe("disconnected");
+    expect(httpCalls.some((call) => call.path === "/info")).toBe(true);
+  });
+  host.offline = false;
+  await vi.advanceTimersByTimeAsync(5000);
+  expect(fleet.hosts.value[0]?.control.connectionStatus.value).toBe("connected");
+  expect(fleet.panels.value).toHaveLength(1);
+  expect(fleet.panels.value[0]?.control.project.value?.id).toBe("service");
+  expect(fleet.panels.value[0]?.control.agent.value).toBe("claude");
+  expect(fleet.panels.value[0]?.control.selected.value?.id).toBe("service-claude");
+});
+
+it("retries an existing panel that failed to connect without replacing its draft", async () => {
+  const host = hostFixture("http://alpha:7337", "Alpha");
+  const { fleet } = mountFleet();
+  const connected = (await fleet.connectSaved(host))!;
+  host.offline = true;
+  const failed = (await fleet.openPanel(connected, host.projects[1]!, "claude"))!;
+  expect(failed.control.connectionStatus.value).toBe("disconnected");
+  failed.control.prompt.value = "keep this draft";
+  host.offline = false;
+  const recovered = await fleet.openPanel(connected, host.projects[1]!, "claude");
+  expect(recovered).toBe(failed);
+  expect(fleet.panels.value).toHaveLength(1);
+  expect(recovered?.control.connectionStatus.value).toBe("connected");
+  expect(recovered?.control.project.value?.id).toBe("service");
+  expect(recovered?.control.agent.value).toBe("claude");
+  expect(recovered?.control.prompt.value).toBe("keep this draft");
+});
+
+it("allows immediate reopen while an old closed panel request is still pending", async () => {
+  const host = hostFixture("http://alpha:7337", "Alpha");
+  const { fleet } = mountFleet();
+  const connected = (await fleet.connectSaved(host))!;
+  let releaseFirst!: () => void;
+  let releaseSecond!: () => void;
+  const path = "/runs/service-claude/events";
+  heldResponses.set(`${host.address}${path}`, new Promise<void>((resolve) => { releaseFirst = resolve; }));
+  const first = fleet.openPanel(connected, host.projects[1]!, "claude");
+  await vi.waitFor(() => expect(httpCalls.filter((call) => call.path === path)).toHaveLength(1));
+  const closed = fleet.panels.value[0]!;
+  fleet.closePanel(closed);
+  heldResponses.set(`${host.address}${path}`, new Promise<void>((resolve) => { releaseSecond = resolve; }));
+  const second = fleet.openPanel(connected, host.projects[1]!, "claude");
+  expect(second).not.toBe(first);
+  fleet.closePanel(closed);
+  await vi.waitFor(() => expect(httpCalls.filter((call) => call.path === path)).toHaveLength(2));
+  releaseFirst();
+  await expect(first).resolves.toBeNull();
+  // Completion of the old request must not erase the new in-flight entry.
+  expect(fleet.openPanel(connected, host.projects[1]!, "claude")).toBe(second);
+  releaseSecond();
+  const reopened = await second;
+  expect(reopened).not.toBeNull();
+  expect(reopened).not.toBe(closed);
+  expect(fleet.panels.value).toEqual([reopened]);
+  expect(reopened?.control.selected.value?.id).toBe("service-claude");
+});
+
+it("never falls back to another project when re-pairing a deleted panel project", async () => {
+  const host = hostFixture("http://alpha:7337", "Alpha");
+  const { fleet } = mountFleet();
+  const connected = (await fleet.connectSaved(host))!;
+  const panel = (await fleet.openPanel(connected, host.projects[1]!, "claude"))!;
+  panel.control.prompt.value = "only run in service";
+  host.projects = host.projects.filter((project) => project.id !== "service");
+  host.token = "replacement-private-token";
+  await fleet.pairDevice({ address: host.address, code: "new-code", name: "Phone" });
+  expect(fleet.panels.value).toEqual([panel]);
+  expect(panel.project.id).toBe("service");
+  expect(panel.control.project.value).toBeNull();
+  expect(panel.control.agent.value).toBe("");
+  expect(panel.control.runs.value).toEqual([]);
+  expect(panel.control.selected.value).toBeNull();
+  expect(panel.control.prompt.value).toBe("only run in service");
+  expect(fleet.error.value).toContain("项目");
+  expect(httpCalls.some((call) => call.path === "/runs" && call.method === "POST")).toBe(false);
+});
+
+it("does not automatically retry a saved host that needs fresh pairing", async () => {
+  const host = hostFixture("http://alpha:7337", "Alpha");
+  storage.set("orchester.devices", JSON.stringify([{ address: host.address, name: host.name }]));
+  tokens.set(`orchester.token:${host.address}`, "expired-token");
+  const { fleet } = mountFleet();
+  await vi.waitFor(() => expect(fleet.hosts.value[0]?.control.connectionStatus.value).toBe("needs_pairing"));
+  const calls = httpCalls.length;
+  await vi.advanceTimersByTimeAsync(15000);
+  expect(httpCalls).toHaveLength(calls);
+  expect(fleet.panels.value).toEqual([]);
+});
+
+it("recovers an initially failed panel during a healthy host's next heartbeat", async () => {
+  const host = hostFixture("http://alpha:7337", "Alpha");
+  const { fleet } = mountFleet();
+  const connected = (await fleet.connectSaved(host))!;
+  host.offline = true;
+  const panel = (await fleet.openPanel(connected, host.projects[1]!, "claude"))!;
+  panel.control.prompt.value = "retry this project";
+  host.offline = false;
+  await vi.advanceTimersByTimeAsync(5000);
+  expect(fleet.panels.value).toEqual([panel]);
+  expect(panel.control.connectionStatus.value).toBe("connected");
+  expect(panel.control.project.value?.id).toBe("service");
+  expect(panel.control.agent.value).toBe("claude");
+  expect(panel.control.prompt.value).toBe("retry this project");
+});
+
+it("does not reopen a panel closed while another panel is being re-paired", async () => {
+  const host = hostFixture("http://alpha:7337", "Alpha");
+  const { fleet } = mountFleet();
+  const connected = (await fleet.connectSaved(host))!;
+  const first = (await fleet.openPanel(connected, host.projects[0]!, "codex"))!;
+  const closing = (await fleet.openPanel(connected, host.projects[1]!, "claude"))!;
+  await vi.advanceTimersByTimeAsync(0);
+  let release!: () => void;
+  const path = "/runs/shared%20project-codex/events";
+  const before = httpCalls.filter((call) => call.path === path).length;
+  heldResponses.set(`${host.address}${path}`, new Promise<void>((resolve) => { release = resolve; }));
+  host.token = "replacement-private-token";
+  const pairing = fleet.pairDevice({ address: host.address, code: "new-code", name: "Phone" });
+  await vi.waitFor(() => expect(httpCalls.filter((call) => call.path === path)).toHaveLength(before + 1));
+  fleet.closePanel(closing);
+  release();
+  await pairing;
+  expect(fleet.panels.value).toEqual([first]);
+  expect(savedPanels()).toEqual([
+    { hostAddress: host.address, projectId: "shared project", agent: "codex" },
+  ]);
+  expect(closing.scope.active).toBe(false);
+});
+
+it("does not restore a failed panel closed during another panel's recovery", async () => {
+  const host = hostFixture("http://alpha:7337", "Alpha");
+  const { fleet } = mountFleet();
+  const connected = (await fleet.connectSaved(host))!;
+  host.offline = true;
+  const first = (await fleet.openPanel(connected, host.projects[0]!, "codex"))!;
+  const closing = (await fleet.openPanel(connected, host.projects[1]!, "claude"))!;
+  host.offline = false;
+  let release!: () => void;
+  const path = "/runs/shared%20project-codex/events";
+  heldResponses.set(`${host.address}${path}`, new Promise<void>((resolve) => { release = resolve; }));
+  const recovering = fleet.refreshHosts();
+  await vi.waitFor(() => expect(httpCalls.some((call) => call.path === path)).toBe(true));
+  fleet.closePanel(closing);
+  release();
+  await recovering;
+  expect(fleet.panels.value).toHaveLength(1);
+  expect(fleet.panels.value[0]).toBe(first);
+  expect(savedPanels()).toEqual([
+    { hostAddress: host.address, projectId: "shared project", agent: "codex" },
+  ]);
+  expect(closing.scope.active).toBe(false);
+});
